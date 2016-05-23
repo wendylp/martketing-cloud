@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cn.rongcapital.mkt</groupId>
+	<artifactId>marketing-cloud</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<!-- properties -->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+	</properties>
+	<!-- modules -->
+	<modules>
+   		<module>marketing-tool-api</module>
+   		<module>marketing-tool-service</module>
+   		<module>marketing-tool-service-impl</module>
+   		<module>marketing-tool-dao</module>
+   		<module>marketing-tool-po</module>
+   		<module>marketing-tool-vo</module>
+   		<module>marketing-tool-job</module>
+	</modules>
+	<!-- parent -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.2.8.RELEASE</version>
+    </parent>
+    <!-- dependencies -->
+    <dependencies>
+        <!--web,tomcat,spring-mvc support -->
+        <dependency>
+        	<groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!-- 
+            <exclusions>
+		        <exclusion>
+		            <groupId>org.springframework.boot</groupId>
+		            <artifactId>spring-boot-starter-tomcat</artifactId>
+		        </exclusion>
+	    	</exclusions>
+	    	 -->
+        </dependency>
+        <!-- 
+        <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-jetty</artifactId>
+		</dependency>
+		 -->
+        <!--添加适用于生产环境的功能，如性能指标和监测等功能。 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- resteasy -->
+        <dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-spring</artifactId>
+			<version>3.0.9.Final</version>
+		</dependency> 
+   		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.1</version>
+		</dependency>        
+    </dependencies>
+    
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <mvnvar.conf.path>conf_dev</mvnvar.conf.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <mvnvar.conf.path>conf</mvnvar.conf.path>
+            </properties>
+        </profile>
+    </profiles>
+    
+    <repositories>
+    	<repository>
+	        <id>nexus</id>
+	        <name>nexus</name>
+	        <url>http://jira.dataengine.com/nexus/content/groups/public/</url>
+	        <releases>
+	            <enabled>true</enabled>
+	        </releases>
+	        <snapshots>
+	            <enabled>true</enabled>
+	        </snapshots>
+    	</repository>
+	</repositories>
+    
+</project>	

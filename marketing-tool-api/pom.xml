@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>cn.rongcapital.mkt</groupId>
+    	<artifactId>marketing-cloud</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>marketing-tool-api</artifactId>
+	<packaging>jar</packaging>
+    <!-- dependencies -->
+	<dependencies>
+		<dependency>
+			<groupId>cn.rongcapital.mkt</groupId>
+			<artifactId>marketing-tool-service</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.rongcapital.mkt</groupId>
+			<artifactId>marketing-tool-service-impl</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.rongcapital.mkt</groupId>
+			<artifactId>marketing-tool-vo</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.rongcapital.mkt</groupId>
+			<artifactId>marketing-tool-job</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>	
+	</dependencies>
+  
+</project>

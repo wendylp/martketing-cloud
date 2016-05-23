@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.TriggerNodeDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id,type,start_time,end_time,event_id,campaign_tmpl_id]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM trigger_node]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
+		    	<if test="type != null and type != ''"><![CDATA[type = #{type} AND ]]></if>
+		    	<if test="start_time != null and start_time != ''"><![CDATA[start_time = #{start_time} AND ]]></if>
+		    	<if test="end_time != null and end_time != ''"><![CDATA[end_time = #{end_time} AND ]]></if>
+		    	<if test="event_id != null and event_id != ''"><![CDATA[event_id = #{event_id} AND ]]></if>
+		    	<if test="campaign_tmpl_id != null and campaign_tmpl_id != ''"><![CDATA[campaign_tmpl_id = #{campaign_tmpl_id}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
+		    	<if test="type != null"><![CDATA[AND type = #{type},]]></if>
+		    	<if test="start_time != null"><![CDATA[AND start_time = #{start_time},]]></if>
+		    	<if test="end_time != null"><![CDATA[AND end_time = #{end_time},]]></if>
+		    	<if test="event_id != null"><![CDATA[AND event_id = #{event_id},]]></if>
+		    	<if test="campaign_tmpl_id != null"><![CDATA[AND campaign_tmpl_id = #{campaign_tmpl_id}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.TriggerNode" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO trigger_node (id,type,start_time,end_time,event_id,campaign_tmpl_id)
+			VALUES
+			(
+			  #{id},#{type},#{start_time},#{end_time},#{event_id},#{campaign_tmpl_id}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.TriggerNode">
+		<![CDATA[UPDATE trigger_node]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.TriggerNode" resultType="cn.rongcapital.mkt.po.TriggerNode">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.TriggerNode" resultType="cn.rongcapital.mkt.po.TriggerNode">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.TriggerNode" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	
+	
+</mapper>
