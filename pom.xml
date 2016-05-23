@@ -19,6 +19,7 @@
    		<module>marketing-tool-po</module>
    		<module>marketing-tool-vo</module>
    		<module>marketing-tool-job</module>
+   		<module>marketing-tool-util</module>
 	</modules>
 	<!-- parent -->
 	<parent>

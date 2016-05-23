@@ -29,6 +29,11 @@
 			<groupId>cn.rongcapital.mkt</groupId>
 			<artifactId>marketing-tool-job</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.rongcapital.mkt</groupId>
+			<artifactId>marketing-tool-util</artifactId>
+			<version>${project.parent.version}</version>
 		</dependency>	
 	</dependencies>
   

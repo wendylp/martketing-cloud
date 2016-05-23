@@ -1,23 +1,19 @@
 package cn.rongcapital.mkt.vo;
 
-/**
- * \u8F93\u5165
- **/
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 @javax.xml.bind.annotation.XmlRootElement
-public class SegmentTitleIn
-//extends BaseOutput
+public class SegmentHeadOut extends BaseOutput
 {
   
   private String name = null;
-  private String operator = null;
+  private String oper = null;
   private Integer segmentId = null;
   private Integer status = null;
-//  SegmentTitleIn(){}
-//  public SegmentTitleIn(int code, String msg){
-//    super(code,msg);
-//  }
+  
+  SegmentHeadOut(){}
+  public SegmentHeadOut(int code, String msg){
+    super(code,msg);
+  }
   
   
   @JsonProperty("name")
@@ -29,12 +25,12 @@ public class SegmentTitleIn
   }
   
   
-  @JsonProperty("operator")
-  public String getOperator() {
-    return operator;
+  @JsonProperty("oper")
+  public String getOper() {
+    return oper;
   }
-  public void setOperator(String operator) {
-    this.operator = operator;
+  public void setOper(String oper) {
+    this.oper = oper;
   }
   
   

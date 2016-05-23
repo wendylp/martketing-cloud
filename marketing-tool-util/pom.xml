@@ -6,4 +6,13 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>marketing-tool-util</artifactId>
+  
+  <dependencies>
+	<dependency>
+		<groupId>cn.rongcapital.mkt</groupId>
+		<artifactId>marketing-tool-service</artifactId>
+		<version>${project.parent.version}</version>
+	</dependency>
+  </dependencies>
+  
 </project>
