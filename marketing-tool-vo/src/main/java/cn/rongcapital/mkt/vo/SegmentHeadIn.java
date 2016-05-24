@@ -2,28 +2,11 @@ package cn.rongcapital.mkt.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 @javax.xml.bind.annotation.XmlRootElement
-public class SegmentHeadIn
-//extends BaseOutput
+public class SegmentHeadIn extends BaseInput
 {
-  
-  private String method = null;
   private Integer publishStatus = null;
   private String segmentName = null;
   private String userToken = null;
-  //SegmentHeadIn(){}
-  //public SegmentHeadIn(int code, String msg){
-  //  super(code,msg);
-  //}
-  
-  
-  @JsonProperty("method")
-  public String getMethod() {
-    return method;
-  }
-  public void setMethod(String method) {
-    this.method = method;
-  }
-  
   
   @JsonProperty("publish_status")
   public Integer getPublishStatus() {
