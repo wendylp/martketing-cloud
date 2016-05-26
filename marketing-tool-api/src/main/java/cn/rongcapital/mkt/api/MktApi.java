@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.api;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -62,7 +63,7 @@ public class MktApi {
 	@POST
 	@Path("/mkt.segment.header.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object segmentHeaderCreate(SegmentHeadIn body, @Context SecurityContext securityContext) {
+	public Object segmentHeaderCreate(@Valid SegmentHeadIn body, @Context SecurityContext securityContext) {
 	    return segmentHeaderService.segmentHeaderCreate(body, securityContext);
 	}
 }

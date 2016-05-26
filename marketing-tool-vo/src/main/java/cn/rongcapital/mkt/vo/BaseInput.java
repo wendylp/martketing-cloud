@@ -20,6 +20,7 @@ public class BaseInput {
     @NotEmpty
 	private String method;
     
+    @NotEmpty
     private String ver;
 	  
 	@JsonProperty("method")
@@ -29,7 +30,7 @@ public class BaseInput {
 	public void setMethod(String method) {
 	  this.method = method;
 	}
-	@JsonProperty("method")
+	@JsonProperty("ver")
 	public String getVer() {
 		return ver;
 	}

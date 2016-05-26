@@ -19,6 +19,7 @@ public class SegmentHeadIn extends BaseInput {
   
     private String segmentName = null;
   
+    @NotEmpty
     private String userToken = null;
   
     @JsonProperty("publish_status")
@@ -40,7 +41,6 @@ public class SegmentHeadIn extends BaseInput {
     }
   
     @JsonProperty("user_token")
-    @NotEmpty
     public String getUserToken() {
 	    return userToken;
     }
