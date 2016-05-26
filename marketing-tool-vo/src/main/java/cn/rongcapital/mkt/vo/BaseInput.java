@@ -19,6 +19,8 @@ public class BaseInput {
 
     @NotEmpty
 	private String method;
+    
+    private String ver;
 	  
 	@JsonProperty("method")
 	public String getMethod() {
@@ -27,5 +29,13 @@ public class BaseInput {
 	public void setMethod(String method) {
 	  this.method = method;
 	}
+	@JsonProperty("method")
+	public String getVer() {
+		return ver;
+	}
+	public void setVer(String ver) {
+		this.ver = ver;
+	}
+	
 
 }

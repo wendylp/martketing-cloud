@@ -48,7 +48,8 @@ public class MktApi {
 	@GET
 	@Path("/test")
 	public Object testGet(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken) throws Exception {
+						  @NotEmpty @QueryParam("user_token") String userToken,
+						  @QueryParam("ver") String ver) throws Exception {
 		UpdateResult ur = new UpdateResult(0, "success");
 		return Response.ok().entity(ur).build();
 	}
