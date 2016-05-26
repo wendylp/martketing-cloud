@@ -13,8 +13,8 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="source != null and source != ''"><![CDATA[source = #{source} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="source != null and source != ''"><![CDATA[ AND source = #{source}]]></if>
 		    	<if test="entityId != null and entityId != ''"><![CDATA[entity_id = #{entityId}]]></if>
 		</where>
 	</sql>

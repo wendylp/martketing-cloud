@@ -13,11 +13,11 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="type != null and type != ''"><![CDATA[type = #{type} AND ]]></if>
-		    	<if test="startTime != null and startTime != ''"><![CDATA[start_time = #{startTime} AND ]]></if>
-		    	<if test="endTime != null and endTime != ''"><![CDATA[end_time = #{endTime} AND ]]></if>
-		    	<if test="eventId != null and eventId != ''"><![CDATA[event_id = #{eventId} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
+		    	<if test="startTime != null and startTime != ''"><![CDATA[ AND start_time = #{startTime}]]></if>
+		    	<if test="endTime != null and endTime != ''"><![CDATA[ AND end_time = #{endTime}]]></if>
+		    	<if test="eventId != null and eventId != ''"><![CDATA[ AND event_id = #{eventId}]]></if>
 		    	<if test="campaignTmplId != null and campaignTmplId != ''"><![CDATA[campaign_tmpl_id = #{campaignTmplId}]]></if>
 		</where>
 	</sql>

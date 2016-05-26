@@ -13,14 +13,14 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="name != null and name != ''"><![CDATA[name = #{name} AND ]]></if>
-		    	<if test="publishStatus != null and publishStatus != ''"><![CDATA[publish_status = #{publishStatus} AND ]]></if>
-		    	<if test="tagId != null and tagId != ''"><![CDATA[tag_id = #{tagId} AND ]]></if>
-		    	<if test="exclude != null and exclude != ''"><![CDATA[exclude = #{exclude} AND ]]></if>
-		    	<if test="groupIndex != null and groupIndex != ''"><![CDATA[group_index = #{groupIndex} AND ]]></if>
-		    	<if test="createTime != null and createTime != ''"><![CDATA[create_time = #{createTime} AND ]]></if>
-		    	<if test="updateTime != null and updateTime != ''"><![CDATA[update_time = #{updateTime} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="publishStatus != null and publishStatus != ''"><![CDATA[ AND publish_status = #{publishStatus}]]></if>
+		    	<if test="tagId != null and tagId != ''"><![CDATA[ AND tag_id = #{tagId}]]></if>
+		    	<if test="exclude != null and exclude != ''"><![CDATA[ AND exclude = #{exclude}]]></if>
+		    	<if test="groupIndex != null and groupIndex != ''"><![CDATA[ AND group_index = #{groupIndex}]]></if>
+		    	<if test="createTime != null and createTime != ''"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null and updateTime != ''"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		    	<if test="status != null and status != ''"><![CDATA[status = #{status}]]></if>
 		</where>
 	</sql>

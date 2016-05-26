@@ -13,14 +13,14 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="campaignTplId != null and campaignTplId != ''"><![CDATA[campaign_tpl_id = #{campaignTplId} AND ]]></if>
-		    	<if test="nodeStatus != null and nodeStatus != ''"><![CDATA[node_status = #{nodeStatus} AND ]]></if>
-		    	<if test="desciption != null and desciption != ''"><![CDATA[desciption = #{desciption} AND ]]></if>
-		    	<if test="type != null and type != ''"><![CDATA[type = #{type} AND ]]></if>
-		    	<if test="assetId != null and assetId != ''"><![CDATA[asset_id = #{assetId} AND ]]></if>
-		    	<if test="value != null and value != ''"><![CDATA[value = #{value} AND ]]></if>
-		    	<if test="posX != null and posX != ''"><![CDATA[pos_x = #{posX} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="campaignTplId != null and campaignTplId != ''"><![CDATA[ AND campaign_tpl_id = #{campaignTplId}]]></if>
+		    	<if test="nodeStatus != null and nodeStatus != ''"><![CDATA[ AND node_status = #{nodeStatus}]]></if>
+		    	<if test="desciption != null and desciption != ''"><![CDATA[ AND desciption = #{desciption}]]></if>
+		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
+		    	<if test="assetId != null and assetId != ''"><![CDATA[ AND asset_id = #{assetId}]]></if>
+		    	<if test="value != null and value != ''"><![CDATA[ AND value = #{value}]]></if>
+		    	<if test="posX != null and posX != ''"><![CDATA[ AND pos_x = #{posX}]]></if>
 		    	<if test="posY != null and posY != ''"><![CDATA[pos_y = #{posY}]]></if>
 		</where>
 	</sql>

@@ -12,7 +12,9 @@ package cn.rongcapital.mkt.common.constant;
 
 public enum ApiErrorCode {
 	
-	PARAMETER_ERROR(101,"parameter error");//error code and msg
+	SUCCESS(1,"success"),
+	PARAMETER_ERROR(101,"parameter error"),//error code and msg
+	DB_ERROR(201,"DB error");
 	
     private int code;
      

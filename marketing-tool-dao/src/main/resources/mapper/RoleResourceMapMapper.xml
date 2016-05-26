@@ -13,10 +13,10 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="roleId != null and roleId != ''"><![CDATA[role_id = #{roleId} AND ]]></if>
-		    	<if test="resourceId != null and resourceId != ''"><![CDATA[resource_id = #{resourceId} AND ]]></if>
-		    	<if test="createTime != null and createTime != ''"><![CDATA[create_time = #{createTime} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="roleId != null and roleId != ''"><![CDATA[ AND role_id = #{roleId}]]></if>
+		    	<if test="resourceId != null and resourceId != ''"><![CDATA[ AND resource_id = #{resourceId}]]></if>
+		    	<if test="createTime != null and createTime != ''"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null and updateTime != ''"><![CDATA[update_time = #{updateTime}]]></if>
 		</where>
 	</sql>

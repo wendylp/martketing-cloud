@@ -13,16 +13,16 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="importStartTime != null and importStartTime != ''"><![CDATA[import_start_time = #{importStartTime} AND ]]></if>
-		    	<if test="importEndTime != null and importEndTime != ''"><![CDATA[import_end_time = #{importEndTime} AND ]]></if>
-		    	<if test="totalRows != null and totalRows != ''"><![CDATA[total_rows = #{totalRows} AND ]]></if>
-		    	<if test="legalRows != null and legalRows != ''"><![CDATA[legal_rows = #{legalRows} AND ]]></if>
-		    	<if test="success != null and success != ''"><![CDATA[success = #{success} AND ]]></if>
-		    	<if test="source != null and source != ''"><![CDATA[source = #{source} AND ]]></if>
-		    	<if test="emailCount != null and emailCount != ''"><![CDATA[email_count = #{emailCount} AND ]]></if>
-		    	<if test="contactCount != null and contactCount != ''"><![CDATA[contact_count = #{contactCount} AND ]]></if>
-		    	<if test="mobileCount != null and mobileCount != ''"><![CDATA[mobile_count = #{mobileCount} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="importStartTime != null and importStartTime != ''"><![CDATA[ AND import_start_time = #{importStartTime}]]></if>
+		    	<if test="importEndTime != null and importEndTime != ''"><![CDATA[ AND import_end_time = #{importEndTime}]]></if>
+		    	<if test="totalRows != null and totalRows != ''"><![CDATA[ AND total_rows = #{totalRows}]]></if>
+		    	<if test="legalRows != null and legalRows != ''"><![CDATA[ AND legal_rows = #{legalRows}]]></if>
+		    	<if test="success != null and success != ''"><![CDATA[ AND success = #{success}]]></if>
+		    	<if test="source != null and source != ''"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="emailCount != null and emailCount != ''"><![CDATA[ AND email_count = #{emailCount}]]></if>
+		    	<if test="contactCount != null and contactCount != ''"><![CDATA[ AND contact_count = #{contactCount}]]></if>
+		    	<if test="mobileCount != null and mobileCount != ''"><![CDATA[ AND mobile_count = #{mobileCount}]]></if>
 		    	<if test="qqCount != null and qqCount != ''"><![CDATA[qq_count = #{qqCount}]]></if>
 		</where>
 	</sql>

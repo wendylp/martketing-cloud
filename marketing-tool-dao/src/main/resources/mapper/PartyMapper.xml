@@ -13,10 +13,10 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="name != null and name != ''"><![CDATA[name = #{name} AND ]]></if>
-		    	<if test="mobile != null and mobile != ''"><![CDATA[mobile = #{mobile} AND ]]></if>
-		    	<if test="email != null and email != ''"><![CDATA[email = #{email} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="mobile != null and mobile != ''"><![CDATA[ AND mobile = #{mobile}]]></if>
+		    	<if test="email != null and email != ''"><![CDATA[ AND email = #{email}]]></if>
 		    	<if test="age != null and age != ''"><![CDATA[age = #{age}]]></if>
 		</where>
 	</sql>

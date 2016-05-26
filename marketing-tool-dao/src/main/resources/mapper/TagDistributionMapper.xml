@@ -13,10 +13,10 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="tagId != null and tagId != ''"><![CDATA[tag_id = #{tagId} AND ]]></if>
-		    	<if test="coveragePercent != null and coveragePercent != ''"><![CDATA[coverage_percent = #{coveragePercent} AND ]]></if>
-		    	<if test="inuseTagPercent != null and inuseTagPercent != ''"><![CDATA[inuse_tag_percent = #{inuseTagPercent} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="tagId != null and tagId != ''"><![CDATA[ AND tag_id = #{tagId}]]></if>
+		    	<if test="coveragePercent != null and coveragePercent != ''"><![CDATA[ AND coverage_percent = #{coveragePercent}]]></if>
+		    	<if test="inuseTagPercent != null and inuseTagPercent != ''"><![CDATA[ AND inuse_tag_percent = #{inuseTagPercent}]]></if>
 		    	<if test="audienceCount != null and audienceCount != ''"><![CDATA[audience_count = #{audienceCount}]]></if>
 		</where>
 	</sql>

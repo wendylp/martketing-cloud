@@ -28,9 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.service.SegmentHeaderService;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
+import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.SegmentHeadIn;
-import cn.rongcapital.mkt.vo.UpdateResult;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -39,11 +41,13 @@ import cn.rongcapital.mkt.vo.UpdateResult;
 public class MktApi {
 
 	@Autowired
-	private SegmentHeaderService segmentHeaderService;
+	private SegmentHeaderCreateService segmentHeaderService;
+	@Autowired
+	private SegmentPublishStatusCountService segmentPublishStatusCountService;
 
 	/**
 	 * @功能简述: For testing, will remove later
-	 * @param: String method,String userToken
+	 * @param: String method,String userToken,String ver
 	 * @return: Object
 	 */
 	@GET
@@ -51,7 +55,7 @@ public class MktApi {
 	public Object testGet(@NotEmpty @QueryParam("method") String method,
 						  @NotEmpty @QueryParam("user_token") String userToken,
 						  @QueryParam("ver") String ver) throws Exception {
-		UpdateResult ur = new UpdateResult(0, "success");
+		BaseOutput ur = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),0,null);
 		return Response.ok().entity(ur).build();
 	}
 
@@ -65,5 +69,18 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Object segmentHeaderCreate(@Valid SegmentHeadIn body, @Context SecurityContext securityContext) {
 	    return segmentHeaderService.segmentHeaderCreate(body, securityContext);
+	}
+	
+    /**
+	 * @功能简述: 查询不同发布状态下的segment数量
+	 * @param: String method, String userToken, String ver 
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.segment.publishstatus.count.get")
+	public Object segmentPublishstatusCount(@NotEmpty @QueryParam("method") String method,
+						  @NotEmpty @QueryParam("user_token") String userToken,
+						  @QueryParam("ver") String ver) throws Exception {
+		return segmentPublishStatusCountService.segmentPublishstatusCount(method, userToken, ver);
 	}
 }

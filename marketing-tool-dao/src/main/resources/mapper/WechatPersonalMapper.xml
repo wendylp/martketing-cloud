@@ -13,8 +13,8 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="accountId != null and accountId != ''"><![CDATA[account_id = #{accountId} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="accountId != null and accountId != ''"><![CDATA[ AND account_id = #{accountId}]]></if>
 		    	<if test="friendCount != null and friendCount != ''"><![CDATA[friend_count = #{friendCount}]]></if>
 		</where>
 	</sql>
