@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.api;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -31,6 +32,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
 import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
+import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.SegmentHeadIn;
 
@@ -44,6 +46,8 @@ public class MktApi {
 	private SegmentHeaderCreateService segmentHeaderService;
 	@Autowired
 	private SegmentPublishStatusCountService segmentPublishStatusCountService;
+	@Autowired
+	private SegmentPublishstatusListService segmentPublishstatusListService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -79,8 +83,24 @@ public class MktApi {
 	@GET
 	@Path("/mkt.segment.publishstatus.count.get")
 	public Object segmentPublishstatusCount(@NotEmpty @QueryParam("method") String method,
-						  @NotEmpty @QueryParam("user_token") String userToken,
-						  @QueryParam("ver") String ver) throws Exception {
+						  					@NotEmpty @QueryParam("user_token") String userToken,
+						  					@NotEmpty @QueryParam("ver") String ver) throws Exception {
 		return segmentPublishStatusCountService.segmentPublishstatusCount(method, userToken, ver);
+	}
+	
+    /**
+	 * @功能简述: 获取某个发布状态下的segemnt列表
+	 * @param: String method, String userToken, String ver, String publishStatus 
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.segment.publishstatus.list.get")
+	public Object segmentPublishstatusList(@NotEmpty @QueryParam("method") String method,
+						  				   @NotEmpty @QueryParam("user_token") String userToken,
+						  				   @NotNull @QueryParam("publish_status") Integer publishStatus,
+						  				   @QueryParam("index") Integer index,
+						  				   @QueryParam("size") Integer size,
+						  				   @NotEmpty @QueryParam("ver") String ver) throws Exception {
+		return segmentPublishstatusListService.segmentPublishstatusList(method, userToken,publishStatus,index,size,ver);
 	}
 }

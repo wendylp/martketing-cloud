@@ -10,11 +10,13 @@
 
 package cn.rongcapital.mkt.po.base;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+
 public class BaseQuery {
 	
-    private transient Integer startIndex;// 开始索引
+    private transient Integer startIndex = ApiConstant.PAGE_START_INDEX_DEFAULT;// 开始索引
 	
-	private transient Integer pageSize;//pageSize
+	private transient Integer pageSize = ApiConstant.PAGE_PAGE_SIZE_DEFAULT;//pageSize
 	
 	private transient String orderField;// 排序字段
 	
