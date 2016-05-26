@@ -4,28 +4,28 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class ImportDataHistory extends BaseQuery{
+public class ImportDataHistory extends BaseQuery {
     private Long id;
 
-    private Date import_start_time;
+    private Date importStartTime;
 
-    private Date import_end_time;
+    private Date importEndTime;
 
-    private Integer total_rows;
+    private Integer totalRows;
 
-    private Integer legal_rows;
+    private Integer legalRows;
 
     private Byte success;
 
     private String source;
 
-    private Integer email_count;
+    private Integer emailCount;
 
-    private Integer contact_count;
+    private Integer contactCount;
 
-    private Integer mobile_count;
+    private Integer mobileCount;
 
-    private Integer qq_count;
+    private Integer qqCount;
 
     public Long getId() {
         return id;
@@ -35,36 +35,36 @@ public class ImportDataHistory extends BaseQuery{
         this.id = id;
     }
 
-    public Date getImport_start_time() {
-        return import_start_time;
+    public Date getImportStartTime() {
+        return importStartTime;
     }
 
-    public void setImport_start_time(Date import_start_time) {
-        this.import_start_time = import_start_time;
+    public void setImportStartTime(Date importStartTime) {
+        this.importStartTime = importStartTime;
     }
 
-    public Date getImport_end_time() {
-        return import_end_time;
+    public Date getImportEndTime() {
+        return importEndTime;
     }
 
-    public void setImport_end_time(Date import_end_time) {
-        this.import_end_time = import_end_time;
+    public void setImportEndTime(Date importEndTime) {
+        this.importEndTime = importEndTime;
     }
 
-    public Integer getTotal_rows() {
-        return total_rows;
+    public Integer getTotalRows() {
+        return totalRows;
     }
 
-    public void setTotal_rows(Integer total_rows) {
-        this.total_rows = total_rows;
+    public void setTotalRows(Integer totalRows) {
+        this.totalRows = totalRows;
     }
 
-    public Integer getLegal_rows() {
-        return legal_rows;
+    public Integer getLegalRows() {
+        return legalRows;
     }
 
-    public void setLegal_rows(Integer legal_rows) {
-        this.legal_rows = legal_rows;
+    public void setLegalRows(Integer legalRows) {
+        this.legalRows = legalRows;
     }
 
     public Byte getSuccess() {
@@ -83,35 +83,35 @@ public class ImportDataHistory extends BaseQuery{
         this.source = source == null ? null : source.trim();
     }
 
-    public Integer getEmail_count() {
-        return email_count;
+    public Integer getEmailCount() {
+        return emailCount;
     }
 
-    public void setEmail_count(Integer email_count) {
-        this.email_count = email_count;
+    public void setEmailCount(Integer emailCount) {
+        this.emailCount = emailCount;
     }
 
-    public Integer getContact_count() {
-        return contact_count;
+    public Integer getContactCount() {
+        return contactCount;
     }
 
-    public void setContact_count(Integer contact_count) {
-        this.contact_count = contact_count;
+    public void setContactCount(Integer contactCount) {
+        this.contactCount = contactCount;
     }
 
-    public Integer getMobile_count() {
-        return mobile_count;
+    public Integer getMobileCount() {
+        return mobileCount;
     }
 
-    public void setMobile_count(Integer mobile_count) {
-        this.mobile_count = mobile_count;
+    public void setMobileCount(Integer mobileCount) {
+        this.mobileCount = mobileCount;
     }
 
-    public Integer getQq_count() {
-        return qq_count;
+    public Integer getQqCount() {
+        return qqCount;
     }
 
-    public void setQq_count(Integer qq_count) {
-        this.qq_count = qq_count;
+    public void setQqCount(Integer qqCount) {
+        this.qqCount = qqCount;
     }
 }

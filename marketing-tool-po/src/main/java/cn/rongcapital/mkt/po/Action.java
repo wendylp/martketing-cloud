@@ -2,14 +2,14 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class Action extends BaseQuery{
+public class Action extends BaseQuery {
     private Long id;
 
     private String description;
 
     private Byte type;
 
-    private Long asset_id;
+    private Long assetId;
 
     private String value;
 
@@ -37,12 +37,12 @@ public class Action extends BaseQuery{
         this.type = type;
     }
 
-    public Long getAsset_id() {
-        return asset_id;
+    public Long getAssetId() {
+        return assetId;
     }
 
-    public void setAsset_id(Long asset_id) {
-        this.asset_id = asset_id;
+    public void setAssetId(Long assetId) {
+        this.assetId = assetId;
     }
 
     public String getValue() {

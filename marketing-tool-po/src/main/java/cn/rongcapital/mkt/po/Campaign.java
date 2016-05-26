@@ -2,12 +2,12 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class Campaign extends BaseQuery{
+public class Campaign extends BaseQuery {
     private Long id;
 
     private String name;
 
-    private String asset_id_list;
+    private String assetIdList;
 
     public Long getId() {
         return id;
@@ -25,11 +25,11 @@ public class Campaign extends BaseQuery{
         this.name = name == null ? null : name.trim();
     }
 
-    public String getAsset_id_list() {
-        return asset_id_list;
+    public String getAssetIdList() {
+        return assetIdList;
     }
 
-    public void setAsset_id_list(String asset_id_list) {
-        this.asset_id_list = asset_id_list == null ? null : asset_id_list.trim();
+    public void setAssetIdList(String assetIdList) {
+        this.assetIdList = assetIdList == null ? null : assetIdList.trim();
     }
 }

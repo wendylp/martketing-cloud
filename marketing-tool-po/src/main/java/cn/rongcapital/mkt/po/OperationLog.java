@@ -4,14 +4,14 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class OperationLog extends BaseQuery{
+public class OperationLog extends BaseQuery {
     private Long id;
 
-    private String user_id;
+    private String userId;
 
-    private String operate_desc;
+    private String operateDesc;
 
-    private Date operate_time;
+    private Date operateTime;
 
     public Long getId() {
         return id;
@@ -21,27 +21,27 @@ public class OperationLog extends BaseQuery{
         this.id = id;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id == null ? null : user_id.trim();
+    public void setUserId(String userId) {
+        this.userId = userId == null ? null : userId.trim();
     }
 
-    public String getOperate_desc() {
-        return operate_desc;
+    public String getOperateDesc() {
+        return operateDesc;
     }
 
-    public void setOperate_desc(String operate_desc) {
-        this.operate_desc = operate_desc == null ? null : operate_desc.trim();
+    public void setOperateDesc(String operateDesc) {
+        this.operateDesc = operateDesc == null ? null : operateDesc.trim();
     }
 
-    public Date getOperate_time() {
-        return operate_time;
+    public Date getOperateTime() {
+        return operateTime;
     }
 
-    public void setOperate_time(Date operate_time) {
-        this.operate_time = operate_time;
+    public void setOperateTime(Date operateTime) {
+        this.operateTime = operateTime;
     }
 }

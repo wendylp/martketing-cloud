@@ -1,46 +1,40 @@
+/*************************************************
+ * @功能简述: 输入结果VO基类
+ * @项目名称: marketing cloud
+ * @see: 
+ * @author: 宋世涛
+ * @version: 0.0.1
+ * @date: 2016/5/16
+ * @复审人: 
+*************************************************/
+
 package cn.rongcapital.mkt.vo;
 
-@javax.xml.bind.annotation.XmlRootElement
+import java.util.ArrayList;
+import java.util.List;
+
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class BaseOutput {
 	
-	public static final int ERROR = 1;
-	public static final int WARNING = 2;
-	public static final int INFO = 3;
-	public static final int OK = 4;
-	public static final int TOO_BUSY = 5;
-	/**
-	 * response code
-	 */
-	int code;
-	String type;
-	String msg;
+	private int code;
+	
+	private String msg;
+	
+	private int total;
+	
+	private List<Object> data = new ArrayList<Object>();
 
 	public BaseOutput(){}
 	
-	public BaseOutput(int code, String msg){
+	public BaseOutput(int code, String msg, int total, List<Object> data) {
 		this.code = code;
-		switch(code){
-		case ERROR:
-			setType("error");
-			break;
-		case WARNING:
-			setType("warning");
-			break;
-		case INFO:
-			setType("info");
-			break;
-		case OK:
-			setType("ok");
-			break;
-		case TOO_BUSY:
-			setType("too busy");
-			break;
-		default:
-			setType("unknown");
-			break;
-		}
 		this.msg = msg;
+		this.total = total;
+		this.data = null == data?this.data:data;
 	}
+	
+	@JsonProperty("code")
 	public int getCode() {
 		return code;
 	}
@@ -49,14 +43,7 @@ public class BaseOutput {
 		this.code = code;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
+	@JsonProperty("msg")
 	public String getMsg() {
 		return msg;
 	}
@@ -64,4 +51,24 @@ public class BaseOutput {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
+
+	@JsonProperty("total")
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
+	@JsonProperty("data")
+	public List<Object> getData() {
+		return data;
+	}
+
+	public void setData(List<Object> data) {
+		this.data = data;
+	}
+	
+	
 }

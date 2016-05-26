@@ -4,14 +4,14 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class User extends BaseQuery{
+public class User extends BaseQuery {
     private Long id;
 
-    private String user_name;
+    private String userName;
 
-    private String user_id;
+    private String userId;
 
-    private Long role_id;
+    private Long roleId;
 
     private String icon;
 
@@ -19,9 +19,9 @@ public class User extends BaseQuery{
 
     private Byte status;
 
-    private Date created_time;
+    private Date createdTime;
 
-    private Date update_time;
+    private Date updateTime;
 
     public Long getId() {
         return id;
@@ -31,28 +31,28 @@ public class User extends BaseQuery{
         this.id = id;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name == null ? null : user_name.trim();
+    public void setUserName(String userName) {
+        this.userName = userName == null ? null : userName.trim();
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id == null ? null : user_id.trim();
+    public void setUserId(String userId) {
+        this.userId = userId == null ? null : userId.trim();
     }
 
-    public Long getRole_id() {
-        return role_id;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRole_id(Long role_id) {
-        this.role_id = role_id;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
     public String getIcon() {
@@ -79,19 +79,19 @@ public class User extends BaseQuery{
         this.status = status;
     }
 
-    public Date getCreated_time() {
-        return created_time;
+    public Date getCreatedTime() {
+        return createdTime;
     }
 
-    public void setCreated_time(Date created_time) {
-        this.created_time = created_time;
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
     }
 
-    public Date getUpdate_time() {
-        return update_time;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdate_time(Date update_time) {
-        this.update_time = update_time;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

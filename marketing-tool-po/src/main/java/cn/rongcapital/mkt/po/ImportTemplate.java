@@ -2,7 +2,7 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class ImportTemplate extends BaseQuery{
+public class ImportTemplate extends BaseQuery {
     private Long id;
 
     private String name;

@@ -32,24 +32,9 @@
 		</dependency>
 		<dependency>
 			<groupId>cn.rongcapital.mkt</groupId>
-			<artifactId>marketing-tool-util</artifactId>
+			<artifactId>marketing-tool-common</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		<dependency>
-		    <groupId>org.jboss.resteasy</groupId>
-		    <artifactId>resteasy-hibernatevalidator-provider</artifactId>
-		    <version>3.0.16.Final</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.hibernate</groupId>
-		    <artifactId>hibernate-validator</artifactId>
-		    <version>4.2.0.Final</version>
-		</dependency>
-		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-api</artifactId>
-		    <version>7.0</version>
-		</dependency>	
 	</dependencies>
   
 </project>

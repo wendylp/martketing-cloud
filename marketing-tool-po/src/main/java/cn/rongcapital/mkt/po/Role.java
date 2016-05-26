@@ -4,18 +4,18 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class Role extends BaseQuery{
+public class Role extends BaseQuery {
     private Long id;
 
-    private String role_name;
+    private String roleName;
 
-    private Long branch_id;
+    private Long branchId;
 
     private Byte status;
 
-    private Date crated_time;
+    private Date cratedTime;
 
-    private Date update_time;
+    private Date updateTime;
 
     public Long getId() {
         return id;
@@ -25,20 +25,20 @@ public class Role extends BaseQuery{
         this.id = id;
     }
 
-    public String getRole_name() {
-        return role_name;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRole_name(String role_name) {
-        this.role_name = role_name == null ? null : role_name.trim();
+    public void setRoleName(String roleName) {
+        this.roleName = roleName == null ? null : roleName.trim();
     }
 
-    public Long getBranch_id() {
-        return branch_id;
+    public Long getBranchId() {
+        return branchId;
     }
 
-    public void setBranch_id(Long branch_id) {
-        this.branch_id = branch_id;
+    public void setBranchId(Long branchId) {
+        this.branchId = branchId;
     }
 
     public Byte getStatus() {
@@ -49,19 +49,19 @@ public class Role extends BaseQuery{
         this.status = status;
     }
 
-    public Date getCrated_time() {
-        return crated_time;
+    public Date getCratedTime() {
+        return cratedTime;
     }
 
-    public void setCrated_time(Date crated_time) {
-        this.crated_time = crated_time;
+    public void setCratedTime(Date cratedTime) {
+        this.cratedTime = cratedTime;
     }
 
-    public Date getUpdate_time() {
-        return update_time;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdate_time(Date update_time) {
-        this.update_time = update_time;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

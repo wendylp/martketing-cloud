@@ -2,14 +2,14 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class ContactFieldRelation extends BaseQuery{
+public class ContactFieldRelation extends BaseQuery {
     private Integer id;
 
-    private String contact_id;
+    private String contactId;
 
-    private String field_id;
+    private String fieldId;
 
-    private String field_value;
+    private String fieldValue;
 
     public Integer getId() {
         return id;
@@ -19,27 +19,27 @@ public class ContactFieldRelation extends BaseQuery{
         this.id = id;
     }
 
-    public String getContact_id() {
-        return contact_id;
+    public String getContactId() {
+        return contactId;
     }
 
-    public void setContact_id(String contact_id) {
-        this.contact_id = contact_id == null ? null : contact_id.trim();
+    public void setContactId(String contactId) {
+        this.contactId = contactId == null ? null : contactId.trim();
     }
 
-    public String getField_id() {
-        return field_id;
+    public String getFieldId() {
+        return fieldId;
     }
 
-    public void setField_id(String field_id) {
-        this.field_id = field_id == null ? null : field_id.trim();
+    public void setFieldId(String fieldId) {
+        this.fieldId = fieldId == null ? null : fieldId.trim();
     }
 
-    public String getField_value() {
-        return field_value;
+    public String getFieldValue() {
+        return fieldValue;
     }
 
-    public void setField_value(String field_value) {
-        this.field_value = field_value == null ? null : field_value.trim();
+    public void setFieldValue(String fieldValue) {
+        this.fieldValue = fieldValue == null ? null : fieldValue.trim();
     }
 }

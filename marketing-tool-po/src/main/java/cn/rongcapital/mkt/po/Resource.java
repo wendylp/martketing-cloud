@@ -2,16 +2,16 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class Resource extends BaseQuery{
+public class Resource extends BaseQuery {
     private Long id;
 
-    private String resource_action;
+    private String resourceAction;
 
     private String description;
 
     private Byte status;
 
-    private byte[] resource_id;
+    private byte[] resourceId;
 
     public Long getId() {
         return id;
@@ -21,12 +21,12 @@ public class Resource extends BaseQuery{
         this.id = id;
     }
 
-    public String getResource_action() {
-        return resource_action;
+    public String getResourceAction() {
+        return resourceAction;
     }
 
-    public void setResource_action(String resource_action) {
-        this.resource_action = resource_action == null ? null : resource_action.trim();
+    public void setResourceAction(String resourceAction) {
+        this.resourceAction = resourceAction == null ? null : resourceAction.trim();
     }
 
     public String getDescription() {
@@ -45,11 +45,11 @@ public class Resource extends BaseQuery{
         this.status = status;
     }
 
-    public byte[] getResource_id() {
-        return resource_id;
+    public byte[] getResourceId() {
+        return resourceId;
     }
 
-    public void setResource_id(byte[] resource_id) {
-        this.resource_id = resource_id;
+    public void setResourceId(byte[] resourceId) {
+        this.resourceId = resourceId;
     }
 }

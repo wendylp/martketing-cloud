@@ -2,12 +2,12 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class WechatPersonal extends BaseQuery{
+public class WechatPersonal extends BaseQuery {
     private Integer id;
 
-    private String account_id;
+    private String accountId;
 
-    private String friend_count;
+    private String friendCount;
 
     public Integer getId() {
         return id;
@@ -17,19 +17,19 @@ public class WechatPersonal extends BaseQuery{
         this.id = id;
     }
 
-    public String getAccount_id() {
-        return account_id;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setAccount_id(String account_id) {
-        this.account_id = account_id == null ? null : account_id.trim();
+    public void setAccountId(String accountId) {
+        this.accountId = accountId == null ? null : accountId.trim();
     }
 
-    public String getFriend_count() {
-        return friend_count;
+    public String getFriendCount() {
+        return friendCount;
     }
 
-    public void setFriend_count(String friend_count) {
-        this.friend_count = friend_count == null ? null : friend_count.trim();
+    public void setFriendCount(String friendCount) {
+        this.friendCount = friendCount == null ? null : friendCount.trim();
     }
 }

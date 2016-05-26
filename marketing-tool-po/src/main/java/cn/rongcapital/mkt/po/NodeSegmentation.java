@@ -2,18 +2,18 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class NodeSegmentation extends BaseQuery{
+public class NodeSegmentation extends BaseQuery {
     private Long id;
 
-    private Long segmentation_id;
+    private Long segmentationId;
 
-    private Long campaign_tpl_id;
+    private Long campaignTplId;
 
-    private Byte node_status;
+    private Byte nodeStatus;
 
-    private String pos_x;
+    private String posX;
 
-    private String pos_y;
+    private String posY;
 
     public Long getId() {
         return id;
@@ -23,43 +23,43 @@ public class NodeSegmentation extends BaseQuery{
         this.id = id;
     }
 
-    public Long getSegmentation_id() {
-        return segmentation_id;
+    public Long getSegmentationId() {
+        return segmentationId;
     }
 
-    public void setSegmentation_id(Long segmentation_id) {
-        this.segmentation_id = segmentation_id;
+    public void setSegmentationId(Long segmentationId) {
+        this.segmentationId = segmentationId;
     }
 
-    public Long getCampaign_tpl_id() {
-        return campaign_tpl_id;
+    public Long getCampaignTplId() {
+        return campaignTplId;
     }
 
-    public void setCampaign_tpl_id(Long campaign_tpl_id) {
-        this.campaign_tpl_id = campaign_tpl_id;
+    public void setCampaignTplId(Long campaignTplId) {
+        this.campaignTplId = campaignTplId;
     }
 
-    public Byte getNode_status() {
-        return node_status;
+    public Byte getNodeStatus() {
+        return nodeStatus;
     }
 
-    public void setNode_status(Byte node_status) {
-        this.node_status = node_status;
+    public void setNodeStatus(Byte nodeStatus) {
+        this.nodeStatus = nodeStatus;
     }
 
-    public String getPos_x() {
-        return pos_x;
+    public String getPosX() {
+        return posX;
     }
 
-    public void setPos_x(String pos_x) {
-        this.pos_x = pos_x == null ? null : pos_x.trim();
+    public void setPosX(String posX) {
+        this.posX = posX == null ? null : posX.trim();
     }
 
-    public String getPos_y() {
-        return pos_y;
+    public String getPosY() {
+        return posY;
     }
 
-    public void setPos_y(String pos_y) {
-        this.pos_y = pos_y == null ? null : pos_y.trim();
+    public void setPosY(String posY) {
+        this.posY = posY == null ? null : posY.trim();
     }
 }

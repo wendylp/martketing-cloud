@@ -2,14 +2,14 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class IllegalDataDetail extends BaseQuery{
+public class IllegalDataDetail extends BaseQuery {
     private Integer id;
 
-    private String summary_id;
+    private String summaryId;
 
     private String type;
 
-    private String data_id;
+    private String dataId;
 
     public Integer getId() {
         return id;
@@ -19,12 +19,12 @@ public class IllegalDataDetail extends BaseQuery{
         this.id = id;
     }
 
-    public String getSummary_id() {
-        return summary_id;
+    public String getSummaryId() {
+        return summaryId;
     }
 
-    public void setSummary_id(String summary_id) {
-        this.summary_id = summary_id == null ? null : summary_id.trim();
+    public void setSummaryId(String summaryId) {
+        this.summaryId = summaryId == null ? null : summaryId.trim();
     }
 
     public String getType() {
@@ -35,11 +35,11 @@ public class IllegalDataDetail extends BaseQuery{
         this.type = type == null ? null : type.trim();
     }
 
-    public String getData_id() {
-        return data_id;
+    public String getDataId() {
+        return dataId;
     }
 
-    public void setData_id(String data_id) {
-        this.data_id = data_id == null ? null : data_id.trim();
+    public void setDataId(String dataId) {
+        this.dataId = dataId == null ? null : dataId.trim();
     }
 }

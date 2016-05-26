@@ -2,20 +2,20 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class NodeDecision extends BaseQuery{
+public class NodeDecision extends BaseQuery {
     private Long id;
 
     private Byte type;
 
-    private String rule_key;
+    private String ruleKey;
 
-    private String campaign_tpl_id;
+    private String campaignTplId;
 
-    private Byte node_status;
+    private Byte nodeStatus;
 
-    private String pos_x;
+    private String posX;
 
-    private String pos_y;
+    private String posY;
 
     public Long getId() {
         return id;
@@ -33,43 +33,43 @@ public class NodeDecision extends BaseQuery{
         this.type = type;
     }
 
-    public String getRule_key() {
-        return rule_key;
+    public String getRuleKey() {
+        return ruleKey;
     }
 
-    public void setRule_key(String rule_key) {
-        this.rule_key = rule_key == null ? null : rule_key.trim();
+    public void setRuleKey(String ruleKey) {
+        this.ruleKey = ruleKey == null ? null : ruleKey.trim();
     }
 
-    public String getCampaign_tpl_id() {
-        return campaign_tpl_id;
+    public String getCampaignTplId() {
+        return campaignTplId;
     }
 
-    public void setCampaign_tpl_id(String campaign_tpl_id) {
-        this.campaign_tpl_id = campaign_tpl_id == null ? null : campaign_tpl_id.trim();
+    public void setCampaignTplId(String campaignTplId) {
+        this.campaignTplId = campaignTplId == null ? null : campaignTplId.trim();
     }
 
-    public Byte getNode_status() {
-        return node_status;
+    public Byte getNodeStatus() {
+        return nodeStatus;
     }
 
-    public void setNode_status(Byte node_status) {
-        this.node_status = node_status;
+    public void setNodeStatus(Byte nodeStatus) {
+        this.nodeStatus = nodeStatus;
     }
 
-    public String getPos_x() {
-        return pos_x;
+    public String getPosX() {
+        return posX;
     }
 
-    public void setPos_x(String pos_x) {
-        this.pos_x = pos_x == null ? null : pos_x.trim();
+    public void setPosX(String posX) {
+        this.posX = posX == null ? null : posX.trim();
     }
 
-    public String getPos_y() {
-        return pos_y;
+    public String getPosY() {
+        return posY;
     }
 
-    public void setPos_y(String pos_y) {
-        this.pos_y = pos_y == null ? null : pos_y.trim();
+    public void setPosY(String posY) {
+        this.posY = posY == null ? null : posY.trim();
     }
 }

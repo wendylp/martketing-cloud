@@ -2,18 +2,18 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class CampaignInatanceNodeHistory extends BaseQuery{
+public class CampaignInatanceNodeHistory extends BaseQuery {
     private Long id;
 
-    private Long campaign_instance_id;
+    private Long campaignInstanceId;
 
-    private Long node_id;
+    private Long nodeId;
 
-    private Integer audience_count;
+    private Integer audienceCount;
 
-    private Long segment_id;
+    private Long segmentId;
 
-    private Long snapshaot_id;
+    private Long snapshaotId;
 
     public Long getId() {
         return id;
@@ -23,43 +23,43 @@ public class CampaignInatanceNodeHistory extends BaseQuery{
         this.id = id;
     }
 
-    public Long getCampaign_instance_id() {
-        return campaign_instance_id;
+    public Long getCampaignInstanceId() {
+        return campaignInstanceId;
     }
 
-    public void setCampaign_instance_id(Long campaign_instance_id) {
-        this.campaign_instance_id = campaign_instance_id;
+    public void setCampaignInstanceId(Long campaignInstanceId) {
+        this.campaignInstanceId = campaignInstanceId;
     }
 
-    public Long getNode_id() {
-        return node_id;
+    public Long getNodeId() {
+        return nodeId;
     }
 
-    public void setNode_id(Long node_id) {
-        this.node_id = node_id;
+    public void setNodeId(Long nodeId) {
+        this.nodeId = nodeId;
     }
 
-    public Integer getAudience_count() {
-        return audience_count;
+    public Integer getAudienceCount() {
+        return audienceCount;
     }
 
-    public void setAudience_count(Integer audience_count) {
-        this.audience_count = audience_count;
+    public void setAudienceCount(Integer audienceCount) {
+        this.audienceCount = audienceCount;
     }
 
-    public Long getSegment_id() {
-        return segment_id;
+    public Long getSegmentId() {
+        return segmentId;
     }
 
-    public void setSegment_id(Long segment_id) {
-        this.segment_id = segment_id;
+    public void setSegmentId(Long segmentId) {
+        this.segmentId = segmentId;
     }
 
-    public Long getSnapshaot_id() {
-        return snapshaot_id;
+    public Long getSnapshaotId() {
+        return snapshaotId;
     }
 
-    public void setSnapshaot_id(Long snapshaot_id) {
-        this.snapshaot_id = snapshaot_id;
+    public void setSnapshaotId(Long snapshaotId) {
+        this.snapshaotId = snapshaotId;
     }
 }

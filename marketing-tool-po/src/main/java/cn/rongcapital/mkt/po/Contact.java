@@ -2,7 +2,7 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class Contact extends BaseQuery{
+public class Contact extends BaseQuery {
     private Integer id;
 
     private String source;

@@ -4,16 +4,16 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class CampaignInstance extends BaseQuery{
+public class CampaignInstance extends BaseQuery {
     private Long id;
 
-    private Long campaign_id;
+    private Long campaignId;
 
-    private Integer audience_count;
+    private Integer audienceCount;
 
-    private Date start_time;
+    private Date startTime;
 
-    private Date end_time;
+    private Date endTime;
 
     public Long getId() {
         return id;
@@ -23,35 +23,35 @@ public class CampaignInstance extends BaseQuery{
         this.id = id;
     }
 
-    public Long getCampaign_id() {
-        return campaign_id;
+    public Long getCampaignId() {
+        return campaignId;
     }
 
-    public void setCampaign_id(Long campaign_id) {
-        this.campaign_id = campaign_id;
+    public void setCampaignId(Long campaignId) {
+        this.campaignId = campaignId;
     }
 
-    public Integer getAudience_count() {
-        return audience_count;
+    public Integer getAudienceCount() {
+        return audienceCount;
     }
 
-    public void setAudience_count(Integer audience_count) {
-        this.audience_count = audience_count;
+    public void setAudienceCount(Integer audienceCount) {
+        this.audienceCount = audienceCount;
     }
 
-    public Date getStart_time() {
-        return start_time;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setStart_time(Date start_time) {
-        this.start_time = start_time;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
-    public Date getEnd_time() {
-        return end_time;
+    public Date getEndTime() {
+        return endTime;
     }
 
-    public void setEnd_time(Date end_time) {
-        this.end_time = end_time;
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

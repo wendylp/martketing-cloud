@@ -4,18 +4,18 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class TriggerNode extends BaseQuery{
+public class TriggerNode extends BaseQuery {
     private Long id;
 
     private Byte type;
 
-    private Date start_time;
+    private Date startTime;
 
-    private Date end_time;
+    private Date endTime;
 
-    private Long event_id;
+    private Long eventId;
 
-    private Long campaign_tmpl_id;
+    private Long campaignTmplId;
 
     public Long getId() {
         return id;
@@ -33,35 +33,35 @@ public class TriggerNode extends BaseQuery{
         this.type = type;
     }
 
-    public Date getStart_time() {
-        return start_time;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setStart_time(Date start_time) {
-        this.start_time = start_time;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
-    public Date getEnd_time() {
-        return end_time;
+    public Date getEndTime() {
+        return endTime;
     }
 
-    public void setEnd_time(Date end_time) {
-        this.end_time = end_time;
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
-    public Long getEvent_id() {
-        return event_id;
+    public Long getEventId() {
+        return eventId;
     }
 
-    public void setEvent_id(Long event_id) {
-        this.event_id = event_id;
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
 
-    public Long getCampaign_tmpl_id() {
-        return campaign_tmpl_id;
+    public Long getCampaignTmplId() {
+        return campaignTmplId;
     }
 
-    public void setCampaign_tmpl_id(Long campaign_tmpl_id) {
-        this.campaign_tmpl_id = campaign_tmpl_id;
+    public void setCampaignTmplId(Long campaignTmplId) {
+        this.campaignTmplId = campaignTmplId;
     }
 }

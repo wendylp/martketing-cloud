@@ -19,7 +19,7 @@
    		<module>marketing-tool-po</module>
    		<module>marketing-tool-vo</module>
    		<module>marketing-tool-job</module>
-   		<module>marketing-tool-util</module>
+   		<module>marketing-tool-common</module>
 	</modules>
 	<!-- parent -->
 	<parent>
@@ -63,8 +63,40 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.1</version>
-		</dependency>        
+		</dependency> 
+		<dependency>
+		    <groupId>org.jboss.resteasy</groupId>
+		    <artifactId>resteasy-hibernatevalidator-provider</artifactId>
+		    <version>3.0.16.Final</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-validator</artifactId>
+		    <version>4.2.0.Final</version>
+		</dependency>
+		<dependency>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-api</artifactId>
+		    <version>7.0</version>
+		</dependency>
+		<dependency>
+	        <groupId>org.jboss.resteasy</groupId>
+	        <artifactId>resteasy-jackson-provider</artifactId>
+	        <version>3.0.9.Final</version>
+    	</dependency>       
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>fastjson</artifactId>
+		    <version>1.2.9</version>
+		</dependency>
+		
     </dependencies>
+	    
     
     <profiles>
         <profile>

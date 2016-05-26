@@ -1,12 +1,23 @@
+/*************************************************
+ * @功能简述: 输入参数VO基类
+ * @项目名称: marketing cloud
+ * @see: 
+ * @author: 宋世涛
+ * @version: 0.0.1
+ * @date: 2016/5/16
+ * @复审人: 
+*************************************************/
+
 package cn.rongcapital.mkt.vo;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class BaseInput {
 
-	@NotEmpty
+    @NotEmpty
 	private String method;
 	  
 	@JsonProperty("method")

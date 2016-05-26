@@ -2,12 +2,12 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class ListNode extends BaseQuery{
+public class ListNode extends BaseQuery {
     private Long id;
 
-    private Long list_id;
+    private Long listId;
 
-    private Long campaign_tmpl_id;
+    private Long campaignTmplId;
 
     public Long getId() {
         return id;
@@ -17,19 +17,19 @@ public class ListNode extends BaseQuery{
         this.id = id;
     }
 
-    public Long getList_id() {
-        return list_id;
+    public Long getListId() {
+        return listId;
     }
 
-    public void setList_id(Long list_id) {
-        this.list_id = list_id;
+    public void setListId(Long listId) {
+        this.listId = listId;
     }
 
-    public Long getCampaign_tmpl_id() {
-        return campaign_tmpl_id;
+    public Long getCampaignTmplId() {
+        return campaignTmplId;
     }
 
-    public void setCampaign_tmpl_id(Long campaign_tmpl_id) {
-        this.campaign_tmpl_id = campaign_tmpl_id;
+    public void setCampaignTmplId(Long campaignTmplId) {
+        this.campaignTmplId = campaignTmplId;
     }
 }

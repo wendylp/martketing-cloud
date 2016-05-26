@@ -2,12 +2,12 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class Customer extends BaseQuery{
+public class Customer extends BaseQuery {
     private Integer id;
 
     private String source;
 
-    private String entity_id;
+    private String entityId;
 
     public Integer getId() {
         return id;
@@ -25,11 +25,11 @@ public class Customer extends BaseQuery{
         this.source = source == null ? null : source.trim();
     }
 
-    public String getEntity_id() {
-        return entity_id;
+    public String getEntityId() {
+        return entityId;
     }
 
-    public void setEntity_id(String entity_id) {
-        this.entity_id = entity_id == null ? null : entity_id.trim();
+    public void setEntityId(String entityId) {
+        this.entityId = entityId == null ? null : entityId.trim();
     }
 }

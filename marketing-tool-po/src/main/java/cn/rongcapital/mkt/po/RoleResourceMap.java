@@ -4,16 +4,16 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class RoleResourceMap extends BaseQuery{
+public class RoleResourceMap extends BaseQuery {
     private Long id;
 
-    private Long role_id;
+    private Long roleId;
 
-    private Long resource_id;
+    private Long resourceId;
 
-    private Date create_time;
+    private Date createTime;
 
-    private Date update_time;
+    private Date updateTime;
 
     public Long getId() {
         return id;
@@ -23,35 +23,35 @@ public class RoleResourceMap extends BaseQuery{
         this.id = id;
     }
 
-    public Long getRole_id() {
-        return role_id;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRole_id(Long role_id) {
-        this.role_id = role_id;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
-    public Long getResource_id() {
-        return resource_id;
+    public Long getResourceId() {
+        return resourceId;
     }
 
-    public void setResource_id(Long resource_id) {
-        this.resource_id = resource_id;
+    public void setResourceId(Long resourceId) {
+        this.resourceId = resourceId;
     }
 
-    public Date getCreate_time() {
-        return create_time;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Date getUpdate_time() {
-        return update_time;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdate_time(Date update_time) {
-        this.update_time = update_time;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

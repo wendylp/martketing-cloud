@@ -2,14 +2,14 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class DecisionNode extends BaseQuery{
+public class DecisionNode extends BaseQuery {
     private Integer id;
 
     private String type;
 
-    private String rule_key;
+    private String ruleKey;
 
-    private String campaign_tmpl_id;
+    private String campaignTmplId;
 
     public Integer getId() {
         return id;
@@ -27,19 +27,19 @@ public class DecisionNode extends BaseQuery{
         this.type = type == null ? null : type.trim();
     }
 
-    public String getRule_key() {
-        return rule_key;
+    public String getRuleKey() {
+        return ruleKey;
     }
 
-    public void setRule_key(String rule_key) {
-        this.rule_key = rule_key == null ? null : rule_key.trim();
+    public void setRuleKey(String ruleKey) {
+        this.ruleKey = ruleKey == null ? null : ruleKey.trim();
     }
 
-    public String getCampaign_tmpl_id() {
-        return campaign_tmpl_id;
+    public String getCampaignTmplId() {
+        return campaignTmplId;
     }
 
-    public void setCampaign_tmpl_id(String campaign_tmpl_id) {
-        this.campaign_tmpl_id = campaign_tmpl_id == null ? null : campaign_tmpl_id.trim();
+    public void setCampaignTmplId(String campaignTmplId) {
+        this.campaignTmplId = campaignTmplId == null ? null : campaignTmplId.trim();
     }
 }

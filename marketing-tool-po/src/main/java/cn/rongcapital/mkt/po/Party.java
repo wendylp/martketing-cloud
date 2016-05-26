@@ -2,7 +2,7 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class Party extends BaseQuery{
+public class Party extends BaseQuery {
     private Integer id;
 
     private String name;

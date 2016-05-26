@@ -1,14 +1,20 @@
-/*
- * Copyright (c) 2016 www.rongcapital.cn All rights reserved.
- */
+/*************************************************
+ * @功能简述: DAO接口类
+ * @项目名称: marketing cloud
+ * @see: 
+ * @author: 宋世涛
+ * @version: 0.0.1
+ * @date: 2016/5/16
+ * @复审人: 
+*************************************************/
+
 package cn.rongcapital.mkt.dao;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.Party;
-/**
- * dao接口类
- * @author songshitao
- */
+
 public interface PartyDao extends BaseDao<Party>{
+	
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -18,6 +24,8 @@ public interface PartyDao extends BaseDao<Party>{
 	 * @return list
 	 */
 	//List<T> selectListBycustomMap(Map<String,Object> paramMap);
+	
+	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
 	 * 查询对象总数

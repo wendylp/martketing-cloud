@@ -2,7 +2,7 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class Segment extends BaseQuery{
+public class Segment extends BaseQuery {
     private Long id;
 
     public Long getId() {

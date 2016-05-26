@@ -2,16 +2,16 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class TagDistribution extends BaseQuery{
+public class TagDistribution extends BaseQuery {
     private Long id;
 
-    private Long tag_id;
+    private Long tagId;
 
-    private String coverage_percent;
+    private String coveragePercent;
 
-    private String inuse_tag_percent;
+    private String inuseTagPercent;
 
-    private String audience_count;
+    private String audienceCount;
 
     public Long getId() {
         return id;
@@ -21,35 +21,35 @@ public class TagDistribution extends BaseQuery{
         this.id = id;
     }
 
-    public Long getTag_id() {
-        return tag_id;
+    public Long getTagId() {
+        return tagId;
     }
 
-    public void setTag_id(Long tag_id) {
-        this.tag_id = tag_id;
+    public void setTagId(Long tagId) {
+        this.tagId = tagId;
     }
 
-    public String getCoverage_percent() {
-        return coverage_percent;
+    public String getCoveragePercent() {
+        return coveragePercent;
     }
 
-    public void setCoverage_percent(String coverage_percent) {
-        this.coverage_percent = coverage_percent == null ? null : coverage_percent.trim();
+    public void setCoveragePercent(String coveragePercent) {
+        this.coveragePercent = coveragePercent == null ? null : coveragePercent.trim();
     }
 
-    public String getInuse_tag_percent() {
-        return inuse_tag_percent;
+    public String getInuseTagPercent() {
+        return inuseTagPercent;
     }
 
-    public void setInuse_tag_percent(String inuse_tag_percent) {
-        this.inuse_tag_percent = inuse_tag_percent == null ? null : inuse_tag_percent.trim();
+    public void setInuseTagPercent(String inuseTagPercent) {
+        this.inuseTagPercent = inuseTagPercent == null ? null : inuseTagPercent.trim();
     }
 
-    public String getAudience_count() {
-        return audience_count;
+    public String getAudienceCount() {
+        return audienceCount;
     }
 
-    public void setAudience_count(String audience_count) {
-        this.audience_count = audience_count == null ? null : audience_count.trim();
+    public void setAudienceCount(String audienceCount) {
+        this.audienceCount = audienceCount == null ? null : audienceCount.trim();
     }
 }

@@ -2,14 +2,14 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class WechatPublic extends BaseQuery{
+public class WechatPublic extends BaseQuery {
     private Integer id;
 
-    private String account_id;
+    private String accountId;
 
-    private String fans_count;
+    private String fansCount;
 
-    private String is_authorized;
+    private String isAuthorized;
 
     public Integer getId() {
         return id;
@@ -19,27 +19,27 @@ public class WechatPublic extends BaseQuery{
         this.id = id;
     }
 
-    public String getAccount_id() {
-        return account_id;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setAccount_id(String account_id) {
-        this.account_id = account_id == null ? null : account_id.trim();
+    public void setAccountId(String accountId) {
+        this.accountId = accountId == null ? null : accountId.trim();
     }
 
-    public String getFans_count() {
-        return fans_count;
+    public String getFansCount() {
+        return fansCount;
     }
 
-    public void setFans_count(String fans_count) {
-        this.fans_count = fans_count == null ? null : fans_count.trim();
+    public void setFansCount(String fansCount) {
+        this.fansCount = fansCount == null ? null : fansCount.trim();
     }
 
-    public String getIs_authorized() {
-        return is_authorized;
+    public String getIsAuthorized() {
+        return isAuthorized;
     }
 
-    public void setIs_authorized(String is_authorized) {
-        this.is_authorized = is_authorized == null ? null : is_authorized.trim();
+    public void setIsAuthorized(String isAuthorized) {
+        this.isAuthorized = isAuthorized == null ? null : isAuthorized.trim();
     }
 }

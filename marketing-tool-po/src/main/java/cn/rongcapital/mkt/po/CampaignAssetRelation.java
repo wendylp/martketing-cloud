@@ -2,12 +2,12 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class CampaignAssetRelation extends BaseQuery{
+public class CampaignAssetRelation extends BaseQuery {
     private Long id;
 
-    private Long campaign_id;
+    private Long campaignId;
 
-    private Long asset_id;
+    private Long assetId;
 
     public Long getId() {
         return id;
@@ -17,19 +17,19 @@ public class CampaignAssetRelation extends BaseQuery{
         this.id = id;
     }
 
-    public Long getCampaign_id() {
-        return campaign_id;
+    public Long getCampaignId() {
+        return campaignId;
     }
 
-    public void setCampaign_id(Long campaign_id) {
-        this.campaign_id = campaign_id;
+    public void setCampaignId(Long campaignId) {
+        this.campaignId = campaignId;
     }
 
-    public Long getAsset_id() {
-        return asset_id;
+    public Long getAssetId() {
+        return assetId;
     }
 
-    public void setAsset_id(Long asset_id) {
-        this.asset_id = asset_id;
+    public void setAssetId(Long assetId) {
+        this.assetId = assetId;
     }
 }

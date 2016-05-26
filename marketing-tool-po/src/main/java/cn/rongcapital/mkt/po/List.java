@@ -2,10 +2,10 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class List extends BaseQuery{
+public class List extends BaseQuery {
     private Long id;
 
-    private String list_id;
+    private String listId;
 
     public Long getId() {
         return id;
@@ -15,11 +15,11 @@ public class List extends BaseQuery{
         this.id = id;
     }
 
-    public String getList_id() {
-        return list_id;
+    public String getListId() {
+        return listId;
     }
 
-    public void setList_id(String list_id) {
-        this.list_id = list_id == null ? null : list_id.trim();
+    public void setListId(String listId) {
+        this.listId = listId == null ? null : listId.trim();
     }
 }

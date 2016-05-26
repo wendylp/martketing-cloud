@@ -1,18 +1,18 @@
-/*
- * Copyright (c) 2016 www.rongcapital.cn All rights reserved.
- */
+/*************************************************
+ * @功能简述: PO基类(常规公共字段)
+ * @项目名称: marketing cloud
+ * @see: 
+ * @author: 宋世涛
+ * @version: 0.0.1
+ * @date: 2016/5/16
+ * @复审人: 
+*************************************************/
+
 package cn.rongcapital.mkt.po.base;
 
-/**
- * 领域模型基类(常规公共字段)<br/>
- * 一律使用引用类型
- * @author songshitao
- */
 public class BaseQuery {
 	
-	private static final long serialVersionUID = 1L;
-	
-	private transient Integer startIndex;// 开始索引
+    private transient Integer startIndex;// 开始索引
 	
 	private transient Integer pageSize;//pageSize
 	

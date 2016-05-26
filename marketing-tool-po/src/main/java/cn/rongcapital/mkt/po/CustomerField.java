@@ -2,10 +2,10 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class CustomerField extends BaseQuery{
+public class CustomerField extends BaseQuery {
     private Integer id;
 
-    private String field_name;
+    private String fieldName;
 
     public Integer getId() {
         return id;
@@ -15,11 +15,11 @@ public class CustomerField extends BaseQuery{
         this.id = id;
     }
 
-    public String getField_name() {
-        return field_name;
+    public String getFieldName() {
+        return fieldName;
     }
 
-    public void setField_name(String field_name) {
-        this.field_name = field_name == null ? null : field_name.trim();
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName == null ? null : fieldName.trim();
     }
 }

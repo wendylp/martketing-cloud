@@ -36,7 +36,7 @@
 		<dependency>
 	        <groupId>com.zaxxer</groupId>
 	        <artifactId>HikariCP</artifactId>
-	        <version>2.4.5</version>
+	        <version>2.4.5</version><!--$NO-MVN-MAN-VER$-->
     	</dependency>
 		<dependency>
 		   <groupId>heracles-data</groupId>
@@ -48,11 +48,6 @@
 		         <artifactId>log4j</artifactId>
 		      </exclusion>
 		   </exclusions>
-		</dependency>
-	    <dependency>
-			<groupId>c3p0</groupId>
-			<artifactId>c3p0</artifactId>
-			<version>0.9.1.2</version>
 		</dependency>
 		<!-- 引入sharding-jdbc核心模块 -->
 		<dependency>

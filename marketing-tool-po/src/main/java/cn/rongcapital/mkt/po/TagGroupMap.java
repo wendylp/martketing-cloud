@@ -2,12 +2,12 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class TagGroupMap extends BaseQuery{
+public class TagGroupMap extends BaseQuery {
     private Long id;
 
-    private Long tag_id;
+    private Long tagId;
 
-    private Long group_id;
+    private Long groupId;
 
     public Long getId() {
         return id;
@@ -17,19 +17,19 @@ public class TagGroupMap extends BaseQuery{
         this.id = id;
     }
 
-    public Long getTag_id() {
-        return tag_id;
+    public Long getTagId() {
+        return tagId;
     }
 
-    public void setTag_id(Long tag_id) {
-        this.tag_id = tag_id;
+    public void setTagId(Long tagId) {
+        this.tagId = tagId;
     }
 
-    public Long getGroup_id() {
-        return group_id;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setGroup_id(Long group_id) {
-        this.group_id = group_id;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 }

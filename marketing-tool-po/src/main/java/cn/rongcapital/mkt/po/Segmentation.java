@@ -1,10 +1,10 @@
 package cn.rongcapital.mkt.po;
 
-import java.util.Date;
-
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class Segmentation extends BaseQuery{
+import java.util.Date;
+
+public class Segmentation extends BaseQuery {
     private Integer id;
 
     private String name;

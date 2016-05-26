@@ -2,7 +2,7 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class Visitor extends BaseQuery{
+public class Visitor extends BaseQuery {
     private Long id;
 
     private String source;

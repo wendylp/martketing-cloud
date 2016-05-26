@@ -2,12 +2,12 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class WechatPersonalAssetHistory extends BaseQuery{
+public class WechatPersonalAssetHistory extends BaseQuery {
     private Integer id;
 
-    private String wechat_id;
+    private String wechatId;
 
-    private String asset_id;
+    private String assetId;
 
     public Integer getId() {
         return id;
@@ -17,19 +17,19 @@ public class WechatPersonalAssetHistory extends BaseQuery{
         this.id = id;
     }
 
-    public String getWechat_id() {
-        return wechat_id;
+    public String getWechatId() {
+        return wechatId;
     }
 
-    public void setWechat_id(String wechat_id) {
-        this.wechat_id = wechat_id == null ? null : wechat_id.trim();
+    public void setWechatId(String wechatId) {
+        this.wechatId = wechatId == null ? null : wechatId.trim();
     }
 
-    public String getAsset_id() {
-        return asset_id;
+    public String getAssetId() {
+        return assetId;
     }
 
-    public void setAsset_id(String asset_id) {
-        this.asset_id = asset_id == null ? null : asset_id.trim();
+    public void setAssetId(String assetId) {
+        this.assetId = assetId == null ? null : assetId.trim();
     }
 }
