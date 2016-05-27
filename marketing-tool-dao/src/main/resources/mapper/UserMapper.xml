@@ -109,18 +109,11 @@
 		WHERE user_id = #{userId} AND passwd = #{passwd} AND status = 0
 	</select>
 
-	<!-- 获取用户的role_id -->
-	<select id="getRoleId" parameterType="cn.rongcapital.mkt.po.User" resultType="java.lang.Long">
-		SELECT role_id
+	<!-- 获取roleId和userName -->
+	<select id="getRoleIdAndUserName" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT user_name,role_id
 		<include refid="QUERY_FROM_TABLE"/>
-        WHERE  user_id = #{userId}
-	</select>
-
-	<!-- 获取用户名称 -->
-	<select id="getUserName" parameterType="cn.rongcapital.mkt.po.User" resultType="java.lang.String">
-		SELECT user_name
-		<include refid="QUERY_FROM_TABLE"/>
-		WHERE  user_id = #{userId}
+		WHERE user_id = #{user_id}
 	</select>
 
 	<!--更改用户密码 -->

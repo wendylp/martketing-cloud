@@ -32,16 +32,22 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Object validateLoginPassword(LoginInput loginInput, SecurityContext securityContext) {
-        //利用LoginInput对象构建User对象
+        BaseOutput baseOutput= null;
         User user = new User();
         user.setUserId(loginInput.getUserId());
         user.setPasswd(loginInput.getPassword());
-        if (validatePasswd(user)) return null;
+        if (validatePasswd(user)){
+            baseOutput = generateBasicBaseOutput(0,"用户名密码错误",0);
+            return Response.ok().entity(baseOutput).build();
+        }
 
-        long roleId = userDao.getRoleId(user);
-        String userName = userDao.getUserName(user);
-        String roleName = roleDao.getRoleName(roleId);
-        List<Long> resourceIds = roleResourceMapDao.selectResourceIds(roleId);
+        Map<String,Object> paramMap = new HashMap<String,Object>();
+        paramMap.put("user_id",user.getUserId());
+        Map<String,Object> map = userDao.getRoleIdAndUserName(paramMap);
+
+        String roleName = roleDao.getRoleName((Long) map.get("role_id"));
+
+        List<Long> resourceIds = roleResourceMapDao.selectResourceIds((Long) map.get("role_id"));
         StringBuilder builder = new StringBuilder("");
         for(long resourceId : resourceIds){
             builder.append(resourceId);
@@ -49,19 +55,24 @@ public class LoginServiceImpl implements LoginService {
         }
         builder.deleteCharAt(builder.length()-1);
 
-        BaseOutput baseOutput = constructBaseOutput(userName, roleName, builder);
+        baseOutput = constructBaseOutput((String) map.get("user_name"), roleName, builder);
         return Response.ok().entity(baseOutput).build();
     }
 
-    private BaseOutput constructBaseOutput(String userName, String roleName, StringBuilder builder) {
+    private BaseOutput generateBasicBaseOutput(int code, String msg, int total) {
         BaseOutput baseOutput = new BaseOutput();
+        baseOutput.setCode(code);
+        baseOutput.setMsg(msg);
+        baseOutput.setTotal(total);
+        return baseOutput;
+    }
+
+    private BaseOutput constructBaseOutput(String userName, String roleName, StringBuilder builder) {
+        BaseOutput baseOutput = generateBasicBaseOutput(0,"success",1);
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("user_name",userName);
         map.put("role_name",roleName);
         map.put("resource_ids",builder.toString());
-        baseOutput.setCode(0);
-        baseOutput.setMsg("success");
-        baseOutput.setTotal(1);
         baseOutput.getData().add(map);
         return baseOutput;
     }
@@ -71,10 +82,8 @@ public class LoginServiceImpl implements LoginService {
         //查询数据库中是否存在这个User对象,没有返回null,有继续第二步和第三步
         Integer validateValue = userDao.validateLoginInput(user);
         if(validateValue == 0){
-            System.out.println("用户名，密码验证不通过");
             return true;
         }
         return false;
     }
-
 }

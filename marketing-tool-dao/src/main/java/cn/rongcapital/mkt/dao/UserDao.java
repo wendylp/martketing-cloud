@@ -13,6 +13,9 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.User;
 
+import java.util.List;
+import java.util.Map;
+
 public interface UserDao extends BaseDao<User>{
 	
 	//自定义扩展
@@ -43,18 +46,12 @@ public interface UserDao extends BaseDao<User>{
 	Integer validateLoginInput(User user);
 
 	/**
-	 * 获取RoleId
+	 * 获取roleId和userName
 	 * @param User
 	 * @return Integer
 	 */
-	Long getRoleId(User user);
+	Map<String,Object>  getRoleIdAndUserName(Map<String,Object> paramMap);
 
-	/**
-	 * 获取UserName
-	 * @param User
-	 * @return String
-	 */
-	String getUserName(User user);
 	/**
 	 * 修改密码
 	 * @param User
