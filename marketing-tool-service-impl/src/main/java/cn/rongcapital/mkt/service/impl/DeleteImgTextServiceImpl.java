@@ -23,7 +23,6 @@ public class DeleteImgTextServiceImpl implements DeleteImgTextAssetService {
 
     @Override
     public Object deleteImgTextService(int imgtextId) {
-        System.out.println("imgtextId-->" + imgtextId);
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("id",imgtextId);
         int rowEffected = imgTextAssetDao.logicDeleteAssetById(paramMap);

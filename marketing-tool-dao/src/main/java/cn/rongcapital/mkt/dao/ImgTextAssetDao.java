@@ -57,4 +57,17 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * @return list
 	 */
 	int logicDeleteAssetById(Map<String, Object> paramMap);
+
+	/**
+	 * 查询所有图文资产
+	 * @param paramMap
+	 * @return list
+	 */
+	List<Map<String,Object>> selectList(Map<String, Object> paramMap);
+	/**
+	 * 根据type查询所有资产
+	 * @param paramMap
+	 * @return list
+	 */
+	List<Map<String,Object>> selectListByType(Map<String, Object> paramMap);
 }

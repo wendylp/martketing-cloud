@@ -23,7 +23,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.service.*;
 import cn.rongcapital.mkt.vo.*;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -181,7 +180,6 @@ public class MktApi {
 	@Path("/mkt.asset.imgtext.delete")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object deleteImgTextAsset(@Valid ImgAsset imgAsset,@Context SecurityContext securityContext){
-        System.out.println("imgAssetId-->" + imgAsset.getImgtextId());
 		return deleteImgTextAssetService.deleteImgTextService(imgAsset.getImgtextId());
 	}
 }

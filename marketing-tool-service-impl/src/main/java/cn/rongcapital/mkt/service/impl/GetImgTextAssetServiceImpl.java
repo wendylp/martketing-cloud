@@ -22,24 +22,40 @@ public class GetImgTextAssetServiceImpl implements GetImgTextAssetService {
     @Autowired
     ImgTextAssetDao imgTextAssetDao;
 
-
     @Override
     public Object getImgTextAssetService(ImgAsset imgAsset) {
+
+        Map<String, Object> paramMap = getParamMap(imgAsset);
+        List<Map<String, Object>> imgTextAssets = getImgTextAssets(imgAsset, paramMap);
+        BaseOutput baseOutput = constructBaseOutput(imgTextAssets);
+        return Response.ok().entity(baseOutput).build();
+    }
+
+    private Map<String, Object> getParamMap(ImgAsset imgAsset) {
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("owner_name",imgAsset.getOwnerName());
         paramMap.put("type",imgAsset.getAssetType());
         paramMap.put("index",(imgAsset.getIndex()-1)*imgAsset.getSize());
         paramMap.put("size",imgAsset.getSize());
+        return paramMap;
+    }
 
+    private List<Map<String, Object>> getImgTextAssets(ImgAsset imgAsset, Map<String, Object> paramMap) {
         List<Map<String,Object>> imgTextAssets = null;
         if(imgAsset.getAssetType() == 2){
-            imgTextAssets = imgTextAssetDao.selectListByName(paramMap);
+            if(imgAsset.getOwnerName() == null){
+                imgTextAssets = imgTextAssetDao.selectList(paramMap);
+            }else{
+                imgTextAssets = imgTextAssetDao.selectListByName(paramMap);
+            }
         }else{
-            imgTextAssets = imgTextAssetDao.selectListByNameAndType(paramMap);
+            if(imgAsset.getOwnerName() == null){
+                imgTextAssets = imgTextAssetDao.selectListByType(paramMap);
+            }else{
+                imgTextAssets = imgTextAssetDao.selectListByNameAndType(paramMap);
+            }
         }
-        BaseOutput baseOutput = constructBaseOutput(imgTextAssets);
-
-        return Response.ok().entity(baseOutput).build();
+        return imgTextAssets;
     }
 
 
