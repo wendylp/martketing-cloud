@@ -13,12 +13,12 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="type != null and type != ''"><![CDATA[type = #{type} AND ]]></if>
-		    	<if test="ruleKey != null and ruleKey != ''"><![CDATA[rule_key = #{ruleKey} AND ]]></if>
-		    	<if test="campaignTplId != null and campaignTplId != ''"><![CDATA[campaign_tpl_id = #{campaignTplId} AND ]]></if>
-		    	<if test="nodeStatus != null and nodeStatus != ''"><![CDATA[node_status = #{nodeStatus} AND ]]></if>
-		    	<if test="posX != null and posX != ''"><![CDATA[pos_x = #{posX} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
+		    	<if test="ruleKey != null and ruleKey != ''"><![CDATA[ AND rule_key = #{ruleKey}]]></if>
+		    	<if test="campaignTplId != null and campaignTplId != ''"><![CDATA[ AND campaign_tpl_id = #{campaignTplId}]]></if>
+		    	<if test="nodeStatus != null and nodeStatus != ''"><![CDATA[ AND node_status = #{nodeStatus}]]></if>
+		    	<if test="posX != null and posX != ''"><![CDATA[ AND pos_x = #{posX}]]></if>
 		    	<if test="posY != null and posY != ''"><![CDATA[pos_y = #{posY}]]></if>
 		</where>
 	</sql>

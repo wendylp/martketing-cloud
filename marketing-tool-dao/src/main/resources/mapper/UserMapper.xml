@@ -13,14 +13,14 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="userName != null and userName != ''"><![CDATA[user_name = #{userName} AND ]]></if>
-		    	<if test="userId != null and userId != ''"><![CDATA[user_id = #{userId} AND ]]></if>
-		    	<if test="roleId != null and roleId != ''"><![CDATA[role_id = #{roleId} AND ]]></if>
-		    	<if test="icon != null and icon != ''"><![CDATA[icon = #{icon} AND ]]></if>
-		    	<if test="passwd != null and passwd != ''"><![CDATA[passwd = #{passwd} AND ]]></if>
-		    	<if test="status != null and status != ''"><![CDATA[status = #{status} AND ]]></if>
-		    	<if test="createdTime != null and createdTime != ''"><![CDATA[created_time = #{createdTime} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="userName != null and userName != ''"><![CDATA[ AND user_name = #{userName}]]></if>
+		    	<if test="userId != null and userId != ''"><![CDATA[ AND user_id = #{userId}]]></if>
+		    	<if test="roleId != null and roleId != ''"><![CDATA[ AND role_id = #{roleId}]]></if>
+		    	<if test="icon != null and icon != ''"><![CDATA[ AND icon = #{icon}]]></if>
+		    	<if test="passwd != null and passwd != ''"><![CDATA[ AND passwd = #{passwd}]]></if>
+		    	<if test="status != null and status != ''"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createdTime != null and createdTime != ''"><![CDATA[ AND created_time = #{createdTime}]]></if>
 		    	<if test="updateTime != null and updateTime != ''"><![CDATA[update_time = #{updateTime}]]></if>
 		</where>
 	</sql>

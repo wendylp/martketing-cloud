@@ -13,7 +13,7 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="listId != null and listId != ''"><![CDATA[list_id = #{listId}]]></if>
 		</where>
 	</sql>

@@ -13,9 +13,9 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="visitorId != null and visitorId != ''"><![CDATA[visitor_id = #{visitorId} AND ]]></if>
-		    	<if test="fieldId != null and fieldId != ''"><![CDATA[field_id = #{fieldId} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="visitorId != null and visitorId != ''"><![CDATA[ AND visitor_id = #{visitorId}]]></if>
+		    	<if test="fieldId != null and fieldId != ''"><![CDATA[ AND field_id = #{fieldId}]]></if>
 		    	<if test="fieldValue != null and fieldValue != ''"><![CDATA[field_value = #{fieldValue}]]></if>
 		</where>
 	</sql>

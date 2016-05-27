@@ -13,11 +13,11 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="roleName != null and roleName != ''"><![CDATA[role_name = #{roleName} AND ]]></if>
-		    	<if test="branchId != null and branchId != ''"><![CDATA[branch_id = #{branchId} AND ]]></if>
-		    	<if test="status != null and status != ''"><![CDATA[status = #{status} AND ]]></if>
-		    	<if test="cratedTime != null and cratedTime != ''"><![CDATA[crated_time = #{cratedTime} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="roleName != null and roleName != ''"><![CDATA[ AND role_name = #{roleName}]]></if>
+		    	<if test="branchId != null and branchId != ''"><![CDATA[ AND branch_id = #{branchId}]]></if>
+		    	<if test="status != null and status != ''"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="cratedTime != null and cratedTime != ''"><![CDATA[ AND crated_time = #{cratedTime}]]></if>
 		    	<if test="updateTime != null and updateTime != ''"><![CDATA[update_time = #{updateTime}]]></if>
 		</where>
 	</sql>

@@ -13,14 +13,14 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="campaignId != null and campaignId != ''"><![CDATA[campaign_id = #{campaignId} AND ]]></if>
-		    	<if test="nodeId != null and nodeId != ''"><![CDATA[node_id = #{nodeId} AND ]]></if>
-		    	<if test="preNodeId != null and preNodeId != ''"><![CDATA[pre_node_id = #{preNodeId} AND ]]></if>
-		    	<if test="nextNodeId != null and nextNodeId != ''"><![CDATA[next_node_id = #{nextNodeId} AND ]]></if>
-		    	<if test="nodeTableName != null and nodeTableName != ''"><![CDATA[node_table_name = #{nodeTableName} AND ]]></if>
-		    	<if test="preNodeLineType != null and preNodeLineType != ''"><![CDATA[pre_node_line_type = #{preNodeLineType} AND ]]></if>
-		    	<if test="nextNodeLineType != null and nextNodeLineType != ''"><![CDATA[next_node_line_type = #{nextNodeLineType} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="campaignId != null and campaignId != ''"><![CDATA[ AND campaign_id = #{campaignId}]]></if>
+		    	<if test="nodeId != null and nodeId != ''"><![CDATA[ AND node_id = #{nodeId}]]></if>
+		    	<if test="preNodeId != null and preNodeId != ''"><![CDATA[ AND pre_node_id = #{preNodeId}]]></if>
+		    	<if test="nextNodeId != null and nextNodeId != ''"><![CDATA[ AND next_node_id = #{nextNodeId}]]></if>
+		    	<if test="nodeTableName != null and nodeTableName != ''"><![CDATA[ AND node_table_name = #{nodeTableName}]]></if>
+		    	<if test="preNodeLineType != null and preNodeLineType != ''"><![CDATA[ AND pre_node_line_type = #{preNodeLineType}]]></if>
+		    	<if test="nextNodeLineType != null and nextNodeLineType != ''"><![CDATA[ AND next_node_line_type = #{nextNodeLineType}]]></if>
 		    	<if test="nodeType != null and nodeType != ''"><![CDATA[node_type = #{nodeType}]]></if>
 		</where>
 	</sql>

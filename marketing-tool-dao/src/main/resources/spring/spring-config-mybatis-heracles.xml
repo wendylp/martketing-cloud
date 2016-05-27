@@ -56,7 +56,7 @@
         <property name="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource"/>
         <property name="dataSourceProperties">
             <props>
-                <prop key="url">jdbc:mysql://127.0.0.1:3306/mkt-slave?characterEncoding=UTF-8</prop>
+                <prop key="url">jdbc:mysql://127.0.0.1:3306/mkt?characterEncoding=UTF-8</prop>
                 <prop key="user">${spring.datasource.username}</prop>
                 <prop key="password">${spring.datasource.password}</prop>
                 <prop key="cachePrepStmts">true</prop>

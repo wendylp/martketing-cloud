@@ -13,11 +13,11 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="campaignInstanceId != null and campaignInstanceId != ''"><![CDATA[campaign_instance_id = #{campaignInstanceId} AND ]]></if>
-		    	<if test="nodeId != null and nodeId != ''"><![CDATA[node_id = #{nodeId} AND ]]></if>
-		    	<if test="audienceCount != null and audienceCount != ''"><![CDATA[audience_count = #{audienceCount} AND ]]></if>
-		    	<if test="segmentId != null and segmentId != ''"><![CDATA[segment_id = #{segmentId} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="campaignInstanceId != null and campaignInstanceId != ''"><![CDATA[ AND campaign_instance_id = #{campaignInstanceId}]]></if>
+		    	<if test="nodeId != null and nodeId != ''"><![CDATA[ AND node_id = #{nodeId}]]></if>
+		    	<if test="audienceCount != null and audienceCount != ''"><![CDATA[ AND audience_count = #{audienceCount}]]></if>
+		    	<if test="segmentId != null and segmentId != ''"><![CDATA[ AND segment_id = #{segmentId}]]></if>
 		    	<if test="snapshaotId != null and snapshaotId != ''"><![CDATA[snapshaot_id = #{snapshaotId}]]></if>
 		</where>
 	</sql>

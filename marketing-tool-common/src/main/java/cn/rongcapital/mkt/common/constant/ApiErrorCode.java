@@ -12,7 +12,13 @@ package cn.rongcapital.mkt.common.constant;
 
 public enum ApiErrorCode {
 	
-	PARAMETER_ERROR(101,"parameter error");//error code and msg
+	SUCCESS(0,"success"),
+	
+	PARAMETER_ERROR(1001,"parameter error"),//1001-1999,参数相关错误码
+	
+	DB_ERROR(2001,"DB error"),//2001-2999,数据库相关的错误码
+	
+	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
     private int code;
      

@@ -13,10 +13,10 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[id = #{id} AND ]]></if>
-		    	<if test="emailCount != null and emailCount != ''"><![CDATA[email_count = #{emailCount} AND ]]></if>
-		    	<if test="monileCount != null and monileCount != ''"><![CDATA[monile_count = #{monileCount} AND ]]></if>
-		    	<if test="needMergeCount != null and needMergeCount != ''"><![CDATA[need_merge_count = #{needMergeCount} AND ]]></if>
+		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="emailCount != null and emailCount != ''"><![CDATA[ AND email_count = #{emailCount}]]></if>
+		    	<if test="monileCount != null and monileCount != ''"><![CDATA[ AND monile_count = #{monileCount}]]></if>
+		    	<if test="needMergeCount != null and needMergeCount != ''"><![CDATA[ AND need_merge_count = #{needMergeCount}]]></if>
 		    	<if test="inspectTime != null and inspectTime != ''"><![CDATA[inspect_time = #{inspectTime}]]></if>
 		</where>
 	</sql>
