@@ -49,6 +49,7 @@ public class MktApi {
 	private LoginService loginService;
 	@Autowired
 	private ModifyPasswdService modifyPasswdService;
+	@Autowired
 	private SegmentHeaderCreateService segmentHeaderService;
 	@Autowired
 	private SegmentPublishStatusCountService segmentPublishStatusCountService;
