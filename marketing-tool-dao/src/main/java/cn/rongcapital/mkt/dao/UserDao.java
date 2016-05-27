@@ -34,4 +34,31 @@ public interface UserDao extends BaseDao<User>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 账号密码有效性验证
+	 * @param User
+	 * @return Integer
+	 */
+	Integer validateLoginInput(User user);
+
+	/**
+	 * 获取RoleId
+	 * @param User
+	 * @return Integer
+	 */
+	Long getRoleId(User user);
+
+	/**
+	 * 获取UserName
+	 * @param User
+	 * @return String
+	 */
+	String getUserName(User user);
+	/**
+	 * 修改密码
+	 * @param User
+	 * @return String
+	 */
+	void updatePasswd(User user);
 }

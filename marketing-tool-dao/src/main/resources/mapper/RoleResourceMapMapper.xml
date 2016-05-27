@@ -91,6 +91,10 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<select id="selectResourceIds" parameterType="java.lang.Long" resultType="java.lang.Long">
+		SELECT resource_id
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE role_id = #{role_id}
+	</select>
 	
 </mapper>

@@ -13,6 +13,9 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.RoleResourceMap;
 
+import java.util.List;
+import java.util.Map;
+
 public interface RoleResourceMapDao extends BaseDao<RoleResourceMap>{
 	
 	//自定义扩展
@@ -33,5 +36,7 @@ public interface RoleResourceMapDao extends BaseDao<RoleResourceMap>{
 	 * @param paramMap
 	 * @return list
 	 */
-	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+//	List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	List<Long> selectResourceIds(long role_id);
 }

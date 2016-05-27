@@ -101,8 +101,32 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
-	
-	<!-- 其它SQL语句 -->
-	
-	
+
+	<!-- 验证用户名密码是否合法 -->
+	<select id="validateLoginInput" parameterType="cn.rongcapital.mkt.po.User" resultType="int">
+		SELECT count(id)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE user_id = #{userId} AND passwd = #{passwd} AND status = 0
+	</select>
+
+	<!-- 获取用户的role_id -->
+	<select id="getRoleId" parameterType="cn.rongcapital.mkt.po.User" resultType="java.lang.Long">
+		SELECT role_id
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE  user_id = #{userId}
+	</select>
+
+	<!-- 获取用户名称 -->
+	<select id="getUserName" parameterType="cn.rongcapital.mkt.po.User" resultType="java.lang.String">
+		SELECT user_name
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE  user_id = #{userId}
+	</select>
+
+	<!--更改用户密码 -->
+	<update id="updatePasswd" parameterType="cn.rongcapital.mkt.po.User">
+		UPDATE user
+		SET passwd = #{passwd}
+		WHERE user_id = #{userId}
+	</update>
 </mapper>

@@ -14,7 +14,8 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.Role;
 
 public interface RoleDao extends BaseDao<Role>{
-	
+
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -34,4 +35,11 @@ public interface RoleDao extends BaseDao<Role>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 根据roleId查询roleName
+	 * @param Integer
+	 * @return String
+	 */
+	String getRoleName(Long roleId);
 }
