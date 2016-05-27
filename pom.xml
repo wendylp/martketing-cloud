@@ -106,8 +106,7 @@
 		</dependency>
 		
     </dependencies>
-	    
-    
+
     <profiles>
         <profile>
             <id>dev</id>
@@ -130,7 +129,7 @@
     	<repository>
 	        <id>nexus</id>
 	        <name>nexus</name>
-	        <url>http://jira.dataengine.com/nexus/content/groups/public/</url>
+	        <url>https://nexus.rc.dataengine.com/nexus/content/groups/public/</url>
 	        <releases>
 	            <enabled>true</enabled>
 	        </releases>
