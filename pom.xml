@@ -115,21 +115,30 @@
             </activation>
             <properties>
                 <mvnvar.conf.path>conf_dev</mvnvar.conf.path>
+                <maven.repository.rongcapital.url>https://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <mvnvar.conf.path>conf_test</mvnvar.conf.path>
+                <maven.repository.rongcapital.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.rongcapital.url>
             </properties>
         </profile>
         <profile>
             <id>production</id>
             <properties>
                 <mvnvar.conf.path>conf</mvnvar.conf.path>
+                <maven.repository.remote.url></maven.repository.remote.url>
             </properties>
         </profile>
     </profiles>
     
     <repositories>
     	<repository>
-	        <id>nexus</id>
-	        <name>nexus</name>
-	        <url>https://nexus.rc.dataengine.com/nexus/content/groups/public/</url>
+	        <id>nexus-rongcapital</id>
+	        <name>nexus-rongcapital</name>
+	        <url>${maven.repository.rongcapital.url}</url>
 	        <releases>
 	            <enabled>true</enabled>
 	        </releases>
