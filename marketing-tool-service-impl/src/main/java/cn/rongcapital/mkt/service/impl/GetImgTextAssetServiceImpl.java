@@ -44,7 +44,7 @@ public class GetImgTextAssetServiceImpl implements GetImgTextAssetService {
         List<Map<String,Object>> imgTextAssets = null;
         if(imgAsset.getAssetType() == 2){
             if(imgAsset.getOwnerName() == null){
-                imgTextAssets = imgTextAssetDao.selectList(paramMap);
+                imgTextAssets = imgTextAssetDao.selectListByMap(paramMap);
             }else{
                 imgTextAssets = imgTextAssetDao.selectListByName(paramMap);
             }

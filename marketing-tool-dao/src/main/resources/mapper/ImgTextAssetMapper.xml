@@ -125,7 +125,7 @@
 		limit #{index},#{size}
 	</select>
 
-	<select id="selectList" parameterType="java.util.Map" resultType="java.util.Map">
+	<select id="selectListByMap" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT
 		<include refid="QUERY_ASSET_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
