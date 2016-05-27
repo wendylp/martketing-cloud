@@ -23,8 +23,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.service.LoginService;
-import cn.rongcapital.mkt.service.ModifyPasswdService;
+import cn.rongcapital.mkt.po.ImgTextAsset;
+import cn.rongcapital.mkt.service.*;
 import cn.rongcapital.mkt.vo.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -33,9 +33,6 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
-import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
-import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.SegmentHeadIn;
 
@@ -54,6 +51,10 @@ public class MktApi {
 	private SegmentPublishStatusCountService segmentPublishStatusCountService;
 	@Autowired
 	private SegmentPublishstatusListService segmentPublishstatusListService;
+	@Autowired
+	private DeleteImgTextAssetService deleteImgTextAssetService;
+	@Autowired
+	private GetImgTextAssetService getImgTextAssetService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -80,12 +81,29 @@ public class MktApi {
 	@Path("/mkt.asset.imgtext.get")
 	public Object getImgTextAsset(@NotEmpty @QueryParam("method") String method,
 								  @NotEmpty @QueryParam("user_token") String userToken,
-								  @QueryParam("asset_type") int assetType,
-								  @QueryParam("asset_name") String assetName,
+								  @NotEmpty @QueryParam("ver") String ver,
+								  @NotNull @QueryParam("type") Integer type,
+								  @QueryParam("owner_name") String ownerName,
 								  @QueryParam("index") int index,
 								  @QueryParam("size") int size){
-		return null;
-
+		ImgAsset imgAsset = new ImgAsset();
+		imgAsset.setMethod(method);
+		imgAsset.setAssetType(type);
+		imgAsset.setVer(ver);
+		if(ownerName != null) {
+			imgAsset.setOwnerName(ownerName);
+		}
+		if(index != 0){
+			imgAsset.setIndex(index);
+		}else{
+			imgAsset.setIndex(1);
+		}
+		if(size != 0){
+			imgAsset.setSize(size);
+		}else{
+			imgAsset.setSize(10);
+		}
+		return getImgTextAssetService.getImgTextAssetService(imgAsset);
 	}
 
 	/**
@@ -150,6 +168,19 @@ public class MktApi {
 	@Path("/mkt.user.modifypasswd")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object modifyPasswd(@Valid ModifyInput input, @Context SecurityContext securityContext){
-		return modifyPasswdService.modifyPasswd(input,securityContext);
+		return modifyPasswdService.modifyPasswd(input, securityContext);
+	}
+
+	/**
+	 * @功能描述:删除图文资产 mkt.asset.imgtext.delete
+	 * @Param: LoginIn loginIn, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.asset.imgtext.delete")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object deleteImgTextAsset(@Valid ImgAsset imgAsset,@Context SecurityContext securityContext){
+        System.out.println("imgAssetId-->" + imgAsset.getImgtextId());
+		return deleteImgTextAssetService.deleteImgTextService(imgAsset.getImgtextId());
 	}
 }

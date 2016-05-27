@@ -9,6 +9,6 @@ import javax.ws.rs.core.SecurityContext;
  */
 public interface LoginService {
 
-    public Object validateLoginPassword(LoginInput loginInput, SecurityContext securityContext);
+    Object validateLoginPassword(LoginInput loginInput, SecurityContext securityContext);
 
 }

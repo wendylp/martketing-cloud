@@ -22,6 +22,9 @@ public class BaseInput {
     
     @NotEmpty
     private String ver;
+
+	private int index;
+	private int size;
 	  
 	@JsonProperty("method")
 	public String getMethod() {
@@ -37,6 +40,22 @@ public class BaseInput {
 	public void setVer(String ver) {
 		this.ver = ver;
 	}
-	
 
+	@JsonProperty("index")
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	@JsonProperty("size")
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
 }
