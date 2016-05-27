@@ -29,6 +29,16 @@
     </parent>
     <!-- dependencies -->
     <dependencies>
+
+		<!-- 添加单元测试所依赖的框架 -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+
         <!--web,tomcat,spring-mvc support -->
         <dependency>
         	<groupId>org.springframework.boot</groupId>
