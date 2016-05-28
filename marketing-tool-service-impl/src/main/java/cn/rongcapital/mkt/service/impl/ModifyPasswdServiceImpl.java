@@ -40,7 +40,6 @@ public class ModifyPasswdServiceImpl implements ModifyPasswdService{
         User user = new User();
         user.setUserId(input.getUser_id());
         user.setPasswd(input.getOldPasswd());
-        System.out.println("user_id-->" + input.getUser_id() + "old_passwd-->" + input.getOldPasswd());
         return user;
     }
 
