@@ -56,9 +56,9 @@
         <property name="dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource"/>
         <property name="dataSourceProperties">
             <props>
-                <prop key="url">${spring.datasource.url}</prop>
-                <prop key="user">${spring.datasource.username}</prop>
-                <prop key="password">${spring.datasource.password}</prop>
+                <prop key="url">${spring.datasource.url.slave}</prop>
+                <prop key="user">${spring.datasource.username.slave}</prop>
+                <prop key="password">${spring.datasource.password.slave}</prop>
                 <prop key="cachePrepStmts">true</prop>
                 <prop key="prepStmtCacheSize">250</prop>
                 <prop key="prepStmtCacheSqlLimit">2048</prop>
