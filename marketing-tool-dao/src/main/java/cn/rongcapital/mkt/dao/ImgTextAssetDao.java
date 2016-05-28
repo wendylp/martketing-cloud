@@ -63,7 +63,7 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * @param paramMap
 	 * @return list
 	 */
-	List<Map<String,Object>> selectList(Map<String, Object> paramMap);
+	List<Map<String,Object>> selectListAll(Map<String, Object> paramMap);
 	/**
 	 * 根据type查询所有资产
 	 * @param paramMap

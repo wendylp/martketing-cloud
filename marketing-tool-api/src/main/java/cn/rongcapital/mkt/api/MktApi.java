@@ -70,13 +70,11 @@ public class MktApi {
 		return Response.ok().entity(ur).build();
 	}
 
-	/**	"method": "${同接口名称}",
-			"user_token": "6200819d9366af1383023a19907ZZf9048e4c14fd56333b263685215",
-			"asset_type":2,
-			"asset_name":"MAKA",
-			"index":"1",
-			"size":"4"
-	*/
+	/**
+	 * @功能简述: 获取图文资产
+	 * @Param: String method,String user_token,String ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
 	@GET
 	@Path("/mkt.asset.imgtext.get")
 	public Object getImgTextAsset(@NotEmpty @QueryParam("method") String method,

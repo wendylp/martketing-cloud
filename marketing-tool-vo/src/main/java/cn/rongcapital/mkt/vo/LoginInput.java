@@ -1,6 +1,6 @@
 package cn.rongcapital.mkt.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Created by Yunfeng on 2016-5-25.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class LoginInput {
+public class LoginInput extends BaseInput{
     public String user_id = null;
     public String password = null;
 

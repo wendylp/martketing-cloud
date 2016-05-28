@@ -125,7 +125,7 @@
 		limit #{index},#{size}
 	</select>
 
-	<select id="selectList" parameterType="java.util.Map" resultType="java.util.Map">
+	<select id="selectListAll" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT
 		<include refid="QUERY_ASSET_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -141,7 +141,7 @@
 		limit #{index},#{size}
 	</select>
 
-	<update id="logicDeleteAssetById" parameterType="java.util.Map"  >
+	<update id="logicDeleteAssetById" parameterType="java.util.Map" >
 		UPDATE img_text_asset
 		SET status = 1
 		WHERE id = #{id}

@@ -33,9 +33,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Object validateLoginPassword(LoginInput loginInput, SecurityContext securityContext) {
         BaseOutput baseOutput= null;
-        User user = new User();
-        user.setUserId(loginInput.getUserId());
-        user.setPasswd(loginInput.getPassword());
+        User user = constructUser(loginInput);
         if (validatePasswd(user)){
             baseOutput = generateBasicBaseOutput(0,"用户名密码错误",0);
             return Response.ok().entity(baseOutput).build();
@@ -43,10 +41,16 @@ public class LoginServiceImpl implements LoginService {
 
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("user_id",user.getUserId());
+
         Map<String,Object> map = userDao.getRoleIdAndUserName(paramMap);
-
         String roleName = roleDao.getRoleName((Long) map.get("role_id"));
+        String resourceIds = getResourceIds(map);
 
+        baseOutput = constructBaseOutput((String) map.get("user_name"), roleName, resourceIds);
+        return Response.ok().entity(baseOutput).build();
+    }
+
+    private String getResourceIds(Map<String, Object> map) {
         List<Long> resourceIds = roleResourceMapDao.selectResourceIds((Long) map.get("role_id"));
         StringBuilder builder = new StringBuilder("");
         for(long resourceId : resourceIds){
@@ -54,9 +58,14 @@ public class LoginServiceImpl implements LoginService {
             builder.append(",");
         }
         builder.deleteCharAt(builder.length()-1);
+        return builder.toString();
+    }
 
-        baseOutput = constructBaseOutput((String) map.get("user_name"), roleName, builder);
-        return Response.ok().entity(baseOutput).build();
+    private User constructUser(LoginInput loginInput) {
+        User user = new User();
+        user.setUserId(loginInput.getUserId());
+        user.setPasswd(loginInput.getPassword());
+        return user;
     }
 
     private BaseOutput generateBasicBaseOutput(int code, String msg, int total) {
@@ -67,12 +76,12 @@ public class LoginServiceImpl implements LoginService {
         return baseOutput;
     }
 
-    private BaseOutput constructBaseOutput(String userName, String roleName, StringBuilder builder) {
+    private BaseOutput constructBaseOutput(String userName, String roleName, String resourceIds) {
         BaseOutput baseOutput = generateBasicBaseOutput(0,"success",1);
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("user_name",userName);
         map.put("role_name",roleName);
-        map.put("resource_ids",builder.toString());
+        map.put("resource_ids",resourceIds);
         baseOutput.getData().add(map);
         return baseOutput;
     }
