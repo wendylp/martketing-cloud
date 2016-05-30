@@ -22,6 +22,8 @@ public class BaseOutput {
 	private String msg;
 	
 	private int total;
+
+	private int count;
 	
 	private List<Object> data = new ArrayList<Object>();
 
@@ -69,6 +71,13 @@ public class BaseOutput {
 	public void setData(List<Object> data) {
 		this.data = data;
 	}
-	
-	
+
+	@JsonProperty("count")
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
 }

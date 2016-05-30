@@ -13,6 +13,8 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ImportDataHistory;
 
+import java.util.Map;
+
 public interface ImportDataHistoryDao extends BaseDao<ImportDataHistory>{
 	
 	//自定义扩展
@@ -34,4 +36,10 @@ public interface ImportDataHistoryDao extends BaseDao<ImportDataHistory>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 获取数据接入的总览信息
+	 * @return map
+	 */
+	Map<String,Object> selectMigrationFileGeneralInfo();
 }

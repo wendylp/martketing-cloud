@@ -1,13 +1,13 @@
 package cn.rongcapital.mkt.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
  * Created by Yunfeng on 2016-5-26.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class ModifyInput {
+public class ModifyInput extends BaseInput{
     public String user_id = null;
     public String oldPasswd = null;
     public String newPasswd = null;

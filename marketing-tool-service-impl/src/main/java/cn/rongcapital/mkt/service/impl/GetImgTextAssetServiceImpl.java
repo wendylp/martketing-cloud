@@ -24,7 +24,6 @@ public class GetImgTextAssetServiceImpl implements GetImgTextAssetService {
 
     @Override
     public Object getImgTextAssetService(ImgAsset imgAsset) {
-
         Map<String, Object> paramMap = getParamMap(imgAsset);
         List<Map<String, Object>> imgTextAssets = getImgTextAssets(imgAsset, paramMap);
         BaseOutput baseOutput = constructBaseOutput(imgTextAssets);
@@ -44,7 +43,7 @@ public class GetImgTextAssetServiceImpl implements GetImgTextAssetService {
         List<Map<String,Object>> imgTextAssets = null;
         if(imgAsset.getAssetType() == 2){
             if(imgAsset.getOwnerName() == null){
-                imgTextAssets = imgTextAssetDao.selectListByMap(paramMap);
+                imgTextAssets = imgTextAssetDao.selectListAll(paramMap);
             }else{
                 imgTextAssets = imgTextAssetDao.selectListByName(paramMap);
             }
@@ -67,6 +66,7 @@ public class GetImgTextAssetServiceImpl implements GetImgTextAssetService {
         for(Map<String,Object> map: imgTextAssets){
             map.put("imgtext_id",map.remove("id"));
             map.put("imgtext_name",map.remove("name"));
+            map.put("imgtext_type",map.remove("type"));
             baseOutput.getData().add(map);
         }
         return baseOutput;

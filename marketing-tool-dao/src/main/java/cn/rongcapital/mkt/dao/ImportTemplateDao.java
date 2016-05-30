@@ -13,6 +13,9 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ImportTemplate;
 
+import java.util.List;
+import java.util.Map;
+
 public interface ImportTemplateDao extends BaseDao<ImportTemplate>{
 	
 	//自定义扩展
@@ -34,4 +37,10 @@ public interface ImportTemplateDao extends BaseDao<ImportTemplate>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 获取文件模板下载列表
+	 * @return list
+	 */
+	List<Map<String,Object>> selectTemplateList();
 }

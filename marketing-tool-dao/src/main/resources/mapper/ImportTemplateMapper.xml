@@ -7,6 +7,10 @@
 		<![CDATA[ id,name,description,type,length,rule]]>
 	</sql>
 
+	<sql id="QUERY_TEMPLATE_LIST">
+		<![CDATA[ id,name]]>
+	</sql>
+
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM import_template]]></sql>
 	
@@ -94,6 +98,10 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<select id="selectTemplateList" resultType="java.util.Map">
+		SELECT
+		<include refid="QUERY_TEMPLATE_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+	</select>
 	
 </mapper>
