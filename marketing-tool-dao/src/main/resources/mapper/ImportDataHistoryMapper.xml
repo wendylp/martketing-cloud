@@ -7,6 +7,10 @@
 		<![CDATA[ id,import_start_time,import_end_time,total_rows,legal_rows,success,source,email_count,contact_count,mobile_count,qq_count]]>
 	</sql>
 
+	<sql id="QUERY_GENERALFILE_INFO">
+		<![CDATA[import_end_time,total_rows]]>
+	</sql>
+
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM import_data_history]]></sql>
 	
@@ -109,6 +113,10 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<select id="selectMigrationFileGeneralInfo" resultType="java.util.Map">
+		SELECT
+		<include refid="QUERY_GENERALFILE_INFO" />
+		<include refid="QUERY_FROM_TABLE" />
+	</select>
 	
 </mapper>

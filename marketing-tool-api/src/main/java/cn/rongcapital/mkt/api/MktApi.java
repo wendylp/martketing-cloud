@@ -57,6 +57,14 @@ public class MktApi {
 	private GetImgTextAssetService getImgTextAssetService;
 	@Autowired
 	private ImgtextHostService imgtextHostService;
+	@Autowired
+	private WechatTypeCountGetService wechatTypeCountGetService;
+	@Autowired
+	private MigrationFileGeneralInfoService migrationFileGeneralInfoService;
+	@Autowired
+	private MigrationFileTemplateService migrationFileTemplateService;
+	@Autowired
+	private MigrationFileUploadUrlService migrationFileUploadUrlService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -184,7 +192,7 @@ public class MktApi {
 	}
 
 	/**
-	 * @功能描述:托管图文资产 mkt.asset.imgtext.host
+	 * @功能描述:托管图文资产(这个功能暂时先不做) mkt.asset.imgtext.host
 	 * @Param: String asset_url, SecurityContext securityContext
 	 * @return: Object
 	 */
@@ -193,5 +201,57 @@ public class MktApi {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object imgtextHostAsset(@Valid ImgtextHostIn imgtextHostIn,@Context SecurityContext securityContext){
 		return imgtextHostService.hostImgtextAsset(imgtextHostIn,securityContext);
+	}
+
+	/**
+	 * @功能简述: 获取不同类型微信资产的数量
+	 * @param: String method, String userToken, String ver
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.wechat.type.count.get")
+	public Object getWechatAssetTypeCount(@NotEmpty @QueryParam("method") String method,
+										   @NotEmpty @QueryParam("user_token") String userToken,
+										   @NotEmpty @QueryParam("ver") String ver) throws Exception {
+		return wechatTypeCountGetService.getWechatTypeCount();
+	}
+
+	/**
+	 * @功能简述: 获取文件接入的总览信息
+	 * @param: String method, String userToken, String ver
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.data.migration.file.generalinfo.get")
+	public Object getMigrationFileGeneralInfo(@NotEmpty @QueryParam("method") String method,
+										   @NotEmpty @QueryParam("user_token") String userToken,
+										   @NotEmpty @QueryParam("ver") String ver) throws Exception {
+		return migrationFileGeneralInfoService.getMigrationFileGeneralInfo(null);
+	}
+
+	/**
+	 * @功能简述: 获取文件模板下载列表
+	 * @param: String method, String userToken, String ver
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.data.migration.file.template.list.get")
+	public Object getMigrationFileTemplateList(@NotEmpty @QueryParam("method") String method,
+											  @NotEmpty @QueryParam("user_token") String userToken,
+											  @NotEmpty @QueryParam("ver") String ver) throws Exception {
+		return migrationFileTemplateService.getMigrationFileTemplateList(null);
+	}
+
+	/**
+	 * @功能简述: 获取文件上传url
+	 * @param: String method, String userToken, String ver
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.data.migration.file.uploadurl.get")
+	public Object getMigrationFileUploadUrl(@NotEmpty @QueryParam("method") String method,
+											   @NotEmpty @QueryParam("user_token") String userToken,
+											   @NotEmpty @QueryParam("ver") String ver) throws Exception {
+		return migrationFileUploadUrlService.getMigrationFileUploadUrl(null);
 	}
 }
