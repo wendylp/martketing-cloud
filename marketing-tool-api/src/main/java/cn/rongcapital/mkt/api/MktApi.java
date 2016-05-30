@@ -55,6 +55,8 @@ public class MktApi {
 	private DeleteImgTextAssetService deleteImgTextAssetService;
 	@Autowired
 	private GetImgTextAssetService getImgTextAssetService;
+	@Autowired
+	private ImgtextHostService imgtextHostService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -179,5 +181,17 @@ public class MktApi {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object deleteImgTextAsset(@Valid ImgAsset imgAsset,@Context SecurityContext securityContext){
 		return deleteImgTextAssetService.deleteImgTextService(imgAsset.getImgtextId());
+	}
+
+	/**
+	 * @功能描述:托管图文资产 mkt.asset.imgtext.host
+	 * @Param: String asset_url, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.asset.imgtext.host")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object imgtextHostAsset(@Valid ImgtextHostIn imgtextHostIn,@Context SecurityContext securityContext){
+		return imgtextHostService.hostImgtextAsset(imgtextHostIn,securityContext);
 	}
 }

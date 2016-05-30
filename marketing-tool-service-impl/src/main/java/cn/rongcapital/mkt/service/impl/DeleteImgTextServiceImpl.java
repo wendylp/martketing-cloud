@@ -34,7 +34,8 @@ public class DeleteImgTextServiceImpl implements DeleteImgTextAssetService {
         }else{
             baseOutput.setMsg("不存在当前输入值的图文资源");
         }
-        baseOutput.setTotal(0);
+        baseOutput.setTotal(rowEffected);
+        baseOutput.setCount(rowEffected);
         return Response.ok().entity(baseOutput).build();
     }
 }
