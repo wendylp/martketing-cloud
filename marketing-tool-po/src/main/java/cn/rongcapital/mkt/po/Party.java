@@ -276,4 +276,18 @@ public class Party extends BaseQuery {
     public void setOfflineActivityAttendence(Integer offlineActivityAttendence) {
         this.offlineActivityAttendence = offlineActivityAttendence;
     }
+
+    @Override
+    public String toString() {
+        return "Party [id=" + id + ", accountName=" + accountName + ", name=" + name + ", gender="
+                        + gender + ", age=" + age + ", homeAddress=" + homeAddress
+                        + ", workAddress=" + workAddress + ", homeStatus=" + homeStatus
+                        + ", workStatus=" + workStatus + ", memberLevel=" + memberLevel
+                        + ", mobile=" + mobile + ", email=" + email + ", wechat=" + wechat + ", qq="
+                        + qq + ", weibo=" + weibo + ", orderCount=" + orderCount + ", orderAmount="
+                        + orderAmount + ", cartItemCount=" + cartItemCount + ", favoriteItemCount="
+                        + favoriteItemCount + ", salary=" + salary + ", offlineActivityAttendence="
+                        + offlineActivityAttendence + "]";
+    }
+
 }
