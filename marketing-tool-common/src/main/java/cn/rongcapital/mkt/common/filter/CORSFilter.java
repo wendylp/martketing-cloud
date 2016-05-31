@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.common.filter;
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -17,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +35,7 @@ public class CORSFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain fc)
 			throws IOException, ServletException {
+		
 	    HttpServletResponse response = (HttpServletResponse) res;
 	    response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, CORSDomain);
 	    fc.doFilter(req, res);

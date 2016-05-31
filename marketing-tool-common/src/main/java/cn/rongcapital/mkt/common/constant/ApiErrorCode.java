@@ -15,6 +15,7 @@ public enum ApiErrorCode {
 	SUCCESS(0,"success"),
 	
 	PARAMETER_ERROR(1001,"parameter error"),//1001-1999,参数相关错误码
+	VALIDATE_ERROR(1002,"validation failed"),//校验失败
 	
 	DB_ERROR(2001,"DB error"),//2001-2999,数据库相关的错误码
 	
