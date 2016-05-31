@@ -37,7 +37,7 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
     /**
      * @功能简述: mkt.segment.publishstatus.list.get
      * @param: String method, String userToken, 
-	 *		   Integer publishStatus, Integer index ,
+	 *		   Integer publishStatus, Integer index,
 	 *		   Integer size, String ver
      * @return: Object
      */
