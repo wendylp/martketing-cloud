@@ -45,7 +45,7 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 	@ReadWrite(type=ReadWriteType.READ)
 	public Object segmentPublishstatusList(String userToken, 
 										   Integer publishStatus, Integer index,
-										   Integer size, String ver) {
+										   Integer size, String ver,String keyword) {
 		Segmentation t = new Segmentation();
 		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		if(ApiConstant.SEGMENT_PUBLISH_STATUS_ALL != publishStatus.byteValue()){
@@ -53,7 +53,8 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 		}
 		t.setPageSize(size);
 		t.setStartIndex((index-1)*size);
-		List<Segmentation> reList = segmentationDao.selectList(t);
+		t.getCustomMap().put("keyword", keyword);
+		List<Segmentation> reList = segmentationDao.selectListByKeyword(t);
 		BaseOutput rseult = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 										   ApiErrorCode.SUCCESS.getMsg(),
 										   ApiConstant.INT_ZERO,null);

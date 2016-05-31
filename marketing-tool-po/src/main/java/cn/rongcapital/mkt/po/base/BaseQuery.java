@@ -10,6 +10,9 @@
 
 package cn.rongcapital.mkt.po.base;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 
 public class BaseQuery {
@@ -21,6 +24,9 @@ public class BaseQuery {
 	private transient String orderField;// 排序字段
 	
 	private transient String orderFieldType;// 排序字段类型:asc,desc
+	
+	//自定义参数
+	private transient Map<String,Object> customMap = new HashMap<>(); 
 	
 	
 	public Integer getStartIndex() {
@@ -54,5 +60,13 @@ public class BaseQuery {
 	public void setOrderFieldType(String orderFieldType) {
 		this.orderFieldType = orderFieldType;
 	}
+	public Map<String, Object> getCustomMap() {
+		return customMap;
+	}
+	public void setCustomMap(Map<String, Object> customMap) {
+		this.customMap = customMap;
+	}
+	
+	
 
 }

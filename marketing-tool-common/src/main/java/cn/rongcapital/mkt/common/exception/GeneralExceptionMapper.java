@@ -21,7 +21,7 @@ public class GeneralExceptionMapper implements ExceptionMapper<Exception> {
 	@Override
     public Response toResponse(Exception cex) {
         BaseOutput error = new BaseOutput(ApiErrorCode.SYSTEM_ERROR.getCode(),
-        		                          ApiErrorCode.SYSTEM_ERROR.getMsg()+":"+cex.getMessage(),0,null);
+        		                          ApiErrorCode.SYSTEM_ERROR.getMsg(),0,null);
         return Response.ok().entity(error).build();
     }
 

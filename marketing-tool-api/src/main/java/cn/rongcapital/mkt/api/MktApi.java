@@ -169,8 +169,9 @@ public class MktApi {
 						  				   @NotNull @QueryParam("publish_status") Integer publishStatus,
 						  				   @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
-						  				   @NotEmpty @QueryParam("ver") String ver) throws Exception {
-		return segmentPublishstatusListService.segmentPublishstatusList(userToken,publishStatus,index,size,ver);
+						  				   @NotEmpty @QueryParam("ver") String ver,
+						  				   @QueryParam("keyword") String keyword) throws Exception {
+		return segmentPublishstatusListService.segmentPublishstatusList(userToken,publishStatus,index,size,ver,keyword);
 	}
 
 	/**
