@@ -68,6 +68,8 @@ public class MktApi {
 	private MigrationFileTemplateService migrationFileTemplateService;
 	@Autowired
 	private MigrationFileUploadUrlService migrationFileUploadUrlService;
+	@Autowired
+	private DataGetMainListService dataGetMainListService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -249,4 +251,13 @@ public class MktApi {
 											@NotEmpty @QueryParam("ver") String ver) throws Exception {
 		return migrationFileUploadUrlService.getMigrationFileUploadUrl(null);
 	}
+	
+    @GET
+    @Path("/mkt.data.main.list.get")
+    public Object getDataMainList(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @QueryParam("index") Integer index, @QueryParam("size") Integer size,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        return dataGetMainListService.getMainList(method, userToken, index, size, ver);
+    }
 }
