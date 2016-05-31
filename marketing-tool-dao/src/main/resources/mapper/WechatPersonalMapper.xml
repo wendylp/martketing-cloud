@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,account_id,friend_count]]>
+		<![CDATA[ id as id,account_id as accountId,friend_count as friendCount]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -15,7 +15,7 @@
 		<where>
 		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="accountId != null and accountId != ''"><![CDATA[ AND account_id = #{accountId}]]></if>
-		    	<if test="friendCount != null and friendCount != ''"><![CDATA[friend_count = #{friendCount}]]></if>
+		    	<if test="friendCount != null and friendCount != ''"><![CDATA[ AND friend_count = #{friendCount}]]></if>
 		</where>
 	</sql>
 	

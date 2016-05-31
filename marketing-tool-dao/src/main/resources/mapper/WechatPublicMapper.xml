@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,account_id,fans_count,is_authorized]]>
+		<![CDATA[ id as id,account_id as accountId,fans_count as fansCount,is_authorized as isAuthorized]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -16,7 +16,7 @@
 		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="accountId != null and accountId != ''"><![CDATA[ AND account_id = #{accountId}]]></if>
 		    	<if test="fansCount != null and fansCount != ''"><![CDATA[ AND fans_count = #{fansCount}]]></if>
-		    	<if test="isAuthorized != null and isAuthorized != ''"><![CDATA[is_authorized = #{isAuthorized}]]></if>
+		    	<if test="isAuthorized != null and isAuthorized != ''"><![CDATA[ AND is_authorized = #{isAuthorized}]]></if>
 		</where>
 	</sql>
 	

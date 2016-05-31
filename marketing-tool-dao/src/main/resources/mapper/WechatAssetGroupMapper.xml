@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,name,members]]>
+		<![CDATA[ id as id,name as name,members as members]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -15,7 +15,7 @@
 		<where>
 		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="members != null and members != ''"><![CDATA[members = #{members}]]></if>
+		    	<if test="members != null and members != ''"><![CDATA[ AND members = #{members}]]></if>
 		</where>
 	</sql>
 	

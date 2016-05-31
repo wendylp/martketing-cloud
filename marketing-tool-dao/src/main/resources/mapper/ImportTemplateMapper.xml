@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,name,description,type,length,rule]]>
+		<![CDATA[ id as id,name as name,description as description,type as type,length as length,rule as rule]]>
 	</sql>
 
 	<sql id="QUERY_TEMPLATE_LIST">
@@ -22,7 +22,7 @@
 		    	<if test="description != null and description != ''"><![CDATA[ AND description = #{description}]]></if>
 		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
 		    	<if test="length != null and length != ''"><![CDATA[ AND length = #{length}]]></if>
-		    	<if test="rule != null and rule != ''"><![CDATA[rule = #{rule}]]></if>
+		    	<if test="rule != null and rule != ''"><![CDATA[ AND rule = #{rule}]]></if>
 		</where>
 	</sql>
 	

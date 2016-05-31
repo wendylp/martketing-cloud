@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,type,start_time,end_time,event_id,campaign_tmpl_id]]>
+		<![CDATA[ id as id,type as type,start_time as startTime,end_time as endTime,event_id as eventId,campaign_tmpl_id as campaignTmplId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -18,7 +18,7 @@
 		    	<if test="startTime != null and startTime != ''"><![CDATA[ AND start_time = #{startTime}]]></if>
 		    	<if test="endTime != null and endTime != ''"><![CDATA[ AND end_time = #{endTime}]]></if>
 		    	<if test="eventId != null and eventId != ''"><![CDATA[ AND event_id = #{eventId}]]></if>
-		    	<if test="campaignTmplId != null and campaignTmplId != ''"><![CDATA[campaign_tmpl_id = #{campaignTmplId}]]></if>
+		    	<if test="campaignTmplId != null and campaignTmplId != ''"><![CDATA[ AND campaign_tmpl_id = #{campaignTmplId}]]></if>
 		</where>
 	</sql>
 	

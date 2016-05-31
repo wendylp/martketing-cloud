@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,description,type,asset_id,value]]>
+		<![CDATA[ id as id,description as description,type as type,asset_id as assetId,value as value]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -17,7 +17,7 @@
 		    	<if test="description != null and description != ''"><![CDATA[ AND description = #{description}]]></if>
 		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
 		    	<if test="assetId != null and assetId != ''"><![CDATA[ AND asset_id = #{assetId}]]></if>
-		    	<if test="value != null and value != ''"><![CDATA[value = #{value}]]></if>
+		    	<if test="value != null and value != ''"><![CDATA[ AND value = #{value}]]></if>
 		</where>
 	</sql>
 	

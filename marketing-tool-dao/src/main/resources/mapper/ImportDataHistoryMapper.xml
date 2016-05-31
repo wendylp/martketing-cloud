@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,import_start_time,import_end_time,total_rows,legal_rows,success,source,email_count,contact_count,mobile_count,qq_count]]>
+		<![CDATA[ id as id,import_start_time as importStartTime,import_end_time as importEndTime,total_rows as totalRows,legal_rows as legalRows,success as success,source as source,email_count as emailCount,contact_count as contactCount,mobile_count as mobileCount,qq_count as qqCount]]>
 	</sql>
 
 	<sql id="QUERY_GENERALFILE_INFO">
@@ -27,7 +27,7 @@
 		    	<if test="emailCount != null and emailCount != ''"><![CDATA[ AND email_count = #{emailCount}]]></if>
 		    	<if test="contactCount != null and contactCount != ''"><![CDATA[ AND contact_count = #{contactCount}]]></if>
 		    	<if test="mobileCount != null and mobileCount != ''"><![CDATA[ AND mobile_count = #{mobileCount}]]></if>
-		    	<if test="qqCount != null and qqCount != ''"><![CDATA[qq_count = #{qqCount}]]></if>
+		    	<if test="qqCount != null and qqCount != ''"><![CDATA[ AND qq_count = #{qqCount}]]></if>
 		</where>
 	</sql>
 	

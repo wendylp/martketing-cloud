@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,name,parent_group_id]]>
+		<![CDATA[ id as id,name as name,parent_group_id as parentGroupId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -15,7 +15,7 @@
 		<where>
 		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="parentGroupId != null and parentGroupId != ''"><![CDATA[parent_group_id = #{parentGroupId}]]></if>
+		    	<if test="parentGroupId != null and parentGroupId != ''"><![CDATA[ AND parent_group_id = #{parentGroupId}]]></if>
 		</where>
 	</sql>
 	

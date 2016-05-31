@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,segmentation_id,campaign_tpl_id,node_status,pos_x,pos_y]]>
+		<![CDATA[ id as id,segmentation_id as segmentationId,campaign_tpl_id as campaignTplId,node_status as nodeStatus,pos_x as posX,pos_y as posY]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -18,7 +18,7 @@
 		    	<if test="campaignTplId != null and campaignTplId != ''"><![CDATA[ AND campaign_tpl_id = #{campaignTplId}]]></if>
 		    	<if test="nodeStatus != null and nodeStatus != ''"><![CDATA[ AND node_status = #{nodeStatus}]]></if>
 		    	<if test="posX != null and posX != ''"><![CDATA[ AND pos_x = #{posX}]]></if>
-		    	<if test="posY != null and posY != ''"><![CDATA[pos_y = #{posY}]]></if>
+		    	<if test="posY != null and posY != ''"><![CDATA[ AND pos_y = #{posY}]]></if>
 		</where>
 	</sql>
 	

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,campaign_instance_id,node_id,audience_count,segment_id,snapshaot_id]]>
+		<![CDATA[ id as id,campaign_instance_id as campaignInstanceId,node_id as nodeId,audience_count as audienceCount,segment_id as segmentId,snapshaot_id as snapshaotId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -18,7 +18,7 @@
 		    	<if test="nodeId != null and nodeId != ''"><![CDATA[ AND node_id = #{nodeId}]]></if>
 		    	<if test="audienceCount != null and audienceCount != ''"><![CDATA[ AND audience_count = #{audienceCount}]]></if>
 		    	<if test="segmentId != null and segmentId != ''"><![CDATA[ AND segment_id = #{segmentId}]]></if>
-		    	<if test="snapshaotId != null and snapshaotId != ''"><![CDATA[snapshaot_id = #{snapshaotId}]]></if>
+		    	<if test="snapshaotId != null and snapshaotId != ''"><![CDATA[ AND snapshaot_id = #{snapshaotId}]]></if>
 		</where>
 	</sql>
 	

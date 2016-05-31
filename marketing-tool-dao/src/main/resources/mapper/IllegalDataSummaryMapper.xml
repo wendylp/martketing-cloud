@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,email_count,monile_count,need_merge_count,inspect_time]]>
+		<![CDATA[ id as id,email_count as emailCount,monile_count as monileCount,need_merge_count as needMergeCount,inspect_time as inspectTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -17,7 +17,7 @@
 		    	<if test="emailCount != null and emailCount != ''"><![CDATA[ AND email_count = #{emailCount}]]></if>
 		    	<if test="monileCount != null and monileCount != ''"><![CDATA[ AND monile_count = #{monileCount}]]></if>
 		    	<if test="needMergeCount != null and needMergeCount != ''"><![CDATA[ AND need_merge_count = #{needMergeCount}]]></if>
-		    	<if test="inspectTime != null and inspectTime != ''"><![CDATA[inspect_time = #{inspectTime}]]></if>
+		    	<if test="inspectTime != null and inspectTime != ''"><![CDATA[ AND inspect_time = #{inspectTime}]]></if>
 		</where>
 	</sql>
 	

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,user_name,user_id,role_id,icon,passwd,status,created_time,update_time]]>
+		<![CDATA[ id as id,user_name as userName,user_id as userId,role_id as roleId,icon as icon,passwd as passwd,status as status,created_time as createdTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -21,7 +21,7 @@
 		    	<if test="passwd != null and passwd != ''"><![CDATA[ AND passwd = #{passwd}]]></if>
 		    	<if test="status != null and status != ''"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createdTime != null and createdTime != ''"><![CDATA[ AND created_time = #{createdTime}]]></if>
-		    	<if test="updateTime != null and updateTime != ''"><![CDATA[update_time = #{updateTime}]]></if>
+		    	<if test="updateTime != null and updateTime != ''"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		</where>
 	</sql>
 	

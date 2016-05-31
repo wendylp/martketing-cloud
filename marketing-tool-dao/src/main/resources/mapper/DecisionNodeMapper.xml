@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,type,rule_key,campaign_tmpl_id]]>
+		<![CDATA[ id as id,type as type,rule_key as ruleKey,campaign_tmpl_id as campaignTmplId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -16,7 +16,7 @@
 		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
 		    	<if test="ruleKey != null and ruleKey != ''"><![CDATA[ AND rule_key = #{ruleKey}]]></if>
-		    	<if test="campaignTmplId != null and campaignTmplId != ''"><![CDATA[campaign_tmpl_id = #{campaignTmplId}]]></if>
+		    	<if test="campaignTmplId != null and campaignTmplId != ''"><![CDATA[ AND campaign_tmpl_id = #{campaignTmplId}]]></if>
 		</where>
 	</sql>
 	

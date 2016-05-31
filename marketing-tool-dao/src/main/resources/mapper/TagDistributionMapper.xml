@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,tag_id,coverage_percent,inuse_tag_percent,audience_count]]>
+		<![CDATA[ id as id,tag_id as tagId,coverage_percent as coveragePercent,inuse_tag_percent as inuseTagPercent,audience_count as audienceCount]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -17,7 +17,7 @@
 		    	<if test="tagId != null and tagId != ''"><![CDATA[ AND tag_id = #{tagId}]]></if>
 		    	<if test="coveragePercent != null and coveragePercent != ''"><![CDATA[ AND coverage_percent = #{coveragePercent}]]></if>
 		    	<if test="inuseTagPercent != null and inuseTagPercent != ''"><![CDATA[ AND inuse_tag_percent = #{inuseTagPercent}]]></if>
-		    	<if test="audienceCount != null and audienceCount != ''"><![CDATA[audience_count = #{audienceCount}]]></if>
+		    	<if test="audienceCount != null and audienceCount != ''"><![CDATA[ AND audience_count = #{audienceCount}]]></if>
 		</where>
 	</sql>
 	

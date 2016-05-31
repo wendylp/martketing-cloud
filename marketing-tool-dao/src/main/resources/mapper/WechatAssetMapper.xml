@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,asset_id,asset_type,asset_name,nickname,wx_acct,consignation_time,total_count,status,group_ids,imgfile_url]]>
+		<![CDATA[ id as id,asset_id as assetId,asset_type as assetType,asset_name as assetName,nickname as nickname,wx_acct as wxAcct,consignation_time as consignationTime,total_count as totalCount,status as status,group_ids as groupIds,imgfile_url as imgfileUrl]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -23,7 +23,7 @@
 		    	<if test="totalCount != null and totalCount != ''"><![CDATA[ AND total_count = #{totalCount}]]></if>
 		    	<if test="status != null and status != ''"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="groupIds != null and groupIds != ''"><![CDATA[ AND group_ids = #{groupIds}]]></if>
-		    	<if test="imgfileUrl != null and imgfileUrl != ''"><![CDATA[imgfile_url = #{imgfileUrl}]]></if>
+		    	<if test="imgfileUrl != null and imgfileUrl != ''"><![CDATA[ AND imgfile_url = #{imgfileUrl}]]></if>
 		</where>
 	</sql>
 	

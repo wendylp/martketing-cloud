@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,role_id,resource_id,create_time,update_time]]>
+		<![CDATA[ id as id,role_id as roleId,resource_id as resourceId,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -17,7 +17,7 @@
 		    	<if test="roleId != null and roleId != ''"><![CDATA[ AND role_id = #{roleId}]]></if>
 		    	<if test="resourceId != null and resourceId != ''"><![CDATA[ AND resource_id = #{resourceId}]]></if>
 		    	<if test="createTime != null and createTime != ''"><![CDATA[ AND create_time = #{createTime}]]></if>
-		    	<if test="updateTime != null and updateTime != ''"><![CDATA[update_time = #{updateTime}]]></if>
+		    	<if test="updateTime != null and updateTime != ''"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		</where>
 	</sql>
 	

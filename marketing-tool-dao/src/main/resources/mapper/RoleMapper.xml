@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,role_name,branch_id,status,crated_time,update_time]]>
+		<![CDATA[ id as id,role_name as roleName,branch_id as branchId,status as status,crated_time as cratedTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -18,7 +18,7 @@
 		    	<if test="branchId != null and branchId != ''"><![CDATA[ AND branch_id = #{branchId}]]></if>
 		    	<if test="status != null and status != ''"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="cratedTime != null and cratedTime != ''"><![CDATA[ AND crated_time = #{cratedTime}]]></if>
-		    	<if test="updateTime != null and updateTime != ''"><![CDATA[update_time = #{updateTime}]]></if>
+		    	<if test="updateTime != null and updateTime != ''"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		</where>
 	</sql>
 	
