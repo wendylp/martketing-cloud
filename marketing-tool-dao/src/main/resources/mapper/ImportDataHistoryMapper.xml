@@ -115,7 +115,7 @@
 	<!-- 其它SQL语句 -->
 	<select id="selectMigrationFileGeneralInfo" resultType="java.util.Map">
 		SELECT
-		<include refid="QUERY_GENERALFILE_INFO" />
+		sum(total_rows) as total_rows, max(import_end_time) as import_end_time
 		<include refid="QUERY_FROM_TABLE" />
 	</select>
 	

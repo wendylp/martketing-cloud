@@ -26,7 +26,6 @@ public class MigrationFileGeneralInfoServiceImpl implements MigrationFileGeneral
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
         Map<String,Object> generalInfos = importDataHistoryDao.selectMigrationFileGeneralInfo();
         if(generalInfos != null){
-            System.out.println("have already here!");
             generalInfos.put("migarated_row_count",generalInfos.remove("total_rows"));
             generalInfos.put("last_upload_time",generalInfos.remove("import_end_time"));
             baseOutput.getData().add(generalInfos);

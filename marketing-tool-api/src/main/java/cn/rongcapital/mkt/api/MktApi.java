@@ -65,6 +65,8 @@ public class MktApi {
 	private MigrationFileTemplateService migrationFileTemplateService;
 	@Autowired
 	private MigrationFileUploadUrlService migrationFileUploadUrlService;
+	@Autowired
+	private WechatAssetListService wechatAssetListService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -211,9 +213,25 @@ public class MktApi {
 	@GET
 	@Path("/mkt.asset.wechat.type.count.get")
 	public Object getWechatAssetTypeCount(@NotEmpty @QueryParam("method") String method,
-										   @NotEmpty @QueryParam("user_token") String userToken,
-										   @NotEmpty @QueryParam("ver") String ver) throws Exception {
+										  @NotEmpty @QueryParam("user_token") String userToken,
+										  @NotEmpty @QueryParam("ver") String ver) throws Exception {
 		return wechatTypeCountGetService.getWechatTypeCount();
+	}
+
+	/**
+	 * @功能简述: 获取某个类型下的资产列表
+	 * @param: String method, String userToken, String ver, int asset_type, int index, int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.wechat.type.list.get")
+	public Object getWechatAssetListByType(@NotEmpty @QueryParam("method") String method,
+	                                       @NotEmpty @QueryParam("user_token") String userToken,
+	                                       @NotEmpty @QueryParam("ver") String ver,
+	                                       @NotNull @QueryParam("asset_type") Integer assetType,
+	                                       @QueryParam("index") Integer index,
+	                                       @QueryParam("size") Integer size) throws Exception {
+		return wechatAssetListService.getWechatAssetListByType(assetType,index,size);
 	}
 
 	/**
