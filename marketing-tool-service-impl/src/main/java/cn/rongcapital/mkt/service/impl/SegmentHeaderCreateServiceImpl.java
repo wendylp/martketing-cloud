@@ -45,7 +45,7 @@ public class SegmentHeaderCreateServiceImpl implements SegmentHeaderCreateServic
     	t.setPublishStatus(body.getPublishStatus().byteValue());
     	BaseOutput ur = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(),ApiConstant.INT_ZERO,null);
     	int res = segmentationDao.insert(t);
-    	if(res>ApiConstant.INT_ZERO) {
+    	if(res > ApiConstant.INT_ZERO) {
     		ur = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
     	}
     	return Response.ok().entity(ur).build();

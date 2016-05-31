@@ -40,7 +40,7 @@ public class SegmentPublishStatusCountServiceImpl implements SegmentPublishStatu
 	 */
     @Override
     @ReadWrite(type=ReadWriteType.READ)
-    public Object segmentPublishstatusCount(String method, String userToken,String ver) {
+    public Object segmentPublishstatusCount(String userToken,String ver) {
     	Segmentation t = new Segmentation();
     	t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
     	t.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH);

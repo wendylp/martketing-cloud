@@ -25,6 +25,8 @@ import cn.rongcapital.mkt.dao.SegmentationDao;
 import cn.rongcapital.mkt.po.Segmentation;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 
 @Service
 public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatusListService {
@@ -40,7 +42,8 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
      * @return: Object
      */
 	@Override
-	public Object segmentPublishstatusList(String method, String userToken, 
+	@ReadWrite(type=ReadWriteType.READ)
+	public Object segmentPublishstatusList(String userToken, 
 										   Integer publishStatus, Integer index,
 										   Integer size, String ver) {
 		Segmentation t = new Segmentation();
@@ -48,8 +51,8 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 		if(ApiConstant.SEGMENT_PUBLISH_STATUS_ALL != publishStatus.byteValue()){
 			t.setPublishStatus(publishStatus.byteValue());
 		}
-		t.setPageSize(null==size?t.getPageSize():size);
-		t.setStartIndex(null==index?t.getStartIndex():(index-1)*size);
+		t.setPageSize(size);
+		t.setStartIndex((index-1)*size);
 		List<Segmentation> reList = segmentationDao.selectList(t);
 		BaseOutput rseult = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 										   ApiErrorCode.SUCCESS.getMsg(),
