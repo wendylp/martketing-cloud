@@ -21,7 +21,7 @@ public class Segmentation extends BaseQuery {
 
     private Date updateTime;
 
-    private Byte status;
+    private Byte status = 0;//默认为0
 
     public Integer getId() {
         return id;

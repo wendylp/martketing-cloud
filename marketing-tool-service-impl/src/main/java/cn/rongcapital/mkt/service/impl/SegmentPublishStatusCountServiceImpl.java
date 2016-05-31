@@ -1,5 +1,5 @@
 /*************************************************
- * @功能简述: SegmentPublishStatusCountService实现类
+ * @功能简述: 接口mkt.segment.publishstatus.count.get的service接口实现类
  * @项目名称: marketing cloud
  * @see: 
  * @author: 宋世涛

@@ -70,6 +70,8 @@ public class MktApi {
 	private MigrationFileUploadUrlService migrationFileUploadUrlService;
 	@Autowired
 	private DataGetMainListService dataGetMainListService;
+	@Autowired
+	private SegmentHeaderGetService segmentHeaderGetService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -117,6 +119,20 @@ public class MktApi {
 		return getImgTextAssetService.getImgTextAssetService(imgAsset);
 	}
 
+	/**
+	 * @功能简述: 根据is获取segment header
+	 * @param: SegmentHeadIn body, SecurityContext securityContext 
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.segment.header.get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object segmentHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
+								   @NotEmpty @QueryParam("ver") String ver,
+								   @NotEmpty @QueryParam("segment_id") String segmentId) {
+	    return segmentHeaderGetService.segmentHeaderGet(userToken, ver,segmentId);
+	}
+	
 	/**
 	 * @功能简述: 创建segment header
 	 * @param: SegmentHeadIn body, SecurityContext securityContext 
