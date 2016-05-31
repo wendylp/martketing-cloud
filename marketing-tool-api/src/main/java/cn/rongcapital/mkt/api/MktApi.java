@@ -26,8 +26,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.service.*;
-import cn.rongcapital.mkt.vo.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +33,24 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.DataGetMainListService;
+import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
+import cn.rongcapital.mkt.service.GetImgTextAssetService;
+import cn.rongcapital.mkt.service.ImgtextHostService;
+import cn.rongcapital.mkt.service.LoginService;
+import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
+import cn.rongcapital.mkt.service.MigrationFileTemplateService;
+import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
+import cn.rongcapital.mkt.service.ModifyPasswdService;
+import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
+import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
+import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
+import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.ImgAsset;
+import cn.rongcapital.mkt.vo.ImgtextHostIn;
+import cn.rongcapital.mkt.vo.LoginInput;
+import cn.rongcapital.mkt.vo.ModifyInput;
 import cn.rongcapital.mkt.vo.SegmentHeadIn;
 
 @Component
@@ -70,6 +85,8 @@ public class MktApi {
 	private MigrationFileUploadUrlService migrationFileUploadUrlService;
 	@Autowired
 	private DataGetMainListService dataGetMainListService;
+	@Autowired
+	private SegmentHeaderGetService segmentHeaderGetService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -117,6 +134,20 @@ public class MktApi {
 		return getImgTextAssetService.getImgTextAssetService(imgAsset);
 	}
 
+	/**
+	 * @功能简述: 根据is获取segment header
+	 * @param: SegmentHeadIn body, SecurityContext securityContext 
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.segment.header.get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object segmentHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
+								   @NotEmpty @QueryParam("ver") String ver,
+								   @NotEmpty @QueryParam("segment_id") String segmentId) {
+	    return segmentHeaderGetService.segmentHeaderGet(userToken, ver,segmentId);
+	}
+	
 	/**
 	 * @功能简述: 创建segment header
 	 * @param: SegmentHeadIn body, SecurityContext securityContext 
