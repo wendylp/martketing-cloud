@@ -10,10 +10,13 @@
 
 package cn.rongcapital.mkt.common.exception;
 
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.jboss.resteasy.api.validation.ResteasyConstraintViolation;
 import org.jboss.resteasy.api.validation.ResteasyViolationException;
 import org.springframework.stereotype.Component;
 
@@ -31,8 +34,13 @@ public class ValidationExceptionMapper implements ExceptionMapper<ResteasyViolat
 	 */
 	@Override
     public Response toResponse(ResteasyViolationException cex) {
-        BaseOutput error = new BaseOutput(ApiErrorCode.PARAMETER_ERROR.getCode(),
-        		                          ApiErrorCode.PARAMETER_ERROR.getMsg(),0,null);
+		List<ResteasyConstraintViolation> exceptionList = cex.getViolations();
+		String msg = "";
+		if(null != exceptionList && exceptionList.size() > 0) {
+			ResteasyConstraintViolation exceptionTmp = exceptionList.get(0);
+			msg = exceptionTmp.getPath() + exceptionTmp.getMessage();
+		}
+        BaseOutput error = new BaseOutput(ApiErrorCode.VALIDATE_ERROR.getCode(),ApiErrorCode.VALIDATE_ERROR.getMsg()+":"+msg,0,null);
         return Response.ok().entity(error).build();
     }
 }

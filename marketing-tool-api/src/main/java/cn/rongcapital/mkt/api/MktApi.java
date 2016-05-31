@@ -11,8 +11,11 @@
 package cn.rongcapital.mkt.api;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -66,38 +69,39 @@ public class MktApi {
 	@Autowired
 	private MigrationFileUploadUrlService migrationFileUploadUrlService;
 	@Autowired
+	private DataGetMainListService dataGetMainListService;
+	@Autowired
+	private SegmentHeaderGetService segmentHeaderGetService;
+	@Autowired
 	private WechatAssetListService wechatAssetListService;
 
 	/**
 	 * @功能简述: For testing, will remove later
-	 * @param: String method,String userToken,String ver
+	 * @param:String userToken,String ver
 	 * @return: Object
 	 */
 	@GET
-	@Path("/test")
-	public Object testGet(@NotEmpty @QueryParam("method") String method,
-						  @NotEmpty @QueryParam("user_token") String userToken,
+	@Path("/test.demo")
+	public Object testGet(@NotEmpty @QueryParam("user_token") String userToken,
 						  @QueryParam("ver") String ver) throws Exception {
-		BaseOutput ur = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),0,null);
+		BaseOutput ur = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),userToken,0,null);
 		return Response.ok().entity(ur).build();
 	}
 
 	/**
 	 * @功能简述: 获取图文资产
-	 * @Param: String method,String user_token,String ver,Integer type,String ownerName,int index,int size
+	 * @param:String user_token,String ver,Integer type,String ownerName,int index,int size
 	 * @return: Object
 	 */
 	@GET
 	@Path("/mkt.asset.imgtext.get")
-	public Object getImgTextAsset(@NotEmpty @QueryParam("method") String method,
-								  @NotEmpty @QueryParam("user_token") String userToken,
+	public Object getImgTextAsset(@NotEmpty @QueryParam("user_token") String userToken,
 								  @NotEmpty @QueryParam("ver") String ver,
 								  @NotNull @QueryParam("type") Integer type,
 								  @QueryParam("owner_name") String ownerName,
-								  @QueryParam("index") int index,
-								  @QueryParam("size") int size){
+								  @DefaultValue("1") @Min(1) @QueryParam("index") int index,
+								  @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size){
 		ImgAsset imgAsset = new ImgAsset();
-		imgAsset.setMethod(method);
 		imgAsset.setAssetType(type);
 		imgAsset.setVer(ver);
 		if(ownerName != null) {
@@ -117,6 +121,20 @@ public class MktApi {
 	}
 
 	/**
+	 * @功能简述: 根据is获取segment header
+	 * @param: SegmentHeadIn body, SecurityContext securityContext 
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.segment.header.get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object segmentHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
+								   @NotEmpty @QueryParam("ver") String ver,
+								   @NotEmpty @QueryParam("segment_id") String segmentId) {
+	    return segmentHeaderGetService.segmentHeaderGet(userToken, ver,segmentId);
+	}
+	
+	/**
 	 * @功能简述: 创建segment header
 	 * @param: SegmentHeadIn body, SecurityContext securityContext 
 	 * @return: Object
@@ -130,31 +148,29 @@ public class MktApi {
 	
     /**
 	 * @功能简述: 查询不同发布状态下的segment数量
-	 * @param: String method, String userToken, String ver 
+	 * @param: String userToken, String ver 
 	 * @return: Object
 	 */
 	@GET
 	@Path("/mkt.segment.publishstatus.count.get")
-	public Object segmentPublishstatusCount(@NotEmpty @QueryParam("method") String method,
-						  					@NotEmpty @QueryParam("user_token") String userToken,
+	public Object segmentPublishstatusCount(@NotEmpty @QueryParam("user_token") String userToken,
 						  					@NotEmpty @QueryParam("ver") String ver) throws Exception {
-		return segmentPublishStatusCountService.segmentPublishstatusCount(method, userToken, ver);
+		return segmentPublishStatusCountService.segmentPublishstatusCount(userToken, ver);
 	}
 	
     /**
 	 * @功能简述: 获取某个发布状态下的segemnt列表
-	 * @param: String method, String userToken, String ver, String publishStatus 
+	 * @param: String userToken, String ver, String publishStatus 
 	 * @return: Object
 	 */
 	@GET
 	@Path("/mkt.segment.publishstatus.list.get")
-	public Object segmentPublishstatusList(@NotEmpty @QueryParam("method") String method,
-						  				   @NotEmpty @QueryParam("user_token") String userToken,
+	public Object segmentPublishstatusList(@NotEmpty @QueryParam("user_token") String userToken,
 						  				   @NotNull @QueryParam("publish_status") Integer publishStatus,
-						  				   @QueryParam("index") Integer index,
-						  				   @QueryParam("size") Integer size,
+						  				   @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
 						  				   @NotEmpty @QueryParam("ver") String ver) throws Exception {
-		return segmentPublishstatusListService.segmentPublishstatusList(method, userToken,publishStatus,index,size,ver);
+		return segmentPublishstatusListService.segmentPublishstatusList(userToken,publishStatus,index,size,ver);
 	}
 
 	/**
@@ -166,7 +182,7 @@ public class MktApi {
 	@Path("/mkt.user.login")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object login(@Valid LoginInput input, @Context SecurityContext securityContext){
-		return loginService.validateLoginPassword(input,securityContext);
+		return loginService.validateLoginPassword(input, securityContext);
 	}
 
 	/**
@@ -202,18 +218,17 @@ public class MktApi {
 	@Path("/mkt.asset.imgtext.host")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object imgtextHostAsset(@Valid ImgtextHostIn imgtextHostIn,@Context SecurityContext securityContext){
-		return imgtextHostService.hostImgtextAsset(imgtextHostIn,securityContext);
+		return imgtextHostService.hostImgtextAsset(imgtextHostIn, securityContext);
 	}
 
 	/**
 	 * @功能简述: 获取不同类型微信资产的数量
-	 * @param: String method, String userToken, String ver
+	 * @param: String userToken, String ver
 	 * @return: Object
 	 */
 	@GET
 	@Path("/mkt.asset.wechat.type.count.get")
-	public Object getWechatAssetTypeCount(@NotEmpty @QueryParam("method") String method,
-										  @NotEmpty @QueryParam("user_token") String userToken,
+	public Object getWechatAssetTypeCount(@NotEmpty @QueryParam("user_token") String userToken,
 										  @NotEmpty @QueryParam("ver") String ver) throws Exception {
 		return wechatTypeCountGetService.getWechatTypeCount();
 	}
@@ -229,47 +244,53 @@ public class MktApi {
 	                                       @NotEmpty @QueryParam("user_token") String userToken,
 	                                       @NotEmpty @QueryParam("ver") String ver,
 	                                       @NotNull @QueryParam("asset_type") Integer assetType,
-	                                       @QueryParam("index") Integer index,
-	                                       @QueryParam("size") Integer size) throws Exception {
-		return wechatAssetListService.getWechatAssetListByType(assetType,index,size);
+										   @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+										   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
+		return wechatAssetListService.getWechatAssetListByType(assetType, index, size);
 	}
 
 	/**
 	 * @功能简述: 获取文件接入的总览信息
-	 * @param: String method, String userToken, String ver
+	 * @param: String userToken, String ver
 	 * @return: Object
 	 */
 	@GET
-	@Path("/mkt.data.migration.file.generalinfo.get")
-	public Object getMigrationFileGeneralInfo(@NotEmpty @QueryParam("method") String method,
-										   @NotEmpty @QueryParam("user_token") String userToken,
-										   @NotEmpty @QueryParam("ver") String ver) throws Exception {
+	@Path("/mkt.data.inbound.file.generalinfo.get")
+	public Object getMigrationFileGeneralInfo(@NotEmpty @QueryParam("user_token") String userToken,
+										   	  @NotEmpty @QueryParam("ver") String ver) throws Exception {
 		return migrationFileGeneralInfoService.getMigrationFileGeneralInfo(null);
 	}
 
 	/**
 	 * @功能简述: 获取文件模板下载列表
-	 * @param: String method, String userToken, String ver
+	 * @param: String userToken, String ver
 	 * @return: Object
 	 */
 	@GET
-	@Path("/mkt.data.migration.file.template.list.get")
-	public Object getMigrationFileTemplateList(@NotEmpty @QueryParam("method") String method,
-											  @NotEmpty @QueryParam("user_token") String userToken,
-											  @NotEmpty @QueryParam("ver") String ver) throws Exception {
+	@Path("/mkt.data.inbound.file.template.list.get")
+	public Object getMigrationFileTemplateList(@NotEmpty @QueryParam("user_token") String userToken,
+											   @NotEmpty @QueryParam("ver") String ver) throws Exception {
 		return migrationFileTemplateService.getMigrationFileTemplateList(null);
 	}
 
 	/**
 	 * @功能简述: 获取文件上传url
-	 * @param: String method, String userToken, String ver
+	 * @param: String userToken, String ver
 	 * @return: Object
 	 */
 	@GET
-	@Path("/mkt.data.migration.file.uploadurl.get")
-	public Object getMigrationFileUploadUrl(@NotEmpty @QueryParam("method") String method,
-											   @NotEmpty @QueryParam("user_token") String userToken,
-											   @NotEmpty @QueryParam("ver") String ver) throws Exception {
+	@Path("/mkt.data.inbound.file.uploadurl.get")
+	public Object getMigrationFileUploadUrl(@NotEmpty @QueryParam("user_token") String userToken,
+											@NotEmpty @QueryParam("ver") String ver) throws Exception {
 		return migrationFileUploadUrlService.getMigrationFileUploadUrl(null);
 	}
+	
+    @GET
+    @Path("/mkt.data.main.list.get")
+    public Object getDataMainList(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @QueryParam("index") Integer index, @QueryParam("size") Integer size,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        return dataGetMainListService.getMainList(method, userToken, index, size, ver);
+    }
 }

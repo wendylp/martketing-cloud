@@ -23,7 +23,7 @@ public class BaseOutput {
 	
 	private int total;
 
-	private int count;
+//	private int count;
 	
 	private List<Object> data = new ArrayList<Object>();
 
@@ -72,12 +72,12 @@ public class BaseOutput {
 		this.data = data;
 	}
 
-	@JsonProperty("count")
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
+//	@JsonProperty("count")
+//	public int getCount() {
+//		return count;
+//	}
+//
+//	public void setCount(int count) {
+//		this.count = count;
+//	}
 }

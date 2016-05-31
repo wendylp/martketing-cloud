@@ -17,8 +17,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class BaseInput {
 
-    @NotEmpty
-	private String method;
+//    @NotEmpty
+//	private String method;
     
     @NotEmpty
     private String ver;
@@ -26,13 +26,13 @@ public class BaseInput {
 	private int index;
 	private int size;
 	  
-	@JsonProperty("method")
-	public String getMethod() {
-		return method;
-	}
-	public void setMethod(String method) {
-	  this.method = method;
-	}
+//	@JsonProperty("method")
+//	public String getMethod() {
+//		return method;
+//	}
+//	public void setMethod(String method) {
+//	  this.method = method;
+//	}
 	@JsonProperty("ver")
 	public String getVer() {
 		return ver;
