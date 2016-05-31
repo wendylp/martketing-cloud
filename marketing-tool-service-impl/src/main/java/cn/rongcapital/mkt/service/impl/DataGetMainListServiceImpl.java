@@ -34,7 +34,7 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         BaseOutput rseult = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
-        if (partyList != null && partyList.isEmpty()) {
+        if (partyList != null && !partyList.isEmpty()) {
             for (Party party : partyList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("data_id", party.getId());
@@ -66,5 +66,4 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
 
         return Response.ok().entity(rseult).build();
     }
-
 }
