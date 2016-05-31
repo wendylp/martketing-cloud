@@ -23,6 +23,8 @@ public class ImgTextAsset extends BaseQuery {
 
     private Date updateTime;
 
+    private String imgfileUrl;
+
     public Integer getId() {
         return id;
     }
@@ -94,5 +96,12 @@ public class ImgTextAsset extends BaseQuery {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
-}
 
+    public String getImgfileUrl() {
+        return imgfileUrl;
+    }
+
+    public void setImgfileUrl(String imgfileUrl) {
+        this.imgfileUrl = imgfileUrl == null ? null : imgfileUrl.trim();
+    }
+}
