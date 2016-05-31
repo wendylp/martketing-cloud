@@ -25,10 +25,6 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
     @Override
     public Object getMainList(String method, String userToken, Integer index, Integer size,
                     String ver) {
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("startIndex", index);
-        paramMap.put("pageSize", size);
-
         Party paramParty = new Party();
         paramParty.setStartIndex(index);
         paramParty.setPageSize(size);
