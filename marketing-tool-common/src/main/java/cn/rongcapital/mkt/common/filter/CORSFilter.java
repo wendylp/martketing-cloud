@@ -38,6 +38,7 @@ public class CORSFilter implements Filter {
 		
 	    HttpServletResponse response = (HttpServletResponse) res;
 	    response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, CORSDomain);
+	    response.setHeader("Access-Control-Allow-Headers","X-Requested-With, Content-Type");
 	    fc.doFilter(req, res);
 	}
 
