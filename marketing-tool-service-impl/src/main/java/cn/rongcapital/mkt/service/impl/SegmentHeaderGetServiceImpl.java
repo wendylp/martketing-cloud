@@ -46,6 +46,7 @@ public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
 			map.put("segment_name", s.getName());
 			map.put("publish_status", s.getPublishStatus());
 			map.put("oper", "奥巴马");//TO DO:MOCK
+			map.put("id", t.getId());
 			map.put("updatetime", "2016-06-01 14:26:01");
 			out.getData().add(map);
 		}

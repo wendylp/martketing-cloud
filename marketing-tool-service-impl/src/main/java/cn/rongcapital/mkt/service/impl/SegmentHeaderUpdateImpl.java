@@ -40,12 +40,13 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
 	    	t.setPublishStatus(body.getPublishStatus().byteValue());
 	    	t.setCreateTime(new Date());
 	    	BaseOutput ur = new BaseOutput(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
+	    	segmentationDao.updateById(t);
 	    	Map<String,Object> map = new HashMap<String,Object>();
 	    	map.put("oper", "奥巴马");//TO DO:MOCK
 	    	map.put("updatetime", "2016-06-01 14:26:01");
+	    	map.put("id", t.getId());
 	    	ur.getData().add(map);
 	    	ur.setTotal(ur.getData().size());
-	    	segmentationDao.updateById(t);
 	    	return Response.ok().entity(ur).build();
 	    
 	 }

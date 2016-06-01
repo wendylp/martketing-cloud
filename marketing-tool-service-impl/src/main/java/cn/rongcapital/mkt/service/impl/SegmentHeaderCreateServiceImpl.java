@@ -55,6 +55,7 @@ public class SegmentHeaderCreateServiceImpl implements SegmentHeaderCreateServic
     	Map<String,Object> map = new HashMap<String,Object>();
     	map.put("oper", "奥巴马");//TO DO:MOCK
     	map.put("updatetime", "2016-06-01 14:26:01");
+    	map.put("id", t.getId());
     	ur.getData().add(map);
     	ur.setTotal(ur.getData().size());
     	return Response.ok().entity(ur).build();
