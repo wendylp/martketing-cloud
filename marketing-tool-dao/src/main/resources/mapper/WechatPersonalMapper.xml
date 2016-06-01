@@ -28,9 +28,9 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="accountId != null"><![CDATA[AND account_id = #{accountId},]]></if>
-		    	<if test="friendCount != null"><![CDATA[AND friend_count = #{friendCount}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="accountId != null"><![CDATA[account_id = #{accountId},]]></if>
+		    	<if test="friendCount != null"><![CDATA[friend_count = #{friendCount}]]></if>
 		</set>
 	</sql>
 

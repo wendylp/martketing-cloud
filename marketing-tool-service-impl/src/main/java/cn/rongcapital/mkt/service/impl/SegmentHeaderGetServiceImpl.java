@@ -35,7 +35,7 @@ public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
 	@Override
 	public Object segmentHeaderGet(String userToken, String ver, String segmentId) {
 		Segmentation t = new Segmentation();
-		t.setId(Integer.parseInt(segmentId));
+		t.setId(Integer.parseInt(segmentId));  
 		t.setStatus((byte)ApiConstant.INT_ZERO);
 		List<Segmentation> list = segmentationDao.selectList(t);
 		BaseOutput out = new BaseOutput(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
@@ -44,9 +44,12 @@ public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
 			Segmentation s = list.get(0);
 			map.put("segment_name", s.getName());
 			map.put("publish_status", s.getPublishStatus());
+			map.put("oper", "奥巴马");//TO DO:MOCK
+			map.put("id", t.getId());
+			map.put("updatetime", "2016-06-01 14:26:01");
 			out.getData().add(map);
-			out.setTotal(out.getData().size());
 		}
+		out.setTotal(out.getData().size());
 		return Response.ok().entity(out).build();
 	}
 

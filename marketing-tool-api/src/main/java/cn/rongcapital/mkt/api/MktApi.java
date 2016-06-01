@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.SegmentHeadIn;
+import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -80,6 +80,8 @@ public class MktApi {
 	private UpdateNicknameService updateNicknameService;
 	@Autowired
 	private SaveWechatAssetListService saveWechatAssetListService;
+	@Autowired
+	private SegmentHeaderUpdateService segmentHeaderUpdateService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -127,7 +129,18 @@ public class MktApi {
 	}
 
 	/**
-	 * @功能简述: 根据is获取segment header
+	 * @功能简述: 编辑segment header
+	 * @param: SegmentHeadIn body, SecurityContext securityContext 
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.segment.header.update")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object segmentHeaderUpdate(@Valid SegmentHeadUpdateIn body, @Context SecurityContext securityContext) {
+	    return segmentHeaderUpdateService.segmentHeaderUpdate(body,securityContext);
+	}
+	/**
+	 * @功能简述: 根据id获取segment header
 	 * @param: SegmentHeadIn body, SecurityContext securityContext 
 	 * @return: Object
 	 */
@@ -148,7 +161,7 @@ public class MktApi {
 	@POST
 	@Path("/mkt.segment.header.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object segmentHeaderCreate(@Valid SegmentHeadIn body, @Context SecurityContext securityContext) {
+	public Object segmentHeaderCreate(@Valid SegmentHeadCreateIn body, @Context SecurityContext securityContext) {
 	    return segmentHeaderService.segmentHeaderCreate(body, securityContext);
 	}
 	
@@ -296,9 +309,10 @@ public class MktApi {
     @Path("/mkt.data.main.list.get")
     public Object getDataMainList(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("data_type") Integer dataType,
                     @QueryParam("index") Integer index, @QueryParam("size") Integer size,
                     @NotEmpty @QueryParam("ver") String ver) {
-        return dataGetMainListService.getMainList(method, userToken, index, size, ver);
+        return dataGetMainListService.getMainList(method, userToken, dataType , index, size, ver);
     }
 
 	/**

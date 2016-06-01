@@ -28,9 +28,9 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="name != null"><![CDATA[AND name = #{name},]]></if>
-		    	<if test="parentGroupId != null"><![CDATA[AND parent_group_id = #{parentGroupId}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="parentGroupId != null"><![CDATA[parent_group_id = #{parentGroupId}]]></if>
 		</set>
 	</sql>
 

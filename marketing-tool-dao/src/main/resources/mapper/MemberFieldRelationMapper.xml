@@ -29,10 +29,10 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="memberId != null"><![CDATA[AND member_id = #{memberId},]]></if>
-		    	<if test="fieldId != null"><![CDATA[AND field_id = #{fieldId},]]></if>
-		    	<if test="fieldValue != null"><![CDATA[AND field_value = #{fieldValue}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="memberId != null"><![CDATA[member_id = #{memberId},]]></if>
+		    	<if test="fieldId != null"><![CDATA[field_id = #{fieldId},]]></if>
+		    	<if test="fieldValue != null"><![CDATA[field_value = #{fieldValue}]]></if>
 		</set>
 	</sql>
 

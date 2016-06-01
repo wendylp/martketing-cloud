@@ -35,12 +35,12 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="name != null"><![CDATA[AND name = #{name},]]></if>
-		    	<if test="description != null"><![CDATA[AND description = #{description},]]></if>
-		    	<if test="type != null"><![CDATA[AND type = #{type},]]></if>
-		    	<if test="length != null"><![CDATA[AND length = #{length},]]></if>
-		    	<if test="rule != null"><![CDATA[AND rule = #{rule}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="description != null"><![CDATA[description = #{description},]]></if>
+		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
+		    	<if test="length != null"><![CDATA[length = #{length},]]></if>
+		    	<if test="rule != null"><![CDATA[rule = #{rule}]]></if>
 		</set>
 	</sql>
 

@@ -32,13 +32,13 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="type != null"><![CDATA[AND type = #{type},]]></if>
-		    	<if test="ruleKey != null"><![CDATA[AND rule_key = #{ruleKey},]]></if>
-		    	<if test="campaignTplId != null"><![CDATA[AND campaign_tpl_id = #{campaignTplId},]]></if>
-		    	<if test="nodeStatus != null"><![CDATA[AND node_status = #{nodeStatus},]]></if>
-		    	<if test="posX != null"><![CDATA[AND pos_x = #{posX},]]></if>
-		    	<if test="posY != null"><![CDATA[AND pos_y = #{posY}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
+		    	<if test="ruleKey != null"><![CDATA[rule_key = #{ruleKey},]]></if>
+		    	<if test="campaignTplId != null"><![CDATA[campaign_tpl_id = #{campaignTplId},]]></if>
+		    	<if test="nodeStatus != null"><![CDATA[node_status = #{nodeStatus},]]></if>
+		    	<if test="posX != null"><![CDATA[pos_x = #{posX},]]></if>
+		    	<if test="posY != null"><![CDATA[pos_y = #{posY}]]></if>
 		</set>
 	</sql>
 

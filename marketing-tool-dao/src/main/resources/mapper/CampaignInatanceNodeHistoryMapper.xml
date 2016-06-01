@@ -31,12 +31,12 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="campaignInstanceId != null"><![CDATA[AND campaign_instance_id = #{campaignInstanceId},]]></if>
-		    	<if test="nodeId != null"><![CDATA[AND node_id = #{nodeId},]]></if>
-		    	<if test="audienceCount != null"><![CDATA[AND audience_count = #{audienceCount},]]></if>
-		    	<if test="segmentId != null"><![CDATA[AND segment_id = #{segmentId},]]></if>
-		    	<if test="snapshaotId != null"><![CDATA[AND snapshaot_id = #{snapshaotId}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="campaignInstanceId != null"><![CDATA[campaign_instance_id = #{campaignInstanceId},]]></if>
+		    	<if test="nodeId != null"><![CDATA[node_id = #{nodeId},]]></if>
+		    	<if test="audienceCount != null"><![CDATA[audience_count = #{audienceCount},]]></if>
+		    	<if test="segmentId != null"><![CDATA[segment_id = #{segmentId},]]></if>
+		    	<if test="snapshaotId != null"><![CDATA[snapshaot_id = #{snapshaotId}]]></if>
 		</set>
 	</sql>
 
