@@ -34,15 +34,15 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="campaignId != null"><![CDATA[AND campaign_id = #{campaignId},]]></if>
-		    	<if test="nodeId != null"><![CDATA[AND node_id = #{nodeId},]]></if>
-		    	<if test="preNodeId != null"><![CDATA[AND pre_node_id = #{preNodeId},]]></if>
-		    	<if test="nextNodeId != null"><![CDATA[AND next_node_id = #{nextNodeId},]]></if>
-		    	<if test="nodeTableName != null"><![CDATA[AND node_table_name = #{nodeTableName},]]></if>
-		    	<if test="preNodeLineType != null"><![CDATA[AND pre_node_line_type = #{preNodeLineType},]]></if>
-		    	<if test="nextNodeLineType != null"><![CDATA[AND next_node_line_type = #{nextNodeLineType},]]></if>
-		    	<if test="nodeType != null"><![CDATA[AND node_type = #{nodeType}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="campaignId != null"><![CDATA[campaign_id = #{campaignId},]]></if>
+		    	<if test="nodeId != null"><![CDATA[node_id = #{nodeId},]]></if>
+		    	<if test="preNodeId != null"><![CDATA[pre_node_id = #{preNodeId},]]></if>
+		    	<if test="nextNodeId != null"><![CDATA[next_node_id = #{nextNodeId},]]></if>
+		    	<if test="nodeTableName != null"><![CDATA[node_table_name = #{nodeTableName},]]></if>
+		    	<if test="preNodeLineType != null"><![CDATA[pre_node_line_type = #{preNodeLineType},]]></if>
+		    	<if test="nextNodeLineType != null"><![CDATA[next_node_line_type = #{nextNodeLineType},]]></if>
+		    	<if test="nodeType != null"><![CDATA[node_type = #{nodeType}]]></if>
 		</set>
 	</sql>
 

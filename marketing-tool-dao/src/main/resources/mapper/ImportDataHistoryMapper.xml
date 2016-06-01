@@ -40,17 +40,17 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="importStartTime != null"><![CDATA[AND import_start_time = #{importStartTime},]]></if>
-		    	<if test="importEndTime != null"><![CDATA[AND import_end_time = #{importEndTime},]]></if>
-		    	<if test="totalRows != null"><![CDATA[AND total_rows = #{totalRows},]]></if>
-		    	<if test="legalRows != null"><![CDATA[AND legal_rows = #{legalRows},]]></if>
-		    	<if test="success != null"><![CDATA[AND success = #{success},]]></if>
-		    	<if test="source != null"><![CDATA[AND source = #{source},]]></if>
-		    	<if test="emailCount != null"><![CDATA[AND email_count = #{emailCount},]]></if>
-		    	<if test="contactCount != null"><![CDATA[AND contact_count = #{contactCount},]]></if>
-		    	<if test="mobileCount != null"><![CDATA[AND mobile_count = #{mobileCount},]]></if>
-		    	<if test="qqCount != null"><![CDATA[AND qq_count = #{qqCount}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="importStartTime != null"><![CDATA[import_start_time = #{importStartTime},]]></if>
+		    	<if test="importEndTime != null"><![CDATA[import_end_time = #{importEndTime},]]></if>
+		    	<if test="totalRows != null"><![CDATA[total_rows = #{totalRows},]]></if>
+		    	<if test="legalRows != null"><![CDATA[legal_rows = #{legalRows},]]></if>
+		    	<if test="success != null"><![CDATA[success = #{success},]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="emailCount != null"><![CDATA[email_count = #{emailCount},]]></if>
+		    	<if test="contactCount != null"><![CDATA[contact_count = #{contactCount},]]></if>
+		    	<if test="mobileCount != null"><![CDATA[mobile_count = #{mobileCount},]]></if>
+		    	<if test="qqCount != null"><![CDATA[qq_count = #{qqCount}]]></if>
 		</set>
 	</sql>
 

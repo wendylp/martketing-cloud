@@ -36,17 +36,17 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="assetId != null"><![CDATA[AND asset_id = #{assetId},]]></if>
-		    	<if test="assetType != null"><![CDATA[AND asset_type = #{assetType},]]></if>
-		    	<if test="assetName != null"><![CDATA[AND asset_name = #{assetName},]]></if>
-		    	<if test="nickname != null"><![CDATA[AND nickname = #{nickname},]]></if>
-		    	<if test="wxAcct != null"><![CDATA[AND wx_acct = #{wxAcct},]]></if>
-		    	<if test="consignationTime != null"><![CDATA[AND consignation_time = #{consignationTime},]]></if>
-		    	<if test="totalCount != null"><![CDATA[AND total_count = #{totalCount},]]></if>
-		    	<if test="status != null"><![CDATA[AND status = #{status},]]></if>
-		    	<if test="groupIds != null"><![CDATA[AND group_ids = #{groupIds},]]></if>
-		    	<if test="imgfileUrl != null"><![CDATA[AND imgfile_url = #{imgfileUrl}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="assetId != null"><![CDATA[asset_id = #{assetId},]]></if>
+		    	<if test="assetType != null"><![CDATA[asset_type = #{assetType},]]></if>
+		    	<if test="assetName != null"><![CDATA[asset_name = #{assetName},]]></if>
+		    	<if test="nickname != null"><![CDATA[nickname = #{nickname},]]></if>
+		    	<if test="wxAcct != null"><![CDATA[wx_acct = #{wxAcct},]]></if>
+		    	<if test="consignationTime != null"><![CDATA[consignation_time = #{consignationTime},]]></if>
+		    	<if test="totalCount != null"><![CDATA[total_count = #{totalCount},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="groupIds != null"><![CDATA[group_ids = #{groupIds},]]></if>
+		    	<if test="imgfileUrl != null"><![CDATA[imgfile_url = #{imgfileUrl}]]></if>
 		</set>
 	</sql>
 

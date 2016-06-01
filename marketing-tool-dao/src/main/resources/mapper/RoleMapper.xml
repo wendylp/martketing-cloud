@@ -31,12 +31,12 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="roleName != null"><![CDATA[AND role_name = #{roleName},]]></if>
-		    	<if test="branchId != null"><![CDATA[AND branch_id = #{branchId},]]></if>
-		    	<if test="status != null"><![CDATA[AND status = #{status},]]></if>
-		    	<if test="cratedTime != null"><![CDATA[AND crated_time = #{cratedTime},]]></if>
-		    	<if test="updateTime != null"><![CDATA[AND update_time = #{updateTime}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="roleName != null"><![CDATA[role_name = #{roleName},]]></if>
+		    	<if test="branchId != null"><![CDATA[branch_id = #{branchId},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="cratedTime != null"><![CDATA[crated_time = #{cratedTime},]]></if>
+		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
 		</set>
 	</sql>
 

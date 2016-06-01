@@ -30,11 +30,11 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="description != null"><![CDATA[AND description = #{description},]]></if>
-		    	<if test="type != null"><![CDATA[AND type = #{type},]]></if>
-		    	<if test="assetId != null"><![CDATA[AND asset_id = #{assetId},]]></if>
-		    	<if test="value != null"><![CDATA[AND value = #{value}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="description != null"><![CDATA[description = #{description},]]></if>
+		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
+		    	<if test="assetId != null"><![CDATA[asset_id = #{assetId},]]></if>
+		    	<if test="value != null"><![CDATA[value = #{value}]]></if>
 		</set>
 	</sql>
 

@@ -30,11 +30,11 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="emailCount != null"><![CDATA[AND email_count = #{emailCount},]]></if>
-		    	<if test="monileCount != null"><![CDATA[AND monile_count = #{monileCount},]]></if>
-		    	<if test="needMergeCount != null"><![CDATA[AND need_merge_count = #{needMergeCount},]]></if>
-		    	<if test="inspectTime != null"><![CDATA[AND inspect_time = #{inspectTime}]]></if>
+		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="emailCount != null"><![CDATA[email_count = #{emailCount},]]></if>
+		    	<if test="monileCount != null"><![CDATA[monile_count = #{monileCount},]]></if>
+		    	<if test="needMergeCount != null"><![CDATA[need_merge_count = #{needMergeCount},]]></if>
+		    	<if test="inspectTime != null"><![CDATA[inspect_time = #{inspectTime}]]></if>
 		</set>
 	</sql>
 
