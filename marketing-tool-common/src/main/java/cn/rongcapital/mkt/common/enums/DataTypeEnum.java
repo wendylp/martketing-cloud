@@ -2,13 +2,13 @@ package cn.rongcapital.mkt.common.enums;
 
 public enum DataTypeEnum {
 
-    PARTY(0, "主数据"),
-    APP(1, "APP"),
-    POS(2, "POS"),
-    PUBLIC(3, "公众号"),
-    PERSONAL(4, "个人号"),
-    ESHOP(5, "网上商城"),
-    CRM(6, "CRM"),
+    PARTY(0, "主数据"), 
+    APP(1, "APP"), 
+    POS(2, "POS"), 
+    PUBLIC(3, "公众号"), 
+    PERSONAL(4, "个人号"), 
+    ESHOP(5, "网上商城"), 
+    CRM(6, "CRM"), 
     TMAL(7, "天猫"),
 
     ;
@@ -42,6 +42,17 @@ public enum DataTypeEnum {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public static boolean isContainCode(int code) {
+        boolean result = false;
+        DataTypeEnum[] dataTypeEnums = DataTypeEnum.values();
+        for (DataTypeEnum dataTypeEnum : dataTypeEnums) {
+            if (dataTypeEnum.getCode() == code) {
+                return true;
+            }
+        }
+        return result;
     }
 
 }
