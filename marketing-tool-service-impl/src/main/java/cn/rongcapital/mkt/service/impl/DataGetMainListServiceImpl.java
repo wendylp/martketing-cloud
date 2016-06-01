@@ -13,7 +13,6 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.po.DataParty;
-import cn.rongcapital.mkt.po.Party;
 import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
