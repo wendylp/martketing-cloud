@@ -9,6 +9,6 @@ public interface DataGetMainListService {
      * @param: String method, String userToken, Integer index, Integer size, String ver
      * @return Object
      */
-    public Object getMainList(String method, String userToken, Integer index, Integer size,
-                    String ver);
+    public Object getMainList(String method, String userToken, Integer dataType, Integer index,
+                    Integer size, String ver);
 }
