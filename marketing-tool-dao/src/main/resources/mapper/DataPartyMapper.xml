@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence]]>
+		<![CDATA[ id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence,child_amount,child_annual_budget,deleted,delete_time]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -33,7 +33,11 @@
 		    	<if test="cartItemCount != null and cartItemCount != ''"><![CDATA[ AND cart_item_count = #{cartItemCount}]]></if>
 		    	<if test="favoriteItemCount != null and favoriteItemCount != ''"><![CDATA[ AND favorite_item_count = #{favoriteItemCount}]]></if>
 		    	<if test="salary != null and salary != ''"><![CDATA[ AND salary = #{salary}]]></if>
-		    	<if test="offlineActivityAttendence != null and offlineActivityAttendence != ''"><![CDATA[offline_activity_attendence = #{offlineActivityAttendence}]]></if>
+		    	<if test="offlineActivityAttendence != null and offlineActivityAttendence != ''"><![CDATA[ AND offline_activity_attendence = #{offlineActivityAttendence}]]></if>
+		    	<if test="childAmount != null and childAmount != ''"><![CDATA[ AND child_amount = #{childAmount}]]></if>
+		    	<if test="childAnnualBudget != null and childAnnualBudget != ''"><![CDATA[ AND child_annual_budget = #{childAnnualBudget}]]></if>
+		    	<if test="deleted != null and deleted != ''"><![CDATA[ AND deleted = #{deleted}]]></if>
+		    	<if test="deleteTime != null and deleteTime != ''"><![CDATA[delete_time = #{deleteTime}]]></if>
 		</where>
 	</sql>
 	
@@ -66,14 +70,18 @@
 		    	<if test="cartItemCount != null"><![CDATA[AND cart_item_count = #{cartItemCount},]]></if>
 		    	<if test="favoriteItemCount != null"><![CDATA[AND favorite_item_count = #{favoriteItemCount},]]></if>
 		    	<if test="salary != null"><![CDATA[AND salary = #{salary},]]></if>
-		    	<if test="offlineActivityAttendence != null"><![CDATA[AND offline_activity_attendence = #{offlineActivityAttendence}]]></if>
+		    	<if test="offlineActivityAttendence != null"><![CDATA[AND offline_activity_attendence = #{offlineActivityAttendence},]]></if>
+		    	<if test="childAmount != null"><![CDATA[AND child_amount = #{childAmount},]]></if>
+		    	<if test="childAnnualBudget != null"><![CDATA[AND child_annual_budget = #{childAnnualBudget},]]></if>
+		    	<if test="deleted != null"><![CDATA[AND deleted = #{deleted},]]></if>
+		    	<if test="deleteTime != null"><![CDATA[AND delete_time = #{deleteTime}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataParty" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_party (id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence)
+			INSERT INTO data_party (id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence,child_amount,child_annual_budget,deleted,delete_time)
 			VALUES
 			(
 			  #{id},
@@ -96,7 +104,11 @@
 			  #{cartItemCount},
 			  #{favoriteItemCount},
 			  #{salary},
-			  #{offlineActivityAttendence}
+			  #{offlineActivityAttendence},
+			  #{childAmount},
+			  #{childAnnualBudget},
+			  #{deleted},
+			  #{deleteTime}
 			)
 		]]>
 	</insert>

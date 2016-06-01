@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.util.Date;
+
 public class DataPersonal extends BaseQuery {
     private Integer id;
 
@@ -10,6 +12,10 @@ public class DataPersonal extends BaseQuery {
     private String personalName;
 
     private String nickName;
+
+    private Boolean deleted;
+
+    private Date deleteTime;
 
     public Integer getId() {
         return id;
@@ -41,5 +47,21 @@ public class DataPersonal extends BaseQuery {
 
     public void setNickName(String nickName) {
         this.nickName = nickName == null ? null : nickName.trim();
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeleteTime() {
+        return deleteTime;
+    }
+
+    public void setDeleteTime(Date deleteTime) {
+        this.deleteTime = deleteTime;
     }
 }

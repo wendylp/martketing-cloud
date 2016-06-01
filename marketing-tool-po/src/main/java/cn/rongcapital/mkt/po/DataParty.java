@@ -2,6 +2,9 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 public class DataParty extends BaseQuery {
     private Integer id;
 
@@ -44,6 +47,14 @@ public class DataParty extends BaseQuery {
     private Long salary;
 
     private Integer offlineActivityAttendence;
+
+    private Byte childAmount;
+
+    private BigDecimal childAnnualBudget;
+
+    private Boolean deleted;
+
+    private Date deleteTime;
 
     public Integer getId() {
         return id;
@@ -211,5 +222,37 @@ public class DataParty extends BaseQuery {
 
     public void setOfflineActivityAttendence(Integer offlineActivityAttendence) {
         this.offlineActivityAttendence = offlineActivityAttendence;
+    }
+
+    public Byte getChildAmount() {
+        return childAmount;
+    }
+
+    public void setChildAmount(Byte childAmount) {
+        this.childAmount = childAmount;
+    }
+
+    public BigDecimal getChildAnnualBudget() {
+        return childAnnualBudget;
+    }
+
+    public void setChildAnnualBudget(BigDecimal childAnnualBudget) {
+        this.childAnnualBudget = childAnnualBudget;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeleteTime() {
+        return deleteTime;
+    }
+
+    public void setDeleteTime(Date deleteTime) {
+        this.deleteTime = deleteTime;
     }
 }

@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.util.Date;
+
 public class DataEshop extends BaseQuery {
     private Integer id;
 
@@ -22,6 +24,10 @@ public class DataEshop extends BaseQuery {
     private Integer cartItemCount;
 
     private Integer favoriteItemCount;
+
+    private Boolean deleted;
+
+    private Date deleteTime;
 
     public Integer getId() {
         return id;
@@ -101,5 +107,21 @@ public class DataEshop extends BaseQuery {
 
     public void setFavoriteItemCount(Integer favoriteItemCount) {
         this.favoriteItemCount = favoriteItemCount;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeleteTime() {
+        return deleteTime;
+    }
+
+    public void setDeleteTime(Date deleteTime) {
+        this.deleteTime = deleteTime;
     }
 }

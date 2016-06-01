@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.util.Date;
+
 public class DataPublic extends BaseQuery {
     private Integer id;
 
@@ -16,6 +18,10 @@ public class DataPublic extends BaseQuery {
     private Boolean gender;
 
     private String area;
+
+    private Boolean deleted;
+
+    private Date deleteTime;
 
     public Integer getId() {
         return id;
@@ -71,5 +77,21 @@ public class DataPublic extends BaseQuery {
 
     public void setArea(String area) {
         this.area = area == null ? null : area.trim();
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeleteTime() {
+        return deleteTime;
+    }
+
+    public void setDeleteTime(Date deleteTime) {
+        this.deleteTime = deleteTime;
     }
 }

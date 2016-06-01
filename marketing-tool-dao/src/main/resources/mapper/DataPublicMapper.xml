@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,open_id,public_name,nick_name,icon_url,gender,area]]>
+		<![CDATA[ id,open_id,public_name,nick_name,icon_url,gender,area,deleted,delete_time]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -19,7 +19,9 @@
 		    	<if test="nickName != null and nickName != ''"><![CDATA[ AND nick_name = #{nickName}]]></if>
 		    	<if test="iconUrl != null and iconUrl != ''"><![CDATA[ AND icon_url = #{iconUrl}]]></if>
 		    	<if test="gender != null and gender != ''"><![CDATA[ AND gender = #{gender}]]></if>
-		    	<if test="area != null and area != ''"><![CDATA[area = #{area}]]></if>
+		    	<if test="area != null and area != ''"><![CDATA[ AND area = #{area}]]></if>
+		    	<if test="deleted != null and deleted != ''"><![CDATA[ AND deleted = #{deleted}]]></if>
+		    	<if test="deleteTime != null and deleteTime != ''"><![CDATA[delete_time = #{deleteTime}]]></if>
 		</where>
 	</sql>
 	
@@ -38,14 +40,16 @@
 		    	<if test="nickName != null"><![CDATA[AND nick_name = #{nickName},]]></if>
 		    	<if test="iconUrl != null"><![CDATA[AND icon_url = #{iconUrl},]]></if>
 		    	<if test="gender != null"><![CDATA[AND gender = #{gender},]]></if>
-		    	<if test="area != null"><![CDATA[AND area = #{area}]]></if>
+		    	<if test="area != null"><![CDATA[AND area = #{area},]]></if>
+		    	<if test="deleted != null"><![CDATA[AND deleted = #{deleted},]]></if>
+		    	<if test="deleteTime != null"><![CDATA[AND delete_time = #{deleteTime}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataPublic" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_public (id,open_id,public_name,nick_name,icon_url,gender,area)
+			INSERT INTO data_public (id,open_id,public_name,nick_name,icon_url,gender,area,deleted,delete_time)
 			VALUES
 			(
 			  #{id},
@@ -54,7 +58,9 @@
 			  #{nickName},
 			  #{iconUrl},
 			  #{gender},
-			  #{area}
+			  #{area},
+			  #{deleted},
+			  #{deleteTime}
 			)
 		]]>
 	</insert>

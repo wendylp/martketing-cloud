@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.util.Date;
+
 public class DataCrm extends BaseQuery {
     private Integer id;
 
@@ -9,19 +11,33 @@ public class DataCrm extends BaseQuery {
 
     private String name;
 
-    private String deliveryAddress;
+    private Boolean gender;
+
+    private Byte age;
+
+    private String homeAddress;
+
+    private String workAddress;
+
+    private String homeStatus;
+
+    private String workStatus;
+
+    private String memberLevel;
 
     private Long mobile;
 
     private String email;
 
-    private Integer orderCount;
+    private String wechat;
 
-    private Long orderAmount;
+    private Integer qq;
 
-    private Integer cartItemCount;
+    private String weibo;
 
-    private Integer favoriteItemCount;
+    private Boolean deleted;
+
+    private Date deleteTime;
 
     public Integer getId() {
         return id;
@@ -47,12 +63,60 @@ public class DataCrm extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getDeliveryAddress() {
-        return deliveryAddress;
+    public Boolean getGender() {
+        return gender;
     }
 
-    public void setDeliveryAddress(String deliveryAddress) {
-        this.deliveryAddress = deliveryAddress == null ? null : deliveryAddress.trim();
+    public void setGender(Boolean gender) {
+        this.gender = gender;
+    }
+
+    public Byte getAge() {
+        return age;
+    }
+
+    public void setAge(Byte age) {
+        this.age = age;
+    }
+
+    public String getHomeAddress() {
+        return homeAddress;
+    }
+
+    public void setHomeAddress(String homeAddress) {
+        this.homeAddress = homeAddress == null ? null : homeAddress.trim();
+    }
+
+    public String getWorkAddress() {
+        return workAddress;
+    }
+
+    public void setWorkAddress(String workAddress) {
+        this.workAddress = workAddress == null ? null : workAddress.trim();
+    }
+
+    public String getHomeStatus() {
+        return homeStatus;
+    }
+
+    public void setHomeStatus(String homeStatus) {
+        this.homeStatus = homeStatus == null ? null : homeStatus.trim();
+    }
+
+    public String getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(String workStatus) {
+        this.workStatus = workStatus == null ? null : workStatus.trim();
+    }
+
+    public String getMemberLevel() {
+        return memberLevel;
+    }
+
+    public void setMemberLevel(String memberLevel) {
+        this.memberLevel = memberLevel == null ? null : memberLevel.trim();
     }
 
     public Long getMobile() {
@@ -71,35 +135,43 @@ public class DataCrm extends BaseQuery {
         this.email = email == null ? null : email.trim();
     }
 
-    public Integer getOrderCount() {
-        return orderCount;
+    public String getWechat() {
+        return wechat;
     }
 
-    public void setOrderCount(Integer orderCount) {
-        this.orderCount = orderCount;
+    public void setWechat(String wechat) {
+        this.wechat = wechat == null ? null : wechat.trim();
     }
 
-    public Long getOrderAmount() {
-        return orderAmount;
+    public Integer getQq() {
+        return qq;
     }
 
-    public void setOrderAmount(Long orderAmount) {
-        this.orderAmount = orderAmount;
+    public void setQq(Integer qq) {
+        this.qq = qq;
     }
 
-    public Integer getCartItemCount() {
-        return cartItemCount;
+    public String getWeibo() {
+        return weibo;
     }
 
-    public void setCartItemCount(Integer cartItemCount) {
-        this.cartItemCount = cartItemCount;
+    public void setWeibo(String weibo) {
+        this.weibo = weibo == null ? null : weibo.trim();
     }
 
-    public Integer getFavoriteItemCount() {
-        return favoriteItemCount;
+    public Boolean getDeleted() {
+        return deleted;
     }
 
-    public void setFavoriteItemCount(Integer favoriteItemCount) {
-        this.favoriteItemCount = favoriteItemCount;
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeleteTime() {
+        return deleteTime;
+    }
+
+    public void setDeleteTime(Date deleteTime) {
+        this.deleteTime = deleteTime;
     }
 }

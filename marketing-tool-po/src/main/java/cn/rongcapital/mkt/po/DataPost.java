@@ -18,6 +18,10 @@ public class DataPost extends BaseQuery {
 
     private String skuList;
 
+    private Boolean deleted;
+
+    private Date deleteTime;
+
     public Integer getId() {
         return id;
     }
@@ -64,5 +68,21 @@ public class DataPost extends BaseQuery {
 
     public void setSkuList(String skuList) {
         this.skuList = skuList == null ? null : skuList.trim();
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeleteTime() {
+        return deleteTime;
+    }
+
+    public void setDeleteTime(Date deleteTime) {
+        this.deleteTime = deleteTime;
     }
 }

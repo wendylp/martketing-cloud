@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,account_name,name,delivery_address,mobile,email,order_count,order_amount,cart_item_count,favorite_item_count]]>
+		<![CDATA[ id,account_name,name,delivery_address,mobile,email,order_count,order_amount,cart_item_count,favorite_item_count,deleted,delete_time]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -22,7 +22,9 @@
 		    	<if test="orderCount != null and orderCount != ''"><![CDATA[ AND order_count = #{orderCount}]]></if>
 		    	<if test="orderAmount != null and orderAmount != ''"><![CDATA[ AND order_amount = #{orderAmount}]]></if>
 		    	<if test="cartItemCount != null and cartItemCount != ''"><![CDATA[ AND cart_item_count = #{cartItemCount}]]></if>
-		    	<if test="favoriteItemCount != null and favoriteItemCount != ''"><![CDATA[favorite_item_count = #{favoriteItemCount}]]></if>
+		    	<if test="favoriteItemCount != null and favoriteItemCount != ''"><![CDATA[ AND favorite_item_count = #{favoriteItemCount}]]></if>
+		    	<if test="deleted != null and deleted != ''"><![CDATA[ AND deleted = #{deleted}]]></if>
+		    	<if test="deleteTime != null and deleteTime != ''"><![CDATA[delete_time = #{deleteTime}]]></if>
 		</where>
 	</sql>
 	
@@ -44,14 +46,16 @@
 		    	<if test="orderCount != null"><![CDATA[AND order_count = #{orderCount},]]></if>
 		    	<if test="orderAmount != null"><![CDATA[AND order_amount = #{orderAmount},]]></if>
 		    	<if test="cartItemCount != null"><![CDATA[AND cart_item_count = #{cartItemCount},]]></if>
-		    	<if test="favoriteItemCount != null"><![CDATA[AND favorite_item_count = #{favoriteItemCount}]]></if>
+		    	<if test="favoriteItemCount != null"><![CDATA[AND favorite_item_count = #{favoriteItemCount},]]></if>
+		    	<if test="deleted != null"><![CDATA[AND deleted = #{deleted},]]></if>
+		    	<if test="deleteTime != null"><![CDATA[AND delete_time = #{deleteTime}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataTmail" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_tmail (id,account_name,name,delivery_address,mobile,email,order_count,order_amount,cart_item_count,favorite_item_count)
+			INSERT INTO data_tmail (id,account_name,name,delivery_address,mobile,email,order_count,order_amount,cart_item_count,favorite_item_count,deleted,delete_time)
 			VALUES
 			(
 			  #{id},
@@ -63,7 +67,9 @@
 			  #{orderCount},
 			  #{orderAmount},
 			  #{cartItemCount},
-			  #{favoriteItemCount}
+			  #{favoriteItemCount},
+			  #{deleted},
+			  #{deleteTime}
 			)
 		]]>
 	</insert>

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,open_id,personal_name,nick_name]]>
+		<![CDATA[ id,open_id,personal_name,nick_name,deleted,delete_time]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -16,7 +16,9 @@
 		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="openId != null and openId != ''"><![CDATA[ AND open_id = #{openId}]]></if>
 		    	<if test="personalName != null and personalName != ''"><![CDATA[ AND personal_name = #{personalName}]]></if>
-		    	<if test="nickName != null and nickName != ''"><![CDATA[nick_name = #{nickName}]]></if>
+		    	<if test="nickName != null and nickName != ''"><![CDATA[ AND nick_name = #{nickName}]]></if>
+		    	<if test="deleted != null and deleted != ''"><![CDATA[ AND deleted = #{deleted}]]></if>
+		    	<if test="deleteTime != null and deleteTime != ''"><![CDATA[delete_time = #{deleteTime}]]></if>
 		</where>
 	</sql>
 	
@@ -32,20 +34,24 @@
 		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
 		    	<if test="openId != null"><![CDATA[AND open_id = #{openId},]]></if>
 		    	<if test="personalName != null"><![CDATA[AND personal_name = #{personalName},]]></if>
-		    	<if test="nickName != null"><![CDATA[AND nick_name = #{nickName}]]></if>
+		    	<if test="nickName != null"><![CDATA[AND nick_name = #{nickName},]]></if>
+		    	<if test="deleted != null"><![CDATA[AND deleted = #{deleted},]]></if>
+		    	<if test="deleteTime != null"><![CDATA[AND delete_time = #{deleteTime}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataPersonal" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_personal (id,open_id,personal_name,nick_name)
+			INSERT INTO data_personal (id,open_id,personal_name,nick_name,deleted,delete_time)
 			VALUES
 			(
 			  #{id},
 			  #{openId},
 			  #{personalName},
-			  #{nickName}
+			  #{nickName},
+			  #{deleted},
+			  #{deleteTime}
 			)
 		]]>
 	</insert>

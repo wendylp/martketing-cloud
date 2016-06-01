@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,account_name,time,store,monetary,sku_list]]>
+		<![CDATA[ id,account_name,time,store,monetary,sku_list,deleted,delete_time]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -18,7 +18,9 @@
 		    	<if test="time != null and time != ''"><![CDATA[ AND time = #{time}]]></if>
 		    	<if test="store != null and store != ''"><![CDATA[ AND store = #{store}]]></if>
 		    	<if test="monetary != null and monetary != ''"><![CDATA[ AND monetary = #{monetary}]]></if>
-		    	<if test="skuList != null and skuList != ''"><![CDATA[sku_list = #{skuList}]]></if>
+		    	<if test="skuList != null and skuList != ''"><![CDATA[ AND sku_list = #{skuList}]]></if>
+		    	<if test="deleted != null and deleted != ''"><![CDATA[ AND deleted = #{deleted}]]></if>
+		    	<if test="deleteTime != null and deleteTime != ''"><![CDATA[delete_time = #{deleteTime}]]></if>
 		</where>
 	</sql>
 	
@@ -36,14 +38,16 @@
 		    	<if test="time != null"><![CDATA[AND time = #{time},]]></if>
 		    	<if test="store != null"><![CDATA[AND store = #{store},]]></if>
 		    	<if test="monetary != null"><![CDATA[AND monetary = #{monetary},]]></if>
-		    	<if test="skuList != null"><![CDATA[AND sku_list = #{skuList}]]></if>
+		    	<if test="skuList != null"><![CDATA[AND sku_list = #{skuList},]]></if>
+		    	<if test="deleted != null"><![CDATA[AND deleted = #{deleted},]]></if>
+		    	<if test="deleteTime != null"><![CDATA[AND delete_time = #{deleteTime}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataPost" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_post (id,account_name,time,store,monetary,sku_list)
+			INSERT INTO data_post (id,account_name,time,store,monetary,sku_list,deleted,delete_time)
 			VALUES
 			(
 			  #{id},
@@ -51,7 +55,9 @@
 			  #{time},
 			  #{store},
 			  #{monetary},
-			  #{skuList}
+			  #{skuList},
+			  #{deleted},
+			  #{deleteTime}
 			)
 		]]>
 	</insert>
