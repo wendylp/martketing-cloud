@@ -10,7 +10,6 @@
 
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +43,7 @@ public class SegmentHeaderCreateServiceImpl implements SegmentHeaderCreateServic
     @Override
     @ReadWrite(type=ReadWriteType.WRITE)
     public Object segmentHeaderCreate(SegmentHeadCreateIn body,SecurityContext securityContext) {
-        Segmentation t = new Segmentation();
+        Segmentation t = new Segmentation();  
     	t.setName(body.getSegmentName());
     	t.setPublishStatus(body.getPublishStatus().byteValue());
     	BaseOutput ur = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(),ApiConstant.INT_ZERO,null);

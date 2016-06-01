@@ -10,7 +10,6 @@
 
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
 	@Override
 	public Object segmentHeaderGet(String userToken, String ver, String segmentId) {
 		Segmentation t = new Segmentation();
-		t.setId(Integer.parseInt(segmentId));
+		t.setId(Integer.parseInt(segmentId));  
 		t.setStatus((byte)ApiConstant.INT_ZERO);
 		List<Segmentation> list = segmentationDao.selectList(t);
 		BaseOutput out = new BaseOutput(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);

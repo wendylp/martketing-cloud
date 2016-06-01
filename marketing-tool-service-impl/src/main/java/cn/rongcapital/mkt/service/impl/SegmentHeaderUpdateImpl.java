@@ -34,7 +34,7 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
 	 @Override
 	 @ReadWrite(type=ReadWriteType.WRITE)
 	 public Object segmentHeaderUpdate(SegmentHeadUpdateIn body,SecurityContext securityContext) {
-	        Segmentation t = new Segmentation();
+	        Segmentation t = new Segmentation();  
 	        t.setId(body.getSegmentId());
 	    	t.setName(body.getSegmentName());
 	    	t.setPublishStatus(body.getPublishStatus().byteValue());
