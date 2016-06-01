@@ -13,7 +13,9 @@ package cn.rongcapital.mkt.vo;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class SegmentHeadIn extends BaseInput {
+public class SegmentHeadUpdateIn extends BaseInput {
+	
+	private Integer segmentId;
 
     private Integer publishStatus = null;
   
@@ -48,6 +50,15 @@ public class SegmentHeadIn extends BaseInput {
     public void setUserToken(String userToken) {
         this.userToken = userToken;
     }
+
+	public Integer getSegmentId() {
+		return segmentId;
+	}
+
+	@JsonProperty("segment_Id")
+	public void setSegmentId(Integer segmentId) {
+		this.segmentId = segmentId;
+	}
   
 }
 

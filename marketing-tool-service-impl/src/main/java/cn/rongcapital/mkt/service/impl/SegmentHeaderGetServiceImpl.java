@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +45,11 @@ public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
 			Segmentation s = list.get(0);
 			map.put("segment_name", s.getName());
 			map.put("publish_status", s.getPublishStatus());
+			map.put("oper", "奥巴马");//TO DO:MOCK
+			map.put("updatetime", "2016-06-01 14:26:01");
 			out.getData().add(map);
-			out.setTotal(out.getData().size());
 		}
+		out.setTotal(out.getData().size());
 		return Response.ok().entity(out).build();
 	}
 
