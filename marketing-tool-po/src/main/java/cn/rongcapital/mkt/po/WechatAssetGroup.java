@@ -9,6 +9,12 @@ public class WechatAssetGroup extends BaseQuery {
 
     private Integer members;
 
+    private String wxAcct;
+
+    private Integer isSysGroup;
+
+    private Integer assetId;
+
     public Long getId() {
         return id;
     }
@@ -31,5 +37,29 @@ public class WechatAssetGroup extends BaseQuery {
 
     public void setMembers(Integer members) {
         this.members = members;
+    }
+
+    public String getWxAcct() {
+        return wxAcct;
+    }
+
+    public void setWxAcct(String wxAcct) {
+        this.wxAcct = wxAcct == null ? null : wxAcct.trim();
+    }
+
+    public Integer getIsSysGroup() {
+        return isSysGroup;
+    }
+
+    public void setIsSysGroup(Integer isSysGroup) {
+        this.isSysGroup = isSysGroup;
+    }
+
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
     }
 }

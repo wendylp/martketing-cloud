@@ -123,5 +123,17 @@
         WHERE asset_type = #{asset_type} and status = 0
         limit #{index},#{size}
 	</select>
-	
+
+	<select id="selectWechatAssetDetai" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		asset_name,wx_acct,nickname,status,consignation_time,group_ids
+		FROM wechat_asset
+		WHERE asset_id = #{asset_id}
+    </select>
+
+	<update id="updateNicknameById" parameterType="java.util.Map">
+		UPDATE wechat_asset
+		SET nickname = #{nickname}
+		WHERE asset_id = #{asset_id}
+	</update>
 </mapper>

@@ -74,6 +74,12 @@ public class MktApi {
 	private SegmentHeaderGetService segmentHeaderGetService;
 	@Autowired
 	private WechatAssetListService wechatAssetListService;
+	@Autowired
+	private WechatAssetListGetService wechatAssetListGetService;
+	@Autowired
+	private UpdateNicknameService updateNicknameService;
+	@Autowired
+	private SaveWechatAssetListService saveWechatAssetListService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -294,4 +300,41 @@ public class MktApi {
                     @NotEmpty @QueryParam("ver") String ver) {
         return dataGetMainListService.getMainList(method, userToken, index, size, ver);
     }
+
+	/**
+	 * @功能简述: 获取某个微信账号下的好友/粉丝/群组信息
+	 * @param: String userToken, String ver, Ingeger asset_id
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.wechat.list.get")
+	public Object getWechatAssetTypeCount(@NotEmpty @QueryParam("user_token") String userToken,
+										  @NotEmpty @QueryParam("ver") String ver,
+	                                      @NotNull @QueryParam("asset_id") Integer assetId) throws Exception {
+		return wechatAssetListGetService.getWechatAssetList(assetId);
+	}
+
+	/**
+	 * @功能描述:编辑mkt系统中微信的昵称，不是微信中的昵称
+	 * @Param: String user_token, String ver, Integer asset_id, String nickname
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.asset.wechat.nickname.update")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object updateWechatNickname(@Valid UpdateNicknameIn updateNicknameIn,@Context SecurityContext securityContext){
+		return updateNicknameService.updateNickname(updateNicknameIn, securityContext);
+	}
+
+	/**
+	 * @功能描述:保存微信账号下的人群
+	 * @Param: String user_token, String ver, Integer asset_id, String nickname
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.asset.wechat.list.save")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object saveWechatAssetList(@Valid SaveWechatAssetListIn saveWechatAssetListIn,@Context SecurityContext securityContext){
+		return saveWechatAssetListService.saveWechatAssetList(saveWechatAssetListIn, securityContext);
+	}
 }

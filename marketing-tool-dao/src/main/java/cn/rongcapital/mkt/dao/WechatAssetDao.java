@@ -46,9 +46,23 @@ public interface WechatAssetDao extends BaseDao<WechatAsset>{
 	List<Map<String,Object>> getWechatCountByType(Map<String,Object> paramMap);
 
 	/**
-	 * 根据
+	 * 根据资产类型获取资产列表
 	 * @param paramMap
 	 * @return list
 	 */
 	List<Map<String,Object>> selectAssetListByType(Map<String, Object> paramMap);
+
+	/**
+	 * 根据资产Id获取资产详细信息
+	 * @param paramMap
+	 * @return list
+	 */
+	Map<String,Object> selectWechatAssetDetai(Map<String, Object> paramMap);
+
+	/**
+	 * 根据资产Id修改资产昵称
+	 * @param paramMap
+	 * @return int
+	 */
+	int updateNicknameById(Map<String, Object> paramMap);
 }
