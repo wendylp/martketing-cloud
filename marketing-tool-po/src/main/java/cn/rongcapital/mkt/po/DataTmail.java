@@ -11,7 +11,7 @@ public class DataTmail extends BaseQuery {
 
     private String deliveryAddress;
 
-    private Integer mobile;
+    private Long mobile;
 
     private String email;
 
@@ -55,11 +55,11 @@ public class DataTmail extends BaseQuery {
         this.deliveryAddress = deliveryAddress == null ? null : deliveryAddress.trim();
     }
 
-    public Integer getMobile() {
+    public Long getMobile() {
         return mobile;
     }
 
-    public void setMobile(Integer mobile) {
+    public void setMobile(Long mobile) {
         this.mobile = mobile;
     }
 

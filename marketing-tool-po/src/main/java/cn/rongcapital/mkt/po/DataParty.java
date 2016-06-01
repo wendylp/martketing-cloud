@@ -23,7 +23,7 @@ public class DataParty extends BaseQuery {
 
     private String memberLevel;
 
-    private Integer mobile;
+    private Long mobile;
 
     private String email;
 
@@ -125,11 +125,11 @@ public class DataParty extends BaseQuery {
         this.memberLevel = memberLevel == null ? null : memberLevel.trim();
     }
 
-    public Integer getMobile() {
+    public Long getMobile() {
         return mobile;
     }
 
-    public void setMobile(Integer mobile) {
+    public void setMobile(Long mobile) {
         this.mobile = mobile;
     }
 
