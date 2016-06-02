@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.DataGetMainCountService;
 import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.service.DataGetQualityCountService;
 import cn.rongcapital.mkt.service.DataGetQualityListService;
@@ -101,6 +102,8 @@ public class MktApi {
 	private DataGetQualityCountService dataGetQualityCountService;
 	@Autowired
 	private DataGetUnqualifiedCountService dataGetUnqualifiedCountService;
+	@Autowired
+	private DataGetMainCountService dataGetMainCountService;
 	@Autowired
 	private DataGetMainListService dataGetMainListService;
 	@Autowired
@@ -360,7 +363,7 @@ public class MktApi {
      * @return: Object
      */
     @GET
-    @Path("mkt.data.quality.count.get")
+    @Path("/mkt.data.quality.count.get")
     public Object getQualityCount(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
                     @NotEmpty @QueryParam("ver") String ver) {
@@ -375,13 +378,28 @@ public class MktApi {
      * @return: Object
      */
     @GET
-    @Path("mkt.data.unqualified.count.get")
+    @Path("/mkt.data.unqualified.count.get")
     public Object getUnqualifiedCount(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
                     @NotEmpty @QueryParam("ver") String ver,
                     @NotNull @QueryParam("batch_id") Long batchId) {
 
         return dataGetUnqualifiedCountService.getQualityCount(method, userToken, ver, batchId);
+    }
+
+    /**
+     * @功能简述 : 获取主数据条数
+     * @param: String method, String userToken, String ver, Long batchId
+     * @author nianjun
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.main.count.get")
+    public Object getUnqualifiedCount(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver) {
+
+        return dataGetMainCountService.getMainCount(method, userToken, ver);
     }
 
 	/**

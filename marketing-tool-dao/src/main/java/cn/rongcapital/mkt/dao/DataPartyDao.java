@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.DataParty;
 
@@ -34,4 +36,13 @@ public interface DataPartyDao extends BaseDao<DataParty>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    /**
+     * mkt.data.main.count.get
+     * 
+     * @功能简述 : 获取主数据条数
+     * @author nianjun
+     * @return map
+     */
+    public Map<String, Object> selectMainCount();
 }

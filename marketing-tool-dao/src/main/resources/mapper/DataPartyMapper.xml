@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence,child_amount,child_annual_budget,deleted,delete_time]]>
+		<![CDATA[ id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -33,11 +33,7 @@
 		    	<if test="cartItemCount != null and cartItemCount != ''"><![CDATA[ AND cart_item_count = #{cartItemCount}]]></if>
 		    	<if test="favoriteItemCount != null and favoriteItemCount != ''"><![CDATA[ AND favorite_item_count = #{favoriteItemCount}]]></if>
 		    	<if test="salary != null and salary != ''"><![CDATA[ AND salary = #{salary}]]></if>
-		    	<if test="offlineActivityAttendence != null and offlineActivityAttendence != ''"><![CDATA[ AND offline_activity_attendence = #{offlineActivityAttendence}]]></if>
-		    	<if test="childAmount != null and childAmount != ''"><![CDATA[ AND child_amount = #{childAmount}]]></if>
-		    	<if test="childAnnualBudget != null and childAnnualBudget != ''"><![CDATA[ AND child_annual_budget = #{childAnnualBudget}]]></if>
-		    	<if test="deleted != null and deleted != ''"><![CDATA[ AND deleted = #{deleted}]]></if>
-		    	<if test="deleteTime != null and deleteTime != ''"><![CDATA[delete_time = #{deleteTime}]]></if>
+		    	<if test="offlineActivityAttendence != null and offlineActivityAttendence != ''"><![CDATA[offline_activity_attendence = #{offlineActivityAttendence}]]></if>
 		</where>
 	</sql>
 	
@@ -70,18 +66,14 @@
 		    	<if test="cartItemCount != null"><![CDATA[AND cart_item_count = #{cartItemCount},]]></if>
 		    	<if test="favoriteItemCount != null"><![CDATA[AND favorite_item_count = #{favoriteItemCount},]]></if>
 		    	<if test="salary != null"><![CDATA[AND salary = #{salary},]]></if>
-		    	<if test="offlineActivityAttendence != null"><![CDATA[AND offline_activity_attendence = #{offlineActivityAttendence},]]></if>
-		    	<if test="childAmount != null"><![CDATA[AND child_amount = #{childAmount},]]></if>
-		    	<if test="childAnnualBudget != null"><![CDATA[AND child_annual_budget = #{childAnnualBudget},]]></if>
-		    	<if test="deleted != null"><![CDATA[AND deleted = #{deleted},]]></if>
-		    	<if test="deleteTime != null"><![CDATA[AND delete_time = #{deleteTime}]]></if>
+		    	<if test="offlineActivityAttendence != null"><![CDATA[AND offline_activity_attendence = #{offlineActivityAttendence}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataParty" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_party (id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence,child_amount,child_annual_budget,deleted,delete_time)
+			INSERT INTO data_party (id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence)
 			VALUES
 			(
 			  #{id},
@@ -104,11 +96,7 @@
 			  #{cartItemCount},
 			  #{favoriteItemCount},
 			  #{salary},
-			  #{offlineActivityAttendence},
-			  #{childAmount},
-			  #{childAnnualBudget},
-			  #{deleted},
-			  #{deleteTime}
+			  #{offlineActivityAttendence}
 			)
 		]]>
 	</insert>
@@ -151,6 +139,20 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
+	
+	<select id="selectMainCount" resultType="java.util.Map">
+		SELECT
+			data_party_rows,data_app_rows,data_pos_rows,data_crm_rows,data_personal_rows,data_public_rows,data_eshop_rows,data_tmall_rows
+		FROM
+			(select count(id) as data_party_rows from data_party) as data_party_result,
+			(select count(id) as data_app_rows from data_app) as data_app_result,
+			(select count(id) as data_pos_rows from data_pos) as data_pos_result,
+			(select count(id) as data_crm_rows from data_crm) as data_crm_result,
+			(select count(id) as data_personal_rows from data_personal) as data_personal_result,
+			(select count(id) as data_public_rows from data_public) as data_public_result,
+			(select count(id) as data_eshop_rows from data_eshop) as data_eshop_result,
+			(select count(id) as data_tmall_rows from data_tmall) as data_tmall_result
+	</select>
 	
 	
 </mapper>
