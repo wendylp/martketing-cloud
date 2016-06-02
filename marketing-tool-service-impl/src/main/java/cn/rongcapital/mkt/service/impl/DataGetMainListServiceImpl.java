@@ -9,15 +9,19 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysql.fabric.xmlrpc.base.Data;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.dao.DataAppDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.DataPosDao;
+import cn.rongcapital.mkt.dao.DataPublicDao;
 import cn.rongcapital.mkt.po.DataApp;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.DataPos;
+import cn.rongcapital.mkt.po.DataPublic;
 import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -33,6 +37,9 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
     @Autowired
     private DataPosDao dataPosDao;
 
+    @Autowired
+    private DataPublicDao dataPublicDao;
+
     @Override
     public Object getMainList(String method, String userToken, Integer dataType, Integer index,
                     Integer size, String ver) {
@@ -40,13 +47,15 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         BaseOutput rseult = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
+        // 这代码写的太2了
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             assignPartyData(rseult, index, size);
-        } // 获取App数据
-        else if (dataType == DataTypeEnum.APP.getCode()) {
+        } else if (dataType == DataTypeEnum.APP.getCode()) {
             assignAppData(rseult, index, size);
         } else if (dataType == DataTypeEnum.POS.getCode()) {
             assignAppData(rseult, index, size);
+        } else if (dataType == DataTypeEnum.PUBLIC.getCode()) {
+            assignPublicData(rseult, index, size);
         }
 
 
@@ -55,7 +64,6 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         return Response.ok().entity(rseult).build();
     }
 
-    // 这代码写的太2了
     private void assignPartyData(BaseOutput rseult, int index, int size) {
 
         DataParty paramParty = new DataParty();
@@ -137,6 +145,32 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("store", dataPos.getStore());
                 map.put("monetory", dataPos.getMonetary());
                 map.put("sku_list", dataPos.getSkuList());
+
+                rseult.getData().add(map);
+            }
+        }
+    }
+
+    private void assignPublicData(BaseOutput rseult, int index, int size) {
+        DataPublic paramDataPublic = new DataPublic();
+        paramDataPublic.setStartIndex(index);
+        paramDataPublic.setPageSize(size);
+        paramDataPublic.setDeleted(Boolean.FALSE);
+
+        List<DataPublic> dataPublicList = dataPublicDao.selectList(paramDataPublic);
+
+        if (dataPublicList != null && !dataPublicList.isEmpty()) {
+            for (DataPublic dataPublic : dataPublicList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("data_id", dataPublic.getId());
+                map.put("open_id", dataPublic.getOpenId());
+                map.put("public_name", dataPublic.getPublicName());
+                map.put("nick_name", dataPublic.getNickName());
+                map.put("icon_url", dataPublic.getIconUrl());
+                map.put("gender", dataPublic.getGender());
+                map.put("area", dataPublic.getArea());
+
+                rseult.getData().add(map);
             }
         }
     }
