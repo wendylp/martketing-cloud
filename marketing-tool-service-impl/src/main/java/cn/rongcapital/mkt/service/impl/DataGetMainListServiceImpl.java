@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,8 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
 public class DataGetMainListServiceImpl implements DataGetMainListService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private DataPartyDao dataPartyDao;
@@ -82,6 +86,8 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
             assignCrmData(rseult, index, size);
         } else if (dataType == DataTypeEnum.TMALL.getCode()) {
             assignTmallData(rseult, index, size);
+        } else {
+            logger.error("传入错误的data type : {}", dataType);
         }
 
         rseult.setTotal(rseult.getData().size());
