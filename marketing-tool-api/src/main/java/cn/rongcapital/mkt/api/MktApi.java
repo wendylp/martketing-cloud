@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.DataDeleteMainService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
 import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.service.DataGetQualityCountService;
@@ -106,6 +107,8 @@ public class MktApi {
 	private DataGetMainCountService dataGetMainCountService;
 	@Autowired
 	private DataGetMainListService dataGetMainListService;
+	@Autowired
+	private DataDeleteMainService dataDeleteMainService;
 	@Autowired
 	private SegmentHeaderGetService segmentHeaderGetService;
 	@Autowired
@@ -415,6 +418,20 @@ public class MktApi {
                     @QueryParam("index") Integer index, @QueryParam("size") Integer size,
                     @NotEmpty @QueryParam("ver") String ver) {
         return dataGetMainListService.getMainList(method, userToken, dataType, index, size, ver);
+    }
+
+    /**
+     * @功能简述 : 删除某条主数据
+     * @param: String method, String userToken, String ver, dataId
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.main.delete")
+    public Object deleteDataMain(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("data_id") Integer dataId,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        return dataDeleteMainService.deleteMain(method, userToken, ver, dataId);
     }
 
 	/**
