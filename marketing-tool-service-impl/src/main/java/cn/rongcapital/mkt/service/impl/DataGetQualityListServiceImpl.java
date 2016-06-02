@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -15,6 +16,7 @@ import cn.rongcapital.mkt.po.ImportDataHistory;
 import cn.rongcapital.mkt.service.DataGetQualityListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
+@Service
 public class DataGetQualityListServiceImpl implements DataGetQualityListService {
 
     @Autowired
