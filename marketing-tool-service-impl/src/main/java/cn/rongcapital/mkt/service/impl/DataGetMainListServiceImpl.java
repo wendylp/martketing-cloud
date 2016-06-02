@@ -13,17 +13,21 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.dao.DataAppDao;
+import cn.rongcapital.mkt.dao.DataCrmDao;
 import cn.rongcapital.mkt.dao.DataEshopDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.DataPersonalDao;
 import cn.rongcapital.mkt.dao.DataPosDao;
 import cn.rongcapital.mkt.dao.DataPublicDao;
+import cn.rongcapital.mkt.dao.DataTmallDao;
 import cn.rongcapital.mkt.po.DataApp;
+import cn.rongcapital.mkt.po.DataCrm;
 import cn.rongcapital.mkt.po.DataEshop;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.DataPersonal;
 import cn.rongcapital.mkt.po.DataPos;
 import cn.rongcapital.mkt.po.DataPublic;
+import cn.rongcapital.mkt.po.DataTmall;
 import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -48,6 +52,12 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
     @Autowired
     private DataEshopDao dataEshopDao;
 
+    @Autowired
+    private DataCrmDao dataCrmDao;
+
+    @Autowired
+    private DataTmallDao dataTmallDao;
+
     @Override
     public Object getMainList(String method, String userToken, Integer dataType, Integer index,
                     Integer size, String ver) {
@@ -61,22 +71,25 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         } else if (dataType == DataTypeEnum.APP.getCode()) {
             assignAppData(rseult, index, size);
         } else if (dataType == DataTypeEnum.POS.getCode()) {
-            assignAppData(rseult, index, size);
+            assignPosData(rseult, index, size);
         } else if (dataType == DataTypeEnum.PUBLIC.getCode()) {
             assignPublicData(rseult, index, size);
         } else if (dataType == DataTypeEnum.PERSONAL.getCode()) {
             assignPersonalData(rseult, index, size);
         } else if (dataType == DataTypeEnum.ESHOP.getCode()) {
             assignEshopData(rseult, index, size);
+        } else if (dataType == DataTypeEnum.CRM.getCode()) {
+            assignCrmData(rseult, index, size);
+        } else if (dataType == DataTypeEnum.TMALL.getCode()) {
+            assignTmallData(rseult, index, size);
         }
-
 
         rseult.setTotal(rseult.getData().size());
 
         return Response.ok().entity(rseult).build();
     }
 
-    private void assignPartyData(BaseOutput rseult, int index, int size) {
+    private void assignPartyData(BaseOutput result, int index, int size) {
 
         DataParty paramParty = new DataParty();
         paramParty.setStartIndex(index);
@@ -111,12 +124,12 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("child_amount", dataParty.getChildAmount());
                 map.put("child_annual_budget", dataParty.getChildAnnualBudget());
 
-                rseult.getData().add(map);
+                result.getData().add(map);
             }
         }
     }
 
-    private void assignAppData(BaseOutput rseult, int index, int size) {
+    private void assignAppData(BaseOutput result, int index, int size) {
         DataApp paramDataApp = new DataApp();
         paramDataApp.setStartIndex(index);
         paramDataApp.setPageSize(size);
@@ -137,12 +150,12 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("cart_item_count", dataApp.getCartItemCount());
                 map.put("favorite_item_count", dataApp.getFavoriteItemCount());
 
-                rseult.getData().add(map);
+                result.getData().add(map);
             }
         }
     }
 
-    private void assignPosData(BaseOutput rseult, int index, int size) {
+    private void assignPosData(BaseOutput result, int index, int size) {
         DataPos paramDataPos = new DataPos();
         paramDataPos.setStartIndex(index);
         paramDataPos.setPageSize(size);
@@ -160,12 +173,12 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("monetory", dataPos.getMonetary());
                 map.put("sku_list", dataPos.getSkuList());
 
-                rseult.getData().add(map);
+                result.getData().add(map);
             }
         }
     }
 
-    private void assignPublicData(BaseOutput rseult, int index, int size) {
+    private void assignPublicData(BaseOutput result, int index, int size) {
         DataPublic paramDataPublic = new DataPublic();
         paramDataPublic.setStartIndex(index);
         paramDataPublic.setPageSize(size);
@@ -184,12 +197,12 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("gender", dataPublic.getGender());
                 map.put("area", dataPublic.getArea());
 
-                rseult.getData().add(map);
+                result.getData().add(map);
             }
         }
     }
 
-    private void assignPersonalData(BaseOutput rseult, int index, int size) {
+    private void assignPersonalData(BaseOutput result, int index, int size) {
         DataPersonal paramDataPersonal = new DataPersonal();
         paramDataPersonal.setStartIndex(index);
         paramDataPersonal.setPageSize(size);
@@ -205,12 +218,12 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("personal_name", dataPersonal.getPersonalName());
                 map.put("nick_name", dataPersonal.getNickName());
 
-                rseult.getData().add(map);
+                result.getData().add(map);
             }
         }
     }
 
-    private void assignEshopData(BaseOutput rseult, int index, int size) {
+    private void assignEshopData(BaseOutput result, int index, int size) {
         DataEshop paramDataEshop = new DataEshop();
         paramDataEshop.setStartIndex(index);
         paramDataEshop.setPageSize(size);
@@ -232,7 +245,66 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("cart_iterm_count", dataEshop.getCartItemCount());
                 map.put("favorite_item_count", dataEshop.getFavoriteItemCount());
 
-                rseult.getData().add(map);
+                result.getData().add(map);
+            }
+        }
+    }
+
+    private void assignCrmData(BaseOutput result, int index, int size) {
+        DataCrm paramDataCrm = new DataCrm();
+        paramDataCrm.setStartIndex(index);
+        paramDataCrm.setPageSize(size);
+        paramDataCrm.setDeleted(Boolean.FALSE);
+
+        List<DataCrm> dataCrmList = dataCrmDao.selectList(paramDataCrm);
+
+        if (dataCrmList != null && !dataCrmList.isEmpty()) {
+            for (DataCrm dataCrm : dataCrmList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("data_id", dataCrm.getId());
+                map.put("account_name", dataCrm.getAccountName());
+                map.put("name", dataCrm.getName());
+                map.put("gender", dataCrm.getGender());
+                map.put("age", dataCrm.getAge());
+                map.put("home_address", dataCrm.getHomeAddress());
+                map.put("work_address", dataCrm.getWorkAddress());
+                map.put("home_status", dataCrm.getHomeStatus());
+                map.put("work_status", dataCrm.getWorkStatus());
+                map.put("member_level", dataCrm.getMemberLevel());
+                map.put("mobile", dataCrm.getMobile());
+                map.put("email", dataCrm.getEmail());
+                map.put("wechat", dataCrm.getWechat());
+                map.put("qq", dataCrm.getQq());
+                map.put("weibo", dataCrm.getWeibo());
+
+                result.getData().add(map);
+            }
+        }
+    }
+
+    private void assignTmallData(BaseOutput result, int index, int size) {
+        DataTmall paramDataTmall = new DataTmall();
+        paramDataTmall.setStartIndex(index);
+        paramDataTmall.setPageSize(size);
+        paramDataTmall.setDeleted(Boolean.FALSE);
+
+        List<DataTmall> dataTmallList = dataTmallDao.selectList(paramDataTmall);
+
+        if (dataTmallList != null && !dataTmallList.isEmpty()) {
+            for (DataTmall dataTmall : dataTmallList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("data_id", dataTmall.getId());
+                map.put("account_name", dataTmall.getAccountName());
+                map.put("name", dataTmall.getName());
+                map.put("delivery_address", dataTmall.getDeliveryAddress());
+                map.put("mobile", dataTmall.getMobile());
+                map.put("email", dataTmall.getEmail());
+                map.put("order_count", dataTmall.getOrderCount());
+                map.put("order_amount", dataTmall.getOrderAmount());
+                map.put("cart_item_count", dataTmall.getCartItemCount());
+                map.put("favorite_item_count", dataTmall.getFavoriteItemCount());
+
+                result.getData().add(map);
             }
         }
     }
