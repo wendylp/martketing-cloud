@@ -10,10 +10,10 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ImportDataHistory;
-
-import java.util.Map;
 
 public interface ImportDataHistoryDao extends BaseDao<ImportDataHistory>{
 	
@@ -42,4 +42,14 @@ public interface ImportDataHistoryDao extends BaseDao<ImportDataHistory>{
 	 * @return map
 	 */
 	Map<String,Object> selectMigrationFileGeneralInfo();
+	
+	/**
+	 * mkt.data.quality.count.get
+	 * 
+	 * @功能简述 : 获取数据接入条数
+	 * @author nianjun
+	 * @return map
+	 */
+    public Map<String, Object> selectQualityCount();
+
 }

@@ -8,7 +8,11 @@
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM import_data_history]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM import_data_history]]></sql> 
+	
+	<!-- 查询复合来源表-->
+	<sql id="QUERY_FROM_UNION_LOG_TABLE"><![CDATA[FROM import_data_history , import_data_modify_log]]></sql>
+	
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
@@ -116,6 +120,14 @@
 		SELECT
 		sum(total_rows) as total_rows, max(import_end_time) as import_end_time
 		<include refid="QUERY_FROM_TABLE" />
+	</select>
+	
+	<select id="selectQualityCount" resultType="java.util.Map">
+		SELECT 
+			SUM(import_data_history.total_rows) as total_rows, 
+			SUM(import_data_history.illegal_rows) as issue_rows,
+			SUM(import_data_modify_log.modify_rows) as modified_rows
+			<include refid="QUERY_FROM_UNION_LOG_TABLE" />
 	</select>
 	
 </mapper>
