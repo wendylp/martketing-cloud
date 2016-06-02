@@ -9,17 +9,17 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mysql.fabric.xmlrpc.base.Data;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.dao.DataAppDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.DataPersonalDao;
 import cn.rongcapital.mkt.dao.DataPosDao;
 import cn.rongcapital.mkt.dao.DataPublicDao;
 import cn.rongcapital.mkt.po.DataApp;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.DataPersonal;
 import cn.rongcapital.mkt.po.DataPos;
 import cn.rongcapital.mkt.po.DataPublic;
 import cn.rongcapital.mkt.service.DataGetMainListService;
@@ -40,6 +40,9 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
     @Autowired
     private DataPublicDao dataPublicDao;
 
+    @Autowired
+    private DataPersonalDao dataPersonalDao;
+
     @Override
     public Object getMainList(String method, String userToken, Integer dataType, Integer index,
                     Integer size, String ver) {
@@ -56,6 +59,8 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
             assignAppData(rseult, index, size);
         } else if (dataType == DataTypeEnum.PUBLIC.getCode()) {
             assignPublicData(rseult, index, size);
+        } else if (dataType == DataTypeEnum.PERSONAL.getCode()) {
+            assignPersonalData(rseult, index, size);
         }
 
 
@@ -96,6 +101,8 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("favorite_item_count", dataParty.getFavoriteItemCount());
                 map.put("salary", dataParty.getSalary());
                 map.put("offline_activity_attendence", dataParty.getOfflineActivityAttendence());
+                map.put("child_amount", dataParty.getChildAmount());
+                map.put("child_annual_budget", dataParty.getChildAnnualBudget());
 
                 rseult.getData().add(map);
             }
@@ -169,6 +176,27 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("icon_url", dataPublic.getIconUrl());
                 map.put("gender", dataPublic.getGender());
                 map.put("area", dataPublic.getArea());
+
+                rseult.getData().add(map);
+            }
+        }
+    }
+
+    private void assignPersonalData(BaseOutput rseult, int index, int size) {
+        DataPersonal paramDataPersonal = new DataPersonal();
+        paramDataPersonal.setStartIndex(index);
+        paramDataPersonal.setPageSize(size);
+        paramDataPersonal.setDeleted(Boolean.FALSE);
+
+        List<DataPersonal> dataPersonalList = dataPersonalDao.selectList(paramDataPersonal);
+
+        if (dataPersonalList != null && !dataPersonalList.isEmpty()) {
+            for (DataPersonal dataPersonal : dataPersonalList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("data_id", dataPersonal.getId());
+                map.put("open_id", dataPersonal.getOpenId());
+                map.put("personal_name", dataPersonal.getPersonalName());
+                map.put("nick_name", dataPersonal.getNickName());
 
                 rseult.getData().add(map);
             }
