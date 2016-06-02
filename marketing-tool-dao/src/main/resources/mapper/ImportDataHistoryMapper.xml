@@ -130,4 +130,11 @@
 			<include refid="QUERY_FROM_UNION_LOG_TABLE" />
 	</select>
 	
+	<select id="selectUnqualifiedCount" parameterType="cn.rongcapital.mkt.po.ImportDataHistory" resultType="java.util.Map">
+		SELECT 
+			mobile_rows , email_rows , duplicate_rows
+			<include refid="QUERY_FROM_TABLE" />
+			<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
 </mapper>

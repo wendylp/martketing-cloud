@@ -34,7 +34,9 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.DataGetMainListService;
+import cn.rongcapital.mkt.service.DataGetQualityCountService;
 import cn.rongcapital.mkt.service.DataGetQualityListService;
+import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
@@ -94,9 +96,13 @@ public class MktApi {
 	@Autowired
 	private MigrationFileUploadUrlService migrationFileUploadUrlService;
 	@Autowired
-	private DataGetMainListService dataGetMainListService;
-	@Autowired
 	private DataGetQualityListService dataGetQualityListService;
+	@Autowired
+	private DataGetQualityCountService dataGetQualityCountService;
+	@Autowired
+	private DataGetUnqualifiedCountService dataGetUnqualifiedCountService;
+	@Autowired
+	private DataGetMainListService dataGetMainListService;
 	@Autowired
 	private SegmentHeaderGetService segmentHeaderGetService;
 	@Autowired
@@ -334,6 +340,7 @@ public class MktApi {
 	
 	/**
      * @功能简述: 获取数据质量列表
+     * @author nianjun
      * @param: String method, String userToken, String ver, Ingeger index, Integer size
      * @return: Object
      */
@@ -347,7 +354,38 @@ public class MktApi {
     }
 
 	/**
-     * @功能简述: 获取主数据列表
+     * @功能简述 : 获取数据接入条数
+     * @param: String method, String userToken, String ver
+     * @author nianjun
+     * @return: Object
+     */
+    @GET
+    @Path("mkt.data.quality.count.get")
+    public Object getQualityCount(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver) {
+
+        return dataGetQualityCountService.getQualityCount(method, userToken, ver);
+    }
+
+    /**
+     * @功能简述 : 获取非法数据条数
+     * @param: String method, String userToken, String ver, Long batchId
+     * @author nianjun
+     * @return: Object
+     */
+    @GET
+    @Path("mkt.data.unqualified.count.get")
+    public Object getUnqualifiedCount(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver,
+                    @NotNull @QueryParam("batch_id") Long batchId) {
+
+        return dataGetUnqualifiedCountService.getQualityCount(method, userToken, ver, batchId);
+    }
+
+	/**
+     * @功能简述 : 获取主数据列表
      * @param: String method, String userToken, String ver, Ingeger index, Integer size
      * @return: Object
      */
