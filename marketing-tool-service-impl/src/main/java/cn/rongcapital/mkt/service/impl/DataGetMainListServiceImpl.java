@@ -66,33 +66,33 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
     public Object getMainList(String method, String userToken, Integer dataType, Integer index,
                     Integer size, String ver) {
 
-        BaseOutput rseult = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
         // 这代码写的太2了
         if (dataType == DataTypeEnum.PARTY.getCode()) {
-            assignPartyData(rseult, index, size);
+            assignPartyData(result, index, size);
         } else if (dataType == DataTypeEnum.APP.getCode()) {
-            assignAppData(rseult, index, size);
+            assignAppData(result, index, size);
         } else if (dataType == DataTypeEnum.POS.getCode()) {
-            assignPosData(rseult, index, size);
+            assignPosData(result, index, size);
         } else if (dataType == DataTypeEnum.PUBLIC.getCode()) {
-            assignPublicData(rseult, index, size);
+            assignPublicData(result, index, size);
         } else if (dataType == DataTypeEnum.PERSONAL.getCode()) {
-            assignPersonalData(rseult, index, size);
+            assignPersonalData(result, index, size);
         } else if (dataType == DataTypeEnum.ESHOP.getCode()) {
-            assignEshopData(rseult, index, size);
+            assignEshopData(result, index, size);
         } else if (dataType == DataTypeEnum.CRM.getCode()) {
-            assignCrmData(rseult, index, size);
+            assignCrmData(result, index, size);
         } else if (dataType == DataTypeEnum.TMALL.getCode()) {
-            assignTmallData(rseult, index, size);
+            assignTmallData(result, index, size);
         } else {
             logger.error("传入错误的data type : {}", dataType);
         }
 
-        rseult.setTotal(rseult.getData().size());
+        result.setTotal(result.getData().size());
 
-        return Response.ok().entity(rseult).build();
+        return Response.ok().entity(result).build();
     }
 
     private void assignPartyData(BaseOutput result, int index, int size) {

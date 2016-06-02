@@ -19,13 +19,15 @@ public class ImportDataHistory extends BaseQuery {
 
     private String source;
 
-    private Integer emailCount;
+    private String sourceFilename;
 
-    private Integer contactCount;
+    private Integer emailRows;
 
-    private Integer mobileCount;
+    private Integer mobileRows;
 
-    private Integer qqCount;
+    private Integer duplicateRows;
+
+    private Integer illegalRows;
 
     public Long getId() {
         return id;
@@ -83,35 +85,43 @@ public class ImportDataHistory extends BaseQuery {
         this.source = source == null ? null : source.trim();
     }
 
-    public Integer getEmailCount() {
-        return emailCount;
+    public String getSourceFilename() {
+        return sourceFilename;
     }
 
-    public void setEmailCount(Integer emailCount) {
-        this.emailCount = emailCount;
+    public void setSourceFilename(String sourceFilename) {
+        this.sourceFilename = sourceFilename == null ? null : sourceFilename.trim();
     }
 
-    public Integer getContactCount() {
-        return contactCount;
+    public Integer getEmailRows() {
+        return emailRows;
     }
 
-    public void setContactCount(Integer contactCount) {
-        this.contactCount = contactCount;
+    public void setEmailRows(Integer emailRows) {
+        this.emailRows = emailRows;
     }
 
-    public Integer getMobileCount() {
-        return mobileCount;
+    public Integer getMobileRows() {
+        return mobileRows;
     }
 
-    public void setMobileCount(Integer mobileCount) {
-        this.mobileCount = mobileCount;
+    public void setMobileRows(Integer mobileRows) {
+        this.mobileRows = mobileRows;
     }
 
-    public Integer getQqCount() {
-        return qqCount;
+    public Integer getDuplicateRows() {
+        return duplicateRows;
     }
 
-    public void setQqCount(Integer qqCount) {
-        this.qqCount = qqCount;
+    public void setDuplicateRows(Integer duplicateRows) {
+        this.duplicateRows = duplicateRows;
+    }
+
+    public Integer getIllegalRows() {
+        return illegalRows;
+    }
+
+    public void setIllegalRows(Integer illegalRows) {
+        this.illegalRows = illegalRows;
     }
 }

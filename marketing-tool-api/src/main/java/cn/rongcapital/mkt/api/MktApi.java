@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.DataGetMainListService;
+import cn.rongcapital.mkt.service.DataGetQualityListService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
@@ -94,6 +95,8 @@ public class MktApi {
 	private MigrationFileUploadUrlService migrationFileUploadUrlService;
 	@Autowired
 	private DataGetMainListService dataGetMainListService;
+	@Autowired
+	private DataGetQualityListService dataGetQualityListService;
 	@Autowired
 	private SegmentHeaderGetService segmentHeaderGetService;
 	@Autowired
@@ -328,7 +331,26 @@ public class MktApi {
 											@NotEmpty @QueryParam("ver") String ver) throws Exception {
 		return migrationFileUploadUrlService.getMigrationFileUploadUrl(null);
 	}
+	
+	/**
+     * @功能简述: 获取数据质量列表
+     * @param: String method, String userToken, String ver, Ingeger index, Integer size
+     * @return: Object
+     */
+	@GET
+    @Path("/mkt.data.quality.list.get")
+    public Object getQualityList(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @QueryParam("index") Integer index, @QueryParam("size") Integer size,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        return dataGetQualityListService.getQualityList(method, userToken, index, size, ver);
+    }
 
+	/**
+     * @功能简述: 获取主数据列表
+     * @param: String method, String userToken, String ver, Ingeger index, Integer size
+     * @return: Object
+     */
     @GET
     @Path("/mkt.data.main.list.get")
     public Object getDataMainList(@NotEmpty @QueryParam("method") String method,
