@@ -26,8 +26,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.service.*;
-import cn.rongcapital.mkt.vo.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +33,34 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.DataGetMainListService;
+import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
+import cn.rongcapital.mkt.service.GetImgTextAssetService;
+import cn.rongcapital.mkt.service.ImgtextHostService;
+import cn.rongcapital.mkt.service.LoginService;
+import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
+import cn.rongcapital.mkt.service.MigrationFileTemplateService;
+import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
+import cn.rongcapital.mkt.service.ModifyPasswdService;
+import cn.rongcapital.mkt.service.SaveWechatAssetListService;
+import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
+import cn.rongcapital.mkt.service.SegmentHeaderGetService;
+import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
+import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
+import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
+import cn.rongcapital.mkt.service.UpdateNicknameService;
+import cn.rongcapital.mkt.service.WechatAssetListGetService;
+import cn.rongcapital.mkt.service.WechatAssetListService;
+import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.ImgAsset;
+import cn.rongcapital.mkt.vo.ImgtextHostIn;
+import cn.rongcapital.mkt.vo.LoginInput;
+import cn.rongcapital.mkt.vo.ModifyInput;
+import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
+import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
+import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -304,15 +328,15 @@ public class MktApi {
 											@NotEmpty @QueryParam("ver") String ver) throws Exception {
 		return migrationFileUploadUrlService.getMigrationFileUploadUrl(null);
 	}
-	
+
     @GET
     @Path("/mkt.data.main.list.get")
     public Object getDataMainList(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotEmpty @QueryParam("data_type") Integer dataType,
+                    @NotNull @QueryParam("data_type") Integer dataType,
                     @QueryParam("index") Integer index, @QueryParam("size") Integer size,
                     @NotEmpty @QueryParam("ver") String ver) {
-        return dataGetMainListService.getMainList(method, userToken, dataType , index, size, ver);
+        return dataGetMainListService.getMainList(method, userToken, dataType, index, size, ver);
     }
 
 	/**
