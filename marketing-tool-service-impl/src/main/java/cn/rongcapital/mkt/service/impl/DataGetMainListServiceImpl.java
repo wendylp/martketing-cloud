@@ -46,7 +46,7 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         else if (dataType == DataTypeEnum.APP.getCode()) {
             assignAppData(rseult, index, size);
         } else if (dataType == DataTypeEnum.POS.getCode()) {
-
+            assignAppData(rseult, index, size);
         }
 
 
