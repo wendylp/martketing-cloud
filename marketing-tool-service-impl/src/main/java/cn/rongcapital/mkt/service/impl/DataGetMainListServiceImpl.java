@@ -14,8 +14,10 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.dao.DataAppDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.DataPosDao;
 import cn.rongcapital.mkt.po.DataApp;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.DataPos;
 import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -27,6 +29,9 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
 
     @Autowired
     private DataAppDao dataAppDao;
+
+    @Autowired
+    private DataPosDao dataPosDao;
 
     @Override
     public Object getMainList(String method, String userToken, Integer dataType, Integer index,
@@ -40,6 +45,8 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         } // 获取App数据
         else if (dataType == DataTypeEnum.APP.getCode()) {
             assignAppData(rseult, index, size);
+        } else if (dataType == DataTypeEnum.POS.getCode()) {
+
         }
 
 
@@ -112,4 +119,26 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
             }
         }
     }
+
+    private void assignPosData(BaseOutput rseult, int index, int size) {
+        DataPos paramDataPos = new DataPos();
+        paramDataPos.setStartIndex(index);
+        paramDataPos.setPageSize(size);
+        paramDataPos.setDeleted(Boolean.FALSE);
+
+        List<DataPos> dataPosList = dataPosDao.selectList(paramDataPos);
+
+        if (dataPosList != null && !dataPosList.isEmpty()) {
+            for (DataPos dataPos : dataPosList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("data_id", dataPos.getId());
+                map.put("account_name", dataPos.getAccountName());
+                map.put("time", dataPos.getTime());
+                map.put("store", dataPos.getStore());
+                map.put("monetory", dataPos.getMonetary());
+                map.put("sku_list", dataPos.getSkuList());
+            }
+        }
+    }
+
 }
