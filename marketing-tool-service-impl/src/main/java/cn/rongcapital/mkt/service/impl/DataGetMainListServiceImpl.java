@@ -13,11 +13,13 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.dao.DataAppDao;
+import cn.rongcapital.mkt.dao.DataEshopDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.DataPersonalDao;
 import cn.rongcapital.mkt.dao.DataPosDao;
 import cn.rongcapital.mkt.dao.DataPublicDao;
 import cn.rongcapital.mkt.po.DataApp;
+import cn.rongcapital.mkt.po.DataEshop;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.DataPersonal;
 import cn.rongcapital.mkt.po.DataPos;
@@ -43,6 +45,9 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
     @Autowired
     private DataPersonalDao dataPersonalDao;
 
+    @Autowired
+    private DataEshopDao dataEshopDao;
+
     @Override
     public Object getMainList(String method, String userToken, Integer dataType, Integer index,
                     Integer size, String ver) {
@@ -61,6 +66,8 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
             assignPublicData(rseult, index, size);
         } else if (dataType == DataTypeEnum.PERSONAL.getCode()) {
             assignPersonalData(rseult, index, size);
+        } else if (dataType == DataTypeEnum.ESHOP.getCode()) {
+            assignEshopData(rseult, index, size);
         }
 
 
@@ -197,6 +204,33 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("open_id", dataPersonal.getOpenId());
                 map.put("personal_name", dataPersonal.getPersonalName());
                 map.put("nick_name", dataPersonal.getNickName());
+
+                rseult.getData().add(map);
+            }
+        }
+    }
+
+    private void assignEshopData(BaseOutput rseult, int index, int size) {
+        DataEshop paramDataEshop = new DataEshop();
+        paramDataEshop.setStartIndex(index);
+        paramDataEshop.setPageSize(size);
+        paramDataEshop.setDeleted(Boolean.FALSE);
+
+        List<DataEshop> dataEshopList = dataEshopDao.selectList(paramDataEshop);
+
+        if (dataEshopList != null && !dataEshopList.isEmpty()) {
+            for (DataEshop dataEshop : dataEshopList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("data_id", dataEshop.getId());
+                map.put("account_name", dataEshop.getAccountName());
+                map.put("name", dataEshop.getName());
+                map.put("delivery_address", dataEshop.getDeliveryAddress());
+                map.put("mobile", dataEshop.getMobile());
+                map.put("email", dataEshop.getEmail());
+                map.put("order_count", dataEshop.getOrderCount());
+                map.put("order_amount", dataEshop.getOrderAmount());
+                map.put("cart_iterm_count", dataEshop.getCartItemCount());
+                map.put("favorite_item_count", dataEshop.getFavoriteItemCount());
 
                 rseult.getData().add(map);
             }
