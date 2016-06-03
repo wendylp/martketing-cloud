@@ -10,33 +10,25 @@
 
 package cn.rongcapital.mkt.api;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.*;
 import cn.rongcapital.mkt.vo.*;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -82,6 +74,8 @@ public class MktApi {
 	private SaveWechatAssetListService saveWechatAssetListService;
 	@Autowired
 	private SegmentHeaderUpdateService segmentHeaderUpdateService;
+	@Autowired
+	private UploadFileService uploadFileService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -350,5 +344,21 @@ public class MktApi {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object saveWechatAssetList(@Valid SaveWechatAssetListIn saveWechatAssetListIn,@Context SecurityContext securityContext){
 		return saveWechatAssetListService.saveWechatAssetList(saveWechatAssetListIn, securityContext);
+	}
+
+	/**
+	 * @功能描述:文件上传
+	 * @Param: String user_token, String ver, Integer asset_id, String nickname
+	 * @return: Object
+	 */
+	@POST()
+	@Path("/mkt.file.upload")
+	@Consumes("multipart/form-data")
+	public Object fileUpload(
+			@QueryParam("file_source") String fileSource,
+			@NotEmpty @QueryParam("file_unique") String fileUnique,
+			@QueryParam("file_type") int fileType,
+			MultipartFormDataInput input,@Context SecurityContext securityContext){
+		return uploadFileService.uploadFile(fileSource,fileUnique,fileType,input,securityContext);
 	}
 }
