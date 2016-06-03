@@ -4,11 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,name as name,description as description,type as type,length as length,rule as rule]]>
-	</sql>
-
-	<sql id="QUERY_TEMPLATE_LIST">
-		<![CDATA[ id,name]]>
+		<![CDATA[ id,templ_type,templ_name,field_name,field_code,selected]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -18,11 +14,11 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="description != null and description != ''"><![CDATA[ AND description = #{description}]]></if>
-		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
-		    	<if test="length != null and length != ''"><![CDATA[ AND length = #{length}]]></if>
-		    	<if test="rule != null and rule != ''"><![CDATA[ AND rule = #{rule}]]></if>
+		    	<if test="templType != null and templType != ''"><![CDATA[ AND templ_type = #{templType}]]></if>
+		    	<if test="templName != null and templName != ''"><![CDATA[ AND templ_name = #{templName}]]></if>
+		    	<if test="fieldName != null and fieldName != ''"><![CDATA[ AND field_name = #{fieldName}]]></if>
+		    	<if test="fieldCode != null and fieldCode != ''"><![CDATA[ AND field_code = #{fieldCode}]]></if>
+		    	<if test="selected != null and selected != ''"><![CDATA[selected = #{selected}]]></if>
 		</where>
 	</sql>
 	
@@ -35,27 +31,27 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
-		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
-		    	<if test="description != null"><![CDATA[description = #{description},]]></if>
-		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
-		    	<if test="length != null"><![CDATA[length = #{length},]]></if>
-		    	<if test="rule != null"><![CDATA[rule = #{rule}]]></if>
+		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
+		    	<if test="templType != null"><![CDATA[AND templ_type = #{templType},]]></if>
+		    	<if test="templName != null"><![CDATA[AND templ_name = #{templName},]]></if>
+		    	<if test="fieldName != null"><![CDATA[AND field_name = #{fieldName},]]></if>
+		    	<if test="fieldCode != null"><![CDATA[AND field_code = #{fieldCode},]]></if>
+		    	<if test="selected != null"><![CDATA[AND selected = #{selected}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ImportTemplate" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO import_template (id,name,description,type,length,rule)
+			INSERT INTO import_template (id,templ_type,templ_name,field_name,field_code,selected)
 			VALUES
 			(
 			  #{id},
-			  #{name},
-			  #{description},
-			  #{type},
-			  #{length},
-			  #{rule}
+			  #{templType},
+			  #{templName},
+			  #{fieldName},
+			  #{fieldCode},
+			  #{selected}
 			)
 		]]>
 	</insert>
