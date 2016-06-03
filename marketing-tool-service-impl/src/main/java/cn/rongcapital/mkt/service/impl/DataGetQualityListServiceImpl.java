@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
+import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
 import cn.rongcapital.mkt.po.ImportDataHistory;
+import cn.rongcapital.mkt.po.ImportDataModifyLog;
 import cn.rongcapital.mkt.service.DataGetQualityListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -21,6 +23,9 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
 
     @Autowired
     private ImportDataHistoryDao importDataHistoryDao;
+    
+    @Autowired
+    private ImportDataModifyLogDao importDataModifyLogDao;
 
     @Override
     public Object getQualityList(String method, String userToken, Integer index, Integer size,
@@ -45,7 +50,14 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
                 map.put("data_source", importDataHistory.getSource());
                 map.put("legal_data_rows_count", importDataHistory.getLegalRows());
                 map.put("ilegal_data_rows_count", importDataHistory.getIllegalRows());
-                
+
+                ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
+                paramImportDataModifyLog.setImportDataId(importDataHistory.getId());
+                List<ImportDataModifyLog> importDataModifyLogList = importDataModifyLogDao.selectList(paramImportDataModifyLog);
+                if(importDataModifyLogList!=null && !importDataModifyLogList.isEmpty()){
+                    map.put("", importDataModifyLogList);
+                }
+
                 result.getData().add(map);
             }
         }
