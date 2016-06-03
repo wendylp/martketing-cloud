@@ -104,4 +104,14 @@
 		<include refid="QUERY_FROM_TABLE"/>
 	</select>
 	
+	<!-- 查询自定义视图字段列表 -->
+	<select id="selectViewListByTemplType" parameterType="cn.rongcapital.mkt.po.ImportTemplate" resultType="cn.rongcapital.mkt.po.ImportTemplate">
+		SELECT
+			id,templ_type as templType ,templ_name as templName,field_name as fieldName,field_code as fieldCode,selected
+		FROM 
+			import_template
+		WHERE 
+			templ_type = #{templType}
+	</select>
+	
 </mapper>

@@ -30,11 +30,15 @@ public class DataGetViewListServiceImpl implements DataGetViewListService {
         ImportTemplate paramImportTemplate = new ImportTemplate();
         paramImportTemplate.setTemplType(mdType);
 
-        List<ImportTemplate> importTemplateList = importTemplateDao.selectList(paramImportTemplate);
+        List<ImportTemplate> importTemplateList =
+                        importTemplateDao.selectViewListByTemplType(paramImportTemplate);
+        
         if (importTemplateList != null && !importTemplateList.isEmpty()) {
             for (ImportTemplate importTemplate : importTemplateList) {
                 Map<String, Object> map = new HashMap<>();
-                map.put(importTemplate.getFieldName(), importTemplate.getSelected());
+                map.put("field_name", importTemplate.getFieldName());
+                map.put("templ_name", importTemplate.getTemplName());
+                map.put("selected", importTemplate.getSelected());
                 result.getData().add(map);
             }
         }

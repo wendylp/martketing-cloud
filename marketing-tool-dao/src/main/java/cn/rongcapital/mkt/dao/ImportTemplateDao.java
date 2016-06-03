@@ -10,11 +10,11 @@
 
 package cn.rongcapital.mkt.dao;
 
-import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.ImportTemplate;
-
 import java.util.List;
 import java.util.Map;
+
+import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.po.ImportTemplate;
 
 public interface ImportTemplateDao extends BaseDao<ImportTemplate>{
 	
@@ -43,4 +43,13 @@ public interface ImportTemplateDao extends BaseDao<ImportTemplate>{
 	 * @return list
 	 */
 	List<Map<String,Object>> selectTemplateList();
+	
+	/**
+     * mkt.data.view.list.get
+     * 
+     * @功能简述 : 查询自定义视图字段列表
+     * @author nianjun
+     * @return List
+     */
+    List<ImportTemplate> selectViewListByTemplType(ImportTemplate paramImportTemplate);
 }
