@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.CampaignHeaderGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
 import cn.rongcapital.mkt.service.DataGetMainListService;
@@ -121,6 +122,8 @@ public class MktApi {
 	private SaveWechatAssetListService saveWechatAssetListService;
 	@Autowired
 	private SegmentHeaderUpdateService segmentHeaderUpdateService;
+	@Autowired
+	private CampaignHeaderGetService campaignHeaderGetService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -167,6 +170,20 @@ public class MktApi {
 		return getImgTextAssetService.getImgTextAssetService(imgAsset);
 	}
 
+	/**
+	 * @功能简述: 根据id获取segment header
+	 * @param: SegmentHeadIn body, SecurityContext securityContext 
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.campaign.header.get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object campaignHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
+								   @NotEmpty @QueryParam("ver") String ver,
+								   @NotNull @QueryParam("campaign_id") Integer campaignId) {
+	    return campaignHeaderGetService.campaignHeaderGet(userToken, ver, campaignId);
+	}
+	
 	/**
 	 * @功能简述: 编辑segment header
 	 * @param: SegmentHeadIn body, SecurityContext securityContext 
