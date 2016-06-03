@@ -5,13 +5,13 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 public class ImportTemplate extends BaseQuery {
     private Integer id;
 
-    private String templType;
+    private Integer templType;
 
     private String templName;
 
     private String fieldName;
 
-    private Byte fieldCode;
+    private String fieldCode;
 
     private Boolean selected;
 
@@ -23,12 +23,12 @@ public class ImportTemplate extends BaseQuery {
         this.id = id;
     }
 
-    public String getTemplType() {
+    public Integer getTemplType() {
         return templType;
     }
 
-    public void setTemplType(String templType) {
-        this.templType = templType == null ? null : templType.trim();
+    public void setTemplType(Integer templType) {
+        this.templType = templType;
     }
 
     public String getTemplName() {
@@ -47,12 +47,12 @@ public class ImportTemplate extends BaseQuery {
         this.fieldName = fieldName == null ? null : fieldName.trim();
     }
 
-    public Byte getFieldCode() {
+    public String getFieldCode() {
         return fieldCode;
     }
 
-    public void setFieldCode(Byte fieldCode) {
-        this.fieldCode = fieldCode;
+    public void setFieldCode(String fieldCode) {
+        this.fieldCode = fieldCode == null ? null : fieldCode.trim();
     }
 
     public Boolean getSelected() {

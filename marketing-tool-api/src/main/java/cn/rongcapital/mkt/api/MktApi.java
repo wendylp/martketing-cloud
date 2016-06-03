@@ -40,6 +40,7 @@ import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.service.DataGetQualityCountService;
 import cn.rongcapital.mkt.service.DataGetQualityListService;
 import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
+import cn.rongcapital.mkt.service.DataGetViewListService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
@@ -110,6 +111,8 @@ public class MktApi {
 	private DataGetMainListService dataGetMainListService;
 	@Autowired
 	private DataDeleteMainService dataDeleteMainService;
+	@Autowired
+	private DataGetViewListService dataGetViewListService;
 	@Autowired
 	private SegmentHeaderGetService segmentHeaderGetService;
 	@Autowired
@@ -449,6 +452,20 @@ public class MktApi {
                     @NotNull @QueryParam("data_id") Integer dataId,
                     @NotEmpty @QueryParam("ver") String ver) {
         return dataDeleteMainService.deleteMain(method, userToken, ver, dataId);
+    }
+    
+    /**
+     * @功能简述 : 查询自定义视图字段列表
+     * @param: String method, String userToken, String ver, Integer mdType
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.view.list.get")
+    public Object getViewList(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("md_type") Integer mdType,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        return dataGetViewListService.getViewList(method, userToken, ver, mdType);
     }
 
 	/**
