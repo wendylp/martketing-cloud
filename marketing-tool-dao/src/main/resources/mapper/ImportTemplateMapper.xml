@@ -6,6 +6,10 @@
 	<sql id="QUERY_COLUMN_LIST">
 		<![CDATA[ id,templ_type,templ_name,field_name,field_code,selected]]>
 	</sql>
+	
+	<sql id="QUERY_TEMPLATE_LIST">
+		<![CDATA[ id,name]]>
+	</sql>
 
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM import_template]]></sql>
