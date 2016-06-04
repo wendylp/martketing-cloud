@@ -10,25 +10,66 @@
 
 package cn.rongcapital.mkt.api;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.service.*;
-import cn.rongcapital.mkt.vo.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.CampaignHeaderGetService;
+import cn.rongcapital.mkt.service.DataDeleteMainService;
+import cn.rongcapital.mkt.service.DataGetMainCountService;
+import cn.rongcapital.mkt.service.DataGetMainListService;
+import cn.rongcapital.mkt.service.DataGetQualityCountService;
+import cn.rongcapital.mkt.service.DataGetQualityListService;
+import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
+import cn.rongcapital.mkt.service.DataGetViewListService;
+import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
+import cn.rongcapital.mkt.service.GetImgTextAssetService;
+import cn.rongcapital.mkt.service.ImgtextHostService;
+import cn.rongcapital.mkt.service.LoginService;
+import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
+import cn.rongcapital.mkt.service.MigrationFileTemplateService;
+import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
+import cn.rongcapital.mkt.service.ModifyPasswdService;
+import cn.rongcapital.mkt.service.SaveWechatAssetListService;
+import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
+import cn.rongcapital.mkt.service.SegmentHeaderGetService;
+import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
+import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
+import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
+import cn.rongcapital.mkt.service.UpdateNicknameService;
+import cn.rongcapital.mkt.service.WechatAssetListGetService;
+import cn.rongcapital.mkt.service.WechatAssetListService;
+import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.UploadFileService;
+import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.ImgAsset;
+import cn.rongcapital.mkt.vo.ImgtextHostIn;
+import cn.rongcapital.mkt.vo.LoginInput;
+import cn.rongcapital.mkt.vo.ModifyInput;
+import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
+import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
+import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
+import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -61,7 +102,19 @@ public class MktApi {
 	@Autowired
 	private MigrationFileUploadUrlService migrationFileUploadUrlService;
 	@Autowired
+	private DataGetQualityListService dataGetQualityListService;
+	@Autowired
+	private DataGetQualityCountService dataGetQualityCountService;
+	@Autowired
+	private DataGetUnqualifiedCountService dataGetUnqualifiedCountService;
+	@Autowired
+	private DataGetMainCountService dataGetMainCountService;
+	@Autowired
 	private DataGetMainListService dataGetMainListService;
+	@Autowired
+	private DataDeleteMainService dataDeleteMainService;
+	@Autowired
+	private DataGetViewListService dataGetViewListService;
 	@Autowired
 	private SegmentHeaderGetService segmentHeaderGetService;
 	@Autowired
@@ -76,6 +129,8 @@ public class MktApi {
 	private SegmentHeaderUpdateService segmentHeaderUpdateService;
 	@Autowired
 	private UploadFileService uploadFileService;
+	@Autowired
+	private CampaignHeaderGetService campaignHeaderGetService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -120,6 +175,20 @@ public class MktApi {
 			imgAsset.setSize(10);
 		}
 		return getImgTextAssetService.getImgTextAssetService(imgAsset);
+	}
+
+	/**
+	 * @功能简述: 根据id获取segment header
+	 * @param: SegmentHeadIn body, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.campaign.header.get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object campaignHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
+								   @NotEmpty @QueryParam("ver") String ver,
+								   @NotNull @QueryParam("campaign_id") Integer campaignId) {
+	    return campaignHeaderGetService.campaignHeaderGet(userToken, ver, campaignId);
 	}
 
 	/**
@@ -299,14 +368,108 @@ public class MktApi {
 		return migrationFileUploadUrlService.getMigrationFileUploadUrl(null);
 	}
 	
+	/**
+     * @功能简述: 获取数据质量列表
+     * @author nianjun
+     * @param: String method, String userToken, String ver, Ingeger index, Integer size
+     * @return: Object
+     */
+	@GET
+    @Path("/mkt.data.quality.list.get")
+    public Object getQualityList(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @QueryParam("index") Integer index, @QueryParam("size") Integer size,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        return dataGetQualityListService.getQualityList(method, userToken, index, size, ver);
+    }
+
+	/**
+     * @功能简述 : 获取数据接入条数
+     * @param: String method, String userToken, String ver
+     * @author nianjun
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.quality.count.get")
+    public Object getQualityCount(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver) {
+
+        return dataGetQualityCountService.getQualityCount(method, userToken, ver);
+    }
+
+    /**
+     * @功能简述 : 获取非法数据条数
+     * @param: String method, String userToken, String ver, Long batchId
+     * @author nianjun
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.unqualified.count.get")
+    public Object getUnqualifiedCount(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver,
+                    @NotNull @QueryParam("batch_id") Long batchId) {
+
+        return dataGetUnqualifiedCountService.getQualityCount(method, userToken, ver, batchId);
+    }
+
+    /**
+     * @功能简述 : 获取主数据条数
+     * @param: String method, String userToken, String ver, Long batchId
+     * @author nianjun
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.main.count.get")
+    public Object getUnqualifiedCount(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver) {
+
+        return dataGetMainCountService.getMainCount(method, userToken, ver);
+    }
+
+	/**
+     * @功能简述 : 获取主数据列表
+     * @param: String method, String userToken, String ver, Ingeger index, Integer size
+     * @return: Object
+     */
     @GET
     @Path("/mkt.data.main.list.get")
     public Object getDataMainList(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotEmpty @QueryParam("data_type") Integer dataType,
+                    @NotNull @QueryParam("data_type") Integer dataType,
                     @QueryParam("index") Integer index, @QueryParam("size") Integer size,
                     @NotEmpty @QueryParam("ver") String ver) {
-        return dataGetMainListService.getMainList(method, userToken, dataType , index, size, ver);
+        return dataGetMainListService.getMainList(method, userToken, dataType, index, size, ver);
+    }
+
+    /**
+     * @功能简述 : 删除某条主数据
+     * @param: String method, String userToken, String ver, dataId
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.main.delete")
+    public Object deleteDataMain(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("data_id") Integer dataId,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        return dataDeleteMainService.deleteMain(method, userToken, ver, dataId);
+    }
+
+    /**
+     * @功能简述 : 查询自定义视图字段列表
+     * @param: String method, String userToken, String ver, Integer mdType
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.view.list.get")
+    public Object getViewList(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("md_type") Integer mdType,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        return dataGetViewListService.getViewList(method, userToken, ver, mdType);
     }
 
 	/**
@@ -358,7 +521,7 @@ public class MktApi {
 			@QueryParam("file_source") String fileSource,
 			@NotEmpty @QueryParam("file_unique") String fileUnique,
 			@QueryParam("file_type") int fileType,
-			MultipartFormDataInput input,@Context SecurityContext securityContext){
+			MultipartFormDataInput input, @Context SecurityContext securityContext){
 		return uploadFileService.uploadFile(fileSource,fileUnique,fileType,input,securityContext);
 	}
 }

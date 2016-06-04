@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.rongcapital.mkt.dao.DataPostDao">
+<mapper namespace="cn.rongcapital.mkt.dao.DataPosDao">
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
@@ -8,7 +8,7 @@
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_post]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_pos]]></sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
@@ -45,9 +45,9 @@
 	</sql>
 
 	<!-- 插入action记录 -->
-	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataPost" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataPos" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_post (id,account_name,time,store,monetary,sku_list,deleted,delete_time)
+			INSERT INTO data_pos (id,account_name,time,store,monetary,sku_list,deleted,delete_time)
 			VALUES
 			(
 			  #{id},
@@ -66,14 +66,14 @@
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
 	<!-- 修改记录通过主键 -->
-	<update id="updateById" parameterType="cn.rongcapital.mkt.po.DataPost">
-		<![CDATA[UPDATE data_post]]>
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.DataPos">
+		<![CDATA[UPDATE data_pos]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.DataPost" resultType="cn.rongcapital.mkt.po.DataPost">
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.DataPos" resultType="cn.rongcapital.mkt.po.DataPos">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -84,7 +84,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectList" parameterType="cn.rongcapital.mkt.po.DataPost" resultType="cn.rongcapital.mkt.po.DataPost">
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.DataPos" resultType="cn.rongcapital.mkt.po.DataPos">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -93,7 +93,7 @@
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.DataPost" resultType="int">
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.DataPos" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>

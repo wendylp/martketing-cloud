@@ -11,9 +11,9 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.DataTmail;
+import cn.rongcapital.mkt.po.DataPos;
 
-public interface DataTmailDao extends BaseDao<DataTmail>{
+public interface DataPosDao extends BaseDao<DataPos>{
 	
 	//自定义扩展
 	/**

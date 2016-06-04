@@ -10,12 +10,10 @@
 
 package cn.rongcapital.mkt.dao;
 
-import java.util.Map;
-
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.DataTmall;
 
-public interface DataPartyDao extends BaseDao<DataParty>{
+public interface DataTmallDao extends BaseDao<DataTmall>{
 	
 	//自定义扩展
 	/**
@@ -36,22 +34,4 @@ public interface DataPartyDao extends BaseDao<DataParty>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
-    
-    /**
-     * mkt.data.main.count.get
-     * 
-     * @功能简述 : 获取主数据条数
-     * @author nianjun
-     * @return map
-     */
-    public Map<String, Object> selectMainCount();
-    
-    /**
-     * mkt.data.main.delete
-     * 
-     * @功能简述 : 删除某条主数据
-     * @author nianjun
-     * @return map
-     */
-    public int logicDeleteById(DataParty dataParty);
 }

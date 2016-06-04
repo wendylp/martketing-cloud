@@ -4,7 +4,7 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class DataTmail extends BaseQuery {
+public class DataTmall extends BaseQuery {
     private Integer id;
 
     private String accountName;

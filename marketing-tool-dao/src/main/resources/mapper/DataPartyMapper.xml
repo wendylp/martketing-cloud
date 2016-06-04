@@ -152,5 +152,29 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<select id="selectMainCount" resultType="java.util.Map">
+		SELECT
+			data_party_rows,data_app_rows,data_pos_rows,data_crm_rows,data_personal_rows,data_public_rows,data_eshop_rows,data_tmall_rows
+		FROM
+			(select count(id) as data_party_rows from data_party) as data_party_result,
+			(select count(id) as data_app_rows from data_app) as data_app_result,
+			(select count(id) as data_pos_rows from data_pos) as data_pos_result,
+			(select count(id) as data_crm_rows from data_crm) as data_crm_result,
+			(select count(id) as data_personal_rows from data_personal) as data_personal_result,
+			(select count(id) as data_public_rows from data_public) as data_public_result,
+			(select count(id) as data_eshop_rows from data_eshop) as data_eshop_result,
+			(select count(id) as data_tmall_rows from data_tmall) as data_tmall_result
+	</select>
+
+	<!-- 根据Id逻辑上删除某条主数据 -->
+	<update id="logicDeleteById" parameterType="cn.rongcapital.mkt.po.DataParty">
+		UPDATE
+			data_party
+		SET
+			deleted=#{deleted},
+			delete_time= #{deleteTime}
+		WHERE id=#{id}
+	</update>
+	
 	
 </mapper>

@@ -3,63 +3,63 @@ package cn.rongcapital.mkt.po;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class ImportTemplate extends BaseQuery {
-    private Long id;
+    private Integer id;
 
-    private String name;
+    private Integer templType;
 
-    private String description;
+    private String templName;
 
-    private String type;
+    private String fieldName;
 
-    private Integer length;
+    private String fieldCode;
 
-    private String rule;
+    private Boolean selected;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Integer getTemplType() {
+        return templType;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setTemplType(Integer templType) {
+        this.templType = templType;
     }
 
-    public String getDescription() {
-        return description;
+    public String getTemplName() {
+        return templName;
     }
 
-    public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
+    public void setTemplName(String templName) {
+        this.templName = templName == null ? null : templName.trim();
     }
 
-    public String getType() {
-        return type;
+    public String getFieldName() {
+        return fieldName;
     }
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName == null ? null : fieldName.trim();
     }
 
-    public Integer getLength() {
-        return length;
+    public String getFieldCode() {
+        return fieldCode;
     }
 
-    public void setLength(Integer length) {
-        this.length = length;
+    public void setFieldCode(String fieldCode) {
+        this.fieldCode = fieldCode == null ? null : fieldCode.trim();
     }
 
-    public String getRule() {
-        return rule;
+    public Boolean getSelected() {
+        return selected;
     }
 
-    public void setRule(String rule) {
-        this.rule = rule == null ? null : rule.trim();
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
     }
 }

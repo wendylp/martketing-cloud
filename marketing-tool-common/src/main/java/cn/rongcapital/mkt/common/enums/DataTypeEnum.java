@@ -9,7 +9,7 @@ public enum DataTypeEnum {
     PERSONAL(4, "个人号"), 
     ESHOP(5, "网上商城"), 
     CRM(6, "CRM"), 
-    TMAL(7, "天猫"),
+    TMALL(7, "天猫"),
 
     ;
 

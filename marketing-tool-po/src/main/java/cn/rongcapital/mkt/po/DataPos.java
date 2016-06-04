@@ -5,7 +5,7 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class DataPost extends BaseQuery {
+public class DataPos extends BaseQuery {
     private Integer id;
 
     private String accountName;
