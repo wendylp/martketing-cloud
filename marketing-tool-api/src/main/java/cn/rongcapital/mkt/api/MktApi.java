@@ -46,6 +46,7 @@ import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
 import cn.rongcapital.mkt.service.DataGetViewListService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
+import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
@@ -64,7 +65,6 @@ import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -78,7 +78,6 @@ import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyOut;
-import cn.rongcapital.mkt.vo.out.SegmentTagnameTagList;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -591,7 +590,7 @@ public class MktApi {
 	 */
 	@GET
 	@Path("/mkt.segment.tagname.taglist.get")
-	public SegmentTagnameTagList getSysRecommendedTagList(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput getSysRecommendedTagList(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken){
 		return null;
 	}
