@@ -26,6 +26,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.service.*;
+import cn.rongcapital.mkt.vo.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -34,44 +36,6 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.service.CampaignBodyCreateService;
-import cn.rongcapital.mkt.service.CampaignBodyGetService;
-import cn.rongcapital.mkt.service.CampaignHeaderGetService;
-import cn.rongcapital.mkt.service.DataDeleteMainService;
-import cn.rongcapital.mkt.service.DataGetMainCountService;
-import cn.rongcapital.mkt.service.DataGetMainListService;
-import cn.rongcapital.mkt.service.DataGetQualityCountService;
-import cn.rongcapital.mkt.service.DataGetQualityListService;
-import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
-import cn.rongcapital.mkt.service.DataGetViewListService;
-import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
-import cn.rongcapital.mkt.service.GetImgTextAssetService;
-import cn.rongcapital.mkt.service.ImgtextHostService;
-import cn.rongcapital.mkt.service.LoginService;
-import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
-import cn.rongcapital.mkt.service.MigrationFileTemplateService;
-import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
-import cn.rongcapital.mkt.service.ModifyPasswdService;
-import cn.rongcapital.mkt.service.SaveWechatAssetListService;
-import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
-import cn.rongcapital.mkt.service.SegmentHeaderGetService;
-import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
-import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
-import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
-import cn.rongcapital.mkt.service.UpdateNicknameService;
-import cn.rongcapital.mkt.service.UploadFileService;
-import cn.rongcapital.mkt.service.WechatAssetListGetService;
-import cn.rongcapital.mkt.service.WechatAssetListService;
-import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.ImgAsset;
-import cn.rongcapital.mkt.vo.ImgtextHostIn;
-import cn.rongcapital.mkt.vo.LoginInput;
-import cn.rongcapital.mkt.vo.ModifyInput;
-import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
-import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
-import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
-import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyOut;
 
@@ -95,6 +59,8 @@ public class MktApi {
 	private DeleteImgTextAssetService deleteImgTextAssetService;
 	@Autowired
 	private GetImgTextAssetService getImgTextAssetService;
+	@Autowired
+	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 	@Autowired
 	private ImgtextHostService imgtextHostService;
 	@Autowired
@@ -152,6 +118,8 @@ public class MktApi {
 		return Response.ok().entity(ur).build();
 	}
 
+
+
 	/**
 	 * @功能简述: 获取图文资产
 	 * @param:String user_token,String ver,Integer type,String ownerName,int index,int size
@@ -182,6 +150,23 @@ public class MktApi {
 			imgAsset.setSize(10);
 		}
 		return getImgTextAssetService.getImgTextAssetService(imgAsset);
+	}
+
+	/**
+	 * @功能简述: 获取图文资产
+	 * @param:String user_token,String ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.imgtext.menulist.get")
+	public Object getImgtextAssetMenulist(@NotEmpty @QueryParam("user_token") String userToken,
+								  @NotEmpty @QueryParam("ver") String ver,
+								  @DefaultValue("1") @Min(1) @QueryParam("index") int index,
+								  @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size){
+		BaseInput baseInput = new BaseInput();
+		baseInput.setIndex(index);
+		baseInput.setSize(size);
+		return getImgtextAssetMenulistService.getImgTextAssetMenulist(baseInput);
 	}
 
 	/**
