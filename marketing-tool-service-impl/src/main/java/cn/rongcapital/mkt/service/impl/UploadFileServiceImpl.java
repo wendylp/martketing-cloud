@@ -40,10 +40,10 @@ public class UploadFileServiceImpl implements UploadFileService{
     public Object uploadFile(String source,String fileUnique,int fileType,MultipartFormDataInput fileInput, SecurityContext securityContext) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(),ApiConstant.INT_ZERO,null);
         if( !isFileUniqueValid(fileUnique) ) return Response.ok().entity(baseOutput).build();
-
         String fileName = "";
         Map<String,List<InputPart>> uploadForm = fileInput.getFormDataMap();
         List<InputPart> inputParts = uploadForm.get("file");
+        logger.info("get file successed" + inputParts);
         for(InputPart inputPart : inputParts){
             try {
                 MultivaluedMap<String,String> header = inputPart.getHeaders();
