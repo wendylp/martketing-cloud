@@ -530,8 +530,8 @@ public class MktApi {
 	 * @Param: String user_token, String ver, Integer asset_id, String nickname
 	 * @return: Object
 	 */
-	@POST()
-	@Path("/mkt.service.file.upload")
+	@POST
+	@Path("/mkt.file.upload")
 	@Consumes("multipart/form-data")
 	public Object fileUpload(
 			@QueryParam("file_source") String fileSource,
