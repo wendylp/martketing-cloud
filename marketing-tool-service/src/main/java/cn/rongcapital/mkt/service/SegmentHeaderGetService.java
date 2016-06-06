@@ -9,7 +9,9 @@
 *************************************************/
 package cn.rongcapital.mkt.service;
 
+import cn.rongcapital.mkt.vo.BaseOutput;
+
 public interface SegmentHeaderGetService {
 
-	public Object segmentHeaderGet(String userToken,String ver,String segmentId);
+	public BaseOutput segmentHeaderGet(String userToken,String ver,String segmentId);
 }

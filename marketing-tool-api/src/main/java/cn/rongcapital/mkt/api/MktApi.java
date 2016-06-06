@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
@@ -58,10 +59,10 @@ import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
 import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
+import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
 import cn.rongcapital.mkt.vo.ImgtextHostIn;
@@ -71,6 +72,8 @@ import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
+import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
+import cn.rongcapital.mkt.vo.out.CampaignBodyOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -134,6 +137,8 @@ public class MktApi {
 	private CampaignHeaderGetService campaignHeaderGetService;
     @Autowired
     private CampaignBodyGetService campaignBodyGetService;
+    @Autowired
+    private CampaignBodyCreateService campaignBodyCreateService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -179,6 +184,18 @@ public class MktApi {
 		return getImgTextAssetService.getImgTextAssetService(imgAsset);
 	}
 
+	/**
+	 * @功能简述: 创建campaign body
+	 * @param: SegmentHeadIn body, SecurityContext securityContext,Integer campaignHeadId 
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.campaign.body.create")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public CampaignBodyOut campaignBodyCreate(@Valid CampaignBodyCreateIn body, @Context SecurityContext securityContext) {
+	    return campaignBodyCreateService.campaignBodyCreate(body, securityContext);
+	}
+	
 	/**
 	 * @功能简述: 根据campaign_head_id 获取campaign body
 	 * @param: SegmentHeadIn body, SecurityContext securityContext,Integer campaignHeadId 
@@ -226,7 +243,7 @@ public class MktApi {
 	@GET
 	@Path("/mkt.segment.header.get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object segmentHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
+	public BaseOutput segmentHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
 								   @NotEmpty @QueryParam("ver") String ver,
 								   @NotEmpty @QueryParam("segment_head_id") String segmentId) {
 	    return segmentHeaderGetService.segmentHeaderGet(userToken, ver,segmentId);
