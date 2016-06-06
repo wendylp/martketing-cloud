@@ -21,8 +21,19 @@ public class CampaignDecisionTagIn {
     private Date createTime;
 
     private Date updateTime;
+    
+    private Integer campaignHeadId;
+    
 
-    public Integer getId() {
+    public Integer getCampaignHeadId() {
+		return campaignHeadId;
+	}
+
+	public void setCampaignHeadId(Integer campaignHeadId) {
+		this.campaignHeadId = campaignHeadId;
+	}
+
+	public Integer getId() {
         return id;
     }
 
