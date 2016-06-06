@@ -53,6 +53,7 @@ import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.ModifyPasswdService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
+import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
 import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
 import cn.rongcapital.mkt.service.SegmentHeaderGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
@@ -73,6 +74,7 @@ import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
+import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyOut;
 
 @Component
@@ -139,6 +141,8 @@ public class MktApi {
     private CampaignBodyGetService campaignBodyGetService;
     @Autowired
     private CampaignBodyCreateService campaignBodyCreateService;
+    @Autowired
+    private SegmentBodyUpdateService segmentBodyUpdateService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -556,5 +560,17 @@ public class MktApi {
 			@QueryParam("file_type") int fileType,
 			MultipartFormDataInput input, @Context SecurityContext securityContext){
 		return uploadFileService.uploadFile(fileSource,fileUnique,fileType,input,securityContext);
+	}
+	
+	/**
+	 * @功能简述: 编辑segment body
+	 * @param: SegmentBodyUpdateIn body, SecurityContext securityContext 
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.segment.body.update")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object segmentBodyUpdate(@Valid SegmentBodyUpdateIn body, @Context SecurityContext securityContext) {
+	    return segmentBodyUpdateService.segmentBodyUpdate(body, securityContext);
 	}
 }

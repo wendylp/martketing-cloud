@@ -28,7 +28,7 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 
 	@Override
 	@ReadWrite(type = ReadWriteType.WRITE)
-	public Object segmentBodyCreate(SegmentBodyUpdateIn body,
+	public Object segmentBodyUpdate(SegmentBodyUpdateIn body,
 			SecurityContext securityContext) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);

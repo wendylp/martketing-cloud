@@ -15,6 +15,6 @@ import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 
 public interface SegmentBodyUpdateService {
   
-    public Object segmentBodyCreate(SegmentBodyUpdateIn body,SecurityContext securityContext);
+    public Object segmentBodyUpdate(SegmentBodyUpdateIn body,SecurityContext securityContext);
     
 }
