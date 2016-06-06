@@ -228,7 +228,7 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Object segmentHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
 								   @NotEmpty @QueryParam("ver") String ver,
-								   @NotEmpty @QueryParam("segment_id") String segmentId) {
+								   @NotEmpty @QueryParam("segment_head_id") String segmentId) {
 	    return segmentHeaderGetService.segmentHeaderGet(userToken, ver,segmentId);
 	}
 	

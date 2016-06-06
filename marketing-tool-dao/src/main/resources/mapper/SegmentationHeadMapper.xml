@@ -100,6 +100,16 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+   
+    <select id="selectListByKeyword" parameterType="cn.rongcapital.mkt.po.SegmentationHead" resultType="cn.rongcapital.mkt.po.SegmentationHead">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<if test="customMap.keyword != null and customMap.keyword != ''"> 
+		 <where> and name like CONCAT('%',#{customMap.keyword},'%' )</where>
+		</if>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
 	
 </mapper>

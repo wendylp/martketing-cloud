@@ -10,10 +10,19 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SegmentationHead;
 
 public interface SegmentationHeadDao extends BaseDao<SegmentationHead>{
+	
+	/**
+	 * @功能简述:根据条件查询segmentation列表
+	 * @param: Segmentation t
+	 * @return: List<T>
+	 */
+	List<SegmentationHead> selectListByKeyword(SegmentationHead t);
 	
 	//自定义扩展
 	/**

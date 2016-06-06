@@ -20,8 +20,8 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.SegmentationDao;
-import cn.rongcapital.mkt.po.Segmentation;
+import cn.rongcapital.mkt.dao.SegmentationHeadDao;
+import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import heracles.data.common.annotation.ReadWrite;
@@ -31,7 +31,7 @@ import heracles.data.common.util.ReadWriteType;
 public class SegmentPublishStatusCountServiceImpl implements SegmentPublishStatusCountService {
 
     @Autowired
-    SegmentationDao segmentationDao;
+    SegmentationHeadDao segmentationHeadDao;
     
     /**
 	 * @功能简述: 查询不同发布状态下的segment数量
@@ -41,16 +41,16 @@ public class SegmentPublishStatusCountServiceImpl implements SegmentPublishStatu
     @Override
     @ReadWrite(type=ReadWriteType.READ)
     public Object segmentPublishstatusCount(String userToken,String ver) {
-    	Segmentation t = new Segmentation();
+    	SegmentationHead t = new SegmentationHead();
     	t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
     	t.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH);
-    	int countNotPublish = segmentationDao.selectListCount(t);
+    	int countNotPublish = segmentationHeadDao.selectListCount(t);
     	
     	t.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_PUBLISH);
-    	int countPublish = segmentationDao.selectListCount(t);
+    	int countPublish = segmentationHeadDao.selectListCount(t);
     	
     	t.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN);
-    	int countInCampaign = segmentationDao.selectListCount(t);
+    	int countInCampaign = segmentationHeadDao.selectListCount(t);
     	
     	int countAll = countNotPublish + countPublish + countInCampaign;
     	

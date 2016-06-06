@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.SegmentationDao;
-import cn.rongcapital.mkt.po.Segmentation;
+import cn.rongcapital.mkt.dao.SegmentationHeadDao;
+import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
@@ -24,7 +24,7 @@ import heracles.data.common.util.ReadWriteType;
 public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
 	
 	 @Autowired
-	 SegmentationDao segmentationDao;
+	 SegmentationHeadDao segmentationHeadDao;
 	 
 	 /**
      * @功能简述: 编辑segment header
@@ -34,13 +34,13 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
 	 @Override
 	 @ReadWrite(type=ReadWriteType.WRITE)
 	 public Object segmentHeaderUpdate(SegmentHeadUpdateIn body,SecurityContext securityContext) {
-	        Segmentation t = new Segmentation();  
+		 SegmentationHead t = new SegmentationHead();  
 	        t.setId(body.getSegmentId());
 	    	t.setName(body.getSegmentName());
 	    	t.setPublishStatus(body.getPublishStatus().byteValue());
 	    	t.setCreateTime(new Date());
 	    	BaseOutput ur = new BaseOutput(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
-	    	segmentationDao.updateById(t);
+	    	segmentationHeadDao.updateById(t);
 	    	Map<String,Object> map = new HashMap<String,Object>();
 	    	map.put("oper", "奥巴马");//TO DO:MOCK
 	    	map.put("updatetime", "2016-06-01 14:26:01");
