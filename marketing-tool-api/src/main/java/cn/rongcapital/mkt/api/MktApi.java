@@ -53,6 +53,7 @@ import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.ModifyPasswdService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
+import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
 import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
 import cn.rongcapital.mkt.service.SegmentHeaderGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
@@ -63,6 +64,8 @@ import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
+import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
 import cn.rongcapital.mkt.vo.ImgtextHostIn;
@@ -73,6 +76,7 @@ import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
+import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyOut;
 import cn.rongcapital.mkt.vo.out.SegmentTagnameTagList;
 
@@ -140,6 +144,10 @@ public class MktApi {
     private CampaignBodyGetService campaignBodyGetService;
     @Autowired
     private CampaignBodyCreateService campaignBodyCreateService;
+    @Autowired
+    private SegmentBodyUpdateService segmentBodyUpdateService;
+	@Autowired
+	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -183,6 +191,23 @@ public class MktApi {
 			imgAsset.setSize(10);
 		}
 		return getImgTextAssetService.getImgTextAssetService(imgAsset);
+	}
+
+	/**
+	 * @功能简述: 获取图文资产
+	 * @param:String user_token,String ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.imgtext.menulist.get")
+	public Object getImgtextAssetMenulist(@NotEmpty @QueryParam("user_token") String userToken,
+								  @NotEmpty @QueryParam("ver") String ver,
+								  @DefaultValue("1") @Min(1) @QueryParam("index") int index,
+								  @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size){
+		BaseInput baseInput = new BaseInput();
+		baseInput.setIndex(index);
+		baseInput.setSize(size);
+		return getImgtextAssetMenulistService.getImgTextAssetMenulist(baseInput);
 	}
 
 	/**
@@ -569,5 +594,17 @@ public class MktApi {
 	public SegmentTagnameTagList getSysRecommendedTagList(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken){
 		return null;
+	}
+	
+	/**
+	 * @功能简述: 编辑segment body
+	 * @param: SegmentBodyUpdateIn body, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.segment.body.update")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object segmentBodyUpdate(@Valid SegmentBodyUpdateIn body, @Context SecurityContext securityContext) {
+	    return segmentBodyUpdateService.segmentBodyUpdate(body, securityContext);
 	}
 }
