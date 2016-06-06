@@ -15,6 +15,10 @@ public class CampaignBody extends BaseQuery {
 
     private String itemId;
 
+    private Byte nextNodeType;
+
+    private Byte nextItemType;
+
     private String nextItemId;
 
     private String statisticsUrl;
@@ -69,6 +73,22 @@ public class CampaignBody extends BaseQuery {
 
     public void setItemId(String itemId) {
         this.itemId = itemId == null ? null : itemId.trim();
+    }
+
+    public Byte getNextNodeType() {
+        return nextNodeType;
+    }
+
+    public void setNextNodeType(Byte nextNodeType) {
+        this.nextNodeType = nextNodeType;
+    }
+
+    public Byte getNextItemType() {
+        return nextItemType;
+    }
+
+    public void setNextItemType(Byte nextItemType) {
+        this.nextItemType = nextItemType;
     }
 
     public String getNextItemId() {
