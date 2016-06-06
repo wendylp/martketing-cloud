@@ -1,10 +1,11 @@
 package cn.rongcapital.mkt.vo.out;
 
-
 import java.util.Date;
 
 public class CampaignActionSendPrivt {
     private Integer id;
+
+    private Integer campaignHeadId;
 
     private String itemId;
 
@@ -34,6 +35,14 @@ public class CampaignActionSendPrivt {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getCampaignHeadId() {
+        return campaignHeadId;
+    }
+
+    public void setCampaignHeadId(Integer campaignHeadId) {
+        this.campaignHeadId = campaignHeadId;
     }
 
     public String getItemId() {

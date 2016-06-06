@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +31,7 @@ public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
     SegmentationHeadDao segmentationHeadDao;
 	
 	@Override
-	public Object segmentHeaderGet(String userToken, String ver, String segmentId) {
+	public BaseOutput segmentHeaderGet(String userToken, String ver, String segmentId) {
 		SegmentationHead t = new SegmentationHead();
 		t.setId(Integer.parseInt(segmentId));  
 		t.setStatus((byte)ApiConstant.INT_ZERO);
@@ -50,7 +48,8 @@ public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
 			out.getData().add(map);
 		}
 		out.setTotal(out.getData().size());
-		return Response.ok().entity(out).build();
+		return out;
+//		return Response.ok().entity(out).build();
 	}
 
 }

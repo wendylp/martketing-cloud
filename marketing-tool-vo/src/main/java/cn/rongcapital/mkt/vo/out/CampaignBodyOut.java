@@ -22,6 +22,9 @@ public class CampaignBodyOut extends BaseOutput {
 	
 	private Object info;//节点配置的属性
 
+	public CampaignBodyOut(int code, String msg, int total, List<Object> data){
+		super(code,msg,total,data);
+	}
 	@JsonProperty("segment_head_id")
 	public int getSegmentHeadId() {
 		return segmentHeadId;

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,item_id as itemId,name as name,type as type,relative_value as relativeValue,relative_type as relativeType,specific_time as specificTime,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,campaign_head_id as campaignHeadId,item_id as itemId,name as name,type as type,relative_value as relativeValue,relative_type as relativeType,specific_time as specificTime,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -14,6 +14,7 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="campaignHeadId != null and campaignHeadId != ''"><![CDATA[ AND campaign_head_id = #{campaignHeadId}]]></if>
 		    	<if test="itemId != null and itemId != ''"><![CDATA[ AND item_id = #{itemId}]]></if>
 		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
 		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
@@ -36,6 +37,7 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="campaignHeadId != null"><![CDATA[campaign_head_id = #{campaignHeadId},]]></if>
 		    	<if test="itemId != null"><![CDATA[item_id = #{itemId},]]></if>
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
 		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
@@ -51,10 +53,11 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignActionWait" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_action_wait (id,item_id,name,type,relative_value,relative_type,specific_time,status,create_time,update_time)
+			INSERT INTO campaign_action_wait (id,campaign_head_id,item_id,name,type,relative_value,relative_type,specific_time,status,create_time,update_time)
 			VALUES
 			(
 			  #{id},
+			  #{campaignHeadId},
 			  #{itemId},
 			  #{name},
 			  #{type},

@@ -5,13 +5,15 @@ import java.util.Date;
 public class CampaignActionSaveAudience {
     private Integer id;
 
+    private Integer campaignHeadId;
+
     private String itemId;
 
     private String name;
 
-    private Integer segmentationId;
+    private Integer audienceId;
 
-    private String segmentationName;
+    private String audienceName;
 
     private Byte status;
 
@@ -25,6 +27,14 @@ public class CampaignActionSaveAudience {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getCampaignHeadId() {
+        return campaignHeadId;
+    }
+
+    public void setCampaignHeadId(Integer campaignHeadId) {
+        this.campaignHeadId = campaignHeadId;
     }
 
     public String getItemId() {
@@ -43,23 +53,24 @@ public class CampaignActionSaveAudience {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getSegmentationId() {
-        return segmentationId;
-    }
 
-    public void setSegmentationId(Integer segmentationId) {
-        this.segmentationId = segmentationId;
-    }
+    public Integer getAudienceId() {
+		return audienceId;
+	}
 
-    public String getSegmentationName() {
-        return segmentationName;
-    }
+	public void setAudienceId(Integer audienceId) {
+		this.audienceId = audienceId;
+	}
 
-    public void setSegmentationName(String segmentationName) {
-        this.segmentationName = segmentationName == null ? null : segmentationName.trim();
-    }
+	public String getAudienceName() {
+		return audienceName;
+	}
 
-    public Byte getStatus() {
+	public void setAudienceName(String audienceName) {
+		this.audienceName = audienceName;
+	}
+
+	public Byte getStatus() {
         return status;
     }
 

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,item_id as itemId,name as name,tag_ids as tagIds,tag_names as tagNames,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,campaign_head_id as campaignHeadId,item_id as itemId,name as name,tag_ids as tagIds,tag_names as tagNames,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -14,6 +14,7 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="campaignHeadId != null and campaignHeadId != ''"><![CDATA[ AND campaign_head_id = #{campaignHeadId}]]></if>
 		    	<if test="itemId != null and itemId != ''"><![CDATA[ AND item_id = #{itemId}]]></if>
 		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
 		    	<if test="tagIds != null and tagIds != ''"><![CDATA[ AND tag_ids = #{tagIds}]]></if>
@@ -34,6 +35,7 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
+		    	<if test="campaignHeadId != null"><![CDATA[campaign_head_id = #{campaignHeadId},]]></if>
 		    	<if test="itemId != null"><![CDATA[item_id = #{itemId},]]></if>
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
 		    	<if test="tagIds != null"><![CDATA[tag_ids = #{tagIds},]]></if>
@@ -47,10 +49,11 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignActionSetTag" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_action_set_tag (id,item_id,name,tag_ids,tag_names,status,create_time,update_time)
+			INSERT INTO campaign_action_set_tag (id,campaign_head_id,item_id,name,tag_ids,tag_names,status,create_time,update_time)
 			VALUES
 			(
 			  #{id},
+			  #{campaignHeadId},
 			  #{itemId},
 			  #{name},
 			  #{tagIds},

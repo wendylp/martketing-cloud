@@ -4,6 +4,9 @@ package cn.rongcapital.mkt.vo.in;
 import java.util.Date;
 
 public class CampaignActionSendPubIn {
+	
+	private Integer campaignHeadId;
+	
     private Integer id;
 
     private String itemId;
@@ -24,7 +27,16 @@ public class CampaignActionSendPubIn {
 
     private Date updateTime;
 
-    public Integer getId() {
+    
+    public Integer getCampaignHeadId() {
+		return campaignHeadId;
+	}
+
+	public void setCampaignHeadId(Integer campaignHeadId) {
+		this.campaignHeadId = campaignHeadId;
+	}
+
+	public Integer getId() {
         return id;
     }
 

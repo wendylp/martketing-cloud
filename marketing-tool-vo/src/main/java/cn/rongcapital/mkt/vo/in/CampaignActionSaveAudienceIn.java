@@ -3,23 +3,35 @@ package cn.rongcapital.mkt.vo.in;
 import java.util.Date;
 
 public class CampaignActionSaveAudienceIn {
+	
+	private Integer campaignHeadId;
+	
     private Integer id;
 
     private String itemId;
 
     private String name;
 
-    private Integer segmentationId;
+    private Integer audienceId;
 
-    private String segmentationName;
+    private String audienceName;
 
     private Byte status;
 
     private Date createTime;
 
     private Date updateTime;
+    
 
-    public Integer getId() {
+    public Integer getCampaignHeadId() {
+		return campaignHeadId;
+	}
+
+	public void setCampaignHeadId(Integer campaignHeadId) {
+		this.campaignHeadId = campaignHeadId;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -43,23 +55,23 @@ public class CampaignActionSaveAudienceIn {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getSegmentationId() {
-        return segmentationId;
-    }
+    public Integer getAudienceId() {
+		return audienceId;
+	}
 
-    public void setSegmentationId(Integer segmentationId) {
-        this.segmentationId = segmentationId;
-    }
+	public void setAudienceId(Integer audienceId) {
+		this.audienceId = audienceId;
+	}
 
-    public String getSegmentationName() {
-        return segmentationName;
-    }
+	public String getAudienceName() {
+		return audienceName;
+	}
 
-    public void setSegmentationName(String segmentationName) {
-        this.segmentationName = segmentationName == null ? null : segmentationName.trim();
-    }
+	public void setAudienceName(String audienceName) {
+		this.audienceName = audienceName;
+	}
 
-    public Byte getStatus() {
+	public Byte getStatus() {
         return status;
     }
 

@@ -7,13 +7,15 @@ import java.util.Date;
 public class CampaignActionSaveAudience extends BaseQuery {
     private Integer id;
 
+    private Integer campaignHeadId;
+
     private String itemId;
 
     private String name;
 
-    private Integer segmentationId;
+    private Integer audienceId;
 
-    private String segmentationName;
+    private String audienceName;
 
     private Byte status;
 
@@ -27,6 +29,14 @@ public class CampaignActionSaveAudience extends BaseQuery {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getCampaignHeadId() {
+        return campaignHeadId;
+    }
+
+    public void setCampaignHeadId(Integer campaignHeadId) {
+        this.campaignHeadId = campaignHeadId;
     }
 
     public String getItemId() {
@@ -45,20 +55,20 @@ public class CampaignActionSaveAudience extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getSegmentationId() {
-        return segmentationId;
+    public Integer getAudienceId() {
+        return audienceId;
     }
 
-    public void setSegmentationId(Integer segmentationId) {
-        this.segmentationId = segmentationId;
+    public void setAudienceId(Integer audienceId) {
+        this.audienceId = audienceId;
     }
 
-    public String getSegmentationName() {
-        return segmentationName;
+    public String getAudienceName() {
+        return audienceName;
     }
 
-    public void setSegmentationName(String segmentationName) {
-        this.segmentationName = segmentationName == null ? null : segmentationName.trim();
+    public void setAudienceName(String audienceName) {
+        this.audienceName = audienceName == null ? null : audienceName.trim();
     }
 
     public Byte getStatus() {

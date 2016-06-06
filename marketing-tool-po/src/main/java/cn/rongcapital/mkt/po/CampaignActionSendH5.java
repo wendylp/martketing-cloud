@@ -7,6 +7,8 @@ import java.util.Date;
 public class CampaignActionSendH5 extends BaseQuery {
     private Integer id;
 
+    private Integer campaignHeadId;
+
     private String itemId;
 
     private String name;
@@ -37,6 +39,14 @@ public class CampaignActionSendH5 extends BaseQuery {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getCampaignHeadId() {
+        return campaignHeadId;
+    }
+
+    public void setCampaignHeadId(Integer campaignHeadId) {
+        this.campaignHeadId = campaignHeadId;
     }
 
     public String getItemId() {
