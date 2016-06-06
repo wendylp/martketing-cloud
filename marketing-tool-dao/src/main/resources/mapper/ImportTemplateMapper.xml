@@ -11,6 +11,10 @@
 		<![CDATA[ id,name]]>
 	</sql>
 
+	<sql id="UPDATE_SELECTED_STATUS_LIST">
+		<![CDATA[ templ_name,field_name,selected]]>
+	</sql>
+	
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM import_template]]></sql>
 	
@@ -113,5 +117,16 @@
 		WHERE 
 			templ_type = #{templType}
 	</select>
+	
+	<update id="updateByTemplNameandFieldName" parameterType="cn.rongcapital.mkt.po.ImportTemplate">
+		UPDATE
+			import_template
+		SET 
+			selected = #{selected}
+		WHERE
+			templName = #{templName}
+		AND	  
+			fieldName = #{fieldName}
+	</update>
 	
 </mapper>
