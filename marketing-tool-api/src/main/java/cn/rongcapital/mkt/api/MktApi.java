@@ -27,12 +27,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
@@ -59,6 +61,7 @@ import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
 import cn.rongcapital.mkt.vo.ImgtextHostIn;
@@ -126,8 +129,11 @@ public class MktApi {
 	@Autowired
 	private SegmentHeaderUpdateService segmentHeaderUpdateService;
 	@Autowired
+	private UploadFileService uploadFileService;
+	@Autowired
 	private CampaignHeaderGetService campaignHeaderGetService;
-
+    @Autowired
+    private CampaignBodyGetService campaignBodyGetService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -174,8 +180,22 @@ public class MktApi {
 	}
 
 	/**
+	 * @功能简述: 根据campaign_head_id 获取campaign body
+	 * @param: SegmentHeadIn body, SecurityContext securityContext,Integer campaignHeadId 
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.campaign.body.get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object campaignBodyGet(@NotEmpty @QueryParam("user_token") String userToken,
+								  @NotEmpty @QueryParam("ver") String ver,
+								  @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
+	    return campaignBodyGetService.campaignBodyGet(userToken, ver, campaignHeadId);
+	}
+	
+	/**
 	 * @功能简述: 根据id获取segment header
-	 * @param: SegmentHeadIn body, SecurityContext securityContext 
+	 * @param: SegmentHeadIn body, SecurityContext securityContext,Integer campaignHeadId 
 	 * @return: Object
 	 */
 	@GET
@@ -183,10 +203,10 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Object campaignHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
 								   @NotEmpty @QueryParam("ver") String ver,
-								   @NotNull @QueryParam("campaign_id") Integer campaignId) {
-	    return campaignHeaderGetService.campaignHeaderGet(userToken, ver, campaignId);
+								   @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
+	    return campaignHeaderGetService.campaignHeaderGet(userToken, ver, campaignHeadId);
 	}
-	
+
 	/**
 	 * @功能简述: 编辑segment header
 	 * @param: SegmentHeadIn body, SecurityContext securityContext 
@@ -200,7 +220,7 @@ public class MktApi {
 	}
 	/**
 	 * @功能简述: 根据id获取segment header
-	 * @param: SegmentHeadIn body, SecurityContext securityContext 
+	 * @param: SegmentHeadIn body, SecurityContext securityContext, String segmentId
 	 * @return: Object
 	 */
 	@GET
@@ -208,7 +228,7 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Object segmentHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
 								   @NotEmpty @QueryParam("ver") String ver,
-								   @NotEmpty @QueryParam("segment_id") String segmentId) {
+								   @NotEmpty @QueryParam("segment_head_id") String segmentId) {
 	    return segmentHeaderGetService.segmentHeaderGet(userToken, ver,segmentId);
 	}
 	
@@ -453,7 +473,7 @@ public class MktApi {
                     @NotEmpty @QueryParam("ver") String ver) {
         return dataDeleteMainService.deleteMain(method, userToken, ver, dataId);
     }
-    
+
     /**
      * @功能简述 : 查询自定义视图字段列表
      * @param: String method, String userToken, String ver, Integer mdType
@@ -503,5 +523,21 @@ public class MktApi {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object saveWechatAssetList(@Valid SaveWechatAssetListIn saveWechatAssetListIn,@Context SecurityContext securityContext){
 		return saveWechatAssetListService.saveWechatAssetList(saveWechatAssetListIn, securityContext);
+	}
+
+	/**
+	 * @功能描述:文件上传
+	 * @Param: String user_token, String ver, Integer asset_id, String nickname
+	 * @return: Object
+	 */
+	@POST()
+	@Path("/mkt.file.upload")
+	@Consumes("multipart/form-data")
+	public Object fileUpload(
+			@QueryParam("file_source") String fileSource,
+			@NotEmpty @QueryParam("file_unique") String fileUnique,
+			@QueryParam("file_type") int fileType,
+			MultipartFormDataInput input, @Context SecurityContext securityContext){
+		return uploadFileService.uploadFile(fileSource,fileUnique,fileType,input,securityContext);
 	}
 }

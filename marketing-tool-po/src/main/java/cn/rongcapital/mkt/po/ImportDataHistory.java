@@ -29,6 +29,12 @@ public class ImportDataHistory extends BaseQuery {
 
     private Integer illegalRows;
 
+    private String summary;
+
+    private String noRecognizeProperty;
+
+    private String fileUnique;
+
     public Long getId() {
         return id;
     }
@@ -123,5 +129,29 @@ public class ImportDataHistory extends BaseQuery {
 
     public void setIllegalRows(Integer illegalRows) {
         this.illegalRows = illegalRows;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary == null ? null : summary.trim();
+    }
+
+    public String getNoRecognizeProperty() {
+        return noRecognizeProperty;
+    }
+
+    public void setNoRecognizeProperty(String noRecognizeProperty) {
+        this.noRecognizeProperty = noRecognizeProperty == null ? null : noRecognizeProperty.trim();
+    }
+
+    public String getFileUnique() {
+        return fileUnique;
+    }
+
+    public void setFileUnique(String fileUnique) {
+        this.fileUnique = fileUnique == null ? null : fileUnique.trim();
     }
 }

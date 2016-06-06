@@ -45,10 +45,10 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 		}
 		if(
 		    (HttpMethod.GET.equals(requestContext.getMethod()) ||
-		      (HttpMethod.POST.equals(requestContext.getMethod()) 
-//		    		  && 
+		      (HttpMethod.POST.equals(requestContext.getMethod())
+//					  &&
 //		       MediaType.APPLICATION_JSON_TYPE.equals(requestContext.getMediaType())
-		       )
+			  )
 		    ) 
 		  ) { 
 			List<String> pList = requestContext.getUriInfo().getQueryParameters()
