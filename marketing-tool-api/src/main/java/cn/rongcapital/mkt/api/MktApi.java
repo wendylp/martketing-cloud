@@ -548,7 +548,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@POST
-	@Path("/mkt.file.upload")
+	@Path("/mkt.service.file.upload")
 	@Consumes("multipart/form-data")
 	public Object fileUpload(
 			@QueryParam("file_source") String fileSource,
