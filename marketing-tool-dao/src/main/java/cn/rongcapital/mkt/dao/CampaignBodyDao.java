@@ -11,9 +11,9 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.CampaginBody;
+import cn.rongcapital.mkt.po.CampaignBody;
 
-public interface CampaginBodyDao extends BaseDao<CampaginBody>{
+public interface CampaignBodyDao extends BaseDao<CampaignBody>{
 	
 	//自定义扩展
 	/**

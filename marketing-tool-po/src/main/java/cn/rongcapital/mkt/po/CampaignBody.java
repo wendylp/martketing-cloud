@@ -4,7 +4,7 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class CampaginBody extends BaseQuery {
+public class CampaignBody extends BaseQuery {
     private Integer id;
 
     private Integer headId;
