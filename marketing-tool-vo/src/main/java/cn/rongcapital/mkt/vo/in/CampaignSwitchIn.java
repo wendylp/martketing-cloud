@@ -1,8 +1,9 @@
 package cn.rongcapital.mkt.vo.in;
 
-import java.util.Date;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignSwitchIn {
+	
     private Integer id;
 
     private Integer campaignHeadId;
@@ -13,12 +14,7 @@ public class CampaignSwitchIn {
 
     private String color;
 
-    private Byte status;
-
-    private Date createTime;
-
-    private Date updateTime;
-
+    @JsonProperty("id")
     public Integer getId() {
         return id;
     }
@@ -27,6 +23,7 @@ public class CampaignSwitchIn {
         this.id = id;
     }
 
+    @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
         return campaignHeadId;
     }
@@ -35,6 +32,7 @@ public class CampaignSwitchIn {
         this.campaignHeadId = campaignHeadId;
     }
 
+    @JsonProperty("item_id")
     public String getItemId() {
         return itemId;
     }
@@ -43,6 +41,7 @@ public class CampaignSwitchIn {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
+    @JsonProperty("type")
     public Byte getType() {
         return type;
     }
@@ -51,35 +50,12 @@ public class CampaignSwitchIn {
         this.type = type;
     }
 
+    @JsonProperty("color")
     public String getColor() {
         return color;
     }
 
     public void setColor(String color) {
         this.color = color == null ? null : color.trim();
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

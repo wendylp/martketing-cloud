@@ -26,8 +26,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.service.*;
-import cn.rongcapital.mkt.vo.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -36,7 +34,49 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.CampaignBodyCreateService;
+import cn.rongcapital.mkt.service.CampaignBodyGetService;
+import cn.rongcapital.mkt.service.CampaignHeaderGetService;
+import cn.rongcapital.mkt.service.DataDeleteMainService;
+import cn.rongcapital.mkt.service.DataGetMainCountService;
+import cn.rongcapital.mkt.service.DataGetMainListService;
+import cn.rongcapital.mkt.service.DataGetQualityCountService;
+import cn.rongcapital.mkt.service.DataGetQualityListService;
+import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
+import cn.rongcapital.mkt.service.DataGetViewListService;
+import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
+import cn.rongcapital.mkt.service.GetImgTextAssetService;
+import cn.rongcapital.mkt.service.ImgtextHostService;
+import cn.rongcapital.mkt.service.LoginService;
+import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
+import cn.rongcapital.mkt.service.MigrationFileTemplateService;
+import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
+import cn.rongcapital.mkt.service.ModifyPasswdService;
+import cn.rongcapital.mkt.service.SaveWechatAssetListService;
+import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
+import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
+import cn.rongcapital.mkt.service.SegmentHeaderGetService;
+import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
+import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
+import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
+import cn.rongcapital.mkt.service.UpdateNicknameService;
+import cn.rongcapital.mkt.service.UploadFileService;
+import cn.rongcapital.mkt.service.WechatAssetListGetService;
+import cn.rongcapital.mkt.service.WechatAssetListService;
+import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
+import cn.rongcapital.mkt.vo.BaseInput;
+import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.ImgAsset;
+import cn.rongcapital.mkt.vo.ImgtextHostIn;
+import cn.rongcapital.mkt.vo.LoginInput;
+import cn.rongcapital.mkt.vo.ModifyInput;
+import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
+import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
+import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
+import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
+import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyOut;
 
 @Component
@@ -59,8 +99,6 @@ public class MktApi {
 	private DeleteImgTextAssetService deleteImgTextAssetService;
 	@Autowired
 	private GetImgTextAssetService getImgTextAssetService;
-	@Autowired
-	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 	@Autowired
 	private ImgtextHostService imgtextHostService;
 	@Autowired
@@ -105,6 +143,10 @@ public class MktApi {
     private CampaignBodyGetService campaignBodyGetService;
     @Autowired
     private CampaignBodyCreateService campaignBodyCreateService;
+    @Autowired
+    private SegmentBodyUpdateService segmentBodyUpdateService;
+	@Autowired
+	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -117,8 +159,6 @@ public class MktApi {
 		BaseOutput ur = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),userToken,0,null);
 		return Response.ok().entity(ur).build();
 	}
-
-
 
 	/**
 	 * @功能简述: 获取图文资产
@@ -541,5 +581,17 @@ public class MktApi {
 			@QueryParam("file_type") int fileType,
 			MultipartFormDataInput input, @Context SecurityContext securityContext){
 		return uploadFileService.uploadFile(fileSource,fileUnique,fileType,input,securityContext);
+	}
+
+	/**
+	 * @功能简述: 编辑segment body
+	 * @param: SegmentBodyUpdateIn body, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.segment.body.update")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object segmentBodyUpdate(@Valid SegmentBodyUpdateIn body, @Context SecurityContext securityContext) {
+	    return segmentBodyUpdateService.segmentBodyUpdate(body, securityContext);
 	}
 }
