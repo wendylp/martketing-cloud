@@ -3,6 +3,8 @@ package cn.rongcapital.mkt.vo.in;
 
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class CampaignActionWaitIn {
 	
 	private Integer campaignHeadId;
@@ -21,12 +23,7 @@ public class CampaignActionWaitIn {
 
     private Date specificTime;
 
-    private Byte status;
-
-    private Date createTime;
-
-    private Date updateTime;
-
+    @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
 		return campaignHeadId;
 	}
@@ -35,6 +32,7 @@ public class CampaignActionWaitIn {
 		this.campaignHeadId = campaignHeadId;
 	}
 
+	@JsonProperty("id")
 	public Integer getId() {
         return id;
     }
@@ -43,6 +41,7 @@ public class CampaignActionWaitIn {
         this.id = id;
     }
 
+    @JsonProperty("item_id")
     public String getItemId() {
         return itemId;
     }
@@ -51,6 +50,7 @@ public class CampaignActionWaitIn {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -59,6 +59,7 @@ public class CampaignActionWaitIn {
         this.name = name == null ? null : name.trim();
     }
 
+    @JsonProperty("type")
     public Byte getType() {
         return type;
     }
@@ -67,6 +68,7 @@ public class CampaignActionWaitIn {
         this.type = type;
     }
 
+    @JsonProperty("relative_value")
     public Integer getRelativeValue() {
         return relativeValue;
     }
@@ -75,6 +77,7 @@ public class CampaignActionWaitIn {
         this.relativeValue = relativeValue;
     }
 
+    @JsonProperty("relative_type")
     public Byte getRelativeType() {
         return relativeType;
     }
@@ -83,35 +86,12 @@ public class CampaignActionWaitIn {
         this.relativeType = relativeType;
     }
 
+    @JsonProperty("specific_time")
     public Date getSpecificTime() {
         return specificTime;
     }
 
     public void setSpecificTime(Date specificTime) {
         this.specificTime = specificTime;
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

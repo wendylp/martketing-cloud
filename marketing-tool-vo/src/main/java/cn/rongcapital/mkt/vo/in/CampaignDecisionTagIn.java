@@ -1,9 +1,10 @@
 package cn.rongcapital.mkt.vo.in;
 
 
-import java.util.Date;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignDecisionTagIn {
+	
     private Integer id;
 
     private String itemId;
@@ -15,16 +16,10 @@ public class CampaignDecisionTagIn {
     private String tagIds;
 
     private Byte rule;
-
-    private Byte status;
-
-    private Date createTime;
-
-    private Date updateTime;
     
     private Integer campaignHeadId;
     
-
+    @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
 		return campaignHeadId;
 	}
@@ -33,6 +28,7 @@ public class CampaignDecisionTagIn {
 		this.campaignHeadId = campaignHeadId;
 	}
 
+	 @JsonProperty("id")
 	public Integer getId() {
         return id;
     }
@@ -41,6 +37,7 @@ public class CampaignDecisionTagIn {
         this.id = id;
     }
 
+    @JsonProperty("item_id")
     public String getItemId() {
         return itemId;
     }
@@ -49,6 +46,7 @@ public class CampaignDecisionTagIn {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -57,6 +55,7 @@ public class CampaignDecisionTagIn {
         this.name = name == null ? null : name.trim();
     }
 
+    @JsonProperty("tag_names")
     public String getTagNames() {
         return tagNames;
     }
@@ -65,6 +64,7 @@ public class CampaignDecisionTagIn {
         this.tagNames = tagNames == null ? null : tagNames.trim();
     }
 
+    @JsonProperty("tag_ids")
     public String getTagIds() {
         return tagIds;
     }
@@ -73,35 +73,12 @@ public class CampaignDecisionTagIn {
         this.tagIds = tagIds == null ? null : tagIds.trim();
     }
 
+    @JsonProperty("rule")
     public Byte getRule() {
         return rule;
     }
 
     public void setRule(Byte rule) {
         this.rule = rule;
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

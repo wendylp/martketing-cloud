@@ -1,26 +1,26 @@
 package cn.rongcapital.mkt.vo.in;
 
-import java.util.Date;
+import javax.validation.constraints.NotNull;
+
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignTriggerTimerIn {
+	
     private Integer id;
 
     private Integer campaignHeadId;
 
+    @NotNull
     private String itemId;
 
     private String name;
 
-    private Date startTime;
+    @NotNull
+    private String startTime;
 
-    private Date endTime;
+    private String endTime;
 
-    private Byte status;
-
-    private Date createTime;
-
-    private Date updateTime;
-
+    @JsonProperty("id")
     public Integer getId() {
         return id;
     }
@@ -29,6 +29,7 @@ public class CampaignTriggerTimerIn {
         this.id = id;
     }
 
+    @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
         return campaignHeadId;
     }
@@ -37,6 +38,7 @@ public class CampaignTriggerTimerIn {
         this.campaignHeadId = campaignHeadId;
     }
 
+    @JsonProperty("item_id")
     public String getItemId() {
         return itemId;
     }
@@ -45,6 +47,7 @@ public class CampaignTriggerTimerIn {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -53,43 +56,22 @@ public class CampaignTriggerTimerIn {
         this.name = name == null ? null : name.trim();
     }
 
-    public Date getStartTime() {
+    @JsonProperty("start_time")
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    @JsonProperty("end_time")
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }
