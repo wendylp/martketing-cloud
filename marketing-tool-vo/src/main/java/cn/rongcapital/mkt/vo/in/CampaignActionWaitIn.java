@@ -1,23 +1,22 @@
-package cn.rongcapital.mkt.po;
+package cn.rongcapital.mkt.vo.in;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class CampaignDecisionTag extends BaseQuery {
+public class CampaignActionWaitIn {
     private Integer id;
 
     private String itemId;
 
-    private Integer campaignHeadId;
-
     private String name;
 
-    private String tagNames;
+    private Byte type;
 
-    private String tagIds;
+    private Integer relativeValue;
 
-    private Byte rule;
+    private Byte relativeType;
+
+    private Date specificTime;
 
     private Byte status;
 
@@ -41,14 +40,6 @@ public class CampaignDecisionTag extends BaseQuery {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
-    public Integer getCampaignHeadId() {
-        return campaignHeadId;
-    }
-
-    public void setCampaignHeadId(Integer campaignHeadId) {
-        this.campaignHeadId = campaignHeadId;
-    }
-
     public String getName() {
         return name;
     }
@@ -57,28 +48,36 @@ public class CampaignDecisionTag extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getTagNames() {
-        return tagNames;
+    public Byte getType() {
+        return type;
     }
 
-    public void setTagNames(String tagNames) {
-        this.tagNames = tagNames == null ? null : tagNames.trim();
+    public void setType(Byte type) {
+        this.type = type;
     }
 
-    public String getTagIds() {
-        return tagIds;
+    public Integer getRelativeValue() {
+        return relativeValue;
     }
 
-    public void setTagIds(String tagIds) {
-        this.tagIds = tagIds == null ? null : tagIds.trim();
+    public void setRelativeValue(Integer relativeValue) {
+        this.relativeValue = relativeValue;
     }
 
-    public Byte getRule() {
-        return rule;
+    public Byte getRelativeType() {
+        return relativeType;
     }
 
-    public void setRule(Byte rule) {
-        this.rule = rule;
+    public void setRelativeType(Byte relativeType) {
+        this.relativeType = relativeType;
+    }
+
+    public Date getSpecificTime() {
+        return specificTime;
+    }
+
+    public void setSpecificTime(Date specificTime) {
+        this.specificTime = specificTime;
     }
 
     public Byte getStatus() {

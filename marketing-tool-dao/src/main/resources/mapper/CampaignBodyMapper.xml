@@ -4,11 +4,11 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,head_id as headId,node_type as nodeType,item_type as itemType,item_id as itemId,next_item_id as nextItemId,statistics_url as statisticsUrl,pos_x as posX,pos_y as posY,audience_count as audienceCount,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,head_id as headId,node_type as nodeType,item_type as itemType,item_id as itemId,next_node_type as nextNodeType,next_item_type as nextItemType,next_item_id as nextItemId,statistics_url as statisticsUrl,pos_x as posX,pos_y as posY,audience_count as audienceCount,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM campagin_body]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM campaign_body]]></sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
@@ -18,6 +18,8 @@
 		    	<if test="nodeType != null and nodeType != ''"><![CDATA[ AND node_type = #{nodeType}]]></if>
 		    	<if test="itemType != null and itemType != ''"><![CDATA[ AND item_type = #{itemType}]]></if>
 		    	<if test="itemId != null and itemId != ''"><![CDATA[ AND item_id = #{itemId}]]></if>
+		    	<if test="nextNodeType != null and nextNodeType != ''"><![CDATA[ AND next_node_type = #{nextNodeType}]]></if>
+		    	<if test="nextItemType != null and nextItemType != ''"><![CDATA[ AND next_item_type = #{nextItemType}]]></if>
 		    	<if test="nextItemId != null and nextItemId != ''"><![CDATA[ AND next_item_id = #{nextItemId}]]></if>
 		    	<if test="statisticsUrl != null and statisticsUrl != ''"><![CDATA[ AND statistics_url = #{statisticsUrl}]]></if>
 		    	<if test="posX != null and posX != ''"><![CDATA[ AND pos_x = #{posX}]]></if>
@@ -43,6 +45,8 @@
 		    	<if test="nodeType != null"><![CDATA[node_type = #{nodeType},]]></if>
 		    	<if test="itemType != null"><![CDATA[item_type = #{itemType},]]></if>
 		    	<if test="itemId != null"><![CDATA[item_id = #{itemId},]]></if>
+		    	<if test="nextNodeType != null"><![CDATA[next_node_type = #{nextNodeType},]]></if>
+		    	<if test="nextItemType != null"><![CDATA[next_item_type = #{nextItemType},]]></if>
 		    	<if test="nextItemId != null"><![CDATA[next_item_id = #{nextItemId},]]></if>
 		    	<if test="statisticsUrl != null"><![CDATA[statistics_url = #{statisticsUrl},]]></if>
 		    	<if test="posX != null"><![CDATA[pos_x = #{posX},]]></if>
@@ -57,7 +61,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignBody" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campagin_body (id,head_id,node_type,item_type,item_id,next_item_id,statistics_url,pos_x,pos_y,audience_count,status,create_time,update_time)
+			INSERT INTO campaign_body (id,head_id,node_type,item_type,item_id,next_node_type,next_item_type,next_item_id,statistics_url,pos_x,pos_y,audience_count,status,create_time,update_time)
 			VALUES
 			(
 			  #{id},
@@ -65,6 +69,8 @@
 			  #{nodeType},
 			  #{itemType},
 			  #{itemId},
+			  #{nextNodeType},
+			  #{nextItemType},
 			  #{nextItemId},
 			  #{statisticsUrl},
 			  #{posX},
@@ -82,7 +88,7 @@
 
 	<!-- 修改记录通过主键 -->
 	<update id="updateById" parameterType="cn.rongcapital.mkt.po.CampaignBody">
-		<![CDATA[UPDATE campagin_body]]>
+		<![CDATA[UPDATE campaign_body]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>

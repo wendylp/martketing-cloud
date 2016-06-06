@@ -60,7 +60,9 @@ public class UploadFileServiceImpl implements UploadFileService{
             }
         }
         //Todo: 4.将数据摘要，数据条数，未识别属性返回给前端。
-        return Response.status(200).entity(baseOutput).build();
+        baseOutput.setCode(200);
+        baseOutput.setMsg("文件上传成功");
+        return Response.ok().entity(baseOutput).build();
     }
 
     private boolean isFileUniqueValid(String fileUnique) {

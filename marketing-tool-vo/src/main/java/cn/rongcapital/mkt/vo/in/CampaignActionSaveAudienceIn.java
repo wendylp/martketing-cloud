@@ -1,23 +1,17 @@
-package cn.rongcapital.mkt.po;
-
-import cn.rongcapital.mkt.po.base.BaseQuery;
+package cn.rongcapital.mkt.vo.in;
 
 import java.util.Date;
 
-public class CampaignDecisionTag extends BaseQuery {
+public class CampaignActionSaveAudienceIn {
     private Integer id;
 
     private String itemId;
 
-    private Integer campaignHeadId;
-
     private String name;
 
-    private String tagNames;
+    private Integer segmentationId;
 
-    private String tagIds;
-
-    private Byte rule;
+    private String segmentationName;
 
     private Byte status;
 
@@ -41,14 +35,6 @@ public class CampaignDecisionTag extends BaseQuery {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
-    public Integer getCampaignHeadId() {
-        return campaignHeadId;
-    }
-
-    public void setCampaignHeadId(Integer campaignHeadId) {
-        this.campaignHeadId = campaignHeadId;
-    }
-
     public String getName() {
         return name;
     }
@@ -57,28 +43,20 @@ public class CampaignDecisionTag extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getTagNames() {
-        return tagNames;
+    public Integer getSegmentationId() {
+        return segmentationId;
     }
 
-    public void setTagNames(String tagNames) {
-        this.tagNames = tagNames == null ? null : tagNames.trim();
+    public void setSegmentationId(Integer segmentationId) {
+        this.segmentationId = segmentationId;
     }
 
-    public String getTagIds() {
-        return tagIds;
+    public String getSegmentationName() {
+        return segmentationName;
     }
 
-    public void setTagIds(String tagIds) {
-        this.tagIds = tagIds == null ? null : tagIds.trim();
-    }
-
-    public Byte getRule() {
-        return rule;
-    }
-
-    public void setRule(Byte rule) {
-        this.rule = rule;
+    public void setSegmentationName(String segmentationName) {
+        this.segmentationName = segmentationName == null ? null : segmentationName.trim();
     }
 
     public Byte getStatus() {

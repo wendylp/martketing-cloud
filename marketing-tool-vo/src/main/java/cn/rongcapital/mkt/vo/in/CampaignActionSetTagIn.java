@@ -1,23 +1,18 @@
-package cn.rongcapital.mkt.po;
+package cn.rongcapital.mkt.vo.in;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class CampaignDecisionTag extends BaseQuery {
+public class CampaignActionSetTagIn {
     private Integer id;
 
     private String itemId;
 
-    private Integer campaignHeadId;
-
     private String name;
-
-    private String tagNames;
 
     private String tagIds;
 
-    private Byte rule;
+    private String tagNames;
 
     private Byte status;
 
@@ -41,28 +36,12 @@ public class CampaignDecisionTag extends BaseQuery {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
-    public Integer getCampaignHeadId() {
-        return campaignHeadId;
-    }
-
-    public void setCampaignHeadId(Integer campaignHeadId) {
-        this.campaignHeadId = campaignHeadId;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
-    }
-
-    public String getTagNames() {
-        return tagNames;
-    }
-
-    public void setTagNames(String tagNames) {
-        this.tagNames = tagNames == null ? null : tagNames.trim();
     }
 
     public String getTagIds() {
@@ -73,12 +52,12 @@ public class CampaignDecisionTag extends BaseQuery {
         this.tagIds = tagIds == null ? null : tagIds.trim();
     }
 
-    public Byte getRule() {
-        return rule;
+    public String getTagNames() {
+        return tagNames;
     }
 
-    public void setRule(Byte rule) {
-        this.rule = rule;
+    public void setTagNames(String tagNames) {
+        this.tagNames = tagNames == null ? null : tagNames.trim();
     }
 
     public Byte getStatus() {

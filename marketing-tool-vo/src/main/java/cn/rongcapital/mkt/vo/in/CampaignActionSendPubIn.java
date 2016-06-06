@@ -1,23 +1,22 @@
-package cn.rongcapital.mkt.po;
+package cn.rongcapital.mkt.vo.in;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class CampaignDecisionTag extends BaseQuery {
+public class CampaignActionSendPubIn {
     private Integer id;
 
     private String itemId;
 
-    private Integer campaignHeadId;
-
     private String name;
 
-    private String tagNames;
+    private Integer wechatH5Id;
 
-    private String tagIds;
+    private String wechatH5Name;
 
-    private Byte rule;
+    private String pubId;
+
+    private String pubName;
 
     private Byte status;
 
@@ -41,14 +40,6 @@ public class CampaignDecisionTag extends BaseQuery {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
-    public Integer getCampaignHeadId() {
-        return campaignHeadId;
-    }
-
-    public void setCampaignHeadId(Integer campaignHeadId) {
-        this.campaignHeadId = campaignHeadId;
-    }
-
     public String getName() {
         return name;
     }
@@ -57,28 +48,36 @@ public class CampaignDecisionTag extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getTagNames() {
-        return tagNames;
+    public Integer getWechatH5Id() {
+        return wechatH5Id;
     }
 
-    public void setTagNames(String tagNames) {
-        this.tagNames = tagNames == null ? null : tagNames.trim();
+    public void setWechatH5Id(Integer wechatH5Id) {
+        this.wechatH5Id = wechatH5Id;
     }
 
-    public String getTagIds() {
-        return tagIds;
+    public String getWechatH5Name() {
+        return wechatH5Name;
     }
 
-    public void setTagIds(String tagIds) {
-        this.tagIds = tagIds == null ? null : tagIds.trim();
+    public void setWechatH5Name(String wechatH5Name) {
+        this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
     }
 
-    public Byte getRule() {
-        return rule;
+    public String getPubId() {
+        return pubId;
     }
 
-    public void setRule(Byte rule) {
-        this.rule = rule;
+    public void setPubId(String pubId) {
+        this.pubId = pubId == null ? null : pubId.trim();
+    }
+
+    public String getPubName() {
+        return pubName;
+    }
+
+    public void setPubName(String pubName) {
+        this.pubName = pubName == null ? null : pubName.trim();
     }
 
     public Byte getStatus() {

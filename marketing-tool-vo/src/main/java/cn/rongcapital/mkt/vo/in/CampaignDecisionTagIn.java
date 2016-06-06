@@ -1,15 +1,12 @@
-package cn.rongcapital.mkt.po;
+package cn.rongcapital.mkt.vo.in;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class CampaignDecisionTag extends BaseQuery {
+public class CampaignDecisionTagIn {
     private Integer id;
 
     private String itemId;
-
-    private Integer campaignHeadId;
 
     private String name;
 
@@ -24,8 +21,19 @@ public class CampaignDecisionTag extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+    
+    private Integer campaignHeadId;
+    
 
-    public Integer getId() {
+    public Integer getCampaignHeadId() {
+		return campaignHeadId;
+	}
+
+	public void setCampaignHeadId(Integer campaignHeadId) {
+		this.campaignHeadId = campaignHeadId;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -39,14 +47,6 @@ public class CampaignDecisionTag extends BaseQuery {
 
     public void setItemId(String itemId) {
         this.itemId = itemId == null ? null : itemId.trim();
-    }
-
-    public Integer getCampaignHeadId() {
-        return campaignHeadId;
-    }
-
-    public void setCampaignHeadId(Integer campaignHeadId) {
-        this.campaignHeadId = campaignHeadId;
     }
 
     public String getName() {
