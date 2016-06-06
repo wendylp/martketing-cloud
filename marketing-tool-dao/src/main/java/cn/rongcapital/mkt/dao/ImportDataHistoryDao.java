@@ -53,12 +53,21 @@ public interface ImportDataHistoryDao extends BaseDao<ImportDataHistory>{
     public Map<String, Object> selectQualityCount();
     
     /**
-     * mkt.data.unqualified.count.get
-     * 
-     * @功能简述 : 获取非法数据条数
-     * @author nianjun
-     * @return map
-     */
-    public Map<String, Object> selectUnqualifiedCount(ImportDataHistory paramImportDataHistory);
+	 * mkt.data.unqualified.count.get
+	 *
+	 * @功能简述 : 获取非法数据条数
+	 * @author nianjun
+	 * @return map
+	 */
+	public Map<String, Object> selectUnqualifiedCount(ImportDataHistory paramImportDataHistory);
+
+	/**
+	 * mkt.data.unqualified.count.get
+	 *
+	 * @功能简述 : 获取非法数据条数
+	 * @author nianjun
+	 * @return map
+	 */
+	public void insertFileUnique(Map<String,Object> paramMap);
 
 }
