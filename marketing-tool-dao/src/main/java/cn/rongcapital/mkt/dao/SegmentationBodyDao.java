@@ -34,4 +34,6 @@ public interface SegmentationBodyDao extends BaseDao<SegmentationBody>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	void batchDeleteUseHeaderId(Integer headId);
 }
