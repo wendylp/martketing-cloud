@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.SegmentationDao;
-import cn.rongcapital.mkt.po.Segmentation;
+import cn.rongcapital.mkt.dao.SegmentationHeadDao;
+import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import heracles.data.common.annotation.ReadWrite;
@@ -32,7 +32,7 @@ import heracles.data.common.util.ReadWriteType;
 public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatusListService {
 
     @Autowired
-    SegmentationDao segmentationDao;
+    SegmentationHeadDao segmentationHeadDao;
 
     /**
      * @功能简述: mkt.segment.publishstatus.list.get
@@ -46,7 +46,7 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 	public Object segmentPublishstatusList(String userToken, 
 										   Integer publishStatus, Integer index,
 										   Integer size, String ver,String keyword) {
-		Segmentation t = new Segmentation();
+		SegmentationHead t = new SegmentationHead();
 		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		if(ApiConstant.SEGMENT_PUBLISH_STATUS_ALL != publishStatus.byteValue()){
 			t.setPublishStatus(publishStatus.byteValue());
@@ -54,15 +54,15 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 		t.setPageSize(size);
 		t.setStartIndex((index-1)*size);
 		t.getCustomMap().put("keyword", keyword);
-		List<Segmentation> reList = segmentationDao.selectListByKeyword(t);
+		List<SegmentationHead> reList = segmentationHeadDao.selectListByKeyword(t);
 		BaseOutput rseult = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 										   ApiErrorCode.SUCCESS.getMsg(),
 										   ApiConstant.INT_ZERO,null);
 		if(null !=reList && reList.size()>0){
-			for(Segmentation s:reList){
+			for(SegmentationHead s:reList){
 				Map<String,Object> map = new HashMap<String,Object>();
 				map.put("segment_name", s.getName());
-				map.put("segment_id", s.getId());
+				map.put("segment_head_id", s.getId());
 				rseult.getData().add(map);
 			}
 		}

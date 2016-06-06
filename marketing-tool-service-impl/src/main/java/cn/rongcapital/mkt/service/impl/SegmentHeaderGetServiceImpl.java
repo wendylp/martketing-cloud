@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.SegmentationDao;
-import cn.rongcapital.mkt.po.Segmentation;
+import cn.rongcapital.mkt.dao.SegmentationHeadDao;
+import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.service.SegmentHeaderGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -30,18 +30,18 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
 
 	@Autowired
-    SegmentationDao segmentationDao;
+    SegmentationHeadDao segmentationHeadDao;
 	
 	@Override
 	public Object segmentHeaderGet(String userToken, String ver, String segmentId) {
-		Segmentation t = new Segmentation();
+		SegmentationHead t = new SegmentationHead();
 		t.setId(Integer.parseInt(segmentId));  
 		t.setStatus((byte)ApiConstant.INT_ZERO);
-		List<Segmentation> list = segmentationDao.selectList(t);
+		List<SegmentationHead> list = segmentationHeadDao.selectList(t);
 		BaseOutput out = new BaseOutput(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 		Map<String,Object> map = new HashMap<String,Object>();
 		if(null != list && list.size() > 0){
-			Segmentation s = list.get(0);
+			SegmentationHead s = list.get(0);
 			map.put("segment_name", s.getName());
 			map.put("publish_status", s.getPublishStatus());
 			map.put("oper", "奥巴马");//TO DO:MOCK

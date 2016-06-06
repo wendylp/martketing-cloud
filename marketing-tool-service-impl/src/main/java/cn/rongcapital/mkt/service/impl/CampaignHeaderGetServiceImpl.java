@@ -23,9 +23,9 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
 	CampaignHeadDao campaignHeadDao;
 
 	@Override
-	public Object campaignHeaderGet(String userToken, String ver, int campaignId) {
+	public Object campaignHeaderGet(String userToken, String ver, int campaignHeadId) {
 		CampaignHead t = new CampaignHead();
-		t.setId(campaignId);
+		t.setId(campaignHeadId);
 		t.setStatus((byte)ApiConstant.INT_ZERO);
 		List<CampaignHead> list = campaignHeadDao.selectList(t);
 		

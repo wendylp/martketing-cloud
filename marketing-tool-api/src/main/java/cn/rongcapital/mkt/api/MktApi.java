@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
@@ -131,7 +132,8 @@ public class MktApi {
 	private UploadFileService uploadFileService;
 	@Autowired
 	private CampaignHeaderGetService campaignHeaderGetService;
-
+    @Autowired
+    private CampaignBodyGetService campaignBodyGetService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -178,8 +180,22 @@ public class MktApi {
 	}
 
 	/**
+	 * @功能简述: 根据campaign_head_id 获取campaign body
+	 * @param: SegmentHeadIn body, SecurityContext securityContext,Integer campaignHeadId 
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.campaign.body.get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object campaignBodyGet(@NotEmpty @QueryParam("user_token") String userToken,
+								  @NotEmpty @QueryParam("ver") String ver,
+								  @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
+	    return campaignBodyGetService.campaignBodyGet(userToken, ver, campaignHeadId);
+	}
+	
+	/**
 	 * @功能简述: 根据id获取segment header
-	 * @param: SegmentHeadIn body, SecurityContext securityContext
+	 * @param: SegmentHeadIn body, SecurityContext securityContext,Integer campaignHeadId 
 	 * @return: Object
 	 */
 	@GET
@@ -187,8 +203,8 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Object campaignHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
 								   @NotEmpty @QueryParam("ver") String ver,
-								   @NotNull @QueryParam("campaign_id") Integer campaignId) {
-	    return campaignHeaderGetService.campaignHeaderGet(userToken, ver, campaignId);
+								   @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
+	    return campaignHeaderGetService.campaignHeaderGet(userToken, ver, campaignHeadId);
 	}
 
 	/**
@@ -204,7 +220,7 @@ public class MktApi {
 	}
 	/**
 	 * @功能简述: 根据id获取segment header
-	 * @param: SegmentHeadIn body, SecurityContext securityContext 
+	 * @param: SegmentHeadIn body, SecurityContext securityContext, String segmentId
 	 * @return: Object
 	 */
 	@GET
@@ -212,7 +228,7 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Object segmentHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
 								   @NotEmpty @QueryParam("ver") String ver,
-								   @NotEmpty @QueryParam("segment_id") String segmentId) {
+								   @NotEmpty @QueryParam("segment_head_id") String segmentId) {
 	    return segmentHeaderGetService.segmentHeaderGet(userToken, ver,segmentId);
 	}
 	
