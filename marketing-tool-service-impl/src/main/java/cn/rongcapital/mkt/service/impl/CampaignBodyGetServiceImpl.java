@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.dao.CampaignActionSaveAudienceDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendH5Dao;
@@ -20,6 +21,7 @@ import cn.rongcapital.mkt.dao.CampaignDecisionWechatSentDao;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 
+@Service
 public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 
 	@Autowired
