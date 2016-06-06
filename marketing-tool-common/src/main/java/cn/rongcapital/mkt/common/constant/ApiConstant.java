@@ -27,7 +27,7 @@ public class ApiConstant {
 	public static final int PAGE_START_INDEX_DEFAULT = 0;//默认分页起始index值
 	public static final int PAGE_PAGE_SIZE_DEFAULT = 10;//默认每页记录数
 
-	public static final String FILE_UPLOAD_URL = "mkt.file.upload";   //文件上传地址
+	public static final String FILE_UPLOAD_URL = "mkt.service.file.upload";   //文件上传地址
 
 	public static final int WECHAT_ASSET_SERVER_NUMBER = 0;
 	public static final int WECHAT_ASSET_PERSONAL_NUMBER = 1;
