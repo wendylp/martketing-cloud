@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
+import cn.rongcapital.mkt.common.util.ReflectionUtil;
 import cn.rongcapital.mkt.dao.DataAppDao;
 import cn.rongcapital.mkt.dao.DataCrmDao;
 import cn.rongcapital.mkt.dao.DataEshopDao;
@@ -22,6 +23,7 @@ import cn.rongcapital.mkt.dao.DataPersonalDao;
 import cn.rongcapital.mkt.dao.DataPosDao;
 import cn.rongcapital.mkt.dao.DataPublicDao;
 import cn.rongcapital.mkt.dao.DataTmallDao;
+import cn.rongcapital.mkt.dao.ImportTemplateDao;
 import cn.rongcapital.mkt.po.DataApp;
 import cn.rongcapital.mkt.po.DataCrm;
 import cn.rongcapital.mkt.po.DataEshop;
@@ -30,6 +32,7 @@ import cn.rongcapital.mkt.po.DataPersonal;
 import cn.rongcapital.mkt.po.DataPos;
 import cn.rongcapital.mkt.po.DataPublic;
 import cn.rongcapital.mkt.po.DataTmall;
+import cn.rongcapital.mkt.po.ImportTemplate;
 import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -37,6 +40,9 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public class DataGetMainListServiceImpl implements DataGetMainListService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private ImportTemplateDao importTemplateDao;
 
     @Autowired
     private DataPartyDao dataPartyDao;
@@ -71,21 +77,21 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
 
         // 这代码写的太2了
         if (dataType == DataTypeEnum.PARTY.getCode()) {
-            assignPartyData(result, index, size);
+            assignPartyData(result, index, size, dataType);
         } else if (dataType == DataTypeEnum.APP.getCode()) {
-            assignAppData(result, index, size);
+            assignAppData(result, index, size, dataType);
         } else if (dataType == DataTypeEnum.POS.getCode()) {
-            assignPosData(result, index, size);
+            assignPosData(result, index, size, dataType);
         } else if (dataType == DataTypeEnum.PUBLIC.getCode()) {
-            assignPublicData(result, index, size);
+            assignPublicData(result, index, size, dataType);
         } else if (dataType == DataTypeEnum.PERSONAL.getCode()) {
-            assignPersonalData(result, index, size);
+            assignPersonalData(result, index, size, dataType);
         } else if (dataType == DataTypeEnum.ESHOP.getCode()) {
-            assignEshopData(result, index, size);
+            assignEshopData(result, index, size, dataType);
         } else if (dataType == DataTypeEnum.CRM.getCode()) {
-            assignCrmData(result, index, size);
+            assignCrmData(result, index, size, dataType);
         } else if (dataType == DataTypeEnum.TMALL.getCode()) {
-            assignTmallData(result, index, size);
+            assignTmallData(result, index, size, dataType);
         } else {
             logger.error("传入错误的data type : {}", dataType);
         }
@@ -95,8 +101,7 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         return Response.ok().entity(result).build();
     }
 
-    private void assignPartyData(BaseOutput result, int index, int size) {
-
+    private void assignPartyData(BaseOutput result, int index, int size, Integer mdType) {
         DataParty paramParty = new DataParty();
         paramParty.setStartIndex(index);
         paramParty.setPageSize(size);
@@ -104,38 +109,29 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
 
         List<DataParty> dataPartyList = dataPartyDao.selectList(paramParty);
         if (dataPartyList != null && !dataPartyList.isEmpty()) {
+            ImportTemplate paramImportTemplate = new ImportTemplate();
+            paramImportTemplate.setSelected(Boolean.TRUE);
+            paramImportTemplate.setTemplType(mdType);
+
+            List<ImportTemplate> importTemplateList =
+                            importTemplateDao.selectList(paramImportTemplate);
+
             for (DataParty dataParty : dataPartyList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("data_id", dataParty.getId());
-                map.put("account_name", dataParty.getAccountName());
-                map.put("name", dataParty.getName());
-                map.put("gender", dataParty.getGender());
-                map.put("age", dataParty.getAge());
-                map.put("home_address", dataParty.getHomeAddress());
-                map.put("work_address", dataParty.getWorkAddress());
-                map.put("home_status", dataParty.getHomeStatus());
-                map.put("work_status", dataParty.getWorkStatus());
-                map.put("member_level", dataParty.getMemberLevel());
-                map.put("mobile", dataParty.getMobile());
-                map.put("email", dataParty.getEmail());
-                map.put("wechat", dataParty.getWechat());
-                map.put("qq", dataParty.getQq());
-                map.put("weibo", dataParty.getWeibo());
-                map.put("order_count", dataParty.getOrderCount());
-                map.put("order_amount", dataParty.getOrderAmount());
-                map.put("cart_item_count", dataParty.getCartItemCount());
-                map.put("favorite_item_count", dataParty.getFavoriteItemCount());
-                map.put("salary", dataParty.getSalary());
-                map.put("offline_activity_attendence", dataParty.getOfflineActivityAttendence());
-                map.put("child_amount", dataParty.getChildAmount());
-                map.put("child_annual_budget", dataParty.getChildAnnualBudget());
+                for (ImportTemplate importTemplate : importTemplateList) {
+                    if (importTemplate.getSelected()) {
+                        ReflectionUtil.getObjectPropertyByName(dataParty, ReflectionUtil
+                                        .recoverFieldName(importTemplate.getFieldCode()));
+                    }
+                }
 
                 result.getData().add(map);
             }
         }
     }
 
-    private void assignAppData(BaseOutput result, int index, int size) {
+    private void assignAppData(BaseOutput result, int index, int size, Integer mdType) {
         DataApp paramDataApp = new DataApp();
         paramDataApp.setStartIndex(index);
         paramDataApp.setPageSize(size);
@@ -143,25 +139,29 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
 
         List<DataApp> dataAppList = dataAppDao.selectList(paramDataApp);
         if (dataAppList != null && !dataAppList.isEmpty()) {
+            ImportTemplate paramImportTemplate = new ImportTemplate();
+            paramImportTemplate.setSelected(Boolean.TRUE);
+            paramImportTemplate.setTemplType(mdType);
+
+            List<ImportTemplate> importTemplateList =
+                            importTemplateDao.selectList(paramImportTemplate);
+
             for (DataApp dataApp : dataAppList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("data_id", dataApp.getId());
-                map.put("account_name", dataApp.getAccountName());
-                map.put("name", dataApp.getName());
-                map.put("delivery_address", dataApp.getDeliveryAddress());
-                map.put("mobile", dataApp.getMobile());
-                map.put("email", dataApp.getEmail());
-                map.put("order_count", dataApp.getOrderCount());
-                map.put("order_amount", dataApp.getOrderAmount());
-                map.put("cart_item_count", dataApp.getCartItemCount());
-                map.put("favorite_item_count", dataApp.getFavoriteItemCount());
+                for (ImportTemplate importTemplate : importTemplateList) {
+                    if (importTemplate.getSelected()) {
+                        ReflectionUtil.getObjectPropertyByName(dataApp, ReflectionUtil
+                                        .recoverFieldName(importTemplate.getFieldCode()));
+                    }
+                }
 
                 result.getData().add(map);
             }
         }
     }
 
-    private void assignPosData(BaseOutput result, int index, int size) {
+    private void assignPosData(BaseOutput result, int index, int size, Integer mdType) {
         DataPos paramDataPos = new DataPos();
         paramDataPos.setStartIndex(index);
         paramDataPos.setPageSize(size);
@@ -170,21 +170,29 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         List<DataPos> dataPosList = dataPosDao.selectList(paramDataPos);
 
         if (dataPosList != null && !dataPosList.isEmpty()) {
+            ImportTemplate paramImportTemplate = new ImportTemplate();
+            paramImportTemplate.setSelected(Boolean.TRUE);
+            paramImportTemplate.setTemplType(mdType);
+
+            List<ImportTemplate> importTemplateList =
+                            importTemplateDao.selectList(paramImportTemplate);
+
             for (DataPos dataPos : dataPosList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("data_id", dataPos.getId());
-                map.put("account_name", dataPos.getAccountName());
-                map.put("time", dataPos.getTime());
-                map.put("store", dataPos.getStore());
-                map.put("monetory", dataPos.getMonetary());
-                map.put("sku_list", dataPos.getSkuList());
+                for (ImportTemplate importTemplate : importTemplateList) {
+                    if (importTemplate.getSelected()) {
+                        ReflectionUtil.getObjectPropertyByName(dataPos, ReflectionUtil
+                                        .recoverFieldName(importTemplate.getFieldCode()));
+                    }
+                }
 
                 result.getData().add(map);
             }
         }
     }
 
-    private void assignPublicData(BaseOutput result, int index, int size) {
+    private void assignPublicData(BaseOutput result, int index, int size, Integer mdType) {
         DataPublic paramDataPublic = new DataPublic();
         paramDataPublic.setStartIndex(index);
         paramDataPublic.setPageSize(size);
@@ -193,22 +201,29 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         List<DataPublic> dataPublicList = dataPublicDao.selectList(paramDataPublic);
 
         if (dataPublicList != null && !dataPublicList.isEmpty()) {
+            ImportTemplate paramImportTemplate = new ImportTemplate();
+            paramImportTemplate.setSelected(Boolean.TRUE);
+            paramImportTemplate.setTemplType(mdType);
+
+            List<ImportTemplate> importTemplateList =
+                            importTemplateDao.selectList(paramImportTemplate);
+
             for (DataPublic dataPublic : dataPublicList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("data_id", dataPublic.getId());
-                map.put("open_id", dataPublic.getOpenId());
-                map.put("public_name", dataPublic.getPublicName());
-                map.put("nick_name", dataPublic.getNickName());
-                map.put("icon_url", dataPublic.getIconUrl());
-                map.put("gender", dataPublic.getGender());
-                map.put("area", dataPublic.getArea());
+                for (ImportTemplate importTemplate : importTemplateList) {
+                    if (importTemplate.getSelected()) {
+                        ReflectionUtil.getObjectPropertyByName(dataPublic, ReflectionUtil
+                                        .recoverFieldName(importTemplate.getFieldCode()));
+                    }
+                }
 
                 result.getData().add(map);
             }
         }
     }
 
-    private void assignPersonalData(BaseOutput result, int index, int size) {
+    private void assignPersonalData(BaseOutput result, int index, int size, Integer mdType) {
         DataPersonal paramDataPersonal = new DataPersonal();
         paramDataPersonal.setStartIndex(index);
         paramDataPersonal.setPageSize(size);
@@ -217,19 +232,29 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         List<DataPersonal> dataPersonalList = dataPersonalDao.selectList(paramDataPersonal);
 
         if (dataPersonalList != null && !dataPersonalList.isEmpty()) {
+            ImportTemplate paramImportTemplate = new ImportTemplate();
+            paramImportTemplate.setSelected(Boolean.TRUE);
+            paramImportTemplate.setTemplType(mdType);
+
+            List<ImportTemplate> importTemplateList =
+                            importTemplateDao.selectList(paramImportTemplate);
+
             for (DataPersonal dataPersonal : dataPersonalList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("data_id", dataPersonal.getId());
-                map.put("open_id", dataPersonal.getOpenId());
-                map.put("personal_name", dataPersonal.getPersonalName());
-                map.put("nick_name", dataPersonal.getNickName());
+                for (ImportTemplate importTemplate : importTemplateList) {
+                    if (importTemplate.getSelected()) {
+                        ReflectionUtil.getObjectPropertyByName(dataPersonal, ReflectionUtil
+                                        .recoverFieldName(importTemplate.getFieldCode()));
+                    }
+                }
 
                 result.getData().add(map);
             }
         }
     }
 
-    private void assignEshopData(BaseOutput result, int index, int size) {
+    private void assignEshopData(BaseOutput result, int index, int size, Integer mdType) {
         DataEshop paramDataEshop = new DataEshop();
         paramDataEshop.setStartIndex(index);
         paramDataEshop.setPageSize(size);
@@ -238,25 +263,29 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         List<DataEshop> dataEshopList = dataEshopDao.selectList(paramDataEshop);
 
         if (dataEshopList != null && !dataEshopList.isEmpty()) {
+            ImportTemplate paramImportTemplate = new ImportTemplate();
+            paramImportTemplate.setSelected(Boolean.TRUE);
+            paramImportTemplate.setTemplType(mdType);
+
+            List<ImportTemplate> importTemplateList =
+                            importTemplateDao.selectList(paramImportTemplate);
+
             for (DataEshop dataEshop : dataEshopList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("data_id", dataEshop.getId());
-                map.put("account_name", dataEshop.getAccountName());
-                map.put("name", dataEshop.getName());
-                map.put("delivery_address", dataEshop.getDeliveryAddress());
-                map.put("mobile", dataEshop.getMobile());
-                map.put("email", dataEshop.getEmail());
-                map.put("order_count", dataEshop.getOrderCount());
-                map.put("order_amount", dataEshop.getOrderAmount());
-                map.put("cart_iterm_count", dataEshop.getCartItemCount());
-                map.put("favorite_item_count", dataEshop.getFavoriteItemCount());
+                for (ImportTemplate importTemplate : importTemplateList) {
+                    if (importTemplate.getSelected()) {
+                        ReflectionUtil.getObjectPropertyByName(dataEshop, ReflectionUtil
+                                        .recoverFieldName(importTemplate.getFieldCode()));
+                    }
+                }
 
                 result.getData().add(map);
             }
         }
     }
 
-    private void assignCrmData(BaseOutput result, int index, int size) {
+    private void assignCrmData(BaseOutput result, int index, int size, Integer mdType) {
         DataCrm paramDataCrm = new DataCrm();
         paramDataCrm.setStartIndex(index);
         paramDataCrm.setPageSize(size);
@@ -265,30 +294,29 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         List<DataCrm> dataCrmList = dataCrmDao.selectList(paramDataCrm);
 
         if (dataCrmList != null && !dataCrmList.isEmpty()) {
+            ImportTemplate paramImportTemplate = new ImportTemplate();
+            paramImportTemplate.setSelected(Boolean.TRUE);
+            paramImportTemplate.setTemplType(mdType);
+
+            List<ImportTemplate> importTemplateList =
+                            importTemplateDao.selectList(paramImportTemplate);
+
             for (DataCrm dataCrm : dataCrmList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("data_id", dataCrm.getId());
-                map.put("account_name", dataCrm.getAccountName());
-                map.put("name", dataCrm.getName());
-                map.put("gender", dataCrm.getGender());
-                map.put("age", dataCrm.getAge());
-                map.put("home_address", dataCrm.getHomeAddress());
-                map.put("work_address", dataCrm.getWorkAddress());
-                map.put("home_status", dataCrm.getHomeStatus());
-                map.put("work_status", dataCrm.getWorkStatus());
-                map.put("member_level", dataCrm.getMemberLevel());
-                map.put("mobile", dataCrm.getMobile());
-                map.put("email", dataCrm.getEmail());
-                map.put("wechat", dataCrm.getWechat());
-                map.put("qq", dataCrm.getQq());
-                map.put("weibo", dataCrm.getWeibo());
+                for (ImportTemplate importTemplate : importTemplateList) {
+                    if (importTemplate.getSelected()) {
+                        ReflectionUtil.getObjectPropertyByName(dataCrm, ReflectionUtil
+                                        .recoverFieldName(importTemplate.getFieldCode()));
+                    }
+                }
 
                 result.getData().add(map);
             }
         }
     }
 
-    private void assignTmallData(BaseOutput result, int index, int size) {
+    private void assignTmallData(BaseOutput result, int index, int size, Integer mdType) {
         DataTmall paramDataTmall = new DataTmall();
         paramDataTmall.setStartIndex(index);
         paramDataTmall.setPageSize(size);
@@ -297,18 +325,22 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         List<DataTmall> dataTmallList = dataTmallDao.selectList(paramDataTmall);
 
         if (dataTmallList != null && !dataTmallList.isEmpty()) {
+            ImportTemplate paramImportTemplate = new ImportTemplate();
+            paramImportTemplate.setSelected(Boolean.TRUE);
+            paramImportTemplate.setTemplType(mdType);
+
+            List<ImportTemplate> importTemplateList =
+                            importTemplateDao.selectList(paramImportTemplate);
+
             for (DataTmall dataTmall : dataTmallList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("data_id", dataTmall.getId());
-                map.put("account_name", dataTmall.getAccountName());
-                map.put("name", dataTmall.getName());
-                map.put("delivery_address", dataTmall.getDeliveryAddress());
-                map.put("mobile", dataTmall.getMobile());
-                map.put("email", dataTmall.getEmail());
-                map.put("order_count", dataTmall.getOrderCount());
-                map.put("order_amount", dataTmall.getOrderAmount());
-                map.put("cart_item_count", dataTmall.getCartItemCount());
-                map.put("favorite_item_count", dataTmall.getFavoriteItemCount());
+                for (ImportTemplate importTemplate : importTemplateList) {
+                    if (importTemplate.getSelected()) {
+                        ReflectionUtil.getObjectPropertyByName(dataTmall, ReflectionUtil
+                                        .recoverFieldName(importTemplate.getFieldCode()));
+                    }
+                }
 
                 result.getData().add(map);
             }

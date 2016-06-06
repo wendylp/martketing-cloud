@@ -9,6 +9,8 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,7 @@ import java.util.Map;
 public class UploadFileServiceImpl implements UploadFileService{
 
     private final String UPLOADED_FILE_PATH = ApiConstant.FILE_UPLOAD_URL;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ImportDataHistoryDao importDataHistoryDao;
@@ -54,7 +57,7 @@ public class UploadFileServiceImpl implements UploadFileService{
                 //Todo: 2.如果有效，把上传上来的文件解析，解析后得到的摘要，数据条数，未识别属性
                 //Todo: 3.根据文件唯一标识，把数据条数，摘要，未识别属性放到数据库的importHistory表中的相应栏位中。
                 writeFile(bytes,fileName);
-                System.out.println("DONE");
+                logger.info("文件上传完毕！");
             }catch (Exception e){
                 e.printStackTrace();
             }
