@@ -119,8 +119,27 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
-	
-	<!-- 其它SQL语句 -->
+
+	<select id="selectMigrationFileGeneralInfo" resultType="java.util.Map">
+		SELECT
+		sum(total_rows) as total_rows, max(import_end_time) as import_end_time
+		<include refid="QUERY_FROM_TABLE" />
+	</select>
+
+	<select id="selectQualityCount" resultType="java.util.Map">
+		SELECT
+		SUM(import_data_history.total_rows) as total_rows,
+		SUM(import_data_history.illegal_rows) as issue_rows,
+		SUM(import_data_modify_log.modify_rows) as modified_rows
+		<include refid="QUERY_FROM_UNION_LOG_TABLE" />
+	</select>
+
+	<select id="selectUnqualifiedCount" parameterType="cn.rongcapital.mkt.po.ImportDataHistory" resultType="java.util.Map">
+		SELECT
+		mobile_rows , email_rows , duplicate_rows
+		<include refid="QUERY_FROM_TABLE" />
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
 	
 	
 </mapper>
