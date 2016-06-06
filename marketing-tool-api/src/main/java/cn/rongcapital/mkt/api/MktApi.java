@@ -74,6 +74,7 @@ import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyOut;
+import cn.rongcapital.mkt.vo.out.SegmentTagnameTagList;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -556,5 +557,17 @@ public class MktApi {
 			@QueryParam("file_type") int fileType,
 			MultipartFormDataInput input, @Context SecurityContext securityContext){
 		return uploadFileService.uploadFile(fileSource,fileUnique,fileType,input,securityContext);
+	}
+	
+	/**
+	 * @功能描述:查询系统推荐标签列表
+	 * @Param: String method, String userToken
+	 * @return SegmentTagnameTagList
+	 */
+	@GET
+	@Path("/mkt.segment.tagname.taglist.get")
+	public SegmentTagnameTagList getSysRecommendedTagList(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken){
+		return null;
 	}
 }
