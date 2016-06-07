@@ -13,6 +13,8 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.AudienceList;
 
+import java.util.Map;
+
 public interface AudienceListDao extends BaseDao<AudienceList>{
 	
 	//自定义扩展
@@ -34,4 +36,12 @@ public interface AudienceListDao extends BaseDao<AudienceList>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	//自定义扩展
+	/**
+	 * 微信资产下保存人群的工作
+	 * @param paramMap
+	 * @return int
+	 */
+	Integer insertWechatGroups(Map<String,Object> paramMap);
 }
