@@ -750,8 +750,8 @@ public class MktApi {
 	}
 	
 	/**
-	 * @功能简述: 获取不同状态下的campaign数量以及该页面默认列表信息
-	 * @param: campaign_id 营销活动id
+	 * @功能简述: 获取不同状态下的campaign数量
+	 * @param: 
 	 * @return: Object
 	 */
 	@GET

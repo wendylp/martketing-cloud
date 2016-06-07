@@ -44,7 +44,7 @@ public interface CampaignHeadDao extends BaseDao<CampaignHead>{
 	 * @param 
 	 * @return map
 	 */
-	public Map<String,Object> selectCampaignHeadCountGroupByPublishStatus();
+	public List<Object> selectCampaignHeadCountGroupByPublishStatus();
 	
 	/**
 	 * 根据publish_status以及campaign_name(如果有要用like做模糊查询)从campaign_head表中查询
