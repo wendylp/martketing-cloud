@@ -181,6 +181,7 @@ public class MktApi {
 	private CampaignProgressStatusCountService campaignProgressStatusCountService;
 	@Autowired
 	private CampaignProgressStatusListService campaignProgressStatusListService;
+	@Autowired
 	private SegmentTagnameTagListService segmentTagnameTagListService;
 	@Autowired
 	private SegmentTagkeyTagListService segmentTagkeyTagListService;
@@ -188,6 +189,7 @@ public class MktApi {
 	private SegmentTagnameTagValueService segmentTagnameTagValueService;
 	@Autowired
 	private TagSystemTagcountService tagSystemTagcountService;
+	@Autowired
 	private SegmentBodyGetService segmentBodyGetService;
 	
 	/**
@@ -823,5 +825,19 @@ public class MktApi {
 			@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("segment_head_id") String segmentHeadId) {
 		return segmentBodyGetService.getSegmentBody(userToken, segmentHeadId);
+	}
+	
+	/**
+	 * @功能简述: 获取系统标签总数量 
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupName
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.tag.system.tagcount.get")
+	public BaseOutput getTagcount(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken){
+		return tagSystemTagcountService.getTagcount(method, userToken);
 	}
 }
