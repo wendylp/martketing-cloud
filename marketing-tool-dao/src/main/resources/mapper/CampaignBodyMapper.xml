@@ -124,7 +124,7 @@
 	<select id="selectCampaignAudienceCount" resultType="int">
 		<![CDATA[
 			SELECT
-				SUM(audience_count) AS total_campaign_audience_count
+				IFNULL(SUM(audience_count),0) AS total_campaign_audience_count
 			FROM
 				campaign_body
 		]]>
