@@ -11,6 +11,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.TagDao;
 import cn.rongcapital.mkt.dao.TaskRunLogDao;
+import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -26,12 +27,16 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
 	
 	@Override
 	public BaseOutput getTagcount(String method, String userToken) {
-		int tagCount = tagDao.selectAllListCount();
+		Tag tag = new Tag();
+		int tagCount = tagDao.selectListCount(tag);
+		TaskRunLog taskRunLog = new TaskRunLog();
+		taskRunLog.setOrderField("end_time");
+		taskRunLog.setOrderFieldType("DESC");
+		taskRunLog.setStartIndex(0);
+		taskRunLog.setPageSize(1);
 		Map<String,Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("orderField", "end_time");
-		paramMap.put("orderFieldType", "desc");
 		paramMap.put("count", 1);
-		List<TaskRunLog> taskRunLogList = taskRunLogDao.selectLastOne(paramMap);
+		List<TaskRunLog> taskRunLogList = taskRunLogDao.selectList(taskRunLog);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				   ApiErrorCode.SUCCESS.getMsg(),
 				   ApiConstant.INT_ONE,null);

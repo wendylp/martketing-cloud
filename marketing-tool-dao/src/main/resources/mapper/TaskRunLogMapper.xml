@@ -115,13 +115,6 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
-
-	<!-- 查询最后更新数据 -->
-	<select id="selectLastOne" parameterType="cn.rongcapital.mkt.po.TaskRunLog" resultType="cn.rongcapital.mkt.po.TaskRunLog">
-		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_ORDER_LIMIT_COUNT"/>
-	</select>
 	
 	<!-- 查询最近发生的10个任务 -->
 	<select id="taskRunLogList" resultType="map">

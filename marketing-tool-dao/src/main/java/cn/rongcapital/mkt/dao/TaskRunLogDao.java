@@ -37,22 +37,22 @@ public interface TaskRunLogDao extends BaseDao<TaskRunLog>{
      * @return list
      */
     //List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
-	
-	List<TaskRunLog> selectLastOne(Map<String,Object> paramMap);
+    
+    List<TaskRunLog> selectLastOne(Map<String,Object> paramMap);
 
-	/**
-	 * 查询最近发生的10个任务
-	 * @param
-	 * @return list
-	 */
-	List<Object> taskRunLogList();
-	
-	/**
+    /**
+     * 查询最近发生的10个任务
+     * @param
+     * @return list
+     */
+    List<Object> taskRunLogList();
+    
+    /**
      * mkt.data.filter.recenttask.get
      * 
      * @功能简述 : 根据条件查询最近完成的数据接入任务
      * @author nianjun
      * @return map
      */
-	List<TaskRunLog> selectByEndtime(TaskRunLog taskRunLog);
+    List<TaskRunLog> selectByEndtime(TaskRunLog taskRunLog);
 }
