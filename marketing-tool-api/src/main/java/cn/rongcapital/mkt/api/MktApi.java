@@ -56,6 +56,7 @@ import cn.rongcapital.mkt.service.DataGetQualityCountService;
 import cn.rongcapital.mkt.service.DataGetQualityListService;
 import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
 import cn.rongcapital.mkt.service.DataGetViewListService;
+import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
@@ -201,6 +202,8 @@ public class MktApi {
 	private SegmentTagGetService segmentTagGetService;
 	@Autowired
 	private SegmentTagUpdateService segmentTagUpdateService;
+	@Autowired
+	private DataMainRadarInfoGetService dataMainRadarInfoGetService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
@@ -893,4 +896,16 @@ public class MktApi {
 		return segmentTagUpdateService.updateSegmentTag(body, securityContext);
 	}
 	
+	/**
+	 * @功能简述: 获取某联系人雷达图数据 
+	 * @param userToken
+	 * @param contactId
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.data.main.radarinfo.get")
+	public BaseOutput getRadarInfoByContactId(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("contact_id") String contactId){
+		return dataMainRadarInfoGetService.getRadarInfoByContactId(contactId);
+	}
 }
