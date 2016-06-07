@@ -1,7 +1,7 @@
 package cn.rongcapital.mkt.vo.in;
 
 
-import java.util.Date;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignActionSendPrivtIn {
 	
@@ -25,12 +25,7 @@ public class CampaignActionSendPrivtIn {
 
     private String textInfo;
 
-    private Byte status;
-
-    private Date createTime;
-
-    private Date updateTime;
-    
+    @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
 		return campaignHeadId;
 	}
@@ -39,6 +34,7 @@ public class CampaignActionSendPrivtIn {
 		this.campaignHeadId = campaignHeadId;
 	}
 
+	@JsonProperty("id")
 	public Integer getId() {
         return id;
     }
@@ -47,6 +43,7 @@ public class CampaignActionSendPrivtIn {
         this.id = id;
     }
 
+    @JsonProperty("item_id")
     public String getItemId() {
         return itemId;
     }
@@ -55,6 +52,7 @@ public class CampaignActionSendPrivtIn {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -63,6 +61,7 @@ public class CampaignActionSendPrivtIn {
         this.name = name == null ? null : name.trim();
     }
 
+    @JsonProperty("wechat_h5_id")
     public Integer getWechatH5Id() {
         return wechatH5Id;
     }
@@ -71,6 +70,7 @@ public class CampaignActionSendPrivtIn {
         this.wechatH5Id = wechatH5Id;
     }
 
+    @JsonProperty("wechat_h5_name")
     public String getWechatH5Name() {
         return wechatH5Name;
     }
@@ -79,6 +79,7 @@ public class CampaignActionSendPrivtIn {
         this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
     }
 
+    @JsonProperty("prvt_id")
     public String getPrvtId() {
         return prvtId;
     }
@@ -87,6 +88,7 @@ public class CampaignActionSendPrivtIn {
         this.prvtId = prvtId == null ? null : prvtId.trim();
     }
 
+    @JsonProperty("prvt_group_name")
     public String getPrvtGroupName() {
         return prvtGroupName;
     }
@@ -95,6 +97,7 @@ public class CampaignActionSendPrivtIn {
         this.prvtGroupName = prvtGroupName == null ? null : prvtGroupName.trim();
     }
 
+    @JsonProperty("prvt_name")
     public String getPrvtName() {
         return prvtName;
     }
@@ -103,35 +106,12 @@ public class CampaignActionSendPrivtIn {
         this.prvtName = prvtName == null ? null : prvtName.trim();
     }
 
+    @JsonProperty("text_info")
     public String getTextInfo() {
         return textInfo;
     }
 
     public void setTextInfo(String textInfo) {
         this.textInfo = textInfo == null ? null : textInfo.trim();
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

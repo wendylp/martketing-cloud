@@ -8,6 +8,8 @@ public class Taggroup extends BaseQuery {
     private String name;
 
     private Long parentGroupId;
+    
+    private Integer level;
 
     public Long getId() {
         return id;
@@ -32,4 +34,12 @@ public class Taggroup extends BaseQuery {
     public void setParentGroupId(Long parentGroupId) {
         this.parentGroupId = parentGroupId;
     }
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
 }

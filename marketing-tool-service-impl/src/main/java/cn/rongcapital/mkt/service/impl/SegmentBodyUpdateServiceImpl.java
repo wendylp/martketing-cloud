@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.service.impl;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
@@ -33,8 +34,9 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
+		Integer headerId = Integer.valueOf(body.getSegmentHeadId());
 		// 删除既有body数据
-		segmentationHeadDao.batchDeleteUseHeaderId(body.getSegmentHeadId());
+		segmentationHeadDao.batchDeleteUseHeaderId(headerId);
 
 		// 插入新的Body数据
 		List<SegmentBodyFilterGroupIn> filterGroups = body.getFilterGroups();
@@ -46,10 +48,11 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 				if (tags != null) {
 					for (SegmentBodyTagsIn tag : tags) {
 						SegmentationBody insertBody = new SegmentationBody();
-						insertBody.setHeadId(body.getSegmentHeadId());
+						insertBody.setHeadId(headerId);
 						insertBody.setTagGroupId(tag.getTagGroupId());
 						insertBody.setTagId(tag.getTagId());
 						insertBody.setExclude(tag.getExclude().byteValue());
+						insertBody.setCreateTime(new Date());
 						insertBody.setGroupIndex(groupIndex);
 						insertBody
 								.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);

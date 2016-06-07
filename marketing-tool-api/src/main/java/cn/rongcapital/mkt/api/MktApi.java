@@ -71,6 +71,8 @@ import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
+import cn.rongcapital.mkt.service.impl.SegmentTagnameTagListServiceImpl;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -83,7 +85,7 @@ import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
-import cn.rongcapital.mkt.vo.out.CampaignBodyOut;
+import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 
 @Component
@@ -156,6 +158,11 @@ public class MktApi {
     private SegmentBodyUpdateService segmentBodyUpdateService;
 	@Autowired
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
+	@Autowired
+	private SegmentTagnameTagListServiceImpl segmentTagnameTagListServiceImpl;
+	@Autowired
+	private SegmentTagkeyTagListServiceImpl segmentTagkeyTagListServiceImpl;
+	
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -226,7 +233,7 @@ public class MktApi {
 	@POST
 	@Path("/mkt.campaign.body.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public CampaignBodyOut campaignBodyCreate(@Valid CampaignBodyCreateIn body, @Context SecurityContext securityContext) {
+	public CampaignBodyCreateOut campaignBodyCreate(@Valid CampaignBodyCreateIn body, @Context SecurityContext securityContext) {
 	    return campaignBodyCreateService.campaignBodyCreate(body, securityContext);
 	}
 	
@@ -621,7 +628,19 @@ public class MktApi {
 			MultipartFormDataInput input, @Context SecurityContext securityContext){
 		return uploadFileService.uploadFile(fileSource,fileUnique,fileType,input,securityContext);
 	}
-
+	
+	/**
+	 * @功能描述:查询系统推荐标签列表
+	 * @Param: String method, String userToken
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.segment.tagname.taglist.get")
+	public BaseOutput getSysRecommendedTagList(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken){
+		return segmentTagnameTagListServiceImpl.getSysRecommendedTagList();
+	}
+	
 	/**
 	 * @功能简述: 编辑segment body
 	 * @param: SegmentBodyUpdateIn body, SecurityContext securityContext
@@ -629,8 +648,21 @@ public class MktApi {
 	 */
 	@POST
 	@Path("/mkt.segment.body.update")
-	@Consumes({ MediaType.APPLICATION_JSON })
+	@Consumes({MediaType.APPLICATION_JSON})
 	public Object segmentBodyUpdate(@Valid SegmentBodyUpdateIn body, @Context SecurityContext securityContext) {
 	    return segmentBodyUpdateService.segmentBodyUpdate(body, securityContext);
+	}
+	
+	/**
+	 * @功能简述: 根据关键字查询出系统最末级标签名称列表
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupName
+	 * @return
+	 */
+	public BaseOutput getLastTagByKey(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("tag_group_name") String tagGroupName){
+		return segmentTagkeyTagListServiceImpl.getLastTagByKey(tagGroupName);
 	}
 }

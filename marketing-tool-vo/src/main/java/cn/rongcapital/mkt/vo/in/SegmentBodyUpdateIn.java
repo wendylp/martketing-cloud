@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class SegmentBodyUpdateIn {
 
 	@NotEmpty
-	private Integer segmentHeadId;
+	private String segmentHeadId;
 
 	@NotEmpty
 	private List<SegmentBodyFilterGroupIn> filterGroups;
@@ -27,12 +27,12 @@ public class SegmentBodyUpdateIn {
 	private String userToken = null;
 
 	@JsonProperty("segment_head_id")
-	public Integer getSegmentHeadId() {
+	public String getSegmentHeadId() {
 		return segmentHeadId;
 	}
 
 	@JsonProperty("segment_head_id")
-	public void setSegmentHeadId(Integer segmentHeadId) {
+	public void setSegmentHeadId(String segmentHeadId) {
 		this.segmentHeadId = segmentHeadId;
 	}
 
