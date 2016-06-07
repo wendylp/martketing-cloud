@@ -52,4 +52,11 @@ public interface TagDao extends BaseDao<Tag>{
 	 * @return list
 	 */
 	List<Tag> selectListByParentGroupId(Map<String,Object> paramMap);
+	
+	/**
+	 * 根据标签组ID查询标签数量
+	 * @param tagGroupId
+	 * @return int
+	 */
+	int selectListCountByGroupId(String tagGroupId);
 }
