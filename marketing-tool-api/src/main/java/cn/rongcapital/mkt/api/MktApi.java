@@ -835,7 +835,7 @@ public class MktApi {
 	 * @return BaseOutput
 	 */
 	@GET
-	@Path("/mkt.tag.system.tagcount.get ")
+	@Path("/mkt.tag.system.tagcount.get")
 	public BaseOutput getTagcount(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken){
 		return tagSystemTagcountService.getTagcount(method, userToken);
