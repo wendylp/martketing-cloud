@@ -36,7 +36,11 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
+import cn.rongcapital.mkt.service.CampaignDeleteService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
+import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
+import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
+import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
 import cn.rongcapital.mkt.service.DataGetMainListService;
@@ -46,6 +50,7 @@ import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
 import cn.rongcapital.mkt.service.DataGetViewListService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
+import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
@@ -59,12 +64,12 @@ import cn.rongcapital.mkt.service.SegmentHeaderGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
 import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
+import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -148,6 +153,16 @@ public class MktApi {
     private SegmentBodyUpdateService segmentBodyUpdateService;
 	@Autowired
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
+	@Autowired
+	private TaskListGetService taskListGetService;
+	@Autowired
+	private CampaignDeleteService campaignDeleteService;
+	@Autowired
+	private CampaignSummaryGetService campaignSummaryGetService;
+	@Autowired
+	private CampaignProgressStatusCountService campaignProgressStatusCountService;
+	@Autowired
+	private CampaignProgressStatusListService campaignProgressStatusListService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -606,5 +621,78 @@ public class MktApi {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object segmentBodyUpdate(@Valid SegmentBodyUpdateIn body, @Context SecurityContext securityContext) {
 	    return segmentBodyUpdateService.segmentBodyUpdate(body, securityContext);
+	}
+	
+	/**
+	 * @功能简述: 获取后台任务列表
+	 * @param: 
+	 * @return: Object
+	 */
+	@GET
+	@Path("mkt.task.list.get ")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object taskListGet(@NotEmpty @QueryParam("method") String method,
+			@NotEmpty @QueryParam("user_token") String userToken){
+		return taskListGetService.taskListGet();
+	}
+	
+	/**
+	 * @功能简述: 删除campaign
+	 * @param: campaign_id 营销活动id
+	 * @return: Object
+	 */
+	@POST
+	@Path("mkt.campaign.delete")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object campaignDelete(@NotEmpty @QueryParam("method") String method,
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("campaign_id") Integer campaignId){
+		return campaignDeleteService.campaignDelete(campaignId);
+	}
+	
+	/**
+	 * @功能简述: 查询营销活动个数和触达人数
+	 * @param: campaign_id 营销活动id
+	 * @return: Object
+	 */
+	@GET
+	@Path("mkt.campaign.summary.get")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
+			@NotEmpty @QueryParam("user_token") String userToken){
+		return campaignSummaryGetService.campaignSummaryGet();
+	}
+	
+	/**
+	 * @功能简述: 获取不同状态下的campaign数量以及该页面默认列表信息
+	 * @param: campaign_id 营销活动id
+	 * @return: Object
+	 */
+	@GET
+	@Path("mkt.campaign.progressstatus.count.get")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
+			@NotEmpty @QueryParam("user_token") String userToken){
+		return campaignProgressStatusCountService.campaignProgressStatusCountGet();
+	}
+	
+	/**
+	 * @功能简述: 获取不同状态下的campaign列表
+	 * @param: publish_status 0:未发布,1:已发布,2:活动中,3:已结束,4:全部
+	 * 		   campaign_name 活动名称摘要，如果有代表作前端界面的模糊查询
+	 * 		   index 开始页索引，默认为1
+	 * 		   size 分页大小，默认为10，最大值为100
+	 * @return: Object
+	 */
+	@GET
+	@Path("mkt.campaign.progressstatus.list.get")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("publish_status") Integer publishStatus,
+			@QueryParam("campaign_name") String campaignName,
+			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
+		return campaignProgressStatusListService.campaignProgressStatusList(publishStatus, campaignName, index, size);
 	}
 }
