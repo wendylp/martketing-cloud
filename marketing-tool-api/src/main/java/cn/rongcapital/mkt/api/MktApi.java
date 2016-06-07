@@ -39,6 +39,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
+import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.AudienceListPartyMapService;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
@@ -52,6 +53,7 @@ import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
+import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
 import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.service.DataGetQualityCountService;
@@ -62,6 +64,7 @@ import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
+import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MainActionInfoGetService;
@@ -89,7 +92,6 @@ import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -105,6 +107,7 @@ import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
+import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -151,6 +154,8 @@ public class MktApi {
 	private DataGetViewListService dataGetViewListService;
 	@Autowired
 	private DataGetFilterContactwayService dataGetFilterContactwayService;
+	@Autowired
+	private DataGetFilterRecentTaskService dataGetFilterRecentTaskService;
 	@Autowired
 	private SegmentHeaderGetService segmentHeaderGetService;
 	@Autowired
@@ -629,6 +634,37 @@ public class MktApi {
                 Map<String, Object> map = new HashMap<>();
                 map.put("contact_id", contactWay.getId());
                 map.put("contact_way", contactWay.getName());
+                result.getData().add(map);
+            }
+        }
+
+        result.setTotal(result.getData().size());
+        return Response.ok().entity(result).build();
+    }
+
+    /**
+     * @功能简述 : 查询最近完成的数据接入任务
+     * @param: String method, String userToken, String ver, String condition
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.filter.recenttask.get")
+    public Object getFilterContactway(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("md_type") Integer mdType,
+                    @NotEmpty @QueryParam("ver") String ver,
+                    @NotEmpty @QueryParam("condition") String condition) {
+
+        List<TaskRunLog> taskRunLogList = dataGetFilterRecentTaskService.getFilterRecntTask(method,
+                        userToken, ver, condition);
+        DataGetFilterRecentTaskOut result =
+                        new DataGetFilterRecentTaskOut(ApiErrorCode.SUCCESS.getCode(),
+                                        ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+        if (taskRunLogList != null && !taskRunLogList.isEmpty()) {
+            for (TaskRunLog taskRunLog : taskRunLogList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("task_id", taskRunLog.getTaskId());
+                map.put("filename", taskRunLog.getTaskName());
                 result.getData().add(map);
             }
         }
