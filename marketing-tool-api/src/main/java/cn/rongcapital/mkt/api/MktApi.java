@@ -71,7 +71,7 @@ import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
+import cn.rongcapital.mkt.service.impl.SegmentTagkeyTagListServiceImpl;
 import cn.rongcapital.mkt.service.impl.SegmentTagnameTagListServiceImpl;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
