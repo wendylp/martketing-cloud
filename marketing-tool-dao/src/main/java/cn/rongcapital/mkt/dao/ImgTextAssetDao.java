@@ -77,5 +77,9 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 */
 	List<Map<String,Object>> selectMenuList(Map<String, Object> paramMap);
 
-
+	/**
+	 * 根据图文资产菜单列表
+	 * @return list
+	 */
+	List<Map<String,Object>> selectImgtextAssetCountByType();
 }

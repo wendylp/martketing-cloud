@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.service.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -39,53 +40,6 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
-import cn.rongcapital.mkt.service.AudienceListPartyMapService;
-import cn.rongcapital.mkt.service.AudienceListService;
-import cn.rongcapital.mkt.service.CampaignBodyCreateService;
-import cn.rongcapital.mkt.service.CampaignBodyGetService;
-import cn.rongcapital.mkt.service.CampaignDeleteService;
-import cn.rongcapital.mkt.service.CampaignHeaderGetService;
-import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
-import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
-import cn.rongcapital.mkt.service.CampaignSummaryGetService;
-import cn.rongcapital.mkt.service.DataDeleteMainService;
-import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
-import cn.rongcapital.mkt.service.DataGetMainCountService;
-import cn.rongcapital.mkt.service.DataGetMainListService;
-import cn.rongcapital.mkt.service.DataGetQualityCountService;
-import cn.rongcapital.mkt.service.DataGetQualityListService;
-import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
-import cn.rongcapital.mkt.service.DataGetViewListService;
-import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
-import cn.rongcapital.mkt.service.GetImgTextAssetService;
-import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
-import cn.rongcapital.mkt.service.ImgtextHostService;
-import cn.rongcapital.mkt.service.LoginService;
-import cn.rongcapital.mkt.service.MainActionInfoGetService;
-import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
-import cn.rongcapital.mkt.service.MigrationFileTemplateService;
-import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
-import cn.rongcapital.mkt.service.ModifyPasswdService;
-import cn.rongcapital.mkt.service.SaveWechatAssetListService;
-import cn.rongcapital.mkt.service.SegmentBodyGetService;
-import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
-import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
-import cn.rongcapital.mkt.service.SegmentHeaderGetService;
-import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
-import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
-import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
-import cn.rongcapital.mkt.service.SegmentTagGetService;
-import cn.rongcapital.mkt.service.SegmentTagUpdateService;
-import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
-import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
-import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
-import cn.rongcapital.mkt.service.TagSystemTagcountService;
-import cn.rongcapital.mkt.service.TaskListGetService;
-import cn.rongcapital.mkt.service.UpdateNicknameService;
-import cn.rongcapital.mkt.service.UploadFileService;
-import cn.rongcapital.mkt.service.WechatAssetListGetService;
-import cn.rongcapital.mkt.service.WechatAssetListService;
-import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -201,7 +155,8 @@ public class MktApi {
 	private SegmentTagGetService segmentTagGetService;
 	@Autowired
 	private SegmentTagUpdateService segmentTagUpdateService;
-	
+	@Autowired
+	private GetImgtextCountService getImgtextCountService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -262,6 +217,18 @@ public class MktApi {
 		baseInput.setIndex(index);
 		baseInput.setSize(size);
 		return getImgtextAssetMenulistService.getImgTextAssetMenulist(baseInput);
+	}
+
+	/**
+	 * @功能简述: 获取图文资产
+	 * @param:String user_token,String ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.imgtext.count.get")
+	public Object getImgtextAssetCount(@NotEmpty @QueryParam("user_token") String userToken,
+										  @NotEmpty @QueryParam("ver") String ver){
+		return getImgtextCountService.getImgtextAssetCount();
 	}
 
 	/**
@@ -812,7 +779,6 @@ public class MktApi {
 	 * @功能简述: 根据系统最末级标签组ID查询出标签内容列表
 	 * @param method
 	 * @param userToken
-	 * @param tagGroupName
 	 * @return BaseOutput
 	 */
 	@GET
@@ -856,7 +822,6 @@ public class MktApi {
 	 * @功能简述: 获取系统标签总数量 
 	 * @param method
 	 * @param userToken
-	 * @param tagGroupName
 	 * @return BaseOutput
 	 */
 	@GET
