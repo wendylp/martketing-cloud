@@ -109,7 +109,7 @@
 	<select id="selectLastOne" parameterType="cn.rongcapital.mkt.po.TaskRunLog" resultType="cn.rongcapital.mkt.po.TaskRunLog">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_ORDER_TIME_LIMIT_ONE"/>
+		<include refid="QUERY_ORDER_LIMIT_COUNT"/>
 	</select>
 	
 	<!-- 其它SQL语句 -->
