@@ -11,19 +11,19 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface TagSystemListGetService {
 
-    /**
-     * mkt.tag.system.list.get
-     * 
-     * @author zhangwei
-     * @功能简述 : 获取系统标签内容列表
-     * @param method
-     * @param userToken
-     * @param tagGroupId
-     * @param index
-     * @param size
-     * @return
-     */
-    public BaseOutput getTagcount(String method, String userToken, Integer tagGroupId,
-    		Integer index, Integer size);
+	/**
+	 * mkt.tag.system.list.get
+	 * 
+	 * @author zhangwei
+	 * @功能简述 : 获取系统标签内容列表
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupId
+	 * @param index
+	 * @param size
+	 * @return
+	 */
+	public BaseOutput getTagcount(String method, String userToken,
+			Integer tagGroupId, Integer index, Integer size);
 
 }

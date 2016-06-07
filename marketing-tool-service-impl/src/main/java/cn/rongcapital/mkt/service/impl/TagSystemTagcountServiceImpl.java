@@ -21,10 +21,10 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
 
 	@Autowired
 	TagDao tagDao;
-	
+
 	@Autowired
 	TaskRunLogDao taskRunLogDao;
-	
+
 	@Override
 	public BaseOutput getTagcount(String method, String userToken) {
 		Tag tag = new Tag();
@@ -34,15 +34,14 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
 		taskRunLog.setOrderFieldType("DESC");
 		taskRunLog.setStartIndex(0);
 		taskRunLog.setPageSize(1);
-		Map<String,Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("count", 1);
 		List<TaskRunLog> taskRunLogList = taskRunLogDao.selectList(taskRunLog);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
-				   ApiErrorCode.SUCCESS.getMsg(),
-				   ApiConstant.INT_ONE,null);
-		Map<String,Object> map = new HashMap<String,Object>();
+				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE, null);
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tag_count", tagCount);
-		if(null != taskRunLogList && taskRunLogList.size() > 0){
+		if (null != taskRunLogList && taskRunLogList.size() > 0) {
 			map.put("sync_time", taskRunLogList.get(0).getEndTime());
 		}
 		result.getData().add(map);

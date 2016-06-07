@@ -23,6 +23,7 @@ public interface TaggroupSystemListGetService {
      * @param size
      * @return
      */
-    public BaseOutput getTagGroupByParentGroupId(String method, String userToken, Integer tagGroupId,
+    public BaseOutput getTagGroupByParentGroupId(String method, 
+    		String userToken, Integer tagGroupId,
     		Integer index, Integer size);
 }

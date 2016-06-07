@@ -38,7 +38,8 @@ public class TaggroupSystemListGetServiceImpl implements
 		if(null != groupList && groupList.size() > 0){
 			baseOutput.setTotal(groupList.size());
 			for(Taggroup group: groupList){
-				int count = tagDao.selectListCountByGroupId(String.valueOf(group.getId()));
+				int count = tagDao.selectListCountByGroupId(
+						String.valueOf(group.getId()));
 				Map<String,Object> map = new HashMap<String,Object>();
 				map.put("tag_group_id", group.getId());
 				map.put("tag_group_name", group.getName());
