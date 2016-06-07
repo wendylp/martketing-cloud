@@ -181,6 +181,7 @@ public class MktApi {
 	private CampaignProgressStatusCountService campaignProgressStatusCountService;
 	@Autowired
 	private CampaignProgressStatusListService campaignProgressStatusListService;
+	@Autowired
 	private SegmentTagnameTagListService segmentTagnameTagListService;
 	@Autowired
 	private SegmentTagkeyTagListService segmentTagkeyTagListService;
@@ -188,6 +189,7 @@ public class MktApi {
 	private SegmentTagnameTagValueService segmentTagnameTagValueService;
 	@Autowired
 	private TagSystemTagcountService tagSystemTagcountService;
+	@Autowired
 	private SegmentBodyGetService segmentBodyGetService;
 	
 	/**
