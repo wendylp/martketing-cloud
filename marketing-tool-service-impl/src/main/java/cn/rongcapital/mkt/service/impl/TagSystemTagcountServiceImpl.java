@@ -1,6 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,11 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
 	@Override
 	public BaseOutput getTagcount(String method, String userToken) {
 		int tagCount = tagDao.selectAllListCount();
-		List<TaskRunLog> taskRunLogList = taskRunLogDao.selectLastOne();
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("orderField", "end_time");
+		paramMap.put("orderFieldType", "desc");
+		paramMap.put("count", 1);
+		List<TaskRunLog> taskRunLogList = taskRunLogDao.selectLastOne(paramMap);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				   ApiErrorCode.SUCCESS.getMsg(),
 				   ApiConstant.INT_ONE,null);
