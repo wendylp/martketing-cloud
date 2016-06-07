@@ -1,11 +1,17 @@
+/*************************************************
+ * @功能简述: 查询营销活动个数和触达人数
+ * @项目名称: marketing cloud
+ * @see: 
+ * @author: yuhaixin
+ * @version: 0.0.1
+ * @date: 2016/6/6
+ * @复审人: 
+*************************************************/
+
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +20,8 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
+import cn.rongcapital.mkt.po.CampaignBody;
+import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -25,24 +33,33 @@ public class CampaignSummaryGetServiceImpl implements CampaignSummaryGetService 
 	@Autowired
 	private CampaignBodyDao campaignBodyDao;
 
+
+	/**
+	 * mkt.campaign.summary.get
+	 * @param 
+	 * @return BaseOutput
+	 */
 	@Override
 	public BaseOutput campaignSummaryGet() {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
-		List<Object> data = new ArrayList<Object>();
 		Map<String,Object> result = new HashMap<String, Object>();
 		
-		int totalCampaignCount = campaignHeadDao.selectListCount(null);
-		int totalCampaignAudienceCount = campaignBodyDao.selectCampaignAudienceCount();
+		CampaignHead campaignHead = new CampaignHead();
+		campaignHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		
+		int totalCampaignCount = campaignHeadDao.selectListCount(campaignHead);
+		
+		CampaignBody campaignBody = new CampaignBody();
+		campaignBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		
+		int totalCampaignAudienceCount = campaignBodyDao.selectCampaignAudienceCount(campaignBody);
 		
 		result.put("total_campaign_count", totalCampaignCount);
 		result.put("total_campaign_audience_count", totalCampaignAudienceCount);
-		data.add(result);
+		baseOutput.getData().add(result);
+		baseOutput.setTotal(baseOutput.getData().size());
 		
-		baseOutput.setData(data);
-		baseOutput.setTotal(data.size());
-		
-		//return Response.ok().entity(result).build();
-		return null;
+		return baseOutput;
 	}
 
 }

@@ -38,8 +38,8 @@ public interface CampaignBodyDao extends BaseDao<CampaignBody>{
 	//自定义扩展
 	/**
 	 * 对campaign_body表中的audience_count做sum
-	 * @param
+	 * @param campaignBody
 	 * @return int
 	 */
-	int selectCampaignAudienceCount();
+	int selectCampaignAudienceCount(CampaignBody campaignBody);
 }
