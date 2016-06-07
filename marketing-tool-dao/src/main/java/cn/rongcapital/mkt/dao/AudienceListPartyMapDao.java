@@ -34,4 +34,11 @@ public interface AudienceListPartyMapDao extends BaseDao<AudienceListPartyMap>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/***
+	 * 根据人群id更新表
+	 * @param t
+	 * @return 影响条目
+	 */
+	int updateByListId(AudienceListPartyMap t);
 }
