@@ -48,5 +48,5 @@ public interface TagDao extends BaseDao<Tag>{
 	 * 返回总标签数量
 	 * @return int
 	 */
-	int selectListCount();
+	int selectAllListCount();
 }
