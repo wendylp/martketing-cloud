@@ -740,7 +740,7 @@ public class MktApi {
 	
 	/**
 	 * @功能简述: 查询营销活动个数和触达人数
-	 * @param: campaign_id 营销活动id
+	 * @param: 
 	 * @return: Object
 	 */
 	@GET
