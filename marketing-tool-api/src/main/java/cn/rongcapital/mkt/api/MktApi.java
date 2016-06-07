@@ -68,6 +68,7 @@ import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MainActionInfoGetService;
+import cn.rongcapital.mkt.service.MainBasicInfoGetService;
 import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
 import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
@@ -278,6 +279,9 @@ public class MktApi {
 	@Autowired
 	private TaggroupSystemListGetService taggroupSystemListGetService;
 
+	@Autowired
+	private MainBasicInfoGetService mainBasicInfoGetService;
+	
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1093,4 +1097,19 @@ public class MktApi {
 		return taggroupSystemListGetService.getTagGroupByParentGroupId(method, 
 				userToken, tagGroupId, index, size);
 	}
+	
+	/**
+	 * @功能简述: 获取某条主数据详细信息
+	 * @param userToken
+	 * @param contactId
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.data.main.basicinfo.get")
+	public BaseOutput getPartyBehaviorByCondition(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("contact_id") String contactId) {
+		return mainBasicInfoGetService.getMainBasicInfo(contactId, userToken);
+	}
+	
 }
