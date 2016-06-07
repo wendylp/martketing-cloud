@@ -29,7 +29,7 @@ public class TagSystemListGetServiceImpl implements TagSystemListGetService {
 	
 	@Override
 	public BaseOutput getTagcount(String method, String userToken,
-			int tagGroupId, int index, int size) {
+			Integer tagGroupId, Integer index, Integer size) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		Map<String,Object> paramMap = new HashMap<String, Object>();

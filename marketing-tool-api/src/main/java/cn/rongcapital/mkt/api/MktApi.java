@@ -85,6 +85,7 @@ import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
+import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
@@ -269,6 +270,8 @@ public class MktApi {
 	
 	@Autowired
 	private DataMainRadarInfoGetService dataMainRadarInfoGetService;
+	@Autowired
+	private TagSystemListGetService tagSystemListGetService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -1040,5 +1043,21 @@ public class MktApi {
 	public BaseOutput getRadarInfoByContactId(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("contact_id") String contactId){
 		return dataMainRadarInfoGetService.getRadarInfoByContactId(contactId);
+	}
+	
+	/**
+	 * @功能简述: 获取系统标签内容列表
+	 * @param userToken
+	 * @param contactId
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.tag.system.list.get")
+	public BaseOutput getTagcountByParentGroupId(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("tag_group_id") Integer tagGroupId,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size){
+		return tagSystemListGetService.getTagcount(method, userToken, tagGroupId, index, size);
 	}
 }
