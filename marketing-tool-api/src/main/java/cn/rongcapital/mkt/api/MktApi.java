@@ -625,7 +625,7 @@ public class MktApi {
 	 * @return BaseOutput
 	 */
 	@GET
-	@Path("/mkt.segment.tagname.taglist.get")
+	@Path("/mkt.segment.tagkey.taglist.get")
 	public BaseOutput getLastTagByKey(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("tag_group_name") String tagGroupName){
