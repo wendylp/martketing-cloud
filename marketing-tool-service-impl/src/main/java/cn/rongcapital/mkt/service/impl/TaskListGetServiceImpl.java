@@ -11,11 +11,13 @@
 package cn.rongcapital.mkt.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.dao.TaskRunLogDao;
 import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
+@Service
 public class TaskListGetServiceImpl implements TaskListGetService {
 	@Autowired
 	private TaskRunLogDao taskRunLogDao;
