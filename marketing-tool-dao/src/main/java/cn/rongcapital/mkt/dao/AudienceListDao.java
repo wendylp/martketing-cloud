@@ -23,7 +23,7 @@ public interface AudienceListDao extends BaseDao<AudienceList>{
 	 * @param paramMap
 	 * @return list
 	 */
-	//List<T> selectListBycustomMap(Map<String,Object> paramMap);
+	//List<AudienceList> selectListBycustomMap(Map<String,Object> t);
 	
 	//自定义扩展
 	/**

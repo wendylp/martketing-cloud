@@ -5,6 +5,9 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
 
 public class AudienceListPartyMap extends BaseQuery {
+	
+	private Integer id;
+	
     private Integer audienceListId;
 
     private Integer partyId;
@@ -14,6 +17,14 @@ public class AudienceListPartyMap extends BaseQuery {
     private String oper;
 
     private Date updateTime;
+    
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getAudienceListId() {
         return audienceListId;
