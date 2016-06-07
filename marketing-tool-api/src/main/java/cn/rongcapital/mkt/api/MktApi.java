@@ -48,6 +48,8 @@ import cn.rongcapital.mkt.service.CampaignHeaderGetService;
 import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
 import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
 import cn.rongcapital.mkt.service.CampaignSummaryGetService;
+import cn.rongcapital.mkt.service.CustomTagDeleteService;
+import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
@@ -108,7 +110,6 @@ import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 @Produces({ MediaType.APPLICATION_JSON })
 @ValidateRequest
 public class MktApi {
-
 	@Autowired
 	private LoginService loginService;
 	@Autowired
@@ -197,6 +198,9 @@ public class MktApi {
 	@Autowired
 	private SegmentBodyGetService segmentBodyGetService;
 	@Autowired
+	private CustomTagGetService customTagGetService;
+	@Autowired
+	private CustomTagDeleteService customTagDeleteService;
 	private MainActionInfoGetService mainActionInfoGetService;
 	@Autowired
 	private SegmentTagGetService segmentTagGetService;
@@ -730,7 +734,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.task.list.get ")
+	@Path("mkt.task.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object taskListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
@@ -747,7 +751,7 @@ public class MktApi {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object campaignDelete(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("campaign_id") Integer campaignId){
+			@NotNull @QueryParam("campaign_id") Integer campaignId){
 		return campaignDeleteService.campaignDelete(campaignId);
 	}
 	
@@ -870,6 +874,33 @@ public class MktApi {
 	}
 	
 	/**
+     * @功能简述 : 获取自定义标签列表
+     * @param: String method, String userToken, Ingeger index, Integer size
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.tag.custom.list.get")
+    public BaseOutput getCustomTagList(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @QueryParam("index") Integer index, 
+                    @QueryParam("size") Integer size) {
+        return customTagGetService.getCustomTagList(method, userToken, index, size);
+    }
+    
+    /**
+     * @功能简述 : 删除某个自定义标签
+     * @param: String method, String userToken, Ingeger tag_id
+     * @return: Object
+     */
+    @POST
+    @Path("/mkt.tag.custom.delete")
+    public Object deleteCustomTag(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("tag_id") Integer tag_id) {
+        return customTagDeleteService.deleteCustomTag(method, userToken, tag_id);
+    }
+
+    /**
 	 * @功能简述: 获取受众细分关联的tag
 	 * @param userToken
 	 * @param segmentHeadId
