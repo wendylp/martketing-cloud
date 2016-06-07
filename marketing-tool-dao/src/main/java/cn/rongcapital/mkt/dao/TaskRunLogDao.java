@@ -39,4 +39,11 @@ public interface TaskRunLogDao extends BaseDao<TaskRunLog>{
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
 	
 	List<TaskRunLog> selectLastOne(Map<String,Object> paramMap);
+
+	/**
+	 * 查询最近发生的10个任务
+	 * @param
+	 * @return list
+	 */
+	List<Object> taskRunLogList();
 }

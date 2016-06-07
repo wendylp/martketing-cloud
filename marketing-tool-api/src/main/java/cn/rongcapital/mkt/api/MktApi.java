@@ -727,7 +727,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.task.list.get ")
+	@Path("mkt.task.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object taskListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
