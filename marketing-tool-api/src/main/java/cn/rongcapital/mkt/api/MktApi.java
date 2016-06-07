@@ -102,6 +102,7 @@ import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
+import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
