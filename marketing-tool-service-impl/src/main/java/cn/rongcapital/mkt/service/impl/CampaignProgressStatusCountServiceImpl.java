@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
-import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
