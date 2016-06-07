@@ -43,6 +43,12 @@
 		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
 		</set>
 	</sql>
+	
+	<!-- 只能排序智能获取条数 -->
+	<sql id="QUERY_ORDER_LIMIT_COUNT">
+		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="count != null and count &gt;= 0 "><![CDATA[LIMIT #{count}]]></if>	
+	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.TaskRunLog" useGeneratedKeys="true" keyProperty="id">
@@ -97,6 +103,13 @@
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<!-- 查询最后更新数据 -->
+	<select id="selectLastOne" parameterType="cn.rongcapital.mkt.po.TaskRunLog" resultType="cn.rongcapital.mkt.po.TaskRunLog">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_ORDER_LIMIT_COUNT"/>
 	</select>
 	
 	<!-- 其它SQL语句 -->

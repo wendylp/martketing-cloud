@@ -182,6 +182,7 @@ public class MktApi {
 	private CampaignProgressStatusCountService campaignProgressStatusCountService;
 	@Autowired
 	private CampaignProgressStatusListService campaignProgressStatusListService;
+	@Autowired
 	private SegmentTagnameTagListService segmentTagnameTagListService;
 	@Autowired
 	private SegmentTagkeyTagListService segmentTagkeyTagListService;
@@ -742,7 +743,7 @@ public class MktApi {
 	
 	/**
 	 * @功能简述: 查询营销活动个数和触达人数
-	 * @param: campaign_id 营销活动id
+	 * @param: 
 	 * @return: Object
 	 */
 	@GET
@@ -754,8 +755,8 @@ public class MktApi {
 	}
 	
 	/**
-	 * @功能简述: 获取不同状态下的campaign数量以及该页面默认列表信息
-	 * @param: campaign_id 营销活动id
+	 * @功能简述: 获取不同状态下的campaign数量
+	 * @param: 
 	 * @return: Object
 	 */
 	@GET
@@ -842,5 +843,19 @@ public class MktApi {
             @NotEmpty @QueryParam("contact_id") String contactId,
             @NotEmpty @QueryParam("behavior_type") String behaviorType){
 		return mainActionInfoGetService.getMainActionInfo(contactId, behaviorType);
+	}
+	
+	/**	
+	 * @功能简述: 获取系统标签总数量 
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupName
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.tag.system.tagcount.get")
+	public BaseOutput getTagcount(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken){
+		return tagSystemTagcountService.getTagcount(method, userToken);
 	}
 }
