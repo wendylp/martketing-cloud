@@ -48,6 +48,7 @@ import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
 import cn.rongcapital.mkt.service.DataGetViewListService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
+import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
@@ -55,16 +56,21 @@ import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.ModifyPasswdService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
+import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
 import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
 import cn.rongcapital.mkt.service.SegmentHeaderGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
 import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
+import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
+import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
+import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
 import cn.rongcapital.mkt.vo.ImgtextHostIn;
@@ -75,7 +81,8 @@ import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
-import cn.rongcapital.mkt.vo.out.CampaignBodyOut;
+import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
+import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -145,6 +152,16 @@ public class MktApi {
     private AudienceListService audienceListService;
     @Autowired
     private AudienceListPartyMapService audienceListPartyMapService;
+    private SegmentBodyUpdateService segmentBodyUpdateService;
+	@Autowired
+	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
+	@Autowired
+	private SegmentTagnameTagListService segmentTagnameTagListService;
+	@Autowired
+	private SegmentTagkeyTagListService segmentTagkeyTagListService;
+	@Autowired
+	private SegmentTagnameTagValueService segmentTagnameTagValueService;
+	
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -191,6 +208,23 @@ public class MktApi {
 	}
 
 	/**
+	 * @功能简述: 获取图文资产
+	 * @param:String user_token,String ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.imgtext.menulist.get")
+	public Object getImgtextAssetMenulist(@NotEmpty @QueryParam("user_token") String userToken,
+								  @NotEmpty @QueryParam("ver") String ver,
+								  @DefaultValue("1") @Min(1) @QueryParam("index") int index,
+								  @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size){
+		BaseInput baseInput = new BaseInput();
+		baseInput.setIndex(index);
+		baseInput.setSize(size);
+		return getImgtextAssetMenulistService.getImgTextAssetMenulist(baseInput);
+	}
+
+	/**
 	 * @功能简述: 创建campaign body
 	 * @param: SegmentHeadIn body, SecurityContext securityContext,Integer campaignHeadId 
 	 * @return: Object
@@ -198,7 +232,7 @@ public class MktApi {
 	@POST
 	@Path("/mkt.campaign.body.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public CampaignBodyOut campaignBodyCreate(@Valid CampaignBodyCreateIn body, @Context SecurityContext securityContext) {
+	public CampaignBodyCreateOut campaignBodyCreate(@Valid CampaignBodyCreateIn body, @Context SecurityContext securityContext) {
 	    return campaignBodyCreateService.campaignBodyCreate(body, securityContext);
 	}
 	
@@ -591,5 +625,59 @@ public class MktApi {
 			@QueryParam("audience_list_id") Integer audience_list_id,
 	        @Context SecurityContext securityContext){
 		return audienceListPartyMapService.audienceListDel(userToken, audience_list_id, securityContext);
+	}
+	
+	/**
+	 * @功能描述:查询系统推荐标签列表
+	 * @Param: String method, String userToken
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.segment.tagname.taglist.get")
+	public BaseOutput getSysRecommendedTagList(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken){
+		return segmentTagnameTagListService.getSysRecommendedTagList();
+	}
+	
+	/**
+	 * @功能简述: 编辑segment body
+	 * @param: SegmentBodyUpdateIn body, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.segment.body.update")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object segmentBodyUpdate(@Valid SegmentBodyUpdateIn body, @Context SecurityContext securityContext) {
+	    return segmentBodyUpdateService.segmentBodyUpdate(body, securityContext);
+	}
+	
+	/**
+	 * @功能简述: 根据关键字查询出系统最末级标签名称列表
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupName
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.segment.tagkey.taglist.get")
+	public BaseOutput getLastTagByKey(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("tag_group_name") String tagGroupName){
+		return segmentTagkeyTagListService.getLastTagByKey(tagGroupName);
+	}
+	
+	/**
+	 * @功能简述: 根据系统最末级标签组ID查询出标签内容列表
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupName
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.segment.tagname.tagvalue.get")
+	public BaseOutput getTagValueByGroupId(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("tag_group_id") String tagGroupId){
+		return segmentTagnameTagValueService.getTagValueByGroupId(tagGroupId);
 	}
 }

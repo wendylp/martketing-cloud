@@ -1,7 +1,7 @@
 package cn.rongcapital.mkt.vo.in;
 
 
-import java.util.Date;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignActionSetTagIn {
 	
@@ -17,12 +17,7 @@ public class CampaignActionSetTagIn {
 
     private String tagNames;
 
-    private Byte status;
-
-    private Date createTime;
-
-    private Date updateTime;
-    
+    @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
 		return campaignHeadId;
 	}
@@ -31,6 +26,7 @@ public class CampaignActionSetTagIn {
 		this.campaignHeadId = campaignHeadId;
 	}
 
+	@JsonProperty("id")
 	public Integer getId() {
         return id;
     }
@@ -39,6 +35,7 @@ public class CampaignActionSetTagIn {
         this.id = id;
     }
 
+    @JsonProperty("item_id")
     public String getItemId() {
         return itemId;
     }
@@ -47,6 +44,7 @@ public class CampaignActionSetTagIn {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -55,6 +53,7 @@ public class CampaignActionSetTagIn {
         this.name = name == null ? null : name.trim();
     }
 
+    @JsonProperty("tag_ids")
     public String getTagIds() {
         return tagIds;
     }
@@ -63,35 +62,12 @@ public class CampaignActionSetTagIn {
         this.tagIds = tagIds == null ? null : tagIds.trim();
     }
 
+    @JsonProperty("tag_names")
     public String getTagNames() {
         return tagNames;
     }
 
     public void setTagNames(String tagNames) {
         this.tagNames = tagNames == null ? null : tagNames.trim();
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

@@ -144,6 +144,13 @@
 		limit #{index},#{size}
 	</select>
 
+	<select id="selectMenuList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT distinct type ,owner_name
+		<include refid="QUERY_FROM_TABLE"/>
+		where status = #{status}
+		limit #{index},#{size}
+	</select>
+
 	<update id="logicDeleteAssetById" parameterType="java.util.Map" >
 		UPDATE img_text_asset
 		SET status = 1

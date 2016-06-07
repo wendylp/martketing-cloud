@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.rongcapital.mkt.dao.TagDao">
+<mapper namespace="cn.rongcapital.mkt.dao.CustomTagMapDao">
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,name as name]]>
+		<![CDATA[ id as id,tag_id as tagId,type as type,map_id as mapId,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tag]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM custom_tag_map]]></sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="tagId != null and tagId != ''"><![CDATA[ AND tag_id = #{tagId}]]></if>
+		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
+		    	<if test="mapId != null and mapId != ''"><![CDATA[ AND map_id = #{mapId}]]></if>
+		    	<if test="status != null and status != ''"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null and createTime != ''"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null and updateTime != ''"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		</where>
 	</sql>
 	
@@ -28,18 +33,28 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
-		    	<if test="name != null"><![CDATA[name = #{name}]]></if>
+		    	<if test="tagId != null"><![CDATA[tag_id = #{tagId},]]></if>
+		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
+		    	<if test="mapId != null"><![CDATA[map_id = #{mapId},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="createTime != null"><![CDATA[create_time = #{createTime},]]></if>
+		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
-	<insert id="insert" parameterType="cn.rongcapital.mkt.po.Tag" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CustomTagMap" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tag (id,name)
+			INSERT INTO custom_tag_map (id,tag_id,type,map_id,status,create_time,update_time)
 			VALUES
 			(
 			  #{id},
-			  #{name}
+			  #{tagId},
+			  #{type},
+			  #{mapId},
+			  #{status},
+			  #{createTime},
+			  #{updateTime}
 			)
 		]]>
 	</insert>
@@ -48,14 +63,14 @@
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
 	<!-- 修改记录通过主键 -->
-	<update id="updateById" parameterType="cn.rongcapital.mkt.po.Tag">
-		<![CDATA[UPDATE tag]]>
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.CustomTagMap">
+		<![CDATA[UPDATE custom_tag_map]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.Tag" resultType="cn.rongcapital.mkt.po.Tag">
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.CustomTagMap" resultType="cn.rongcapital.mkt.po.CustomTagMap">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -66,7 +81,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectList" parameterType="cn.rongcapital.mkt.po.Tag" resultType="cn.rongcapital.mkt.po.Tag">
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.CustomTagMap" resultType="cn.rongcapital.mkt.po.CustomTagMap">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -75,19 +90,13 @@
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.Tag" resultType="int">
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.CustomTagMap" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	<!-- 根据标签组Id查询标签列表 -->
-	<select id="selectListByGroupId" parameterType="String" resultType="cn.rongcapital.mkt.po.Tag">
-	   SELECT tg.id AS id,tg.name AS name
-	     FROM tag tg
-	    INNER JOIN tag_group_map tm
-	       ON tg.id = tm.tag_id
-	    WHERE tm.group_id = #{_parameter}
-	</select>
+	
+	
 </mapper>

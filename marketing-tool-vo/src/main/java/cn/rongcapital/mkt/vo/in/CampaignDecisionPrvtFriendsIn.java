@@ -1,9 +1,10 @@
 package cn.rongcapital.mkt.vo.in;
 
 
-import java.util.Date;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignDecisionPrvtFriendsIn {
+	
     private Integer id;
 
     private Integer campaignHeadId;
@@ -22,12 +23,7 @@ public class CampaignDecisionPrvtFriendsIn {
 
     private Byte refreshIntervalType;
 
-    private Byte status;
-
-    private Date createTime;
-
-    private Date updateTime;
-
+    @JsonProperty("id")
     public Integer getId() {
         return id;
     }
@@ -36,6 +32,7 @@ public class CampaignDecisionPrvtFriendsIn {
         this.id = id;
     }
 
+    @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
         return campaignHeadId;
     }
@@ -44,6 +41,7 @@ public class CampaignDecisionPrvtFriendsIn {
         this.campaignHeadId = campaignHeadId;
     }
 
+    @JsonProperty("item_id")
     public String getItemId() {
         return itemId;
     }
@@ -52,6 +50,7 @@ public class CampaignDecisionPrvtFriendsIn {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -60,6 +59,7 @@ public class CampaignDecisionPrvtFriendsIn {
         this.name = name == null ? null : name.trim();
     }
 
+    @JsonProperty("prvt_id")
     public String getPrvtId() {
         return prvtId;
     }
@@ -68,6 +68,7 @@ public class CampaignDecisionPrvtFriendsIn {
         this.prvtId = prvtId == null ? null : prvtId.trim();
     }
 
+    @JsonProperty("prvt_name")
     public String getPrvtName() {
         return prvtName;
     }
@@ -76,6 +77,7 @@ public class CampaignDecisionPrvtFriendsIn {
         this.prvtName = prvtName == null ? null : prvtName.trim();
     }
 
+    @JsonProperty("group_name")
     public String getGroupName() {
         return groupName;
     }
@@ -84,6 +86,7 @@ public class CampaignDecisionPrvtFriendsIn {
         this.groupName = groupName == null ? null : groupName.trim();
     }
 
+    @JsonProperty("refresh_interval")
     public Integer getRefreshInterval() {
         return refreshInterval;
     }
@@ -92,35 +95,12 @@ public class CampaignDecisionPrvtFriendsIn {
         this.refreshInterval = refreshInterval;
     }
 
+    @JsonProperty("refresh_interval_type")
     public Byte getRefreshIntervalType() {
         return refreshIntervalType;
     }
 
     public void setRefreshIntervalType(Byte refreshIntervalType) {
         this.refreshIntervalType = refreshIntervalType;
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

@@ -11,9 +11,9 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.SegmentationBody;
+import cn.rongcapital.mkt.po.CustomTagMap;
 
-public interface SegmentationBodyDao extends BaseDao<SegmentationBody>{
+public interface CustomTagMapDao extends BaseDao<CustomTagMap>{
 	
 	//自定义扩展
 	/**
@@ -34,6 +34,4 @@ public interface SegmentationBodyDao extends BaseDao<SegmentationBody>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
-	
-	void batchDeleteUseHeaderId(Integer headId);
 }

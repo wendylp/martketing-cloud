@@ -70,4 +70,12 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * @return list
 	 */
 	List<Map<String,Object>> selectListByType(Map<String, Object> paramMap);
+	/**
+	 * 根据图文资产菜单列表
+	 * @param paramMap
+	 * @return list
+	 */
+	List<Map<String,Object>> selectMenuList(Map<String, Object> paramMap);
+
+
 }
