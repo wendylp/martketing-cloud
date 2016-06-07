@@ -10,9 +10,13 @@
 
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.TaskRunLogDao;
 import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -21,10 +25,17 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public class TaskListGetServiceImpl implements TaskListGetService {
 	@Autowired
 	private TaskRunLogDao taskRunLogDao;
-	
+
 	@Override
 	public BaseOutput taskListGet() {
-		return null;
+		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+		
+		List<Object> taskRunLogList = taskRunLogDao.taskRunLogList();
+		
+		baseOutput.setData(taskRunLogList);
+		baseOutput.setTotal(baseOutput.getData().size());
+		
+		return baseOutput;
 	}
-
 }
