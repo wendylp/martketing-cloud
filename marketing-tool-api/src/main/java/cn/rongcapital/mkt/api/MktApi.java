@@ -270,6 +270,7 @@ public class MktApi {
 	
 	@Autowired
 	private DataMainRadarInfoGetService dataMainRadarInfoGetService;
+	
 	@Autowired
 	private TagSystemListGetService tagSystemListGetService;
 
