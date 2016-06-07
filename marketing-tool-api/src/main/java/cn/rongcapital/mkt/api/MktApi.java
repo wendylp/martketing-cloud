@@ -79,7 +79,7 @@ import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
-import cn.rongcapital.mkt.vo.out.CampaignBodyOut;
+import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -224,7 +224,7 @@ public class MktApi {
 	@POST
 	@Path("/mkt.campaign.body.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public CampaignBodyOut campaignBodyCreate(@Valid CampaignBodyCreateIn body, @Context SecurityContext securityContext) {
+	public CampaignBodyCreateOut campaignBodyCreate(@Valid CampaignBodyCreateIn body, @Context SecurityContext securityContext) {
 	    return campaignBodyCreateService.campaignBodyCreate(body, securityContext);
 	}
 	
