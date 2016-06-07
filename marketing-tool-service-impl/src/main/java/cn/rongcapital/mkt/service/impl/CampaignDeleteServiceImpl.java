@@ -36,10 +36,9 @@ public class CampaignDeleteServiceImpl implements CampaignDeleteService {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
-		byte status = 1;
 		CampaignHead campaignHead = new CampaignHead();
 		campaignHead.setId(campaignId);
-		campaignHead.setStatus(status);
+		campaignHead.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
 		
 		int rowEffected = campaignHeadDao.updateById(campaignHead);
 

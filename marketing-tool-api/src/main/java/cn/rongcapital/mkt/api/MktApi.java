@@ -744,7 +744,7 @@ public class MktApi {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object campaignDelete(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("campaign_id") Integer campaignId){
+			@NotNull @QueryParam("campaign_id") Integer campaignId){
 		return campaignDeleteService.campaignDelete(campaignId);
 	}
 	
