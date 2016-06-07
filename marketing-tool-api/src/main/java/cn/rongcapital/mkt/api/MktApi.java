@@ -38,9 +38,9 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.service.AudienceListPartyMapService;
 import cn.rongcapital.mkt.service.AudienceListService;
-import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
@@ -62,6 +62,7 @@ import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.ModifyPasswdService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
+import cn.rongcapital.mkt.service.SegmentBodyGetService;
 import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
 import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
 import cn.rongcapital.mkt.service.SegmentHeaderGetService;
@@ -170,6 +171,8 @@ public class MktApi {
 	private SegmentTagkeyTagListService segmentTagkeyTagListService;
 	@Autowired
 	private SegmentTagnameTagValueService segmentTagnameTagValueService;
+	@Autowired
+	private SegmentBodyGetService segmentBodyGetService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
@@ -719,4 +722,19 @@ public class MktApi {
             @NotEmpty @QueryParam("tag_group_id") String tagGroupId){
 		return segmentTagnameTagValueService.getTagValueByGroupId(tagGroupId);
 	}
+	
+	/**
+	 * @功能简述: 获取受众细分body信息
+	 * @param userToken
+	 * @param segmentHeadId
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.segment.body.get")
+	public BaseOutput getSegmentBody(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("segment_head_id") String segmentHeadId) {
+		return segmentBodyGetService.getSegmentBody(userToken, segmentHeadId);
+	}
+	
 }
