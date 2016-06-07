@@ -65,6 +65,8 @@ import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.impl.SegmentTagkeyTagListServiceImpl;
+import cn.rongcapital.mkt.service.impl.SegmentTagnameTagListServiceImpl;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -147,6 +149,11 @@ public class MktApi {
     private SegmentBodyUpdateService segmentBodyUpdateService;
 	@Autowired
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
+	@Autowired
+	private SegmentTagnameTagListServiceImpl segmentTagnameTagListServiceImpl;
+	@Autowired
+	private SegmentTagkeyTagListServiceImpl segmentTagkeyTagListServiceImpl;
+	
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -586,13 +593,13 @@ public class MktApi {
 	/**
 	 * @功能描述:查询系统推荐标签列表
 	 * @Param: String method, String userToken
-	 * @return SegmentTagnameTagList
+	 * @return BaseOutput
 	 */
 	@GET
 	@Path("/mkt.segment.tagname.taglist.get")
 	public BaseOutput getSysRecommendedTagList(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken){
-		return null;
+		return segmentTagnameTagListServiceImpl.getSysRecommendedTagList();
 	}
 	
 	/**
@@ -605,5 +612,18 @@ public class MktApi {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object segmentBodyUpdate(@Valid SegmentBodyUpdateIn body, @Context SecurityContext securityContext) {
 	    return segmentBodyUpdateService.segmentBodyUpdate(body, securityContext);
+	}
+	
+	/**
+	 * @功能简述: 根据关键字查询出系统最末级标签名称列表
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupName
+	 * @return
+	 */
+	public BaseOutput getLastTagByKey(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("tag_group_name") String tagGroupName){
+		return segmentTagkeyTagListServiceImpl.getLastTagByKey(tagGroupName);
 	}
 }
