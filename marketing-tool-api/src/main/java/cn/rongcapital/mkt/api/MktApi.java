@@ -61,6 +61,7 @@ import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
+import cn.rongcapital.mkt.service.MainActionInfoGetService;
 import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
 import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
@@ -191,6 +192,8 @@ public class MktApi {
 	private TagSystemTagcountService tagSystemTagcountService;
 	@Autowired
 	private SegmentBodyGetService segmentBodyGetService;
+	@Autowired
+	private MainActionInfoGetService mainActionInfoGetService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
@@ -740,7 +743,7 @@ public class MktApi {
 	
 	/**
 	 * @功能简述: 查询营销活动个数和触达人数
-	 * @param: campaign_id 营销活动id
+	 * @param: 
 	 * @return: Object
 	 */
 	@GET
@@ -752,8 +755,8 @@ public class MktApi {
 	}
 	
 	/**
-	 * @功能简述: 获取不同状态下的campaign数量以及该页面默认列表信息
-	 * @param: campaign_id 营销活动id
+	 * @功能简述: 获取不同状态下的campaign数量
+	 * @param: 
 	 * @return: Object
 	 */
 	@GET
@@ -828,6 +831,21 @@ public class MktApi {
 	}
 	
 	/**
+	 * @功能简述: 获取某联系人行为信息
+	 * @param userToken
+	 * @param contactId
+	 * @param behaviorType
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.data.main.actioninfo.get")
+	public BaseOutput getPartyBehaviorByCondition(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("contact_id") String contactId,
+            @NotEmpty @QueryParam("behavior_type") String behaviorType){
+		return mainActionInfoGetService.getMainActionInfo(contactId, behaviorType);
+	}
+	
+	/**	
 	 * @功能简述: 获取系统标签总数量 
 	 * @param method
 	 * @param userToken

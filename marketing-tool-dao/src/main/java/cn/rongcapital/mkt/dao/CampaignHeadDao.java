@@ -42,15 +42,21 @@ public interface CampaignHeadDao extends BaseDao<CampaignHead>{
 	 * 查询compaign_head表，对status=0(代表本条数据有效)的数据，
 	 * 根据publish_status(各个值得含义下表中已经给出)做统计
 	 * @param 
-	 * @return map
+	 * @return list
 	 */
-	public Map<String,Object> selectCampaignHeadCountGroupByPublishStatus();
+	public List<Object> selectCampaignHeadCountGroupByPublishStatus();
+	
+	/**
+	 * 对campaign_head表做count统计，获取总有多少个活动
+	 * @param 
+	 * @return int
+	 */
+	public int selectCampaignCount();
 	
 	/**
 	 * 根据publish_status以及campaign_name(如果有要用like做模糊查询)从campaign_head表中查询
 	 * @param paramMap
-	 * @return map
+	 * @return list
 	 */
 	public List<CampaignHead> selectCampaignProgressStatusListByPublishStatus(Map<String,Object> paramMap);
-	
 }
