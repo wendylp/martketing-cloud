@@ -61,6 +61,7 @@ import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
+import cn.rongcapital.mkt.service.MainActionInfoGetService;
 import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
 import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
@@ -188,7 +189,10 @@ public class MktApi {
 	private SegmentTagnameTagValueService segmentTagnameTagValueService;
 	@Autowired
 	private TagSystemTagcountService tagSystemTagcountService;
+	@Autowired
 	private SegmentBodyGetService segmentBodyGetService;
+	@Autowired
+	private MainActionInfoGetService mainActionInfoGetService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
@@ -823,5 +827,20 @@ public class MktApi {
 			@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("segment_head_id") String segmentHeadId) {
 		return segmentBodyGetService.getSegmentBody(userToken, segmentHeadId);
+	}
+	
+	/**
+	 * @功能简述: 获取某联系人行为信息
+	 * @param userToken
+	 * @param contactId
+	 * @param behaviorType
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.data.main.actioninfo.get")
+	public BaseOutput getPartyBehaviorByCondition(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("contact_id") String contactId,
+            @NotEmpty @QueryParam("behavior_type") String behaviorType){
+		return mainActionInfoGetService.getMainActionInfo(contactId, behaviorType);
 	}
 }
