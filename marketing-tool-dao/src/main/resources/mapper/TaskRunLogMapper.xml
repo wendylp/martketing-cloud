@@ -44,10 +44,10 @@
 		</set>
 	</sql>
 	
-	<!-- 按时间排序，只取第一条 -->
-	<sql id="QUERY_ORDER_TIME_LIMIT_ONE">
-		<![CDATA[ORDER BY END_TIME DESC]]>
-		<![CDATA[LIMIT 1]]>	
+	<!-- 只能排序智能获取条数 -->
+	<sql id="QUERY_ORDER_LIMIT_COUNT">
+		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="count != null and count &gt;= 0 "><![CDATA[LIMIT #{count}]]></if>	
 	</sql>
 
 	<!-- 插入action记录 -->

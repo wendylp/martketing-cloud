@@ -824,4 +824,18 @@ public class MktApi {
 			@NotEmpty @QueryParam("segment_head_id") String segmentHeadId) {
 		return segmentBodyGetService.getSegmentBody(userToken, segmentHeadId);
 	}
+	
+	/**
+	 * @功能简述: 获取系统标签总数量 
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupName
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.tag.system.tagcount.get ")
+	public BaseOutput getTagcount(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken){
+		return tagSystemTagcountService.getTagcount(method, userToken);
+	}
 }
