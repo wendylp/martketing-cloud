@@ -77,7 +77,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		for (Long customTag : tagIdList) {
 			CustomTagMap tagMap = new CustomTagMap();
 			tagMap.setTagId(customTag.intValue());
-			tagMap.setType(Byte.valueOf("0"));
+			tagMap.setType(ApiConstant.TAG_TYPE_SEGMENT);
 			tagMap.setMapId(headerId);
 			tagMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 			tagMap.setCreateTime(now);
