@@ -62,6 +62,13 @@
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
+	
+	<!-- 修改记录通过人群list_id-->
+	<update id="updateByListId" parameterType="cn.rongcapital.mkt.po.AudienceListPartyMap">
+		<![CDATA[UPDATE audience_list_party_map]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE audience_list_id = #{audienceListId}]]>
+	</update>
 
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.AudienceListPartyMap" resultType="cn.rongcapital.mkt.po.AudienceListPartyMap">
