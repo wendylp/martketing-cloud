@@ -20,6 +20,8 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
+import cn.rongcapital.mkt.po.CampaignBody;
+import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -42,8 +44,15 @@ public class CampaignSummaryGetServiceImpl implements CampaignSummaryGetService 
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
 		Map<String,Object> result = new HashMap<String, Object>();
 		
-		int totalCampaignCount = campaignHeadDao.selectListCount(null);
-		int totalCampaignAudienceCount = campaignBodyDao.selectCampaignAudienceCount();
+		CampaignHead campaignHead = new CampaignHead();
+		campaignHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		
+		int totalCampaignCount = campaignHeadDao.selectListCount(campaignHead);
+		
+		CampaignBody campaignBody = new CampaignBody();
+		campaignBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		
+		int totalCampaignAudienceCount = campaignBodyDao.selectCampaignAudienceCount(campaignBody);
 		
 		result.put("total_campaign_count", totalCampaignCount);
 		result.put("total_campaign_audience_count", totalCampaignAudienceCount);
