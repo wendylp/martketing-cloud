@@ -67,6 +67,7 @@ import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.service.impl.SegmentTagkeyTagListServiceImpl;
 import cn.rongcapital.mkt.service.impl.SegmentTagnameTagListServiceImpl;
+import cn.rongcapital.mkt.service.impl.SegmentTagnameTagValueServiceImpl;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -150,9 +151,11 @@ public class MktApi {
 	@Autowired
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 	@Autowired
-	private SegmentTagnameTagListServiceImpl segmentTagnameTagListServiceImpl;
+	private SegmentTagnameTagListServiceImpl segmentTagnameTagListService;
 	@Autowired
-	private SegmentTagkeyTagListServiceImpl segmentTagkeyTagListServiceImpl;
+	private SegmentTagkeyTagListServiceImpl segmentTagkeyTagListService;
+	@Autowired
+	private SegmentTagnameTagValueServiceImpl segmentTagnameTagValueService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
@@ -599,7 +602,7 @@ public class MktApi {
 	@Path("/mkt.segment.tagname.taglist.get")
 	public BaseOutput getSysRecommendedTagList(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken){
-		return segmentTagnameTagListServiceImpl.getSysRecommendedTagList();
+		return segmentTagnameTagListService.getSysRecommendedTagList();
 	}
 	
 	/**
@@ -619,11 +622,28 @@ public class MktApi {
 	 * @param method
 	 * @param userToken
 	 * @param tagGroupName
-	 * @return
+	 * @return BaseOutput
 	 */
+	@GET
+	@Path("/mkt.segment.tagname.taglist.get")
 	public BaseOutput getLastTagByKey(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("tag_group_name") String tagGroupName){
-		return segmentTagkeyTagListServiceImpl.getLastTagByKey(tagGroupName);
+		return segmentTagkeyTagListService.getLastTagByKey(tagGroupName);
+	}
+	
+	/**
+	 * @功能简述: 根据系统最末级标签组ID查询出标签内容列表
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupName
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.segment.tagname.tagvalue.get")
+	public BaseOutput getTagValueByGroupId(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("tag_group_id") String tagGroupId){
+		return segmentTagnameTagValueService.getTagValueByGroupId(tagGroupId);
 	}
 }
