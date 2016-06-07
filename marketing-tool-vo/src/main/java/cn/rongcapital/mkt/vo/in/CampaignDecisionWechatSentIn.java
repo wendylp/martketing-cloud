@@ -1,8 +1,9 @@
 package cn.rongcapital.mkt.vo.in;
 
-import java.util.Date;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignDecisionWechatSentIn {
+	
     private Integer id;
 
     private Integer campaignHeadId;
@@ -23,12 +24,7 @@ public class CampaignDecisionWechatSentIn {
 
     private String wechatH5Name;
 
-    private Byte status;
-
-    private Date createTime;
-
-    private Date updateTime;
-
+    @JsonProperty("id")
     public Integer getId() {
         return id;
     }
@@ -37,6 +33,7 @@ public class CampaignDecisionWechatSentIn {
         this.id = id;
     }
 
+    @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
         return campaignHeadId;
     }
@@ -45,6 +42,7 @@ public class CampaignDecisionWechatSentIn {
         this.campaignHeadId = campaignHeadId;
     }
 
+    @JsonProperty("item_id")
     public String getItemId() {
         return itemId;
     }
@@ -53,6 +51,7 @@ public class CampaignDecisionWechatSentIn {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -61,6 +60,7 @@ public class CampaignDecisionWechatSentIn {
         this.name = name == null ? null : name.trim();
     }
 
+    @JsonProperty("pub_id")
     public String getPubId() {
         return pubId;
     }
@@ -69,6 +69,7 @@ public class CampaignDecisionWechatSentIn {
         this.pubId = pubId == null ? null : pubId.trim();
     }
 
+    @JsonProperty("pub_name")
     public String getPubName() {
         return pubName;
     }
@@ -77,6 +78,7 @@ public class CampaignDecisionWechatSentIn {
         this.pubName = pubName == null ? null : pubName.trim();
     }
 
+    @JsonProperty("refresh_interval")
     public Integer getRefreshInterval() {
         return refreshInterval;
     }
@@ -85,6 +87,7 @@ public class CampaignDecisionWechatSentIn {
         this.refreshInterval = refreshInterval;
     }
 
+    @JsonProperty("refresh_interval_type")
     public Byte getRefreshIntervalType() {
         return refreshIntervalType;
     }
@@ -92,7 +95,8 @@ public class CampaignDecisionWechatSentIn {
     public void setRefreshIntervalType(Byte refreshIntervalType) {
         this.refreshIntervalType = refreshIntervalType;
     }
-
+    
+    @JsonProperty("wechat_h5_id")
     public Integer getWechatH5Id() {
         return wechatH5Id;
     }
@@ -101,35 +105,12 @@ public class CampaignDecisionWechatSentIn {
         this.wechatH5Id = wechatH5Id;
     }
 
+    @JsonProperty("wechat_h5_name")
     public String getWechatH5Name() {
         return wechatH5Name;
     }
 
     public void setWechatH5Name(String wechatH5Name) {
         this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

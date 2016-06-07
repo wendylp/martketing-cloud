@@ -15,7 +15,7 @@ public class TagRecommend extends BaseQuery {
 
     private Date updateTime;
 
-    private byte[] tagGroupName;
+    private String tagGroupName;
 
     public Integer getId() {
         return id;
@@ -57,11 +57,11 @@ public class TagRecommend extends BaseQuery {
         this.updateTime = updateTime;
     }
 
-    public byte[] getTagGroupName() {
+    public String getTagGroupName() {
         return tagGroupName;
     }
 
-    public void setTagGroupName(byte[] tagGroupName) {
+    public void setTagGroupName(String tagGroupName) {
         this.tagGroupName = tagGroupName;
     }
 }

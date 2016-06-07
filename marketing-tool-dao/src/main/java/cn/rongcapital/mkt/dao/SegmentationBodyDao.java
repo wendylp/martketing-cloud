@@ -10,7 +10,10 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.po.SegmentBodyWithName;
 import cn.rongcapital.mkt.po.SegmentationBody;
 
 public interface SegmentationBodyDao extends BaseDao<SegmentationBody>{
@@ -36,4 +39,6 @@ public interface SegmentationBodyDao extends BaseDao<SegmentationBody>{
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
 	
 	void batchDeleteUseHeaderId(Integer headId);
+	
+	List<SegmentBodyWithName> getSegBodyUseHeaderId(Integer headId);
 }

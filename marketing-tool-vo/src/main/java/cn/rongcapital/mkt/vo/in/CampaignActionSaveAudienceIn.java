@@ -1,6 +1,6 @@
 package cn.rongcapital.mkt.vo.in;
 
-import java.util.Date;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignActionSaveAudienceIn {
 	
@@ -16,14 +16,19 @@ public class CampaignActionSaveAudienceIn {
 
     private String audienceName;
 
-    private Byte status;
-
-    private Date createTime;
-
-    private Date updateTime;
+//    private Byte type;// 0:关联已有的audience_list; 1:新增audience_list
     
+    
+//    public Byte getType() {
+//		return type;
+//	}
+//
+//	public void setType(Byte type) {
+//		this.type = type;
+//	}
 
-    public Integer getCampaignHeadId() {
+    @JsonProperty("campaign_head_id")
+	public Integer getCampaignHeadId() {
 		return campaignHeadId;
 	}
 
@@ -31,6 +36,7 @@ public class CampaignActionSaveAudienceIn {
 		this.campaignHeadId = campaignHeadId;
 	}
 
+	@JsonProperty("id")
 	public Integer getId() {
         return id;
     }
@@ -39,6 +45,7 @@ public class CampaignActionSaveAudienceIn {
         this.id = id;
     }
 
+    @JsonProperty("item_id")
     public String getItemId() {
         return itemId;
     }
@@ -47,6 +54,7 @@ public class CampaignActionSaveAudienceIn {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -55,6 +63,7 @@ public class CampaignActionSaveAudienceIn {
         this.name = name == null ? null : name.trim();
     }
 
+    @JsonProperty("audience_id")
     public Integer getAudienceId() {
 		return audienceId;
 	}
@@ -63,6 +72,7 @@ public class CampaignActionSaveAudienceIn {
 		this.audienceId = audienceId;
 	}
 
+	@JsonProperty("audience_name")
 	public String getAudienceName() {
 		return audienceName;
 	}
@@ -71,27 +81,4 @@ public class CampaignActionSaveAudienceIn {
 		this.audienceName = audienceName;
 	}
 
-	public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }
