@@ -93,6 +93,30 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 	
+	<!-- 查询compaign_head表，对status=0的数据，根据publish_status做统计 -->
+	<select id="selectCampaignHeadCountGroupByPublishStatus" resultType="map">
+		<![CDATA[
+			SELECT
+				publish_status,
+				count(id) AS count
+			FROM
+				campaign_head
+			WHERE
+				STATUS = 0
+			GROUP BY
+				publish_status
+		]]>
+	</select>
+	
+	<!-- 根据条件从campaign_head表中查询 -->
+	<select id="selectCampaignProgressStatusListByPublishStatus" parameterType="map" resultType="cn.rongcapital.mkt.po.CampaignHead">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+	
 	<!-- 其它SQL语句 -->
 	
 	
