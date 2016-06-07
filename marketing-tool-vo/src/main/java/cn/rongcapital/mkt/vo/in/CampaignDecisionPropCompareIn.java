@@ -1,9 +1,9 @@
 package cn.rongcapital.mkt.vo.in;
 
-
-import java.util.Date;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignDecisionPropCompareIn {
+	
     private Integer id;
 
     private Integer campaignHeadId;
@@ -16,12 +16,7 @@ public class CampaignDecisionPropCompareIn {
 
     private Byte rule;
 
-    private Byte status;
-
-    private Date createTime;
-
-    private Date updateTime;
-
+    @JsonProperty("id")
     public Integer getId() {
         return id;
     }
@@ -30,6 +25,7 @@ public class CampaignDecisionPropCompareIn {
         this.id = id;
     }
 
+    @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
         return campaignHeadId;
     }
@@ -38,6 +34,7 @@ public class CampaignDecisionPropCompareIn {
         this.campaignHeadId = campaignHeadId;
     }
 
+    @JsonProperty("item_id")
     public String getItemId() {
         return itemId;
     }
@@ -46,6 +43,7 @@ public class CampaignDecisionPropCompareIn {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -54,6 +52,7 @@ public class CampaignDecisionPropCompareIn {
         this.name = name == null ? null : name.trim();
     }
 
+    @JsonProperty("prop_type")
     public Byte getPropType() {
         return propType;
     }
@@ -62,6 +61,7 @@ public class CampaignDecisionPropCompareIn {
         this.propType = propType;
     }
 
+    @JsonProperty("rule")
     public Byte getRule() {
         return rule;
     }
@@ -70,27 +70,4 @@ public class CampaignDecisionPropCompareIn {
         this.rule = rule;
     }
 
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

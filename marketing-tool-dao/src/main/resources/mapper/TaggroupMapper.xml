@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,name as name,parent_group_id as parentGroupId]]>
+		<![CDATA[ id as id,name as name,parent_group_id as parentGroupId,level as level]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -16,6 +16,7 @@
 		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
 		    	<if test="parentGroupId != null and parentGroupId != ''"><![CDATA[ AND parent_group_id = #{parentGroupId}]]></if>
+		    	<if test="level != null and level != ''"><![CDATA[ AND level = #{level}]]></if>
 		</where>
 	</sql>
 	
@@ -31,18 +32,20 @@
 		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
 		    	<if test="parentGroupId != null"><![CDATA[parent_group_id = #{parentGroupId}]]></if>
+		    	<if test="level != null"><![CDATA[level = #{level}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.Taggroup" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO taggroup (id,name,parent_group_id)
+			INSERT INTO taggroup (id,name,parent_group_id,level)
 			VALUES
 			(
 			  #{id},
 			  #{name},
-			  #{parentGroupId}
+			  #{parentGroupId},
+			  #{level}
 			)
 		]]>
 	</insert>
@@ -84,7 +87,16 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 	
-	<!-- 其它SQL语句 -->
-	
+	<!-- 根据关键字模糊查询系统最末级标签组列表 -->
+	<select id="selectByNameFuzzy" parameterType="cn.rongcapital.mkt.po.Taggroup" resultType="cn.rongcapital.mkt.po.Taggroup">
+	    <bind name="fuzzy" value="'%' + _parameter.name + '%'" />
+	    <![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<where>
+		    	<if test="name != null and name != ''"><![CDATA[ AND name like #{fuzzy}]]></if>
+		    	<if test="level != null and level != ''"><![CDATA[ AND level = #{level}]]></if>
+		</where>
+	</select>
 	
 </mapper>

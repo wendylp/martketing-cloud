@@ -80,8 +80,20 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
+
+	<!-- 总数查询,无条件 -->
+	<select id="selectAllListCount" parameterType="cn.rongcapital.mkt.po.Tag" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+	</select>
 	
 	<!-- 其它SQL语句 -->
-	
-	
+	<!-- 根据标签组Id查询标签列表 -->
+	<select id="selectListByGroupId" parameterType="String" resultType="cn.rongcapital.mkt.po.Tag">
+	   SELECT tg.id AS id,tg.name AS name
+	     FROM tag tg
+	    INNER JOIN tag_group_map tm
+	       ON tg.id = tm.tag_id
+	    WHERE tm.group_id = #{_parameter}
+	</select>
 </mapper>

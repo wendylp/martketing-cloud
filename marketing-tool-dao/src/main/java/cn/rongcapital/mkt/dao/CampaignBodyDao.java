@@ -14,7 +14,7 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CampaignBody;
 
 public interface CampaignBodyDao extends BaseDao<CampaignBody>{
-	
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -34,4 +34,12 @@ public interface CampaignBodyDao extends BaseDao<CampaignBody>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	//自定义扩展
+	/**
+	 * 对campaign_body表中的audience_count做sum
+	 * @param 
+	 * @return int
+	 */
+	int selectCampaignAudienceCount();
 }

@@ -23,6 +23,7 @@ public class ApiConstant {
 	public static final byte  SEGMENT_PUBLISH_STATUS_ALL = 3;//全部活动
 	
 	public static final int INT_ZERO = 0;
+	public static final int INT_ONE = 1;
 	
 	public static final int PAGE_START_INDEX_DEFAULT = 0;//默认分页起始index值
 	public static final int PAGE_PAGE_SIZE_DEFAULT = 10;//默认每页记录数
@@ -34,4 +35,8 @@ public class ApiConstant {
 	public static final int WECHAT_ASSET_SUBSCRIPTION_NUMBER=2;
 	
 	public static final String DATE_FORMAT_yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
+	
+	public static final byte TAG_TYPE_SEGMENT = 0;// 细分
+	public static final byte TAG_TYPE_ACTIVITY = 1;// 活动
+	public static final byte TAG_TYPE_CONTACT = 2;// 联系人
 }

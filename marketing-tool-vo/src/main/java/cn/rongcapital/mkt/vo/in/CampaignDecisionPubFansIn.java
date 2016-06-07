@@ -1,7 +1,6 @@
 package cn.rongcapital.mkt.vo.in;
 
-
-import java.util.Date;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignDecisionPubFansIn {
     private Integer id;
@@ -22,12 +21,8 @@ public class CampaignDecisionPubFansIn {
 
     private Byte refreshIntervalType;
 
-    private Byte status;
 
-    private Date createTime;
-
-    private Date updateTime;
-
+    @JsonProperty("id")
     public Integer getId() {
         return id;
     }
@@ -36,6 +31,7 @@ public class CampaignDecisionPubFansIn {
         this.id = id;
     }
 
+    @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
         return campaignHeadId;
     }
@@ -44,6 +40,7 @@ public class CampaignDecisionPubFansIn {
         this.campaignHeadId = campaignHeadId;
     }
 
+    @JsonProperty("item_id")
     public String getItemId() {
         return itemId;
     }
@@ -52,6 +49,7 @@ public class CampaignDecisionPubFansIn {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -60,6 +58,7 @@ public class CampaignDecisionPubFansIn {
         this.name = name == null ? null : name.trim();
     }
 
+    @JsonProperty("pub_id")
     public String getPubId() {
         return pubId;
     }
@@ -68,6 +67,7 @@ public class CampaignDecisionPubFansIn {
         this.pubId = pubId == null ? null : pubId.trim();
     }
 
+    @JsonProperty("pub_name")
     public String getPubName() {
         return pubName;
     }
@@ -76,6 +76,7 @@ public class CampaignDecisionPubFansIn {
         this.pubName = pubName == null ? null : pubName.trim();
     }
 
+    @JsonProperty("subscribe_time")
     public Byte getSubscribeTime() {
         return subscribeTime;
     }
@@ -84,6 +85,7 @@ public class CampaignDecisionPubFansIn {
         this.subscribeTime = subscribeTime;
     }
 
+    @JsonProperty("refresh_interval")
     public Integer getRefreshInterval() {
         return refreshInterval;
     }
@@ -92,6 +94,7 @@ public class CampaignDecisionPubFansIn {
         this.refreshInterval = refreshInterval;
     }
 
+    @JsonProperty("refresh_interval_type")
     public Byte getRefreshIntervalType() {
         return refreshIntervalType;
     }
@@ -100,27 +103,4 @@ public class CampaignDecisionPubFansIn {
         this.refreshIntervalType = refreshIntervalType;
     }
 
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }
