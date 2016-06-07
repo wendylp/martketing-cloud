@@ -63,6 +63,7 @@ import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
+import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
@@ -156,6 +157,8 @@ public class MktApi {
 	private SegmentTagkeyTagListService segmentTagkeyTagListService;
 	@Autowired
 	private SegmentTagnameTagValueService segmentTagnameTagValueService;
+	@Autowired
+	private TagSystemTagcountService tagSystemTagcountService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
