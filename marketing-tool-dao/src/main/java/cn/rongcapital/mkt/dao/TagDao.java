@@ -43,4 +43,10 @@ public interface TagDao extends BaseDao<Tag>{
 	 * @return list
 	 */
 	List<Tag> selectListByGroupId(String tagGroupId);
+	
+	/**
+	 * 返回总标签数量
+	 * @return int
+	 */
+	int selectAllListCount();
 }

@@ -43,7 +43,11 @@ import cn.rongcapital.mkt.service.AudienceListPartyMapService;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
+import cn.rongcapital.mkt.service.CampaignDeleteService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
+import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
+import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
+import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
@@ -69,9 +73,11 @@ import cn.rongcapital.mkt.service.SegmentHeaderGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
 import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
+import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
+import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
@@ -166,11 +172,23 @@ public class MktApi {
 	@Autowired
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 	@Autowired
+	private TaskListGetService taskListGetService;
+	@Autowired
+	private CampaignDeleteService campaignDeleteService;
+	@Autowired
+	private CampaignSummaryGetService campaignSummaryGetService;
+	@Autowired
+	private CampaignProgressStatusCountService campaignProgressStatusCountService;
+	@Autowired
+	private CampaignProgressStatusListService campaignProgressStatusListService;
+	@Autowired
 	private SegmentTagnameTagListService segmentTagnameTagListService;
 	@Autowired
 	private SegmentTagkeyTagListService segmentTagkeyTagListService;
 	@Autowired
 	private SegmentTagnameTagValueService segmentTagnameTagValueService;
+	@Autowired
+	private TagSystemTagcountService tagSystemTagcountService;
 	@Autowired
 	private SegmentBodyGetService segmentBodyGetService;
 	
@@ -694,7 +712,79 @@ public class MktApi {
 	}
 	
 	/**
-	 * @功能简述: 根据关键字查询出系统最末级标签名称列表
+	 * @功能简述: 获取后台任务列表
+	 * @param: 
+	 * @return: Object
+	 */
+	@GET
+	@Path("mkt.task.list.get ")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object taskListGet(@NotEmpty @QueryParam("method") String method,
+			@NotEmpty @QueryParam("user_token") String userToken){
+		return taskListGetService.taskListGet();
+	}
+	
+	/**
+	 * @功能简述: 删除campaign
+	 * @param: campaign_id 营销活动id
+	 * @return: Object
+	 */
+	@POST
+	@Path("mkt.campaign.delete")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object campaignDelete(@NotEmpty @QueryParam("method") String method,
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("campaign_id") Integer campaignId){
+		return campaignDeleteService.campaignDelete(campaignId);
+	}
+	
+	/**
+	 * @功能简述: 查询营销活动个数和触达人数
+	 * @param: campaign_id 营销活动id
+	 * @return: Object
+	 */
+	@GET
+	@Path("mkt.campaign.summary.get")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
+			@NotEmpty @QueryParam("user_token") String userToken){
+		return campaignSummaryGetService.campaignSummaryGet();
+	}
+	
+	/**
+	 * @功能简述: 获取不同状态下的campaign数量以及该页面默认列表信息
+	 * @param: campaign_id 营销活动id
+	 * @return: Object
+	 */
+	@GET
+	@Path("mkt.campaign.progressstatus.count.get")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
+			@NotEmpty @QueryParam("user_token") String userToken){
+		return campaignProgressStatusCountService.campaignProgressStatusCountGet();
+	}
+	
+	/**
+	 * @功能简述: 获取不同状态下的campaign列表
+	 * @param: publish_status 0:未发布,1:已发布,2:活动中,3:已结束,4:全部
+	 * 		   campaign_name 活动名称摘要，如果有代表作前端界面的模糊查询
+	 * 		   index 开始页索引，默认为1
+	 * 		   size 分页大小，默认为10，最大值为100
+	 * @return: Object
+	 */
+	@GET
+	@Path("mkt.campaign.progressstatus.list.get")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("publish_status") Integer publishStatus,
+			@QueryParam("campaign_name") String campaignName,
+			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
+		return campaignProgressStatusListService.campaignProgressStatusList(publishStatus, campaignName, index, size);
+	}
+
+	/* @功能简述: 根据关键字查询出系统最末级标签名称列表
 	 * @param method
 	 * @param userToken
 	 * @param tagGroupName
@@ -737,4 +827,17 @@ public class MktApi {
 		return segmentBodyGetService.getSegmentBody(userToken, segmentHeadId);
 	}
 	
+	/**
+	 * @功能简述: 获取系统标签总数量 
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupName
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.tag.system.tagcount.get")
+	public BaseOutput getTagcount(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken){
+		return tagSystemTagcountService.getTagcount(method, userToken);
+	}
 }

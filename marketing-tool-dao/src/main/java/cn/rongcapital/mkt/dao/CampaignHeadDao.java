@@ -10,6 +10,9 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CampaignHead;
 
@@ -34,4 +37,20 @@ public interface CampaignHeadDao extends BaseDao<CampaignHead>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * 查询compaign_head表，对status=0(代表本条数据有效)的数据，
+	 * 根据publish_status(各个值得含义下表中已经给出)做统计
+	 * @param 
+	 * @return map
+	 */
+	public Map<String,Object> selectCampaignHeadCountGroupByPublishStatus();
+	
+	/**
+	 * 根据publish_status以及campaign_name(如果有要用like做模糊查询)从campaign_head表中查询
+	 * @param paramMap
+	 * @return map
+	 */
+	public List<CampaignHead> selectCampaignProgressStatusListByPublishStatus(Map<String,Object> paramMap);
+	
 }
