@@ -34,6 +34,8 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.AudienceListPartyMapService;
+import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
@@ -139,6 +141,10 @@ public class MktApi {
     private CampaignBodyGetService campaignBodyGetService;
     @Autowired
     private CampaignBodyCreateService campaignBodyCreateService;
+    @Autowired
+    private AudienceListService audienceListService;
+    @Autowired
+    private AudienceListPartyMapService audienceListPartyMapService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -556,5 +562,34 @@ public class MktApi {
 			@QueryParam("file_type") int fileType,
 			MultipartFormDataInput input, @Context SecurityContext securityContext){
 		return uploadFileService.uploadFile(fileSource,fileUnique,fileType,input,securityContext);
+	}
+	
+    /**
+	 * @功能简述: 获取人群list列表
+	 * @param: String userToken
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.audience.list.get")
+	public Object audienceList(@NotEmpty @QueryParam("user_token") String userToken,
+						  				   @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) 
+						  						   throws Exception {
+		return audienceListService.audienceList(userToken, size, index);
+	}
+	
+	/**
+	 * @功能描述:删除人群list
+	 * @Param: String user_token, String audience_list_id
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.audience.list.delete")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object audienceListDel(
+			@QueryParam("user_token") String userToken,
+			@QueryParam("audience_list_id") Integer audience_list_id,
+	        @Context SecurityContext securityContext){
+		return audienceListPartyMapService.audienceListDel(userToken, audience_list_id, securityContext);
 	}
 }
