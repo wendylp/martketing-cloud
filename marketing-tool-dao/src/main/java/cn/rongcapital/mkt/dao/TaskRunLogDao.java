@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.TaskRunLog;
 
@@ -34,4 +36,6 @@ public interface TaskRunLogDao extends BaseDao<TaskRunLog>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	List<TaskRunLog> selectLastOne();
 }

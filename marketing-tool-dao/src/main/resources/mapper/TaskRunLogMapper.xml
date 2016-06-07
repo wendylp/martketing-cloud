@@ -43,6 +43,12 @@
 		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
 		</set>
 	</sql>
+	
+	<!-- 按时间排序，只取第一条 -->
+	<sql id="QUERY_ORDER_TIME_LIMIT_ONE">
+		<![CDATA[ORDER BY END_TIME DESC]]>
+		<![CDATA[LIMIT 1]]>	
+	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.TaskRunLog" useGeneratedKeys="true" keyProperty="id">
@@ -97,6 +103,13 @@
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<!-- 查询最后更新数据 -->
+	<select id="selectLastOne" parameterType="cn.rongcapital.mkt.po.TaskRunLog" resultType="cn.rongcapital.mkt.po.TaskRunLog">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_ORDER_TIME_LIMIT_ONE"/>
 	</select>
 	
 	<!-- 其它SQL语句 -->
