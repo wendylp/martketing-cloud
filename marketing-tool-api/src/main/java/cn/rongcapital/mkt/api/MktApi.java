@@ -60,14 +60,14 @@ import cn.rongcapital.mkt.service.SegmentHeaderGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
 import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
+import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
+import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
+import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.impl.SegmentTagkeyTagListServiceImpl;
-import cn.rongcapital.mkt.service.impl.SegmentTagnameTagListServiceImpl;
-import cn.rongcapital.mkt.service.impl.SegmentTagnameTagValueServiceImpl;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -151,11 +151,11 @@ public class MktApi {
 	@Autowired
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 	@Autowired
-	private SegmentTagnameTagListServiceImpl segmentTagnameTagListService;
+	private SegmentTagnameTagListService segmentTagnameTagListService;
 	@Autowired
-	private SegmentTagkeyTagListServiceImpl segmentTagkeyTagListService;
+	private SegmentTagkeyTagListService segmentTagkeyTagListService;
 	@Autowired
-	private SegmentTagnameTagValueServiceImpl segmentTagnameTagValueService;
+	private SegmentTagnameTagValueService segmentTagnameTagValueService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
