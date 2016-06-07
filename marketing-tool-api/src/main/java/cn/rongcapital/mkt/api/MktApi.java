@@ -58,6 +58,7 @@ import cn.rongcapital.mkt.service.DataGetQualityCountService;
 import cn.rongcapital.mkt.service.DataGetQualityListService;
 import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
 import cn.rongcapital.mkt.service.DataGetViewListService;
+import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
@@ -102,6 +103,7 @@ import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
+import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -204,6 +206,8 @@ public class MktApi {
 	private SegmentTagGetService segmentTagGetService;
 	@Autowired
 	private SegmentTagUpdateService segmentTagUpdateService;
+	@Autowired
+	private DataMainRadarInfoGetService dataMainRadarInfoGetService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
@@ -747,7 +751,7 @@ public class MktApi {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object campaignDelete(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("campaign_id") Integer campaignId){
+			@NotNull @QueryParam("campaign_id") Integer campaignId){
 		return campaignDeleteService.campaignDelete(campaignId);
 	}
 	
@@ -870,7 +874,6 @@ public class MktApi {
 	}
 	
 	/**
-<<<<<<< HEAD
      * @功能简述 : 获取自定义标签列表
      * @param: String method, String userToken, Ingeger index, Integer size
      * @return: Object
@@ -922,5 +925,18 @@ public class MktApi {
 	public BaseOutput segmentBodyUpdate(@Valid SegmentTagUpdateIn body,
 			@Context SecurityContext securityContext) {
 		return segmentTagUpdateService.updateSegmentTag(body, securityContext);
+	}
+	
+	/**
+	 * @功能简述: 获取某联系人雷达图数据 
+	 * @param userToken
+	 * @param contactId
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.data.main.radarinfo.get")
+	public BaseOutput getRadarInfoByContactId(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("contact_id") String contactId){
+		return dataMainRadarInfoGetService.getRadarInfoByContactId(contactId);
 	}
 }
