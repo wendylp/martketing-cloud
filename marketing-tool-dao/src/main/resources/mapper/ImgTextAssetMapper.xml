@@ -151,6 +151,12 @@
 		limit #{index},#{size}
 	</select>
 
+	<select id="selectImgtextAssetCountByType" resultType="java.util.Map">
+		SELECT type , count(id) as type_count
+		FROM img_text_asset
+		GROUP BY type
+	</select>
+
 	<update id="logicDeleteAssetById" parameterType="java.util.Map" >
 		UPDATE img_text_asset
 		SET status = 1

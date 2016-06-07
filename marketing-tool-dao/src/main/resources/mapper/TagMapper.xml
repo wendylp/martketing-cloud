@@ -80,12 +80,6 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
-
-	<!-- 总数查询,无条件 -->
-	<select id="selectAllListCount" parameterType="cn.rongcapital.mkt.po.Tag" resultType="int">
-		<![CDATA[SELECT COUNT(id) AS dataCount]]>
-		<include refid="QUERY_FROM_TABLE"/>
-	</select>
 	
 	<!-- 其它SQL语句 -->
 	<!-- 根据标签组Id查询标签列表 -->
