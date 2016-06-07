@@ -42,13 +42,13 @@ public class GetImgTextAssetServiceImpl implements GetImgTextAssetService {
     private List<Map<String, Object>> getImgTextAssets(ImgAsset imgAsset, Map<String, Object> paramMap) {
         List<Map<String,Object>> imgTextAssets = null;
         if(imgAsset.getAssetType() == 2){
-            if(imgAsset.getOwnerName() == null){
+            if(imgAsset.getOwnerName() == null || "".equals(imgAsset.getOwnerName())){
                 imgTextAssets = imgTextAssetDao.selectListAll(paramMap);
             }else{
                 imgTextAssets = imgTextAssetDao.selectListByName(paramMap);
             }
         }else{
-            if(imgAsset.getOwnerName() == null){
+            if(imgAsset.getOwnerName() == null || "".equals(imgAsset.getOwnerName())){
                 imgTextAssets = imgTextAssetDao.selectListByType(paramMap);
             }else{
                 imgTextAssets = imgTextAssetDao.selectListByNameAndType(paramMap);

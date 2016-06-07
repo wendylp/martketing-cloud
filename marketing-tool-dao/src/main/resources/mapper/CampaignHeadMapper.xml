@@ -108,6 +108,18 @@
 		]]>
 	</select>
 	
+	<!-- 对campaign_head表做count统计，获取总有多少个活动 -->
+	<select id="selectCampaignCount" resultType="int">
+		<![CDATA[
+			SELECT
+				count(id) AS count
+			FROM
+				campaign_head
+			WHERE
+				STATUS = 0
+		]]>
+	</select>
+	
 	<!-- 根据条件从campaign_head表中查询 -->
 	<select id="selectCampaignProgressStatusListByPublishStatus" parameterType="map" resultType="cn.rongcapital.mkt.po.CampaignHead">
 		<![CDATA[SELECT]]>

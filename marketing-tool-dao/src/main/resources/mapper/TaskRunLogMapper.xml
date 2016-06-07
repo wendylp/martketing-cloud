@@ -112,6 +112,24 @@
 		<include refid="QUERY_ORDER_LIMIT_COUNT"/>
 	</select>
 	
+	<!-- 查询最近发生的10个任务 -->
+	<select id="taskRunLogList" resultType="map">
+		<![CDATA[
+			SELECT
+				task_name,
+				STATUS AS task_status,
+				start_time,
+				end_time
+			FROM
+				task_run_log
+			WHERE
+				start_time < now()
+			ORDER BY
+				start_time DESC
+			LIMIT 0,10
+		]]>
+	</select>
+	
 	<!-- 其它SQL语句 -->
 	
 	

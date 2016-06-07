@@ -63,6 +63,7 @@ import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
+import cn.rongcapital.mkt.service.MainActionInfoGetService;
 import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
 import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
@@ -75,6 +76,8 @@ import cn.rongcapital.mkt.service.SegmentHeaderGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
 import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
+import cn.rongcapital.mkt.service.SegmentTagGetService;
+import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
@@ -97,6 +100,7 @@ import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
+import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 
 @Component
@@ -104,7 +108,6 @@ import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 @Produces({ MediaType.APPLICATION_JSON })
 @ValidateRequest
 public class MktApi {
-
 	@Autowired
 	private LoginService loginService;
 	@Autowired
@@ -196,6 +199,11 @@ public class MktApi {
 	private CustomTagGetService customTagGetService;
 	@Autowired
 	private CustomTagDeleteService customTagDeleteService;
+	private MainActionInfoGetService mainActionInfoGetService;
+	@Autowired
+	private SegmentTagGetService segmentTagGetService;
+	@Autowired
+	private SegmentTagUpdateService segmentTagUpdateService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
@@ -722,7 +730,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.task.list.get ")
+	@Path("mkt.task.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object taskListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
@@ -833,6 +841,21 @@ public class MktApi {
 	}
 	
 	/**
+	 * @功能简述: 获取某联系人行为信息
+	 * @param userToken
+	 * @param contactId
+	 * @param behaviorType
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.data.main.actioninfo.get")
+	public BaseOutput getPartyBehaviorByCondition(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("contact_id") String contactId,
+            @NotEmpty @QueryParam("behavior_type") String behaviorType){
+		return mainActionInfoGetService.getMainActionInfo(contactId, behaviorType);
+	}
+	
+	/**	
 	 * @功能简述: 获取系统标签总数量 
 	 * @param method
 	 * @param userToken
@@ -847,6 +870,7 @@ public class MktApi {
 	}
 	
 	/**
+<<<<<<< HEAD
      * @功能简述 : 获取自定义标签列表
      * @param: String method, String userToken, Ingeger index, Integer size
      * @return: Object
@@ -872,4 +896,31 @@ public class MktApi {
                     @NotEmpty @QueryParam("tag_id") Integer tag_id) {
         return customTagDeleteService.deleteCustomTag(method, userToken, tag_id);
     }
+
+    /**
+	 * @功能简述: 获取受众细分关联的tag
+	 * @param userToken
+	 * @param segmentHeadId
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.segment.tag.get")
+	public BaseOutput getSegmentHeaderTag(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("segment_head_id") String segmentHeadId){
+		return segmentTagGetService.getSegmentTag(userToken, segmentHeadId);
+	}
+	
+	/**
+	 * @功能简述: 打标签，增加或修改受众细分关联的tag
+	 * @param: SegmentTagUpdateIn body, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.segment.tag.update")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput segmentBodyUpdate(@Valid SegmentTagUpdateIn body,
+			@Context SecurityContext securityContext) {
+		return segmentTagUpdateService.updateSegmentTag(body, securityContext);
+	}
 }

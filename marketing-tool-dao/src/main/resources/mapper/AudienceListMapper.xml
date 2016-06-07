@@ -91,6 +91,12 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<insert id="insertWechatGroups" parameterType="java.util.Map" >
+		INSERT INTO audience_list (audience_name,create_time)
+		VALUES (
+		       #{audience_name},
+		       #{create_time}
+		       )
+	</insert>
 	
 </mapper>

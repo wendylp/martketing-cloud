@@ -10,6 +10,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SaveWechatAssetListIn extends BaseInput {
     private int assetId;
     private int groupId;
+    private String peopleGroupName;
 
     @JsonProperty("asset_id")
     public int getAssetId() {
@@ -27,5 +28,14 @@ public class SaveWechatAssetListIn extends BaseInput {
 
     public void setGroupId(int groupId) {
         this.groupId = groupId;
+    }
+
+    @JsonProperty("group_name")
+    public String getPeopleGroupName() {
+        return peopleGroupName;
+    }
+
+    public void setPeopleGroupName(String peopleGroupName) {
+        this.peopleGroupName = peopleGroupName;
     }
 }
