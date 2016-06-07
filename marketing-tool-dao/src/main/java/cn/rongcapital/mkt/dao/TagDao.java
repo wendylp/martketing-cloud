@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.Tag;
 
@@ -34,4 +36,11 @@ public interface TagDao extends BaseDao<Tag>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * 根据标签组ID查询标签列表
+	 * @param tagGroupId
+	 * @return list
+	 */
+	List<Tag> selectListByGroupId(String tagGroupId);
 }
