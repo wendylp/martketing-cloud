@@ -46,4 +46,13 @@ public interface TaskRunLogDao extends BaseDao<TaskRunLog>{
 	 * @return list
 	 */
 	List<Object> taskRunLogList();
+	
+	/**
+     * mkt.data.filter.recenttask.get
+     * 
+     * @功能简述 : 根据条件查询最近完成的数据接入任务
+     * @author nianjun
+     * @return map
+     */
+	List<TaskRunLog> selectByEndtime(TaskRunLog taskRunLog);
 }
