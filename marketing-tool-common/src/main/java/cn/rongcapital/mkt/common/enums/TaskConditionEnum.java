@@ -74,7 +74,7 @@ public enum TaskConditionEnum {
         }
 
         for (TaskConditionEnum taskConditionEnum : enums) {
-            if (taskConditionEnum.getAbbreviation().equals(abbreviation)) {
+            if (taskConditionEnum.getAbbreviation().equalsIgnoreCase(abbreviation)) {
                 return taskConditionEnum;
             }
         }
