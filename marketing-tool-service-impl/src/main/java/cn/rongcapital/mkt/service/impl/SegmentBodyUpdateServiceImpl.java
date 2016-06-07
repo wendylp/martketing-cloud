@@ -33,7 +33,7 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 			SecurityContext securityContext) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
-
+		Date now = new Date();
 		Integer headerId = Integer.valueOf(body.getSegmentHeadId());
 		// 删除既有body数据
 		segmentationHeadDao.batchDeleteUseHeaderId(headerId);
@@ -52,7 +52,8 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 						insertBody.setTagGroupId(tag.getTagGroupId());
 						insertBody.setTagId(tag.getTagId());
 						insertBody.setExclude(tag.getExclude().byteValue());
-						insertBody.setCreateTime(new Date());
+						insertBody.setCreateTime(now);
+						insertBody.setUpdateTime(now);
 						insertBody.setGroupIndex(groupIndex);
 						insertBody
 								.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
