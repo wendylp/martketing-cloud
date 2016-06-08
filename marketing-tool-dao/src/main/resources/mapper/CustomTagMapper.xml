@@ -97,6 +97,10 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<update id="logicDeleteTagById" parameterType="java.util.Map" >
+		UPDATE custom_tag
+		SET status = 1
+		WHERE id = #{id}
+	</update>
 	
 </mapper>
