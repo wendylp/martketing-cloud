@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
@@ -22,6 +23,7 @@ public interface DataGetFilterAudiencesService {
      * @return
      * 
      */
-    public <T extends BaseQuery> List<T> getFilterAudiences(String method, String userToken,
-                    String ver, Integer mdType, List<Integer> taskIdList);
+    public <T extends BaseQuery> List<Map<String, Object>> getFilterAudiences(String method,
+                    String userToken, String ver, Integer index, Integer size, Integer mdType,
+                    List<Integer> taskIdList);
 }
