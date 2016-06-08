@@ -30,7 +30,7 @@
 	
 	<sql id="QUERY_ENDTIME_CLAUSE">
 		<where>
-		    	<![CDATA[ AND end_time = #{endTime}]]>
+		    	<![CDATA[ AND end_time > #{endTime}]]>
 		</where>
 	</sql>
 	

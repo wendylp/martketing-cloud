@@ -1,5 +1,3 @@
-package cn.rongcapital.mkt.service.impl;
-
 /*************************************************
  * @功能简述: 获取系统标签内容列表 
  * @see MktApi
@@ -7,6 +5,7 @@ package cn.rongcapital.mkt.service.impl;
  * @version: 1.0
  * @date：2016-06-07
  *************************************************/
+package cn.rongcapital.mkt.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
