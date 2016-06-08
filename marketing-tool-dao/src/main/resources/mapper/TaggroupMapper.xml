@@ -99,4 +99,17 @@
 		</where>
 	</select>
 	
+	<!-- 通过head_id获取受众细分关联的tag -->
+	<select id="getTagGroupMenulist" parameterType="java.lang.Long" resultType="cn.rongcapital.mkt.po.CustomTagWithName">
+		SELECT group.id AS tag_group_id, group.name AS tag_group_name, 
+		       p_group.parentGroupId AS tag_group_pid, p_group.name AS tag_group_pname,
+		       c_group.id AS tag_group_cid, c_group.name AS tag_group_cname
+		FROM taggroup group
+		LEFT JOIN taggroup p_group
+		ON group.parentGroupId = p_group.id AND p_group.status = 0
+		LEFT JOIN taggroup c_group
+		ON group.id = c_group.parentGroupId AND c_group.status = 0
+		WHERE group.status = 0
+	</select>
+	
 </mapper>

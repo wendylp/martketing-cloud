@@ -40,6 +40,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.service.AudienceListDeleteService;
+import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
@@ -52,6 +53,7 @@ import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
+import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
 import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.service.DataGetQualityCountService;
@@ -63,9 +65,11 @@ import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
+import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MainActionInfoGetService;
+import cn.rongcapital.mkt.service.MainBasicInfoGetService;
 import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
 import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
@@ -83,7 +87,9 @@ import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
+import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
+import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
 import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
@@ -106,6 +112,7 @@ import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
+import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -114,104 +121,171 @@ import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 public class MktApi {
 	@Autowired
 	private LoginService loginService;
+	
 	@Autowired
 	private ModifyPasswdService modifyPasswdService;
+	
 	@Autowired
 	private SegmentHeaderCreateService segmentHeaderService;
+	
 	@Autowired
 	private SegmentPublishStatusCountService segmentPublishStatusCountService;
+	
 	@Autowired
 	private SegmentPublishstatusListService segmentPublishstatusListService;
+	
 	@Autowired
 	private DeleteImgTextAssetService deleteImgTextAssetService;
+	
 	@Autowired
 	private GetImgTextAssetService getImgTextAssetService;
+	
 	@Autowired
 	private ImgtextHostService imgtextHostService;
+	
 	@Autowired
 	private WechatTypeCountGetService wechatTypeCountGetService;
+	
 	@Autowired
 	private MigrationFileGeneralInfoService migrationFileGeneralInfoService;
+	
 	@Autowired
 	private MigrationFileTemplateService migrationFileTemplateService;
+	
 	@Autowired
 	private MigrationFileUploadUrlService migrationFileUploadUrlService;
+	
 	@Autowired
 	private DataGetQualityListService dataGetQualityListService;
+	
 	@Autowired
 	private DataGetQualityCountService dataGetQualityCountService;
+	
 	@Autowired
 	private DataGetUnqualifiedCountService dataGetUnqualifiedCountService;
+	
 	@Autowired
 	private DataGetMainCountService dataGetMainCountService;
+	
 	@Autowired
 	private DataGetMainListService dataGetMainListService;
+	
 	@Autowired
 	private DataDeleteMainService dataDeleteMainService;
+	
 	@Autowired
 	private DataGetViewListService dataGetViewListService;
+	
 	@Autowired
 	private DataGetFilterContactwayService dataGetFilterContactwayService;
+	
+	@Autowired
+	private DataGetFilterRecentTaskService dataGetFilterRecentTaskService;
+	
 	@Autowired
 	private SegmentHeaderGetService segmentHeaderGetService;
+	
 	@Autowired
 	private WechatAssetListService wechatAssetListService;
+	
 	@Autowired
 	private WechatAssetListGetService wechatAssetListGetService;
+	
 	@Autowired
 	private UpdateNicknameService updateNicknameService;
+	
 	@Autowired
 	private SaveWechatAssetListService saveWechatAssetListService;
+	
 	@Autowired
 	private SegmentHeaderUpdateService segmentHeaderUpdateService;
+	
 	@Autowired
 	private UploadFileService uploadFileService;
+	
 	@Autowired
 	private CampaignHeaderGetService campaignHeaderGetService;
+	
     @Autowired
     private CampaignBodyGetService campaignBodyGetService;
+    
     @Autowired
     private CampaignBodyCreateService campaignBodyCreateService;
+    
     @Autowired
     private AudienceListService audienceListService;
+    
     @Autowired
     private AudienceListDeleteService audienceListDeleteService;
+    
+    @Autowired
     private SegmentBodyUpdateService segmentBodyUpdateService;
+    
 	@Autowired
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
+	
 	@Autowired
 	private TaskListGetService taskListGetService;
+	
 	@Autowired
 	private CampaignDeleteService campaignDeleteService;
+	
 	@Autowired
 	private CampaignSummaryGetService campaignSummaryGetService;
+	
 	@Autowired
 	private CampaignProgressStatusCountService campaignProgressStatusCountService;
+	
 	@Autowired
 	private CampaignProgressStatusListService campaignProgressStatusListService;
+	
 	@Autowired
 	private SegmentTagnameTagListService segmentTagnameTagListService;
+	
 	@Autowired
 	private SegmentTagkeyTagListService segmentTagkeyTagListService;
+	
 	@Autowired
 	private SegmentTagnameTagValueService segmentTagnameTagValueService;
+	
 	@Autowired
 	private TagSystemTagcountService tagSystemTagcountService;
+	
 	@Autowired
 	private SegmentBodyGetService segmentBodyGetService;
+	
 	@Autowired
 	private CustomTagGetService customTagGetService;
+	
 	@Autowired
 	private CustomTagDeleteService customTagDeleteService;
+	
+	@Autowired
 	private MainActionInfoGetService mainActionInfoGetService;
+	
 	@Autowired
 	private SegmentTagGetService segmentTagGetService;
+	
 	@Autowired
 	private SegmentTagUpdateService segmentTagUpdateService;
+	
+	@Autowired
+	private GetImgtextCountService getImgtextCountService;
+	
 	@Autowired
 	private DataMainRadarInfoGetService dataMainRadarInfoGetService;
+
 	@Autowired
 	private DataMainBasicInfoUpdateService dataMainBasicInfoUpdateService;
+	
+	@Autowired
+	private TagSystemListGetService tagSystemListGetService;
+	
+	@Autowired
+	private TaggroupSystemListGetService taggroupSystemListGetService;
+
+	@Autowired
+	private MainBasicInfoGetService mainBasicInfoGetService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
@@ -273,6 +347,18 @@ public class MktApi {
 		baseInput.setIndex(index);
 		baseInput.setSize(size);
 		return getImgtextAssetMenulistService.getImgTextAssetMenulist(baseInput);
+	}
+
+	/**
+	 * @功能简述: 获取图文资产
+	 * @param:String user_token,String ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.imgtext.count.get")
+	public Object getImgtextAssetCount(@NotEmpty @QueryParam("user_token") String userToken,
+										  @NotEmpty @QueryParam("ver") String ver){
+		return getImgtextCountService.getImgtextAssetCount();
 	}
 
 	/**
@@ -626,6 +712,37 @@ public class MktApi {
         return Response.ok().entity(result).build();
     }
 
+    /**
+     * @功能简述 : 查询最近完成的数据接入任务
+     * @param: String method, String userToken, String ver, String condition
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.filter.recenttask.get")
+    public Object getFilterContactway(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("md_type") Integer mdType,
+                    @NotEmpty @QueryParam("ver") String ver,
+                    @NotEmpty @QueryParam("condition") String condition) {
+
+        List<TaskRunLog> taskRunLogList = dataGetFilterRecentTaskService.getFilterRecntTask(method,
+                        userToken, ver, condition);
+        DataGetFilterRecentTaskOut result =
+                        new DataGetFilterRecentTaskOut(ApiErrorCode.SUCCESS.getCode(),
+                                        ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+        if (taskRunLogList != null && !taskRunLogList.isEmpty()) {
+            for (TaskRunLog taskRunLog : taskRunLogList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("task_id", taskRunLog.getTaskId());
+                map.put("filename", taskRunLog.getTaskName());
+                result.getData().add(map);
+            }
+        }
+
+        result.setTotal(result.getData().size());
+        return Response.ok().entity(result).build();
+    }
+
 	/**
 	 * @功能简述: 获取某个微信账号下的好友/粉丝/群组信息
 	 * @param: String userToken, String ver, Ingeger asset_id
@@ -739,7 +856,7 @@ public class MktApi {
 	@GET
 	@Path("mkt.task.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object taskListGet(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput taskListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
 		return taskListGetService.taskListGet();
 	}
@@ -752,7 +869,7 @@ public class MktApi {
 	@POST
 	@Path("mkt.campaign.delete")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignDelete(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput campaignDelete(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
 			@NotNull @QueryParam("campaign_id") Integer campaignId){
 		return campaignDeleteService.campaignDelete(campaignId);
@@ -766,7 +883,7 @@ public class MktApi {
 	@GET
 	@Path("mkt.campaign.summary.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
 		return campaignSummaryGetService.campaignSummaryGet();
 	}
@@ -779,7 +896,7 @@ public class MktApi {
 	@GET
 	@Path("mkt.campaign.progressstatus.count.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
 		return campaignProgressStatusCountService.campaignProgressStatusCountGet();
 	}
@@ -795,7 +912,7 @@ public class MktApi {
 	@GET
 	@Path("mkt.campaign.progressstatus.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("publish_status") Integer publishStatus,
 			@QueryParam("campaign_name") String campaignName,
@@ -822,7 +939,6 @@ public class MktApi {
 	 * @功能简述: 根据系统最末级标签组ID查询出标签内容列表
 	 * @param method
 	 * @param userToken
-	 * @param tagGroupName
 	 * @return BaseOutput
 	 */
 	@GET
@@ -866,7 +982,6 @@ public class MktApi {
 	 * @功能简述: 获取系统标签总数量 
 	 * @param method
 	 * @param userToken
-	 * @param tagGroupName
 	 * @return BaseOutput
 	 */
 	@GET
@@ -883,23 +998,26 @@ public class MktApi {
      */
     @GET
     @Path("/mkt.tag.custom.list.get")
-    public BaseOutput getCustomTagList(@NotEmpty @QueryParam("method") String method,
-                    @NotEmpty @QueryParam("user_token") String userToken,
-                    @QueryParam("index") Integer index, 
-                    @QueryParam("size") Integer size) {
+    public BaseOutput getCustomTagList(
+    		@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size) {
         return customTagGetService.getCustomTagList(method, userToken, index, size);
     }
-    
+
     /**
      * @功能简述 : 删除某个自定义标签
      * @param: String method, String userToken, Ingeger tag_id
      * @return: Object
      */
     @POST
-    @Path("/mkt.tag.custom.delete")
-    public Object deleteCustomTag(@NotEmpty @QueryParam("method") String method,
+    @Path("mkt.tag.custom.delete")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput deleteCustomTag(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotEmpty @QueryParam("tag_id") Integer tag_id) {
+                    @NotNull @QueryParam("tag_id") Integer tag_id,
+                    @Context SecurityContext securityContext) {
         return customTagDeleteService.deleteCustomTag(method, userToken, tag_id);
     }
 
@@ -931,14 +1049,15 @@ public class MktApi {
 	}
 	
 	/**
-	 * @功能简述: 获取某联系人雷达图数据 
+	 * @功能简述: 获取某联系人雷达图数据
 	 * @param userToken
 	 * @param contactId
 	 * @return BaseOutput
 	 */
 	@GET
 	@Path("/mkt.data.main.radarinfo.get")
-	public BaseOutput getRadarInfoByContactId(@NotEmpty @QueryParam("user_token") String userToken,
+	public BaseOutput getRadarInfoByContactId(
+			@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("contact_id") String contactId){
 		return dataMainRadarInfoGetService.getRadarInfoByContactId(contactId);
 	}
@@ -953,5 +1072,61 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public BaseOutput updateBaseInfoByContactId(@Valid DataMainBaseInfoUpdateIn body){
 		return dataMainBasicInfoUpdateService.updateBaseInfoByContactId(body);
+	}
+	
+	/**
+	 * @功能简述: 获取系统标签内容列表
+	 * @param method
+	 * @param user_token
+	 * @param tag_group_id
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.tag.system.list.get")
+	public BaseOutput getTagcountByParentGroupId(
+			@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotNull @QueryParam("tag_group_id") Integer tagGroupId,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size){
+		return tagSystemListGetService.getTagcount(method, userToken, 
+				tagGroupId, index, size);
+	}
+	
+	/**
+	 * @功能简述: 获取系统标签组列表
+	 * @param method
+	 * @param user_token
+	 * @param tag_group_id
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.taggroup.system.list.get")
+	public BaseOutput getTagGroupByParentGroupId(
+			@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotNull @QueryParam("tag_group_id") Integer tagGroupId,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size){
+		return taggroupSystemListGetService.getTagGroupByParentGroupId(method, 
+				userToken, tagGroupId, index, size);
+	}
+	
+	/**
+	 * @功能简述: 获取某条主数据详细信息
+	 * @param userToken
+	 * @param contactId
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.data.main.basicinfo.get")
+	public BaseOutput getPartyBehaviorByCondition(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("contact_id") String contactId) {
+		return mainBasicInfoGetService.getMainBasicInfo(contactId, userToken);
 	}
 }

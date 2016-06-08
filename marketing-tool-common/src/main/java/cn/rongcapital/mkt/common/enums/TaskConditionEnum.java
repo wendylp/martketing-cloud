@@ -3,11 +3,17 @@ package cn.rongcapital.mkt.common.enums;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public enum TaskConditionEnum {
 
     H(1, "H", "最近1小时"), 
     D(2, "D", "最近一天"), 
     W(3, "W", "最近一周"),;
+
+    private static Logger logger = LoggerFactory.getLogger(TaskConditionEnum.class);
 
     private TaskConditionEnum(int code, String abbreviation, String description) {
         this.code = code;
@@ -58,5 +64,22 @@ public enum TaskConditionEnum {
         }
 
         return calendar.getTime();
+    }
+
+    public static TaskConditionEnum getEnumByAbbreviation(String abbreviation) {
+        TaskConditionEnum[] enums = TaskConditionEnum.values();
+        if (StringUtils.isEmpty(abbreviation)) {
+            logger.error("通过缩写获取TaskConditionEnum失败 : 参数为空");
+            return null;
+        }
+
+        for (TaskConditionEnum taskConditionEnum : enums) {
+            if (taskConditionEnum.getAbbreviation().equalsIgnoreCase(abbreviation)) {
+                return taskConditionEnum;
+            }
+        }
+
+        logger.info("缩写参数{}错误,不含该缩写的枚举", abbreviation);
+        return null;
     }
 }

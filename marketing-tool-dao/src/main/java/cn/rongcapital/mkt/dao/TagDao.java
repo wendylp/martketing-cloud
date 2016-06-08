@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.Tag;
@@ -43,10 +44,19 @@ public interface TagDao extends BaseDao<Tag>{
 	 * @return list
 	 */
 	List<Tag> selectListByGroupId(String tagGroupId);
+
 	
 	/**
-	 * 返回总标签数量
+	 * 根据标签组次末层级Id查询标签列表
+	 * @param paramMap
+	 * @return list
+	 */
+	List<Tag> selectListByParentGroupId(Map<String,Object> paramMap);
+	
+	/**
+	 * 根据标签组ID查询标签数量
+	 * @param tagGroupId
 	 * @return int
 	 */
-	int selectAllListCount();
+	int selectListCountByGroupId(String tagGroupId);
 }
