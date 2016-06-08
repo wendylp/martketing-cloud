@@ -34,10 +34,7 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
 		TaskRunLog taskRunLog = new TaskRunLog();
 		taskRunLog.setOrderField("end_time");
 		taskRunLog.setOrderFieldType("DESC");
-		taskRunLog.setStartIndex(0);
-		taskRunLog.setPageSize(1);
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("count", 1);
+
 		List<TaskRunLog> taskRunLogList = taskRunLogDao.selectList(taskRunLog);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE, null);
