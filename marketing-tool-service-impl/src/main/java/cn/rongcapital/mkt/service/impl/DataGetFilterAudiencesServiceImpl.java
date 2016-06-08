@@ -8,6 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.util.ReflectionUtil;
@@ -33,6 +34,7 @@ import cn.rongcapital.mkt.po.ImportTemplate;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
 
+@Service
 public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiencesService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());

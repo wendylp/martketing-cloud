@@ -33,7 +33,7 @@ public class AudienceListDeleteServiceImpl implements AudienceListDeleteService{
 	
 	@Override
 	@ReadWrite(type=ReadWriteType.WRITE)
-	public BaseOutput audienceListDel(String userToken, Integer audienceListId, SecurityContext securityContext) {
+	public BaseOutput audienceListDel(Integer audienceListId, SecurityContext securityContext) {
 		AudienceListPartyMap audienceListPartyMap = new AudienceListPartyMap();
 		
 		audienceListPartyMap.setAudienceListId(audienceListId);
