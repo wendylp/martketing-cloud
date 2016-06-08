@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +38,8 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
 				Map<String,Object> map = new HashMap<String,Object>();
 				map.put("tag_id", tag.getId());
 				map.put("tag_name", tag.getName());
-				map.put("create_time", tag.getCreateTime());
+				DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+				map.put("create_time", format.format(tag.getCreateTime()));
 				map.put("cover_audience_count", tag.getCoverAudienceCount());
 				result.getData().add(map);
 			}
