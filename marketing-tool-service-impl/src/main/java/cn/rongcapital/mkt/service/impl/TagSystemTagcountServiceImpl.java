@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
 
 	@Override
 	public BaseOutput getTagcount(String method, String userToken) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Tag tag = new Tag();
 		int tagCount = tagDao.selectListCount(tag);
 		TaskRunLog taskRunLog = new TaskRunLog();
@@ -42,7 +44,7 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tag_count", tagCount);
 		if (null != taskRunLogList && taskRunLogList.size() > 0) {
-			map.put("sync_time", taskRunLogList.get(0).getEndTime());
+			map.put("sync_time", format.format(taskRunLogList.get(0).getEndTime()));
 		}
 		result.getData().add(map);
 		return result;
