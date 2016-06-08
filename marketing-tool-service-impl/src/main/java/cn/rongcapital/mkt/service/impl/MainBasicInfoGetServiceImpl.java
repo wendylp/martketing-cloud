@@ -43,8 +43,7 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 			MainBasicInfoGetOut dataVo = new MainBasicInfoGetOut();
 			dataVo.setContactId(id);
 			dataVo.setName(party.getName());
-//			dataVo.setGender(party.getGender() == null ? null : (party
-//					.getGender() ? 1 : 0));
+			dataVo.setGender(party.getGender());
 			dataVo.setAge(party.getAge() == null ? null : party.getAge()
 					.intValue());
 			dataVo.setMobile(party.getMobile() == null ? null : party
