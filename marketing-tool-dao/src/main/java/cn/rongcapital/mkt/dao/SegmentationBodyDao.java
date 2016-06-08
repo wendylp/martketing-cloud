@@ -38,7 +38,19 @@ public interface SegmentationBodyDao extends BaseDao<SegmentationBody>{
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
 	
+    /**
+     * @功能简述 : 根据细分Id逻辑删除受众细分body信息
+     * @param headId
+     * @author zhuxuelong
+     */
 	void batchDeleteUseHeaderId(Integer headId);
 	
+    /**
+     * @功能简述 : 根据细分Id获取受众细分body信息
+     * @param headId
+     * @author zhuxuelong
+     * @return List
+     */
 	List<SegmentBodyWithName> getSegBodyUseHeaderId(Integer headId);
+	
 }
