@@ -113,5 +113,16 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<!-- 根据taskId查询相关数据 -->
+	<select id="selectByTaskId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataApp">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE task_id IN]]>
+		<foreach collection="list" item="taskId" open="(" separator="," close=")">
+			<![CDATA[#{taskId}]]>
+		</foreach>
+	</select>
+	
 	
 </mapper>

@@ -102,7 +102,7 @@
 	<update id="batchDeleteUseHeadId" parameterType="java.lang.Integer">
 		<![CDATA[UPDATE custom_tag_map]]>
 		<![CDATA[SET status = 1, update_time = NOW()]]>
-		<![CDATA[WHERE type = 0 AND map_id = #{headerId} AND status = 0]]>
+		<![CDATA[WHERE type = 0 AND map_id = #{headerId} AND STATUS = 0]]>
 	</update>
 	
 	<!-- 通过head_id获取受众细分关联的tag -->

@@ -1,5 +1,5 @@
 /*************************************************
- * @功能简述: 获取系统标签总数量 
+ * @功能简述: 获取系统标签内容列表 
  * @see MktApi
  * @author: zhangwei
  * @version: 1.0
@@ -9,17 +9,21 @@ package cn.rongcapital.mkt.service;
 
 import cn.rongcapital.mkt.vo.BaseOutput;
 
-public interface TagSystemTagcountService {
+public interface TagSystemListGetService {
 
 	/**
-	 * mkt.tag.system.tagcount.get
+	 * mkt.tag.system.list.get
 	 * 
 	 * @author zhangwei
-	 * @功能简述 : 获取系统标签总数量
+	 * @功能简述 : 获取系统标签内容列表
 	 * @param method
 	 * @param userToken
+	 * @param tagGroupId
+	 * @param index
+	 * @param size
 	 * @return
 	 */
-	public BaseOutput getTagcount(String method, String userToken);
+	public BaseOutput getTagcount(String method, String userToken,
+			Integer tagGroupId, Integer index, Integer size);
 
 }

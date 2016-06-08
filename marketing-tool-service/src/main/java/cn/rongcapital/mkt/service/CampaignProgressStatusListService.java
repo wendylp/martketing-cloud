@@ -10,12 +10,14 @@
 
 package cn.rongcapital.mkt.service;
 
+import cn.rongcapital.mkt.vo.BaseOutput;
+
 public interface CampaignProgressStatusListService {
 	/**
 	 * mkt.campaign.progressstatus.list.get
 	 * @param publishStatus campaignName index size
 	 * @return 
 	 */
-	Object campaignProgressStatusList(Integer publishStatus,
+	BaseOutput campaignProgressStatusList(Integer publishStatus,
 			String campaignName, Integer index, Integer size);
 }

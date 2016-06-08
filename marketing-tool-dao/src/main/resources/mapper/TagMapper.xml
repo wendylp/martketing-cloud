@@ -90,4 +90,25 @@
 	       ON tg.id = tm.tag_id
 	    WHERE tm.group_id = #{_parameter}
 	</select>
+	
+	<!-- 根据标签组次末层级Id查询标签列表 -->
+	<select id="selectListByParentGroupId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.Tag">
+        SELECT t.id AS id,t.name AS name
+	     FROM tag t
+	    INNER JOIN tag_group_map tgm
+	       ON t.id = tgm.tag_id
+			INNER JOIN taggroup tg
+         ON tg.id = tgm.group_id
+	    WHERE tg.parent_group_id = #{tagGroupId}
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+	
+	<!-- 根据标签组Id查询标签数量 -->
+	<select id="selectListCountByGroupId" parameterType="String" resultType="int">
+	   SELECT count(tg.id) as dataCount
+	     FROM tag tg
+	    INNER JOIN tag_group_map tm
+	       ON tg.id = tm.tag_id
+	    WHERE tm.group_id = #{_parameter}
+	</select>
 </mapper>

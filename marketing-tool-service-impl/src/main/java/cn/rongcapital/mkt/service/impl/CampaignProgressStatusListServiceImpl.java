@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
 public class CampaignProgressStatusListServiceImpl implements
@@ -32,7 +33,7 @@ public class CampaignProgressStatusListServiceImpl implements
 	 * @return Object
 	 */
 	@Override
-	public Object campaignProgressStatusList(Integer publishStatus,
+	public BaseOutput campaignProgressStatusList(Integer publishStatus,
 			String campaignName, Integer index, Integer size) {
 		Map<String,Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("publish_status", publishStatus);

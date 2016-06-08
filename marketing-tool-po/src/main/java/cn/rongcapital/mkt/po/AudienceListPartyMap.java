@@ -12,7 +12,7 @@ public class AudienceListPartyMap extends BaseQuery {
 
     private Integer partyId;
 
-    private Byte status;
+    private Integer status;
 
     private String oper;
 
@@ -42,11 +42,11 @@ public class AudienceListPartyMap extends BaseQuery {
         this.partyId = partyId;
     }
 
-    public Byte getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Byte status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

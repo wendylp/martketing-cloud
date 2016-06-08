@@ -30,7 +30,7 @@
 	
 	<sql id="QUERY_ENDTIME_CLAUSE">
 		<where>
-		    	<![CDATA[ AND end_time = #{endTime}]]>
+		    	<![CDATA[ AND end_time > #{endTime}]]>
 		</where>
 	</sql>
 	
@@ -122,8 +122,8 @@
 			SELECT
 				task_name,
 				STATUS AS task_status,
-				start_time,
-				end_time
+				date_format(start_time,'%Y-%m-%d %H:%i:%s') as start_time,
+				date_format(end_time,'%Y-%m-%d %H:%i:%s') as end_time
 			FROM
 				task_run_log
 			WHERE

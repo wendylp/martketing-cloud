@@ -40,7 +40,8 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
-import cn.rongcapital.mkt.service.AudienceListPartyMapService;
+import cn.rongcapital.mkt.po.TaskRunLog;
+import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
@@ -52,20 +53,25 @@ import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
+import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
+import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
 import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.service.DataGetQualityCountService;
 import cn.rongcapital.mkt.service.DataGetQualityListService;
 import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
 import cn.rongcapital.mkt.service.DataGetViewListService;
+import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
 import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
+import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MainActionInfoGetService;
+import cn.rongcapital.mkt.service.MainBasicInfoGetService;
 import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
 import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
@@ -83,7 +89,10 @@ import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
+import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
+import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
+import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
 import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
@@ -103,11 +112,16 @@ import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
+import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
+import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
+import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
+import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
+import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -155,6 +169,10 @@ public class MktApi {
 	@Autowired
 	private DataGetFilterContactwayService dataGetFilterContactwayService;
 	@Autowired
+	private DataGetFilterRecentTaskService dataGetFilterRecentTaskService;
+	@Autowired
+	private DataGetFilterAudiencesService dataGetFilterAudiencesService;
+	@Autowired
 	private SegmentHeaderGetService segmentHeaderGetService;
 	@Autowired
 	private WechatAssetListService wechatAssetListService;
@@ -177,7 +195,8 @@ public class MktApi {
     @Autowired
     private AudienceListService audienceListService;
     @Autowired
-    private AudienceListPartyMapService audienceListPartyMapService;
+    private AudienceListDeleteService audienceListDeleteService;
+    @Autowired
     private SegmentBodyUpdateService segmentBodyUpdateService;
 	@Autowired
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
@@ -218,6 +237,16 @@ public class MktApi {
 	private GetDataMainSearchService getDataMainSearchService;
 	@Autowired
 	private GetDataMainSearchByIdService getDataMainSearchByIdService;
+	@Autowired
+	private DataMainBasicInfoUpdateService dataMainBasicInfoUpdateService;
+	@Autowired
+	private TagSystemListGetService tagSystemListGetService;
+	@Autowired
+	private TaggroupSystemListGetService taggroupSystemListGetService;
+	@Autowired
+	private MainBasicInfoGetService mainBasicInfoGetService;
+	@Autowired
+	private TaggroupSystemMenulistGetService taggroupSystemMenulistGetService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -644,6 +673,62 @@ public class MktApi {
         return Response.ok().entity(result).build();
     }
 
+    /**
+     * @功能简述 : 查询最近完成的数据接入任务
+     * @param: String method, String userToken, String ver, String condition
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.filter.recenttask.get")
+    public Object getFilterContactway(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("md_type") Integer mdType,
+                    @NotEmpty @QueryParam("ver") String ver,
+                    @NotEmpty @QueryParam("condition") String condition) {
+
+        List<TaskRunLog> taskRunLogList = dataGetFilterRecentTaskService.getFilterRecntTask(method,
+                        userToken, ver, condition);
+        DataGetFilterRecentTaskOut result =
+                        new DataGetFilterRecentTaskOut(ApiErrorCode.SUCCESS.getCode(),
+                                        ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+        if (taskRunLogList != null && !taskRunLogList.isEmpty()) {
+            for (TaskRunLog taskRunLog : taskRunLogList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("task_id", taskRunLog.getTaskId());
+                map.put("filename", taskRunLog.getTaskName());
+                result.getData().add(map);
+            }
+        }
+
+        result.setTotal(result.getData().size());
+        return Response.ok().entity(result).build();
+    }
+
+
+    /**
+     * @功能简述 : 根据快捷筛选查询某类型的主数据
+     * @param: String method, String userToken, String ver, String mdType, List taskIdList
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.filter.audiences.get")
+    public Object getFilterAudiences(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("md_type") Integer mdType, @NotEmpty @QueryParam("ver") String ver,
+                    @NotEmpty @QueryParam("taskIdList") List taskIdList, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) {
+
+        List<Map<String, Object>> audiencesList = dataGetFilterAudiencesService.getFilterAudiences(method, userToken,
+                        ver, index, size, mdType, taskIdList);
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        result.getData().add(audiencesList);
+
+        result.setTotal(result.getData().size());
+        return Response.ok().entity(result).build();
+    }
+
+
 	/**
 	 * @功能简述: 获取某个微信账号下的好友/粉丝/群组信息
 	 * @param: String userToken, String ver, Ingeger asset_id
@@ -704,26 +789,24 @@ public class MktApi {
 	 */
 	@GET
 	@Path("/mkt.audience.list.get")
-	public Object audienceList(@NotEmpty @QueryParam("user_token") String userToken,
+	public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
 						  				   @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) 
-						  						   throws Exception {
+						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
 		return audienceListService.audienceList(userToken, size, index);
 	}
 	
 	/**
 	 * @功能描述:删除人群list
-	 * @Param: String user_token, String audience_list_id
-	 * @return: Object
+	 * @Param: body
+	 * @param securityContext
+	 * @return: BaseOutput
 	 */
 	@POST
 	@Path("/mkt.audience.list.delete")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object audienceListDel(
-			@QueryParam("user_token") String userToken,
-			@QueryParam("audience_list_id") Integer audience_list_id,
+	public BaseOutput audienceListDel(@Valid AudienceListDeleteIn body,
 	        @Context SecurityContext securityContext){
-		return audienceListPartyMapService.audienceListDel(userToken, audience_list_id, securityContext);
+		return audienceListDeleteService.audienceListDel(body.getAudienceListId(), securityContext);
 	}
 	
 	/**
@@ -756,9 +839,9 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.task.list.get")
+	@Path("/mkt.task.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object taskListGet(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput taskListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
 		return taskListGetService.taskListGet();
 	}
@@ -769,12 +852,10 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@POST
-	@Path("mkt.campaign.delete")
+	@Path("/mkt.campaign.delete")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignDelete(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("campaign_id") Integer campaignId){
-		return campaignDeleteService.campaignDelete(campaignId);
+	public BaseOutput campaignDelete(@Valid CampaignDeleteIn campaignDeleteIn,@Context SecurityContext securityContext){
+		return campaignDeleteService.campaignDelete(campaignDeleteIn.getCampaignId());
 	}
 	
 	/**
@@ -783,9 +864,9 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.campaign.summary.get")
+	@Path("/mkt.campaign.summary.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
 		return campaignSummaryGetService.campaignSummaryGet();
 	}
@@ -796,9 +877,9 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.campaign.progressstatus.count.get")
+	@Path("/mkt.campaign.progressstatus.count.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
 		return campaignProgressStatusCountService.campaignProgressStatusCountGet();
 	}
@@ -812,9 +893,9 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.campaign.progressstatus.list.get")
+	@Path("/mkt.campaign.progressstatus.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("publish_status") Integer publishStatus,
 			@QueryParam("campaign_name") String campaignName,
@@ -900,10 +981,11 @@ public class MktApi {
      */
     @GET
     @Path("/mkt.tag.custom.list.get")
-    public BaseOutput getCustomTagList(@NotEmpty @QueryParam("method") String method,
-                    @NotEmpty @QueryParam("user_token") String userToken,
-                    @QueryParam("index") Integer index,
-                    @QueryParam("size") Integer size) {
+    public BaseOutput getCustomTagList(
+    		@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size) {
         return customTagGetService.getCustomTagList(method, userToken, index, size);
     }
 
@@ -913,11 +995,11 @@ public class MktApi {
      * @return: Object
      */
     @POST
-    @Path("/mkt.tag.custom.delete")
-    public Object deleteCustomTag(@NotEmpty @QueryParam("method") String method,
-                    @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotEmpty @QueryParam("tag_id") Integer tag_id) {
-        return customTagDeleteService.deleteCustomTag(method, userToken, tag_id);
+    @Path("mkt.tag.custom.delete")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput deleteCustomTag(@Valid CustomTagDeleteIn body,
+                    @Context SecurityContext securityContext) {
+        return customTagDeleteService.deleteCustomTag(body);
     }
 
     /**
@@ -955,9 +1037,97 @@ public class MktApi {
 	 */
 	@GET
 	@Path("/mkt.data.main.radarinfo.get")
-	public BaseOutput getRadarInfoByContactId(@NotEmpty @QueryParam("user_token") String userToken,
+	public BaseOutput getRadarInfoByContactId(
+			@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("contact_id") String contactId){
 		return dataMainRadarInfoGetService.getRadarInfoByContactId(contactId);
+	}
+
+	/**
+	 * @功能简述: 编辑某条主数据详细信息
+	 * @param body
+	 * @return BaseOutput
+	 */
+	@POST
+	@Path("/mkt.data.main.basicinfo.update")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput updateBaseInfoByContactId(@Valid DataMainBaseInfoUpdateIn body){
+		return dataMainBasicInfoUpdateService.updateBaseInfoByContactId(body);
+	}
+
+	/**
+	 * @功能简述: 获取系统标签内容列表
+	 * @param method
+	 * @param user_token
+	 * @param tag_group_id
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.tag.system.list.get")
+	public BaseOutput getTagcountByParentGroupId(
+			@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotNull @QueryParam("tag_group_id") Integer tagGroupId,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size){
+		return tagSystemListGetService.getTagcount(method, userToken,
+				tagGroupId, index, size);
+	}
+
+	/**
+	 * @功能简述: 获取系统标签组列表
+	 * @param method
+	 * @param user_token
+	 * @param tag_group_id
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.taggroup.system.list.get")
+	public BaseOutput getTagGroupByParentGroupId(
+			@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotNull @QueryParam("tag_group_id") Integer tagGroupId,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size){
+		return taggroupSystemListGetService.getTagGroupByParentGroupId(method,
+				userToken, tagGroupId, index, size);
+	}
+
+	/**
+	 * @功能简述: 获取某条主数据详细信息
+	 * @param userToken
+	 * @param contactId
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.data.main.basicinfo.get")
+	public BaseOutput getPartyBehaviorByCondition(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("contact_id") String contactId) {
+		return mainBasicInfoGetService.getMainBasicInfo(contactId, userToken);
+	}
+
+	/**
+	 * @功能简述: 获取系统标签组列表
+	 * @param method
+	 * @param user_token
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.taggroup.system.menulist.get")
+	public BaseOutput getTaggroupSystemMenulist(
+			@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size) {
+		return taggroupSystemMenulistGetService.getTaggroupSystemMenulist(
+				method, userToken, index, size);
 	}
 
 	/**

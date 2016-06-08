@@ -10,6 +10,9 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.DataApp;
 
@@ -34,4 +37,13 @@ public interface DataAppDao extends BaseDao<DataApp>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    /**
+     * mkt.data.filter.audiences.get
+     * 
+     * @功能简述 : 根据快捷筛选查询某类型的主数据
+     * @author nianjun
+     * @return map
+     */
+    public List<DataApp> selectByTaskId(Map<String, List<String>> paramMap);
 }

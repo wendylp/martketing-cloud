@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.enums.TaskConditionEnum;
 import cn.rongcapital.mkt.dao.TaskRunLogDao;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
 
+@Service
 public class DataGetFilterRecentTaskServiceImpl implements DataGetFilterRecentTaskService {
 
     @Autowired
