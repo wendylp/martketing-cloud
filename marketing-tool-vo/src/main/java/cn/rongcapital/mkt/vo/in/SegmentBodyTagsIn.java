@@ -10,14 +10,19 @@
 
 package cn.rongcapital.mkt.vo.in;
 
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class SegmentBodyTagsIn {
 
+	@NotNull
 	private Integer tagId;
-
+	
+	@NotNull
 	private Integer tagGroupId;
-
+	
+	@NotNull
 	private Integer exclude;
 
 	@JsonProperty("tag_id")
