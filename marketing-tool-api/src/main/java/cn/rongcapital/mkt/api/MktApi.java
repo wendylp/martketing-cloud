@@ -39,8 +39,8 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
-import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.po.TaskRunLog;
+import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
@@ -108,6 +108,7 @@ import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
+import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
@@ -858,7 +859,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.task.list.get")
+	@Path("/mkt.task.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public BaseOutput taskListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
@@ -871,12 +872,10 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@POST
-	@Path("mkt.campaign.delete")
+	@Path("/mkt.campaign.delete")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public BaseOutput campaignDelete(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("campaign_id") Integer campaignId){
-		return campaignDeleteService.campaignDelete(campaignId);
+	public BaseOutput campaignDelete(@Valid CampaignDeleteIn campaignDeleteIn,@Context SecurityContext securityContext){
+		return campaignDeleteService.campaignDelete(campaignDeleteIn.getCampaignId());
 	}
 	
 	/**
@@ -885,7 +884,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.campaign.summary.get")
+	@Path("/mkt.campaign.summary.get")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
@@ -898,7 +897,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.campaign.progressstatus.count.get")
+	@Path("/mkt.campaign.progressstatus.count.get")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public BaseOutput campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
@@ -914,7 +913,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.campaign.progressstatus.list.get")
+	@Path("/mkt.campaign.progressstatus.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public BaseOutput campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
