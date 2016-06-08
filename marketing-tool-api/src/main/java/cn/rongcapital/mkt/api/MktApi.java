@@ -39,8 +39,8 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
+import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.po.TaskRunLog;
-import cn.rongcapital.mkt.service.AudienceListPartyMapService;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
@@ -60,6 +60,7 @@ import cn.rongcapital.mkt.service.DataGetQualityCountService;
 import cn.rongcapital.mkt.service.DataGetQualityListService;
 import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
 import cn.rongcapital.mkt.service.DataGetViewListService;
+import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
 import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
@@ -89,6 +90,7 @@ import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
+import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
 import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
@@ -106,6 +108,7 @@ import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
+import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
@@ -214,7 +217,7 @@ public class MktApi {
     private AudienceListService audienceListService;
     
     @Autowired
-    private AudienceListPartyMapService audienceListPartyMapService;
+    private AudienceListDeleteService audienceListDeleteService;
     
     @Autowired
     private SegmentBodyUpdateService segmentBodyUpdateService;
@@ -272,6 +275,9 @@ public class MktApi {
 	
 	@Autowired
 	private DataMainRadarInfoGetService dataMainRadarInfoGetService;
+
+	@Autowired
+	private DataMainBasicInfoUpdateService dataMainBasicInfoUpdateService;
 	
 	@Autowired
 	private TagSystemListGetService tagSystemListGetService;
@@ -281,6 +287,9 @@ public class MktApi {
 
 	@Autowired
 	private MainBasicInfoGetService mainBasicInfoGetService;
+
+	@Autowired
+	private TaggroupSystemMenulistGetService taggroupSystemMenulistGetService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
@@ -798,26 +807,25 @@ public class MktApi {
 	 */
 	@GET
 	@Path("/mkt.audience.list.get")
-	public Object audienceList(@NotEmpty @QueryParam("user_token") String userToken,
+	public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
 						  				   @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) 
-						  						   throws Exception {
+						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
 		return audienceListService.audienceList(userToken, size, index);
 	}
 	
 	/**
 	 * @功能描述:删除人群list
 	 * @Param: String user_token, String audience_list_id
-	 * @return: Object
+	 * @return: BaseOutput
 	 */
 	@POST
 	@Path("/mkt.audience.list.delete")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object audienceListDel(
-			@QueryParam("user_token") String userToken,
-			@QueryParam("audience_list_id") Integer audience_list_id,
+	public BaseOutput audienceListDel(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotNull @QueryParam("audience_list_id") Integer audienceListId,
 	        @Context SecurityContext securityContext){
-		return audienceListPartyMapService.audienceListDel(userToken, audience_list_id, securityContext);
+		return audienceListDeleteService.audienceListDel(userToken, audienceListId, securityContext);
 	}
 	
 	/**
@@ -1059,6 +1067,18 @@ public class MktApi {
 	}
 	
 	/**
+	 * @功能简述: 编辑某条主数据详细信息
+	 * @param body
+	 * @return BaseOutput
+	 */
+	@POST
+	@Path("/mkt.data.main.basicinfo.update")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput updateBaseInfoByContactId(@Valid DataMainBaseInfoUpdateIn body){
+		return dataMainBasicInfoUpdateService.updateBaseInfoByContactId(body);
+	}
+	
+	/**
 	 * @功能简述: 获取系统标签内容列表
 	 * @param method
 	 * @param user_token
@@ -1114,4 +1134,22 @@ public class MktApi {
 		return mainBasicInfoGetService.getMainBasicInfo(contactId, userToken);
 	}
 	
+	/**
+	 * @功能简述: 获取系统标签组列表
+	 * @param method
+	 * @param user_token
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.taggroup.system.menulist.get")
+	public BaseOutput getTaggroupSystemMenulist(
+			@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size) {
+		return taggroupSystemMenulistGetService.getTaggroupSystemMenulist(
+				method, userToken, index, size);
+	}
 }

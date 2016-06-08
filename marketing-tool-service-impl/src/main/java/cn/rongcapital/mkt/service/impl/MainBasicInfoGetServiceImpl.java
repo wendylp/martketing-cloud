@@ -36,19 +36,15 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		Integer id = Integer.valueOf(contactId);
-		List<DataParty> partyList = dataPartyDao.getDataById(id);
-		if (partyList != null) {
+		DataParty party = dataPartyDao.getDataById(id);
+		if (party != null) {
 			List<Object> data = new ArrayList<Object>();
-			DataParty party = partyList.get(0);
 			MainBasicInfoGetOut dataVo = new MainBasicInfoGetOut();
 			dataVo.setContactId(id);
 			dataVo.setName(party.getName());
-			dataVo.setGender(party.getGender() == null ? null : (party
-					.getGender() ? 1 : 0));
-			dataVo.setAge(party.getAge() == null ? null : party.getAge()
-					.intValue());
-			dataVo.setMobile(party.getMobile() == null ? null : party
-					.getMobile().toString());
+			dataVo.setGender(party.getGender());
+			dataVo.setAge(party.getAge());
+			dataVo.setMobile(party.getMobile());
 			dataVo.setEmail(party.getEmail());
 			dataVo.setAddress(party.getHomeAddress());
 			data.add(dataVo);
