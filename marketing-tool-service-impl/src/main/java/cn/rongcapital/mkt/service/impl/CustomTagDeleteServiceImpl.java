@@ -2,8 +2,6 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.util.Date;
 
-import javax.ws.rs.core.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +19,7 @@ public class CustomTagDeleteServiceImpl implements CustomTagDeleteService {
     private CustomTagDao customTagDao;
 
     @Override
-    public Object deleteCustomTag(String method, String userToken, Integer tag_id) {
+    public BaseOutput deleteCustomTag(String method, String userToken, Integer tag_id) {
 
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
@@ -34,7 +32,7 @@ public class CustomTagDeleteServiceImpl implements CustomTagDeleteService {
 
         result.setTotal(result.getData().size());
 
-        return Response.ok().entity(result).build();
+        return result;
     }
 
 }
