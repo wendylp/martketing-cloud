@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -54,4 +55,12 @@ public interface DataPartyDao extends BaseDao<DataParty>{
      * @return map
      */
     public int logicDeleteById(DataParty dataParty);
+    
+    /**
+     * 
+     * @功能简述 : 根据Id获取某条主数据
+     * @author zhuxuelong
+     * @return List
+     */
+    public List<DataParty> getDataById(Integer id);
 }
