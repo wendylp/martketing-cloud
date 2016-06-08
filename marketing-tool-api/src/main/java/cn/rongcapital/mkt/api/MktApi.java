@@ -108,7 +108,9 @@ import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
+import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
+import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
 import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
@@ -845,17 +847,16 @@ public class MktApi {
 	
 	/**
 	 * @功能描述:删除人群list
-	 * @Param: String user_token, String audience_list_id
+	 * @Param: body
+	 * @param securityContext
 	 * @return: BaseOutput
 	 */
 	@POST
 	@Path("/mkt.audience.list.delete")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput audienceListDel(
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("audience_list_id") Integer audienceListId,
+	public BaseOutput audienceListDel(@Valid AudienceListDeleteIn body,
 	        @Context SecurityContext securityContext){
-		return audienceListDeleteService.audienceListDel(userToken, audienceListId, securityContext);
+		return audienceListDeleteService.audienceListDel(body.getAudienceListId(), securityContext);
 	}
 	
 	/**
@@ -888,7 +889,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.task.list.get")
+	@Path("/mkt.task.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public BaseOutput taskListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
@@ -901,12 +902,10 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@POST
-	@Path("mkt.campaign.delete")
+	@Path("/mkt.campaign.delete")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public BaseOutput campaignDelete(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("campaign_id") Integer campaignId){
-		return campaignDeleteService.campaignDelete(campaignId);
+	public BaseOutput campaignDelete(@Valid CampaignDeleteIn campaignDeleteIn,@Context SecurityContext securityContext){
+		return campaignDeleteService.campaignDelete(campaignDeleteIn.getCampaignId());
 	}
 	
 	/**
@@ -915,7 +914,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.campaign.summary.get")
+	@Path("/mkt.campaign.summary.get")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
@@ -928,7 +927,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.campaign.progressstatus.count.get")
+	@Path("/mkt.campaign.progressstatus.count.get")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public BaseOutput campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
@@ -944,7 +943,7 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@GET
-	@Path("mkt.campaign.progressstatus.list.get")
+	@Path("/mkt.campaign.progressstatus.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public BaseOutput campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
