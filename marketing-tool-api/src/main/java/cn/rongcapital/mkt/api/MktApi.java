@@ -52,6 +52,7 @@ import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
+import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
 import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
@@ -109,6 +110,7 @@ import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
+import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
@@ -183,6 +185,9 @@ public class MktApi {
 	
 	@Autowired
 	private DataGetFilterRecentTaskService dataGetFilterRecentTaskService;
+	
+	@Autowired
+	private DataGetFilterAudiencesService dataGetFilterAudiencesService;
 	
 	@Autowired
 	private SegmentHeaderGetService segmentHeaderGetService;
@@ -748,6 +753,31 @@ public class MktApi {
         return Response.ok().entity(result).build();
     }
 
+
+    /**
+     * @功能简述 : 根据快捷筛选查询某类型的主数据
+     * @param: String method, String userToken, String ver, String mdType, List taskIdList
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.filter.audiences.get")
+    public Object getFilterAudiences(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("md_type") Integer mdType, @NotEmpty @QueryParam("ver") String ver,
+                    @NotEmpty @QueryParam("taskIdList") List taskIdList, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) {
+
+        List<Map<String, Object>> audiencesList = dataGetFilterAudiencesService.getFilterAudiences(method, userToken,
+                        ver, index, size, mdType, taskIdList);
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        result.getData().add(audiencesList);
+
+        result.setTotal(result.getData().size());
+        return Response.ok().entity(result).build();
+    }
+  
+
 	/**
 	 * @功能简述: 获取某个微信账号下的好友/粉丝/群组信息
 	 * @param: String userToken, String ver, Ingeger asset_id
@@ -1017,11 +1047,9 @@ public class MktApi {
     @POST
     @Path("mkt.tag.custom.delete")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public BaseOutput deleteCustomTag(@NotEmpty @QueryParam("method") String method,
-                    @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotNull @QueryParam("tag_id") Integer tag_id,
+    public BaseOutput deleteCustomTag(@Valid CustomTagDeleteIn body,
                     @Context SecurityContext securityContext) {
-        return customTagDeleteService.deleteCustomTag(method, userToken, tag_id);
+        return customTagDeleteService.deleteCustomTag(body);
     }
 
     /**
