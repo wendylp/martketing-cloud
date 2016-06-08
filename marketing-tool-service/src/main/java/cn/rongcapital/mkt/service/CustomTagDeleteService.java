@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service;
 
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
 
 
 public interface CustomTagDeleteService {
@@ -15,6 +16,6 @@ public interface CustomTagDeleteService {
      * @param tag_id
      * @return
      */
-	public BaseOutput deleteCustomTag(String method, String userToken, Integer tag_id);
+	public BaseOutput deleteCustomTag(CustomTagDeleteIn body);
 
 }

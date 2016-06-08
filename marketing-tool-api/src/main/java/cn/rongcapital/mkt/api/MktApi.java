@@ -109,6 +109,7 @@ import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
+import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
@@ -1047,11 +1048,9 @@ public class MktApi {
     @POST
     @Path("mkt.tag.custom.delete")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public BaseOutput deleteCustomTag(@NotEmpty @QueryParam("method") String method,
-                    @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotNull @QueryParam("tag_id") Integer tag_id,
+    public BaseOutput deleteCustomTag(@Valid CustomTagDeleteIn body,
                     @Context SecurityContext securityContext) {
-        return customTagDeleteService.deleteCustomTag(method, userToken, tag_id);
+        return customTagDeleteService.deleteCustomTag(body);
     }
 
     /**
