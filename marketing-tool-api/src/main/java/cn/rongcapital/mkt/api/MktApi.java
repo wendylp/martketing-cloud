@@ -90,6 +90,7 @@ import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
+import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
 import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
@@ -286,6 +287,9 @@ public class MktApi {
 
 	@Autowired
 	private MainBasicInfoGetService mainBasicInfoGetService;
+
+	@Autowired
+	private TaggroupSystemMenulistGetService taggroupSystemMenulistGetService;
 	
 	/**
 	 * @功能简述: For testing, will remove later
@@ -1128,5 +1132,24 @@ public class MktApi {
 			@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("contact_id") String contactId) {
 		return mainBasicInfoGetService.getMainBasicInfo(contactId, userToken);
+	}
+	
+	/**
+	 * @功能简述: 获取系统标签组列表
+	 * @param method
+	 * @param user_token
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.taggroup.system.menulist.get")
+	public BaseOutput getTaggroupSystemMenulist(
+			@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size) {
+		return taggroupSystemMenulistGetService.getTaggroupSystemMenulist(
+				method, userToken, index, size);
 	}
 }
