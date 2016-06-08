@@ -65,8 +65,9 @@
 	
 	<!-- 修改记录通过人群list_id-->
 	<update id="updateByListId" parameterType="cn.rongcapital.mkt.po.AudienceListPartyMap">
-		<![CDATA[UPDATE audience_list_party_map]]>
-		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[UPDATE audience_list_party_map SET]]>
+		<![CDATA[status = #{status},]]>
+		<![CDATA[update_time = #{updateTime}]]>
 		<![CDATA[WHERE audience_list_id = #{audienceListId}]]>
 	</update>
 

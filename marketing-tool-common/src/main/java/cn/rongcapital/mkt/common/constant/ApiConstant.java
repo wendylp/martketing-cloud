@@ -1,11 +1,11 @@
 /*************************************************
- * @功能�?�?: API常量�?
+ * @功能简述: API常量类
  * @项目名称: marketing cloud
  * @see: 
- * @author: 宋世�?
+ * @author: 宋世涛
  * @version: 0.0.1
  * @date: 2016/5/16
- * @复审�?: 
+ * @复审人: 
 *************************************************/
 
 package cn.rongcapital.mkt.common.constant;
@@ -13,20 +13,20 @@ package cn.rongcapital.mkt.common.constant;
 public class ApiConstant {
 
 	public static final String API_METHOD = "method";//api的method参数
-	public static final String API_PATH = "/api";//api的路�?
+	public static final String API_PATH = "/api";//api的路径
 	public static final byte TABLE_DATA_STATUS_VALID = 0;//数据正常
 	public static final byte TABLE_DATA_STATUS_INVALID = 1;//数据已被逻辑删除
 	
-	public static final byte SEGMENT_PUBLISH_STATUS_NOT_PUBLISH = 0;//未发�?
-	public static final byte SEGMENT_PUBLISH_STATUS_PUBLISH = 1;//已发�?
-	public static final byte SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN = 2;//活动�?
+	public static final byte SEGMENT_PUBLISH_STATUS_NOT_PUBLISH = 0;//未发布
+	public static final byte SEGMENT_PUBLISH_STATUS_PUBLISH = 1;//已发布
+	public static final byte SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN = 2;//活动中
 	public static final byte  SEGMENT_PUBLISH_STATUS_ALL = 3;//全部活动
 	
 	public static final int INT_ZERO = 0;
 	public static final int INT_ONE = 1;
 	
-	public static final int PAGE_START_INDEX_DEFAULT = 0;//默认分页起始index�?
-	public static final int PAGE_PAGE_SIZE_DEFAULT = 10;//默认每页记录�?
+	public static final int PAGE_START_INDEX_DEFAULT = 0;//默认分页起始index值
+	public static final int PAGE_PAGE_SIZE_DEFAULT = 10;//默认每页记录数
 
 	public static final String FILE_UPLOAD_URL = "mkt.service.file.upload";   //文件上传地址
 
@@ -38,5 +38,5 @@ public class ApiConstant {
 	
 	public static final byte TAG_TYPE_SEGMENT = 0;// 细分
 	public static final byte TAG_TYPE_ACTIVITY = 1;// 活动
-	public static final byte TAG_TYPE_CONTACT = 2;// 联系�?
+	public static final byte TAG_TYPE_CONTACT = 2;// 联系人
 }

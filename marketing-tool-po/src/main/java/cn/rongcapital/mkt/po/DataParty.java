@@ -12,9 +12,9 @@ public class DataParty extends BaseQuery {
 
     private String name;
 
-    private Boolean gender;
+    private Integer gender;
 
-    private Byte age;
+    private Integer age;
 
     private String homeAddress;
 
@@ -80,19 +80,19 @@ public class DataParty extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public Boolean getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(Boolean gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
-    public Byte getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(Byte age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
