@@ -1004,10 +1004,12 @@ public class MktApi {
      * @return: Object
      */
     @POST
-    @Path("/mkt.tag.custom.delete")
-    public Object deleteCustomTag(@NotEmpty @QueryParam("method") String method,
+    @Path("mkt.tag.custom.delete")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput deleteCustomTag(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotEmpty @QueryParam("tag_id") Integer tag_id) {
+                    @NotNull @QueryParam("tag_id") Integer tag_id,
+                    @Context SecurityContext securityContext) {
         return customTagDeleteService.deleteCustomTag(method, userToken, tag_id);
     }
 
