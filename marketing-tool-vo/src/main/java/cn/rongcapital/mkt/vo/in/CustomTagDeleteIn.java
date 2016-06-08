@@ -5,28 +5,26 @@ import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import cn.rongcapital.mkt.vo.BaseInput;
-
-public class CustomTagDeleteIn extends BaseInput {
+public class CustomTagDeleteIn {
 
 	@NotEmpty
 	private String userToken = null;
 	
 	@NotNull
-	private Integer tag_id = null;
-
-	@JsonProperty("tag_id")
-	public Integer getTag_id() {
-		return tag_id;
-	}
-
-	public void setTag_id(Integer tag_id) {
-		this.tag_id = tag_id;
-	}
+	private Integer tagId = null;
 
 	@JsonProperty("user_token")
 	public String getUserToken() {
 		return userToken;
+	}
+
+	@JsonProperty("tag_id")
+	public Integer getTagId() {
+		return tagId;
+	}
+
+	public void setTagId(Integer tagId) {
+		this.tagId = tagId;
 	}
 
 	public void setUserToken(String userToken) {

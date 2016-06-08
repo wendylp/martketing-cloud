@@ -22,7 +22,7 @@ public class CustomTagDeleteServiceImpl implements CustomTagDeleteService {
     @Override
     public BaseOutput deleteCustomTag(CustomTagDeleteIn body) {
     	Map<String,Object> paramMap = new HashMap<String,Object>();
-        paramMap.put("id",body.getTag_id());
+        paramMap.put("id",body.getTagId());
         int rowEffected = customTagDao.logicDeleteTagById(paramMap);
     	
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
