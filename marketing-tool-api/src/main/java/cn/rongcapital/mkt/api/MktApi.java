@@ -39,8 +39,8 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
-import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.po.TaskRunLog;
+import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
@@ -52,6 +52,7 @@ import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
+import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
 import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
 import cn.rongcapital.mkt.service.DataGetMainCountService;
@@ -182,6 +183,9 @@ public class MktApi {
 	
 	@Autowired
 	private DataGetFilterRecentTaskService dataGetFilterRecentTaskService;
+	
+	@Autowired
+	private DataGetFilterAudiencesService dataGetFilterAudiencesService;
 	
 	@Autowired
 	private SegmentHeaderGetService segmentHeaderGetService;
@@ -746,6 +750,31 @@ public class MktApi {
         result.setTotal(result.getData().size());
         return Response.ok().entity(result).build();
     }
+
+
+    /**
+     * @功能简述 : 根据快捷筛选查询某类型的主数据
+     * @param: String method, String userToken, String ver, String mdType, List taskIdList
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.data.filter.audiences.get")
+    public Object getFilterAudiences(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("md_type") Integer mdType, @NotEmpty @QueryParam("ver") String ver,
+                    @NotEmpty @QueryParam("taskIdList") List taskIdList, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) {
+
+        List<Map<String, Object>> audiencesList = dataGetFilterAudiencesService.getFilterAudiences(method, userToken,
+                        ver, index, size, mdType, taskIdList);
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        result.getData().add(audiencesList);
+
+        result.setTotal(result.getData().size());
+        return Response.ok().entity(result).build();
+    }
+  
 
 	/**
 	 * @功能简述: 获取某个微信账号下的好友/粉丝/群组信息
