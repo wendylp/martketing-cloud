@@ -23,16 +23,12 @@ public class MainBasicInfoGetOut {
 	
 	private Integer age;
 	
-	private String mobile;
+	private Long mobile;
 	
 	private String email;
 	
 	private String address;
 	
-	private String tagIds;
-	
-	private String campaignIds;
-
 	@JsonProperty("contact_id")
 	public Integer getContactId() {
 		return contactId;
@@ -66,11 +62,11 @@ public class MainBasicInfoGetOut {
 		this.age = age;
 	}
 
-	public String getMobile() {
+	public Long getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(String mobile) {
+	public void setMobile(Long mobile) {
 		this.mobile = mobile;
 	}
 
@@ -88,24 +84,6 @@ public class MainBasicInfoGetOut {
 
 	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	@JsonProperty("tag_ids")
-	public String getTagIds() {
-		return tagIds;
-	}
-
-	public void setTagIds(String tagIds) {
-		this.tagIds = tagIds;
-	}
-
-	@JsonProperty("campaign_ids")
-	public String getCampaignIds() {
-		return campaignIds;
-	}
-
-	public void setCampaignIds(String campaignIds) {
-		this.campaignIds = campaignIds;
 	}
 
 }

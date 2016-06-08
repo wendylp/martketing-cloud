@@ -38,7 +38,19 @@ public interface CustomTagMapDao extends BaseDao<CustomTagMap>{
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
 	
+    /**
+     * @功能简述 : 根据细分Id逻辑删除细分关联的标签
+     * @param headId
+     * @author zhuxuelong
+     */
 	void batchDeleteUseHeadId(Integer headerId);
 	
+    /**
+     * @功能简述 : 根据细分Id获取细分关联的标签
+     * @param headId
+     * @author zhuxuelong
+     * @return List
+     */
 	List<CustomTagWithName> getTagUseHeadId(Long headerId);
+	
 }

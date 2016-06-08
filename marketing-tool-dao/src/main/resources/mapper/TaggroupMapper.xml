@@ -7,37 +7,40 @@
 		<![CDATA[ id as id,name as name,parent_group_id as parentGroupId,level as level]]>
 	</sql>
 
-	<!-- 查询列来源表-->
+	<!-- 查询列来源表 -->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM taggroup]]></sql>
-	
+
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="parentGroupId != null and parentGroupId != ''"><![CDATA[ AND parent_group_id = #{parentGroupId}]]></if>
-		    	<if test="level != null and level != ''"><![CDATA[ AND level = #{level}]]></if>
+			<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
+			<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
+			<if test="parentGroupId != null and parentGroupId != ''"><![CDATA[ AND parent_group_id = #{parentGroupId}]]></if>
+			<if test="level != null and level != ''"><![CDATA[ AND level = #{level}]]></if>
 		</where>
 	</sql>
-	
+
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
-		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+		<if
+			test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if
+			test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
 	</sql>
 
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
-		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
-		    	<if test="parentGroupId != null"><![CDATA[parent_group_id = #{parentGroupId}]]></if>
-		    	<if test="level != null"><![CDATA[level = #{level}]]></if>
+			<if test="id != null"><![CDATA[id = #{id},]]></if>
+			<if test="name != null"><![CDATA[name = #{name},]]></if>
+			<if test="parentGroupId != null"><![CDATA[parent_group_id = #{parentGroupId}]]></if>
+			<if test="level != null"><![CDATA[level = #{level}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
-	<insert id="insert" parameterType="cn.rongcapital.mkt.po.Taggroup" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.Taggroup"
+		useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO taggroup (id,name,parent_group_id,level)
 			VALUES
@@ -49,67 +52,82 @@
 			)
 		]]>
 	</insert>
-	
+
 	<!-- 返回插入的编号,在事务开启状态下有效 -->
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
 	<!-- 修改记录通过主键 -->
 	<update id="updateById" parameterType="cn.rongcapital.mkt.po.Taggroup">
 		<![CDATA[UPDATE taggroup]]>
-		<include refid="UPDATE_COLUMN_SET"/>
+		<include refid="UPDATE_COLUMN_SET" />
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.Taggroup" resultType="cn.rongcapital.mkt.po.Taggroup">
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.Taggroup"
+		resultType="cn.rongcapital.mkt.po.Taggroup">
 		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_COLUMN_LIST" />
+		<include refid="QUERY_FROM_TABLE" />
 		<![CDATA[WHERE id IN]]>
-		<foreach collection="list" item="id" open="(" separator="," close=")">
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
 			<![CDATA[#{id}]]>
 		</foreach>
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectList" parameterType="cn.rongcapital.mkt.po.Taggroup" resultType="cn.rongcapital.mkt.po.Taggroup">
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.Taggroup"
+		resultType="cn.rongcapital.mkt.po.Taggroup">
 		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
-		<include refid="QUERY_WHERE_CLAUSE"/>
-		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+		<include refid="QUERY_COLUMN_LIST" />
+		<include refid="QUERY_FROM_TABLE" />
+		<include refid="QUERY_WHERE_CLAUSE" />
+		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.Taggroup" resultType="int">
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.Taggroup"
+		resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
-		<include refid="QUERY_FROM_TABLE"/>
-		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_FROM_TABLE" />
+		<include refid="QUERY_WHERE_CLAUSE" />
 	</select>
-	
+
 	<!-- 根据关键字模糊查询系统最末级标签组列表 -->
-	<select id="selectByNameFuzzy" parameterType="cn.rongcapital.mkt.po.Taggroup" resultType="cn.rongcapital.mkt.po.Taggroup">
-	    <bind name="fuzzy" value="'%' + _parameter.name + '%'" />
+	<select id="selectByNameFuzzy" parameterType="cn.rongcapital.mkt.po.Taggroup"
+		resultType="cn.rongcapital.mkt.po.Taggroup">
+		<bind name="fuzzy" value="'%' + _parameter.name + '%'" />
 	    <![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_COLUMN_LIST" />
+		<include refid="QUERY_FROM_TABLE" />
 		<where>
-		    	<if test="name != null and name != ''"><![CDATA[ AND name like #{fuzzy}]]></if>
-		    	<if test="level != null and level != ''"><![CDATA[ AND level = #{level}]]></if>
+			<if test="name != null and name != ''"><![CDATA[ AND name like #{fuzzy}]]></if>
+			<if test="level != null and level != ''"><![CDATA[ AND level = #{level}]]></if>
 		</where>
 	</select>
-	
+
 	<!-- 通过head_id获取受众细分关联的tag -->
-	<select id="getTagGroupMenulist" parameterType="java.lang.Long" resultType="cn.rongcapital.mkt.po.CustomTagWithName">
-		SELECT group.id AS tag_group_id, group.name AS tag_group_name, 
-		       p_group.parentGroupId AS tag_group_pid, p_group.name AS tag_group_pname,
-		       c_group.id AS tag_group_cid, c_group.name AS tag_group_cname
-		FROM taggroup group
+	<select id="selectTaggroupSystemMenulist" parameterType="cn.rongcapital.mkt.po.Taggroup"
+		resultType="java.util.Map">
+		SELECT t_group.tag_group_cid AS tag_group_cid,
+		t_group.tag_group_cname AS tag_group_cname,
+		t_group.tag_group_id AS tag_group_id, t_group.tag_group_name AS tag_group_name,
+		pp_group.id AS tag_group_pid, pp_group.name AS tag_group_pname
+		FROM
+		(SELECT c_group.id AS tag_group_cid, c_group.name AS tag_group_cname,
+		p_group.id AS tag_group_id, p_group.name AS tag_group_name,
+		p_group.parent_group_id AS tag_group_parent_groupId
+		FROM (SELECT id,
+		name, parent_group_id
+		FROM taggroup where level = 0) AS c_group
 		LEFT JOIN taggroup p_group
-		ON group.parentGroupId = p_group.id AND p_group.status = 0
-		LEFT JOIN taggroup c_group
-		ON group.id = c_group.parentGroupId AND c_group.status = 0
-		WHERE group.status = 0
+		ON
+		c_group.parent_group_id = p_group.id) t_group
+		LEFT JOIN taggroup
+		pp_group
+		ON t_group.tag_group_parent_groupId = pp_group.id
+		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
 	</select>
-	
+
 </mapper>

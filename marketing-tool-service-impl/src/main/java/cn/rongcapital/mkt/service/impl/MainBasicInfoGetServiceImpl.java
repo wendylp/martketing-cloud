@@ -36,25 +36,17 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		Integer id = Integer.valueOf(contactId);
-		DataParty partyExample = new DataParty();
-		partyExample.setId(id);
-		List<DataParty> partyList = dataPartyDao.selectList(partyExample);
-		List<Object> data = new ArrayList<Object>();
-		MainBasicInfoGetOut dataVo = new MainBasicInfoGetOut();
-		if (partyList != null) {
-			DataParty party = partyList.get(0);
+		DataParty party = dataPartyDao.getDataById(id);
+		if (party != null) {
+			List<Object> data = new ArrayList<Object>();
+			MainBasicInfoGetOut dataVo = new MainBasicInfoGetOut();
 			dataVo.setContactId(id);
 			dataVo.setName(party.getName());
-			dataVo.setGender(party.getGender() == null ? null : (party
-					.getGender() ? 1 : 0));
-			dataVo.setAge(party.getAge() == null ? null : party.getAge()
-					.intValue());
-			dataVo.setMobile(party.getMobile() == null ? null : party
-					.getMobile().toString());
+			dataVo.setGender(party.getGender());
+			dataVo.setAge(party.getAge());
+			dataVo.setMobile(party.getMobile());
 			dataVo.setEmail(party.getEmail());
 			dataVo.setAddress(party.getHomeAddress());
-			dataVo.setTagIds("");
-			dataVo.setCampaignIds("");
 			data.add(dataVo);
 			result.setData(data);
 			result.setTotal(data.size());
