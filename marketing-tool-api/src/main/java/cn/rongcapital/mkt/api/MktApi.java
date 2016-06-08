@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -90,6 +91,8 @@ import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
+import cn.rongcapital.mkt.service.GetDataMainSearchService;
+import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -211,6 +214,10 @@ public class MktApi {
 	private GetImgtextCountService getImgtextCountService;
 	@Autowired
 	private DataMainRadarInfoGetService dataMainRadarInfoGetService;
+	@Autowired
+	private GetDataMainSearchService getDataMainSearchService;
+	@Autowired
+	private GetDataMainSearchByIdService getDataMainSearchByIdService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -951,5 +958,35 @@ public class MktApi {
 	public BaseOutput getRadarInfoByContactId(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("contact_id") String contactId){
 		return dataMainRadarInfoGetService.getRadarInfoByContactId(contactId);
+	}
+
+	/**
+	 * @功能简述: 主界面上的搜索栏模糊查询数据
+	 * @param:String user_token,String ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.data.main.search.get")
+	public BaseOutput getDataMainSearch(@NotEmpty @QueryParam("user_token") String userToken,
+										@NotEmpty @QueryParam("name") String name,
+										@NotEmpty @QueryParam("ver") String ver
+										){
+		DataMainSearchIn dataMainSearchIn = new DataMainSearchIn();
+		dataMainSearchIn.setName(name);
+		return getDataMainSearchService.searchDataMain(dataMainSearchIn);
+	}
+
+	/**
+	 * @功能简述: 根据类型和编号，搜索获取主数据(细分、活动和人群)
+	 * @param:String user_token,String ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.data.main.searchbyid.get")
+	public BaseOutput getDataMainSearchById(@NotEmpty @QueryParam("user_token") String userToken,
+										@NotEmpty @QueryParam("ver") String ver,
+										@NotNull @QueryParam("type") Integer type,
+										@NotNull @QueryParam("id") Integer id){
+		return getDataMainSearchByIdService.searchDataMainById(id,type);
 	}
 }

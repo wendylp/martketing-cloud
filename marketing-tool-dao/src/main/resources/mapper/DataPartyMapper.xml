@@ -175,6 +175,11 @@
 			delete_time= #{deleteTime}
 		WHERE id=#{id}
 	</update>
-	
+
+	<select id="selectAudienceDetail" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT id as data_id,name,gender,age,mobile,email
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id = #{party_id} and deleted = 1
+	</select>
 	
 </mapper>

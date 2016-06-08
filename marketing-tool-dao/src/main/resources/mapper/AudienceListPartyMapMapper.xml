@@ -98,6 +98,10 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<select id="searchPartyList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT party_id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE audience_list_id = #{audience_list_id}
+	</select>
 	
 </mapper>

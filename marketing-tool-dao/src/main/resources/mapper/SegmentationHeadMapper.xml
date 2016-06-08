@@ -111,5 +111,11 @@
 		</if>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
-	
+
+	<select id="searchDataMain" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT id,name
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE name like #{name}
+		limit #{size}
+	</select>
 </mapper>

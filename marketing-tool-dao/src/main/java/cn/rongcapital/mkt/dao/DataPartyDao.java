@@ -54,4 +54,13 @@ public interface DataPartyDao extends BaseDao<DataParty>{
      * @return map
      */
     public int logicDeleteById(DataParty dataParty);
+
+	/**
+	 * mkt.data.main.searchbyid.get
+	 *
+	 * @功能简述 : 根据类型和编号，搜索获取主数据(人群)
+	 * @author nianjun
+	 * @return map
+	 */
+	Map<String,Object> selectAudienceDetail(Map<String, Object> map);
 }

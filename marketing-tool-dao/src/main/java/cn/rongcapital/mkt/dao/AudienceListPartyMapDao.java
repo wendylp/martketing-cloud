@@ -13,6 +13,9 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.AudienceListPartyMap;
 
+import java.util.List;
+import java.util.Map;
+
 public interface AudienceListPartyMapDao extends BaseDao<AudienceListPartyMap>{
 	
 	//自定义扩展
@@ -41,4 +44,11 @@ public interface AudienceListPartyMapDao extends BaseDao<AudienceListPartyMap>{
 	 * @return 影响条目
 	 */
 	int updateByListId(AudienceListPartyMap t);
+
+	/***
+	 * 根据人群id更新表
+	 * @param Integer
+	 * @return 影响条目
+	 */
+	List<Map<String,Object>> searchPartyList(Map<String,Object> paramMap);
 }

@@ -130,6 +130,11 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<select id="searchDataMain" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT id,name
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE name like #{name}
+		limit #{size}
+	</select>
 	
 </mapper>

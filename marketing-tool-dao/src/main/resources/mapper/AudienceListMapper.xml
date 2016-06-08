@@ -98,5 +98,11 @@
 		       #{create_time}
 		       )
 	</insert>
-	
+
+	<select id="searchDataMain" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT id,audience_name
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE audience_name like #{name}
+		limit #{size}
+	</select>
 </mapper>
