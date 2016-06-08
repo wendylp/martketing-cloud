@@ -11,6 +11,7 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
 
 @Service
 public class CustomTagDeleteServiceImpl implements CustomTagDeleteService {
@@ -19,9 +20,9 @@ public class CustomTagDeleteServiceImpl implements CustomTagDeleteService {
     private CustomTagDao customTagDao;
 
     @Override
-    public BaseOutput deleteCustomTag(String method, String userToken, Integer tag_id) {
+    public BaseOutput deleteCustomTag(CustomTagDeleteIn body) {
     	Map<String,Object> paramMap = new HashMap<String,Object>();
-        paramMap.put("id",tag_id);
+        paramMap.put("id",body.getTag_id());
         int rowEffected = customTagDao.logicDeleteTagById(paramMap);
     	
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
