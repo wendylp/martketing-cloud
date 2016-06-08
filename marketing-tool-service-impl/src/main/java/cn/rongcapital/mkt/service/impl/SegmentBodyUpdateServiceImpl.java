@@ -17,6 +17,8 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -29,6 +31,7 @@ import cn.rongcapital.mkt.vo.in.SegmentBodyTagsIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 
 @Service
+@Transactional
 public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 
 	@Autowired
@@ -36,6 +39,7 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 
 	@Override
 	@ReadWrite(type = ReadWriteType.WRITE)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public Object segmentBodyUpdate(SegmentBodyUpdateIn body,
 			SecurityContext securityContext) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),

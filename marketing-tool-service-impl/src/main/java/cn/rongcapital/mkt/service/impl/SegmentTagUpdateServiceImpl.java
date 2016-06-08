@@ -20,6 +20,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -34,6 +36,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 
 @Service
+@Transactional
 public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
 	@Autowired
@@ -46,6 +49,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 	CustomTagDao customTagDao;
 
 	@ReadWrite(type = ReadWriteType.WRITE)
+	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public BaseOutput updateSegmentTag(SegmentTagUpdateIn body,
 			SecurityContext securityContext) {
