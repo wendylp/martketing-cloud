@@ -852,7 +852,7 @@ public class MktApi {
 	@GET
 	@Path("mkt.task.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object taskListGet(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput taskListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
 		return taskListGetService.taskListGet();
 	}
@@ -865,7 +865,7 @@ public class MktApi {
 	@POST
 	@Path("mkt.campaign.delete")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignDelete(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput campaignDelete(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
 			@NotNull @QueryParam("campaign_id") Integer campaignId){
 		return campaignDeleteService.campaignDelete(campaignId);
@@ -879,7 +879,7 @@ public class MktApi {
 	@GET
 	@Path("mkt.campaign.summary.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
 		return campaignSummaryGetService.campaignSummaryGet();
 	}
@@ -892,7 +892,7 @@ public class MktApi {
 	@GET
 	@Path("mkt.campaign.progressstatus.count.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken){
 		return campaignProgressStatusCountService.campaignProgressStatusCountGet();
 	}
