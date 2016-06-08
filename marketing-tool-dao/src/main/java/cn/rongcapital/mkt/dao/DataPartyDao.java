@@ -58,11 +58,12 @@ public interface DataPartyDao extends BaseDao<DataParty>{
     
     /**
      * 
-     * @功能简述 : 根据Id获取某条主数据
+     * @功能简述 : 根据主键获取某条主数据
+     * @param id
      * @author zhuxuelong
-     * @return List
+     * @return DataParty
      */
-    public List<DataParty> getDataById(Integer id);
+    public DataParty getDataById(Integer id);
     
     /**
      * mkt.data.filter.audiences.get
