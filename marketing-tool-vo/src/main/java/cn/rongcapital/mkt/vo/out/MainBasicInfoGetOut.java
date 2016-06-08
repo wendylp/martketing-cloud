@@ -23,7 +23,7 @@ public class MainBasicInfoGetOut {
 	
 	private Integer age;
 	
-	private String mobile;
+	private Long mobile;
 	
 	private String email;
 	
@@ -62,11 +62,11 @@ public class MainBasicInfoGetOut {
 		this.age = age;
 	}
 
-	public String getMobile() {
+	public Long getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(String mobile) {
+	public void setMobile(Long mobile) {
 		this.mobile = mobile;
 	}
 
