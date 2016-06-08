@@ -12,12 +12,19 @@ package cn.rongcapital.mkt.vo.in;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class SegmentBodyFilterGroupIn {
 
+	@NotNull
 	private Integer groupIndex;
 
+	@NotEmpty
+	@Valid
 	private List<SegmentBodyTagsIn> tagList;
 
 	@JsonProperty("group_index")

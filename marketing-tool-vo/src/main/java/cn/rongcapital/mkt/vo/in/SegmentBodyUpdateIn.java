@@ -12,6 +12,8 @@ package cn.rongcapital.mkt.vo.in;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -21,6 +23,7 @@ public class SegmentBodyUpdateIn {
 	private String segmentHeadId;
 
 	@NotEmpty
+	@Valid
 	private List<SegmentBodyFilterGroupIn> filterGroups;
 
 	@NotEmpty
