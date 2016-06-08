@@ -10,11 +10,19 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CustomTag;
 
 public interface CustomTagDao extends BaseDao<CustomTag>{
 	
+	/**
+	 * 通过tag_id删除tag
+	 * @param paramMap
+	 * @return list
+	 */
+	int logicDeleteTagById(Map<String, Object> paramMap);
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展

@@ -63,4 +63,13 @@ public interface DataPartyDao extends BaseDao<DataParty>{
      * @return List
      */
     public List<DataParty> getDataById(Integer id);
+    
+    /**
+     * mkt.data.filter.audiences.get
+     * 
+     * @功能简述 : 根据快捷筛选查询某类型的主数据
+     * @author nianjun
+     * @return map
+     */
+    public List<DataParty> selectByTaskId(Map<String, List<String>> paramMap);
 }

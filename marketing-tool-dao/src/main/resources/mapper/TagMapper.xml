@@ -93,7 +93,7 @@
 	
 	<!-- 根据标签组次末层级Id查询标签列表 -->
 	<select id="selectListByParentGroupId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.Tag">
-        SELECT tg.id AS id,tg.name AS name
+        SELECT t.id AS id,t.name AS name
 	     FROM tag t
 	    INNER JOIN tag_group_map tgm
 	       ON t.id = tgm.tag_id
