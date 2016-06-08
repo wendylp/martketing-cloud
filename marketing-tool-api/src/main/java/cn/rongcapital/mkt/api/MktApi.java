@@ -39,8 +39,8 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
-import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.po.TaskRunLog;
+import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
@@ -107,6 +107,7 @@ import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
+import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
@@ -815,17 +816,16 @@ public class MktApi {
 	
 	/**
 	 * @功能描述:删除人群list
-	 * @Param: String user_token, String audience_list_id
+	 * @Param: body
+	 * @param securityContext
 	 * @return: BaseOutput
 	 */
 	@POST
 	@Path("/mkt.audience.list.delete")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput audienceListDel(
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("audience_list_id") Integer audienceListId,
+	public BaseOutput audienceListDel(@Valid AudienceListDeleteIn body,
 	        @Context SecurityContext securityContext){
-		return audienceListDeleteService.audienceListDel(userToken, audienceListId, securityContext);
+		return audienceListDeleteService.audienceListDel(body.getAudienceListId(), securityContext);
 	}
 	
 	/**
