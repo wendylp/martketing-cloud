@@ -1,3 +1,10 @@
+/*************************************************
+ * @功能简述: 获取细分关联的标签
+ * @see MktApi：
+ * @author: 朱学龙
+ * @version: 1.0
+ * @date：2016-06-07
+ *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
 import heracles.data.common.annotation.ReadWrite;
