@@ -36,10 +36,9 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		Integer id = Integer.valueOf(contactId);
-		List<DataParty> partyList = dataPartyDao.getDataById(id);
-		if (partyList != null) {
+		DataParty party = dataPartyDao.getDataById(id);
+		if (party != null) {
 			List<Object> data = new ArrayList<Object>();
-			DataParty party = partyList.get(0);
 			MainBasicInfoGetOut dataVo = new MainBasicInfoGetOut();
 			dataVo.setContactId(id);
 			dataVo.setName(party.getName());
