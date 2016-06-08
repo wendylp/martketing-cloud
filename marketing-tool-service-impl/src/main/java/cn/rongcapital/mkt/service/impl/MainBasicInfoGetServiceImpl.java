@@ -36,13 +36,11 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		Integer id = Integer.valueOf(contactId);
-		DataParty partyExample = new DataParty();
-		partyExample.setId(id);
-		List<DataParty> partyList = dataPartyDao.selectList(partyExample);
-		List<Object> data = new ArrayList<Object>();
-		MainBasicInfoGetOut dataVo = new MainBasicInfoGetOut();
+		List<DataParty> partyList = dataPartyDao.getDataById(id);
 		if (partyList != null) {
+			List<Object> data = new ArrayList<Object>();
 			DataParty party = partyList.get(0);
+			MainBasicInfoGetOut dataVo = new MainBasicInfoGetOut();
 			dataVo.setContactId(id);
 			dataVo.setName(party.getName());
 			dataVo.setGender(party.getGender() == null ? null : (party
@@ -53,8 +51,6 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 					.getMobile().toString());
 			dataVo.setEmail(party.getEmail());
 			dataVo.setAddress(party.getHomeAddress());
-			dataVo.setTagIds("");
-			dataVo.setCampaignIds("");
 			data.add(dataVo);
 			result.setData(data);
 			result.setTotal(data.size());
