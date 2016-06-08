@@ -908,7 +908,7 @@ public class MktApi {
 	@GET
 	@Path("mkt.campaign.progressstatus.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Object campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
+	public BaseOutput campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("publish_status") Integer publishStatus,
 			@QueryParam("campaign_name") String campaignName,
