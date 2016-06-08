@@ -57,6 +57,15 @@ public interface DataPartyDao extends BaseDao<DataParty>{
     public int logicDeleteById(DataParty dataParty);
     
     /**
+     * 
+     * @功能简述 : 根据主键获取某条主数据
+     * @param id
+     * @author zhuxuelong
+     * @return List
+     */
+    public List<DataParty> getDataById(Integer id);
+    
+    /**
      * mkt.data.filter.audiences.get
      * 
      * @功能简述 : 根据快捷筛选查询某类型的主数据

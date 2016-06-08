@@ -1,3 +1,10 @@
+/*************************************************
+ * @功能简述: 增加或修改受众细分关联的标签
+ * @see MktApi：
+ * @author: 朱学龙
+ * @version: 1.0
+ * @date：2016-06-07
+ *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
 import heracles.data.common.annotation.ReadWrite;
@@ -13,6 +20,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -27,6 +36,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 
 @Service
+@Transactional
 public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
 	@Autowired
@@ -39,6 +49,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 	CustomTagDao customTagDao;
 
 	@ReadWrite(type = ReadWriteType.WRITE)
+	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public BaseOutput updateSegmentTag(SegmentTagUpdateIn body,
 			SecurityContext securityContext) {
