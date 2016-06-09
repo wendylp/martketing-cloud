@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.rongcapital.mkt.dao.CampaignDecisionTagDao">
+<mapper namespace="cn.rongcapital.mkt.dao.CampaignNodeItemDao">
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,item_id as itemId,campaign_head_id as campaignHeadId,name as name,rule as rule,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,ptype as ptype,type as type,name as name,code as code,icon as icon,display_index as displayIndex,url as url,color as color,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM campaign_decision_tag]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM campaign_node_item]]></sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="itemId != null"><![CDATA[ AND item_id = #{itemId}]]></if>
-		    	<if test="campaignHeadId != null"><![CDATA[ AND campaign_head_id = #{campaignHeadId}]]></if>
+		    	<if test="ptype != null"><![CDATA[ AND ptype = #{ptype}]]></if>
+		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
 		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="rule != null"><![CDATA[ AND rule = #{rule}]]></if>
+		    	<if test="code != null"><![CDATA[ AND code = #{code}]]></if>
+		    	<if test="icon != null"><![CDATA[ AND icon = #{icon}]]></if>
+		    	<if test="displayIndex != null"><![CDATA[ AND display_index = #{displayIndex}]]></if>
+		    	<if test="url != null"><![CDATA[ AND url = #{url}]]></if>
+		    	<if test="color != null"><![CDATA[ AND color = #{color}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
@@ -34,10 +38,14 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
-		    	<if test="itemId != null"><![CDATA[item_id = #{itemId},]]></if>
-		    	<if test="campaignHeadId != null"><![CDATA[campaign_head_id = #{campaignHeadId},]]></if>
+		    	<if test="ptype != null"><![CDATA[ptype = #{ptype},]]></if>
+		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
-		    	<if test="rule != null"><![CDATA[rule = #{rule},]]></if>
+		    	<if test="code != null"><![CDATA[code = #{code},]]></if>
+		    	<if test="icon != null"><![CDATA[icon = #{icon},]]></if>
+		    	<if test="displayIndex != null"><![CDATA[display_index = #{displayIndex},]]></if>
+		    	<if test="url != null"><![CDATA[url = #{url},]]></if>
+		    	<if test="color != null"><![CDATA[color = #{color},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="createTime != null"><![CDATA[create_time = #{createTime},]]></if>
 		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
@@ -45,19 +53,22 @@
 	</sql>
 
 	<!-- 插入action记录 -->
-	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignDecisionTag" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignNodeItem" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_decision_tag (id,item_id,campaign_head_id,name,rule,status,create_time,update_time)
+			INSERT INTO campaign_node_item (id,ptype,type,name,code,icon,display_index,url,color,status,create_time,update_time)
 			VALUES
 			(
 			  #{id},
-			  #{itemId},
-			  #{campaignHeadId},
+			  #{ptype},
+			  #{type},
 			  #{name},
-			  #{rule},
+			  #{code},
+			  #{icon},
+			  #{displayIndex},
+			  #{url},
+			  #{color},
 			  #{status},
-			  now(),
-
+			  #{createTime},
 			  #{updateTime}
 			)
 		]]>
@@ -67,14 +78,14 @@
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
 	<!-- 修改记录通过主键 -->
-	<update id="updateById" parameterType="cn.rongcapital.mkt.po.CampaignDecisionTag">
-		<![CDATA[UPDATE campaign_decision_tag]]>
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.CampaignNodeItem">
+		<![CDATA[UPDATE campaign_node_item]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.CampaignDecisionTag" resultType="cn.rongcapital.mkt.po.CampaignDecisionTag">
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.CampaignNodeItem" resultType="cn.rongcapital.mkt.po.CampaignNodeItem">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -85,7 +96,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectList" parameterType="cn.rongcapital.mkt.po.CampaignDecisionTag" resultType="cn.rongcapital.mkt.po.CampaignDecisionTag">
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.CampaignNodeItem" resultType="cn.rongcapital.mkt.po.CampaignNodeItem">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -94,7 +105,7 @@
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.CampaignDecisionTag" resultType="int">
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.CampaignNodeItem" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>

@@ -18,6 +18,8 @@ public class CampaignDecisionPrvtFriendsIn {
     private String prvtName;
 
     private String groupName;
+    
+    private int groupId;//TO DO
 
     private Integer refreshInterval;
 
@@ -103,4 +105,14 @@ public class CampaignDecisionPrvtFriendsIn {
     public void setRefreshIntervalType(Byte refreshIntervalType) {
         this.refreshIntervalType = refreshIntervalType;
     }
+
+    @JsonProperty("group_id")
+	public int getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
+	}
+    
 }

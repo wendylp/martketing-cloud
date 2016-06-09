@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,campaign_head_id as campaignHeadId,item_id as itemId,type as type,color as color,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,campaign_head_id as campaignHeadId,item_id as itemId,type as type,draw_type as drawType,color as color,next_item_id as nextItemId,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -17,7 +17,9 @@
 		    	<if test="campaignHeadId != null and campaignHeadId != ''"><![CDATA[ AND campaign_head_id = #{campaignHeadId}]]></if>
 		    	<if test="itemId != null and itemId != ''"><![CDATA[ AND item_id = #{itemId}]]></if>
 		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
+		    	<if test="drawType != null and drawType != ''"><![CDATA[ AND draw_type = #{drawType}]]></if>
 		    	<if test="color != null and color != ''"><![CDATA[ AND color = #{color}]]></if>
+		    	<if test="nextItemId != null and nextItemId != ''"><![CDATA[ AND next_item_id = #{nextItemId}]]></if>
 		    	<if test="status != null and status != ''"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null and createTime != ''"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null and updateTime != ''"><![CDATA[ AND update_time = #{updateTime}]]></if>
@@ -37,7 +39,9 @@
 		    	<if test="campaignHeadId != null"><![CDATA[campaign_head_id = #{campaignHeadId},]]></if>
 		    	<if test="itemId != null"><![CDATA[item_id = #{itemId},]]></if>
 		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
+		    	<if test="drawType != null"><![CDATA[draw_type = #{drawType},]]></if>
 		    	<if test="color != null"><![CDATA[color = #{color},]]></if>
+		    	<if test="nextItemId != null"><![CDATA[next_item_id = #{nextItemId},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="createTime != null"><![CDATA[create_time = #{createTime},]]></if>
 		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
@@ -47,14 +51,16 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignSwitch" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_switch (id,campaign_head_id,item_id,type,color,status,create_time,update_time)
+			INSERT INTO campaign_switch (id,campaign_head_id,item_id,type,draw_type,color,next_item_id,status,create_time,update_time)
 			VALUES
 			(
 			  #{id},
 			  #{campaignHeadId},
 			  #{itemId},
 			  #{type},
+			  #{drawType},
 			  #{color},
+			  #{nextItemId},
 			  #{status},
 			  #{createTime},
 			  #{updateTime}

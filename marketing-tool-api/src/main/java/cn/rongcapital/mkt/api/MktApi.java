@@ -47,6 +47,7 @@ import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.service.CampaignDeleteService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
+import cn.rongcapital.mkt.service.CampaignNodeItemListGetService;
 import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
 import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
 import cn.rongcapital.mkt.service.CampaignSummaryGetService;
@@ -122,6 +123,8 @@ import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
+import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
+import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -247,6 +250,8 @@ public class MktApi {
 	private MainBasicInfoGetService mainBasicInfoGetService;
 	@Autowired
 	private TaggroupSystemMenulistGetService taggroupSystemMenulistGetService;
+	@Autowired
+	private CampaignNodeItemListGetService campaignNodeItemListGetService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -321,17 +326,30 @@ public class MktApi {
 										  @NotEmpty @QueryParam("ver") String ver){
 		return getImgtextCountService.getImgtextAssetCount();
 	}
+	
+        /**
+	 * @功能简述: 获取活动编排页面左侧的节点和子节点列表
+	 * @param: SegmentHeadIn body, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.campaign.nodeitem.list.get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public CampaignNodeItemListOut campaignBodyGet(@NotEmpty @QueryParam("user_token") String userToken,
+								  @NotEmpty @QueryParam("ver") String ver) {
+	    return campaignNodeItemListGetService.campaignNodeItemListGet(userToken, ver);
+	}
 
 	/**
-	 * @功能简述: 创建campaign body
+	 * @功能简述: 创建/编辑campaign body
 	 * @param: SegmentHeadIn body, SecurityContext securityContext,Integer campaignHeadId 
 	 * @return: Object
 	 */
 	@POST
-	@Path("/mkt.campaign.body.create")
+	@Path("/mkt.campaign.body.update")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public CampaignBodyCreateOut campaignBodyCreate(@Valid CampaignBodyCreateIn body, @Context SecurityContext securityContext) {
-	    return campaignBodyCreateService.campaignBodyCreate(body, securityContext);
+		return campaignBodyCreateService.campaignBodyCreate(body, securityContext);
 	}
 	
 	/**
@@ -342,7 +360,7 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.body.get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object campaignBodyGet(@NotEmpty @QueryParam("user_token") String userToken,
+	public CampaignBodyGetOut campaignBodyGet(@NotEmpty @QueryParam("user_token") String userToken,
 								  @NotEmpty @QueryParam("ver") String ver,
 								  @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
 	    return campaignBodyGetService.campaignBodyGet(userToken, ver, campaignHeadId);

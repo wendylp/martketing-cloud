@@ -15,11 +15,7 @@ public class CampaignBody extends BaseQuery {
 
     private String itemId;
 
-    private Byte nextNodeType;
-
-    private Byte nextItemType;
-
-    private String nextItemId;
+//    private String switchItemIds;
 
     private String statisticsUrl;
 
@@ -75,29 +71,13 @@ public class CampaignBody extends BaseQuery {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
-    public Byte getNextNodeType() {
-        return nextNodeType;
-    }
-
-    public void setNextNodeType(Byte nextNodeType) {
-        this.nextNodeType = nextNodeType;
-    }
-
-    public Byte getNextItemType() {
-        return nextItemType;
-    }
-
-    public void setNextItemType(Byte nextItemType) {
-        this.nextItemType = nextItemType;
-    }
-
-    public String getNextItemId() {
-        return nextItemId;
-    }
-
-    public void setNextItemId(String nextItemId) {
-        this.nextItemId = nextItemId == null ? null : nextItemId.trim();
-    }
+//    public String getSwitchItemIds() {
+//        return switchItemIds;
+//    }
+//
+//    public void setSwitchItemIds(String switchItemIds) {
+//        this.switchItemIds = switchItemIds == null ? null : switchItemIds.trim();
+//    }
 
     public String getStatisticsUrl() {
         return statisticsUrl;

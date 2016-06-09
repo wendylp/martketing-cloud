@@ -1,47 +1,39 @@
 package cn.rongcapital.mkt.vo.out;
 
-public class CampaignSwitchOut {
+import org.codehaus.jackson.annotate.JsonProperty;
 
-	private int id;
+public class CampaignSwitchOut {
 	
-	private int campaignHeadId;
-	
-	private String itemId;
-	
-	private byte type;//分支类型,0:curveTriangle
-	
-	private String color;
-	
-	public int getId() {
-		return id;
+    private String nextItemId;
+    
+    private Byte drawType;//0:curveTriangle
+
+    private String color;
+
+    @JsonProperty("next_item_id")
+    public String getNextItemId() {
+		return nextItemId;
 	}
-	public void setId(int id) {
-		this.id = id;
+
+	public void setNextItemId(String nextItemId) {
+		this.nextItemId = nextItemId;
 	}
-	public int getCampaignHeadId() {
-		return campaignHeadId;
+
+	@JsonProperty("draw_type")
+	public Byte getDrawType() {
+		return drawType;
 	}
-	public void setCampaignHeadId(int campaignHeadId) {
-		this.campaignHeadId = campaignHeadId;
+
+	public void setDrawType(Byte drawType) {
+		this.drawType = drawType;
 	}
-	public String getItemId() {
-		return itemId;
-	}
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
-	}
-	public byte getType() {
-		return type;
-	}
-	public void setType(byte type) {
-		this.type = type;
-	}
-	public String getColor() {
-		return color;
-	}
-	public void setColor(String color) {
-		this.color = color;
-	}
-	
-	
+
+	@JsonProperty("color")
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color == null ? null : color.trim();
+    }
 }

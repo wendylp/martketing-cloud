@@ -1,6 +1,8 @@
 package cn.rongcapital.mkt.vo.in;
 
 
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignActionSetTagIn {
@@ -13,9 +15,7 @@ public class CampaignActionSetTagIn {
 
     private String name;
 
-    private String tagIds;
-
-    private String tagNames;
+    private List<String> tagNames;
 
     @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
@@ -53,21 +53,13 @@ public class CampaignActionSetTagIn {
         this.name = name == null ? null : name.trim();
     }
 
-    @JsonProperty("tag_ids")
-    public String getTagIds() {
-        return tagIds;
-    }
-
-    public void setTagIds(String tagIds) {
-        this.tagIds = tagIds == null ? null : tagIds.trim();
-    }
-
     @JsonProperty("tag_names")
-    public String getTagNames() {
-        return tagNames;
-    }
+	public List<String> getTagNames() {
+		return tagNames;
+	}
 
-    public void setTagNames(String tagNames) {
-        this.tagNames = tagNames == null ? null : tagNames.trim();
-    }
+	public void setTagNames(List<String> tagNames) {
+		this.tagNames = tagNames;
+	}
+    
 }

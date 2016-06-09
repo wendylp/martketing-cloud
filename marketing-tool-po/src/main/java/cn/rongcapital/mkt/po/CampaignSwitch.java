@@ -5,6 +5,7 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
 
 public class CampaignSwitch extends BaseQuery {
+	
     private Integer id;
 
     private Integer campaignHeadId;
@@ -13,7 +14,11 @@ public class CampaignSwitch extends BaseQuery {
 
     private Byte type;
 
+    private Byte drawType;
+
     private String color;
+
+    private String nextItemId;
 
     private Byte status;
 
@@ -53,12 +58,28 @@ public class CampaignSwitch extends BaseQuery {
         this.type = type;
     }
 
+    public Byte getDrawType() {
+        return drawType;
+    }
+
+    public void setDrawType(Byte drawType) {
+        this.drawType = drawType;
+    }
+
     public String getColor() {
         return color;
     }
 
     public void setColor(String color) {
         this.color = color == null ? null : color.trim();
+    }
+
+    public String getNextItemId() {
+        return nextItemId;
+    }
+
+    public void setNextItemId(String nextItemId) {
+        this.nextItemId = nextItemId == null ? null : nextItemId.trim();
     }
 
     public Byte getStatus() {

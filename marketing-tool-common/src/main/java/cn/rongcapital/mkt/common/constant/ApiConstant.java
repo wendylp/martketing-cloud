@@ -39,4 +39,7 @@ public class ApiConstant {
 	public static final byte TAG_TYPE_SEGMENT = 0;// 细分
 	public static final byte TAG_TYPE_ACTIVITY = 1;// 活动
 	public static final byte TAG_TYPE_CONTACT = 2;// 联系人
+
+	public static final byte CAMPAIGN_SWITCH_SWITCH = 0;//判断类型
+	public static final byte CAMPAIGN_SWITCH_ENDS = 1;//多分支类型
 }

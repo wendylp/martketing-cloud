@@ -30,4 +30,20 @@ public class DateUtil {
         }
         return result;
     }
+    
+    /**
+     * 将时间转化为字符串
+     * 
+     * @param dateString
+     * @param format
+     * @return
+     */
+    public static String getStringFromDate(Date date, String format) {
+        if (null == date) {
+            return "";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        String result = sdf.format(date);
+        return result;
+    }
 }

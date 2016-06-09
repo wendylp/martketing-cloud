@@ -13,10 +13,6 @@ public class CampaignActionSetTag extends BaseQuery {
 
     private String name;
 
-    private String tagIds;
-
-    private String tagNames;
-
     private Byte status;
 
     private Date createTime;
@@ -53,22 +49,6 @@ public class CampaignActionSetTag extends BaseQuery {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
-    }
-
-    public String getTagIds() {
-        return tagIds;
-    }
-
-    public void setTagIds(String tagIds) {
-        this.tagIds = tagIds == null ? null : tagIds.trim();
-    }
-
-    public String getTagNames() {
-        return tagNames;
-    }
-
-    public void setTagNames(String tagNames) {
-        this.tagNames = tagNames == null ? null : tagNames.trim();
     }
 
     public Byte getStatus() {

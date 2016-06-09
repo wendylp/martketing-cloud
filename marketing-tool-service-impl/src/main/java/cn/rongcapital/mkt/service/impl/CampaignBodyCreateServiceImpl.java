@@ -1,7 +1,11 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.core.SecurityContext;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +29,7 @@ import cn.rongcapital.mkt.dao.CampaignDecisionWechatForwardDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatReadDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatSentDao;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
+import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
 import cn.rongcapital.mkt.po.AudienceList;
 import cn.rongcapital.mkt.po.CampaignActionSaveAudience;
@@ -42,6 +47,7 @@ import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatForward;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatRead;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatSent;
+import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.vo.in.CampaignActionSaveAudienceIn;
@@ -59,6 +65,8 @@ import cn.rongcapital.mkt.vo.in.CampaignDecisionTagIn;
 import cn.rongcapital.mkt.vo.in.CampaignDecisionWechatForwardIn;
 import cn.rongcapital.mkt.vo.in.CampaignDecisionWechatReadIn;
 import cn.rongcapital.mkt.vo.in.CampaignDecisionWechatSentIn;
+import cn.rongcapital.mkt.vo.in.CampaignNodeChainIn;
+import cn.rongcapital.mkt.vo.in.CampaignSwitchIn;
 import cn.rongcapital.mkt.vo.in.CampaignTriggerTimerIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 
@@ -103,111 +111,163 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	CampaignDecisionWechatSentDao campaignDecisionWechatSentDao;
 	@Autowired
 	AudienceListDao audienceListDao;
-
+	@Autowired
+	CampaignSwitchDao campaignSwitchDao;
+	
+	private static final ObjectMapper jacksonObjectMapper = new ObjectMapper();
+	
 	@Override
 	public CampaignBodyCreateOut campaignBodyCreate(CampaignBodyCreateIn body, SecurityContext securityContext) {
-		CampaignBody campaignBody = initCampaignBody(body);
-		if(body.getCampaignNodeChain().getNodeType() == 0){
-			switch (body.getCampaignNodeChain().getItemType()) {
-			case 0://定时触发
-				CampaignTriggerTimer campaignTriggerTimer = initCampaignTriggerTimer(body);
-				campaignTriggerTimerDao.insert(campaignTriggerTimer);
-				break;
-			}
-		}
-		if(body.getCampaignNodeChain().getNodeType() == 1){
-			switch (body.getCampaignNodeChain().getItemType()) {
-			case 0://目标人群
-				CampaignAudienceTarget campaignAudienceTarget = initCampaignAudienceTarget(body);
-				CampaignAudienceTargetDao.insert(campaignAudienceTarget);
-				break;
-			}
-		}
-		if(body.getCampaignNodeChain().getNodeType() == 2){
-			switch (body.getCampaignNodeChain().getItemType()) {
-			case 0://联系人属性比较
-				CampaignDecisionPropCompare campaignDecisionPropCompare = initCampaignDecisionPropCompare(body);
-				campaignDecisionPropCompareDao.insert(campaignDecisionPropCompare);
-				break;
-			case 1://微信图文是否发送
-				CampaignDecisionWechatSent campaignDecisionWechatSent = initCampaignDecisionWechatSent(body);
-				campaignDecisionWechatSentDao.insert(campaignDecisionWechatSent);
-				break;
-			case 2://微信图文是否查看
-				CampaignDecisionWechatRead campaignDecisionWechatRead = initCampaignDecisionWechatRead(body);
-				campaignDecisionWechatReadDao.insert(campaignDecisionWechatRead);
-				break;
-			case 3://微信图文是否转发
-				CampaignDecisionWechatForward campaignDecisionWechatForward = initCampaignDecisionWechatForward(body);
-				campaignDecisionWechatForwardDao.insert(campaignDecisionWechatForward);
-				break;
-			case 4://是否订阅公众号
-				CampaignDecisionPubFans campaignDecisionPubFans = initCampaignDecisionPubFans(body);
-				campaignDecisionPubFansDao.insert(campaignDecisionPubFans);
-				break;
-			case 5://是否个人号好友
-				CampaignDecisionPrvtFriends campaignDecisionPrvtFriends = initCampaignDecisionPrvtFriends(body);
-				campaignDecisionPrvtFriendsDao.insert(campaignDecisionPrvtFriends);
-				break;
-			case 6://标签判断
-				CampaignDecisionTag campaignDecisionTag = initCampaignDecisionTag(body);
-				campaignDecisionTagDao.insert(campaignDecisionTag);
-				break;
-	        }
-		}
-		if(body.getCampaignNodeChain().getNodeType() == 3){
-			switch (body.getCampaignNodeChain().getItemType()) {
-			case 0://等待
-				CampaignActionWait campaignActionWait = initCampaignActionWait(body);
-				campaignActionWaitDao.insert(campaignActionWait);
-				break;
-			case 1://保存当前人群
-				CampaignActionSaveAudience campaignActionSaveAudience = initCampaignActionSaveAudience(body);
-				//如果audience_id参数为空,则在audience_list表增加1条记录
-				if(campaignActionSaveAudience.getAudienceId() == null){
-					AudienceList audienceList = new AudienceList();
-					audienceList.setAudienceName(campaignActionSaveAudience.getName());
-					audienceListDao.insert(audienceList);
-				} else {
-					//TO DO:检查audience_list表里是否存在audience_id的记录?
+		int campaignHeadId = body.getCampaignHeadId();
+		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
+			List<CampaignSwitch> campaignSwitchList = initCampaignSwitchList(campaignNodeChainIn,campaignHeadId);
+			List<CampaignSwitch> campaignEndsList = initCampaignEndsList(campaignNodeChainIn,campaignHeadId);
+			if(null != campaignSwitchList && campaignSwitchList.size() > 0) {
+				for(CampaignSwitch c:campaignSwitchList) {
+					campaignSwitchDao.insert(c);
 				}
-				campaignActionSaveAudienceDao.insert(campaignActionSaveAudience);
-				break;
-			case 2://设置标签
-				CampaignActionSetTag campaignActionSetTag = initCampaignActionSetTag(body);
-				campaignActionSetTagDao.insert(campaignActionSetTag);
-				break;
-			case 3://添加到其它活动
-				break;
-			case 4://转移到其它活动
-				break;
-			case 5://发送微信图文
-				CampaignActionSendPub campaignActionSendPub = initCampaignActionSendPub(body);
-				campaignActionSendPubDao.insert(campaignActionSendPub);
-				break;
-			case 6://发送H5图文
-				CampaignActionSendH5 campaignActionSendH5 = initCampaignActionSendH5(body);
-				campaignActionSendH5Dao.insert(campaignActionSendH5);
-				break;
-			case 7://发送个人号消息
-				CampaignActionSendPrivt campaignActionSendPrivt = initCampaignActionSendPrivt(body);
-				campaignActionSendPrivtDao.insert(campaignActionSendPrivt);
-				break;
-	        }
+			} else if(null != campaignEndsList && campaignEndsList.size() > 0) {
+				for(CampaignSwitch c:campaignEndsList) {
+					campaignSwitchDao.insert(c);
+				}
+			}
+			if(campaignNodeChainIn.getNodeType() == 0){
+				switch (campaignNodeChainIn.getItemType()) {
+				case 0://定时触发
+					CampaignTriggerTimer campaignTriggerTimer = initCampaignTriggerTimer(campaignNodeChainIn,campaignHeadId);
+					campaignTriggerTimerDao.insert(campaignTriggerTimer);
+					break;
+				}
+			}
+			if(campaignNodeChainIn.getNodeType() == 1){
+				switch (campaignNodeChainIn.getItemType()) {
+				case 0://目标人群
+					CampaignAudienceTarget campaignAudienceTarget = initCampaignAudienceTarget(campaignNodeChainIn,campaignHeadId);
+					CampaignAudienceTargetDao.insert(campaignAudienceTarget);
+					break;
+				}
+			}
+			if(campaignNodeChainIn.getNodeType() == 2){
+				switch (campaignNodeChainIn.getItemType()) {
+				case 0://联系人属性比较
+					CampaignDecisionPropCompare campaignDecisionPropCompare = initCampaignDecisionPropCompare(campaignNodeChainIn,campaignHeadId);
+					campaignDecisionPropCompareDao.insert(campaignDecisionPropCompare);
+					break;
+				case 1://微信图文是否发送
+					CampaignDecisionWechatSent campaignDecisionWechatSent = initCampaignDecisionWechatSent(campaignNodeChainIn,campaignHeadId);
+					campaignDecisionWechatSentDao.insert(campaignDecisionWechatSent);
+					break;
+				case 2://微信图文是否查看
+					CampaignDecisionWechatRead campaignDecisionWechatRead = initCampaignDecisionWechatRead(campaignNodeChainIn,campaignHeadId);
+					campaignDecisionWechatReadDao.insert(campaignDecisionWechatRead);
+					break;
+				case 3://微信图文是否转发
+					CampaignDecisionWechatForward campaignDecisionWechatForward = initCampaignDecisionWechatForward(campaignNodeChainIn,campaignHeadId);
+					campaignDecisionWechatForwardDao.insert(campaignDecisionWechatForward);
+					break;
+				case 4://是否订阅公众号
+					CampaignDecisionPubFans campaignDecisionPubFans = initCampaignDecisionPubFans(campaignNodeChainIn,campaignHeadId);
+					campaignDecisionPubFansDao.insert(campaignDecisionPubFans);
+					break;
+				case 5://是否个人号好友
+					CampaignDecisionPrvtFriends campaignDecisionPrvtFriends = initCampaignDecisionPrvtFriends(campaignNodeChainIn,campaignHeadId);
+					campaignDecisionPrvtFriendsDao.insert(campaignDecisionPrvtFriends);
+					break;
+				case 6://标签判断
+					CampaignDecisionTag campaignDecisionTag = initCampaignDecisionTag(campaignNodeChainIn,campaignHeadId);
+					campaignDecisionTagDao.insert(campaignDecisionTag);
+					break;
+				}
+			}
+			if(campaignNodeChainIn.getNodeType() == 3){
+				switch (campaignNodeChainIn.getItemType()) {
+				case 0://等待
+					CampaignActionWait campaignActionWait = initCampaignActionWait(campaignNodeChainIn,campaignHeadId);
+					campaignActionWaitDao.insert(campaignActionWait);
+					break;
+				case 1://保存当前人群
+					CampaignActionSaveAudience campaignActionSaveAudience = initCampaignActionSaveAudience(campaignNodeChainIn,campaignHeadId);
+					//如果audience_id参数为空,则在audience_list表增加1条记录
+					if(campaignActionSaveAudience.getAudienceId() == null){
+						AudienceList audienceList = new AudienceList();
+						audienceList.setAudienceName(campaignActionSaveAudience.getName());
+						audienceListDao.insert(audienceList);
+					} else {
+						//TO DO:检查audience_list表里是否存在audience_id的记录?
+					}
+					campaignActionSaveAudienceDao.insert(campaignActionSaveAudience);
+					break;
+				case 2://设置标签
+					CampaignActionSetTag campaignActionSetTag = initCampaignActionSetTag(campaignNodeChainIn,campaignHeadId);
+					campaignActionSetTagDao.insert(campaignActionSetTag);
+					break;
+				case 3://添加到其它活动
+					break;
+				case 4://转移到其它活动
+					break;
+				case 5://发送微信图文
+					CampaignActionSendPub campaignActionSendPub = initCampaignActionSendPub(campaignNodeChainIn,campaignHeadId);
+					campaignActionSendPubDao.insert(campaignActionSendPub);
+					break;
+				case 6://发送H5图文
+					CampaignActionSendH5 campaignActionSendH5 = initCampaignActionSendH5(campaignNodeChainIn,campaignHeadId);
+					campaignActionSendH5Dao.insert(campaignActionSendH5);
+					break;
+				case 7://发送个人号消息
+					CampaignActionSendPrivt campaignActionSendPrivt = initCampaignActionSendPrivt(campaignNodeChainIn,campaignHeadId);
+					campaignActionSendPrivtDao.insert(campaignActionSendPrivt);
+					break;
+				}
+			}
+			CampaignBody campaignBody = initCampaignBody(campaignNodeChainIn,campaignHeadId);
+			campaignBodyDao.insert(campaignBody);
 		}
-		campaignBodyDao.insert(campaignBody);
 		CampaignBodyCreateOut out = new CampaignBodyCreateOut(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 		return out;
 	}
 
-	private CampaignActionSendPrivt initCampaignActionSendPrivt(CampaignBodyCreateIn body) {
+	private List<CampaignSwitch> initCampaignSwitchList(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		List<CampaignSwitchIn> campaignSwitchInList = campaignNodeChainIn.getCampaignSwitchList();
+		List<CampaignSwitch> campaignSwitchList = new ArrayList<CampaignSwitch>();
+		if(null != campaignSwitchInList && campaignSwitchInList.size() > 0) {
+			for(CampaignSwitchIn campaignSwitchIn:campaignSwitchInList){
+				CampaignSwitch campaignSwitch = new CampaignSwitch();
+				campaignSwitch.setCampaignHeadId(campaignHeadId);
+				campaignSwitch.setItemId(campaignNodeChainIn.getItemId());
+				campaignSwitch.setColor(campaignSwitchIn.getColor());
+				campaignSwitch.setNextItemId(campaignSwitchIn.getNextItemId());
+				campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH);
+				campaignSwitch.setDrawType(campaignSwitchIn.getDrawType());
+				campaignSwitchList.add(campaignSwitch);
+			}
+		}
+		return campaignSwitchList;
+	}
+	
+	private List<CampaignSwitch> initCampaignEndsList(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		List<CampaignSwitchIn> campaignEndsInList = campaignNodeChainIn.getCampaignEndsList();
+		List<CampaignSwitch> campaignSwitchList = new ArrayList<CampaignSwitch>();
+		if(null != campaignEndsInList && campaignEndsInList.size() > 0) {
+			for(CampaignSwitchIn campaignSwitchIn:campaignEndsInList){
+				CampaignSwitch campaignSwitch = new CampaignSwitch();
+				campaignSwitch.setCampaignHeadId(campaignHeadId);
+				campaignSwitch.setItemId(campaignNodeChainIn.getItemId());
+				campaignSwitch.setColor(campaignSwitchIn.getColor());
+				campaignSwitch.setNextItemId(campaignSwitchIn.getNextItemId());
+				campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_ENDS);
+				campaignSwitch.setDrawType(campaignSwitchIn.getDrawType());
+				campaignSwitchList.add(campaignSwitch);
+			}
+		}
+		return campaignSwitchList;
+	}
+	
+	private CampaignActionSendPrivt initCampaignActionSendPrivt(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionSendPrivt campaignActionSendPrivt = new CampaignActionSendPrivt();
-		CampaignActionSendPrivtIn campaignActionSendPrivtIn = (CampaignActionSendPrivtIn)body.getCampaignNodeChain().getInfo();
+		CampaignActionSendPrivtIn campaignActionSendPrivtIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendPrivtIn.class);
 		campaignActionSendPrivt.setName(campaignActionSendPrivtIn.getName());
-		campaignActionSendPrivt.setItemId(campaignActionSendPrivtIn.getItemId());
-		campaignActionSendPrivt.setCampaignHeadId(campaignActionSendPrivtIn.getCampaignHeadId());
-		campaignActionSendPrivt.setWechatH5Id(campaignActionSendPrivtIn.getWechatH5Id());
-		campaignActionSendPrivt.setWechatH5Name(campaignActionSendPrivtIn.getWechatH5Name());
+		campaignActionSendPrivt.setItemId(campaignNodeChainIn.getItemId());
+		campaignActionSendPrivt.setCampaignHeadId(campaignHeadId);
 		campaignActionSendPrivt.setPrvtId(campaignActionSendPrivtIn.getPrvtId());
 		campaignActionSendPrivt.setPrvtName(campaignActionSendPrivtIn.getPrvtName());
 		campaignActionSendPrivt.setPrvtGroupName(campaignActionSendPrivtIn.getPrvtGroupName());
@@ -215,12 +275,12 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return campaignActionSendPrivt;
 	}
 	
-	private CampaignActionSendH5 initCampaignActionSendH5(CampaignBodyCreateIn body) {
+	private CampaignActionSendH5 initCampaignActionSendH5(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionSendH5 campaignActionSendH5 = new CampaignActionSendH5();
-		CampaignActionSendH5In campaignActionSendH5In = (CampaignActionSendH5In)body.getCampaignNodeChain().getInfo();
+		CampaignActionSendH5In campaignActionSendH5In = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendH5In.class);
 		campaignActionSendH5.setName(campaignActionSendH5In.getName());
-		campaignActionSendH5.setItemId(campaignActionSendH5In.getItemId());
-		campaignActionSendH5.setCampaignHeadId(campaignActionSendH5In.getCampaignHeadId());
+		campaignActionSendH5.setItemId(campaignNodeChainIn.getItemId());
+		campaignActionSendH5.setCampaignHeadId(campaignHeadId);
 		campaignActionSendH5.setWechatH5Id(campaignActionSendH5In.getWechatH5Id());
 		campaignActionSendH5.setWechatH5Name(campaignActionSendH5In.getWechatH5Name());
 		campaignActionSendH5.setPubId(campaignActionSendH5In.getPubId());
@@ -231,12 +291,12 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return campaignActionSendH5;
 	}
 	
-	private CampaignActionSendPub initCampaignActionSendPub(CampaignBodyCreateIn body) {
+	private CampaignActionSendPub initCampaignActionSendPub(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionSendPub campaignActionSendPub = new CampaignActionSendPub();
-		CampaignActionSendPubIn campaignActionSendPubIn = (CampaignActionSendPubIn)body.getCampaignNodeChain().getInfo();
+		CampaignActionSendPubIn campaignActionSendPubIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendPubIn.class);
 		campaignActionSendPub.setName(campaignActionSendPubIn.getName());
-		campaignActionSendPub.setItemId(campaignActionSendPubIn.getItemId());
-		campaignActionSendPub.setCampaignHeadId(campaignActionSendPubIn.getCampaignHeadId());
+		campaignActionSendPub.setItemId(campaignNodeChainIn.getItemId());
+		campaignActionSendPub.setCampaignHeadId(campaignHeadId);
 		campaignActionSendPub.setWechatH5Id(campaignActionSendPubIn.getWechatH5Id());
 		campaignActionSendPub.setWechatH5Name(campaignActionSendPubIn.getWechatH5Name());
 		campaignActionSendPub.setPubId(campaignActionSendPubIn.getPubId());
@@ -244,34 +304,34 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return campaignActionSendPub;
 	}
 	
-	private CampaignActionSetTag initCampaignActionSetTag(CampaignBodyCreateIn body) {
+	private CampaignActionSetTag initCampaignActionSetTag(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionSetTag campaignActionSetTag = new CampaignActionSetTag();
-		CampaignActionSetTagIn campaignActionSetTagIn = (CampaignActionSetTagIn)body.getCampaignNodeChain().getInfo();
+		CampaignActionSetTagIn campaignActionSetTagIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSetTagIn.class);
 		campaignActionSetTag.setName(campaignActionSetTagIn.getName());
-		campaignActionSetTag.setItemId(campaignActionSetTagIn.getItemId());
-		campaignActionSetTag.setCampaignHeadId(campaignActionSetTagIn.getCampaignHeadId());
-		campaignActionSetTag.setTagIds(campaignActionSetTagIn.getTagIds());
-		campaignActionSetTag.setTagNames(campaignActionSetTagIn.getTagNames());
+		campaignActionSetTag.setItemId(campaignNodeChainIn.getItemId());
+		campaignActionSetTag.setCampaignHeadId(campaignHeadId);
+//		campaignActionSetTag.setTagIds(campaignActionSetTagIn.getTagIds());//TO DO:关联关系写入到custom_tag_map表
+//		campaignActionSetTag.setTagNames(campaignActionSetTagIn.getTagNames());
 		return campaignActionSetTag;
 	}
 	
-	private CampaignActionSaveAudience initCampaignActionSaveAudience(CampaignBodyCreateIn body) {
+	private CampaignActionSaveAudience initCampaignActionSaveAudience(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionSaveAudience campaignActionSaveAudience = new CampaignActionSaveAudience();
-		CampaignActionSaveAudienceIn campaignActionSaveAudienceIn = (CampaignActionSaveAudienceIn)body.getCampaignNodeChain().getInfo();
+		CampaignActionSaveAudienceIn campaignActionSaveAudienceIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSaveAudienceIn.class);
 		campaignActionSaveAudience.setName(campaignActionSaveAudienceIn.getName());
-		campaignActionSaveAudience.setItemId(campaignActionSaveAudienceIn.getItemId());
-		campaignActionSaveAudience.setCampaignHeadId(campaignActionSaveAudienceIn.getCampaignHeadId());
+		campaignActionSaveAudience.setItemId(campaignNodeChainIn.getItemId());
+		campaignActionSaveAudience.setCampaignHeadId(campaignHeadId);
 		campaignActionSaveAudience.setAudienceId(campaignActionSaveAudienceIn.getAudienceId());
 		campaignActionSaveAudience.setAudienceName(campaignActionSaveAudienceIn.getAudienceName());
 		return campaignActionSaveAudience;
 	}
 	
-	private CampaignActionWait initCampaignActionWait(CampaignBodyCreateIn body) {
+	private CampaignActionWait initCampaignActionWait(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionWait campaignActionWait = new CampaignActionWait();
-		CampaignActionWaitIn campaignActionWaitIn = (CampaignActionWaitIn)body.getCampaignNodeChain().getInfo();
+		CampaignActionWaitIn campaignActionWaitIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionWaitIn.class);
 		campaignActionWait.setName(campaignActionWaitIn.getName());
-		campaignActionWait.setItemId(campaignActionWaitIn.getItemId());
-		campaignActionWait.setCampaignHeadId(campaignActionWaitIn.getCampaignHeadId());
+		campaignActionWait.setItemId(campaignNodeChainIn.getItemId());
+		campaignActionWait.setCampaignHeadId(campaignHeadId);
 		campaignActionWait.setType(campaignActionWaitIn.getType());
 		campaignActionWait.setRelativeValue(campaignActionWaitIn.getRelativeValue());
 		campaignActionWait.setRelativeType(campaignActionWaitIn.getRelativeType());
@@ -279,23 +339,22 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return campaignActionWait;
 	}
 	
-	private CampaignDecisionTag initCampaignDecisionTag(CampaignBodyCreateIn body) {
+	private CampaignDecisionTag initCampaignDecisionTag(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionTag campaignDecisionTag = new CampaignDecisionTag();
-		CampaignDecisionTagIn campaignDecisionTagIn = (CampaignDecisionTagIn)body.getCampaignNodeChain().getInfo();
+		CampaignDecisionTagIn campaignDecisionTagIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionTagIn.class);
 		campaignDecisionTag.setName(campaignDecisionTagIn.getName());
-		campaignDecisionTag.setItemId(campaignDecisionTagIn.getItemId());
-		campaignDecisionTag.setCampaignHeadId(campaignDecisionTagIn.getCampaignHeadId());
-		campaignDecisionTag.setTagIds(campaignDecisionTagIn.getTagIds());
-		campaignDecisionTag.setTagNames(campaignDecisionTagIn.getTagNames());
+		campaignDecisionTag.setItemId(campaignNodeChainIn.getItemId());
+		campaignDecisionTag.setCampaignHeadId(campaignHeadId);
+//		campaignDecisionTag.setTagIds(campaignDecisionTagIn.getTagIds());//TO DO:关联关系写入到campaign_decision_tag_map表
 		return campaignDecisionTag;
 	}
 	
-	private CampaignDecisionPrvtFriends initCampaignDecisionPrvtFriends(CampaignBodyCreateIn body) {
+	private CampaignDecisionPrvtFriends initCampaignDecisionPrvtFriends(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionPrvtFriends campaignDecisionPrvtFriends = new CampaignDecisionPrvtFriends();
-		CampaignDecisionPrvtFriendsIn campaignDecisionPrvtFriendsIn = (CampaignDecisionPrvtFriendsIn)body.getCampaignNodeChain().getInfo();
+		CampaignDecisionPrvtFriendsIn campaignDecisionPrvtFriendsIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPrvtFriendsIn.class);
 		campaignDecisionPrvtFriends.setName(campaignDecisionPrvtFriendsIn.getName());
-		campaignDecisionPrvtFriends.setItemId(campaignDecisionPrvtFriendsIn.getItemId());
-		campaignDecisionPrvtFriends.setCampaignHeadId(campaignDecisionPrvtFriendsIn.getCampaignHeadId());
+		campaignDecisionPrvtFriends.setItemId(campaignNodeChainIn.getItemId());
+		campaignDecisionPrvtFriends.setCampaignHeadId(campaignHeadId);
 		campaignDecisionPrvtFriends.setPrvtId(campaignDecisionPrvtFriendsIn.getPrvtId());
 		campaignDecisionPrvtFriends.setPrvtName(campaignDecisionPrvtFriendsIn.getPrvtName());
 		campaignDecisionPrvtFriends.setGroupName(campaignDecisionPrvtFriendsIn.getGroupName());
@@ -304,12 +363,12 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return campaignDecisionPrvtFriends;
 	}
 	
-	private CampaignDecisionPubFans initCampaignDecisionPubFans(CampaignBodyCreateIn body) {
+	private CampaignDecisionPubFans initCampaignDecisionPubFans(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionPubFans campaignDecisionPubFans = new CampaignDecisionPubFans();
-		CampaignDecisionPubFansIn campaignDecisionPubFansIn = (CampaignDecisionPubFansIn)body.getCampaignNodeChain().getInfo();
+		CampaignDecisionPubFansIn campaignDecisionPubFansIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPubFansIn.class);
 		campaignDecisionPubFans.setName(campaignDecisionPubFansIn.getName());
-		campaignDecisionPubFans.setItemId(campaignDecisionPubFansIn.getItemId());
-		campaignDecisionPubFans.setCampaignHeadId(campaignDecisionPubFansIn.getCampaignHeadId());
+		campaignDecisionPubFans.setItemId(campaignNodeChainIn.getItemId());
+		campaignDecisionPubFans.setCampaignHeadId(campaignHeadId);
 		campaignDecisionPubFans.setPubId(campaignDecisionPubFansIn.getPubId());
 		campaignDecisionPubFans.setPubName(campaignDecisionPubFansIn.getPubName());
 		campaignDecisionPubFans.setSubscribeTime(campaignDecisionPubFansIn.getSubscribeTime());
@@ -318,12 +377,12 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return campaignDecisionPubFans;
 	}
 	
-	private CampaignDecisionWechatForward initCampaignDecisionWechatForward(CampaignBodyCreateIn body) {
+	private CampaignDecisionWechatForward initCampaignDecisionWechatForward(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionWechatForward campaignDecisionWechatForward = new CampaignDecisionWechatForward();
-		CampaignDecisionWechatForwardIn campaignDecisionWechatForwardIn = (CampaignDecisionWechatForwardIn)body.getCampaignNodeChain().getInfo();
+		CampaignDecisionWechatForwardIn campaignDecisionWechatForwardIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatForwardIn.class);
 		campaignDecisionWechatForward.setName(campaignDecisionWechatForwardIn.getName());
-		campaignDecisionWechatForward.setItemId(campaignDecisionWechatForwardIn.getItemId());
-		campaignDecisionWechatForward.setCampaignHeadId(campaignDecisionWechatForwardIn.getCampaignHeadId());
+		campaignDecisionWechatForward.setItemId(campaignNodeChainIn.getItemId());
+		campaignDecisionWechatForward.setCampaignHeadId(campaignHeadId);
 		campaignDecisionWechatForward.setPubId(campaignDecisionWechatForwardIn.getPubId());
 		campaignDecisionWechatForward.setPubName(campaignDecisionWechatForwardIn.getPubName());
 		campaignDecisionWechatForward.setRefreshInterval(campaignDecisionWechatForwardIn.getRefreshInterval());
@@ -334,12 +393,12 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return campaignDecisionWechatForward;
 	}
 	
-	private CampaignDecisionWechatRead initCampaignDecisionWechatRead(CampaignBodyCreateIn body) {
+	private CampaignDecisionWechatRead initCampaignDecisionWechatRead(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionWechatRead campaignDecisionWechatRead = new  CampaignDecisionWechatRead();
-		CampaignDecisionWechatReadIn campaignDecisionWechatReadIn = (CampaignDecisionWechatReadIn)body.getCampaignNodeChain().getInfo();
+		CampaignDecisionWechatReadIn campaignDecisionWechatReadIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatReadIn.class);
 		campaignDecisionWechatRead.setName(campaignDecisionWechatReadIn.getName());
-		campaignDecisionWechatRead.setItemId(campaignDecisionWechatReadIn.getItemId());
-		campaignDecisionWechatRead.setCampaignHeadId(campaignDecisionWechatReadIn.getCampaignHeadId());
+		campaignDecisionWechatRead.setItemId(campaignNodeChainIn.getItemId());
+		campaignDecisionWechatRead.setCampaignHeadId(campaignHeadId);
 		campaignDecisionWechatRead.setPubId(campaignDecisionWechatReadIn.getPubId());
 		campaignDecisionWechatRead.setPubName(campaignDecisionWechatReadIn.getPubName());
 		campaignDecisionWechatRead.setRefreshInterval(campaignDecisionWechatReadIn.getRefreshInterval());
@@ -351,12 +410,12 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return campaignDecisionWechatRead;
 	}
 	
-	private CampaignDecisionWechatSent initCampaignDecisionWechatSent(CampaignBodyCreateIn body) {
+	private CampaignDecisionWechatSent initCampaignDecisionWechatSent(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionWechatSent campaignDecisionWechatSent = new  CampaignDecisionWechatSent();
-		CampaignDecisionWechatSentIn campaignDecisionWechatSentIn = (CampaignDecisionWechatSentIn)body.getCampaignNodeChain().getInfo();
+		CampaignDecisionWechatSentIn campaignDecisionWechatSentIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatSentIn.class);
 		campaignDecisionWechatSent.setName(campaignDecisionWechatSentIn.getName());
-		campaignDecisionWechatSent.setItemId(campaignDecisionWechatSentIn.getItemId());
-		campaignDecisionWechatSent.setCampaignHeadId(campaignDecisionWechatSentIn.getCampaignHeadId());
+		campaignDecisionWechatSent.setItemId(campaignNodeChainIn.getItemId());
+		campaignDecisionWechatSent.setCampaignHeadId(campaignHeadId);
 		campaignDecisionWechatSent.setPubId(campaignDecisionWechatSentIn.getPubId());
 		campaignDecisionWechatSent.setPubName(campaignDecisionWechatSentIn.getPubName());
 		campaignDecisionWechatSent.setRefreshInterval(campaignDecisionWechatSentIn.getRefreshInterval());
@@ -366,48 +425,45 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return campaignDecisionWechatSent;
 	}
 	
-	private CampaignDecisionPropCompare initCampaignDecisionPropCompare(CampaignBodyCreateIn body) {
+	private CampaignDecisionPropCompare initCampaignDecisionPropCompare(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionPropCompare campaignDecisionPropCompare = new  CampaignDecisionPropCompare();
-		CampaignDecisionPropCompareIn campaignDecisionPropCompareIn = (CampaignDecisionPropCompareIn)body.getCampaignNodeChain().getInfo();
+		CampaignDecisionPropCompareIn campaignDecisionPropCompareIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPropCompareIn.class);
 		campaignDecisionPropCompare.setName(campaignDecisionPropCompareIn.getName());
-		campaignDecisionPropCompare.setItemId(campaignDecisionPropCompareIn.getItemId());
-		campaignDecisionPropCompare.setCampaignHeadId(campaignDecisionPropCompareIn.getCampaignHeadId());
+		campaignDecisionPropCompare.setItemId(campaignNodeChainIn.getItemId());
+		campaignDecisionPropCompare.setCampaignHeadId(campaignHeadId);
 		campaignDecisionPropCompare.setPropType(campaignDecisionPropCompareIn.getPropType());
 		campaignDecisionPropCompare.setRule(campaignDecisionPropCompareIn.getRule());
 		return campaignDecisionPropCompare;
 	}
 	
-	private CampaignBody initCampaignBody(CampaignBodyCreateIn body) {
+	private CampaignBody initCampaignBody(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignBody campaignBody = new CampaignBody();
-		campaignBody.setHeadId(body.getCampaignNodeChain().getCampaignHeadId());
-		campaignBody.setNodeType(body.getCampaignNodeChain().getNodeType());
-		campaignBody.setItemType(body.getCampaignNodeChain().getItemType());
-		campaignBody.setItemId(body.getCampaignNodeChain().getIntemId());
-		campaignBody.setNextItemId(body.getCampaignNodeChain().getNextItemId());
-		campaignBody.setNextNodeType(body.getCampaignNodeChain().getNextNodeType());
-		campaignBody.setNextItemType(body.getCampaignNodeChain().getNextItemType());
-		campaignBody.setPosX(body.getCampaignNodeChain().getPosX());
-		campaignBody.setPosY(body.getCampaignNodeChain().getPoxY());
+		campaignBody.setHeadId(campaignHeadId);
+		campaignBody.setItemType(campaignNodeChainIn.getItemType());
+		campaignBody.setNodeType(campaignNodeChainIn.getNodeType());
+		campaignBody.setItemId(campaignNodeChainIn.getItemId());
+		campaignBody.setPosX(campaignNodeChainIn.getPosX());
+		campaignBody.setPosY(campaignNodeChainIn.getPosY());
 		return campaignBody;
 	}
 	
-	private CampaignTriggerTimer initCampaignTriggerTimer(CampaignBodyCreateIn body) {
+	private CampaignTriggerTimer initCampaignTriggerTimer(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignTriggerTimer campaignTriggerTimer = new CampaignTriggerTimer();
-		CampaignTriggerTimerIn campaignTriggerTimerIn = (CampaignTriggerTimerIn)body.getCampaignNodeChain().getInfo();
-		campaignTriggerTimer.setCampaignHeadId(body.getCampaignNodeChain().getCampaignHeadId());
+		CampaignTriggerTimerIn campaignTriggerTimerIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignTriggerTimerIn.class);
+		campaignTriggerTimer.setCampaignHeadId(campaignHeadId);
+		campaignTriggerTimer.setItemId(campaignNodeChainIn.getItemId());
 		campaignTriggerTimer.setName(campaignTriggerTimerIn.getName());
-		campaignTriggerTimer.setItemId(campaignTriggerTimerIn.getItemId());
 		campaignTriggerTimer.setStartTime(DateUtil.getDateFromString(campaignTriggerTimerIn.getStartTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
 		campaignTriggerTimer.setEndTime(DateUtil.getDateFromString(campaignTriggerTimerIn.getEndTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
 		return campaignTriggerTimer;
 	}
 	
-	private CampaignAudienceTarget initCampaignAudienceTarget(CampaignBodyCreateIn body) {
+	private CampaignAudienceTarget initCampaignAudienceTarget(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignAudienceTarget campaignAudienceTarget = new CampaignAudienceTarget();
-		CampaignAudienceTargetIn campaignAudienceTargetIn = (CampaignAudienceTargetIn)body.getCampaignNodeChain().getInfo();
+		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
 		campaignAudienceTarget.setName(campaignAudienceTargetIn.getName());
-		campaignAudienceTarget.setCampaignHeadId(campaignAudienceTargetIn.getCampaignHeadId());
-		campaignAudienceTarget.setItemId(campaignAudienceTargetIn.getItemId());
+		campaignAudienceTarget.setCampaignHeadId(campaignHeadId);
+		campaignAudienceTarget.setItemId(campaignNodeChainIn.getItemId());
 		campaignAudienceTarget.setSegmentationId(campaignAudienceTargetIn.getSegmentationId());
 		campaignAudienceTarget.setSegmentationName(campaignAudienceTargetIn.getSegmentationName());
 		campaignAudienceTarget.setAllowedNew(campaignAudienceTargetIn.getAllowedNew());

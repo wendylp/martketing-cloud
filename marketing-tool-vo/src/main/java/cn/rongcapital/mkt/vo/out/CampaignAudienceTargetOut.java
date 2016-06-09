@@ -1,14 +1,9 @@
 package cn.rongcapital.mkt.vo.out;
 
-import java.util.Date;
+import org.codehaus.jackson.annotate.JsonProperty;
 
-public class CampaignAudienceTarget {
-    private Integer id;
-
-    private Integer campaignHeadId;
-
-    private String itemId;
-
+public class CampaignAudienceTargetOut {
+	
     private String name;
 
     private Integer segmentationId;
@@ -21,36 +16,7 @@ public class CampaignAudienceTarget {
 
     private Byte refreshIntervalType;
 
-    private Byte status;
-
-    private Date createTime;
-
-    private Date updateTime;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getCampaignHeadId() {
-        return campaignHeadId;
-    }
-
-    public void setCampaignHeadId(Integer campaignHeadId) {
-        this.campaignHeadId = campaignHeadId;
-    }
-
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId == null ? null : itemId.trim();
-    }
-
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -59,6 +25,7 @@ public class CampaignAudienceTarget {
         this.name = name == null ? null : name.trim();
     }
 
+    @JsonProperty("segmentation_id")
     public Integer getSegmentationId() {
         return segmentationId;
     }
@@ -67,6 +34,7 @@ public class CampaignAudienceTarget {
         this.segmentationId = segmentationId;
     }
 
+    @JsonProperty("segmentation_name")
     public String getSegmentationName() {
         return segmentationName;
     }
@@ -75,6 +43,7 @@ public class CampaignAudienceTarget {
         this.segmentationName = segmentationName == null ? null : segmentationName.trim();
     }
 
+    @JsonProperty("allowed_new")
     public Byte getAllowedNew() {
         return allowedNew;
     }
@@ -83,6 +52,7 @@ public class CampaignAudienceTarget {
         this.allowedNew = allowedNew;
     }
 
+    @JsonProperty("refresh_interval")
     public Integer getRefreshInterval() {
         return refreshInterval;
     }
@@ -91,35 +61,12 @@ public class CampaignAudienceTarget {
         this.refreshInterval = refreshInterval;
     }
 
+    @JsonProperty("refresh_interval_type")
     public Byte getRefreshIntervalType() {
         return refreshIntervalType;
     }
 
     public void setRefreshIntervalType(Byte refreshIntervalType) {
         this.refreshIntervalType = refreshIntervalType;
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

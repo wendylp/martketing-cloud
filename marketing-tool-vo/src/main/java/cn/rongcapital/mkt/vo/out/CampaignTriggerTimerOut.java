@@ -1,28 +1,17 @@
-package cn.rongcapital.mkt.vo.in;
+package cn.rongcapital.mkt.vo.out;
 
 import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class CampaignTriggerTimerIn {
+public class CampaignTriggerTimerOut {
 	
-    private Integer id;
-
     private String name;
 
     @NotNull
     private String startTime;
 
     private String endTime;
-
-    @JsonProperty("id")
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @JsonProperty("name")
     public String getName() {
