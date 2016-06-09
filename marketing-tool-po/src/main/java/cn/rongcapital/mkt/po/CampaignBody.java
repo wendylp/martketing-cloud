@@ -23,6 +23,8 @@ public class CampaignBody extends BaseQuery {
 
     private String posY;
 
+    private String posZ;
+
     private Integer audienceCount;
 
     private Byte status;
@@ -101,6 +103,14 @@ public class CampaignBody extends BaseQuery {
 
     public void setPosY(String posY) {
         this.posY = posY == null ? null : posY.trim();
+    }
+
+    public String getPosZ() {
+        return posZ;
+    }
+
+    public void setPosZ(String posZ) {
+        this.posZ = posZ == null ? null : posZ.trim();
     }
 
     public Integer getAudienceCount() {

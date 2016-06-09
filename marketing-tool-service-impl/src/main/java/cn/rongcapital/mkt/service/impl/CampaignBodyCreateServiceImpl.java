@@ -19,7 +19,6 @@ import cn.rongcapital.mkt.dao.CampaignActionSendPrivtDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
-import cn.rongcapital.mkt.dao.CampaignAssetRelationDao;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPropCompareDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPrvtFriendsDao;
@@ -91,8 +90,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	CampaignActionSetTagDao campaignActionSetTagDao;
 	@Autowired
 	CampaignActionWaitDao campaignActionWaitDao;
-	@Autowired
-	CampaignAssetRelationDao campaignAssetRelationDao;
 	@Autowired
 	cn.rongcapital.mkt.dao.CampaignAudienceTargetDao CampaignAudienceTargetDao;
 	@Autowired
@@ -444,6 +441,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignBody.setItemId(campaignNodeChainIn.getItemId());
 		campaignBody.setPosX(campaignNodeChainIn.getPosX());
 		campaignBody.setPosY(campaignNodeChainIn.getPosY());
+		campaignBody.setPosZ(campaignNodeChainIn.getPosZ());
 		return campaignBody;
 	}
 	

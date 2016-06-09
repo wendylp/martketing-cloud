@@ -20,6 +20,9 @@ public class CampaignNodeChainOut {
 	@NotEmpty
 	private String posY;//Y坐标
 	
+	@NotEmpty
+	private String posZ;//X坐标
+	
 	private List<CampaignSwitchOut> campaignSwitchList;
 	
 	private List<CampaignSwitchOut> campaignEndsList;
@@ -70,6 +73,15 @@ public class CampaignNodeChainOut {
 
 	public void setPosY(String posY) {
 		this.posY = posY;
+	}
+
+	@JsonProperty("z")
+	public String getPosZ() {
+		return posZ;
+	}
+
+	public void setPosZ(String posZ) {
+		this.posZ = posZ;
 	}
 
 	@JsonProperty("switch")

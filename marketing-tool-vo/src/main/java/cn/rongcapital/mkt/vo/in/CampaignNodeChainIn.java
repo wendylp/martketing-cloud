@@ -16,6 +16,8 @@ public class CampaignNodeChainIn {
 	private String posX;//x坐标
 	@NotEmpty
 	private String posY;//y坐标
+	@NotEmpty
+	private String posZ;//z坐标
 	
 	private List<CampaignSwitchIn> campaignSwitchList;//判断分支:switch
 	
@@ -66,6 +68,15 @@ public class CampaignNodeChainIn {
 
 	public void setPosY(String posY) {
 		this.posY = posY;
+	}
+
+	@JsonProperty("z")
+	public String getPosZ() {
+		return posZ;
+	}
+
+	public void setPosZ(String posZ) {
+		this.posZ = posZ;
 	}
 
 	@JsonProperty("ends")

@@ -59,7 +59,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignDecisionWechatForward" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_decision_wechat_forward (id,campaign_head_id,item_id,name,pub_id,pub_name,refresh_interval,refresh_interval_type,wechat_h5_id,wechat_h5_name,forward_times,status,create_time,update_time)
+			INSERT INTO campaign_decision_wechat_forward (id,campaign_head_id,item_id,name,pub_id,pub_name,refresh_interval,refresh_interval_type,wechat_h5_id,wechat_h5_name,forward_times,create_time,update_time)
 			VALUES
 			(
 			  #{id},
@@ -73,8 +73,7 @@
 			  #{wechatH5Id},
 			  #{wechatH5Name},
 			  #{forwardTimes},
-			  #{status},
-			  #{createTime},
+			  now(),
 			  #{updateTime}
 			)
 		]]>

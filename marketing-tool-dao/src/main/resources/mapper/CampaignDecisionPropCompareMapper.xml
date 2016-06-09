@@ -49,7 +49,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignDecisionPropCompare" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_decision_prop_compare (id,campaign_head_id,item_id,name,prop_type,rule,status,create_time,update_time)
+			INSERT INTO campaign_decision_prop_compare (id,campaign_head_id,item_id,name,prop_type,rule,create_time,update_time)
 			VALUES
 			(
 			  #{id},
@@ -58,8 +58,7 @@
 			  #{name},
 			  #{propType},
 			  #{rule},
-			  #{status},
-			  #{createTime},
+			  now(),
 			  #{updateTime}
 			)
 		]]>

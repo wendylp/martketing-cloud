@@ -45,16 +45,14 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignActionSetTag" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_action_set_tag (id,campaign_head_id,item_id,name,status,create_time,update_time)
+			INSERT INTO campaign_action_set_tag (id,campaign_head_id,item_id,name,create_time,update_time)
 			VALUES
 			(
 			  #{id},
 			  #{campaignHeadId},
 			  #{itemId},
 			  #{name},
-			  #{status},
 			  now(),
-
 			  #{updateTime}
 			)
 		]]>

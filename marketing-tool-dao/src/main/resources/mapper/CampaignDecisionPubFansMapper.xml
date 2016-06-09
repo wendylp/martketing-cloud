@@ -55,7 +55,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignDecisionPubFans" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_decision_pub_fans (id,campaign_head_id,item_id,name,pub_id,pub_name,subscribe_time,refresh_interval,refresh_interval_type,status,create_time,update_time)
+			INSERT INTO campaign_decision_pub_fans (id,campaign_head_id,item_id,name,pub_id,pub_name,subscribe_time,refresh_interval,refresh_interval_type,create_time,update_time)
 			VALUES
 			(
 			  #{id},
@@ -67,8 +67,7 @@
 			  #{subscribeTime},
 			  #{refreshInterval},
 			  #{refreshIntervalType},
-			  #{status},
-			  #{createTime},
+			  now(),
 			  #{updateTime}
 			)
 		]]>

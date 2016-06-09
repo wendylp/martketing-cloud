@@ -47,7 +47,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignDecisionTag" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_decision_tag (id,item_id,campaign_head_id,name,rule,status,create_time,update_time)
+			INSERT INTO campaign_decision_tag (id,item_id,campaign_head_id,name,rule,create_time,update_time)
 			VALUES
 			(
 			  #{id},
@@ -55,9 +55,7 @@
 			  #{campaignHeadId},
 			  #{name},
 			  #{rule},
-			  #{status},
 			  now(),
-
 			  #{updateTime}
 			)
 		]]>

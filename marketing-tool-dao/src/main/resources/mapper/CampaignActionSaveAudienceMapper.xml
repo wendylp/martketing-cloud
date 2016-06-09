@@ -49,7 +49,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignActionSaveAudience" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_action_save_audience (id,campaign_head_id,item_id,name,audience_id,audience_name,status,create_time,update_time)
+			INSERT INTO campaign_action_save_audience (id,campaign_head_id,item_id,name,audience_id,audience_name,create_time,update_time)
 			VALUES
 			(
 			  #{id},
@@ -58,8 +58,7 @@
 			  #{name},
 			  #{audienceId},
 			  #{audienceName},
-			  #{status},
-			  #{createTime},
+			  now(),
 			  #{updateTime}
 			)
 		]]>

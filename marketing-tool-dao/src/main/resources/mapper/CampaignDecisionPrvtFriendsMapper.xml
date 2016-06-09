@@ -55,7 +55,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignDecisionPrvtFriends" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_decision_prvt_friends (id,campaign_head_id,item_id,name,prvt_id,prvt_name,group_name,refresh_interval,refresh_interval_type,status,create_time,update_time)
+			INSERT INTO campaign_decision_prvt_friends (id,campaign_head_id,item_id,name,prvt_id,prvt_name,group_name,refresh_interval,refresh_interval_type,create_time,update_time)
 			VALUES
 			(
 			  #{id},
@@ -67,8 +67,7 @@
 			  #{groupName},
 			  #{refreshInterval},
 			  #{refreshIntervalType},
-			  #{status},
-			  #{createTime},
+			  now(),
 			  #{updateTime}
 			)
 		]]>

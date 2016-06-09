@@ -43,14 +43,13 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignHead" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_head (id,name,publish_status,status,create_time,update_time)
+			INSERT INTO campaign_head (id,name,publish_status,create_time,update_time)
 			VALUES
 			(
 			  #{id},
 			  #{name},
 			  #{publishStatus},
-			  #{status},
-			  #{createTime},
+			  now(),
 			  #{updateTime}
 			)
 		]]>

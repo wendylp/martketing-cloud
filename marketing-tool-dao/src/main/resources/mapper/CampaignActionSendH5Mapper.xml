@@ -59,7 +59,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignActionSendH5" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_action_send_h5 (id,campaign_head_id,item_id,name,wechat_h5_id,wechat_h5_name,pub_id,pub_name,prvt_id,prvt_group_name,prvt_name,status,create_time,update_time)
+			INSERT INTO campaign_action_send_h5 (id,campaign_head_id,item_id,name,wechat_h5_id,wechat_h5_name,pub_id,pub_name,prvt_id,prvt_group_name,prvt_name,create_time,update_time)
 			VALUES
 			(
 			  #{id},
@@ -73,8 +73,7 @@
 			  #{prvtId},
 			  #{prvtGroupName},
 			  #{prvtName},
-			  #{status},
-			  #{createTime},
+			  now(),
 			  #{updateTime}
 			)
 		]]>

@@ -53,7 +53,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignActionWait" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_action_wait (id,campaign_head_id,item_id,name,type,relative_value,relative_type,specific_time,status,create_time,update_time)
+			INSERT INTO campaign_action_wait (id,campaign_head_id,item_id,name,type,relative_value,relative_type,specific_time,create_time,update_time)
 			VALUES
 			(
 			  #{id},
@@ -64,8 +64,7 @@
 			  #{relativeValue},
 			  #{relativeType},
 			  #{specificTime},
-			  #{status},
-			  #{createTime},
+			  now(),
 			  #{updateTime}
 			)
 		]]>

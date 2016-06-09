@@ -55,7 +55,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignNodeItem" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_node_item (id,ptype,type,name,code,icon,display_index,url,color,status,create_time,update_time)
+			INSERT INTO campaign_node_item (id,ptype,type,name,code,icon,display_index,url,color,create_time,update_time)
 			VALUES
 			(
 			  #{id},
@@ -67,8 +67,7 @@
 			  #{displayIndex},
 			  #{url},
 			  #{color},
-			  #{status},
-			  #{createTime},
+			  now(),
 			  #{updateTime}
 			)
 		]]>

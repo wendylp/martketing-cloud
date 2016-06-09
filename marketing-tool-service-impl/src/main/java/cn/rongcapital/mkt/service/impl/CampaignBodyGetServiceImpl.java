@@ -15,7 +15,6 @@ import cn.rongcapital.mkt.dao.CampaignActionSendPrivtDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
-import cn.rongcapital.mkt.dao.CampaignAssetRelationDao;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPropCompareDao;
@@ -85,8 +84,6 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	@Autowired
 	CampaignActionWaitDao campaignActionWaitDao;
 	@Autowired
-	CampaignAssetRelationDao campaignAssetRelationDao;
-	@Autowired
 	CampaignAudienceTargetDao campaignAudienceTargetDao;
 	@Autowired
 	CampaignDecisionPropCompareDao campaignDecisionPropCompareDao;
@@ -123,6 +120,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				campaignNodeChainOut.setNodeType(c.getNodeType());
 				campaignNodeChainOut.setPosX(c.getPosX());
 				campaignNodeChainOut.setPosY(c.getPosY());
+				campaignNodeChainOut.setPosZ(c.getPosZ());
 				
 				List<CampaignSwitchOut> campaignSwitchList = queryCampaignSwitchList(campaignHeadId,c.getItemId());
 				List<CampaignSwitchOut> campaignEndsList = queryCampaignEndsList(campaignHeadId,c.getItemId());
