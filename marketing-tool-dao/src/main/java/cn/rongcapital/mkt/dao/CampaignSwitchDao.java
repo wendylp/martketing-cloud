@@ -34,4 +34,6 @@ public interface CampaignSwitchDao extends BaseDao<CampaignSwitch>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	int deleteByCampaignHeadId(int campaignHeadId);
 }

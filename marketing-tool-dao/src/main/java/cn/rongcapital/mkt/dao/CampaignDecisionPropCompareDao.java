@@ -34,4 +34,5 @@ public interface CampaignDecisionPropCompareDao extends BaseDao<CampaignDecision
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	int deleteByCampaignHeadId(int campaignHeadId);
 }

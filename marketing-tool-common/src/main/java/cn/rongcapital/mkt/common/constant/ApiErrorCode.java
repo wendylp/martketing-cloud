@@ -19,6 +19,8 @@ public enum ApiErrorCode {
 	
 	DB_ERROR(2001,"DB error"),//2001-2999,数据库相关的错误码
 	
+	BUSINESS_ERROR(3001,"business error"),//3001-3999,业务逻辑相关错误
+	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
     private int code;

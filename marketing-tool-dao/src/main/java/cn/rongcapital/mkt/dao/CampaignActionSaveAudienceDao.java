@@ -34,4 +34,5 @@ public interface CampaignActionSaveAudienceDao extends BaseDao<CampaignActionSav
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	int deleteByCampaignHeadId(int campaignHeadId);
 }

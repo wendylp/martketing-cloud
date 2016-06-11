@@ -20,6 +20,7 @@ import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
+import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPropCompareDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPrvtFriendsDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPubFansDao;
@@ -46,6 +47,7 @@ import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatForward;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatRead;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatSent;
+import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
@@ -91,7 +93,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	@Autowired
 	CampaignActionWaitDao campaignActionWaitDao;
 	@Autowired
-	cn.rongcapital.mkt.dao.CampaignAudienceTargetDao CampaignAudienceTargetDao;
+	CampaignAudienceTargetDao CampaignAudienceTargetDao;
 	@Autowired
 	CampaignDecisionPropCompareDao campaignDecisionPropCompareDao;
 	@Autowired
@@ -116,6 +118,13 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	@Override
 	public CampaignBodyCreateOut campaignBodyCreate(CampaignBodyCreateIn body, SecurityContext securityContext) {
 		int campaignHeadId = body.getCampaignHeadId();
+
+		CampaignBodyCreateOut out = checkCampaignBiz(campaignHeadId);
+		if(null != out) {
+			return out;
+		}
+		deleteOldCampaignData(campaignHeadId);//删除旧数据 
+		
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
 			List<CampaignSwitch> campaignSwitchList = initCampaignSwitchList(campaignNodeChainIn,campaignHeadId);
 			List<CampaignSwitch> campaignEndsList = initCampaignEndsList(campaignNodeChainIn,campaignHeadId);
@@ -128,61 +137,61 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					campaignSwitchDao.insert(c);
 				}
 			}
-			if(campaignNodeChainIn.getNodeType() == 0){
+			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_TRIGGER){
 				switch (campaignNodeChainIn.getItemType()) {
-				case 0://定时触发
+				case ApiConstant.CAMPAIGN_ITEM_TRIGGER_TIMMER://定时触发
 					CampaignTriggerTimer campaignTriggerTimer = initCampaignTriggerTimer(campaignNodeChainIn,campaignHeadId);
 					campaignTriggerTimerDao.insert(campaignTriggerTimer);
 					break;
 				}
 			}
-			if(campaignNodeChainIn.getNodeType() == 1){
+			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_AUDIENCE){
 				switch (campaignNodeChainIn.getItemType()) {
-				case 0://目标人群
+				case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_TARGET://目标人群
 					CampaignAudienceTarget campaignAudienceTarget = initCampaignAudienceTarget(campaignNodeChainIn,campaignHeadId);
 					CampaignAudienceTargetDao.insert(campaignAudienceTarget);
 					break;
 				}
 			}
-			if(campaignNodeChainIn.getNodeType() == 2){
+			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_DECISION){
 				switch (campaignNodeChainIn.getItemType()) {
-				case 0://联系人属性比较
+				case ApiConstant.CAMPAIGN_ITEM_DECISION_PROP_COMPARE://联系人属性比较
 					CampaignDecisionPropCompare campaignDecisionPropCompare = initCampaignDecisionPropCompare(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionPropCompareDao.insert(campaignDecisionPropCompare);
 					break;
-				case 1://微信图文是否发送
+				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_SENT://微信图文是否发送
 					CampaignDecisionWechatSent campaignDecisionWechatSent = initCampaignDecisionWechatSent(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionWechatSentDao.insert(campaignDecisionWechatSent);
 					break;
-				case 2://微信图文是否查看
+				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_READ://微信图文是否查看
 					CampaignDecisionWechatRead campaignDecisionWechatRead = initCampaignDecisionWechatRead(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionWechatReadDao.insert(campaignDecisionWechatRead);
 					break;
-				case 3://微信图文是否转发
+				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_FORWARD://微信图文是否转发
 					CampaignDecisionWechatForward campaignDecisionWechatForward = initCampaignDecisionWechatForward(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionWechatForwardDao.insert(campaignDecisionWechatForward);
 					break;
-				case 4://是否订阅公众号
+				case ApiConstant.CAMPAIGN_ITEM_DECISION_IS_SUBSCRIBE://是否订阅公众号
 					CampaignDecisionPubFans campaignDecisionPubFans = initCampaignDecisionPubFans(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionPubFansDao.insert(campaignDecisionPubFans);
 					break;
-				case 5://是否个人号好友
+				case ApiConstant.CAMPAIGN_ITEM_DECISION_IS_PRIVT_FRIEND://是否个人号好友
 					CampaignDecisionPrvtFriends campaignDecisionPrvtFriends = initCampaignDecisionPrvtFriends(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionPrvtFriendsDao.insert(campaignDecisionPrvtFriends);
 					break;
-				case 6://标签判断
+				case ApiConstant.CAMPAIGN_ITEM_DECISION_TAG://标签判断
 					CampaignDecisionTag campaignDecisionTag = initCampaignDecisionTag(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionTagDao.insert(campaignDecisionTag);
 					break;
 				}
 			}
-			if(campaignNodeChainIn.getNodeType() == 3){
+			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_ACTION){
 				switch (campaignNodeChainIn.getItemType()) {
-				case 0://等待
+				case ApiConstant.CAMPAIGN_ITEM_ACTION_WAIT://等待
 					CampaignActionWait campaignActionWait = initCampaignActionWait(campaignNodeChainIn,campaignHeadId);
 					campaignActionWaitDao.insert(campaignActionWait);
 					break;
-				case 1://保存当前人群
+				case ApiConstant.CAMPAIGN_ITEM_ACTION_SAVE_AUDIENCE://保存当前人群
 					CampaignActionSaveAudience campaignActionSaveAudience = initCampaignActionSaveAudience(campaignNodeChainIn,campaignHeadId);
 					//如果audience_id参数为空,则在audience_list表增加1条记录
 					if(campaignActionSaveAudience.getAudienceId() == null){
@@ -194,23 +203,23 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					}
 					campaignActionSaveAudienceDao.insert(campaignActionSaveAudience);
 					break;
-				case 2://设置标签
+				case ApiConstant.CAMPAIGN_ITEM_ACTION_SET_TAG://设置标签
 					CampaignActionSetTag campaignActionSetTag = initCampaignActionSetTag(campaignNodeChainIn,campaignHeadId);
 					campaignActionSetTagDao.insert(campaignActionSetTag);
 					break;
-				case 3://添加到其它活动
+				case ApiConstant.CAMPAIGN_ITEM_ACTION_ADD_CAMPAIGN://添加到其它活动
 					break;
-				case 4://转移到其它活动
+				case ApiConstant.CAMPAIGN_ITEM_ACTION_MOVE_CAMPAIGN://转移到其它活动
 					break;
-				case 5://发送微信图文
+				case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_WECHAT_H5://发送微信图文
 					CampaignActionSendPub campaignActionSendPub = initCampaignActionSendPub(campaignNodeChainIn,campaignHeadId);
 					campaignActionSendPubDao.insert(campaignActionSendPub);
 					break;
-				case 6://发送H5图文
+				case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_H5://发送H5图文
 					CampaignActionSendH5 campaignActionSendH5 = initCampaignActionSendH5(campaignNodeChainIn,campaignHeadId);
 					campaignActionSendH5Dao.insert(campaignActionSendH5);
 					break;
-				case 7://发送个人号消息
+				case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_PRVT_INFO://发送个人号消息
 					CampaignActionSendPrivt campaignActionSendPrivt = initCampaignActionSendPrivt(campaignNodeChainIn,campaignHeadId);
 					campaignActionSendPrivtDao.insert(campaignActionSendPrivt);
 					break;
@@ -219,10 +228,54 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			CampaignBody campaignBody = initCampaignBody(campaignNodeChainIn,campaignHeadId);
 			campaignBodyDao.insert(campaignBody);
 		}
-		CampaignBodyCreateOut out = new CampaignBodyCreateOut(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
+		out = new CampaignBodyCreateOut(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 		return out;
 	}
 
+	/**
+	 * 校验业务逻辑:
+	 * 1.活动头必须存在且只存在1个
+	 * 2.只有未发布的活动才能编辑/创建 body
+	 * @return
+	 */
+	private CampaignBodyCreateOut checkCampaignBiz(int campaignHeadId) {
+		CampaignBodyCreateOut out = null;
+		CampaignHead ch = new CampaignHead();
+		ch.setStatus((byte)0);
+		ch.setId(campaignHeadId);
+		List<CampaignHead> campaignHeadList = campaignHeadDao.selectList(ch);
+		
+		if(null!=campaignHeadList && campaignHeadList.size()==1){
+			CampaignHead campaignHead = campaignHeadList.get(0);
+			if(campaignHead.getPublishStatus() != 0){
+				out = new CampaignBodyCreateOut(ApiErrorCode.BUSINESS_ERROR.getCode(),"只有未发布状态的活动才能编辑",ApiConstant.INT_ZERO,null);
+			}
+		}else{
+			out = new CampaignBodyCreateOut(ApiErrorCode.DB_ERROR.getCode(),"活动头不存在或存在多个活动头",ApiConstant.INT_ZERO,null);
+		}
+		return out;
+	}
+	
+	private void deleteOldCampaignData (int campaignHeadId) {
+		campaignSwitchDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignDecisionWechatSentDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignDecisionWechatReadDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignDecisionWechatForwardDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignDecisionTagDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignDecisionPubFansDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignDecisionPrvtFriendsDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignDecisionPropCompareDao.deleteByCampaignHeadId(campaignHeadId);
+		CampaignAudienceTargetDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignActionWaitDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignActionSetTagDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignActionSendPubDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignActionSendPrivtDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignActionSendH5Dao.deleteByCampaignHeadId(campaignHeadId);
+		campaignActionSaveAudienceDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignTriggerTimerDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);
+	}
+	
 	private List<CampaignSwitch> initCampaignSwitchList(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		List<CampaignSwitchIn> campaignSwitchInList = campaignNodeChainIn.getCampaignSwitchList();
 		List<CampaignSwitch> campaignSwitchList = new ArrayList<CampaignSwitch>();

@@ -127,81 +127,81 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				campaignNodeChainOut.setCampaignEndsList(campaignEndsList);
 				campaignNodeChainOut.setCampaignSwitchList(campaignSwitchList);
 				
-				if(campaignNodeChainOut.getNodeType() == 0){
+				if(campaignNodeChainOut.getNodeType() == ApiConstant.CAMPAIGN_NODE_TRIGGER){
 					switch (campaignNodeChainOut.getItemType()) {
-					case 0://定时触发
+					case ApiConstant.CAMPAIGN_ITEM_TRIGGER_TIMMER://定时触发
 						CampaignTriggerTimerOut campaignTriggerTimerOut = queryCampaignTriggerTimer(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignTriggerTimerOut);
 						break;
 					}
 				}
-				if(campaignNodeChainOut.getNodeType() == 1){
+				if(campaignNodeChainOut.getNodeType() == ApiConstant.CAMPAIGN_NODE_AUDIENCE){
 					switch (campaignNodeChainOut.getItemType()) {
-					case 0://目标人群
+					case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_TARGET://目标人群
 						CampaignAudienceTargetOut campaignAudienceTargetOut = queryCampaignAudienceTarget(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignAudienceTargetOut);
 						break;
 					}
 				}
-				if(campaignNodeChainOut.getNodeType() == 2){
+				if(campaignNodeChainOut.getNodeType() == ApiConstant.CAMPAIGN_NODE_DECISION){
 					switch (campaignNodeChainOut.getItemType()) {
-					case 0://联系人属性比较
+					case ApiConstant.CAMPAIGN_ITEM_DECISION_PROP_COMPARE://联系人属性比较
 						CampaignDecisionPropCompareOut campaignDecisionPropCompareOut = queryCampaignDecisionPropCompare(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignDecisionPropCompareOut);
 						break;
-					case 1://微信图文是否发送
+					case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_SENT://微信图文是否发送
 						CampaignDecisionWechatSentOut campaignDecisionWechatSentOut = queryCampaignDecisionWechatSent(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignDecisionWechatSentOut);
 						break;
-					case 2://微信图文是否查看
+					case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_READ://微信图文是否查看
 						CampaignDecisionWechatReadOut campaignDecisionWechatReadOut = queryCampaignDecisionWechatRead(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignDecisionWechatReadOut);
 						break;
-					case 3://微信图文是否转发
+					case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_FORWARD://微信图文是否转发
 						CampaignDecisionWechatForwardOut campaignDecisionWechatForwardOut = queryCampaignDecisionWechatForward(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignDecisionWechatForwardOut);
 						break;
-					case 4://是否订阅公众号
+					case ApiConstant.CAMPAIGN_ITEM_DECISION_IS_SUBSCRIBE://是否订阅公众号
 						CampaignDecisionPubFansOut campaignDecisionPubFansOut = queryCampaignDecisionPubFans(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignDecisionPubFansOut);
 						break;
-					case 5://是否个人号好友
+					case ApiConstant.CAMPAIGN_ITEM_DECISION_IS_PRIVT_FRIEND://是否个人号好友
 						CampaignDecisionPrvtFriendsOut campaignDecisionPrvtFriendsOut = queryCampaignDecisionPrvtFriends(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignDecisionPrvtFriendsOut);
 						break;
-					case 6://标签判断
+					case ApiConstant.CAMPAIGN_ITEM_DECISION_TAG://标签判断
 						CampaignDecisionTagOut campaignDecisionTagOut = queryCampaignDecisionTag(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignDecisionTagOut);
 						break;
 					}
 				}
-				if(campaignNodeChainOut.getNodeType() == 3){
+				if(campaignNodeChainOut.getNodeType() == ApiConstant.CAMPAIGN_NODE_ACTION){
 					switch (campaignNodeChainOut.getItemType()) {
-					case 0://等待
+					case ApiConstant.CAMPAIGN_ITEM_ACTION_WAIT://等待
 						CampaignActionWaitOut campaignActionWaitOut = queryCampaignActionWait(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignActionWaitOut);
 						break;
-					case 1://保存当前人群
+					case ApiConstant.CAMPAIGN_ITEM_ACTION_SAVE_AUDIENCE://保存当前人群
 						CampaignActionSaveAudienceOut campaignActionSaveAudienceOut = queryCampaignActionSaveAudience(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignActionSaveAudienceOut);
 						break;
-					case 2://设置标签
+					case ApiConstant.CAMPAIGN_ITEM_ACTION_SET_TAG://设置标签
 						CampaignActionSetTagOut campaignActionSetTagOut = queryCampaignActionSetTag(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignActionSetTagOut);
 						break;
-					case 3://添加到其它活动
+					case ApiConstant.CAMPAIGN_ITEM_ACTION_ADD_CAMPAIGN://添加到其它活动
 						break;
-					case 4://转移到其它活动
+					case ApiConstant.CAMPAIGN_ITEM_ACTION_MOVE_CAMPAIGN://转移到其它活动
 						break;
-					case 5://发送微信图文
+					case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_WECHAT_H5://发送微信图文
 						CampaignActionSendPubOut campaignActionSendPubOut = queryCampaignActionSendPub(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignActionSendPubOut);
 						break;
-					case 6://发送H5图文
+					case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_H5://发送H5图文
 						CampaignActionSendH5Out campaignActionSendH5Out = queryCampaignActionSendH5(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignActionSendH5Out);
 						break;
-					case 7://发送个人号消息
+					case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_PRVT_INFO://发送个人号消息
 						CampaignActionSendPrivtOut campaignActionSendPrivtOut = queryCampaignActionSendPrivt(campaignNodeChainOut,campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignActionSendPrivtOut);
 						break;

@@ -34,4 +34,6 @@ public interface CampaignTriggerTimerDao extends BaseDao<CampaignTriggerTimer>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	int deleteByCampaignHeadId(int campaignHeadId);
 }

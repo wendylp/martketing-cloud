@@ -91,6 +91,10 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<delete id="deleteByCampaignHeadId" parameterType="int">
+		delete 
+		<include refid="QUERY_FROM_TABLE"/>
+		where campaign_head_id = #{campaignHeadId}
+	</delete>
 	
 </mapper>
