@@ -883,8 +883,9 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.summary.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken){
+	public BaseOutput campaignSummaryGet(
+										@NotEmpty @QueryParam("method") String method,
+										@NotEmpty @QueryParam("user_token") String userToken){
 		return campaignSummaryGetService.campaignSummaryGet();
 	}
 	
@@ -896,8 +897,9 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.progressstatus.count.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public BaseOutput campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken){
+	public BaseOutput campaignProgressStatusCount(
+													@NotEmpty @QueryParam("method") String method,
+													@NotEmpty @QueryParam("user_token") String userToken){
 		return campaignProgressStatusCountService.campaignProgressStatusCountGet();
 	}
 	
@@ -912,12 +914,13 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.progressstatus.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public BaseOutput campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("publish_status") Integer publishStatus,
-			@QueryParam("campaign_name") String campaignName,
-			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
+	public BaseOutput campaignProgressStatusListGet(
+													@NotEmpty @QueryParam("method") String method,
+													@NotEmpty @QueryParam("user_token") String userToken,
+													@NotNull @QueryParam("publish_status") Byte publishStatus,
+													@QueryParam("campaign_name") String campaignName,
+													@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+													@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
 		return campaignProgressStatusListService.campaignProgressStatusList(publishStatus, campaignName, index, size);
 	}
 

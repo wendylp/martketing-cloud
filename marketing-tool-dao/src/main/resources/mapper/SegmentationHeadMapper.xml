@@ -101,7 +101,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<if test="customMap.keyword != null and customMap.keyword != ''"> 
-		 <where> and name like CONCAT('%',#{customMap.keyword},'%' )</where>
+		    and name like CONCAT('%',#{customMap.keyword},'%' )
 		</if>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>

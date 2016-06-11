@@ -115,11 +115,14 @@
 	</select>
 	
 	<!-- 根据条件从campaign_head表中查询 -->
-	<select id="selectCampaignProgressStatusListByPublishStatus" parameterType="map" resultType="cn.rongcapital.mkt.po.CampaignHead">
+	<select id="selectCampaignProgressStatusListByPublishStatus" parameterType="cn.rongcapital.mkt.po.CampaignHead" resultType="cn.rongcapital.mkt.po.CampaignHead">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
+	    <if test="customMap.keyword != null and customMap.keyword != ''"> 
+		   and name like CONCAT('%',#{customMap.keyword},'%' )
+		</if>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
 	
