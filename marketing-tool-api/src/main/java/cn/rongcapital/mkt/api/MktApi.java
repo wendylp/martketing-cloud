@@ -30,7 +30,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -66,6 +65,8 @@ import cn.rongcapital.mkt.service.DataGetViewListService;
 import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
 import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
+import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
+import cn.rongcapital.mkt.service.GetDataMainSearchService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
@@ -100,9 +101,6 @@ import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.GetImgtextCountService;
-import cn.rongcapital.mkt.service.GetDataMainSearchService;
-import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -118,13 +116,14 @@ import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
 import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
+import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
-import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
-import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
+import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
+import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -733,7 +732,7 @@ public class MktApi {
     public Object getFilterAudiences(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
                     @NotNull @QueryParam("md_type") Integer mdType, @NotEmpty @QueryParam("ver") String ver,
-                    @NotEmpty @QueryParam("taskIdList") List taskIdList, @QueryParam("index") Integer index,
+                    @NotEmpty @QueryParam("taskIdList") List<Integer> taskIdList, @QueryParam("index") Integer index,
                     @QueryParam("size") Integer size) {
 
         List<Map<String, Object>> audiencesList = dataGetFilterAudiencesService.getFilterAudiences(method, userToken,

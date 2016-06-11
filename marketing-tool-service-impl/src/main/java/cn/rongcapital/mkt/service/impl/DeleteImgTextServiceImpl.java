@@ -1,16 +1,16 @@
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.dao.AssetDao;
-import cn.rongcapital.mkt.dao.ImgTextAssetDao;
-import cn.rongcapital.mkt.po.Asset;
-import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
-import cn.rongcapital.mkt.vo.BaseOutput;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.ws.rs.core.Response;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.Map;
+import cn.rongcapital.mkt.dao.ImgTextAssetDao;
+import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 /**
  * Created by Yunfeng on 2016-5-27.

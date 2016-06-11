@@ -1,5 +1,13 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.AudienceListDao;
@@ -9,13 +17,6 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.service.GetDataMainSearchService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Yunfeng on 2016-6-7.
@@ -47,7 +48,7 @@ public class GetDataMainSearchServiceImpl implements GetDataMainSearchService {
         return baseOutput;
     }
 
-    private void searchMainDataFromTable(BaseDao baseDao,Map<String,Object> paramMap,BaseOutput baseOutput){
+    private void searchMainDataFromTable(BaseDao<?> baseDao,Map<String,Object> paramMap,BaseOutput baseOutput){
         int type = -1;
         List<Map<String,Object>> resultList = null;
         if(baseDao instanceof  SegmentationHeadDao){
