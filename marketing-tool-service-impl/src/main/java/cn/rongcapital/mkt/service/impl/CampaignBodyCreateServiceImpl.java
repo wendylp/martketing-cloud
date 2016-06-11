@@ -8,6 +8,8 @@ import javax.ws.rs.core.SecurityContext;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -19,8 +21,8 @@ import cn.rongcapital.mkt.dao.CampaignActionSendPrivtDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
-import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
+import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPropCompareDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPrvtFriendsDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPubFansDao;
@@ -116,6 +118,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private static final ObjectMapper jacksonObjectMapper = new ObjectMapper();
 	
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public CampaignBodyCreateOut campaignBodyCreate(CampaignBodyCreateIn body, SecurityContext securityContext) {
 		int campaignHeadId = body.getCampaignHeadId();
 
@@ -124,7 +127,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			return out;
 		}
 		deleteOldCampaignData(campaignHeadId);//删除旧数据 
-		
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
 			List<CampaignSwitch> campaignSwitchList = initCampaignSwitchList(campaignNodeChainIn,campaignHeadId);
 			List<CampaignSwitch> campaignEndsList = initCampaignEndsList(campaignNodeChainIn,campaignHeadId);
