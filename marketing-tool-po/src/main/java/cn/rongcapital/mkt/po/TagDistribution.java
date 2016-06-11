@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.util.Date;
+
 public class TagDistribution extends BaseQuery {
     private Long id;
 
@@ -12,6 +14,12 @@ public class TagDistribution extends BaseQuery {
     private String inuseTagPercent;
 
     private String audienceCount;
+
+    private Byte status;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     public Long getId() {
         return id;
@@ -51,5 +59,29 @@ public class TagDistribution extends BaseQuery {
 
     public void setAudienceCount(String audienceCount) {
         this.audienceCount = audienceCount == null ? null : audienceCount.trim();
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

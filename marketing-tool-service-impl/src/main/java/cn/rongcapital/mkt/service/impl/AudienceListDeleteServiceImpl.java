@@ -37,7 +37,7 @@ public class AudienceListDeleteServiceImpl implements AudienceListDeleteService{
 		AudienceListPartyMap audienceListPartyMap = new AudienceListPartyMap();
 		
 		audienceListPartyMap.setAudienceListId(audienceListId);
-		audienceListPartyMap.setStatus(ApiConstant.INT_ONE);
+		audienceListPartyMap.setStatus((byte)ApiConstant.INT_ONE);
 		audienceListPartyMap.setUpdateTime(new Date());
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);

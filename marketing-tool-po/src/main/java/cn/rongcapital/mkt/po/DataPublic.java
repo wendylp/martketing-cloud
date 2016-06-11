@@ -7,6 +7,8 @@ import java.util.Date;
 public class DataPublic extends BaseQuery {
     private Integer id;
 
+    private Integer taskId;
+
     private Integer openId;
 
     private String publicName;
@@ -29,6 +31,14 @@ public class DataPublic extends BaseQuery {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     public Integer getOpenId() {

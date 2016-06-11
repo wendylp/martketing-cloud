@@ -2,37 +2,35 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.util.Date;
+
 public class SegmentDistribution extends BaseQuery {
-    private Long id;
+    private Integer id;
 
-    private Long sagmentationId;
-
-    private Long campaignId;
+    private Integer sagmentationId;
 
     private Integer audienceCount;
 
-    public Long getId() {
+    private Byte status;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Long getSagmentationId() {
+    public Integer getSagmentationId() {
         return sagmentationId;
     }
 
-    public void setSagmentationId(Long sagmentationId) {
+    public void setSagmentationId(Integer sagmentationId) {
         this.sagmentationId = sagmentationId;
-    }
-
-    public Long getCampaignId() {
-        return campaignId;
-    }
-
-    public void setCampaignId(Long campaignId) {
-        this.campaignId = campaignId;
     }
 
     public Integer getAudienceCount() {
@@ -41,5 +39,29 @@ public class SegmentDistribution extends BaseQuery {
 
     public void setAudienceCount(Integer audienceCount) {
         this.audienceCount = audienceCount;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

@@ -7,6 +7,8 @@ import java.util.Date;
 public class DataEshop extends BaseQuery {
     private Integer id;
 
+    private Integer taskId;
+
     private String accountName;
 
     private String name;
@@ -35,6 +37,14 @@ public class DataEshop extends BaseQuery {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     public String getAccountName() {

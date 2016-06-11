@@ -13,24 +13,23 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
-		    	<if test="description != null and description != ''"><![CDATA[ AND description = #{description}]]></if>
-		    	<if test="url != null and url != ''"><![CDATA[ AND url = #{url}]]></if>
-		    	<if test="content != null and content != ''"><![CDATA[ AND content = #{content}]]></if>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		    	<if test="description != null"><![CDATA[ AND description = #{description}]]></if>
+		    	<if test="url != null"><![CDATA[ AND url = #{url}]]></if>
+		    	<if test="content != null"><![CDATA[ AND content = #{content}]]></if>
 		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
 		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
 		    	<if test="description != null"><![CDATA[description = #{description},]]></if>
 		    	<if test="url != null"><![CDATA[url = #{url},]]></if>
@@ -41,10 +40,9 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.Asset" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO asset (id,type,description,url,content)
+			INSERT INTO asset (type,description,url,content)
 			VALUES
 			(
-			  #{id},
 			  #{type},
 			  #{description},
 			  #{url},

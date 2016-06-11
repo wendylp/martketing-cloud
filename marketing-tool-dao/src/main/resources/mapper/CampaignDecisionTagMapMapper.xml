@@ -32,28 +32,23 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
 		    	<if test="campaignDecisionTagId != null"><![CDATA[campaign_decision_tag_id = #{campaignDecisionTagId},]]></if>
 		    	<if test="tagId != null"><![CDATA[tag_id = #{tagId},]]></if>
 		    	<if test="tagName != null"><![CDATA[tag_name = #{tagName},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
-		    	<if test="createTime != null"><![CDATA[create_time = #{createTime},]]></if>
-		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignDecisionTagMap" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_decision_tag_map (id,campaign_decision_tag_id,tag_id,tag_name,create_time,update_time)
+			INSERT INTO campaign_decision_tag_map (campaign_decision_tag_id,tag_id,tag_name,create_time)
 			VALUES
 			(
-			  #{id},
 			  #{campaignDecisionTagId},
 			  #{tagId},
 			  #{tagName},
-			  now(),
-			  #{updateTime}
+			  now()
 			)
 		]]>
 	</insert>

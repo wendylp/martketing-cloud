@@ -13,44 +13,42 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="importDataId != null and importDataId != ''"><![CDATA[ AND import_data_id = #{importDataId}]]></if>
-		    	<if test="handleTime != null and handleTime != ''"><![CDATA[ AND handle_time = #{handleTime}]]></if>
-		    	<if test="totalRows != null and totalRows != ''"><![CDATA[ AND total_rows = #{totalRows}]]></if>
-		    	<if test="modifyRows != null and modifyRows != ''"><![CDATA[ AND modify_rows = #{modifyRows}]]></if>
-		    	<if test="illegalRows != null and illegalRows != ''"><![CDATA[ AND illegal_rows = #{illegalRows}]]></if>
-		    	<if test="modifyFilename != null and modifyFilename != ''"><![CDATA[ AND modify_filename = #{modifyFilename}]]></if>
-		    	<if test="success != null and success != ''"><![CDATA[success = #{success}]]></if>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="importDataId != null"><![CDATA[ AND import_data_id = #{importDataId}]]></if>
+		    	<if test="handleTime != null"><![CDATA[ AND handle_time = #{handleTime}]]></if>
+		    	<if test="totalRows != null"><![CDATA[ AND total_rows = #{totalRows}]]></if>
+		    	<if test="modifyRows != null"><![CDATA[ AND modify_rows = #{modifyRows}]]></if>
+		    	<if test="illegalRows != null"><![CDATA[ AND illegal_rows = #{illegalRows}]]></if>
+		    	<if test="modifyFilename != null"><![CDATA[ AND modify_filename = #{modifyFilename}]]></if>
+		    	<if test="success != null"><![CDATA[ AND success = #{success}]]></if>
 		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="importDataId != null"><![CDATA[AND import_data_id = #{importDataId},]]></if>
-		    	<if test="handleTime != null"><![CDATA[AND handle_time = #{handleTime},]]></if>
-		    	<if test="totalRows != null"><![CDATA[AND total_rows = #{totalRows},]]></if>
-		    	<if test="modifyRows != null"><![CDATA[AND modify_rows = #{modifyRows},]]></if>
-		    	<if test="illegalRows != null"><![CDATA[AND illegal_rows = #{illegalRows},]]></if>
-		    	<if test="modifyFilename != null"><![CDATA[AND modify_filename = #{modifyFilename},]]></if>
-		    	<if test="success != null"><![CDATA[AND success = #{success}]]></if>
+		    	<if test="importDataId != null"><![CDATA[import_data_id = #{importDataId},]]></if>
+		    	<if test="handleTime != null"><![CDATA[handle_time = #{handleTime},]]></if>
+		    	<if test="totalRows != null"><![CDATA[total_rows = #{totalRows},]]></if>
+		    	<if test="modifyRows != null"><![CDATA[modify_rows = #{modifyRows},]]></if>
+		    	<if test="illegalRows != null"><![CDATA[illegal_rows = #{illegalRows},]]></if>
+		    	<if test="modifyFilename != null"><![CDATA[modify_filename = #{modifyFilename},]]></if>
+		    	<if test="success != null"><![CDATA[success = #{success}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ImportDataModifyLog" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO import_data_modify_log (id,import_data_id,handle_time,total_rows,modify_rows,illegal_rows,modify_filename,success)
+			INSERT INTO import_data_modify_log (import_data_id,handle_time,total_rows,modify_rows,illegal_rows,modify_filename,success)
 			VALUES
 			(
-			  #{id},
 			  #{importDataId},
 			  #{handleTime},
 			  #{totalRows},

@@ -2,16 +2,22 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.util.Date;
+
 public class IllegalData extends BaseQuery {
     private Integer id;
 
     private String batchId;
 
-    private String createtime;
-
     private String type;
 
-    private String origionData;
+    private String originData;
+
+    private Date createTime;
+
+    private Byte status;
+
+    private Date updateTime;
 
     public Integer getId() {
         return id;
@@ -29,14 +35,6 @@ public class IllegalData extends BaseQuery {
         this.batchId = batchId == null ? null : batchId.trim();
     }
 
-    public String getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(String createtime) {
-        this.createtime = createtime == null ? null : createtime.trim();
-    }
-
     public String getType() {
         return type;
     }
@@ -45,11 +43,35 @@ public class IllegalData extends BaseQuery {
         this.type = type == null ? null : type.trim();
     }
 
-    public String getOrigionData() {
-        return origionData;
+    public String getOriginData() {
+        return originData;
     }
 
-    public void setOrigionData(String origionData) {
-        this.origionData = origionData == null ? null : origionData.trim();
+    public void setOriginData(String originData) {
+        this.originData = originData == null ? null : originData.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

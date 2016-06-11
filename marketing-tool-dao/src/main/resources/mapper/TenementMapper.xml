@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.rongcapital.mkt.dao.CampaignActionWaitDao">
+<mapper namespace="cn.rongcapital.mkt.dao.TenementDao">
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,campaign_head_id as campaignHeadId,item_id as itemId,name as name,type as type,relative_value as relativeValue,relative_type as relativeType,specific_time as specificTime,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,name as name,shortname as shortname,pid as pid,email as email,mobile as mobile,province as province,city as city,area as area,address as address,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM campaign_action_wait]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tenement]]></sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="campaignHeadId != null"><![CDATA[ AND campaign_head_id = #{campaignHeadId}]]></if>
-		    	<if test="itemId != null"><![CDATA[ AND item_id = #{itemId}]]></if>
 		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
-		    	<if test="relativeValue != null"><![CDATA[ AND relative_value = #{relativeValue}]]></if>
-		    	<if test="relativeType != null"><![CDATA[ AND relative_type = #{relativeType}]]></if>
-		    	<if test="specificTime != null"><![CDATA[ AND specific_time = #{specificTime}]]></if>
+		    	<if test="shortname != null"><![CDATA[ AND shortname = #{shortname}]]></if>
+		    	<if test="pid != null"><![CDATA[ AND pid = #{pid}]]></if>
+		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
+		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
+		    	<if test="province != null"><![CDATA[ AND province = #{province}]]></if>
+		    	<if test="city != null"><![CDATA[ AND city = #{city}]]></if>
+		    	<if test="area != null"><![CDATA[ AND area = #{area}]]></if>
+		    	<if test="address != null"><![CDATA[ AND address = #{address}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
@@ -36,30 +38,34 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="campaignHeadId != null"><![CDATA[campaign_head_id = #{campaignHeadId},]]></if>
-		    	<if test="itemId != null"><![CDATA[item_id = #{itemId},]]></if>
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
-		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
-		    	<if test="relativeValue != null"><![CDATA[relative_value = #{relativeValue},]]></if>
-		    	<if test="relativeType != null"><![CDATA[relative_type = #{relativeType},]]></if>
-		    	<if test="specificTime != null"><![CDATA[specific_time = #{specificTime},]]></if>
+		    	<if test="shortname != null"><![CDATA[shortname = #{shortname},]]></if>
+		    	<if test="pid != null"><![CDATA[pid = #{pid},]]></if>
+		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
+		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
+		    	<if test="province != null"><![CDATA[province = #{province},]]></if>
+		    	<if test="city != null"><![CDATA[city = #{city},]]></if>
+		    	<if test="area != null"><![CDATA[area = #{area},]]></if>
+		    	<if test="address != null"><![CDATA[address = #{address},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
-	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignActionWait" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.Tenement" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_action_wait (campaign_head_id,item_id,name,type,relative_value,relative_type,specific_time,create_time)
+			INSERT INTO tenement (name,shortname,pid,email,mobile,province,city,area,address,create_time)
 			VALUES
 			(
-			  #{campaignHeadId},
-			  #{itemId},
 			  #{name},
-			  #{type},
-			  #{relativeValue},
-			  #{relativeType},
-			  #{specificTime},
+			  #{shortname},
+			  #{pid},
+			  #{email},
+			  #{mobile},
+			  #{province},
+			  #{city},
+			  #{area},
+			  #{address},
 			  now()
 			)
 		]]>
@@ -69,14 +75,14 @@
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
 	<!-- 修改记录通过主键 -->
-	<update id="updateById" parameterType="cn.rongcapital.mkt.po.CampaignActionWait">
-		<![CDATA[UPDATE campaign_action_wait]]>
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.Tenement">
+		<![CDATA[UPDATE tenement]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.CampaignActionWait" resultType="cn.rongcapital.mkt.po.CampaignActionWait">
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.Tenement" resultType="cn.rongcapital.mkt.po.Tenement">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -87,7 +93,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectList" parameterType="cn.rongcapital.mkt.po.CampaignActionWait" resultType="cn.rongcapital.mkt.po.CampaignActionWait">
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.Tenement" resultType="cn.rongcapital.mkt.po.Tenement">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -96,7 +102,7 @@
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.CampaignActionWait" resultType="int">
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.Tenement" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>

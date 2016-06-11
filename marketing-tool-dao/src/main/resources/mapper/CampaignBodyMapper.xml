@@ -38,7 +38,6 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
 		    	<if test="headId != null"><![CDATA[head_id = #{headId},]]></if>
 		    	<if test="nodeType != null"><![CDATA[node_type = #{nodeType},]]></if>
 		    	<if test="itemType != null"><![CDATA[item_type = #{itemType},]]></if>
@@ -48,19 +47,16 @@
 		    	<if test="posY != null"><![CDATA[pos_y = #{posY},]]></if>
 		    	<if test="posZ != null"><![CDATA[pos_z = #{posZ},]]></if>
 		    	<if test="audienceCount != null"><![CDATA[audience_count = #{audienceCount},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
-		    	<if test="createTime != null"><![CDATA[create_time = #{createTime},]]></if>
-		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignBody" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_body (id,head_id,node_type,item_type,item_id,statistics_url,pos_x,pos_y,pos_z,audience_count,create_time,update_time)
+			INSERT INTO campaign_body (head_id,node_type,item_type,item_id,statistics_url,pos_x,pos_y,pos_z,audience_count,create_time)
 			VALUES
 			(
-			  #{id},
 			  #{headId},
 			  #{nodeType},
 			  #{itemType},
@@ -70,8 +66,7 @@
 			  #{posY},
 			  #{posZ},
 			  #{audienceCount},
-			  now(),
-			  #{updateTime}
+			  now()
 			)
 		]]>
 	</insert>

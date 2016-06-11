@@ -13,78 +13,79 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="accountName != null and accountName != ''"><![CDATA[ AND account_name = #{accountName}]]></if>
-		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="gender != null and gender != ''"><![CDATA[ AND gender = #{gender}]]></if>
-		    	<if test="age != null and age != ''"><![CDATA[ AND age = #{age}]]></if>
-		    	<if test="homeAddress != null and homeAddress != ''"><![CDATA[ AND home_address = #{homeAddress}]]></if>
-		    	<if test="workAddress != null and workAddress != ''"><![CDATA[ AND work_address = #{workAddress}]]></if>
-		    	<if test="homeStatus != null and homeStatus != ''"><![CDATA[ AND home_status = #{homeStatus}]]></if>
-		    	<if test="workStatus != null and workStatus != ''"><![CDATA[ AND work_status = #{workStatus}]]></if>
-		    	<if test="memberLevel != null and memberLevel != ''"><![CDATA[ AND member_level = #{memberLevel}]]></if>
-		    	<if test="mobile != null and mobile != ''"><![CDATA[ AND mobile = #{mobile}]]></if>
-		    	<if test="email != null and email != ''"><![CDATA[ AND email = #{email}]]></if>
-		    	<if test="wechat != null and wechat != ''"><![CDATA[ AND wechat = #{wechat}]]></if>
-		    	<if test="qq != null and qq != ''"><![CDATA[ AND qq = #{qq}]]></if>
-		    	<if test="weibo != null and weibo != ''"><![CDATA[ AND weibo = #{weibo}]]></if>
-		    	<if test="orderCount != null and orderCount != ''"><![CDATA[ AND order_count = #{orderCount}]]></if>
-		    	<if test="orderAmount != null and orderAmount != ''"><![CDATA[ AND order_amount = #{orderAmount}]]></if>
-		    	<if test="cartItemCount != null and cartItemCount != ''"><![CDATA[ AND cart_item_count = #{cartItemCount}]]></if>
-		    	<if test="favoriteItemCount != null and favoriteItemCount != ''"><![CDATA[ AND favorite_item_count = #{favoriteItemCount}]]></if>
-		    	<if test="salary != null and salary != ''"><![CDATA[ AND salary = #{salary}]]></if>
-		    	<if test="offlineActivityAttendence != null and offlineActivityAttendence != ''"><![CDATA[ AND offline_activity_attendence = #{offlineActivityAttendence}]]></if>
-		    	<if test="childAmount != null and childAmount != ''"><![CDATA[ AND child_amount = #{childAmount}]]></if>
-		    	<if test="childAnnualBudget != null and childAnnualBudget != ''"><![CDATA[ AND child_annual_budget = #{childAnnualBudget}]]></if>
-		    	<if test="deleted != null and deleted != ''"><![CDATA[ AND deleted = #{deleted}]]></if>
-		    	<if test="deleteTime != null and deleteTime != ''"><![CDATA[delete_time = #{deleteTime}]]></if>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="taskId != null"><![CDATA[ AND task_id = #{taskId}]]></if>
+		    	<if test="accountName != null"><![CDATA[ AND account_name = #{accountName}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="gender != null"><![CDATA[ AND gender = #{gender}]]></if>
+		    	<if test="age != null"><![CDATA[ AND age = #{age}]]></if>
+		    	<if test="homeAddress != null"><![CDATA[ AND home_address = #{homeAddress}]]></if>
+		    	<if test="workAddress != null"><![CDATA[ AND work_address = #{workAddress}]]></if>
+		    	<if test="homeStatus != null"><![CDATA[ AND home_status = #{homeStatus}]]></if>
+		    	<if test="workStatus != null"><![CDATA[ AND work_status = #{workStatus}]]></if>
+		    	<if test="memberLevel != null"><![CDATA[ AND member_level = #{memberLevel}]]></if>
+		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
+		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
+		    	<if test="wechat != null"><![CDATA[ AND wechat = #{wechat}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
+		    	<if test="weibo != null"><![CDATA[ AND weibo = #{weibo}]]></if>
+		    	<if test="orderCount != null"><![CDATA[ AND order_count = #{orderCount}]]></if>
+		    	<if test="orderAmount != null"><![CDATA[ AND order_amount = #{orderAmount}]]></if>
+		    	<if test="cartItemCount != null"><![CDATA[ AND cart_item_count = #{cartItemCount}]]></if>
+		    	<if test="favoriteItemCount != null"><![CDATA[ AND favorite_item_count = #{favoriteItemCount}]]></if>
+		    	<if test="salary != null"><![CDATA[ AND salary = #{salary}]]></if>
+		    	<if test="offlineActivityAttendence != null"><![CDATA[ AND offline_activity_attendence = #{offlineActivityAttendence}]]></if>
+		    	<if test="childAmount != null"><![CDATA[ AND child_amount = #{childAmount}]]></if>
+		    	<if test="childAnnualBudget != null"><![CDATA[ AND child_annual_budget = #{childAnnualBudget}]]></if>
+		    	<if test="deleted != null"><![CDATA[ AND deleted = #{deleted}]]></if>
+		    	<if test="deleteTime != null"><![CDATA[ AND delete_time = #{deleteTime}]]></if>
 		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="accountName != null"><![CDATA[AND account_name = #{accountName},]]></if>
-		    	<if test="name != null"><![CDATA[AND name = #{name},]]></if>
-		    	<if test="gender != null"><![CDATA[AND gender = #{gender},]]></if>
-		    	<if test="age != null"><![CDATA[AND age = #{age},]]></if>
-		    	<if test="homeAddress != null"><![CDATA[AND home_address = #{homeAddress},]]></if>
-		    	<if test="workAddress != null"><![CDATA[AND work_address = #{workAddress},]]></if>
-		    	<if test="homeStatus != null"><![CDATA[AND home_status = #{homeStatus},]]></if>
-		    	<if test="workStatus != null"><![CDATA[AND work_status = #{workStatus},]]></if>
-		    	<if test="memberLevel != null"><![CDATA[AND member_level = #{memberLevel},]]></if>
-		    	<if test="mobile != null"><![CDATA[AND mobile = #{mobile},]]></if>
-		    	<if test="email != null"><![CDATA[AND email = #{email},]]></if>
-		    	<if test="wechat != null"><![CDATA[AND wechat = #{wechat},]]></if>
-		    	<if test="qq != null"><![CDATA[AND qq = #{qq},]]></if>
-		    	<if test="weibo != null"><![CDATA[AND weibo = #{weibo},]]></if>
-		    	<if test="orderCount != null"><![CDATA[AND order_count = #{orderCount},]]></if>
-		    	<if test="orderAmount != null"><![CDATA[AND order_amount = #{orderAmount},]]></if>
-		    	<if test="cartItemCount != null"><![CDATA[AND cart_item_count = #{cartItemCount},]]></if>
-		    	<if test="favoriteItemCount != null"><![CDATA[AND favorite_item_count = #{favoriteItemCount},]]></if>
-		    	<if test="salary != null"><![CDATA[AND salary = #{salary},]]></if>
-		    	<if test="offlineActivityAttendence != null"><![CDATA[AND offline_activity_attendence = #{offlineActivityAttendence},]]></if>
-		    	<if test="childAmount != null"><![CDATA[AND child_amount = #{childAmount},]]></if>
-		    	<if test="childAnnualBudget != null"><![CDATA[AND child_annual_budget = #{childAnnualBudget},]]></if>
-		    	<if test="deleted != null"><![CDATA[AND deleted = #{deleted},]]></if>
-		    	<if test="deleteTime != null"><![CDATA[AND delete_time = #{deleteTime}]]></if>
+		    	<if test="taskId != null"><![CDATA[task_id = #{taskId},]]></if>
+		    	<if test="accountName != null"><![CDATA[account_name = #{accountName},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="gender != null"><![CDATA[gender = #{gender},]]></if>
+		    	<if test="age != null"><![CDATA[age = #{age},]]></if>
+		    	<if test="homeAddress != null"><![CDATA[home_address = #{homeAddress},]]></if>
+		    	<if test="workAddress != null"><![CDATA[work_address = #{workAddress},]]></if>
+		    	<if test="homeStatus != null"><![CDATA[home_status = #{homeStatus},]]></if>
+		    	<if test="workStatus != null"><![CDATA[work_status = #{workStatus},]]></if>
+		    	<if test="memberLevel != null"><![CDATA[member_level = #{memberLevel},]]></if>
+		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
+		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
+		    	<if test="wechat != null"><![CDATA[wechat = #{wechat},]]></if>
+		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
+		    	<if test="weibo != null"><![CDATA[weibo = #{weibo},]]></if>
+		    	<if test="orderCount != null"><![CDATA[order_count = #{orderCount},]]></if>
+		    	<if test="orderAmount != null"><![CDATA[order_amount = #{orderAmount},]]></if>
+		    	<if test="cartItemCount != null"><![CDATA[cart_item_count = #{cartItemCount},]]></if>
+		    	<if test="favoriteItemCount != null"><![CDATA[favorite_item_count = #{favoriteItemCount},]]></if>
+		    	<if test="salary != null"><![CDATA[salary = #{salary},]]></if>
+		    	<if test="offlineActivityAttendence != null"><![CDATA[offline_activity_attendence = #{offlineActivityAttendence},]]></if>
+		    	<if test="childAmount != null"><![CDATA[child_amount = #{childAmount},]]></if>
+		    	<if test="childAnnualBudget != null"><![CDATA[child_annual_budget = #{childAnnualBudget},]]></if>
+		    	<if test="deleted != null"><![CDATA[deleted = #{deleted},]]></if>
+		    	<if test="deleteTime != null"><![CDATA[delete_time = #{deleteTime}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataParty" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_party (id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence,child_amount,child_annual_budget,deleted,delete_time)
+			INSERT INTO data_party (task_id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence,child_amount,child_annual_budget,deleted,delete_time)
 			VALUES
 			(
-			  #{id},
+			  #{taskId},
 			  #{accountName},
 			  #{name},
 			  #{gender},

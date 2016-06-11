@@ -8,6 +8,8 @@ import java.util.Date;
 public class DataPos extends BaseQuery {
     private Integer id;
 
+    private Integer taskId;
+
     private String accountName;
 
     private Date time;
@@ -28,6 +30,14 @@ public class DataPos extends BaseQuery {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     public String getAccountName() {

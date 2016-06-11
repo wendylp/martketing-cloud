@@ -16,58 +16,60 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="importStartTime != null and importStartTime != ''"><![CDATA[ AND import_start_time = #{importStartTime}]]></if>
-		    	<if test="importEndTime != null and importEndTime != ''"><![CDATA[ AND import_end_time = #{importEndTime}]]></if>
-		    	<if test="totalRows != null and totalRows != ''"><![CDATA[ AND total_rows = #{totalRows}]]></if>
-		    	<if test="legalRows != null and legalRows != ''"><![CDATA[ AND legal_rows = #{legalRows}]]></if>
-		    	<if test="success != null and success != ''"><![CDATA[ AND success = #{success}]]></if>
-		    	<if test="source != null and source != ''"><![CDATA[ AND source = #{source}]]></if>
-		    	<if test="sourceFilename != null and sourceFilename != ''"><![CDATA[ AND source_filename = #{sourceFilename}]]></if>
-		    	<if test="emailRows != null and emailRows != ''"><![CDATA[ AND email_rows = #{emailRows}]]></if>
-		    	<if test="mobileRows != null and mobileRows != ''"><![CDATA[ AND mobile_rows = #{mobileRows}]]></if>
-		    	<if test="duplicateRows != null and duplicateRows != ''"><![CDATA[ AND duplicate_rows = #{duplicateRows}]]></if>
-		    	<if test="illegalRows != null and illegalRows != ''"><![CDATA[ AND illegal_rows = #{illegalRows}]]></if>
-		    	<if test="summary != null and summary != ''"><![CDATA[ AND summary = #{summary}]]></if>
-		    	<if test="noRecognizeProperty != null and noRecognizeProperty != ''"><![CDATA[ AND no_recognize_property = #{noRecognizeProperty}]]></if>
-		    	<if test="fileUnique != null and fileUnique != ''"><![CDATA[file_unique = #{fileUnique}]]></if>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="importStartTime != null"><![CDATA[ AND import_start_time = #{importStartTime}]]></if>
+		    	<if test="importEndTime != null"><![CDATA[ AND import_end_time = #{importEndTime}]]></if>
+		    	<if test="totalRows != null"><![CDATA[ AND total_rows = #{totalRows}]]></if>
+		    	<if test="legalRows != null"><![CDATA[ AND legal_rows = #{legalRows}]]></if>
+		    	<if test="success != null"><![CDATA[ AND success = #{success}]]></if>
+		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="sourceFilename != null"><![CDATA[ AND source_filename = #{sourceFilename}]]></if>
+		    	<if test="emailRows != null"><![CDATA[ AND email_rows = #{emailRows}]]></if>
+		    	<if test="mobileRows != null"><![CDATA[ AND mobile_rows = #{mobileRows}]]></if>
+		    	<if test="duplicateRows != null"><![CDATA[ AND duplicate_rows = #{duplicateRows}]]></if>
+		    	<if test="illegalRows != null"><![CDATA[ AND illegal_rows = #{illegalRows}]]></if>
+		    	<if test="summary != null"><![CDATA[ AND summary = #{summary}]]></if>
+		    	<if test="noRecognizeProperty != null"><![CDATA[ AND no_recognize_property = #{noRecognizeProperty}]]></if>
+		    	<if test="fileUnique != null"><![CDATA[ AND file_unique = #{fileUnique}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="importStartTime != null"><![CDATA[AND import_start_time = #{importStartTime},]]></if>
-		    	<if test="importEndTime != null"><![CDATA[AND import_end_time = #{importEndTime},]]></if>
-		    	<if test="totalRows != null"><![CDATA[AND total_rows = #{totalRows},]]></if>
-		    	<if test="legalRows != null"><![CDATA[AND legal_rows = #{legalRows},]]></if>
-		    	<if test="success != null"><![CDATA[AND success = #{success},]]></if>
-		    	<if test="source != null"><![CDATA[AND source = #{source},]]></if>
-		    	<if test="sourceFilename != null"><![CDATA[AND source_filename = #{sourceFilename},]]></if>
-		    	<if test="emailRows != null"><![CDATA[AND email_rows = #{emailRows},]]></if>
-		    	<if test="mobileRows != null"><![CDATA[AND mobile_rows = #{mobileRows},]]></if>
-		    	<if test="duplicateRows != null"><![CDATA[AND duplicate_rows = #{duplicateRows},]]></if>
-		    	<if test="illegalRows != null"><![CDATA[AND illegal_rows = #{illegalRows},]]></if>
-		    	<if test="summary != null"><![CDATA[AND summary = #{summary},]]></if>
-		    	<if test="noRecognizeProperty != null"><![CDATA[AND no_recognize_property = #{noRecognizeProperty},]]></if>
-		    	<if test="fileUnique != null"><![CDATA[AND file_unique = #{fileUnique}]]></if>
+		    	<if test="importStartTime != null"><![CDATA[import_start_time = #{importStartTime},]]></if>
+		    	<if test="importEndTime != null"><![CDATA[import_end_time = #{importEndTime},]]></if>
+		    	<if test="totalRows != null"><![CDATA[total_rows = #{totalRows},]]></if>
+		    	<if test="legalRows != null"><![CDATA[legal_rows = #{legalRows},]]></if>
+		    	<if test="success != null"><![CDATA[success = #{success},]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="sourceFilename != null"><![CDATA[source_filename = #{sourceFilename},]]></if>
+		    	<if test="emailRows != null"><![CDATA[email_rows = #{emailRows},]]></if>
+		    	<if test="mobileRows != null"><![CDATA[mobile_rows = #{mobileRows},]]></if>
+		    	<if test="duplicateRows != null"><![CDATA[duplicate_rows = #{duplicateRows},]]></if>
+		    	<if test="illegalRows != null"><![CDATA[illegal_rows = #{illegalRows},]]></if>
+		    	<if test="summary != null"><![CDATA[summary = #{summary},]]></if>
+		    	<if test="noRecognizeProperty != null"><![CDATA[no_recognize_property = #{noRecognizeProperty},]]></if>
+		    	<if test="fileUnique != null"><![CDATA[file_unique = #{fileUnique},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ImportDataHistory" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO import_data_history (id,import_start_time,import_end_time,total_rows,legal_rows,success,source,source_filename,email_rows,mobile_rows,duplicate_rows,illegal_rows,summary,no_recognize_property,file_unique)
+			INSERT INTO import_data_history (import_start_time,import_end_time,total_rows,legal_rows,success,source,source_filename,email_rows,mobile_rows,duplicate_rows,illegal_rows,summary,no_recognize_property,file_unique,create_time)
 			VALUES
 			(
-			  #{id},
 			  #{importStartTime},
 			  #{importEndTime},
 			  #{totalRows},
@@ -81,7 +83,8 @@
 			  #{illegalRows},
 			  #{summary},
 			  #{noRecognizeProperty},
-			  #{fileUnique}
+			  #{fileUnique},
+			  now()
 			)
 		]]>
 	</insert>

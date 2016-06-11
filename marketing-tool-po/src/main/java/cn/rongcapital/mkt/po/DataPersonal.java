@@ -7,6 +7,8 @@ import java.util.Date;
 public class DataPersonal extends BaseQuery {
     private Integer id;
 
+    private Integer taskId;
+
     private Integer openId;
 
     private String personalName;
@@ -23,6 +25,14 @@ public class DataPersonal extends BaseQuery {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     public Integer getOpenId() {
