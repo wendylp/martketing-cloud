@@ -4,11 +4,15 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,templ_type,templ_name,field_name,field_code,selected]]>
+		<![CDATA[ id,templ_type as templType,templ_name as templName,field_name as fieldName,field_code as fieldCode,selected]]>
 	</sql>
 	
 	<sql id="QUERY_TEMPLATE_LIST">
 		<![CDATA[ id,name]]>
+	</sql>
+	
+	<sql id="QUERY_ALIAS_COLUMN_LIST">
+		<![CDATA[ id,templ_type as templType,templ_name as templName,field_name as fieldName,field_code as fieldCode,selected]]>
 	</sql>
 
 	<sql id="UPDATE_SELECTED_STATUS_LIST">
@@ -131,5 +135,12 @@
 		AND	  
 			fieldName = #{fieldName}
 	</update>
+	
+	<select id="selectSelectedTemplateList" parameterType="cn.rongcapital.mkt.po.ImportTemplate" resultType="cn.rongcapital.mkt.po.ImportTemplate">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_ALIAS_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
 	
 </mapper>

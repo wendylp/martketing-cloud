@@ -121,10 +121,10 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
     @SuppressWarnings({"unchecked", "rawtypes"})
     private <T extends BaseQuery, D extends BaseDataFilterDao> List<Map<String, Object>> getData(Integer mdType,
                     List<Integer> taskIdList, T paramObj, D dao) {
-        
+
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("paramObj", paramObj);
-        paramMap.put("filterdList", taskIdList);
+        paramMap.put("taskIdList", taskIdList);
 
         List<T> dataList = dao.selectByTaskId(paramMap);
         List<Map<String, Object>> resultList = new ArrayList<>();
@@ -133,15 +133,13 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
             paramImportTemplate.setSelected(Boolean.TRUE);
             paramImportTemplate.setTemplType(mdType);
 
-            List<ImportTemplate> importTemplateList = importTemplateDao.selectList(paramImportTemplate);
+            List<ImportTemplate> importTemplateList = importTemplateDao.selectSelectedTemplateList(paramImportTemplate);
 
             for (T tempT : dataList) {
                 Map<String, Object> map = new HashMap<>();
                 for (ImportTemplate importTemplate : importTemplateList) {
-                    if (importTemplate.getSelected()) {
-                        ReflectionUtil.getObjectPropertyByName(tempT,
-                                        ReflectionUtil.recoverFieldName(importTemplate.getFieldCode()));
-                    }
+                    map.put(importTemplate.getFieldCode(), ReflectionUtil.getObjectPropertyByName(tempT,
+                                    ReflectionUtil.recoverFieldName(importTemplate.getFieldCode())));
                 }
 
                 resultList.add(map);
