@@ -101,7 +101,7 @@
 	<!-- 通过head_id批量删除记录 -->
 	<update id="batchDeleteUseHeaderId" parameterType="java.lang.Integer">
 		<![CDATA[UPDATE segmentation_body]]>
-		<![CDATA[SET status = 1, update_time = NOW()]]>
+		<![CDATA[SET status = 1]]>
 		<![CDATA[WHERE head_id = #{headId} AND status = 0]]>
 	</update>
 	

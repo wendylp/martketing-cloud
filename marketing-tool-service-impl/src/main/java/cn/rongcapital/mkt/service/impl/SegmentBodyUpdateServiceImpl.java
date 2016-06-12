@@ -64,7 +64,7 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 						insertBody.setTagId(tag.getTagId());
 						insertBody.setExclude(tag.getExclude().byteValue());
 						insertBody.setCreateTime(now);
-						insertBody.setUpdateTime(now);
+//						insertBody.setUpdateTime(now);
 						insertBody.setGroupIndex(groupIndex);
 						insertBody
 								.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
