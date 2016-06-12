@@ -46,6 +46,7 @@ import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.service.CampaignDeleteService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
+import cn.rongcapital.mkt.service.CampaignManualStartService;
 import cn.rongcapital.mkt.service.CampaignNodeItemListGetService;
 import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
 import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
@@ -114,6 +115,7 @@ import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
+import cn.rongcapital.mkt.vo.in.CampaignManualStartIn;
 import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
@@ -121,6 +123,7 @@ import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
+import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
@@ -251,7 +254,8 @@ public class MktApi {
 	private TaggroupSystemMenulistGetService taggroupSystemMenulistGetService;
 	@Autowired
 	private CampaignNodeItemListGetService campaignNodeItemListGetService;
-
+	@Autowired
+	private CampaignManualStartService campaignManualStartService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -325,8 +329,20 @@ public class MktApi {
 										  @NotEmpty @QueryParam("ver") String ver){
 		return getImgtextCountService.getImgtextAssetCount();
 	}
+
+	/**
+	 * @功能简述: 手动开启活动接口
+	 * @param: SegmentHeadIn body, SecurityContext securityContext 
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.campaign.manual.start")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public CampaignManualStartOut campaignBodyCreate(@Valid CampaignManualStartIn body, @Context SecurityContext securityContext) {
+		return campaignManualStartService.campaignManualStart(body, securityContext);
+	}
 	
-        /**
+    /**
 	 * @功能简述: 获取活动编排页面左侧的节点和子节点列表
 	 * @param: SegmentHeadIn body, SecurityContext securityContext
 	 * @return: Object
