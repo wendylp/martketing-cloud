@@ -10,13 +10,13 @@
 
 package cn.rongcapital.mkt.dao;
 
-import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataParty;
 
-public interface DataPartyDao extends BaseDao<DataParty>{
+public interface DataPartyDao extends BaseDao<DataParty> , BaseDataFilterDao<DataParty>{
 	
 	//自定义扩展
 	/**
@@ -64,15 +64,6 @@ public interface DataPartyDao extends BaseDao<DataParty>{
      * @return DataParty
      */
     public DataParty getDataById(Integer id);
-
-    /**
-     * mkt.data.filter.audiences.get
-     *
-     * @功能简述 : 根据快捷筛选查询某类型的主数据
-     * @author nianjun
-     * @return map
-     */
-    public List<DataParty> selectByTaskId(Map<String, List<String>> paramMap);
 
 	/**
 	 * mkt.data.main.searchbyid.get

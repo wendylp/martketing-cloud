@@ -10,13 +10,11 @@
 
 package cn.rongcapital.mkt.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataPos;
 
-public interface DataPosDao extends BaseDao<DataPos>{
+public interface DataPosDao extends BaseDao<DataPos>, BaseDataFilterDao<DataPos>{
 	
 	//自定义扩展
 	/**
@@ -38,12 +36,4 @@ public interface DataPosDao extends BaseDao<DataPos>{
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
     
-    /**
-     * mkt.data.filter.audiences.get
-     * 
-     * @功能简述 : 根据快捷筛选查询某类型的主数据
-     * @author nianjun
-     * @return map
-     */
-    public List<DataPos> selectByTaskId(Map<String, List<String>> paramMap);
 }
