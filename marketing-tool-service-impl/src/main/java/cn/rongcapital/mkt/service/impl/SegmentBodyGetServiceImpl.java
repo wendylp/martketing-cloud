@@ -32,14 +32,14 @@ import cn.rongcapital.mkt.vo.out.SegmentBodyTagsOut;
 public class SegmentBodyGetServiceImpl implements SegmentBodyGetService {
 
 	@Autowired
-	SegmentationBodyDao segmentationHeadDao;
+	SegmentationBodyDao segmentationBodyDao;
 
 	@ReadWrite(type = ReadWriteType.READ)
 	@Override
 	public BaseOutput getSegmentBody(String userToken, String segmentHeadId) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
-		List<SegmentBodyWithName> bodyList = segmentationHeadDao.getSegBodyUseHeaderId(Integer.valueOf(segmentHeadId));
+		List<SegmentBodyWithName> bodyList = segmentationBodyDao.getSegBodyUseHeaderId(Integer.valueOf(segmentHeadId));
 		List<Object> data = new ArrayList<Object>();
 		Map<Integer, List<SegmentBodyTagsOut>> dataMap = new TreeMap<Integer, List<SegmentBodyTagsOut>>();
 		SegmentBodyGetOut dataElement = null;
