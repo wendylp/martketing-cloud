@@ -95,15 +95,22 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
+
 	<!-- 根据taskId查询相关数据 -->
-	<select id="selectByTaskId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataPersonal">
+	<select id="selectByTaskId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataParty">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		<![CDATA[WHERE task_id IN]]>
-		<foreach collection="list" item="taskId" open="(" separator="," close=")">
+		<foreach collection="taskIdList" item="taskId" open="(" separator="," close=")">
 			<![CDATA[#{taskId}]]>
 		</foreach>
+		<![CDATA[AND deleted=0]]>
+		<if test="paramObj != null">
+			<if test="paramObj.startIndex != null and paramObj.startIndex &gt;= 0 and paramObj.pageSize != null and paramObj.pageSize &gt; 0">
+				<![CDATA[LIMIT #{paramObj}.startIndex,#{paramObj}.pageSize]]>
+			</if>	
+		</if>
 	</select>
 	
 </mapper>
