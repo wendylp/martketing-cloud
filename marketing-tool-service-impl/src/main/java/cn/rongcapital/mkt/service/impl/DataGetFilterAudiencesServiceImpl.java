@@ -21,7 +21,7 @@ import cn.rongcapital.mkt.dao.DataPosDao;
 import cn.rongcapital.mkt.dao.DataPublicDao;
 import cn.rongcapital.mkt.dao.DataTmallDao;
 import cn.rongcapital.mkt.dao.ImportTemplateDao;
-import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataApp;
 import cn.rongcapital.mkt.po.DataCrm;
 import cn.rongcapital.mkt.po.DataEshop;
@@ -119,10 +119,14 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private <T extends BaseQuery, D extends BaseDao> List<Map<String, Object>> getData(Integer mdType,
+    private <T extends BaseQuery, D extends BaseDataFilterDao> List<Map<String, Object>> getData(Integer mdType,
                     List<Integer> taskIdList, T paramObj, D dao) {
+        
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("paramObj", paramObj);
+        paramMap.put("filterdList", taskIdList);
 
-        List<T> dataList = dao.selectList(paramObj);
+        List<T> dataList = dao.selectByTaskId(paramMap);
         List<Map<String, Object>> resultList = new ArrayList<>();
         if (dataList != null && !dataList.isEmpty()) {
             ImportTemplate paramImportTemplate = new ImportTemplate();
