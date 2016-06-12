@@ -16,7 +16,7 @@ import cn.rongcapital.mkt.SpringBootMain;
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SpringBootMain.class)
-public abstract class AbstractUnitService {
+public abstract class AbstractUnitTest {
 
 	protected MockMvc mvc;
 

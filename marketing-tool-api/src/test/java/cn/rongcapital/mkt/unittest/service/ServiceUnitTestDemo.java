@@ -4,9 +4,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.rongcapital.mkt.service.CampaignDeleteService;
-import cn.rongcapital.mkt.unittest.AbstractUnitService;
+import cn.rongcapital.mkt.unittest.AbstractUnitTest;
 
-public class ServiceUnitTestDemo extends AbstractUnitService{
+public class ServiceUnitTestDemo extends AbstractUnitTest{
 
     @Autowired
     private CampaignDeleteService campaignDeleteService;
