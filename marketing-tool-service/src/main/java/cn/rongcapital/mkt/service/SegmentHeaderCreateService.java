@@ -11,10 +11,11 @@
 package cn.rongcapital.mkt.service;
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
+import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
 
 public interface SegmentHeaderCreateService {
   
-    public Object segmentHeaderCreate(SegmentHeadCreateIn body,SecurityContext securityContext);
+    public BaseOutput segmentHeaderCreate(SegmentHeadCreateIn body,SecurityContext securityContext);
     
 }

@@ -8,15 +8,15 @@
  * @复审人: 
 *************************************************/
 
-package cn.rongcapital.mkt.vo;
+package cn.rongcapital.mkt.vo.in;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class SegmentHeadUpdateIn extends BaseInput {
-	
-	private Integer segmentId;
+import cn.rongcapital.mkt.vo.BaseInput;
 
+public class SegmentHeadCreateIn extends BaseInput {
+	
     private Integer publishStatus = null;
   
     private String segmentName = null;
@@ -50,15 +50,6 @@ public class SegmentHeadUpdateIn extends BaseInput {
     public void setUserToken(String userToken) {
         this.userToken = userToken;
     }
-
-	public Integer getSegmentId() {
-		return segmentId;
-	}
-
-	@JsonProperty("segment_Id")
-	public void setSegmentId(Integer segmentId) {
-		this.segmentId = segmentId;
-	}
   
 }
 

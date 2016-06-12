@@ -45,7 +45,7 @@
 			(
 			  #{name},
 			  #{publishStatus},
-			  now()
+			  #{createTime}
 			)
 		]]>
 	</insert>

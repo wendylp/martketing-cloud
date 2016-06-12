@@ -51,7 +51,7 @@
 			  #{publishStatus},
 			  #{oper},
 			  #{tagIds},
-			  now()
+			  #{createTime}
 			)
 		]]>
 	</insert>

@@ -2,7 +2,7 @@ package cn.rongcapital.mkt.service;
 
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
+import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 
 public interface SegmentHeaderUpdateService {
 	

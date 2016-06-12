@@ -46,7 +46,9 @@ import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.service.CampaignDeleteService;
+import cn.rongcapital.mkt.service.CampaignHeaderCreateService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
+import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
 import cn.rongcapital.mkt.service.CampaignManualStartService;
 import cn.rongcapital.mkt.service.CampaignNodeItemListGetService;
 import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
@@ -110,17 +112,19 @@ import cn.rongcapital.mkt.vo.ImgtextHostIn;
 import cn.rongcapital.mkt.vo.LoginInput;
 import cn.rongcapital.mkt.vo.ModifyInput;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
-import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
-import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
+import cn.rongcapital.mkt.vo.in.CampaignHeadCreateIn;
+import cn.rongcapital.mkt.vo.in.CampaignHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.CampaignManualStartIn;
 import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
+import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
+import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
@@ -257,6 +261,10 @@ public class MktApi {
 	private CampaignNodeItemListGetService campaignNodeItemListGetService;
 	@Autowired
 	private CampaignManualStartService campaignManualStartService;
+	@Autowired
+	private CampaignHeaderCreateService campaignHeaderCreateService;
+	@Autowired
+	private CampaignHeaderUpdateService campaignHeaderUpdateService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -383,6 +391,30 @@ public class MktApi {
 	}
 	
 	/**
+	 * @功能简述: 编辑campaign header
+	 * @param: CampaignHeadUpdateIn body, SecurityContext securityContext 
+	 * @return: BaseOutput
+	 */
+	@POST
+	@Path("/mkt.campaign.header.update")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput campaignHeaderUpdate(@Valid CampaignHeadUpdateIn body, @Context SecurityContext securityContext) {
+	    return campaignHeaderUpdateService.campaignHeaderUpdate(body, securityContext);
+	}
+	
+	/**
+	 * @功能简述: 创建campaign header
+	 * @param: CampaignHeadCreateIn body, SecurityContext securityContext 
+	 * @return: BaseOutput
+	 */
+	@POST
+	@Path("/mkt.campaign.header.create")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput campaignHeaderCreate(@Valid CampaignHeadCreateIn body, @Context SecurityContext securityContext) {
+	    return campaignHeaderCreateService.campaignHeaderCreate(body, securityContext);
+	}
+	
+	/**
 	 * @功能简述: 根据id获取segment header
 	 * @param: SegmentHeadIn body, SecurityContext securityContext,Integer campaignHeadId 
 	 * @return: Object
@@ -429,7 +461,7 @@ public class MktApi {
 	@POST
 	@Path("/mkt.segment.header.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object segmentHeaderCreate(@Valid SegmentHeadCreateIn body, @Context SecurityContext securityContext) {
+	public BaseOutput segmentHeaderCreate(@Valid SegmentHeadCreateIn body, @Context SecurityContext securityContext) {
 	    return segmentHeaderService.segmentHeaderCreate(body, securityContext);
 	}
 	

@@ -8,16 +8,20 @@
  * @复审人: 
 *************************************************/
 
-package cn.rongcapital.mkt.vo;
+package cn.rongcapital.mkt.vo.in;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class CampaignHeadCreateIn extends BaseInput {
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class SegmentHeadUpdateIn extends BaseInput {
 	
+	private Integer segmentId;
+
     private Integer publishStatus = null;
   
-    private String campaignName = null;
+    private String segmentName = null;
   
     @NotEmpty
     private String userToken = null;
@@ -31,6 +35,15 @@ public class CampaignHeadCreateIn extends BaseInput {
   		this.publishStatus = publishStatus;
   	}
   
+	@JsonProperty("segment_name")
+  	public String getSegmentName() {
+	  	return segmentName;
+  	}
+  
+    public void setSegmentName(String segmentName) {
+        this.segmentName = segmentName;
+    }
+  
     @JsonProperty("user_token")
     public String getUserToken() {
 	    return userToken;
@@ -40,13 +53,13 @@ public class CampaignHeadCreateIn extends BaseInput {
         this.userToken = userToken;
     }
 
-    @JsonProperty("campaign_name")
-	public String getCampaignName() {
-		return campaignName;
+	public Integer getSegmentId() {
+		return segmentId;
 	}
 
-	public void setCampaignName(String campaignName) {
-		this.campaignName = campaignName;
+	@JsonProperty("segment_Id")
+	public void setSegmentId(Integer segmentId) {
+		this.segmentId = segmentId;
 	}
   
 }
