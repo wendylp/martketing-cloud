@@ -72,8 +72,8 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 					CustomTag insertTag = new CustomTag();
 					insertTag.setName(tagName);
 					insertTag.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-					insertTag.setCreateTime(now);
-					insertTag.setUpdateTime(now);
+//					insertTag.setCreateTime(now);
+//					insertTag.setUpdateTime(now);
 					customTagDao.insert(insertTag);
 					tagIdList.add(insertTag.getId());
 				} else {
@@ -91,8 +91,8 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 			tagMap.setType(ApiConstant.TAG_TYPE_SEGMENT);
 			tagMap.setMapId(headerId);
 			tagMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-			tagMap.setCreateTime(now);
-			tagMap.setUpdateTime(now);
+//			tagMap.setCreateTime(now);
+//			tagMap.setUpdateTime(now);
 			customTagMapDao.insert(tagMap);
 		}
 
@@ -100,7 +100,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		SegmentationHead headUpdate = new SegmentationHead();
 		headUpdate.setId(headerId);
 		headUpdate.setTagIds(StringUtils.join(tagIdList, ","));
-		headUpdate.setUpdateTime(now);
+//		headUpdate.setUpdateTime(now);
 		segmentationHeadDao.updateById(headUpdate);
 		return baseOutput;
 	}
