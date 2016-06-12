@@ -17,7 +17,9 @@ import javax.validation.Valid;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class SegmentBodyUpdateIn {
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class SegmentBodyUpdateIn extends BaseInput{
 
 	@NotEmpty
 	private String segmentHeadId;
