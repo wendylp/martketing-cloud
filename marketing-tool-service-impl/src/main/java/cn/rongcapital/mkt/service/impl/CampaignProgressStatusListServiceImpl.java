@@ -21,14 +21,17 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
+import cn.rongcapital.mkt.dao.CampaignColumnsDao;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
+import cn.rongcapital.mkt.po.CampaignColumns;
 import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
 import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.CampaignProgressStatusListOut;
+import cn.rongcapital.mkt.vo.out.ColumnsOut;
 
 @Service
 public class CampaignProgressStatusListServiceImpl implements
@@ -40,6 +43,10 @@ public class CampaignProgressStatusListServiceImpl implements
 	private CampaignTriggerTimerDao campaignTriggerTimerDao;
 	@Autowired
     private CampaignAudienceTargetDao campaignAudienceTargetDao;
+	@Autowired
+	private CampaignColumnsDao campaignColumnsDao;
+	
+	private static final String ORDER_BY_FIELD_NAME = "field_order";//排序的字段名
 	/**
 	 * mkt.campaign.progressstatus.list.get
 	 * @param publishStatus campaignName index size
@@ -55,7 +62,7 @@ public class CampaignProgressStatusListServiceImpl implements
 		t.setStartIndex((index-1)*size);
 		t.getCustomMap().put("keyword", campaignName);
 		List<CampaignHead> reList = campaignHeadDao.selectCampaignProgressStatusListByPublishStatus(t);
-		BaseOutput rseult = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				   ApiErrorCode.SUCCESS.getMsg(),
 				   ApiConstant.INT_ZERO,null);
 		if(null !=reList && reList.size()>0){
@@ -93,10 +100,25 @@ public class CampaignProgressStatusListServiceImpl implements
 					campaignProgressStatusListOut.setCampaignName(StringUtils.join(campNameList, ";"));
 				}
 				
-				rseult.getData().add(campaignProgressStatusListOut);
+				result.getData().add(campaignProgressStatusListOut);
 			}
 		}
-		rseult.setTotal(rseult.getData().size());
-		return rseult;
+		//查询页面表格的列名
+		CampaignColumns campaignColumns = new CampaignColumns();
+		campaignColumns.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		campaignColumns.setOrderField(ORDER_BY_FIELD_NAME);
+		List<CampaignColumns> campaignColumnsList = campaignColumnsDao.selectList(campaignColumns);
+		List<Object> columnsOutList = new ArrayList<Object>(); 
+		if(null != campaignColumnsList && campaignColumnsList.size() > 0) {
+			for(CampaignColumns cc:campaignColumnsList) {
+				ColumnsOut columnsOut = new ColumnsOut();
+				columnsOut.setColCode(cc.getFieldCode());
+				columnsOut.setColName(cc.getFieldName());
+				columnsOutList.add(columnsOut);
+			}
+		}
+		result.setColNames(columnsOutList);
+		result.setTotal(result.getData().size());
+		return result;
 	}
 }

@@ -9,11 +9,9 @@
 
 package cn.rongcapital.mkt.service.impl;
 
-import heracles.data.common.annotation.ReadWrite;
-import heracles.data.common.util.ReadWriteType;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,16 +21,25 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.AudienceColumnsDao;
 import cn.rongcapital.mkt.dao.AudienceListDao;
+import cn.rongcapital.mkt.po.AudienceColumns;
 import cn.rongcapital.mkt.po.AudienceList;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.ColumnsOut;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 
 @Service
 public class AudienceListServiceImpl implements AudienceListService {
 	@Autowired
 	AudienceListDao audienceListDao;
-
+	@Autowired
+	AudienceColumnsDao audienceColumnsDao;
+	
+	private static final String ORDER_BY_FIELD_NAME = "field_order";//排序的字段名
+	
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
 	public BaseOutput audienceList(String userToken,Integer size,Integer index) {
@@ -59,6 +66,23 @@ public class AudienceListServiceImpl implements AudienceListService {
 				result.getData().add(map);
 			}
 		}
+		
+		//查询页面表格的列名
+		AudienceColumns audienceColumns = new AudienceColumns();
+		audienceColumns.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		audienceColumns.setOrderField(ORDER_BY_FIELD_NAME);
+		List<AudienceColumns> audienceColumnsList = audienceColumnsDao.selectList(audienceColumns);
+		List<Object> columnsOutList = new ArrayList<Object>(); 
+		if(null != audienceColumnsList && audienceColumnsList.size() > 0) {
+			for(AudienceColumns ac:audienceColumnsList) {
+				ColumnsOut columnsOut = new ColumnsOut();
+				columnsOut.setColCode(ac.getFieldCode());
+				columnsOut.setColName(ac.getFieldName());
+				columnsOutList.add(columnsOut);
+			}
+		}
+		result.setColNames(columnsOutList);
+		result.setTotal(result.getData().size());
 		return result;
 	}
 

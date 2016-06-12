@@ -22,9 +22,9 @@ public class BaseOutput {
 	private String msg;
 	
 	private int total;
-
-//	private int count;
 	
+	private List<Object> colNames = new ArrayList<Object>();
+
 	private List<Object> data = new ArrayList<Object>();
 
 	public BaseOutput(){}
@@ -63,21 +63,22 @@ public class BaseOutput {
 		this.total = total;
 	}
 
+	@JsonProperty("col_names")
+	public List<Object> getColNames() {
+		return colNames;
+	}
+	
+	public void setColNames(List<Object> colNames) {
+		this.colNames = colNames;
+	}
+
 	@JsonProperty("data")
 	public List<Object> getData() {
 		return data;
 	}
-
+	
 	public void setData(List<Object> data) {
 		this.data = data;
 	}
 
-//	@JsonProperty("count")
-//	public int getCount() {
-//		return count;
-//	}
-//
-//	public void setCount(int count) {
-//		this.count = count;
-//	}
 }
