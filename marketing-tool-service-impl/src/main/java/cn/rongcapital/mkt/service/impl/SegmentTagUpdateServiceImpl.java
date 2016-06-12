@@ -7,11 +7,7 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
-import heracles.data.common.annotation.ReadWrite;
-import heracles.data.common.util.ReadWriteType;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
@@ -34,6 +30,8 @@ import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 
 @Service
 @Transactional
@@ -57,7 +55,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		Integer headerId = Integer.valueOf(body.getSegmentHeadId());
 		List<String> tagNames = body.getTagNames();
-		Date now = new Date();
+//		Date now = new Date();
 		List<Long> tagIdList = new ArrayList<Long>();
 		CustomTag tagExample = null;
 		List<CustomTag> tag = null;
