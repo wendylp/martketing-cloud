@@ -5,7 +5,10 @@ import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class AudienceListDeleteIn {
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class AudienceListDeleteIn extends BaseInput{
+	
 	@NotEmpty
 	@JsonProperty("user_token")
 	private String userToken;

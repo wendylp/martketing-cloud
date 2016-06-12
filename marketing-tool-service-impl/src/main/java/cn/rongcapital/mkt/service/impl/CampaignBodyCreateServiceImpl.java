@@ -196,10 +196,11 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_SAVE_AUDIENCE://保存当前人群
 					CampaignActionSaveAudience campaignActionSaveAudience = initCampaignActionSaveAudience(campaignNodeChainIn,campaignHeadId);
 					//如果audience_id参数为空,则在audience_list表增加1条记录
-					if(campaignActionSaveAudience.getAudienceId() == null){
+					if(campaignActionSaveAudience.getAudienceId() == null) {
 						AudienceList audienceList = new AudienceList();
 						audienceList.setAudienceName(campaignActionSaveAudience.getName());
 						audienceListDao.insert(audienceList);
+						campaignActionSaveAudience.setAudienceId(audienceList.getId());
 					} else {
 						//TO DO:检查audience_list表里是否存在audience_id的记录?
 					}

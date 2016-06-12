@@ -32,7 +32,9 @@ public class SegmentTagnameTagListServiceImpl implements SegmentTagnameTagListSe
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
 	public BaseOutput getSysRecommendedTagList() {
-		List<TagRecommend> resList = tagRecommendDao.selectList(new TagRecommend());
+		TagRecommend tr = new TagRecommend();
+		tr.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		List<TagRecommend> resList = tagRecommendDao.selectList(tr);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				   ApiErrorCode.SUCCESS.getMsg(),
 				   ApiConstant.INT_ZERO,null);
