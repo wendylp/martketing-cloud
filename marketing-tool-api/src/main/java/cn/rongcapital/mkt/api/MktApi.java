@@ -990,7 +990,7 @@ public class MktApi {
 	@Path("/mkt.segment.tagkey.taglist.get")
 	public BaseOutput getLastTagByKey(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("tag_group_name") String tagGroupName){
+            @QueryParam("tag_group_name") String tagGroupName){
 		return segmentTagkeyTagListService.getLastTagByKey(tagGroupName);
 	}
 	

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,9 @@ public class SegmentTagkeyTagListServiceImpl implements SegmentTagkeyTagListServ
 	public BaseOutput getLastTagByKey(String tagGroupName) {
 		//根据标签组名模糊查询标签组
 		Taggroup param = new Taggroup();
+		if(StringUtils.isNotBlank(tagGroupName)) {
+			param.setName(tagGroupName);
+		}
 		param.setName(tagGroupName);
 		param.setLevel(ApiConstant.INT_ZERO);
 		List<Taggroup> resList = taggroupDao.selectByNameFuzzy(param);
