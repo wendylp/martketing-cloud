@@ -27,7 +27,7 @@ public class CampaignProgressStatusListOut {
 		this.campaignName = campaignName;
 	}
 
-	@JsonProperty("campaign_id")
+	@JsonProperty("campaign_head_id")
 	public int getCampaignId() {
 		return campaignId;
 	}

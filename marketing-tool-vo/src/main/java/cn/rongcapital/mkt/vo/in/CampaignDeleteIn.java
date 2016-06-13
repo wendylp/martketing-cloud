@@ -13,7 +13,7 @@ public class CampaignDeleteIn extends BaseInput{
 	@NotEmpty
 	private String userToken;
 
-	@JsonProperty("campaign_id")
+	@JsonProperty("campaign_head_id")
 	public Integer getCampaignId() {
 		return campaignId;
 	}

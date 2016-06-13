@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.TagGroupMapDao;
 import cn.rongcapital.mkt.dao.TaggroupDao;
+import cn.rongcapital.mkt.po.TagGroupMap;
 import cn.rongcapital.mkt.po.Taggroup;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -26,6 +28,8 @@ public class SegmentTagkeyTagListServiceImpl implements SegmentTagkeyTagListServ
 	
 	@Autowired
 	TaggroupDao taggroupDao;
+	@Autowired
+	private TagGroupMapDao tagGroupMapDao;
 	
 	@Override
 	public BaseOutput getLastTagByKey(String tagGroupName) {
@@ -41,10 +45,16 @@ public class SegmentTagkeyTagListServiceImpl implements SegmentTagkeyTagListServ
 		if(null != resList && resList.size() > 0){
 			result.setTotal(resList.size());
 			for(Taggroup po : resList){
-				Map<String,Object> map = new HashMap<String,Object>();
-				map.put("tag_group_id", po.getId());
-				map.put("tag_group_name", po.getName());
-				result.getData().add(map);
+				TagGroupMap tagGroupMap = new TagGroupMap();
+        		tagGroupMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        		tagGroupMap.setGroupId(po.getId());
+        		List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMap);
+        		if(null != tagGroupMapList && tagGroupMapList.size() > 0) {
+        			Map<String,Object> map = new HashMap<String,Object>();
+        			map.put("tag_group_id", po.getId());
+        			map.put("tag_group_name", po.getName());
+        			result.getData().add(map);
+        		}
 			}
 		}
 		return result;

@@ -921,7 +921,7 @@ public class MktApi {
 	
 	/**
 	 * @功能简述: 删除campaign
-	 * @param: campaign_id 营销活动id
+	 * @param: campaign_head_id 营销活动id
 	 * @return: Object
 	 */
 	@POST
