@@ -24,8 +24,8 @@ public class SegmentBodyUpdateIn extends BaseInput{
 	@NotEmpty
 	private String segmentHeadId;
 
-	@NotEmpty
-	@Valid
+//	@NotEmpty
+//	@Valid
 	private List<SegmentBodyFilterGroupIn> filterGroups;
 
 	@NotEmpty
