@@ -2,16 +2,23 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class DataArchPoint extends BaseQuery {
+public class DataMember extends BaseQuery {
     private Integer id;
 
-    private Integer eventId;
+    private String memberId;
 
-    private String eventName;
+    private String memberPoints;
 
-    private Date clickTime;
+    private Date memberLevel;
+
+    private Date registTime;
+
+    private BigDecimal cardAmt;
+
+    private Date expire;
 
     private String identifyNo;
 
@@ -53,28 +60,52 @@ public class DataArchPoint extends BaseQuery {
         this.id = id;
     }
 
-    public Integer getEventId() {
-        return eventId;
+    public String getMemberId() {
+        return memberId;
     }
 
-    public void setEventId(Integer eventId) {
-        this.eventId = eventId;
+    public void setMemberId(String memberId) {
+        this.memberId = memberId == null ? null : memberId.trim();
     }
 
-    public String getEventName() {
-        return eventName;
+    public String getMemberPoints() {
+        return memberPoints;
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName == null ? null : eventName.trim();
+    public void setMemberPoints(String memberPoints) {
+        this.memberPoints = memberPoints == null ? null : memberPoints.trim();
     }
 
-    public Date getClickTime() {
-        return clickTime;
+    public Date getMemberLevel() {
+        return memberLevel;
     }
 
-    public void setClickTime(Date clickTime) {
-        this.clickTime = clickTime;
+    public void setMemberLevel(Date memberLevel) {
+        this.memberLevel = memberLevel;
+    }
+
+    public Date getRegistTime() {
+        return registTime;
+    }
+
+    public void setRegistTime(Date registTime) {
+        this.registTime = registTime;
+    }
+
+    public BigDecimal getCardAmt() {
+        return cardAmt;
+    }
+
+    public void setCardAmt(BigDecimal cardAmt) {
+        this.cardAmt = cardAmt;
+    }
+
+    public Date getExpire() {
+        return expire;
+    }
+
+    public void setExpire(Date expire) {
+        this.expire = expire;
     }
 
     public String getIdentifyNo() {

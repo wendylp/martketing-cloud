@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.rongcapital.mkt.dao.OriginalDataArchPointDao">
+<mapper namespace="cn.rongcapital.mkt.dao.DataPaymentDao">
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,event_id as eventId,event_name as eventName,click_time as clickTime,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,QQ as qQ,acct_type as acctType,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source]]>
+		<![CDATA[ id as id,pay_channel as payChannel,pay_acct as payAcct,pay_serial as paySerial,trans_serial as transSerial,order_no as orderNo,product_name as productName,create_time as createTime,complete_time as completeTime,pay_status as payStatus,counter_acct as counterAcct,income_amt as incomeAmt,paid_amt as paidAmt,acct_amt as acctAmt,comments as comments,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,QQ as qQ,acct_type as acctType,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,update_time as updateTime,source as source]]>
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM original_data_arch_point]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_payment]]></sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="eventId != null"><![CDATA[ AND event_id = #{eventId}]]></if>
-		    	<if test="eventName != null"><![CDATA[ AND event_name = #{eventName}]]></if>
-		    	<if test="clickTime != null"><![CDATA[ AND click_time = #{clickTime}]]></if>
+		    	<if test="payChannel != null"><![CDATA[ AND pay_channel = #{payChannel}]]></if>
+		    	<if test="payAcct != null"><![CDATA[ AND pay_acct = #{payAcct}]]></if>
+		    	<if test="paySerial != null"><![CDATA[ AND pay_serial = #{paySerial}]]></if>
+		    	<if test="transSerial != null"><![CDATA[ AND trans_serial = #{transSerial}]]></if>
+		    	<if test="orderNo != null"><![CDATA[ AND order_no = #{orderNo}]]></if>
+		    	<if test="productName != null"><![CDATA[ AND product_name = #{productName}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="completeTime != null"><![CDATA[ AND complete_time = #{completeTime}]]></if>
+		    	<if test="payStatus != null"><![CDATA[ AND pay_status = #{payStatus}]]></if>
+		    	<if test="counterAcct != null"><![CDATA[ AND counter_acct = #{counterAcct}]]></if>
+		    	<if test="incomeAmt != null"><![CDATA[ AND income_amt = #{incomeAmt}]]></if>
+		    	<if test="paidAmt != null"><![CDATA[ AND paid_amt = #{paidAmt}]]></if>
+		    	<if test="acctAmt != null"><![CDATA[ AND acct_amt = #{acctAmt}]]></if>
+		    	<if test="comments != null"><![CDATA[ AND comments = #{comments}]]></if>
 		    	<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
 		    	<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
 		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
@@ -30,7 +41,6 @@
 		    	<if test="uDID != null"><![CDATA[ AND UDID = #{uDID}]]></if>
 		    	<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
-		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
 		</where>
@@ -45,9 +55,19 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="eventId != null"><![CDATA[event_id = #{eventId},]]></if>
-		    	<if test="eventName != null"><![CDATA[event_name = #{eventName},]]></if>
-		    	<if test="clickTime != null"><![CDATA[click_time = #{clickTime},]]></if>
+		    	<if test="payChannel != null"><![CDATA[pay_channel = #{payChannel},]]></if>
+		    	<if test="payAcct != null"><![CDATA[pay_acct = #{payAcct},]]></if>
+		    	<if test="paySerial != null"><![CDATA[pay_serial = #{paySerial},]]></if>
+		    	<if test="transSerial != null"><![CDATA[trans_serial = #{transSerial},]]></if>
+		    	<if test="orderNo != null"><![CDATA[order_no = #{orderNo},]]></if>
+		    	<if test="productName != null"><![CDATA[product_name = #{productName},]]></if>
+		    	<if test="completeTime != null"><![CDATA[complete_time = #{completeTime},]]></if>
+		    	<if test="payStatus != null"><![CDATA[pay_status = #{payStatus},]]></if>
+		    	<if test="counterAcct != null"><![CDATA[counter_acct = #{counterAcct},]]></if>
+		    	<if test="incomeAmt != null"><![CDATA[income_amt = #{incomeAmt},]]></if>
+		    	<if test="paidAmt != null"><![CDATA[paid_amt = #{paidAmt},]]></if>
+		    	<if test="acctAmt != null"><![CDATA[acct_amt = #{acctAmt},]]></if>
+		    	<if test="comments != null"><![CDATA[comments = #{comments},]]></if>
 		    	<if test="identifyNo != null"><![CDATA[identify_no = #{identifyNo},]]></if>
 		    	<if test="drivingLicense != null"><![CDATA[driving_license = #{drivingLicense},]]></if>
 		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
@@ -66,14 +86,25 @@
 	</sql>
 
 	<!-- 插入action记录 -->
-	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataArchPoint" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataPayment" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO original_data_arch_point (event_id,event_name,click_time,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source)
+			INSERT INTO data_payment (pay_channel,pay_acct,pay_serial,trans_serial,order_no,product_name,create_time,complete_time,pay_status,counter_acct,income_amt,paid_amt,acct_amt,comments,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,source)
 			VALUES
 			(
-			  #{eventId},
-			  #{eventName},
-			  #{clickTime},
+			  #{payChannel},
+			  #{payAcct},
+			  #{paySerial},
+			  #{transSerial},
+			  #{orderNo},
+			  #{productName},
+			  now(),
+			  #{completeTime},
+			  #{payStatus},
+			  #{counterAcct},
+			  #{incomeAmt},
+			  #{paidAmt},
+			  #{acctAmt},
+			  #{comments},
 			  #{identifyNo},
 			  #{drivingLicense},
 			  #{email},
@@ -86,7 +117,6 @@
 			  #{iMEI},
 			  #{uDID},
 			  #{phoneMac},
-			  now(),
 			  #{source}
 			)
 		]]>
@@ -96,14 +126,14 @@
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
 	<!-- 修改记录通过主键 -->
-	<update id="updateById" parameterType="cn.rongcapital.mkt.po.OriginalDataArchPoint">
-		<![CDATA[UPDATE original_data_arch_point]]>
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.DataPayment">
+		<![CDATA[UPDATE data_payment]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.OriginalDataArchPoint" resultType="cn.rongcapital.mkt.po.OriginalDataArchPoint">
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.DataPayment" resultType="cn.rongcapital.mkt.po.DataPayment">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -114,7 +144,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectList" parameterType="cn.rongcapital.mkt.po.OriginalDataArchPoint" resultType="cn.rongcapital.mkt.po.OriginalDataArchPoint">
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.DataPayment" resultType="cn.rongcapital.mkt.po.DataPayment">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -123,7 +153,7 @@
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.OriginalDataArchPoint" resultType="int">
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.DataPayment" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>

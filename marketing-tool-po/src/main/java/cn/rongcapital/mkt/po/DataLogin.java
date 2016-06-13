@@ -2,16 +2,25 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class DataArchPoint extends BaseQuery {
+public class DataLogin extends BaseQuery {
     private Integer id;
 
-    private Integer eventId;
+    private String loginType;
 
-    private String eventName;
+    private String loginTime;
 
-    private Date clickTime;
+    private Date logoutTime;
+
+    private String loginIp;
+
+    private String loginDevice;
+
+    private String resolutionRatio;
+
+    private BigDecimal loginUrl;
 
     private String identifyNo;
 
@@ -53,28 +62,60 @@ public class DataArchPoint extends BaseQuery {
         this.id = id;
     }
 
-    public Integer getEventId() {
-        return eventId;
+    public String getLoginType() {
+        return loginType;
     }
 
-    public void setEventId(Integer eventId) {
-        this.eventId = eventId;
+    public void setLoginType(String loginType) {
+        this.loginType = loginType == null ? null : loginType.trim();
     }
 
-    public String getEventName() {
-        return eventName;
+    public String getLoginTime() {
+        return loginTime;
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName == null ? null : eventName.trim();
+    public void setLoginTime(String loginTime) {
+        this.loginTime = loginTime == null ? null : loginTime.trim();
     }
 
-    public Date getClickTime() {
-        return clickTime;
+    public Date getLogoutTime() {
+        return logoutTime;
     }
 
-    public void setClickTime(Date clickTime) {
-        this.clickTime = clickTime;
+    public void setLogoutTime(Date logoutTime) {
+        this.logoutTime = logoutTime;
+    }
+
+    public String getLoginIp() {
+        return loginIp;
+    }
+
+    public void setLoginIp(String loginIp) {
+        this.loginIp = loginIp == null ? null : loginIp.trim();
+    }
+
+    public String getLoginDevice() {
+        return loginDevice;
+    }
+
+    public void setLoginDevice(String loginDevice) {
+        this.loginDevice = loginDevice == null ? null : loginDevice.trim();
+    }
+
+    public String getResolutionRatio() {
+        return resolutionRatio;
+    }
+
+    public void setResolutionRatio(String resolutionRatio) {
+        this.resolutionRatio = resolutionRatio == null ? null : resolutionRatio.trim();
+    }
+
+    public BigDecimal getLoginUrl() {
+        return loginUrl;
+    }
+
+    public void setLoginUrl(BigDecimal loginUrl) {
+        this.loginUrl = loginUrl;
     }
 
     public String getIdentifyNo() {
