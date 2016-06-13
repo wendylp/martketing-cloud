@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.vo.in;
 
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -17,8 +19,10 @@ import cn.rongcapital.mkt.vo.BaseInput;
 
 public class SegmentHeadCreateIn extends BaseInput {
 	
+	@NotNull
     private Integer publishStatus = null;
   
+	@NotEmpty
     private String segmentName = null;
   
     @NotEmpty
