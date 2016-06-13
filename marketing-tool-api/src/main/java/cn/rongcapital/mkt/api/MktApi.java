@@ -234,6 +234,8 @@ public class MktApi {
 	private CustomTagGetService customTagGetService;
 	@Autowired
 	private CustomTagDeleteService customTagDeleteService;
+	
+	@Autowired
 	private MainActionInfoGetService mainActionInfoGetService;
 	@Autowired
 	private SegmentTagGetService segmentTagGetService;
