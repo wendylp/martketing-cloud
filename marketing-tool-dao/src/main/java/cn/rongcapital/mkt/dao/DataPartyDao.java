@@ -47,14 +47,14 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      */
     public Map<String, Object> selectMainCount();
     
-    /**
-     * mkt.data.main.delete
-     * 
-     * @功能简述 : 删除某条主数据
-     * @author nianjun
-     * @return map
-     */
-    public int logicDeleteById(DataParty dataParty);
+//    /**
+//     * mkt.data.main.delete
+//     * 
+//     * @功能简述 : 删除某条主数据
+//     * @author nianjun
+//     * @return map
+//     */
+//    public int logicDeleteById(DataParty dataParty);
 
     /**
      *
