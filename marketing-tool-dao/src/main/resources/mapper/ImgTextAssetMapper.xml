@@ -148,6 +148,7 @@
 	<select id="selectImgtextAssetCountByType" resultType="java.util.Map">
 		SELECT type , count(id) as type_count
 		FROM img_text_asset
+		WHERE status = 0
 		GROUP BY type
 	</select>
 
