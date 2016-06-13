@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.DatareportColumns;
 
@@ -34,4 +36,11 @@ public interface DatareportColumnsDao extends BaseDao<DatareportColumns>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    /**
+     * @功能简述 : 获取所有数据质量报告中的列名
+     * @author nianjun
+     * @return map
+     */
+    List<DatareportColumns> selectListByFieldOrder();
 }

@@ -1,6 +1,8 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,54 +13,75 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.DatareportColumnsDao;
 import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
 import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
+import cn.rongcapital.mkt.po.DatareportColumns;
 import cn.rongcapital.mkt.po.ImportDataHistory;
 import cn.rongcapital.mkt.po.ImportDataModifyLog;
 import cn.rongcapital.mkt.service.DataGetQualityListService;
-import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.DataGetQualityListOut;
 
 @Service
 public class DataGetQualityListServiceImpl implements DataGetQualityListService {
 
     @Autowired
     private ImportDataHistoryDao importDataHistoryDao;
-    
+
     @Autowired
     private ImportDataModifyLogDao importDataModifyLogDao;
 
-    @Override
-    public Object getQualityList(String method, String userToken, Integer index, Integer size,
-                    String ver) {
+    @Autowired
+    private DatareportColumnsDao datareportColumnsDao;
 
-        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+    @Override
+    public Object getQualityList(String method, String userToken, Integer index, Integer size, String ver) {
+
+        DataGetQualityListOut result = new DataGetQualityListOut(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
         ImportDataHistory paramImportDataHistory = new ImportDataHistory();
         paramImportDataHistory.setStartIndex(index);
         paramImportDataHistory.setPageSize(size);
 
-        List<ImportDataHistory> importDataHistoryList =
-                        importDataHistoryDao.selectList(paramImportDataHistory);
+        List<ImportDataHistory> importDataHistoryList = importDataHistoryDao.selectList(paramImportDataHistory);
+        List<DatareportColumns> datareportColumnList = datareportColumnsDao.selectListByFieldOrder();
+        if (datareportColumnList != null && !datareportColumnList.isEmpty()) {
+            for (DatareportColumns datareportColumns : datareportColumnList) {
+                Map<String, Object> map = new LinkedHashMap<>();
+                map.put(datareportColumns.getFieldCode(), datareportColumns.getFieldName());
+                result.getColNames().add(map);
+            }
+        }
 
         if (importDataHistoryList != null && !importDataHistoryList.isEmpty()) {
             for (ImportDataHistory importDataHistory : importDataHistoryList) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("data_id", importDataHistory.getId());
-                map.put("start_time", importDataHistory.getImportStartTime());
-                map.put("end_time", importDataHistory.getImportEndTime());
-                map.put("data_source", importDataHistory.getSource());
-                map.put("legal_data_rows_count", importDataHistory.getLegalRows());
-                map.put("ilegal_data_rows_count", importDataHistory.getIllegalRows());
+                Map<String, Object> dataMap = new LinkedHashMap<>();
+                List<Map<String, Object>> logList = new ArrayList<>();
+                dataMap.put("data_id", importDataHistory.getId());
+                dataMap.put("start_time", importDataHistory.getImportStartTime());
+                dataMap.put("end_time", importDataHistory.getImportEndTime());
+                dataMap.put("data_source", importDataHistory.getSource());
+                dataMap.put("legal_data_rows_count", importDataHistory.getLegalRows());
+                dataMap.put("ilegal_data_rows_count", importDataHistory.getIllegalRows());
 
                 ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
                 paramImportDataModifyLog.setImportDataId(importDataHistory.getId());
-                List<ImportDataModifyLog> importDataModifyLogList = importDataModifyLogDao.selectList(paramImportDataModifyLog);
-                if(importDataModifyLogList!=null && !importDataModifyLogList.isEmpty()){
-                    map.put("", importDataModifyLogList);
+                List<ImportDataModifyLog> importDataModifyLogList =
+                                importDataModifyLogDao.selectList(paramImportDataModifyLog);
+                if (importDataModifyLogList != null && !importDataModifyLogList.isEmpty()) {
+                    for (ImportDataModifyLog importDataModifyLog : importDataModifyLogList) {
+                        Map<String, Object> contentMap = new HashMap<>();
+                        contentMap.put("modify_file_name", importDataModifyLog.getModifyFilename());
+                        contentMap.put("handle_time", importDataModifyLog.getHandleTime());
+                        logList.add(contentMap);
+                    }
+                    dataMap.put("modify_log", logList);
+                } else {
+                    dataMap.put("modify_log", null);
                 }
 
-                result.getData().add(map);
+                result.getData().add(dataMap);
             }
         }
 

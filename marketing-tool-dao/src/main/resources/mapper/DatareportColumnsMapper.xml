@@ -91,6 +91,10 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
-	
+	<select id="selectListByFieldOrder" resultType="cn.rongcapital.mkt.po.DatareportColumns">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[order by 4]]>	
+	</select>	
 </mapper>
