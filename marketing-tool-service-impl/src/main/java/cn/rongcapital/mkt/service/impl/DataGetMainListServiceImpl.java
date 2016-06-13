@@ -105,7 +105,6 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
         DataParty paramParty = new DataParty();
         paramParty.setStartIndex(index);
         paramParty.setPageSize(size);
-        paramParty.setDeleted(Boolean.FALSE);
 
         List<DataParty> dataPartyList = dataPartyDao.selectList(paramParty);
         if (dataPartyList != null && !dataPartyList.isEmpty()) {
