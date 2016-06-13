@@ -10,10 +10,13 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataParty;
 
-public interface DataPartyDao extends BaseDao<DataParty>{
+public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<DataParty>{
 	
 	//自定义扩展
 	/**
@@ -34,4 +37,40 @@ public interface DataPartyDao extends BaseDao<DataParty>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    /**
+     * mkt.data.main.count.get
+     * 
+     * @功能简述 : 获取主数据条数
+     * @author nianjun
+     * @return map
+     */
+    public Map<String, Object> selectMainCount();
+    
+    /**
+     * mkt.data.main.delete
+     * 
+     * @功能简述 : 删除某条主数据
+     * @author nianjun
+     * @return map
+     */
+    public int logicDeleteById(DataParty dataParty);
+
+    /**
+     *
+     * @功能简述 : 根据主键获取某条主数据
+     * @param id
+     * @author zhuxuelong
+     * @return DataParty
+     */
+    public DataParty getDataById(Integer id);
+
+    /**
+     * mkt.data.main.searchbyid.get
+     *
+     * @功能简述 : 根据类型和编号，搜索获取主数据(人群)
+     * @author nianjun
+     * @return map
+     */
+    Map<String,Object> selectAudienceDetail(Map<String, Object> map);
 }
