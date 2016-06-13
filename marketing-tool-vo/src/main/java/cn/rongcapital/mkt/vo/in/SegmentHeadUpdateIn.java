@@ -62,7 +62,7 @@ public class SegmentHeadUpdateIn extends BaseInput {
 		return segmentId;
 	}
 
-	@JsonProperty("segment_Id")
+	@JsonProperty("segment_head_id")
 	public void setSegmentId(Integer segmentId) {
 		this.segmentId = segmentId;
 	}
