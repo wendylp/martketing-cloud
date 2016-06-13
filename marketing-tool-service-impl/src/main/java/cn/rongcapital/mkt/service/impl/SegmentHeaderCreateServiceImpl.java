@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.common.util.UserSessionUtil;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
@@ -54,7 +55,7 @@ public class SegmentHeaderCreateServiceImpl implements SegmentHeaderCreateServic
     	if(res > ApiConstant.INT_ZERO) {
     		ur = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
     		Map<String,Object> map = new HashMap<String,Object>();
-    		map.put("oper","");//TO DO:获取当前用户名
+    		map.put("oper", UserSessionUtil.getUserNameByUserToken());//TO DO:获取当前用户名
     		map.put("updatetime", DateUtil.getStringFromDate(now, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
     		map.put("id", t.getId());
     		ur.getData().add(map);

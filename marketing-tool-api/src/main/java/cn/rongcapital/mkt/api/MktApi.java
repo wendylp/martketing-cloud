@@ -436,7 +436,7 @@ public class MktApi {
 	@POST
 	@Path("/mkt.segment.header.update")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object segmentHeaderUpdate(@Valid SegmentHeadUpdateIn body, @Context SecurityContext securityContext) {
+	public BaseOutput segmentHeaderUpdate(@Valid SegmentHeadUpdateIn body, @Context SecurityContext securityContext) {
 	    return segmentHeaderUpdateService.segmentHeaderUpdate(body,securityContext);
 	}
 	/**

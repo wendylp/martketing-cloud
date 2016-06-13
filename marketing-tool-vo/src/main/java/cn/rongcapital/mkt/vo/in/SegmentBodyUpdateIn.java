@@ -12,7 +12,7 @@ package cn.rongcapital.mkt.vo.in;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -21,8 +21,8 @@ import cn.rongcapital.mkt.vo.BaseInput;
 
 public class SegmentBodyUpdateIn extends BaseInput{
 
-	@NotEmpty
-	private String segmentHeadId;
+	@NotNull
+	private Integer segmentHeadId;
 
 //	@NotEmpty
 //	@Valid
@@ -32,12 +32,12 @@ public class SegmentBodyUpdateIn extends BaseInput{
 	private String userToken = null;
 
 	@JsonProperty("segment_head_id")
-	public String getSegmentHeadId() {
+	public Integer getSegmentHeadId() {
 		return segmentHeadId;
 	}
 
 	@JsonProperty("segment_head_id")
-	public void setSegmentHeadId(String segmentHeadId) {
+	public void setSegmentHeadId(Integer segmentHeadId) {
 		this.segmentHeadId = segmentHeadId;
 	}
 
