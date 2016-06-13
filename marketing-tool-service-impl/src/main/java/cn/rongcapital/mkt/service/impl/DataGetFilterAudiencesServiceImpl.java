@@ -73,7 +73,6 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         // 这代码写的太2了
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             DataParty paramObj = new DataParty();
-            paramObj.setDeleted(Boolean.FALSE);
             assignPagingValue(paramObj, index, size);
             return getData(dataType, taskIdList, paramObj, dataPartyDao);
         } else if (dataType == DataTypeEnum.APP.getCode()) {
