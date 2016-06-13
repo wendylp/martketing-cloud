@@ -95,6 +95,7 @@ import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
+import cn.rongcapital.mkt.service.GroupTagsSearchService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
@@ -132,6 +133,7 @@ import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
+import cn.rongcapital.mkt.vo.out.SerarchTagGroupTagsOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -267,6 +269,8 @@ public class MktApi {
 	private CampaignHeaderCreateService campaignHeaderCreateService;
 	@Autowired
 	private CampaignHeaderUpdateService campaignHeaderUpdateService;
+	@Autowired
+	private GroupTagsSearchService groupTagsSearchService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -988,6 +992,20 @@ public class MktApi {
             @NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("tag_group_name") String tagGroupName){
 		return segmentTagkeyTagListService.getLastTagByKey(tagGroupName);
+	}
+	
+	/* @功能简述: 根据关键字查询出系统最末级标签组名称和所关联的标签列表
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupName
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.tag.search.grouptags.get")
+	public SerarchTagGroupTagsOut getGroupTagsByKey(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("tag_group_name") String tagGroupName) {
+		return groupTagsSearchService.groupTagsSearch(method,userToken,tagGroupName);
 	}
 	
 	/**

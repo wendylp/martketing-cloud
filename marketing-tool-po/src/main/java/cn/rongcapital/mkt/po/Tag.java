@@ -5,7 +5,8 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
 
 public class Tag extends BaseQuery {
-    private Long id;
+	
+    private Integer id;
 
     private String name;
 
@@ -15,11 +16,11 @@ public class Tag extends BaseQuery {
 
     private Date updateTime;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

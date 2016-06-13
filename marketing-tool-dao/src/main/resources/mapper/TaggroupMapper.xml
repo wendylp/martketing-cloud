@@ -99,14 +99,17 @@
 	<!-- 根据关键字模糊查询系统最末级标签组列表 -->
 	<select id="selectByNameFuzzy" parameterType="cn.rongcapital.mkt.po.Taggroup"
 		resultType="cn.rongcapital.mkt.po.Taggroup">
-		<bind name="fuzzy" value="'%' + _parameter.name + '%'" />
 	    <![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST" />
 		<include refid="QUERY_FROM_TABLE" />
 		<where>
-			<if test="name != null and name != ''"><![CDATA[ AND name like #{fuzzy}]]></if>
-			<if test="level != null and level != ''"><![CDATA[ AND level = #{level}]]></if>
+			<if test="name != null and name != ''">
+				<bind name="fuzzy" value="'%' + _parameter.name + '%'" />
+				<![CDATA[ AND name like #{fuzzy}]]>
+			</if>
+			<if test="level != null"><![CDATA[ AND level = #{level}]]></if>
 		</where>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
 	</select>
 
 	<!-- 通过head_id获取受众细分关联的tag -->

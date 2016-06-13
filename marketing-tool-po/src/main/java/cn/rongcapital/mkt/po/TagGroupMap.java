@@ -1,15 +1,16 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
 
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
 public class TagGroupMap extends BaseQuery {
-    private Long id;
+	
+    private Integer id;
 
-    private Long tagId;
+    private Integer tagId;
 
-    private Long groupId;
+    private Integer groupId;
 
     private Byte status;
 
@@ -17,27 +18,27 @@ public class TagGroupMap extends BaseQuery {
 
     private Date updateTime;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Long getTagId() {
+    public Integer getTagId() {
         return tagId;
     }
 
-    public void setTagId(Long tagId) {
+    public void setTagId(Integer tagId) {
         this.tagId = tagId;
     }
 
-    public Long getGroupId() {
+    public Integer getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(Long groupId) {
+    public void setGroupId(Integer groupId) {
         this.groupId = groupId;
     }
 
