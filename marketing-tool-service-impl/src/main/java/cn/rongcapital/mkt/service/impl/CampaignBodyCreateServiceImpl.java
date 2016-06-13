@@ -244,7 +244,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignBodyCreateOut checkCampaignBiz(int campaignHeadId) {
 		CampaignBodyCreateOut out = null;
 		CampaignHead ch = new CampaignHead();
-		ch.setStatus((byte)0);
+		ch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		ch.setId(campaignHeadId);
 		List<CampaignHead> campaignHeadList = campaignHeadDao.selectList(ch);
 		

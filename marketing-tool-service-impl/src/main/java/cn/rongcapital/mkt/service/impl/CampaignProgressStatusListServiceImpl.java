@@ -56,7 +56,7 @@ public class CampaignProgressStatusListServiceImpl implements
 	public BaseOutput campaignProgressStatusList(Byte publishStatus,
 			String campaignName, Integer index, Integer size) {
 		CampaignHead t = new CampaignHead();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setPublishStatus(publishStatus);
 		t.setPageSize(size);
 		t.setStartIndex((index-1)*size);
@@ -75,7 +75,7 @@ public class CampaignProgressStatusListServiceImpl implements
 				
 				//查询活动的开始结束时间
 				CampaignTriggerTimer ctt = new CampaignTriggerTimer();
-				ctt.setStatus((byte)0);
+				ctt.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				ctt.setCampaignHeadId(c.getId());
 				List<CampaignTriggerTimer> cttList = campaignTriggerTimerDao.selectList(ctt);
 				if(null != cttList && cttList.size() == 1){
@@ -87,7 +87,7 @@ public class CampaignProgressStatusListServiceImpl implements
 				
 				//查询活动涉及到的人群
 				CampaignAudienceTarget cat = new CampaignAudienceTarget();
-				cat.setStatus((byte)0);
+				cat.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				cat.setCampaignHeadId(c.getId());
 				List<CampaignAudienceTarget> catList = campaignAudienceTargetDao.selectList(cat);
 				if(null != catList && catList.size() > 0){

@@ -109,7 +109,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		CampaignBodyGetOut campaignBodyGetOut = new CampaignBodyGetOut(0,ApiErrorCode.SUCCESS.getMsg(),0,null);
 		CampaignBody campaignBodyQuery = new CampaignBody();
 		campaignBodyQuery.setHeadId(campaignHeadId);
-		campaignBodyQuery.setStatus((byte)0);
+		campaignBodyQuery.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		List<CampaignBody> campaignBodyList = campaignBodyDao.selectList(campaignBodyQuery);
 		
 		if(null != campaignBodyList && campaignBodyList.size() > 0) {
@@ -215,7 +215,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignActionSendPrivtOut queryCampaignActionSendPrivt(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignActionSendPrivt t = new CampaignActionSendPrivt();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionSendPrivt> resList = campaignActionSendPrivtDao.selectList(t);
@@ -235,7 +235,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignActionSendH5Out queryCampaignActionSendH5(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignActionSendH5 t = new CampaignActionSendH5();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionSendH5> resList = campaignActionSendH5Dao.selectList(t);
@@ -256,7 +256,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignActionSendPubOut queryCampaignActionSendPub(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignActionSendPub t = new CampaignActionSendPub();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionSendPub> resList = campaignActionSendPubDao.selectList(t);
@@ -274,7 +274,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignActionSetTagOut queryCampaignActionSetTag(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignActionSetTag t = new CampaignActionSetTag();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionSetTag> resList = campaignActionSetTagDao.selectList(t);
@@ -290,7 +290,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignActionSaveAudienceOut queryCampaignActionSaveAudience(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignActionSaveAudience t = new CampaignActionSaveAudience();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionSaveAudience> resList = campaignActionSaveAudienceDao.selectList(t);
@@ -306,7 +306,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignActionWaitOut queryCampaignActionWait(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignActionWait t = new CampaignActionWait();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionWait> resList = campaignActionWaitDao.selectList(t);
@@ -324,7 +324,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignDecisionTagOut queryCampaignDecisionTag(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignDecisionTag t = new CampaignDecisionTag();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionTag> resList = campaignDecisionTagDao.selectList(t);
@@ -339,7 +339,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignDecisionPrvtFriendsOut queryCampaignDecisionPrvtFriends(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignDecisionPrvtFriends t = new CampaignDecisionPrvtFriends();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionPrvtFriends> resList = campaignDecisionPrvtFriendsDao.selectList(t);
@@ -357,7 +357,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignDecisionPubFansOut queryCampaignDecisionPubFans(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignDecisionPubFans t = new CampaignDecisionPubFans();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionPubFans> resList = campaignDecisionPubFansDao.selectList(t);
@@ -376,7 +376,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignDecisionWechatForwardOut queryCampaignDecisionWechatForward(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignDecisionWechatForward t = new CampaignDecisionWechatForward();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionWechatForward> resList = campaignDecisionWechatForwardDao.selectList(t);
@@ -397,7 +397,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignDecisionWechatReadOut queryCampaignDecisionWechatRead(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignDecisionWechatRead t = new CampaignDecisionWechatRead();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionWechatRead> resList = campaignDecisionWechatReadDao.selectList(t);
@@ -419,7 +419,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignDecisionWechatSentOut queryCampaignDecisionWechatSent(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignDecisionWechatSent t = new CampaignDecisionWechatSent();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionWechatSent> resList = campaignDecisionWechatSentDao.selectList(t);
@@ -439,7 +439,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignDecisionPropCompareOut queryCampaignDecisionPropCompare(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignDecisionPropCompare t = new CampaignDecisionPropCompare();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionPropCompare> resList = campaignDecisionPropCompareDao.selectList(t);
@@ -455,7 +455,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignAudienceTargetOut queryCampaignAudienceTarget(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignAudienceTarget t = new CampaignAudienceTarget();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignAudienceTarget> resList = campaignAudienceTargetDao.selectList(t);
@@ -475,7 +475,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	private CampaignTriggerTimerOut queryCampaignTriggerTimer(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignTriggerTimer t = new CampaignTriggerTimer();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setCampaignHeadId(campaignHeadId);
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignTriggerTimer> resList = campaignTriggerTimerDao.selectList(t);
@@ -493,7 +493,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	private List<CampaignSwitchOut> queryCampaignSwitchList(int campaignHeadId,String itemId) {
 		CampaignSwitch campaignSwitch = new CampaignSwitch();
 		campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH);
-		campaignSwitch.setStatus((byte)0);
+		campaignSwitch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		campaignSwitch.setCampaignHeadId(campaignHeadId);
 		campaignSwitch.setItemId(itemId);
 		List<CampaignSwitch> campaignSwitchList = campaignSwitchDao.selectList(campaignSwitch);
@@ -512,7 +512,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	private List<CampaignSwitchOut> queryCampaignEndsList(int campaignHeadId,String itemId) {
 		CampaignSwitch campaignSwitch = new CampaignSwitch();
 		campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_ENDS);
-		campaignSwitch.setStatus((byte)0);
+		campaignSwitch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		campaignSwitch.setCampaignHeadId(campaignHeadId);
 		campaignSwitch.setItemId(itemId);
 		List<CampaignSwitch> campaignEndsList = campaignSwitchDao.selectList(campaignSwitch);

@@ -24,7 +24,7 @@ public class CampaignNodeItemListGetServiceImpl implements CampaignNodeItemListG
 		
 		CampaignNodeItemListOut campaignNodeItemListOut = new CampaignNodeItemListOut(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),0,null);
 		CampaignNodeItem t = new CampaignNodeItem();
-		t.setStatus((byte)0);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setPtype((byte)-1);//先查找父类节点
 		List<CampaignNodeItem> campaignNodeList = campaignNodeItemDao.selectList(t);
 		if(null != campaignNodeList && campaignNodeList.size() > 0){
@@ -39,7 +39,7 @@ public class CampaignNodeItemListGetServiceImpl implements CampaignNodeItemListG
 				campaignNodeListOut.setUrl(node.getUrl());
 				
 				CampaignNodeItem t2 = new CampaignNodeItem();
-				t2.setStatus((byte)0);
+				t2.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				t2.setPtype(node.getType());
 				List<CampaignNodeItem> campaignItemList = campaignNodeItemDao.selectList(t2);
 				if(null != campaignItemList && campaignItemList.size() > 0){

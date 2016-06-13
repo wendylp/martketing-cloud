@@ -34,7 +34,7 @@ public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
 	public BaseOutput segmentHeaderGet(String userToken, String ver, String segmentId) {
 		SegmentationHead t = new SegmentationHead();
 		t.setId(Integer.parseInt(segmentId));  
-		t.setStatus((byte)ApiConstant.INT_ZERO);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		List<SegmentationHead> list = segmentationHeadDao.selectList(t);
 		BaseOutput out = new BaseOutput(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 		Map<String,Object> map = new HashMap<String,Object>();
