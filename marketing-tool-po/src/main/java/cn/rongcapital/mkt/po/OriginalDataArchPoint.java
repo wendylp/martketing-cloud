@@ -4,7 +4,7 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class DataArchPoint extends BaseQuery {
+public class OriginalDataArchPoint extends BaseQuery {
     private Integer id;
 
     private Integer eventId;
@@ -44,6 +44,8 @@ public class DataArchPoint extends BaseQuery {
     private Date updateTime;
 
     private String source;
+
+    private String cookie;
 
     public Integer getId() {
         return id;
@@ -203,5 +205,13 @@ public class DataArchPoint extends BaseQuery {
 
     public void setSource(String source) {
         this.source = source == null ? null : source.trim();
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie == null ? null : cookie.trim();
     }
 }

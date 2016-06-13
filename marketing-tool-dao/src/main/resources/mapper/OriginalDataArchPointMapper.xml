@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.rongcapital.mkt.dao.DataArchPointDao">
+<mapper namespace="cn.rongcapital.mkt.dao.OriginalDataArchPointDao">
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
@@ -8,7 +8,7 @@
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_arch_point]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM original_data_arch_point]]></sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
@@ -68,9 +68,9 @@
 	</sql>
 
 	<!-- 插入action记录 -->
-	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataArchPoint" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataArchPoint" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_arch_point (event_id,event_name,click_time,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,cookie)
+			INSERT INTO original_data_arch_point (event_id,event_name,click_time,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,cookie)
 			VALUES
 			(
 			  #{eventId},
@@ -99,14 +99,14 @@
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
 	<!-- 修改记录通过主键 -->
-	<update id="updateById" parameterType="cn.rongcapital.mkt.po.DataArchPoint">
-		<![CDATA[UPDATE data_arch_point]]>
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.OriginalDataArchPoint">
+		<![CDATA[UPDATE original_data_arch_point]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.DataArchPoint" resultType="cn.rongcapital.mkt.po.DataArchPoint">
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.OriginalDataArchPoint" resultType="cn.rongcapital.mkt.po.OriginalDataArchPoint">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -117,7 +117,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectList" parameterType="cn.rongcapital.mkt.po.DataArchPoint" resultType="cn.rongcapital.mkt.po.DataArchPoint">
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.OriginalDataArchPoint" resultType="cn.rongcapital.mkt.po.OriginalDataArchPoint">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -126,7 +126,7 @@
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.DataArchPoint" resultType="int">
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.OriginalDataArchPoint" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
