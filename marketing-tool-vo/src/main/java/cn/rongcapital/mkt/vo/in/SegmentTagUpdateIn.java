@@ -53,5 +53,4 @@ public class SegmentTagUpdateIn extends BaseInput{
 	public void setUserToken(String userToken) {
 		this.userToken = userToken;
 	}
-
 }
