@@ -15,8 +15,29 @@ public class CampaignDecisionPropCompareIn {
     private Byte propType;
 
     private Byte rule;
+    
+    private String ruleValue;
+    private Byte exlude;
 
-    @JsonProperty("id")
+    @JsonProperty("rule_value")
+    public String getRuleValue() {
+		return ruleValue;
+	}
+
+	public void setRuleValue(String ruleValue) {
+		this.ruleValue = ruleValue;
+	}
+
+	@JsonProperty("exclude")
+	public Byte getExlude() {
+		return exlude;
+	}
+
+	public void setExlude(Byte exlude) {
+		this.exlude = exlude;
+	}
+
+	@JsonProperty("id")
     public Integer getId() {
         return id;
     }

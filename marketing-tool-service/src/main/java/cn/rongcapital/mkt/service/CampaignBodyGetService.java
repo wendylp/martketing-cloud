@@ -1,6 +1,8 @@
 package cn.rongcapital.mkt.service;
 
+import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
+
 public interface CampaignBodyGetService {
 
-	public Object campaignBodyGet(String userToken, String ver, int campaignHeadId);
+	public CampaignBodyGetOut campaignBodyGet(String userToken, String ver, int campaignHeadId);
 }

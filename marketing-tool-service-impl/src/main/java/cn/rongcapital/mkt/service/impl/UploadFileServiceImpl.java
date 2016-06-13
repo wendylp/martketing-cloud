@@ -1,11 +1,16 @@
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
-import cn.rongcapital.mkt.po.ImportDataHistory;
-import cn.rongcapital.mkt.service.UploadFileService;
-import cn.rongcapital.mkt.vo.BaseOutput;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -14,15 +19,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
+import cn.rongcapital.mkt.po.ImportDataHistory;
+import cn.rongcapital.mkt.service.UploadFileService;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 /**
  * Created by Yunfeng on 2016-6-2.
@@ -30,7 +32,6 @@ import java.util.Map;
 @Service
 public class UploadFileServiceImpl implements UploadFileService{
 
-    private final String UPLOADED_FILE_PATH = ApiConstant.FILE_UPLOAD_URL;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired

@@ -1,9 +1,7 @@
 package cn.rongcapital.mkt.vo;
 
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
-import javax.xml.bind.annotation.XmlRootElement;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * Created by Yunfeng on 2016-5-25.

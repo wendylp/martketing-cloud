@@ -13,44 +13,45 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="accountName != null and accountName != ''"><![CDATA[ AND account_name = #{accountName}]]></if>
-		    	<if test="time != null and time != ''"><![CDATA[ AND time = #{time}]]></if>
-		    	<if test="store != null and store != ''"><![CDATA[ AND store = #{store}]]></if>
-		    	<if test="monetary != null and monetary != ''"><![CDATA[ AND monetary = #{monetary}]]></if>
-		    	<if test="skuList != null and skuList != ''"><![CDATA[ AND sku_list = #{skuList}]]></if>
-		    	<if test="deleted != null and deleted != ''"><![CDATA[ AND deleted = #{deleted}]]></if>
-		    	<if test="deleteTime != null and deleteTime != ''"><![CDATA[delete_time = #{deleteTime}]]></if>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="taskId != null"><![CDATA[ AND task_id = #{taskId}]]></if>
+		    	<if test="accountName != null"><![CDATA[ AND account_name = #{accountName}]]></if>
+		    	<if test="time != null"><![CDATA[ AND time = #{time}]]></if>
+		    	<if test="store != null"><![CDATA[ AND store = #{store}]]></if>
+		    	<if test="monetary != null"><![CDATA[ AND monetary = #{monetary}]]></if>
+		    	<if test="skuList != null"><![CDATA[ AND sku_list = #{skuList}]]></if>
+		    	<if test="deleted != null"><![CDATA[ AND deleted = #{deleted}]]></if>
+		    	<if test="deleteTime != null"><![CDATA[ AND delete_time = #{deleteTime}]]></if>
 		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="accountName != null"><![CDATA[AND account_name = #{accountName},]]></if>
-		    	<if test="time != null"><![CDATA[AND time = #{time},]]></if>
-		    	<if test="store != null"><![CDATA[AND store = #{store},]]></if>
-		    	<if test="monetary != null"><![CDATA[AND monetary = #{monetary},]]></if>
-		    	<if test="skuList != null"><![CDATA[AND sku_list = #{skuList},]]></if>
-		    	<if test="deleted != null"><![CDATA[AND deleted = #{deleted},]]></if>
-		    	<if test="deleteTime != null"><![CDATA[AND delete_time = #{deleteTime}]]></if>
+		    	<if test="taskId != null"><![CDATA[task_id = #{taskId},]]></if>
+		    	<if test="accountName != null"><![CDATA[account_name = #{accountName},]]></if>
+		    	<if test="time != null"><![CDATA[time = #{time},]]></if>
+		    	<if test="store != null"><![CDATA[store = #{store},]]></if>
+		    	<if test="monetary != null"><![CDATA[monetary = #{monetary},]]></if>
+		    	<if test="skuList != null"><![CDATA[sku_list = #{skuList},]]></if>
+		    	<if test="deleted != null"><![CDATA[deleted = #{deleted},]]></if>
+		    	<if test="deleteTime != null"><![CDATA[delete_time = #{deleteTime}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataPos" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_pos (id,account_name,time,store,monetary,sku_list,deleted,delete_time)
+			INSERT INTO data_pos (task_id,account_name,time,store,monetary,sku_list,deleted,delete_time)
 			VALUES
 			(
-			  #{id},
+			  #{taskId},
 			  #{accountName},
 			  #{time},
 			  #{store},
@@ -100,16 +101,22 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+
 	<!-- 根据taskId查询相关数据 -->
-	<select id="selectByTaskId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataPos">
+	<select id="selectByTaskId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataParty">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		<![CDATA[WHERE task_id IN]]>
-		<foreach collection="list" item="taskId" open="(" separator="," close=")">
+		<foreach collection="taskIdList" item="taskId" open="(" separator="," close=")">
 			<![CDATA[#{taskId}]]>
 		</foreach>
+		<![CDATA[AND deleted=0]]>
+		<if test="paramObj != null">
+			<if test="paramObj.startIndex != null and paramObj.startIndex &gt;= 0 and paramObj.pageSize != null and paramObj.pageSize &gt; 0">
+				<![CDATA[LIMIT #{paramObj}.startIndex,#{paramObj}.pageSize]]>
+			</if>	
+		</if>
 	</select>
 	
 </mapper>

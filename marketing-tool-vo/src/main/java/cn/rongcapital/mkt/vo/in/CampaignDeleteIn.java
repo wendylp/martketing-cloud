@@ -5,7 +5,9 @@ import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class CampaignDeleteIn {
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class CampaignDeleteIn extends BaseInput{
 	@NotNull
 	private Integer campaignId;
 	@NotEmpty

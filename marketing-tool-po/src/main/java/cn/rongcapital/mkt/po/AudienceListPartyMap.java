@@ -12,9 +12,11 @@ public class AudienceListPartyMap extends BaseQuery {
 
     private Integer partyId;
 
-    private Integer status;
+    private Byte status;
 
     private String oper;
+
+    private Date createTime;
 
     private Date updateTime;
     
@@ -42,11 +44,11 @@ public class AudienceListPartyMap extends BaseQuery {
         this.partyId = partyId;
     }
 
-    public Integer getStatus() {
+    public Byte getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Byte status) {
         this.status = status;
     }
 
@@ -56,6 +58,14 @@ public class AudienceListPartyMap extends BaseQuery {
 
     public void setOper(String oper) {
         this.oper = oper == null ? null : oper.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Date getUpdateTime() {

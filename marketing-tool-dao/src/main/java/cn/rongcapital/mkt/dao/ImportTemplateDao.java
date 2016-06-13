@@ -60,5 +60,13 @@ public interface ImportTemplateDao extends BaseDao<ImportTemplate> {
      * @return Integer
      */
     Integer updateByTemplNameandFieldName(ImportTemplate paramImportTemplate);
-
+    
+    /**
+     * mkt.data.filter.audiences.get
+     * 
+     * @功能简述 : 根据快捷筛选查询某类型的主数据
+     * @author nianjun
+     * @return List
+     */
+    List<ImportTemplate> selectSelectedTemplateList(ImportTemplate paramImportTemplate);
 }

@@ -15,7 +15,9 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class SegmentTagUpdateIn {
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class SegmentTagUpdateIn extends BaseInput{
 
 	@NotEmpty
 	private String segmentHeadId;

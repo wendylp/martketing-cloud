@@ -155,6 +155,7 @@
         <property name="basePackage" value="cn.rongcapital.mkt.dao"/>
     </bean>
 
+<!-- 
     <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg ref="sqlSessionFactory"/>
     </bean>
@@ -169,10 +170,13 @@
             <bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource"/>
         </property>
     </bean>
+
     <bean id="transactionAttributeSourceAdvisor"
           class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
         <property name="transactionInterceptor" ref="transactionInterceptor"/>
     </bean>
+-->  
+
     <!-- 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
           p:dataSource-ref="dataSource"/>

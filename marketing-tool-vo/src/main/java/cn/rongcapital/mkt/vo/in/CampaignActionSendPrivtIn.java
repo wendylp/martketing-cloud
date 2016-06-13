@@ -13,10 +13,6 @@ public class CampaignActionSendPrivtIn {
 
     private String name;
 
-    private Integer wechatH5Id;
-
-    private String wechatH5Name;
-
     private String prvtId;
 
     private String prvtGroupName;
@@ -59,24 +55,6 @@ public class CampaignActionSendPrivtIn {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
-    }
-
-    @JsonProperty("wechat_h5_id")
-    public Integer getWechatH5Id() {
-        return wechatH5Id;
-    }
-
-    public void setWechatH5Id(Integer wechatH5Id) {
-        this.wechatH5Id = wechatH5Id;
-    }
-
-    @JsonProperty("wechat_h5_name")
-    public String getWechatH5Name() {
-        return wechatH5Name;
-    }
-
-    public void setWechatH5Name(String wechatH5Name) {
-        this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
     }
 
     @JsonProperty("prvt_id")

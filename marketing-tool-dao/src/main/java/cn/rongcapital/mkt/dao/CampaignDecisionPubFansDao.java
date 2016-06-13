@@ -34,4 +34,5 @@ public interface CampaignDecisionPubFansDao extends BaseDao<CampaignDecisionPubF
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	int deleteByCampaignHeadId(int campaignHeadId);
 }

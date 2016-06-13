@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,head_id as headId,node_type as nodeType,item_type as itemType,item_id as itemId,next_node_type as nextNodeType,next_item_type as nextItemType,next_item_id as nextItemId,statistics_url as statisticsUrl,pos_x as posX,pos_y as posY,audience_count as audienceCount,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,head_id as headId,node_type as nodeType,item_type as itemType,item_id as itemId,statistics_url as statisticsUrl,pos_x as posX,pos_y as posY,pos_z as posZ,audience_count as audienceCount,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -13,72 +13,60 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="headId != null and headId != ''"><![CDATA[ AND head_id = #{headId}]]></if>
-		    	<if test="nodeType != null and nodeType != ''"><![CDATA[ AND node_type = #{nodeType}]]></if>
-		    	<if test="itemType != null and itemType != ''"><![CDATA[ AND item_type = #{itemType}]]></if>
-		    	<if test="itemId != null and itemId != ''"><![CDATA[ AND item_id = #{itemId}]]></if>
-		    	<if test="nextNodeType != null and nextNodeType != ''"><![CDATA[ AND next_node_type = #{nextNodeType}]]></if>
-		    	<if test="nextItemType != null and nextItemType != ''"><![CDATA[ AND next_item_type = #{nextItemType}]]></if>
-		    	<if test="nextItemId != null and nextItemId != ''"><![CDATA[ AND next_item_id = #{nextItemId}]]></if>
-		    	<if test="statisticsUrl != null and statisticsUrl != ''"><![CDATA[ AND statistics_url = #{statisticsUrl}]]></if>
-		    	<if test="posX != null and posX != ''"><![CDATA[ AND pos_x = #{posX}]]></if>
-		    	<if test="posY != null and posY != ''"><![CDATA[ AND pos_y = #{posY}]]></if>
-		    	<if test="audienceCount != null and audienceCount != ''"><![CDATA[ AND audience_count = #{audienceCount}]]></if>
-		    	<if test="status != null and status != ''"><![CDATA[ AND status = #{status}]]></if>
-		    	<if test="createTime != null and createTime != ''"><![CDATA[ AND create_time = #{createTime}]]></if>
-		    	<if test="updateTime != null and updateTime != ''"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="headId != null"><![CDATA[ AND head_id = #{headId}]]></if>
+		    	<if test="nodeType != null"><![CDATA[ AND node_type = #{nodeType}]]></if>
+		    	<if test="itemType != null"><![CDATA[ AND item_type = #{itemType}]]></if>
+		    	<if test="itemId != null"><![CDATA[ AND item_id = #{itemId}]]></if>
+		    	<if test="statisticsUrl != null"><![CDATA[ AND statistics_url = #{statisticsUrl}]]></if>
+		    	<if test="posX != null"><![CDATA[ AND pos_x = #{posX}]]></if>
+		    	<if test="posY != null"><![CDATA[ AND pos_y = #{posY}]]></if>
+		    	<if test="posZ != null"><![CDATA[ AND pos_z = #{posZ}]]></if>
+		    	<if test="audienceCount != null"><![CDATA[ AND audience_count = #{audienceCount}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
 		    	<if test="headId != null"><![CDATA[head_id = #{headId},]]></if>
 		    	<if test="nodeType != null"><![CDATA[node_type = #{nodeType},]]></if>
 		    	<if test="itemType != null"><![CDATA[item_type = #{itemType},]]></if>
 		    	<if test="itemId != null"><![CDATA[item_id = #{itemId},]]></if>
-		    	<if test="nextNodeType != null"><![CDATA[next_node_type = #{nextNodeType},]]></if>
-		    	<if test="nextItemType != null"><![CDATA[next_item_type = #{nextItemType},]]></if>
-		    	<if test="nextItemId != null"><![CDATA[next_item_id = #{nextItemId},]]></if>
 		    	<if test="statisticsUrl != null"><![CDATA[statistics_url = #{statisticsUrl},]]></if>
 		    	<if test="posX != null"><![CDATA[pos_x = #{posX},]]></if>
 		    	<if test="posY != null"><![CDATA[pos_y = #{posY},]]></if>
+		    	<if test="posZ != null"><![CDATA[pos_z = #{posZ},]]></if>
 		    	<if test="audienceCount != null"><![CDATA[audience_count = #{audienceCount},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
-		    	<if test="createTime != null"><![CDATA[create_time = #{createTime},]]></if>
-		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignBody" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_body (id,head_id,node_type,item_type,item_id,next_node_type,next_item_type,next_item_id,statistics_url,pos_x,pos_y,audience_count,status,create_time,update_time)
+			INSERT INTO campaign_body (head_id,node_type,item_type,item_id,statistics_url,pos_x,pos_y,pos_z,audience_count,create_time)
 			VALUES
 			(
-			  #{id},
 			  #{headId},
 			  #{nodeType},
 			  #{itemType},
 			  #{itemId},
-			  #{nextNodeType},
-			  #{nextItemType},
-			  #{nextItemId},
 			  #{statisticsUrl},
 			  #{posX},
 			  #{posY},
+			  #{posZ},
 			  #{audienceCount},
-			  #{status},
-			  #{createTime},
-			  #{updateTime}
+			  now()
 			)
 		]]>
 	</insert>
@@ -133,6 +121,11 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
+	<delete id="deleteByCampaignHeadId" parameterType="int">
+		delete 
+		<include refid="QUERY_FROM_TABLE"/>
+		where head_id = #{campaignHeadId}
+	</delete>
 	
 	
 </mapper>

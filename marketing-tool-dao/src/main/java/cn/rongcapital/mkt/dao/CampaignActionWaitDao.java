@@ -34,4 +34,5 @@ public interface CampaignActionWaitDao extends BaseDao<CampaignActionWait>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	int deleteByCampaignHeadId(int campaignHeadId);
 }

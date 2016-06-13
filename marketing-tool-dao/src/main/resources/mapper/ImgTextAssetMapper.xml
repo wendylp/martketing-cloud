@@ -17,57 +17,51 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="type != null and type != ''"><![CDATA[ AND type = #{type}]]></if>
-		    	<if test="ownerName != null and ownerName != ''"><![CDATA[ AND owner_name = #{ownerName}]]></if>
-		    	<if test="pcPreviewUrl != null and pcPreviewUrl != ''"><![CDATA[ AND pc_preview_url = #{pcPreviewUrl}]]></if>
-		    	<if test="mobilePreviewUrl != null and mobilePreviewUrl != ''"><![CDATA[ AND mobile_preview_url = #{mobilePreviewUrl}]]></if>
-		    	<if test="status != null and status != ''"><![CDATA[ AND status = #{status}]]></if>
-		    	<if test="createTime != null and createTime != ''"><![CDATA[ AND create_time = #{createTime}]]></if>
-		    	<if test="updateTime != null and updateTime != ''"><![CDATA[ AND update_time = #{updateTime}]]></if>
-		    	<if test="imgfileUrl != null and imgfileUrl != ''"><![CDATA[ AND imgfile_url = #{imgfileUrl}]]></if>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		    	<if test="ownerName != null"><![CDATA[ AND owner_name = #{ownerName}]]></if>
+		    	<if test="pcPreviewUrl != null"><![CDATA[ AND pc_preview_url = #{pcPreviewUrl}]]></if>
+		    	<if test="mobilePreviewUrl != null"><![CDATA[ AND mobile_preview_url = #{mobilePreviewUrl}]]></if>
+		    	<if test="imgfileUrl != null"><![CDATA[ AND imgfile_url = #{imgfileUrl}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
 		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
 		    	<if test="ownerName != null"><![CDATA[owner_name = #{ownerName},]]></if>
 		    	<if test="pcPreviewUrl != null"><![CDATA[pc_preview_url = #{pcPreviewUrl},]]></if>
 		    	<if test="mobilePreviewUrl != null"><![CDATA[mobile_preview_url = #{mobilePreviewUrl},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
-		    	<if test="createTime != null"><![CDATA[create_time = #{createTime},]]></if>
-		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime},]]></if>
-		    	<if test="imgfileUrl != null"><![CDATA[imgfile_url = #{imgfileUrl}]]></if>
+		    	<if test="imgfileUrl != null"><![CDATA[imgfile_url = #{imgfileUrl},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ImgTextAsset" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO img_text_asset (id,name,type,owner_name,pc_preview_url,mobile_preview_url,status,create_time,update_time,imgfile_url)
+			INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,create_time)
 			VALUES
 			(
-			  #{id},
 			  #{name},
 			  #{type},
 			  #{ownerName},
 			  #{pcPreviewUrl},
 			  #{mobilePreviewUrl},
-			  #{status},
-			  #{createTime},
-			  #{updateTime},
-			  #{imgfileUrl}
+			  #{imgfileUrl},
+			  now()
 			)
 		]]>
 	</insert>

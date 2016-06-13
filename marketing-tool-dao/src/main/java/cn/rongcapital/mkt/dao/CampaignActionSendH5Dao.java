@@ -34,4 +34,5 @@ public interface CampaignActionSendH5Dao extends BaseDao<CampaignActionSendH5>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	int deleteByCampaignHeadId(int campaignHeadId);
 }

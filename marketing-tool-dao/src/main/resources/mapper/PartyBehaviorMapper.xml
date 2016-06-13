@@ -13,20 +13,20 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		        <if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="contactId != null and contactId != ''"><![CDATA[ AND contact_id = #{contactId}]]></if>
-		    	<if test="behaviorType != null and behaviorType != ''"><![CDATA[ AND behavior_type = #{behaviorType}]]></if>
-		    	<if test="behaviorName != null and behaviorName != ''"><![CDATA[ AND behavior_name = #{behaviorName}]]></if>
-		    	<if test="wechatType != null and wechatType != ''"><![CDATA[ AND wechat_type = #{wechatType}]]></if>
-		    	<if test="wechatName != null and wechatName != ''"><![CDATA[ AND wechat_name = #{wechatName}]]></if>
-		    	<if test="message != null and message != ''"><![CDATA[ AND message = #{message}]]></if>
-		    	<if test="createtime != null and createtime != ''"><![CDATA[ AND createtime = #{createtime}]]></if>
+		        <if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="contactId != null"><![CDATA[ AND contact_id = #{contactId}]]></if>
+		    	<if test="behaviorType != null"><![CDATA[ AND behavior_type = #{behaviorType}]]></if>
+		    	<if test="behaviorName != null"><![CDATA[ AND behavior_name = #{behaviorName}]]></if>
+		    	<if test="wechatType != null"><![CDATA[ AND wechat_type = #{wechatType}]]></if>
+		    	<if test="wechatName != null"><![CDATA[ AND wechat_name = #{wechatName}]]></if>
+		    	<if test="message != null"><![CDATA[ AND message = #{message}]]></if>
+		    	<if test="createtime != null"><![CDATA[ AND createtime = #{createtime}]]></if>
 		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 

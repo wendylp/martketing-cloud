@@ -13,64 +13,66 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="pubId != null and pubId != ''"><![CDATA[ AND pub_id = #{pubId}]]></if>
-		    	<if test="pubName != null and pubName != ''"><![CDATA[ AND pub_name = #{pubName}]]></if>
-		    	<if test="name != null and name != ''"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="nickname != null and nickname != ''"><![CDATA[ AND nickname = #{nickname}]]></if>
-		    	<if test="sex != null and sex != ''"><![CDATA[ AND sex = #{sex}]]></if>
-		    	<if test="country != null and country != ''"><![CDATA[ AND country = #{country}]]></if>
-		    	<if test="province != null and province != ''"><![CDATA[ AND province = #{province}]]></if>
-		    	<if test="city != null and city != ''"><![CDATA[ AND city = #{city}]]></if>
-		    	<if test="county != null and county != ''"><![CDATA[ AND county = #{county}]]></if>
-		    	<if test="birtday != null and birtday != ''"><![CDATA[ AND birtday = #{birtday}]]></if>
-		    	<if test="subscribeYn != null and subscribeYn != ''"><![CDATA[ AND subscribe_yn = #{subscribeYn}]]></if>
-		    	<if test="subscribeTime != null and subscribeTime != ''"><![CDATA[ AND subscribe_time = #{subscribeTime}]]></if>
-		    	<if test="activeTime != null and activeTime != ''"><![CDATA[ AND active_time = #{activeTime}]]></if>
-		    	<if test="activity48hYn != null and activity48hYn != ''"><![CDATA[ AND activity_48h_yn = #{activity48hYn}]]></if>
-		    	<if test="headImageUrl != null and headImageUrl != ''"><![CDATA[ AND head_image_url = #{headImageUrl}]]></if>
-		    	<if test="remark != null and remark != ''"><![CDATA[ AND remark = #{remark}]]></if>
-		    	<if test="groupIds != null and groupIds != ''"><![CDATA[group_ids = #{groupIds}]]></if>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		    	<if test="pubName != null"><![CDATA[ AND pub_name = #{pubName}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="nickname != null"><![CDATA[ AND nickname = #{nickname}]]></if>
+		    	<if test="sex != null"><![CDATA[ AND sex = #{sex}]]></if>
+		    	<if test="country != null"><![CDATA[ AND country = #{country}]]></if>
+		    	<if test="province != null"><![CDATA[ AND province = #{province}]]></if>
+		    	<if test="city != null"><![CDATA[ AND city = #{city}]]></if>
+		    	<if test="county != null"><![CDATA[ AND county = #{county}]]></if>
+		    	<if test="birtday != null"><![CDATA[ AND birtday = #{birtday}]]></if>
+		    	<if test="subscribeYn != null"><![CDATA[ AND subscribe_yn = #{subscribeYn}]]></if>
+		    	<if test="subscribeTime != null"><![CDATA[ AND subscribe_time = #{subscribeTime}]]></if>
+		    	<if test="activeTime != null"><![CDATA[ AND active_time = #{activeTime}]]></if>
+		    	<if test="activity48hYn != null"><![CDATA[ AND activity_48h_yn = #{activity48hYn}]]></if>
+		    	<if test="headImageUrl != null"><![CDATA[ AND head_image_url = #{headImageUrl}]]></if>
+		    	<if test="remark != null"><![CDATA[ AND remark = #{remark}]]></if>
+		    	<if test="groupIds != null"><![CDATA[ AND group_ids = #{groupIds}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[AND id = #{id},]]></if>
-		    	<if test="pubId != null"><![CDATA[AND pub_id = #{pubId},]]></if>
-		    	<if test="pubName != null"><![CDATA[AND pub_name = #{pubName},]]></if>
-		    	<if test="name != null"><![CDATA[AND name = #{name},]]></if>
-		    	<if test="nickname != null"><![CDATA[AND nickname = #{nickname},]]></if>
-		    	<if test="sex != null"><![CDATA[AND sex = #{sex},]]></if>
-		    	<if test="country != null"><![CDATA[AND country = #{country},]]></if>
-		    	<if test="province != null"><![CDATA[AND province = #{province},]]></if>
-		    	<if test="city != null"><![CDATA[AND city = #{city},]]></if>
-		    	<if test="county != null"><![CDATA[AND county = #{county},]]></if>
-		    	<if test="birtday != null"><![CDATA[AND birtday = #{birtday},]]></if>
-		    	<if test="subscribeYn != null"><![CDATA[AND subscribe_yn = #{subscribeYn},]]></if>
-		    	<if test="subscribeTime != null"><![CDATA[AND subscribe_time = #{subscribeTime},]]></if>
-		    	<if test="activeTime != null"><![CDATA[AND active_time = #{activeTime},]]></if>
-		    	<if test="activity48hYn != null"><![CDATA[AND activity_48h_yn = #{activity48hYn},]]></if>
-		    	<if test="headImageUrl != null"><![CDATA[AND head_image_url = #{headImageUrl},]]></if>
-		    	<if test="remark != null"><![CDATA[AND remark = #{remark},]]></if>
-		    	<if test="groupIds != null"><![CDATA[AND group_ids = #{groupIds}]]></if>
+		    	<if test="pubId != null"><![CDATA[pub_id = #{pubId},]]></if>
+		    	<if test="pubName != null"><![CDATA[pub_name = #{pubName},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="nickname != null"><![CDATA[nickname = #{nickname},]]></if>
+		    	<if test="sex != null"><![CDATA[sex = #{sex},]]></if>
+		    	<if test="country != null"><![CDATA[country = #{country},]]></if>
+		    	<if test="province != null"><![CDATA[province = #{province},]]></if>
+		    	<if test="city != null"><![CDATA[city = #{city},]]></if>
+		    	<if test="county != null"><![CDATA[county = #{county},]]></if>
+		    	<if test="birtday != null"><![CDATA[birtday = #{birtday},]]></if>
+		    	<if test="subscribeYn != null"><![CDATA[subscribe_yn = #{subscribeYn},]]></if>
+		    	<if test="subscribeTime != null"><![CDATA[subscribe_time = #{subscribeTime},]]></if>
+		    	<if test="activeTime != null"><![CDATA[active_time = #{activeTime},]]></if>
+		    	<if test="activity48hYn != null"><![CDATA[activity_48h_yn = #{activity48hYn},]]></if>
+		    	<if test="headImageUrl != null"><![CDATA[head_image_url = #{headImageUrl},]]></if>
+		    	<if test="remark != null"><![CDATA[remark = #{remark},]]></if>
+		    	<if test="groupIds != null"><![CDATA[group_ids = #{groupIds},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatPublicFans" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_public_fans (id,pub_id,pub_name,name,nickname,sex,country,province,city,county,birtday,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,group_ids)
+			INSERT INTO wechat_public_fans (pub_id,pub_name,name,nickname,sex,country,province,city,county,birtday,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,group_ids,create_time)
 			VALUES
 			(
-			  #{id},
 			  #{pubId},
 			  #{pubName},
 			  #{name},
@@ -87,7 +89,8 @@
 			  #{activity48hYn},
 			  #{headImageUrl},
 			  #{remark},
-			  #{groupIds}
+			  #{groupIds},
+			  now()
 			)
 		]]>
 	</insert>

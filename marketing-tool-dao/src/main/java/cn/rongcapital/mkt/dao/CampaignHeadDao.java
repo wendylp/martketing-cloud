@@ -58,7 +58,7 @@ public interface CampaignHeadDao extends BaseDao<CampaignHead>{
 	 * @param paramMap
 	 * @return list
 	 */
-	public List<CampaignHead> selectCampaignProgressStatusListByPublishStatus(Map<String,Object> paramMap);
+	public List<CampaignHead> selectCampaignProgressStatusListByPublishStatus(CampaignHead campaignHead);
 
 	/**
 	 * 主数据查询(主界面搜索栏里面的模糊查询)

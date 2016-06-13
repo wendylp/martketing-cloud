@@ -8,11 +8,6 @@ public class CampaignTriggerTimerIn {
 	
     private Integer id;
 
-    private Integer campaignHeadId;
-
-    @NotNull
-    private String itemId;
-
     private String name;
 
     @NotNull
@@ -27,24 +22,6 @@ public class CampaignTriggerTimerIn {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    @JsonProperty("campaign_head_id")
-    public Integer getCampaignHeadId() {
-        return campaignHeadId;
-    }
-
-    public void setCampaignHeadId(Integer campaignHeadId) {
-        this.campaignHeadId = campaignHeadId;
-    }
-
-    @JsonProperty("item_id")
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId == null ? null : itemId.trim();
     }
 
     @JsonProperty("name")

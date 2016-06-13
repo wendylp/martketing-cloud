@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -46,7 +46,11 @@ import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.service.CampaignDeleteService;
+import cn.rongcapital.mkt.service.CampaignHeaderCreateService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
+import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
+import cn.rongcapital.mkt.service.CampaignManualStartService;
+import cn.rongcapital.mkt.service.CampaignNodeItemListGetService;
 import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
 import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
 import cn.rongcapital.mkt.service.CampaignSummaryGetService;
@@ -65,6 +69,8 @@ import cn.rongcapital.mkt.service.DataGetViewListService;
 import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
 import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
+import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
+import cn.rongcapital.mkt.service.GetDataMainSearchService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
@@ -99,9 +105,6 @@ import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.GetImgtextCountService;
-import cn.rongcapital.mkt.service.GetDataMainSearchService;
-import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -109,17 +112,24 @@ import cn.rongcapital.mkt.vo.ImgtextHostIn;
 import cn.rongcapital.mkt.vo.LoginInput;
 import cn.rongcapital.mkt.vo.ModifyInput;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
-import cn.rongcapital.mkt.vo.SegmentHeadCreateIn;
-import cn.rongcapital.mkt.vo.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
+import cn.rongcapital.mkt.vo.in.CampaignHeadCreateIn;
+import cn.rongcapital.mkt.vo.in.CampaignHeadUpdateIn;
+import cn.rongcapital.mkt.vo.in.CampaignManualStartIn;
 import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
+import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
+import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
+import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
+import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
+import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
+import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 
@@ -247,7 +257,14 @@ public class MktApi {
 	private MainBasicInfoGetService mainBasicInfoGetService;
 	@Autowired
 	private TaggroupSystemMenulistGetService taggroupSystemMenulistGetService;
-
+	@Autowired
+	private CampaignNodeItemListGetService campaignNodeItemListGetService;
+	@Autowired
+	private CampaignManualStartService campaignManualStartService;
+	@Autowired
+	private CampaignHeaderCreateService campaignHeaderCreateService;
+	@Autowired
+	private CampaignHeaderUpdateService campaignHeaderUpdateService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -323,15 +340,40 @@ public class MktApi {
 	}
 
 	/**
-	 * @功能简述: 创建campaign body
+	 * @功能简述: 手动开启活动接口
+	 * @param: SegmentHeadIn body, SecurityContext securityContext 
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.campaign.manual.start")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public CampaignManualStartOut campaignBodyCreate(@Valid CampaignManualStartIn body, @Context SecurityContext securityContext) {
+		return campaignManualStartService.campaignManualStart(body, securityContext);
+	}
+	
+    /**
+	 * @功能简述: 获取活动编排页面左侧的节点和子节点列表
+	 * @param: SegmentHeadIn body, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.campaign.nodeitem.list.get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public CampaignNodeItemListOut campaignBodyGet(@NotEmpty @QueryParam("user_token") String userToken,
+								  @NotEmpty @QueryParam("ver") String ver) {
+	    return campaignNodeItemListGetService.campaignNodeItemListGet(userToken, ver);
+	}
+
+	/**
+	 * @功能简述: 创建/编辑campaign body
 	 * @param: SegmentHeadIn body, SecurityContext securityContext,Integer campaignHeadId 
 	 * @return: Object
 	 */
 	@POST
-	@Path("/mkt.campaign.body.create")
+	@Path("/mkt.campaign.body.update")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public CampaignBodyCreateOut campaignBodyCreate(@Valid CampaignBodyCreateIn body, @Context SecurityContext securityContext) {
-	    return campaignBodyCreateService.campaignBodyCreate(body, securityContext);
+		return campaignBodyCreateService.campaignBodyCreate(body, securityContext);
 	}
 	
 	/**
@@ -342,10 +384,34 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.body.get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object campaignBodyGet(@NotEmpty @QueryParam("user_token") String userToken,
+	public CampaignBodyGetOut campaignBodyGet(@NotEmpty @QueryParam("user_token") String userToken,
 								  @NotEmpty @QueryParam("ver") String ver,
 								  @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
 	    return campaignBodyGetService.campaignBodyGet(userToken, ver, campaignHeadId);
+	}
+	
+	/**
+	 * @功能简述: 编辑campaign header
+	 * @param: CampaignHeadUpdateIn body, SecurityContext securityContext 
+	 * @return: BaseOutput
+	 */
+	@POST
+	@Path("/mkt.campaign.header.update")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput campaignHeaderUpdate(@Valid CampaignHeadUpdateIn body, @Context SecurityContext securityContext) {
+	    return campaignHeaderUpdateService.campaignHeaderUpdate(body, securityContext);
+	}
+	
+	/**
+	 * @功能简述: 创建campaign header
+	 * @param: CampaignHeadCreateIn body, SecurityContext securityContext 
+	 * @return: BaseOutput
+	 */
+	@POST
+	@Path("/mkt.campaign.header.create")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput campaignHeaderCreate(@Valid CampaignHeadCreateIn body, @Context SecurityContext securityContext) {
+	    return campaignHeaderCreateService.campaignHeaderCreate(body, securityContext);
 	}
 	
 	/**
@@ -395,7 +461,7 @@ public class MktApi {
 	@POST
 	@Path("/mkt.segment.header.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object segmentHeaderCreate(@Valid SegmentHeadCreateIn body, @Context SecurityContext securityContext) {
+	public BaseOutput segmentHeaderCreate(@Valid SegmentHeadCreateIn body, @Context SecurityContext securityContext) {
 	    return segmentHeaderService.segmentHeaderCreate(body, securityContext);
 	}
 	
@@ -714,17 +780,18 @@ public class MktApi {
     @Path("/mkt.data.filter.audiences.get")
     public Object getFilterAudiences(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotNull @QueryParam("md_type") Integer mdType, @NotEmpty @QueryParam("ver") String ver,
-                    @NotEmpty @QueryParam("taskIdList") List taskIdList, @QueryParam("index") Integer index,
-                    @QueryParam("size") Integer size) {
+                    @NotNull @QueryParam("md_type") Integer mdType, @NotEmpty @QueryParam("ver") String ver, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) { 
 
+        List<Integer> taskIdList = new ArrayList<>();
+        taskIdList.add(1);
         List<Map<String, Object>> audiencesList = dataGetFilterAudiencesService.getFilterAudiences(method, userToken,
                         ver, index, size, mdType, taskIdList);
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
-        result.getData().add(audiencesList);
-
+        result.getData().addAll(audiencesList);
         result.setTotal(result.getData().size());
+        
         return Response.ok().entity(result).build();
     }
 
@@ -866,8 +933,9 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.summary.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken){
+	public BaseOutput campaignSummaryGet(
+										@NotEmpty @QueryParam("method") String method,
+										@NotEmpty @QueryParam("user_token") String userToken){
 		return campaignSummaryGetService.campaignSummaryGet();
 	}
 	
@@ -879,8 +947,9 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.progressstatus.count.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public BaseOutput campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken){
+	public BaseOutput campaignProgressStatusCount(
+													@NotEmpty @QueryParam("method") String method,
+													@NotEmpty @QueryParam("user_token") String userToken){
 		return campaignProgressStatusCountService.campaignProgressStatusCountGet();
 	}
 	
@@ -895,12 +964,13 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.progressstatus.list.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public BaseOutput campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("publish_status") Integer publishStatus,
-			@QueryParam("campaign_name") String campaignName,
-			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
+	public BaseOutput campaignProgressStatusListGet(
+													@NotEmpty @QueryParam("method") String method,
+													@NotEmpty @QueryParam("user_token") String userToken,
+													@NotNull @QueryParam("publish_status") Byte publishStatus,
+													@QueryParam("campaign_name") String campaignName,
+													@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+													@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
 		return campaignProgressStatusListService.campaignProgressStatusList(publishStatus, campaignName, index, size);
 	}
 

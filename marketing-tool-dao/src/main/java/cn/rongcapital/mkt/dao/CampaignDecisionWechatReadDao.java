@@ -34,4 +34,5 @@ public interface CampaignDecisionWechatReadDao extends BaseDao<CampaignDecisionW
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	int deleteByCampaignHeadId(int campaignHeadId);
 }

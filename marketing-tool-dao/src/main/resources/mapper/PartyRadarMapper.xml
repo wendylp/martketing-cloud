@@ -13,19 +13,19 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="contactId != null and contactId != ''"><![CDATA[ AND contact_id = #{contactId}]]></if>
-		    	<if test="contactName != null and contactName != ''"><![CDATA[ AND contact_name = #{contactName}]]></if>
-		    	<if test="recentBuyTime != null and recentBuyTime != ''"><![CDATA[ AND recent_buy_time = #{recentBuyTime}]]></if>
-		    	<if test="buyRate != null and buyRate != ''"><![CDATA[ AND buy_rate = #{buyRate}]]></if>
-		    	<if test="goodsTypes != null and goodsTypes != ''"><![CDATA[ AND goods_types = #{goodsTypes}]]></if>
-		    	<if test="averageTransAmt != null and averageTransAmt != ''"><![CDATA[ AND average_trans_amt = #{averageTransAmt}]]></if>
-		    	<if test="topTransAmt != null and topTransAmt != ''"><![CDATA[ AND top_trans_amt = #{topTransAmt}]]></if>
+		    	<if test="contactId != null"><![CDATA[ AND contact_id = #{contactId}]]></if>
+		    	<if test="contactName != null"><![CDATA[ AND contact_name = #{contactName}]]></if>
+		    	<if test="recentBuyTime != null"><![CDATA[ AND recent_buy_time = #{recentBuyTime}]]></if>
+		    	<if test="buyRate != null"><![CDATA[ AND buy_rate = #{buyRate}]]></if>
+		    	<if test="goodsTypes != null"><![CDATA[ AND goods_types = #{goodsTypes}]]></if>
+		    	<if test="averageTransAmt != null"><![CDATA[ AND average_trans_amt = #{averageTransAmt}]]></if>
+		    	<if test="topTransAmt != null"><![CDATA[ AND top_trans_amt = #{topTransAmt}]]></if>
 		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
@@ -66,7 +66,7 @@
 	<update id="updateById" parameterType="cn.rongcapital.mkt.po.PartyRadar">
 		<![CDATA[UPDATE party_radar]]>
 		<include refid="UPDATE_COLUMN_SET"/>
-		<![CDATA[WHERE contact_id = #{contactId}]]>
+		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->

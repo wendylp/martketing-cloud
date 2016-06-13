@@ -10,11 +10,10 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.User;
-
-import java.util.List;
-import java.util.Map;
 
 public interface UserDao extends BaseDao<User>{
 	

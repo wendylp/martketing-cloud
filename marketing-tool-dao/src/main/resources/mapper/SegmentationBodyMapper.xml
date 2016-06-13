@@ -13,54 +13,48 @@
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-		    	<if test="id != null and id != ''"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="headId != null and headId != ''"><![CDATA[ AND head_id = #{headId}]]></if>
-		    	<if test="tagGroupId != null and tagGroupId != ''"><![CDATA[ AND tag_group_id = #{tagGroupId}]]></if>
-		    	<if test="tagId != null and tagId != ''"><![CDATA[ AND tag_id = #{tagId}]]></if>
-		    	<if test="exclude != null and exclude != ''"><![CDATA[ AND exclude = #{exclude}]]></if>
-		    	<if test="groupIndex != null and groupIndex != ''"><![CDATA[ AND group_index = #{groupIndex}]]></if>
-		    	<if test="status != null and status != ''"><![CDATA[ AND status = #{status}]]></if>
-		    	<if test="createTime != null and createTime != ''"><![CDATA[ AND create_time = #{createTime}]]></if>
-		    	<if test="updateTime != null and updateTime != ''"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="headId != null"><![CDATA[ AND head_id = #{headId}]]></if>
+		    	<if test="tagGroupId != null"><![CDATA[ AND tag_group_id = #{tagGroupId}]]></if>
+		    	<if test="tagId != null"><![CDATA[ AND tag_id = #{tagId}]]></if>
+		    	<if test="exclude != null"><![CDATA[ AND exclude = #{exclude}]]></if>
+		    	<if test="groupIndex != null"><![CDATA[ AND group_index = #{groupIndex}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="id != null"><![CDATA[id = #{id},]]></if>
 		    	<if test="headId != null"><![CDATA[head_id = #{headId},]]></if>
 		    	<if test="tagGroupId != null"><![CDATA[tag_group_id = #{tagGroupId},]]></if>
 		    	<if test="tagId != null"><![CDATA[tag_id = #{tagId},]]></if>
 		    	<if test="exclude != null"><![CDATA[exclude = #{exclude},]]></if>
 		    	<if test="groupIndex != null"><![CDATA[group_index = #{groupIndex},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
-		    	<if test="createTime != null"><![CDATA[create_time = #{createTime},]]></if>
-		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SegmentationBody" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO segmentation_body (id,head_id,tag_group_id,tag_id,exclude,group_index,status,create_time,update_time)
+			INSERT INTO segmentation_body (head_id,tag_group_id,tag_id,exclude,group_index,create_time)
 			VALUES
 			(
-			  #{id},
 			  #{headId},
 			  #{tagGroupId},
 			  #{tagId},
 			  #{exclude},
 			  #{groupIndex},
-			  #{status},
-			  #{createTime},
-			  #{updateTime}
+			  now()
 			)
 		]]>
 	</insert>
@@ -107,7 +101,7 @@
 	<!-- 通过head_id批量删除记录 -->
 	<update id="batchDeleteUseHeaderId" parameterType="java.lang.Integer">
 		<![CDATA[UPDATE segmentation_body]]>
-		<![CDATA[SET status = 1, update_time = NOW()]]>
+		<![CDATA[SET status = 1]]>
 		<![CDATA[WHERE head_id = #{headId} AND status = 0]]>
 	</update>
 	

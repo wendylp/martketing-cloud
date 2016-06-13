@@ -5,16 +5,23 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class CampaignSwitchIn {
 	
     private Integer id;
-
-    private Integer campaignHeadId;
-
-    private String itemId;
-
-    private Byte type;
+    
+    private String nextItemId;
+    
+    private Byte drawType;//0:curveTriangle
 
     private String color;
 
-    @JsonProperty("id")
+	@JsonProperty("next_itemId")
+	public String getNextItemId() {
+		return nextItemId;
+	}
+
+	public void setNextItemId(String nextItemId) {
+		this.nextItemId = nextItemId;
+	}
+
+	@JsonProperty("id")
     public Integer getId() {
         return id;
     }
@@ -23,34 +30,16 @@ public class CampaignSwitchIn {
         this.id = id;
     }
 
-    @JsonProperty("campaign_head_id")
-    public Integer getCampaignHeadId() {
-        return campaignHeadId;
-    }
+    @JsonProperty("draw_type")
+    public Byte getDrawType() {
+		return drawType;
+	}
 
-    public void setCampaignHeadId(Integer campaignHeadId) {
-        this.campaignHeadId = campaignHeadId;
-    }
+	public void setDrawType(Byte drawType) {
+		this.drawType = drawType;
+	}
 
-    @JsonProperty("item_id")
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId == null ? null : itemId.trim();
-    }
-
-    @JsonProperty("type")
-    public Byte getType() {
-        return type;
-    }
-
-    public void setType(Byte type) {
-        this.type = type;
-    }
-
-    @JsonProperty("color")
+	@JsonProperty("color")
     public String getColor() {
         return color;
     }

@@ -42,4 +42,6 @@ public interface CampaignBodyDao extends BaseDao<CampaignBody>{
 	 * @return int
 	 */
 	int selectCampaignAudienceCount();
+	
+	int deleteByCampaignHeadId(int campaignHeadId);
 }

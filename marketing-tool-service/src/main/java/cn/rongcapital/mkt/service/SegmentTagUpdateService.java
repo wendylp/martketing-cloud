@@ -16,7 +16,6 @@ import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 
 public interface SegmentTagUpdateService {
 
-	public BaseOutput updateSegmentTag(SegmentTagUpdateIn body,
-			SecurityContext securityContext);
+	public BaseOutput updateSegmentTag(SegmentTagUpdateIn body, SecurityContext securityContext);
 
 }

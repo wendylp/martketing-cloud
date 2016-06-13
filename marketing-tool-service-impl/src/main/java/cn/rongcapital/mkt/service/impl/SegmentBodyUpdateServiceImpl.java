@@ -35,7 +35,7 @@ import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 
 	@Autowired
-	SegmentationBodyDao segmentationHeadDao;
+	SegmentationBodyDao segmentationBodyDao;
 
 	@Override
 	@ReadWrite(type = ReadWriteType.WRITE)
@@ -47,7 +47,7 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 		Date now = new Date();
 		Integer headerId = Integer.valueOf(body.getSegmentHeadId());
 		// 删除既有body数据
-		segmentationHeadDao.batchDeleteUseHeaderId(headerId);
+		segmentationBodyDao.batchDeleteUseHeaderId(headerId);
 
 		// 插入新的Body数据
 		List<SegmentBodyFilterGroupIn> filterGroups = body.getFilterGroups();
@@ -64,11 +64,11 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 						insertBody.setTagId(tag.getTagId());
 						insertBody.setExclude(tag.getExclude().byteValue());
 						insertBody.setCreateTime(now);
-						insertBody.setUpdateTime(now);
+//						insertBody.setUpdateTime(now);
 						insertBody.setGroupIndex(groupIndex);
 						insertBody
 								.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-						segmentationHeadDao.insert(insertBody);
+						segmentationBodyDao.insert(insertBody);
 					}
 				}
 			}

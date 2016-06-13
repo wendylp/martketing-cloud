@@ -1,32 +1,19 @@
 package cn.rongcapital.mkt.vo.in;
 
 
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignDecisionTagIn {
 	
     private Integer id;
 
-    private String itemId;
-
     private String name;
 
-    private String tagNames;
-
-    private String tagIds;
+    private List<TagIn> tags;
 
     private Byte rule;
-    
-    private Integer campaignHeadId;
-    
-    @JsonProperty("campaign_head_id")
-    public Integer getCampaignHeadId() {
-		return campaignHeadId;
-	}
-
-	public void setCampaignHeadId(Integer campaignHeadId) {
-		this.campaignHeadId = campaignHeadId;
-	}
 
 	 @JsonProperty("id")
 	public Integer getId() {
@@ -37,40 +24,22 @@ public class CampaignDecisionTagIn {
         this.id = id;
     }
 
-    @JsonProperty("item_id")
-    public String getItemId() {
-        return itemId;
-    }
+    @JsonProperty("tags")
+    public List<TagIn> getTags() {
+		return tags;
+	}
 
-    public void setItemId(String itemId) {
-        this.itemId = itemId == null ? null : itemId.trim();
-    }
+	public void setTags(List<TagIn> tags) {
+		this.tags = tags;
+	}
 
-    @JsonProperty("name")
+	@JsonProperty("name")
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
-    }
-
-    @JsonProperty("tag_names")
-    public String getTagNames() {
-        return tagNames;
-    }
-
-    public void setTagNames(String tagNames) {
-        this.tagNames = tagNames == null ? null : tagNames.trim();
-    }
-
-    @JsonProperty("tag_ids")
-    public String getTagIds() {
-        return tagIds;
-    }
-
-    public void setTagIds(String tagIds) {
-        this.tagIds = tagIds == null ? null : tagIds.trim();
     }
 
     @JsonProperty("rule")

@@ -11,6 +11,8 @@ public class RoleResourceMap extends BaseQuery {
 
     private Long resourceId;
 
+    private Byte status;
+
     private Date createTime;
 
     private Date updateTime;
@@ -37,6 +39,14 @@ public class RoleResourceMap extends BaseQuery {
 
     public void setResourceId(Long resourceId) {
         this.resourceId = resourceId;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
     }
 
     public Date getCreateTime() {

@@ -21,11 +21,15 @@ public class WechatAsset extends BaseQuery {
 
     private Integer totalCount;
 
-    private Integer status;
-
     private String groupIds;
 
     private String imgfileUrl;
+
+    private Byte status;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     public Integer getId() {
         return id;
@@ -91,14 +95,6 @@ public class WechatAsset extends BaseQuery {
         this.totalCount = totalCount;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public String getGroupIds() {
         return groupIds;
     }
@@ -113,5 +109,29 @@ public class WechatAsset extends BaseQuery {
 
     public void setImgfileUrl(String imgfileUrl) {
         this.imgfileUrl = imgfileUrl == null ? null : imgfileUrl.trim();
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

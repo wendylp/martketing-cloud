@@ -34,4 +34,5 @@ public interface CampaignDecisionTagDao extends BaseDao<CampaignDecisionTag>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	int deleteByCampaignHeadId(int campaignHeadId);
 }

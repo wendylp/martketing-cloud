@@ -40,8 +40,8 @@ public class SegmentTagnameTagValueServiceImpl implements SegmentTagnameTagValue
 			result.setTotal(resList.size());
 			for(Tag po : resList){
 				Map<String,Object> map = new HashMap<String,Object>();
-				map.put("id", po.getId());
-				map.put("name", po.getName());
+				map.put("tag_id", po.getId());
+				map.put("tag_name", po.getName());
 				result.getData().add(map);
 			}
 		}
