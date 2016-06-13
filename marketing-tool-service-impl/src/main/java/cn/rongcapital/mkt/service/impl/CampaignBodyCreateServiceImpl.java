@@ -251,7 +251,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		if(null!=campaignHeadList && campaignHeadList.size()==1){
 			CampaignHead campaignHead = campaignHeadList.get(0);
 			if(campaignHead.getPublishStatus() != 0){
-				out = new CampaignBodyCreateOut(ApiErrorCode.BUSINESS_ERROR.getCode(),"只有未发布状态的活动才能编辑",ApiConstant.INT_ZERO,null);
+				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR.getCode(),"只有未发布状态的活动才能编辑",ApiConstant.INT_ZERO,null);
 			}
 		}else{
 			out = new CampaignBodyCreateOut(ApiErrorCode.DB_ERROR.getCode(),"活动头不存在或存在多个活动头",ApiConstant.INT_ZERO,null);

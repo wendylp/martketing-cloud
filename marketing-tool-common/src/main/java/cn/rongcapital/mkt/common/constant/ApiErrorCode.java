@@ -19,7 +19,7 @@ public enum ApiErrorCode {
 	
 	DB_ERROR(2001,"DB error"),//2001-2999,数据库相关的错误码
 	
-	BUSINESS_ERROR(3001,"business error"),//3001-3999,业务逻辑相关错误
+	BIZ_ERROR(3001,"business error"),//3001-3999,业务逻辑相关错误
 	BIZ_ERROR_TABLE_DATA_NOT_EXIST(3002,"table data not exist"),//数据在表里不存在
 	BIZ_ERROR_SEGMENTATION_IN_CAMPAIGN(3003,"segmentation is in campaign"),//细分处在活动中
 	
