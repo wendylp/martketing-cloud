@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -112,7 +113,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		campaignBodyQuery.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		List<CampaignBody> campaignBodyList = campaignBodyDao.selectList(campaignBodyQuery);
 		
-		if(null != campaignBodyList && campaignBodyList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(campaignBodyList)) {
 			for(CampaignBody c:campaignBodyList) {
 				CampaignNodeChainOut campaignNodeChainOut = new CampaignNodeChainOut();
 				campaignNodeChainOut.setItemId(c.getItemId());
@@ -220,7 +221,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionSendPrivt> resList = campaignActionSendPrivtDao.selectList(t);
 		CampaignActionSendPrivtOut campaignActionSendPrivtOut = new CampaignActionSendPrivtOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignActionSendPrivt campaignActionSendPrivt = resList.get(0);
 			campaignActionSendPrivtOut.setName(campaignActionSendPrivt.getName());
 			campaignActionSendPrivtOut.setPrvtGroupName(campaignActionSendPrivt.getPrvtGroupName());
@@ -240,7 +241,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionSendH5> resList = campaignActionSendH5Dao.selectList(t);
 		CampaignActionSendH5Out campaignActionSendH5Out = new CampaignActionSendH5Out();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignActionSendH5 campaignActionSendH5 = resList.get(0);
 			campaignActionSendH5Out.setName(campaignActionSendH5.getName());
 			campaignActionSendH5Out.setPrvtGroupName(campaignActionSendH5.getPrvtGroupName());
@@ -261,7 +262,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionSendPub> resList = campaignActionSendPubDao.selectList(t);
 		CampaignActionSendPubOut campaignActionSendPubOut = new CampaignActionSendPubOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignActionSendPub campaignActionSendPub = resList.get(0);
 			campaignActionSendPubOut.setName(campaignActionSendPub.getName());
 			campaignActionSendPubOut.setPubId(campaignActionSendPub.getPubId());
@@ -279,7 +280,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionSetTag> resList = campaignActionSetTagDao.selectList(t);
 		CampaignActionSetTagOut campaignActionSetTagOut = new CampaignActionSetTagOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignActionSetTag campaignActionSetTag = resList.get(0);
 			campaignActionSetTagOut.setName(campaignActionSetTag.getName());
 //			campaignActionSetTagOut.setTagIds(campaignActionSetTag.getTagIds());//TO DO:查询custom_tag_map表
@@ -295,7 +296,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionSaveAudience> resList = campaignActionSaveAudienceDao.selectList(t);
 		CampaignActionSaveAudienceOut campaignActionSaveAudienceOut = new CampaignActionSaveAudienceOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignActionSaveAudience campaignActionSaveAudience = resList.get(0);
 			campaignActionSaveAudienceOut.setName(campaignActionSaveAudience.getName());
 			campaignActionSaveAudienceOut.setAudienceId(campaignActionSaveAudience.getAudienceId());
@@ -311,7 +312,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignActionWait> resList = campaignActionWaitDao.selectList(t);
 		CampaignActionWaitOut campaignActionWaitOut = new CampaignActionWaitOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignActionWait campaignActionWait = resList.get(0);
 			campaignActionWaitOut.setName(campaignActionWait.getName());
 			campaignActionWaitOut.setRelativeType(campaignActionWait.getRelativeType());
@@ -329,7 +330,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionTag> resList = campaignDecisionTagDao.selectList(t);
 		CampaignDecisionTagOut campaignDecisionTagOut = new CampaignDecisionTagOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignDecisionTag campaignDecisionTag = resList.get(0);
 			campaignDecisionTagOut.setName(campaignDecisionTag.getName());
 			campaignDecisionTagOut.setRule(campaignDecisionTag.getRule());
@@ -344,7 +345,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionPrvtFriends> resList = campaignDecisionPrvtFriendsDao.selectList(t);
 		CampaignDecisionPrvtFriendsOut campaignDecisionPrvtFriendsOut = new CampaignDecisionPrvtFriendsOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignDecisionPrvtFriends campaignDecisionPrvtFriends = resList.get(0);
 			campaignDecisionPrvtFriendsOut.setName(campaignDecisionPrvtFriends.getName());
 			campaignDecisionPrvtFriendsOut.setPrvtId(campaignDecisionPrvtFriends.getPrvtId());
@@ -362,7 +363,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionPubFans> resList = campaignDecisionPubFansDao.selectList(t);
 		CampaignDecisionPubFansOut campaignDecisionPubFansOut = new CampaignDecisionPubFansOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignDecisionPubFans campaignDecisionPubFans = resList.get(0);
 			campaignDecisionPubFansOut.setName(campaignDecisionPubFans.getName());
 			campaignDecisionPubFansOut.setPubId(campaignDecisionPubFans.getPubId());
@@ -381,7 +382,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionWechatForward> resList = campaignDecisionWechatForwardDao.selectList(t);
 		CampaignDecisionWechatForwardOut campaignDecisionWechatForwardOut = new CampaignDecisionWechatForwardOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignDecisionWechatForward campaignDecisionWechatForward = resList.get(0);
 			campaignDecisionWechatForwardOut.setName(campaignDecisionWechatForward.getName());
 			campaignDecisionWechatForwardOut.setPubId(campaignDecisionWechatForward.getPubId());
@@ -402,7 +403,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionWechatRead> resList = campaignDecisionWechatReadDao.selectList(t);
 		CampaignDecisionWechatReadOut campaignDecisionWechatReadOut = new CampaignDecisionWechatReadOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignDecisionWechatRead campaignDecisionWechatRead = resList.get(0);
 			campaignDecisionWechatReadOut.setName(campaignDecisionWechatRead.getName());
 			campaignDecisionWechatReadOut.setPubId(campaignDecisionWechatRead.getPubId());
@@ -424,7 +425,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionWechatSent> resList = campaignDecisionWechatSentDao.selectList(t);
 		CampaignDecisionWechatSentOut campaignDecisionWechatSentOut = new CampaignDecisionWechatSentOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignDecisionWechatSent campaignDecisionWechatSent = resList.get(0);
 			campaignDecisionWechatSentOut.setName(campaignDecisionWechatSent.getName());
 			campaignDecisionWechatSentOut.setPubId(campaignDecisionWechatSent.getPubId());
@@ -444,7 +445,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignDecisionPropCompare> resList = campaignDecisionPropCompareDao.selectList(t);
 		CampaignDecisionPropCompareOut campaignDecisionPropCompareOut = new CampaignDecisionPropCompareOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignDecisionPropCompare campaignDecisionPropCompare = resList.get(0);
 			campaignDecisionPropCompareOut.setName(campaignDecisionPropCompare.getName());
 			campaignDecisionPropCompareOut.setPropType(campaignDecisionPropCompare.getPropType());
@@ -452,7 +453,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		}
 		return campaignDecisionPropCompareOut;
 	}
-	
+
 	private CampaignAudienceTargetOut queryCampaignAudienceTarget(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignAudienceTarget t = new CampaignAudienceTarget();
 		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
@@ -460,7 +461,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignAudienceTarget> resList = campaignAudienceTargetDao.selectList(t);
 		CampaignAudienceTargetOut campaignAudienceTargetOut = new CampaignAudienceTargetOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignAudienceTarget campaignAudienceTarget = resList.get(0);
 			campaignAudienceTargetOut.setName(campaignAudienceTarget.getName());
 			campaignAudienceTargetOut.setAllowedNew(campaignAudienceTarget.getAllowedNew());
@@ -480,7 +481,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		t.setItemId(campaignNodeChainOut.getItemId());
 		List<CampaignTriggerTimer> resList = campaignTriggerTimerDao.selectList(t);
 		CampaignTriggerTimerOut campaignTriggerTimerOut = new CampaignTriggerTimerOut();
-		if(null != resList && resList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignTriggerTimer campaignTriggerTimer = resList.get(0);
 			campaignTriggerTimerOut.setName(campaignTriggerTimer.getName());
 			campaignTriggerTimerOut.setStartTime(DateUtil.getStringFromDate(campaignTriggerTimer.getStartTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
@@ -498,7 +499,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		campaignSwitch.setItemId(itemId);
 		List<CampaignSwitch> campaignSwitchList = campaignSwitchDao.selectList(campaignSwitch);
 		List<CampaignSwitchOut> campaignSwitchOutList = new ArrayList<CampaignSwitchOut>();
-		if(null != campaignSwitchList && campaignSwitchList.size() > 0){
+		if(CollectionUtils.isNotEmpty(campaignSwitchList)){
 			for(CampaignSwitch cs:campaignSwitchList) {
 				CampaignSwitchOut cso = new CampaignSwitchOut();
 				cso.setColor(cs.getColor());
@@ -517,7 +518,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		campaignSwitch.setItemId(itemId);
 		List<CampaignSwitch> campaignEndsList = campaignSwitchDao.selectList(campaignSwitch);
 		List<CampaignSwitchOut> campaignSwitchOutList = new ArrayList<CampaignSwitchOut>();
-		if(null != campaignEndsList && campaignEndsList.size() > 0){
+		if(CollectionUtils.isNotEmpty(campaignEndsList)){
 			for(CampaignSwitch cs:campaignEndsList) {
 				CampaignSwitchOut cso = new CampaignSwitchOut();
 				cso.setColor(cs.getColor());

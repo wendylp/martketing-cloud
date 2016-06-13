@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
 															ApiErrorCode.SUCCESS.getMsg(),
 															ApiConstant.INT_ZERO);
 		
-		if(null != list && list.size() > 0){
+		if(CollectionUtils.isNotEmpty(list)){
 			CampaignHead obj = list.get(0);
 			CampaignHeaderGetDataOut chgto = new CampaignHeaderGetDataOut();
 			chgto.setCampaignName(obj.getName());

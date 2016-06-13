@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +56,7 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
 		 t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		 t.setId(id);
 		 List<CampaignHead> segList = campaignHeadDao.selectList(t);
-		 if(null != segList && segList.size() > 0) {
+		 if(CollectionUtils.isNotEmpty(segList)) {
 			 CampaignHead ch = segList.get(0);
 			if(ch.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
 				ur = new BaseOutput(ApiErrorCode.BIZ_ERROR_CANPAIGN_IN_PROGRESS.getCode(),

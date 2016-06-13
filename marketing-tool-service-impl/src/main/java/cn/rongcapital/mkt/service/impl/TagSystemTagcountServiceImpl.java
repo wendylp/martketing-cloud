@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +41,7 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE, null);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tag_count", tagCount);
-		if (null != taskRunLogList && taskRunLogList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(taskRunLogList)) {
 			map.put("sync_time", format.format(taskRunLogList.get(0).getEndTime()));
 		}
 		result.getData().add(map);

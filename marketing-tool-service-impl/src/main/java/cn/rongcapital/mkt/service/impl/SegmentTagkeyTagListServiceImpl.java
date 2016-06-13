@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,14 +47,14 @@ public class SegmentTagkeyTagListServiceImpl implements SegmentTagkeyTagListServ
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				   ApiErrorCode.SUCCESS.getMsg(),
 				   ApiConstant.INT_ZERO,null);
-		if(null != resList && resList.size() > 0){
+		if(CollectionUtils.isNotEmpty(resList)){
 			result.setTotal(resList.size());
 			for(Taggroup po : resList){
 				TagGroupMap tagGroupMap = new TagGroupMap();
         		tagGroupMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         		tagGroupMap.setGroupId(po.getId());
         		List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMap);
-        		if(null != tagGroupMapList && tagGroupMapList.size() > 0) {
+        		if(CollectionUtils.isNotEmpty(tagGroupMapList)) {
         			Map<String,Object> map = new HashMap<String,Object>();
         			map.put("tag_group_id", po.getId());
         			map.put("tag_group_name", po.getName());

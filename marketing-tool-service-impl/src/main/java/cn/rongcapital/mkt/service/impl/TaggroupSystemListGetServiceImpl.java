@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class TaggroupSystemListGetServiceImpl implements
 		taggroup.setStartIndex(index);
 		taggroup.setPageSize(size);
 		List<Taggroup> groupList = taggroupDao.selectList(taggroup);
-		if(null != groupList && groupList.size() > 0){
+		if(CollectionUtils.isNotEmpty(groupList)){
 			baseOutput.setTotal(groupList.size());
 			for(Taggroup group: groupList){
 				int count = tagDao.selectListCountByGroupId(

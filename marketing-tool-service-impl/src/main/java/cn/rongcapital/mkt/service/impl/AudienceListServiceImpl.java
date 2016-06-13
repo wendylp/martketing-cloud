@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +54,7 @@ public class AudienceListServiceImpl implements AudienceListService {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				   ApiErrorCode.SUCCESS.getMsg(),
 				   ApiConstant.INT_ZERO,null);
-		if (null != reList && reList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(reList)) {
 			result.setTotal(reList.size());
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			for (AudienceList s : reList) {
@@ -73,7 +74,7 @@ public class AudienceListServiceImpl implements AudienceListService {
 		audienceColumns.setOrderField(ORDER_BY_FIELD_NAME);
 		List<AudienceColumns> audienceColumnsList = audienceColumnsDao.selectList(audienceColumns);
 		List<Object> columnsOutList = new ArrayList<Object>(); 
-		if(null != audienceColumnsList && audienceColumnsList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(audienceColumnsList)) {
 			for(AudienceColumns ac:audienceColumnsList) {
 				ColumnsOut columnsOut = new ColumnsOut();
 				columnsOut.setColCode(ac.getFieldCode());
