@@ -22,7 +22,6 @@ public class SegmentTagUpdateIn extends BaseInput{
 	@NotEmpty
 	private String segmentHeadId;
 
-	@NotEmpty
 	private List<String> tagNames;
 
 	@NotEmpty
