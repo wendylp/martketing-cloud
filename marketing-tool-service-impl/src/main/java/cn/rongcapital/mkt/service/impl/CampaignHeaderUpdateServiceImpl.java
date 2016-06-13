@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.SecurityContext;
@@ -27,6 +28,10 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
 	
 	@Override
 	public BaseOutput campaignHeaderUpdate(CampaignHeadUpdateIn body, SecurityContext securityContext) {
+		BaseOutput ur = checkPublishStatus(body.getCampaignId());
+		if(null != ur) {
+			return ur;
+		}
 		CampaignHead t = new CampaignHead();  
         t.setId(body.getCampaignId());
     	t.setName(body.getCampaignName());
@@ -38,10 +43,35 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
     	map.put("oper", UserSessionUtil.getUserNameByUserToken());//TO DO:获取当前用户名
     	map.put("updatetime", DateUtil.getStringFromDate(now, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
     	map.put("id", t.getId());
-    	BaseOutput ur = new BaseOutput(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
+    	ur = new BaseOutput(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
     	ur.getData().add(map);
     	ur.setTotal(ur.getData().size());
     	return ur;
 	}
 
+	private BaseOutput checkPublishStatus(int id) {
+		 BaseOutput ur = null;
+		 CampaignHead t = new CampaignHead(); 
+		 t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		 t.setId(id);
+		 List<CampaignHead> segList = campaignHeadDao.selectList(t);
+		 if(null != segList && segList.size() > 0) {
+			 CampaignHead ch = segList.get(0);
+			if(ch.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
+				ur = new BaseOutput(ApiErrorCode.BIZ_ERROR_CANPAIGN_IN_PROGRESS.getCode(),
+									ApiErrorCode.BIZ_ERROR_CANPAIGN_IN_PROGRESS.getMsg(),
+									ApiConstant.INT_ZERO,null);
+			}
+			if(ch.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH) {
+				ur = new BaseOutput(ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getCode(),
+									ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
+									ApiConstant.INT_ZERO,null);
+			}
+		 } else {
+			ur = new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
+								ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(),
+								ApiConstant.INT_ZERO,null);
+		 }
+		 return ur;
+	 }
 }

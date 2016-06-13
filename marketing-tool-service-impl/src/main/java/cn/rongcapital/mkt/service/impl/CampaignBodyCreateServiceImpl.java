@@ -238,7 +238,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	/**
 	 * 校验业务逻辑:
 	 * 1.活动头必须存在且只存在1个
-	 * 2.只有未发布的活动才能编辑/创建 body
+	 * 2.只有未发布和已发布状态的活动才能编辑/创建 body
 	 * @return
 	 */
 	private CampaignBodyCreateOut checkCampaignBiz(int campaignHeadId) {
@@ -248,13 +248,23 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		ch.setId(campaignHeadId);
 		List<CampaignHead> campaignHeadList = campaignHeadDao.selectList(ch);
 		
-		if(null!=campaignHeadList && campaignHeadList.size()==1){
+		if(null != campaignHeadList && campaignHeadList.size() > 0){
 			CampaignHead campaignHead = campaignHeadList.get(0);
-			if(campaignHead.getPublishStatus() != 0){
-				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR.getCode(),"只有未发布状态的活动才能编辑",ApiConstant.INT_ZERO,null);
+			if(campaignHead.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
+				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_IN_PROGRESS.getCode(),
+												ApiErrorCode.BIZ_ERROR_CANPAIGN_IN_PROGRESS.getMsg(),
+												ApiConstant.INT_ZERO,null);
+			}
+			if(campaignHead.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH) {
+				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getCode(),
+												ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
+												ApiConstant.INT_ZERO,null);
 			}
 		}else{
-			out = new CampaignBodyCreateOut(ApiErrorCode.DB_ERROR.getCode(),"活动头不存在或存在多个活动头",ApiConstant.INT_ZERO,null);
+			out = new CampaignBodyCreateOut(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
+								 			ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(),
+								 			ApiConstant.INT_ZERO,null);
+		 
 		}
 		return out;
 	}

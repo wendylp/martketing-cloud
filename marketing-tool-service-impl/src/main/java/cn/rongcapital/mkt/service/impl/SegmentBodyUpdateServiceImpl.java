@@ -92,11 +92,13 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 			SegmentationHead sht = segList.get(0);
 			if(sht.getPublishStatus() == ApiConstant.SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN) {
 				ur = new BaseOutput(ApiErrorCode.BIZ_ERROR_SEGMENTATION_IN_CAMPAIGN.getCode(),
-						ApiErrorCode.BIZ_ERROR_SEGMENTATION_IN_CAMPAIGN.getMsg(),ApiConstant.INT_ZERO,null);
+									ApiErrorCode.BIZ_ERROR_SEGMENTATION_IN_CAMPAIGN.getMsg(),
+									ApiConstant.INT_ZERO,null);
 			}
 		 } else {
-			ur = new BaseOutput(ApiErrorCode.BIZ_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
-								ApiErrorCode.BIZ_ERROR_TABLE_DATA_NOT_EXIST.getMsg(),ApiConstant.INT_ZERO,null);
+			ur = new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
+								ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(),
+								ApiConstant.INT_ZERO,null);
 		 }
 		 return ur;
 	 }

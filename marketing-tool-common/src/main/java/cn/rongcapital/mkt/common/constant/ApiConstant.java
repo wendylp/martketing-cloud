@@ -20,7 +20,13 @@ public class ApiConstant {
 	public static final byte SEGMENT_PUBLISH_STATUS_NOT_PUBLISH = 0;//未发布
 	public static final byte SEGMENT_PUBLISH_STATUS_PUBLISH = 1;//已发布
 	public static final byte SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN = 2;//活动中
-	public static final byte SEGMENT_PUBLISH_STATUS_ALL = 3;//全部活动
+	public static final byte SEGMENT_PUBLISH_STATUS_ALL = 3;//全部细分
+	
+	public static final byte CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH = 0;//未发布
+	public static final byte CAMPAIGN_PUBLISH_STATUS_PUBLISH = 1;//已发布
+	public static final byte CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS = 2;//活动中
+	public static final byte CAMPAIGN_PUBLISH_STATUS_FINISH = 3;//已结束
+	public static final byte CAMPAIGN_PUBLISH_STATUS_ALL = 4;//全部活动
 	
 	public static final int INT_ZERO = 0;
 	public static final int INT_ONE = 1;
