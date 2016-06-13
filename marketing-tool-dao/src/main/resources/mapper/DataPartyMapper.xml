@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence,child_amount,child_annual_budget,deleted,delete_time]]>
+		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,member_level as memberLevel,member_points as memberPoints,source as source,monthly_consume as monthlyConsume,last_login as lastLogin,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -14,31 +14,22 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="taskId != null"><![CDATA[ AND task_id = #{taskId}]]></if>
-		    	<if test="accountName != null"><![CDATA[ AND account_name = #{accountName}]]></if>
+		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
 		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
 		    	<if test="gender != null"><![CDATA[ AND gender = #{gender}]]></if>
-		    	<if test="age != null"><![CDATA[ AND age = #{age}]]></if>
-		    	<if test="homeAddress != null"><![CDATA[ AND home_address = #{homeAddress}]]></if>
-		    	<if test="workAddress != null"><![CDATA[ AND work_address = #{workAddress}]]></if>
-		    	<if test="homeStatus != null"><![CDATA[ AND home_status = #{homeStatus}]]></if>
-		    	<if test="workStatus != null"><![CDATA[ AND work_status = #{workStatus}]]></if>
+		    	<if test="birthday != null"><![CDATA[ AND birthday = #{birthday}]]></if>
+		    	<if test="provice != null"><![CDATA[ AND provice = #{provice}]]></if>
+		    	<if test="city != null"><![CDATA[ AND city = #{city}]]></if>
+		    	<if test="job != null"><![CDATA[ AND job = #{job}]]></if>
+		    	<if test="monthlyIncome != null"><![CDATA[ AND monthly_income = #{monthlyIncome}]]></if>
 		    	<if test="memberLevel != null"><![CDATA[ AND member_level = #{memberLevel}]]></if>
-		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
-		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
-		    	<if test="wechat != null"><![CDATA[ AND wechat = #{wechat}]]></if>
-		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
-		    	<if test="weibo != null"><![CDATA[ AND weibo = #{weibo}]]></if>
-		    	<if test="orderCount != null"><![CDATA[ AND order_count = #{orderCount}]]></if>
-		    	<if test="orderAmount != null"><![CDATA[ AND order_amount = #{orderAmount}]]></if>
-		    	<if test="cartItemCount != null"><![CDATA[ AND cart_item_count = #{cartItemCount}]]></if>
-		    	<if test="favoriteItemCount != null"><![CDATA[ AND favorite_item_count = #{favoriteItemCount}]]></if>
-		    	<if test="salary != null"><![CDATA[ AND salary = #{salary}]]></if>
-		    	<if test="offlineActivityAttendence != null"><![CDATA[ AND offline_activity_attendence = #{offlineActivityAttendence}]]></if>
-		    	<if test="childAmount != null"><![CDATA[ AND child_amount = #{childAmount}]]></if>
-		    	<if test="childAnnualBudget != null"><![CDATA[ AND child_annual_budget = #{childAnnualBudget}]]></if>
-		    	<if test="deleted != null"><![CDATA[ AND deleted = #{deleted}]]></if>
-		    	<if test="deleteTime != null"><![CDATA[ AND delete_time = #{deleteTime}]]></if>
+		    	<if test="memberPoints != null"><![CDATA[ AND member_points = #{memberPoints}]]></if>
+		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="monthlyConsume != null"><![CDATA[ AND monthly_consume = #{monthlyConsume}]]></if>
+		    	<if test="lastLogin != null"><![CDATA[ AND last_login = #{lastLogin}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		</where>
 	</sql>
 	
@@ -51,65 +42,43 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="taskId != null"><![CDATA[task_id = #{taskId},]]></if>
-		    	<if test="accountName != null"><![CDATA[account_name = #{accountName},]]></if>
+		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
 		    	<if test="gender != null"><![CDATA[gender = #{gender},]]></if>
-		    	<if test="age != null"><![CDATA[age = #{age},]]></if>
-		    	<if test="homeAddress != null"><![CDATA[home_address = #{homeAddress},]]></if>
-		    	<if test="workAddress != null"><![CDATA[work_address = #{workAddress},]]></if>
-		    	<if test="homeStatus != null"><![CDATA[home_status = #{homeStatus},]]></if>
-		    	<if test="workStatus != null"><![CDATA[work_status = #{workStatus},]]></if>
+		    	<if test="birthday != null"><![CDATA[birthday = #{birthday},]]></if>
+		    	<if test="provice != null"><![CDATA[provice = #{provice},]]></if>
+		    	<if test="city != null"><![CDATA[city = #{city},]]></if>
+		    	<if test="job != null"><![CDATA[job = #{job},]]></if>
+		    	<if test="monthlyIncome != null"><![CDATA[monthly_income = #{monthlyIncome},]]></if>
 		    	<if test="memberLevel != null"><![CDATA[member_level = #{memberLevel},]]></if>
-		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
-		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
-		    	<if test="wechat != null"><![CDATA[wechat = #{wechat},]]></if>
-		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
-		    	<if test="weibo != null"><![CDATA[weibo = #{weibo},]]></if>
-		    	<if test="orderCount != null"><![CDATA[order_count = #{orderCount},]]></if>
-		    	<if test="orderAmount != null"><![CDATA[order_amount = #{orderAmount},]]></if>
-		    	<if test="cartItemCount != null"><![CDATA[cart_item_count = #{cartItemCount},]]></if>
-		    	<if test="favoriteItemCount != null"><![CDATA[favorite_item_count = #{favoriteItemCount},]]></if>
-		    	<if test="salary != null"><![CDATA[salary = #{salary},]]></if>
-		    	<if test="offlineActivityAttendence != null"><![CDATA[offline_activity_attendence = #{offlineActivityAttendence},]]></if>
-		    	<if test="childAmount != null"><![CDATA[child_amount = #{childAmount},]]></if>
-		    	<if test="childAnnualBudget != null"><![CDATA[child_annual_budget = #{childAnnualBudget},]]></if>
-		    	<if test="deleted != null"><![CDATA[deleted = #{deleted},]]></if>
-		    	<if test="deleteTime != null"><![CDATA[delete_time = #{deleteTime}]]></if>
+		    	<if test="memberPoints != null"><![CDATA[member_points = #{memberPoints},]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="monthlyConsume != null"><![CDATA[monthly_consume = #{monthlyConsume},]]></if>
+		    	<if test="lastLogin != null"><![CDATA[last_login = #{lastLogin},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataParty" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_party (task_id,account_name,name,gender,age,home_address,work_address,home_status,work_status,member_level,mobile,email,wechat,qq,weibo,order_count,order_amount,cart_item_count,favorite_item_count,salary,offline_activity_attendence,child_amount,child_annual_budget,deleted,delete_time)
+			INSERT INTO data_party (mobile,name,gender,birthday,provice,city,job,monthly_income,member_level,member_points,source,monthly_consume,last_login,create_time)
 			VALUES
 			(
-			  #{taskId},
-			  #{accountName},
+			  #{mobile},
 			  #{name},
 			  #{gender},
-			  #{age},
-			  #{homeAddress},
-			  #{workAddress},
-			  #{homeStatus},
-			  #{workStatus},
+			  #{birthday},
+			  #{provice},
+			  #{city},
+			  #{job},
+			  #{monthlyIncome},
 			  #{memberLevel},
-			  #{mobile},
-			  #{email},
-			  #{wechat},
-			  #{qq},
-			  #{weibo},
-			  #{orderCount},
-			  #{orderAmount},
-			  #{cartItemCount},
-			  #{favoriteItemCount},
-			  #{salary},
-			  #{offlineActivityAttendence},
-			  #{childAmount},
-			  #{childAnnualBudget},
-			  #{deleted},
-			  #{deleteTime}
+			  #{memberPoints},
+			  #{source},
+			  #{monthlyConsume},
+			  #{lastLogin},
+			  now()
 			)
 		]]>
 	</insert>
@@ -153,62 +122,5 @@
 	
 	<!-- 其它SQL语句 -->
 	
-	<select id="selectMainCount" resultType="java.util.Map">
-		SELECT
-			data_party_rows,data_app_rows,data_pos_rows,data_crm_rows,data_personal_rows,data_public_rows,data_eshop_rows,data_tmall_rows
-		FROM
-			(select count(id) as data_party_rows from data_party) as data_party_result,
-			(select count(id) as data_app_rows from data_app) as data_app_result,
-			(select count(id) as data_pos_rows from data_pos) as data_pos_result,
-			(select count(id) as data_crm_rows from data_crm) as data_crm_result,
-			(select count(id) as data_personal_rows from data_personal) as data_personal_result,
-			(select count(id) as data_public_rows from data_public) as data_public_result,
-			(select count(id) as data_eshop_rows from data_eshop) as data_eshop_result,
-			(select count(id) as data_tmall_rows from data_tmall) as data_tmall_result
-	</select>
-
-	<!-- 根据Id逻辑上删除某条主数据 -->
-	<update id="logicDeleteById" parameterType="cn.rongcapital.mkt.po.DataParty">
-		UPDATE
-			data_party
-		SET
-			deleted=#{deleted},
-			delete_time= #{deleteTime}
-		WHERE id=#{id}
-	</update>
-
-	<select id="selectAudienceDetail" parameterType="java.util.Map" resultType="java.util.Map">
-		SELECT id as data_id,name,gender,age,mobile,email
-		<include refid="QUERY_FROM_TABLE"/>
-		WHERE id = #{party_id} and deleted = 1
-	</select>
-
-	<!-- 根据Id获取某条主数据 -->
-	<select id="getDataById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataParty">
-		SELECT
-		id,account_name AS accountName,name,gender,age,home_address AS homeAddress,work_address AS workAddress,
-		home_status AS homeStatus,work_status AS workStatus,member_level AS memberLevel,mobile,email,wechat,qq,weibo,order_count AS orderCount,
-		order_amount AS orderAmount,cart_item_count AS cartItemCount,favorite_item_count AS favoriteItemCount,salary,offline_activity_attendence AS offlineActivityAttendence,
-		child_amount AS childAmount,child_annual_budget AS childAnnualBudget,deleted,delete_time AS deleteTime
-		FROM data_party
-	    WHERE id = #{id} AND deleted = 0
-	</select>
 	
-	<!-- 根据taskId查询相关数据 -->
-	<select id="selectByTaskId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataParty">
-		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
-		<![CDATA[WHERE task_id IN]]>
-		<foreach collection="taskIdList" item="taskId" open="(" separator="," close=")">
-			<![CDATA[#{taskId}]]>
-		</foreach>
-		<![CDATA[AND deleted=0]]>
-		<if test="paramObj != null">
-			<if test="paramObj.startIndex != null and paramObj.startIndex &gt;= 0 and paramObj.pageSize != null and paramObj.pageSize &gt; 0">
-				<![CDATA[LIMIT #{paramObj}.startIndex,#{paramObj}.pageSize]]>
-			</if>	
-		</if>
-	</select>
-
 </mapper>

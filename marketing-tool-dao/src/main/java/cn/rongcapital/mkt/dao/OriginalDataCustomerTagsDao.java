@@ -11,9 +11,9 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.DataArchPoint;
+import cn.rongcapital.mkt.po.OriginalDataCustomerTags;
 
-public interface DataArchPointDao extends BaseDao<DataArchPoint>{
+public interface OriginalDataCustomerTagsDao extends BaseDao<OriginalDataCustomerTags>{
 	
 	//自定义扩展
 	/**

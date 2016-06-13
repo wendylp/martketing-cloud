@@ -2,16 +2,39 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class DataArchPoint extends BaseQuery {
+public class DataPayment extends BaseQuery {
     private Integer id;
 
-    private Integer eventId;
+    private String payChannel;
 
-    private String eventName;
+    private String payAcct;
 
-    private Date clickTime;
+    private String paySerial;
+
+    private String transSerial;
+
+    private String orderNo;
+
+    private String productName;
+
+    private Date createTime;
+
+    private Date completeTime;
+
+    private String payStatus;
+
+    private String counterAcct;
+
+    private BigDecimal incomeAmt;
+
+    private BigDecimal paidAmt;
+
+    private BigDecimal acctAmt;
+
+    private String comments;
 
     private String identifyNo;
 
@@ -39,8 +62,6 @@ public class DataArchPoint extends BaseQuery {
 
     private Boolean status;
 
-    private Date createTime;
-
     private Date updateTime;
 
     private String source;
@@ -53,28 +74,116 @@ public class DataArchPoint extends BaseQuery {
         this.id = id;
     }
 
-    public Integer getEventId() {
-        return eventId;
+    public String getPayChannel() {
+        return payChannel;
     }
 
-    public void setEventId(Integer eventId) {
-        this.eventId = eventId;
+    public void setPayChannel(String payChannel) {
+        this.payChannel = payChannel == null ? null : payChannel.trim();
     }
 
-    public String getEventName() {
-        return eventName;
+    public String getPayAcct() {
+        return payAcct;
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName == null ? null : eventName.trim();
+    public void setPayAcct(String payAcct) {
+        this.payAcct = payAcct == null ? null : payAcct.trim();
     }
 
-    public Date getClickTime() {
-        return clickTime;
+    public String getPaySerial() {
+        return paySerial;
     }
 
-    public void setClickTime(Date clickTime) {
-        this.clickTime = clickTime;
+    public void setPaySerial(String paySerial) {
+        this.paySerial = paySerial == null ? null : paySerial.trim();
+    }
+
+    public String getTransSerial() {
+        return transSerial;
+    }
+
+    public void setTransSerial(String transSerial) {
+        this.transSerial = transSerial == null ? null : transSerial.trim();
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo == null ? null : orderNo.trim();
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName == null ? null : productName.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getCompleteTime() {
+        return completeTime;
+    }
+
+    public void setCompleteTime(Date completeTime) {
+        this.completeTime = completeTime;
+    }
+
+    public String getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(String payStatus) {
+        this.payStatus = payStatus == null ? null : payStatus.trim();
+    }
+
+    public String getCounterAcct() {
+        return counterAcct;
+    }
+
+    public void setCounterAcct(String counterAcct) {
+        this.counterAcct = counterAcct == null ? null : counterAcct.trim();
+    }
+
+    public BigDecimal getIncomeAmt() {
+        return incomeAmt;
+    }
+
+    public void setIncomeAmt(BigDecimal incomeAmt) {
+        this.incomeAmt = incomeAmt;
+    }
+
+    public BigDecimal getPaidAmt() {
+        return paidAmt;
+    }
+
+    public void setPaidAmt(BigDecimal paidAmt) {
+        this.paidAmt = paidAmt;
+    }
+
+    public BigDecimal getAcctAmt() {
+        return acctAmt;
+    }
+
+    public void setAcctAmt(BigDecimal acctAmt) {
+        this.acctAmt = acctAmt;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments == null ? null : comments.trim();
     }
 
     public String getIdentifyNo() {
@@ -179,14 +288,6 @@ public class DataArchPoint extends BaseQuery {
 
     public void setStatus(Boolean status) {
         this.status = status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
     public Date getUpdateTime() {

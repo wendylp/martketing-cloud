@@ -45,8 +45,6 @@ public class OriginalDataArchPoint extends BaseQuery {
 
     private String source;
 
-    private String cookie;
-
     public Integer getId() {
         return id;
     }
@@ -205,13 +203,5 @@ public class OriginalDataArchPoint extends BaseQuery {
 
     public void setSource(String source) {
         this.source = source == null ? null : source.trim();
-    }
-
-    public String getCookie() {
-        return cookie;
-    }
-
-    public void setCookie(String cookie) {
-        this.cookie = cookie == null ? null : cookie.trim();
     }
 }

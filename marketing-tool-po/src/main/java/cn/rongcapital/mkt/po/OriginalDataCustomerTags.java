@@ -4,14 +4,14 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 import java.util.Date;
 
-public class DataArchPoint extends BaseQuery {
+public class OriginalDataCustomerTags extends BaseQuery {
     private Integer id;
 
-    private Integer eventId;
+    private String tagType;
 
-    private String eventName;
+    private String tagName;
 
-    private Date clickTime;
+    private Date birthday;
 
     private String identifyNo;
 
@@ -21,11 +21,11 @@ public class DataArchPoint extends BaseQuery {
 
     private String mobile;
 
+    private String acctType;
+
     private String tel;
 
     private String qq;
-
-    private String acctType;
 
     private String acctNo;
 
@@ -53,28 +53,28 @@ public class DataArchPoint extends BaseQuery {
         this.id = id;
     }
 
-    public Integer getEventId() {
-        return eventId;
+    public String getTagType() {
+        return tagType;
     }
 
-    public void setEventId(Integer eventId) {
-        this.eventId = eventId;
+    public void setTagType(String tagType) {
+        this.tagType = tagType == null ? null : tagType.trim();
     }
 
-    public String getEventName() {
-        return eventName;
+    public String getTagName() {
+        return tagName;
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName == null ? null : eventName.trim();
+    public void setTagName(String tagName) {
+        this.tagName = tagName == null ? null : tagName.trim();
     }
 
-    public Date getClickTime() {
-        return clickTime;
+    public Date getBirthday() {
+        return birthday;
     }
 
-    public void setClickTime(Date clickTime) {
-        this.clickTime = clickTime;
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     public String getIdentifyNo() {
@@ -109,6 +109,14 @@ public class DataArchPoint extends BaseQuery {
         this.mobile = mobile == null ? null : mobile.trim();
     }
 
+    public String getAcctType() {
+        return acctType;
+    }
+
+    public void setAcctType(String acctType) {
+        this.acctType = acctType == null ? null : acctType.trim();
+    }
+
     public String getTel() {
         return tel;
     }
@@ -123,14 +131,6 @@ public class DataArchPoint extends BaseQuery {
 
     public void setQq(String qq) {
         this.qq = qq == null ? null : qq.trim();
-    }
-
-    public String getAcctType() {
-        return acctType;
-    }
-
-    public void setAcctType(String acctType) {
-        this.acctType = acctType == null ? null : acctType.trim();
     }
 
     public String getAcctNo() {
