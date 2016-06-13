@@ -129,6 +129,7 @@ import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
+import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
@@ -428,9 +429,9 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.header.get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object campaignHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
-								   @NotEmpty @QueryParam("ver") String ver,
-								   @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
+	public CampaignHeaderGetOut campaignHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
+								   				  @NotEmpty @QueryParam("ver") String ver,
+								   			      @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
 	    return campaignHeaderGetService.campaignHeaderGet(userToken, ver, campaignHeadId);
 	}
 

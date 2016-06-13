@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.service;
 
+import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
+
 public interface CampaignHeaderGetService {
-	public Object campaignHeaderGet(String userToken, String ver, int campaignHeadId);
+	public CampaignHeaderGetOut campaignHeaderGet(String userToken, String ver, int campaignHeadId);
 }
