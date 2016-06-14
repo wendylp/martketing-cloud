@@ -98,7 +98,7 @@ public class DataShopping extends BaseQuery {
 
     private String batchId;
     
-    public DataShopping() {}
+    public DataShopping(){}
     
     public DataShopping(Integer index , Integer size){
         setStartIndex(index);
