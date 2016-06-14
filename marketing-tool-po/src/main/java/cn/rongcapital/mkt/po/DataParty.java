@@ -1,9 +1,9 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.math.BigDecimal;
 import java.util.Date;
+
+import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class DataParty extends BaseQuery {
     private Integer id;
@@ -39,6 +39,15 @@ public class DataParty extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+
+    private Integer batchId;
+    
+    public DataParty(){}
+    
+    public DataParty(Integer index , Integer size){
+        setStartIndex(index);
+        setPageSize(size);
+    }
 
     public Integer getId() {
         return id;
@@ -174,5 +183,13 @@ public class DataParty extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(Integer batchId) {
+        this.batchId = batchId;
     }
 }

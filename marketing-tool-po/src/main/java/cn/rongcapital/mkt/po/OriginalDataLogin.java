@@ -54,6 +54,8 @@ public class OriginalDataLogin extends BaseQuery {
 
     private String source;
 
+    private String batchId;
+
     public Integer getId() {
         return id;
     }
@@ -244,5 +246,13 @@ public class OriginalDataLogin extends BaseQuery {
 
     public void setSource(String source) {
         this.source = source == null ? null : source.trim();
+    }
+
+    public String getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(String batchId) {
+        this.batchId = batchId == null ? null : batchId.trim();
     }
 }

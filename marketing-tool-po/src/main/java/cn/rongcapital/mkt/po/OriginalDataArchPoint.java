@@ -45,6 +45,10 @@ public class OriginalDataArchPoint extends BaseQuery {
 
     private String source;
 
+    private String cookie;
+
+    private Integer batchId;
+
     public Integer getId() {
         return id;
     }
@@ -203,5 +207,21 @@ public class OriginalDataArchPoint extends BaseQuery {
 
     public void setSource(String source) {
         this.source = source == null ? null : source.trim();
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie == null ? null : cookie.trim();
+    }
+
+    public Integer getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(Integer batchId) {
+        this.batchId = batchId;
     }
 }

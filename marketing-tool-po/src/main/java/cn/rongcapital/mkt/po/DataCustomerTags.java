@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
+
+import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class DataCustomerTags extends BaseQuery {
     private Integer id;
@@ -44,6 +44,15 @@ public class DataCustomerTags extends BaseQuery {
     private Date updateTime;
 
     private String source;
+
+    private Integer batchId;
+    
+    public DataCustomerTags(){}
+    
+    public DataCustomerTags(Integer index , Integer size){
+        setStartIndex(index);
+        setPageSize(size);
+    }
 
     public Integer getId() {
         return id;
@@ -203,5 +212,13 @@ public class DataCustomerTags extends BaseQuery {
 
     public void setSource(String source) {
         this.source = source == null ? null : source.trim();
+    }
+
+    public Integer getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(Integer batchId) {
+        this.batchId = batchId;
     }
 }
