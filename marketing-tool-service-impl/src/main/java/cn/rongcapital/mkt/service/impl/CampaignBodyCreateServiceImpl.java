@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,11 +131,11 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
 			List<CampaignSwitch> campaignSwitchList = initCampaignSwitchList(campaignNodeChainIn,campaignHeadId);
 			List<CampaignSwitch> campaignEndsList = initCampaignEndsList(campaignNodeChainIn,campaignHeadId);
-			if(null != campaignSwitchList && campaignSwitchList.size() > 0) {
+			if(CollectionUtils.isNotEmpty(campaignSwitchList)) {
 				for(CampaignSwitch c:campaignSwitchList) {
 					campaignSwitchDao.insert(c);
 				}
-			} else if(null != campaignEndsList && campaignEndsList.size() > 0) {
+			} else if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 				for(CampaignSwitch c:campaignEndsList) {
 					campaignSwitchDao.insert(c);
 				}
@@ -244,11 +245,11 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignBodyCreateOut checkCampaignBiz(int campaignHeadId) {
 		CampaignBodyCreateOut out = null;
 		CampaignHead ch = new CampaignHead();
-		ch.setStatus((byte)0);
+		ch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		ch.setId(campaignHeadId);
 		List<CampaignHead> campaignHeadList = campaignHeadDao.selectList(ch);
 		
-		if(null != campaignHeadList && campaignHeadList.size() > 0){
+		if(CollectionUtils.isNotEmpty(campaignHeadList)){
 			CampaignHead campaignHead = campaignHeadList.get(0);
 			if(campaignHead.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_IN_PROGRESS.getCode(),
@@ -292,7 +293,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private List<CampaignSwitch> initCampaignSwitchList(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		List<CampaignSwitchIn> campaignSwitchInList = campaignNodeChainIn.getCampaignSwitchList();
 		List<CampaignSwitch> campaignSwitchList = new ArrayList<CampaignSwitch>();
-		if(null != campaignSwitchInList && campaignSwitchInList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(campaignSwitchInList)) {
 			for(CampaignSwitchIn campaignSwitchIn:campaignSwitchInList){
 				CampaignSwitch campaignSwitch = new CampaignSwitch();
 				campaignSwitch.setCampaignHeadId(campaignHeadId);
@@ -310,7 +311,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private List<CampaignSwitch> initCampaignEndsList(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		List<CampaignSwitchIn> campaignEndsInList = campaignNodeChainIn.getCampaignEndsList();
 		List<CampaignSwitch> campaignSwitchList = new ArrayList<CampaignSwitch>();
-		if(null != campaignEndsInList && campaignEndsInList.size() > 0) {
+		if(CollectionUtils.isNotEmpty(campaignEndsInList)) {
 			for(CampaignSwitchIn campaignSwitchIn:campaignEndsInList){
 				CampaignSwitch campaignSwitch = new CampaignSwitch();
 				campaignSwitch.setCampaignHeadId(campaignHeadId);

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class SegmentTagnameTagListServiceImpl implements SegmentTagnameTagListSe
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				   ApiErrorCode.SUCCESS.getMsg(),
 				   ApiConstant.INT_ZERO,null);
-		if(null != resList && resList.size() > 0){
+		if(CollectionUtils.isNotEmpty(resList)){
 			result.setTotal(resList.size());
 			for(TagRecommend po : resList){
 				Map<String,Object> map = new HashMap<String,Object>();

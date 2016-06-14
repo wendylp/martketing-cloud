@@ -7,9 +7,6 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
-import heracles.data.common.annotation.ReadWrite;
-import heracles.data.common.util.ReadWriteType;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +20,8 @@ import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.service.MainBasicInfoGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.MainBasicInfoGetOut;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 
 @Service
 public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
@@ -42,11 +41,8 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 			MainBasicInfoGetOut dataVo = new MainBasicInfoGetOut();
 			dataVo.setContactId(id);
 			dataVo.setName(party.getName());
-			dataVo.setGender(party.getGender());
-			dataVo.setAge(party.getAge());
-			dataVo.setMobile(party.getMobile());
-			dataVo.setEmail(party.getEmail());
-			dataVo.setAddress(party.getHomeAddress());
+			dataVo.setGender(Integer.valueOf(party.getGender()));
+			dataVo.setMobile(Long.valueOf(party.getMobile()));
 			data.add(dataVo);
 			result.setData(data);
 			result.setTotal(data.size());

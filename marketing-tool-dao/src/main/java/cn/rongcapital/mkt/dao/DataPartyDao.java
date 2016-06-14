@@ -16,7 +16,7 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataParty;
 
-public interface DataPartyDao extends BaseDao<DataParty> , BaseDataFilterDao<DataParty>{
+public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<DataParty>{
 	
 	//自定义扩展
 	/**
@@ -47,14 +47,14 @@ public interface DataPartyDao extends BaseDao<DataParty> , BaseDataFilterDao<Dat
      */
     public Map<String, Object> selectMainCount();
     
-    /**
-     * mkt.data.main.delete
-     * 
-     * @功能简述 : 删除某条主数据
-     * @author nianjun
-     * @return map
-     */
-    public int logicDeleteById(DataParty dataParty);
+//    /**
+//     * mkt.data.main.delete
+//     * 
+//     * @功能简述 : 删除某条主数据
+//     * @author nianjun
+//     * @return map
+//     */
+//    public int logicDeleteById(DataParty dataParty);
 
     /**
      *
@@ -65,12 +65,12 @@ public interface DataPartyDao extends BaseDao<DataParty> , BaseDataFilterDao<Dat
      */
     public DataParty getDataById(Integer id);
 
-	/**
-	 * mkt.data.main.searchbyid.get
-	 *
-	 * @功能简述 : 根据类型和编号，搜索获取主数据(人群)
-	 * @author nianjun
-	 * @return map
-	 */
-	Map<String,Object> selectAudienceDetail(Map<String, Object> map);
+    /**
+     * mkt.data.main.searchbyid.get
+     *
+     * @功能简述 : 根据类型和编号，搜索获取主数据(人群)
+     * @author nianjun
+     * @return map
+     */
+    Map<String,Object> selectAudienceDetail(Map<String, Object> map);
 }

@@ -7,9 +7,6 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
-import heracles.data.common.annotation.ReadWrite;
-import heracles.data.common.util.ReadWriteType;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +18,8 @@ import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 
 @Service
 public class DataMainBasicInfoUpdateServiceImpl implements DataMainBasicInfoUpdateService{
@@ -36,24 +35,9 @@ public class DataMainBasicInfoUpdateServiceImpl implements DataMainBasicInfoUpda
 		DataParty po = new DataParty();
 		po.setId(body.getContactId());
 		po.setName(body.getName());
-		po.setGender(body.getGender());
-		po.setAge(body.getAge());
+		po.setGender(body.getGender() + "");
 		if(!StringUtils.isEmpty(body.getMobile())){
-			po.setMobile(Long.parseLong(body.getMobile()));
-		}
-		po.setEmail(body.getEmail());
-		po.setHomeAddress(body.getHomeAddress());
-		po.setWorkAddress(body.getWorkAddress());
-		if(!StringUtils.isEmpty(body.getQq())){
-		    po.setQq(Integer.parseInt(body.getQq()));
-		}
-		po.setWechat(body.getWechat());
-		po.setWeibo(body.getWeibo());
-		if(!StringUtils.isEmpty(body.getChildAmount())){
-			po.setChildAmount(Byte.parseByte(body.getChildAmount()));
-		}
-		if(!StringUtils.isEmpty(body.getSalary())){
-			po.setSalary(Long.parseLong(body.getSalary()));
+			po.setMobile(body.getMobile());
 		}
 		
 		int res = dataPartyDao.updateById(po);

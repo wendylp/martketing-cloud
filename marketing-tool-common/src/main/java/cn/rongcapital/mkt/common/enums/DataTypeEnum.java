@@ -3,13 +3,13 @@ package cn.rongcapital.mkt.common.enums;
 public enum DataTypeEnum {
 
     PARTY(0, "主数据"), 
-    APP(1, "APP"), 
-    POS(2, "POS"), 
-    PUBLIC(3, "公众号"), 
-    PERSONAL(4, "个人号"), 
-    ESHOP(5, "网上商城"), 
-    CRM(6, "CRM"), 
-    TMALL(7, "天猫"),
+    POPULATION(1, "人口属性"), 
+    CUSTOMER_TAGS(2, "客户标签"), 
+    ARCH_POINT(3, "埋点统计"), 
+    MEMBER(4, "会员卡记录"), 
+    LOGIN(5, "登录行为"), 
+    PAYMENT(6, "支付记录"), 
+    SHOPPING(7, "购物记录"),
 
     ;
 

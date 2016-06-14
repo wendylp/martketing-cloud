@@ -1,62 +1,59 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.math.BigDecimal;
 import java.util.Date;
+
+import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class DataParty extends BaseQuery {
     private Integer id;
 
-    private Integer taskId;
-
-    private String accountName;
+    private String mobile;
 
     private String name;
 
-    private Integer gender;
+    private String gender;
 
-    private Integer age;
+    private Date birthday;
 
-    private String homeAddress;
+    private String provice;
 
-    private String workAddress;
+    private String city;
 
-    private String homeStatus;
+    private String job;
 
-    private String workStatus;
+    private BigDecimal monthlyIncome;
 
     private String memberLevel;
 
-    private Long mobile;
+    private Integer memberPoints;
 
-    private String email;
+    private String source;
 
-    private String wechat;
+    private BigDecimal monthlyConsume;
 
-    private Integer qq;
+    private Date lastLogin;
 
-    private String weibo;
+    private Boolean status;
 
-    private Integer orderCount;
+    private Date createTime;
 
-    private Long orderAmount;
+    private Date updateTime;
 
-    private Integer cartItemCount;
+    private Integer batchId;
 
-    private Integer favoriteItemCount;
+    private String mid;
 
-    private Long salary;
+    private Integer mdType;
 
-    private Integer offlineActivityAttendence;
-
-    private Byte childAmount;
-
-    private BigDecimal childAnnualBudget;
-
-    private Boolean deleted;
-
-    private Date deleteTime;
+    private String mappingKeyid;
+    
+    public DataParty(){}
+    
+    public DataParty(Integer index , Integer size){
+        setStartIndex(index);
+        setPageSize(size);
+    }
 
     public Integer getId() {
         return id;
@@ -66,20 +63,12 @@ public class DataParty extends BaseQuery {
         this.id = id;
     }
 
-    public Integer getTaskId() {
-        return taskId;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setTaskId(Integer taskId) {
-        this.taskId = taskId;
-    }
-
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public void setAccountName(String accountName) {
-        this.accountName = accountName == null ? null : accountName.trim();
+    public void setMobile(String mobile) {
+        this.mobile = mobile == null ? null : mobile.trim();
     }
 
     public String getName() {
@@ -90,52 +79,52 @@ public class DataParty extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(Integer gender) {
-        this.gender = gender;
+    public void setGender(String gender) {
+        this.gender = gender == null ? null : gender.trim();
     }
 
-    public Integer getAge() {
-        return age;
+    public Date getBirthday() {
+        return birthday;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
-    public String getHomeAddress() {
-        return homeAddress;
+    public String getProvice() {
+        return provice;
     }
 
-    public void setHomeAddress(String homeAddress) {
-        this.homeAddress = homeAddress == null ? null : homeAddress.trim();
+    public void setProvice(String provice) {
+        this.provice = provice == null ? null : provice.trim();
     }
 
-    public String getWorkAddress() {
-        return workAddress;
+    public String getCity() {
+        return city;
     }
 
-    public void setWorkAddress(String workAddress) {
-        this.workAddress = workAddress == null ? null : workAddress.trim();
+    public void setCity(String city) {
+        this.city = city == null ? null : city.trim();
     }
 
-    public String getHomeStatus() {
-        return homeStatus;
+    public String getJob() {
+        return job;
     }
 
-    public void setHomeStatus(String homeStatus) {
-        this.homeStatus = homeStatus == null ? null : homeStatus.trim();
+    public void setJob(String job) {
+        this.job = job == null ? null : job.trim();
     }
 
-    public String getWorkStatus() {
-        return workStatus;
+    public BigDecimal getMonthlyIncome() {
+        return monthlyIncome;
     }
 
-    public void setWorkStatus(String workStatus) {
-        this.workStatus = workStatus == null ? null : workStatus.trim();
+    public void setMonthlyIncome(BigDecimal monthlyIncome) {
+        this.monthlyIncome = monthlyIncome;
     }
 
     public String getMemberLevel() {
@@ -146,123 +135,91 @@ public class DataParty extends BaseQuery {
         this.memberLevel = memberLevel == null ? null : memberLevel.trim();
     }
 
-    public Long getMobile() {
-        return mobile;
+    public Integer getMemberPoints() {
+        return memberPoints;
     }
 
-    public void setMobile(Long mobile) {
-        this.mobile = mobile;
+    public void setMemberPoints(Integer memberPoints) {
+        this.memberPoints = memberPoints;
     }
 
-    public String getEmail() {
-        return email;
+    public String getSource() {
+        return source;
     }
 
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
+    public void setSource(String source) {
+        this.source = source == null ? null : source.trim();
     }
 
-    public String getWechat() {
-        return wechat;
+    public BigDecimal getMonthlyConsume() {
+        return monthlyConsume;
     }
 
-    public void setWechat(String wechat) {
-        this.wechat = wechat == null ? null : wechat.trim();
+    public void setMonthlyConsume(BigDecimal monthlyConsume) {
+        this.monthlyConsume = monthlyConsume;
     }
 
-    public Integer getQq() {
-        return qq;
+    public Date getLastLogin() {
+        return lastLogin;
     }
 
-    public void setQq(Integer qq) {
-        this.qq = qq;
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
-    public String getWeibo() {
-        return weibo;
+    public Boolean getStatus() {
+        return status;
     }
 
-    public void setWeibo(String weibo) {
-        this.weibo = weibo == null ? null : weibo.trim();
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
-    public Integer getOrderCount() {
-        return orderCount;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setOrderCount(Integer orderCount) {
-        this.orderCount = orderCount;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Long getOrderAmount() {
-        return orderAmount;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setOrderAmount(Long orderAmount) {
-        this.orderAmount = orderAmount;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
-    public Integer getCartItemCount() {
-        return cartItemCount;
+    public Integer getBatchId() {
+        return batchId;
     }
 
-    public void setCartItemCount(Integer cartItemCount) {
-        this.cartItemCount = cartItemCount;
+    public void setBatchId(Integer batchId) {
+        this.batchId = batchId;
     }
 
-    public Integer getFavoriteItemCount() {
-        return favoriteItemCount;
+    public String getMid() {
+        return mid;
     }
 
-    public void setFavoriteItemCount(Integer favoriteItemCount) {
-        this.favoriteItemCount = favoriteItemCount;
+    public void setMid(String mid) {
+        this.mid = mid == null ? null : mid.trim();
     }
 
-    public Long getSalary() {
-        return salary;
+    public Integer getMdType() {
+        return mdType;
     }
 
-    public void setSalary(Long salary) {
-        this.salary = salary;
+    public void setMdType(Integer mdType) {
+        this.mdType = mdType;
     }
 
-    public Integer getOfflineActivityAttendence() {
-        return offlineActivityAttendence;
+    public String getMappingKeyid() {
+        return mappingKeyid;
     }
 
-    public void setOfflineActivityAttendence(Integer offlineActivityAttendence) {
-        this.offlineActivityAttendence = offlineActivityAttendence;
-    }
-
-    public Byte getChildAmount() {
-        return childAmount;
-    }
-
-    public void setChildAmount(Byte childAmount) {
-        this.childAmount = childAmount;
-    }
-
-    public BigDecimal getChildAnnualBudget() {
-        return childAnnualBudget;
-    }
-
-    public void setChildAnnualBudget(BigDecimal childAnnualBudget) {
-        this.childAnnualBudget = childAnnualBudget;
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public Date getDeleteTime() {
-        return deleteTime;
-    }
-
-    public void setDeleteTime(Date deleteTime) {
-        this.deleteTime = deleteTime;
+    public void setMappingKeyid(String mappingKeyid) {
+        this.mappingKeyid = mappingKeyid == null ? null : mappingKeyid.trim();
     }
 }

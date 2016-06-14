@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface OriginalDataPopulationDao extends BaseDao<OriginalDataPopulation>{
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展

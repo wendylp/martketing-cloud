@@ -129,8 +129,10 @@ import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
+import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
+import cn.rongcapital.mkt.vo.out.CampaignProgressStatusCountOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 import cn.rongcapital.mkt.vo.out.SerarchTagGroupTagsOut;
@@ -428,9 +430,9 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.header.get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object campaignHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
-								   @NotEmpty @QueryParam("ver") String ver,
-								   @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
+	public CampaignHeaderGetOut campaignHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
+								   				  @NotEmpty @QueryParam("ver") String ver,
+								   			      @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
 	    return campaignHeaderGetService.campaignHeaderGet(userToken, ver, campaignHeadId);
 	}
 
@@ -921,7 +923,7 @@ public class MktApi {
 	
 	/**
 	 * @功能简述: 删除campaign
-	 * @param: campaign_id 营销活动id
+	 * @param: campaign_head_id 营销活动id
 	 * @return: Object
 	 */
 	@POST
@@ -953,7 +955,7 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.progressstatus.count.get")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public BaseOutput campaignProgressStatusCount(
+	public CampaignProgressStatusCountOut campaignProgressStatusCount(
 													@NotEmpty @QueryParam("method") String method,
 													@NotEmpty @QueryParam("user_token") String userToken){
 		return campaignProgressStatusCountService.campaignProgressStatusCountGet();
@@ -990,7 +992,7 @@ public class MktApi {
 	@Path("/mkt.segment.tagkey.taglist.get")
 	public BaseOutput getLastTagByKey(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("tag_group_name") String tagGroupName){
+            @QueryParam("tag_group_name") String tagGroupName){
 		return segmentTagkeyTagListService.getLastTagByKey(tagGroupName);
 	}
 	

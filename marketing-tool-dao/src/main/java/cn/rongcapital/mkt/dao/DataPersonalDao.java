@@ -35,5 +35,4 @@ public interface DataPersonalDao extends BaseDao<DataPersonal>, BaseDataFilterDa
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
-    
 }

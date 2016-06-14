@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +66,7 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
 		 t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		 t.setId(id);
 		 List<SegmentationHead> segList = segmentationHeadDao.selectList(t);
-		 if(null != segList && segList.size() > 0) {
+		 if(CollectionUtils.isNotEmpty(segList)) {
 			SegmentationHead sht = segList.get(0);
 			if(sht.getPublishStatus() == ApiConstant.SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN) {
 				ur = new BaseOutput(ApiErrorCode.BIZ_ERROR_SEGMENTATION_IN_CAMPAIGN.getCode(),

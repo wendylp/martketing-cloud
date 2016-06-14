@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class TagSystemListGetServiceImpl implements TagSystemListGetService {
 		paramMap.put("startIndex", index);
 		paramMap.put("pageSize", size);
 		List<Tag> tagList = tagDao.selectListByParentGroupId(paramMap);
-		if (null != tagList && tagList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(tagList)) {
 			baseOutput.setTotal(tagList.size());
 			for (Tag t : tagList) {
 				Map<String, Object> map = new HashMap<String, Object>();

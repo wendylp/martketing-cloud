@@ -10,6 +10,7 @@ package cn.rongcapital.mkt.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class TaggroupSystemMenulistGetServiceImpl implements
 		param.setStartIndex(index);
 		param.setPageSize(size);
 		List<Map<String, Object>> groupList = TaggroupDao.selectTaggroupSystemMenulist(param);
-		if (null != groupList && groupList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(groupList)) {
 			baseOutput.setTotal(groupList.size());
 			for (Map<String, Object> groupMap : groupList) {
 				if(!groupMap.containsKey("tag_group_id")){

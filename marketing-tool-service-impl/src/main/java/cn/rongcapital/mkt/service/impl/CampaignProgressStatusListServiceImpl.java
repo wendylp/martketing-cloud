@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,8 +57,10 @@ public class CampaignProgressStatusListServiceImpl implements
 	public BaseOutput campaignProgressStatusList(Byte publishStatus,
 			String campaignName, Integer index, Integer size) {
 		CampaignHead t = new CampaignHead();
-		t.setStatus((byte)0);
-		t.setPublishStatus(publishStatus);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		if(publishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_ALL){
+			t.setPublishStatus(publishStatus);
+		}
 		t.setPageSize(size);
 		t.setStartIndex((index-1)*size);
 		t.getCustomMap().put("keyword", campaignName);
@@ -65,7 +68,7 @@ public class CampaignProgressStatusListServiceImpl implements
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				   ApiErrorCode.SUCCESS.getMsg(),
 				   ApiConstant.INT_ZERO,null);
-		if(null !=reList && reList.size()>0){
+		if(CollectionUtils.isNotEmpty(reList)){
 			for(CampaignHead c:reList){
 				CampaignProgressStatusListOut campaignProgressStatusListOut = new CampaignProgressStatusListOut();
 				campaignProgressStatusListOut.setCampaignId(c.getId());
@@ -75,10 +78,10 @@ public class CampaignProgressStatusListServiceImpl implements
 				
 				//查询活动的开始结束时间
 				CampaignTriggerTimer ctt = new CampaignTriggerTimer();
-				ctt.setStatus((byte)0);
+				ctt.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				ctt.setCampaignHeadId(c.getId());
 				List<CampaignTriggerTimer> cttList = campaignTriggerTimerDao.selectList(ctt);
-				if(null != cttList && cttList.size() == 1){
+				if(CollectionUtils.isNotEmpty(cttList)){
 					String startTime = DateUtil.getStringFromDate(cttList.get(0).getStartTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
 					String endTime = DateUtil.getStringFromDate(cttList.get(0).getEndTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
 					campaignProgressStatusListOut.setStartTime(startTime);
@@ -87,10 +90,10 @@ public class CampaignProgressStatusListServiceImpl implements
 				
 				//查询活动涉及到的人群
 				CampaignAudienceTarget cat = new CampaignAudienceTarget();
-				cat.setStatus((byte)0);
+				cat.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				cat.setCampaignHeadId(c.getId());
 				List<CampaignAudienceTarget> catList = campaignAudienceTargetDao.selectList(cat);
-				if(null != catList && catList.size() > 0){
+				if(CollectionUtils.isNotEmpty(catList)){
 					List<String> campNameList = new ArrayList<String>();
 					for(CampaignAudienceTarget campaignAudienceTarget:catList) {
 						if(StringUtils.isNotBlank(campaignAudienceTarget.getName())) {
@@ -109,7 +112,7 @@ public class CampaignProgressStatusListServiceImpl implements
 		campaignColumns.setOrderField(ORDER_BY_FIELD_NAME);
 		List<CampaignColumns> campaignColumnsList = campaignColumnsDao.selectList(campaignColumns);
 		List<Object> columnsOutList = new ArrayList<Object>(); 
-		if(null != campaignColumnsList && campaignColumnsList.size() > 0) {
+		if(CollectionUtils.isEmpty(campaignColumnsList)) {
 			for(CampaignColumns cc:campaignColumnsList) {
 				ColumnsOut columnsOut = new ColumnsOut();
 				columnsOut.setColCode(cc.getFieldCode());

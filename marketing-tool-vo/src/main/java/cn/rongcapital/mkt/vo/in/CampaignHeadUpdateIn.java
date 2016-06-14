@@ -31,7 +31,7 @@ public class CampaignHeadUpdateIn extends BaseInput {
     @NotEmpty
     private String userToken = null;
 
-    @JsonProperty("campaign_id")
+    @JsonProperty("campaign_head_id")
 	public Integer getCampaignId() {
 		return campaignId;
 	}

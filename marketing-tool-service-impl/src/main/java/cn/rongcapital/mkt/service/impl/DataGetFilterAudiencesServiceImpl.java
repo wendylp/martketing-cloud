@@ -12,24 +12,24 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.util.ReflectionUtil;
-import cn.rongcapital.mkt.dao.DataAppDao;
-import cn.rongcapital.mkt.dao.DataCrmDao;
-import cn.rongcapital.mkt.dao.DataEshopDao;
+import cn.rongcapital.mkt.dao.DataArchPointDao;
+import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
+import cn.rongcapital.mkt.dao.DataLoginDao;
+import cn.rongcapital.mkt.dao.DataMemberDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.dao.DataPersonalDao;
-import cn.rongcapital.mkt.dao.DataPosDao;
-import cn.rongcapital.mkt.dao.DataPublicDao;
-import cn.rongcapital.mkt.dao.DataTmallDao;
+import cn.rongcapital.mkt.dao.DataPaymentDao;
+import cn.rongcapital.mkt.dao.DataPopulationDao;
+import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.dao.ImportTemplateDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
-import cn.rongcapital.mkt.po.DataApp;
-import cn.rongcapital.mkt.po.DataCrm;
-import cn.rongcapital.mkt.po.DataEshop;
+import cn.rongcapital.mkt.po.DataArchPoint;
+import cn.rongcapital.mkt.po.DataCustomerTags;
+import cn.rongcapital.mkt.po.DataLogin;
+import cn.rongcapital.mkt.po.DataMember;
 import cn.rongcapital.mkt.po.DataParty;
-import cn.rongcapital.mkt.po.DataPersonal;
-import cn.rongcapital.mkt.po.DataPos;
-import cn.rongcapital.mkt.po.DataPublic;
-import cn.rongcapital.mkt.po.DataTmall;
+import cn.rongcapital.mkt.po.DataPayment;
+import cn.rongcapital.mkt.po.DataPopulation;
+import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.ImportTemplate;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
@@ -46,25 +46,25 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
     private DataPartyDao dataPartyDao;
 
     @Autowired
-    private DataAppDao dataAppDao;
+    private DataPopulationDao dataPopulationDao;
 
     @Autowired
-    private DataPosDao dataPosDao;
+    private DataCustomerTagsDao dataCustomerTagsDao;
 
     @Autowired
-    private DataPublicDao dataPublicDao;
+    private DataArchPointDao dataArchPointDao;
 
     @Autowired
-    private DataPersonalDao dataPersonalDao;
+    private DataMemberDao dataMemberDao;
 
     @Autowired
-    private DataEshopDao dataEshopDao;
+    private DataLoginDao dataLoginDao;
 
     @Autowired
-    private DataCrmDao dataCrmDao;
+    private DataPaymentDao dataPaymentDao;
 
     @Autowired
-    private DataTmallDao dataTmallDao;
+    private DataShoppingDao dataShoppingDao;
 
     @Override
     public <T extends BaseQuery> List<Map<String, Object>> getFilterAudiences(String method, String userToken,
@@ -72,45 +72,29 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
         // 这代码写的太2了
         if (dataType == DataTypeEnum.PARTY.getCode()) {
-            DataParty paramObj = new DataParty();
-            paramObj.setDeleted(Boolean.FALSE);
-            assignPagingValue(paramObj, index, size);
+            DataParty paramObj = new DataParty(index, size);
             return getData(dataType, taskIdList, paramObj, dataPartyDao);
-        } else if (dataType == DataTypeEnum.APP.getCode()) {
-            DataApp paramObj = new DataApp();
-            paramObj.setDeleted(Boolean.FALSE);
-            assignPagingValue(paramObj, index, size);
-            return getData(dataType, taskIdList, paramObj, dataAppDao);
-        } else if (dataType == DataTypeEnum.POS.getCode()) {
-            DataPos paramObj = new DataPos();
-            paramObj.setDeleted(Boolean.FALSE);
-            assignPagingValue(paramObj, index, size);
-            return getData(dataType, taskIdList, paramObj, dataPosDao);
-        } else if (dataType == DataTypeEnum.PUBLIC.getCode()) {
-            DataPublic paramObj = new DataPublic();
-            paramObj.setDeleted(Boolean.FALSE);
-            assignPagingValue(paramObj, index, size);
-            return getData(dataType, taskIdList, paramObj, dataPublicDao);
-        } else if (dataType == DataTypeEnum.PERSONAL.getCode()) {
-            DataPersonal paramObj = new DataPersonal();
-            paramObj.setDeleted(Boolean.FALSE);
-            assignPagingValue(paramObj, index, size);
-            return getData(dataType, taskIdList, paramObj, dataPersonalDao);
-        } else if (dataType == DataTypeEnum.ESHOP.getCode()) {
-            DataEshop paramObj = new DataEshop();
-            paramObj.setDeleted(Boolean.FALSE);
-            assignPagingValue(paramObj, index, size);
-            return getData(dataType, taskIdList, paramObj, dataEshopDao);
-        } else if (dataType == DataTypeEnum.CRM.getCode()) {
-            DataCrm paramObj = new DataCrm();
-            paramObj.setDeleted(Boolean.FALSE);
-            assignPagingValue(paramObj, index, size);
-            return getData(dataType, taskIdList, paramObj, dataCrmDao);
-        } else if (dataType == DataTypeEnum.TMALL.getCode()) {
-            DataTmall paramObj = new DataTmall();
-            paramObj.setDeleted(Boolean.FALSE);
-            assignPagingValue(paramObj, index, size);
-            return getData(dataType, taskIdList, paramObj, dataTmallDao);
+        } else if (dataType == DataTypeEnum.POPULATION.getCode()) {
+            DataPopulation paramObj = new DataPopulation(index, size);
+            return getData(dataType, taskIdList, paramObj, dataPopulationDao);
+        } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
+            DataCustomerTags paramObj = new DataCustomerTags(index, size);
+            return getData(dataType, taskIdList, paramObj, dataCustomerTagsDao);
+        } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
+            DataArchPoint paramObj = new DataArchPoint(index, size);
+            return getData(dataType, taskIdList, paramObj, dataArchPointDao);
+        } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
+            DataMember paramObj = new DataMember(index, size);
+            return getData(dataType, taskIdList, paramObj, dataMemberDao);
+        } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
+            DataLogin paramObj = new DataLogin(index, size);
+            return getData(dataType, taskIdList, paramObj, dataLoginDao);
+        } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
+            DataPayment paramObj = new DataPayment(index, size);
+            return getData(dataType, taskIdList, paramObj, dataPaymentDao);
+        } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
+            DataShopping paramObj = new DataShopping(index, size);
+            return getData(dataType, taskIdList, paramObj, dataShoppingDao);
         } else {
             logger.error("传入错误的data type : {}", dataType);
         }
@@ -124,9 +108,9 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("paramObj", paramObj);
-        paramMap.put("taskIdList", taskIdList);
+        paramMap.put("batchIdList", taskIdList);
 
-        List<T> dataList = dao.selectByTaskId(paramMap);
+        List<T> dataList = dao.selectByBatchId(paramMap);
         List<Map<String, Object>> resultList = new ArrayList<>();
         if (dataList != null && !dataList.isEmpty()) {
             ImportTemplate paramImportTemplate = new ImportTemplate();
@@ -148,10 +132,4 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
         return resultList;
     }
-
-    public <T extends BaseQuery> void assignPagingValue(T paramObject, Integer index, Integer size) {
-        paramObject.setStartIndex(index);
-        paramObject.setPageSize(size);
-    }
-
 }
