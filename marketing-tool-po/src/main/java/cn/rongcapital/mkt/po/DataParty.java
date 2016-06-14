@@ -41,6 +41,12 @@ public class DataParty extends BaseQuery {
     private Date updateTime;
 
     private Integer batchId;
+
+    private String mid;
+
+    private Integer mdType;
+
+    private String mappingKeyid;
     
     public DataParty(){}
     
@@ -191,5 +197,29 @@ public class DataParty extends BaseQuery {
 
     public void setBatchId(Integer batchId) {
         this.batchId = batchId;
+    }
+
+    public String getMid() {
+        return mid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid == null ? null : mid.trim();
+    }
+
+    public Integer getMdType() {
+        return mdType;
+    }
+
+    public void setMdType(Integer mdType) {
+        this.mdType = mdType;
+    }
+
+    public String getMappingKeyid() {
+        return mappingKeyid;
+    }
+
+    public void setMappingKeyid(String mappingKeyid) {
+        this.mappingKeyid = mappingKeyid == null ? null : mappingKeyid.trim();
     }
 }
