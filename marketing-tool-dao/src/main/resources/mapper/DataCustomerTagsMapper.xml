@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,tag_type as tagType,tag_name as tagName,birthday as birthday,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,acct_type as acctType,tel as tel,QQ as qQ,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId]]>
+		<![CDATA[ id as id,tag_type as tagType,tag_name as tagName,birthday as birthday,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,acct_type as acctType,tel as tel,QQ as qq,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -23,7 +23,7 @@
 		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
 		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
 		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
-		    	<if test="qQ != null"><![CDATA[ AND QQ = #{qQ}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND QQ = #{qq}]]></if>
 		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
 		    	<if test="iDFA != null"><![CDATA[ AND IDFA = #{iDFA}]]></if>
 		    	<if test="iMEI != null"><![CDATA[ AND IMEI = #{iMEI}]]></if>
@@ -55,7 +55,7 @@
 		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
 		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
 		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
-		    	<if test="qQ != null"><![CDATA[QQ = #{qQ},]]></if>
+		    	<if test="qq != null"><![CDATA[QQ = #{qq},]]></if>
 		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
 		    	<if test="iDFA != null"><![CDATA[IDFA = #{iDFA},]]></if>
 		    	<if test="iMEI != null"><![CDATA[IMEI = #{iMEI},]]></if>
@@ -82,7 +82,7 @@
 			  #{mobile},
 			  #{acctType},
 			  #{tel},
-			  #{qQ},
+			  #{qq},
 			  #{acctNo},
 			  #{iDFA},
 			  #{iMEI},
