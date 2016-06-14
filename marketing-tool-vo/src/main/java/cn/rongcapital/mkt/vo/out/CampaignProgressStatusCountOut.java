@@ -3,6 +3,8 @@ package cn.rongcapital.mkt.vo.out;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 public class CampaignProgressStatusCountOut extends BaseOutput {
@@ -13,6 +15,7 @@ public class CampaignProgressStatusCountOut extends BaseOutput {
 		super(code, msg, total, null);
 	}
 
+	@JsonProperty("data")
 	public List<CampaignProgressStatusCountDataOut> getDataCustom() {
 		return dataCustom;
 	}
