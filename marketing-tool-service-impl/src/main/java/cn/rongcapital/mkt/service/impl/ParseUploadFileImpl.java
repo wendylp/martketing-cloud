@@ -4,8 +4,6 @@ import cn.rongcapital.mkt.dao.ImportTemplateDao;
 import cn.rongcapital.mkt.dao.OriginalDataPopulationDao;
 import cn.rongcapital.mkt.service.ParseUploadFile;
 import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +23,6 @@ public class ParseUploadFileImpl implements ParseUploadFile {
 
     @Override
     public UploadFileAccordTemplateOut parseUploadFileByType(String fileName, byte[] bytes) {
-        JSONObject obj = new JSONObject();
         UploadFileAccordTemplateOut uploadFileAccordTemplateOut = new UploadFileAccordTemplateOut();
         StringBuffer illegalColumns = new StringBuffer();  //用于存放文件中不合法的列名
         Map<String,Object> codeIndexMap = new HashMap<String,Object>();  //用于存放数据库表列名与文件中对应列索引的对应关系

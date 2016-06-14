@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.vo;
+package cn.rongcapital.mkt.vo.out;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
