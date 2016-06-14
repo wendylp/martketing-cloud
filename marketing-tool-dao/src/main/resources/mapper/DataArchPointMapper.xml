@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,event_id as eventId,event_name as eventName,click_time as clickTime,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,QQ as qQ,acct_type as acctType,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source]]>
+		<![CDATA[ id as id,event_id as eventId,event_name as eventName,click_time as clickTime,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,QQ as qQ,acct_type as acctType,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,cookie as cookie,batch_id as batchId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -33,6 +33,8 @@
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="cookie != null"><![CDATA[ AND cookie = #{cookie}]]></if>
+		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		</where>
 	</sql>
 	
@@ -61,14 +63,16 @@
 		    	<if test="uDID != null"><![CDATA[UDID = #{uDID},]]></if>
 		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
-		    	<if test="source != null"><![CDATA[source = #{source}]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="cookie != null"><![CDATA[cookie = #{cookie},]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataArchPoint" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_arch_point (event_id,event_name,click_time,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source)
+			INSERT INTO data_arch_point (event_id,event_name,click_time,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,cookie,batch_id)
 			VALUES
 			(
 			  #{eventId},
@@ -87,7 +91,9 @@
 			  #{uDID},
 			  #{phoneMac},
 			  now(),
-			  #{source}
+			  #{source},
+			  #{cookie},
+			  #{batchId}
 			)
 		]]>
 	</insert>

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,tag_type as tagType,tag_name as tagName,birthday as birthday,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,acct_type as acctType,tel as tel,QQ as qQ,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source]]>
+		<![CDATA[ id as id,tag_type as tagType,tag_name as tagName,birthday as birthday,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,acct_type as acctType,tel as tel,QQ as qQ,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -33,6 +33,7 @@
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		</where>
 	</sql>
 	
@@ -61,14 +62,15 @@
 		    	<if test="uDID != null"><![CDATA[UDID = #{uDID},]]></if>
 		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
-		    	<if test="source != null"><![CDATA[source = #{source}]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataCustomerTags" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO original_data_customer_tags (tag_type,tag_name,birthday,identify_no,driving_license,email,mobile,acct_type,tel,QQ,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source)
+			INSERT INTO original_data_customer_tags (tag_type,tag_name,birthday,identify_no,driving_license,email,mobile,acct_type,tel,QQ,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,batch_id)
 			VALUES
 			(
 			  #{tagType},
@@ -87,7 +89,8 @@
 			  #{uDID},
 			  #{phoneMac},
 			  now(),
-			  #{source}
+			  #{source},
+			  #{batchId}
 			)
 		]]>
 	</insert>

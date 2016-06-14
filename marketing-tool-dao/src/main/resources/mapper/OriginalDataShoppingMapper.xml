@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,pay_channel as payChannel,pay_acct as payAcct,pay_serial as paySerial,trans_serial as transSerial,order_no as orderNo,product_name as productName,create_time as createTime,complete_time as completeTime,pay_status as payStatus,counter_acct as counterAcct,income_amt as incomeAmt,paid_amt as paidAmt,acct_amt as acctAmt,comments as comments,identfy_no as identfyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,QQ as qQ,acct_type as acctType,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,update_time as updateTime,source as source]]>
+		<![CDATA[ id as id,pay_channel as payChannel,pay_acct as payAcct,pay_serial as paySerial,trans_serial as transSerial,order_no as orderNo,product_name as productName,create_time as createTime,complete_time as completeTime,pay_status as payStatus,counter_acct as counterAcct,income_amt as incomeAmt,paid_amt as paidAmt,acct_amt as acctAmt,comments as comments,identfy_no as identfyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,QQ as qQ,acct_type as acctType,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,update_time as updateTime,source as source,batch_id as batchId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -43,6 +43,7 @@
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		</where>
 	</sql>
 	
@@ -81,14 +82,15 @@
 		    	<if test="uDID != null"><![CDATA[UDID = #{uDID},]]></if>
 		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
-		    	<if test="source != null"><![CDATA[source = #{source}]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataShopping" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO original_data_shopping (pay_channel,pay_acct,pay_serial,trans_serial,order_no,product_name,create_time,complete_time,pay_status,counter_acct,income_amt,paid_amt,acct_amt,comments,identfy_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,source)
+			INSERT INTO original_data_shopping (pay_channel,pay_acct,pay_serial,trans_serial,order_no,product_name,create_time,complete_time,pay_status,counter_acct,income_amt,paid_amt,acct_amt,comments,identfy_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,source,batch_id)
 			VALUES
 			(
 			  #{payChannel},
@@ -117,7 +119,8 @@
 			  #{iMEI},
 			  #{uDID},
 			  #{phoneMac},
-			  #{source}
+			  #{source},
+			  #{batchId}
 			)
 		]]>
 	</insert>
