@@ -41,15 +41,21 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService{
             setNicknameFlag(assetDetaiMap);
             assetDetaiMap.put("consignation_time", assetDetaiMap.remove("consignation_time").toString().substring(0,19));
             String groupIds = (String) assetDetaiMap.get("group_ids");
-            String[] ids = groupIds.split(",");
-            ArrayList<Map<String,Object>> groups = new ArrayList<Map<String,Object>>();
-            for(String id : ids){
-                Map<String,Object> group = wechatAssetGroupDao.selectGroupById(id);
-                group.put("group_name",group.remove("name"));
-                group.put("member_count",group.remove("members"));
-                groups.add(group);
+            if(groupIds != null && !("".equals(groupIds))){
+                ArrayList<Map<String,Object>> groups = new ArrayList<Map<String,Object>>();
+                if(groupIds.contains(",")){
+                    String[] ids = groupIds.split(",");
+                    for(String id : ids){
+                        Map<String,Object> group = wechatAssetGroupDao.selectGroupById(id);
+                        addGroupDataToList(groups, group);
+                    }
+                }else{
+                    Map<String,Object> group = wechatAssetGroupDao.selectGroupById(groupIds);
+                    addGroupDataToList(groups, group);
+                }
+                assetDetaiMap.put("group_data",groups);
             }
-            assetDetaiMap.put("group_data",groups);
+
             assetDetaiMap.remove("group_ids");
 
             baseOutput.getData().add(assetDetaiMap);
@@ -58,6 +64,14 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService{
             baseOutput.setTotal(baseOutput.getData().size());
         }
         return Response.ok().entity(baseOutput).build();
+    }
+
+    private void addGroupDataToList(ArrayList<Map<String, Object>> groups, Map<String, Object> group) {
+        if(group != null){
+            group.put("group_name",group.remove("name"));
+            group.put("member_count",group.remove("members"));
+            groups.add(group);
+        }
     }
 
     private void setNicknameFlag(Map<String, Object> assetDetaiMap) {
