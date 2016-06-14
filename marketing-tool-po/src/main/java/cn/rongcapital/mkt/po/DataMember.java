@@ -53,10 +53,10 @@ public class DataMember extends BaseQuery {
     private String source;
 
     private Integer batchId;
-    
+
     public DataMember() {}
-    
-    public DataMember(Integer index , Integer size){
+
+    public DataMember(Integer index, Integer size) {
         setStartIndex(index);
         setPageSize(size);
     }
