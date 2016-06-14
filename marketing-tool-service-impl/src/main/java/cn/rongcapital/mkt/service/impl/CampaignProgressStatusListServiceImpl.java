@@ -58,7 +58,9 @@ public class CampaignProgressStatusListServiceImpl implements
 			String campaignName, Integer index, Integer size) {
 		CampaignHead t = new CampaignHead();
 		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		t.setPublishStatus(publishStatus);
+		if(publishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_ALL){
+			t.setPublishStatus(publishStatus);
+		}
 		t.setPageSize(size);
 		t.setStartIndex((index-1)*size);
 		t.getCustomMap().put("keyword", campaignName);

@@ -68,7 +68,7 @@ public class DataPayment extends BaseQuery {
 
     private Integer batchId;
     
-    public DataPayment() {}
+    public DataPayment(){}
     
     public DataPayment(Integer index , Integer size){
         setStartIndex(index);

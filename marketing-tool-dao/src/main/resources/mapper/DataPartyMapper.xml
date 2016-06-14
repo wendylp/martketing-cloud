@@ -126,16 +126,16 @@
 	<!-- 其它SQL语句 -->
 		<select id="selectMainCount" resultType="java.util.Map">
 		SELECT
-			data_party_rows,data_arch_point_rows,data_customer_tags_rows,data_login_rows,data_member_rows,data_payment_rows,data_polulation_rows,data_shopping_rows
+			data_party_rows,data_arch_point_rows,data_customer_tags_rows,data_login_rows,data_member_rows,data_payment_rows,data_population_rows,data_shopping_rows
 		FROM
 			(select count(id) as data_party_rows from data_party) as data_party_result,
-			(select count(id) as data_app_rows from data_arch_point) as data_arch_point,
-			(select count(id) as data_pos_rows from data_customer_tags) as data_customer_tags,
-			(select count(id) as data_crm_rows from data_login) as data_login,
-			(select count(id) as data_personal_rows from data_member) as data_member,
-			(select count(id) as data_public_rows from data_payment) as data_payment,
-			(select count(id) as data_eshop_rows from data_polulation) as data_population,
-			(select count(id) as data_tmall_rows from data_shopping) as data_shopping
+			(select count(id) as data_arch_point_rows from data_arch_point) as data_arch_point,
+			(select count(id) as data_customer_tags_rows from data_customer_tags) as data_customer_tags,
+			(select count(id) as data_login_rows from data_login) as data_login,
+			(select count(id) as data_member_rows from data_member) as data_member,
+			(select count(id) as data_payment_rows from data_payment) as data_payment,
+			(select count(id) as data_population_rows from data_population) as data_population,
+			(select count(id) as data_shopping_rows from data_shopping) as data_shopping
 	</select>
 
 	<!-- 根据Id逻辑上删除某条主数据 -->
