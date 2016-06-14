@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,channel_type as channelType,channel_id as channelId,channel_name as channelName,pay_type as payType,trans_serial as transSerial,order_no as orderNo,trans_time as transTime,product_id as productId,specification as specification,color as color,discount_type as discountType,discount_amt as discountAmt,price as price,amount as amount,inventory as inventory,brand_id as brandId,brand_name as brandName,class1_id as class1Id,class1_name as class1Name,class2_id as class2Id,class2_name as class2Name,class3_id as class3Id,class3_name as class3Name,class4_id as class4Id,class4_name as class4Name,sale_assist_id as saleAssistId,sale_assistance as saleAssistance,settlement_clerk_id as settlementClerkId,settlement_clerk as settlementClerk,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,QQ as qq,acct_type as acctType,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,update_time as updateTime,source as source,batch_id as batchId]]>
+		<![CDATA[ id as id,channel_type as channelType,channel_id as channelId,channel_name as channelName,pay_type as payType,trans_serial as transSerial,order_no as orderNo,trans_time as transTime,product_id as productId,specification as specification,color as color,discount_type as discountType,discount_amt as discountAmt,price as price,amount as amount,inventory as inventory,brand_id as brandId,brand_name as brandName,class1_id as class1Id,class1_name as class1Name,class2_id as class2Id,class2_name as class2Name,class3_id as class3Id,class3_name as class3Name,class4_id as class4Id,class4_name as class4Name,sale_assist_id as saleAssistId,sale_assistance as saleAssistance,settlement_clerk_id as settlementClerkId,settlement_clerk as settlementClerk,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,update_time as updateTime,source as source,batch_id as batchId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -48,12 +48,12 @@
 		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
 		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
 		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
-		    	<if test="qQ != null"><![CDATA[ AND QQ = #{qQ}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
 		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
 		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
-		    	<if test="iDFA != null"><![CDATA[ AND IDFA = #{iDFA}]]></if>
-		    	<if test="iMEI != null"><![CDATA[ AND IMEI = #{iMEI}]]></if>
-		    	<if test="uDID != null"><![CDATA[ AND UDID = #{uDID}]]></if>
+		    	<if test="idfa != null"><![CDATA[ AND idfa = #{idfa}]]></if>
+		    	<if test="imei != null"><![CDATA[ AND imei = #{imei}]]></if>
+		    	<if test="udid != null"><![CDATA[ AND udid = #{udid}]]></if>
 		    	<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
@@ -105,12 +105,12 @@
 		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
 		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
 		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
-		    	<if test="qQ != null"><![CDATA[QQ = #{qQ},]]></if>
+		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
 		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
 		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
-		    	<if test="iDFA != null"><![CDATA[IDFA = #{iDFA},]]></if>
-		    	<if test="iMEI != null"><![CDATA[IMEI = #{iMEI},]]></if>
-		    	<if test="uDID != null"><![CDATA[UDID = #{uDID},]]></if>
+		    	<if test="idfa != null"><![CDATA[idfa = #{idfa},]]></if>
+		    	<if test="imei != null"><![CDATA[imei = #{imei},]]></if>
+		    	<if test="udid != null"><![CDATA[udid = #{udid},]]></if>
 		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
@@ -121,7 +121,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataShopping" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_shopping (channel_type,channel_id,channel_name,pay_type,trans_serial,order_no,trans_time,product_id,specification,color,discount_type,discount_amt,price,amount,inventory,brand_id,brand_name,class1_id,class1_name,class2_id,class2_name,class3_id,class3_name,class4_id,class4_name,sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,source,batch_id)
+			INSERT INTO data_shopping (channel_type,channel_id,channel_name,pay_type,trans_serial,order_no,trans_time,product_id,specification,color,discount_type,discount_amt,price,amount,inventory,brand_id,brand_name,class1_id,class1_name,class2_id,class2_name,class3_id,class3_name,class4_id,class4_name,sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,source,batch_id)
 			VALUES
 			(
 			  #{channelType},
@@ -158,12 +158,12 @@
 			  #{email},
 			  #{mobile},
 			  #{tel},
-			  #{qQ},
+			  #{qq},
 			  #{acctType},
 			  #{acctNo},
-			  #{iDFA},
-			  #{iMEI},
-			  #{uDID},
+			  #{idfa},
+			  #{imei},
+			  #{udid},
 			  #{phoneMac},
 			  #{source},
 			  #{batchId}

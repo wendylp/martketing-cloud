@@ -56,7 +56,7 @@ public class DataLogin extends BaseQuery {
 
     private Integer batchId;
     
-    public DataLogin() {}
+    public DataLogin(){}
     
     public DataLogin(Integer index , Integer size){
         setStartIndex(index);
