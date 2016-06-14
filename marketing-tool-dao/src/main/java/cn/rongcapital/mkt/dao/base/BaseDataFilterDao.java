@@ -10,5 +10,5 @@ public interface BaseDataFilterDao<T> {
      * @param: Map paramMap
      * @return: List<T>
      */
-    List<T> selectByTaskId(Map<String, Object> paramMap);
+    List<T> selectByBatchId(Map<String, Object> paramMap);
 }

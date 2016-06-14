@@ -11,9 +11,10 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataLogin;
 
-public interface DataLoginDao extends BaseDao<DataLogin>{
+public interface DataLoginDao extends BaseDao<DataLogin>, BaseDataFilterDao<DataLogin>{
 	
 	//自定义扩展
 	/**

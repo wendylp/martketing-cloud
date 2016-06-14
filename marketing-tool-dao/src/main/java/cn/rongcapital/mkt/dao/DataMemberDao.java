@@ -11,9 +11,10 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataMember;
 
-public interface DataMemberDao extends BaseDao<DataMember>{
+public interface DataMemberDao extends BaseDao<DataMember>, BaseDataFilterDao<DataMember>{
 	
 	//自定义扩展
 	/**
