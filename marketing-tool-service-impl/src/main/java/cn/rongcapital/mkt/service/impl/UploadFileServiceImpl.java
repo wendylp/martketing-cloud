@@ -11,6 +11,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.service.ParseUploadFile;
+import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -36,10 +38,13 @@ public class UploadFileServiceImpl implements UploadFileService{
 
     @Autowired
     private ImportDataHistoryDao importDataHistoryDao;
+    @Autowired
+    private ParseUploadFile parseUploadFile;
 
     @Override
     public Object uploadFile(String source,String fileUnique,int fileType,MultipartFormDataInput fileInput, SecurityContext securityContext) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(),ApiConstant.INT_ZERO,null);
+        UploadFileAccordTemplateOut uploadFileAccordTemplateOut = null;
         if( !isFileUniqueValid(fileUnique) ) return Response.ok().entity(baseOutput).build();
         String fileName = "";
         Map<String,List<InputPart>> uploadForm = fileInput.getFormDataMap();
@@ -55,9 +60,9 @@ public class UploadFileServiceImpl implements UploadFileService{
                 }
                 InputStream inputStream = inputPart.getBody(InputStream.class,null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
-                //Todo: 2.如果有效，把上传上来的文件解析，解析后得到的摘要，数据条数，未识别属性
+                uploadFileAccordTemplateOut = parseUploadFile.parseUploadFileByType(fileName,bytes);
                 //Todo: 3.根据文件唯一标识，把数据条数，摘要，未识别属性放到数据库的importHistory表中的相应栏位中。
-                writeFile(bytes,fileName);
+                writeFile(bytes,fileName);    //Todo: 4不确定文件是否还需要保存临时文件
                 logger.info("文件上传完毕！");
             }catch (Exception e){
                 e.printStackTrace();
@@ -66,6 +71,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         //Todo: 4.将数据摘要，数据条数，未识别属性返回给前端。
         baseOutput.setCode(200);
         baseOutput.setMsg("文件上传成功");
+        baseOutput.getData().add(uploadFileAccordTemplateOut);
         return Response.ok().entity(baseOutput).build();
     }
 

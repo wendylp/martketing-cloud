@@ -51,8 +51,12 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService{
             }
             assetDetaiMap.put("group_data",groups);
             assetDetaiMap.remove("group_ids");
+
+            baseOutput.getData().add(assetDetaiMap);
+            baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+            baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+            baseOutput.setTotal(baseOutput.getData().size());
         }
-        baseOutput.getData().add(assetDetaiMap);
         return Response.ok().entity(baseOutput).build();
     }
 

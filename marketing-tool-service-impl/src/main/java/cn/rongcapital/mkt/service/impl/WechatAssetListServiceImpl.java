@@ -41,6 +41,7 @@ public class WechatAssetListServiceImpl implements WechatAssetListService{
             map.put("follower_count", map.remove("total_count"));
             baseOutput.getData().add(map);
         }
+        baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
         baseOutput.setTotal(baseOutput.getData().size());
     }

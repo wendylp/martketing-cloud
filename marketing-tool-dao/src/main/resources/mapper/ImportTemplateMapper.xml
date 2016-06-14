@@ -142,5 +142,16 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
-	
+
+	<select id="selectFileColumn" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT field_name,field_code
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE templ_type = #{templ_type}
+	</select>
+
+	<select id="selectTempleNameByType" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT distinct templ_name
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE templ_type = #{templ_type}
+	</select>
 </mapper>

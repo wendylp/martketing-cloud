@@ -69,4 +69,18 @@ public interface ImportTemplateDao extends BaseDao<ImportTemplate> {
      * @return List
      */
     List<ImportTemplate> selectSelectedTemplateList(ImportTemplate paramImportTemplate);
+
+    /**
+     * @功能简述 : 根据文件类型查询文件应该包含的列
+     * @author baiyunfneg
+     * @return List
+     */
+    List<Map<String,Object>> selectFileColumn(Map<String, Object> paramMap);
+
+    /**
+     * @功能简述 : 根据模板类型查询模板名称
+     * @author baiyunfneg
+     * @return List
+     */
+    String selectTempleNameByType(Integer templ_type);
 }
