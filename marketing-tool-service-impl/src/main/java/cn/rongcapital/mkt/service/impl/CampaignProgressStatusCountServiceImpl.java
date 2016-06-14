@@ -10,16 +10,16 @@
 
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
+import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
-import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.CampaignProgressStatusCountDataOut;
+import cn.rongcapital.mkt.vo.out.CampaignProgressStatusCountOut;
 
 @Service
 public class CampaignProgressStatusCountServiceImpl implements
@@ -33,17 +33,48 @@ public class CampaignProgressStatusCountServiceImpl implements
 	 * @return BaseOutput
 	 */
 	@Override
-	public BaseOutput campaignProgressStatusCountGet() {
-		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
-				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
-
-		// 查询campaign_head表，对status=0(代表本条数据有效)的数据，根据publish_status(各个值得含义下表中已经给出)做统计
-		List<Object> campaignHeadCount = campaignHeadDao
-				.selectCampaignHeadCountGroupByPublishStatus();
+	public CampaignProgressStatusCountOut campaignProgressStatusCountGet() {
+		CampaignProgressStatusCountOut baseOutput = new CampaignProgressStatusCountOut(ApiErrorCode.SUCCESS.getCode(),
+																					   ApiErrorCode.SUCCESS.getMsg(), 
+																					   ApiConstant.INT_ZERO);
+		CampaignHead t = new CampaignHead();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH);
+		int notPublishCount = campaignHeadDao.selectListCount(t);
+		t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH);
+		int publishCount = campaignHeadDao.selectListCount(t);
+		t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS);
+		int inprogressCount = campaignHeadDao.selectListCount(t);
+		t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH);
+		int finishCount = campaignHeadDao.selectListCount(t);
+		int allCount = notPublishCount + publishCount + inprogressCount + finishCount;
 		
-		baseOutput.setData(campaignHeadCount);
-		baseOutput.setTotal(baseOutput.getData().size());
+		CampaignProgressStatusCountDataOut cpscdo = new CampaignProgressStatusCountDataOut();
+		cpscdo.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH);
+		cpscdo.setCount(notPublishCount);
+		baseOutput.getDataCustom().add(cpscdo);
 		
+		cpscdo = new CampaignProgressStatusCountDataOut();
+		cpscdo.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH);
+		cpscdo.setCount(publishCount);
+		baseOutput.getDataCustom().add(cpscdo);
+		
+		cpscdo = new CampaignProgressStatusCountDataOut();
+		cpscdo.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS);
+		cpscdo.setCount(inprogressCount);
+		baseOutput.getDataCustom().add(cpscdo);
+		
+		cpscdo = new CampaignProgressStatusCountDataOut();
+		cpscdo.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH);
+		cpscdo.setCount(finishCount);
+		baseOutput.getDataCustom().add(cpscdo);
+		
+		cpscdo = new CampaignProgressStatusCountDataOut();
+		cpscdo.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_ALL);
+		cpscdo.setCount(allCount);
+		baseOutput.getDataCustom().add(cpscdo);
+		
+		baseOutput.setTotal(baseOutput.getDataCustom().size());
 		return baseOutput;
 	}
 
