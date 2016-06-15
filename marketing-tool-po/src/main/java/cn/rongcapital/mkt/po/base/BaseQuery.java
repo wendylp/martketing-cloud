@@ -31,6 +31,8 @@ public class BaseQuery {
 	public BaseQuery(){}
 
     public BaseQuery(Integer startIndex, Integer pageSize) {
+        this.pageSize = pageSize;
+        this.startIndex = startIndex;
         if (startIndex == null || startIndex < 0) {
             this.startIndex = 0;
         }
