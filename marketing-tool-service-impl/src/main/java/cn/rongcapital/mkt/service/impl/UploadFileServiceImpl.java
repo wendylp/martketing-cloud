@@ -44,14 +44,15 @@ public class UploadFileServiceImpl implements UploadFileService{
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(),ApiConstant.INT_ZERO,null);
         UploadFileAccordTemplateOut uploadFileAccordTemplateOut = null;
         if( !isFileUniqueValid(fileUnique) ) {
-            baseOutput.setMsg("唯一性标识获取失败");
+            baseOutput.getData().add("唯一性标识获取失败");
             return Response.ok().entity(baseOutput).build();
         }
-        baseOutput.setMsg("唯一性标识获取成功");
+        baseOutput.getData().add("唯一性标识获取成功");
         String fileName = "";
         Map<String,List<InputPart>> uploadForm = fileInput.getFormDataMap();
         List<InputPart> inputParts = uploadForm.get("file");
         logger.info("get file successed" + inputParts);
+        baseOutput.getData().add("进入1号代码");
         for(InputPart inputPart : inputParts){
             try {
                 MultivaluedMap<String,String> header = inputPart.getHeaders();
