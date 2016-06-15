@@ -74,6 +74,7 @@ import cn.rongcapital.mkt.service.GetDataMainSearchService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
+import cn.rongcapital.mkt.service.GroupTagsSearchService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MainActionInfoGetService;
@@ -95,7 +96,6 @@ import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
-import cn.rongcapital.mkt.service.GroupTagsSearchService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
@@ -683,7 +683,7 @@ public class MktApi {
     @Path("/mkt.data.main.list.get")
     public Object getDataMainList(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotNull @QueryParam("data_type") Integer dataType,
+                    @NotNull @QueryParam("md_type") Integer dataType,
                     @QueryParam("index") Integer index, @QueryParam("size") Integer size,
                     @NotEmpty @QueryParam("ver") String ver) {
         return dataGetMainListService.getMainList(method, userToken, dataType, index, size, ver);

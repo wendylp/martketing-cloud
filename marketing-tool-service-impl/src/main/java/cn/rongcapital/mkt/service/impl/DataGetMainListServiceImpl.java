@@ -1,6 +1,8 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +39,7 @@ import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.ImportTemplate;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.service.DataGetMainListService;
-import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.DataGetMainListOut;
 
 @Service
 public class DataGetMainListServiceImpl implements DataGetMainListService {
@@ -75,49 +77,65 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
     public Object getMainList(String method, String userToken, Integer dataType, Integer index, Integer size,
                     String ver) {
 
-        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-                        ApiConstant.INT_ZERO, null);
+        DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(),
+                        ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
         List<Map<String, Object>> resultList = new ArrayList<>();
+        ImportTemplate paramImportTemplate = new ImportTemplate();
+        paramImportTemplate.setSelected(Boolean.TRUE);
+        paramImportTemplate.setTemplType(dataType);
+        List<ImportTemplate> importTemplateList = importTemplateDao.selectSelectedTemplateList(paramImportTemplate);
+        List<Map<String, Object>> columnList = new ArrayList<>();
+        if (importTemplateList != null && !importTemplateList.isEmpty()) {
+            for (ImportTemplate importTemplate : importTemplateList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("col_name", importTemplate.getFieldName());
+                map.put("col_code", importTemplate.getFieldCode());
+                columnList.add(map);
+                result.setMd_type(importTemplate.getTemplType());
+            }
+        }
 
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             DataParty paramObj = new DataParty(index, size);
-            resultList = getData(dataType, paramObj, dataPartyDao);
+            resultList = getData(dataType, paramObj, dataPartyDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.POPULATION.getCode()) {
             DataPopulation paramObj = new DataPopulation(index, size);
-            resultList = getData(dataType, paramObj, dataPopulationDao);
+            resultList = getData(dataType, paramObj, dataPopulationDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
             DataCustomerTags paramObj = new DataCustomerTags(index, size);
-            resultList = getData(dataType, paramObj, dataCustomerTagsDao);
+            resultList = getData(dataType, paramObj, dataCustomerTagsDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
             DataArchPoint paramObj = new DataArchPoint(index, size);
-            resultList = getData(dataType, paramObj, dataArchPointDao);
+            resultList = getData(dataType, paramObj, dataArchPointDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
             DataMember paramObj = new DataMember(index, size);
-            resultList = getData(dataType, paramObj, dataMemberDao);
+            resultList = getData(dataType, paramObj, dataMemberDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
             DataLogin paramObj = new DataLogin(index, size);
-            resultList = getData(dataType, paramObj, dataLoginDao);
+            resultList = getData(dataType, paramObj, dataLoginDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
             DataPayment paramObj = new DataPayment(index, size);
-            resultList = getData(dataType, paramObj, dataPaymentDao);
+            resultList = getData(dataType, paramObj, dataPaymentDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
             DataShopping paramObj = new DataShopping(index, size);
-            resultList = getData(dataType, paramObj, dataShoppingDao);
+            resultList = getData(dataType, paramObj, dataShoppingDao, importTemplateList, result);
         } else {
             logger.error("传入错误的data type : {}", dataType);
         }
 
-        result.getData().addAll(resultList);
-        result.setTotal(result.getData().size());
 
+        result.getData().addAll(resultList);
+        result.getColNames().addAll(columnList);
         return Response.ok().entity(result).build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private <T extends BaseQuery, D extends BaseDao> List<Map<String, Object>> getData(Integer mdType, T paramObj,
-                    D dao) {
+                    D dao, List<ImportTemplate> importTemplateList, DataGetMainListOut result) {
 
+        int total = dao.selectListCount(null);
+        result.setTotal(total);
         List<T> dataList = dao.selectList(paramObj);
         List<Map<String, Object>> resultList = new ArrayList<>();
         if (dataList != null && !dataList.isEmpty()) {
@@ -125,13 +143,16 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
             paramImportTemplate.setSelected(Boolean.TRUE);
             paramImportTemplate.setTemplType(mdType);
 
-            List<ImportTemplate> importTemplateList = importTemplateDao.selectSelectedTemplateList(paramImportTemplate);
-
             for (T tempT : dataList) {
                 Map<String, Object> map = new HashMap<>();
                 for (ImportTemplate importTemplate : importTemplateList) {
-                    map.put(importTemplate.getFieldCode(), ReflectionUtil.getObjectPropertyByName(tempT,
-                                    ReflectionUtil.recoverFieldName(importTemplate.getFieldCode())));
+                    Object value = ReflectionUtil.getObjectPropertyByName(tempT,
+                                    ReflectionUtil.recoverFieldName(importTemplate.getFieldCode()));
+                    if (value != null && value.getClass().getSimpleName().equals(Date.class.getSimpleName())) {
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        value = simpleDateFormat.format((Date) value);
+                    }
+                    map.put(importTemplate.getFieldCode(), value);
                 }
 
                 resultList.add(map);
