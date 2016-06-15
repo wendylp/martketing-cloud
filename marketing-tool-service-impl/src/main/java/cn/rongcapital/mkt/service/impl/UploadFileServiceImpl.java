@@ -33,6 +33,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public class UploadFileServiceImpl implements UploadFileService{
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final String directory = "/rc/uploadFiles/";
 
     @Autowired
     private ImportDataHistoryDao importDataHistoryDao;
@@ -60,7 +61,7 @@ public class UploadFileServiceImpl implements UploadFileService{
                 byte[] bytes = IOUtils.toByteArray(inputStream);
                 uploadFileAccordTemplateOut = parseUploadFile.parseUploadFileByType(fileName,bytes);
                 //Todo: 3.根据文件唯一标识，把数据条数，摘要，未识别属性放到数据库的importHistory表中的相应栏位中。
-                writeFile(bytes,fileName);    //Todo: 4不确定文件是否还需要保存临时文件
+                writeFile(bytes,directory + fileName);    //Todo: 4不确定文件是否还需要保存临时文件
                 logger.info("文件上传完毕！");
             }catch (Exception e){
                 e.printStackTrace();
@@ -84,11 +85,6 @@ public class UploadFileServiceImpl implements UploadFileService{
     private String getFileName(MultivaluedMap<String, String> header) {
         String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
         for(String filename : contentDisposition){
-            try {
-                filename = new String(filename.getBytes("utf-8"),"GBK");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
             if((filename.trim().startsWith("filename"))){
                 String[] name = filename.split("=");
                 String finalFileName = name[1].trim().replaceAll("\"","");
