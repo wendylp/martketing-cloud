@@ -145,6 +145,35 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,batch_id)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.login_type},
+			#{item.login_time},
+			#{item.logout_time},
+			#{item.login_ip},
+			#{item.login_device},
+			#{item.resolution_ratio},
+			#{item.login_url},
+			#{item.identify_no},
+			#{item.driving_license},
+			#{item.email},
+			#{item.mobile},
+			#{item.tel},
+			#{item.qq},
+			#{item.acct_type},
+			#{item.acct_no},
+			#{item.idfa},
+			#{item.imei},
+			#{item.udid},
+			#{item.phone_mac},
+			#{item.create_time},
+			#{item.source},
+			#{item.batch_id}
+			)
+		</foreach>
+	</insert>
 	
 </mapper>

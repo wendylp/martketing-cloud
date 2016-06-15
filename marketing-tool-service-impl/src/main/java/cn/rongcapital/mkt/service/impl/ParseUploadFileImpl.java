@@ -1,7 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.dao.ImportTemplateDao;
-import cn.rongcapital.mkt.dao.OriginalDataPopulationDao;
+import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.service.ParseUploadFile;
 import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,18 @@ public class ParseUploadFileImpl implements ParseUploadFile {
     private ImportTemplateDao importTemplateDao;
     @Autowired
     private OriginalDataPopulationDao originalDataPopulationDao;
+    @Autowired
+    private OriginalDataArchPointDao originalDataArchPointDao;
+    @Autowired
+    private OriginalDataCustomerTagsDao originalDataCustomerTagsDao;
+    @Autowired
+    private OriginalDataLoginDao originalDataLoginDao;
+    @Autowired
+    private OriginalDataMemberDao originalDataMemberDao;
+    @Autowired
+    private OriginalDataPaymentDao originalDataPaymentDao;
+    @Autowired
+    private OriginalDataShoppingDao originalDataShoppingDao;
 
     @Override
     public UploadFileAccordTemplateOut parseUploadFileByType(String fileName, byte[] bytes) {
@@ -48,17 +59,17 @@ public class ParseUploadFileImpl implements ParseUploadFile {
             case 1:
                 return originalDataPopulationDao.batchInsertUploadFileData(insertList);
             case 2:
-                break;
+                return originalDataCustomerTagsDao.batchInsertUploadFileData(insertList);
             case 3:
-                break;
+                return originalDataArchPointDao.batchInsertUploadFileData(insertList);
             case 4:
-                break;
+                return originalDataMemberDao.batchInsertUploadFileData(insertList);
             case 5:
-                break;
+                return originalDataLoginDao.batchInsertUploadFileData(insertList);
             case 6:
-                break;
+                return originalDataPaymentDao.batchInsertUploadFileData(insertList);
             case 7:
-                break;
+                return originalDataShoppingDao.batchInsertUploadFileData(insertList);
         }
         return 0;
     }

@@ -8,35 +8,65 @@ import java.util.Date;
 public class OriginalDataShopping extends BaseQuery {
     private Integer id;
 
-    private String payChannel;
+    private String channelType;
 
-    private String payAcct;
+    private String channelId;
 
-    private String paySerial;
+    private String channelName;
+
+    private String payType;
 
     private String transSerial;
 
     private String orderNo;
 
-    private String productName;
+    private Date transTime;
 
-    private Date createTime;
+    private String productId;
 
-    private Date completeTime;
+    private String specification;
 
-    private String payStatus;
+    private String color;
 
-    private String counterAcct;
+    private String discountType;
 
-    private BigDecimal incomeAmt;
+    private BigDecimal discountAmt;
 
-    private BigDecimal paidAmt;
+    private BigDecimal price;
 
-    private BigDecimal acctAmt;
+    private Integer amount;
 
-    private String comments;
+    private Integer inventory;
 
-    private String identfyNo;
+    private String brandId;
+
+    private String brandName;
+
+    private String class1Id;
+
+    private String class1Name;
+
+    private String class2Id;
+
+    private String class2Name;
+
+    private String class3Id;
+
+    private String class3Name;
+
+    private String class4Id;
+
+    private String class4Name;
+
+    private String saleAssistId;
+
+    private String saleAssistance;
+
+    private String settlementClerkId;
+
+    private String settlementClerk;
+
+    private String identifyNo;
 
     private String drivingLicense;
 
@@ -76,28 +106,36 @@ public class OriginalDataShopping extends BaseQuery {
         this.id = id;
     }
 
-    public String getPayChannel() {
-        return payChannel;
+    public String getChannelType() {
+        return channelType;
     }
 
-    public void setPayChannel(String payChannel) {
-        this.payChannel = payChannel == null ? null : payChannel.trim();
+    public void setChannelType(String channelType) {
+        this.channelType = channelType == null ? null : channelType.trim();
     }
 
-    public String getPayAcct() {
-        return payAcct;
+    public String getChannelId() {
+        return channelId;
     }
 
-    public void setPayAcct(String payAcct) {
-        this.payAcct = payAcct == null ? null : payAcct.trim();
+    public void setChannelId(String channelId) {
+        this.channelId = channelId == null ? null : channelId.trim();
     }
 
-    public String getPaySerial() {
-        return paySerial;
+    public String getChannelName() {
+        return channelName;
     }
 
-    public void setPaySerial(String paySerial) {
-        this.paySerial = paySerial == null ? null : paySerial.trim();
+    public void setChannelName(String channelName) {
+        this.channelName = channelName == null ? null : channelName.trim();
+    }
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType == null ? null : payType.trim();
     }
 
     public String getTransSerial() {
@@ -116,84 +154,196 @@ public class OriginalDataShopping extends BaseQuery {
         this.orderNo = orderNo == null ? null : orderNo.trim();
     }
 
-    public String getProductName() {
-        return productName;
+    public Date getTransTime() {
+        return transTime;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName == null ? null : productName.trim();
+    public void setTransTime(Date transTime) {
+        this.transTime = transTime;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setProductId(String productId) {
+        this.productId = productId == null ? null : productId.trim();
     }
 
-    public Date getCompleteTime() {
-        return completeTime;
+    public String getSpecification() {
+        return specification;
     }
 
-    public void setCompleteTime(Date completeTime) {
-        this.completeTime = completeTime;
+    public void setSpecification(String specification) {
+        this.specification = specification == null ? null : specification.trim();
     }
 
-    public String getPayStatus() {
-        return payStatus;
+    public String getColor() {
+        return color;
     }
 
-    public void setPayStatus(String payStatus) {
-        this.payStatus = payStatus == null ? null : payStatus.trim();
+    public void setColor(String color) {
+        this.color = color == null ? null : color.trim();
     }
 
-    public String getCounterAcct() {
-        return counterAcct;
+    public String getDiscountType() {
+        return discountType;
     }
 
-    public void setCounterAcct(String counterAcct) {
-        this.counterAcct = counterAcct == null ? null : counterAcct.trim();
+    public void setDiscountType(String discountType) {
+        this.discountType = discountType == null ? null : discountType.trim();
     }
 
-    public BigDecimal getIncomeAmt() {
-        return incomeAmt;
+    public BigDecimal getDiscountAmt() {
+        return discountAmt;
     }
 
-    public void setIncomeAmt(BigDecimal incomeAmt) {
-        this.incomeAmt = incomeAmt;
+    public void setDiscountAmt(BigDecimal discountAmt) {
+        this.discountAmt = discountAmt;
     }
 
-    public BigDecimal getPaidAmt() {
-        return paidAmt;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setPaidAmt(BigDecimal paidAmt) {
-        this.paidAmt = paidAmt;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public BigDecimal getAcctAmt() {
-        return acctAmt;
+    public Integer getAmount() {
+        return amount;
     }
 
-    public void setAcctAmt(BigDecimal acctAmt) {
-        this.acctAmt = acctAmt;
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 
-    public String getComments() {
-        return comments;
+    public Integer getInventory() {
+        return inventory;
     }
 
-    public void setComments(String comments) {
-        this.comments = comments == null ? null : comments.trim();
+    public void setInventory(Integer inventory) {
+        this.inventory = inventory;
     }
 
-    public String getIdentfyNo() {
-        return identfyNo;
+    public String getBrandId() {
+        return brandId;
     }
 
-    public void setIdentfyNo(String identfyNo) {
-        this.identfyNo = identfyNo == null ? null : identfyNo.trim();
+    public void setBrandId(String brandId) {
+        this.brandId = brandId == null ? null : brandId.trim();
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName == null ? null : brandName.trim();
+    }
+
+    public String getClass1Id() {
+        return class1Id;
+    }
+
+    public void setClass1Id(String class1Id) {
+        this.class1Id = class1Id == null ? null : class1Id.trim();
+    }
+
+    public String getClass1Name() {
+        return class1Name;
+    }
+
+    public void setClass1Name(String class1Name) {
+        this.class1Name = class1Name == null ? null : class1Name.trim();
+    }
+
+    public String getClass2Id() {
+        return class2Id;
+    }
+
+    public void setClass2Id(String class2Id) {
+        this.class2Id = class2Id == null ? null : class2Id.trim();
+    }
+
+    public String getClass2Name() {
+        return class2Name;
+    }
+
+    public void setClass2Name(String class2Name) {
+        this.class2Name = class2Name == null ? null : class2Name.trim();
+    }
+
+    public String getClass3Id() {
+        return class3Id;
+    }
+
+    public void setClass3Id(String class3Id) {
+        this.class3Id = class3Id == null ? null : class3Id.trim();
+    }
+
+    public String getClass3Name() {
+        return class3Name;
+    }
+
+    public void setClass3Name(String class3Name) {
+        this.class3Name = class3Name == null ? null : class3Name.trim();
+    }
+
+    public String getClass4Id() {
+        return class4Id;
+    }
+
+    public void setClass4Id(String class4Id) {
+        this.class4Id = class4Id == null ? null : class4Id.trim();
+    }
+
+    public String getClass4Name() {
+        return class4Name;
+    }
+
+    public void setClass4Name(String class4Name) {
+        this.class4Name = class4Name == null ? null : class4Name.trim();
+    }
+
+    public String getSaleAssistId() {
+        return saleAssistId;
+    }
+
+    public void setSaleAssistId(String saleAssistId) {
+        this.saleAssistId = saleAssistId == null ? null : saleAssistId.trim();
+    }
+
+    public String getSaleAssistance() {
+        return saleAssistance;
+    }
+
+    public void setSaleAssistance(String saleAssistance) {
+        this.saleAssistance = saleAssistance == null ? null : saleAssistance.trim();
+    }
+
+    public String getSettlementClerkId() {
+        return settlementClerkId;
+    }
+
+    public void setSettlementClerkId(String settlementClerkId) {
+        this.settlementClerkId = settlementClerkId == null ? null : settlementClerkId.trim();
+    }
+
+    public String getSettlementClerk() {
+        return settlementClerk;
+    }
+
+    public void setSettlementClerk(String settlementClerk) {
+        this.settlementClerk = settlementClerk == null ? null : settlementClerk.trim();
+    }
+
+    public String getIdentifyNo() {
+        return identifyNo;
+    }
+
+    public void setIdentifyNo(String identifyNo) {
+        this.identifyNo = identifyNo == null ? null : identifyNo.trim();
     }
 
     public String getDrivingLicense() {

@@ -169,8 +169,7 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	<!-- 其它SQL语句 -->
-	<insert id="batchInsertUploadFileData" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="id">
+	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO original_data_population (mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,IQ,identify_no,driving_license,email,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >

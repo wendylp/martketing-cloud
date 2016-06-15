@@ -1,9 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -86,6 +84,11 @@ public class UploadFileServiceImpl implements UploadFileService{
     private String getFileName(MultivaluedMap<String, String> header) {
         String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
         for(String filename : contentDisposition){
+            try {
+                filename = new String(filename.getBytes("utf-8"),"GBK");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             if((filename.trim().startsWith("filename"))){
                 String[] name = filename.split("=");
                 String finalFileName = name[1].trim().replaceAll("\"","");

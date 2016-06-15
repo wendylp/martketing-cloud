@@ -13,6 +13,9 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.OriginalDataLogin;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public interface OriginalDataLoginDao extends BaseDao<OriginalDataLogin>{
 	
 	//自定义扩展
@@ -34,4 +37,11 @@ public interface OriginalDataLoginDao extends BaseDao<OriginalDataLogin>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 批量插入数据
+	 * @param List
+	 * @return int
+	 */
+	int batchInsertUploadFileData(ArrayList<Map<String, Object>> insertList);
 }

@@ -163,6 +163,41 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO original_data_payment (pay_channel,pay_acct,pay_serial,trans_serial,order_no,product_name,create_time,complete_time,pay_status,counter_acct,income_amt,paid_amt,acct_amt,comments,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,source,batch_id)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.pay_channel},
+			#{item.pay_acct},
+			#{item.pay_serial},
+			#{item.trans_serial},
+			#{item.order_no},
+			#{item.product_name},
+			#{item.create_time},
+			#{item.complete_time},
+			#{item.pay_status},
+			#{item.counter_acct},
+			#{item.income_amt},
+			#{item.paid_amt},
+			#{item.acct_amt},
+			#{item.comments},
+			#{item.identify_no},
+			#{item.driving_license},
+			#{item.email},
+			#{item.mobile},
+			#{item.tel},
+			#{item.qq},
+			#{item.acct_type},
+			#{item.acct_no},
+			#{item.idfa},
+			#{item.imei},
+			#{item.udid},
+			#{item.phone_mac},
+			#{item.source},
+			#{item.batch_id}
+			)
+		</foreach>
+	</insert>
 	
 </mapper>

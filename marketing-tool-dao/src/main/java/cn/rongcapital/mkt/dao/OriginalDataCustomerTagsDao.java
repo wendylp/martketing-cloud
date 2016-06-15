@@ -13,8 +13,11 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.OriginalDataCustomerTags;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public interface OriginalDataCustomerTagsDao extends BaseDao<OriginalDataCustomerTags>{
-	
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -34,4 +37,11 @@ public interface OriginalDataCustomerTagsDao extends BaseDao<OriginalDataCustome
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 批量插入数据
+	 * @param List
+	 * @return int
+	 */
+	int batchInsertUploadFileData(ArrayList<Map<String, Object>> insertList);
 }
