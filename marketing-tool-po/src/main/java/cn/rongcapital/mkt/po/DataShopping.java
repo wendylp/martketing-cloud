@@ -100,9 +100,8 @@ public class DataShopping extends BaseQuery {
     
     public DataShopping(){}
     
-    public DataShopping(Integer index , Integer size){
-        setStartIndex(index);
-        setPageSize(size);
+    public DataShopping(Integer index, Integer size) {
+        super(index, size);
     }
 
     public Integer getId() {

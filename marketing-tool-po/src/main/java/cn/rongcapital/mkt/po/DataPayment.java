@@ -71,8 +71,7 @@ public class DataPayment extends BaseQuery {
     public DataPayment(){}
     
     public DataPayment(Integer index , Integer size){
-        setStartIndex(index);
-        setPageSize(size);
+        super(index, size);
     }
 
     public Integer getId() {

@@ -52,8 +52,7 @@ public class DataArchPoint extends BaseQuery {
     public DataArchPoint(){}
     
     public DataArchPoint(Integer index , Integer size){
-        setStartIndex(index);
-        setPageSize(size);
+        super(index, size);
     }
 
     public Integer getId() {

@@ -51,8 +51,7 @@ public class DataParty extends BaseQuery {
     public DataParty(){}
     
     public DataParty(Integer index , Integer size){
-        setStartIndex(index);
-        setPageSize(size);
+        super(index, size);
     }
 
     public Integer getId() {
