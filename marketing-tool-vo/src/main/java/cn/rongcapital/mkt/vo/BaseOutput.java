@@ -23,6 +23,8 @@ public class BaseOutput {
 	
 	private int total;
 	
+	private int totalCount;
+	
 	private List<Object> colNames = new ArrayList<Object>();
 
 	private List<Object> data = new ArrayList<Object>();
@@ -81,4 +83,13 @@ public class BaseOutput {
 		this.data = data;
 	}
 
+	@JsonProperty("total_count")
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+	
 }
