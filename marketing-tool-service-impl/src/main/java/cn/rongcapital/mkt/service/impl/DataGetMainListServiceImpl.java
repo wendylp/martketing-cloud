@@ -126,6 +126,7 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
 
 
         result.getData().addAll(resultList);
+        result.setTotal(result.getData().size());
         result.getColNames().addAll(columnList);
         return Response.ok().entity(result).build();
     }
@@ -135,7 +136,7 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                     D dao, List<ImportTemplate> importTemplateList, DataGetMainListOut result) {
 
         int total = dao.selectListCount(null);
-        result.setTotal(total);
+        result.setTotalCount(total);
         List<T> dataList = dao.selectList(paramObj);
         List<Map<String, Object>> resultList = new ArrayList<>();
         if (dataList != null && !dataList.isEmpty()) {
