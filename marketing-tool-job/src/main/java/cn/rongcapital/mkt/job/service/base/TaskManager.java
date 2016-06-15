@@ -38,7 +38,7 @@ public class TaskManager {
 	private volatile boolean isInited = false;
 	
 	public void initTask() {
-		logger.info("initTask");
+		logger.debug("initTask");
 		if(isInited){
 			return;
 		}
@@ -58,7 +58,7 @@ public class TaskManager {
 	}
 	
 	private void scanTask() {
-		logger.info("scanTask");
+		logger.debug("scanTask");
 		TaskSchedule t= new TaskSchedule();
 		List<TaskSchedule> taskScheduleList = taskScheduleDao.selectList(t);
 		ConcurrentHashMap<String, TaskSchedule> taskPropMapTmp = new ConcurrentHashMap<String, TaskSchedule>();
@@ -81,7 +81,7 @@ public class TaskManager {
 	}
 	
 	private void prepareTasks() {
-		logger.info("prepareTasks");
+		logger.debug("prepareTasks");
 		TaskManager.taskPropMap.forEach((k,v)->{
 			ScheduledFuture<?> taskSchedule = TaskManager.taskMap.get(k);
 			if(v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_VALID && 
@@ -100,7 +100,7 @@ public class TaskManager {
 	}
 	
 	private void startTask(TaskSchedule taskSchedulePo) {
-		logger.info("startTask:"+JSON.toJSONString(taskSchedulePo));
+		logger.debug("startTask:"+JSON.toJSONString(taskSchedulePo));
 		Runnable task = new Runnable() {
 		       public void run() {
 				try {
