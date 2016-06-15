@@ -11,6 +11,8 @@ import javax.ws.rs.core.SecurityContext;
 import cn.rongcapital.mkt.service.ParseUploadFile;
 import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
 import org.apache.commons.io.IOUtils;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
@@ -41,10 +43,16 @@ public class UploadFileServiceImpl implements UploadFileService{
 
     @Override
     public Object uploadFile(String source,String fileUnique,int fileType,MultipartFormDataInput fileInput, SecurityContext securityContext) {
+        JSONObject obj = new JSONObject();
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(),ApiConstant.INT_ZERO,null);
         UploadFileAccordTemplateOut uploadFileAccordTemplateOut = null;
         if( !isFileUniqueValid(fileUnique) ) {
-            baseOutput.getData().add("唯一性标识获取失败");
+            try {
+                obj.put("msg","唯一性标识获取失败");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            baseOutput.getData().add(obj);
             return Response.ok().entity(baseOutput).build();
         }
         baseOutput.getData().add("唯一性标识获取成功");
