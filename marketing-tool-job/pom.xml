@@ -8,6 +8,21 @@
   <artifactId>marketing-tool-job</artifactId>
   
   <dependencies>
+  		<dependency>
+			<groupId>cn.rongcapital.mkt</groupId>
+			<artifactId>marketing-tool-po</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.rongcapital.mkt</groupId>
+			<artifactId>marketing-tool-dao</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.rongcapital.mkt</groupId>
+			<artifactId>marketing-tool-service</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
   		<!-- 引入elastic-job核心模块
 		<dependency>
 		    <groupId>com.dangdang</groupId>
