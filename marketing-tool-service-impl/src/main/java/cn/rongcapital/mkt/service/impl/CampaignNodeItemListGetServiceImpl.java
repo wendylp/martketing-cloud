@@ -61,6 +61,7 @@ public class CampaignNodeItemListGetServiceImpl implements CampaignNodeItemListG
 			}
 			
 		}
+		campaignNodeItemListOut.setTotal(campaignNodeItemListOut.getData().size());
 		return campaignNodeItemListOut;
 	}
 

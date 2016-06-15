@@ -224,6 +224,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				campaignBodyGetOut.getData().add(campaignNodeChainOut);
 			}
 		}
+		campaignBodyGetOut.setTotal(campaignBodyGetOut.getData().size());
 		return campaignBodyGetOut;
 	}
 	

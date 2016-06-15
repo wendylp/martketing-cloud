@@ -85,6 +85,9 @@ public class BaseOutput {
 
 	@JsonProperty("total_count")
     public int getTotalCount() {
+		if(totalCount==0) {//兼容旧代码
+			totalCount = getTotal();
+		}
         return totalCount;
     }
 
