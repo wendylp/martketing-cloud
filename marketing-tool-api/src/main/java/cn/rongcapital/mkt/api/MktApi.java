@@ -848,7 +848,6 @@ public class MktApi {
 	@POST
 	@Path("/mkt.service.file.upload")
 	@Consumes("multipart/form-data")
-	@Produces(MediaType.TEXT_PLAIN)
 	public Object fileUpload(
 			@QueryParam("file_source") String fileSource,
 			@NotEmpty @QueryParam("file_unique") String fileUnique,
