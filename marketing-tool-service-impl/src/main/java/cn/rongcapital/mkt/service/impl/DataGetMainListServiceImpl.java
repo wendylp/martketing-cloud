@@ -39,7 +39,7 @@ import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.ImportTemplate;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.service.DataGetMainListService;
-import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.DataGetMainListOut;
 
 @Service
 public class DataGetMainListServiceImpl implements DataGetMainListService {
@@ -77,7 +77,7 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
     public Object getMainList(String method, String userToken, Integer dataType, Integer index, Integer size,
                     String ver) {
 
-        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+        DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
 
         List<Map<String, Object>> resultList = new ArrayList<>();
@@ -92,6 +92,7 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("col_name", importTemplate.getFieldName());
                 map.put("col_code", importTemplate.getFieldCode());
                 columnList.add(map);
+                result.setMd_type(importTemplate.getTemplType());
             }
         }
 
