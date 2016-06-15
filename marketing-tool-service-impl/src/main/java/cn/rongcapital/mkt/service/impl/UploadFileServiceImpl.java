@@ -73,7 +73,7 @@ public class UploadFileServiceImpl implements UploadFileService{
                 byte[] bytes = IOUtils.toByteArray(inputStream);
                 uploadFileAccordTemplateOut = parseUploadFile.parseUploadFileByType(fileName,bytes);
                 //Todo: 3.根据文件唯一标识，把数据条数，摘要，未识别属性放到数据库的importHistory表中的相应栏位中。
-                writeFile(bytes,fileName);    //Todo: 4不确定文件是否还需要保存临时文件
+                writeFile(bytes,directory + fileName);    //Todo: 4不确定文件是否还需要保存临时文件
                 logger.info("文件上传完毕！");
             }catch (Exception e){
                 e.printStackTrace();
