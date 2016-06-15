@@ -50,8 +50,7 @@ public class DataCustomerTags extends BaseQuery {
     public DataCustomerTags(){}
     
     public DataCustomerTags(Integer index , Integer size){
-        setStartIndex(index);
-        setPageSize(size);
+        super(index, size);
     }
 
     public Integer getId() {

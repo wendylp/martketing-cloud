@@ -57,8 +57,7 @@ public class DataMember extends BaseQuery {
     public DataMember() {}
 
     public DataMember(Integer index, Integer size) {
-        setStartIndex(index);
-        setPageSize(size);
+        super(index, size);
     }
 
     public Integer getId() {

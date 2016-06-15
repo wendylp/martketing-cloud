@@ -75,8 +75,7 @@ public class DataPopulation extends BaseQuery {
     public DataPopulation(){}
     
     public DataPopulation(Integer index , Integer size){
-        setStartIndex(index);
-        setPageSize(size);
+        super(index, size);
     }
 
     public Integer getId() {

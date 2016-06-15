@@ -59,8 +59,7 @@ public class DataLogin extends BaseQuery {
     public DataLogin(){}
     
     public DataLogin(Integer index , Integer size){
-        setStartIndex(index);
-        setPageSize(size);
+        super(index, size);
     }
 
     public Integer getId() {

@@ -26,9 +26,27 @@ public class BaseQuery {
 	private transient String orderFieldType;// 排序字段类型:asc,desc
 	
 	//自定义参数
-	private transient Map<String,Object> customMap = new HashMap<>(); 
+	private transient Map<String,Object> customMap = new HashMap<>();
 	
-	
+	public BaseQuery(){}
+
+    public BaseQuery(Integer startIndex, Integer pageSize) {
+        if (startIndex == null || startIndex < 0) {
+            this.startIndex = 0;
+        }
+
+        if (pageSize == null || pageSize < 0) {
+            this.pageSize = 10;
+        }
+
+        if (pageSize > 100) {
+            this.pageSize = 100;
+        }
+
+        this.startIndex = (startIndex - 1) * this.pageSize;
+    }
+
+
 	public Integer getStartIndex() {
 		return startIndex;
 	}
