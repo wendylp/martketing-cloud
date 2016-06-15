@@ -1,7 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +43,11 @@ public class UploadFileServiceImpl implements UploadFileService{
     public Object uploadFile(String source,String fileUnique,int fileType,MultipartFormDataInput fileInput, SecurityContext securityContext) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(),ApiConstant.INT_ZERO,null);
         UploadFileAccordTemplateOut uploadFileAccordTemplateOut = null;
-        if( !isFileUniqueValid(fileUnique) ) return Response.ok().entity(baseOutput).build();
+        if( !isFileUniqueValid(fileUnique) ) {
+            baseOutput.setMsg("唯一性标识获取失败");
+            return Response.ok().entity(baseOutput).build();
+        }
+        baseOutput.setMsg("唯一性标识获取成功");
         String fileName = "";
         Map<String,List<InputPart>> uploadForm = fileInput.getFormDataMap();
         List<InputPart> inputParts = uploadForm.get("file");
@@ -61,7 +64,7 @@ public class UploadFileServiceImpl implements UploadFileService{
                 byte[] bytes = IOUtils.toByteArray(inputStream);
                 uploadFileAccordTemplateOut = parseUploadFile.parseUploadFileByType(fileName,bytes);
                 //Todo: 3.根据文件唯一标识，把数据条数，摘要，未识别属性放到数据库的importHistory表中的相应栏位中。
-                writeFile(bytes,directory + fileName);    //Todo: 4不确定文件是否还需要保存临时文件
+                writeFile(bytes,fileName);    //Todo: 4不确定文件是否还需要保存临时文件
                 logger.info("文件上传完毕！");
             }catch (Exception e){
                 e.printStackTrace();
