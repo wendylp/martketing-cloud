@@ -77,8 +77,8 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
     public Object getMainList(String method, String userToken, Integer dataType, Integer index, Integer size,
                     String ver) {
 
-        DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-                        ApiConstant.INT_ZERO, null);
+        DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(),
+                        ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
         List<Map<String, Object>> resultList = new ArrayList<>();
         ImportTemplate paramImportTemplate = new ImportTemplate();
@@ -98,43 +98,44 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
 
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             DataParty paramObj = new DataParty(index, size);
-            resultList = getData(dataType, paramObj, dataPartyDao, importTemplateList);
+            resultList = getData(dataType, paramObj, dataPartyDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.POPULATION.getCode()) {
             DataPopulation paramObj = new DataPopulation(index, size);
-            resultList = getData(dataType, paramObj, dataPopulationDao, importTemplateList);
+            resultList = getData(dataType, paramObj, dataPopulationDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
             DataCustomerTags paramObj = new DataCustomerTags(index, size);
-            resultList = getData(dataType, paramObj, dataCustomerTagsDao, importTemplateList);
+            resultList = getData(dataType, paramObj, dataCustomerTagsDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
             DataArchPoint paramObj = new DataArchPoint(index, size);
-            resultList = getData(dataType, paramObj, dataArchPointDao, importTemplateList);
+            resultList = getData(dataType, paramObj, dataArchPointDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
             DataMember paramObj = new DataMember(index, size);
-            resultList = getData(dataType, paramObj, dataMemberDao, importTemplateList);
+            resultList = getData(dataType, paramObj, dataMemberDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
             DataLogin paramObj = new DataLogin(index, size);
-            resultList = getData(dataType, paramObj, dataLoginDao, importTemplateList);
+            resultList = getData(dataType, paramObj, dataLoginDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
             DataPayment paramObj = new DataPayment(index, size);
-            resultList = getData(dataType, paramObj, dataPaymentDao, importTemplateList);
+            resultList = getData(dataType, paramObj, dataPaymentDao, importTemplateList, result);
         } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
             DataShopping paramObj = new DataShopping(index, size);
-            resultList = getData(dataType, paramObj, dataShoppingDao, importTemplateList);
+            resultList = getData(dataType, paramObj, dataShoppingDao, importTemplateList, result);
         } else {
             logger.error("传入错误的data type : {}", dataType);
         }
 
 
         result.getData().addAll(resultList);
-        result.setTotal(result.getData().size());
         result.getColNames().addAll(columnList);
         return Response.ok().entity(result).build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private <T extends BaseQuery, D extends BaseDao> List<Map<String, Object>> getData(Integer mdType, T paramObj,
-                    D dao, List<ImportTemplate> importTemplateList) {
+                    D dao, List<ImportTemplate> importTemplateList, DataGetMainListOut result) {
 
+        int total = dao.selectListCount(null);
+        result.setTotal(total);
         List<T> dataList = dao.selectList(paramObj);
         List<Map<String, Object>> resultList = new ArrayList<>();
         if (dataList != null && !dataList.isEmpty()) {
