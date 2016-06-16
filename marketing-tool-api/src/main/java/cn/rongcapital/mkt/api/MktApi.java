@@ -105,8 +105,8 @@ import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
-import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
+import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -144,139 +144,204 @@ import cn.rongcapital.mkt.vo.out.SerarchTagGroupTagsOut;
 @Produces({ MediaType.APPLICATION_JSON })
 @ValidateRequest
 public class MktApi {
-	@Autowired
-	private LoginService loginService;
-	@Autowired
-	private ModifyPasswdService modifyPasswdService;
-	@Autowired
-	private SegmentHeaderCreateService segmentHeaderService;
-	@Autowired
-	private SegmentPublishStatusCountService segmentPublishStatusCountService;
-	@Autowired
-	private SegmentPublishstatusListService segmentPublishstatusListService;
-	@Autowired
-	private DeleteImgTextAssetService deleteImgTextAssetService;
-	@Autowired
-	private GetImgTextAssetService getImgTextAssetService;
-	@Autowired
-	private ImgtextHostService imgtextHostService;
-	@Autowired
-	private WechatTypeCountGetService wechatTypeCountGetService;
-	@Autowired
-	private MigrationFileGeneralInfoService migrationFileGeneralInfoService;
-	@Autowired
-	private MigrationFileTemplateService migrationFileTemplateService;
-	@Autowired
-	private MigrationFileUploadUrlService migrationFileUploadUrlService;
-	@Autowired
-	private DataGetQualityListService dataGetQualityListService;
-	@Autowired
-	private DataGetQualityCountService dataGetQualityCountService;
-	@Autowired
-	private DataGetUnqualifiedCountService dataGetUnqualifiedCountService;
-	@Autowired
-	private DataGetMainCountService dataGetMainCountService;
-	@Autowired
-	private DataGetMainListService dataGetMainListService;
-	@Autowired
-	private DataDeleteMainService dataDeleteMainService;
-	@Autowired
-	private DataGetViewListService dataGetViewListService;
-	@Autowired
-	private DataGetFilterContactwayService dataGetFilterContactwayService;
-	@Autowired
-	private DataGetFilterRecentTaskService dataGetFilterRecentTaskService;
-	@Autowired
-	private DataGetFilterAudiencesService dataGetFilterAudiencesService;
-	@Autowired
-	private SegmentHeaderGetService segmentHeaderGetService;
-	@Autowired
-	private WechatAssetListService wechatAssetListService;
-	@Autowired
-	private WechatAssetListGetService wechatAssetListGetService;
-	@Autowired
-	private UpdateNicknameService updateNicknameService;
-	@Autowired
-	private SaveWechatAssetListService saveWechatAssetListService;
-	@Autowired
-	private SegmentHeaderUpdateService segmentHeaderUpdateService;
-	@Autowired
-	private UploadFileService uploadFileService;
-	@Autowired
-	private CampaignHeaderGetService campaignHeaderGetService;
+    @Autowired
+    private LoginService loginService;
+
+    @Autowired
+    private ModifyPasswdService modifyPasswdService;
+
+    @Autowired
+    private SegmentHeaderCreateService segmentHeaderService;
+
+    @Autowired
+    private SegmentPublishStatusCountService segmentPublishStatusCountService;
+
+    @Autowired
+    private SegmentPublishstatusListService segmentPublishstatusListService;
+
+    @Autowired
+    private DeleteImgTextAssetService deleteImgTextAssetService;
+
+    @Autowired
+    private GetImgTextAssetService getImgTextAssetService;
+
+    @Autowired
+    private ImgtextHostService imgtextHostService;
+
+    @Autowired
+    private WechatTypeCountGetService wechatTypeCountGetService;
+
+    @Autowired
+    private MigrationFileGeneralInfoService migrationFileGeneralInfoService;
+
+    @Autowired
+    private MigrationFileTemplateService migrationFileTemplateService;
+
+    @Autowired
+    private MigrationFileUploadUrlService migrationFileUploadUrlService;
+
+    @Autowired
+    private DataGetQualityListService dataGetQualityListService;
+
+    @Autowired
+    private DataGetQualityCountService dataGetQualityCountService;
+
+    @Autowired
+    private DataGetUnqualifiedCountService dataGetUnqualifiedCountService;
+
+    @Autowired
+    private DataGetMainCountService dataGetMainCountService;
+
+    @Autowired
+    private DataGetMainListService dataGetMainListService;
+
+    @Autowired
+    private DataDeleteMainService dataDeleteMainService;
+
+    @Autowired
+    private DataGetViewListService dataGetViewListService;
+
+    @Autowired
+    private DataGetFilterContactwayService dataGetFilterContactwayService;
+
+    @Autowired
+    private DataGetFilterRecentTaskService dataGetFilterRecentTaskService;
+
+    @Autowired
+    private DataGetFilterAudiencesService dataGetFilterAudiencesService;
+
+    @Autowired
+    private SegmentHeaderGetService segmentHeaderGetService;
+
+    @Autowired
+    private WechatAssetListService wechatAssetListService;
+
+    @Autowired
+    private WechatAssetListGetService wechatAssetListGetService;
+
+    @Autowired
+    private UpdateNicknameService updateNicknameService;
+
+    @Autowired
+    private SaveWechatAssetListService saveWechatAssetListService;
+
+    @Autowired
+    private SegmentHeaderUpdateService segmentHeaderUpdateService;
+
+    @Autowired
+    private UploadFileService uploadFileService;
+
+    @Autowired
+    private CampaignHeaderGetService campaignHeaderGetService;
+
     @Autowired
     private CampaignBodyGetService campaignBodyGetService;
+
     @Autowired
     private CampaignBodyCreateService campaignBodyCreateService;
+
     @Autowired
     private AudienceListService audienceListService;
+
     @Autowired
     private AudienceListDeleteService audienceListDeleteService;
+
     @Autowired
     private SegmentBodyUpdateService segmentBodyUpdateService;
-	@Autowired
-	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
-	@Autowired
-	private TaskListGetService taskListGetService;
-	@Autowired
-	private CampaignDeleteService campaignDeleteService;
-	@Autowired
-	private CampaignSummaryGetService campaignSummaryGetService;
-	@Autowired
-	private CampaignProgressStatusCountService campaignProgressStatusCountService;
-	@Autowired
-	private CampaignProgressStatusListService campaignProgressStatusListService;
-	@Autowired
-	private SegmentTagnameTagListService segmentTagnameTagListService;
-	@Autowired
-	private SegmentTagkeyTagListService segmentTagkeyTagListService;
-	@Autowired
-	private SegmentTagnameTagValueService segmentTagnameTagValueService;
-	@Autowired
-	private TagSystemTagcountService tagSystemTagcountService;
-	@Autowired
-	private SegmentBodyGetService segmentBodyGetService;
-	@Autowired
-	private CustomTagGetService customTagGetService;
-	@Autowired
-	private CustomTagDeleteService customTagDeleteService;
-	
-	@Autowired
-	private MainActionInfoGetService mainActionInfoGetService;
-	@Autowired
-	private SegmentTagGetService segmentTagGetService;
-	@Autowired
-	private SegmentTagUpdateService segmentTagUpdateService;
-	@Autowired
-	private GetImgtextCountService getImgtextCountService;
-	@Autowired
-	private DataMainRadarInfoGetService dataMainRadarInfoGetService;
-	@Autowired
-	private GetDataMainSearchService getDataMainSearchService;
-	@Autowired
-	private GetDataMainSearchByIdService getDataMainSearchByIdService;
-	@Autowired
-	private DataMainBasicInfoUpdateService dataMainBasicInfoUpdateService;
-	@Autowired
-	private TagSystemListGetService tagSystemListGetService;
-	@Autowired
-	private TaggroupSystemListGetService taggroupSystemListGetService;
-	@Autowired
-	private MainBasicInfoGetService mainBasicInfoGetService;
-	@Autowired
-	private TaggroupSystemMenulistGetService taggroupSystemMenulistGetService;
-	@Autowired
-	private CampaignNodeItemListGetService campaignNodeItemListGetService;
-	@Autowired
-	private CampaignManualStartService campaignManualStartService;
-	@Autowired
-	private CampaignHeaderCreateService campaignHeaderCreateService;
-	@Autowired
-	private CampaignHeaderUpdateService campaignHeaderUpdateService;
-	@Autowired
-	private GroupTagsSearchService groupTagsSearchService;
-	@Autowired
-	private WechatPublicAuthService wechatPublicAuthService;
+
+    @Autowired
+    private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
+
+    @Autowired
+    private TaskListGetService taskListGetService;
+
+    @Autowired
+    private CampaignDeleteService campaignDeleteService;
+
+    @Autowired
+    private CampaignSummaryGetService campaignSummaryGetService;
+
+    @Autowired
+    private CampaignProgressStatusCountService campaignProgressStatusCountService;
+
+    @Autowired
+    private CampaignProgressStatusListService campaignProgressStatusListService;
+
+    @Autowired
+    private SegmentTagnameTagListService segmentTagnameTagListService;
+
+    @Autowired
+    private SegmentTagkeyTagListService segmentTagkeyTagListService;
+
+    @Autowired
+    private SegmentTagnameTagValueService segmentTagnameTagValueService;
+
+    @Autowired
+    private TagSystemTagcountService tagSystemTagcountService;
+
+    @Autowired
+    private SegmentBodyGetService segmentBodyGetService;
+
+    @Autowired
+    private CustomTagGetService customTagGetService;
+
+    @Autowired
+    private CustomTagDeleteService customTagDeleteService;
+    
+
+    @Autowired
+    private MainActionInfoGetService mainActionInfoGetService;
+
+    @Autowired
+    private SegmentTagGetService segmentTagGetService;
+
+    @Autowired
+    private SegmentTagUpdateService segmentTagUpdateService;
+
+    @Autowired
+    private GetImgtextCountService getImgtextCountService;
+
+    @Autowired
+    private DataMainRadarInfoGetService dataMainRadarInfoGetService;
+
+    @Autowired
+    private GetDataMainSearchService getDataMainSearchService;
+
+    @Autowired
+    private GetDataMainSearchByIdService getDataMainSearchByIdService;
+
+    @Autowired
+    private DataMainBasicInfoUpdateService dataMainBasicInfoUpdateService;
+
+    @Autowired
+    private TagSystemListGetService tagSystemListGetService;
+
+    @Autowired
+    private TaggroupSystemListGetService taggroupSystemListGetService;
+
+    @Autowired
+    private MainBasicInfoGetService mainBasicInfoGetService;
+
+    @Autowired
+    private TaggroupSystemMenulistGetService taggroupSystemMenulistGetService;
+
+    @Autowired
+    private CampaignNodeItemListGetService campaignNodeItemListGetService;
+
+    @Autowired
+    private CampaignManualStartService campaignManualStartService;
+
+    @Autowired
+    private CampaignHeaderCreateService campaignHeaderCreateService;
+
+    @Autowired
+    private CampaignHeaderUpdateService campaignHeaderUpdateService;
+
+    @Autowired
+    private GroupTagsSearchService groupTagsSearchService;
+
+    @Autowired
+    private WechatPublicAuthService wechatPublicAuthService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
