@@ -155,7 +155,7 @@ public class CampaignNodeChainOut {
 
 	@JsonProperty("audience_count")
 	public Integer getAudienceCount() {
-		return audienceCount;
+		return audienceCount == null?0:audienceCount;
 	}
 
 	public void setAudienceCount(Integer audienceCount) {
