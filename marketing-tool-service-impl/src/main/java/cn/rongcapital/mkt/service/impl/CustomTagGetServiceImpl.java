@@ -25,9 +25,7 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
     @Override
     public BaseOutput getCustomTagList(String method, String userToken, Integer index, Integer size) {
     	
-    	CustomTag customTag = new CustomTag();
-    	customTag.setStartIndex(index);
-    	customTag.setPageSize(size);
+    	CustomTag customTag = new CustomTag(index,size);
 		List<CustomTag> customTagList = customTagDao.selectList(customTag);
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
