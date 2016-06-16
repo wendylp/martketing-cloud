@@ -28,6 +28,8 @@ public class CampaignNodeChainOut {
 	
 	private String posZ;//X坐标
 	
+	private String statisticsUrl;//campaign_node_item表里的statistics_url
+	
 	private List<CampaignSwitchOut> campaignSwitchList;
 	
 	private List<CampaignSwitchOut> campaignEndsList;
@@ -160,6 +162,15 @@ public class CampaignNodeChainOut {
 
 	public void setAudienceCount(Integer audienceCount) {
 		this.audienceCount = audienceCount;
+	}
+
+	@JsonProperty("url")
+	public String getStatisticsUrl() {
+		return statisticsUrl;
+	}
+
+	public void setStatisticsUrl(String statisticsUrl) {
+		this.statisticsUrl = statisticsUrl;
 	}
 	
 	
