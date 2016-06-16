@@ -135,6 +135,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				if(CollectionUtils.isNotEmpty(campaignNodeItemList)) {
 					campaignNodeChainOut.setCode(campaignNodeItemList.get(0).getCode());
 					campaignNodeChainOut.setIcon(campaignNodeItemList.get(0).getIcon());
+					campaignNodeChainOut.setCodeName(campaignNodeItemList.get(0).getName());
 				}
 				//设置desc
 				campaignNodeChainOut.setDesc(c.getDescription());
