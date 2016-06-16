@@ -170,4 +170,11 @@
 			(select distinct(templ_type) as data_shopping_rows from import_template where templ_name='购物记录') as data_shopping
 	</select>
 	
+	<select id="selectTemplTypePairs" resultType="cn.rongcapital.mkt.po.ImportTemplate">
+		SELECT
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		group by templ_type
+	</select>
+	
 </mapper>
