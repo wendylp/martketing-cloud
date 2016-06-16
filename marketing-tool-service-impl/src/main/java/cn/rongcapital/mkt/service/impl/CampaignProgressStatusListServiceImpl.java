@@ -64,6 +64,7 @@ public class CampaignProgressStatusListServiceImpl implements
 		t.setPageSize(size);
 		t.setStartIndex((index-1)*size);
 		t.getCustomMap().put("keyword", campaignName);
+		int totalCount = campaignHeadDao.selectCampaignProgressStatusListByPublishStatusCount(t);
 		List<CampaignHead> reList = campaignHeadDao.selectCampaignProgressStatusListByPublishStatus(t);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				   ApiErrorCode.SUCCESS.getMsg(),
@@ -122,6 +123,7 @@ public class CampaignProgressStatusListServiceImpl implements
 		}
 		result.setColNames(columnsOutList);
 		result.setTotal(result.getData().size());
+		result.setTotalCount(totalCount);
 		return result;
 	}
 }

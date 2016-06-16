@@ -19,6 +19,14 @@ public class CampaignNodeChainIn {
 	@NotEmpty
 	private String posZ;//z坐标
 	
+	@NotEmpty
+	private String icon;//icon
+	
+	@NotEmpty
+	private String code;//code
+	
+	private String desc;//节点描述,对应campaign_body表里的description
+	
 	private List<CampaignSwitchIn> campaignSwitchList;//判断分支:switch
 	
 	private List<CampaignSwitchIn> campaignEndsList;//多分支:ends
@@ -104,6 +112,33 @@ public class CampaignNodeChainIn {
 
 	public void setInfo(Map<String,Object> info) {
 		this.info = info;
+	}
+
+	@JsonProperty("icon")
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	@JsonProperty("code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	@JsonProperty("desc")
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 	
 }

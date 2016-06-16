@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,task_name as taskName,task_descript as taskDescript,task_type as taskType,schedule as schedule,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,task_name as taskName,task_descript as taskDescript,task_type as taskType,schedule as schedule,service_name as serviceName,task_status as taskStatus,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -18,6 +18,8 @@
 		    	<if test="taskDescript != null"><![CDATA[ AND task_descript = #{taskDescript}]]></if>
 		    	<if test="taskType != null"><![CDATA[ AND task_type = #{taskType}]]></if>
 		    	<if test="schedule != null"><![CDATA[ AND schedule = #{schedule}]]></if>
+		    	<if test="serviceName != null"><![CDATA[ AND service_name = #{serviceName}]]></if>
+		    	<if test="taskStatus != null"><![CDATA[ AND task_status = #{taskStatus}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
@@ -37,6 +39,8 @@
 		    	<if test="taskDescript != null"><![CDATA[task_descript = #{taskDescript},]]></if>
 		    	<if test="taskType != null"><![CDATA[task_type = #{taskType},]]></if>
 		    	<if test="schedule != null"><![CDATA[schedule = #{schedule},]]></if>
+		    	<if test="serviceName != null"><![CDATA[service_name = #{serviceName},]]></if>
+		    	<if test="taskStatus != null"><![CDATA[task_status = #{taskStatus},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
@@ -44,13 +48,15 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.TaskSchedule" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO task_schedule (task_name,task_descript,task_type,schedule,create_time)
+			INSERT INTO task_schedule (task_name,task_descript,task_type,schedule,service_name,task_status,create_time)
 			VALUES
 			(
 			  #{taskName},
 			  #{taskDescript},
 			  #{taskType},
 			  #{schedule},
+			  #{serviceName},
+			  #{taskStatus},
 			  now()
 			)
 		]]>

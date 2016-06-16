@@ -61,6 +61,12 @@ public interface CampaignHeadDao extends BaseDao<CampaignHead>{
 	public List<CampaignHead> selectCampaignProgressStatusListByPublishStatus(CampaignHead campaignHead);
 
 	/**
+	 * 根据publish_status以及campaign_name(如果有要用like做模糊查询)从campaign_head表中查询 总数
+	 * @param paramMap
+	 * @return list
+	 */
+	public int selectCampaignProgressStatusListByPublishStatusCount(CampaignHead campaignHead);
+	/**
 	 * 主数据查询(主界面搜索栏里面的模糊查询)
 	 * @param paramMap
 	 * @return list

@@ -1,10 +1,10 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
 
-public class ImportTemplate extends BaseQuery {
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
+public class ImportTemplate extends BaseQuery implements Comparable<ImportTemplate> {
     private Integer id;
 
     private Integer templType;
@@ -93,5 +93,15 @@ public class ImportTemplate extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @Override
+    public int compareTo(ImportTemplate o) {
+        if (this.id > o.id) {
+            return 1;
+        } else if (this.id < o.id) {
+            return -1;
+        }
+        return 0;
     }
 }

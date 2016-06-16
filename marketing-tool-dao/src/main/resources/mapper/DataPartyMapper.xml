@@ -146,7 +146,7 @@
 			(select count(id) as data_population_rows from data_population) as data_population,
 			(select count(id) as data_shopping_rows from data_shopping) as data_shopping
 	</select>
-
+	
 	<!-- 根据Id逻辑上删除某条主数据 -->
 	<update id="logicDeleteById" parameterType="cn.rongcapital.mkt.po.DataParty">
 		UPDATE

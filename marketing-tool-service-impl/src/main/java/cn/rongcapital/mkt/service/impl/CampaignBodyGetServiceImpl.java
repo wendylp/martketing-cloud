@@ -26,6 +26,7 @@ import cn.rongcapital.mkt.dao.CampaignDecisionWechatForwardDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatReadDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatSentDao;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
+import cn.rongcapital.mkt.dao.CampaignNodeItemDao;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
 import cn.rongcapital.mkt.po.CampaignActionSaveAudience;
@@ -43,6 +44,7 @@ import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatForward;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatRead;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatSent;
+import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
@@ -104,6 +106,8 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	CampaignSwitchDao campaignSwitchDao;
 	@Autowired
 	CampaignTriggerTimerDao campaignTriggerTimerDao;
+	@Autowired
+	CampaignNodeItemDao campaignNodeItemDao;
 
 	@Override
 	public CampaignBodyGetOut campaignBodyGet(String userToken, String ver, int campaignHeadId) {
@@ -122,6 +126,19 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				campaignNodeChainOut.setPosX(c.getPosX());
 				campaignNodeChainOut.setPosY(c.getPosY());
 				campaignNodeChainOut.setPosZ(c.getPosZ());
+				//获取code、icon值
+				CampaignNodeItem campaignNodeItem = new CampaignNodeItem();
+				campaignNodeItem.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+				campaignNodeItem.setType(c.getItemType());
+				campaignNodeItem.setPtype(c.getNodeType());
+				List<CampaignNodeItem> campaignNodeItemList = campaignNodeItemDao.selectList(campaignNodeItem);
+				if(CollectionUtils.isNotEmpty(campaignNodeItemList)) {
+					campaignNodeChainOut.setCode(campaignNodeItemList.get(0).getCode());
+					campaignNodeChainOut.setIcon(campaignNodeItemList.get(0).getIcon());
+					campaignNodeChainOut.setCodeName(campaignNodeItemList.get(0).getName());
+				}
+				//设置desc
+				campaignNodeChainOut.setDesc(c.getDescription());
 				
 				List<CampaignSwitchOut> campaignSwitchList = queryCampaignSwitchList(campaignHeadId,c.getItemId());
 				List<CampaignSwitchOut> campaignEndsList = queryCampaignEndsList(campaignHeadId,c.getItemId());
@@ -211,6 +228,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				campaignBodyGetOut.getData().add(campaignNodeChainOut);
 			}
 		}
+		campaignBodyGetOut.setTotal(campaignBodyGetOut.getData().size());
 		return campaignBodyGetOut;
 	}
 	

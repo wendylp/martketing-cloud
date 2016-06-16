@@ -83,4 +83,11 @@ public interface ImportTemplateDao extends BaseDao<ImportTemplate> {
      * @return List
      */
     String selectTempleNameByType(Integer templ_type);
+    
+    /**
+     * @功能简述 : 根据templType分类获取所有的组数据名称
+     * @author nianjun
+     * @return Map
+     */
+    List<ImportTemplate> selectTemplTypePairs();
 }

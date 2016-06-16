@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -55,12 +56,13 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
         }
 
         if (importDataHistoryList != null && !importDataHistoryList.isEmpty()) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             for (ImportDataHistory importDataHistory : importDataHistoryList) {
                 Map<String, Object> dataMap = new LinkedHashMap<>();
                 List<Map<String, Object>> logList = new ArrayList<>();
                 dataMap.put("data_id", importDataHistory.getId());
-                dataMap.put("start_time", importDataHistory.getImportStartTime());
-                dataMap.put("end_time", importDataHistory.getImportEndTime());
+                dataMap.put("start_time", simpleDateFormat.format(importDataHistory.getImportStartTime()));
+                dataMap.put("end_time", simpleDateFormat.format(importDataHistory.getImportEndTime()));
                 dataMap.put("data_source", importDataHistory.getSource());
                 dataMap.put("legal_data_rows_count", importDataHistory.getLegalRows());
                 dataMap.put("ilegal_data_rows_count", importDataHistory.getIllegalRows());
@@ -73,7 +75,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
                     for (ImportDataModifyLog importDataModifyLog : importDataModifyLogList) {
                         Map<String, Object> contentMap = new HashMap<>();
                         contentMap.put("modify_file_name", importDataModifyLog.getModifyFilename());
-                        contentMap.put("handle_time", importDataModifyLog.getHandleTime());
+                        contentMap.put("handle_time", simpleDateFormat.format(importDataModifyLog.getHandleTime()));
                         logList.add(contentMap);
                     }
                     dataMap.put("modify_log", logList);
