@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
+
+import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class CustomTag extends BaseQuery {
     private Long id;
@@ -18,6 +18,12 @@ public class CustomTag extends BaseQuery {
     private Date updateTime;
 
     private Date createTime;
+
+    public CustomTag() {}
+
+    public CustomTag(Integer index, Integer size) {
+        super(index, size);
+    }
 
     public Long getId() {
         return id;
