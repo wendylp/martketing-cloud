@@ -83,4 +83,11 @@ public interface ImportTemplateDao extends BaseDao<ImportTemplate> {
      * @return List
      */
     String selectTempleNameByType(Integer templ_type);
+    
+    /**
+     * @功能简述 : 查询每个data_xx表数据量对应的md_type
+     * @author nianjun
+     * @return Map
+     */
+    Map<String, Integer> selectMainCountPair();
 }
