@@ -136,6 +136,8 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 					campaignNodeChainOut.setCode(campaignNodeItemList.get(0).getCode());
 					campaignNodeChainOut.setIcon(campaignNodeItemList.get(0).getIcon());
 				}
+				//设置desc
+				campaignNodeChainOut.setDesc(c.getDescription());
 				
 				List<CampaignSwitchOut> campaignSwitchList = queryCampaignSwitchList(campaignHeadId,c.getItemId());
 				List<CampaignSwitchOut> campaignEndsList = queryCampaignEndsList(campaignHeadId,c.getItemId());

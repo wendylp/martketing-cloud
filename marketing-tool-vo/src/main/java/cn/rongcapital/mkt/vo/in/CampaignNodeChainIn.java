@@ -25,6 +25,8 @@ public class CampaignNodeChainIn {
 	@NotEmpty
 	private String code;//code
 	
+	private String desc;//节点描述,对应campaign_body表里的description
+	
 	private List<CampaignSwitchIn> campaignSwitchList;//判断分支:switch
 	
 	private List<CampaignSwitchIn> campaignEndsList;//多分支:ends
@@ -128,6 +130,15 @@ public class CampaignNodeChainIn {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	@JsonProperty("desc")
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 	
 }

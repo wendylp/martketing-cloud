@@ -37,22 +37,28 @@ public class TaskManager {
 	
 	private volatile boolean isInited = false;
 	
+	private Runnable scanTask = new Runnable() {
+		public void run() {
+				scanTask();
+	       }
+	}; 
+	private Runnable prepareTasks = new Runnable() {
+		public void run() {
+				prepareTasks();
+	       }
+	};
+	
+	public synchronized void manualInitTask () {
+		taskSchedule.submit(scanTask);
+		taskSchedule.submit(prepareTasks);
+	}
+	
 	public void initTask() {
 		logger.debug("initTask");
 		if(isInited){
 			return;
 		}
 		isInited = true;
-		Runnable scanTask = new Runnable() {
-			public void run() {
-					scanTask();
-		       }
-		};
-		Runnable prepareTasks = new Runnable() {
-			public void run() {
-					prepareTasks();
-		       }
-		};
 		taskSchedule.scheduleAtFixedRate(scanTask, ApiConstant.TASK_SCAN_INTERVAL_MILLS);
 		taskSchedule.scheduleAtFixedRate(prepareTasks, ApiConstant.TASK_DO_INTERVAL_MILLS);
 	}
@@ -113,7 +119,7 @@ public class TaskManager {
 					logger.error("error in method cn.rongcapital.mkt.job.TaskManager.startTask(TaskSchedule)", e);
 				}
 		       }
-		    };
+		};
 	    ScheduledFuture<?> scheduledFuture = taskSchedule.schedule(task, new CronTrigger(taskSchedulePo.getSchedule()));
 	    TaskManager.taskMap.put(taskSchedulePo.getId().toString(),scheduledFuture);
 	}
