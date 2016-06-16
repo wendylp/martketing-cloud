@@ -1,7 +1,8 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,21 +38,17 @@ public class DataGetMainCountServiceImpl implements DataGetMainCountService {
         Map<String, Object> countRowsMap = dataPartyDao.selectMainCount();
         List<Map<String, Object>> resultList = new ArrayList<>();
         List<ImportTemplate> importTemplateList = importTemplateDao.selectTemplTypePairs();
-        for (Map.Entry<String, Object> entry : countRowsMap.entrySet()) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("count_rows", entry.getValue());
-            String tagName = ImportTemplTypeEnum.getNameByCountName(entry.getKey());
+        Collections.sort(importTemplateList);
+        for (ImportTemplate importTemplate : importTemplateList) {
+            Map<String, Object> map = new LinkedHashMap<>();
+            String tagName = importTemplate.getTemplName();
+            map.put("md_type", importTemplate.getTemplType());
             map.put("tag_name", tagName);
-            for (ImportTemplate importTemplate : importTemplateList) {
-                if (importTemplate.getTemplName().equals(tagName)) {
-                    map.put("md_type", importTemplate.getTemplType());
-                    break;
-                }
-            }
-
+            map.put("count_rows", countRowsMap.get(ImportTemplTypeEnum.getCountNameByName(tagName)));
+            
             resultList.add(map);
-
         }
+
         result.getData().addAll(resultList);
         result.setTotal(result.getData().size());
 
