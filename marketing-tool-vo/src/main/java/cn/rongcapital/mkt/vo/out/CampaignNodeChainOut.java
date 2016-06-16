@@ -18,6 +18,8 @@ public class CampaignNodeChainOut {
 	
 	private String desc;//对应campaign_body表的description
 	
+	private String codeName;//对应campaign_node_item表里的name列
+	
 	private String posX;//x坐标
 	
 	private String posY;//Y坐标
@@ -138,6 +140,15 @@ public class CampaignNodeChainOut {
 
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+
+	@JsonProperty("code_name")
+	public String getCodeName() {
+		return codeName;
+	}
+
+	public void setCodeName(String codeName) {
+		this.codeName = codeName;
 	}
 	
 	
