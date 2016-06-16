@@ -15,8 +15,6 @@ public class CampaignBody extends BaseQuery {
 
     private String itemId;
 
-//    private String switchItemIds;
-
     private String statisticsUrl;
 
     private String posX;
@@ -26,6 +24,8 @@ public class CampaignBody extends BaseQuery {
     private String posZ;
 
     private Integer audienceCount;
+
+    private Integer taskId;
 
     private Byte status;
 
@@ -73,14 +73,6 @@ public class CampaignBody extends BaseQuery {
         this.itemId = itemId == null ? null : itemId.trim();
     }
 
-//    public String getSwitchItemIds() {
-//        return switchItemIds;
-//    }
-//
-//    public void setSwitchItemIds(String switchItemIds) {
-//        this.switchItemIds = switchItemIds == null ? null : switchItemIds.trim();
-//    }
-
     public String getStatisticsUrl() {
         return statisticsUrl;
     }
@@ -119,6 +111,14 @@ public class CampaignBody extends BaseQuery {
 
     public void setAudienceCount(Integer audienceCount) {
         this.audienceCount = audienceCount;
+    }
+
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     public Byte getStatus() {

@@ -32,6 +32,7 @@ import cn.rongcapital.mkt.dao.CampaignDecisionWechatForwardDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatReadDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatSentDao;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
+import cn.rongcapital.mkt.dao.CampaignNodeItemDao;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
 import cn.rongcapital.mkt.po.AudienceList;
@@ -51,6 +52,7 @@ import cn.rongcapital.mkt.po.CampaignDecisionWechatForward;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatRead;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatSent;
 import cn.rongcapital.mkt.po.CampaignHead;
+import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
@@ -115,6 +117,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	AudienceListDao audienceListDao;
 	@Autowired
 	CampaignSwitchDao campaignSwitchDao;
+	@Autowired
+	CampaignNodeItemDao campaignNodeItemDao;
 	
 	private static final ObjectMapper jacksonObjectMapper = new ObjectMapper();
 	
@@ -231,6 +235,11 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			}
 			CampaignBody campaignBody = initCampaignBody(campaignNodeChainIn,campaignHeadId);
 			campaignBodyDao.insert(campaignBody);
+			
+			CampaignNodeItem campaignNodeItem = initCampaignNodeItem(campaignNodeChainIn, campaignHeadId);
+			if(null != campaignNodeItem) {
+				campaignNodeItemDao.updateById(campaignNodeItem);
+			}
 		}
 		out = new CampaignBodyCreateOut(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 		return out;
@@ -510,6 +519,27 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignBody.setPosY(campaignNodeChainIn.getPosY());
 		campaignBody.setPosZ(campaignNodeChainIn.getPosZ());
 		return campaignBody;
+	}
+	/**
+	 * 初始化campaign_node_item表的数据:更新icon
+	 * @param campaignNodeChainIn
+	 * @param campaignHeadId
+	 * @return
+	 */
+	private CampaignNodeItem initCampaignNodeItem(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignNodeItem campaignNodeItemTmp = new CampaignNodeItem();
+		campaignNodeItemTmp.setCode(campaignNodeChainIn.getCode());
+		campaignNodeItemTmp.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		List<CampaignNodeItem> campaignNodeItemList = campaignNodeItemDao.selectList(campaignNodeItemTmp);
+		if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(campaignNodeItemList) &&
+		   campaignNodeItemList.size() == 1) {
+			
+			CampaignNodeItem campaignNodeItem = new CampaignNodeItem();
+			campaignNodeItem.setId(campaignNodeItemList.get(0).getId());
+			campaignNodeItem.setIcon(campaignNodeChainIn.getIcon());
+			return campaignNodeItem;
+		}
+		return null;
 	}
 	
 	private CampaignTriggerTimer initCampaignTriggerTimer(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
