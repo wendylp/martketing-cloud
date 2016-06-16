@@ -42,10 +42,9 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
         ImportDataHistory paramImportDataHistory = new ImportDataHistory(index, size);
-        paramImportDataHistory.setStartIndex(index);
-        paramImportDataHistory.setPageSize(size);
 
         List<ImportDataHistory> importDataHistoryList = importDataHistoryDao.selectList(paramImportDataHistory);
+        int totalCount = importDataHistoryDao.selectListCount(null);
         List<DatareportColumns> datareportColumnList = datareportColumnsDao.selectListByFieldOrder();
         if (datareportColumnList != null && !datareportColumnList.isEmpty()) {
             for (DatareportColumns datareportColumns : datareportColumnList) {
@@ -88,6 +87,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
             }
         }
 
+        result.setTotalCount(totalCount);
         result.setTotal(result.getData().size());
 
         return Response.ok().entity(result).build();
