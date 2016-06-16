@@ -41,7 +41,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
         DataGetQualityListOut result = new DataGetQualityListOut(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
-        ImportDataHistory paramImportDataHistory = new ImportDataHistory();
+        ImportDataHistory paramImportDataHistory = new ImportDataHistory(index, size);
         paramImportDataHistory.setStartIndex(index);
         paramImportDataHistory.setPageSize(size);
 
@@ -66,6 +66,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
                 dataMap.put("data_source", importDataHistory.getSource());
                 dataMap.put("legal_data_rows_count", importDataHistory.getLegalRows());
                 dataMap.put("ilegal_data_rows_count", importDataHistory.getIllegalRows());
+                dataMap.put("source_file_name", importDataHistory.getSourceFilename());
 
                 ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
                 paramImportDataModifyLog.setImportDataId(importDataHistory.getId());
