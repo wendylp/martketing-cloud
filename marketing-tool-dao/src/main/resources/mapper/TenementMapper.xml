@@ -109,6 +109,9 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<select id="selectPidAndShortname" resultType="java.util.Map">
+		SELECT pid, shortname
+		<include refid="QUERY_FROM_TABLE"/>
+	</select>
 	
 </mapper>

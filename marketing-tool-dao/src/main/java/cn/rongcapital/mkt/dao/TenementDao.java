@@ -13,8 +13,10 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.Tenement;
 
+import java.util.Map;
+
 public interface TenementDao extends BaseDao<Tenement>{
-	
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -34,4 +36,10 @@ public interface TenementDao extends BaseDao<Tenement>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 获取企业ID和企业简称，从而进行公众号授权
+	 * @return map
+	 */
+	Map<String,Object> selectPidAndShortname();
 }
