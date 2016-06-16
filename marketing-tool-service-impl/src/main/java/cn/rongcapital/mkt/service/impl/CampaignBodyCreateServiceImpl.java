@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -553,11 +554,13 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		List<CampaignNodeItem> campaignNodeItemList = campaignNodeItemDao.selectList(campaignNodeItemTmp);
 		if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(campaignNodeItemList) &&
 		   campaignNodeItemList.size() == 1) {
-			
-			CampaignNodeItem campaignNodeItem = new CampaignNodeItem();
-			campaignNodeItem.setId(campaignNodeItemList.get(0).getId());
-			campaignNodeItem.setIcon(campaignNodeChainIn.getIcon());
-			return campaignNodeItem;
+			String icon = campaignNodeChainIn.getIcon();
+			if(StringUtils.isNotBlank(icon)){
+				CampaignNodeItem campaignNodeItem = new CampaignNodeItem();
+				campaignNodeItem.setId(campaignNodeItemList.get(0).getId());
+				campaignNodeItem.setIcon(icon);
+				return campaignNodeItem;
+			}
 		}
 		return null;
 	}
