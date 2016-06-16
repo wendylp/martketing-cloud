@@ -126,6 +126,15 @@
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
 	
+	<select id="selectCampaignProgressStatusListByPublishStatusCount" parameterType="cn.rongcapital.mkt.po.CampaignHead" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	    <if test="customMap.keyword != null and customMap.keyword != ''"> 
+		   and name like CONCAT('%',#{customMap.keyword},'%' )
+		</if>
+	</select>
+	
 	<!-- 其它SQL语句 -->
 	<select id="searchDataMain" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT id,name

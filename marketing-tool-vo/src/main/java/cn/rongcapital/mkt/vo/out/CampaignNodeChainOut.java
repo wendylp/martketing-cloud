@@ -3,24 +3,21 @@ package cn.rongcapital.mkt.vo.out;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.hibernate.validator.constraints.NotEmpty;
 
 public class CampaignNodeChainOut {
 	
-	@NotEmpty
 	private String itemId;
 	
 	private byte itemType;
 	
 	private byte nodeType;
 	
-	@NotEmpty
+	private String code;
+	
 	private String posX;//x坐标
 	
-	@NotEmpty
 	private String posY;//Y坐标
 	
-	@NotEmpty
 	private String posZ;//X坐标
 	
 	private List<CampaignSwitchOut> campaignSwitchList;
@@ -111,5 +108,15 @@ public class CampaignNodeChainOut {
 	public void setInfo(Object info) {
 		this.info = info;
 	}
+
+	@JsonProperty("code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
 	
 }

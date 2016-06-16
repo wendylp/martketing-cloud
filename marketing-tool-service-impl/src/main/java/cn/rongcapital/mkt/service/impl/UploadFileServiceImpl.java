@@ -11,6 +11,8 @@ import javax.ws.rs.core.SecurityContext;
 import cn.rongcapital.mkt.service.ParseUploadFile;
 import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
 import org.apache.commons.io.IOUtils;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
@@ -41,17 +43,24 @@ public class UploadFileServiceImpl implements UploadFileService{
 
     @Override
     public Object uploadFile(String source,String fileUnique,int fileType,MultipartFormDataInput fileInput, SecurityContext securityContext) {
+        JSONObject obj = new JSONObject();
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(),ApiConstant.INT_ZERO,null);
         UploadFileAccordTemplateOut uploadFileAccordTemplateOut = null;
         if( !isFileUniqueValid(fileUnique) ) {
-            baseOutput.setMsg("唯一性标识获取失败");
+            try {
+                obj.put("msg","唯一性标识获取失败");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            baseOutput.getData().add(obj);
             return Response.ok().entity(baseOutput).build();
         }
-        baseOutput.setMsg("唯一性标识获取成功");
+        baseOutput.getData().add("唯一性标识获取成功");
         String fileName = "";
         Map<String,List<InputPart>> uploadForm = fileInput.getFormDataMap();
         List<InputPart> inputParts = uploadForm.get("file");
         logger.info("get file successed" + inputParts);
+        baseOutput.getData().add("进入1号代码");
         for(InputPart inputPart : inputParts){
             try {
                 MultivaluedMap<String,String> header = inputPart.getHeaders();
@@ -64,7 +73,7 @@ public class UploadFileServiceImpl implements UploadFileService{
                 byte[] bytes = IOUtils.toByteArray(inputStream);
                 uploadFileAccordTemplateOut = parseUploadFile.parseUploadFileByType(fileName,bytes);
                 //Todo: 3.根据文件唯一标识，把数据条数，摘要，未识别属性放到数据库的importHistory表中的相应栏位中。
-                writeFile(bytes,fileName);    //Todo: 4不确定文件是否还需要保存临时文件
+                writeFile(bytes,directory + fileName);    //Todo: 4不确定文件是否还需要保存临时文件
                 logger.info("文件上传完毕！");
             }catch (Exception e){
                 e.printStackTrace();

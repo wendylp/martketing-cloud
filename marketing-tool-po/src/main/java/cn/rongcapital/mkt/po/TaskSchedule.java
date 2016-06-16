@@ -15,6 +15,10 @@ public class TaskSchedule extends BaseQuery {
 
     private String schedule;
 
+    private String serviceName;
+
+    private Byte taskStatus;
+
     private Byte status;
 
     private Date createTime;
@@ -59,6 +63,22 @@ public class TaskSchedule extends BaseQuery {
 
     public void setSchedule(String schedule) {
         this.schedule = schedule == null ? null : schedule.trim();
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName == null ? null : serviceName.trim();
+    }
+
+    public Byte getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(Byte taskStatus) {
+        this.taskStatus = taskStatus;
     }
 
     public Byte getStatus() {

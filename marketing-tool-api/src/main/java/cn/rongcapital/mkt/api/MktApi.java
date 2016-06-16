@@ -135,6 +135,7 @@ import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
 import cn.rongcapital.mkt.vo.out.CampaignProgressStatusCountOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
+import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListOut;
 import cn.rongcapital.mkt.vo.out.SerarchTagGroupTagsOut;
 
 @Component
@@ -492,7 +493,7 @@ public class MktApi {
 	 */
 	@GET
 	@Path("/mkt.segment.publishstatus.list.get")
-	public Object segmentPublishstatusList(@NotEmpty @QueryParam("user_token") String userToken,
+	public SegmentPublishstatusListOut segmentPublishstatusList(@NotEmpty @QueryParam("user_token") String userToken,
 						  				   @NotNull @QueryParam("publish_status") Integer publishStatus,
 						  				   @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
