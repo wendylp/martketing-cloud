@@ -126,7 +126,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				campaignNodeChainOut.setPosX(c.getPosX());
 				campaignNodeChainOut.setPosY(c.getPosY());
 				campaignNodeChainOut.setPosZ(c.getPosZ());
-				//获取code值
+				//获取code、icon值
 				CampaignNodeItem campaignNodeItem = new CampaignNodeItem();
 				campaignNodeItem.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				campaignNodeItem.setType(c.getItemType());
@@ -134,6 +134,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				List<CampaignNodeItem> campaignNodeItemList = campaignNodeItemDao.selectList(campaignNodeItem);
 				if(CollectionUtils.isNotEmpty(campaignNodeItemList)) {
 					campaignNodeChainOut.setCode(campaignNodeItemList.get(0).getCode());
+					campaignNodeChainOut.setIcon(campaignNodeItemList.get(0).getIcon());
 				}
 				
 				List<CampaignSwitchOut> campaignSwitchList = queryCampaignSwitchList(campaignHeadId,c.getItemId());

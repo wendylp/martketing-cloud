@@ -14,6 +14,8 @@ public class CampaignNodeChainOut {
 	
 	private String code;
 	
+	private String icon;
+	
 	private String posX;//x坐标
 	
 	private String posY;//Y坐标
@@ -116,6 +118,15 @@ public class CampaignNodeChainOut {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	@JsonProperty("icon")
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 	
 	
