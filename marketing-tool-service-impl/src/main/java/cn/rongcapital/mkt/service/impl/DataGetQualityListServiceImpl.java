@@ -41,11 +41,10 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
         DataGetQualityListOut result = new DataGetQualityListOut(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
-        ImportDataHistory paramImportDataHistory = new ImportDataHistory();
-        paramImportDataHistory.setStartIndex(index);
-        paramImportDataHistory.setPageSize(size);
+        ImportDataHistory paramImportDataHistory = new ImportDataHistory(index, size);
 
         List<ImportDataHistory> importDataHistoryList = importDataHistoryDao.selectList(paramImportDataHistory);
+        int totalCount = importDataHistoryDao.selectListCount(null);
         List<DatareportColumns> datareportColumnList = datareportColumnsDao.selectListByFieldOrder();
         if (datareportColumnList != null && !datareportColumnList.isEmpty()) {
             for (DatareportColumns datareportColumns : datareportColumnList) {
@@ -66,6 +65,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
                 dataMap.put("data_source", importDataHistory.getSource());
                 dataMap.put("legal_data_rows_count", importDataHistory.getLegalRows());
                 dataMap.put("ilegal_data_rows_count", importDataHistory.getIllegalRows());
+                dataMap.put("source_file_name", importDataHistory.getSourceFilename());
 
                 ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
                 paramImportDataModifyLog.setImportDataId(importDataHistory.getId());
@@ -87,6 +87,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
             }
         }
 
+        result.setTotalCount(totalCount);
         result.setTotal(result.getData().size());
 
         return Response.ok().entity(result).build();

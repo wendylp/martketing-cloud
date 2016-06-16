@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
+
+import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class ImportDataHistory extends BaseQuery {
     private Long id;
@@ -40,6 +40,12 @@ public class ImportDataHistory extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+
+    public ImportDataHistory() {}
+
+    public ImportDataHistory(Integer index, Integer size) {
+        super(index, size);
+    }
 
     public Long getId() {
         return id;
