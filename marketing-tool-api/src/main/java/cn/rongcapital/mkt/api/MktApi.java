@@ -106,6 +106,7 @@ import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -274,6 +275,8 @@ public class MktApi {
 	private CampaignHeaderUpdateService campaignHeaderUpdateService;
 	@Autowired
 	private GroupTagsSearchService groupTagsSearchService;
+	@Autowired
+	private WechatPublicAuthService wechatPublicAuthService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1250,5 +1253,17 @@ public class MktApi {
 										@NotNull @QueryParam("type") Integer type,
 										@NotNull @QueryParam("id") Integer id){
 		return getDataMainSearchByIdService.searchDataMainById(id,type);
+	}
+
+	/**
+	 * @功能简述: 微信公众号授权
+	 * @param:String user_token,String ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.data.inbound.wechat.public.auth")
+	public BaseOutput authWechatPublicAccount(@NotEmpty @QueryParam("user_token") String userToken,
+											@NotEmpty @QueryParam("ver") String ver){
+		return wechatPublicAuthService.authWechatPublicAccount();
 	}
 }

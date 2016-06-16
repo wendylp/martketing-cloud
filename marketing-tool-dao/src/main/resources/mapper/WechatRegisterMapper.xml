@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.rongcapital.mkt.dao.WechatAssetGroupDao">
+<mapper namespace="cn.rongcapital.mkt.dao.WechatRegisterDao">
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,name,members,wx_acct,is_sys_group,asset_id]]>
+		<![CDATA[ id as id,wx_acct as wxAcct,name as name,type as type,nickname as nickname,header_image as headerImage,sex as sex,province as province,city as city,signature as signature,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM wechat_asset_group]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM wechat_register]]></sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="members != null"><![CDATA[ AND members = #{members}]]></if>
 		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
-		    	<if test="isSysGroup != null"><![CDATA[ AND is_sys_group = #{isSysGroup}]]></if>
-		    	<if test="assetId != null"><![CDATA[ AND asset_id = #{assetId}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		    	<if test="nickname != null"><![CDATA[ AND nickname = #{nickname}]]></if>
+		    	<if test="headerImage != null"><![CDATA[ AND header_image = #{headerImage}]]></if>
+		    	<if test="sex != null"><![CDATA[ AND sex = #{sex}]]></if>
+		    	<if test="province != null"><![CDATA[ AND province = #{province}]]></if>
+		    	<if test="city != null"><![CDATA[ AND city = #{city}]]></if>
+		    	<if test="signature != null"><![CDATA[ AND signature = #{signature}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
@@ -34,26 +38,34 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
-		    	<if test="members != null"><![CDATA[members = #{members},]]></if>
 		    	<if test="wxAcct != null"><![CDATA[wx_acct = #{wxAcct},]]></if>
-		    	<if test="isSysGroup != null"><![CDATA[is_sys_group = #{isSysGroup},]]></if>
-		    	<if test="assetId != null"><![CDATA[asset_id = #{assetId},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
+		    	<if test="nickname != null"><![CDATA[nickname = #{nickname},]]></if>
+		    	<if test="headerImage != null"><![CDATA[header_image = #{headerImage},]]></if>
+		    	<if test="sex != null"><![CDATA[sex = #{sex},]]></if>
+		    	<if test="province != null"><![CDATA[province = #{province},]]></if>
+		    	<if test="city != null"><![CDATA[city = #{city},]]></if>
+		    	<if test="signature != null"><![CDATA[signature = #{signature},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
-	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatRegister" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_asset_group (name,members,wx_acct,is_sys_group,asset_id,create_time)
+			INSERT INTO wechat_register (wx_acct,name,type,nickname,header_image,sex,province,city,signature,create_time)
 			VALUES
 			(
-			  #{name},
-			  #{members},
 			  #{wxAcct},
-			  #{isSysGroup},
-			  #{assetId},
+			  #{name},
+			  #{type},
+			  #{nickname},
+			  #{headerImage},
+			  #{sex},
+			  #{province},
+			  #{city},
+			  #{signature},
 			  now()
 			)
 		]]>
@@ -63,14 +75,14 @@
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
 	<!-- 修改记录通过主键 -->
-	<update id="updateById" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup">
-		<![CDATA[UPDATE wechat_asset_group]]>
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.WechatRegister">
+		<![CDATA[UPDATE wechat_register]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup" resultType="cn.rongcapital.mkt.po.WechatAssetGroup">
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.WechatRegister" resultType="cn.rongcapital.mkt.po.WechatRegister">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -81,7 +93,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectList" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup" resultType="cn.rongcapital.mkt.po.WechatAssetGroup">
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.WechatRegister" resultType="cn.rongcapital.mkt.po.WechatRegister">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -90,18 +102,13 @@
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup" resultType="int">
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.WechatRegister" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	<select id="selectGroupById" parameterType="java.lang.String" resultType="java.util.Map">
-		SELECT
-		id as group_id,name,members
-		FROM wechat_asset_group
-		WHERE id = #{id}
-	</select>	
+	
 	
 </mapper>
