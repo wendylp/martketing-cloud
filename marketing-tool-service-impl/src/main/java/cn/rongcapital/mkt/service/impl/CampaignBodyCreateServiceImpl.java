@@ -35,6 +35,7 @@ import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.dao.CampaignNodeItemDao;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
+import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.po.AudienceList;
 import cn.rongcapital.mkt.po.CampaignActionSaveAudience;
 import cn.rongcapital.mkt.po.CampaignActionSendH5;
@@ -55,6 +56,7 @@ import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
+import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.vo.in.CampaignActionSaveAudienceIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionSendH5In;
@@ -119,6 +121,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	CampaignSwitchDao campaignSwitchDao;
 	@Autowired
 	CampaignNodeItemDao campaignNodeItemDao;
+	@Autowired
+	TaskScheduleDao taskScheduleDao;
 	
 	private static final ObjectMapper jacksonObjectMapper = new ObjectMapper();
 	
@@ -133,6 +137,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		}
 		deleteOldCampaignData(campaignHeadId);//删除旧数据 
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
+			Integer taskId= null;//定时任务id
 			List<CampaignSwitch> campaignSwitchList = initCampaignSwitchList(campaignNodeChainIn,campaignHeadId);
 			List<CampaignSwitch> campaignEndsList = initCampaignEndsList(campaignNodeChainIn,campaignHeadId);
 			if(CollectionUtils.isNotEmpty(campaignSwitchList)) {
@@ -147,6 +152,9 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_TRIGGER){
 				switch (campaignNodeChainIn.getItemType()) {
 				case ApiConstant.CAMPAIGN_ITEM_TRIGGER_TIMMER://定时触发
+//					TaskSchedule taskSchedule = initTaskSchedule(campaignNodeChainIn,campaignHeadId);
+//					taskScheduleDao.insert(taskSchedule);
+//					taskId = taskSchedule.getId();
 					CampaignTriggerTimer campaignTriggerTimer = initCampaignTriggerTimer(campaignNodeChainIn,campaignHeadId);
 					campaignTriggerTimerDao.insert(campaignTriggerTimer);
 					break;
@@ -233,13 +241,15 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					break;
 				}
 			}
-			CampaignBody campaignBody = initCampaignBody(campaignNodeChainIn,campaignHeadId);
-			campaignBodyDao.insert(campaignBody);
 			
+			//更新campaign_node_item表
 			CampaignNodeItem campaignNodeItem = initCampaignNodeItem(campaignNodeChainIn, campaignHeadId);
 			if(null != campaignNodeItem) {
 				campaignNodeItemDao.updateById(campaignNodeItem);
 			}
+
+			CampaignBody campaignBody = initCampaignBody(campaignNodeChainIn,campaignHeadId,taskId);
+			campaignBodyDao.insert(campaignBody);
 		}
 		out = new CampaignBodyCreateOut(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 		return out;
@@ -297,6 +307,14 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSaveAudienceDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignTriggerTimerDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);
+	}
+	
+	private TaskSchedule initTaskSchedule(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		TaskSchedule taskSchedule = new TaskSchedule();
+		CampaignTriggerTimerIn campaignTriggerTimerIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignTriggerTimerIn.class);
+		campaignTriggerTimerIn.getStartTime();
+		campaignTriggerTimerIn.getEndTime();
+		return taskSchedule;
 	}
 	
 	private List<CampaignSwitch> initCampaignSwitchList(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
@@ -509,7 +527,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return campaignDecisionPropCompare;
 	}
 	
-	private CampaignBody initCampaignBody(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+	private CampaignBody initCampaignBody(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId,Integer taskId) {
 		CampaignBody campaignBody = new CampaignBody();
 		campaignBody.setHeadId(campaignHeadId);
 		campaignBody.setItemType(campaignNodeChainIn.getItemType());
@@ -518,6 +536,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignBody.setPosX(campaignNodeChainIn.getPosX());
 		campaignBody.setPosY(campaignNodeChainIn.getPosY());
 		campaignBody.setPosZ(campaignNodeChainIn.getPosZ());
+		campaignBody.setDescription(campaignNodeChainIn.getDesc());
+		campaignBody.setTaskId(taskId);
 		return campaignBody;
 	}
 	/**

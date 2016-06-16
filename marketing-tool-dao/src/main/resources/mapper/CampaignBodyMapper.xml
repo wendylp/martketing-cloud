@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,head_id as headId,node_type as nodeType,item_type as itemType,item_id as itemId,statistics_url as statisticsUrl,pos_x as posX,pos_y as posY,pos_z as posZ,audience_count as audienceCount,task_id as taskId,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,head_id as headId,node_type as nodeType,item_type as itemType,item_id as itemId,statistics_url as statisticsUrl,pos_x as posX,pos_y as posY,pos_z as posZ,audience_count as audienceCount,task_id as taskId,description as description,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -24,6 +24,7 @@
 		    	<if test="posZ != null"><![CDATA[ AND pos_z = #{posZ}]]></if>
 		    	<if test="audienceCount != null"><![CDATA[ AND audience_count = #{audienceCount}]]></if>
 		    	<if test="taskId != null"><![CDATA[ AND task_id = #{taskId}]]></if>
+		    	<if test="description != null"><![CDATA[ AND description = #{description}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
@@ -49,6 +50,7 @@
 		    	<if test="posZ != null"><![CDATA[pos_z = #{posZ},]]></if>
 		    	<if test="audienceCount != null"><![CDATA[audience_count = #{audienceCount},]]></if>
 		    	<if test="taskId != null"><![CDATA[task_id = #{taskId},]]></if>
+		    	<if test="description != null"><![CDATA[description = #{description},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
@@ -56,7 +58,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignBody" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_body (head_id,node_type,item_type,item_id,statistics_url,pos_x,pos_y,pos_z,audience_count,task_id,create_time)
+			INSERT INTO campaign_body (head_id,node_type,item_type,item_id,statistics_url,pos_x,pos_y,pos_z,audience_count,task_id,description,create_time)
 			VALUES
 			(
 			  #{headId},
@@ -69,6 +71,7 @@
 			  #{posZ},
 			  #{audienceCount},
 			  #{taskId},
+			  #{description},
 			  now()
 			)
 		]]>

@@ -27,6 +27,8 @@ public class CampaignBody extends BaseQuery {
 
     private Integer taskId;
 
+    private String description;
+
     private Byte status;
 
     private Date createTime;
@@ -119,6 +121,14 @@ public class CampaignBody extends BaseQuery {
 
     public void setTaskId(Integer taskId) {
         this.taskId = taskId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
     }
 
     public Byte getStatus() {
