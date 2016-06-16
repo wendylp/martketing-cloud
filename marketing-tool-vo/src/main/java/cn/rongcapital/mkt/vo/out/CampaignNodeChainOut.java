@@ -20,6 +20,8 @@ public class CampaignNodeChainOut {
 	
 	private String codeName;//对应campaign_node_item表里的name列
 	
+	private Integer audienceCount;
+	
 	private String posX;//x坐标
 	
 	private String posY;//Y坐标
@@ -149,6 +151,15 @@ public class CampaignNodeChainOut {
 
 	public void setCodeName(String codeName) {
 		this.codeName = codeName;
+	}
+
+	@JsonProperty("audience_count")
+	public Integer getAudienceCount() {
+		return audienceCount;
+	}
+
+	public void setAudienceCount(Integer audienceCount) {
+		this.audienceCount = audienceCount;
 	}
 	
 	

@@ -139,6 +139,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				}
 				//设置desc
 				campaignNodeChainOut.setDesc(c.getDescription());
+				campaignNodeChainOut.setAudienceCount(c.getAudienceCount());
 				
 				List<CampaignSwitchOut> campaignSwitchList = queryCampaignSwitchList(campaignHeadId,c.getItemId());
 				List<CampaignSwitchOut> campaignEndsList = queryCampaignEndsList(campaignHeadId,c.getItemId());

@@ -116,10 +116,11 @@ public class TaskManager {
 					TaskService taskService = (TaskService)cotext.getBean(serviceName);
 					taskService.task(taskSchedulePo.getId());
 				} catch (Exception e) {
-					logger.error("error in method cn.rongcapital.mkt.job.TaskManager.startTask(TaskSchedule)", e);
+					logger.error(e.getMessage(), e);
 				}
 		       }
 		};
+
 	    ScheduledFuture<?> scheduledFuture = taskSchedule.schedule(task, new CronTrigger(taskSchedulePo.getSchedule()));
 	    TaskManager.taskMap.put(taskSchedulePo.getId().toString(),scheduledFuture);
 	}
