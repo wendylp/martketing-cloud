@@ -146,6 +146,7 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
 
             for (T tempT : dataList) {
                 Map<String, Object> map = new HashMap<>();
+                map.put("data_id", ReflectionUtil.getObjectPropertyByName(tempT, "id"));
                 for (ImportTemplate importTemplate : importTemplateList) {
                     Object value = ReflectionUtil.getObjectPropertyByName(tempT,
                                     ReflectionUtil.recoverFieldName(importTemplate.getFieldCode()));
