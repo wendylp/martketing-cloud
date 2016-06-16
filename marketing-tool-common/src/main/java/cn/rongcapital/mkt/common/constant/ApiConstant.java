@@ -81,7 +81,7 @@ public class ApiConstant {
 	public static final byte TASK_STATUS_VALID = 0;//任务可运行
 	public static final byte TASK_STATUS_INVALID = 1;//任务不可运行
 	
-	public static final long TASK_SCAN_INTERVAL_MILLS = 1000*3600; //扫描任务表的时间间隔:毫秒
-	public static final long TASK_DO_INTERVAL_MILLS = 1000*3600; //扫描执行列表的时间间隔:毫秒
+	public static final long TASK_SCAN_INTERVAL_MILLS = 1000*3; //扫描任务表的时间间隔:毫秒
+	public static final long TASK_DO_INTERVAL_MILLS = 1000*3; //扫描执行列表的时间间隔:毫秒
 	
 }

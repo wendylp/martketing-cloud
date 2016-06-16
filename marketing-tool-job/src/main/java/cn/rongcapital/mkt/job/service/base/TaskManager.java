@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.service.base;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
@@ -80,7 +81,7 @@ public class TaskManager {
 				v.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
 				ScheduledFuture<?> scheduledFuture = TaskManager.taskMap.get(k);
 				if(null != scheduledFuture && scheduledFuture.isDone()) {
-					TaskManager.taskMap.remove(k);//从内存中删除
+					TaskManager.taskMap.remove(k);//任务从内存中删除
 				}
 			}
 		});
@@ -93,14 +94,20 @@ public class TaskManager {
 			if(v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_VALID && 
 			   v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_VALID) {
 				if(null == taskSchedule || taskSchedule.isCancelled()) {
-					startTask(v);
+					if(v.getStartTime() == null || v.getStartTime().before(Calendar.getInstance().getTime())) {
+						if(v.getEndTime() == null || v.getEndTime().after(Calendar.getInstance().getTime())) {
+							startTask(v);
+						}
+					}
 				}
 			}
 			if(v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID || 
-			   v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_INVALID) {
-				if(null != taskSchedule && !taskSchedule.isDone() && !taskSchedule.isCancelled()) {
-					taskSchedule.cancel(false);
-				}
+			   v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_INVALID ||
+			   (v.getStartTime() != null && v.getStartTime().after(Calendar.getInstance().getTime())) || 
+			   (v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime()))) {
+					if(null != taskSchedule && !taskSchedule.isDone() && !taskSchedule.isCancelled()) {
+						taskSchedule.cancel(false);
+					}
 			}
 		});
 	}
@@ -123,5 +130,6 @@ public class TaskManager {
 
 	    ScheduledFuture<?> scheduledFuture = taskSchedule.schedule(task, new CronTrigger(taskSchedulePo.getSchedule()));
 	    TaskManager.taskMap.put(taskSchedulePo.getId().toString(),scheduledFuture);
+	    
 	}
 }
