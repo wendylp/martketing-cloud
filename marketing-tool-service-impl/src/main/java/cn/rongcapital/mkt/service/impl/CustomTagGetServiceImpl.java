@@ -27,7 +27,7 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
     	
     	CustomTag customTag = new CustomTag(index,size);
 		List<CustomTag> customTagList = customTagDao.selectList(customTag);
-		
+		int totalCount = customTagDao.selectListCount(null);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                 ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		
@@ -43,6 +43,7 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
 			}
 		}
 		result.setTotal(result.getData().size());
+		result.setTotalCount(totalCount);
 		return result;
     }
 }
