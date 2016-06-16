@@ -12,7 +12,7 @@ public class CampaignSwitchIn {
 
     private String color;
 
-	@JsonProperty("next_itemId")
+	@JsonProperty("next_item_id")
 	public String getNextItemId() {
 		return nextItemId;
 	}
