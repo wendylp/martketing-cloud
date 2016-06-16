@@ -124,4 +124,5 @@ public class CampaignNodeItem extends BaseQuery {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+    
 }
