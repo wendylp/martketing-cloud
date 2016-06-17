@@ -33,15 +33,15 @@ public class BaseQuery {
     public BaseQuery(Integer startIndex, Integer pageSize) {
         this.pageSize = pageSize;
         this.startIndex = startIndex;
-        if (startIndex == null || startIndex < 1) {
+        if (this.startIndex == null || this.startIndex < 1) {
             this.startIndex = 1;
         }
 
-        if (pageSize == null || pageSize < 0) {
+        if (this.pageSize == null || this.pageSize < 0) {
             this.pageSize = 10;
         }
 
-        if (pageSize > 100) {
+        if (this.pageSize > 100) {
             this.pageSize = 100;
         }
 
