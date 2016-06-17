@@ -10,7 +10,6 @@
 
 package cn.rongcapital.mkt.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -850,15 +849,16 @@ public class MktApi {
      * @param: String method, String userToken, String ver, String mdType, List taskIdList
      * @return: Object
      */
-    @GET
+    @POST
     @Path("/mkt.data.filter.audiences.get")
     public Object getFilterAudiences(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotNull @QueryParam("md_type") Integer mdType, @NotEmpty @QueryParam("ver") String ver, @QueryParam("index") Integer index,
-                    @QueryParam("size") Integer size) { 
-
-        List<Integer> taskIdList = new ArrayList<>();
-        taskIdList.add(1);
+                    @NotNull @QueryParam("md_type") Integer mdType, 
+                    @NotEmpty @QueryParam("ver") String ver, 
+                    @NotEmpty @QueryParam("task_ids") List<Integer> taskIdList, 
+                    @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size,
+                    @QueryParam("size") List<Integer> contact_ids) {
         List<Map<String, Object>> audiencesList = dataGetFilterAudiencesService.getFilterAudiences(method, userToken,
                         ver, index, size, mdType, taskIdList);
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
