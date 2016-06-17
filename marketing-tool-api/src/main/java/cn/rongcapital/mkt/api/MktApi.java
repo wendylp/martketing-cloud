@@ -794,7 +794,6 @@ public class MktApi {
     @Path("/mkt.data.filter.contactway.get")
     public Object getFilterContactway(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotNull @QueryParam("md_type") Integer mdType,
                     @NotEmpty @QueryParam("ver") String ver) {
 
         List<ContactWay> contactWayList =
