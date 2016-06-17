@@ -31,6 +31,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.vo.in.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -107,6 +108,7 @@ import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
+import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -115,19 +117,6 @@ import cn.rongcapital.mkt.vo.LoginInput;
 import cn.rongcapital.mkt.vo.ModifyInput;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
-import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
-import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
-import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
-import cn.rongcapital.mkt.vo.in.CampaignHeadCreateIn;
-import cn.rongcapital.mkt.vo.in.CampaignHeadUpdateIn;
-import cn.rongcapital.mkt.vo.in.CampaignManualStartIn;
-import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
-import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
-import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
-import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
-import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
@@ -277,6 +266,8 @@ public class MktApi {
 	private GroupTagsSearchService groupTagsSearchService;
 	@Autowired
 	private WechatPublicAuthService wechatPublicAuthService;
+	@Autowired
+	private WechatPublicAuthCallbackService wechatPublicAuthCallbackService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1265,5 +1256,17 @@ public class MktApi {
 	public BaseOutput authWechatPublicAccount(@NotEmpty @QueryParam("user_token") String userToken,
 											@NotEmpty @QueryParam("ver") String ver){
 		return wechatPublicAuthService.authWechatPublicAccount();
+	}
+
+	/**
+	 * @功能简述: 微信公众号授权时大连那边所调用的回调接口
+	 * @param body
+	 * @return BaseOutput
+	 */
+	@POST
+	@Path("/mkt.data.inbound.wechat.public.auth.callback")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput wechatPublicAuthCallback(@Valid WechatPublicAuthCallbackIn wechatPublicAuthCallbackIn){
+		return wechatPublicAuthCallbackService.authWechatPublicCallback(wechatPublicAuthCallbackIn);
 	}
 }
