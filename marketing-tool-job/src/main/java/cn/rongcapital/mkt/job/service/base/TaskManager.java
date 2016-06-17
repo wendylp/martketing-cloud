@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.job.service.base;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
@@ -127,9 +129,23 @@ public class TaskManager {
 				}
 		       }
 		};
-
-	    ScheduledFuture<?> scheduledFuture = taskSchedule.schedule(task, new CronTrigger(taskSchedulePo.getSchedule()));
-	    TaskManager.taskMap.put(taskSchedulePo.getId().toString(),scheduledFuture);
-	    
+		ScheduledFuture<?> scheduledFuture = null;
+		String cronStr = taskSchedulePo.getSchedule();
+		if(StringUtils.isNotBlank(cronStr)) {
+			Trigger triger = new CronTrigger(cronStr);
+			scheduledFuture = taskSchedule.schedule(task,triger);
+		} else {
+			Date startTime = taskSchedulePo.getStartTime() == null ? 
+							 Calendar.getInstance().getTime():taskSchedulePo.getStartTime();
+			Integer interMinutes = taskSchedulePo.getIntervalMinutes();
+			if(null != interMinutes) {
+				scheduledFuture =  taskSchedule.scheduleAtFixedRate(task, startTime, interMinutes*60*1000);
+			}else {
+				scheduledFuture = taskSchedule.schedule(task,taskSchedulePo.getStartTime());
+			}
+		}
+		if(null != scheduledFuture) {
+			TaskManager.taskMap.put(taskSchedulePo.getId().toString(),scheduledFuture);
+		}
 	}
 }
