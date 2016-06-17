@@ -6,8 +6,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignSwitchIn {
 	
-    private Integer id;
-    
     private String nextItemId;
     
     private Byte drawType;//0:curveTriangle
@@ -22,15 +20,6 @@ public class CampaignSwitchIn {
 	public void setNextItemId(String nextItemId) {
 		this.nextItemId = nextItemId;
 	}
-
-	@JsonProperty("id")
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @JsonProperty("draw_type")
     public Byte getDrawType() {
