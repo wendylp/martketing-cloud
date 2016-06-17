@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
@@ -136,6 +137,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		if(null != out) {
 			return out;
 		}
+		deleteOldCampaignTask(campaignHeadId);//删除旧任务
 		deleteOldCampaignData(campaignHeadId);//删除旧数据 
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
 			Integer taskId= null;//定时任务id
@@ -153,9 +155,9 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_TRIGGER){
 				switch (campaignNodeChainIn.getItemType()) {
 				case ApiConstant.CAMPAIGN_ITEM_TRIGGER_TIMMER://定时触发
-//					TaskSchedule taskSchedule = initTaskSchedule(campaignNodeChainIn,campaignHeadId);
-//					taskScheduleDao.insert(taskSchedule);
-//					taskId = taskSchedule.getId();
+					TaskSchedule taskSchedule = initTaskTimeTrigger(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					CampaignTriggerTimer campaignTriggerTimer = initCampaignTriggerTimer(campaignNodeChainIn,campaignHeadId);
 					campaignTriggerTimerDao.insert(campaignTriggerTimer);
 					break;
@@ -164,34 +166,55 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_AUDIENCE){
 				switch (campaignNodeChainIn.getItemType()) {
 				case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_TARGET://目标人群
+					TaskSchedule taskSchedule = initTaskAudienceTarget(campaignNodeChainIn,campaignHeadId);
+					if(null != taskSchedule) {
+						taskScheduleDao.insert(taskSchedule);
+						taskId = taskSchedule.getId();
+					}
 					CampaignAudienceTarget campaignAudienceTarget = initCampaignAudienceTarget(campaignNodeChainIn,campaignHeadId);
 					CampaignAudienceTargetDao.insert(campaignAudienceTarget);
 					break;
 				}
 			}
 			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_DECISION){
+				TaskSchedule taskSchedule = null;
 				switch (campaignNodeChainIn.getItemType()) {
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_PROP_COMPARE://联系人属性比较
 					CampaignDecisionPropCompare campaignDecisionPropCompare = initCampaignDecisionPropCompare(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionPropCompareDao.insert(campaignDecisionPropCompare);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_SENT://微信图文是否发送
+					taskSchedule = initTaskWechatSent(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					CampaignDecisionWechatSent campaignDecisionWechatSent = initCampaignDecisionWechatSent(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionWechatSentDao.insert(campaignDecisionWechatSent);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_READ://微信图文是否查看
+					taskSchedule = initTaskWechatRead(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					CampaignDecisionWechatRead campaignDecisionWechatRead = initCampaignDecisionWechatRead(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionWechatReadDao.insert(campaignDecisionWechatRead);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_FORWARD://微信图文是否转发
+					taskSchedule = initTaskWechatForward(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					CampaignDecisionWechatForward campaignDecisionWechatForward = initCampaignDecisionWechatForward(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionWechatForwardDao.insert(campaignDecisionWechatForward);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_IS_SUBSCRIBE://是否订阅公众号
+					taskSchedule = initTaskWechatSubscribe(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					CampaignDecisionPubFans campaignDecisionPubFans = initCampaignDecisionPubFans(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionPubFansDao.insert(campaignDecisionPubFans);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_IS_PRIVT_FRIEND://是否个人号好友
+					taskSchedule = initTaskWechatPrivFriend(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					CampaignDecisionPrvtFriends campaignDecisionPrvtFriends = initCampaignDecisionPrvtFriends(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionPrvtFriendsDao.insert(campaignDecisionPrvtFriends);
 					break;
@@ -310,11 +333,128 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);
 	}
 	
-	private TaskSchedule initTaskSchedule(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+	private void deleteOldCampaignTask (int campaignHeadId) {
+		CampaignBody campaignBody = new CampaignBody();
+		campaignBody.setHeadId(campaignHeadId);
+		List<CampaignBody> campaignBodyList = campaignBodyDao.selectList(campaignBody);
+		for(CampaignBody cb:campaignBodyList) {
+			if(null != cb.getTaskId()) {
+				taskScheduleDao.physicalDeleteById(cb.getTaskId());
+			}
+		}
+	}
+	
+	private TaskSchedule initTaskTimeTrigger(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		TaskSchedule taskSchedule = new TaskSchedule();
 		CampaignTriggerTimerIn campaignTriggerTimerIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignTriggerTimerIn.class);
-		campaignTriggerTimerIn.getStartTime();
-		campaignTriggerTimerIn.getEndTime();
+		Date startTime = DateUtil.getDateFromString(campaignTriggerTimerIn.getStartTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+		Date endTime = DateUtil.getDateFromString(campaignTriggerTimerIn.getEndTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+		taskSchedule.setStartTime(startTime);
+		taskSchedule.setEndTime(endTime);
+		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_TIME_TRIGGER);
+		CampaignHead ch =  new CampaignHead();
+		ch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		ch.setId(campaignHeadId);
+		List<CampaignHead> chList = campaignHeadDao.selectList(ch);
+		if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(chList)){
+			if(chList.get(0).getPublishStatus()==ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH) {
+				taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_VALID);//如果活动是已发布状态,设置触发任务为可运行状态
+			}else {
+				taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//如果活动不是已发布状态,设置触发任务为不可运行状态
+			}
+		} else {
+			taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//如果没有查询到活动head,设置触发任务为不可运行状态
+		}
+		return taskSchedule;
+	}
+	
+	private Integer tranlateToMinutes(int refreshIntv,int refreshType) {
+		Integer intervalMinutes = null;
+		switch (refreshType) {
+		case 0://小时
+			intervalMinutes = 60;
+			break;
+		case 1://天
+			intervalMinutes = 60 * 24;
+			break;
+		case 2://周
+			intervalMinutes = 60 * 24 * 7;
+			break;
+		case 3://月
+			intervalMinutes = 60 * 24 * 30;
+			break;
+		default:
+			break;
+		}
+		return intervalMinutes;
+	}
+	
+	private TaskSchedule initTaskAudienceTarget(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
+		byte allowedNew = campaignAudienceTargetIn.getAllowedNew();
+		if(allowedNew==0) {
+			TaskSchedule taskSchedule = new TaskSchedule();
+			Integer intervalMinutes = tranlateToMinutes(campaignAudienceTargetIn.getRefreshInterval(), 
+					          	      					campaignAudienceTargetIn.getRefreshIntervalType());
+			taskSchedule.setIntervalMinutes(intervalMinutes);
+			taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_AUDIENCE_TARGET);
+			taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		}
+		return null;
+	}
+	
+	private TaskSchedule initTaskWechatSent(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignDecisionWechatSentIn campaignDecisionWechatSentIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatSentIn.class);
+		TaskSchedule taskSchedule = new TaskSchedule();
+		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatSentIn.getRefreshInterval(), 
+													campaignDecisionWechatSentIn.getRefreshIntervalType());
+		taskSchedule.setIntervalMinutes(intervalMinutes);
+		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SENT);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		return taskSchedule;
+	}
+	
+	private TaskSchedule initTaskWechatRead(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignDecisionWechatReadIn campaignDecisionWechatReadIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatReadIn.class);
+		TaskSchedule taskSchedule = new TaskSchedule();
+		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatReadIn.getRefreshInterval(), 
+													campaignDecisionWechatReadIn.getRefreshIntervalType());
+		taskSchedule.setIntervalMinutes(intervalMinutes);
+		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_READ);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		return taskSchedule;
+	}
+	
+	private TaskSchedule initTaskWechatForward(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignDecisionWechatForwardIn campaignDecisionWechatForwardIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatForwardIn.class);
+		TaskSchedule taskSchedule = new TaskSchedule();
+		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatForwardIn.getRefreshInterval(), 
+													campaignDecisionWechatForwardIn.getRefreshIntervalType());
+		taskSchedule.setIntervalMinutes(intervalMinutes);
+		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_FORWARD);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		return taskSchedule;
+	}
+	
+	private TaskSchedule initTaskWechatSubscribe(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignDecisionPubFansIn campaignDecisionPubFansIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPubFansIn.class);
+		TaskSchedule taskSchedule = new TaskSchedule();
+		Integer intervalMinutes = tranlateToMinutes(campaignDecisionPubFansIn.getRefreshInterval(), 
+													campaignDecisionPubFansIn.getRefreshIntervalType());
+		taskSchedule.setIntervalMinutes(intervalMinutes);
+		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SUBSCRIBE);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		return taskSchedule;
+	}
+	
+	private TaskSchedule initTaskWechatPrivFriend(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignDecisionPrvtFriendsIn campaignDecisionPrvtFriendsIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPrvtFriendsIn.class);
+		TaskSchedule taskSchedule = new TaskSchedule();
+		Integer intervalMinutes = tranlateToMinutes(campaignDecisionPrvtFriendsIn.getRefreshInterval(), 
+													campaignDecisionPrvtFriendsIn.getRefreshIntervalType());
+		taskSchedule.setIntervalMinutes(intervalMinutes);
+		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_PRV_FRIEND);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
 		return taskSchedule;
 	}
 	

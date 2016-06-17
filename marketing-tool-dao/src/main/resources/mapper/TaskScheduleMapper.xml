@@ -110,5 +110,10 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<delete id="physicalDeleteById" parameterType="int">
+		delete 
+		<include refid="QUERY_FROM_TABLE"/>
+		where id = #{taskId}
+	</delete>
 	
 </mapper>
