@@ -48,7 +48,7 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
                 baseOutput.getData().add(map);
             }
         }
-        
+
         baseOutput.setColNames(generateColumnNameList());
 
         return baseOutput;
