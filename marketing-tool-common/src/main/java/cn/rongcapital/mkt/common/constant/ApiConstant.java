@@ -49,6 +49,8 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_SWITCH_SWITCH = 0;//判断类型
 	public static final byte CAMPAIGN_SWITCH_ENDS = 1;//多分支类型
 	
+	public static final byte CAMPAIGN_PARENT_NODE_PTYPE = -1;//父节点的ptype列值
+	
 	public static final byte CAMPAIGN_NODE_TRIGGER = 0;//触发
 	public static final byte CAMPAIGN_NODE_AUDIENCE = 1;//受众
 	public static final byte CAMPAIGN_NODE_DECISION = 2;//决策
@@ -83,5 +85,13 @@ public class ApiConstant {
 	
 	public static final long TASK_SCAN_INTERVAL_MILLS = 1000*3; //扫描任务表的时间间隔:毫秒
 	public static final long TASK_DO_INTERVAL_MILLS = 1000*3; //扫描执行列表的时间间隔:毫秒
+	
+	public static final String TASK_SERVICE_NAME_CAMPAIGN_TIME_TRIGGER = "campaignTimeTriggerServiceImpl";
+	public static final String TASK_SERVICE_NAME_CAMPAIGN_AUDIENCE_TARGET = "campaignAudienceTargetServiceImpl";
+	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SENT = "campaignWechatSentServiceImpl";
+	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_READ = "campaignWechatReadServiceImpl";
+	public static final String  TASK_SERVICE_NAME_CAMPAIGN_WECHAT_FORWARD = "campaignWechatForwardServiceImpl";
+	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SUBSCRIBE = "campaignWechatSubscribeServiceImpl";
+	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_PRV_FRIEND = "campaignWechatPrivFriendServiceImpl";
 	
 }

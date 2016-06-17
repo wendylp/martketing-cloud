@@ -133,9 +133,19 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				campaignNodeItem.setPtype(c.getNodeType());
 				List<CampaignNodeItem> campaignNodeItemList = campaignNodeItemDao.selectList(campaignNodeItem);
 				if(CollectionUtils.isNotEmpty(campaignNodeItemList)) {
-					campaignNodeChainOut.setCode(campaignNodeItemList.get(0).getCode());
-					campaignNodeChainOut.setIcon(campaignNodeItemList.get(0).getIcon());
-					campaignNodeChainOut.setCodeName(campaignNodeItemList.get(0).getName());
+					CampaignNodeItem cni = campaignNodeItemList.get(0);
+					campaignNodeChainOut.setCode(cni.getCode());
+					campaignNodeChainOut.setIcon(cni.getIcon());
+					campaignNodeChainOut.setCodeName(cni.getName());
+					//获取父节点的code值
+					if(cni.getPtype() != ApiConstant.CAMPAIGN_PARENT_NODE_PTYPE) {//不是父节点
+						campaignNodeItem = new CampaignNodeItem();
+						campaignNodeItem.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+						campaignNodeItem.setType(cni.getPtype());
+						campaignNodeItem.setPtype(ApiConstant.CAMPAIGN_PARENT_NODE_PTYPE);
+						List<CampaignNodeItem> cnilist = campaignNodeItemDao.selectList(campaignNodeItem);
+						campaignNodeChainOut.setParentCode(cnilist.get(0).getCode());
+					}
 				}
 				//设置desc
 				campaignNodeChainOut.setDesc(c.getDescription());

@@ -14,6 +14,8 @@ public class CampaignNodeChainOut {
 	
 	private String code;
 	
+	private String parentCode;//父节点的code
+	
 	private String icon;
 	
 	private String desc;//对应campaign_body表的description
@@ -171,6 +173,15 @@ public class CampaignNodeChainOut {
 
 	public void setStatisticsUrl(String statisticsUrl) {
 		this.statisticsUrl = statisticsUrl;
+	}
+
+	@JsonProperty("parent_code")
+	public String getParentCode() {
+		return parentCode;
+	}
+
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
 	}
 	
 	
