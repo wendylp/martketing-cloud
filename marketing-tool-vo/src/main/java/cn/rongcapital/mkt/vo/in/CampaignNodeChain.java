@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignNodeChain {
 	
 	@NotNull
