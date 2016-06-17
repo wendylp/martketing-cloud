@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,9 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
         taggroup.setParentGroupId(Long.valueOf(tagGroupId));
         taggroup.setStartIndex(index);
         taggroup.setPageSize(size);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         List<Taggroup> groupList = taggroupDao.selectList(taggroup);
         if (CollectionUtils.isNotEmpty(groupList)) {
             baseOutput.setTotal(groupList.size());
@@ -43,7 +47,7 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("tag_group_id", group.getId());
                 map.put("tag_group_name", group.getName());
-                map.put("tag_group_creat_time", group.getCreateTime());
+                map.put("tag_group_creat_time", sdf.format(group.getCreateTime()));
                 map.put("tag_count", count);
                 baseOutput.getData().add(map);
             }
