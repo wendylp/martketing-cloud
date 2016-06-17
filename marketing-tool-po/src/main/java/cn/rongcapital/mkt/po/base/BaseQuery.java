@@ -45,7 +45,7 @@ public class BaseQuery {
             this.pageSize = 100;
         }
 
-        this.startIndex = (startIndex - 1) * this.pageSize;
+        this.startIndex = (this.startIndex - 1) * this.pageSize;
     }
 
 
