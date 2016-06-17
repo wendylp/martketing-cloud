@@ -3,8 +3,10 @@ package cn.rongcapital.mkt.vo.in;
 
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignActionWaitIn {
 	
 	private Integer campaignHeadId;

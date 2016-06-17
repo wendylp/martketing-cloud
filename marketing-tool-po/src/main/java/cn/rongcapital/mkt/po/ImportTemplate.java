@@ -23,6 +23,12 @@ public class ImportTemplate extends BaseQuery implements Comparable<ImportTempla
 
     private Date updateTime;
 
+    public ImportTemplate() {}
+
+    public ImportTemplate(Integer startIndex, Integer pageSize) {
+        super(startIndex, pageSize);
+    }
+
     public Integer getId() {
         return id;
     }

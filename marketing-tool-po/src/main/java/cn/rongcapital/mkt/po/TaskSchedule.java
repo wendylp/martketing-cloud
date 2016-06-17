@@ -13,6 +13,12 @@ public class TaskSchedule extends BaseQuery {
 
     private String taskType;
 
+    private Date startTime;
+
+    private Date endTime;
+
+    private Integer intervalMinutes;
+
     private String schedule;
 
     private String serviceName;
@@ -55,6 +61,30 @@ public class TaskSchedule extends BaseQuery {
 
     public void setTaskType(String taskType) {
         this.taskType = taskType == null ? null : taskType.trim();
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Integer getIntervalMinutes() {
+        return intervalMinutes;
+    }
+
+    public void setIntervalMinutes(Integer intervalMinutes) {
+        this.intervalMinutes = intervalMinutes;
     }
 
     public String getSchedule() {

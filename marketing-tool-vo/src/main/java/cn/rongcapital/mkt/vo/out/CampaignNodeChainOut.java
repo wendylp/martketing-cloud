@@ -20,11 +20,15 @@ public class CampaignNodeChainOut {
 	
 	private String codeName;//对应campaign_node_item表里的name列
 	
+	private Integer audienceCount;
+	
 	private String posX;//x坐标
 	
 	private String posY;//Y坐标
 	
 	private String posZ;//X坐标
+	
+	private String statisticsUrl;//campaign_node_item表里的statistics_url
 	
 	private List<CampaignSwitchOut> campaignSwitchList;
 	
@@ -149,6 +153,24 @@ public class CampaignNodeChainOut {
 
 	public void setCodeName(String codeName) {
 		this.codeName = codeName;
+	}
+
+	@JsonProperty("audience_count")
+	public Integer getAudienceCount() {
+		return audienceCount == null?0:audienceCount;
+	}
+
+	public void setAudienceCount(Integer audienceCount) {
+		this.audienceCount = audienceCount;
+	}
+
+	@JsonProperty("url")
+	public String getStatisticsUrl() {
+		return statisticsUrl;
+	}
+
+	public void setStatisticsUrl(String statisticsUrl) {
+		this.statisticsUrl = statisticsUrl;
 	}
 	
 	

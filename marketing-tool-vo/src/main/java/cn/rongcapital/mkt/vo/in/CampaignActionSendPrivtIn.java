@@ -1,8 +1,10 @@
 package cn.rongcapital.mkt.vo.in;
 
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignActionSendPrivtIn {
 	
 	private Integer campaignHeadId;

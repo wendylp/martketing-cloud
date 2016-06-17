@@ -5,11 +5,13 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignBodyCreateIn extends BaseInput {
 
 	@NotNull

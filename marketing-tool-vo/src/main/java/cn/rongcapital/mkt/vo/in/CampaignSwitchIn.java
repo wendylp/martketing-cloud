@@ -1,7 +1,9 @@
 package cn.rongcapital.mkt.vo.in;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignSwitchIn {
 	
     private Integer id;
@@ -12,7 +14,7 @@ public class CampaignSwitchIn {
 
     private String color;
 
-	@JsonProperty("next_itemId")
+	@JsonProperty("next_item_id")
 	public String getNextItemId() {
 		return nextItemId;
 	}

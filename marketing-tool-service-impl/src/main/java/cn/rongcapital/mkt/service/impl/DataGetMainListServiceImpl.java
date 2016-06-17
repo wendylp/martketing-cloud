@@ -81,7 +81,7 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
         List<Map<String, Object>> resultList = new ArrayList<>();
-        ImportTemplate paramImportTemplate = new ImportTemplate();
+        ImportTemplate paramImportTemplate = new ImportTemplate(index, size);
         paramImportTemplate.setSelected(Boolean.TRUE);
         paramImportTemplate.setTemplType(dataType);
         List<ImportTemplate> importTemplateList = importTemplateDao.selectSelectedTemplateList(paramImportTemplate);

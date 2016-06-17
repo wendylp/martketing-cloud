@@ -24,27 +24,26 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
 
     @Override
     public BaseOutput getCustomTagList(String method, String userToken, Integer index, Integer size) {
-    	
-    	CustomTag customTag = new CustomTag();
-    	customTag.setStartIndex(index);
-    	customTag.setPageSize(size);
-		List<CustomTag> customTagList = customTagDao.selectList(customTag);
-		
-		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
-                ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
-		
-		if (customTagList != null && !customTagList.isEmpty()) {
-			for (CustomTag tag : customTagList) {
-				Map<String,Object> map = new HashMap<String,Object>();
-				map.put("tag_id", tag.getId());
-				map.put("tag_name", tag.getName());
-				DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-				map.put("create_time", format.format(tag.getCreateTime()));
-				map.put("cover_audience_count", tag.getCoverAudienceCount());
-				result.getData().add(map);
-			}
-		}
-		result.setTotal(result.getData().size());
-		return result;
+
+        CustomTag customTag = new CustomTag(index, size);
+        List<CustomTag> customTagList = customTagDao.selectList(customTag);
+        int totalCount = customTagDao.selectListCount(null);
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+
+        if (customTagList != null && !customTagList.isEmpty()) {
+            for (CustomTag tag : customTagList) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("tag_id", tag.getId());
+                map.put("tag_name", tag.getName());
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                map.put("create_time", format.format(tag.getCreateTime()));
+                map.put("cover_audience_count", tag.getCoverAudienceCount());
+                result.getData().add(map);
+            }
+        }
+        result.setTotal(result.getData().size());
+        result.setTotalCount(totalCount);
+        return result;
     }
 }

@@ -1,11 +1,14 @@
 package cn.rongcapital.mkt.vo.in;
 
 import java.util.List;
+
 import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignNodeChainIn {
 	
 	@NotEmpty

@@ -33,8 +33,8 @@ public class BaseQuery {
     public BaseQuery(Integer startIndex, Integer pageSize) {
         this.pageSize = pageSize;
         this.startIndex = startIndex;
-        if (startIndex == null || startIndex < 0) {
-            this.startIndex = 0;
+        if (startIndex == null || startIndex < 1) {
+            this.startIndex = 1;
         }
 
         if (pageSize == null || pageSize < 0) {
@@ -45,7 +45,7 @@ public class BaseQuery {
             this.pageSize = 100;
         }
 
-        this.startIndex = (startIndex - 1) * this.pageSize;
+        this.startIndex = (this.startIndex - 1) * this.pageSize;
     }
 
 
