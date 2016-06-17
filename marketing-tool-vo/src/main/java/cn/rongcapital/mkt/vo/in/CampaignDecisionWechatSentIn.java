@@ -6,8 +6,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignDecisionWechatSentIn {
 	
-    private Integer id;
-
     private Integer campaignHeadId;
 
     private String itemId;
@@ -25,15 +23,6 @@ public class CampaignDecisionWechatSentIn {
     private Integer wechatH5Id;
 
     private String wechatH5Name;
-
-    @JsonProperty("id")
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {

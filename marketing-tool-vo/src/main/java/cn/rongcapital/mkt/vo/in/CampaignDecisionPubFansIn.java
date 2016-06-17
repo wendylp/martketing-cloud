@@ -5,7 +5,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignDecisionPubFansIn {
-    private Integer id;
 
     private Integer campaignHeadId;
 
@@ -22,16 +21,6 @@ public class CampaignDecisionPubFansIn {
     private Integer refreshInterval;
 
     private Byte refreshIntervalType;
-
-
-    @JsonProperty("id")
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {

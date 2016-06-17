@@ -6,8 +6,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignDecisionPropCompareIn {
 	
-    private Integer id;
-
     private Integer campaignHeadId;
 
     private String itemId;
@@ -38,15 +36,6 @@ public class CampaignDecisionPropCompareIn {
 	public void setExlude(Byte exlude) {
 		this.exlude = exlude;
 	}
-
-	@JsonProperty("id")
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @JsonProperty("campaign_head_id")
     public Integer getCampaignHeadId() {
