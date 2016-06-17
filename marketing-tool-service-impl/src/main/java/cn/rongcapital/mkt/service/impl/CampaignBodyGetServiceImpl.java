@@ -525,6 +525,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				cso.setColor(cs.getColor());
 				cso.setDrawType(cs.getDrawType());
 				cso.setNextItemId(cs.getNextItemId());
+				campaignSwitchOutList.add(cso);
 			}
 		}
 		return campaignSwitchOutList;
@@ -544,6 +545,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				cso.setColor(cs.getColor());
 				cso.setDrawType(cs.getDrawType());
 				cso.setNextItemId(cs.getNextItemId());
+				campaignSwitchOutList.add(cso);
 			}
 		}
 		return campaignSwitchOutList;
