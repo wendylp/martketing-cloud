@@ -183,13 +183,7 @@
 		<foreach collection="batchIdList" item="batchId" open="(" separator="," close=")">
 			<![CDATA[#{batchId}]]>
 		</foreach>
-		<![CDATA[AND deleted=0]]>
-		<if test="paramObj != null">
-			<if test="paramObj.startIndex != null and paramObj.startIndex &gt;= 0 and paramObj.pageSize != null and paramObj.pageSize &gt; 0">
-				<![CDATA[LIMIT #{paramObj}.startIndex,#{paramObj}.pageSize]]>
-			</if>	
-		</if>
+		<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 	</select>	
-	
 	
 </mapper>

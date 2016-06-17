@@ -107,7 +107,8 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                     List<Integer> taskIdList, T paramObj, D dao) {
 
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("paramObj", paramObj);
+        paramMap.put("startIndex", paramObj.getStartIndex());
+        paramMap.put("pageSize", paramObj.getPageSize());
         paramMap.put("batchIdList", taskIdList);
 
         List<T> dataList = dao.selectByBatchId(paramMap);
