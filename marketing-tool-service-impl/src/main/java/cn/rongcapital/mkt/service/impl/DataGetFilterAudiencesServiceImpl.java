@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.enums.ContactwayEnum;
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.util.ReflectionUtil;
 import cn.rongcapital.mkt.dao.DataArchPointDao;
@@ -110,6 +112,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                     List<Integer> taskIdList, List<Integer> contactIdList, T paramObj, D dao) {
 
         Map<String, Object> paramMap = new HashMap<>();
+        filterContactId(contactIdList, dao);
         paramMap.put("startIndex", paramObj.getStartIndex());
         paramMap.put("pageSize", paramObj.getPageSize());
         paramMap.put("batchIdList", taskIdList);
@@ -138,6 +141,33 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
                 resultList.add(map);
             }
+        }
+
+        return resultList;
+    }
+
+    private <D extends BaseDataFilterDao<?>> List<Integer> filterContactId(List<Integer> contactIdList, D dao) {
+        List<Integer> resultList = new ArrayList<>();
+
+        if (CollectionUtils.isEmpty(contactIdList)) {
+            return resultList;
+        }
+
+
+        for (Integer contactId : contactIdList) {
+            String columnName = ContactwayEnum.getColumnNameById(contactId);
+            if (columnName == null) {
+                continue;
+            } else {
+                List<String> columnNameList = dao.selectColumns();
+                for (String str : columnNameList) {
+                    if (columnName.equalsIgnoreCase(str)) {
+                        resultList.add(contactId);
+                        break;
+                    }
+                }
+            }
+
         }
 
         return resultList;
