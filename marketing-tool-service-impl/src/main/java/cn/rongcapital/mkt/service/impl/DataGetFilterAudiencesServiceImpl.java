@@ -90,6 +90,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         if (importTemplateList != null && !importTemplateList.isEmpty()) {
             for (ImportTemplate importTemplate : importTemplateList) {
                 Map<String, Object> map = new HashMap<>();
+                map.put("col_id", importTemplate.getId());
                 map.put("col_name", importTemplate.getFieldName());
                 map.put("col_code", importTemplate.getFieldCode());
                 columnList.add(map);
