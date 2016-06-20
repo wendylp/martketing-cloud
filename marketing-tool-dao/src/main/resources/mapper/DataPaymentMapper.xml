@@ -184,7 +184,9 @@
 				<![CDATA[AND wechat is not null]]>
 			</if>
 		</foreach>
-		<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
+		<if test="pageSize != null and pageSize &gt; 0">
+			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
+		</if>
 	</select>
 	
 	<select id="selectColumns" resultType="java.lang.String">
@@ -193,7 +195,7 @@
 		FROM 
 			information_schema.columns 
 		WHERE 
-			table_name='data_party'
+			table_name='data_payment'
 	</select>
 	
 </mapper>
