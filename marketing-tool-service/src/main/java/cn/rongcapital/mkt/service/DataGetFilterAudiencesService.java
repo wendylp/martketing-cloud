@@ -23,7 +23,7 @@ public interface DataGetFilterAudiencesService {
      * @return
      * 
      */
-    public <T extends BaseQuery> List<Map<String, Object>> getFilterAudiences(String method,
-                    String userToken, String ver, Integer index, Integer size, Integer mdType,
-                    List<Integer> taskIdList);
+    public <T extends BaseQuery> List<Map<String, Object>> getFilterAudiences(String method, String userToken,
+                    String ver, Integer index, Integer size, Integer mdType, List<Integer> taskIdList,
+                    List<Integer> contactIds);
 }

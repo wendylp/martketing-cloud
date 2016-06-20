@@ -68,33 +68,34 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
     @Override
     public <T extends BaseQuery> List<Map<String, Object>> getFilterAudiences(String method, String userToken,
-                    String ver, Integer index, Integer size, Integer dataType, List<Integer> taskIdList) {
+                    String ver, Integer index, Integer size, Integer dataType, List<Integer> taskIdList,
+                    List<Integer> contactIds) {
 
         // 这代码写的太2了
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             DataParty paramObj = new DataParty(index, size);
-            return getData(dataType, taskIdList, paramObj, dataPartyDao);
+            return getData(dataType, taskIdList, contactIds,paramObj, dataPartyDao);
         } else if (dataType == DataTypeEnum.POPULATION.getCode()) {
             DataPopulation paramObj = new DataPopulation(index, size);
-            return getData(dataType, taskIdList, paramObj, dataPopulationDao);
+            return getData(dataType, taskIdList, contactIds,paramObj, dataPopulationDao);
         } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
             DataCustomerTags paramObj = new DataCustomerTags(index, size);
-            return getData(dataType, taskIdList, paramObj, dataCustomerTagsDao);
+            return getData(dataType, taskIdList, contactIds,paramObj, dataCustomerTagsDao);
         } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
             DataArchPoint paramObj = new DataArchPoint(index, size);
-            return getData(dataType, taskIdList, paramObj, dataArchPointDao);
+            return getData(dataType, taskIdList, contactIds,paramObj, dataArchPointDao);
         } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
             DataMember paramObj = new DataMember(index, size);
-            return getData(dataType, taskIdList, paramObj, dataMemberDao);
+            return getData(dataType, taskIdList, contactIds,paramObj, dataMemberDao);
         } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
             DataLogin paramObj = new DataLogin(index, size);
-            return getData(dataType, taskIdList, paramObj, dataLoginDao);
+            return getData(dataType, taskIdList, contactIds,paramObj, dataLoginDao);
         } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
             DataPayment paramObj = new DataPayment(index, size);
-            return getData(dataType, taskIdList, paramObj, dataPaymentDao);
+            return getData(dataType, taskIdList, contactIds,paramObj, dataPaymentDao);
         } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
             DataShopping paramObj = new DataShopping(index, size);
-            return getData(dataType, taskIdList, paramObj, dataShoppingDao);
+            return getData(dataType, taskIdList, contactIds, paramObj, dataShoppingDao);
         } else {
             logger.error("传入错误的data type : {}", dataType);
         }
@@ -104,12 +105,13 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private <T extends BaseQuery, D extends BaseDataFilterDao> List<Map<String, Object>> getData(Integer mdType,
-                    List<Integer> taskIdList, T paramObj, D dao) {
+                    List<Integer> taskIdList, List<Integer> contactIdList, T paramObj, D dao) {
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("startIndex", paramObj.getStartIndex());
         paramMap.put("pageSize", paramObj.getPageSize());
         paramMap.put("batchIdList", taskIdList);
+        paramMap.put("contactIdList", contactIdList);
 
         List<T> dataList = dao.selectByBatchId(paramMap);
         List<Map<String, Object>> resultList = new ArrayList<>();
