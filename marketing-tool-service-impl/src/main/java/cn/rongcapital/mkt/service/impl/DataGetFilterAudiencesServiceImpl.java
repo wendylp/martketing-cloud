@@ -7,12 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.ContactwayEnum;
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.util.ReflectionUtil;
@@ -37,6 +41,7 @@ import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.ImportTemplate;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
+import cn.rongcapital.mkt.vo.out.DataGetMainListOut;
 
 @Service
 public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiencesService {
@@ -71,40 +76,60 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
     private DataShoppingDao dataShoppingDao;
 
     @Override
-    public <T extends BaseQuery> List<Map<String, Object>> getFilterAudiences(String method, String userToken,
+    public <T extends BaseQuery> Object getFilterAudiences(String method, String userToken,
                     String ver, Integer index, Integer size, Integer dataType, List<Integer> taskIdList,
                     List<Integer> contactIds) {
+        DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(),
+                        ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        ImportTemplate paramImportTemplate = new ImportTemplate(index, size);
+        paramImportTemplate.setSelected(Boolean.TRUE);
+        paramImportTemplate.setTemplType(dataType);
+        List<ImportTemplate> importTemplateList = importTemplateDao.selectSelectedTemplateList(paramImportTemplate);
+        List<Map<String, Object>> columnList = new ArrayList<>();
+        if (importTemplateList != null && !importTemplateList.isEmpty()) {
+            for (ImportTemplate importTemplate : importTemplateList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("col_name", importTemplate.getFieldName());
+                map.put("col_code", importTemplate.getFieldCode());
+                columnList.add(map);
+                result.setMd_type(importTemplate.getTemplType());
+            }
+        }
 
         // 这代码写的太2了
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             DataParty paramObj = new DataParty(index, size);
-            return getData(dataType, taskIdList, contactIds, paramObj, dataPartyDao);
+            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPartyDao);
         } else if (dataType == DataTypeEnum.POPULATION.getCode()) {
             DataPopulation paramObj = new DataPopulation(index, size);
-            return getData(dataType, taskIdList, contactIds, paramObj, dataPopulationDao);
+            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPopulationDao);
         } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
             DataCustomerTags paramObj = new DataCustomerTags(index, size);
-            return getData(dataType, taskIdList, contactIds, paramObj, dataCustomerTagsDao);
+            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataCustomerTagsDao);
         } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
             DataArchPoint paramObj = new DataArchPoint(index, size);
-            return getData(dataType, taskIdList, contactIds, paramObj, dataArchPointDao);
+            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataArchPointDao);
         } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
             DataMember paramObj = new DataMember(index, size);
-            return getData(dataType, taskIdList, contactIds, paramObj, dataMemberDao);
+            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataMemberDao);
         } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
             DataLogin paramObj = new DataLogin(index, size);
-            return getData(dataType, taskIdList, contactIds, paramObj, dataLoginDao);
+            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataLoginDao);
         } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
             DataPayment paramObj = new DataPayment(index, size);
-            return getData(dataType, taskIdList, contactIds, paramObj, dataPaymentDao);
+            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPaymentDao);
         } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
             DataShopping paramObj = new DataShopping(index, size);
-            return getData(dataType, taskIdList, contactIds, paramObj, dataShoppingDao);
+            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataShoppingDao);
         } else {
             logger.error("传入错误的data type : {}", dataType);
         }
 
-        return null;
+        result.getData().addAll(resultList);
+        result.setTotal(result.getData().size());
+        result.getColNames().addAll(columnList);
+        return Response.ok().entity(result).build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

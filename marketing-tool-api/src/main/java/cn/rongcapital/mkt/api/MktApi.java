@@ -854,19 +854,12 @@ public class MktApi {
     @Path("/mkt.data.filter.audiences.get")
     @Consumes({MediaType.APPLICATION_JSON})
     public Object getFilterAudiences(@Valid DataGetFilterAudiencesIn dataGetFilterAudiencesIn) {
-        List<Map<String, Object>> audiencesList = dataGetFilterAudiencesService.getFilterAudiences(
-                        dataGetFilterAudiencesIn.getMethod(), dataGetFilterAudiencesIn.getUserToken(),
-                        dataGetFilterAudiencesIn.getVer(), dataGetFilterAudiencesIn.getIndex(),
-                        dataGetFilterAudiencesIn.getSize(), dataGetFilterAudiencesIn.getMdType(),
-                        dataGetFilterAudiencesIn.getTaskIds(), dataGetFilterAudiencesIn.getContactIds());
-        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-                        ApiConstant.INT_ZERO, null);
-        result.getData().addAll(audiencesList);
-        result.setTotal(result.getData().size());
-
-        return Response.ok().entity(result).build();
+        return dataGetFilterAudiencesService.getFilterAudiences(dataGetFilterAudiencesIn.getMethod(),
+                        dataGetFilterAudiencesIn.getUserToken(), dataGetFilterAudiencesIn.getVer(),
+                        dataGetFilterAudiencesIn.getIndex(), dataGetFilterAudiencesIn.getSize(),
+                        dataGetFilterAudiencesIn.getMdType(), dataGetFilterAudiencesIn.getTaskIds(),
+                        dataGetFilterAudiencesIn.getContactIds());
     }
-
 
 	/**
 	 * @功能简述: 获取某个微信账号下的好友/粉丝/群组信息
