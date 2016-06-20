@@ -52,5 +52,4 @@ public enum ContactwayEnum {
 
         return null;
     }
-
 }
