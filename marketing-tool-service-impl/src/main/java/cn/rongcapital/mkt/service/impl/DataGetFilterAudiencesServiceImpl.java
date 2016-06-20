@@ -1,6 +1,8 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,25 +76,25 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         // 这代码写的太2了
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             DataParty paramObj = new DataParty(index, size);
-            return getData(dataType, taskIdList, contactIds,paramObj, dataPartyDao);
+            return getData(dataType, taskIdList, contactIds, paramObj, dataPartyDao);
         } else if (dataType == DataTypeEnum.POPULATION.getCode()) {
             DataPopulation paramObj = new DataPopulation(index, size);
-            return getData(dataType, taskIdList, contactIds,paramObj, dataPopulationDao);
+            return getData(dataType, taskIdList, contactIds, paramObj, dataPopulationDao);
         } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
             DataCustomerTags paramObj = new DataCustomerTags(index, size);
-            return getData(dataType, taskIdList, contactIds,paramObj, dataCustomerTagsDao);
+            return getData(dataType, taskIdList, contactIds, paramObj, dataCustomerTagsDao);
         } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
             DataArchPoint paramObj = new DataArchPoint(index, size);
-            return getData(dataType, taskIdList, contactIds,paramObj, dataArchPointDao);
+            return getData(dataType, taskIdList, contactIds, paramObj, dataArchPointDao);
         } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
             DataMember paramObj = new DataMember(index, size);
-            return getData(dataType, taskIdList, contactIds,paramObj, dataMemberDao);
+            return getData(dataType, taskIdList, contactIds, paramObj, dataMemberDao);
         } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
             DataLogin paramObj = new DataLogin(index, size);
-            return getData(dataType, taskIdList, contactIds,paramObj, dataLoginDao);
+            return getData(dataType, taskIdList, contactIds, paramObj, dataLoginDao);
         } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
             DataPayment paramObj = new DataPayment(index, size);
-            return getData(dataType, taskIdList, contactIds,paramObj, dataPaymentDao);
+            return getData(dataType, taskIdList, contactIds, paramObj, dataPaymentDao);
         } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
             DataShopping paramObj = new DataShopping(index, size);
             return getData(dataType, taskIdList, contactIds, paramObj, dataShoppingDao);
@@ -125,8 +127,13 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
             for (T tempT : dataList) {
                 Map<String, Object> map = new HashMap<>();
                 for (ImportTemplate importTemplate : importTemplateList) {
-                    map.put(importTemplate.getFieldCode(), ReflectionUtil.getObjectPropertyByName(tempT,
-                                    ReflectionUtil.recoverFieldName(importTemplate.getFieldCode())));
+                    Object value = ReflectionUtil.getObjectPropertyByName(tempT,
+                                    ReflectionUtil.recoverFieldName(importTemplate.getFieldCode()));
+                    if (value != null && value.getClass().getSimpleName().equals(Date.class.getSimpleName())) {
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        value = simpleDateFormat.format((Date) value);
+                    }
+                    map.put(importTemplate.getFieldCode(), value);
                 }
 
                 resultList.add(map);
