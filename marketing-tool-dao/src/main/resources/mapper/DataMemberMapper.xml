@@ -166,4 +166,13 @@
 		<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 	</select>	
 	
+	<select id="selectColumns" resultType="java.lang.String">
+		SELECT 
+			COLUMN_NAME 
+		FROM 
+			information_schema.columns 
+		WHERE 
+			table_name='data_party'
+	</select>
+	
 </mapper>
