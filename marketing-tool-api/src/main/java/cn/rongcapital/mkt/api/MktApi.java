@@ -854,8 +854,8 @@ public class MktApi {
     public Object getFilterAudiences(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
                     @NotNull @QueryParam("md_type") Integer mdType, @NotEmpty @QueryParam("ver") String ver,
-                    @NotEmpty @QueryParam("task_ids") List<Integer> taskIdList, @QueryParam("index") Integer index,
-                    @QueryParam("size") Integer size, @QueryParam("contact_ids") List<Integer> contactIdList) {
+                    @NotEmpty @QueryParam("task_ids[]") List<Integer> taskIdList, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size, @QueryParam("contact_ids[]") List<Integer> contactIdList) {
         List<Map<String, Object>> audiencesList = dataGetFilterAudiencesService.getFilterAudiences(method, userToken,
                         ver, index, size, mdType, taskIdList, contactIdList);
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
