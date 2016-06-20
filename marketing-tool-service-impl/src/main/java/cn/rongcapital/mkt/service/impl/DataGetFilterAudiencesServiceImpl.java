@@ -112,7 +112,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                     List<Integer> taskIdList, List<Integer> contactIdList, T paramObj, D dao) {
 
         Map<String, Object> paramMap = new HashMap<>();
-        filterContactId(contactIdList, dao);
+        contactIdList = filterContactId(contactIdList, dao);
         paramMap.put("startIndex", paramObj.getStartIndex());
         paramMap.put("pageSize", paramObj.getPageSize());
         paramMap.put("batchIdList", taskIdList);
@@ -153,7 +153,6 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
             return resultList;
         }
 
-
         for (Integer contactId : contactIdList) {
             String columnName = ContactwayEnum.getColumnNameById(contactId);
             if (columnName == null) {
@@ -167,7 +166,6 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                     }
                 }
             }
-
         }
 
         return resultList;
