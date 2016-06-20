@@ -49,11 +49,5 @@
 		      </exclusion>
 		   </exclusions>
 		</dependency>
-		<!-- 引入sharding-jdbc核心模块 -->
-		<dependency>
-		    <groupId>com.dangdang</groupId>
-		    <artifactId>sharding-jdbc-core</artifactId>
-		    <version>1.2.0</version>
-		</dependency>
   </dependencies>
 </project>
