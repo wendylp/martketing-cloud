@@ -849,7 +849,7 @@ public class MktApi {
      * @param: String method, String userToken, String ver, String mdType, List taskIdList
      * @return: Object
      */
-    @GET
+    @POST
     @Path("/mkt.data.filter.audiences.get")
     public Object getFilterAudiences(@NotEmpty @QueryParam("method") String method,
                     @NotEmpty @QueryParam("user_token") String userToken,
