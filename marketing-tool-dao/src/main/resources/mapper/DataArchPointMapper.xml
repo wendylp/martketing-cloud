@@ -157,11 +157,7 @@
 				<![CDATA[AND wechat is not null]]>
 			</if>
 		</foreach>
-		<if test="paramObj != null">
-			<if test="paramObj.startIndex != null and paramObj.startIndex &gt;= 0 and paramObj.pageSize != null and paramObj.pageSize &gt; 0">
-				<![CDATA[LIMIT #{paramObj}.startIndex,#{paramObj}.pageSize]]>
-			</if>	
-		</if>
+		<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 	</select>
 	
 	
