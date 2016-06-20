@@ -18,7 +18,6 @@ public class DataGetFilterAudiencesIn extends BaseInput {
     @NotNull
     private Integer mdType;
     
-    @NotEmpty
     private List<Integer> taskIds;
     
     private List<Integer> contactIds;
