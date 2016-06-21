@@ -9,13 +9,10 @@ public interface DataUpateMainSegmenttagService {
      * @author nianjun
      * @param method
      * @param userToken
-     * @param index
-     * @param size
      * @param ver
      * @param tagName
      * @param contactId
      * @return
      */
-    public boolean updateMainSegmenttag(String method, String userToken, Integer index, Integer size, String ver,
-                    String tagName, Integer contactId);
+    public boolean updateMainSegmenttag(String method, String userToken, String ver, String tagName, Integer contactId);
 }

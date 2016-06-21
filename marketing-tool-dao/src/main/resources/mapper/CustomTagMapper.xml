@@ -82,6 +82,16 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
+	
+	<!-- 查询,通过条件 -->
+	<select id="selectListforUpdate" parameterType="cn.rongcapital.mkt.po.CustomTag" resultType="cn.rongcapital.mkt.po.CustomTag">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+		FOR UPDATE
+	</select>
 
 	<!-- 总数查询,通过条件 -->
 	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.CustomTag" resultType="int">
@@ -95,6 +105,12 @@
 		UPDATE custom_tag
 		SET status = 1
 		WHERE id = #{id}
+	</update>
+	
+	<!-- 更新受众人群数量,该SQL务必在事务内for update做 -->
+	<update id="increaseCoverAudienceCount" parameterType="cn.rongcapital.mkt.po.CustomTag" >
+		UPDATE custom_tag
+		SET cover_audience_count =#{cover_audience_count} + 1
 	</update>
 	
 </mapper>

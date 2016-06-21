@@ -10,11 +10,12 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.OriginalDataArchPoint;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public interface OriginalDataArchPointDao extends BaseDao<OriginalDataArchPoint>{
 
@@ -44,4 +45,11 @@ public interface OriginalDataArchPointDao extends BaseDao<OriginalDataArchPoint>
 	 * @return int
 	 */
 	int batchInsertUploadFileData(ArrayList<Map<String, Object>> insertList);
+	
+	/**
+     * @功能简述 : 批量清洗且合并数据到DataArchPoint表
+     * @author nianjun
+     * @return map
+     */
+	int batchCleanData(List<OriginalDataArchPoint> originalDataArchPoints);
 }
