@@ -30,6 +30,4 @@ public enum DeleteStatusEnum {
         this.description = description;
     }
 
-
-
 }
