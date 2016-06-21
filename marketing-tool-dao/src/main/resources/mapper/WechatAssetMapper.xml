@@ -124,6 +124,14 @@
         limit #{index},#{size}
 	</select>
 
+	<select id="selectServerAndBookList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		asset_name,asset_id,imgfile_url,total_count
+		FROM wechat_asset
+		WHERE asset_type = 0 or asset_type =2 and status = 0
+		limit #{index},#{size}
+	</select>
+
 	<select id="selectWechatAssetDetai" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT
 		asset_name,wx_acct,nickname,status,consignation_time,group_ids

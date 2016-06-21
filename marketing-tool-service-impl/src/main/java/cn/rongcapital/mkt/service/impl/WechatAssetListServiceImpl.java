@@ -36,14 +36,21 @@ public class WechatAssetListServiceImpl implements WechatAssetListService{
     }
 
     private void constructRightResult(BaseOutput baseOutput, Map<String, Object> paramMap) {
-        List<Map<String,Object>> resultList = wechatAssetDao.selectAssetListByType(paramMap);
-        for(Map<String,Object> map : resultList){
-            map.put("follower_count", map.remove("total_count"));
-            baseOutput.getData().add(map);
+        List<Map<String,Object>> resultList = null;
+        if(paramMap.get("asset_type") instanceof Integer){
+            if((Integer)paramMap.get("asset_type") != 3){
+                resultList = wechatAssetDao.selectAssetListByType(paramMap);
+            }else if((Integer)paramMap.get("asset_type") == 3){
+                resultList = wechatAssetDao.selectServerAndBookList(paramMap);
+            }
+            for(Map<String,Object> map : resultList){
+                map.put("follower_count", map.remove("total_count"));
+                baseOutput.getData().add(map);
+            }
+            baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+            baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+            baseOutput.setTotal(baseOutput.getData().size());
         }
-        baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
-        baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
-        baseOutput.setTotal(baseOutput.getData().size());
     }
 
     private Map<String,Object> constructParamMap(Integer assetType, Integer index, Integer size) {
