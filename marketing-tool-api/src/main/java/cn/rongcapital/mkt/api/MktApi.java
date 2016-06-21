@@ -107,6 +107,7 @@ import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
+import cn.rongcapital.mkt.service.ImgtextAssetSyncService;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -131,6 +132,7 @@ import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
+import cn.rongcapital.mkt.vo.in.ImgtextAssetSyncIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
@@ -290,7 +292,6 @@ public class MktApi {
 
     @Autowired
     private CustomTagDeleteService customTagDeleteService;
-    
 
     @Autowired
     private MainActionInfoGetService mainActionInfoGetService;
@@ -348,6 +349,9 @@ public class MktApi {
 
 	@Autowired
 	private WechatPublicAuthCallbackService wechatPublicAuthCallbackService;
+
+	@Autowired
+	private ImgtextAssetSyncService imgtextAssetSyncService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1338,5 +1342,17 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public BaseOutput wechatPublicAuthCallback(@Valid WechatPublicAuthCallbackIn wechatPublicAuthCallbackIn){
 		return wechatPublicAuthCallbackService.authWechatPublicCallback(wechatPublicAuthCallbackIn);
+	}
+
+	/**
+	 * @功能简述: 微信公众号授权时大连那边所调用的回调接口
+	 * @param body
+	 * @return BaseOutput
+	 */
+	@POST
+	@Path("/mkt.asset.imgtext.sync")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput imgtextAssetSync(ImgtextAssetSyncIn imgtextAssetSyncIn){
+		return imgtextAssetSyncService.syncImgtextAsset(imgtextAssetSyncIn);
 	}
 }

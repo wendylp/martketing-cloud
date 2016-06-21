@@ -82,4 +82,16 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * @return list
 	 */
 	List<Map<String,Object>> selectImgtextAssetCountByType();
+
+	/**
+	 * 从大连那边批量导入图文资产
+	 * @return list
+	 */
+	void batchInsertTuwen(List<Map<String, Object>> paramTuwenList);
+
+	/**
+	 * 将托管的图文资产插入数据库
+	 * @return list
+	 */
+	void insertHostImg(Map<String, Object> paramMap);
 }

@@ -161,4 +161,33 @@
 		SET status = 1
 		WHERE id = #{id}
 	</update>
+
+	<insert id="batchInsertTuwen" parameterType="java.util.List">
+		INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url)
+		VALUES
+		<foreach collection="list" index="index" item="item" separator=",">
+		(
+		#{item.name},
+		#{item.type},
+		#{item.owner_name},
+		#{item.pc_preview_url},
+		#{item.mobile_preview_url},
+		#{item.imgfile_url}
+		)
+		</foreach>
+	</insert>
+
+	<insert id="insertHostImg" parameterType="java.util.Map">
+		INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,create_time)
+		VALUES
+		(
+		#{name},
+		#{type},
+		#{owner_name},
+		#{pc_preview_url},
+		#{mobile_preview_url},
+		#{imgfile_url},
+		#{create_time}
+		)
+	</insert>
 </mapper>
