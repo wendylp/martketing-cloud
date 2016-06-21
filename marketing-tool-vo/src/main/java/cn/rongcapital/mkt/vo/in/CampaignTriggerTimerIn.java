@@ -8,23 +8,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignTriggerTimerIn {
 	
-    private Integer id;
-
     private String name;
 
     @NotNull
     private String startTime;
 
     private String endTime;
-
-    @JsonProperty("id")
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @JsonProperty("name")
     public String getName() {

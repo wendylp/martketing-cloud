@@ -11,4 +11,10 @@ public interface BaseDataFilterDao<T> {
      * @return: List<T>
      */
     List<T> selectByBatchId(Map<String, Object> paramMap);
+    
+    /**
+     * @功能简述: 查询一个表里的所有字段
+     * @return: List<String>
+     */
+    List<String> selectColumns();
 }

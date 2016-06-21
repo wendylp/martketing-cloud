@@ -34,4 +34,7 @@ public interface TaskScheduleDao extends BaseDao<TaskSchedule>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	public void physicalDeleteById(int taskId);
+	
 }

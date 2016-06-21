@@ -9,22 +9,11 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignDecisionTagIn {
 	
-    private Integer id;
-
     private String name;
 
     private List<TagIn> tags;
 
     private Byte rule;
-
-	 @JsonProperty("id")
-	public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @JsonProperty("tags")
     public List<TagIn> getTags() {

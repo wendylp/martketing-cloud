@@ -9,8 +9,6 @@ public class CampaignActionSendH5In {
 	
 	private Integer campaignHeadId;
 	
-    private Integer id;
-
     private String itemId;
 
     private String name;
@@ -37,15 +35,6 @@ public class CampaignActionSendH5In {
 	public void setCampaignHeadId(Integer campaignHeadId) {
 		this.campaignHeadId = campaignHeadId;
 	}
-
-	@JsonProperty("id")
-	public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @JsonProperty("item_id")
     public String getItemId() {

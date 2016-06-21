@@ -173,12 +173,29 @@
 		<foreach collection="batchIdList" item="batchId" open="(" separator="," close=")">
 			<![CDATA[#{batchId}]]>
 		</foreach>
-		<![CDATA[AND deleted=0]]>
-		<if test="paramObj != null">
-			<if test="paramObj.startIndex != null and paramObj.startIndex &gt;= 0 and paramObj.pageSize != null and paramObj.pageSize &gt; 0">
-				<![CDATA[LIMIT #{paramObj}.startIndex,#{paramObj}.pageSize]]>
-			</if>	
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		<if test="pageSize != null and pageSize &gt; 0">
+			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
+	</select>
+	
+	<select id="selectColumns" resultType="java.lang.String">
+		SELECT 
+			COLUMN_NAME 
+		FROM 
+			information_schema.columns 
+		WHERE 
+			table_name='data_payment'
 	</select>
 	
 </mapper>
