@@ -25,8 +25,8 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public boolean updateMainSegmenttag(String method, String userToken, Integer index, Integer size, String ver,
-                    String tagName, Integer contactId) {
+    public boolean updateMainSegmenttag(String method, String userToken, String ver, String tagName,
+                    Integer contactId) {
 
         // step 1 检查tag是否已经存在数据库中
         CustomTag paramCustomTag = new CustomTag();

@@ -67,6 +67,7 @@ import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
 import cn.rongcapital.mkt.service.DataGetViewListService;
 import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
 import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
+import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
 import cn.rongcapital.mkt.service.GetDataMainSearchService;
@@ -104,10 +105,9 @@ import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
+import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
-
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -212,6 +212,9 @@ public class MktApi {
 
     @Autowired
     private DataGetFilterAudiencesService dataGetFilterAudiencesService;
+    
+    @Autowired
+    private DataUpateMainSegmenttagService dataUpateMainSegmenttagService;
 
     @Autowired
     private SegmentHeaderGetService segmentHeaderGetService;
@@ -867,7 +870,26 @@ public class MktApi {
                         dataGetFilterAudiencesIn.getContactIds());
     }
 
+    /**
+     * @功能简述 : 根据快捷筛选查询某类型的主数据
+     * @param: String method, String userToken, String ver, String mdType, List taskIdList
+     * @return: Object
+     */
+    @POST
+    @Path("/mkt.data.filter.audiences.get")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Object getFilterAudiences(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver,
+                    @NotEmpty @QueryParam("tag_name") String tagName,
+                    @NotEmpty @QueryParam("contact_id") Integer contactId) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        dataUpateMainSegmenttagService.updateMainSegmenttag(method, userToken, ver, tagName, contactId);
 
+        return result;
+    }
+
+    
 	/**
 	 * @功能简述: 获取某个微信账号下的好友/粉丝/群组信息
 	 * @param: String userToken, String ver, Ingeger asset_id
