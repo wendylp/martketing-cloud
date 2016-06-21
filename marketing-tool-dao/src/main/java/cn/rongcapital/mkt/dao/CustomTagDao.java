@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -42,4 +43,19 @@ public interface CustomTagDao extends BaseDao<CustomTag>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+     * @功能简述: 查询对象list并锁表,只要不为NULL与空则为条件,属性值之间and连接
+     * @param: CustomTag t
+     * @return: List<CustomTag>
+     */
+    List<CustomTag> selectListforUpdate(CustomTag t);
+    
+    /**
+     * @功能简述: 查询对象list并锁表,只要不为NULL与空则为条件,属性值之间and连接
+     * @param: CustomTag t
+     * @return: List<CustomTag>
+     */
+    int increaseCoverAudienceCount(CustomTag t);
+    
 }
