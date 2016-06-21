@@ -83,5 +83,14 @@ public class ApiConstant {
 	
 	public static final long TASK_SCAN_INTERVAL_MILLS = 1000*3; //扫描任务表的时间间隔:毫秒
 	public static final long TASK_DO_INTERVAL_MILLS = 1000*3; //扫描执行列表的时间间隔:毫秒
-	
+
+	public static final String DL_PUB_GRANT_API = "ruixue.hfive.mkt.pub.grant";
+	public static final String DL_PUB_LIST_API = "ruixue.hfive.mkt.pub.list";
+	public static final String DL_PUB_FANSLIST_API = "ruixue.hfive.mkt.pub.fanslist";
+    public static final String DL_PERSONAL_LIST = "ruixue.hfive.mkt.personal.list";
+	public static final String DL_PERSONAL_CONTACTLIST = "ruixue.hfive.mkt.personal.contactlist";
+	public static final String DL_PERSONAL_GROUPLIST = "ruixue.hfive.mkt.personal.grouplist";
+	public static final String DL_API_PARAM_METHOD = "method";
+	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_KEY = "callback";
+	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_VALUE = "mkt.data.inbound.wechat.public.auth.callback";
 }

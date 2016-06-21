@@ -110,6 +110,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE
 		owner_name = #{owner_name} AND status = 0
+		order by create_time desc
 		limit #{index},#{size}
 	</select>
 
@@ -119,6 +120,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE
 		owner_name = #{owner_name} AND type = #{type} AND status = 0
+		order by create_time desc
 		limit #{index},#{size}
 	</select>
 
@@ -127,6 +129,7 @@
 		<include refid="QUERY_ASSET_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE status = 0
+		order by create_time desc
 		limit #{index},#{size}
 	</select>
 
@@ -135,6 +138,7 @@
 		<include refid="QUERY_ASSET_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE type = #{type} AND status = 0
+		order by create_time desc
 		limit #{index},#{size}
 	</select>
 

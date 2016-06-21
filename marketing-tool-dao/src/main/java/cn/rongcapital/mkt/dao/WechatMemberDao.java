@@ -13,8 +13,11 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatMember;
 
+import java.util.List;
+import java.util.Map;
+
 public interface WechatMemberDao extends BaseDao<WechatMember>{
-	
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -34,4 +37,11 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 批量插入粉丝人数
+	 * @param paramMap
+	 * @return list
+	 */
+	void batchInsertFans(List<Map<String, Object>> fansList);
 }

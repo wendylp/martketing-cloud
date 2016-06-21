@@ -25,7 +25,7 @@ public class WechatMember extends BaseQuery {
 
     private String county;
 
-    private String birtday;
+    private String birthday;
 
     private String signature;
 
@@ -129,12 +129,12 @@ public class WechatMember extends BaseQuery {
         this.county = county == null ? null : county.trim();
     }
 
-    public String getBirtday() {
-        return birtday;
+    public String getBirthday() {
+        return birthday;
     }
 
-    public void setBirtday(String birtday) {
-        this.birtday = birtday == null ? null : birtday.trim();
+    public void setBirthday(String birthday) {
+        this.birthday = birthday == null ? null : birthday.trim();
     }
 
     public String getSignature() {

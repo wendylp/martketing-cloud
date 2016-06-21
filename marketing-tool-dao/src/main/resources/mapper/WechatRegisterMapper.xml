@@ -109,6 +109,44 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
-	
+	<insert id="insertAuthPublic" parameterType="java.util.Map">
+		INSERT INTO wechat_register(wx_acct,name,status)
+		VALUES
+		(
+		    #{wx_acct},
+		    #{name},
+		    #{status}
+		)
+	</insert>
+
+	<select id="selectStatus" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT status
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_acct = #{wx_acct}
+	</select>
+
+	<update id="updatePubInfo" parameterType="java.util.Map">
+		UPDATE wechat_register
+		<set>
+			name = #{name}, type = #{type}, header_image = #{header_image}
+		</set>
+		WHERE wx_acct = #{wx_acct}
+	</update>
+
+	<insert id="batchInsertPersonList" parameterType="java.util.List">
+		INSERT INTO wechat_register (wx_acct,type,nickname,header_image,sex,province,city,signature)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+		(
+		#{item.wx_acct},
+		#{item.type},
+		#{item.nickname},
+		#{item.header_image},
+		#{item.sex},
+		#{item.province},
+		#{item.city},
+		#{item.signature}
+		)
+		</foreach>
+	</insert>
 </mapper>

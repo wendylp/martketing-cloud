@@ -41,5 +41,11 @@ public interface TenementDao extends BaseDao<Tenement>{
 	 * 获取企业ID和企业简称，从而进行公众号授权
 	 * @return map
 	 */
-	Map<String,Object> selectPidAndShortname();
+	Map<String,String> selectPidAndShortname();
+
+	/**
+	 * 获取企业ID,从而进行公众号列表的同步
+	 * @return map
+	 */
+	Map<String,String> selectPid();
 }
