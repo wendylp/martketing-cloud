@@ -50,7 +50,7 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_SWITCH_ENDS = 1;//多分支类型
 	
 	public static final byte CAMPAIGN_PARENT_NODE_PTYPE = -1;//父节点的ptype列值
-	
+
 	public static final byte CAMPAIGN_NODE_TRIGGER = 0;//触发
 	public static final byte CAMPAIGN_NODE_AUDIENCE = 1;//受众
 	public static final byte CAMPAIGN_NODE_DECISION = 2;//决策
@@ -85,7 +85,7 @@ public class ApiConstant {
 	
 	public static final long TASK_SCAN_INTERVAL_MILLS = 1000*3; //扫描任务表的时间间隔:毫秒
 	public static final long TASK_DO_INTERVAL_MILLS = 1000*3; //扫描执行列表的时间间隔:毫秒
-	
+
 	public static final String TASK_SERVICE_NAME_CAMPAIGN_TIME_TRIGGER = "campaignTimeTriggerServiceImpl";
 	public static final String TASK_SERVICE_NAME_CAMPAIGN_AUDIENCE_TARGET = "campaignAudienceTargetServiceImpl";
 	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SENT = "campaignWechatSentServiceImpl";
@@ -93,5 +93,15 @@ public class ApiConstant {
 	public static final String  TASK_SERVICE_NAME_CAMPAIGN_WECHAT_FORWARD = "campaignWechatForwardServiceImpl";
 	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SUBSCRIBE = "campaignWechatSubscribeServiceImpl";
 	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_PRV_FRIEND = "campaignWechatPrivFriendServiceImpl";
-	
+
+
+	public static final String DL_PUB_GRANT_API = "ruixue.hfive.mkt.pub.grant";
+	public static final String DL_PUB_LIST_API = "ruixue.hfive.mkt.pub.list";
+	public static final String DL_PUB_FANSLIST_API = "ruixue.hfive.mkt.pub.fanslist";
+    public static final String DL_PERSONAL_LIST = "ruixue.hfive.mkt.personal.list";
+	public static final String DL_PERSONAL_CONTACTLIST = "ruixue.hfive.mkt.personal.contactlist";
+	public static final String DL_PERSONAL_GROUPLIST = "ruixue.hfive.mkt.personal.grouplist";
+	public static final String DL_API_PARAM_METHOD = "method";
+	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_KEY = "callback";
+	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_VALUE = "mkt.data.inbound.wechat.public.auth.callback";
 }

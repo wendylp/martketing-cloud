@@ -13,8 +13,10 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatGroup;
 
+import java.util.Map;
+
 public interface WechatGroupDao extends BaseDao<WechatGroup>{
-	
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -34,4 +36,18 @@ public interface WechatGroupDao extends BaseDao<WechatGroup>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 根据公众号和组名唯一选取GroupId
+	 * @param paramMap
+	 * @return Integer
+	 */
+	Integer selectGroupId(Map<String, Object> paramGroup);
+
+	/**
+	 * 插入一条新的数据
+	 * @param paramMap
+	 * @return Integer
+	 */
+	void insertWechatGroup(Map<String, Object> paramGroup);
 }

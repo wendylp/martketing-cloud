@@ -13,8 +13,11 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatRegister;
 
+import java.util.List;
+import java.util.Map;
+
 public interface WechatRegisterDao extends BaseDao<WechatRegister>{
-	
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -34,4 +37,31 @@ public interface WechatRegisterDao extends BaseDao<WechatRegister>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 插入授权成功的微信公众号
+	 * @param paramMap
+	 * @return list
+	 */
+	void insertAuthPublic(Map<String, Object> paramMap);
+
+	/**
+	 * 查询这个微信号的授权状态
+	 * @param paramMap
+	 * @return list
+	 */
+	Integer selectStatus(String wx_acct);
+
+	/**
+	 * 更新微信公众号的信息
+	 * @param paramMap
+	 * @return list
+	 */
+	Integer updatePubInfo(Map<String, Object> paramMap);
+
+	/**
+	 * 批量插入个人号
+	 * @param list
+	 */
+	void batchInsertPersonList(List<Map<String, Object>> paramPersonals);
 }

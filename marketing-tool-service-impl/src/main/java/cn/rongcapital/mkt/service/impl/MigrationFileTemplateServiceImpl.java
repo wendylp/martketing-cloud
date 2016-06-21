@@ -28,7 +28,7 @@ public class MigrationFileTemplateServiceImpl implements MigrationFileTemplateSe
         List<Map<String,Object>> templateList = importTemplateDao.selectTemplateList();
         if(templateList != null && templateList.size() > 0 ){
             for(Map<String,Object> map : templateList){
-                map.put("template_name",map.remove("name"));
+                map.put("template_name",map.remove("templ_name"));
                 map.put("template_id",map.remove("id"));
                 baseOutput.getData().add(map);
             }

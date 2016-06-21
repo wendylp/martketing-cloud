@@ -65,4 +65,11 @@ public interface WechatAssetDao extends BaseDao<WechatAsset>{
 	 * @return int
 	 */
 	int updateNicknameById(Map<String, Object> paramMap);
+
+	/**
+	 * 获取服务号和订阅号列表
+	 * @param paramMap
+	 * @return int
+	 */
+	List<Map<String,Object>> selectServerAndBookList(Map<String, Object> paramMap);
 }

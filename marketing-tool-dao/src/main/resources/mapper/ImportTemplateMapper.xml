@@ -8,7 +8,7 @@
 	</sql>
 	
 	<sql id="QUERY_TEMPLATE_LIST">
-		<![CDATA[ id,name]]>
+		<![CDATA[ id,templ_name]]>
 	</sql>
 	
 	<sql id="QUERY_ALIAS_COLUMN_LIST">
@@ -113,6 +113,7 @@
 		SELECT
 		<include refid="QUERY_TEMPLATE_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
+		group by templ_name
 	</select>
 	
 	<!-- 查询自定义视图字段列表 -->
