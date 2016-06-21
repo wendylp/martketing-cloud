@@ -52,7 +52,7 @@ public interface CustomTagDao extends BaseDao<CustomTag>{
     List<CustomTag> selectListforUpdate(CustomTag t);
     
     /**
-     * @功能简述: 查询对象list并锁表,只要不为NULL与空则为条件,属性值之间and连接
+     * @功能简述: 跟心cover audience count
      * @param: CustomTag t
      * @return: List<CustomTag>
      */
