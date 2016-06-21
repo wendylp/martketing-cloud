@@ -8,7 +8,7 @@
 	</sql>
 	
 	<sql id="QUERY_TEMPLATE_LIST">
-		<![CDATA[ id,name]]>
+		<![CDATA[ id,templ_name]]>
 	</sql>
 	
 	<sql id="QUERY_ALIAS_COLUMN_LIST">
