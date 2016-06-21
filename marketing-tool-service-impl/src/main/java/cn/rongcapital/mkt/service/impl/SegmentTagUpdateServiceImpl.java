@@ -56,7 +56,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		Integer headerId = Integer.valueOf(body.getSegmentHeadId());
 		List<String> tagNames = body.getTagNames();
 //		Date now = new Date();
-		List<Long> tagIdList = new ArrayList<Long>();
+		List<Integer> tagIdList = new ArrayList<Integer>();
 		CustomTag tagExample = null;
 		List<CustomTag> tag = null;
 		// 标签名保存至自定义标签表
@@ -83,7 +83,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		customTagMapDao.batchDeleteUseHeadId(headerId);
 
 		// 建立标签与细分对应关系
-		for (Long customTag : tagIdList) {
+		for (Integer customTag : tagIdList) {
 			CustomTagMap tagMap = new CustomTagMap();
 			tagMap.setTagId(customTag.intValue());
 			tagMap.setType(ApiConstant.TAG_TYPE_SEGMENT);
