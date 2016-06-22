@@ -96,6 +96,7 @@ import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
+import cn.rongcapital.mkt.service.SegmentTagnameTagCountService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
@@ -285,6 +286,9 @@ public class MktApi {
 
     @Autowired
     private SegmentTagnameTagValueService segmentTagnameTagValueService;
+    
+    @Autowired
+    private SegmentTagnameTagCountService segmentTagnameTagCountService;
 
     @Autowired
     private TagSystemTagcountService tagSystemTagcountService;
@@ -1116,6 +1120,20 @@ public class MktApi {
             @NotEmpty @QueryParam("tag_group_id") String tagGroupId){
 		return segmentTagnameTagValueService.getTagValueByGroupId(tagGroupId);
 	}
+	
+	/**
+     * @功能简述: 获取标签的柱状图数据
+     * @param method
+     * @param userToken
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.segment.tagname.tagcount.get")
+    public BaseOutput getTagCountByGroupId(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("tag_ids") String tagIds){
+        return segmentTagnameTagCountService.getTagCountById(tagIds);
+    }
 	
 	/**
 	 * @功能简述: 获取受众细分body信息
