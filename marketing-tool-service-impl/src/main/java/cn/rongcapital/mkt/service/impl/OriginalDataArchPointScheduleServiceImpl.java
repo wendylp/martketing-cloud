@@ -1,9 +1,12 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +16,7 @@ import cn.rongcapital.mkt.po.DataArchPoint;
 import cn.rongcapital.mkt.po.OriginalDataArchPoint;
 import cn.rongcapital.mkt.service.OriginalDataArchPointScheduleService;
 
+@Service
 public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArchPointScheduleService {
 
     /**
@@ -53,13 +57,14 @@ public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArc
         for (int i = 0; i < loopCount; i++) {
             // 每次循环中的临时数据表
             List<OriginalDataArchPoint> tmpOriginalDataArchPoints = new ArrayList<>(BATCH_NUM);
-            if (i == loopCount) {
+            if (i == loopCount - 1) {
                 tmpOriginalDataArchPoints =
-                                originalDataArchPoints.subList(i * BATCH_NUM, originalDataArchPoints.size() - 1);
+                                originalDataArchPoints.subList(i * BATCH_NUM, originalDataArchPoints.size());
             } else {
                 tmpOriginalDataArchPoints = originalDataArchPoints.subList(i * BATCH_NUM, (i + 1) * BATCH_NUM - 1);
             }
 
+            handleOriginalDataArchPoint(tmpOriginalDataArchPoints);
 
         }
     }
@@ -76,12 +81,21 @@ public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArc
         // 将OriginalDataArchPoint的数据同步到DataArchPoint
         for (int i = 0; i < batchCount; i++) {
             DataArchPoint paramDataArchPoint = new DataArchPoint();
-            paramDataArchPoint.setClickTime(tmpOriginalDataArchPoints.get(i).getClickTime());
-            paramDataArchPoint.setEventId(tmpOriginalDataArchPoints.get(i).getEventId());
+            OriginalDataArchPoint tmpOriginalDataArchPoint = tmpOriginalDataArchPoints.get(i);
+            paramDataArchPoint.setClickTime(tmpOriginalDataArchPoint.getClickTime());
+            paramDataArchPoint.setEventId(tmpOriginalDataArchPoint.getEventId());
+            paramDataArchPoint.setBatchId(tmpOriginalDataArchPoint.getBatchId());
+
+            // 因为在一个事务里 , 直接修改OriginalDataArchPoint的状态
+            tmpOriginalDataArchPoint.setStatus(Boolean.TRUE);
+            originalDataArchPointDao.updateById(tmpOriginalDataArchPoint);
             dataArchPoints.add(paramDataArchPoint);
         }
 
-        dataArchPointDao.cleanAndUpdateByOriginal(dataArchPoints);
+        Map<String, List<DataArchPoint>> paramMap = new HashMap<>();
+        paramMap.put("list", dataArchPoints);
+
+        dataArchPointDao.cleanAndUpdateByOriginal(paramMap);
     }
 
 }
