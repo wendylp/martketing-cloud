@@ -183,7 +183,7 @@
 		)
 		values
 		<foreach collection="list" item="obj" index="index" separator=",">
-			( #{obj.eventId}, #{obj.eventName},#{obj.clickTime},
+			(#{obj.eventId}, #{obj.eventName},#{obj.clickTime},
 			#{obj.identifyNo}, #{obj.drivingLicense}, #{obj.email},
 			#{obj.mobile}, #{obj.tel}, #{obj.qq}, #{obj.acctType}, #{obj.acctNo},
 			#{obj.idfa},

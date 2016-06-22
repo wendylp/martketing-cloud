@@ -55,13 +55,13 @@ public class ImgtextHostServiceImpl implements ImgtextHostService {
                     paramMap.put("type",1);
                     switch (h5MktWtuwenConvertResponse.getChannelType()){
                         case 2:
-                            paramMap.put("owner_name","易企秀图文");
+                            paramMap.put("owner_name","易企秀");
                             break;
                         case 3:
-                            paramMap.put("owner_name","兔展图文");
+                            paramMap.put("owner_name","兔展");
                             break;
                         case 4:
-                            paramMap.put("owner_name","MAMA图文");
+                            paramMap.put("owner_name","MAKA");
                             break;
                     }
                     imgTextAssetDao.insertHostImg(paramMap);
