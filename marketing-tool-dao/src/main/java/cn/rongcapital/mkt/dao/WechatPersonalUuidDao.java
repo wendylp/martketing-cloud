@@ -13,8 +13,10 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatPersonalUuid;
 
+import java.util.Map;
+
 public interface WechatPersonalUuidDao extends BaseDao<WechatPersonalUuid>{
-	
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -34,4 +36,11 @@ public interface WechatPersonalUuidDao extends BaseDao<WechatPersonalUuid>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 *
+	 * @param paramMap
+	 * @return list
+	 */
+	void insertUuid(Map<String, Object> paramMap);
 }
