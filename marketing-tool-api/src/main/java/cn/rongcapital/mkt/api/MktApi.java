@@ -868,7 +868,6 @@ public class MktApi {
         return Response.ok().entity(result).build();
     }
 
-
     /**
      * @功能简述 : 根据快捷筛选查询某类型的主数据
      * @param: String method, String userToken, String ver, String mdType, List taskIdList
@@ -885,29 +884,10 @@ public class MktApi {
                         dataGetFilterAudiencesIn.getContactIds());
     }
 
-    /**
-     * @功能简述 : 根据快捷筛选查询某类型的主数据
-     * @param: String method, String userToken, String ver, String mdType, List taskIdList
-     * @return: Object
-     */
-    @POST
-    @Path("/mkt.data.filter.audiences.get")
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Object getFilterAudiences(@NotEmpty @QueryParam("method") String method,
-                    @NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver,
-                    @NotEmpty @QueryParam("tag_name") String tagName,
-                    @NotEmpty @QueryParam("contact_id") Integer contactId) {
-        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-                        ApiConstant.INT_ZERO, null);
-        dataUpateMainSegmenttagService.updateMainSegmenttag(method, userToken, ver, tagName, contactId);
-
-        return result;
-    }
-
     @POST
     @Path("/mkt.data.main.segmenttag.update")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Object getFilterAudiences(@Valid DataUpdateMainSegmenttagIn dataUpdateMainSegmenttagIn) {
+    public Object updateMainSegmenttag(@Valid DataUpdateMainSegmenttagIn dataUpdateMainSegmenttagIn) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
         dataUpateMainSegmenttagService.updateMainSegmenttag(dataUpdateMainSegmenttagIn.getMethod(),
