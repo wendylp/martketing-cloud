@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
@@ -41,7 +42,6 @@ public interface DataArchPointDao extends BaseDao<DataArchPoint>, BaseDataFilter
     /**
      * @功能简述 : 根据原始数据更新DataArchPoint的数据
      * @author nianjun
-     * @return map
      */
-    void cleanAndUpdateByOriginal(List<DataArchPoint> dataArchPoints);
+    void cleanAndUpdateByOriginal(Map<String, List<DataArchPoint>> paramMap);
 }
