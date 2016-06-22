@@ -118,5 +118,10 @@
 		SELECT pid
 		<include refid="QUERY_FROM_TABLE"/>
 	</select>
+
+	<select id="selectCompanyRegisterParam" resultType="java.util.Map">
+		SELECT pid,name,shortname as initial
+		<include refid="QUERY_FROM_TABLE"/>
+	</select>
 	
 </mapper>

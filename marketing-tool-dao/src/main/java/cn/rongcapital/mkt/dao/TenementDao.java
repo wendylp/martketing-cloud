@@ -48,4 +48,10 @@ public interface TenementDao extends BaseDao<Tenement>{
 	 * @return map
 	 */
 	Map<String,String> selectPid();
+
+	/**
+	 * 获取企业注册所需要的参数
+	 * @return map
+	 */
+	Map<String,String> selectCompanyRegisterParam();
 }
