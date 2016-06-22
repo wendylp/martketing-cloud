@@ -38,11 +38,11 @@ public class CampaignTimeTriggerTaskImpl extends BaseMQService implements TaskSe
 //		Queue q = getDynamicQueue("ff");
 //		List<Segment> ls = getQueueData(q);
 //		System.out.println(ls);
-		test1();
+//		test1();
 		
-//		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
-//		//激活该活动对应的全部任务
-//		taskScheduleDao.activateTaskByCampaignHeadId(campaignHeadId);
+		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
+		//激活该活动对应的全部任务
+		taskScheduleDao.activateTaskByCampaignHeadId(campaignHeadId);
 	}
 	
 	private void test1() {
