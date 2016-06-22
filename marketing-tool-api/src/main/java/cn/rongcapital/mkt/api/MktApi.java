@@ -75,6 +75,7 @@ import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.service.GroupTagsSearchService;
+import cn.rongcapital.mkt.service.ImgtextAssetSyncService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MainActionInfoGetService;
@@ -94,6 +95,7 @@ import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.service.SegmentTagGetService;
 import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
+import cn.rongcapital.mkt.service.SegmentTagnameTagCountService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
@@ -105,12 +107,10 @@ import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
+import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.ImgtextAssetSyncService;
-import cn.rongcapital.mkt.service.WechatPersonalAuthService;
-
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -129,13 +129,14 @@ import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
 import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
+import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
+import cn.rongcapital.mkt.vo.in.ImgtextAssetSyncIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
-import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
-import cn.rongcapital.mkt.vo.in.ImgtextAssetSyncIn;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
+import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
@@ -286,6 +287,9 @@ public class MktApi {
 
     @Autowired
     private SegmentTagnameTagValueService segmentTagnameTagValueService;
+    
+    @Autowired
+    private SegmentTagnameTagCountService segmentTagnameTagCountService;
 
     @Autowired
     private TagSystemTagcountService tagSystemTagcountService;
@@ -864,7 +868,6 @@ public class MktApi {
         return Response.ok().entity(result).build();
     }
 
-
     /**
      * @功能简述 : 根据快捷筛选查询某类型的主数据
      * @param: String method, String userToken, String ver, String mdType, List taskIdList
@@ -881,25 +884,18 @@ public class MktApi {
                         dataGetFilterAudiencesIn.getContactIds());
     }
 
-    /**
-     * @功能简述 : 根据快捷筛选查询某类型的主数据
-     * @param: String method, String userToken, String ver, String mdType, List taskIdList
-     * @return: Object
-     */
     @POST
-    @Path("/mkt.data.filter.audiences.get")
+    @Path("/mkt.data.main.segmenttag.update")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Object getFilterAudiences(@NotEmpty @QueryParam("method") String method,
-                    @NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver,
-                    @NotEmpty @QueryParam("tag_name") String tagName,
-                    @NotEmpty @QueryParam("contact_id") Integer contactId) {
+    public Object updateMainSegmenttag(@Valid DataUpdateMainSegmenttagIn dataUpdateMainSegmenttagIn) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
-        dataUpateMainSegmenttagService.updateMainSegmenttag(method, userToken, ver, tagName, contactId);
+        dataUpateMainSegmenttagService.updateMainSegmenttag(dataUpdateMainSegmenttagIn.getMethod(),
+                        dataUpdateMainSegmenttagIn.getUserToken(), dataUpdateMainSegmenttagIn.getVer(),
+                        dataUpdateMainSegmenttagIn.getTagName(), dataUpdateMainSegmenttagIn.getContactId());
 
         return result;
     }
-
 
 	/**
 	 * @功能简述: 获取某个微信账号下的好友/粉丝/群组信息
@@ -1120,6 +1116,20 @@ public class MktApi {
             @NotEmpty @QueryParam("tag_group_id") String tagGroupId){
 		return segmentTagnameTagValueService.getTagValueByGroupId(tagGroupId);
 	}
+	
+	/**
+     * @功能简述: 获取标签的柱状图数据
+     * @param method
+     * @param userToken
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.segment.tagname.tagcount.get")
+    public BaseOutput getTagCountByGroupId(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("tag_ids") String tagIds){
+        return segmentTagnameTagCountService.getTagCountById(tagIds);
+    }
 	
 	/**
 	 * @功能简述: 获取受众细分body信息

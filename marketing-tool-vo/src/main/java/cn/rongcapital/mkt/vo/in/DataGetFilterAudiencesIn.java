@@ -2,25 +2,24 @@ package cn.rongcapital.mkt.vo.in;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class DataGetFilterAudiencesIn extends BaseInput {
-    @NotEmpty
+//    @NotEmpty
     private String userToken = null;
     
-    @NotNull
+//    @NotNull
     private Integer mdType;
     
     private List<Integer> taskIds;
     
     private List<Integer> contactIds;
+    
+    private List<CustomizeViewCheckboxIn> customizeViews;
     
     private String method;
 
@@ -67,5 +66,13 @@ public class DataGetFilterAudiencesIn extends BaseInput {
     public void setMethod(String method) {
         this.method = method;
     }
-    
+
+    @JsonProperty("customize_views")
+    public List<CustomizeViewCheckboxIn> getCustomizeViews() {
+        return customizeViews;
+    }
+
+    public void setCustomizeViews(List<CustomizeViewCheckboxIn> customizeViews) {
+        this.customizeViews = customizeViews;
+    }
 }
