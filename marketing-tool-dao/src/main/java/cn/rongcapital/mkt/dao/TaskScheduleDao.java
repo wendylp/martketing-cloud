@@ -37,4 +37,6 @@ public interface TaskScheduleDao extends BaseDao<TaskSchedule>{
 	
 	public void physicalDeleteById(int taskId);
 	
+	public void activateTaskByCampaignHeadId(int campaignHeadId);
+	
 }

@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.po.mongodb;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -7,7 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "data_party")
-public class DataParty {
+public class DataParty implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String id;
@@ -16,6 +19,8 @@ public class DataParty {
 	
 	@Field(value = "md_type")
 	private String mdType;
+	
+	private String name;
 	
 	@Field(value = "mapping_keyid")
 	private String mappingKeyid;
@@ -72,6 +77,14 @@ public class DataParty {
 
 	public void setTagList(List<Tag> tagList) {
 		this.tagList = tagList;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	
