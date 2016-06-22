@@ -33,6 +33,8 @@ public class WechatPublicAuthServiceImpl implements WechatPublicAuthService{
         Map<String,String> h5ParamRequestMap = tenementDao.selectPidAndShortname();
         h5ParamRequestMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PUB_GRANT_API);
         h5ParamRequestMap.put(ApiConstant.DL_API_PARAM_PUB_GRANT_CALLBACK_KEY,ApiConstant.DL_API_PARAM_PUB_GRANT_CALLBACK_VALUE);
+        h5ParamRequestMap.put("user_token","6200819d9366af1383023a19907ZZf9048e4c14fd56333b263685215");
+        h5ParamRequestMap.put("ver","1.2.1");
         HttpResponse response = HttpUtils.requestH5Interface(h5ParamRequestMap);
         if(response != null){
             try {
