@@ -44,6 +44,11 @@ public class SegmentTagnameTagValueServiceImpl implements SegmentTagnameTagValue
 				map.put("tag_name", po.getName());
 				result.getData().add(map);
 			}
+			
+			Map<String,Object> mapUnlimited = new HashMap<String,Object>();
+            mapUnlimited.put("tag_id", "0");
+            mapUnlimited.put("tag_name", "不限");
+            result.getData().add(mapUnlimited);
 		}
 		return result;
 	}
