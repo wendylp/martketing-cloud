@@ -61,7 +61,7 @@ public class ImgtextHostServiceImpl implements ImgtextHostService {
                             paramMap.put("owner_name","兔展");
                             break;
                         case 4:
-                            paramMap.put("owner_name","MAMA");
+                            paramMap.put("owner_name","MAKA");
                             break;
                     }
                     imgTextAssetDao.insertHostImg(paramMap);
