@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -41,6 +43,7 @@ import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.ImportTemplate;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
+import cn.rongcapital.mkt.vo.in.CustomizeViewCheckboxIn;
 import cn.rongcapital.mkt.vo.out.DataGetMainListOut;
 
 @Service
@@ -76,17 +79,32 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
     private DataShoppingDao dataShoppingDao;
 
     @Override
-    public <T extends BaseQuery> Object getFilterAudiences(String method, String userToken,
-                    String ver, Integer index, Integer size, Integer dataType, List<Integer> taskIdList,
-                    List<Integer> contactIds) {
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public <T extends BaseQuery> Object getFilterAudiences(String method, String userToken, String ver, Integer index,
+                    Integer size, Integer dataType, List<Integer> taskIdList, List<Integer> contactIds,
+                    List<CustomizeViewCheckboxIn> customizeViews) {
         DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
         List<Map<String, Object>> resultList = new ArrayList<>();
+        List<Map<String, Object>> columnList = new ArrayList<>();
+        List<ImportTemplate> importTemplateList = null;
+
+
+        if (customizeViews != null && !customizeViews.isEmpty()) {
+            for (int i = 0; i < customizeViews.size(); i++) {
+                ImportTemplate paramImportTemplate = new ImportTemplate(index, size);
+                paramImportTemplate.setSelected(customizeViews.get(i).getIsSelected());
+                paramImportTemplate.setFieldName(customizeViews.get(i).getColName());
+                paramImportTemplate.setTemplType(dataType);
+                importTemplateDao.updateSelectedByTemplType(paramImportTemplate);
+            }
+        }
+
         ImportTemplate paramImportTemplate = new ImportTemplate(index, size);
         paramImportTemplate.setSelected(Boolean.TRUE);
         paramImportTemplate.setTemplType(dataType);
-        List<ImportTemplate> importTemplateList = importTemplateDao.selectSelectedTemplateList(paramImportTemplate);
-        List<Map<String, Object>> columnList = new ArrayList<>();
+        importTemplateList = importTemplateDao.selectSelectedTemplateList(paramImportTemplate);
+
         if (importTemplateList != null && !importTemplateList.isEmpty()) {
             for (ImportTemplate importTemplate : importTemplateList) {
                 Map<String, Object> map = new HashMap<>();
