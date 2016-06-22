@@ -109,8 +109,8 @@ import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.ImgtextAssetSyncService;
+import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -136,6 +136,7 @@ import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.in.ImgtextAssetSyncIn;
+import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
@@ -362,6 +363,9 @@ public class MktApi {
 
 	@Autowired
 	private ImgtextAssetSyncService imgtextAssetSyncService;
+
+	@Autowired
+	private WechatPersonalAuthService wechatPersonalAuthService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1397,5 +1401,17 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public BaseOutput imgtextAssetSync(ImgtextAssetSyncIn imgtextAssetSyncIn){
 		return imgtextAssetSyncService.syncImgtextAsset(imgtextAssetSyncIn);
+	}
+
+	/**
+	 * @功能简述: 获取微信个人号授权时产生的uuid
+	 * @param body
+	 * @return BaseOutput
+	 */
+	@POST
+	@Path("/mkt.data.inbound.wechat.personal.auth")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput wechatPersonalAuth(WechatPersonalAuthIn wechatPersonalAuthIn){
+		return wechatPersonalAuthService.authPersonWechat(wechatPersonalAuthIn);
 	}
 }
