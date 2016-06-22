@@ -1,12 +1,13 @@
 package cn.rongcapital.mkt.vo.in;
 
+import cn.rongcapital.mkt.vo.BaseInput;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * Created by Yunfeng on 2016-6-17.
  */
-public class WechatPublicAuthCallbackIn {
+public class WechatPublicAuthCallbackIn extends BaseInput{
     @NotEmpty
     private String status;
     @NotEmpty
