@@ -132,7 +132,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public CampaignBodyCreateOut campaignBodyCreate(CampaignBodyCreateIn body, SecurityContext securityContext) {
 		int campaignHeadId = body.getCampaignHeadId();
-
 		CampaignBodyCreateOut out = checkCampaignBiz(campaignHeadId);
 		if(null != out) {
 			return out;
@@ -265,13 +264,11 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					break;
 				}
 			}
-			
 			//更新campaign_node_item表
 			CampaignNodeItem campaignNodeItem = initCampaignNodeItem(campaignNodeChainIn, campaignHeadId);
 			if(null != campaignNodeItem) {
 				campaignNodeItemDao.updateById(campaignNodeItem);
 			}
-
 			CampaignBody campaignBody = initCampaignBody(campaignNodeChainIn,campaignHeadId,taskId);
 			campaignBodyDao.insert(campaignBody);
 		}
@@ -368,7 +365,10 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return taskSchedule;
 	}
 	
-	private Integer tranlateToMinutes(int refreshIntv,int refreshType) {
+	private Integer tranlateToMinutes(Integer refreshIntv,Byte refreshType) {
+		if(null == refreshIntv || refreshType == null) {
+			return null;
+		}
 		Integer intervalMinutes = null;
 		switch (refreshType) {
 		case 0://小时
@@ -391,14 +391,17 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	
 	private TaskSchedule initTaskAudienceTarget(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
-		byte allowedNew = campaignAudienceTargetIn.getAllowedNew();
-		if(allowedNew==0) {
-			TaskSchedule taskSchedule = new TaskSchedule();
-			Integer intervalMinutes = tranlateToMinutes(campaignAudienceTargetIn.getRefreshInterval(), 
-					          	      					campaignAudienceTargetIn.getRefreshIntervalType());
-			taskSchedule.setIntervalMinutes(intervalMinutes);
-			taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_AUDIENCE_TARGET);
-			taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		Byte allowedNew = campaignAudienceTargetIn.getAllowedNew();
+		if(null!=allowedNew) {
+			if(allowedNew==0) {
+				TaskSchedule taskSchedule = new TaskSchedule();
+				Integer intervalMinutes = tranlateToMinutes(campaignAudienceTargetIn.getRefreshInterval(), 
+						campaignAudienceTargetIn.getRefreshIntervalType());
+				taskSchedule.setIntervalMinutes(intervalMinutes);
+				taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_AUDIENCE_TARGET);
+				taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+				return taskSchedule;
+			}
 		}
 		return null;
 	}
