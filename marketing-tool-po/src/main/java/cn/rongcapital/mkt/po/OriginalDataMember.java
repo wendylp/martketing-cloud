@@ -8,11 +8,11 @@ import java.util.Date;
 public class OriginalDataMember extends BaseQuery {
     private Integer id;
 
-    private String memberId;
+    private Integer memberId;
 
     private String memberPoints;
 
-    private Date memberLevel;
+    private String memberLevel;
 
     private Date registTime;
 
@@ -52,7 +52,7 @@ public class OriginalDataMember extends BaseQuery {
 
     private String source;
 
-    private String batchId;
+    private Integer batchId;
 
     public Integer getId() {
         return id;
@@ -62,12 +62,12 @@ public class OriginalDataMember extends BaseQuery {
         this.id = id;
     }
 
-    public String getMemberId() {
+    public Integer getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(String memberId) {
-        this.memberId = memberId == null ? null : memberId.trim();
+    public void setMemberId(Integer memberId) {
+        this.memberId = memberId;
     }
 
     public String getMemberPoints() {
@@ -78,12 +78,12 @@ public class OriginalDataMember extends BaseQuery {
         this.memberPoints = memberPoints == null ? null : memberPoints.trim();
     }
 
-    public Date getMemberLevel() {
+    public String getMemberLevel() {
         return memberLevel;
     }
 
-    public void setMemberLevel(Date memberLevel) {
-        this.memberLevel = memberLevel;
+    public void setMemberLevel(String memberLevel) {
+        this.memberLevel = memberLevel == null ? null : memberLevel.trim();
     }
 
     public Date getRegistTime() {
@@ -238,11 +238,11 @@ public class OriginalDataMember extends BaseQuery {
         this.source = source == null ? null : source.trim();
     }
 
-    public String getBatchId() {
+    public Integer getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(String batchId) {
-        this.batchId = batchId == null ? null : batchId.trim();
+    public void setBatchId(Integer batchId) {
+        this.batchId = batchId;
     }
 }

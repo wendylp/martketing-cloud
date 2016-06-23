@@ -8,7 +8,7 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 public class DataMember extends BaseQuery {
     private Integer id;
 
-    private String memberId;
+    private Integer memberId;
 
     private String memberPoints;
 
@@ -53,10 +53,10 @@ public class DataMember extends BaseQuery {
     private String source;
 
     private Integer batchId;
-
-    public DataMember() {}
-
-    public DataMember(Integer index, Integer size) {
+    
+    public DataMember(){}
+    
+    public DataMember(Integer index , Integer size){
         super(index, size);
     }
 
@@ -68,12 +68,12 @@ public class DataMember extends BaseQuery {
         this.id = id;
     }
 
-    public String getMemberId() {
+    public Integer getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(String memberId) {
-        this.memberId = memberId == null ? null : memberId.trim();
+    public void setMemberId(Integer memberId) {
+        this.memberId = memberId;
     }
 
     public String getMemberPoints() {
