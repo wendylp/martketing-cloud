@@ -108,6 +108,7 @@ public class ApiConstant {
 	public static final String DL_PERSONAL_GROUPLIST = "ruixue.hfive.mkt.personal.grouplist";
     public static final String DL_WUWEN_SYNC = "ruixue.hfive.mkt.wtuwen.sync";
 	public static final String DL_WUWEN_HOST = "ruixue.hfive.mkt.wtuwen.convert";
+	public static final String DL_PERSONAL_ISONLINE = "ruixue.hfive.mkt.personal.isonline";
 	public static final String DL_API_PARAM_METHOD = "method";
 	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_KEY = "callback";
 	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_VALUE = "mkt.data.inbound.wechat.public.auth.callback";

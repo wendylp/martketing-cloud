@@ -46,7 +46,6 @@ public class GetH5PersonalListImpl implements TaskService {
                 JSONObject obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_personal_list_response");
                 H5MktPersonalListResponse h5MktPersonalListResponse = JSON.parseObject(obj.toString(),H5MktPersonalListResponse.class);
                 insertPersonalInfo(h5MktPersonalListResponse);
-                System.out.print(1);
             } catch (IOException e) {
                 e.printStackTrace();
             }

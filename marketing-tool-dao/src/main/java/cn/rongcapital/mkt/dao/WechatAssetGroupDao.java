@@ -13,6 +13,8 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface WechatAssetGroupDao extends BaseDao<WechatAssetGroup>{
@@ -46,4 +48,18 @@ public interface WechatAssetGroupDao extends BaseDao<WechatAssetGroup>{
 	 * @return list
 	 */
 	Map<String,Object> selectGroupById(String id);
+
+	/**
+	 * 获取多个组的总人数
+	 * @param paramMap
+	 * @return list
+	 */
+	Long sumGroupMemberCount(ArrayList<Integer> groupIds);
+
+	/**
+	 * 获取导入时的组的编号
+	 * @param paramMap
+	 * @return list
+	 */
+	List<Long> selectImportGroupIdsByIds(ArrayList<Integer> groupIds);
 }

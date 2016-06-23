@@ -3,34 +3,27 @@ package cn.rongcapital.mkt.vo;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.util.ArrayList;
+
 /**
  * Created by Yunfeng on 2016-6-1.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class SaveWechatAssetListIn extends BaseInput {
-    private int assetId;
-    private int groupId;
+
+    private ArrayList<Integer> groupIds;
     private String peopleGroupName;
 
-    @JsonProperty("asset_id")
-    public int getAssetId() {
-        return assetId;
+    @JsonProperty("group_ids")
+    public ArrayList<Integer> getGroupIds() {
+        return groupIds;
     }
 
-    public void setAssetId(int assetId) {
-        this.assetId = assetId;
+    public void setGroupIds(ArrayList<Integer> groupIds) {
+        this.groupIds = groupIds;
     }
 
-    @JsonProperty("group_id")
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
-
-    @JsonProperty("group_name")
+    @JsonProperty("name")
     public String getPeopleGroupName() {
         return peopleGroupName;
     }

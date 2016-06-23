@@ -16,4 +16,5 @@ public class PersonalContacts {
     public void setContact(ArrayList<PersonalContact> contact) {
         this.contact = contact;
     }
+
 }

@@ -92,9 +92,10 @@
 	
 	<!-- 其它SQL语句 -->
 	<insert id="insertWechatGroups" parameterType="java.util.Map" >
-		INSERT INTO audience_list (audience_name,create_time)
+		INSERT INTO audience_list (audience_name,audience_rows,create_time)
 		VALUES (
 		       #{audience_name},
+		       #{audience_rows},
 		       #{create_time}
 		       )
 	</insert>
@@ -104,5 +105,11 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE audience_name like #{name}
 		limit #{size}
+	</select>
+
+	<select id="selectIdByAudienceName" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE audience_name = #{audience_name}
 	</select>
 </mapper>

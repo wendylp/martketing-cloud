@@ -34,7 +34,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public class UploadFileServiceImpl implements UploadFileService{
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final String directory = "/rc/uploadFiles/";
+    private final String directory = "//rc//";
 
     @Autowired
     private ImportDataHistoryDao importDataHistoryDao;
@@ -55,12 +55,9 @@ public class UploadFileServiceImpl implements UploadFileService{
             baseOutput.getData().add(obj);
             return Response.ok().entity(baseOutput).build();
         }
-        baseOutput.getData().add("唯一性标识获取成功");
         String fileName = "";
         Map<String,List<InputPart>> uploadForm = fileInput.getFormDataMap();
-        List<InputPart> inputParts = uploadForm.get("file");
-        logger.info("get file successed" + inputParts);
-        baseOutput.getData().add("进入1号代码");
+        List<InputPart> inputParts = uploadForm.get("uploadedFile");
         for(InputPart inputPart : inputParts){
             try {
                 MultivaluedMap<String,String> header = inputPart.getHeaders();

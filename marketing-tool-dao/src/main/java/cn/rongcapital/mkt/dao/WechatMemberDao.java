@@ -44,4 +44,25 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return list
 	 */
 	void batchInsertFans(List<Map<String, Object>> fansList);
+
+	/**
+	 * 判断这个人是否已经被保存
+	 * @param paramMap
+	 * @return list
+	 */
+	Long selectIdByGroupIdAndWxAcct(Map<String, Object> paramMap);
+
+	/**
+	 * 批量插入微信好友
+	 * @param paramMap
+	 * @return list
+	 */
+	void batchInsertContacts(List<Map<String, Object>> paramContacts);
+
+	/**
+	 * 根据组名获取组员的唯一标识
+	 * @param paramMap
+	 * @return list
+	 */
+	List<String> selectWxCodeByGroupId(List<Long> importGroudIds);
 }

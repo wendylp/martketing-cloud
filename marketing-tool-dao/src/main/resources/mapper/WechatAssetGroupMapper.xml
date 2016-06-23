@@ -103,5 +103,22 @@
 		FROM wechat_asset_group
 		WHERE id = #{id}
 	</select>	
-	
+
+	<select id="sumGroupMemberCount" parameterType="java.util.List" resultType="java.lang.Long">
+		SELECT sum(members)
+		FROM wechat_asset_group
+		WHERE id in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectImportGroupIdsByIds" parameterType="java.util.List" resultType="java.lang.Long">
+		SELECT import_group_id
+		FROM wechat_asset_group
+		WHERE id in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>
