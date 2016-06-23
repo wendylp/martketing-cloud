@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -80,9 +81,7 @@ public class OriginalDataMemberScheduleServiceImpl implements OriginalDataMember
         for (int i = 0; i < batchCount; i++) {
             DataMember paramDataMember = new DataMember();
             OriginalDataMember tmpOriginalDataMember = tmpOriginalDataMembers.get(i);
-            paramDataMember.setBatchId(tmpOriginalDataMember.getBatchId());
-            paramDataMember.setMemberId(tmpOriginalDataMember.getMemberId());
-
+            BeanUtils.copyProperties(tmpOriginalDataMember, paramDataMember);
             // 因为在一个事务里 , 直接修改OriginalDataMember的状态
             tmpOriginalDataMember.setStatus(Boolean.TRUE);
             originalDataMemberDao.updateById(tmpOriginalDataMember);
