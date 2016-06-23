@@ -77,8 +77,8 @@ public class UploadFileServiceImpl implements UploadFileService{
             }
         }
         //Todo: 4.将数据摘要，数据条数，未识别属性返回给前端。
-        baseOutput.setCode(200);
-        baseOutput.setMsg("文件上传成功");
+        baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+        baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
         baseOutput.getData().add(uploadFileAccordTemplateOut);
         return Response.ok().entity(baseOutput).build();
     }
