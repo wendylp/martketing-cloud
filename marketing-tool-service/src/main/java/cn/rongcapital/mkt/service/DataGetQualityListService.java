@@ -5,7 +5,6 @@ public interface DataGetQualityListService {
     /**
      * mkt.data.quality.list.get
      * 
-     * @author nianjun
      * @功能简述 : 数据质量报告
      * @author nianjun
      * @param method
