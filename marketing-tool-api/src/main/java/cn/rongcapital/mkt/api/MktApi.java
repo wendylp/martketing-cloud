@@ -900,12 +900,13 @@ public class MktApi {
 
         return result;
     }
-
+    
     @GET
     @Path("/mkt.tag.user.custom.get")
     @Consumes({MediaType.APPLICATION_JSON})
     public Object getCustomTag(@NotEmpty @QueryParam("user_token") String userToken,
-                    @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("contact_id") Integer contactId) {
+                    @NotEmpty @QueryParam("ver") String ver,
+                    @NotNull @QueryParam("contact_id") Integer contactId) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
         List<String> customTags = tagGetCustomService.getCustomizeTagByContactId(ver, contactId);
@@ -914,10 +915,10 @@ public class MktApi {
         result.setTotal(result.getData().size());
         return result;
     }
-
+    
 	/**
 	 * @功能简述: 获取某个微信账号下的好友/粉丝/群组信息
-	 * @param: String userToken, String ver, Ingeger asset_id
+	 * @param: String userToken, String ver, Integer asset_id
 	 * @return: Object
 	 */
 	@GET
