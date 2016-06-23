@@ -181,7 +181,7 @@
 	</insert>
 
 	<insert id="insertHostImg" parameterType="java.util.Map">
-		INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,create_time)
+		INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,create_time,material_id)
 		VALUES
 		(
 		#{name},
@@ -190,7 +190,8 @@
 		#{pc_preview_url},
 		#{mobile_preview_url},
 		#{imgfile_url},
-		#{create_time}
+		#{create_time},
+		#{material_id}
 		)
 	</insert>
 </mapper>
