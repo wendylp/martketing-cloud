@@ -104,5 +104,16 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE audience_list_id = #{audience_list_id}
 	</select>
-	
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO audience_list_party_map (audience_list_id,party_id,create_time)
+        VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.audience_list_id},
+			#{item.party_id},
+			#{item.create_time}
+			)
+		</foreach>
+	</insert>
 </mapper>

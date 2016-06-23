@@ -137,7 +137,7 @@
 	
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsertFans" parameterType="java.util.List">
-		INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark)
+		INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,create_time)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 		(
@@ -161,4 +161,34 @@
 		</foreach>
 	</insert>	
 	
+	<select id="selectIdByGroupIdAndWxAcct" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_code = #{wx_code} AND wx_group_id = #{wx_group_id}
+	</select>
+
+	<insert id="batchInsertContacts" parameterType="java.util.List">
+		INSERT INTO wechat_member (wx_code,wx_group_id,nickname,sex,province,city,signature)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.wx_code},
+			#{item.wx_group_id},
+			#{item.nickname},
+			#{item.sex},
+			#{item.province},
+			#{item.city},
+			#{item.signature}
+			)
+		</foreach>
+	</insert>
+
+	<select id="selectWxCodeByGroupId" parameterType="java.util.List" resultType="java.lang.String">
+		SELECT wx_code
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_group_id in
+		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

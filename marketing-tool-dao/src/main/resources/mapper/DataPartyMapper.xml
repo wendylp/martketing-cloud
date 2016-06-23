@@ -207,5 +207,13 @@
 		WHERE 
 			table_name='data_party'
 	</select>
-	
+
+	<select id="selectDataPartyIdsByMappinKeyIds" parameterType="java.util.List" resultType="java.lang.Long">
+		SELECT id
+        <include refid="QUERY_FROM_TABLE"/>
+		WHERE md_type = 8 AND mapping_keyid in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

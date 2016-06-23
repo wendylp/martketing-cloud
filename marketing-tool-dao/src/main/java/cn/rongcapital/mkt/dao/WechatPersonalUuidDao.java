@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatPersonalUuid;
 
+import java.util.List;
 import java.util.Map;
 
 public interface WechatPersonalUuidDao extends BaseDao<WechatPersonalUuid>{
@@ -38,9 +39,23 @@ public interface WechatPersonalUuidDao extends BaseDao<WechatPersonalUuid>{
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
 
 	/**
-	 *
+	 * 插入个人号登录时的uuid
 	 * @param paramMap
 	 * @return list
 	 */
 	void insertUuid(Map<String, Object> paramMap);
+
+	/**
+	 * 选择当前数据库下status为0的uuid
+	 * @param paramMap
+	 * @return list
+	 */
+	List<Map<String,String>> selectEffectiveUuids();
+
+	/**
+	 * 将该条uuid跟新为无效数据
+	 * @param paramMap
+	 * @return list
+	 */
+	void updateStatus(Map<String,Object> paramMap);
 }
