@@ -10,6 +10,10 @@
 
 package cn.rongcapital.mkt.api;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +31,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +100,7 @@ import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
 import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.service.SegmentTagGetService;
+import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagCountService;
@@ -130,6 +138,7 @@ import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
+import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
 import cn.rongcapital.mkt.vo.in.ImgtextAssetSyncIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
@@ -309,6 +318,10 @@ public class MktApi {
 
     @Autowired
     private SegmentTagGetService segmentTagGetService;
+    
+    
+    @Autowired
+    private SegmentFilterGetService segmentFilterGetService;
 
     @Autowired
     private SegmentTagUpdateService segmentTagUpdateService;
@@ -1215,6 +1228,26 @@ public class MktApi {
 		return segmentTagGetService.getSegmentTag(userToken, segmentHeadId);
 	}
 	
+	
+    /**
+     * @功能简述: 获取受众细分漏斗计算结果
+     * @param userToken
+     * @param segment_head_id
+     * @param group_index
+     * @param conditions
+     * @return BaseOutput
+     */
+    @POST
+    @Path("/mkt.segment.filter.get")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput getSegmentFilterCount(
+            @Valid SegmentFilterCountIn body,
+            @Context SecurityContext securityContext){
+        return segmentFilterGetService.getSegmentFilterCount(body, securityContext);
+    }
+	
+	
+	
 	/**
 	 * @功能简述: 打标签，增加或修改受众细分关联的tag
 	 * @param: SegmentTagUpdateIn body, SecurityContext securityContext
@@ -1406,4 +1439,73 @@ public class MktApi {
 	public BaseOutput wechatPersonalAuth(WechatPersonalAuthIn wechatPersonalAuthIn){
 		return wechatPersonalAuthService.authPersonWechat(wechatPersonalAuthIn);
 	}
+	
+	@POST
+    @Path("/upload")
+    @Consumes("multipart/form-data")
+    public Object uploadFile(
+            //@QueryParam("file_source") String fileSource,
+            //@NotEmpty @QueryParam("file_unique") String fileUnique,
+            //@QueryParam("file_type") int fileType,
+            MultipartFormDataInput input, @Context SecurityContext securityContext){
+        
+//	
+//	@POST
+//    @Path("/upload")
+//    @Consumes("multipart/form-data")
+//    public Response uploadFile(MultipartFormDataInput input){
+        String fileName = "";
+        Map<String,List<InputPart>> uploadForm = input.getFormDataMap();
+        List<InputPart> inputParts = uploadForm.get("uploadedFile");
+
+        for(InputPart inputPart : inputParts){
+            try {
+                MultivaluedMap<String,String> header = inputPart.getHeaders();
+                fileName = getFileName(header);
+
+                InputStream inputStream = inputPart.getBody(InputStream.class,null);
+                byte[] bytes = IOUtils.toByteArray(inputStream);
+
+                fileName = "c://tmp//" + fileName;
+
+                writeFile(bytes,fileName);
+                System.out.println("DONE");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return Response.status(200).entity("uploadFile is called, Uploaded file name: " + fileName).build();
+    }
+
+
+
+    private String getFileName(MultivaluedMap<String, String> header) {
+
+        String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
+
+        for(String filename : contentDisposition){
+            if((filename.trim().startsWith("filename"))){
+                String[] name = filename.split("=");
+                String finalFileName = name[1].trim().replaceAll("\"","");
+                return finalFileName;
+            }
+        }
+
+        return "unknown";
+    }
+
+    private void writeFile(byte[] content, String fileName) throws IOException{
+        File file = new File(fileName);
+
+        if(!file.exists()){
+            file.createNewFile();
+        }
+
+        FileOutputStream fop = new FileOutputStream(file);
+
+        fop.write(content);
+        fop.flush();
+        fop.close();
+    }
 }
