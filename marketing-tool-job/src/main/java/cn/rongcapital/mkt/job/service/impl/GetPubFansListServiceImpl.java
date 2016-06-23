@@ -54,7 +54,6 @@ public class GetPubFansListServiceImpl implements TaskService {
                 obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_pub_fanslist_response");
                 H5MktPubFansListResponse h5MktPubFansListResponse = JSON.parseObject(obj.toString(),H5MktPubFansListResponse.class);
                 fansBatchInsert(h5MktPubFansListResponse);
-                System.out.print(1);
             } catch (IOException e) {
                 e.printStackTrace();
             }

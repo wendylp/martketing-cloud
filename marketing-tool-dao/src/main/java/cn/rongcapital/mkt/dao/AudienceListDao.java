@@ -52,4 +52,11 @@ public interface AudienceListDao extends BaseDao<AudienceList>{
 	 * @return int
 	 */
 	List<Map<String,Object>> searchDataMain(Map<String, Object> paramMap);
+
+	/**
+	 * 根据人群名称查找主键Id
+	 * @param paramMap
+	 * @return int
+	 */
+	Long selectIdByAudienceName(Map<String, Object> paramMap);
 }

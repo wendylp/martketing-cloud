@@ -31,6 +31,7 @@ import cn.rongcapital.mkt.dao.DataPaymentDao;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.dao.ImportTemplateDao;
+import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataArchPoint;
 import cn.rongcapital.mkt.po.DataCustomerTags;
@@ -88,6 +89,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         List<Map<String, Object>> resultList = new ArrayList<>();
         List<Map<String, Object>> columnList = new ArrayList<>();
         List<ImportTemplate> importTemplateList = null;
+        int totalCount = 0;
 
 
         if (customizeViews != null && !customizeViews.isEmpty()) {
@@ -120,33 +122,42 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             DataParty paramObj = new DataParty(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPartyDao);
+            totalCount = getTotalCount(dataPartyDao);
         } else if (dataType == DataTypeEnum.POPULATION.getCode()) {
             DataPopulation paramObj = new DataPopulation(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPopulationDao);
+            totalCount = getTotalCount(dataPopulationDao);
         } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
             DataCustomerTags paramObj = new DataCustomerTags(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataCustomerTagsDao);
+            totalCount = getTotalCount(dataCustomerTagsDao);
         } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
             DataArchPoint paramObj = new DataArchPoint(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataArchPointDao);
+            totalCount = getTotalCount(dataArchPointDao);
         } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
             DataMember paramObj = new DataMember(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataMemberDao);
+            totalCount = getTotalCount(dataMemberDao);
         } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
             DataLogin paramObj = new DataLogin(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataLoginDao);
+            totalCount = getTotalCount(dataLoginDao);
         } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
             DataPayment paramObj = new DataPayment(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPaymentDao);
+            totalCount = getTotalCount(dataPaymentDao);
         } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
             DataShopping paramObj = new DataShopping(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataShoppingDao);
+            totalCount = getTotalCount(dataShoppingDao);
         } else {
             logger.error("传入错误的data type : {}", dataType);
         }
 
         result.getData().addAll(resultList);
         result.setTotal(result.getData().size());
+        result.setTotalCount(totalCount);
         result.getColNames().addAll(columnList);
         return Response.ok().entity(result).build();
     }
@@ -213,5 +224,9 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         }
 
         return resultList;
+    }
+
+    private <D extends BaseDao> int getTotalCount(D dao) {
+        return dao.selectListCount(null);
     }
 }

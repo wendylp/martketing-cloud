@@ -4,9 +4,8 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.HttpUtils;
 import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
+import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.job.vo.in.H5MktPubFansListResponse;
-import cn.rongcapital.mkt.job.vo.in.H5Personal;
 import cn.rongcapital.mkt.job.vo.in.H5PersonalContactlistResponse;
 import cn.rongcapital.mkt.job.vo.in.PersonalContact;
 import com.alibaba.fastjson.JSON;
@@ -32,39 +31,84 @@ public class GetPersonContactsList implements TaskService {
     private TenementDao tenementDao;
     @Autowired
     private WechatMemberDao wechatMemberDao;
+    @Autowired
+    private GetUUidListServiceImpl getUUidListService;
+    @Autowired
+    private IsUuidEffectiveService isUuidEffectiveService;
+    @Autowired
+    private WechatRegisterDao wechatRegisterDao;
+    @Autowired
+    private GetGroupIdServiceImpl getGroupIdService;
 
     @Override
     public void task(Integer taskId) {
         Map<String,String> h5ParamMap = tenementDao.selectPid();
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PERSONAL_CONTACTLIST);
-        h5ParamMap.put("uuid","wZ_5PrO_fw==");
-        HttpResponse httpResponse = HttpUtils.requestH5Interface(h5ParamMap);
-        if(httpResponse != null){
-            JSONObject obj = null;
-            try {
-                obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_personal_contactlist_response");
-                if(obj != null){
-                    H5PersonalContactlistResponse h5PersonalContactlistResponse = JSON.parseObject(obj.toString(),H5PersonalContactlistResponse.class);
-                    batchInsertContacts(h5PersonalContactlistResponse);
-                    System.out.print(1);
+
+        List<String> uuids = getUUidListService.getUuidList();
+        if(uuids == null) return ;
+
+        for(String uuid : uuids){
+            if(isUuidEffectiveService.isUuidEffective(uuid)){
+                h5ParamMap.put("uuid",uuid);
+                HttpResponse httpResponse = HttpUtils.requestH5Interface(h5ParamMap);
+                if(httpResponse != null){
+                    JSONObject obj = null;
+                    try {
+                        obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_personal_contactlist_response");
+                        if(obj != null){
+                            H5PersonalContactlistResponse h5PersonalContactlistResponse = JSON.parseObject(obj.toString(),H5PersonalContactlistResponse.class);
+                            if(h5PersonalContactlistResponse.getContacts() != null){
+                                batchInsertContacts(h5PersonalContactlistResponse,h5PersonalContactlistResponse.getUin());
+                            }
+                            System.out.print(1);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
 
-    private void batchInsertContacts(H5PersonalContactlistResponse h5PersonalContactlistResponse) {
+    private void batchInsertContacts(H5PersonalContactlistResponse h5PersonalContactlistResponse,String uin) {
         List<Map<String,Object>> paramContacts = new ArrayList<Map<String,Object>>();
+        //Todo:1.首先通过uin和好友组确定是否已经存储了这个人的好友组，如果没有则先存储这个人的好友组，如果存储了则获取这个组的groupid
+        Integer groupId = getGroupIdService.getGroupIdByOwnerIdAndGroupname(uin,"好友组");
+        //Todo:2.获取了group_id以后需要根据group_id和微信号进行判重，重复了就不插入数据了
         for(PersonalContact personalContact : h5PersonalContactlistResponse.getContacts().getContact()){
-            Map<String,Object> paramContact = new HashMap<String,Object>();
-            paramContact.put("wx_code", personalContact.getUcode());
-            paramContact.put("nickname", personalContact.getNickname());
-            paramContact.put("sex", personalContact.getSex());
-            paramContact.put("signature", personalContact.getSignature());
-            paramContact.put("province", personalContact.getProvince());
-            paramContact.put("city", personalContact.getCity());
-
+            if(!isFriendAlreadySave(groupId,personalContact.getUcode())){
+                Map<String,Object> paramContact = new HashMap<String,Object>();
+                paramContact.put("wx_group_id",groupId);
+                paramContact.put("wx_code", personalContact.getUcode());
+                try {
+                    paramContact.put("nickname", personalContact.getNickname().getBytes("utf-8"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if("男".equals(personalContact.getSex())){
+                    paramContact.put("sex", 0);
+                }else if("女".equals(personalContact.getSex())){
+                    paramContact.put("sex", 1);
+                }else {
+                    paramContact.put("sex", 2);
+                }
+                paramContact.put("signature", personalContact.getSignature());
+                paramContact.put("province", personalContact.getProvince());
+                paramContact.put("city", personalContact.getCity());
+                paramContacts.add(paramContact);
+            }
         }
+        if(paramContacts.size() != 0){
+            wechatMemberDao.batchInsertContacts(paramContacts);
+        }
+    }
+
+    private boolean isFriendAlreadySave(Integer groupId, String ucode) {
+        Map<String,Object> paramMap = new HashMap<String,Object>();
+        paramMap.put("wx_group_id",groupId);
+        paramMap.put("wx_code",ucode);
+        Long id = wechatMemberDao.selectIdByGroupIdAndWxAcct(paramMap);
+        return !(id==null);
     }
 }

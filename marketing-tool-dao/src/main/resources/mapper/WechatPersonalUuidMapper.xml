@@ -89,5 +89,17 @@
 		#{uuid}
 		)
 	</insert>
+
+	<select id="selectEffectiveUuids" resultType="java.util.Map">
+		SELECT uuid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = 0
+	</select>
+
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE wechat_personal_uuid
+		SET status = 1
+		WHERE uuid = #{uuid}
+	</update>
 	
 </mapper>

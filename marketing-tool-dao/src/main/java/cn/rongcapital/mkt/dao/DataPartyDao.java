@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -73,4 +74,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      * @return map
      */
     Map<String,Object> selectAudienceDetail(Map<String, Object> map);
+
+	/**
+	 * @功能简述 : 获取dataPartyIds
+	 * @author nianjun
+	 * @return map
+	 */
+	List<Long> selectDataPartyIdsByMappinKeyIds(List<String> wxCodes);
 }

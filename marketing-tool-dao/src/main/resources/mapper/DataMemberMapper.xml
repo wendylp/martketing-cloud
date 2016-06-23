@@ -6,6 +6,11 @@
 	<sql id="QUERY_COLUMN_LIST">
 		<![CDATA[ id as id,member_id as memberId,member_points as memberPoints,member_level as memberLevel,regist_time as registTime,card_amt as cardAmt,expire as expire,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId]]>
 	</sql>
+	
+	<!-- 用于批量更新的列 -->
+	<sql id="ORIGINAL_CLEAN_COLUMN_LIST">
+		<![CDATA[ member_id,member_points ,member_level,regist_time,card_amt ,expire,identify_no,driving_license ,email ,mobile ,tel ,qq ,acct_type,acct_no,idfa ,imei ,udid,phone_mac,status ,create_time ,update_time ,source,batch_id]]>
+	</sql>
 
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_member]]></sql>
@@ -176,5 +181,46 @@
 		WHERE 
 			table_name='data_member'
 	</select>
+	
+	<update id="cleanAndUpdateByOriginal" parameterType="map">
+		<![CDATA[INSERT INTO data_member]]>
+		(
+		<include refid="ORIGINAL_CLEAN_COLUMN_LIST" />
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(#{obj.memberId}, #{obj.memberPoints},#{obj.memberLevel},
+			#{obj.registTime}, #{obj.cardAmt}, #{obj.expire},
+			#{obj.identifyNo},#{obj.drivingLicense},#{obj.email},
+			#{obj.mobile}, #{obj.tel}, #{obj.qq}, #{obj.acctType}, #{obj.acctNo},
+			#{obj.idfa},
+			#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.status},
+			#{obj.createTime},#{obj.updateTime},#{obj.source},
+			#{obj.batchId})
+		</foreach>
+		on duplicate key update
+		member_id = values(member_id),
+		member_points = values(member_points),
+		member_level = values(member_level),
+		regist_time = values(regist_time),
+		card_amt = values(card_amt),
+		expire = values(expire),
+		identify_no = values(identify_no),
+		driving_license = values(driving_license),
+		email = values(email),
+		mobile = values(mobile),
+		tel = values(tel),
+		qq = values(qq),
+		acct_type = values(acct_type),
+		acct_no = values(acct_no),
+		idfa = values(idfa),
+		imei = values(imei),
+		udid = values(udid),
+		phone_mac = values(phone_mac),
+		create_time = values(create_time),
+		update_time = values(update_time	),
+		source = values(source),
+		batch_id = values(batch_id)
+	</update>
 	
 </mapper>
