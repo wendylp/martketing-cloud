@@ -1461,7 +1461,7 @@ public class MktApi {
 	
 	@POST
     @Path("/upload")
-    @Consumes("multipart/form-data")
+    @Consumes("multipart/form-data")	
     public Object uploadFile(
             //@QueryParam("file_source") String fileSource,
             //@NotEmpty @QueryParam("file_unique") String fileUnique,
@@ -1485,7 +1485,7 @@ public class MktApi {
                 InputStream inputStream = inputPart.getBody(InputStream.class,null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
 
-                fileName = "/rc/" + fileName;
+                fileName = "//rc//" + fileName;
 
                 writeFile(bytes,fileName);
                 System.out.println("DONE");
