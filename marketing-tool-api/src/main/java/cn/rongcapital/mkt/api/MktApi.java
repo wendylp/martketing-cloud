@@ -94,13 +94,13 @@ import cn.rongcapital.mkt.service.ModifyPasswdService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
 import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
+import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
 import cn.rongcapital.mkt.service.SegmentHeaderGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
 import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.service.SegmentTagGetService;
-import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagCountService;
@@ -111,6 +111,7 @@ import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
 import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
+import cn.rongcapital.mkt.service.TaskGetListService;
 import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
@@ -139,9 +140,9 @@ import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
-import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
 import cn.rongcapital.mkt.vo.in.ImgtextAssetSyncIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
+import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
@@ -383,6 +384,10 @@ public class MktApi {
 
 	@Autowired
 	private WechatPersonalAuthService wechatPersonalAuthService;
+	
+	@Autowired
+	private TaskGetListService taskGetListService;
+	
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1032,20 +1037,21 @@ public class MktApi {
 	public Object segmentBodyUpdate(@Valid SegmentBodyUpdateIn body, @Context SecurityContext securityContext) {
 	    return segmentBodyUpdateService.segmentBodyUpdate(body, securityContext);
 	}
-	
-	/**
-	 * @功能简述: 获取后台任务列表
-	 * @param: 
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.task.list.get")
-	@Consumes({MediaType.APPLICATION_JSON})
-	public BaseOutput taskListGet(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken){
-		return taskListGetService.taskListGet();
-	}
-	
+
+    /**
+     * @功能简述: 获取后台任务列表
+     * @author nianjun
+     * @param:
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.task.list.get")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput taskListGet(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken) {
+        return taskGetListService.getTaskList();
+    }
+
 	/**
 	 * @功能简述: 删除campaign
 	 * @param: campaign_head_id 营销活动id
