@@ -1485,7 +1485,7 @@ public class MktApi {
                 InputStream inputStream = inputPart.getBody(InputStream.class,null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
 
-                fileName = "c://tmp//" + fileName;
+                fileName = "/rc/" + fileName;
 
                 writeFile(bytes,fileName);
                 System.out.println("DONE");
