@@ -103,13 +103,18 @@ public class TaskManager {
 					}
 				}
 			}
+			
 			if(v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID || 
 			   v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_INVALID ||
 			   (v.getStartTime() != null && v.getStartTime().after(Calendar.getInstance().getTime())) || 
 			   (v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime()))) {
 					if(null != taskSchedule && !taskSchedule.isDone() && !taskSchedule.isCancelled()) {
-						taskSchedule.cancel(false);
+						taskSchedule.cancel(true);
 					}
+					//停止内嵌的任务/线程
+					String serviceName = getServiceName(v.getServiceName());
+					TaskService taskService = (TaskService)cotext.getBean(serviceName);
+					taskService.cancelInnerTask();
 			}
 		});
 	}
@@ -119,11 +124,10 @@ public class TaskManager {
 		Runnable task = new Runnable() {
 		       public void run() {
 				try {
-					char serviceNameChar[] = taskSchedulePo.getServiceName().toCharArray();
-					serviceNameChar[0] = Character.toLowerCase(serviceNameChar[0]);
-					String serviceName = String.valueOf(serviceNameChar);
+					String serviceName = getServiceName(taskSchedulePo.getServiceName());
 					TaskService taskService = (TaskService)cotext.getBean(serviceName);
 					taskService.task(taskSchedulePo.getId());
+					taskService.task(taskSchedulePo);
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
@@ -141,11 +145,18 @@ public class TaskManager {
 			if(null != interMinutes) {
 				scheduledFuture =  taskSchedule.scheduleAtFixedRate(task, startTime, interMinutes*60*1000);
 			}else {
-				scheduledFuture = taskSchedule.schedule(task,taskSchedulePo.getStartTime());
+				scheduledFuture = taskSchedule.schedule(task,startTime);
 			}
 		}
 		if(null != scheduledFuture) {
 			TaskManager.taskMap.put(taskSchedulePo.getId().toString(),scheduledFuture);
 		}
+	}
+	
+	private String getServiceName(String serviceName) {
+		char serviceNameChar[] = serviceName.toCharArray();
+		serviceNameChar[0] = Character.toLowerCase(serviceNameChar[0]);
+		String sname = String.valueOf(serviceNameChar);
+		return sname;
 	}
 }

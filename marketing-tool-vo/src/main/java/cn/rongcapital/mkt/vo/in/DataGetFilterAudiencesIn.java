@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.vo.in;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -9,10 +11,9 @@ import cn.rongcapital.mkt.vo.BaseInput;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class DataGetFilterAudiencesIn extends BaseInput {
-//    @NotEmpty
     private String userToken = null;
     
-//    @NotNull
+    @NotNull
     private Integer mdType;
     
     private List<Integer> taskIds;

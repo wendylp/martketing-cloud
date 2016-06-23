@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -82,9 +83,7 @@ public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArc
         for (int i = 0; i < batchCount; i++) {
             DataArchPoint paramDataArchPoint = new DataArchPoint();
             OriginalDataArchPoint tmpOriginalDataArchPoint = tmpOriginalDataArchPoints.get(i);
-            paramDataArchPoint.setClickTime(tmpOriginalDataArchPoint.getClickTime());
-            paramDataArchPoint.setEventId(tmpOriginalDataArchPoint.getEventId());
-            paramDataArchPoint.setBatchId(tmpOriginalDataArchPoint.getBatchId());
+            BeanUtils.copyProperties(tmpOriginalDataArchPoint, paramDataArchPoint);
 
             // 因为在一个事务里 , 直接修改OriginalDataArchPoint的状态
             tmpOriginalDataArchPoint.setStatus(Boolean.TRUE);

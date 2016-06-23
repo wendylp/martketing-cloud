@@ -10,6 +10,9 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataMember;
@@ -35,4 +38,11 @@ public interface DataMemberDao extends BaseDao<DataMember>, BaseDataFilterDao<Da
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    /**
+     * @功能简述 : 根据原始数据更新DataMember的数据
+     * @author nianjun
+     */
+    void cleanAndUpdateByOriginal(Map<String, List<DataMember>> paramMap);
+    
 }

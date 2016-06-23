@@ -58,4 +58,11 @@ public interface CustomTagDao extends BaseDao<CustomTag>{
      */
     int increaseCoverAudienceCount(CustomTag t);
     
+    /**
+     * @功能简述: 根据contactId获取用户所有的自定义标签
+     * @param: Map<String , Integer>
+     * @return: List<String>
+     */
+    List<String> selectTagsByContactId(Map<String, Integer> paramMap);
+    
 }

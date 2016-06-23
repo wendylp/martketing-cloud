@@ -90,4 +90,10 @@ public interface ImportTemplateDao extends BaseDao<ImportTemplate> {
      * @return Map
      */
     List<ImportTemplate> selectTemplTypePairs();
+    
+    /**
+     * @功能简述 : 根据templType与具体的fieldName更新选择状态.
+     * @author nianjun
+     */
+    void updateSelectedByTemplType(ImportTemplate paramImportTemplate);
 }

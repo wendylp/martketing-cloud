@@ -132,9 +132,9 @@
 		SET 
 			selected = #{selected}
 		WHERE
-			templName = #{templName}
+			templ_name = #{templName}
 		AND	  
-			fieldName = #{fieldName}
+			field_name = #{fieldName}
 	</update>
 	
 	<select id="selectSelectedTemplateList" parameterType="cn.rongcapital.mkt.po.ImportTemplate" resultType="cn.rongcapital.mkt.po.ImportTemplate">
@@ -177,5 +177,16 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		group by templ_type
 	</select>
+	
+	<update id="updateSelectedByTemplType" parameterType="cn.rongcapital.mkt.po.ImportTemplate">
+		UPDATE
+			import_template
+		SET 
+			selected = #{selected}
+		WHERE
+			templ_type = #{templType}
+		AND	  
+			field_name = #{fieldName}
+	</update>
 	
 </mapper>

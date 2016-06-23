@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.service;
 import java.util.List;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
+import cn.rongcapital.mkt.vo.in.CustomizeViewCheckboxIn;
 
 public interface DataGetFilterAudiencesService {
 
@@ -24,5 +25,5 @@ public interface DataGetFilterAudiencesService {
      */
     public <T extends BaseQuery> Object getFilterAudiences(String method, String userToken,
                     String ver, Integer index, Integer size, Integer mdType, List<Integer> taskIdList,
-                    List<Integer> contactIds);
+                    List<Integer> contactIds , List<CustomizeViewCheckboxIn> customizeViews);
 }

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,task_name as taskName,task_descript as taskDescript,task_type as taskType,start_time as startTime,end_time as endTime,interval_minutes as intervalMinutes,schedule as schedule,service_name as serviceName,task_status as taskStatus,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,task_name as taskName,task_descript as taskDescript,task_type as taskType,start_time as startTime,end_time as endTime,interval_minutes as intervalMinutes,schedule as schedule,service_name as serviceName,task_status as taskStatus,status as status,create_time as createTime,update_time as updateTime,campaign_head_id as campaignHeadId,campaign_item_id as campaignItemId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -26,6 +26,8 @@
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		<if test="campaignHeadId != null"><![CDATA[ AND campaign_head_id = #{campaignHeadId}]]></if>
+		    	<if test="campaignItemId != null"><![CDATA[ AND campaign_item_id = #{campaignItemId}]]></if>
 		</where>
 	</sql>
 	
@@ -47,14 +49,16 @@
 		    	<if test="schedule != null"><![CDATA[schedule = #{schedule},]]></if>
 		    	<if test="serviceName != null"><![CDATA[service_name = #{serviceName},]]></if>
 		    	<if test="taskStatus != null"><![CDATA[task_status = #{taskStatus},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="campaignHeadId != null"><![CDATA[campaign_head_id = #{campaignHeadId},]]></if>
+		    	<if test="campaignItemId != null"><![CDATA[campaign_item_id = #{campaignItemId}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.TaskSchedule" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO task_schedule (task_name,task_descript,task_type,start_time,end_time,interval_minutes,schedule,service_name,task_status,create_time)
+			INSERT INTO task_schedule (task_name,task_descript,task_type,start_time,end_time,interval_minutes,schedule,service_name,task_status,create_time,campaign_head_id,campaign_item_id)
 			VALUES
 			(
 			  #{taskName},
@@ -66,7 +70,9 @@
 			  #{schedule},
 			  #{serviceName},
 			  #{taskStatus},
-			  now()
+			  now(),
+			  #{campaignHeadId},
+			  #{campaignItemId}
 			)
 		]]>
 	</insert>
@@ -109,11 +115,16 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
 	<delete id="physicalDeleteById" parameterType="int">
 		delete 
 		<include refid="QUERY_FROM_TABLE"/>
 		where id = #{taskId}
 	</delete>
+	<update id="activateTaskByCampaignHeadId" parameterType="int">
+		update 
+		task_schedule
+		set task_status = 1
+		where campaign_head_id = #{campaignHeadId} and status = 0
+	</update>
 	
 </mapper>

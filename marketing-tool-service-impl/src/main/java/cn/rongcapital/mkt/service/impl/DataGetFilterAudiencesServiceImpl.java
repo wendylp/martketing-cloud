@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -29,6 +31,7 @@ import cn.rongcapital.mkt.dao.DataPaymentDao;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.dao.ImportTemplateDao;
+import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataArchPoint;
 import cn.rongcapital.mkt.po.DataCustomerTags;
@@ -41,6 +44,7 @@ import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.ImportTemplate;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
+import cn.rongcapital.mkt.vo.in.CustomizeViewCheckboxIn;
 import cn.rongcapital.mkt.vo.out.DataGetMainListOut;
 
 @Service
@@ -76,17 +80,33 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
     private DataShoppingDao dataShoppingDao;
 
     @Override
-    public <T extends BaseQuery> Object getFilterAudiences(String method, String userToken,
-                    String ver, Integer index, Integer size, Integer dataType, List<Integer> taskIdList,
-                    List<Integer> contactIds) {
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public <T extends BaseQuery> Object getFilterAudiences(String method, String userToken, String ver, Integer index,
+                    Integer size, Integer dataType, List<Integer> taskIdList, List<Integer> contactIds,
+                    List<CustomizeViewCheckboxIn> customizeViews) {
         DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
         List<Map<String, Object>> resultList = new ArrayList<>();
+        List<Map<String, Object>> columnList = new ArrayList<>();
+        List<ImportTemplate> importTemplateList = null;
+        int totalCount = 0;
+
+
+        if (customizeViews != null && !customizeViews.isEmpty()) {
+            for (int i = 0; i < customizeViews.size(); i++) {
+                ImportTemplate paramImportTemplate = new ImportTemplate(index, size);
+                paramImportTemplate.setSelected(customizeViews.get(i).getIsSelected());
+                paramImportTemplate.setFieldName(customizeViews.get(i).getColName());
+                paramImportTemplate.setTemplType(dataType);
+                importTemplateDao.updateSelectedByTemplType(paramImportTemplate);
+            }
+        }
+
         ImportTemplate paramImportTemplate = new ImportTemplate(index, size);
         paramImportTemplate.setSelected(Boolean.TRUE);
         paramImportTemplate.setTemplType(dataType);
-        List<ImportTemplate> importTemplateList = importTemplateDao.selectSelectedTemplateList(paramImportTemplate);
-        List<Map<String, Object>> columnList = new ArrayList<>();
+        importTemplateList = importTemplateDao.selectSelectedTemplateList(paramImportTemplate);
+
         if (importTemplateList != null && !importTemplateList.isEmpty()) {
             for (ImportTemplate importTemplate : importTemplateList) {
                 Map<String, Object> map = new HashMap<>();
@@ -102,33 +122,42 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             DataParty paramObj = new DataParty(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPartyDao);
+            totalCount = getTotalCount(dataPartyDao);
         } else if (dataType == DataTypeEnum.POPULATION.getCode()) {
             DataPopulation paramObj = new DataPopulation(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPopulationDao);
+            totalCount = getTotalCount(dataPopulationDao);
         } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
             DataCustomerTags paramObj = new DataCustomerTags(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataCustomerTagsDao);
+            totalCount = getTotalCount(dataCustomerTagsDao);
         } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
             DataArchPoint paramObj = new DataArchPoint(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataArchPointDao);
+            totalCount = getTotalCount(dataArchPointDao);
         } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
             DataMember paramObj = new DataMember(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataMemberDao);
+            totalCount = getTotalCount(dataMemberDao);
         } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
             DataLogin paramObj = new DataLogin(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataLoginDao);
+            totalCount = getTotalCount(dataLoginDao);
         } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
             DataPayment paramObj = new DataPayment(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPaymentDao);
+            totalCount = getTotalCount(dataPaymentDao);
         } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
             DataShopping paramObj = new DataShopping(index, size);
             resultList = getData(dataType, taskIdList, contactIds, paramObj, dataShoppingDao);
+            totalCount = getTotalCount(dataShoppingDao);
         } else {
             logger.error("传入错误的data type : {}", dataType);
         }
 
         result.getData().addAll(resultList);
         result.setTotal(result.getData().size());
+        result.setTotalCount(totalCount);
         result.getColNames().addAll(columnList);
         return Response.ok().entity(result).build();
     }
@@ -195,5 +224,9 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         }
 
         return resultList;
+    }
+
+    private <D extends BaseDao> int getTotalCount(D dao) {
+        return dao.selectListCount(null);
     }
 }

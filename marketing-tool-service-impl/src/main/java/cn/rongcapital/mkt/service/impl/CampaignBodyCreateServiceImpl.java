@@ -218,6 +218,9 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					campaignDecisionPrvtFriendsDao.insert(campaignDecisionPrvtFriends);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_TAG://标签判断
+					taskSchedule = initTaskDecisionTag(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					CampaignDecisionTag campaignDecisionTag = initCampaignDecisionTag(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionTagDao.insert(campaignDecisionTag);
 					break;
@@ -349,6 +352,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		taskSchedule.setStartTime(startTime);
 		taskSchedule.setEndTime(endTime);
 		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_TIME_TRIGGER);
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
 		CampaignHead ch =  new CampaignHead();
 		ch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		ch.setId(campaignHeadId);
@@ -400,6 +405,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				taskSchedule.setIntervalMinutes(intervalMinutes);
 				taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_AUDIENCE_TARGET);
 				taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+				taskSchedule.setCampaignHeadId(campaignHeadId);
+				taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
 				return taskSchedule;
 			}
 		}
@@ -414,6 +421,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		taskSchedule.setIntervalMinutes(intervalMinutes);
 		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SENT);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
 		return taskSchedule;
 	}
 	
@@ -425,6 +434,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		taskSchedule.setIntervalMinutes(intervalMinutes);
 		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_READ);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
 		return taskSchedule;
 	}
 	
@@ -436,6 +447,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		taskSchedule.setIntervalMinutes(intervalMinutes);
 		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_FORWARD);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
 		return taskSchedule;
 	}
 	
@@ -447,6 +460,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		taskSchedule.setIntervalMinutes(intervalMinutes);
 		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SUBSCRIBE);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
 		return taskSchedule;
 	}
 	
@@ -458,6 +473,17 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		taskSchedule.setIntervalMinutes(intervalMinutes);
 		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_PRV_FRIEND);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+		return taskSchedule;
+	}
+	
+	private TaskSchedule initTaskDecisionTag(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		TaskSchedule taskSchedule = new TaskSchedule();
+		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_DECISION_TAG);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
 		return taskSchedule;
 	}
 	
