@@ -2,7 +2,9 @@ package cn.rongcapital.mkt.common.enums;
 
 public enum ContactwayEnum {
 
-    MOBILE(1, "mobile", "手机"), EMAIL(2, "email", "电子邮件"), WECHAT(3, "wechat", "微信号"),
+    MOBILE(1, "mobile", "手机"), 
+    EMAIL(2, "email", "电子邮件"), 
+    WECHAT(3, "wechat", "微信号"),
 
     ;
 
