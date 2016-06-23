@@ -46,7 +46,7 @@ public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCount
 	    
 	    String ids[]=tagIds.split(",");
 	    
-	    Map<String,Object> map = new HashMap<String,Object>();
+	    
 	    
 	    BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 	                    ApiErrorCode.SUCCESS.getMsg(),
@@ -57,6 +57,8 @@ public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCount
 	    for(String tagid : ids){
 	        
 	        List<DataParty> restList =mongoTemplate.find(new Query(Criteria.where("tagList.tagId").is(tagid)),DataParty.class);
+	        
+	        Map<String,Object> map = new HashMap<String,Object>();
 	        
 	        int count=restList.size();	        
 	        map.put("tag_id",tagid);
