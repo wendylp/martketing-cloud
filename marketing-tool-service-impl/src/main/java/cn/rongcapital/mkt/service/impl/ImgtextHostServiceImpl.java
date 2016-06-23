@@ -52,6 +52,7 @@ public class ImgtextHostServiceImpl implements ImgtextHostService {
                     paramMap.put("mobile_url",h5MktWtuwenConvertResponse.getMobileUrl());
                     paramMap.put("imgfile_url",h5MktWtuwenConvertResponse.getScreenshopUrl());
                     paramMap.put("create_time",h5MktWtuwenConvertResponse.getCreateTime());
+                    paramMap.put("material_id",h5MktWtuwenConvertResponse.getMaterialId());
                     paramMap.put("type",1);
                     switch (h5MktWtuwenConvertResponse.getChannelType()){
                         case 2:

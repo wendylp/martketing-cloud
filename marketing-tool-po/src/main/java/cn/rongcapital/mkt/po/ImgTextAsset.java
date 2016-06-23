@@ -17,13 +17,15 @@ public class ImgTextAsset extends BaseQuery {
 
     private String mobilePreviewUrl;
 
+    private String imgfileUrl;
+
+    private String materialId;
+
     private Byte status;
 
     private Date createTime;
 
     private Date updateTime;
-
-    private String imgfileUrl;
 
     public Integer getId() {
         return id;
@@ -73,6 +75,22 @@ public class ImgTextAsset extends BaseQuery {
         this.mobilePreviewUrl = mobilePreviewUrl == null ? null : mobilePreviewUrl.trim();
     }
 
+    public String getImgfileUrl() {
+        return imgfileUrl;
+    }
+
+    public void setImgfileUrl(String imgfileUrl) {
+        this.imgfileUrl = imgfileUrl == null ? null : imgfileUrl.trim();
+    }
+
+    public String getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(String materialId) {
+        this.materialId = materialId == null ? null : materialId.trim();
+    }
+
     public Byte getStatus() {
         return status;
     }
@@ -95,13 +113,5 @@ public class ImgTextAsset extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getImgfileUrl() {
-        return imgfileUrl;
-    }
-
-    public void setImgfileUrl(String imgfileUrl) {
-        this.imgfileUrl = imgfileUrl == null ? null : imgfileUrl.trim();
     }
 }

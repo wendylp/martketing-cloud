@@ -85,6 +85,7 @@ public class ImgtextAssetSyncServiceImpl implements ImgtextAssetSyncService{
             paramMap.put("pc_preview_url",wtuwen.getPcUrl());
             paramMap.put("mobile_preview_url",wtuwen.getMobileUrl());
             paramMap.put("imgfile_url",wtuwen.getScreenshotUrl());
+            paramMap.put("material_id",wtuwen.getMaterial_id());
             if(wtuwen.getChannelType() != null){
                 switch (wtuwen.getChannelType()){
                     case 1:
@@ -93,15 +94,15 @@ public class ImgtextAssetSyncServiceImpl implements ImgtextAssetSyncService{
                         break;
                     case 2:
                         paramMap.put("type",1);
-                        paramMap.put("owner_name","易企秀图文");
+                        paramMap.put("owner_name","易企秀");
                         break;
                     case 3:
                         paramMap.put("type",2);
-                        paramMap.put("owner_name","兔展图文");
+                        paramMap.put("owner_name","兔展");
                         break;
                     case 4:
                         paramMap.put("type",3);
-                        paramMap.put("owner_name","MAMA图文");
+                        paramMap.put("owner_name","MAMA");
                         break;
                 }
             }
