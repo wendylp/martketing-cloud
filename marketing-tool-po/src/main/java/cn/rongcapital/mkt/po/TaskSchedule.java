@@ -31,6 +31,10 @@ public class TaskSchedule extends BaseQuery {
 
     private Date updateTime;
 
+    private Integer campaignHeadId;
+
+    private String campaignItemId;
+
     public Integer getId() {
         return id;
     }
@@ -133,5 +137,21 @@ public class TaskSchedule extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getCampaignHeadId() {
+        return campaignHeadId;
+    }
+
+    public void setCampaignHeadId(Integer campaignHeadId) {
+        this.campaignHeadId = campaignHeadId;
+    }
+
+    public String getCampaignItemId() {
+        return campaignItemId;
+    }
+
+    public void setCampaignItemId(String campaignItemId) {
+        this.campaignItemId = campaignItemId == null ? null : campaignItemId.trim();
     }
 }

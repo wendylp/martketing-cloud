@@ -110,7 +110,18 @@
 	<!-- 更新受众人群数量,该SQL务必在事务内for update做 -->
 	<update id="increaseCoverAudienceCount" parameterType="cn.rongcapital.mkt.po.CustomTag" >
 		UPDATE custom_tag
-		SET cover_audience_count =#{cover_audience_count} + 1
+		SET cover_audience_count =#{coverAudienceCount} + 1
 	</update>
+	
+	<select id="selectTagsByContactId" resultType="java.lang.String" parameterType="java.util.Map" >
+		SELECT 
+			custom_tag.name 
+		FROM custom_tag 
+		JOIN 
+			custom_tag_map 
+			ON 
+				custom_tag.id = custom_tag_map.tag_id
+			WHERE custom_tag_map.map_id = #{contactId};
+	</select>
 	
 </mapper>

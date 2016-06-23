@@ -1,7 +1,10 @@
 package cn.rongcapital.mkt.vo.in;
 
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
@@ -12,8 +15,10 @@ public class DataUpdateMainSegmenttagIn extends BaseInput{
     
     private String userToken;
     
+    @NotEmpty
     private String tagName;
     
+    @NotNull
     private Integer contactId;
     
     @JsonProperty("method")

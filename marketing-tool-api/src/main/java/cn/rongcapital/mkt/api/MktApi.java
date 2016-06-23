@@ -106,6 +106,7 @@ import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagCountService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
+import cn.rongcapital.mkt.service.TagGetCustomService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
@@ -230,6 +231,9 @@ public class MktApi {
 
     @Autowired
     private DataUpateMainSegmenttagService dataUpateMainSegmenttagService;
+    
+    @Autowired
+    private TagGetCustomService tagGetCustomService;
 
     @Autowired
     private SegmentHeaderGetService segmentHeaderGetService;
@@ -894,7 +898,7 @@ public class MktApi {
                         dataGetFilterAudiencesIn.getUserToken(), dataGetFilterAudiencesIn.getVer(),
                         dataGetFilterAudiencesIn.getIndex(), dataGetFilterAudiencesIn.getSize(),
                         dataGetFilterAudiencesIn.getMdType(), dataGetFilterAudiencesIn.getTaskIds(),
-                        dataGetFilterAudiencesIn.getContactIds());
+                        dataGetFilterAudiencesIn.getContactIds(), dataGetFilterAudiencesIn.getCustomizeViews());
     }
 
     @POST
@@ -909,10 +913,25 @@ public class MktApi {
 
         return result;
     }
+    
+    @GET
+    @Path("/mkt.tag.user.custom.get")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Object getCustomTag(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver,
+                    @NotNull @QueryParam("contact_id") Integer contactId) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        List<String> customTags = tagGetCustomService.getCustomizeTagByContactId(ver, contactId);
 
+        result.getData().addAll(customTags);
+        result.setTotal(result.getData().size());
+        return result;
+    }
+    
 	/**
 	 * @功能简述: 获取某个微信账号下的好友/粉丝/群组信息
-	 * @param: String userToken, String ver, Ingeger asset_id
+	 * @param: String userToken, String ver, Integer asset_id
 	 * @return: Object
 	 */
 	@GET

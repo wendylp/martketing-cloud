@@ -10,14 +10,17 @@
 
 package cn.rongcapital.mkt.po.base;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 
-public class BaseQuery {
+public class BaseQuery implements Serializable{
 
-    private transient Integer startIndex = ApiConstant.PAGE_START_INDEX_DEFAULT;// 开始索引
+	private static final long serialVersionUID = 1L;
+
+	private transient Integer startIndex = ApiConstant.PAGE_START_INDEX_DEFAULT;// 开始索引
 
     private transient Integer pageSize = ApiConstant.PAGE_PAGE_SIZE_DEFAULT;// pageSize
 

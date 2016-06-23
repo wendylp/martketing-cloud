@@ -15,7 +15,9 @@ import cn.rongcapital.mkt.dao.CustomTagMapDao;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.CustomTagMap;
 import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
-
+/**
+ * @author nianjun
+ */
 @Service
 public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmenttagService {
 
