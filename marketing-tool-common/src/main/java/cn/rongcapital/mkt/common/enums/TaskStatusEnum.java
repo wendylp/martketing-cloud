@@ -2,7 +2,9 @@ package cn.rongcapital.mkt.common.enums;
 
 public enum TaskStatusEnum {
 
-    PROCESSING((byte) 0, "进行中"), FINISHED((byte) 1, "完成"), FAILED((byte) 0, "失败"),
+    PROCESSING((byte) 0, "进行中"), 
+    FINISHED((byte) 1, "完成"), 
+    FAILED((byte) 0, "失败"),
 
     ;
 
