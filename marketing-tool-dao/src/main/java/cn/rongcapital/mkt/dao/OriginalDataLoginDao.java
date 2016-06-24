@@ -43,5 +43,5 @@ public interface OriginalDataLoginDao extends BaseDao<OriginalDataLogin>{
 	 * @param List
 	 * @return int
 	 */
-	int batchInsertUploadFileData(ArrayList<Map<String, Object>> insertList);
+	int batchInsertUploadFileData(ArrayList<Map<String, Object>> insertLists);
 }
