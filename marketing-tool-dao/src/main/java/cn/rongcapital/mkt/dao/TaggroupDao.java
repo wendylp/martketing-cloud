@@ -52,5 +52,5 @@ public interface TaggroupDao extends BaseDao<Taggroup>{
      * @param paramMap
      * @return list
      */
-	List<String> selectSubNodesByGroupName(Map<String, String> paramMap);
+	List<String> selectSubNodesByGroupName(Map<String, Object> paramMap);
 }
