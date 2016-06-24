@@ -5,10 +5,13 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class SegmentFilterCountIn {
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class SegmentFilterCountIn extends BaseInput{
 
     @NotEmpty
     private String userToken;
+
     
     @NotEmpty
     private String segment_head_id;
@@ -51,8 +54,8 @@ public class SegmentFilterCountIn {
         return conditions;
     }
 
-    @JsonProperty("conditions")
-    public void setConditions(List<SegmentFilterCondition> filterGroups) {
+    
+    public void setConditions(List<SegmentFilterCondition> conditions) {
         this.conditions = conditions;
     }
 		

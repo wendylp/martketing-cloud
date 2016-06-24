@@ -27,8 +27,8 @@ import com.alibaba.fastjson.JSON;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.TagDao;
-import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
+import cn.rongcapital.mkt.po.mongodb.Tag;
 import cn.rongcapital.mkt.service.SegmentTagnameTagCountService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -60,10 +60,21 @@ public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCount
 	        
 	        Map<String,Object> map = new HashMap<String,Object>();
 	        
-	        int count=restList.size();	        
 	        map.put("tag_id",tagid);
-            map.put("tag_name", restList.get(0).getTagList().get(0).getTagName());
-            map.put("tag_count", count);
+	        
+	        int count=restList.size();	        
+	        map.put("tag_count", count);	        
+	        
+	        List<Tag> tagList = restList.get(0).getTagList();
+	        for(Tag tag : tagList){
+	            
+	            if(tagid.equals(tag.getTagId())){
+	                map.put("tag_name", tag.getTagName());
+	                break;
+	            }
+	        }
+                    
+            
             result.getData().add(map);
 	        
 	    }

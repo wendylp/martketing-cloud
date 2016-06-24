@@ -134,5 +134,19 @@
 		ON t_group.tag_group_parent_groupId = pp_group.id
 		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
 	</select>
+	
+	<select id="selectSubNodesByGroupName" parameterType="map" resultType="String">
+		SELECT 
+		    name
+		FROM
+		    taggroup
+		WHERE
+		    parent_group_id IN (SELECT 
+		            id
+		        FROM
+		            taggroup
+		        WHERE
+		            name = #{tagGroupName});
+	</select>
 
 </mapper>

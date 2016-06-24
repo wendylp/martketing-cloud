@@ -46,4 +46,11 @@ public interface TaggroupDao extends BaseDao<Taggroup>{
 	 * @return list
 	 */
 	List<Map<String, Object>> selectTaggroupSystemMenulist(Taggroup param);
+	
+	/**
+     * 获取系统标签内容列表
+     * @param paramMap
+     * @return list
+     */
+	List<String> selectSubNodesByGroupName(Map<String, String> paramMap);
 }
