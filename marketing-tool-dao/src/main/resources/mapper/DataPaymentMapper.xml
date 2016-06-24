@@ -223,35 +223,7 @@
 			#{obj.source},#{obj.batchId})
 		</foreach>
 		on duplicate key update
-		pay_channel = values(pay_channel),
-		pay_acct = values(pay_acct),
-		pay_serial = values(pay_serial),
-		trans_serial = values(trans_serial),
-		order_no = values(order_no),
-		product_name = values(product_name),
-		create_time = values(create_time),
-		complete_time = values(complete_time),
-		pay_status = values(pay_status),
-		counter_acct = values(counter_acct),
-		income_amt = values(income_amt),
-		paid_amt = values(paid_amt),
-		acct_amt = values(acct_amt),
-		comments = values(comments),
-		identify_no = values(identify_no),
-		driving_license = values(driving_license),
-		email = values(email),
-		mobile = values(mobile),
-		tel = values(tel),
-		qq = values(qq),
-		acct_type = values(acct_type),
-		acct_no = values(acct_no),
-		idfa = values(idfa),
-		imei = values(imei),
-		udid = values(udid),
-		phone_mac = values(phone_mac),
-		update_time = values(update_time),
-		source = values(source),
-		batch_id = values(batch_id)
+		pay_serial = values(pay_serial)
 	</update>
 
 </mapper>
