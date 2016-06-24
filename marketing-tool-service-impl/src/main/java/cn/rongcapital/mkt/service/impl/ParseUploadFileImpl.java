@@ -48,7 +48,11 @@ public class ParseUploadFileImpl implements ParseUploadFile {
 
         uploadFileAccordTemplateOut.setDataTopic(importTemplateDao.selectTempleNameByType(fileType));
         uploadFileAccordTemplateOut.setDataRows(effectRows+"");
-        uploadFileAccordTemplateOut.setUnrecognizeFields(illegalColumns.deleteCharAt(illegalColumns.length()-1).toString());
+        if(illegalColumns.length() > 0){
+            uploadFileAccordTemplateOut.setUnrecognizeFields(illegalColumns.deleteCharAt(illegalColumns.length()-1).toString());
+        }else{
+            uploadFileAccordTemplateOut.setUnrecognizeFields("");
+        }
         return uploadFileAccordTemplateOut;
     }
 
