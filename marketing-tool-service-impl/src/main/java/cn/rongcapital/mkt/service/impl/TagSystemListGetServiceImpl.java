@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.PagingUtil;
 import cn.rongcapital.mkt.dao.TaggroupDao;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -31,22 +32,11 @@ public class TagSystemListGetServiceImpl implements TagSystemListGetService {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
 
-        if (index == null || index < 1) {
-            index = 1;
-        }
-
-        if (size == null || size < 0) {
-            size = 10;
-        }
-
-        if (size > 100) {
-            size = 100;
-        }
-
-        index = (index - 1) * size;
-
-        Map<String, String> paramMap = new HashMap<>();
+        PagingUtil.fixPagingParam(index, size);
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("tagGroupName", tagGroupName);
+        paramMap.put("index", index);
+        paramMap.put("size", size);
         List<String> tagNames = taggroupDao.selectSubNodesByGroupName(paramMap);
 
         baseOutput.getData().addAll(tagNames);
