@@ -30,34 +30,6 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
     @Autowired
     TaggroupDao TaggroupDao;
 
-    // @Override
-    // public BaseOutput getTaggroupSystemMenulist(String method, String userToken, Integer index,
-    // Integer size) {
-    // BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
-    // ApiErrorCode.SUCCESS.getMsg(),
-    // ApiConstant.INT_ZERO, null);
-    // Taggroup param = new Taggroup();
-    // param.setStartIndex(index);
-    // param.setPageSize(size);
-    // List<Map<String, Object>> groupList = TaggroupDao.selectTaggroupSystemMenulist(param);
-    // if (CollectionUtils.isNotEmpty(groupList)) {
-    // baseOutput.setTotal(groupList.size());
-    // for (Map<String, Object> groupMap : groupList) {
-    // if (!groupMap.containsKey("tag_group_id")) {
-    // groupMap.put("tag_group_id", "");
-    // groupMap.put("tag_group_name", "");
-    // }
-    // if (!groupMap.containsKey("tag_group_pid")) {
-    // groupMap.put("tag_group_pid", "");
-    // groupMap.put("tag_group_pname", "");
-    // }
-    // baseOutput.getData().add(groupMap);
-    // }
-    // }
-    //
-    // return baseOutput;
-    // }
-
     @Override
     public BaseOutput getTaggroupSystemMenulist(String method, String userToken, Integer index, Integer size) {
 
@@ -143,4 +115,5 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
 
         return null;
     }
+
 }
