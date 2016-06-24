@@ -9,7 +9,14 @@
 
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_customer_tags]]></sql>
-	
+
+	<!-- Original需要更新的列 -->
+	<sql id="ORIGINAL_CLEAN_COLUMN_LIST">
+		<![CDATA[ tag_type,tag_name,birthday,identify_no,driving_license,email,mobile,
+		acct_type,tel,qq,acct_no,idfa,imei,udid,phone_mac,
+		create_time,update_time,source,batch_id]]>
+	</sql>
+
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
@@ -167,5 +174,23 @@
 		WHERE 
 			table_name='data_customer_tags'
 	</select>
-	
+
+	<update id="cleanAndUpdateByOriginal" parameterType="map">
+		<![CDATA[INSERT INTO data_customer_tags]]>
+		(
+		<include refid="ORIGINAL_CLEAN_COLUMN_LIST" />
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			( #{obj.tagType}, #{obj.tagName},#{obj.birthday},
+			#{obj.identifyNo}, #{obj.drivingLicense}, #{obj.email},
+			#{obj.mobile}, #{obj.acctType}, #{obj.tel}, #{obj.qq}, #{obj.acctNo},
+			#{obj.idfa},#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.createTime},
+			#{obj.updateTime},#{obj.source},#{obj.batchId})
+		</foreach>
+		on duplicate key update
+		tag_type = values(tag_type),
+		tag_name = values(tag_name)
+	</update>
+
 </mapper>

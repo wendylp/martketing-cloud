@@ -14,6 +14,9 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataCustomerTags;
 
+import java.util.List;
+import java.util.Map;
+
 public interface DataCustomerTagsDao extends BaseDao<DataCustomerTags>, BaseDataFilterDao<DataCustomerTags>{
 	
 	//自定义扩展
@@ -35,4 +38,11 @@ public interface DataCustomerTagsDao extends BaseDao<DataCustomerTags>, BaseData
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+
+	/**
+	 * @功能简述 : 根据原始数据更新DataCustomerTags的数据
+	 * @author bianyulong
+	 */
+	void cleanAndUpdateByOriginal(Map<String, List<DataCustomerTags>> dataCustomerTags);
 }

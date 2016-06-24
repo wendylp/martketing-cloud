@@ -17,7 +17,6 @@
 		create_time,update_time,source,batch_id]]>
 	</sql>
 
-
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
@@ -203,31 +202,7 @@
 			#{obj.source},#{obj.batchId})
 		</foreach>
 		on duplicate key update
-		login_type = values(login_type),
-		login_time = values(login_time),
-		logout_time = values(logout_time),
-		login_ip = values(login_ip),
-		login_device = values(login_device),
-		resolution_ratio = values(resolution_ratio),
-		login_url = values(login_url),
-
-		identify_no = values(identify_no),
-		driving_license = values(driving_license),
-		email = values(email),
-		mobile = values(mobile),
-		tel = values(tel),
-		qq = values(qq),
-		acct_type = values(acct_type),
-		acct_no = values(acct_no),
-		idfa = values(idfa),
-		imei = values(imei),
-
-		udid = values(udid),
-		phone_mac = values(phone_mac),
-		create_time = values(create_time),
-		update_time = values(update_time),
-		source = values(source),
-		batch_id = values(batch_id)
+		login_time = values(login_time)
 	</update>
 
 </mapper>

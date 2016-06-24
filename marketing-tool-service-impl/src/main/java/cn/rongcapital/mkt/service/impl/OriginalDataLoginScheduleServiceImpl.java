@@ -77,7 +77,11 @@ public class OriginalDataLoginScheduleServiceImpl implements OriginalDataLoginSc
         // 将OriginalDataLogin的数据同步到DataLogin
         for (int i = 0; i < batchCount; i++) {
             DataLogin paramDataLogin = new DataLogin();
-            BeanUtils.copyProperties(tmpOriginalDataLogins.get(i), paramDataLogin);
+            OriginalDataLogin tmpOriginalDataLogin = tmpOriginalDataLogins.get(i);
+            BeanUtils.copyProperties(tmpOriginalDataLogin, paramDataLogin);
+            // 因为在一个事务里 , 直接修改OriginalDataLogin的状态
+            tmpOriginalDataLogin.setStatus(Boolean.TRUE);
+            originalDataLoginDao.updateById(tmpOriginalDataLogin);
             dataLogins.add(paramDataLogin);
         }
 
