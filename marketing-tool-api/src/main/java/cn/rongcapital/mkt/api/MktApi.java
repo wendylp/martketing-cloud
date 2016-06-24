@@ -1486,7 +1486,6 @@ public class MktApi {
 	 */
 	@GET
 	@Path("/mkt.data.inbound.file.template.download")
-	@Produces(MediaType.TEXT_PLAIN)
 	public BaseOutput fileTemplateDownload(@NotEmpty @QueryParam("user_token") String userToken,
 										   @NotEmpty @QueryParam("ver") String ver,
 	                                       @NotEmpty @QueryParam("template_id_list") String templateIdList){
