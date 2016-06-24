@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,wx_code as wxCode,wx_name as wxName,wx_group_id as wxGroupId,nickname as nickname,sex as sex,country as country,province as province,city as city,county as county,birthday as birthday,signature as signature,is_friend as isFriend,subscribe_yn as subscribeYn,subscribe_time as subscribeTime,active_time as activeTime,activity_48h_yn as activity48hYn,head_image_url as headImageUrl,remark as remark,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,wx_code as wxCode,wx_name as wxName,wx_group_id as wxGroupId,nickname as nickname,sex as sex,country as country,province as province,city as city,county as county,birthday as birthday,signature as signature,is_friend as isFriend,pub_id as pubId,uin as uin,subscribe_yn as subscribeYn,subscribe_time as subscribeTime,active_time as activeTime,activity_48h_yn as activity48hYn,head_image_url as headImageUrl,remark as remark,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -26,6 +26,8 @@
 		    	<if test="birthday != null"><![CDATA[ AND birthday = #{birthday}]]></if>
 		    	<if test="signature != null"><![CDATA[ AND signature = #{signature}]]></if>
 		    	<if test="isFriend != null"><![CDATA[ AND is_friend = #{isFriend}]]></if>
+		    	<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		    	<if test="uin != null"><![CDATA[ AND uin = #{uin}]]></if>
 		    	<if test="subscribeYn != null"><![CDATA[ AND subscribe_yn = #{subscribeYn}]]></if>
 		    	<if test="subscribeTime != null"><![CDATA[ AND subscribe_time = #{subscribeTime}]]></if>
 		    	<if test="activeTime != null"><![CDATA[ AND active_time = #{activeTime}]]></if>
@@ -59,6 +61,8 @@
 		    	<if test="birthday != null"><![CDATA[birthday = #{birthday},]]></if>
 		    	<if test="signature != null"><![CDATA[signature = #{signature},]]></if>
 		    	<if test="isFriend != null"><![CDATA[is_friend = #{isFriend},]]></if>
+		    	<if test="pubId != null"><![CDATA[pub_id = #{pubId},]]></if>
+		    	<if test="uin != null"><![CDATA[uin = #{uin},]]></if>
 		    	<if test="subscribeYn != null"><![CDATA[subscribe_yn = #{subscribeYn},]]></if>
 		    	<if test="subscribeTime != null"><![CDATA[subscribe_time = #{subscribeTime},]]></if>
 		    	<if test="activeTime != null"><![CDATA[active_time = #{activeTime},]]></if>
@@ -72,7 +76,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatMember" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,create_time)
+			INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,pub_id,uin,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,create_time)
 			VALUES
 			(
 			  #{wxCode},
@@ -87,6 +91,8 @@
 			  #{birthday},
 			  #{signature},
 			  #{isFriend},
+			  #{pubId},
+			  #{uin},
 			  #{subscribeYn},
 			  #{subscribeTime},
 			  #{activeTime},
@@ -137,7 +143,9 @@
 	
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsertFans" parameterType="java.util.List">
-		INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,create_time)
+		INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,
+								   subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,pub_id,
+								   create_time)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 		(
@@ -156,7 +164,9 @@
 		#{item.active_time},
 		#{item.activity_48h_yn},
 		#{item.head_image_url},
-		#{item.remark}
+		#{item.remark},
+		#{item.pub_id},
+		now()
 		)
 		</foreach>
 	</insert>	
@@ -168,7 +178,7 @@
 	</select>
 
 	<insert id="batchInsertContacts" parameterType="java.util.List">
-		INSERT INTO wechat_member (wx_code,wx_group_id,nickname,sex,province,city,signature)
+		INSERT INTO wechat_member (wx_code,wx_group_id,nickname,sex,province,city,signature,uin,create_time)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -178,7 +188,9 @@
 			#{item.sex},
 			#{item.province},
 			#{item.city},
-			#{item.signature}
+			#{item.signature},
+			#{item.uin},
+			now()
 			)
 		</foreach>
 	</insert>
