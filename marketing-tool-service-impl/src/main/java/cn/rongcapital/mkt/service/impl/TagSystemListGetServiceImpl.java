@@ -35,8 +35,8 @@ public class TagSystemListGetServiceImpl implements TagSystemListGetService {
         PagingUtil.fixPagingParam(index, size);
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("tagGroupName", tagGroupName);
-        paramMap.put("index", index);
-        paramMap.put("size", size);
+        paramMap.put("startIndex", index);
+        paramMap.put("pageSize", size);
         List<String> tagNames = taggroupDao.selectSubNodesByGroupName(paramMap);
 
         baseOutput.getData().addAll(tagNames);

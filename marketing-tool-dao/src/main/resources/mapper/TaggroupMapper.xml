@@ -146,7 +146,8 @@
 		        FROM
 		            taggroup
 		        WHERE
-		            name = #{tagGroupName});
+		            name = #{tagGroupName})
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
 	</select>
 
 </mapper>
