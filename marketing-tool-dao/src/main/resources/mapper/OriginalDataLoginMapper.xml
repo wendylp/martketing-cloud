@@ -61,12 +61,12 @@
 		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
 		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
 		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
-		    	<if test="qQ != null"><![CDATA[QQ = #{qQ},]]></if>
+		    	<if test="qq != null"><![CDATA[QQ = #{qq},]]></if>
 		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
 		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
-		    	<if test="iDFA != null"><![CDATA[IDFA = #{iDFA},]]></if>
-		    	<if test="iMEI != null"><![CDATA[IMEI = #{iMEI},]]></if>
-		    	<if test="uDID != null"><![CDATA[UDID = #{uDID},]]></if>
+		    	<if test="idfa != null"><![CDATA[IDFA = #{idfa},]]></if>
+		    	<if test="imei != null"><![CDATA[IMEI = #{imei},]]></if>
+		    	<if test="udid != null"><![CDATA[UDID = #{udid},]]></if>
 		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
@@ -92,12 +92,12 @@
 			  #{email},
 			  #{mobile},
 			  #{tel},
-			  #{qQ},
+			  #{qq},
 			  #{acctType},
 			  #{acctNo},
-			  #{iDFA},
-			  #{iMEI},
-			  #{uDID},
+			  #{idfa},
+			  #{imei},
+			  #{udid},
 			  #{phoneMac},
 			  now(),
 			  #{source},
