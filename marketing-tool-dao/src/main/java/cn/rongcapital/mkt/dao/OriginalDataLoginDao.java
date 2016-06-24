@@ -16,7 +16,7 @@ import cn.rongcapital.mkt.po.OriginalDataLogin;
 import java.util.ArrayList;
 import java.util.Map;
 
-public interface OriginalDataLoginDao extends BaseDao<OriginalDataLogin>{
+public interface OriginalDataLoginDao extends BaseDao<OriginalDataLogin> {
 	
 	//自定义扩展
 	/**
@@ -43,5 +43,5 @@ public interface OriginalDataLoginDao extends BaseDao<OriginalDataLogin>{
 	 * @param List
 	 * @return int
 	 */
-	int batchInsertUploadFileData(ArrayList<Map<String, Object>> insertLists);
+	int batchInsertUploadFileData(ArrayList<Map<String, Object>> insertList);
 }

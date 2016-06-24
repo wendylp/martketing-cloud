@@ -16,7 +16,7 @@ import cn.rongcapital.mkt.po.OriginalDataShopping;
 import java.util.ArrayList;
 import java.util.Map;
 
-public interface OriginalDataShoppingDao extends BaseDao<OriginalDataShopping>{
+public interface OriginalDataShoppingDao extends BaseDao<OriginalDataShopping> {
 	
 	//自定义扩展
 	/**

@@ -14,7 +14,9 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataShopping;
 
-public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDao<DataShopping>{
+import java.util.List;
+
+public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDao<DataShopping> {
 	
 	//自定义扩展
 	/**
@@ -35,4 +37,11 @@ public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDa
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * @功能简述 : 根据原始数据更新DataLogin的数据
+	 * @return map
+	 */
+	void cleanAndUpdateByOriginal(List<DataShopping> dataShoppings);
+
 }

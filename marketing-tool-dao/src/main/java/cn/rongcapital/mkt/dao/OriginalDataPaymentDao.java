@@ -16,7 +16,7 @@ import cn.rongcapital.mkt.po.OriginalDataPayment;
 import java.util.ArrayList;
 import java.util.Map;
 
-public interface OriginalDataPaymentDao extends BaseDao<OriginalDataPayment>{
+public interface OriginalDataPaymentDao extends BaseDao<OriginalDataPayment> {
 	
 	//自定义扩展
 	/**
