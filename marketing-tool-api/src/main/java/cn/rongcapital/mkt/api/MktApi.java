@@ -1343,11 +1343,11 @@ public class MktApi {
 	public BaseOutput getTagcountByParentGroupId(
 			@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken,
-            @NotNull @QueryParam("tag_group_id") Integer tagGroupId,
+            @NotEmpty @QueryParam("tag_group_name") String tagGroupName,
             @QueryParam("index") Integer index,
             @QueryParam("size") Integer size){
 		return tagSystemListGetService.getTagcount(method, userToken,
-				tagGroupId, index, size);
+		                tagGroupName, index, size);
 	}
 
 	/**
