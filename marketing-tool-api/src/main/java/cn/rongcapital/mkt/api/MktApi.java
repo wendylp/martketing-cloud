@@ -10,10 +10,6 @@
 
 package cn.rongcapital.mkt.api;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +27,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +115,7 @@ import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.service.ReauthWechatAccountService;
 import cn.rongcapital.mkt.service.TaskGetListService;
+import cn.rongcapital.mkt.service.FileTemplateDownloadService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -148,7 +142,6 @@ import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
-import cn.rongcapital.mkt.vo.in.ReauthWechatAccountIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
@@ -390,10 +383,11 @@ public class MktApi {
 	@Autowired
 	private ReauthWechatAccountService reauthWechatAccountService;
 
-
 	@Autowired
 	private TaskGetListService taskGetListService;
 
+	@Autowired
+	private FileTemplateDownloadService fileTemplateDownloadService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1482,73 +1476,18 @@ public class MktApi {
 	public BaseOutput wechatPersonalAuth(WechatPersonalAuthIn wechatPersonalAuthIn){
 		return wechatPersonalAuthService.authPersonWechat(wechatPersonalAuthIn);
 	}
-	
-	@POST
-    @Path("/upload")
-    @Consumes("multipart/form-data")	
-    public Object uploadFile(
-            //@QueryParam("file_source") String fileSource,
-            //@NotEmpty @QueryParam("file_unique") String fileUnique,
-            //@QueryParam("file_type") int fileType,
-            MultipartFormDataInput input, @Context SecurityContext securityContext){
-        
-//	
-//	@POST
-//    @Path("/upload")
-//    @Consumes("multipart/form-data")
-//    public Response uploadFile(MultipartFormDataInput input){
-        String fileName = "";
-        Map<String,List<InputPart>> uploadForm = input.getFormDataMap();
-        List<InputPart> inputParts = uploadForm.get("uploadedFile");
 
-        for(InputPart inputPart : inputParts){
-            try {
-                MultivaluedMap<String,String> header = inputPart.getHeaders();
-                fileName = getFileName(header);
-
-                InputStream inputStream = inputPart.getBody(InputStream.class,null);
-                byte[] bytes = IOUtils.toByteArray(inputStream);
-
-                fileName = "//rc//" + fileName;
-
-                writeFile(bytes,fileName);
-                System.out.println("DONE");
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        return Response.status(200).entity("uploadFile is called, Uploaded file name: " + fileName).build();
-    }
-
-
-
-    private String getFileName(MultivaluedMap<String, String> header) {
-
-        String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
-
-        for(String filename : contentDisposition){
-            if((filename.trim().startsWith("filename"))){
-                String[] name = filename.split("=");
-                String finalFileName = name[1].trim().replaceAll("\"","");
-                return finalFileName;
-            }
-        }
-
-        return "unknown";
-    }
-
-    private void writeFile(byte[] content, String fileName) throws IOException{
-        File file = new File(fileName);
-
-        if(!file.exists()){
-            file.createNewFile();
-        }
-
-        FileOutputStream fop = new FileOutputStream(file);
-
-        fop.write(content);
-        fop.flush();
-        fop.close();
-    }
+	/**
+	 * @功能简述: 获取文件模板下载列表
+	 * @param: String userToken
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.data.inbound.file.template.download")
+	@Produces(MediaType.TEXT_PLAIN)
+	public BaseOutput fileTemplateDownload(@NotEmpty @QueryParam("user_token") String userToken,
+										   @NotEmpty @QueryParam("ver") String ver,
+	                                       @NotEmpty @QueryParam("template_id_list") String templateIdList){
+        return fileTemplateDownloadService.downloadFileTemplate(templateIdList);
+	}
 }
