@@ -216,4 +216,21 @@
 			#{item}
 		</foreach>
 	</select>
+	
+	<!-- 获取人群list列表 -->
+	<select id="selectDataPartyByAudienceId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataParty">
+		SELECT 
+		    *
+		FROM
+		    data_party
+		WHERE
+		    id IN (SELECT 
+		            party_id
+		        FROM
+		            audience_list_party_map
+		                JOIN
+		            audience_list ON audience_list_party_map.audience_list_id = audience_list.id
+		        WHERE
+		            audience_list.id = #{audienceId});
+	</select>
 </mapper>
