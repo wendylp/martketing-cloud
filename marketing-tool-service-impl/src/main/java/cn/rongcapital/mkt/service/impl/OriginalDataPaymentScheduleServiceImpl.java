@@ -77,7 +77,11 @@ public class OriginalDataPaymentScheduleServiceImpl implements OriginalDataPayme
         // 将OriginalDataPayment的数据同步到DataPayment
         for (int i = 0; i < batchCount; i++) {
             DataPayment paramDataPayment = new DataPayment();
-            BeanUtils.copyProperties(tmpOriginalDataPayments.get(i), paramDataPayment);
+            OriginalDataPayment originalDataPayment = tmpOriginalDataPayments.get(i);
+            BeanUtils.copyProperties(originalDataPayment, paramDataPayment);
+
+            originalDataPayment.setStatus(Boolean.TRUE);
+            originalDataPaymentDao.updateById(originalDataPayment);
             dataLogins.add(paramDataPayment);
         }
 

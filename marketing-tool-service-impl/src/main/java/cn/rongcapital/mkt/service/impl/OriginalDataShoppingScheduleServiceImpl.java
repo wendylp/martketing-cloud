@@ -77,7 +77,11 @@ public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShop
         // 将OriginalDataPayment的数据同步到DataPayment
         for (int i = 0; i < batchCount; i++) {
             DataShopping paramDataShopping = new DataShopping();
+            OriginalDataShopping originalDataShopping = tmpOriginalDataShoppings.get(i);
             BeanUtils.copyProperties(tmpOriginalDataShoppings.get(i), paramDataShopping);
+
+            originalDataShopping.setStatus(Boolean.TRUE);
+            originalDataShoppingDao.updateById(originalDataShopping);
             dataShoppings.add(paramDataShopping);
         }
 
