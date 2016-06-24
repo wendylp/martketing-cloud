@@ -4,6 +4,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
+import cn.rongcapital.mkt.service.ReauthWechatAccountService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService{
     private WechatAssetDao wechatAssetDao;
     @Autowired
     private WechatAssetGroupDao wechatAssetGroupDao;
+    @Autowired
+    private ReauthWechatAccountService reauthWechatAccountService;
 
     @Override
     public Object getWechatAssetList(Integer assetId) {
@@ -35,6 +38,7 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService{
 
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("asset_id",assetId);
+        Map<String,Object> reauthRelation = reauthWechatAccountService.reauthWechatAccount(assetId + "");
 
         Map<String,Object> assetDetaiMap = wechatAssetDao.selectWechatAssetDetai(paramMap);
         if(assetDetaiMap != null){
@@ -59,6 +63,9 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService{
             assetDetaiMap.remove("group_ids");
 
             baseOutput.getData().add(assetDetaiMap);
+            if(reauthRelation != null){
+                assetDetaiMap.putAll(reauthRelation);
+            }
             baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
             baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
             baseOutput.setTotal(baseOutput.getData().size());

@@ -46,12 +46,12 @@ public class ReauthWechatAccountServiceImpl implements ReauthWechatAccountServic
     private TenementDao tenementDao;
 
     @Override
-    public BaseOutput reauthWechatAccount(ReauthWechatAccountIn reauthWechatAccountIn) {
+    public Map<String,Object> reauthWechatAccount(String assetId) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
         Boolean isAlreadyLogin = false;
         String redirectUrl = null;
         Map<String,Object> paramMap = new HashMap<String,Object>();
-        paramMap.put("asset_id",reauthWechatAccountIn.getAssetId());
+        paramMap.put("asset_id",assetId);
         Map<String,Object> resultMap = wechatAssetDao.selectAssetTypeAndWxacct(paramMap);
         if(resultMap != null){
             if((Integer)resultMap.get("asset_type") == 1){
@@ -89,9 +89,6 @@ public class ReauthWechatAccountServiceImpl implements ReauthWechatAccountServic
         Map<String,Object> responseMap = new HashMap<String,Object>();
         responseMap.put("flag",isAlreadyLogin);
         responseMap.put("url",redirectUrl);
-        baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
-        baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
-        baseOutput.getData().add(responseMap);
-        return baseOutput;
+        return responseMap;
     }
 }

@@ -982,12 +982,12 @@ public class MktApi {
 	 * @Param: String user_token, String ver, Integer asset_id, String nickname
 	 * @return: Object
 	 */
-	@POST
-	@Path("/mkt.asset.wechat.reauth")
-	@Consumes({MediaType.APPLICATION_JSON})
-	public Object reauthWechatAccount(@Valid ReauthWechatAccountIn reauthWechatAccountIn,@Context SecurityContext securityContext){
-		return reauthWechatAccountService.reauthWechatAccount(reauthWechatAccountIn);
-	}
+//	@POST
+//	@Path("/mkt.asset.wechat.reauth")
+//	@Consumes({MediaType.APPLICATION_JSON})
+//	public Object reauthWechatAccount(@Valid ReauthWechatAccountIn reauthWechatAccountIn,@Context SecurityContext securityContext){
+//		return reauthWechatAccountService.reauthWechatAccount(reauthWechatAccountIn);
+//	}
 
 	/**
 	 * @功能描述:文件上传
