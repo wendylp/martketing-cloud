@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
+
+import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class AudienceList extends BaseQuery {
     private Integer id;
@@ -18,6 +18,12 @@ public class AudienceList extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+
+    public AudienceList() {}
+
+    public AudienceList(Integer index, Integer size) {
+        super(index, size);
+    }
 
     public Integer getId() {
         return id;

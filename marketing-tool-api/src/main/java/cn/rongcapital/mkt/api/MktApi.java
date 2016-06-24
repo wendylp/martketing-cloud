@@ -1013,7 +1013,21 @@ public class MktApi {
 						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
 		return audienceListService.audienceList(userToken, size, index);
 	}
-	
+
+    /**
+     * @功能简述: 获取人群list列表
+     * @param: String userToken
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.audience.listbyid.get")
+    public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("audience_id") Integer audienceId,
+                    @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+                    @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
+        return audienceListService.getAudienceByListId(userToken, audienceId, size, index);
+    }
+
 	/**
 	 * @功能描述:删除人群list
 	 * @Param: body

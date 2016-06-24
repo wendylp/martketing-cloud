@@ -36,6 +36,7 @@ import heracles.data.common.util.ReadWriteType;
 public class AudienceListServiceImpl implements AudienceListService {
 	@Autowired
 	AudienceListDao audienceListDao;
+	
 	@Autowired
 	AudienceColumnsDao audienceColumnsDao;
 	
@@ -86,5 +87,29 @@ public class AudienceListServiceImpl implements AudienceListService {
 		result.setTotal(result.getData().size());
 		return result;
 	}
+
+    @Override
+    public BaseOutput getAudienceByListId(String userToken, Integer audienceId, Integer index, Integer size) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        AudienceList audienceListParam = new AudienceList();
+        audienceListParam.setId(audienceId);
+        List<AudienceList> audienceLists = audienceListDao.selectList(audienceListParam);
+        if (CollectionUtils.isEmpty(audienceLists)) {
+            return result;
+        }
+
+        audienceListParam = audienceLists.get(0);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("audience_list_id", audienceListParam.getId());
+        resultMap.put("audience_list_name", audienceListParam.getAudienceName());
+        resultMap.put("audience_count", audienceListParam.getAudienceRows());
+        resultMap.put("source_name", audienceListParam.getSource());
+        resultMap.put("create_time", df.format(audienceListParam.getCreateTime()));
+
+        result.getData().add(resultMap);
+        return result;
+    }
 
 }
