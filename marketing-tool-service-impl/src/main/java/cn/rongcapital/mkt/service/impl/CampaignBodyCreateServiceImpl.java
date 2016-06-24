@@ -351,7 +351,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		Date endTime = DateUtil.getDateFromString(campaignTriggerTimerIn.getEndTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
 		taskSchedule.setStartTime(startTime);
 		taskSchedule.setEndTime(endTime);
-		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_TIME_TRIGGER);
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_TRUGGER_TIME);
 		taskSchedule.setCampaignHeadId(campaignHeadId);
 		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
 		CampaignHead ch =  new CampaignHead();
@@ -403,7 +403,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				Integer intervalMinutes = tranlateToMinutes(campaignAudienceTargetIn.getRefreshInterval(), 
 						campaignAudienceTargetIn.getRefreshIntervalType());
 				taskSchedule.setIntervalMinutes(intervalMinutes);
-				taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_AUDIENCE_TARGET);
+				taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_AUDIENCE_TARGET);
 				taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
 				taskSchedule.setCampaignHeadId(campaignHeadId);
 				taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
@@ -419,7 +419,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatSentIn.getRefreshInterval(), 
 													campaignDecisionWechatSentIn.getRefreshIntervalType());
 		taskSchedule.setIntervalMinutes(intervalMinutes);
-		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SENT);
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_WECHAT_SENT);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
 		taskSchedule.setCampaignHeadId(campaignHeadId);
 		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
@@ -432,7 +432,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatReadIn.getRefreshInterval(), 
 													campaignDecisionWechatReadIn.getRefreshIntervalType());
 		taskSchedule.setIntervalMinutes(intervalMinutes);
-		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_READ);
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_WECHAT_READ);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
 		taskSchedule.setCampaignHeadId(campaignHeadId);
 		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
@@ -445,7 +445,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatForwardIn.getRefreshInterval(), 
 													campaignDecisionWechatForwardIn.getRefreshIntervalType());
 		taskSchedule.setIntervalMinutes(intervalMinutes);
-		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_FORWARD);
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_WECHAT_FORWARD);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
 		taskSchedule.setCampaignHeadId(campaignHeadId);
 		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
@@ -458,7 +458,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		Integer intervalMinutes = tranlateToMinutes(campaignDecisionPubFansIn.getRefreshInterval(), 
 													campaignDecisionPubFansIn.getRefreshIntervalType());
 		taskSchedule.setIntervalMinutes(intervalMinutes);
-		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SUBSCRIBE);
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_WECHAT_SUBSCRIBE);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
 		taskSchedule.setCampaignHeadId(campaignHeadId);
 		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
@@ -471,7 +471,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		Integer intervalMinutes = tranlateToMinutes(campaignDecisionPrvtFriendsIn.getRefreshInterval(), 
 													campaignDecisionPrvtFriendsIn.getRefreshIntervalType());
 		taskSchedule.setIntervalMinutes(intervalMinutes);
-		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_WECHAT_PRV_FRIEND);
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_WECHAT_PRV_FRIEND);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
 		taskSchedule.setCampaignHeadId(campaignHeadId);
 		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
@@ -480,7 +480,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	
 	private TaskSchedule initTaskDecisionTag(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		TaskSchedule taskSchedule = new TaskSchedule();
-		taskSchedule.setServiceName(ApiConstant.TASK_SERVICE_NAME_CAMPAIGN_DECISION_TAG);
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_TAG);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
 		taskSchedule.setCampaignHeadId(campaignHeadId);
 		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
@@ -491,13 +491,21 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		List<CampaignSwitchIn> campaignSwitchInList = campaignNodeChainIn.getCampaignSwitchList();
 		List<CampaignSwitch> campaignSwitchList = new ArrayList<CampaignSwitch>();
 		if(CollectionUtils.isNotEmpty(campaignSwitchInList)) {
-			for(CampaignSwitchIn campaignSwitchIn:campaignSwitchInList){
+			for(int i=0;i<campaignSwitchInList.size();i++) {
+				CampaignSwitchIn campaignSwitchIn = campaignSwitchInList.get(i);
+				if(null == campaignSwitchIn) {
+					continue;//为null表示该是非分支上没有连线
+				}
 				CampaignSwitch campaignSwitch = new CampaignSwitch();
 				campaignSwitch.setCampaignHeadId(campaignHeadId);
 				campaignSwitch.setItemId(campaignNodeChainIn.getItemId());
 				campaignSwitch.setColor(campaignSwitchIn.getColor());
 				campaignSwitch.setNextItemId(campaignSwitchIn.getNextItemId());
-				campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH);
+				if(i == 0) {
+					campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH_YES);
+				}else {
+					campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH_NO);
+				}
 				campaignSwitch.setDrawType(campaignSwitchIn.getDrawType());
 				campaignSwitchList.add(campaignSwitch);
 			}
