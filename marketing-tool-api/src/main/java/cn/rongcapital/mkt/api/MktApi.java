@@ -111,7 +111,6 @@ import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
 import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
-import cn.rongcapital.mkt.service.TaskGetListService;
 import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
@@ -121,6 +120,8 @@ import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.ReauthWechatAccountService;
+import cn.rongcapital.mkt.service.TaskGetListService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -140,13 +141,14 @@ import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
+import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
 import cn.rongcapital.mkt.vo.in.ImgtextAssetSyncIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
+import cn.rongcapital.mkt.vo.in.ReauthWechatAccountIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
@@ -384,10 +386,14 @@ public class MktApi {
 
 	@Autowired
 	private WechatPersonalAuthService wechatPersonalAuthService;
-	
+
+	@Autowired
+	private ReauthWechatAccountService reauthWechatAccountService;
+
+
 	@Autowired
 	private TaskGetListService taskGetListService;
-	
+
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -970,6 +976,18 @@ public class MktApi {
 	public Object saveWechatAssetList(@Valid SaveWechatAssetListIn saveWechatAssetListIn,@Context SecurityContext securityContext){
 		return saveWechatAssetListService.saveWechatAssetList(saveWechatAssetListIn, securityContext);
 	}
+
+	/**
+	 * @功能描述:重新授权或者重新登录
+	 * @Param: String user_token, String ver, Integer asset_id, String nickname
+	 * @return: Object
+	 */
+//	@POST
+//	@Path("/mkt.asset.wechat.reauth")
+//	@Consumes({MediaType.APPLICATION_JSON})
+//	public Object reauthWechatAccount(@Valid ReauthWechatAccountIn reauthWechatAccountIn,@Context SecurityContext securityContext){
+//		return reauthWechatAccountService.reauthWechatAccount(reauthWechatAccountIn);
+//	}
 
 	/**
 	 * @功能描述:文件上传

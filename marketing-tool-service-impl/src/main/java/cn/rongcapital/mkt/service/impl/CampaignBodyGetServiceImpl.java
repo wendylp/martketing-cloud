@@ -522,21 +522,30 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	}
 	
 	private List<CampaignSwitchOut> queryCampaignSwitchList(int campaignHeadId,String itemId) {
+		List<CampaignSwitchOut> campaignSwitchOutList = new ArrayList<CampaignSwitchOut>();
 		CampaignSwitch campaignSwitch = new CampaignSwitch();
-		campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH);
+		campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH_YES);
 		campaignSwitch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		campaignSwitch.setCampaignHeadId(campaignHeadId);
 		campaignSwitch.setItemId(itemId);
-		List<CampaignSwitch> campaignSwitchList = campaignSwitchDao.selectList(campaignSwitch);
-		List<CampaignSwitchOut> campaignSwitchOutList = new ArrayList<CampaignSwitchOut>();
-		if(CollectionUtils.isNotEmpty(campaignSwitchList)){
-			for(CampaignSwitch cs:campaignSwitchList) {
-				CampaignSwitchOut cso = new CampaignSwitchOut();
-				cso.setColor(cs.getColor());
-				cso.setDrawType(cs.getDrawType());
-				cso.setNextItemId(cs.getNextItemId());
-				campaignSwitchOutList.add(cso);
-			}
+		List<CampaignSwitch> campaignSwitchListYes = campaignSwitchDao.selectList(campaignSwitch);
+		if(CollectionUtils.isNotEmpty(campaignSwitchListYes)){
+			CampaignSwitch cs = campaignSwitchListYes.get(0);
+			CampaignSwitchOut cso = new CampaignSwitchOut();
+			cso.setColor(cs.getColor());
+			cso.setDrawType(cs.getDrawType());
+			cso.setNextItemId(cs.getNextItemId());
+			campaignSwitchOutList.add(cso);
+		}
+		campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH_NO);
+		List<CampaignSwitch> campaignSwitchListNo = campaignSwitchDao.selectList(campaignSwitch);
+		if(CollectionUtils.isNotEmpty(campaignSwitchListNo)){
+			CampaignSwitch cs = campaignSwitchListNo.get(0);
+			CampaignSwitchOut cso = new CampaignSwitchOut();
+			cso.setColor(cs.getColor());
+			cso.setDrawType(cs.getDrawType());
+			cso.setNextItemId(cs.getNextItemId());
+			campaignSwitchOutList.add(cso);
 		}
 		return campaignSwitchOutList;
 	}

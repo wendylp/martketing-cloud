@@ -9,7 +9,15 @@
 
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_login]]></sql>
-	
+
+	<!-- Original需要更新的列 -->
+	<sql id="ORIGINAL_CLEAN_COLUMN_LIST">
+		<![CDATA[ login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,
+		identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,
+		create_time,update_time,source,batch_id]]>
+	</sql>
+
+
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
@@ -179,5 +187,47 @@
 		WHERE 
 			table_name='data_login'
 	</select>
-	
+
+	<update id="cleanAndUpdateByOriginal" parameterType="map">
+		<![CDATA[INSERT INTO data_login]]>
+		(
+		<include refid="ORIGINAL_CLEAN_COLUMN_LIST" />
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			( #{obj.loginType}, #{obj.loginTime},#{obj.logoutTime},
+			#{obj.loginIp}, #{obj.loginDevice}, #{obj.resolutionRatio},
+			#{obj.loginUrl}, #{obj.identifyNo}, #{obj.drivingLicense}, #{obj.email}, #{obj.mobile},
+			#{obj.tel},#{obj.qq},#{obj.acctType},#{obj.acctNo},#{obj.idfa},#{obj.imei},
+			#{obj.udid},#{obj.phoneMac},#{obj.createTime},#{obj.updateTime},
+			#{obj.source},#{obj.batchId})
+		</foreach>
+		on duplicate key update
+		login_type = values(login_type),
+		login_time = values(login_time),
+		logout_time = values(logout_time),
+		login_ip = values(login_ip),
+		login_device = values(login_device),
+		resolution_ratio = values(resolution_ratio),
+		login_url = values(login_url),
+
+		identify_no = values(identify_no),
+		driving_license = values(driving_license),
+		email = values(email),
+		mobile = values(mobile),
+		tel = values(tel),
+		qq = values(qq),
+		acct_type = values(acct_type),
+		acct_no = values(acct_no),
+		idfa = values(idfa),
+		imei = values(imei),
+
+		udid = values(udid),
+		phone_mac = values(phone_mac),
+		create_time = values(create_time),
+		update_time = values(update_time),
+		source = values(source),
+		batch_id = values(batch_id)
+	</update>
+
 </mapper>

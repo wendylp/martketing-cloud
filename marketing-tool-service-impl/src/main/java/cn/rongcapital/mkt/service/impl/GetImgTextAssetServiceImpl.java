@@ -59,6 +59,7 @@ public class GetImgTextAssetServiceImpl implements GetImgTextAssetService {
     }
 
 
+    //Todo:如果要修改在这里做一个验证修改就可以
     private BaseOutput constructBaseOutput(List<Map<String,Object>> imgTextAssets) {
         BaseOutput baseOutput = new BaseOutput();
         baseOutput.setCode(0);

@@ -43,7 +43,7 @@ public interface WechatPersonalUuidDao extends BaseDao<WechatPersonalUuid>{
 	 * @param paramMap
 	 * @return list
 	 */
-	void insertUuid(Map<String, Object> paramMap);
+	void insertUuidAndUin(Map<String, Object> paramMap);
 
 	/**
 	 * 选择当前数据库下status为0的uuid
@@ -58,4 +58,11 @@ public interface WechatPersonalUuidDao extends BaseDao<WechatPersonalUuid>{
 	 * @return list
 	 */
 	void updateStatus(Map<String,Object> paramMap);
+
+	/**
+	 * 根据uin来获取uuid
+	 * @param paramMap
+	 * @return list
+	 */
+	Map<String,Object> selectUuidByUin(Map<String,Object> paramMap);
 }
