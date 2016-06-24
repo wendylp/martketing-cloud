@@ -134,4 +134,5 @@ public class ApiConstant {
 	public static final String DL_PUB_ISREAD_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.wtuwen.viewed";
 
     public static final String DOWNLOAD_TEMPLATE_FILE_DIR = "//rc//templeteFiles";
+	public static final String DOWNLOAD_BASE_DIR = "//rc//downloads";
 }
