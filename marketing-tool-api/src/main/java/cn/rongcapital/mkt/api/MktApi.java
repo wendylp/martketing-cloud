@@ -69,6 +69,7 @@ import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
 import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
 import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
+import cn.rongcapital.mkt.service.FileTemplateDownloadService;
 import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
 import cn.rongcapital.mkt.service.GetDataMainSearchService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
@@ -84,6 +85,7 @@ import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
 import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.ModifyPasswdService;
+import cn.rongcapital.mkt.service.ReauthWechatAccountService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
 import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
@@ -114,9 +116,6 @@ import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.ReauthWechatAccountService;
-import cn.rongcapital.mkt.service.TaskGetListService;
-import cn.rongcapital.mkt.service.FileTemplateDownloadService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -143,7 +142,6 @@ import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
-import cn.rongcapital.mkt.vo.in.ReauthWechatAccountIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
@@ -1340,26 +1338,23 @@ public class MktApi {
 		return dataMainBasicInfoUpdateService.updateBaseInfoByContactId(body);
 	}
 
-	/**
-	 * @功能简述: 获取系统标签内容列表
-	 * @param method
-	 * @param user_token
-	 * @param tag_group_id
-	 * @param index
-	 * @param size
-	 * @return BaseOutput
-	 */
-	@GET
-	@Path("/mkt.tag.system.list.get")
-	public BaseOutput getTagcountByParentGroupId(
-			@NotEmpty @QueryParam("method") String method,
-            @NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("tag_group_name") String tagGroupName,
-            @QueryParam("index") Integer index,
-            @QueryParam("size") Integer size){
-		return tagSystemListGetService.getTagcount(method, userToken,
-		                tagGroupName, index, size);
-	}
+    /**
+     * @功能简述: 获取系统标签内容列表
+     * @param method
+     * @param user_token
+     * @param tag_group_id
+     * @param index
+     * @param size
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.tag.system.list.get")
+    public BaseOutput getTagcountByParentGroupId(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("tag_group_name") String tagGroupName, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) {
+        return tagSystemListGetService.getTagcount(method, userToken, tagGroupName, index, size);
+    }
 
 	/**
 	 * @功能简述: 获取系统标签组列表
