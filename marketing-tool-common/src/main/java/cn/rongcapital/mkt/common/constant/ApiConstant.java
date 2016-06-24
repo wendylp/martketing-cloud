@@ -46,8 +46,9 @@ public class ApiConstant {
 	public static final byte TAG_TYPE_ACTIVITY = 1;// 活动
 	public static final byte TAG_TYPE_CONTACT = 2;// 联系人
 
-	public static final byte CAMPAIGN_SWITCH_SWITCH = 0;//判断类型
-	public static final byte CAMPAIGN_SWITCH_ENDS = 1;//多分支类型
+	public static final byte CAMPAIGN_SWITCH_SWITCH_YES = 0;//是分支
+	public static final byte CAMPAIGN_SWITCH_SWITCH_NO = 1;//非分支
+	public static final byte CAMPAIGN_SWITCH_ENDS = 2;//多分支类型
 	
 	public static final byte CAMPAIGN_PARENT_NODE_PTYPE = -1;//父节点的ptype列值
 
@@ -90,14 +91,28 @@ public class ApiConstant {
 	public static final long TASK_SCAN_INTERVAL_MILLS = 1000*3; //扫描任务表的时间间隔:毫秒
 	public static final long TASK_DO_INTERVAL_MILLS = 1000*3; //扫描执行列表的时间间隔:毫秒
 
-	public static final String TASK_SERVICE_NAME_CAMPAIGN_TIME_TRIGGER = "campaignTimeTriggerTaskImpl";
-	public static final String TASK_SERVICE_NAME_CAMPAIGN_AUDIENCE_TARGET = "campaignAudienceTargetTaskImpl";
-	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SENT = "campaignWechatSentTaskImpl";
-	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_READ = "campaignWechatReadTaskImpl";
-	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_FORWARD = "campaignWechatForwardTaskImpl";
-	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_SUBSCRIBE = "campaignWechatSubscribeTaskImpl";
-	public static final String TASK_SERVICE_NAME_CAMPAIGN_WECHAT_PRV_FRIEND = "campaignWechatPrivFriendTaskImpl";
-	public static final String TASK_SERVICE_NAME_CAMPAIGN_DECISION_TAG = "campaignDecisionTagTaskImpl";
+	//时间触发节点
+	public static final String TASK_NAME_CAMPAIGN_TRUGGER_TIME = "campaignTriggerTimeTask";
+	//目标人群节点
+	public static final String TASK_NAME_CAMPAIGN_AUDIENCE_TARGET = "campaignAudienceTargetTask";
+	//微信是否发送节点
+	public static final String TASK_NAME_CAMPAIGN_DECISION_WECHAT_SENT = "campaignDecisionWechatSentTask";
+	//微信是否阅读节点
+	public static final String TASK_NAME_CAMPAIGN_DECISION_WECHAT_READ = "campaignDecisionWechatReadTask";
+	//微信是否转发节点
+	public static final String TASK_NAME_CAMPAIGN_DECISION_WECHAT_FORWARD = "campaignDecisionWechatForwardTask";
+	//是否关注公众号
+	public static final String TASK_NAME_CAMPAIGN_DECISION_WECHAT_SUBSCRIBE = "campaignDecisionWechatSubscribeTask";
+	//是否个人号好友
+	public static final String TASK_NAME_CAMPAIGN_DECISION_WECHAT_PRV_FRIEND = "campaignDecisionWechatPrivFriendTask";
+	//标签判断
+	public static final String TASK_NAME_CAMPAIGN_DECISION_TAG = "campaignDecisionTagTask";
+	//公众号发送微信图文
+	public static final String TASK_NAME_CAMPAIGN_ACTION_PUBWECHAT_SEND_H5 = "campaignActionPubWechatSendH5Task";
+	
+	
+	public static final Integer DATA_PARTY_MD_TYPE_WECHAT = 8;//data_party表:微信类型数据
+
 
 
 	public static final String DL_PUB_GRANT_API = "ruixue.hfive.mkt.pub.grant";
@@ -114,4 +129,7 @@ public class ApiConstant {
 	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_KEY = "callback";
 	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_VALUE = "mkt.data.inbound.wechat.public.auth.callback";
 	
+	public static final String DL_PUB_SEND_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.pub.send";
+	public static final String DL_PUB_ISSENT_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.wtuwen.sent";
+	public static final String DL_PUB_ISREAD_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.wtuwen.viewed";
 }
