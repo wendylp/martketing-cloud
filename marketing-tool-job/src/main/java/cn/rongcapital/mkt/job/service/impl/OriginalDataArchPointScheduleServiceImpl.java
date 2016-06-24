@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.service.impl;
+package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,12 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.dao.DataArchPointDao;
 import cn.rongcapital.mkt.dao.OriginalDataArchPointDao;
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.DataArchPoint;
 import cn.rongcapital.mkt.po.OriginalDataArchPoint;
 import cn.rongcapital.mkt.service.OriginalDataArchPointScheduleService;
 
 @Service
-public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArchPointScheduleService {
+public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArchPointScheduleService, TaskService {
 
     /**
      * 每次批量处理的数据数
@@ -95,6 +96,11 @@ public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArc
         paramMap.put("list", dataArchPoints);
 
         dataArchPointDao.cleanAndUpdateByOriginal(paramMap);
+    }
+
+    @Override
+    public void task(Integer taskId) {
+        cleanData();
     }
 
 }
