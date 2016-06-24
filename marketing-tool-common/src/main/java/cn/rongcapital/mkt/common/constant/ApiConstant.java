@@ -113,8 +113,6 @@ public class ApiConstant {
 	
 	public static final Integer DATA_PARTY_MD_TYPE_WECHAT = 8;//data_party表:微信类型数据
 
-
-
 	public static final String DL_PUB_GRANT_API = "ruixue.hfive.mkt.pub.grant";
 	public static final String DL_PUB_LIST_API = "ruixue.hfive.mkt.pub.list";
 	public static final String DL_PUB_FANSLIST_API = "ruixue.hfive.mkt.pub.fanslist";

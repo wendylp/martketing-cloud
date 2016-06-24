@@ -6,6 +6,7 @@ import cn.rongcapital.mkt.service.FileTemplateDownloadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.core.Response;
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -23,12 +24,12 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
 //   return response.build();
 
     @Override
-    public BaseOutput downloadFileTemplate(String templateIdList) {
+    public Object downloadFileTemplate(String templateIdList) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
         BufferedInputStream bis = null;
         ZipOutputStream zos = null;
+        File zipFile = new File(ApiConstant.DOWNLOAD_BASE_DIR + System.currentTimeMillis() + "template.zip");
         try {
-            File zipFile = new File(ApiConstant.DOWNLOAD_BASE_DIR + System.currentTimeMillis() + "template.zip");
 
             FileInputStream fis = null;
             FileOutputStream fos = null;
@@ -66,6 +67,8 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
                 e.printStackTrace();
             }
         }
-        return baseOutput;
+        Response.ResponseBuilder response = Response.ok((Object) zipFile);
+        response.header("Content-Disposition", "attachment; filename=\""+zipFile.getName() +"\"");
+        return response.build();
     }
 }
