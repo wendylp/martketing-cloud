@@ -120,6 +120,7 @@ import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.ReauthWechatAccountService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -146,6 +147,7 @@ import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
+import cn.rongcapital.mkt.vo.in.ReauthWechatAccountIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
@@ -383,6 +385,10 @@ public class MktApi {
 
 	@Autowired
 	private WechatPersonalAuthService wechatPersonalAuthService;
+
+	@Autowired
+	private ReauthWechatAccountService reauthWechatAccountService;
+
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -964,6 +970,18 @@ public class MktApi {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Object saveWechatAssetList(@Valid SaveWechatAssetListIn saveWechatAssetListIn,@Context SecurityContext securityContext){
 		return saveWechatAssetListService.saveWechatAssetList(saveWechatAssetListIn, securityContext);
+	}
+
+	/**
+	 * @功能描述:重新授权或者重新登录
+	 * @Param: String user_token, String ver, Integer asset_id, String nickname
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.asset.wechat.reauth")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Object reauthWechatAccount(@Valid ReauthWechatAccountIn reauthWechatAccountIn,@Context SecurityContext securityContext){
+		return reauthWechatAccountService.reauthWechatAccount(reauthWechatAccountIn);
 	}
 
 	/**

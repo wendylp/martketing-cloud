@@ -144,4 +144,10 @@
 		SET nickname = #{nickname}
 		WHERE asset_id = #{asset_id}
 	</update>
+
+	<select id="selectAssetTypeAndWxacct" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT asset_type,wx_acct
+		FROM wechat_asset
+		WHERE asset_id = #{asset_id}
+	</select>
 </mapper>
