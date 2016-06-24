@@ -59,4 +59,5 @@ public interface TagDao extends BaseDao<Tag>{
 	 * @return int
 	 */
 	int selectListCountByGroupId(String tagGroupId);
+	
 }
