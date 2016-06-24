@@ -31,6 +31,20 @@ public class TagSystemListGetServiceImpl implements TagSystemListGetService {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
 
+        if (index == null || index < 1) {
+            index = 1;
+        }
+
+        if (size == null || size < 0) {
+            size = 10;
+        }
+
+        if (size > 100) {
+            size = 100;
+        }
+
+        index = (index - 1) * size;
+
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("tagGroupName", tagGroupName);
         List<String> tagNames = taggroupDao.selectSubNodesByGroupName(paramMap);
