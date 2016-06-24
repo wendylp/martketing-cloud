@@ -94,13 +94,13 @@ import cn.rongcapital.mkt.service.ModifyPasswdService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
 import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
+import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
 import cn.rongcapital.mkt.service.SegmentHeaderGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
 import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.service.SegmentTagGetService;
-import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagCountService;
@@ -121,6 +121,7 @@ import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.service.ReauthWechatAccountService;
+import cn.rongcapital.mkt.service.TaskGetListService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -388,6 +389,10 @@ public class MktApi {
 
 	@Autowired
 	private ReauthWechatAccountService reauthWechatAccountService;
+
+
+	@Autowired
+	private TaskGetListService taskGetListService;
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -1050,20 +1055,21 @@ public class MktApi {
 	public Object segmentBodyUpdate(@Valid SegmentBodyUpdateIn body, @Context SecurityContext securityContext) {
 	    return segmentBodyUpdateService.segmentBodyUpdate(body, securityContext);
 	}
-	
-	/**
-	 * @功能简述: 获取后台任务列表
-	 * @param: 
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.task.list.get")
-	@Consumes({MediaType.APPLICATION_JSON})
-	public BaseOutput taskListGet(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken){
-		return taskListGetService.taskListGet();
-	}
-	
+
+    /**
+     * @功能简述: 获取后台任务列表
+     * @author nianjun
+     * @param:
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.task.list.get")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput taskListGet(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken) {
+        return taskGetListService.getTaskList();
+    }
+
 	/**
 	 * @功能简述: 删除campaign
 	 * @param: campaign_head_id 营销活动id
