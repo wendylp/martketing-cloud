@@ -1500,7 +1500,7 @@ public class MktApi {
 	 */
 	@GET
 	@Path("/mkt.data.inbound.file.template.download")
-	public BaseOutput fileTemplateDownload(@NotEmpty @QueryParam("user_token") String userToken,
+	public Object fileTemplateDownload(@NotEmpty @QueryParam("user_token") String userToken,
 										   @NotEmpty @QueryParam("ver") String ver,
 	                                       @NotEmpty @QueryParam("template_id_list") String templateIdList){
         return fileTemplateDownloadService.downloadFileTemplate(templateIdList);
