@@ -1,9 +1,9 @@
 package cn.rongcapital.mkt.po;
 
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
 import java.math.BigDecimal;
 import java.util.Date;
-
-import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class DataShopping extends BaseQuery {
     private Integer id;

@@ -14,6 +14,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,9 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
+import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.po.CampaignSwitch;
+import cn.rongcapital.mkt.po.Tenement;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
@@ -38,6 +41,9 @@ public class BaseMQService {
 	private String providerUrl;
 	
 	private volatile boolean isJndiInited = false;
+	
+	@Autowired
+	private TenementDao tenementDao;
 
 	public void initJndiEvironment() {
 		if(isJndiInited){
@@ -68,16 +74,26 @@ public class BaseMQService {
 		return campaignEndsList;
 	}
     
-    protected List<CampaignSwitch> queryCampaignSwitchList(int campaignHeadId,String itemId) {
+    protected List<CampaignSwitch> queryCampaignSwitchYesList(int campaignHeadId,String itemId) {
 		CampaignSwitch campaignSwitch = new CampaignSwitch();
-		campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH);
+		campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH_YES);
 		campaignSwitch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		campaignSwitch.setCampaignHeadId(campaignHeadId);
 		campaignSwitch.setItemId(itemId);
-		List<CampaignSwitch> campaignEndsList = campaignSwitchDao.selectList(campaignSwitch);
-		return campaignEndsList;
+		List<CampaignSwitch> campaignSwitchListYes = campaignSwitchDao.selectList(campaignSwitch);
+		return campaignSwitchListYes;
 	}
 	
+    protected List<CampaignSwitch> queryCampaignSwitchNoList(int campaignHeadId,String itemId) {
+		CampaignSwitch campaignSwitch = new CampaignSwitch();
+		campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH_NO);
+		campaignSwitch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		campaignSwitch.setCampaignHeadId(campaignHeadId);
+		campaignSwitch.setItemId(itemId);
+		List<CampaignSwitch> campaignSwitchListNo = campaignSwitchDao.selectList(campaignSwitch);
+		return campaignSwitchListNo;
+	}
+    
 	protected Queue getDynamicQueue(String name) {
 		Queue myqueue = null;
 		try {
@@ -121,6 +137,18 @@ public class BaseMQService {
 			logger.error(e.getMessage(),e);
 		}
 		return consumer;
+	}
+	
+	protected String getPid() {
+		String pid = null;
+		Tenement t = new Tenement();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		List<Tenement> tenementList = tenementDao.selectList(t);
+		if(CollectionUtils.isNotEmpty(tenementList)) {
+			Tenement  tenement = tenementList.get(0);
+			pid = tenement.getPid();
+		}
+		return pid;
 	}
 	
 }

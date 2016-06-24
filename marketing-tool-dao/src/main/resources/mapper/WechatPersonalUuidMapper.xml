@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,uuid as uuid,status as status]]>
+		<![CDATA[ id as id,uuid as uuid,status as status,uin as uin]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -16,6 +16,7 @@
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="uuid != null"><![CDATA[ AND uuid = #{uuid}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="uin != null"><![CDATA[ AND uin = #{uin}]]></if>
 		</where>
 	</sql>
 	
@@ -29,17 +30,19 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="uuid != null"><![CDATA[uuid = #{uuid},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="uin != null"><![CDATA[uin = #{uin}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatPersonalUuid" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_personal_uuid (uuid)
+			INSERT INTO wechat_personal_uuid (uuid,uin)
 			VALUES
 			(
-			  #{uuid}
+			  #{uuid},
+			  #{uin}
 			)
 		]]>
 	</insert>
@@ -82,11 +85,12 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	<insert id="insertUuid" parameterType="java.util.Map">
-		REPLACE INTO wechat_personal_uuid (uuid)
+	<insert id="insertUuidAndUin" parameterType="java.util.Map">
+		REPLACE INTO wechat_personal_uuid (uuid,uin)
 		VALUES
 		(
-		#{uuid}
+		#{uuid},
+		#{uin}
 		)
 	</insert>
 
@@ -100,6 +104,11 @@
 		UPDATE wechat_personal_uuid
 		SET status = 1
 		WHERE uuid = #{uuid}
-	</update>
-	
+	</update>	
+
+	<select id="selectUuidByUin" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT uuid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE uin = #{uin}
+	</select>
 </mapper>

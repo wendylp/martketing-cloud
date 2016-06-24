@@ -9,6 +9,8 @@ public class WechatPersonalUuid extends BaseQuery {
 
     private Integer status;
 
+    private String uin;
+
     public Long getId() {
         return id;
     }
@@ -31,5 +33,13 @@ public class WechatPersonalUuid extends BaseQuery {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getUin() {
+        return uin;
+    }
+
+    public void setUin(String uin) {
+        this.uin = uin == null ? null : uin.trim();
     }
 }

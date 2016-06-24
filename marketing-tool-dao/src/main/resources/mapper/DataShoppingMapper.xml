@@ -9,7 +9,18 @@
 
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_shopping]]></sql>
-	
+
+	<!-- Original需要更新的列 -->
+	<sql id="ORIGINAL_CLEAN_COLUMN_LIST">
+		<![CDATA[ channel_type,channel_id,channel_name,pay_type,trans_serial,order_no,trans_time,
+		product_id,specification,color,discount_type,discount_amt,price,amount,inventory,
+		brand_id,brand_name,class1_id,class1_name,class2_id,class2_name,class3_id,class3_name,
+		class4_id,class4_name,sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,
+		identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,
+		update_time,source,batch_id]]>
+	</sql>
+
+
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
@@ -243,5 +254,71 @@
 		WHERE 
 			table_name='data_shopping'
 	</select>
-	
+
+	<update id="cleanAndUpdateByOriginal" parameterType="map">
+		<![CDATA[INSERT INTO data_shopping]]>
+		(
+		<include refid="ORIGINAL_CLEAN_COLUMN_LIST" />
+		)
+		values
+
+		<foreach collection="list" item="obj" index="index" separator=",">
+			( #{obj.channelType}, #{obj.channelId},#{obj.channelName},#{obj.payType},
+			#{obj.transSerial}, #{obj.orderNo},#{obj.transTime}, #{obj.productId},
+			#{obj.specification}, #{obj.color}, #{obj.discountType},#{obj.discountAmt},
+			#{obj.price},#{obj.amount},#{obj.inventory},#{obj.brandId},
+			#{obj.brandName},#{obj.class1Id},#{obj.class1Name},#{obj.class2Id},#{obj.class2Name},
+			#{obj.class3Id},#{obj.class3Name},#{obj.class4Id},#{obj.class4Name},#{obj.saleAssistId},
+			#{obj.saleAssistance},#{obj.settlementClerkId},#{obj.settlementClerk},#{obj.identifyNo},
+			#{obj.drivingLicense},#{obj.email},#{obj.mobile},#{obj.tel},#{obj.qq},#{obj.acctType},
+			#{obj.acctNo},#{obj.idfa},#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.updateTime},
+			#{obj.source},#{obj.batchId})
+		</foreach>
+		on duplicate key update
+		channel_type = values(channel_type),
+		channel_id = values(channel_id),
+		channel_name = values(channel_name),
+		pay_type = values(pay_type),
+		trans_serial = values(trans_serial),
+		order_no = values(order_no),
+		trans_time = values(trans_time),
+		product_id = values(product_id),
+		specification = values(specification),
+		color = values(color),
+		discount_type = values(discount_type),
+		discount_amt = values(discount_amt),
+		price = values(price),
+		amount = values(amount),
+		inventory = values(inventory),
+		brand_id = values(brand_id),
+		brand_name = values(brand_name),
+		class1_id = values(class1_id),
+		class1_name = values(class1_name),
+		class2_id = values(class2_id),
+		class2_name = values(class2_name),
+		class3_id = values(class3_id),
+		class3_name = values(class3_name),
+		class4_id = values(class4_id),
+		class4_name = values(class4_name),
+		sale_assist_id = values(sale_assist_id),
+		sale_assistance = values(sale_assistance),
+		settlement_clerk_id = values(settlement_clerk_id),
+		settlement_clerk = values(settlement_clerk),
+		identify_no = values(identify_no),
+		driving_license = values(driving_license),
+		email = values(email),
+		mobile = values(mobile),
+		tel = values(tel),
+		qq = values(qq),
+		acct_type = values(acct_type),
+		acct_no = values(acct_no),
+		idfa = values(idfa),
+		imei = values(imei),
+		udid = values(udid),
+		phone_mac = values(phone_mac),
+		update_time = values(update_time),
+		source = values(source),
+		batch_id = values(batch_id)
+	</update>
+
 </mapper>

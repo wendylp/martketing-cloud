@@ -16,7 +16,7 @@ import cn.rongcapital.mkt.po.OriginalDataLogin;
 import java.util.ArrayList;
 import java.util.Map;
 
-public interface OriginalDataLoginDao extends BaseDao<OriginalDataLogin>{
+public interface OriginalDataLoginDao extends BaseDao<OriginalDataLogin> {
 	
 	//自定义扩展
 	/**

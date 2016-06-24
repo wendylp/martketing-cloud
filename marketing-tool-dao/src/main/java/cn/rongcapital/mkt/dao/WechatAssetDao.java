@@ -72,4 +72,11 @@ public interface WechatAssetDao extends BaseDao<WechatAsset>{
 	 * @return int
 	 */
 	List<Map<String,Object>> selectServerAndBookList(Map<String, Object> paramMap);
+
+	/**
+	 * 获取资产类型和微信账号
+	 * @param paramMap
+	 * @return int
+	 */
+	Map<String,Object> selectAssetTypeAndWxacct(Map<String, Object> paramMap);
 }
