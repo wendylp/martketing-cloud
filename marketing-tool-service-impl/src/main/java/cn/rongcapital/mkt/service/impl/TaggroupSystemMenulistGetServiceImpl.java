@@ -23,7 +23,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 @Service
 public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenulistGetService {
 
-    private static final int ZERO_LEVEL = 0;
+    private static final int ZERO_LEVEL = 1;
 
     private static final long TOP_LEVEL = -1L;
 
