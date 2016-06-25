@@ -69,7 +69,7 @@ public class GetPubFansListServiceImpl implements TaskService {
                 paramGroup.put("wx_acct",h5PubFan.getPubId());
                 paramGroup.put("group_name",userGroup.getUserGroup());
                 Integer groupId = wechatGroupDao.selectGroupId(paramGroup);
-                if(groupId == null){
+                if(groupId == null) {
                     wechatGroupDao.insertWechatGroup(paramGroup);
                     groupId = wechatGroupDao.selectGroupId(paramGroup);
                 }
@@ -90,6 +90,7 @@ public class GetPubFansListServiceImpl implements TaskService {
                 paramFan.put("activity_48h_yn",h5PubFan.getActive48hYn());
                 paramFan.put("head_image_url",h5PubFan.getHeadImageUrl());
                 paramFan.put("remark",h5PubFan.getRemark());
+                paramFan.put("pub_id",h5PubFan.getPubId());
 
                 fansList.add(paramFan);
             }

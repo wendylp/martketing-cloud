@@ -13,8 +13,6 @@ public class WechatMember extends BaseQuery {
 
     private String wxGroupId;
 
-    private String nickname;
-
     private Integer sex;
 
     private String country;
@@ -30,6 +28,10 @@ public class WechatMember extends BaseQuery {
     private String signature;
 
     private String isFriend;
+
+    private String pubId;
+
+    private String uin;
 
     private String subscribeYn;
 
@@ -48,6 +50,8 @@ public class WechatMember extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+
+    private byte[] nickname;
 
     public Long getId() {
         return id;
@@ -79,14 +83,6 @@ public class WechatMember extends BaseQuery {
 
     public void setWxGroupId(String wxGroupId) {
         this.wxGroupId = wxGroupId == null ? null : wxGroupId.trim();
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname == null ? null : nickname.trim();
     }
 
     public Integer getSex() {
@@ -151,6 +147,22 @@ public class WechatMember extends BaseQuery {
 
     public void setIsFriend(String isFriend) {
         this.isFriend = isFriend == null ? null : isFriend.trim();
+    }
+
+    public String getPubId() {
+        return pubId;
+    }
+
+    public void setPubId(String pubId) {
+        this.pubId = pubId == null ? null : pubId.trim();
+    }
+
+    public String getUin() {
+        return uin;
+    }
+
+    public void setUin(String uin) {
+        this.uin = uin == null ? null : uin.trim();
     }
 
     public String getSubscribeYn() {
@@ -223,5 +235,13 @@ public class WechatMember extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public byte[] getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(byte[] nickname) {
+        this.nickname = nickname;
     }
 }

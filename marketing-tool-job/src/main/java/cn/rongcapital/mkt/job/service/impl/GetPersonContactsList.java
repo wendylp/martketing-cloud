@@ -96,6 +96,7 @@ public class GetPersonContactsList implements TaskService {
                 paramContact.put("signature", personalContact.getSignature());
                 paramContact.put("province", personalContact.getProvince());
                 paramContact.put("city", personalContact.getCity());
+                paramContact.put("uin", uin);
                 paramContacts.add(paramContact);
             }
         }
