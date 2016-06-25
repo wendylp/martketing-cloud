@@ -65,4 +65,11 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return list
 	 */
 	List<String> selectWxCodeByGroupId(List<Long> importGroudIds);
+
+	/**
+	 * 选取微信人群的详细信息
+	 * @param paramMap
+	 * @return list
+	 */
+	List<Map<String,Object>> selectPeopleDetails(List<Long> importGroupIds);
 }

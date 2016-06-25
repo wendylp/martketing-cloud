@@ -116,6 +116,7 @@ import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -388,6 +389,9 @@ public class MktApi {
 
 	@Autowired
 	private FileTemplateDownloadService fileTemplateDownloadService;
+
+	@Autowired
+	private WechatPeopleDetailDownloadService wechatPeopleDetailDownloadService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1499,5 +1503,18 @@ public class MktApi {
 										   @NotEmpty @QueryParam("ver") String ver,
 	                                       @NotEmpty @QueryParam("template_id_list") String templateIdList){
         return fileTemplateDownloadService.downloadFileTemplate(templateIdList);
+	}
+
+	/**
+	 * @功能简述: 获取微信人群的明细下载
+	 * @param: String userToken
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.wechat.people.detail.download")
+	public Object downloadWechatPeopleDetail(@NotEmpty @QueryParam("user_token") String userToken,
+									   @NotEmpty @QueryParam("ver") String ver,
+									   @NotEmpty @QueryParam("group_ids") String group_ids){
+		return wechatPeopleDetailDownloadService.downloadWechatPeopleDetail(group_ids);
 	}
 }
