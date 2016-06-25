@@ -117,6 +117,7 @@ import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
+import cn.rongcapital.mkt.service.FileTagUpdateService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -144,6 +145,7 @@ import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
+import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
@@ -392,6 +394,9 @@ public class MktApi {
 
 	@Autowired
 	private WechatPeopleDetailDownloadService wechatPeopleDetailDownloadService;
+
+	@Autowired
+	private FileTagUpdateService fileTagUpdateService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1516,5 +1521,17 @@ public class MktApi {
 									   @NotEmpty @QueryParam("ver") String ver,
 									   @NotEmpty @QueryParam("group_ids") String group_ids){
 		return wechatPeopleDetailDownloadService.downloadWechatPeopleDetail(group_ids);
+	}
+
+	/**
+	 * @功能简述: 文件上传时为上传的人群打标签
+	 * @param body
+	 * @return BaseOutput
+	 */
+	@POST
+	@Path("/mkt.data.inbound.file.tag.update")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput fileTagUpdate(FileTagUpdateIn fileTagUpdateIn){
+		return fileTagUpdateService.updateFileTag(fileTagUpdateIn);
 	}
 }

@@ -68,6 +68,8 @@ public class OriginalDataPayment extends BaseQuery {
 
     private String batchId;
 
+    private String fileUnique;
+
     public Integer getId() {
         return id;
     }
@@ -314,5 +316,13 @@ public class OriginalDataPayment extends BaseQuery {
 
     public void setBatchId(String batchId) {
         this.batchId = batchId == null ? null : batchId.trim();
+    }
+
+    public String getFileUnique() {
+        return fileUnique;
+    }
+
+    public void setFileUnique(String fileUnique) {
+        this.fileUnique = fileUnique == null ? null : fileUnique.trim();
     }
 }

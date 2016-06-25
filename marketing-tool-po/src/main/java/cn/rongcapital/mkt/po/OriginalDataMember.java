@@ -54,6 +54,8 @@ public class OriginalDataMember extends BaseQuery {
 
     private Integer batchId;
 
+    private String fileUnique;
+
     public Integer getId() {
         return id;
     }
@@ -244,5 +246,13 @@ public class OriginalDataMember extends BaseQuery {
 
     public void setBatchId(Integer batchId) {
         this.batchId = batchId;
+    }
+
+    public String getFileUnique() {
+        return fileUnique;
+    }
+
+    public void setFileUnique(String fileUnique) {
+        this.fileUnique = fileUnique == null ? null : fileUnique.trim();
     }
 }

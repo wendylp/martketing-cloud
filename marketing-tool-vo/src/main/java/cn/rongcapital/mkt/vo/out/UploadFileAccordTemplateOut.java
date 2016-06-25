@@ -11,6 +11,7 @@ public class UploadFileAccordTemplateOut {
     private String dataTopic;
     private String dataRows;
     private String unrecognizeFields;
+    private String fileType;
 
     @JsonProperty("data_topic")
     public String getDataTopic() {
@@ -37,5 +38,14 @@ public class UploadFileAccordTemplateOut {
 
     public void setUnrecognizeFields(String unrecognizeFields) {
         this.unrecognizeFields = unrecognizeFields;
+    }
+
+    @JsonProperty("file_type")
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 }

@@ -55,6 +55,8 @@ public class OriginalDataLogin extends BaseQuery {
 
     private String batchId;
 
+    private String fileUnique;
+
     public Integer getId() {
         return id;
     }
@@ -116,7 +118,7 @@ public class OriginalDataLogin extends BaseQuery {
     }
 
     public void setLoginUrl(String loginUrl) {
-        this.loginUrl = loginUrl;
+        this.loginUrl = loginUrl == null ? null : loginUrl.trim();
     }
 
     public String getIdentifyNo() {
@@ -253,5 +255,13 @@ public class OriginalDataLogin extends BaseQuery {
 
     public void setBatchId(String batchId) {
         this.batchId = batchId == null ? null : batchId.trim();
+    }
+
+    public String getFileUnique() {
+        return fileUnique;
+    }
+
+    public void setFileUnique(String fileUnique) {
+        this.fileUnique = fileUnique == null ? null : fileUnique.trim();
     }
 }

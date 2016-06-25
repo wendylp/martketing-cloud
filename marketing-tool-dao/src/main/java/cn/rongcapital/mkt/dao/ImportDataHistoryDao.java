@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -70,4 +71,19 @@ public interface ImportDataHistoryDao extends BaseDao<ImportDataHistory>{
 	 */
 	public void insertFileUnique(Map<String,Object> paramMap);
 
+	/**
+	 *
+	 * @功能简述 : 根据FileUnique获取相应的数据条数
+	 * @author nianjun
+	 * @return map
+	 */
+	List<Map<String,Object>> selectTotalRowsAndFileType(Map<String, Object> paramMap);
+
+	/**
+	 *
+	 * @功能简述 : 根据FileUnique跟新相应的数据属性
+	 * @author nianjun
+	 * @return map
+	 */
+	void updateByFileUnique(Map<String, Object> updateMap);
 }

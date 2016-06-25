@@ -45,4 +45,11 @@ public interface OriginalDataPopulationDao extends BaseDao<OriginalDataPopulatio
 	 * @return int
 	 */
 	int batchInsertUploadFileData(List<Map<String,Object>> list);
+
+	/**
+	 * 根据FileUnique获取id列表
+	 * @param List
+	 * @return int
+	 */
+	List<Long> selelctIdListByFileUnique(Map<String, Object> paramMap);
 }

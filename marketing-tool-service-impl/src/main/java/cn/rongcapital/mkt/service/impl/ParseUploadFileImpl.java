@@ -33,7 +33,7 @@ public class ParseUploadFileImpl implements ParseUploadFile {
     private OriginalDataShoppingDao originalDataShoppingDao;
 
     @Override
-    public UploadFileAccordTemplateOut parseUploadFileByType(String fileName, byte[] bytes) {
+    public UploadFileAccordTemplateOut parseUploadFileByType(String fileUnique,String fileName, byte[] bytes) {
         UploadFileAccordTemplateOut uploadFileAccordTemplateOut = new UploadFileAccordTemplateOut();
         StringBuffer illegalColumns = new StringBuffer();  //用于存放文件中不合法的列名
         Map<String,Object> codeIndexMap = new HashMap<String,Object>();  //用于存放数据库表列名与文件中对应列索引的对应关系
@@ -43,11 +43,12 @@ public class ParseUploadFileImpl implements ParseUploadFile {
         int fileType = Integer.parseInt(typeAndBatchId[0].substring(typeAndBatchId[0].length()-1));
         String batchId = typeAndBatchId[1];
 
-        readAndParseFile(bytes, illegalColumns, codeIndexMap, insertList, fileType, batchId);
+        readAndParseFile(bytes, illegalColumns, codeIndexMap, insertList, fileType, batchId, fileUnique);
         int effectRows = insertParsedData(insertList, fileType);
 
         uploadFileAccordTemplateOut.setDataTopic(importTemplateDao.selectTempleNameByType(fileType));
         uploadFileAccordTemplateOut.setDataRows(effectRows+"");
+        uploadFileAccordTemplateOut.setFileType(fileType + "");
         if(illegalColumns.length() > 0){
             uploadFileAccordTemplateOut.setUnrecognizeFields(illegalColumns.deleteCharAt(illegalColumns.length()-1).toString());
         }else{
@@ -82,7 +83,7 @@ public class ParseUploadFileImpl implements ParseUploadFile {
      * @功能简述: 读取文件并做相应处理
      * @param: byte[] bytes, ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, int fileType
      */
-    private void readAndParseFile(byte[] bytes, StringBuffer illegalColumns, Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, int fileType, String batchId) {
+    private void readAndParseFile(byte[] bytes, StringBuffer illegalColumns, Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, int fileType, String batchId, String fileUnique) {
         Map<String, String> nameCodeMap = getNameCodeRelationByFileType(fileType);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
         try{
@@ -94,7 +95,7 @@ public class ParseUploadFileImpl implements ParseUploadFile {
                     generateCodeFileColumnIndexRelationMap(illegalColumns, codeIndexMap, nameCodeMap, uploadFileColumns);
                     isFileHeadFlag = false;
                 }else{
-                    generateInsertDataList(codeIndexMap, insertList, uploadFileColumns, batchId);
+                    generateInsertDataList(codeIndexMap, insertList, uploadFileColumns, batchId, fileUnique);
                 }
             }
         }catch (Exception e){
@@ -106,11 +107,12 @@ public class ParseUploadFileImpl implements ParseUploadFile {
      * @功能简述: 根据对应关系构造出文件解析后的插入数据数组
      * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
      */
-    private void generateInsertDataList(Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, String[] uploadFileColumns, String batchId) {
+    private void generateInsertDataList(Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, String[] uploadFileColumns, String batchId, String fileUnique) {
         Map<String,Object> insertMap = new HashMap<String,Object>();
         for(String key : codeIndexMap.keySet()){
             insertMap.put(key,uploadFileColumns[(Integer)codeIndexMap.get(key)]);
         }
+        insertMap.put("file_unique",fileUnique);
         insertMap.put("batch_id",batchId);
         insertList.add(insertMap);
     }

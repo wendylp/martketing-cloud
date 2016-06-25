@@ -108,5 +108,16 @@
 		WHERE ctm.type = 0 AND ctm.map_id = #{headerId} AND ctm.status = 0
 		ORDER BY ct.id ASC
 	</select>
-	
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO custom_tag_map(tag_id,map_id,type)
+		VALUE
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			   #{item.tag_id},
+			   #{item.map_id},
+			   #{item.type}
+			)
+		</foreach>
+	</insert>
 </mapper>

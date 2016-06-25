@@ -45,9 +45,6 @@ public class MigrationFileUploadUrlServiceImpl implements MigrationFileUploadUrl
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("import_start_time",new Date(System.currentTimeMillis()));
         paramMap.put("file_unique",fileUnique);
-//        ImportDataHistory importDataHistory = new ImportDataHistory();
-//        importDataHistory.setFileUnique(fileUnique);
-//        importDataHistory.setImportStartTime(new Date(System.currentTimeMillis()));
         importDataHistoryDao.insertFileUnique(paramMap);
     }
 }

@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,13 +47,8 @@ public class UploadFileServiceImpl implements UploadFileService{
         JSONObject obj = new JSONObject();
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(),ApiConstant.INT_ZERO,null);
         UploadFileAccordTemplateOut uploadFileAccordTemplateOut = null;
-        if( !isFileUniqueValid(fileUnique) ) {
-            try {
-                obj.put("msg","唯一性标识获取失败");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            baseOutput.getData().add(obj);
+        if(!isFileUniqueValid(fileUnique)){
+            baseOutput.setMsg("文件唯一性标识不合法。");
             return Response.ok().entity(baseOutput).build();
         }
         String fileName = "";
@@ -68,9 +64,17 @@ public class UploadFileServiceImpl implements UploadFileService{
                 }
                 InputStream inputStream = inputPart.getBody(InputStream.class,null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
-                uploadFileAccordTemplateOut = parseUploadFile.parseUploadFileByType(fileName,bytes);
+                uploadFileAccordTemplateOut = parseUploadFile.parseUploadFileByType(fileUnique,fileName,bytes);
                 //Todo: 3.根据文件唯一标识，把数据条数，摘要，未识别属性放到数据库的importHistory表中的相应栏位中。
-                writeFile(bytes,directory + fileName);    //Todo: 4不确定文件是否还需要保存临时文件
+                Map<String,Object> updateMap = new HashMap<String,Object>();
+                updateMap.put("total_rows",uploadFileAccordTemplateOut.getDataRows());
+                updateMap.put("no_recognize_property",uploadFileAccordTemplateOut.getUnrecognizeFields());
+                updateMap.put("file_type",uploadFileAccordTemplateOut.getFileType());
+                updateMap.put("file_unique",fileUnique);
+                importDataHistoryDao.updateByFileUnique(updateMap);
+                //Todo: 4不确定文件是否还需要保存临时文件
+//                writeFile(bytes,directory + fileName);
+                writeFile(bytes, fileName);
                 logger.info("文件上传完毕！");
             }catch (Exception e){
                 e.printStackTrace();

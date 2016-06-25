@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CustomTagMap;
@@ -52,5 +53,12 @@ public interface CustomTagMapDao extends BaseDao<CustomTagMap>{
      * @return List
      */
 	List<CustomTagWithName> getTagUseHeadId(Long headerId);
-	
+
+	/**
+	 * @功能简述 : 批量插入数据
+	 * @param headId
+	 * @author zhuxuelong
+	 * @return List
+	 */
+	void batchInsert(List<Map<String, Object>> insertCustomTagMapList);
 }

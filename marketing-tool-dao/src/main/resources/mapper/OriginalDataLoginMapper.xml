@@ -4,7 +4,8 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,login_type as loginType,login_time as loginTime,logout_time as logoutTime,login_ip as loginIp,login_device as loginDevice,resolution_ratio as resolutionRatio,login_url as loginUrl,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,QQ as qq,acct_type as acctType,acct_no as acctNo,IDFA as idfa,IMEI as imei,UDID as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId]]>	</sql>
+		<![CDATA[ id as id,login_type as loginType,login_time as loginTime,logout_time as logoutTime,login_ip as loginIp,login_device as loginDevice,resolution_ratio as resolutionRatio,login_url as loginUrl,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,QQ as qQ,acct_type as acctType,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique]]>
+	</sql>
 
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM original_data_login]]></sql>
@@ -25,18 +26,19 @@
 		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
 		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
 		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
-				<if test="qq != null"><![CDATA[ AND QQ = #{qq}]]></if>
+		    	<if test="qQ != null"><![CDATA[ AND QQ = #{qQ}]]></if>
 		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
 		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
-		    	<if test="idfa != null"><![CDATA[ AND IDFA = #{idfa}]]></if>
-		    	<if test="imei != null"><![CDATA[ AND IMEI = #{imei}]]></if>
-		    	<if test="udid != null"><![CDATA[ AND UDID = #{udid}]]></if>
+		    	<if test="iDFA != null"><![CDATA[ AND IDFA = #{iDFA}]]></if>
+		    	<if test="iMEI != null"><![CDATA[ AND IMEI = #{iMEI}]]></if>
+		    	<if test="uDID != null"><![CDATA[ AND UDID = #{uDID}]]></if>
 		    	<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
+		    	<if test="fileUnique != null"><![CDATA[ AND file_unique = #{fileUnique}]]></if>
 		</where>
 	</sql>
 	
@@ -61,23 +63,24 @@
 		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
 		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
 		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
-		    	<if test="qq != null"><![CDATA[QQ = #{qq},]]></if>
+		    	<if test="qQ != null"><![CDATA[QQ = #{qQ},]]></if>
 		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
 		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
-		    	<if test="idfa != null"><![CDATA[IDFA = #{idfa},]]></if>
-		    	<if test="imei != null"><![CDATA[IMEI = #{imei},]]></if>
-		    	<if test="udid != null"><![CDATA[UDID = #{udid},]]></if>
+		    	<if test="iDFA != null"><![CDATA[IDFA = #{iDFA},]]></if>
+		    	<if test="iMEI != null"><![CDATA[IMEI = #{iMEI},]]></if>
+		    	<if test="uDID != null"><![CDATA[UDID = #{uDID},]]></if>
 		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
-		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId}]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="fileUnique != null"><![CDATA[file_unique = #{fileUnique}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataLogin" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,batch_id)
+			INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,batch_id,file_unique)
 			VALUES
 			(
 			  #{loginType},
@@ -92,16 +95,17 @@
 			  #{email},
 			  #{mobile},
 			  #{tel},
-			  #{qq},
+			  #{qQ},
 			  #{acctType},
 			  #{acctNo},
-			  #{idfa},
-			  #{imei},
-			  #{udid},
+			  #{iDFA},
+			  #{iMEI},
+			  #{uDID},
 			  #{phoneMac},
 			  now(),
 			  #{source},
-			  #{batchId}
+			  #{batchId},
+			  #{fileUnique}
 			)
 		]]>
 	</insert>
@@ -145,7 +149,7 @@
 	
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,batch_id)
+		INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,file_unique,batch_id)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -170,9 +174,10 @@
 			#{item.phone_mac},
 			#{item.create_time},
 			#{item.source},
+			#{item.file_unique},
 			#{item.batch_id}
 			)
 		</foreach>
-	</insert>
+	</insert>	
 	
 </mapper>

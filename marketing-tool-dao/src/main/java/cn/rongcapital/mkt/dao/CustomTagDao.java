@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,5 +65,18 @@ public interface CustomTagDao extends BaseDao<CustomTag>{
      * @return: List<String>
      */
     List<String> selectTagsByContactId(Map<String, Integer> paramMap);
-    
+
+	/**
+	 * @功能简述: 批量插入标签
+	 * @param: Map<String , Integer>
+	 * @return: List<String>
+	 */
+	void batchInsert(List<Map<String, Object>> insertCustomTagList);
+
+	/**
+	 * @功能简述: 根据名称获取Id
+	 * @param: Map<String , Integer>
+	 * @return: List<String>
+	 */
+	List<Long> selectIdsByCustomTags(ArrayList<String> tag_names);
 }

@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.po;
 
-import java.util.Date;
-
 import cn.rongcapital.mkt.po.base.BaseQuery;
+
+import java.util.Date;
 
 public class ImportDataHistory extends BaseQuery {
     private Long id;
@@ -40,6 +40,8 @@ public class ImportDataHistory extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+
+    private Integer fileType;
 
     public ImportDataHistory() {}
 
@@ -189,5 +191,13 @@ public class ImportDataHistory extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(Integer fileType) {
+        this.fileType = fileType;
     }
 }

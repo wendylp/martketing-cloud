@@ -123,5 +123,24 @@
 				custom_tag.id = custom_tag_map.tag_id
 			WHERE custom_tag_map.map_id = #{contactId};
 	</select>
-	
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO custom_tag(name,cover_audience_count)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			   #{item.name},
+			   #{item.cover_audience_count}
+			)
+		</foreach>
+	</insert>
+
+	<select id="selectIdsByCustomTags" parameterType="java.util.List" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE name in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>
