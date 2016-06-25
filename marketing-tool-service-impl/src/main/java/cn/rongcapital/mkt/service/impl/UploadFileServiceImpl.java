@@ -73,8 +73,8 @@ public class UploadFileServiceImpl implements UploadFileService{
                 updateMap.put("file_unique",fileUnique);
                 importDataHistoryDao.updateByFileUnique(updateMap);
                 //Todo: 4不确定文件是否还需要保存临时文件
-//                writeFile(bytes,directory + fileName);
-                writeFile(bytes, fileName);
+                writeFile(bytes,directory + fileName);
+//                writeFile(bytes, fileName);  //测试使用路径
                 logger.info("文件上传完毕！");
             }catch (Exception e){
                 e.printStackTrace();
