@@ -1,12 +1,12 @@
 package cn.rongcapital.mkt.common.util;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;
+
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 
 /**
  * Created by Yunfeng on 2016-6-25.
@@ -51,5 +51,9 @@ public class FileUtil {
             }
         }
         return file;
+    }
+    
+    public static <T extends BaseQuery> generateFileforDownload(){
+        
     }
 }
