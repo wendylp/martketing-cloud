@@ -13,6 +13,6 @@ public interface DataDownloadQualityLogService {
      * @return
      * 
      */
-    public File downloadQualityLog(Integer importDataId);
+    public File downloadQualityLog(Long importDataId);
 
 }

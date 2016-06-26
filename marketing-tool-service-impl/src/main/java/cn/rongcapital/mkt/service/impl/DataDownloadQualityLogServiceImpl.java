@@ -14,7 +14,7 @@ public class DataDownloadQualityLogServiceImpl implements DataDownloadQualityLog
     private ImportDataModifyLogDao importDataModifyLogDao;
     
     @Override
-    public File downloadQualityLog(Integer importDataId) {
+    public File downloadQualityLog(Long importDataId) {
         
         ImportDataModifyLog importDataModifyLog = new ImportDataModifyLog();
         importDataModifyLog.setImportDataId(importDataId);
