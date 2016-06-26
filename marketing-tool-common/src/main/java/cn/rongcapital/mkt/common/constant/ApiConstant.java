@@ -40,7 +40,8 @@ public class ApiConstant {
 	public static final int WECHAT_ASSET_PERSONAL_NUMBER = 1;
 	public static final int WECHAT_ASSET_SUBSCRIPTION_NUMBER=2;
 	
-	public static final String DATE_FORMAT_yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT_yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT_yyyy_MM_dd = "yyyy-MM-dd";
 	
 	public static final byte TAG_TYPE_SEGMENT = 0;// 细分
 	public static final byte TAG_TYPE_ACTIVITY = 1;// 活动

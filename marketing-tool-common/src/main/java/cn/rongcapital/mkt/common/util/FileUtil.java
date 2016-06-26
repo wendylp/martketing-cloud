@@ -26,6 +26,7 @@ public class FileUtil {
 
     private static String FILE_SEPERATOR = ",";
     private static String WRAP_TEXT_CHARACTOR = "\n";
+    private static String FILE_SUFFIX = ".csv";
 
     public static File generateDownloadFile(List<Map<String, Object>> dataSource, String prefixFileName) {
         String fileName = ApiConstant.DOWNLOAD_BASE_DIR + prefixFileName + System.currentTimeMillis() + ".csv"; // 线上服务器文件生成目录
@@ -77,8 +78,12 @@ public class FileUtil {
      * @return
      */
     public static <E extends BaseQuery> File generateFileforDownload(List<E> poList, String fileName) {
-        String pathName = ApiConstant.DOWNLOAD_BASE_DIR + fileName + System.currentTimeMillis() + ".csv";
-        File file = new File(pathName);
+        StringBuilder pathNameBuilder = new StringBuilder();
+        // 当前日期
+        DateTime today = DateTime.now();
+        pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName)
+                        .append(today.toString(ApiConstant.DATE_FORMAT_yyyy_MM_dd)).append(FILE_SUFFIX);
+        File file = new File(pathNameBuilder.toString());
         return generateFileforDownload(poList, file);
     }
 
