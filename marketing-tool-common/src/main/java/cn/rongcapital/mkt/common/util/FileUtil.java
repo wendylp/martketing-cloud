@@ -23,6 +23,7 @@ public class FileUtil {
     private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
     private static String FILE_SEPERATOR = ",";
+    private static String WRAP_TEXT_CHARACTOR = "\n";
 
     public static File generateDownloadFile(List<Map<String, Object>> dataSource, String prefixFileName) {
         String fileName = ApiConstant.DOWNLOAD_BASE_DIR + prefixFileName + System.currentTimeMillis() + ".csv"; // 线上服务器文件生成目录
@@ -95,10 +96,16 @@ public class FileUtil {
                 int fieldsCount = fields.length;
 
                 for (int j = 0; j < fieldsCount; j++) {
-
+                    Field field = fields[j];
+                    stringBuilder.append(field.get(entity));
+                    if (j == fieldsCount - 1) {
+                        stringBuilder.append(WRAP_TEXT_CHARACTOR);
+                    } else {
+                        stringBuilder.append(FILE_SEPERATOR);
+                    }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException | IllegalAccessException e) {
             logger.error("生成下载文件时出错", e);
         }
 
