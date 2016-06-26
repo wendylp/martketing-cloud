@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,8 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 public class FileUtil {
 
     private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
+
+    private static String FILE_SEPERATOR = ",";
 
     public static File generateDownloadFile(List<Map<String, Object>> dataSource, String prefixFileName) {
         String fileName = ApiConstant.DOWNLOAD_BASE_DIR + prefixFileName + System.currentTimeMillis() + ".csv"; // 线上服务器文件生成目录
@@ -83,6 +86,18 @@ public class FileUtil {
 
         try {
             FileWriter fileWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            int rowCount = poList.size();
+            for (int i = 0; i < rowCount; i++) {
+                E entity = poList.get(i);
+                StringBuilder stringBuilder = new StringBuilder();
+                Field[] fields = entity.getClass().getDeclaredFields();
+                int fieldsCount = fields.length;
+
+                for (int j = 0; j < fieldsCount; j++) {
+
+                }
+            }
         } catch (IOException e) {
             logger.error("生成下载文件时出错", e);
         }
