@@ -70,7 +70,7 @@ public class FileUtil {
     /**
      * 根据PO类型,文件名生成下载的文件
      * 
-     * @param t
+     * @param poList
      * @param fileName
      * @return
      */
@@ -85,9 +85,11 @@ public class FileUtil {
             return file;
         }
 
+        FileWriter fileWriter = null;
+        BufferedWriter bufferedWriter = null;
         try {
-            FileWriter fileWriter = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            fileWriter = new FileWriter(file);
+            bufferedWriter = new BufferedWriter(fileWriter);
             int rowCount = poList.size();
             for (int i = 0; i < rowCount; i++) {
                 E entity = poList.get(i);
@@ -99,16 +101,28 @@ public class FileUtil {
                     Field field = fields[j];
                     stringBuilder.append(field.get(entity));
                     if (j == fieldsCount - 1) {
-                        stringBuilder.append(WRAP_TEXT_CHARACTOR);
+                        break;
                     } else {
                         stringBuilder.append(FILE_SEPERATOR);
                     }
                 }
+
+                bufferedWriter.write(stringBuilder.toString());
+                bufferedWriter.newLine();
             }
+
+            bufferedWriter.flush();
         } catch (IOException | IllegalArgumentException | IllegalAccessException e) {
             logger.error("生成下载文件时出错", e);
+        } finally {
+            try {
+                fileWriter.close();
+                bufferedWriter.close();
+            } catch (IOException e) {
+                logger.error("生成下载文件后关闭资源时出错", e);
+            }
         }
 
-        return null;
+        return file;
     }
 }
