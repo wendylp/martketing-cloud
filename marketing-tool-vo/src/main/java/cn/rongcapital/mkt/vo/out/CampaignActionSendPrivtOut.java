@@ -7,15 +7,13 @@ public class CampaignActionSendPrivtOut {
 	
     private String name;
 
-    private Integer wechatH5Id;
+    private Integer assetId;
 
-    private String wechatH5Name;
+    private String assetName;
 
-    private String prvtId;
-
-    private String prvtGroupName;
-
-    private String prvtName;
+    private Integer groupId;
+    
+    private String groupName;
 
     private String textInfo;
 
@@ -28,52 +26,43 @@ public class CampaignActionSendPrivtOut {
         this.name = name == null ? null : name.trim();
     }
 
-    @JsonProperty("wechat_h5_id")
-    public Integer getWechatH5Id() {
-        return wechatH5Id;
-    }
+    @JsonProperty("asset_id")
+    public Integer getAssetId() {
+		return assetId;
+	}
 
-    public void setWechatH5Id(Integer wechatH5Id) {
-        this.wechatH5Id = wechatH5Id;
-    }
+	public void setAssetId(Integer assetId) {
+		this.assetId = assetId;
+	}
 
-    @JsonProperty("wechat_h5_name")
-    public String getWechatH5Name() {
-        return wechatH5Name;
-    }
+	@JsonProperty("asset_name")
+	public String getAssetName() {
+		return assetName;
+	}
 
-    public void setWechatH5Name(String wechatH5Name) {
-        this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
-    }
+	public void setAssetName(String assetName) {
+		this.assetName = assetName;
+	}
 
-    @JsonProperty("prvt_id")
-    public String getPrvtId() {
-        return prvtId;
-    }
+	@JsonProperty("group_id")
+	public Integer getGroupId() {
+		return groupId;
+	}
 
-    public void setPrvtId(String prvtId) {
-        this.prvtId = prvtId == null ? null : prvtId.trim();
-    }
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
+	}
 
-    @JsonProperty("prvt_group_name")
-    public String getPrvtGroupName() {
-        return prvtGroupName;
-    }
+	@JsonProperty("group_name")
+	public String getGroupName() {
+		return groupName;
+	}
 
-    public void setPrvtGroupName(String prvtGroupName) {
-        this.prvtGroupName = prvtGroupName == null ? null : prvtGroupName.trim();
-    }
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
 
-    @JsonProperty("prvt_name")
-    public String getPrvtName() {
-        return prvtName;
-    }
-
-    public void setPrvtName(String prvtName) {
-        this.prvtName = prvtName == null ? null : prvtName.trim();
-    }
-
-    @JsonProperty("text_info")
+	@JsonProperty("text_info")
     public String getTextInfo() {
         return textInfo;
     }

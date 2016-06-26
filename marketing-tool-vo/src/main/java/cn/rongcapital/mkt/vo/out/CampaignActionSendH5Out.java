@@ -7,19 +7,13 @@ public class CampaignActionSendH5Out {
 	
     private String name;
 
-    private Integer wechatH5Id;
+    private Integer imgTextAssetId;
 
-    private String wechatH5Name;
+    private String imgTextAssetName;
 
-    private String pubId;
+    private Integer pubAssetId;
 
-    private String pubName;
-
-    private String prvtId;
-
-    private String prvtGroupName;
-
-    private String prvtName;
+    private String pubAssetName;
 
     @JsonProperty("name")
     public String getName() {
@@ -30,66 +24,41 @@ public class CampaignActionSendH5Out {
         this.name = name == null ? null : name.trim();
     }
 
-    @JsonProperty("wechat_h5_id")
-    public Integer getWechatH5Id() {
-        return wechatH5Id;
-    }
+    @JsonProperty("img_text_asset_id")
+	public Integer getImgTextAssetId() {
+		return imgTextAssetId;
+	}
 
-    public void setWechatH5Id(Integer wechatH5Id) {
-        this.wechatH5Id = wechatH5Id;
-    }
+	public void setImgTextAssetId(Integer imgTextAssetId) {
+		this.imgTextAssetId = imgTextAssetId;
+	}
 
-    @JsonProperty("wechat_h5_name")
-    public String getWechatH5Name() {
-        return wechatH5Name;
-    }
+	@JsonProperty("img_text_asset_name")
+	public String getImgTextAssetName() {
+		return imgTextAssetName;
+	}
 
-    public void setWechatH5Name(String wechatH5Name) {
-        this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
-    }
+	public void setImgTextAssetName(String imgTextAssetName) {
+		this.imgTextAssetName = imgTextAssetName;
+	}
 
-    @JsonProperty("pub_id")
-    public String getPubId() {
-        return pubId;
-    }
+	@JsonProperty("pub_asset_id")
+	public Integer getPubAssetId() {
+		return pubAssetId;
+	}
 
-    public void setPubId(String pubId) {
-        this.pubId = pubId == null ? null : pubId.trim();
-    }
+	public void setPubAssetId(Integer pubAssetId) {
+		this.pubAssetId = pubAssetId;
+	}
 
-    @JsonProperty("pub_name")
-    public String getPubName() {
-        return pubName;
-    }
+	@JsonProperty("pub_asset_name")
+	public String getPubAssetName() {
+		return pubAssetName;
+	}
 
-    public void setPubName(String pubName) {
-        this.pubName = pubName == null ? null : pubName.trim();
-    }
+	public void setPubAssetName(String pubAssetName) {
+		this.pubAssetName = pubAssetName;
+	}
+    
 
-    @JsonProperty("prvt_id")
-    public String getPrvtId() {
-        return prvtId;
-    }
-
-    public void setPrvtId(String prvtId) {
-        this.prvtId = prvtId == null ? null : prvtId.trim();
-    }
-
-    @JsonProperty("prvt_group_name")
-    public String getPrvtGroupName() {
-        return prvtGroupName;
-    }
-
-    public void setPrvtGroupName(String prvtGroupName) {
-        this.prvtGroupName = prvtGroupName == null ? null : prvtGroupName.trim();
-    }
-
-    @JsonProperty("prvt_name")
-    public String getPrvtName() {
-        return prvtName;
-    }
-
-    public void setPrvtName(String prvtName) {
-        this.prvtName = prvtName == null ? null : prvtName.trim();
-    }
 }

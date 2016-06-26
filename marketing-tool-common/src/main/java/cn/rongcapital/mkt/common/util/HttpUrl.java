@@ -18,7 +18,7 @@ public class HttpUrl implements Cloneable {
 
     private String requetsBody;
 
-    private String encoding;
+    private String encoding = "utf-8";
 
     private String contentType;
 

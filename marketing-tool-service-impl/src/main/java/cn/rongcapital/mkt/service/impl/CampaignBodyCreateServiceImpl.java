@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.dao.AudienceListDao;
 import cn.rongcapital.mkt.dao.CampaignActionSaveAudienceDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendH5Dao;
 import cn.rongcapital.mkt.dao.CampaignActionSendPrivtDao;
@@ -37,8 +36,12 @@ import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.dao.CampaignNodeItemDao;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
+import cn.rongcapital.mkt.dao.CustomTagDao;
+import cn.rongcapital.mkt.dao.ImgTextAssetDao;
 import cn.rongcapital.mkt.dao.TaskScheduleDao;
-import cn.rongcapital.mkt.po.AudienceList;
+import cn.rongcapital.mkt.dao.WechatAssetDao;
+import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
+import cn.rongcapital.mkt.dao.WechatGroupDao;
 import cn.rongcapital.mkt.po.CampaignActionSaveAudience;
 import cn.rongcapital.mkt.po.CampaignActionSendH5;
 import cn.rongcapital.mkt.po.CampaignActionSendPrivt;
@@ -53,12 +56,16 @@ import cn.rongcapital.mkt.po.CampaignDecisionPubFans;
 import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatForward;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatRead;
-import cn.rongcapital.mkt.po.CampaignDecisionWechatSent;
 import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
+import cn.rongcapital.mkt.po.CustomTag;
+import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.po.TaskSchedule;
+import cn.rongcapital.mkt.po.WechatAsset;
+import cn.rongcapital.mkt.po.WechatAssetGroup;
+import cn.rongcapital.mkt.po.WechatGroup;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.vo.in.CampaignActionSaveAudienceIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionSendH5In;
@@ -74,57 +81,65 @@ import cn.rongcapital.mkt.vo.in.CampaignDecisionPubFansIn;
 import cn.rongcapital.mkt.vo.in.CampaignDecisionTagIn;
 import cn.rongcapital.mkt.vo.in.CampaignDecisionWechatForwardIn;
 import cn.rongcapital.mkt.vo.in.CampaignDecisionWechatReadIn;
-import cn.rongcapital.mkt.vo.in.CampaignDecisionWechatSentIn;
 import cn.rongcapital.mkt.vo.in.CampaignNodeChainIn;
 import cn.rongcapital.mkt.vo.in.CampaignSwitchIn;
 import cn.rongcapital.mkt.vo.in.CampaignTriggerTimerIn;
+import cn.rongcapital.mkt.vo.in.TagIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 
 @Service
 public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService {
 
 	@Autowired
-	CampaignHeadDao campaignHeadDao;
+	private CampaignHeadDao campaignHeadDao;
 	@Autowired
-	CampaignBodyDao campaignBodyDao;
+	private CampaignBodyDao campaignBodyDao;
 	@Autowired
-	CampaignTriggerTimerDao campaignTriggerTimerDao;
+	private CampaignTriggerTimerDao campaignTriggerTimerDao;
 	@Autowired
-	CampaignActionSaveAudienceDao campaignActionSaveAudienceDao;
+	private CampaignActionSaveAudienceDao campaignActionSaveAudienceDao;
 	@Autowired
-	CampaignActionSendH5Dao campaignActionSendH5Dao;
+	private CampaignActionSendH5Dao campaignActionSendH5Dao;
 	@Autowired
-	CampaignActionSendPrivtDao campaignActionSendPrivtDao;
+	private CampaignActionSendPrivtDao campaignActionSendPrivtDao;
 	@Autowired
-	CampaignActionSendPubDao campaignActionSendPubDao;
+	private CampaignActionSendPubDao campaignActionSendPubDao;
 	@Autowired
-	CampaignActionSetTagDao campaignActionSetTagDao;
+	private CampaignActionSetTagDao campaignActionSetTagDao;
 	@Autowired
-	CampaignActionWaitDao campaignActionWaitDao;
+	private CampaignActionWaitDao campaignActionWaitDao;
 	@Autowired
-	CampaignAudienceTargetDao CampaignAudienceTargetDao;
+	private CampaignAudienceTargetDao CampaignAudienceTargetDao;
 	@Autowired
-	CampaignDecisionPropCompareDao campaignDecisionPropCompareDao;
+	private CampaignDecisionPropCompareDao campaignDecisionPropCompareDao;
 	@Autowired
-	CampaignDecisionPrvtFriendsDao campaignDecisionPrvtFriendsDao;
+	private CampaignDecisionPrvtFriendsDao campaignDecisionPrvtFriendsDao;
 	@Autowired
-	CampaignDecisionPubFansDao campaignDecisionPubFansDao;
+	private CampaignDecisionPubFansDao campaignDecisionPubFansDao;
 	@Autowired
-	CampaignDecisionTagDao campaignDecisionTagDao;
+	private CampaignDecisionTagDao campaignDecisionTagDao;
 	@Autowired
-	CampaignDecisionWechatForwardDao campaignDecisionWechatForwardDao;
+	private CampaignDecisionWechatForwardDao campaignDecisionWechatForwardDao;
 	@Autowired
-	CampaignDecisionWechatReadDao campaignDecisionWechatReadDao;
+	private CampaignDecisionWechatReadDao campaignDecisionWechatReadDao;
 	@Autowired
-	CampaignDecisionWechatSentDao campaignDecisionWechatSentDao;
+	private CampaignDecisionWechatSentDao campaignDecisionWechatSentDao;
 	@Autowired
-	AudienceListDao audienceListDao;
+	private CampaignSwitchDao campaignSwitchDao;
 	@Autowired
-	CampaignSwitchDao campaignSwitchDao;
+	private CampaignNodeItemDao campaignNodeItemDao;
 	@Autowired
-	CampaignNodeItemDao campaignNodeItemDao;
+	private TaskScheduleDao taskScheduleDao;
 	@Autowired
-	TaskScheduleDao taskScheduleDao;
+	private WechatAssetDao wechatAssetDao;
+	@Autowired
+	private WechatAssetGroupDao wechatAssetGroupDao;
+	@Autowired
+	private WechatGroupDao wechatGroupDao;
+	@Autowired
+	private ImgTextAssetDao imgTextAssetDao;
+	@Autowired
+	private CustomTagDao customTagDao;
 	
 	private static final ObjectMapper jacksonObjectMapper = new ObjectMapper();
 	
@@ -179,15 +194,16 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				TaskSchedule taskSchedule = null;
 				switch (campaignNodeChainIn.getItemType()) {
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_PROP_COMPARE://联系人属性比较
+					// TO DO:联系人属性比较，需求不明确，暂不生成任务
 					CampaignDecisionPropCompare campaignDecisionPropCompare = initCampaignDecisionPropCompare(campaignNodeChainIn,campaignHeadId);
 					campaignDecisionPropCompareDao.insert(campaignDecisionPropCompare);
 					break;
-				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_SENT://微信图文是否发送
-					taskSchedule = initTaskWechatSent(campaignNodeChainIn,campaignHeadId);
-					taskScheduleDao.insert(taskSchedule);
-					taskId = taskSchedule.getId();
-					CampaignDecisionWechatSent campaignDecisionWechatSent = initCampaignDecisionWechatSent(campaignNodeChainIn,campaignHeadId);
-					campaignDecisionWechatSentDao.insert(campaignDecisionWechatSent);
+				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_SENT://微信图文是否发送(节点已去掉)
+//					taskSchedule = initTaskWechatSent(campaignNodeChainIn,campaignHeadId);
+//					taskScheduleDao.insert(taskSchedule);
+//					taskId = taskSchedule.getId();
+//					CampaignDecisionWechatSent campaignDecisionWechatSent = initCampaignDecisionWechatSent(campaignNodeChainIn,campaignHeadId);
+//					campaignDecisionWechatSentDao.insert(campaignDecisionWechatSent);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_READ://微信图文是否查看
 					taskSchedule = initTaskWechatRead(campaignNodeChainIn,campaignHeadId);
@@ -227,26 +243,36 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				}
 			}
 			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_ACTION){
+				TaskSchedule taskSchedule = null;
 				switch (campaignNodeChainIn.getItemType()) {
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_WAIT://等待
+					taskSchedule = initTaskActionWait(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					CampaignActionWait campaignActionWait = initCampaignActionWait(campaignNodeChainIn,campaignHeadId);
 					campaignActionWaitDao.insert(campaignActionWait);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_SAVE_AUDIENCE://保存当前人群
 					CampaignActionSaveAudience campaignActionSaveAudience = initCampaignActionSaveAudience(campaignNodeChainIn,campaignHeadId);
 					//如果audience_id参数为空,则在audience_list表增加1条记录
-					if(campaignActionSaveAudience.getAudienceId() == null) {
-						AudienceList audienceList = new AudienceList();
-						audienceList.setAudienceName(campaignActionSaveAudience.getName());
-						audienceListDao.insert(audienceList);
-						campaignActionSaveAudience.setAudienceId(audienceList.getId());
-					} else {
-						//TO DO:检查audience_list表里是否存在audience_id的记录?
-					}
+//					if(campaignActionSaveAudience.getAudienceId() == null) {
+//						AudienceList audienceList = new AudienceList();
+//						audienceList.setAudienceName(campaignActionSaveAudience.getName());
+//						audienceListDao.insert(audienceList);
+//						campaignActionSaveAudience.setAudienceId(audienceList.getId());
+//					} else {
+//						//TO DO:检查audience_list表里是否存在audience_id的记录?
+//					}
+					taskSchedule = initTaskActionSaveAudience(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					campaignActionSaveAudienceDao.insert(campaignActionSaveAudience);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_SET_TAG://设置标签
 					CampaignActionSetTag campaignActionSetTag = initCampaignActionSetTag(campaignNodeChainIn,campaignHeadId);
+					taskSchedule = initTaskActionSetTag(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					campaignActionSetTagDao.insert(campaignActionSetTag);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_ADD_CAMPAIGN://添加到其它活动
@@ -255,13 +281,22 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_WECHAT_H5://发送微信图文
 					CampaignActionSendPub campaignActionSendPub = initCampaignActionSendPub(campaignNodeChainIn,campaignHeadId);
+					taskSchedule = initTaskActionSendWechatH5(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					campaignActionSendPubDao.insert(campaignActionSendPub);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_H5://发送H5图文
 					CampaignActionSendH5 campaignActionSendH5 = initCampaignActionSendH5(campaignNodeChainIn,campaignHeadId);
+					taskSchedule = initTaskActionSendH5(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					campaignActionSendH5Dao.insert(campaignActionSendH5);
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_PRVT_INFO://发送个人号消息
+					taskSchedule = initTaskActionSendPrvInfo(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					CampaignActionSendPrivt campaignActionSendPrivt = initCampaignActionSendPrivt(campaignNodeChainIn,campaignHeadId);
 					campaignActionSendPrivtDao.insert(campaignActionSendPrivt);
 					break;
@@ -413,18 +448,18 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return null;
 	}
 	
-	private TaskSchedule initTaskWechatSent(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
-		CampaignDecisionWechatSentIn campaignDecisionWechatSentIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatSentIn.class);
-		TaskSchedule taskSchedule = new TaskSchedule();
-		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatSentIn.getRefreshInterval(), 
-													campaignDecisionWechatSentIn.getRefreshIntervalType());
-		taskSchedule.setIntervalMinutes(intervalMinutes);
-		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_WECHAT_SENT);
-		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
-		taskSchedule.setCampaignHeadId(campaignHeadId);
-		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
-		return taskSchedule;
-	}
+//	private TaskSchedule initTaskWechatSent(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+//		CampaignDecisionWechatSentIn campaignDecisionWechatSentIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatSentIn.class);
+//		TaskSchedule taskSchedule = new TaskSchedule();
+//		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatSentIn.getRefreshInterval(), 
+//													campaignDecisionWechatSentIn.getRefreshIntervalType());
+//		taskSchedule.setIntervalMinutes(intervalMinutes);
+//		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_WECHAT_SENT);
+//		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+//		taskSchedule.setCampaignHeadId(campaignHeadId);
+//		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+//		return taskSchedule;
+//	}
 	
 	private TaskSchedule initTaskWechatRead(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionWechatReadIn campaignDecisionWechatReadIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatReadIn.class);
@@ -486,7 +521,54 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
 		return taskSchedule;
 	}
-	
+	private TaskSchedule initTaskActionWait(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		TaskSchedule taskSchedule = new TaskSchedule();
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_ACTION_WAIT);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+		return taskSchedule;
+	}
+	private TaskSchedule initTaskActionSaveAudience(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		TaskSchedule taskSchedule = new TaskSchedule();
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_ACTION_SAVE_AUDIENCE);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+		return taskSchedule;
+	}
+	private TaskSchedule initTaskActionSetTag(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		TaskSchedule taskSchedule = new TaskSchedule();
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_ACTION_SET_TAG);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+		return taskSchedule;
+	}
+	private TaskSchedule initTaskActionSendWechatH5(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		TaskSchedule taskSchedule = new TaskSchedule();
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_ACTION_PUBWECHAT_SEND_H5);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+		return taskSchedule;
+	}
+	private TaskSchedule initTaskActionSendH5(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		TaskSchedule taskSchedule = new TaskSchedule();
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_ACTION_WECHAT_SEND_H5);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+		return taskSchedule;
+	}
+	private TaskSchedule initTaskActionSendPrvInfo(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		TaskSchedule taskSchedule = new TaskSchedule();
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_ACTION_WECHAT_PRV_SEND_INFO);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+		return taskSchedule;
+	}
 	private List<CampaignSwitch> initCampaignSwitchList(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		List<CampaignSwitchIn> campaignSwitchInList = campaignNodeChainIn.getCampaignSwitchList();
 		List<CampaignSwitch> campaignSwitchList = new ArrayList<CampaignSwitch>();
@@ -537,10 +619,38 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSendPrivt.setName(campaignActionSendPrivtIn.getName());
 		campaignActionSendPrivt.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSendPrivt.setCampaignHeadId(campaignHeadId);
-		campaignActionSendPrivt.setPrvtId(campaignActionSendPrivtIn.getPrvtId());
-		campaignActionSendPrivt.setPrvtName(campaignActionSendPrivtIn.getPrvtName());
-		campaignActionSendPrivt.setPrvtGroupName(campaignActionSendPrivtIn.getPrvtGroupName());
+		campaignActionSendPrivt.setAssetId(campaignActionSendPrivtIn.getAssetId());
+		campaignActionSendPrivt.setGroupId(campaignActionSendPrivtIn.getGroupId());
 		campaignActionSendPrivt.setTextInfo(campaignActionSendPrivtIn.getTextInfo());
+		
+		WechatAsset wechatAssetT = new WechatAsset();
+		wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		wechatAssetT.setAssetId(campaignActionSendPrivtIn.getAssetId());
+		List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAssetT);
+		if(CollectionUtils.isNotEmpty(wechatAssetList)) {
+			WechatAsset wechatAsset = wechatAssetList.get(0);
+			String uin = wechatAsset.getWxAcct();
+			campaignActionSendPrivt.setUin(uin);//写入uin
+		}
+		if(null != campaignActionSendPrivtIn.getGroupId()) {
+			WechatAssetGroup wechatAssetGroupT = new WechatAssetGroup();
+			wechatAssetGroupT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			wechatAssetGroupT.setId(campaignActionSendPrivtIn.getGroupId().longValue());
+			List<WechatAssetGroup> wechatAssetGroupList =  wechatAssetGroupDao.selectList(wechatAssetGroupT);
+			if(CollectionUtils.isNotEmpty(wechatAssetGroupList)) {
+				Long importId = wechatAssetGroupList.get(0).getImportGroupId();
+				if(null != importId) {
+					WechatGroup wechatGroupT = new WechatGroup();
+					wechatGroupT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+					wechatGroupT.setId(importId.intValue());
+					List<WechatGroup> wechatGroupList = wechatGroupDao.selectList(wechatGroupT);
+					if(CollectionUtils.isNotEmpty(wechatGroupList)) {
+						String ucode = wechatGroupList.get(0).getGroupId();
+						campaignActionSendPrivt.setUcode(ucode);//写入ucode
+					}
+				}
+			}
+		}
 		return campaignActionSendPrivt;
 	}
 	
@@ -550,13 +660,16 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSendH5.setName(campaignActionSendH5In.getName());
 		campaignActionSendH5.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSendH5.setCampaignHeadId(campaignHeadId);
-		campaignActionSendH5.setWechatH5Id(campaignActionSendH5In.getWechatH5Id());
-		campaignActionSendH5.setWechatH5Name(campaignActionSendH5In.getWechatH5Name());
-		campaignActionSendH5.setPubId(campaignActionSendH5In.getPubId());
-		campaignActionSendH5.setPubName(campaignActionSendH5In.getPubName());
-		campaignActionSendH5.setPrvtId(campaignActionSendH5In.getPrvtId());
-		campaignActionSendH5.setPrvtName(campaignActionSendH5In.getPrvtName());
-		campaignActionSendH5.setPrvtGroupName(campaignActionSendH5In.getPrvtGroupName());
+		campaignActionSendH5.setPubAssetId(campaignActionSendH5In.getPubAssetId());
+		campaignActionSendH5.setImgTextAssetId(campaignActionSendH5In.getImgTextAssetId());
+		WechatAsset wechatAssetT = new WechatAsset();
+		wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		wechatAssetT.setAssetId(campaignActionSendH5In.getPubAssetId());
+		List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAssetT);
+		if(CollectionUtils.isNotEmpty(wechatAssetList)) {
+			WechatAsset wechatAsset = wechatAssetList.get(0);
+			campaignActionSendH5.setPubId(wechatAsset.getWxAcct());
+		}
 		return campaignActionSendH5;
 	}
 	
@@ -566,10 +679,25 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSendPub.setName(campaignActionSendPubIn.getName());
 		campaignActionSendPub.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSendPub.setCampaignHeadId(campaignHeadId);
-		campaignActionSendPub.setWechatH5Id(campaignActionSendPubIn.getWechatH5Id());
-		campaignActionSendPub.setWechatH5Name(campaignActionSendPubIn.getWechatH5Name());
-		campaignActionSendPub.setPubId(campaignActionSendPubIn.getPubId());
-		campaignActionSendPub.setPubName(campaignActionSendPubIn.getPubName());
+		campaignActionSendPub.setAssetId(campaignActionSendPubIn.getAssetId());
+		campaignActionSendPub.setImgTextAssetId(campaignActionSendPubIn.getImgTextAssetId());
+		
+		ImgTextAsset imgTextAssetT = new ImgTextAsset();
+		imgTextAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		imgTextAssetT.setId(campaignActionSendPubIn.getImgTextAssetId());
+		List<ImgTextAsset> imgTextAssetList = imgTextAssetDao.selectList(imgTextAssetT);
+		if(CollectionUtils.isNotEmpty(imgTextAssetList)) {
+			ImgTextAsset imgTextAsset = imgTextAssetList.get(0);
+			campaignActionSendPub.setMaterialId(Integer.parseInt(imgTextAsset.getMaterialId()));
+		}
+		WechatAsset wechatAssetT = new WechatAsset();
+		wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		wechatAssetT.setAssetId(campaignActionSendPubIn.getAssetId());
+		List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAssetT);
+		if(CollectionUtils.isNotEmpty(wechatAssetList)) {
+			WechatAsset wechatAsset = wechatAssetList.get(0);
+			campaignActionSendPub.setPubId(wechatAsset.getWxAcct());
+		}
 		return campaignActionSendPub;
 	}
 	
@@ -579,8 +707,31 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSetTag.setName(campaignActionSetTagIn.getName());
 		campaignActionSetTag.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSetTag.setCampaignHeadId(campaignHeadId);
-//		campaignActionSetTag.setTagIds(campaignActionSetTagIn.getTagIds());//TO DO:关联关系写入到custom_tag_map表
-//		campaignActionSetTag.setTagNames(campaignActionSetTagIn.getTagNames());
+		List<String> tagNameList = campaignActionSetTagIn.getTagNames();
+		if(CollectionUtils.isNotEmpty(tagNameList)) {
+			List<Integer> tagIdList = new ArrayList<Integer>();
+			for(String tagName:tagNameList) {
+				CustomTag customTagT = new CustomTag();
+				customTagT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+				customTagT.setName(tagName);
+				List<CustomTag> customTagList = customTagDao.selectList(customTagT);
+				Integer cutomTagId = null;
+				if(CollectionUtils.isNotEmpty(customTagList)) {
+					cutomTagId = customTagList.get(0).getId();
+				} else {
+					//插入该tag到custom_tag表
+					customTagT = new CustomTag();
+					customTagT.setName(tagName);
+					customTagDao.insert(customTagT);
+					cutomTagId = customTagT.getId();
+				}
+				if(null != cutomTagId) {
+					tagIdList.add(cutomTagId);
+				}
+			}
+			campaignActionSetTag.setTagIds(StringUtils.join(tagIdList,","));
+			campaignActionSetTag.setTagNames(StringUtils.join(tagNameList,","));
+		}
 		return campaignActionSetTag;
 	}
 	
@@ -614,7 +765,16 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionTag.setName(campaignDecisionTagIn.getName());
 		campaignDecisionTag.setItemId(campaignNodeChainIn.getItemId());
 		campaignDecisionTag.setCampaignHeadId(campaignHeadId);
-//		campaignDecisionTag.setTagIds(campaignDecisionTagIn.getTagIds());//TO DO:关联关系写入到campaign_decision_tag_map表
+		campaignDecisionTag.setRule(campaignDecisionTagIn.getRule());
+		List<TagIn> tagList =  campaignDecisionTagIn.getTags();
+		if(CollectionUtils.isNotEmpty(tagList)) {//TO DO:优化,前端参数直接传递1个逗号分隔的tag_id的字符串
+			List<Integer> tagIdList = new ArrayList<Integer>();
+			for(TagIn tagIn:tagList) {
+				tagIdList.add(tagIn.getTag_id());
+			}
+			String tagIds = StringUtils.join(tagIdList, ",");
+			campaignDecisionTag.setTagIds(tagIds);
+		}
 		return campaignDecisionTag;
 	}
 	
@@ -624,11 +784,39 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionPrvtFriends.setName(campaignDecisionPrvtFriendsIn.getName());
 		campaignDecisionPrvtFriends.setItemId(campaignNodeChainIn.getItemId());
 		campaignDecisionPrvtFriends.setCampaignHeadId(campaignHeadId);
-		campaignDecisionPrvtFriends.setPrvtId(campaignDecisionPrvtFriendsIn.getPrvtId());
-		campaignDecisionPrvtFriends.setPrvtName(campaignDecisionPrvtFriendsIn.getPrvtName());
-		campaignDecisionPrvtFriends.setGroupName(campaignDecisionPrvtFriendsIn.getGroupName());
+		campaignDecisionPrvtFriends.setAssetId(campaignDecisionPrvtFriendsIn.getAssetId());
+		campaignDecisionPrvtFriends.setGroupId(campaignDecisionPrvtFriendsIn.getGroupId());
 		campaignDecisionPrvtFriends.setRefreshInterval(campaignDecisionPrvtFriendsIn.getRefreshInterval());
 		campaignDecisionPrvtFriends.setRefreshIntervalType(campaignDecisionPrvtFriendsIn.getRefreshIntervalType());
+		
+		WechatAsset wechatAssetT = new WechatAsset();
+		wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		wechatAssetT.setAssetId(campaignDecisionPrvtFriendsIn.getAssetId());
+		List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAssetT);
+		if(CollectionUtils.isNotEmpty(wechatAssetList)) {
+			WechatAsset wechatAsset = wechatAssetList.get(0);
+			String uin = wechatAsset.getWxAcct();
+			campaignDecisionPrvtFriends.setUin(uin);//写入uin
+		}
+		if(null != campaignDecisionPrvtFriendsIn.getGroupId()) {
+			WechatAssetGroup wechatAssetGroupT = new WechatAssetGroup();
+			wechatAssetGroupT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			wechatAssetGroupT.setId(campaignDecisionPrvtFriendsIn.getGroupId().longValue());
+			List<WechatAssetGroup> wechatAssetGroupList =  wechatAssetGroupDao.selectList(wechatAssetGroupT);
+			if(CollectionUtils.isNotEmpty(wechatAssetGroupList)) {
+				Long importId = wechatAssetGroupList.get(0).getImportGroupId();
+				if(null != importId) {
+					WechatGroup wechatGroupT = new WechatGroup();
+					wechatGroupT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+					wechatGroupT.setId(importId.intValue());
+					List<WechatGroup> wechatGroupList = wechatGroupDao.selectList(wechatGroupT);
+					if(CollectionUtils.isNotEmpty(wechatGroupList)) {
+						String ucode = wechatGroupList.get(0).getGroupId();
+						campaignDecisionPrvtFriends.setUcode(ucode);//写入ucode
+					}
+				}
+			}
+		}
 		return campaignDecisionPrvtFriends;
 	}
 	
@@ -638,11 +826,18 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionPubFans.setName(campaignDecisionPubFansIn.getName());
 		campaignDecisionPubFans.setItemId(campaignNodeChainIn.getItemId());
 		campaignDecisionPubFans.setCampaignHeadId(campaignHeadId);
-		campaignDecisionPubFans.setPubId(campaignDecisionPubFansIn.getPubId());
-		campaignDecisionPubFans.setPubName(campaignDecisionPubFansIn.getPubName());
+		campaignDecisionPubFans.setAssetId(campaignDecisionPubFansIn.getAssetId());
 		campaignDecisionPubFans.setSubscribeTime(campaignDecisionPubFansIn.getSubscribeTime());
 		campaignDecisionPubFans.setRefreshInterval(campaignDecisionPubFansIn.getRefreshInterval());
 		campaignDecisionPubFans.setRefreshIntervalType(campaignDecisionPubFansIn.getRefreshIntervalType());
+		WechatAsset wechatAssetT = new WechatAsset();
+		wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		wechatAssetT.setAssetId(campaignDecisionPubFansIn.getAssetId());
+		List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAssetT);
+		if(CollectionUtils.isNotEmpty(wechatAssetList)) {
+			WechatAsset wechatAsset = wechatAssetList.get(0);
+			campaignDecisionPubFans.setPubId(wechatAsset.getWxAcct());
+		}
 		return campaignDecisionPubFans;
 	}
 	
@@ -679,20 +874,20 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return campaignDecisionWechatRead;
 	}
 	
-	private CampaignDecisionWechatSent initCampaignDecisionWechatSent(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
-		CampaignDecisionWechatSent campaignDecisionWechatSent = new  CampaignDecisionWechatSent();
-		CampaignDecisionWechatSentIn campaignDecisionWechatSentIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatSentIn.class);
-		campaignDecisionWechatSent.setName(campaignDecisionWechatSentIn.getName());
-		campaignDecisionWechatSent.setItemId(campaignNodeChainIn.getItemId());
-		campaignDecisionWechatSent.setCampaignHeadId(campaignHeadId);
-		campaignDecisionWechatSent.setPubId(campaignDecisionWechatSentIn.getPubId());
-		campaignDecisionWechatSent.setPubName(campaignDecisionWechatSentIn.getPubName());
-		campaignDecisionWechatSent.setRefreshInterval(campaignDecisionWechatSentIn.getRefreshInterval());
-		campaignDecisionWechatSent.setRefreshIntervalType(campaignDecisionWechatSentIn.getRefreshIntervalType());
-		campaignDecisionWechatSent.setWechatH5Id(campaignDecisionWechatSentIn.getWechatH5Id());
-		campaignDecisionWechatSent.setWechatH5Name(campaignDecisionWechatSent.getWechatH5Name());
-		return campaignDecisionWechatSent;
-	}
+//	private CampaignDecisionWechatSent initCampaignDecisionWechatSent(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+//		CampaignDecisionWechatSent campaignDecisionWechatSent = new  CampaignDecisionWechatSent();
+//		CampaignDecisionWechatSentIn campaignDecisionWechatSentIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatSentIn.class);
+//		campaignDecisionWechatSent.setName(campaignDecisionWechatSentIn.getName());
+//		campaignDecisionWechatSent.setItemId(campaignNodeChainIn.getItemId());
+//		campaignDecisionWechatSent.setCampaignHeadId(campaignHeadId);
+//		campaignDecisionWechatSent.setPubId(campaignDecisionWechatSentIn.getPubId());
+//		campaignDecisionWechatSent.setPubName(campaignDecisionWechatSentIn.getPubName());
+//		campaignDecisionWechatSent.setRefreshInterval(campaignDecisionWechatSentIn.getRefreshInterval());
+//		campaignDecisionWechatSent.setRefreshIntervalType(campaignDecisionWechatSentIn.getRefreshIntervalType());
+//		campaignDecisionWechatSent.setWechatH5Id(campaignDecisionWechatSentIn.getWechatH5Id());
+//		campaignDecisionWechatSent.setWechatH5Name(campaignDecisionWechatSent.getWechatH5Name());
+//		return campaignDecisionWechatSent;
+//	}
 	
 	private CampaignDecisionPropCompare initCampaignDecisionPropCompare(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionPropCompare campaignDecisionPropCompare = new  CampaignDecisionPropCompare();

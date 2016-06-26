@@ -78,6 +78,7 @@ public class HttpClientUtil {
      * @param httpUrl
      * @throws Exception
      */
+    @Deprecated
     public PostMethod post(HttpUrl httpUrl) throws Exception {
         if (httpUrl == null) return null;
         HostConfiguration config = new HostConfiguration();
@@ -113,7 +114,7 @@ public class HttpClientUtil {
      * @return
      * @throws Exception .
      */
-    public PostMethod postNew(HttpUrl httpUrl) throws Exception {
+    public PostMethod postExt(HttpUrl httpUrl) throws Exception {
         if (httpUrl == null) return null;
 
         HostConfiguration config = new HostConfiguration();

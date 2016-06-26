@@ -1,6 +1,8 @@
 package cn.rongcapital.mkt.vo.out;
 
 
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CampaignDecisionTagOut {
@@ -9,6 +11,8 @@ public class CampaignDecisionTagOut {
 
     private Byte rule;
 
+    private List<TagOut> tags; 
+    
     @JsonProperty("name")
     public String getName() {
         return name;
@@ -26,4 +30,14 @@ public class CampaignDecisionTagOut {
     public void setRule(Byte rule) {
         this.rule = rule;
     }
+
+    @JsonProperty("tags")
+	public List<TagOut> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<TagOut> tags) {
+		this.tags = tags;
+	}
+    
 }

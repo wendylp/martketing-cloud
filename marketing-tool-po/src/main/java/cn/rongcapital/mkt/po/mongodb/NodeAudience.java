@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class NodeAudience implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	private String id;
 	
@@ -25,6 +25,9 @@ public class NodeAudience implements Serializable {
 	
 	private Integer taskId;
 
+	@Field(value = "name")
+	private String name;
+	
 	public String getId() {
 		return id;
 	}
@@ -63,6 +66,14 @@ public class NodeAudience implements Serializable {
 
 	public void setTaskId(Integer taskId) {
 		this.taskId = taskId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	

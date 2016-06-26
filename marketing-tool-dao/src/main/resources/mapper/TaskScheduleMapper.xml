@@ -123,8 +123,13 @@
 	<update id="activateTaskByCampaignHeadId" parameterType="int">
 		update 
 		task_schedule
+		set task_status = 0
+		where campaign_head_id = #{campaignHeadId} and status = 0
+	</update>
+	<update id="deActivateTaskByCampaignHeadId" parameterType="int">
+		update 
+		task_schedule
 		set task_status = 1
 		where campaign_head_id = #{campaignHeadId} and status = 0
 	</update>
-	
 </mapper>
