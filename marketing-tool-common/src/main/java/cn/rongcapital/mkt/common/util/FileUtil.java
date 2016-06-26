@@ -77,6 +77,8 @@ public class FileUtil {
      * @param fileName
      * @return
      */
+
+    // 如果调用该方法生成文件 , 也得用反射的方式把数据存入对象中并update数据库
     public static <E extends BaseQuery> File generateFileforDownload(List<E> poList, String fileName) {
         StringBuilder pathNameBuilder = new StringBuilder();
         // 当前日期
@@ -88,6 +90,8 @@ public class FileUtil {
     }
 
     public static <E extends BaseQuery> File generateFileforDownload(List<E> poList, File file) {
+
+        // 没数据的时候生成空文件
         if (CollectionUtils.isEmpty(poList)) {
             return file;
         }
