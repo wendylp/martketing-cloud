@@ -5,10 +5,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +101,15 @@ public class FileUtil {
 
                 for (int j = 0; j < fieldsCount; j++) {
                     Field field = fields[j];
+                    // 这是个日期类型,需要转换
+                    if (field != null && field.getClass().getSimpleName().equals(Date.class.getSimpleName())) {
+                        DateTime dateTime = new DateTime(field.get(entity));
+                        stringBuilder.append(dateTime.toString(ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
+                        stringBuilder.append(FILE_SEPERATOR);
+
+                        continue;
+                    }
+
                     stringBuilder.append(field.get(entity));
                     if (j == fieldsCount - 1) {
                         break;
