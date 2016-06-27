@@ -32,8 +32,6 @@ import cn.rongcapital.mkt.po.mongodb.Segment;
 public class CampaignDecisionWechatReadTask extends BaseMQService implements TaskService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	@Autowired  
-    private MQUtil mqUtil;
 	@Autowired
 	private CampaignDecisionWechatReadDao campaignDecisionWechatReadDao;
 	
@@ -47,7 +45,7 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 		List<CampaignSwitch> campaignSwitchNoList = queryCampaignSwitchNoList(campaignHeadId, itemId);
 		if(CollectionUtils.isEmpty(campaignSwitchYesList) && 
 		   CollectionUtils.isEmpty(campaignSwitchNoList)) {
-			logger.info("没有后续节点，该活动线路终止,campaignHeadId:"+campaignHeadId+",itemId:"+itemId);
+			logger.info("没有后续节点,return,campaignHeadId:"+campaignHeadId+",itemId:"+itemId);
 			return;
 		}
 		CampaignDecisionWechatRead campaignDecisionWechatReadT = new CampaignDecisionWechatRead();
@@ -56,7 +54,7 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 		campaignDecisionWechatReadT.setItemId(itemId);
 		List<CampaignDecisionWechatRead> campaignDecisionWechatReadList = campaignDecisionWechatReadDao.selectList(campaignDecisionWechatReadT);
 		if(CollectionUtils.isEmpty(campaignDecisionWechatReadList)) {
-			logger.info("没有设置决策条件，该活动线路终止,campaignHeadId:"+campaignHeadId+",itemId:"+itemId);
+			logger.info("没有设置决策条件，return,campaignHeadId:"+campaignHeadId+",itemId:"+itemId);
 		    return;
 		}
 		CampaignDecisionWechatRead campaignDecisionWechatRead = campaignDecisionWechatReadList.get(0);
@@ -68,10 +66,12 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 			for(Segment segment:segmentList) {
 				String pubId= segment.getPubId();
 				String openId = segment.getFansFriendsOpenId();
-				String h5Url = segment.getH5Url();
-				//有pubId,openId,h5Url的人,校验是否已读
-				if(StringUtils.isNotBlank(pubId) && StringUtils.isNotBlank(openId) && StringUtils.isNotBlank(h5Url)) {
-					boolean isRead = checkWechatReadByH5Interface(pubId,openId,h5Url,campaignDecisionWechatRead);
+				String h5MobileUrl = segment.getH5MobileUrl();//mobile端的url
+				//有pubId,openId,h5MobileUrl的人,校验是否已读
+				if(StringUtils.isNotBlank(pubId) && 
+				   StringUtils.isNotBlank(openId) && 
+				   StringUtils.isNotBlank(h5MobileUrl)) {
+					boolean isRead = checkWechatReadByH5Interface(pubId,openId,h5MobileUrl,campaignDecisionWechatRead);
 					if(true == isRead) {
 						segmentListToNextYes.add(segment);
 					} else {
@@ -81,39 +81,38 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 			}
 			if(CollectionUtils.isNotEmpty(campaignSwitchYesList)) {
 				CampaignSwitch csYes = campaignSwitchYesList.get(0);
-				mqUtil.sendDynamicQueue(segmentListToNextYes, csYes.getCampaignHeadId() +"-"+csYes.getNextItemId());
+				sendDynamicQueue(segmentListToNextYes, csYes.getCampaignHeadId() +"-"+csYes.getNextItemId());
 			}
 			if(CollectionUtils.isNotEmpty(campaignSwitchNoList)) {
 				CampaignSwitch csNo = campaignSwitchNoList.get(0);
-				mqUtil.sendDynamicQueue(segmentListToNextNo, csNo.getCampaignHeadId() +"-"+csNo.getNextItemId());
+				sendDynamicQueue(segmentListToNextNo, csNo.getCampaignHeadId() +"-"+csNo.getNextItemId());
 			} else {
 				//如果没有非分支，则MQ数据发送给本节点，供本节点下一次刷新的时候再次检测是否已读
-				mqUtil.sendDynamicQueue(segmentListToNextNo, campaignHeadId +"-"+itemId);
+				sendDynamicQueue(segmentListToNextNo, campaignHeadId +"-"+itemId);
 			}
 		}
 	
 	}
 	
-	private boolean checkWechatReadByH5Interface(String pubId,String fansOpenId,String h5Url,
+	private boolean checkWechatReadByH5Interface(String pubId,String fansOpenId,String h5MobileUrl,
 												 CampaignDecisionWechatRead campaignDecisionWechatRead) {
 		boolean isRead = true;
 		HttpUrl httpUrl = new HttpUrl();
 		httpUrl.setHost(h5BaseUrl);
-		httpUrl.setPath(ApiConstant.DL_PUB_ISREAD_API_PATH);
+		httpUrl.setPath(ApiConstant.DL_PUB_ISREAD_API_PATH+getPid());
 		HashMap<Object , Object> params = new HashMap<Object , Object>();
-		params.put("pid",getPid());
 		params.put("pub_id", pubId);
 		params.put("fans_open_id", fansOpenId);
-		params.put("wtuwen_url", h5Url);
-		httpUrl.setParams(params);
+		params.put("wtuwen_url", h5MobileUrl);
+		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
+		httpUrl.setRequetsBody(JSON.toJSONString(params));
 		try {
-			PostMethod postResult = HttpClientUtil.getInstance().post(httpUrl);
+			PostMethod postResult = HttpClientUtil.getInstance().postExt(httpUrl);
 			String postResStr = postResult.getResponseBodyAsString();
 			JSONObject resJson = JSON.parseObject(postResStr).getJSONObject("hfive_mkt_wtuwen_viewed_response");
 			String status = resJson.getString("status");
 			Integer duration = resJson.getInteger("duration");//阅读时长
-//			Integer scroll_cnt = resJson.getInteger("scroll_cnt");//滑动次数
-//			String scroll_to_bottom = resJson.getString("scroll_to_bottom");//是否滑到底部
+			String scroll_to_bottom = resJson.getString("scroll_to_bottom");//是否滑到底部
 			if(StringUtils.isNotBlank(status) && status.equals("true")) {
 				if(campaignDecisionWechatRead.getReadTime() != null && 
 				   campaignDecisionWechatRead.getReadTime() != 0) {
@@ -136,8 +135,11 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 					}
 					isRead = duration < durtionStrict?false:true;
 				}
-				if(isRead == true) {
-					//TO DO:阅读百分比的判断需要加上,但大连接口返回结果里没有包含此数据
+				if(isRead == true && StringUtils.isNotBlank(scroll_to_bottom) && scroll_to_bottom.equals("false")) {
+					byte readPercent = campaignDecisionWechatRead.getReadPercent();
+					if(readPercent == 2) {//要求全部阅读
+						isRead = false;
+					}
 				}
 			} else {
 				isRead = false;

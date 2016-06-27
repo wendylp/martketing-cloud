@@ -13,15 +13,13 @@ public class CampaignActionSendPrivt extends BaseQuery {
 
     private String name;
 
-    private Integer wechatH5Id;
+    private String uin;
 
-    private String wechatH5Name;
+    private Integer assetId;
 
-    private String prvtId;
+    private String ucode;
 
-    private String prvtGroupName;
-
-    private String prvtName;
+    private Integer groupId;
 
     private String textInfo;
 
@@ -63,44 +61,36 @@ public class CampaignActionSendPrivt extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getWechatH5Id() {
-        return wechatH5Id;
+    public String getUin() {
+        return uin;
     }
 
-    public void setWechatH5Id(Integer wechatH5Id) {
-        this.wechatH5Id = wechatH5Id;
+    public void setUin(String uin) {
+        this.uin = uin == null ? null : uin.trim();
     }
 
-    public String getWechatH5Name() {
-        return wechatH5Name;
+    public Integer getAssetId() {
+        return assetId;
     }
 
-    public void setWechatH5Name(String wechatH5Name) {
-        this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
     }
 
-    public String getPrvtId() {
-        return prvtId;
+    public String getUcode() {
+        return ucode;
     }
 
-    public void setPrvtId(String prvtId) {
-        this.prvtId = prvtId == null ? null : prvtId.trim();
+    public void setUcode(String ucode) {
+        this.ucode = ucode == null ? null : ucode.trim();
     }
 
-    public String getPrvtGroupName() {
-        return prvtGroupName;
+    public Integer getGroupId() {
+        return groupId;
     }
 
-    public void setPrvtGroupName(String prvtGroupName) {
-        this.prvtGroupName = prvtGroupName == null ? null : prvtGroupName.trim();
-    }
-
-    public String getPrvtName() {
-        return prvtName;
-    }
-
-    public void setPrvtName(String prvtName) {
-        this.prvtName = prvtName == null ? null : prvtName.trim();
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 
     public String getTextInfo() {

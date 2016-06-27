@@ -6,9 +6,9 @@ public class CampaignDecisionPubFansOut {
 
     private String name;
 
-    private String pubId;
+    private Integer assetId;
 
-    private String pubName;
+    private String assetName;
 
     private Byte subscribeTime;
 
@@ -23,24 +23,6 @@ public class CampaignDecisionPubFansOut {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
-    }
-
-    @JsonProperty("pub_id")
-    public String getPubId() {
-        return pubId;
-    }
-
-    public void setPubId(String pubId) {
-        this.pubId = pubId == null ? null : pubId.trim();
-    }
-
-    @JsonProperty("pub_name")
-    public String getPubName() {
-        return pubName;
-    }
-
-    public void setPubName(String pubName) {
-        this.pubName = pubName == null ? null : pubName.trim();
     }
 
     @JsonProperty("subscribe_time")
@@ -69,5 +51,23 @@ public class CampaignDecisionPubFansOut {
     public void setRefreshIntervalType(Byte refreshIntervalType) {
         this.refreshIntervalType = refreshIntervalType;
     }
+
+    @JsonProperty("asset_id")
+	public Integer getAssetId() {
+		return assetId;
+	}
+
+	public void setAssetId(Integer assetId) {
+		this.assetId = assetId;
+	}
+
+	@JsonProperty("asset_name")
+	public String getAssetName() {
+		return assetName;
+	}
+
+	public void setAssetName(String assetName) {
+		this.assetName = assetName;
+	}
 
 }

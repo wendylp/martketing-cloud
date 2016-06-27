@@ -13,19 +13,17 @@ public class CampaignActionSendH5 extends BaseQuery {
 
     private String name;
 
-    private Integer wechatH5Id;
+    private Integer pubAssetId;
 
-    private String wechatH5Name;
+    private Integer prvAssetId;
+
+    private Integer imgTextAssetId;
 
     private String pubId;
 
-    private String pubName;
+    private String uin;
 
-    private String prvtId;
-
-    private String prvtGroupName;
-
-    private String prvtName;
+    private Integer materialId;
 
     private Byte status;
 
@@ -65,20 +63,28 @@ public class CampaignActionSendH5 extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getWechatH5Id() {
-        return wechatH5Id;
+    public Integer getPubAssetId() {
+        return pubAssetId;
     }
 
-    public void setWechatH5Id(Integer wechatH5Id) {
-        this.wechatH5Id = wechatH5Id;
+    public void setPubAssetId(Integer pubAssetId) {
+        this.pubAssetId = pubAssetId;
     }
 
-    public String getWechatH5Name() {
-        return wechatH5Name;
+    public Integer getPrvAssetId() {
+        return prvAssetId;
     }
 
-    public void setWechatH5Name(String wechatH5Name) {
-        this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
+    public void setPrvAssetId(Integer prvAssetId) {
+        this.prvAssetId = prvAssetId;
+    }
+
+    public Integer getImgTextAssetId() {
+        return imgTextAssetId;
+    }
+
+    public void setImgTextAssetId(Integer imgTextAssetId) {
+        this.imgTextAssetId = imgTextAssetId;
     }
 
     public String getPubId() {
@@ -89,36 +95,20 @@ public class CampaignActionSendH5 extends BaseQuery {
         this.pubId = pubId == null ? null : pubId.trim();
     }
 
-    public String getPubName() {
-        return pubName;
+    public String getUin() {
+        return uin;
     }
 
-    public void setPubName(String pubName) {
-        this.pubName = pubName == null ? null : pubName.trim();
+    public void setUin(String uin) {
+        this.uin = uin == null ? null : uin.trim();
     }
 
-    public String getPrvtId() {
-        return prvtId;
+    public Integer getMaterialId() {
+        return materialId;
     }
 
-    public void setPrvtId(String prvtId) {
-        this.prvtId = prvtId == null ? null : prvtId.trim();
-    }
-
-    public String getPrvtGroupName() {
-        return prvtGroupName;
-    }
-
-    public void setPrvtGroupName(String prvtGroupName) {
-        this.prvtGroupName = prvtGroupName == null ? null : prvtGroupName.trim();
-    }
-
-    public String getPrvtName() {
-        return prvtName;
-    }
-
-    public void setPrvtName(String prvtName) {
-        this.prvtName = prvtName == null ? null : prvtName.trim();
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 
     public Byte getStatus() {

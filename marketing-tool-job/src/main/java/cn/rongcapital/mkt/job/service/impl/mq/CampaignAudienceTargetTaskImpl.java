@@ -24,8 +24,6 @@ import cn.rongcapital.mkt.po.mongodb.Segment;
 @Service
 public class CampaignAudienceTargetTaskImpl extends BaseMQService implements TaskService {
 	
-	@Autowired  
-    private MQUtil mqUtil;
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
@@ -63,6 +61,7 @@ public class CampaignAudienceTargetTaskImpl extends BaseMQService implements Tas
 						nodeAudience.setCampaignHeadId(campaignHeadId+"");
 						nodeAudience.setItemId(itemId);
 						nodeAudience.setDataId(segement.getDataId());
+						nodeAudience.setName(segement.getName());
 						segmentListUnique.add(segement);
 						//把segment保存到mongo中的node_audience表
 						mongoTemplate.insert(nodeAudience);
@@ -72,7 +71,7 @@ public class CampaignAudienceTargetTaskImpl extends BaseMQService implements Tas
 				List<CampaignSwitch> campaignEndsList = queryCampaignEndsList(campaignHeadId, itemId);
 				for(CampaignSwitch cs:campaignEndsList) {
 					//发送segment数据到后面的节点
-					mqUtil.sendDynamicQueue(segmentListUnique, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+					sendDynamicQueue(segmentListUnique, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
 				}
 			}
 			

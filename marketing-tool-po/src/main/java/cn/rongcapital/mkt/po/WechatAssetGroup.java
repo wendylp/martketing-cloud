@@ -7,6 +7,8 @@ import java.util.Date;
 public class WechatAssetGroup extends BaseQuery {
     private Long id;
 
+    private Long importGroupId;
+
     private String name;
 
     private Integer members;
@@ -29,6 +31,14 @@ public class WechatAssetGroup extends BaseQuery {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getImportGroupId() {
+        return importGroupId;
+    }
+
+    public void setImportGroupId(Long importGroupId) {
+        this.importGroupId = importGroupId;
     }
 
     public String getName() {

@@ -12,6 +12,8 @@ package cn.rongcapital.mkt.common.constant;
 
 public class ApiConstant {
 
+	public static final String CONTENT_TYPE_JSON = "application/json";
+	
 	public static final String API_METHOD = "method";//api的method参数
 	public static final String API_PATH = "/api";//api的路径
 	public static final byte TABLE_DATA_STATUS_VALID = 0;//数据正常
@@ -40,7 +42,8 @@ public class ApiConstant {
 	public static final int WECHAT_ASSET_PERSONAL_NUMBER = 1;
 	public static final int WECHAT_ASSET_SUBSCRIPTION_NUMBER=2;
 	
-	public static final String DATE_FORMAT_yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT_yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT_yyyy_MM_dd = "yyyy-MM-dd";
 	
 	public static final byte TAG_TYPE_SEGMENT = 0;// 细分
 	public static final byte TAG_TYPE_ACTIVITY = 1;// 活动
@@ -90,13 +93,15 @@ public class ApiConstant {
 	
 	public static final long TASK_SCAN_INTERVAL_MILLS = 1000*3; //扫描任务表的时间间隔:毫秒
 	public static final long TASK_DO_INTERVAL_MILLS = 1000*3; //扫描执行列表的时间间隔:毫秒
+	
+	public static final int SEGMENTATION_GROUP_MEMBER_MOST_COUNT = 3;//细分每个分组内标签的最多数量
 
 	//时间触发节点
 	public static final String TASK_NAME_CAMPAIGN_TRUGGER_TIME = "campaignTriggerTimeTask";
 	//目标人群节点
 	public static final String TASK_NAME_CAMPAIGN_AUDIENCE_TARGET = "campaignAudienceTargetTask";
-	//微信是否发送节点
-	public static final String TASK_NAME_CAMPAIGN_DECISION_WECHAT_SENT = "campaignDecisionWechatSentTask";
+	//微信是否发送节点(已去掉)
+//	public static final String TASK_NAME_CAMPAIGN_DECISION_WECHAT_SENT = "campaignDecisionWechatSentTask";
 	//微信是否阅读节点
 	public static final String TASK_NAME_CAMPAIGN_DECISION_WECHAT_READ = "campaignDecisionWechatReadTask";
 	//微信是否转发节点
@@ -109,9 +114,29 @@ public class ApiConstant {
 	public static final String TASK_NAME_CAMPAIGN_DECISION_TAG = "campaignDecisionTagTask";
 	//公众号发送微信图文
 	public static final String TASK_NAME_CAMPAIGN_ACTION_PUBWECHAT_SEND_H5 = "campaignActionPubWechatSendH5Task";
+	//发送个人号消息
+	public static final String TASK_NAME_CAMPAIGN_ACTION_WECHAT_PRV_SEND_INFO = "campaignActionPrvWechatSendInfoTask";
+	//公众号发送H5图文:个人号暂时不支持发送H5图文
+	public static final String TASK_NAME_CAMPAIGN_ACTION_WECHAT_SEND_H5 = "campaignActionWechatSendH5Task";
+	//等待
+	public static final String TASK_NAME_CAMPAIGN_ACTION_WAIT = "campaignActionWaitTask";
+	//保存当前人群
+    public static final String TASK_NAME_CAMPAIGN_ACTION_SAVE_AUDIENCE = "campaignActionSaveAudienceTask";
+	//设置标签
+    public static final String TASK_NAME_CAMPAIGN_ACTION_SET_TAG = "campaignActionSetTagTask";
+    //联系人属性比较
+    public static final String TASK_NAME_CAMPAIGN_DECISION_PROP_COMPARE = "campaignDecisionPropTask";
 	
-	
-	public static final Integer DATA_PARTY_MD_TYPE_WECHAT = 8;//data_party表:微信类型数据
+	public static final int DATA_PARTY_MD_TYPE_WECHAT = 8;//data_party表:微信类型数据
+	/**
+	 * campaign_decision_wechat_forward表:forward_times
+	 */
+	public static final byte CAMPAIGN_DECISION_WECHAT_FORWARD_FORWARD_TIMES_NOLIMIT = 0;//不限
+	public static final byte CAMPAIGN_DECISION_WECHAT_FORWARD_FORWARD_TIMES_ONE = 1;//超1人次
+	public static final byte CAMPAIGN_DECISION_WECHAT_FORWARD_FORWARD_TIMES_TEN = 2;//超10人次
+	public static final byte CAMPAIGN_DECISION_WECHAT_FORWARD_FORWARD_TIMES_ONE_HUNDRED = 3;//超100人次
+	public static final byte CAMPAIGN_DECISION_WECHAT_FORWARD_FORWARD_TIMES_FIVE_HUNDRED = 4;//超500人次
+
 
 	public static final String DL_PUB_GRANT_API = "ruixue.hfive.mkt.pub.grant";
 	public static final String DL_PUB_LIST_API = "ruixue.hfive.mkt.pub.list";
@@ -127,10 +152,13 @@ public class ApiConstant {
 	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_KEY = "callback";
 	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_VALUE = "mkt.data.inbound.wechat.public.auth.callback";
 	
-	public static final String DL_PUB_SEND_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.pub.send";
-	public static final String DL_PUB_ISSENT_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.wtuwen.sent";
-	public static final String DL_PUB_ISREAD_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.wtuwen.viewed";
-
+	public static final String DL_PUB_SEND_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.pub.send&pid=";
+	public static final String DL_PUB_ISSENT_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.wtuwen.sent&pid=";
+	public static final String DL_PUB_ISREAD_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.wtuwen.viewed&pid=";
+	public static final String DL_PUB_ISFORWARD_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.wtuwen.shared&pid=";
+	public static final String DL_PRV_SEND_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.personal.send&pid=";
+	
+	
     public static final String DOWNLOAD_TEMPLATE_FILE_DIR = "//rc//templeteFiles";
 	public static final String DOWNLOAD_BASE_DIR = "//rc//downloads/";
 }

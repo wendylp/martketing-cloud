@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.ObjectMessage;
@@ -12,13 +14,13 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -36,6 +38,12 @@ public class BaseMQService {
 	private static Context jndiContext = null;
 	
 	private static ConnectionFactory connectionFactory = null;
+	
+	private static Connection conn = null;
+	
+	
+	@Autowired  
+    private JmsMessagingTemplate jmsMessagingTemplate; 
 	
 	@Value("${spring.activemq.broker-url}")
 	private String providerUrl;
@@ -56,7 +64,9 @@ public class BaseMQService {
 	        environment.put(Context.PROVIDER_URL, providerUrl);   
 			jndiContext = new InitialContext(environment);
 			connectionFactory = (ConnectionFactory)jndiContext.lookup("ConnectionFactory");
-		} catch (NamingException e) {
+			conn = connectionFactory.createConnection();
+			conn.start();
+		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
 	}
@@ -108,9 +118,6 @@ public class BaseMQService {
 	protected List<Segment> getQueueData(Queue queue) {
 		List<Segment> myDomainObj = null;
 		try {
-			Connection conn = connectionFactory.createConnection();
-			conn.start();
-
 			Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			MessageConsumer consumer = session.createConsumer(queue);
 			Message msg = consumer.receiveNoWait();
@@ -119,24 +126,43 @@ public class BaseMQService {
 			}
 			consumer.close();
 			session.close();
-			conn.close();
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
 		return myDomainObj;
 	}
 	
+	protected void sendDynamicQueue(List<Segment> campaignSegmentList,String dest) { 
+		Session session = null;
+    	try {
+    		session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+    		Destination destination = session.createQueue(dest);
+    		jmsMessagingTemplate.convertAndSend(destination, campaignSegmentList); 
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+		} finally {
+			try {
+				session.close();
+			} catch (JMSException e) {
+				logger.error(e.getMessage(),e);
+			}
+		}
+    } 
+	
 	protected MessageConsumer getQueueConsumer(Queue queue) {
 		MessageConsumer consumer = null;
+		Session session = null;
 		try {
-			Connection conn = connectionFactory.createConnection();
-			conn.start();
-			Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			consumer = session.createConsumer(queue);
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
 		return consumer;
+	}
+	
+	protected void deleteQueueByName(String queueName) {
+		//TO DO
 	}
 	
 	protected String getPid() {

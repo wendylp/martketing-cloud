@@ -128,7 +128,12 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-broker</artifactId>
         </dependency>
-        
+  
+	   <dependency>
+		   <groupId>joda-time</groupId>
+		   <artifactId>joda-time</artifactId>
+	   </dependency>
+	      
     </dependencies>
 
 		

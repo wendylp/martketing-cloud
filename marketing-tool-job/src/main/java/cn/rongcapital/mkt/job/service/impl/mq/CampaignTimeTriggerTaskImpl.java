@@ -26,6 +26,12 @@ public class CampaignTimeTriggerTaskImpl extends BaseMQService implements TaskSe
 		taskScheduleDao.activateTaskByCampaignHeadId(campaignHeadId);
 	}
 	
+	public void cancelInnerTask(TaskSchedule taskSchedule){
+		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
+		//停止该活动对应的全部任务
+		taskScheduleDao.deActivateTaskByCampaignHeadId(campaignHeadId);
+	}
+
 	@Override
 	public void task(Integer taskId) {
 		// TODO Auto-generated method stub

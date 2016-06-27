@@ -15,7 +15,7 @@ public class CampaignDecisionPubFans extends BaseQuery {
 
     private String pubId;
 
-    private String pubName;
+    private Integer assetId;
 
     private Byte subscribeTime;
 
@@ -69,12 +69,12 @@ public class CampaignDecisionPubFans extends BaseQuery {
         this.pubId = pubId == null ? null : pubId.trim();
     }
 
-    public String getPubName() {
-        return pubName;
+    public Integer getAssetId() {
+        return assetId;
     }
 
-    public void setPubName(String pubName) {
-        this.pubName = pubName == null ? null : pubName.trim();
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
     }
 
     public Byte getSubscribeTime() {
