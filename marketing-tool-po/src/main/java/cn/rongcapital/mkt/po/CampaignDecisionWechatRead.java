@@ -13,17 +13,17 @@ public class CampaignDecisionWechatRead extends BaseQuery {
 
     private String name;
 
-    private String pubId;
+    private Integer assetId;
 
-    private String pubName;
+    private String pubId;
 
     private Integer refreshInterval;
 
     private Byte refreshIntervalType;
 
-    private Integer wechatH5Id;
+    private Integer imgTextAssetId;
 
-    private String wechatH5Name;
+    private Integer materialId;
 
     private Byte readTime;
 
@@ -67,20 +67,20 @@ public class CampaignDecisionWechatRead extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
+    }
+
     public String getPubId() {
         return pubId;
     }
 
     public void setPubId(String pubId) {
         this.pubId = pubId == null ? null : pubId.trim();
-    }
-
-    public String getPubName() {
-        return pubName;
-    }
-
-    public void setPubName(String pubName) {
-        this.pubName = pubName == null ? null : pubName.trim();
     }
 
     public Integer getRefreshInterval() {
@@ -99,20 +99,20 @@ public class CampaignDecisionWechatRead extends BaseQuery {
         this.refreshIntervalType = refreshIntervalType;
     }
 
-    public Integer getWechatH5Id() {
-        return wechatH5Id;
+    public Integer getImgTextAssetId() {
+        return imgTextAssetId;
     }
 
-    public void setWechatH5Id(Integer wechatH5Id) {
-        this.wechatH5Id = wechatH5Id;
+    public void setImgTextAssetId(Integer imgTextAssetId) {
+        this.imgTextAssetId = imgTextAssetId;
     }
 
-    public String getWechatH5Name() {
-        return wechatH5Name;
+    public Integer getMaterialId() {
+        return materialId;
     }
 
-    public void setWechatH5Name(String wechatH5Name) {
-        this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 
     public Byte getReadTime() {
