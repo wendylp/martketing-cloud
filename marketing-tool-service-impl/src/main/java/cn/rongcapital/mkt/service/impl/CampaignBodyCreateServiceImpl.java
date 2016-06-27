@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,8 +174,10 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				switch (campaignNodeChainIn.getItemType()) {
 				case ApiConstant.CAMPAIGN_ITEM_TRIGGER_TIMMER://定时触发
 					TaskSchedule taskSchedule = initTaskTimeTrigger(campaignNodeChainIn,campaignHeadId);
-					taskScheduleDao.insert(taskSchedule);
-					taskId = taskSchedule.getId();
+					if(null != taskSchedule) {
+						taskScheduleDao.insert(taskSchedule);
+						taskId = taskSchedule.getId();
+					}
 					CampaignTriggerTimer campaignTriggerTimer = initCampaignTriggerTimer(campaignNodeChainIn,campaignHeadId);
 					if(null != campaignTriggerTimer) {
 						campaignTriggerTimerDao.insert(campaignTriggerTimer);
@@ -438,7 +440,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		ch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		ch.setId(campaignHeadId);
 		List<CampaignHead> chList = campaignHeadDao.selectList(ch);
-		if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(chList)){
+		if(CollectionUtils.isNotEmpty(chList)){
 			if(chList.get(0).getPublishStatus()==ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH) {
 				taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_VALID);//如果活动是已发布状态,设置触发任务为可运行状态
 			}else {
