@@ -308,6 +308,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 			campaignActionSendH5Out.setPubAssetId(campaignActionSendH5.getPubAssetId());
 			campaignActionSendH5Out.setPrvAssetId(campaignActionSendH5.getPrvAssetId());
 			campaignActionSendH5Out.setImgTextAssetId(campaignActionSendH5.getImgTextAssetId());
+			campaignActionSendH5Out.setGroupId(campaignActionSendH5.getGroupId());
 			if(null != campaignActionSendH5.getPubAssetId()) {
 				WechatAsset wechatAssetT = new WechatAsset();
 				wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
