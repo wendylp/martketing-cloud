@@ -10,7 +10,6 @@
 
 package cn.rongcapital.mkt.api;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1538,22 +1537,19 @@ public class MktApi {
 	public BaseOutput fileTagUpdate(FileTagUpdateIn fileTagUpdateIn){
 		return fileTagUpdateService.updateFileTag(fileTagUpdateIn);
 	}
-	
-	/**
+
+    /**
      * @功能简述: 编辑某条主数据详细信息
      * @param body
      * @return BaseOutput
      */
     @GET
     @Path("/mkt.data.quality.log.download")
-    public Object downloadQualityLog(@NotEmpty @QueryParam("user_token") String userToken,
+    public BaseOutput downloadQualityLog(@NotEmpty @QueryParam("user_token") String userToken,
                     @NotNull @QueryParam("import_data_id") Long importDataId) {
-        File file = dataDownloadQualityLogService.downloadQualityLog(importDataId);
-        Response.ResponseBuilder response = Response.ok((Object) file);
-        response.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
-        return response.build();
+        return dataDownloadQualityLogService.downloadQualityLog(importDataId);
     }
-    
+
 	/**
 	 * 搜索活动节点上的人
 	 * @param userToken
