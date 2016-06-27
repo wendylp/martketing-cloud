@@ -2,7 +2,6 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
