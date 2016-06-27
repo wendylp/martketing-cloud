@@ -57,21 +57,12 @@ public class CampaignManualStartServiceImple implements CampaignManualStartServi
 		 List<CampaignHead> segList = campaignHeadDao.selectList(t);
 		 if(CollectionUtils.isNotEmpty(segList)) {
 			 CampaignHead ch = segList.get(0);
-			if(ch.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH) {
-			  ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_NOT_PUBLISH.getCode(),
-									ApiErrorCode.BIZ_ERROR_CANPAIGN_NOT_PUBLISH.getMsg(),
-									ApiConstant.INT_ZERO,null);
-			}
-			if(ch.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
-				ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_IN_PROGRESS.getCode(),
-									ApiErrorCode.BIZ_ERROR_CANPAIGN_IN_PROGRESS.getMsg(),
-									ApiConstant.INT_ZERO,null);
-			}
-			if(ch.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH) {
-				ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getCode(),
-									ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
-									ApiConstant.INT_ZERO,null);
-			}
+			 //只有发布状态的活动才能被手动开启
+			 if(ch.getPublishStatus() != ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH) {
+				 ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_CAN_NOT_MANUAL_START.getCode(),
+							ApiErrorCode.BIZ_ERROR_CANPAIGN_CAN_NOT_MANUAL_START.getMsg(),
+							ApiConstant.INT_ZERO,null);
+			 }
 		 } else {
 			ur = new CampaignManualStartOut(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
 								ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(),
