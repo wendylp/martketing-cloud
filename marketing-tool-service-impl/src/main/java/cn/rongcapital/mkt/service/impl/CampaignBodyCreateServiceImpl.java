@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -146,6 +148,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public CampaignBodyCreateOut campaignBodyCreate(CampaignBodyCreateIn body, SecurityContext securityContext) {
+		DateFormat formatter = new SimpleDateFormat(ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+		jacksonObjectMapper.setDateFormat(formatter);
 		int campaignHeadId = body.getCampaignHeadId();
 		CampaignBodyCreateOut out = checkCampaignBiz(campaignHeadId);
 		if(null != out) {
