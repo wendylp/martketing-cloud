@@ -53,7 +53,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         }
         String fileName = "";
         Map<String,List<InputPart>> uploadForm = fileInput.getFormDataMap();
-        List<InputPart> inputParts = uploadForm.get("uploadedFile");
+        List<InputPart> inputParts = uploadForm.get("uploadFile");
         for(InputPart inputPart : inputParts){
             try {
                 MultivaluedMap<String,String> header = inputPart.getHeaders();
