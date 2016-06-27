@@ -1,6 +1,6 @@
 package cn.rongcapital.mkt.service;
 
-import java.io.File;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface DataDownloadQualityLogService {
 
@@ -13,6 +13,6 @@ public interface DataDownloadQualityLogService {
      * @return
      * 
      */
-    public File downloadQualityLog(Long importDataId);
+    public BaseOutput downloadQualityLog(Long importDataId);
 
 }
