@@ -6,6 +6,7 @@ import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.DownloadFileName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,9 +43,12 @@ public class WechatPeopleDetailDownloadServiceImpl implements WechatPeopleDetail
             //3.根据import_id选取出人。
             List<Map<String,Object>> peopleDetails = wechatMemberDao.selectPeopleDetails(importGroupIds);
             file = FileUtil.generateDownloadFile(peopleDetails,"wxDetails");
+            baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+            baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+            DownloadFileName downloadFileName = new DownloadFileName();
+            downloadFileName.setDownloadFileName(file.getName());
+            baseOutput.getData().add(downloadFileName);
         }
-        Response.ResponseBuilder response = Response.ok((Object) file);
-        response.header("Content-Disposition", "attachment; filename=\""+file.getName() +"\"");
-        return response.build();
+        return baseOutput;
     }
 }
