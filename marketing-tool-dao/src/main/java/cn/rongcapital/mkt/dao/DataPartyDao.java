@@ -75,6 +75,19 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      */
     Map<String,Object> selectAudienceDetail(Map<String, Object> map);
 
+    
+    /**
+     * mkt.audience.search.get
+     *
+     * @功能简述 : 在人群中查找
+     * @author xukun
+     * @return map
+     */
+    Map<String,Object> selectListByKeyName(String audience_name);
+    
+    Map<String,Object> selectListByNameInList(List<Integer> idList,String audience_name);
+
+    
 	/**
 	 * @功能简述 : 获取dataPartyIds
 	 * @author nianjun
@@ -82,10 +95,6 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 */
 	List<Long> selectDataPartyIdsByMappinKeyIds(List<String> wxCodes);
 	
-	/**
-     * @功能简述 : 获取人群list列表
-     * @author nianjun
-     * @return List<DataParty>
-     */
-	List<DataParty> selectDataPartyByAudienceId(Map<String, Integer> paramMap);
+	
+	
 }

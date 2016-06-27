@@ -29,7 +29,6 @@ public class IsUuidEffectiveService {
 
     public boolean isUuidEffective(String uuid){
         Map<String,String> h5VerifyUuidParamMap = tenementDao.selectPid();
-        h5VerifyUuidParamMap.put("company_key",h5VerifyUuidParamMap.remove("pid"));
         h5VerifyUuidParamMap.put("uuid",uuid);
         h5VerifyUuidParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PERSONAL_ISONLINE);
         HttpResponse httpResponse = HttpUtils.requestH5Interface(h5VerifyUuidParamMap);

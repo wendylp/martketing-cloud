@@ -306,7 +306,9 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 			CampaignActionSendH5 campaignActionSendH5 = resList.get(0);
 			campaignActionSendH5Out.setName(campaignActionSendH5.getName());
 			campaignActionSendH5Out.setPubAssetId(campaignActionSendH5.getPubAssetId());
+			campaignActionSendH5Out.setPrvAssetId(campaignActionSendH5.getPrvAssetId());
 			campaignActionSendH5Out.setImgTextAssetId(campaignActionSendH5.getImgTextAssetId());
+			campaignActionSendH5Out.setGroupId(campaignActionSendH5.getGroupId());
 			if(null != campaignActionSendH5.getPubAssetId()) {
 				WechatAsset wechatAssetT = new WechatAsset();
 				wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
@@ -323,6 +325,26 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				List<ImgTextAsset> imgTextAssetList = imgTextAssetDao.selectList(imgTextAssetT);
 				if(CollectionUtils.isNotEmpty(imgTextAssetList)) {
 					campaignActionSendH5Out.setImgTextAssetName(imgTextAssetList.get(0).getName());
+				}
+			}
+			if(campaignActionSendH5.getPrvAssetId() != null) {
+				WechatAsset wechatAssetT = new WechatAsset();
+				wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+				wechatAssetT.setAssetId(campaignActionSendH5.getPrvAssetId());
+				List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAssetT);
+				if(CollectionUtils.isNotEmpty(wechatAssetList)) {
+					String assetName = wechatAssetList.get(0).getAssetName();
+					campaignActionSendH5Out.setPrvAssetName(assetName);//返回个人号微信名
+				}
+			}
+			if(campaignActionSendH5.getGroupId() != null) {
+				WechatAssetGroup wechatAssetGroupT = new WechatAssetGroup();
+				wechatAssetGroupT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+				wechatAssetGroupT.setId(campaignActionSendH5.getGroupId().longValue());
+				List<WechatAssetGroup> wechatAssetGroupList = wechatAssetGroupDao.selectList(wechatAssetGroupT);
+				if(CollectionUtils.isNotEmpty(wechatAssetGroupList)) {
+					String groupName = wechatAssetGroupList.get(0).getName();
+					campaignActionSendH5Out.setGroupName(groupName);//返回群组名
 				}
 			}
 		}

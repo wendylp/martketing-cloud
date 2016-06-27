@@ -17,11 +17,15 @@ public class CampaignActionSendH5 extends BaseQuery {
 
     private Integer prvAssetId;
 
+    private Integer groupId;
+
     private Integer imgTextAssetId;
 
     private String pubId;
 
     private String uin;
+
+    private String ucode;
 
     private Integer materialId;
 
@@ -79,6 +83,14 @@ public class CampaignActionSendH5 extends BaseQuery {
         this.prvAssetId = prvAssetId;
     }
 
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
+    }
+
     public Integer getImgTextAssetId() {
         return imgTextAssetId;
     }
@@ -101,6 +113,14 @@ public class CampaignActionSendH5 extends BaseQuery {
 
     public void setUin(String uin) {
         this.uin = uin == null ? null : uin.trim();
+    }
+
+    public String getUcode() {
+        return ucode;
+    }
+
+    public void setUcode(String ucode) {
+        this.ucode = ucode == null ? null : ucode.trim();
     }
 
     public Integer getMaterialId() {

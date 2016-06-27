@@ -14,6 +14,14 @@ public class CampaignActionSendH5Out {
     private Integer pubAssetId;
 
     private String pubAssetName;
+    
+    private Integer prvAssetId;
+
+    private String prvAssetName;
+    
+    private Integer groupId;
+    
+    private String groupName;
 
     @JsonProperty("name")
     public String getName() {
@@ -59,6 +67,41 @@ public class CampaignActionSendH5Out {
 	public void setPubAssetName(String pubAssetName) {
 		this.pubAssetName = pubAssetName;
 	}
-    
+
+	@JsonProperty("group_id")
+	public Integer getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
+	}
+
+	@JsonProperty("group_name")
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+	@JsonProperty("prv_asset_id")
+	public Integer getPrvAssetId() {
+		return prvAssetId;
+	}
+
+	public void setPrvAssetId(Integer prvAssetId) {
+		this.prvAssetId = prvAssetId;
+	}
+	
+	@JsonProperty("prv_asset_name")
+	public String getPrvAssetName() {
+		return prvAssetName;
+	}
+
+	public void setPrvAssetName(String prvAssetName) {
+		this.prvAssetName = prvAssetName;
+	}
 
 }
