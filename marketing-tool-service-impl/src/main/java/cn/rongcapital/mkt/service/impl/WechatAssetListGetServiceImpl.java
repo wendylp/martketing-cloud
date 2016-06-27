@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +44,12 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService{
         Map<String,Object> assetDetaiMap = wechatAssetDao.selectWechatAssetDetai(paramMap);
         if(assetDetaiMap != null){
             setNicknameFlag(assetDetaiMap);
-            assetDetaiMap.put("consignation_time", assetDetaiMap.remove("consignation_time").toString().substring(0,19));
+            String consignationTime = (String) assetDetaiMap.remove("consignation_time");
+            if(consignationTime != null){
+                assetDetaiMap.put("consignation_time", consignationTime.substring(0,19));
+            }else{
+                assetDetaiMap.put("consignation_time","");
+            }
             String groupIds = (String) assetDetaiMap.get("group_ids");
             if(groupIds != null && !("".equals(groupIds))){
                 ArrayList<Map<String,Object>> groups = new ArrayList<Map<String,Object>>();
