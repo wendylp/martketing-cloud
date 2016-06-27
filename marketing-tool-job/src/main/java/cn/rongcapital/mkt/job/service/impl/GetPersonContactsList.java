@@ -71,21 +71,18 @@ public class GetPersonContactsList implements TaskService {
         }
     }
 
+    //Todo:如何过滤掉微信好友名称为图片的好友
     private void batchInsertContacts(H5PersonalContactlistResponse h5PersonalContactlistResponse,String uin) {
         List<Map<String,Object>> paramContacts = new ArrayList<Map<String,Object>>();
-        //Todo:1.首先通过uin和好友组确定是否已经存储了这个人的好友组，如果没有则先存储这个人的好友组，如果存储了则获取这个组的groupid
+        //1.首先通过uin和好友组确定是否已经存储了这个人的好友组，如果没有则先存储这个人的好友组，如果存储了则获取这个组的groupid
         Integer groupId = getGroupIdService.getGroupIdByOwnerIdAndGroupname(uin,"好友组");
-        //Todo:2.获取了group_id以后需要根据group_id和微信号进行判重，重复了就不插入数据了
+        //2.获取了group_id以后需要根据group_id和微信号进行判重，重复了就不插入数据了
         for(PersonalContact personalContact : h5PersonalContactlistResponse.getContacts().getContact()){
             if(!isFriendAlreadySave(groupId,personalContact.getUcode())){
                 Map<String,Object> paramContact = new HashMap<String,Object>();
                 paramContact.put("wx_group_id",groupId);
                 paramContact.put("wx_code", personalContact.getUcode());
-                try {
-                    paramContact.put("nickname", personalContact.getNickname().getBytes("utf-8"));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                paramContact.put("name",personalContact.getNickname());
                 if("男".equals(personalContact.getSex())){
                     paramContact.put("sex", 0);
                 }else if("女".equals(personalContact.getSex())){

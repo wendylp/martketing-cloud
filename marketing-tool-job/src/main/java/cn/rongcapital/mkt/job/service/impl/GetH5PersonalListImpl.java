@@ -26,7 +26,7 @@ import java.util.Map;
 @Service
 public class GetH5PersonalListImpl implements TaskService {
 
-    //Todo:同步大连那边获取服务号，订阅号接口。
+    //Todo:同步大连那边个人号列表接口。
     //Todo:1.调用Http请求获取接口返回值  (checked)
     //Todo:2.对接口返回值进行JSON解析，保存到entity类中 (checked)
 
@@ -56,6 +56,7 @@ public class GetH5PersonalListImpl implements TaskService {
     private void insertPersonalInfo(H5MktPersonalListResponse h5MktPersonalListResponse) {
         List<Map<String,Object>> paramPersonals = new ArrayList<Map<String,Object>>();
         for(H5Personal h5Personal :h5MktPersonalListResponse.getPersonals().getPersonal()){
+            if(personAlreadySaved(h5Personal)) continue;
             Map<String,Object> paramPersonal = new HashMap<String,Object>();
             paramPersonal.put("wx_acct",h5Personal.getUin());
             paramPersonal.put("nickname",h5Personal.getNickname());
@@ -68,5 +69,16 @@ public class GetH5PersonalListImpl implements TaskService {
             paramPersonals.add(paramPersonal);
         }
         wechatRegisterDao.batchInsertPersonList(paramPersonals);
+    }
+
+    private boolean personAlreadySaved(H5Personal h5Personal) {
+        boolean flag = false;
+        Map<String,Object> paramMap = new HashMap<String,Object>();
+        paramMap.put("wx_acct",h5Personal.getUin());
+        Long id = wechatRegisterDao.selectPersonalId(paramMap);
+        if(id != null && id > 0){
+            flag = true;
+        }
+        return flag;
     }
 }

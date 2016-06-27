@@ -72,4 +72,18 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return list
 	 */
 	List<Map<String,Object>> selectPeopleDetails(List<Long> importGroupIds);
+
+	/**
+	 * 批量插入微信组成员信息
+	 * @param paramMap
+	 * @return list
+	 */
+	void batchInsertGroupMember(List<Map<String, Object>> paramGroupMembers);
+
+	/**
+	 * 获取一个组好下的总人数
+	 * @param paramMap
+	 * @return list
+	 */
+	Integer selectGroupMemeberCount(Map<String,Object> paramMap);
 }

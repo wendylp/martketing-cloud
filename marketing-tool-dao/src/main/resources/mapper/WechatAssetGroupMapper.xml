@@ -103,13 +103,13 @@
 	<select id="selectGroupById" parameterType="java.lang.String" resultType="java.util.Map">
 		SELECT
 		id as group_id,name,members
-		FROM wechat_asset_group
+		<include refid="QUERY_FROM_TABLE"/>
 		WHERE id = #{id}
 	</select>	
 
 	<select id="sumGroupMemberCount" parameterType="java.util.List" resultType="java.lang.Long">
 		SELECT sum(members)
-		FROM wechat_asset_group
+		<include refid="QUERY_FROM_TABLE"/>
 		WHERE id in
 		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
 			#{item}
@@ -118,10 +118,46 @@
 
 	<select id="selectImportGroupIdsByIds" parameterType="java.util.List" resultType="java.lang.Long">
 		SELECT import_group_id
-		FROM wechat_asset_group
+		<include refid="QUERY_FROM_TABLE"/>
 		WHERE id in
 		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
 			#{item}
 		</foreach>
+	</select>
+
+	<select id="selectImportGroupIds" resultType="java.lang.Long">
+		SELECT import_group_id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE import_group_id > 0
+	</select>
+
+	<insert id="insertNewGroupList" parameterType="java.util.List">
+		INSERT INTO wechat_asset_group(import_group_id,name,wx_acct)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			   #{item.import_group_id},
+			   #{item.name},
+			   #{item.wx_acct}
+			)
+		</foreach>
+	</insert>
+
+	<update id="updateGroupCountById" parameterType="java.util.Map">
+		UPDATE wechat_asset_group
+		SET members = #{members}
+		WHERE import_group_id = #{import_group_id}
+	</update>
+
+	<select id="selectGroupIdsByWxAcct" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE wx_acct = #{wx_acct}
+	</select>
+
+	<select id="selectMemberCountByWxAcct" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT sum(members)
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE wx_acct = #{wx_acct}
 	</select>
 </mapper>

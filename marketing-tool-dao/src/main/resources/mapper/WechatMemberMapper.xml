@@ -212,4 +212,24 @@
 			#{item}
 		</foreach>
 	</select>
+
+	<insert id="batchInsertGroupMember" parameterType="java.util.List">
+		INSERT INTO wechat_member(wx_code,wx_group_id,head_image_url,nickname,is_friend)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			  #{item.wx_code},
+			  #{item.wx_group_id},
+			  #{item.head_image_url},
+			  #{item.nickname},
+			  #{item.is_friend}
+			)
+		</foreach>
+	</insert>
+	
+	<select id="selectGroupMemeberCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(id)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_group_id = #{wx_group_id}
+	</select>
 </mapper>
