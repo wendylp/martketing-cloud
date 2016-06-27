@@ -9,13 +9,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.po.base.BaseQuery;
 
 /**
  * Created by Yunfeng on 2016-6-25.
@@ -79,7 +78,7 @@ public class FileUtil {
      */
 
     // 如果调用该方法生成文件 , 也得用反射的方式把数据存入对象中并update数据库
-    public static <E extends BaseQuery> File generateFileforDownload(List<E> poList, String fileName) {
+    public static <E> File generateFileforDownload(List<E> poList, String fileName) {
         StringBuilder pathNameBuilder = new StringBuilder();
         // 当前日期
         DateTime today = DateTime.now();
@@ -89,7 +88,7 @@ public class FileUtil {
         return generateFileforDownload(poList, file);
     }
 
-    public static <E extends BaseQuery> File generateFileforDownload(List<E> poList, File file) {
+    public static <E> File generateFileforDownload(List<E> poList, File file) {
 
         // 没数据的时候生成空文件
         if (CollectionUtils.isEmpty(poList)) {
