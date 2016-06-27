@@ -6,17 +6,17 @@ public class CampaignDecisionWechatReadOut {
 	
     private String name;
 
-    private String pubId;
+    private Integer assetId;
 
-    private String pubName;
+    private String assetName;
 
     private Integer refreshInterval;
 
     private Byte refreshIntervalType;
 
-    private Integer wechatH5Id;
+    private Integer imgTextAssetId;
 
-    private String wechatH5Name;
+    private String imgTextAssetName;
 
     private Byte readTime;
 
@@ -29,24 +29,6 @@ public class CampaignDecisionWechatReadOut {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
-    }
-
-    @JsonProperty("pub_id")
-    public String getPubId() {
-        return pubId;
-    }
-
-    public void setPubId(String pubId) {
-        this.pubId = pubId == null ? null : pubId.trim();
-    }
-
-    @JsonProperty("pub_name")
-    public String getPubName() {
-        return pubName;
-    }
-
-    public void setPubName(String pubName) {
-        this.pubName = pubName == null ? null : pubName.trim();
     }
 
     @JsonProperty("refresh_interval")
@@ -67,24 +49,6 @@ public class CampaignDecisionWechatReadOut {
         this.refreshIntervalType = refreshIntervalType;
     }
 
-    @JsonProperty("wechat_h5_id")
-    public Integer getWechatH5Id() {
-        return wechatH5Id;
-    }
-
-    public void setWechatH5Id(Integer wechatH5Id) {
-        this.wechatH5Id = wechatH5Id;
-    }
-
-    @JsonProperty("wechat_h5_name")
-    public String getWechatH5Name() {
-        return wechatH5Name;
-    }
-
-    public void setWechatH5Name(String wechatH5Name) {
-        this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
-    }
-
     @JsonProperty("read_time")
     public Byte getReadTime() {
         return readTime;
@@ -102,5 +66,41 @@ public class CampaignDecisionWechatReadOut {
     public void setReadPercent(Byte readPercent) {
         this.readPercent = readPercent;
     }
+
+    @JsonProperty("asset_id")
+	public Integer getAssetId() {
+		return assetId;
+	}
+
+	public void setAssetId(Integer assetId) {
+		this.assetId = assetId;
+	}
+
+	@JsonProperty("asset_name")
+	public String getAssetName() {
+		return assetName;
+	}
+
+	public void setAssetName(String assetName) {
+		this.assetName = assetName;
+	}
+
+	@JsonProperty("img_text_asset_id")
+	public Integer getImgTextAssetId() {
+		return imgTextAssetId;
+	}
+
+	public void setImgTextAssetId(Integer imgTextAssetId) {
+		this.imgTextAssetId = imgTextAssetId;
+	}
+
+	@JsonProperty("img_text_asset_name")
+	public String getImgTextAssetName() {
+		return imgTextAssetName;
+	}
+
+	public void setImgTextAssetName(String imgTextAssetName) {
+		this.imgTextAssetName = imgTextAssetName;
+	}
 
 }

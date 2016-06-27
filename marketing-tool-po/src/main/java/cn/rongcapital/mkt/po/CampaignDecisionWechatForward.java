@@ -13,17 +13,17 @@ public class CampaignDecisionWechatForward extends BaseQuery {
 
     private String name;
 
+    private Integer assetId;
+
     private String pubId;
 
-    private String pubName;
+    private Integer imgTextAssetId;
+
+    private Integer materialId;
 
     private Integer refreshInterval;
 
     private Byte refreshIntervalType;
-
-    private Integer wechatH5Id;
-
-    private String wechatH5Name;
 
     private Byte forwardTimes;
 
@@ -65,6 +65,14 @@ public class CampaignDecisionWechatForward extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
+    }
+
     public String getPubId() {
         return pubId;
     }
@@ -73,12 +81,20 @@ public class CampaignDecisionWechatForward extends BaseQuery {
         this.pubId = pubId == null ? null : pubId.trim();
     }
 
-    public String getPubName() {
-        return pubName;
+    public Integer getImgTextAssetId() {
+        return imgTextAssetId;
     }
 
-    public void setPubName(String pubName) {
-        this.pubName = pubName == null ? null : pubName.trim();
+    public void setImgTextAssetId(Integer imgTextAssetId) {
+        this.imgTextAssetId = imgTextAssetId;
+    }
+
+    public Integer getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 
     public Integer getRefreshInterval() {
@@ -95,22 +111,6 @@ public class CampaignDecisionWechatForward extends BaseQuery {
 
     public void setRefreshIntervalType(Byte refreshIntervalType) {
         this.refreshIntervalType = refreshIntervalType;
-    }
-
-    public Integer getWechatH5Id() {
-        return wechatH5Id;
-    }
-
-    public void setWechatH5Id(Integer wechatH5Id) {
-        this.wechatH5Id = wechatH5Id;
-    }
-
-    public String getWechatH5Name() {
-        return wechatH5Name;
-    }
-
-    public void setWechatH5Name(String wechatH5Name) {
-        this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
     }
 
     public Byte getForwardTimes() {

@@ -849,13 +849,29 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionWechatForward.setName(campaignDecisionWechatForwardIn.getName());
 		campaignDecisionWechatForward.setItemId(campaignNodeChainIn.getItemId());
 		campaignDecisionWechatForward.setCampaignHeadId(campaignHeadId);
-		campaignDecisionWechatForward.setPubId(campaignDecisionWechatForwardIn.getPubId());
-		campaignDecisionWechatForward.setPubName(campaignDecisionWechatForwardIn.getPubName());
+		campaignDecisionWechatForward.setAssetId(campaignDecisionWechatForwardIn.getAssetId());
+		campaignDecisionWechatForward.setImgTextAssetId(campaignDecisionWechatForwardIn.getImgTextAssetId());
 		campaignDecisionWechatForward.setRefreshInterval(campaignDecisionWechatForwardIn.getRefreshInterval());
 		campaignDecisionWechatForward.setRefreshIntervalType(campaignDecisionWechatForwardIn.getRefreshIntervalType());
-		campaignDecisionWechatForward.setWechatH5Id(campaignDecisionWechatForwardIn.getWechatH5Id());
-		campaignDecisionWechatForward.setWechatH5Name(campaignDecisionWechatForwardIn.getWechatH5Name());
 		campaignDecisionWechatForward.setForwardTimes(campaignDecisionWechatForwardIn.getForwardTimes());
+		WechatAsset wechatAssetT = new WechatAsset();
+		wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		wechatAssetT.setAssetId(campaignDecisionWechatForwardIn.getAssetId());
+		List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAssetT);
+		if(CollectionUtils.isNotEmpty(wechatAssetList)) {
+			WechatAsset wechatAsset = wechatAssetList.get(0);
+			campaignDecisionWechatForward.setPubId(wechatAsset.getWxAcct());
+		}
+		ImgTextAsset imgTextAssetT = new ImgTextAsset();
+		imgTextAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		imgTextAssetT.setId(campaignDecisionWechatForwardIn.getImgTextAssetId());
+		List<ImgTextAsset> imgTextAssetList = imgTextAssetDao.selectList(imgTextAssetT);
+		if(CollectionUtils.isNotEmpty(imgTextAssetList)) {
+			ImgTextAsset imgTextAsset = imgTextAssetList.get(0);
+			if(StringUtils.isNotBlank(imgTextAsset.getMaterialId())) {
+				campaignDecisionWechatForward.setMaterialId(Integer.parseInt(imgTextAsset.getMaterialId()));
+			}
+		}
 		return campaignDecisionWechatForward;
 	}
 	
@@ -865,14 +881,30 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionWechatRead.setName(campaignDecisionWechatReadIn.getName());
 		campaignDecisionWechatRead.setItemId(campaignNodeChainIn.getItemId());
 		campaignDecisionWechatRead.setCampaignHeadId(campaignHeadId);
-		campaignDecisionWechatRead.setPubId(campaignDecisionWechatReadIn.getPubId());
-		campaignDecisionWechatRead.setPubName(campaignDecisionWechatReadIn.getPubName());
+		campaignDecisionWechatRead.setAssetId(campaignDecisionWechatReadIn.getAssetId());
 		campaignDecisionWechatRead.setRefreshInterval(campaignDecisionWechatReadIn.getRefreshInterval());
 		campaignDecisionWechatRead.setRefreshIntervalType(campaignDecisionWechatReadIn.getRefreshIntervalType());
-		campaignDecisionWechatRead.setWechatH5Id(campaignDecisionWechatReadIn.getWechatH5Id());
-		campaignDecisionWechatRead.setWechatH5Name(campaignDecisionWechatReadIn.getWechatH5Name());
+		campaignDecisionWechatRead.setImgTextAssetId(campaignDecisionWechatReadIn.getImgTextAssetId());
 		campaignDecisionWechatRead.setReadTime(campaignDecisionWechatReadIn.getReadTime());
 		campaignDecisionWechatRead.setReadPercent(campaignDecisionWechatReadIn.getReadPercent());
+		WechatAsset wechatAssetT = new WechatAsset();
+		wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		wechatAssetT.setAssetId(campaignDecisionWechatReadIn.getAssetId());
+		List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAssetT);
+		if(CollectionUtils.isNotEmpty(wechatAssetList)) {
+			WechatAsset wechatAsset = wechatAssetList.get(0);
+			campaignDecisionWechatRead.setPubId(wechatAsset.getWxAcct());
+		}
+		ImgTextAsset imgTextAssetT = new ImgTextAsset();
+		imgTextAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		imgTextAssetT.setId(campaignDecisionWechatReadIn.getImgTextAssetId());
+		List<ImgTextAsset> imgTextAssetList = imgTextAssetDao.selectList(imgTextAssetT);
+		if(CollectionUtils.isNotEmpty(imgTextAssetList)) {
+			ImgTextAsset imgTextAsset = imgTextAssetList.get(0);
+			if(StringUtils.isNotBlank(imgTextAsset.getMaterialId())) {
+				campaignDecisionWechatRead.setMaterialId(Integer.parseInt(imgTextAsset.getMaterialId()));
+			}
+		}
 		return campaignDecisionWechatRead;
 	}
 	
