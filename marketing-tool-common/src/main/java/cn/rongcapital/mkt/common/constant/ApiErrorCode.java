@@ -21,10 +21,12 @@ public enum ApiErrorCode {
 	DB_ERROR_TABLE_DATA_NOT_EXIST(2002,"table data not exist"),//数据在表里不存在
 	
 	BIZ_ERROR(3001,"business error"),//3001-3999,业务逻辑相关错误
-	BIZ_ERROR_SEGMENTATION_IN_CAMPAIGN(3003,"egmentation is in campaign"),//细分处在活动中，无法编辑
-	BIZ_ERROR_CANPAIGN_IN_PROGRESS(3004,"campaign is in progress"),//活动进行中,无法编辑
-	BIZ_ERROR_CANPAIGN_FINISH(3005,"ccampaign is finish"),//活动已结束,无法编辑
-	BIZ_ERROR_CANPAIGN_NOT_PUBLISH(3006,"campaign not published"),//活动没有发布
+	BIZ_ERROR_SEGMENTATION_IN_CAMPAIGN(3003,"egmentation is in campaign"),//细分处在活动中
+	BIZ_ERROR_CANPAIGN_IN_PROGRESS(3004,"campaign is in progress"),//活动进行中
+	BIZ_ERROR_CANPAIGN_FINISH(3005,"ccampaign is finish"),//活动已结束
+	BIZ_ERROR_CANPAIGN_CAN_NOT_MANUAL_START(3006,"campaign can not manual start"),//活动无法手动开启
+	BIZ_ERROR_CANPAIGN_NOT_PUBLISH(3007,"campaign not published"),//活动没有发布
+	
 	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
