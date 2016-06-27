@@ -417,7 +417,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 			String tagIds = campaignDecisionTag.getTagIds();
 			if(StringUtils.isNotBlank(tagIds)) {
 				List<TagOut> tags = new ArrayList<TagOut>();
-				List<String> tagIdsStrList = Arrays.asList(tagIds,",");
+				List<String> tagIdsStrList = Arrays.asList(tagIds);
 				for(String tagIdStr:tagIdsStrList) {
 					TagOut tagOut = new TagOut();
 					Integer tagId = Integer.parseInt(tagIdStr);

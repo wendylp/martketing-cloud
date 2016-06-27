@@ -95,7 +95,7 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 			nodeAudience.setName(segment.getName());
 			mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
 			Integer dataId = segment.getDataId();
-			List<String> tagIdList = Arrays.asList(tagIds,",");
+			List<String> tagIdList = Arrays.asList(tagIds);
 			for(String idStr:tagIdList) {
 				int tagId = Integer.parseInt(idStr);
 				CustomTagMap customTagMapT = new CustomTagMap();

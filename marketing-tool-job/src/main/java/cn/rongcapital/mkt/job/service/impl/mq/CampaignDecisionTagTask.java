@@ -66,7 +66,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 		Byte rule = campaignDecisionTag.getRule();//标签判断规则
 		//查询该规则对应的标签list
 		String tagIdsStr =  campaignDecisionTagList.get(0).getTagIds();
-		List<String> tagIdsStrList = Arrays.asList(tagIdsStr,",");
+		List<String> tagIdsStrList = Arrays.asList(tagIdsStr);
 		List<String> tagIdList = new ArrayList<String>();
 		for(String tagIdStrT:tagIdsStrList) {
 			tagIdList.add(tagIdStrT);
