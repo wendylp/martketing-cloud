@@ -44,9 +44,10 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService{
         Map<String,Object> assetDetaiMap = wechatAssetDao.selectWechatAssetDetai(paramMap);
         if(assetDetaiMap != null){
             setNicknameFlag(assetDetaiMap);
-            String consignationTime = (String) assetDetaiMap.remove("consignation_time");
+
+            Object consignationTime = assetDetaiMap.remove("consignation_time");
             if(consignationTime != null){
-                assetDetaiMap.put("consignation_time", consignationTime.substring(0,19));
+                assetDetaiMap.put("consignation_time", consignationTime.toString().substring(0,19));
             }else{
                 assetDetaiMap.put("consignation_time","");
             }
