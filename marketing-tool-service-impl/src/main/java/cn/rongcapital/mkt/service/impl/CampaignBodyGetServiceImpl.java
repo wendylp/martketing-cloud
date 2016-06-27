@@ -26,7 +26,6 @@ import cn.rongcapital.mkt.dao.CampaignDecisionPubFansDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionTagDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatForwardDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatReadDao;
-import cn.rongcapital.mkt.dao.CampaignDecisionWechatSentDao;
 import cn.rongcapital.mkt.dao.CampaignNodeItemDao;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
@@ -48,7 +47,6 @@ import cn.rongcapital.mkt.po.CampaignDecisionPubFans;
 import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatForward;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatRead;
-import cn.rongcapital.mkt.po.CampaignDecisionWechatSent;
 import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
@@ -71,7 +69,6 @@ import cn.rongcapital.mkt.vo.out.CampaignDecisionPubFansOut;
 import cn.rongcapital.mkt.vo.out.CampaignDecisionTagOut;
 import cn.rongcapital.mkt.vo.out.CampaignDecisionWechatForwardOut;
 import cn.rongcapital.mkt.vo.out.CampaignDecisionWechatReadOut;
-import cn.rongcapital.mkt.vo.out.CampaignDecisionWechatSentOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeChainOut;
 import cn.rongcapital.mkt.vo.out.CampaignSwitchOut;
 import cn.rongcapital.mkt.vo.out.CampaignTriggerTimerOut;
@@ -108,8 +105,8 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	private CampaignDecisionWechatForwardDao campaignDecisionWechatForwardDao;
 	@Autowired
 	private CampaignDecisionWechatReadDao campaignDecisionWechatReadDao;
-	@Autowired
-	private CampaignDecisionWechatSentDao campaignDecisionWechatSentDao;
+//	@Autowired
+//	private CampaignDecisionWechatSentDao campaignDecisionWechatSentDao;
 	@Autowired
 	private CampaignSwitchDao campaignSwitchDao;
 	@Autowired
@@ -566,26 +563,26 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		return campaignDecisionWechatReadOut;
 	}
 	
-	@SuppressWarnings("unused")
-	private CampaignDecisionWechatSentOut queryCampaignDecisionWechatSent(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
-		CampaignDecisionWechatSent t = new CampaignDecisionWechatSent();
-		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		t.setCampaignHeadId(campaignHeadId);
-		t.setItemId(campaignNodeChainOut.getItemId());
-		List<CampaignDecisionWechatSent> resList = campaignDecisionWechatSentDao.selectList(t);
-		CampaignDecisionWechatSentOut campaignDecisionWechatSentOut = new CampaignDecisionWechatSentOut();
-		if(CollectionUtils.isNotEmpty(resList)) {
-			CampaignDecisionWechatSent campaignDecisionWechatSent = resList.get(0);
-			campaignDecisionWechatSentOut.setName(campaignDecisionWechatSent.getName());
-			campaignDecisionWechatSentOut.setPubId(campaignDecisionWechatSent.getPubId());
-			campaignDecisionWechatSentOut.setPubName(campaignDecisionWechatSent.getPubName());
-			campaignDecisionWechatSentOut.setRefreshInterval(campaignDecisionWechatSent.getRefreshInterval());
-			campaignDecisionWechatSentOut.setRefreshIntervalType(campaignDecisionWechatSent.getRefreshIntervalType());
-			campaignDecisionWechatSentOut.setWechatH5Id(campaignDecisionWechatSent.getWechatH5Id());
-			campaignDecisionWechatSentOut.setWechatH5Name(campaignDecisionWechatSent.getWechatH5Name());
-		}
-		return campaignDecisionWechatSentOut;
-	}
+//	@SuppressWarnings("unused")
+//	private CampaignDecisionWechatSentOut queryCampaignDecisionWechatSent(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
+//		CampaignDecisionWechatSent t = new CampaignDecisionWechatSent();
+//		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+//		t.setCampaignHeadId(campaignHeadId);
+//		t.setItemId(campaignNodeChainOut.getItemId());
+//		List<CampaignDecisionWechatSent> resList = campaignDecisionWechatSentDao.selectList(t);
+//		CampaignDecisionWechatSentOut campaignDecisionWechatSentOut = new CampaignDecisionWechatSentOut();
+//		if(CollectionUtils.isNotEmpty(resList)) {
+//			CampaignDecisionWechatSent campaignDecisionWechatSent = resList.get(0);
+//			campaignDecisionWechatSentOut.setName(campaignDecisionWechatSent.getName());
+//			campaignDecisionWechatSentOut.setPubId(campaignDecisionWechatSent.getPubId());
+//			campaignDecisionWechatSentOut.setPubName(campaignDecisionWechatSent.getPubName());
+//			campaignDecisionWechatSentOut.setRefreshInterval(campaignDecisionWechatSent.getRefreshInterval());
+//			campaignDecisionWechatSentOut.setRefreshIntervalType(campaignDecisionWechatSent.getRefreshIntervalType());
+//			campaignDecisionWechatSentOut.setWechatH5Id(campaignDecisionWechatSent.getWechatH5Id());
+//			campaignDecisionWechatSentOut.setWechatH5Name(campaignDecisionWechatSent.getWechatH5Name());
+//		}
+//		return campaignDecisionWechatSentOut;
+//	}
 	
 	private CampaignDecisionPropCompareOut queryCampaignDecisionPropCompare(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignDecisionPropCompare t = new CampaignDecisionPropCompare();
