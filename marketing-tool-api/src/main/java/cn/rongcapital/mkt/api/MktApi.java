@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.api;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
+import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
 import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
@@ -69,6 +71,7 @@ import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
 import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
 import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
+import cn.rongcapital.mkt.service.FileTagUpdateService;
 import cn.rongcapital.mkt.service.FileTemplateDownloadService;
 import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
 import cn.rongcapital.mkt.service.GetDataMainSearchService;
@@ -112,12 +115,11 @@ import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
+import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
 import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
-import cn.rongcapital.mkt.service.FileTagUpdateService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -137,6 +139,7 @@ import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
+import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.ImgtextAssetSyncIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
@@ -145,7 +148,6 @@ import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
-import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
@@ -230,6 +232,9 @@ public class MktApi {
 
     @Autowired
     private DataUpateMainSegmenttagService dataUpateMainSegmenttagService;
+    
+    @Autowired
+    private DataDownloadQualityLogService dataDownloadQualityLogService;
     
     @Autowired
     private TagGetCustomService tagGetCustomService;
@@ -1346,6 +1351,22 @@ public class MktApi {
 	public BaseOutput updateBaseInfoByContactId(@Valid DataMainBaseInfoUpdateIn body){
 		return dataMainBasicInfoUpdateService.updateBaseInfoByContactId(body);
 	}
+	
+
+    /**
+     * @功能简述: 编辑某条主数据详细信息
+     * @param body
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.data.quality.log.download")
+    public Object downloadQualityLog(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("import_data_id") Long importDataId) {
+        File file = dataDownloadQualityLogService.downloadQualityLog(importDataId);
+        Response.ResponseBuilder response = Response.ok((Object) file);
+        response.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+        return response.build();
+    }
 
     /**
      * @功能简述: 获取系统标签内容列表
