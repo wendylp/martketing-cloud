@@ -36,7 +36,7 @@ public class CampaignBodyItemAudienceSearchServiceImpl implements CampaignBodyIt
 	    if(CollectionUtils.isNotEmpty(segmentList)) {
 	    	for(Segment segment:segmentList) {
 	    		CampaignBodyItemAudienceSearchData dataCustom = new CampaignBodyItemAudienceSearchData();
-	    		dataCustom.setDataId(Integer.parseInt(segment.getDataId()));
+	    		dataCustom.setDataId(segment.getDataId());
 	    		dataCustom.setName(segment.getName());
 	    		CampaignBodyItemAudienceSearchOut.getDataCustom().add(dataCustom);
 	    	}

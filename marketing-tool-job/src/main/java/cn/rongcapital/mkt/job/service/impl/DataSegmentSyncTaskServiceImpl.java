@@ -41,7 +41,7 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 					continue;//未发布的细分不进行同步
 				}
 				//删除旧segment数据
-				mongoTemplate.findAllAndRemove(new Query(Criteria.where("segmentationHeadId").is(String.valueOf(segmentationHead.getId()))),Segment.class);
+				mongoTemplate.findAllAndRemove(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
 				//SEGMENTATION_GROUP_MEMBER_MOST_COUNT:每个组最多的标签数
 				for(int groupIndex=0;groupIndex<ApiConstant.SEGMENTATION_GROUP_MEMBER_MOST_COUNT;groupIndex++) {
 					SegmentationBody segmentationBodyT = new SegmentationBody(); 
@@ -57,10 +57,10 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 						Integer tagId = segmentationBody.getTagId();
 						Byte exclude = segmentationBody.getExclude();
 						if(exclude == 0) {
-							Criteria criteria = Criteria.where("tagList.tagId").is(String.valueOf(tagId));
+							Criteria criteria = Criteria.where("tagList.tagId").is(tagId);
 							criteriasList.add(criteria);
 						}else{
-							Criteria criteria  = Criteria.where("tagList.tagId").ne(String.valueOf(tagId));
+							Criteria criteria  = Criteria.where("tagList.tagId").ne(tagId);
 							criteriasList.add(criteria);
 						}
 						Criteria criteriaAll = new Criteria().andOperator(criteriasList.toArray(new Criteria[criteriasList.size()]));
@@ -68,13 +68,13 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 						if(CollectionUtils.isNotEmpty(dataPartyList)) {
 							for(DataParty dataParty:dataPartyList) {
 								List<Segment> sListT = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId")
-												       .is(segmentationBody.getHeadId()+"")
+												       .is(segmentationBody.getHeadId())
 												       .and("dataId").is(dataParty.getMid())), 
 												       Segment.class);
 								if(CollectionUtils.isEmpty(sListT)) {//不存在，则插入
 									Segment segment = new Segment();
 									segment.setDataId(dataParty.getMid());
-									segment.setSegmentationHeadId(segmentationBody.getHeadId()+"");
+									segment.setSegmentationHeadId(segmentationBody.getHeadId());
 									segment.setName(dataParty.getName());
 									segment.setMdType(dataParty.getMdType());
 									segment.setMappingKeyid(dataParty.getMappingKeyid());

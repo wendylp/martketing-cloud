@@ -15,13 +15,13 @@ public class Segment implements Serializable{
 	private String id;
 	
 	@Field(value = "segmentation_head_id")
-	private String segmentationHeadId;
+	private Integer segmentationHeadId;
 	
 	@Field(value = "data_id")
-	private String dataId;
+	private Integer dataId;
 	
 	@Field(value = "md_type")
-	private String mdType;
+	private Integer mdType;
 	
 	@Field(value = "name")
 	private String name;
@@ -39,7 +39,7 @@ public class Segment implements Serializable{
 	private transient String fansFriendsOpenId;
 	
 	//微信图文的id
-	private transient String materialId;
+	private transient Integer materialId;
 	
 	public String getId() {
 		return id;
@@ -49,19 +49,19 @@ public class Segment implements Serializable{
 		this.id = id;
 	}
 
-	public String getSegmentationHeadId() {
+	public Integer getSegmentationHeadId() {
 		return segmentationHeadId;
 	}
 
-	public void setSegmentationHeadId(String segmentationHeadId) {
+	public void setSegmentationHeadId(Integer segmentationHeadId) {
 		this.segmentationHeadId = segmentationHeadId;
 	}
 
-	public String getDataId() {
+	public Integer getDataId() {
 		return dataId;
 	}
 
-	public void setDataId(String dataId) {
+	public void setDataId(Integer dataId) {
 		this.dataId = dataId;
 	}
 
@@ -89,19 +89,19 @@ public class Segment implements Serializable{
 		this.fansFriendsOpenId = fansFriendsOpenId;
 	}
 
-	public String getMaterialId() {
+	public Integer getMaterialId() {
 		return materialId;
 	}
 
-	public void setMaterialId(String materialId) {
+	public void setMaterialId(Integer materialId) {
 		this.materialId = materialId;
 	}
 
-	public String getMdType() {
+	public Integer getMdType() {
 		return mdType;
 	}
 
-	public void setMdType(String mdType) {
+	public void setMdType(Integer mdType) {
 		this.mdType = mdType;
 	}
 

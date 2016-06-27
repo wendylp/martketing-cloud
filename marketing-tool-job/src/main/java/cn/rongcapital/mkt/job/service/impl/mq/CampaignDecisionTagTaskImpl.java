@@ -115,8 +115,8 @@ public class CampaignDecisionTagTaskImpl extends BaseMQService implements TaskSe
 			case ApiConstant.CAMPAIGN_DECISION_TAG_RULE_MATCH_ALL:
 				boolean isAllMatch = true;
 				for(int i=0;i<tagIdList.size();i++){
-					String dataIdStr = s.getDataId();
-					Criteria criteria = Criteria.where("mid").is(dataIdStr);
+					Integer dataId = s.getDataId();
+					Criteria criteria = Criteria.where("mid").is(dataId);
 					criteria = criteria.andOperator(Criteria.where("tagList.tagId").is(tagIdList.get(i)));
 					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
 					if(CollectionUtils.isEmpty(dpListM1)) {
@@ -132,8 +132,8 @@ public class CampaignDecisionTagTaskImpl extends BaseMQService implements TaskSe
 				break;
 			//匹配其一
 			case ApiConstant.CAMPAIGN_DECISION_TAG_RULE_MATCH_ONE:
-				String dataIdStr = s.getDataId();
-				Criteria criteria = Criteria.where("mid").is(dataIdStr);
+				Integer dataId = s.getDataId();
+				Criteria criteria = Criteria.where("mid").is(dataId);
 				criteria = criteria.andOperator(Criteria.where("tagList.tagId").in(tagIdList));
 				List<DataParty> dpListM2 = mongoTemplate.find(new Query(criteria), DataParty.class);
 				if(CollectionUtils.isNotEmpty(dpListM2)) {
@@ -147,7 +147,7 @@ public class CampaignDecisionTagTaskImpl extends BaseMQService implements TaskSe
 				int matchCount = 0;
 				boolean matchTwoMore = false;
 				for(int i=0;i<tagIdList.size();i++){
-					String dataIdStr3 = s.getDataId();
+					Integer dataIdStr3 = s.getDataId();
 					Criteria criteria3 = Criteria.where("mid").is(dataIdStr3);
 					criteria3 = criteria3.andOperator(Criteria.where("tagList.tagId").is(tagIdList.get(i)));
 					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria3), DataParty.class);

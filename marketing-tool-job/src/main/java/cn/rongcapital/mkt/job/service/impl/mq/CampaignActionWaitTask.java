@@ -99,7 +99,7 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 								  Byte realativeType,Integer relativeValue,Date specificTime) {
 		for(Segment segment:segmentList) {
 			NodeAudience nodeAudience = new NodeAudience();
-			nodeAudience.setCampaignHeadId(campaignHeadId+"");
+			nodeAudience.setCampaignHeadId(campaignHeadId);
 			nodeAudience.setItemId(itemId);
 			nodeAudience.setDataId(segment.getDataId());
 			nodeAudience.setName(segment.getName());

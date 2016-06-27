@@ -15,13 +15,13 @@ public class NodeAudience implements Serializable {
 	private String id;
 	
 	@Field(value = "campaign_head_id")
-	private String campaignHeadId;
+	private Integer campaignHeadId;
 	
 	@Field(value = "item_id")
 	private String itemId;
 	
 	@Field(value = "data_id")
-	private String dataId;
+	private Integer dataId;
 	
 	private Integer taskId;
 
@@ -36,11 +36,11 @@ public class NodeAudience implements Serializable {
 		this.id = id;
 	}
 
-	public String getCampaignHeadId() {
+	public Integer getCampaignHeadId() {
 		return campaignHeadId;
 	}
 
-	public void setCampaignHeadId(String campaignHeadId) {
+	public void setCampaignHeadId(Integer campaignHeadId) {
 		this.campaignHeadId = campaignHeadId;
 	}
 
@@ -52,11 +52,11 @@ public class NodeAudience implements Serializable {
 		this.itemId = itemId;
 	}
 
-	public String getDataId() {
+	public Integer getDataId() {
 		return dataId;
 	}
 
-	public void setDataId(String dataId) {
+	public void setDataId(Integer dataId) {
 		this.dataId = dataId;
 	}
 

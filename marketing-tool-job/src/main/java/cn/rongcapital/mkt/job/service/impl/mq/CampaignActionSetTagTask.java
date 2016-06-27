@@ -89,18 +89,18 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 								  List<CampaignSwitch> campaignEndsList, String tagIds) {
 		for(Segment segment:segmentList) {
 			NodeAudience nodeAudience = new NodeAudience();
-			nodeAudience.setCampaignHeadId(campaignHeadId+"");
+			nodeAudience.setCampaignHeadId(campaignHeadId);
 			nodeAudience.setItemId(itemId);
 			nodeAudience.setDataId(segment.getDataId());
 			nodeAudience.setName(segment.getName());
 			mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
-			String dataIdStr = segment.getDataId();
+			Integer dataId = segment.getDataId();
 			List<String> tagIdList = Arrays.asList(tagIds,",");
 			for(String idStr:tagIdList) {
 				int tagId = Integer.parseInt(idStr);
 				CustomTagMap customTagMapT = new CustomTagMap();
 				customTagMapT.setTagId(tagId);
-				customTagMapT.setMapId(Integer.parseInt(dataIdStr));
+				customTagMapT.setMapId(dataId);
 				customTagMapDao.insert(customTagMapT);
 			}
 		}

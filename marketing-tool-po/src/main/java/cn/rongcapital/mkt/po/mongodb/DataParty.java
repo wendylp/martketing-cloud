@@ -15,10 +15,10 @@ public class DataParty implements Serializable{
 	@Id
 	private String id;
 	
-	private String mid;
+	private Integer mid;
 	
 	@Field(value = "md_type")
-	private String mdType;
+	private Integer mdType;
 	
 	private String name;
 	
@@ -39,19 +39,19 @@ public class DataParty implements Serializable{
 		this.id = id;
 	}
 
-	public String getMid() {
+	public Integer getMid() {
 		return mid;
 	}
 
-	public void setMid(String mid) {
+	public void setMid(Integer mid) {
 		this.mid = mid;
 	}
 
-	public String getMdType() {
+	public Integer getMdType() {
 		return mdType;
 	}
 
-	public void setMdType(String mdType) {
+	public void setMdType(Integer mdType) {
 		this.mdType = mdType;
 	}
 

@@ -65,9 +65,9 @@ public class CampaignDecisionWechatForwardTask extends BaseMQService implements 
 			for(Segment segment:segmentList) {
 				String pubId= segment.getPubId();
 				String openId = segment.getFansFriendsOpenId();
-				String materialId = segment.getMaterialId();
+				Integer materialId = segment.getMaterialId();
 				//有pubId,openId,materialId的人,校验是否转发
-				if(StringUtils.isNotBlank(pubId) && StringUtils.isNotBlank(openId) && StringUtils.isNotBlank(materialId)) {
+				if(StringUtils.isNotBlank(pubId) && StringUtils.isNotBlank(openId) && null != materialId) {
 					boolean isForward = checkWechatForwardByH5Interface(pubId,openId,materialId,campaignDecisionWechatForward);
 					if(true == isForward) {
 						segmentListToNextYes.add(segment);
@@ -91,7 +91,7 @@ public class CampaignDecisionWechatForwardTask extends BaseMQService implements 
 	
 	}
 	
-	private boolean checkWechatForwardByH5Interface(String pubId,String fansOpenId,String materialId,
+	private boolean checkWechatForwardByH5Interface(String pubId,String fansOpenId,Integer materialId,
 												    CampaignDecisionWechatForward campaignDecisionWechatForward) {
 		boolean isForward = false;
 		HttpUrl httpUrl = new HttpUrl();

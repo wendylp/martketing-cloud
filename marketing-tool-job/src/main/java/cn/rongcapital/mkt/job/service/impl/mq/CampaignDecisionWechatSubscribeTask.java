@@ -71,9 +71,9 @@ public class CampaignDecisionWechatSubscribeTask extends BaseMQService implement
 				boolean isFans = false;
 				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())), 
 													 DataParty.class);
-				if(null != dp && StringUtils.isNotBlank(dp.getMdType()) &&
+				if(null != dp && null != dp.getMdType() &&
 						   StringUtils.isNotBlank(dp.getMappingKeyid()) &&
-						   dp.getMdType().equals(ApiConstant.DATA_PARTY_MD_TYPE_WECHAT+"")) {
+						   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
 					String fanOpenId = dp.getMappingKeyid();
 					WechatMember wechatMemberT = new WechatMember();
 					wechatMemberT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);

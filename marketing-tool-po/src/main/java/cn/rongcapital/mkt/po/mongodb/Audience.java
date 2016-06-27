@@ -5,16 +5,16 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Audience {
 
 	@Field(value = "audience_id")
-	private String audienceId;
+	private Integer audienceId;
 	
 	@Field(value = "audience_name")
 	private String audienceName;
 
-	public String getAudienceId() {
+	public Integer getAudienceId() {
 		return audienceId;
 	}
 
-	public void setAudienceId(String audienceId) {
+	public void setAudienceId(Integer audienceId) {
 		this.audienceId = audienceId;
 	}
 
