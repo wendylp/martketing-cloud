@@ -161,7 +161,25 @@
 		SELECT id as data_id,name,gender,age,mobile,email
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE id = #{party_id} and deleted = 1
+	</select>	
+	
+	<!-- 模糊查询 -->
+	<select id="selectListByKeyName" parameterType="java.lang.String" resultType="java.util.Map">
+		<![CDATA[SELECT name,gender,mobile,(year(now())-year(birthday)-1) + ( DATE_FORMAT(birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age]]>		
+		<include refid="QUERY_FROM_TABLE"/>		
+		<where>	
+			(mobile like #{key_words} OR name like #{key_words}) and status=0
+		</where>				
 	</select>
+	
+	<select id="selectListByNameInList" parameterType="java.util.Map" resultType="java.util.Map">
+		<![CDATA[SELECT name,gender,mobile,(year(now())-year(birthday)-1) + ( DATE_FORMAT(birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age]]>		
+		<include refid="QUERY_FROM_TABLE"/>		
+		<where>	
+			(mobile like #{key_words} OR name like #{key_words}) and status=0
+		</where>				
+	</select>
+	
 
 	<!-- 根据Id获取某条主数据 -->
 	<select id="getDataById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataParty">
