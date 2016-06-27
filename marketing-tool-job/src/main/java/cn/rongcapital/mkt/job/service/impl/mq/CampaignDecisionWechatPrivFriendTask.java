@@ -72,9 +72,9 @@ public class CampaignDecisionWechatPrivFriendTask extends BaseMQService implemen
 			for(Segment segment:segmentList) {
 				boolean isFriend = false;
 				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())), DataParty.class);
-				if(null != dp && StringUtils.isNotBlank(dp.getMdType()) &&
+				if(null != dp && null != dp.getMdType() &&
 				   StringUtils.isNotBlank(dp.getMappingKeyid()) &&
-				   dp.getMdType().equals(ApiConstant.DATA_PARTY_MD_TYPE_WECHAT+"")) {
+				   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
 					
 					String friendUcode = dp.getMappingKeyid();
 					WechatMember wechatMemberT = new WechatMember();

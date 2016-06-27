@@ -10,7 +10,7 @@ import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.TaskSchedule;
 
 @Service
-public class CampaignTimeTriggerTaskImpl extends BaseMQService implements TaskService {
+public class CampaignTimeTriggerTask extends BaseMQService implements TaskService {
 
 //	private static Logger logger = LoggerFactory.getLogger(CampaignDecisionTagTaskImpl.class);
 	

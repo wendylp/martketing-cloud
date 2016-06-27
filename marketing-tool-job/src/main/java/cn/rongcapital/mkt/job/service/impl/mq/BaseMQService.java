@@ -32,26 +32,19 @@ import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
 public class BaseMQService {
-	
 	private static Logger logger = LoggerFactory.getLogger(BaseMQService.class);
-	
 	private static Context jndiContext = null;
-	
 	private static ConnectionFactory connectionFactory = null;
-	
 	private static Connection conn = null;
-	
-	
 	@Autowired  
     private JmsMessagingTemplate jmsMessagingTemplate; 
-	
 	@Value("${spring.activemq.broker-url}")
 	private String providerUrl;
-	
 	private volatile boolean isJndiInited = false;
-	
 	@Autowired
 	private TenementDao tenementDao;
+	@Autowired
+	private CampaignSwitchDao campaignSwitchDao;
 
 	public void initJndiEvironment() {
 		if(isJndiInited){
@@ -71,9 +64,6 @@ public class BaseMQService {
 		}
 	}
 	
-    @Autowired
-    private CampaignSwitchDao campaignSwitchDao;
-    
     protected List<CampaignSwitch> queryCampaignEndsList(int campaignHeadId,String itemId) {
 		CampaignSwitch campaignSwitch = new CampaignSwitch();
 		campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_ENDS);

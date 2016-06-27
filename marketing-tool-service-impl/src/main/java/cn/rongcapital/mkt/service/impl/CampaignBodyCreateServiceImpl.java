@@ -688,7 +688,9 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		List<ImgTextAsset> imgTextAssetList = imgTextAssetDao.selectList(imgTextAssetT);
 		if(CollectionUtils.isNotEmpty(imgTextAssetList)) {
 			ImgTextAsset imgTextAsset = imgTextAssetList.get(0);
-			campaignActionSendPub.setMaterialId(Integer.parseInt(imgTextAsset.getMaterialId()));
+			if(StringUtils.isNotBlank(imgTextAsset.getMaterialId())) {
+				campaignActionSendPub.setMaterialId(Integer.parseInt(imgTextAsset.getMaterialId()));
+			}
 		}
 		WechatAsset wechatAssetT = new WechatAsset();
 		wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);

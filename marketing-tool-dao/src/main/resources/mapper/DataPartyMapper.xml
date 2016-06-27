@@ -165,13 +165,10 @@
 
 	<!-- 根据Id获取某条主数据 -->
 	<select id="getDataById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataParty">
-		SELECT
-		id,account_name AS accountName,name,gender,age,home_address AS homeAddress,work_address AS workAddress,
-		home_status AS homeStatus,work_status AS workStatus,member_level AS memberLevel,mobile,email,wechat,qq,weibo,order_count AS orderCount,
-		order_amount AS orderAmount,cart_item_count AS cartItemCount,favorite_item_count AS favoriteItemCount,salary,offline_activity_attendence AS offlineActivityAttendence,
-		child_amount AS childAmount,child_annual_budget AS childAnnualBudget,deleted,delete_time AS deleteTime
-		FROM data_party
-	    WHERE id = #{id} AND deleted = 0
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+	    WHERE id = #{id}
 	</select>
 	
 	<!-- 根据taskId查询相关数据 -->

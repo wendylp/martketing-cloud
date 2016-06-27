@@ -41,8 +41,12 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 			MainBasicInfoGetOut dataVo = new MainBasicInfoGetOut();
 			dataVo.setContactId(id);
 			dataVo.setName(party.getName());
-			dataVo.setGender(Integer.valueOf(party.getGender()));
-			dataVo.setMobile(Long.valueOf(party.getMobile()));
+			if(party.getGender()!=null){
+			    dataVo.setGender(Integer.valueOf(party.getGender()));
+			}
+			if(party.getMobile() != null){
+			    dataVo.setMobile(Long.valueOf(party.getMobile()));
+			}
 			data.add(dataVo);
 			result.setData(data);
 			result.setTotal(data.size());

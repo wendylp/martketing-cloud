@@ -25,7 +25,6 @@ public class FileUtil {
     private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
     private static String FILE_SEPERATOR = ",";
-    private static String WRAP_TEXT_CHARACTOR = "\n";
     private static String FILE_SUFFIX = ".csv";
 
     public static File generateDownloadFile(List<Map<String, Object>> dataSource, String prefixFileName) {
