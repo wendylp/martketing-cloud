@@ -196,8 +196,8 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 						campaignNodeChainOut.setInfo(campaignDecisionPropCompareOut);
 						break;
 					case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_SENT://微信图文是否发送
-						CampaignDecisionWechatSentOut campaignDecisionWechatSentOut = queryCampaignDecisionWechatSent(campaignNodeChainOut,campaignHeadId);
-						campaignNodeChainOut.setInfo(campaignDecisionWechatSentOut);
+//						CampaignDecisionWechatSentOut campaignDecisionWechatSentOut = queryCampaignDecisionWechatSent(campaignNodeChainOut,campaignHeadId);
+//						campaignNodeChainOut.setInfo(campaignDecisionWechatSentOut);
 						break;
 					case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_READ://微信图文是否查看
 						CampaignDecisionWechatReadOut campaignDecisionWechatReadOut = queryCampaignDecisionWechatRead(campaignNodeChainOut,campaignHeadId);
@@ -566,6 +566,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		return campaignDecisionWechatReadOut;
 	}
 	
+	@SuppressWarnings("unused")
 	private CampaignDecisionWechatSentOut queryCampaignDecisionWechatSent(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
 		CampaignDecisionWechatSent t = new CampaignDecisionWechatSent();
 		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
