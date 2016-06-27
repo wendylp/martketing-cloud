@@ -30,13 +30,17 @@ public class WechatPeopleDetailDownloadServiceImpl implements WechatPeopleDetail
     @Override
     public Object downloadWechatPeopleDetail(String group_ids) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
+        ArrayList<Integer> groupIds = new ArrayList<Integer>();
         File file = null;
         //1.将group_ids进行拆分，获取组id
         if(group_ids != null){
-            String[] ids = group_ids.split(",");
-            ArrayList<Integer> groupIds = new ArrayList<Integer>();
-            for (String id : ids){
-                groupIds.add(Integer.parseInt(id));
+            if(group_ids.contains(",")){
+                String[] ids = group_ids.split(",");
+                for (String id : ids){
+                    groupIds.add(Integer.parseInt(id));
+                }
+            }else{
+                groupIds.add(Integer.parseInt(group_ids));
             }
             //通过组id查询import的group_id
             List<Long> importGroupIds = wechatAssetGroupDao.selectImportGroupIdsByIds(groupIds);
