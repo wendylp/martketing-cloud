@@ -10,18 +10,13 @@
 
 	<properties>
 		<joda.time.version>2.9.4</joda.time.version>
+		<commons.collections.version>3.2.2</commons.collections.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>cn.rongcapital.mkt</groupId>
 			<artifactId>marketing-tool-vo</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>cn.rongcapital.mkt</groupId>
-			<artifactId>marketing-tool-dao</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 
@@ -36,6 +31,12 @@
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>${joda.time.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>${commons.collections.version}</version>
 		</dependency>
 
 	</dependencies>
