@@ -962,8 +962,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		   campaignNodeItemList.size() == 1) {
 			String icon = campaignNodeChainIn.getIcon();
 			if(StringUtils.isNotBlank(icon)){
-				CampaignNodeItem campaignNodeItem = new CampaignNodeItem();
-				campaignNodeItem.setId(campaignNodeItemList.get(0).getId());
+				CampaignNodeItem campaignNodeItem = campaignNodeItemList.get(0);
 				campaignNodeItem.setIcon(icon);
 				return campaignNodeItem;
 			}
