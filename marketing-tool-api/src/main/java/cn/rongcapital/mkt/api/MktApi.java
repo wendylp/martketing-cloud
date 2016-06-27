@@ -1407,24 +1407,21 @@ public class MktApi {
 		return mainBasicInfoGetService.getMainBasicInfo(contactId, userToken);
 	}
 
-	/**
-	 * @功能简述: 获取系统标签组列表
-	 * @param method
-	 * @param user_token
-	 * @param index
-	 * @param size
-	 * @return BaseOutput
-	 */
-	@GET
-	@Path("/mkt.taggroup.system.menulist.get")
-	public BaseOutput getTaggroupSystemMenulist(
-			@NotEmpty @QueryParam("method") String method,
-            @NotEmpty @QueryParam("user_token") String userToken,
-            @QueryParam("index") Integer index,
-            @QueryParam("size") Integer size) {
-		return taggroupSystemMenulistGetService.getTaggroupSystemMenulist(
-				method, userToken, index, size);
-	}
+    /**
+     * @功能简述: 获取系统标签组列表
+     * @param method
+     * @param user_token
+     * @param index
+     * @param size
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.taggroup.system.menulist.get")
+    public BaseOutput getTaggroupSystemMenulist(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) {
+        return taggroupSystemMenulistGetService.getTaggroupSystemMenulist(method, userToken, index, size);
+    }
 
 	/**
 	 * @功能简述: 主界面上的搜索栏模糊查询数据
