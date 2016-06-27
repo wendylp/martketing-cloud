@@ -69,10 +69,10 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
 
                 if (j == 0) {
                     map.put("select_count", getLeafNodeCount(tmpList.get(j), taggroups));
+                    map.put("id", tmpList.get(j).getId());
                 }
             }
             map.put("select_name", selectionName.toString());
-            map.put("id", tmpList.get(i).getId());
 
             resultList.add(map);
         }
