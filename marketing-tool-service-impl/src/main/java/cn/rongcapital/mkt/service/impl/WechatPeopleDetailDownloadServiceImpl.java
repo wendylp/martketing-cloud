@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
@@ -10,7 +11,6 @@ import cn.rongcapital.mkt.vo.out.DownloadFileName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

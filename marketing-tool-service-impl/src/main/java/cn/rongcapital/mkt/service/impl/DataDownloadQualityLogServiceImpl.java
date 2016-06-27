@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.enums.FileNameEnum;
+import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
 import cn.rongcapital.mkt.po.ImportDataModifyLog;
 import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
