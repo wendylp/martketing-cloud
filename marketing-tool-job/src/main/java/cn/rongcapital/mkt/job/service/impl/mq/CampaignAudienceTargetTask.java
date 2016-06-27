@@ -22,7 +22,7 @@ import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
-public class CampaignAudienceTargetTaskImpl extends BaseMQService implements TaskService {
+public class CampaignAudienceTargetTask extends BaseMQService implements TaskService {
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;

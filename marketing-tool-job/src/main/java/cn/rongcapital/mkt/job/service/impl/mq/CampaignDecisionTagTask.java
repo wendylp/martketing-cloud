@@ -29,7 +29,7 @@ import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
-public class CampaignDecisionTagTaskImpl extends BaseMQService implements TaskService {
+public class CampaignDecisionTagTask extends BaseMQService implements TaskService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 			
