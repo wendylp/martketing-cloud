@@ -6,11 +6,7 @@ public interface TaskService {
 	
 	public void task (Integer taskId);
 	
-	default void task (TaskSchedule taskSchedule){
-		
-	}
+	default void task (TaskSchedule taskSchedule) {}
 	
-	default void cancelInnerTask(){
-		
-	}
+	default void cancelInnerTask(TaskSchedule taskSchedule) {}
 }

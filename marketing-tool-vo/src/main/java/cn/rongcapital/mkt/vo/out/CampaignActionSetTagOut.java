@@ -7,8 +7,6 @@ public class CampaignActionSetTagOut {
 	
     private String name;
 
-    private String tagIds;
-
     private String tagNames;
 
     @JsonProperty("name")
@@ -20,14 +18,6 @@ public class CampaignActionSetTagOut {
         this.name = name == null ? null : name.trim();
     }
 
-    @JsonProperty("tag_ids")
-    public String getTagIds() {
-        return tagIds;
-    }
-
-    public void setTagIds(String tagIds) {
-        this.tagIds = tagIds == null ? null : tagIds.trim();
-    }
 
     @JsonProperty("tag_names")
     public String getTagNames() {

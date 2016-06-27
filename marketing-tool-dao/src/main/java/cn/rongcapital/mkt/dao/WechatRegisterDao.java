@@ -64,4 +64,16 @@ public interface WechatRegisterDao extends BaseDao<WechatRegister>{
 	 * @param list
 	 */
 	void batchInsertPersonList(List<Map<String, Object>> paramPersonals);
+
+	/**
+	 * 判断这个个人号是否已经插入
+	 * @param list
+	 */
+	Long selectPersonalId(Map<String, Object> paramMap);
+
+	/**
+	 * 获取新注册的微信资产的相关信息
+	 * @param list
+	 */
+	List<Map<String,Object>> selectNewWxAssetList(List<String> alreadyImportedWxAcctList);
 }

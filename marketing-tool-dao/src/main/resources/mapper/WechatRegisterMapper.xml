@@ -149,4 +149,19 @@
 		)
 		</foreach>
 	</insert>
+
+	<select id="selectPersonalId" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE wx_acct = #{wx_acct}
+	</select>
+
+	<select id="selectNewWxAssetList" parameterType="java.util.List" resultType="java.util.Map">
+		SELECT id as asset_id,wx_acct,name as asset_name,type as asset_type,nickname,header_image as imgfile_url
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE wx_acct not in
+		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

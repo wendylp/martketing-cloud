@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,campaign_head_id as campaignHeadId,item_id as itemId,name as name,wechat_h5_id as wechatH5Id,wechat_h5_name as wechatH5Name,pub_id as pubId,pub_name as pubName,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,campaign_head_id as campaignHeadId,item_id as itemId,name as name,material_id as materialId,img_text_asset_id as imgTextAssetId,pub_id as pubId,asset_id as assetId,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -17,10 +17,10 @@
 		    	<if test="campaignHeadId != null"><![CDATA[ AND campaign_head_id = #{campaignHeadId}]]></if>
 		    	<if test="itemId != null"><![CDATA[ AND item_id = #{itemId}]]></if>
 		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="wechatH5Id != null"><![CDATA[ AND wechat_h5_id = #{wechatH5Id}]]></if>
-		    	<if test="wechatH5Name != null"><![CDATA[ AND wechat_h5_name = #{wechatH5Name}]]></if>
+		    	<if test="materialId != null"><![CDATA[ AND material_id = #{materialId}]]></if>
+		    	<if test="imgTextAssetId != null"><![CDATA[ AND img_text_asset_id = #{imgTextAssetId}]]></if>
 		    	<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
-		    	<if test="pubName != null"><![CDATA[ AND pub_name = #{pubName}]]></if>
+		    	<if test="assetId != null"><![CDATA[ AND asset_id = #{assetId}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
@@ -39,10 +39,10 @@
 		    	<if test="campaignHeadId != null"><![CDATA[campaign_head_id = #{campaignHeadId},]]></if>
 		    	<if test="itemId != null"><![CDATA[item_id = #{itemId},]]></if>
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
-		    	<if test="wechatH5Id != null"><![CDATA[wechat_h5_id = #{wechatH5Id},]]></if>
-		    	<if test="wechatH5Name != null"><![CDATA[wechat_h5_name = #{wechatH5Name},]]></if>
+		    	<if test="materialId != null"><![CDATA[material_id = #{materialId},]]></if>
+		    	<if test="imgTextAssetId != null"><![CDATA[img_text_asset_id = #{imgTextAssetId},]]></if>
 		    	<if test="pubId != null"><![CDATA[pub_id = #{pubId},]]></if>
-		    	<if test="pubName != null"><![CDATA[pub_name = #{pubName},]]></if>
+		    	<if test="assetId != null"><![CDATA[asset_id = #{assetId},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
@@ -50,16 +50,16 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignActionSendPub" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_action_send_pub (campaign_head_id,item_id,name,wechat_h5_id,wechat_h5_name,pub_id,pub_name,create_time)
+			INSERT INTO campaign_action_send_pub (campaign_head_id,item_id,name,material_id,img_text_asset_id,pub_id,asset_id,create_time)
 			VALUES
 			(
 			  #{campaignHeadId},
 			  #{itemId},
 			  #{name},
-			  #{wechatH5Id},
-			  #{wechatH5Name},
+			  #{materialId},
+			  #{imgTextAssetId},
 			  #{pubId},
-			  #{pubName},
+			  #{assetId},
 			  now()
 			)
 		]]>

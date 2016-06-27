@@ -13,13 +13,13 @@ public class CampaignActionSendPub extends BaseQuery {
 
     private String name;
 
-    private Integer wechatH5Id;
+    private Integer materialId;
 
-    private String wechatH5Name;
+    private Integer imgTextAssetId;
 
     private String pubId;
 
-    private String pubName;
+    private Integer assetId;
 
     private Byte status;
 
@@ -59,20 +59,20 @@ public class CampaignActionSendPub extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getWechatH5Id() {
-        return wechatH5Id;
+    public Integer getMaterialId() {
+        return materialId;
     }
 
-    public void setWechatH5Id(Integer wechatH5Id) {
-        this.wechatH5Id = wechatH5Id;
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 
-    public String getWechatH5Name() {
-        return wechatH5Name;
+    public Integer getImgTextAssetId() {
+        return imgTextAssetId;
     }
 
-    public void setWechatH5Name(String wechatH5Name) {
-        this.wechatH5Name = wechatH5Name == null ? null : wechatH5Name.trim();
+    public void setImgTextAssetId(Integer imgTextAssetId) {
+        this.imgTextAssetId = imgTextAssetId;
     }
 
     public String getPubId() {
@@ -83,12 +83,12 @@ public class CampaignActionSendPub extends BaseQuery {
         this.pubId = pubId == null ? null : pubId.trim();
     }
 
-    public String getPubName() {
-        return pubName;
+    public Integer getAssetId() {
+        return assetId;
     }
 
-    public void setPubName(String pubName) {
-        this.pubName = pubName == null ? null : pubName.trim();
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
     }
 
     public Byte getStatus() {

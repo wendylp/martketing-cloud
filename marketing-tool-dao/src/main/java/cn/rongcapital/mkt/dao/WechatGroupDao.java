@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatGroup;
 
+import java.util.List;
 import java.util.Map;
 
 public interface WechatGroupDao extends BaseDao<WechatGroup>{
@@ -50,4 +51,32 @@ public interface WechatGroupDao extends BaseDao<WechatGroup>{
 	 * @return Integer
 	 */
 	void insertWechatGroup(Map<String, Object> paramGroup);
+
+	/**
+	 * 根据个人号群组的ucode获取唯一标识id
+	 * @param paramMap
+	 * @return Integer
+	 */
+	Long selectGroupIdByUcode(Map<String, Object> paramMap);
+
+	/**
+	 * 插入一条新的数据
+	 * @param paramMap
+	 * @return Integer
+	 */
+	void insertWechatGroupByUcode(Map<String, Object> paramMap);
+
+	/**
+	 * 更新群组的相关信息
+	 * @param paramMap
+	 * @return Integer
+	 */
+	void updateInfoById(Map<String, Object> updateMap);
+
+	/**
+	 * 获取尚没有导入的IdList
+	 * @param paramMap
+	 * @return Integer
+	 */
+	List<Map<String,Object>> selectNewGroupList(List<Long> alreadyImportedIdList);
 }

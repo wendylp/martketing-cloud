@@ -10,7 +10,6 @@
 
 package cn.rongcapital.mkt.api;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +44,7 @@ import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
+import cn.rongcapital.mkt.service.CampaignBodyItemAudienceSearchService;
 import cn.rongcapital.mkt.service.CampaignDeleteService;
 import cn.rongcapital.mkt.service.CampaignHeaderCreateService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
@@ -57,7 +57,6 @@ import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
-import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
 import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
@@ -88,7 +87,6 @@ import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
 import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.ModifyPasswdService;
-import cn.rongcapital.mkt.service.ReauthWechatAccountService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
 import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
@@ -110,7 +108,6 @@ import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
 import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
 import cn.rongcapital.mkt.service.TaskGetListService;
-import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
@@ -150,6 +147,7 @@ import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
+import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
 import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
@@ -234,9 +232,6 @@ public class MktApi {
     private DataUpateMainSegmenttagService dataUpateMainSegmenttagService;
     
     @Autowired
-    private DataDownloadQualityLogService dataDownloadQualityLogService;
-    
-    @Autowired
     private TagGetCustomService tagGetCustomService;
 
     @Autowired
@@ -281,8 +276,8 @@ public class MktApi {
     @Autowired
     private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 
-    @Autowired
-    private TaskListGetService taskListGetService;
+//    @Autowired
+//    private TaskListGetService taskListGetService;
 
     @Autowired
     private CampaignDeleteService campaignDeleteService;
@@ -388,8 +383,8 @@ public class MktApi {
 	@Autowired
 	private WechatPersonalAuthService wechatPersonalAuthService;
 
-	@Autowired
-	private ReauthWechatAccountService reauthWechatAccountService;
+//	@Autowired
+//	private ReauthWechatAccountService reauthWechatAccountService;
 
 	@Autowired
 	private TaskGetListService taskGetListService;
@@ -402,6 +397,8 @@ public class MktApi {
 
 	@Autowired
 	private FileTagUpdateService fileTagUpdateService;
+	@Autowired
+	private CampaignBodyItemAudienceSearchService campaignBodyItemAudienceSearchService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1351,22 +1348,6 @@ public class MktApi {
 	public BaseOutput updateBaseInfoByContactId(@Valid DataMainBaseInfoUpdateIn body){
 		return dataMainBasicInfoUpdateService.updateBaseInfoByContactId(body);
 	}
-	
-
-    /**
-     * @功能简述: 编辑某条主数据详细信息
-     * @param body
-     * @return BaseOutput
-     */
-    @GET
-    @Path("/mkt.data.quality.log.download")
-    public Object downloadQualityLog(@NotEmpty @QueryParam("user_token") String userToken,
-                    @NotNull @QueryParam("import_data_id") Long importDataId) {
-        File file = dataDownloadQualityLogService.downloadQualityLog(importDataId);
-        Response.ResponseBuilder response = Response.ok((Object) file);
-        response.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
-        return response.build();
-    }
 
     /**
      * @功能简述: 获取系统标签内容列表
@@ -1554,5 +1535,19 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public BaseOutput fileTagUpdate(FileTagUpdateIn fileTagUpdateIn){
 		return fileTagUpdateService.updateFileTag(fileTagUpdateIn);
+	}
+	/**
+	 * 搜索活动节点上的人
+	 * @param userToken
+	 * @param ver
+	 * @param templateIdList
+	 * @return
+	 */
+	@GET
+	@Path("/mkt.campaign.body.item.audience.search")
+	public CampaignBodyItemAudienceSearchOut campaignBodyItemAudienceSearch(@NotEmpty @QueryParam("user_token") String userToken,
+									   @NotEmpty @QueryParam("ver") String ver,
+	                                   @NotEmpty @QueryParam("name") String name){
+        return campaignBodyItemAudienceSearchService.campaignBodyItemAudienceSearch(name);
 	}
 }

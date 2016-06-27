@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.jms.Message;
@@ -20,10 +21,8 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignDecisionTagDao;
-import cn.rongcapital.mkt.dao.CampaignDecisionTagMapDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignDecisionTag;
-import cn.rongcapital.mkt.po.CampaignDecisionTagMap;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
@@ -34,14 +33,10 @@ public class CampaignDecisionTagTaskImpl extends BaseMQService implements TaskSe
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 			
-	@Autowired  
-    private MQUtil mqUtil;
 	@Autowired
 	private CampaignDecisionTagDao campaignDecisionTagDao;
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	@Autowired
-	private CampaignDecisionTagMapDao campaignDecisionTagMapDao;
 	
 	private MessageConsumer consumer = null;
 	
@@ -60,24 +55,21 @@ public class CampaignDecisionTagTaskImpl extends BaseMQService implements TaskSe
 		campaignDecisionTagT.setCampaignHeadId(campaignHeadId);
 		campaignDecisionTagT.setItemId(itemId);
 		List<CampaignDecisionTag> campaignDecisionTagList = campaignDecisionTagDao.selectList(campaignDecisionTagT);
-		if(CollectionUtils.isEmpty(campaignDecisionTagList) || null == campaignDecisionTagList.get(0).getRule()) {
-			logger.error("标签判断规则为空,campagin_head_id:"+campaignHeadId+",itemId:"+itemId);
+		if(CollectionUtils.isEmpty(campaignDecisionTagList) || 
+		   null == campaignDecisionTagList.get(0).getRule() ||
+		   null == campaignDecisionTagList.get(0).getTagIds()
+		  ){
+			logger.info("标签判断规则为空,campagin_head_id:"+campaignHeadId+",itemId:"+itemId);
 			return;//该条活动线路截止
 		}
 		CampaignDecisionTag campaignDecisionTag = campaignDecisionTagList.get(0);
 		Byte rule = campaignDecisionTag.getRule();//标签判断规则
 		//查询该规则对应的标签list
-		CampaignDecisionTagMap campaignDecisionTagMapT = new CampaignDecisionTagMap();
-		campaignDecisionTagMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		campaignDecisionTagMapT.setCampaignDecisionTagId(campaignDecisionTag.getId());
-		List<CampaignDecisionTagMap> campaignDecisionTagMapList=campaignDecisionTagMapDao.selectList(campaignDecisionTagMapT);
-		if(CollectionUtils.isEmpty(campaignDecisionTagMapList)) {
-			logger.error("关联的标签为空,campagin_head_id:"+campaignHeadId+",itemId:"+itemId);
-			return;//该条活动线路截止
-		}
+		String tagIdsStr =  campaignDecisionTagList.get(0).getTagIds();
+		List<String> tagIdsStrList = Arrays.asList(tagIdsStr,",");
 		List<String> tagIdList = new ArrayList<String>();
-		for(CampaignDecisionTagMap cdtm:campaignDecisionTagMapList) {
-			tagIdList.add(cdtm.getTagId()+"");//取出tagId List
+		for(String tagIdStrT:tagIdsStrList) {
+			tagIdList.add(tagIdStrT);
 		}
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
 		consumer = getQueueConsumer(queue);//获取queue的消费者对象
@@ -123,8 +115,8 @@ public class CampaignDecisionTagTaskImpl extends BaseMQService implements TaskSe
 			case ApiConstant.CAMPAIGN_DECISION_TAG_RULE_MATCH_ALL:
 				boolean isAllMatch = true;
 				for(int i=0;i<tagIdList.size();i++){
-					String dataIdStr = s.getDataId();
-					Criteria criteria = Criteria.where("mid").is(dataIdStr);
+					Integer dataId = s.getDataId();
+					Criteria criteria = Criteria.where("mid").is(dataId);
 					criteria = criteria.andOperator(Criteria.where("tagList.tagId").is(tagIdList.get(i)));
 					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
 					if(CollectionUtils.isEmpty(dpListM1)) {
@@ -140,8 +132,8 @@ public class CampaignDecisionTagTaskImpl extends BaseMQService implements TaskSe
 				break;
 			//匹配其一
 			case ApiConstant.CAMPAIGN_DECISION_TAG_RULE_MATCH_ONE:
-				String dataIdStr = s.getDataId();
-				Criteria criteria = Criteria.where("mid").is(dataIdStr);
+				Integer dataId = s.getDataId();
+				Criteria criteria = Criteria.where("mid").is(dataId);
 				criteria = criteria.andOperator(Criteria.where("tagList.tagId").in(tagIdList));
 				List<DataParty> dpListM2 = mongoTemplate.find(new Query(criteria), DataParty.class);
 				if(CollectionUtils.isNotEmpty(dpListM2)) {
@@ -155,7 +147,7 @@ public class CampaignDecisionTagTaskImpl extends BaseMQService implements TaskSe
 				int matchCount = 0;
 				boolean matchTwoMore = false;
 				for(int i=0;i<tagIdList.size();i++){
-					String dataIdStr3 = s.getDataId();
+					Integer dataIdStr3 = s.getDataId();
 					Criteria criteria3 = Criteria.where("mid").is(dataIdStr3);
 					criteria3 = criteria3.andOperator(Criteria.where("tagList.tagId").is(tagIdList.get(i)));
 					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria3), DataParty.class);
@@ -177,15 +169,15 @@ public class CampaignDecisionTagTaskImpl extends BaseMQService implements TaskSe
 		}
 		if(CollectionUtils.isNotEmpty(campaignSwitchYesList)) {
 			CampaignSwitch csYes = campaignSwitchYesList.get(0);
-			mqUtil.sendDynamicQueue(segmentListToMqYes, csYes.getCampaignHeadId() +"-"+csYes.getNextItemId());
+			sendDynamicQueue(segmentListToMqYes, csYes.getCampaignHeadId() +"-"+csYes.getNextItemId());
 		}
 		if(CollectionUtils.isNotEmpty(campaignSwitchNoList)) {
 			CampaignSwitch csNo = campaignSwitchNoList.get(0);
-			mqUtil.sendDynamicQueue(segmentListToMqNo, csNo.getCampaignHeadId() +"-"+csNo.getNextItemId());
+			sendDynamicQueue(segmentListToMqNo, csNo.getCampaignHeadId() +"-"+csNo.getNextItemId());
 		}
 	}
 	
-	public void cancelInnerTask() {
+	public void cancelInnerTask(TaskSchedule taskSchedule) {
 		if(null != consumer) {
 			try {
 				consumer.close();

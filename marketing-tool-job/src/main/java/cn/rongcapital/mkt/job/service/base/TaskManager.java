@@ -114,7 +114,7 @@ public class TaskManager {
 					//停止内嵌的任务/线程
 					String serviceName = getServiceName(v.getServiceName());
 					TaskService taskService = (TaskService)cotext.getBean(serviceName);
-					taskService.cancelInnerTask();
+					taskService.cancelInnerTask(v);
 			}
 		});
 	}

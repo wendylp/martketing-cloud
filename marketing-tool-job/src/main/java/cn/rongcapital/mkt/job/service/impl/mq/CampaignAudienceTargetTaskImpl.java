@@ -24,8 +24,6 @@ import cn.rongcapital.mkt.po.mongodb.Segment;
 @Service
 public class CampaignAudienceTargetTaskImpl extends BaseMQService implements TaskService {
 	
-	@Autowired  
-    private MQUtil mqUtil;
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
@@ -45,11 +43,11 @@ public class CampaignAudienceTargetTaskImpl extends BaseMQService implements Tas
 		if(CollectionUtils.isNotEmpty(campaignAudienceTargetList)) {
 			CampaignAudienceTarget cat = campaignAudienceTargetList.get(0);
 			//查询mongo中该segmentId对应的segment list
-			List<Segment> segmentList = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId").is(cat.getSegmentationId()+"")), Segment.class);
+			List<Segment> segmentList = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId").is(cat.getSegmentationId())), Segment.class);
 			if(CollectionUtils.isNotEmpty(segmentList)) {
 				List<Segment> segmentListUnique =  new ArrayList<Segment>();//去重后的segment list
 				for(Segment segement:segmentList) {
-					Criteria criteria = Criteria.where("campaignHeadId").is(campaignHeadId+"")
+					Criteria criteria = Criteria.where("campaignHeadId").is(campaignHeadId)
 										.and("itemId").is(itemId)
 										.and("dataId").is(segement.getDataId());
 					Query query = new Query(criteria);
@@ -60,9 +58,10 @@ public class CampaignAudienceTargetTaskImpl extends BaseMQService implements Tas
 							segement.setFansFriendsOpenId(dp.getMappingKeyid());//设置微信粉丝/好友的openid
 						}
 						NodeAudience nodeAudience = new NodeAudience();
-						nodeAudience.setCampaignHeadId(campaignHeadId+"");
+						nodeAudience.setCampaignHeadId(campaignHeadId);
 						nodeAudience.setItemId(itemId);
 						nodeAudience.setDataId(segement.getDataId());
+						nodeAudience.setName(segement.getName());
 						segmentListUnique.add(segement);
 						//把segment保存到mongo中的node_audience表
 						mongoTemplate.insert(nodeAudience);
@@ -72,7 +71,7 @@ public class CampaignAudienceTargetTaskImpl extends BaseMQService implements Tas
 				List<CampaignSwitch> campaignEndsList = queryCampaignEndsList(campaignHeadId, itemId);
 				for(CampaignSwitch cs:campaignEndsList) {
 					//发送segment数据到后面的节点
-					mqUtil.sendDynamicQueue(segmentListUnique, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+					sendDynamicQueue(segmentListUnique, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
 				}
 			}
 			

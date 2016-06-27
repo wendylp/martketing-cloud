@@ -13,11 +13,13 @@ public class CampaignDecisionPrvtFriends extends BaseQuery {
 
     private String name;
 
-    private String prvtId;
+    private String uin;
 
-    private String prvtName;
+    private Integer assetId;
 
-    private String groupName;
+    private String ucode;
+
+    private Integer groupId;
 
     private Integer refreshInterval;
 
@@ -61,28 +63,36 @@ public class CampaignDecisionPrvtFriends extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getPrvtId() {
-        return prvtId;
+    public String getUin() {
+        return uin;
     }
 
-    public void setPrvtId(String prvtId) {
-        this.prvtId = prvtId == null ? null : prvtId.trim();
+    public void setUin(String uin) {
+        this.uin = uin == null ? null : uin.trim();
     }
 
-    public String getPrvtName() {
-        return prvtName;
+    public Integer getAssetId() {
+        return assetId;
     }
 
-    public void setPrvtName(String prvtName) {
-        this.prvtName = prvtName == null ? null : prvtName.trim();
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getUcode() {
+        return ucode;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName == null ? null : groupName.trim();
+    public void setUcode(String ucode) {
+        this.ucode = ucode == null ? null : ucode.trim();
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 
     public Integer getRefreshInterval() {

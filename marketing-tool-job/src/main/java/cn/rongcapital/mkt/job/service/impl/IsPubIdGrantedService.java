@@ -34,9 +34,11 @@ public class IsPubIdGrantedService {
             JSONObject obj = null;
             try {
                 obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_grant_status_response");
-                H5GrantStatusResponse h5GrantStatusResponse = JSON.parseObject(obj.toString(),H5GrantStatusResponse.class);
-                if(h5GrantStatusResponse != null){
-                    return h5GrantStatusResponse.getStatus();
+                if(obj != null){
+                    H5GrantStatusResponse h5GrantStatusResponse = JSON.parseObject(obj.toString(),H5GrantStatusResponse.class);
+                    if(h5GrantStatusResponse != null){
+                        return h5GrantStatusResponse.getStatus();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

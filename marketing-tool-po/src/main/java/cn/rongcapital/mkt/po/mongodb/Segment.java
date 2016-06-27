@@ -15,22 +15,31 @@ public class Segment implements Serializable{
 	private String id;
 	
 	@Field(value = "segmentation_head_id")
-	private String segmentationHeadId;
+	private Integer segmentationHeadId;
 	
 	@Field(value = "data_id")
-	private String dataId;
-
-	//调用大连接口后，返回的任务id
-	private Integer taskId;
+	private Integer dataId;
+	
+	@Field(value = "md_type")
+	private Integer mdType;
+	
+	@Field(value = "name")
+	private String name;
+	
+	@Field(value = "mapping_keyid")
+	private String mappingKeyid;
 	
 	//调用大连发送公众号图文接口中，发送方的公众号pubId
-	private String pubId;
+	private transient String pubId;
 	
-	//发送的微信h5图文地址
-	private String h5Url;
+	//发送的微信h5手机图文地址
+	private transient String h5MobileUrl;
 	
 	//粉丝/好友的微信open_id
-	private String fansFriendsOpenId;
+	private transient String fansFriendsOpenId;
+	
+	//微信图文的id
+	private transient Integer materialId;
 	
 	public String getId() {
 		return id;
@@ -40,28 +49,20 @@ public class Segment implements Serializable{
 		this.id = id;
 	}
 
-	public String getSegmentationHeadId() {
+	public Integer getSegmentationHeadId() {
 		return segmentationHeadId;
 	}
 
-	public void setSegmentationHeadId(String segmentationHeadId) {
+	public void setSegmentationHeadId(Integer segmentationHeadId) {
 		this.segmentationHeadId = segmentationHeadId;
 	}
 
-	public String getDataId() {
+	public Integer getDataId() {
 		return dataId;
 	}
 
-	public void setDataId(String dataId) {
+	public void setDataId(Integer dataId) {
 		this.dataId = dataId;
-	}
-
-	public Integer getTaskId() {
-		return taskId;
-	}
-
-	public void setTaskId(Integer taskId) {
-		this.taskId = taskId;
 	}
 
 	public String getPubId() {
@@ -72,12 +73,12 @@ public class Segment implements Serializable{
 		this.pubId = pubId;
 	}
 
-	public String getH5Url() {
-		return h5Url;
+	public String getH5MobileUrl() {
+		return h5MobileUrl;
 	}
 
-	public void setH5Url(String h5Url) {
-		this.h5Url = h5Url;
+	public void setH5MobileUrl(String h5MobileUrl) {
+		this.h5MobileUrl = h5MobileUrl;
 	}
 
 	public String getFansFriendsOpenId() {
@@ -86,6 +87,38 @@ public class Segment implements Serializable{
 
 	public void setFansFriendsOpenId(String fansFriendsOpenId) {
 		this.fansFriendsOpenId = fansFriendsOpenId;
+	}
+
+	public Integer getMaterialId() {
+		return materialId;
+	}
+
+	public void setMaterialId(Integer materialId) {
+		this.materialId = materialId;
+	}
+
+	public Integer getMdType() {
+		return mdType;
+	}
+
+	public void setMdType(Integer mdType) {
+		this.mdType = mdType;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getMappingKeyid() {
+		return mappingKeyid;
+	}
+
+	public void setMappingKeyid(String mappingKeyid) {
+		this.mappingKeyid = mappingKeyid;
 	}
 	
 }

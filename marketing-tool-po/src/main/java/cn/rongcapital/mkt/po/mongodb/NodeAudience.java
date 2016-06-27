@@ -10,21 +10,24 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class NodeAudience implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	private String id;
 	
 	@Field(value = "campaign_head_id")
-	private String campaignHeadId;
+	private Integer campaignHeadId;
 	
 	@Field(value = "item_id")
 	private String itemId;
 	
 	@Field(value = "data_id")
-	private String dataId;
+	private Integer dataId;
 	
 	private Integer taskId;
 
+	@Field(value = "name")
+	private String name;
+	
 	public String getId() {
 		return id;
 	}
@@ -33,11 +36,11 @@ public class NodeAudience implements Serializable {
 		this.id = id;
 	}
 
-	public String getCampaignHeadId() {
+	public Integer getCampaignHeadId() {
 		return campaignHeadId;
 	}
 
-	public void setCampaignHeadId(String campaignHeadId) {
+	public void setCampaignHeadId(Integer campaignHeadId) {
 		this.campaignHeadId = campaignHeadId;
 	}
 
@@ -49,11 +52,11 @@ public class NodeAudience implements Serializable {
 		this.itemId = itemId;
 	}
 
-	public String getDataId() {
+	public Integer getDataId() {
 		return dataId;
 	}
 
-	public void setDataId(String dataId) {
+	public void setDataId(Integer dataId) {
 		this.dataId = dataId;
 	}
 
@@ -63,6 +66,14 @@ public class NodeAudience implements Serializable {
 
 	public void setTaskId(Integer taskId) {
 		this.taskId = taskId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	
