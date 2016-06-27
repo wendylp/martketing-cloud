@@ -82,7 +82,8 @@ public class FileUtil {
         StringBuilder pathNameBuilder = new StringBuilder();
         // 当前日期
         DateTime today = DateTime.now();
-        pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName)
+        pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName).append("_")
+//        pathNameBuilder.append("/Users/nianjun/Work/logs/").append(fileName).append("_")
                         .append(today.toString(ApiConstant.DATE_FORMAT_yyyy_MM_dd)).append(FILE_SUFFIX);
         File file = new File(pathNameBuilder.toString());
         return generateFileforDownload(poList, file);
@@ -109,6 +110,8 @@ public class FileUtil {
 
                 for (int j = 0; j < fieldsCount; j++) {
                     Field field = fields[j];
+                    field.setAccessible(true);
+                    
                     // 这是个日期类型,需要转换
                     if (field != null && field.getClass().getSimpleName().equals(Date.class.getSimpleName())) {
                         DateTime dateTime = new DateTime(field.get(entity));
