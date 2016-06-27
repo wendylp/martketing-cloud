@@ -7,7 +7,9 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,19 +55,25 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
             }
         }
 
-        List<String> resultList = new ArrayList<>();
+        List<Map<String, Object>> resultList = new ArrayList<>();
         for (int i = 0; i < rawResultList.size(); i++) {
             List<Taggroup> tmpList = rawResultList.get(i);
             StringBuilder selectionName = new StringBuilder();
+            Map<String, Object> map = new HashMap<>();
             // list中保存的是从叶子节点到根节点的组合,要倒着取值,从根节点取到叶子节点
             for (int j = tmpList.size() - 1; j > -1; j--) {
                 selectionName.append(tmpList.get(j).getName());
                 if (j > 0) {
                     selectionName.append(" - ");
                 }
-            }
 
-            resultList.add(selectionName.toString());
+                if (j == 0) {
+                    map.put("select_count", getLeafNodeCount(tmpList.get(j), taggroups));
+                }
+            }
+            map.put("select_name", selectionName.toString());
+
+            resultList.add(map);
         }
 
         baseOutput.getData().addAll(resultList);
@@ -95,12 +103,12 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
     private List<Taggroup> getGroupList(Taggroup leafNode, List<Taggroup> trees) {
         List<Taggroup> taggroups = new ArrayList<>();
         taggroups.add(leafNode);
-        Taggroup firstParent = getParentNode(leafNode, trees);
-        while (!firstParent.getParentGroupId().equals(TOP_LEVEL)) {
-            taggroups.add(firstParent);
-            firstParent = getParentNode(firstParent, trees);
+        Taggroup previousParent = getParentNode(leafNode, trees);
+        while (!previousParent.getParentGroupId().equals(TOP_LEVEL)) {
+            taggroups.add(previousParent);
+            previousParent = getParentNode(previousParent, trees);
         }
-        taggroups.add(firstParent);
+        taggroups.add(previousParent);
 
         return taggroups;
     }
@@ -114,6 +122,23 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
         }
 
         return null;
+    }
+
+    // 根据节点获取所有直接子节点的数量
+    public int getLeafNodeCount(Taggroup node, List<Taggroup> trees) {
+        int count = 0;
+
+        if (CollectionUtils.isEmpty(trees)) {
+            return count;
+        } else {
+            for (Taggroup taggroup : trees) {
+                if (taggroup.getParentGroupId().equals(Long.valueOf(node.getId()))) {
+                    count++;
+                }
+            }
+        }
+
+        return count;
     }
 
 }
