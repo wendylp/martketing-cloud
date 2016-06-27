@@ -72,6 +72,7 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
                 }
             }
             map.put("select_name", selectionName.toString());
+            map.put("id", tmpList.get(i).getId());
 
             resultList.add(map);
         }
