@@ -674,6 +674,38 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				campaignActionSendH5.setPubId(wechatAsset.getWxAcct());
 			}
 		}
+		campaignActionSendH5.setPrvAssetId(campaignActionSendH5In.getPrvAssetId());
+		campaignActionSendH5.setGroupId(campaignActionSendH5In.getGroupId());
+		if(null != campaignActionSendH5In.getPrvAssetId()) {
+			WechatAsset wechatAssetT = new WechatAsset();
+			wechatAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			wechatAssetT.setAssetId(campaignActionSendH5In.getPrvAssetId());
+			List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAssetT);
+			if(CollectionUtils.isNotEmpty(wechatAssetList)) {
+				WechatAsset wechatAsset = wechatAssetList.get(0);
+				String uin = wechatAsset.getWxAcct();
+				campaignActionSendH5.setUin(uin);//写入uin
+			}
+		}
+		if(null != campaignActionSendH5In.getGroupId()) {
+			WechatAssetGroup wechatAssetGroupT = new WechatAssetGroup();
+			wechatAssetGroupT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			wechatAssetGroupT.setId(campaignActionSendH5In.getGroupId().longValue());
+			List<WechatAssetGroup> wechatAssetGroupList =  wechatAssetGroupDao.selectList(wechatAssetGroupT);
+			if(CollectionUtils.isNotEmpty(wechatAssetGroupList)) {
+				Long importId = wechatAssetGroupList.get(0).getImportGroupId();
+				if(null != importId) {
+					WechatGroup wechatGroupT = new WechatGroup();
+					wechatGroupT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+					wechatGroupT.setId(importId.intValue());
+					List<WechatGroup> wechatGroupList = wechatGroupDao.selectList(wechatGroupT);
+					if(CollectionUtils.isNotEmpty(wechatGroupList)) {
+						String ucode = wechatGroupList.get(0).getGroupId();
+						campaignActionSendH5.setUcode(ucode);//写入ucode
+					}
+				}
+			}
+		}
 		return campaignActionSendH5;
 	}
 	

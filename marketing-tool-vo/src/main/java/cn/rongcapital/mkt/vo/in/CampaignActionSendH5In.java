@@ -1,8 +1,6 @@
 package cn.rongcapital.mkt.vo.in;
 
 
-import javax.validation.constraints.NotNull;
-
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -11,11 +9,13 @@ public class CampaignActionSendH5In {
 	
     private String name;
 
-    
     private Integer pubAssetId;
     
-    
     private Integer imgTextAssetId;
+    
+    private Integer prvAssetId;
+    
+    private Integer groupId;
 
     @JsonProperty("name")
 	public String getName() {
@@ -42,6 +42,24 @@ public class CampaignActionSendH5In {
 
 	public void setImgTextAssetId(Integer imgTextAssetId) {
 		this.imgTextAssetId = imgTextAssetId;
+	}
+
+	@JsonProperty("prv_asset_id")
+	public Integer getPrvAssetId() {
+		return prvAssetId;
+	}
+
+	public void setPrvAssetId(Integer prvAssetId) {
+		this.prvAssetId = prvAssetId;
+	}
+
+	@JsonProperty("group_id")
+	public Integer getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
 	}
 
 }
