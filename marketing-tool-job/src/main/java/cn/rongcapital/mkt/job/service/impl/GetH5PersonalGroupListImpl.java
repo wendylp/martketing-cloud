@@ -45,7 +45,6 @@ public class GetH5PersonalGroupListImpl implements TaskService {
     @Override
     public void task(Integer taskId) {
         Map<String,String> h5ParamMap = tenementDao.selectPid();
-        h5ParamMap.put("company_key",h5ParamMap.remove("pid"));
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PERSONAL_GROUPLIST);
 
         List<String> uuids = getUUidListService.getUuidList();

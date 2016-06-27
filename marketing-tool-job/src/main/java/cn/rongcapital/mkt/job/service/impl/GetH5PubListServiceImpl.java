@@ -77,7 +77,7 @@ public class GetH5PubListServiceImpl implements TaskService {
             if(h5Pub.getPubType() < 2 ){
                 paramMap.put("type",2);
             }else{
-                paramMap.put("type",1);
+                paramMap.put("type",0);
             }
             wechatRegisterDao.updatePubInfo(paramMap);
         }
