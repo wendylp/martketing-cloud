@@ -11,6 +11,9 @@
 package cn.rongcapital.mkt.api;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,10 +31,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +49,7 @@ import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
+import cn.rongcapital.mkt.service.AudienceSearchService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.service.CampaignBodyItemAudienceSearchService;
@@ -89,6 +96,7 @@ import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
 import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.ModifyPasswdService;
+import cn.rongcapital.mkt.service.ReauthWechatAccountService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
 import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
@@ -110,6 +118,7 @@ import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
 import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
 import cn.rongcapital.mkt.service.TaskGetListService;
+import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
@@ -273,6 +282,10 @@ public class MktApi {
     private AudienceListService audienceListService;
 
     @Autowired
+    private AudienceSearchService audienceSearchService;
+    
+
+    @Autowired
     private AudienceListDeleteService audienceListDeleteService;
 
     @Autowired
@@ -281,8 +294,8 @@ public class MktApi {
     @Autowired
     private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 
-//    @Autowired
-//    private TaskListGetService taskListGetService;
+    @Autowired
+    private TaskListGetService taskListGetService;
 
     @Autowired
     private CampaignDeleteService campaignDeleteService;
@@ -388,8 +401,8 @@ public class MktApi {
 	@Autowired
 	private WechatPersonalAuthService wechatPersonalAuthService;
 
-//	@Autowired
-//	private ReauthWechatAccountService reauthWechatAccountService;
+	@Autowired
+	private ReauthWechatAccountService reauthWechatAccountService;
 
 	@Autowired
 	private TaskGetListService taskGetListService;
@@ -1027,21 +1040,25 @@ public class MktApi {
 						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
 		return audienceListService.audienceList(userToken, size, index);
 	}
-
-    /**
-     * @功能简述: 获取人群list列表
+	
+	/**
+     * @功能简述: 在人群中查找
      * @param: String userToken
+     * @param: String audience_id   人群ID
+     * @param: String audience_name 人群名字
      * @return: Object
      */
     @GET
-    @Path("/mkt.audience.listbyid.get")
-    public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
-                    @NotNull @QueryParam("audience_id") Integer audienceId,
-                    @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-                    @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
-        return audienceListService.getAudienceByListId(userToken, audienceId, size, index);
+    @Path("/mkt.audience.search.get")
+    public BaseOutput audienceByName(@NotEmpty @QueryParam("user_token") String userToken,
+                                           @QueryParam("audience_type") String audience_type,                       
+                                           @QueryParam("audience_id") int audience_id,
+                                           @QueryParam("audience_name") String audience_name,
+                                           @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+                                           @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
+        return audienceSearchService.audienceByName(userToken,audience_type,audience_id,audience_name,size, index);
     }
-
+	
 	/**
 	 * @功能描述:删除人群list
 	 * @Param: body
@@ -1354,23 +1371,26 @@ public class MktApi {
 		return dataMainBasicInfoUpdateService.updateBaseInfoByContactId(body);
 	}
 
-    /**
-     * @功能简述: 获取系统标签内容列表
-     * @param method
-     * @param user_token
-     * @param tag_group_id
-     * @param index
-     * @param size
-     * @return BaseOutput
-     */
-    @GET
-    @Path("/mkt.tag.system.list.get")
-    public BaseOutput getTagcountByParentGroupId(@NotEmpty @QueryParam("method") String method,
-                    @NotEmpty @QueryParam("user_token") String userToken,
-                    @NotEmpty @QueryParam("tag_group_name") String tagGroupName, @QueryParam("index") Integer index,
-                    @QueryParam("size") Integer size) {
-        return tagSystemListGetService.getTagcount(method, userToken, tagGroupName, index, size);
-    }
+	/**
+	 * @功能简述: 获取系统标签内容列表
+	 * @param method
+	 * @param user_token
+	 * @param tag_group_id
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.tag.system.list.get")
+	public BaseOutput getTagcountByParentGroupId(
+			@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("tag_group_name") String tagGroupName,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size){
+		return tagSystemListGetService.getTagcount(method, userToken,
+		                tagGroupName, index, size);
+	}
 
 	/**
 	 * @功能简述: 获取系统标签组列表
@@ -1407,21 +1427,24 @@ public class MktApi {
 		return mainBasicInfoGetService.getMainBasicInfo(contactId, userToken);
 	}
 
-    /**
-     * @功能简述: 获取系统标签组列表
-     * @param method
-     * @param user_token
-     * @param index
-     * @param size
-     * @return BaseOutput
-     */
-    @GET
-    @Path("/mkt.taggroup.system.menulist.get")
-    public BaseOutput getTaggroupSystemMenulist(@NotEmpty @QueryParam("method") String method,
-                    @NotEmpty @QueryParam("user_token") String userToken, @QueryParam("index") Integer index,
-                    @QueryParam("size") Integer size) {
-        return taggroupSystemMenulistGetService.getTaggroupSystemMenulist(method, userToken, index, size);
-    }
+	/**
+	 * @功能简述: 获取系统标签组列表
+	 * @param method
+	 * @param user_token
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.taggroup.system.menulist.get")
+	public BaseOutput getTaggroupSystemMenulist(
+			@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("index") Integer index,
+            @QueryParam("size") Integer size) {
+		return taggroupSystemMenulistGetService.getTaggroupSystemMenulist(
+				method, userToken, index, size);
+	}
 
 	/**
 	 * @功能简述: 主界面上的搜索栏模糊查询数据
