@@ -29,21 +29,25 @@ public class IsUuidEffectiveService {
 
     public boolean isUuidEffective(String uuid){
         Map<String,String> h5VerifyUuidParamMap = tenementDao.selectPid();
+        h5VerifyUuidParamMap.put("company_key",h5VerifyUuidParamMap.remove("pid"));
         h5VerifyUuidParamMap.put("uuid",uuid);
         h5VerifyUuidParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PERSONAL_ISONLINE);
         HttpResponse httpResponse = HttpUtils.requestH5Interface(h5VerifyUuidParamMap);
         if(httpResponse != null){
             JSONObject obj = null;
             try {
-                obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_personal_isonline_response");
-                H5PersonalIsonline h5PersonalIsonline = JSON.parseObject(obj.toString(),H5PersonalIsonline.class);
-                if(h5PersonalIsonline != null){
-                    if(h5PersonalIsonline.getStatus() == 0){
-                        return true;
-                    }else{
-                        Map<String,Object> paramMap = new HashMap<String,Object>();
-                        paramMap.put("uuid",uuid);
-                        wechatPersonalUuidDao.updateStatus(paramMap);
+                String entityString = EntityUtils.toString(httpResponse.getEntity());
+                obj = JSON.parseObject(entityString).getJSONObject("hfive_mkt_personal_isonline_response");
+                if(obj != null){
+                    H5PersonalIsonline h5PersonalIsonline = JSON.parseObject(obj.toString(),H5PersonalIsonline.class);
+                    if(h5PersonalIsonline != null){
+                        if(h5PersonalIsonline.getStatus() == 0){
+                            return true;
+                        }else{
+                            Map<String,Object> paramMap = new HashMap<String,Object>();
+                            paramMap.put("uuid",uuid);
+                            wechatPersonalUuidDao.updateStatus(paramMap);
+                        }
                     }
                 }
             } catch (IOException e) {

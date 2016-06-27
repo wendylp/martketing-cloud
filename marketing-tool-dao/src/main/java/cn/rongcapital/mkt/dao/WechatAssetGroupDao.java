@@ -62,4 +62,39 @@ public interface WechatAssetGroupDao extends BaseDao<WechatAssetGroup>{
 	 * @return list
 	 */
 	List<Long> selectImportGroupIdsByIds(ArrayList<Integer> groupIds);
+
+	/**
+	 * 获取所有导入的id列表
+	 * @param paramMap
+	 * @return list
+	 */
+	List<Long> selectImportGroupIds();
+
+	/**
+	 * 插入新的小组列表
+	 * @param paramMap
+	 * @return list
+	 */
+	void insertNewGroupList(List<Map<String, Object>> newGroupList);
+
+	/**
+	 * 同步小组人数
+	 * @param paramMap
+	 * @return list
+	 */
+	void updateGroupCountById(Map<String, Object> paramMap);
+
+	/**
+	 * 获取某个微信账号下的人数
+	 * @param paramMap
+	 * @return list
+	 */
+	List<Long> selectGroupIdsByWxAcct(Map<String, Object> paramMap);
+
+	/**
+	 * 统计某个微信账号下的所有人数
+	 * @param paramMap
+	 * @return list
+	 */
+	Integer selectMemberCountByWxAcct(Map<String, Object> paramMap);
 }

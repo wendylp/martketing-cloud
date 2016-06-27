@@ -79,4 +79,25 @@ public interface WechatAssetDao extends BaseDao<WechatAsset>{
 	 * @return int
 	 */
 	Map<String,Object> selectAssetTypeAndWxacct(Map<String, Object> paramMap);
+
+	/**
+	 * 获取所有已经被同步的微信号
+	 * @param paramMap
+	 * @return int
+	 */
+	List<String> selectWxAssetList();
+
+	/**
+	 * 插入新注册的微信号列表
+	 * @param paramMap
+	 * @return int
+	 */
+	void insertNewRegisterAsset(List<Map<String, Object>> newRegisterWxAssetList);
+
+	/**
+	 * 更新微信账号的组数和人数信息
+	 * @param paramMap
+	 * @return int
+	 */
+	void updateGroupIdsAndTotalCount(Map<String,Object> paramMap);
 }

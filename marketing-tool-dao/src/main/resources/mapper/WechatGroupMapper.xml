@@ -103,6 +103,12 @@
 		WHERE group_name = #{group_name} AND wx_acct = #{wx_acct}
 	</select>
 
+	<select id="selectGroupIdByUcode" parameterType="java.util.Map" resultType="java.lang.Long">
+		select id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE group_id = #{group_id} AND wx_acct = #{wx_acct}
+	</select>
+
 	<insert id="insertWechatGroup" parameterType="java.util.Map">
 		INSERT INTO wechat_group (group_name,wx_acct)
 		VALUES
@@ -111,4 +117,28 @@
 		#{wx_acct}
 		)
 	</insert>
+
+	<insert id="insertWechatGroupByUcode" parameterType="java.util.Map">
+		INSERT INTO wechat_group (group_id,wx_acct)
+		VALUES
+		(
+		#{group_id},
+		#{wx_acct}
+		)
+	</insert>
+
+	<update id="updateInfoById" parameterType="java.util.Map">
+		UPDATE wechat_group
+		SET group_name = #{group_name}, header_image = #{header_image}
+		WHERE id = #{id}
+	</update>
+
+	<select id="selectNewGroupList" parameterType="java.util.List" resultType="java.util.Map">
+		select id as import_group_id, group_name as name, wx_acct
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id not in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

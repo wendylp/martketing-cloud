@@ -150,4 +150,30 @@
 		FROM wechat_asset
 		WHERE asset_id = #{asset_id}
 	</select>
+
+	<select id="selectWxAssetList" resultType="java.lang.String">
+		SELECT wx_acct
+		<include refid="QUERY_FROM_TABLE"/>
+	</select>
+
+	<insert id="insertNewRegisterAsset" parameterType="java.util.List">
+		INSERT INTO wechat_asset(asset_id,asset_type,asset_name,nickname,wx_acct,imgfile_url)
+		VALUES
+		<foreach collection="list" index="index" item="item" separator=",">
+			(
+			   #{item.asset_id},
+			   #{item.asset_type},
+			   #{item.asset_name},
+			   #{item.nickname},
+			   #{item.wx_acct},
+			   #{item.imgfile_url}
+			)
+		</foreach>
+	</insert>
+
+	<update id="updateGroupIdsAndTotalCount" parameterType="java.util.Map">
+		UPDATE wechat_asset
+		SET group_ids = #{group_ids},total_count = #{total_count}
+		WHERE wx_acct = #{wx_acct}
+	</update>
 </mapper>

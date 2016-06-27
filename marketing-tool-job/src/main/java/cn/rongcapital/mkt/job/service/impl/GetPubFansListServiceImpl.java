@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.HttpUtils;
 import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.dao.WechatGroupDao;
@@ -17,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Yunfeng on 2016-6-17.
@@ -45,8 +43,8 @@ public class GetPubFansListServiceImpl implements TaskService {
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PUB_FANSLIST_API);
         h5ParamMap.put("page_size", 100 + "");
         h5ParamMap.put("page_num",1 + "");
-//        h5ParamMap.put("start_time","");  //Todo:这个增量时间怎么算
-//        h5ParamMap.put("end_time","");   //Todo:这个增量怎么算
+        h5ParamMap.put("start_time",DateUtil.getStringFromDate(new Date(System.currentTimeMillis()-24*3600*1000),"yyyy-MM-dd HH:mm:ss"));  //Todo:这个增量时间怎么算
+        h5ParamMap.put("end_time", DateUtil.getStringFromDate(new Date(System.currentTimeMillis()),"yyyy-MM-dd HH:mm:ss"));   //Todo:这个增量怎么算
         HttpResponse httpResponse = HttpUtils.requestH5Interface(h5ParamMap);
         if(httpResponse != null){
             JSONObject obj = null;
