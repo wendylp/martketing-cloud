@@ -67,4 +67,6 @@ public interface AudienceListDao extends BaseDao<AudienceList>{
 	 * @return int
 	 */
 	Long selectIdByAudienceName(Map<String, Object> paramMap);
+	
+	
 }
