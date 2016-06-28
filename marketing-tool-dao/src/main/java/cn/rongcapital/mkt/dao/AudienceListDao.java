@@ -45,6 +45,14 @@ public interface AudienceListDao extends BaseDao<AudienceList>{
 	 * @return int
 	 */
 	Integer insertWechatGroups(Map<String,Object> paramMap);
+	
+	
+	/**
+     * 活动编排-保存当前人群
+     * @param paramMap
+     * @return int
+     */
+    Integer insertAudience(Map<String,Object> paramMap);
 
 	/**
 	 * 主数据查询(主界面搜索栏里面的模糊查询)
