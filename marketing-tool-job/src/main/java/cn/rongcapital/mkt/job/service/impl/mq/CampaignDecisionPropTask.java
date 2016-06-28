@@ -1,7 +1,11 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
@@ -9,15 +13,21 @@ import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.CampaignDecisionPropCompareDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignDecisionPropCompare;
 import cn.rongcapital.mkt.po.CampaignSwitch;
+import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
@@ -26,8 +36,8 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private CampaignDecisionPropCompareDao campaignDecisionPropCompareDao;
-//	@Autowired
-//	private MongoTemplate mongoTemplate;
+	@Autowired
+	private MongoTemplate mongoTemplate;
 	private MessageConsumer consumer = null;	
 	
 	public void task (TaskSchedule taskSchedule) {
@@ -50,6 +60,7 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 			logger.info("节点属性为空,return,campagin_head_id:"+campaignHeadId+",itemId:"+itemId);
 			return;
 		}
+		
 		CampaignDecisionPropCompare campaignDecisionPropCompare = campaignDecisionPropCompareList.get(0);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
 		consumer = getQueueConsumer(queue);//获取queue的消费者对象
@@ -81,36 +92,23 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 		}
 	}
 	//处理listener接收到的数据
-	//TO DO:目前属性判断分支，接收到的数据都会传递到下面节点,等需求明确了再完善
 	private void processMqMessage(Message message,List<Segment> segmentList,
 								  List<CampaignSwitch> campaignSwitchYesList,
 								  List<CampaignSwitch> campaignSwitchNoList,
 								  CampaignDecisionPropCompare campaignDecisionPropCompare) throws Exception{
-//		List<Segment> segmentListToMqYes = new ArrayList<Segment>();//初始化"是"分支的数据对象list
-//		List<Segment> segmentListToMqNo = new ArrayList<Segment>();//初始化"非"分支的数据对象list
-//		Byte rule = campaignDecisionPropCompare.getRule();
-//		for(Segment segment:segmentList) {
-//			switch (rule) {
-//			case 0://0：等于
-//				break;
-//			case 1://1:包含
-//				break;
-//			case 2://2:starts_with
-//				break;
-//			case 3://3:ends_with
-//				break;
-//			case 4://4:empty
-//				break;
-//			case 5://5:大于
-//				break;
-//			case 6://6:小于
-//				break;
-//			case 7://7:大于等于
-//				break;
-//			case 8://8:小于等于
-//				break;
-//			}
-//		}
+		List<Segment> segmentListToMqYes = new ArrayList<Segment>();//初始化"是"分支的数据对象list
+		List<Segment> segmentListToMqNo = new ArrayList<Segment>();//初始化"非"分支的数据对象list
+		Byte rule = campaignDecisionPropCompare.getRule();
+		Byte propType = campaignDecisionPropCompare.getPropType();
+		String value = campaignDecisionPropCompare.getValue();
+		for(Segment segment:segmentList) {
+			boolean checkRes = compareProp(rule, propType, segment, value);
+			if(checkRes) {
+				segmentListToMqYes.add(segment);
+			} else {
+				segmentListToMqNo.add(segment);
+			}
+		}
 		if(CollectionUtils.isNotEmpty(campaignSwitchYesList)) {
 			CampaignSwitch csYes = campaignSwitchYesList.get(0);
 			sendDynamicQueue(segmentList, csYes.getCampaignHeadId() +"-"+csYes.getNextItemId());
@@ -121,8 +119,299 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 		}
 	}
 	
+	private boolean compareProp(Byte rule,Byte propType,Segment segment, String value) throws IllegalArgumentException, IllegalAccessException {
+		boolean checkRes = false;
+		DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())), DataParty.class);
+		if(dp != null) {
+			Field fields[] = DataParty.class.getDeclaredFields();
+			switch (rule) {
+			case 0://0：等于
+				switch (propType) {
+				case 0://文本
+					if(StringUtils.isBlank(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(String.class) ){
+					    	String valueInData = (String)filed.get(dp);
+					    	if(StringUtils.equals(value, valueInData)) {
+					    		checkRes= true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				case 1://数字
+					if(StringUtils.isBlank(value) || !StringUtils.isNumeric(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(Byte.class) ||
+					       filed.getType().isAssignableFrom(Integer.class)||
+					       filed.getType().isAssignableFrom(Long.class)){
+					    	Object valueInData = filed.get(dp);
+					    	Long valueInDataLong = Long.parseLong(String.valueOf(valueInData));
+					    	Long valueLong = Long.parseLong(value);
+					    	if(valueInDataLong == valueLong) {
+					    		checkRes = true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				case 2://日期
+					if(StringUtils.isBlank(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(Date.class) ){
+					    	Date dateInData = (Date)filed.get(dp);
+					    	Date date = DateUtil.getDateFromString(value, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+					    	if(dateInData.equals(date)) {
+					    		checkRes= true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				}
+				break;
+			case 1://1:包含
+				switch (propType) {
+				case 0://文本
+					if(StringUtils.isBlank(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(String.class) ){
+					    	String valueInData = (String)filed.get(dp);
+					    	if(StringUtils.contains(value, valueInData)) {
+					    		checkRes= true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				case 1://数字
+					break;
+				case 2://日期
+					break;
+				}
+				break;
+			case 2://2:starts_with
+				switch (propType) {
+				case 0://文本
+					if(StringUtils.isBlank(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(String.class) ){
+					    	String valueInData = (String)filed.get(dp);
+					    	if(StringUtils.startsWith(value, valueInData)) {
+					    		checkRes= true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				}
+				break;
+			case 3://3:ends_with
+				switch (propType) {
+				case 0://文本
+					if(StringUtils.isBlank(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(String.class) ){
+					    	String valueInData = (String)filed.get(dp);
+					    	if(StringUtils.endsWith(value, valueInData)) {
+					    		checkRes= true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				}
+				break;
+			case 4://4:empty
+				switch (propType) {
+				case 0://文本
+					if(StringUtils.isBlank(value)) {
+						checkRes= true;
+					}
+					break;
+				}
+				break;
+			case 5://5:大于
+				switch (propType) {
+				case 0://文本
+					break;
+				case 1://数字
+					if(StringUtils.isBlank(value) || !StringUtils.isNumeric(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(Byte.class) ||
+					       filed.getType().isAssignableFrom(Integer.class)||
+					       filed.getType().isAssignableFrom(Long.class)){
+					    	Object valueInData = filed.get(dp);
+					    	Long valueInDataLong = Long.parseLong(String.valueOf(valueInData));
+					    	Long valueLong = Long.parseLong(value);
+					    	if(valueInDataLong > valueLong) {
+					    		checkRes = true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				case 2://日期
+					if(StringUtils.isBlank(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(Date.class) ){
+					    	Date dateInData = (Date)filed.get(dp);
+					    	Date date = DateUtil.getDateFromString(value, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+					    	if(dateInData.after(date)) {
+					    		checkRes= true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				}
+				break;
+			case 6://6:小于
+				switch (propType) {
+				case 0://文本
+					break;
+				case 1://数字
+					if(StringUtils.isBlank(value) || !StringUtils.isNumeric(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(Byte.class) ||
+					       filed.getType().isAssignableFrom(Integer.class)||
+					       filed.getType().isAssignableFrom(Long.class)){
+					    	Object valueInData = filed.get(dp);
+					    	Long valueInDataLong = Long.parseLong(String.valueOf(valueInData));
+					    	Long valueLong = Long.parseLong(value);
+					    	if(valueInDataLong < valueLong) {
+					    		checkRes = true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				case 2://日期
+					if(StringUtils.isBlank(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(Date.class) ){
+					    	Date dateInData = (Date)filed.get(dp);
+					    	Date date = DateUtil.getDateFromString(value, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+					    	if(dateInData.before(date)) {
+					    		checkRes= true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				}
+				break;
+			case 7://7:大于等于
+				switch (propType) {
+				case 0://文本
+					break;
+				case 1://数字
+					if(StringUtils.isBlank(value) || !StringUtils.isNumeric(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(Byte.class) ||
+					       filed.getType().isAssignableFrom(Integer.class)||
+					       filed.getType().isAssignableFrom(Long.class)){
+					    	Object valueInData = filed.get(dp);
+					    	Long valueInDataLong = Long.parseLong(String.valueOf(valueInData));
+					    	Long valueLong = Long.parseLong(value);
+					    	if(valueInDataLong >= valueLong) {
+					    		checkRes = true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				case 2://日期
+					if(StringUtils.isBlank(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(Date.class) ){
+					    	Date dateInData = (Date)filed.get(dp);
+					    	Date date = DateUtil.getDateFromString(value, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+					    	if(dateInData.after(date) || dateInData.equals(date)) {
+					    		checkRes= true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				}
+				break;
+			case 8://8:小于等于
+				switch (propType) {
+				case 0://文本
+					break;
+				case 1://数字
+					if(StringUtils.isBlank(value) || !StringUtils.isNumeric(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(Byte.class) ||
+					       filed.getType().isAssignableFrom(Integer.class)||
+					       filed.getType().isAssignableFrom(Long.class)){
+					    	Object valueInData = filed.get(dp);
+					    	Long valueInDataLong = Long.parseLong(String.valueOf(valueInData));
+					    	Long valueLong = Long.parseLong(value);
+					    	if(valueInDataLong <= valueLong) {
+					    		checkRes = true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				case 2://日期
+					if(StringUtils.isBlank(value)) {
+						break;
+					}
+					for(Field filed:fields){
+					    if(filed.getType().isAssignableFrom(Date.class) ){
+					    	Date dateInData = (Date)filed.get(dp);
+					    	Date date = DateUtil.getDateFromString(value, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+					    	if(dateInData.before(date) || dateInData.equals(date)) {
+					    		checkRes= true;
+					    		break;
+					    	}
+					    }
+					}
+					break;
+				}
+				break;
+			}
+		}
+		return checkRes;
+	}
+	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		
+		if(null != consumer) {
+			try {
+				consumer.close();
+			} catch (JMSException e) {
+				logger.error(e.getMessage(),e);
+			}
+		}
 	}
 	@Override
 	public void task(Integer taskId) {

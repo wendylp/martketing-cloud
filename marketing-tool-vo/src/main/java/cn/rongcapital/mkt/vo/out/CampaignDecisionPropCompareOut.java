@@ -9,6 +9,9 @@ public class CampaignDecisionPropCompareOut {
     private Byte propType;
 
     private Byte rule;
+    
+    private String ruleValue;
+    
 
     @JsonProperty("name")
     public String getName() {
@@ -36,5 +39,14 @@ public class CampaignDecisionPropCompareOut {
     public void setRule(Byte rule) {
         this.rule = rule;
     }
+
+    @JsonProperty("value")
+	public String getRuleValue() {
+		return ruleValue;
+	}
+
+	public void setRuleValue(String ruleValue) {
+		this.ruleValue = ruleValue;
+	}
 
 }
