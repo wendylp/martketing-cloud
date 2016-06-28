@@ -122,7 +122,7 @@ public class DataDownloadMainListServiceImpl implements DataDownloadMainListServ
         } else {
             for (ImportTemplate importTemplate : importTemplates) {
                 Map<String, String> map = new HashMap<>();
-                map.put(importTemplate.getOrderField(), importTemplate.getFieldName());
+                map.put(importTemplate.getFieldCode(), importTemplate.getFieldName());
                 columnNamesMap.add(map);
             }
         }
