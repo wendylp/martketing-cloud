@@ -4,6 +4,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.FileTemplateDownloadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.DownloadFileName;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
@@ -26,37 +27,32 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
     @Override
     public Object downloadFileTemplate(String templateIdList) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
+        File[] templateFiles = null;
         BufferedInputStream bis = null;
         ZipOutputStream zos = null;
         File zipFile = new File(ApiConstant.DOWNLOAD_BASE_DIR + System.currentTimeMillis() + "template.zip");
         try {
-
             FileInputStream fis = null;
             FileOutputStream fos = null;
-
-            String[] idList = templateIdList.split(",");
             File file = new File(ApiConstant.DOWNLOAD_TEMPLATE_FILE_DIR);
             fos = new FileOutputStream(zipFile);
             zos = new ZipOutputStream(new BufferedOutputStream(fos));
             byte[] bufs = new byte[1024 * 10];
-            if (file.exists()) {
-                if (file.isDirectory()) {
-                    File[] templateFiles = file.listFiles();
-                    for (String id : idList) {
-                        ZipEntry zipEntry = new ZipEntry(templateFiles[Integer.parseInt(id)].getName());
-                        zos.putNextEntry(zipEntry);
-
-                        fis = new FileInputStream(templateFiles[Integer.parseInt(id)]);
-                        bis = new BufferedInputStream(fis, 1024*10);
-                        int read = 0;
-                        while((read=bis.read(bufs, 0, 1024*10)) != -1){
-                            zos.write(bufs,0,read);
-                        }
-                    }
+            templateFiles = getTemplateFiles(baseOutput, templateFiles, file);
+            String[] idList = null;
+            if(templateIdList.contains(",")){
+                idList = templateIdList.split(",");
+                for (String id : idList) {
+                    bis = getZipBufferedInputStream(templateFiles, bis, zos, bufs, id);
                 }
-            } else {
-                baseOutput.setMsg("模板文件目录不存在");
+            }else{
+                bis = getZipBufferedInputStream(templateFiles, bis, zos, bufs, templateIdList);
             }
+            baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+            baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+            DownloadFileName downloadFileName = new DownloadFileName();
+            downloadFileName.setDownloadFileName(zipFile.getName());
+            baseOutput.getData().add(downloadFileName);
         }catch (Exception e){
             e.printStackTrace();
         }finally {
@@ -67,8 +63,30 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
                 e.printStackTrace();
             }
         }
-        Response.ResponseBuilder response = Response.ok((Object) zipFile);
-        response.header("Content-Disposition", "attachment; filename=\""+zipFile.getName() +"\"");
-        return response.build();
+        return baseOutput;
+    }
+
+    private File[] getTemplateFiles(BaseOutput baseOutput, File[] templateFiles, File file) {
+        if (file.exists() && file.isDirectory()) {
+            templateFiles = file.listFiles();
+        } else {
+            baseOutput.setMsg("模板文件目录不存在");
+        }
+        return templateFiles;
+    }
+
+    private BufferedInputStream getZipBufferedInputStream(File[] templateFiles, BufferedInputStream bis, ZipOutputStream zos, byte[] bufs, String id) throws IOException {
+        FileInputStream fis;
+        if(Integer.parseInt(id) > 6 && Integer.parseInt(id) > -1){
+            ZipEntry zipEntry = new ZipEntry(templateFiles[Integer.parseInt(id)].getName());
+            zos.putNextEntry(zipEntry);
+            fis = new FileInputStream(templateFiles[Integer.parseInt(id)]);
+            bis = new BufferedInputStream(fis, 1024*10);
+            int read = 0;
+            while((read=bis.read(bufs, 0, 1024*10)) != -1){
+                zos.write(bufs,0,read);
+            }
+        }
+        return bis;
     }
 }

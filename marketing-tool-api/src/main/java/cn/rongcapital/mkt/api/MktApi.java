@@ -10,6 +10,9 @@
 
 package cn.rongcapital.mkt.api;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +30,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1554,19 +1560,22 @@ public class MktApi {
 	public BaseOutput fileTagUpdate(FileTagUpdateIn fileTagUpdateIn){
 		return fileTagUpdateService.updateFileTag(fileTagUpdateIn);
 	}
-	
-	/**
+
+    /**
      * @功能简述: 编辑某条主数据详细信息
      * @param body
      * @return BaseOutput
      */
     @GET
     @Path("/mkt.data.quality.log.download")
-    public BaseOutput downloadQualityLog(@NotEmpty @QueryParam("user_token") String userToken,
+    public Object downloadQualityLog(@NotEmpty @QueryParam("user_token") String userToken,
                     @NotNull @QueryParam("import_data_id") Long importDataId) {
-        return dataDownloadQualityLogService.downloadQualityLog(importDataId);
+        File file = dataDownloadQualityLogService.downloadQualityLog(importDataId);
+        Response.ResponseBuilder response = Response.ok((Object) file);
+        response.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+        return response.build();
     }
-    
+
 	/**
 	 * 搜索活动节点上的人
 	 * @param userToken

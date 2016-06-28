@@ -1,12 +1,14 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,6 +148,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public CampaignBodyCreateOut campaignBodyCreate(CampaignBodyCreateIn body, SecurityContext securityContext) {
+		DateFormat formatter = new SimpleDateFormat(ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+		jacksonObjectMapper.setDateFormat(formatter);
 		int campaignHeadId = body.getCampaignHeadId();
 		CampaignBodyCreateOut out = checkCampaignBiz(campaignHeadId);
 		if(null != out) {
@@ -170,10 +174,14 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				switch (campaignNodeChainIn.getItemType()) {
 				case ApiConstant.CAMPAIGN_ITEM_TRIGGER_TIMMER://定时触发
 					TaskSchedule taskSchedule = initTaskTimeTrigger(campaignNodeChainIn,campaignHeadId);
-					taskScheduleDao.insert(taskSchedule);
-					taskId = taskSchedule.getId();
+					if(null != taskSchedule) {
+						taskScheduleDao.insert(taskSchedule);
+						taskId = taskSchedule.getId();
+					}
 					CampaignTriggerTimer campaignTriggerTimer = initCampaignTriggerTimer(campaignNodeChainIn,campaignHeadId);
-					campaignTriggerTimerDao.insert(campaignTriggerTimer);
+					if(null != campaignTriggerTimer) {
+						campaignTriggerTimerDao.insert(campaignTriggerTimer);
+					}
 					break;
 				}
 			}
@@ -186,7 +194,9 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 						taskId = taskSchedule.getId();
 					}
 					CampaignAudienceTarget campaignAudienceTarget = initCampaignAudienceTarget(campaignNodeChainIn,campaignHeadId);
-					CampaignAudienceTargetDao.insert(campaignAudienceTarget);
+					if(null != campaignAudienceTarget) {
+						CampaignAudienceTargetDao.insert(campaignAudienceTarget);
+					}
 					break;
 				}
 			}
@@ -194,9 +204,13 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				TaskSchedule taskSchedule = null;
 				switch (campaignNodeChainIn.getItemType()) {
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_PROP_COMPARE://联系人属性比较
-					// TO DO:联系人属性比较，需求不明确，暂不生成任务
+					taskSchedule = initTaskPropCompare(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
 					CampaignDecisionPropCompare campaignDecisionPropCompare = initCampaignDecisionPropCompare(campaignNodeChainIn,campaignHeadId);
-					campaignDecisionPropCompareDao.insert(campaignDecisionPropCompare);
+					if(null != campaignDecisionPropCompare) {
+						campaignDecisionPropCompareDao.insert(campaignDecisionPropCompare);
+					}
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_SENT://微信图文是否发送(节点已去掉)
 //					taskSchedule = initTaskWechatSent(campaignNodeChainIn,campaignHeadId);
@@ -207,38 +221,56 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_READ://微信图文是否查看
 					taskSchedule = initTaskWechatRead(campaignNodeChainIn,campaignHeadId);
-					taskScheduleDao.insert(taskSchedule);
-					taskId = taskSchedule.getId();
+					if(null != taskSchedule) {
+						taskScheduleDao.insert(taskSchedule);
+						taskId = taskSchedule.getId();
+					}
 					CampaignDecisionWechatRead campaignDecisionWechatRead = initCampaignDecisionWechatRead(campaignNodeChainIn,campaignHeadId);
-					campaignDecisionWechatReadDao.insert(campaignDecisionWechatRead);
+					if(null != campaignDecisionWechatRead) {
+						campaignDecisionWechatReadDao.insert(campaignDecisionWechatRead);
+					}
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_WECHAT_FORWARD://微信图文是否转发
 					taskSchedule = initTaskWechatForward(campaignNodeChainIn,campaignHeadId);
-					taskScheduleDao.insert(taskSchedule);
-					taskId = taskSchedule.getId();
+					if(null != taskSchedule) {
+						taskScheduleDao.insert(taskSchedule);
+						taskId = taskSchedule.getId();
+					}
 					CampaignDecisionWechatForward campaignDecisionWechatForward = initCampaignDecisionWechatForward(campaignNodeChainIn,campaignHeadId);
-					campaignDecisionWechatForwardDao.insert(campaignDecisionWechatForward);
+					if(null != campaignDecisionWechatForward) {
+						campaignDecisionWechatForwardDao.insert(campaignDecisionWechatForward);
+					}
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_IS_SUBSCRIBE://是否订阅公众号
 					taskSchedule = initTaskWechatSubscribe(campaignNodeChainIn,campaignHeadId);
-					taskScheduleDao.insert(taskSchedule);
-					taskId = taskSchedule.getId();
+					if(null != taskSchedule) {
+						taskScheduleDao.insert(taskSchedule);
+						taskId = taskSchedule.getId();
+					}
 					CampaignDecisionPubFans campaignDecisionPubFans = initCampaignDecisionPubFans(campaignNodeChainIn,campaignHeadId);
-					campaignDecisionPubFansDao.insert(campaignDecisionPubFans);
+					if(null != campaignDecisionPubFans) {
+						campaignDecisionPubFansDao.insert(campaignDecisionPubFans);
+					}
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_IS_PRIVT_FRIEND://是否个人号好友
 					taskSchedule = initTaskWechatPrivFriend(campaignNodeChainIn,campaignHeadId);
-					taskScheduleDao.insert(taskSchedule);
-					taskId = taskSchedule.getId();
+					if(null != taskSchedule) {
+						taskScheduleDao.insert(taskSchedule);
+						taskId = taskSchedule.getId();
+					}
 					CampaignDecisionPrvtFriends campaignDecisionPrvtFriends = initCampaignDecisionPrvtFriends(campaignNodeChainIn,campaignHeadId);
-					campaignDecisionPrvtFriendsDao.insert(campaignDecisionPrvtFriends);
+					if(null != campaignDecisionPrvtFriends) {
+						campaignDecisionPrvtFriendsDao.insert(campaignDecisionPrvtFriends);
+					}
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_DECISION_TAG://标签判断
 					taskSchedule = initTaskDecisionTag(campaignNodeChainIn,campaignHeadId);
 					taskScheduleDao.insert(taskSchedule);
 					taskId = taskSchedule.getId();
 					CampaignDecisionTag campaignDecisionTag = initCampaignDecisionTag(campaignNodeChainIn,campaignHeadId);
-					campaignDecisionTagDao.insert(campaignDecisionTag);
+					if(null != campaignDecisionTag) {
+						campaignDecisionTagDao.insert(campaignDecisionTag);
+					}
 					break;
 				}
 			}
@@ -250,7 +282,9 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					taskScheduleDao.insert(taskSchedule);
 					taskId = taskSchedule.getId();
 					CampaignActionWait campaignActionWait = initCampaignActionWait(campaignNodeChainIn,campaignHeadId);
-					campaignActionWaitDao.insert(campaignActionWait);
+					if(null != campaignActionWait) {
+						campaignActionWaitDao.insert(campaignActionWait);
+					}
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_SAVE_AUDIENCE://保存当前人群
 					CampaignActionSaveAudience campaignActionSaveAudience = initCampaignActionSaveAudience(campaignNodeChainIn,campaignHeadId);
@@ -266,14 +300,18 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					taskSchedule = initTaskActionSaveAudience(campaignNodeChainIn,campaignHeadId);
 					taskScheduleDao.insert(taskSchedule);
 					taskId = taskSchedule.getId();
-					campaignActionSaveAudienceDao.insert(campaignActionSaveAudience);
+					if(null != campaignActionSaveAudience) {
+						campaignActionSaveAudienceDao.insert(campaignActionSaveAudience);
+					}
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_SET_TAG://设置标签
 					CampaignActionSetTag campaignActionSetTag = initCampaignActionSetTag(campaignNodeChainIn,campaignHeadId);
 					taskSchedule = initTaskActionSetTag(campaignNodeChainIn,campaignHeadId);
 					taskScheduleDao.insert(taskSchedule);
 					taskId = taskSchedule.getId();
-					campaignActionSetTagDao.insert(campaignActionSetTag);
+					if(null != campaignActionSetTag) {
+						campaignActionSetTagDao.insert(campaignActionSetTag);
+					}
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_ADD_CAMPAIGN://添加到其它活动
 					break;
@@ -284,21 +322,27 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					taskSchedule = initTaskActionSendWechatH5(campaignNodeChainIn,campaignHeadId);
 					taskScheduleDao.insert(taskSchedule);
 					taskId = taskSchedule.getId();
-					campaignActionSendPubDao.insert(campaignActionSendPub);
+					if(null != campaignActionSendPub) {
+						campaignActionSendPubDao.insert(campaignActionSendPub);
+					}
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_H5://发送H5图文
 					CampaignActionSendH5 campaignActionSendH5 = initCampaignActionSendH5(campaignNodeChainIn,campaignHeadId);
 					taskSchedule = initTaskActionSendH5(campaignNodeChainIn,campaignHeadId);
 					taskScheduleDao.insert(taskSchedule);
 					taskId = taskSchedule.getId();
-					campaignActionSendH5Dao.insert(campaignActionSendH5);
+					if(null != campaignActionSendH5) {
+						campaignActionSendH5Dao.insert(campaignActionSendH5);
+					}
 					break;
 				case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_PRVT_INFO://发送个人号消息
 					taskSchedule = initTaskActionSendPrvInfo(campaignNodeChainIn,campaignHeadId);
 					taskScheduleDao.insert(taskSchedule);
 					taskId = taskSchedule.getId();
 					CampaignActionSendPrivt campaignActionSendPrivt = initCampaignActionSendPrivt(campaignNodeChainIn,campaignHeadId);
-					campaignActionSendPrivtDao.insert(campaignActionSendPrivt);
+					if(null != campaignActionSendPrivt) {
+						campaignActionSendPrivtDao.insert(campaignActionSendPrivt);
+					}
 					break;
 				}
 			}
@@ -308,7 +352,9 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				campaignNodeItemDao.updateById(campaignNodeItem);
 			}
 			CampaignBody campaignBody = initCampaignBody(campaignNodeChainIn,campaignHeadId,taskId);
-			campaignBodyDao.insert(campaignBody);
+			if(null != campaignBody) {
+				campaignBodyDao.insert(campaignBody);
+			}
 		}
 		out = new CampaignBodyCreateOut(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 		return out;
@@ -382,6 +428,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private TaskSchedule initTaskTimeTrigger(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		TaskSchedule taskSchedule = new TaskSchedule();
 		CampaignTriggerTimerIn campaignTriggerTimerIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignTriggerTimerIn.class);
+		if(null == campaignTriggerTimerIn) return null;
 		Date startTime = DateUtil.getDateFromString(campaignTriggerTimerIn.getStartTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
 		Date endTime = DateUtil.getDateFromString(campaignTriggerTimerIn.getEndTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
 		taskSchedule.setStartTime(startTime);
@@ -393,7 +440,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		ch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		ch.setId(campaignHeadId);
 		List<CampaignHead> chList = campaignHeadDao.selectList(ch);
-		if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(chList)){
+		if(CollectionUtils.isNotEmpty(chList)){
 			if(chList.get(0).getPublishStatus()==ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH) {
 				taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_VALID);//如果活动是已发布状态,设置触发任务为可运行状态
 			}else {
@@ -431,21 +478,32 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	
 	private TaskSchedule initTaskAudienceTarget(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
-		Byte allowedNew = campaignAudienceTargetIn.getAllowedNew();
-		if(null!=allowedNew) {
-			if(allowedNew==0) {
-				TaskSchedule taskSchedule = new TaskSchedule();
-				Integer intervalMinutes = tranlateToMinutes(campaignAudienceTargetIn.getRefreshInterval(), 
-						campaignAudienceTargetIn.getRefreshIntervalType());
-				taskSchedule.setIntervalMinutes(intervalMinutes);
-				taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_AUDIENCE_TARGET);
-				taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
-				taskSchedule.setCampaignHeadId(campaignHeadId);
-				taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
-				return taskSchedule;
+		if(null != campaignAudienceTargetIn) {
+			Byte allowedNew = campaignAudienceTargetIn.getAllowedNew();
+			if(null!=allowedNew) {
+				if(allowedNew==0) {
+					TaskSchedule taskSchedule = new TaskSchedule();
+					Integer intervalMinutes = tranlateToMinutes(campaignAudienceTargetIn.getRefreshInterval(), 
+							campaignAudienceTargetIn.getRefreshIntervalType());
+					taskSchedule.setIntervalMinutes(intervalMinutes);
+					taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_AUDIENCE_TARGET);
+					taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+					taskSchedule.setCampaignHeadId(campaignHeadId);
+					taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+					return taskSchedule;
+				}
 			}
 		}
 		return null;
+	}
+	
+	private TaskSchedule initTaskPropCompare(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		TaskSchedule taskSchedule = new TaskSchedule();
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_PROP_COMPARE);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+		return taskSchedule;
 	}
 	
 //	private TaskSchedule initTaskWechatSent(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
@@ -463,6 +521,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	
 	private TaskSchedule initTaskWechatRead(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionWechatReadIn campaignDecisionWechatReadIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatReadIn.class);
+		if(null == campaignDecisionWechatReadIn) return null;
 		TaskSchedule taskSchedule = new TaskSchedule();
 		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatReadIn.getRefreshInterval(), 
 													campaignDecisionWechatReadIn.getRefreshIntervalType());
@@ -476,6 +535,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	
 	private TaskSchedule initTaskWechatForward(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionWechatForwardIn campaignDecisionWechatForwardIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatForwardIn.class);
+		if(null == campaignDecisionWechatForwardIn) return null;
 		TaskSchedule taskSchedule = new TaskSchedule();
 		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatForwardIn.getRefreshInterval(), 
 													campaignDecisionWechatForwardIn.getRefreshIntervalType());
@@ -489,6 +549,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	
 	private TaskSchedule initTaskWechatSubscribe(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionPubFansIn campaignDecisionPubFansIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPubFansIn.class);
+		if(null == campaignDecisionPubFansIn) return null;
 		TaskSchedule taskSchedule = new TaskSchedule();
 		Integer intervalMinutes = tranlateToMinutes(campaignDecisionPubFansIn.getRefreshInterval(), 
 													campaignDecisionPubFansIn.getRefreshIntervalType());
@@ -502,6 +563,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	
 	private TaskSchedule initTaskWechatPrivFriend(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionPrvtFriendsIn campaignDecisionPrvtFriendsIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPrvtFriendsIn.class);
+		if(null == campaignDecisionPrvtFriendsIn) return null;
 		TaskSchedule taskSchedule = new TaskSchedule();
 		Integer intervalMinutes = tranlateToMinutes(campaignDecisionPrvtFriendsIn.getRefreshInterval(), 
 													campaignDecisionPrvtFriendsIn.getRefreshIntervalType());
@@ -616,6 +678,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignActionSendPrivt initCampaignActionSendPrivt(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionSendPrivt campaignActionSendPrivt = new CampaignActionSendPrivt();
 		CampaignActionSendPrivtIn campaignActionSendPrivtIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendPrivtIn.class);
+		if(null == campaignActionSendPrivtIn) return null;
 		campaignActionSendPrivt.setName(campaignActionSendPrivtIn.getName());
 		campaignActionSendPrivt.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSendPrivt.setCampaignHeadId(campaignHeadId);
@@ -659,6 +722,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignActionSendH5 initCampaignActionSendH5(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionSendH5 campaignActionSendH5 = new CampaignActionSendH5();
 		CampaignActionSendH5In campaignActionSendH5In = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendH5In.class);
+		if(null == campaignActionSendH5In) return null;
 		campaignActionSendH5.setName(campaignActionSendH5In.getName());
 		campaignActionSendH5.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSendH5.setCampaignHeadId(campaignHeadId);
@@ -712,6 +776,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignActionSendPub initCampaignActionSendPub(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionSendPub campaignActionSendPub = new CampaignActionSendPub();
 		CampaignActionSendPubIn campaignActionSendPubIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendPubIn.class);
+		if(null == campaignActionSendPubIn) return null;
 		campaignActionSendPub.setName(campaignActionSendPubIn.getName());
 		campaignActionSendPub.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSendPub.setCampaignHeadId(campaignHeadId);
@@ -745,6 +810,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignActionSetTag initCampaignActionSetTag(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionSetTag campaignActionSetTag = new CampaignActionSetTag();
 		CampaignActionSetTagIn campaignActionSetTagIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSetTagIn.class);
+		if(null == campaignActionSetTagIn) return null;
 		campaignActionSetTag.setName(campaignActionSetTagIn.getName());
 		campaignActionSetTag.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSetTag.setCampaignHeadId(campaignHeadId);
@@ -779,6 +845,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignActionSaveAudience initCampaignActionSaveAudience(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionSaveAudience campaignActionSaveAudience = new CampaignActionSaveAudience();
 		CampaignActionSaveAudienceIn campaignActionSaveAudienceIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSaveAudienceIn.class);
+		if(null == campaignActionSaveAudienceIn) return null;
 		campaignActionSaveAudience.setName(campaignActionSaveAudienceIn.getName());
 		campaignActionSaveAudience.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSaveAudience.setCampaignHeadId(campaignHeadId);
@@ -790,6 +857,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignActionWait initCampaignActionWait(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignActionWait campaignActionWait = new CampaignActionWait();
 		CampaignActionWaitIn campaignActionWaitIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionWaitIn.class);
+		if(null == campaignActionWaitIn) return null;
 		campaignActionWait.setName(campaignActionWaitIn.getName());
 		campaignActionWait.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionWait.setCampaignHeadId(campaignHeadId);
@@ -803,6 +871,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignDecisionTag initCampaignDecisionTag(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionTag campaignDecisionTag = new CampaignDecisionTag();
 		CampaignDecisionTagIn campaignDecisionTagIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionTagIn.class);
+		if(null == campaignDecisionTagIn) return null;
 		campaignDecisionTag.setName(campaignDecisionTagIn.getName());
 		campaignDecisionTag.setItemId(campaignNodeChainIn.getItemId());
 		campaignDecisionTag.setCampaignHeadId(campaignHeadId);
@@ -822,6 +891,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignDecisionPrvtFriends initCampaignDecisionPrvtFriends(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionPrvtFriends campaignDecisionPrvtFriends = new CampaignDecisionPrvtFriends();
 		CampaignDecisionPrvtFriendsIn campaignDecisionPrvtFriendsIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPrvtFriendsIn.class);
+		if(null == campaignDecisionPrvtFriendsIn) return null;
 		campaignDecisionPrvtFriends.setName(campaignDecisionPrvtFriendsIn.getName());
 		campaignDecisionPrvtFriends.setItemId(campaignNodeChainIn.getItemId());
 		campaignDecisionPrvtFriends.setCampaignHeadId(campaignHeadId);
@@ -865,6 +935,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignDecisionPubFans initCampaignDecisionPubFans(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionPubFans campaignDecisionPubFans = new CampaignDecisionPubFans();
 		CampaignDecisionPubFansIn campaignDecisionPubFansIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPubFansIn.class);
+		if(null == campaignDecisionPubFansIn) return null;
 		campaignDecisionPubFans.setName(campaignDecisionPubFansIn.getName());
 		campaignDecisionPubFans.setItemId(campaignNodeChainIn.getItemId());
 		campaignDecisionPubFans.setCampaignHeadId(campaignHeadId);
@@ -888,6 +959,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignDecisionWechatForward initCampaignDecisionWechatForward(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionWechatForward campaignDecisionWechatForward = new CampaignDecisionWechatForward();
 		CampaignDecisionWechatForwardIn campaignDecisionWechatForwardIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatForwardIn.class);
+		if(null == campaignDecisionWechatForwardIn) return null;
 		campaignDecisionWechatForward.setName(campaignDecisionWechatForwardIn.getName());
 		campaignDecisionWechatForward.setItemId(campaignNodeChainIn.getItemId());
 		campaignDecisionWechatForward.setCampaignHeadId(campaignHeadId);
@@ -924,6 +996,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignDecisionWechatRead initCampaignDecisionWechatRead(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionWechatRead campaignDecisionWechatRead = new  CampaignDecisionWechatRead();
 		CampaignDecisionWechatReadIn campaignDecisionWechatReadIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatReadIn.class);
+		if(null == campaignDecisionWechatReadIn) return null;
 		campaignDecisionWechatRead.setName(campaignDecisionWechatReadIn.getName());
 		campaignDecisionWechatRead.setItemId(campaignNodeChainIn.getItemId());
 		campaignDecisionWechatRead.setCampaignHeadId(campaignHeadId);
@@ -976,6 +1049,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignDecisionPropCompare initCampaignDecisionPropCompare(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignDecisionPropCompare campaignDecisionPropCompare = new  CampaignDecisionPropCompare();
 		CampaignDecisionPropCompareIn campaignDecisionPropCompareIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPropCompareIn.class);
+		if(null == campaignDecisionPropCompareIn) return null;
 		campaignDecisionPropCompare.setName(campaignDecisionPropCompareIn.getName());
 		campaignDecisionPropCompare.setItemId(campaignNodeChainIn.getItemId());
 		campaignDecisionPropCompare.setCampaignHeadId(campaignHeadId);
@@ -1026,6 +1100,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignTriggerTimer initCampaignTriggerTimer(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignTriggerTimer campaignTriggerTimer = new CampaignTriggerTimer();
 		CampaignTriggerTimerIn campaignTriggerTimerIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignTriggerTimerIn.class);
+		if(null == campaignTriggerTimerIn) return null;
 		campaignTriggerTimer.setCampaignHeadId(campaignHeadId);
 		campaignTriggerTimer.setItemId(campaignNodeChainIn.getItemId());
 		campaignTriggerTimer.setName(campaignTriggerTimerIn.getName());
@@ -1037,6 +1112,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignAudienceTarget initCampaignAudienceTarget(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignAudienceTarget campaignAudienceTarget = new CampaignAudienceTarget();
 		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
+		if(null == campaignAudienceTargetIn) return null;
 		campaignAudienceTarget.setName(campaignAudienceTargetIn.getName());
 		campaignAudienceTarget.setCampaignHeadId(campaignHeadId);
 		campaignAudienceTarget.setItemId(campaignNodeChainIn.getItemId());

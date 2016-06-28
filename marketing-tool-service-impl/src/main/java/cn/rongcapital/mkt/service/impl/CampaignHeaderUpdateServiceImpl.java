@@ -16,7 +16,9 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.UserSessionUtil;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
+import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.po.CampaignHead;
+import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CampaignHeadUpdateIn;
@@ -26,6 +28,8 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
 
 	@Autowired
 	private CampaignHeadDao campaignHeadDao;
+	@Autowired
+	private TaskScheduleDao taskScheduleDao;
 	
 	@Override
 	public BaseOutput campaignHeaderUpdate(CampaignHeadUpdateIn body, SecurityContext securityContext) {
@@ -40,6 +44,30 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
     	Date now = new Date();
     	t.setCreateTime(now);
     	campaignHeadDao.updateById(t);
+    	
+		TaskSchedule taskScheduleT = new TaskSchedule();
+		taskScheduleT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		taskScheduleT.setCampaignHeadId(body.getCampaignId());
+		taskScheduleT.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_TRUGGER_TIME);
+		List<TaskSchedule> taskScheduleList = taskScheduleDao.selectList(taskScheduleT);
+    	if(body.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH){
+    		//设置时间触发节点的定时任务的task_status=0(ready to run)
+    		if(CollectionUtils.isNotEmpty(taskScheduleList)){
+    			for(TaskSchedule ts:taskScheduleList) {
+					ts.setTaskStatus(ApiConstant.TASK_STATUS_VALID);
+					taskScheduleDao.updateById(ts);
+    			}
+    		}	
+    	} 
+    	if(body.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH) {
+    		//设置任务为不可运行状态
+    		if(CollectionUtils.isNotEmpty(taskScheduleList)){
+    			for(TaskSchedule ts:taskScheduleList) {
+					ts.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);
+					taskScheduleDao.updateById(ts);
+    			}
+    		}	
+    	}
     	Map<String,Object> map = new HashMap<String,Object>();
     	map.put("oper", UserSessionUtil.getUserNameByUserToken());//TO DO:获取当前用户名
     	map.put("updatetime", DateUtil.getStringFromDate(now, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));

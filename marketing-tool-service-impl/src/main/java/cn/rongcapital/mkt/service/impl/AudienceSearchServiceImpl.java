@@ -1,9 +1,9 @@
 /*************************************************
- * @功能简述: AudienceListService实现类
+ * @功能简述: AudienceSearchService实现类
  * @see: MkyApi
- * @author: 杨玉麟
+ * @author: xukun
  * @version: 1.0
- * @date: 2016/6/6 
+ * @date: 2016/6/23 
 *************************************************/
 
 
@@ -48,6 +48,10 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 	@Autowired
 	DataPartyDao dataPartyDao;	
 	
+	//微信
+	@Autowired
+    //DataPartyDao dataPartyDao;
+	
 	private static final String ORDER_BY_FIELD_NAME = "field_order";//排序的字段名
 	
 	@Override
@@ -66,12 +70,11 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 		                   ApiErrorCode.SUCCESS.getMsg(),
 		                   ApiConstant.INT_ZERO,null);
-		
-		
-		if(audience_type.equals("0")){
-		    
-		    //全局模糊查询所有联系人		    
+				
+		if(audience_type.equals("0")){		    
+		    //全局模糊查询所有联系人		    		    
 		    Map<String,Object> map=dataPartyDao.selectListByKeyName(audience_name);	
+		    
 		    //返回结果
 		    
 		}else if(audience_type.equals("1")){
@@ -97,8 +100,8 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
                 partyIdList.add(col.getPartyId());
             }
             
-            //2.在微信中查找名字(? 昵称 ? )匹配的
-            Map<String,Object> map=dataPartyDao.selectListByNameInList(partyIdList,audience_name); 
+            //2.在微信中查找昵称匹配的(wechat_member)
+            //Map<String,Object> map=wechatMemberDao.selectListByNameInList(partyIdList,audience_name); 
             
             //3.返回结果
             
@@ -122,10 +125,7 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
             
             
         }else{
-          //全局查询所有联系人
-            //全局模糊查询所有联系人            
-            Map<String,Object> map=dataPartyDao.selectListByKeyName(audience_name); 
-          //返回结果
+          ;
         }
 		
 		
