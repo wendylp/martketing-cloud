@@ -97,13 +97,13 @@ public class CampaignProgressStatusListServiceImpl implements
 				cat.setCampaignHeadId(c.getId());
 				List<CampaignAudienceTarget> catList = campaignAudienceTargetDao.selectList(cat);
 				if(CollectionUtils.isNotEmpty(catList)){
-					List<String> campNameList = new ArrayList<String>();
+					List<String> audienceNameList = new ArrayList<String>();
 					for(CampaignAudienceTarget campaignAudienceTarget:catList) {
 						if(StringUtils.isNotBlank(campaignAudienceTarget.getName())) {
-							campNameList.add(campaignAudienceTarget.getName());
+							audienceNameList.add(campaignAudienceTarget.getName());
 						}
 					}
-					campaignProgressStatusListOut.setCampaignName(StringUtils.join(campNameList, ";"));
+					campaignProgressStatusListOut.setSegmentationName(StringUtils.join(audienceNameList, ";"));
 				}
 				
 				result.getData().add(campaignProgressStatusListOut);
