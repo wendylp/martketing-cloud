@@ -107,8 +107,8 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
                 partyIdList.add(col.getPartyId());
             }
             
-            //2.在微信中查找昵称匹配的
-            Map<String,Object> map=dataPartyDao.selectListByNameInList(partyIdList,audience_name); 
+            //2.在微信中查找昵称匹配的(wechat_member)
+            Map<String,Object> map=wechatMemberDao.selectListByNameInList(partyIdList,audience_name); 
             
             //3.返回结果
             

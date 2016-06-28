@@ -2,16 +2,10 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.dao.DataArchPointDao;
 import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
@@ -21,11 +15,7 @@ import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.DataPaymentDao;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
-import cn.rongcapital.mkt.dao.TagDao;
-import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.mongodb.DataPartyRepository;
-import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.po.DataArchPoint;
 import cn.rongcapital.mkt.po.DataCustomerTags;
 import cn.rongcapital.mkt.po.DataLogin;
@@ -35,14 +25,14 @@ import cn.rongcapital.mkt.po.DataPayment;
 import cn.rongcapital.mkt.po.DataPopulation;
 import cn.rongcapital.mkt.po.DataShopping;
 
+
+
 @Service
 public class DataPartySyncTaskServiceImpl implements TaskService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@Autowired
-	private DataPartyRepository dataPartyRepository;
-	
+		
     //主数据data_xxx
 	@Autowired
     private DataPartyDao dataPartyDao;
@@ -67,110 +57,124 @@ public class DataPartySyncTaskServiceImpl implements TaskService {
     
     @Autowired
     private DataLoginDao dataLoginDao;
-	
-	@Autowired
-	private MongoTemplate mongoTemplate;
+		
 	
 	@Override
 	public void task(Integer taskId) {
-	    		
-	    //1.从mysql data_party表中读取所有mid,keyid
-	    DataParty dataParty=new DataParty();	    
-	    //dataParty.setStatus(0);	    
 	    
-	    //分批读出
-	    List<DataParty> datapartyList=dataPartyDao.selectList(dataParty); 
+	    for(int i=1;i<8;i++){
 	    
-	    //2.根据keyid在data_xxx表中查出所有字段插入mongodb data_party表中
-	    for(DataParty data_party : datapartyList){
-	        
-	        Integer data_type=data_party.getMdType();
-	        String keyid=data_party.getMappingKeyid();
-	        
-	        add2Mongo(data_type,keyid);
-	        
+	        add2DataParty(i);
 	    }
+
 
 	}
 	
-	private void add2Mongo(int data_type,String keyid){
+	private void add2DataParty(int type){
 	    
-	    //data_entity
+	    //从mysql data_xxx表中读取数据
         List<Integer> idList=new ArrayList<Integer>();
-        idList.add(Integer.parseInt(keyid));
-	    
-	    //批量插入
-	    if(data_type==1){
-	        
-	        List<DataPopulation> dataList=dataPopulationDao.selectListByIdList(idList);
-	        
-	        //insert into mongodb
-	        for(DataPopulation dataObj : dataList){
-	            ;
-	            //mongoTemplate.createCollection(dataObj);
-	        }
-	        	        
-	        
-	    }else if(data_type==2){
-	        
-	        List<DataCustomerTags> dataList=dataCustomerTagsDao.selectListByIdList(idList);
+        
+        
+        if(type==1){            
+            List<DataPopulation> dataPopulationList=dataPopulationDao.selectListByIdList(idList); 
+            for(DataPopulation dataObj : dataPopulationList){                
+                
+                DataParty dataParty=new DataParty();                   
+                
+                dataParty.setMappingKeyid(dataObj.getId()+"");
+                dataParty.setMdType(Integer.parseInt("1"));
+                dataParty.setMobile(dataObj.getMobile());
+                dataParty.setName(dataObj.getName());
+                dataParty.setGender(dataObj.getGender());
+                dataParty.setBirthday(dataObj.getBirthday());
+                dataParty.setProvice(dataObj.getProvice());
+                dataParty.setCity(dataObj.getCity());
+                dataParty.setJob(dataObj.getJob());
+                dataParty.setMonthlyIncome(dataObj.getMonthlyIncome());
+                dataParty.setMonthlyConsume(dataObj.getMonthlyConsume());
+                dataParty.setSource("1");
+                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
+                                                
+                dataPartyDao.insert(dataParty);
+            }            
+        }else if(type==2){            
+            List<DataCustomerTags> dataCustomerTagsList=dataCustomerTagsDao.selectListByIdList(idList);
+            for(DataCustomerTags dataObj : dataCustomerTagsList){                
+                
+                DataParty dataParty=new DataParty();        
+                dataParty.setMappingKeyid(dataObj.getId()+""); 
+                dataParty.setMdType(Integer.parseInt("2"));                
+                dataParty.setSource("2");
+                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
             
-            //insert into mongodb
-            for(DataCustomerTags dataObj : dataList){
-                ;
-                //mongoTemplate.createCollection(dataObj);
+                dataPartyDao.insert(dataParty);
+            } 
+            
+        }else if(type==3){
+            List<DataArchPoint> dataArchPointList=dataArchPointDao.selectListByIdList(idList);
+            for(DataArchPoint dataObj : dataArchPointList){                
+                
+                DataParty dataParty=new DataParty();        
+                dataParty.setMappingKeyid(dataObj.getId()+"");
+                dataParty.setMdType(Integer.parseInt("3"));                
+                dataParty.setSource("3");
+                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
+                dataPartyDao.insert(dataParty);
             }
-	        
-	    }else if(data_type==3){
-	        
-	        List<DataArchPoint> dataList=dataArchPointDao.selectListByIdList(idList);
+        }else if(type==4){
+            List<DataMember> dataMemberList=dataMemberDao.selectListByIdList(idList);            
+            for(DataMember dataObj : dataMemberList){                
+                
+                DataParty dataParty=new DataParty();        
+                dataParty.setMappingKeyid(dataObj.getId()+"");
+                dataParty.setMdType(Integer.parseInt("4"));
+                dataParty.setSource("4");
+                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
             
-            //insert into mongodb
-            for(DataArchPoint dataObj : dataList){
-                ;
-                //mongoTemplate.createCollection(dataObj);
+                dataPartyDao.insert(dataParty);
             }
-        }else if(data_type==4){
+        }else if(type==5){
+            List<DataLogin> dataLoginList=dataLoginDao.selectListByIdList(idList);
+            for(DataLogin dataObj : dataLoginList){                
+                
+                DataParty dataParty=new DataParty();        
+                dataParty.setMappingKeyid(dataObj.getId()+"");
+                dataParty.setMdType(Integer.parseInt("5")); 
+                dataParty.setSource("5");
+                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
             
-            List<DataMember> dataList=dataMemberDao.selectListByIdList(idList);
-            
-            //insert into mongodb
-            for(DataMember dataObj : dataList){
-                ;
-                //mongoTemplate.createCollection(dataObj);
+                dataPartyDao.insert(dataParty);
             }
-        }else if(data_type==5){
+        }else if(type==6){
+            List<DataPayment> dataPaymentList=dataPaymentDao.selectListByIdList(idList);
+            for(DataPayment dataObj : dataPaymentList){                
+                
+                DataParty dataParty=new DataParty();        
+                dataParty.setMappingKeyid(dataObj.getId()+"");
+                dataParty.setMdType(Integer.parseInt("6"));
+                dataParty.setSource("6");
+                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
             
-            List<DataLogin> dataList=dataLoginDao.selectListByIdList(idList);
-            
-            //insert into mongodb
-            for(DataLogin dataObj : dataList){
-                ;
-                //mongoTemplate.createCollection(dataObj);
+                dataPartyDao.insert(dataParty);
             }
-        }else if(data_type==6){
+        }else if(type==7){
+            List<DataShopping> dataShoppingList=dataShoppingDao.selectListByIdList(idList);
+            for(DataShopping dataObj : dataShoppingList){                
+                
+                DataParty dataParty=new DataParty();        
+                dataParty.setMappingKeyid(dataObj.getId()+"");
+                dataParty.setMdType(Integer.parseInt("7"));
+                dataParty.setSource("7");
+                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
             
-            List<DataPayment> dataList=dataPaymentDao.selectListByIdList(idList);
-            
-            //insert into mongodb
-            for(DataPayment dataObj : dataList){
-                ;
-                //mongoTemplate.createCollection(dataObj);
-            }
-        }else if(data_type==7){
-            
-            List<DataShopping> dataList=dataShoppingDao.selectListByIdList(idList);
-            
-            //insert into mongodb
-            for(DataShopping dataObj : dataList){
-                ;
-                //mongoTemplate.createCollection(dataObj);
+                dataPartyDao.insert(dataParty);
             }
         }else{
-            ;
+            logger.debug("Invalid Type="+type);;
         }
-	        
-	    
+        
 	}
+	
 	
 }
