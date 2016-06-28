@@ -48,7 +48,7 @@ public interface OriginalDataPopulationDao extends BaseDao<OriginalDataPopulatio
 
 	/**
 	 * 根据FileUnique获取id列表
-	 * @param List
+	 * @param paramMap
 	 * @return int
 	 */
 	List<Long> selelctIdListByFileUnique(Map<String, Object> paramMap);
