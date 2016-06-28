@@ -644,6 +644,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 			campaignDecisionPropCompareOut.setPropType(campaignDecisionPropCompare.getPropType());
 			campaignDecisionPropCompareOut.setRule(campaignDecisionPropCompare.getRule());
 			campaignDecisionPropCompareOut.setRuleValue(campaignDecisionPropCompare.getValue());
+			campaignDecisionPropCompareOut.setExclude(campaignDecisionPropCompare.getExclude());
 		}
 		return campaignDecisionPropCompareOut;
 	}

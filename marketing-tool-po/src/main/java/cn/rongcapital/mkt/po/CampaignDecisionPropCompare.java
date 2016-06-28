@@ -17,6 +17,8 @@ public class CampaignDecisionPropCompare extends BaseQuery {
 
     private Byte rule;
 
+    private Byte exclude;
+
     private String value;
 
     private Byte status;
@@ -71,6 +73,14 @@ public class CampaignDecisionPropCompare extends BaseQuery {
 
     public void setRule(Byte rule) {
         this.rule = rule;
+    }
+
+    public Byte getExclude() {
+        return exclude;
+    }
+
+    public void setExclude(Byte exclude) {
+        this.exclude = exclude;
     }
 
     public String getValue() {

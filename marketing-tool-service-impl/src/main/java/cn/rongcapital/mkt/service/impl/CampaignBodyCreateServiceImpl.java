@@ -1056,6 +1056,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionPropCompare.setPropType(campaignDecisionPropCompareIn.getPropType());
 		campaignDecisionPropCompare.setRule(campaignDecisionPropCompareIn.getRule());
 		campaignDecisionPropCompare.setValue(campaignDecisionPropCompareIn.getRuleValue());
+		campaignDecisionPropCompare.setExclude(campaignDecisionPropCompareIn.getExlude());
 		return campaignDecisionPropCompare;
 	}
 	

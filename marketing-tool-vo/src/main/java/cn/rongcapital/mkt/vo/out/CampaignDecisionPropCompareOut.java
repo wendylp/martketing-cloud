@@ -12,6 +12,7 @@ public class CampaignDecisionPropCompareOut {
     
     private String ruleValue;
     
+    private Byte exclude;
 
     @JsonProperty("name")
     public String getName() {
@@ -40,13 +41,22 @@ public class CampaignDecisionPropCompareOut {
         this.rule = rule;
     }
 
-    @JsonProperty("value")
+    @JsonProperty("rule_value")
 	public String getRuleValue() {
 		return ruleValue;
 	}
 
 	public void setRuleValue(String ruleValue) {
 		this.ruleValue = ruleValue;
+	}
+
+	@JsonProperty("exclude")
+	public Byte getExclude() {
+		return exclude;
+	}
+
+	public void setExclude(Byte exclude) {
+		this.exclude = exclude;
 	}
 
 }

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,campaign_head_id as campaignHeadId,item_id as itemId,name as name,prop_type as propType,rule as rule,value as value,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,campaign_head_id as campaignHeadId,item_id as itemId,name as name,prop_type as propType,rule as rule,exclude as exclude,value as value,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -19,6 +19,7 @@
 		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
 		    	<if test="propType != null"><![CDATA[ AND prop_type = #{propType}]]></if>
 		    	<if test="rule != null"><![CDATA[ AND rule = #{rule}]]></if>
+		    	<if test="exclude != null"><![CDATA[ AND exclude = #{exclude}]]></if>
 		    	<if test="value != null"><![CDATA[ AND value = #{value}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
@@ -40,6 +41,7 @@
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
 		    	<if test="propType != null"><![CDATA[prop_type = #{propType},]]></if>
 		    	<if test="rule != null"><![CDATA[rule = #{rule},]]></if>
+		    	<if test="exclude != null"><![CDATA[exclude = #{exclude},]]></if>
 		    	<if test="value != null"><![CDATA[value = #{value},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
@@ -48,7 +50,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignDecisionPropCompare" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_decision_prop_compare (campaign_head_id,item_id,name,prop_type,rule,value,create_time)
+			INSERT INTO campaign_decision_prop_compare (campaign_head_id,item_id,name,prop_type,rule,exclude,value,create_time)
 			VALUES
 			(
 			  #{campaignHeadId},
@@ -56,6 +58,7 @@
 			  #{name},
 			  #{propType},
 			  #{rule},
+			  #{exclude},
 			  #{value},
 			  now()
 			)
