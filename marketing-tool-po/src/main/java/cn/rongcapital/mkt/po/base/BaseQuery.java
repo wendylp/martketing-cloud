@@ -27,6 +27,13 @@ public class BaseQuery implements Serializable{
     private transient String orderField;// 排序字段
 
     private transient String orderFieldType;// 排序字段类型:asc,desc
+    
+    
+    
+    private transient String mid;    //主数据ID
+    private transient String md_type;//主数据类型
+    private transient String mapping_keyid;//主数据keyid
+    
 
     // 自定义参数
     private transient Map<String, Object> customMap = new HashMap<>();
@@ -93,6 +100,30 @@ public class BaseQuery implements Serializable{
 
     public void setCustomMap(Map<String, Object> customMap) {
         this.customMap = customMap;
+    }
+    
+    public String getMid() {
+        return mid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
+    
+    public String getMd_type() {
+        return md_type;
+    }
+
+    public void setMd_type(String md_type) {
+        this.md_type = md_type;
+    }
+    
+    public String getMapping_keyid() {
+        return mapping_keyid;
+    }
+
+    public void setMapping_keyid(String mapping_keyid) {
+        this.mapping_keyid = mapping_keyid;
     }
 
 }

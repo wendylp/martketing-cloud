@@ -113,6 +113,7 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 				Runnable task = new Runnable() {
 					public void run() {
 						sendDynamicQueue(segmentList, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+						deleteNodeAudience(campaignHeadId,itemId,segmentList);
 					}
 				};
 				ScheduledFuture<?> scheduledFuture = null;

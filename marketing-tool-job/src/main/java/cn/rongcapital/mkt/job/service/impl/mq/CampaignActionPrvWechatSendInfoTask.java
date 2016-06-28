@@ -129,8 +129,9 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 			for(CampaignSwitch cs:campaignEndsList) {
-			//发送segment数据到后面的节点
-			sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				//发送segment数据到后面的节点
+				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				deleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
 			}
 		}
 	}

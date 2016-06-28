@@ -114,6 +114,9 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 			nodeAudience.setItemId(itemId);
 			nodeAudience.setDataId(segment.getDataId());
 			nodeAudience.setName(segment.getName());
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			}
 			Integer dataId = segment.getDataId();
 		    //从mongo的主数据表中查询该条id对应的主数据详细信息
 			DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
@@ -130,14 +133,12 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 				   segmentListToNext.add(segment);//数据放入向后面节点传递的list里
 			   }
 			}
-			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
-				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
-			}
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 			for(CampaignSwitch cs:campaignEndsList) {
 				//发送segment数据到后面的节点
 				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				deleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
 			}
 		}
 	}

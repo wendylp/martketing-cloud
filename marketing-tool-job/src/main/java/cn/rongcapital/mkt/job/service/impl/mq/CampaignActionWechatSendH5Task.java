@@ -143,6 +143,7 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 			for(CampaignSwitch cs:campaignEndsList) {
 				//发送segment数据到后面的节点
 				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				deleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
 			}
 		}
 	}
