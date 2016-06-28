@@ -52,7 +52,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 										.and("dataId").is(segement.getDataId());
 					Query query = new Query(criteria);
 					List<NodeAudience> nodeAudienceExistList = mongoTemplate.find(query, NodeAudience.class);
-					if(CollectionUtils.isNotEmpty(nodeAudienceExistList)) {//只存node_audience表中不存在的数据
+					if(CollectionUtils.isEmpty(nodeAudienceExistList)) {//只存node_audience表中不存在的数据
 						DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segement.getDataId())), DataParty.class);
 						if(null != dp && StringUtils.isNotBlank(dp.getMappingKeyid())) {
 							segement.setFansFriendsOpenId(dp.getMappingKeyid());//设置微信粉丝/好友的openid

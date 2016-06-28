@@ -69,6 +69,7 @@ public class TaskManager {
 	private void scanTask() {
 		logger.debug("scanTask");
 		TaskSchedule t= new TaskSchedule();
+		t.setPageSize(Integer.MAX_VALUE);
 		List<TaskSchedule> taskScheduleList = taskScheduleDao.selectList(t);
 		ConcurrentHashMap<String, TaskSchedule> taskPropMapTmp = new ConcurrentHashMap<String, TaskSchedule>();
 		for(TaskSchedule ts:taskScheduleList) {
@@ -92,6 +93,7 @@ public class TaskManager {
 	private void prepareTasks() {
 		logger.debug("prepareTasks");
 		TaskManager.taskPropMap.forEach((k,v)->{
+//			logger.info(JSON.toJSONString(v));
 			ScheduledFuture<?> taskSchedule = TaskManager.taskMap.get(k);
 			if(v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_VALID && 
 			   v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_VALID) {
@@ -120,7 +122,7 @@ public class TaskManager {
 	}
 	
 	private void startTask(TaskSchedule taskSchedulePo) {
-		logger.debug("startTask:"+JSON.toJSONString(taskSchedulePo));
+		logger.info("startTask:"+JSON.toJSONString(taskSchedulePo));
 		Runnable task = new Runnable() {
 		       public void run() {
 				try {
@@ -130,6 +132,7 @@ public class TaskManager {
 					taskService.task(taskSchedulePo);
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
+					// TO DO: fixme:need to do sth
 				}
 		       }
 		};

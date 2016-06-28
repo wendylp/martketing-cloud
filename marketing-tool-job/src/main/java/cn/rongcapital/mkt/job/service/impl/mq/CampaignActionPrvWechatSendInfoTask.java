@@ -111,7 +111,9 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 			nodeAudience.setItemId(itemId);
 			nodeAudience.setDataId(segment.getDataId());
 			nodeAudience.setName(segment.getName());
-			mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			}
 			Integer dataId = segment.getDataId();
 		    //从mongo的主数据表中查询该条id对应的主数据详细信息
 			DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);

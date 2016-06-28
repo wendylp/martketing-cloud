@@ -20,6 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,7 @@ import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.Tenement;
+import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
@@ -45,7 +49,9 @@ public class BaseMQService {
 	private TenementDao tenementDao;
 	@Autowired
 	private CampaignSwitchDao campaignSwitchDao;
-
+	@Autowired
+	private MongoTemplate mongoTemplate;
+	
 	public void initJndiEvironment() {
 		if(isJndiInited){
 			return;
@@ -62,6 +68,19 @@ public class BaseMQService {
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
+	}
+	
+	protected boolean checkNodeAudienceExist (int campaignId,String itemId,int dataId) {
+		boolean exist = false;
+		Criteria criteria = Criteria.where("campaignHeadId").is(campaignId)
+									.and("itemId").is(itemId)
+									.and("dataId").is(dataId);
+		Query query = new Query(criteria);
+		List<NodeAudience> nodeAudienceExistList = mongoTemplate.find(query, NodeAudience.class);
+		if(CollectionUtils.isNotEmpty(nodeAudienceExistList)) {
+			exist = true;
+		}
+		return exist;
 	}
 	
     protected List<CampaignSwitch> queryCampaignEndsList(int campaignHeadId,String itemId) {

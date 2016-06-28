@@ -39,7 +39,7 @@ import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 /**
- * 发送H5活动节点,由于大连接口不支持个人号发送H5,所以暂没有个人号的发送H5逻辑
+ * 发送H5活动节点,由于大连接口不支持个人号发送H5,修改为个人号发送H5的链接
  * @author Jason
  *
  */
@@ -119,7 +119,9 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 			nodeAudience.setItemId(itemId);
 			nodeAudience.setDataId(segment.getDataId());
 			nodeAudience.setName(segment.getName());
-			mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			}
 			Integer dataId = segment.getDataId();
 		    //从mongo的主数据表中查询该条id对应的主数据详细信息
 			DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);

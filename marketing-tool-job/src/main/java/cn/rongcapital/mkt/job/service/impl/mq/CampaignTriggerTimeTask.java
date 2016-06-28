@@ -18,7 +18,7 @@ import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 
 @Service
-public class CampaignTimeTriggerTask extends BaseMQService implements TaskService {
+public class CampaignTriggerTimeTask extends BaseMQService implements TaskService {
 
 //	private static Logger logger = LoggerFactory.getLogger(CampaignDecisionTagTaskImpl.class);
 	

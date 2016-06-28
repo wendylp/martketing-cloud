@@ -864,7 +864,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionWait.setType(campaignActionWaitIn.getType());
 		campaignActionWait.setRelativeValue(campaignActionWaitIn.getRelativeValue());
 		campaignActionWait.setRelativeType(campaignActionWaitIn.getRelativeType());
-		campaignActionWait.setSpecificTime(campaignActionWait.getSpecificTime());
+		campaignActionWait.setSpecificTime(campaignActionWaitIn.getSpecificTime());
 		return campaignActionWait;
 	}
 	

@@ -130,7 +130,9 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 				   segmentListToNext.add(segment);//数据放入向后面节点传递的list里
 			   }
 			}
-			mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			}
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 			for(CampaignSwitch cs:campaignEndsList) {

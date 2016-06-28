@@ -93,7 +93,9 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 			nodeAudience.setItemId(itemId);
 			nodeAudience.setDataId(segment.getDataId());
 			nodeAudience.setName(segment.getName());
-			mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			}
 			Integer dataId = segment.getDataId();
 			AudienceListPartyMap audienceListPartyMapT = new AudienceListPartyMap();
 			audienceListPartyMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
