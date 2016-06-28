@@ -1573,19 +1573,19 @@ public class MktApi {
 	public BaseOutput fileTagUpdate(FileTagUpdateIn fileTagUpdateIn){
 		return fileTagUpdateService.updateFileTag(fileTagUpdateIn);
 	}
-	
-	/**
+
+    /**
      * @功能简述: 编辑某条主数据详细信息
      * @param body
      * @return BaseOutput
      */
     @GET
     @Path("/mkt.data.quality.log.download")
-    public BaseOutput downloadQualityLog(@NotEmpty @QueryParam("user_token") String userToken,
+    public Object downloadQualityLog(@NotEmpty @QueryParam("user_token") String userToken,
                     @NotNull @QueryParam("import_data_id") Long importDataId) {
         return dataDownloadQualityLogService.downloadQualityLog(importDataId);
     }
-    
+
 	/**
 	 * 搜索活动节点上的人
 	 * @param userToken

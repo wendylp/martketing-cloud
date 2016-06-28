@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +58,12 @@ public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCount
 	    for(String tagid : ids){
 	        
 	        List<DataParty> restList =mongoTemplate.find(new Query(Criteria.where("tagList.tagId").is(tagid)),DataParty.class);
-	        
 	        Map<String,Object> map = new HashMap<String,Object>();
+	        if(CollectionUtils.isEmpty(restList)) {
+	        	map.put("tag_id","");
+	        	map.put("tag_count", 0);	
+	        	map.put("tag_name", "");
+	        }
 	        
 	        map.put("tag_id",tagid);
 	        

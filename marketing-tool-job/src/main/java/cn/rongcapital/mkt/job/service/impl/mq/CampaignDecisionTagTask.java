@@ -67,9 +67,9 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 		//查询该规则对应的标签list
 		String tagIdsStr =  campaignDecisionTagList.get(0).getTagIds();
 		List<String> tagIdsStrList = Arrays.asList(tagIdsStr);
-		List<String> tagIdList = new ArrayList<String>();
+		List<Integer> tagIdList = new ArrayList<Integer>();
 		for(String tagIdStrT:tagIdsStrList) {
-			tagIdList.add(tagIdStrT);
+			tagIdList.add(Integer.parseInt(tagIdStrT));
 		}
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
 		consumer = getQueueConsumer(queue);//获取queue的消费者对象
@@ -103,7 +103,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 	
 	//处理listener接收到的数据
 	private void processMqMessage(Message message,List<Segment> segmentList,
-								  List<String> tagIdList,
+								  List<Integer> tagIdList,
 								  List<CampaignSwitch> campaignSwitchYesList,
 								  List<CampaignSwitch> campaignSwitchNoList,
 								  byte rule) throws Exception{
@@ -132,11 +132,18 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 				break;
 			//匹配其一
 			case ApiConstant.CAMPAIGN_DECISION_TAG_RULE_MATCH_ONE:
-				Integer dataId = s.getDataId();
-				Criteria criteria = Criteria.where("mid").is(dataId);
-				criteria = criteria.andOperator(Criteria.where("tagList.tagId").in(tagIdList));
-				List<DataParty> dpListM2 = mongoTemplate.find(new Query(criteria), DataParty.class);
-				if(CollectionUtils.isNotEmpty(dpListM2)) {
+				boolean isMatchOne = true;
+				for(int i=0;i<tagIdList.size();i++){
+					Integer dataId = s.getDataId();
+					Criteria criteria = Criteria.where("mid").is(dataId);
+					criteria = criteria.andOperator(Criteria.where("tagList.tagId").is(tagIdList.get(i)));
+					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
+					if(CollectionUtils.isNotEmpty(dpListM1)) {
+						isMatchOne = true;
+						break;
+					}
+				}
+				if(isMatchOne) {
 					segmentListToMqYes.add(s);
 				}else{
 					segmentListToMqNo.add(s);

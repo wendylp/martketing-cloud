@@ -864,7 +864,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionWait.setType(campaignActionWaitIn.getType());
 		campaignActionWait.setRelativeValue(campaignActionWaitIn.getRelativeValue());
 		campaignActionWait.setRelativeType(campaignActionWaitIn.getRelativeType());
-		campaignActionWait.setSpecificTime(campaignActionWait.getSpecificTime());
+		campaignActionWait.setSpecificTime(campaignActionWaitIn.getSpecificTime());
 		return campaignActionWait;
 	}
 	
@@ -1055,6 +1055,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionPropCompare.setCampaignHeadId(campaignHeadId);
 		campaignDecisionPropCompare.setPropType(campaignDecisionPropCompareIn.getPropType());
 		campaignDecisionPropCompare.setRule(campaignDecisionPropCompareIn.getRule());
+		campaignDecisionPropCompare.setValue(campaignDecisionPropCompareIn.getRuleValue());
+		campaignDecisionPropCompare.setExclude(campaignDecisionPropCompareIn.getExlude());
 		return campaignDecisionPropCompare;
 	}
 	

@@ -14,6 +14,7 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.OriginalDataCustomerTags;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface OriginalDataCustomerTagsDao extends BaseDao<OriginalDataCustomerTags>{
@@ -44,4 +45,11 @@ public interface OriginalDataCustomerTagsDao extends BaseDao<OriginalDataCustome
 	 * @return int
 	 */
 	int batchInsertUploadFileData(ArrayList<Map<String, Object>> insertList);
+
+	/**
+	 * 根据FileUnique获取id列表
+	 * @param paramMap
+	 * @return int
+	 */
+	List<Long> selelctIdListByFileUnique(Map<String, Object> paramMap);
 }

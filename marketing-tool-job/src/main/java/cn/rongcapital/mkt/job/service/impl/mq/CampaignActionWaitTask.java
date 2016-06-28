@@ -103,7 +103,9 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 			nodeAudience.setItemId(itemId);
 			nodeAudience.setDataId(segment.getDataId());
 			nodeAudience.setName(segment.getName());
-			mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			}
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 			for(CampaignSwitch cs:campaignEndsList) {

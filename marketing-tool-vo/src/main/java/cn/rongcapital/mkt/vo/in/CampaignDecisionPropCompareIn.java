@@ -17,6 +17,7 @@ public class CampaignDecisionPropCompareIn {
     private Byte rule;
     
     private String ruleValue;
+    
     private Byte exlude;
 
     @JsonProperty("rule_value")

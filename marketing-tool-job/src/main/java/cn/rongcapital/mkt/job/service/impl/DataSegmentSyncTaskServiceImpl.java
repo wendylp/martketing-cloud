@@ -34,6 +34,7 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 	public void task(Integer taskId) {
 		SegmentationHead segmentationHeadT = new SegmentationHead();
 		segmentationHeadT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		segmentationHeadT.setPageSize(Integer.MAX_VALUE);
 		List<SegmentationHead> segmentationHeadList = segmentationHeadDao.selectList(segmentationHeadT);
 		if(CollectionUtils.isNotEmpty(segmentationHeadList)) {
 			for(SegmentationHead segmentationHead:segmentationHeadList) {

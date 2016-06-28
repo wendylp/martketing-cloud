@@ -48,9 +48,13 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
         Map<String, Object> columnNameA = new HashMap<>();
         Map<String, Object> columnNameB = new HashMap<>();
         Map<String, Object> columnNameC = new HashMap<>();
-        columnNameA.put("col_code", 1);
-        columnNameB.put("col_code", 2);
-        columnNameC.put("col_code", 3);
+        columnNameA.put("col_id", 1);
+        columnNameB.put("col_id", 2);
+        columnNameC.put("col_id", 3);
+
+        columnNameA.put("col_code", "tag_name");
+        columnNameB.put("col_code", "create_time");
+        columnNameC.put("col_code", "cover_audience_count");
 
         columnNameA.put("col_name", "标签名称");
         columnNameB.put("col_name", "添加时间");

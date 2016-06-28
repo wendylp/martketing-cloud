@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.service.CampaignBodyItemAudienceSearchService;
 import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchData;
 import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
@@ -32,12 +32,12 @@ public class CampaignBodyItemAudienceSearchServiceImpl implements CampaignBodyIt
 		//模糊匹配
 		Pattern pattern = Pattern.compile("^.*"+name+".*$", Pattern.CASE_INSENSITIVE);
 		Query query = Query.query(Criteria.where("name").regex(pattern));  
-	    List<Segment> segmentList = mongoTemplate.find(query, Segment.class);
-	    if(CollectionUtils.isNotEmpty(segmentList)) {
-	    	for(Segment segment:segmentList) {
+	    List<NodeAudience> sodeAudienceList = mongoTemplate.find(query, NodeAudience.class);
+	    if(CollectionUtils.isNotEmpty(sodeAudienceList)) {
+	    	for(NodeAudience nodeAudience:sodeAudienceList) {
 	    		CampaignBodyItemAudienceSearchData dataCustom = new CampaignBodyItemAudienceSearchData();
-	    		dataCustom.setDataId(segment.getDataId());
-	    		dataCustom.setName(segment.getName());
+	    		dataCustom.setDataId(nodeAudience.getDataId());
+	    		dataCustom.setName(nodeAudience.getName());
 	    		CampaignBodyItemAudienceSearchOut.getDataCustom().add(dataCustom);
 	    	}
 	    	CampaignBodyItemAudienceSearchOut.setTotal(CampaignBodyItemAudienceSearchOut.getDataCustom().size());

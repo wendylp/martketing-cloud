@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -28,6 +29,11 @@ public class MigrationFileGeneralInfoServiceImpl implements MigrationFileGeneral
         if(generalInfos != null){
             generalInfos.put("migarated_row_count",generalInfos.remove("total_rows"));
             generalInfos.put("last_upload_time",generalInfos.remove("import_end_time"));
+            baseOutput.getData().add(generalInfos);
+        }else{
+            generalInfos = new HashMap<String,Object>();
+            generalInfos.put("migarated_row_count",new Integer(0));
+            generalInfos.put("last_upload_time",null);
             baseOutput.getData().add(generalInfos);
         }
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());

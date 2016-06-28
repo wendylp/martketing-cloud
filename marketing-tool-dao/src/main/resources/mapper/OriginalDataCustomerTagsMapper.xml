@@ -162,6 +162,11 @@
 			#{item.batch_id}
 			)
 		</foreach>
-	</insert>	
-	
+	</insert>
+
+	<select id="selelctIdListByFileUnique" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE file_unique = #{file_unique}
+	</select>
 </mapper>
