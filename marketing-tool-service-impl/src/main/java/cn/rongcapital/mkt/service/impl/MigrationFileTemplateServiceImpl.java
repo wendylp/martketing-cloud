@@ -29,7 +29,7 @@ public class MigrationFileTemplateServiceImpl implements MigrationFileTemplateSe
         if(templateList != null && templateList.size() > 0 ){
             for(Map<String,Object> map : templateList){
                 map.put("template_name",map.remove("templ_name"));
-                map.put("template_id",map.remove("id"));
+                map.put("template_id",map.remove("templ_type"));
                 baseOutput.getData().add(map);
             }
         }
@@ -38,5 +38,4 @@ public class MigrationFileTemplateServiceImpl implements MigrationFileTemplateSe
         baseOutput.setTotal(baseOutput.getData().size());
         return Response.ok().entity(baseOutput).build();
     }
-
 }
