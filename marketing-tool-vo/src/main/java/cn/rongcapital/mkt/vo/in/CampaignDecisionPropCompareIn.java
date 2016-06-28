@@ -74,7 +74,7 @@ public class CampaignDecisionPropCompareIn {
         this.propType = propType;
     }
 
-    @JsonProperty("rule_value")
+    @JsonProperty("rule")
     public Byte getRule() {
         return rule;
     }
