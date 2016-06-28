@@ -90,6 +90,7 @@ import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.ModifyPasswdService;
 import cn.rongcapital.mkt.service.ReauthWechatAccountService;
+import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
 import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
@@ -129,6 +130,7 @@ import cn.rongcapital.mkt.vo.LoginInput;
 import cn.rongcapital.mkt.vo.ModifyInput;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
+import cn.rongcapital.mkt.vo.in.Audience;
 import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
@@ -255,6 +257,9 @@ public class MktApi {
 
     @Autowired
     private SaveWechatAssetListService saveWechatAssetListService;
+    
+    @Autowired
+    private SaveCampaignAudienceService saveCampaignAudienceService;
 
     @Autowired
     private SegmentHeaderUpdateService segmentHeaderUpdateService;
@@ -992,6 +997,20 @@ public class MktApi {
 	public Object saveWechatAssetList(@Valid SaveWechatAssetListIn saveWechatAssetListIn,@Context SecurityContext securityContext){
 		return saveWechatAssetListService.saveWechatAssetList(saveWechatAssetListIn, securityContext);
 	}
+	
+	
+	/**
+     * @功能描述:活动编排，保存人群
+     * @Param: String user_token, String ver, String audience_name
+     * @return: Object
+     */
+    @POST
+    @Path("/mkt.campaign.node.audience.save")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Object saveCampaignAudience(@Valid Audience audience,@Context SecurityContext securityContext){
+        return saveCampaignAudienceService.saveCampaignAudience(audience, securityContext);
+    }
+	
 
 	/**
 	 * @功能描述:重新授权或者重新登录

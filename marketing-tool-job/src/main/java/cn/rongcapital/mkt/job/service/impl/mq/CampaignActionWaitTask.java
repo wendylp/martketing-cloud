@@ -12,6 +12,7 @@ import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,18 +117,24 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 				};
 				ScheduledFuture<?> scheduledFuture = null;
 				if(null != realativeType && null != relativeValue) {
+					DateTime now = new DateTime();
+					DateTime execTime = null;
 					switch (realativeType) {
 					case 0://小时
-						scheduledFuture = taskSchedule.scheduleWithFixedDelay(task, relativeValue*3600*1000);
+						execTime = now.plusHours(relativeValue);
+						scheduledFuture = taskSchedule.schedule(task, execTime.toDate());
 						break;
 					case 1://天
-						scheduledFuture = taskSchedule.scheduleWithFixedDelay(task, relativeValue*24*3600*1000);
+						execTime = now.plusDays(relativeValue);
+						scheduledFuture = taskSchedule.schedule(task, execTime.toDate());
 						break;
 					case 2://周
-						scheduledFuture = taskSchedule.scheduleWithFixedDelay(task, relativeValue*7*24*3600*1000);
+						execTime = now.plusWeeks(relativeValue);
+						scheduledFuture = taskSchedule.schedule(task, execTime.toDate());
 						break;
 					case 3://月
-						scheduledFuture = taskSchedule.scheduleWithFixedDelay(task, relativeValue*30*7*24*3600*1000);
+						execTime = now.plusMonths(relativeValue);
+						scheduledFuture = taskSchedule.schedule(task, execTime.toDate());
 						break;
 					}
 				} else if(null != specificTime) {
