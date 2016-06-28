@@ -5,18 +5,14 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public interface DataDownloadMainListService {
 
     /**
-     * mkt.data.main.list.get
+     * mkt.data.main.list.download
      * 
      * @author nianjun
-     * @功能简述 : 获取主数据列表
+     * @功能简述 : 下载主数据列表
      * @param method
      * @param userToken
      * @param dataType
-     * @param index
-     * @param size
-     * @param ver
      * @return
      */
-    public BaseOutput getMainList(String method, String userToken, Integer dataType, Integer index,
-                    Integer size, String ver);
+    public BaseOutput downloadMainList(String method, String userToken, Integer dataType);
 }
