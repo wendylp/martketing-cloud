@@ -34,7 +34,7 @@ public interface BaseDao<T> {
 	 * @return: List<T>
 	 */
 	List<T> selectList(T t);
-
+	
 	/**
 	 * @功能简述: 查询对象list,查询条件:where id in(id1,id2...);非null的id才有效
 	 * @param: List<Integer> idList
