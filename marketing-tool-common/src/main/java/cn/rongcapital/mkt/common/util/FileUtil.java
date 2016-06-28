@@ -213,9 +213,9 @@ public class FileUtil {
             columnNamesMap.add(emptyMap);
         } else {
             for (String columnName : columnNames) {
-                Map<String, String> emptyMap = new HashMap<>();
-                emptyMap.put(columnName, "");
-                columnNamesMap.add(emptyMap);
+                Map<String, String> map = new HashMap<>();
+                map.put(columnName, "");
+                columnNamesMap.add(map);
             }
         }
 
