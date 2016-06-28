@@ -9,14 +9,10 @@
 
 package cn.rongcapital.mkt.service.impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,14 +23,11 @@ import cn.rongcapital.mkt.dao.AudienceListDao;
 import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
 import cn.rongcapital.mkt.dao.CustomTagMapDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.po.AudienceColumns;
 import cn.rongcapital.mkt.po.AudienceList;
 import cn.rongcapital.mkt.po.AudienceListPartyMap;
 import cn.rongcapital.mkt.po.CustomTagMap;
-import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.service.AudienceSearchService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.out.ColumnsOut;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
 
