@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
@@ -27,6 +28,7 @@ import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
+@Service
 public class CampaignActionSetTagTask extends BaseMQService implements TaskService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
