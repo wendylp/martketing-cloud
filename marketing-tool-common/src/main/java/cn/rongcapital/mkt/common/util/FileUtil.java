@@ -198,6 +198,13 @@ public class FileUtil {
         return null;
     }
 
+    /**
+     * 用于转换列名参数,将list转换为map,转换后map的key为list<String>的string,value为""
+     * 
+     * @author nianjun
+     * @param columnNames
+     * @return
+     */
     public static List<Map<String, String>> transferNameListtoMap(List<String> columnNames) {
         List<Map<String, String>> columnNamesMap = new ArrayList<>();
         if (CollectionUtils.isEmpty(columnNames)) {
