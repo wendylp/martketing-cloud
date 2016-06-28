@@ -132,7 +132,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 				break;
 			//匹配其一
 			case ApiConstant.CAMPAIGN_DECISION_TAG_RULE_MATCH_ONE:
-				boolean isMatchOne = true;
+				boolean isMatchOne = false;
 				for(int i=0;i<tagIdList.size();i++){
 					Integer dataId = s.getDataId();
 					Criteria criteria = Criteria.where("mid").is(dataId);
