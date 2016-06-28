@@ -42,6 +42,7 @@ import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
+import cn.rongcapital.mkt.service.AudienceNameListService;
 import cn.rongcapital.mkt.service.AudienceSearchService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
@@ -282,6 +283,9 @@ public class MktApi {
 
     @Autowired
     private AudienceListService audienceListService;
+    
+    @Autowired
+    private AudienceNameListService audienceNameListService;
 
     @Autowired
     private AudienceSearchService audienceSearchService;
@@ -1045,17 +1049,30 @@ public class MktApi {
 	}
 	
     /**
-	 * @功能简述: 获取人群list列表
+	 * @功能简述: 数据分析，获取人群名称列表
 	 * @param: String userToken
 	 * @return: Object
 	 */
 	@GET
-	@Path("/mkt.audience.list.get")
-	public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
-						  				   @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
-		return audienceListService.audienceList(userToken, size, index);
+	@Path("/mkt.dataanalysis.audname.list.get")
+	public BaseOutput audienceNameList(@NotEmpty @QueryParam("user_token") String userToken){
+		return audienceNameListService.audienceNameList(userToken);
 	}
+	
+	/**
+     * @功能简述: 获取人群list列表
+     * @param: String userToken
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.audience.list.get")
+    public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
+                                           @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+                                           @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
+        return audienceListService.audienceList(userToken, size, index);
+    }
+	
+	
 	
 	/**
      * @功能简述: 在人群中查找

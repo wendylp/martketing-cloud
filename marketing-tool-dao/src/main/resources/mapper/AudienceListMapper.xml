@@ -90,6 +90,8 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 	
+
+	
 	<!-- 其它SQL语句 -->
 	<insert id="insertWechatGroups" parameterType="java.util.Map" >
 		INSERT INTO audience_list (audience_name,audience_rows,create_time)
