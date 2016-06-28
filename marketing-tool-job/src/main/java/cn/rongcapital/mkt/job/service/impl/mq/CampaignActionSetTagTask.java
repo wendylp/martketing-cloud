@@ -112,6 +112,7 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 			for(CampaignSwitch cs:campaignEndsList) {
 				//发送segment数据到后面的节点
 				sendDynamicQueue(segmentList, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				deleteNodeAudience(campaignHeadId,itemId,segmentList);
 			}
 		}
 	}

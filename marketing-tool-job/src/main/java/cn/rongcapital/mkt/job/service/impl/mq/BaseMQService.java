@@ -70,6 +70,19 @@ public class BaseMQService {
 		}
 	}
 	
+	/**
+	 * 传递给后面节点的数据，从当前节点的mongo库里删除
+	 * @param segmentListToNext
+	 */
+	protected void deleteNodeAudience(Integer campaignHeadId,String itemId,List<Segment> segmentListToNext) {
+		for(Segment cs:segmentListToNext) {
+			Criteria criteria = Criteria.where("campaignHeadId").is(campaignHeadId);
+			criteria = criteria.andOperator(Criteria.where("itemId").is(itemId));
+			criteria = criteria.andOperator(Criteria.where("dataId").is(cs.getDataId()));
+			mongoTemplate.findAllAndRemove(new Query(criteria), NodeAudience.class);
+		}
+	}
+	
 	protected boolean checkNodeAudienceExist (int campaignId,String itemId,int dataId) {
 		boolean exist = false;
 		Criteria criteria = Criteria.where("campaignHeadId").is(campaignId)
