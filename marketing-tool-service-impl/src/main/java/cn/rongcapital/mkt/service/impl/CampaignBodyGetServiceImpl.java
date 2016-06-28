@@ -410,7 +410,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignActionSetTag campaignActionSetTag = resList.get(0);
 			campaignActionSetTagOut.setName(campaignActionSetTag.getName());
-			campaignActionSetTagOut.setTagNames(campaignActionSetTag.getTagNames());
+			campaignActionSetTagOut.setTagNames(Arrays.asList(campaignActionSetTag.getTagNames(),","));
 		}
 		return campaignActionSetTagOut;
 	}
