@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ImportDataModifyLog;
 
@@ -34,4 +36,11 @@ public interface ImportDataModifyLogDao extends BaseDao<ImportDataModifyLog>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    /**
+     * @功能简述: 获取表中所有列
+     * @return: List<String>
+     */
+    List<String> selectColumns();
+
 }
