@@ -10,6 +10,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -32,6 +33,7 @@ import cn.rongcapital.mkt.service.DataDownloadMainListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.DataGetMainListOut;
 
+@Service
 public class DataDownloadMainListServiceImpl implements DataDownloadMainListService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
