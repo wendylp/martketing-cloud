@@ -7,6 +7,9 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -54,6 +57,7 @@ import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.po.WechatAsset;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
+import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.vo.out.CampaignActionSaveAudienceOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionSendH5Out;
@@ -121,6 +125,8 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	private WechatAssetGroupDao wechatAssetGroupDao;
 	@Autowired
 	private ImgTextAssetDao imgTextAssetDao;
+	@Autowired
+	private MongoTemplate mongoTemplate;
 
 	@Override
 	public CampaignBodyGetOut campaignBodyGet(String userToken, String ver, int campaignHeadId) {
@@ -162,7 +168,8 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				}
 				//设置desc
 				campaignNodeChainOut.setDesc(c.getDescription());
-				campaignNodeChainOut.setAudienceCount(c.getAudienceCount());
+				//设置节点上的当前人数:查询mongodb获得
+				campaignNodeChainOut.setAudienceCount(getAudienceCountInNode(campaignHeadId, c.getItemId()));
 				campaignNodeChainOut.setStatisticsUrl(c.getStatisticsUrl());
 				
 				List<CampaignSwitchOut> campaignSwitchList = queryCampaignSwitchList(campaignHeadId,c.getItemId());
@@ -255,6 +262,14 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		}
 		campaignBodyGetOut.setTotal(campaignBodyGetOut.getData().size());
 		return campaignBodyGetOut;
+	}
+	
+	
+	private int getAudienceCountInNode(Integer campaignHeadId,String itemId) {
+		Criteria criteria = Criteria.where("campaignHeadId").is(campaignHeadId);
+		criteria = criteria.andOperator(Criteria.where("itemId").is(itemId));
+		long count = mongoTemplate.count(new Query(criteria), NodeAudience.class);
+		return (int)count;
 	}
 	
 	private CampaignActionSendPrivtOut queryCampaignActionSendPrivt(CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
