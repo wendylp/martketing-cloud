@@ -2,8 +2,10 @@ package cn.rongcapital.mkt.common.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,11 +107,9 @@ public class FileUtil {
             return file;
         }
 
-        FileWriter fileWriter = null;
         BufferedWriter bufferedWriter = null;
         try {
-            fileWriter = new FileWriter(file);
-            bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "GBK"));
             int rowCount = poList.size();
 
             // 按数据量取出每一行的数据
@@ -172,7 +172,6 @@ public class FileUtil {
             logger.error("生成下载文件时出错", e);
         } finally {
             try {
-                fileWriter.close();
                 bufferedWriter.close();
             } catch (IOException e) {
                 logger.error("生成下载文件后关闭资源时出错", e);

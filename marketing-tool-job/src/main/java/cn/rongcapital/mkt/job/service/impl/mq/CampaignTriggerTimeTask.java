@@ -50,9 +50,9 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		 CampaignHead t = new CampaignHead(); 
 		 t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		 t.setId(id);
-		 List<CampaignHead> segList = campaignHeadDao.selectList(t);
-		 if(CollectionUtils.isNotEmpty(segList)) {
-			 CampaignHead ch = segList.get(0);
+		 List<CampaignHead> camList = campaignHeadDao.selectList(t);
+		 if(CollectionUtils.isNotEmpty(camList)) {
+			 CampaignHead ch = camList.get(0);
 			 //只有发布状态的活动才能被开启
 			 if(ch.getPublishStatus() != ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH) {
 				 ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_CAN_NOT_MANUAL_START.getCode(),
@@ -71,12 +71,18 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		//停止该活动对应的全部任务
 		taskScheduleDao.deActivateTaskByCampaignHeadId(campaignHeadId);
-		//设置活动状态为:已结束
-		CampaignHead t = new CampaignHead();
-		t.setId(campaignHeadId);
-		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH);
-		campaignHeadDao.updateById(t);
+		//如果活动状态为运行中，则设置活动状态为:已结束
+		 CampaignHead t = new CampaignHead(); 
+		 t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		 t.setId(taskSchedule.getCampaignHeadId());
+		 List<CampaignHead> camList = campaignHeadDao.selectList(t);
+		 if(CollectionUtils.isNotEmpty(camList)) {
+			 CampaignHead ch = camList.get(0);
+			 if(ch.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
+				 t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH);
+				 campaignHeadDao.updateById(t);
+			 }
+		 }
 	}
 
 	@Override

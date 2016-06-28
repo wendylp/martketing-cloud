@@ -58,6 +58,7 @@ import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
+import cn.rongcapital.mkt.service.DataDownloadMainListService;
 import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
@@ -239,6 +240,9 @@ public class MktApi {
     
     @Autowired
     private DataDownloadQualityLogService dataDownloadQualityLogService;
+    
+    @Autowired
+    private DataDownloadMainListService dataDownloadMainListService;
     
     @Autowired
     private TagGetCustomService tagGetCustomService;
@@ -1575,8 +1579,7 @@ public class MktApi {
 	}
 
     /**
-     * @功能简述: 编辑某条主数据详细信息
-     * @param body
+     * @功能简述: 下载某条主数据详细信息
      * @return BaseOutput
      */
     @GET
@@ -1584,6 +1587,17 @@ public class MktApi {
     public Object downloadQualityLog(@NotEmpty @QueryParam("user_token") String userToken,
                     @NotNull @QueryParam("import_data_id") Long importDataId) {
         return dataDownloadQualityLogService.downloadQualityLog(importDataId);
+    }
+
+    /**
+     * @功能简述: 下载某个主数据分类的数据
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.data.main.list.download")
+    public Object downloadMainList(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("md_type") Integer dataType) {
+        return dataDownloadMainListService.downloadMainList(userToken, dataType);
     }
 
 	/**

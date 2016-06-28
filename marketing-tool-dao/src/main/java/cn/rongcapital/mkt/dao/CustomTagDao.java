@@ -79,4 +79,11 @@ public interface CustomTagDao extends BaseDao<CustomTag>{
 	 * @return: List<String>
 	 */
 	List<Long> selectIdsByCustomTags(ArrayList<String> tag_names);
+	
+	/**
+     * @功能简述: 获取未删除的CustomTag
+     * @param: CustomTag t
+     * @return: List<CustomTag>
+     */
+	List<CustomTag> selectListUndeleteTags(CustomTag t);
 }

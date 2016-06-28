@@ -14,5 +14,5 @@ public interface DataDownloadMainListService {
      * @param dataType
      * @return
      */
-    public BaseOutput downloadMainList(String method, String userToken, Integer dataType);
+    public BaseOutput downloadMainList(String userToken, Integer dataType);
 }

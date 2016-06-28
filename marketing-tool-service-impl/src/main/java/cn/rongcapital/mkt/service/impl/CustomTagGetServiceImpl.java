@@ -28,8 +28,9 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
     public BaseOutput getCustomTagList(String method, String userToken, Integer index, Integer size) {
 
         CustomTag customTag = new CustomTag(index, size);
-        List<CustomTag> customTagList = customTagDao.selectList(customTag);
-        int totalCount = customTagDao.selectListCount(null);
+        customTag.setStatus((byte)0);
+        List<CustomTag> customTagList = customTagDao.selectListUndeleteTags(customTag);
+        int totalCount = customTagDao.selectListCount(customTag);
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
 
