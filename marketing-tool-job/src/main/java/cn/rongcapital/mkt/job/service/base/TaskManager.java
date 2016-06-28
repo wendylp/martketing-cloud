@@ -113,6 +113,12 @@ public class TaskManager {
 					if(null != taskSchedule && !taskSchedule.isDone() && !taskSchedule.isCancelled()) {
 						taskSchedule.cancel(true);
 					}
+					Logger lohin = LoggerFactory.getLogger(getClass());
+					boolean t1 = v.getStartTime() != null;
+					boolean t2 = v.getStartTime().after(Calendar.getInstance().getTime());
+					boolean t3 = v.getEndTime() != null;
+					boolean t4 = v.getEndTime().before(Calendar.getInstance().getTime());
+					lohin.info(t1+","+t2+","+t3+","+t4+";"+JSON.toJSONString(v));
 					//停止内嵌的任务/线程
 					String serviceName = getServiceName(v.getServiceName());
 					TaskService taskService = (TaskService)cotext.getBean(serviceName);
