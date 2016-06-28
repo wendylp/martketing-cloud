@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -67,6 +68,24 @@ public class BaseMQService {
 			conn.start();
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
+		}
+	}
+	
+	/**
+	 * 传递给后面节点的数据，从当前节点的mongo库里删除
+	 * @param segmentListToNext
+	 */
+	protected void deleteNodeAudience(Integer campaignHeadId,String itemId,List<Segment> segmentListToNext) {
+		for(Segment cs:segmentListToNext) {
+			List<Criteria> criteriasList = new ArrayList<Criteria>();
+			Criteria criteria1 = Criteria.where("campaignHeadId").is(campaignHeadId);
+			criteriasList.add(criteria1);
+			Criteria criteria2 = Criteria.where("itemId").is(itemId);
+			criteriasList.add(criteria2);
+			Criteria criteria3 = Criteria.where("dataId").is(cs.getDataId());
+			criteriasList.add(criteria3);
+			Criteria criteriaAll = new Criteria().andOperator(criteriasList.toArray(new Criteria[criteriasList.size()]));
+			mongoTemplate.findAllAndRemove(new Query(criteriaAll), NodeAudience.class);
 		}
 	}
 	
