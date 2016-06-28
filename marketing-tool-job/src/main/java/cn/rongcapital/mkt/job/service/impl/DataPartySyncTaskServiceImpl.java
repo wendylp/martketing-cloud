@@ -20,11 +20,8 @@ import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.DataPaymentDao;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
-import cn.rongcapital.mkt.dao.TagDao;
-import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.mongodb.DataPartyRepository;
-import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 
 @Service
