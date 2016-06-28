@@ -64,6 +64,8 @@ public class CampaignProgressStatusListServiceImpl implements
 		t.setPageSize(size);
 		t.setStartIndex((index-1)*size);
 		t.getCustomMap().put("keyword", campaignName);
+		t.setOrderField("update_time");
+		t.setOrderFieldType("desc");
 		int totalCount = campaignHeadDao.selectCampaignProgressStatusListByPublishStatusCount(t);
 		List<CampaignHead> reList = campaignHeadDao.selectCampaignProgressStatusListByPublishStatus(t);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
