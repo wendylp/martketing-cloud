@@ -52,4 +52,11 @@ public interface OriginalDataArchPointDao extends BaseDao<OriginalDataArchPoint>
      * @return map
      */
 	int batchCleanData(List<OriginalDataArchPoint> originalDataArchPoints);
+
+	/**
+	 * 根据FileUnique获取id列表
+	 * @param paramMap
+	 * @return int
+	 */
+	List<Long> selelctIdListByFileUnique(Map<String, Object> paramMap);
 }
