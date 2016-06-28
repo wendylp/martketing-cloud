@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -76,10 +77,15 @@ public class BaseMQService {
 	 */
 	protected void deleteNodeAudience(Integer campaignHeadId,String itemId,List<Segment> segmentListToNext) {
 		for(Segment cs:segmentListToNext) {
-			Criteria criteria = Criteria.where("campaignHeadId").is(campaignHeadId);
-			criteria = criteria.andOperator(Criteria.where("itemId").is(itemId));
-			criteria = criteria.andOperator(Criteria.where("dataId").is(cs.getDataId()));
-			mongoTemplate.findAllAndRemove(new Query(criteria), NodeAudience.class);
+			List<Criteria> criteriasList = new ArrayList<Criteria>();
+			Criteria criteria1 = Criteria.where("campaignHeadId").is(campaignHeadId);
+			criteriasList.add(criteria1);
+			Criteria criteria2 = Criteria.where("itemId").is(itemId);
+			criteriasList.add(criteria2);
+			Criteria criteria3 = Criteria.where("dataId").is(cs.getDataId());
+			criteriasList.add(criteria3);
+			Criteria criteriaAll = new Criteria().andOperator(criteriasList.toArray(new Criteria[criteriasList.size()]));
+			mongoTemplate.findAllAndRemove(new Query(criteriaAll), NodeAudience.class);
 		}
 	}
 	
