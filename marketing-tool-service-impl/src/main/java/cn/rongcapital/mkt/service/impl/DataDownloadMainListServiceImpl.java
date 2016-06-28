@@ -97,6 +97,7 @@ public class DataDownloadMainListServiceImpl implements DataDownloadMainListServ
         return result;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private <T extends BaseQuery, D extends BaseDao> String generateDownloadFile(D dao, Integer dataType) {
         List<T> dataList = dao.selectList(null);
         ImportTemplate paramImportTemplate = new ImportTemplate();
