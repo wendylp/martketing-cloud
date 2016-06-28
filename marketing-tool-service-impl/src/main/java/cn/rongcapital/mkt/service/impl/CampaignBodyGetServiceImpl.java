@@ -643,6 +643,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 			campaignDecisionPropCompareOut.setName(campaignDecisionPropCompare.getName());
 			campaignDecisionPropCompareOut.setPropType(campaignDecisionPropCompare.getPropType());
 			campaignDecisionPropCompareOut.setRule(campaignDecisionPropCompare.getRule());
+			campaignDecisionPropCompareOut.setRuleValue(campaignDecisionPropCompare.getValue());
 		}
 		return campaignDecisionPropCompareOut;
 	}
