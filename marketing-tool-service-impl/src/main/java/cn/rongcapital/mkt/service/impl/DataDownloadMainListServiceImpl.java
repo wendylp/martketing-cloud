@@ -64,7 +64,7 @@ public class DataDownloadMainListServiceImpl implements DataDownloadMainListServ
     private DataShoppingDao dataShoppingDao;
 
     @Override
-    public BaseOutput downloadMainList(String method, String userToken, Integer dataType) {
+    public BaseOutput downloadMainList(String userToken, Integer dataType) {
 
         DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
