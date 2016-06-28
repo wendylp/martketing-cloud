@@ -145,7 +145,7 @@ public class TaskManager {
 			Date startTime = taskSchedulePo.getStartTime() == null ? 
 							 Calendar.getInstance().getTime():taskSchedulePo.getStartTime();
 			Integer interMinutes = taskSchedulePo.getIntervalMinutes();
-			if(null != interMinutes) {
+			if(null != interMinutes && interMinutes > 0) {
 				scheduledFuture =  taskSchedule.scheduleAtFixedRate(task, startTime, interMinutes*60*1000);
 			}else {
 				scheduledFuture = taskSchedule.schedule(task,startTime);
