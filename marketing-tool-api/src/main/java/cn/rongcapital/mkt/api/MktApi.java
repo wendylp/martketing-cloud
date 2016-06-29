@@ -1680,7 +1680,7 @@ public class MktApi {
 	public BaseOutput wechatAssetMemberSearch(@NotEmpty @QueryParam("user_token") String userToken,
 											  @NotEmpty @QueryParam("ver") String ver,
 											  @NotEmpty @QueryParam("group_ids") String groupIds,
-											  @NotEmpty @QueryParam("search_field") String searchField){
+											  @QueryParam("search_field") String searchField){
 		return wechatAssetMemberSearchService.searchWechatAssetMember(groupIds,searchField);
 	}
 }
