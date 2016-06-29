@@ -38,8 +38,6 @@ public class TaskManager {
 	
 	private static final ConcurrentHashMap<String, TaskSchedule> taskPropMap = new ConcurrentHashMap<String, TaskSchedule>();	
 	
-	private volatile boolean isInited = false;
-	
 	private Runnable scanTask = new Runnable() {
 		public void run() {
 				scanTask();
@@ -56,12 +54,8 @@ public class TaskManager {
 		taskSchedule.submit(prepareTasks);
 	}
 	
-	public void initTask() {
+	public synchronized void initTask() {
 		logger.debug("initTask");
-		if(isInited){
-			return;
-		}
-		isInited = true;
 		taskSchedule.scheduleAtFixedRate(scanTask, ApiConstant.TASK_SCAN_INTERVAL_MILLS);
 		taskSchedule.scheduleAtFixedRate(prepareTasks, ApiConstant.TASK_DO_INTERVAL_MILLS);
 	}
@@ -113,12 +107,6 @@ public class TaskManager {
 					if(null != taskSchedule && !taskSchedule.isDone() && !taskSchedule.isCancelled()) {
 						taskSchedule.cancel(true);
 					}
-//					Logger lohin = LoggerFactory.getLogger(getClass());
-//					boolean t1 = v.getStartTime() != null;
-//					boolean t2 = v.getStartTime().after(Calendar.getInstance().getTime());
-//					boolean t3 = v.getEndTime() != null;
-//					boolean t4 = v.getEndTime().before(Calendar.getInstance().getTime());
-//					lohin.info(t1+","+t2+","+t3+","+t4+";"+JSON.toJSONString(v));
 					//停止内嵌的任务/线程
 					String serviceName = getServiceName(v.getServiceName());
 					TaskService taskService = (TaskService)cotext.getBean(serviceName);

@@ -45,7 +45,6 @@ public class BaseMQService {
     private JmsMessagingTemplate jmsMessagingTemplate; 
 	@Value("${spring.activemq.broker-url}")
 	private String providerUrl;
-	private volatile boolean isJndiInited = false;
 	@Autowired
 	private TenementDao tenementDao;
 	@Autowired
@@ -53,11 +52,7 @@ public class BaseMQService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	public void initJndiEvironment() {
-		if(isJndiInited){
-			return;
-		}
-		isJndiInited = true;
+	public synchronized void initJndiEvironment() {
 		try {
 			Hashtable<Object,Object> environment = new Hashtable<Object,Object>();   
 	        environment.put(Context.INITIAL_CONTEXT_FACTORY,"org.apache.activemq.jndi.ActiveMQInitialContextFactory");   
