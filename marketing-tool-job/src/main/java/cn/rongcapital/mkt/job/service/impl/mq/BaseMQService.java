@@ -54,7 +54,7 @@ public class BaseMQService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	protected ConcurrentHashMap<String, MessageConsumer> consumerMap = new ConcurrentHashMap<String, MessageConsumer>();
+	protected static ConcurrentHashMap<String, MessageConsumer> consumerMap = new ConcurrentHashMap<String, MessageConsumer>();
 	
 	public synchronized void initJndiEvironment() {
 		try {

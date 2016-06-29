@@ -38,6 +38,8 @@ public class TaskManager {
 	
 	private static final ConcurrentHashMap<String, TaskSchedule> taskPropMap = new ConcurrentHashMap<String, TaskSchedule>();	
 	
+	private volatile boolean taskInited = false;
+	
 	private Runnable scanTask = new Runnable() {
 		public void run() {
 				scanTask();
@@ -55,7 +57,11 @@ public class TaskManager {
 	}
 	
 	public synchronized void initTask() {
-		logger.debug("initTask");
+		logger.info("initTask");
+		if(taskInited) {
+			return;
+		}
+		taskInited = true;
 		taskSchedule.scheduleAtFixedRate(scanTask, ApiConstant.TASK_SCAN_INTERVAL_MILLS);
 		taskSchedule.scheduleAtFixedRate(prepareTasks, ApiConstant.TASK_DO_INTERVAL_MILLS);
 	}
