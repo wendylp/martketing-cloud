@@ -2,7 +2,6 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class DataLogin extends BaseQuery {
@@ -20,7 +19,7 @@ public class DataLogin extends BaseQuery {
 
     private String resolutionRatio;
 
-    private BigDecimal loginUrl;
+    private String loginUrl;
 
     private String identifyNo;
 
@@ -118,11 +117,11 @@ public class DataLogin extends BaseQuery {
         this.resolutionRatio = resolutionRatio == null ? null : resolutionRatio.trim();
     }
 
-    public BigDecimal getLoginUrl() {
+    public String getLoginUrl() {
         return loginUrl;
     }
 
-    public void setLoginUrl(BigDecimal loginUrl) {
+    public void setLoginUrl(String loginUrl) {
         this.loginUrl = loginUrl;
     }
 

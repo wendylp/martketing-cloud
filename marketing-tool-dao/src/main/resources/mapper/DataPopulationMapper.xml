@@ -9,7 +9,10 @@
 
     <!-- Original需要更新的列 -->
     <sql id="UPDATE_COLUMN_LIST">
-        <![CDATA[ mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,iq,identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,update_time,source,batch_id]]>
+        <![CDATA[ mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,
+        marital_status,education,employment,nationality,blood_type,citizenship,iq,
+        identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,
+        udid,phone_mac,create_time,update_time,source,batch_id]]>
     </sql>
 
 	<!-- 查询列来源表-->
@@ -224,7 +227,7 @@
             #{obj.education},#{obj.employment},#{obj.nationality},#{obj.bloodType},#{obj.citizenship},
             #{obj.iq},#{obj.identifyNo},#{obj.drivingLicense},#{obj.email},#{obj.tel},#{obj.qq},
             #{obj.acctType},#{obj.acctNo},#{obj.idfa},#{obj.imei},#{obj.udid},#{obj.phoneMac},
-            now(),now(),#{obj.source},#{obj.batchId})
+            #{obj.createTime},#{obj.updateTime},#{obj.source},#{obj.batchId})
 		</foreach>
 
         on duplicate key update

@@ -12,7 +12,7 @@ public class DataMember extends BaseQuery {
 
     private String memberPoints;
 
-    private Date memberLevel;
+    private String memberLevel;
 
     private Date registTime;
 
@@ -84,11 +84,11 @@ public class DataMember extends BaseQuery {
         this.memberPoints = memberPoints == null ? null : memberPoints.trim();
     }
 
-    public Date getMemberLevel() {
+    public String getMemberLevel() {
         return memberLevel;
     }
 
-    public void setMemberLevel(Date memberLevel) {
+    public void setMemberLevel(String memberLevel) {
         this.memberLevel = memberLevel;
     }
 
