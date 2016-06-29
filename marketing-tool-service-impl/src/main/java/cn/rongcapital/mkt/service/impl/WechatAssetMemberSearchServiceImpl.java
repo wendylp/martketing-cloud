@@ -29,6 +29,11 @@ public class WechatAssetMemberSearchServiceImpl implements WechatAssetMemberSear
     public BaseOutput searchWechatAssetMember(String groupIds,String searchField) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
         if(groupIds == null) return baseOutput;
+        if(searchField == null || "".equals(searchField.trim())){
+            baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+            baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+            return baseOutput;
+        }
 
         ArrayList<Long> idList = new ArrayList<Long>();
         getIdList(groupIds, idList);
