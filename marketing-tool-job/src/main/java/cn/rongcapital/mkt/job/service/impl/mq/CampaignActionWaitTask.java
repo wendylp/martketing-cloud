@@ -158,7 +158,7 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 		String itemId = taskSchedule.getCampaignItemId();
 		String prefixKey = campaignHeadId+"-"+itemId;
 		waitTaskMap.forEach((key,scheduledFuture)->{
-			if(StringUtils.isNotBlank(key) || key.startsWith(prefixKey))
+			if(StringUtils.isNotBlank(key) && key.startsWith(prefixKey))
 			scheduledFuture.cancel(true);
 		});
 		super.cancelCampaignInnerTask(taskSchedule);
