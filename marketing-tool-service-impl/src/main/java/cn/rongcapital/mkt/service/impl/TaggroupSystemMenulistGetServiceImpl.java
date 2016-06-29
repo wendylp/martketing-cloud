@@ -35,11 +35,10 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
 
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
-        // 所有的数据 , 相当于一颗多叉树
-        List<Taggroup> trees = TaggroupDao.selectList(null);
 
-        // 获取所有的top级别的节点
-        List<Taggroup> topTaggroups = getTopTaggroup(trees);
+        Taggroup paramTaggroup = new Taggroup();
+        paramTaggroup.setParentGroupId(TOP_LEVEL);
+        List<Taggroup> topTaggroups = TaggroupDao.selectList(paramTaggroup);
         List<Map<String, Object>> resultList = new ArrayList<>();
 
         // 获取一级节点的子节点
@@ -49,18 +48,8 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
             for (int i = 0; i < topTaggroups.size(); i++) {
                 Taggroup topTaggroup = topTaggroups.get(i);
                 Map<String, Object> selectMap = new HashMap<>();
-                List<Map<String, Object>> childNodes = new ArrayList<>();
                 selectMap.put("select_name", topTaggroup.getName());
                 selectMap.put("id", topTaggroup.getId());
-                List<Taggroup> subNodes = getChildNodeByCurrentNode(topTaggroup, trees);
-                selectMap.put("child_count", subNodes.size());
-                for (Taggroup taggroup : subNodes) {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("select_name", taggroup.getName());
-                    map.put("id", taggroup.getId());
-                    childNodes.add(map);
-                }
-                selectMap.put("child_nodes", childNodes);
                 resultList.add(selectMap);
             }
         }
@@ -69,41 +58,6 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
         baseOutput.setTotalCount(resultList.size());
 
         return baseOutput;
-    }
-
-    // 获取所有顶级节点,即parentId为-1的节点
-    private List<Taggroup> getTopTaggroup(List<Taggroup> trees) {
-        List<Taggroup> resultList = new ArrayList<>();
-
-        if (CollectionUtils.isEmpty(trees)) {
-            return resultList;
-        } else {
-            for (Taggroup taggroup : trees) {
-                if (taggroup.getParentGroupId() == TOP_LEVEL) {
-                    resultList.add(taggroup);
-                }
-            }
-        }
-
-        return resultList;
-    }
-
-    // 根据当前节点获取所有子节点
-    private List<Taggroup> getChildNodeByCurrentNode(Taggroup node, List<Taggroup> trees) {
-
-        List<Taggroup> resultList = new ArrayList<>();
-
-        if (node == null || CollectionUtils.isEmpty(trees)) {
-            return resultList;
-        }
-
-        for (Taggroup taggroup : trees) {
-            if (taggroup.getParentGroupId().equals(Long.valueOf(node.getId()))) {
-                resultList.add(taggroup);
-            }
-        }
-
-        return resultList;
     }
 
 }

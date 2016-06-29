@@ -6,9 +6,8 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.PagingUtil;
 import cn.rongcapital.mkt.dao.TaggroupDao;
+import cn.rongcapital.mkt.po.Taggroup;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -28,20 +28,27 @@ public class TagSystemListGetServiceImpl implements TagSystemListGetService {
     TaggroupDao taggroupDao;
 
     @Override
-    public BaseOutput getTagcount(String method, String userToken, String tagGroupName, Integer index, Integer size) {
+    public BaseOutput getTagcount(String method, String userToken, Integer tagGroupId, Integer index, Integer size) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
 
         PagingUtil.fixPagingParam(index, size);
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("tagGroupName", tagGroupName);
-        paramMap.put("startIndex", index);
-        paramMap.put("pageSize", size);
-        List<String> tagNames = taggroupDao.selectSubNodesByGroupName(paramMap);
+        Taggroup paramTaggroup = new Taggroup();
+        paramTaggroup.setParentGroupId(Long.valueOf(tagGroupId));
+        paramTaggroup.setStartIndex(index);
+        paramTaggroup.setPageSize(size);
 
-        baseOutput.getData().addAll(tagNames);
-        if (!CollectionUtils.isEmpty(tagNames)) {
-            baseOutput.setTotal(tagNames.size());
+        List<Taggroup> taggroups = taggroupDao.selectList(paramTaggroup);
+        List<String> resultList = new ArrayList<>(taggroups.size());
+
+        for (Taggroup taggroup : taggroups) {
+            resultList.add(taggroup.getName());
+        }
+
+
+        baseOutput.getData().addAll(resultList);
+        if (!CollectionUtils.isEmpty(resultList)) {
+            baseOutput.setTotal(resultList.size());
         }
 
         return baseOutput;

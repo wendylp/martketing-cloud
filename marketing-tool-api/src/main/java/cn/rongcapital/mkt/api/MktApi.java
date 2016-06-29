@@ -1404,26 +1404,23 @@ public class MktApi {
 		return dataMainBasicInfoUpdateService.updateBaseInfoByContactId(body);
 	}
 
-	/**
-	 * @功能简述: 获取系统标签内容列表
-	 * @param method
-	 * @param user_token
-	 * @param tag_group_id
-	 * @param index
-	 * @param size
-	 * @return BaseOutput
-	 */
-	@GET
-	@Path("/mkt.tag.system.list.get")
-	public BaseOutput getTagcountByParentGroupId(
-			@NotEmpty @QueryParam("method") String method,
-            @NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("tag_group_name") String tagGroupName,
-            @QueryParam("index") Integer index,
-            @QueryParam("size") Integer size){
-		return tagSystemListGetService.getTagcount(method, userToken,
-		                tagGroupName, index, size);
-	}
+    /**
+     * @功能简述: 获取系统标签内容列表
+     * @param method
+     * @param user_token
+     * @param tag_group_id
+     * @param index
+     * @param size
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.tag.system.list.get")
+    public BaseOutput getTagcountByParentGroupId(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) {
+        return tagSystemListGetService.getTagcount(method, userToken, tagGroupId, index, size);
+    }
 
 	/**
 	 * @功能简述: 获取系统标签组列表
