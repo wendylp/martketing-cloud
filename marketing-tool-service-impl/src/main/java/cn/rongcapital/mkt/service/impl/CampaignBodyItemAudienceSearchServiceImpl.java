@@ -31,7 +31,7 @@ public class CampaignBodyItemAudienceSearchServiceImpl implements CampaignBodyIt
 					                    		                                ApiConstant.INT_ZERO);
 		//模糊匹配
 		Pattern pattern = Pattern.compile("^.*"+name+".*$", Pattern.CASE_INSENSITIVE);
-		Query query = Query.query(Criteria.where("name").regex(pattern));  
+		Query query = Query.query(Criteria.where("name").regex(pattern).and("status").is(0));  
 	    List<NodeAudience> sodeAudienceList = mongoTemplate.find(query, NodeAudience.class);
 	    if(CollectionUtils.isNotEmpty(sodeAudienceList)) {
 	    	for(NodeAudience nodeAudience:sodeAudienceList) {

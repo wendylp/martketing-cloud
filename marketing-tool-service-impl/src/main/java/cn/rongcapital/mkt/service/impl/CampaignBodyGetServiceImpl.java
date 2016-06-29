@@ -266,8 +266,9 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	
 	
 	private int getAudienceCountInNode(Integer campaignHeadId,String itemId) {
-		Criteria criteria = Criteria.where("campaignHeadId").is(campaignHeadId);
-		criteria = criteria.andOperator(Criteria.where("itemId").is(itemId));
+		Criteria criteria = Criteria.where("campaignHeadId").is(campaignHeadId)
+									.and("itemId").is(itemId)
+									.and("status").is(0);
 		long count = mongoTemplate.count(new Query(criteria), NodeAudience.class);
 		return (int)count;
 	}

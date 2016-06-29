@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jms.Message;
@@ -89,29 +90,32 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 			  Integer campaignHeadId,String itemId,
 			  List<CampaignSwitch> campaignEndsList,
 			  CampaignActionSaveAudience campaignActionSaveAudience) {
+		List<Segment> segmentListToNext = new ArrayList<Segment>();
 		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
-			NodeAudience nodeAudience = new NodeAudience();
-			nodeAudience.setCampaignHeadId(campaignHeadId);
-			nodeAudience.setItemId(itemId);
-			nodeAudience.setDataId(segment.getDataId());
-			nodeAudience.setName(segment.getName());
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				NodeAudience nodeAudience = new NodeAudience();
+				nodeAudience.setCampaignHeadId(campaignHeadId);
+				nodeAudience.setItemId(itemId);
+				nodeAudience.setDataId(segment.getDataId());
+				nodeAudience.setName(segment.getName());
+				nodeAudience.setStatus(0);
 				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+				Integer dataId = segment.getDataId();
+				AudienceListPartyMap audienceListPartyMapT = new AudienceListPartyMap();
+				audienceListPartyMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+				audienceListPartyMapT.setPartyId(dataId);
+				audienceListPartyMapT.setAudienceListId(campaignActionSaveAudience.getAudienceId());
+				audienceListPartyMapDao.insert(audienceListPartyMapT);
+				segmentListToNext.add(segment);
 			}
-			Integer dataId = segment.getDataId();
-			AudienceListPartyMap audienceListPartyMapT = new AudienceListPartyMap();
-			audienceListPartyMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-			audienceListPartyMapT.setPartyId(dataId);
-			audienceListPartyMapT.setAudienceListId(campaignActionSaveAudience.getAudienceId());
-			audienceListPartyMapDao.insert(audienceListPartyMapT);
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 			for(CampaignSwitch cs:campaignEndsList) {
 				//发送segment数据到后面的节点
-				sendDynamicQueue(segmentList, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
-				deleteNodeAudience(campaignHeadId,itemId,segmentList);
-				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentList));
+				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				logicDeleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
+				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListToNext));
 			}
 		}
 	}
