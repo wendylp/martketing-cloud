@@ -92,10 +92,15 @@
 	</select>
 	
 	<!-- 查询,通过条件 -->
-	<select id="selectPartyIdList" parameterType="java.util.List" resultType="java.util.List">
+	<select id="selectPartyIdList" parameterType="java.util.List" resultType="java.lang.Integer">
 		<![CDATA[SELECT distinct party_id]]>		
-		<include refid="QUERY_FROM_TABLE"/>		  
-		<![CDATA[WHERE audience_list_id IN('1','2')]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<if test="list != null">
+			<![CDATA[WHERE audience_list_id IN]]>
+			<foreach collection="list" item="id" open="(" separator="," close=")">
+				<![CDATA[#{id}]]>
+			</foreach>
+		</if>
 	</select>
 	
 

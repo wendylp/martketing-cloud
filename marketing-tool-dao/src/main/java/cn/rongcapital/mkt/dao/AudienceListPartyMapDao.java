@@ -60,7 +60,7 @@ public interface AudienceListPartyMapDao extends BaseDao<AudienceListPartyMap>{
 	int batchInsert(List<Map<String, Object>> paramInsertLists);
 	
 	
-	List<String> selectPartyIdList(List<String> audience_ids);
+	List<String> selectPartyIdList(List<Integer> audience_ids);
 	
 	
 }
