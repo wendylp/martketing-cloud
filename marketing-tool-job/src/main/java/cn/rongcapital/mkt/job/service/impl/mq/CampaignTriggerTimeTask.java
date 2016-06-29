@@ -67,9 +67,9 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		 return ur;
 	 }
 	
-	public void cancelInnerTask(TaskSchedule taskSchedule){
+	public void cancelInnerTask(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
-		boolean isNeedCancel = false;
+		boolean isNeedCancel = false;//double check,查询数据库的任务表，看是否真的需要停止任务
 		TaskSchedule taskScheduleT = new TaskSchedule();
 		taskScheduleT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		taskScheduleT.setCampaignHeadId(campaignHeadId);
