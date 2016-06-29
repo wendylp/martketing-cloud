@@ -1,7 +1,8 @@
-package cn.rongcapital.mkt.service.impl;
+package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
 import cn.rongcapital.mkt.dao.OriginalDataCustomerTagsDao;
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.DataCustomerTags;
 import cn.rongcapital.mkt.po.OriginalDataCustomerTags;
 import cn.rongcapital.mkt.service.OriginalDataCustomTagScheduleService;
@@ -20,11 +21,7 @@ import java.util.Map;
  * Created by bianyulong on 16/6/24.
  */
 @Service
-public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCustomTagScheduleService{
-    /**
-     * 每次批量处理的数据数
-     */
-    public static final int BATCH_NUM = 1000;
+public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCustomTagScheduleService, TaskService {
 
     @Autowired
     private OriginalDataCustomerTagsDao originalDataCustomerTagsDao;
@@ -95,5 +92,10 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
         paramMap.put("list", dataCustomerTags);
 
         dataCustomerTagsDao.cleanAndUpdateByOriginal(paramMap);
+    }
+
+    @Override
+    public void task(Integer taskId) {
+        cleanData();
     }
 }
