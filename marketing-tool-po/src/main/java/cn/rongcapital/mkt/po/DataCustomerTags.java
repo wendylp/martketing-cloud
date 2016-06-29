@@ -45,7 +45,7 @@ public class DataCustomerTags extends BaseQuery {
 
     private String source;
 
-    private Integer batchId;
+    private String batchId;
     
     public DataCustomerTags(){}
     
@@ -213,11 +213,11 @@ public class DataCustomerTags extends BaseQuery {
         this.source = source == null ? null : source.trim();
     }
 
-    public Integer getBatchId() {
+    public String getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(Integer batchId) {
+    public void setBatchId(String batchId) {
         this.batchId = batchId;
     }
 }

@@ -47,7 +47,7 @@ public class OriginalDataArchPoint extends BaseQuery {
 
     private String cookie;
 
-    private Integer batchId;
+    private String batchId;
 
     private String fileUnique;
 
@@ -219,11 +219,11 @@ public class OriginalDataArchPoint extends BaseQuery {
         this.cookie = cookie == null ? null : cookie.trim();
     }
 
-    public Integer getBatchId() {
+    public String getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(Integer batchId) {
+    public void setBatchId(String batchId) {
         this.batchId = batchId;
     }
 

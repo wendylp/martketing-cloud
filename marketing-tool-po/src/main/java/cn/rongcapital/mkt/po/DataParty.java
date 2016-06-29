@@ -40,7 +40,7 @@ public class DataParty extends BaseQuery {
 
     private Date updateTime;
 
-    private Integer batchId;
+    private String batchId;
 
     private String mid;
 
@@ -190,11 +190,11 @@ public class DataParty extends BaseQuery {
         this.updateTime = updateTime;
     }
 
-    public Integer getBatchId() {
+    public String getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(Integer batchId) {
+    public void setBatchId(String batchId) {
         this.batchId = batchId;
     }
 
