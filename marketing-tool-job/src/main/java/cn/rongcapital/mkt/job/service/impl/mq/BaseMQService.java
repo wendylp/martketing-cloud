@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.job.service.impl.mq;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -31,6 +32,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.po.CampaignSwitch;
+import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.Tenement;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
@@ -52,7 +54,15 @@ public class BaseMQService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
+	protected static ConcurrentHashMap<String, MessageConsumer> consumerMap = new ConcurrentHashMap<String, MessageConsumer>();
+	
+	private static volatile boolean isJndiInited = false;
+	
 	public synchronized void initJndiEvironment() {
+		if(isJndiInited) {
+			return;
+		}
+		isJndiInited = true;
 		try {
 			Hashtable<Object,Object> environment = new Hashtable<Object,Object>();   
 	        environment.put(Context.INITIAL_CONTEXT_FACTORY,"org.apache.activemq.jndi.ActiveMQInitialContextFactory");   
@@ -63,6 +73,21 @@ public class BaseMQService {
 			conn.start();
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
+		}
+	}
+	
+	protected void cancelCampaignInnerTask(TaskSchedule taskSchedule) {
+		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
+		String itemId = taskSchedule.getCampaignItemId();
+		String consumerKey = campaignHeadId+"-"+itemId;
+		MessageConsumer consumer = consumerMap.get(consumerKey);
+		if(null != consumer) {
+			try {
+				consumer.close();
+				consumerMap.remove(consumerKey);
+			} catch (Exception e) {
+				logger.error(e.getMessage(),e);
+			}
 		}
 	}
 	

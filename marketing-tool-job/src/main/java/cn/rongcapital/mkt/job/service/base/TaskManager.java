@@ -38,6 +38,8 @@ public class TaskManager {
 	
 	private static final ConcurrentHashMap<String, TaskSchedule> taskPropMap = new ConcurrentHashMap<String, TaskSchedule>();	
 	
+	private static volatile boolean taskInited = false;
+	
 	private Runnable scanTask = new Runnable() {
 		public void run() {
 				scanTask();
@@ -50,12 +52,16 @@ public class TaskManager {
 	};
 	
 	public synchronized void manualInitTask () {
-		taskSchedule.submit(scanTask);
-		taskSchedule.submit(prepareTasks);
+		scanTask();
+		prepareTasks();
 	}
 	
 	public synchronized void initTask() {
-		logger.debug("initTask");
+		logger.info("initTask");
+		if(taskInited) {
+			return;
+		}
+		taskInited = true;
 		taskSchedule.scheduleAtFixedRate(scanTask, ApiConstant.TASK_SCAN_INTERVAL_MILLS);
 		taskSchedule.scheduleAtFixedRate(prepareTasks, ApiConstant.TASK_DO_INTERVAL_MILLS);
 	}
@@ -109,8 +115,11 @@ public class TaskManager {
 					}
 					//停止内嵌的任务/线程
 					String serviceName = getServiceName(v.getServiceName());
-					TaskService taskService = (TaskService)cotext.getBean(serviceName);
-					taskService.cancelInnerTask(v);
+					Object serviceBean = cotext.getBean(serviceName);
+					if(serviceBean instanceof TaskService) {
+						TaskService taskService = (TaskService)serviceBean;
+						taskService.cancelInnerTask(v);
+					}
 			}
 		});
 	}
@@ -121,9 +130,12 @@ public class TaskManager {
 		       public void run() {
 				try {
 					String serviceName = getServiceName(taskSchedulePo.getServiceName());
-					TaskService taskService = (TaskService)cotext.getBean(serviceName);
-					taskService.task(taskSchedulePo.getId());
-					taskService.task(taskSchedulePo);
+					Object serviceBean = cotext.getBean(serviceName);
+					if(serviceBean instanceof TaskService) {
+						TaskService taskService = (TaskService)serviceBean;
+						taskService.task(taskSchedulePo.getId());
+						taskService.task(taskSchedulePo);
+					}
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					// TO DO: fixme:need to do sth

@@ -1,7 +1,8 @@
-package cn.rongcapital.mkt.service.impl;
+package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.dao.OriginalDataShoppingDao;
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.OriginalDataShopping;
 import cn.rongcapital.mkt.service.OriginalDataShoppingScheduleService;
@@ -18,9 +19,7 @@ import java.util.List;
  * Created by bianyulong on 16/6/23.
  */
 @Service
-public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShoppingScheduleService {
-
-    public static final int BATCH_NUM = 1000;
+public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShoppingScheduleService, TaskService {
 
     @Autowired
     private OriginalDataShoppingDao originalDataShoppingDao;
@@ -86,5 +85,10 @@ public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShop
         }
 
         dataShoppingDao.cleanAndUpdateByOriginal(dataShoppings);
+    }
+
+    @Override
+    public void task(Integer taskId) {
+        cleanData();
     }
 }

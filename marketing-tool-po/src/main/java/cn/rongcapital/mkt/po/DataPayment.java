@@ -66,7 +66,7 @@ public class DataPayment extends BaseQuery {
 
     private String source;
 
-    private Integer batchId;
+    private String batchId;
     
     public DataPayment(){}
     
@@ -314,11 +314,11 @@ public class DataPayment extends BaseQuery {
         this.source = source == null ? null : source.trim();
     }
 
-    public Integer getBatchId() {
+    public String getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(Integer batchId) {
+    public void setBatchId(String batchId) {
         this.batchId = batchId;
     }
 }

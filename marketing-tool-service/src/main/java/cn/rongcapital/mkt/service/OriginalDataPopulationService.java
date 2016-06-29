@@ -1,7 +1,7 @@
 package cn.rongcapital.mkt.service;
 
-public interface OriginalDataPopulationService {
+import cn.rongcapital.mkt.service.base.OriginalDataScheduleService;
 
-   public void cleanData();
+public interface OriginalDataPopulationService  extends OriginalDataScheduleService  {
 
 }
