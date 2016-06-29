@@ -56,7 +56,13 @@ public class BaseMQService {
 	
 	protected static ConcurrentHashMap<String, MessageConsumer> consumerMap = new ConcurrentHashMap<String, MessageConsumer>();
 	
+	private static volatile boolean isJndiInited = false;
+	
 	public synchronized void initJndiEvironment() {
+		if(isJndiInited) {
+			return;
+		}
+		isJndiInited = true;
 		try {
 			Hashtable<Object,Object> environment = new Hashtable<Object,Object>();   
 	        environment.put(Context.INITIAL_CONTEXT_FACTORY,"org.apache.activemq.jndi.ActiveMQInitialContextFactory");   
