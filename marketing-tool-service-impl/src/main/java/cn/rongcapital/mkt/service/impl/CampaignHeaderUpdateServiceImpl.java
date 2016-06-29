@@ -10,6 +10,8 @@ import javax.ws.rs.core.SecurityContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -32,6 +34,7 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
 	private TaskScheduleDao taskScheduleDao;
 	
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public BaseOutput campaignHeaderUpdate(CampaignHeadUpdateIn body, SecurityContext securityContext) {
 		BaseOutput ur = checkPublishStatus(body.getCampaignId());
 		if(null != ur) {

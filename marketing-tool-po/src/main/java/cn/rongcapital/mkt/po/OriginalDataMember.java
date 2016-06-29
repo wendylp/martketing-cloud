@@ -52,7 +52,7 @@ public class OriginalDataMember extends BaseQuery {
 
     private String source;
 
-    private Integer batchId;
+    private String batchId;
 
     private String fileUnique;
 
@@ -240,11 +240,11 @@ public class OriginalDataMember extends BaseQuery {
         this.source = source == null ? null : source.trim();
     }
 
-    public Integer getBatchId() {
+    public String getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(Integer batchId) {
+    public void setBatchId(String batchId) {
         this.batchId = batchId;
     }
 

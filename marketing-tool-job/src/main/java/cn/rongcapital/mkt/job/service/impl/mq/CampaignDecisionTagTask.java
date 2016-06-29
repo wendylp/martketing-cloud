@@ -19,6 +19,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignDecisionTagDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -38,12 +40,11 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	private MessageConsumer consumer = null;
-	
 	@Override
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
+		String queueKey = campaignHeadId+"-"+itemId;
 		List<CampaignSwitch> campaignSwitchYesList = queryCampaignSwitchYesList(campaignHeadId, itemId);
 		List<CampaignSwitch> campaignSwitchNoList = queryCampaignSwitchNoList(campaignHeadId, itemId);
 		if(CollectionUtils.isEmpty(campaignSwitchYesList) && 
@@ -72,7 +73,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 			tagIdList.add(Integer.parseInt(tagIdStrT));
 		}
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -83,7 +84,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 						//获取segment list数据对象
 						List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
 						if(CollectionUtils.isNotEmpty(segmentList)) {
-							processMqMessage(message,segmentList,tagIdList,campaignSwitchYesList,campaignSwitchNoList,rule);
+							processMqMessage(message,segmentList,tagIdList,campaignSwitchYesList,campaignSwitchNoList,rule,queueKey);
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(),e);
@@ -106,7 +107,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 								  List<Integer> tagIdList,
 								  List<CampaignSwitch> campaignSwitchYesList,
 								  List<CampaignSwitch> campaignSwitchNoList,
-								  byte rule) throws Exception{
+								  byte rule,String queueKey) throws Exception{
 		List<Segment> segmentListToMqYes = new ArrayList<Segment>();//初始化"是"分支的数据对象list
 		List<Segment> segmentListToMqNo = new ArrayList<Segment>();//初始化"非"分支的数据对象list
 		for(Segment s:segmentList) {
@@ -177,21 +178,17 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 		if(CollectionUtils.isNotEmpty(campaignSwitchYesList)) {
 			CampaignSwitch csYes = campaignSwitchYesList.get(0);
 			sendDynamicQueue(segmentListToMqYes, csYes.getCampaignHeadId() +"-"+csYes.getNextItemId());
+			logger.info(queueKey+"-out-yes:"+JSON.toJSONString(segmentListToMqYes));
 		}
 		if(CollectionUtils.isNotEmpty(campaignSwitchNoList)) {
 			CampaignSwitch csNo = campaignSwitchNoList.get(0);
 			sendDynamicQueue(segmentListToMqNo, csNo.getCampaignHeadId() +"-"+csNo.getNextItemId());
+			logger.info(queueKey+"-out-no:"+JSON.toJSONString(segmentListToMqNo));
 		}
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 
 	@Override

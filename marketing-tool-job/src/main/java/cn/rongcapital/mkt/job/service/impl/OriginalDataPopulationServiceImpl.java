@@ -1,10 +1,11 @@
-package cn.rongcapital.mkt.service.impl;
+package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,7 @@ import cn.rongcapital.mkt.po.OriginalDataPopulation;
 import cn.rongcapital.mkt.service.OriginalDataPopulationService;
 
 @Service
-public class OriginalDataPopulationServiceImpl implements OriginalDataPopulationService {
-
-    /**
-     * 每次批量处理的数据数
-     */
-    public static final int BATCH_NUM = 1000;
+public class OriginalDataPopulationServiceImpl implements OriginalDataPopulationService,TaskService {
 
     @Autowired
     private OriginalDataPopulationDao originalDataPopulationDao;
@@ -99,4 +95,8 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
         dataPopulationDao.cleanAndUpdateByOriginal(paramMap);
     }
 
+    @Override
+    public void task(Integer taskId) {
+        cleanData();
+    }
 }

@@ -21,11 +21,6 @@ import cn.rongcapital.mkt.service.OriginalDataArchPointScheduleService;
 @Service
 public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArchPointScheduleService, TaskService {
 
-    /**
-     * 每次批量处理的数据数
-     */
-    public static final int BATCH_NUM = 1000;
-
     @Autowired
     private OriginalDataArchPointDao originalDataArchPointDao;
 

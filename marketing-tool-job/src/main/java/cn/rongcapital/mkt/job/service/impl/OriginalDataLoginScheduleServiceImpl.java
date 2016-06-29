@@ -1,7 +1,8 @@
-package cn.rongcapital.mkt.service.impl;
+package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.dao.DataLoginDao;
 import cn.rongcapital.mkt.dao.OriginalDataLoginDao;
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.DataLogin;
 import cn.rongcapital.mkt.po.OriginalDataLogin;
 import cn.rongcapital.mkt.service.OriginalDataLoginScheduleService;
@@ -18,9 +19,7 @@ import java.util.List;
  * Created by bianyulong on 16/6/22.
  */
 @Service
-public class OriginalDataLoginScheduleServiceImpl implements OriginalDataLoginScheduleService {
-
-    public static final int BATCH_NUM = 1000;
+public class OriginalDataLoginScheduleServiceImpl implements OriginalDataLoginScheduleService,TaskService {
 
     @Autowired
     private OriginalDataLoginDao originalDataLoginDao;
@@ -88,4 +87,8 @@ public class OriginalDataLoginScheduleServiceImpl implements OriginalDataLoginSc
         dataLoginDao.cleanAndUpdateByOriginal(dataLogins);
     }
 
+    @Override
+    public void task(Integer taskId) {
+        cleanData();
+    }
 }
