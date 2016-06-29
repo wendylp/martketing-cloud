@@ -1422,26 +1422,23 @@ public class MktApi {
         return tagSystemListGetService.getTagcount(method, userToken, tagGroupId, index, size);
     }
 
-	/**
-	 * @功能简述: 获取系统标签组列表
-	 * @param method
-	 * @param user_token
-	 * @param tag_group_id
-	 * @param index
-	 * @param size
-	 * @return BaseOutput
-	 */
-	@GET
-	@Path("/mkt.taggroup.system.list.get")
-	public BaseOutput getTagGroupByParentGroupId(
-			@NotEmpty @QueryParam("method") String method,
-            @NotEmpty @QueryParam("user_token") String userToken,
-            @NotNull @QueryParam("tag_group_id") Integer tagGroupId,
-            @QueryParam("index") Integer index,
-            @QueryParam("size") Integer size){
-		return taggroupSystemListGetService.getTagGroupByParentGroupId(method,
-				userToken, tagGroupId, index, size);
-	}
+    /**
+     * @功能简述: 获取系统标签组列表
+     * @param method
+     * @param user_token
+     * @param tag_group_id
+     * @param index
+     * @param size
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.taggroup.system.list.get")
+    public BaseOutput getTagGroupByParentGroupId(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) {
+        return taggroupSystemListGetService.getTagGroupByParentGroupId(method, userToken, tagGroupId, index, size);
+    }
 
 	/**
 	 * @功能简述: 获取某条主数据详细信息
