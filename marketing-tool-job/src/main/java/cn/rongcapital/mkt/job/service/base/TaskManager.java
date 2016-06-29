@@ -109,8 +109,11 @@ public class TaskManager {
 					}
 					//停止内嵌的任务/线程
 					String serviceName = getServiceName(v.getServiceName());
-					TaskService taskService = (TaskService)cotext.getBean(serviceName);
-					taskService.cancelInnerTask(v);
+					Object serviceBean = cotext.getBean(serviceName);
+					if(serviceBean instanceof TaskService) {
+						TaskService taskService = (TaskService)serviceBean;
+						taskService.cancelInnerTask(v);
+					}
 			}
 		});
 	}
@@ -121,9 +124,12 @@ public class TaskManager {
 		       public void run() {
 				try {
 					String serviceName = getServiceName(taskSchedulePo.getServiceName());
-					TaskService taskService = (TaskService)cotext.getBean(serviceName);
-					taskService.task(taskSchedulePo.getId());
-					taskService.task(taskSchedulePo);
+					Object serviceBean = cotext.getBean(serviceName);
+					if(serviceBean instanceof TaskService) {
+						TaskService taskService = (TaskService)serviceBean;
+						taskService.task(taskSchedulePo.getId());
+						taskService.task(taskSchedulePo);
+					}
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					// TO DO: fixme:need to do sth
