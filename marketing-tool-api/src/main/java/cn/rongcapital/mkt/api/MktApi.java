@@ -1365,7 +1365,7 @@ public class MktApi {
      * @param: String userToken, Ingeger tag_id
      * @return: Object
      */
-    @POST
+    @GET
     @Path("mkt.tag.custom.audience.download")
     @Consumes({MediaType.APPLICATION_JSON})
     public BaseOutput downloadCustomAudience(@NotEmpty @QueryParam("method") String method,
