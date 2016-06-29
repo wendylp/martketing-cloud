@@ -38,7 +38,7 @@ public class TaskManager {
 	
 	private static final ConcurrentHashMap<String, TaskSchedule> taskPropMap = new ConcurrentHashMap<String, TaskSchedule>();	
 	
-	private volatile boolean taskInited = false;
+	private static volatile boolean taskInited = false;
 	
 	private Runnable scanTask = new Runnable() {
 		public void run() {
