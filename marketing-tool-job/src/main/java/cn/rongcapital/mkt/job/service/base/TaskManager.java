@@ -52,8 +52,8 @@ public class TaskManager {
 	};
 	
 	public synchronized void manualInitTask () {
-		taskSchedule.submit(scanTask);
-		taskSchedule.submit(prepareTasks);
+		scanTask();
+		prepareTasks();
 	}
 	
 	public synchronized void initTask() {
