@@ -104,6 +104,7 @@ public class DataDownloadMainListServiceImpl implements DataDownloadMainListServ
         List<T> dataList = dao.selectList(null);
         ImportTemplate paramImportTemplate = new ImportTemplate();
         paramImportTemplate.setTemplType(dataType);
+        paramImportTemplate.setPageSize(0);
         List<ImportTemplate> importTemplates = importTemplateDao.selectList(paramImportTemplate);
         List<Map<String, String>> columnsMap = transferNameListtoMap(importTemplates);
 

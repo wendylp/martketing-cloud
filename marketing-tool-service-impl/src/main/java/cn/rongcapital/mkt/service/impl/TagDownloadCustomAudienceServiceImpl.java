@@ -38,6 +38,7 @@ public class TagDownloadCustomAudienceServiceImpl implements TagDownloadCustomAu
         List<DataParty> dataList = dataPartyDao.selectCustomAudiencesByTagId(paramMap);
         ImportTemplate paramImportTemplate = new ImportTemplate();
         paramImportTemplate.setTemplType(FileNameEnum.PARTY.getCode());
+        paramImportTemplate.setPageSize(0);
         List<ImportTemplate> importTemplates = importTemplateDao.selectList(paramImportTemplate);
         List<Map<String, String>> columnsMap = DataDownloadMainListServiceImpl.transferNameListtoMap(importTemplates);
 
