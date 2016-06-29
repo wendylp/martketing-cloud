@@ -22,11 +22,6 @@ import cn.rongcapital.mkt.service.OriginalDataMemberScheduleService;
 @Service
 public class OriginalDataMemberScheduleServiceImpl implements OriginalDataMemberScheduleService , TaskService{
 
-    /**
-     * 每次批量处理的数据数
-     */
-    public static final int BATCH_NUM = 1000;
-
     @Autowired
     private OriginalDataMemberDao originalDataMemberDao;
 

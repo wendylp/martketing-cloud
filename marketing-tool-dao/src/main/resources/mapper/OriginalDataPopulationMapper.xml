@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,monthly_consume as monthlyConsume,marital_status as maritalStatus,education as education,employment as employment,nationality as nationality,blood_type as bloodType,citizenship as citizenship,IQ as iQ,identify_no as identifyNo,driving_license as drivingLicense,email as email,tel as tel,QQ as qQ,acct_type as acctType,acct_no as acctNo,IDFA as iDFA,IMEI as iMEI,UDID as uDID,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique]]>
+		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,monthly_consume as monthlyConsume,marital_status as maritalStatus,education as education,employment as employment,nationality as nationality,blood_type as bloodType,citizenship as citizenship,iq as iq,identify_no as identifyNo,driving_license as drivingLicense,email as email,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -29,17 +29,17 @@
 		    	<if test="nationality != null"><![CDATA[ AND nationality = #{nationality}]]></if>
 		    	<if test="bloodType != null"><![CDATA[ AND blood_type = #{bloodType}]]></if>
 		    	<if test="citizenship != null"><![CDATA[ AND citizenship = #{citizenship}]]></if>
-		    	<if test="iQ != null"><![CDATA[ AND IQ = #{iQ}]]></if>
+		    	<if test="iq != null"><![CDATA[ AND iq = #{iq}]]></if>
 		    	<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
 		    	<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
 		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
 		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
-		    	<if test="qQ != null"><![CDATA[ AND QQ = #{qQ}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
 		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
 		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
-		    	<if test="iDFA != null"><![CDATA[ AND IDFA = #{iDFA}]]></if>
-		    	<if test="iMEI != null"><![CDATA[ AND IMEI = #{iMEI}]]></if>
-		    	<if test="uDID != null"><![CDATA[ AND UDID = #{uDID}]]></if>
+		    	<if test="idfa != null"><![CDATA[ AND idfa = #{idfa}]]></if>
+		    	<if test="imei != null"><![CDATA[ AND imei = #{imei}]]></if>
+		    	<if test="udid != null"><![CDATA[ AND udid = #{udid}]]></if>
 		    	<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
@@ -74,17 +74,17 @@
 		    	<if test="nationality != null"><![CDATA[nationality = #{nationality},]]></if>
 		    	<if test="bloodType != null"><![CDATA[blood_type = #{bloodType},]]></if>
 		    	<if test="citizenship != null"><![CDATA[citizenship = #{citizenship},]]></if>
-		    	<if test="iQ != null"><![CDATA[IQ = #{iQ},]]></if>
+		    	<if test="iq != null"><![CDATA[iq = #{iq},]]></if>
 		    	<if test="identifyNo != null"><![CDATA[identify_no = #{identifyNo},]]></if>
 		    	<if test="drivingLicense != null"><![CDATA[driving_license = #{drivingLicense},]]></if>
 		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
 		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
-		    	<if test="qQ != null"><![CDATA[QQ = #{qQ},]]></if>
+		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
 		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
 		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
-		    	<if test="iDFA != null"><![CDATA[IDFA = #{iDFA},]]></if>
-		    	<if test="iMEI != null"><![CDATA[IMEI = #{iMEI},]]></if>
-		    	<if test="uDID != null"><![CDATA[UDID = #{uDID},]]></if>
+		    	<if test="idfa != null"><![CDATA[idfa = #{idfa},]]></if>
+		    	<if test="imei != null"><![CDATA[imei = #{imei},]]></if>
+		    	<if test="udid != null"><![CDATA[udid = #{udid},]]></if>
 		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
@@ -96,7 +96,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataPopulation" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO original_data_population (mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,IQ,identify_no,driving_license,email,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,batch_id,file_unique)
+			INSERT INTO original_data_population (mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,iq,identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,file_unique)
 			VALUES
 			(
 			  #{mobile},
@@ -114,17 +114,17 @@
 			  #{nationality},
 			  #{bloodType},
 			  #{citizenship},
-			  #{iQ},
+			  #{iq},
 			  #{identifyNo},
 			  #{drivingLicense},
 			  #{email},
 			  #{tel},
-			  #{qQ},
+			  #{qq},
 			  #{acctType},
 			  #{acctNo},
-			  #{iDFA},
-			  #{iMEI},
-			  #{uDID},
+			  #{idfa},
+			  #{imei},
+			  #{udid},
 			  #{phoneMac},
 			  now(),
 			  #{source},
@@ -173,7 +173,7 @@
 	
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO original_data_population (mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,IQ,identify_no,driving_license,email,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,file_unique,batch_id)
+		INSERT INTO original_data_population (mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,iq,identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,file_unique,batch_id)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -192,17 +192,17 @@
 			#{item.nationality},
 			#{item.blood_type},
 			#{item.citizenship},
-			#{item.IQ},
+			#{item.iq},
 			#{item.identify_no},
 			#{item.driving_license},
 			#{item.email},
 			#{item.tel},
-			#{item.QQ},
+			#{item.qq},
 			#{item.acct_type},
 			#{item.acct_no},
-			#{item.IDFA},
-			#{item.IMEI},
-			#{item.UDID},
+			#{item.idfa},
+			#{item.imei},
+			#{item.udid},
 			#{item.phone_mac},
 			#{item.create_time},
 			#{item.source},

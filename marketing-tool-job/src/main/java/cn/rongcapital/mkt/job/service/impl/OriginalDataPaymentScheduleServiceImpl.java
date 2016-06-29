@@ -1,7 +1,8 @@
-package cn.rongcapital.mkt.service.impl;
+package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.dao.DataPaymentDao;
 import cn.rongcapital.mkt.dao.OriginalDataPaymentDao;
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.DataPayment;
 import cn.rongcapital.mkt.po.OriginalDataPayment;
 import cn.rongcapital.mkt.service.OriginalDataPaymentScheduleService;
@@ -18,9 +19,7 @@ import java.util.List;
  * Created by bianyulong on 16/6/23.
  */
 @Service
-public class OriginalDataPaymentScheduleServiceImpl implements OriginalDataPaymentScheduleService {
-
-    public static final int BATCH_NUM = 1000;
+public class OriginalDataPaymentScheduleServiceImpl implements OriginalDataPaymentScheduleService,TaskService {
 
     @Autowired
     private OriginalDataPaymentDao originalDataPaymentDao;
@@ -88,4 +87,8 @@ public class OriginalDataPaymentScheduleServiceImpl implements OriginalDataPayme
         dataPaymentDao.cleanAndUpdateByOriginal(dataLogins);
     }
 
+    @Override
+    public void task(Integer taskId) {
+        cleanData();
+    }
 }
