@@ -11,15 +11,15 @@ import java.util.ArrayList;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class SaveWechatAssetListIn extends BaseInput {
 
-    private ArrayList<Integer> groupIds;
+    private ArrayList<Long> groupIds;
     private String peopleGroupName;
 
     @JsonProperty("group_ids")
-    public ArrayList<Integer> getGroupIds() {
+    public ArrayList<Long> getGroupIds() {
         return groupIds;
     }
 
-    public void setGroupIds(ArrayList<Integer> groupIds) {
+    public void setGroupIds(ArrayList<Long> groupIds) {
         this.groupIds = groupIds;
     }
 

@@ -121,6 +121,7 @@ import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -408,8 +409,12 @@ public class MktApi {
 
 	@Autowired
 	private FileTagUpdateService fileTagUpdateService;
+
 	@Autowired
 	private CampaignBodyItemAudienceSearchService campaignBodyItemAudienceSearchService;
+
+	@Autowired
+	private WechatAssetMemberSearchService wechatAssetMemberSearchService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1046,7 +1051,7 @@ public class MktApi {
     public BaseOutput audienceByName(@NotEmpty @QueryParam("user_token") String userToken,
                                            @QueryParam("audience_type") String audience_type,                       
                                            @QueryParam("audience_id") int audience_id,
-                                           @QueryParam("audience_name") String audience_name,
+                                           @QueryParam("search_field") String audience_name,
                                            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
                                            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
         return audienceSearchService.audienceByName(userToken,audience_type,audience_id,audience_name,size, index);
@@ -1580,5 +1585,21 @@ public class MktApi {
 									   @NotEmpty @QueryParam("ver") String ver,
 	                                   @NotEmpty @QueryParam("name") String name){
         return campaignBodyItemAudienceSearchService.campaignBodyItemAudienceSearch(name);
+	}
+
+	/**
+	 * 查询微信小组中的人群
+	 * @param userToken
+	 * @param ver
+	 * @param groupIds
+	 * @return
+	 */
+	@GET
+	@Path("/mkt.asset.wechat.member.search")
+	public BaseOutput wechatAssetMemberSearch(@NotEmpty @QueryParam("user_token") String userToken,
+											  @NotEmpty @QueryParam("ver") String ver,
+											  @NotEmpty @QueryParam("group_ids") String groupIds,
+											  @NotEmpty @QueryParam("search_field") String searchField){
+		return wechatAssetMemberSearchService.searchWechatAssetMember(groupIds,searchField);
 	}
 }
