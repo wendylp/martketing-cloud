@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
@@ -9,10 +11,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Yunfeng on 2016-6-28.
@@ -43,15 +42,26 @@ public class WechatAssetMemberSearchServiceImpl implements WechatAssetMemberSear
         if(searchResult != null && searchResult.size() > 0){
             for(Map<String,Object> map : searchResult){
                 if(map.get("sex") != null){
-                    if((Integer)map.get("sex") == 1){
-                        map.put("sex","男");
-                    }else if((Integer)map.get("sex") == 2){
-                        map.put("sex","女");
-                    }
+                    map.put("gender", GenderUtils.intToChar((Integer)map.get("sex")));
+                    map.remove("sex");
                 }
-                map.put("sex","用户保密");
                 if(map.get("head_image_url") == null){
                     map.put("head_image_url","http://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png");
+                }
+                if(map.get("birthday") != null){
+                    try {
+                        Integer age = 0;
+                        String date = (String) map.get("birthday");
+                        Date now = new Date(System.currentTimeMillis());
+                        String nowYear = DateUtil.getStringFromDate(now,"yyyy");
+                        if(date.length() > 5){
+                            age = Integer.parseInt(nowYear) - Integer.parseInt(date.substring(0,4));
+                        }
+                        map.remove("birthday");
+                        map.put("age",age);
+                    }catch (Throwable throwable){
+                        throwable.printStackTrace();
+                    }
                 }
                 baseOutput.getData().add(map);
             }
