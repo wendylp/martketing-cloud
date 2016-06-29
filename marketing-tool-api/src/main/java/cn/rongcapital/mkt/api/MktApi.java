@@ -125,6 +125,7 @@ import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -425,8 +426,12 @@ public class MktApi {
 
 	@Autowired
 	private FileTagUpdateService fileTagUpdateService;
+
 	@Autowired
 	private CampaignBodyItemAudienceSearchService campaignBodyItemAudienceSearchService;
+
+	@Autowired
+	private WechatAssetMemberSearchService wechatAssetMemberSearchService;
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1107,7 +1112,7 @@ public class MktApi {
     public BaseOutput audienceByName(@NotEmpty @QueryParam("user_token") String userToken,
                                            @QueryParam("audience_type") String audience_type,                       
                                            @QueryParam("audience_id") int audience_id,
-                                           @QueryParam("audience_name") String audience_name,
+                                           @QueryParam("search_field") String audience_name,
                                            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
                                            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
         return audienceSearchService.audienceByName(userToken,audience_type,audience_id,audience_name,size, index);
@@ -1425,47 +1430,41 @@ public class MktApi {
 		return dataMainBasicInfoUpdateService.updateBaseInfoByContactId(body);
 	}
 
-	/**
-	 * @功能简述: 获取系统标签内容列表
-	 * @param method
-	 * @param user_token
-	 * @param tag_group_id
-	 * @param index
-	 * @param size
-	 * @return BaseOutput
-	 */
-	@GET
-	@Path("/mkt.tag.system.list.get")
-	public BaseOutput getTagcountByParentGroupId(
-			@NotEmpty @QueryParam("method") String method,
-            @NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("tag_group_name") String tagGroupName,
-            @QueryParam("index") Integer index,
-            @QueryParam("size") Integer size){
-		return tagSystemListGetService.getTagcount(method, userToken,
-		                tagGroupName, index, size);
-	}
+    /**
+     * @功能简述: 获取系统标签内容列表
+     * @param method
+     * @param user_token
+     * @param tag_group_id
+     * @param index
+     * @param size
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.tag.system.list.get")
+    public BaseOutput getTagcountByParentGroupId(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) {
+        return tagSystemListGetService.getTagcount(method, userToken, tagGroupId, index, size);
+    }
 
-	/**
-	 * @功能简述: 获取系统标签组列表
-	 * @param method
-	 * @param user_token
-	 * @param tag_group_id
-	 * @param index
-	 * @param size
-	 * @return BaseOutput
-	 */
-	@GET
-	@Path("/mkt.taggroup.system.list.get")
-	public BaseOutput getTagGroupByParentGroupId(
-			@NotEmpty @QueryParam("method") String method,
-            @NotEmpty @QueryParam("user_token") String userToken,
-            @NotNull @QueryParam("tag_group_id") Integer tagGroupId,
-            @QueryParam("index") Integer index,
-            @QueryParam("size") Integer size){
-		return taggroupSystemListGetService.getTagGroupByParentGroupId(method,
-				userToken, tagGroupId, index, size);
-	}
+    /**
+     * @功能简述: 获取系统标签组列表
+     * @param method
+     * @param user_token
+     * @param tag_group_id
+     * @param index
+     * @param size
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.taggroup.system.list.get")
+    public BaseOutput getTagGroupByParentGroupId(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) {
+        return taggroupSystemListGetService.getTagGroupByParentGroupId(method, userToken, tagGroupId, index, size);
+    }
 
 	/**
 	 * @功能简述: 获取某条主数据详细信息
@@ -1651,5 +1650,21 @@ public class MktApi {
 									   @NotEmpty @QueryParam("ver") String ver,
 	                                   @NotEmpty @QueryParam("name") String name){
         return campaignBodyItemAudienceSearchService.campaignBodyItemAudienceSearch(name);
+	}
+
+	/**
+	 * 查询微信小组中的人群
+	 * @param userToken
+	 * @param ver
+	 * @param groupIds
+	 * @return
+	 */
+	@GET
+	@Path("/mkt.asset.wechat.member.search")
+	public BaseOutput wechatAssetMemberSearch(@NotEmpty @QueryParam("user_token") String userToken,
+											  @NotEmpty @QueryParam("ver") String ver,
+											  @NotEmpty @QueryParam("group_ids") String groupIds,
+											  @NotEmpty @QueryParam("search_field") String searchField){
+		return wechatAssetMemberSearchService.searchWechatAssetMember(groupIds,searchField);
 	}
 }

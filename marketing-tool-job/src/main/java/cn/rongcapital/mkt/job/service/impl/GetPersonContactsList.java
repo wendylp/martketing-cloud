@@ -82,13 +82,13 @@ public class GetPersonContactsList implements TaskService {
                 Map<String,Object> paramContact = new HashMap<String,Object>();
                 paramContact.put("wx_group_id",groupId);
                 paramContact.put("wx_code", personalContact.getUcode());
-//                paramContact.put("name",personalContact.getNickname());
+                paramContact.put("nickname",personalContact.getNickname());
                 if("男".equals(personalContact.getSex())){
-                    paramContact.put("sex", 0);
-                }else if("女".equals(personalContact.getSex())){
                     paramContact.put("sex", 1);
-                }else {
+                }else if("女".equals(personalContact.getSex())){
                     paramContact.put("sex", 2);
+                }else {
+                    paramContact.put("sex", 3);
                 }
                 paramContact.put("signature", personalContact.getSignature());
                 paramContact.put("province", personalContact.getProvince());

@@ -61,22 +61,21 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 		AudienceList param = new AudienceList();
 		param.setPageSize(size);
 		param.setStartIndex((index-1)*size);
+
+		audience_name = "%" + audience_name + "%";
 		
 		List<Integer> idList=new ArrayList<Integer>();
-		
-		
+
 		List<Integer> partyIdList=new ArrayList<Integer>();
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 		                   ApiErrorCode.SUCCESS.getMsg(),
 		                   ApiConstant.INT_ZERO,null);
+		List<Map<String,Object>> resultList = null;
 				
 		if(audience_type.equals("0")){		    
 		    //全局模糊查询所有联系人		    		    
-		    Map<String,Object> map=dataPartyDao.selectListByKeyName(audience_name);	
-		    
-		    //返回结果
-		    
+		    resultList=dataPartyDao.selectListByKeyName(audience_name);
 		}else if(audience_type.equals("1")){
 		    
 		    //人群管理:在人群中查找
@@ -86,27 +85,9 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 		    for(AudienceListPartyMap col : cols){
 		        partyIdList.add(col.getPartyId());
 		    }
-		    
 		    //2.在联系人中查找名字匹配的
-		    Map<String,Object> map=dataPartyDao.selectListByNameInList(partyIdList,audience_name);   
-		    	    
-		    
+		    resultList=dataPartyDao.selectListByNameInList(partyIdList,audience_name);
 		}else if(audience_type.equals("2")){
-            //微信资产:在人群中查找
-		    //1.根据人群ID查出微信ID列表 
-            
-            List<AudienceListPartyMap> cols=audienceListPartyMapDao.selectListByIdList(idList);
-            for(AudienceListPartyMap col : cols){
-                partyIdList.add(col.getPartyId());
-            }
-            
-            //2.在微信中查找昵称匹配的(wechat_member)
-            //Map<String,Object> map=wechatMemberDao.selectListByNameInList(partyIdList,audience_name); 
-            
-            //3.返回结果
-            
-            
-        }else if(audience_type.equals("3")){
             //自定义标签:在人群中查找
             //1.根据自定义标签ID查出人群ID列表 
             CustomTagMap tagmap=new CustomTagMap();
@@ -119,16 +100,12 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
             }
             
             //2.在人群(自定义标签)中查找名字匹配的
-            Map<String,Object> map=dataPartyDao.selectListByNameInList(partyIdList,audience_name);  
-            
-            //3.返回结果
-            
-            
-        }else{
-          ;
+            resultList=dataPartyDao.selectListByNameInList(partyIdList,audience_name);
         }
-		
-		
+
+		if(resultList != null && resultList.size() > 0){
+			result.getData().addAll(resultList);
+		}
 		result.setTotal(result.getData().size());
 		
 		return result;

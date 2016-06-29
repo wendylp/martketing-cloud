@@ -86,4 +86,11 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return list
 	 */
 	Integer selectGroupMemeberCount(Map<String,Object> paramMap);
+
+	/**
+	 * 搜索微信小组中人的信息
+	 * @param paramMap
+	 * @return list
+	 */
+	List<Map<String,Object>> selectSearchInfo(Map<String,Object> paramMap);
 }

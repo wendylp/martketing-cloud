@@ -8,6 +8,7 @@ import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.DownloadFileName;
+import cn.rongcapital.mkt.vo.out.WechatPeopleDetailDownloadOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,18 +31,20 @@ public class WechatPeopleDetailDownloadServiceImpl implements WechatPeopleDetail
     @Override
     public Object downloadWechatPeopleDetail(String group_ids) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
-        ArrayList<Integer> groupIds = new ArrayList<Integer>();
+        ArrayList<Long> groupIds = new ArrayList<Long>();
         File file = null;
         //1.将group_ids进行拆分，获取组id
         if(group_ids != null){
             if(group_ids.contains(",")){
                 String[] ids = group_ids.split(",");
                 for (String id : ids){
-                    groupIds.add(Integer.parseInt(id));
+                    groupIds.add(Long.parseLong(id));
                 }
             }else{
-                groupIds.add(Integer.parseInt(group_ids));
+                groupIds.add(Long.parseLong(group_ids));
             }
+            //通过asset_group_id查询这些group的总人数
+            Long totalGroupCount = wechatAssetGroupDao.sumGroupMemberCount(groupIds);
             //通过组id查询import的group_id
             List<Long> importGroupIds = wechatAssetGroupDao.selectImportGroupIdsByIds(groupIds);
             //3.根据import_id选取出人。
@@ -49,9 +52,10 @@ public class WechatPeopleDetailDownloadServiceImpl implements WechatPeopleDetail
             file = FileUtil.generateDownloadFile(peopleDetails,"wxDetails");
             baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
             baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
-            DownloadFileName downloadFileName = new DownloadFileName();
-            downloadFileName.setDownloadFileName(file.getName());
-            baseOutput.getData().add(downloadFileName);
+            WechatPeopleDetailDownloadOut wechatPeopleDetailDownloadOut = new WechatPeopleDetailDownloadOut();
+            wechatPeopleDetailDownloadOut.setDownloadFileName(file.getName());
+            wechatPeopleDetailDownloadOut.setTotalCount(totalGroupCount);
+            baseOutput.getData().add(wechatPeopleDetailDownloadOut);
         }
         return baseOutput;
     }
