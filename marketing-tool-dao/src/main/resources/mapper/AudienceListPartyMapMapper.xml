@@ -90,6 +90,14 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
+	
+	<!-- 查询,通过条件 -->
+	<select id="selectPartyIdList" parameterType="java.util.List" resultType="java.util.List">
+		<![CDATA[SELECT distinct party_id]]>		
+		<include refid="QUERY_FROM_TABLE"/>		  
+		<![CDATA[WHERE audience_list_id IN('1','2')]]>
+	</select>
+	
 
 	<!-- 总数查询,通过条件 -->
 	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.AudienceListPartyMap" resultType="int">

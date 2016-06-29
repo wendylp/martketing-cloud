@@ -40,6 +40,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
+import cn.rongcapital.mkt.service.AudienceIdListService;
 import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.AudienceNameListService;
@@ -286,6 +287,9 @@ public class MktApi {
     
     @Autowired
     private AudienceNameListService audienceNameListService;
+    
+    @Autowired
+    private AudienceIdListService audienceIdListService;
 
     @Autowired
     private AudienceSearchService audienceSearchService;
@@ -1058,6 +1062,23 @@ public class MktApi {
 	public BaseOutput audienceNameList(@NotEmpty @QueryParam("user_token") String userToken){
 		return audienceNameListService.audienceNameList(userToken);
 	}
+	
+	
+	/**
+     * @功能简述: 数据分析，获取联系人ID列表
+     * @param: String userToken
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.dataanalysis.audiences.get")
+    public BaseOutput audienceIdList(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("audience_ids") String audience_ids,
+                    @NotEmpty @QueryParam("audience_type") String audience_type){
+        return audienceIdListService.audienceIdList(userToken,audience_ids,audience_type);
+    }
+	
+	
+	
 	
 	/**
      * @功能简述: 获取人群list列表
