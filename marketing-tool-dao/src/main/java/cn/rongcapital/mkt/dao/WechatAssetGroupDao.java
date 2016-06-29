@@ -54,14 +54,14 @@ public interface WechatAssetGroupDao extends BaseDao<WechatAssetGroup>{
 	 * @param paramMap
 	 * @return list
 	 */
-	Long sumGroupMemberCount(ArrayList<Integer> groupIds);
+	Long sumGroupMemberCount(ArrayList<Long> groupIds);
 
 	/**
 	 * 获取导入时的组的编号
 	 * @param paramMap
 	 * @return list
 	 */
-	List<Long> selectImportGroupIdsByIds(ArrayList<Integer> groupIds);
+	List<Long> selectImportGroupIdsByIds(ArrayList<Long> groupIds);
 
 	/**
 	 * 获取所有导入的id列表

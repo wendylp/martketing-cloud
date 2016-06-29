@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.TagDao;
 import cn.rongcapital.mkt.dao.TaggroupDao;
 import cn.rongcapital.mkt.po.Taggroup;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
@@ -24,30 +23,29 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
     @Autowired
     TaggroupDao taggroupDao;
 
-    @Autowired
-    TagDao tagDao;
-
     @Override
     public BaseOutput getTagGroupByParentGroupId(String method, String userToken, Integer tagGroupId, Integer index,
                     Integer size) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
-        Taggroup taggroup = new Taggroup();
-        taggroup.setParentGroupId(Long.valueOf(tagGroupId));
-        taggroup.setStartIndex(index);
-        taggroup.setPageSize(size);
+        Taggroup paramTaggroup = new Taggroup();
+        paramTaggroup.setParentGroupId(Long.valueOf(tagGroupId));
+        paramTaggroup.setStartIndex(index);
+        paramTaggroup.setPageSize(size);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        List<Taggroup> groupList = taggroupDao.selectList(taggroup);
+        List<Taggroup> groupList = taggroupDao.selectList(paramTaggroup);
         if (CollectionUtils.isNotEmpty(groupList)) {
             baseOutput.setTotal(groupList.size());
-            for (Taggroup group : groupList) {
-                int count = tagDao.selectListCountByGroupId(String.valueOf(group.getId()));
+            for (Taggroup tagGroup : groupList) {
+                Taggroup paramNodeTaggroup = new Taggroup();
+                paramNodeTaggroup.setParentGroupId(Long.valueOf(tagGroup.getId()));
+                int count = taggroupDao.selectListCount(paramNodeTaggroup);
                 Map<String, Object> map = new HashMap<String, Object>();
-                map.put("tag_group_id", group.getId());
-                map.put("tag_group_name", group.getName());
-                map.put("tag_group_creat_time", sdf.format(group.getCreateTime()));
+                map.put("tag_group_id", tagGroup.getId());
+                map.put("tag_group_name", tagGroup.getName());
+                map.put("tag_group_creat_time", sdf.format(tagGroup.getCreateTime()));
                 map.put("tag_count", count);
                 baseOutput.getData().add(map);
             }

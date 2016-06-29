@@ -11,6 +11,7 @@ public enum FileNameEnum {
     PAYMENT(6, "data_payment"), 
     SHOPPING(7, "data_shopping"), 
     IMPORT_DATA_MODIFY_LOG(8, "import_data_modify_log"),
+    CUSTOM_AUDIENCE(9,"custom_audience"),
 
     ;
 

@@ -168,7 +168,7 @@
 		<![CDATA[SELECT name,gender,mobile,(year(now())-year(birthday)-1) + ( DATE_FORMAT(birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age]]>		
 		<include refid="QUERY_FROM_TABLE"/>		
 		<where>	
-			(mobile like #{key_words} OR name like #{key_words}) and status=0
+			(mobile like #{audience_name} OR name like #{audience_name}) and status=0
 		</where>				
 	</select>
 	
@@ -249,5 +249,18 @@
 		            audience_list ON audience_list_party_map.audience_list_id = audience_list.id
 		        WHERE
 		            audience_list.id = #{audienceId});
+	</select>
+	
+	<select id="selectCustomAudiencesByTagId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataParty">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE
+		    id IN (SELECT 
+		            map_id
+		        FROM
+		            custom_tag_map
+		        WHERE
+		            tag_id = #{tagId});
 	</select>
 </mapper>
