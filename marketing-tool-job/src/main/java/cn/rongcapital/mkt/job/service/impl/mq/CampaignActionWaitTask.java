@@ -21,6 +21,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -99,6 +101,7 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 	private void processMqMessage(List<Segment> segmentList,
 								  Integer campaignHeadId,String itemId,List<CampaignSwitch> campaignEndsList,
 								  Byte realativeType,Integer relativeValue,Date specificTime) {
+		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
 			NodeAudience nodeAudience = new NodeAudience();
 			nodeAudience.setCampaignHeadId(campaignHeadId);
@@ -115,6 +118,7 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 					public void run() {
 						sendDynamicQueue(segmentList, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
 						deleteNodeAudience(campaignHeadId,itemId,segmentList);
+						logger.info(queueKey+"-out:"+JSON.toJSONString(segmentList));
 					}
 				};
 				ScheduledFuture<?> scheduledFuture = null;

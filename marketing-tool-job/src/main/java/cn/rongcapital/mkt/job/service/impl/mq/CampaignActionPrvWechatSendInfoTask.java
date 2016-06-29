@@ -105,6 +105,7 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 			  List<CampaignSwitch> campaignEndsList,
 			  CampaignActionSendPrivt campaignActionSendPrivt) {
 		List<Segment> segmentListToNext = new ArrayList<Segment>();//要传递给下面节点的数据(执行了发送微信操作的数据)
+		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
 			NodeAudience nodeAudience = new NodeAudience();
 			nodeAudience.setCampaignHeadId(campaignHeadId);
@@ -132,6 +133,7 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 				//发送segment数据到后面的节点
 				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
 				deleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
+				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListToNext));
 			}
 		}
 	}

@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CustomTagMapDao;
@@ -88,6 +90,7 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 
 	private void processMqMessage(List<Segment> segmentList, Integer campaignHeadId,String itemId,
 								  List<CampaignSwitch> campaignEndsList, String tagIds) {
+		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
 			NodeAudience nodeAudience = new NodeAudience();
 			nodeAudience.setCampaignHeadId(campaignHeadId);
@@ -112,6 +115,7 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 				//发送segment数据到后面的节点
 				sendDynamicQueue(segmentList, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
 				deleteNodeAudience(campaignHeadId,itemId,segmentList);
+				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentList));
 			}
 		}
 	}

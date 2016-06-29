@@ -21,6 +21,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.CampaignDecisionPropCompareDao;
@@ -43,6 +45,7 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 	public void task (TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
+		String queueKey = campaignHeadId+"-"+itemId;
 		List<CampaignSwitch> campaignSwitchYesList = queryCampaignSwitchYesList(campaignHeadId, itemId);
 		List<CampaignSwitch> campaignSwitchNoList = queryCampaignSwitchNoList(campaignHeadId, itemId);
 		if(CollectionUtils.isEmpty(campaignSwitchYesList) && 
@@ -74,7 +77,7 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 						//获取segment list数据对象
 						List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
 						if(CollectionUtils.isNotEmpty(segmentList)) {
-							processMqMessage(message,segmentList,campaignSwitchYesList,campaignSwitchNoList,campaignDecisionPropCompare);
+							processMqMessage(message,segmentList,campaignSwitchYesList,campaignSwitchNoList,campaignDecisionPropCompare,queueKey);
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(),e);
@@ -96,7 +99,8 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 	private void processMqMessage(Message message,List<Segment> segmentList,
 								  List<CampaignSwitch> campaignSwitchYesList,
 								  List<CampaignSwitch> campaignSwitchNoList,
-								  CampaignDecisionPropCompare campaignDecisionPropCompare) throws Exception{
+								  CampaignDecisionPropCompare campaignDecisionPropCompare,
+								  String queueKey) throws Exception{
 		List<Segment> segmentListToMqYes = new ArrayList<Segment>();//初始化"是"分支的数据对象list
 		List<Segment> segmentListToMqNo = new ArrayList<Segment>();//初始化"非"分支的数据对象list
 		Byte rule = campaignDecisionPropCompare.getRule();
@@ -113,11 +117,13 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 		}
 		if(CollectionUtils.isNotEmpty(campaignSwitchYesList)) {
 			CampaignSwitch csYes = campaignSwitchYesList.get(0);
-			sendDynamicQueue(segmentList, csYes.getCampaignHeadId() +"-"+csYes.getNextItemId());
+			sendDynamicQueue(segmentListToMqYes, csYes.getCampaignHeadId() +"-"+csYes.getNextItemId());
+			logger.info(queueKey+"-out-yes:"+JSON.toJSONString(segmentListToMqYes));
 		}
 		if(CollectionUtils.isNotEmpty(campaignSwitchNoList)) {
 			CampaignSwitch csNo = campaignSwitchNoList.get(0);
-			sendDynamicQueue(segmentList, csNo.getCampaignHeadId() +"-"+csNo.getNextItemId());
+			sendDynamicQueue(segmentListToMqNo, csNo.getCampaignHeadId() +"-"+csNo.getNextItemId());
+			logger.info(queueKey+"-out-no:"+JSON.toJSONString(segmentListToMqNo));
 		}
 	}
 	
