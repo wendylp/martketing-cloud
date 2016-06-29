@@ -26,6 +26,7 @@ import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.mongodb.DataPartyRepository;
 import cn.rongcapital.mkt.po.Tag;
+import cn.rongcapital.mkt.service.DataPartySyncMongoTaskService;
 import cn.rongcapital.mkt.po.DataArchPoint;
 import cn.rongcapital.mkt.po.DataCustomerTags;
 import cn.rongcapital.mkt.po.DataLogin;
@@ -38,12 +39,11 @@ import cn.rongcapital.mkt.po.DataShopping;
 //同步数据至Mongodb
 
 @Service
-public class DataPartySyncMongoTaskServiceImpl implements TaskService {
+public class DataPartySyncMongoTaskServiceImpl implements TaskService {  
 	
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	//private Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@Autowired
-	private DataPartyRepository dataPartyRepository;
+	
 	
     //主数据data_xxx
 	@Autowired
@@ -78,7 +78,6 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
 	    		
 	    //1.从mysql data_party表中读取所有mid,keyid
 	    DataParty dataParty=new DataParty();	    
-	    //dataParty.setStatus(0);	    
 	    
 	    //分批读出
 	    List<DataParty> datapartyList=dataPartyDao.selectList(dataParty); 
@@ -97,71 +96,112 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
 	
 	private void add2Mongo(int data_type,String keyid){
 	    
-	    //data_entity
-        List<Integer> idList=new ArrayList<Integer>();
-        idList.add(Integer.parseInt(keyid));
+	    String collection="data_party";
 	    
 	    //批量插入
 	    if(data_type==1){
 	        
-	        List<DataPopulation> dataList=dataPopulationDao.selectListByIdList(idList);
+	        DataPopulation data=new DataPopulation();
+	        data.setId(Integer.parseInt(keyid));
+	        
+	        List<DataPopulation> dataList=dataPopulationDao.selectList(data);
 	        
 	        //insert into mongodb
 	        for(DataPopulation dataObj : dataList){
 	            
-	            mongoTemplate.insert(dataObj);
+	            dataObj.setMid(keyid);
+	            dataObj.setMd_type("1");
+	            dataObj.setMapping_keyid(dataObj.getId()+"");
+	            
+	            mongoTemplate.insert(dataObj,collection);
 	            
 	        }
 	        	        
 	        
 	    }else if(data_type==2){
 	        
-	        List<DataCustomerTags> dataList=dataCustomerTagsDao.selectListByIdList(idList);
+	        DataCustomerTags data=new DataCustomerTags();
+            data.setId(Integer.parseInt(keyid));
+	        
+	        List<DataCustomerTags> dataList=dataCustomerTagsDao.selectList(data);
             
             //insert into mongodb
             for(DataCustomerTags dataObj : dataList){
-                mongoTemplate.insert(dataObj);
+                dataObj.setMid(keyid);
+                dataObj.setMd_type("2");
+                dataObj.setMapping_keyid(dataObj.getId()+"");
+                mongoTemplate.insert(dataObj,collection);
             }
 	        
 	    }else if(data_type==3){
 	        
-	        List<DataArchPoint> dataList=dataArchPointDao.selectListByIdList(idList);
+	        DataArchPoint data=new DataArchPoint();
+            data.setId(Integer.parseInt(keyid));
+	        
+	        List<DataArchPoint> dataList=dataArchPointDao.selectList(data);
             
             //insert into mongodb
             for(DataArchPoint dataObj : dataList){
-                mongoTemplate.insert(dataObj);
+                dataObj.setMid(keyid);
+                dataObj.setMd_type("3");
+                dataObj.setMapping_keyid(dataObj.getId()+"");
+                mongoTemplate.insert(dataObj,collection);
             }
         }else if(data_type==4){
             
-            List<DataMember> dataList=dataMemberDao.selectListByIdList(idList);
+            DataMember data=new DataMember();
+            data.setId(Integer.parseInt(keyid));
+            
+            List<DataMember> dataList=dataMemberDao.selectList(data);
             
             //insert into mongodb
             for(DataMember dataObj : dataList){
-                mongoTemplate.insert(dataObj);
+                dataObj.setMid(keyid);
+                dataObj.setMd_type("4");
+                dataObj.setMapping_keyid(dataObj.getId()+"");
+                mongoTemplate.insert(dataObj,collection);
             }
         }else if(data_type==5){
             
-            List<DataLogin> dataList=dataLoginDao.selectListByIdList(idList);
+            DataLogin data=new DataLogin();
+            data.setId(Integer.parseInt(keyid));
+            
+            List<DataLogin> dataList=dataLoginDao.selectList(data);
             
             //insert into mongodb
             for(DataLogin dataObj : dataList){
-                mongoTemplate.insert(dataObj);
+                dataObj.setMid(keyid);
+                dataObj.setMd_type("5");
+                dataObj.setMapping_keyid(dataObj.getId()+"");
+                mongoTemplate.insert(dataObj,collection);
             }
         }else if(data_type==6){
             
-            List<DataPayment> dataList=dataPaymentDao.selectListByIdList(idList);
+            DataPayment data=new DataPayment();
+            data.setId(Integer.parseInt(keyid));
+            
+            List<DataPayment> dataList=dataPaymentDao.selectList(data);
             
             //insert into mongodb
             for(DataPayment dataObj : dataList){
-                mongoTemplate.insert(dataObj);
+                dataObj.setMid(keyid);
+                dataObj.setMd_type("6");
+                dataObj.setMapping_keyid(dataObj.getId()+"");
+                mongoTemplate.insert(dataObj,collection);
             }
         }else if(data_type==7){
             
-            List<DataShopping> dataList=dataShoppingDao.selectListByIdList(idList);
+            DataShopping data=new DataShopping();
+            data.setId(Integer.parseInt(keyid));
+            
+            List<DataShopping> dataList=dataShoppingDao.selectList(data);
             
             //insert into mongodb
             for(DataShopping dataObj : dataList){
-                mongoTemplate.insert(dataObj);
+                dataObj.setMid(keyid);
+                dataObj.setMd_type("7");
+                dataObj.setMapping_keyid(dataObj.getId()+"");
+                mongoTemplate.insert(dataObj,collection);
             }
         }else{
             ;

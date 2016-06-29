@@ -1,7 +1,9 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -30,6 +32,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.po.CampaignSwitch;
+import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.Tenement;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
@@ -44,7 +47,6 @@ public class BaseMQService {
     private JmsMessagingTemplate jmsMessagingTemplate; 
 	@Value("${spring.activemq.broker-url}")
 	private String providerUrl;
-	private volatile boolean isJndiInited = false;
 	@Autowired
 	private TenementDao tenementDao;
 	@Autowired
@@ -52,8 +54,12 @@ public class BaseMQService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	public void initJndiEvironment() {
-		if(isJndiInited){
+	protected static ConcurrentHashMap<String, MessageConsumer> consumerMap = new ConcurrentHashMap<String, MessageConsumer>();
+	
+	private static volatile boolean isJndiInited = false;
+	
+	public synchronized void initJndiEvironment() {
+		if(isJndiInited) {
 			return;
 		}
 		isJndiInited = true;
@@ -67,6 +73,39 @@ public class BaseMQService {
 			conn.start();
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
+		}
+	}
+	
+	protected void cancelCampaignInnerTask(TaskSchedule taskSchedule) {
+		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
+		String itemId = taskSchedule.getCampaignItemId();
+		String consumerKey = campaignHeadId+"-"+itemId;
+		MessageConsumer consumer = consumerMap.get(consumerKey);
+		if(null != consumer) {
+			try {
+				consumer.close();
+				consumerMap.remove(consumerKey);
+			} catch (Exception e) {
+				logger.error(e.getMessage(),e);
+			}
+		}
+	}
+	
+	/**
+	 * 传递给后面节点的数据，从当前节点的mongo库里删除
+	 * @param segmentListToNext
+	 */
+	protected void deleteNodeAudience(Integer campaignHeadId,String itemId,List<Segment> segmentListToNext) {
+		for(Segment cs:segmentListToNext) {
+			List<Criteria> criteriasList = new ArrayList<Criteria>();
+			Criteria criteria1 = Criteria.where("campaignHeadId").is(campaignHeadId);
+			criteriasList.add(criteria1);
+			Criteria criteria2 = Criteria.where("itemId").is(itemId);
+			criteriasList.add(criteria2);
+			Criteria criteria3 = Criteria.where("dataId").is(cs.getDataId());
+			criteriasList.add(criteria3);
+			Criteria criteriaAll = new Criteria().andOperator(criteriasList.toArray(new Criteria[criteriasList.size()]));
+			mongoTemplate.findAllAndRemove(new Query(criteriaAll), NodeAudience.class);
 		}
 	}
 	

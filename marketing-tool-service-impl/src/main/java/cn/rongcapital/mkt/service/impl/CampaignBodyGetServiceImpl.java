@@ -410,7 +410,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		if(CollectionUtils.isNotEmpty(resList)) {
 			CampaignActionSetTag campaignActionSetTag = resList.get(0);
 			campaignActionSetTagOut.setName(campaignActionSetTag.getName());
-			campaignActionSetTagOut.setTagNames(campaignActionSetTag.getTagNames());
+			campaignActionSetTagOut.setTagNames(Arrays.asList(StringUtils.split(campaignActionSetTag.getTagNames(), ',')));
 		}
 		return campaignActionSetTagOut;
 	}
@@ -463,7 +463,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 			String tagIds = campaignDecisionTag.getTagIds();
 			if(StringUtils.isNotBlank(tagIds)) {
 				List<TagOut> tags = new ArrayList<TagOut>();
-				List<String> tagIdsStrList = Arrays.asList(tagIds);
+				List<String> tagIdsStrList = Arrays.asList(StringUtils.split(tagIds, ','));
 				for(String tagIdStr:tagIdsStrList) {
 					TagOut tagOut = new TagOut();
 					Integer tagId = Integer.parseInt(tagIdStr);

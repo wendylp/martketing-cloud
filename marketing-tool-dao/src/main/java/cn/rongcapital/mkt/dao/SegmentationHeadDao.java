@@ -50,4 +50,7 @@ public interface SegmentationHeadDao extends BaseDao<SegmentationHead>{
 	 * @return list
 	 */
 	List<Map<String,Object>> searchDataMain(Map<String,Object> paramMap);
+		
+
+	
 }

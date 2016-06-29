@@ -5,11 +5,15 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
@@ -23,7 +27,7 @@ import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
 public class CampaignAudienceTargetTask extends BaseMQService implements TaskService {
-	
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
@@ -33,7 +37,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
-		
+		String queueKey = campaignHeadId+"-"+itemId;
 		CampaignAudienceTarget campaignAudienceTarget = new CampaignAudienceTarget();
 		campaignAudienceTarget.setCampaignHeadId(campaignHeadId);
 		campaignAudienceTarget.setItemId(itemId);
@@ -72,6 +76,8 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 				for(CampaignSwitch cs:campaignEndsList) {
 					//发送segment数据到后面的节点
 					sendDynamicQueue(segmentListUnique, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+					deleteNodeAudience(campaignHeadId,itemId,segmentListUnique);
+					logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListUnique));
 				}
 			}
 			

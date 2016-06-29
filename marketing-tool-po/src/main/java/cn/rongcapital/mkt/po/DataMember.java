@@ -12,7 +12,7 @@ public class DataMember extends BaseQuery {
 
     private String memberPoints;
 
-    private Date memberLevel;
+    private String memberLevel;
 
     private Date registTime;
 
@@ -52,7 +52,7 @@ public class DataMember extends BaseQuery {
 
     private String source;
 
-    private Integer batchId;
+    private String batchId;
     
     public DataMember(){}
     
@@ -84,11 +84,11 @@ public class DataMember extends BaseQuery {
         this.memberPoints = memberPoints == null ? null : memberPoints.trim();
     }
 
-    public Date getMemberLevel() {
+    public String getMemberLevel() {
         return memberLevel;
     }
 
-    public void setMemberLevel(Date memberLevel) {
+    public void setMemberLevel(String memberLevel) {
         this.memberLevel = memberLevel;
     }
 
@@ -244,11 +244,11 @@ public class DataMember extends BaseQuery {
         this.source = source == null ? null : source.trim();
     }
 
-    public Integer getBatchId() {
+    public String getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(Integer batchId) {
+    public void setBatchId(String batchId) {
         this.batchId = batchId;
     }
 }

@@ -42,6 +42,7 @@ import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
+import cn.rongcapital.mkt.service.AudienceNameListService;
 import cn.rongcapital.mkt.service.AudienceSearchService;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
@@ -58,6 +59,7 @@ import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
+import cn.rongcapital.mkt.service.DataDownloadMainListService;
 import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
@@ -90,6 +92,7 @@ import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.ModifyPasswdService;
 import cn.rongcapital.mkt.service.ReauthWechatAccountService;
+import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
 import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
@@ -130,6 +133,7 @@ import cn.rongcapital.mkt.vo.LoginInput;
 import cn.rongcapital.mkt.vo.ModifyInput;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
+import cn.rongcapital.mkt.vo.in.Audience;
 import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
@@ -240,6 +244,9 @@ public class MktApi {
     private DataDownloadQualityLogService dataDownloadQualityLogService;
     
     @Autowired
+    private DataDownloadMainListService dataDownloadMainListService;
+    
+    @Autowired
     private TagGetCustomService tagGetCustomService;
 
     @Autowired
@@ -256,6 +263,9 @@ public class MktApi {
 
     @Autowired
     private SaveWechatAssetListService saveWechatAssetListService;
+    
+    @Autowired
+    private SaveCampaignAudienceService saveCampaignAudienceService;
 
     @Autowired
     private SegmentHeaderUpdateService segmentHeaderUpdateService;
@@ -274,6 +284,9 @@ public class MktApi {
 
     @Autowired
     private AudienceListService audienceListService;
+    
+    @Autowired
+    private AudienceNameListService audienceNameListService;
 
     @Autowired
     private AudienceSearchService audienceSearchService;
@@ -997,6 +1010,20 @@ public class MktApi {
 	public Object saveWechatAssetList(@Valid SaveWechatAssetListIn saveWechatAssetListIn,@Context SecurityContext securityContext){
 		return saveWechatAssetListService.saveWechatAssetList(saveWechatAssetListIn, securityContext);
 	}
+	
+	
+	/**
+     * @功能描述:活动编排，保存人群
+     * @Param: String user_token, String ver, String audience_name
+     * @return: Object
+     */
+    @POST
+    @Path("/mkt.campaign.node.audience.save")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Object saveCampaignAudience(@Valid Audience audience,@Context SecurityContext securityContext){
+        return saveCampaignAudienceService.saveCampaignAudience(audience, securityContext);
+    }
+	
 
 	/**
 	 * @功能描述:重新授权或者重新登录
@@ -1027,17 +1054,30 @@ public class MktApi {
 	}
 	
     /**
-	 * @功能简述: 获取人群list列表
+	 * @功能简述: 数据分析，获取人群名称列表
 	 * @param: String userToken
 	 * @return: Object
 	 */
 	@GET
-	@Path("/mkt.audience.list.get")
-	public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
-						  				   @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-						  				   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
-		return audienceListService.audienceList(userToken, size, index);
+	@Path("/mkt.dataanalysis.audname.list.get")
+	public BaseOutput audienceNameList(@NotEmpty @QueryParam("user_token") String userToken){
+		return audienceNameListService.audienceNameList(userToken);
 	}
+	
+	/**
+     * @功能简述: 获取人群list列表
+     * @param: String userToken
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.audience.list.get")
+    public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
+                                           @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+                                           @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
+        return audienceListService.audienceList(userToken, size, index);
+    }
+	
+	
 	
 	/**
      * @功能简述: 在人群中查找
@@ -1369,47 +1409,41 @@ public class MktApi {
 		return dataMainBasicInfoUpdateService.updateBaseInfoByContactId(body);
 	}
 
-	/**
-	 * @功能简述: 获取系统标签内容列表
-	 * @param method
-	 * @param user_token
-	 * @param tag_group_id
-	 * @param index
-	 * @param size
-	 * @return BaseOutput
-	 */
-	@GET
-	@Path("/mkt.tag.system.list.get")
-	public BaseOutput getTagcountByParentGroupId(
-			@NotEmpty @QueryParam("method") String method,
-            @NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("tag_group_name") String tagGroupName,
-            @QueryParam("index") Integer index,
-            @QueryParam("size") Integer size){
-		return tagSystemListGetService.getTagcount(method, userToken,
-		                tagGroupName, index, size);
-	}
+    /**
+     * @功能简述: 获取系统标签内容列表
+     * @param method
+     * @param user_token
+     * @param tag_group_id
+     * @param index
+     * @param size
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.tag.system.list.get")
+    public BaseOutput getTagcountByParentGroupId(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) {
+        return tagSystemListGetService.getTagcount(method, userToken, tagGroupId, index, size);
+    }
 
-	/**
-	 * @功能简述: 获取系统标签组列表
-	 * @param method
-	 * @param user_token
-	 * @param tag_group_id
-	 * @param index
-	 * @param size
-	 * @return BaseOutput
-	 */
-	@GET
-	@Path("/mkt.taggroup.system.list.get")
-	public BaseOutput getTagGroupByParentGroupId(
-			@NotEmpty @QueryParam("method") String method,
-            @NotEmpty @QueryParam("user_token") String userToken,
-            @NotNull @QueryParam("tag_group_id") Integer tagGroupId,
-            @QueryParam("index") Integer index,
-            @QueryParam("size") Integer size){
-		return taggroupSystemListGetService.getTagGroupByParentGroupId(method,
-				userToken, tagGroupId, index, size);
-	}
+    /**
+     * @功能简述: 获取系统标签组列表
+     * @param method
+     * @param user_token
+     * @param tag_group_id
+     * @param index
+     * @param size
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.taggroup.system.list.get")
+    public BaseOutput getTagGroupByParentGroupId(@NotEmpty @QueryParam("method") String method,
+                    @NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
+                    @QueryParam("size") Integer size) {
+        return taggroupSystemListGetService.getTagGroupByParentGroupId(method, userToken, tagGroupId, index, size);
+    }
 
 	/**
 	 * @功能简述: 获取某条主数据详细信息
@@ -1561,8 +1595,7 @@ public class MktApi {
 	}
 
     /**
-     * @功能简述: 编辑某条主数据详细信息
-     * @param body
+     * @功能简述: 下载某条主数据详细信息
      * @return BaseOutput
      */
     @GET
@@ -1570,6 +1603,17 @@ public class MktApi {
     public Object downloadQualityLog(@NotEmpty @QueryParam("user_token") String userToken,
                     @NotNull @QueryParam("import_data_id") Long importDataId) {
         return dataDownloadQualityLogService.downloadQualityLog(importDataId);
+    }
+
+    /**
+     * @功能简述: 下载某个主数据分类的数据
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.data.main.list.download")
+    public Object downloadMainList(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotNull @QueryParam("md_type") Integer dataType) {
+        return dataDownloadMainListService.downloadMainList(userToken, dataType);
     }
 
 	/**

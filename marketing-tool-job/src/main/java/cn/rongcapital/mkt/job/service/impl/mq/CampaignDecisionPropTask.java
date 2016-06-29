@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
@@ -20,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.DateUtil;
@@ -31,6 +33,7 @@ import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
+@Service
 public class CampaignDecisionPropTask extends BaseMQService implements TaskService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -38,11 +41,11 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 	private CampaignDecisionPropCompareDao campaignDecisionPropCompareDao;
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	private MessageConsumer consumer = null;	
 	
 	public void task (TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
+		String queueKey = campaignHeadId+"-"+itemId;
 		List<CampaignSwitch> campaignSwitchYesList = queryCampaignSwitchYesList(campaignHeadId, itemId);
 		List<CampaignSwitch> campaignSwitchNoList = queryCampaignSwitchNoList(campaignHeadId, itemId);
 		if(CollectionUtils.isEmpty(campaignSwitchYesList) && 
@@ -63,7 +66,7 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 		
 		CampaignDecisionPropCompare campaignDecisionPropCompare = campaignDecisionPropCompareList.get(0);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -74,7 +77,7 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 						//获取segment list数据对象
 						List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
 						if(CollectionUtils.isNotEmpty(segmentList)) {
-							processMqMessage(message,segmentList,campaignSwitchYesList,campaignSwitchNoList,campaignDecisionPropCompare);
+							processMqMessage(message,segmentList,campaignSwitchYesList,campaignSwitchNoList,campaignDecisionPropCompare,queueKey);
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(),e);
@@ -86,6 +89,7 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
+				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
@@ -95,14 +99,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 	private void processMqMessage(Message message,List<Segment> segmentList,
 								  List<CampaignSwitch> campaignSwitchYesList,
 								  List<CampaignSwitch> campaignSwitchNoList,
-								  CampaignDecisionPropCompare campaignDecisionPropCompare) throws Exception{
+								  CampaignDecisionPropCompare campaignDecisionPropCompare,
+								  String queueKey) throws Exception{
 		List<Segment> segmentListToMqYes = new ArrayList<Segment>();//初始化"是"分支的数据对象list
 		List<Segment> segmentListToMqNo = new ArrayList<Segment>();//初始化"非"分支的数据对象list
 		Byte rule = campaignDecisionPropCompare.getRule();
 		Byte propType = campaignDecisionPropCompare.getPropType();
 		String value = campaignDecisionPropCompare.getValue();
+		Byte exclude = campaignDecisionPropCompare.getExclude();
 		for(Segment segment:segmentList) {
-			boolean checkRes = compareProp(rule, propType, segment, value);
+			boolean checkRes = compareProp(rule, propType, segment, value,exclude);
 			if(checkRes) {
 				segmentListToMqYes.add(segment);
 			} else {
@@ -111,15 +117,17 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 		}
 		if(CollectionUtils.isNotEmpty(campaignSwitchYesList)) {
 			CampaignSwitch csYes = campaignSwitchYesList.get(0);
-			sendDynamicQueue(segmentList, csYes.getCampaignHeadId() +"-"+csYes.getNextItemId());
+			sendDynamicQueue(segmentListToMqYes, csYes.getCampaignHeadId() +"-"+csYes.getNextItemId());
+			logger.info(queueKey+"-out-yes:"+JSON.toJSONString(segmentListToMqYes));
 		}
 		if(CollectionUtils.isNotEmpty(campaignSwitchNoList)) {
 			CampaignSwitch csNo = campaignSwitchNoList.get(0);
-			sendDynamicQueue(segmentList, csNo.getCampaignHeadId() +"-"+csNo.getNextItemId());
+			sendDynamicQueue(segmentListToMqNo, csNo.getCampaignHeadId() +"-"+csNo.getNextItemId());
+			logger.info(queueKey+"-out-no:"+JSON.toJSONString(segmentListToMqNo));
 		}
 	}
 	
-	private boolean compareProp(Byte rule,Byte propType,Segment segment, String value) throws IllegalArgumentException, IllegalAccessException {
+	private boolean compareProp(Byte rule,Byte propType,Segment segment, String value,byte exclude) throws IllegalArgumentException, IllegalAccessException {
 		boolean checkRes = false;
 		DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())), DataParty.class);
 		if(dp != null) {
@@ -134,9 +142,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					for(Field filed:fields){
 					    if(filed.getType().isAssignableFrom(String.class) ){
 					    	String valueInData = (String)filed.get(dp);
-					    	if(StringUtils.equals(value, valueInData)) {
-					    		checkRes= true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(StringUtils.equals(value, valueInData)) {
+					    			checkRes= true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(!StringUtils.equals(value, valueInData)) {
+					    			checkRes = true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -152,9 +167,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					    	Object valueInData = filed.get(dp);
 					    	Long valueInDataLong = Long.parseLong(String.valueOf(valueInData));
 					    	Long valueLong = Long.parseLong(value);
-					    	if(valueInDataLong == valueLong) {
-					    		checkRes = true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(valueInDataLong == valueLong) {
+					    			checkRes = true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(valueInDataLong != valueLong) {
+					    			checkRes = true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -167,9 +189,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					    if(filed.getType().isAssignableFrom(Date.class) ){
 					    	Date dateInData = (Date)filed.get(dp);
 					    	Date date = DateUtil.getDateFromString(value, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
-					    	if(dateInData.equals(date)) {
-					    		checkRes= true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(dateInData.equals(date)) {
+					    			checkRes= true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(!dateInData.equals(date)) {
+					    			checkRes= true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -185,9 +214,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					for(Field filed:fields){
 					    if(filed.getType().isAssignableFrom(String.class) ){
 					    	String valueInData = (String)filed.get(dp);
-					    	if(StringUtils.contains(value, valueInData)) {
-					    		checkRes= true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(StringUtils.contains(value, valueInData)) {
+					    			checkRes= true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(!StringUtils.contains(value, valueInData)) {
+					    			checkRes= true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -207,9 +243,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					for(Field filed:fields){
 					    if(filed.getType().isAssignableFrom(String.class) ){
 					    	String valueInData = (String)filed.get(dp);
-					    	if(StringUtils.startsWith(value, valueInData)) {
-					    		checkRes= true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(StringUtils.startsWith(value, valueInData)) {
+					    			checkRes= true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(!StringUtils.startsWith(value, valueInData)) {
+					    			checkRes= true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -225,9 +268,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					for(Field filed:fields){
 					    if(filed.getType().isAssignableFrom(String.class) ){
 					    	String valueInData = (String)filed.get(dp);
-					    	if(StringUtils.endsWith(value, valueInData)) {
-					    		checkRes= true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(StringUtils.endsWith(value, valueInData)) {
+					    			checkRes= true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(!StringUtils.endsWith(value, valueInData)) {
+					    			checkRes= true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -237,8 +287,14 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 			case 4://4:empty
 				switch (propType) {
 				case 0://文本
-					if(StringUtils.isBlank(value)) {
-						checkRes= true;
+					if(exclude == 0) {
+						if(StringUtils.isBlank(value)) {
+							checkRes= true;
+						}
+					} else {
+						if(!StringUtils.isBlank(value)) {
+							checkRes= true;
+						}
 					}
 					break;
 				}
@@ -258,9 +314,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					    	Object valueInData = filed.get(dp);
 					    	Long valueInDataLong = Long.parseLong(String.valueOf(valueInData));
 					    	Long valueLong = Long.parseLong(value);
-					    	if(valueInDataLong > valueLong) {
-					    		checkRes = true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(valueInDataLong > valueLong) {
+					    			checkRes = true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(valueInDataLong <= valueLong) {
+					    			checkRes = true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -273,9 +336,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					    if(filed.getType().isAssignableFrom(Date.class) ){
 					    	Date dateInData = (Date)filed.get(dp);
 					    	Date date = DateUtil.getDateFromString(value, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
-					    	if(dateInData.after(date)) {
-					    		checkRes= true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(dateInData.after(date)) {
+					    			checkRes= true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(!dateInData.after(date)) {
+					    			checkRes= true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -297,9 +367,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					    	Object valueInData = filed.get(dp);
 					    	Long valueInDataLong = Long.parseLong(String.valueOf(valueInData));
 					    	Long valueLong = Long.parseLong(value);
-					    	if(valueInDataLong < valueLong) {
-					    		checkRes = true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(valueInDataLong < valueLong) {
+					    			checkRes = true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(valueInDataLong >= valueLong) {
+					    			checkRes = true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -312,9 +389,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					    if(filed.getType().isAssignableFrom(Date.class) ){
 					    	Date dateInData = (Date)filed.get(dp);
 					    	Date date = DateUtil.getDateFromString(value, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
-					    	if(dateInData.before(date)) {
-					    		checkRes= true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(dateInData.before(date)) {
+					    			checkRes= true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(!dateInData.before(date)) {
+					    			checkRes= true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -336,9 +420,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					    	Object valueInData = filed.get(dp);
 					    	Long valueInDataLong = Long.parseLong(String.valueOf(valueInData));
 					    	Long valueLong = Long.parseLong(value);
-					    	if(valueInDataLong >= valueLong) {
-					    		checkRes = true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(valueInDataLong >= valueLong) {
+					    			checkRes = true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(valueInDataLong < valueLong) {
+					    			checkRes = true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -351,9 +442,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					    if(filed.getType().isAssignableFrom(Date.class) ){
 					    	Date dateInData = (Date)filed.get(dp);
 					    	Date date = DateUtil.getDateFromString(value, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
-					    	if(dateInData.after(date) || dateInData.equals(date)) {
-					    		checkRes= true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(dateInData.after(date) || dateInData.equals(date)) {
+					    			checkRes= true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(!dateInData.after(date) && !dateInData.equals(date)) {
+					    			checkRes= true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -375,9 +473,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					    	Object valueInData = filed.get(dp);
 					    	Long valueInDataLong = Long.parseLong(String.valueOf(valueInData));
 					    	Long valueLong = Long.parseLong(value);
-					    	if(valueInDataLong <= valueLong) {
-					    		checkRes = true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(valueInDataLong <= valueLong) {
+					    			checkRes = true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(valueInDataLong > valueLong) {
+					    			checkRes = true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -390,9 +495,16 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 					    if(filed.getType().isAssignableFrom(Date.class) ){
 					    	Date dateInData = (Date)filed.get(dp);
 					    	Date date = DateUtil.getDateFromString(value, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
-					    	if(dateInData.before(date) || dateInData.equals(date)) {
-					    		checkRes= true;
-					    		break;
+					    	if(exclude == 0) {
+					    		if(dateInData.before(date) || dateInData.equals(date)) {
+					    			checkRes= true;
+					    			break;
+					    		}
+					    	} else {
+					    		if(!dateInData.before(date) && !dateInData.equals(date)) {
+					    			checkRes= true;
+					    			break;
+					    		}
 					    	}
 					    }
 					}
@@ -405,13 +517,7 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (JMSException e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 	@Override
 	public void task(Integer taskId) {

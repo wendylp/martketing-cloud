@@ -15,6 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
@@ -27,6 +30,7 @@ import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
+@Service
 public class CampaignActionSetTagTask extends BaseMQService implements TaskService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -36,8 +40,6 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 	private CampaignActionSetTagDao campaignActionSetTagDao;
 	@Autowired
 	private CustomTagMapDao customTagMapDao;
-	
-	private MessageConsumer consumer = null;
 	
 	public void task (TaskSchedule taskSchedule){
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -56,7 +58,7 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 		CampaignActionSetTag campaignActionSetTag = campaignActionSetTagDaoList.get(0);
 		String tagIds = campaignActionSetTag.getTagIds();
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -79,6 +81,7 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
+				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
@@ -87,6 +90,7 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 
 	private void processMqMessage(List<Segment> segmentList, Integer campaignHeadId,String itemId,
 								  List<CampaignSwitch> campaignEndsList, String tagIds) {
+		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
 			NodeAudience nodeAudience = new NodeAudience();
 			nodeAudience.setCampaignHeadId(campaignHeadId);
@@ -110,18 +114,14 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 			for(CampaignSwitch cs:campaignEndsList) {
 				//发送segment数据到后面的节点
 				sendDynamicQueue(segmentList, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				deleteNodeAudience(campaignHeadId,itemId,segmentList);
+				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentList));
 			}
 		}
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 
 	@Override

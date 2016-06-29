@@ -94,7 +94,7 @@ public class DataPartySyncTaskServiceImpl implements TaskService {
                 dataParty.setMonthlyIncome(dataObj.getMonthlyIncome());
                 dataParty.setMonthlyConsume(dataObj.getMonthlyConsume());
                 dataParty.setSource("1");
-                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
+                dataParty.setBatchId(dataObj.getBatchId());
                                                 
                 dataPartyDao.insert(dataParty);
             }            
@@ -106,7 +106,7 @@ public class DataPartySyncTaskServiceImpl implements TaskService {
                 dataParty.setMappingKeyid(dataObj.getId()+""); 
                 dataParty.setMdType(Integer.parseInt("2"));                
                 dataParty.setSource("2");
-                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
+                dataParty.setBatchId(dataObj.getBatchId());
             
                 dataPartyDao.insert(dataParty);
             } 
@@ -119,7 +119,7 @@ public class DataPartySyncTaskServiceImpl implements TaskService {
                 dataParty.setMappingKeyid(dataObj.getId()+"");
                 dataParty.setMdType(Integer.parseInt("3"));                
                 dataParty.setSource("3");
-                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
+                dataParty.setBatchId(dataObj.getBatchId());
                 dataPartyDao.insert(dataParty);
             }
         }else if(type==4){
@@ -130,7 +130,7 @@ public class DataPartySyncTaskServiceImpl implements TaskService {
                 dataParty.setMappingKeyid(dataObj.getId()+"");
                 dataParty.setMdType(Integer.parseInt("4"));
                 dataParty.setSource("4");
-                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
+                dataParty.setBatchId(dataObj.getBatchId());
             
                 dataPartyDao.insert(dataParty);
             }
@@ -142,7 +142,7 @@ public class DataPartySyncTaskServiceImpl implements TaskService {
                 dataParty.setMappingKeyid(dataObj.getId()+"");
                 dataParty.setMdType(Integer.parseInt("5")); 
                 dataParty.setSource("5");
-                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
+                dataParty.setBatchId(dataObj.getBatchId());
             
                 dataPartyDao.insert(dataParty);
             }
@@ -154,7 +154,7 @@ public class DataPartySyncTaskServiceImpl implements TaskService {
                 dataParty.setMappingKeyid(dataObj.getId()+"");
                 dataParty.setMdType(Integer.parseInt("6"));
                 dataParty.setSource("6");
-                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
+                dataParty.setBatchId(dataObj.getBatchId());
             
                 dataPartyDao.insert(dataParty);
             }
@@ -166,7 +166,7 @@ public class DataPartySyncTaskServiceImpl implements TaskService {
                 dataParty.setMappingKeyid(dataObj.getId()+"");
                 dataParty.setMdType(Integer.parseInt("7"));
                 dataParty.setSource("7");
-                dataParty.setBatchId(Integer.parseInt(dataObj.getBatchId()+""));
+                dataParty.setBatchId(dataObj.getBatchId());
             
                 dataPartyDao.insert(dataParty);
             }

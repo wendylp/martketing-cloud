@@ -7,6 +7,14 @@
 		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,monthly_consume as monthlyConsume,marital_status as maritalStatus,education as education,employment as employment,nationality as nationality,blood_type as bloodType,citizenship as citizenship,iq as iq,identify_no as identifyNo,driving_license as drivingLicense,email as email,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId]]>
 	</sql>
 
+    <!-- Original需要更新的列 -->
+    <sql id="UPDATE_COLUMN_LIST">
+        <![CDATA[ mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,
+        marital_status,education,employment,nationality,blood_type,citizenship,iq,
+        identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,
+        udid,phone_mac,create_time,update_time,source,batch_id]]>
+    </sql>
+
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_population]]></sql>
 	
@@ -160,6 +168,7 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
+		
 
 	<!-- 总数查询,通过条件 -->
 	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.DataPopulation" resultType="int">
@@ -175,6 +184,7 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
+		<if test="batchIdList != null">
 		<![CDATA[WHERE batch_id IN]]>
 		<foreach collection="batchIdList" item="batchId" open="(" separator="," close=")">
 			<![CDATA[#{batchId}]]>
@@ -190,6 +200,7 @@
 				<![CDATA[AND wechat is not null]]>
 			</if>
 		</foreach>
+		</if>
 		<if test="pageSize != null and pageSize &gt; 0">
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
@@ -203,5 +214,52 @@
 		WHERE 
 			table_name='data_population'
 	</select>
+
+	<insert id="cleanAndUpdateByOriginal" parameterType="map">
+		<![CDATA[INSERT INTO data_population]]>
+		(
+		    <include refid="UPDATE_COLUMN_LIST" />
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+            (#{obj.mobile},#{obj.name},#{obj.gender},#{obj.birthday},#{obj.provice},
+            #{obj.city},#{obj.job},#{obj.monthlyIncome},#{obj.monthlyConsume},#{obj.maritalStatus},
+            #{obj.education},#{obj.employment},#{obj.nationality},#{obj.bloodType},#{obj.citizenship},
+            #{obj.iq},#{obj.identifyNo},#{obj.drivingLicense},#{obj.email},#{obj.tel},#{obj.qq},
+            #{obj.acctType},#{obj.acctNo},#{obj.idfa},#{obj.imei},#{obj.udid},#{obj.phoneMac},
+            #{obj.createTime},#{obj.updateTime},#{obj.source},#{obj.batchId})
+		</foreach>
+
+        on duplicate key update
+        mobile = values(mobile),
+        name = values(name),
+        birthday = values(birthday),
+        provice = values(provice),
+        city = values(city),
+        job = values(job),
+        monthly_income = values(monthly_income),
+        monthly_consume = values(monthly_consume),
+        marital_status = values(marital_status),
+        education = values(education),
+        employment = values(employment),
+        nationality = values(nationality),
+        blood_type = values(blood_type),
+        citizenship = values(citizenship),
+        iq = values(iq),
+        identify_no = values(identify_no),
+        driving_license = values(driving_license),
+        email = values(email),
+        tel = values(tel),
+        qq = values(qq),
+        acct_type = values(acct_type),
+        acct_no = values(acct_no),
+        idfa = values(idfa),
+        imei = values(imei),
+        udid = values(udid),
+        phone_mac = values(phone_mac),
+        source = values(source),
+        update_time = values(update_time),
+        batch_id = values(batch_id)
+	</insert>
 	
 </mapper>

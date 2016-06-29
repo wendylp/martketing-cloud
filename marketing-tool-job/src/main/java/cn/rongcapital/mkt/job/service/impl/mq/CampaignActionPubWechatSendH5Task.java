@@ -49,7 +49,6 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 	@Autowired
 	private ImgTextAssetDao imgTextAssetDao;
 	
-	private MessageConsumer consumer = null;
 	@Value("${runxue.h5.api.base.url}")
 	private String h5BaseUrl;
 	
@@ -72,7 +71,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 		}
 		CampaignActionSendPub campaignActionSendPub = campaignActionSendPubList.get(0);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -96,6 +95,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
+				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
@@ -108,12 +108,16 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 								  List<CampaignSwitch> campaignEndsList,
 								  CampaignActionSendPub campaignActionSendPub) {
 		List<Segment> segmentListToNext = new ArrayList<Segment>();//要传递给下面节点的数据(执行了发送微信操作的数据)
+		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
 			NodeAudience nodeAudience = new NodeAudience();
 			nodeAudience.setCampaignHeadId(campaignHeadId);
 			nodeAudience.setItemId(itemId);
 			nodeAudience.setDataId(segment.getDataId());
 			nodeAudience.setName(segment.getName());
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			}
 			Integer dataId = segment.getDataId();
 		    //从mongo的主数据表中查询该条id对应的主数据详细信息
 			DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
@@ -130,14 +134,13 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 				   segmentListToNext.add(segment);//数据放入向后面节点传递的list里
 			   }
 			}
-			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
-				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
-			}
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 			for(CampaignSwitch cs:campaignEndsList) {
 				//发送segment数据到后面的节点
 				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				deleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
+				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListToNext));
 			}
 		}
 	}
@@ -214,13 +217,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 //	}
 //	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 	
 	@Override

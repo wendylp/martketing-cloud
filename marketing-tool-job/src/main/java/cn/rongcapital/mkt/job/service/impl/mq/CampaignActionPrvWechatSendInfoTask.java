@@ -49,7 +49,6 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 	@Autowired
 	private WechatPersonalUuidDao wechatPersonalUuidDao;
 	
-	private MessageConsumer consumer = null;
 	@Value("${runxue.h5.api.base.url}")
 	private String h5BaseUrl;
 	
@@ -69,7 +68,7 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 		}
 		CampaignActionSendPrivt campaignActionSendPrivt = campaignActionSendPrivtList.get(0);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -93,6 +92,7 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
+				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
@@ -105,6 +105,7 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 			  List<CampaignSwitch> campaignEndsList,
 			  CampaignActionSendPrivt campaignActionSendPrivt) {
 		List<Segment> segmentListToNext = new ArrayList<Segment>();//要传递给下面节点的数据(执行了发送微信操作的数据)
+		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
 			NodeAudience nodeAudience = new NodeAudience();
 			nodeAudience.setCampaignHeadId(campaignHeadId);
@@ -129,8 +130,10 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 			for(CampaignSwitch cs:campaignEndsList) {
-			//发送segment数据到后面的节点
-			sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				//发送segment数据到后面的节点
+				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				deleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
+				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListToNext));
 			}
 		}
 	}
@@ -171,13 +174,7 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 	
 	@Override

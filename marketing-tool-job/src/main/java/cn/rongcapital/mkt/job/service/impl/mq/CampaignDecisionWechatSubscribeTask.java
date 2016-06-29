@@ -17,6 +17,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignDecisionPubFansDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
@@ -42,6 +44,7 @@ public class CampaignDecisionWechatSubscribeTask extends BaseMQService implement
 	public void task (TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
+		String queueKey = campaignHeadId+"-"+itemId;
 		List<CampaignSwitch> campaignSwitchYesList = queryCampaignSwitchYesList(campaignHeadId, itemId);
 		List<CampaignSwitch> campaignSwitchNoList = queryCampaignSwitchNoList(campaignHeadId, itemId);
 		if(CollectionUtils.isEmpty(campaignSwitchYesList) && 
@@ -99,13 +102,16 @@ public class CampaignDecisionWechatSubscribeTask extends BaseMQService implement
 			if(CollectionUtils.isNotEmpty(campaignSwitchYesList)) {
 				CampaignSwitch csYes = campaignSwitchYesList.get(0);
 				sendDynamicQueue(segmentListToNextYes, csYes.getCampaignHeadId() +"-"+csYes.getNextItemId());
+				logger.info(queueKey+"-out-to-yes:"+JSON.toJSONString(segmentListToNextYes));
 			}
 			if(CollectionUtils.isNotEmpty(campaignSwitchNoList)) {
 				CampaignSwitch csNo = campaignSwitchNoList.get(0);
 				sendDynamicQueue(segmentListToNextNo, csNo.getCampaignHeadId() +"-"+csNo.getNextItemId());
+				logger.info(queueKey+"-out-to-no:"+JSON.toJSONString(segmentListToNextNo));
 			} else {
 				//如果没有非分支，则MQ数据发送给本节点，供本节点下一次刷新的时候再次检测
 				sendDynamicQueue(segmentListToNextNo, campaignHeadId +"-"+itemId);
+				logger.info(queueKey+"-out-to-self:"+JSON.toJSONString(segmentListToNextNo));
 			}
 		}
 		

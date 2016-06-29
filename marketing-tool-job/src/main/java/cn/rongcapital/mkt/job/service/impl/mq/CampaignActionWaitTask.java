@@ -12,12 +12,16 @@ import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
@@ -36,7 +40,6 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private CampaignActionWaitDao campaignActionWaitDao;
-	private MessageConsumer consumer = null;
 	@Autowired
     private ConcurrentTaskScheduler taskSchedule;
 	private static ConcurrentHashMap<String, ScheduledFuture<?>> waitTaskMap = new ConcurrentHashMap<String, ScheduledFuture<?>>();
@@ -64,7 +67,7 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 		Date specificTime = campaignActionWaitList.get(0).getSpecificTime();
 		
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -88,6 +91,7 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
+				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
@@ -97,6 +101,7 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 	private void processMqMessage(List<Segment> segmentList,
 								  Integer campaignHeadId,String itemId,List<CampaignSwitch> campaignEndsList,
 								  Byte realativeType,Integer relativeValue,Date specificTime) {
+		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
 			NodeAudience nodeAudience = new NodeAudience();
 			nodeAudience.setCampaignHeadId(campaignHeadId);
@@ -112,45 +117,51 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 				Runnable task = new Runnable() {
 					public void run() {
 						sendDynamicQueue(segmentList, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+						deleteNodeAudience(campaignHeadId,itemId,segmentList);
+						logger.info(queueKey+"-out:"+JSON.toJSONString(segmentList));
 					}
 				};
 				ScheduledFuture<?> scheduledFuture = null;
 				if(null != realativeType && null != relativeValue) {
+					DateTime now = new DateTime();
+					DateTime execTime = null;
 					switch (realativeType) {
 					case 0://小时
-						scheduledFuture = taskSchedule.scheduleWithFixedDelay(task, relativeValue*3600*1000);
+						execTime = now.plusHours(relativeValue);
+						scheduledFuture = taskSchedule.schedule(task, execTime.toDate());
 						break;
 					case 1://天
-						scheduledFuture = taskSchedule.scheduleWithFixedDelay(task, relativeValue*24*3600*1000);
+						execTime = now.plusDays(relativeValue);
+						scheduledFuture = taskSchedule.schedule(task, execTime.toDate());
 						break;
 					case 2://周
-						scheduledFuture = taskSchedule.scheduleWithFixedDelay(task, relativeValue*7*24*3600*1000);
+						execTime = now.plusWeeks(relativeValue);
+						scheduledFuture = taskSchedule.schedule(task, execTime.toDate());
 						break;
 					case 3://月
-						scheduledFuture = taskSchedule.scheduleWithFixedDelay(task, relativeValue*30*7*24*3600*1000);
+						execTime = now.plusMonths(relativeValue);
+						scheduledFuture = taskSchedule.schedule(task, execTime.toDate());
 						break;
 					}
 				} else if(null != specificTime) {
 					scheduledFuture = taskSchedule.schedule(task, specificTime);
 				}
 				if(null != scheduledFuture) {
-					waitTaskMap.put(System.currentTimeMillis()+"-"+segmentList.hashCode()+"-"+cs.getCampaignHeadId()+"-"+cs.getNextItemId(), scheduledFuture);
+					waitTaskMap.put(cs.getCampaignHeadId()+"-"+cs.getNextItemId()+"-"+System.currentTimeMillis()+"-"+segmentList.hashCode(), scheduledFuture);
 				}
 			}
 		}
 	}	
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
-		waitTaskMap.forEach((k,scheduledFuture)->{
+		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
+		String itemId = taskSchedule.getCampaignItemId();
+		String prefixKey = campaignHeadId+"-"+itemId;
+		waitTaskMap.forEach((key,scheduledFuture)->{
+			if(StringUtils.isNotBlank(key) && key.startsWith(prefixKey))
 			scheduledFuture.cancel(true);
 		});
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 	
 	@Override

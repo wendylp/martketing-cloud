@@ -54,7 +54,6 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 	@Autowired
 	private ImgTextAssetDao imgTextAssetDao;
 	
-	private MessageConsumer consumer = null;
 	@Value("${runxue.h5.api.base.url}")
 	private String h5BaseUrl;
 	
@@ -77,7 +76,7 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 		}
 		CampaignActionSendH5 campaignActionSendH5 = campaignActionSendH5List.get(0);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -101,6 +100,7 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
+				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
@@ -112,6 +112,7 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 								  Integer campaignHeadId,String itemId,
 								  List<CampaignSwitch> campaignEndsList,
 								  CampaignActionSendH5 campaignActionSendH5) {
+		String queueKey = campaignHeadId+"-"+itemId;
 		List<Segment> segmentListToNext = new ArrayList<Segment>();//要传递给下面节点的数据(执行了发送微信操作的数据)
 		for(Segment segment:segmentList) {
 			NodeAudience nodeAudience = new NodeAudience();
@@ -143,6 +144,8 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 			for(CampaignSwitch cs:campaignEndsList) {
 				//发送segment数据到后面的节点
 				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				deleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
+				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListToNext));
 			}
 		}
 	}
@@ -196,13 +199,7 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 	
 
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 	
 	@Override

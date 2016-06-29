@@ -47,7 +47,7 @@ public class DataArchPoint extends BaseQuery {
 
     private String cookie;
 
-    private Integer batchId;
+    private String batchId;
     
     public DataArchPoint(){}
     
@@ -223,11 +223,11 @@ public class DataArchPoint extends BaseQuery {
         this.cookie = cookie == null ? null : cookie.trim();
     }
 
-    public Integer getBatchId() {
+    public String getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(Integer batchId) {
+    public void setBatchId(String batchId) {
         this.batchId = batchId;
     }
 }

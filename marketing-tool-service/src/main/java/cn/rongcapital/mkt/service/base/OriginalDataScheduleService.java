@@ -5,5 +5,8 @@ package cn.rongcapital.mkt.service.base;
  */
 
 public interface OriginalDataScheduleService {
+
+    int BATCH_NUM = 1000;
+
     public void cleanData();
 }

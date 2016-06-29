@@ -22,6 +22,6 @@ public interface TagSystemListGetService {
      * @param size
      * @return
      */
-    public BaseOutput getTagcount(String method, String userToken, String tagGroupName, Integer index, Integer size);
+    public BaseOutput getTagcount(String method, String userToken, Integer tagGroupId, Integer index, Integer size);
 
 }
