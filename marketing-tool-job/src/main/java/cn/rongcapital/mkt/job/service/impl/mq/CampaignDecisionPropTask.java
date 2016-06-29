@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
@@ -40,7 +39,6 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 	private CampaignDecisionPropCompareDao campaignDecisionPropCompareDao;
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	private MessageConsumer consumer = null;	
 	
 	public void task (TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -65,7 +63,7 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 		
 		CampaignDecisionPropCompare campaignDecisionPropCompare = campaignDecisionPropCompareList.get(0);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -88,6 +86,7 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
+				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
@@ -512,13 +511,7 @@ public class CampaignDecisionPropTask extends BaseMQService implements TaskServi
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (JMSException e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 	@Override
 	public void task(Integer taskId) {

@@ -54,7 +54,6 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 	@Autowired
 	private ImgTextAssetDao imgTextAssetDao;
 	
-	private MessageConsumer consumer = null;
 	@Value("${runxue.h5.api.base.url}")
 	private String h5BaseUrl;
 	
@@ -77,7 +76,7 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 		}
 		CampaignActionSendH5 campaignActionSendH5 = campaignActionSendH5List.get(0);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -101,6 +100,7 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
+				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
@@ -197,13 +197,7 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 	
 
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 	
 	@Override

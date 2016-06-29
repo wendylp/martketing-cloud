@@ -36,7 +36,6 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 	private CampaignActionSaveAudienceDao campaignActionSaveAudienceDao;
 	@Autowired
 	private AudienceListPartyMapDao audienceListPartyMapDao;
-	private MessageConsumer consumer = null;
 	
 	public void task (TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -54,7 +53,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 		}
 		CampaignActionSaveAudience campaignActionSaveAudience = campaignActionSaveAudienceList.get(0);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -78,6 +77,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
+				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
@@ -113,13 +113,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 	
 	@Override

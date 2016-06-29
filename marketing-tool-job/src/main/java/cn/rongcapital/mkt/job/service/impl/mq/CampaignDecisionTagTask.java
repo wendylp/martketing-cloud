@@ -38,8 +38,6 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	private MessageConsumer consumer = null;
-	
 	@Override
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -72,7 +70,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 			tagIdList.add(Integer.parseInt(tagIdStrT));
 		}
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -185,13 +183,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 
 	@Override

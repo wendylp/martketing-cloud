@@ -6,8 +6,6 @@ import java.util.List;
 import javax.jms.MessageConsumer;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +21,7 @@ import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 @Service
 public class CampaignTriggerTimeTask extends BaseMQService implements TaskService {
 
-	private static Logger logger = LoggerFactory.getLogger(CampaignTriggerTimeTask.class);
+//	private static Logger logger = LoggerFactory.getLogger(CampaignTriggerTimeTask.class);
 	
     @Autowired
     private TaskScheduleDao taskScheduleDao;

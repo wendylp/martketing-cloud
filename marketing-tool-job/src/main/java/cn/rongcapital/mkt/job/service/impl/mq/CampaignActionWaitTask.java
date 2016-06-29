@@ -12,6 +12,7 @@ import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,6 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private CampaignActionWaitDao campaignActionWaitDao;
-	private MessageConsumer consumer = null;
 	@Autowired
     private ConcurrentTaskScheduler taskSchedule;
 	private static ConcurrentHashMap<String, ScheduledFuture<?>> waitTaskMap = new ConcurrentHashMap<String, ScheduledFuture<?>>();
@@ -65,7 +65,7 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 		Date specificTime = campaignActionWaitList.get(0).getSpecificTime();
 		
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
@@ -89,6 +89,7 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
+				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
@@ -142,23 +143,21 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 					scheduledFuture = taskSchedule.schedule(task, specificTime);
 				}
 				if(null != scheduledFuture) {
-					waitTaskMap.put(System.currentTimeMillis()+"-"+segmentList.hashCode()+"-"+cs.getCampaignHeadId()+"-"+cs.getNextItemId(), scheduledFuture);
+					waitTaskMap.put(cs.getCampaignHeadId()+"-"+cs.getNextItemId()+"-"+System.currentTimeMillis()+"-"+segmentList.hashCode(), scheduledFuture);
 				}
 			}
 		}
 	}	
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		if(null != consumer) {
-			try {
-				consumer.close();
-			} catch (Exception e) {
-				logger.error(e.getMessage(),e);
-			}
-		}
-		waitTaskMap.forEach((k,scheduledFuture)->{
+		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
+		String itemId = taskSchedule.getCampaignItemId();
+		String prefixKey = campaignHeadId+"-"+itemId;
+		waitTaskMap.forEach((key,scheduledFuture)->{
+			if(StringUtils.isNotBlank(key) || key.startsWith(prefixKey))
 			scheduledFuture.cancel(true);
 		});
+		super.cancelCampaignInnerTask(taskSchedule);
 	}
 	
 	@Override
