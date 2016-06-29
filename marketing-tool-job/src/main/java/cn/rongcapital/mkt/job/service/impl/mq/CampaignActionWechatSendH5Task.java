@@ -115,36 +115,37 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 		String queueKey = campaignHeadId+"-"+itemId;
 		List<Segment> segmentListToNext = new ArrayList<Segment>();//要传递给下面节点的数据(执行了发送微信操作的数据)
 		for(Segment segment:segmentList) {
-			NodeAudience nodeAudience = new NodeAudience();
-			nodeAudience.setCampaignHeadId(campaignHeadId);
-			nodeAudience.setItemId(itemId);
-			nodeAudience.setDataId(segment.getDataId());
-			nodeAudience.setName(segment.getName());
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				NodeAudience nodeAudience = new NodeAudience();
+				nodeAudience.setCampaignHeadId(campaignHeadId);
+				nodeAudience.setItemId(itemId);
+				nodeAudience.setDataId(segment.getDataId());
+				nodeAudience.setName(segment.getName());
+				nodeAudience.setStatus(0);
 				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
-			}
-			Integer dataId = segment.getDataId();
-		    //从mongo的主数据表中查询该条id对应的主数据详细信息
-			DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
-			if(null!=dp && null !=dp.getMdType() &&
-			   StringUtils.isNotBlank(dp.getMappingKeyid()) &&
-			   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
-			   //调用微信公众号发送图文接口
-			   boolean isSent = sendWechatByH5Interface(campaignActionSendH5,dp.getMappingKeyid());
-			   if(isSent) {
-				   String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
-				   segment.setPubId(campaignActionSendH5.getPubId());
-				   segment.setH5MobileUrl(h5MobileUrl);
-				   segment.setMaterialId(campaignActionSendH5.getMaterialId());
-				   segmentListToNext.add(segment);//数据放入向后面节点传递的list里
-			   }
+				Integer dataId = segment.getDataId();
+				//从mongo的主数据表中查询该条id对应的主数据详细信息
+				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
+				if(null!=dp && null !=dp.getMdType() &&
+						StringUtils.isNotBlank(dp.getMappingKeyid()) &&
+						dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
+					//调用微信公众号发送图文接口
+					boolean isSent = sendWechatByH5Interface(campaignActionSendH5,dp.getMappingKeyid());
+					if(isSent) {
+						String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
+						segment.setPubId(campaignActionSendH5.getPubId());
+						segment.setH5MobileUrl(h5MobileUrl);
+						segment.setMaterialId(campaignActionSendH5.getMaterialId());
+						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+					}
+				}
 			}
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 			for(CampaignSwitch cs:campaignEndsList) {
 				//发送segment数据到后面的节点
 				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
-				deleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
+				logicDeleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
 				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListToNext));
 			}
 		}

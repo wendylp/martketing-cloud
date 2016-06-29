@@ -40,6 +40,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
+import cn.rongcapital.mkt.service.AudienceIdListService;
 import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
 import cn.rongcapital.mkt.service.AudienceNameListService;
@@ -108,6 +109,7 @@ import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagCountService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
+import cn.rongcapital.mkt.service.TagDownloadCustomAudienceService;
 import cn.rongcapital.mkt.service.TagGetCustomService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
@@ -119,12 +121,12 @@ import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
+import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
 import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
 import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -287,11 +289,13 @@ public class MktApi {
     
     @Autowired
     private AudienceNameListService audienceNameListService;
+    
+    @Autowired
+    private AudienceIdListService audienceIdListService;
 
     @Autowired
     private AudienceSearchService audienceSearchService;
     
-
     @Autowired
     private AudienceListDeleteService audienceListDeleteService;
 
@@ -339,14 +343,12 @@ public class MktApi {
 
     @Autowired
     private CustomTagDeleteService customTagDeleteService;
-    
 
     @Autowired
     private MainActionInfoGetService mainActionInfoGetService;
 
     @Autowired
     private SegmentTagGetService segmentTagGetService;
-    
     
     @Autowired
     private SegmentFilterGetService segmentFilterGetService;
@@ -428,6 +430,11 @@ public class MktApi {
 
 	@Autowired
 	private WechatAssetMemberSearchService wechatAssetMemberSearchService;
+	
+	@Autowired
+	private TagDownloadCustomAudienceService tagDownloadCustomAudienceService;
+	
+	
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1064,6 +1071,23 @@ public class MktApi {
 		return audienceNameListService.audienceNameList(userToken);
 	}
 	
+	
+	/**
+     * @功能简述: 数据分析，获取联系人ID列表
+     * @param: String userToken
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.dataanalysis.audiences.get")
+    public BaseOutput audienceIdList(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("audience_ids") String audience_ids,
+                    @NotEmpty @QueryParam("audience_type") String audience_type){
+        return audienceIdListService.audienceIdList(userToken,audience_ids,audience_type);
+    }
+	
+	
+	
+	
 	/**
      * @功能简述: 获取人群list列表
      * @param: String userToken
@@ -1334,6 +1358,19 @@ public class MktApi {
     public BaseOutput deleteCustomTag(@Valid CustomTagDeleteIn body,
                     @Context SecurityContext securityContext) {
         return customTagDeleteService.deleteCustomTag(body);
+    }
+
+    /**
+     * @功能简述 : 根据自定义标签下载覆盖的人群
+     * @param: String userToken, Ingeger tag_id
+     * @return: Object
+     */
+    @GET
+    @Path("mkt.tag.custom.audience.download")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput downloadCustomAudience(@NotEmpty @QueryParam("method") String method,
+                    @NotNull @QueryParam("tag_id") Integer tagId) {
+        return tagDownloadCustomAudienceService.downloadCustomAudience(tagId);
     }
 
     /**

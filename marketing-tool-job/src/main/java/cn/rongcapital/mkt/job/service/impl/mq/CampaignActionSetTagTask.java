@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -91,31 +92,34 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 	private void processMqMessage(List<Segment> segmentList, Integer campaignHeadId,String itemId,
 								  List<CampaignSwitch> campaignEndsList, String tagIds) {
 		String queueKey = campaignHeadId+"-"+itemId;
+		List<Segment> segmentListToNext = new ArrayList<Segment>();
 		for(Segment segment:segmentList) {
-			NodeAudience nodeAudience = new NodeAudience();
-			nodeAudience.setCampaignHeadId(campaignHeadId);
-			nodeAudience.setItemId(itemId);
-			nodeAudience.setDataId(segment.getDataId());
-			nodeAudience.setName(segment.getName());
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				NodeAudience nodeAudience = new NodeAudience();
+				nodeAudience.setCampaignHeadId(campaignHeadId);
+				nodeAudience.setItemId(itemId);
+				nodeAudience.setDataId(segment.getDataId());
+				nodeAudience.setName(segment.getName());
+				nodeAudience.setStatus(0);
 				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
-			}
-			Integer dataId = segment.getDataId();
-			List<String> tagIdList = Arrays.asList(tagIds);
-			for(String idStr:tagIdList) {
-				int tagId = Integer.parseInt(idStr);
-				CustomTagMap customTagMapT = new CustomTagMap();
-				customTagMapT.setTagId(tagId);
-				customTagMapT.setMapId(dataId);
-				customTagMapDao.insert(customTagMapT);
+				Integer dataId = segment.getDataId();
+				List<String> tagIdList = Arrays.asList(tagIds);
+				for(String idStr:tagIdList) {
+					int tagId = Integer.parseInt(idStr);
+					CustomTagMap customTagMapT = new CustomTagMap();
+					customTagMapT.setTagId(tagId);
+					customTagMapT.setMapId(dataId);
+					customTagMapDao.insert(customTagMapT);
+				}
+				segmentListToNext.add(segment);
 			}
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 			for(CampaignSwitch cs:campaignEndsList) {
 				//发送segment数据到后面的节点
-				sendDynamicQueue(segmentList, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
-				deleteNodeAudience(campaignHeadId,itemId,segmentList);
-				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentList));
+				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				logicDeleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
+				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListToNext));
 			}
 		}
 	}

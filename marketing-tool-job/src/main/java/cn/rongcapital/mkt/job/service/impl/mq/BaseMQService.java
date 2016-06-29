@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -91,6 +92,26 @@ public class BaseMQService {
 		}
 	}
 	
+	/**
+	 * 传递给后面节点的数据，从当前节点的mongo库里逻辑删除
+	 * @param segmentListToNext
+	 */
+	protected void logicDeleteNodeAudience(Integer campaignHeadId,String itemId,List<Segment> segmentListToNext) {
+		for(Segment cs:segmentListToNext) {
+			List<Criteria> criteriasList = new ArrayList<Criteria>();
+			Criteria criteria1 = Criteria.where("campaignHeadId").is(campaignHeadId);
+			criteriasList.add(criteria1);
+			Criteria criteria2 = Criteria.where("itemId").is(itemId);
+			criteriasList.add(criteria2);
+			Criteria criteria3 = Criteria.where("dataId").is(cs.getDataId());
+			criteriasList.add(criteria3);
+			Criteria criteria4 = Criteria.where("status").is(0);
+			criteriasList.add(criteria4);
+			Criteria criteriaAll = new Criteria().andOperator(criteriasList.toArray(new Criteria[criteriasList.size()]));
+			Update update = new Update().inc("status", 1);//逻辑删除
+			mongoTemplate.findAndModify(new Query(criteriaAll), update, NodeAudience.class);
+		}
+	}
 	/**
 	 * 传递给后面节点的数据，从当前节点的mongo库里删除
 	 * @param segmentListToNext
