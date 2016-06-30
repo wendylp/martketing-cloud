@@ -82,6 +82,7 @@ public class AudienceIdListServiceImpl implements AudienceIdListService {
                 
             }else{
                 
+                //需要去重
                 //match=new BasicDBObject("segmentationHeadId", new BasicDBObject("$in", audienceList));
                 //List segList=mongoTemplate.getCollection("segment").distinct("mapping_keyid",match);
                 
@@ -101,11 +102,13 @@ public class AudienceIdListServiceImpl implements AudienceIdListService {
                 
             }
             
-//            for(Segment segment : segmentList){
-//                
-//                audPartyIdList.add(segment.getMappingKeyid());
-//            }
+            for(Segment segment : segmentList){
+                                
+                String keyid=segment.getMappingKeyid();
+                result.getData().add(keyid);
+            }
                         
+            result.setTotal(segmentList.size());
         }
         
         
@@ -122,14 +125,19 @@ public class AudienceIdListServiceImpl implements AudienceIdListService {
                 audPartyIdList = audienceListPartyMapDao.selectPartyIdList(audienceList);
                 
             }
+            
+          for(int i=0;i<audPartyIdList.size();i++){
+              
+              result.getData().add(audPartyIdList.get(i));
+          }
+        
+          
+          result.setTotal(audPartyIdList.size());
+          
         }
         
-        
-        
-        
-        result.getData().add(audPartyIdList);
        
-        result.setTotal(audPartyIdList.size());
+        
        
         return result;
     }
