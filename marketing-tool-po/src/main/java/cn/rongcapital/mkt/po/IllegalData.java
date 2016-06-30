@@ -7,7 +7,7 @@ import java.util.Date;
 public class IllegalData extends BaseQuery {
     private Integer id;
 
-    private String batchId;
+    private Long batchId;
 
     private String type;
 
@@ -27,12 +27,12 @@ public class IllegalData extends BaseQuery {
         this.id = id;
     }
 
-    public String getBatchId() {
+    public Long getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(String batchId) {
-        this.batchId = batchId == null ? null : batchId.trim();
+    public void setBatchId(Long batchId) {
+        this.batchId = batchId;
     }
 
     public String getType() {

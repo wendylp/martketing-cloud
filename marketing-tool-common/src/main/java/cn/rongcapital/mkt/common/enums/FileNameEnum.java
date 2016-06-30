@@ -12,6 +12,7 @@ public enum FileNameEnum {
     SHOPPING(7, "data_shopping"), 
     IMPORT_DATA_MODIFY_LOG(8, "import_data_modify_log"),
     CUSTOM_AUDIENCE(9,"custom_audience"),
+    ILLEGAL_DATA(10,"illegal_data"),
 
     ;
 

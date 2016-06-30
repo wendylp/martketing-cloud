@@ -61,6 +61,7 @@ import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
 import cn.rongcapital.mkt.service.DataDownloadMainListService;
+import cn.rongcapital.mkt.service.DataDownloadQualityIllegalDataService;
 import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
@@ -433,6 +434,9 @@ public class MktApi {
 	
 	@Autowired
 	private TagDownloadCustomAudienceService tagDownloadCustomAudienceService;
+	
+	@Autowired
+	private DataDownloadQualityIllegalDataService dataDownloadQualityIllegalDataService;
 	
 	
 	/**
@@ -1373,6 +1377,20 @@ public class MktApi {
         return tagDownloadCustomAudienceService.downloadCustomAudience(tagId);
     }
 
+    /**
+     * @功能简述 : 下载非法数据
+     * @param: String userToken, Integer batchId
+     * @return: Object
+     */
+    @GET
+    @Path("mkt.data.quality.illegaldata.download    ")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput downloadIllegalData(@NotEmpty @QueryParam("method") String method,
+                    @NotNull @QueryParam("batch_id") Long batchId) {
+        return dataDownloadQualityIllegalDataService.downloadIllegalData(batchId);
+    }
+
+    
     /**
 	 * @功能简述: 获取受众细分关联的tag
 	 * @param userToken

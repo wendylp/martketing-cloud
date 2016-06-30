@@ -33,7 +33,6 @@ public class DataDownloadQualityLogServiceImpl implements DataDownloadQualityLog
         List<ImportDataModifyLog> importDataModifyLogs = importDataModifyLogDao.selectList(paramImportDataModifyLog);
         List<String> columnNames = importDataModifyLogDao.selectColumns();
 
-
         File file = FileUtil.generateFileforDownload(FileUtil.transferNameListtoMap(columnNames), importDataModifyLogs,
                         FileNameEnum.IMPORT_DATA_MODIFY_LOG.getDetailName());
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),

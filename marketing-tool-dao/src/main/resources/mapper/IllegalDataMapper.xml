@@ -91,6 +91,14 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
+	<select id="selectColumns" resultType="java.lang.String">
+		SELECT 
+			COLUMN_NAME 
+		FROM 
+			information_schema.columns 
+		WHERE 
+			table_name='illegal_data'
+	</select>
 	
 	
 </mapper>
