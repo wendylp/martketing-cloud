@@ -223,7 +223,7 @@
 			#{item.pay_type},
 			#{item.trans_serial},
 			#{item.order_no},
-			#{item.trans_time},
+			#{item.trans_time,jdbcType=TIMESTAMP},
 			#{item.product_id},
 			#{item.specification},
 			#{item.color},
