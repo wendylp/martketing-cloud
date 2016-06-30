@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
 
         // 1. 取出需要处理的数据
         OriginalDataPopulation paramOriginalDataPopulation = new OriginalDataPopulation();
-        paramOriginalDataPopulation.setStatus(false);
+        paramOriginalDataPopulation.setStatus(StatusEnum.ACTIVE.getStatusCode());
         // 查询没有被处理过的数据 (未删除的)
         List<OriginalDataPopulation> originalDataPopulations =
                         originalDataPopulationDao.selectList(paramOriginalDataPopulation);
@@ -84,7 +85,7 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
             BeanUtils.copyProperties(tmpOriginalDataPopulation, paramDataPopulation);
 
             // 因为在一个事务里 , 直接修改OriginalDataPopulation的状态
-            tmpOriginalDataPopulation.setStatus(Boolean.TRUE);
+            tmpOriginalDataPopulation.setStatus(StatusEnum.DELETED.getStatusCode());
             originalDataPopulationDao.updateById(tmpOriginalDataPopulation);
             dataPopulations.add(paramDataPopulation);
         }

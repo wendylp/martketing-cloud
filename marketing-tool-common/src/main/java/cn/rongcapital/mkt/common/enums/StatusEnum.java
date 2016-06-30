@@ -1,24 +1,25 @@
 package cn.rongcapital.mkt.common.enums;
 
-public enum DeleteStatusEnum {
+public enum StatusEnum {
 
     ACTIVE(0, "未删除"), 
-    DELETED(1, "已删除"),;
+    DELETED(1, "已删除"),
+    PROCESSED(2, "已处理"),;
 
-    private DeleteStatusEnum(int statusCode, String description) {
+    private StatusEnum(Integer statusCode, String description) {
         this.statusCode = statusCode;
         this.description = description;
     }
 
-    private int statusCode;
+    private Integer statusCode;
 
     private String description;
 
-    public int getStatusCode() {
+    public Integer getStatusCode() {
         return statusCode;
     }
 
-    public void setStatusCode(int statusCode) {
+    public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
     }
 

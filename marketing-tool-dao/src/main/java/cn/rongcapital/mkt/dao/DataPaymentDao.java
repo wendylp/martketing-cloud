@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataPayment;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -43,5 +44,12 @@ public interface DataPaymentDao extends BaseDao<DataPayment>, BaseDataFilterDao<
 	 * @return map
 	 */
 	void cleanAndUpdateByOriginal(List<DataPayment> dataPayments);
+
+	/**
+	 * 批量更新数据状态
+	 * @param idList
+	 * @return
+	 */
+	int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
 
 }

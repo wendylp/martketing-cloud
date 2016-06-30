@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataLoginDao;
 import cn.rongcapital.mkt.dao.OriginalDataLoginDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -33,7 +34,7 @@ public class OriginalDataLoginScheduleServiceImpl implements OriginalDataLoginSc
 
         // 1. 取出需要处理的数据
         OriginalDataLogin paramOriginalDataLogin = new OriginalDataLogin();
-        paramOriginalDataLogin.setStatus(false);
+        paramOriginalDataLogin.setStatus(StatusEnum.ACTIVE.getStatusCode());
 
         // 查询没有被处理过的数据
         List<OriginalDataLogin> originalDataLogins =
@@ -79,7 +80,7 @@ public class OriginalDataLoginScheduleServiceImpl implements OriginalDataLoginSc
             OriginalDataLogin tmpOriginalDataLogin = tmpOriginalDataLogins.get(i);
             BeanUtils.copyProperties(tmpOriginalDataLogin, paramDataLogin);
             // 因为在一个事务里 , 直接修改OriginalDataLogin的状态
-            tmpOriginalDataLogin.setStatus(Boolean.TRUE);
+            tmpOriginalDataLogin.setStatus(StatusEnum.DELETED.getStatusCode());
             originalDataLoginDao.updateById(tmpOriginalDataLogin);
             dataLogins.add(paramDataLogin);
         }

@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
 import cn.rongcapital.mkt.dao.OriginalDataCustomerTagsDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -35,7 +36,7 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
 
         // 1. 取出需要处理的数据
         OriginalDataCustomerTags paramOriginalDataCustomTags = new OriginalDataCustomerTags();
-        paramOriginalDataCustomTags.setStatus(false);
+        paramOriginalDataCustomTags.setStatus(StatusEnum.ACTIVE.getStatusCode());
         // 查询没有被处理过的数据 (未删除的)
         List<OriginalDataCustomerTags> originalDataCustomerTags =
                 originalDataCustomerTagsDao.selectList(paramOriginalDataCustomTags);
@@ -83,7 +84,7 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
             BeanUtils.copyProperties(tmpOriginalDataCustomerTag, paramDataCustomTags);
 
             // 因为在一个事务里 , 直接修改OriginalDataCustomTags的状态
-            tmpOriginalDataCustomerTag.setStatus(Boolean.TRUE);
+            tmpOriginalDataCustomerTag.setStatus(StatusEnum.DELETED.getStatusCode());
             originalDataCustomerTagsDao.updateById(tmpOriginalDataCustomerTag);
             dataCustomerTags.add(paramDataCustomTags);
         }

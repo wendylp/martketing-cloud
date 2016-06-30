@@ -144,6 +144,14 @@
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
+	<update id="updateStatusByIds">
+		update data_payment set status = #{status}
+		where id in
+		<foreach collection="list" item="idItem" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</update>
+
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.DataPayment" resultType="cn.rongcapital.mkt.po.DataPayment">
 		<![CDATA[SELECT]]>

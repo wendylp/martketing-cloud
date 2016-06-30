@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataCustomerTags;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -45,4 +46,11 @@ public interface DataCustomerTagsDao extends BaseDao<DataCustomerTags>, BaseData
 	 * @author bianyulong
 	 */
 	void cleanAndUpdateByOriginal(Map<String, List<DataCustomerTags>> dataCustomerTags);
+
+	/**
+	 * 批量更新数据状态
+	 * @param idList
+	 * @return
+	 */
+	int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
 }
