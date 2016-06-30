@@ -38,6 +38,8 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
         List<Integer> idList = new ArrayList<>(dataMemberList.size());
         for(DataMember dataObj : dataMemberList){
             DataParty dataParty=new DataParty();
+            dataParty.setMemberLevel(dataObj.getMemberLevel());
+            dataParty.setMemberPoints(dataObj.getMemberPoints());
             dataParty.setMappingKeyid(dataObj.getId().toString());
             dataParty.setMdType(Integer.parseInt(MD_TYPE));
             dataParty.setSource(MD_TYPE);
