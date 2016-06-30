@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.IllegalData;
 
@@ -34,4 +36,11 @@ public interface IllegalDataDao extends BaseDao<IllegalData>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    /**
+     * @功能简述: 查询对象总数,只要不为NULL与空则为条件,属性值之间and连接
+     * @author nianjun
+     * @return: List<String>
+     */
+    List<String> selectColumns();
 }
