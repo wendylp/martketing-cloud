@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -90,7 +92,7 @@ public class ParseUploadFileImpl implements ParseUploadFile {
             String line = null;
             boolean isFileHeadFlag = true;
             while((line = bufferedReader.readLine()) != null){
-                String[] uploadFileColumns = line.split(",");
+                String[] uploadFileColumns = line.replace(" ","").split(",");
                 if(isFileHeadFlag){
                     generateCodeFileColumnIndexRelationMap(illegalColumns, codeIndexMap, nameCodeMap, uploadFileColumns);
                     isFileHeadFlag = false;
@@ -110,7 +112,11 @@ public class ParseUploadFileImpl implements ParseUploadFile {
     private void generateInsertDataList(Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, String[] uploadFileColumns, String batchId, String fileUnique) {
         Map<String,Object> insertMap = new HashMap<String,Object>();
         for(String key : codeIndexMap.keySet()){
-            insertMap.put(key,uploadFileColumns[(Integer)codeIndexMap.get(key)]);
+            if(uploadFileColumns.length  > (Integer)codeIndexMap.get(key)){
+                insertMap.put(key,uploadFileColumns[(Integer)codeIndexMap.get(key)]);
+            }else{
+                insertMap.put(key,null);
+            }
         }
         insertMap.put("file_unique",fileUnique);
         insertMap.put("batch_id",batchId);
