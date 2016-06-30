@@ -9,9 +9,8 @@
 
 package cn.rongcapital.mkt.service.impl;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
+import com.mongodb.BasicDBObject;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -72,20 +73,38 @@ public class AudienceIdListServiceImpl implements AudienceIdListService {
         //细分人群
         if(audience_type.equals("0")){
             
+            BasicDBObject match = new BasicDBObject();
+            
             if(aud_idList[0].equals("0")){
                 
                 segmentList=mongoTemplate.findAll(Segment.class,"segment");
                 
+                
             }else{
-                                
-                segmentList=mongoTemplate.find(new Query(Criteria.where("segmentationHeadId").in(audienceList)), Segment.class);
+                
+                //match=new BasicDBObject("segmentationHeadId", new BasicDBObject("$in", audienceList));
+                //List segList=mongoTemplate.getCollection("segment").distinct("mapping_keyid",match);
+                
+                //List segList=mongoTemplate.getCollection("segment").distinct("mapping_keyid");
+                
+                
+                mongoTemplate.getCollection("segment").distinct("mapping_keyid", new BasicDBObject("segmentationHeadId", new BasicDBObject("$in", audienceList)));
+                
+                
+                
+                //Query query = Query.query(Criteria.where("segmentationHeadId").in(audienceList));
+                //List resultList = mongoTemplate.getCollection("segment").distinct("mapping_keyid", query.getQueryObject());
+                
+                //List result1 = mongoTemplate.getCollection("segment").distinct("mapping_keyid"); 
+                
+                //segmentList=mongoTemplate.find(new Query(Criteria.where("segmentationHeadId").in(audienceList)), Segment.class);
                 
             }
             
-            for(Segment segment : segmentList){
-                
-                audPartyIdList.add(segment.getMappingKeyid());
-            }
+//            for(Segment segment : segmentList){
+//                
+//                audPartyIdList.add(segment.getMappingKeyid());
+//            }
                         
         }
         
