@@ -782,7 +782,7 @@ public class MktApi {
 	/**
      * @功能简述: 获取数据质量列表
      * @author nianjun
-     * @param: String method, String userToken, String ver, Ingeger index, Integer size
+     * @param: String method, String userToken, String ver, Integer index, Integer size
      * @return: Object
      */
 	@GET
@@ -842,7 +842,7 @@ public class MktApi {
 
 	/**
      * @功能简述 : 获取主数据列表
-     * @param: String method, String userToken, String ver, Ingeger index, Integer size
+     * @param: String method, String userToken, String ver, Integer index, Integer size
      * @return: Object
      */
     @GET
@@ -1338,7 +1338,7 @@ public class MktApi {
 	
 	/**
      * @功能简述 : 获取自定义标签列表
-     * @param: String method, String userToken, Ingeger index, Integer size
+     * @param: String method, String userToken, Integer index, Integer size
      * @return: Object
      */
     @GET
@@ -1353,7 +1353,7 @@ public class MktApi {
 
     /**
      * @功能简述 : 删除某个自定义标签
-     * @param: String method, String userToken, Ingeger tag_id
+     * @param: String method, String userToken, Integer tag_id
      * @return: Object
      */
     @POST
@@ -1366,7 +1366,7 @@ public class MktApi {
 
     /**
      * @功能简述 : 根据自定义标签下载覆盖的人群
-     * @param: String userToken, Ingeger tag_id
+     * @param: String userToken, Integer tag_id
      * @return: Object
      */
     @GET
@@ -1383,7 +1383,7 @@ public class MktApi {
      * @return: Object
      */
     @GET
-    @Path("mkt.data.quality.illegaldata.download    ")
+    @Path("mkt.data.quality.illegaldata.download")
     @Consumes({MediaType.APPLICATION_JSON})
     public BaseOutput downloadIllegalData(@NotEmpty @QueryParam("method") String method,
                     @NotNull @QueryParam("batch_id") Long batchId) {

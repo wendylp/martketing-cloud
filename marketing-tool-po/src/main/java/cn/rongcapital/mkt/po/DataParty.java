@@ -34,7 +34,7 @@ public class DataParty extends BaseQuery {
 
     private Date lastLogin;
 
-    private Boolean status;
+    private Integer status;
 
     private Date createTime;
 
@@ -166,11 +166,11 @@ public class DataParty extends BaseQuery {
         this.lastLogin = lastLogin;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

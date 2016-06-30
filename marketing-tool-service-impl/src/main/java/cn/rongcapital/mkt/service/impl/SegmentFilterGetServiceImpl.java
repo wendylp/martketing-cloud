@@ -1,8 +1,8 @@
 /*************************************************
- * @功能简述: 获取细分关联的标签
+ * @功能简述: 获取细分标签漏斗计算
  * @see MktApi：
- * @author: 朱学龙
- * @version: 1.0 @date：2016-06-07
+ * @author: xukun
+ * @version: 1.0 @date：2016-06-28
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
@@ -24,22 +24,16 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.CustomTagMapDao;
-import cn.rongcapital.mkt.po.CustomTagWithName;
+
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Tag;
 import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCondition;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
-import cn.rongcapital.mkt.vo.out.SegmentTagGetOut;
+
 
 @Service
 public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
@@ -70,7 +64,8 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
             Map<String,Object> map = new HashMap<String,Object>();
             
             map.put("tag_id",conditions.get(i).getTag_id());
-            map.put("tag_name",conditions.get(i).getTag_name());
+            //map.put("tag_name",conditions.get(i).getTag_name());
+            map.put("tag_name","tester");
             
             String tag_count=getPeopleCount(i,conditions);
             
@@ -81,189 +76,40 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         }
         
       return result;
-        
-//        
-//        
-//        
-//        if(count==1){
-//            
-//            map.put("tag_id",conditions.get(0).getTag_id());
-//            map.put("tag_name",conditions.get(0).getTag_name());
-//            String tag_count=getPeopleCount(criterialist);
-//            map.put("tag_count",tag_count);
-//            
-//            result.getData().add(map);
-//        }
-//                
-//        
-//        if(count==2){
-//            
-//            map.put("tag_id",conditions.get(0).getTag_id());
-//            map.put("tag_name",conditions.get(0).getTag_name());
-//            String tag_count=getPeopleCount(criterialist);
-//            map.put("tag_count",tag_count);
-//            
-//            result.getData().add(map);
-//        }
-//        
-//        
-//        
-//        
-//        
-//        
-//        // 拼mongodb 查询条件
-//        Query query = new Query();
-//        Criteria criteria = new Criteria();
-//        Criteria[] criterialist = new Criteria[conditions.size()];
-//        int count=conditions.size();
-//        logger.debug("conditions count="+count);
-//        
-//        List<DataParty> restList=new ArrayList<DataParty>(count);
-//        
-//        
-//        if(count==1){
-//            
-//            
-//            for (int i = 0; i < count; i++) {
-//                
-//                Criteria criteriaAnd = new Criteria();
-//                //根据getExclude()拼条件
-//                
-//                if(conditions.get(i).getExclude().equals("0")){
-//                    
-//                    criteriaAnd.andOperator(Criteria.where("tagList.tagId").is(new String(conditions.get(i).getTag_id())));
-//                                    
-//                }else{
-//                    
-//                    criteriaAnd.andOperator(Criteria.where("tagList.tagId").ne(new String(conditions.get(i).getTag_id())));
-//                }
-//                
-//                criterialist[i] = criteriaAnd;
-//            }
-//
-//            criteria.orOperator(criterialist);
-//            query.addCriteria(criteria);
-//            restList =mongoTemplate.find(query, DataParty.class);
-//                    
-//            
-//        }else if(count==2){
-//            
-//        
-//            
-//        }else if(count==3){
-//            
-//        
-//            
-//            
-//        }else{
-//            
-//            logger.debug("conditions count 非法");
-//        }
-//        
-//
-//        for (int i = 0; i < count; i++) {
-//            
-//            Criteria criteriaAnd = new Criteria();
-//            //根据getExclude()拼条件
-//            
-//            if(conditions.get(i).getExclude().equals("0")){
-//                
-//                criteriaAnd.andOperator(Criteria.where("tagList.tagId").is(new String(conditions.get(i).getTag_id())));
-//                                
-//            }else{
-//                
-//                criteriaAnd.andOperator(Criteria.where("tagList.tagId").ne(new String(conditions.get(i).getTag_id())));
-//            }
-//            
-//            criterialist[i] = criteriaAnd;
-//        }
-//
-//        criteria.orOperator(criterialist);
-//        query.addCriteria(criteria);
-//        List<DataParty> restList =mongoTemplate.find(query, DataParty.class);
-        
-//        Map<String,Object> map = new HashMap<String,Object>();
-//        
-//        map.put("tag_id",tagid);
-//        
-//        int count=restList.size();          
-//        map.put("tag_count", count);            
-//        
-//        List<Tag> tagList = restList.get(0).getTagList();
-//        for(Tag tag : tagList){
-//            
-//            if(tagid.equals(tag.getTagId())){
-//                map.put("tag_name", tag.getTagName());
-//                break;
-//            }
-//        }
-//        
-//        result.getData().add(map);
-        
-//    }
-    
-    
-    
     }
-    
-    
-//    private Criteria[] buildConditions(List<SegmentFilterCondition> conditions){
-//        
-//        Criteria[] criterialist = new Criteria[conditions.size()];
-//        int count=conditions.size();
-//        
-//        for (int i = 0; i < count; i++) {
-//            
-//            Criteria criteriaAnd = new Criteria();
-//            
-//            //根据getExclude()拼条件            
-//            if(conditions.get(i).getExclude().equals("0")){
-//                
-//                criteriaAnd.andOperator(Criteria.where("tagList.tagId").is(new String(conditions.get(i).getTag_id())));
-//                                
-//            }else{
-//                
-//                criteriaAnd.andOperator(Criteria.where("tagList.tagId").ne(new String(conditions.get(i).getTag_id())));
-//            }
-//            
-//            criterialist[i] = criteriaAnd;
-//        }
-//        
-//        return criterialist;
-//              
-//        
-//    }
+        
     
     
     private String getPeopleCount(int idx,List<SegmentFilterCondition> conditions){
         
         Query query = new Query();
-        Criteria criteria = new Criteria(); 
-        
+         
+                
         Criteria[] criterialist = new Criteria[idx+1];
         
         
         for(int i=0;i<idx+1;i++){
             
-            Criteria criteriaAnd = new Criteria();
+            Criteria criteriaCond=Criteria.where("tagList.tagId").is(new String(conditions.get(i).getTag_id()));
+            
             
             //根据getExclude()拼条件            
-            if(conditions.get(i).getExclude().equals("0")){
+            if(conditions.get(i).getExclude().equals("1")){                                
                 
-                criteriaAnd.andOperator(Criteria.where("tagList.tagId").is(new String(conditions.get(i).getTag_id())));
+                criterialist[i]=criteriaCond.not();
+                
                                 
             }else{
-                
-                criteriaAnd.andOperator(Criteria.where("tagList.tagId").ne(new String(conditions.get(i).getTag_id())));
+                                
+                criterialist[i]=criteriaCond;
             }
-            
-            criterialist[i] = criteriaAnd;
-                        
+                                    
         }
+               
+        query.addCriteria(new Criteria().andOperator(criterialist));
         
-        criteria.andOperator(criterialist);
-        query.addCriteria(criteria);
         long tag_count=mongoTemplate.count(query, DataParty.class);
+        
         return  Long.toString(tag_count);     
         
     }

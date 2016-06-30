@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArc
 
         // 1. 取出需要处理的数据
         OriginalDataArchPoint paramOriginalDataArchPoint = new OriginalDataArchPoint();
-        paramOriginalDataArchPoint.setStatus(false);
+        paramOriginalDataArchPoint.setStatus(StatusEnum.ACTIVE.getStatusCode());
         // 查询没有被处理过的数据 (未删除的)
         List<OriginalDataArchPoint> originalDataArchPoints =
                         originalDataArchPointDao.selectList(paramOriginalDataArchPoint);
@@ -82,7 +83,7 @@ public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArc
             BeanUtils.copyProperties(tmpOriginalDataArchPoint, paramDataArchPoint);
 
             // 因为在一个事务里 , 直接修改OriginalDataArchPoint的状态
-            tmpOriginalDataArchPoint.setStatus(Boolean.TRUE);
+            tmpOriginalDataArchPoint.setStatus(StatusEnum.DELETED.getStatusCode());
             originalDataArchPointDao.updateById(tmpOriginalDataArchPoint);
             dataArchPoints.add(paramDataArchPoint);
         }

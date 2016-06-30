@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataPaymentDao;
 import cn.rongcapital.mkt.dao.OriginalDataPaymentDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -33,7 +34,7 @@ public class OriginalDataPaymentScheduleServiceImpl implements OriginalDataPayme
 
         // 1. 取出需要处理的数据
         OriginalDataPayment paramOriginalDataPayment = new OriginalDataPayment();
-        paramOriginalDataPayment.setStatus(false);
+        paramOriginalDataPayment.setStatus(StatusEnum.ACTIVE.getStatusCode());
 
         // 查询没有被处理过的数据
         List<OriginalDataPayment> originalDataPayments =
@@ -79,7 +80,7 @@ public class OriginalDataPaymentScheduleServiceImpl implements OriginalDataPayme
             OriginalDataPayment originalDataPayment = tmpOriginalDataPayments.get(i);
             BeanUtils.copyProperties(originalDataPayment, paramDataPayment);
 
-            originalDataPayment.setStatus(Boolean.TRUE);
+            originalDataPayment.setStatus(StatusEnum.DELETED.getStatusCode());
             originalDataPaymentDao.updateById(originalDataPayment);
             dataLogins.add(paramDataPayment);
         }
