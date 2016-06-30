@@ -110,7 +110,7 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 
 		for(Map<String,Object> map : resultList){
 			if(map.get("gender") != null){
-				map.put("gender", GenderUtils.intToChar((Integer)(map.get("gender"))));
+				map.put("gender", map.get("gender"));
 			}
 		}
 		if(resultList != null && resultList.size() > 0){
