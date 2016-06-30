@@ -59,7 +59,14 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
 	public BaseOutput audienceByName(String userToken,String audience_type,int audience_id,String audience_name,Integer size,Integer index) {
-	    
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+				ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO,null);
+
+		if(audience_name == null || "".equals(audience_name)){
+			return result;
+		}
+
 		AudienceList param = new AudienceList();
 		param.setPageSize(size);
 		param.setStartIndex((index-1)*size);
@@ -69,10 +76,7 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 		List<Integer> idList=new ArrayList<Integer>();
 
 		List<Integer> partyIdList=new ArrayList<Integer>();
-		
-		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
-		                   ApiErrorCode.SUCCESS.getMsg(),
-		                   ApiConstant.INT_ZERO,null);
+
 		List<Map<String,Object>> resultList = null;
 				
 		if(audience_type.equals("0")){		    
