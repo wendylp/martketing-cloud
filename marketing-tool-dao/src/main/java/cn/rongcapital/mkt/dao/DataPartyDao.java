@@ -92,7 +92,7 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @author xukun
 	 * @return map
 	 */
-    List<Map<String,Object>> selectListByNameInList(List<Integer> idList,String audience_name);
+    List<Map<String,Object>> selectListByNameInList(Map<String,Object> paramMap);
 
     
 	/**

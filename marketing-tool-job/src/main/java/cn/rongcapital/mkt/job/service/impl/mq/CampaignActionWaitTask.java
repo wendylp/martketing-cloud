@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -102,23 +103,26 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 								  Integer campaignHeadId,String itemId,List<CampaignSwitch> campaignEndsList,
 								  Byte realativeType,Integer relativeValue,Date specificTime) {
 		String queueKey = campaignHeadId+"-"+itemId;
+		List<Segment> segmentListToNext = new ArrayList<Segment>();
 		for(Segment segment:segmentList) {
-			NodeAudience nodeAudience = new NodeAudience();
-			nodeAudience.setCampaignHeadId(campaignHeadId);
-			nodeAudience.setItemId(itemId);
-			nodeAudience.setDataId(segment.getDataId());
-			nodeAudience.setName(segment.getName());
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				NodeAudience nodeAudience = new NodeAudience();
+				nodeAudience.setCampaignHeadId(campaignHeadId);
+				nodeAudience.setItemId(itemId);
+				nodeAudience.setDataId(segment.getDataId());
+				nodeAudience.setName(segment.getName());
+				nodeAudience.setStatus(0);
 				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+				segmentListToNext.add(segment);
 			}
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 			for(CampaignSwitch cs:campaignEndsList) {
 				Runnable task = new Runnable() {
 					public void run() {
-						sendDynamicQueue(segmentList, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
-						deleteNodeAudience(campaignHeadId,itemId,segmentList);
-						logger.info(queueKey+"-out:"+JSON.toJSONString(segmentList));
+						sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+						logicDeleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
+						logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListToNext));
 					}
 				};
 				ScheduledFuture<?> scheduledFuture = null;
@@ -147,7 +151,7 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 					scheduledFuture = taskSchedule.schedule(task, specificTime);
 				}
 				if(null != scheduledFuture) {
-					waitTaskMap.put(cs.getCampaignHeadId()+"-"+cs.getNextItemId()+"-"+System.currentTimeMillis()+"-"+segmentList.hashCode(), scheduledFuture);
+					waitTaskMap.put(cs.getCampaignHeadId()+"-"+cs.getNextItemId()+"-"+System.currentTimeMillis()+"-"+segmentListToNext.hashCode(), scheduledFuture);
 				}
 			}
 		}

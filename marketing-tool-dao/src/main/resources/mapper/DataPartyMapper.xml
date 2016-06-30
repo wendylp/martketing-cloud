@@ -165,7 +165,7 @@
 	
 	<!-- 模糊查询 -->
 	<select id="selectListByKeyName" parameterType="java.lang.String" resultType="java.util.Map">
-		<![CDATA[SELECT name,gender,mobile,(year(now())-year(birthday)-1) + ( DATE_FORMAT(birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age]]>		
+		<![CDATA[SELECT id,name,gender,mobile,(year(now())-year(birthday)-1) + ( DATE_FORMAT(birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age]]>
 		<include refid="QUERY_FROM_TABLE"/>		
 		<where>	
 			(mobile like #{audience_name} OR name like #{audience_name}) and status=0
@@ -174,10 +174,11 @@
 	
 	<select id="selectListByNameInList" parameterType="java.util.Map" resultType="java.util.Map">
 		<![CDATA[SELECT name,gender,mobile,(year(now())-year(birthday)-1) + ( DATE_FORMAT(birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age]]>		
-		<include refid="QUERY_FROM_TABLE"/>		
-		<where>	
-			(mobile like #{key_words} OR name like #{key_words}) and status=0
-		</where>				
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE mobile like #{key_word} OR name like #{key_word} and status=0 AND id in
+		<foreach collection="partyIdList" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
 	</select>
 	
 
