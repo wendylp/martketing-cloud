@@ -28,10 +28,10 @@ public class DataDownloadQualityLogServiceImpl implements DataDownloadQualityLog
 
         ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
         paramImportDataModifyLog.setImportDataId(importDataId);
+        paramImportDataModifyLog.setPageSize(0);
 
         List<ImportDataModifyLog> importDataModifyLogs = importDataModifyLogDao.selectList(paramImportDataModifyLog);
         List<String> columnNames = importDataModifyLogDao.selectColumns();
-
 
         File file = FileUtil.generateFileforDownload(FileUtil.transferNameListtoMap(columnNames), importDataModifyLogs,
                         FileNameEnum.IMPORT_DATA_MODIFY_LOG.getDetailName());

@@ -180,7 +180,7 @@
 			#{item.mobile},
 			#{item.name},
 			#{item.gender},
-			#{item.birthday},
+			#{item.birthday,jdbcType=DATE},
 			#{item.provice},
 			#{item.city},
 			#{item.job},

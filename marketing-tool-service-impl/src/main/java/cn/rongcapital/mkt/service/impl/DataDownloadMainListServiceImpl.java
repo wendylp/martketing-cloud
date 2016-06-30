@@ -104,6 +104,7 @@ public class DataDownloadMainListServiceImpl implements DataDownloadMainListServ
         List<T> dataList = dao.selectList(null);
         ImportTemplate paramImportTemplate = new ImportTemplate();
         paramImportTemplate.setTemplType(dataType);
+        paramImportTemplate.setPageSize(0);
         List<ImportTemplate> importTemplates = importTemplateDao.selectList(paramImportTemplate);
         List<Map<String, String>> columnsMap = transferNameListtoMap(importTemplates);
 
@@ -113,7 +114,7 @@ public class DataDownloadMainListServiceImpl implements DataDownloadMainListServ
     }
 
     // 用于转换ImportTemplate,转换后map的key为字段名,value为对应的中文名
-    private List<Map<String, String>> transferNameListtoMap(List<ImportTemplate> importTemplates) {
+    public static List<Map<String, String>> transferNameListtoMap(List<ImportTemplate> importTemplates) {
         List<Map<String, String>> columnNamesMap = new ArrayList<>();
         if (CollectionUtils.isEmpty(importTemplates)) {
             Map<String, String> emptyMap = new HashMap<>();

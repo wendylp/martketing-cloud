@@ -61,6 +61,7 @@ import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.DataDeleteMainService;
 import cn.rongcapital.mkt.service.DataDownloadMainListService;
+import cn.rongcapital.mkt.service.DataDownloadQualityIllegalDataService;
 import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
@@ -109,6 +110,7 @@ import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagCountService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
+import cn.rongcapital.mkt.service.TagDownloadCustomAudienceService;
 import cn.rongcapital.mkt.service.TagGetCustomService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
@@ -120,12 +122,12 @@ import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
+import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
 import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
 import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -295,7 +297,6 @@ public class MktApi {
     @Autowired
     private AudienceSearchService audienceSearchService;
     
-
     @Autowired
     private AudienceListDeleteService audienceListDeleteService;
 
@@ -343,14 +344,12 @@ public class MktApi {
 
     @Autowired
     private CustomTagDeleteService customTagDeleteService;
-    
 
     @Autowired
     private MainActionInfoGetService mainActionInfoGetService;
 
     @Autowired
     private SegmentTagGetService segmentTagGetService;
-    
     
     @Autowired
     private SegmentFilterGetService segmentFilterGetService;
@@ -432,6 +431,14 @@ public class MktApi {
 
 	@Autowired
 	private WechatAssetMemberSearchService wechatAssetMemberSearchService;
+	
+	@Autowired
+	private TagDownloadCustomAudienceService tagDownloadCustomAudienceService;
+	
+	@Autowired
+	private DataDownloadQualityIllegalDataService dataDownloadQualityIllegalDataService;
+	
+	
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -775,7 +782,7 @@ public class MktApi {
 	/**
      * @功能简述: 获取数据质量列表
      * @author nianjun
-     * @param: String method, String userToken, String ver, Ingeger index, Integer size
+     * @param: String method, String userToken, String ver, Integer index, Integer size
      * @return: Object
      */
 	@GET
@@ -835,7 +842,7 @@ public class MktApi {
 
 	/**
      * @功能简述 : 获取主数据列表
-     * @param: String method, String userToken, String ver, Ingeger index, Integer size
+     * @param: String method, String userToken, String ver, Integer index, Integer size
      * @return: Object
      */
     @GET
@@ -1331,7 +1338,7 @@ public class MktApi {
 	
 	/**
      * @功能简述 : 获取自定义标签列表
-     * @param: String method, String userToken, Ingeger index, Integer size
+     * @param: String method, String userToken, Integer index, Integer size
      * @return: Object
      */
     @GET
@@ -1346,7 +1353,7 @@ public class MktApi {
 
     /**
      * @功能简述 : 删除某个自定义标签
-     * @param: String method, String userToken, Ingeger tag_id
+     * @param: String method, String userToken, Integer tag_id
      * @return: Object
      */
     @POST
@@ -1357,6 +1364,33 @@ public class MktApi {
         return customTagDeleteService.deleteCustomTag(body);
     }
 
+    /**
+     * @功能简述 : 根据自定义标签下载覆盖的人群
+     * @param: String userToken, Integer tag_id
+     * @return: Object
+     */
+    @GET
+    @Path("mkt.tag.custom.audience.download")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput downloadCustomAudience(@NotEmpty @QueryParam("method") String method,
+                    @NotNull @QueryParam("tag_id") Integer tagId) {
+        return tagDownloadCustomAudienceService.downloadCustomAudience(tagId);
+    }
+
+    /**
+     * @功能简述 : 下载非法数据
+     * @param: String userToken, Integer batchId
+     * @return: Object
+     */
+    @GET
+    @Path("mkt.data.quality.illegaldata.download")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput downloadIllegalData(@NotEmpty @QueryParam("method") String method,
+                    @NotNull @QueryParam("batch_id") Long batchId) {
+        return dataDownloadQualityIllegalDataService.downloadIllegalData(batchId);
+    }
+
+    
     /**
 	 * @功能简述: 获取受众细分关联的tag
 	 * @param userToken
@@ -1664,7 +1698,7 @@ public class MktApi {
 	public BaseOutput wechatAssetMemberSearch(@NotEmpty @QueryParam("user_token") String userToken,
 											  @NotEmpty @QueryParam("ver") String ver,
 											  @NotEmpty @QueryParam("group_ids") String groupIds,
-											  @NotEmpty @QueryParam("search_field") String searchField){
+											  @QueryParam("search_field") String searchField){
 		return wechatAssetMemberSearchService.searchWechatAssetMember(groupIds,searchField);
 	}
 }

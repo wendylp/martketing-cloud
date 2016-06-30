@@ -66,6 +66,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 						nodeAudience.setItemId(itemId);
 						nodeAudience.setDataId(segement.getDataId());
 						nodeAudience.setName(segement.getName());
+						nodeAudience.setStatus(0);
 						segmentListUnique.add(segement);
 						//把segment保存到mongo中的node_audience表
 						mongoTemplate.insert(nodeAudience);
@@ -76,7 +77,8 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 				for(CampaignSwitch cs:campaignEndsList) {
 					//发送segment数据到后面的节点
 					sendDynamicQueue(segmentListUnique, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
-					deleteNodeAudience(campaignHeadId,itemId,segmentListUnique);
+					//逻辑删除传递走的数据
+					logicDeleteNodeAudience(campaignHeadId,itemId,segmentListUnique);
 					logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListUnique));
 				}
 			}

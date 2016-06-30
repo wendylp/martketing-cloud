@@ -28,6 +28,18 @@ public class NodeAudience implements Serializable {
 	@Field(value = "name")
 	private String name;
 	
+	//逻辑删除标记,0:未删除,1:已删除
+	@Field(value = "status")
+	private Integer status;
+	
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 	public String getId() {
 		return id;
 	}

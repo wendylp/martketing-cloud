@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -78,22 +79,23 @@ public class FileUtil {
      * 根据PO类型,文件名生成下载的文件 Map的key为数据库字段值,value为对应的字段名
      * 
      * @author nianjun
-     * @param poList
+     * @param dataList
      * @param fileName
      * @return
      */
 
     // 如果调用该方法生成文件 , 也得用反射的方式把数据存入对象中并update数据库
-    public static <E> File generateFileforDownload(List<Map<String, String>> columnNames, List<E> poList,
+    public static <E> File generateFileforDownload(List<Map<String, String>> columnNames, List<E> dataList,
                     String fileName) {
         StringBuilder pathNameBuilder = new StringBuilder();
         // 当前日期
-        DateTime today = DateTime.now();
+//        DateTime today = DateTime.now();
         // pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName).append("_")
         pathNameBuilder.append("/Users/nianjun/Work/logs/").append(fileName).append("_")
-                        .append(today.toString(ApiConstant.DATE_FORMAT_yyyy_MM_dd)).append(FILE_SUFFIX);
+                        // .append(today.toString(ApiConstant.DATE_FORMAT_yyyy_MM_dd)).append(FILE_SUFFIX);
+                        .append(RandomStringUtils.randomAlphanumeric(5)).append("_").append(FILE_SUFFIX);
         File file = new File(pathNameBuilder.toString());
-        return generateFile(columnNames, poList, file);
+        return generateFile(columnNames, dataList, file);
     }
 
     private static <E> File generateFile(List<Map<String, String>> columnNames, List<E> poList, File file) {

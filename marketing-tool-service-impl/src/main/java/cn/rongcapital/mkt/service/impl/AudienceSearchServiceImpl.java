@@ -10,9 +10,11 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.common.util.GenderUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,11 +84,13 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 		    //1.根据人群ID查出联系人ID列表		    
 		    idList.add(audience_id);
 		    List<AudienceListPartyMap> cols=audienceListPartyMapDao.selectListByIdList(idList);
-		    for(AudienceListPartyMap col : cols){
-		        partyIdList.add(col.getPartyId());
-		    }
+			if(cols != null && cols.size() > 0){
+				for(AudienceListPartyMap col : cols){
+					partyIdList.add(col.getPartyId());
+				}
+			}
 		    //2.在联系人中查找名字匹配的
-		    resultList=dataPartyDao.selectListByNameInList(partyIdList,audience_name);
+			resultList = SearchAudienceByName(audience_name, partyIdList, resultList);
 		}else if(audience_type.equals("2")){
             //自定义标签:在人群中查找
             //1.根据自定义标签ID查出人群ID列表 
@@ -94,21 +98,37 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
             tagmap.setId(audience_id);            
             
             List<CustomTagMap> cols=customTagMapDao.selectList(tagmap);
-            
-            for(CustomTagMap col : cols){
-                partyIdList.add(col.getMapId());
-            }
-            
-            //2.在人群(自定义标签)中查找名字匹配的
-            resultList=dataPartyDao.selectListByNameInList(partyIdList,audience_name);
-        }
+            if(cols != null && cols.size() > 0){
+				for(CustomTagMap col : cols){
+					partyIdList.add(col.getMapId());
+				}
+			}
 
+            //2.在人群(自定义标签)中查找名字匹配的
+			resultList = SearchAudienceByName(audience_name, partyIdList, resultList);
+		}
+
+		for(Map<String,Object> map : resultList){
+			if(map.get("gender") != null){
+				map.put("gender", GenderUtils.intToChar((Integer)(map.get("gender"))));
+			}
+		}
 		if(resultList != null && resultList.size() > 0){
 			result.getData().addAll(resultList);
 		}
 		result.setTotal(result.getData().size());
 		
 		return result;
+	}
+
+	private List<Map<String, Object>> SearchAudienceByName(String audience_name, List<Integer> partyIdList, List<Map<String, Object>> resultList) {
+		if(partyIdList.size() != 0){
+            Map<String,Object> paramMap = new HashMap<String,Object>();
+            paramMap.put("partyIdList",partyIdList);
+            paramMap.put("key_word",audience_name);
+            resultList=dataPartyDao.selectListByNameInList(paramMap);
+        }
+		return resultList;
 	}
 
 }
