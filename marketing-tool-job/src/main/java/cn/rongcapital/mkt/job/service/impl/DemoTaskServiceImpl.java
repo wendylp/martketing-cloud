@@ -31,10 +31,6 @@ public class DemoTaskServiceImpl implements TaskService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	public static void main(String[] args) {
-		System.out.println(Calendar.getInstance().getTime().toString());
-	}
-	
 	@Override
 	public void task(Integer taskId) {
 		test();
@@ -71,7 +67,7 @@ public class DemoTaskServiceImpl implements TaskService {
 			try {
 				PostMethod postResult = HttpClientUtil.getInstance().postExt(httpUrl);
 				String postResStr = postResult.getResponseBodyAsString();
-				System.out.println(postResStr);
+				logger.info(postResStr);
 				Integer taskId = JSON.parseObject(postResStr).getJSONObject("hfive_mkt_pub_send_response").getInteger("task_id");
 			} catch (Exception e) {
 				e.printStackTrace();
