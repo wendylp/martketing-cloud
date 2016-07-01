@@ -3,8 +3,10 @@ package cn.rongcapital.mkt.job.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -35,6 +37,7 @@ import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.DataPayment;
 import cn.rongcapital.mkt.po.DataPopulation;
 import cn.rongcapital.mkt.po.DataShopping;
+import org.springframework.util.CollectionUtils;
 
 //同步数据至Mongodb
 
@@ -77,48 +80,49 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
 	public void task(Integer taskId) {
 	    		
 	    //1.从mysql data_party表中读取所有mid,keyid
-	    DataParty dataParty=new DataParty();	    
+	    DataParty dataParty=new DataParty();
+        dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode());
 	    
 	    //分批读出
-	    List<DataParty> datapartyList=dataPartyDao.selectList(dataParty); 
+	    List<DataParty> datapartyList=dataPartyDao.selectList(dataParty);
+        if (CollectionUtils.isEmpty(datapartyList)) {
+            return;
+        }
 	    
 	    //2.根据keyid在data_xxx表中查出所有字段插入mongodb data_party表中
-	    for(DataParty data_party : datapartyList){
-	        
-	        Integer data_type=data_party.getMdType();
-	        String keyid=data_party.getMappingKeyid();
-	        
-	        add2Mongo(data_type,keyid);
-	        
+        List<Integer> dataPartyIdList = new ArrayList<>();
+	    for(DataParty tempDataParty : datapartyList){
+
+            dataPartyIdList.add(tempDataParty.getId());
+	        add2Mongo(tempDataParty.getMdType(), tempDataParty.getMappingKeyid());
 	    }
 
+        dataPartyDao.updateStatusByIds(dataPartyIdList, StatusEnum.PROCESSED.getStatusCode());
 	}
 	
-	private void add2Mongo(int data_type,String keyid){
+	private void add2Mongo(int dataType,String keyid){
 	    
 	    String collection="data_party";
 	    
 	    //批量插入
-	    if(data_type==1){
+	    if(dataType==1){
 	        
 	        DataPopulation data=new DataPopulation();
 	        data.setId(Integer.parseInt(keyid));
 	        
 	        List<DataPopulation> dataList=dataPopulationDao.selectList(data);
-	        
 	        //insert into mongodb
 	        for(DataPopulation dataObj : dataList){
-	            
 	            dataObj.setMid(keyid);
 	            dataObj.setMd_type("1");
 	            dataObj.setMapping_keyid(dataObj.getId()+"");
-	            
-	            mongoTemplate.insert(dataObj,collection);
-	            
+                cn.rongcapital.mkt.po.mongodb.DataPopulation mongoDataPopulation =
+                        new cn.rongcapital.mkt.po.mongodb.DataPopulation();
+                BeanUtils.copyProperties(dataObj, mongoDataPopulation);
+                mongoTemplate.insert(mongoDataPopulation, collection);
 	        }
-	        	        
-	        
-	    }else if(data_type==2){
+
+	    }else if(dataType==2){
 	        
 	        DataCustomerTags data=new DataCustomerTags();
             data.setId(Integer.parseInt(keyid));
@@ -130,10 +134,13 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 dataObj.setMid(keyid);
                 dataObj.setMd_type("2");
                 dataObj.setMapping_keyid(dataObj.getId()+"");
-                mongoTemplate.insert(dataObj,collection);
+                cn.rongcapital.mkt.po.mongodb.DataCustomerTags mongoDataCustomerTags =
+                        new cn.rongcapital.mkt.po.mongodb.DataCustomerTags();
+                BeanUtils.copyProperties(dataObj, mongoDataCustomerTags);
+                mongoTemplate.insert(mongoDataCustomerTags,collection);
             }
 	        
-	    }else if(data_type==3){
+	    }else if(dataType==3){
 	        
 	        DataArchPoint data=new DataArchPoint();
             data.setId(Integer.parseInt(keyid));
@@ -145,9 +152,12 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 dataObj.setMid(keyid);
                 dataObj.setMd_type("3");
                 dataObj.setMapping_keyid(dataObj.getId()+"");
-                mongoTemplate.insert(dataObj,collection);
+                cn.rongcapital.mkt.po.mongodb.DataArchPoint mongoDataArchPoint =
+                        new cn.rongcapital.mkt.po.mongodb.DataArchPoint();
+                BeanUtils.copyProperties(dataObj, mongoDataArchPoint);
+                mongoTemplate.insert(mongoDataArchPoint,collection);
             }
-        }else if(data_type==4){
+        }else if(dataType==4){
             
             DataMember data=new DataMember();
             data.setId(Integer.parseInt(keyid));
@@ -159,9 +169,12 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 dataObj.setMid(keyid);
                 dataObj.setMd_type("4");
                 dataObj.setMapping_keyid(dataObj.getId()+"");
-                mongoTemplate.insert(dataObj,collection);
+                cn.rongcapital.mkt.po.mongodb.DataMember mongoDataMember =
+                        new cn.rongcapital.mkt.po.mongodb.DataMember();
+                BeanUtils.copyProperties(dataObj, mongoDataMember);
+                mongoTemplate.insert(mongoDataMember,collection);
             }
-        }else if(data_type==5){
+        }else if(dataType==5){
             
             DataLogin data=new DataLogin();
             data.setId(Integer.parseInt(keyid));
@@ -173,9 +186,12 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 dataObj.setMid(keyid);
                 dataObj.setMd_type("5");
                 dataObj.setMapping_keyid(dataObj.getId()+"");
-                mongoTemplate.insert(dataObj,collection);
+                cn.rongcapital.mkt.po.mongodb.DataLogin mongoDataLogin =
+                        new cn.rongcapital.mkt.po.mongodb.DataLogin();
+                BeanUtils.copyProperties(dataObj, mongoDataLogin);
+                mongoTemplate.insert(mongoDataLogin,collection);
             }
-        }else if(data_type==6){
+        }else if(dataType==6){
             
             DataPayment data=new DataPayment();
             data.setId(Integer.parseInt(keyid));
@@ -187,9 +203,12 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 dataObj.setMid(keyid);
                 dataObj.setMd_type("6");
                 dataObj.setMapping_keyid(dataObj.getId()+"");
-                mongoTemplate.insert(dataObj,collection);
+                cn.rongcapital.mkt.po.mongodb.DataPayment mongoDataPayment =
+                        new cn.rongcapital.mkt.po.mongodb.DataPayment();
+                BeanUtils.copyProperties(dataObj, mongoDataPayment);
+                mongoTemplate.insert(mongoDataPayment,collection);
             }
-        }else if(data_type==7){
+        }else if(dataType==7){
             
             DataShopping data=new DataShopping();
             data.setId(Integer.parseInt(keyid));
@@ -201,7 +220,10 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 dataObj.setMid(keyid);
                 dataObj.setMd_type("7");
                 dataObj.setMapping_keyid(dataObj.getId()+"");
-                mongoTemplate.insert(dataObj,collection);
+                cn.rongcapital.mkt.po.mongodb.DataShopping mongoDataShopping =
+                        new cn.rongcapital.mkt.po.mongodb.DataShopping();
+                BeanUtils.copyProperties(dataObj, mongoDataShopping);
+                mongoTemplate.insert(mongoDataShopping,collection);
             }
         }else{
             ;

@@ -118,4 +118,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      */
 	int batchInsert(@Param("list") List<DataParty> list);
 
+    /**
+     * 批量更新数据状态
+     * @param idList
+     * @return
+     */
+    int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
+
 }
