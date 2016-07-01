@@ -116,13 +116,16 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 						dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
 					String pubId = campaignActionSendH5.getPubId();
 					Integer materialId = campaignActionSendH5.getMaterialId();
-					boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,dp.getMappingKeyid());
-					String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
-					if(isPubSent) {//公众号执行了发送动作
-						segment.setPubId(campaignActionSendH5.getPubId());
-						segment.setH5MobileUrl(h5MobileUrl);
-						segment.setMaterialId(campaignActionSendH5.getMaterialId());
-						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+					boolean isFans = isPubWechatFans(segment, pubId, null);
+					if(isFans) {
+						boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,dp.getMappingKeyid());
+						if(isPubSent) {//公众号执行了发送动作
+							segment.setPubId(campaignActionSendH5.getPubId());
+							String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
+							segment.setH5MobileUrl(h5MobileUrl);
+							segment.setMaterialId(campaignActionSendH5.getMaterialId());
+							segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+						}
 					}
 				}
 			}
