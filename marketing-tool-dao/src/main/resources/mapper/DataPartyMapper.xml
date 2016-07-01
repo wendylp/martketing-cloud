@@ -94,6 +94,34 @@
 			)
 		]]>
 	</insert>
+
+	<insert id="batchInsert">
+        INSERT INTO data_party (mobile,name,gender,birthday,provice,city,job,monthly_income,
+            member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,mid,md_type,mapping_keyid)
+        VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			  #{item.mobile},
+              #{item.name},
+              #{item.gender},
+              #{item.birthday},
+              #{item.provice},
+              #{item.city},
+              #{item.job},
+              #{item.monthlyIncome},
+              #{item.memberLevel},
+              #{item.memberPoints},
+              #{item.source},
+              #{item.monthlyConsume},
+              #{item.lastLogin},
+              now(),
+              #{item.batchId},
+              #{item.mid},
+              #{item.mdType},
+              #{item.mappingKeyid}
+			)
+		</foreach>
+	</insert>
 	
 	<!-- 返回插入的编号,在事务开启状态下有效 -->
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>

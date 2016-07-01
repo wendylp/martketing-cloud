@@ -26,7 +26,7 @@ public class DataParty extends BaseQuery {
 
     private String memberLevel;
 
-    private Integer memberPoints;
+    private String memberPoints;
 
     private String source;
 
@@ -34,7 +34,7 @@ public class DataParty extends BaseQuery {
 
     private Date lastLogin;
 
-    private Boolean status;
+    private Integer status;
 
     private Date createTime;
 
@@ -134,11 +134,11 @@ public class DataParty extends BaseQuery {
         this.memberLevel = memberLevel == null ? null : memberLevel.trim();
     }
 
-    public Integer getMemberPoints() {
+    public String getMemberPoints() {
         return memberPoints;
     }
 
-    public void setMemberPoints(Integer memberPoints) {
+    public void setMemberPoints(String memberPoints) {
         this.memberPoints = memberPoints;
     }
 
@@ -166,11 +166,11 @@ public class DataParty extends BaseQuery {
         this.lastLogin = lastLogin;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

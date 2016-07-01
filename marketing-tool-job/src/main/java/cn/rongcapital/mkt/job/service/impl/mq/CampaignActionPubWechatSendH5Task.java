@@ -1,7 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.jms.Message;
@@ -11,12 +10,10 @@ import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -25,8 +22,6 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.util.HttpClientUtil;
-import cn.rongcapital.mkt.common.util.HttpUrl;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -48,9 +43,6 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 	private CampaignActionSendPubDao campaignActionSendPubDao;
 	@Autowired
 	private ImgTextAssetDao imgTextAssetDao;
-	
-	@Value("${runxue.h5.api.base.url}")
-	private String h5BaseUrl;
 	
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -125,7 +117,9 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 						StringUtils.isNotBlank(dp.getMappingKeyid()) &&
 						dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
 					//调用微信公众号发送图文接口
-					boolean isSent = sendWechatByH5Interface(campaignActionSendPub,dp.getMappingKeyid());
+					String pubId = campaignActionSendPub.getPubId();
+					Integer materialId = campaignActionSendPub.getMaterialId();
+					boolean isSent = sendPubWechatByH5Interface(pubId,materialId,dp.getMappingKeyid());
 					if(isSent) {
 						String h5MobileUrl = getH5MobileUrl(campaignActionSendPub.getImgTextAssetId());
 						segment.setPubId(campaignActionSendPub.getPubId());
@@ -159,41 +153,6 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 		
 	}
 	
-	/**
-	 * 
-	 * @param campaignActionSendH5
-	 * @param fansWeixinId
-	 * @return 任务id
-	 */
-	private boolean sendWechatByH5Interface(CampaignActionSendPub campaignActionSendPub,String fansWeixinId) {
-		boolean isSent = false;
-		HttpUrl httpUrl = new HttpUrl();
-		httpUrl.setHost(h5BaseUrl);
-		httpUrl.setPath(ApiConstant.DL_PUB_SEND_API_PATH+getPid());
-		HashMap<Object , Object> params = new HashMap<Object , Object>();
-		params.put("pub_id", campaignActionSendPub.getPubId());
-		List<String> fansWeixinIds = new ArrayList<String>();
-		fansWeixinIds.add(fansWeixinId);
-		params.put("fans_weixin_ids",fansWeixinIds);
-		params.put("message_type","news");
-		params.put("material_id",campaignActionSendPub.getMaterialId());
-		httpUrl.setRequetsBody(JSON.toJSONString(params));
-		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
-		try {
-			PostMethod postResult = HttpClientUtil.getInstance().postExt(httpUrl);
-			String postResStr = postResult.getResponseBodyAsString();
-			String status = JSON.parseObject(postResStr).getJSONObject("hfive_mkt_pub_send_response").getString("status");
-			if(StringUtils.isNotBlank(status) && status.equalsIgnoreCase("true")) {
-				isSent = true;
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
-			isSent = false;
-		}
-		return isSent;
-	}
-	
-
 //	public static void main(String[] args) {
 //		HttpUrl httpUrl = new HttpUrl();
 //		httpUrl.setHost("test.h5plus.net");

@@ -17,7 +17,7 @@ public class TaskSchedule extends BaseQuery {
 
     private Date endTime;
 
-    private Integer intervalMinutes;
+    private Float intervalMinutes;
 
     private String schedule;
 
@@ -83,11 +83,11 @@ public class TaskSchedule extends BaseQuery {
         this.endTime = endTime;
     }
 
-    public Integer getIntervalMinutes() {
+    public Float getIntervalMinutes() {
         return intervalMinutes;
     }
 
-    public void setIntervalMinutes(Integer intervalMinutes) {
+    public void setIntervalMinutes(Float intervalMinutes) {
         this.intervalMinutes = intervalMinutes;
     }
 

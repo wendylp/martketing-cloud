@@ -16,6 +16,7 @@ import java.util.Map;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataPopulation;
+import org.apache.ibatis.annotations.Param;
 
 public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilterDao<DataPopulation>{
 	
@@ -44,5 +45,12 @@ public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilt
      * @author xukun
      */
     void cleanAndUpdateByOriginal(Map<String, List<DataPopulation>> paramMap);
+
+    /**
+     * 批量更新数据状态
+     * @param idList
+     * @return
+     */
+	int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
     
 }

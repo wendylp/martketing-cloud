@@ -34,7 +34,7 @@ public class DateUtil {
     /**
      * 将时间转化为字符串
      * 
-     * @param dateString
+     * @param date,format
      * @param format
      * @return
      */
@@ -45,5 +45,17 @@ public class DateUtil {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         String result = sdf.format(date);
         return result;
+    }
+
+    public static Date parseTimeInUploadFile(String timeInUploadFile) {
+        if(timeInUploadFile.length() == "yyyy-MM-dd".length()){
+            return DateUtil.getDateFromString(timeInUploadFile,"yyyy-MM-dd");
+        }else if(timeInUploadFile.length() == "yyyy-MM-ddHH:mm".length()){
+            return DateUtil.getDateFromString(timeInUploadFile,"yyyy-MM-ddHH:mm");
+        }else if(timeInUploadFile.length() == "yyyy-MM-ddHH:mm:ss".length()){
+            return  DateUtil.getDateFromString(timeInUploadFile,"yyyy-MM-ddHH:mm:ss");
+        }
+
+        return null;
     }
 }

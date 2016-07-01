@@ -9,7 +9,7 @@ public class OriginalDataLogin extends BaseQuery {
 
     private String loginType;
 
-    private String loginTime;
+    private Date loginTime;
 
     private Date logoutTime;
 
@@ -45,7 +45,7 @@ public class OriginalDataLogin extends BaseQuery {
 
     private String phoneMac;
 
-    private Boolean status;
+    private Integer status;
 
     private Date createTime;
 
@@ -73,12 +73,12 @@ public class OriginalDataLogin extends BaseQuery {
         this.loginType = loginType == null ? null : loginType.trim();
     }
 
-    public String getLoginTime() {
+    public Date getLoginTime() {
         return loginTime;
     }
 
-    public void setLoginTime(String loginTime) {
-        this.loginTime = loginTime == null ? null : loginTime.trim();
+    public void setLoginTime(Date loginTime) {
+        this.loginTime = loginTime;
     }
 
     public Date getLogoutTime() {
@@ -217,11 +217,11 @@ public class OriginalDataLogin extends BaseQuery {
         this.phoneMac = phoneMac == null ? null : phoneMac.trim();
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

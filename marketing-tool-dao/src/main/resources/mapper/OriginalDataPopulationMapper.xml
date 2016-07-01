@@ -204,7 +204,7 @@
 			#{item.imei},
 			#{item.udid},
 			#{item.phone_mac},
-			#{item.create_time},
+			#{item.create_time,jdbcType=DATE},
 			#{item.source},
 			#{item.file_unique},
 			#{item.batch_id}

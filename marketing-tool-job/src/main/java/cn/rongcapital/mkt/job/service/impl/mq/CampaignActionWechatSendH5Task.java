@@ -1,7 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.jms.Message;
@@ -11,12 +10,10 @@ import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -25,8 +22,6 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.util.HttpClientUtil;
-import cn.rongcapital.mkt.common.util.HttpUrl;
 import cn.rongcapital.mkt.dao.CampaignActionSendH5Dao;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -40,7 +35,6 @@ import cn.rongcapital.mkt.po.mongodb.Segment;
 
 /**
  * 发送H5活动节点,由于大连接口不支持个人号发送H5,修改为个人号发送H5的链接
- * @author Jason
  *
  */
 @Service
@@ -53,9 +47,6 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 	private CampaignActionSendH5Dao campaignActionSendH5Dao;
 	@Autowired
 	private ImgTextAssetDao imgTextAssetDao;
-	
-	@Value("${runxue.h5.api.base.url}")
-	private String h5BaseUrl;
 	
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -70,8 +61,9 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 		List<CampaignActionSendH5> campaignActionSendH5List = campaignActionSendH5Dao.selectList(campaignActionSendH5T);
 		if(CollectionUtils.isEmpty(campaignActionSendH5List) ||
 		   StringUtils.isBlank(campaignActionSendH5List.get(0).getPubId()) || 
-		   null == campaignActionSendH5List.get(0).getMaterialId()) {
-			logger.error("没有配置公众号和图文属性,return,campaignHeadId:"+campaignHeadId+",itemId:"+itemId);
+		   null == campaignActionSendH5List.get(0).getMaterialId() ||
+		   StringUtils.isBlank(campaignActionSendH5List.get(0).getUin())) {
+			logger.error("没有配置公众号或个人号属性,return,campaignHeadId:"+campaignHeadId+",itemId:"+itemId);
 			return;
 		}
 		CampaignActionSendH5 campaignActionSendH5 = campaignActionSendH5List.get(0);
@@ -130,7 +122,9 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 						StringUtils.isNotBlank(dp.getMappingKeyid()) &&
 						dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
 					//调用微信公众号发送图文接口
-					boolean isSent = sendWechatByH5Interface(campaignActionSendH5,dp.getMappingKeyid());
+					String pubId = campaignActionSendH5.getPubId();
+					Integer materialId = campaignActionSendH5.getMaterialId();
+					boolean isSent = sendPubWechatByH5Interface(pubId,materialId,dp.getMappingKeyid());
 					if(isSent) {
 						String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
 						segment.setPubId(campaignActionSendH5.getPubId());
@@ -161,44 +155,8 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 			h5Url = imgTextAssetList.get(0).getMobilePreviewUrl();
 		}
 		return h5Url;
-		
 	}
 	
-	/**
-	 * 
-	 * @param campaignActionSendH5
-	 * @param fansWeixinId
-	 * @return 任务id
-	 */
-	private boolean sendWechatByH5Interface(CampaignActionSendH5 campaignActionSendH5,String fansWeixinId) {
-		boolean isSent = false;
-		HttpUrl httpUrl = new HttpUrl();
-		httpUrl.setHost(h5BaseUrl);
-		httpUrl.setPath(ApiConstant.DL_PUB_SEND_API_PATH+getPid());
-		HashMap<Object , Object> params = new HashMap<Object , Object>();
-		params.put("pub_id", campaignActionSendH5.getPubId());
-		List<String> fansWeixinIds = new ArrayList<String>();
-		fansWeixinIds.add(fansWeixinId);
-		params.put("fans_weixin_ids",fansWeixinIds);
-		params.put("message_type","news");
-		params.put("material_id",campaignActionSendH5.getMaterialId());
-		httpUrl.setRequetsBody(JSON.toJSONString(params));
-		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
-		try {
-			PostMethod postResult = HttpClientUtil.getInstance().postExt(httpUrl);
-			String postResStr = postResult.getResponseBodyAsString();
-			String status = JSON.parseObject(postResStr).getJSONObject("hfive_mkt_pub_send_response").getString("status");
-			if(StringUtils.isNotBlank(status) && status.equalsIgnoreCase("true")) {
-				isSent = true;
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
-			isSent = false;
-		}
-		return isSent;
-	}
-	
-
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
 		super.cancelCampaignInnerTask(taskSchedule);
 	}

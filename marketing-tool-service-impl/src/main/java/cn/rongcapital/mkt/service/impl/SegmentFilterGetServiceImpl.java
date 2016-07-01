@@ -6,10 +6,6 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
-import heracles.data.common.annotation.ReadWrite;
-import heracles.data.common.util.ReadWriteType;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,13 +22,13 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-
 import cn.rongcapital.mkt.po.mongodb.DataParty;
-import cn.rongcapital.mkt.po.mongodb.Tag;
 import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCondition;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 
 
 @Service
