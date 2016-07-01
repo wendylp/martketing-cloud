@@ -5,6 +5,8 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.FileTemplateDownloadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.DownloadFileName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
@@ -17,6 +19,8 @@ import java.util.zip.ZipOutputStream;
  */
 @Service
 public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public Object downloadFileTemplate(String templateIdList) {
@@ -65,10 +69,12 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
     private void executeCommand(String command) {
         Process p;
         try {
+            logger.debug("zipCommand: " + command);
             p = Runtime.getRuntime().exec(command);
             p.waitFor();
         } catch (Exception e) {
             e.printStackTrace();
+            logger.debug(e.getMessage());
         }
     }
 }
