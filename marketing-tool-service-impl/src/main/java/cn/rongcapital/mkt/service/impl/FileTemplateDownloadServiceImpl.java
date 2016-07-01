@@ -31,7 +31,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
         String generateFileSimpleName = System.currentTimeMillis() + "template.zip";
         String generateFileName = ApiConstant.DOWNLOAD_BASE_DIR + generateFileSimpleName;  //正式文件
 //        String generateFileName = System.currentTimeMillis() + "template.zip";   //测试文件
-        String command = "tar -zcvPf " + generateFileName + " ";
+        String command = "/rc/marketcloudsrv/zipTempelete.sh ";
         File file = new File(ApiConstant.DOWNLOAD_TEMPLATE_FILE_DIR);
         templateFiles = getTemplateFiles(baseOutput, templateFiles, file);
         String[] idList = null;
@@ -42,9 +42,17 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
                 String templateFileName = templateFiles[Integer.parseInt(id)].getAbsoluteFile().toString() + " ";
                 command += templateFileName;
             }
+            command += generateFileSimpleName + " ";
+            for(String id : idList){
+                String templateFileName = templateFiles[Integer.parseInt(id)].getName() + " ";
+                command += templateFileName;
+            }
         }else{
             //压缩文件有1个
             String templateFileName = templateFiles[Integer.parseInt(templateIdList)].getAbsoluteFile().toString() + "";
+            command += templateFileName;
+            command += generateFileSimpleName + " ";
+            templateFileName = templateFiles[Integer.parseInt(templateIdList)].getName() + "";
             command += templateFileName;
         }
         logger.info("begin to execute command");
