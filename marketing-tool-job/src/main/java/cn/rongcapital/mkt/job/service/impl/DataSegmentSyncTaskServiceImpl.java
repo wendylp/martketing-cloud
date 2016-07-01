@@ -65,12 +65,13 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 							criteriasList.add(criteria);
 						}
 						Criteria criteriaAll = new Criteria().andOperator(criteriasList.toArray(new Criteria[criteriasList.size()]));
-						List<DataParty> dataPartyList = mongoTemplate.find(new Query(criteriaAll), DataParty.class);
+						List<DataParty> dataPartyList = mongoTemplate.find(new Query().addCriteria(criteriaAll), DataParty.class);
 						if(CollectionUtils.isNotEmpty(dataPartyList)) {
 							for(DataParty dataParty:dataPartyList) {
 								List<Segment> sListT = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId")
 												       .is(segmentationBody.getHeadId())
-												       .and("dataId").is(dataParty.getMid())), 
+												       .and("dataId").is(dataParty.getMid())
+													   .and("mappingKeyid").is(dataParty.getMappingKeyid())),
 												       Segment.class);
 								if(CollectionUtils.isEmpty(sListT)) {//不存在，则插入
 									Segment segment = new Segment();
