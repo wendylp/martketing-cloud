@@ -97,8 +97,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             p = Runtime.getRuntime().exec(command);
             p.waitFor();
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.info(e.getMessage());
+            logger.error("zipCommand",e);
         }
     }
 }
