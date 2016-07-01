@@ -72,7 +72,6 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService{
                 wechatAssetDao.updateGroupIdsAndTotalCount(paramMap);
             }
         }
-        System.out.print(0);
     }
 
     private String generateGroupIds(List<Long> groupIdList) {
