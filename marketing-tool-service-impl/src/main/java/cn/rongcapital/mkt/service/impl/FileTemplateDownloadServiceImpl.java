@@ -29,6 +29,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             baseOutput.setMsg("参数不合法");
             return baseOutput;
         }
+        logger.debug("begin downloadFile");
         File[] templateFiles = null;
         String generateFileName = ApiConstant.DOWNLOAD_BASE_DIR + System.currentTimeMillis() + "template.zip";  //正式文件
 //        String generateFileName = System.currentTimeMillis() + "template.zip";   //测试文件
