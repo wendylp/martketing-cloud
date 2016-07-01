@@ -29,7 +29,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
         }
         logger.info("begin downloadFile");
         File[] templateFiles = null;
-        String generateFileSimpleName = System.currentTimeMillis() + "template.zip";
+        String generateFileSimpleName = System.currentTimeMillis() + "template.zip ";
         String generateFileName = ApiConstant.DOWNLOAD_BASE_DIR + generateFileSimpleName;  //正式文件
         String command = "tar -zcvPf "+ generateFileName;
         File file = new File(ApiConstant.DOWNLOAD_TEMPLATE_FILE_DIR);
