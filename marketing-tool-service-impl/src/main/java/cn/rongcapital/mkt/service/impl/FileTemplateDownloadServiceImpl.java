@@ -9,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.Response;
 import java.io.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 /**
  * Created by Yunfeng on 2016-6-24.
@@ -29,7 +26,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             baseOutput.setMsg("参数不合法");
             return baseOutput;
         }
-        logger.debug("begin downloadFile");
+        logger.info("begin downloadFile");
         File[] templateFiles = null;
         String generateFileName = ApiConstant.DOWNLOAD_BASE_DIR + System.currentTimeMillis() + "template.zip";  //正式文件
 //        String generateFileName = System.currentTimeMillis() + "template.zip";   //测试文件
@@ -49,10 +46,10 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             String templateFileName = templateFiles[Integer.parseInt(templateIdList)].getAbsoluteFile().toString() + "";
             command += templateFileName;
         }
-        logger.debug("begin to execute command");
+        logger.info("begin to execute command");
         this.executeCommand(command);
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
-        baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+        baseOutput.setMsg(command);
         DownloadFileName downloadFileName = new DownloadFileName();
         downloadFileName.setDownloadFileName(generateFileName);
         baseOutput.getData().add(downloadFileName);
@@ -71,12 +68,12 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
     private void executeCommand(String command) {
         Process p;
         try {
-            logger.debug("zipCommand: " + command);
+            logger.info("zipCommand: " + command);
             p = Runtime.getRuntime().exec(command);
             p.waitFor();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug(e.getMessage());
+            logger.info(e.getMessage());
         }
     }
 }
