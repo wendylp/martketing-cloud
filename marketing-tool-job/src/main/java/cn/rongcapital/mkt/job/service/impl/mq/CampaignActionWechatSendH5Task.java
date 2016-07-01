@@ -34,7 +34,8 @@ import cn.rongcapital.mkt.po.mongodb.Segment;
 
 /**
  * 发送H5活动节点,由于大连接口不支持个人号发送H5,修改为个人号发送H5的链接
- *
+ * changelog:
+ * 2016-07-01:跟闫俊确认:该节点上个人号发送H5功能暂时去掉
  */
 @Service
 public class CampaignActionWechatSendH5Task extends BaseMQService implements TaskService {
@@ -60,9 +61,8 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 		List<CampaignActionSendH5> campaignActionSendH5List = campaignActionSendH5Dao.selectList(campaignActionSendH5T);
 		if(CollectionUtils.isEmpty(campaignActionSendH5List) ||
 		   StringUtils.isBlank(campaignActionSendH5List.get(0).getPubId()) || 
-		   null == campaignActionSendH5List.get(0).getMaterialId() ||
-		   StringUtils.isBlank(campaignActionSendH5List.get(0).getUin())) {
-			logger.error("没有配置公众号或个人号属性,return,campaignHeadId:"+campaignHeadId+",itemId:"+itemId);
+		   null == campaignActionSendH5List.get(0).getMaterialId()) {
+			logger.error("没有配置公众号属性,return,campaignHeadId:"+campaignHeadId+",itemId:"+itemId);
 			return;
 		}
 		CampaignActionSendH5 campaignActionSendH5 = campaignActionSendH5List.get(0);
@@ -117,11 +117,8 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 					String pubId = campaignActionSendH5.getPubId();
 					Integer materialId = campaignActionSendH5.getMaterialId();
 					boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,dp.getMappingKeyid());
-					String uin = campaignActionSendH5.getUin();
 					String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
-					String textInfo = h5MobileUrl;//给个人号好友发送图文的url
-					boolean isPrvSent = sendPrvWechatByH5Interface(uin, textInfo, dp.getMappingKeyid());
-					if(isPubSent || isPrvSent) {//公众号或个人号执行了发送动作
+					if(isPubSent) {//公众号执行了发送动作
 						segment.setPubId(campaignActionSendH5.getPubId());
 						segment.setH5MobileUrl(h5MobileUrl);
 						segment.setMaterialId(campaignActionSendH5.getMaterialId());
