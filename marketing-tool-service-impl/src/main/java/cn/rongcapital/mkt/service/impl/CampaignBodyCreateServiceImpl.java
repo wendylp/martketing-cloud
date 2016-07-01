@@ -452,23 +452,23 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return taskSchedule;
 	}
 	
-	private Integer tranlateToMinutes(Integer refreshIntv,Byte refreshType) {
+	private Float tranlateToMinutes(Integer refreshIntv,Byte refreshType) {
 		if(null == refreshIntv || refreshType == null) {
 			return null;
 		}
-		Integer intervalMinutes = null;
+		Float intervalMinutes = null;
 		switch (refreshType) {
 		case 0://小时
-			intervalMinutes = 60;
+			intervalMinutes = 60f;
 			break;
 		case 1://天
-			intervalMinutes = 60 * 24;
+			intervalMinutes = 60 * 24f;
 			break;
 		case 2://周
-			intervalMinutes = 60 * 24 * 7;
+			intervalMinutes = 60 * 24 * 7f;
 			break;
 		case 3://月
-			intervalMinutes = 60 * 24 * 30;
+			intervalMinutes = 60 * 24 * 30f;
 			break;
 		default:
 			break;
@@ -483,7 +483,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			if(null!=allowedNew) {
 				if(allowedNew==0) {
 					TaskSchedule taskSchedule = new TaskSchedule();
-					Integer intervalMinutes = tranlateToMinutes(campaignAudienceTargetIn.getRefreshInterval(), 
+					Float intervalMinutes = tranlateToMinutes(campaignAudienceTargetIn.getRefreshInterval(), 
 							campaignAudienceTargetIn.getRefreshIntervalType());
 					taskSchedule.setIntervalMinutes(intervalMinutes);
 					taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_AUDIENCE_TARGET);
@@ -523,7 +523,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		CampaignDecisionWechatReadIn campaignDecisionWechatReadIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatReadIn.class);
 		if(null == campaignDecisionWechatReadIn) return null;
 		TaskSchedule taskSchedule = new TaskSchedule();
-		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatReadIn.getRefreshInterval(), 
+		Float intervalMinutes = tranlateToMinutes(campaignDecisionWechatReadIn.getRefreshInterval(), 
 													campaignDecisionWechatReadIn.getRefreshIntervalType());
 		taskSchedule.setIntervalMinutes(intervalMinutes);
 		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_WECHAT_READ);
@@ -537,7 +537,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		CampaignDecisionWechatForwardIn campaignDecisionWechatForwardIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionWechatForwardIn.class);
 		if(null == campaignDecisionWechatForwardIn) return null;
 		TaskSchedule taskSchedule = new TaskSchedule();
-		Integer intervalMinutes = tranlateToMinutes(campaignDecisionWechatForwardIn.getRefreshInterval(), 
+		Float intervalMinutes = tranlateToMinutes(campaignDecisionWechatForwardIn.getRefreshInterval(), 
 													campaignDecisionWechatForwardIn.getRefreshIntervalType());
 		taskSchedule.setIntervalMinutes(intervalMinutes);
 		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_WECHAT_FORWARD);
@@ -551,7 +551,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		CampaignDecisionPubFansIn campaignDecisionPubFansIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPubFansIn.class);
 		if(null == campaignDecisionPubFansIn) return null;
 		TaskSchedule taskSchedule = new TaskSchedule();
-		Integer intervalMinutes = tranlateToMinutes(campaignDecisionPubFansIn.getRefreshInterval(), 
+		Float intervalMinutes = tranlateToMinutes(campaignDecisionPubFansIn.getRefreshInterval(), 
 													campaignDecisionPubFansIn.getRefreshIntervalType());
 		taskSchedule.setIntervalMinutes(intervalMinutes);
 		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_WECHAT_SUBSCRIBE);
@@ -565,7 +565,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		CampaignDecisionPrvtFriendsIn campaignDecisionPrvtFriendsIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignDecisionPrvtFriendsIn.class);
 		if(null == campaignDecisionPrvtFriendsIn) return null;
 		TaskSchedule taskSchedule = new TaskSchedule();
-		Integer intervalMinutes = tranlateToMinutes(campaignDecisionPrvtFriendsIn.getRefreshInterval(), 
+		Float intervalMinutes = tranlateToMinutes(campaignDecisionPrvtFriendsIn.getRefreshInterval(), 
 													campaignDecisionPrvtFriendsIn.getRefreshIntervalType());
 		taskSchedule.setIntervalMinutes(intervalMinutes);
 		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_DECISION_WECHAT_PRV_FRIEND);

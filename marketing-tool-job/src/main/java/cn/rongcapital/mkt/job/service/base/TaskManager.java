@@ -150,9 +150,10 @@ public class TaskManager {
 		} else {
 			Date startTime = taskSchedulePo.getStartTime() == null ? 
 							 Calendar.getInstance().getTime():taskSchedulePo.getStartTime();
-			Integer interMinutes = taskSchedulePo.getIntervalMinutes();
+			Float interMinutes = taskSchedulePo.getIntervalMinutes();
 			if(null != interMinutes && interMinutes > 0) {
-				scheduledFuture =  taskSchedule.scheduleAtFixedRate(task, startTime, interMinutes*60*1000);
+				long period = (long)(interMinutes*60*1000);
+				scheduledFuture =  taskSchedule.scheduleAtFixedRate(task, startTime, period);
 			}else {
 				scheduledFuture = taskSchedule.schedule(task,startTime);
 			}
