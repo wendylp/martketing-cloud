@@ -8,6 +8,8 @@ import javax.jms.MessageConsumer;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -30,6 +32,7 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 	CampaignHeadDao campaignHeadDao;
 	
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		CampaignManualStartOut ur = checkPublishStatus(campaignHeadId);
@@ -67,6 +70,7 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		 return ur;
 	 }
 	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		boolean isNeedCancel = false;//double check,查询数据库的任务表，看是否真的需要停止任务
