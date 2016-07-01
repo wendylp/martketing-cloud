@@ -95,7 +95,13 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
         try {
             logger.info("zipCommand: " + command);
             p = Runtime.getRuntime().exec(command);
+
+            logger.info("zipCommand waitFor()....");
+
             p.waitFor();
+
+            logger.info("zipCommand end.");
+
         } catch (Exception e) {
             logger.error("zipCommand",e);
         }
