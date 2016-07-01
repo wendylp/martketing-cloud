@@ -90,11 +90,10 @@ public class FileUtil {
         StringBuilder pathNameBuilder = new StringBuilder();
         // 当前日期
         // DateTime today = DateTime.now();
-        pathNameBuilder.append(ClassLoader.getSystemResource("")).append("download").append(fileName)
-                        .append("_")
+        pathNameBuilder.append(ClassLoader.getSystemResource("")).append("download/").append(fileName).append("_")
                         // pathNameBuilder.append("/Users/nianjun/Work/logs/").append(fileName).append("_")
                         // .append(today.toString(ApiConstant.DATE_FORMAT_yyyy_MM_dd)).append(FILE_SUFFIX);
-                        .append(RandomStringUtils.randomAlphanumeric(5)).append("_").append(FILE_SUFFIX);
+                        .append(RandomStringUtils.randomAlphanumeric(6).toUpperCase()).append("_").append(FILE_SUFFIX);
         File file = new File(pathNameBuilder.toString().replace("file:", ""));
         return generateFile(columnNames, dataList, file);
     }
@@ -106,7 +105,15 @@ public class FileUtil {
         }
 
         try {
-            file.createNewFile();
+            // 判断目标文件所在的目录是否存在
+            if (!file.getParentFile().exists()) {
+                // 如果目标文件所在的目录不存在，则创建父目录
+                logger.info("目标文件所在目录不存在，准备创建它！");
+                if (!file.getParentFile().mkdirs()) {
+                    logger.info("创建目标文件所在目录失败！");
+                }
+                file.createNewFile();
+            }
         } catch (IOException e1) {
             logger.error("创建文件失败", e1);
         }
