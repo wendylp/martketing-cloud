@@ -31,7 +31,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
         String generateFileSimpleName = System.currentTimeMillis() + "template.zip";
         String generateFileName = ApiConstant.DOWNLOAD_BASE_DIR + generateFileSimpleName;  //正式文件
 //        String generateFileName = System.currentTimeMillis() + "template.zip";   //测试文件
-        String command = "/rc/marketcloudsrv/zipTempelete.sh ";
+        String command = "sh /rc/marketcloudsrv/zipTempelete.sh ";
         File file = new File(ApiConstant.DOWNLOAD_TEMPLATE_FILE_DIR);
         templateFiles = getTemplateFiles(baseOutput, templateFiles, file);
         String[] idList = null;
