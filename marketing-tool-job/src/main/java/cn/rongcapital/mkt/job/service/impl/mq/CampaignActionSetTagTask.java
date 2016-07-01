@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -28,15 +27,12 @@ import cn.rongcapital.mkt.po.CampaignActionSetTag;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CustomTagMap;
 import cn.rongcapital.mkt.po.TaskSchedule;
-import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
 public class CampaignActionSetTagTask extends BaseMQService implements TaskService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	@Autowired
-	private MongoTemplate mongoTemplate;
 	@Autowired
 	private CampaignActionSetTagDao campaignActionSetTagDao;
 	@Autowired
@@ -94,14 +90,8 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 		String queueKey = campaignHeadId+"-"+itemId;
 		List<Segment> segmentListToNext = new ArrayList<Segment>();
 		for(Segment segment:segmentList) {
-			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
-				NodeAudience nodeAudience = new NodeAudience();
-				nodeAudience.setCampaignHeadId(campaignHeadId);
-				nodeAudience.setItemId(itemId);
-				nodeAudience.setDataId(segment.getDataId());
-				nodeAudience.setName(segment.getName());
-				nodeAudience.setStatus(0);
-				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId(),segment.getMappingKeyid())) {
+				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName(), segment.getMappingKeyid());
 				Integer dataId = segment.getDataId();
 				List<String> tagIdList = Arrays.asList(tagIds);
 				for(String idStr:tagIdList) {
