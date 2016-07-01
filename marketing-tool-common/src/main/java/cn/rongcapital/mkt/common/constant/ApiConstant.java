@@ -160,5 +160,5 @@ public class ApiConstant {
 	
 	
     public static final String DOWNLOAD_TEMPLATE_FILE_DIR = "//rc//templeteFiles";
-	public static final String DOWNLOAD_BASE_DIR = "//rc//downloads/";
+	public static final String DOWNLOAD_BASE_DIR = "//downloads/";
 }
