@@ -168,6 +168,9 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
         Map<String, Object> paramMap = new HashMap<>();
         contactIdList = filterContactId(contactIdList, dao);
+        if(CollectionUtils.isEmpty(taskIdList)){
+            taskIdList = null;
+        }
         paramMap.put("startIndex", paramObj.getStartIndex());
         paramMap.put("pageSize", paramObj.getPageSize());
         paramMap.put("batchIdList", taskIdList);
