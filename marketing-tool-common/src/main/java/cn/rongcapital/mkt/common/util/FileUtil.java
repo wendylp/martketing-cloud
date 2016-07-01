@@ -89,12 +89,13 @@ public class FileUtil {
                     String fileName) {
         StringBuilder pathNameBuilder = new StringBuilder();
         // 当前日期
-//        DateTime today = DateTime.now();
-         pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName).append("_")
-//        pathNameBuilder.append("/Users/nianjun/Work/logs/").append(fileName).append("_")
+        // DateTime today = DateTime.now();
+        pathNameBuilder.append(ClassLoader.getSystemResource("")).append("download").append(fileName)
+                        .append("_")
+                        // pathNameBuilder.append("/Users/nianjun/Work/logs/").append(fileName).append("_")
                         // .append(today.toString(ApiConstant.DATE_FORMAT_yyyy_MM_dd)).append(FILE_SUFFIX);
                         .append(RandomStringUtils.randomAlphanumeric(5)).append("_").append(FILE_SUFFIX);
-        File file = new File(pathNameBuilder.toString());
+        File file = new File(pathNameBuilder.toString().replace("file:", ""));
         return generateFile(columnNames, dataList, file);
     }
 
@@ -102,6 +103,12 @@ public class FileUtil {
 
         if (CollectionUtils.isEmpty(columnNames)) {
             throw new IllegalArgumentException("columnNames为空,需要提供cvs文件的字段名");
+        }
+
+        try {
+            file.createNewFile();
+        } catch (IOException e1) {
+            logger.error("创建文件失败", e1);
         }
 
         // 没数据的时候生成空文件
