@@ -61,7 +61,6 @@ public class GetPersonContactsList implements TaskService {
                             if(h5PersonalContactlistResponse.getContacts() != null){
                                 batchInsertContacts(h5PersonalContactlistResponse,h5PersonalContactlistResponse.getUin());
                             }
-                            System.out.print(1);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

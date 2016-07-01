@@ -2,11 +2,9 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
-import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataCustomerTags;
 import cn.rongcapital.mkt.po.DataParty;
-import cn.rongcapital.mkt.po.DataPopulation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -26,10 +24,19 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
     private DataCustomerTagsDao dataCustomerTagsDao;
 
     @Override
-    public DataPartySyncVO<Integer> querySyncData() {
+    public int queryTotalCount() {
+        DataCustomerTags dataCustomerTags = new DataCustomerTags();
+        dataCustomerTags.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        return dataCustomerTagsDao.selectListCount(dataCustomerTags);
+    }
+
+    @Override
+    public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
 
         DataCustomerTags dataCustomerTags = new DataCustomerTags();
         dataCustomerTags.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        dataCustomerTags.setPageSize(pageSize);
+        dataCustomerTags.setStartIndex(startIndex);
         List<DataCustomerTags> dataCustomerTagsList = dataCustomerTagsDao.selectList(dataCustomerTags);
         if (CollectionUtils.isEmpty(dataCustomerTagsList)) {
             return null;

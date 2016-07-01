@@ -7,7 +7,9 @@ import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
  */
 public interface DataPartySyncService<T> {
 
-    DataPartySyncVO<T> querySyncData();
+    int queryTotalCount();
+
+    DataPartySyncVO<T> querySyncData(Integer startIndex, Integer pageSize);
 
     void doSync();
 

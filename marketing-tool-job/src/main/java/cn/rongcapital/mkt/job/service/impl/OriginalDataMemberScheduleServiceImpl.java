@@ -36,32 +36,16 @@ public class OriginalDataMemberScheduleServiceImpl implements OriginalDataMember
         OriginalDataMember paramOriginalDataMember = new OriginalDataMember();
         paramOriginalDataMember.setStatus(StatusEnum.ACTIVE.getStatusCode());
 
-        List<OriginalDataMember> originalDataMembers = originalDataMemberDao.selectList(paramOriginalDataMember);
-
-        if (CollectionUtils.isEmpty(originalDataMembers)) {
-            // 根本没有要处理的数据
-            return;
-        }
-
-        // 2. 分多次处理所有的数据,每次处理BATCH_NUM条数据
-
-        // 一共有多少条要处理的数据
-        int totalCount = originalDataMembers.size();
-
-        // 需要多少次循环去处理,相当于一个房间住M个人,N个人需要多少房间的问题.不解释
-        int loopCount = (totalCount + BATCH_NUM - 1) / BATCH_NUM;
-
-        for (int i = 0; i < loopCount; i++) {
-            // 每次循环中的临时数据表
-            List<OriginalDataMember> tmpOriginalDataMembers = new ArrayList<>(BATCH_NUM);
-            if (i == loopCount - 1) {
-                tmpOriginalDataMembers = originalDataMembers.subList(i * BATCH_NUM, originalDataMembers.size());
-            } else {
-                tmpOriginalDataMembers = originalDataMembers.subList(i * BATCH_NUM, (i + 1) * BATCH_NUM - 1);
+        int totalCount = originalDataMemberDao.selectListCount(paramOriginalDataMember);
+        int totalPages = (totalCount + BATCH_NUM - 1) / BATCH_NUM;
+        paramOriginalDataMember.setPageSize(BATCH_NUM);
+        for (int i = 0; i < totalPages; i++) {
+            paramOriginalDataMember.setStartIndex(Integer.valueOf(i * BATCH_NUM));
+            List<OriginalDataMember> originalDataMembers = originalDataMemberDao.selectList(paramOriginalDataMember);
+            if (CollectionUtils.isEmpty(originalDataMembers)) {
+                continue;
             }
-
-            handleOriginalDataMember(tmpOriginalDataMembers);
-
+            handleOriginalDataMember(originalDataMembers);
         }
     }
 

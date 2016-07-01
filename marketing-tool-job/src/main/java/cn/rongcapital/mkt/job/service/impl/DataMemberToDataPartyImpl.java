@@ -26,10 +26,19 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
     private DataMemberDao dataMemberDao;
 
     @Override
-    public DataPartySyncVO<Integer> querySyncData() {
+    public int queryTotalCount() {
+        DataMember dataMember = new DataMember();
+        dataMember.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        return dataMemberDao.selectListCount(dataMember);
+    }
+
+    @Override
+    public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
 
         DataMember dataMember = new DataMember();
         dataMember.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        dataMember.setPageSize(pageSize);
+        dataMember.setStartIndex(startIndex);
         List<DataMember> dataMemberList = dataMemberDao.selectList(dataMember);
         if (CollectionUtils.isEmpty(dataMemberList)) {
             return null;

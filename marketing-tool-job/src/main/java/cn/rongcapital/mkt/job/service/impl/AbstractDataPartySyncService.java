@@ -14,20 +14,32 @@ import java.util.List;
  */
 public abstract class AbstractDataPartySyncService<T> implements DataPartySyncService<T> {
 
+    protected int BATCH_SIZE = 500;
+
     @Autowired
     private DataPartyDao dataPartyDao;
 
     @Override
     public void doSync() {
-        DataPartySyncVO<T> dataPartySyncVO = this.querySyncData();
-        if (dataPartySyncVO == null) {
+        int totalCount = this.queryTotalCount();
+        if (totalCount < 1) {
             return;
         }
-        List<DataParty> dataPartyList = dataPartySyncVO.getDataPartyList();
-        if (CollectionUtils.isEmpty(dataPartyList)) {
-            return;
+
+        int totalPages = (totalCount + BATCH_SIZE - 1) / BATCH_SIZE;
+        for (int i = 0; i < totalPages; i++) {
+            DataPartySyncVO<T> dataPartySyncVO = this.querySyncData(
+                    Integer.valueOf(i * BATCH_SIZE), Integer.valueOf(BATCH_SIZE));
+            if (dataPartySyncVO == null) {
+                return;
+            }
+            List<DataParty> dataPartyList = dataPartySyncVO.getDataPartyList();
+            if (CollectionUtils.isEmpty(dataPartyList)) {
+                return;
+            }
+            dataPartyDao.batchInsert(dataPartyList);
+            this.doSyncAfter(dataPartySyncVO);
         }
-        dataPartyDao.batchInsert(dataPartyList);
-        this.doSyncAfter(dataPartySyncVO);
+
     }
 }

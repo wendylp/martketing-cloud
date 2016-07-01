@@ -2,10 +2,8 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataArchPointDao;
-import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataArchPoint;
-import cn.rongcapital.mkt.po.DataCustomerTags;
 import cn.rongcapital.mkt.po.DataParty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +24,18 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
     private DataArchPointDao dataArchPointDao;
 
     @Override
-    public DataPartySyncVO<Integer> querySyncData() {
+    public int queryTotalCount() {
         DataArchPoint dataArchPoint = new DataArchPoint();
         dataArchPoint.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        return dataArchPointDao.selectListCount(dataArchPoint);
+    }
+
+    @Override
+    public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
+        DataArchPoint dataArchPoint = new DataArchPoint();
+        dataArchPoint.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        dataArchPoint.setPageSize(pageSize);
+        dataArchPoint.setStartIndex(startIndex);
         List<DataArchPoint> dataArchPointList = dataArchPointDao.selectList(dataArchPoint);
         if (CollectionUtils.isEmpty(dataArchPointList)) {
             return null;

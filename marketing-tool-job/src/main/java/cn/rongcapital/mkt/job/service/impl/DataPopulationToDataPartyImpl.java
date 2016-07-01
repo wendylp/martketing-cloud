@@ -24,10 +24,19 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
     private DataPopulationDao dataPopulationDao;
 
     @Override
-    public DataPartySyncVO<Integer> querySyncData() {
+    public int queryTotalCount() {
+        DataPopulation dataPopulation = new DataPopulation();
+        dataPopulation.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        return dataPopulationDao.selectListCount(dataPopulation);
+    }
+
+    @Override
+    public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
 
         DataPopulation dataPopulation = new DataPopulation();
         dataPopulation.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        dataPopulation.setPageSize(pageSize);
+        dataPopulation.setStartIndex(startIndex);
         List<DataPopulation> dataPopulationList = dataPopulationDao.selectList(dataPopulation);
         if (CollectionUtils.isEmpty(dataPopulationList)) {
             return null;
