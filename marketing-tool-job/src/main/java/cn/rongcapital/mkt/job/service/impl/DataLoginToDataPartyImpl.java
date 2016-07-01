@@ -37,6 +37,7 @@ public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integ
         List<Integer> idList = new ArrayList<>(dataLoginList.size());
         for(DataLogin dataObj : dataLoginList){
             DataParty dataParty=new DataParty();
+            dataParty.setLastLogin(dataObj.getLoginTime());
             dataParty.setMappingKeyid(dataObj.getId().toString());
             dataParty.setMdType(Integer.parseInt(MD_TYPE));
             dataParty.setSource(MD_TYPE);
