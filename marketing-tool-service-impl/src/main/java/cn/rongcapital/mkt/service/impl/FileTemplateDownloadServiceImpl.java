@@ -49,6 +49,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             String templateFileName = templateFiles[Integer.parseInt(templateIdList)].getAbsoluteFile().toString() + "";
             command += templateFileName;
         }
+        logger.debug("begin to execute command");
         this.executeCommand(command);
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
