@@ -12,6 +12,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class WechatPersonalAuthIn extends BaseInput{
     @NotEmpty
     private String uuid;
+    @NotEmpty
+    private String uin;
 
     @JsonProperty("uuid")
     public String getUuid() {
@@ -20,5 +22,14 @@ public class WechatPersonalAuthIn extends BaseInput{
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    @JsonProperty("uin")
+    public String getUin() {
+        return uin;
+    }
+
+    public void setUin(String uin) {
+        this.uin = uin;
     }
 }

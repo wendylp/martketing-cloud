@@ -31,8 +31,7 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
     private TenementDao tenementDao;
     @Autowired
     private WechatPersonalUuidDao wechatPersonalUuidDao;
-    @Autowired
-    private GetPersonContactsList getPersonContactsList;
+
 
     @Override
     public BaseOutput authPersonWechat(WechatPersonalAuthIn wechatPersonalAuthIn) {
@@ -41,7 +40,7 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
         String uuid = wechatPersonalAuthIn.getUuid();
         if(uuid != null){
             paramMap.put("uuid",wechatPersonalAuthIn.getUuid());
-            String uin = getString(uuid);
+            String uin = wechatPersonalAuthIn.getUin();
             if(uin != null){
                 paramMap.put("uin",uin);
                 wechatPersonalUuidDao.insertUuidAndUin(paramMap);
@@ -50,25 +49,5 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
             }
         }
         return baseOutput;
-    }
-
-    private String getString(String uuid) {
-        Map<String,String> h5ParamMap = tenementDao.selectPid();
-        h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PERSONAL_CONTACTLIST);
-        h5ParamMap.put("uuid",uuid);
-        HttpResponse httpResponse = HttpUtils.requestH5Interface(h5ParamMap);
-        if(httpResponse != null) {
-            JSONObject obj = null;
-            try {
-                obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_personal_contactlist_response");
-                if (obj != null) {
-                    H5PersonalContactlistResponse h5PersonalContactlistResponse = JSON.parseObject(obj.toString(), H5PersonalContactlistResponse.class);
-                    return h5PersonalContactlistResponse.getUin();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
 }

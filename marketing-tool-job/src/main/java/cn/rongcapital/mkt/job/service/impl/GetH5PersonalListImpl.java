@@ -13,6 +13,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class GetH5PersonalListImpl implements TaskService {
     private WechatRegisterDao wechatRegisterDao;
 
 
+    @Transactional
     @Override
     public void task(Integer taskId) {
         Map<String,String> h5ParamMap = tenementDao.selectPid();
@@ -55,20 +57,24 @@ public class GetH5PersonalListImpl implements TaskService {
 
     private void insertPersonalInfo(H5MktPersonalListResponse h5MktPersonalListResponse) {
         List<Map<String,Object>> paramPersonals = new ArrayList<Map<String,Object>>();
-        for(H5Personal h5Personal :h5MktPersonalListResponse.getPersonals().getPersonal()){
-            if(personAlreadySaved(h5Personal)) continue;
-            Map<String,Object> paramPersonal = new HashMap<String,Object>();
-            paramPersonal.put("wx_acct",h5Personal.getUin());
-            paramPersonal.put("nickname",h5Personal.getNickname());
-            paramPersonal.put("type",1);
-            paramPersonal.put("header_image",h5Personal.getHeadImage());
-            paramPersonal.put("sex",h5Personal.getSex());
-            paramPersonal.put("province",h5Personal.getProvince());
-            paramPersonal.put("city",h5Personal.getCity());
-            paramPersonal.put("signature",h5Personal.getSignature());
-            paramPersonals.add(paramPersonal);
+        if(h5MktPersonalListResponse.getPersonals().getPersonal() != null && h5MktPersonalListResponse.getPersonals().getPersonal().size() > 0){
+            for(H5Personal h5Personal :h5MktPersonalListResponse.getPersonals().getPersonal()){
+                if(personAlreadySaved(h5Personal)) continue;
+                Map<String,Object> paramPersonal = new HashMap<String,Object>();
+                paramPersonal.put("wx_acct",h5Personal.getUin());
+                paramPersonal.put("nickname",h5Personal.getNickname());
+                paramPersonal.put("type",1);
+                paramPersonal.put("header_image",h5Personal.getHeadImage());
+                paramPersonal.put("sex",h5Personal.getSex());
+                paramPersonal.put("province",h5Personal.getProvince());
+                paramPersonal.put("city",h5Personal.getCity());
+                paramPersonal.put("signature",h5Personal.getSignature());
+                paramPersonals.add(paramPersonal);
+            }
+            if(paramPersonals != null && paramPersonals.size() > 0){
+                wechatRegisterDao.batchInsertPersonList(paramPersonals);
+            }
         }
-        wechatRegisterDao.batchInsertPersonList(paramPersonals);
     }
 
     private boolean personAlreadySaved(H5Personal h5Personal) {
