@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.job.service.base.TaskManager;
 import cn.rongcapital.mkt.service.ParseUploadFile;
 import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class ParseUploadFileImpl implements ParseUploadFile {
     private OriginalDataPaymentDao originalDataPaymentDao;
     @Autowired
     private OriginalDataShoppingDao originalDataShoppingDao;
+    @Autowired
+    private TaskManager taskManager;
 
     @Override
     public UploadFileAccordTemplateOut parseUploadFileByType(String fileUnique,String fileName, byte[] bytes) {
@@ -64,25 +67,28 @@ public class ParseUploadFileImpl implements ParseUploadFile {
     }
 
     private int insertParsedData(ArrayList<Map<String, Object>> insertList, int fileType) {
+       int  effectRows = 0;
         switch(fileType){
             case 0:
                 break;
             case 1:
-                return originalDataPopulationDao.batchInsertUploadFileData(insertList);
+                effectRows = originalDataPopulationDao.batchInsertUploadFileData(insertList);
+
             case 2:
-                return originalDataCustomerTagsDao.batchInsertUploadFileData(insertList);
+                effectRows = originalDataCustomerTagsDao.batchInsertUploadFileData(insertList);
+                taskManager.manualInitTask(826,null);
             case 3:
-                return originalDataArchPointDao.batchInsertUploadFileData(insertList);
+                effectRows = originalDataArchPointDao.batchInsertUploadFileData(insertList);
             case 4:
-                return originalDataMemberDao.batchInsertUploadFileData(insertList);
+                effectRows = originalDataMemberDao.batchInsertUploadFileData(insertList);
             case 5:
-                return originalDataLoginDao.batchInsertUploadFileData(insertList);
+                effectRows = originalDataLoginDao.batchInsertUploadFileData(insertList);
             case 6:
-                return originalDataPaymentDao.batchInsertUploadFileData(insertList);
+                effectRows = originalDataPaymentDao.batchInsertUploadFileData(insertList);
             case 7:
-                return originalDataShoppingDao.batchInsertUploadFileData(insertList);
+                effectRows = originalDataShoppingDao.batchInsertUploadFileData(insertList);
         }
-        return 0;
+        return effectRows;
     }
 
     /**
