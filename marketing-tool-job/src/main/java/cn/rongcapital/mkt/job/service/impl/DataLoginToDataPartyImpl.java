@@ -26,9 +26,18 @@ public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integ
     private DataLoginDao dataLoginDao;
 
     @Override
-    public DataPartySyncVO<Integer> querySyncData() {
+    public int queryTotalCount() {
         DataLogin dataLogin = new DataLogin();
         dataLogin.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        return dataLoginDao.selectListCount(dataLogin);
+    }
+
+    @Override
+    public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
+        DataLogin dataLogin = new DataLogin();
+        dataLogin.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        dataLogin.setPageSize(pageSize);
+        dataLogin.setStartIndex(startIndex);
         List<DataLogin> dataLoginList = dataLoginDao.selectList(dataLogin);
         if (CollectionUtils.isEmpty(dataLoginList)) {
             return null;

@@ -45,7 +45,8 @@ import org.springframework.util.CollectionUtils;
 public class DataPartySyncMongoTaskServiceImpl implements TaskService {  
 	
 	//private Logger logger = LoggerFactory.getLogger(getClass());
-	
+
+    private int BATCH_SIZE = 500;
 	
 	
     //主数据data_xxx
@@ -82,22 +83,28 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
 	    //1.从mysql data_party表中读取所有mid,keyid
 	    DataParty dataParty=new DataParty();
         dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode());
-	    
-	    //分批读出
-	    List<DataParty> datapartyList=dataPartyDao.selectList(dataParty);
-        if (CollectionUtils.isEmpty(datapartyList)) {
+        int totalCount = dataPartyDao.selectListCount(dataParty);
+        if (totalCount < 1) {
             return;
         }
-	    
-	    //2.根据keyid在data_xxx表中查出所有字段插入mongodb data_party表中
-        List<Integer> dataPartyIdList = new ArrayList<>();
-	    for(DataParty tempDataParty : datapartyList){
+        int totalPages = (totalCount + BATCH_SIZE - 1) / BATCH_SIZE;
+        dataParty.setPageSize(Integer.valueOf(BATCH_SIZE));
+        for (int i = 0; i < totalPages; i++) {
+            dataParty.setStartIndex(Integer.valueOf(i * BATCH_SIZE));
+            List<DataParty> datapartyList=dataPartyDao.selectList(dataParty);
+            if (CollectionUtils.isEmpty(datapartyList)) {
+                return;
+            }
 
-            dataPartyIdList.add(tempDataParty.getId());
-	        add2Mongo(tempDataParty.getMdType(), tempDataParty.getMappingKeyid());
-	    }
+            //2.根据keyid在data_xxx表中查出所有字段插入mongodb data_party表中
+            List<Integer> dataPartyIdList = new ArrayList<>();
+            for(DataParty tempDataParty : datapartyList){
+                dataPartyIdList.add(tempDataParty.getId());
+                add2Mongo(tempDataParty.getMdType(), tempDataParty.getMappingKeyid());
+            }
 
-        dataPartyDao.updateStatusByIds(dataPartyIdList, StatusEnum.PROCESSED.getStatusCode());
+            dataPartyDao.updateStatusByIds(dataPartyIdList, StatusEnum.PROCESSED.getStatusCode());
+        }
 	}
 	
 	private void add2Mongo(int dataType,String keyid){

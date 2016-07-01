@@ -26,10 +26,19 @@ public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Int
     private DataPaymentDao dataPaymentDao;
 
     @Override
-    public DataPartySyncVO<Integer> querySyncData() {
+    public int queryTotalCount() {
+        DataPayment dataPayment = new DataPayment();
+        dataPayment.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        return dataPaymentDao.selectListCount(dataPayment);
+    }
+
+    @Override
+    public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
 
         DataPayment dataPayment = new DataPayment();
         dataPayment.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        dataPayment.setPageSize(pageSize);
+        dataPayment.setStartIndex(startIndex);
         List<DataPayment> dataPaymentList = dataPaymentDao.selectList(dataPayment);
         if (CollectionUtils.isEmpty(dataPaymentList)) {
             return null;

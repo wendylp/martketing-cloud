@@ -32,35 +32,20 @@ public class OriginalDataPaymentScheduleServiceImpl implements OriginalDataPayme
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void cleanData() {
 
-        // 1. 取出需要处理的数据
         OriginalDataPayment paramOriginalDataPayment = new OriginalDataPayment();
         paramOriginalDataPayment.setStatus(StatusEnum.ACTIVE.getStatusCode());
 
-        // 查询没有被处理过的数据
-        List<OriginalDataPayment> originalDataPayments =
-                originalDataPaymentDao.selectList(paramOriginalDataPayment);
-
-        if (originalDataPayments.isEmpty()) {
-            // 根本没有要处理的数据
-            return;
-        }
-
-        // 2. 分多次处理所有的数据,每次处理BATCH_NUM条数据
-        // 一共有多少条要处理的数据
-        int totalCount = originalDataPayments.size();
-        int loopCount = (totalCount + BATCH_NUM - 1) / BATCH_NUM;
-
-        for (int i = 0; i < loopCount; i++) {
-            // 每次循环中的临时数据表
-            List<OriginalDataPayment> tmpOriginalDataPayments = new ArrayList<>(BATCH_NUM);
-            if (i == (loopCount - 1)) {
-                tmpOriginalDataPayments =
-                        originalDataPayments.subList(i * BATCH_NUM, originalDataPayments.size());
-            } else {
-                tmpOriginalDataPayments = originalDataPayments.subList(i * BATCH_NUM, (i + 1) * BATCH_NUM - 1);
+        int totalCount = originalDataPaymentDao.selectListCount(paramOriginalDataPayment);
+        int totalPages = (totalCount + BATCH_NUM - 1) / BATCH_NUM;
+        paramOriginalDataPayment.setPageSize(BATCH_NUM);
+        for (int i = 0; i < totalPages; i++) {
+            paramOriginalDataPayment.setStartIndex(Integer.valueOf(i * BATCH_NUM));
+            List<OriginalDataPayment> originalDataPayments =
+                    originalDataPaymentDao.selectList(paramOriginalDataPayment);
+            if (originalDataPayments.isEmpty()) {
+                continue;
             }
-
-            handleOriginalDataLogin(tmpOriginalDataPayments);
+            handleOriginalDataLogin(originalDataPayments);
         }
 
     }
