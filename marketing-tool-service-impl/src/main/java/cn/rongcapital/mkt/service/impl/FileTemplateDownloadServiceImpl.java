@@ -30,7 +30,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
         File[] templateFiles = null;
         String generateFileName = ApiConstant.DOWNLOAD_BASE_DIR + System.currentTimeMillis() + "template.zip";  //正式文件
 //        String generateFileName = System.currentTimeMillis() + "template.zip";   //测试文件
-        String command = "tar -zcvPf" + generateFileName + " ";
+        String command = "tar -zcvPf " + generateFileName + " ";
         File file = new File(ApiConstant.DOWNLOAD_TEMPLATE_FILE_DIR);
         templateFiles = getTemplateFiles(baseOutput, templateFiles, file);
         String[] idList = null;
@@ -38,7 +38,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             idList = templateIdList.split(",");
             for (String id : idList) {
                 //压缩文件有多个
-                String templateFileName = templateFiles[Integer.parseInt(id)].getAbsoluteFile().toString() + "";
+                String templateFileName = templateFiles[Integer.parseInt(id)].getAbsoluteFile().toString() + " ";
                 command += templateFileName;
             }
         }else{
