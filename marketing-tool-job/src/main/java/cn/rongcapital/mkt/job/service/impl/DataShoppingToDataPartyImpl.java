@@ -26,10 +26,19 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
     private DataShoppingDao dataShoppingDao;
 
     @Override
-    public DataPartySyncVO<Integer> querySyncData() {
+    public int queryTotalCount() {
+        DataShopping dataShopping = new DataShopping();
+        dataShopping.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        return dataShoppingDao.selectListCount(dataShopping);
+    }
+
+    @Override
+    public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
 
         DataShopping dataShopping = new DataShopping();
         dataShopping.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        dataShopping.setPageSize(pageSize);
+        dataShopping.setStartIndex(startIndex);
         List<DataShopping> dataShoppingList = dataShoppingDao.selectList(dataShopping);
         if (CollectionUtils.isEmpty(dataShoppingList)) {
             return null;

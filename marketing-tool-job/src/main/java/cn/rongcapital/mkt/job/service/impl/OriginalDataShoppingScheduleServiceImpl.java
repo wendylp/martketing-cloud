@@ -36,31 +36,19 @@ public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShop
         OriginalDataShopping paramOriginalDataShopping = new OriginalDataShopping();
         paramOriginalDataShopping.setStatus(StatusEnum.ACTIVE.getStatusCode());
 
-        // 查询没有被处理过的数据
-        List<OriginalDataShopping> originalDataShoppings =
-                originalDataShoppingDao.selectList(paramOriginalDataShopping);
+        int totalCount = originalDataShoppingDao.selectListCount(paramOriginalDataShopping);
+        int totalPages = (totalCount + BATCH_NUM - 1) / BATCH_NUM;
+        paramOriginalDataShopping.setPageSize(BATCH_NUM);
+        for (int i = 0; i < totalPages; i++) {
+            paramOriginalDataShopping.setStartIndex(Integer.valueOf(i * BATCH_NUM));
+            List<OriginalDataShopping> originalDataShoppings =
+                    originalDataShoppingDao.selectList(paramOriginalDataShopping);
 
-        if (originalDataShoppings.isEmpty()) {
-            // 根本没有要处理的数据
-            return;
-        }
-
-        // 2. 分多次处理所有的数据,每次处理BATCH_NUM条数据
-        // 一共有多少条要处理的数据
-        int totalCount = originalDataShoppings.size();
-        int loopCount = (totalCount + BATCH_NUM - 1) / BATCH_NUM;
-
-        for (int i = 0; i < loopCount; i++) {
-            // 每次循环中的临时数据表
-            List<OriginalDataShopping> tmpOriginalDataShoppings = new ArrayList<>(BATCH_NUM);
-            if (i == (loopCount - 1)) {
-                tmpOriginalDataShoppings =
-                        originalDataShoppings.subList(i * BATCH_NUM, originalDataShoppings.size());
-            } else {
-                tmpOriginalDataShoppings = originalDataShoppings.subList(i * BATCH_NUM, (i + 1) * BATCH_NUM - 1);
+            if (originalDataShoppings.isEmpty()) {
+                continue;
             }
 
-            handleOriginalDataLogin(tmpOriginalDataShoppings);
+            handleOriginalDataLogin(originalDataShoppings);
         }
 
     }

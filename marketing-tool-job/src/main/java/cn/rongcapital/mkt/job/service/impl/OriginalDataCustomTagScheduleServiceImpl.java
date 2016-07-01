@@ -33,38 +33,19 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void cleanData() {
-
-        // 1. 取出需要处理的数据
         OriginalDataCustomerTags paramOriginalDataCustomTags = new OriginalDataCustomerTags();
         paramOriginalDataCustomTags.setStatus(StatusEnum.ACTIVE.getStatusCode());
-        // 查询没有被处理过的数据 (未删除的)
-        List<OriginalDataCustomerTags> originalDataCustomerTags =
-                originalDataCustomerTagsDao.selectList(paramOriginalDataCustomTags);
-
-        if (originalDataCustomerTags.isEmpty()) {
-            // 根本没有要处理的数据
-            return;
-        }
-
-        // 2. 分多次处理所有的数据,每次处理BATCH_NUM条数据
-        // 一共有多少条要处理的数据
-        int totalCount = originalDataCustomerTags.size();
-
-        // 需要多少次循环去处理,相当于一个房间住M个人,N个人需要多少房间的问题.不解释
-        int loopCount = (totalCount + BATCH_NUM - 1) / BATCH_NUM;
-
-        for (int i = 0; i < loopCount; i++) {
-            // 每次循环中的临时数据表
-            List<OriginalDataCustomerTags> tmpOriginalDataCustomTags = new ArrayList<>(BATCH_NUM);
-            if (i == loopCount - 1) {
-                tmpOriginalDataCustomTags =
-                        originalDataCustomerTags.subList(i * BATCH_NUM, originalDataCustomerTags.size());
-            } else {
-                tmpOriginalDataCustomTags = originalDataCustomerTags.subList(i * BATCH_NUM, (i + 1) * BATCH_NUM - 1);
+        int totalCount = originalDataCustomerTagsDao.selectListCount(paramOriginalDataCustomTags);
+        int totalPages = (totalCount + BATCH_NUM - 1) / BATCH_NUM;
+        paramOriginalDataCustomTags.setPageSize(BATCH_NUM);
+        for (int i = 0; i < totalPages; i++) {
+            paramOriginalDataCustomTags.setStartIndex(Integer.valueOf(i * BATCH_NUM));
+            List<OriginalDataCustomerTags> originalDataCustomerTags =
+                    originalDataCustomerTagsDao.selectList(paramOriginalDataCustomTags);
+            if (originalDataCustomerTags.isEmpty()) {
+                continue;
             }
-
-            handleOriginalDataArchPoint(tmpOriginalDataCustomTags);
-
+            handleOriginalDataArchPoint(originalDataCustomerTags);
         }
     }
 
