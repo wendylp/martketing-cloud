@@ -146,7 +146,7 @@
 			(
 			#{item.event_id},
 			#{item.event_name},
-			#{item.click_time},
+			#{item.click_time,jdbcType=TIMESTAMP},
 			#{item.identify_no},
 			#{item.driving_license},
 			#{item.email},
@@ -159,7 +159,7 @@
 			#{item.imei},
 			#{item.udid},
 			#{item.phone_mac},
-			#{item.create_time},
+			#{item.create_time,jdbcType=DATE},
 			#{item.source},
 			#{item.cookie},
 			#{item.file_unique},

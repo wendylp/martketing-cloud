@@ -62,7 +62,7 @@ public class OriginalDataPopulation extends BaseQuery {
 
     private String phoneMac;
 
-    private Boolean status;
+    private Integer status;
 
     private Date createTime;
 
@@ -298,11 +298,11 @@ public class OriginalDataPopulation extends BaseQuery {
         this.phoneMac = phoneMac == null ? null : phoneMac.trim();
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

@@ -153,7 +153,7 @@
 			#{item.member_id},
 			#{item.member_points},
 			#{item.member_level},
-			#{item.regist_time},
+			#{item.regist_time,jdbcType=TIMESTAMP},
 			#{item.card_amt},
 			#{item.expire},
 			#{item.identify_no},
@@ -168,7 +168,7 @@
 			#{item.imei},
 			#{item.udid},
 			#{item.phone_mac},
-			#{item.create_time},
+			#{item.create_time,jdbcType=DATE},
 			#{item.source},
 			#{item.file_unique},
 			#{item.batch_id}

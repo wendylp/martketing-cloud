@@ -16,6 +16,7 @@ import java.util.Map;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataParty;
+import org.apache.ibatis.annotations.Param;
 
 public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<DataParty>{
 	
@@ -109,4 +110,12 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      */
 	List<DataParty> selectCustomAudiencesByTagId(Map<String, Integer> paramMap);
 	
+
+    /**
+     * 批量插入数据
+     * @param list
+     * @return
+     */
+	int batchInsert(@Param("list") List<DataParty> list);
+
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class OriginalDataMemberScheduleServiceImpl implements OriginalDataMember
     public void cleanData() {
         // 1. 取出需要处理的数据
         OriginalDataMember paramOriginalDataMember = new OriginalDataMember();
-        paramOriginalDataMember.setStatus(Boolean.FALSE);
+        paramOriginalDataMember.setStatus(StatusEnum.ACTIVE.getStatusCode());
 
         List<OriginalDataMember> originalDataMembers = originalDataMemberDao.selectList(paramOriginalDataMember);
 
@@ -79,7 +80,7 @@ public class OriginalDataMemberScheduleServiceImpl implements OriginalDataMember
             OriginalDataMember tmpOriginalDataMember = tmpOriginalDataMembers.get(i);
             BeanUtils.copyProperties(tmpOriginalDataMember, paramDataMember);
             // 因为在一个事务里 , 直接修改OriginalDataMember的状态
-            tmpOriginalDataMember.setStatus(Boolean.TRUE);
+            tmpOriginalDataMember.setStatus(StatusEnum.DELETED.getStatusCode());
             originalDataMemberDao.updateById(tmpOriginalDataMember);
             dataMembers.add(paramDataMember);
         }

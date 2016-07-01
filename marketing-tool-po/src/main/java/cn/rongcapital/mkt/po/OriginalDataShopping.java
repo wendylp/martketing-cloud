@@ -90,7 +90,7 @@ public class OriginalDataShopping extends BaseQuery {
 
     private String phoneMac;
 
-    private Boolean status;
+    private Integer status;
 
     private Date updateTime;
 
@@ -436,11 +436,11 @@ public class OriginalDataShopping extends BaseQuery {
         this.phoneMac = phoneMac == null ? null : phoneMac.trim();
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

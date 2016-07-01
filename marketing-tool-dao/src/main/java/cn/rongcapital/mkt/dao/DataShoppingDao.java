@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataShopping;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -43,5 +44,12 @@ public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDa
 	 * @return map
 	 */
 	void cleanAndUpdateByOriginal(List<DataShopping> dataShoppings);
+
+	/**
+	 * 批量更新数据状态
+	 * @param idList
+	 * @return
+	 */
+	int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
 
 }

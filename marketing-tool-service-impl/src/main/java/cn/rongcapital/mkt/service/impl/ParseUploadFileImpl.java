@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.service.ParseUploadFile;
 import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
@@ -46,7 +47,10 @@ public class ParseUploadFileImpl implements ParseUploadFile {
         String batchId = typeAndBatchId[1];
 
         readAndParseFile(bytes, illegalColumns, codeIndexMap, insertList, fileType, batchId, fileUnique);
-        int effectRows = insertParsedData(insertList, fileType);
+        int effectRows = 0;
+        if(insertList.size() > 0){
+            effectRows = insertParsedData(insertList, fileType);
+        }
 
         uploadFileAccordTemplateOut.setDataTopic(importTemplateDao.selectTempleNameByType(fileType));
         uploadFileAccordTemplateOut.setDataRows(effectRows+"");
@@ -97,7 +101,7 @@ public class ParseUploadFileImpl implements ParseUploadFile {
                     generateCodeFileColumnIndexRelationMap(illegalColumns, codeIndexMap, nameCodeMap, uploadFileColumns);
                     isFileHeadFlag = false;
                 }else{
-                    generateInsertDataList(codeIndexMap, insertList, uploadFileColumns, batchId, fileUnique);
+                    generateInsertDataList(codeIndexMap, insertList, uploadFileColumns, batchId, fileUnique,fileType);
                 }
             }
         }catch (Exception e){
@@ -109,10 +113,15 @@ public class ParseUploadFileImpl implements ParseUploadFile {
      * @功能简述: 根据对应关系构造出文件解析后的插入数据数组
      * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
      */
-    private void generateInsertDataList(Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, String[] uploadFileColumns, String batchId, String fileUnique) {
+    private void generateInsertDataList(Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, String[] uploadFileColumns, String batchId, String fileUnique, int fileType) {
         Map<String,Object> insertMap = new HashMap<String,Object>();
         for(String key : codeIndexMap.keySet()){
-            if(uploadFileColumns.length  > (Integer)codeIndexMap.get(key)){
+            if(uploadFileColumns.length  > (Integer)codeIndexMap.get(key) && !("".equals(uploadFileColumns[(Integer)codeIndexMap.get(key)]))){
+                if(key.endsWith("time") || key.endsWith("birthday")){
+                    Date date = DateUtil.parseTimeInUploadFile(uploadFileColumns[(Integer)codeIndexMap.get(key)]);
+                    insertMap.put(key,date);
+                    continue;
+                }
                 insertMap.put(key,uploadFileColumns[(Integer)codeIndexMap.get(key)]);
             }else{
                 insertMap.put(key,null);
@@ -120,7 +129,34 @@ public class ParseUploadFileImpl implements ParseUploadFile {
         }
         insertMap.put("file_unique",fileUnique);
         insertMap.put("batch_id",batchId);
-        insertList.add(insertMap);
+
+        if(validateData(insertMap,fileType)){
+            insertList.add(insertMap);
+        }
+    }
+
+    /**
+     * @功能简述: 验证数据解析后是否合法
+     * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
+     */
+    private boolean validateData(Map<String, Object> insertMap,int fileType) {
+        if(fileType == 1 || fileType == 2 || fileType == 3 || fileType == 4 || fileType == 5){
+            if(insertMap.get("mobile") != null && !("".equals(insertMap.get("mobile")))){
+                return true;
+            }
+        }else if(fileType == 7){
+            if(insertMap.get("order_no") != null && insertMap.get("trans_serial") != null
+                    && !("".equals(insertMap.get("order_no"))) && !("".equals(insertMap.get("trans_serial")))){
+                return true;
+            }
+        }else if(fileType == 6){
+            if(insertMap.get("order_no") != null && insertMap.get("trans_serial") != null
+                    && insertMap.get("mobile") != null && !("".equals(insertMap.get("mobile")))
+                    && !("".equals(insertMap.get("order_no"))) && !("".equals(insertMap.get("trans_serial")))){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

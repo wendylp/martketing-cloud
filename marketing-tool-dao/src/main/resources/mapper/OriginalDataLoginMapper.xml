@@ -154,8 +154,8 @@
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
 			#{item.login_type},
-			#{item.login_time},
-			#{item.logout_time},
+			#{item.login_time,jdbcType=TIMESTAMP},
+			#{item.logout_time,jdbcType=TIMESTAMP},
 			#{item.login_ip},
 			#{item.login_device},
 			#{item.resolution_ratio},
@@ -172,7 +172,7 @@
 			#{item.imei},
 			#{item.udid},
 			#{item.phone_mac},
-			#{item.create_time},
+			#{item.create_time,jdbcType=DATE},
 			#{item.source},
 			#{item.file_unique},
 			#{item.batch_id}

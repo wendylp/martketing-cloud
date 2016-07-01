@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.dao.OriginalDataShoppingDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -33,7 +34,7 @@ public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShop
 
         // 1. 取出需要处理的数据
         OriginalDataShopping paramOriginalDataShopping = new OriginalDataShopping();
-        paramOriginalDataShopping.setStatus(false);
+        paramOriginalDataShopping.setStatus(StatusEnum.ACTIVE.getStatusCode());
 
         // 查询没有被处理过的数据
         List<OriginalDataShopping> originalDataShoppings =
@@ -79,7 +80,7 @@ public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShop
             OriginalDataShopping originalDataShopping = tmpOriginalDataShoppings.get(i);
             BeanUtils.copyProperties(tmpOriginalDataShoppings.get(i), paramDataShopping);
 
-            originalDataShopping.setStatus(Boolean.TRUE);
+            originalDataShopping.setStatus(StatusEnum.DELETED.getStatusCode());
             originalDataShoppingDao.updateById(originalDataShopping);
             dataShoppings.add(paramDataShopping);
         }

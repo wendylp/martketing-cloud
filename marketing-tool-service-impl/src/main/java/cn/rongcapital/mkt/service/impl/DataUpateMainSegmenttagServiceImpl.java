@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.enums.CustomTagMapEnum;
-import cn.rongcapital.mkt.common.enums.DeleteStatusEnum;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.CustomTagMapDao;
 import cn.rongcapital.mkt.po.CustomTag;
@@ -39,7 +39,7 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
         List<CustomTag> customTags = customTagDao.selectListforUpdate(paramCustomTag);
         // 不存在则入库
         if (customTags.isEmpty()) {
-            paramCustomTag.setStatus(Byte.valueOf(DeleteStatusEnum.ACTIVE.getStatusCode() + ""));
+            paramCustomTag.setStatus(Byte.valueOf(StatusEnum.ACTIVE.getStatusCode().toString()));
             paramCustomTag.setCreateTime(createTime);
             // 覆盖人群,目前有一个覆盖
             paramCustomTag.setCoverAudienceCount(1);
@@ -61,7 +61,7 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
         if (customTagMaps.isEmpty()) {
             paramCustomTagMap.setType(Byte.valueOf(CustomTagMapEnum.AUDIENCE.getCode() + ""));
             paramCustomTagMap.setTagId(paramCustomTag.getId());
-            paramCustomTagMap.setStatus(Byte.valueOf(DeleteStatusEnum.ACTIVE.getStatusCode() + ""));
+            paramCustomTagMap.setStatus(Byte.valueOf(StatusEnum.ACTIVE.getStatusCode().toString()));
             paramCustomTagMap.setCreateTime(createTime);
             customTagMapDao.insert(paramCustomTagMap);
 
