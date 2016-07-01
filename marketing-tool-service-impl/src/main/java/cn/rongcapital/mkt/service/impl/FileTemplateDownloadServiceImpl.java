@@ -19,59 +19,35 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+//    sudo tar -zcvPf /rc/downloads/1467362267553template.tar.zip /rc/templeteFiles/TYPE2_002_客户标签.csv /rc/templeteFiles/TYPE3_003_埋点统计.csv /rc/templeteFiles/TYPE4_004_会员卡记录.csv
     @Override
     public Object downloadFileTemplate(String templateIdList) {
-        logger.info("diyiju begin to execute command");
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
         if(templateIdList.length() <= 0){
             baseOutput.setMsg("参数不合法");
             return baseOutput;
         }
+        logger.info("begin downloadFile");
         File[] templateFiles = null;
         String generateFileSimpleName = System.currentTimeMillis() + "template.zip";
         String generateFileName = ApiConstant.DOWNLOAD_BASE_DIR + generateFileSimpleName;  //正式文件
-//        String generateFileName = System.currentTimeMillis() + "template.zip";   //测试文件
-        String command = "sh /rc/marketcloudsrv/zipTempelete.sh ";
+        String command = "tar -zcvPf "+ generateFileName;
         File file = new File(ApiConstant.DOWNLOAD_TEMPLATE_FILE_DIR);
         templateFiles = getTemplateFiles(baseOutput, templateFiles, file);
         String[] idList = null;
         if(templateIdList.contains(",")){
             idList = templateIdList.split(",");
-            command += " '";
             for (String id : idList) {
                 //压缩文件有多个
                 String templateFileName = templateFiles[Integer.parseInt(id)].getAbsoluteFile().toString() + " ";
                 command += templateFileName;
             }
-            command += "' ";
-            command += "' ";
-            command += generateFileSimpleName + " ";
-            command += "' ";
-            command += "' ";
-            for(String id : idList){
-                String templateFileName = templateFiles[Integer.parseInt(id)].getName() + " ";
-                command += templateFileName;
-            }
-            command += "' ";
         }else{
             //压缩文件有1个
-            command += "' ";
             String templateFileName = templateFiles[Integer.parseInt(templateIdList)].getAbsoluteFile().toString() + "";
             command += templateFileName;
-            command += "' ";
-            command += "' ";
-            command += generateFileSimpleName + " ";
-            command += "' ";
-            command += "' ";
-            templateFileName = templateFiles[Integer.parseInt(templateIdList)].getName() + "";
-            command += templateFileName;
-            command += "' ";
         }
         logger.info("begin to execute command");
-
-        //测试
-        command = "sh /rc/marketcloudsrv/zipTempelete.sh  '/rc/templeteFiles/TYPE2_002_客户标签.csv /rc/templeteFiles/TYPE3_003_埋点统计.csv /rc/templeteFiles/TYPE4_004_会员卡记录.csv ' ' 1467365236119template.zip ' ' TYPE2_002_客户标签.csv TYPE3_003_埋点统计.csv TYPE4_004_会员卡记录.csv '";
-
         this.executeCommand(command);
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(command);
@@ -95,15 +71,10 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
         try {
             logger.info("zipCommand: " + command);
             p = Runtime.getRuntime().exec(command);
-
-            logger.info("zipCommand waitFor()....");
-
             p.waitFor();
-
-            logger.info("zipCommand end.");
-
         } catch (Exception e) {
-            logger.error("zipCommand",e);
+            e.printStackTrace();
+            logger.info(e.getMessage());
         }
     }
 }
