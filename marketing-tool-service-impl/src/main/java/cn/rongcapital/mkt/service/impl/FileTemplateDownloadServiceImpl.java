@@ -37,23 +37,35 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
         String[] idList = null;
         if(templateIdList.contains(",")){
             idList = templateIdList.split(",");
+            command += " '";
             for (String id : idList) {
                 //压缩文件有多个
                 String templateFileName = templateFiles[Integer.parseInt(id)].getAbsoluteFile().toString() + " ";
                 command += templateFileName;
             }
+            command += "' ";
+            command += "' ";
             command += generateFileSimpleName + " ";
+            command += "' ";
+            command += "' ";
             for(String id : idList){
                 String templateFileName = templateFiles[Integer.parseInt(id)].getName() + " ";
                 command += templateFileName;
             }
+            command += "' ";
         }else{
             //压缩文件有1个
+            command += "' ";
             String templateFileName = templateFiles[Integer.parseInt(templateIdList)].getAbsoluteFile().toString() + "";
             command += templateFileName;
+            command += "' ";
+            command += "' ";
             command += generateFileSimpleName + " ";
+            command += "' ";
+            command += "' ";
             templateFileName = templateFiles[Integer.parseInt(templateIdList)].getName() + "";
             command += templateFileName;
+            command += "' ";
         }
         logger.info("begin to execute command");
         this.executeCommand(command);
