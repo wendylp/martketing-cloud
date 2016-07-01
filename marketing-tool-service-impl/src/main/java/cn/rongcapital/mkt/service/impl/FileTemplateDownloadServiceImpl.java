@@ -21,12 +21,12 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
 
     @Override
     public Object downloadFileTemplate(String templateIdList) {
+        logger.info("diyiju begin to execute command");
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
         if(templateIdList.length() <= 0){
             baseOutput.setMsg("参数不合法");
             return baseOutput;
         }
-        logger.info("begin downloadFile");
         File[] templateFiles = null;
         String generateFileSimpleName = System.currentTimeMillis() + "template.zip";
         String generateFileName = ApiConstant.DOWNLOAD_BASE_DIR + generateFileSimpleName;  //正式文件
