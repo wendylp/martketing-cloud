@@ -339,11 +339,23 @@ public class BaseMQService {
 		}
 	}
 	
-	protected boolean checkNodeAudienceExist (int campaignId,String itemId,int dataId) {
+	protected void insertNodeAudience(int campaignHeadId,String itemId,int dataId,String name,String mappingKeyId) {
+		NodeAudience nodeAudience = new NodeAudience();
+		nodeAudience.setCampaignHeadId(campaignHeadId);
+		nodeAudience.setItemId(itemId);
+		nodeAudience.setDataId(dataId);
+		nodeAudience.setName(name);
+		nodeAudience.setMappingKeyid(mappingKeyId);
+		nodeAudience.setStatus(0);
+		mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+	}
+	
+	protected boolean checkNodeAudienceExist (int campaignId,String itemId,int dataId,String mappingKeyid) {
 		boolean exist = false;
 		Criteria criteria = Criteria.where("campaignHeadId").is(campaignId)
 									.and("itemId").is(itemId)
-									.and("dataId").is(dataId);
+									.and("dataId").is(dataId)
+								    .and("mappingKeyid").is(mappingKeyid);
 		Query query = new Query(criteria);
 		List<NodeAudience> nodeAudienceExistList = mongoTemplate.find(query, NodeAudience.class);
 		if(CollectionUtils.isNotEmpty(nodeAudienceExistList)) {

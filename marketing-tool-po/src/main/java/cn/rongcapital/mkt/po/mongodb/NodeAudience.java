@@ -28,6 +28,9 @@ public class NodeAudience implements Serializable {
 	@Field(value = "name")
 	private String name;
 	
+	@Field(value = "mapping_keyid")
+	private String mappingKeyid;
+	
 	//逻辑删除标记,0:未删除,1:已删除
 	@Field(value = "status")
 	private Integer status;
@@ -87,6 +90,13 @@ public class NodeAudience implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	public String getMappingKeyid() {
+		return mappingKeyid;
+	}
+
+	public void setMappingKeyid(String mappingKeyid) {
+		this.mappingKeyid = mappingKeyid;
+	}
 	
 }

@@ -30,7 +30,6 @@ import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
-import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
@@ -102,14 +101,8 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 		List<Segment> segmentListToNext = new ArrayList<Segment>();//要传递给下面节点的数据(执行了发送微信操作的数据)
 		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
-			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
-				NodeAudience nodeAudience = new NodeAudience();
-				nodeAudience.setCampaignHeadId(campaignHeadId);
-				nodeAudience.setItemId(itemId);
-				nodeAudience.setDataId(segment.getDataId());
-				nodeAudience.setName(segment.getName());
-				nodeAudience.setStatus(0);
-				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId(),segment.getMappingKeyid())) {
+				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName(), segment.getMappingKeyid());
 				Integer dataId = segment.getDataId();
 				//从mongo的主数据表中查询该条id对应的主数据详细信息
 				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
