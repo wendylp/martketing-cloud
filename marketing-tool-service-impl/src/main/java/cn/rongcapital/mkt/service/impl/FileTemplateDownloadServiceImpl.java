@@ -28,7 +28,8 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
         }
         logger.info("begin downloadFile");
         File[] templateFiles = null;
-        String generateFileName = ApiConstant.DOWNLOAD_BASE_DIR + System.currentTimeMillis() + "template.zip";  //正式文件
+        String generateFileSimpleName = System.currentTimeMillis() + "template.zip";
+        String generateFileName = ApiConstant.DOWNLOAD_BASE_DIR + generateFileSimpleName;  //正式文件
 //        String generateFileName = System.currentTimeMillis() + "template.zip";   //测试文件
         String command = "tar -zcvPf " + generateFileName + " ";
         File file = new File(ApiConstant.DOWNLOAD_TEMPLATE_FILE_DIR);
@@ -51,7 +52,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(command);
         DownloadFileName downloadFileName = new DownloadFileName();
-        downloadFileName.setDownloadFileName(generateFileName);
+        downloadFileName.setDownloadFileName(generateFileSimpleName);
         baseOutput.getData().add(downloadFileName);
         return baseOutput;
     }
