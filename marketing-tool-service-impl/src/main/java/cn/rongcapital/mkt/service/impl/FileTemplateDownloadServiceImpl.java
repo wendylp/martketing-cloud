@@ -68,6 +68,10 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             command += "' ";
         }
         logger.info("begin to execute command");
+
+        //测试
+        command = "sh /rc/marketcloudsrv/zipTempelete.sh  '/rc/templeteFiles/TYPE2_002_客户标签.csv /rc/templeteFiles/TYPE3_003_埋点统计.csv /rc/templeteFiles/TYPE4_004_会员卡记录.csv ' ' 1467365236119template.zip ' ' TYPE2_002_客户标签.csv TYPE3_003_埋点统计.csv TYPE4_004_会员卡记录.csv '";
+
         this.executeCommand(command);
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(command);
