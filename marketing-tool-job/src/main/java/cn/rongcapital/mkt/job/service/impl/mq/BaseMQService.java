@@ -222,15 +222,13 @@ public class BaseMQService {
 		return isFriend;
 	}
 	
-	protected boolean sendPubWechatByH5Interface(String pubId,Integer materialId,String fansWeixinId) {
+	protected boolean sendPubWechatByH5Interface(String pubId,Integer materialId,List<String> fansWeixinIds) {
 		boolean isSent = false;
 		HttpUrl httpUrl = new HttpUrl();
 		httpUrl.setHost(h5BaseUrl);
 		httpUrl.setPath(ApiConstant.DL_PUB_SEND_API_PATH+getPid());
 		HashMap<Object , Object> params = new HashMap<Object , Object>();
 		params.put("pub_id", pubId);
-		List<String> fansWeixinIds = new ArrayList<String>();
-		fansWeixinIds.add(fansWeixinId);
 		params.put("fans_weixin_ids",fansWeixinIds);
 		params.put("message_type","news");
 		params.put("material_id", materialId);
@@ -423,6 +421,9 @@ public class BaseMQService {
 	}
 	
 	protected void sendDynamicQueue(List<Segment> campaignSegmentList,String dest) { 
+		if(CollectionUtils.isEmpty(campaignSegmentList) || StringUtils.isBlank(dest)) {
+			return;
+		}
 		Session session = null;
     	try {
     		session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);

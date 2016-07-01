@@ -105,6 +105,9 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 								  CampaignActionSendH5 campaignActionSendH5) {
 		String queueKey = campaignHeadId+"-"+itemId;
 		List<Segment> segmentListToNext = new ArrayList<Segment>();//要传递给下面节点的数据(执行了发送微信操作的数据)
+		List<String> fansWeixinIds = new ArrayList<String>();
+		String pubId = campaignActionSendH5.getPubId();
+		Integer materialId = campaignActionSendH5.getMaterialId();
 		for(Segment segment:segmentList) {
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId(),segment.getMappingKeyid())) {
 				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName(), segment.getMappingKeyid());
@@ -114,23 +117,27 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 				if(null!=dp && null !=dp.getMdType() &&
 						StringUtils.isNotBlank(dp.getMappingKeyid()) &&
 						dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
-					String pubId = campaignActionSendH5.getPubId();
-					Integer materialId = campaignActionSendH5.getMaterialId();
 					boolean isFans = isPubWechatFans(segment, pubId, null);
 					if(isFans) {
-						boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,dp.getMappingKeyid());
-						if(isPubSent) {//公众号执行了发送动作
-							segment.setPubId(campaignActionSendH5.getPubId());
-							String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
-							segment.setH5MobileUrl(h5MobileUrl);
-							segment.setMaterialId(campaignActionSendH5.getMaterialId());
-							segmentListToNext.add(segment);//数据放入向后面节点传递的list里
-						}
+						segment.setPubId(campaignActionSendH5.getPubId());
+						String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
+						segment.setH5MobileUrl(h5MobileUrl);
+						segment.setMaterialId(campaignActionSendH5.getMaterialId());
+						fansWeixinIds.add(dp.getMappingKeyid());
+						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+					} else {
+						logger.info("不是公众号粉丝,无法发送,"+JSON.toJSONString(segment));
 					}
 				}
 			}
 		}
-		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
+		if(fansWeixinIds.size() > 0) {
+			boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,fansWeixinIds);
+			if(!isPubSent) {//公众号执行发送动作失败
+				segmentListToNext = null;
+			}
+		}
+		if(CollectionUtils.isNotEmpty(campaignEndsList) && CollectionUtils.isNotEmpty(segmentListToNext)) {
 			for(CampaignSwitch cs:campaignEndsList) {
 				//发送segment数据到后面的节点
 				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
