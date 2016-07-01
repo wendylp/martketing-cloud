@@ -1,9 +1,10 @@
 package cn.rongcapital.mkt.vo.in;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class SegmentFilterCondition{
 
     @NotEmpty

@@ -1,7 +1,6 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.jms.Message;
@@ -11,12 +10,10 @@ import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -25,17 +22,12 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.util.HttpClientUtil;
-import cn.rongcapital.mkt.common.util.HttpUrl;
 import cn.rongcapital.mkt.dao.CampaignActionSendPrivtDao;
-import cn.rongcapital.mkt.dao.WechatPersonalUuidDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignActionSendPrivt;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
-import cn.rongcapital.mkt.po.WechatPersonalUuid;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
-import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
@@ -46,11 +38,6 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private CampaignActionSendPrivtDao campaignActionSendPrivtDao;
-	@Autowired
-	private WechatPersonalUuidDao wechatPersonalUuidDao;
-	
-	@Value("${runxue.h5.api.base.url}")
-	private String h5BaseUrl;
 	
 	public void task (TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -62,7 +49,8 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 		campaignActionSendPrivtT.setItemId(itemId);
 		List<CampaignActionSendPrivt> campaignActionSendPrivtList = campaignActionSendPrivtDao.selectList(campaignActionSendPrivtT);
 		if(CollectionUtils.isEmpty(campaignActionSendPrivtList) ||
-		   StringUtils.isBlank(campaignActionSendPrivtList.get(0).getUin())) {
+		   StringUtils.isBlank(campaignActionSendPrivtList.get(0).getUin()) ||
+		   StringUtils.isBlank(campaignActionSendPrivtList.get(0).getTextInfo())) {
 			logger.error("没有配置个人号属性,return,campaignHeadId:"+campaignHeadId+",itemId:"+itemId);
 			return;
 		}
@@ -107,14 +95,8 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 		List<Segment> segmentListToNext = new ArrayList<Segment>();//要传递给下面节点的数据(执行了发送微信操作的数据)
 		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
-			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
-				NodeAudience nodeAudience = new NodeAudience();
-				nodeAudience.setCampaignHeadId(campaignHeadId);
-				nodeAudience.setItemId(itemId);
-				nodeAudience.setDataId(segment.getDataId());
-				nodeAudience.setName(segment.getName());
-				nodeAudience.setStatus(0);
-				mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId(),segment.getMappingKeyid())) {
+				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName(), segment.getMappingKeyid());
 				Integer dataId = segment.getDataId();
 				//从mongo的主数据表中查询该条id对应的主数据详细信息
 				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
@@ -122,9 +104,17 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 						StringUtils.isNotBlank(dp.getMappingKeyid()) &&
 						dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
 					//调用微信个人号发送消息接口
-					boolean isSent = sendWechatByH5Interface(campaignActionSendPrivt,dp.getMappingKeyid());
-					if(isSent) {
-						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+					String uin = campaignActionSendPrivt.getUin();
+					String textInfo = campaignActionSendPrivt.getTextInfo();
+					String groupUcode = campaignActionSendPrivt.getUcode();
+					boolean isFriend = isPrvWechatFriend(segment, uin, groupUcode);
+					if(isFriend) {
+						boolean isSent = sendPrvWechatByH5Interface(uin,textInfo,dp.getMappingKeyid());
+						if(isSent) {
+							segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+						}
+					} else {
+						logger.info("不是个人号好友,无法发送,"+JSON.toJSONString(segment));
 					}
 				}
 			}
@@ -137,41 +127,6 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListToNext));
 			}
 		}
-	}
-	
-	private boolean sendWechatByH5Interface(CampaignActionSendPrivt campaignActionSendPrivt,String ucode) {
-		boolean isSent = false;
-		HashMap<Object , Object> params = new HashMap<Object , Object>();
-		WechatPersonalUuid wechatPersonalUuidT = new WechatPersonalUuid();
-		wechatPersonalUuidT.setStatus((int)ApiConstant.TABLE_DATA_STATUS_VALID);
-		wechatPersonalUuidT.setUin(campaignActionSendPrivt.getUin());
-		List<WechatPersonalUuid> wechatPersonalUuidList = wechatPersonalUuidDao.selectList(wechatPersonalUuidT);
-		if(CollectionUtils.isNotEmpty(wechatPersonalUuidList)) {
-			WechatPersonalUuid wechatPersonalUuid = new WechatPersonalUuid();
-			String uuid = wechatPersonalUuid.getUuid();
-			params.put("uuid", uuid);
-		} else {
-			return isSent;//没有有效的uuid,无法发送
-		}
-		HttpUrl httpUrl = new HttpUrl();
-		httpUrl.setHost(h5BaseUrl);
-		httpUrl.setPath(ApiConstant.DL_PRV_SEND_API_PATH+getPid());
-		params.put("ucode", ucode);
-		params.put("message",campaignActionSendPrivt.getTextInfo());
-		httpUrl.setRequetsBody(JSON.toJSONString(params));
-		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
-		try {
-			PostMethod postResult = HttpClientUtil.getInstance().postExt(httpUrl);
-			String postResStr = postResult.getResponseBodyAsString();
-			String status = JSON.parseObject(postResStr).getJSONObject("hfive_mkt_personal_send_response").getString("status");
-			if(StringUtils.isNotBlank(status) && status.equalsIgnoreCase("true")) {
-				isSent = true;
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
-			isSent = false;
-		}
-		return isSent;
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {

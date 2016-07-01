@@ -19,7 +19,9 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.dao.TaskRunLogDao;
 import cn.rongcapital.mkt.dao.TaskScheduleDao;
+import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.po.TaskSchedule;
 
 @Component
@@ -33,6 +35,8 @@ public class TaskManager {
     private ConcurrentTaskScheduler taskSchedule;
 	@Autowired
 	private TaskScheduleDao taskScheduleDao;
+	@Autowired
+	private TaskRunLogDao taskRunLogDao;
 	
 	private static final ConcurrentHashMap<String, ScheduledFuture<?>> taskMap = new ConcurrentHashMap<String, ScheduledFuture<?>>();
 	
@@ -51,7 +55,12 @@ public class TaskManager {
 	       }
 	};
 	
-	public synchronized void manualInitTask () {
+	public synchronized void manualInitTask (int taskId,String taskName) {
+		TaskRunLog taskRunLogT = new TaskRunLog();
+		taskRunLogT.setTaskId(taskId);
+		taskRunLogT.setTaskName(taskName);
+		taskRunLogT.setStartTime(new Date());
+		taskRunLogDao.insert(taskRunLogT);
 		scanTask();
 		prepareTasks();
 	}
@@ -150,9 +159,10 @@ public class TaskManager {
 		} else {
 			Date startTime = taskSchedulePo.getStartTime() == null ? 
 							 Calendar.getInstance().getTime():taskSchedulePo.getStartTime();
-			Integer interMinutes = taskSchedulePo.getIntervalMinutes();
+			Float interMinutes = taskSchedulePo.getIntervalMinutes();
 			if(null != interMinutes && interMinutes > 0) {
-				scheduledFuture =  taskSchedule.scheduleAtFixedRate(task, startTime, interMinutes*60*1000);
+				long period = (long)(interMinutes*60*1000);
+				scheduledFuture =  taskSchedule.scheduleAtFixedRate(task, startTime, period);
 			}else {
 				scheduledFuture = taskSchedule.schedule(task,startTime);
 			}

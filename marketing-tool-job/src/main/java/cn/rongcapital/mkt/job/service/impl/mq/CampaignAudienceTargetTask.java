@@ -22,7 +22,6 @@ import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
-import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
@@ -50,26 +49,16 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			List<Segment> segmentList = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId").is(cat.getSegmentationId())), Segment.class);
 			if(CollectionUtils.isNotEmpty(segmentList)) {
 				List<Segment> segmentListUnique =  new ArrayList<Segment>();//去重后的segment list
-				for(Segment segement:segmentList) {
-					Criteria criteria = Criteria.where("campaignHeadId").is(campaignHeadId)
-										.and("itemId").is(itemId)
-										.and("dataId").is(segement.getDataId());
-					Query query = new Query(criteria);
-					List<NodeAudience> nodeAudienceExistList = mongoTemplate.find(query, NodeAudience.class);
-					if(CollectionUtils.isEmpty(nodeAudienceExistList)) {//只存node_audience表中不存在的数据
-						DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segement.getDataId())), DataParty.class);
-						if(null != dp && StringUtils.isNotBlank(dp.getMappingKeyid())) {
-							segement.setFansFriendsOpenId(dp.getMappingKeyid());//设置微信粉丝/好友的openid
-						}
-						NodeAudience nodeAudience = new NodeAudience();
-						nodeAudience.setCampaignHeadId(campaignHeadId);
-						nodeAudience.setItemId(itemId);
-						nodeAudience.setDataId(segement.getDataId());
-						nodeAudience.setName(segement.getName());
-						nodeAudience.setStatus(0);
-						segmentListUnique.add(segement);
+				for(Segment segment:segmentList) {
+					boolean audienceExist = checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId(),segment.getMappingKeyid());
+					if(!audienceExist) {//只存node_audience表中不存在的数据
 						//把segment保存到mongo中的node_audience表
-						mongoTemplate.insert(nodeAudience);
+						insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName(), segment.getMappingKeyid());
+						DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())), DataParty.class);
+						if(null != dp && StringUtils.isNotBlank(dp.getMappingKeyid())) {
+							segment.setFansFriendsOpenId(dp.getMappingKeyid());//设置微信粉丝/好友的openid
+						}
+						segmentListUnique.add(segment);
 					}
 				}
 				//查询节点后面的分支

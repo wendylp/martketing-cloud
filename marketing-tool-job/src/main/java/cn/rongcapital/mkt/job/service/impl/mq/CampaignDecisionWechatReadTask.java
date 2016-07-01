@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -35,8 +34,8 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 	@Autowired
 	private CampaignDecisionWechatReadDao campaignDecisionWechatReadDao;
 	
-	@Value("${runxue.h5.api.base.url}")
-	private String h5BaseUrl;
+//	@Value("${runxue.h5.api.base.url}")
+//	private String h5BaseUrl;
 	
 	public void task (TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
