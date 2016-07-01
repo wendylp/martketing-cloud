@@ -113,9 +113,15 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 					//调用微信个人号发送消息接口
 					String uin = campaignActionSendPrivt.getUin();
 					String textInfo = campaignActionSendPrivt.getTextInfo();
-					boolean isSent = sendPrvWechatByH5Interface(uin,textInfo,dp.getMappingKeyid());
-					if(isSent) {
-						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+					String groupUcode = campaignActionSendPrivt.getUcode();
+					boolean isFriend = isPrvWechatFriend(segment, uin, groupUcode);
+					if(isFriend) {
+						boolean isSent = sendPrvWechatByH5Interface(uin,textInfo,dp.getMappingKeyid());
+						if(isSent) {
+							segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+						}
+					} else {
+						logger.info("不是个人号好友,无法发送,"+JSON.toJSONString(segment));
 					}
 				}
 			}

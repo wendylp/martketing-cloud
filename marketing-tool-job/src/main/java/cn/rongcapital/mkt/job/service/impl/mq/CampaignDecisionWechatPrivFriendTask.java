@@ -10,24 +10,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignDecisionPrvtFriendsDao;
-import cn.rongcapital.mkt.dao.WechatGroupDao;
-import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignDecisionPrvtFriends;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
-import cn.rongcapital.mkt.po.WechatGroup;
-import cn.rongcapital.mkt.po.WechatMember;
-import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
@@ -35,13 +27,7 @@ public class CampaignDecisionWechatPrivFriendTask extends BaseMQService implemen
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
-	private MongoTemplate mongoTemplate;
-	@Autowired
 	private CampaignDecisionPrvtFriendsDao campaignDecisionPrvtFriendsDao;
-	@Autowired
-	private WechatMemberDao wechatMemberDao;
-	@Autowired
-	private WechatGroupDao wechatGroupDao;
 	
 	public void task (TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -60,12 +46,14 @@ public class CampaignDecisionWechatPrivFriendTask extends BaseMQService implemen
 		campaignDecisionPrvtFriendsT.setItemId(itemId);
 		List<CampaignDecisionPrvtFriends> campaignDecisionPrvtFriendsList = campaignDecisionPrvtFriendsDao.selectList(campaignDecisionPrvtFriendsT);
 		if(CollectionUtils.isEmpty(campaignDecisionPrvtFriendsList) || 
-		   null == campaignDecisionPrvtFriendsList.get(0).getAssetId()) {
+		   null == campaignDecisionPrvtFriendsList.get(0).getAssetId() ||
+		   StringUtils.isBlank(campaignDecisionPrvtFriendsList.get(0).getUin())) {
 			logger.error("没有设置决策条件,return,campaignHeadId:"+campaignHeadId+",itemId:"+itemId);
 			return;
 		}
 		CampaignDecisionPrvtFriends campaignDecisionPrvFans = campaignDecisionPrvtFriendsList.get(0);
 		String uin = campaignDecisionPrvFans.getUin();
+		String groupUcode = campaignDecisionPrvFans.getUcode();
 		String currentQueueName = campaignHeadId + "-" +itemId;
 		Queue queue = getDynamicQueue(currentQueueName);
 		List<Segment> segmentList = getQueueData(queue);
@@ -73,47 +61,12 @@ public class CampaignDecisionWechatPrivFriendTask extends BaseMQService implemen
 			List<Segment> segmentListToNextYes = new ArrayList<Segment>();//要传递给下面节点的数据:是好友
 			List<Segment> segmentListToNextNo = new ArrayList<Segment>();//要传递给下面节点的数据:不是好友
 			for(Segment segment:segmentList) {
-				boolean isFriend = false;
-				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())), DataParty.class);
-				if(null != dp && null != dp.getMdType() &&
-				   StringUtils.isNotBlank(dp.getMappingKeyid()) &&
-				   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
-					
-					String friendUcode = dp.getMappingKeyid();
-					WechatMember wechatMemberT = new WechatMember();
-					wechatMemberT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-					wechatMemberT.setWxCode(friendUcode);
-					wechatMemberT.setUin(uin);
-					List<WechatMember> wechatMemberList = wechatMemberDao.selectList(wechatMemberT);
-					if(CollectionUtils.isNotEmpty(wechatMemberList)) {
-						String groupUcode = campaignDecisionPrvFans.getUcode();
-						if(StringUtils.isBlank(groupUcode)) {//groupid为空表示不限群组
-							isFriend = true;
-						} else {
-							for(WechatMember wm:wechatMemberList) {
-								if(StringUtils.isNotBlank(wm.getWxGroupId()) &&
-								   StringUtils.isNumeric(wm.getWxGroupId())) {
-									Integer idOfWechatGroup = Integer.parseInt(wm.getWxGroupId());
-									WechatGroup wechatGroupT = new WechatGroup();
-									wechatGroupT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-									wechatGroupT.setGroupId(groupUcode);
-									List<WechatGroup> wechatGroupList = wechatGroupDao.selectList(wechatGroupT);
-									if(CollectionUtils.isNotEmpty(wechatGroupList) && 
-									   wechatGroupList.get(0).getId()==idOfWechatGroup) {
-										  isFriend = true;
-										  break;
-										}
-									}
-								}
-								
-							}
-						}
-					}
-					if(isFriend) {
-						segmentListToNextYes.add(segment);
-					}else{
-						segmentListToNextNo.add(segment);
-					}
+				boolean isFriend = isPrvWechatFriend(segment, uin, groupUcode);
+				if(isFriend) {
+					segmentListToNextYes.add(segment);
+				}else{
+					segmentListToNextNo.add(segment);
+				}
 			    }
 			if(CollectionUtils.isNotEmpty(campaignSwitchYesList)) {
 				CampaignSwitch csYes = campaignSwitchYesList.get(0);

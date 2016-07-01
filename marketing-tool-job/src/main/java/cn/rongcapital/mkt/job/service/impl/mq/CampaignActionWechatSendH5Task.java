@@ -121,12 +121,14 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 				if(null!=dp && null !=dp.getMdType() &&
 						StringUtils.isNotBlank(dp.getMappingKeyid()) &&
 						dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
-					//调用微信公众号发送图文接口
 					String pubId = campaignActionSendH5.getPubId();
 					Integer materialId = campaignActionSendH5.getMaterialId();
-					boolean isSent = sendPubWechatByH5Interface(pubId,materialId,dp.getMappingKeyid());
-					if(isSent) {
-						String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
+					boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,dp.getMappingKeyid());
+					String uin = campaignActionSendH5.getUin();
+					String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
+					String textInfo = h5MobileUrl;//给个人号好友发送图文的url
+					boolean isPrvSent = sendPrvWechatByH5Interface(uin, textInfo, dp.getMappingKeyid());
+					if(isPubSent || isPrvSent) {//公众号或个人号执行了发送动作
 						segment.setPubId(campaignActionSendH5.getPubId());
 						segment.setH5MobileUrl(h5MobileUrl);
 						segment.setMaterialId(campaignActionSendH5.getMaterialId());

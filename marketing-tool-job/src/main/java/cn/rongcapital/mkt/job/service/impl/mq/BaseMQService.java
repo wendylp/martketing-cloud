@@ -21,6 +21,8 @@ import javax.naming.InitialContext;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +41,16 @@ import cn.rongcapital.mkt.common.util.HttpClientUtil;
 import cn.rongcapital.mkt.common.util.HttpUrl;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.TenementDao;
+import cn.rongcapital.mkt.dao.WechatGroupDao;
+import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.dao.WechatPersonalUuidDao;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.Tenement;
+import cn.rongcapital.mkt.po.WechatGroup;
+import cn.rongcapital.mkt.po.WechatMember;
 import cn.rongcapital.mkt.po.WechatPersonalUuid;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
@@ -69,6 +76,10 @@ public class BaseMQService {
 	protected String h5BaseUrl;
 	@Autowired
 	protected WechatPersonalUuidDao wechatPersonalUuidDao;
+	@Autowired
+	private WechatMemberDao wechatMemberDao;
+	@Autowired
+	private WechatGroupDao wechatGroupDao;
 	
 	public synchronized void initJndiEvironment() {
 		if(isJndiInited) {
@@ -86,6 +97,129 @@ public class BaseMQService {
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
+	}
+	
+	protected boolean isPubWechatFans(Segment segment,String pubId,Byte subscribeTimeType) {
+		boolean isFans = false;
+		DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())), 
+											 DataParty.class);
+		if(null != dp && null != dp.getMdType() &&
+				   StringUtils.isNotBlank(dp.getMappingKeyid()) &&
+				   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
+			String fanOpenId = dp.getMappingKeyid();
+			WechatMember wechatMemberT = new WechatMember();
+			wechatMemberT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			wechatMemberT.setWxCode(fanOpenId);
+			wechatMemberT.setPubId(pubId);
+			List<WechatMember> wechatMemberList = wechatMemberDao.selectList(wechatMemberT);
+			if(CollectionUtils.isNotEmpty(wechatMemberList)) {
+				if(null == subscribeTimeType) {//为空表示不限订阅时间
+					isFans = true;
+				} else {
+					String realSubscribeTime = wechatMemberList.get(0).getSubscribeTime();
+					isFans = checkSubscriberTime(subscribeTimeType,realSubscribeTime);
+				}
+			}
+		}
+		return isFans;
+	}
+	
+	protected boolean checkSubscriberTime(byte subscribeTimeType,String realSubscribeTime) {
+		boolean isSubscribe = false;
+		DateTime realSubscribeTimeDate = DateTime.parse(realSubscribeTime);  
+		if(null != realSubscribeTimeDate) {
+			DateTime now = new DateTime();
+			switch (subscribeTimeType) {
+			case 0://一天
+				Interval interval1 = new Interval(realSubscribeTimeDate, now);
+				long interv1 = interval1.toDuration().getStandardDays();
+				if(interv1 <= 1) {
+					isSubscribe = true;
+				}
+				break;
+			case 1://一周
+				Interval interval2 = new Interval(realSubscribeTimeDate, now);
+				long interv2 = interval2.toDuration().getStandardDays();
+				if(interv2 <= 7) {
+					isSubscribe = true;
+				}
+				break;
+			case 2://一个月
+				Interval interval3 = new Interval(realSubscribeTimeDate, now);
+				long interv3 = interval3.toDuration().getStandardDays();
+				if(interv3 <= 30) {
+					isSubscribe = true;
+				}
+				break;
+			case 3://三个月
+				Interval interval4 = new Interval(realSubscribeTimeDate, now);
+				long interv4 = interval4.toDuration().getStandardDays();
+				if(interv4 <= 90) {
+					isSubscribe = true;
+				}				
+				break;
+			case 4://六个月
+				Interval interval5 = new Interval(realSubscribeTimeDate, now);
+				long interv5 = interval5.toDuration().getStandardDays();
+				if(interv5 <= 180) {
+					isSubscribe = true;
+				}				
+				break;
+			case 5:
+				Interval interval6 = new Interval(realSubscribeTimeDate, now);
+				long interv6 = interval6.toDuration().getStandardDays();
+				if(interv6 <= 365) {
+					isSubscribe = true;
+				}				
+				break;
+			case 6:
+				Interval interval7 = new Interval(realSubscribeTimeDate, now);
+				long interv7 = interval7.toDuration().getStandardDays();
+				if(interv7 > 365) {
+					isSubscribe = true;
+				}							
+				break;
+			}
+		}
+		return isSubscribe;
+	}
+	
+	protected boolean isPrvWechatFriend(Segment segment,String uin,String groupUcode) {
+		boolean isFriend = false;
+		DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())), DataParty.class);
+		if(null != dp && null != dp.getMdType() &&
+		   StringUtils.isNotBlank(dp.getMappingKeyid()) &&
+		   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
+			String friendUcode = dp.getMappingKeyid();
+			WechatMember wechatMemberT = new WechatMember();
+			wechatMemberT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			wechatMemberT.setWxCode(friendUcode);
+			wechatMemberT.setUin(uin);
+			List<WechatMember> wechatMemberList = wechatMemberDao.selectList(wechatMemberT);
+			if(CollectionUtils.isNotEmpty(wechatMemberList)) {
+				if(StringUtils.isBlank(groupUcode)) {//groupid为空表示不限群组
+					isFriend = true;
+				} else {
+					for(WechatMember wm:wechatMemberList) {
+						if(StringUtils.isNotBlank(wm.getWxGroupId()) &&
+						   StringUtils.isNumeric(wm.getWxGroupId())) {
+							Integer idOfWechatGroup = Integer.parseInt(wm.getWxGroupId());
+							WechatGroup wechatGroupT = new WechatGroup();
+							wechatGroupT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+							wechatGroupT.setGroupId(groupUcode);
+							List<WechatGroup> wechatGroupList = wechatGroupDao.selectList(wechatGroupT);
+							if(CollectionUtils.isNotEmpty(wechatGroupList) && 
+							   wechatGroupList.get(0).getId()==idOfWechatGroup) {
+								  isFriend = true;
+								  break;
+								}
+							}
+						}
+						
+					}
+				}
+			}
+		return isFriend;
 	}
 	
 	protected boolean sendPubWechatByH5Interface(String pubId,Integer materialId,String fansWeixinId) {

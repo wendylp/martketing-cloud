@@ -119,13 +119,18 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 					//调用微信公众号发送图文接口
 					String pubId = campaignActionSendPub.getPubId();
 					Integer materialId = campaignActionSendPub.getMaterialId();
-					boolean isSent = sendPubWechatByH5Interface(pubId,materialId,dp.getMappingKeyid());
-					if(isSent) {
-						String h5MobileUrl = getH5MobileUrl(campaignActionSendPub.getImgTextAssetId());
-						segment.setPubId(campaignActionSendPub.getPubId());
-						segment.setH5MobileUrl(h5MobileUrl);
-						segment.setMaterialId(campaignActionSendPub.getMaterialId());
-						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+					boolean isFans = isPubWechatFans(segment, pubId, null);
+					if(isFans) {
+						boolean isSent = sendPubWechatByH5Interface(pubId,materialId,dp.getMappingKeyid());
+						if(isSent) {
+							String h5MobileUrl = getH5MobileUrl(campaignActionSendPub.getImgTextAssetId());
+							segment.setPubId(campaignActionSendPub.getPubId());
+							segment.setH5MobileUrl(h5MobileUrl);
+							segment.setMaterialId(campaignActionSendPub.getMaterialId());
+							segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+						}
+					} else {
+						logger.info("不是公众号粉丝,无法发送,"+JSON.toJSONString(segment));
 					}
 				}
 			}
