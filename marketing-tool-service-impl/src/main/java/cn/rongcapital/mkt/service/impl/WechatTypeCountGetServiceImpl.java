@@ -59,7 +59,9 @@ public class WechatTypeCountGetServiceImpl implements WechatTypeCountGetService{
             for(Map<String,Object> map : typeCountList){
                 resultMap.put("asset_type",assetType);
                 resultMap.put("count",(Integer)resultMap.get("count") + 1);
-                resultMap.put("totalNumber",map.get("total_count") == null ? null : (Integer)resultMap.get("totalNumber") + (Integer)map.get("total_count"));
+                if(map.get("total_count") != null){
+                    resultMap.put("totalNumber",(Integer)resultMap.get("totalNumber") + (Integer)map.get("total_count"));
+                }
             }
             return resultMap;
         }
