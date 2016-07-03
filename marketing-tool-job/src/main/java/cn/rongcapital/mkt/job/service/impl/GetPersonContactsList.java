@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +82,8 @@ public class GetPersonContactsList implements TaskService {
                 Map<String,Object> paramContact = new HashMap<String,Object>();
                 paramContact.put("wx_group_id",groupId);
                 paramContact.put("wx_code", personalContact.getUcode());
-                paramContact.put("nickname",personalContact.getNickname());
+                paramContact.put("wx_name",personalContact.getNickname().replaceAll("[^\\u0000-\\uFFFF]", ""));
+
                 if("男".equals(personalContact.getSex())){
                     paramContact.put("sex", 1);
                 }else if("女".equals(personalContact.getSex())){

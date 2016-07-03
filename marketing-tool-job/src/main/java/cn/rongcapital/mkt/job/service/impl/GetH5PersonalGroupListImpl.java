@@ -7,7 +7,6 @@ import cn.rongcapital.mkt.dao.WechatGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.job.vo.in.H5MktPersonGroupListResponse;
-import cn.rongcapital.mkt.job.vo.in.H5PersonalContactlistResponse;
 import cn.rongcapital.mkt.job.vo.in.H5PersonalGroup;
 import cn.rongcapital.mkt.job.vo.in.H5PersonalGroupMember;
 import com.alibaba.fastjson.JSON;
@@ -16,6 +15,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,11 +43,12 @@ public class GetH5PersonalGroupListImpl implements TaskService {
     @Autowired
     private GetGroupIdServiceImpl getGroupIdService;
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void task(Integer taskId) {
         Map<String,String> h5ParamMap = tenementDao.selectPid();
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PERSONAL_GROUPLIST);
-
+        return;
         List<String> uuids = getUUidListService.getUuidList();
         if(uuids == null) return ;
 
@@ -90,9 +92,9 @@ public class GetH5PersonalGroupListImpl implements TaskService {
                     Map<String,Object> paramGroupMember = new HashMap<String,Object>();
                     paramGroupMember.put("wx_group_id",groupId);
                     paramGroupMember.put("wx_code", h5PersonalGroupMember.getUcode());
-//                paramContact.put("name",personalContact.getNickname());
+                    paramGroupMember.put("nickname",h5PersonalGroupMember.getNickname().replaceAll("[^\\u0000-\\uFFFF]", ""));
                     paramGroupMember.put("head_image_url", h5PersonalGroupMember.getHeadImage());
-                    paramGroupMember.put("nick_name",h5PersonalGroupMember.getDisplayName());
+                    paramGroupMember.put("wx_name",h5PersonalGroupMember.getDisplayName().replaceAll("[^\\u0000-\\uFFFF]", ""));
                     paramGroupMember.put("is_friend", h5PersonalGroupMember.getIsFriend());
                     paramGroupMembers.add(paramGroupMember);
                 }

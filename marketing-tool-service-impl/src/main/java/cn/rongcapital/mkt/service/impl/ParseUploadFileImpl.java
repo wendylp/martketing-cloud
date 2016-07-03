@@ -76,7 +76,7 @@ public class ParseUploadFileImpl implements ParseUploadFile {
 
             case 2:
                 effectRows = originalDataCustomerTagsDao.batchInsertUploadFileData(insertList);
-                taskManager.manualInitTask(826,null);
+                taskManager.manualInitTask(826,"DataCustomTagScheduleServiceImpl");
             case 3:
                 effectRows = originalDataArchPointDao.batchInsertUploadFileData(insertList);
             case 4:

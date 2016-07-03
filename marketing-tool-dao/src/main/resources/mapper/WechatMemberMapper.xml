@@ -178,13 +178,13 @@
 	</select>
 
 	<insert id="batchInsertContacts" parameterType="java.util.List">
-		INSERT INTO wechat_member (wx_code,wx_group_id,nickname,sex,province,city,signature,uin,create_time)
+		INSERT INTO wechat_member (wx_code,wx_group_id,wx_name,sex,province,city,signature,uin,create_time)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
 			#{item.wx_code},
 			#{item.wx_group_id},
-			#{item.nickname},
+			#{item.wx_name},
 			#{item.sex},
 			#{item.province},
 			#{item.city},
@@ -214,7 +214,7 @@
 	</select>
 
 	<insert id="batchInsertGroupMember" parameterType="java.util.List">
-		INSERT INTO wechat_member(wx_code,wx_group_id,head_image_url,nickname,is_friend)
+		INSERT INTO wechat_member(wx_code,wx_group_id,head_image_url,nickname,is_friend,wx_name)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator=",">
 			(
@@ -222,7 +222,8 @@
 			  #{item.wx_group_id},
 			  #{item.head_image_url},
 			  #{item.nickname},
-			  #{item.is_friend}
+			  #{item.is_friend},
+			  #{item.wx_name}
 			)
 		</foreach>
 	</insert>
