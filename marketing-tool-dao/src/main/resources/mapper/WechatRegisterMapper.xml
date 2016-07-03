@@ -164,4 +164,9 @@
 			#{item}
 		</foreach>
 	</select>
+
+	<select id="selectNewWxAssetListWhenFirstImported" resultType="java.util.Map">
+		SELECT id as asset_id,wx_acct,name as asset_name,type as asset_type,nickname,header_image as imgfile_url
+		<include refid="QUERY_FROM_TABLE"/>
+	</select>
 </mapper>

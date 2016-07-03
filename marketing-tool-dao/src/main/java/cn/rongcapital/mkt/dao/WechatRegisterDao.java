@@ -76,4 +76,10 @@ public interface WechatRegisterDao extends BaseDao<WechatRegister>{
 	 * @param list
 	 */
 	List<Map<String,Object>> selectNewWxAssetList(List<String> alreadyImportedWxAcctList);
+
+	/**
+	 * 第一次导入时获取新注册的微信资产的相关信息
+	 * @param list
+	 */
+	List<Map<String,Object>> selectNewWxAssetListWhenFirstImported();
 }

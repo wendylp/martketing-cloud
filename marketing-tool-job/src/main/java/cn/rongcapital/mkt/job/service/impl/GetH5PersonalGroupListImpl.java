@@ -46,9 +46,14 @@ public class GetH5PersonalGroupListImpl implements TaskService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void task(Integer taskId) {
-        Map<String,String> h5ParamMap = tenementDao.selectPid();
+        Map<String,String> h5ParamMap = new HashMap<String,String>();
+        Map<String,String> pidMap = tenementDao.selectPid();
+        if(pidMap != null && pidMap.size() > 0 ){
+            h5ParamMap.put("pid",tenementDao.selectPid().get("pid"));
+        }else{
+            return;
+        }
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PERSONAL_GROUPLIST);
-        return;
         List<String> uuids = getUUidListService.getUuidList();
         if(uuids == null) return ;
 
@@ -92,9 +97,9 @@ public class GetH5PersonalGroupListImpl implements TaskService {
                     Map<String,Object> paramGroupMember = new HashMap<String,Object>();
                     paramGroupMember.put("wx_group_id",groupId);
                     paramGroupMember.put("wx_code", h5PersonalGroupMember.getUcode());
-                    paramGroupMember.put("nickname",h5PersonalGroupMember.getNickname().replaceAll("[^\\u0000-\\uFFFF]", ""));
+                    paramGroupMember.put("wx_name",h5PersonalGroupMember.getNickname().replaceAll("[^\\u0000-\\uFFFF]", ""));
                     paramGroupMember.put("head_image_url", h5PersonalGroupMember.getHeadImage());
-                    paramGroupMember.put("wx_name",h5PersonalGroupMember.getDisplayName().replaceAll("[^\\u0000-\\uFFFF]", ""));
+                    paramGroupMember.put("nickname",h5PersonalGroupMember.getDisplayName().replaceAll("[^\\u0000-\\uFFFF]", ""));
                     paramGroupMember.put("is_friend", h5PersonalGroupMember.getIsFriend());
                     paramGroupMembers.add(paramGroupMember);
                 }

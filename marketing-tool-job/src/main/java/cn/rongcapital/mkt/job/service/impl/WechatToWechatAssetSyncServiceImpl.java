@@ -33,11 +33,17 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService{
         //Todo:1.遍历wechat_asset_group表，获取importId的List
         List<Long> alreadyImportedIdList = wechatAssetGroupDao.selectImportGroupIds();
         //Todo:2.根据1获取的listId，在wechat_group表中获取不在importId中的IdList
-        List<Map<String,Object>> newGroupList = wechatGroupDao.selectNewGroupList(alreadyImportedIdList);
+        List<Map<String,Object>> newGroupList = null;
+        if(alreadyImportedIdList != null && alreadyImportedIdList.size() > 0){
+            newGroupList = wechatGroupDao.selectNewGroupList(alreadyImportedIdList);
+        }else{
+            newGroupList = wechatGroupDao.selectFirstImportGroupList();
+        }
         //Todo:3.根据2获取idList，查询wechat_group中的相关数据同步到wechat_asset_group表中
         if(newGroupList != null && newGroupList.size() > 0){
             wechatAssetGroupDao.insertNewGroupList(newGroupList);
         }
+
         //Todo:4.即时跟新wechat_asset_group表中的member数
         alreadyImportedIdList = wechatAssetGroupDao.selectImportGroupIds();
         for(Long id : alreadyImportedIdList){
@@ -53,9 +59,14 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService{
         //Todo:获取wechat_asset表中的wx_acct。
         List<String> alreadyImportedWxAcctList = wechatAssetDao.selectWxAssetList();
         //Todo:根据acct获取wx_register表中新注册的公众号或者个人号
-        List<Map<String,Object>> newRegisterWxAssetList = wechatRegisterDao.selectNewWxAssetList(alreadyImportedWxAcctList);
+        List<Map<String,Object>> newRegisterWxAssetList = null;
+        if(alreadyImportedWxAcctList != null && alreadyImportedWxAcctList.size() > 0){
+            newRegisterWxAssetList = wechatRegisterDao.selectNewWxAssetList(alreadyImportedWxAcctList);
+        }else{
+            newRegisterWxAssetList = wechatRegisterDao.selectNewWxAssetListWhenFirstImported();
+        }
         //Todo:将选择出来的相应数据插入wechat_asset表中
-        if(newRegisterWxAssetList != null){
+        if(newRegisterWxAssetList != null && newRegisterWxAssetList.size() > 0){
             wechatAssetDao.insertNewRegisterAsset(newRegisterWxAssetList);
         }
         //Todo:更新wechat_asset表中的total数据和groupIds数据
@@ -81,6 +92,7 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService{
                 sf.append( id + ",");
             }
             sf.deleteCharAt(sf.length()-1);
+            return sf.toString();
         }
         return null;
     }

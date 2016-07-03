@@ -28,7 +28,8 @@ public class IsUuidEffectiveService {
     private WechatPersonalUuidDao wechatPersonalUuidDao;
 
     public boolean isUuidEffective(String uuid){
-        Map<String,String> h5VerifyUuidParamMap = tenementDao.selectPid();
+        Map<String,String> h5VerifyUuidParamMap = new HashMap<String,String>();
+        h5VerifyUuidParamMap.put("pid",tenementDao.selectPid().get("pid"));
         h5VerifyUuidParamMap.put("uuid",uuid);
         h5VerifyUuidParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PERSONAL_ISONLINE);
         HttpResponse httpResponse = HttpUtils.requestH5Interface(h5VerifyUuidParamMap);

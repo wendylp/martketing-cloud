@@ -141,4 +141,9 @@
 			#{item}
 		</foreach>
 	</select>
+
+	<select id="selectFirstImportGroupList" resultType="java.util.Map">
+		select id as import_group_id, group_name as name, wx_acct
+		<include refid="QUERY_FROM_TABLE"/>
+	</select>
 </mapper>

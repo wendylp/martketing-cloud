@@ -79,4 +79,11 @@ public interface WechatGroupDao extends BaseDao<WechatGroup>{
 	 * @return Integer
 	 */
 	List<Map<String,Object>> selectNewGroupList(List<Long> alreadyImportedIdList);
+
+	/**
+	 * 获取第一次导入的List
+	 * @param paramMap
+	 * @return Integer
+	 */
+	List<Map<String,Object>> selectFirstImportGroupList();
 }
