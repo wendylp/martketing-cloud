@@ -39,12 +39,15 @@ public class GetH5PubListServiceImpl implements TaskService {
 
     @Override
     public void task(Integer taskId) {
-        Map<String,String> h5ParamMap = tenementDao.selectPid();
+        Map<String,String> h5ParamMap = new HashMap<String,String>();
+        h5ParamMap.put("pid",tenementDao.selectPid().get("pid"));
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PUB_LIST_API);
         HttpResponse httpResponse = HttpUtils.requestH5Interface(h5ParamMap);
         if(httpResponse != null){
             try {
-                JSONObject obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_pub_list_response");
+                String entityString = EntityUtils.toString(httpResponse.getEntity());
+                if(entityString == null) return;
+                JSONObject obj = JSON.parseObject(entityString).getJSONObject("hfive_mkt_pub_list_response");
                 if(obj != null){
                     H5MktPubListResponse h5MktPubListResponse = JSON.parseObject(obj.toString(),H5MktPubListResponse.class);
                     //Todo:3.判断pub_id是否已经注册，如果没有注册则属于非法数据，反之属于合法数据，则更新register表中的数据

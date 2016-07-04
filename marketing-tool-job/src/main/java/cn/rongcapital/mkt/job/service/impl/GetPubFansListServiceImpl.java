@@ -12,6 +12,7 @@ import cn.rongcapital.mkt.job.vo.in.H5PubFan;
 import cn.rongcapital.mkt.job.vo.in.UserGroup;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class GetPubFansListServiceImpl implements TaskService {
     public void task(Integer taskId) {
         Map<String,String> h5ParamMap = tenementDao.selectPid();
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PUB_FANSLIST_API);
-        h5ParamMap.put("page_size", 100 + "");
+        h5ParamMap.put("page_size", ApiConstant.FANS_LIST_SYNC_SIZE + "");
         h5ParamMap.put("page_num",1 + "");
         h5ParamMap.put("start_time",DateUtil.getStringFromDate(new Date(System.currentTimeMillis()-24*3600*1000),"yyyy-MM-dd HH:mm:ss"));  //Todo:这个增量时间怎么算
         h5ParamMap.put("end_time", DateUtil.getStringFromDate(new Date(System.currentTimeMillis()),"yyyy-MM-dd HH:mm:ss"));   //Todo:这个增量怎么算
@@ -49,20 +50,48 @@ public class GetPubFansListServiceImpl implements TaskService {
         if(httpResponse != null){
             JSONObject obj = null;
             try {
-                obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_pub_fanslist_response");
-                H5MktPubFansListResponse h5MktPubFansListResponse = JSON.parseObject(obj.toString(),H5MktPubFansListResponse.class);
-                fansBatchInsert(h5MktPubFansListResponse);
+                String entityString = EntityUtils.toString(httpResponse.getEntity());
+                if(entityString == null || "".equals(entityString)) return;
+                obj = JSON.parseObject(entityString).getJSONObject("hfive_mkt_pub_fanslist_response");
+                if(obj != null){
+                    H5MktPubFansListResponse h5MktPubFansListResponse = JSON.parseObject(obj.toString(),H5MktPubFansListResponse.class);
+                    long total = h5MktPubFansListResponse.getTotal();
+                    for(int pageNumber = 1; pageNumber <= total/ApiConstant.FANS_LIST_SYNC_SIZE + 1; pageNumber++){
+                        if (syncFansListByPageNum(h5ParamMap, entityString, pageNumber)) return;
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    //Todo:如果不是按增量改，那么如果不全部删除的话，再次插入需要进行判重，看看本条数据是不是已经插入了。
+    private boolean syncFansListByPageNum(Map<String, String> h5ParamMap, String entityString, int pageNumber) throws IOException {
+        HttpResponse httpResponse;
+        JSONObject obj;
+        H5MktPubFansListResponse h5MktPubFansListResponse;
+        h5ParamMap.put("page_num",pageNumber + "");
+        httpResponse = HttpUtils.requestH5Interface(h5ParamMap);
+        if(httpResponse != null){
+            JSONObject insertObj = null;
+            String insertString = EntityUtils.toString(httpResponse.getEntity());
+            if(entityString == null || "".equals(entityString)) return true;
+            obj = JSON.parseObject(insertString).getJSONObject("hfive_mkt_pub_fanslist_response");
+            if(obj != null){
+                h5MktPubFansListResponse = JSON.parseObject(obj.toString(),H5MktPubFansListResponse.class);
+                if(h5MktPubFansListResponse != null && h5MktPubFansListResponse.getFans()!= null && h5MktPubFansListResponse.getFans().getFan() != null && h5MktPubFansListResponse.getFans().getFan().size() > 0){
+                    fansBatchInsert(h5MktPubFansListResponse);
+                }
+            }
+        }
+        return false;
+    }
+
     private void fansBatchInsert(H5MktPubFansListResponse h5MktPubFansListResponse) {
         List<Map<String,Object>> fansList = new ArrayList<Map<String,Object>>();
         for(H5PubFan h5PubFan : h5MktPubFansListResponse.getFans().getFan()){
             for(UserGroup userGroup : h5PubFan.getUserGroups().getUserGroup()){
+                if(isFansAlreadyImporte(h5PubFan.getPubId(),h5PubFan.getOpenId())) continue;
                 Map<String,Object> paramGroup = new HashMap<String,Object>();
                 paramGroup.put("wx_acct",h5PubFan.getPubId());
                 paramGroup.put("group_name",userGroup.getUserGroup());
@@ -93,6 +122,17 @@ public class GetPubFansListServiceImpl implements TaskService {
                 fansList.add(paramFan);
             }
         }
-        wechatMemeberDao.batchInsertFans(fansList);
+
+        if(fansList != null && fansList.size() > 0){
+            wechatMemeberDao.batchInsertFans(fansList);
+        }
+    }
+
+    private boolean isFansAlreadyImporte(String pubId, String openId) {
+        Map<String,Object> paramMap = new HashMap<String,Object>();
+        paramMap.put("pub_id",pubId);
+        paramMap.put("wx_code",openId);
+        Long id = wechatMemeberDao.selectIdByPubIdAndOpenId(paramMap);
+        return id == null;
     }
 }

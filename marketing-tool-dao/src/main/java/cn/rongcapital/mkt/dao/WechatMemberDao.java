@@ -93,4 +93,11 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return list
 	 */
 	List<Map<String,Object>> selectSearchInfo(Map<String,Object> paramMap);
+
+	/**
+	 * 根据pub_id和open_id判断这个人是否已经被保存
+	 * @param paramMap
+	 * @return list
+	 */
+	Long selectIdByPubIdAndOpenId(Map<String, Object> paramMap);
 }

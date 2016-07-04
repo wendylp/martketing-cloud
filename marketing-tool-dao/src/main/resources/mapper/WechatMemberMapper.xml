@@ -244,4 +244,10 @@
 			#{item}
 		</foreach>
 	</select>
+
+	<select id="selectIdByPubIdAndOpenId" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_code = #{wx_code} AND pub_id = #{pub_id}
+	</select>
 </mapper>

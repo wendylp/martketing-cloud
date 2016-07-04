@@ -5,7 +5,7 @@ package cn.rongcapital.mkt.job.vo.in;
  */
 public class H5MktPubFansListResponse {
     private String message;
-    private int total;
+    private long total;
     private H5PubFanList fans;
 
     public String getMessage() {
@@ -16,11 +16,11 @@ public class H5MktPubFansListResponse {
         this.message = message;
     }
 
-    public int getTotal() {
+    public long getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(long total) {
         this.total = total;
     }
 

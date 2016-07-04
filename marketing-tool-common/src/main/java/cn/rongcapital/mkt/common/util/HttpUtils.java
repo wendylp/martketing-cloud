@@ -7,8 +7,10 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 /**
@@ -24,8 +26,9 @@ public class HttpUtils {
         for(String key : paramMap.keySet()){
             url = url + key + "=" + paramMap.get(key) + "&";
         }
-        HttpGet httpGet = new HttpGet(url);
+        url = url.replace(" ","");
         try {
+            HttpGet httpGet = new HttpGet(url);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             if(httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) return httpResponse;
         } catch (IOException e) {

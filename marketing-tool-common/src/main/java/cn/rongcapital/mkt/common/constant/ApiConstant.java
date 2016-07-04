@@ -151,7 +151,8 @@ public class ApiConstant {
 	public static final String DL_API_PARAM_METHOD = "method";
 	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_KEY = "callback";
 	public static final String DL_API_PARAM_PUB_GRANT_CALLBACK_VALUE = "mkt.data.inbound.wechat.public.auth.callback";
-	
+	public static final Integer FANS_LIST_SYNC_SIZE = 100;
+
 	public static final String DL_PUB_SEND_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.pub.send&pid=";
 	public static final String DL_PUB_ISSENT_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.wtuwen.sent&pid=";
 	public static final String DL_PUB_ISREAD_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.wtuwen.viewed&pid=";
