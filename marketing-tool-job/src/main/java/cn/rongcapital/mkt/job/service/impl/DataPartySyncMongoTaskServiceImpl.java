@@ -82,7 +82,7 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
 	    		
 	    //1.从mysql data_party表中读取所有mid,keyid
 	    DataParty dataParty=new DataParty();
-        dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
         int totalCount = dataPartyDao.selectListCount(dataParty);
         if (totalCount < 1) {
             return;
