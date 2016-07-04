@@ -91,7 +91,7 @@ public class GetPubFansListServiceImpl implements TaskService {
         List<Map<String,Object>> fansList = new ArrayList<Map<String,Object>>();
         for(H5PubFan h5PubFan : h5MktPubFansListResponse.getFans().getFan()){
             for(UserGroup userGroup : h5PubFan.getUserGroups().getUserGroup()){
-                if(isFansAlreadyImporte(h5PubFan.getPubId(),h5PubFan.getOpenId())) continue;
+                if(!isFansAlreadyImporte(h5PubFan.getPubId(),h5PubFan.getOpenId())) continue;
                 Map<String,Object> paramGroup = new HashMap<String,Object>();
                 paramGroup.put("wx_acct",h5PubFan.getPubId());
                 paramGroup.put("group_name",userGroup.getUserGroup());

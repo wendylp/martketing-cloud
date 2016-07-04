@@ -48,6 +48,12 @@ public class WechatTypeCountGetServiceImpl implements WechatTypeCountGetService{
         List<Map<String,Object>> typeCountList = wechatAssetDao.getWechatCountByType(paramMap);
         if(typeCountList != null && typeCountList.size() > 0){
             baseOutput.getData().add(wechatCountByType(typeCountList,assetType));
+        }else{
+            Map<String,Object> resultMap = new HashMap<String,Object>();
+            resultMap.put("count",new Integer(0));
+            resultMap.put("totalNumber",new Integer(0));
+            resultMap.put("asset_type",assetType);
+            baseOutput.getData().add(resultMap);
         }
     }
 
