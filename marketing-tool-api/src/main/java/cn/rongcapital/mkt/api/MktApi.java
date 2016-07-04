@@ -970,6 +970,18 @@ public class MktApi {
         return result;
     }
     
+    
+    @GET
+    @Path("/mkt.data.main.segmenttag.get")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Object getMainSegmenttagNames(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver,
+                    @NotNull @QueryParam("map_id") Integer map_id) {
+        return dataUpateMainSegmenttagService.getMainSegmenttagNames(map_id);
+       
+    }
+    
+    
     @GET
     @Path("/mkt.tag.user.custom.get")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -1322,6 +1334,21 @@ public class MktApi {
             @NotEmpty @QueryParam("behavior_type") String behaviorType){
 		return mainActionInfoGetService.getMainActionInfo(contactId, behaviorType);
 	}
+	
+	
+	/**
+     * @功能简述: 统计联系人行为数量
+     * @param userToken
+     * @param contactId
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.data.main.action.count.get")
+    public BaseOutput getPartyBehaviorCountById(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("contact_id") String contactId){            
+        return mainActionInfoGetService.getPartyBehaviorCountById(contactId);
+    }
+	
 	
 	/**	
 	 * @功能简述: 获取系统标签总数量 
@@ -1682,8 +1709,10 @@ public class MktApi {
 	@Path("/mkt.campaign.body.item.audience.search")
 	public CampaignBodyItemAudienceSearchOut campaignBodyItemAudienceSearch(@NotEmpty @QueryParam("user_token") String userToken,
 									   @NotEmpty @QueryParam("ver") String ver,
-	                                   @NotEmpty @QueryParam("search_field") String name){
-        return campaignBodyItemAudienceSearchService.campaignBodyItemAudienceSearch(name);
+	                                   @QueryParam("search_field") String name,
+	                                   @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId,
+	                                   @NotNull @QueryParam("item_id") String itemId){
+        return campaignBodyItemAudienceSearchService.campaignBodyItemAudienceSearch(name,campaignHeadId,itemId);
 	}
 
 	/**
