@@ -47,26 +47,25 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
     @Transactional
     @Override
     public BaseOutput updateFileTag(FileTagUpdateIn fileTagUpdateIn) {
-        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
-        if (validateTagNames(fileTagUpdateIn, baseOutput)) return baseOutput;
-
+        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
         String fileUnique = fileTagUpdateIn.getFileUnique();
         Integer fileType = Integer.valueOf(fileTagUpdateIn.getFileType());
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("file_unique",fileTagUpdateIn.getFileUnique());
         List<Map<String,Object>> importRows = importDataHistoryDao.selectTotalRowsAndFileType(paramMap);         //0根据上传分fileUnique选出导入的人群数量
-
         if(importRows != null && importRows.size() > 0){
-            addNewCustomTag(fileTagUpdateIn, importRows);             //将上传上来的标签名称列表以及上一步选出的总人群数量插入到custom_tag表中
-            List<Long> mapIdList = getOriginalDataIdList(paramMap, fileType);      //2.根据fileUnique选出对应的original表中的idList
-            //3将customName和idList插入到cumstomTagMapping表中
-            List<Long> tagIds =  customTagDao.selectIdsByCustomTags(fileTagUpdateIn.getTag_names());
-            if(tagIds != null && tagIds.size() > 0 && mapIdList != null && mapIdList.size() > 0){
-                updateCustomTagMapping(fileType, mapIdList, tagIds);
-                baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
-                baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+            if (hasTagNames(fileTagUpdateIn)) {
+                addNewCustomTag(fileTagUpdateIn, importRows);             //将上传上来的标签名称列表以及上一步选出的总人群数量插入到custom_tag表中
+                List<Long> mapIdList = getOriginalDataIdList(paramMap, fileType);      //2.根据fileUnique选出对应的original表中的idList
+                //3将customName和idList插入到cumstomTagMapping表中
+                List<Long> tagIds =  customTagDao.selectIdsByCustomTags(fileTagUpdateIn.getTag_names());
+                if(tagIds != null && tagIds.size() > 0 && mapIdList != null && mapIdList.size() > 0){
+                    insertCustomTagMapping(fileType, mapIdList, tagIds);
+                }
+            } else {
+                baseOutput.setMsg("用户没有上传标签");
             }
-            // update status
+
             updateOriginalDataStatus(fileUnique, fileType);
         }else{
             baseOutput.setMsg("数据上传失败");
@@ -75,7 +74,7 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         return baseOutput;
     }
 
-    private void updateCustomTagMapping(Integer fileType, List<Long> mapIdList, List<Long> tagIds) {
+    private void insertCustomTagMapping(Integer fileType, List<Long> mapIdList, List<Long> tagIds) {
         List<Map<String,Object>> insertCustomTagMapList = new ArrayList<Map<String,Object>>();
         for(Long tagId : tagIds){
             for(Long mapId : mapIdList){
@@ -89,12 +88,11 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         customTagMapDao.batchInsert(insertCustomTagMapList);
     }
 
-    private boolean validateTagNames(FileTagUpdateIn fileTagUpdateIn, BaseOutput baseOutput) {
-        if(fileTagUpdateIn.getTag_names() == null && fileTagUpdateIn.getTag_names().size() <= 0){
-            baseOutput.setMsg("用户没有上传标签");
-            return true;
+    private boolean hasTagNames(FileTagUpdateIn fileTagUpdateIn) {
+        if(fileTagUpdateIn.getTag_names() == null || fileTagUpdateIn.getTag_names().size() < 1){
+            return false;
         }
-        return false;
+        return true;
     }
 
     //1将上传上来的标签名称列表以及上一步选出的总人群数量插入到custom_tag表中
