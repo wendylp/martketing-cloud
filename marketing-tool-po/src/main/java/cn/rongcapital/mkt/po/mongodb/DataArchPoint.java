@@ -1,12 +1,13 @@
 package cn.rongcapital.mkt.po.mongodb;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
 import org.springframework.data.annotation.Id;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class DataArchPoint extends BaseQuery {
+public class DataArchPoint implements Serializable {
 
+    private static final long serialVersionUID = 7408249878653614514L;
     @Id
     private String id;
 
@@ -51,13 +52,15 @@ public class DataArchPoint extends BaseQuery {
     private String cookie;
 
     private String batchId;
+
+    private Integer mid;
+
+    private Integer md_type;
+
+    private String mapping_keyid;
     
     public DataArchPoint(){}
     
-    public DataArchPoint(Integer index , Integer size){
-        super(index, size);
-    }
-
     public String getId() {
         return id;
     }
@@ -232,5 +235,29 @@ public class DataArchPoint extends BaseQuery {
 
     public void setBatchId(String batchId) {
         this.batchId = batchId;
+    }
+
+    public Integer getMid() {
+        return mid;
+    }
+
+    public void setMid(Integer mid) {
+        this.mid = mid;
+    }
+
+    public Integer getMd_type() {
+        return md_type;
+    }
+
+    public void setMd_type(Integer md_type) {
+        this.md_type = md_type;
+    }
+
+    public String getMapping_keyid() {
+        return mapping_keyid;
+    }
+
+    public void setMapping_keyid(String mapping_keyid) {
+        this.mapping_keyid = mapping_keyid;
     }
 }
