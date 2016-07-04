@@ -17,16 +17,15 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.FileNameEnum;
 import cn.rongcapital.mkt.common.util.FileUtil;
-import cn.rongcapital.mkt.dao.DataArchPointDao;
-import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
-import cn.rongcapital.mkt.dao.DataLoginDao;
-import cn.rongcapital.mkt.dao.DataMemberDao;
-import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.dao.DataPaymentDao;
-import cn.rongcapital.mkt.dao.DataPopulationDao;
-import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.dao.IllegalDataDao;
 import cn.rongcapital.mkt.dao.ImportTemplateDao;
+import cn.rongcapital.mkt.dao.OriginalDataArchPointDao;
+import cn.rongcapital.mkt.dao.OriginalDataCustomerTagsDao;
+import cn.rongcapital.mkt.dao.OriginalDataLoginDao;
+import cn.rongcapital.mkt.dao.OriginalDataMemberDao;
+import cn.rongcapital.mkt.dao.OriginalDataPaymentDao;
+import cn.rongcapital.mkt.dao.OriginalDataPopulationDao;
+import cn.rongcapital.mkt.dao.OriginalDataShoppingDao;
 import cn.rongcapital.mkt.po.IllegalData;
 import cn.rongcapital.mkt.po.ImportTemplate;
 import cn.rongcapital.mkt.service.DataDownloadQualityIllegalDataService;
@@ -46,28 +45,25 @@ public class DataDownloadQualityIllegalDataServiceImpl implements DataDownloadQu
     private ImportTemplateDao importTemplateDao;
 
     @Autowired
-    private DataPartyDao dataPartyDao;
+    private OriginalDataPopulationDao originalDataPopulationDao;
 
     @Autowired
-    private DataPopulationDao dataPopulationDao;
+    private OriginalDataCustomerTagsDao originalDataCustomerTagsDao;
 
     @Autowired
-    private DataCustomerTagsDao dataCustomerTagsDao;
+    private OriginalDataArchPointDao originalDataArchPointDao;
 
     @Autowired
-    private DataArchPointDao dataArchPointDao;
+    private OriginalDataMemberDao originalDataMemberDao;
 
     @Autowired
-    private DataMemberDao dataMemberDao;
+    private OriginalDataLoginDao originalDataLoginDao;
 
     @Autowired
-    private DataLoginDao dataLoginDao;
+    private OriginalDataPaymentDao originalDataPaymentDao;
 
     @Autowired
-    private DataPaymentDao dataPaymentDao;
-
-    @Autowired
-    private DataShoppingDao dataShoppingDao;
+    private OriginalDataShoppingDao originalDataShoppingDao;
 
     @Override
     public BaseOutput downloadIllegalData(Long batchId) {
@@ -89,22 +85,20 @@ public class DataDownloadQualityIllegalDataServiceImpl implements DataDownloadQu
             idList.add(Integer.parseInt(illegalData.getOriginData()));
         }
 
-        if (dataType == DataTypeEnum.PARTY.getCode()) {
-            dataList = dataPartyDao.selectListByIdList(idList);
-        } else if (dataType == DataTypeEnum.POPULATION.getCode()) {
-            dataList = dataPopulationDao.selectListByIdList(idList);
+        if (dataType == DataTypeEnum.POPULATION.getCode()) {
+            dataList = originalDataPopulationDao.selectListByIdList(idList);
         } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
-            dataList = dataCustomerTagsDao.selectListByIdList(idList);
+            dataList = originalDataCustomerTagsDao.selectListByIdList(idList);
         } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
-            dataList = dataArchPointDao.selectListByIdList(idList);
+            dataList = originalDataArchPointDao.selectListByIdList(idList);
         } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
-            dataList = dataMemberDao.selectListByIdList(idList);
+            dataList = originalDataMemberDao.selectListByIdList(idList);
         } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
-            dataList = dataLoginDao.selectListByIdList(idList);
+            dataList = originalDataLoginDao.selectListByIdList(idList);
         } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
-            dataList = dataPaymentDao.selectListByIdList(idList);
+            dataList = originalDataPaymentDao.selectListByIdList(idList);
         } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
-            dataList = dataShoppingDao.selectListByIdList(idList);
+            dataList = originalDataShoppingDao.selectListByIdList(idList);
         } else {
             logger.error("传入错误的data type : {}", dataType);
         }
