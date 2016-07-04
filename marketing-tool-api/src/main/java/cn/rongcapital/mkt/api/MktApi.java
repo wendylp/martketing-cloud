@@ -970,6 +970,18 @@ public class MktApi {
         return result;
     }
     
+    
+    @GET
+    @Path("/mkt.data.main.segmenttag.get")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Object getMainSegmenttagNames(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver,
+                    @NotNull @QueryParam("map_id") Integer map_id) {
+        return dataUpateMainSegmenttagService.getMainSegmenttagNames(map_id);
+       
+    }
+    
+    
     @GET
     @Path("/mkt.tag.user.custom.get")
     @Consumes({MediaType.APPLICATION_JSON})

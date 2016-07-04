@@ -1,13 +1,18 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.CustomTagMapEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.CustomTagDao;
@@ -15,6 +20,9 @@ import cn.rongcapital.mkt.dao.CustomTagMapDao;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.CustomTagMap;
 import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
+import cn.rongcapital.mkt.vo.BaseOutput;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 /**
  * @author nianjun
  */
@@ -70,5 +78,43 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
 
         return false;
     }
+    
+    @Override
+    @ReadWrite(type=ReadWriteType.READ)
+    public BaseOutput getMainSegmenttagNames(Integer map_id) {
+    
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+                        ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO,null);
+        
+        CustomTagMap customTagMap=new CustomTagMap();
+        customTagMap.setMapId(map_id);
+        customTagMap.setStatus(new Byte("0"));        
+        List<CustomTagMap> customTagMapList=customTagMapDao.selectList(customTagMap);
+        
+        for(CustomTagMap customTagMap2: customTagMapList){
+            
+            
+            List<Integer> idList=new ArrayList<Integer>();
+            idList.add(customTagMap2.getTagId());            
+            List<CustomTag> customTagList=customTagDao.selectListByIdList(idList);
+                        
+            Map<String,Object> map = new HashMap<String,Object>();
+            
+            map.put("tag_name", customTagList.get(0).getName());
+                        
+            result.getData().add(map);
+            
+            
+        }
+        
+        result.setTotal(customTagMapList.size());
+               
+        
+        return result;
+        
+        
+    }
+    
 
 }

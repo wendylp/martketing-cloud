@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.service;
 
+import cn.rongcapital.mkt.vo.BaseOutput;
+
 public interface DataUpateMainSegmenttagService {
 
     /**
@@ -15,4 +17,9 @@ public interface DataUpateMainSegmenttagService {
      * @return
      */
     public boolean updateMainSegmenttag(String method, String userToken, String ver, String tagName, Integer contactId);
+    
+    
+    BaseOutput getMainSegmenttagNames(Integer map_id);
+    
+    
 }
