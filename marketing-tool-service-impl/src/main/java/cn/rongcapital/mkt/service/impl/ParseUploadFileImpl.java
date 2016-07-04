@@ -72,21 +72,19 @@ public class ParseUploadFileImpl implements ParseUploadFile {
             case 0:
                 break;
             case 1:
-                effectRows = originalDataPopulationDao.batchInsertUploadFileData(insertList);
-
+                return originalDataPopulationDao.batchInsertUploadFileData(insertList);
             case 2:
-                effectRows = originalDataCustomerTagsDao.batchInsertUploadFileData(insertList);
-                taskManager.manualInitTask(826,"DataCustomTagScheduleServiceImpl");
+                return originalDataCustomerTagsDao.batchInsertUploadFileData(insertList);
             case 3:
-                effectRows = originalDataArchPointDao.batchInsertUploadFileData(insertList);
+                return originalDataArchPointDao.batchInsertUploadFileData(insertList);
             case 4:
-                effectRows = originalDataMemberDao.batchInsertUploadFileData(insertList);
+                return originalDataMemberDao.batchInsertUploadFileData(insertList);
             case 5:
-                effectRows = originalDataLoginDao.batchInsertUploadFileData(insertList);
+                return originalDataLoginDao.batchInsertUploadFileData(insertList);
             case 6:
-                effectRows = originalDataPaymentDao.batchInsertUploadFileData(insertList);
+                return originalDataPaymentDao.batchInsertUploadFileData(insertList);
             case 7:
-                effectRows = originalDataShoppingDao.batchInsertUploadFileData(insertList);
+                return originalDataShoppingDao.batchInsertUploadFileData(insertList);
         }
         return effectRows;
     }
