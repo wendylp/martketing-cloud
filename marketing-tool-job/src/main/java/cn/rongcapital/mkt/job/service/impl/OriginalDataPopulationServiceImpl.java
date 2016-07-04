@@ -69,7 +69,7 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
             BeanUtils.copyProperties(tmpOriginalDataPopulation, paramDataPopulation);
 
             // 因为在一个事务里 , 直接修改OriginalDataPopulation的状态
-            tmpOriginalDataPopulation.setStatus(StatusEnum.DELETED.getStatusCode());
+            tmpOriginalDataPopulation.setStatus(StatusEnum.PROCESSED.getStatusCode());
             originalDataPopulationDao.updateById(tmpOriginalDataPopulation);
             dataPopulations.add(paramDataPopulation);
         }

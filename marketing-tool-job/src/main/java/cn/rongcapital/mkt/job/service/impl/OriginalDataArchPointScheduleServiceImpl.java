@@ -67,7 +67,7 @@ public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArc
             BeanUtils.copyProperties(tmpOriginalDataArchPoint, paramDataArchPoint);
 
             // 因为在一个事务里 , 直接修改OriginalDataArchPoint的状态
-            tmpOriginalDataArchPoint.setStatus(StatusEnum.DELETED.getStatusCode());
+            tmpOriginalDataArchPoint.setStatus(StatusEnum.PROCESSED.getStatusCode());
             originalDataArchPointDao.updateById(tmpOriginalDataArchPoint);
             dataArchPoints.add(paramDataArchPoint);
         }

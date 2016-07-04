@@ -65,7 +65,7 @@ public class OriginalDataPaymentScheduleServiceImpl implements OriginalDataPayme
             OriginalDataPayment originalDataPayment = tmpOriginalDataPayments.get(i);
             BeanUtils.copyProperties(originalDataPayment, paramDataPayment);
 
-            originalDataPayment.setStatus(StatusEnum.DELETED.getStatusCode());
+            originalDataPayment.setStatus(StatusEnum.PROCESSED.getStatusCode());
             originalDataPaymentDao.updateById(originalDataPayment);
             dataLogins.add(paramDataPayment);
         }

@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.OriginalDataMember;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,4 +53,11 @@ public interface OriginalDataMemberDao extends BaseDao<OriginalDataMember>{
 	 * @return int
 	 */
 	List<Long> selelctIdListByFileUnique(Map<String, Object> paramMap);
+
+	/**
+	 * 根据FileUnique更新数据状态
+	 * @param fileUnique
+	 * @return
+	 */
+	int updateStatusByFileUnique(@Param("fileUnique") String fileUnique, @Param("status") Integer status);
 }

@@ -120,6 +120,10 @@
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
+	<update id="updateStatusByFileUnique">
+		update original_data_login set status = #{status} where file_unique = #{fileUnique}
+	</update>
+
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.OriginalDataLogin" resultType="cn.rongcapital.mkt.po.OriginalDataLogin">
 		<![CDATA[SELECT]]>
@@ -149,7 +153,10 @@
 	
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,file_unique,batch_id)
+		INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,
+			login_device,resolution_ratio,login_url,identify_no,driving_license,
+			email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,status,
+			create_time,source,file_unique,batch_id)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -172,6 +179,7 @@
 			#{item.imei},
 			#{item.udid},
 			#{item.phone_mac},
+			#{item.status},
 			#{item.create_time,jdbcType=DATE},
 			#{item.source},
 			#{item.file_unique},

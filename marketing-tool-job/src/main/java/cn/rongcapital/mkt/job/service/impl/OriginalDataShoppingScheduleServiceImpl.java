@@ -68,7 +68,7 @@ public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShop
             OriginalDataShopping originalDataShopping = tmpOriginalDataShoppings.get(i);
             BeanUtils.copyProperties(tmpOriginalDataShoppings.get(i), paramDataShopping);
 
-            originalDataShopping.setStatus(StatusEnum.DELETED.getStatusCode());
+            originalDataShopping.setStatus(StatusEnum.PROCESSED.getStatusCode());
             originalDataShoppingDao.updateById(originalDataShopping);
             dataShoppings.add(paramDataShopping);
         }

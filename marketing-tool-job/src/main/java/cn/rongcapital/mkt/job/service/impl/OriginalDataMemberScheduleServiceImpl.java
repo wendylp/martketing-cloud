@@ -64,7 +64,7 @@ public class OriginalDataMemberScheduleServiceImpl implements OriginalDataMember
             OriginalDataMember tmpOriginalDataMember = tmpOriginalDataMembers.get(i);
             BeanUtils.copyProperties(tmpOriginalDataMember, paramDataMember);
             // 因为在一个事务里 , 直接修改OriginalDataMember的状态
-            tmpOriginalDataMember.setStatus(StatusEnum.DELETED.getStatusCode());
+            tmpOriginalDataMember.setStatus(StatusEnum.PROCESSED.getStatusCode());
             originalDataMemberDao.updateById(tmpOriginalDataMember);
             dataMembers.add(paramDataMember);
         }

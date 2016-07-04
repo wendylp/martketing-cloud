@@ -65,7 +65,7 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
             BeanUtils.copyProperties(tmpOriginalDataCustomerTag, paramDataCustomTags);
 
             // 因为在一个事务里 , 直接修改OriginalDataCustomTags的状态
-            tmpOriginalDataCustomerTag.setStatus(StatusEnum.DELETED.getStatusCode());
+            tmpOriginalDataCustomerTag.setStatus(StatusEnum.PROCESSED.getStatusCode());
             originalDataCustomerTagsDao.updateById(tmpOriginalDataCustomerTag);
             dataCustomerTags.add(paramDataCustomTags);
         }

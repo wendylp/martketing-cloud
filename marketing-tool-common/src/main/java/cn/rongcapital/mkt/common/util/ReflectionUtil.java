@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.common.util;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class ReflectionUtil {
 
     private static Logger logger = LoggerFactory.getLogger(ReflectionUtil.class);
-    
+
     /**
      * 将带有下划线的数据库中的字段名转换为驼峰式的Java字段名
      * 
@@ -61,11 +62,28 @@ public class ReflectionUtil {
             field = t.getClass().getDeclaredField(propertyName);
             field.setAccessible(true);
             return field.get(t);
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException
-                        | IllegalAccessException e) {
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
             logger.error("通过反射调用" + t.getClass().getName() + "时出现问题 ", e);
 
         }
         return null;
+    }
+
+    public static <T> void setObjectPropertyByName(T t, Map<String, Object> valuePair) {
+        if (t == null || valuePair == null) {
+            return;
+        }
+
+        Field field;
+        try {
+            for (Map.Entry<String, Object> entry : valuePair.entrySet()) {
+                field = t.getClass().getDeclaredField(entry.getKey());
+                field.setAccessible(true);
+                field.set(t, entry.getValue());
+            }
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+            logger.error("通过反射调用" + t.getClass().getName() + "时出现问题 ", e);
+
+        }
     }
 }

@@ -184,6 +184,10 @@
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
+	<update id="updateStatusByFileUnique">
+		update original_data_shopping set status = #{status} where file_unique = #{fileUnique}
+	</update>
+
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.OriginalDataShopping" resultType="cn.rongcapital.mkt.po.OriginalDataShopping">
 		<![CDATA[SELECT]]>
@@ -213,7 +217,13 @@
 	
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO original_data_shopping (channel_type,channel_id,channel_name,pay_type,trans_serial,order_no,trans_time,product_id,specification,color,discount_type,discount_amt,price,amount,inventory,brand_id,brand_name,class1_id,class1_name,class2_id,class2_name,class3_id,class3_name,class4_id,class4_name,sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,source,file_unique,batch_id)
+		INSERT INTO original_data_shopping (channel_type,channel_id,channel_name,pay_type,
+            trans_serial,order_no,trans_time,product_id,specification,color,discount_type,
+            discount_amt,price,amount,inventory,brand_id,brand_name,class1_id,
+            class1_name,class2_id,class2_name,class3_id,class3_name,class4_id,class4_name,
+            sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,
+            identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,
+            udid,phone_mac,status,source,file_unique,batch_id)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -258,6 +268,7 @@
 			#{item.imei},
 			#{item.udid},
 			#{item.phone_mac},
+            #{item.status},
 			#{item.source},
 			#{item.file_unique},
 			#{item.batch_id}

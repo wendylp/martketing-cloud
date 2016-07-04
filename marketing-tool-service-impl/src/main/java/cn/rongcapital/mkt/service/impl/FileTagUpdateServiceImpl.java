@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.po.OriginalDataArchPoint;
 import cn.rongcapital.mkt.service.FileTagUpdateService;
@@ -49,12 +50,13 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
         if (validateTagNames(fileTagUpdateIn, baseOutput)) return baseOutput;
 
+        String fileUnique = fileTagUpdateIn.getFileUnique();
+        Integer fileType = Integer.valueOf(fileTagUpdateIn.getFileType());
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("file_unique",fileTagUpdateIn.getFileUnique());
         List<Map<String,Object>> importRows = importDataHistoryDao.selectTotalRowsAndFileType(paramMap);         //0根据上传分fileUnique选出导入的人群数量
 
         if(importRows != null && importRows.size() > 0){
-            Integer fileType = (Integer) importRows.get(0).get("file_type");   //获取上传文件的类型
             addNewCustomTag(fileTagUpdateIn, importRows);             //将上传上来的标签名称列表以及上一步选出的总人群数量插入到custom_tag表中
             List<Long> mapIdList = getOriginalDataIdList(paramMap, fileType);      //2.根据fileUnique选出对应的original表中的idList
             //3将customName和idList插入到cumstomTagMapping表中
@@ -64,6 +66,8 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
                 baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
                 baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
             }
+            // update status
+            updateOriginalDataStatus(fileUnique, fileType);
         }else{
             baseOutput.setMsg("数据上传失败");
         }
@@ -134,5 +138,32 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
                 break;
         }
         return mapIdList;
+    }
+
+    private void updateOriginalDataStatus(String fileUnique, int fileType) {
+        switch (fileType){
+            case 1:
+                originalDataPopulationDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                break;
+            case 2:
+                originalDataCustomerTagsDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                break;
+            case 3:
+                originalDataArchPointDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                break;
+            case 4:
+                originalDataMemberDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                break;
+            case 5:
+                originalDataLoginDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                break;
+            case 6:
+                originalDataPaymentDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                break;
+            case 7:
+                originalDataShoppingDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                break;
+        }
+
     }
 }

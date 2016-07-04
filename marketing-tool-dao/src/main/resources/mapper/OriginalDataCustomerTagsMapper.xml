@@ -108,6 +108,10 @@
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
+	<update id="updateStatusByFileUnique">
+		update original_data_customer_tags set status = #{status} where file_unique = #{fileUnique}
+	</update>
+
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.OriginalDataCustomerTags" resultType="cn.rongcapital.mkt.po.OriginalDataCustomerTags">
 		<![CDATA[SELECT]]>
@@ -137,7 +141,9 @@
 	
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO original_data_customer_tags (tag_type,tag_name,birthday,identify_no,driving_license,email,mobile,acct_type,tel,qq,acct_no,idfa,imei,udid,phone_mac,create_time,source,file_unique,batch_id)
+		INSERT INTO original_data_customer_tags (tag_type,tag_name,birthday,identify_no,
+			driving_license,email,mobile,acct_type,tel,qq,acct_no,idfa,imei,udid,
+			phone_mac,status,create_time,source,file_unique,batch_id)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -156,6 +162,7 @@
 			#{item.imei},
 			#{item.udid},
 			#{item.phone_mac},
+			#{item.status},
 			#{item.create_time,jdbcType=DATE},
 			#{item.source},
 			#{item.file_unique},
