@@ -101,6 +101,7 @@ public class GetH5PersonalGroupListImpl implements TaskService {
                     paramGroupMember.put("head_image_url", h5PersonalGroupMember.getHeadImage());
                     paramGroupMember.put("nickname",h5PersonalGroupMember.getDisplayName().replaceAll("[^\\u0000-\\uFFFF]", ""));
                     paramGroupMember.put("is_friend", h5PersonalGroupMember.getIsFriend());
+                    paramGroupMember.put("uin", uin);
                     paramGroupMembers.add(paramGroupMember);
                 }
             }

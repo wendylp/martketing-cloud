@@ -1682,8 +1682,10 @@ public class MktApi {
 	@Path("/mkt.campaign.body.item.audience.search")
 	public CampaignBodyItemAudienceSearchOut campaignBodyItemAudienceSearch(@NotEmpty @QueryParam("user_token") String userToken,
 									   @NotEmpty @QueryParam("ver") String ver,
-	                                   @NotEmpty @QueryParam("search_field") String name){
-        return campaignBodyItemAudienceSearchService.campaignBodyItemAudienceSearch(name);
+	                                   @QueryParam("search_field") String name,
+	                                   @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId,
+	                                   @NotNull @QueryParam("item_id") String itemId){
+        return campaignBodyItemAudienceSearchService.campaignBodyItemAudienceSearch(name,campaignHeadId,itemId);
 	}
 
 	/**

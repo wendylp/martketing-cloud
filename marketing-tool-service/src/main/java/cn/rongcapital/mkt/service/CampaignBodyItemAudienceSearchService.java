@@ -4,5 +4,5 @@ import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
 
 public interface CampaignBodyItemAudienceSearchService {
 
-	public CampaignBodyItemAudienceSearchOut campaignBodyItemAudienceSearch(String name);
+	public CampaignBodyItemAudienceSearchOut campaignBodyItemAudienceSearch(String name,Integer campaignHeadId,String itemId);
 }
