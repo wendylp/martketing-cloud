@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import cn.rongcapital.mkt.common.enums.GenderEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskManager;
@@ -7,11 +8,12 @@ import cn.rongcapital.mkt.service.ParseUploadFile;
 import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Yunfeng on 2016-6-13.
@@ -71,19 +73,19 @@ public class ParseUploadFileImpl implements ParseUploadFile {
         switch(fileType){
             case 0:
                 break;
-            case 1:
+            case ImportConstant.POPULATION_FILE:
                 return originalDataPopulationDao.batchInsertUploadFileData(insertList);
-            case 2:
+            case ImportConstant.CUSTOMER_TAG_FILE:
                 return originalDataCustomerTagsDao.batchInsertUploadFileData(insertList);
-            case 3:
+            case ImportConstant.ARCH_POINT_FILE:
                 return originalDataArchPointDao.batchInsertUploadFileData(insertList);
-            case 4:
+            case ImportConstant.MEMBER_FILE:
                 return originalDataMemberDao.batchInsertUploadFileData(insertList);
-            case 5:
+            case ImportConstant.LOGIN_FILE:
                 return originalDataLoginDao.batchInsertUploadFileData(insertList);
-            case 6:
+            case ImportConstant.PAYMENT_FILE:
                 return originalDataPaymentDao.batchInsertUploadFileData(insertList);
-            case 7:
+            case ImportConstant.SHOPPING_FILE:
                 return originalDataShoppingDao.batchInsertUploadFileData(insertList);
         }
         return effectRows;
@@ -135,6 +137,7 @@ public class ParseUploadFileImpl implements ParseUploadFile {
         insertMap.put("batch_id",batchId);
 
         if(tanslateDataField(insertMap,fileType) && validateData(insertMap,fileType)){
+            convertData(insertMap);
             insertList.add(insertMap);
         }
     }
@@ -166,23 +169,70 @@ public class ParseUploadFileImpl implements ParseUploadFile {
      * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
      */
     private boolean validateData(Map<String, Object> insertMap,int fileType) {
-        if(fileType == 1 || fileType == 2 || fileType == 3 || fileType == 4 || fileType == 5){
-            if(insertMap.get("mobile") != null && !("".equals(insertMap.get("mobile")))){
-                return true;
+        if(fileType == ImportConstant.POPULATION_FILE){
+            String mobile = (String) insertMap.get(ImportConstant.MOBILE_FIELD);
+            if(!StringUtils.hasLength(mobile) || mobile.trim().length() != ImportConstant.MOBILE_LENGTH){
+                return false;
             }
-        }else if(fileType == 7){
-            if(insertMap.get("order_no") != null && insertMap.get("trans_serial") != null
-                    && !("".equals(insertMap.get("order_no"))) && !("".equals(insertMap.get("trans_serial")))){
-                return true;
+
+            String maritalStatus = (String) insertMap.get(ImportConstant.MARITAL_STATUS_FIELD);
+            if (!ImportConstant.MARITAL_STATUS_MARRIED.equals(maritalStatus) &&
+                    !ImportConstant.MARITAL_STATUS_SINGLE.equals(maritalStatus) &&
+                    !ImportConstant.MARITAL_STATUS_UNKNOWN.equals(maritalStatus)) {
+                return false;
             }
-        }else if(fileType == 6){
-            if(insertMap.get("order_no") != null && insertMap.get("trans_serial") != null
-                    && insertMap.get("mobile") != null && !("".equals(insertMap.get("mobile")))
-                    && !("".equals(insertMap.get("order_no"))) && !("".equals(insertMap.get("trans_serial")))){
-                return true;
+            String monthlyIncome = (String) insertMap.get(ImportConstant.MONTHLY_INCOME_FIELD);
+            String monthlyConsume = (String) insertMap.get(ImportConstant.MONTHLY_CONSUME_FIELD);
+            if (!isNumber(monthlyIncome) || !isNumber(monthlyConsume)) {
+                return false;
             }
+
+            return true;
+
+        }else if(fileType == ImportConstant.SHOPPING_FILE){
+            String orderNo = (String) insertMap.get(ImportConstant.ORDER_NO_FIELD);
+            String transSerial = (String) insertMap.get(ImportConstant.TRANS_SERIAL_FIELD);
+            String discount = (String) insertMap.get(ImportConstant.DISCOUNT_AMT_FIELD);
+            String price = (String) insertMap.get(ImportConstant.PRICE_FIELD);
+
+            if(!StringUtils.hasText(orderNo) || !StringUtils.hasText(transSerial)){
+                return false;
+            }
+
+            if(!isNumber(discount) || !isNumber(price)){
+                return false;
+            }
+            return true;
+        }else if(fileType == ImportConstant.PAYMENT_FILE){
+            String orderNo = (String) insertMap.get(ImportConstant.ORDER_NO_FIELD);
+            String transSerial = (String) insertMap.get(ImportConstant.TRANS_SERIAL_FIELD);
+            String mobile = (String) insertMap.get(ImportConstant.MOBILE_FIELD);
+            String incomeAmt = (String) insertMap.get(ImportConstant.INCOME_AMT_FIELD);
+            String paidAmt = (String) insertMap.get(ImportConstant.PAID_AMT_FIELD);
+            String acctAmt = (String) insertMap.get(ImportConstant.ACCT_AMT_FIELD);
+            if(StringUtils.isEmpty(orderNo) || StringUtils.isEmpty(transSerial) ||
+                    StringUtils.isEmpty(mobile)){
+                return false;
+            }
+            if (!isNumber(incomeAmt) || !isNumber(paidAmt) || !isNumber(acctAmt)) {
+                return false;
+            }
+            return true;
+        } else {
+
+            if (fileType == ImportConstant.MEMBER_FILE) {
+                String cardAmt = (String) insertMap.get(ImportConstant.CARD_AMT_FIELD);
+                if (!isNumber(cardAmt)) {
+                    return false;
+                }
+            }
+
+            String mobile = (String) insertMap.get(ImportConstant.MOBILE_FIELD);
+            if(!StringUtils.hasLength(mobile) || mobile.trim().length() != ImportConstant.MOBILE_LENGTH){
+                return false;
+            }
+            return true;
         }
-        return false;
     }
 
     /**
@@ -217,4 +267,60 @@ public class ParseUploadFileImpl implements ParseUploadFile {
         }
         return nameCodeMap;
     }
+
+    private void convertData(Map<String, Object> insertMap) {
+        Object gender =  insertMap.get(ImportConstant.GENDER_FIELD);
+        if (gender != null) {
+            if (GenderEnum.MALE.getDescription().equals(gender)){
+                insertMap.put(ImportConstant.GENDER_FIELD, GenderEnum.MALE.getStatusCode());
+            } else if (GenderEnum.FEMALE.getDescription().equals(gender)) {
+                insertMap.put(ImportConstant.GENDER_FIELD, GenderEnum.FEMALE.getStatusCode());
+            } else if (GenderEnum.OTHER.getDescription().equals(gender)) {
+                insertMap.put(ImportConstant.GENDER_FIELD, GenderEnum.OTHER.getStatusCode());
+            }
+        }
+
+    }
+
+    private boolean isNumber(String valStr) {
+        if (!StringUtils.hasText(valStr)) {
+            return true;
+        }
+
+        Pattern pattern = Pattern.compile("^((\\d*)|(\\d+\\.\\d+))?$");
+        Matcher match = pattern.matcher(valStr);
+        return match.matches();
+    }
+
+    interface ImportConstant {
+
+        int POPULATION_FILE = 1;
+        int CUSTOMER_TAG_FILE = 2;
+        int ARCH_POINT_FILE = 3;
+        int MEMBER_FILE = 4;
+        int LOGIN_FILE = 5;
+        int PAYMENT_FILE = 6;
+        int SHOPPING_FILE = 7;
+
+        String GENDER_FIELD = "gender";
+        String ORDER_NO_FIELD = "order_no";
+        String TRANS_SERIAL_FIELD = "trans_serial";
+        String MOBILE_FIELD = "mobile";
+        String MARITAL_STATUS_FIELD = "marital_status";
+        String CARD_AMT_FIELD = "card_amt";
+        String INCOME_AMT_FIELD = "income_amt";
+        String PAID_AMT_FIELD = "paid_amt";
+        String ACCT_AMT_FIELD = "acct_amt";
+        String MONTHLY_INCOME_FIELD = "monthly_income";
+        String MONTHLY_CONSUME_FIELD = "monthly_consume";
+        String DISCOUNT_AMT_FIELD = "discount_amt";
+        String PRICE_FIELD = "price";
+
+        int MOBILE_LENGTH = 11;
+        String MARITAL_STATUS_SINGLE = "未婚";
+        String MARITAL_STATUS_MARRIED = "已婚";
+        String MARITAL_STATUS_UNKNOWN = "未知";
+
+    }
+
 }
