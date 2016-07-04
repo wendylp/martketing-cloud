@@ -34,7 +34,7 @@ public class DataParty extends BaseQuery {
 
     private Date lastLogin;
 
-    private Integer status;
+    private Byte status;
 
     private Date createTime;
 
@@ -42,18 +42,14 @@ public class DataParty extends BaseQuery {
 
     private String batchId;
 
-    private String mid;
-
     private Integer mdType;
 
     private String mappingKeyid;
-    
     public DataParty(){}
     
     public DataParty(Integer index , Integer size){
         super(index, size);
     }
-
     public Integer getId() {
         return id;
     }
@@ -139,7 +135,7 @@ public class DataParty extends BaseQuery {
     }
 
     public void setMemberPoints(String memberPoints) {
-        this.memberPoints = memberPoints;
+        this.memberPoints = memberPoints == null ? null : memberPoints.trim();
     }
 
     public String getSource() {
@@ -166,11 +162,11 @@ public class DataParty extends BaseQuery {
         this.lastLogin = lastLogin;
     }
 
-    public Integer getStatus() {
+    public Byte getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Byte status) {
         this.status = status;
     }
 
@@ -195,15 +191,7 @@ public class DataParty extends BaseQuery {
     }
 
     public void setBatchId(String batchId) {
-        this.batchId = batchId;
-    }
-
-    public String getMid() {
-        return mid;
-    }
-
-    public void setMid(String mid) {
-        this.mid = mid == null ? null : mid.trim();
+        this.batchId = batchId == null ? null : batchId.trim();
     }
 
     public Integer getMdType() {

@@ -45,10 +45,12 @@ public class GetH5PubListServiceImpl implements TaskService {
         if(httpResponse != null){
             try {
                 JSONObject obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_pub_list_response");
-                H5MktPubListResponse h5MktPubListResponse = JSON.parseObject(obj.toString(),H5MktPubListResponse.class);
-                //Todo:3.判断pub_id是否已经注册，如果没有注册则属于非法数据，反之属于合法数据，则更新register表中的数据
-                checkPublistStatus(h5MktPubListResponse);
-                updatePublistInfo(h5MktPubListResponse);
+                if(obj != null){
+                    H5MktPubListResponse h5MktPubListResponse = JSON.parseObject(obj.toString(),H5MktPubListResponse.class);
+                    //Todo:3.判断pub_id是否已经注册，如果没有注册则属于非法数据，反之属于合法数据，则更新register表中的数据
+                    checkPublistStatus(h5MktPubListResponse);
+                    updatePublistInfo(h5MktPubListResponse);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

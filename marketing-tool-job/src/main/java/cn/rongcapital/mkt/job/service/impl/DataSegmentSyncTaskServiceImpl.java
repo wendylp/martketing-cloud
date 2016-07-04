@@ -56,13 +56,24 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 					List<Criteria> criteriasList = new ArrayList<Criteria>();
 					for(SegmentationBody segmentationBody:segmentationBodyList) {
 						Integer tagId = segmentationBody.getTagId();
+						Integer tagGroupId = segmentationBody.getTagGroupId();
 						Byte exclude = segmentationBody.getExclude();
 						if(exclude == 0) {
-							Criteria criteria = Criteria.where("tagList.tagId").is(tagId);
-							criteriasList.add(criteria);
+							if(tagId == 0) {//不限
+								Criteria criteria = Criteria.where("tagList.tagGroupId").is(tagGroupId);
+								criteriasList.add(criteria);
+							} else {
+								Criteria criteria = Criteria.where("tagList.tagId").is(tagId);
+								criteriasList.add(criteria);
+							}
 						}else{
-							Criteria criteria  = Criteria.where("tagList.tagId").ne(tagId);
-							criteriasList.add(criteria);
+							if(tagId == 0) {//不限
+								Criteria criteria = Criteria.where("tagList.tagGroupId").ne(tagGroupId);
+								criteriasList.add(criteria);
+							} else {
+								Criteria criteria  = Criteria.where("tagList.tagId").ne(tagId);
+								criteriasList.add(criteria);
+							}
 						}
 						Criteria criteriaAll = new Criteria().andOperator(criteriasList.toArray(new Criteria[criteriasList.size()]));
 						List<DataParty> dataPartyList = mongoTemplate.find(new Query().addCriteria(criteriaAll), DataParty.class);

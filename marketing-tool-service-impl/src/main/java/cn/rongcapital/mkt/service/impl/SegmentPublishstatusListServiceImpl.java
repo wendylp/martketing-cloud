@@ -52,6 +52,8 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 		t.setPageSize(size);
 		t.setStartIndex((index-1)*size);
 		t.getCustomMap().put("keyword", keyword);
+		t.setOrderFieldType("desc");
+		t.setOrderField("update_time");
 		int totalCount = segmentationHeadDao.selectListCount(t);
 		List<SegmentationHead> reList = segmentationHeadDao.selectListByKeyword(t);
 		SegmentPublishstatusListOut rseult = new SegmentPublishstatusListOut(ApiErrorCode.SUCCESS.getCode(),

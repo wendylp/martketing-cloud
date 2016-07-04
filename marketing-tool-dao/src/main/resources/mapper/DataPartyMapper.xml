@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,member_level as memberLevel,member_points as memberPoints,source as source,monthly_consume as monthlyConsume,last_login as lastLogin,status as status,create_time as createTime,update_time as updateTime,batch_id as batchId,mid as mid,md_type as mdType,mapping_keyid as mappingKeyid]]>
+		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,member_level as memberLevel,member_points as memberPoints,source as source,monthly_consume as monthlyConsume,last_login as lastLogin,status as status,create_time as createTime,update_time as updateTime,batch_id as batchId,md_type as mdType,mapping_keyid as mappingKeyid]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -31,7 +31,6 @@
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
-		    	<if test="mid != null"><![CDATA[ AND mid = #{mid}]]></if>
 		    	<if test="mdType != null"><![CDATA[ AND md_type = #{mdType}]]></if>
 		    	<if test="mappingKeyid != null"><![CDATA[ AND mapping_keyid = #{mappingKeyid}]]></if>
 		</where>
@@ -61,7 +60,6 @@
 		    	<if test="lastLogin != null"><![CDATA[last_login = #{lastLogin},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
-		    	<if test="mid != null"><![CDATA[mid = #{mid},]]></if>
 		    	<if test="mdType != null"><![CDATA[md_type = #{mdType},]]></if>
 		    	<if test="mappingKeyid != null"><![CDATA[mapping_keyid = #{mappingKeyid}]]></if>
 		</set>
@@ -70,7 +68,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataParty" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_party (mobile,name,gender,birthday,provice,city,job,monthly_income,member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,mid,md_type,mapping_keyid)
+			INSERT INTO data_party (mobile,name,gender,birthday,provice,city,job,monthly_income,member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,md_type,mapping_keyid)
 			VALUES
 			(
 			  #{mobile},
@@ -88,7 +86,6 @@
 			  #{lastLogin},
 			  now(),
 			  #{batchId},
-			  #{mid},
 			  #{mdType},
 			  #{mappingKeyid}
 			)
@@ -97,7 +94,7 @@
 
 	<insert id="batchInsert">
         INSERT INTO data_party (mobile,name,gender,birthday,provice,city,job,monthly_income,
-            member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,mid,md_type,mapping_keyid)
+            member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,md_type,mapping_keyid)
         VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -116,7 +113,6 @@
               #{item.lastLogin},
               now(),
               #{item.batchId},
-              #{item.mid},
               #{item.mdType},
               #{item.mappingKeyid}
 			)
