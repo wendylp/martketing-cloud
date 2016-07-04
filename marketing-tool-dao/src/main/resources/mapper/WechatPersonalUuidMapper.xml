@@ -109,6 +109,6 @@
 	<select id="selectUuidByUin" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT uuid
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE uin = #{uin}
+		WHERE uin = #{uin} and status = 0
 	</select>
 </mapper>

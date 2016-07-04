@@ -134,13 +134,13 @@
 	</update>
 
 	<insert id="batchInsertPersonList" parameterType="java.util.List">
-		INSERT INTO wechat_register (wx_acct,type,nickname,header_image,sex,province,city,signature)
+		INSERT INTO wechat_register (wx_acct,type,name,header_image,sex,province,city,signature)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 		(
 		#{item.wx_acct},
 		#{item.type},
-		#{item.nickname},
+		#{item.name},
 		#{item.header_image},
 		#{item.sex},
 		#{item.province},

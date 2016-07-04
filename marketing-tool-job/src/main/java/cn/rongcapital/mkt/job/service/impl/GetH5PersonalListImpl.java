@@ -64,7 +64,7 @@ public class GetH5PersonalListImpl implements TaskService {
                 if(personAlreadySaved(h5Personal)) continue;
                 Map<String,Object> paramPersonal = new HashMap<String,Object>();
                 paramPersonal.put("wx_acct",h5Personal.getUin());
-                paramPersonal.put("nickname",h5Personal.getNickname());
+                paramPersonal.put("name",h5Personal.getNickname());
                 paramPersonal.put("type",1);
                 paramPersonal.put("header_image",h5Personal.getHeadImage());
                 paramPersonal.put("sex",h5Personal.getSex());
