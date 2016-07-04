@@ -134,9 +134,31 @@ public class ParseUploadFileImpl implements ParseUploadFile {
         insertMap.put("file_unique",fileUnique);
         insertMap.put("batch_id",batchId);
 
-        if(validateData(insertMap,fileType)){
+        if(tanslateDataField(insertMap,fileType) && validateData(insertMap,fileType)){
             insertList.add(insertMap);
         }
+    }
+
+    private boolean tanslateDataField(Map<String, Object> insertMap, int fileType) {
+        boolean flag = true;
+        if(fileType == 2){
+            String tagType = (String) insertMap.get("tag_type");
+            if(tagType != null && tagType.length() > 0){
+                if("日期型标签".equals(tagType)){
+                    modifyTagTypeInCustomTag(insertMap,1);
+                }else if("文本型标签".equals(tagType)){
+                    modifyTagTypeInCustomTag(insertMap,0);
+                }else{
+                    flag = false;
+                }
+            }
+        }
+        return flag;
+    }
+
+    private void modifyTagTypeInCustomTag(Map<String, Object> insertMap,int fieldValue) {
+        insertMap.remove("tag_type");
+        insertMap.put("tag_type",fieldValue);
     }
 
     /**
