@@ -231,6 +231,7 @@ public class BaseMQService {
 		params.put("pub_id", pubId);
 		params.put("fans_weixin_ids",fansWeixinIds);
 		params.put("message_type","news");
+		params.put("send_type","publish");//发送类型:publish:群发接口,custom:客服接口
 		params.put("material_id", materialId);
 		httpUrl.setRequetsBody(JSON.toJSONString(params));
 		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
