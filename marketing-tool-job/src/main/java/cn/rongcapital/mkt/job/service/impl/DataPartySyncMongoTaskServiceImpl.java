@@ -82,7 +82,7 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
 	    		
 	    //1.从mysql data_party表中读取所有mid,keyid
 	    DataParty dataParty=new DataParty();
-        dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
         int totalCount = dataPartyDao.selectListCount(dataParty);
         if (totalCount < 1) {
             return;
@@ -100,143 +100,138 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
             List<Integer> dataPartyIdList = new ArrayList<>();
             for(DataParty tempDataParty : datapartyList){
                 dataPartyIdList.add(tempDataParty.getId());
-                add2Mongo(tempDataParty.getMdType(), tempDataParty.getMappingKeyid());
+                add2Mongo(tempDataParty.getMdType(), tempDataParty.getMappingKeyid(), tempDataParty.getId());
             }
 
             dataPartyDao.updateStatusByIds(dataPartyIdList, StatusEnum.PROCESSED.getStatusCode());
         }
 	}
 	
-	private void add2Mongo(int dataType,String keyid){
+	private void add2Mongo(Integer dataType,String dataKeyId, Integer dataPartyId){
 	    
 	    String collection="data_party";
-	    
+	    Integer dataKeyIdInteger = Integer.valueOf(dataKeyId);
 	    //批量插入
-	    if(dataType==1){
+	    if(dataType.intValue() == 1){
 	        
 	        DataPopulation data=new DataPopulation();
-	        data.setId(Integer.parseInt(keyid));
+	        data.setId(dataKeyIdInteger);
 	        
 	        List<DataPopulation> dataList=dataPopulationDao.selectList(data);
 	        //insert into mongodb
 	        for(DataPopulation dataObj : dataList){
-	            dataObj.setMid(keyid);
-	            dataObj.setMd_type("1");
-	            dataObj.setMapping_keyid(dataObj.getId()+"");
                 cn.rongcapital.mkt.po.mongodb.DataPopulation mongoDataPopulation =
                         new cn.rongcapital.mkt.po.mongodb.DataPopulation();
                 BeanUtils.copyProperties(dataObj, mongoDataPopulation);
+                mongoDataPopulation.setMid(dataPartyId);
+                mongoDataPopulation.setMd_type(dataType);
+                mongoDataPopulation.setMapping_keyid(dataObj.getId().toString());
                 mongoTemplate.insert(mongoDataPopulation, collection);
 	        }
 
-	    }else if(dataType==2){
+	    }else if(dataType.intValue()==2){
 	        
 	        DataCustomerTags data=new DataCustomerTags();
-            data.setId(Integer.parseInt(keyid));
+            data.setId(dataKeyIdInteger);
 	        
 	        List<DataCustomerTags> dataList=dataCustomerTagsDao.selectList(data);
             
             //insert into mongodb
             for(DataCustomerTags dataObj : dataList){
-                dataObj.setMid(keyid);
-                dataObj.setMd_type("2");
-                dataObj.setMapping_keyid(dataObj.getId()+"");
                 cn.rongcapital.mkt.po.mongodb.DataCustomerTags mongoDataCustomerTags =
                         new cn.rongcapital.mkt.po.mongodb.DataCustomerTags();
                 BeanUtils.copyProperties(dataObj, mongoDataCustomerTags);
+                mongoDataCustomerTags.setMid(dataPartyId);
+                mongoDataCustomerTags.setMd_type(dataType);
+                mongoDataCustomerTags.setMapping_keyid(dataObj.getId().toString());
                 mongoTemplate.insert(mongoDataCustomerTags,collection);
             }
 	        
-	    }else if(dataType==3){
+	    }else if(dataType.intValue()==3){
 	        
 	        DataArchPoint data=new DataArchPoint();
-            data.setId(Integer.parseInt(keyid));
+            data.setId(dataKeyIdInteger);
 	        
 	        List<DataArchPoint> dataList=dataArchPointDao.selectList(data);
             
             //insert into mongodb
             for(DataArchPoint dataObj : dataList){
-                dataObj.setMid(keyid);
-                dataObj.setMd_type("3");
-                dataObj.setMapping_keyid(dataObj.getId()+"");
                 cn.rongcapital.mkt.po.mongodb.DataArchPoint mongoDataArchPoint =
                         new cn.rongcapital.mkt.po.mongodb.DataArchPoint();
                 BeanUtils.copyProperties(dataObj, mongoDataArchPoint);
+                mongoDataArchPoint.setMid(dataPartyId);
+                mongoDataArchPoint.setMd_type(dataType);
+                mongoDataArchPoint.setMapping_keyid(dataObj.getId().toString());
                 mongoTemplate.insert(mongoDataArchPoint,collection);
             }
-        }else if(dataType==4){
+        }else if(dataType.intValue()==4){
             
             DataMember data=new DataMember();
-            data.setId(Integer.parseInt(keyid));
+            data.setId(dataKeyIdInteger);
             
             List<DataMember> dataList=dataMemberDao.selectList(data);
             
             //insert into mongodb
             for(DataMember dataObj : dataList){
-                dataObj.setMid(keyid);
-                dataObj.setMd_type("4");
-                dataObj.setMapping_keyid(dataObj.getId()+"");
                 cn.rongcapital.mkt.po.mongodb.DataMember mongoDataMember =
                         new cn.rongcapital.mkt.po.mongodb.DataMember();
                 BeanUtils.copyProperties(dataObj, mongoDataMember);
+                mongoDataMember.setMid(dataPartyId);
+                mongoDataMember.setMd_type(dataType);
+                mongoDataMember.setMapping_keyid(dataObj.getId().toString());
                 mongoTemplate.insert(mongoDataMember,collection);
             }
-        }else if(dataType==5){
+        }else if(dataType.intValue()==5){
             
             DataLogin data=new DataLogin();
-            data.setId(Integer.parseInt(keyid));
+            data.setId(dataKeyIdInteger);
             
             List<DataLogin> dataList=dataLoginDao.selectList(data);
             
             //insert into mongodb
             for(DataLogin dataObj : dataList){
-                dataObj.setMid(keyid);
-                dataObj.setMd_type("5");
-                dataObj.setMapping_keyid(dataObj.getId()+"");
                 cn.rongcapital.mkt.po.mongodb.DataLogin mongoDataLogin =
                         new cn.rongcapital.mkt.po.mongodb.DataLogin();
                 BeanUtils.copyProperties(dataObj, mongoDataLogin);
+                mongoDataLogin.setMid(dataPartyId);
+                mongoDataLogin.setMd_type(dataType);
+                mongoDataLogin.setMapping_keyid(dataObj.getId().toString());
                 mongoTemplate.insert(mongoDataLogin,collection);
             }
-        }else if(dataType==6){
+        }else if(dataType.intValue()==6){
             
             DataPayment data=new DataPayment();
-            data.setId(Integer.parseInt(keyid));
+            data.setId(dataKeyIdInteger);
             
             List<DataPayment> dataList=dataPaymentDao.selectList(data);
             
             //insert into mongodb
             for(DataPayment dataObj : dataList){
-                dataObj.setMid(keyid);
-                dataObj.setMd_type("6");
-                dataObj.setMapping_keyid(dataObj.getId()+"");
                 cn.rongcapital.mkt.po.mongodb.DataPayment mongoDataPayment =
                         new cn.rongcapital.mkt.po.mongodb.DataPayment();
                 BeanUtils.copyProperties(dataObj, mongoDataPayment);
+                mongoDataPayment.setMid(dataPartyId);
+                mongoDataPayment.setMd_type(dataType);
+                mongoDataPayment.setMapping_keyid(dataObj.getId().toString());
                 mongoTemplate.insert(mongoDataPayment,collection);
             }
-        }else if(dataType==7){
+        }else if(dataType.intValue()==7){
             
             DataShopping data=new DataShopping();
-            data.setId(Integer.parseInt(keyid));
-            
+            data.setId(dataKeyIdInteger);
             List<DataShopping> dataList=dataShoppingDao.selectList(data);
             
             //insert into mongodb
             for(DataShopping dataObj : dataList){
-                dataObj.setMid(keyid);
-                dataObj.setMd_type("7");
-                dataObj.setMapping_keyid(dataObj.getId()+"");
                 cn.rongcapital.mkt.po.mongodb.DataShopping mongoDataShopping =
                         new cn.rongcapital.mkt.po.mongodb.DataShopping();
                 BeanUtils.copyProperties(dataObj, mongoDataShopping);
+                mongoDataShopping.setMid(dataPartyId);
+                mongoDataShopping.setMd_type(dataType);
+                mongoDataShopping.setMapping_keyid(dataObj.getId().toString());
                 mongoTemplate.insert(mongoDataShopping,collection);
             }
-        }else{
-            ;
         }
-	        
-	    
 	}
 	
 }

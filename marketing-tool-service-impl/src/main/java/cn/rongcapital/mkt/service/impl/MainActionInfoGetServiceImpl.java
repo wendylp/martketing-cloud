@@ -55,5 +55,44 @@ public class MainActionInfoGetServiceImpl implements MainActionInfoGetService{
 		}
 		return result;
 	}
+	
+	@Override
+    @ReadWrite(type=ReadWriteType.READ)
+    public BaseOutput getPartyBehaviorCountById(String contactId) {
+        
+	    BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+	                    ApiErrorCode.SUCCESS.getMsg(),
+	                    ApiConstant.INT_ZERO,null);
+	    
+	    PartyBehavior param = new PartyBehavior();
+        param.setContactId(contactId);
+        
+        //行为类型
+        //0-微信、1-web、2-营销活动
+        
+        Map<String,Object> map1 = new HashMap<String,Object>();        
+        param.setBehaviorType("0");
+        int type1_count=partyBehaviorDao.selectListCount(param);                
+        map1.put("behavior_type", "0");
+        map1.put("behavior_count", type1_count+""); 
+        result.getData().add(map1);
+                
+        Map<String,Object> map2 = new HashMap<String,Object>();
+        param.setBehaviorType("1");
+        int type2_count=partyBehaviorDao.selectListCount(param);
+        map2.put("behavior_type", "1");
+        map2.put("behavior_count", type2_count+"");
+        result.getData().add(map2);
+        
+        Map<String,Object> map3 = new HashMap<String,Object>();
+        param.setBehaviorType("2");
+        int type3_count=partyBehaviorDao.selectListCount(param);
+        map3.put("behavior_type", "2");
+        map3.put("behavior_count", type3_count+"");
+        result.getData().add(map3);
+        
+        result.setTotal(3);        
+        return result;
+    }
 
 }
