@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -30,6 +31,9 @@ public class CampaignBodyItemAudienceSearchServiceImpl implements CampaignBodyIt
 					                    		                                ApiErrorCode.SUCCESS.getMsg(), 
 					                    		                                ApiConstant.INT_ZERO);
 		//模糊匹配
+		if(StringUtils.isBlank(name)) {
+			name = "";
+		}
 		Pattern pattern = Pattern.compile("^.*"+name+".*$", Pattern.CASE_INSENSITIVE);
 		Query query = Query.query(Criteria.where("name").regex(pattern).and("status").is(0));  
 	    List<NodeAudience> sodeAudienceList = mongoTemplate.find(query, NodeAudience.class);
