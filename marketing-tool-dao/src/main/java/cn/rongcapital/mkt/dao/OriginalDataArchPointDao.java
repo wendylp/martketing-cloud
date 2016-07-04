@@ -16,6 +16,7 @@ import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.OriginalDataArchPoint;
+import org.apache.ibatis.annotations.Param;
 
 public interface OriginalDataArchPointDao extends BaseDao<OriginalDataArchPoint>{
 
@@ -59,4 +60,11 @@ public interface OriginalDataArchPointDao extends BaseDao<OriginalDataArchPoint>
 	 * @return int
 	 */
 	List<Long> selelctIdListByFileUnique(Map<String, Object> paramMap);
+
+	/**
+	 * 根据FileUnique更新数据状态
+	 * @param fileUnique
+	 * @return
+	 */
+	int updateStatusByFileUnique(@Param("fileUnique") String fileUnique, @Param("status") Integer status);
 }

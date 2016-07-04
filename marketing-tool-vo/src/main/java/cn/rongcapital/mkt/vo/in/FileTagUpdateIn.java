@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class FileTagUpdateIn extends BaseInput{
 
     private String fileUnique;
+    private String fileType;
     private ArrayList<String> tag_names;
 
     @JsonProperty("file_unique")
@@ -22,6 +23,15 @@ public class FileTagUpdateIn extends BaseInput{
 
     public void setFileUnique(String fileUnique) {
         this.fileUnique = fileUnique;
+    }
+
+    @JsonProperty("file_type")
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 
     @JsonProperty("tag_names")

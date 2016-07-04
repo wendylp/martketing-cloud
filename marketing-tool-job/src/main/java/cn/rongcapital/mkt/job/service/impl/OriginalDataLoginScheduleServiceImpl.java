@@ -65,7 +65,7 @@ public class OriginalDataLoginScheduleServiceImpl implements OriginalDataLoginSc
             OriginalDataLogin tmpOriginalDataLogin = tmpOriginalDataLogins.get(i);
             BeanUtils.copyProperties(tmpOriginalDataLogin, paramDataLogin);
             // 因为在一个事务里 , 直接修改OriginalDataLogin的状态
-            tmpOriginalDataLogin.setStatus(StatusEnum.DELETED.getStatusCode());
+            tmpOriginalDataLogin.setStatus(StatusEnum.PROCESSED.getStatusCode());
             originalDataLoginDao.updateById(tmpOriginalDataLogin);
             dataLogins.add(paramDataLogin);
         }

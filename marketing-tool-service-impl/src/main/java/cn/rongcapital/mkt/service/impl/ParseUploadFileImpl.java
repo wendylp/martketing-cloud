@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.enums.GenderEnum;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskManager;
@@ -280,6 +281,8 @@ public class ParseUploadFileImpl implements ParseUploadFile {
             }
         }
 
+        insertMap.put(ImportConstant.STATUS_FIELD, StatusEnum.DELETED.getStatusCode());
+
     }
 
     private boolean isNumber(String valStr) {
@@ -315,6 +318,7 @@ public class ParseUploadFileImpl implements ParseUploadFile {
         String MONTHLY_CONSUME_FIELD = "monthly_consume";
         String DISCOUNT_AMT_FIELD = "discount_amt";
         String PRICE_FIELD = "price";
+        String STATUS_FIELD = "status";
 
         int MOBILE_LENGTH = 11;
         String MARITAL_STATUS_SINGLE = "未婚";
