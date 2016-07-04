@@ -11,4 +11,6 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface MainActionInfoGetService {
 	BaseOutput getMainActionInfo(String contactId,String behaviorType);
+	
+	BaseOutput getPartyBehaviorCountById(String contactId);
 }
