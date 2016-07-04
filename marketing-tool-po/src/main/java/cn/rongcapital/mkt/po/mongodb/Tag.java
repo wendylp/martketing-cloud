@@ -9,6 +9,9 @@ public class Tag {
 	
 	@Field(value = "tag_name")
 	private String tagName;
+	
+	@Field(value = "tag_group_id")
+	private String tagGroupId;
 
 	public Integer getTagId() {
 		return tagId;
@@ -25,6 +28,13 @@ public class Tag {
 	public void setTagName(String tagName) {
 		this.tagName = tagName;
 	}
-	
+
+	public String getTagGroupId() {
+		return tagGroupId;
+	}
+
+	public void setTagGroupId(String tagGroupId) {
+		this.tagGroupId = tagGroupId;
+	}
 	
 }
