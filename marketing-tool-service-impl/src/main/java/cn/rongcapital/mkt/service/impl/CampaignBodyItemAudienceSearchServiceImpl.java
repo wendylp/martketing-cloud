@@ -25,7 +25,7 @@ public class CampaignBodyItemAudienceSearchServiceImpl implements CampaignBodyIt
 	private MongoTemplate mongoTemplate;
 	
 	@Override
-	public CampaignBodyItemAudienceSearchOut campaignBodyItemAudienceSearch(String name) {
+	public CampaignBodyItemAudienceSearchOut campaignBodyItemAudienceSearch(String name,Integer campaignHeadId,String itemId) {
 		CampaignBodyItemAudienceSearchOut CampaignBodyItemAudienceSearchOut =  new CampaignBodyItemAudienceSearchOut(
 				 															    ApiConstant.INT_ZERO, 
 					                    		                                ApiErrorCode.SUCCESS.getMsg(), 
@@ -35,10 +35,11 @@ public class CampaignBodyItemAudienceSearchServiceImpl implements CampaignBodyIt
 			name = "";
 		}
 		Pattern pattern = Pattern.compile("^.*"+name+".*$", Pattern.CASE_INSENSITIVE);
-		Query query = Query.query(Criteria.where("name").regex(pattern).and("status").is(0));  
-	    List<NodeAudience> sodeAudienceList = mongoTemplate.find(query, NodeAudience.class);
-	    if(CollectionUtils.isNotEmpty(sodeAudienceList)) {
-	    	for(NodeAudience nodeAudience:sodeAudienceList) {
+		Query query = Query.query(Criteria.where("name").regex(pattern).and("status").is(0)
+								  .and("campaignHeadId").is(campaignHeadId).and("itemId").is(itemId));  
+	    List<NodeAudience> nodeAudienceList = mongoTemplate.find(query, NodeAudience.class);
+	    if(CollectionUtils.isNotEmpty(nodeAudienceList)) {
+	    	for(NodeAudience nodeAudience:nodeAudienceList) {
 	    		CampaignBodyItemAudienceSearchData dataCustom = new CampaignBodyItemAudienceSearchData();
 	    		dataCustom.setDataId(nodeAudience.getDataId());
 	    		dataCustom.setName(nodeAudience.getName());
