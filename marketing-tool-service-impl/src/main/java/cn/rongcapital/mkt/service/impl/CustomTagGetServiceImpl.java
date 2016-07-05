@@ -40,7 +40,11 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
                 map.put("tag_id", tag.getId());
                 map.put("tag_name", tag.getName());
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                map.put("create_time", format.format(tag.getCreateTime()));
+                String creatTime = "";
+                if(null != tag.getCreateTime()) {
+                	creatTime = format.format(tag.getCreateTime());
+                }
+                map.put("create_time", creatTime);
                 map.put("cover_audience_count", tag.getCoverAudienceCount());
                 result.getData().add(map);
             }
