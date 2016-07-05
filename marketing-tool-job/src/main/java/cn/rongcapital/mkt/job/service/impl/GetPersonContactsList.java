@@ -43,7 +43,8 @@ public class GetPersonContactsList implements TaskService {
 
     @Override
     public void task(Integer taskId) {
-        Map<String,String> h5ParamMap = tenementDao.selectPid();
+        Map<String,String> h5ParamMap = new HashMap<String,String>();
+        h5ParamMap.put("pid",tenementDao.selectPid().get("pid"));
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PERSONAL_CONTACTLIST);
 
         List<String> uuids = getUUidListService.getUuidList();

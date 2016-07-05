@@ -36,11 +36,11 @@ public class GetH5PersonalListImpl implements TaskService {
     @Autowired
     private WechatRegisterDao wechatRegisterDao;
 
-
     @Transactional
     @Override
     public void task(Integer taskId) {
-        Map<String,String> h5ParamMap = tenementDao.selectPid();
+        Map<String,String> h5ParamMap = new HashMap<String,String>();
+        h5ParamMap.put("pid",tenementDao.selectPid().get("pid"));
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PERSONAL_LIST);
         HttpResponse httpResponse = HttpUtils.requestH5Interface(h5ParamMap);
         if(httpResponse != null){
@@ -64,7 +64,7 @@ public class GetH5PersonalListImpl implements TaskService {
                 if(personAlreadySaved(h5Personal)) continue;
                 Map<String,Object> paramPersonal = new HashMap<String,Object>();
                 paramPersonal.put("wx_acct",h5Personal.getUin());
-                paramPersonal.put("name",h5Personal.getNickname());
+                paramPersonal.put("name",h5Personal.getNickname().replaceAll("[^\\u0000-\\uFFFF]", ""));
                 paramPersonal.put("type",1);
                 paramPersonal.put("header_image",h5Personal.getHeadImage());
                 paramPersonal.put("sex",h5Personal.getSex());
