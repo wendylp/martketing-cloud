@@ -12,7 +12,7 @@ public class DataParty extends BaseQuery {
 
     private String name;
 
-    private String gender;
+    private Integer gender;
 
     private Date birthday;
 
@@ -74,12 +74,12 @@ public class DataParty extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender == null ? null : gender.trim();
+    public void setGender(Integer gender) {
+        this.gender = gender == null ? null : gender;
     }
 
     public Date getBirthday() {

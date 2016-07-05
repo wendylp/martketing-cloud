@@ -20,17 +20,17 @@ public class GenderUtils {
         return "不确定";
     }
     
-    public static String charToInt(String genderFlag){
+    public static Integer charToInt(String genderFlag){
         if(genderFlag != null){
             switch (genderFlag){
                 case "男":
-                    return "1";
+                    return 1;
                 case "女":
-                    return "2";
+                    return 2;
                 case "未确定":
-                    return "3";                
+                    return 3;                
             }
         }
-        return "3";
+        return 3;
     }
 }

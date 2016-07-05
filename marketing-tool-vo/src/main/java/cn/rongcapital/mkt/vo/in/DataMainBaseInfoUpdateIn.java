@@ -13,7 +13,7 @@ public class DataMainBaseInfoUpdateIn  extends BaseInput {
 	
 	private String name;
 	
-	private Integer gender;
+	private String gender;
 	
 	private Integer age;
 	
@@ -56,11 +56,11 @@ public class DataMainBaseInfoUpdateIn  extends BaseInput {
 		this.name = name;
 	}
 
-	public Integer getGender() {
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(Integer gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
