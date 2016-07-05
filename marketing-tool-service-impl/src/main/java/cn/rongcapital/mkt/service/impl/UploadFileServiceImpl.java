@@ -80,11 +80,21 @@ public class UploadFileServiceImpl implements UploadFileService{
         UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
         ImportDataHistory importDataHistory = uploadFileVO.getImportDataHistory();
         int repairRows = processVO.getLegalRows().intValue();
-        importDataHistory.setIllegalRows(importDataHistory.getIllegalRows().intValue() - repairRows);
-        importDataHistory.setLegalRows(importDataHistory.getLegalRows() + repairRows);
-        importDataHistory.setNoRecognizeProperty(processVO.getUnrecognizeFields());
-        importDataHistory.setFileType(Integer.valueOf(processVO.getFileType()));
-        importDataHistoryDao.updateById(importDataHistory);
+        if (repairRows > 0) {
+            if (importDataHistory.getIllegalRows() != null) {
+                importDataHistory.setIllegalRows(importDataHistory.getIllegalRows().intValue() - repairRows);
+            } else {
+                importDataHistory.setIllegalRows(Integer.valueOf(0));
+            }
+            if (importDataHistory.getLegalRows() != null) {
+                importDataHistory.setLegalRows(importDataHistory.getLegalRows() + repairRows);
+            } else {
+                importDataHistory.setLegalRows(repairRows);
+            }
+            importDataHistory.setNoRecognizeProperty(processVO.getUnrecognizeFields());
+            importDataHistory.setFileType(Integer.valueOf(processVO.getFileType()));
+            importDataHistoryDao.updateById(importDataHistory);
+        }
 
         ImportDataModifyLog importDataModifyLog = new ImportDataModifyLog();
         importDataModifyLog.setImportDataId(importDataHistory.getId());
