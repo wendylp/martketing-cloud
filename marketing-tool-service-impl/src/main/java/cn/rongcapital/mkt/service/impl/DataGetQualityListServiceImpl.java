@@ -42,6 +42,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
         ImportDataHistory paramImportDataHistory = new ImportDataHistory(index, size);
+        
         paramImportDataHistory.setOrderField("import_start_time");
         paramImportDataHistory.setOrderFieldType("DESC");
 
@@ -62,8 +63,19 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
                 Map<String, Object> dataMap = new LinkedHashMap<>();
                 List<Map<String, Object>> logList = new ArrayList<>();
                 dataMap.put("data_id", importDataHistory.getId());
-                dataMap.put("start_time", simpleDateFormat.format(importDataHistory.getImportStartTime()));
-                dataMap.put("end_time", simpleDateFormat.format(importDataHistory.getImportEndTime()));
+                if(importDataHistory.getImportStartTime()==null){
+                    dataMap.put("start_time", "");
+                }else{
+                    dataMap.put("start_time", simpleDateFormat.format(importDataHistory.getImportStartTime()));
+                }
+                
+                if(importDataHistory.getImportEndTime()==null){
+                    dataMap.put("end_time", "");
+                }else{
+                    dataMap.put("end_time", simpleDateFormat.format(importDataHistory.getImportEndTime()));
+                }
+                               
+                
                 dataMap.put("data_source", importDataHistory.getSource());
                 dataMap.put("legal_data_rows_count", importDataHistory.getLegalRows());
                 dataMap.put("ilegal_data_rows_count", importDataHistory.getIllegalRows());
