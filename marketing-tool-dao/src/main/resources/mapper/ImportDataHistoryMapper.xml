@@ -163,8 +163,22 @@
 	</select>
 
 	<update id="updateByFileUnique" parameterType="java.util.Map">
-		UPDATE import_data_history
-		SET total_rows = #{total_rows}, no_recognize_property = #{no_recognize_property}, file_type = #{file_type}
+		update import_data_history
+        <set>
+            <if test="legalRows != null"><![CDATA[legal_rows = #{legalRows},]]></if>
+            <if test="success != null"><![CDATA[success = #{success},]]></if>
+            <if test="source != null"><![CDATA[source = #{source},]]></if>
+            <if test="sourceFilename != null"><![CDATA[source_filename = #{sourceFilename},]]></if>
+            <if test="emailRows != null"><![CDATA[email_rows = #{emailRows},]]></if>
+            <if test="mobileRows != null"><![CDATA[mobile_rows = #{mobileRows},]]></if>
+            <if test="duplicateRows != null"><![CDATA[duplicate_rows = #{duplicateRows},]]></if>
+            <if test="illegalRows != null"><![CDATA[illegal_rows = #{illegalRows},]]></if>
+            <if test="summary != null"><![CDATA[summary = #{summary},]]></if>
+            <if test="noRecognizeProperty != null"><![CDATA[no_recognize_property = #{noRecognizeProperty},]]></if>
+            <if test="fileUnique != null"><![CDATA[file_unique = #{fileUnique},]]></if>
+            <if test="status != null"><![CDATA[status = #{status},]]></if>
+            <if test="fileType != null"><![CDATA[file_type = #{fileType}]]></if>
+        </set>
 		WHERE file_unique = #{file_unique}
 	</update>	
 	

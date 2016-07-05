@@ -1068,12 +1068,22 @@ public class MktApi {
 	@POST
 	@Path("/mkt.service.file.upload")
 	@Consumes("multipart/form-data")
-	public Object fileUpload(
-			@QueryParam("file_source") String fileSource,
-			@NotEmpty @QueryParam("file_unique") String fileUnique,
-			@QueryParam("file_type") int fileType,
-			MultipartFormDataInput input, @Context SecurityContext securityContext){
-		return uploadFileService.uploadFile(fileSource,fileUnique,fileType,input,securityContext);
+	public Object fileUpload(@NotEmpty @QueryParam("file_unique") String fileUnique,
+ 			MultipartFormDataInput input){
+		return uploadFileService.uploadFile(fileUnique, input);
+	}
+
+	/**
+	 * @功能描述:文件上传
+	 * @Param: String user_token, String ver, Integer asset_id, String nickname
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.service.file.repiar.upload")
+	@Consumes("multipart/form-data")
+	public Object uploadRepiarFile(@NotEmpty @QueryParam("file_unique") String fileUnique,
+							 MultipartFormDataInput input){
+		return uploadFileService.uploadRepairFile(fileUnique, input);
 	}
 	
     /**

@@ -81,7 +81,7 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
                 Map<String,Object> insertCustomTagMapMap = new HashMap<String,Object>();
                 insertCustomTagMapMap.put("tag_id",tagId);
                 insertCustomTagMapMap.put("map_id",mapId);
-                insertCustomTagMapMap.put("type",fileType);
+                insertCustomTagMapMap.put("type","3");
                 insertCustomTagMapList.add(insertCustomTagMapMap);
             }
         }

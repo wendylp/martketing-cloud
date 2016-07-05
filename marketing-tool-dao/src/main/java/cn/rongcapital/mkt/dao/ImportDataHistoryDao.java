@@ -79,11 +79,4 @@ public interface ImportDataHistoryDao extends BaseDao<ImportDataHistory>{
 	 */
 	List<Map<String,Object>> selectTotalRowsAndFileType(Map<String, Object> paramMap);
 
-	/**
-	 *
-	 * @功能简述 : 根据FileUnique跟新相应的数据属性
-	 * @author nianjun
-	 * @return map
-	 */
-	void updateByFileUnique(Map<String, Object> updateMap);
 }
