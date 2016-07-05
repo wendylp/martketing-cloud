@@ -29,6 +29,8 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
 
         CustomTag customTag = new CustomTag(index, size);
         customTag.setStatus((byte)0);
+        customTag.setOrderField("create_time");
+        customTag.setOrderFieldType("DESC");
         List<CustomTag> customTagList = customTagDao.selectListUndeleteTags(customTag);
         int totalCount = customTagDao.selectListCount(customTag);
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
