@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.service.MainBasicInfoGetService;
@@ -42,7 +43,7 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 			dataVo.setContactId(id);
 			dataVo.setName(party.getName());
 			if(party.getGender()!=null){
-			    dataVo.setGender(Integer.valueOf(party.getGender()));
+			    dataVo.setGender(GenderUtils.intToChar(Integer.parseInt(party.getGender())));
 			}
 			if(party.getMobile() != null){
 			    dataVo.setMobile(Long.valueOf(party.getMobile()));
