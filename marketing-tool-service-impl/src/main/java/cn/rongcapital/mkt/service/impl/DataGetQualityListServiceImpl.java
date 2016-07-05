@@ -80,6 +80,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
                 dataMap.put("legal_data_rows_count", importDataHistory.getLegalRows());
                 dataMap.put("ilegal_data_rows_count", importDataHistory.getIllegalRows());
                 dataMap.put("source_file_name", importDataHistory.getSourceFilename());
+                dataMap.put("file_unique", importDataHistory.getFileUnique());
 
                 ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
                 paramImportDataModifyLog.setImportDataId(importDataHistory.getId());
