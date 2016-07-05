@@ -9,7 +9,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class UploadFileAccordTemplateOut {
     private String dataTopic;
-    private String dataRows;
+    private Integer totalRows;
+    private Integer legalRows;
+    private Integer illegalRows;
     private String unrecognizeFields;
     private String fileType;
 
@@ -22,13 +24,29 @@ public class UploadFileAccordTemplateOut {
         this.dataTopic = dataTopic;
     }
 
-    @JsonProperty("data_rows")
-    public String getDataRows() {
-        return dataRows;
+    public Integer getTotalRows() {
+        return totalRows;
     }
 
-    public void setDataRows(String dataRows) {
-        this.dataRows = dataRows;
+    public void setTotalRows(Integer totalRows) {
+        this.totalRows = totalRows;
+    }
+
+    @JsonProperty("data_rows")
+    public Integer getLegalRows() {
+        return legalRows;
+    }
+
+    public void setLegalRows(Integer legalRows) {
+        this.legalRows = legalRows;
+    }
+
+    public Integer getIllegalRows() {
+        return illegalRows;
+    }
+
+    public void setIllegalRows(Integer illegalRows) {
+        this.illegalRows = illegalRows;
     }
 
     @JsonProperty("unrecognize_fields")
