@@ -1,11 +1,14 @@
 package cn.rongcapital.mkt.service.impl;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.GenderEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskManager;
 import cn.rongcapital.mkt.service.impl.vo.UploadFileProcessVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -40,8 +43,9 @@ public class ParseUploadFileImpl {
     private OriginalDataPaymentDao originalDataPaymentDao;
     @Autowired
     private OriginalDataShoppingDao originalDataShoppingDao;
-    @Autowired
-    private TaskManager taskManager;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
 
     public UploadFileProcessVO parseAndInsertUploadFileByType(String fileUnique, String fileName, byte[] bytes) {
         String[] typeAndBatchId = fileName.split("_");
@@ -111,6 +115,11 @@ public class ParseUploadFileImpl {
             String line = null;
             boolean isFileHeadFlag = true;
             while((line = bufferedReader.readLine()) != null){
+                byte[] lineBytes = line.getBytes();
+                if (!(lineBytes[0] == -17 && lineBytes[1] == -69 && lineBytes[2] == -65)){
+                    logger.error("文件格式非UTF-8编码");
+                    return -1;
+                }
                 String[] uploadFileColumns = line.replace(" ","").split(",");
                 if(isFileHeadFlag){
                     parseHeader(illegalColumns, codeIndexMap, nameCodeMappingMap, uploadFileColumns);

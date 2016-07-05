@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
@@ -51,6 +52,10 @@ public class UploadFileServiceImpl implements UploadFileService{
     public Object uploadFile(String fileUnique, MultipartFormDataInput fileInput) {
         UploadFileVO uploadFileVO = processEachUploadFile(fileUnique, fileInput, false);
         UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
+
+        if(processVO.getTotalRows() == -1){
+            return new BaseOutput(ApiErrorCode.BIZ_ERROR.getCode(),"文件格式非UTF-8编码",ApiConstant.INT_ZERO,null);
+        }
 
         ImportDataHistory importDataHistory = uploadFileVO.getImportDataHistory();
         importDataHistory.setTotalRows(processVO.getTotalRows());
@@ -135,7 +140,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         }
         UploadFileProcessVO processVO = null;
         Map<String,List<InputPart>> uploadForm = fileInput.getFormDataMap();
-        List<InputPart> inputParts = uploadForm.get("uploadedFile");
+        List<InputPart> inputParts = uploadForm.get("file");
         for(InputPart inputPart : inputParts){
             try {
                 String fileName = getFileName(inputPart.getHeaders());
