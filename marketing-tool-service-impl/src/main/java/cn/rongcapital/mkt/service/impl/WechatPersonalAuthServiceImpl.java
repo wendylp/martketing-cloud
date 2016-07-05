@@ -3,8 +3,7 @@ package cn.rongcapital.mkt.service.impl;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.HttpUtils;
-import cn.rongcapital.mkt.dao.TenementDao;
-import cn.rongcapital.mkt.dao.WechatPersonalUuidDao;
+import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskManager;
 import cn.rongcapital.mkt.job.service.impl.GetPersonContactsList;
 import cn.rongcapital.mkt.job.vo.in.H5PersonalContactlistResponse;
@@ -34,6 +33,14 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
     private WechatPersonalUuidDao wechatPersonalUuidDao;
     @Autowired
     private TaskManager taskManager;
+    @Autowired
+    private WechatMemberDao wechatMemberDao;
+    @Autowired
+    private WechatGroupDao wechatGroupDao;
+    @Autowired
+    private WechatAssetDao wechatAssetDao;
+    @Autowired
+    private WechatAssetGroupDao wechatAssetGroupDao;
 
     @Override
     public BaseOutput authPersonWechat(WechatPersonalAuthIn wechatPersonalAuthIn) {
@@ -46,7 +53,7 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
             if(uin != null){
                 paramMap.put("uin",uin);
                 wechatPersonalUuidDao.insertUuidAndUin(paramMap);
-//                taskManager.manualInitTask(1098,null);
+                taskManager.manualInitTask(1098,null);
                 baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
                 baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
             }
