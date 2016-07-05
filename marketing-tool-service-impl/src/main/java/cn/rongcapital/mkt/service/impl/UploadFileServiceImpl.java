@@ -1,19 +1,15 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.io.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
 import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
+import cn.rongcapital.mkt.po.ImportDataHistory;
 import cn.rongcapital.mkt.po.ImportDataModifyLog;
-import cn.rongcapital.mkt.service.ParseUploadFile;
+import cn.rongcapital.mkt.service.UploadFileService;
+import cn.rongcapital.mkt.service.impl.vo.UploadFileProcessVO;
 import cn.rongcapital.mkt.service.impl.vo.UploadFileVO;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
@@ -22,14 +18,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
-import cn.rongcapital.mkt.po.ImportDataHistory;
-import cn.rongcapital.mkt.service.UploadFileService;
-import cn.rongcapital.mkt.vo.BaseOutput;
 import org.springframework.util.CollectionUtils;
+
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yunfeng on 2016-6-2.
@@ -47,20 +45,30 @@ public class UploadFileServiceImpl implements UploadFileService{
     private ImportDataModifyLogDao importDataModifyLogDao;
 
     @Autowired
-    private ParseUploadFile parseUploadFile;
+    private ParseUploadFileImpl parseUploadFile;
 
     @Override
     public Object uploadFile(String fileUnique, MultipartFormDataInput fileInput) {
         UploadFileVO uploadFileVO = processEachUploadFile(fileUnique, fileInput, false);
-        UploadFileAccordTemplateOut parseOut = uploadFileVO.getParseOutput();
+        UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
 
         ImportDataHistory importDataHistory = uploadFileVO.getImportDataHistory();
-        importDataHistory.setTotalRows(parseOut.getLegalRows());
-        importDataHistory.setNoRecognizeProperty(parseOut.getUnrecognizeFields());
-        importDataHistory.setFileType(Integer.valueOf(parseOut.getFileType()));
+        importDataHistory.setTotalRows(processVO.getTotalRows());
+        importDataHistory.setLegalRows(processVO.getLegalRows());
+        importDataHistory.setIllegalRows(processVO.getTotalRows().intValue() - processVO.getLegalRows().intValue());
+        importDataHistory.setNoRecognizeProperty(processVO.getUnrecognizeFields());
+        importDataHistory.setFileType(Integer.valueOf(processVO.getFileType()));
+        importDataHistory.setSourceFilename(uploadFileVO.getFileName());
         importDataHistoryDao.updateById(importDataHistory);
 
-        return Response.ok().entity(uploadFileVO.getOutput()).build();
+        BaseOutput baseOutput = uploadFileVO.getOutput();
+        UploadFileAccordTemplateOut out = new UploadFileAccordTemplateOut();
+        out.setLegalRows(processVO.getLegalRows());
+        out.setDataTopic(processVO.getDataTopic());
+        out.setFileType(processVO.getFileType());
+        out.setUnrecognizeFields(processVO.getUnrecognizeFields());
+        baseOutput.getData().add(baseOutput);
+        return Response.ok().entity(baseOutput).build();
     }
 
     @Override
@@ -69,26 +77,28 @@ public class UploadFileServiceImpl implements UploadFileService{
         UploadFileVO uploadFileVO = processEachUploadFile(fileUnique, fileInput, true);
 
         // update import history,insert import log
-        UploadFileAccordTemplateOut parseOut = uploadFileVO.getParseOutput();
+        UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
         ImportDataHistory importDataHistory = uploadFileVO.getImportDataHistory();
-        int repairRows = parseOut.getLegalRows().intValue();
+        int repairRows = processVO.getLegalRows().intValue();
         importDataHistory.setIllegalRows(importDataHistory.getIllegalRows().intValue() - repairRows);
         importDataHistory.setLegalRows(importDataHistory.getLegalRows() + repairRows);
-        importDataHistory.setNoRecognizeProperty(parseOut.getUnrecognizeFields());
-        importDataHistory.setFileType(Integer.valueOf(parseOut.getFileType()));
+        importDataHistory.setNoRecognizeProperty(processVO.getUnrecognizeFields());
+        importDataHistory.setFileType(Integer.valueOf(processVO.getFileType()));
         importDataHistoryDao.updateById(importDataHistory);
 
         ImportDataModifyLog importDataModifyLog = new ImportDataModifyLog();
         importDataModifyLog.setImportDataId(importDataHistory.getId());
         importDataModifyLog.setHandleTime(new Date());
         importDataModifyLog.setTotalRows(importDataHistory.getTotalRows());
-        importDataModifyLog.setModifyRows(parseOut.getLegalRows());
+        importDataModifyLog.setModifyRows(processVO.getLegalRows());
         importDataModifyLog.setIllegalRows(importDataHistory.getIllegalRows());
         importDataModifyLog.setModifyFilename(uploadFileVO.getFileName());
         importDataModifyLog.setSuccess(Byte.valueOf(StatusEnum.ACTIVE.getStatusCode().toString()));
         importDataModifyLogDao.insert(importDataModifyLog);
 
-        return Response.ok().entity(uploadFileVO.getOutput()).build();
+        BaseOutput baseOut = uploadFileVO.getOutput();
+        baseOut.getData().add(processVO);
+        return Response.ok().entity(baseOut).build();
     }
 
 
@@ -113,7 +123,7 @@ public class UploadFileServiceImpl implements UploadFileService{
                 return uploadFileVO;
             }
         }
-        UploadFileAccordTemplateOut uploadFileAccordTemplateOut = null;
+        UploadFileProcessVO processVO = null;
         Map<String,List<InputPart>> uploadForm = fileInput.getFormDataMap();
         List<InputPart> inputParts = uploadForm.get("uploadedFile");
         for(InputPart inputPart : inputParts){
@@ -126,8 +136,8 @@ public class UploadFileServiceImpl implements UploadFileService{
                 }
                 InputStream inputStream = inputPart.getBody(InputStream.class,null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
-                uploadFileAccordTemplateOut = parseUploadFile.parseAndInsertUploadFileByType(fileUnique,fileName,bytes);
-                if (uploadFileAccordTemplateOut == null) {
+                processVO = parseUploadFile.parseAndInsertUploadFileByType(fileUnique,fileName,bytes);
+                if (processVO == null) {
                     baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
                     baseOutput.setMsg("上传的文件名称不是预定格式");
                     return uploadFileVO;
@@ -140,8 +150,7 @@ public class UploadFileServiceImpl implements UploadFileService{
                 baseOutput.setMsg(ApiErrorCode.SYSTEM_ERROR.getMsg());
             }
         }
-        baseOutput.getData().add(uploadFileAccordTemplateOut);
-        uploadFileVO.setParseOutput(uploadFileAccordTemplateOut);
+        uploadFileVO.setProcessVO(processVO);
         return uploadFileVO;
     }
 

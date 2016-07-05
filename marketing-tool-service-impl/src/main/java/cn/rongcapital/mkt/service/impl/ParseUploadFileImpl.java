@@ -5,13 +5,15 @@ import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskManager;
-import cn.rongcapital.mkt.service.ParseUploadFile;
-import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
+import cn.rongcapital.mkt.service.impl.vo.UploadFileProcessVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +23,7 @@ import java.util.regex.Pattern;
  * 把上传上来的文件解析，解析后得到的摘要，数据条数，未识别属性
  */
 @Service
-public class ParseUploadFileImpl implements ParseUploadFile {
+public class ParseUploadFileImpl {
     @Autowired
     private ImportTemplateDao importTemplateDao;
     @Autowired
@@ -41,8 +43,7 @@ public class ParseUploadFileImpl implements ParseUploadFile {
     @Autowired
     private TaskManager taskManager;
 
-    @Override
-    public UploadFileAccordTemplateOut parseAndInsertUploadFileByType(String fileUnique, String fileName, byte[] bytes) {
+    public UploadFileProcessVO parseAndInsertUploadFileByType(String fileUnique, String fileName, byte[] bytes) {
         String[] typeAndBatchId = fileName.split("_");
         if (typeAndBatchId.length < 2) {
             return null;
@@ -52,22 +53,23 @@ public class ParseUploadFileImpl implements ParseUploadFile {
 
         StringBuffer illegalColumns = new StringBuffer();
         ArrayList<Map<String,Object>> rowDataList = new ArrayList<>();
-        UploadFileAccordTemplateOut uploadFileAccordTemplateOut = new UploadFileAccordTemplateOut();
-        parseFile(bytes, illegalColumns, rowDataList, fileType, batchId, fileUnique, uploadFileAccordTemplateOut);
+        UploadFileProcessVO uploadFileProcessVO = new UploadFileProcessVO();
+        int totalRows = parseFile(bytes, illegalColumns, rowDataList, fileType, batchId, fileUnique);
         int effectRows = 0;
         if(rowDataList.size() > 0){
             effectRows = insertParsedData(rowDataList, fileType);
         }
-        uploadFileAccordTemplateOut.setLegalRows(effectRows);
-        uploadFileAccordTemplateOut.setIllegalRows(uploadFileAccordTemplateOut.getTotalRows().intValue() - effectRows);
-        uploadFileAccordTemplateOut.setDataTopic(importTemplateDao.selectTempleNameByType(fileType));
-        uploadFileAccordTemplateOut.setFileType(fileType + "");
+        uploadFileProcessVO.setTotalRows(Integer.valueOf(totalRows));
+        uploadFileProcessVO.setLegalRows(effectRows);
+        uploadFileProcessVO.setIllegalRows(uploadFileProcessVO.getTotalRows().intValue() - effectRows);
+        uploadFileProcessVO.setDataTopic(importTemplateDao.selectTempleNameByType(fileType));
+        uploadFileProcessVO.setFileType(fileType + "");
         if(illegalColumns.length() > 0){
-            uploadFileAccordTemplateOut.setUnrecognizeFields(illegalColumns.substring(illegalColumns.length()-1));
+            uploadFileProcessVO.setUnrecognizeFields(illegalColumns.substring(0, illegalColumns.length()-1));
         }else{
-            uploadFileAccordTemplateOut.setUnrecognizeFields(illegalColumns.toString());
+            uploadFileProcessVO.setUnrecognizeFields(illegalColumns.toString());
         }
-        return uploadFileAccordTemplateOut;
+        return uploadFileProcessVO;
     }
 
     private int insertParsedData(ArrayList<Map<String, Object>> insertList, int fileType) {
@@ -99,15 +101,15 @@ public class ParseUploadFileImpl implements ParseUploadFile {
      * @功能简述: 读取文件并做相应处理
      * @param: byte[] bytes, ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, int fileType
      */
-    private void parseFile(byte[] bytes, StringBuffer illegalColumns, ArrayList<Map<String, Object>> rowDataList,
-            int fileType, String batchId, String fileUnique, UploadFileAccordTemplateOut uploadFileAccordTemplateOut) {
+    private int parseFile(byte[] bytes, StringBuffer illegalColumns, ArrayList<Map<String, Object>> rowDataList,
+            int fileType, String batchId, String fileUnique) {
         Map<String, String> nameCodeMappingMap = getNameCodeRelationByFileType(fileType);
         Map<String, Integer> codeIndexMap = new HashMap<>();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8));
+        int totalRows = 0;
         try{
             String line = null;
             boolean isFileHeadFlag = true;
-            int totalRows = 0;
             while((line = bufferedReader.readLine()) != null){
                 String[] uploadFileColumns = line.replace(" ","").split(",");
                 if(isFileHeadFlag){
@@ -118,10 +120,11 @@ public class ParseUploadFileImpl implements ParseUploadFile {
                 }
                 totalRows++;
             }
-            uploadFileAccordTemplateOut.setTotalRows(Integer.valueOf(totalRows));
         }catch (Exception e){
 
         }
+
+        return totalRows;
     }
 
     /**

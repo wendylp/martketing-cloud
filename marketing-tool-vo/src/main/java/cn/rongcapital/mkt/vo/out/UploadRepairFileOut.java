@@ -6,14 +6,14 @@ import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * Created by Yunfeng on 2016-6-14.
  */
-@JsonIgnoreProperties(ignoreUnknown=true)
-public class UploadFileAccordTemplateOut {
+public class UploadRepairFileOut {
     private String dataTopic;
+    private Integer totalRows;
     private Integer legalRows;
+    private Integer illegalRows;
     private String unrecognizeFields;
     private String fileType;
 
-    @JsonProperty("data_topic")
     public String getDataTopic() {
         return dataTopic;
     }
@@ -22,7 +22,14 @@ public class UploadFileAccordTemplateOut {
         this.dataTopic = dataTopic;
     }
 
-    @JsonProperty("data_rows")
+    public Integer getTotalRows() {
+        return totalRows;
+    }
+
+    public void setTotalRows(Integer totalRows) {
+        this.totalRows = totalRows;
+    }
+
     public Integer getLegalRows() {
         return legalRows;
     }
@@ -31,7 +38,14 @@ public class UploadFileAccordTemplateOut {
         this.legalRows = legalRows;
     }
 
-    @JsonProperty("unrecognize_fields")
+    public Integer getIllegalRows() {
+        return illegalRows;
+    }
+
+    public void setIllegalRows(Integer illegalRows) {
+        this.illegalRows = illegalRows;
+    }
+
     public String getUnrecognizeFields() {
         return unrecognizeFields;
     }
@@ -40,7 +54,6 @@ public class UploadFileAccordTemplateOut {
         this.unrecognizeFields = unrecognizeFields;
     }
 
-    @JsonProperty("file_type")
     public String getFileType() {
         return fileType;
     }
