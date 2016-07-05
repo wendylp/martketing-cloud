@@ -112,7 +112,7 @@
 	</insert>
 
 	<select id="searchDataMain" parameterType="java.util.Map" resultType="java.util.Map">
-		SELECT id,audience_name
+		SELECT id,audience_name as name
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE audience_name like #{name}
 		limit #{size}
