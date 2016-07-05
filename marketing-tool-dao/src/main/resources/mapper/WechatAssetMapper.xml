@@ -176,4 +176,10 @@
 		SET group_ids = #{group_ids},total_count = #{total_count}
 		WHERE wx_acct = #{wx_acct}
 	</update>
+
+	<delete id="deleteRecordByUin" parameterType="java.lang.String">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE wx_acct = #{uin}
+	</delete>
 </mapper>

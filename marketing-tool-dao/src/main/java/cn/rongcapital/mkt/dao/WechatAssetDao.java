@@ -100,4 +100,11 @@ public interface WechatAssetDao extends BaseDao<WechatAsset>{
 	 * @return int
 	 */
 	void updateGroupIdsAndTotalCount(Map<String,Object> paramMap);
+
+	/**
+	 * 删除与该uin相关的信息
+	 * @param paramMap
+	 * @return int
+	 */
+	void deleteRecordByUin(String uin);
 }

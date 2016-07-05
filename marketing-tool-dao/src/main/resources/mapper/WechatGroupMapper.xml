@@ -146,4 +146,10 @@
 		select id as import_group_id, group_name as name, wx_acct
 		<include refid="QUERY_FROM_TABLE"/>
 	</select>
+
+	<delete id="deleteRecordByUin" parameterType="java.lang.String">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_acct = #{uin}
+	</delete>
 </mapper>

@@ -214,7 +214,7 @@
 	</select>
 
 	<insert id="batchInsertGroupMember" parameterType="java.util.List">
-		INSERT INTO wechat_member(wx_code,wx_group_id,head_image_url,nickname,is_friend,wx_name)
+		INSERT INTO wechat_member(wx_code,wx_group_id,head_image_url,nickname,is_friend,wx_name,uin)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator=",">
 			(
@@ -223,7 +223,8 @@
 			  #{item.head_image_url},
 			  #{item.nickname},
 			  #{item.is_friend},
-			  #{item.wx_name}
+			  #{item.wx_name},
+			  #{item.uin}
 			)
 		</foreach>
 	</insert>
@@ -250,4 +251,10 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE wx_code = #{wx_code} AND pub_id = #{pub_id}
 	</select>
+
+	<delete id="deleteRecordByUin" parameterType="java.lang.String">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE uin = #{uin}
+	</delete>
 </mapper>

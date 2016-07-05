@@ -86,4 +86,11 @@ public interface WechatGroupDao extends BaseDao<WechatGroup>{
 	 * @return Integer
 	 */
 	List<Map<String,Object>> selectFirstImportGroupList();
+
+	/**
+	 * 删除与该uin相关的所有数据
+	 * @param paramMap
+	 * @return Integer
+	 */
+	void deleteRecordByUin(String uin);
 }

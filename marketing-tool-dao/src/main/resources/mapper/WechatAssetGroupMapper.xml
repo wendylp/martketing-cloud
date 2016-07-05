@@ -160,4 +160,10 @@
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE wx_acct = #{wx_acct}
 	</select>
+
+	<delete id="deleteRecordByUin" parameterType="java.lang.String">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE wx_acct = #{uin}
+	</delete>
 </mapper>

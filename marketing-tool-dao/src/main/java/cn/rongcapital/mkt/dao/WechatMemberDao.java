@@ -100,4 +100,11 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return list
 	 */
 	Long selectIdByPubIdAndOpenId(Map<String, Object> paramMap);
+
+	/**
+	 * 删掉与这个uin相关的所有数据
+	 * @param paramMap
+	 * @return list
+	 */
+	void deleteRecordByUin(String uin);
 }
