@@ -67,7 +67,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         out.setDataTopic(processVO.getDataTopic());
         out.setFileType(processVO.getFileType());
         out.setUnrecognizeFields(processVO.getUnrecognizeFields());
-        baseOutput.getData().set(0, baseOutput);
+        baseOutput.getData().add(out);
         return Response.ok().entity(baseOutput).build();
     }
 
@@ -107,7 +107,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         importDataModifyLogDao.insert(importDataModifyLog);
 
         BaseOutput baseOut = uploadFileVO.getOutput();
-        baseOut.getData().set(0, processVO);
+        baseOut.getData().add(processVO);
         return Response.ok().entity(baseOut).build();
     }
 
