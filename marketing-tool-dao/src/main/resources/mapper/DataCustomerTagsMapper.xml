@@ -171,7 +171,7 @@
 			</if>
 		</foreach>
 		</if>
-		<if test="pageSize != null and pageSize &gt; 0">
+		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
 	</select>
