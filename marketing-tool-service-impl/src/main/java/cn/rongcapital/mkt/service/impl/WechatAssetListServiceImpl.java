@@ -47,7 +47,7 @@ public class WechatAssetListServiceImpl implements WechatAssetListService{
                 if(map.get("total_count") == null){
                     map.put("follower_count",0);
                 }else{
-                    map.put("follower_count", map.remove("total_count") == null);
+                    map.put("follower_count", map.remove("total_count"));
                 }
                 baseOutput.getData().add(map);
             }
