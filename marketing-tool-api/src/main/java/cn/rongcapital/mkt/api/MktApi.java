@@ -1625,26 +1625,20 @@ public class MktApi {
 	@POST
 	@Path("/mkt.data.inbound.wechat.public.auth.callback")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public void wechatPublicAuthCallback(@Valid WechatPublicAuthCallbackIn wechatPublicAuthCallbackIn,@Context
-	                HttpServletRequest request, @Context
-	                HttpServletResponse response){
-		//return wechatPublicAuthCallbackService.authWechatPublicCallback(wechatPublicAuthCallbackIn);
-		//Response.temporaryRedirect(uriInfo.getBaseUriBuilder().path("/").build()).build();
+	public Response wechatPublicAuthCallback(@Valid WechatPublicAuthCallbackIn wechatPublicAuthCallbackIn){		
 	    
-	    try {
+	    URI location=null;
+	    
+	    try{
 	        
-	        URI location = new java.net.URI("http://mktpro.rc.dataengine.com/html/data-access/weixin.html");
-	        //Response.temporaryRedirect(location).build();	        
-
-            Response.temporaryRedirect(location).build();                    
-	                
-	        
+	        location = new java.net.URI("http://mktpro.rc.dataengine.com/html/data-access/weixin.html");
+	        	        
 	    } catch (URISyntaxException e) {
 	        
 	        e.printStackTrace();
 	    }   
 	    
-	    //return new BaseOutput();
+	    return Response.temporaryRedirect(location).build();
 	}
 
 	/**
