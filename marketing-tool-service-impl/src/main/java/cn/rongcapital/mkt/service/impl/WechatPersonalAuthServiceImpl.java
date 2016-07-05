@@ -16,6 +16,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -53,11 +55,24 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
             if(uin != null){
                 paramMap.put("uin",uin);
                 wechatPersonalUuidDao.insertUuidAndUin(paramMap);
+                deleteRecordAccordUin(uin);
                 taskManager.manualInitTask(1098,null);
                 baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
                 baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
             }
         }
         return baseOutput;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    private void deleteRecordAccordUin(String uin) {
+        //Todo:1.删除wechat_member相关数据
+        wechatMemberDao.deleteRecordByUin(uin);
+        //Todo:2.删除wechat_group相关数据
+        wechatGroupDao.deleteRecordByUin(uin);
+        //Todo:3.删除wechat_asset相关数据
+        wechatAssetDao.deleteRecordByUin(uin);
+        //Todo:4.删除wechat_asset_group相关数据
+        wechatAssetGroupDao.deleteRecordByUin(uin);
     }
 }

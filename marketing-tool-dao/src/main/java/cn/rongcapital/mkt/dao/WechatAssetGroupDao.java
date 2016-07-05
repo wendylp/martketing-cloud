@@ -97,4 +97,11 @@ public interface WechatAssetGroupDao extends BaseDao<WechatAssetGroup>{
 	 * @return list
 	 */
 	Integer selectMemberCountByWxAcct(Map<String, Object> paramMap);
+
+	/**
+	 * 删除与该微信账号相关的所有数据
+	 * @param paramMap
+	 * @return list
+	 */
+	void deleteRecordByUin(String uin);
 }
