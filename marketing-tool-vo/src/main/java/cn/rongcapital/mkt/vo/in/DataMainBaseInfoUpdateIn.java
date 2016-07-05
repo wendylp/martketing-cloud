@@ -5,7 +5,9 @@ import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class DataMainBaseInfoUpdateIn {
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class DataMainBaseInfoUpdateIn  extends BaseInput {
 	@NotNull
 	private Integer contactId;
 	
@@ -45,6 +47,7 @@ public class DataMainBaseInfoUpdateIn {
 		this.contactId = contactId;
 	}
 
+	@JsonProperty("name")
 	public String getName() {
 		return name;
 	}

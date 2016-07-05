@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
@@ -38,7 +39,14 @@ public class DataMainBasicInfoUpdateServiceImpl implements DataMainBasicInfoUpda
         DataParty po = new DataParty();
         po.setId(body.getContactId());
         po.setName(body.getName());
-        po.setGender(body.getGender() + "");
+        
+        if(body.getGender()==null){
+            po.setGender("3");
+        }else{
+            po.setGender(GenderUtils.charToInt(body.getGender()+""));
+        }
+                
+        
         if (!StringUtils.isEmpty(body.getMobile())) {
             po.setMobile(body.getMobile());
         }
