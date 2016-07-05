@@ -46,7 +46,7 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
             if(uin != null){
                 paramMap.put("uin",uin);
                 wechatPersonalUuidDao.insertUuidAndUin(paramMap);
-                taskManager.manualInitTask(1098,null);
+//                taskManager.manualInitTask(1098,null);
                 baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
                 baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
             }
