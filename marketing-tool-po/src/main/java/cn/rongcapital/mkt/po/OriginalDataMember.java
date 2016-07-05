@@ -8,7 +8,7 @@ import java.util.Date;
 public class OriginalDataMember extends BaseQuery {
     private Integer id;
 
-    private Integer memberId;
+    private String memberId;
 
     private String memberPoints;
 
@@ -64,11 +64,11 @@ public class OriginalDataMember extends BaseQuery {
         this.id = id;
     }
 
-    public Integer getMemberId() {
+    public String getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(Integer memberId) {
+    public void setMemberId(String memberId) {
         this.memberId = memberId;
     }
 

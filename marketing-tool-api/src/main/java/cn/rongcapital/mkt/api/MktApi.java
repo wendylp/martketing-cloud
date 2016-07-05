@@ -10,10 +10,14 @@
 
 package cn.rongcapital.mkt.api;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -25,6 +29,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -1620,8 +1625,20 @@ public class MktApi {
 	@POST
 	@Path("/mkt.data.inbound.wechat.public.auth.callback")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput wechatPublicAuthCallback(@Valid WechatPublicAuthCallbackIn wechatPublicAuthCallbackIn){
-		return wechatPublicAuthCallbackService.authWechatPublicCallback(wechatPublicAuthCallbackIn);
+	public Response wechatPublicAuthCallback(@Valid WechatPublicAuthCallbackIn wechatPublicAuthCallbackIn){		
+	    
+	    URI location=null;
+	    
+	    try{
+	        
+	        location = new java.net.URI("http://mktpro.rc.dataengine.com/html/data-access/weixin.html");
+	        	        
+	    } catch (URISyntaxException e) {
+	        
+	        e.printStackTrace();
+	    }   
+	    
+	    return Response.temporaryRedirect(location).build();
 	}
 
 	/**
