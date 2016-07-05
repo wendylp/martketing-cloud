@@ -44,7 +44,11 @@ public class WechatAssetListServiceImpl implements WechatAssetListService{
                 resultList = wechatAssetDao.selectServerAndBookList(paramMap);
             }
             for(Map<String,Object> map : resultList){
-                map.put("follower_count", map.remove("total_count"));
+                if(map.get("total_count") == null){
+                    map.put("follower_count",0);
+                }else{
+                    map.put("follower_count", map.remove("total_count"));
+                }
                 baseOutput.getData().add(map);
             }
             baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());

@@ -66,12 +66,13 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 			for(Segment segment:segmentList) {
 				String pubId= segment.getPubId();
 				String openId = segment.getFansFriendsOpenId();
-				String h5MobileUrl = segment.getH5MobileUrl();//mobile端的url
+				Integer materialId = campaignDecisionWechatRead.getMaterialId();
+//				String h5MobileUrl = segment.getH5MobileUrl();//mobile端的url
 				//有pubId,openId,h5MobileUrl的人,校验是否已读
 				if(StringUtils.isNotBlank(pubId) && 
 				   StringUtils.isNotBlank(openId) && 
-				   StringUtils.isNotBlank(h5MobileUrl)) {
-					boolean isRead = checkWechatReadByH5Interface(pubId,openId,h5MobileUrl,campaignDecisionWechatRead);
+				   null!=materialId) {
+					boolean isRead = checkWechatReadByH5Interface(pubId,openId,campaignDecisionWechatRead);
 					if(true == isRead) {
 						segmentListToNextYes.add(segment);
 					} else {
@@ -97,7 +98,7 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 	
 	}
 	
-	private boolean checkWechatReadByH5Interface(String pubId,String fansOpenId,String h5MobileUrl,
+	private boolean checkWechatReadByH5Interface(String pubId,String fansOpenId,
 												 CampaignDecisionWechatRead campaignDecisionWechatRead) {
 		boolean isRead = true;
 		HttpUrl httpUrl = new HttpUrl();
@@ -106,7 +107,8 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 		HashMap<Object , Object> params = new HashMap<Object , Object>();
 		params.put("pub_id", pubId);
 		params.put("fans_open_id", fansOpenId);
-		params.put("wtuwen_url", h5MobileUrl);
+		Integer materialId = campaignDecisionWechatRead.getMaterialId();
+		params.put("material_id", materialId);
 		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
 		httpUrl.setRequetsBody(JSON.toJSONString(params));
 		try {
@@ -154,6 +156,25 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 		return isRead;
 	}
 	
+//	public static void main(String[] args) throws Exception {
+//		test();
+//	}
+//	
+//	private static void test() throws Exception {
+//		HttpUrl httpUrl = new HttpUrl();
+//		httpUrl.setHost("test.h5plus.net");
+//		httpUrl.setPath(ApiConstant.DL_PUB_ISREAD_API_PATH + "55cbf3a3986a9b483376f279");
+//		HashMap<Object , Object> params = new HashMap<Object , Object>();
+//		params.put("pub_id", "gh_e611846d32ee");
+//		params.put("fans_open_id", "ozn8st4fvXQ3oGzB__j6gMt9Va7A");
+//		params.put("material_id", 1349);
+//		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
+//		httpUrl.setRequetsBody(JSON.toJSONString(params));
+//		PostMethod postResult = HttpClientUtil.getInstance().postExt(httpUrl);
+//		String postResStr = postResult.getResponseBodyAsString();
+//		System.out.println(postResStr);
+//	}
+//	
 	@Override
 	public void task(Integer taskId) {
 		// TODO Auto-generated method stub
