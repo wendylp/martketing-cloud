@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
+import cn.rongcapital.mkt.service.impl.vo.MainDataVO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +87,6 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                     List<CustomizeViewCheckboxIn> customizeViews) {
         DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
-        List<Map<String, Object>> resultList = new ArrayList<>();
         List<Map<String, Object>> columnList = new ArrayList<>();
         List<ImportTemplate> importTemplateList = null;
         Integer totalCount = 0;
@@ -119,45 +119,47 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         }
 
         // 这代码写的太2了
+        MainDataVO mainDataVO = null;
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             DataParty paramObj = new DataParty(index, size);
-            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPartyDao, totalCount);
+            mainDataVO = getData(dataType, taskIdList, contactIds, paramObj, dataPartyDao);
         } else if (dataType == DataTypeEnum.POPULATION.getCode()) {
             DataPopulation paramObj = new DataPopulation(index, size);
-            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPopulationDao, totalCount);
+            mainDataVO = getData(dataType, taskIdList, contactIds, paramObj, dataPopulationDao);
         } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
             DataCustomerTags paramObj = new DataCustomerTags(index, size);
-            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataCustomerTagsDao, totalCount);
+            mainDataVO = getData(dataType, taskIdList, contactIds, paramObj, dataCustomerTagsDao);
         } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
             DataArchPoint paramObj = new DataArchPoint(index, size);
-            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataArchPointDao, totalCount);
+            mainDataVO = getData(dataType, taskIdList, contactIds, paramObj, dataArchPointDao);
         } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
             DataMember paramObj = new DataMember(index, size);
-            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataMemberDao, totalCount);
+            mainDataVO = getData(dataType, taskIdList, contactIds, paramObj, dataMemberDao);
         } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
             DataLogin paramObj = new DataLogin(index, size);
-            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataLoginDao, totalCount);
+            mainDataVO = getData(dataType, taskIdList, contactIds, paramObj, dataLoginDao);
         } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
             DataPayment paramObj = new DataPayment(index, size);
-            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataPaymentDao, totalCount);
+            mainDataVO = getData(dataType, taskIdList, contactIds, paramObj, dataPaymentDao);
         } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
             DataShopping paramObj = new DataShopping(index, size);
-            resultList = getData(dataType, taskIdList, contactIds, paramObj, dataShoppingDao, totalCount);
+            mainDataVO = getData(dataType, taskIdList, contactIds, paramObj, dataShoppingDao);
         } else {
             logger.error("传入错误的data type : {}", dataType);
         }
 
-        result.getData().addAll(resultList);
-        result.setTotal(result.getData().size());
-        result.setTotalCount(totalCount);
+        result.getData().addAll(mainDataVO.getResultList());
+        result.setTotal(mainDataVO.getTotalCount());
+        result.setTotalCount(mainDataVO.getTotalCount());
         result.getColNames().addAll(columnList);
         return Response.ok().entity(result).build();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private <T extends BaseQuery, D extends BaseDataFilterDao> List<Map<String, Object>> getData(Integer mdType,
-                    List<Integer> taskIdList, List<Integer> contactIdList, T paramObj, D dao, Integer totalCount) {
+    private <T extends BaseQuery, D extends BaseDataFilterDao> MainDataVO getData(Integer mdType,
+            List<Integer> taskIdList, List<Integer> contactIdList, T paramObj, D dao) {
 
+        MainDataVO mainDataVO = new MainDataVO();
         Map<String, Object> paramMap = new HashMap<>();
         contactIdList = filterContactId(contactIdList, dao);
         if (CollectionUtils.isEmpty(taskIdList)) {
@@ -171,7 +173,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         List<T> dataList = dao.selectByBatchId(paramMap);
         paramMap.remove("startIndex");
         paramMap.remove("pageSize");
-        totalCount = dao.selectByBatchId(paramMap).size();
+        Integer totalCount = Integer.valueOf(dao.selectByBatchId(paramMap).size());
 
         List<Map<String, Object>> resultList = new ArrayList<>();
         if (dataList != null && !dataList.isEmpty()) {
@@ -197,7 +199,9 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
             }
         }
 
-        return resultList;
+        mainDataVO.setResultList(resultList);
+        mainDataVO.setTotalCount(totalCount);
+        return mainDataVO;
     }
 
     private <D extends BaseDataFilterDao<?>> List<Integer> filterContactId(List<Integer> contactIdList, D dao) {
