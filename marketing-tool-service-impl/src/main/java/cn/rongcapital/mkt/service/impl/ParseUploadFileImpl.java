@@ -42,38 +42,40 @@ public class ParseUploadFileImpl implements ParseUploadFile {
     private TaskManager taskManager;
 
     @Override
-    public UploadFileAccordTemplateOut parseUploadFileByType(String fileUnique,String fileName, byte[] bytes) {
-        UploadFileAccordTemplateOut uploadFileAccordTemplateOut = new UploadFileAccordTemplateOut();
-        StringBuffer illegalColumns = new StringBuffer();  //用于存放文件中不合法的列名
-        Map<String,Object> codeIndexMap = new HashMap<String,Object>();  //用于存放数据库表列名与文件中对应列索引的对应关系
-        ArrayList<Map<String,Object>> insertList = new ArrayList<Map<String,Object>>();  //用于存放将要被插入数据库的数据
-
+    public UploadFileAccordTemplateOut parseAndInsertUploadFileByType(String fileUnique, String fileName, byte[] bytes) {
         String[] typeAndBatchId = fileName.split("_");
+        if (typeAndBatchId.length < 2) {
+            return null;
+        }
         int fileType = Integer.parseInt(typeAndBatchId[0].substring(typeAndBatchId[0].length()-1));
         String batchId = typeAndBatchId[1];
 
-        readAndParseFile(bytes, illegalColumns, codeIndexMap, insertList, fileType, batchId, fileUnique);
+        StringBuffer illegalColumns = new StringBuffer();
+        ArrayList<Map<String,Object>> rowDataList = new ArrayList<>();
+        UploadFileAccordTemplateOut uploadFileAccordTemplateOut = new UploadFileAccordTemplateOut();
+        parseFile(bytes, illegalColumns, rowDataList, fileType, batchId, fileUnique, uploadFileAccordTemplateOut);
         int effectRows = 0;
-        if(insertList.size() > 0){
-            effectRows = insertParsedData(insertList, fileType);
+        if(rowDataList.size() > 0){
+            effectRows = insertParsedData(rowDataList, fileType);
         }
-
+        uploadFileAccordTemplateOut.setLegalRows(effectRows);
+        uploadFileAccordTemplateOut.setIllegalRows(uploadFileAccordTemplateOut.getTotalRows().intValue() - effectRows);
         uploadFileAccordTemplateOut.setDataTopic(importTemplateDao.selectTempleNameByType(fileType));
-        uploadFileAccordTemplateOut.setDataRows(effectRows+"");
         uploadFileAccordTemplateOut.setFileType(fileType + "");
         if(illegalColumns.length() > 0){
-            uploadFileAccordTemplateOut.setUnrecognizeFields(illegalColumns.deleteCharAt(illegalColumns.length()-1).toString());
+            uploadFileAccordTemplateOut.setUnrecognizeFields(illegalColumns.substring(illegalColumns.length()-1));
         }else{
-            uploadFileAccordTemplateOut.setUnrecognizeFields("");
+            uploadFileAccordTemplateOut.setUnrecognizeFields(illegalColumns.toString());
         }
         return uploadFileAccordTemplateOut;
     }
 
     private int insertParsedData(ArrayList<Map<String, Object>> insertList, int fileType) {
-       int  effectRows = 0;
+        int effectRows = 0;
+        if (fileType == 0) {
+            return effectRows;
+        }
         switch(fileType){
-            case 0:
-                break;
             case ImportConstant.POPULATION_FILE:
                 return originalDataPopulationDao.batchInsertUploadFileData(insertList);
             case ImportConstant.CUSTOMER_TAG_FILE:
@@ -88,31 +90,37 @@ public class ParseUploadFileImpl implements ParseUploadFile {
                 return originalDataPaymentDao.batchInsertUploadFileData(insertList);
             case ImportConstant.SHOPPING_FILE:
                 return originalDataShoppingDao.batchInsertUploadFileData(insertList);
+            default:
+                return effectRows;
         }
-        return effectRows;
     }
 
     /**
      * @功能简述: 读取文件并做相应处理
      * @param: byte[] bytes, ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, int fileType
      */
-    private void readAndParseFile(byte[] bytes, StringBuffer illegalColumns, Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, int fileType, String batchId, String fileUnique) {
-        Map<String, String> nameCodeMap = getNameCodeRelationByFileType(fileType);
+    private void parseFile(byte[] bytes, StringBuffer illegalColumns, ArrayList<Map<String, Object>> rowDataList,
+            int fileType, String batchId, String fileUnique, UploadFileAccordTemplateOut uploadFileAccordTemplateOut) {
+        Map<String, String> nameCodeMappingMap = getNameCodeRelationByFileType(fileType);
+        Map<String, Integer> codeIndexMap = new HashMap<>();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
         try{
             String line = null;
             boolean isFileHeadFlag = true;
+            int totalRows = 0;
             while((line = bufferedReader.readLine()) != null){
                 String[] uploadFileColumns = line.replace(" ","").split(",");
                 if(isFileHeadFlag){
-                    generateCodeFileColumnIndexRelationMap(illegalColumns, codeIndexMap, nameCodeMap, uploadFileColumns);
+                    parseHeader(illegalColumns, codeIndexMap, nameCodeMappingMap, uploadFileColumns);
                     isFileHeadFlag = false;
                 }else{
-                    generateInsertDataList(codeIndexMap, insertList, uploadFileColumns, batchId, fileUnique,fileType);
+                    parseRowDataList(codeIndexMap, rowDataList, uploadFileColumns, batchId, fileUnique,fileType);
                 }
+                totalRows++;
             }
+            uploadFileAccordTemplateOut.setTotalRows(Integer.valueOf(totalRows));
         }catch (Exception e){
-            e.printStackTrace();
+
         }
     }
 
@@ -120,49 +128,30 @@ public class ParseUploadFileImpl implements ParseUploadFile {
      * @功能简述: 根据对应关系构造出文件解析后的插入数据数组
      * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
      */
-    private void generateInsertDataList(Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, String[] uploadFileColumns, String batchId, String fileUnique, int fileType) {
-        Map<String,Object> insertMap = new HashMap<String,Object>();
-        for(String key : codeIndexMap.keySet()){
-            if(uploadFileColumns.length  > (Integer)codeIndexMap.get(key) && !("".equals(uploadFileColumns[(Integer)codeIndexMap.get(key)]))){
-                if(key.endsWith("time") || key.endsWith("birthday")){
-                    Date date = DateUtil.parseTimeInUploadFile(uploadFileColumns[(Integer)codeIndexMap.get(key)]);
-                    insertMap.put(key,date);
+    private void parseRowDataList(Map<String, Integer> codeIndexMap,
+            ArrayList<Map<String, Object>> rowDataList, String[] uploadFileColumns, String batchId, String fileUnique, int fileType) {
+        Map<String,Object> insertMap = new HashMap<>();
+        for(Map.Entry<String, Integer> entry : codeIndexMap.entrySet()){
+            String cloumnCode = entry.getKey();
+            int cloumnIndex = entry.getValue().intValue();
+            if(uploadFileColumns.length  > cloumnIndex && !("".equals(uploadFileColumns[cloumnIndex]))){
+                if(cloumnCode.endsWith("time") || cloumnCode.endsWith("birthday")){
+                    Date date = DateUtil.parseTimeInUploadFile(uploadFileColumns[cloumnIndex]);
+                    insertMap.put(cloumnCode, date);
                     continue;
                 }
-                insertMap.put(key,uploadFileColumns[(Integer)codeIndexMap.get(key)]);
+                insertMap.put(cloumnCode, uploadFileColumns[cloumnIndex]);
             }else{
-                insertMap.put(key,null);
+                insertMap.put(cloumnCode, null);
             }
         }
-        insertMap.put("file_unique",fileUnique);
-        insertMap.put("batch_id",batchId);
 
-        if(tanslateDataField(insertMap,fileType) && validateData(insertMap,fileType)){
-            convertData(insertMap);
-            insertList.add(insertMap);
+        if(validateData(insertMap, fileType)){
+            convertData(insertMap, fileType);
+            insertMap.put("file_unique",fileUnique);
+            insertMap.put("batch_id",batchId);
+            rowDataList.add(insertMap);
         }
-    }
-
-    private boolean tanslateDataField(Map<String, Object> insertMap, int fileType) {
-        boolean flag = true;
-        if(fileType == 2){
-            String tagType = (String) insertMap.get("tag_type");
-            if(tagType != null && tagType.length() > 0){
-                if("日期型标签".equals(tagType)){
-                    modifyTagTypeInCustomTag(insertMap,1);
-                }else if("文本型标签".equals(tagType)){
-                    modifyTagTypeInCustomTag(insertMap,0);
-                }else{
-                    flag = false;
-                }
-            }
-        }
-        return flag;
-    }
-
-    private void modifyTagTypeInCustomTag(Map<String, Object> insertMap,int fieldValue) {
-        insertMap.remove("tag_type");
-        insertMap.put("tag_type",fieldValue);
     }
 
     /**
@@ -226,6 +215,13 @@ public class ParseUploadFileImpl implements ParseUploadFile {
                 if (!isNumber(cardAmt)) {
                     return false;
                 }
+            } else if (fileType == ImportConstant.CUSTOMER_TAG_FILE) {
+                String tagType = (String) insertMap.get("tag_type");
+                if(StringUtils.hasText(tagType) && !ImportConstant.TAG_TYPE_DATE.equals(tagType) &&
+                           !ImportConstant.TAG_TYPE_TEXT.equals(tagType)){
+                    return false;
+                }
+
             }
 
             String mobile = (String) insertMap.get(ImportConstant.MOBILE_FIELD);
@@ -240,12 +236,12 @@ public class ParseUploadFileImpl implements ParseUploadFile {
      * @功能简述: 构造出数据库列名与文件中相应列索引的对应关系
      * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
      */
-    private void generateCodeFileColumnIndexRelationMap(StringBuffer illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns) {
+    private void parseHeader(StringBuffer illegalColumns, Map<String, Integer> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns) {
         int column = 0;
         for(String uploadFileColumn : uploadFileColumns){
             String fieldCode = nameCodeMap.get(uploadFileColumn);
             if(fieldCode != null){
-                codeIndexMap.put(fieldCode,column);
+                codeIndexMap.put(fieldCode, Integer.valueOf(column));
             }else{
                 illegalColumns.append(uploadFileColumn + ",");
             }
@@ -269,7 +265,7 @@ public class ParseUploadFileImpl implements ParseUploadFile {
         return nameCodeMap;
     }
 
-    private void convertData(Map<String, Object> insertMap) {
+    private void convertData(Map<String, Object> insertMap, int fileType) {
         Object gender =  insertMap.get(ImportConstant.GENDER_FIELD);
         if (gender != null) {
             if (GenderEnum.MALE.getDescription().equals(gender)){
@@ -278,6 +274,17 @@ public class ParseUploadFileImpl implements ParseUploadFile {
                 insertMap.put(ImportConstant.GENDER_FIELD, GenderEnum.FEMALE.getStatusCode());
             } else if (GenderEnum.OTHER.getDescription().equals(gender)) {
                 insertMap.put(ImportConstant.GENDER_FIELD, GenderEnum.OTHER.getStatusCode());
+            }
+        }
+
+        if (fileType == ImportConstant.CUSTOMER_TAG_FILE) {
+            String tagType = (String) insertMap.get("tag_type");
+            if(tagType != null && tagType.length() > 0){
+                if(ImportConstant.TAG_TYPE_DATE.equals(tagType)){
+                    insertMap.put("tag_type", Integer.valueOf(1));
+                }else if(ImportConstant.TAG_TYPE_TEXT.equals(tagType)){
+                    insertMap.put("tag_type",Integer.valueOf(0));
+                }
             }
         }
 
@@ -324,6 +331,9 @@ public class ParseUploadFileImpl implements ParseUploadFile {
         String MARITAL_STATUS_SINGLE = "未婚";
         String MARITAL_STATUS_MARRIED = "已婚";
         String MARITAL_STATUS_UNKNOWN = "未知";
+
+        String TAG_TYPE_DATE = "日期型标签";
+        String TAG_TYPE_TEXT = "文本型标签";
 
     }
 
