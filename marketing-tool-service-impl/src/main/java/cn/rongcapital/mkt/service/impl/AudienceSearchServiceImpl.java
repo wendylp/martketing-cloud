@@ -48,11 +48,7 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 	CustomTagMapDao  customTagMapDao;
 	
 	@Autowired
-	DataPartyDao dataPartyDao;	
-	
-	//微信
-	@Autowired
-    //DataPartyDao dataPartyDao;
+	DataPartyDao dataPartyDao;
 	
 	private static final String ORDER_BY_FIELD_NAME = "field_order";//排序的字段名
 	
@@ -70,8 +66,6 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 		AudienceList param = new AudienceList();
 		param.setPageSize(size);
 		param.setStartIndex((index-1)*size);
-
-		audience_name = "%" + audience_name + "%";
 		
 		List<Integer> idList=new ArrayList<Integer>();
 
@@ -112,11 +106,14 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 			resultList = SearchAudienceByName(audience_name, partyIdList, resultList);
 		}
 
-		for(Map<String,Object> map : resultList){
-			if(map.get("gender") != null){
-				map.put("gender", map.get("gender"));
+		if(resultList != null && resultList.size() > 0){
+			for(Map<String,Object> map : resultList){
+				if(map.get("gender") != null){
+					map.put("gender", GenderUtils.intToChar((Integer) map.get("gender")));
+				}
 			}
 		}
+
 		if(resultList != null && resultList.size() > 0){
 			result.getData().addAll(resultList);
 		}
