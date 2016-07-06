@@ -54,6 +54,7 @@
 		    	<if test="success != null"><![CDATA[success = #{success},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
 		    	<if test="sourceFilename != null"><![CDATA[source_filename = #{sourceFilename},]]></if>
+                <if test="downloadFilename != null"><![CDATA[download_filename = #{downloadFilename},]]></if>
 		    	<if test="emailRows != null"><![CDATA[email_rows = #{emailRows},]]></if>
 		    	<if test="mobileRows != null"><![CDATA[mobile_rows = #{mobileRows},]]></if>
 		    	<if test="duplicateRows != null"><![CDATA[duplicate_rows = #{duplicateRows},]]></if>

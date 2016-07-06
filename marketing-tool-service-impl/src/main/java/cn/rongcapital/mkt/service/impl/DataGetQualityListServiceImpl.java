@@ -90,6 +90,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
                     for (ImportDataModifyLog importDataModifyLog : importDataModifyLogList) {
                         Map<String, Object> contentMap = new HashMap<>();
                         contentMap.put("modify_file_name", importDataModifyLog.getModifyFilename());
+                        contentMap.put("modify_download_file_name", importDataModifyLog.getModifyDownloadFilename());
                         contentMap.put("handle_time", simpleDateFormat.format(importDataModifyLog.getHandleTime()));
                         logList.add(contentMap);
                     }

@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.po;
 
-import java.util.Date;
-
 import cn.rongcapital.mkt.po.base.BaseQuery;
+
+import java.util.Date;
 
 public class ImportDataHistory extends BaseQuery {
     private Long id;
@@ -44,13 +44,13 @@ public class ImportDataHistory extends BaseQuery {
     private Date updateTime;
 
     private Integer fileType;
-    
-    public ImportDataHistory(){}
-    
-    public ImportDataHistory(Integer index , Integer size){
+
+    public ImportDataHistory() {}
+
+    public ImportDataHistory(Integer index, Integer size) {
         super(index, size);
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -120,7 +120,7 @@ public class ImportDataHistory extends BaseQuery {
     }
 
     public void setDownloadFilename(String downloadFilename) {
-        this.downloadFilename = downloadFilename == null ? null : downloadFilename.trim();
+        this.downloadFilename = downloadFilename;
     }
 
     public Integer getEmailRows() {
