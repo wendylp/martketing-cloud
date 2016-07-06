@@ -35,6 +35,7 @@ import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.sun.tools.internal.ws.wsdl.document.soap.SOAPStyle;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -139,7 +140,7 @@ public class BaseMQService {
 							ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_SEGMENTATION_NOT_PUBLISH.getCode(),
 									ApiErrorCode.BIZ_ERROR_SEGMENTATION_NOT_PUBLISH.getMsg(),
 									ApiConstant.INT_ZERO,null);
-							break;
+							return ur;
 						} else {
 							//设置细分为活动中状态
 							segmentationHead.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN);
@@ -160,6 +161,7 @@ public class BaseMQService {
 		}
 		return ur;
 	}
+	
 	
 	/**
 	 * 检查活动状态:只有发布状态的活动才能被手动开启
