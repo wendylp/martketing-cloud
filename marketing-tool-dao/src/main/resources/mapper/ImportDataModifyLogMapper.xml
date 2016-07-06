@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id,import_data_id as importDataId,handle_time as handleTime,total_rows as totalRows,modify_rows as modifyRows,illegal_rows as illegalRows,modify_filename as modifyFileName,success]]>
+		<![CDATA[ id,import_data_id as importDataId,handle_time as handleTime,total_rows as totalRows,modify_rows as modifyRows,illegal_rows as illegalRows,modify_filename as modifyFileName,modify_download_filename as modifyDownloadFilename,success]]>
 	</sql>
 
 	<!-- 查询列来源表-->

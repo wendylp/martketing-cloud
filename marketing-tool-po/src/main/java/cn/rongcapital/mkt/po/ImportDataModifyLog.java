@@ -19,6 +19,8 @@ public class ImportDataModifyLog extends BaseQuery {
 
     private String modifyFilename;
 
+    private String modifyDownloadFilename;
+
     private Byte success;
 
     public Long getId() {
@@ -75,6 +77,14 @@ public class ImportDataModifyLog extends BaseQuery {
 
     public void setModifyFilename(String modifyFilename) {
         this.modifyFilename = modifyFilename == null ? null : modifyFilename.trim();
+    }
+
+    public String getModifyDownloadFilename() {
+        return modifyDownloadFilename;
+    }
+
+    public void setModifyDownloadFilename(String modifyDownloadFilename) {
+        this.modifyDownloadFilename = modifyDownloadFilename;
     }
 
     public Byte getSuccess() {
