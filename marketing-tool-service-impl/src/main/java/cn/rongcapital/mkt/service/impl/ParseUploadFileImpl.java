@@ -115,11 +115,11 @@ public class ParseUploadFileImpl {
             String line = null;
             boolean isFileHeadFlag = true;
             while((line = bufferedReader.readLine()) != null){
-                byte[] lineBytes = line.getBytes();
-                if (!(lineBytes[0] == -17 && lineBytes[1] == -69 && lineBytes[2] == -65)){
-                    logger.error("文件格式非UTF-8编码");
-                    return -1;
-                }
+//                byte[] lineBytes = line.getBytes();
+//                if (!(lineBytes[0] == -17 && lineBytes[1] == -69 && lineBytes[2] == -65)){
+//                    logger.error("文件格式非UTF-8编码");
+//                    return -1;
+//                }
                 String[] uploadFileColumns = line.replace(" ","").split(",");
                 if(isFileHeadFlag){
                     parseHeader(illegalColumns, codeIndexMap, nameCodeMappingMap, uploadFileColumns);
