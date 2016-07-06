@@ -7,6 +7,8 @@ public class SegmentPublishstatusListDataOut {
 	private String segmentName;
 	
 	private Integer segmentHeadId;
+	
+	private Byte publishStatus;
 
 	@JsonProperty("segment_name")
 	public String getSegmentName() {
@@ -24,6 +26,15 @@ public class SegmentPublishstatusListDataOut {
 
 	public void setSegmentHeadId(Integer segmentHeadId) {
 		this.segmentHeadId = segmentHeadId;
+	}
+
+	@JsonProperty("publish_status")
+	public Byte getPublishStatus() {
+		return publishStatus;
+	}
+
+	public void setPublishStatus(Byte publishStatus) {
+		this.publishStatus = publishStatus;
 	}
 	
 	
