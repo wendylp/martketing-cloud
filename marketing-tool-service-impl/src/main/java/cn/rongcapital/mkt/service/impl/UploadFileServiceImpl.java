@@ -140,7 +140,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         }
         UploadFileProcessVO processVO = null;
         Map<String,List<InputPart>> uploadForm = fileInput.getFormDataMap();
-        List<InputPart> inputParts = uploadForm.get("file");
+        List<InputPart> inputParts = uploadForm.get("uploadedFile");
         for(InputPart inputPart : inputParts){
             try {
                 String fileName = getFileName(inputPart.getHeaders());
