@@ -104,6 +104,7 @@ public class ParseUploadFileImpl {
 
         Map<String, String> nameCodeMappingMap = getNameCodeRelationByFileType(fileType);
         Map<String, Integer> codeIndexMap = new HashMap<>();
+        Map<String, String> dataCheck = new HashMap<>();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8));
         int totalRows = 0;
         int emailRows = 0;
@@ -119,6 +120,7 @@ public class ParseUploadFileImpl {
                 if (uploadFileColumns.length < 1) {
                     continue;
                 }
+
                 if(isFileHeadFlag){
                     header = line;
                     String firstColumn = uploadFileColumns[0];
@@ -130,6 +132,12 @@ public class ParseUploadFileImpl {
                     illegalColumns = parseHeader(codeIndexMap, nameCodeMappingMap, uploadFileColumns);
                     isFileHeadFlag = false;
                 }else{
+                    String existsData = dataCheck.get(line);
+                    if (existsData == null) {
+                        dataCheck.put(line, "");
+                    } else {
+                        duplicateRows++;
+                    }
                     int validateResult = parseRowDataList(codeIndexMap, legalDataList, uploadFileColumns, batchId, fileUnique,fileType);
                     if (ImportConstant.VALIDATE_SUCCESS != validateResult) {
                         illegaDataList.add(line);
@@ -140,9 +148,6 @@ public class ParseUploadFileImpl {
                             break;
                         case ImportConstant.VALIDATE_MOBILE_FAILED :
                             mobileRows++;
-                            break;
-                        case ImportConstant.VALIDATE_DUPLICATE_FAILED :
-                            duplicateRows++;
                             break;
                     }
 
@@ -367,7 +372,7 @@ public class ParseUploadFileImpl {
             return true;
         }
 
-        Pattern pattern = Pattern.compile("(\\w|-|_|\\.)+@(\\w|-_)+\\.(\\w|-_)+");
+        Pattern pattern = Pattern.compile("^(\\w|-|_|\\.)+@(\\w|-|_|\\.)+[a-zA-Z]+$");
         Matcher match = pattern.matcher(valStr);
         return match.matches();
     }
@@ -409,8 +414,7 @@ public class ParseUploadFileImpl {
         int VALIDATE_SUCCESS = 0;
         int VALIDATE_MOBILE_FAILED = 1;
         int VALIDATE_EMAIL_FAILED = 2;
-        int VALIDATE_DUPLICATE_FAILED = 3;
-        int VALIDATE_OTHER_FAILED = 4;
+        int VALIDATE_OTHER_FAILED = 3;
 
 
     }
