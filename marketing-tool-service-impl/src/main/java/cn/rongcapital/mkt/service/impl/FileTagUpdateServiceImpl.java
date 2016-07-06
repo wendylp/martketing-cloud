@@ -4,6 +4,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.job.service.base.TaskManager;
 import cn.rongcapital.mkt.po.OriginalDataArchPoint;
 import cn.rongcapital.mkt.service.FileTagUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -43,6 +44,10 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
     private OriginalDataPaymentDao originalDataPaymentDao;
     @Autowired
     private OriginalDataShoppingDao originalDataShoppingDao;
+    @Autowired
+    private TaskManager taskManager;
+    @Autowired
+    private TaskScheduleDao taskScheduleDao;
 
     @Transactional
     @Override
@@ -142,26 +147,36 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         switch (fileType){
             case 1:
                 originalDataPopulationDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataPopulationServiceImpl"),null);
                 break;
             case 2:
                 originalDataCustomerTagsDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataCustomTagScheduleServiceImpl"),null);
                 break;
             case 3:
                 originalDataArchPointDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataArchPointScheduleServiceImpl"),null);
                 break;
             case 4:
                 originalDataMemberDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataMemberScheduleServiceImpl"),null);
                 break;
             case 5:
                 originalDataLoginDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataLoginScheduleServiceImpl"),null);
                 break;
             case 6:
                 originalDataPaymentDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataPaymentScheduleServiceImpl"),null);
                 break;
             case 7:
                 originalDataShoppingDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
+                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataShoppingScheduleServiceImpl"),null);
                 break;
         }
+    }
 
+    private int selectTaskIdByServiceName(String serviceName){
+       return taskScheduleDao.selectIdByServiceName(serviceName);
     }
 }
