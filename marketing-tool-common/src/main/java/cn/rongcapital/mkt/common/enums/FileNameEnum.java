@@ -10,7 +10,7 @@ public enum FileNameEnum {
     LOGIN(5, "data_login"), 
     PAYMENT(6, "data_payment"), 
     SHOPPING(7, "data_shopping"), 
-    IMPORT_DATA_MODIFY_LOG(8, "import_data_modify_log"),
+    IMPORT_DATA_HISTORY_LOG(8, "import_data_history_log"),
     CUSTOM_AUDIENCE(9,"custom_audience"),
     ILLEGAL_DATA(10,"illegal_data"),
 

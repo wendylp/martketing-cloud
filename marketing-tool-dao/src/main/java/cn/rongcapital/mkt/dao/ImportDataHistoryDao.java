@@ -78,5 +78,11 @@ public interface ImportDataHistoryDao extends BaseDao<ImportDataHistory>{
 	 * @return map
 	 */
 	List<Map<String,Object>> selectTotalRowsAndFileType(Map<String, Object> paramMap);
+	
+	/**
+     * @功能简述: 获取表中所有列
+     * @return: List<String>
+     */
+    List<String> selectColumns();
 
 }
