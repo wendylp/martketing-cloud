@@ -18,15 +18,14 @@ public class DataGetFilterRecentTaskServiceImpl implements DataGetFilterRecentTa
     private TaskRunLogDao taskRunLogDao;
 
     @Override
-    public List<TaskRunLog> getFilterRecntTask(String method, String userToken, String ver, String condition) {
+    public List<TaskRunLog> getFilterRecntTask(String method, String userToken, String ver,
+                    String condition) {
 
         if (StringUtils.isEmpty(condition)) {
             return null;
         }
 
-        TaskRunLog paramTaskRunLog = new TaskRunLog(1, 10);
-        paramTaskRunLog.setOrderField("start_time");
-        paramTaskRunLog.setOrderFieldType("DESC");
+        TaskRunLog paramTaskRunLog = new TaskRunLog();
         paramTaskRunLog.setEndTime(TaskConditionEnum.getEnumByAbbreviation(condition).getTime());
         List<TaskRunLog> taskRunLogList = taskRunLogDao.selectByEndtime(paramTaskRunLog);
 
