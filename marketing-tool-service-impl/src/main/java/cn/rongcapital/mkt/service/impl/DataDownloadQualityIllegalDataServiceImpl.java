@@ -61,7 +61,7 @@ public class DataDownloadQualityIllegalDataServiceImpl implements DataDownloadQu
 
         Path path = FileUtil.generateFileforDownload(header, illegalRowData, FileNameEnum.ILLEGAL_DATA.getDetailName());
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("download_file_name", path.toString());
+        resultMap.put("download_file_name", path.getFileName().toString());
         result.getData().add(resultMap);
 
         return result;
