@@ -64,6 +64,7 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 				SegmentPublishstatusListDataOut data = new SegmentPublishstatusListDataOut();
 				data.setSegmentName(s.getName());
 				data.setSegmentHeadId(s.getId());
+				data.setPublishStatus(s.getPublishStatus());
 				rseult.getDataCustom().add(data);
 			}
 		}
