@@ -40,6 +40,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 
     @Override
     public void task(Integer taskId) {
+        if(true) return;
         Map<String,String> h5ParamMap = new HashMap<String,String>();
         h5ParamMap.put("pid",tenementDao.selectPid().get("pid"));
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PUB_FANSLIST_API);
