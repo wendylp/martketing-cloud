@@ -38,6 +38,8 @@ import javax.ws.rs.core.SecurityContext;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -442,8 +444,8 @@ public class MktApi {
 	
 	@Autowired
 	private DataDownloadQualityIllegalDataService dataDownloadQualityIllegalDataService;
-	
-	
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	/**
 	 * @功能简述: For testing, will remove later
 	 * @param:String userToken,String ver
@@ -1632,13 +1634,14 @@ public class MktApi {
 		URI location=null;
 	    
 	    try{
-	        
+            logger.info("redirect : before location!");
 	        location = new java.net.URI("http://mktpro.rc.dataengine.com/html/data-access/weixin.html");
-	        	        
+	        logger.info("redirect : after location!");
 	    } catch (URISyntaxException e) {
-	        
+	        logger.info("redirect : before exception");
 	        e.printStackTrace();
-	    }   
+			logger.info("redirect : after exception");
+		}
 	    
 	    return Response.temporaryRedirect(location).build();
 	}

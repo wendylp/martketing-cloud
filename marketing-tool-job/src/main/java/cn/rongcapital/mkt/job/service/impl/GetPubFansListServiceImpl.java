@@ -40,7 +40,9 @@ public class GetPubFansListServiceImpl implements TaskService {
 
     @Override
     public void task(Integer taskId) {
-        Map<String,String> h5ParamMap = tenementDao.selectPid();
+        if(true) return;
+        Map<String,String> h5ParamMap = new HashMap<String,String>();
+        h5ParamMap.put("pid",tenementDao.selectPid().get("pid"));
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PUB_FANSLIST_API);
         h5ParamMap.put("page_size", ApiConstant.FANS_LIST_SYNC_SIZE + "");
         h5ParamMap.put("page_num",1 + "");
@@ -91,7 +93,7 @@ public class GetPubFansListServiceImpl implements TaskService {
         List<Map<String,Object>> fansList = new ArrayList<Map<String,Object>>();
         for(H5PubFan h5PubFan : h5MktPubFansListResponse.getFans().getFan()){
             for(UserGroup userGroup : h5PubFan.getUserGroups().getUserGroup()){
-                if(!isFansAlreadyImporte(h5PubFan.getPubId(),h5PubFan.getOpenId())) continue;
+                if(!isFansAlreadyImported(h5PubFan.getPubId(),h5PubFan.getOpenId())) continue;
                 Map<String,Object> paramGroup = new HashMap<String,Object>();
                 paramGroup.put("wx_acct",h5PubFan.getPubId());
                 paramGroup.put("group_name",userGroup.getUserGroup());
@@ -130,7 +132,7 @@ public class GetPubFansListServiceImpl implements TaskService {
         }
     }
 
-    private boolean isFansAlreadyImporte(String pubId, String openId) {
+    private boolean isFansAlreadyImported(String pubId, String openId) {
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("pub_id",pubId);
         paramMap.put("wx_code",openId);
