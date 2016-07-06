@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
+
+import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class TaskRunLog extends BaseQuery {
     private Integer id;
@@ -20,6 +20,12 @@ public class TaskRunLog extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+
+    public TaskRunLog() {}
+
+    public TaskRunLog(Integer index, Integer size) {
+        super(index, size);
+    }
 
     public Integer getId() {
         return id;

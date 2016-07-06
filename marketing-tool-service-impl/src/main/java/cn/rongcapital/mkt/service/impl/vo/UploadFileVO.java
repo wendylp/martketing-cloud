@@ -16,6 +16,8 @@ public class UploadFileVO {
 
     private String fileName;
 
+    private String downloadFileName;
+
     public BaseOutput getOutput() {
         return output;
     }
@@ -46,5 +48,13 @@ public class UploadFileVO {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getDownloadFileName() {
+        return downloadFileName;
+    }
+
+    public void setDownloadFileName(String downloadFileName) {
+        this.downloadFileName = downloadFileName;
     }
 }

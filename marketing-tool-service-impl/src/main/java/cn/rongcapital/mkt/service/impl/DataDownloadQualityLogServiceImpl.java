@@ -12,8 +12,8 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.FileNameEnum;
 import cn.rongcapital.mkt.common.util.FileUtil;
-import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
-import cn.rongcapital.mkt.po.ImportDataModifyLog;
+import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
+import cn.rongcapital.mkt.po.ImportDataHistory;
 import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -21,20 +21,18 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public class DataDownloadQualityLogServiceImpl implements DataDownloadQualityLogService {
 
     @Autowired
-    private ImportDataModifyLogDao importDataModifyLogDao;
+    private ImportDataHistoryDao importDataHistoryDao;
 
     @Override
     public BaseOutput downloadQualityLog(Long importDataId) {
 
-        ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
-        paramImportDataModifyLog.setImportDataId(importDataId);
-        paramImportDataModifyLog.setPageSize(0);
+        ImportDataHistory paramImportDataHistory = new ImportDataHistory();
+        paramImportDataHistory.setId(importDataId);
+        List<ImportDataHistory> importDataHistories = importDataHistoryDao.selectList(paramImportDataHistory);
+        List<String> columnNames = importDataHistoryDao.selectColumns();
 
-        List<ImportDataModifyLog> importDataModifyLogs = importDataModifyLogDao.selectList(paramImportDataModifyLog);
-        List<String> columnNames = importDataModifyLogDao.selectColumns();
-
-        File file = FileUtil.generateFileforDownload(FileUtil.transferNameListtoMap(columnNames), importDataModifyLogs,
-                        FileNameEnum.IMPORT_DATA_MODIFY_LOG.getDetailName());
+        File file = FileUtil.generateFileforDownload(FileUtil.transferNameListtoMap(columnNames), importDataHistories,
+                        FileNameEnum.IMPORT_DATA_HISTORY_LOG.getDetailName());
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
         Map<String, String> resultMap = new HashMap<>();

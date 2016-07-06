@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.vo.in;
 
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -16,6 +18,8 @@ public class SegmentFilterCondition{
     @NotEmpty
 	private String exclude;
    
+    @NotNull
+    private Integer tag_group_id;
     
 	
     @JsonProperty("tag_id")
@@ -44,7 +48,14 @@ public class SegmentFilterCondition{
     public void setExclude(String exclude) {
         this.exclude = exclude;
     }
-	
-	
+
+    @JsonProperty("tag_group_id")
+	public Integer getTag_group_id() {
+		return tag_group_id;
+	}
+
+	public void setTag_group_id(Integer tag_group_id) {
+		this.tag_group_id = tag_group_id;
+	}
 	
 }

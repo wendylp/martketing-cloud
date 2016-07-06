@@ -4,6 +4,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.IllegalDataHeadTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.IllegalDataDao;
 import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
 import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
@@ -14,6 +15,8 @@ import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.impl.vo.UploadFileProcessVO;
 import cn.rongcapital.mkt.service.impl.vo.UploadFileVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.IllegalDataUploadModifyLogOut;
+import cn.rongcapital.mkt.vo.out.IllegalDataUploadOut;
 import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
@@ -29,10 +32,7 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Yunfeng on 2016-6-2.
@@ -70,6 +70,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         importDataHistory.setNoRecognizeProperty(processVO.getUnrecognizeFields());
         importDataHistory.setFileType(Integer.valueOf(processVO.getFileType()));
         importDataHistory.setSourceFilename(uploadFileVO.getFileName());
+        importDataHistory.setDownloadFilename(uploadFileVO.getDownloadFileName());
         importDataHistoryDao.updateById(importDataHistory);
 
         saveIllegalData(processVO, importDataHistory.getId());
@@ -124,12 +125,41 @@ public class UploadFileServiceImpl implements UploadFileService{
         importDataModifyLog.setModifyRows(processVO.getLegalRows());
         importDataModifyLog.setIllegalRows(importDataHistory.getIllegalRows());
         importDataModifyLog.setModifyFilename(uploadFileVO.getFileName());
+        importDataModifyLog.setModifyDownloadFilename(uploadFileVO.getDownloadFileName());
         importDataModifyLog.setSuccess(Byte.valueOf(StatusEnum.ACTIVE.getStatusCode().toString()));
         importDataModifyLogDao.insert(importDataModifyLog);
 
+        return Response.ok().entity(processOut(uploadFileVO, importDataHistory.getId())).build();
+    }
+
+    private IllegalDataUploadOut processOut(UploadFileVO uploadFileVO, Long importDataHistoryId) {
+        UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
+        ImportDataModifyLog queryImportDataModifyLog = new ImportDataModifyLog();
+        queryImportDataModifyLog.setImportDataId(importDataHistoryId);
+        queryImportDataModifyLog.setPageSize(null);
+        queryImportDataModifyLog.setStartIndex(null);
+        List<ImportDataModifyLog> allImportDataModifyLogList =
+                importDataModifyLogDao.selectList(queryImportDataModifyLog);
+        List<IllegalDataUploadModifyLogOut> modifyLogOutList = new ArrayList<>(allImportDataModifyLogList.size());
+        for (ImportDataModifyLog tempImportDataModifyLog : allImportDataModifyLogList) {
+            IllegalDataUploadModifyLogOut modifyLogOut = new IllegalDataUploadModifyLogOut();
+            modifyLogOut.setModifyFilename(tempImportDataModifyLog.getModifyFilename());
+            modifyLogOut.setModifyDownloadFilename(tempImportDataModifyLog.getModifyDownloadFilename());
+            modifyLogOut.setHandleTime(tempImportDataModifyLog.getHandleTime());
+            modifyLogOutList.add(modifyLogOut);
+        }
+
         BaseOutput baseOut = uploadFileVO.getOutput();
         baseOut.getData().add(processVO);
-        return Response.ok().entity(baseOut).build();
+
+        IllegalDataUploadOut illegalDataUploadOut = new IllegalDataUploadOut();
+        illegalDataUploadOut.setCode(baseOut.getCode());
+        illegalDataUploadOut.setMsg(baseOut.getMsg());
+        illegalDataUploadOut.setTotal(baseOut.getTotal());
+        illegalDataUploadOut.getData().add(processVO);
+        illegalDataUploadOut.setModifyLog(modifyLogOutList);
+
+        return illegalDataUploadOut;
     }
 
 
@@ -196,8 +226,10 @@ public class UploadFileServiceImpl implements UploadFileService{
                     baseOutput.setMsg("上传的文件名称不是预定格式");
                     return uploadFileVO;
                 }
-                writeFile(bytes, directory + fileName);
+
+                String downloadFileName = FileUtil.generateFileforDownload(bytes);
                 uploadFileVO.setFileName(fileName);
+                uploadFileVO.setDownloadFileName(downloadFileName);
             }catch (Exception e){
                 logger.error("parse file failed", e);
                 baseOutput.setCode(ApiErrorCode.SYSTEM_ERROR.getCode());
@@ -257,26 +289,5 @@ public class UploadFileServiceImpl implements UploadFileService{
         return "unknown";
     }
 
-    private void writeFile(byte[] content, String fileName) {
-        FileOutputStream fop = null;
-        try {
-            File file = new File(fileName);
-            if(!file.exists()){
-                file.createNewFile();
-            }
-            fop = new FileOutputStream(file);
-            fop.write(content);
-            fop.flush();
-        } catch (Exception e) {
 
-        } finally {
-            if (fop != null) {
-                try {
-                    fop.close();
-                } catch (Exception e) {
-
-                }
-            }
-        }
-    }
 }

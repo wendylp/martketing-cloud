@@ -35,79 +35,57 @@ import heracles.data.common.util.ReadWriteType;
 public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private MongoTemplate mongoTemplate;
-
+    
     @ReadWrite(type = ReadWriteType.READ)
     @Override
     public BaseOutput getSegmentFilterCount(SegmentFilterCountIn body, SecurityContext securityContext) {
-
-               
         List<SegmentFilterCondition> conditions=body.getConditions();
-        
         int count=conditions.size();
-        
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO,null);
-        
         result.setTotal(count);
-        
-        
         for(int i=0;i<count;i++){
-            
             Map<String,Object> map = new HashMap<String,Object>();
-            
             map.put("tag_id",conditions.get(i).getTag_id());
-            //map.put("tag_name",conditions.get(i).getTag_name());
-            map.put("tag_name","tester");
-            
+            map.put("tag_name",conditions.get(i).getTag_name());
             String tag_count=getPeopleCount(i,conditions);
-            
             map.put("tag_count",tag_count);
-                        
             result.getData().add(map);            
-            
         }
-        
       return result;
     }
         
-    
-    
     private String getPeopleCount(int idx,List<SegmentFilterCondition> conditions){
-        
         Query query = new Query();
-         
-                
         Criteria[] criterialist = new Criteria[idx+1];
-        
-        
-        for(int i=0;i<idx+1;i++){
-            
-            Criteria criteriaCond=Criteria.where("tagList.tagId").is(new String(conditions.get(i).getTag_id()));
-            
-            
+        for(int i=0;i<idx+1;i++) {
+        	int tagId = Integer.parseInt(conditions.get(i).getTag_id());
+        	int tagGroupId = conditions.get(i).getTag_group_id();
             //根据getExclude()拼条件            
-            if(conditions.get(i).getExclude().equals("1")){                                
-                
-                criterialist[i]=criteriaCond.not();
-                
-                                
-            }else{
-                                
+            if(conditions.get(i).getExclude().equals("1")) {
+            	Criteria criteriaCond = null;
+            	if(tagId == 0) {//不限
+            		criteriaCond = Criteria.where("tagList.tagGroupId").ne(tagGroupId);
+            	} else {
+            		criteriaCond=Criteria.where("tagList.tagId").ne(tagId);
+            	}
+                criterialist[i]=criteriaCond;
+            } else {
+            	Criteria criteriaCond = null;
+            	if(tagId == 0) {//不限
+            		criteriaCond = Criteria.where("tagList.tagGroupId").is(tagGroupId);
+            	} else {
+            		criteriaCond=Criteria.where("tagList.tagId").is(tagId);
+            	}
                 criterialist[i]=criteriaCond;
             }
-                                    
         }
-               
         query.addCriteria(new Criteria().andOperator(criterialist));
-        
         long tag_count=mongoTemplate.count(query, DataParty.class);
-        
         return  Long.toString(tag_count);     
-        
     }
 
 

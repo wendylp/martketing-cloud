@@ -21,6 +21,8 @@ public class ImportDataHistory extends BaseQuery {
 
     private String sourceFilename;
 
+    private String downloadFilename;
+
     private Integer emailRows;
 
     private Integer mobileRows;
@@ -111,6 +113,14 @@ public class ImportDataHistory extends BaseQuery {
 
     public void setSourceFilename(String sourceFilename) {
         this.sourceFilename = sourceFilename == null ? null : sourceFilename.trim();
+    }
+
+    public String getDownloadFilename() {
+        return downloadFilename;
+    }
+
+    public void setDownloadFilename(String downloadFilename) {
+        this.downloadFilename = downloadFilename;
     }
 
     public Integer getEmailRows() {
