@@ -50,8 +50,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         for(int i=0;i<count;i++){
             Map<String,Object> map = new HashMap<String,Object>();
             map.put("tag_id",conditions.get(i).getTag_id());
-            //map.put("tag_name",conditions.get(i).getTag_name());
-            map.put("tag_name","tester");
+            map.put("tag_name",conditions.get(i).getTag_name());
             String tag_count=getPeopleCount(i,conditions);
             map.put("tag_count",tag_count);
             result.getData().add(map);            
