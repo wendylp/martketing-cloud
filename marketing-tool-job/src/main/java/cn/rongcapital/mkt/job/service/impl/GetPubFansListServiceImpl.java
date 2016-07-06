@@ -15,6 +15,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,9 +40,10 @@ public class GetPubFansListServiceImpl implements TaskService {
     @Autowired
     private WechatGroupDao wechatGroupDao;
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     public void task(Integer taskId) {
-        if(true) return;
         Map<String,String> h5ParamMap = new HashMap<String,String>();
         h5ParamMap.put("pid",tenementDao.selectPid().get("pid"));
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PUB_FANSLIST_API);
@@ -82,6 +85,7 @@ public class GetPubFansListServiceImpl implements TaskService {
             if(obj != null){
                 h5MktPubFansListResponse = JSON.parseObject(obj.toString(), H5MktPubFansListResponse.class);
                 if (h5MktPubFansListResponse != null && h5MktPubFansListResponse.getFans() != null && h5MktPubFansListResponse.getFans().getFan() != null && h5MktPubFansListResponse.getFans().getFan().size() > 0) {
+                    logger.info("now pageNum :" + pageNumber);
                     fansBatchInsert(h5MktPubFansListResponse);
                 }
             }
@@ -92,8 +96,8 @@ public class GetPubFansListServiceImpl implements TaskService {
     private void fansBatchInsert(H5MktPubFansListResponse h5MktPubFansListResponse) {
         List<Map<String,Object>> fansList = new ArrayList<Map<String,Object>>();
         for(H5PubFan h5PubFan : h5MktPubFansListResponse.getFans().getFan()){
+            if(h5PubFan.getPubId() == null) continue;
             for(UserGroup userGroup : h5PubFan.getUserGroups().getUserGroup()){
-                if(!isFansAlreadyImported(h5PubFan.getPubId(),h5PubFan.getOpenId())) continue;
                 Map<String,Object> paramGroup = new HashMap<String,Object>();
                 paramGroup.put("wx_acct",h5PubFan.getPubId());
                 paramGroup.put("group_name",userGroup.getUserGroup());
@@ -102,6 +106,7 @@ public class GetPubFansListServiceImpl implements TaskService {
                     wechatGroupDao.insertWechatGroup(paramGroup);
                     groupId = wechatGroupDao.selectGroupId(paramGroup);
                 }
+                if(!isFansAlreadyImported(h5PubFan.getPubId(),h5PubFan.getOpenId(),null)) continue;
                 Map<String,Object> paramFan = new HashMap<String,Object>();
                 paramFan.put("wx_group_id",groupId);
                 paramFan.put("wx_code",h5PubFan.getOpenId());
@@ -134,14 +139,16 @@ public class GetPubFansListServiceImpl implements TaskService {
         }
 
         if(fansList != null && fansList.size() > 0){
+            logger.info("now page number add list size: " + fansList.size());
             wechatMemeberDao.batchInsertFans(fansList);
         }
     }
 
-    private boolean isFansAlreadyImported(String pubId, String openId) {
+    private boolean isFansAlreadyImported(String pubId, String openId, Integer groupId) {
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("pub_id",pubId);
         paramMap.put("wx_code",openId);
+        paramMap.put("wx_group_id",groupId);
         Long id = wechatMemeberDao.selectIdByPubIdAndOpenId(paramMap);
         return id == null;
     }

@@ -164,5 +164,7 @@ public class ApiConstant {
 	public static final String DOWNLOAD_BASE_DIR = "//rc//downloads/";
 	
 	public static final String UPLOAD_BASE_DIR = "//rc//uploads/";
+	
+	public static final String AUDIENCE_SOUCE_NAME_CAMPAIGN = "营销活动";
 
 }
