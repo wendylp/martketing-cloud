@@ -37,14 +37,21 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.HttpClientUtil;
 import cn.rongcapital.mkt.common.util.HttpUrl;
+import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
+import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
+import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.dao.WechatGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.dao.WechatPersonalUuidDao;
+import cn.rongcapital.mkt.po.CampaignAudienceTarget;
+import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.CampaignSwitch;
+import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.Tenement;
 import cn.rongcapital.mkt.po.WechatGroup;
@@ -53,6 +60,7 @@ import cn.rongcapital.mkt.po.WechatPersonalUuid;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 
 @Service
 public class BaseMQService {
@@ -80,6 +88,12 @@ public class BaseMQService {
 	private WechatMemberDao wechatMemberDao;
 	@Autowired
 	private WechatGroupDao wechatGroupDao;
+	@Autowired
+	private CampaignHeadDao campaignHeadDao;
+	@Autowired
+	private CampaignAudienceTargetDao campaignAudienceTargetDao;
+	@Autowired
+	private SegmentationHeadDao segmentationHeadDao;
 	
 	public synchronized void initJndiEvironment() {
 		if(isJndiInited) {
@@ -98,6 +112,81 @@ public class BaseMQService {
 			logger.error(e.getMessage(),e);
 		}
 	}
+	
+	/**
+	 * 检查并设置细分状态:如果活动中包含未发布状态的细分，或者细分不存在，则不能开启活动
+	 * @param body
+	 * @return
+	 */
+	protected CampaignManualStartOut checkAndSetSegmentStatus(Integer campaignHeadId) {
+		CampaignManualStartOut ur = null;
+		CampaignAudienceTarget campaignAudienceTargetT = new CampaignAudienceTarget();
+		campaignAudienceTargetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		campaignAudienceTargetT.setCampaignHeadId(campaignHeadId);
+		List<CampaignAudienceTarget> campaignAudienceTargetList = campaignAudienceTargetDao.selectList(campaignAudienceTargetT);
+		if(CollectionUtils.isNotEmpty(campaignAudienceTargetList)) {
+			for(CampaignAudienceTarget cat:campaignAudienceTargetList) {
+				Integer segmentHeadId = cat.getSegmentationId();
+				SegmentationHead sh = new SegmentationHead();
+				sh.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+				sh.setId(segmentHeadId);
+				List<SegmentationHead> segmentationHeadList = segmentationHeadDao.selectList(sh);
+				if(CollectionUtils.isNotEmpty(segmentationHeadList)) {
+					for(SegmentationHead segmentationHead:segmentationHeadList) {
+						Byte publishStatus = segmentationHead.getPublishStatus();
+						if(null == publishStatus || publishStatus.byteValue() == ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH) {
+							//细分未发布
+							ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_SEGMENTATION_NOT_PUBLISH.getCode(),
+									ApiErrorCode.BIZ_ERROR_SEGMENTATION_NOT_PUBLISH.getMsg(),
+									ApiConstant.INT_ZERO,null);
+							break;
+						} else {
+							//设置细分为活动中状态
+							segmentationHead.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN);
+						}
+					}
+					for(SegmentationHead segmentationHead:segmentationHeadList) {
+						//更新细分状态
+						segmentationHeadDao.updateById(segmentationHead);
+					}
+				} else {
+				    //细分不存在
+					ur = new CampaignManualStartOut(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
+							ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(),
+							ApiConstant.INT_ZERO,null);
+					break;
+				}
+			}
+		}
+		return ur;
+	}
+	
+	/**
+	 * 检查活动状态:只有发布状态的活动才能被手动开启
+	 * @param id
+	 * @return
+	 */
+	protected CampaignManualStartOut checkPublishStatus(int id) {
+		 CampaignManualStartOut ur = null;
+		 CampaignHead t = new CampaignHead(); 
+		 t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		 t.setId(id);
+		 List<CampaignHead> segList = campaignHeadDao.selectList(t);
+		 if(CollectionUtils.isNotEmpty(segList)) {
+			 CampaignHead ch = segList.get(0);
+			 //只有发布状态的活动才能被手动开启
+			 if(ch.getPublishStatus() != ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH) {
+				 ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_CAN_NOT_START.getCode(),
+							ApiErrorCode.BIZ_ERROR_CANPAIGN_CAN_NOT_START.getMsg(),
+							ApiConstant.INT_ZERO,null);
+			 }
+		 } else {
+			ur = new CampaignManualStartOut(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
+								ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(),
+								ApiConstant.INT_ZERO,null);
+		 }
+		 return ur;
+	 }
 	
 	protected boolean isPubWechatFans(Segment segment,String pubId,Byte subscribeTimeType) {
 		boolean isFans = false;
