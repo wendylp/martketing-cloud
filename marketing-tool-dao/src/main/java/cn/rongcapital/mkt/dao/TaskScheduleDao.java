@@ -40,5 +40,11 @@ public interface TaskScheduleDao extends BaseDao<TaskSchedule>{
 	public void activateTaskByCampaignHeadId(int campaignHeadId);
 	
 	public void deActivateTaskByCampaignHeadId(int campaignHeadId);
-	
+
+	/**
+	 * 根据服务名称选择服务Id
+	 * @param paramMap
+	 * @return list
+	 */
+	public int selectIdByServiceName(String serviceName);
 }

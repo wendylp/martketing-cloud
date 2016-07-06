@@ -68,6 +68,10 @@ public class UploadFileServiceImpl implements UploadFileService{
         importDataHistory.setTotalRows(processVO.getTotalRows());
         importDataHistory.setLegalRows(processVO.getLegalRows());
         importDataHistory.setIllegalRows(processVO.getTotalRows().intValue() - processVO.getLegalRows().intValue());
+        importDataHistory.setEmailRows(processVO.getEmailRows());
+        importDataHistory.setMobileRows(processVO.getMobileRows());
+        importDataHistory.setEmailRows(processVO.getEmailRows());
+        importDataHistory.setDuplicateRows(processVO.getDuplicateRows());
         importDataHistory.setNoRecognizeProperty(processVO.getUnrecognizeFields());
         importDataHistory.setFileType(Integer.valueOf(processVO.getFileType()));
         importDataHistory.setSourceFilename(uploadFileVO.getFileName());

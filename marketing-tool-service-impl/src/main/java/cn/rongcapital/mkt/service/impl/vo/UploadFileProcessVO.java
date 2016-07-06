@@ -8,6 +8,9 @@ public class UploadFileProcessVO {
     private Integer totalRows;
     private Integer legalRows;
     private Integer illegalRows;
+    private Integer emailRows;
+    private Integer mobileRows;
+    private Integer duplicateRows;
     private String unrecognizeFields;
     private String fileType;
 
@@ -76,5 +79,29 @@ public class UploadFileProcessVO {
 
     public void setIllegalRawData(List<String> illegalRawData) {
         this.illegalRawData = illegalRawData;
+    }
+
+    public Integer getEmailRows() {
+        return emailRows;
+    }
+
+    public void setEmailRows(Integer emailRows) {
+        this.emailRows = emailRows;
+    }
+
+    public Integer getMobileRows() {
+        return mobileRows;
+    }
+
+    public void setMobileRows(Integer mobileRows) {
+        this.mobileRows = mobileRows;
+    }
+
+    public Integer getDuplicateRows() {
+        return duplicateRows;
+    }
+
+    public void setDuplicateRows(Integer duplicateRows) {
+        this.duplicateRows = duplicateRows;
     }
 }

@@ -132,4 +132,10 @@
 		set task_status = 1
 		where campaign_head_id = #{campaignHeadId} and status = 0
 	</update>
+
+	<select id="selectIdByServiceName" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE service_name = #{serviceName}
+	</select>
 </mapper>

@@ -62,6 +62,9 @@ public class ParseUploadFileImpl {
         uploadFileProcessVO.setUnrecognizeFields(parseFileVO.getIllegaColumns());
         uploadFileProcessVO.setFileHeader(parseFileVO.getHeader());
         uploadFileProcessVO.setIllegalRawData(parseFileVO.getIllegaRawDataList());
+        uploadFileProcessVO.setEmailRows(parseFileVO.getEmailRows());
+        uploadFileProcessVO.setMobileRows(parseFileVO.getMobileRows());
+        uploadFileProcessVO.setDuplicateRows(parseFileVO.getDuplicateRows());
         return uploadFileProcessVO;
     }
 
@@ -101,8 +104,12 @@ public class ParseUploadFileImpl {
 
         Map<String, String> nameCodeMappingMap = getNameCodeRelationByFileType(fileType);
         Map<String, Integer> codeIndexMap = new HashMap<>();
+        Map<String, String> dataCheck = new HashMap<>();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8));
         int totalRows = 0;
+        int emailRows = 0;
+        int mobileRows = 0;
+        int duplicateRows = 0;
         String header = null;
         String illegalColumns = null;
         try{
@@ -113,6 +120,7 @@ public class ParseUploadFileImpl {
                 if (uploadFileColumns.length < 1) {
                     continue;
                 }
+
                 if(isFileHeadFlag){
                     header = line;
                     String firstColumn = uploadFileColumns[0];
@@ -124,10 +132,25 @@ public class ParseUploadFileImpl {
                     illegalColumns = parseHeader(codeIndexMap, nameCodeMappingMap, uploadFileColumns);
                     isFileHeadFlag = false;
                 }else{
-                    boolean isValidData = parseRowDataList(codeIndexMap, legalDataList, uploadFileColumns, batchId, fileUnique,fileType);
-                    if (!isValidData) {
+                    String existsData = dataCheck.get(line);
+                    if (existsData == null) {
+                        dataCheck.put(line, "");
+                    } else {
+                        duplicateRows++;
+                    }
+                    int validateResult = parseRowDataList(codeIndexMap, legalDataList, uploadFileColumns, batchId, fileUnique,fileType);
+                    if (ImportConstant.VALIDATE_SUCCESS != validateResult) {
                         illegaDataList.add(line);
                     }
+                    switch (validateResult) {
+                        case ImportConstant.VALIDATE_EMAIL_FAILED:
+                            emailRows++;
+                            break;
+                        case ImportConstant.VALIDATE_MOBILE_FAILED :
+                            mobileRows++;
+                            break;
+                    }
+
                     totalRows++;
                 }
             }
@@ -149,10 +172,13 @@ public class ParseUploadFileImpl {
         parseFileVO.setHeader(header);
         parseFileVO.setIllegaColumns(illegalColumns);
         parseFileVO.setTotalRows(Integer.valueOf(totalRows));
+        parseFileVO.setEmailRows(emailRows);
+        parseFileVO.setMobileRows(mobileRows);
+        parseFileVO.setDuplicateRows(duplicateRows);
         return parseFileVO;
     }
 
-    private boolean parseRowDataList(Map<String, Integer> codeIndexMap,
+    private int parseRowDataList(Map<String, Integer> codeIndexMap,
             ArrayList<Map<String, Object>> rowDataList, String[] uploadFileColumns, String batchId, String fileUnique, int fileType) {
         Map<String,Object> insertMap = new HashMap<>();
         for(Map.Entry<String, Integer> entry : codeIndexMap.entrySet()){
@@ -170,40 +196,46 @@ public class ParseUploadFileImpl {
             }
         }
 
-        if(validateData(insertMap, fileType)){
+        int validateResult = validateData(insertMap, fileType);
+        if(validateResult == ImportConstant.VALIDATE_SUCCESS){
             convertData(insertMap, fileType);
             insertMap.put("file_unique",fileUnique);
             insertMap.put("batch_id",batchId);
             rowDataList.add(insertMap);
-            return true;
         }
-        return false;
+        return validateResult;
     }
 
     /**
      * @功能简述: 验证数据解析后是否合法
      * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
      */
-    private boolean validateData(Map<String, Object> insertMap,int fileType) {
+    private int validateData(Map<String, Object> insertMap,int fileType) {
+        String email = (String) insertMap.get(ImportConstant.EMAIL_FIELD);
+        if(StringUtils.hasText(email)){
+            if (!isEmail(email)) {
+                return ImportConstant.VALIDATE_EMAIL_FAILED;
+            }
+        }
         if(fileType == ImportConstant.POPULATION_FILE){
             String mobile = (String) insertMap.get(ImportConstant.MOBILE_FIELD);
             if(!StringUtils.hasLength(mobile) || mobile.trim().length() != ImportConstant.MOBILE_LENGTH){
-                return false;
+                return ImportConstant.VALIDATE_MOBILE_FAILED;
             }
 
             String maritalStatus = (String) insertMap.get(ImportConstant.MARITAL_STATUS_FIELD);
             if (!ImportConstant.MARITAL_STATUS_MARRIED.equals(maritalStatus) &&
                     !ImportConstant.MARITAL_STATUS_SINGLE.equals(maritalStatus) &&
                     !ImportConstant.MARITAL_STATUS_UNKNOWN.equals(maritalStatus)) {
-                return false;
+                return ImportConstant.VALIDATE_OTHER_FAILED;
             }
             String monthlyIncome = (String) insertMap.get(ImportConstant.MONTHLY_INCOME_FIELD);
             String monthlyConsume = (String) insertMap.get(ImportConstant.MONTHLY_CONSUME_FIELD);
             if (!isNumber(monthlyIncome) || !isNumber(monthlyConsume)) {
-                return false;
+                return ImportConstant.VALIDATE_OTHER_FAILED;
             }
 
-            return true;
+            return ImportConstant.VALIDATE_SUCCESS;
 
         }else if(fileType == ImportConstant.SHOPPING_FILE){
             String orderNo = (String) insertMap.get(ImportConstant.ORDER_NO_FIELD);
@@ -212,13 +244,13 @@ public class ParseUploadFileImpl {
             String price = (String) insertMap.get(ImportConstant.PRICE_FIELD);
 
             if(!StringUtils.hasText(orderNo) || !StringUtils.hasText(transSerial)){
-                return false;
+                return ImportConstant.VALIDATE_OTHER_FAILED;
             }
 
             if(!isNumber(discount) || !isNumber(price)){
-                return false;
+                return ImportConstant.VALIDATE_OTHER_FAILED;
             }
-            return true;
+            return ImportConstant.VALIDATE_SUCCESS;
         }else if(fileType == ImportConstant.PAYMENT_FILE){
             String orderNo = (String) insertMap.get(ImportConstant.ORDER_NO_FIELD);
             String transSerial = (String) insertMap.get(ImportConstant.TRANS_SERIAL_FIELD);
@@ -228,33 +260,33 @@ public class ParseUploadFileImpl {
             String acctAmt = (String) insertMap.get(ImportConstant.ACCT_AMT_FIELD);
             if(StringUtils.isEmpty(orderNo) || StringUtils.isEmpty(transSerial) ||
                     StringUtils.isEmpty(mobile)){
-                return false;
+                return ImportConstant.VALIDATE_OTHER_FAILED;
             }
             if (!isNumber(incomeAmt) || !isNumber(paidAmt) || !isNumber(acctAmt)) {
-                return false;
+                return ImportConstant.VALIDATE_OTHER_FAILED;
             }
-            return true;
+            return ImportConstant.VALIDATE_SUCCESS;
         } else {
 
             if (fileType == ImportConstant.MEMBER_FILE) {
                 String cardAmt = (String) insertMap.get(ImportConstant.CARD_AMT_FIELD);
                 if (!isNumber(cardAmt)) {
-                    return false;
+                    return ImportConstant.VALIDATE_OTHER_FAILED;
                 }
             } else if (fileType == ImportConstant.CUSTOMER_TAG_FILE) {
                 String tagType = (String) insertMap.get("tag_type");
                 if(StringUtils.hasText(tagType) && !ImportConstant.TAG_TYPE_DATE.equals(tagType) &&
                            !ImportConstant.TAG_TYPE_TEXT.equals(tagType)){
-                    return false;
+                    return ImportConstant.VALIDATE_OTHER_FAILED;
                 }
 
             }
 
             String mobile = (String) insertMap.get(ImportConstant.MOBILE_FIELD);
             if(!StringUtils.hasLength(mobile) || mobile.trim().length() != ImportConstant.MOBILE_LENGTH){
-                return false;
+                return ImportConstant.VALIDATE_MOBILE_FAILED;
             }
-            return true;
+            return ImportConstant.VALIDATE_SUCCESS;
         }
     }
 
@@ -335,6 +367,16 @@ public class ParseUploadFileImpl {
         return match.matches();
     }
 
+    private boolean isEmail(String valStr) {
+        if (!StringUtils.hasText(valStr)) {
+            return true;
+        }
+
+        Pattern pattern = Pattern.compile("^(\\w|-|_|\\.)+@(\\w|-|_|\\.)+[a-zA-Z]+$");
+        Matcher match = pattern.matcher(valStr);
+        return match.matches();
+    }
+
     interface ImportConstant {
 
         int POPULATION_FILE = 1;
@@ -349,6 +391,7 @@ public class ParseUploadFileImpl {
         String ORDER_NO_FIELD = "order_no";
         String TRANS_SERIAL_FIELD = "trans_serial";
         String MOBILE_FIELD = "mobile";
+        String EMAIL_FIELD = "email";
         String MARITAL_STATUS_FIELD = "marital_status";
         String CARD_AMT_FIELD = "card_amt";
         String INCOME_AMT_FIELD = "income_amt";
@@ -367,6 +410,12 @@ public class ParseUploadFileImpl {
 
         String TAG_TYPE_DATE = "日期型标签";
         String TAG_TYPE_TEXT = "文本型标签";
+
+        int VALIDATE_SUCCESS = 0;
+        int VALIDATE_MOBILE_FAILED = 1;
+        int VALIDATE_EMAIL_FAILED = 2;
+        int VALIDATE_OTHER_FAILED = 3;
+
 
     }
 
