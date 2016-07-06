@@ -12,26 +12,27 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.FileNameEnum;
 import cn.rongcapital.mkt.common.util.FileUtil;
-import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
-import cn.rongcapital.mkt.po.ImportDataHistory;
+import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
+import cn.rongcapital.mkt.po.ImportDataModifyLog;
 import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
 public class DataDownloadQualityLogServiceImpl implements DataDownloadQualityLogService {
-
     @Autowired
-    private ImportDataHistoryDao importDataHistoryDao;
+    private ImportDataModifyLogDao importDataModifyLogDao;
 
     @Override
     public BaseOutput downloadQualityLog(Long importDataId) {
 
-        ImportDataHistory paramImportDataHistory = new ImportDataHistory();
-        paramImportDataHistory.setId(importDataId);
-        List<ImportDataHistory> importDataHistories = importDataHistoryDao.selectList(paramImportDataHistory);
-        List<String> columnNames = importDataHistoryDao.selectColumns();
+        ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
+        paramImportDataModifyLog.setImportDataId(importDataId);
+        paramImportDataModifyLog.setPageSize(0);
 
-        File file = FileUtil.generateFileforDownload(FileUtil.transferNameListtoMap(columnNames), importDataHistories,
+        List<ImportDataModifyLog> importDataModifyLogs = importDataModifyLogDao.selectList(paramImportDataModifyLog);
+        List<String> columnNames = importDataModifyLogDao.selectColumns();
+
+        File file = FileUtil.generateFileforDownload(FileUtil.transferNameListtoMap(columnNames), importDataModifyLogs,
                         FileNameEnum.IMPORT_DATA_HISTORY_LOG.getDetailName());
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
@@ -42,5 +43,4 @@ public class DataDownloadQualityLogServiceImpl implements DataDownloadQualityLog
 
         return baseOutput;
     }
-
 }
