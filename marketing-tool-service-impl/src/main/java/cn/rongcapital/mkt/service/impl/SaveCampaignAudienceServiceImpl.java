@@ -1,8 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
@@ -32,18 +29,18 @@ public class SaveCampaignAudienceServiceImpl implements SaveCampaignAudienceServ
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 
         //1.现根据传进来的name判断这个人群名称是否已经存在，存在返回，不存在继续下一步
-        Map<String,Object> paramMap = new HashMap<String,Object>();
-        paramMap.put("audience_name",audience.getAudience_name());
-        Long id = audienceListDao.selectIdByAudienceName(paramMap);
-        if(id != null){
-            baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+        AudienceList audienceListT = new AudienceList();
+        audienceListT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        audienceListT.setAudienceName(audience.getAudience_name());
+        int count = audienceListDao.selectListCount(audienceListT);
+        if(count > 0) {
+        	baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
             baseOutput.setMsg("人群名称已经重复");
             return Response.ok().entity(baseOutput).build();
         }
-
+        
         //2.保存人群名称到audience_list表中        
-        AudienceList audienceListT = new AudienceList();
-        audienceListT.setAudienceName(audience.getAudience_name());
+        audienceListT.setAudienceRows(0+"");
         audienceListT.setSource(ApiConstant.AUDIENCE_SOUCE_NAME_CAMPAIGN);
         audienceListDao.insert(audienceListT);
 
