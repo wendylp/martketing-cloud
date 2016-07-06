@@ -118,6 +118,12 @@
 		WHERE audience_list_id = #{audience_list_id}
 	</select>
 
+	<select id="selectPartyIdLIistByAudienceId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT party_id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE audience_list_id = #{audience_list_id}
+	</select>
+
 	<insert id="batchInsert" parameterType="java.util.List">
 		INSERT INTO audience_list_party_map (audience_list_id,party_id,create_time)
         VALUES
