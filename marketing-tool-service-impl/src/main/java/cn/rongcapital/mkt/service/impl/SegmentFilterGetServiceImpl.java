@@ -62,12 +62,24 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         Query query = new Query();
         Criteria[] criterialist = new Criteria[idx+1];
         for(int i=0;i<idx+1;i++) {
+        	int tagId = Integer.parseInt(conditions.get(i).getTag_id());
+        	int tagGroupId = conditions.get(i).getTag_group_id();
             //根据getExclude()拼条件            
             if(conditions.get(i).getExclude().equals("1")) {
-            	Criteria criteriaCond=Criteria.where("tagList.tagId").ne(Integer.parseInt(conditions.get(i).getTag_id()));
+            	Criteria criteriaCond = null;
+            	if(tagId == 0) {//不限
+            		criteriaCond = Criteria.where("tagList.tagGroupId").ne(tagGroupId);
+            	} else {
+            		criteriaCond=Criteria.where("tagList.tagId").ne(tagId);
+            	}
                 criterialist[i]=criteriaCond;
             } else {
-            	Criteria criteriaCond=Criteria.where("tagList.tagId").is(Integer.parseInt(conditions.get(i).getTag_id()));
+            	Criteria criteriaCond = null;
+            	if(tagId == 0) {//不限
+            		criteriaCond = Criteria.where("tagList.tagGroupId").is(tagGroupId);
+            	} else {
+            		criteriaCond=Criteria.where("tagList.tagId").is(tagId);
+            	}
                 criterialist[i]=criteriaCond;
             }
         }
