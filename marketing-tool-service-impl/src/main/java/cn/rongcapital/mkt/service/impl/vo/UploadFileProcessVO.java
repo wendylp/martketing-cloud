@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.service.impl.vo;
 
+import java.util.List;
+
 public class UploadFileProcessVO {
 
     private String dataTopic;
@@ -8,6 +10,9 @@ public class UploadFileProcessVO {
     private Integer illegalRows;
     private String unrecognizeFields;
     private String fileType;
+
+    private String fileHeader;
+    private List<String> illegalRawData;
 
     public String getDataTopic() {
         return dataTopic;

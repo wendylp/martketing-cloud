@@ -60,12 +60,12 @@ public class ParseUploadFileImpl {
         UploadFileProcessVO uploadFileProcessVO = new UploadFileProcessVO();
         int totalRows = parseFile(bytes, illegalColumns, rowDataList, fileType, batchId, fileUnique);
         int effectRows = 0;
-        if(rowDataList.size() > 0){
+        if(totalRows > 0){
             effectRows = insertParsedData(rowDataList, fileType);
         }
         uploadFileProcessVO.setTotalRows(Integer.valueOf(totalRows));
         uploadFileProcessVO.setLegalRows(effectRows);
-        uploadFileProcessVO.setIllegalRows(uploadFileProcessVO.getTotalRows().intValue() - effectRows);
+        uploadFileProcessVO.setIllegalRows(totalRows - effectRows);
         uploadFileProcessVO.setDataTopic(importTemplateDao.selectTempleNameByType(fileType));
         uploadFileProcessVO.setFileType(fileType + "");
         if(illegalColumns.length() > 0){
@@ -102,8 +102,14 @@ public class ParseUploadFileImpl {
     }
 
     /**
-     * @功能简述: 读取文件并做相应处理
-     * @param: byte[] bytes, ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, ArrayList<Map<String, Object>> insertList, int fileType
+     * parse file
+     * @param bytes
+     * @param illegalColumns
+     * @param rowDataList
+     * @param fileType
+     * @param batchId
+     * @param fileUnique
+     * @return data rows ,not include header
      */
     private int parseFile(byte[] bytes, StringBuffer illegalColumns, ArrayList<Map<String, Object>> rowDataList,
             int fileType, String batchId, String fileUnique) {
@@ -112,22 +118,26 @@ public class ParseUploadFileImpl {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8));
         int totalRows = 0;
         try{
-            String line = null;
+            String line;
             boolean isFileHeadFlag = true;
             while((line = bufferedReader.readLine()) != null){
-//                byte[] lineBytes = line.getBytes();
-//                if (!(lineBytes[0] == -17 && lineBytes[1] == -69 && lineBytes[2] == -65)){
-//                    logger.error("文件格式非UTF-8编码");
-//                    return -1;
-//                }
                 String[] uploadFileColumns = line.replace(" ","").split(",");
+                if (uploadFileColumns.length < 1) {
+                    continue;
+                }
                 if(isFileHeadFlag){
+                    String firstColumn = uploadFileColumns[0];
+                    String firstColumnUTH8Str = new String(firstColumn.getBytes(), "UTF-8");
+                    if (!firstColumn.equals(firstColumnUTH8Str)) {
+                        return -1;
+                    }
                     parseHeader(illegalColumns, codeIndexMap, nameCodeMappingMap, uploadFileColumns);
                     isFileHeadFlag = false;
                 }else{
                     parseRowDataList(codeIndexMap, rowDataList, uploadFileColumns, batchId, fileUnique,fileType);
+                    totalRows++;
                 }
-                totalRows++;
+
             }
         }catch (Exception e){
 

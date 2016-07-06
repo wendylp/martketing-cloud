@@ -80,9 +80,12 @@ public class UploadFileServiceImpl implements UploadFileService{
     public Object uploadRepairFile(String fileUnique, MultipartFormDataInput fileInput) {
         // parse file, insert original
         UploadFileVO uploadFileVO = processEachUploadFile(fileUnique, fileInput, true);
+        UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
+        if(processVO.getTotalRows() == -1){
+            return new BaseOutput(ApiErrorCode.BIZ_ERROR.getCode(),"文件格式非UTF-8编码",ApiConstant.INT_ZERO,null);
+        }
 
         // update import history,insert import log
-        UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
         ImportDataHistory importDataHistory = uploadFileVO.getImportDataHistory();
         int repairRows = processVO.getLegalRows().intValue();
         if (repairRows > 0) {
@@ -122,7 +125,6 @@ public class UploadFileServiceImpl implements UploadFileService{
         BaseOutput baseOutput = new BaseOutput();
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
-        uploadFileVO.setOutput(baseOutput);
 
         ImportDataHistory importDataHistory = queryFileUnique(fileUnique);
         uploadFileVO.setImportDataHistory(importDataHistory);
@@ -165,6 +167,7 @@ public class UploadFileServiceImpl implements UploadFileService{
                 baseOutput.setMsg(ApiErrorCode.SYSTEM_ERROR.getMsg());
             }
         }
+        uploadFileVO.setOutput(baseOutput);
         uploadFileVO.setProcessVO(processVO);
         return uploadFileVO;
     }
