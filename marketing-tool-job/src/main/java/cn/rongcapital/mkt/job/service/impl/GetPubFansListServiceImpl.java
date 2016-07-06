@@ -79,11 +79,9 @@ public class GetPubFansListServiceImpl implements TaskService {
             if(entityString == null || "".equals(entityString)) return true;
             obj = JSON.parseObject(insertString).getJSONObject("hfive_mkt_pub_fanslist_response");
             if(obj != null){
-                if(pageNumber == 278) {
-                    h5MktPubFansListResponse = JSON.parseObject(obj.toString(), H5MktPubFansListResponse.class);
-                    if (h5MktPubFansListResponse != null && h5MktPubFansListResponse.getFans() != null && h5MktPubFansListResponse.getFans().getFan() != null && h5MktPubFansListResponse.getFans().getFan().size() > 0) {
-                        fansBatchInsert(h5MktPubFansListResponse);
-                    }
+                h5MktPubFansListResponse = JSON.parseObject(obj.toString(), H5MktPubFansListResponse.class);
+                if (h5MktPubFansListResponse != null && h5MktPubFansListResponse.getFans() != null && h5MktPubFansListResponse.getFans().getFan() != null && h5MktPubFansListResponse.getFans().getFan().size() > 0) {
+                    fansBatchInsert(h5MktPubFansListResponse);
                 }
             }
         }
