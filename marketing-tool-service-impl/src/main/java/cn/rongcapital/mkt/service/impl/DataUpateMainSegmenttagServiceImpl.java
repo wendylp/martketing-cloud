@@ -3,9 +3,12 @@ package cn.rongcapital.mkt.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,6 +26,7 @@ import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
+
 /**
  * @author nianjun
  */
@@ -40,6 +44,35 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
     public boolean updateMainSegmenttag(String method, String userToken, String ver, String tagName,
                     Integer contactId) {
 
+        boolean result = false;
+
+        if (StringUtils.isEmpty(tagName)) {
+            return result;
+        }
+
+        if (tagName.contains(",")) {
+            String[] tagNames = tagName.split(",");
+            if (tagNames.length < 1) {
+                return result;
+            }
+
+            // 做个简单的去重操作
+            Set<String> uniqTags = new HashSet<>();
+            for (String tag : tagNames) {
+                uniqTags.add(tag);
+            }
+
+            for (String tag : uniqTags) {
+                result = result & updateTag(tag, contactId);
+            }
+        } else {
+            result = result & updateTag(tagName, contactId);
+        }
+
+        return result;
+    }
+
+    private boolean updateTag(String tagName, Integer contactId) {
         // step 1 检查tag是否已经存在数据库中
         CustomTag paramCustomTag = new CustomTag();
         Date createTime = new Date();
@@ -75,46 +108,42 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
 
             return true;
         }
-
         return false;
     }
-    
+
     @Override
-    @ReadWrite(type=ReadWriteType.READ)
+    @ReadWrite(type = ReadWriteType.READ)
     public BaseOutput getMainSegmenttagNames(Integer map_id) {
-    
-        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
-                        ApiErrorCode.SUCCESS.getMsg(),
-                        ApiConstant.INT_ZERO,null);
-        
-        CustomTagMap customTagMap=new CustomTagMap();
+
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+
+        CustomTagMap customTagMap = new CustomTagMap();
         customTagMap.setMapId(map_id);
-        customTagMap.setStatus(new Byte("0"));        
-        List<CustomTagMap> customTagMapList=customTagMapDao.selectList(customTagMap);
-        
-        for(CustomTagMap customTagMap2: customTagMapList){
-            
-            
-            List<Integer> idList=new ArrayList<Integer>();
-            idList.add(customTagMap2.getTagId());            
-            List<CustomTag> customTagList=customTagDao.selectListByIdList(idList);
-                        
-            Map<String,Object> map = new HashMap<String,Object>();
-            
+        customTagMap.setStatus(new Byte("0"));
+        List<CustomTagMap> customTagMapList = customTagMapDao.selectList(customTagMap);
+
+        for (CustomTagMap customTagMap2 : customTagMapList) {
+
+
+            List<Integer> idList = new ArrayList<Integer>();
+            idList.add(customTagMap2.getTagId());
+            List<CustomTag> customTagList = customTagDao.selectListByIdList(idList);
+
+            Map<String, Object> map = new HashMap<String, Object>();
+
             map.put("tag_name", customTagList.get(0).getName());
-                        
+
             result.getData().add(map);
-            
-            
+
+
         }
-        
+
         result.setTotal(customTagMapList.size());
-               
-        
+
+
         return result;
-        
-        
     }
-    
+
 
 }
