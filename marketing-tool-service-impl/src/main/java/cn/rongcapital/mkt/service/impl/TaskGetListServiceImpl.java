@@ -26,7 +26,10 @@ public class TaskGetListServiceImpl implements TaskGetListService {
 
     @Override
     public BaseOutput getTaskList() {
-        List<TaskRunLog> taskRunLogs = taskRunLogDao.selectList(null);
+        TaskRunLog paramTaskRunLog = new TaskRunLog();
+        paramTaskRunLog.setOrderField("start_time");
+        paramTaskRunLog.setOrderFieldType("DESC");
+        List<TaskRunLog> taskRunLogs = taskRunLogDao.selectList(paramTaskRunLog);
         List<Map<String, Object>> resultList = new ArrayList<>();
         int totalCount = 0;
 
