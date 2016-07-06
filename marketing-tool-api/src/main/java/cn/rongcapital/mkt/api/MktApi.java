@@ -1429,9 +1429,9 @@ public class MktApi {
     @GET
     @Path("mkt.data.quality.illegaldata.download")
     @Consumes({MediaType.APPLICATION_JSON})
-    public BaseOutput downloadIllegalData(@NotEmpty @QueryParam("type") String type,
+    public BaseOutput downloadIllegalData(@NotEmpty @QueryParam("file_type") String fileType,
                     @NotNull @QueryParam("batch_id") Long batchId) {
-        return dataDownloadQualityIllegalDataService.downloadIllegalData(batchId, type);
+        return dataDownloadQualityIllegalDataService.downloadIllegalData(batchId, fileType);
     }
 
     

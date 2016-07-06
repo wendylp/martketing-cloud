@@ -15,7 +15,7 @@ public class IllegalData extends BaseQuery {
 
     private Date createTime;
 
-    private Byte status;
+    private Integer status;
 
     private Date updateTime;
 
@@ -61,11 +61,11 @@ public class IllegalData extends BaseQuery {
         this.createTime = createTime;
     }
 
-    public Byte getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Byte status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

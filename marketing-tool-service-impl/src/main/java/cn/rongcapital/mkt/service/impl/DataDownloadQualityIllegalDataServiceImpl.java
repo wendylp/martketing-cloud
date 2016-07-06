@@ -4,6 +4,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.FileNameEnum;
 import cn.rongcapital.mkt.common.enums.IllegalDataHeadTypeEnum;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.IllegalDataDao;
 import cn.rongcapital.mkt.po.IllegalData;
@@ -40,6 +41,7 @@ public class DataDownloadQualityIllegalDataServiceImpl implements DataDownloadQu
         IllegalData paramIllegalData = new IllegalData();
         paramIllegalData.setBatchId(batchId);
         paramIllegalData.setType(type);
+        paramIllegalData.setStatus(StatusEnum.ACTIVE.getStatusCode());
         paramIllegalData.setStartIndex(null);
         paramIllegalData.setPageSize(null);
         List<IllegalData> illegalDatas = illegalDataDao.selectList(paramIllegalData);
