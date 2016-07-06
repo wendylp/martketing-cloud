@@ -1,20 +1,21 @@
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.*;
-import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
-import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.Audience;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.util.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.AudienceListDao;
+import cn.rongcapital.mkt.po.AudienceList;
+import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
+import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.Audience;
 
 /**
  * Created by Xu kun on 2016-6-1.
@@ -41,12 +42,10 @@ public class SaveCampaignAudienceServiceImpl implements SaveCampaignAudienceServ
         }
 
         //2.保存人群名称到audience_list表中        
-        Map<String,Object> dataMap = new HashMap<String,Object>();
-        dataMap.put("audience_name",audience.getAudience_name());        
-        dataMap.put("create_time",new Date(System.currentTimeMillis()));
-        
-        audienceListDao.insertAudience(dataMap);
-        
+        AudienceList audienceListT = new AudienceList();
+        audienceListT.setAudienceName(audience.getAudience_name());
+        audienceListT.setSource(ApiConstant.AUDIENCE_SOUCE_NAME_CAMPAIGN);
+        audienceListDao.insert(audienceListT);
 
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
