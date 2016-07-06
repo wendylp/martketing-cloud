@@ -40,7 +40,6 @@ public class GetPubFansListServiceImpl implements TaskService {
 
     @Override
     public void task(Integer taskId) {
-        if(true) return;
         Map<String,String> h5ParamMap = new HashMap<String,String>();
         h5ParamMap.put("pid",tenementDao.selectPid().get("pid"));
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_PUB_FANSLIST_API);
@@ -58,8 +57,8 @@ public class GetPubFansListServiceImpl implements TaskService {
                 if(obj != null){
                     H5MktPubFansListResponse h5MktPubFansListResponse = JSON.parseObject(obj.toString(),H5MktPubFansListResponse.class);
                     long total = h5MktPubFansListResponse.getTotal();
-                    for(int pageNumber = 1; pageNumber <= total/ApiConstant.FANS_LIST_SYNC_SIZE + 1; pageNumber++){
-                        if (syncFansListByPageNum(h5ParamMap, entityString, pageNumber)) return;
+                    for(int pageNumber =(int)(total/ApiConstant.FANS_LIST_SYNC_SIZE + 1); pageNumber >= 1; pageNumber--){
+                        if (syncFansListByPageNum(h5ParamMap, entityString, pageNumber)) continue;
                     }
                 }
             } catch (IOException e) {
@@ -80,9 +79,11 @@ public class GetPubFansListServiceImpl implements TaskService {
             if(entityString == null || "".equals(entityString)) return true;
             obj = JSON.parseObject(insertString).getJSONObject("hfive_mkt_pub_fanslist_response");
             if(obj != null){
-                h5MktPubFansListResponse = JSON.parseObject(obj.toString(),H5MktPubFansListResponse.class);
-                if(h5MktPubFansListResponse != null && h5MktPubFansListResponse.getFans()!= null && h5MktPubFansListResponse.getFans().getFan() != null && h5MktPubFansListResponse.getFans().getFan().size() > 0){
-                    fansBatchInsert(h5MktPubFansListResponse);
+                if(pageNumber == 278) {
+                    h5MktPubFansListResponse = JSON.parseObject(obj.toString(), H5MktPubFansListResponse.class);
+                    if (h5MktPubFansListResponse != null && h5MktPubFansListResponse.getFans() != null && h5MktPubFansListResponse.getFans().getFan() != null && h5MktPubFansListResponse.getFans().getFan().size() > 0) {
+                        fansBatchInsert(h5MktPubFansListResponse);
+                    }
                 }
             }
         }
@@ -104,10 +105,16 @@ public class GetPubFansListServiceImpl implements TaskService {
                 }
                 Map<String,Object> paramFan = new HashMap<String,Object>();
                 paramFan.put("wx_group_id",groupId);
-                paramFan.put("wx_code",h5PubFan.getPubId());
-                paramFan.put("wx_name",h5PubFan.getName().replaceAll("[^\\u0000-\\uFFFF]", ""));
+                paramFan.put("wx_code",h5PubFan.getOpenId());
+                if(h5PubFan.getName() != null && h5PubFan.getName().length() > 0){
+                    paramFan.put("wx_name",h5PubFan.getName().replaceAll("[^\\u0000-\\uFFFF]", ""));
+                }else{
+                    paramFan.put("wx_name",null);
+                }
                 if(h5PubFan.getNickName() != null && h5PubFan.getNickName().length() > 0){
                     paramFan.put("nickname",h5PubFan.getNickName().replaceAll("[^\\u0000-\\uFFFF]", ""));
+                }else{
+                    paramFan.put("nickname",null);
                 }
                 paramFan.put("sex",h5PubFan.getSex());
                 paramFan.put("country",h5PubFan.getCountry());
