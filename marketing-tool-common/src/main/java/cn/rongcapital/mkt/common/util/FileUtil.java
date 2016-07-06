@@ -34,6 +34,7 @@ public class FileUtil {
 
     private static String FILE_SEPERATOR = ",";
     private static String FILE_SUFFIX = ".csv";
+    private static int MAX_RETRY_GENERATE_TIMES = 5;
 
     public static File generateDownloadFile(List<Map<String, Object>> dataSource, String prefixFileName) {
         String fileName = ApiConstant.DOWNLOAD_BASE_DIR + prefixFileName + System.currentTimeMillis() + ".csv"; // 线上服务器文件生成目录
@@ -102,12 +103,37 @@ public class FileUtil {
         return generateFile(columnNames, dataList, file);
     }
 
+    public static String generateFileforDownload(byte[] content) {
+        int times = 0;
+        String downloadFileName = null;
+        while (times < MAX_RETRY_GENERATE_TIMES) {
+            downloadFileName = new StringBuilder().append(RandomStringUtils.randomAlphanumeric(10))
+                    .append("_").append(System.currentTimeMillis())
+                    .append(FILE_SUFFIX).toString();
+            String fullPathName = new StringBuilder().append(ApiConstant.DOWNLOAD_BASE_DIR)
+                                          .append(downloadFileName).toString();
+            Path file = Paths.get(fullPathName);
+            if (Files.exists(file)) {
+                continue;
+            }
+            try {
+                Files.createFile(file);
+                Files.write(file, content);
+            } catch (Exception e) {
+                return null;
+            }
+            times++;
+        }
+        return downloadFileName;
+    }
+
     public static Path generateFileforDownload(String header, List<String> dataList, String fileName) {
         StringBuilder pathNameBuilder = new StringBuilder();
         pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR)
                 .append(fileName).append("_")
                 .append(RandomStringUtils.randomAlphanumeric(6).toUpperCase())
-                .append("_").append(FILE_SUFFIX);
+                .append("_")
+                .append(System.currentTimeMillis()).append(FILE_SUFFIX);
         return generateFile(header, dataList, pathNameBuilder.toString().replace("file:", ""));
     }
 
