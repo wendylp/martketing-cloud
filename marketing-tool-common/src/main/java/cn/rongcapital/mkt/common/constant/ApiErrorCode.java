@@ -26,7 +26,8 @@ public enum ApiErrorCode {
 	BIZ_ERROR_CANPAIGN_FINISH(3005,"ccampaign is finish"),//活动已结束
 	BIZ_ERROR_CANPAIGN_CAN_NOT_MANUAL_START(3006,"campaign can not manual start"),//活动无法手动开启
 	BIZ_ERROR_CANPAIGN_NOT_PUBLISH(3007,"campaign not published"),//活动没有发布
-	
+	BIZ_ERROR_SEGMENTATION_NOT_PUBLISH(3008,"egmentation not published"),//细分未发布
+	BIZ_ERROR_CANPAIGN_CAN_NOT_START(3009,"campaign can not start"),//活动无法开启
 	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	

@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
@@ -52,6 +53,10 @@ public class UploadFileServiceImpl implements UploadFileService{
         UploadFileVO uploadFileVO = processEachUploadFile(fileUnique, fileInput, false);
         UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
 
+        if(processVO.getTotalRows() == -1){
+            return new BaseOutput(ApiErrorCode.BIZ_ERROR.getCode(),"文件格式非UTF-8编码",ApiConstant.INT_ZERO,null);
+        }
+
         ImportDataHistory importDataHistory = uploadFileVO.getImportDataHistory();
         importDataHistory.setTotalRows(processVO.getTotalRows());
         importDataHistory.setLegalRows(processVO.getLegalRows());
@@ -67,7 +72,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         out.setDataTopic(processVO.getDataTopic());
         out.setFileType(processVO.getFileType());
         out.setUnrecognizeFields(processVO.getUnrecognizeFields());
-        baseOutput.getData().add(baseOutput);
+        baseOutput.getData().add(out);
         return Response.ok().entity(baseOutput).build();
     }
 
@@ -75,9 +80,12 @@ public class UploadFileServiceImpl implements UploadFileService{
     public Object uploadRepairFile(String fileUnique, MultipartFormDataInput fileInput) {
         // parse file, insert original
         UploadFileVO uploadFileVO = processEachUploadFile(fileUnique, fileInput, true);
+        UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
+        if(processVO.getTotalRows() == -1){
+            return new BaseOutput(ApiErrorCode.BIZ_ERROR.getCode(),"文件格式非UTF-8编码",ApiConstant.INT_ZERO,null);
+        }
 
         // update import history,insert import log
-        UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
         ImportDataHistory importDataHistory = uploadFileVO.getImportDataHistory();
         int repairRows = processVO.getLegalRows().intValue();
         if (repairRows > 0) {
@@ -117,7 +125,6 @@ public class UploadFileServiceImpl implements UploadFileService{
         BaseOutput baseOutput = new BaseOutput();
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
-        uploadFileVO.setOutput(baseOutput);
 
         ImportDataHistory importDataHistory = queryFileUnique(fileUnique);
         uploadFileVO.setImportDataHistory(importDataHistory);
@@ -160,6 +167,7 @@ public class UploadFileServiceImpl implements UploadFileService{
                 baseOutput.setMsg(ApiErrorCode.SYSTEM_ERROR.getMsg());
             }
         }
+        uploadFileVO.setOutput(baseOutput);
         uploadFileVO.setProcessVO(processVO);
         return uploadFileVO;
     }
