@@ -209,6 +209,7 @@
 			</if>
 		</foreach>
 		</if>
+		order by create_time DESC
 		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
