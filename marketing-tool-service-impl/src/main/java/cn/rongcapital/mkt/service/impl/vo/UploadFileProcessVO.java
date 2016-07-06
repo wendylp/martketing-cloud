@@ -61,4 +61,20 @@ public class UploadFileProcessVO {
     public void setFileType(String fileType) {
         this.fileType = fileType;
     }
+
+    public String getFileHeader() {
+        return fileHeader;
+    }
+
+    public void setFileHeader(String fileHeader) {
+        this.fileHeader = fileHeader;
+    }
+
+    public List<String> getIllegalRawData() {
+        return illegalRawData;
+    }
+
+    public void setIllegalRawData(List<String> illegalRawData) {
+        this.illegalRawData = illegalRawData;
+    }
 }

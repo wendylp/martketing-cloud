@@ -7,6 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -97,6 +100,53 @@ public class FileUtil {
         File file = new File(pathNameBuilder.toString());
         logger.info("要创建的文件为 : " + file.getAbsolutePath());
         return generateFile(columnNames, dataList, file);
+    }
+
+    public static Path generateFileforDownload(String header, List<String> dataList, String fileName) {
+        StringBuilder pathNameBuilder = new StringBuilder();
+        pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR)
+                .append(fileName).append("_")
+                .append(RandomStringUtils.randomAlphanumeric(6).toUpperCase())
+                .append("_").append(FILE_SUFFIX);
+        return generateFile(header, dataList, pathNameBuilder.toString().replace("file:", ""));
+    }
+
+    private static Path generateFile(String header, List<String> dataList, String filePath) {
+        Path file = null;
+        try {
+            file = Paths.get(filePath);
+            if (!Files.exists(file)) {
+                Files.createFile(file);
+            }
+        } catch (IOException e1) {
+            logger.error("创建文件失败", e1);
+        }
+
+        if (CollectionUtils.isEmpty(dataList)) {
+            return file;
+        }
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(file), "UTF-8"));
+            bufferedWriter.write(header);
+            bufferedWriter.newLine();
+            for (String rowData : dataList) {
+                bufferedWriter.write(rowData);
+                bufferedWriter.newLine();
+            }
+            bufferedWriter.flush();
+        } catch (IOException e) {
+            logger.error("生成下载文件时出错", e);
+        } finally {
+            try {
+                if (bufferedWriter != null) {
+                    bufferedWriter.close();
+                }
+            } catch (IOException e) {
+            }
+        }
+
+        return file;
     }
 
     private static <E> File generateFile(List<Map<String, String>> columnNames, List<E> poList, File file) {

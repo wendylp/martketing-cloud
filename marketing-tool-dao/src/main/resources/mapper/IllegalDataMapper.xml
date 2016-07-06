@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,batch_id as batchId,type as type,origin_data as originData,create_time as createTime,status as status,update_time as updateTime]]>
+		<![CDATA[ id as id,batch_id as batchId,type as type,origin_data as originData,create_time as createTime,status as status,update_time as updateTime, head_type as headType]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -42,15 +42,32 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.IllegalData" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO illegal_data (batch_id,type,origin_data,create_time)
+			INSERT INTO illegal_data (batch_id,type,origin_data,create_time,update_time,head_type)
 			VALUES
 			(
 			  #{batchId},
 			  #{type},
 			  #{originData},
-			  now()
+			  now(),
+			  now(),
+			  #{headType}
 			)
 		]]>
+	</insert>
+
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO illegal_data (batch_id,type,origin_data,create_time,update_time,head_type)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.batchId},
+			#{item.type},
+			#{item.originData},
+			now(),
+			now(),
+			#{item.headType}
+			)
+		</foreach>
 	</insert>
 	
 	<!-- 返回插入的编号,在事务开启状态下有效 -->
@@ -62,6 +79,11 @@
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
+
+
+    <update id="updateStatusByBatchIdAndType">
+        UPDATE illegal_data set status = #{status} where batch_id = #{batchId} and type = #{type}
+    </update>
 
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.IllegalData" resultType="cn.rongcapital.mkt.po.IllegalData">

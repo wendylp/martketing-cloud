@@ -14,6 +14,7 @@ import java.util.List;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.IllegalData;
+import org.apache.ibatis.annotations.Param;
 
 public interface IllegalDataDao extends BaseDao<IllegalData>{
 	
@@ -43,4 +44,9 @@ public interface IllegalDataDao extends BaseDao<IllegalData>{
      * @return: List<String>
      */
     List<String> selectColumns();
+
+	int batchInsert(@Param("list") List<IllegalData> list);
+
+    int updateStatusByBatchIdAndType(@Param("batchId")Long batchId,
+        @Param("type")String type, @Param("status")Integer status);
 }

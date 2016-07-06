@@ -19,6 +19,8 @@ public class IllegalData extends BaseQuery {
 
     private Date updateTime;
 
+    private String headType;
+
     public Integer getId() {
         return id;
     }
@@ -73,5 +75,13 @@ public class IllegalData extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getHeadType() {
+        return headType;
+    }
+
+    public void setHeadType(String headType) {
+        this.headType = headType;
     }
 }
