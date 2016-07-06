@@ -47,8 +47,12 @@ public class AudienceListServiceImpl implements AudienceListService {
 	public BaseOutput audienceList(String userToken,Integer size,Integer index) {
 		
 		AudienceList param = new AudienceList();
+		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		int totalCount = audienceListDao.selectListCount(param);
 		param.setPageSize(size);
 		param.setStartIndex((index-1)*size);
+		param.setOrderField("create_time");
+		param.setOrderFieldType("desc");
 		
 		List<AudienceList> reList = audienceListDao.selectList(param);
 		
@@ -85,6 +89,7 @@ public class AudienceListServiceImpl implements AudienceListService {
 		}
 		result.setColNames(columnsOutList);
 		result.setTotal(result.getData().size());
+		result.setTotalCount(totalCount);
 		return result;
 	}
 
