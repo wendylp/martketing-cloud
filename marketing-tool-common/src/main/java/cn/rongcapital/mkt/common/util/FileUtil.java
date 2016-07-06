@@ -93,8 +93,8 @@ public class FileUtil {
         StringBuilder pathNameBuilder = new StringBuilder();
         // 当前日期
         // DateTime today = DateTime.now();
-//        pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName).append("_")
-                         pathNameBuilder.append("/Users/nianjun/Work/logs/").append(fileName).append("_")
+        pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName).append("_")
+//                         pathNameBuilder.append("/Users/nianjun/Work/logs/").append(fileName).append("_")
                         // .append(today.toString(ApiConstant.DATE_FORMAT_yyyy_MM_dd)).append(FILE_SUFFIX);
                         .append(RandomStringUtils.randomAlphanumeric(6).toUpperCase()).append(FILE_SUFFIX);
         File file = new File(pathNameBuilder.toString());
