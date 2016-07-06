@@ -74,13 +74,13 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
                 }else{
                     dataMap.put("end_time", simpleDateFormat.format(importDataHistory.getImportEndTime()));
                 }
-                               
-                
+
                 dataMap.put("data_source", importDataHistory.getSource());
                 dataMap.put("legal_data_rows_count", importDataHistory.getLegalRows());
                 dataMap.put("ilegal_data_rows_count", importDataHistory.getIllegalRows());
                 dataMap.put("source_file_name", importDataHistory.getSourceFilename());
                 dataMap.put("file_unique", importDataHistory.getFileUnique());
+                dataMap.put("file_type", importDataHistory.getFileType());
 
                 ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
                 paramImportDataModifyLog.setImportDataId(importDataHistory.getId());

@@ -2,9 +2,12 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.IllegalDataHeadTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.dao.IllegalDataDao;
 import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
 import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
+import cn.rongcapital.mkt.po.IllegalData;
 import cn.rongcapital.mkt.po.ImportDataHistory;
 import cn.rongcapital.mkt.po.ImportDataModifyLog;
 import cn.rongcapital.mkt.service.UploadFileService;
@@ -26,6 +29,7 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +50,15 @@ public class UploadFileServiceImpl implements UploadFileService{
     private ImportDataModifyLogDao importDataModifyLogDao;
 
     @Autowired
+    private IllegalDataDao illegalDataDao;
+
+    @Autowired
     private ParseUploadFileImpl parseUploadFile;
 
     @Override
     public Object uploadFile(String fileUnique, MultipartFormDataInput fileInput) {
         UploadFileVO uploadFileVO = processEachUploadFile(fileUnique, fileInput, false);
         UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
-
         if(processVO.getTotalRows() == -1){
             return new BaseOutput(ApiErrorCode.BIZ_ERROR.getCode(),"文件格式非UTF-8编码",ApiConstant.INT_ZERO,null);
         }
@@ -65,6 +71,8 @@ public class UploadFileServiceImpl implements UploadFileService{
         importDataHistory.setFileType(Integer.valueOf(processVO.getFileType()));
         importDataHistory.setSourceFilename(uploadFileVO.getFileName());
         importDataHistoryDao.updateById(importDataHistory);
+
+        saveIllegalData(processVO, importDataHistory.getId());
 
         BaseOutput baseOutput = uploadFileVO.getOutput();
         UploadFileAccordTemplateOut out = new UploadFileAccordTemplateOut();
@@ -103,6 +111,11 @@ public class UploadFileServiceImpl implements UploadFileService{
             importDataHistory.setFileType(Integer.valueOf(processVO.getFileType()));
             importDataHistoryDao.updateById(importDataHistory);
         }
+
+        // update and insert illegal data
+        illegalDataDao.updateStatusByBatchIdAndType(importDataHistory.getId(),
+                importDataHistory.getFileType().toString(), StatusEnum.DELETED.getStatusCode());
+        saveIllegalData(processVO, importDataHistory.getId());
 
         ImportDataModifyLog importDataModifyLog = new ImportDataModifyLog();
         importDataModifyLog.setImportDataId(importDataHistory.getId());
@@ -151,9 +164,33 @@ public class UploadFileServiceImpl implements UploadFileService{
                     baseOutput.setMsg("上传的文件不是预定格式");
                     return uploadFileVO;
                 }
+
+                String[] typeAndBatchId = fileName.split("_");
+                int fileType = 0;
+                if (!isRepair) {
+                    if (typeAndBatchId.length < 1) {
+                        baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+                        baseOutput.setMsg("上传的文件名不是预定格式");
+                        return uploadFileVO;
+                    }
+                    fileType = Integer.parseInt(typeAndBatchId[0].substring(typeAndBatchId[0].length()-1));
+                    if (fileType == 0) {
+                        baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+                        baseOutput.setMsg("上传的文件名不是预定格式");
+                        return uploadFileVO;
+                    }
+
+                } else {
+                    fileType = importDataHistory.getFileType();
+                }
+
+                String batchId = null;
+                if (typeAndBatchId.length > 1) {
+                    batchId = typeAndBatchId[1];
+                }
                 InputStream inputStream = inputPart.getBody(InputStream.class,null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
-                processVO = parseUploadFile.parseAndInsertUploadFileByType(fileUnique,fileName,bytes);
+                processVO = parseUploadFile.parseAndInsertUploadFileByType(fileUnique,fileType, batchId, bytes);
                 if (processVO == null) {
                     baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
                     baseOutput.setMsg("上传的文件名称不是预定格式");
@@ -170,6 +207,29 @@ public class UploadFileServiceImpl implements UploadFileService{
         uploadFileVO.setOutput(baseOutput);
         uploadFileVO.setProcessVO(processVO);
         return uploadFileVO;
+    }
+
+    private void saveIllegalData(UploadFileProcessVO processVO, Long importDataHistoryId) {
+        List<String> illegalRawDataList = processVO.getIllegalRawData();
+        if (illegalRawDataList.size() < 1) {
+            return;
+        }
+        List<IllegalData> illegalDataList = new ArrayList<>(illegalRawDataList.size() + 1);
+        for (String originData : illegalRawDataList) {
+            IllegalData illegalData = new IllegalData();
+            illegalData.setBatchId(importDataHistoryId);
+            illegalData.setType(processVO.getFileType());
+            illegalData.setOriginData(originData);
+            illegalData.setHeadType(IllegalDataHeadTypeEnum.DATA.getCode());
+            illegalDataList.add(illegalData);
+        }
+        IllegalData illegalData = new IllegalData();
+        illegalData.setBatchId(importDataHistoryId);
+        illegalData.setType(processVO.getFileType());
+        illegalData.setOriginData(processVO.getFileHeader());
+        illegalData.setHeadType(IllegalDataHeadTypeEnum.HEADER.getCode());
+        illegalDataList.add(illegalData);
+        illegalDataDao.batchInsert(illegalDataList);
     }
 
     private ImportDataHistory queryFileUnique(String fileUnique) {

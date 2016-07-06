@@ -1,11 +1,10 @@
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.GenderEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
-import cn.rongcapital.mkt.job.service.base.TaskManager;
+import cn.rongcapital.mkt.service.impl.vo.ParseFileVO;
 import cn.rongcapital.mkt.service.impl.vo.UploadFileProcessVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,43 +43,30 @@ public class ParseUploadFileImpl {
     @Autowired
     private OriginalDataShoppingDao originalDataShoppingDao;
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static Logger logger = LoggerFactory.getLogger(ParseUploadFileImpl.class);
 
-
-    public UploadFileProcessVO parseAndInsertUploadFileByType(String fileUnique, String fileName, byte[] bytes) {
-        String[] typeAndBatchId = fileName.split("_");
-        if (typeAndBatchId.length < 2) {
-            return null;
-        }
-        int fileType = Integer.parseInt(typeAndBatchId[0].substring(typeAndBatchId[0].length()-1));
-        String batchId = typeAndBatchId[1];
-
-        StringBuffer illegalColumns = new StringBuffer();
-        ArrayList<Map<String,Object>> rowDataList = new ArrayList<>();
-        UploadFileProcessVO uploadFileProcessVO = new UploadFileProcessVO();
-        int totalRows = parseFile(bytes, illegalColumns, rowDataList, fileType, batchId, fileUnique);
+    public UploadFileProcessVO parseAndInsertUploadFileByType(String fileUnique, int fileType, String batchId, byte[] bytes) {
+        ParseFileVO parseFileVO = parseFile(bytes, fileType, batchId, fileUnique);
+        ArrayList<Map<String, Object>> legalDataList = parseFileVO.getLegalDataList();
         int effectRows = 0;
-        if(totalRows > 0){
-            effectRows = insertParsedData(rowDataList, fileType);
+        if(legalDataList.size() > 0){
+            effectRows = insertParsedData(legalDataList, fileType);
         }
-        uploadFileProcessVO.setTotalRows(Integer.valueOf(totalRows));
+
+        UploadFileProcessVO uploadFileProcessVO = new UploadFileProcessVO();
+        uploadFileProcessVO.setTotalRows(parseFileVO.getTotalRows());
         uploadFileProcessVO.setLegalRows(effectRows);
-        uploadFileProcessVO.setIllegalRows(totalRows - effectRows);
+        uploadFileProcessVO.setIllegalRows(parseFileVO.getTotalRows() - effectRows);
         uploadFileProcessVO.setDataTopic(importTemplateDao.selectTempleNameByType(fileType));
         uploadFileProcessVO.setFileType(fileType + "");
-        if(illegalColumns.length() > 0){
-            uploadFileProcessVO.setUnrecognizeFields(illegalColumns.substring(0, illegalColumns.length()-1));
-        }else{
-            uploadFileProcessVO.setUnrecognizeFields(illegalColumns.toString());
-        }
+        uploadFileProcessVO.setUnrecognizeFields(parseFileVO.getIllegaColumns());
+        uploadFileProcessVO.setFileHeader(parseFileVO.getHeader());
+        uploadFileProcessVO.setIllegalRawData(parseFileVO.getIllegaRawDataList());
         return uploadFileProcessVO;
     }
 
     private int insertParsedData(ArrayList<Map<String, Object>> insertList, int fileType) {
         int effectRows = 0;
-        if (fileType == 0) {
-            return effectRows;
-        }
         switch(fileType){
             case ImportConstant.POPULATION_FILE:
                 return originalDataPopulationDao.batchInsertUploadFileData(insertList);
@@ -104,19 +90,21 @@ public class ParseUploadFileImpl {
     /**
      * parse file
      * @param bytes
-     * @param illegalColumns
-     * @param rowDataList
      * @param fileType
      * @param batchId
      * @param fileUnique
      * @return data rows ,not include header
      */
-    private int parseFile(byte[] bytes, StringBuffer illegalColumns, ArrayList<Map<String, Object>> rowDataList,
-            int fileType, String batchId, String fileUnique) {
+    private ParseFileVO parseFile(byte[] bytes, int fileType, String batchId, String fileUnique) {
+        ArrayList<Map<String,Object>> legalDataList = new ArrayList<>();
+        ArrayList<String> illegaDataList = new ArrayList<>();
+
         Map<String, String> nameCodeMappingMap = getNameCodeRelationByFileType(fileType);
         Map<String, Integer> codeIndexMap = new HashMap<>();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8));
         int totalRows = 0;
+        String header = null;
+        String illegalColumns = null;
         try{
             String line;
             boolean isFileHeadFlag = true;
@@ -126,31 +114,45 @@ public class ParseUploadFileImpl {
                     continue;
                 }
                 if(isFileHeadFlag){
+                    header = line;
                     String firstColumn = uploadFileColumns[0];
                     String firstColumnUTH8Str = new String(firstColumn.getBytes(), "UTF-8");
                     if (!firstColumn.equals(firstColumnUTH8Str)) {
-                        return -1;
+                        totalRows = -1;
+                        break;
                     }
-                    parseHeader(illegalColumns, codeIndexMap, nameCodeMappingMap, uploadFileColumns);
+                    illegalColumns = parseHeader(codeIndexMap, nameCodeMappingMap, uploadFileColumns);
                     isFileHeadFlag = false;
                 }else{
-                    parseRowDataList(codeIndexMap, rowDataList, uploadFileColumns, batchId, fileUnique,fileType);
+                    boolean isValidData = parseRowDataList(codeIndexMap, legalDataList, uploadFileColumns, batchId, fileUnique,fileType);
+                    if (!isValidData) {
+                        illegaDataList.add(line);
+                    }
                     totalRows++;
                 }
-
             }
         }catch (Exception e){
+            logger.error("文件解析失败!", e);
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (Exception e) {
 
+                }
+            }
         }
 
-        return totalRows;
+        ParseFileVO parseFileVO = new ParseFileVO();
+        parseFileVO.setLegalDataList(legalDataList);
+        parseFileVO.setIllegaRawDataList(illegaDataList);
+        parseFileVO.setHeader(header);
+        parseFileVO.setIllegaColumns(illegalColumns);
+        parseFileVO.setTotalRows(Integer.valueOf(totalRows));
+        return parseFileVO;
     }
 
-    /**
-     * @功能简述: 根据对应关系构造出文件解析后的插入数据数组
-     * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
-     */
-    private void parseRowDataList(Map<String, Integer> codeIndexMap,
+    private boolean parseRowDataList(Map<String, Integer> codeIndexMap,
             ArrayList<Map<String, Object>> rowDataList, String[] uploadFileColumns, String batchId, String fileUnique, int fileType) {
         Map<String,Object> insertMap = new HashMap<>();
         for(Map.Entry<String, Integer> entry : codeIndexMap.entrySet()){
@@ -173,7 +175,9 @@ public class ParseUploadFileImpl {
             insertMap.put("file_unique",fileUnique);
             insertMap.put("batch_id",batchId);
             rowDataList.add(insertMap);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -258,7 +262,9 @@ public class ParseUploadFileImpl {
      * @功能简述: 构造出数据库列名与文件中相应列索引的对应关系
      * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
      */
-    private void parseHeader(StringBuffer illegalColumns, Map<String, Integer> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns) {
+    private String parseHeader(Map<String, Integer> codeIndexMap,
+                             Map<String, String> nameCodeMap, String[] uploadFileColumns) {
+        StringBuffer illegalColumns = new StringBuffer();
         int column = 0;
         for(String uploadFileColumn : uploadFileColumns){
             String fieldCode = nameCodeMap.get(uploadFileColumn);
@@ -269,6 +275,11 @@ public class ParseUploadFileImpl {
             }
             column ++;
         }
+
+        if (illegalColumns.length() > 0) {
+            return illegalColumns.substring(0, illegalColumns.length() - 1);
+        }
+        return "";
     }
 
     /**

@@ -9,10 +9,9 @@ public interface DataDownloadQualityIllegalDataService {
      * 
      * @功能简述 : 下载非法数据
      * @author nianjun
-     * @param long
      * @return
      * 
      */
-    public BaseOutput downloadIllegalData(Long batchId);
+    BaseOutput downloadIllegalData(Long batchId, String type);
 
 }
