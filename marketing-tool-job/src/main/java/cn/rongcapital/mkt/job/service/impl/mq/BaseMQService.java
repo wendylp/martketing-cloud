@@ -139,7 +139,7 @@ public class BaseMQService {
 							ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_SEGMENTATION_NOT_PUBLISH.getCode(),
 									ApiErrorCode.BIZ_ERROR_SEGMENTATION_NOT_PUBLISH.getMsg(),
 									ApiConstant.INT_ZERO,null);
-							break;
+							return ur;
 						} else {
 							//设置细分为活动中状态
 							segmentationHead.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN);

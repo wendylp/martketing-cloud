@@ -29,12 +29,21 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
         Taggroup paramTaggroup = new Taggroup();
+                
         paramTaggroup.setParentGroupId(Long.valueOf(tagGroupId));
+        
+        int total=taggroupDao.selectListCount(paramTaggroup);
+        baseOutput.setTotalCount(total);
+        
         paramTaggroup.setStartIndex(index);
         paramTaggroup.setPageSize(size);
+        
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+        
+        
+        
+        
         List<Taggroup> groupList = taggroupDao.selectList(paramTaggroup);
         if (CollectionUtils.isNotEmpty(groupList)) {
             baseOutput.setTotal(groupList.size());
