@@ -104,7 +104,9 @@ public class GetPubFansListServiceImpl implements TaskService {
                 paramFan.put("wx_group_id",groupId);
                 paramFan.put("wx_code",h5PubFan.getPubId());
                 paramFan.put("wx_name",h5PubFan.getName().replaceAll("[^\\u0000-\\uFFFF]", ""));
-                paramFan.put("nickname",h5PubFan.getNickName().replaceAll("[^\\u0000-\\uFFFF]", ""));
+                if(h5PubFan.getNickName() != null && h5PubFan.getNickName().length() > 0){
+                    paramFan.put("nickname",h5PubFan.getNickName().replaceAll("[^\\u0000-\\uFFFF]", ""));
+                }
                 paramFan.put("sex",h5PubFan.getSex());
                 paramFan.put("country",h5PubFan.getCountry());
                 paramFan.put("province",h5PubFan.getProvince());
