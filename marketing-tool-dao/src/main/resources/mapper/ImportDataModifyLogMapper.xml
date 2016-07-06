@@ -39,6 +39,7 @@
 		    	<if test="modifyRows != null"><![CDATA[modify_rows = #{modifyRows},]]></if>
 		    	<if test="illegalRows != null"><![CDATA[illegal_rows = #{illegalRows},]]></if>
 		    	<if test="modifyFilename != null"><![CDATA[modify_filename = #{modifyFilename},]]></if>
+                <if test="modifyDownloadFilename != null"><![CDATA[modify_download_filename = #{modifyDownloadFilename},]]></if>
 		    	<if test="success != null"><![CDATA[success = #{success}]]></if>
 		</set>
 	</sql>
@@ -46,7 +47,8 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ImportDataModifyLog" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO import_data_modify_log (import_data_id,handle_time,total_rows,modify_rows,illegal_rows,modify_filename,success)
+			INSERT INTO import_data_modify_log (import_data_id,handle_time,total_rows,modify_rows,
+				illegal_rows,modify_filename,modify_download_filename,success)
 			VALUES
 			(
 			  #{importDataId},
@@ -55,6 +57,7 @@
 			  #{modifyRows},
 			  #{illegalRows},
 			  #{modifyFilename},
+			  #{modifyDownloadFilename},
 			  #{success}
 			)
 		]]>
