@@ -105,22 +105,22 @@ public class FileUtil {
             throw new IllegalArgumentException("columnNames为空,需要提供cvs文件的字段名");
         }
 
-        try {
-            // 判断目标文件所在的目录是否存在
-            if (!file.getParentFile().exists()) {
-                // 如果目标文件所在的目录不存在，则创建父目录
-                logger.info("目标文件所在目录不存在，准备创建它！");
-                if (!file.getParentFile().mkdirs()) {
-                    logger.info("创建目标文件所在目录失败！");
-                }
-                file.createNewFile();
+        // 判断目标文件所在的目录是否存在
+        if (!file.getParentFile().exists()) {
+            // 如果目标文件所在的目录不存在，则创建父目录
+            logger.info("目标文件所在目录不存在，准备创建它！");
+            if (!file.getParentFile().mkdirs()) {
+                logger.info("创建目标文件所在目录失败！");
             }
-        } catch (IOException e1) {
-            logger.error("创建文件失败", e1);
         }
 
         // 没数据的时候生成空文件
         if (CollectionUtils.isEmpty(poList)) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                logger.info("文件无内容时,创建空文件失败");
+            }
             return file;
         }
 
@@ -186,7 +186,7 @@ public class FileUtil {
 
             bufferedWriter.flush();
             logger.info("下载文件创建完毕 : " + file.getAbsoluteFile());
-        } catch (Exception  e) {
+        } catch (IOException | IllegalArgumentException | IllegalAccessException e) {
             logger.error("生成下载文件时出错", e);
         } finally {
             try {
