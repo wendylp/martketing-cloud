@@ -103,8 +103,8 @@ public class GetPubFansListServiceImpl implements TaskService {
                 Map<String,Object> paramFan = new HashMap<String,Object>();
                 paramFan.put("wx_group_id",groupId);
                 paramFan.put("wx_code",h5PubFan.getPubId());
-                paramFan.put("wx_name",h5PubFan.getName());
-                paramFan.put("nickname",h5PubFan.getNickName());
+                paramFan.put("wx_name",h5PubFan.getName().replaceAll("[^\\u0000-\\uFFFF]", ""));
+                paramFan.put("nickname",h5PubFan.getNickName().replaceAll("[^\\u0000-\\uFFFF]", ""));
                 paramFan.put("sex",h5PubFan.getSex());
                 paramFan.put("country",h5PubFan.getCountry());
                 paramFan.put("province",h5PubFan.getProvince());

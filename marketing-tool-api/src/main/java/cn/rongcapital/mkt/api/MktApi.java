@@ -1625,9 +1625,11 @@ public class MktApi {
 	@POST
 	@Path("/mkt.data.inbound.wechat.public.auth.callback")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response wechatPublicAuthCallback(@Valid WechatPublicAuthCallbackIn wechatPublicAuthCallbackIn){		
-	    
-	    URI location=null;
+	public Response wechatPublicAuthCallback(@Valid WechatPublicAuthCallbackIn wechatPublicAuthCallbackIn){
+
+		wechatPublicAuthCallbackService.authWechatPublicCallback(wechatPublicAuthCallbackIn);
+
+		URI location=null;
 	    
 	    try{
 	        
