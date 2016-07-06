@@ -107,12 +107,12 @@ public class FileUtil {
         int times = 0;
         String downloadFileName = null;
         while (times < MAX_RETRY_GENERATE_TIMES) {
-            downloadFileName = new StringBuilder().append(ApiConstant.DOWNLOAD_BASE_DIR)
-                    .append(RandomStringUtils.randomAlphanumeric(10))
+            downloadFileName = new StringBuilder().append(RandomStringUtils.randomAlphanumeric(10))
                     .append("_").append(System.currentTimeMillis())
                     .append(FILE_SUFFIX).toString();
-
-            Path file = Paths.get(downloadFileName.toString());
+            String fullPathName = new StringBuilder().append(ApiConstant.DOWNLOAD_BASE_DIR)
+                                          .append(downloadFileName).toString();
+            Path file = Paths.get(fullPathName);
             if (Files.exists(file)) {
                 continue;
             }

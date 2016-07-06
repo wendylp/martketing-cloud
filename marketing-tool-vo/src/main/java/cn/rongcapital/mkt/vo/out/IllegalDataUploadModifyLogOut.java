@@ -4,17 +4,17 @@ import java.util.Date;
 
 public class IllegalDataUploadModifyLogOut {
 
-    private Date handleTime;
+    private String handleTime;
 
     private String modifyFilename;
 
     private String modifyDownloadFilename;
 
-    public Date getHandleTime() {
+    public String getHandleTime() {
         return handleTime;
     }
 
-    public void setHandleTime(Date handleTime) {
+    public void setHandleTime(String handleTime) {
         this.handleTime = handleTime;
     }
 

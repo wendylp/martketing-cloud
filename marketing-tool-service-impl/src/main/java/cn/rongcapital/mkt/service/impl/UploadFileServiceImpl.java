@@ -32,6 +32,7 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -138,14 +139,17 @@ public class UploadFileServiceImpl implements UploadFileService{
         queryImportDataModifyLog.setImportDataId(importDataHistoryId);
         queryImportDataModifyLog.setPageSize(null);
         queryImportDataModifyLog.setStartIndex(null);
+        queryImportDataModifyLog.setOrderField("handle_time");
+        queryImportDataModifyLog.setOrderFieldType("desc");
         List<ImportDataModifyLog> allImportDataModifyLogList =
                 importDataModifyLogDao.selectList(queryImportDataModifyLog);
         List<IllegalDataUploadModifyLogOut> modifyLogOutList = new ArrayList<>(allImportDataModifyLogList.size());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for (ImportDataModifyLog tempImportDataModifyLog : allImportDataModifyLogList) {
             IllegalDataUploadModifyLogOut modifyLogOut = new IllegalDataUploadModifyLogOut();
             modifyLogOut.setModifyFilename(tempImportDataModifyLog.getModifyFilename());
             modifyLogOut.setModifyDownloadFilename(tempImportDataModifyLog.getModifyDownloadFilename());
-            modifyLogOut.setHandleTime(tempImportDataModifyLog.getHandleTime());
+            modifyLogOut.setHandleTime(simpleDateFormat.format(tempImportDataModifyLog.getHandleTime()));
             modifyLogOutList.add(modifyLogOut);
         }
 
