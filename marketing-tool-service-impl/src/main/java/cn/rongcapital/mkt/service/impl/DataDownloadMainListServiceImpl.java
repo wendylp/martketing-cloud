@@ -121,15 +121,19 @@ public class DataDownloadMainListServiceImpl implements DataDownloadMainListServ
             emptyMap.put("", "");
             columnNamesMap.add(emptyMap);
         } else {
+            Map<String, String> idMap = new HashMap<>();
+            Map<String, String> batchIdMap = new HashMap<>();
+            batchIdMap.put("batch_id", "批次号");
+            idMap.put("id", "id");
+            columnNamesMap.add(idMap);
+            columnNamesMap.add(batchIdMap);
+
             for (ImportTemplate importTemplate : importTemplates) {
                 Map<String, String> map = new HashMap<>();
                 map.put(importTemplate.getFieldCode(), importTemplate.getFieldName());
-                map.put("batch_id", "批次号");
-                map.put("id", "id");
                 columnNamesMap.add(map);
             }
         }
-
         return columnNamesMap;
     }
 
