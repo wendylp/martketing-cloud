@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,14 +21,18 @@ public class DataGetFilterRecentTaskServiceImpl implements DataGetFilterRecentTa
     @Override
     public List<TaskRunLog> getFilterRecntTask(String method, String userToken, String ver,
                     String condition) {
+        
+        List<TaskRunLog> taskRunLogList = new ArrayList<>();
 
         if (StringUtils.isEmpty(condition)) {
-            return null;
+            return taskRunLogList;
         }
 
         TaskRunLog paramTaskRunLog = new TaskRunLog();
         paramTaskRunLog.setEndTime(TaskConditionEnum.getEnumByAbbreviation(condition).getTime());
-        List<TaskRunLog> taskRunLogList = taskRunLogDao.selectByEndtime(paramTaskRunLog);
+        paramTaskRunLog.setOrderField("start_time");
+        paramTaskRunLog.setOrderFieldType("DESC");
+        taskRunLogList = taskRunLogDao.selectByEndtime(paramTaskRunLog);
 
         return taskRunLogList;
     }
