@@ -107,4 +107,18 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return list
 	 */
 	void deleteRecordByUin(String uin);
+
+	/**
+	 * 选出尚未同步到dataParty的数据
+	 * @param paramMap
+	 * @return list
+	 */
+	List<Map<String,Object>> selectNotSyncWechatMemberList();
+
+	/**
+	 * 更新数据已经同步到data_party表中的数据标志
+	 * @param paramMap
+	 * @return list
+	 */
+	void updateSyncDataMark(Long id);
 }

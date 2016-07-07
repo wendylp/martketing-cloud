@@ -125,4 +125,10 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      */
     int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
 
+	/**
+	 * 同步微信数据到主数据
+	 * @param idList
+	 * @return
+	 */
+	Integer batchInsertWechatDatas(List<Map<String, Object>> notSyncWechatMemberList);
 }

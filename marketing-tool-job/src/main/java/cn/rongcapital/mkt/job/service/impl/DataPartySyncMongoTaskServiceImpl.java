@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.po.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -15,28 +17,9 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.rongcapital.mkt.dao.DataArchPointDao;
-import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
-import cn.rongcapital.mkt.dao.DataLoginDao;
-import cn.rongcapital.mkt.dao.DataMemberDao;
-import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.dao.DataPaymentDao;
-import cn.rongcapital.mkt.dao.DataPopulationDao;
-import cn.rongcapital.mkt.dao.DataShoppingDao;
-import cn.rongcapital.mkt.dao.TagDao;
-import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.mongodb.DataPartyRepository;
-import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.service.DataPartySyncMongoTaskService;
-import cn.rongcapital.mkt.po.DataArchPoint;
-import cn.rongcapital.mkt.po.DataCustomerTags;
-import cn.rongcapital.mkt.po.DataLogin;
-import cn.rongcapital.mkt.po.DataMember;
-import cn.rongcapital.mkt.po.DataParty;
-import cn.rongcapital.mkt.po.DataPayment;
-import cn.rongcapital.mkt.po.DataPopulation;
-import cn.rongcapital.mkt.po.DataShopping;
 import org.springframework.util.CollectionUtils;
 
 //同步数据至Mongodb
@@ -73,6 +56,9 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
     
     @Autowired
     private DataLoginDao dataLoginDao;
+
+    @Autowired
+    private WechatMemberDao wechatMemberDao;
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
@@ -231,6 +217,23 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 mongoDataShopping.setMapping_keyid(dataObj.getId().toString());
                 mongoTemplate.insert(mongoDataShopping,collection);
             }
+        }else if(dataType.intValue() == 8){
+
+            WechatMember wechatMember = new WechatMember();
+            wechatMember.setId(Long.valueOf(dataKeyIdInteger));
+            List<WechatMember> dataList=wechatMemberDao.selectList(wechatMember);
+
+            //insert into mongodb
+            for(WechatMember dataObj : dataList){
+                cn.rongcapital.mkt.po.mongodb.WechatMember mongoWechatMember =
+                        new cn.rongcapital.mkt.po.mongodb.WechatMember();
+                BeanUtils.copyProperties(dataObj, mongoWechatMember);
+                mongoWechatMember.setMid(dataPartyId);
+                mongoWechatMember.setMd_type(dataType);
+                mongoWechatMember.setMapping_keyid(dataObj.getId().toString());
+                mongoTemplate.insert(mongoWechatMember,collection);
+            }
+
         }
 	}
 	
