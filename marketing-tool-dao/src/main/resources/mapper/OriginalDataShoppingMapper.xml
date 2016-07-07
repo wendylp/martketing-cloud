@@ -223,7 +223,7 @@
             class1_name,class2_id,class2_name,class3_id,class3_name,class4_id,class4_name,
             sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,
             identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,
-            udid,phone_mac,status,source,file_unique,source,batch_id)
+            udid,phone_mac,status,source,file_unique,batch_id)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
