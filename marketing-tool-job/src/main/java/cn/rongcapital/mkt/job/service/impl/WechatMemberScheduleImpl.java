@@ -31,9 +31,18 @@ public class WechatMemberScheduleImpl implements TaskService{
     //Todo: 2将数据同步到dataParty表中。
     //Todo: 3将通不过的数据的selected字段置为1。
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void task(Integer taskId) {
+        Integer totalCount = wechatMemberDao.selectedNotSyncCount();
+        if(totalCount != null){
+            for(int pageNum = 1; pageNum < (totalCount + BATCH_SIZE -1) / BATCH_SIZE; pageNum ++ ){
+                syncWechatMemberByBatchSize();
+            }
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    private void syncWechatMemberByBatchSize() {
         List<Map<String,Object>> notSyncWechatMemberList = wechatMemberDao.selectNotSyncWechatMemberList();
         if(doSync(notSyncWechatMemberList)){
             updateSyncWechatMemeberListStatus(notSyncWechatMemberList);
