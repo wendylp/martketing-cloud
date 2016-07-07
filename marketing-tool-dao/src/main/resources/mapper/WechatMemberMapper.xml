@@ -198,8 +198,8 @@
 		</foreach>
 	</insert>
 
-	<select id="selectWxCodeByGroupId" parameterType="java.util.List" resultType="java.lang.String">
-		SELECT wx_code
+	<select id="selectIdListByGroupId" parameterType="java.util.List" resultType="java.lang.String">
+		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE wx_group_id in
 		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
@@ -274,4 +274,10 @@
 		SET selected = 1
 		WHERE id = #{id}
 	</update>
+
+	<select id="selectedNotSyncCount" resultType="java.lang.Integer">
+		SELECT count(id)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE selected = 0
+	</select>
 </mapper>

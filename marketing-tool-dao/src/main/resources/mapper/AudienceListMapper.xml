@@ -122,5 +122,6 @@
 		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE audience_name = #{audience_name}
+		limit 1
 	</select>
 </mapper>

@@ -101,7 +101,7 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @author nianjun
 	 * @return map
 	 */
-	List<Long> selectDataPartyIdsByMappinKeyIds(List<String> wxCodes);
+	List<Long> selectDataPartyIdsByMappinKeyIds(List<Long> mappingIdList);
 	
 	/**
      * @功能简述 : 根据自定义标签获取覆盖人群
