@@ -269,10 +269,13 @@
 		limit 500
 	</select>
 
-	<update id="updateSyncDataMark" parameterType="java.lang.Long">
+	<update id="updateSyncDataMark" parameterType="java.util.List">
 		UPDATE wechat_member
 		SET selected = 1
-		WHERE id = #{id}
+		WHERE id in
+		<foreach collection="list" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
 	</update>
 
 	<select id="selectedNotSyncCount" resultType="java.lang.Integer">

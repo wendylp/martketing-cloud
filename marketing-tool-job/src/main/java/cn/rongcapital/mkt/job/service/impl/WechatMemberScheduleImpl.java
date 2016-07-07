@@ -46,7 +46,11 @@ public class WechatMemberScheduleImpl implements TaskService{
     private void syncWechatMemberByBatchSize() {
         List<Map<String,Object>> notSyncWechatMemberList = wechatMemberDao.selectNotSyncWechatMemberList();
         if(doSync(notSyncWechatMemberList)){
-            updateSyncWechatMemeberListStatus(notSyncWechatMemberList);
+            List<Long> idList = new ArrayList<Long>();
+            for(Map<String,Object> map : notSyncWechatMemberList){
+                idList.add((long)map.get("mapping_key_id"));
+            }
+            updateSyncWechatMemeberListStatus(idList);
         }
     }
 
@@ -66,12 +70,8 @@ public class WechatMemberScheduleImpl implements TaskService{
         return false;
     }
 
-    private void updateSyncWechatMemeberListStatus(List<Map<String, Object>> notSyncWechatMemberList) {
-        for(Map<String,Object> map : notSyncWechatMemberList){
-            if(map.get("mapping_key_id") != null){
-                wechatMemberDao.updateSyncDataMark((Long)map.get("mapping_keyid"));
-            }
-        }
+    private void updateSyncWechatMemeberListStatus(List<Long> notSyncWechatMemberList) {
+        wechatMemberDao.updateSyncDataMark(notSyncWechatMemberList);
     }
 
 }

@@ -121,7 +121,7 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @param paramMap
 	 * @return list
 	 */
-	void updateSyncDataMark(@Param("id") Long id);
+	void updateSyncDataMark(List<Long> list);
 
 	/**
 	 * 选取未同步的微信粉丝
