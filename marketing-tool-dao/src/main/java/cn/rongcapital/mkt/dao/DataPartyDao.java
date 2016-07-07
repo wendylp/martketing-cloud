@@ -131,4 +131,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @return
 	 */
 	Integer batchInsertWechatDatas(List<Map<String, Object>> notSyncWechatMemberList);
+
+	/**
+	 * 根据mappingId选择dataPartyId
+	 * @param idList
+	 * @return
+	 */
+	Integer selectIdByMappingId(@Param("mapping_keyid") Long id);
 }
