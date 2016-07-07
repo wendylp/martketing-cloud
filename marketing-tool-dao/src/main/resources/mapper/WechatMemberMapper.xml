@@ -243,7 +243,7 @@
 		FROM wechat_member wm
 		LEFT JOIN data_party dp
 		ON wm.wx_code = dp.mapping_keyid
-		WHERE nickname like #{nickname} AND wx_group_id in
+		WHERE wx_name like CONCAT('%',#{wx_name},'%') AND wx_group_id in
 		<foreach collection="importIdList" index="index" item="item" separator="," open="(" close=")">
 			#{item}
 		</foreach>

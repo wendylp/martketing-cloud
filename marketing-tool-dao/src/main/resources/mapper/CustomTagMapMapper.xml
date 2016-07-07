@@ -109,6 +109,12 @@
 		ORDER BY ct.id ASC
 	</select>
 
+	<select id="selectTagIdList" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT map_id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE tag_id = #{tag_id}
+	</select>
+
 	<insert id="batchInsert" parameterType="java.util.List">
 		INSERT INTO custom_tag_map(tag_id,map_id,type)
 		VALUE

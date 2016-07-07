@@ -106,7 +106,7 @@ public class GetPubFansListServiceImpl implements TaskService {
                     wechatGroupDao.insertWechatGroup(paramGroup);
                     groupId = wechatGroupDao.selectGroupId(paramGroup);
                 }
-                if(!isFansAlreadyImported(h5PubFan.getPubId(),h5PubFan.getOpenId(),null)) continue;
+                if(isFansAlreadyImported(h5PubFan.getPubId(),h5PubFan.getOpenId(),groupId)) continue;
                 Map<String,Object> paramFan = new HashMap<String,Object>();
                 paramFan.put("wx_group_id",groupId);
                 paramFan.put("wx_code",h5PubFan.getOpenId());
@@ -149,7 +149,10 @@ public class GetPubFansListServiceImpl implements TaskService {
         paramMap.put("pub_id",pubId);
         paramMap.put("wx_code",openId);
         paramMap.put("wx_group_id",groupId);
-        Long id = wechatMemeberDao.selectIdByPubIdAndOpenId(paramMap);
-        return id == null;
+        List<Long> ids = wechatMemeberDao.selectIdByPubIdAndOpenId(paramMap);
+        if(ids != null && ids.size() > 0){
+            return true;
+        }
+        return false;
     }
 }

@@ -13,7 +13,9 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.FileNameEnum;
 import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
+import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
 import cn.rongcapital.mkt.po.ImportDataHistory;
+import cn.rongcapital.mkt.po.ImportDataModifyLog;
 import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -23,16 +25,30 @@ public class DataDownloadQualityLogServiceImpl implements DataDownloadQualityLog
     @Autowired
     private ImportDataHistoryDao importDataHistoryDao;
 
+    @Autowired
+    private ImportDataModifyLogDao importDataModifyLogDao;
+
     @Override
     public BaseOutput downloadQualityLog(Long importDataId) {
 
         ImportDataHistory paramImportDataHistory = new ImportDataHistory();
         paramImportDataHistory.setId(importDataId);
+        paramImportDataHistory.setPageSize(0);
         List<ImportDataHistory> importDataHistories = importDataHistoryDao.selectList(paramImportDataHistory);
-        List<String> columnNames = importDataHistoryDao.selectColumns();
+        List<String> historyColumnNames = importDataModifyLogDao.selectColumns();
 
-        File file = FileUtil.generateFileforDownload(FileUtil.transferNameListtoMap(columnNames), importDataHistories,
-                        FileNameEnum.IMPORT_DATA_HISTORY_LOG.getDetailName());
+        ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
+        paramImportDataModifyLog.setImportDataId(importDataId);
+        paramImportDataModifyLog.setPageSize(0);
+
+        List<ImportDataModifyLog> importDataModifyLogs = importDataModifyLogDao.selectList(paramImportDataModifyLog);
+        List<String> modifyLogColumnNames = importDataModifyLogDao.selectColumns();
+
+        File file = FileUtil.generateFileforDownload(FileUtil.transferNameListtoMap(historyColumnNames),
+                        importDataHistories, FileNameEnum.IMPORT_DATA_HISTORY_LOG.getDetailName());
+
+        file = FileUtil.generateFile(FileUtil.transferNameListtoMap(modifyLogColumnNames), importDataModifyLogs, file);
+
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
         Map<String, String> resultMap = new HashMap<>();
@@ -42,5 +58,4 @@ public class DataDownloadQualityLogServiceImpl implements DataDownloadQualityLog
 
         return baseOutput;
     }
-
 }

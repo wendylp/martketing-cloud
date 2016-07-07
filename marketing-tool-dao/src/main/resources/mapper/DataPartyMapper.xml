@@ -207,7 +207,7 @@
 	<select id="selectListByNameInList" parameterType="java.util.Map" resultType="java.util.Map">
 		<![CDATA[SELECT id,name,gender,mobile,(year(now())-year(birthday)-1) + ( DATE_FORMAT(birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age]]>
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE (mobile like CONCAT('%',#{audience_name},'%') OR name like CONCAT('%',#{audience_name},'%')) and (status = 0 OR status = 2) AND id in
+		WHERE (mobile like CONCAT('%',#{key_word},'%') OR name like CONCAT('%',#{key_word},'%')) and (status = 0 OR status = 2) AND id in
 		<foreach collection="partyIdList" item="item" index="index" separator="," open="(" close=")">
 			#{item}
 		</foreach>

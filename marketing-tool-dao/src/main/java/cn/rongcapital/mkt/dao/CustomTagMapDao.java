@@ -61,4 +61,12 @@ public interface CustomTagMapDao extends BaseDao<CustomTagMap>{
 	 * @return List
 	 */
 	void batchInsert(List<Map<String, Object>> insertCustomTagMapList);
+
+	/**
+	 * @功能简述 : 搜索partyIdList
+	 * @param headId
+	 * @author zhuxuelong
+	 * @return List
+	 */
+	List<Integer> selectTagIdList(Integer tag_id);
 }

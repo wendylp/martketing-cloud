@@ -41,7 +41,7 @@ public class WechatAssetMemberSearchServiceImpl implements WechatAssetMemberSear
         List<Long> importIdList = wechatAssetGroupDao.selectImportGroupIdsByIds(idList);
 
         Map<String,Object> paramMap = new HashMap<String,Object>();
-        paramMap.put("nickname", "%" + searchField + "%");
+        paramMap.put("wx_name", searchField);
         paramMap.put("importIdList",importIdList);
         List<Map<String,Object>> searchResult = wechatMemberDao.selectSearchInfo(paramMap);
         if(searchResult != null && searchResult.size() > 0){

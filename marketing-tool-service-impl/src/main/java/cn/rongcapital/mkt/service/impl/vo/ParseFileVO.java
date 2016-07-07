@@ -18,6 +18,10 @@ public class ParseFileVO {
 
     private Integer totalRows;
 
+    private Integer emailRows;
+    private Integer mobileRows;
+    private Integer duplicateRows;
+
     public ArrayList<Map<String, Object>> getLegalDataList() {
         return legalDataList;
     }
@@ -56,5 +60,29 @@ public class ParseFileVO {
 
     public void setTotalRows(Integer totalRows) {
         this.totalRows = totalRows;
+    }
+
+    public Integer getEmailRows() {
+        return emailRows;
+    }
+
+    public void setEmailRows(Integer emailRows) {
+        this.emailRows = emailRows;
+    }
+
+    public Integer getMobileRows() {
+        return mobileRows;
+    }
+
+    public void setMobileRows(Integer mobileRows) {
+        this.mobileRows = mobileRows;
+    }
+
+    public Integer getDuplicateRows() {
+        return duplicateRows;
+    }
+
+    public void setDuplicateRows(Integer duplicateRows) {
+        this.duplicateRows = duplicateRows;
     }
 }

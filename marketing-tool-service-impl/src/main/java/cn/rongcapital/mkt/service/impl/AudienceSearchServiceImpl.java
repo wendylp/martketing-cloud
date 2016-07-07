@@ -79,28 +79,16 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 		}else if(audience_type.equals("1")){
 		    
 		    //人群管理:在人群中查找
-		    //1.根据人群ID查出联系人ID列表		    
-		    idList.add(audience_id);
-		    List<AudienceListPartyMap> cols=audienceListPartyMapDao.selectListByIdList(idList);
-			if(cols != null && cols.size() > 0){
-				for(AudienceListPartyMap col : cols){
-					partyIdList.add(col.getPartyId());
-				}
-			}
+		    //1.根据人群ID查出联系人ID列表
+			partyIdList = audienceListPartyMapDao.selectPartyIdLIistByAudienceId(audience_id);
 		    //2.在联系人中查找名字匹配的
-			resultList = SearchAudienceByName(audience_name, partyIdList, resultList);
+			if(partyIdList != null && partyIdList.size() > 0){
+				resultList = SearchAudienceByName(audience_name, partyIdList, resultList);
+			}
 		}else if(audience_type.equals("2")){
             //自定义标签:在人群中查找
-            //1.根据自定义标签ID查出人群ID列表 
-            CustomTagMap tagmap=new CustomTagMap();
-            tagmap.setId(audience_id);            
-            
-            List<CustomTagMap> cols=customTagMapDao.selectList(tagmap);
-            if(cols != null && cols.size() > 0){
-				for(CustomTagMap col : cols){
-					partyIdList.add(col.getMapId());
-				}
-			}
+            //1.根据自定义标签ID查出人群ID列表
+			partyIdList = customTagMapDao.selectTagIdList(audience_id);
 
             //2.在人群(自定义标签)中查找名字匹配的
 			resultList = SearchAudienceByName(audience_name, partyIdList, resultList);

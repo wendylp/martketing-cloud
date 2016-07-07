@@ -34,6 +34,7 @@ public class FileUtil {
 
     private static String FILE_SEPERATOR = ",";
     private static String FILE_SUFFIX = ".csv";
+    private static int MAX_RETRY_GENERATE_TIMES = 5;
 
     public static File generateDownloadFile(List<Map<String, Object>> dataSource, String prefixFileName) {
         String fileName = ApiConstant.DOWNLOAD_BASE_DIR + prefixFileName + System.currentTimeMillis() + ".csv"; // 线上服务器文件生成目录
@@ -102,12 +103,34 @@ public class FileUtil {
         return generateFile(columnNames, dataList, file);
     }
 
+    public static String generateFileforDownload(byte[] content) {
+        int times = 0;
+        String downloadFileName = null;
+        while (times < MAX_RETRY_GENERATE_TIMES) {
+            downloadFileName = new StringBuilder().append(RandomStringUtils.randomAlphanumeric(10)).append("_")
+                            .append(System.currentTimeMillis()).append(FILE_SUFFIX).toString();
+            String fullPathName = new StringBuilder().append(ApiConstant.DOWNLOAD_BASE_DIR).append(downloadFileName)
+                            .toString();
+            Path file = Paths.get(fullPathName);
+            if (Files.exists(file)) {
+                continue;
+            }
+            try {
+                Files.createFile(file);
+                Files.write(file, content);
+            } catch (Exception e) {
+                return null;
+            }
+            times++;
+        }
+        return downloadFileName;
+    }
+
     public static Path generateFileforDownload(String header, List<String> dataList, String fileName) {
         StringBuilder pathNameBuilder = new StringBuilder();
-        pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR)
-                .append(fileName).append("_")
-                .append(RandomStringUtils.randomAlphanumeric(6).toUpperCase())
-                .append("_").append(FILE_SUFFIX);
+        pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName).append("_")
+                        .append(RandomStringUtils.randomAlphanumeric(6).toUpperCase()).append("_")
+                        .append(System.currentTimeMillis()).append(FILE_SUFFIX);
         return generateFile(header, dataList, pathNameBuilder.toString().replace("file:", ""));
     }
 
@@ -149,7 +172,7 @@ public class FileUtil {
         return file;
     }
 
-    private static <E> File generateFile(List<Map<String, String>> columnNames, List<E> poList, File file) {
+    public static <E> File generateFile(List<Map<String, String>> columnNames, List<E> poList, File file) {
 
         if (CollectionUtils.isEmpty(columnNames)) {
             throw new IllegalArgumentException("columnNames为空,需要提供cvs文件的字段名");
@@ -167,7 +190,9 @@ public class FileUtil {
         // 没数据的时候生成空文件
         if (CollectionUtils.isEmpty(poList)) {
             try {
-                file.createNewFile();
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
             } catch (IOException e) {
                 logger.info("文件无内容时,创建空文件失败");
             }
@@ -176,7 +201,7 @@ public class FileUtil {
 
         BufferedWriter bufferedWriter = null;
         try {
-            bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "GBK"));
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "GBK"));
             int rowCount = poList.size();
 
             // 按数据量取出每一行的数据
@@ -204,6 +229,8 @@ public class FileUtil {
 
                     // 根据字段名获取对象对应的字段
                     Field field = getFieldByName(fields, ReflectionUtil.recoverFieldName(columnName));
+                    System.out.println(columnName);
+                    System.out.println(field.getName());
                     field.setAccessible(true);
 
                     // 这是个日期类型,需要转换

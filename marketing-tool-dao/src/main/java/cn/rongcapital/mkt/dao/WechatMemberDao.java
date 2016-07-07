@@ -99,7 +99,7 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @param paramMap
 	 * @return list
 	 */
-	Long selectIdByPubIdAndOpenId(Map<String, Object> paramMap);
+	List<Long> selectIdByPubIdAndOpenId(Map<String, Object> paramMap);
 
 	/**
 	 * 删掉与这个uin相关的所有数据
