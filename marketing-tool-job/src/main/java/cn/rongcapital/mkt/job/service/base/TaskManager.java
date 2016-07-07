@@ -131,7 +131,8 @@ public class TaskManager {
 	
 	private TaskRunLog addTaskLog(int taskId) {
 		TaskRunLog taskRunLogT = new TaskRunLog();
-		taskRunLogT.setTaskName("Task_"+RandomStringUtils.randomAlphabetic(5).toUpperCase());
+        taskRunLogT.setTaskName("Task_" + RandomStringUtils.randomAlphabetic(5).toUpperCase() + "_"
+                        + RandomStringUtils.randomNumeric(3));
 		taskRunLogT.setTaskId(taskId);
 		taskRunLogT.setStartTime(new Date());
 		taskRunLogDao.insert(taskRunLogT);
