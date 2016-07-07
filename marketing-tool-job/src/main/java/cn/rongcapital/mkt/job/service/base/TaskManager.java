@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,6 +131,7 @@ public class TaskManager {
 	
 	private TaskRunLog addTaskLog(int taskId) {
 		TaskRunLog taskRunLogT = new TaskRunLog();
+		taskRunLogT.setTaskName("Task_"+RandomStringUtils.randomAlphabetic(5).toUpperCase());
 		taskRunLogT.setTaskId(taskId);
 		taskRunLogT.setStartTime(new Date());
 		taskRunLogDao.insert(taskRunLogT);
