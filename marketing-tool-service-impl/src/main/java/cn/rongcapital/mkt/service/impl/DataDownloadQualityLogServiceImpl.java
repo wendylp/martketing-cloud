@@ -35,7 +35,7 @@ public class DataDownloadQualityLogServiceImpl implements DataDownloadQualityLog
         paramImportDataHistory.setId(importDataId);
         paramImportDataHistory.setPageSize(0);
         List<ImportDataHistory> importDataHistories = importDataHistoryDao.selectList(paramImportDataHistory);
-        List<String> historyColumnNames = importDataModifyLogDao.selectColumns();
+        List<String> historyColumnNames = importDataHistoryDao.selectColumns();
 
         ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
         paramImportDataModifyLog.setImportDataId(importDataId);
