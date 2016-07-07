@@ -5,6 +5,7 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskManager;
+import cn.rongcapital.mkt.po.ImportDataHistory;
 import cn.rongcapital.mkt.po.OriginalDataArchPoint;
 import cn.rongcapital.mkt.service.FileTagUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -54,14 +55,13 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
     public BaseOutput updateFileTag(FileTagUpdateIn fileTagUpdateIn) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
         String fileUnique = fileTagUpdateIn.getFileUnique();
-        Integer fileType = Integer.valueOf(fileTagUpdateIn.getFileType());
-        Map<String,Object> paramMap = new HashMap<String,Object>();
-        paramMap.put("file_unique",fileTagUpdateIn.getFileUnique());
-        List<Map<String,Object>> importRows = importDataHistoryDao.selectTotalRowsAndFileType(paramMap);         //0根据上传分fileUnique选出导入的人群数量
-        if(importRows != null && importRows.size() > 0){
+        ImportDataHistory importDataHistory = importDataHistoryDao.queryByFileUnique(fileUnique);
+        Integer fileType = importDataHistory.getFileType();
+        Integer legalRows = importDataHistory.getLegalRows();
+        if(legalRows != null && legalRows.intValue() > 0){
             if (hasTagNames(fileTagUpdateIn)) {
-                addNewCustomTag(fileTagUpdateIn, importRows);             //将上传上来的标签名称列表以及上一步选出的总人群数量插入到custom_tag表中
-                List<Long> mapIdList = getOriginalDataIdList(paramMap, fileType);      //2.根据fileUnique选出对应的original表中的idList
+                addNewCustomTag(fileTagUpdateIn, legalRows);             //将上传上来的标签名称列表以及上一步选出的总人群数量插入到custom_tag表中
+                List<Long> mapIdList = getOriginalDataIdList(importDataHistory.getFileUnique(), fileType);      //2.根据fileUnique选出对应的original表中的idList
                 //3将customName和idList插入到cumstomTagMapping表中
                 List<Long> tagIds =  customTagDao.selectIdsByCustomTags(fileTagUpdateIn.getTag_names());
                 if(tagIds != null && tagIds.size() > 0 && mapIdList != null && mapIdList.size() > 0){
@@ -72,6 +72,8 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
             }
 
             updateOriginalDataStatus(fileUnique, fileType);
+            importDataHistory.setStatus(Byte.valueOf((byte)0));
+            importDataHistoryDao.updateById(importDataHistory);
         }else{
             baseOutput.setMsg("数据上传失败");
         }
@@ -101,8 +103,7 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
     }
 
     //1将上传上来的标签名称列表以及上一步选出的总人群数量插入到custom_tag表中
-    private void addNewCustomTag(FileTagUpdateIn fileTagUpdateIn, List<Map<String, Object>> importRows) {
-        Integer legalRows = (Integer) importRows.get(0).get("legal_rows");
+    private void addNewCustomTag(FileTagUpdateIn fileTagUpdateIn, Integer legalRows) {
         List<Map<String,Object>> insertCustomTagList = new ArrayList<Map<String,Object>>();
         for(String tagName : fileTagUpdateIn.getTag_names()){
             Map<String,Object> insertMap = new HashMap<String,Object>();
@@ -115,7 +116,9 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
 
     //2.根据fileUnique选出对应的original表中的idList
     //Todo:以后如果要修改mappingIdList修改这个方法即可
-    private List<Long> getOriginalDataIdList(Map<String, Object> paramMap, Integer fileType) {
+    private List<Long> getOriginalDataIdList(String fileUnique, Integer fileType) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("file_unique", fileUnique);
         List<Long> mapIdList = null;
         switch (fileType){
             case 1:

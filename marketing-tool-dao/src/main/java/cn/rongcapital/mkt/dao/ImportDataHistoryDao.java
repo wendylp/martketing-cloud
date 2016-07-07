@@ -15,6 +15,7 @@ import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ImportDataHistory;
+import org.apache.ibatis.annotations.Param;
 
 public interface ImportDataHistoryDao extends BaseDao<ImportDataHistory>{
 	
@@ -78,6 +79,8 @@ public interface ImportDataHistoryDao extends BaseDao<ImportDataHistory>{
 	 * @return map
 	 */
 	List<Map<String,Object>> selectTotalRowsAndFileType(Map<String, Object> paramMap);
+
+	ImportDataHistory queryByFileUnique(@Param("fileUnique") String fileUnique);
 	
 	/**
      * @功能简述: 获取表中所有列

@@ -129,6 +129,13 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
+
+	<select id="queryByFileUnique"  resultType="cn.rongcapital.mkt.po.ImportDataHistory">
+		SELECT
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		where file_unique = #{fileUnique} limit 1
+	</select>
 	
 	<!-- 其它SQL语句 -->
 	<select id="selectMigrationFileGeneralInfo" resultType="java.util.Map">
@@ -153,8 +160,8 @@
 	</select>
 
 	<insert id="insertFileUnique" parameterType="java.util.Map">
-		INSERT into import_data_history (import_start_time,file_unique)
-		VALUES (#{import_start_time},#{file_unique})
+		INSERT into import_data_history (import_start_time,file_unique,status)
+		VALUES (#{import_start_time},#{file_unique},#{status})
 	</insert>
 
 	<select id="selectTotalRowsAndFileType" parameterType="java.util.Map" resultType="java.util.Map">
