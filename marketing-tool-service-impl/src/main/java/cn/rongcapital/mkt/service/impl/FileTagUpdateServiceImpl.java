@@ -147,7 +147,7 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         switch (fileType){
             case 1:
                 originalDataPopulationDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataPopulationServiceImpl"),null);
+                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataPopulationServiceImpl"),System.currentTimeMillis() + "originalDataPopulationServiceImplTest");
                 break;
             case 2:
                 originalDataCustomerTagsDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
