@@ -56,11 +56,6 @@ public class TaskManager {
 	};
 	
 	public synchronized void manualInitTask (int taskId,String taskName) {
-		TaskRunLog taskRunLogT = new TaskRunLog();
-		taskRunLogT.setTaskId(taskId);
-		taskRunLogT.setTaskName(taskName);
-		taskRunLogT.setStartTime(new Date());
-		taskRunLogDao.insert(taskRunLogT);
 		scanTask();
 		prepareTasks();
 	}
@@ -133,6 +128,14 @@ public class TaskManager {
 		});
 	}
 	
+	private TaskRunLog addTaskLog(int taskId) {
+		TaskRunLog taskRunLogT = new TaskRunLog();
+		taskRunLogT.setTaskId(taskId);
+		taskRunLogT.setStartTime(new Date());
+		taskRunLogDao.insert(taskRunLogT);
+		return taskRunLogT;
+	}
+	
 	private void startTask(TaskSchedule taskSchedulePo) {
 		logger.info("startTask:"+JSON.toJSONString(taskSchedulePo));
 		Runnable task = new Runnable() {
@@ -142,8 +145,11 @@ public class TaskManager {
 					Object serviceBean = cotext.getBean(serviceName);
 					if(serviceBean instanceof TaskService) {
 						TaskService taskService = (TaskService)serviceBean;
+						TaskRunLog taskRunLog = addTaskLog(taskSchedulePo.getId());
 						taskService.task(taskSchedulePo.getId());
 						taskService.task(taskSchedulePo);
+						taskRunLog.setEndTime(new Date());
+						taskRunLogDao.updateById(taskRunLog);
 					}
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);

@@ -19,9 +19,9 @@ public class ImportDataModifyLog extends BaseQuery {
 
     private String modifyFilename;
 
-    private String modifyDownloadFilename;
-
     private Byte success;
+
+    private String modifyDownloadFilename;
 
     public Long getId() {
         return id;
@@ -79,19 +79,19 @@ public class ImportDataModifyLog extends BaseQuery {
         this.modifyFilename = modifyFilename == null ? null : modifyFilename.trim();
     }
 
-    public String getModifyDownloadFilename() {
-        return modifyDownloadFilename;
-    }
-
-    public void setModifyDownloadFilename(String modifyDownloadFilename) {
-        this.modifyDownloadFilename = modifyDownloadFilename;
-    }
-
     public Byte getSuccess() {
         return success;
     }
 
     public void setSuccess(Byte success) {
         this.success = success;
+    }
+
+    public String getModifyDownloadFilename() {
+        return modifyDownloadFilename;
+    }
+
+    public void setModifyDownloadFilename(String modifyDownloadFilename) {
+        this.modifyDownloadFilename = modifyDownloadFilename == null ? null : modifyDownloadFilename.trim();
     }
 }
