@@ -121,15 +121,9 @@ public class ParseUploadFileImpl {
                     continue;
                 }
                 if(isFileHeadFlag){
-                    header = line;
-                    String firstColumn = uploadFileColumns[0];
-                    String firstColumnUTH8Str = new String(firstColumn.getBytes(), "UTF-8");
-                    if (!firstColumn.equals(firstColumnUTH8Str)) {
-                        totalRows = -1;
-                        break;
-                    }
                     illegalColumns = parseHeader(codeIndexMap, nameCodeMappingMap, uploadFileColumns);
                     isFileHeadFlag = false;
+                    header = line;
                 }else{
                     String existsData = dataCheck.get(line);
                     if (existsData == null) {
