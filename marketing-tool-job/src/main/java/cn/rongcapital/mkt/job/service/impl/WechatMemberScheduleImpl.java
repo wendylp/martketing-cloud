@@ -36,7 +36,7 @@ public class WechatMemberScheduleImpl implements TaskService{
     public void task(Integer taskId) {
         Integer totalCount = wechatMemberDao.selectedNotSyncCount();
         if(totalCount != null){
-            for(int pageNum = 1; pageNum < (totalCount + BATCH_SIZE -1) / BATCH_SIZE; pageNum ++ ){
+            for(int pageNum = 1; pageNum <= (totalCount + BATCH_SIZE -1) / BATCH_SIZE; pageNum ++ ){
                 syncWechatMemberByBatchSize();
             }
         }
