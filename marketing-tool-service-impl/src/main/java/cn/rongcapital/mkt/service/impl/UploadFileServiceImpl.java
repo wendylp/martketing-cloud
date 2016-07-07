@@ -259,10 +259,12 @@ public class UploadFileServiceImpl implements UploadFileService{
 
     public boolean isUTF8(final byte[] dataBytes) {
         int expectedLength = 0;
-        for (int i = 0; i < 9; i++) {
-            if (dataBytes.length <= i) {
-                return true;
-            }
+        int testLength = 9;
+        if (dataBytes.length <= testLength) {
+            testLength =  dataBytes.length;
+        }
+
+        for (int i = 0; i < testLength; i++) {
             if ((dataBytes[i] & 0b10000000) == 0b00000000) {
                 expectedLength = 1;
             } else if ((dataBytes[i] & 0b11100000) == 0b11000000) {
