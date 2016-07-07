@@ -45,6 +45,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
         
         paramImportDataHistory.setOrderField("import_start_time");
         paramImportDataHistory.setOrderFieldType("DESC");
+        paramImportDataHistory.setStatus((byte)1);
 
         List<ImportDataHistory> importDataHistoryList = importDataHistoryDao.selectList(paramImportDataHistory);
         int totalCount = importDataHistoryDao.selectListCount(null);
