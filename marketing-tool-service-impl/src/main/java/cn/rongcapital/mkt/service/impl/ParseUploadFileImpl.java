@@ -199,7 +199,6 @@ public class ParseUploadFileImpl {
         if(validateResult == ImportConstant.VALIDATE_SUCCESS){
             convertData(insertMap, fileType);
             insertMap.put("file_unique",fileUnique);
-            insertMap.put("source",fileType);
             insertMap.put("batch_id",batchId);
             rowDataList.add(insertMap);
         }

@@ -207,7 +207,6 @@
 			#{item.status},
 			#{item.source},
 			#{item.file_unique},
-			#{item.source},
 			#{item.batch_id}
 			)
 		</foreach>

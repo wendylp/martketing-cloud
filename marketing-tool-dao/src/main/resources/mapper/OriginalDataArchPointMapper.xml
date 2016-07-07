@@ -170,7 +170,6 @@
 			#{item.source},
 			#{item.cookie},
 			#{item.file_unique},
-			#{item.source},
 			#{item.batch_id}
 			)
 		</foreach>
