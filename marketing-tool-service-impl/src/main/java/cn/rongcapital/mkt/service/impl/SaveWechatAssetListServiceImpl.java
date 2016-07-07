@@ -76,7 +76,10 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
             paramMap.put("create_time",new Date(System.currentTimeMillis()));
             paramInsertLists.add(paramMap);
         }
-        int effectRows = audienceListPartyMapDao.batchInsert(paramInsertLists);
+        int effectRows = 0;
+        if(paramInsertLists != null && paramInsertLists.size() > 0){
+            effectRows = audienceListPartyMapDao.batchInsert(paramInsertLists);
+        }
 
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
