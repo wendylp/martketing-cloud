@@ -95,7 +95,7 @@ public class FileUtil {
         // 当前日期
         // DateTime today = DateTime.now();
         pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName).append("_")
-//                         pathNameBuilder.append("/Users/nianjun/Work/logs/").append(fileName).append("_")
+                        // pathNameBuilder.append("/Users/nianjun/Work/logs/").append(fileName).append("_")
                         // .append(today.toString(ApiConstant.DATE_FORMAT_yyyy_MM_dd)).append(FILE_SUFFIX);
                         .append(RandomStringUtils.randomAlphanumeric(6).toUpperCase()).append(FILE_SUFFIX);
         File file = new File(pathNameBuilder.toString());
@@ -107,11 +107,10 @@ public class FileUtil {
         int times = 0;
         String downloadFileName = null;
         while (times < MAX_RETRY_GENERATE_TIMES) {
-            downloadFileName = new StringBuilder().append(RandomStringUtils.randomAlphanumeric(10))
-                    .append("_").append(System.currentTimeMillis())
-                    .append(FILE_SUFFIX).toString();
-            String fullPathName = new StringBuilder().append(ApiConstant.DOWNLOAD_BASE_DIR)
-                                          .append(downloadFileName).toString();
+            downloadFileName = new StringBuilder().append(RandomStringUtils.randomAlphanumeric(10)).append("_")
+                            .append(System.currentTimeMillis()).append(FILE_SUFFIX).toString();
+            String fullPathName = new StringBuilder().append(ApiConstant.DOWNLOAD_BASE_DIR).append(downloadFileName)
+                            .toString();
             Path file = Paths.get(fullPathName);
             if (Files.exists(file)) {
                 continue;
@@ -129,11 +128,9 @@ public class FileUtil {
 
     public static Path generateFileforDownload(String header, List<String> dataList, String fileName) {
         StringBuilder pathNameBuilder = new StringBuilder();
-        pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR)
-                .append(fileName).append("_")
-                .append(RandomStringUtils.randomAlphanumeric(6).toUpperCase())
-                .append("_")
-                .append(System.currentTimeMillis()).append(FILE_SUFFIX);
+        pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName).append("_")
+                        .append(RandomStringUtils.randomAlphanumeric(6).toUpperCase()).append("_")
+                        .append(System.currentTimeMillis()).append(FILE_SUFFIX);
         return generateFile(header, dataList, pathNameBuilder.toString().replace("file:", ""));
     }
 
@@ -175,7 +172,7 @@ public class FileUtil {
         return file;
     }
 
-    private static <E> File generateFile(List<Map<String, String>> columnNames, List<E> poList, File file) {
+    public static <E> File generateFile(List<Map<String, String>> columnNames, List<E> poList, File file) {
 
         if (CollectionUtils.isEmpty(columnNames)) {
             throw new IllegalArgumentException("columnNames为空,需要提供cvs文件的字段名");
@@ -193,7 +190,9 @@ public class FileUtil {
         // 没数据的时候生成空文件
         if (CollectionUtils.isEmpty(poList)) {
             try {
-                file.createNewFile();
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
             } catch (IOException e) {
                 logger.info("文件无内容时,创建空文件失败");
             }
@@ -202,7 +201,7 @@ public class FileUtil {
 
         BufferedWriter bufferedWriter = null;
         try {
-            bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "GBK"));
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "GBK"));
             int rowCount = poList.size();
 
             // 按数据量取出每一行的数据
