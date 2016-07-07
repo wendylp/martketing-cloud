@@ -50,23 +50,24 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
             return result;
         }
 
+        Set<String> tagNames = new HashSet<>();
+
         if (tagName.contains(",")) {
-            String[] tagNames = tagName.split(",");
-            if (tagNames.length < 1) {
+            String[] tagNameArray = tagName.split(",");
+            if (tagNameArray.length < 1) {
                 return result;
             }
 
             // 做个简单的去重操作
-            Set<String> uniqTags = new HashSet<>();
-            for (String tag : tagNames) {
-                uniqTags.add(tag);
-            }
-
-            for (String tag : uniqTags) {
-                result = result & updateTag(tag, contactId);
+            for (String tag : tagNameArray) {
+                tagNames.add(tag);
             }
         } else {
-            result = result & updateTag(tagName, contactId);
+            tagNames.add(tagName);
+        }
+
+        for (String tag : tagNames) {
+            result = result & updateTag(tag, contactId);
         }
 
         return result;
@@ -110,7 +111,7 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
         }
         return false;
     }
-
+    
     @Override
     @ReadWrite(type = ReadWriteType.READ)
     public BaseOutput getMainSegmenttagNames(Integer map_id) {
