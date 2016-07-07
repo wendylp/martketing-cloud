@@ -260,4 +260,18 @@
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE uin = #{uin}
 	</delete>
+
+	<select id="selectNotSyncWechatMemberList" resultType="java.util.Map">
+		SELECT id,wx_name,sex,province,city,birthday
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE selected = 0
+		ORDER BY id
+		limit 500
+	</select>
+
+	<update id="updateSyncDataMark" parameterType="java.lang.Long">
+		UPDATE wechat_member
+		SET selected = 1
+		WHERE id = #{id}
+	</update>
 </mapper>

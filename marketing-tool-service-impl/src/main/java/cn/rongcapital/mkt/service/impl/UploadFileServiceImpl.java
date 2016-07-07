@@ -29,11 +29,12 @@ import org.springframework.util.CollectionUtils;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yunfeng on 2016-6-2.
@@ -59,11 +60,12 @@ public class UploadFileServiceImpl implements UploadFileService{
     @Override
     public Object uploadFile(String fileUnique, MultipartFormDataInput fileInput) {
         UploadFileVO uploadFileVO = processEachUploadFile(fileUnique, fileInput, false);
-        UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
-        if(processVO.getTotalRows() == -1){
-            return new BaseOutput(ApiErrorCode.BIZ_ERROR.getCode(),"文件格式非UTF-8编码",ApiConstant.INT_ZERO,null);
+        BaseOutput baseOutput = uploadFileVO.getOutput();
+        if(baseOutput.getCode() != ApiErrorCode.SUCCESS.getCode()){
+            return baseOutput;
         }
 
+        UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
         ImportDataHistory importDataHistory = uploadFileVO.getImportDataHistory();
         importDataHistory.setTotalRows(processVO.getTotalRows());
         importDataHistory.setLegalRows(processVO.getLegalRows());
@@ -80,7 +82,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 
         saveIllegalData(processVO, importDataHistory.getId());
 
-        BaseOutput baseOutput = uploadFileVO.getOutput();
+
         UploadFileAccordTemplateOut out = new UploadFileAccordTemplateOut();
         out.setLegalRows(processVO.getLegalRows());
         out.setDataTopic(processVO.getDataTopic());
@@ -94,6 +96,11 @@ public class UploadFileServiceImpl implements UploadFileService{
     public Object uploadRepairFile(String fileUnique, MultipartFormDataInput fileInput) {
         // parse file, insert original
         UploadFileVO uploadFileVO = processEachUploadFile(fileUnique, fileInput, true);
+        BaseOutput baseOutput = uploadFileVO.getOutput();
+        if(baseOutput.getCode() != ApiErrorCode.SUCCESS.getCode()){
+            return baseOutput;
+        }
+
         UploadFileProcessVO processVO = uploadFileVO.getProcessVO();
         if(processVO.getTotalRows() == -1){
             return new BaseOutput(ApiErrorCode.BIZ_ERROR.getCode(),"文件格式非UTF-8编码",ApiConstant.INT_ZERO,null);
@@ -176,6 +183,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         BaseOutput baseOutput = new BaseOutput();
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+        uploadFileVO.setOutput(baseOutput);
 
         ImportDataHistory importDataHistory = queryFileUnique(fileUnique);
         uploadFileVO.setImportDataHistory(importDataHistory);
@@ -187,6 +195,7 @@ public class UploadFileServiceImpl implements UploadFileService{
             Integer totalRows = importDataHistory.getTotalRows();
             Integer legalRows = importDataHistory.getLegalRows();
             if (totalRows != null && legalRows != null && legalRows.intValue() == totalRows.intValue()) {
+                baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
                 baseOutput.setMsg("没有需要修正的记录。");
                 return uploadFileVO;
             }
@@ -228,13 +237,12 @@ public class UploadFileServiceImpl implements UploadFileService{
                 }
                 InputStream inputStream = inputPart.getBody(InputStream.class,null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
-                processVO = parseUploadFile.parseAndInsertUploadFileByType(fileUnique,fileType, batchId, bytes);
-                if (processVO == null) {
+                if (!isUTF8(bytes)) {
                     baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
-                    baseOutput.setMsg("上传的文件名称不是预定格式");
+                    baseOutput.setMsg("上传的文件不是UTF-8编码");
                     return uploadFileVO;
                 }
-
+                processVO = parseUploadFile.parseAndInsertUploadFileByType(fileUnique,fileType, batchId, bytes);
                 String downloadFileName = FileUtil.generateFileforDownload(bytes);
                 uploadFileVO.setFileName(fileName);
                 uploadFileVO.setDownloadFileName(downloadFileName);
@@ -247,6 +255,39 @@ public class UploadFileServiceImpl implements UploadFileService{
         uploadFileVO.setOutput(baseOutput);
         uploadFileVO.setProcessVO(processVO);
         return uploadFileVO;
+    }
+
+    public boolean isUTF8(final byte[] dataBytes) {
+        int expectedLength = 0;
+        for (int i = 0; i < 9; i++) {
+            if (dataBytes.length <= i) {
+                return true;
+            }
+            if ((dataBytes[i] & 0b10000000) == 0b00000000) {
+                expectedLength = 1;
+            } else if ((dataBytes[i] & 0b11100000) == 0b11000000) {
+                expectedLength = 2;
+            } else if ((dataBytes[i] & 0b11110000) == 0b11100000) {
+                expectedLength = 3;
+            } else if ((dataBytes[i] & 0b11111000) == 0b11110000) {
+                expectedLength = 4;
+            } else if ((dataBytes[i] & 0b11111100) == 0b11111000) {
+                expectedLength = 5;
+            } else if ((dataBytes[i] & 0b11111110) == 0b11111100) {
+                expectedLength = 6;
+            } else {
+                return false;
+            }
+            while (--expectedLength > 0) {
+                if (++i >= dataBytes.length) {
+                    return false;
+                }
+                if ((dataBytes[i] & 0b11000000) != 0b10000000) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void saveIllegalData(UploadFileProcessVO processVO, Long importDataHistoryId) {

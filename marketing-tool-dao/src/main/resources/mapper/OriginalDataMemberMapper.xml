@@ -152,7 +152,7 @@
 	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO original_data_member (member_id,member_points,member_level,regist_time,
 			card_amt,expire,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,
-			IDFA,IMEI,UDID,phone_mac,status,create_time,source,file_unique,batch_id)
+			IDFA,IMEI,UDID,phone_mac,status,create_time,file_unique,source,batch_id)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(

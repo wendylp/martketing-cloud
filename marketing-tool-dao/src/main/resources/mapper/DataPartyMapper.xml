@@ -297,4 +297,22 @@
 		        WHERE
 		            tag_id = #{tagId});
 	</select>
+
+	<insert id="batchInsertWechatDatas" parameterType="java.util.List">
+		INSERT INTO data_party (name,gender,birthday,provice,city,create_time,source,md_type,mapping_keyid)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.name},
+			#{item.gender},
+			#{item.birthday},
+			#{item.provice},
+			#{item.city},
+			now(),
+			8,
+			#{item.md_type},
+			#{item.mapping_key_id}
+			)
+		</foreach>
+	</insert>
 </mapper>
