@@ -156,7 +156,7 @@
 		INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,
 			login_device,resolution_ratio,login_url,identify_no,driving_license,
 			email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,status,
-			create_time,source,file_unique,batch_id)
+			create_time,source,file_unique,source,batch_id)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -183,6 +183,7 @@
 			#{item.create_time,jdbcType=DATE},
 			#{item.source},
 			#{item.file_unique},
+			#{item.source},
 			#{item.batch_id}
 			)
 		</foreach>

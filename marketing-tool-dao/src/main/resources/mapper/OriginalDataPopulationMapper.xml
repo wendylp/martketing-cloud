@@ -180,7 +180,7 @@
 		INSERT INTO original_data_population (mobile,name,gender,birthday,provice,city,job,monthly_income,
             monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,iq,
             identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,udid,
-            phone_mac,status,create_time,source,file_unique,batch_id)
+            phone_mac,status,create_time,source,file_unique,source,batch_id)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -215,6 +215,7 @@
 			#{item.create_time,jdbcType=DATE},
 			#{item.source},
 			#{item.file_unique},
+			#{item.source},
 			#{item.batch_id}
 			)
 		</foreach>

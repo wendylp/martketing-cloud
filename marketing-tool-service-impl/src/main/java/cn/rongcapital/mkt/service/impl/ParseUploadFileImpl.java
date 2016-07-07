@@ -120,7 +120,6 @@ public class ParseUploadFileImpl {
                 if (uploadFileColumns.length < 1) {
                     continue;
                 }
-
                 if(isFileHeadFlag){
                     header = line;
                     String firstColumn = uploadFileColumns[0];
@@ -200,6 +199,7 @@ public class ParseUploadFileImpl {
         if(validateResult == ImportConstant.VALIDATE_SUCCESS){
             convertData(insertMap, fileType);
             insertMap.put("file_unique",fileUnique);
+            insertMap.put("source",fileType);
             insertMap.put("batch_id",batchId);
             rowDataList.add(insertMap);
         }
