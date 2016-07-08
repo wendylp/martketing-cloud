@@ -148,11 +148,17 @@ public class TaskManager {
 					Object serviceBean = cotext.getBean(serviceName);
 					if(serviceBean instanceof TaskService) {
 						TaskService taskService = (TaskService)serviceBean;
-						TaskRunLog taskRunLog = addTaskLog(taskSchedulePo.getId());
+						TaskRunLog taskRunLog = null;
+						if(taskSchedulePo.getIntervalMinutes() == null &&
+						   taskSchedulePo.getCampaignHeadId() == null) {
+							taskRunLog = addTaskLog(taskSchedulePo.getId());
+						}
 						taskService.task(taskSchedulePo.getId());
 						taskService.task(taskSchedulePo);
-						taskRunLog.setEndTime(new Date());
-						taskRunLogDao.updateById(taskRunLog);
+						if(null != taskRunLog) {
+							taskRunLog.setEndTime(new Date());
+							taskRunLogDao.updateById(taskRunLog);
+						}
 					}
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
