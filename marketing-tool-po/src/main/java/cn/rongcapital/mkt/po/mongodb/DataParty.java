@@ -42,6 +42,8 @@ public class DataParty implements Serializable {
 	@Field(value = "subscribeTime")
 	private String subscribeTime;
 	
+	private Integer sex;
+	
     private String gender;
 
     private Date birthday;
@@ -252,5 +254,12 @@ public class DataParty implements Serializable {
 		this.subscribeTime = subscribeTime;
 	}
 
+	public Integer getSex() {
+		return sex;
+	}
+
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
 	
 }
