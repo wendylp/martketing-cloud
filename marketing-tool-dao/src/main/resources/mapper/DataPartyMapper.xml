@@ -94,7 +94,7 @@
 
 	<insert id="batchInsert">
         INSERT INTO data_party (mobile,name,gender,birthday,provice,city,job,monthly_income,
-            member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,md_type,mapping_keyid)
+            member_level,member_points,source,monthly_consume,last_login,status,create_time,batch_id,md_type,mapping_keyid)
         VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -111,12 +111,31 @@
               #{item.source},
               #{item.monthlyConsume},
               #{item.lastLogin},
+              #{item.status},
               now(),
               #{item.batchId},
               #{item.mdType},
               #{item.mappingKeyid}
 			)
 		</foreach>
+        ON DUPLICATE KEY UPDATE
+            mobile=VALUES(mobile),
+            mobile=VALUES(mobile),
+            name=VALUES(name),
+            gender=VALUES(gender),
+            birthday=VALUES(birthday),
+            provice=VALUES(provice),
+            city=VALUES(city),
+            job=VALUES(job),
+            monthly_income=VALUES(monthly_income),
+            member_level=VALUES(member_level),
+            member_points=VALUES(member_points),
+            source=VALUES(source),
+            monthly_consume=VALUES(monthly_consume),
+            last_login=VALUES(last_login),
+            status=VALUES(status),
+            batch_id=VALUES(batch_id),
+            mobile=VALUES(mobile)
 	</insert>
 	
 	<!-- 返回插入的编号,在事务开启状态下有效 -->

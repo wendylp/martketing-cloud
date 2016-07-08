@@ -195,4 +195,11 @@
 		#{material_id}
 		)
 	</insert>
+
+	<select id="selectImgtextIdByPcPreviewUrl" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE pc_preview_url = #{pc_preview_url}
+		limit 1
+	</select>
 </mapper>

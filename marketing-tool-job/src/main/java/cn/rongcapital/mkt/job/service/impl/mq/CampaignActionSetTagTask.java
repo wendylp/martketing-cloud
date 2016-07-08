@@ -90,16 +90,20 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 		String queueKey = campaignHeadId+"-"+itemId;
 		List<Segment> segmentListToNext = new ArrayList<Segment>();
 		for(Segment segment:segmentList) {
-			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId(),segment.getMappingKeyid())) {
-				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName(), segment.getMappingKeyid());
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
 				Integer dataId = segment.getDataId();
 				List<String> tagIdList = Arrays.asList(tagIds);
 				for(String idStr:tagIdList) {
 					int tagId = Integer.parseInt(idStr);
 					CustomTagMap customTagMapT = new CustomTagMap();
+					customTagMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 					customTagMapT.setTagId(tagId);
 					customTagMapT.setMapId(dataId);
-					customTagMapDao.insert(customTagMapT);
+					int count = customTagMapDao.selectListCount(customTagMapT);
+					if(count == 0) {
+						customTagMapDao.insert(customTagMapT);
+					}
 				}
 				segmentListToNext.add(segment);
 			}

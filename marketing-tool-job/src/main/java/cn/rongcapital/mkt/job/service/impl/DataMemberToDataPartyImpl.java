@@ -49,9 +49,10 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
             DataParty dataParty=new DataParty();
             dataParty.setMemberLevel(dataObj.getMemberLevel());
             dataParty.setMemberPoints(dataObj.getMemberPoints());
-            dataParty.setMappingKeyid(dataObj.getId().toString());
+            dataParty.setMappingKeyid(dataObj.getMobile());
+            dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
             dataParty.setMdType(Integer.parseInt(MD_TYPE));
-            dataParty.setSource(MD_TYPE);
+            dataParty.setSource(dataObj.getSource());
             dataParty.setBatchId(dataObj.getBatchId());
 
             dataPartyList.add(dataParty);

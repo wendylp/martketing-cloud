@@ -101,8 +101,8 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 		String queueKey = campaignHeadId+"-"+itemId;
 		List<Segment> segmentListToNext = new ArrayList<Segment>();
 		for(Segment segment:segmentList) {
-			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId(),segment.getMappingKeyid())) {
-				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName(), segment.getMappingKeyid());
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
 				segmentListToNext.add(segment);
 			}
 		}

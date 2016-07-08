@@ -23,18 +23,16 @@ import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSendH5Dao;
-import cn.rongcapital.mkt.dao.ImgTextAssetDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignActionSendH5;
 import cn.rongcapital.mkt.po.CampaignSwitch;
-import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 /**
  * 发送H5活动节点,由于大连接口不支持个人号发送H5,修改为个人号发送H5的链接
- * changelog:
+ * change log:
  * 2016-07-01:跟闫俊确认:该节点上个人号发送H5功能暂时去掉
  */
 @Service
@@ -45,8 +43,6 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private CampaignActionSendH5Dao campaignActionSendH5Dao;
-	@Autowired
-	private ImgTextAssetDao imgTextAssetDao;
 	
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -109,21 +105,18 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 		String pubId = campaignActionSendH5.getPubId();
 		Integer materialId = campaignActionSendH5.getMaterialId();
 		for(Segment segment:segmentList) {
-			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId(),segment.getMappingKeyid())) {
-				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName(), segment.getMappingKeyid());
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
 				Integer dataId = segment.getDataId();
 				//从mongo的主数据表中查询该条id对应的主数据详细信息
 				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
 				if(null!=dp && null !=dp.getMdType() &&
-						StringUtils.isNotBlank(dp.getMappingKeyid()) &&
-						dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
-					boolean isFans = isPubWechatFans(segment, pubId, null);
+				   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
+					boolean isFans = isPubWechatFans(dp, pubId, null);
 					if(isFans) {
-						segment.setPubId(campaignActionSendH5.getPubId());
-						String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
-						segment.setH5MobileUrl(h5MobileUrl);
-						segment.setMaterialId(campaignActionSendH5.getMaterialId());
-						fansWeixinIds.add(dp.getMappingKeyid());
+//						String h5MobileUrl = getH5MobileUrl(campaignActionSendH5.getImgTextAssetId());
+//						segment.setH5MobileUrl(h5MobileUrl);
+						fansWeixinIds.add(dp.getFansOpenId());
 						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
 					} else {
 						logger.info("不是公众号粉丝,无法发送,"+JSON.toJSONString(segment));
@@ -147,17 +140,17 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 		}
 	}
 	
-	private String getH5MobileUrl(Integer imgTextAssetId){
-		String h5Url = null;
-		ImgTextAsset imgTextAssetT = new ImgTextAsset();
-		imgTextAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		imgTextAssetT.setId(imgTextAssetId);
-		List<ImgTextAsset> imgTextAssetList = imgTextAssetDao.selectList(imgTextAssetT);
-		if(CollectionUtils.isNotEmpty(imgTextAssetList)) {
-			h5Url = imgTextAssetList.get(0).getMobilePreviewUrl();
-		}
-		return h5Url;
-	}
+//	private String getH5MobileUrl(Integer imgTextAssetId){
+//		String h5Url = null;
+//		ImgTextAsset imgTextAssetT = new ImgTextAsset();
+//		imgTextAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+//		imgTextAssetT.setId(imgTextAssetId);
+//		List<ImgTextAsset> imgTextAssetList = imgTextAssetDao.selectList(imgTextAssetT);
+//		if(CollectionUtils.isNotEmpty(imgTextAssetList)) {
+//			h5Url = imgTextAssetList.get(0).getMobilePreviewUrl();
+//		}
+//		return h5Url;
+//	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
 		super.cancelCampaignInnerTask(taskSchedule);

@@ -50,7 +50,7 @@
 //			List<Segment> segmentListToNextYes = new ArrayList<Segment>();//要传递给下面节点的数据:发送成功的
 //			List<Segment> segmentListToNextNo = new ArrayList<Segment>();//要传递给下面节点的数据:发送失败的
 //			for(Segment segment:segmentList) {
-//				String pubId= segment.getPubId();
+//				String pubId= ;
 //				Integer taskId = segment.getTaskId();
 //				if(StringUtils.isNotBlank(pubId) && null != taskId) {//有pubId和taskId的人,校验是否发送
 //					boolean isSent = checkWechatSentByH5Interface(pubId, taskId);

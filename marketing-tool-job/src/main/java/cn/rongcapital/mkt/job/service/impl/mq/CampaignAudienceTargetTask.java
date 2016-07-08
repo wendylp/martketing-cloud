@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +49,13 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			if(CollectionUtils.isNotEmpty(segmentList)) {
 				List<Segment> segmentListUnique =  new ArrayList<Segment>();//去重后的segment list
 				for(Segment segment:segmentList) {
-					boolean audienceExist = checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId(),segment.getMappingKeyid());
+					boolean audienceExist = checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId());
 					if(!audienceExist) {//只存node_audience表中不存在的数据
 						//把segment保存到mongo中的node_audience表
-						insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName(), segment.getMappingKeyid());
+						insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
 						DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())), DataParty.class);
-						if(null != dp && StringUtils.isNotBlank(dp.getMappingKeyid())) {
-							segment.setFansFriendsOpenId(dp.getMappingKeyid());//设置微信粉丝/好友的openid
+						if(null != dp && dp.getMdType() != null && dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
+							segment.setFansFriendsOpenId(dp.getFansOpenId());//设置微信粉丝/好友的openid
 						}
 						segmentListUnique.add(segment);
 					}
