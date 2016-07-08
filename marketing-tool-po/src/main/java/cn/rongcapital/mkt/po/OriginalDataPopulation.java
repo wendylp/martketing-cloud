@@ -1,9 +1,9 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.math.BigDecimal;
 import java.util.Date;
+
+import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class OriginalDataPopulation extends BaseQuery {
     private Integer id;
@@ -12,7 +12,7 @@ public class OriginalDataPopulation extends BaseQuery {
 
     private String name;
 
-    private String gender;
+    private Integer gender;
 
     private Date birthday;
 
@@ -98,12 +98,12 @@ public class OriginalDataPopulation extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender == null ? null : gender.trim();
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 
     public Date getBirthday() {
