@@ -20,6 +20,6 @@ public interface DataGetFilterRecentTaskService {
      * @return
      */
     
-    public List<TaskRunLog> getFilterRecntTask(String method, String userToken, String ver , String condition);
+    public List<TaskRunLog> getFilterRecentTask(String method, String userToken, String ver , String condition);
 
 }

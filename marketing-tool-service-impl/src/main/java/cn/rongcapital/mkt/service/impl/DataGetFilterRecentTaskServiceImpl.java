@@ -19,7 +19,7 @@ public class DataGetFilterRecentTaskServiceImpl implements DataGetFilterRecentTa
     private TaskRunLogDao taskRunLogDao;
 
     @Override
-    public List<TaskRunLog> getFilterRecntTask(String method, String userToken, String ver,
+    public List<TaskRunLog> getFilterRecentTask(String method, String userToken, String ver,
                     String condition) {
         
         List<TaskRunLog> taskRunLogList = new ArrayList<>();
