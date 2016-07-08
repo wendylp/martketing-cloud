@@ -144,8 +144,6 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
             map.put("tag_name", customTagList.get(0).getName());
 
             result.getData().add(map);
-
-
         }
 
         result.setTotal(customTagMapList.size());
