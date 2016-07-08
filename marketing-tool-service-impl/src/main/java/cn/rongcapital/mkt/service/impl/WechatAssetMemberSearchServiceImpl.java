@@ -4,6 +4,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.GenderUtils;
+import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
@@ -24,6 +25,9 @@ public class WechatAssetMemberSearchServiceImpl implements WechatAssetMemberSear
 
     @Autowired
     private WechatMemberDao wechatMemberDao;
+
+    @Autowired
+    private DataPartyDao dataPartyDao;
 
     @Override
     public BaseOutput searchWechatAssetMember(String groupIds,String searchField) {
@@ -46,6 +50,8 @@ public class WechatAssetMemberSearchServiceImpl implements WechatAssetMemberSear
         List<Map<String,Object>> searchResult = wechatMemberDao.selectSearchInfo(paramMap);
         if(searchResult != null && searchResult.size() > 0){
             for(Map<String,Object> map : searchResult){
+                Long id = (Long) map.get("id");
+                map.put("id",transformToDataPartyId(id));
                 if(map.get("sex") != null){
                     map.put("gender", GenderUtils.intToChar((Integer)map.get("sex")));
                     map.remove("sex");
@@ -76,6 +82,11 @@ public class WechatAssetMemberSearchServiceImpl implements WechatAssetMemberSear
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
         baseOutput.setTotal(baseOutput.getData().size());
         return baseOutput;
+    }
+
+    private Object transformToDataPartyId(Long id) {
+        Integer dataParyId = dataPartyDao.selectIdByMappingId(id);
+        return dataParyId;
     }
 
     private void getIdList(String groupIds, ArrayList<Long> idList) {

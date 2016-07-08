@@ -101,7 +101,7 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @author nianjun
 	 * @return map
 	 */
-	List<Long> selectDataPartyIdsByMappinKeyIds(List<String> wxCodes);
+	List<Long> selectDataPartyIdsByMappinKeyIds(List<Long> mappingIdList);
 	
 	/**
      * @功能简述 : 根据自定义标签获取覆盖人群
@@ -131,4 +131,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @return
 	 */
 	Integer batchInsertWechatDatas(List<Map<String, Object>> notSyncWechatMemberList);
+
+	/**
+	 * 根据mappingId选择dataPartyId
+	 * @param idList
+	 * @return
+	 */
+	Integer selectIdByMappingId(@Param("mapping_keyid") Long id);
 }

@@ -61,11 +61,11 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
         //Todo:2.根据groupId选出import_groupId。
         List<Long> importGroudIds = wechatAssetGroupDao.selectImportGroupIdsByIds(saveWechatAssetListIn.getGroupIds());
 
-        //Todo:3.根据import_groupId，选出member的ucode
-        List<String> wxCodes = wechatMemberDao.selectWxCodeByGroupId(importGroudIds);
+        //Todo:3.根据import_groupId，选出member的Id
+        List<Long> idLists = wechatMemberDao.selectIdListByGroupId(importGroudIds);
 
         //Todo:4.根据ucode选择出data_party_id
-        List<Long> dataPartyIds = dataPartyDao.selectDataPartyIdsByMappinKeyIds(wxCodes);
+        List<Long> dataPartyIds = dataPartyDao.selectDataPartyIdsByMappinKeyIds(idLists);
 
         //Todo:5.将dataparty_id和audience_id存入audience_data_mapping表中
         List<Map<String,Object>> paramInsertLists = new ArrayList<Map<String,Object>>();
@@ -76,7 +76,10 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
             paramMap.put("create_time",new Date(System.currentTimeMillis()));
             paramInsertLists.add(paramMap);
         }
-        int effectRows = audienceListPartyMapDao.batchInsert(paramInsertLists);
+        int effectRows = 0;
+        if(paramInsertLists != null && paramInsertLists.size() > 0){
+            effectRows = audienceListPartyMapDao.batchInsert(paramInsertLists);
+        }
 
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());

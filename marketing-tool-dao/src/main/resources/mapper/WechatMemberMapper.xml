@@ -198,8 +198,8 @@
 		</foreach>
 	</insert>
 
-	<select id="selectWxCodeByGroupId" parameterType="java.util.List" resultType="java.lang.String">
-		SELECT wx_code
+	<select id="selectIdListByGroupId" parameterType="java.util.List" resultType="java.lang.String">
+		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE wx_group_id in
 		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
@@ -239,7 +239,7 @@
 	</select>
 
 	<select id="selectSearchInfo" parameterType="java.util.Map" resultType="java.util.Map">
-		SELECT nickname as name,sex,head_image_url,dp.id,wm.birthday
+		SELECT wm.id,wx_name as name,sex,head_image_url,dp.id,wm.birthday
 		FROM wechat_member wm
 		LEFT JOIN data_party dp
 		ON wm.wx_code = dp.mapping_keyid
@@ -269,9 +269,18 @@
 		limit 500
 	</select>
 
-	<update id="updateSyncDataMark" parameterType="java.lang.Long">
+	<update id="updateSyncDataMark" parameterType="java.util.List">
 		UPDATE wechat_member
 		SET selected = 1
-		WHERE id = #{id}
+		WHERE id in
+		<foreach collection="list" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
 	</update>
+
+	<select id="selectedNotSyncCount" resultType="java.lang.Integer">
+		SELECT count(id)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE selected = 0
+	</select>
 </mapper>

@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatMember;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @param paramMap
 	 * @return list
 	 */
-	List<String> selectWxCodeByGroupId(List<Long> importGroudIds);
+	List<Long> selectIdListByGroupId(List<Long> importGroudIds);
 
 	/**
 	 * 选取微信人群的详细信息
@@ -120,5 +121,11 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @param paramMap
 	 * @return list
 	 */
-	void updateSyncDataMark(Long id);
+	void updateSyncDataMark(List<Long> list);
+
+	/**
+	 * 选取未同步的微信粉丝
+	 * @return Integer
+	 */
+	Integer selectedNotSyncCount();
 }
