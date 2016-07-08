@@ -26,8 +26,8 @@ public class Segment implements Serializable{
 	@Field(value = "name")
 	private String name;
 	
-//	@Field(value = "mapping_keyid")
-//	private String mappingKeyid;
+	@Field(value = "mapping_keyid")
+	private String mappingKeyid;
 	
 	//调用大连发送公众号图文接口中，发送方的公众号pubId
 //	private transient String pubId;
@@ -97,12 +97,12 @@ public class Segment implements Serializable{
 		this.name = name;
 	}
 
-//	public String getMappingKeyid() {
-//		return mappingKeyid;
-//	}
-//
-//	public void setMappingKeyid(String mappingKeyid) {
-//		this.mappingKeyid = mappingKeyid;
-//	}
+	public String getMappingKeyid() {
+		return mappingKeyid;
+	}
+
+	public void setMappingKeyid(String mappingKeyid) {
+		this.mappingKeyid = mappingKeyid;
+	}
 	
 }

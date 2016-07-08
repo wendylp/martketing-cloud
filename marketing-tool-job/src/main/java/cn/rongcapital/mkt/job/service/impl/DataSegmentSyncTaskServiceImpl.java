@@ -89,6 +89,7 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 									segment.setSegmentationHeadId(segmentationBody.getHeadId());
 									segment.setName(dataParty.getName());
 									segment.setMdType(dataParty.getMdType());
+									segment.setMappingKeyid(dataParty.getMappingKeyid());
 									mongoTemplate.insert(segment);
 								}
 							}
