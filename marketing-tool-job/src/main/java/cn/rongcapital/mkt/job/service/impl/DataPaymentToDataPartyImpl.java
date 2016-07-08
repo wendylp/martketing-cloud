@@ -47,6 +47,7 @@ public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Int
         List<Integer> idList = new ArrayList<>(dataPaymentList.size());
         for(DataPayment dataObj : dataPaymentList){
             DataParty dataParty=new DataParty();
+            dataParty.setMobile(dataObj.getMobile());
             dataParty.setMappingKeyid(dataObj.getMobile());
             dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
             dataParty.setMdType(Integer.parseInt(MD_TYPE));
