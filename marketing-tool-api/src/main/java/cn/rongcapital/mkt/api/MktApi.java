@@ -922,7 +922,7 @@ public class MktApi {
                     @NotEmpty @QueryParam("ver") String ver,
                     @NotEmpty @QueryParam("condition") String condition) {
 
-        List<TaskRunLog> taskRunLogList = dataGetFilterRecentTaskService.getFilterRecntTask(method,
+        List<TaskRunLog> taskRunLogList = dataGetFilterRecentTaskService.getFilterRecentTask(method,
                         userToken, ver, condition);
         DataGetFilterRecentTaskOut result =
                         new DataGetFilterRecentTaskOut(ApiErrorCode.SUCCESS.getCode(),
@@ -932,6 +932,7 @@ public class MktApi {
                 Map<String, Object> map = new HashMap<>();
                 map.put("task_id", taskRunLog.getTaskId());
                 map.put("filename", taskRunLog.getTaskName());
+                map.put("status", taskRunLog.getEndTime() == null ? "已完成" : "进行中");
                 result.getData().add(map);
             }
         }
