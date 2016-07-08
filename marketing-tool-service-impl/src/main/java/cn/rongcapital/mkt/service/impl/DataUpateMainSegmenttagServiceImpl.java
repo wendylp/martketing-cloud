@@ -91,9 +91,13 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
             customTagDao.insert(paramCustomTag);
         } else {
             // 标签已经存在, 更新受覆盖人群数量
-            List<CustomTagMap> tagMaps = customTagMapDao.selectCustomTagMapByTagName(tagName);
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("tagName", tagName);
+            paramMap.put("mapId", contactId);
+            List<CustomTagMap> tagMaps = customTagMapDao.selectCustomTagMapByTagNameandMapId(paramMap);
             if (CollectionUtils.isEmpty(tagMaps)) {
                 customTagDao.increaseCoverAudienceCount(paramCustomTag);
+                paramCustomTag = customTags.get(0);
             } else {
                 return true;
             }

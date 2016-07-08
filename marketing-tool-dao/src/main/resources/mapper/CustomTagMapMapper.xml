@@ -135,4 +135,13 @@
 		(select id from custom_tag where name=#{tagName,jdbcType=VARCHAR})	
 	</select>
 	
+	<select id="selectCustomTagMapByTagNameandMapId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.CustomTagWithName">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE tag_id IN]]>
+		(select id from custom_tag where name=#{tagName})
+		and map_id=#{mapId}
+	</select>
+	
 </mapper>
