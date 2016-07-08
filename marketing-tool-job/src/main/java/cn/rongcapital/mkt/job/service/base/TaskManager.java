@@ -32,8 +32,8 @@ public class TaskManager {
 
     @Autowired
     private ApplicationContext cotext;
-    @Autowired
-    private ConcurrentTaskScheduler taskSchedule;
+//    @Autowired
+//    private ConcurrentTaskScheduler taskSchedule;
     @Autowired
     private TaskScheduleDao taskScheduleDao;
     @Autowired
@@ -69,11 +69,12 @@ public class TaskManager {
             return;
         }
         taskInited = true;
+        ConcurrentTaskScheduler taskSchedule = new ConcurrentTaskScheduler();
         taskSchedule.scheduleAtFixedRate(scanTask, ApiConstant.TASK_SCAN_INTERVAL_MILLS);
         taskSchedule.scheduleAtFixedRate(prepareTasks, ApiConstant.TASK_DO_INTERVAL_MILLS);
     }
 
-    private void scanTask() {
+    private synchronized void scanTask() {
         logger.debug("scanTask");
         TaskSchedule t = new TaskSchedule();
         t.setPageSize(Integer.MAX_VALUE);
@@ -97,7 +98,7 @@ public class TaskManager {
         });
     }
 
-    private void prepareTasks() {
+    private synchronized void prepareTasks() {
         logger.debug("prepareTasks");
         TaskManager.taskPropMap.forEach((k, v) -> {
             // logger.info(JSON.toJSONString(v));
@@ -141,7 +142,7 @@ public class TaskManager {
         return taskRunLogT;
     }
 
-    private void startTask(TaskSchedule taskSchedulePo) {
+    private synchronized void startTask(TaskSchedule taskSchedulePo) {
         logger.info("startTask:" + JSON.toJSONString(taskSchedulePo));
         Runnable task = new Runnable() {
             public void run() {
@@ -168,6 +169,7 @@ public class TaskManager {
             }
         };
         ScheduledFuture<?> scheduledFuture = null;
+        ConcurrentTaskScheduler taskSchedule = new ConcurrentTaskScheduler();
         String cronStr = taskSchedulePo.getSchedule();
         if (StringUtils.isNotBlank(cronStr)) {
             Trigger triger = new CronTrigger(cronStr);
@@ -178,6 +180,7 @@ public class TaskManager {
             Float interMinutes = taskSchedulePo.getIntervalMinutes();
             if (null != interMinutes && interMinutes > 0) {
                 long period = (long) (interMinutes * 60 * 1000);
+//                System.out.println(JSON.toJSONString(taskSchedulePo));
                 scheduledFuture = taskSchedule.scheduleAtFixedRate(task, startTime, period);
             } else {
                 scheduledFuture = taskSchedule.schedule(task, startTime);
