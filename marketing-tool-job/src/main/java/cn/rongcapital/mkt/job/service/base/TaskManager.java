@@ -152,9 +152,9 @@ public class TaskManager {
                     if (serviceBean instanceof TaskService) {
                         TaskService taskService = (TaskService) serviceBean;
                         TaskRunLog taskRunLog = null;
-                        if (taskSchedulePo.getIntervalMinutes() == null && taskSchedulePo.getCampaignHeadId() == null) {
+//                        if (taskSchedulePo.getIntervalMinutes() == null && taskSchedulePo.getCampaignHeadId() == null) {
                             taskRunLog = addTaskLog(taskSchedulePo);
-                        }
+//                        }
                         taskService.task(taskSchedulePo.getId());
                         taskService.task(taskSchedulePo);
                         if (null != taskRunLog) {
