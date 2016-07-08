@@ -9,17 +9,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.DataPartyTagRuleMapDao;
 import cn.rongcapital.mkt.dao.TagDao;
 import cn.rongcapital.mkt.dao.TagGroupMapDao;
+import cn.rongcapital.mkt.job.service.base.SpringDataPageable;
 import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.mongodb.DataPartyRepository;
 import cn.rongcapital.mkt.po.DataPartyTagRuleMap;
 import cn.rongcapital.mkt.po.TagGroupMap;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
@@ -36,17 +41,22 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService{
 	private TagDao tagDao;
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	private DataPartyRepository dataPartyRepository;
+	private static final int pageSize = 1;
 	@Override
 	public void task(Integer taskId) {
-		List<DataParty> dataPartyList = getDataPartyList();
-		List<DataPartyTagRuleMap> dataPartyTagRuleMapList = getDataPartyTagRuleMap();
-		if(CollectionUtils.isNotEmpty(dataPartyTagRuleMapList) &&
-		   CollectionUtils.isNotEmpty(dataPartyList)) {
-			for(DataParty dp:dataPartyList) {
-				try {
-					setTagToMongoDataParty(dp,dataPartyTagRuleMapList);
-				} catch (Exception e) {
-					logger.error(e.getMessage(),e);
+		for(int index=0;index<Integer.MAX_VALUE;index++) {
+			List<DataParty> dataPartyList = getDataPartyList(index,pageSize);
+			List<DataPartyTagRuleMap> dataPartyTagRuleMapList = getDataPartyTagRuleMap();
+			if(CollectionUtils.isNotEmpty(dataPartyTagRuleMapList) &&
+			   CollectionUtils.isNotEmpty(dataPartyList)) {
+				for(DataParty dp:dataPartyList) {
+					try {
+						setTagToMongoDataParty(dp,dataPartyTagRuleMapList);
+					} catch (Exception e) {
+						logger.error(e.getMessage(),e);
+					}
 				}
 			}
 		}
@@ -55,6 +65,7 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService{
 	private List<DataPartyTagRuleMap> getDataPartyTagRuleMap() {
 		DataPartyTagRuleMap dataPartyTagRuleMapT = new DataPartyTagRuleMap();
 		dataPartyTagRuleMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		dataPartyTagRuleMapT.setPageSize(Integer.MAX_VALUE);
 		List<DataPartyTagRuleMap> dataPartyTagRuleMapList = dataPartyTagRuleMapDao.selectList(dataPartyTagRuleMapT);
 		return dataPartyTagRuleMapList;
 	}
@@ -134,13 +145,21 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService{
 		if(CollectionUtils.isNotEmpty(tagList)) {
 			Update update = new Update().set("tagList", tagList);
 			Criteria criteria = Criteria.where("mid").is(mid);
-			mongoTemplate.findAndModify(new Query(criteria), update,DataParty.class);
+			DataParty dpp = mongoTemplate.findAndModify(new Query(criteria), update,DataParty.class);
 //			System.out.println(JSON.toJSONString(dpp));
 		}
 	}
 	
-	private List<DataParty> getDataPartyList () {
-		List<DataParty> dataPartyList = mongoTemplate.findAll(DataParty.class);
+	private List<DataParty> getDataPartyList(int index,int pageSize) {
+		SpringDataPageable pageable = new SpringDataPageable();
+        pageable.setPagenumber(index);  
+        pageable.setPagesize(pageSize);
+        Page<DataParty> dataPartyPageList = dataPartyRepository.findAll(pageable);
+        List<DataParty> dataPartyList = new ArrayList<DataParty>();
+        for(DataParty dp:dataPartyPageList) {
+        	dataPartyList.add(dp);
+        }
+//        List<DataParty> dataPartyList = mongoTemplate.find(new Query().with(pageable), DataParty.class);  
 		return dataPartyList;
 	}
 }
