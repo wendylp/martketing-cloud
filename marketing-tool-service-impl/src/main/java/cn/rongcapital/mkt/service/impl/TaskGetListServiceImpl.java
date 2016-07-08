@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.enums.TaskStatusEnum;
 import cn.rongcapital.mkt.dao.TaskRunLogDao;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.TaskGetListService;
@@ -39,7 +38,7 @@ public class TaskGetListServiceImpl implements TaskGetListService {
                 Map<String, Object> map = new HashMap<>();
                 map.put("task_name", taskRunLog.getTaskName());
                 map.put("createtime", simpleDateFormat.format(taskRunLog.getCreateTime()));
-                map.put("task_status", TaskStatusEnum.getDescriptionByStatus(taskRunLog.getStatus()));
+                map.put("status", taskRunLog.getEndTime() == null ? "已完成" : "进行中");
                 resultList.add(map);
             }
 
