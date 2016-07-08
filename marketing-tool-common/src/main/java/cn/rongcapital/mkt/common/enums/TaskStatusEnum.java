@@ -4,7 +4,10 @@ public enum TaskStatusEnum {
 
     PROCESSING((byte) 0, "进行中"), 
     FINISHED((byte) 1, "完成"), 
-    FAILED((byte) 0, "失败"),
+    FAILED((byte) 2, "失败"),
+    DELETED((byte) 3, "已删除"),
+    PHYSICAL_DELETED((byte) 4, "物理删除"),
+    IN_MEMORY_DELETED((byte) 5, "内存删除"),
 
     ;
 

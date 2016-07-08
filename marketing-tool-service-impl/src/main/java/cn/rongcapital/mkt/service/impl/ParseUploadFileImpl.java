@@ -104,7 +104,7 @@ public class ParseUploadFileImpl {
 
         Map<String, String> nameCodeMappingMap = getNameCodeRelationByFileType(fileType);
         Map<String, Integer> codeIndexMap = new HashMap<>();
-        Map<String, String> dataCheck = new HashMap<>();
+        Map<String, Integer> dataCheck = new HashMap<>();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8));
         int totalRows = 0;
         int emailRows = 0;
@@ -125,26 +125,36 @@ public class ParseUploadFileImpl {
                     isFileHeadFlag = false;
                     header = line;
                 }else{
-                    String existsData = dataCheck.get(line);
-                    if (existsData == null) {
-                        dataCheck.put(line, "");
+                    Integer existsDataIndex = dataCheck.get(line);
+                    if (existsDataIndex == null) {
+                        int validateResult = parseRowDataList(codeIndexMap, legalDataList, uploadFileColumns, batchId, fileUnique,fileType);
+                        if (ImportConstant.VALIDATE_SUCCESS != validateResult) {
+                            illegaDataList.add(line);
+                            switch (validateResult) {
+                                case ImportConstant.VALIDATE_EMAIL_FAILED:
+                                    emailRows++;
+                                    break;
+                                case ImportConstant.VALIDATE_MOBILE_FAILED :
+                                    mobileRows++;
+                                    break;
+                            }
+                        } else {
+                            dataCheck.put(line, Integer.valueOf(legalDataList.size() - 1));
+                        }
                     } else {
+                        illegaDataList.add(line);
+                        illegaDataList.add(line);
+                        legalDataList.set(existsDataIndex.intValue(), null);
                         duplicateRows++;
                     }
-                    int validateResult = parseRowDataList(codeIndexMap, legalDataList, uploadFileColumns, batchId, fileUnique,fileType);
-                    if (ImportConstant.VALIDATE_SUCCESS != validateResult) {
-                        illegaDataList.add(line);
-                    }
-                    switch (validateResult) {
-                        case ImportConstant.VALIDATE_EMAIL_FAILED:
-                            emailRows++;
-                            break;
-                        case ImportConstant.VALIDATE_MOBILE_FAILED :
-                            mobileRows++;
-                            break;
-                    }
-
                     totalRows++;
+                }
+            }
+            Iterator<Map<String, Object>> iterator = legalDataList.iterator();
+            while (iterator.hasNext()) {
+                Map<String, Object> dataMap = iterator.next();
+                if (dataMap == null) {
+                    iterator.remove();
                 }
             }
         }catch (Exception e){

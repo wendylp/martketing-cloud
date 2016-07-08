@@ -1,5 +1,28 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.io.IOUtils;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.IllegalDataHeadTypeEnum;
@@ -18,23 +41,6 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.IllegalDataUploadModifyLogOut;
 import cn.rongcapital.mkt.vo.out.IllegalDataUploadOut;
 import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
-import org.apache.commons.io.IOUtils;
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Yunfeng on 2016-6-2.
@@ -121,6 +127,26 @@ public class UploadFileServiceImpl implements UploadFileService{
             } else {
                 importDataHistory.setLegalRows(repairRows);
             }
+
+            // update importDataHistory Illegal data start
+            int emailRows = processVO.getEmailRows().intValue();//非法邮箱的记录数
+            if (importDataHistory.getEmailRows() != null && importDataHistory.getEmailRows()>0) {
+                importDataHistory.setEmailRows(emailRows);
+            }
+
+            int mobileRows = processVO.getMobileRows().intValue();//非法手机号的记录数
+
+            if (importDataHistory.getMobileRows() != null && importDataHistory.getMobileRows() > 0) {
+                importDataHistory.setMobileRows(mobileRows);
+            }
+
+            int duplicateRows = processVO.getDuplicateRows().intValue();//重复数据的记录数
+
+            if (importDataHistory.getDuplicateRows() != null && importDataHistory.getDuplicateRows() > 0) {
+                importDataHistory.setDuplicateRows(duplicateRows);
+            }
+            // update importDataHistory Illegal data end
+            
             importDataHistory.setNoRecognizeProperty(processVO.getUnrecognizeFields());
             importDataHistory.setFileType(Integer.valueOf(processVO.getFileType()));
             importDataHistoryDao.updateById(importDataHistory);
@@ -243,6 +269,25 @@ public class UploadFileServiceImpl implements UploadFileService{
                     baseOutput.setMsg("上传的文件不是UTF-8编码");
                     return uploadFileVO;
                 }
+                // 上传非法数据
+                if (isRepair) {
+                    // 比较上传文件的记录条数跟数据库中非法数据的记录数
+                    int repairDataCount = repairDataLength(bytes);
+                    logger.info("上传的文件的记录条数:" + repairDataCount);
+                    IllegalData illegalData = new IllegalData();
+                    illegalData.setStatus(0);
+                    illegalData.setBatchId(importDataHistory.getId());
+                    illegalData.setType(String.valueOf(fileType));
+                    
+                    int count = illegalDataDao.selectListCount(illegalData);
+                    if (repairDataCount > count) {
+                        baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+                        baseOutput.setMsg("上传文件的非法记录多于系统的,请先下载非法数据后再修改csv文件!");
+                        return uploadFileVO;
+                    }
+                    // 比较上传文件的记录条数跟数据库中非法数据的记录数
+                }
+
                 processVO = parseUploadFile.parseAndInsertUploadFileByType(fileUnique,fileType, batchId, bytes);
                 String downloadFileName = FileUtil.generateFileforDownload(bytes);
                 uploadFileVO.setFileName(fileName);
@@ -256,6 +301,28 @@ public class UploadFileServiceImpl implements UploadFileService{
         uploadFileVO.setOutput(baseOutput);
         uploadFileVO.setProcessVO(processVO);
         return uploadFileVO;
+    }
+    
+    public int repairDataLength(final byte[] dataBytes) {
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(dataBytes), StandardCharsets.UTF_8));
+		int len = 0;
+		try{
+		    while((bufferedReader.readLine()) != null) {
+		    	len++;
+		    }
+		    	
+		 } catch (Exception e){
+			 logger.error("文件解析失败!", e);
+		 } finally {
+		    if (bufferedReader != null) {
+		        try {
+		            bufferedReader.close();
+		        } catch (Exception e) {
+		
+		        }
+		    }
+		 }
+		return len;
     }
 
     public boolean isUTF8(final byte[] dataBytes) {

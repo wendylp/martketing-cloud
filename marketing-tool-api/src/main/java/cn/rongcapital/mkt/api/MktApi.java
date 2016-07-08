@@ -932,7 +932,6 @@ public class MktApi {
                 Map<String, Object> map = new HashMap<>();
                 map.put("task_id", taskRunLog.getTaskId());
                 map.put("filename", taskRunLog.getTaskName());
-                map.put("status", taskRunLog.getEndTime() == null ? "已完成" : "进行中");
                 result.getData().add(map);
             }
         }
