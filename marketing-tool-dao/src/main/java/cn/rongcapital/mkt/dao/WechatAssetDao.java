@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatAsset;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -106,5 +107,5 @@ public interface WechatAssetDao extends BaseDao<WechatAsset>{
 	 * @param paramMap
 	 * @return int
 	 */
-	void deleteRecordByUin(String uin);
+	void deleteRecordByUin(@Param("uin") String uin);
 }
