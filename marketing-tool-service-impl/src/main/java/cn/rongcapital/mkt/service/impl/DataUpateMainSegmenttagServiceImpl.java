@@ -67,6 +67,7 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
             tagNames.add(tagName);
         }
 
+        // 这个result意义不大
         result = true;
         for (String tag : tagNames) {
             result = result & updateTag(tag, contactId);

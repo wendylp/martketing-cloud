@@ -69,4 +69,13 @@ public interface CustomTagMapDao extends BaseDao<CustomTagMap>{
 	 * @return List
 	 */
 	List<Integer> selectTagIdList(Integer tag_id);
+	
+	/**
+     * @功能简述 : 根据tagName获取tagMap
+     * @param tagName
+     * @author nianjun
+     * @return List
+     */
+	List<CustomTagMap> selectCustomTagMapByTagName(String tagName);
+	
 }
