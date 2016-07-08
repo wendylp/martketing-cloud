@@ -45,9 +45,10 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
         List<Integer> idList = new ArrayList<>(dataCustomerTagsList.size());
         for(DataCustomerTags dataObj : dataCustomerTagsList){
             DataParty dataParty=new DataParty();
-            dataParty.setMappingKeyid(dataObj.getId().toString());
+            dataParty.setMappingKeyid(dataObj.getMobile());
+            dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
             dataParty.setMdType(Integer.parseInt(MD_TYPE));
-            dataParty.setSource(MD_TYPE);
+            dataParty.setSource(dataObj.getSource());
             dataParty.setBatchId(dataObj.getBatchId());
             dataPartyList.add(dataParty);
             idList.add(dataObj.getId());
