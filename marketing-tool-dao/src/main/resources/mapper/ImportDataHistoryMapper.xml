@@ -11,7 +11,7 @@
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM import_data_history]]></sql>
 
 	<!-- 查询复合来源表-->
-	<sql id="QUERY_FROM_UNION_LOG_TABLE"><![CDATA[FROM import_data_history , import_data_modify_log]]></sql>
+	<sql id="QUERY_FROM_UNION_LOG_TABLE"><![CDATA[FROM import_data_history left join import_data_modify_log on 1=1]]></sql>
 
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
