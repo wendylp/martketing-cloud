@@ -64,7 +64,7 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 			List<Segment> segmentListToNextYes = new ArrayList<Segment>();//要传递给下面节点的数据:已读的
 			List<Segment> segmentListToNextNo = new ArrayList<Segment>();//要传递给下面节点的数据:未读的
 			for(Segment segment:segmentList) {
-				String pubId= segment.getPubId();
+				String pubId= campaignDecisionWechatRead.getPubId();
 				String openId = segment.getFansFriendsOpenId();
 				Integer materialId = campaignDecisionWechatRead.getMaterialId();
 //				String h5MobileUrl = segment.getH5MobileUrl();//mobile端的url

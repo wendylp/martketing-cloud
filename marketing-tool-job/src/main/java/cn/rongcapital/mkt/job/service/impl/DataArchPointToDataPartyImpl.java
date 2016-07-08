@@ -44,9 +44,10 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
         List<Integer> idList = new ArrayList<>(dataArchPointList.size());
         for(DataArchPoint dataObj : dataArchPointList){
             DataParty dataParty=new DataParty();
-            dataParty.setMappingKeyid(dataObj.getId().toString());
+            dataParty.setMappingKeyid(dataObj.getMobile());
+            dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
             dataParty.setMdType(Integer.parseInt(MD_TYPE));
-            dataParty.setSource(MD_TYPE);
+            dataParty.setSource(dataObj.getSource());
             dataParty.setBatchId(dataObj.getBatchId());
 
             dataPartyList.add(dataParty);

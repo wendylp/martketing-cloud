@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,8 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
             tagNames.add(tagName);
         }
 
+        // 这个result意义不大
+        result = true;
         for (String tag : tagNames) {
             result = result & updateTag(tag, contactId);
         }
@@ -88,7 +91,16 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
             customTagDao.insert(paramCustomTag);
         } else {
             // 标签已经存在, 更新受覆盖人群数量
-            customTagDao.increaseCoverAudienceCount(paramCustomTag);
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("tagName", tagName);
+            paramMap.put("mapId", contactId);
+            List<CustomTagMap> tagMaps = customTagMapDao.selectCustomTagMapByTagNameandMapId(paramMap);
+            if (CollectionUtils.isEmpty(tagMaps)) {
+                customTagDao.increaseCoverAudienceCount(paramCustomTag);
+                paramCustomTag = customTags.get(0);
+            } else {
+                return true;
+            }
         }
 
         // step 2 将用户id与tag关联起来
@@ -111,7 +123,7 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
         }
         return false;
     }
-    
+
     @Override
     @ReadWrite(type = ReadWriteType.READ)
     public BaseOutput getMainSegmenttagNames(Integer map_id) {
@@ -136,8 +148,6 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
             map.put("tag_name", customTagList.get(0).getName());
 
             result.getData().add(map);
-
-
         }
 
         result.setTotal(customTagMapList.size());

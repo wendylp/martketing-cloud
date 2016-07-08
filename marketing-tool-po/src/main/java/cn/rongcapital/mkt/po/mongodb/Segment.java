@@ -30,7 +30,7 @@ public class Segment implements Serializable{
 	private String mappingKeyid;
 	
 	//调用大连发送公众号图文接口中，发送方的公众号pubId
-	private transient String pubId;
+//	private transient String pubId;
 	
 	//发送的微信h5手机图文地址
 	private transient String h5MobileUrl;
@@ -39,7 +39,7 @@ public class Segment implements Serializable{
 	private transient String fansFriendsOpenId;
 	
 	//微信图文的id
-	private transient Integer materialId;
+//	private transient Integer materialId;
 	
 	public String getId() {
 		return id;
@@ -65,14 +65,6 @@ public class Segment implements Serializable{
 		this.dataId = dataId;
 	}
 
-	public String getPubId() {
-		return pubId;
-	}
-
-	public void setPubId(String pubId) {
-		this.pubId = pubId;
-	}
-
 	public String getH5MobileUrl() {
 		return h5MobileUrl;
 	}
@@ -87,14 +79,6 @@ public class Segment implements Serializable{
 
 	public void setFansFriendsOpenId(String fansFriendsOpenId) {
 		this.fansFriendsOpenId = fansFriendsOpenId;
-	}
-
-	public Integer getMaterialId() {
-		return materialId;
-	}
-
-	public void setMaterialId(Integer materialId) {
-		this.materialId = materialId;
 	}
 
 	public Integer getMdType() {

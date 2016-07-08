@@ -45,7 +45,8 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
         List<Integer> idList = new ArrayList<>(dataPopulationList.size());
         for(DataPopulation dataObj : dataPopulationList){
             DataParty dataParty=new DataParty();
-            dataParty.setMappingKeyid(dataObj.getId().toString());
+            dataParty.setMappingKeyid(dataObj.getMobile());
+            dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
             dataParty.setMdType(Integer.parseInt(MD_TYPE));
             dataParty.setMobile(dataObj.getMobile());
             dataParty.setName(dataObj.getName());
@@ -56,7 +57,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
             dataParty.setJob(dataObj.getJob());
             dataParty.setMonthlyIncome(dataObj.getMonthlyIncome());
             dataParty.setMonthlyConsume(dataObj.getMonthlyConsume());
-            dataParty.setSource(MD_TYPE);
+            dataParty.setSource(dataObj.getSource());
             dataParty.setBatchId(dataObj.getBatchId());
 
             dataPartyList.add(dataParty);

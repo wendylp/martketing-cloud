@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -29,7 +27,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -959,6 +956,9 @@ public class MktApi {
                         dataGetFilterAudiencesIn.getContactIds(), dataGetFilterAudiencesIn.getCustomizeViews());
     }
 
+    /**
+     * @功能简述 : 根据联系人id更新联系人标签
+     */
     @POST
     @Path("/mkt.data.main.segmenttag.update")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -973,6 +973,9 @@ public class MktApi {
     }
     
     
+    /**
+     * @功能简述 : 根据联系人id获取联系人标签
+     */
     @GET
     @Path("/mkt.data.main.segmenttag.get")
     @Consumes({MediaType.APPLICATION_JSON})

@@ -188,6 +188,7 @@ public class BaseMQService {
 		 return ur;
 	 }
 	
+	/**改为从mongodb中查询
 	protected boolean isPubWechatFans(Segment segment,String pubId,Byte subscribeTimeType) {
 		boolean isFans = false;
 		DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())), 
@@ -208,6 +209,20 @@ public class BaseMQService {
 					String realSubscribeTime = wechatMemberList.get(0).getSubscribeTime();
 					isFans = checkSubscriberTime(subscribeTimeType,realSubscribeTime);
 				}
+			}
+		}
+		return isFans;
+	}
+	**/
+	
+	protected boolean isPubWechatFans(DataParty dp,String pubId,Byte subscribeTimeType) {
+		boolean isFans = false;
+		if(dp!= null && StringUtils.equals(dp.getPubId(), pubId)) {
+			if(null == subscribeTimeType) {//为空表示不限订阅时间
+				isFans = true;
+			} else {
+				String realSubscribeTime = dp.getSubscribeTime();
+				isFans = checkSubscriberTime(subscribeTimeType,realSubscribeTime);
 			}
 		}
 		return isFans;
@@ -427,23 +442,21 @@ public class BaseMQService {
 		}
 	}
 	
-	protected void insertNodeAudience(int campaignHeadId,String itemId,int dataId,String name,String mappingKeyId) {
+	protected void insertNodeAudience(int campaignHeadId,String itemId,int dataId,String name) {
 		NodeAudience nodeAudience = new NodeAudience();
 		nodeAudience.setCampaignHeadId(campaignHeadId);
 		nodeAudience.setItemId(itemId);
 		nodeAudience.setDataId(dataId);
 		nodeAudience.setName(name);
-		nodeAudience.setMappingKeyid(mappingKeyId);
 		nodeAudience.setStatus(0);
 		mongoTemplate.insert(nodeAudience);//插入mongo的node_audience表
 	}
 	
-	protected boolean checkNodeAudienceExist (int campaignId,String itemId,int dataId,String mappingKeyid) {
+	protected boolean checkNodeAudienceExist (int campaignId,String itemId,int dataId) {
 		boolean exist = false;
 		Criteria criteria = Criteria.where("campaignHeadId").is(campaignId)
 									.and("itemId").is(itemId)
-									.and("dataId").is(dataId)
-								    .and("mappingKeyid").is(mappingKeyid);
+									.and("dataId").is(dataId);
 		Query query = new Query(criteria);
 		List<NodeAudience> nodeAudienceExistList = mongoTemplate.find(query, NodeAudience.class);
 		if(CollectionUtils.isNotEmpty(nodeAudienceExistList)) {

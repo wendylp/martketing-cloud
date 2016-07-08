@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class DataPopulation implements Serializable {
+public class DataPopulation extends AbstractBaseMongoVO implements Serializable {
 
     private static final long serialVersionUID = 3193356223895965123L;
 
@@ -77,10 +77,6 @@ public class DataPopulation implements Serializable {
 
     private String batchId;
 
-    private Integer mid;
-    private Integer md_type;
-    private String mapping_keyid;
-    
     public DataPopulation(){}
     
     public String getId() {
@@ -347,27 +343,4 @@ public class DataPopulation implements Serializable {
         this.batchId = batchId;
     }
 
-    public Integer getMid() {
-        return mid;
-    }
-
-    public void setMid(Integer mid) {
-        this.mid = mid;
-    }
-
-    public Integer getMd_type() {
-        return md_type;
-    }
-
-    public void setMd_type(Integer md_type) {
-        this.md_type = md_type;
-    }
-
-    public String getMapping_keyid() {
-        return mapping_keyid;
-    }
-
-    public void setMapping_keyid(String mapping_keyid) {
-        this.mapping_keyid = mapping_keyid;
-    }
 }

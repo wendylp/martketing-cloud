@@ -33,6 +33,15 @@ public class DataParty implements Serializable {
 	@Field(value = "tag_list")
 	private List<Tag> tagList;
 	
+	@Field(value = "wxCode")
+	private String fansOpenId;
+	
+	@Field(value = "pubId")
+	private String pubId;
+	
+	@Field(value = "subscribeTime")
+	private String subscribeTime;
+	
     private String gender;
 
     private Date birthday;
@@ -217,6 +226,30 @@ public class DataParty implements Serializable {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public String getFansOpenId() {
+		return fansOpenId;
+	}
+
+	public void setFansOpenId(String fansOpenId) {
+		this.fansOpenId = fansOpenId;
+	}
+
+	public String getPubId() {
+		return pubId;
+	}
+
+	public void setPubId(String pubId) {
+		this.pubId = pubId;
+	}
+
+	public String getSubscribeTime() {
+		return subscribeTime;
+	}
+
+	public void setSubscribeTime(String subscribeTime) {
+		this.subscribeTime = subscribeTime;
 	}
 
 	

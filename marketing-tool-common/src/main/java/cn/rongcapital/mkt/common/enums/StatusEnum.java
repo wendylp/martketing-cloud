@@ -4,7 +4,8 @@ public enum StatusEnum {
 
     ACTIVE(0, "未删除"), 
     DELETED(1, "已删除"),
-    PROCESSED(2, "已处理"),;
+    PROCESSED(2, "主数据已处理"),
+    MONGO_PROCESSED(3, "芒果已处理");
 
     private StatusEnum(Integer statusCode, String description) {
         this.statusCode = statusCode;
