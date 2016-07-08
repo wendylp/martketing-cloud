@@ -961,6 +961,9 @@ public class MktApi {
                         dataGetFilterAudiencesIn.getContactIds(), dataGetFilterAudiencesIn.getCustomizeViews());
     }
 
+    /**
+     * @功能简述 : 根据联系人id更新联系人标签
+     */
     @POST
     @Path("/mkt.data.main.segmenttag.update")
     @Consumes({MediaType.APPLICATION_JSON})
