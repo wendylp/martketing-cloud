@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.vo.in;
+package cn.rongcapital.mkt.job.vo.in;
 
 import java.util.ArrayList;
 
