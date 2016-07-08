@@ -269,22 +269,24 @@ public class UploadFileServiceImpl implements UploadFileService{
                     baseOutput.setMsg("上传的文件不是UTF-8编码");
                     return uploadFileVO;
                 }
-                // 比较上传文件的记录条数跟数据库中非法数据的记录数
-                int repairDataCount = repairDataLength(bytes);
-                logger.info("上传的文件的记录条数:" + repairDataCount);
-                IllegalData illegalData = new IllegalData();
-                illegalData.setStatus(0);
-                illegalData.setBatchId(importDataHistory.getId());
-                illegalData.setType(String.valueOf(fileType));
-                
-                int count = illegalDataDao.selectListCount(illegalData);
-                if (repairDataCount > count) {
-                    baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
-                    baseOutput.setMsg("上传文件的非法记录多于系统的,请先下载非法数据后再修改csv文件!");
-                    return uploadFileVO;
+                if (!isRepair) {
+                    // 比较上传文件的记录条数跟数据库中非法数据的记录数
+                    int repairDataCount = repairDataLength(bytes);
+                    logger.info("上传的文件的记录条数:" + repairDataCount);
+                    IllegalData illegalData = new IllegalData();
+                    illegalData.setStatus(0);
+                    illegalData.setBatchId(importDataHistory.getId());
+                    illegalData.setType(String.valueOf(fileType));
+                    
+                    int count = illegalDataDao.selectListCount(illegalData);
+                    if (repairDataCount > count) {
+                        baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+                        baseOutput.setMsg("上传文件的非法记录多于系统的,请先下载非法数据后再修改csv文件!");
+                        return uploadFileVO;
+                    }
+                    // 比较上传文件的记录条数跟数据库中非法数据的记录数
                 }
-                // 比较上传文件的记录条数跟数据库中非法数据的记录数
-                
+
                 processVO = parseUploadFile.parseAndInsertUploadFileByType(fileUnique,fileType, batchId, bytes);
                 String downloadFileName = FileUtil.generateFileforDownload(bytes);
                 uploadFileVO.setFileName(fileName);
