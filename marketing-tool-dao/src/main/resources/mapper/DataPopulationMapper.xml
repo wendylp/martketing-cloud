@@ -241,6 +241,7 @@
 
         on duplicate key update
         mobile = values(mobile),
+        gender = values(gender),
         name = values(name),
         birthday = values(birthday),
         provice = values(provice),
