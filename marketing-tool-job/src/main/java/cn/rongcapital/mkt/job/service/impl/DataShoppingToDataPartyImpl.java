@@ -47,9 +47,10 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
         List<Integer> idList = new ArrayList<>(dataShoppingList.size());
         for(DataShopping dataObj : dataShoppingList){
             DataParty dataParty=new DataParty();
-            dataParty.setMappingKeyid(dataObj.getId().toString());
+            dataParty.setMappingKeyid(dataObj.getMobile());
+            dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
             dataParty.setMdType(Integer.parseInt(MD_TYPE));
-            dataParty.setSource(MD_TYPE);
+            dataParty.setSource(dataObj.getSource());
             dataParty.setBatchId(dataObj.getBatchId());
 
             dataPartyList.add(dataParty);
