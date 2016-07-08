@@ -269,6 +269,7 @@ public class UploadFileServiceImpl implements UploadFileService{
                     baseOutput.setMsg("上传的文件不是UTF-8编码");
                     return uploadFileVO;
                 }
+                // 上传非法数据
                 if (isRepair) {
                     // 比较上传文件的记录条数跟数据库中非法数据的记录数
                     int repairDataCount = repairDataLength(bytes);
