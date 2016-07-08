@@ -89,14 +89,17 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 		List<Segment> segmentListToNext = new ArrayList<Segment>();
 		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
-			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId(),segment.getMappingKeyid())) {
-				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName(), segment.getMappingKeyid());
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
 				Integer dataId = segment.getDataId();
 				AudienceListPartyMap audienceListPartyMapT = new AudienceListPartyMap();
 				audienceListPartyMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				audienceListPartyMapT.setPartyId(dataId);
 				audienceListPartyMapT.setAudienceListId(campaignActionSaveAudience.getAudienceId());
-				audienceListPartyMapDao.insert(audienceListPartyMapT);
+				int count = audienceListPartyMapDao.selectListCount(audienceListPartyMapT);
+				if(count == 0) {
+					audienceListPartyMapDao.insert(audienceListPartyMapT);
+				}
 				segmentListToNext.add(segment);
 			}
 		}

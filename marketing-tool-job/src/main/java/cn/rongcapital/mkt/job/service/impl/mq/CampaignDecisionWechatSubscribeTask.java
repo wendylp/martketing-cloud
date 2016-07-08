@@ -10,6 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -20,6 +23,7 @@ import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignDecisionPubFans;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
@@ -28,6 +32,8 @@ public class CampaignDecisionWechatSubscribeTask extends BaseMQService implement
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private CampaignDecisionPubFansDao campaignDecisionPubFansDao;
+	@Autowired
+	private MongoTemplate mongoTemplate;
 	
 	public void task (TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -60,7 +66,9 @@ public class CampaignDecisionWechatSubscribeTask extends BaseMQService implement
 			List<Segment> segmentListToNextYes = new ArrayList<Segment>();//要传递给下面节点的数据:是粉丝
 			List<Segment> segmentListToNextNo = new ArrayList<Segment>();//要传递给下面节点的数据:不是粉丝
 			for(Segment segment:segmentList) {
-				boolean isFans = isPubWechatFans(segment, pubId, subscribeTimeType);
+				//从mongo的主数据表中查询该条id对应的主数据详细信息
+				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())), DataParty.class);
+				boolean isFans = isPubWechatFans(dp, pubId, subscribeTimeType);
 				if(isFans) {
 					segmentListToNextYes.add(segment);
 				}else{
