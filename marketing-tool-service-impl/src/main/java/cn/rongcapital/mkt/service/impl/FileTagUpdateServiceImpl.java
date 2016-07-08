@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Yunfeng on 2016-6-25.
@@ -73,6 +70,7 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
 
             updateOriginalDataStatus(fileUnique, fileType);
             importDataHistory.setStatus(Byte.valueOf((byte)0));
+            importDataHistory.setImportEndTime(new Date(System.currentTimeMillis()));
             importDataHistoryDao.updateById(importDataHistory);
         }else{
             baseOutput.setMsg("数据上传失败");
