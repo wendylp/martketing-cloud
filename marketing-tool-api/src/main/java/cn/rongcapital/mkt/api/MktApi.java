@@ -91,7 +91,6 @@ import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.service.GroupTagsSearchService;
-import cn.rongcapital.mkt.service.ImgtextAssetSyncService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MainActionInfoGetService;
@@ -156,7 +155,6 @@ import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
 import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
-import cn.rongcapital.mkt.vo.in.ImgtextAssetSyncIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
@@ -411,9 +409,6 @@ public class MktApi {
 
 	@Autowired
 	private WechatPublicAuthCallbackService wechatPublicAuthCallbackService;
-
-	@Autowired
-	private ImgtextAssetSyncService imgtextAssetSyncService;
 
 	@Autowired
 	private WechatPersonalAuthService wechatPersonalAuthService;
@@ -1644,18 +1639,6 @@ public class MktApi {
 		}
 	    
 	    return Response.temporaryRedirect(location).build();
-	}
-
-	/**
-	 * @功能简述: 微信公众号授权时大连那边所调用的回调接口
-	 * @param body
-	 * @return BaseOutput
-	 */
-	@POST
-	@Path("/mkt.asset.imgtext.sync")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput imgtextAssetSync(ImgtextAssetSyncIn imgtextAssetSyncIn){
-		return imgtextAssetSyncService.syncImgtextAsset(imgtextAssetSyncIn);
 	}
 
 	/**

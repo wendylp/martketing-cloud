@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ImgTextAsset;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -94,4 +95,10 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * @return list
 	 */
 	void insertHostImg(Map<String, Object> paramMap);
+
+	/**
+	 * 根据material_id判断图文是否被保存
+	 * @return list
+	 */
+	Integer selectImgtextIdByPcPreviewUrl(@Param("pc_preview_url") String pcPreviewUrl);
 }
