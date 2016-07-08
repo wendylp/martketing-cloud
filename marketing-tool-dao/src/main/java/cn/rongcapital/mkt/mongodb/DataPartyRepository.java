@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.mongodb;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import cn.rongcapital.mkt.po.mongodb.DataParty;
@@ -14,4 +16,7 @@ public interface  DataPartyRepository extends MongoRepository<DataParty,Long> {
 	 * @return
 	 */
 	public List<DataParty> findByMid(String mid);
+	
+	Page<DataParty> findAll(Pageable pageable);
+
 }

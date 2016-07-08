@@ -12,8 +12,10 @@ package cn.rongcapital.mkt.vo.in;
 
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class SegmentBodyTagsIn {
 
 	@NotNull
