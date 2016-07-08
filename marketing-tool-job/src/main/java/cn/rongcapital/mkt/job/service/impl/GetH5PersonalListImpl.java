@@ -67,7 +67,7 @@ public class GetH5PersonalListImpl implements TaskService {
                 paramPersonal.put("wx_acct",h5Personal.getUin());
                 paramPersonal.put("name",h5Personal.getNickname().replaceAll("[^\\u0000-\\uFFFF]", ""));
                 paramPersonal.put("type",1);
-                paramPersonal.put("header_image",h5Personal.getHeadImage());
+                paramPersonal.put("header_image",null);
                 paramPersonal.put("sex",h5Personal.getSex());
                 paramPersonal.put("province",h5Personal.getProvince());
                 paramPersonal.put("city",h5Personal.getCity());
