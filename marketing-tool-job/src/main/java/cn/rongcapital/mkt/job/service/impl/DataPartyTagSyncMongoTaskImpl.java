@@ -103,6 +103,28 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService{
 							}
 						}
 					}
+					if(fieldValueObj instanceof Integer) {
+						int columnValue = (int)fieldValueObj;
+						int columnValueFromRuleTable = Integer.parseInt(dataPartyTagRuleMap.getFieldValue());
+						if(columnValue == columnValueFromRuleTable) {
+							tagOfMongoDataParty = new Tag();
+							tagOfMongoDataParty.setTagId(dataPartyTagRuleMap.getTagId());
+							cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
+							tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+							tagOfMysqlT.setId(dataPartyTagRuleMap.getTagId());
+							List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
+							if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
+								tagOfMongoDataParty.setTagName(tagOfMysqlList.get(0).getName());
+							}
+							TagGroupMap tagGroupMapT = new TagGroupMap();
+							tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+							tagGroupMapT.setTagId(dataPartyTagRuleMap.getTagId());
+							List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
+							if(CollectionUtils.isNotEmpty(tagGroupMapList)) {
+								tagOfMongoDataParty.setTagGroupId(tagGroupMapList.get(0).getGroupId());
+							}
+						}
+					}
 					if(null != tagOfMongoDataParty) {
 						tagList.add(tagOfMongoDataParty);
 					}
