@@ -78,6 +78,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         importDataHistory.setFileType(Integer.valueOf(processVO.getFileType()));
         importDataHistory.setSourceFilename(uploadFileVO.getFileName());
         importDataHistory.setDownloadFilename(uploadFileVO.getDownloadFileName());
+        importDataHistory.setSource(ApiConstant.IMPORT_FILE_SOURCE);
         importDataHistoryDao.updateById(importDataHistory);
 
         saveIllegalData(processVO, importDataHistory.getId());

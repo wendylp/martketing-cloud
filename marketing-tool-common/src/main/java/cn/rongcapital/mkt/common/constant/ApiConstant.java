@@ -168,4 +168,5 @@ public class ApiConstant {
 	
 	public static final String AUDIENCE_SOUCE_NAME_CAMPAIGN = "营销活动";
 
+	public static String IMPORT_FILE_SOURCE = "文件接入";
 }
