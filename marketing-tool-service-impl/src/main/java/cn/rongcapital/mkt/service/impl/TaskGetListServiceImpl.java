@@ -38,7 +38,7 @@ public class TaskGetListServiceImpl implements TaskGetListService {
                 Map<String, Object> map = new HashMap<>();
                 map.put("task_name", taskRunLog.getTaskName());
                 map.put("createtime", simpleDateFormat.format(taskRunLog.getCreateTime()));
-                map.put("task_status", taskRunLog.getEndTime() == null ? "已完成" : "进行中");
+                map.put("task_status", taskRunLog.getEndTime() == null ? "进行中" : "已完成");
                 resultList.add(map);
             }
 
