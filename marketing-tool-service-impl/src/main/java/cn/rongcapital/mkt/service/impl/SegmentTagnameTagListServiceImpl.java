@@ -35,7 +35,8 @@ public class SegmentTagnameTagListServiceImpl implements SegmentTagnameTagListSe
 	public BaseOutput getSysRecommendedTagList() {
 		TagRecommend tr = new TagRecommend();
 		tr.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		tr.setPageSize(Integer.MAX_VALUE);
+		int count = tagRecommendDao.selectListCount(tr);
+		tr.setPageSize(count);
 		List<TagRecommend> resList = tagRecommendDao.selectList(tr);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				   ApiErrorCode.SUCCESS.getMsg(),
@@ -50,7 +51,6 @@ public class SegmentTagnameTagListServiceImpl implements SegmentTagnameTagListSe
 			}
 			
 		}
-		
 		return result;
 	}
 }

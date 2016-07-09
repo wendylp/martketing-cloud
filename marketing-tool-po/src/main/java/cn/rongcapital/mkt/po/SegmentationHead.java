@@ -1,11 +1,14 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
 
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
 public class SegmentationHead extends BaseQuery {
-    private Integer id;
+	
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
 
     private String name;
 
@@ -20,6 +23,13 @@ public class SegmentationHead extends BaseQuery {
     private String oper;
 
     private String tagIds;
+    
+    public SegmentationHead() {
+    }
+    
+    public SegmentationHead(Integer startIndex, Integer pageSize) {
+    	super(startIndex, pageSize);
+    }
 
     public Integer getId() {
         return id;

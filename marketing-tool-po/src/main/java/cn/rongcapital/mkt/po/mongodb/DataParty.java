@@ -42,6 +42,12 @@ public class DataParty implements Serializable {
 	@Field(value = "subscribeTime")
 	private String subscribeTime;
 	
+	private String maritalStatus;
+	
+	private String education;
+	
+	private String employment;
+	
 	private Integer sex;
 	
     private String gender;
@@ -260,6 +266,30 @@ public class DataParty implements Serializable {
 
 	public void setSex(Integer sex) {
 		this.sex = sex;
+	}
+
+	public String getMaritalStatus() {
+		return maritalStatus;
+	}
+
+	public void setMaritalStatus(String maritalStatus) {
+		this.maritalStatus = maritalStatus;
+	}
+
+	public String getEducation() {
+		return education;
+	}
+
+	public void setEducation(String education) {
+		this.education = education;
+	}
+
+	public String getEmployment() {
+		return employment;
+	}
+
+	public void setEmployment(String employment) {
+		this.employment = employment;
 	}
 	
 }

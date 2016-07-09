@@ -5,6 +5,16 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
 
 public class TaskSchedule extends BaseQuery {
+	
+	private static final long serialVersionUID = 1L;
+
+	public TaskSchedule() {
+		
+	}
+	public TaskSchedule(Integer startIndex, Integer pageSize) {
+		super(startIndex, pageSize);
+	}
+
     private Integer id;
 
     private String taskName;

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,13 +33,13 @@ public class TaskManager {
 
     @Autowired
     private ApplicationContext cotext;
-//    @Autowired
-//    private ConcurrentTaskScheduler taskSchedule;
     @Autowired
     private TaskScheduleDao taskScheduleDao;
     @Autowired
     private TaskRunLogDao taskRunLogDao;
 
+    private static final int pageSize = 100;
+    
     private static final ConcurrentHashMap<String, ScheduledFuture<?>> taskMap =
                     new ConcurrentHashMap<String, ScheduledFuture<?>>();
 
@@ -69,39 +70,45 @@ public class TaskManager {
             return;
         }
         taskInited = true;
-        ConcurrentTaskScheduler taskSchedule = new ConcurrentTaskScheduler();
-        taskSchedule.scheduleAtFixedRate(scanTask, ApiConstant.TASK_SCAN_INTERVAL_MILLS);
-        taskSchedule.scheduleAtFixedRate(prepareTasks, ApiConstant.TASK_DO_INTERVAL_MILLS);
+        ConcurrentTaskScheduler concurrentTaskScheduler = new ConcurrentTaskScheduler();
+        concurrentTaskScheduler.scheduleAtFixedRate(scanTask, ApiConstant.TASK_SCAN_INTERVAL_MILLS);
+        concurrentTaskScheduler.scheduleAtFixedRate(prepareTasks, ApiConstant.TASK_DO_INTERVAL_MILLS);
     }
 
     private synchronized void scanTask() {
         logger.debug("scanTask");
-        TaskSchedule t = new TaskSchedule();
-        t.setPageSize(Integer.MAX_VALUE);
-        List<TaskSchedule> taskScheduleList = taskScheduleDao.selectList(t);
         ConcurrentHashMap<String, TaskSchedule> taskPropMapTmp = new ConcurrentHashMap<String, TaskSchedule>();
-        for (TaskSchedule ts : taskScheduleList) {
-            if (StringUtils.isNotBlank(ts.getServiceName())) {
-                taskPropMapTmp.put(ts.getId().toString(), ts);
-                TaskManager.taskPropMap.put(ts.getId().toString(), ts);
-            }
+        TaskSchedule t = new TaskSchedule();
+        int totalRecord = taskScheduleDao.selectListCount(t);
+        int totalPage = (totalRecord + pageSize -1) / pageSize;
+        for(int index = 1; index <= totalPage; index++) {
+        	t = new TaskSchedule(index,pageSize);
+        	List<TaskSchedule> taskScheduleList = taskScheduleDao.selectList(t);
+        	if(CollectionUtils.isEmpty(taskScheduleList)) {
+        		break;
+        	}
+        	for (TaskSchedule ts : taskScheduleList) {
+        		if (StringUtils.isNotBlank(ts.getServiceName())) {
+        			taskPropMapTmp.put(ts.getId().toString(), ts);
+        			TaskManager.taskPropMap.put(ts.getId().toString(), ts);
+        		}
+        	}
         }
-        TaskManager.taskPropMap.forEach((k, v) -> {
-            if (!taskPropMapTmp.containsKey(k)) {// 任务已被物理删除
-                v.setTaskStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-                v.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-                ScheduledFuture<?> scheduledFuture = TaskManager.taskMap.get(k);
-                if (null != scheduledFuture && scheduledFuture.isDone()) {
-                    TaskManager.taskMap.remove(k);// 任务从内存中删除
-                }
-            }
-        });
+    	TaskManager.taskPropMap.forEach((k, v) -> {
+    		if (!taskPropMapTmp.containsKey(k)) {// 任务已被物理删除
+    			v.setTaskStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+    			v.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+    			ScheduledFuture<?> scheduledFuture = TaskManager.taskMap.get(k);
+    			if (null != scheduledFuture && scheduledFuture.isDone()) {
+    				TaskManager.taskMap.remove(k);// 任务从内存中删除
+    			}
+    		}
+    	});
     }
 
     private synchronized void prepareTasks() {
         logger.debug("prepareTasks");
         TaskManager.taskPropMap.forEach((k, v) -> {
-            // logger.info(JSON.toJSONString(v));
             ScheduledFuture<?> taskSchedule = TaskManager.taskMap.get(k);
             if (v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_VALID
                             && v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_VALID) {
@@ -143,9 +150,9 @@ public class TaskManager {
     }
 
     private synchronized void startTask(TaskSchedule taskSchedulePo) {
-        logger.info("startTask:" + JSON.toJSONString(taskSchedulePo));
         Runnable task = new Runnable() {
             public void run() {
+            	logger.info("startTask:" + JSON.toJSONString(taskSchedulePo));
                 try {
                     String serviceName = getServiceName(taskSchedulePo.getServiceName());
                     Object serviceBean = cotext.getBean(serviceName);
@@ -169,21 +176,21 @@ public class TaskManager {
             }
         };
         ScheduledFuture<?> scheduledFuture = null;
-        ConcurrentTaskScheduler taskSchedule = new ConcurrentTaskScheduler();
         String cronStr = taskSchedulePo.getSchedule();
         if (StringUtils.isNotBlank(cronStr)) {
+        	ConcurrentTaskScheduler concurrentTaskScheduler = new ConcurrentTaskScheduler();
             Trigger triger = new CronTrigger(cronStr);
-            scheduledFuture = taskSchedule.schedule(task, triger);
+            scheduledFuture = concurrentTaskScheduler.schedule(task, triger);
         } else {
+        	ConcurrentTaskScheduler concurrentTaskScheduler = new ConcurrentTaskScheduler();
             Date startTime = taskSchedulePo.getStartTime() == null ? Calendar.getInstance().getTime()
                             : taskSchedulePo.getStartTime();
             Float interMinutes = taskSchedulePo.getIntervalMinutes();
             if (null != interMinutes && interMinutes > 0) {
                 long period = (long) (interMinutes * 60 * 1000);
-//                System.out.println(JSON.toJSONString(taskSchedulePo));
-                scheduledFuture = taskSchedule.scheduleAtFixedRate(task, startTime, period);
+                scheduledFuture = concurrentTaskScheduler.scheduleAtFixedRate(task, startTime, period);
             } else {
-                scheduledFuture = taskSchedule.schedule(task, startTime);
+                scheduledFuture = concurrentTaskScheduler.schedule(task, startTime);
             }
         }
         if (null != scheduledFuture) {

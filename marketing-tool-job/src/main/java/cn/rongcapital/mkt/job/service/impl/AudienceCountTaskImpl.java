@@ -20,23 +20,27 @@ public class AudienceCountTaskImpl implements TaskService {
 	@Autowired
 	private AudienceListPartyMapDao audienceListPartyMapDao;
 	private static int batchSize = 10;
+	
 	@Override
 	public void task(Integer taskId) {
-		for(int pageIndex=1;pageIndex<Integer.MAX_VALUE;pageIndex++) {
-			AudienceList audienceListT = new AudienceList(pageIndex,batchSize);
+		AudienceList audienceListT = new AudienceList();
+		audienceListT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		int totalRecord = audienceListDao.selectListCount(audienceListT);
+		int totalPage = (totalRecord + batchSize -1) / batchSize;
+		for(int pageIndex = 1; pageIndex <= totalPage; pageIndex++) {
+			audienceListT = new AudienceList(pageIndex,batchSize);
 			audienceListT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 			List<AudienceList> audienceListList = audienceListDao.selectList(audienceListT);
-			if(CollectionUtils.isNotEmpty(audienceListList)) {
-				for(AudienceList audienceList:audienceListList) {
-					AudienceListPartyMap audienceListPartyMapT = new AudienceListPartyMap();
-					audienceListPartyMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-					audienceListPartyMapT.setAudienceListId(audienceList.getId());
-					int audienceCount = audienceListPartyMapDao.selectListCount(audienceListPartyMapT);
-					audienceList.setAudienceRows(audienceCount+"");
-					audienceListDao.updateById(audienceList);
-				}
-			} else {
+			if(CollectionUtils.isEmpty(audienceListList)) {
 				break;
+			}
+			for(AudienceList audienceList:audienceListList) {
+				AudienceListPartyMap audienceListPartyMapT = new AudienceListPartyMap();
+				audienceListPartyMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+				audienceListPartyMapT.setAudienceListId(audienceList.getId());
+				int audienceCount = audienceListPartyMapDao.selectListCount(audienceListPartyMapT);
+				audienceList.setAudienceRows(audienceCount+"");
+				audienceListDao.updateById(audienceList);
 			}
 		}
 	}
