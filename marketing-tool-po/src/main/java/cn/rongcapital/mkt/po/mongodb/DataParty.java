@@ -2,7 +2,6 @@ package cn.rongcapital.mkt.po.mongodb;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -52,7 +51,7 @@ public class DataParty implements Serializable {
 	
     private String gender;
 
-    private Date birthday;
+    private String birthday;
 
     private String provice;
 
@@ -70,11 +69,11 @@ public class DataParty implements Serializable {
 
     private BigDecimal monthlyConsume;
 
-    private Date lastLogin;
+    private String lastLogin;
 
     private Byte status;
 
-    private Date updateTime;
+    private String updateTime;
 
 	public String getId() {
 		return id;
@@ -140,11 +139,11 @@ public class DataParty implements Serializable {
 		this.gender = gender;
 	}
 
-	public Date getBirthday() {
+	public String getBirthday() {
 		return birthday;
 	}
 
-	public void setBirthday(Date birthday) {
+	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
 
@@ -212,11 +211,11 @@ public class DataParty implements Serializable {
 		this.monthlyConsume = monthlyConsume;
 	}
 
-	public Date getLastLogin() {
+	public String getLastLogin() {
 		return lastLogin;
 	}
 
-	public void setLastLogin(Date lastLogin) {
+	public void setLastLogin(String lastLogin) {
 		this.lastLogin = lastLogin;
 	}
 
@@ -228,11 +227,11 @@ public class DataParty implements Serializable {
 		this.status = status;
 	}
 
-	public Date getUpdateTime() {
+	public String getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
+	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
 	}
 

@@ -1,10 +1,19 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
 
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
 public class CustomTagMap extends BaseQuery {
+	
+	private static final long serialVersionUID = 1L;
+
+	public CustomTagMap() {
+		
+	}
+	public CustomTagMap(Integer startIndex, Integer pageSize) {
+		super(startIndex, pageSize);
+	}
     private Integer id;
 
     private Integer tagId;
