@@ -99,6 +99,7 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 					CustomTagMap customTagMapT = new CustomTagMap();
 					customTagMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 					customTagMapT.setTagId(tagId);
+					customTagMapT.setType(ApiConstant.TAG_TYPE_CONTACT);
 					customTagMapT.setMapId(dataId);
 					int count = customTagMapDao.selectListCount(customTagMapT);
 					if(count == 0) {
