@@ -43,6 +43,8 @@ public class CustomTagAudienceCountTask implements TaskService {
 				int cutomTagId = customTag.getId();
 				dataPartyIdSet = getCampaginTagDataPartyIdList(dataPartyIdSet,cutomTagId);
 				dataPartyIdSet = getContactTagDataPartyIdList(dataPartyIdSet,cutomTagId);
+				//TO DO:上传文件来源的tag关联的人群，由于使用的是origin_*表的id，
+				//并且没有设置md_ype,无法获取到data_party表的id
 				customTag.setCoverAudienceCount(dataPartyIdSet.size());
 				customTagDao.updateById(customTag);
 			}

@@ -23,6 +23,8 @@ public class DataParty implements Serializable {
 	
 	private String name;
 	
+	private String wxName;
+	
 	@Field(value = "mapping_keyid")
 	private String mappingKeyid;
 	
@@ -289,6 +291,14 @@ public class DataParty implements Serializable {
 
 	public void setEmployment(String employment) {
 		this.employment = employment;
+	}
+
+	public String getWxName() {
+		return wxName;
+	}
+
+	public void setWxName(String wxName) {
+		this.wxName = wxName;
 	}
 	
 }

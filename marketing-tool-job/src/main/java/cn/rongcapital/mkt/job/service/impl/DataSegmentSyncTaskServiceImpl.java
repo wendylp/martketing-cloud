@@ -102,7 +102,11 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 								Segment segment = new Segment();
 								segment.setDataId(dataParty.getMid());
 								segment.setSegmentationHeadId(segmentationBody.getHeadId());
-								segment.setName(dataParty.getName());
+								if(dataParty.getMdType()==8) {//如果是微信数据
+									segment.setName(dataParty.getWxName());
+								} else {
+									segment.setName(dataParty.getName());
+								}
 								segment.setMdType(dataParty.getMdType());
 								segment.setMappingKeyid(dataParty.getMappingKeyid());
 								mongoTemplate.insert(segment);

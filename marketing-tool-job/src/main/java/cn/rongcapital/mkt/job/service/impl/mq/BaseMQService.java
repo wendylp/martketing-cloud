@@ -340,8 +340,10 @@ public class BaseMQService {
 		httpUrl.setRequetsBody(JSON.toJSONString(params));
 		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
 		try {
+			logger.info("开始发送公众号图文:"+JSON.toJSONString(params));
 			PostMethod postResult = HttpClientUtil.getInstance().postExt(httpUrl);
 			String postResStr = postResult.getResponseBodyAsString();
+			logger.info("结束发送公众号图文:"+postResStr);
 			String status = JSON.parseObject(postResStr).getJSONObject("hfive_mkt_pub_send_response").getString("status");
 			if(StringUtils.isNotBlank(status) && status.equalsIgnoreCase("true")) {
 				isSent = true;
