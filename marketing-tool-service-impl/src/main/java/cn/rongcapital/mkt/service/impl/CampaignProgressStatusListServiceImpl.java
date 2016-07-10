@@ -99,8 +99,8 @@ public class CampaignProgressStatusListServiceImpl implements
 				if(CollectionUtils.isNotEmpty(catList)){
 					List<String> audienceNameList = new ArrayList<String>();
 					for(CampaignAudienceTarget campaignAudienceTarget:catList) {
-						if(StringUtils.isNotBlank(campaignAudienceTarget.getName())) {
-							audienceNameList.add(campaignAudienceTarget.getName());
+						if(StringUtils.isNotBlank(campaignAudienceTarget.getSegmentationName())) {
+							audienceNameList.add(campaignAudienceTarget.getSegmentationName());
 						}
 					}
 					campaignProgressStatusListOut.setSegmentationName(StringUtils.join(audienceNameList, ";"));
