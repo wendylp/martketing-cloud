@@ -41,9 +41,9 @@ public class DataMainBasicInfoUpdateServiceImpl implements DataMainBasicInfoUpda
         po.setName(body.getName());
         
         if(body.getGender()==null){
-            po.setGender(3);
+            po.setGender((byte)3);
         }else{
-            po.setGender(GenderUtils.charToInt(body.getGender()));
+            po.setGender(Byte.parseByte(GenderUtils.charToInt(body.getGender()) + ""));
         }
                 
         
