@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.job.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -100,17 +101,22 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
             List<Integer> dataPartyIdList = new ArrayList<>();
             for(DataParty tempDataParty : datapartyList){
                 dataPartyIdList.add(tempDataParty.getId());
-                add2Mongo(tempDataParty.getMdType(), tempDataParty.getMappingKeyid(), tempDataParty.getId());
+                for (DataTypeEnum temDataTypeEnum : DataTypeEnum.values()) {
+                    if (temDataTypeEnum == DataTypeEnum.PARTY) {
+                        continue;
+                    }
+                    add2Mongo(temDataTypeEnum.getCode(), tempDataParty.getMappingKeyid(), tempDataParty.getId());
+                }
             }
 
             dataPartyDao.updateStatusByIds(dataPartyIdList, StatusEnum.PROCESSED.getStatusCode());
         }
 	}
 	
-	private void add2Mongo(Integer dataType,String dataKeyId, Integer dataPartyId){
-	    if(dataType.intValue() == 1){
+	private void add2Mongo(Integer dataType,String mappingKeyId, Integer dataPartyId){
+	    if(dataType.intValue() == DataTypeEnum.POPULATION.getCode()){
 	        DataPopulation data = new DataPopulation();
-	        data.setMobile(dataKeyId);
+	        data.setMobile(mappingKeyId);
             data.setStatus(StatusEnum.PROCESSED.getStatusCode());
             MongoProcessor<DataPopulation, cn.rongcapital.mkt.po.mongodb.DataPopulation> processor =
                     new MongoProcessor<DataPopulation, cn.rongcapital.mkt.po.mongodb.DataPopulation>() {
@@ -130,9 +136,9 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                         }
                     };
             syncToMongo(data, dataPopulationDao, processor, dataType, dataPartyId);
-	    }else if(dataType.intValue()==2){
+	    }else if(dataType.intValue() == DataTypeEnum.CUSTOMER_TAGS.getCode()){
             DataCustomerTags data=new DataCustomerTags();
-            data.setMobile(dataKeyId);
+            data.setMobile(mappingKeyId);
             data.setStatus(StatusEnum.PROCESSED.getStatusCode());
             MongoProcessor<DataCustomerTags, cn.rongcapital.mkt.po.mongodb.DataCustomerTags> processor =
                     new MongoProcessor<DataCustomerTags, cn.rongcapital.mkt.po.mongodb.DataCustomerTags>() {
@@ -152,10 +158,10 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                         }
                     };
             syncToMongo(data, dataCustomerTagsDao, processor, dataType, dataPartyId);
-	    }else if(dataType.intValue()==3){
+	    }else if(dataType.intValue() == DataTypeEnum.ARCH_POINT.getCode()){
 	        
 	        DataArchPoint data = new DataArchPoint();
-            data.setMobile(dataKeyId);
+            data.setMobile(mappingKeyId);
             data.setStatus(StatusEnum.PROCESSED.getStatusCode());
             MongoProcessor<DataArchPoint, cn.rongcapital.mkt.po.mongodb.DataArchPoint> processor =
                     new MongoProcessor<DataArchPoint, cn.rongcapital.mkt.po.mongodb.DataArchPoint>() {
@@ -175,10 +181,10 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                         }
                     };
             syncToMongo(data, dataArchPointDao, processor, dataType, dataPartyId);
-        }else if(dataType.intValue()==4){
+        }else if(dataType.intValue() == DataTypeEnum.MEMBER.getCode()){
             
             DataMember data = new DataMember();
-            data.setMobile(dataKeyId);
+            data.setMobile(mappingKeyId);
             data.setStatus(StatusEnum.PROCESSED.getStatusCode());
 
             MongoProcessor<DataMember, cn.rongcapital.mkt.po.mongodb.DataMember> processor =
@@ -200,10 +206,10 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                     };
             syncToMongo(data, dataMemberDao, processor, dataType, dataPartyId);
 
-        }else if(dataType.intValue()==5){
+        }else if(dataType.intValue() == DataTypeEnum.LOGIN.getCode()){
             
             DataLogin data=new DataLogin();
-            data.setMobile(dataKeyId);
+            data.setMobile(mappingKeyId);
             data.setStatus(StatusEnum.PROCESSED.getStatusCode());
 
             MongoProcessor<DataLogin, cn.rongcapital.mkt.po.mongodb.DataLogin> processor =
@@ -225,10 +231,10 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                     };
             syncToMongo(data, dataLoginDao, processor, dataType, dataPartyId);
 
-        }else if(dataType.intValue()==6){
+        }else if(dataType.intValue() == DataTypeEnum.PAYMENT.getCode()){
 
             DataPayment data=new DataPayment();
-            data.setMobile(dataKeyId);
+            data.setMobile(mappingKeyId);
             data.setStatus(StatusEnum.PROCESSED.getStatusCode());
 
             MongoProcessor<DataPayment, cn.rongcapital.mkt.po.mongodb.DataPayment> processor =
@@ -250,10 +256,10 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                     };
             syncToMongo(data, dataPaymentDao, processor, dataType, dataPartyId);
 
-        }else if(dataType.intValue()==7){
+        }else if(dataType.intValue() == DataTypeEnum.SHOPPING.getCode()){
             
             DataShopping data=new DataShopping();
-            data.setMobile(dataKeyId);
+            data.setMobile(mappingKeyId);
             data.setStatus(StatusEnum.PROCESSED.getStatusCode());
 
             MongoProcessor<DataShopping, cn.rongcapital.mkt.po.mongodb.DataShopping> processor =
@@ -275,10 +281,10 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                     };
             syncToMongo(data, dataShoppingDao, processor, dataType, dataPartyId);
 
-        }else if(dataType.intValue() == 8){
+        }else if(dataType.intValue() == DataTypeEnum.WECHAT.getCode()){
 
             WechatMember wechatMember = new WechatMember();
-            wechatMember.setId(Long.valueOf(dataKeyId));
+            wechatMember.setId(Long.valueOf(mappingKeyId));
             List<WechatMember> dataList=wechatMemberDao.selectList(wechatMember);
 
             //insert into mongodb
