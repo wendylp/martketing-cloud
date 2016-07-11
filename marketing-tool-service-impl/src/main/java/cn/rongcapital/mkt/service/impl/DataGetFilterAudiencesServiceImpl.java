@@ -196,8 +196,16 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                     }
                     map.put(importTemplate.getFieldCode(), value);
                 }
-                map.put("sex", GenderUtils.byteToChar(
-                                Byte.valueOf(ReflectionUtil.getObjectPropertyByName(tempT, "gender") + "")));
+
+                if (mdType == 0 || mdType == 1) {
+                    Object sexByte = ReflectionUtil.getObjectPropertyByName(tempT, "gender");
+                    if (sexByte != null) {
+                        String sex = GenderUtils.byteToChar(Byte.valueOf(sexByte + ""));
+                        map.put("sex", sex);
+
+                    }
+                }
+                
                 resultList.add(map);
             }
         }

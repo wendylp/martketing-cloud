@@ -64,8 +64,8 @@ public class ReflectionUtil {
             return field.get(t);
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
             logger.error("通过反射调用" + t.getClass().getName() + "时出现问题 ", e);
-
         }
+        
         return null;
     }
 
