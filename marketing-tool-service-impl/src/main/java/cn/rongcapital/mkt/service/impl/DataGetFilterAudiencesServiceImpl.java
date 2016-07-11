@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
-import cn.rongcapital.mkt.service.impl.vo.MainDataVO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +44,7 @@ import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.ImportTemplate;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
+import cn.rongcapital.mkt.service.impl.vo.MainDataVO;
 import cn.rongcapital.mkt.vo.in.CustomizeViewCheckboxIn;
 import cn.rongcapital.mkt.vo.out.DataGetMainListOut;
 
@@ -195,6 +195,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                     }
                     map.put(importTemplate.getFieldCode(), value);
                 }
+                map.put("sex", ReflectionUtil.getObjectPropertyByName(tempT, "sex"));
                 resultList.add(map);
             }
         }
