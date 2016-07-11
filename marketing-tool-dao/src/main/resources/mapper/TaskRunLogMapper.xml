@@ -6,10 +6,6 @@
 	<sql id="QUERY_COLUMN_LIST">
 		<![CDATA[ id as id,task_id as taskId,task_name as taskName,status as status,start_time as startTime,end_time as endTime,create_time as createTime,update_time as updateTime,task_type as taskType]]>
 	</sql>
-	
-	<sql id="QUERY_RECENTTASK_COLUMN_LIST">
-		<![CDATA[ task_id as taskId,task_name as taskName]]>
-	</sql>
 
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM task_run_log]]></sql>
@@ -29,13 +25,6 @@
 		</where>
 	</sql>
 	
-	<sql id="QUERY_ENDTIME_CLAUSE">
-		<where>
-		    	<![CDATA[ AND end_time > #{endTime}]]>
-		</where>
-	</sql>
-	
-	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
 		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
@@ -52,12 +41,6 @@
 		    	<if test="endTime != null"><![CDATA[end_time = #{endTime},]]></if>
 		    	<if test="taskType != null"><![CDATA[task_type = #{taskType}]]></if>
 		</set>
-	</sql>
-	
-	<!-- 只能排序智能获取条数 -->
-	<sql id="QUERY_ORDER_LIMIT_COUNT">
-		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
-		<if test="count != null and count &gt;= 0 "><![CDATA[LIMIT #{count}]]></if>	
 	</sql>
 
 	<!-- 插入action记录 -->
@@ -113,25 +96,13 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 	
-	<!-- 查询最近发生的10个任务 -->
-	<select id="taskRunLogList" resultType="map">
-		<![CDATA[
-			SELECT
-				task_name,
-				STATUS AS task_status,
-				date_format(start_time,'%Y-%m-%d %H:%i:%s') as start_time,
-				date_format(end_time,'%Y-%m-%d %H:%i:%s') as end_time
-			FROM
-				task_run_log
-			WHERE
-				start_time < now()
-			ORDER BY
-				start_time DESC
-			LIMIT 0,10
-		]]>
-	</select>
-	
 	<!-- 其它SQL语句 -->
+
+	<sql id="QUERY_ENDTIME_CLAUSE">
+		<where>
+		    	<![CDATA[ AND end_time > #{endTime} AND task_type = 1]]>
+		</where>
+	</sql>
 	
 	<select id="selectByEndtime" parameterType="cn.rongcapital.mkt.po.TaskRunLog" resultType="cn.rongcapital.mkt.po.TaskRunLog">
 		<![CDATA[SELECT]]>
