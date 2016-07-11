@@ -239,29 +239,29 @@ public class UploadFileServiceImpl implements UploadFileService{
                     return uploadFileVO;
                 }
 
-                String[] typeAndBatchId = fileName.split("_");
+                String batchId = importDataHistory.getId().toString();
+                String[] fileTypeArray = fileName.split("_");
                 int fileType = 0;
                 if (!isRepair) {
-                    if (typeAndBatchId.length < 1) {
+                    if (fileTypeArray.length < 1) {
                         baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
                         baseOutput.setMsg("上传的文件名不是预定格式");
                         return uploadFileVO;
                     }
-                    fileType = Integer.parseInt(typeAndBatchId[0].substring(typeAndBatchId[0].length()-1));
+                    try {
+                        fileType = Integer.parseInt(fileTypeArray[0].substring(fileTypeArray[0].length()-1));
+                    } catch (Exception e) {
+                        logger.error("invalid file name,file type parse failed", e);
+                    }
                     if (fileType == 0) {
                         baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
                         baseOutput.setMsg("上传的文件名不是预定格式");
                         return uploadFileVO;
                     }
-
                 } else {
                     fileType = importDataHistory.getFileType();
                 }
 
-                String batchId = null;
-                if (typeAndBatchId.length > 1) {
-                    batchId = typeAndBatchId[1];
-                }
                 InputStream inputStream = inputPart.getBody(InputStream.class,null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
                 if (!isUTF8(bytes)) {
