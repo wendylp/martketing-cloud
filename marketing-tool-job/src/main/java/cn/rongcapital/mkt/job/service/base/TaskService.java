@@ -9,4 +9,6 @@ public interface TaskService {
 	default void task (TaskSchedule taskSchedule) {}
 	
 	default void cancelInnerTask(TaskSchedule taskSchedule) {}
+	
+	default void task (){}
 }
