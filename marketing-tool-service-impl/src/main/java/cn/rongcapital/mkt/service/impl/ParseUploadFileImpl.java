@@ -1,24 +1,37 @@
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.common.enums.GenderEnum;
-import cn.rongcapital.mkt.common.enums.StatusEnum;
-import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.dao.*;
-import cn.rongcapital.mkt.service.impl.vo.ParseFileVO;
-import cn.rongcapital.mkt.service.impl.vo.UploadFileProcessVO;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import cn.rongcapital.mkt.common.enums.GenderEnum;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.dao.ImportTemplateDao;
+import cn.rongcapital.mkt.dao.OriginalDataArchPointDao;
+import cn.rongcapital.mkt.dao.OriginalDataCustomerTagsDao;
+import cn.rongcapital.mkt.dao.OriginalDataLoginDao;
+import cn.rongcapital.mkt.dao.OriginalDataMemberDao;
+import cn.rongcapital.mkt.dao.OriginalDataPaymentDao;
+import cn.rongcapital.mkt.dao.OriginalDataPopulationDao;
+import cn.rongcapital.mkt.dao.OriginalDataShoppingDao;
+import cn.rongcapital.mkt.service.impl.vo.ParseFileVO;
+import cn.rongcapital.mkt.service.impl.vo.UploadFileProcessVO;
 
 /**
  * Created by Yunfeng on 2016-6-13.
@@ -336,12 +349,14 @@ public class ParseUploadFileImpl {
     private void convertData(Map<String, Object> insertMap, int fileType) {
         Object gender =  insertMap.get(ImportConstant.GENDER_FIELD);
         if (gender != null) {
-            if (GenderEnum.MALE.getDescription().equals(gender)){
+            if (GenderEnum.MALE.getDescription().equals(gender)) {
                 insertMap.put(ImportConstant.GENDER_FIELD, GenderEnum.MALE.getStatusCode());
             } else if (GenderEnum.FEMALE.getDescription().equals(gender)) {
                 insertMap.put(ImportConstant.GENDER_FIELD, GenderEnum.FEMALE.getStatusCode());
             } else if (GenderEnum.OTHER.getDescription().equals(gender)) {
                 insertMap.put(ImportConstant.GENDER_FIELD, GenderEnum.OTHER.getStatusCode());
+            } else if (GenderEnum.UNSURE.getDescription().equals(gender)) {
+                insertMap.put(ImportConstant.GENDER_FIELD, GenderEnum.UNSURE.getStatusCode());
             }
         }
 

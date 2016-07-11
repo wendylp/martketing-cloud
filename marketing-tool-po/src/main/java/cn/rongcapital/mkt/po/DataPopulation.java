@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.po;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class DataPopulation extends BaseQuery {
@@ -13,6 +14,8 @@ public class DataPopulation extends BaseQuery {
     private String name;
 
     private Byte gender;
+    
+    private String sex;
 
     private Date birthday;
 
@@ -340,5 +343,13 @@ public class DataPopulation extends BaseQuery {
 
     public void setBatchId(String batchId) {
         this.batchId = batchId;
+    }
+    
+    public String getSex() {
+        return GenderUtils.byteToChar(getGender());
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 }

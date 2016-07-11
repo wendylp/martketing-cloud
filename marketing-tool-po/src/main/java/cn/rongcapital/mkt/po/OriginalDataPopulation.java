@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.po;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class OriginalDataPopulation extends BaseQuery {
@@ -13,6 +14,8 @@ public class OriginalDataPopulation extends BaseQuery {
     private String name;
 
     private Byte gender;
+    
+    private String sex;
 
     private Date birthday;
 
@@ -344,5 +347,13 @@ public class OriginalDataPopulation extends BaseQuery {
 
     public void setFileUnique(String fileUnique) {
         this.fileUnique = fileUnique == null ? null : fileUnique.trim();
+    }
+    
+    public String getSex() {
+        return GenderUtils.byteToChar(getGender());
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 }
