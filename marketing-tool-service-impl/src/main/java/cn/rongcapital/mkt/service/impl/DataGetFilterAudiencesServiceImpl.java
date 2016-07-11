@@ -202,7 +202,6 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                     if (sexByte != null) {
                         String sex = GenderUtils.byteToChar(Byte.valueOf(sexByte + ""));
                         map.put("sex", sex);
-
                     }
                 }
                 
