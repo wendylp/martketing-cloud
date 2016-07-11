@@ -21,6 +21,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.ContactwayEnum;
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
+import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.common.util.ReflectionUtil;
 import cn.rongcapital.mkt.dao.DataArchPointDao;
 import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
@@ -195,7 +196,8 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                     }
                     map.put(importTemplate.getFieldCode(), value);
                 }
-                map.put("sex", ReflectionUtil.getObjectPropertyByName(tempT, "sex"));
+                map.put("sex", GenderUtils.byteToChar(
+                                Byte.valueOf(ReflectionUtil.getObjectPropertyByName(tempT, "gender") + "")));
                 resultList.add(map);
             }
         }
