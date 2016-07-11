@@ -1,20 +1,35 @@
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.enums.StatusEnum;
-import cn.rongcapital.mkt.dao.*;
-import cn.rongcapital.mkt.job.service.base.TaskManager;
-import cn.rongcapital.mkt.po.ImportDataHistory;
-import cn.rongcapital.mkt.po.OriginalDataArchPoint;
-import cn.rongcapital.mkt.service.FileTagUpdateService;
-import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.enums.TaskNameEnum;
+import cn.rongcapital.mkt.common.enums.TaskTypeEnum;
+import cn.rongcapital.mkt.dao.CustomTagDao;
+import cn.rongcapital.mkt.dao.CustomTagMapDao;
+import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
+import cn.rongcapital.mkt.dao.OriginalDataArchPointDao;
+import cn.rongcapital.mkt.dao.OriginalDataCustomerTagsDao;
+import cn.rongcapital.mkt.dao.OriginalDataLoginDao;
+import cn.rongcapital.mkt.dao.OriginalDataMemberDao;
+import cn.rongcapital.mkt.dao.OriginalDataPaymentDao;
+import cn.rongcapital.mkt.dao.OriginalDataPopulationDao;
+import cn.rongcapital.mkt.dao.OriginalDataShoppingDao;
+import cn.rongcapital.mkt.job.service.base.TaskManager;
+import cn.rongcapital.mkt.po.ImportDataHistory;
+import cn.rongcapital.mkt.service.FileTagUpdateService;
+import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
 
 /**
  * Created by Yunfeng on 2016-6-25.
@@ -44,9 +59,7 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
     private OriginalDataShoppingDao originalDataShoppingDao;
     @Autowired
     private TaskManager taskManager;
-    @Autowired
-    private TaskScheduleDao taskScheduleDao;
-
+    
     @Transactional
     @Override
     public BaseOutput updateFileTag(FileTagUpdateIn fileTagUpdateIn) {
@@ -148,36 +161,32 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         switch (fileType){
             case 1:
                 originalDataPopulationDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataPopulationServiceImpl"),null);
+                taskManager.initFrontTask(TaskNameEnum.POPULATION, "originalDataPopulationServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 2:
                 originalDataCustomerTagsDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataCustomTagScheduleServiceImpl"),null);
+                taskManager.initFrontTask(TaskNameEnum.CUSTOMER_TAGS, "originalDataCustomTagScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 3:
                 originalDataArchPointDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataArchPointScheduleServiceImpl"),null);
+                taskManager.initFrontTask(TaskNameEnum.ARCH_POINT, "originalDataArchPointScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 4:
                 originalDataMemberDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataMemberScheduleServiceImpl"),null);
+                taskManager.initFrontTask(TaskNameEnum.MEMBER, "originalDataMemberScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 5:
                 originalDataLoginDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataLoginScheduleServiceImpl"),null);
+                taskManager.initFrontTask(TaskNameEnum.LOGIN, "originalDataLoginScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 6:
                 originalDataPaymentDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataPaymentScheduleServiceImpl"),null);
+                taskManager.initFrontTask(TaskNameEnum.PAYMENT, "originalDataPaymentScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 7:
                 originalDataShoppingDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                taskManager.manualInitTask(selectTaskIdByServiceName("originalDataShoppingScheduleServiceImpl"),null);
+                taskManager.initFrontTask(TaskNameEnum.SHOPPING, "originalDataShoppingScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
         }
-    }
-
-    private int selectTaskIdByServiceName(String serviceName){
-       return taskScheduleDao.selectIdByServiceName(serviceName);
     }
 }
