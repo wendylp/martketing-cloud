@@ -57,7 +57,7 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 				continue;//未发布的细分不进行同步
 			}
 			//删除旧segment数据
-			mongoTemplate.findAllAndRemove(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
+//			mongoTemplate.findAllAndRemove(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
 			//SEGMENTATION_GROUP_MEMBER_MOST_COUNT:每个组最多的标签数
 			for(int groupIndex=0;groupIndex<ApiConstant.SEGMENTATION_GROUP_MEMBER_MOST_COUNT;groupIndex++) {
 				SegmentationBody segmentationBodyT = new SegmentationBody(); 
