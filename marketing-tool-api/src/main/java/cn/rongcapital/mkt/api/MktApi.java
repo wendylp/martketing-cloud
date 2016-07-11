@@ -1552,8 +1552,9 @@ public class MktApi {
 	@Path("/mkt.data.main.basicinfo.get")
 	public BaseOutput getPartyBehaviorByCondition(
 			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("contact_id") String contactId) {
-		return mainBasicInfoGetService.getMainBasicInfo(contactId, userToken);
+			@NotNull @QueryParam("contact_id") Integer contactId,
+			@NotNull @QueryParam("md_type") Integer dataType) {
+        return mainBasicInfoGetService.getMainBasicInfo(contactId, dataType, userToken);
 	}
 
 	/**

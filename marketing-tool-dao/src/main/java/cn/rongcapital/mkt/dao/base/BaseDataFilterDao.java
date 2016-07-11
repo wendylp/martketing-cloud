@@ -17,4 +17,10 @@ public interface BaseDataFilterDao<T> {
      * @return: List<String>
      */
     List<String> selectColumns();
+    
+    /**
+     * @功能简述: 查询一个表里的mobile字段
+     * @return: List<String>
+     */
+    String selectMobileById(Integer id);
 }
