@@ -100,8 +100,12 @@
 
 	<sql id="QUERY_ENDTIME_CLAUSE">
 		<where>
-		    	<![CDATA[ AND end_time > #{endTime} AND task_type = 1]]>
+		    	<![CDATA[ AND end_time > #{endTime}]]>
 		</where>
+	</sql>
+
+	<sql id="QUERY_RECENTTASK_COLUMN_LIST">
+		<![CDATA[ task_id as taskId,task_name as taskName]]>
 	</sql>
 	
 	<select id="selectByEndtime" parameterType="cn.rongcapital.mkt.po.TaskRunLog" resultType="cn.rongcapital.mkt.po.TaskRunLog">
