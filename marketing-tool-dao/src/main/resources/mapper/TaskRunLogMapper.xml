@@ -100,7 +100,7 @@
 
 	<sql id="QUERY_ENDTIME_CLAUSE">
 		<where>
-		    	<![CDATA[ AND end_time > #{endTime}]]>
+		    	<![CDATA[ AND end_time > #{endTime} and task_type = 1]]>
 		</where>
 	</sql>
 
