@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.TaskTypeEnum;
 import cn.rongcapital.mkt.dao.TaskRunLogDao;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.TaskGetListService;
@@ -28,6 +29,7 @@ public class TaskGetListServiceImpl implements TaskGetListService {
         TaskRunLog paramTaskRunLog = new TaskRunLog();
         paramTaskRunLog.setOrderField("start_time");
         paramTaskRunLog.setOrderFieldType("DESC");
+        paramTaskRunLog.setTaskType((byte)TaskTypeEnum.DISPLAY.getCode());
         List<TaskRunLog> taskRunLogs = taskRunLogDao.selectList(paramTaskRunLog);
         List<Map<String, Object>> resultList = new ArrayList<>();
         int totalCount = 0;
