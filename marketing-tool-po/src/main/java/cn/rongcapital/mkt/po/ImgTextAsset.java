@@ -27,6 +27,16 @@ public class ImgTextAsset extends BaseQuery {
 
     private Date updateTime;
 
+    private String pubId;
+
+    private String pubName;
+
+    private Byte wechatStatus;
+
+    private Byte showCoverPic;
+
+    private Byte thumbReady;
+
     public Integer getId() {
         return id;
     }
@@ -113,5 +123,45 @@ public class ImgTextAsset extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getPubId() {
+        return pubId;
+    }
+
+    public void setPubId(String pubId) {
+        this.pubId = pubId == null ? null : pubId.trim();
+    }
+
+    public String getPubName() {
+        return pubName;
+    }
+
+    public void setPubName(String pubName) {
+        this.pubName = pubName == null ? null : pubName.trim();
+    }
+
+    public Byte getWechatStatus() {
+        return wechatStatus;
+    }
+
+    public void setWechatStatus(Byte wechatStatus) {
+        this.wechatStatus = wechatStatus;
+    }
+
+    public Byte getShowCoverPic() {
+        return showCoverPic;
+    }
+
+    public void setShowCoverPic(Byte showCoverPic) {
+        this.showCoverPic = showCoverPic;
+    }
+
+    public Byte getThumbReady() {
+        return thumbReady;
+    }
+
+    public void setThumbReady(Byte thumbReady) {
+        this.thumbReady = thumbReady;
     }
 }
