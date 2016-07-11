@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.enums.TaskNameEnum;
+import cn.rongcapital.mkt.common.enums.TaskTypeEnum;
 import cn.rongcapital.mkt.dao.TaskRunLogDao;
 import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.po.TaskRunLog;
@@ -203,5 +205,34 @@ public class TaskManager {
         serviceNameChar[0] = Character.toLowerCase(serviceNameChar[0]);
         String sname = String.valueOf(serviceNameChar);
         return sname;
+    }
+    
+    /**
+     * 启动需要在前端页面显示task名称进度的task
+     * @param taskName:任务名称
+     * @param serviceName:定时任务的service类名称
+     * @param taskType:0:显示,1:不显示
+     */
+    public void initFrontTask(TaskNameEnum taskNameEnum,String serviceName,TaskTypeEnum taskTypeEnum) {
+    	serviceName = getServiceName(serviceName);
+        Object serviceBean = cotext.getBean(serviceName);
+        if (serviceBean instanceof TaskService) {
+        	Runnable task = new Runnable() {
+        		public void run() {
+        			TaskService taskService = (TaskService) serviceBean;
+        			TaskRunLog taskRunLogT = new TaskRunLog();
+        			taskRunLogT.setTaskName(taskNameEnum.getDescription());
+        			taskRunLogT.setTaskId(ApiConstant.MANUAL_RUN_ONCE_TASK_ID);
+        			taskRunLogT.setStartTime(new Date());
+        			taskRunLogT.setTaskType((byte)taskTypeEnum.getCode());
+        			taskRunLogDao.insert(taskRunLogT);
+        			taskService.task(ApiConstant.MANUAL_RUN_ONCE_TASK_ID);
+        			taskRunLogT.setEndTime(new Date());
+        			taskRunLogDao.updateById(taskRunLogT);
+        		}
+        	};
+        	ConcurrentTaskScheduler concurrentTaskScheduler = new ConcurrentTaskScheduler();
+        	concurrentTaskScheduler.schedule(task, new Date());
+        }
     }
 }

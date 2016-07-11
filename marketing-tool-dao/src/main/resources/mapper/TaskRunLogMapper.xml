@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,task_id as taskId,task_name as taskName,status as status,start_time as startTime,end_time as endTime,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,task_id as taskId,task_name as taskName,status as status,start_time as startTime,end_time as endTime,create_time as createTime,update_time as updateTime,task_type as taskType]]>
 	</sql>
 	
 	<sql id="QUERY_RECENTTASK_COLUMN_LIST">
@@ -25,6 +25,7 @@
 		    	<if test="endTime != null"><![CDATA[ AND end_time = #{endTime}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="taskType != null"><![CDATA[ AND task_type = #{taskType}]]></if>
 		</where>
 	</sql>
 	
@@ -48,7 +49,8 @@
 		    	<if test="taskName != null"><![CDATA[task_name = #{taskName},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="startTime != null"><![CDATA[start_time = #{startTime},]]></if>
-		    	<if test="endTime != null"><![CDATA[end_time = #{endTime}]]></if>
+		    	<if test="endTime != null"><![CDATA[end_time = #{endTime},]]></if>
+		    	<if test="taskType != null"><![CDATA[task_type = #{taskType}]]></if>
 		</set>
 	</sql>
 	
@@ -61,14 +63,15 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.TaskRunLog" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO task_run_log (task_id,task_name,start_time,end_time,create_time)
+			INSERT INTO task_run_log (task_id,task_name,start_time,end_time,create_time,task_type)
 			VALUES
 			(
 			  #{taskId},
 			  #{taskName},
 			  #{startTime},
 			  #{endTime},
-			  now()
+			  now(),
+			  #{taskType}
 			)
 		]]>
 	</insert>
