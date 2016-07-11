@@ -147,6 +147,7 @@ public class TaskManager {
                         + RandomStringUtils.randomAlphabetic(5).toUpperCase());
         taskRunLogT.setTaskId(taskSchedulePo.getId());
         taskRunLogT.setStartTime(new Date());
+        taskRunLogT.setTaskType((byte)TaskTypeEnum.HIDE.getCode());
         taskRunLogDao.insert(taskRunLogT);
         return taskRunLogT;
     }
