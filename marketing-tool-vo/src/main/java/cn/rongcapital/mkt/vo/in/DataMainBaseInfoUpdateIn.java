@@ -2,14 +2,18 @@ package cn.rongcapital.mkt.vo.in;
 
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class DataMainBaseInfoUpdateIn  extends BaseInput {
 	@NotNull
 	private Integer contactId;
+	
+	private Integer dataType;
 	
 	private String name;
 	
@@ -155,4 +159,13 @@ public class DataMainBaseInfoUpdateIn  extends BaseInput {
 	public void setUserToken(String userToken) {
 		this.userToken = userToken;
 	}
+
+	@JsonProperty("md_type")
+    public Integer getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(Integer dataType) {
+        this.dataType = dataType;
+    }
 }

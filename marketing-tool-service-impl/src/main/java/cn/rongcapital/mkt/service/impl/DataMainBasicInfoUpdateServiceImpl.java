@@ -57,6 +57,6 @@ public class DataMainBasicInfoUpdateServiceImpl implements DataMainBasicInfoUpda
             result.setMsg(ApiErrorCode.DB_ERROR.getMsg());
         }
         
-        return mainBasicInfoGetService.getMainBasicInfo(body.getContactId() + "", body.getUserToken());
+        return mainBasicInfoGetService.getMainBasicInfo(body.getContactId(), body.getDataType(), body.getUserToken());
     }
 }
