@@ -119,23 +119,22 @@
 			)
 		</foreach>
         ON DUPLICATE KEY UPDATE
-            mobile=VALUES(mobile),
-            mobile=VALUES(mobile),
-            name=VALUES(name),
-            gender=VALUES(gender),
-            birthday=VALUES(birthday),
-            provice=VALUES(provice),
-            city=VALUES(city),
-            job=VALUES(job),
-            monthly_income=VALUES(monthly_income),
-            member_level=VALUES(member_level),
-            member_points=VALUES(member_points),
-            source=VALUES(source),
-            monthly_consume=VALUES(monthly_consume),
-            last_login=VALUES(last_login),
-            status=VALUES(status),
-            batch_id=VALUES(batch_id),
-            mobile=VALUES(mobile)
+            mobile=COALESCE(VALUES(mobile),mobile),
+            name=COALESCE(VALUES(name), name),
+            gender=COALESCE(VALUES(gender),gender),
+            birthday=COALESCE(VALUES(birthday), birthday),
+            provice=COALESCE(VALUES(provice), provice),
+            city=COALESCE(VALUES(city), city),
+            job=COALESCE(VALUES(job), job),
+            monthly_income=COALESCE(VALUES(monthly_income), monthly_income),
+            monthly_consume=COALESCE(VALUES(monthly_consume), monthly_consume),
+            member_level=COALESCE(VALUES(member_level), member_level),
+            member_points=COALESCE(VALUES(member_points), member_points),
+            source=COALESCE(VALUES(source), source),
+            last_login=COALESCE(VALUES(last_login), last_login),
+            status=COALESCE(VALUES(status), status),
+            batch_id=COALESCE(VALUES(batch_id), batch_id),
+            md_type=COALESCE(VALUES(md_type), md_type)
 	</insert>
 	
 	<!-- 返回插入的编号,在事务开启状态下有效 -->
