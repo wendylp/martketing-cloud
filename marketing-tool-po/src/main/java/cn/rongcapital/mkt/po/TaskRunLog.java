@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.po;
 
-import java.util.Date;
-
 import cn.rongcapital.mkt.po.base.BaseQuery;
+
+import java.util.Date;
 
 public class TaskRunLog extends BaseQuery {
     private Integer id;
@@ -20,6 +20,8 @@ public class TaskRunLog extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+
+    private Byte taskType;
 
     public TaskRunLog() {}
 
@@ -89,5 +91,13 @@ public class TaskRunLog extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Byte getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(Byte taskType) {
+        this.taskType = taskType;
     }
 }

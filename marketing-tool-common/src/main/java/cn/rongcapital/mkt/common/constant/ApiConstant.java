@@ -169,4 +169,7 @@ public class ApiConstant {
 	public static final String AUDIENCE_SOUCE_NAME_CAMPAIGN = "营销活动";
 
 	public static String IMPORT_FILE_SOURCE = "文件接入";
+	
+	//调用后只执行1次的任务,该任务不存入task_schedule表，只在task_run_log表里记录任务日志
+	public static final int MANUAL_RUN_ONCE_TASK_ID = 0;
 }
