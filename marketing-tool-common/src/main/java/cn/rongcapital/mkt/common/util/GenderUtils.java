@@ -4,7 +4,7 @@ package cn.rongcapital.mkt.common.util;
  * Created by Yunfeng on 2016-6-29.
  */
 public class GenderUtils {
-    public static String intToChar(Integer genderFlag){
+    public static String byteToChar(Byte genderFlag){
         if(genderFlag != null){
             switch (genderFlag){
                 case 1:

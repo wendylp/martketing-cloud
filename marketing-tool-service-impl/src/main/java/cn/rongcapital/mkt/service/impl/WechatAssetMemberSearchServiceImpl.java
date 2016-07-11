@@ -1,5 +1,14 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
@@ -9,10 +18,6 @@ import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * Created by Yunfeng on 2016-6-28.
@@ -53,7 +58,7 @@ public class WechatAssetMemberSearchServiceImpl implements WechatAssetMemberSear
                 Long id = (Long) map.get("id");
                 map.put("id",transformToDataPartyId(id));
                 if(map.get("sex") != null){
-                    map.put("gender", GenderUtils.intToChar((Integer)map.get("sex")));
+                    map.put("gender", GenderUtils.byteToChar((Byte)map.get("sex")));
                     map.remove("sex");
                 }
                 if(map.get("head_image_url") == null){
