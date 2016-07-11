@@ -12,7 +12,7 @@ public class OriginalDataPopulation extends BaseQuery {
 
     private String name;
 
-    private Integer gender;
+    private Byte gender;
 
     private Date birthday;
 
@@ -98,11 +98,11 @@ public class OriginalDataPopulation extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getGender() {
+    public Byte getGender() {
         return gender;
     }
 
-    public void setGender(Integer gender) {
+    public void setGender(Byte gender) {
         this.gender = gender;
     }
 

@@ -6,13 +6,20 @@ import java.util.Date;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class DataParty extends BaseQuery {
+
+    public DataParty() {}
+
+    public DataParty(Integer index, Integer size) {
+        super(index, size);
+    }
+
     private Integer id;
 
     private String mobile;
 
     private String name;
 
-    private Integer gender;
+    private Byte gender;
 
     private Date birthday;
 
@@ -45,11 +52,7 @@ public class DataParty extends BaseQuery {
     private Integer mdType;
 
     private String mappingKeyid;
-    public DataParty(){}
-    
-    public DataParty(Integer index , Integer size){
-        super(index, size);
-    }
+
     public Integer getId() {
         return id;
     }
@@ -74,12 +77,12 @@ public class DataParty extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getGender() {
+    public Byte getGender() {
         return gender;
     }
 
-    public void setGender(Integer gender) {
-        this.gender = gender == null ? null : gender;
+    public void setGender(Byte gender) {
+        this.gender = gender;
     }
 
     public Date getBirthday() {
