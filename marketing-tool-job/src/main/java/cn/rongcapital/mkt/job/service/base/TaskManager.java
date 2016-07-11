@@ -222,7 +222,7 @@ public class TaskManager {
         		public void run() {
         			TaskService taskService = (TaskService) serviceBean;
         			TaskRunLog taskRunLogT = new TaskRunLog();
-        			taskRunLogT.setTaskName(taskNameEnum.getDescription());
+        			taskRunLogT.setTaskName(taskNameEnum.getDescription()+"_"+System.currentTimeMillis());
         			taskRunLogT.setTaskId(ApiConstant.MANUAL_RUN_ONCE_TASK_ID);
         			taskRunLogT.setStartTime(new Date());
         			taskRunLogT.setTaskType((byte)taskTypeEnum.getCode());
