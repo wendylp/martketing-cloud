@@ -46,28 +46,33 @@ public class ImgtextHostServiceImpl implements ImgtextHostService {
                 JSONObject obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_wtuwen_convert_response");
                 if(obj != null){
                     H5MktWtuwenConvertResponse h5MktWtuwenConvertResponse = JSON.parseObject(obj.toString(),  H5MktWtuwenConvertResponse.class);
-                    Map<String,Object> paramMap = new HashMap<String,Object>();
-                    paramMap.put("name",h5MktWtuwenConvertResponse.getTitle());
-                    paramMap.put("pc_preview_url",h5MktWtuwenConvertResponse.getPcUrl());
-                    paramMap.put("mobile_url",h5MktWtuwenConvertResponse.getMobileUrl());
-                    paramMap.put("imgfile_url",h5MktWtuwenConvertResponse.getScreenshopUrl());
-                    paramMap.put("create_time",h5MktWtuwenConvertResponse.getCreateTime());
-                    paramMap.put("material_id",h5MktWtuwenConvertResponse.getMaterialId());
-                    paramMap.put("type",1);
-                    switch (h5MktWtuwenConvertResponse.getChannelType()){
-                        case 2:
-                            paramMap.put("owner_name","易企秀");
-                            break;
-                        case 3:
-                            paramMap.put("owner_name","兔展");
-                            break;
-                        case 4:
-                            paramMap.put("owner_name","MAKA");
-                            break;
+                    if(h5MktWtuwenConvertResponse != null){
+                        Map<String,Object> paramMap = new HashMap<String,Object>();
+                        paramMap.put("name",h5MktWtuwenConvertResponse.getTitle());
+                        paramMap.put("pc_preview_url",h5MktWtuwenConvertResponse.getPcUrl());
+                        paramMap.put("mobile_url",h5MktWtuwenConvertResponse.getMobileUrl());
+                        paramMap.put("imgfile_url",h5MktWtuwenConvertResponse.getScreenshopUrl());
+                        paramMap.put("create_time",h5MktWtuwenConvertResponse.getCreateTime());
+                        paramMap.put("material_id",h5MktWtuwenConvertResponse.getMaterialId());
+                        paramMap.put("type",1);
+                        switch (h5MktWtuwenConvertResponse.getChannelType()){
+                            case 2:
+                                paramMap.put("owner_name","易企秀");
+                                break;
+                            case 3:
+                                paramMap.put("owner_name","兔展");
+                                break;
+                            case 4:
+                                paramMap.put("owner_name","MAKA");
+                                break;
+                        }
+                        imgTextAssetDao.insertHostImg(paramMap);
+                        ur.setCode(ApiErrorCode.SUCCESS.getCode());
+                        ur.setMsg(ApiErrorCode.SUCCESS.getMsg());
+                    }else{
+                        ur.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+                        ur.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
                     }
-                    imgTextAssetDao.insertHostImg(paramMap);
-                    ur.setCode(ApiErrorCode.SUCCESS.getCode());
-                    ur.setMsg(ApiErrorCode.SUCCESS.getMsg());
                 }else{
                     ur.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
                     ur.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
