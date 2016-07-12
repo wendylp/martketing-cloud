@@ -114,6 +114,9 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                 map.put("col_id", importTemplate.getId());
                 map.put("col_name", importTemplate.getFieldName());
                 map.put("col_code", importTemplate.getFieldCode());
+                if (importTemplate.getFieldName().equalsIgnoreCase("gender")) {
+                    map.put("col_code", "sex");
+                }
                 columnList.add(map);
                 result.setMd_type(importTemplate.getTemplType());
             }
