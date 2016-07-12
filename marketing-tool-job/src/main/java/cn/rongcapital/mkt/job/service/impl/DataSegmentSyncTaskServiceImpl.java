@@ -41,6 +41,8 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 		for(int index = 1; index <= totalPage; index++) {
 			segmentationHeadT = new SegmentationHead(index,pageSize);
 			segmentationHeadT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			segmentationHeadT.setOrderField("update_time");
+			segmentationHeadT.setOrderFieldType("desc");
 			List<SegmentationHead> segmentationHeadList = segmentationHeadDao.selectList(segmentationHeadT);
 			if(CollectionUtils.isEmpty(segmentationHeadList)) {
 				break;
