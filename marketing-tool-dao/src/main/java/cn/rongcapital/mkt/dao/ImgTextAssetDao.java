@@ -88,7 +88,7 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * 从大连那边批量导入图文资产
 	 * @return list
 	 */
-	void batchInsertTuwen(List<Map<String, Object>> paramTuwenList);
+	void batchInsertTuwen(@Param("list") List<ImgTextAsset> imgTextAssetList);
 
 	/**
 	 * 将托管的图文资产插入数据库
@@ -100,5 +100,5 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * 根据material_id判断图文是否被保存
 	 * @return list
 	 */
-	Integer selectImgtextIdByPcPreviewUrl(@Param("pc_preview_url") String pcPreviewUrl);
+	Integer selectImgtextIdByMaterialId(@Param("material_id") String materialId);
 }

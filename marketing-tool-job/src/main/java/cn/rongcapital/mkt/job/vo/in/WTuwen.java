@@ -4,54 +4,20 @@ package cn.rongcapital.mkt.job.vo.in;
  * Created by Yunfeng on 2016-6-21.
  */
 public class WTuwen {
-    private String pcUrl;
-    private String mobileUrl;
-    private String screenshotUrl;
-    private String title;
-    private String createTime;
+    private Integer materialId;
     private String pubId;
     private String pubName;
+    private String createTime;
     private Integer channelType;
-    private String material_id;
+    private Integer status;
+    private MaterialContents materialContents;
 
-    public String getPcUrl() {
-        return pcUrl;
+    public Integer getMaterialId() {
+        return materialId;
     }
 
-    public void setPcUrl(String pcUrl) {
-        this.pcUrl = pcUrl;
-    }
-
-    public String getMobileUrl() {
-        return mobileUrl;
-    }
-
-    public void setMobileUrl(String mobileUrl) {
-        this.mobileUrl = mobileUrl;
-    }
-
-    public String getScreenshotUrl() {
-        return screenshotUrl;
-    }
-
-    public void setScreenshotUrl(String screenshotUrl) {
-        this.screenshotUrl = screenshotUrl;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 
     public String getPubId() {
@@ -70,6 +36,14 @@ public class WTuwen {
         this.pubName = pubName;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     public Integer getChannelType() {
         return channelType;
     }
@@ -78,11 +52,19 @@ public class WTuwen {
         this.channelType = channelType;
     }
 
-    public String getMaterial_id() {
-        return material_id;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setMaterial_id(String material_id) {
-        this.material_id = material_id;
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public MaterialContents getMaterialContents() {
+        return materialContents;
+    }
+
+    public void setMaterialContents(MaterialContents materialContents) {
+        this.materialContents = materialContents;
     }
 }

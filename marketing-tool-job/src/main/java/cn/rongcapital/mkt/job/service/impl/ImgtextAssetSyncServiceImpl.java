@@ -1,18 +1,23 @@
 package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.enums.H5ImgtextType;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.HttpUtils;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
 import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.job.vo.in.H5TuwenSyncResponse;
+import cn.rongcapital.mkt.job.vo.in.MaterialContent;
 import cn.rongcapital.mkt.job.vo.in.WTuwen;
+import cn.rongcapital.mkt.po.ImgTextAsset;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +45,7 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
         h5ParamMap.put("pid",pidMap.get("pid"));
         h5ParamMap.put("page_size",ApiConstant.IMGTEXT_SYNC_SIZE + "");
         h5ParamMap.put("page_num","1");
+        h5ParamMap.put("sync_mp","true");
         HttpResponse httpResponse = HttpUtils.requestH5Interface(h5ParamMap);
         if(httpResponse != null){
             try {
@@ -48,7 +54,9 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
                     h5TuwenSyncResponse = JSON.parseObject(obj.toString(),H5TuwenSyncResponse.class);
                     if(h5TuwenSyncResponse != null){
                         Integer totalNumber = h5TuwenSyncResponse.getTotal();
-                        syncImgtextByPageNum(h5ParamMap, totalNumber);
+                        if(totalNumber != null){
+                            syncImgtextByPageNum(h5ParamMap, totalNumber);
+                        }
                     }
                 }
             } catch (IOException e) {
@@ -69,7 +77,7 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
                     obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_wtuwen_sync_response");
                     if(obj != null){
                         h5TuwenSyncResponse = JSON.parseObject(obj.toString(),H5TuwenSyncResponse.class);
-                        batchInsertImgtext(h5TuwenSyncResponse);
+                        batchSyncImgtext(h5TuwenSyncResponse);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -79,48 +87,80 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     }
 
 
-    private void batchInsertImgtext(H5TuwenSyncResponse h5TuwenSyncResponse) {
-        List<Map<String,Object>> paramTuwenList = new ArrayList<Map<String,Object>>();
+    private void batchSyncImgtext(H5TuwenSyncResponse h5TuwenSyncResponse) {
+        List<ImgTextAsset> imgTextAssetInsertList = new ArrayList<ImgTextAsset>();
+        List<ImgTextAsset> imgTextAssetUpdateList = new ArrayList<ImgTextAsset>();
         for(WTuwen wtuwen : h5TuwenSyncResponse.getWtuwens().getWtuwen()){
-            if(wtuwen.getPcUrl() == null || isAlreadySync(wtuwen.getPcUrl())) continue;
-            Map<String,Object> paramMap = new HashMap<String,Object>();
-            paramMap.put("name",wtuwen.getTitle());
-            paramMap.put("pc_preview_url",wtuwen.getPcUrl());
-            paramMap.put("mobile_preview_url",wtuwen.getMobileUrl());
-            paramMap.put("imgfile_url",wtuwen.getScreenshotUrl());
-            paramMap.put("material_id",wtuwen.getMaterial_id());
-            if(wtuwen.getChannelType() != null){
-                switch (wtuwen.getChannelType()){
-                    case 1:
-                        paramMap.put("type", 0);
-                        paramMap.put("owner_name",wtuwen.getPubName());
-                        break;
-                    case 2:
-                        paramMap.put("type",1);
-                        paramMap.put("owner_name","易企秀");
-                        break;
-                    case 3:
-                        paramMap.put("type",2);
-                        paramMap.put("owner_name","兔展");
-                        break;
-                    case 4:
-                        paramMap.put("type",3);
-                        paramMap.put("owner_name","MAMA");
-                        break;
-                }
+            if(wtuwen.getPubId() == null || wtuwen.getMaterialId() == null || !checkChannelType(wtuwen.getChannelType()) || wtuwen.getMaterialContents() == null ||CollectionUtils.isEmpty(wtuwen.getMaterialContents().getMaterialContent())) continue;
+            MaterialContent materialContent = wtuwen.getMaterialContents().getMaterialContent().get(0);
+            ImgTextAsset imgTextAsset = new ImgTextAsset();
+            if(isAlreadySync(wtuwen.getMaterialId())){
+                //已经导入的图文进行图文更新，通过Id
+                constructLegalImagetextAsset(wtuwen, materialContent, imgTextAsset);
+                Integer updateId = imgTextAssetDao.selectImgtextIdByMaterialId(Integer.toString(wtuwen.getMaterialId()));
+                imgTextAsset.setId(updateId);
+                imgTextAssetUpdateList.add(imgTextAsset);
             }else{
-                continue;
+                //没有导入的图文进行图文插入，通过materialId做唯一标识
+                constructLegalImagetextAsset(wtuwen, materialContent, imgTextAsset);
+                imgTextAssetInsertList.add(imgTextAsset);
             }
-
-            paramTuwenList.add(paramMap);
         }
-        if(paramTuwenList != null && paramTuwenList.size() > 0){
-            imgTextAssetDao.batchInsertTuwen(paramTuwenList);
+
+        if(!CollectionUtils.isEmpty(imgTextAssetInsertList)){
+            for(ImgTextAsset imgTextAsset : imgTextAssetInsertList){
+                imgTextAssetDao.insert(imgTextAsset);
+            }
+        }
+
+        if(!CollectionUtils.isEmpty(imgTextAssetUpdateList)){
+            for(ImgTextAsset imgTextAsset : imgTextAssetUpdateList){
+                imgTextAssetDao.updateById(imgTextAsset);
+            }
         }
     }
 
-    private boolean isAlreadySync(String pcUrl) {
-        Integer id = imgTextAssetDao.selectImgtextIdByPcPreviewUrl(pcUrl);
+    private void constructLegalImagetextAsset(WTuwen wtuwen, MaterialContent materialContent, ImgTextAsset imgTextAsset) {
+        imgTextAsset.setWechatStatus(wtuwen.getStatus().byteValue());
+        imgTextAsset.setName(materialContent.getTitle());
+        imgTextAsset.setImgfileUrl(materialContent.getScreenshotUrl());
+        imgTextAsset.setPubId(wtuwen.getPubId());
+        imgTextAsset.setPubName(wtuwen.getPubName());
+        imgTextAsset.setMaterialId(Integer.toString(wtuwen.getMaterialId()));
+        imgTextAsset.setCreateTime(DateUtil.getDateFromString(wtuwen.getCreateTime(),"yyyy-MM-dd HH:mm:ss"));
+        imgTextAsset.setMobilePreviewUrl(materialContent.getMobileUrl());
+        imgTextAsset.setShowCoverPic(materialContent.getShowCoverPic().byteValue());
+        imgTextAsset.setPcPreviewUrl(materialContent.getPcUrl());
+        imgTextAsset.setThumbReady(materialContent.getThumbReady().byteValue());
+        if(wtuwen.getChannelType() != null){
+            switch (wtuwen.getChannelType()){
+                case 1:
+                    imgTextAsset.setType(wtuwen.getChannelType().byteValue());
+                    imgTextAsset.setOwnerName(wtuwen.getPubName());
+                    break;
+                case 2:
+                    imgTextAsset.setType(H5ImgtextType.YI_QI_XIU.getType().byteValue());
+                    imgTextAsset.setOwnerName(H5ImgtextType.YI_QI_XIU.getOwnerName());
+                    break;
+                case 3:
+                    imgTextAsset.setType(H5ImgtextType.TU_ZHAN.getType().byteValue());
+                    imgTextAsset.setOwnerName(H5ImgtextType.TU_ZHAN.getOwnerName());
+                    break;
+                case 4:
+                    imgTextAsset.setType(H5ImgtextType.MAKA.getType().byteValue());
+                    imgTextAsset.setOwnerName(H5ImgtextType.MAKA.getOwnerName());
+                    break;
+            }
+        }
+    }
+
+    private boolean checkChannelType(Integer channelType) {
+        if(channelType != null && channelType >= 1 && channelType <= 4) return true;
+        return false;
+    }
+
+    private boolean isAlreadySync(Integer materialId) {
+        Integer id = imgTextAssetDao.selectImgtextIdByMaterialId(Integer.toString(materialId));
         return id != null;
     }
 

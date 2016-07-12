@@ -9,7 +9,7 @@
 
 	<!-- 根据owner查询一些列 -->
 	<sql id="QUERY_ASSET_LIST">
-		<![CDATA[ id,name,imgfile_url,type,owner_name,pc_preview_url,mobile_preview_url,create_time]]>
+		<![CDATA[ id,name,imgfile_url,type,owner_name,pc_preview_url,mobile_preview_url,create_time,thumb_ready]]>
 	</sql>
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM img_text_asset]]></sql>
@@ -211,10 +211,10 @@
 		)
 	</insert>
 
-	<select id="selectImgtextIdByPcPreviewUrl" parameterType="java.lang.String" resultType="java.lang.Integer">
+	<select id="selectImgtextIdByMaterialId" parameterType="java.lang.String" resultType="java.lang.Integer">
 		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
-        WHERE pc_preview_url = #{pc_preview_url}
+        WHERE material_id = #{material_id}
 		limit 1
 	</select>
 </mapper>
