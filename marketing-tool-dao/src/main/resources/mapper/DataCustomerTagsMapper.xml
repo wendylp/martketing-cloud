@@ -203,5 +203,11 @@
 		tag_type = values(tag_type),
 		tag_name = values(tag_name)
 	</update>
+	
+	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT mobile
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
 
 </mapper>

@@ -288,5 +288,11 @@
 		on duplicate key update
 		order_no = values(order_no)
 	</update>
+	
+	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT mobile
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
 
 </mapper>

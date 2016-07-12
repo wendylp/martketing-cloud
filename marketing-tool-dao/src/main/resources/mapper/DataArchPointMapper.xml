@@ -221,4 +221,10 @@
 		batch_id = values(batch_id)
 	</update>
 	
+	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT mobile
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+	
 </mapper>

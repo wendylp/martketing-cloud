@@ -215,5 +215,11 @@
 		on duplicate key update
 		login_time = values(login_time)
 	</update>
+	
+	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT mobile
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
 
 </mapper>

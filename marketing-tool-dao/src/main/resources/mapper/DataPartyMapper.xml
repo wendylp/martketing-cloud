@@ -339,4 +339,11 @@
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE mapping_keyid = #{mapping_keyid}
 	</select>
+	
+	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT mobile
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+	
 </mapper>
