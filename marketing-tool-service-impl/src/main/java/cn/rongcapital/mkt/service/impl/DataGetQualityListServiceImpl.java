@@ -48,7 +48,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
         paramImportDataHistory.setStatus((byte)0);
 
         List<ImportDataHistory> importDataHistoryList = importDataHistoryDao.selectList(paramImportDataHistory);
-        int totalCount = importDataHistoryDao.selectListCount(null);
+        int totalCount = importDataHistoryDao.selectListCount(paramImportDataHistory);
         List<DatareportColumns> datareportColumnList = datareportColumnsDao.selectListByFieldOrder();
         if (datareportColumnList != null && !datareportColumnList.isEmpty()) {
             for (DatareportColumns datareportColumns : datareportColumnList) {
