@@ -98,30 +98,30 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 							criteriasList.add(criteria);
 						}
 					}
-					Criteria criteriaAll = new Criteria().andOperator(criteriasList.toArray(new Criteria[criteriasList.size()]));
-					List<DataParty> dataPartyList = mongoTemplate.find(new Query().addCriteria(criteriaAll), DataParty.class);
-					if(CollectionUtils.isNotEmpty(dataPartyList)) {
-						for(DataParty dataParty:dataPartyList) {
+				}
+				Criteria criteriaAll = new Criteria().andOperator(criteriasList.toArray(new Criteria[criteriasList.size()]));
+				List<DataParty> dataPartyList = mongoTemplate.find(new Query().addCriteria(criteriaAll), DataParty.class);
+				if(CollectionUtils.isNotEmpty(dataPartyList)) {
+					for(DataParty dataParty:dataPartyList) {
 //							List<Segment> sListT = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId")
 //											       .is(segmentationBody.getHeadId())
 //											       .and("dataId").is(dataParty.getMid())),
 //											       Segment.class);
 //							if(CollectionUtils.isEmpty(sListT)) {//不存在，则插入
-							if(!lastSegmentDataIdSet.contains(dataParty.getMid()+"")) {//不存在，则插入
-								Segment segment = new Segment();
-								segment.setDataId(dataParty.getMid());
-								segment.setSegmentationHeadId(segmentationBody.getHeadId());
-								if(dataParty.getMdType()==DataTypeEnum.WECHAT.getCode()) {//如果是微信数据
-									segment.setName(dataParty.getWxName());
-								} else {
-									segment.setName(dataParty.getName());
-								}
-								segment.setMdType(dataParty.getMdType());
-								segment.setMappingKeyid(dataParty.getMappingKeyid());
-								mongoTemplate.insert(segment);
-							} else {//存在,则删除之前list里的id
-								lastSegmentDataIdSet.remove(dataParty.getMid()+"");
+						if(!lastSegmentDataIdSet.contains(dataParty.getMid()+"")) {//不存在，则插入
+							Segment segment = new Segment();
+							segment.setDataId(dataParty.getMid());
+							segment.setSegmentationHeadId(segmentationHead.getId());
+							if(dataParty.getMdType()==DataTypeEnum.WECHAT.getCode()) {//如果是微信数据
+								segment.setName(dataParty.getWxName());
+							} else {
+								segment.setName(dataParty.getName());
 							}
+							segment.setMdType(dataParty.getMdType());
+							segment.setMappingKeyid(dataParty.getMappingKeyid());
+							mongoTemplate.insert(segment);
+						} else {//存在,则删除之前list里的id
+							lastSegmentDataIdSet.remove(dataParty.getMid()+"");
 						}
 					}
 				}
