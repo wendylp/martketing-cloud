@@ -60,10 +60,10 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 				continue;//未发布的细分不进行同步
 			}
 			List<Segment> lastSegmentList = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
-			Set<Integer> lastSegmentDataIdSet = new HashSet<Integer>();
+			Set<String> lastSegmentDataIdSet = new HashSet<String>();
 			if(CollectionUtils.isNotEmpty(lastSegmentList)) {
 				for(Segment s:lastSegmentList) {
-					lastSegmentDataIdSet.add(s.getDataId());
+					lastSegmentDataIdSet.add(s.getDataId()+"");
 				}
 			}
 			//SEGMENTATION_GROUP_MEMBER_MOST_COUNT:每个组最多的标签数
@@ -107,7 +107,7 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 //											       .and("dataId").is(dataParty.getMid())),
 //											       Segment.class);
 //							if(CollectionUtils.isEmpty(sListT)) {//不存在，则插入
-							if(!lastSegmentDataIdSet.contains(dataParty.getMid())) {//不存在，则插入
+							if(!lastSegmentDataIdSet.contains(dataParty.getMid()+"")) {//不存在，则插入
 								Segment segment = new Segment();
 								segment.setDataId(dataParty.getMid());
 								segment.setSegmentationHeadId(segmentationBody.getHeadId());
@@ -120,17 +120,17 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 								segment.setMappingKeyid(dataParty.getMappingKeyid());
 								mongoTemplate.insert(segment);
 							} else {//存在,则删除之前list里的id
-								lastSegmentDataIdSet.remove(dataParty.getMid());
+								lastSegmentDataIdSet.remove(dataParty.getMid()+"");
 							}
 						}
 					}
 				}
 			}
 			if(CollectionUtils.isNotEmpty(lastSegmentDataIdSet)) {
-				for(int dataId:lastSegmentDataIdSet) {
+				for(String dataId:lastSegmentDataIdSet) {
 					mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId")
 						       .is(segmentationHead.getId())
-						       .and("dataId").is(dataId)),
+						       .and("dataId").is(Integer.parseInt(dataId))),
 						       Segment.class);
 				}
 			}
