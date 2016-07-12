@@ -3,11 +3,26 @@ package cn.rongcapital.mkt.job.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
-import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.dao.DataArchPointDao;
+import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
+import cn.rongcapital.mkt.dao.DataLoginDao;
+import cn.rongcapital.mkt.dao.DataMemberDao;
+import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.DataPaymentDao;
+import cn.rongcapital.mkt.dao.DataPopulationDao;
+import cn.rongcapital.mkt.dao.DataShoppingDao;
+import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.*;
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.DataArchPoint;
 import cn.rongcapital.mkt.po.DataCustomerTags;
 import cn.rongcapital.mkt.po.DataLogin;
@@ -18,22 +33,7 @@ import cn.rongcapital.mkt.po.DataPopulation;
 import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.WechatMember;
 import cn.rongcapital.mkt.po.base.BaseQuery;
-import cn.rongcapital.mkt.po.mongodb.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSON;
-
-import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.mongodb.DataPartyRepository;
-import cn.rongcapital.mkt.service.DataPartySyncMongoTaskService;
-import org.springframework.util.CollectionUtils;
+import cn.rongcapital.mkt.po.mongodb.AbstractBaseMongoVO;
 
 //同步数据至Mongodb
 
@@ -281,7 +281,7 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                     };
             syncToMongo(data, dataShoppingDao, processor, dataType, dataPartyId);
 
-        }else if(dataType.intValue() == DataTypeEnum.WECHAT.getCode()){
+        }else if(dataType.intValue() == DataTypeEnum.WECHAT.getCode() && StringUtils.isNumeric(mappingKeyId)){
 
             WechatMember wechatMember = new WechatMember();
             wechatMember.setId(Long.valueOf(mappingKeyId));
