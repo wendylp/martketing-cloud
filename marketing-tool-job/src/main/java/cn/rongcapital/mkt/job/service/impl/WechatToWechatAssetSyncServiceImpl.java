@@ -2,8 +2,11 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.po.WechatAsset;
+import cn.rongcapital.mkt.po.WechatRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -81,6 +84,24 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService{
                 paramMap.put("group_ids",groupIds);
                 paramMap.put("total_count", totalCount);
                 wechatAssetDao.updateGroupIdsAndTotalCount(paramMap);
+            }
+        }
+
+        //Todo:更新微信资产的状态信息，未来做成PO与上面那个for循环进行合并
+        for(String wxAcct : alreadyImportedWxAcctList){
+            WechatRegister wechatRegister = new WechatRegister();
+            wechatRegister.setWxAcct(wxAcct);
+            wechatRegister.setStatus(new Integer(0).byteValue());  //0代表有效
+            List<WechatRegister> wechatRegisterList = wechatRegisterDao.selectList(wechatRegister);
+            if(!CollectionUtils.isEmpty(wechatRegisterList)){
+                wechatRegister = wechatRegisterList.get(0);
+                WechatAsset wechatAsset = new WechatAsset();
+                wechatAsset.setAssetName(wechatRegister.getName());
+                wechatAsset.setAssetType(wechatRegister.getType());
+                wechatAsset.setImgfileUrl(wechatRegister.getHeaderImage());
+                wechatAsset.setWxAcct(wechatRegister.getWxAcct());
+                wechatAsset.setNickname(wechatRegister.getNickname());
+                wechatAssetDao.updateByWxacct(wechatAsset);
             }
         }
     }

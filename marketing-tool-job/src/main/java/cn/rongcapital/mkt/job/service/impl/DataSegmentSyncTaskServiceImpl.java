@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.dao.SegmentationBodyDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -56,8 +57,13 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 			if(segmentationHead.getPublishStatus() == ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH) {
 				continue;//未发布的细分不进行同步
 			}
-			//删除旧segment数据
-//			mongoTemplate.findAllAndRemove(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
+			List<Segment> lastSegmentList = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
+			List<Integer> lastSegmentDataIdList = new ArrayList<Integer>();
+			if(CollectionUtils.isNotEmpty(lastSegmentList)) {
+				for(Segment s:lastSegmentList) {
+					lastSegmentDataIdList.add(s.getDataId());
+				}
+			}
 			//SEGMENTATION_GROUP_MEMBER_MOST_COUNT:每个组最多的标签数
 			for(int groupIndex=0;groupIndex<ApiConstant.SEGMENTATION_GROUP_MEMBER_MOST_COUNT;groupIndex++) {
 				SegmentationBody segmentationBodyT = new SegmentationBody(); 
@@ -94,15 +100,16 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 					List<DataParty> dataPartyList = mongoTemplate.find(new Query().addCriteria(criteriaAll), DataParty.class);
 					if(CollectionUtils.isNotEmpty(dataPartyList)) {
 						for(DataParty dataParty:dataPartyList) {
-							List<Segment> sListT = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId")
-											       .is(segmentationBody.getHeadId())
-											       .and("dataId").is(dataParty.getMid())),
-											       Segment.class);
-							if(CollectionUtils.isEmpty(sListT)) {//不存在，则插入
+//							List<Segment> sListT = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId")
+//											       .is(segmentationBody.getHeadId())
+//											       .and("dataId").is(dataParty.getMid())),
+//											       Segment.class);
+//							if(CollectionUtils.isEmpty(sListT)) {//不存在，则插入
+							if(!lastSegmentDataIdList.contains(dataParty.getMid())) {//不存在，则插入
 								Segment segment = new Segment();
 								segment.setDataId(dataParty.getMid());
 								segment.setSegmentationHeadId(segmentationBody.getHeadId());
-								if(dataParty.getMdType()==8) {//如果是微信数据
+								if(dataParty.getMdType()==DataTypeEnum.WECHAT.getCode()) {//如果是微信数据
 									segment.setName(dataParty.getWxName());
 								} else {
 									segment.setName(dataParty.getName());
@@ -110,9 +117,19 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 								segment.setMdType(dataParty.getMdType());
 								segment.setMappingKeyid(dataParty.getMappingKeyid());
 								mongoTemplate.insert(segment);
+							} else {//存在,则删除之前list里的id
+								lastSegmentDataIdList.remove(dataParty.getMid());
 							}
 						}
 					}
+				}
+			}
+			if(CollectionUtils.isNotEmpty(lastSegmentDataIdList)) {
+				for(int dataId:lastSegmentDataIdList) {
+					mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId")
+						       .is(segmentationHead.getId())
+						       .and("dataId").is(dataId)),
+						       Segment.class);
 				}
 			}
 		}
