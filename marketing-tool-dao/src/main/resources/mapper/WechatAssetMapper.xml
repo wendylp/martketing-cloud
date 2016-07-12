@@ -177,6 +177,12 @@
 		WHERE wx_acct = #{wx_acct}
 	</update>
 
+	<update id="updateByWxacct" parameterType="cn.rongcapital.mkt.po.WechatAsset">
+		<![CDATA[UPDATE wechat_asset]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE wx_acct = #{wxAcct}]]>
+	</update>
+
 	<delete id="deleteRecordByUin" parameterType="java.lang.String">
 		DELETE
 		<include refid="QUERY_FROM_TABLE"/>

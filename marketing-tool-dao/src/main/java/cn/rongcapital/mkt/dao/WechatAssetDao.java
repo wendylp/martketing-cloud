@@ -108,4 +108,11 @@ public interface WechatAssetDao extends BaseDao<WechatAsset>{
 	 * @return int
 	 */
 	void deleteRecordByUin(@Param("uin") String uin);
+
+	/**
+	 * 根据微信号更新微信资产相关信息
+	 * @param paramMap
+	 * @return int
+	 */
+	void updateByWxacct(WechatAsset wechatAsset);
 }
