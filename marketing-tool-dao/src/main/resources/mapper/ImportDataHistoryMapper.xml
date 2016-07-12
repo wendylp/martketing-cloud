@@ -10,9 +10,6 @@
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM import_data_history]]></sql>
 
-	<!-- 查询复合来源表-->
-	<sql id="QUERY_FROM_UNION_LOG_TABLE"><![CDATA[FROM import_data_history left join import_data_modify_log on 1=1 where status=0]]></sql>
-
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
@@ -130,6 +127,8 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 
+	<!-- 其它SQL语句 -->
+	
 	<select id="queryByFileUnique"  resultType="cn.rongcapital.mkt.po.ImportDataHistory">
 		SELECT
 		<include refid="QUERY_COLUMN_LIST"/>
@@ -137,7 +136,9 @@
 		where file_unique = #{fileUnique} limit 1
 	</select>
 	
-	<!-- 其它SQL语句 -->
+	<!-- 查询复合来源表-->
+	<sql id="QUERY_FROM_UNION_LOG_TABLE"><![CDATA[FROM import_data_history left join import_data_modify_log on 1=1 where status=0]]></sql>
+	
 	<select id="selectMigrationFileGeneralInfo" resultType="java.util.Map">
 		SELECT
 		sum(total_rows) as total_rows, max(import_end_time) as import_end_time
