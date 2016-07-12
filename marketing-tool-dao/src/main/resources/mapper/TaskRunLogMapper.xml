@@ -113,6 +113,5 @@
 		<include refid="QUERY_RECENTTASK_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_ENDTIME_CLAUSE"/>
-		group by task_id
 	</select>	
 </mapper>
