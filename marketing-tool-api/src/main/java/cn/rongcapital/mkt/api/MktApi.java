@@ -930,7 +930,7 @@ public class MktApi {
         if (taskRunLogList != null && !taskRunLogList.isEmpty()) {
             for (TaskRunLog taskRunLog : taskRunLogList) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("task_id", taskRunLog.getTaskId());
+                map.put("task_id", taskRunLog.getId());
                 map.put("filename", taskRunLog.getTaskName());
                 result.getData().add(map);
             }
