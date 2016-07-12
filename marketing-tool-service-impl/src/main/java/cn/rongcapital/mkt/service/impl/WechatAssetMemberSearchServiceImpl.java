@@ -58,7 +58,8 @@ public class WechatAssetMemberSearchServiceImpl implements WechatAssetMemberSear
                 Long id = (Long) map.get("id");
                 map.put("id",transformToDataPartyId(id));
                 if(map.get("sex") != null){
-                    map.put("gender", GenderUtils.byteToChar((Byte)map.get("sex")));
+                    Integer sex = (Integer) map.get("sex");
+                    map.put("gender", GenderUtils.byteToChar(sex.byteValue()));
                     map.remove("sex");
                 }
                 if(map.get("head_image_url") == null){

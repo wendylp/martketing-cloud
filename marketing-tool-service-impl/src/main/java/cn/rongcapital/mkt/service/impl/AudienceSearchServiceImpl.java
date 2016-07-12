@@ -95,7 +95,8 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 		if(resultList != null && resultList.size() > 0){
 			for(Map<String,Object> map : resultList){
 				if(map.get("gender") != null){
-					map.put("gender", GenderUtils.byteToChar((Byte) map.get("gender")));
+                    Integer gender = (Integer) map.get("gender");
+					map.put("gender", GenderUtils.byteToChar(gender.byteValue()));
 				}
 			}
 		}
