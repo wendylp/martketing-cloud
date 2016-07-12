@@ -135,7 +135,7 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
         if(wtuwen.getChannelType() != null){
             switch (wtuwen.getChannelType()){
                 case 1:
-                    imgTextAsset.setType(wtuwen.getChannelType().byteValue());
+                    imgTextAsset.setType(ApiConstant.WECHAT_IMGTEXT_TYPE);
                     imgTextAsset.setOwnerName(wtuwen.getPubName());
                     break;
                 case 2:
