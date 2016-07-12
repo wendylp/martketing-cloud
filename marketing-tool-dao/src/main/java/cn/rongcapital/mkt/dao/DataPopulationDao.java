@@ -52,5 +52,16 @@ public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilt
      * @return
      */
 	int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
+	
+	
+    /**
+     * @功能简述 : 根据手机号查询data_population的数据
+     * @param Mobile
+     * 				手机号
+     * @return DataPopulation
+     * 				data_population对象
+     * 
+     */
+	DataPopulation getDataPopulationByMobile(String Mobile);
     
 }

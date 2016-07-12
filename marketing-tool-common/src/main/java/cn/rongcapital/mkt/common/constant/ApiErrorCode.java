@@ -28,6 +28,7 @@ public enum ApiErrorCode {
 	BIZ_ERROR_CANPAIGN_NOT_PUBLISH(3007,"campaign not published"),//活动没有发布
 	BIZ_ERROR_SEGMENTATION_NOT_PUBLISH(3008,"egmentation not published"),//细分未发布
 	BIZ_ERROR_CANPAIGN_CAN_NOT_START(3009,"campaign can not start"),//活动无法开启
+	BIZ_ERROR_CONTACTINFO_MOBILE(3010,"can not get the mobile"),//
 	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
