@@ -272,4 +272,10 @@
         batch_id = COALESCE(values(batch_id), batch_id)
 	</insert>
 	
+	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT mobile
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+	
 </mapper>
