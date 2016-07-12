@@ -7,6 +7,8 @@ import java.util.Date;
 public class ImportDataHistory extends BaseQuery {
     private Long id;
 
+    private String name;
+
     private Date importStartTime;
 
     private Date importEndTime;
@@ -45,18 +47,20 @@ public class ImportDataHistory extends BaseQuery {
 
     private Integer fileType;
 
-    public ImportDataHistory() {}
-
-    public ImportDataHistory(Integer index, Integer size) {
-        super(index, size);
-    }
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
     }
 
     public Date getImportStartTime() {
@@ -120,7 +124,7 @@ public class ImportDataHistory extends BaseQuery {
     }
 
     public void setDownloadFilename(String downloadFilename) {
-        this.downloadFilename = downloadFilename;
+        this.downloadFilename = downloadFilename == null ? null : downloadFilename.trim();
     }
 
     public Integer getEmailRows() {
