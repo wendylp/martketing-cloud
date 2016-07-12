@@ -1,7 +1,9 @@
 package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,10 +60,10 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 				continue;//未发布的细分不进行同步
 			}
 			List<Segment> lastSegmentList = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
-			List<Integer> lastSegmentDataIdList = new ArrayList<Integer>();
+			Set<Integer> lastSegmentDataIdSet = new HashSet<Integer>();
 			if(CollectionUtils.isNotEmpty(lastSegmentList)) {
 				for(Segment s:lastSegmentList) {
-					lastSegmentDataIdList.add(s.getDataId());
+					lastSegmentDataIdSet.add(s.getDataId());
 				}
 			}
 			//SEGMENTATION_GROUP_MEMBER_MOST_COUNT:每个组最多的标签数
@@ -105,7 +107,7 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 //											       .and("dataId").is(dataParty.getMid())),
 //											       Segment.class);
 //							if(CollectionUtils.isEmpty(sListT)) {//不存在，则插入
-							if(!lastSegmentDataIdList.contains(dataParty.getMid())) {//不存在，则插入
+							if(!lastSegmentDataIdSet.contains(dataParty.getMid())) {//不存在，则插入
 								Segment segment = new Segment();
 								segment.setDataId(dataParty.getMid());
 								segment.setSegmentationHeadId(segmentationBody.getHeadId());
@@ -118,14 +120,14 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 								segment.setMappingKeyid(dataParty.getMappingKeyid());
 								mongoTemplate.insert(segment);
 							} else {//存在,则删除之前list里的id
-								lastSegmentDataIdList.remove(dataParty.getMid());
+								lastSegmentDataIdSet.remove(dataParty.getMid());
 							}
 						}
 					}
 				}
 			}
-			if(CollectionUtils.isNotEmpty(lastSegmentDataIdList)) {
-				for(int dataId:lastSegmentDataIdList) {
+			if(CollectionUtils.isNotEmpty(lastSegmentDataIdSet)) {
+				for(int dataId:lastSegmentDataIdSet) {
 					mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId")
 						       .is(segmentationHead.getId())
 						       .and("dataId").is(dataId)),
