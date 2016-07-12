@@ -110,7 +110,7 @@
 	
 	<select id="selectByEndtime" parameterType="cn.rongcapital.mkt.po.TaskRunLog" resultType="cn.rongcapital.mkt.po.TaskRunLog">
 		<![CDATA[SELECT]]>
-		<include refid="QUERY_RECENTTASK_COLUMN_LIST"/>
+		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_ENDTIME_CLAUSE"/>
 	</select>	
