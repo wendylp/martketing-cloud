@@ -1,6 +1,6 @@
 package cn.rongcapital.mkt.common.enums;
 
-public enum BASEventEnum {
+public enum BasEventEnum {
 
     EVENT("事件类型", "Event", ""), 
     DATE_TIME("事件发生的时间", "datatime", "createTime"), 
@@ -62,18 +62,17 @@ public enum BASEventEnum {
     OPEN_CARD_TIME("开卡时间", "OpenCardTime", "registTime"),
     CARD_BALANCE("卡内余额", "CardBalance", "cardAmt"),
     VALID_DAY("有效期（日）", "ValidDay", "expire"),
-    
 
     ;
 
-    private BASEventEnum(String basCNName, String basENName, String mcName) {
+    private BasEventEnum(String basCNName, String basENName, String mcName) {
         this.basCNName = basCNName;
         this.basENName = basENName;
         this.mcName = mcName;
     }
 
     /**
-     * BAS中的中文列明
+     * BAS中的中文列名
      */
     private String basCNName;
 

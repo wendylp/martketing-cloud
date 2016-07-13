@@ -8,7 +8,7 @@ import java.util.Date;
  * @author : nianjun.sun
  * @date : 2016-07-13
  *************************************************/
-public class BASEventOut {
+public class BasEventOut {
 
     /**
      * 事件类型
