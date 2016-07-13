@@ -80,4 +80,117 @@ public class BusEventOut {
      */
     private BigDecimal takeMoney;
 
+    /**
+     * 支出金额
+     */
+    private BigDecimal payMoney;
+
+    /**
+     * 账户余额
+     */
+    private BigDecimal accBalance;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 数据来源
+     */
+    private String dataSources;
+
+    /**
+     * 渠道分类
+     */
+    private String channelClassify;
+
+    /**
+     * 购物渠道ID
+     */
+    private String shopChannelId;
+
+    /**
+     * 购物渠道
+     */
+    private String shopChannel;
+
+    /**
+     * 支付方式
+     */
+    private String payWay;
+
+    /**
+     * 消费时间
+     */
+    private Date shopTime;
+
+    /**
+     * 商品ID
+     */
+    private String businessId;
+
+    /**
+     * 规格
+     */
+    private String format;
+
+    /**
+     * 颜色
+     */
+    private String color;
+
+    /**
+     * 折扣类型
+     */
+    private String discountType;
+
+    /**
+     * 折扣金额
+     */
+    private BigDecimal discountMoney;
+    
+    /**
+     * 单价
+     */
+    private BigDecimal price;
+    
+    /**
+     * 数量
+     */
+    private int number;
+    
+    /**
+     * 库存量
+     */
+    private int stockNumber;
+    
+    /**
+     * 品牌
+     */
+    private String brandName;
+    
+    /**
+     * 品牌Id
+     */
+    private String brandId;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
 }
