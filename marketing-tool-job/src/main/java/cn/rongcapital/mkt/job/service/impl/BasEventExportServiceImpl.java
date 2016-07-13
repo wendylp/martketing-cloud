@@ -1,14 +1,20 @@
 package cn.rongcapital.mkt.job.service.impl;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.enums.BasEventEnum;
 import cn.rongcapital.mkt.dao.DataArchPointDao;
 import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
 import cn.rongcapital.mkt.dao.DataLoginDao;
@@ -17,11 +23,14 @@ import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.DataPaymentDao;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
+import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.job.service.base.BasEventExportService;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.vo.out.BasEventOut;
 
 @Service
+@SuppressWarnings("rawtypes")
 public class BasEventExportServiceImpl implements BasEventExportService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -55,6 +64,19 @@ public class BasEventExportServiceImpl implements BasEventExportService {
 
     @Override
     public File exportData() {
+        List<BasEventOut> basEventOuts = new ArrayList<>();
+        Map<String, BaseDao> daoMap = getInitDaoMap();
+        for (Map.Entry<String, BaseDao> entry : daoMap.entrySet()) {
+            List<BaseQuery> datas = entry.getValue().selectList(null);
+            if (!CollectionUtils.isEmpty(datas)) {
+                for (int i = 0; i < datas.size(); i++) {
+                    BaseQuery data = datas.get(i);
+                    basEventOuts.add(transferDataToBasEventVO(data));
+                }
+            }
+        }
+
+
         return null;
     }
 
@@ -87,19 +109,64 @@ public class BasEventExportServiceImpl implements BasEventExportService {
         return basEventOuts;
     }
 
+    // 根据每次截取出来的dataParty数据,查询相关的数据表,并导入BasEventOut对象中去
     private List<BasEventOut> fillBasEventVo(List<DataParty> dataParties) {
         int dataPartyCount = dataParties.size();
         List<BasEventOut> basEventOuts = new ArrayList<>(dataPartyCount);
         // 如果没有数据,则返回空对象,坚决不返回null
         if (dataPartyCount != 0) {
-
             for (int i = 0; i < dataPartyCount; i++) {
+                DataParty dataParty = dataParties.get(i);
+                Integer dataType = dataParty.getMdType();
+                if (dataType == null) {
+                    logger.error("DataParty表中id为{}的数据md_type为null", dataParty.getId());
+                    continue;
+                } else {
 
+                }
             }
 
         }
 
         return basEventOuts;
+    }
+
+    private Map<String, BaseDao> getInitDaoMap() {
+        Map<String, BaseDao> daoMap = new HashMap<>();
+        daoMap.put("dataPopulationDao", dataPopulationDao);
+        daoMap.put("dataCustomerTagsDao", dataCustomerTagsDao);
+        daoMap.put("dataArchPointDao", dataArchPointDao);
+        daoMap.put("dataMemberDao", dataMemberDao);
+        daoMap.put("dataLoginDao", dataLoginDao);
+        daoMap.put("dataPaymentDao", dataPaymentDao);
+        daoMap.put("dataShoppingDao", dataShoppingDao);
+
+        return daoMap;
+    }
+
+    private BasEventOut transferDataToBasEventVO(BaseQuery data) {
+        BasEventOut basEventOut = new BasEventOut();
+        BasEventEnum[] basEventEnums = BasEventEnum.values();
+        boolean isNothingAssigned = true;
+        for (BasEventEnum basEventEnum : basEventEnums) {
+            if (StringUtils.isEmpty(basEventEnum.getMcName())) {
+                continue;
+            } else {
+                try {
+                    Field dataField = data.getClass().getField(basEventEnum.getMcName());
+                    Field baseEventVOField = basEventOut.getClass().getField(basEventEnum.getBasENName());
+                    dataField.setAccessible(true);
+                    baseEventVOField.setAccessible(true);
+                    Object dataFieldValue = dataField.get(data);
+                    baseEventVOField.set(data, dataFieldValue);
+                } catch (NoSuchFieldException | SecurityException | IllegalArgumentException
+                                | IllegalAccessException e) {
+                    logger.info("BasEvent对象转换的时候调用了不存在的field", e);
+                }
+            }
+        }
+
+        return basEventOut;
     }
 
 
