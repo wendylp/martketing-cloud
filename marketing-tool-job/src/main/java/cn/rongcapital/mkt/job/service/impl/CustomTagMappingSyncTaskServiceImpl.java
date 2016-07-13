@@ -48,7 +48,7 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
                 //Todo:4.跟新原始的tagOriginal表的字段
                 customTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_INVALIDATE);
                 customTagOriginalDataMapDao.updateById(customTagOriginalDataMap);
-                //Todo:5.构造出CustomTag
+                //Todo:5.构造出CustomTagMap
                 CustomTagMap customTagMap = new CustomTagMap();
                 customTagMap.setTagId(customTagOriginalDataMap.getTagId());
                 customTagMap.setType(customTagOriginalDataMap.getOriginalDataType().byteValue());

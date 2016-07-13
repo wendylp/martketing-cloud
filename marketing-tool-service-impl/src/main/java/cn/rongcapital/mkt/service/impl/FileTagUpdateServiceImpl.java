@@ -66,14 +66,14 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         Integer legalRows = importDataHistory.getLegalRows();
         if(legalRows != null && legalRows.intValue() > 0){
             if (hasTagNames(fileTagUpdateIn)) {
-                //Todo:1.这里还需要把status给扔进去，先将status置为1表示无效
-                if(!addNewCustomTag(fileTagUpdateIn)){
+                //Todo:1.将上传数据通过fileUnique选出不同的手机号
+                List<String> dataIdentifierList = getOriginalIdentifierList(importDataHistory.getFileUnique(), fileType);
+                //Todo:2.这里还需要把status给扔进去，先将status置为1表示无效
+                if(!addNewCustomTag(fileTagUpdateIn,dataIdentifierList.size())){
                     baseOutput.setCode(ApiErrorCode.DB_ERROR.getCode());
                     baseOutput.setMsg("自定义标签名称重复，新建标签失败");
                     return baseOutput;
                 }
-                //Todo:2.将上传数据通过fileUnique选出不同的手机号
-                List<String> dataIdentifierList = getOriginalIdentifierList(importDataHistory.getFileUnique(), fileType);
                 //Todo:3.选择本次上传的customId，然后与上一步选出的数据唯一标识一起存入customTagOriginalMap表中，将status置为0
                 List<Long> tagIds =  customTagDao.selectIdsByCustomTags(fileTagUpdateIn.getTag_names());
                 if(!CollectionUtils.isEmpty(dataIdentifierList) && !CollectionUtils.isEmpty(tagIds)){
@@ -135,7 +135,7 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
     }
 
     //1将上传上来的标签名称列表以及上一步选出的总人群数量插入到custom_tag表中
-    private boolean addNewCustomTag(FileTagUpdateIn fileTagUpdateIn) {
+    private boolean addNewCustomTag(FileTagUpdateIn fileTagUpdateIn,Integer customTagDataNumber) {
         List<CustomTag> customTagList = new ArrayList<CustomTag>();
         for(String tagName : fileTagUpdateIn.getTag_names()){
             CustomTag customTag = new CustomTag();
@@ -144,6 +144,7 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
             if(count != null && count > 0){
                 return false;
             }
+            customTag.setCoverAudienceCount(customTagDataNumber);
             customTag.setStatus(ApiConstant.CUSTOM_TAG_INVALIDATE);
             customTagList.add(customTag);
         }
