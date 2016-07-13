@@ -56,7 +56,7 @@ public enum BASEventEnum {
     LOGIN_PAGE("登录页面", "LoginPage", "loginUrl"),
     CREATE_TIME("创建时间", "CreateTime", "createTime"),
     CLICK_TIME("点击时间", "ClickTime", "clickTime"),
-    VIP_CARD_NUM("会员卡号", "VipCardNum", "member_id"),
+    VIP_CARD_NUM("会员卡号", "VipCardNum", "memberId"),
     VIP_INTEGRAL("会员积分", "VipIntegral", "memberPoints"),
     VIP_LEVEL("会员等级", "VipLevel", "memberLevel"),
     OPEN_CARD_TIME("开卡时间", "OpenCardTime", "registTime"),
