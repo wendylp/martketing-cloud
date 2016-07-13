@@ -37,7 +37,34 @@ public class DataMainBaseInfoUpdateIn  extends BaseInput {
 	
 	private String childAmount;
 	
-	private String salary; 
+	private String salary;
+	
+    private String birthday;
+	
+    private String bloodType;
+    
+    private Integer iq;
+    
+    private String job;
+    
+	private String citizenship;
+    
+    private String provice;
+    
+    private String city;
+    
+    private String nationality;
+    
+    private String monthlyIncome;
+    
+    private String monthlyConsume;
+    
+    private String maritalStatus;
+    
+    private String education;
+    
+    private String employment;
+	
 	
 	@NotEmpty
 	private String userToken;
@@ -168,4 +195,111 @@ public class DataMainBaseInfoUpdateIn  extends BaseInput {
     public void setDataType(Integer dataType) {
         this.dataType = dataType;
     }
+	
+	public String getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+
+	@JsonProperty("blood_type")
+	public String getBloodType() {
+		return bloodType;
+	}
+
+	public void setBloodType(String bloodType) {
+		this.bloodType = bloodType;
+	}
+
+	public Integer getIq() {
+		return iq;
+	}
+
+	public void setIq(Integer iq) {
+		this.iq = iq;
+	}
+	
+    public String getJob() {
+		return job;
+	}
+
+	public void setJob(String job) {
+		this.job = job;
+	}
+	
+	public String getCitizenship() {
+		return citizenship;
+	}
+
+	public void setCitizenship(String citizenship) {
+		this.citizenship = citizenship;
+	}
+
+	public String getProvice() {
+		return provice;
+	}
+
+	public void setProvice(String provice) {
+		this.provice = provice;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
+	public String getNationality() {
+		return nationality;
+	}
+
+	public void setNationality(String nationality) {
+		this.nationality = nationality;
+	}
+
+	@JsonProperty("monthly_income")
+	public String getMonthlyIncome() {
+		return monthlyIncome;
+	}
+
+	public void setMonthlyIncome(String monthlyIncome) {
+		this.monthlyIncome = monthlyIncome;
+	}
+    @JsonProperty("monthly_consume")
+	public String getMonthlyConsume() {
+		return monthlyConsume;
+	}
+
+	public void setMonthlyConsume(String monthlyConsume) {
+		this.monthlyConsume = monthlyConsume;
+	}
+	@JsonProperty("marital_status")
+	public String getMaritalStatus() {
+		return maritalStatus;
+	}
+
+	public void setMaritalStatus(String maritalStatus) {
+		this.maritalStatus = maritalStatus;
+	}
+
+	public String getEducation() {
+		return education;
+	}
+
+	public void setEducation(String education) {
+		this.education = education;
+	}
+
+	public String getEmployment() {
+		return employment;
+	}
+
+	public void setEmployment(String employment) {
+		this.employment = employment;
+	}
+    
 }

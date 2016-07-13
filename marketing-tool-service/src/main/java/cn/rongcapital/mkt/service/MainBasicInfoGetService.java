@@ -9,5 +9,7 @@ package cn.rongcapital.mkt.service;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface MainBasicInfoGetService {
+	String getMobileFromContactInfo(Integer contactId, Integer dataType, String userToken);
+    
     BaseOutput getMainBasicInfo(Integer contactId, Integer dataType, String userToken);
 }
