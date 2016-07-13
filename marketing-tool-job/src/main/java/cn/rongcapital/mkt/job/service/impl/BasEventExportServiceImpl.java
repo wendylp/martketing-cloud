@@ -27,7 +27,7 @@ public class BasEventExportServiceImpl implements BasEventExportService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     // 每次获取的数据量,不能一次把数据库的数据都导出来
-    private static final int LOOP_TIME = 1000;
+    private static final int LOOP_COUNT = 1000;
 
     @Autowired
     private DataPartyDao dataPartyDao;
@@ -58,15 +58,46 @@ public class BasEventExportServiceImpl implements BasEventExportService {
         return null;
     }
 
-    // 获取
+    // 获取所有整理为BAS Event格式的数据
     private List<BasEventOut> getBasData() {
+
         // 1.获取dataParty中的数据数量,这也是最终导出的数据数量
         DataParty paramDataPary = new DataParty();
         // 导出未被删除的数据
         paramDataPary.setStatus((byte) 0);
         int totalCount = dataPartyDao.selectListCount(paramDataPary);
-        logger.info("BAS Event预计要导出的数据量为 : {}条", totalCount);
+        List<DataParty> dataParties = dataPartyDao.selectList(paramDataPary);
         List<BasEventOut> basEventOuts = new ArrayList<>(totalCount);
+
+        logger.info("BAS Event预计要导出的数据量为 : {}条", totalCount);
+
+        // 循环次数为"一个房间能住N个人,M个人需要多少房间"的问题.不解释
+        int loopTimes = (totalCount + LOOP_COUNT - 1) / LOOP_COUNT;
+        for (int i = 0; i < loopTimes; i++) {
+            int startIndex = i * LOOP_COUNT;
+            int endIndex = (i + 1) * LOOP_COUNT;
+            // 如果是最后一次循环,endIndex就是最大值了.
+            if (i == loopTimes - 1) {
+                endIndex = totalCount;
+            }
+
+            basEventOuts.addAll(fillBasEventVo(dataParties.subList(startIndex, endIndex)));
+        }
+
+        return basEventOuts;
+    }
+
+    private List<BasEventOut> fillBasEventVo(List<DataParty> dataParties) {
+        int dataPartyCount = dataParties.size();
+        List<BasEventOut> basEventOuts = new ArrayList<>(dataPartyCount);
+        // 如果没有数据,则返回空对象,坚决不返回null
+        if (dataPartyCount != 0) {
+
+            for (int i = 0; i < dataPartyCount; i++) {
+
+            }
+
+        }
 
         return basEventOuts;
     }
