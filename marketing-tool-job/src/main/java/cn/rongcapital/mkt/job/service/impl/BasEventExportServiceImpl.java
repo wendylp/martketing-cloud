@@ -65,6 +65,7 @@ public class BasEventExportServiceImpl implements BasEventExportService {
         // 导出未被删除的数据
         paramDataPary.setStatus((byte) 0);
         int totalCount = dataPartyDao.selectListCount(paramDataPary);
+        logger.info("BAS Event预计要导出的数据量为 : {}条", totalCount);
         List<BasEventOut> basEventOuts = new ArrayList<>(totalCount);
 
         return basEventOuts;
