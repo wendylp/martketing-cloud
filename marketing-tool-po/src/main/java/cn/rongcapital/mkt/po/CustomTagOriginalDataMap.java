@@ -9,8 +9,6 @@ public class CustomTagOriginalDataMap extends BaseQuery {
 
     private Integer originalDataType;
 
-    private Integer originalDataId;
-
     private String dataUniqueIdentifier;
 
     private Byte status;
@@ -37,14 +35,6 @@ public class CustomTagOriginalDataMap extends BaseQuery {
 
     public void setOriginalDataType(Integer originalDataType) {
         this.originalDataType = originalDataType;
-    }
-
-    public Integer getOriginalDataId() {
-        return originalDataId;
-    }
-
-    public void setOriginalDataId(Integer originalDataId) {
-        this.originalDataId = originalDataId;
     }
 
     public String getDataUniqueIdentifier() {

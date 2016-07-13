@@ -67,4 +67,11 @@ public interface OriginalDataArchPointDao extends BaseDao<OriginalDataArchPoint>
 	 * @return
 	 */
 	int updateStatusByFileUnique(@Param("fileUnique") String fileUnique, @Param("status") Integer status);
+
+	/**
+	 * 选取唯一标识列表
+	 * @param fileUnique
+	 * @return
+	 */
+	List<String> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
 }

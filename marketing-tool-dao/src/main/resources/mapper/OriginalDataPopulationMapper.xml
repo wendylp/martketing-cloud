@@ -225,4 +225,10 @@
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE file_unique = #{file_unique}
 	</select>
+
+	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT distinct mobile
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE file_unique = #{file_unique}
+	</select>
 </mapper>

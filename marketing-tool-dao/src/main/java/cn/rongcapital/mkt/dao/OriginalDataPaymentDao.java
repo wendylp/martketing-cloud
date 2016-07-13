@@ -60,4 +60,11 @@ public interface OriginalDataPaymentDao extends BaseDao<OriginalDataPayment> {
 	 * @return
 	 */
 	int updateStatusByFileUnique(@Param("fileUnique") String fileUnique, @Param("status") Integer status);
+
+	/**
+	 * 选取唯一标识列表
+	 * @param paramMap
+	 * @return int
+	 */
+	List<String> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
 }

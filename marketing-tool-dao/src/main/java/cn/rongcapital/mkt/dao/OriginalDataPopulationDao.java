@@ -60,4 +60,11 @@ public interface OriginalDataPopulationDao extends BaseDao<OriginalDataPopulatio
 	 * @return
      */
 	int updateStatusByFileUnique(@Param("fileUnique") String fileUnique, @Param("status") Integer status);
+
+	/**
+	 * 根据FileUnique更新数据状态
+	 * @param fileUnique
+	 * @return
+	 */
+	List<String> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
 }
