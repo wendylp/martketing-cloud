@@ -13,10 +13,11 @@ package cn.rongcapital.mkt.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataParty;
-import org.apache.ibatis.annotations.Param;
 
 public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<DataParty>{
 	
@@ -138,4 +139,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @return
 	 */
 	Integer selectIdByMappingId(@Param("mapping_keyid") Long id);
+	
+	/**
+	 * 根据手机号更新data_party表数据
+	 * @param dataParty 
+	 * @return 更新数据条数
+	 */
+	int updateDataPartyInfo(DataParty dataParty);
 }

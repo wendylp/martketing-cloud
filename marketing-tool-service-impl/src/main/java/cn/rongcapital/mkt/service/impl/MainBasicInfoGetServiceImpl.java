@@ -67,21 +67,11 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 
     @Autowired
     private DataShoppingDao dataShoppingDao;
-
+    
     @Override
-    @ReadWrite(type = ReadWriteType.READ)
-    public BaseOutput getMainBasicInfo(Integer contactId, Integer dataType, String userToken) {
-        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-                        ApiConstant.INT_ZERO, null);
+    public String getMobileFromContactInfo(Integer contactId, Integer dataType, String userToken){
 
-        if (contactId == null || dataType == null) {
-        	result.setCode(ApiErrorCode.PARAMETER_ERROR.getCode());
-        	result.setMsg("传入参数不合法!");
-            return result;
-        }
-
-        String mobile = "";
-
+		String mobile = "";
 
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             mobile = dataPartyDao.selectMobileById(contactId);
@@ -98,13 +88,33 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
         } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
         } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
             mobile = dataShoppingDao.selectMobileById(contactId);
-        } else {
-            logger.error("传入错误的data type : {}", dataType);
+        }
+		
+    	return mobile;
+    }
+    
+    @Override
+    @ReadWrite(type = ReadWriteType.READ)
+    public BaseOutput getMainBasicInfo(Integer contactId, Integer dataType, String userToken) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+
+        if (contactId == null || dataType == null) {
         	result.setCode(ApiErrorCode.PARAMETER_ERROR.getCode());
-        	result.setMsg("传入参数data type不合法!");
+        	result.setMsg("传入参数不合法!");
             return result;
         }
-        
+
+        String mobile = this.getMobileFromContactInfo(contactId, dataType, userToken);
+
+
+//        {
+//            logger.error("传入错误的data type : {}", dataType);
+//        	result.setCode(ApiErrorCode.PARAMETER_ERROR.getCode());
+//        	result.setMsg("传入参数data type不合法!");
+//            return result;
+//        }
+//        
 //      if (CollectionUtils.isEmpty(partys)) {
 //      return result;
 //  }

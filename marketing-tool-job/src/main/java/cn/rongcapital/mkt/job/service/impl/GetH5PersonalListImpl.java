@@ -60,7 +60,7 @@ public class GetH5PersonalListImpl implements TaskService {
 
     private void insertPersonalInfo(H5MktPersonalListResponse h5MktPersonalListResponse) {
         List<Map<String,Object>> paramPersonals = new ArrayList<Map<String,Object>>();
-        if(h5MktPersonalListResponse.getPersonals().getPersonal() != null && h5MktPersonalListResponse.getPersonals().getPersonal().size() > 0){
+        if(h5MktPersonalListResponse != null && h5MktPersonalListResponse.getPersonals() != null && h5MktPersonalListResponse.getPersonals().getPersonal() != null && h5MktPersonalListResponse.getPersonals().getPersonal().size() > 0){
             for(H5Personal h5Personal :h5MktPersonalListResponse.getPersonals().getPersonal()){
                 if(personAlreadySaved(h5Personal)) continue;
                 Map<String,Object> paramPersonal = new HashMap<String,Object>();

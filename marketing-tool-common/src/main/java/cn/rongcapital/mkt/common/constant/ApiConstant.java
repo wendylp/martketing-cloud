@@ -173,4 +173,11 @@ public class ApiConstant {
 	
 	//调用后只执行1次的任务,该任务不存入task_schedule表，只在task_run_log表里记录任务日志
 	public static final int MANUAL_RUN_ONCE_TASK_ID = 0;
+
+	//自定义标签状态标识
+	public static final Byte CUSTOM_TAG_INVALIDATE = 1;
+
+	//自定义标签元数据状态标识
+	public static final Byte CUSTOM_TAG_ORIGINAL_DATA_MAP_VALIDATE = 0;
+	public static final Byte CUSTOM_TAG_ORIGINAL_DATA_MAP_INVALIDATE = 1;
 }

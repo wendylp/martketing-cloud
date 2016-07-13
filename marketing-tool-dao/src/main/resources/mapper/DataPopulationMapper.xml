@@ -284,4 +284,11 @@
         WHERE mobile = #{mobile}
 	</select>
 	
+	<!-- 修改记录通过手机号 -->
+	<update id="updateDataPopulation" parameterType="cn.rongcapital.mkt.po.DataPopulation">
+		<![CDATA[UPDATE data_population]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE mobile = #{mobile}]]>
+	</update>
+	
 </mapper>

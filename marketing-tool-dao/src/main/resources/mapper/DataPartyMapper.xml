@@ -346,4 +346,11 @@
         WHERE id = #{id}
 	</select>
 	
+	<!-- 修改记录通过手机号 -->
+	<update id="updateDataPartyInfo" parameterType="cn.rongcapital.mkt.po.DataParty">
+		<![CDATA[UPDATE data_party]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE mobile = #{mobile}]]>
+	</update>
+	
 </mapper>

@@ -13,10 +13,11 @@ package cn.rongcapital.mkt.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataPopulation;
-import org.apache.ibatis.annotations.Param;
 
 public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilterDao<DataPopulation>{
 	
@@ -56,12 +57,22 @@ public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilt
 	
     /**
      * @功能简述 : 根据手机号查询data_population的数据
-     * @param Mobile
+     * @param mobile
      * 				手机号
      * @return DataPopulation
      * 				data_population对象
      * 
      */
-	DataPopulation getDataPopulationByMobile(String Mobile);
+	DataPopulation getDataPopulationByMobile(@Param("mobile") String mobile);
+	
+    /**
+     * @功能简述 : 根据手机号更新data_population的数据
+     * @param dataPopulation
+     * 				data_population对象
+     * @return int
+     * 				更新记录条数
+     * 
+     */
+	int updateDataPopulation(DataPopulation dataPopulation);
     
 }
