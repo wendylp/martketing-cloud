@@ -164,7 +164,6 @@
 		SELECT distinct type ,owner_name
 		<include refid="QUERY_FROM_TABLE"/>
 		where status = #{status}
-		limit #{index},#{size}
 	</select>
 
 	<select id="selectImgtextAssetCountByType" resultType="java.util.Map">

@@ -491,12 +491,8 @@ public class MktApi {
 	@GET
 	@Path("/mkt.asset.imgtext.menulist.get")
 	public Object getImgtextAssetMenulist(@NotEmpty @QueryParam("user_token") String userToken,
-								  @NotEmpty @QueryParam("ver") String ver,
-								  @DefaultValue("1") @Min(1) @QueryParam("index") int index,
-								  @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size){
+								  @NotEmpty @QueryParam("ver") String ver){
 		BaseInput baseInput = new BaseInput();
-		baseInput.setIndex(index);
-		baseInput.setSize(size);
 		return getImgtextAssetMenulistService.getImgTextAssetMenulist(baseInput);
 	}
 
