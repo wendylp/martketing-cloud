@@ -65,17 +65,22 @@ public class BasEventExportServiceImpl implements BasEventExportService {
     @Override
     public File exportData() {
         List<BasEventOut> basEventOuts = new ArrayList<>();
-        Map<String, BaseDao> daoMap = getInitDaoMap();
+        Map<String, BaseDao> daoMap = getInitDataDaoMap();
         for (Map.Entry<String, BaseDao> entry : daoMap.entrySet()) {
             List<BaseQuery> datas = entry.getValue().selectList(null);
+
             if (!CollectionUtils.isEmpty(datas)) {
                 for (int i = 0; i < datas.size(); i++) {
                     BaseQuery data = datas.get(i);
-                    basEventOuts.add(transferDataToBasEventVO(data));
+                    BasEventOut tmpBasEventOut = transferDataToBasEventVO(data);
+                    if (tmpBasEventOut != null) {
+                        basEventOuts.add(tmpBasEventOut);
+                    }
                 }
             }
         }
 
+        List<Map<String, String>> colNames = new ArrayList<>();
 
         return null;
     }
@@ -131,15 +136,22 @@ public class BasEventExportServiceImpl implements BasEventExportService {
         return basEventOuts;
     }
 
-    private Map<String, BaseDao> getInitDaoMap() {
+    private Map<String, BaseDao> getInitDataDaoMap() {
         Map<String, BaseDao> daoMap = new HashMap<>();
-        daoMap.put("dataPopulationDao", dataPopulationDao);
-        daoMap.put("dataCustomerTagsDao", dataCustomerTagsDao);
         daoMap.put("dataArchPointDao", dataArchPointDao);
-        daoMap.put("dataMemberDao", dataMemberDao);
         daoMap.put("dataLoginDao", dataLoginDao);
         daoMap.put("dataPaymentDao", dataPaymentDao);
         daoMap.put("dataShoppingDao", dataShoppingDao);
+
+        return daoMap;
+    }
+
+    // TYPE1_人口属性,TYPE2_客户标签,TYPE4_会员卡记录是需要合并到User文件中的
+    private Map<String, BaseDao> getInitUserDaoMap() {
+        Map<String, BaseDao> daoMap = new HashMap<>();
+        daoMap.put("dataPopulationDao", dataPopulationDao);
+        daoMap.put("dataCustomerTagsDao", dataCustomerTagsDao);
+        daoMap.put("dataMemberDao", dataMemberDao);
 
         return daoMap;
     }
@@ -153,20 +165,21 @@ public class BasEventExportServiceImpl implements BasEventExportService {
                 continue;
             } else {
                 try {
-                    Field dataField = data.getClass().getField(basEventEnum.getMcName());
-                    Field baseEventVOField = basEventOut.getClass().getField(basEventEnum.getBasENName());
+                    Field dataField = data.getClass().getDeclaredField(basEventEnum.getMcName());
+                    Field baseEventVOField = basEventOut.getClass().getDeclaredField(basEventEnum.getBasENName());
                     dataField.setAccessible(true);
                     baseEventVOField.setAccessible(true);
                     Object dataFieldValue = dataField.get(data);
-                    baseEventVOField.set(data, dataFieldValue);
+                    baseEventVOField.set(basEventOut, dataFieldValue);
+                    isNothingAssigned = false;
                 } catch (NoSuchFieldException | SecurityException | IllegalArgumentException
                                 | IllegalAccessException e) {
-                    logger.info("BasEvent对象转换的时候调用了不存在的field", e);
+                    logger.info("BasEvent对象转换的时候调用了不存在的field,这都不是事");
                 }
             }
         }
 
-        return basEventOut;
+        return isNothingAssigned ? null : basEventOut;
     }
 
 
