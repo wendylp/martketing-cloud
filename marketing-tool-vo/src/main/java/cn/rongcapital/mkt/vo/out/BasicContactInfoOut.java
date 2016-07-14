@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.vo.out;
 
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /*************************************************
@@ -14,8 +16,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * @复审人：
  *************************************************/
 public class BasicContactInfoOut {
-	
-        private Integer id;
+		@NotNull
+		private Integer contactId;
 
 		private String name;
 
@@ -67,13 +69,13 @@ public class BasicContactInfoOut {
         
         private String photo;
 
-        @JsonProperty("_id")
-		public Integer getId() {
-			return id;
+        @JsonProperty("contact_id")
+		public Integer getContactId() {
+			return contactId;
 		}
 
-		public void setId(Integer id) {
-			this.id = id;
+		public void setContactId(Integer contactId) {
+			this.contactId = contactId;
 		}
 
 		public String getName() {

@@ -155,7 +155,7 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 			List<Object> data = new ArrayList<Object>();
 			BasicContactInfoOut dataVo = new BasicContactInfoOut();
 			
-			dataVo.setId(contactId);
+			dataVo.setContactId(contactId);
 			dataVo.setName(dataPopulation.getName());
 			String gender = GenderUtils.byteToChar(dataPopulation.getGender());
 			dataVo.setGender(gender);
