@@ -94,8 +94,8 @@ public class FileUtil {
         StringBuilder pathNameBuilder = new StringBuilder();
         // 当前日期
         // DateTime today = DateTime.now();
-         pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName).append("_")
-//        pathNameBuilder.append("/Users/nianjun/Work/logs/").append(fileName).append("_")
+//         pathNameBuilder.append(ApiConstant.DOWNLOAD_BASE_DIR).append(fileName).append("_")
+        pathNameBuilder.append("/Users/nianjun/Work/logs/").append(fileName).append("_")
                         // .append(today.toString(ApiConstant.DATE_FORMAT_yyyy_MM_dd)).append(FILE_SUFFIX);
                         .append(RandomStringUtils.randomAlphanumeric(6).toUpperCase()).append(FILE_SUFFIX);
         File file = new File(pathNameBuilder.toString());
@@ -229,6 +229,9 @@ public class FileUtil {
 
                     // 根据字段名获取对象对应的字段
                     Field field = getFieldByName(fields, ReflectionUtil.recoverFieldName(columnName));
+                    if (field == null) {
+                        logger.info("无法找到该字段 : {}", ReflectionUtil.recoverFieldName(columnName));
+                    }
                     field.setAccessible(true);
 
                     // 这是个日期类型,需要转换

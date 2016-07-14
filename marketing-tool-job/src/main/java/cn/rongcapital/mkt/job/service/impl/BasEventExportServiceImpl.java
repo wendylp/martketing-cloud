@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.enums.BasEventEnum;
+import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.DataArchPointDao;
 import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
 import cn.rongcapital.mkt.dao.DataLoginDao;
@@ -30,7 +31,7 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.vo.out.BasEventOut;
 
 @Service
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class BasEventExportServiceImpl implements BasEventExportService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -70,18 +71,38 @@ public class BasEventExportServiceImpl implements BasEventExportService {
             List<BaseQuery> datas = entry.getValue().selectList(null);
 
             if (!CollectionUtils.isEmpty(datas)) {
-                for (int i = 0; i < datas.size(); i++) {
-                    BaseQuery data = datas.get(i);
-                    BasEventOut tmpBasEventOut = transferDataToBasEventVO(data);
-                    if (tmpBasEventOut != null) {
-                        basEventOuts.add(tmpBasEventOut);
+                int totalCount = datas.size();
+                int loopTimes = (totalCount + LOOP_COUNT - 1) / LOOP_COUNT;
+                for (int i = 0; i < loopTimes; i++) {
+                    int startIndex = i * LOOP_COUNT;
+                    int endIndex = (i + 1) * LOOP_COUNT;
+                    // 如果是最后一次循环,endIndex就是最大值了.
+                    if (i == loopTimes - 1) {
+                        endIndex = totalCount;
                     }
+
+                    List<BaseQuery> tmpData = datas.subList(startIndex, endIndex);
+
+                    for (int j = 0; j < tmpData.size(); j++) {
+                        BaseQuery data = datas.get(j);
+                        BasEventOut tmpBasEventOut = transferDataToBasEventVO(data);
+                        if (tmpBasEventOut != null) {
+                            basEventOuts.add(tmpBasEventOut);
+                        }
+                    }
+
                 }
             }
         }
 
         List<Map<String, String>> colNames = new ArrayList<>();
+        for (BasEventEnum basEventEnum : BasEventEnum.values()) {
+            Map<String, String> colNameMap = new HashMap<>();
+            colNameMap.put(basEventEnum.getBasENName(), basEventEnum.getBasCNName());
+            colNames.add(colNameMap);
+        }
 
+        FileUtil.generateFileforDownload(colNames, basEventOuts, "Basevent");
         return null;
     }
 

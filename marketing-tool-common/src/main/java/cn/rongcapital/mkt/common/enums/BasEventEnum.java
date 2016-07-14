@@ -3,7 +3,7 @@ package cn.rongcapital.mkt.common.enums;
 public enum BasEventEnum {
 
     EVENT("事件类型", "event", ""), 
-    DATE_TIME("事件发生的时间", "dataTime", "createTime"), 
+    DATE_TIME("事件发生的时间", "dateTime", "createTime"), 
     MID("MID", "mid", "mobile"), 
     PAY_CHANNEL("支付渠道", "payChannel", "payChannel"), 
     ALI_PAY_NUMBER("支付宝账号", "alipayNumber", ""), 
