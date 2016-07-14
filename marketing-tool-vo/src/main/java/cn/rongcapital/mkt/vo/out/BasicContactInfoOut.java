@@ -4,6 +4,8 @@ import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /*************************************************
  * @功能及特点的描述简述: 展示联系人档案信息类
  * 该类被编译测试过
@@ -15,6 +17,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * 最后修改日期：2017-07-11
  * @复审人：
  *************************************************/
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class BasicContactInfoOut {
 		@NotNull
 		private Integer contactId;
