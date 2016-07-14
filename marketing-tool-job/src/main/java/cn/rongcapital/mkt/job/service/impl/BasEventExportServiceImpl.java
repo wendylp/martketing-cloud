@@ -26,7 +26,6 @@ import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.job.service.base.BasEventExportService;
-import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.vo.out.BasEventOut;
 
@@ -66,34 +65,8 @@ public class BasEventExportServiceImpl implements BasEventExportService {
     @Override
     public File exportData() {
         List<BasEventOut> basEventOuts = new ArrayList<>();
-        Map<String, BaseDao> daoMap = getInitDataDaoMap();
-        for (Map.Entry<String, BaseDao> entry : daoMap.entrySet()) {
-            List<BaseQuery> datas = entry.getValue().selectList(null);
-
-            if (!CollectionUtils.isEmpty(datas)) {
-                int totalCount = datas.size();
-                int loopTimes = (totalCount + LOOP_COUNT - 1) / LOOP_COUNT;
-                for (int i = 0; i < loopTimes; i++) {
-                    int startIndex = i * LOOP_COUNT;
-                    int endIndex = (i + 1) * LOOP_COUNT;
-                    // 如果是最后一次循环,endIndex就是最大值了.
-                    if (i == loopTimes - 1) {
-                        endIndex = totalCount;
-                    }
-
-                    List<BaseQuery> tmpData = datas.subList(startIndex, endIndex);
-
-                    for (int j = 0; j < tmpData.size(); j++) {
-                        BaseQuery data = datas.get(j);
-                        BasEventOut tmpBasEventOut = transferDataToBasEventVO(data);
-                        if (tmpBasEventOut != null) {
-                            basEventOuts.add(tmpBasEventOut);
-                        }
-                    }
-
-                }
-            }
-        }
+        Map<String, BaseDao> dataDaoMap = getInitDataDaoMap();
+        Map<String, BaseDao> userDaoMap = getInitUserDaoMap();
 
         List<Map<String, String>> colNames = new ArrayList<>();
         for (BasEventEnum basEventEnum : BasEventEnum.values()) {
@@ -106,56 +79,6 @@ public class BasEventExportServiceImpl implements BasEventExportService {
         return null;
     }
 
-    // 获取所有整理为BAS Event格式的数据
-    private List<BasEventOut> getBasData() {
-
-        // 1.获取dataParty中的数据数量,这也是最终导出的数据数量
-        DataParty paramDataPary = new DataParty();
-        // 导出未被删除的数据
-        paramDataPary.setStatus((byte) 0);
-        int totalCount = dataPartyDao.selectListCount(paramDataPary);
-        List<DataParty> dataParties = dataPartyDao.selectList(paramDataPary);
-        List<BasEventOut> basEventOuts = new ArrayList<>(totalCount);
-
-        logger.info("BAS Event预计要导出的数据量为 : {}条", totalCount);
-
-        // 循环次数为"一个房间能住N个人,M个人需要多少房间"的问题.不解释
-        int loopTimes = (totalCount + LOOP_COUNT - 1) / LOOP_COUNT;
-        for (int i = 0; i < loopTimes; i++) {
-            int startIndex = i * LOOP_COUNT;
-            int endIndex = (i + 1) * LOOP_COUNT;
-            // 如果是最后一次循环,endIndex就是最大值了.
-            if (i == loopTimes - 1) {
-                endIndex = totalCount;
-            }
-
-            basEventOuts.addAll(fillBasEventVo(dataParties.subList(startIndex, endIndex)));
-        }
-
-        return basEventOuts;
-    }
-
-    // 根据每次截取出来的dataParty数据,查询相关的数据表,并导入BasEventOut对象中去
-    private List<BasEventOut> fillBasEventVo(List<DataParty> dataParties) {
-        int dataPartyCount = dataParties.size();
-        List<BasEventOut> basEventOuts = new ArrayList<>(dataPartyCount);
-        // 如果没有数据,则返回空对象,坚决不返回null
-        if (dataPartyCount != 0) {
-            for (int i = 0; i < dataPartyCount; i++) {
-                DataParty dataParty = dataParties.get(i);
-                Integer dataType = dataParty.getMdType();
-                if (dataType == null) {
-                    logger.error("DataParty表中id为{}的数据md_type为null", dataParty.getId());
-                    continue;
-                } else {
-
-                }
-            }
-
-        }
-
-        return basEventOuts;
-    }
 
     private Map<String, BaseDao> getInitDataDaoMap() {
         Map<String, BaseDao> daoMap = new HashMap<>();
@@ -203,5 +126,38 @@ public class BasEventExportServiceImpl implements BasEventExportService {
         return isNothingAssigned ? null : basEventOut;
     }
 
+    private List<BasEventOut> getBasEventVoByDaos(Map<String, BaseDao> daoMap) {
+
+        List<BasEventOut> basEventOuts = new ArrayList<>();
+
+        for (Map.Entry<String, BaseDao> entry : daoMap.entrySet()) {
+            List<BaseQuery> datas = entry.getValue().selectList(null);
+            if (!CollectionUtils.isEmpty(datas)) {
+                int totalCount = datas.size();
+                int loopTimes = (totalCount + LOOP_COUNT - 1) / LOOP_COUNT;
+                for (int i = 0; i < loopTimes; i++) {
+                    int startIndex = i * LOOP_COUNT;
+                    int endIndex = (i + 1) * LOOP_COUNT;
+                    // 如果是最后一次循环,endIndex就是最大值了.
+                    if (i == loopTimes - 1) {
+                        endIndex = totalCount;
+                    }
+
+                    List<BaseQuery> tmpData = datas.subList(startIndex, endIndex);
+
+                    for (int j = 0; j < tmpData.size(); j++) {
+                        BaseQuery data = datas.get(j);
+                        BasEventOut tmpBasEventOut = transferDataToBasEventVO(data);
+                        if (tmpBasEventOut != null) {
+                            basEventOuts.add(tmpBasEventOut);
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return basEventOuts;
+    }
 
 }
