@@ -27,7 +27,7 @@ public class GetImgtextAssetMenulistServiceImpl implements GetImgtextAssetMenuli
     public Object getImgTextAssetMenulist(BaseInput baseInput) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 
-        Map<String, Object> paramMap = constructParamMap(baseInput);
+        Map<String, Object> paramMap = constructParamMap();
         List<Map<String,Object>> menuList = imgTextAssetDao.selectMenuList(paramMap);
         baseOutput.getData().addAll(menuList);
 
@@ -37,10 +37,8 @@ public class GetImgtextAssetMenulistServiceImpl implements GetImgtextAssetMenuli
         return Response.ok().entity(baseOutput).build();
     }
 
-    private Map<String, Object> constructParamMap(BaseInput baseInput) {
+    private Map<String, Object> constructParamMap() {
         Map<String,Object> paramMap = new HashMap<String,Object>();
-        paramMap.put("index",(baseInput.getIndex()-1)*baseInput.getSize());
-        paramMap.put("size",baseInput.getSize());
         paramMap.put("status",0);
         return paramMap;
     }
