@@ -18,7 +18,7 @@ public class BasEventOut {
     /**
      * 时间发生的时间
      */
-    private String dateTime;
+    private Date dateTime;
 
     /**
      * MID
@@ -318,11 +318,11 @@ public class BasEventOut {
         this.event = event;
     }
 
-    public String getDateTime() {
+    public Date getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(String dateTime) {
+    public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
 
