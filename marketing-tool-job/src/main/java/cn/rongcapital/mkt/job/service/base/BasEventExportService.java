@@ -1,7 +1,5 @@
 package cn.rongcapital.mkt.job.service.base;
 
-import java.io.File;
-
 public interface BasEventExportService {
 
     /**
@@ -9,5 +7,5 @@ public interface BasEventExportService {
      * @author nianjun
      * @return File
      */
-    public File exportData();
+    public void exportData();
 }

@@ -13,6 +13,8 @@ public enum FileNameEnum {
     IMPORT_DATA_HISTORY_LOG(8, "import_data_history_log"),
     CUSTOM_AUDIENCE(9,"custom_audience"),
     ILLEGAL_DATA(10,"illegal_data"),
+    BAS_EVENT(11,"bas_event"),
+    BAS_USER(12,"bas_user"),
 
     ;
 

@@ -1,6 +1,5 @@
 package cn.rongcapital.mkt.job.service.impl;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,12 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.enums.BasEventEnum;
+import cn.rongcapital.mkt.common.enums.BasUserEnum;
+import cn.rongcapital.mkt.common.enums.FileNameEnum;
 import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.DataArchPointDao;
 import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
 import cn.rongcapital.mkt.dao.DataLoginDao;
 import cn.rongcapital.mkt.dao.DataMemberDao;
-import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.DataPaymentDao;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
@@ -28,6 +28,7 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.job.service.base.BasEventExportService;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.vo.out.BasEventOut;
+import cn.rongcapital.mkt.vo.out.BasUserOut;
 
 @Service
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -37,9 +38,6 @@ public class BasEventExportServiceImpl implements BasEventExportService {
 
     // 每次获取的数据量,不能一次把数据库的数据都导出来
     private static final int LOOP_COUNT = 1000;
-
-    @Autowired
-    private DataPartyDao dataPartyDao;
 
     @Autowired
     private DataPopulationDao dataPopulationDao;
@@ -63,20 +61,19 @@ public class BasEventExportServiceImpl implements BasEventExportService {
     private DataShoppingDao dataShoppingDao;
 
     @Override
-    public File exportData() {
+    public void exportData() {
         List<BasEventOut> basEventOuts = new ArrayList<>();
+        List<BasUserOut> userOuts = new ArrayList<>();
         Map<String, BaseDao> dataDaoMap = getInitDataDaoMap();
         Map<String, BaseDao> userDaoMap = getInitUserDaoMap();
+        List<Map<String, String>> basEventColNames = getBasEventColumnNamesMap();
+        List<Map<String, String>> basUserColNames = getBasUserColumnNamesMap();
 
-        List<Map<String, String>> colNames = new ArrayList<>();
-        for (BasEventEnum basEventEnum : BasEventEnum.values()) {
-            Map<String, String> colNameMap = new HashMap<>();
-            colNameMap.put(basEventEnum.getBasENName(), basEventEnum.getBasCNName());
-            colNames.add(colNameMap);
-        }
+        basEventOuts = getBasEventVoByDaos(dataDaoMap);
+        userOuts = getBasUserVoByDaos(userDaoMap);
 
-        FileUtil.generateFileforDownload(colNames, basEventOuts, "Basevent");
-        return null;
+        FileUtil.generateFileforDownload(basEventColNames, basEventOuts, FileNameEnum.BAS_EVENT.getDetailName());
+        FileUtil.generateFileforDownload(basUserColNames, userOuts, FileNameEnum.BAS_USER.getDetailName());
     }
 
 
@@ -126,6 +123,32 @@ public class BasEventExportServiceImpl implements BasEventExportService {
         return isNothingAssigned ? null : basEventOut;
     }
 
+    private BasUserOut transferDataToBasUserVO(BaseQuery data) {
+        BasUserOut basUserOut = new BasUserOut();
+        BasUserEnum[] basUserEnums = BasUserEnum.values();
+        boolean isNothingAssigned = true;
+        for (BasUserEnum basUserEnum : basUserEnums) {
+            if (StringUtils.isEmpty(basUserEnum.getMcName())) {
+                continue;
+            } else {
+                try {
+                    Field dataField = data.getClass().getDeclaredField(basUserEnum.getMcName());
+                    Field baseUserVOField = basUserOut.getClass().getDeclaredField(basUserEnum.getBasENName());
+                    dataField.setAccessible(true);
+                    baseUserVOField.setAccessible(true);
+                    Object dataFieldValue = dataField.get(data);
+                    baseUserVOField.set(basUserOut, dataFieldValue);
+                    isNothingAssigned = false;
+                } catch (NoSuchFieldException | SecurityException | IllegalArgumentException
+                                | IllegalAccessException e) {
+                    logger.info("BasEvent对象转换的时候调用了不存在的field,这都不是事");
+                }
+            }
+        }
+
+        return isNothingAssigned ? null : basUserOut;
+    }
+
     private List<BasEventOut> getBasEventVoByDaos(Map<String, BaseDao> daoMap) {
 
         List<BasEventOut> basEventOuts = new ArrayList<>();
@@ -158,6 +181,62 @@ public class BasEventExportServiceImpl implements BasEventExportService {
         }
 
         return basEventOuts;
+    }
+
+    private List<BasUserOut> getBasUserVoByDaos(Map<String, BaseDao> daoMap) {
+        List<BasUserOut> basUserOuts = new ArrayList<>();
+
+        for (Map.Entry<String, BaseDao> entry : daoMap.entrySet()) {
+            List<BaseQuery> datas = entry.getValue().selectList(null);
+            if (!CollectionUtils.isEmpty(datas)) {
+                int totalCount = datas.size();
+                int loopTimes = (totalCount + LOOP_COUNT - 1) / LOOP_COUNT;
+                for (int i = 0; i < loopTimes; i++) {
+                    int startIndex = i * LOOP_COUNT;
+                    int endIndex = (i + 1) * LOOP_COUNT;
+                    // 如果是最后一次循环,endIndex就是最大值了.
+                    if (i == loopTimes - 1) {
+                        endIndex = totalCount;
+                    }
+
+                    List<BaseQuery> tmpData = datas.subList(startIndex, endIndex);
+
+                    for (int j = 0; j < tmpData.size(); j++) {
+                        BaseQuery data = datas.get(j);
+                        BasUserOut tmpBasEventOut = transferDataToBasUserVO(data);
+                        if (tmpBasEventOut != null) {
+                            basUserOuts.add(tmpBasEventOut);
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return basUserOuts;
+    }
+
+
+    private List<Map<String, String>> getBasEventColumnNamesMap() {
+        List<Map<String, String>> colNames = new ArrayList<>();
+        for (BasEventEnum basEventEnum : BasEventEnum.values()) {
+            Map<String, String> colNameMap = new HashMap<>();
+            colNameMap.put(basEventEnum.getBasENName(), basEventEnum.getBasCNName());
+            colNames.add(colNameMap);
+        }
+
+        return colNames;
+    }
+
+    private List<Map<String, String>> getBasUserColumnNamesMap() {
+        List<Map<String, String>> colNames = new ArrayList<>();
+        for (BasUserEnum basUserEnum : BasUserEnum.values()) {
+            Map<String, String> colNameMap = new HashMap<>();
+            colNameMap.put(basUserEnum.getBasENName(), basUserEnum.getBasCNName());
+            colNames.add(colNameMap);
+        }
+
+        return colNames;
     }
 
 }
