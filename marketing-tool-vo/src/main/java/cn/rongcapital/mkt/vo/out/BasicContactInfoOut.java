@@ -1,6 +1,10 @@
 package cn.rongcapital.mkt.vo.out;
 
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*************************************************
  * @功能及特点的描述简述: 展示联系人档案信息类
@@ -13,9 +17,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * 最后修改日期：2017-07-11
  * @复审人：
  *************************************************/
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class BasicContactInfoOut {
-	
-        private Integer id;
+		@NotNull
+		private Integer contactId;
 
 		private String name;
 
@@ -67,13 +72,13 @@ public class BasicContactInfoOut {
         
         private String photo;
 
-        @JsonProperty("_id")
-		public Integer getId() {
-			return id;
+        @JsonProperty("contact_id")
+		public Integer getContactId() {
+			return contactId;
 		}
 
-		public void setId(Integer id) {
-			this.id = id;
+		public void setContactId(Integer contactId) {
+			this.contactId = contactId;
 		}
 
 		public String getName() {
