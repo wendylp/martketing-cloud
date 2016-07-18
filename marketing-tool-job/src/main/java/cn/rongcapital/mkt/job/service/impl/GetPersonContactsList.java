@@ -60,7 +60,7 @@ public class GetPersonContactsList implements TaskService {
                         obj = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity())).getJSONObject("hfive_mkt_personal_contactlist_response");
                         if(obj != null){
                             H5PersonalContactlistResponse h5PersonalContactlistResponse = JSON.parseObject(obj.toString(),H5PersonalContactlistResponse.class);
-                            if(h5PersonalContactlistResponse.getContacts() != null){
+                            if(h5PersonalContactlistResponse.getContacts() != null && h5PersonalContactlistResponse.getContacts().getContact() != null){
                                 batchInsertContacts(h5PersonalContactlistResponse,h5PersonalContactlistResponse.getUin());
                             }
                         }
@@ -79,11 +79,14 @@ public class GetPersonContactsList implements TaskService {
         Integer groupId = getGroupIdService.getGroupIdByOwnerIdAndGroupname(uin,"好友组");
         //2.获取了group_id以后需要根据group_id和微信号进行判重，重复了就不插入数据了
         for(PersonalContact personalContact : h5PersonalContactlistResponse.getContacts().getContact()){
+            if(personalContact == null || groupId == null || personalContact.getUcode() == null) continue;
             if(!isFriendAlreadySave(groupId,personalContact.getUcode())){
                 Map<String,Object> paramContact = new HashMap<String,Object>();
                 paramContact.put("wx_group_id",groupId);
                 paramContact.put("wx_code", personalContact.getUcode());
-                paramContact.put("wx_name",personalContact.getNickname().replaceAll("[^\\u0000-\\uFFFF]", ""));
+                if(personalContact.getNickname() != null){
+                    paramContact.put("wx_name",personalContact.getNickname().replaceAll("[^\\u0000-\\uFFFF]", ""));
+                }
 
                 if("男".equals(personalContact.getSex())){
                     paramContact.put("sex", 1);

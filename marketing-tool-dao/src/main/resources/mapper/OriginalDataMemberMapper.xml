@@ -176,8 +176,8 @@
 			#{item.phone_mac},
 			#{item.status},
 			#{item.create_time,jdbcType=DATE},
-			#{item.source},
 			#{item.file_unique},
+			#{item.source},
 			#{item.batch_id}
 			)
 		</foreach>

@@ -122,10 +122,14 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
 
     private void constructLegalImagetextAsset(WTuwen wtuwen, MaterialContent materialContent, ImgTextAsset imgTextAsset) {
         imgTextAsset.setWechatStatus(wtuwen.getStatus().byteValue());
-        imgTextAsset.setName(materialContent.getTitle());
+        if(materialContent.getTitle() != null){
+            imgTextAsset.setName(materialContent.getTitle().replaceAll("[^\\u0000-\\uFFFF]", ""));
+        }
         imgTextAsset.setImgfileUrl(materialContent.getScreenshotUrl());
         imgTextAsset.setPubId(wtuwen.getPubId());
-        imgTextAsset.setPubName(wtuwen.getPubName());
+        if(wtuwen.getPubName() != null){
+            imgTextAsset.setPubName(wtuwen.getPubName().replaceAll("[^\\u0000-\\uFFFF]", ""));
+        }
         imgTextAsset.setMaterialId(Integer.toString(wtuwen.getMaterialId()));
         imgTextAsset.setCreateTime(DateUtil.getDateFromString(wtuwen.getCreateTime(),"yyyy-MM-dd HH:mm:ss"));
         imgTextAsset.setMobilePreviewUrl(materialContent.getMobileUrl());

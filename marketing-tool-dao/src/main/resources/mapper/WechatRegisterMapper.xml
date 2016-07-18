@@ -154,6 +154,7 @@
 		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE wx_acct = #{wx_acct}
+		limit 1
 	</select>
 
 	<select id="selectNewWxAssetList" parameterType="java.util.List" resultType="java.util.Map">

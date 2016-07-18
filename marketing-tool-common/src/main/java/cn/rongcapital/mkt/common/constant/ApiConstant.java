@@ -176,6 +176,7 @@ public class ApiConstant {
 
 	//自定义标签状态标识
 	public static final Byte CUSTOM_TAG_INVALIDATE = 1;
+	public static final Byte CUSTOM_TAG_VALIDATE = 0;
 
 	//自定义标签元数据状态标识
 	public static final Byte CUSTOM_TAG_ORIGINAL_DATA_MAP_VALIDATE = 0;

@@ -66,15 +66,15 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         Integer legalRows = importDataHistory.getLegalRows();
         if(legalRows != null && legalRows.intValue() > 0){
             if (hasTagNames(fileTagUpdateIn)) {
-                //Todo:1.将上传数据通过fileUnique选出不同的手机号
+                //1.将上传数据通过fileUnique选出不同的手机号
                 List<String> dataIdentifierList = getOriginalIdentifierList(importDataHistory.getFileUnique(), fileType);
-                //Todo:2.这里还需要把status给扔进去，先将status置为1表示无效
+                //2.这里还需要把status给扔进去，先将status置为1表示无效
                 if(!addNewCustomTag(fileTagUpdateIn)){
                     baseOutput.setCode(ApiErrorCode.DB_ERROR.getCode());
                     baseOutput.setMsg("自定义标签名称重复，新建标签失败");
                     return baseOutput;
                 }
-                //Todo:3.选择本次上传的customId，然后与上一步选出的数据唯一标识一起存入customTagOriginalMap表中，将status置为0
+                //3.选择本次上传的customId，然后与上一步选出的数据唯一标识一起存入customTagOriginalMap表中，将status置为0
                 List<Long> tagIds =  customTagDao.selectIdsByCustomTags(fileTagUpdateIn.getTag_names());
                 if(!CollectionUtils.isEmpty(dataIdentifierList) && !CollectionUtils.isEmpty(tagIds)){
                     insertCustomTagOriginalDataMapping(fileType, dataIdentifierList, tagIds);
@@ -117,12 +117,14 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
     private void insertCustomTagOriginalDataMapping(Integer fileType, List<String> dataIdentifierList, List<Long> tagIds) {
         for(Long tagId : tagIds){
             for(String  dataIdentifier: dataIdentifierList){
-                CustomTagOriginalDataMap customTagOriginalDataMap = new CustomTagOriginalDataMap();
-                customTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_VALIDATE);
-                customTagOriginalDataMap.setDataUniqueIdentifier(dataIdentifier);
-                customTagOriginalDataMap.setTagId(tagId.intValue());
-                customTagOriginalDataMap.setOriginalDataType(fileType);
-                customTagOriginalDataMapDao.insert(customTagOriginalDataMap);
+                if(dataIdentifier != null && dataIdentifier.length() == 11){
+                    CustomTagOriginalDataMap customTagOriginalDataMap = new CustomTagOriginalDataMap();
+                    customTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_VALIDATE);
+                    customTagOriginalDataMap.setDataUniqueIdentifier(dataIdentifier);
+                    customTagOriginalDataMap.setTagId(tagId.intValue());
+                    customTagOriginalDataMap.setOriginalDataType(fileType);
+                    customTagOriginalDataMapDao.insert(customTagOriginalDataMap);
+                }
             }
         }
     }
