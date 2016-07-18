@@ -95,6 +95,6 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
-		<![CDATA[order by 4]]>	
+		<![CDATA[order by field_order]]>
 	</select>	
 </mapper>

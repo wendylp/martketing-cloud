@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
+import cn.rongcapital.mkt.common.enums.FileTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +83,7 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
                 dataMap.put("source_file_name", importDataHistory.getSourceFilename());
                 dataMap.put("file_unique", importDataHistory.getFileUnique());
                 dataMap.put("file_type", importDataHistory.getFileType());
-
+                dataMap.put("name", FileTypeEnum.getTypeValueByType(importDataHistory.getFileType()) + "_" + importDataHistory.getSourceFilename());
                 ImportDataModifyLog paramImportDataModifyLog = new ImportDataModifyLog();
                 paramImportDataModifyLog.setImportDataId(importDataHistory.getId());
                 List<ImportDataModifyLog> importDataModifyLogList =
@@ -109,5 +110,4 @@ public class DataGetQualityListServiceImpl implements DataGetQualityListService 
 
         return Response.ok().entity(result).build();
     }
-
 }
