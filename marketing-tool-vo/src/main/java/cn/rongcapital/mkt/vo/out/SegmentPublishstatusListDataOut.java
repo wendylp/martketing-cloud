@@ -5,10 +5,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class SegmentPublishstatusListDataOut {
 	
 	private String segmentName;
-	
-	private Integer segmentHeadId;
+
+	private Integer referCampaignCount;
 	
 	private Byte publishStatus;
+
+	private Integer segmentHeadId;
 
 	@JsonProperty("segment_name")
 	public String getSegmentName() {
@@ -19,7 +21,16 @@ public class SegmentPublishstatusListDataOut {
 		this.segmentName = segmentName;
 	}
 
-	@JsonProperty("segment_head_id")
+    @JsonProperty("refer_campaign_count")
+    public Integer getReferCampaignCount() {
+        return referCampaignCount;
+    }
+
+    public void setReferCampaignCount(Integer referCampaignCount) {
+        this.referCampaignCount = referCampaignCount;
+    }
+
+    @JsonProperty("segment_head_id")
 	public Integer getSegmentHeadId() {
 		return segmentHeadId;
 	}

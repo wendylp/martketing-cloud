@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.vo.in.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -138,26 +139,6 @@ import cn.rongcapital.mkt.vo.LoginInput;
 import cn.rongcapital.mkt.vo.ModifyInput;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
-import cn.rongcapital.mkt.vo.in.Audience;
-import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
-import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
-import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
-import cn.rongcapital.mkt.vo.in.CampaignHeadCreateIn;
-import cn.rongcapital.mkt.vo.in.CampaignHeadUpdateIn;
-import cn.rongcapital.mkt.vo.in.CampaignManualStartIn;
-import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
-import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
-import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
-import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
-import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
-import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
-import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
-import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
-import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
-import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
@@ -605,7 +586,7 @@ public class MktApi {
 								   @NotEmpty @QueryParam("segment_head_id") String segmentId) {
 	    return segmentHeaderGetService.segmentHeaderGet(userToken, ver,segmentId);
 	}
-	
+
 	/**
 	 * @功能简述: 创建segment header
 	 * @param: SegmentHeadIn body, SecurityContext securityContext 
@@ -616,6 +597,18 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public BaseOutput segmentHeaderCreate(@Valid SegmentHeadCreateIn body, @Context SecurityContext securityContext) {
 	    return segmentHeaderService.segmentHeaderCreate(body, securityContext);
+	}
+
+	/**
+	 * @功能简述: 创建segment header
+	 * @param: SegmentHeadIn body, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.segment.header.delete")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput segmentHeaderDelete(@Valid SegmentHeadDeleteIn body, @Context SecurityContext securityContext) {
+		return segmentHeaderUpdateService.deleteSegmentHeader(body, securityContext);
 	}
 	
     /**

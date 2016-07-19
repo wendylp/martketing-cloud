@@ -7,8 +7,14 @@ import java.util.Map;
 
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.dao.SegmentationBodyDao;
+import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.vo.in.SegmentHeadDeleteIn;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -28,8 +34,14 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
 	
 	 @Autowired
 	 SegmentationHeadDao segmentationHeadDao;
-	 
-	 /**
+
+    @Autowired
+    SegmentationBodyDao segmentationBodyDao;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    /**
      * @功能简述: 编辑segment header
      * @param: SegmentHeadIn body, SecurityContext securityContext 
      * @return: Object
@@ -59,12 +71,30 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
 		ur.setTotal(ur.getData().size());
 		return ur;
 	 }
-	 
-	 private BaseOutput checkPublishStatus(int id) {
+
+    @Override
+    public BaseOutput deleteSegmentHeader(SegmentHeadDeleteIn body, SecurityContext securityContext) {
+        Integer segmentHeadId = body.getSegmentId();
+        BaseOutput ur = checkPublishStatus(segmentHeadId);
+        if(null != ur) {
+            return ur;
+        }
+        SegmentationHead segmentationHead = new SegmentationHead();
+        segmentationHead.setId(segmentHeadId);
+        segmentationHead.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+
+        segmentationHeadDao.updateById(segmentationHead);
+        segmentationBodyDao.batchDeleteUseHeaderId(segmentHeadId);
+        mongoTemplate.findAllAndRemove(new Query(Criteria.where("segmentationHeadId").is(segmentHeadId)),Segment.class);
+
+        return new BaseOutput(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
+    }
+
+    private BaseOutput checkPublishStatus(Integer segmentHeadId) {
 		 BaseOutput ur = null;
 		 SegmentationHead t = new SegmentationHead(); 
 		 t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		 t.setId(id);
+		 t.setId(segmentHeadId);
 		 List<SegmentationHead> segList = segmentationHeadDao.selectList(t);
 		 if(CollectionUtils.isNotEmpty(segList)) {
 			SegmentationHead sht = segList.get(0);
@@ -80,5 +110,6 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
 								ApiConstant.INT_ZERO,null);
 		 }
 		 return ur;
-	 }
+    }
+
 }

@@ -65,6 +65,7 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 				data.setSegmentName(s.getName());
 				data.setSegmentHeadId(s.getId());
 				data.setPublishStatus(s.getPublishStatus());
+				data.setReferCampaignCount(s.getReferCampaignCount());
 				rseult.getDataCustom().add(data);
 			}
 		}
