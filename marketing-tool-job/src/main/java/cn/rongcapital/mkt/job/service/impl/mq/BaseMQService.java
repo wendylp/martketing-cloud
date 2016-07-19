@@ -567,6 +567,7 @@ public class BaseMQService {
 		String pid = null;
 		Tenement t = new Tenement();
 		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setRegisterType(ApiConstant.REGISTER_WECHAT_TYPE);
 		List<Tenement> tenementList = tenementDao.selectList(t);
 		if(CollectionUtils.isNotEmpty(tenementList)) {
 			Tenement  tenement = tenementList.get(0);

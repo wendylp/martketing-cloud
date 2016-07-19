@@ -31,6 +31,12 @@ public class Tenement extends BaseQuery {
 
     private Date updateTime;
 
+    private String sessionToken;
+
+    private String basId;
+
+    private Byte registerType;
+
     public Integer getId() {
         return id;
     }
@@ -133,5 +139,29 @@ public class Tenement extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken == null ? null : sessionToken.trim();
+    }
+
+    public String getBasId() {
+        return basId;
+    }
+
+    public void setBasId(String basId) {
+        this.basId = basId == null ? null : basId.trim();
+    }
+
+    public Byte getRegisterType() {
+        return registerType;
+    }
+
+    public void setRegisterType(Byte registerType) {
+        this.registerType = registerType;
     }
 }

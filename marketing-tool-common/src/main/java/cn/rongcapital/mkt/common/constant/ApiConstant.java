@@ -181,4 +181,12 @@ public class ApiConstant {
 	//自定义标签元数据状态标识
 	public static final Byte CUSTOM_TAG_ORIGINAL_DATA_MAP_VALIDATE = 0;
 	public static final Byte CUSTOM_TAG_ORIGINAL_DATA_MAP_INVALIDATE = 1;
+
+	//注册表中的注册类型 0代表微信注册类型 1代表Bas注册类型
+	public static final Byte REGISTER_WECHAT_TYPE = 0;
+	public static final Byte REGISTER_BAS_TYPE = 1;
+
+	//注册BAS所需要的URL
+	public static final String BAS_HOST = "api.bas.ruixuesoft.com";
+    public static final String BAS_URL = "/bas/services/usm/company/registerCompany?terminalType=PC";
 }
