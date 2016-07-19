@@ -68,7 +68,8 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
 		 List<SegmentationHead> segList = segmentationHeadDao.selectList(t);
 		 if(CollectionUtils.isNotEmpty(segList)) {
 			SegmentationHead sht = segList.get(0);
-			if(sht.getPublishStatus() == ApiConstant.SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN) {
+			 Integer referCampaignCount = sht.getReferCampaignCount();
+			if(referCampaignCount != null && referCampaignCount.intValue() > 0) {
 				ur = new BaseOutput(ApiErrorCode.BIZ_ERROR_SEGMENTATION_IN_CAMPAIGN.getCode(),
 									ApiErrorCode.BIZ_ERROR_SEGMENTATION_IN_CAMPAIGN.getMsg(),
 									ApiConstant.INT_ZERO,null);
