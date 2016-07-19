@@ -15,6 +15,7 @@ import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SegmentationHead;
+import org.apache.ibatis.annotations.Param;
 
 public interface SegmentationHeadDao extends BaseDao<SegmentationHead>{
 	
@@ -50,7 +51,13 @@ public interface SegmentationHeadDao extends BaseDao<SegmentationHead>{
 	 * @return list
 	 */
 	List<Map<String,Object>> searchDataMain(Map<String,Object> paramMap);
-		
 
-	
+    /**
+     * 修改referCampaignCount
+     * @param id
+     * @param referCampaignCount
+     * @return
+     */
+	int incrementReferCampaignCount(@Param("id") Integer id, @Param("referCampaignCount") Integer referCampaignCount);
+
 }

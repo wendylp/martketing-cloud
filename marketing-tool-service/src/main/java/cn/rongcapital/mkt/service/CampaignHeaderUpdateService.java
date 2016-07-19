@@ -8,4 +8,6 @@ import cn.rongcapital.mkt.vo.in.CampaignHeadUpdateIn;
 public interface CampaignHeaderUpdateService {
 
 	public BaseOutput campaignHeaderUpdate(CampaignHeadUpdateIn body, SecurityContext securityContext);
+
+	void decreaseSegmentReferCampaignCount(Integer campaignHeadId);
 }

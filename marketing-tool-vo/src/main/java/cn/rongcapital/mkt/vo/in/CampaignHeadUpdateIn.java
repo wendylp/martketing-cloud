@@ -33,6 +33,8 @@ public class CampaignHeadUpdateIn extends BaseInput {
     @NotEmpty
     private String userToken = null;
 
+	private Byte triggerType = null;
+
     @JsonProperty("campaign_head_id")
 	public Integer getCampaignId() {
 		return campaignId;
@@ -68,7 +70,14 @@ public class CampaignHeadUpdateIn extends BaseInput {
 	public void setUserToken(String userToken) {
 		this.userToken = userToken;
 	}
-    
-    
+
+    @JsonProperty("trigger_type")
+    public Byte getTriggerType() {
+        return triggerType;
+    }
+
+    public void setTriggerType(Byte triggerType) {
+        this.triggerType = triggerType;
+    }
 }
 

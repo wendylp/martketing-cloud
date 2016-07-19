@@ -49,10 +49,7 @@ public class SegmentPublishStatusCountServiceImpl implements SegmentPublishStatu
     	t.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_PUBLISH);
     	int countPublish = segmentationHeadDao.selectListCount(t);
     	
-    	t.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN);
-    	int countInCampaign = segmentationHeadDao.selectListCount(t);
-    	
-    	int countAll = countNotPublish + countPublish + countInCampaign;
+    	int countAll = countNotPublish + countPublish;
     	
     	BaseOutput spsc = new BaseOutput();
     	Map<String, Number> dataMap = new HashMap<String, Number>();
@@ -62,10 +59,6 @@ public class SegmentPublishStatusCountServiceImpl implements SegmentPublishStatu
     	dataMap = new HashMap<String, Number>();
     	dataMap.put("count", countPublish);
     	dataMap.put("publish_status", ApiConstant.SEGMENT_PUBLISH_STATUS_PUBLISH);
-    	spsc.getData().add(dataMap);
-    	dataMap = new HashMap<String, Number>();
-    	dataMap.put("count", countInCampaign);
-    	dataMap.put("publish_status", ApiConstant.SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN);
     	spsc.getData().add(dataMap);
     	dataMap = new HashMap<String, Number>();
     	dataMap.put("count", countAll);

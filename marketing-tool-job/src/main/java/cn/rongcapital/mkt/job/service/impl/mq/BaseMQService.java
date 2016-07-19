@@ -115,7 +115,7 @@ public class BaseMQService {
 	
 	/**
 	 * 检查并设置细分状态:如果活动中包含未发布状态的细分，或者细分不存在，则不能开启活动
-	 * @param body
+	 * @param campaignHeadId
 	 * @return
 	 */
 	protected CampaignManualStartOut checkAndSetSegmentStatus(Integer campaignHeadId) {
@@ -134,20 +134,13 @@ public class BaseMQService {
 				if(CollectionUtils.isNotEmpty(segmentationHeadList)) {
 					for(SegmentationHead segmentationHead:segmentationHeadList) {
 						Byte publishStatus = segmentationHead.getPublishStatus();
-						if(null == publishStatus || publishStatus.byteValue() == ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH) {
+						if(null == publishStatus || publishStatus.byteValue() != ApiConstant.SEGMENT_PUBLISH_STATUS_PUBLISH ) {
 							//细分未发布
 							ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_SEGMENTATION_NOT_PUBLISH.getCode(),
 									ApiErrorCode.BIZ_ERROR_SEGMENTATION_NOT_PUBLISH.getMsg(),
 									ApiConstant.INT_ZERO,null);
 							return ur;
-						} else {
-							//设置细分为活动中状态
-							segmentationHead.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN);
 						}
-					}
-					for(SegmentationHead segmentationHead:segmentationHeadList) {
-						//更新细分状态
-						segmentationHeadDao.updateById(segmentationHead);
 					}
 				} else {
 				    //细分不存在
@@ -160,7 +153,7 @@ public class BaseMQService {
 		}
 		return ur;
 	}
-	
+
 	/**
 	 * 检查活动状态:只有发布状态的活动才能被手动开启
 	 * @param id

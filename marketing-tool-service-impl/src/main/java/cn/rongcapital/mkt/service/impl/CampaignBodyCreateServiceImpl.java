@@ -379,12 +379,12 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_IN_PROGRESS.getCode(),
 												ApiErrorCode.BIZ_ERROR_CANPAIGN_IN_PROGRESS.getMsg(),
 												ApiConstant.INT_ZERO,null);
-			}
-			if(campaignHead.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH) {
+			} else if(campaignHead.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH) {
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getCode(),
-												ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
-												ApiConstant.INT_ZERO,null);
+													   ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
+													   ApiConstant.INT_ZERO,null);
 			}
+
 		}else{
 			out = new CampaignBodyCreateOut(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
 								 			ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(),

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.jms.MessageConsumer;
 
+import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,9 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
     MessageConsumer consumer = null;
 	@Autowired
 	CampaignHeadDao campaignHeadDao;
+
+    @Autowired
+    CampaignHeaderUpdateService campaignHeaderUpdateService;
 	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -87,6 +91,7 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		 if(CollectionUtils.isNotEmpty(camList)) {
 			 CampaignHead ch = camList.get(0);
 			 if(ch.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
+                 campaignHeaderUpdateService.decreaseSegmentReferCampaignCount(ch.getId());
 				 t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH);
 				 campaignHeadDao.updateById(t);
 			 }

@@ -21,7 +21,6 @@ public class ApiConstant {
 	
 	public static final byte SEGMENT_PUBLISH_STATUS_NOT_PUBLISH = 0;//未发布
 	public static final byte SEGMENT_PUBLISH_STATUS_PUBLISH = 1;//已发布
-	public static final byte SEGMENT_PUBLISH_STATUS_IN_CAMPAIGN = 2;//活动中
 	public static final byte SEGMENT_PUBLISH_STATUS_ALL = 3;//全部细分
 	
 	public static final byte CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH = 0;//未发布
@@ -61,9 +60,8 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_NODE_ACTION = 3;//行动
 	
 	public static final byte CAMPAIGN_ITEM_TRIGGER_TIMMER = 0;//时间触发
-	public static final byte CAMPAIGN_ITEM_TRIGGER_EVENT = 1;//事件触发
-	public static final byte CAMPAIGN_ITEM_TRIGGER_MANUAL = 2;//手动触发
-	
+	public static final byte CAMPAIGN_ITEM_TRIGGER_MANUAL = 1;//手动触发
+
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_TARGET = 0;//目标人群
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_EVENT = 1;//事件人群
 	

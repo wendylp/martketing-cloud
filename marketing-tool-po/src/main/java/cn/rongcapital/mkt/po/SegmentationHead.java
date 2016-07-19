@@ -14,6 +14,8 @@ public class SegmentationHead extends BaseQuery {
 
     private Byte publishStatus;
 
+    private Integer referCampaignCount;
+
     private Date createTime;
 
     private Date updateTime;
@@ -53,6 +55,14 @@ public class SegmentationHead extends BaseQuery {
 
     public void setPublishStatus(Byte publishStatus) {
         this.publishStatus = publishStatus;
+    }
+
+    public Integer getReferCampaignCount() {
+        return referCampaignCount;
+    }
+
+    public void setReferCampaignCount(Integer referCampaignCount) {
+        this.referCampaignCount = referCampaignCount;
     }
 
     public Date getCreateTime() {
