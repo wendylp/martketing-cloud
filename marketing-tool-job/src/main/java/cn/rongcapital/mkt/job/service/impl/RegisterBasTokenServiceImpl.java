@@ -7,9 +7,7 @@ import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.job.vo.in.BASToken;
 import cn.rongcapital.mkt.po.Tenement;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,7 @@ import java.util.Map;
  * Created by Yunfeng on 2016-7-19.
  */
 @Service
-public class registerBasTokenServiceImpl {
+public class RegisterBasTokenServiceImpl {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 

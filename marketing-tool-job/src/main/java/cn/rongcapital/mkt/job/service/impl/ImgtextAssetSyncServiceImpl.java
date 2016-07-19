@@ -122,6 +122,11 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
 
     private void constructLegalImagetextAsset(WTuwen wtuwen, MaterialContent materialContent, ImgTextAsset imgTextAsset) {
         imgTextAsset.setWechatStatus(wtuwen.getStatus().byteValue());
+        if(wtuwen.getStatus() == 1){
+            imgTextAsset.setStatus(new Integer(0).byteValue());
+        }else if(wtuwen.getStatus() == 0){
+            imgTextAsset.setStatus(new Integer(1).byteValue());
+        }
         if(materialContent.getTitle() != null){
             imgTextAsset.setName(materialContent.getTitle().replaceAll("[^\\u0000-\\uFFFF]", ""));
         }
