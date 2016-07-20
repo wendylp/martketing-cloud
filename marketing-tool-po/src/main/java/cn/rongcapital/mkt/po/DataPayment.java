@@ -67,9 +67,13 @@ public class DataPayment extends BaseQuery {
     private String source;
 
     private String batchId;
-    
+
+    private String wxmpId;
+
+    private String wxCode;
+
     public DataPayment(){}
-    
+
     public DataPayment(Integer index , Integer size){
         super(index, size);
     }
@@ -319,6 +323,22 @@ public class DataPayment extends BaseQuery {
     }
 
     public void setBatchId(String batchId) {
-        this.batchId = batchId;
+        this.batchId = batchId == null ? null : batchId.trim();
+    }
+
+    public String getWxmpId() {
+        return wxmpId;
+    }
+
+    public void setWxmpId(String wxmpId) {
+        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
+    }
+
+    public String getWxCode() {
+        return wxCode;
+    }
+
+    public void setWxCode(String wxCode) {
+        this.wxCode = wxCode == null ? null : wxCode.trim();
     }
 }

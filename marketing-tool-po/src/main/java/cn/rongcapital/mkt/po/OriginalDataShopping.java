@@ -100,6 +100,32 @@ public class OriginalDataShopping extends BaseQuery {
 
     private String fileUnique;
 
+    private String orderStatus;
+
+    private String deliveryWay;
+
+    private String logisticsStatus;
+
+    private BigDecimal shippingFee;
+
+    private String shippingWay;
+
+    private String expressCompany;
+
+    private String expressOrder;
+
+    private String consignee;
+
+    private String consigneeTel;
+
+    private String consigneeAddr;
+
+    private String buyerComment;
+
+    private String wxmpId;
+
+    private String wxCode;
+
     public Integer getId() {
         return id;
     }
@@ -474,5 +500,109 @@ public class OriginalDataShopping extends BaseQuery {
 
     public void setFileUnique(String fileUnique) {
         this.fileUnique = fileUnique == null ? null : fileUnique.trim();
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus == null ? null : orderStatus.trim();
+    }
+
+    public String getDeliveryWay() {
+        return deliveryWay;
+    }
+
+    public void setDeliveryWay(String deliveryWay) {
+        this.deliveryWay = deliveryWay == null ? null : deliveryWay.trim();
+    }
+
+    public String getLogisticsStatus() {
+        return logisticsStatus;
+    }
+
+    public void setLogisticsStatus(String logisticsStatus) {
+        this.logisticsStatus = logisticsStatus == null ? null : logisticsStatus.trim();
+    }
+
+    public BigDecimal getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(BigDecimal shippingFee) {
+        this.shippingFee = shippingFee;
+    }
+
+    public String getShippingWay() {
+        return shippingWay;
+    }
+
+    public void setShippingWay(String shippingWay) {
+        this.shippingWay = shippingWay == null ? null : shippingWay.trim();
+    }
+
+    public String getExpressCompany() {
+        return expressCompany;
+    }
+
+    public void setExpressCompany(String expressCompany) {
+        this.expressCompany = expressCompany == null ? null : expressCompany.trim();
+    }
+
+    public String getExpressOrder() {
+        return expressOrder;
+    }
+
+    public void setExpressOrder(String expressOrder) {
+        this.expressOrder = expressOrder == null ? null : expressOrder.trim();
+    }
+
+    public String getConsignee() {
+        return consignee;
+    }
+
+    public void setConsignee(String consignee) {
+        this.consignee = consignee == null ? null : consignee.trim();
+    }
+
+    public String getConsigneeTel() {
+        return consigneeTel;
+    }
+
+    public void setConsigneeTel(String consigneeTel) {
+        this.consigneeTel = consigneeTel == null ? null : consigneeTel.trim();
+    }
+
+    public String getConsigneeAddr() {
+        return consigneeAddr;
+    }
+
+    public void setConsigneeAddr(String consigneeAddr) {
+        this.consigneeAddr = consigneeAddr == null ? null : consigneeAddr.trim();
+    }
+
+    public String getBuyerComment() {
+        return buyerComment;
+    }
+
+    public void setBuyerComment(String buyerComment) {
+        this.buyerComment = buyerComment == null ? null : buyerComment.trim();
+    }
+
+    public String getWxmpId() {
+        return wxmpId;
+    }
+
+    public void setWxmpId(String wxmpId) {
+        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
+    }
+
+    public String getWxCode() {
+        return wxCode;
+    }
+
+    public void setWxCode(String wxCode) {
+        this.wxCode = wxCode == null ? null : wxCode.trim();
     }
 }

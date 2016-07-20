@@ -70,6 +70,10 @@ public class OriginalDataPayment extends BaseQuery {
 
     private String fileUnique;
 
+    private String wxmpId;
+
+    private String wxCode;
+
     public Integer getId() {
         return id;
     }
@@ -324,5 +328,21 @@ public class OriginalDataPayment extends BaseQuery {
 
     public void setFileUnique(String fileUnique) {
         this.fileUnique = fileUnique == null ? null : fileUnique.trim();
+    }
+
+    public String getWxmpId() {
+        return wxmpId;
+    }
+
+    public void setWxmpId(String wxmpId) {
+        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
+    }
+
+    public String getWxCode() {
+        return wxCode;
+    }
+
+    public void setWxCode(String wxCode) {
+        this.wxCode = wxCode == null ? null : wxCode.trim();
     }
 }
