@@ -710,24 +710,27 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		campaignSwitch.setCampaignHeadId(campaignHeadId);
 		campaignSwitch.setItemId(itemId);
 		List<CampaignSwitch> campaignSwitchListYes = campaignSwitchDao.selectList(campaignSwitch);
+		CampaignSwitchOut csoY = null;
 		if(CollectionUtils.isNotEmpty(campaignSwitchListYes)){
 			CampaignSwitch cs = campaignSwitchListYes.get(0);
-			CampaignSwitchOut cso = new CampaignSwitchOut();
-			cso.setColor(cs.getColor());
-			cso.setDrawType(cs.getDrawType());
-			cso.setNextItemId(cs.getNextItemId());
-			campaignSwitchOutList.add(cso);
+			csoY = new CampaignSwitchOut();
+			csoY.setColor(cs.getColor());
+			csoY.setDrawType(cs.getDrawType());
+			csoY.setNextItemId(cs.getNextItemId());
 		}
+		campaignSwitchOutList.add(csoY);
+		
 		campaignSwitch.setType(ApiConstant.CAMPAIGN_SWITCH_SWITCH_NO);
 		List<CampaignSwitch> campaignSwitchListNo = campaignSwitchDao.selectList(campaignSwitch);
+		CampaignSwitchOut csoN = null;
 		if(CollectionUtils.isNotEmpty(campaignSwitchListNo)){
 			CampaignSwitch cs = campaignSwitchListNo.get(0);
-			CampaignSwitchOut cso = new CampaignSwitchOut();
-			cso.setColor(cs.getColor());
-			cso.setDrawType(cs.getDrawType());
-			cso.setNextItemId(cs.getNextItemId());
-			campaignSwitchOutList.add(cso);
+			csoN = new CampaignSwitchOut();
+			csoN.setColor(cs.getColor());
+			csoN.setDrawType(cs.getDrawType());
+			csoN.setNextItemId(cs.getNextItemId());
 		}
+		campaignSwitchOutList.add(csoN);
 		return campaignSwitchOutList;
 	}
 	
