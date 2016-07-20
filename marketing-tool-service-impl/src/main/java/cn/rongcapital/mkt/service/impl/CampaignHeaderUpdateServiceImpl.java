@@ -155,7 +155,7 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
         if(existsCampaignHead != null) {
              Byte existsPublishStatus = existsCampaignHead.getPublishStatus();
              if (publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH &&
-                         (existsPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH ||
+                         (existsPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH &&
                                   existsPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH)) {
                  return getResponse(existsPublishStatus);
              } else if (publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH &&
