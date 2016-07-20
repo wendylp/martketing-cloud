@@ -49,13 +49,15 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
 	public BaseOutput campaignHeaderUpdate(CampaignHeadUpdateIn body, SecurityContext securityContext) {
         Integer campaignHeadId = body.getCampaignId();
         Byte publishStatus = body.getPublishStatus();
-		BaseOutput ur = validate(campaignHeadId, publishStatus);
+
+        CampaignHead existsCampaignHead = queryCampaignHead(campaignHeadId);
+		BaseOutput ur = validate(existsCampaignHead, publishStatus);
 		if(null != ur) {
 			return ur;
 		}
 
         Byte triggerType = body.getTriggerType();
-        modifyReferData(campaignHeadId, publishStatus, triggerType);
+        modifyReferData(existsCampaignHead, publishStatus, triggerType);
 
         if (triggerType != null && triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL &&
                     ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus.byteValue()) {
@@ -82,12 +84,14 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
         changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(-1));
     }
 
-	private void modifyReferData(Integer campaignHeadId, byte publishStatus, Byte triggerType) {
+	private void modifyReferData(CampaignHead existsCampaignHead, byte publishStatus, Byte triggerType) {
+        Integer campaignHeadId = existsCampaignHead.getId();
         // update segment refer count
         if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus) {
             changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(1));
 
-        } else if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH == publishStatus ||
+        } else if ((ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH == publishStatus &&
+                ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == existsCampaignHead.getPublishStatus()) ||
                 ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH == publishStatus) {
             changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(-1));
         }
@@ -146,17 +150,13 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
         }
     }
 
-	private BaseOutput validate(Integer campaignId, byte publishStatus) {
-		 BaseOutput ur = null;
-		 CampaignHead t = new CampaignHead(); 
-		 t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		 t.setId(campaignId);
-		 List<CampaignHead> campaignHeadList = campaignHeadDao.selectList(t);
-		 if(CollectionUtils.isNotEmpty(campaignHeadList)) {
-			 CampaignHead campaignHead = campaignHeadList.get(0);
-             Byte existsPublishStatus = campaignHead.getPublishStatus();
+	private BaseOutput validate(CampaignHead existsCampaignHead, byte publishStatus) {
+        BaseOutput ur = null;
+        if(existsCampaignHead != null) {
+             Byte existsPublishStatus = existsCampaignHead.getPublishStatus();
              if (publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH &&
-                    existsPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH) {
+                         (existsPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH ||
+                                  existsPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH)) {
                  return getResponse(existsPublishStatus);
              } else if (publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH &&
                     existsPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH) {
@@ -173,6 +173,17 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
 		 }
 		 return ur;
 	 }
+
+    private CampaignHead queryCampaignHead(Integer campaignId) {
+        CampaignHead t = new CampaignHead();
+        t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        t.setId(campaignId);
+        List<CampaignHead> campaignHeadList = campaignHeadDao.selectList(t);
+        if (CollectionUtils.isNotEmpty(campaignHeadList)) {
+            return campaignHeadList.get(0);
+        }
+        return null;
+    }
 
     private BaseOutput getResponse(Byte existsPublishStatus) {
         BaseOutput baseOutput = null;
