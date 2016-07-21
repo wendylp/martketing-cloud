@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
+
+import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class ContactWayMap extends BaseQuery {
     private Integer id;
@@ -11,7 +11,7 @@ public class ContactWayMap extends BaseQuery {
 
     private String contactWayName;
 
-    private Boolean status;
+    private Byte status;
 
     private Date timeCondition;
 
@@ -43,11 +43,11 @@ public class ContactWayMap extends BaseQuery {
         this.contactWayName = contactWayName == null ? null : contactWayName.trim();
     }
 
-    public Boolean getStatus() {
+    public Byte getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Byte status) {
         this.status = status;
     }
 

@@ -257,7 +257,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         List<DataOptionMap> dataOptionMaps = dataOptionMapDao.selectList(null);
         if (!CollectionUtils.isEmpty(dataOptionMaps)) {
             for (DataOptionMap dataOptionMap : dataOptionMaps) {
-                if (dataOptionMap.getOptionStatus().equals(1)) {
+                if (dataOptionMap.getOptionStatus().compareTo(new Byte("1")) == 0) {
                     dataOptionMapList.add(dataOptionMap.getTableId());
                 }
             }
@@ -266,7 +266,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         List<ContactWayMap> contactWayMaps = contactWayMapDao.selectList(null);
         if (!CollectionUtils.isEmpty(contactWayMaps)) {
             for (ContactWayMap contactWayMap : contactWayMaps) {
-                if (contactWayMap.getStatus().equals(1)) {
+                if (contactWayMap.getStatus().compareTo(new Byte("1")) == 0) {
                     contactWayMapList.add(contactWayMap.getContactWayId());
                 }
             }
