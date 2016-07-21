@@ -16,9 +16,11 @@ public class DataGetFilterAudiencesIn extends BaseInput {
     @NotNull
     private Integer mdType;
     
-    private List<Integer> taskIds;
+    private List<Integer> mdTypes;
     
     private List<Integer> contactIds;
+    
+    private String timeCondition;
     
     private List<CustomizeViewCheckboxIn> customizeViews;
     
@@ -40,15 +42,6 @@ public class DataGetFilterAudiencesIn extends BaseInput {
 
     public void setMdType(Integer mdType) {
         this.mdType = mdType;
-    }
-
-    @JsonProperty("task_ids")
-    public List<Integer> getTaskIds() {
-        return taskIds;
-    }
-
-    public void setTaskIds(List<Integer> taskIds) {
-        this.taskIds = taskIds;
     }
 
     @JsonProperty("contact_ids")
@@ -75,5 +68,23 @@ public class DataGetFilterAudiencesIn extends BaseInput {
 
     public void setCustomizeViews(List<CustomizeViewCheckboxIn> customizeViews) {
         this.customizeViews = customizeViews;
+    }
+    
+    @JsonProperty("md_types")
+    public List<Integer> getMdTypes() {
+        return mdTypes;
+    }
+
+    public void setMdTypes(List<Integer> mdTypes) {
+        this.mdTypes = mdTypes;
+    }
+
+    @JsonProperty("time_condition")
+    public String getTimeCondition() {
+        return timeCondition;
+    }
+
+    public void setTimeCondition(String timeCondition) {
+        this.timeCondition = timeCondition;
     }
 }

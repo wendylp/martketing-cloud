@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class DataGetMainCountServiceImpl implements DataGetMainCountService {
         DataGetMainCountOut result = new DataGetMainCountOut(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
-        Map<String, Object> countRowsMap = dataPartyDao.selectMainCount();
+        Map<String, Object> countRowsMap = dataPartyDao.selectMainCount(new HashMap<>());
         List<Map<String, Object>> resultList = new ArrayList<>();
         List<ImportTemplate> importTemplateList = importTemplateDao.selectTemplTypePairs();
         Collections.sort(importTemplateList);

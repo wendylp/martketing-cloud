@@ -92,7 +92,7 @@ public class DataGetMainListServiceImpl implements DataGetMainListService {
                 map.put("col_name", importTemplate.getFieldName());
                 map.put("col_code", importTemplate.getFieldCode());
                 columnList.add(map);
-                result.setMd_type(importTemplate.getTemplType());
+                result.setMdType(importTemplate.getTemplType());
             }
         }
 

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,member_level as memberLevel,member_points as memberPoints,source as source,monthly_consume as monthlyConsume,last_login as lastLogin,status as status,create_time as createTime,update_time as updateTime,batch_id as batchId,md_type as mdType,mapping_keyid as mappingKeyid]]>
+		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,citizenship as citizenship,provice as provice,city as city,job as job,monthly_income as monthlyIncome,member_level as memberLevel,member_points as memberPoints,source as source,monthly_consume as monthlyConsume,last_login as lastLogin,status as status,create_time as createTime,update_time as updateTime,batch_id as batchId,md_type as mdType,mapping_keyid as mappingKeyid]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -18,6 +18,7 @@
 		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
 		    	<if test="gender != null"><![CDATA[ AND gender = #{gender}]]></if>
 		    	<if test="birthday != null"><![CDATA[ AND birthday = #{birthday}]]></if>
+				<if test="citizenship != null"><![CDATA[ AND citizenship = #{citizenship}]]></if>
 		    	<if test="provice != null"><![CDATA[ AND provice = #{provice}]]></if>
 		    	<if test="city != null"><![CDATA[ AND city = #{city}]]></if>
 		    	<if test="job != null"><![CDATA[ AND job = #{job}]]></if>
@@ -49,6 +50,7 @@
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
 		    	<if test="gender != null"><![CDATA[gender = #{gender},]]></if>
 		    	<if test="birthday != null"><![CDATA[birthday = #{birthday},]]></if>
+				<if test="citizenship != null"><![CDATA[citizenship = #{citizenship},]]></if>
 		    	<if test="provice != null"><![CDATA[provice = #{provice},]]></if>
 		    	<if test="city != null"><![CDATA[city = #{city},]]></if>
 		    	<if test="job != null"><![CDATA[job = #{job},]]></if>
@@ -68,13 +70,14 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataParty" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_party (mobile,name,gender,birthday,provice,city,job,monthly_income,member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,md_type,mapping_keyid)
+			INSERT INTO data_party (mobile,name,gender,birthday,citizenship,provice,city,job,monthly_income,member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,md_type,mapping_keyid)
 			VALUES
 			(
 			  #{mobile},
 			  #{name},
 			  #{gender},
 			  #{birthday},
+			  #{citizenship},
 			  #{provice},
 			  #{city},
 			  #{job},
@@ -93,7 +96,7 @@
 	</insert>
 
 	<insert id="batchInsert">
-        INSERT INTO data_party (mobile,name,gender,birthday,provice,city,job,monthly_income,
+        INSERT INTO data_party (mobile,name,gender,birthday,citizenship,provice,city,job,monthly_income,
             member_level,member_points,source,monthly_consume,last_login,status,create_time,batch_id,md_type,mapping_keyid)
         VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
@@ -102,6 +105,7 @@
               #{item.name},
               #{item.gender},
               #{item.birthday},
+			  #{item.citizenship},
               #{item.provice},
               #{item.city},
               #{item.job},
@@ -122,7 +126,8 @@
             mobile=COALESCE(VALUES(mobile),mobile),
             name=COALESCE(VALUES(name), name),
             gender=COALESCE(VALUES(gender),gender),
-            birthday=COALESCE(VALUES(birthday), birthday),
+			birthday=COALESCE(VALUES(birthday), birthday),
+			citizenship=COALESCE(VALUES(citizenship), citizenship),
             provice=COALESCE(VALUES(provice), provice),
             city=COALESCE(VALUES(city), city),
             job=COALESCE(VALUES(job), job),
@@ -181,21 +186,135 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
-	
+
 	<!-- 其它SQL语句 -->
-	<select id="selectMainCount" resultType="java.util.Map">
-		SELECT
-			data_party_rows,data_arch_point_rows,data_customer_tags_rows,data_login_rows,data_member_rows,data_payment_rows,data_population_rows,data_shopping_rows
-		FROM
-			(select count(id) as data_party_rows from data_party) as data_party_result,
-			(select count(id) as data_arch_point_rows from data_arch_point) as data_arch_point,
-			(select count(id) as data_customer_tags_rows from data_customer_tags) as data_customer_tags,
-			(select count(id) as data_login_rows from data_login) as data_login,
-			(select count(id) as data_member_rows from data_member) as data_member,
-			(select count(id) as data_payment_rows from data_payment) as data_payment,
-			(select count(id) as data_population_rows from data_population) as data_population,
-			(select count(id) as data_shopping_rows from data_shopping) as data_shopping
-	</select>
+	<select id="selectMainCount" parameterType="java.util.Map" resultType="java.util.Map">
+	SELECT
+	data_party_rows,data_arch_point_rows,data_customer_tags_rows,data_login_rows,data_member_rows,data_payment_rows,data_population_rows,data_shopping_rows
+	FROM
+	(select count(id) as data_party_rows from data_party WHERE 1=1
+	<if test="contactId != null">
+	<foreach collection="contactIdList" item="contactId">
+		<if test="contactId != null and contactId == 1">
+				<![CDATA[AND data_party.mobile is not null]]>
+		</if>
+		<if test="contactId != null and contactId == 2">
+				<!-- email是不存在data_party中的 -->
+		</if>
+	</foreach>
+	</if>
+	<if test="timeCondition != null">
+			<![CDATA[AND data_party.create_time > #{timeCondition}]]>
+	</if>
+	) as data_party_result,
+	(select count(id) as data_arch_point_rows from data_arch_point WHERE 1=1
+	<if test="contactId != null">
+	<foreach collection="contactIdList" item="contactId">
+		<if test="contactId != null and contactId == 1">
+				<![CDATA[AND data_arch_point.mobile is not null]]>
+		</if>
+		<if test="contactId != null and contactId == 2">
+				<![CDATA[AND data_arch_point.email is not null]]>
+		</if>
+	</foreach>
+	</if>
+	<if test="timeCondition != null">
+			<![CDATA[AND data_arch_point.create_time > #{timeCondition}]]>
+	</if>
+	) as
+	data_arch_point,
+	(select count(id) as data_customer_tags_rows from data_customer_tags WHERE 1=1
+	<if test="contactId != null">
+	<foreach collection="contactIdList" item="contactId">
+		<if test="contactId != null and contactId == 1">
+				<![CDATA[AND data_customer_tags.mobile is not null]]>
+		</if>
+		<if test="contactId != null and contactId == 2">
+				<![CDATA[AND data_customer_tags.email is not null]]>
+		</if>
+	</foreach>
+	</if>
+	<if test="timeCondition != null">
+			<![CDATA[AND data_customer_tags.create_time > #{timeCondition}]]>
+	</if>
+	) as
+	data_customer_tags,
+	(select count(id) as data_login_rows from data_login WHERE 1=1
+	<if test="contactId != null">
+	<foreach collection="contactIdList" item="contactId">
+		<if test="contactId != null and contactId == 1">
+				<![CDATA[AND data_login.mobile is not null]]>
+		</if>
+		<if test="contactId != null and contactId == 2">
+				<![CDATA[AND data_login.email is not null]]>
+		</if>
+	</foreach>
+	</if>
+	<if test="timeCondition != null">
+			<![CDATA[AND data_login.create_time > #{timeCondition}]]>
+	</if>
+	) as data_login,
+	(select count(id) as data_member_rows from data_member WHERE 1=1
+	<if test="contactId != null">
+	<foreach collection="contactIdList" item="contactId">
+		<if test="contactId != null and contactId == 1">
+				<![CDATA[AND data_member.mobile is not null]]>
+		</if>
+		<if test="contactId != null and contactId == 2">
+				<![CDATA[AND data_member.email is not null]]>
+		</if>
+	</foreach>
+	</if>
+	<if test="timeCondition != null">
+			<![CDATA[AND data_member.create_time > #{timeCondition}]]>
+	</if>
+	) as data_member,
+	(select count(id) as data_payment_rows from data_payment WHERE 1=1
+	<if test="contactId != null">
+	<foreach collection="contactIdList" item="contactId">
+		<if test="contactId != null and contactId == 1">
+				<![CDATA[AND data_payment.mobile is not null]]>
+		</if>
+		<if test="contactId != null and contactId == 2">
+				<![CDATA[AND data_payment.email is not null]]>
+		</if>
+	</foreach>
+	</if>
+	<if test="timeCondition != null">
+			<![CDATA[AND data_payment.create_time > #{timeCondition}]]>
+	</if>
+	) as
+	data_payment,
+	(select count(id) as data_population_rows from data_population WHERE 1=1
+	<if test="contactId != null">
+	<foreach collection="contactIdList" item="contactId">
+		<if test="contactId != null and contactId == 1">
+				<![CDATA[AND data_population.mobile is not null]]>
+		</if>
+		<if test="contactId != null and contactId == 2">
+				<![CDATA[AND data_population.email is not null]]>
+		</if>
+	</foreach>
+	</if>
+	<if test="timeCondition != null">
+			<![CDATA[AND data_population.create_time > #{timeCondition}]]>
+	</if>
+	) as
+	data_population,
+	(select count(id) as data_shopping_rows from data_shopping WHERE 1=1
+	<if test="contactId != null">
+	<foreach collection="contactIdList" item="contactId">
+		<if test="contactId != null and contactId == 1">
+				<![CDATA[AND data_shopping.mobile is not null]]>
+		</if>
+		<if test="contactId != null and contactId == 2">
+				<![CDATA[AND data_shopping.email is not null]]>
+		</if>
+	</foreach>
+	</if>
+	<!-- 这里没有timeCondition的条件,因为shopping的表就没这个字段 -->
+	) as data_shopping
+</select>
 	
 	<!-- 根据Id逻辑上删除某条主数据 -->
 	<update id="logicDeleteById" parameterType="cn.rongcapital.mkt.po.DataParty">
@@ -245,11 +364,8 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
-		<if test="batchIdList != null">
-		<![CDATA[WHERE batch_id IN]]>
-		<foreach collection="batchIdList" item="batchId" open="(" separator="," close=")">
-			<![CDATA[#{batchId}]]>
-		</foreach>
+		WHERE 1=1
+		<if test="contactId != null">
 		<foreach collection="contactIdList" item="contactId">
 			<if test="contactId != null and contactId == 1">
 				<![CDATA[AND mobile is not null]]>
@@ -262,9 +378,48 @@
 			</if>
 		</foreach>
 		</if>
+		<if test="mdTypes != null">
+			AND mdType IN
+			<foreach collection="mdTypes" item="mdType" index="index" separator=",">
+				#{mdType}
+			</foreach>
+		</if>
+		
+		<if test="timeCondition != null">
+			AND create_time > #{timeCondition}
+		</if>
 		order by create_time DESC
 		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
+		</if>
+	</select>
+	
+	<select id="selectCountByBatchId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<![CDATA[SELECT]]>
+		COUNT(1)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1
+		<if test="contactId != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="mdTypes != null">
+			AND mdType IN
+			<foreach collection="mdTypes" item="mdType" index="index" separator=",">
+				#{mdType}
+			</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
 		</if>
 	</select>
 	
