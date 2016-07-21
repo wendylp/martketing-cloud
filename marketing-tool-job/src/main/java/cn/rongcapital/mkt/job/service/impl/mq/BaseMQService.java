@@ -223,7 +223,13 @@ public class BaseMQService {
 	
 	protected boolean checkSubscriberTime(byte subscribeTimeType,String realSubscribeTime) {
 		boolean isSubscribe = false;
-		DateTime realSubscribeTimeDate = DateTime.parse(realSubscribeTime);  
+		DateTime realSubscribeTimeDate = null;
+		try {
+			realSubscribeTimeDate = DateTime.parse(realSubscribeTime);  
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			realSubscribeTimeDate = null;
+		}
 		if(null != realSubscribeTimeDate) {
 			DateTime now = new DateTime();
 			switch (subscribeTimeType) {
