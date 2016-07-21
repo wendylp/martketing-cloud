@@ -58,6 +58,8 @@ public class DataParty implements Serializable {
 
     private Date birthday;
 
+    private String citizenship;
+
     private String provice;
 
     private String city;
@@ -320,5 +322,13 @@ public class DataParty implements Serializable {
 
     public void setBatchId(String batchId) {
         this.batchId = batchId;
+    }
+
+    public String getCitizenship() {
+        return citizenship;
+    }
+
+    public void setCitizenship(String citizenship) {
+        this.citizenship = citizenship;
     }
 }
