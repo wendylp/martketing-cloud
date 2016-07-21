@@ -459,16 +459,19 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		Float intervalMinutes = null;
 		switch (refreshType) {
 		case 0://小时
-			intervalMinutes = 60f;
+			intervalMinutes = 60f * refreshIntv;
 			break;
 		case 1://天
-			intervalMinutes = 60 * 24f;
+			intervalMinutes = 60 * 24f * refreshIntv;
 			break;
 		case 2://周
-			intervalMinutes = 60 * 24 * 7f;
+			intervalMinutes = 60 * 24 * 7f * refreshIntv;
 			break;
 		case 3://月
-			intervalMinutes = 60 * 24 * 30f;
+			intervalMinutes = 60 * 24 * 30f * refreshIntv;
+			break;
+		case 4://分
+			intervalMinutes = 1f * refreshIntv;
 			break;
 		default:
 			break;
