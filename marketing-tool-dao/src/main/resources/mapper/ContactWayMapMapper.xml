@@ -116,7 +116,7 @@
 	
 	<update id="updateTimeCondition" parameterType="java.util.Map">
 		UPDATE contact_way_map
-			SET time_condition=#{timeCondition}
+			SET time_condition=#{timeCondition},
 			time_condition_abbreviation=#{timeConditionAbbreviation}
 	</update>
 	
