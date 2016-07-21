@@ -85,7 +85,7 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
 
         segmentationHeadDao.updateById(segmentationHead);
         segmentationBodyDao.batchDeleteUseHeaderId(segmentHeadId);
-        mongoTemplate.findAllAndRemove(new Query(Criteria.where("segmentationHeadId").is(segmentHeadId)),Segment.class);
+        mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId").is(segmentHeadId)),Segment.class);
 
         return new BaseOutput(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
     }

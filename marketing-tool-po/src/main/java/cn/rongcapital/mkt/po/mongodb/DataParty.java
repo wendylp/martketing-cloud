@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.po.mongodb;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -42,6 +43,8 @@ public class DataParty implements Serializable {
 	
 	@Field(value = "subscribeTime")
 	private String subscribeTime;
+
+	private String mobile;
 	
 	private String maritalStatus;
 	
@@ -49,11 +52,11 @@ public class DataParty implements Serializable {
 	
 	private String employment;
 	
-	private Integer sex;
+	private String sex;
 	
-    private String gender;
+    private Byte gender;
 
-    private String birthday;
+    private Date birthday;
 
     private String provice;
 
@@ -71,9 +74,11 @@ public class DataParty implements Serializable {
 
     private BigDecimal monthlyConsume;
 
-    private String lastLogin;
+    private Date lastLogin;
 
     private Byte status;
+
+    private String batchId;
 
     private String updateTime;
 
@@ -133,19 +138,19 @@ public class DataParty implements Serializable {
 		this.name = name;
 	}
 
-	public String getGender() {
+	public Byte getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(Byte gender) {
 		this.gender = gender;
 	}
 
-	public String getBirthday() {
+	public Date getBirthday() {
 		return birthday;
 	}
 
-	public void setBirthday(String birthday) {
+	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
 	}
 
@@ -213,11 +218,11 @@ public class DataParty implements Serializable {
 		this.monthlyConsume = monthlyConsume;
 	}
 
-	public String getLastLogin() {
+	public Date getLastLogin() {
 		return lastLogin;
 	}
 
-	public void setLastLogin(String lastLogin) {
+	public void setLastLogin(Date lastLogin) {
 		this.lastLogin = lastLogin;
 	}
 
@@ -261,11 +266,11 @@ public class DataParty implements Serializable {
 		this.subscribeTime = subscribeTime;
 	}
 
-	public Integer getSex() {
+	public String getSex() {
 		return sex;
 	}
 
-	public void setSex(Integer sex) {
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
 
@@ -300,5 +305,20 @@ public class DataParty implements Serializable {
 	public void setWxName(String wxName) {
 		this.wxName = wxName;
 	}
-	
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
+    }
 }
