@@ -527,7 +527,11 @@ public class BaseMQService {
 		Session session = null;
     	try {
     		session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-    		Destination destination = session.createQueue(dest);
+    		//先获取queue,如果queue不存在，则创建1个新的,防止创建重复的queue
+    		Destination destination = getDynamicQueue(dest);
+    		if(null == destination) {
+    			destination = session.createQueue(dest);
+    		}
     		jmsMessagingTemplate.convertAndSend(destination, campaignSegmentList); 
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
