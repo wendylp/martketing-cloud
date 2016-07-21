@@ -10,8 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ContactWayMap;
@@ -54,5 +54,5 @@ public interface ContactWayMapDao extends BaseDao<ContactWayMap>{
      * 更新timeCondition的值
      * @param contactIds
      */
-    void updateTimeCondition(Date timeCondition);
+    void updateTimeCondition(Map<String, Object> paramMap);
 }

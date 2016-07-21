@@ -13,17 +13,15 @@ public class DataGetMainListOut extends BaseOutput {
         super(code, msg, total, data);
     }
 
-    private int md_type;
+    private int mdType;
     
     private List<Map<String, Object>> countList ;
-
-    public int getMd_type() {
-        return md_type;
-    }
-
-    public void setMd_type(int md_type) {
-        this.md_type = md_type;
-    }
+    
+    private List<Integer> dataTypeList;
+    
+    private List<Integer> contactWayList;
+    
+    private Byte timeCondition;
 
     public List<Map<String, Object>> getCountList() {
         return countList;
@@ -31,6 +29,38 @@ public class DataGetMainListOut extends BaseOutput {
 
     public void setCountList(List<Map<String, Object>> countList) {
         this.countList = countList;
+    }
+
+    public int getMdType() {
+        return mdType;
+    }
+
+    public void setMdType(int mdType) {
+        this.mdType = mdType;
+    }
+
+    public List<Integer> getDataTypeList() {
+        return dataTypeList;
+    }
+
+    public void setDataTypeList(List<Integer> dataTypeList) {
+        this.dataTypeList = dataTypeList;
+    }
+
+    public List<Integer> getContactWayList() {
+        return contactWayList;
+    }
+
+    public void setContactWayList(List<Integer> contactWayList) {
+        this.contactWayList = contactWayList;
+    }
+
+    public Byte getTimeCondition() {
+        return timeCondition;
+    }
+
+    public void setTimeCondition(Byte timeCondition) {
+        this.timeCondition = timeCondition;
     }
 
 }

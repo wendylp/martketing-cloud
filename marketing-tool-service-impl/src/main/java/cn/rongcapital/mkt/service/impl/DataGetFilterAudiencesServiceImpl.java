@@ -132,7 +132,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                     map.put("col_code", "sex");
                 }
                 columnList.add(map);
-                result.setMd_type(importTemplate.getTemplType());
+                result.setMdType(importTemplate.getTemplType());
             }
         }
 
@@ -166,6 +166,9 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
             logger.error("传入错误的data type : {}", dataType);
         }
 
+        result.setContactWayList(mainDataVO.getContactWayList());
+        result.setDataTypeList(mainDataVO.getDataTypeList());
+        result.setTimeCondition(mainDataVO.getTimeCondition());
         result.getData().addAll(mainDataVO.getResultList());
         result.setTotal(mainDataVO.getTotalCount());
         result.setTotalCount(mainDataVO.getTotalCount());
@@ -249,7 +252,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
         List<Integer> dataOptionMapList = new ArrayList<>();
         List<Integer> contactWayMapList = new ArrayList<>();
-        String resultTimeCondition = "";
+        String resultTimeCondition = null;
 
         List<DataOptionMap> dataOptionMaps = dataOptionMapDao.selectList(null);
         if (!CollectionUtils.isEmpty(dataOptionMaps)) {
@@ -262,8 +265,8 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
         List<ContactWayMap> contactWayMaps = contactWayMapDao.selectList(null);
         if (!CollectionUtils.isEmpty(contactWayMaps)) {
-            for(ContactWayMap contactWayMap : contactWayMaps){
-                if(contactWayMap.getStatus().equals(1)){
+            for (ContactWayMap contactWayMap : contactWayMaps) {
+                if (contactWayMap.getStatus().equals(1)) {
                     contactWayMapList.add(contactWayMap.getContactWayId());
                 }
             }
@@ -271,6 +274,10 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         }
 
 
+        mainDataVO.setTimeCondition(
+                        Byte.valueOf(TaskConditionEnum.getEnumByAbbreviation(resultTimeCondition).getCode() + ""));
+        mainDataVO.setContactWayList(contactWayMapList);
+        mainDataVO.setDataTypeList(dataOptionMapList);
         mainDataVO.setResultList(resultList);
         mainDataVO.setCountList(countList);
         mainDataVO.setTotalCount(totalCount);
@@ -316,7 +323,10 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         }
 
         if (!StringUtils.isEmpty(timeCondition)) {
-            contactWayMapDao.updateTimeCondition(TaskConditionEnum.getEnumByAbbreviation(timeCondition).getTime());
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("timeCondition", TaskConditionEnum.getEnumByAbbreviation(timeCondition).getTime());
+            paramMap.put("timeConditionAbbreviation", timeCondition);
+            contactWayMapDao.updateTimeCondition(paramMap);
         }
 
     }
