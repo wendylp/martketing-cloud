@@ -89,8 +89,6 @@ public class CampaignDecisionWechatSubscribeTask extends BaseMQService implement
 				sendDynamicQueue(segmentListToNextNo, campaignHeadId +"-"+itemId);
 				logger.info(queueKey+"-out-to-self:"+JSON.toJSONString(segmentListToNextNo));
 			}
-		} else {
-			logger.info(queueKey+"-in:"+JSON.toJSONString(segmentList));
 		}
 		
 	}

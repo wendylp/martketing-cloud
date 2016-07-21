@@ -517,6 +517,7 @@ public class BaseMQService {
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
+		logger.info(queue+"-in:"+JSON.toJSONString(myDomainObj));
 		return myDomainObj;
 	}
 	
