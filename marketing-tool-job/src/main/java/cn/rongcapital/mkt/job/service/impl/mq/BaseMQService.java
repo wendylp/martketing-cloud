@@ -530,6 +530,7 @@ public class BaseMQService {
     		session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
     		//先获取queue,如果queue不存在，则创建1个新的,防止创建重复的queue
     		Destination destination = getDynamicQueue(dest);
+    		logger.info("获取queue:"+dest+",结果:"+destination);
     		if(null == destination) {
     			destination = session.createQueue(dest);
     		}
