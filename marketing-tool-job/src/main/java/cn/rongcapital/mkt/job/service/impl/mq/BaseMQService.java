@@ -23,6 +23,8 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -225,7 +227,8 @@ public class BaseMQService {
 		boolean isSubscribe = false;
 		DateTime realSubscribeTimeDate = null;
 		try {
-			realSubscribeTimeDate = DateTime.parse(realSubscribeTime);  
+			DateTimeFormatter dtf = DateTimeFormat.forPattern(ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+			realSubscribeTimeDate = DateTime.parse(realSubscribeTime,dtf);  
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 			realSubscribeTimeDate = null;
