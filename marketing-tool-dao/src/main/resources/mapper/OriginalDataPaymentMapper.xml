@@ -209,9 +209,9 @@
 			#{item.status},
 			#{item.source},
 			#{item.file_unique},
-			#{item.batch_id}，
-			#{wxmpId},
-			#{wxCode}
+			#{item.batch_id},
+			#{item.wxmp_code},
+			#{item.wxmp_openid}
 			)
 		</foreach>
 	</insert>

@@ -259,7 +259,7 @@ public class ParseUploadFileImpl {
             String discount = (String) insertMap.get(ImportConstant.DISCOUNT_AMT_FIELD);
             String price = (String) insertMap.get(ImportConstant.PRICE_FIELD);
 
-            if(!StringUtils.hasText(orderNo) || !StringUtils.hasText(transSerial)){
+            if(!StringUtils.hasText(orderNo) && !StringUtils.hasText(transSerial)){
                 return ImportConstant.VALIDATE_OTHER_FAILED;
             }
 
@@ -274,7 +274,7 @@ public class ParseUploadFileImpl {
             String incomeAmt = (String) insertMap.get(ImportConstant.INCOME_AMT_FIELD);
             String paidAmt = (String) insertMap.get(ImportConstant.PAID_AMT_FIELD);
             String acctAmt = (String) insertMap.get(ImportConstant.ACCT_AMT_FIELD);
-            if(StringUtils.isEmpty(orderNo) || StringUtils.isEmpty(transSerial) ||
+            if(StringUtils.isEmpty(orderNo) && StringUtils.isEmpty(transSerial) ||
                     StringUtils.isEmpty(mobile)){
                 return ImportConstant.VALIDATE_OTHER_FAILED;
             }

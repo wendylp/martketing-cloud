@@ -260,7 +260,7 @@
             identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,
             udid,phone_mac,status,source,file_unique,batch_id,order_status,delivery_way,
 		    logistics_status,shipping_fee,shipping_way,express_company,express_order,consignee,
-		    consignee_tel,consignee_addr,buyer_comment,wxmp_id,wx_code)
+		    consignee_tel,consignee_addr,buyer_comment,wxmp_id,wx_code,product_name)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -309,19 +309,20 @@
 			#{item.source},
 			#{item.file_unique},
 			#{item.batch_id},
-			#{item.orderStatus},
-			#{item.deliveryWay},
-			#{item.logisticsStatus},
-			#{item.shippingFee},
-			#{item.shippingWay},
-			#{item.expressCompany},
-			#{item.expressOrder},
+			#{item.order_status},
+			#{item.delivery_way},
+			#{item.logistics_status},
+			#{item.shipping_fee},
+			#{item.shipping_way},
+			#{item.express_company},
+			#{item.express_order},
 			#{item.consignee},
-			#{item.consigneeTel},
-			#{item.consigneeAddr},
-			#{item.buyerComment},
-			#{item.wxmpId},
-			#{item.wxCode}
+			#{item.consignee_tel},
+			#{item.consignee_addr},
+			#{item.buyer_comment},
+			#{item.wxmp_code},
+			#{item.wxmp_openid},
+			#{item.product_name}
 			)
 		</foreach>
 	</insert>
