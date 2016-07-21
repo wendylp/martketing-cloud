@@ -19,11 +19,11 @@ public interface DataGetFilterAudiencesService {
      * @param size
      * @param ver
      * @param mdType
-     * @param taskIdList
+     * @param dataTypeList
      * @return
      * 
      */
-    public <T extends BaseQuery> Object getFilterAudiences(String method, String userToken,
-                    String ver, Integer index, Integer size, Integer mdType, List<Integer> taskIdList,
-                    List<Integer> contactIds , List<CustomizeViewCheckboxIn> customizeViews);
+    public <T extends BaseQuery> Object getFilterAudiences(String method, String userToken, String ver, Integer index,
+                    Integer size, Integer mdType, List<Integer> dataTypeList, List<Integer> contactIds,
+                    List<CustomizeViewCheckboxIn> customizeViews, String timeCondition);
 }

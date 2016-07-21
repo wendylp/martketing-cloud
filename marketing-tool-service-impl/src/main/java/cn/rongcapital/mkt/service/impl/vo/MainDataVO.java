@@ -10,6 +10,8 @@ public class MainDataVO {
 
     private List<Map<String, Object>> resultList;
 
+    private List<Map<String, Object>> countList;
+
     private Integer totalCount;
 
     public List<Map<String, Object>> getResultList() {
@@ -26,5 +28,13 @@ public class MainDataVO {
 
     public void setTotalCount(Integer totalCount) {
         this.totalCount = totalCount;
+    }
+
+    public List<Map<String, Object>> getCountList() {
+        return countList;
+    }
+
+    public void setCountList(List<Map<String, Object>> countList) {
+        this.countList = countList;
     }
 }

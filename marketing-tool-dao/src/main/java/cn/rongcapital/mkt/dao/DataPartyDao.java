@@ -48,7 +48,7 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      * @author nianjun
      * @return map
      */
-    public Map<String, Object> selectMainCount();
+    public Map<String, Object> selectMainCount(Map<String, Object> paramMap);
     
 //    /**
 //     * mkt.data.main.delete
