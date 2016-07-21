@@ -9,7 +9,7 @@ public class DataOptionMap extends BaseQuery {
 
     private String tableName;
 
-    private Boolean optionStatus;
+    private Byte optionStatus;
 
     public Integer getId() {
         return id;
@@ -35,11 +35,11 @@ public class DataOptionMap extends BaseQuery {
         this.tableName = tableName == null ? null : tableName.trim();
     }
 
-    public Boolean getOptionStatus() {
+    public Byte getOptionStatus() {
         return optionStatus;
     }
 
-    public void setOptionStatus(Boolean optionStatus) {
+    public void setOptionStatus(Byte optionStatus) {
         this.optionStatus = optionStatus;
     }
 }

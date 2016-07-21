@@ -39,10 +39,12 @@ import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.dao.ImportTemplateDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
+import cn.rongcapital.mkt.po.ContactWayMap;
 import cn.rongcapital.mkt.po.DataArchPoint;
 import cn.rongcapital.mkt.po.DataCustomerTags;
 import cn.rongcapital.mkt.po.DataLogin;
 import cn.rongcapital.mkt.po.DataMember;
+import cn.rongcapital.mkt.po.DataOptionMap;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.DataPayment;
 import cn.rongcapital.mkt.po.DataPopulation;
@@ -243,6 +245,24 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
             countMap.put("count_rows", count);
 
             countList.add(countMap);
+        }
+
+        List<Integer> dataOptionMapList = new ArrayList<>();
+        List<Integer> contactWayMapList = new ArrayList<>();
+        String resultTimeCondition = "";
+
+        List<DataOptionMap> dataOptionMaps = dataOptionMapDao.selectList(null);
+        if (!CollectionUtils.isEmpty(dataOptionMaps)) {
+            for (DataOptionMap dataOptionMap : dataOptionMaps) {
+                if (dataOptionMap.getOptionStatus().equals(1)) {
+                    dataOptionMapList.add(dataOptionMap.getTableId());
+                }
+            }
+        }
+
+        List<ContactWayMap> contactWayMaps = contactWayMapDao.selectList(null);
+        if (!CollectionUtils.isEmpty(contactWayMaps)) {
+
         }
 
 
