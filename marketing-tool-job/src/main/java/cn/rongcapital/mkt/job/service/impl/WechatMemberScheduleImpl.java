@@ -3,13 +3,16 @@ package cn.rongcapital.mkt.job.service.impl;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.service.base.OriginalDataScheduleService;
+import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.WechatMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +23,10 @@ import java.util.Map;
 public class WechatMemberScheduleImpl implements TaskService{
 
     private static final Integer MD_TYPE = 8;
+    private static final String WECHAT_PUBFANS_SOURCE = "公众号";
+    private static final String WECHAT_PERSONS_SOURCE = "个人号";
+    private static final Integer NOT_SYNC_TO_DATA_PARTY = 0;
+    private static final Integer SYNCED_TO_DATA_PARTY = 1;
     private final Integer BATCH_SIZE = 500;
 
     @Autowired
@@ -44,27 +51,45 @@ public class WechatMemberScheduleImpl implements TaskService{
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     private void syncWechatMemberByBatchSize() {
-        List<Map<String,Object>> notSyncWechatMemberList = wechatMemberDao.selectNotSyncWechatMemberList();
+        //1通过PO来选择未同步的WechatMember数据,如果没有未同步的数据则返回，如果有对这些数据进行同步
+        WechatMember wechatMember = new WechatMember();
+        wechatMember.setSelected(NOT_SYNC_TO_DATA_PARTY.byteValue());
+        wechatMember.setPageSize(BATCH_SIZE);
+        List<WechatMember> notSyncWechatMemberList = wechatMemberDao.selectList(wechatMember);
+        if(notSyncWechatMemberList == null || CollectionUtils.isEmpty(notSyncWechatMemberList)) return;
         if(doSync(notSyncWechatMemberList)){
             List<Long> idList = new ArrayList<Long>();
-            for(Map<String,Object> map : notSyncWechatMemberList){
-                idList.add((long)map.get("mapping_key_id"));
+            for(WechatMember notUpdateStatusWechatMember: notSyncWechatMemberList){
+                idList.add(notUpdateStatusWechatMember.getId());
             }
             updateSyncWechatMemeberListStatus(idList);
         }
     }
 
-    private boolean doSync(List<Map<String, Object>> notSyncWechatMemberList) {
-        for(Map<String,Object> map : notSyncWechatMemberList){
-            map.put("provice",map.remove("province"));
-            map.put("name",map.remove("wx_name"));
-            map.put("mapping_key_id",map.remove("id"));
-            map.put("gender",map.remove("sex"));
-            map.put("md_type", MD_TYPE);
+    private boolean doSync(List<WechatMember> notSyncWechatMemberList) {
+        //将同步过程改为使用PO操作数据库而不是使用Map操作数据库
+        List<DataParty> readyToSyncDataPartyList = new LinkedList<DataParty>();
+        for(WechatMember wechatMember : notSyncWechatMemberList){
+            DataParty dataParty = new DataParty();
+            dataParty.setProvice(wechatMember.getProvince());
+            dataParty.setName(wechatMember.getWxName());
+            dataParty.setMappingKeyid(wechatMember.getId() + "");
+            dataParty.setGender(wechatMember.getSex().byteValue());
+            if(wechatMember.getPubId() != null && !wechatMember.getPubId().isEmpty()){
+                dataParty.setSource(WECHAT_PUBFANS_SOURCE);
+            }else{
+                dataParty.setSource(WECHAT_PERSONS_SOURCE);
+            }
+            dataParty.setMdType(MD_TYPE);
+            readyToSyncDataPartyList.add(dataParty);
         }
 
-        Integer effectRows = dataPartyDao.batchInsertWechatDatas(notSyncWechatMemberList);
-        if(effectRows > 0){
+        Integer effectRows = 0;
+        for(DataParty dataParty : readyToSyncDataPartyList){
+            dataPartyDao.insert(dataParty);
+            effectRows ++;
+        }
+        if(effectRows == readyToSyncDataPartyList.size()){
             return true;
         }
         return false;
