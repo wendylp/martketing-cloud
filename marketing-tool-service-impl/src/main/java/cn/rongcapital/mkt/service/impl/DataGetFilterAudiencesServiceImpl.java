@@ -262,7 +262,12 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
         List<ContactWayMap> contactWayMaps = contactWayMapDao.selectList(null);
         if (!CollectionUtils.isEmpty(contactWayMaps)) {
-
+            for(ContactWayMap contactWayMap : contactWayMaps){
+                if(contactWayMap.getStatus().equals(1)){
+                    contactWayMapList.add(contactWayMap.getContactWayId());
+                }
+            }
+            resultTimeCondition = contactWayMaps.get(0).getTimeConditionAbbreviation();
         }
 
 

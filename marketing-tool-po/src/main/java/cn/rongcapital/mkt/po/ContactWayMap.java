@@ -15,6 +15,8 @@ public class ContactWayMap extends BaseQuery {
 
     private Date timeCondition;
 
+    private String timeConditionAbbreviation;
+
     public Integer getId() {
         return id;
     }
@@ -53,5 +55,13 @@ public class ContactWayMap extends BaseQuery {
 
     public void setTimeCondition(Date timeCondition) {
         this.timeCondition = timeCondition;
+    }
+
+    public String getTimeConditionAbbreviation() {
+        return timeConditionAbbreviation;
+    }
+
+    public void setTimeConditionAbbreviation(String timeConditionAbbreviation) {
+        this.timeConditionAbbreviation = timeConditionAbbreviation == null ? null : timeConditionAbbreviation.trim();
     }
 }
