@@ -508,7 +508,7 @@ public class BaseMQService {
 		try {
 			Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			MessageConsumer consumer = session.createConsumer(queue);
-			Message msg = consumer.receiveNoWait();
+			Message msg = consumer.receive();
 			if(null!=msg){
 				myDomainObj = (List<Segment>)((ObjectMessage)msg).getObject();
 			}
