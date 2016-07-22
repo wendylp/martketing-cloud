@@ -85,8 +85,14 @@ public interface WechatRegisterDao extends BaseDao<WechatRegister>{
 	List<Map<String,Object>> selectNewWxAssetListWhenFirstImported();
 
 	/**
-	 * 根据微信账号跟新相关信息
+	 * 根据微信账号跟新个人号相关信息
 	 * @param list
 	 */
 	void updateInforByWxAcct(@Param("updateList") List<WechatRegister> updatePersonInfoList);
+
+	/**
+	 * 根据微信账号跟新第二次授权时间
+	 * @param list
+	 */
+	void updateConsignationTimeByWxacct(WechatRegister wechatRegister);
 }

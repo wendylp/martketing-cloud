@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,7 +86,18 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
     private void registerWechatPersonInDatabase(String uin) {
         WechatRegister wechatRegister = new WechatRegister();
         wechatRegister.setWxAcct(uin);
+        if(isAssetExistEver(wechatRegister)){
+            wechatRegister.setCreateTime(new Date(System.currentTimeMillis()));
+            wechatRegisterDao.updateConsignationTimeByWxacct(wechatRegister);
+            return;
+        }
         wechatRegister.setType(PERSONAL_WECHAT_ASSET_TYPE);
         wechatRegisterDao.insert(wechatRegister);
+    }
+
+    private boolean isAssetExistEver(WechatRegister wechatRegister) {
+        Integer count = wechatRegisterDao.selectListCount(wechatRegister);
+        if(count > 0) return true;
+        return false;
     }
 }

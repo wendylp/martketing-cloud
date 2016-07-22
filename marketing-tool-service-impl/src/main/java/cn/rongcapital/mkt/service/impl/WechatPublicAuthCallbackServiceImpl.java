@@ -10,6 +10,7 @@ import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,20 +26,34 @@ public class WechatPublicAuthCallbackServiceImpl implements WechatPublicAuthCall
     private WechatRegisterDao wechatRegisterDao;
 
     //如果表里已经存在weixinId则
+    //这里还应该判断是否是二次注册，如果是二次注册需要跟新操作时间
 
     @Override
     public BaseOutput authWechatPublicCallback(WechatPublicAuthCallbackIn wechatPublicAuthCallbackIn) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
         WechatRegister wechatRegister = new WechatRegister();
         wechatRegister.setWxAcct(wechatPublicAuthCallbackIn.getWeixinId());
-        wechatRegister.setName(wechatPublicAuthCallbackIn.getName());
         if("success".equals(wechatPublicAuthCallbackIn.getStatus())){
             wechatRegister.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+            if(isAssetExistEver(wechatRegister)){
+                wechatRegister.setCreateTime(new Date(System.currentTimeMillis()));
+                wechatRegisterDao.updateConsignationTimeByWxacct(wechatRegister);
+                baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+                baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+                return baseOutput;
+            }
+            wechatRegister.setName(wechatPublicAuthCallbackIn.getName());
             wechatRegister.setType(UNKNOWN_WECHAT_ASSET_TYPE);
             wechatRegisterDao.insert(wechatRegister);
             baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
             baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
         }
         return baseOutput;
+    }
+
+    private boolean isAssetExistEver(WechatRegister wechatRegister) {
+        Integer count = wechatRegisterDao.selectListCount(wechatRegister);
+        if(count > 0) return true;
+        return false;
     }
 }

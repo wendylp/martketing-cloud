@@ -193,4 +193,10 @@
 			#{item.wxAcct}
 		</foreach>
 	</update>
+
+	<update id="updateConsignationTimeByWxacct" parameterType="cn.rongcapital.mkt.po.WechatRegister">
+		<![CDATA[UPDATE wechat_register]]>
+		SET create_time = #{createTime}
+		WHERE wx_acct = #{wxAcct}
+	</update>
 </mapper>
