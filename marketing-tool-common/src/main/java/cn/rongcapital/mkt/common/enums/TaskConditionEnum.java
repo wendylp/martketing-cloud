@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 
 public enum TaskConditionEnum {
 
-    H(1, "H", "最近1小时"), 
-    D(2, "D", "最近一天"), 
-    W(3, "W", "最近一周"),;
+    ALL(0, "A", "任意时间"), H(1, "H", "最近1小时"), D(2, "D", "最近一天"), W(3, "W", "最近一周"),
+
+    ;
 
     private static Logger logger = LoggerFactory.getLogger(TaskConditionEnum.class);
 
@@ -53,6 +53,9 @@ public enum TaskConditionEnum {
 
     public Date getTime() {
         Calendar calendar = Calendar.getInstance();
+        if (this.getCode() == 0) {
+            calendar.set(1970, 1, 1);
+        }
         if (this.getCode() == 1) {
             calendar.add(Calendar.HOUR, -1);
         } else if (this.getCode() == 2) {
@@ -80,6 +83,23 @@ public enum TaskConditionEnum {
         }
 
         logger.info("缩写参数{}错误,不含该缩写的枚举", abbreviation);
+        return null;
+    }
+
+    public static TaskConditionEnum getEnumByCode(Integer code) {
+        TaskConditionEnum[] enums = TaskConditionEnum.values();
+        if (code == null) {
+            logger.error("通过编码获取TaskConditionEnum失败 : 参数为空");
+            return null;
+        }
+
+        for (TaskConditionEnum taskConditionEnum : enums) {
+            if (taskConditionEnum.getCode() == code) {
+                return taskConditionEnum;
+            }
+        }
+
+        logger.info("缩写参数{}错误,不含该编码的枚举", code);
         return null;
     }
 }

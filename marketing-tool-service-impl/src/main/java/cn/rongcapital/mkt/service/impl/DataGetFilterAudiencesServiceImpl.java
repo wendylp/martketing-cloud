@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +97,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public <T extends BaseQuery> Object getFilterAudiences(String method, String userToken, String ver, Integer index,
                     Integer size, Integer dataType, List<Integer> dataTypeList, List<Integer> contactIds,
-                    List<CustomizeViewCheckboxIn> customizeViews, String timeCondition) {
+                    List<CustomizeViewCheckboxIn> customizeViews, Integer timeCondition) {
         DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
         List<Map<String, Object>> columnList = new ArrayList<>();
@@ -179,7 +178,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private <T extends BaseQuery, D extends BaseDataFilterDao> MainDataVO getData(Integer mdType,
-                    List<Integer> mdTypeList, List<Integer> contactIdList, String timeCondition, T paramObj, D dao) {
+                    List<Integer> mdTypeList, List<Integer> contactIdList, Integer timeCondition, T paramObj, D dao) {
 
         MainDataVO mainDataVO = new MainDataVO();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -192,8 +191,8 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         paramMap.put("pageSize", paramObj.getPageSize());
         paramMap.put("contactIdList", contactIdList);
 
-        if (!StringUtils.isEmpty(timeCondition)) {
-            Date timeConditionDate = TaskConditionEnum.getEnumByAbbreviation(timeCondition).getTime();
+        if (timeCondition != null) {
+            Date timeConditionDate = TaskConditionEnum.getEnumByCode(timeCondition).getTime();
             paramMap.put("timeCondition", timeConditionDate);
         }
 
@@ -309,7 +308,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         return resultList;
     }
 
-    private void updateConditions(List<Integer> dataTypeList, List<Integer> contactIds, String timeCondition) {
+    private void updateConditions(List<Integer> dataTypeList, List<Integer> contactIds, Integer timeCondition) {
 
         // 将数据类型的下拉列表里的状态保存起来
         if (!CollectionUtils.isEmpty(dataTypeList)) {
@@ -322,10 +321,10 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
             contactWayMapDao.updateUnSelectedStatusByIds(contactIds);
         }
 
-        if (!StringUtils.isEmpty(timeCondition)) {
+        if (timeCondition != null) {
             Map<String, Object> paramMap = new HashMap<>();
-            paramMap.put("timeCondition", TaskConditionEnum.getEnumByAbbreviation(timeCondition).getTime());
-            paramMap.put("timeConditionAbbreviation", timeCondition);
+            paramMap.put("timeCondition", TaskConditionEnum.getEnumByCode(timeCondition).getTime());
+            paramMap.put("timeConditionAbbreviation", TaskConditionEnum.getEnumByCode(timeCondition).getAbbreviation());
             contactWayMapDao.updateTimeCondition(paramMap);
         }
 

@@ -188,7 +188,7 @@
 	data_party_rows,data_arch_point_rows,data_customer_tags_rows,data_login_rows,data_member_rows,data_payment_rows,data_population_rows,data_shopping_rows
 	FROM
 	(select count(id) as data_party_rows from data_party WHERE 1=1
-	<if test="contactId != null">
+	<if test="contactIdList != null">
 	<foreach collection="contactIdList" item="contactId">
 		<if test="contactId != null and contactId == 1">
 				<![CDATA[AND data_party.mobile is not null]]>
@@ -203,7 +203,7 @@
 	</if>
 	) as data_party_result,
 	(select count(id) as data_arch_point_rows from data_arch_point WHERE 1=1
-	<if test="contactId != null">
+	<if test="contactIdList != null">
 	<foreach collection="contactIdList" item="contactId">
 		<if test="contactId != null and contactId == 1">
 				<![CDATA[AND data_arch_point.mobile is not null]]>
@@ -219,7 +219,7 @@
 	) as
 	data_arch_point,
 	(select count(id) as data_customer_tags_rows from data_customer_tags WHERE 1=1
-	<if test="contactId != null">
+	<if test="contactIdList != null">
 	<foreach collection="contactIdList" item="contactId">
 		<if test="contactId != null and contactId == 1">
 				<![CDATA[AND data_customer_tags.mobile is not null]]>
@@ -235,7 +235,7 @@
 	) as
 	data_customer_tags,
 	(select count(id) as data_login_rows from data_login WHERE 1=1
-	<if test="contactId != null">
+	<if test="contactIdList != null">
 	<foreach collection="contactIdList" item="contactId">
 		<if test="contactId != null and contactId == 1">
 				<![CDATA[AND data_login.mobile is not null]]>
@@ -250,7 +250,7 @@
 	</if>
 	) as data_login,
 	(select count(id) as data_member_rows from data_member WHERE 1=1
-	<if test="contactId != null">
+	<if test="contactIdList != null">
 	<foreach collection="contactIdList" item="contactId">
 		<if test="contactId != null and contactId == 1">
 				<![CDATA[AND data_member.mobile is not null]]>
@@ -265,7 +265,7 @@
 	</if>
 	) as data_member,
 	(select count(id) as data_payment_rows from data_payment WHERE 1=1
-	<if test="contactId != null">
+	<if test="contactIdList != null">
 	<foreach collection="contactIdList" item="contactId">
 		<if test="contactId != null and contactId == 1">
 				<![CDATA[AND data_payment.mobile is not null]]>
@@ -281,7 +281,7 @@
 	) as
 	data_payment,
 	(select count(id) as data_population_rows from data_population WHERE 1=1
-	<if test="contactId != null">
+	<if test="contactIdList != null">
 	<foreach collection="contactIdList" item="contactId">
 		<if test="contactId != null and contactId == 1">
 				<![CDATA[AND data_population.mobile is not null]]>
@@ -297,7 +297,7 @@
 	) as
 	data_population,
 	(select count(id) as data_shopping_rows from data_shopping WHERE 1=1
-	<if test="contactId != null">
+	<if test="contactIdList != null">
 	<foreach collection="contactIdList" item="contactId">
 		<if test="contactId != null and contactId == 1">
 				<![CDATA[AND data_shopping.mobile is not null]]>
@@ -360,7 +360,7 @@
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE 1=1
-		<if test="contactId != null">
+		<if test="contactIdList != null">
 		<foreach collection="contactIdList" item="contactId">
 			<if test="contactId != null and contactId == 1">
 				<![CDATA[AND mobile is not null]]>
@@ -394,7 +394,7 @@
 		COUNT(1)
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE 1=1
-		<if test="contactId != null">
+		<if test="contactIdList != null">
 		<foreach collection="contactIdList" item="contactId">
 			<if test="contactId != null and contactId == 1">
 				<![CDATA[AND mobile is not null]]>

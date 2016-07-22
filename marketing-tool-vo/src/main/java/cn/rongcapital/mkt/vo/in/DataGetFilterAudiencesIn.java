@@ -9,21 +9,21 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DataGetFilterAudiencesIn extends BaseInput {
     private String userToken = null;
-    
+
     @NotNull
     private Integer mdType;
-    
+
     private List<Integer> mdTypes;
-    
+
     private List<Integer> contactIds;
-    
-    private String timeCondition;
-    
+
+    private Integer timeCondition;
+
     private List<CustomizeViewCheckboxIn> customizeViews;
-    
+
     private String method;
 
     @JsonProperty("user_token")
@@ -69,7 +69,7 @@ public class DataGetFilterAudiencesIn extends BaseInput {
     public void setCustomizeViews(List<CustomizeViewCheckboxIn> customizeViews) {
         this.customizeViews = customizeViews;
     }
-    
+
     @JsonProperty("md_types")
     public List<Integer> getMdTypes() {
         return mdTypes;
@@ -80,11 +80,11 @@ public class DataGetFilterAudiencesIn extends BaseInput {
     }
 
     @JsonProperty("time_condition")
-    public String getTimeCondition() {
+    public Integer getTimeCondition() {
         return timeCondition;
     }
 
-    public void setTimeCondition(String timeCondition) {
+    public void setTimeCondition(Integer timeCondition) {
         this.timeCondition = timeCondition;
     }
 }
