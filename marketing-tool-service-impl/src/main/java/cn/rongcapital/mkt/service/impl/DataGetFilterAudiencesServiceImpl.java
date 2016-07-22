@@ -245,7 +245,8 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
             countMap.put("tag_name", tagName);
             Object count = countRowsMap.get(ImportTemplTypeEnum.getCountNameByName(tagName));
             // 主数据不在此列中
-            if (!importTemplate.getTemplType().equals(DataTypeEnum.PARTY.getCode())
+            if (!CollectionUtils.isEmpty(mdTypeList)
+                            && !importTemplate.getTemplType().equals(DataTypeEnum.PARTY.getCode())
                             && !isDataTypeListContainType(mdTypeList, importTemplate.getTemplType())) {
                 count = "0";
             }
