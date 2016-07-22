@@ -126,6 +126,8 @@ public class OriginalDataShopping extends BaseQuery {
 
     private String wxCode;
 
+    private String productName;
+
     public Integer getId() {
         return id;
     }
@@ -604,5 +606,13 @@ public class OriginalDataShopping extends BaseQuery {
 
     public void setWxCode(String wxCode) {
         this.wxCode = wxCode == null ? null : wxCode.trim();
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName == null ? null : productName.trim();
     }
 }
