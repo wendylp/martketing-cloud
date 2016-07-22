@@ -248,10 +248,6 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                 count = "0";
             }
             countMap.put("count_rows", count);
-            if (tagName.equals(DataTypeEnum.PARTY.getDescription())) {
-                countMap.put("count_rows", totalCount);
-            }
-
             countList.add(countMap);
         }
 
