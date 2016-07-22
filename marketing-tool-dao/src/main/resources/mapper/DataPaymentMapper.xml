@@ -187,7 +187,7 @@
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE 1=1
-		<if test="contactId != null">
+		<if test="contactIdList != null">
 		<foreach collection="contactIdList" item="contactId">
 			<if test="contactId != null and contactId == 1">
 				<![CDATA[AND mobile is not null]]>
@@ -214,7 +214,7 @@
 		COUNT(1)
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE 1=1
-		<if test="contactId != null">
+		<if test="contactIdList != null">
 		<foreach collection="contactIdList" item="contactId">
 			<if test="contactId != null and contactId == 1">
 				<![CDATA[AND mobile is not null]]>

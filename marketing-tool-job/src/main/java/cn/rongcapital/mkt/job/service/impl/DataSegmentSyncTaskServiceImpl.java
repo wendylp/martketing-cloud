@@ -60,7 +60,7 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 				continue;//未发布的细分不进行同步
 			}
 			
-			mongoTemplate.findAllAndRemove(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
+			//mongoTemplate.findAllAndRemove(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
 //			List<Segment> lastSegmentList = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
 //			Set<String> lastSegmentDataIdSet = new HashSet<String>();
 //			if(CollectionUtils.isNotEmpty(lastSegmentList)) {

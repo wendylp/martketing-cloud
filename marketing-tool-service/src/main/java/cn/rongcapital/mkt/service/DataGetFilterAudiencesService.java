@@ -25,5 +25,5 @@ public interface DataGetFilterAudiencesService {
      */
     public <T extends BaseQuery> Object getFilterAudiences(String method, String userToken, String ver, Integer index,
                     Integer size, Integer mdType, List<Integer> dataTypeList, List<Integer> contactIds,
-                    List<CustomizeViewCheckboxIn> customizeViews, String timeCondition);
+                    List<CustomizeViewCheckboxIn> customizeViews, Integer timeCondition);
 }
