@@ -373,9 +373,9 @@
 		</foreach>
 		</if>
 		<if test="mdTypes != null">
-			AND mdType IN
-			<foreach collection="mdTypes" item="mdType" index="index" separator=",">
-				#{mdType}
+			AND md_type IN
+			<foreach collection="mdTypes" item="dataType" index="index" separator="," open="(" close=")">
+				#{dataType}
 			</foreach>
 		</if>
 		
@@ -401,9 +401,9 @@
 		</foreach>
 		</if>
 		<if test="mdTypes != null">
-			AND mdType IN
-			<foreach collection="mdTypes" item="mdType" index="index" separator=",">
-				#{mdType}
+			AND md_type IN
+			<foreach collection="mdTypes" item="dataType" index="index" separator="," open="(" close=")">
+				#{dataType}
 			</foreach>
 		</if>
 		<if test="timeCondition != null">

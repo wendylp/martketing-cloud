@@ -190,6 +190,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         paramMap.put("startIndex", paramObj.getStartIndex());
         paramMap.put("pageSize", paramObj.getPageSize());
         paramMap.put("contactIdList", contactIdList);
+        paramMap.put("mdTypes", mdTypeList);
 
         if (timeCondition == null) {
             timeCondition = 0;
