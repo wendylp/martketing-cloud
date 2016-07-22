@@ -23,6 +23,8 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -223,7 +225,14 @@ public class BaseMQService {
 	
 	protected boolean checkSubscriberTime(byte subscribeTimeType,String realSubscribeTime) {
 		boolean isSubscribe = false;
-		DateTime realSubscribeTimeDate = DateTime.parse(realSubscribeTime);  
+		DateTime realSubscribeTimeDate = null;
+		try {
+			DateTimeFormatter dtf = DateTimeFormat.forPattern(ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+			realSubscribeTimeDate = DateTime.parse(realSubscribeTime,dtf);  
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			realSubscribeTimeDate = null;
+		}
 		if(null != realSubscribeTimeDate) {
 			DateTime now = new DateTime();
 			switch (subscribeTimeType) {
@@ -508,7 +517,7 @@ public class BaseMQService {
 		try {
 			Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			MessageConsumer consumer = session.createConsumer(queue);
-			Message msg = consumer.receiveNoWait();
+			Message msg = consumer.receive();
 			if(null!=msg){
 				myDomainObj = (List<Segment>)((ObjectMessage)msg).getObject();
 			}
@@ -517,6 +526,7 @@ public class BaseMQService {
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
+		logger.info(queue+"-in:"+JSON.toJSONString(myDomainObj));
 		return myDomainObj;
 	}
 	
@@ -527,7 +537,11 @@ public class BaseMQService {
 		Session session = null;
     	try {
     		session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-    		Destination destination = session.createQueue(dest);
+    		//先获取queue,如果queue不存在，则创建1个新的,防止创建重复的queue
+    		Destination destination = getDynamicQueue(dest);
+    		if(null == destination) {
+    			destination = session.createQueue(dest);
+    		}
     		jmsMessagingTemplate.convertAndSend(destination, campaignSegmentList); 
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);

@@ -52,6 +52,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
             dataParty.setName(dataObj.getName());
             dataParty.setGender(dataObj.getGender());
             dataParty.setBirthday(dataObj.getBirthday());
+            dataParty.setCitizenship(dataObj.getCitizenship());
             dataParty.setProvice(dataObj.getProvice());
             dataParty.setCity(dataObj.getCity());
             dataParty.setJob(dataObj.getJob());

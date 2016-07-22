@@ -94,6 +94,7 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
         } else {
             cn.rongcapital.mkt.po.mongodb.DataParty mongoDataParty =
                     new cn.rongcapital.mkt.po.mongodb.DataParty();
+            BeanUtils.copyProperties(dataParty, mongoDataParty);
             mongoDataParty.setMid(dataPartyId);
             mongoTemplate.insert(mongoDataParty, MONGODB_COLLECTION);
         }

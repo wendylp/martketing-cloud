@@ -26,6 +26,8 @@ public class DataParty extends BaseQuery {
 
     private Date birthday;
 
+    private String citizenship;
+
     private String provice;
 
     private String city;
@@ -222,5 +224,13 @@ public class DataParty extends BaseQuery {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public String getCitizenship() {
+        return citizenship;
+    }
+
+    public void setCitizenship(String citizenship) {
+        this.citizenship = citizenship;
     }
 }
