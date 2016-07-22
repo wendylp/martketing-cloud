@@ -17,7 +17,7 @@
 		brand_id,brand_name,class1_id,class1_name,class2_id,class2_name,class3_id,class3_name,
 		class4_id,class4_name,sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,
 		identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,
-		update_time,source,batch_id,order_status as order_tatus,delivery_way,logistics_status,
+		update_time,source,batch_id,order_status,delivery_way,logistics_status,
 		shipping_fee,shipping_way,express_company,express_order,consignee,consignee_tel,consignee_addr,
 		buyer_comment,wxmp_id,wx_code,product_name]]>
 	</sql>
