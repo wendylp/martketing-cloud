@@ -97,6 +97,7 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService{
                 wechatRegister = wechatRegisterList.get(0);
                 WechatAsset wechatAsset = new WechatAsset();
                 wechatAsset.setAssetName(wechatRegister.getName());
+                wechatAsset.setConsignationTime(wechatRegister.getCreateTime());
                 wechatAsset.setAssetType(wechatRegister.getType());
                 wechatAsset.setImgfileUrl(wechatRegister.getHeaderImage());
                 wechatAsset.setWxAcct(wechatRegister.getWxAcct());

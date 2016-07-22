@@ -7,6 +7,7 @@ import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.job.vo.in.H5MktPersonalListResponse;
 import cn.rongcapital.mkt.job.vo.in.H5Personal;
+import cn.rongcapital.mkt.po.WechatRegister;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpResponse;
@@ -15,12 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Yunfeng on 2016-6-17.
@@ -60,9 +59,22 @@ public class GetH5PersonalListImpl implements TaskService {
 
     private void insertPersonalInfo(H5MktPersonalListResponse h5MktPersonalListResponse) {
         List<Map<String,Object>> paramPersonals = new ArrayList<Map<String,Object>>();
+        List<WechatRegister> updatePersonInfoList = new LinkedList<WechatRegister>();
         if(h5MktPersonalListResponse != null && h5MktPersonalListResponse.getPersonals() != null && h5MktPersonalListResponse.getPersonals().getPersonal() != null && h5MktPersonalListResponse.getPersonals().getPersonal().size() > 0){
             for(H5Personal h5Personal :h5MktPersonalListResponse.getPersonals().getPersonal()){
-                if(personAlreadySaved(h5Personal)) continue;
+                if(personAlreadySaved(h5Personal)){
+                    WechatRegister wechatRegister = new WechatRegister();
+                    wechatRegister.setWxAcct(h5Personal.getUin());
+                    wechatRegister.setName(h5Personal.getNickname().replaceAll("[^\\u0000-\\uFFFF]", ""));
+                    wechatRegister.setType(1);
+                    wechatRegister.setHeaderImage(null);
+                    wechatRegister.setSex(h5Personal.getSex());
+                    wechatRegister.setProvince(h5Personal.getProvince());
+                    wechatRegister.setCity(h5Personal.getCity());
+                    wechatRegister.setSignature(h5Personal.getSignature());
+                    updatePersonInfoList.add(wechatRegister);
+                    continue;
+                }
                 Map<String,Object> paramPersonal = new HashMap<String,Object>();
                 paramPersonal.put("wx_acct",h5Personal.getUin());
                 paramPersonal.put("name",h5Personal.getNickname().replaceAll("[^\\u0000-\\uFFFF]", ""));
@@ -76,6 +88,9 @@ public class GetH5PersonalListImpl implements TaskService {
             }
             if(paramPersonals != null && paramPersonals.size() > 0){
                 wechatRegisterDao.batchInsertPersonList(paramPersonals);
+            }
+            if(updatePersonInfoList != null && !CollectionUtils.isEmpty(updatePersonInfoList)){
+                wechatRegisterDao.updateInforByWxAcct(updatePersonInfoList);
             }
         }
     }

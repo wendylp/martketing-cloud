@@ -170,4 +170,27 @@
 		SELECT id as asset_id,wx_acct,name as asset_name,type as asset_type,nickname,header_image as imgfile_url
 		<include refid="QUERY_FROM_TABLE"/>
 	</select>
+
+	<sql id="UPDATE_COLUMN_SET_BY_WXACCT">
+		<set>
+			<if test="name != null"><![CDATA[name = #{name},]]></if>
+			<if test="type != null"><![CDATA[type = #{type},]]></if>
+			<if test="nickname != null"><![CDATA[nickname = #{nickname},]]></if>
+			<if test="headerImage != null"><![CDATA[header_image = #{headerImage},]]></if>
+			<if test="sex != null"><![CDATA[sex = #{sex},]]></if>
+			<if test="province != null"><![CDATA[province = #{province},]]></if>
+			<if test="city != null"><![CDATA[city = #{city},]]></if>
+			<if test="signature != null"><![CDATA[signature = #{signature},]]></if>
+			<if test="status != null"><![CDATA[status = #{status}]]></if>
+		</set>
+	</sql>
+
+	<update id="updateInforByWxAcct" parameterType="java.util.List">
+		<![CDATA[UPDATE wechat_register]]>
+		<include refid="UPDATE_COLUMN_SET_BY_WXACCT"/>
+		WHERE wx_acct in
+		<foreach collection="updateList" item="item" index="index" separator="," open="(" close=")">
+			#{item.wxAcct}
+		</foreach>
+	</update>
 </mapper>

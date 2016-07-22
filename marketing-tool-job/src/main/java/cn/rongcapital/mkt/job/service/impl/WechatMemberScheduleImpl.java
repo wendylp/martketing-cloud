@@ -34,9 +34,9 @@ public class WechatMemberScheduleImpl implements TaskService{
     @Autowired
     private DataPartyDao dataPartyDao;
 
-    //Todo: 1选出没有被同步过的数据，根据selected为0的字段
-    //Todo: 2将数据同步到dataParty表中。
-    //Todo: 3将通不过的数据的selected字段置为1。
+    //1选出没有被同步过的数据，根据selected为0的字段
+    //2将数据同步到dataParty表中。
+    //3将通不过的数据的selected字段置为1。
 
 
     @Override

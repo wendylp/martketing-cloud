@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.service.impl;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
+import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
@@ -21,15 +22,17 @@ public class WechatPublicAuthCallbackServiceImpl implements WechatPublicAuthCall
     @Autowired
     private WechatRegisterDao wechatRegisterDao;
 
+    //如果表里已经存在weixinId则
+
     @Override
     public BaseOutput authWechatPublicCallback(WechatPublicAuthCallbackIn wechatPublicAuthCallbackIn) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
-        Map<String,Object> paramMap =new HashMap<String,Object>();
-        paramMap.put("wx_acct",wechatPublicAuthCallbackIn.getWeixinId());
-        paramMap.put("name",wechatPublicAuthCallbackIn.getName());
+        WechatRegister wechatRegister = new WechatRegister();
+        wechatRegister.setWxAcct(wechatPublicAuthCallbackIn.getWeixinId());
+        wechatRegister.setName(wechatPublicAuthCallbackIn.getName());
         if("success".equals(wechatPublicAuthCallbackIn.getStatus())){
-            paramMap.put("status",0);
-            wechatRegisterDao.insertAuthPublic(paramMap);
+            wechatRegister.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+            wechatRegisterDao.insert(wechatRegister);
             baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
             baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
         }

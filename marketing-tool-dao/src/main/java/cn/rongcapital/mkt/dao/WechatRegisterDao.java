@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatRegister;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -82,4 +83,10 @@ public interface WechatRegisterDao extends BaseDao<WechatRegister>{
 	 * @param list
 	 */
 	List<Map<String,Object>> selectNewWxAssetListWhenFirstImported();
+
+	/**
+	 * 根据微信账号跟新相关信息
+	 * @param list
+	 */
+	void updateInforByWxAcct(@Param("updateList") List<WechatRegister> updatePersonInfoList);
 }

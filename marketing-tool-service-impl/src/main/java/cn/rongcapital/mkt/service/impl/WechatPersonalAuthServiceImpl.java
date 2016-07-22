@@ -7,6 +7,7 @@ import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskManager;
 import cn.rongcapital.mkt.job.service.impl.GetPersonContactsList;
 import cn.rongcapital.mkt.job.vo.in.H5PersonalContactlistResponse;
+import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
@@ -43,6 +44,8 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
     private WechatAssetDao wechatAssetDao;
     @Autowired
     private WechatAssetGroupDao wechatAssetGroupDao;
+    @Autowired
+    private WechatRegisterDao wechatRegisterDao;
 
     @Override
     public BaseOutput authPersonWechat(WechatPersonalAuthIn wechatPersonalAuthIn) {
@@ -55,6 +58,7 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
             if(uin != null){
                 paramMap.put("uin",uin);
                 wechatPersonalUuidDao.insertUuidAndUin(paramMap);
+                registerWechatPersonInDatabase(uin);
                 deleteRecordAccordUin(uin);
                 taskManager.manualInitTask(1098,null);
                 baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
@@ -74,5 +78,11 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
         wechatAssetDao.deleteRecordByUin(uin);
         //Todo:4.删除wechat_asset_group相关数据
         wechatAssetGroupDao.deleteRecordByUin(uin);
+    }
+
+    private void registerWechatPersonInDatabase(String uin) {
+        WechatRegister wechatRegister = new WechatRegister();
+        wechatRegister.setWxAcct(uin);
+        wechatRegisterDao.insert(wechatRegister);
     }
 }
