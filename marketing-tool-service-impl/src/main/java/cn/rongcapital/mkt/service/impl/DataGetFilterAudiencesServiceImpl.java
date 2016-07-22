@@ -191,10 +191,12 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         paramMap.put("pageSize", paramObj.getPageSize());
         paramMap.put("contactIdList", contactIdList);
 
-        if (timeCondition != null) {
-            Date timeConditionDate = TaskConditionEnum.getEnumByCode(timeCondition).getTime();
-            paramMap.put("timeCondition", timeConditionDate);
+        if (timeCondition == null) {
+            timeCondition = 0;
         }
+
+        Date timeConditionDate = TaskConditionEnum.getEnumByCode(timeCondition).getTime();
+        paramMap.put("timeCondition", timeConditionDate);
 
         List<T> dataList = dao.selectByBatchId(paramMap);
         Integer totalCount = dao.selectCountByBatchId(paramMap);
