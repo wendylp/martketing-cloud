@@ -30,6 +30,8 @@ import java.util.Map;
 @Service
 public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService {
 
+    private static final Integer PERSONAL_WECHAT_ASSET_TYPE = 1;
+
     @Autowired
     private TenementDao tenementDao;
     @Autowired
@@ -83,6 +85,7 @@ public class WechatPersonalAuthServiceImpl implements WechatPersonalAuthService 
     private void registerWechatPersonInDatabase(String uin) {
         WechatRegister wechatRegister = new WechatRegister();
         wechatRegister.setWxAcct(uin);
+        wechatRegister.setType(PERSONAL_WECHAT_ASSET_TYPE);
         wechatRegisterDao.insert(wechatRegister);
     }
 }

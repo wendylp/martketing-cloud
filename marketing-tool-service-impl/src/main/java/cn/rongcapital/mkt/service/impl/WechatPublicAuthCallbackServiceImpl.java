@@ -19,6 +19,8 @@ import java.util.Map;
 @Service
 public class WechatPublicAuthCallbackServiceImpl implements WechatPublicAuthCallbackService {
 
+    private static final Integer UNKNOWN_WECHAT_ASSET_TYPE = -1;
+
     @Autowired
     private WechatRegisterDao wechatRegisterDao;
 
@@ -32,6 +34,7 @@ public class WechatPublicAuthCallbackServiceImpl implements WechatPublicAuthCall
         wechatRegister.setName(wechatPublicAuthCallbackIn.getName());
         if("success".equals(wechatPublicAuthCallbackIn.getStatus())){
             wechatRegister.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+            wechatRegister.setType(UNKNOWN_WECHAT_ASSET_TYPE);
             wechatRegisterDao.insert(wechatRegister);
             baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
             baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
