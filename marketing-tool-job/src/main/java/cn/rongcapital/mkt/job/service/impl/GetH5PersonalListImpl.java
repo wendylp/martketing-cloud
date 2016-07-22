@@ -90,7 +90,9 @@ public class GetH5PersonalListImpl implements TaskService {
                 wechatRegisterDao.batchInsertPersonList(paramPersonals);
             }
             if(updatePersonInfoList != null && !CollectionUtils.isEmpty(updatePersonInfoList)){
-                wechatRegisterDao.updateInforByWxAcct(updatePersonInfoList);
+                for(WechatRegister updateWechatRegister : updatePersonInfoList){
+                    wechatRegisterDao.updateInforByWxAcct(updateWechatRegister);
+                }
             }
         }
     }

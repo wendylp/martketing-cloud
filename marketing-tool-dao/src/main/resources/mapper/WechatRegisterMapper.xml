@@ -185,13 +185,10 @@
 		</set>
 	</sql>
 
-	<update id="updateInforByWxAcct" parameterType="java.util.List">
+	<update id="updateInforByWxAcct" parameterType="cn.rongcapital.mkt.po.WechatRegister">
 		<![CDATA[UPDATE wechat_register]]>
 		<include refid="UPDATE_COLUMN_SET_BY_WXACCT"/>
-		WHERE wx_acct in
-		<foreach collection="updateList" item="item" index="index" separator="," open="(" close=")">
-			#{item.wxAcct}
-		</foreach>
+		WHERE wx_acct = #{wxAcct}
 	</update>
 
 	<update id="updateConsignationTimeByWxacct" parameterType="cn.rongcapital.mkt.po.WechatRegister">

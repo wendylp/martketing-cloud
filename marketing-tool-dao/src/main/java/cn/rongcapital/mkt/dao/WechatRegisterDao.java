@@ -86,9 +86,9 @@ public interface WechatRegisterDao extends BaseDao<WechatRegister>{
 
 	/**
 	 * 根据微信账号跟新个人号相关信息
-	 * @param list
+	 * @param
 	 */
-	void updateInforByWxAcct(@Param("updateList") List<WechatRegister> updatePersonInfoList);
+	void updateInforByWxAcct(WechatRegister wechatRegister);
 
 	/**
 	 * 根据微信账号跟新第二次授权时间
