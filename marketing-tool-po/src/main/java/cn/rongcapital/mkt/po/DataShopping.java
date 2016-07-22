@@ -124,6 +124,8 @@ public class DataShopping extends BaseQuery {
 
     private String wxCode;
 
+    private String productName;
+
     public DataShopping(){}
 
     public DataShopping(Integer index, Integer size) {
@@ -600,5 +602,13 @@ public class DataShopping extends BaseQuery {
 
     public void setWxCode(String wxCode) {
         this.wxCode = wxCode == null ? null : wxCode.trim();
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName == null ? null : productName.trim();
     }
 }

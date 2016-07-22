@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,pay_channel as payChannel,pay_acct as payAcct,pay_serial as paySerial,trans_serial as transSerial,order_no as orderNo,product_name as productName,create_time as createTime,complete_time as completeTime,pay_status as payStatus,counter_acct as counterAcct,income_amt as incomeAmt,paid_amt as paidAmt,acct_amt as acctAmt,comments as comments,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,update_time as updateTime,source as source,batch_id as batchId]]>
+		<![CDATA[ id as id,pay_channel as payChannel,pay_acct as payAcct,pay_serial as paySerial,trans_serial as transSerial,order_no as orderNo,product_name as productName,create_time as createTime,complete_time as completeTime,pay_status as payStatus,counter_acct as counterAcct,income_amt as incomeAmt,paid_amt as paidAmt,acct_amt as acctAmt,comments as comments,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,update_time as updateTime,source as source,batch_id as batchId,wxmp_id as wxmpId,wx_code as wxCode]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -15,7 +15,7 @@
 		<![CDATA[ pay_channel,pay_acct,pay_serial,trans_serial,order_no,product_name,create_time,
 		complete_time,pay_status,counter_acct,income_amt,paid_amt,acct_amt,comments,identify_no,
 		driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,update_time,
-		source,batch_id]]>
+		source,batch_id,wxmp_id,wx_code]]>
 	</sql>
 
 
@@ -53,6 +53,8 @@
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
 		</where>
 	</sql>
 	
@@ -92,14 +94,16 @@
 		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
-		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId}]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataPayment" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_payment (pay_channel,pay_acct,pay_serial,trans_serial,order_no,product_name,create_time,complete_time,pay_status,counter_acct,income_amt,paid_amt,acct_amt,comments,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,source,batch_id)
+			INSERT INTO data_payment (pay_channel,pay_acct,pay_serial,trans_serial,order_no,product_name,create_time,complete_time,pay_status,counter_acct,income_amt,paid_amt,acct_amt,comments,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,source,batch_id,wxmp_id,wx_code)
 			VALUES
 			(
 			  #{payChannel},
@@ -129,7 +133,9 @@
 			  #{udid},
 			  #{phoneMac},
 			  #{source},
-			  #{batchId}
+			  #{batchId},
+			  #{wxmpId},
+			  #{wxCode}
 			)
 		]]>
 	</insert>
@@ -208,7 +214,7 @@
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
 	</select>
-	
+
 	<select id="selectCountByBatchId" parameterType="java.util.Map" resultType="java.lang.Integer">
 		<![CDATA[SELECT]]>
 		COUNT(1)
@@ -231,13 +237,13 @@
 			<![CDATA[AND create_time > #{timeCondition}]]>
 		</if>
 	</select>
-	
+
 	<select id="selectColumns" resultType="java.lang.String">
-		SELECT 
-			COLUMN_NAME 
-		FROM 
-			information_schema.columns 
-		WHERE 
+		SELECT
+			COLUMN_NAME
+		FROM
+			information_schema.columns
+		WHERE
 			table_name='data_payment'
 	</select>
 
@@ -254,12 +260,12 @@
 			#{obj.acctAmt},#{obj.comments},#{obj.identifyNo},#{obj.drivingLicense},
 			#{obj.email},#{obj.mobile},#{obj.tel},#{obj.qq},#{obj.acctType}, #{obj.acctNo},
 			#{obj.idfa},#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.updateTime},
-			#{obj.source},#{obj.batchId})
+			#{obj.source},#{obj.batchId},#{obj.wxmpId},#{obj.wxCode})
 		</foreach>
 		on duplicate key update
 		pay_serial = values(pay_serial)
 	</update>
-	
+
 	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
 		SELECT mobile
 		<include refid="QUERY_FROM_TABLE"/>
