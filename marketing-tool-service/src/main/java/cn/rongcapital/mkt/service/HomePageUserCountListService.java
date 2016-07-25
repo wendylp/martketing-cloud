@@ -3,7 +3,7 @@ import java.util.List;
 
 import cn.rongcapital.mkt.vo.out.HomePageUserCountListOut;
 
-public interface HomgePageUserCountListService {
+public interface HomePageUserCountListService {
 
     /**
      * @author nianjun

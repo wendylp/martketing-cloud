@@ -88,6 +88,7 @@ import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.service.GroupTagsSearchService;
 import cn.rongcapital.mkt.service.HomePageDataCountListService;
+import cn.rongcapital.mkt.service.HomePageUserCountListService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MainActionInfoGetService;
@@ -432,6 +433,9 @@ public class MktApi {
 	
 	@Autowired
 	private DataDownloadQualityIllegalDataService dataDownloadQualityIllegalDataService;
+	
+	@Autowired
+	private HomePageUserCountListService homePageUserCountListService;
 	
 	@Autowired
 	private HomePageDataCountListService homePageDataCountListService;
@@ -1760,7 +1764,7 @@ public class MktApi {
                     @NotEmpty @QueryParam("ver") String ver) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
-        result.getData().add(homePageDataCountListService.getDataCountList());
+        result.getData().add(homePageUserCountListService.getHomePageUserCountList());
 
         return result;
     }

@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.po.HomePageMonthlyCount;
-import cn.rongcapital.mkt.service.HomgePageUserCountListService;
+import cn.rongcapital.mkt.service.HomePageUserCountListService;
 import cn.rongcapital.mkt.vo.out.HomePageUserCountListOut;
 
 @Service
-public class HomgePageUserCountListServiceImpl implements HomgePageUserCountListService {
+public class HomgePageUserCountListServiceImpl implements HomePageUserCountListService {
 
     @Autowired
     private DataPartyDao dataPartyDao;
