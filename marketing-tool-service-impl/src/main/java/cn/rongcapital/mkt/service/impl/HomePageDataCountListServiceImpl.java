@@ -82,6 +82,7 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
         wechatCountListObj.setName(WECHAT.getName());
         wechatCountListObj.setLinkName(WECHAT.getLinkName());
 
+        dataCountList.add(wechatCountListObj);
 
         // 获取细分人员的数据
         HomePageDataCountListOut segmentationHeadCountListObj = new HomePageDataCountListOut();
