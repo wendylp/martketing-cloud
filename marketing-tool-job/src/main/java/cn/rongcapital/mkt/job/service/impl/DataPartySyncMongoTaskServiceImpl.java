@@ -8,6 +8,8 @@ import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.WechatMember;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -20,10 +22,13 @@ import org.springframework.util.CollectionUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Service
-public class DataPartySyncMongoTaskServiceImpl implements TaskService {  
+public class DataPartySyncMongoTaskServiceImpl implements TaskService {
+
+    private Logger logger = LoggerFactory.getLogger(DataPartySyncMongoTaskServiceImpl.class);
 	
     private int BATCH_SIZE = 500;
 
@@ -38,6 +43,8 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
 	private MongoTemplate mongoTemplate;
 
     private static String MONGODB_COLLECTION = "data_party";
+
+    private ConcurrentHashMap<String, Field[]> filedMap = new ConcurrentHashMap<>();
 	
 	@Override
 	public void task(Integer taskId) {
@@ -103,8 +110,12 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
 
     private <T> Update buildBaseUpdate(T t) {
         Update update = new Update();
-
-        Field[] fields = t.getClass().getDeclaredFields();
+        String className = t.getClass().getName();
+        Field[] fields = filedMap.get(className);
+        if (fields == null) {
+            fields = t.getClass().getDeclaredFields();
+            filedMap.putIfAbsent(className, fields);
+        }
         for (Field field : fields) {
             field.setAccessible(true);
             try {
@@ -113,7 +124,7 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                     update.set(field.getName(), value);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("buildBaseUpdate failed", e);
             }
         }
         return update;
