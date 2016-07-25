@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.DATA_PARTY;
+import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.TAG;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,19 +34,34 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
         List<HomePageDataCountListOut> dataCountList = new ArrayList<>();
 
         // 获取data_party的数据
-        int dataPartyCount = dataPartyDao.selectListCount(null);
         HomePageDataCountListOut dataPartyCountListObj = new HomePageDataCountListOut();
+        int dataPartyCount = dataPartyDao.selectListCount(null);
         dataPartyCountListObj.setId(DATA_PARTY.getId());
         dataPartyCountListObj.setName(DATA_PARTY.getName());
+        dataPartyCountListObj.setLinkName(DATA_PARTY.getLinkName());
         dataPartyCountListObj.setCount(dataPartyCount);
+
         dataCountList.add(dataPartyCountListObj);
 
         // 获取标签的数据
+        HomePageDataCountListOut tagCountListObj = new HomePageDataCountListOut();
         int customTagCount = customeTagDao.selectListCount(null);
         Taggroup paramTaggroup = new Taggroup();
         paramTaggroup.setLevel(CHILD_LEVEL);
         int taggroupCount = taggroupDao.selectListCount(paramTaggroup);
         int tagCount = customTagCount + taggroupCount;
+        tagCountListObj.setId(TAG.getId());
+        tagCountListObj.setName(TAG.getName());
+        tagCountListObj.setLinkName(TAG.getLinkName());
+
+        dataCountList.add(tagCountListObj);
+
+        // 获取可触达用户的数据
+        // TODO 目前没法做,微信的表都还没有
+
+        // 获取细分人员的数据
+//        HomePageDataCountListOut tagCountListObj = new HomePageDataCountListOut();
+
 
 
         return null;
