@@ -328,6 +328,16 @@ public class BaseMQService {
 		return isFriend;
 	}
 	
+	protected void updateSentStatus(List<Segment> segmentList,Integer campaignHeadId,String itemId,int sentStatus) {
+		for(Segment s:segmentList) {
+			Update update = new Update().set("sentStatus", sentStatus);
+			Criteria criteria = Criteria.where("campaignHeadId").is(campaignHeadId)
+										.and("itemId").is(itemId)
+										.and("dataId").is(s.getDataId());
+			mongoTemplate.findAndModify(new Query(criteria),update,NodeAudience.class);
+		}
+	}
+	
 	protected boolean sendPubWechatByH5Interface(String pubId,Integer materialId,
 												 List<String> fansWeixinIds,Integer campaignHeadId,
 												 String itemId) {

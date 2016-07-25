@@ -128,6 +128,9 @@ public class CampaignActionWechatSendH5Task extends BaseMQService implements Tas
 			boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,fansWeixinIds,campaignHeadId,itemId);
 			if(!isPubSent) {//公众号执行发送动作失败
 				segmentListToNext = null;
+			}else {
+				//更新mongo里node_audience表的发送状态
+				updateSentStatus(segmentList,campaignHeadId,itemId,ApiConstant.MONGO_NODEAUDIENCE_SENTSTATUS_H5_SENT);
 			}
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList) && CollectionUtils.isNotEmpty(segmentListToNext)) {
