@@ -5,6 +5,7 @@ import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.FINISHED
 import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.IN_PROGRESS_ACTIVITY;
 import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.SEGMENTATION_HEAD;
 import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.TAG;
+import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.WECHAT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +76,12 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 
         // 获取可触达用户的数据
         // TODO 目前没法做,微信的表都还没有
+        HomePageDataCountListOut wechatCountListObj = new HomePageDataCountListOut();
+        wechatCountListObj.setId(WECHAT.getId());
+        wechatCountListObj.setCount(0);
+        wechatCountListObj.setName(WECHAT.getName());
+        wechatCountListObj.setLinkName(WECHAT.getLinkName());
+
 
         // 获取细分人员的数据
         HomePageDataCountListOut segmentationHeadCountListObj = new HomePageDataCountListOut();
