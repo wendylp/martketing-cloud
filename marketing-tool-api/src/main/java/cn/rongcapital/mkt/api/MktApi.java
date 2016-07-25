@@ -1745,11 +1745,31 @@ public class MktApi {
 											  @QueryParam("search_field") String searchField){
 		return wechatAssetMemberSearchService.searchWechatAssetMember(groupIds,searchField);
 	}
+	
+	
+	/**
+     * 按月份按公众号统计每月的用户增加数量
+     * 
+     * @param userToken
+     * @param ver
+     * @author nianjun
+     */
+    @GET
+    @Path("/mkt.homepage.usercount.list")
+    public BaseOutput homePageUserCountList(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        result.getData().add(homePageDataCountListService.getDataCountList());
+
+        return result;
+    }
 
     /**
      * 统计出当前用户、细分、活动、标签、接入数据个数
      * 
      * @param userToken
+     * @param ver
      * @author nianjun
      */
     @GET
