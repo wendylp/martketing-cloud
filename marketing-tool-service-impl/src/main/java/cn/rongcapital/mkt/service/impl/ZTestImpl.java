@@ -29,7 +29,7 @@ public class ZTestImpl implements ZTest {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void importData() throws IOException {
-        File file = new File("/Users/nianjun/Desktop/sql.txt");
+        File file = new File("/Users/nianjun/Desktop/导入数据.txt");
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line = bufferedReader.readLine();

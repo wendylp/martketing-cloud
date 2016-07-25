@@ -1,10 +1,16 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
 
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
 public class Taggroup extends BaseQuery {
+    
+    public Taggroup() {}
+
+    public Taggroup(Integer index, Integer size) {
+        super(index, size);
+    }
 	
     private Integer id;
 
