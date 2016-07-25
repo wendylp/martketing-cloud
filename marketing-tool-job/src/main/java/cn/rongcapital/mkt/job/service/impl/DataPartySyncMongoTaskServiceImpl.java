@@ -13,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,8 +74,7 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
         Integer dataType = dataParty.getMdType();
         Integer dataPartyId = dataParty.getId();
         String mappingKeyId = dataParty.getMappingKeyid();
-        mongoTemplate.remove(Query.query(Criteria.where("mid").is(dataParty.getId())),
-                cn.rongcapital.mkt.po.mongodb.DataParty.class);
+        Query query = Query.query(Criteria.where("mid").is(dataPartyId));
 
         if(dataType.intValue() == DataTypeEnum.WECHAT.getCode() && StringUtils.isNumeric(mappingKeyId)){
             WechatMember wechatMember = new WechatMember();
@@ -88,7 +89,7 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 mongoWechatMember.setMid(dataPartyId);
                 mongoWechatMember.setMd_type(dataType);
                 mongoWechatMember.setMapping_keyid(dataObj.getId().toString());
-                mongoTemplate.insert(mongoWechatMember,MONGODB_COLLECTION);
+                mongoTemplate.upsert(query, buildBaseUpdate(mongoWechatMember), MONGODB_COLLECTION);
             }
 
         } else {
@@ -96,8 +97,26 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                     new cn.rongcapital.mkt.po.mongodb.DataParty();
             BeanUtils.copyProperties(dataParty, mongoDataParty);
             mongoDataParty.setMid(dataPartyId);
-            mongoTemplate.insert(mongoDataParty, MONGODB_COLLECTION);
+            mongoTemplate.upsert(query, buildBaseUpdate(mongoDataParty), MONGODB_COLLECTION);
         }
 	}
+
+    private <T> Update buildBaseUpdate(T t) {
+        Update update = new Update();
+
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            try {
+                Object value = field.get(t);
+                if (value != null) {
+                    update.set(field.getName(), value);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return update;
+    }
 
 }

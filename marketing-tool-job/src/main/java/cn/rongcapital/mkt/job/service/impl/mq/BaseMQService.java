@@ -426,7 +426,7 @@ public class BaseMQService {
 			Criteria criteria4 = Criteria.where("status").is(0);
 			criteriasList.add(criteria4);
 			Criteria criteriaAll = new Criteria().andOperator(criteriasList.toArray(new Criteria[criteriasList.size()]));
-			Update update = new Update().inc("status", 1);//逻辑删除
+			Update update = new Update().set("status", 1);//逻辑删除
 			mongoTemplate.findAndModify(new Query(criteriaAll), update, NodeAudience.class);
 		}
 	}
