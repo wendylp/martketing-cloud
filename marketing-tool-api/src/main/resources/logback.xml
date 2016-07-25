@@ -2,6 +2,7 @@
 <configuration scan="true" scanPeriod="10 seconds">
 
   <property name="LOG_HOME" value="/rc/marketcloudsrv/build/logs"/>
+  <!-- <property name="LOG_HOME" value="/Users/nianjun/Work/logs"/> -->
   
   <!-- Simple file output -->
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
