@@ -1741,4 +1741,20 @@ public class MktApi {
 											  @QueryParam("search_field") String searchField){
 		return wechatAssetMemberSearchService.searchWechatAssetMember(groupIds,searchField);
 	}
+	
+    /**
+     * 统计出当前用户、细分、活动、标签、接入数据个数
+     * 
+     * @param userToken
+     * @return
+     */
+    @GET
+    @Path("/mkt.homepage.datacount.list")
+    public BaseOutput homePageDataCountList(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+
+        return result;
+    }
 }
