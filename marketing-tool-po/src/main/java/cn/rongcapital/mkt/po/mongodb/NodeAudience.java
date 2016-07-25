@@ -35,6 +35,18 @@ public class NodeAudience implements Serializable {
 	@Field(value = "status")
 	private Integer status;
 	
+	//发送状态:0:未发送,1:公众号图文已发送
+	@Field(value = "sent_status")
+	private Integer sentStatus;
+	
+	public Integer getSentStatus() {
+		return sentStatus;
+	}
+
+	public void setSentStatus(Integer sentStatus) {
+		this.sentStatus = sentStatus;
+	}
+
 	public Integer getStatus() {
 		return status;
 	}
