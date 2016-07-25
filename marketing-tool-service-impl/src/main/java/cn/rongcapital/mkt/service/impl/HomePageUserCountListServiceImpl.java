@@ -16,7 +16,7 @@ import cn.rongcapital.mkt.service.HomePageUserCountListService;
 import cn.rongcapital.mkt.vo.out.HomePageUserCountListOut;
 
 @Service
-public class HomgePageUserCountListServiceImpl implements HomePageUserCountListService {
+public class HomePageUserCountListServiceImpl implements HomePageUserCountListService {
 
     @Autowired
     private DataPartyDao dataPartyDao;
