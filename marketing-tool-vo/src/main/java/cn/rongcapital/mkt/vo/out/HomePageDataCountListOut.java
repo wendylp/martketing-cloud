@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.vo.out;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 public class HomePageDataCountListOut extends BaseOutput {
@@ -32,6 +34,7 @@ public class HomePageDataCountListOut extends BaseOutput {
         return linkName;
     }
 
+    @JsonProperty("link_name")
     public void setLinkName(String linkName) {
         this.linkName = linkName;
     }
