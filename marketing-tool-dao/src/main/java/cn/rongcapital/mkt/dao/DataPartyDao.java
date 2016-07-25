@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import org.apache.ibatis.annotations.Param;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.HomePageMonthlyCount;
 
 public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<DataParty>{
 	
@@ -146,4 +148,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @return 更新数据条数
 	 */
 	int updateDataPartyInfo(DataParty dataParty);
+	
+	/**
+     * 根据手机号更新data_party表数据
+     * @param dataParty 
+     * @return 月份与对应的
+     */
+    List<HomePageMonthlyCount> selectMonthlyCount(Map<String, Date> paramMap);
 }
