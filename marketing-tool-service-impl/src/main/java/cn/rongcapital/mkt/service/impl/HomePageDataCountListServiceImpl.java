@@ -45,6 +45,7 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
         Taggroup paramTaggroup = new Taggroup();
         paramTaggroup.setLevel(CHILD_LEVEL);
         int taggroupCount = taggroupDao.selectListCount(paramTaggroup);
+        int tagCount = customTagCount + taggroupCount;
 
 
         return null;

@@ -8,6 +8,8 @@ public class HomePageDataCountListOut extends BaseOutput {
 
     private String name;
 
+    private String linkName;
+
     private int count;
 
     public int getId() {
@@ -24,6 +26,14 @@ public class HomePageDataCountListOut extends BaseOutput {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLinkName() {
+        return linkName;
+    }
+
+    public void setLinkName(String linkName) {
+        this.linkName = linkName;
     }
 
     public int getCount() {
