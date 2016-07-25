@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import cn.rongcapital.mkt.common.util.GenderUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -83,6 +84,8 @@ public class DataParty implements Serializable {
     private String batchId;
 
     private String updateTime;
+
+	private Integer receiveCount;
 
 	public String getId() {
 		return id;
@@ -269,7 +272,7 @@ public class DataParty implements Serializable {
 	}
 
 	public String getSex() {
-		return sex;
+		return GenderUtils.byteToChar(getGender());
 	}
 
 	public void setSex(String sex) {
@@ -331,4 +334,12 @@ public class DataParty implements Serializable {
     public void setCitizenship(String citizenship) {
         this.citizenship = citizenship;
     }
+
+	public Integer getReceiveCount() {
+		return receiveCount;
+	}
+
+	public void setReceiveCount(Integer receiveCount) {
+		this.receiveCount = receiveCount;
+	}
 }

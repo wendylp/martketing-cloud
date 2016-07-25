@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.vo.in.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -140,26 +141,6 @@ import cn.rongcapital.mkt.vo.LoginInput;
 import cn.rongcapital.mkt.vo.ModifyInput;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
-import cn.rongcapital.mkt.vo.in.Audience;
-import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
-import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
-import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
-import cn.rongcapital.mkt.vo.in.CampaignHeadCreateIn;
-import cn.rongcapital.mkt.vo.in.CampaignHeadUpdateIn;
-import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
-import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
-import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
-import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
-import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
-import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
-import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
-import cn.rongcapital.mkt.vo.in.SegmentHeadDeleteIn;
-import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
-import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
-import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
@@ -664,6 +645,24 @@ public class MktApi {
 						  				   @QueryParam("keyword") String keyword) throws Exception {
 		return segmentPublishstatusListService.segmentPublishstatusList(userToken,publishStatus,index,size,ver,keyword);
 	}
+
+	@POST
+	@Path("/mkt.segment.gendercount.list")
+	public BaseOutput segmentGenderCountList(@Valid SegmentCountFilterIn input) {
+		return segmentFilterGetService.segmentGenderCountList(input);
+	}
+
+    @POST
+    @Path("/mkt.segment.provincecount.list")
+    public BaseOutput segmentProvinceCountList(@Valid SegmentCountFilterIn input) {
+        return segmentFilterGetService.segmentProvinceCountList(input);
+    }
+
+    @POST
+    @Path("/mkt.segment.receivecount.list")
+    public BaseOutput segmentReceiveCountList(@Valid SegmentCountFilterIn input) {
+        return segmentFilterGetService.segmentReceiveCountList(input);
+    }
 
 	/**
 	 * @功能描述: 登录接口
@@ -1446,15 +1445,13 @@ public class MktApi {
 			@NotEmpty @QueryParam("segment_head_id") String segmentHeadId){
 		return segmentTagGetService.getSegmentTag(userToken, segmentHeadId);
 	}
-	
-	
+
+
     /**
-     * @功能简述: 获取受众细分漏斗计算结果
-     * @param userToken
-     * @param segment_head_id
-     * @param group_index
-     * @param conditions
-     * @return BaseOutput
+     * 获取受众细分漏斗计算结果
+     * @param body
+     * @param securityContext
+     * @return
      */
     @POST
     @Path("/mkt.segment.filter.get")
@@ -1507,13 +1504,13 @@ public class MktApi {
 	}
 
     /**
-     * @功能简述: 获取系统标签内容列表
+     * 获取系统标签内容列表
      * @param method
-     * @param user_token
-     * @param tag_group_id
+     * @param userToken
+     * @param tagGroupId
      * @param index
      * @param size
-     * @return BaseOutput
+     * @return
      */
     @GET
     @Path("/mkt.tag.system.list.get")
@@ -1525,13 +1522,13 @@ public class MktApi {
     }
 
     /**
-     * @功能简述: 获取系统标签组列表
+     * 获取系统标签组列表
      * @param method
-     * @param user_token
-     * @param tag_group_id
+     * @param userToken
+     * @param tagGroupId
      * @param index
      * @param size
-     * @return BaseOutput
+     * @return
      */
     @GET
     @Path("/mkt.taggroup.system.list.get")
@@ -1557,14 +1554,14 @@ public class MktApi {
         return mainBasicInfoGetService.getMainBasicInfo(contactId, dataType, userToken);
 	}
 
-	/**
-	 * @功能简述: 获取系统标签组列表
-	 * @param method
-	 * @param user_token
-	 * @param index
-	 * @param size
-	 * @return BaseOutput
-	 */
+    /**
+     * 获取系统标签组列表
+     * @param method
+     * @param userToken
+     * @param index
+     * @param size
+     * @return
+     */
 	@GET
 	@Path("/mkt.taggroup.system.menulist.get")
 	public BaseOutput getTaggroupSystemMenulist(
@@ -1618,11 +1615,11 @@ public class MktApi {
 		return wechatPublicAuthService.authWechatPublicAccount();
 	}
 
-	/**
-	 * @功能简述: 微信公众号授权时大连那边所调用的回调接口
-	 * @param body
-	 * @return BaseOutput
-	 */
+    /**
+     * 微信公众号授权时大连那边所调用的回调接口
+     * @param wechatPublicAuthCallbackIn
+     * @return
+     */
 	@POST
 	@Path("/mkt.data.inbound.wechat.public.auth.callback")
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -1645,11 +1642,11 @@ public class MktApi {
 	    return Response.temporaryRedirect(location).build();
 	}
 
-	/**
-	 * @功能简述: 获取微信个人号授权时产生的uuid
-	 * @param body
-	 * @return BaseOutput
-	 */
+    /**
+     * 获取微信个人号授权时产生的uuid
+     * @param wechatPersonalAuthIn
+     * @return
+     */
 	@POST
 	@Path("/mkt.data.inbound.wechat.personal.auth")
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -1683,11 +1680,11 @@ public class MktApi {
 		return wechatPeopleDetailDownloadService.downloadWechatPeopleDetail(group_ids);
 	}
 
-	/**
-	 * @功能简述: 文件上传时为上传的人群打标签
-	 * @param body
-	 * @return BaseOutput
-	 */
+    /**
+     * 文件上传时为上传的人群打标签
+     * @param fileTagUpdateIn
+     * @return
+     */
 	@POST
 	@Path("/mkt.data.inbound.file.tag.update")
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -1717,13 +1714,15 @@ public class MktApi {
         return dataDownloadMainListService.downloadMainList(userToken, dataType);
     }
 
-	/**
-	 * 搜索活动节点上的人
-	 * @param userToken
-	 * @param ver
-	 * @param templateIdList
-	 * @return
-	 */
+    /**
+     * 搜索活动节点上的人
+     * @param userToken
+     * @param ver
+     * @param name
+     * @param campaignHeadId
+     * @param itemId
+     * @return
+     */
 	@GET
 	@Path("/mkt.campaign.body.item.audience.search")
 	public CampaignBodyItemAudienceSearchOut campaignBodyItemAudienceSearch(@NotEmpty @QueryParam("user_token") String userToken,
