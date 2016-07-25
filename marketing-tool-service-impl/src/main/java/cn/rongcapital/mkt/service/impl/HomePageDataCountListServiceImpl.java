@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.DATA_PARTY;
+import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.SEGMENtATION_HEAD;
 import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.TAG;
 
 import java.util.ArrayList;
@@ -8,9 +9,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.dao.TaggroupDao;
+import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.Taggroup;
 import cn.rongcapital.mkt.service.HomePageDataCountListService;
 import cn.rongcapital.mkt.vo.out.HomePageDataCountListOut;
@@ -27,6 +31,9 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 
     @Autowired
     private TaggroupDao taggroupDao;
+
+    @Autowired
+    private SegmentationHeadDao segmentationHeadDao;
 
     @Override
     public List<HomePageDataCountListOut> getDataCountList() {
@@ -60,8 +67,19 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
         // TODO 目前没法做,微信的表都还没有
 
         // 获取细分人员的数据
-//        HomePageDataCountListOut tagCountListObj = new HomePageDataCountListOut();
+        HomePageDataCountListOut segmentationHeadCountListObj = new HomePageDataCountListOut();
+        SegmentationHead paramSegmentationHead = new SegmentationHead();
+        paramSegmentationHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        paramSegmentationHead.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH);
+        int countNotPublish = segmentationHeadDao.selectListCount(paramSegmentationHead);
+        paramSegmentationHead.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_PUBLISH);
+        int countPublish = segmentationHeadDao.selectListCount(paramSegmentationHead);
+        int countAll = countNotPublish + countPublish;
+        segmentationHeadCountListObj.setId(SEGMENtATION_HEAD.getId());
+        segmentationHeadCountListObj.setName(SEGMENtATION_HEAD.getName());
+        segmentationHeadCountListObj.setLinkName(SEGMENtATION_HEAD.getLinkName());
 
+        dataCountList.add(segmentationHeadCountListObj);
 
 
         return null;
