@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.po.mongodb;
 
+import cn.rongcapital.mkt.common.util.GenderUtils;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -23,7 +24,9 @@ public class WechatMember implements Serializable{
 
     private String nickname;
 
-    private Integer sex;
+    private String sex;
+
+    private Byte gender;
 
     private String country;
 
@@ -107,11 +110,19 @@ public class WechatMember implements Serializable{
         this.nickname = nickname == null ? null : nickname.trim();
     }
 
-    public Integer getSex() {
-        return sex;
+    public Byte getGender() {
+        return gender;
     }
 
-    public void setSex(Integer sex) {
+    public void setGender(Byte gender) {
+        this.gender = gender;
+    }
+
+    public String getSex() {
+        return GenderUtils.byteToChar(getGender());
+    }
+
+    public void setSex(String sex) {
         this.sex = sex;
     }
 

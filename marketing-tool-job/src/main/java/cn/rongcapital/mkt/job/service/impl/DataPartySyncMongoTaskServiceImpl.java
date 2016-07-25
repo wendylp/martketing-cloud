@@ -93,6 +93,7 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 cn.rongcapital.mkt.po.mongodb.WechatMember mongoWechatMember =
                         new cn.rongcapital.mkt.po.mongodb.WechatMember();
                 BeanUtils.copyProperties(dataObj, mongoWechatMember);
+                mongoWechatMember.setGender(dataObj.getSex().byteValue());
                 mongoWechatMember.setMid(dataPartyId);
                 mongoWechatMember.setMd_type(dataType);
                 mongoWechatMember.setMapping_keyid(dataObj.getId().toString());
