@@ -1,7 +1,9 @@
 package cn.rongcapital.mkt.service.impl;
 
 import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.DATA_PARTY;
-import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.SEGMENtATION_HEAD;
+import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.FINISHED_ACTIVITY;
+import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.IN_PROGRESS_ACTIVITY;
+import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.SEGMENTATION_HEAD;
 import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.TAG;
 
 import java.util.ArrayList;
@@ -10,10 +12,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.dao.TaggroupDao;
+import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.Taggroup;
 import cn.rongcapital.mkt.service.HomePageDataCountListService;
@@ -35,6 +39,9 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
     @Autowired
     private SegmentationHeadDao segmentationHeadDao;
 
+    @Autowired
+    private CampaignHeadDao campaignHeadDao;
+
     @Override
     public List<HomePageDataCountListOut> getDataCountList() {
 
@@ -44,9 +51,9 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
         HomePageDataCountListOut dataPartyCountListObj = new HomePageDataCountListOut();
         int dataPartyCount = dataPartyDao.selectListCount(null);
         dataPartyCountListObj.setId(DATA_PARTY.getId());
+        dataPartyCountListObj.setCount(dataPartyCount);
         dataPartyCountListObj.setName(DATA_PARTY.getName());
         dataPartyCountListObj.setLinkName(DATA_PARTY.getLinkName());
-        dataPartyCountListObj.setCount(dataPartyCount);
 
         dataCountList.add(dataPartyCountListObj);
 
@@ -58,6 +65,7 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
         int taggroupCount = taggroupDao.selectListCount(paramTaggroup);
         int tagCount = customTagCount + taggroupCount;
         tagCountListObj.setId(TAG.getId());
+        tagCountListObj.setCount(tagCount);
         tagCountListObj.setName(TAG.getName());
         tagCountListObj.setLinkName(TAG.getLinkName());
 
@@ -75,14 +83,42 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
         paramSegmentationHead.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_PUBLISH);
         int countPublish = segmentationHeadDao.selectListCount(paramSegmentationHead);
         int countAll = countNotPublish + countPublish;
-        segmentationHeadCountListObj.setId(SEGMENtATION_HEAD.getId());
-        segmentationHeadCountListObj.setName(SEGMENtATION_HEAD.getName());
-        segmentationHeadCountListObj.setLinkName(SEGMENtATION_HEAD.getLinkName());
+        segmentationHeadCountListObj.setId(SEGMENTATION_HEAD.getId());
+        segmentationHeadCountListObj.setCount(countAll);
+        segmentationHeadCountListObj.setName(SEGMENTATION_HEAD.getName());
+        segmentationHeadCountListObj.setLinkName(SEGMENTATION_HEAD.getLinkName());
 
         dataCountList.add(segmentationHeadCountListObj);
 
+        // 获取已结束活动的数据
+        HomePageDataCountListOut finishedCountListObj = new HomePageDataCountListOut();
+        CampaignHead paramCampaignHead = new CampaignHead();
+        paramCampaignHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        paramCampaignHead.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH);
+        int finishCount = campaignHeadDao.selectListCount(paramCampaignHead);
+        finishedCountListObj.setId(FINISHED_ACTIVITY.getId());
+        finishedCountListObj.setCount(finishCount);
+        finishedCountListObj.setName(FINISHED_ACTIVITY.getName());
+        finishedCountListObj.setLinkName(FINISHED_ACTIVITY.getLinkName());
 
-        return null;
+        dataCountList.add(finishedCountListObj);
+
+        // 获取进行活动的数据
+        HomePageDataCountListOut inProgressCountListObj = new HomePageDataCountListOut();
+        paramCampaignHead.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH);
+        int publishCount = campaignHeadDao.selectListCount(paramCampaignHead);
+        paramCampaignHead.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS);
+        int inProgressCount = campaignHeadDao.selectListCount(paramCampaignHead);
+        int totalInProgressCount = publishCount + inProgressCount;
+        inProgressCountListObj.setId(IN_PROGRESS_ACTIVITY.getId());
+        inProgressCountListObj.setCount(totalInProgressCount);
+        inProgressCountListObj.setName(IN_PROGRESS_ACTIVITY.getName());
+        inProgressCountListObj.setLinkName(IN_PROGRESS_ACTIVITY.getLinkName());
+
+        dataCountList.add(inProgressCountListObj);
+
+
+        return dataCountList;
     }
 
 }
