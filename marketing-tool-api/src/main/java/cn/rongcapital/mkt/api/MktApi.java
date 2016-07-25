@@ -87,6 +87,7 @@ import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.service.GroupTagsSearchService;
+import cn.rongcapital.mkt.service.HomePageDataCountListService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MainActionInfoGetService;
@@ -431,6 +432,9 @@ public class MktApi {
 	
 	@Autowired
 	private DataDownloadQualityIllegalDataService dataDownloadQualityIllegalDataService;
+	
+	@Autowired
+	private HomePageDataCountListService homePageDataCountListService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	/**
@@ -1741,12 +1745,12 @@ public class MktApi {
 											  @QueryParam("search_field") String searchField){
 		return wechatAssetMemberSearchService.searchWechatAssetMember(groupIds,searchField);
 	}
-	
+
     /**
      * 统计出当前用户、细分、活动、标签、接入数据个数
      * 
      * @param userToken
-     * @return
+     * @author nianjun
      */
     @GET
     @Path("/mkt.homepage.datacount.list")
@@ -1754,7 +1758,9 @@ public class MktApi {
                     @NotEmpty @QueryParam("ver") String ver) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
+        result.getData().add(homePageDataCountListService.getDataCountList());
 
         return result;
     }
+
 }
