@@ -36,7 +36,7 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
 
-        Taggroup paramTaggroup = new Taggroup();
+        Taggroup paramTaggroup = new Taggroup(0, 0);
         paramTaggroup.setParentGroupId(TOP_LEVEL);
         List<Taggroup> topTaggroups = TaggroupDao.selectList(paramTaggroup);
         List<Map<String, Object>> resultList = new ArrayList<>();
