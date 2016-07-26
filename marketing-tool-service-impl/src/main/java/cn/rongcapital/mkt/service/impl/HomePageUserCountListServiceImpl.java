@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,21 +30,20 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
         Calendar startTime = Calendar.getInstance();
         Calendar endTime = Calendar.getInstance();
 
-        startTime.set(startTime.get(Calendar.YEAR), 0, 1, 0, 0, 0);
-        endTime.set(startTime.get(Calendar.YEAR) + 1, 0, 1, 0, 0, 0);
+        startTime.set(startTime.get(Calendar.YEAR) - 1, startTime.get(Calendar.MONTH) + 1, 1, 0, 0, 0);
+        endTime.set(endTime.get(Calendar.YEAR), endTime.get(Calendar.MONTH), 1, 0, 0, 0);
+        // 这里得把MILLISECOND设置为0,不然即便跟下一年的数据比较,也能因为MILLISECOND的微小差距查出下一年的数据
         startTime.set(Calendar.MILLISECOND, 0);
         endTime.set(Calendar.MILLISECOND, 0);
 
         Map<String, Date> paramMap = new HashMap<>();
-        System.out.println("start time is : " + startTime.getTime().toLocaleString());
-        System.out.println("end time is : " + endTime.getTime().toLocaleString());
         paramMap.put("startTime", startTime.getTime());
         paramMap.put("endTime", endTime.getTime());
 
         List<HomePageMonthlyCount> homePageMonthlyCountList = dataPartyDao.selectMonthlyCount(paramMap);
-        List<String> allMonth = getAllMonthInYear(startTime.get(Calendar.YEAR));
+        List<String> allMonth = getAllMonthInYear(startTime, endTime);
 
-        // 把取出来的数据放在list里 ,方便查询
+        // 把取出来的数据放在Map里, 方便查询, 不然每次都要轮训list.明显map效率更高
         Map<String, Integer> homePageMonthlyCountMap = new HashMap<>(12);
         for (HomePageMonthlyCount HomePageMonthlyCount : homePageMonthlyCountList) {
             homePageMonthlyCountMap.put(HomePageMonthlyCount.getMonth(), HomePageMonthlyCount.getMonthlyCount());
@@ -66,16 +66,12 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
     }
 
     // 默认为yyyy-MM的格式
-    private List<String> getAllMonthInYear(int year) {
+    private List<String> getAllMonthInYear(Calendar startTime, Calendar endTime) {
         List<String> monthList = new ArrayList<>(12);
-        for (int i = 0; i < 12; i++) {
-            String month = year + "-";
-            if (i < 9) {
-                month += "0" + (i + 1);
-            } else {
-                month += (i + 1);
-            }
-            monthList.add(month);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+        while (!startTime.after(endTime)) {
+            monthList.add(simpleDateFormat.format(startTime.getTime()));
+            startTime.add(Calendar.MONTH, 1);
         }
 
         return monthList;
