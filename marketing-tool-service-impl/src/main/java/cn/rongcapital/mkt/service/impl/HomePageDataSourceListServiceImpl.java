@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
 import cn.rongcapital.mkt.service.HomePageDataSourceListService;
 import cn.rongcapital.mkt.vo.out.HomePageDataSourceListOut;
 
+@Service
 public class HomePageDataSourceListServiceImpl implements HomePageDataSourceListService {
 
     @Autowired
