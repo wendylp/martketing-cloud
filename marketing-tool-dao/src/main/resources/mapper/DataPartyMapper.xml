@@ -497,16 +497,18 @@
 	</update>
 	
 	<select id="selectMonthlyCount" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.HomePageMonthlyCount">
+	<![CDATA[
 		SELECT 
 		    COUNT(id) AS monthlyCount,
-		    DATE_FORMAT(create_time, '%Y-%m') AS createTime
+		    DATE_FORMAT(create_time, '%Y-%m') AS month
 		FROM
 		    data_party
 		WHERE
-		    create_time &gt;= #{startTime}
-		        AND create_time &lt; #{endTime}
+		    create_time >= #{startTime}
+		        AND create_time < #{endTime}
 		GROUP BY DATE_FORMAT(create_time, '%Y%m')
-		ORDER BY createTime
+		ORDER BY month
+	]]>
 	</select>
 	
 </mapper>

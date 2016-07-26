@@ -31,8 +31,12 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
 
         startTime.set(startTime.get(Calendar.YEAR), 0, 1, 0, 0, 0);
         endTime.set(startTime.get(Calendar.YEAR) + 1, 0, 1, 0, 0, 0);
+        startTime.set(Calendar.MILLISECOND, 0);
+        endTime.set(Calendar.MILLISECOND, 0);
 
         Map<String, Date> paramMap = new HashMap<>();
+        System.out.println("start time is : " + startTime.getTime().toLocaleString());
+        System.out.println("end time is : " + endTime.getTime().toLocaleString());
         paramMap.put("startTime", startTime.getTime());
         paramMap.put("endTime", endTime.getTime());
 
@@ -65,7 +69,13 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
     private List<String> getAllMonthInYear(int year) {
         List<String> monthList = new ArrayList<>(12);
         for (int i = 0; i < 12; i++) {
-            monthList.add(year + "-" + (i + 1));
+            String month = year + "-";
+            if (i < 9) {
+                month += "0" + (i + 1);
+            } else {
+                month += (i + 1);
+            }
+            monthList.add(month);
         }
 
         return monthList;
