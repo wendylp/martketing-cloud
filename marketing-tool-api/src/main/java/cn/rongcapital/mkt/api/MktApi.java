@@ -32,6 +32,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.vo.in.*;
+import cn.rongcapital.mkt.vo.out.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -441,7 +443,7 @@ public class MktApi {
 	
 	@Autowired
 	private HomePageDataCountListService homePageDataCountListService;
-	
+
 	@Autowired
     private HomePageDataSourceListService homePageDataSourceListService;
 
@@ -591,6 +593,22 @@ public class MktApi {
 								   				  @NotEmpty @QueryParam("ver") String ver,
 								   			      @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
 	    return campaignHeaderGetService.campaignHeaderGet(userToken, ver, campaignHeadId);
+	}
+
+    /**
+     * 活动概要查询
+     * @param userToken
+     * @param ver
+     * @param campaignHeadId
+     * @return
+     */
+	@GET
+	@Path("/mkt.campaign.profile.list")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public CampaignProfileOut campaignProfileList(@NotEmpty @QueryParam("user_token") String userToken,
+                                                  @NotEmpty @QueryParam("ver") String ver,
+                                                  @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
+		return campaignHeaderGetService.campaignProfileList(userToken, ver, campaignHeadId);
 	}
 
 	/**
@@ -1809,10 +1827,10 @@ public class MktApi {
 
         return result;
     }
-    
+
     /**
      * 统计出用户的各类来源，如微信、CRM、POS(以数据文件填写的来源为准)
-     * 
+     *
      * @param userToken
      * @param ver
      * @author nianjun

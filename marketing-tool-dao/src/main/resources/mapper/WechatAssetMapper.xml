@@ -188,4 +188,14 @@
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE wx_acct = #{uin}
 	</delete>
+
+    <select id="selectByWechatAccounts" resultType="cn.rongcapital.mkt.po.WechatAsset">
+        <![CDATA[SELECT]]>
+        <include refid="QUERY_COLUMN_LIST"/>
+        <include refid="QUERY_FROM_TABLE"/>
+        where status = 0 and wx_acct in
+        <foreach collection="wechatAccounts" item="idItem" open="(" separator="," close=")">
+            #{idItem}
+        </foreach>
+    </select>
 </mapper>

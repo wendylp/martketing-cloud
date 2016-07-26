@@ -193,4 +193,13 @@ public class ApiConstant {
 	// 国籍
     public static final String NATIONALITY_CHINA = "中国";
     public static final String NATIONALITY_FOREIGN = "外国";
+
+	public static final String CAMPAIGN_CONTENT_WECHAT = "微信图文";
+	public static final String CAMPAIGN_CONTENT_H5 = "H5活动";
+	public static final String CAMPAIGN_CONTENT_PRIVATE_TEXT = "个人号消息";
+
+    public static final String WECHAT_TYPE_PUB = "[公众号]";
+    public static final String WECHAT_TYPE_SUB = "[订阅号]";
+    public static final String WECHAT_TYPE_PRI = "[个人号]";
+
 }
