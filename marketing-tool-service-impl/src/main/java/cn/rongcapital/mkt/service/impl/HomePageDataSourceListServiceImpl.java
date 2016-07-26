@@ -17,7 +17,7 @@ public class HomePageDataSourceListServiceImpl implements HomePageDataSourceList
     private DataPartyDao dataPartyDao;
 
     @Override
-    public List<HomePageDataSourceListOut> getHomePageUserCountList() {
+    public List<HomePageDataSourceListOut> getHomePageDataSourceList() {
         List<HomePageDataSourceListOut> resultList = new ArrayList<>();
         List<HomePageSourceGroupCount> homePageSourceGroupCounts = dataPartyDao.selectSourceGroupCount();
 

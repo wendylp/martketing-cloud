@@ -14,6 +14,6 @@ public interface HomePageDataSourceListService {
      * 
      * @return List<HomePageUserCountListOut>
      */
-    public List<HomePageDataSourceListOut> getHomePageUserCountList();
+    public List<HomePageDataSourceListOut> getHomePageDataSourceList();
 
 }
