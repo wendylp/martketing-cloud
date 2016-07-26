@@ -1,7 +1,5 @@
 package cn.rongcapital.mkt.service;
 
-import java.util.List;
-
 import cn.rongcapital.mkt.vo.out.HomePageCalendarListOut;
 
 public interface HomePageCalendarListService {
@@ -13,8 +11,8 @@ public interface HomePageCalendarListService {
      * 
      * 统计出当月日历日被客户标记当月定时的活动，按启动时间算。<br>
      * 
-     * @return List<HomePageDataCountListOut>
+     * @return HomePageDataCountListOut
      */
-    public List<HomePageCalendarListOut> getCalendarList(String date);
+    public HomePageCalendarListOut getCalendarList(String date);
 
 }
