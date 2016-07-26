@@ -1,7 +1,9 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -99,6 +102,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 		List<String> fansWeixinIds = new ArrayList<String>();
 		String pubId = campaignActionSendPub.getPubId();
 		Integer materialId = campaignActionSendPub.getMaterialId();
+        Set<Integer> dataPartyIds = new HashSet<>();
 		for(Segment segment:segmentList) {
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
 				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
@@ -113,6 +117,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 //						segment.setH5MobileUrl(h5MobileUrl);
 						fansWeixinIds.add(dp.getFansOpenId());
 						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+                        dataPartyIds.add(dp.getMid());
 					} else {
 						logger.info("不是公众号粉丝,无法发送,"+JSON.toJSONString(segment));
 					}
@@ -126,7 +131,14 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 			} else {
 				//更新mongo里node_audience表的发送状态
 				updateSentStatus(segmentList,campaignHeadId,itemId,ApiConstant.MONGO_NODEAUDIENCE_SENTSTATUS_H5_SENT);
+                if (!CollectionUtils.isEmpty(dataPartyIds)) {
+                    Query query = new Query(Criteria.where("mid").in(dataPartyIds));
+                    Update update = new Update();
+                    update.inc("receiveCount", Integer.valueOf(1));
+                    mongoTemplate.updateMulti(query, update, DataParty.class);
+                }
 			}
+
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList) && CollectionUtils.isNotEmpty(segmentListToNext)) {
 			for(CampaignSwitch cs:campaignEndsList) {

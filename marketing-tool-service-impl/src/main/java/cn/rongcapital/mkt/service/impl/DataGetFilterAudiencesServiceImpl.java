@@ -277,7 +277,6 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
             resultTimeCondition = contactWayMaps.get(0).getTimeConditionAbbreviation();
         }
 
-
         mainDataVO.setTimeCondition(
                         Byte.valueOf(TaskConditionEnum.getEnumByAbbreviation(resultTimeCondition).getCode() + ""));
         mainDataVO.setContactWayList(contactWayMapList);

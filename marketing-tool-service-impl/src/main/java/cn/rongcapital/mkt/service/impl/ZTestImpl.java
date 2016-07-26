@@ -50,7 +50,7 @@ public class ZTestImpl implements ZTest {
                 List<Taggroup> parentTagList = taggroupDao.selectList(parentTag);
                 if (CollectionUtils.isEmpty(parentTagList)) {
                     parentTag.setCreateTime(new Date());
-                    parentTag.setLevel(2);
+                    parentTag.setLevel(0);
                     parentTag.setParentGroupId(-1L);
                     parentTag.setStatus((byte) 0);
                     taggroupDao.insert(parentTag);
@@ -75,7 +75,7 @@ public class ZTestImpl implements ZTest {
                 Taggroup childTag = new Taggroup();
                 childTag.setName(childList.get(i));
                 childTag.setCreateTime(new Date());
-                childTag.setLevel(0);
+                childTag.setLevel(2);
                 childTag.setParentGroupId(Long.parseLong(selfTag.getId() + ""));
                 childTag.setStatus((byte) 0);
                 taggroupDao.insert(childTag);

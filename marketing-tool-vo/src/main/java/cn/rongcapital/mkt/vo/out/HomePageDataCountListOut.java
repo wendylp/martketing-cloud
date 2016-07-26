@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.vo.out;
 
-import cn.rongcapital.mkt.vo.BaseOutput;
+import org.codehaus.jackson.annotate.JsonProperty;
 
-public class HomePageDataCountListOut extends BaseOutput {
+public class HomePageDataCountListOut {
 
     private int id;
 
@@ -32,6 +32,7 @@ public class HomePageDataCountListOut extends BaseOutput {
         return linkName;
     }
 
+    @JsonProperty("link_name")
     public void setLinkName(String linkName) {
         this.linkName = linkName;
     }

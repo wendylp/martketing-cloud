@@ -11,16 +11,21 @@
 package cn.rongcapital.mkt.service;
 
 
-import java.util.List;
+import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
+import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
 
 import javax.ws.rs.core.SecurityContext;
-
-import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
 
 
 public interface SegmentFilterGetService {
   
-    public BaseOutput getSegmentFilterCount(SegmentFilterCountIn body, SecurityContext securityContext);    
-    
+    BaseOutput getSegmentFilterCount(SegmentFilterCountIn body, SecurityContext securityContext);
+
+    BaseOutput segmentGenderCountList(SegmentCountFilterIn input);
+
+    BaseOutput segmentProvinceCountList(SegmentCountFilterIn input);
+
+    BaseOutput segmentReceiveCountList(SegmentCountFilterIn input);
+
 }

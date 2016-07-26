@@ -32,6 +32,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.vo.in.*;
+import cn.rongcapital.mkt.vo.out.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -87,6 +89,9 @@ import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.service.GroupTagsSearchService;
+import cn.rongcapital.mkt.service.HomePageDataCountListService;
+import cn.rongcapital.mkt.service.HomePageDataSourceListService;
+import cn.rongcapital.mkt.service.HomePageUserCountListService;
 import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.LoginService;
 import cn.rongcapital.mkt.service.MainActionInfoGetService;
@@ -154,6 +159,7 @@ import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
 import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
+import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadDeleteIn;
@@ -439,6 +445,12 @@ public class MktApi {
 	private DataDownloadQualityIllegalDataService dataDownloadQualityIllegalDataService;
 
 	@Autowired
+	private HomePageUserCountListService homePageUserCountListService;
+
+	@Autowired
+	private HomePageDataCountListService homePageDataCountListService;
+
+	@Autowired
 	private GetCampaignConvertChartListService getCampaignConvertChartListService;
 
 	@Autowired
@@ -446,6 +458,9 @@ public class MktApi {
 
 	@Autowired
 	private GetWechatUserListService getWechatUserListService;
+
+	@Autowired
+    private HomePageDataSourceListService homePageDataSourceListService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	/**
@@ -595,6 +610,22 @@ public class MktApi {
 	    return campaignHeaderGetService.campaignHeaderGet(userToken, ver, campaignHeadId);
 	}
 
+    /**
+     * 活动概要查询
+     * @param userToken
+     * @param ver
+     * @param campaignHeadId
+     * @return
+     */
+	@GET
+	@Path("/mkt.campaign.profile.list")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public CampaignProfileOut campaignProfileList(@NotEmpty @QueryParam("user_token") String userToken,
+                                                  @NotEmpty @QueryParam("ver") String ver,
+                                                  @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
+		return campaignHeaderGetService.campaignProfileList(userToken, ver, campaignHeadId);
+	}
+
 	/**
 	 * @功能简述: 编辑segment header
 	 * @param: SegmentHeadIn body, SecurityContext securityContext 
@@ -671,6 +702,24 @@ public class MktApi {
 						  				   @QueryParam("keyword") String keyword) throws Exception {
 		return segmentPublishstatusListService.segmentPublishstatusList(userToken,publishStatus,index,size,ver,keyword);
 	}
+
+	@POST
+	@Path("/mkt.segment.gendercount.list")
+	public BaseOutput segmentGenderCountList(@Valid SegmentCountFilterIn input) {
+		return segmentFilterGetService.segmentGenderCountList(input);
+	}
+
+    @POST
+    @Path("/mkt.segment.provincecount.list")
+    public BaseOutput segmentProvinceCountList(@Valid SegmentCountFilterIn input) {
+        return segmentFilterGetService.segmentProvinceCountList(input);
+    }
+
+    @POST
+    @Path("/mkt.segment.receivecount.list")
+    public BaseOutput segmentReceiveCountList(@Valid SegmentCountFilterIn input) {
+        return segmentFilterGetService.segmentReceiveCountList(input);
+    }
 
 	/**
 	 * @功能描述: 登录接口
@@ -1453,8 +1502,8 @@ public class MktApi {
 			@NotEmpty @QueryParam("segment_head_id") String segmentHeadId){
 		return segmentTagGetService.getSegmentTag(userToken, segmentHeadId);
 	}
-	
-	
+
+
     /**
      * @功能简述: 获取受众细分漏斗计算结果
      * @param body
@@ -1512,7 +1561,7 @@ public class MktApi {
 	}
 
     /**
-     * @功能简述: 获取系统标签内容列表
+     * 获取系统标签内容列表
      * @param method
      * @param userToken
      * @param tagGroupId
@@ -1530,7 +1579,7 @@ public class MktApi {
     }
 
     /**
-     * @功能简述: 获取系统标签组列表
+     * 获取系统标签组列表
      * @param method
      * @param userToken
      * @param tagGroupId
@@ -1799,4 +1848,60 @@ public class MktApi {
 											   @NotEmpty @QueryParam("ver") String ver){
 		return getWechatUserListService.getWechatUserListByType();
 	}
+
+
+	/**
+     * 按月份按公众号统计每月的用户增加数量
+     *
+     * @param userToken
+     * @param ver
+     * @author nianjun
+     */
+    @GET
+    @Path("/mkt.homepage.usercount.list")
+    public BaseOutput homePageUserCountList(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        result.getData().add(homePageUserCountListService.getHomePageUserCountList());
+
+        return result;
+    }
+
+    /**
+     * 统计出当前用户、细分、活动、标签、接入数据个数
+     *
+     * @param userToken
+     * @param ver
+     * @author nianjun
+     */
+    @GET
+    @Path("/mkt.homepage.datacount.list")
+    public BaseOutput homePageDataCountList(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        result.getData().add(homePageDataCountListService.getDataCountList());
+
+        return result;
+    }
+
+    /**
+     * 统计出用户的各类来源，如微信、CRM、POS(以数据文件填写的来源为准)
+     *
+     * @param userToken
+     * @param ver
+     * @author nianjun
+     */
+    @GET
+    @Path("/mkt.homepage.datasource.list")
+    public BaseOutput homePageDataSourceList(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        result.getData().add(homePageDataSourceListService.getHomePageDataSourceList());
+
+        return result;
+    }
+
 }

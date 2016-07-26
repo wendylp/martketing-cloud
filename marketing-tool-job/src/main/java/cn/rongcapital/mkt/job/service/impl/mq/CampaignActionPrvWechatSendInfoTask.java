@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -99,7 +100,8 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
 				Integer dataId = segment.getDataId();
 				//从mongo的主数据表中查询该条id对应的主数据详细信息
-				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
+                Query query = new Query(Criteria.where("mid").is(dataId));
+				DataParty dp = mongoTemplate.findOne(query, DataParty.class);
 				if(null!=dp && null !=dp.getMdType() &&
 						StringUtils.isNotBlank(dp.getMappingKeyid()) &&
 						dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
@@ -112,6 +114,9 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 						boolean isSent = sendPrvWechatByH5Interface(uin,textInfo,dp.getMappingKeyid());
 						if(isSent) {
 							segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+                            Update update = new Update();
+                            update.inc("receiveCount", Integer.valueOf(1));
+                            mongoTemplate.updateFirst(query, update, DataParty.class);
 						}
 					} else {
 						logger.info("不是个人号好友,无法发送,"+JSON.toJSONString(segment));

@@ -16,6 +16,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface WechatAssetDao extends BaseDao<WechatAsset>{
 	
@@ -129,4 +130,6 @@ public interface WechatAssetDao extends BaseDao<WechatAsset>{
 	 * @return List<String>
 	 */
 	Integer selectMemberCountByType(WechatAsset wechatAsset);
+
+	List<WechatAsset> selectByWechatAccounts(@Param("wechatAccounts") Set<String> wechatAccounts);
 }

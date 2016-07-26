@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,8 @@ import org.apache.ibatis.annotations.Param;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.HomePageMonthlyCount;
+import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
 
 public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<DataParty>{
 	
@@ -154,4 +157,20 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @return 返回source及该source对应的个数
 	 */
 	List<DataCountBySource> selectDataSourceAndSourceCount(@Param("idList") List<Integer> dataPartyIdList);
+
+    /**
+     * 根据手机号更新data_party表数据
+     *
+     * @param dataParty
+     * @return 月份与对应的count值
+     */
+    List<HomePageMonthlyCount> selectMonthlyCount(Map<String, Date> paramMap);
+
+    /**
+     * 根据source获取每种source的count值
+     *
+     * @param dataParty
+     * @return source与对应的count值
+     */
+    List<HomePageSourceGroupCount> selectSourceGroupCount();
 }

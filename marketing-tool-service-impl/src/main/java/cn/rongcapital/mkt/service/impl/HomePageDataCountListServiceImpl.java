@@ -5,11 +5,13 @@ import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.FINISHED
 import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.IN_PROGRESS_ACTIVITY;
 import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.SEGMENTATION_HEAD;
 import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.TAG;
+import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.WECHAT;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
@@ -23,6 +25,7 @@ import cn.rongcapital.mkt.po.Taggroup;
 import cn.rongcapital.mkt.service.HomePageDataCountListService;
 import cn.rongcapital.mkt.vo.out.HomePageDataCountListOut;
 
+@Service
 public class HomePageDataCountListServiceImpl implements HomePageDataCountListService {
 
     private static final int CHILD_LEVEL = 2;
@@ -62,6 +65,7 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
         int customTagCount = customeTagDao.selectListCount(null);
         Taggroup paramTaggroup = new Taggroup();
         paramTaggroup.setLevel(CHILD_LEVEL);
+        // 个人觉得以后计算叶子节点的算法不是这样的
         int taggroupCount = taggroupDao.selectListCount(paramTaggroup);
         int tagCount = customTagCount + taggroupCount;
         tagCountListObj.setId(TAG.getId());
@@ -73,6 +77,13 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 
         // 获取可触达用户的数据
         // TODO 目前没法做,微信的表都还没有
+        HomePageDataCountListOut wechatCountListObj = new HomePageDataCountListOut();
+        wechatCountListObj.setId(WECHAT.getId());
+        wechatCountListObj.setCount(0);
+        wechatCountListObj.setName(WECHAT.getName());
+        wechatCountListObj.setLinkName(WECHAT.getLinkName());
+
+        dataCountList.add(wechatCountListObj);
 
         // 获取细分人员的数据
         HomePageDataCountListOut segmentationHeadCountListObj = new HomePageDataCountListOut();

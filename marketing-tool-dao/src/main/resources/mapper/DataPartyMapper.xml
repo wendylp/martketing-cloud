@@ -202,6 +202,12 @@
 				<!-- email是不存在data_party中的 -->
 		</if>
 	</foreach>
+	<if test="mdTypes != null">
+		AND md_type IN
+		<foreach collection="mdTypes" item="dataType" index="index" separator="," open="(" close=")">
+			#{dataType}
+		</foreach>
+	</if>
 	</if>
 	<if test="timeCondition != null">
 			<![CDATA[AND data_party.create_time > #{timeCondition}]]>
@@ -505,4 +511,27 @@
 		</foreach>
 		group by source
 	</select>
+
+	<select id="selectMonthlyCount" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.HomePageMonthlyCount">
+	<![CDATA[
+		SELECT
+		    COUNT(id) AS monthlyCount,
+		    DATE_FORMAT(create_time, '%Y-%m') AS month
+		FROM
+		    data_party
+		WHERE
+		    create_time >= #{startTime}
+		        AND create_time < #{endTime}
+		GROUP BY DATE_FORMAT(create_time, '%Y%m')
+		ORDER BY month
+	]]>
+	</select>
+
+	<select id="selectSourceGroupCount" resultType="cn.rongcapital.mkt.po.HomePageSourceGroupCount">
+	<![CDATA[
+		select count(id) as sourceCount , source from data_party group by source
+	]]>
+	</select>
+
+
 </mapper>

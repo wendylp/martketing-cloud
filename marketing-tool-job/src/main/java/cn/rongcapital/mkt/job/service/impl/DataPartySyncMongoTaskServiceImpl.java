@@ -100,6 +100,7 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 }else{
                     mongoWechatMember.setSource(DATA_PARTY_SOURCE_FOR_WECHAT_PERSON);
                 }
+                mongoWechatMember.setGender(dataObj.getSex().byteValue());
                 mongoWechatMember.setMid(dataPartyId);
                 mongoWechatMember.setMd_type(dataType);
                 mongoWechatMember.setMapping_keyid(dataObj.getId().toString());
