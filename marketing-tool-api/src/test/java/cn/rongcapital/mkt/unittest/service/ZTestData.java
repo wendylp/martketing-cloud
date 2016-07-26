@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.unittest.service;
 
+import java.io.IOException;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,13 +17,13 @@ public class ZTestData extends AbstractUnitTest{
     @Autowired
     private BasEventExportService basEventExportService;
 
-//    @Test
-//	public void testImportData() throws IOException{
-//        zTest.importData();
-//	}
-    
     @Test
-    public void testBasEventExport(){
-        basEventExportService.exportData();
-    }
+	public void testImportData() throws IOException{
+        zTest.importData();
+	}
+    
+//    @Test
+//    public void testBasEventExport(){
+//        basEventExportService.exportData();
+//    }
 }
