@@ -202,6 +202,12 @@
 				<!-- email是不存在data_party中的 -->
 		</if>
 	</foreach>
+	<if test="mdTypes != null">
+		AND md_type IN
+		<foreach collection="mdTypes" item="dataType" index="index" separator="," open="(" close=")">
+			#{dataType}
+		</foreach>
+	</if>
 	</if>
 	<if test="timeCondition != null">
 			<![CDATA[AND data_party.create_time > #{timeCondition}]]>
