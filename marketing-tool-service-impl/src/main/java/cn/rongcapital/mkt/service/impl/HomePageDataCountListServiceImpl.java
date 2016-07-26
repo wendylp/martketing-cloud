@@ -65,6 +65,7 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
         int customTagCount = customeTagDao.selectListCount(null);
         Taggroup paramTaggroup = new Taggroup();
         paramTaggroup.setLevel(CHILD_LEVEL);
+        // 个人觉得以后计算叶子节点的算法不是这样的
         int taggroupCount = taggroupDao.selectListCount(paramTaggroup);
         int tagCount = customTagCount + taggroupCount;
         tagCountListObj.setId(TAG.getId());
