@@ -143,4 +143,11 @@
 		limit #{size}
 	</select>
 	
+	<select id="selectInProgressandPrepareStatusCampaignHead" resultType="cn.rongcapital.mkt.po.CampaignHead">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status IN (1,2) ORDER BY status DESC , create_time ASC
+	</select>
+	
 </mapper>
