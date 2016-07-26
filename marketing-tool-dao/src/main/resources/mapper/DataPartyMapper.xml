@@ -495,5 +495,14 @@
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE mobile = #{mobile}]]>
 	</update>
-	
+
+	<select id="selectDataSourceAndSourceCount" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.DataCountBySource">
+		SELECT count(id) as peopleCount,source
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id in
+		<foreach collection="idList" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+		group by source
+	</select>
 </mapper>

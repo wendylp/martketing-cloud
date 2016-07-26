@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.dao;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.po.DataCountBySource;
 import org.apache.ibatis.annotations.Param;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -146,4 +147,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @return 更新数据条数
 	 */
 	int updateDataPartyInfo(DataParty dataParty);
+
+	/**
+	 * 查询指定Id集合所包含的source和该source对应的个数
+	 * @param dataPartyIdList
+	 * @return 返回source及该source对应的个数
+	 */
+	List<DataCountBySource> selectDataSourceAndSourceCount(@Param("idList") List<Integer> dataPartyIdList);
 }

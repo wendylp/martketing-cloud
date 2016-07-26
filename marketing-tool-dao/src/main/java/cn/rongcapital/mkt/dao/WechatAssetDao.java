@@ -111,8 +111,22 @@ public interface WechatAssetDao extends BaseDao<WechatAsset>{
 
 	/**
 	 * 根据微信号更新微信资产相关信息
-	 * @param paramMap
+	 * @param wechatAsset
 	 * @return int
 	 */
 	void updateByWxacct(WechatAsset wechatAsset);
+
+	/**
+	 * 根据微信号类型获取不同类型对应的GroupIdsList
+	 * @param wechatAsset
+	 * @return List<String>
+	 */
+	List<String> selectGroupIdsListByType(WechatAsset wechatAsset);
+
+	/**
+	 * 根据微信号类型获取该类型对应的总人数
+	 * @param wechatAsset
+	 * @return List<String>
+	 */
+	Integer selectMemberCountByType(WechatAsset wechatAsset);
 }

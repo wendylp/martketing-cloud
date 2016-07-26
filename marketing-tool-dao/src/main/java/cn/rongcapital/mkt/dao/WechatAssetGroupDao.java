@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,4 +105,18 @@ public interface WechatAssetGroupDao extends BaseDao<WechatAssetGroup>{
 	 * @return list
 	 */
 	void deleteRecordByUin(String uin);
+
+	/**
+	 * 根据GroupIdList获取这些组所包含的粉丝总数
+	 * @param groupIdList
+	 * @return list
+	 */
+	Integer selectCountByGroupId(@Param("idList") List<Integer> groupIdList);
+
+	/**
+	 * 根据好友组名称获取人数
+	 * @param wechatAssetGroup
+	 * @return list
+	 */
+	Integer selectFriendCount(WechatAssetGroup wechatAssetGroup);
 }

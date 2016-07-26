@@ -67,6 +67,8 @@ public class WechatMember implements Serializable{
 
     private String mapping_keyid;
 
+    private String source;
+
     public String getId() {
         return id;
     }
@@ -281,5 +283,13 @@ public class WechatMember implements Serializable{
 
     public void setMapping_keyid(String mapping_keyid) {
         this.mapping_keyid = mapping_keyid;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

@@ -130,6 +130,9 @@ import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.GetCampaignConvertChartListService;
+import cn.rongcapital.mkt.service.GetCampaignCustomerSourceListService;
+import cn.rongcapital.mkt.service.GetWechatUserListService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -168,6 +171,9 @@ import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListOut;
 import cn.rongcapital.mkt.vo.out.SerarchTagGroupTagsOut;
+import cn.rongcapital.mkt.vo.out.CampaignConvertChartListOut;
+import cn.rongcapital.mkt.vo.out.CampaignCustomSourceListOut;
+import cn.rongcapital.mkt.vo.out.WechatUserListOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -431,6 +437,15 @@ public class MktApi {
 	
 	@Autowired
 	private DataDownloadQualityIllegalDataService dataDownloadQualityIllegalDataService;
+
+	@Autowired
+	private GetCampaignConvertChartListService getCampaignConvertChartListService;
+
+	@Autowired
+	private GetCampaignCustomerSourceListService getCampaignCustomerSourceListService;
+
+	@Autowired
+	private GetWechatUserListService getWechatUserListService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	/**
@@ -1442,10 +1457,8 @@ public class MktApi {
 	
     /**
      * @功能简述: 获取受众细分漏斗计算结果
-     * @param userToken
-     * @param segment_head_id
-     * @param group_index
-     * @param conditions
+     * @param body
+     * @param securityContext
      * @return BaseOutput
      */
     @POST
@@ -1501,8 +1514,8 @@ public class MktApi {
     /**
      * @功能简述: 获取系统标签内容列表
      * @param method
-     * @param user_token
-     * @param tag_group_id
+     * @param userToken
+     * @param tagGroupId
      * @param index
      * @param size
      * @return BaseOutput
@@ -1519,8 +1532,8 @@ public class MktApi {
     /**
      * @功能简述: 获取系统标签组列表
      * @param method
-     * @param user_token
-     * @param tag_group_id
+     * @param userToken
+     * @param tagGroupId
      * @param index
      * @param size
      * @return BaseOutput
@@ -1552,7 +1565,7 @@ public class MktApi {
 	/**
 	 * @功能简述: 获取系统标签组列表
 	 * @param method
-	 * @param user_token
+	 * @param userToken
 	 * @param index
 	 * @param size
 	 * @return BaseOutput
@@ -1612,7 +1625,7 @@ public class MktApi {
 
 	/**
 	 * @功能简述: 微信公众号授权时大连那边所调用的回调接口
-	 * @param body
+	 * @param wechatPublicAuthCallbackIn
 	 * @return BaseOutput
 	 */
 	@POST
@@ -1639,7 +1652,7 @@ public class MktApi {
 
 	/**
 	 * @功能简述: 获取微信个人号授权时产生的uuid
-	 * @param body
+	 * @param wechatPersonalAuthIn
 	 * @return BaseOutput
 	 */
 	@POST
@@ -1677,7 +1690,7 @@ public class MktApi {
 
 	/**
 	 * @功能简述: 文件上传时为上传的人群打标签
-	 * @param body
+	 * @param fileTagUpdateIn
 	 * @return BaseOutput
 	 */
 	@POST
@@ -1713,7 +1726,9 @@ public class MktApi {
 	 * 搜索活动节点上的人
 	 * @param userToken
 	 * @param ver
-	 * @param templateIdList
+	 * @param name
+	 * @param campaignHeadId
+	 * @param itemId
 	 * @return
 	 */
 	@GET
@@ -1740,5 +1755,48 @@ public class MktApi {
 											  @NotEmpty @QueryParam("group_ids") String groupIds,
 											  @QueryParam("search_field") String searchField){
 		return wechatAssetMemberSearchService.searchWechatAssetMember(groupIds,searchField);
+	}
+
+	/**
+	 * 查询活动转化图表的相关数据
+	 * @param userToken
+	 * @param ver
+	 * @param campaignHeadId
+	 * @return
+	 */
+	@GET
+	@Path("/mkt.campaign.conversion.list")
+	public CampaignConvertChartListOut getCompaignConversionList(@NotEmpty @QueryParam("user_token") String userToken,
+																 @NotEmpty @QueryParam("ver") String ver,
+																 @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId){
+		return getCampaignConvertChartListService.getCompaignConvertChartList(campaignHeadId);
+	}
+
+	/**
+	 * 查询活动转化图表的相关数据
+	 * @param userToken
+	 * @param ver
+	 * @param campaignHeadId
+	 * @return
+	 */
+	@GET
+	@Path("/mkt.campaign.customer.source.list")
+	public CampaignCustomSourceListOut getCampaignCustomerSourceList(@NotEmpty @QueryParam("user_token") String userToken,
+																 @NotEmpty @QueryParam("ver") String ver,
+																 @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId){
+		return getCampaignCustomerSourceListService.getCampaignCustomSourceInfo(campaignHeadId);
+	}
+
+	/**
+	 * 返回当前订阅号，服务号，个人号按月累计的粉丝数量
+	 * @param userToken
+	 * @param ver
+	 * @return
+	 */
+	@GET
+	@Path("/mkt.wechat.user.list")
+	public WechatUserListOut getWechatUserList(@NotEmpty @QueryParam("user_token") String userToken,
+											   @NotEmpty @QueryParam("ver") String ver){
+		return getWechatUserListService.getWechatUserListByType();
 	}
 }

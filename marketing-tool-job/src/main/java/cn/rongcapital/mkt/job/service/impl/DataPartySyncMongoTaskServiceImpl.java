@@ -43,6 +43,8 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
 	private MongoTemplate mongoTemplate;
 
     private static String MONGODB_COLLECTION = "data_party";
+    private static String DATA_PARTY_SOURCE_FOR_WECHAT_PUB = "公众号";
+    private static String DATA_PARTY_SOURCE_FOR_WECHAT_PERSON = "个人号";
 
     private ConcurrentHashMap<String, Field[]> filedMap = new ConcurrentHashMap<>();
 	
@@ -93,6 +95,11 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 cn.rongcapital.mkt.po.mongodb.WechatMember mongoWechatMember =
                         new cn.rongcapital.mkt.po.mongodb.WechatMember();
                 BeanUtils.copyProperties(dataObj, mongoWechatMember);
+                if(!org.springframework.util.StringUtils.isEmpty(mongoWechatMember.getPubId())){
+                    mongoWechatMember.setSource(DATA_PARTY_SOURCE_FOR_WECHAT_PUB);
+                }else{
+                    mongoWechatMember.setSource(DATA_PARTY_SOURCE_FOR_WECHAT_PERSON);
+                }
                 mongoWechatMember.setMid(dataPartyId);
                 mongoWechatMember.setMd_type(dataType);
                 mongoWechatMember.setMapping_keyid(dataObj.getId().toString());

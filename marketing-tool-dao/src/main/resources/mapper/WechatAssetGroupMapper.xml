@@ -166,4 +166,19 @@
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE wx_acct = #{uin}
 	</delete>
+
+	<select id="selectCountByGroupId" parameterType="java.util.List" resultType="java.lang.Integer">
+		SELECT sum(members)
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id in
+		<foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectFriendCount" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup" resultType="java.lang.Integer">
+		SELECT sum(members)
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE name = #{name}
+	</select>
 </mapper>

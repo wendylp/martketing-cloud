@@ -111,5 +111,10 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		where campaign_head_id = #{campaignHeadId}
 	</delete>
-	
+
+	<select id="selectItemIdList" parameterType="cn.rongcapital.mkt.po.CampaignAudienceTarget" resultType="java.lang.String">
+		SELECT item_id
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
 </mapper>

@@ -11,12 +11,10 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.CampaignAudienceTarget;
+import cn.rongcapital.mkt.po.WechatMemberCountCache;
 
-import java.util.List;
+public interface WechatMemberCountCacheDao extends BaseDao<WechatMemberCountCache>{
 
-public interface CampaignAudienceTargetDao extends BaseDao<CampaignAudienceTarget>{
-	
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -36,12 +34,11 @@ public interface CampaignAudienceTargetDao extends BaseDao<CampaignAudienceTarge
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
-	int deleteByCampaignHeadId(int campaignHeadId);
 
 	/**
-	 * 根据CampaignHeadId获取相应的ItemIdList
-	 * @param campaignAudienceTarget
+	 * 根据时间和类型来检索最近的缓存
+	 * @param wechatMemberCountCache
 	 * @return list
 	 */
-	List<String> selectItemIdList(CampaignAudienceTarget campaignAudienceTarget);
+	Integer selectCountByTypeAndTimeIndex(WechatMemberCountCache wechatMemberCountCache);
 }

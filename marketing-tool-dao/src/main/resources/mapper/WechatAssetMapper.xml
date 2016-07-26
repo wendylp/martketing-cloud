@@ -188,4 +188,16 @@
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE wx_acct = #{uin}
 	</delete>
+
+	<select id="selectGroupIdsListByType" parameterType="cn.rongcapital.mkt.po.WechatAsset" resultType="java.lang.String">
+		SELECT group_ids
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE asset_type = #{assetType} AND status = #{status}
+	</select>
+
+	<select id="selectMemberCountByType" parameterType="cn.rongcapital.mkt.po.WechatAsset" resultType="java.lang.Integer">
+		SELECT sum(total_count)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE asset_type = #{assetType} AND status = #{status}
+	</select>
 </mapper>
