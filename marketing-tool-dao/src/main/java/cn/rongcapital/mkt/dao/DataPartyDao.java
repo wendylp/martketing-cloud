@@ -20,6 +20,7 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.HomePageMonthlyCount;
+import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
 
 public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<DataParty>{
 	
@@ -148,11 +149,20 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @return 更新数据条数
 	 */
 	int updateDataPartyInfo(DataParty dataParty);
-	
-	/**
+
+    /**
      * 根据手机号更新data_party表数据
-     * @param dataParty 
-     * @return 月份与对应的
+     * 
+     * @param dataParty
+     * @return 月份与对应的count值
      */
     List<HomePageMonthlyCount> selectMonthlyCount(Map<String, Date> paramMap);
+
+    /**
+     * 根据source获取每种source的count值
+     * 
+     * @param dataParty
+     * @return source与对应的count值
+     */
+    List<HomePageSourceGroupCount> selectSourceGroupCount();
 }

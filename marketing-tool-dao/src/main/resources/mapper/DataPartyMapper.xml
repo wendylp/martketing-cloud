@@ -504,7 +504,7 @@
 	
 	<select id="selectMonthlyCount" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.HomePageMonthlyCount">
 	<![CDATA[
-		SELECT 
+		SELECT
 		    COUNT(id) AS monthlyCount,
 		    DATE_FORMAT(create_time, '%Y-%m') AS month
 		FROM
@@ -516,5 +516,12 @@
 		ORDER BY month
 	]]>
 	</select>
+	
+	<select id="selectSourceGroupCount" resultType="cn.rongcapital.mkt.po.HomePageSourceGroupCount">
+	<![CDATA[
+		select count(id) as sourceCount , source from data_party group by source
+	]]>
+	</select>
+	
 	
 </mapper>
