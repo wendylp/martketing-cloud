@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.enums.CampaignHeadStatusEnum;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
@@ -22,6 +23,7 @@ import cn.rongcapital.mkt.service.HomePageCalendarPopService;
 import cn.rongcapital.mkt.vo.out.HomePageCalendarPopData;
 import cn.rongcapital.mkt.vo.out.HomePageCalendarPopOut;
 
+@Service
 public class HomePageCalendarPopServiceImpl implements HomePageCalendarPopService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
