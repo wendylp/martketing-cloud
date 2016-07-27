@@ -63,7 +63,9 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
                     continue;
                 }
                 paramHomePageCalendarData.setActiveDay(simpleDateFormat.format(campaignHead.getCreateTime()));
-                paramHomePageCalendarData.setStatus(CampaignHeadStatusEnum.getStatusByCode(campaignHead.getStatus()));
+                paramHomePageCalendarData.setStatus(campaignHead.getStatus());
+                paramHomePageCalendarData
+                                .setStatusDescription(CampaignHeadStatusEnum.getStatusByCode(campaignHead.getStatus()));
 
                 homePageCalendarDatas.add(paramHomePageCalendarData);
             }

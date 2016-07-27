@@ -6,7 +6,9 @@ public class HomePageCalendarData {
 
     private String activeDay;
 
-    private String status;
+    private int status;
+
+    private String statusDescription;
 
     @JsonProperty("active_day")
     public String getActiveDay() {
@@ -17,12 +19,21 @@ public class HomePageCalendarData {
         this.activeDay = activeDay;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
+    @JsonProperty("status_description")
+    public String getStatusDescription() {
+        return statusDescription;
+    }
+
+    public void setStatusDescription(String statusDescription) {
+        this.statusDescription = statusDescription;
+    }
+    
 }

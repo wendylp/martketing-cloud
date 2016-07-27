@@ -63,7 +63,9 @@ public class HomePageCalendarPopServiceImpl implements HomePageCalendarPopServic
             for (CampaignHead campaignHead : campaignHeads) {
                 HomePageCalendarPopData homePageCalendarPopDataObj = new HomePageCalendarPopData();
                 homePageCalendarPopDataObj.setActivity(campaignHead.getName());
-                homePageCalendarPopDataObj.setStatus(CampaignHeadStatusEnum.getStatusByCode(campaignHead.getStatus()));
+                homePageCalendarPopDataObj.setStatus(campaignHead.getStatus());
+                homePageCalendarPopDataObj
+                                .setStatusDescription(CampaignHeadStatusEnum.getStatusByCode(campaignHead.getStatus()));
 
                 content.add(homePageCalendarPopDataObj);
             }
@@ -81,8 +83,6 @@ public class HomePageCalendarPopServiceImpl implements HomePageCalendarPopServic
         startTime.set(startTime.get(Calendar.YEAR), startTime.get(Calendar.MONTH), startTime.get(Calendar.DATE), 0, 0,
                         0);
         endTime.set(endTime.get(Calendar.YEAR), endTime.get(Calendar.MONTH), startTime.get(Calendar.DATE) + 1, 0, 0, 0);
-        System.out.println("starttime is : " + startTime.getTime().toLocaleString());
-        System.out.println("endtime is : " + endTime.getTime().toLocaleString());
         startTime.set(Calendar.MILLISECOND, 0);
         endTime.set(Calendar.MILLISECOND, 0);
     }
