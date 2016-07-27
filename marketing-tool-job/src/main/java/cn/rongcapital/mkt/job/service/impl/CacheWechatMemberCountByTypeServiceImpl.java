@@ -53,7 +53,7 @@ public class CacheWechatMemberCountByTypeServiceImpl implements TaskService{
     private String getCountTime() {
         Calendar calendar = Calendar.getInstance();
         Integer year = calendar.get(Calendar.YEAR);
-        Integer month = calendar.get(Calendar.MONTH);
+        Integer month = calendar.get(Calendar.MONTH) + 1;
         return year + "/" + formatMonth(month);
     }
 
