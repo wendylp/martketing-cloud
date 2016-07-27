@@ -32,8 +32,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.vo.in.*;
-import cn.rongcapital.mkt.vo.out.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -89,6 +87,7 @@ import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.service.GroupTagsSearchService;
+import cn.rongcapital.mkt.service.HomePageCalendarListService;
 import cn.rongcapital.mkt.service.HomePageDataCountListService;
 import cn.rongcapital.mkt.service.HomePageDataSourceListService;
 import cn.rongcapital.mkt.service.HomePageUserCountListService;
@@ -172,6 +171,7 @@ import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
 import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
+import cn.rongcapital.mkt.vo.out.CampaignProfileOut;
 import cn.rongcapital.mkt.vo.out.CampaignProgressStatusCountOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
@@ -461,6 +461,9 @@ public class MktApi {
 
 	@Autowired
     private HomePageDataSourceListService homePageDataSourceListService;
+	
+	@Autowired
+	private HomePageCalendarListService homePageCalendarListService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	/**
@@ -1900,6 +1903,24 @@ public class MktApi {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
         result.getData().add(homePageDataSourceListService.getHomePageDataSourceList());
+
+        return result;
+    }
+
+    /**
+     * 统计出当月日历日被客户标记当月定时的活动，按启动时间算
+     *
+     * @param userToken
+     * @param ver
+     * @author nianjun
+     */
+    @GET
+    @Path("/mkt.homepage.calendar.list")
+    public BaseOutput homePageCalendarList(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver, @QueryParam("date") String date) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        result.getData().add(homePageCalendarListService.getCalendarList(date));
 
         return result;
     }

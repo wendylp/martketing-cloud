@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.enums.CampaignHeadStatusEnum;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
@@ -22,6 +23,7 @@ import cn.rongcapital.mkt.service.HomePageCalendarListService;
 import cn.rongcapital.mkt.vo.out.HomePageCalendarData;
 import cn.rongcapital.mkt.vo.out.HomePageCalendarListOut;
 
+@Service
 public class HomePageCalendarListServiceImpl implements HomePageCalendarListService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -80,8 +82,8 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
 
         startTime.set(startTime.get(Calendar.YEAR), startTime.get(Calendar.MONTH), 1, 0, 0, 0);
         endTime.set(endTime.get(Calendar.YEAR), endTime.get(Calendar.MONTH) + 1, 1, 0, 0, 0);
-        startTime.setTimeInMillis(0);
-        endTime.setTimeInMillis(0);
+        startTime.set(Calendar.MILLISECOND, 0);
+        endTime.set(Calendar.MILLISECOND, 0);
     }
 
 }
