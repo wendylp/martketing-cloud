@@ -83,15 +83,15 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		}
 		//停止该活动对应的全部任务
 		taskScheduleDao.deActivateTaskByCampaignHeadId(campaignHeadId);
+        campaignHeaderUpdateService.decreaseSegmentReferCampaignCount(campaignHeadId);
 		//如果活动状态为运行中，则设置活动状态为:已结束
 		 CampaignHead t = new CampaignHead(); 
 		 t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		 t.setId(taskSchedule.getCampaignHeadId());
+		 t.setId(campaignHeadId);
 		 List<CampaignHead> camList = campaignHeadDao.selectList(t);
 		 if(CollectionUtils.isNotEmpty(camList)) {
 			 CampaignHead ch = camList.get(0);
 			 if(ch.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
-                 campaignHeaderUpdateService.decreaseSegmentReferCampaignCount(ch.getId());
 				 t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH);
 				 campaignHeadDao.updateById(t);
 			 }

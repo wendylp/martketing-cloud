@@ -86,25 +86,25 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
 
 	private void modifyReferData(CampaignHead existsCampaignHead, byte publishStatus, Byte triggerType) {
         Integer campaignHeadId = existsCampaignHead.getId();
-        // update segment refer count
-        if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus) {
-            changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(1));
-
-        } else if ((ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH == publishStatus &&
-                ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == existsCampaignHead.getPublishStatus()) ||
-                ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH == publishStatus) {
-            changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(-1));
-        }
-
-        // update schedule
+        Byte oldPublishStatus = existsCampaignHead.getPublishStatus();
         if (triggerType != null && triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL) {
             if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus) {
+                changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(1));
                 taskScheduleDao.activateTaskByCampaignHeadId(campaignHeadId);
             } else if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH == publishStatus ||
                                ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH == publishStatus) {
+                if (oldPublishStatus != null &&
+                            oldPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH) {
+                    changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(-1));
+                }
                 taskScheduleDao.deActivateTaskByCampaignHeadId(campaignHeadId);
             }
         } else {
+
+            if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus) {
+                changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(1));
+            }
+
             TaskSchedule taskScheduleT = new TaskSchedule();
             taskScheduleT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
             taskScheduleT.setCampaignHeadId(campaignHeadId);
