@@ -81,13 +81,17 @@ import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.FileTagUpdateService;
 import cn.rongcapital.mkt.service.FileTemplateDownloadService;
+import cn.rongcapital.mkt.service.GetCampaignConvertChartListService;
+import cn.rongcapital.mkt.service.GetCampaignCustomerSourceListService;
 import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
 import cn.rongcapital.mkt.service.GetDataMainSearchService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
+import cn.rongcapital.mkt.service.GetWechatUserListService;
 import cn.rongcapital.mkt.service.GroupTagsSearchService;
 import cn.rongcapital.mkt.service.HomePageCalendarListService;
+import cn.rongcapital.mkt.service.HomePageCalendarPopService;
 import cn.rongcapital.mkt.service.HomePageDataCountListService;
 import cn.rongcapital.mkt.service.HomePageDataSourceListService;
 import cn.rongcapital.mkt.service.HomePageUserCountListService;
@@ -134,9 +138,6 @@ import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.service.WechatTypeCountGetService;
-import cn.rongcapital.mkt.service.GetCampaignConvertChartListService;
-import cn.rongcapital.mkt.service.GetCampaignCustomerSourceListService;
-import cn.rongcapital.mkt.service.GetWechatUserListService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -169,6 +170,8 @@ import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
+import cn.rongcapital.mkt.vo.out.CampaignConvertChartListOut;
+import cn.rongcapital.mkt.vo.out.CampaignCustomSourceListOut;
 import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
 import cn.rongcapital.mkt.vo.out.CampaignProfileOut;
@@ -177,8 +180,6 @@ import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListOut;
 import cn.rongcapital.mkt.vo.out.SerarchTagGroupTagsOut;
-import cn.rongcapital.mkt.vo.out.CampaignConvertChartListOut;
-import cn.rongcapital.mkt.vo.out.CampaignCustomSourceListOut;
 import cn.rongcapital.mkt.vo.out.WechatUserListOut;
 
 @Component
@@ -464,6 +465,9 @@ public class MktApi {
 	
 	@Autowired
 	private HomePageCalendarListService homePageCalendarListService;
+	
+	@Autowired
+	private HomePageCalendarPopService homePageCalendarPopService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	/**
@@ -1921,6 +1925,24 @@ public class MktApi {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
         result.getData().add(homePageCalendarListService.getCalendarList(date));
+
+        return result;
+    }
+
+    /**
+     * 当月日历日被客户标记当日定时的活动的弹窗
+     *
+     * @param userToken
+     * @param ver
+     * @author nianjun
+     */
+    @GET
+    @Path("/mkt.homepage.calendar.pop")
+    public BaseOutput homePageCalendarPop(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("date") String date) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        result.getData().add(homePageCalendarPopService.getCalendarPop(date));
 
         return result;
     }
