@@ -7,7 +7,7 @@ import cn.rongcapital.mkt.vo.out.HomePageDataCountListOut;
 public interface HomePageDataCountListService {
 
     /**
-     * @author  
+     * @author nianjun
      * 
      * mkt.homepage.datacount.list
      * 
