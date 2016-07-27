@@ -13,7 +13,7 @@ public class CampaignProfileOut extends BaseOutput {
     @JsonProperty("start_time")
     private String startTime;
 
-    @JsonProperty("start_time")
+    @JsonProperty("end_time")
     private String endTime;
 
     @JsonProperty("campaign_audience_target")

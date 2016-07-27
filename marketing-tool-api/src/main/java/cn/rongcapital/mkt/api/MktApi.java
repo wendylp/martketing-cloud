@@ -712,18 +712,21 @@ public class MktApi {
 
 	@POST
 	@Path("/mkt.segment.gendercount.list")
+	@Consumes({ MediaType.APPLICATION_JSON })
 	public BaseOutput segmentGenderCountList(@Valid SegmentCountFilterIn input) {
 		return segmentFilterGetService.segmentGenderCountList(input);
 	}
 
     @POST
     @Path("/mkt.segment.provincecount.list")
+    @Consumes({ MediaType.APPLICATION_JSON })
     public BaseOutput segmentProvinceCountList(@Valid SegmentCountFilterIn input) {
         return segmentFilterGetService.segmentProvinceCountList(input);
     }
 
     @POST
     @Path("/mkt.segment.receivecount.list")
+    @Consumes({ MediaType.APPLICATION_JSON })
     public BaseOutput segmentReceiveCountList(@Valid SegmentCountFilterIn input) {
         return segmentFilterGetService.segmentReceiveCountList(input);
     }

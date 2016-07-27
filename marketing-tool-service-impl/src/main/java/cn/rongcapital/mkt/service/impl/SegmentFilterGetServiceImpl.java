@@ -15,10 +15,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCondition;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
-import cn.rongcapital.mkt.vo.out.SegmentAreaCountOut;
-import cn.rongcapital.mkt.vo.out.SegmentGenderCountOut;
-import cn.rongcapital.mkt.vo.out.SegmentProvinceCountOut;
-import cn.rongcapital.mkt.vo.out.SegmentReceiveCountOut;
+import cn.rongcapital.mkt.vo.out.SegmentDimensionCountOut;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
 import org.slf4j.Logger;
@@ -31,6 +28,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.ws.rs.core.SecurityContext;
 import java.util.*;
@@ -70,10 +68,11 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         }
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.match(midCriteria),
-                Aggregation.group("gender").count().as("populationCount"),
-                Aggregation.project("populationCount", "sex"));
-        AggregationResults<SegmentGenderCountOut> aggregationResults =  mongoTemplate.aggregate(
-                aggregation, DataParty.class, SegmentGenderCountOut.class);
+                Aggregation.group("gender").count().as("populationCount")
+                        .first("sex").as("dimensionName")
+                );
+        AggregationResults<SegmentDimensionCountOut> aggregationResults =  mongoTemplate.aggregate(
+                aggregation, DataParty.class, SegmentDimensionCountOut.class);
         setBaseOut(result, aggregationResults.getMappedResults());
         return result;
     }
@@ -87,40 +86,43 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         }
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.match(midCriteria),
-                Aggregation.group("provice").count().as("populationCount"),
-                Aggregation.project("populationCount", "provice"));
-        AggregationResults<SegmentProvinceCountOut> aggregationResults =  mongoTemplate.aggregate(
-                aggregation, DataParty.class, SegmentProvinceCountOut.class);
-        List<SegmentProvinceCountOut> provinceCountOutList = aggregationResults.getMappedResults();
+                Aggregation.group("provice").count().as("populationCount")
+                        .first("provice").as("dimensionName"));
+        AggregationResults<SegmentDimensionCountOut> aggregationResults =  mongoTemplate.aggregate(
+                aggregation, DataParty.class, SegmentDimensionCountOut.class);
+        List<SegmentDimensionCountOut> provinceCountOutList = aggregationResults.getMappedResults();
 
         Aggregation areaAggregation = Aggregation.newAggregation(
                 Aggregation.match(midCriteria),
-                Aggregation.group("citizenship").count().as("populationCount"),
-                Aggregation.project("populationCount", "citizenship"));
-        AggregationResults<SegmentAreaCountOut> areaAggregationResults =  mongoTemplate.aggregate(
-                areaAggregation, DataParty.class, SegmentAreaCountOut.class);
-        List<SegmentAreaCountOut> areaCountOutList = areaAggregationResults.getMappedResults();
+                Aggregation.group("citizenship").count().as("populationCount")
+                        .first("citizenship").as("dimensionName"));
+        AggregationResults<SegmentDimensionCountOut> areaAggregationResults =  mongoTemplate.aggregate(
+                areaAggregation, DataParty.class, SegmentDimensionCountOut.class);
+        List<SegmentDimensionCountOut> areaCountOutList = areaAggregationResults.getMappedResults();
 
         // merge area and province result
         int chinaCount = 0;
         int foreignCount = 0;
         if (!CollectionUtils.isEmpty(areaCountOutList)) {
-            for (SegmentAreaCountOut tempSegmentAreaCountOut : areaCountOutList) {
-                String citizenship = tempSegmentAreaCountOut.getCitizenship();
+            for (SegmentDimensionCountOut tempSegmentAreaCountOut : areaCountOutList) {
+                String citizenship = tempSegmentAreaCountOut.getDimensionName();
+                Integer populationCount = tempSegmentAreaCountOut.getPopulationCount();
+                if (populationCount == null) {
+                    continue;
+                }
                 if (citizenship != null && ApiConstant.NATIONALITY_CHINA.equals(citizenship.trim())) {
-                    chinaCount++;
+                    chinaCount += populationCount.intValue();
                 } else {
-                    foreignCount++;
+                    foreignCount += populationCount.intValue();
                 }
             }
         }
 
-        if (CollectionUtils.isEmpty(provinceCountOutList)) {
-            provinceCountOutList = new ArrayList<>();
-        }
-        provinceCountOutList.add(0, new SegmentProvinceCountOut(ApiConstant.NATIONALITY_FOREIGN, foreignCount));
-        provinceCountOutList.add(0, new SegmentProvinceCountOut(ApiConstant.NATIONALITY_CHINA, chinaCount));
-        setBaseOut(result, provinceCountOutList);
+        List<SegmentDimensionCountOut> fullAreaCountList = new ArrayList<>(provinceCountOutList.size() + 2);
+        fullAreaCountList.add(new SegmentDimensionCountOut(ApiConstant.NATIONALITY_FOREIGN, foreignCount));
+        fullAreaCountList.add(new SegmentDimensionCountOut(ApiConstant.NATIONALITY_CHINA, chinaCount));
+        fullAreaCountList.addAll(provinceCountOutList);
+        setBaseOut(result, fullAreaCountList);
         return result;
     }
 
@@ -133,11 +135,20 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         }
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.match(midCriteria),
-                Aggregation.group("receiveCount").count().as("populationCount"),
-                Aggregation.project("populationCount", "receiveCount"));
-        AggregationResults<SegmentReceiveCountOut> aggregationResults =  mongoTemplate.aggregate(
-                aggregation, DataParty.class, SegmentReceiveCountOut.class);
-        setBaseOut(result, aggregationResults.getMappedResults());
+                Aggregation.group("receiveCount").count().as("populationCount")
+                        .first("receiveCount").as("dimensionName"));
+        AggregationResults<SegmentDimensionCountOut> aggregationResults =  mongoTemplate.aggregate(
+                aggregation, DataParty.class, SegmentDimensionCountOut.class);
+        List<SegmentDimensionCountOut> receiveCountList = aggregationResults.getMappedResults();
+        if (!CollectionUtils.isEmpty(receiveCountList)) {
+            for (SegmentDimensionCountOut tempSegmentDimensionCountOut : receiveCountList) {
+                String receiveCount = tempSegmentDimensionCountOut.getDimensionName();
+                if (!StringUtils.hasText(receiveCount)) {
+                    tempSegmentDimensionCountOut.setDimensionName("0");
+                }
+            }
+        }
+        setBaseOut(result, receiveCountList);
         return result;
     }
 

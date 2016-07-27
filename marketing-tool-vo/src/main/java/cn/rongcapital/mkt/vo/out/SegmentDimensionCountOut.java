@@ -5,25 +5,27 @@ import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * Created by ethan on 16/7/25.
  */
-public class SegmentProvinceCountOut {
+public class SegmentDimensionCountOut {
 
     @JsonProperty("dimension_name")
-    private String province;
+    private String dimensionName;
 
     @JsonProperty("population_count")
     private Integer populationCount;
 
-    public SegmentProvinceCountOut(String province, Integer populationCount) {
-        this.province = province;
+    public SegmentDimensionCountOut() {}
+
+    public SegmentDimensionCountOut(String dimensionName, Integer populationCount) {
+        this.dimensionName = dimensionName;
         this.populationCount = populationCount;
     }
 
-    public String getProvince() {
-        return province;
+    public String getDimensionName() {
+        return dimensionName;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setDimensionName(String dimensionName) {
+        this.dimensionName = dimensionName;
     }
 
     public Integer getPopulationCount() {

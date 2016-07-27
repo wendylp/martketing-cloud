@@ -137,8 +137,8 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
         if (!CollectionUtils.isEmpty(campaignActionSendPubList)) {
             for (CampaignActionSendPub sendPub : campaignActionSendPubList) {
                 CampaignContentOut contentOut = new CampaignContentOut();
-                contentOut.setContentName(ApiConstant.CAMPAIGN_CONTENT_WECHAT);
-                contentOut.setContentType(sendPub.getName());
+                contentOut.setContentType(ApiConstant.CAMPAIGN_CONTENT_WECHAT);
+                contentOut.setContentName(sendPub.getName());
                 contentList.add(contentOut);
 //                wechatAccounts.add(sendPub.getPubId());
             }
@@ -152,8 +152,8 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
         if (!CollectionUtils.isEmpty(campaignActionSendH5List)) {
             for (CampaignActionSendH5 sendH5 : campaignActionSendH5List) {
                 CampaignContentOut contentOut = new CampaignContentOut();
-                contentOut.setContentName(ApiConstant.CAMPAIGN_CONTENT_H5);
-                contentOut.setContentType(sendH5.getName());
+                contentOut.setContentType(ApiConstant.CAMPAIGN_CONTENT_H5);
+                contentOut.setContentName(sendH5.getName());
                 contentList.add(contentOut);
 //                wechatAccounts.add(sendH5.getPubId());
             }
@@ -167,8 +167,8 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
         if (!CollectionUtils.isEmpty(campaignActionSendPrivtList)) {
             for (CampaignActionSendPrivt sendPrivt : campaignActionSendPrivtList) {
                 CampaignContentOut contentOut = new CampaignContentOut();
-                contentOut.setContentName(ApiConstant.CAMPAIGN_CONTENT_PRIVATE_TEXT);
-                contentOut.setContentType(sendPrivt.getName());
+                contentOut.setContentType(ApiConstant.CAMPAIGN_CONTENT_PRIVATE_TEXT);
+                contentOut.setContentName(sendPrivt.getName());
                 contentList.add(contentOut);
             }
         }
