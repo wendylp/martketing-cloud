@@ -1,9 +1,12 @@
 package cn.rongcapital.mkt.service.impl;
 
+import static cn.rongcapital.mkt.common.enums.CampaignHeadStatusEnum.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +74,7 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
             }
         }
 
+        homePageCalendarDatas = filterCalendarList(homePageCalendarDatas);
         result.setCalendarData(homePageCalendarDatas);
         result.setToday(simpleDateFormat.format(new Date()));
 
@@ -86,6 +90,35 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
         endTime.set(endTime.get(Calendar.YEAR), endTime.get(Calendar.MONTH) + 1, 1, 0, 0, 0);
         startTime.set(Calendar.MILLISECOND, 0);
         endTime.set(Calendar.MILLISECOND, 0);
+    }
+
+    // 将数据按日期排序, 同一天有运行中与发布的数据, 优先显示运行中的数据
+    private List<HomePageCalendarData> filterCalendarList(List<HomePageCalendarData> homePageCalendarDatas) {
+        // 无数据则返回
+        if (CollectionUtils.isEmpty(homePageCalendarDatas)) {
+            return new ArrayList<>();
+        }
+
+        // 按日期排序
+        Map<String, HomePageCalendarData> resultMap = new HashMap<>();
+        for (HomePageCalendarData homePageCalendarData : homePageCalendarDatas) {
+            // 正在执行的数据优先显示
+            HomePageCalendarData tmpHomePageCalendarData = resultMap.get(homePageCalendarData.getActiveDay());
+            if (tmpHomePageCalendarData == null) {
+                resultMap.put(homePageCalendarData.getActiveDay(), homePageCalendarData);
+            } else if (tmpHomePageCalendarData != null
+                            && homePageCalendarData.getStatus() == CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS.getCode()) {
+                resultMap.remove(homePageCalendarData.getActiveDay());
+                resultMap.put(homePageCalendarData.getActiveDay(), homePageCalendarData);
+            }
+        }
+
+        Collection<HomePageCalendarData> finalResultCollection = resultMap.values();
+
+        homePageCalendarDatas = new ArrayList<>();
+        homePageCalendarDatas.addAll(finalResultCollection);
+
+        return homePageCalendarDatas;
     }
 
 }
