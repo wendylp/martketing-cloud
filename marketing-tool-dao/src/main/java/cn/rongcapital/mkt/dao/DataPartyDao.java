@@ -175,7 +175,7 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
     List<HomePageSourceGroupCount> selectSourceGroupCount();
     
     /**
-     * 获取所有文件接入与微信公众号的粉丝总量的和
+     * 未经过数据清洗的，从文件接入的数据量+微信接入的数据量的数据数量
      *
      * @return Integer
      */
