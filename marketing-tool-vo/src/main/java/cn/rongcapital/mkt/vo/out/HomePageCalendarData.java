@@ -7,7 +7,7 @@ public class HomePageCalendarData {
     private String activeDay;
 
     private int status;
-
+    
     private String statusDescription;
 
     @JsonProperty("active_day")

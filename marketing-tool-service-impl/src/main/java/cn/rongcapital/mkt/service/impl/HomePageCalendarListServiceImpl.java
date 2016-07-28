@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -75,7 +74,7 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
             }
         }
 
-        filterCalendarList(homePageCalendarDatas);
+        homePageCalendarDatas = filterCalendarList(homePageCalendarDatas);
         result.setCalendarData(homePageCalendarDatas);
         result.setToday(simpleDateFormat.format(new Date()));
 
@@ -94,30 +93,32 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
     }
 
     // 将数据按日期排序, 同一天有运行中与发布的数据, 优先显示运行中的数据
-    private void filterCalendarList(List<HomePageCalendarData> homePageCalendarDatas) {
+    private List<HomePageCalendarData> filterCalendarList(List<HomePageCalendarData> homePageCalendarDatas) {
         // 无数据则返回
         if (CollectionUtils.isEmpty(homePageCalendarDatas)) {
-            return;
+            return new ArrayList<>();
         }
 
         // 按日期排序
-        Map<String, HomePageCalendarData> sortMap = new TreeMap<>((String a, String b) -> a.compareTo(a));
+        Map<String, HomePageCalendarData> resultMap = new HashMap<>();
         for (HomePageCalendarData homePageCalendarData : homePageCalendarDatas) {
-            if (sortMap.get(homePageCalendarData.getActiveDay()) != null) {
-                // 正在执行的数据优先显示
-                if (sortMap.get(homePageCalendarData.getActiveDay()).getStatus() == CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS
-                                .getCode()) {
-                    continue;
-                }
-
-                sortMap.put(homePageCalendarData.getActiveDay(), homePageCalendarData);
+            // 正在执行的数据优先显示
+            HomePageCalendarData tmpHomePageCalendarData = resultMap.get(homePageCalendarData.getActiveDay());
+            if (tmpHomePageCalendarData == null) {
+                resultMap.put(homePageCalendarData.getActiveDay(), homePageCalendarData);
+            } else if (tmpHomePageCalendarData != null
+                            && homePageCalendarData.getStatus() == CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS.getCode()) {
+                resultMap.remove(homePageCalendarData.getActiveDay());
+                resultMap.put(homePageCalendarData.getActiveDay(), homePageCalendarData);
             }
         }
 
-        Collection<HomePageCalendarData> finalResultCollection = sortMap.values();
+        Collection<HomePageCalendarData> finalResultCollection = resultMap.values();
 
         homePageCalendarDatas = new ArrayList<>();
         homePageCalendarDatas.addAll(finalResultCollection);
+
+        return homePageCalendarDatas;
     }
 
 }
