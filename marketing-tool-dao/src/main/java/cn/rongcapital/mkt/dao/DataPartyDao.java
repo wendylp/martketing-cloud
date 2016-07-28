@@ -14,11 +14,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import cn.rongcapital.mkt.po.DataCountBySource;
 import org.apache.ibatis.annotations.Param;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
+import cn.rongcapital.mkt.po.DataCountBySource;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.HomePageMonthlyCount;
 import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
@@ -173,4 +173,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      * @return source与对应的count值
      */
     List<HomePageSourceGroupCount> selectSourceGroupCount();
+    
+    /**
+     * 获取所有文件接入与微信公众号的粉丝总量的和
+     *
+     * @return Integer
+     */
+    Integer selectTotalOriginalCount();
 }
