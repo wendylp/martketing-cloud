@@ -196,4 +196,10 @@
 		SET create_time = #{createTime}
 		WHERE wx_acct = #{wxAcct}
 	</update>
+
+	<select id="selectWxacctList" parameterType="cn.rongcapital.mkt.po.WechatRegister" resultType="java.lang.String">
+		SELECT wx_acct
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = #{status}
+	</select>
 </mapper>

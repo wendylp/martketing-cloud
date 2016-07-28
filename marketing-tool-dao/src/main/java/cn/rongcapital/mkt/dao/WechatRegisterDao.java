@@ -92,7 +92,13 @@ public interface WechatRegisterDao extends BaseDao<WechatRegister>{
 
 	/**
 	 * 根据微信账号跟新第二次授权时间
-	 * @param list
+	 * @param wechatRegister
 	 */
 	void updateConsignationTimeByWxacct(WechatRegister wechatRegister);
+
+	/**
+	 * 根据微信账号跟新第二次授权时间
+	 * @param wechatRegister
+	 */
+	List<String> selectWxacctList(WechatRegister wechatRegister);
 }
