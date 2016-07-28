@@ -52,7 +52,7 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 
         // 获取data_party的数据
         HomePageDataCountListOut dataPartyCountListObj = new HomePageDataCountListOut();
-        int dataPartyCount = dataPartyDao.selectListCount(null);
+        int dataPartyCount = dataPartyDao.selectTotalOriginalCount();
         dataPartyCountListObj.setId(DATA_PARTY.getId());
         dataPartyCountListObj.setCount(dataPartyCount);
         dataPartyCountListObj.setName(DATA_PARTY.getName());

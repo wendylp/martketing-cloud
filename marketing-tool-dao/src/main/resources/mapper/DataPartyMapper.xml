@@ -531,6 +531,40 @@
 		select count(id) as sourceCount , source from data_party group by source
 	]]>
 	</select>
-
+	
+	<select id="selectTotalOriginalCount" resultType="java.lang.Integer">
+	<![CDATA[
+	SELECT 
+	SUM(countId) as countId
+	FROM
+	    (SELECT 
+	        COUNT(id) AS countId
+	    FROM
+	        original_data_arch_point UNION ALL SELECT 
+	        COUNT(id) AS countId
+	    FROM
+	        original_data_customer_tags UNION ALL SELECT 
+	        COUNT(id) AS countId
+	    FROM
+	        original_data_login UNION ALL SELECT 
+	        COUNT(id) AS countId
+	    FROM
+	        original_data_member UNION ALL SELECT 
+	        COUNT(id) AS countId
+	    FROM
+	        original_data_payment UNION ALL SELECT 
+	        COUNT(id) AS countId
+	    FROM
+	        original_data_population UNION ALL SELECT 
+	        COUNT(id) AS countId
+	    FROM
+	        original_data_shopping UNION ALL SELECT 
+	        COUNT(id) AS countId
+	    FROM
+	        wechat_member
+	    WHERE
+	        pub_id IS NOT NULL) tmpCount
+	]]>
+	</select>
 
 </mapper>
