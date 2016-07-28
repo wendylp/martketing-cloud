@@ -138,8 +138,7 @@
             source=COALESCE(VALUES(source), source),
             last_login=COALESCE(VALUES(last_login), last_login),
             status=COALESCE(VALUES(status), status),
-            batch_id=COALESCE(VALUES(batch_id), batch_id),
-            md_type=COALESCE(VALUES(md_type), md_type)
+            batch_id=COALESCE(VALUES(batch_id), batch_id)
 	</insert>
 	
 	<!-- 返回插入的编号,在事务开启状态下有效 -->

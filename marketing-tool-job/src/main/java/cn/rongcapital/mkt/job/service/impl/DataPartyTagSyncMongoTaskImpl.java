@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -93,8 +94,7 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
 			String fieldName = f.getName();
 			Object fieldValueOfMongoObj = f.get(dp);
 			for(DataPartyTagRuleMap dataPartyTagRuleMap:dataPartyTagRuleMapList) {
-				if(mdType.intValue() == dataPartyTagRuleMap.getMdType().intValue() &&
-				   StringUtils.equalsIgnoreCase(dataPartyTagRuleMap.getFieldName(), fieldName)) {
+				if(StringUtils.equalsIgnoreCase(dataPartyTagRuleMap.getFieldName(), fieldName)) {
 					String columnValueOfRuleTable = dataPartyTagRuleMap.getFieldValue();
 				    boolean isMatchTagRule = isMatchTagRule(fieldValueOfMongoObj, columnValueOfRuleTable);
 					if(isMatchTagRule) {
