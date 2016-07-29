@@ -70,7 +70,7 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
         if(tagRuleMap == null || tagRuleMap.isEmpty()) {
             return;
         }
-		long totalRecord = (int)mongoTemplate.count(null, DataParty.class);
+		long totalRecord = mongoTemplate.count(null, DataParty.class);
         long totalPage = (totalRecord + pageSize -1) / pageSize;
 		for(int index = 0; index < totalPage; index++) {
 			List<DataParty> dataPartyList = mongoTemplate.find(
@@ -101,6 +101,9 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
         Map<String, List<TagRuleExtraVO>> tagRuleMap = new HashMap<>();
         for (DataPartyTagRuleMap tempDataPartyTagRuleMap : dataPartyTagRuleMapList) {
             String fileName = tempDataPartyTagRuleMap.getFieldName().toLowerCase();
+            if (fileName == null || fileName.trim().equals("")) {
+                continue;
+            }
             List<TagRuleExtraVO> tempRuleList = tagRuleMap.get(fileName);
             if (tempRuleList == null) {
                 tempRuleList = new ArrayList<>();
@@ -179,14 +182,16 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
         String fieldValueOfRule = dataPartyTagRuleMap.getFieldValue();
         Byte ruleType = dataPartyTagRuleMap.getRuleType();
         if (ApiConstant.DATA_PARTY_TAG_RULE_TYPE_COMMON == ruleType) {
-            if(dataValue instanceof String) {
-                return StringUtils.equals((String)dataValue, fieldValueOfRule);
-            } else if(dataValue instanceof Integer) {
-                int columnValue = (int)dataValue;
-                int columnValueFromRuleTable = Integer.parseInt(fieldValueOfRule);
-                return columnValue == columnValueFromRuleTable;
+            if(fieldValueOfRule == null) {
+                return dataValue == null;
+            } else if(dataValue == null) {
+                return false;
             } else {
-                return fieldValueOfRule.equals(dataValue);
+                if (dataValue instanceof String) {
+                    return fieldValueOfRule.equals(dataValue);
+                } else {
+                    return dataValue.toString().equals(fieldValueOfRule);
+                }
             }
         } else if(ApiConstant.DATA_PARTY_TAG_RULE_TYPE_JS == ruleType) {
             try {
