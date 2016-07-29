@@ -292,10 +292,10 @@
 			</if>
 		</foreach>
 		</if>
-		<if test="timeCondition != null">
+		<!-- <if test="timeCondition != null">
 			<![CDATA[AND trans_time > #{timeCondition}]]>
 		</if>
-		order by trans_time DESC
+		order by trans_time DESC -->
 		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
@@ -347,9 +347,9 @@
 			</if>
 		</foreach>
 		</if>
-		<if test="timeCondition != null">
+		<!-- <if test="timeCondition != null">
 			<![CDATA[AND trans_time > #{timeCondition}]]>
-		</if>
+		</if> -->
 	</select>
 
 	<select id="selectColumns" resultType="java.lang.String">
