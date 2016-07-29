@@ -1,5 +1,29 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.dao.DataPartyTagRuleMapDao;
+import cn.rongcapital.mkt.dao.TagDao;
+import cn.rongcapital.mkt.dao.TagGroupMapDao;
+import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.job.service.vo.TagRuleExtraVO;
+import cn.rongcapital.mkt.po.DataPartyTagRuleMap;
+import cn.rongcapital.mkt.po.TagGroupMap;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
+import cn.rongcapital.mkt.po.mongodb.Tag;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Service;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import javax.script.SimpleBindings;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,37 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import cn.rongcapital.mkt.common.enums.DataTypeEnum;
-import cn.rongcapital.mkt.job.service.vo.TagRuleExtraVO;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.stereotype.Service;
-
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.dao.DataPartyTagRuleMapDao;
-import cn.rongcapital.mkt.dao.TagDao;
-import cn.rongcapital.mkt.dao.TagGroupMapDao;
-import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.mongodb.DataPartyRepository;
-import cn.rongcapital.mkt.po.DataPartyTagRuleMap;
-import cn.rongcapital.mkt.po.TagGroupMap;
-import cn.rongcapital.mkt.po.mongodb.DataParty;
-import cn.rongcapital.mkt.po.mongodb.Tag;
-
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import javax.script.SimpleBindings;
 
 @Service
 public class DataPartyTagSyncMongoTaskImpl implements TaskService {
