@@ -22,6 +22,7 @@ import heracles.data.common.util.ReadWriteType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -88,28 +89,11 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.match(midCriteria),
                 Aggregation.group("provice").count().as("populationCount")
-                        .first("provice").as("dimensionName"));
+                        .first("provice").as("dimensionName"),
+                Aggregation.sort(Sort.Direction.DESC, "populationCount"));
         AggregationResults<SegmentDimensionCountOut> aggregationResults =  mongoTemplate.aggregate(
                 aggregation, DataParty.class, SegmentDimensionCountOut.class);
         List<SegmentDimensionCountOut> provinceCountOutList = aggregationResults.getMappedResults();
-        Collections.sort(provinceCountOutList, new Comparator<SegmentDimensionCountOut>() {
-            @Override
-            public int compare(SegmentDimensionCountOut o1, SegmentDimensionCountOut o2) {
-                Integer populationCount1 = o1.getPopulationCount();
-                Integer populationCount2 = o2.getPopulationCount();
-                if (populationCount1 != null && populationCount2 != null) {
-                    return populationCount1.compareTo(populationCount2);
-                } else {
-                    if (populationCount1 == null && populationCount2 != null){
-                        return -1;
-                    } else if (populationCount1 != null && populationCount2 == null){
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-            }
-        });
 
         Aggregation areaAggregation = Aggregation.newAggregation(
                 Aggregation.match(midCriteria),

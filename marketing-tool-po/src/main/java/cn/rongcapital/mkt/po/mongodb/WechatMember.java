@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.po.mongodb;
 
 import cn.rongcapital.mkt.common.util.GenderUtils;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -30,6 +31,7 @@ public class WechatMember implements Serializable{
 
     private String country;
 
+    @Field(value = "provice") // TODO 需要把从original到mongo整个数据链及DB修正拼写错误
     private String province;
 
     private String city;

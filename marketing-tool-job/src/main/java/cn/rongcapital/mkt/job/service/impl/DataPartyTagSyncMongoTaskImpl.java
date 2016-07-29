@@ -90,6 +90,22 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
                 tempRuleList = new ArrayList<>();
                 tagRuleMap.put(fileName, tempRuleList);
             }
+
+//            TagRuleExtraVO
+
+//            cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
+//            tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+//            tagOfMysqlT.setId(dataPartyTagRuleMap.getTagId());
+//            List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
+//            if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
+//                tagOfMongoDataParty.setTagName(tagOfMysqlList.get(0).getName());
+//            }
+//            TagGroupMap tagGroupMapT = new TagGroupMap();
+//            tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+//            tagGroupMapT.setTagId(dataPartyTagRuleMap.getTagId());
+//            List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
+
+
             tempRuleList.add(tempDataPartyTagRuleMap);
         }
 
@@ -112,30 +128,31 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
 		for(Field f:fields) {
 			f.setAccessible(true);
 			String fieldName = f.getName().toLowerCase();
-			Object dataValue = f.get(dp);
             List<DataPartyTagRuleMap> ruleList = tagRuleMap.get(fieldName);
+            if (CollectionUtils.isEmpty(ruleList)) {
+                continue;
+            }
+            Object dataValue = f.get(dp);
 			for(DataPartyTagRuleMap dataPartyTagRuleMap : ruleList) {
-				if(StringUtils.equalsIgnoreCase(dataPartyTagRuleMap.getFieldName(), fieldName)) {
-					if(isMatchTagRule(dataValue, dataPartyTagRuleMap)) {
-						Tag tagOfMongoDataParty = new Tag();
-						tagOfMongoDataParty.setTagId(dataPartyTagRuleMap.getTagId());
-						cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
-						tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-						tagOfMysqlT.setId(dataPartyTagRuleMap.getTagId());
-						List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
-						if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
-							tagOfMongoDataParty.setTagName(tagOfMysqlList.get(0).getName());
-						}
-						TagGroupMap tagGroupMapT = new TagGroupMap();
-						tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-						tagGroupMapT.setTagId(dataPartyTagRuleMap.getTagId());
-						List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
-						if(CollectionUtils.isNotEmpty(tagGroupMapList)) {
-							tagOfMongoDataParty.setTagGroupId(tagGroupMapList.get(0).getGroupId());
-						}
-						tagList.add(tagOfMongoDataParty);
-					}
-				}
+                if(isMatchTagRule(dataValue, dataPartyTagRuleMap)) {
+                    Tag tagOfMongoDataParty = new Tag();
+                    tagOfMongoDataParty.setTagId(dataPartyTagRuleMap.getTagId());
+                    cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
+                    tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                    tagOfMysqlT.setId(dataPartyTagRuleMap.getTagId());
+                    List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
+                    if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
+                        tagOfMongoDataParty.setTagName(tagOfMysqlList.get(0).getName());
+                    }
+                    TagGroupMap tagGroupMapT = new TagGroupMap();
+                    tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                    tagGroupMapT.setTagId(dataPartyTagRuleMap.getTagId());
+                    List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
+                    if(CollectionUtils.isNotEmpty(tagGroupMapList)) {
+                        tagOfMongoDataParty.setTagGroupId(tagGroupMapList.get(0).getGroupId());
+                    }
+                    tagList.add(tagOfMongoDataParty);
+                }
 			}
 		}
 		if(CollectionUtils.isNotEmpty(tagList)) {
