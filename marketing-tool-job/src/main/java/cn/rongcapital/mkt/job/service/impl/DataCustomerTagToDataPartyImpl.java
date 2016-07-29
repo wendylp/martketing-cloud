@@ -18,8 +18,6 @@ import java.util.List;
 @Service
 public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
 
-    private static String MD_TYPE = "2";
-
     @Autowired
     private DataCustomerTagsDao dataCustomerTagsDao;
 
@@ -48,7 +46,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
             dataParty.setMobile(dataObj.getMobile());
             dataParty.setMappingKeyid(dataObj.getMobile());
             dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-            dataParty.setMdType(Integer.parseInt(MD_TYPE));
+            dataParty.setMdType(MD_TYPE);
             dataParty.setSource(dataObj.getSource());
             dataParty.setBatchId(dataObj.getBatchId());
             dataPartyList.add(dataParty);

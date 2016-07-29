@@ -18,8 +18,6 @@ import java.util.List;
 @Service
 public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
 
-    private static String MD_TYPE = "3";
-
     @Autowired
     private DataArchPointDao dataArchPointDao;
 
@@ -47,7 +45,7 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
             dataParty.setMappingKeyid(dataObj.getMobile());
             dataParty.setMobile(dataObj.getMobile());
             dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-            dataParty.setMdType(Integer.parseInt(MD_TYPE));
+            dataParty.setMdType(MD_TYPE);
             dataParty.setSource(dataObj.getSource());
             dataParty.setBatchId(dataObj.getBatchId());
 
