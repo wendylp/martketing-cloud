@@ -57,7 +57,7 @@ public class HomePageCalendarPopServiceImpl implements HomePageCalendarPopServic
         Map<String, Date> paramMap = new HashMap<>();
         paramMap.put("startTime", startTime.getTime());
         paramMap.put("endTime", endTime.getTime());
-        List<CampaignHead> campaignHeads = campaignHeadDao.selectInProgressandPrepareStatusCampaignHead(paramMap);
+        List<CampaignHead> campaignHeads = campaignHeadDao.selectInProgressandPrepareStatusCampaignHeadLimitation(paramMap);
         List<HomePageCalendarPopData> content = new ArrayList<>();
         if (!CollectionUtils.isEmpty(campaignHeads)) {
             for (CampaignHead campaignHead : campaignHeads) {

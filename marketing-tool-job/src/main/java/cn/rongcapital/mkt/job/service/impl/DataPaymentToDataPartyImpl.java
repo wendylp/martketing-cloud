@@ -20,8 +20,6 @@ import java.util.List;
 @Service
 public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
 
-    private static String MD_TYPE = "6";
-
     @Autowired
     private DataPaymentDao dataPaymentDao;
 
@@ -50,7 +48,7 @@ public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Int
             dataParty.setMobile(dataObj.getMobile());
             dataParty.setMappingKeyid(dataObj.getMobile());
             dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-            dataParty.setMdType(Integer.parseInt(MD_TYPE));
+            dataParty.setMdType(MD_TYPE);
             dataParty.setSource(dataObj.getSource());
             dataParty.setBatchId(dataObj.getBatchId());
 

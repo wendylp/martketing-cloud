@@ -18,8 +18,6 @@ import java.util.List;
 @Service
 public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
 
-    private static String MD_TYPE = "1";
-
     @Autowired
     private DataPopulationDao dataPopulationDao;
 
@@ -47,7 +45,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
             DataParty dataParty=new DataParty();
             dataParty.setMappingKeyid(dataObj.getMobile());
             dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-            dataParty.setMdType(Integer.parseInt(MD_TYPE));
+            dataParty.setMdType(MD_TYPE);
             dataParty.setMobile(dataObj.getMobile());
             dataParty.setName(dataObj.getName());
             dataParty.setGender(dataObj.getGender());

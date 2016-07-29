@@ -15,12 +15,14 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCondition;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
+import cn.rongcapital.mkt.vo.out.SegmentAreaCountOut;
 import cn.rongcapital.mkt.vo.out.SegmentDimensionCountOut;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -87,7 +89,8 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.match(midCriteria),
                 Aggregation.group("provice").count().as("populationCount")
-                        .first("provice").as("dimensionName"));
+                        .first("provice").as("dimensionName"),
+                Aggregation.sort(Sort.Direction.DESC, "populationCount"));
         AggregationResults<SegmentDimensionCountOut> aggregationResults =  mongoTemplate.aggregate(
                 aggregation, DataParty.class, SegmentDimensionCountOut.class);
         List<SegmentDimensionCountOut> provinceCountOutList = aggregationResults.getMappedResults();
@@ -99,7 +102,6 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         AggregationResults<SegmentDimensionCountOut> areaAggregationResults =  mongoTemplate.aggregate(
                 areaAggregation, DataParty.class, SegmentDimensionCountOut.class);
         List<SegmentDimensionCountOut> areaCountOutList = areaAggregationResults.getMappedResults();
-
         // merge area and province result
         int chinaCount = 0;
         int foreignCount = 0;
@@ -118,11 +120,13 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
             }
         }
 
-        List<SegmentDimensionCountOut> fullAreaCountList = new ArrayList<>(provinceCountOutList.size() + 2);
-        fullAreaCountList.add(new SegmentDimensionCountOut(ApiConstant.NATIONALITY_FOREIGN, foreignCount));
-        fullAreaCountList.add(new SegmentDimensionCountOut(ApiConstant.NATIONALITY_CHINA, chinaCount));
-        fullAreaCountList.addAll(provinceCountOutList);
-        setBaseOut(result, fullAreaCountList);
+        SegmentAreaCountOut segmentAreaCountOut = new SegmentAreaCountOut();
+        segmentAreaCountOut.setChinaPopulationCount(chinaCount);
+        segmentAreaCountOut.setForeignPopulationCount(foreignCount);
+        segmentAreaCountOut.setProvinceList(provinceCountOutList);
+        result.setTotal(1);
+        result.getData().add(segmentAreaCountOut);
+
         return result;
     }
 

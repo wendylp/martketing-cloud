@@ -16,6 +16,8 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 
     protected int BATCH_SIZE = 500;
 
+    protected static Integer MD_TYPE = Integer.valueOf(0);
+
     @Autowired
     private DataPartyDao dataPartyDao;
 

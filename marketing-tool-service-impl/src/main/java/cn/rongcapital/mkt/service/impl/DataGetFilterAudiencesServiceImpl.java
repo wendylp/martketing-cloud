@@ -183,12 +183,13 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         MainDataVO mainDataVO = new MainDataVO();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> paramMap = new HashMap<>();
+        // 这段mappingKeyIds的逻辑绝对是效率上的作大死
+        List<String> mappingKeyIds = new ArrayList<>();
         contactIdList = filterContactId(contactIdList, dao);
         if (CollectionUtils.isEmpty(mdTypeList)) {
             mdTypeList = null;
         }
-        paramMap.put("startIndex", paramObj.getStartIndex());
-        paramMap.put("pageSize", paramObj.getPageSize());
+
         paramMap.put("contactIdList", contactIdList);
         paramMap.put("mdTypes", mdTypeList);
 
@@ -198,6 +199,50 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
         Date timeConditionDate = TaskConditionEnum.getEnumByCode(timeCondition).getTime();
         paramMap.put("timeCondition", timeConditionDate);
+        if (!CollectionUtils.isEmpty(mdTypeList)) {
+            for (Integer dataType : mdTypeList) {
+                List<String> tmpList = new ArrayList<String>();
+                if (dataType == DataTypeEnum.POPULATION.getCode()) {
+                    tmpList = dataPopulationDao.selectMappingKeyId(paramMap);
+                    if(!CollectionUtils.isEmpty(tmpList))
+                    mappingKeyIds.addAll(tmpList);
+                } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
+                    tmpList = dataCustomerTagsDao.selectMappingKeyId(paramMap);
+                    if(!CollectionUtils.isEmpty(tmpList))
+                    mappingKeyIds.addAll(tmpList);
+                } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
+                    tmpList= dataArchPointDao.selectMappingKeyId(paramMap);
+                    if(!CollectionUtils.isEmpty(tmpList))
+                    mappingKeyIds.addAll(tmpList);
+                } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
+                    tmpList = dataMemberDao.selectMappingKeyId(paramMap);
+                    if(!CollectionUtils.isEmpty(tmpList))
+                    mappingKeyIds.addAll(tmpList);
+                } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
+                    tmpList = dataLoginDao.selectMappingKeyId(paramMap);
+                    if(!CollectionUtils.isEmpty(tmpList))
+                    mappingKeyIds.addAll(tmpList);
+                } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
+                    tmpList = dataPaymentDao.selectMappingKeyId(paramMap);
+                    if(!CollectionUtils.isEmpty(tmpList))
+                    mappingKeyIds.addAll(tmpList);
+                } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
+                    tmpList = dataShoppingDao.selectMappingKeyId(paramMap);
+                    if(!CollectionUtils.isEmpty(tmpList))
+                    mappingKeyIds.addAll(tmpList);
+                } else {
+                    logger.error("传入错误的data type : {}", dataType);
+                }
+            }
+        }
+
+        if (!CollectionUtils.isEmpty(mdTypeList) && CollectionUtils.isEmpty(mappingKeyIds)) {
+            mappingKeyIds.add("-1");
+        }
+
+        paramMap.put("startIndex", paramObj.getStartIndex());
+        paramMap.put("pageSize", paramObj.getPageSize());
+        paramMap.put("mappingKeyIds", mappingKeyIds);
 
         List<T> dataList = dao.selectByBatchId(paramMap);
         Integer totalCount = dao.selectCountByBatchId(paramMap);

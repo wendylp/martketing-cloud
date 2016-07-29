@@ -2,7 +2,9 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import org.apache.commons.collections4.CollectionUtils;
@@ -32,47 +34,82 @@ import cn.rongcapital.mkt.po.mongodb.Tag;
 @Service
 public class DataPartyTagSyncMongoTaskImpl implements TaskService {
 	
-	private static Logger logger = LoggerFactory.getLogger(DataPartyTagSyncMongoTaskImpl.class);	
+	private static Logger logger = LoggerFactory.getLogger(DataPartyTagSyncMongoTaskImpl.class);
+
 	@Autowired
 	private TagGroupMapDao tagGroupMapDao;
+
 	@Autowired
 	private DataPartyTagRuleMapDao dataPartyTagRuleMapDao;
+
 	@Autowired
 	private TagDao tagDao;
+
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	@Autowired
-	private DataPartyRepository dataPartyRepository;
+
 	private static final int pageSize = 100;
 	@Override
 	public void task(Integer taskId) {
-		int totalRecord = (int)mongoTemplate.count(null, DataParty.class);
-		int totalPage = (totalRecord + pageSize -1) / pageSize;
+        Map<String, List<DataPartyTagRuleMap>> tagRuleMap = getDataPartyTagRuleMap();
+        if(tagRuleMap == null || tagRuleMap.isEmpty()) {
+            return;
+        }
+		long totalRecord = (int)mongoTemplate.count(null, DataParty.class);
+        long totalPage = (totalRecord + pageSize -1) / pageSize;
 		for(int index = 0; index < totalPage; index++) {
-			List<DataParty> dataPartyList = getDataPartyList(index,pageSize);
+			List<DataParty> dataPartyList = mongoTemplate.find(
+                    new Query().skip(index * pageSize).limit(pageSize), DataParty.class);
 			if(CollectionUtils.isEmpty(dataPartyList)) {
 				break;
 			}
-			List<DataPartyTagRuleMap> dataPartyTagRuleMapList = getDataPartyTagRuleMap();
-			if(CollectionUtils.isNotEmpty(dataPartyTagRuleMapList)) {
-				for(DataParty dp:dataPartyList) {
-					try {
-						setTagToMongoDataParty(dp,dataPartyTagRuleMapList);
-					} catch (Exception e) {
-						logger.error(e.getMessage(),e);
-					}
-				}
-			}
+            for(DataParty dp : dataPartyList) {
+                try {
+                    setTagToMongoDataParty(dp, tagRuleMap);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(),e);
+                }
+            }
 		}
 	}
 	
-	private List<DataPartyTagRuleMap> getDataPartyTagRuleMap() {
+	private Map<String, List<DataPartyTagRuleMap>> getDataPartyTagRuleMap() {
 		DataPartyTagRuleMap dataPartyTagRuleMapT = new DataPartyTagRuleMap();
 		dataPartyTagRuleMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		int count = dataPartyTagRuleMapDao.selectListCount(dataPartyTagRuleMapT);
-		dataPartyTagRuleMapT.setPageSize(count);
+        dataPartyTagRuleMapT.setStartIndex(null);
+        dataPartyTagRuleMapT.setPageSize(null);
 		List<DataPartyTagRuleMap> dataPartyTagRuleMapList = dataPartyTagRuleMapDao.selectList(dataPartyTagRuleMapT);
-		return dataPartyTagRuleMapList;
+        if (CollectionUtils.isEmpty(dataPartyTagRuleMapList)) {
+            return null;
+        }
+        Map<String, List<DataPartyTagRuleMap>> tagRuleMap = new HashMap<>();
+        for (DataPartyTagRuleMap tempDataPartyTagRuleMap : dataPartyTagRuleMapList) {
+            String fileName = tempDataPartyTagRuleMap.getFieldName().toLowerCase();
+            List<DataPartyTagRuleMap> tempRuleList = tagRuleMap.get(fileName);
+            if (tempRuleList == null) {
+                tempRuleList = new ArrayList<>();
+                tagRuleMap.put(fileName, tempRuleList);
+            }
+
+//            TagRuleExtraVO
+
+//            cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
+//            tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+//            tagOfMysqlT.setId(dataPartyTagRuleMap.getTagId());
+//            List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
+//            if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
+//                tagOfMongoDataParty.setTagName(tagOfMysqlList.get(0).getName());
+//            }
+//            TagGroupMap tagGroupMapT = new TagGroupMap();
+//            tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+//            tagGroupMapT.setTagId(dataPartyTagRuleMap.getTagId());
+//            List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
+
+
+            tempRuleList.add(tempDataPartyTagRuleMap);
+        }
+
+		return tagRuleMap;
 	}
 
 	/**
@@ -81,72 +118,63 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
 	 * @throws  
 	 * @throws IllegalArgumentException 
 	 */
-	private void setTagToMongoDataParty(DataParty dp,List<DataPartyTagRuleMap> dataPartyTagRuleMapList) throws Exception {
-		Integer mdType = dp.getMdType();
+	private void setTagToMongoDataParty(DataParty dp, Map<String, List<DataPartyTagRuleMap>> tagRuleMap) throws Exception {
 		Integer mid = dp.getMid();
-		if(null == mdType || mid== null) {
+		if(mid == null) {
 			return;
 		}
 		Field fields[] = DataParty.class.getDeclaredFields();
 		List<Tag> tagList = new ArrayList<Tag>();
 		for(Field f:fields) {
 			f.setAccessible(true);
-			String fieldName = f.getName();
-			Object fieldValueOfMongoObj = f.get(dp);
-			for(DataPartyTagRuleMap dataPartyTagRuleMap:dataPartyTagRuleMapList) {
-				if(StringUtils.equalsIgnoreCase(dataPartyTagRuleMap.getFieldName(), fieldName)) {
-					String columnValueOfRuleTable = dataPartyTagRuleMap.getFieldValue();
-				    boolean isMatchTagRule = isMatchTagRule(fieldValueOfMongoObj, columnValueOfRuleTable);
-					if(isMatchTagRule) {
-						Tag tagOfMongoDataParty = new Tag();
-						tagOfMongoDataParty.setTagId(dataPartyTagRuleMap.getTagId());
-						cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
-						tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-						tagOfMysqlT.setId(dataPartyTagRuleMap.getTagId());
-						List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
-						if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
-							tagOfMongoDataParty.setTagName(tagOfMysqlList.get(0).getName());
-						}
-						TagGroupMap tagGroupMapT = new TagGroupMap();
-						tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-						tagGroupMapT.setTagId(dataPartyTagRuleMap.getTagId());
-						List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
-						if(CollectionUtils.isNotEmpty(tagGroupMapList)) {
-							tagOfMongoDataParty.setTagGroupId(tagGroupMapList.get(0).getGroupId());
-						}
-						tagList.add(tagOfMongoDataParty);
-					}
-				}
+			String fieldName = f.getName().toLowerCase();
+            List<DataPartyTagRuleMap> ruleList = tagRuleMap.get(fieldName);
+            if (CollectionUtils.isEmpty(ruleList)) {
+                continue;
+            }
+            Object dataValue = f.get(dp);
+			for(DataPartyTagRuleMap dataPartyTagRuleMap : ruleList) {
+                if(isMatchTagRule(dataValue, dataPartyTagRuleMap)) {
+                    Tag tagOfMongoDataParty = new Tag();
+                    tagOfMongoDataParty.setTagId(dataPartyTagRuleMap.getTagId());
+                    cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
+                    tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                    tagOfMysqlT.setId(dataPartyTagRuleMap.getTagId());
+                    List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
+                    if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
+                        tagOfMongoDataParty.setTagName(tagOfMysqlList.get(0).getName());
+                    }
+                    TagGroupMap tagGroupMapT = new TagGroupMap();
+                    tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                    tagGroupMapT.setTagId(dataPartyTagRuleMap.getTagId());
+                    List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
+                    if(CollectionUtils.isNotEmpty(tagGroupMapList)) {
+                        tagOfMongoDataParty.setTagGroupId(tagGroupMapList.get(0).getGroupId());
+                    }
+                    tagList.add(tagOfMongoDataParty);
+                }
 			}
 		}
 		if(CollectionUtils.isNotEmpty(tagList)) {
 			Update update = new Update().set("tagList", tagList);
 			Criteria criteria = Criteria.where("mid").is(mid);
-//			DataParty dpp = 
-			mongoTemplate.findAndModify(new Query(criteria),update,DataParty.class);
-//			System.out.println(JSON.toJSONString(dpp));
+			mongoTemplate.updateMulti(new Query(criteria),update,DataParty.class);
 		}
 	}
 	
-	private boolean isMatchTagRule(Object fieldValueOfMongoObj,String columnValueOfRuleTable) {
+	private boolean isMatchTagRule(Object fieldValueOfMongoObj, DataPartyTagRuleMap dataPartyTagRuleMap) {
+        String fieldValueOfRule = dataPartyTagRuleMap.getFieldValue();
+        Byte ruleType = dataPartyTagRuleMap.getRuleType();
 		boolean res = false;
 		if(fieldValueOfMongoObj instanceof String) {
-			res = StringUtils.equals((String)fieldValueOfMongoObj, columnValueOfRuleTable);
+			res = StringUtils.equals((String)fieldValueOfMongoObj, fieldValueOfRule);
 		}
 		if(fieldValueOfMongoObj instanceof Integer) {
 			int columnValue = (int)fieldValueOfMongoObj;
-			int columnValueFromRuleTable = Integer.parseInt(columnValueOfRuleTable);
+			int columnValueFromRuleTable = Integer.parseInt(fieldValueOfRule);
 			res = columnValue == columnValueFromRuleTable;
 		}
 		return res;
 	}
 	
-	private List<DataParty> getDataPartyList(int index,int pageSize) {
-        Page<DataParty> dataPartyPageList = dataPartyRepository.findAll(new PageRequest(index,pageSize));
-        List<DataParty> dataPartyList = new ArrayList<DataParty>();
-        for(DataParty dp:dataPartyPageList) {
-        	dataPartyList.add(dp);
-        }
-		return dataPartyList;
-	}
 }

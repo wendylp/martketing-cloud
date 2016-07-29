@@ -292,15 +292,43 @@
 			</if>
 		</foreach>
 		</if>
-		<if test="timeCondition != null">
+		<!-- <if test="timeCondition != null">
 			<![CDATA[AND trans_time > #{timeCondition}]]>
 		</if>
-		order by trans_time DESC
+		order by trans_time DESC -->
 		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
 	</select>
-
+	
+	<select id="selectMappingKeyId" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[SELECT]]>
+		mobile
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<!-- <if test="timeCondition != null">
+		这个值在数据库里根本都没被赋值.
+			<![CDATA[AND trans_time > #{timeCondition}]]>
+		</if>
+		order by trans_time DESC -->
+		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
+			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
+		</if>
+	</select>
+	
 	<select id="selectCountByBatchId" parameterType="java.util.Map" resultType="java.lang.Integer">
 		<![CDATA[SELECT]]>
 		COUNT(1)
@@ -319,9 +347,9 @@
 			</if>
 		</foreach>
 		</if>
-		<if test="timeCondition != null">
+		<!-- <if test="timeCondition != null">
 			<![CDATA[AND trans_time > #{timeCondition}]]>
-		</if>
+		</if> -->
 	</select>
 
 	<select id="selectColumns" resultType="java.lang.String">

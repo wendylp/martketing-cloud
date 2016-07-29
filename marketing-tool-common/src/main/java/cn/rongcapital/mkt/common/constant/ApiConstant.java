@@ -202,4 +202,7 @@ public class ApiConstant {
     public static final String WECHAT_TYPE_SUB = "[订阅号]";
     public static final String WECHAT_TYPE_PRI = "[个人号]";
 
+	public static final Byte DATA_PARTY_TAG_RULE_TYPE_COMMON = 0;
+	public static final Byte DATA_PARTY_TAG_RULE_TYPE_JS = 1;
+
 }
