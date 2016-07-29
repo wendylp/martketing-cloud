@@ -81,4 +81,11 @@ public interface CampaignHeadDao extends BaseDao<CampaignHead>{
      * @return list
      */
 	List<CampaignHead> selectInProgressandPrepareStatusCampaignHead(Map<String, Date> paramMap);
+	
+	/**
+     * 查询正在进行中,待进行的活动.先进行中（按时间先后）、后待进行
+     * @param paramMap
+     * @return list
+     */
+    List<CampaignHead> selectInProgressandPrepareStatusCampaignHeadLimitation(Map<String, Date> paramMap);
 }
