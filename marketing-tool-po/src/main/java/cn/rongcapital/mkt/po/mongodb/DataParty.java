@@ -87,6 +87,8 @@ public class DataParty implements Serializable {
 
 	private Integer receiveCount;
 
+	private Integer totalCount;
+
 	public String getId() {
 		return id;
 	}
@@ -341,5 +343,13 @@ public class DataParty implements Serializable {
 
 	public void setReceiveCount(Integer receiveCount) {
 		this.receiveCount = receiveCount;
+	}
+
+	public Integer getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(Integer totalCount) {
+		this.totalCount = totalCount;
 	}
 }
