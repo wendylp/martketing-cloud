@@ -180,4 +180,5 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      * @return Integer
      */
     Integer selectTotalOriginalCount();
+    
 }

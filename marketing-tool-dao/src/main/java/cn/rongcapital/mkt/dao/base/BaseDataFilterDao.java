@@ -31,4 +31,18 @@ public interface BaseDataFilterDao<T> {
      * @return: List<String>
      */
     String selectMobileById(Integer id);
+
+    /**
+     * @功能简述 : 根据Mapping KeyId以及相关条件查询数据
+     * @param: Map paramMap
+     * @return: List<T>
+     */
+    List<T> selectByMappingKeyId(Map<String, Object> paramMap);
+    
+    /**
+     * @功能简述 : 根据条件查询对应的mappingKeyId
+     * @param: Map paramMap
+     * @return: List<String>
+     */
+    List<String> selectMappingKeyId(Map<String, Object> paramMap);
 }

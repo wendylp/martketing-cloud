@@ -365,7 +365,7 @@
 	</select>
 	
 	<!-- 根据taskId查询相关数据 -->
-	<select id="selectByBatchId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataParty">
+	<!-- <select id="selectByBatchId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataParty">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -391,6 +391,35 @@
 		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
+	</select> -->
+	
+	<!-- 根据MappingKeyId查询相关数据 -->
+	<select id="selectByBatchId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataParty">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="mappingKeyIds != null">
+			AND mapping_keyid IN
+			<foreach collection="mappingKeyIds" item="mappingKeyId" index="index" separator="," open="(" close=")">
+				#{mappingKeyId}
+			</foreach>
+		</if>
+		
+		<if test="timeCondition != null">
+			AND create_time > #{timeCondition}
+		</if>
+		order by create_time DESC
+		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
+			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
+		</if>
 	</select>
 	
 	<select id="selectCountByBatchId" parameterType="java.util.Map" resultType="java.lang.Integer">
@@ -405,10 +434,10 @@
 			</if>
 		</foreach>
 		</if>
-		<if test="mdTypes != null">
-			AND md_type IN
-			<foreach collection="mdTypes" item="dataType" index="index" separator="," open="(" close=")">
-				#{dataType}
+		<if test="mappingKeyIds != null">
+			AND mapping_keyid IN
+			<foreach collection="mappingKeyIds" item="mappingKeyId" index="index" separator="," open="(" close=")">
+				#{mappingKeyId}
 			</foreach>
 		</if>
 		<if test="timeCondition != null">
