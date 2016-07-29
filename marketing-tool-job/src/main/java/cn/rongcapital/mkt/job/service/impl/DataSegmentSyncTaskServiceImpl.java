@@ -56,9 +56,9 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 			return;
 		}
 		for(SegmentationHead segmentationHead:segmentationHeadList) {
-			if(segmentationHead.getPublishStatus() == ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH) {
-				continue;//未发布的细分不进行同步
-			}
+//			if(segmentationHead.getPublishStatus() == ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH) {
+//				continue;//未发布的细分不进行同步
+//			}
 			
 			//mongoTemplate.findAllAndRemove(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
 //			List<Segment> lastSegmentList = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())),Segment.class);
