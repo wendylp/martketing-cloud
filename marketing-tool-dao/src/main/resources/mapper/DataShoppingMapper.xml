@@ -319,10 +319,11 @@
 			</if>
 		</foreach>
 		</if>
-		<if test="timeCondition != null">
-			<![CDATA[AND create_time > #{timeCondition}]]>
+		<!-- <if test="timeCondition != null">
+		这个值在数据库里根本都没被赋值.
+			<![CDATA[AND trans_time > #{timeCondition}]]>
 		</if>
-		order by create_time DESC
+		order by trans_time DESC -->
 		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
