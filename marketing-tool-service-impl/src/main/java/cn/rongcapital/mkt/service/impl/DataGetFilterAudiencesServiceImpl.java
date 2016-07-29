@@ -235,7 +235,11 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                 }
             }
         }
-        
+
+        if (!CollectionUtils.isEmpty(mdTypeList) && CollectionUtils.isEmpty(mappingKeyIds)) {
+            mappingKeyIds.add("-1");
+        }
+
         paramMap.put("startIndex", paramObj.getStartIndex());
         paramMap.put("pageSize", paramObj.getPageSize());
         paramMap.put("mappingKeyIds", mappingKeyIds);
