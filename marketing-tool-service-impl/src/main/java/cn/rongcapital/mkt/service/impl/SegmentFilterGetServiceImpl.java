@@ -15,6 +15,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCondition;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
+import cn.rongcapital.mkt.vo.out.SegmentAreaCountOut;
 import cn.rongcapital.mkt.vo.out.SegmentDimensionCountOut;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
@@ -91,6 +92,24 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         AggregationResults<SegmentDimensionCountOut> aggregationResults =  mongoTemplate.aggregate(
                 aggregation, DataParty.class, SegmentDimensionCountOut.class);
         List<SegmentDimensionCountOut> provinceCountOutList = aggregationResults.getMappedResults();
+        Collections.sort(provinceCountOutList, new Comparator<SegmentDimensionCountOut>() {
+            @Override
+            public int compare(SegmentDimensionCountOut o1, SegmentDimensionCountOut o2) {
+                Integer populationCount1 = o1.getPopulationCount();
+                Integer populationCount2 = o2.getPopulationCount();
+                if (populationCount1 != null && populationCount2 != null) {
+                    return populationCount1.compareTo(populationCount2);
+                } else {
+                    if (populationCount1 == null && populationCount2 != null){
+                        return -1;
+                    } else if (populationCount1 != null && populationCount2 == null){
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+        });
 
         Aggregation areaAggregation = Aggregation.newAggregation(
                 Aggregation.match(midCriteria),
@@ -99,7 +118,6 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         AggregationResults<SegmentDimensionCountOut> areaAggregationResults =  mongoTemplate.aggregate(
                 areaAggregation, DataParty.class, SegmentDimensionCountOut.class);
         List<SegmentDimensionCountOut> areaCountOutList = areaAggregationResults.getMappedResults();
-
         // merge area and province result
         int chinaCount = 0;
         int foreignCount = 0;
@@ -118,11 +136,13 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
             }
         }
 
-        List<SegmentDimensionCountOut> fullAreaCountList = new ArrayList<>(provinceCountOutList.size() + 2);
-        fullAreaCountList.add(new SegmentDimensionCountOut(ApiConstant.NATIONALITY_FOREIGN, foreignCount));
-        fullAreaCountList.add(new SegmentDimensionCountOut(ApiConstant.NATIONALITY_CHINA, chinaCount));
-        fullAreaCountList.addAll(provinceCountOutList);
-        setBaseOut(result, fullAreaCountList);
+        SegmentAreaCountOut segmentAreaCountOut = new SegmentAreaCountOut();
+        segmentAreaCountOut.setChinaPopulationCount(chinaCount);
+        segmentAreaCountOut.setForeignPopulationCount(foreignCount);
+        segmentAreaCountOut.setProvinceList(provinceCountOutList);
+        result.setTotal(1);
+        result.getData().add(segmentAreaCountOut);
+
         return result;
     }
 

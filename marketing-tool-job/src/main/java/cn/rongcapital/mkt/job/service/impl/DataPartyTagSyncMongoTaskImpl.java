@@ -85,6 +85,12 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
         Map<String, List<DataPartyTagRuleMap>> tagRuleMap = new HashMap<>();
         for (DataPartyTagRuleMap tempDataPartyTagRuleMap : dataPartyTagRuleMapList) {
             String fileName = tempDataPartyTagRuleMap.getFieldName().toLowerCase();
+            List<DataPartyTagRuleMap> tempRuleList = tagRuleMap.get(fileName);
+            if (tempRuleList == null) {
+                tempRuleList = new ArrayList<>();
+                tagRuleMap.put(fileName, tempRuleList);
+            }
+            tempRuleList.add(tempDataPartyTagRuleMap);
         }
 
 		return tagRuleMap;
@@ -105,7 +111,7 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
 		List<Tag> tagList = new ArrayList<Tag>();
 		for(Field f:fields) {
 			f.setAccessible(true);
-			String fieldName = f.getName();
+			String fieldName = f.getName().toLowerCase();
 			Object dataValue = f.get(dp);
             List<DataPartyTagRuleMap> ruleList = tagRuleMap.get(fieldName);
 			for(DataPartyTagRuleMap dataPartyTagRuleMap : ruleList) {
