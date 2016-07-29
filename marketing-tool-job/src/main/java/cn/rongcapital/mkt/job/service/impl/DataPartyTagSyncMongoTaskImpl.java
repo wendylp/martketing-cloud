@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
+import cn.rongcapital.mkt.job.service.vo.TagRuleExtraVO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,6 +34,11 @@ import cn.rongcapital.mkt.po.TagGroupMap;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Tag;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import javax.script.SimpleBindings;
+
 @Service
 public class DataPartyTagSyncMongoTaskImpl implements TaskService {
 	
@@ -49,9 +57,16 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
 	private MongoTemplate mongoTemplate;
 
 	private static final int pageSize = 100;
+
+    private ScriptEngine nashornEngine = new ScriptEngineManager().getEngineByName("nashorn");
+
+    private Lock lock = new ReentrantLock();
+
+    private String JS_ENGINE_DATA_FIELD = "dataValue";
+
 	@Override
 	public void task(Integer taskId) {
-        Map<String, List<DataPartyTagRuleMap>> tagRuleMap = getDataPartyTagRuleMap();
+        Map<String, List<TagRuleExtraVO>> tagRuleMap = getDataPartyTagRuleMap();
         if(tagRuleMap == null || tagRuleMap.isEmpty()) {
             return;
         }
@@ -73,7 +88,7 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
 		}
 	}
 	
-	private Map<String, List<DataPartyTagRuleMap>> getDataPartyTagRuleMap() {
+	private Map<String, List<TagRuleExtraVO>> getDataPartyTagRuleMap() {
 		DataPartyTagRuleMap dataPartyTagRuleMapT = new DataPartyTagRuleMap();
 		dataPartyTagRuleMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         dataPartyTagRuleMapT.setStartIndex(null);
@@ -82,31 +97,43 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
         if (CollectionUtils.isEmpty(dataPartyTagRuleMapList)) {
             return null;
         }
-        Map<String, List<DataPartyTagRuleMap>> tagRuleMap = new HashMap<>();
+        Map<String, Tag> tagInfoMap = new HashMap<>();
+        Map<String, List<TagRuleExtraVO>> tagRuleMap = new HashMap<>();
         for (DataPartyTagRuleMap tempDataPartyTagRuleMap : dataPartyTagRuleMapList) {
             String fileName = tempDataPartyTagRuleMap.getFieldName().toLowerCase();
-            List<DataPartyTagRuleMap> tempRuleList = tagRuleMap.get(fileName);
+            List<TagRuleExtraVO> tempRuleList = tagRuleMap.get(fileName);
             if (tempRuleList == null) {
                 tempRuleList = new ArrayList<>();
                 tagRuleMap.put(fileName, tempRuleList);
             }
+            Integer tagId = tempDataPartyTagRuleMap.getTagId();
+            Tag tagInfo = tagInfoMap.get(tagId);
+            if (tagInfo == null) {
+                tagInfo = new Tag();
+                tagInfo.setTagId(tagId);
 
-//            TagRuleExtraVO
+                cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
+                tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                tagOfMysqlT.setId(tagId);
+                List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
+                if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
+                    tagInfo.setTagName(tagOfMysqlList.get(0).getName());
+                }
+                TagGroupMap tagGroupMapT = new TagGroupMap();
+                tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                tagGroupMapT.setTagId(tagId);
+                List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
+                if (CollectionUtils.isNotEmpty(tagGroupMapList)) {
+                    tagInfo.setTagGroupId(tagGroupMapList.get(0).getGroupId());
+                }
 
-//            cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
-//            tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-//            tagOfMysqlT.setId(dataPartyTagRuleMap.getTagId());
-//            List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
-//            if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
-//                tagOfMongoDataParty.setTagName(tagOfMysqlList.get(0).getName());
-//            }
-//            TagGroupMap tagGroupMapT = new TagGroupMap();
-//            tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-//            tagGroupMapT.setTagId(dataPartyTagRuleMap.getTagId());
-//            List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
+                tagInfoMap.put(tagId.toString(), tagInfo);
+            }
 
-
-            tempRuleList.add(tempDataPartyTagRuleMap);
+            TagRuleExtraVO tagRuleExtraVO = new TagRuleExtraVO();
+            tagRuleExtraVO.setRuleMap(tempDataPartyTagRuleMap);
+            tagRuleExtraVO.setTag(tagInfo);
+            tempRuleList.add(tagRuleExtraVO);
         }
 
 		return tagRuleMap;
@@ -118,40 +145,26 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
 	 * @throws  
 	 * @throws IllegalArgumentException 
 	 */
-	private void setTagToMongoDataParty(DataParty dp, Map<String, List<DataPartyTagRuleMap>> tagRuleMap) throws Exception {
+	private void setTagToMongoDataParty(DataParty dp, Map<String, List<TagRuleExtraVO>> tagRuleMap) throws Exception {
 		Integer mid = dp.getMid();
 		if(mid == null) {
 			return;
 		}
 		Field fields[] = DataParty.class.getDeclaredFields();
 		List<Tag> tagList = new ArrayList<Tag>();
-		for(Field f:fields) {
+		for(Field f : fields) {
 			f.setAccessible(true);
 			String fieldName = f.getName().toLowerCase();
-            List<DataPartyTagRuleMap> ruleList = tagRuleMap.get(fieldName);
+            List<TagRuleExtraVO> ruleList = tagRuleMap.get(fieldName);
             if (CollectionUtils.isEmpty(ruleList)) {
                 continue;
             }
             Object dataValue = f.get(dp);
-			for(DataPartyTagRuleMap dataPartyTagRuleMap : ruleList) {
+			for(TagRuleExtraVO tagRuleExtraVO : ruleList) {
+                DataPartyTagRuleMap dataPartyTagRuleMap = tagRuleExtraVO.getRuleMap();
+                Tag tag = tagRuleExtraVO.getTag();
                 if(isMatchTagRule(dataValue, dataPartyTagRuleMap)) {
-                    Tag tagOfMongoDataParty = new Tag();
-                    tagOfMongoDataParty.setTagId(dataPartyTagRuleMap.getTagId());
-                    cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
-                    tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-                    tagOfMysqlT.setId(dataPartyTagRuleMap.getTagId());
-                    List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
-                    if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
-                        tagOfMongoDataParty.setTagName(tagOfMysqlList.get(0).getName());
-                    }
-                    TagGroupMap tagGroupMapT = new TagGroupMap();
-                    tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-                    tagGroupMapT.setTagId(dataPartyTagRuleMap.getTagId());
-                    List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
-                    if(CollectionUtils.isNotEmpty(tagGroupMapList)) {
-                        tagOfMongoDataParty.setTagGroupId(tagGroupMapList.get(0).getGroupId());
-                    }
-                    tagList.add(tagOfMongoDataParty);
+                    tagList.add(tag);
                 }
 			}
 		}
@@ -162,19 +175,34 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
 		}
 	}
 	
-	private boolean isMatchTagRule(Object fieldValueOfMongoObj, DataPartyTagRuleMap dataPartyTagRuleMap) {
+	private boolean isMatchTagRule(Object dataValue, DataPartyTagRuleMap dataPartyTagRuleMap) {
         String fieldValueOfRule = dataPartyTagRuleMap.getFieldValue();
         Byte ruleType = dataPartyTagRuleMap.getRuleType();
-		boolean res = false;
-		if(fieldValueOfMongoObj instanceof String) {
-			res = StringUtils.equals((String)fieldValueOfMongoObj, fieldValueOfRule);
-		}
-		if(fieldValueOfMongoObj instanceof Integer) {
-			int columnValue = (int)fieldValueOfMongoObj;
-			int columnValueFromRuleTable = Integer.parseInt(fieldValueOfRule);
-			res = columnValue == columnValueFromRuleTable;
-		}
-		return res;
+        if (ApiConstant.DATA_PARTY_TAG_RULE_TYPE_COMMON == ruleType) {
+            if(dataValue instanceof String) {
+                return StringUtils.equals((String)dataValue, fieldValueOfRule);
+            } else if(dataValue instanceof Integer) {
+                int columnValue = (int)dataValue;
+                int columnValueFromRuleTable = Integer.parseInt(fieldValueOfRule);
+                return columnValue == columnValueFromRuleTable;
+            } else {
+                return fieldValueOfRule.equals(dataValue);
+            }
+        } else if(ApiConstant.DATA_PARTY_TAG_RULE_TYPE_JS == ruleType) {
+            try {
+                lock.lock();
+                SimpleBindings bindings = new SimpleBindings();
+                bindings.put(JS_ENGINE_DATA_FIELD, dataValue);
+                return (boolean) nashornEngine.eval(fieldValueOfRule, bindings);
+            } catch (ScriptException e) {
+                logger.error("parse tag rule error!", e);
+                return false;
+            } finally {
+                lock.unlock();
+            }
+        } else {
+            return false;
+        }
 	}
 	
 }

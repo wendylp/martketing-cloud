@@ -1,7 +1,7 @@
 package cn.rongcapital.mkt.job.service.vo;
 
 import cn.rongcapital.mkt.po.DataPartyTagRuleMap;
-import cn.rongcapital.mkt.po.Tag;
+import cn.rongcapital.mkt.po.mongodb.Tag;
 
 /**
  * Created by ethan on 16/7/29.
