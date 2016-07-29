@@ -320,9 +320,9 @@
 		</foreach>
 		</if>
 		<if test="timeCondition != null">
-			<![CDATA[AND trans_time > #{timeCondition}]]>
+			<![CDATA[AND create_time > #{timeCondition}]]>
 		</if>
-		order by trans_time DESC
+		order by create_time DESC
 		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
