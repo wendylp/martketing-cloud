@@ -204,32 +204,32 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
                 List<String> tmpList = new ArrayList<String>();
                 if (dataType == DataTypeEnum.POPULATION.getCode()) {
                     tmpList = dataPopulationDao.selectMappingKeyId(paramMap);
-                    if(!CollectionUtils.isEmpty(tmpList))
-                    mappingKeyIds.addAll(tmpList);
+                    if (!CollectionUtils.isEmpty(tmpList))
+                        mappingKeyIds.addAll(tmpList);
                 } else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
                     tmpList = dataCustomerTagsDao.selectMappingKeyId(paramMap);
-                    if(!CollectionUtils.isEmpty(tmpList))
-                    mappingKeyIds.addAll(tmpList);
+                    if (!CollectionUtils.isEmpty(tmpList))
+                        mappingKeyIds.addAll(tmpList);
                 } else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
-                    tmpList= dataArchPointDao.selectMappingKeyId(paramMap);
-                    if(!CollectionUtils.isEmpty(tmpList))
-                    mappingKeyIds.addAll(tmpList);
+                    tmpList = dataArchPointDao.selectMappingKeyId(paramMap);
+                    if (!CollectionUtils.isEmpty(tmpList))
+                        mappingKeyIds.addAll(tmpList);
                 } else if (dataType == DataTypeEnum.MEMBER.getCode()) {
                     tmpList = dataMemberDao.selectMappingKeyId(paramMap);
-                    if(!CollectionUtils.isEmpty(tmpList))
-                    mappingKeyIds.addAll(tmpList);
+                    if (!CollectionUtils.isEmpty(tmpList))
+                        mappingKeyIds.addAll(tmpList);
                 } else if (dataType == DataTypeEnum.LOGIN.getCode()) {
                     tmpList = dataLoginDao.selectMappingKeyId(paramMap);
-                    if(!CollectionUtils.isEmpty(tmpList))
-                    mappingKeyIds.addAll(tmpList);
+                    if (!CollectionUtils.isEmpty(tmpList))
+                        mappingKeyIds.addAll(tmpList);
                 } else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
                     tmpList = dataPaymentDao.selectMappingKeyId(paramMap);
-                    if(!CollectionUtils.isEmpty(tmpList))
-                    mappingKeyIds.addAll(tmpList);
+                    if (!CollectionUtils.isEmpty(tmpList))
+                        mappingKeyIds.addAll(tmpList);
                 } else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
                     tmpList = dataShoppingDao.selectMappingKeyId(paramMap);
-                    if(!CollectionUtils.isEmpty(tmpList))
-                    mappingKeyIds.addAll(tmpList);
+                    if (!CollectionUtils.isEmpty(tmpList))
+                        mappingKeyIds.addAll(tmpList);
                 } else {
                     logger.error("传入错误的data type : {}", dataType);
                 }
@@ -358,6 +358,12 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
     }
 
     private void updateConditions(List<Integer> dataTypeList, List<Integer> contactIds, Integer timeCondition) {
+
+        if (CollectionUtils.isEmpty(dataTypeList)) {
+            for (int i = 1; i < 8; i++) {
+                dataTypeList.add(i);
+            }
+        }
 
         // 将数据类型的下拉列表里的状态保存起来
         if (!CollectionUtils.isEmpty(dataTypeList)) {

@@ -120,10 +120,11 @@ public class WechatMember implements Serializable{
 
     public void setGender(Byte gender) {
         this.gender = gender;
+        this.sex = GenderUtils.byteToChar(gender);
     }
 
     public String getSex() {
-        return GenderUtils.byteToChar(getGender());
+        return sex;
     }
 
     public void setSex(String sex) {

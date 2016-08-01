@@ -5,7 +5,7 @@ public enum GenderEnum {
     MALE((byte)1, "男"),
     FEMALE((byte)2, "女"),
     OTHER((byte)3, "其他"),
-    UNSURE((byte)4, "不确定")
+    UNSURE((byte)4, "未知")
     ;
 
     GenderEnum(Byte statusCode, String description) {
