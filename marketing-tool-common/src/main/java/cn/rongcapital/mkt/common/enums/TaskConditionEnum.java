@@ -54,7 +54,8 @@ public enum TaskConditionEnum {
     public Date getTime() {
         Calendar calendar = Calendar.getInstance();
         if (this.getCode() == 0) {
-            calendar.setTimeInMillis(0);
+//            calendar.setTimeInMillis(0);
+            return null;
         }
         if (this.getCode() == 1) {
             calendar.add(Calendar.HOUR, -1);
