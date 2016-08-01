@@ -87,7 +87,7 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
 
         if(dataType.intValue() == DataTypeEnum.WECHAT.getCode() && StringUtils.isNumeric(mappingKeyId)){
             WechatMember wechatMember = new WechatMember();
-            wechatMember.setId(Long.valueOf(dataPartyId));
+            wechatMember.setId(Long.valueOf(mappingKeyId));
             List<WechatMember> dataList=wechatMemberDao.selectList(wechatMember);
 
             //insert into mongodb
