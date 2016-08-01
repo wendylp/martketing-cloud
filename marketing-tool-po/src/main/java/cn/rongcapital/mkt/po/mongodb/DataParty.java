@@ -19,8 +19,7 @@ public class DataParty implements Serializable {
 	private String id;
 	
 	private Integer mid;
-	
-	@Field(value = "md_type")
+
 	private Integer mdType;
 	
 	private String name;
