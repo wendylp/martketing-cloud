@@ -34,6 +34,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.vo.out.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -169,20 +170,6 @@ import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
-import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
-import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
-import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
-import cn.rongcapital.mkt.vo.out.CampaignConvertChartListOut;
-import cn.rongcapital.mkt.vo.out.CampaignCustomSourceListOut;
-import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
-import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
-import cn.rongcapital.mkt.vo.out.CampaignProfileOut;
-import cn.rongcapital.mkt.vo.out.CampaignProgressStatusCountOut;
-import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
-import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
-import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListOut;
-import cn.rongcapital.mkt.vo.out.SerarchTagGroupTagsOut;
-import cn.rongcapital.mkt.vo.out.WechatUserListOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -1955,11 +1942,10 @@ public class MktApi {
 	@GET
 	@Path("/mkt.campaign.analysis.list")
 	public BaseOutput campaignAnalysisList() {
-		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-												  ApiConstant.INT_ZERO, null);
-        SimpleDateFormat dateFormat = new SimpleDateFormat(ApiConstant.DATE_FORMAT_yyyy_MM_dd);
-		result.getData().add(dateFormat.format(new Date()));
-		return result;
+        BaseOutput out = new BaseOutput(ApiConstant.INT_ZERO,
+                ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+        out.getData().add(campaignHeaderGetService.campaignAnalysisList(null, null, null, null));
+        return out;
 	}
 
 

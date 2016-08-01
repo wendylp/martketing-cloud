@@ -41,6 +41,11 @@ import java.util.*;
 public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private String FRONT_PROVINCE_NAME = "北京,天津,上海,重庆,河北,河南,云南,辽宁,黑龙江,湖南,安徽," +
+            "山东,新疆,江苏,浙江,江西,湖北,广西,甘肃,山西,内蒙古,陕西,吉林,福建,贵州," +
+            "广东,青海,西藏,四川,宁夏,海南,台湾,香港,澳门";
+
     @Autowired
     private MongoTemplate mongoTemplate;
     
@@ -125,6 +130,28 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         AggregationResults<SegmentDimensionCountOut> aggregationResults =  mongoTemplate.aggregate(
                 aggregation, DataParty.class, SegmentDimensionCountOut.class);
         List<SegmentDimensionCountOut> provinceCountOutList = aggregationResults.getMappedResults();
+        List<SegmentDimensionCountOut> formartedProvinceCountOutList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(provinceCountOutList)) {
+            for (SegmentDimensionCountOut tempSegmentDimensionCountOut : provinceCountOutList) {
+                String dimensionName = tempSegmentDimensionCountOut.getDimensionName();
+                if (!StringUtils.hasText(dimensionName) || dimensionName.trim().length() < 2) {
+                    continue;
+                }
+                int startIndex = FRONT_PROVINCE_NAME.indexOf(dimensionName.substring(0, 2));
+                if (startIndex == -1) {
+                    continue;
+                }
+                int endIdex = FRONT_PROVINCE_NAME.indexOf(",", startIndex);
+                if (endIdex == -1) {
+                    endIdex = FRONT_PROVINCE_NAME.length();
+                }
+                String frontProvinceName = FRONT_PROVINCE_NAME.substring(startIndex, endIdex);
+                SegmentDimensionCountOut validProvinceCountOut = new SegmentDimensionCountOut();
+                validProvinceCountOut.setDimensionName(frontProvinceName);
+                validProvinceCountOut.setPopulationCount(tempSegmentDimensionCountOut.getPopulationCount());
+                formartedProvinceCountOutList.add(validProvinceCountOut);
+            }
+        }
 
         Aggregation areaAggregation = Aggregation.newAggregation(
                 Aggregation.match(midCriteria),
@@ -133,6 +160,10 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         AggregationResults<SegmentDimensionCountOut> areaAggregationResults =  mongoTemplate.aggregate(
                 areaAggregation, DataParty.class, SegmentDimensionCountOut.class);
         List<SegmentDimensionCountOut> areaCountOutList = areaAggregationResults.getMappedResults();
+
+
+
+
         // merge area and province result
         int chinaCount = 0;
         int foreignCount = 0;
@@ -154,7 +185,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         SegmentAreaCountOut segmentAreaCountOut = new SegmentAreaCountOut();
         segmentAreaCountOut.setChinaPopulationCount(chinaCount);
         segmentAreaCountOut.setForeignPopulationCount(foreignCount);
-        segmentAreaCountOut.setProvinceList(provinceCountOutList);
+        segmentAreaCountOut.setProvinceList(formartedProvinceCountOutList);
         result.setTotal(1);
         result.getData().add(segmentAreaCountOut);
 

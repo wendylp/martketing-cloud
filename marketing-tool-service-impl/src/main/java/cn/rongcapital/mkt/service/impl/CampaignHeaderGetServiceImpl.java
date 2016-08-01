@@ -1,23 +1,26 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.*;
-
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.CampaignAnalyseTypeEnum;
+import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.common.util.UserSessionUtil;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.service.CampaignHeaderGetService;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.common.util.UserSessionUtil;
-import cn.rongcapital.mkt.service.CampaignHeaderGetService;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
@@ -82,6 +85,89 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
         //queryTAndSetouchPopulation(wechatAccountSet, campaignProfileOut);
 		return campaignProfileOut;
 	}
+
+    @Override
+    public CampaignAnalysisOut campaignAnalysisList(String userToken, String ver, Integer campaignHeadId, Byte viewType) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(ApiConstant.DATE_FORMAT_yyyy_MM_dd);
+
+        List<CampaignAnalysisDimensionSpanOut> dayList = new ArrayList<>();
+        List<CampaignAnalysisDimensionSpanOut> weekList = new ArrayList<>();
+        List<CampaignAnalysisDimensionSpanOut> monthList = new ArrayList<>();
+
+        List<Date> dayByDaySpan = getDataListBySpan(60, 1);
+        Map<String, String> weekByDaySpanMap = convertToMap(getDataListBySpan(7, 1), dateFormat);
+        Map<String, String> monthByWeekSpanMap = convertToMap(getDataListBySpan(8, 7), dateFormat);
+
+        for (CampaignAnalyseTypeEnum tempCampaignAnalyseTypeEnum : CampaignAnalyseTypeEnum.values()) {
+            String dimension = tempCampaignAnalyseTypeEnum.getDescription();
+            List<CampaignAnalysisTimeSpanOut> dayDimensionList = new ArrayList<>();
+            List<CampaignAnalysisTimeSpanOut> weekDimensionList = new ArrayList<>();
+            List<CampaignAnalysisTimeSpanOut> monthDimensionList = new ArrayList<>();
+
+            for (Date tempDate : dayByDaySpan) {
+                String dateStr = dateFormat.format(tempDate);
+                Integer count = Integer.valueOf(0);
+
+                CampaignAnalysisTimeSpanOut timeSpanOut = new CampaignAnalysisTimeSpanOut();
+                timeSpanOut.setCount(count);
+                timeSpanOut.setDate(dateStr);
+
+                dayDimensionList.add(timeSpanOut);
+                if (weekByDaySpanMap.get(dateStr) != null) {
+                    weekDimensionList.add(timeSpanOut);
+                }
+
+                if (monthByWeekSpanMap.get(dateStr) != null) {
+                    monthDimensionList.add(timeSpanOut);
+                }
+            }
+
+            CampaignAnalysisDimensionSpanOut dayDimensionSpanOut = new CampaignAnalysisDimensionSpanOut();
+            dayDimensionSpanOut.setDimension(dimension);
+            dayDimensionSpanOut.setDimensionList(dayDimensionList);
+            dayList.add(dayDimensionSpanOut);
+
+            CampaignAnalysisDimensionSpanOut weekDimensionSpanOut = new CampaignAnalysisDimensionSpanOut();
+            weekDimensionSpanOut.setDimension(dimension);
+            weekDimensionSpanOut.setDimensionList(weekDimensionList);
+            weekList.add(weekDimensionSpanOut);
+
+            CampaignAnalysisDimensionSpanOut monthDimensionSpanOut = new CampaignAnalysisDimensionSpanOut();
+            monthDimensionSpanOut.setDimension(dimension);
+            monthDimensionSpanOut.setDimensionList(monthDimensionList);
+            monthList.add(monthDimensionSpanOut);
+        }
+
+        CampaignAnalysisOut campaignAnalysisOut = new CampaignAnalysisOut();
+        campaignAnalysisOut.setDayList(dayList);
+        campaignAnalysisOut.setWeekList(weekList);
+        campaignAnalysisOut.setMonthList(monthList);
+        return campaignAnalysisOut;
+    }
+
+    private List<Date> getDataListBySpan(int size, int spanDay) {
+        List<Date> dateList = new ArrayList<>();
+        DateTime today = new DateTime().withTimeAtStartOfDay();
+        DateTime formDate = today;
+        dateList.add(formDate.toDate());
+        for (int i = 0; i < size - 1; i++) {
+            formDate = formDate.minusDays(spanDay);
+            dateList.add(formDate.toDate());
+        }
+        return dateList;
+    }
+
+    private Map<String, String> convertToMap(List<Date> dateList, SimpleDateFormat dateFormat) {
+        Map<String, String> dateMap = new HashMap<>();
+        if (CollectionUtils.isEmpty(dateList)) {
+            return dateMap;
+        }
+        for (Date date : dateList) {
+            dateMap.put(dateFormat.format(date), "");
+        }
+        return dateMap;
+
+    }
 
     private void queryAndSetTime(Integer campaignHeadId, CampaignProfileOut out) {
         CampaignTriggerTimer triggerTimer = new CampaignTriggerTimer();
