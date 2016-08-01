@@ -104,7 +104,9 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 mongoWechatMember.setMid(dataPartyId);
                 mongoWechatMember.setMd_type(dataType);
                 mongoWechatMember.setMapping_keyid(dataObj.getId().toString());
+                logger.info("begin insert wechat data to mongo");
                 mongoTemplate.upsert(query, buildBaseUpdate(mongoWechatMember), MONGODB_COLLECTION);
+                logger.info("insertMongoWechatMember:" + mongoWechatMember.getMapping_keyid() + "pubId:" + mongoWechatMember.getPubId());
             }
 
         } else {
