@@ -10,6 +10,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+/**
+ * @author Administrator
+ *
+ */
 @Document(collection = "data_party")
 public class DataParty implements Serializable {
 	
@@ -87,6 +91,8 @@ public class DataParty implements Serializable {
 	private Integer receiveCount;
 
 	private Integer totalCount;
+	
+	private Date payLastTime;
 
 	public String getId() {
 		return id;
@@ -351,4 +357,13 @@ public class DataParty implements Serializable {
 	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
 	}
+
+	public Date getPayLastTime() {
+		return payLastTime;
+	}
+
+	public void setPayLastTime(Date payLastTime) {
+		this.payLastTime = payLastTime;
+	}
+	
 }
