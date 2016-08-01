@@ -60,7 +60,7 @@ public class GetCampaignCustomerSourceListServiceImpl implements GetCampaignCust
             return campaignCustomSourceListOut;
 
         //3.根据itemId获取dataId
-        Query query = Query.query(Criteria.where("campaign_head_id").is(campaignHeadId).and("item_id").in(campaignAudienceTargetItemIdList));
+        Query query = Query.query(Criteria.where("campaignHeadId").is(campaignHeadId).and("itemId").in(campaignAudienceTargetItemIdList));
         List<NodeAudience> nodeAudienceList = mongoTemplate.find(query,NodeAudience.class);
         if(isQueryResultEmpty(campaignCustomSourceListOut,"数据库查询显示选定活动的目标人群包含人数为0，请检查活动的有效性",nodeAudienceList))
             return campaignCustomSourceListOut;

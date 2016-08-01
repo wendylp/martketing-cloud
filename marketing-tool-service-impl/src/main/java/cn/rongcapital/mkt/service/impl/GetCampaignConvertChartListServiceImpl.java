@@ -65,7 +65,7 @@ public class GetCampaignConvertChartListServiceImpl implements GetCampaignConver
             itemIdList.add(audienceTarget.getItemId());
         }
         //2.2根据itemId在芒果中筛选出人群总数,然后将它放到campaignConvertChartData中
-        Long totalCount = mongoTemplate.count(Query.query(Criteria.where("campaign_head_id").is(campaignHeadId).and("item_id").in(itemIdList)), NodeAudience.class);
+        Long totalCount = mongoTemplate.count(Query.query(Criteria.where("campaignHeadId").is(campaignHeadId).and("itemId").in(itemIdList)), NodeAudience.class);
         campaignConvertChartListData.setPeopleTotalCount(totalCount.intValue());
 
         //3查询这个活动截止目前为止收到了微信图文的总人数
@@ -84,7 +84,7 @@ public class GetCampaignConvertChartListServiceImpl implements GetCampaignConver
             for(CampaignActionSendPub actionSendPub : campaignActionSendPubList){
                 itemIdList.add(actionSendPub.getItemId());
             }
-            Long coverCount = mongoTemplate.count(Query.query(Criteria.where("campaign_head_id").is(campaignHeadId).and("sent_status").is(ALREADY_SEND_PUB_STATUS).and("item_id").in(itemIdList)),NodeAudience.class);
+            Long coverCount = mongoTemplate.count(Query.query(Criteria.where("campaignHeadId").is(campaignHeadId).and("sentStatus").is(ALREADY_SEND_PUB_STATUS).and("itemId").in(itemIdList)),NodeAudience.class);
             campaignConvertChartListData.setPeopleCoverCount(coverCount.intValue());
         }
         campaignConvertChartListOut.getDataCustom().add(campaignConvertChartListData);
