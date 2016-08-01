@@ -68,9 +68,9 @@ public class WechatMember implements Serializable{
 
     private Integer mid;
 
-    private Integer md_type;
+    private Integer mdType;
 
-    private String mapping_keyid;
+    private String mappingKeyid;
 
     private String source;
 
@@ -282,20 +282,20 @@ public class WechatMember implements Serializable{
         this.mid = mid;
     }
 
-    public Integer getMd_type() {
-        return md_type;
+    public Integer getMdType() {
+        return mdType;
     }
 
-    public void setMd_type(Integer md_type) {
-        this.md_type = md_type;
+    public void setMdType(Integer mdType) {
+        this.mdType = mdType;
     }
 
-    public String getMapping_keyid() {
-        return mapping_keyid;
+    public String getMappingKeyid() {
+        return mappingKeyid;
     }
 
-    public void setMapping_keyid(String mapping_keyid) {
-        this.mapping_keyid = mapping_keyid;
+    public void setMappingKeyid(String mappingKeyid) {
+        this.mappingKeyid = mappingKeyid;
     }
 
     public String getSource() {
