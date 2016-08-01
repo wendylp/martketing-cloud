@@ -145,6 +145,12 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
                 continue;
             }
             for(SegmentationHead segmentationHead : segmentationHeadList) {
+                if (referCampaignCount.intValue() < 0) {
+                    Integer existsReferCount = segmentationHead.getReferCampaignCount();
+                    if (existsReferCount.intValue() < 0) {
+                        continue;
+                    }
+                }
                 segmentationHeadDao.incrementReferCampaignCount(segmentationHead.getId(), referCampaignCount);
             }
         }
