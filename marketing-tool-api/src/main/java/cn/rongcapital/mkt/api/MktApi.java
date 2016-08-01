@@ -12,6 +12,8 @@ package cn.rongcapital.mkt.api;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1949,5 +1951,17 @@ public class MktApi {
 
         return result;
     }
+
+	@GET
+	@Path("/mkt.campaign.analysis.list")
+	public BaseOutput campaignAnalysisList() {
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+												  ApiConstant.INT_ZERO, null);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(ApiConstant.DATE_FORMAT_yyyy_MM_dd);
+		result.getData().add(dateFormat.format(new Date()));
+		return result;
+	}
+
+
 
 }

@@ -8,6 +8,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.GenderEnum;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.SegmentFilterGetService;
@@ -71,11 +72,41 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.match(midCriteria),
                 Aggregation.group("gender").count().as("populationCount")
-                        .first("sex").as("dimensionName")
+                        .first("gender").as("dimensionName")
                 );
         AggregationResults<SegmentDimensionCountOut> aggregationResults =  mongoTemplate.aggregate(
                 aggregation, DataParty.class, SegmentDimensionCountOut.class);
-        setBaseOut(result, aggregationResults.getMappedResults());
+        List<SegmentDimensionCountOut> segmentDimensionCountOutList = aggregationResults.getMappedResults();
+        int maleCount = 0;
+        int femaleCount = 0;
+        int otherCount = 0;
+        if (!CollectionUtils.isEmpty(segmentDimensionCountOutList)) {
+            for (SegmentDimensionCountOut dimensionCountOut : segmentDimensionCountOutList) {
+                Integer populationCount = dimensionCountOut.getPopulationCount();
+                if (populationCount == null || populationCount.intValue() < 1) {
+                    continue;
+                }
+                String gender = dimensionCountOut.getDimensionName();
+                if (StringUtils.hasText(gender)) {
+                    int genderInt = Integer.parseInt(gender);
+                    if (GenderEnum.MALE.getStatusCode().intValue() == genderInt) {
+                        maleCount += populationCount.intValue();
+                    } else if (GenderEnum.FEMALE.getStatusCode().intValue() == genderInt) {
+                        femaleCount += populationCount.intValue();
+                    } else {
+                        otherCount += populationCount.intValue();
+                    }
+                } else {
+                    otherCount += populationCount.intValue();
+                }
+            }
+        }
+
+        List<SegmentDimensionCountOut> formatSegmentDimensionOut = new ArrayList<>();
+        formatSegmentDimensionOut.add(new SegmentDimensionCountOut(GenderEnum.MALE.getDescription(), maleCount));
+        formatSegmentDimensionOut.add(new SegmentDimensionCountOut(GenderEnum.FEMALE.getDescription(), femaleCount));
+        formatSegmentDimensionOut.add(new SegmentDimensionCountOut(GenderEnum.UNSURE.getDescription(), otherCount));
+        setBaseOut(result, formatSegmentDimensionOut);
         return result;
     }
 
