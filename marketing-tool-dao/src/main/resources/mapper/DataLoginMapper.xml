@@ -193,7 +193,7 @@
 		<![CDATA[SELECT]]>
 		mobile
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE 1=1
+		WHERE 1=1 and mobile is not null
 		<if test="contactIdList != null">
 		<foreach collection="contactIdList" item="contactId">
 			<if test="contactId != null and contactId == 1">
