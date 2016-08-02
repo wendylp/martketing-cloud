@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class ShoppingWechat {
+    
+    private Integer totalCount;
 
     private Integer dataPartyId;
 

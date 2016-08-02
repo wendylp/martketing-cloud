@@ -10,12 +10,14 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataPayment;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
+import cn.rongcapital.mkt.po.ShoppingWechat;
 
 public interface DataPaymentDao extends BaseDao<DataPayment>, BaseDataFilterDao<DataPayment> {
 	
@@ -51,5 +53,11 @@ public interface DataPaymentDao extends BaseDao<DataPayment>, BaseDataFilterDao<
 	 * @return
 	 */
 	int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
+	
+	/**
+     * @功能简述 : 根据支付记录中支付状态成功，获取单个微信用户（公众号标识＋openid）收入金额总额
+     * @return ShoppingWechat
+     */
+	ShoppingWechat selectTotalIncomeAmountByWechatInfo();
 
 }
