@@ -148,10 +148,10 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
     private List<Date> getDataListBySpan(int size, int spanDay) {
         List<Date> dateList = new ArrayList<>();
         DateTime today = new DateTime().withTimeAtStartOfDay();
-        DateTime formDate = today;
+        DateTime formDate = today.minusDays(spanDay * size);
         dateList.add(formDate.toDate());
         for (int i = 0; i < size - 1; i++) {
-            formDate = formDate.minusDays(spanDay);
+            formDate = formDate.plusDays(spanDay);
             dateList.add(formDate.toDate());
         }
         return dateList;
