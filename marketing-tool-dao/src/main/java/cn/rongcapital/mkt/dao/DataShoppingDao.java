@@ -10,13 +10,15 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.OrderCount;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
+import cn.rongcapital.mkt.po.ShoppingWechat;
 
 public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDao<DataShopping> {
 	
@@ -54,4 +56,25 @@ public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDa
 	int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
 
 	List<OrderCount> selectListByWxData(DataShopping dataShopping);
+	
+    /**
+     * @功能简述 : 根据购物记录中单个微信用户（公众号标识＋openId）
+     * 最后一次购买（取订单号的消费时间记最后一次购买时间）的时间获取数据
+     * @return List<ShoppingWechat>
+     */
+    List<ShoppingWechat> selectListByLastTransTimeandWeChatInfo();
+    
+    /**
+     * @功能简述 : 根据购物记录中单个微信用户（公众号标识＋openid）购买的总次数(看订单号)获取数据量
+     * @return ShoppingWechat
+     */
+    ShoppingWechat selectTotalShoppingCountByWeChatInfo();
+    
+    
+    /**
+     * @功能简述 : 根据购物记录中单个微信用户（公众号标识＋openid）单月购买次数（订单号）获取数据量
+     * @return ShoppingWechat
+     */
+    ShoppingWechat selectSingleMonthShoppingCountByWeChatInfo();
+    
 }
