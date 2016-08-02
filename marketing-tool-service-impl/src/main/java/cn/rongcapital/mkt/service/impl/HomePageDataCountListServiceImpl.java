@@ -20,6 +20,7 @@ import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.dao.TaggroupDao;
 import cn.rongcapital.mkt.po.CampaignHead;
+import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.Taggroup;
 import cn.rongcapital.mkt.service.HomePageDataCountListService;
@@ -76,10 +77,14 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
         dataCountList.add(tagCountListObj);
 
         // 获取可触达用户的数据
-        // TODO 目前没法做,微信的表都还没有
         HomePageDataCountListOut wechatCountListObj = new HomePageDataCountListOut();
+        DataParty homePageDataCountListDataParty = new DataParty();
+        homePageDataCountListDataParty.setMdType(8);
+        int notNullMobileCount = dataPartyDao.selectNotNullMobile();
+        int wechatMemberCount = dataPartyDao.selectListCount(homePageDataCountListDataParty);
+        int reachableUserCount = notNullMobileCount + wechatMemberCount;
         wechatCountListObj.setId(WECHAT.getId());
-        wechatCountListObj.setCount(0);
+        wechatCountListObj.setCount(reachableUserCount);
         wechatCountListObj.setName(WECHAT.getName());
         wechatCountListObj.setLinkName(WECHAT.getLinkName());
 

@@ -595,5 +595,14 @@
 	        pub_id IS NOT NULL) tmpCount
 	]]>
 	</select>
+	
+	<select id="selectNotNullMobile" resultType="java.lang.Inteter">
+		SELECT 
+			COUNT(id) 
+		FROM 
+			data_party
+		WHERE 
+			mobile is not null
+	</select> 
 
 </mapper>

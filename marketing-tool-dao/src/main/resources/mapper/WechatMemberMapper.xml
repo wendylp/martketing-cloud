@@ -283,4 +283,5 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE selected = 0
 	</select>
+	
 </mapper>

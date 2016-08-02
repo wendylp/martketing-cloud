@@ -181,4 +181,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      */
     Integer selectTotalOriginalCount();
     
+    /**
+     * 查询手机号不为空的数据量
+     *
+     * @return Integer
+     */
+    Integer selectNotNullMobile();
+    
 }
