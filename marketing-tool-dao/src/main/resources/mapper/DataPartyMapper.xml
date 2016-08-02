@@ -596,7 +596,7 @@
 	]]>
 	</select>
 	
-	<select id="selectNotNullMobile" resultType="java.lang.Inteter">
+	<select id="selectNotNullMobile" resultType="java.lang.Integer">
 		SELECT 
 			COUNT(id) 
 		FROM 
