@@ -125,6 +125,10 @@ public class DataShopping extends BaseQuery {
     private String wxCode;
 
     private String productName;
+    
+    private String bitmap;
+
+    private Integer keyid;
 
     public DataShopping(){}
 
@@ -611,4 +615,20 @@ public class DataShopping extends BaseQuery {
     public void setProductName(String productName) {
         this.productName = productName == null ? null : productName.trim();
     }
+    
+	public String getBitmap() {
+		return bitmap;
+	}
+
+	public void setBitmap(String bitmap) {
+		this.bitmap = bitmap;
+	}
+
+	public Integer getKeyid() {
+		return keyid;
+	}
+
+	public void setKeyid(Integer keyid) {
+		this.keyid = keyid;
+	}
 }

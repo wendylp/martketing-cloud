@@ -75,6 +75,10 @@ public class DataPopulation extends BaseQuery {
 
     private String batchId;
     
+    private String bitmap;
+
+    private Integer keyid;
+    
     public DataPopulation(){}
     
     public DataPopulation(Integer index , Integer size){
@@ -352,4 +356,21 @@ public class DataPopulation extends BaseQuery {
     public void setSex(String sex) {
         this.sex = sex;
     }
+
+	public String getBitmap() {
+		return bitmap;
+	}
+
+	public void setBitmap(String bitmap) {
+		this.bitmap = bitmap;
+	}
+
+	public Integer getKeyid() {
+		return keyid;
+	}
+
+	public void setKeyid(Integer keyid) {
+		this.keyid = keyid;
+	}
+    
 }

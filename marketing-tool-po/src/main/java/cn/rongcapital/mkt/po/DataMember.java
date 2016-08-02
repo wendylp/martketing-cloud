@@ -54,6 +54,10 @@ public class DataMember extends BaseQuery {
 
     private String batchId;
     
+    private String bitmap;
+
+    private Integer keyid;
+    
     public DataMember(){}
     
     public DataMember(Integer index , Integer size){
@@ -251,4 +255,21 @@ public class DataMember extends BaseQuery {
     public void setBatchId(String batchId) {
         this.batchId = batchId;
     }
+
+	public String getBitmap() {
+		return bitmap;
+	}
+
+	public void setBitmap(String bitmap) {
+		this.bitmap = bitmap;
+	}
+
+	public Integer getKeyid() {
+		return keyid;
+	}
+
+	public void setKeyid(Integer keyid) {
+		this.keyid = keyid;
+	}
+    
 }

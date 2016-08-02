@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,channel_type as channelType,channel_id as channelId,channel_name as channelName,pay_type as payType,trans_serial as transSerial,order_no as orderNo,trans_time as transTime,product_id as productId,specification as specification,color as color,discount_type as discountType,discount_amt as discountAmt,price as price,amount as amount,inventory as inventory,brand_id as brandId,brand_name as brandName,class1_id as class1Id,class1_name as class1Name,class2_id as class2Id,class2_name as class2Name,class3_id as class3Id,class3_name as class3Name,class4_id as class4Id,class4_name as class4Name,sale_assist_id as saleAssistId,sale_assistance as saleAssistance,settlement_clerk_id as settlementClerkId,settlement_clerk as settlementClerk,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,update_time as updateTime,source as source,batch_id as batchId,order_status as orderStatus,delivery_way as deliveryWay,logistics_status as logisticsStatus,shipping_fee as shippingFee,shipping_way as shippingWay,express_company as expressCompany,express_order as expressOrder,consignee as consignee,consignee_tel as consigneeTel,consignee_addr as consigneeAddr,buyer_comment as buyerComment,wxmp_id as wxmpId,wx_code as wxCode,product_name as productName]]>
+		<![CDATA[ id as id,channel_type as channelType,channel_id as channelId,channel_name as channelName,pay_type as payType,trans_serial as transSerial,order_no as orderNo,trans_time as transTime,product_id as productId,specification as specification,color as color,discount_type as discountType,discount_amt as discountAmt,price as price,amount as amount,inventory as inventory,brand_id as brandId,brand_name as brandName,class1_id as class1Id,class1_name as class1Name,class2_id as class2Id,class2_name as class2Name,class3_id as class3Id,class3_name as class3Name,class4_id as class4Id,class4_name as class4Name,sale_assist_id as saleAssistId,sale_assistance as saleAssistance,settlement_clerk_id as settlementClerkId,settlement_clerk as settlementClerk,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,update_time as updateTime,source as source,batch_id as batchId,order_status as orderStatus,delivery_way as deliveryWay,logistics_status as logisticsStatus,shipping_fee as shippingFee,shipping_way as shippingWay,express_company as expressCompany,express_order as expressOrder,consignee as consignee,consignee_tel as consigneeTel,consignee_addr as consigneeAddr,buyer_comment as buyerComment,wxmp_id as wxmpId,wx_code as wxCode,product_name as productName,bitmap as bitmap,keyid as keyid]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -19,7 +19,7 @@
 		identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,
 		update_time,source,batch_id,order_status,delivery_way,logistics_status,
 		shipping_fee,shipping_way,express_company,express_order,consignee,consignee_tel,consignee_addr,
-		buyer_comment,wxmp_id,wx_code,product_name]]>
+		buyer_comment,wxmp_id,wx_code,product_name,bitmap,keyid]]>
 	</sql>
 
 
@@ -86,6 +86,8 @@
 		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
 		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
 		    	<if test="productName != null"><![CDATA[ AND product_name = #{productName}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="keyid != null"><![CDATA[ AND keyid = #{keyid}]]></if>
 		</where>
 	</sql>
 	
@@ -156,13 +158,15 @@
 		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
 		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode},]]></if>
 		    	<if test="productName != null"><![CDATA[product_name = #{productName}]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap}]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataShopping" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_shopping (channel_type,channel_id,channel_name,pay_type,trans_serial,order_no,trans_time,product_id,specification,color,discount_type,discount_amt,price,amount,inventory,brand_id,brand_name,class1_id,class1_name,class2_id,class2_name,class3_id,class3_name,class4_id,class4_name,sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,source,batch_id,order_status,delivery_way,logistics_status,shipping_fee,shipping_way,express_company,express_order,consignee,consignee_tel,consignee_addr,buyer_comment,wxmp_id,wx_code,product_name)
+			INSERT INTO data_shopping (channel_type,channel_id,channel_name,pay_type,trans_serial,order_no,trans_time,product_id,specification,color,discount_type,discount_amt,price,amount,inventory,brand_id,brand_name,class1_id,class1_name,class2_id,class2_name,class3_id,class3_name,class4_id,class4_name,sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,source,batch_id,order_status,delivery_way,logistics_status,shipping_fee,shipping_way,express_company,express_order,consignee,consignee_tel,consignee_addr,buyer_comment,wxmp_id,wx_code,product_name,bitmap,keyid)
 			VALUES
 			(
 			  #{channelType},
@@ -221,7 +225,9 @@
 			  #{buyerComment},
 			  #{wxmpId},
 			  #{wxCode},
-			  #{productName}
+			  #{productName},
+			  #{bitmap},
+			  #{keyid}
 			)
 		]]>
 	</insert>
@@ -381,7 +387,7 @@
 			#{obj.source},#{obj.batchId},#{obj.orderStatus},#{obj.deliveryWay},#{obj.logisticsStatus},
 			#{obj.shippingFee},#{obj.shippingWay},#{obj.expressCompany},#{obj.expressOrder},
 			#{obj.consignee},#{obj.consigneeTel},#{obj.consigneeAddr},#{obj.buyerComment},
-			#{obj.wxmpId},#{obj.wxCode},#{obj.productName})
+			#{obj.wxmpId},#{obj.wxCode},#{obj.productName},#{obj.bitmap},#{obj.keyid})
 		</foreach>
 		on duplicate key update
 		order_no = values(order_no)

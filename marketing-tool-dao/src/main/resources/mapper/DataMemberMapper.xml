@@ -4,12 +4,12 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,member_id as memberId,member_points as memberPoints,member_level as memberLevel,regist_time as registTime,card_amt as cardAmt,expire as expire,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId]]>
+		<![CDATA[ id as id,member_id as memberId,member_points as memberPoints,member_level as memberLevel,regist_time as registTime,card_amt as cardAmt,expire as expire,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,bitmap as bitmap,keyid as keyid]]>
 	</sql>
 	
 	<!-- 用于批量更新的列 -->
 	<sql id="ORIGINAL_CLEAN_COLUMN_LIST">
-		<![CDATA[ member_id,member_points ,member_level,regist_time,card_amt ,expire,identify_no,driving_license ,email ,mobile ,tel ,qq ,acct_type,acct_no,idfa ,imei ,udid,phone_mac,status ,create_time ,update_time ,source,batch_id]]>
+		<![CDATA[ member_id,member_points ,member_level,regist_time,card_amt ,expire,identify_no,driving_license ,email ,mobile ,tel ,qq ,acct_type,acct_no,idfa ,imei ,udid,phone_mac,status ,create_time ,update_time ,source,batch_id,bitmap,keyid]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -42,6 +42,8 @@
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="keyid != null"><![CDATA[ AND keyid = #{keyid}]]></if>
 		</where>
 	</sql>
 	
@@ -75,13 +77,15 @@
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
 		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId}]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap}]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataMember" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_member (member_id,member_points,member_level,regist_time,card_amt,expire,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id)
+			INSERT INTO data_member (member_id,member_points,member_level,regist_time,card_amt,expire,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,bitmap,keyid)
 			VALUES
 			(
 			  #{memberId},
@@ -104,7 +108,9 @@
 			  #{phoneMac},
 			  now(),
 			  #{source},
-			  #{batchId}
+			  #{batchId},
+			  #{bitmap},
+			  #{keyid}
 			)
 		]]>
 	</insert>
@@ -257,7 +263,7 @@
 			#{obj.idfa},
 			#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.status},
 			#{obj.createTime},#{obj.updateTime},#{obj.source},
-			#{obj.batchId})
+			#{obj.batchId},#{obj.bitmap},#{obj.keyid})
 		</foreach>
 		on duplicate key update
 		member_id = values(member_id),
@@ -279,9 +285,11 @@
 		udid = values(udid),
 		phone_mac = values(phone_mac),
 		create_time = values(create_time),
-		update_time = values(update_time	),
+		update_time = values(update_time),
 		source = values(source),
-		batch_id = values(batch_id)
+		batch_id = values(batch_id),
+		bitmap = values(bitmap),
+		keyid = values(keyid)
 	</update>
 	
 	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">

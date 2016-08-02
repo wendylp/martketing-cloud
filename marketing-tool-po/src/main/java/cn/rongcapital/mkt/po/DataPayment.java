@@ -71,7 +71,11 @@ public class DataPayment extends BaseQuery {
     private String wxmpId;
 
     private String wxCode;
+    
+    private String bitmap;
 
+    private Integer keyid;
+    
     public DataPayment(){}
 
     public DataPayment(Integer index , Integer size){
@@ -341,4 +345,21 @@ public class DataPayment extends BaseQuery {
     public void setWxCode(String wxCode) {
         this.wxCode = wxCode == null ? null : wxCode.trim();
     }
+
+	public String getBitmap() {
+		return bitmap;
+	}
+
+	public void setBitmap(String bitmap) {
+		this.bitmap = bitmap;
+	}
+
+	public Integer getKeyid() {
+		return keyid;
+	}
+
+	public void setKeyid(Integer keyid) {
+		this.keyid = keyid;
+	}
+    
 }
