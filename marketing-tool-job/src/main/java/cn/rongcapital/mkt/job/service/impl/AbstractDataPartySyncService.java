@@ -57,7 +57,7 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 
 	public List<String> getAvailableKeyid(String bitmap) {
 		List<KeyidMapBlock> list = keyidMapBlockDao.selectKeyidMapBlockList();
-				
+
 		int length = bitmap.length();
 		List<String> strlist = new ArrayList<String>();
 		if (length == list.size()) {
@@ -65,7 +65,16 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 
 			for (int i = 0; i < stringArr.length; i++) {
 				if (stringArr[i] == '1') {
-					strlist.add(list.get(i).getField());
+					String field = list.get(i).getField();
+					if (field.indexOf("_") > 0) {
+						String head = field.substring(0, field.indexOf("_"));
+						String upper = field.substring(field.indexOf("_") + 1, field.indexOf("_") + 2).toUpperCase();
+						String tail = field.substring(field.indexOf("_") + 2);
+						strlist.add(head + upper + tail);
+					} else {
+						strlist.add(field);
+					}
+
 				}
 			}
 		}
@@ -92,5 +101,18 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 		}
 
 		return to;
+	}
+
+	public static void main(String[] args) {
+		String field = "wxmd_id";
+		if (field.indexOf("_") > 0) {
+			System.out.println(field.indexOf("_"));
+			String head = field.substring(0, field.indexOf("_"));
+			String upper = field.substring(field.indexOf("_") + 1, field.indexOf("_") + 2).toUpperCase();
+			String tail = field.substring(field.indexOf("_") + 2);
+			System.out.println(head);
+			System.out.println(upper);
+			System.out.println(tail);
+		}
 	}
 }

@@ -68,9 +68,9 @@ public class DataParty extends BaseQuery {
 
     private String drivingLicense;
 
-    private String wxmpCode;
+    private String wxmpId;
 
-    private String openid;
+    private String wxCode;
 
     private String wxUin;
 
@@ -306,20 +306,20 @@ public class DataParty extends BaseQuery {
 		this.drivingLicense = drivingLicense;
 	}
 
-	public String getWxmpCode() {
-		return wxmpCode;
+	public String getWxmpId() {
+		return wxmpId;
 	}
 
-	public void setWxmpCode(String wxmpCode) {
-		this.wxmpCode = wxmpCode;
+	public void setWxmpId(String wxmpId) {
+		this.wxmpId = wxmpId;
 	}
 
-	public String getOpenid() {
-		return openid;
+	public String getWxCode() {
+		return wxCode;
 	}
 
-	public void setOpenid(String openid) {
-		this.openid = openid;
+	public void setWxCode(String wxCode) {
+		this.wxCode = wxCode;
 	}
 
 	public String getWxUin() {
