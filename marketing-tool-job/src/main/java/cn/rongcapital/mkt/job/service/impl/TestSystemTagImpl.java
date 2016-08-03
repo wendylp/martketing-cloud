@@ -1,11 +1,7 @@
 package cn.rongcapital.mkt.job.service.impl;
 
-import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.dao.DataShoppingDao;
-import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.po.DataParty;
-import cn.rongcapital.mkt.po.DataShopping;
-import cn.rongcapital.mkt.po.OrderCount;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -14,7 +10,12 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.DataShoppingDao;
+import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.DataShopping;
+import cn.rongcapital.mkt.po.OrderCount;
 
 
 /**
