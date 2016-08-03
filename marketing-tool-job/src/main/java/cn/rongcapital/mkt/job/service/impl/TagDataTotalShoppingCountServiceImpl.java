@@ -31,7 +31,6 @@ public class TagDataTotalShoppingCountServiceImpl extends BaseTagData implements
         logger.info("用户价值－购买价值－总购买频次－（1次、2次、3次、4次以上），末级标签需替换之前的高、中、低");
     }
 
-    // TODO 根本不能这么搞, mapping_keyid还不知道怎么查呢.
     // 已经将shopping总数获取到, 交给mongoDB处理
     public List<ShoppingWechat> getByTotalShoppingCount() {
         return dataShoppingDao.selectTotalShoppingCountByWeChatInfo();

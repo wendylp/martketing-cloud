@@ -31,7 +31,6 @@ public class TagDataTotalIncomeAmountServiceImpl extends BaseTagData implements 
         logger.info("用户价值－购买价值－总计交易金额－（50元以下、 51-100元 、101-150元、 151-200 、201-300 、301以上）末级标签需替换之前的5000、5001-20000-20001-50000、50001以上  ");
     }
 
-    // TODO 根本不能这么搞, mapping_keyid还不知道怎么查呢.
     // 已经将shopping总数获取到, 交给mongoDB处理
     public List<ShoppingWechat> getByTotalShoppingCount() {
         return dataPaymentDao.selectTotalIncomeAmountByWechatInfo();
