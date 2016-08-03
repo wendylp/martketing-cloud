@@ -7,6 +7,8 @@ import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,9 @@ public class WechatPublicAuthCallbackServiceImpl implements WechatPublicAuthCall
 
     private static final Integer UNKNOWN_WECHAT_ASSET_TYPE = -1;
 
+    private Logger logger = LoggerFactory.getLogger(WechatPublicAuthCallbackServiceImpl.class);
+
+
     @Autowired
     private WechatRegisterDao wechatRegisterDao;
 
@@ -33,6 +38,7 @@ public class WechatPublicAuthCallbackServiceImpl implements WechatPublicAuthCall
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
         WechatRegister wechatRegister = new WechatRegister();
         wechatRegister.setWxAcct(wechatPublicAuthCallbackIn.getWeixinId());
+        logger.info("已经进入回调接口");
         if("success".equals(wechatPublicAuthCallbackIn.getStatus())){
             wechatRegister.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
             if(isAssetExistEver(wechatRegister)){
@@ -47,6 +53,8 @@ public class WechatPublicAuthCallbackServiceImpl implements WechatPublicAuthCall
             wechatRegisterDao.insert(wechatRegister);
             baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
             baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+        }else{
+            logger.info("回调接口返回值");
         }
         return baseOutput;
     }
