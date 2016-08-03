@@ -15,6 +15,18 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.hssf.eventusermodel.HSSFEventFactory;
+import org.apache.poi.hssf.eventusermodel.HSSFListener;
+import org.apache.poi.hssf.eventusermodel.HSSFRequest;
+import org.apache.poi.hssf.record.CommonObjectDataSubRecord;
+import org.apache.poi.hssf.record.ObjRecord;
+import org.apache.poi.hssf.record.Record;
+import org.apache.poi.hssf.record.SubRecord;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.WorkbookUtil;
+import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
@@ -233,7 +245,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         for(InputPart inputPart : inputParts){
             try {
                 String fileName = getFileName(inputPart.getHeaders());
-                if(!fileName.endsWith(".csv")){
+                if(!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx") && !fileName.endsWith(".xlsm")){
                     baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
                     baseOutput.setMsg("上传的文件不是预定格式");
                     return uploadFileVO;
@@ -264,11 +276,11 @@ public class UploadFileServiceImpl implements UploadFileService{
 
                 InputStream inputStream = inputPart.getBody(InputStream.class,null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
-                if (!isUTF8(bytes)) {
-                    baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
-                    baseOutput.setMsg("上传的文件不是UTF-8编码");
-                    return uploadFileVO;
-                }
+//                if (!isUTF8(bytes)) {
+//                    baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+//                    baseOutput.setMsg("上传的文件不是UTF-8编码");
+//                    return uploadFileVO;
+//                }
                 // 上传非法数据
                 if (isRepair) {
                     // 比较上传文件的记录条数跟数据库中非法数据的记录数
@@ -302,7 +314,7 @@ public class UploadFileServiceImpl implements UploadFileService{
         uploadFileVO.setProcessVO(processVO);
         return uploadFileVO;
     }
-    
+
     public int repairDataLength(final byte[] dataBytes) {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(dataBytes), StandardCharsets.UTF_8));
 		int len = 0;

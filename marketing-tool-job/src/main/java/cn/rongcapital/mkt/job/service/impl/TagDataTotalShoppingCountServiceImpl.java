@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.List;
 
+import cn.rongcapital.mkt.job.service.BaseTagData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.ShoppingWechat;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
-public class TagDataTotalShoppingCountServiceImpl implements TaskService {
+public class TagDataTotalShoppingCountServiceImpl extends BaseTagData implements TaskService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private DataShoppingDao dataShoppingDao;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Override
     public void task(Integer taskId) {
@@ -28,4 +36,12 @@ public class TagDataTotalShoppingCountServiceImpl implements TaskService {
     public List<ShoppingWechat> getByTotalShoppingCount() {
         return dataShoppingDao.selectTotalShoppingCountByWeChatInfo();
     }
+
+    @Override
+    public void tagData(ShoppingWechat shoppingWechat) {
+        Query query = Query.query(Criteria.where("mid").is(shoppingWechat.getDataPartyId()));
+        Update update = new Update().set("totalShoppingCount", shoppingWechat.getTotalShoppingCount());
+        mongoTemplate.findAndModify(query,update,cn.rongcapital.mkt.po.mongodb.DataParty.class);
+    }
+
 }
