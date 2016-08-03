@@ -26,8 +26,8 @@ public class BaseTagData {
 
         for (ShoppingWechat shoppingWechat : shoppingWechats) {
             DataParty paramDataParty = new DataParty();
-            paramDataParty.setWxmpCode(shoppingWechat.getPubId());
-            paramDataParty.setOpenid(shoppingWechat.getOpenId());
+            paramDataParty.setWxmpId(shoppingWechat.getPubId());
+            paramDataParty.setWxCode(shoppingWechat.getOpenId());
             // 这里应该是一条数据
             List<DataParty> dataParties = dataPartyDao.selectList(paramDataParty);
             if (CollectionUtils.isEmpty(dataParties)) {
