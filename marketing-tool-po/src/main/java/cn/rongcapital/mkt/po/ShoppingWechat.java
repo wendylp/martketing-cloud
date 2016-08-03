@@ -87,4 +87,12 @@ public class ShoppingWechat {
         this.averageIncome = averageIncome;
     }
 
+    public Integer getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(Integer totalCount) {
+        this.totalCount = totalCount;
+    }
+
 }

@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ public class TagDataSingleMonthShoppingCountServiceImpl implements TaskService {
         logger.info("用户价值－购买价值－最后一次购买－（本月内、三个月内、半年内）");
     }
 
-    public ShoppingWechat getSingleMonthShoppingCount() {
+    public List<ShoppingWechat> getSingleMonthShoppingCount() {
         return dataShoppingDao.selectSingleMonthShoppingCountByWeChatInfo();
     }
 
