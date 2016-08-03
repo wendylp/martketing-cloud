@@ -46,8 +46,8 @@ public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integ
         for(DataLogin dataObj : dataLoginList){
             DataParty dataParty=new DataParty();
             dataParty.setLastLogin(dataObj.getLoginTime());
-            dataParty.setMobile(dataObj.getMobile());
-            dataParty.setMappingKeyid(dataObj.getId().toString());
+//            dataParty.setMobile(dataObj.getMobile());
+//            dataParty.setMappingKeyid(dataObj.getId().toString());
             dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
             dataParty.setMdType(DataTypeEnum.LOGIN.getCode());
             dataParty.setSource(dataObj.getSource());

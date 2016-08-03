@@ -9,7 +9,7 @@
 		member_points as memberPoints,source as source,monthly_consume as monthlyConsume,last_login as lastLogin,
 		status as status,create_time as createTime,update_time as updateTime,batch_id as batchId,md_type as mdType,
 		mapping_keyid as mappingKeyid,tel as tel,email as email,qq as qq,identify_no as identifyNo,driving_license as drivingLicense,
-		wxmp_code as wxmpCode,openid as openid,wx_uin as wxUin,wxperson_id as wxpersonId,IDFA as IDFA,,IMEI as IMEI,unionid as unionid,
+		wxmp_code as wxmpCode,openid as openid,wx_uin as wxUin,wxperson_id as wxpersonId,IDFA as IDFA,IMEI as IMEI,unionid as unionid,
 		acct_no as acctNo,flag1 as flag1,flag2 as flag2,bitmap as bitmap]]>
 	</sql>
 
@@ -137,7 +137,9 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataParty" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_party (mobile,name,gender,birthday,citizenship,provice,city,job,monthly_income,member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,md_type,mapping_keyid)
+			INSERT INTO data_party (mobile,name,gender,birthday,citizenship,provice,city,job,monthly_income,member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,md_type,
+			mapping_keyid,tel,email,qq,identify_no,driving_license,wxmp_code,openid,wx_uin,wxperson_id,idfa,imei,unionid,
+			acct_no,flag1,flag2,bitmap)
 			VALUES
 			(
 			  #{mobile},
@@ -169,7 +171,9 @@
 
 	<insert id="batchInsert">
         INSERT INTO data_party (mobile,name,gender,birthday,citizenship,provice,city,job,monthly_income,
-            member_level,member_points,source,monthly_consume,last_login,status,create_time,batch_id,md_type,mapping_keyid)
+            member_level,member_points,source,monthly_consume,last_login,status,create_time,batch_id,md_type,mapping_keyid,
+            tel,email,qq,identify_no,driving_license,wxmp_code,openid,wx_uin,wxperson_id,idfa,imei,unionid,
+			acct_no,flag1,flag2,bitmap)
         VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
