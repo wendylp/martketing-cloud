@@ -4,23 +4,32 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class ShoppingWechat {
-    
+
+    // 数据量
     private Integer totalCount;
 
+    // data_party的主键, 在mongodb中是mid
     private Integer dataPartyId;
 
+    // openId, 对应数据库中的wx_code
     private String openId;
 
+    // pubId, 对应数据库中的wxmp_id
     private String pubId;
 
+    // 购物记录中单个微信用户（公众号标识＋openid）最后一次购买（取订单号的消费时间记最后一次购买时间）的时间
     private Date lastShoppingTime;
 
+    // 购物记录中单个微信用户（公众号标识＋openid）购买的总次数（订单号）
     private Integer totalShoppingCount;
 
+    // 购物记录中单个微信用户（公众号标识＋openid）单月购买次数（订单号）
     private Integer singleMonthShoppingCount;
 
+    // 支付记录中支付状态成功，单个微信用户（公众号标识＋openid）收入金额总额
     private BigDecimal totalIncome;
 
+    // 支付记录中支付状态成功，单个微信用户（公众号标识＋openid）收入金额总额取平均数
     private BigDecimal averageIncome;
 
     public Integer getDataPartyId() {
