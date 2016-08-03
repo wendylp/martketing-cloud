@@ -46,8 +46,8 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 		for (DataArchPoint dataObj : dataArchPointList) {
 
 			DataParty dataParty = new DataParty();
-			dataParty.setMappingKeyid(dataObj.getId().toString());
-			dataParty.setMobile(dataObj.getMobile());
+//			dataParty.setMappingKeyid(dataObj.getId().toString());
+//			dataParty.setMobile(dataObj.getMobile());
 			dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
 			dataParty.setMdType(DataTypeEnum.ARCH_POINT.getCode());
 			dataParty.setSource(dataObj.getSource());
@@ -60,7 +60,6 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 					List<String> strlist = super.getAvailableKeyid(bitmap);
 
 					dataParty = (DataParty) super.primaryKeyCopy(dataObj, dataParty, strlist);
-
 
 				} catch (Exception e) {
 					e.printStackTrace();
