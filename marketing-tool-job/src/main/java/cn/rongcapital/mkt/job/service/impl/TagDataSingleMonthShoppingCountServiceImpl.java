@@ -38,9 +38,9 @@ public class TagDataSingleMonthShoppingCountServiceImpl extends BaseTagData impl
 
     @Override
     public void tagData(ShoppingWechat shoppingWechat) {
-        Query query = Query.query(Criteria.where("mid").is(shoppingWechat.getDataPartyId()));
+        Criteria criteria = Criteria.where("mid").is(shoppingWechat.getDataPartyId());
         Update update = new Update().set("singleMonthShoppingCount", shoppingWechat.getSingleMonthShoppingCount());
-        mongoTemplate.findAndModify(query, update, cn.rongcapital.mkt.po.mongodb.DataParty.class);
+        mongoTemplate.findAndModify(new Query(criteria), update, cn.rongcapital.mkt.po.mongodb.DataParty.class);
     }
 
 }
