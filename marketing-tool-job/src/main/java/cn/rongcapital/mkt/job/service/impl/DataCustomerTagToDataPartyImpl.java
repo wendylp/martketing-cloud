@@ -54,6 +54,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
             dataParty.setBatchId(dataObj.getBatchId());
 
 			String bitmap = dataObj.getBitmap();
+			dataParty.setBitmap(bitmap);
 			if (StringUtils.isNotBlank(bitmap)) {
 				try {
 					// 获取keyid
