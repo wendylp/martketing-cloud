@@ -4,13 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,citizenship as citizenship,
-		provice as provice,city as city,job as job,monthly_income as monthlyIncome,member_level as memberLevel,
-		member_points as memberPoints,source as source,monthly_consume as monthlyConsume,last_login as lastLogin,
-		status as status,create_time as createTime,update_time as updateTime,batch_id as batchId,md_type as mdType,
-		mapping_keyid as mappingKeyid,tel as tel,email as email,qq as qq,identify_no as identifyNo,driving_license as drivingLicense,
-		wxmp_id as wxmpId,wx_code as wxCode,wx_uin as wxUin,wxperson_id as wxpersonId,IDFA as IDFA,IMEI as IMEI,unionid as unionid,
-		acct_no as acctNo,flag1 as flag1,flag2 as flag2,bitmap as bitmap]]>
+		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,citizenship as citizenship,provice as provice,city as city,job as job,monthly_income as monthlyIncome,member_level as memberLevel,member_points as memberPoints,source as source,monthly_consume as monthlyConsume,last_login as lastLogin,status as status,create_time as createTime,update_time as updateTime,batch_id as batchId,md_type as mdType,mapping_keyid as mappingKeyid,tel as tel,email as email,qq as qq,identify_no as identifyNo,driving_license as drivingLicense,wxmp_id as wxmpId,wx_code as wxCode,wx_uin as wxUin,wxperson_id as wxpersonId,idfa as idfa,imei as imei,unionid as unionid,acct_no as acctNo,flag1 as flag1,flag2 as flag2,bitmap as bitmap]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -24,7 +18,7 @@
 		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
 		    	<if test="gender != null"><![CDATA[ AND gender = #{gender}]]></if>
 		    	<if test="birthday != null"><![CDATA[ AND birthday = #{birthday}]]></if>
-				<if test="citizenship != null"><![CDATA[ AND citizenship = #{citizenship}]]></if>
+		    	<if test="citizenship != null"><![CDATA[ AND citizenship = #{citizenship}]]></if>
 		    	<if test="provice != null"><![CDATA[ AND provice = #{provice}]]></if>
 		    	<if test="city != null"><![CDATA[ AND city = #{city}]]></if>
 		    	<if test="job != null"><![CDATA[ AND job = #{job}]]></if>
@@ -40,7 +34,6 @@
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		    	<if test="mdType != null"><![CDATA[ AND md_type = #{mdType}]]></if>
 		    	<if test="mappingKeyid != null"><![CDATA[ AND mapping_keyid = #{mappingKeyid}]]></if>
-		    	
 		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
 		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
 		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
@@ -50,14 +43,14 @@
 		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
 		    	<if test="wxUin != null"><![CDATA[ AND wx_uin = #{wxUin}]]></if>
 		    	<if test="wxpersonId != null"><![CDATA[ AND wxperson_id = #{wxpersonId}]]></if>
-		    	<if test="idfa != null"><![CDATA[ AND IDFA = #{idfa}]]></if>
-		    	<if test="imei != null"><![CDATA[ AND IMEI = #{imei}]]></if>
+		    	<if test="idfa != null"><![CDATA[ AND idfa = #{idfa}]]></if>
+		    	<if test="imei != null"><![CDATA[ AND imei = #{imei}]]></if>
 		    	<if test="unionid != null"><![CDATA[ AND unionid = #{unionid}]]></if>
 		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
 		    	<if test="flag1 != null"><![CDATA[ AND flag1 = #{flag1}]]></if>
 		    	<if test="flag2 != null"><![CDATA[ AND flag2 = #{flag2}]]></if>
-		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>		    	
-		 </where>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		</where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
@@ -73,7 +66,7 @@
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
 		    	<if test="gender != null"><![CDATA[gender = #{gender},]]></if>
 		    	<if test="birthday != null"><![CDATA[birthday = #{birthday},]]></if>
-				<if test="citizenship != null"><![CDATA[citizenship = #{citizenship},]]></if>
+		    	<if test="citizenship != null"><![CDATA[citizenship = #{citizenship},]]></if>
 		    	<if test="provice != null"><![CDATA[provice = #{provice},]]></if>
 		    	<if test="city != null"><![CDATA[city = #{city},]]></if>
 		    	<if test="job != null"><![CDATA[job = #{job},]]></if>
@@ -87,59 +80,29 @@
 		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
 		    	<if test="mdType != null"><![CDATA[md_type = #{mdType},]]></if>
 		    	<if test="mappingKeyid != null"><![CDATA[mapping_keyid = #{mappingKeyid},]]></if>
-				<if test="tel != null" >tel = #{tel},</if>
-				<if test="email != null" >email = #{email},</if>
-				<if test="qq != null" >
-				  qq = #{qq},
-				</if>
-				<if test="identifyNo != null" >
-				  identify_no = #{identifyNo},
-				</if>
-				<if test="drivingLicense != null" >
-				  driving_license = #{drivingLicense},
-				</if>
-				<if test="wxmpId != null" >
-				  wxmp_id = #{wxmpId},
-				</if>
-				<if test="wxCode != null" >
-				  wx_code = #{wxCode},
-				</if>
-				<if test="wxUin != null" >
-				  wx_uin = #{wxUin},
-				</if>
-				<if test="wxpersonId != null" >
-				  wxperson_id = #{wxpersonId},
-				</if>
-				<if test="idfa != null" >
-				  IDFA = #{idfa},
-				</if>
-				<if test="imei != null" >
-				  IMEI = #{imei},
-				</if>
-				<if test="unionid != null" >
-				  unionid = #{unionid},
-				</if>
-				<if test="acctNo != null" >
-				  acct_no = #{acctNo},
-				</if>
-				<if test="flag1 != null" >
-				  flag1 = #{flag1},
-				</if>
-				<if test="flag2 != null" >
-				  flag2 = #{flag2},
-				</if>
-				<if test="bitmap != null" >
-				  bitmap = #{bitmap},
-				</if>
+		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
+		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
+		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
+		    	<if test="identifyNo != null"><![CDATA[identify_no = #{identifyNo},]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[driving_license = #{drivingLicense},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode},]]></if>
+		    	<if test="wxUin != null"><![CDATA[wx_uin = #{wxUin},]]></if>
+		    	<if test="wxpersonId != null"><![CDATA[wxperson_id = #{wxpersonId},]]></if>
+		    	<if test="idfa != null"><![CDATA[idfa = #{idfa},]]></if>
+		    	<if test="imei != null"><![CDATA[imei = #{imei},]]></if>
+		    	<if test="unionid != null"><![CDATA[unionid = #{unionid},]]></if>
+		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
+		    	<if test="flag1 != null"><![CDATA[flag1 = #{flag1},]]></if>
+		    	<if test="flag2 != null"><![CDATA[flag2 = #{flag2},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataParty" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_party (mobile,name,gender,birthday,citizenship,provice,city,job,monthly_income,member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,md_type,
-			mapping_keyid,tel,email,qq,identify_no,driving_license,wxmp_id,wx_code,wx_uin,wxperson_id,idfa,imei,unionid,
-			acct_no,flag1,flag2,bitmap)
+			INSERT INTO data_party (mobile,name,gender,birthday,citizenship,provice,city,job,monthly_income,member_level,member_points,source,monthly_consume,last_login,create_time,batch_id,md_type,mapping_keyid,tel,email,qq,identify_no,driving_license,wxmp_id,wx_code,wx_uin,wxperson_id,idfa,imei,unionid,acct_no,flag1,flag2,bitmap)
 			VALUES
 			(
 			  #{mobile},
@@ -160,11 +123,22 @@
 			  #{batchId},
 			  #{mdType},
 			  #{mappingKeyid},
-			  #{tel}, #{email}, #{qq}, #{identifyNo}, 
-		      #{drivingLicense}, #{wxmpId}, #{wxCode}, 
-		      #{wxUin}, #{wxpersonId}, #{idfa}, 
-		      #{imei}, #{unionid}, #{acctNo}, 
-		      #{flag1}, #{flag2}, #{bitmap}
+			  #{tel},
+			  #{email},
+			  #{qq},
+			  #{identifyNo},
+			  #{drivingLicense},
+			  #{wxmpId},
+			  #{wxCode},
+			  #{wxUin},
+			  #{wxpersonId},
+			  #{idfa},
+			  #{imei},
+			  #{unionid},
+			  #{acctNo},
+			  #{flag1},
+			  #{flag2},
+			  #{bitmap}
 			)
 		]]>
 	</insert>
@@ -172,7 +146,7 @@
 	<insert id="batchInsert">
         INSERT INTO data_party (mobile,name,gender,birthday,citizenship,provice,city,job,monthly_income,
             member_level,member_points,source,monthly_consume,last_login,status,create_time,batch_id,md_type,mapping_keyid,
-            tel,email,qq,identify_no,driving_license,wxmp_id,wx_code,wx_uin,wxperson_id,idfa,imei,unionid,
+            tel,email,qq,identify_no,driving_license,wxmp_code,openid,wx_uin,wxperson_id,idfa,imei,unionid,
 			acct_no,flag1,flag2,bitmap)
         VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
@@ -197,7 +171,7 @@
               #{item.mdType},
               #{item.mappingKeyid},
               #{item.tel}, #{item.email}, #{item.qq}, #{item.identifyNo}, 
-		      #{item.drivingLicense}, #{item.wxmpId}, #{item.wxCode}, 
+		      #{item.drivingLicense}, #{item.wxmpCode}, #{item.openid}, 
 		      #{item.wxUin}, #{item.wxpersonId}, #{item.idfa}, 
 		      #{item.imei}, #{item.unionid}, #{item.acctNo}, 
 		      #{item.flag1}, #{item.flag2}, #{item.bitmap}

@@ -3,17 +3,16 @@ package cn.rongcapital.mkt.po;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class DataParty extends BaseQuery {
-
-    public DataParty() {}
-
-    public DataParty(Integer index, Integer size) {
+    
+    public DataParty(){}
+    
+    public DataParty(Integer index , Integer size){
         super(index, size);
     }
-
+    
     private Integer id;
 
     private String mobile;
@@ -21,8 +20,6 @@ public class DataParty extends BaseQuery {
     private String name;
 
     private Byte gender;
-    
-    private String sex;
 
     private Date birthday;
 
@@ -57,7 +54,7 @@ public class DataParty extends BaseQuery {
     private Integer mdType;
 
     private String mappingKeyid;
-    
+
     private String tel;
 
     private String email;
@@ -128,6 +125,14 @@ public class DataParty extends BaseQuery {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
+    }
+
+    public String getCitizenship() {
+        return citizenship;
+    }
+
+    public void setCitizenship(String citizenship) {
+        this.citizenship = citizenship == null ? null : citizenship.trim();
     }
 
     public String getProvice() {
@@ -250,148 +255,131 @@ public class DataParty extends BaseQuery {
         this.mappingKeyid = mappingKeyid == null ? null : mappingKeyid.trim();
     }
 
-    public String getSex() {
-        return GenderUtils.byteToChar(getGender());
+    public String getTel() {
+        return tel;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setTel(String tel) {
+        this.tel = tel == null ? null : tel.trim();
     }
 
-    public String getCitizenship() {
-        return citizenship;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCitizenship(String citizenship) {
-        this.citizenship = citizenship;
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
     }
 
-	public String getTel() {
-		return tel;
-	}
+    public String getQq() {
+        return qq;
+    }
 
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
+    public void setQq(String qq) {
+        this.qq = qq == null ? null : qq.trim();
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getIdentifyNo() {
+        return identifyNo;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setIdentifyNo(String identifyNo) {
+        this.identifyNo = identifyNo == null ? null : identifyNo.trim();
+    }
 
-	public String getQq() {
-		return qq;
-	}
+    public String getDrivingLicense() {
+        return drivingLicense;
+    }
 
-	public void setQq(String qq) {
-		this.qq = qq;
-	}
+    public void setDrivingLicense(String drivingLicense) {
+        this.drivingLicense = drivingLicense == null ? null : drivingLicense.trim();
+    }
 
-	public String getIdentifyNo() {
-		return identifyNo;
-	}
+    public String getWxmpId() {
+        return wxmpId;
+    }
 
-	public void setIdentifyNo(String identifyNo) {
-		this.identifyNo = identifyNo;
-	}
+    public void setWxmpId(String wxmpId) {
+        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
+    }
 
-	public String getDrivingLicense() {
-		return drivingLicense;
-	}
+    public String getWxCode() {
+        return wxCode;
+    }
 
-	public void setDrivingLicense(String drivingLicense) {
-		this.drivingLicense = drivingLicense;
-	}
+    public void setWxCode(String wxCode) {
+        this.wxCode = wxCode == null ? null : wxCode.trim();
+    }
 
-	public String getWxmpId() {
-		return wxmpId;
-	}
+    public String getWxUin() {
+        return wxUin;
+    }
 
-	public void setWxmpId(String wxmpId) {
-		this.wxmpId = wxmpId;
-	}
+    public void setWxUin(String wxUin) {
+        this.wxUin = wxUin == null ? null : wxUin.trim();
+    }
 
-	public String getWxCode() {
-		return wxCode;
-	}
+    public String getWxpersonId() {
+        return wxpersonId;
+    }
 
-	public void setWxCode(String wxCode) {
-		this.wxCode = wxCode;
-	}
+    public void setWxpersonId(String wxpersonId) {
+        this.wxpersonId = wxpersonId == null ? null : wxpersonId.trim();
+    }
 
-	public String getWxUin() {
-		return wxUin;
-	}
+    public String getIdfa() {
+        return idfa;
+    }
 
-	public void setWxUin(String wxUin) {
-		this.wxUin = wxUin;
-	}
+    public void setIdfa(String idfa) {
+        this.idfa = idfa == null ? null : idfa.trim();
+    }
 
-	public String getWxpersonId() {
-		return wxpersonId;
-	}
+    public String getImei() {
+        return imei;
+    }
 
-	public void setWxpersonId(String wxpersonId) {
-		this.wxpersonId = wxpersonId;
-	}
+    public void setImei(String imei) {
+        this.imei = imei == null ? null : imei.trim();
+    }
 
-	public String getIdfa() {
-		return idfa;
-	}
+    public String getUnionid() {
+        return unionid;
+    }
 
-	public void setIdfa(String idfa) {
-		this.idfa = idfa;
-	}
+    public void setUnionid(String unionid) {
+        this.unionid = unionid == null ? null : unionid.trim();
+    }
 
-	public String getImei() {
-		return imei;
-	}
+    public String getAcctNo() {
+        return acctNo;
+    }
 
-	public void setImei(String imei) {
-		this.imei = imei;
-	}
+    public void setAcctNo(String acctNo) {
+        this.acctNo = acctNo == null ? null : acctNo.trim();
+    }
 
-	public String getUnionid() {
-		return unionid;
-	}
+    public String getFlag1() {
+        return flag1;
+    }
 
-	public void setUnionid(String unionid) {
-		this.unionid = unionid;
-	}
+    public void setFlag1(String flag1) {
+        this.flag1 = flag1 == null ? null : flag1.trim();
+    }
 
-	public String getAcctNo() {
-		return acctNo;
-	}
+    public String getFlag2() {
+        return flag2;
+    }
 
-	public void setAcctNo(String acctNo) {
-		this.acctNo = acctNo;
-	}
+    public void setFlag2(String flag2) {
+        this.flag2 = flag2 == null ? null : flag2.trim();
+    }
 
-	public String getFlag1() {
-		return flag1;
-	}
+    public String getBitmap() {
+        return bitmap;
+    }
 
-	public void setFlag1(String flag1) {
-		this.flag1 = flag1;
-	}
-
-	public String getFlag2() {
-		return flag2;
-	}
-
-	public void setFlag2(String flag2) {
-		this.flag2 = flag2;
-	}
-
-	public String getBitmap() {
-		return bitmap;
-	}
-
-	public void setBitmap(String bitmap) {
-		this.bitmap = bitmap;
-	}
-
+    public void setBitmap(String bitmap) {
+        this.bitmap = bitmap == null ? null : bitmap.trim();
+    }
 }
