@@ -42,7 +42,7 @@ public class TagDataLastTransTimeServiceImpl extends BaseTagData implements Task
     // 看看BaseTagData的代码
     @Override
     public void tagData(ShoppingWechat shoppingWechat) {
-        Query query = Query.query(Criteria.where("mid").is(shoppingWechat.getDataPartyId()));
+        Criteria criteria = Criteria.where("mid").is(shoppingWechat.getDataPartyId());
         // 距离现在多少个月
         int monthDiff = 0;
         Calendar now = Calendar.getInstance();
@@ -51,7 +51,7 @@ public class TagDataLastTransTimeServiceImpl extends BaseTagData implements Task
         monthDiff = now.get(Calendar.YEAR) * 12 + now.get(Calendar.MONTH) - targetTime.get(Calendar.YEAR) * 12
                         - targetTime.get(Calendar.MONTH);
         Update update = new Update().set("lastShoppingTime", monthDiff);
-        mongoTemplate.findAndModify(query, update, cn.rongcapital.mkt.po.mongodb.DataParty.class);
+        mongoTemplate.findAndModify(new Query(criteria), update, cn.rongcapital.mkt.po.mongodb.DataParty.class);
     }
 
 }

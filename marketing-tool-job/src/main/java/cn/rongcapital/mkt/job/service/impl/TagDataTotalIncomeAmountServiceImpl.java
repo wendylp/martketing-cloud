@@ -2,18 +2,18 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.List;
 
-import cn.rongcapital.mkt.job.service.BaseTagData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import cn.rongcapital.mkt.dao.DataPaymentDao;
-import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.po.ShoppingWechat;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+
+import cn.rongcapital.mkt.dao.DataPaymentDao;
+import cn.rongcapital.mkt.job.service.BaseTagData;
+import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.po.ShoppingWechat;
 
 public class TagDataTotalIncomeAmountServiceImpl extends BaseTagData implements TaskService {
 
@@ -39,8 +39,8 @@ public class TagDataTotalIncomeAmountServiceImpl extends BaseTagData implements 
 
     @Override
     public void tagData(ShoppingWechat shoppingWechat) {
-        Query query = Query.query(Criteria.where("mid").is(shoppingWechat.getDataPartyId()));
+        Criteria criteria = Criteria.where("mid").is(shoppingWechat.getDataPartyId());
         Update update = new Update().set("totalIncome", shoppingWechat.getTotalIncome());
-        mongoTemplate.findAndModify(query,update,cn.rongcapital.mkt.po.mongodb.DataParty.class);
+        mongoTemplate.findAndModify(new Query(criteria), update, cn.rongcapital.mkt.po.mongodb.DataParty.class);
     }
 }
