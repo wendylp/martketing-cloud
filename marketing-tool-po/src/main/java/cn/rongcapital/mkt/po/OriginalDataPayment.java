@@ -74,6 +74,8 @@ public class OriginalDataPayment extends BaseQuery {
 
     private String wxCode;
 
+    private String bitmap;
+
     public Integer getId() {
         return id;
     }
@@ -344,5 +346,13 @@ public class OriginalDataPayment extends BaseQuery {
 
     public void setWxCode(String wxCode) {
         this.wxCode = wxCode == null ? null : wxCode.trim();
+    }
+
+    public String getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(String bitmap) {
+        this.bitmap = bitmap;
     }
 }

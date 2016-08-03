@@ -1,18 +1,24 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.text.DecimalFormat;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.PackagePart;
+import org.apache.poi.openxml4j.opc.PackageRelationship;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellUtil;
+import org.apache.poi.xssf.eventusermodel.ReadOnlySharedStringsTable;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
+import org.apache.poi.xssf.usermodel.XSSFRelation;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.helpers.XSSFFormulaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +61,10 @@ public class ParseUploadFileImpl {
     private OriginalDataPaymentDao originalDataPaymentDao;
     @Autowired
     private OriginalDataShoppingDao originalDataShoppingDao;
+
+    private final Integer UNIQUE_ID_ROW_IN_FILE = 0;
+    private final Integer INVALID_ROW_IN_FILE = 1;
+    private final Integer ATTRIBUTE_NAME_ROW_IN_FILE = 2;
 
     private static Logger logger = LoggerFactory.getLogger(ParseUploadFileImpl.class);
 
@@ -118,67 +128,121 @@ public class ParseUploadFileImpl {
         Map<String, String> nameCodeMappingMap = getNameCodeRelationByFileType(fileType);
         Map<String, Integer> codeIndexMap = new HashMap<>();
         Map<String, Integer> dataCheck = new HashMap<>();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.UTF_8));
+        String bitmap = null;
+        String illegalColumns = null;
+        String header = null;
+
         int totalRows = 0;
         int emailRows = 0;
         int mobileRows = 0;
         int duplicateRows = 0;
-        String header = null;
-        String illegalColumns = null;
-        try{
-            String line;
-            boolean isFileHeadFlag = true;
-            while((line = bufferedReader.readLine()) != null){
-                String[] uploadFileColumns = line.replace(" ","").split(",");
-                if (uploadFileColumns.length < 1) {
+
+//1解析上传的Excel文件
+//-------------------------------------------
+        InputStream inputStream = new ByteArrayInputStream(bytes);
+        try {
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+            //Todo:1尝试获取Excel中的控件(尝试失败)
+            //----------------------------------
+//            List<PackagePart> embedds = new LinkedList<PackagePart>();
+//            for(PackageRelationship rel : ((XSSFSheet)sheet).getPackagePart().getRelationshipsByType(XSSFRelation.OLEEMBEDDINGS.getRelation())){
+//                embedds.add(rel.);
+//                System.out.print(1);
+//            }
+
+//            for(PackageRelationship rel : ((XSSFSheet)sheet).getPackagePart().getRelationshipsByType(XSSFRelation.PACKEMBEDDINGS.getRelation())){
+//                embedds.add(rel.);
+//                System.out.print(1);
+//            }
+
+            //----------------------------------
+            Iterator<Row> rowIterator = sheet.rowIterator();
+            for(;rowIterator.hasNext();){
+                Row row = rowIterator.next();
+                Integer rowIndex = row.getCell(row.getFirstCellNum()).getRowIndex();
+                if(rowIndex == UNIQUE_ID_ROW_IN_FILE){
+                    //Todo: 这里先将主键ID写死
+                    bitmap = "000000110000000000";
                     continue;
                 }
-                if(isFileHeadFlag){
-                    illegalColumns = parseHeader(codeIndexMap, nameCodeMappingMap, uploadFileColumns);
-                    isFileHeadFlag = false;
-                    header = line;
-                }else{
-                    Integer existsDataIndex = dataCheck.get(line);
-                    if (existsDataIndex == null) {
-                        int validateResult = parseRowDataList(codeIndexMap, legalDataList, uploadFileColumns, batchId, fileUnique,fileType);
-                        if (ImportConstant.VALIDATE_SUCCESS != validateResult) {
-                            illegaDataList.add(line);
-                            switch (validateResult) {
-                                case ImportConstant.VALIDATE_EMAIL_FAILED:
-                                    emailRows++;
-                                    break;
-                                case ImportConstant.VALIDATE_MOBILE_FAILED :
-                                    mobileRows++;
-                                    break;
+                if(bitmap == null) {
+                    logger.info("数据文件没有指定唯一列索引，为非法数据文件");
+                    break;
+                }
+                if(rowIndex == INVALID_ROW_IN_FILE) continue;
+                //当遍历到上传的文件的第三行时，这里解析到了列名与索引的对应关系
+                if(rowIndex == ATTRIBUTE_NAME_ROW_IN_FILE){
+                    illegalColumns = parseHeaderInExcel(codeIndexMap,nameCodeMappingMap,row);
+                    StringBuffer tmpHeader = new StringBuffer();
+                    Iterator<Cell> headerCellIterator = row.cellIterator();
+                    for(;headerCellIterator.hasNext();){
+                        Cell headerColumnCell = headerCellIterator.next();
+                        if(headerColumnCell.getCellType() == Cell.CELL_TYPE_STRING){
+                            tmpHeader.append(headerColumnCell.getStringCellValue() + ",");
+                        }
+                    }
+                    header = tmpHeader.substring(0, tmpHeader.length() - 1);
+                    continue;
+                }
+
+                //解析数据，将数据插入相应的OriginalData表中
+                String line = null;
+                StringBuffer tmpLine = new StringBuffer();
+                Iterator<Cell> dataCellIterator = row.cellIterator();
+                for(;dataCellIterator.hasNext();){
+                    Cell dataColumnCell = dataCellIterator.next();
+                    switch (dataColumnCell.getCellType()){
+                        case Cell.CELL_TYPE_STRING:
+                            tmpLine.append(dataColumnCell.getStringCellValue() + ",");
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            if(org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(dataColumnCell)){
+                                tmpLine.append(DateUtil.getStringFromDate(dataColumnCell.getDateCellValue(),"yyyy-MM-dd HH:mm:ss") + ",");
+                            }else{
+                                tmpLine.append(dataColumnCell.getNumericCellValue() + ",");
                             }
-                        } else {
-                            dataCheck.put(line, Integer.valueOf(legalDataList.size() - 1));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                line = tmpLine.substring(0, tmpLine.length() - 1);
+
+                Integer existsDataIndex = dataCheck.get(line);
+                if (existsDataIndex == null) {
+                    int validateResult = parseRowDataList(codeIndexMap, legalDataList, row, batchId, fileUnique,fileType,bitmap);
+                    if (ImportConstant.VALIDATE_SUCCESS != validateResult) {
+                        illegaDataList.add(line);
+                        switch (validateResult) {
+                            case ImportConstant.VALIDATE_EMAIL_FAILED:
+                                emailRows++;
+                                break;
+                            case ImportConstant.VALIDATE_MOBILE_FAILED :
+                                mobileRows++;
+                                break;
                         }
                     } else {
-                        illegaDataList.add(line);
-                        illegaDataList.add(line);
-                        legalDataList.set(existsDataIndex.intValue(), null);
-                        duplicateRows++;
+                        dataCheck.put(line, Integer.valueOf(legalDataList.size() - 1));
                     }
-                    totalRows++;
+                } else {
+                    illegaDataList.add(line);
+                    illegaDataList.add(line);
+                    legalDataList.set(existsDataIndex.intValue(), null);
+                    duplicateRows++;
                 }
-            }
-            Iterator<Map<String, Object>> iterator = legalDataList.iterator();
-            while (iterator.hasNext()) {
-                Map<String, Object> dataMap = iterator.next();
-                if (dataMap == null) {
-                    iterator.remove();
-                }
-            }
-        }catch (Exception e){
-            logger.error("文件解析失败!", e);
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (Exception e) {
+                totalRows++;
 
-                }
+            }
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+        }
+//-----------------------------------------------------------------
+        Iterator<Map<String, Object>> iterator = legalDataList.iterator();
+        while (iterator.hasNext()) {
+            Map<String, Object> dataMap = iterator.next();
+            if (dataMap == null) {
+                iterator.remove();
             }
         }
 
@@ -195,22 +259,46 @@ public class ParseUploadFileImpl {
     }
 
     private int parseRowDataList(Map<String, Integer> codeIndexMap,
-            ArrayList<Map<String, Object>> rowDataList, String[] uploadFileColumns, String batchId, String fileUnique, int fileType) {
+            ArrayList<Map<String, Object>> rowDataList, Row row, String batchId, String fileUnique, int fileType, String bitmap) {
         Map<String,Object> insertMap = new HashMap<>();
         for(Map.Entry<String, Integer> entry : codeIndexMap.entrySet()){
             String cloumnCode = entry.getKey();
             int cloumnIndex = entry.getValue().intValue();
-            if(uploadFileColumns.length  > cloumnIndex && !("".equals(uploadFileColumns[cloumnIndex]))){
-                if(cloumnCode.endsWith("time") || cloumnCode.endsWith("birthday")){
-                    Date date = DateUtil.parseTimeInUploadFile(uploadFileColumns[cloumnIndex]);
-                    insertMap.put(cloumnCode, date);
-                    continue;
+            try {
+                Cell cell = row.getCell(cloumnIndex);
+                if(cell != null){
+                    if(cloumnCode.endsWith("time") || cloumnCode.endsWith("birthday")){
+                        if(cell.getCellType() == Cell.CELL_TYPE_NUMERIC){
+                            if(org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)){
+                                Date date = cell.getDateCellValue();
+                                insertMap.put(cloumnCode,date);
+                            }
+                        }
+                    }else{
+                        switch (cell.getCellType()){
+                            case Cell.CELL_TYPE_STRING:
+                                insertMap.put(cloumnCode,cell.getStringCellValue());
+                                break;
+                            case Cell.CELL_TYPE_NUMERIC:
+                                if(cloumnCode.endsWith("consignee_tel") || cloumnCode.endsWith("mobile")){
+                                    DecimalFormat df = new DecimalFormat("0");
+                                    insertMap.put(cloumnCode,df.format(cell.getNumericCellValue()));
+                                    break;
+                                }
+                                insertMap.put(cloumnCode,cell.getNumericCellValue() + "");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }else{
+                    insertMap.put(cloumnCode,null);
                 }
-                insertMap.put(cloumnCode, uploadFileColumns[cloumnIndex]);
-            }else{
-                insertMap.put(cloumnCode, null);
+            }catch (Exception e){
+                logger.debug(e.getMessage());
             }
         }
+        insertMap.put("bitmap",bitmap);      //将IDMap的标志值放入到插入数据Map中
 
         int validateResult = validateData(insertMap, fileType);
         if(validateResult == ImportConstant.VALIDATE_SUCCESS){
@@ -283,7 +371,6 @@ public class ParseUploadFileImpl {
             }
             return ImportConstant.VALIDATE_SUCCESS;
         } else {
-
             if (fileType == ImportConstant.MEMBER_FILE) {
                 String cardAmt = (String) insertMap.get(ImportConstant.CARD_AMT_FIELD);
                 if (!isNumber(cardAmt)) {
@@ -310,18 +397,48 @@ public class ParseUploadFileImpl {
      * @功能简述: 构造出数据库列名与文件中相应列索引的对应关系
      * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
      */
-    private String parseHeader(Map<String, Integer> codeIndexMap,
-                             Map<String, String> nameCodeMap, String[] uploadFileColumns) {
+//    private String parseHeader(Map<String, Integer> codeIndexMap,
+//                             Map<String, String> nameCodeMap, String[] uploadFileColumns) {
+//        StringBuffer illegalColumns = new StringBuffer();
+//        int column = 0;
+//        for(String uploadFileColumn : uploadFileColumns){
+//            String fieldCode = nameCodeMap.get(uploadFileColumn);
+//            if(fieldCode != null){
+//                codeIndexMap.put(fieldCode, Integer.valueOf(column));
+//            }else{
+//                illegalColumns.append(uploadFileColumn + ",");
+//            }
+//            column ++;
+//        }
+//
+//        if (illegalColumns.length() > 0) {
+//            return illegalColumns.substring(0, illegalColumns.length() - 1);
+//        }
+//        return "";
+//    }
+
+    /**
+     * @功能简述: 构造出数据库列名与文件中相应列索引的对应关系
+     * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
+     */
+    private String parseHeaderInExcel(Map<String, Integer> codeIndexMap,
+                               Map<String, String> nameCodeMap, Row headerRow) {
         StringBuffer illegalColumns = new StringBuffer();
-        int column = 0;
-        for(String uploadFileColumn : uploadFileColumns){
-            String fieldCode = nameCodeMap.get(uploadFileColumn);
-            if(fieldCode != null){
-                codeIndexMap.put(fieldCode, Integer.valueOf(column));
-            }else{
-                illegalColumns.append(uploadFileColumn + ",");
+        Iterator<Cell> cellIterator = headerRow.cellIterator();
+        for(;cellIterator.hasNext();){
+            Cell cell = cellIterator.next();
+            switch (cell.getCellType()){
+                case Cell.CELL_TYPE_STRING:
+                    String fieldCode = nameCodeMap.get(cell.getStringCellValue());
+                    if(fieldCode != null){
+                        codeIndexMap.put(fieldCode,cell.getColumnIndex());
+                    }else{
+                        illegalColumns.append(cell.getStringCellValue() + ",");
+                    }
+                    break;
+                default:
+                    logger.info("上传列名的数据格式不合法，请检查Excel文件头的编辑");
             }
-            column ++;
         }
 
         if (illegalColumns.length() > 0) {

@@ -15,7 +15,7 @@
 		<![CDATA[ pay_channel,pay_acct,pay_serial,trans_serial,order_no,product_name,create_time,
 		complete_time,pay_status,counter_acct,income_amt,paid_amt,acct_amt,comments,identify_no,
 		driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,update_time,
-		source,batch_id,wxmp_id,wx_code,bitmap,keyid]]>
+		source,batch_id,wxmp_id,wx_code,bitmap]]>
 	</sql>
 
 
@@ -293,7 +293,7 @@
 			#{obj.acctAmt},#{obj.comments},#{obj.identifyNo},#{obj.drivingLicense},
 			#{obj.email},#{obj.mobile},#{obj.tel},#{obj.qq},#{obj.acctType}, #{obj.acctNo},
 			#{obj.idfa},#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.updateTime},
-			#{obj.source},#{obj.batchId},#{obj.wxmpId},#{obj.wxCode},#{obj.bitmap},#{obj.keyid})
+			#{obj.source},#{obj.batchId},#{obj.wxmpId},#{obj.wxCode},#{obj.bitmap})
 		</foreach>
 		on duplicate key update
 		pay_serial = values(pay_serial)

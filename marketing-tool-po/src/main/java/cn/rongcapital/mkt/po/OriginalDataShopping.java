@@ -128,6 +128,8 @@ public class OriginalDataShopping extends BaseQuery {
 
     private String productName;
 
+    private String bitmap;
+
     public Integer getId() {
         return id;
     }
@@ -614,5 +616,13 @@ public class OriginalDataShopping extends BaseQuery {
 
     public void setProductName(String productName) {
         this.productName = productName == null ? null : productName.trim();
+    }
+
+    public String getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(String bitmap) {
+        this.bitmap = bitmap;
     }
 }

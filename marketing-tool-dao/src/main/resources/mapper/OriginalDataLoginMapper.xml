@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,login_type as loginType,login_time as loginTime,logout_time as logoutTime,login_ip as loginIp,login_device as loginDevice,resolution_ratio as resolutionRatio,login_url as loginUrl,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique]]>
+		<![CDATA[ id as id,login_type as loginType,login_time as loginTime,logout_time as logoutTime,login_ip as loginIp,login_device as loginDevice,resolution_ratio as resolutionRatio,login_url as loginUrl,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique,bitmap as bitmap]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -39,6 +39,7 @@
 		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		    	<if test="fileUnique != null"><![CDATA[ AND file_unique = #{fileUnique}]]></if>
+			    <if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
 		</where>
 	</sql>
 	
@@ -73,14 +74,15 @@
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
 		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
-		    	<if test="fileUnique != null"><![CDATA[file_unique = #{fileUnique}]]></if>
+		    	<if test="fileUnique != null"><![CDATA[file_unique = #{fileUnique},]]></if>
+			    <if test="bitmap != null"><![CDATA[bitmap = #{bitmap}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataLogin" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,file_unique)
+			INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,file_unique,bitmap)
 			VALUES
 			(
 			  #{loginType},
@@ -105,7 +107,8 @@
 			  now(),
 			  #{source},
 			  #{batchId},
-			  #{fileUnique}
+			  #{fileUnique},
+			  #{bitmap}
 			)
 		]]>
 	</insert>
@@ -156,7 +159,7 @@
 		INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,
 			login_device,resolution_ratio,login_url,identify_no,driving_license,
 			email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,status,
-			create_time,source,file_unique,batch_id)
+			create_time,source,file_unique,batch_id,bitmap)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -183,7 +186,8 @@
 			#{item.create_time,jdbcType=DATE},
 			#{item.source},
 			#{item.file_unique},
-			#{item.batch_id}
+			#{item.batch_id},
+			#{item.bitmap}
 			)
 		</foreach>
 	</insert>
