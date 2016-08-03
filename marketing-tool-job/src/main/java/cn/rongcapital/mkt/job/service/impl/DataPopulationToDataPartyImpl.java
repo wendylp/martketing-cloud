@@ -1,10 +1,13 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.DataPopulation;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -43,9 +46,9 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
         List<Integer> idList = new ArrayList<>(dataPopulationList.size());
         for(DataPopulation dataObj : dataPopulationList){
             DataParty dataParty=new DataParty();
-            dataParty.setMappingKeyid(dataObj.getMobile());
+            dataParty.setMappingKeyid(dataObj.getId().toString());
             dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-            dataParty.setMdType(MD_TYPE);
+            dataParty.setMdType(DataTypeEnum.POPULATION.getCode());
             dataParty.setMobile(dataObj.getMobile());
             dataParty.setName(dataObj.getName());
             dataParty.setGender(dataObj.getGender());
@@ -58,6 +61,20 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
             dataParty.setMonthlyConsume(dataObj.getMonthlyConsume());
             dataParty.setSource(dataObj.getSource());
             dataParty.setBatchId(dataObj.getBatchId());
+            
+			String bitmap = dataObj.getBitmap();
+			if (StringUtils.isNotBlank(bitmap)) {
+				try {
+					// 获取keyid
+					List<String> strlist = super.getAvailableKeyid(bitmap);
+
+					dataParty = (DataParty) super.primaryKeyCopy(dataObj, dataParty, strlist);
+
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
             dataPartyList.add(dataParty);
             idList.add(dataObj.getId());

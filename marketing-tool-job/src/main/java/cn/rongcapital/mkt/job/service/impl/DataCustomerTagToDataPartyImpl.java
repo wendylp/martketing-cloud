@@ -1,16 +1,19 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataCustomerTags;
 import cn.rongcapital.mkt.po.DataParty;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by ethan on 16/6/30.
@@ -44,11 +47,24 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
         for(DataCustomerTags dataObj : dataCustomerTagsList){
             DataParty dataParty=new DataParty();
             dataParty.setMobile(dataObj.getMobile());
-            dataParty.setMappingKeyid(dataObj.getMobile());
+            dataParty.setMappingKeyid(dataObj.getId().toString());
             dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-            dataParty.setMdType(MD_TYPE);
+            dataParty.setMdType(DataTypeEnum.CUSTOMER_TAGS.getCode());
             dataParty.setSource(dataObj.getSource());
             dataParty.setBatchId(dataObj.getBatchId());
+
+			String bitmap = dataObj.getBitmap();
+			if (StringUtils.isNotBlank(bitmap)) {
+				try {
+					// 获取keyid
+					List<String> strlist = super.getAvailableKeyid(bitmap);
+
+					dataParty = (DataParty) super.primaryKeyCopy(dataObj, dataParty, strlist);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
             dataPartyList.add(dataParty);
             idList.add(dataObj.getId());
         }
