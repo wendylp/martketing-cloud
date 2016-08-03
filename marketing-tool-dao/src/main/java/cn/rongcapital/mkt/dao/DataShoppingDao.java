@@ -68,13 +68,13 @@ public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDa
      * @功能简述 : 根据购物记录中单个微信用户（公众号标识＋openid）购买的总次数(看订单号)获取数据量
      * @return ShoppingWechat
      */
-    ShoppingWechat selectTotalShoppingCountByWeChatInfo();
+    List<ShoppingWechat> selectTotalShoppingCountByWeChatInfo();
     
     
     /**
      * @功能简述 : 根据购物记录中单个微信用户（公众号标识＋openid）单月购买次数（订单号）获取数据量
      * @return ShoppingWechat
      */
-    ShoppingWechat selectSingleMonthShoppingCountByWeChatInfo();
+    List<ShoppingWechat> selectSingleMonthShoppingCountByWeChatInfo();
     
 }

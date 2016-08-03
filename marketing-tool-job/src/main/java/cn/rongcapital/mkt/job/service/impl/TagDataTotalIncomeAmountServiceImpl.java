@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ public class TagDataTotalIncomeAmountServiceImpl implements TaskService {
 
     // TODO 根本不能这么搞, mapping_keyid还不知道怎么查呢.
     // 已经将shopping总数获取到, 交给mongoDB处理
-    public ShoppingWechat getByTotalShoppingCount() {
+    public List<ShoppingWechat> getByTotalShoppingCount() {
         return dataPaymentDao.selectTotalIncomeAmountByWechatInfo();
     }
 }
