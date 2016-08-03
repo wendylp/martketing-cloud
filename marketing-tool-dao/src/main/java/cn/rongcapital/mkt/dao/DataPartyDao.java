@@ -188,4 +188,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      */
     Integer selectNotNullMobile();
     
+    /**
+     * 根据pubId与openId查询dataParty的id
+     *
+     * @return Integer
+     */
+    Integer selectDataPartyIdbyWechatInfo(String pubId , String openId);
+    
 }
