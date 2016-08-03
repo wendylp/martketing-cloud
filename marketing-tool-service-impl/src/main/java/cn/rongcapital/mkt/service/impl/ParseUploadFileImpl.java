@@ -163,8 +163,16 @@ public class ParseUploadFileImpl {
                 Integer rowIndex = row.getCell(row.getFirstCellNum()).getRowIndex();
                 if(rowIndex == UNIQUE_ID_ROW_IN_FILE){
                     //Todo: 这里先将主键ID写死
-                    bitmap = "00000011000000000";
-                    continue;
+                    char[] tmpBuffer = new char[17];
+                    for(int i = 0; i<tmpBuffer.length; i++) tmpBuffer[i] = '0';
+                    Iterator<Cell> uniqueIterator = row.cellIterator();
+                    for(;uniqueIterator.hasNext();){
+                        Cell cell = uniqueIterator.next();
+                        if(cell.getColumnIndex() != 0 && !cell.getStringCellValue().equals("")){
+                            tmpBuffer[cell.getColumnIndex()-1] = '1';
+                        }
+                    }
+                    bitmap = tmpBuffer.toString();
                 }
                 if(bitmap == null) {
                     logger.info("数据文件没有指定唯一列索引，为非法数据文件");
