@@ -163,7 +163,7 @@ public class ParseUploadFileImpl {
                 Integer rowIndex = row.getCell(row.getFirstCellNum()).getRowIndex();
                 if(rowIndex == UNIQUE_ID_ROW_IN_FILE){
                     //Todo: 这里先将主键ID写死
-                    bitmap = "000000110000000000";
+                    bitmap = "00000011000000000";
                     continue;
                 }
                 if(bitmap == null) {
