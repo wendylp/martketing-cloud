@@ -57,6 +57,38 @@ public class DataParty extends BaseQuery {
     private Integer mdType;
 
     private String mappingKeyid;
+    
+    private String tel;
+
+    private String email;
+
+    private String qq;
+
+    private String identifyNo;
+
+    private String drivingLicense;
+
+    private String wxmpCode;
+
+    private String openid;
+
+    private String wxUin;
+
+    private String wxpersonId;
+
+    private String idfa;
+
+    private String imei;
+
+    private String unionid;
+
+    private String acctNo;
+
+    private String flag1;
+
+    private String flag2;
+
+    private String bitmap;
 
     public Integer getId() {
         return id;
@@ -233,4 +265,133 @@ public class DataParty extends BaseQuery {
     public void setCitizenship(String citizenship) {
         this.citizenship = citizenship;
     }
+
+	public String getTel() {
+		return tel;
+	}
+
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getQq() {
+		return qq;
+	}
+
+	public void setQq(String qq) {
+		this.qq = qq;
+	}
+
+	public String getIdentifyNo() {
+		return identifyNo;
+	}
+
+	public void setIdentifyNo(String identifyNo) {
+		this.identifyNo = identifyNo;
+	}
+
+	public String getDrivingLicense() {
+		return drivingLicense;
+	}
+
+	public void setDrivingLicense(String drivingLicense) {
+		this.drivingLicense = drivingLicense;
+	}
+
+	public String getWxmpCode() {
+		return wxmpCode;
+	}
+
+	public void setWxmpCode(String wxmpCode) {
+		this.wxmpCode = wxmpCode;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+
+	public String getWxUin() {
+		return wxUin;
+	}
+
+	public void setWxUin(String wxUin) {
+		this.wxUin = wxUin;
+	}
+
+	public String getWxpersonId() {
+		return wxpersonId;
+	}
+
+	public void setWxpersonId(String wxpersonId) {
+		this.wxpersonId = wxpersonId;
+	}
+
+	public String getIdfa() {
+		return idfa;
+	}
+
+	public void setIdfa(String idfa) {
+		this.idfa = idfa;
+	}
+
+	public String getImei() {
+		return imei;
+	}
+
+	public void setImei(String imei) {
+		this.imei = imei;
+	}
+
+	public String getUnionid() {
+		return unionid;
+	}
+
+	public void setUnionid(String unionid) {
+		this.unionid = unionid;
+	}
+
+	public String getAcctNo() {
+		return acctNo;
+	}
+
+	public void setAcctNo(String acctNo) {
+		this.acctNo = acctNo;
+	}
+
+	public String getFlag1() {
+		return flag1;
+	}
+
+	public void setFlag1(String flag1) {
+		this.flag1 = flag1;
+	}
+
+	public String getFlag2() {
+		return flag2;
+	}
+
+	public void setFlag2(String flag2) {
+		this.flag2 = flag2;
+	}
+
+	public String getBitmap() {
+		return bitmap;
+	}
+
+	public void setBitmap(String bitmap) {
+		this.bitmap = bitmap;
+	}
+
 }

@@ -4,7 +4,13 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,citizenship as citizenship,provice as provice,city as city,job as job,monthly_income as monthlyIncome,member_level as memberLevel,member_points as memberPoints,source as source,monthly_consume as monthlyConsume,last_login as lastLogin,status as status,create_time as createTime,update_time as updateTime,batch_id as batchId,md_type as mdType,mapping_keyid as mappingKeyid]]>
+		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,citizenship as citizenship,
+		provice as provice,city as city,job as job,monthly_income as monthlyIncome,member_level as memberLevel,
+		member_points as memberPoints,source as source,monthly_consume as monthlyConsume,last_login as lastLogin,
+		status as status,create_time as createTime,update_time as updateTime,batch_id as batchId,md_type as mdType,
+		mapping_keyid as mappingKeyid,tel as tel,email as email,qq as qq,identify_no as identifyNo,driving_license as drivingLicense,
+		wxmp_code as wxmpCode,openid as openid,wx_uin as wxUin,wxperson_id as wxpersonId,IDFA as IDFA,,IMEI as IMEI,unionid as unionid,
+		acct_no as acctNo,flag1 as flag1,flag2 as flag2,bitmap as bitmap]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -34,7 +40,24 @@
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		    	<if test="mdType != null"><![CDATA[ AND md_type = #{mdType}]]></if>
 		    	<if test="mappingKeyid != null"><![CDATA[ AND mapping_keyid = #{mappingKeyid}]]></if>
-		</where>
+		    	
+		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
+		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
+		    	<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
+		    	<if test="wxmpCode != null"><![CDATA[ AND wxmp_code = #{wxmpCode}]]></if>
+		    	<if test="openid != null"><![CDATA[ AND openid = #{openid}]]></if>
+		    	<if test="wxUin != null"><![CDATA[ AND wx_uin = #{wxUin}]]></if>
+		    	<if test="wxpersonId != null"><![CDATA[ AND wxperson_id = #{wxpersonId}]]></if>
+		    	<if test="idfa != null"><![CDATA[ AND IDFA = #{idfa}]]></if>
+		    	<if test="imei != null"><![CDATA[ AND IMEI = #{imei}]]></if>
+		    	<if test="unionid != null"><![CDATA[ AND unionid = #{unionid}]]></if>
+		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
+		    	<if test="flag1 != null"><![CDATA[ AND flag1 = #{flag1}]]></if>
+		    	<if test="flag2 != null"><![CDATA[ AND flag2 = #{flag2}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>		    	
+		 </where>
 	</sql>
 	
 	<!-- 智能排序与分页 -->
@@ -63,7 +86,51 @@
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
 		    	<if test="mdType != null"><![CDATA[md_type = #{mdType},]]></if>
-		    	<if test="mappingKeyid != null"><![CDATA[mapping_keyid = #{mappingKeyid}]]></if>
+		    	<if test="mappingKeyid != null"><![CDATA[mapping_keyid = #{mappingKeyid},]]></if>
+				<if test="tel != null" >tel = #{tel},</if>
+				<if test="email != null" >email = #{email},</if>
+				<if test="qq != null" >
+				  qq = #{qq},
+				</if>
+				<if test="identifyNo != null" >
+				  identify_no = #{identifyNo},
+				</if>
+				<if test="drivingLicense != null" >
+				  driving_license = #{drivingLicense},
+				</if>
+				<if test="wxmpCode != null" >
+				  wxmp_code = #{wxmpCode},
+				</if>
+				<if test="openid != null" >
+				  openid = #{openid},
+				</if>
+				<if test="wxUin != null" >
+				  wx_uin = #{wxUin},
+				</if>
+				<if test="wxpersonId != null" >
+				  wxperson_id = #{wxpersonId},
+				</if>
+				<if test="idfa != null" >
+				  IDFA = #{idfa},
+				</if>
+				<if test="imei != null" >
+				  IMEI = #{imei},
+				</if>
+				<if test="unionid != null" >
+				  unionid = #{unionid},
+				</if>
+				<if test="acctNo != null" >
+				  acct_no = #{acctNo},
+				</if>
+				<if test="flag1 != null" >
+				  flag1 = #{flag1},
+				</if>
+				<if test="flag2 != null" >
+				  flag2 = #{flag2},
+				</if>
+				<if test="bitmap != null" >
+				  bitmap = #{bitmap},
+				</if>
 		</set>
 	</sql>
 
@@ -90,7 +157,12 @@
 			  now(),
 			  #{batchId},
 			  #{mdType},
-			  #{mappingKeyid}
+			  #{mappingKeyid},
+			  #{tel}, #{email}, #{qq}, #{identifyNo}, 
+		      #{drivingLicense}, #{wxmpCode}, #{openid}, 
+		      #{wxUin}, #{wxpersonId}, #{idfa}, 
+		      #{imei}, #{unionid}, #{acctNo}, 
+		      #{flag1}, #{flag2}, #{bitmap}
 			)
 		]]>
 	</insert>
@@ -119,7 +191,12 @@
               now(),
               #{item.batchId},
               #{item.mdType},
-              #{item.mappingKeyid}
+              #{item.mappingKeyid},
+              #{item.tel}, #{item.email}, #{item.qq}, #{item.identifyNo}, 
+		      #{item.drivingLicense}, #{item.wxmpCode}, #{item.openid}, 
+		      #{item.wxUin}, #{item.wxpersonId}, #{item.idfa}, 
+		      #{item.imei}, #{item.unionid}, #{item.acctNo}, 
+		      #{item.flag1}, #{item.flag2}, #{item.bitmap}
 			)
 		</foreach>
         ON DUPLICATE KEY UPDATE
@@ -595,7 +672,6 @@
 	        pub_id IS NOT NULL) tmpCount
 	]]>
 	</select>
-	
 	<select id="selectNotNullMobile" resultType="java.lang.Integer">
 		SELECT 
 			COUNT(id) 
