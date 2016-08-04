@@ -157,9 +157,9 @@ public class ParseUploadFileImpl {
                         }
                     }
                     bitmap = new String(tmpBuffer);
-                    logger.info("bitmap: " + bitmap );
                     continue;
                 }
+                logger.info("bitmap: " + bitmap );
                 if(bitmap == null) {
                     logger.info("数据文件没有指定唯一列索引，为非法数据文件");
                     break;
@@ -327,6 +327,7 @@ public class ParseUploadFileImpl {
             seqIndex++;
         }
 
+        logger.info("唯一性验证验证通过");
         String email = (String) insertMap.get(ImportConstant.EMAIL_FIELD);
         if(StringUtils.hasText(email)){
             if (!isEmail(email)) {
@@ -383,14 +384,15 @@ public class ParseUploadFileImpl {
             if(StringUtils.isEmpty(orderNo) && StringUtils.isEmpty(transSerial)){
                 return ImportConstant.VALIDATE_OTHER_FAILED;
             }
-
+            logger.info("订单号验证通过");
             if(StringUtils.isEmpty(source)){
                 return ImportConstant.VALIDATE_OTHER_FAILED;
             }
-
+            logger.info("来源验证通过");
             if (!isNumber(incomeAmt) || !isNumber(paidAmt) || !isNumber(acctAmt)) {
                 return ImportConstant.VALIDATE_OTHER_FAILED;
             }
+            logger.info("数字验证通过");
             return ImportConstant.VALIDATE_SUCCESS;
         } else {
             if (fileType == ImportConstant.MEMBER_FILE) {
