@@ -307,13 +307,13 @@
 	
 	<select id="selectTotalIncomeAmountByWechatInfo" resultType="cn.rongcapital.mkt.po.ShoppingWechat">
 		SELECT sum(income_amt) as totalIncome , count(id) as totalCount ,wxmp_id as pubId , wx_code as openId  FROM data_payment
-			WHERE pay_status = 1 
+			WHERE pay_status = '成功'
 			GROUP BY wxmp_id , wx_code;
 	</select>
 	
 	<select id="selectAverageIncomeAmountByWechatInfo" resultType="cn.rongcapital.mkt.po.ShoppingWechat">
 		SELECT AVG(income_amt) as averageIncome , count(id) as totalCount ,wxmp_id as pubId , wx_code as openId  FROM data_payment
-			WHERE pay_status = 1 
+			WHERE pay_status = '成功'
 			GROUP BY wxmp_id , wx_code;
 	</select>
 	
