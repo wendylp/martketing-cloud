@@ -31,9 +31,15 @@ public class ShoppingWechat {
 
     // 支付记录中支付状态成功，单个微信用户（公众号标识＋openid）收入金额总额取平均数
     private BigDecimal averageIncome;
-    
+
     // 公众号下，openid有购买记录的用户标记为是购买用户，其余的标记为不是购买用户
     private boolean isShoppingUser;
+
+    // 购物记录－购物渠道－官网字段／分销字段--（新增）交易渠道偏好－微盟－（旺铺、其它）
+    private String weimob;
+
+    // 购物记录的订单状态中，交易完成／交易关闭／待支付
+    private String paymentStatus;
 
     public Integer getDataPartyId() {
         return dataPartyId;
@@ -114,4 +120,21 @@ public class ShoppingWechat {
     public void setShoppingUser(boolean isShoppingUser) {
         this.isShoppingUser = isShoppingUser;
     }
+
+    public String getWeimob() {
+        return weimob;
+    }
+
+    public void setWeimob(String weimob) {
+        this.weimob = weimob;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
 }
