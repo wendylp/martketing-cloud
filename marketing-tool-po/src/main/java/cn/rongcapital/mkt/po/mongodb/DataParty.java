@@ -105,7 +105,7 @@ public class DataParty implements Serializable {
 	private BigDecimal averageIncome;
 
 	// 公众号下，openid有购买记录的用户标记为是购买用户，其余的标记为不是购买用户 -- 是/否
-	private boolean isShoppingUser;
+	private Boolean isShoppingUser;
 
 	// 购物记录－购物渠道－官网字段／分销字段--（新增）交易渠道偏好－微盟－（旺铺、其它）
 	private String weimob;
