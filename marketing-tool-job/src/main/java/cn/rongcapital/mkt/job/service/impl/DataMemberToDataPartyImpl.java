@@ -3,7 +3,6 @@ package cn.rongcapital.mkt.job.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -21,68 +20,71 @@ import cn.rongcapital.mkt.po.DataParty;
 @Service
 public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
 
-    @Autowired
-    private DataMemberDao dataMemberDao;
+	@Autowired
+	private DataMemberDao dataMemberDao;
 
-    @Override
-    public int queryTotalCount() {
-        DataMember dataMember = new DataMember();
-        dataMember.setStatus(StatusEnum.ACTIVE.getStatusCode());
-        return dataMemberDao.selectListCount(dataMember);
-    }
+	@Override
+	public int queryTotalCount() {
+		DataMember dataMember = new DataMember();
+		dataMember.setStatus(StatusEnum.ACTIVE.getStatusCode());
+		return dataMemberDao.selectListCount(dataMember);
+	}
 
-    @Override
-    public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
+	@Override
+	public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
 
-        DataMember dataMember = new DataMember();
-        dataMember.setStatus(StatusEnum.ACTIVE.getStatusCode());
-        dataMember.setPageSize(pageSize);
-        dataMember.setStartIndex(startIndex);
-        List<DataMember> dataMemberList = dataMemberDao.selectList(dataMember);
-        if (CollectionUtils.isEmpty(dataMemberList)) {
-            return null;
-        }
-        List<DataParty> dataPartyList = new ArrayList<>(dataMemberList.size());
-        List<Integer> idList = new ArrayList<>(dataMemberList.size());
-        for(DataMember dataObj : dataMemberList){
-            DataParty dataParty=new DataParty();
-            dataParty.setMemberLevel(dataObj.getMemberLevel());
-            dataParty.setMemberPoints(dataObj.getMemberPoints());
-//            dataParty.setMobile(dataObj.getMobile());
-//            dataParty.setMappingKeyid(dataObj.getId().toString());
-            dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-            dataParty.setMdType(DataTypeEnum.MEMBER.getCode());
-            dataParty.setSource(dataObj.getSource());
-            dataParty.setBatchId(dataObj.getBatchId());
-            
+		DataMember dataMember = new DataMember();
+		dataMember.setStatus(StatusEnum.ACTIVE.getStatusCode());
+		dataMember.setPageSize(pageSize);
+		dataMember.setStartIndex(startIndex);
+		List<DataMember> dataMemberList = dataMemberDao.selectList(dataMember);
+		if (CollectionUtils.isEmpty(dataMemberList)) {
+			return null;
+		}
+		// List<DataParty> dataPartyList = new ArrayList<>(dataMemberList.size());
+		List<Integer> idList = new ArrayList<>(dataMemberList.size());
+		for (DataMember dataObj : dataMemberList) {
 			String bitmap = dataObj.getBitmap();
-			dataParty.setBitmap(bitmap);
-			if (StringUtils.isNotBlank(bitmap)) {
-				try {
-					// 获取keyid
-					List<String> strlist = super.getAvailableKeyid(bitmap);
 
-					dataParty = (DataParty) super.primaryKeyCopy(dataObj, dataParty, strlist);
+			Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
+			if (keyid != null) {
+				this.updateKeyidByid(keyid, dataObj.getId());
+			} else {
+				DataParty dataParty = new DataParty();
+				dataParty.setMemberLevel(dataObj.getMemberLevel());
+				dataParty.setMemberPoints(dataObj.getMemberPoints());
+				// dataParty.setMobile(dataObj.getMobile());
+				// dataParty.setMappingKeyid(dataObj.getId().toString());
+				// dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
+				dataParty.setMdType(DataTypeEnum.MEMBER.getCode());
+				dataParty.setSource(dataObj.getSource());
+				dataParty.setBatchId(dataObj.getBatchId());
 
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
+
+				dataPartyDao.insert(dataParty);
+				this.updateKeyidByid(dataParty.getId(), dataObj.getId());
+
+				// dataPartyList.add(dataParty);
 			}
+			idList.add(dataObj.getId());
+		}
+		DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
+		//dataPartySyncVO.setDataPartyList(dataPartyList);
+		dataPartySyncVO.setExtendDataList(idList);
+		return dataPartySyncVO;
+	}
 
-            dataPartyList.add(dataParty);
-            idList.add(dataObj.getId());
-        }
+	@Override
+	public void doSyncAfter(DataPartySyncVO<Integer> dataPartySyncVO) {
+		dataMemberDao.updateStatusByIds(dataPartySyncVO.getExtendDataList(), StatusEnum.PROCESSED.getStatusCode());
 
-        DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-        dataPartySyncVO.setDataPartyList(dataPartyList);
-        dataPartySyncVO.setExtendDataList(idList);
-        return dataPartySyncVO;
-    }
-
-    @Override
-    public void doSyncAfter(DataPartySyncVO<Integer> dataPartySyncVO) {
-        dataMemberDao.updateStatusByIds(dataPartySyncVO.getExtendDataList(),
-                StatusEnum.PROCESSED.getStatusCode());
-
-    }
+	}
+	
+	public void updateKeyidByid(Integer keyid, Integer id) {
+		DataMember keyidObj = new DataMember();
+		keyidObj.setId(id);
+		keyidObj.setKeyid(keyid);
+		dataMemberDao.updateById(keyidObj);
+	}
 }

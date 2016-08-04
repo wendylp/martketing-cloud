@@ -3,7 +3,6 @@ package cn.rongcapital.mkt.job.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -30,7 +29,7 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 		dataArchPoint.setStatus(StatusEnum.ACTIVE.getStatusCode());
 		return dataArchPointDao.selectListCount(dataArchPoint);
 	}
- 
+
 	@Override
 	public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
 		DataArchPoint dataArchPoint = new DataArchPoint();
@@ -41,37 +40,39 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 		if (CollectionUtils.isEmpty(dataArchPointList)) {
 			return null;
 		}
-		List<DataParty> dataPartyList = new ArrayList<>(dataArchPointList.size());
+		// List<DataParty> dataPartyList = new
+		// ArrayList<>(dataArchPointList.size());
 		List<Integer> idList = new ArrayList<>(dataArchPointList.size());
 		for (DataArchPoint dataObj : dataArchPointList) {
 
-			DataParty dataParty = new DataParty();
-//			dataParty.setMappingKeyid(dataObj.getId().toString());
-//			dataParty.setMobile(dataObj.getMobile());
-			dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-			dataParty.setMdType(DataTypeEnum.ARCH_POINT.getCode());
-			dataParty.setSource(dataObj.getSource());
-			dataParty.setBatchId(dataObj.getBatchId());
-
 			String bitmap = dataObj.getBitmap();
-			if (StringUtils.isNotBlank(bitmap)) {
-				try {
-					// 获取keyid
-					List<String> strlist = super.getAvailableKeyid(bitmap);
 
-					dataParty = (DataParty) super.primaryKeyCopy(dataObj, dataParty, strlist);
+			Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
+			if (keyid != null) {
+				this.updateKeyidByid(keyid, dataObj.getId());
+			} else {
 
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				DataParty dataParty = new DataParty();
+				// dataParty.setMappingKeyid(dataObj.getId().toString());
+				// dataParty.setMobile(dataObj.getMobile());
+				// dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
+				dataParty.setMdType(DataTypeEnum.ARCH_POINT.getCode());
+				dataParty.setSource(dataObj.getSource());
+				dataParty.setBatchId(dataObj.getBatchId());
+
+				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
+
+				dataPartyDao.insert(dataParty);
+
+				this.updateKeyidByid(dataParty.getId(), dataObj.getId());
+
+				// dataPartyList.add(dataParty);
 			}
-			dataPartyList.add(dataParty);
 			idList.add(dataObj.getId());
-
 		}
 
 		DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-		dataPartySyncVO.setDataPartyList(dataPartyList);
+		// dataPartySyncVO.setDataPartyList(dataPartyList);
 		dataPartySyncVO.setExtendDataList(idList);
 		return dataPartySyncVO;
 	}
@@ -79,7 +80,13 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 	@Override
 	public void doSyncAfter(DataPartySyncVO<Integer> dataPartySyncVO) {
 		dataArchPointDao.updateStatusByIds(dataPartySyncVO.getExtendDataList(), StatusEnum.PROCESSED.getStatusCode());
+	}
 
+	public void updateKeyidByid(Integer keyid, Integer id) {
+		DataArchPoint keyidObj = new DataArchPoint();
+		keyidObj.setId(id);
+		keyidObj.setKeyid(keyid);
+		dataArchPointDao.updateById(keyidObj);
 	}
 
 }

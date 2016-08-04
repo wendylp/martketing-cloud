@@ -3,7 +3,6 @@ package cn.rongcapital.mkt.job.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -21,66 +20,71 @@ import cn.rongcapital.mkt.po.DataParty;
 @Service
 public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
 
-    @Autowired
-    private DataLoginDao dataLoginDao;
+	@Autowired
+	private DataLoginDao dataLoginDao;
 
-    @Override
-    public int queryTotalCount() {
-        DataLogin dataLogin = new DataLogin();
-        dataLogin.setStatus(StatusEnum.ACTIVE.getStatusCode());
-        return dataLoginDao.selectListCount(dataLogin);
-    }
+	@Override
+	public int queryTotalCount() {
+		DataLogin dataLogin = new DataLogin();
+		dataLogin.setStatus(StatusEnum.ACTIVE.getStatusCode());
+		return dataLoginDao.selectListCount(dataLogin);
+	}
 
-    @Override
-    public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
-        DataLogin dataLogin = new DataLogin();
-        dataLogin.setStatus(StatusEnum.ACTIVE.getStatusCode());
-        dataLogin.setPageSize(pageSize);
-        dataLogin.setStartIndex(startIndex);
-        List<DataLogin> dataLoginList = dataLoginDao.selectList(dataLogin);
-        if (CollectionUtils.isEmpty(dataLoginList)) {
-            return null;
-        }
-        List<DataParty> dataPartyList = new ArrayList<>(dataLoginList.size());
-        List<Integer> idList = new ArrayList<>(dataLoginList.size());
-        for(DataLogin dataObj : dataLoginList){
-            DataParty dataParty=new DataParty();
-            dataParty.setLastLogin(dataObj.getLoginTime());
-//            dataParty.setMobile(dataObj.getMobile());
-//            dataParty.setMappingKeyid(dataObj.getId().toString());
-            dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-            dataParty.setMdType(DataTypeEnum.LOGIN.getCode());
-            dataParty.setSource(dataObj.getSource());
-            dataParty.setBatchId(dataObj.getBatchId());
+	@Override
+	public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
+		DataLogin dataLogin = new DataLogin();
+		dataLogin.setStatus(StatusEnum.ACTIVE.getStatusCode());
+		dataLogin.setPageSize(pageSize);
+		dataLogin.setStartIndex(startIndex);
+		List<DataLogin> dataLoginList = dataLoginDao.selectList(dataLogin);
+		if (CollectionUtils.isEmpty(dataLoginList)) {
+			return null;
+		}
+		// List<DataParty> dataPartyList = new ArrayList<>(dataLoginList.size());
+		List<Integer> idList = new ArrayList<>(dataLoginList.size());
+		for (DataLogin dataObj : dataLoginList) {
 
 			String bitmap = dataObj.getBitmap();
-			dataParty.setBitmap(bitmap);
-			if (StringUtils.isNotBlank(bitmap)) {
-				try {
-					// 获取keyid
-					List<String> strlist = super.getAvailableKeyid(bitmap);
 
-					dataParty = (DataParty) super.primaryKeyCopy(dataObj, dataParty, strlist);
+			Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
+			if (keyid != null) {
+				this.updateKeyidByid(keyid, dataObj.getId());
+			} else {
 
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				DataParty dataParty = new DataParty();
+				dataParty.setLastLogin(dataObj.getLoginTime());
+				// dataParty.setMobile(dataObj.getMobile());
+				// dataParty.setMappingKeyid(dataObj.getId().toString());
+				// dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
+				dataParty.setMdType(DataTypeEnum.LOGIN.getCode());
+				dataParty.setSource(dataObj.getSource());
+				dataParty.setBatchId(dataObj.getBatchId());
+
+				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
+
+				dataPartyDao.insert(dataParty);
+				this.updateKeyidByid(dataParty.getId(), dataObj.getId());
+
+				// dataPartyList.add(dataParty);
 			}
-			
-            dataPartyList.add(dataParty);
-            idList.add(dataObj.getId());
-        }
+			idList.add(dataObj.getId());
+		}
+		DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
+		// dataPartySyncVO.setDataPartyList(dataPartyList);
+		dataPartySyncVO.setExtendDataList(idList);
+		return dataPartySyncVO;
+	}
 
-        DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-        dataPartySyncVO.setDataPartyList(dataPartyList);
-        dataPartySyncVO.setExtendDataList(idList);
-        return dataPartySyncVO;
-    }
+	@Override
+	public void doSyncAfter(DataPartySyncVO<Integer> dataPartySyncVO) {
+		dataLoginDao.updateStatusByIds(dataPartySyncVO.getExtendDataList(), StatusEnum.PROCESSED.getStatusCode());
 
-    @Override
-    public void doSyncAfter(DataPartySyncVO<Integer> dataPartySyncVO) {
-        dataLoginDao.updateStatusByIds(dataPartySyncVO.getExtendDataList(),
-                StatusEnum.PROCESSED.getStatusCode());
-
-    }
+	}
+	
+	public void updateKeyidByid(Integer keyid, Integer id) {
+		DataLogin keyidObj = new DataLogin();
+		keyidObj.setId(id);
+		keyidObj.setKeyid(keyid);
+		dataLoginDao.updateById(keyidObj);
+	}
 }

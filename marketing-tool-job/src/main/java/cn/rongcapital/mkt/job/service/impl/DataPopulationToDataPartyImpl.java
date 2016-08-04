@@ -3,7 +3,6 @@ package cn.rongcapital.mkt.job.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -12,6 +11,7 @@ import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
+import cn.rongcapital.mkt.po.DataMember;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.DataPopulation;
 
@@ -42,48 +42,46 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 		if (CollectionUtils.isEmpty(dataPopulationList)) {
 			return null;
 		}
-		List<DataParty> dataPartyList = new ArrayList<>(dataPopulationList.size());
+		// List<DataParty> dataPartyList = new
+		// ArrayList<>(dataPopulationList.size());
 		List<Integer> idList = new ArrayList<>(dataPopulationList.size());
 		for (DataPopulation dataObj : dataPopulationList) {
-			DataParty dataParty = new DataParty();
-			// dataParty.setMappingKeyid(dataObj.getId().toString());
-			dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-			dataParty.setMdType(DataTypeEnum.POPULATION.getCode());
-			//dataParty.setMobile(dataObj.getMobile());
-			dataParty.setName(dataObj.getName());
-			dataParty.setGender(dataObj.getGender());
-			dataParty.setBirthday(dataObj.getBirthday());
-			dataParty.setCitizenship(dataObj.getCitizenship());
-			dataParty.setProvice(dataObj.getProvice());
-			dataParty.setCity(dataObj.getCity());
-			dataParty.setJob(dataObj.getJob());
-			dataParty.setMonthlyIncome(dataObj.getMonthlyIncome());
-			dataParty.setMonthlyConsume(dataObj.getMonthlyConsume());
-			dataParty.setSource(dataObj.getSource());
-			dataParty.setBatchId(dataObj.getBatchId());
 
 			String bitmap = dataObj.getBitmap();
-			dataParty.setBitmap(bitmap);
-			if (StringUtils.isNotBlank(bitmap)) {
-				try {
-					// 获取keyid
-					List<String> strlist = super.getAvailableKeyid(bitmap);
-					if (CollectionUtils.isEmpty(strlist)) {
 
-					} else {
-						dataParty = (DataParty) super.primaryKeyCopy(dataObj, dataParty, strlist);
-					}
+			Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
+			if (keyid != null) {
+				this.updateKeyidByid(keyid, dataObj.getId());
+			} else {
 
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				DataParty dataParty = new DataParty();
+				// dataParty.setMappingKeyid(dataObj.getId().toString());
+				dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
+				dataParty.setMdType(DataTypeEnum.POPULATION.getCode());
+				// dataParty.setMobile(dataObj.getMobile());
+				dataParty.setName(dataObj.getName());
+				dataParty.setGender(dataObj.getGender());
+				dataParty.setBirthday(dataObj.getBirthday());
+				dataParty.setCitizenship(dataObj.getCitizenship());
+				dataParty.setProvice(dataObj.getProvice());
+				dataParty.setCity(dataObj.getCity());
+				dataParty.setJob(dataObj.getJob());
+				dataParty.setMonthlyIncome(dataObj.getMonthlyIncome());
+				dataParty.setMonthlyConsume(dataObj.getMonthlyConsume());
+				dataParty.setSource(dataObj.getSource());
+				dataParty.setBatchId(dataObj.getBatchId());
+
+				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
+
+				dataPartyDao.insert(dataParty);
+				this.updateKeyidByid(dataParty.getId(), dataObj.getId());
+
+				// dataPartyList.add(dataParty);
 			}
-
-			dataPartyList.add(dataParty);
 			idList.add(dataObj.getId());
 		}
 		DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-		dataPartySyncVO.setDataPartyList(dataPartyList);
+		// dataPartySyncVO.setDataPartyList(dataPartyList);
 		dataPartySyncVO.setExtendDataList(idList);
 		return dataPartySyncVO;
 	}
@@ -91,6 +89,12 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 	@Override
 	public void doSyncAfter(DataPartySyncVO<Integer> dataPartySyncVO) {
 		dataPopulationDao.updateStatusByIds(dataPartySyncVO.getExtendDataList(), StatusEnum.PROCESSED.getStatusCode());
+	}
 
+	public void updateKeyidByid(Integer keyid, Integer id) {
+		DataPopulation keyidObj = new DataPopulation();
+		keyidObj.setId(id);
+		keyidObj.setKeyid(keyid);
+		dataPopulationDao.updateById(keyidObj);
 	}
 }

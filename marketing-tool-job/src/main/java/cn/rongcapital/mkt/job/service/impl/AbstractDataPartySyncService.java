@@ -7,8 +7,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 
+import cn.rongcapital.mkt.common.enums.DataTypeEnum;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.KeyidMapBlockDao;
 import cn.rongcapital.mkt.job.service.DataPartySyncService;
@@ -26,7 +27,7 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 	protected static Integer MD_TYPE = Integer.valueOf(0);
 
 	@Autowired
-	private DataPartyDao dataPartyDao;
+	protected DataPartyDao dataPartyDao;
 
 	@Autowired
 	private KeyidMapBlockDao keyidMapBlockDao;
@@ -45,11 +46,11 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 			if (dataPartySyncVO == null) {
 				return;
 			}
-			List<DataParty> dataPartyList = dataPartySyncVO.getDataPartyList();
-			if (CollectionUtils.isEmpty(dataPartyList)) {
-				return;
-			}
-			dataPartyDao.batchInsert(dataPartyList);
+//			List<DataParty> dataPartyList = dataPartySyncVO.getDataPartyList();
+//			if (CollectionUtils.isEmpty(dataPartyList)) {
+//				return;
+//			}
+//			dataPartyDao.batchInsert(dataPartyList);
 			this.doSyncAfter(dataPartySyncVO);
 		}
 
@@ -103,16 +104,30 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 		return to;
 	}
 
-	public static void main(String[] args) {
-		String field = "wxmd_id";
-		if (field.indexOf("_") > 0) {
-			System.out.println(field.indexOf("_"));
-			String head = field.substring(0, field.indexOf("_"));
-			String upper = field.substring(field.indexOf("_") + 1, field.indexOf("_") + 2).toUpperCase();
-			String tail = field.substring(field.indexOf("_") + 2);
-			System.out.println(head);
-			System.out.println(upper);
-			System.out.println(tail);
-		}
+	public Integer getDataParyPrimaryKey(Object dataObj, String bitmap) {
+		DataParty dataParty = new DataParty();
+		dataParty.setMdType(DataTypeEnum.PARTY.getCode());
+		dataParty.setStatus(StatusEnum.DELETED.getStatusCode().byteValue());
+		// 获取keyid
+		dataParty = this.getDataParyKey(dataParty, dataObj, bitmap);
+
+		Integer id = dataPartyDao.getDataPartyIdByKey(dataParty);
+		return id;
 	}
+
+	public DataParty getDataParyKey(DataParty dataParty, Object dataObj, String bitmap) {
+		if (StringUtils.isNotBlank(bitmap)) {
+			try {
+				// 获取keyid
+				List<String> strlist = this.getAvailableKeyid(bitmap);
+
+				dataParty = (DataParty) this.primaryKeyCopy(dataObj, dataParty, strlist);
+				dataParty.setBitmap(bitmap);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return dataParty;
+	}
+
 }
