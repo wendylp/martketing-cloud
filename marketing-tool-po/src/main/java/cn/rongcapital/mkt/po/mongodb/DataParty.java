@@ -111,7 +111,7 @@ public class DataParty implements Serializable {
 	private String weimob;
 
 	// 购物记录的订单状态中，交易完成／交易关闭／待支付
-	private String paymentStatus;
+	private String orderStatus;
 
 	public String getId() {
 		return id;
@@ -409,14 +409,6 @@ public class DataParty implements Serializable {
         this.averageIncome = averageIncome;
     }
 
-    public boolean isShoppingUser() {
-        return isShoppingUser;
-    }
-
-    public void setShoppingUser(boolean shoppingUser) {
-        isShoppingUser = shoppingUser;
-    }
-
     public String getWeimob() {
         return weimob;
     }
@@ -425,11 +417,19 @@ public class DataParty implements Serializable {
         this.weimob = weimob;
     }
 
-    public String getPaymentStatus() {
-        return paymentStatus;
-    }
+	public Boolean getShoppingUser() {
+		return isShoppingUser;
+	}
 
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
+	public void setShoppingUser(Boolean shoppingUser) {
+		isShoppingUser = shoppingUser;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
 }
