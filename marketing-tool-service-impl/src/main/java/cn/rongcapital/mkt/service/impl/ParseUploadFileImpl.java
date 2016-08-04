@@ -138,6 +138,7 @@ public class ParseUploadFileImpl {
 //-------------------------------------------
         InputStream inputStream = new ByteArrayInputStream(bytes);
         try {
+            logger.info("begin to parse uploaded file.");
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.rowIterator();
@@ -156,6 +157,7 @@ public class ParseUploadFileImpl {
                         }
                     }
                     bitmap = new String(tmpBuffer);
+                    logger.info("bitmap: " + bitmap );
                     continue;
                 }
                 if(bitmap == null) {
