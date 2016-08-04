@@ -146,7 +146,7 @@
 	<insert id="batchInsert">
         INSERT INTO data_party (mobile,name,gender,birthday,citizenship,provice,city,job,monthly_income,
             member_level,member_points,source,monthly_consume,last_login,status,create_time,batch_id,md_type,mapping_keyid,
-            tel,email,qq,identify_no,driving_license,wxmp_code,openid,wx_uin,wxperson_id,idfa,imei,unionid,
+            tel,email,qq,identify_no,driving_license,wxmp_id,wx_code,wx_uin,wxperson_id,idfa,imei,unionid,
 			acct_no,flag1,flag2,bitmap)
         VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
@@ -171,7 +171,7 @@
               #{item.mdType},
               #{item.mappingKeyid},
               #{item.tel}, #{item.email}, #{item.qq}, #{item.identifyNo}, 
-		      #{item.drivingLicense}, #{item.wxmpCode}, #{item.openid}, 
+		      #{item.drivingLicense}, #{item.wxmpId}, #{item.wxCode}, 
 		      #{item.wxUin}, #{item.wxpersonId}, #{item.idfa}, 
 		      #{item.imei}, #{item.unionid}, #{item.acctNo}, 
 		      #{item.flag1}, #{item.flag2}, #{item.bitmap}
@@ -659,4 +659,28 @@
 			mobile is not null
 	</select>
 
+	<!-- 其它SQL语句 -->
+	<select id="getDataPartyIdByKey" parameterType="cn.rongcapital.mkt.po.DataParty" resultType="java.lang.Integer">
+	SELECT id
+		FROM data_party WHERE 1=1 
+				<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
+				<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
+		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
+		    	<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
+		    	<if test="wxUin != null"><![CDATA[ AND wx_uin = #{wxUin}]]></if>
+		    	<if test="wxpersonId != null"><![CDATA[ AND wxperson_id = #{wxpersonId}]]></if>
+		    	<if test="idfa != null"><![CDATA[ AND IDFA = #{idfa}]]></if>
+		    	<if test="imei != null"><![CDATA[ AND IMEI = #{imei}]]></if>
+		    	<if test="unionid != null"><![CDATA[ AND unionid = #{unionid}]]></if>
+		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
+		    	<if test="flag1 != null"><![CDATA[ AND flag1 = #{flag1}]]></if>
+		    	<if test="flag2 != null"><![CDATA[ AND flag2 = #{flag2}]]></if>
+		    	
+		    	<if test="status != null"><![CDATA[ AND status != #{status}]]></if>
+		    	<if test="mdType != null"><![CDATA[ AND md_type = #{mdType}]]></if>
+	</select>
 </mapper>
