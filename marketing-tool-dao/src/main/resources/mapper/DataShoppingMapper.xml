@@ -440,4 +440,15 @@
 		    channel_type = '微盟';
 	</select>
 	
+	<select id="selectAllDataByWechatInfo" resultType="cn.rongcapital.mkt.po.ShoppingWechat">
+		SELECT 
+		    wxmp_id AS pubId,
+		    wx_code AS openId,
+		    pay_status AS paymentStatus
+		FROM
+		    data_shopping
+		WHERE
+		    wxmp_id is not null and wx_code is not null and pay_status is not null;
+	</select>
+	
 </mapper>

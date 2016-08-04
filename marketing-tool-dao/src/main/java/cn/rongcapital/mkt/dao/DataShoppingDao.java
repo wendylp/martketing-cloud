@@ -83,4 +83,10 @@ public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDa
      */
     List<ShoppingWechat> selectAllDataByWeimob();
     
+    /**
+     * @功能简述 : 获取所有含有微信信息的数据
+     * @return ShoppingWechat
+     */
+    List<ShoppingWechat> selectAllDataByWechatInfo();
+    
 }
