@@ -426,4 +426,18 @@
 		]]>
 	</select>
 	
+	<select id="selectAllDataByWeimob" resultType="cn.rongcapital.mkt.po.ShoppingWechat">
+		SELECT 
+		    wxmp_id AS pubId,
+		    wx_code AS openId,
+		    CASE channel_name
+		        WHEN '官网' THEN '旺铺'
+		        WHEN '分销' THEN '其他'
+		    END AS weimob
+		FROM
+		    data_shopping
+		WHERE
+		    channel_type = '微盟';
+	</select>
+	
 </mapper>

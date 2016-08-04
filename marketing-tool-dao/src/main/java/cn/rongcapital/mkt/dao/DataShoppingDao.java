@@ -77,4 +77,10 @@ public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDa
      */
     List<ShoppingWechat> selectSingleMonthShoppingCountByWeChatInfo();
     
+    /**
+     * @功能简述 : 获取所有微盟的数据
+     * @return ShoppingWechat
+     */
+    List<ShoppingWechat> selectAllDataByWeimob();
+    
 }
