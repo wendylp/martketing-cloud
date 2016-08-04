@@ -309,7 +309,7 @@
 	
 	<select id="selectMappingKeyId" parameterType="java.util.Map" resultType="java.lang.String">
 		<![CDATA[SELECT]]>
-		mobile
+		keyid
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE 1=1 and keyid is not null
 		<if test="contactIdList != null">
