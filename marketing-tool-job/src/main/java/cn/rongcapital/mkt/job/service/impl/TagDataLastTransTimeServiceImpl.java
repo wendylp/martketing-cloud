@@ -53,6 +53,7 @@ public class TagDataLastTransTimeServiceImpl extends BaseTagData implements Task
         monthDiff = now.get(Calendar.YEAR) * 12 + now.get(Calendar.MONTH) - targetTime.get(Calendar.YEAR) * 12
                         - targetTime.get(Calendar.MONTH);
         Update update = new Update().set("lastShoppingTime", monthDiff);
+        // 这里的lastshoppingtime改为目标月份与当前月份差几个月.
         mongoTemplate.findAndModify(new Query(criteria), update, cn.rongcapital.mkt.po.mongodb.DataParty.class);
     }
 
