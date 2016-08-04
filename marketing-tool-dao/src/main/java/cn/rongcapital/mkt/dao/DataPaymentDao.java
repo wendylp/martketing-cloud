@@ -61,6 +61,12 @@ public interface DataPaymentDao extends BaseDao<DataPayment>, BaseDataFilterDao<
 	List<ShoppingWechat> selectTotalIncomeAmountByWechatInfo();
 	
 	/**
+     * @功能简述 : 根据支付记录中支付状态成功，获取单个微信用户（公众号标识＋openid）收入金额平均额
+     * @return ShoppingWechat
+     */
+    List<ShoppingWechat> selectAverageIncomeAmountByWechatInfo();
+	
+	/**
      * @功能简述 : 微信状态不为空的数据全部读取出来
      * @return ShoppingWechat
      */

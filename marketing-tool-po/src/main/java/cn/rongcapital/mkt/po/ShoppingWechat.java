@@ -39,7 +39,7 @@ public class ShoppingWechat {
     private String weimob;
 
     // 购物记录的订单状态中，交易完成／交易关闭／待支付
-    private String paymentStatus;
+    private String orderStatus;
 
     public Integer getDataPartyId() {
         return dataPartyId;
@@ -129,12 +129,12 @@ public class ShoppingWechat {
         this.weimob = weimob;
     }
 
-    public String getPaymentStatus() {
-        return paymentStatus;
+    public String getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
 }

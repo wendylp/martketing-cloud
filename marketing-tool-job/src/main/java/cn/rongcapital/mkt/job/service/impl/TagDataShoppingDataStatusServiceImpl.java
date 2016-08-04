@@ -41,7 +41,7 @@ public class TagDataShoppingDataStatusServiceImpl extends BaseTagData implements
     @Override
     public void tagData(ShoppingWechat shoppingWechat) {
         Criteria criteria = Criteria.where("mid").is(shoppingWechat.getDataPartyId());
-        Update update = new Update().set("paymentStatus", shoppingWechat.getPaymentStatus());
+        Update update = new Update().set("orderStatus", shoppingWechat.getOrderStatus());
         mongoTemplate.findAndModify(new Query(criteria), update, cn.rongcapital.mkt.po.mongodb.DataParty.class);
     }
 
