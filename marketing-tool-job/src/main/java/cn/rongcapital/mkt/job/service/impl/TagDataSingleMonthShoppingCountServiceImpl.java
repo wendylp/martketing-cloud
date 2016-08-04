@@ -9,12 +9,14 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.job.service.BaseTagData;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.ShoppingWechat;
 
+@Service
 public class TagDataSingleMonthShoppingCountServiceImpl extends BaseTagData implements TaskService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());

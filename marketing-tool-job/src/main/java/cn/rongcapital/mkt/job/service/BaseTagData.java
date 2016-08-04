@@ -42,7 +42,7 @@ public class BaseTagData {
                 continue;
             } else {
                 if (dataParties.size() > 0) {
-                    logger.error("通过openId,pubId定位出超过一条的主数据了!openid={},pubid={}", shoppingWechat.getOpenId(),
+                    logger.error("通过openId,pubId定位出超过一条的主数据了 : openid={},pubid={}", shoppingWechat.getOpenId(),
                                     shoppingWechat.getPubId());
                     DataParty dataParty = dataParties.get(0);
                     shoppingWechat.setDataPartyId(dataParty.getId());
