@@ -12,4 +12,11 @@ public interface KeyidMapBlockDao extends BaseDao<KeyidMapBlock>{
 	 * @return: List<T>
 	 */
 	List<KeyidMapBlock> selectKeyidMapBlockList();
+
+	/**
+	 * @功能简述: 根据seq获取相应的field字段
+	 * @Param:keyidMapBlock
+	 * @return: KeyidMapBlock
+	 */
+	KeyidMapBlock selectKeyIdMapBolckBySeq(KeyidMapBlock keyidMapBlock);
 }

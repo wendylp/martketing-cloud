@@ -85,5 +85,13 @@
 	    from keyid_map_block
 	    order by seq
     </select>
+
+  <select id="selectKeyIdMapBolckBySeq" parameterType="cn.rongcapital.mkt.po.KeyidMapBlock" resultType="cn.rongcapital.mkt.po.KeyidMapBlock">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM keyid_map_block
+    WHERE seq = #{seq}
+
+  </select>
   
 </mapper>

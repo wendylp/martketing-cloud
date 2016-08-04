@@ -7,6 +7,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.po.KeyidMapBlock;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.PackagePart;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
@@ -23,19 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import cn.rongcapital.mkt.common.enums.GenderEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.dao.ImportTemplateDao;
-import cn.rongcapital.mkt.dao.OriginalDataArchPointDao;
-import cn.rongcapital.mkt.dao.OriginalDataCustomerTagsDao;
-import cn.rongcapital.mkt.dao.OriginalDataLoginDao;
-import cn.rongcapital.mkt.dao.OriginalDataMemberDao;
-import cn.rongcapital.mkt.dao.OriginalDataPaymentDao;
-import cn.rongcapital.mkt.dao.OriginalDataPopulationDao;
-import cn.rongcapital.mkt.dao.OriginalDataShoppingDao;
 import cn.rongcapital.mkt.service.impl.vo.ParseFileVO;
 import cn.rongcapital.mkt.service.impl.vo.UploadFileProcessVO;
 
@@ -61,10 +56,13 @@ public class ParseUploadFileImpl {
     private OriginalDataPaymentDao originalDataPaymentDao;
     @Autowired
     private OriginalDataShoppingDao originalDataShoppingDao;
+    @Autowired
+    private KeyidMapBlockDao keyidMapBlockDao;
 
     private final Integer UNIQUE_ID_ROW_IN_FILE = 0;
     private final Integer INVALID_ROW_IN_FILE = 1;
     private final Integer ATTRIBUTE_NAME_ROW_IN_FILE = 2;
+    private String bitmap;
 
     private static Logger logger = LoggerFactory.getLogger(ParseUploadFileImpl.class);
 
@@ -128,7 +126,6 @@ public class ParseUploadFileImpl {
         Map<String, String> nameCodeMappingMap = getNameCodeRelationByFileType(fileType);
         Map<String, Integer> codeIndexMap = new HashMap<>();
         Map<String, Integer> dataCheck = new HashMap<>();
-        String bitmap = null;
         String illegalColumns = null;
         String header = null;
 
@@ -143,26 +140,12 @@ public class ParseUploadFileImpl {
         try {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
-            //Todo:1尝试获取Excel中的控件(尝试失败)
-            //----------------------------------
-//            List<PackagePart> embedds = new LinkedList<PackagePart>();
-//            for(PackageRelationship rel : ((XSSFSheet)sheet).getPackagePart().getRelationshipsByType(XSSFRelation.OLEEMBEDDINGS.getRelation())){
-//                embedds.add(rel.);
-//                System.out.print(1);
-//            }
-
-//            for(PackageRelationship rel : ((XSSFSheet)sheet).getPackagePart().getRelationshipsByType(XSSFRelation.PACKEMBEDDINGS.getRelation())){
-//                embedds.add(rel.);
-//                System.out.print(1);
-//            }
-
-            //----------------------------------
             Iterator<Row> rowIterator = sheet.rowIterator();
             for(;rowIterator.hasNext();){
                 Row row = rowIterator.next();
-                Integer rowIndex = row.getCell(row.getFirstCellNum()).getRowIndex();
+                Integer rowIndex = row.getRowNum();
                 if(rowIndex == UNIQUE_ID_ROW_IN_FILE){
-                    //Todo: 这里先将主键ID写死
+                    //通过解析文本获取主键
                     char[] tmpBuffer = new char[17];
                     for(int i = 0; i<tmpBuffer.length; i++) tmpBuffer[i] = '0';
                     Iterator<Cell> uniqueIterator = row.cellIterator();
@@ -172,7 +155,8 @@ public class ParseUploadFileImpl {
                             tmpBuffer[cell.getColumnIndex()-1] = '1';
                         }
                     }
-                    bitmap = tmpBuffer.toString();
+                    bitmap = new String(tmpBuffer);
+                    continue;
                 }
                 if(bitmap == null) {
                     logger.info("数据文件没有指定唯一列索引，为非法数据文件");
@@ -281,6 +265,8 @@ public class ParseUploadFileImpl {
                                 Date date = cell.getDateCellValue();
                                 insertMap.put(cloumnCode,date);
                             }
+                        }else{
+                            insertMap.put(cloumnCode,null);
                         }
                     }else{
                         switch (cell.getCellType()){
@@ -296,6 +282,7 @@ public class ParseUploadFileImpl {
                                 insertMap.put(cloumnCode,cell.getNumericCellValue() + "");
                                 break;
                             default:
+                                insertMap.put(cloumnCode,null);
                                 break;
                         }
                     }
@@ -306,13 +293,13 @@ public class ParseUploadFileImpl {
                 logger.debug(e.getMessage());
             }
         }
-        insertMap.put("bitmap",bitmap);      //将IDMap的标志值放入到插入数据Map中
 
-        int validateResult = validateData(insertMap, fileType);
+        int validateResult = validateData(insertMap, fileType, bitmap);
         if(validateResult == ImportConstant.VALIDATE_SUCCESS){
             convertData(insertMap, fileType);
             insertMap.put("file_unique",fileUnique);
             insertMap.put("batch_id",batchId);
+            insertMap.put("bitmap",bitmap);      //将IDMap的标志值放入到插入数据Map中
             rowDataList.add(insertMap);
         }
         return validateResult;
@@ -322,7 +309,22 @@ public class ParseUploadFileImpl {
      * @功能简述: 验证数据解析后是否合法
      * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
      */
-    private int validateData(Map<String, Object> insertMap,int fileType) {
+    private int validateData(Map<String, Object> insertMap,int fileType, String bitmap) {
+        char[] bitmapSequence = bitmap.toCharArray();
+        Integer seqIndex = 1;
+        for(char seqValue : bitmapSequence){
+            if(seqValue == '1'){
+                KeyidMapBlock keyidMapBlock = new KeyidMapBlock();
+                keyidMapBlock.setSeq(seqIndex);
+                keyidMapBlock = keyidMapBlockDao.selectKeyIdMapBolckBySeq(keyidMapBlock);
+                String result = (String) insertMap.get(keyidMapBlock.getField());
+                if(result == null || "".equals(result)){
+                    return ImportConstant.VALIDATE_KEYMAPPINGID_FAILED;
+                }
+            }
+            seqIndex++;
+        }
+
         String email = (String) insertMap.get(ImportConstant.EMAIL_FIELD);
         if(StringUtils.hasText(email)){
             if (!isEmail(email)) {
@@ -558,6 +560,7 @@ public class ParseUploadFileImpl {
         int VALIDATE_MOBILE_FAILED = 1;
         int VALIDATE_EMAIL_FAILED = 2;
         int VALIDATE_OTHER_FAILED = 3;
+        int VALIDATE_KEYMAPPINGID_FAILED =4;
 
 
     }
