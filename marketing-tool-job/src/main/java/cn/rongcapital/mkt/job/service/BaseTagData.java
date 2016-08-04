@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.job.service;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,13 @@ public class BaseTagData {
 
         for (ShoppingWechat shoppingWechat : shoppingWechats) {
             DataParty paramDataParty = new DataParty();
-            paramDataParty.setWxmpId(shoppingWechat.getPubId());
-            paramDataParty.setWxCode(shoppingWechat.getOpenId());
+            if (!StringUtils.isEmpty(shoppingWechat.getPubId())) {
+                paramDataParty.setWxmpId(shoppingWechat.getPubId());
+            }
+
+            if (!StringUtils.isEmpty(shoppingWechat.getOpenId())) {
+                paramDataParty.setWxCode(shoppingWechat.getOpenId());
+            }
             // 这里应该是一条数据
             List<DataParty> dataParties = dataPartyDao.selectList(paramDataParty);
             if (CollectionUtils.isEmpty(dataParties)) {

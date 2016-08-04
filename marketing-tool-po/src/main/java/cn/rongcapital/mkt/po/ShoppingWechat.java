@@ -31,6 +31,9 @@ public class ShoppingWechat {
 
     // 支付记录中支付状态成功，单个微信用户（公众号标识＋openid）收入金额总额取平均数
     private BigDecimal averageIncome;
+    
+    // 公众号下，openid有购买记录的用户标记为是购买用户，其余的标记为不是购买用户
+    private boolean isShoppingUser;
 
     public Integer getDataPartyId() {
         return dataPartyId;
@@ -104,4 +107,11 @@ public class ShoppingWechat {
         this.totalCount = totalCount;
     }
 
+    public boolean isShoppingUser() {
+        return isShoppingUser;
+    }
+
+    public void setShoppingUser(boolean isShoppingUser) {
+        this.isShoppingUser = isShoppingUser;
+    }
 }
