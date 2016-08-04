@@ -138,6 +138,7 @@ public class ParseUploadFileImpl {
 //-------------------------------------------
         InputStream inputStream = new ByteArrayInputStream(bytes);
         try {
+            logger.info("begin to parse uploaded file.");
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.rowIterator();
@@ -158,6 +159,7 @@ public class ParseUploadFileImpl {
                     bitmap = new String(tmpBuffer);
                     continue;
                 }
+                logger.info("bitmap: " + bitmap );
                 if(bitmap == null) {
                     logger.info("数据文件没有指定唯一列索引，为非法数据文件");
                     break;
@@ -325,6 +327,7 @@ public class ParseUploadFileImpl {
             seqIndex++;
         }
 
+        logger.info("唯一性验证验证通过");
         String email = (String) insertMap.get(ImportConstant.EMAIL_FIELD);
         if(StringUtils.hasText(email)){
             if (!isEmail(email)) {
@@ -356,8 +359,13 @@ public class ParseUploadFileImpl {
             String transSerial = (String) insertMap.get(ImportConstant.TRANS_SERIAL_FIELD);
             String discount = (String) insertMap.get(ImportConstant.DISCOUNT_AMT_FIELD);
             String price = (String) insertMap.get(ImportConstant.PRICE_FIELD);
+            String source = (String) insertMap.get(ImportConstant.SOURCE_FIELD);
 
             if(!StringUtils.hasText(orderNo) && !StringUtils.hasText(transSerial)){
+                return ImportConstant.VALIDATE_OTHER_FAILED;
+            }
+
+            if(!StringUtils.hasText(source)){
                 return ImportConstant.VALIDATE_OTHER_FAILED;
             }
 
@@ -372,13 +380,19 @@ public class ParseUploadFileImpl {
             String incomeAmt = (String) insertMap.get(ImportConstant.INCOME_AMT_FIELD);
             String paidAmt = (String) insertMap.get(ImportConstant.PAID_AMT_FIELD);
             String acctAmt = (String) insertMap.get(ImportConstant.ACCT_AMT_FIELD);
-            if(StringUtils.isEmpty(orderNo) && StringUtils.isEmpty(transSerial) ||
-                    StringUtils.isEmpty(mobile)){
+            String source = (String) insertMap.get(ImportConstant.SOURCE_FIELD);
+            if(StringUtils.isEmpty(orderNo) && StringUtils.isEmpty(transSerial)){
                 return ImportConstant.VALIDATE_OTHER_FAILED;
             }
+            logger.info("订单号验证通过");
+            if(StringUtils.isEmpty(source)){
+                return ImportConstant.VALIDATE_OTHER_FAILED;
+            }
+            logger.info("来源验证通过");
             if (!isNumber(incomeAmt) || !isNumber(paidAmt) || !isNumber(acctAmt)) {
                 return ImportConstant.VALIDATE_OTHER_FAILED;
             }
+            logger.info("数字验证通过");
             return ImportConstant.VALIDATE_SUCCESS;
         } else {
             if (fileType == ImportConstant.MEMBER_FILE) {
@@ -547,6 +561,7 @@ public class ParseUploadFileImpl {
         String DISCOUNT_AMT_FIELD = "discount_amt";
         String PRICE_FIELD = "price";
         String STATUS_FIELD = "status";
+        String SOURCE_FIELD = "source";
 
         int MOBILE_LENGTH = 11;
         String MARITAL_STATUS_SINGLE = "未婚";

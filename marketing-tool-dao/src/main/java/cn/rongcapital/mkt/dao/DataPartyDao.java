@@ -194,5 +194,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      * @return Integer
      */
     Integer selectDataPartyIdbyWechatInfo(String pubId , String openId);
-    
+
+	/**
+	 * 根据bitmap获得主键的id
+	 *
+	 * @return Integer
+	 */
+	Integer getDataPartyIdByKey(DataParty dataParty);
 }
