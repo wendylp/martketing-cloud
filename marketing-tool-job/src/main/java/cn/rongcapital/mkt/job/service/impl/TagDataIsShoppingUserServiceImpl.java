@@ -39,6 +39,11 @@ public class TagDataIsShoppingUserServiceImpl extends BaseTagData implements Tas
 
     @Override
     public void tagData(ShoppingWechat shoppingWechat) {
+
+        Criteria criteriaAll = Criteria.where("mid").gt(-1);
+        Update updateAll = new Update().set("isShoppingUser", false);
+        mongoTemplate.findAndModify(new Query(criteriaAll), updateAll, cn.rongcapital.mkt.po.mongodb.DataParty.class);
+
         Criteria criteria = Criteria.where("mid").is(shoppingWechat.getDataPartyId());
         Update update = new Update().set("isShoppingUser", shoppingWechat.isShoppingUser());
         mongoTemplate.findAndModify(new Query(criteria), update, cn.rongcapital.mkt.po.mongodb.DataParty.class);
