@@ -31,10 +31,10 @@ public class TagDataShoppingDataStatusServiceImpl extends BaseTagData implements
     public void task(Integer taskId) {
         logger.info("tag task : 购物记录的订单状态中，交易完成／交易关闭／待支付");
         logger.info("（新增）品牌联系强度－客户流失概率－支付状态－（交易完成／交易关闭／待支付）");
-        handleData(getSingleMonthShoppingCount());
+        handleData(getShoppingDataStatus());
     }
 
-    public List<ShoppingWechat> getSingleMonthShoppingCount() {
+    public List<ShoppingWechat> getShoppingDataStatus() {
         return dataShoppingDao.selectAllDataByWechatInfo();
     }
 

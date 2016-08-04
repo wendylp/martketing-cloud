@@ -32,10 +32,10 @@ public class TagDataWeimobServiceImpl extends BaseTagData implements TaskService
     public void task(Integer taskId) {
         logger.info("tag task : 公众号下，openid有购买记录的用户标记为是购买用户，其余的标记为不是购买用户");
         logger.info("（新增）品牌联系强度－客户流失概率－是否购买用户－（是／否）");
-        handleData(getSingleMonthShoppingCount());
+        handleData(getWeimob());
     }
 
-    public List<ShoppingWechat> getSingleMonthShoppingCount() {
+    public List<ShoppingWechat> getWeimob() {
         return dataShoppingDao.selectAllDataByWeimob();
     }
 

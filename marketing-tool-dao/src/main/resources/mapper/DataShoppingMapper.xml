@@ -408,7 +408,7 @@
 	
 	<select id="selectListByLastTransTimeandWeChatInfo" resultType="cn.rongcapital.mkt.po.ShoppingWechat">
 		SELECT trans_time as lastShoppingTime ,wxmp_id as pubId , wx_code as openId  FROM (
-			SELECT QUERY_COLUMN_LIST FROM data_shopping ORDER BY trans_time
+			SELECT <include refid="QUERY_COLUMN_LIST"/> FROM data_shopping ORDER BY trans_time
 		) AS orderedTable GROUP BY wxmp_id , wx_code;
 	</select>
 	
