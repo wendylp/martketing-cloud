@@ -356,8 +356,13 @@ public class ParseUploadFileImpl {
             String transSerial = (String) insertMap.get(ImportConstant.TRANS_SERIAL_FIELD);
             String discount = (String) insertMap.get(ImportConstant.DISCOUNT_AMT_FIELD);
             String price = (String) insertMap.get(ImportConstant.PRICE_FIELD);
+            String source = (String) insertMap.get(ImportConstant.SOURCE_FIELD);
 
             if(!StringUtils.hasText(orderNo) && !StringUtils.hasText(transSerial)){
+                return ImportConstant.VALIDATE_OTHER_FAILED;
+            }
+
+            if(!StringUtils.hasText(source)){
                 return ImportConstant.VALIDATE_OTHER_FAILED;
             }
 
@@ -372,10 +377,15 @@ public class ParseUploadFileImpl {
             String incomeAmt = (String) insertMap.get(ImportConstant.INCOME_AMT_FIELD);
             String paidAmt = (String) insertMap.get(ImportConstant.PAID_AMT_FIELD);
             String acctAmt = (String) insertMap.get(ImportConstant.ACCT_AMT_FIELD);
-            if(StringUtils.isEmpty(orderNo) && StringUtils.isEmpty(transSerial) ||
-                    StringUtils.isEmpty(mobile)){
+            String source = (String) insertMap.get(ImportConstant.SOURCE_FIELD);
+            if(StringUtils.isEmpty(orderNo) && StringUtils.isEmpty(transSerial)){
                 return ImportConstant.VALIDATE_OTHER_FAILED;
             }
+
+            if(StringUtils.isEmpty(source)){
+                return ImportConstant.VALIDATE_OTHER_FAILED;
+            }
+
             if (!isNumber(incomeAmt) || !isNumber(paidAmt) || !isNumber(acctAmt)) {
                 return ImportConstant.VALIDATE_OTHER_FAILED;
             }
@@ -547,6 +557,7 @@ public class ParseUploadFileImpl {
         String DISCOUNT_AMT_FIELD = "discount_amt";
         String PRICE_FIELD = "price";
         String STATUS_FIELD = "status";
+        String SOURCE_FIELD = "source";
 
         int MOBILE_LENGTH = 11;
         String MARITAL_STATUS_SINGLE = "未婚";
