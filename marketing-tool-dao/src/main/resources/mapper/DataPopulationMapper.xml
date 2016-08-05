@@ -334,6 +334,12 @@
         WHERE id = #{id}
 	</select>
 	
+	<select id="selectObjectById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataPopulation">
+		SELECT <include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+	
 	<select id="getDataPopulationByMobile" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.DataPopulation">
 		SELECT <include refid="QUERY_COLUMN_LIST" />
 		<include refid="QUERY_FROM_TABLE"/>
