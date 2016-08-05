@@ -31,7 +31,7 @@ public enum ApiErrorCode {
 
 	BIZ_ERROR_CANPAIGN_CAN_NOT_MANUAL_START(3006,"campaign can not manual start"),//活动无法手动开启
 	BIZ_ERROR_CANPAIGN_CAN_NOT_START(3009,"campaign can not start"),//活动无法开启
-	BIZ_ERROR_CONTACTINFO_MOBILE(3010,"can not get the mobile"),//
+	BIZ_ERROR_CONTACTINFO_KEYID(3010,"can not get the keyid"),//
 
 	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码

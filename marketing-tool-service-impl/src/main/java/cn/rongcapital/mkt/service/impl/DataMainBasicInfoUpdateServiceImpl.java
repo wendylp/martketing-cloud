@@ -48,13 +48,13 @@ public class DataMainBasicInfoUpdateServiceImpl implements DataMainBasicInfoUpda
         Integer id = body.getContactId();
         Integer dataType = body.getDataType();
         
-        String mobile = mainBasicInfoGetService.getMobileFromContactInfo(id, dataType, null);
+        Integer keyId = mainBasicInfoGetService.getKeyIdFromContactInfo(id, dataType, null);
         
-        if (StringUtils.isBlank(mobile)) {
-        	result.setCode(ApiErrorCode.BIZ_ERROR_CONTACTINFO_MOBILE.getCode());
-        	result.setMsg("不能获取手机号!");
-            return result;
-        }
+		if (keyId != null) {
+			result.setCode(ApiErrorCode.BIZ_ERROR_CONTACTINFO_KEYID.getCode());
+			result.setMsg("不能获取关联的keyid!");
+			return result;
+		}
 
         DataParty po = new DataParty();
 
@@ -89,45 +89,45 @@ public class DataMainBasicInfoUpdateServiceImpl implements DataMainBasicInfoUpda
         //设置小数位数，第一个变量是小数位数，第二个变量是取舍方法(四舍五入) 
         monthConsume = monthConsume.setScale(2, BigDecimal.ROUND_HALF_UP);
         po.setMonthlyConsume(monthConsume);
-        po.setMobile(mobile);
+        po.setId(keyId);
 
-        int res = dataPartyDao.updateDataPartyInfo(po);
+        int res = dataPartyDao.updateById(po);
         if (res == 0) {
             result.setCode(ApiErrorCode.DB_ERROR.getCode());
             result.setMsg(ApiErrorCode.DB_ERROR.getMsg());
             return result;
         }
         
-        DataPopulation dataPopulation = new DataPopulation();
-        
-        dataPopulation.setName(body.getName());
-        if (body.getGender() == null) {
-        	dataPopulation.setGender((byte) 3);
-        } else {
-        	dataPopulation.setGender(Byte.parseByte(GenderUtils.charToInt(body.getGender()) + ""));
-        }
-		dataPopulation.setBirthday(date);
-		dataPopulation.setBloodType(body.getBloodType());
-		dataPopulation.setIq(body.getIq());
-		dataPopulation.setCitizenship(body.getCitizenship());
-		dataPopulation.setProvice(body.getProvice());
-		dataPopulation.setCity(body.getCity());
-		dataPopulation.setJob(body.getJob());
-		dataPopulation.setNationality(body.getNationality());
-		dataPopulation.setMonthlyIncome(monthIncome);
-		dataPopulation.setMonthlyConsume(monthConsume);
-		dataPopulation.setMaritalStatus(body.getMaritalStatus());
-		dataPopulation.setEducation(body.getEducation());
-		dataPopulation.setEmployment(body.getEmployment());
-		dataPopulation.setMobile(mobile);
-        
-        int count = dataPopulationDao.updateDataPopulation(dataPopulation);
-        if (count == 0) {
-            result.setCode(ApiErrorCode.DB_ERROR.getCode());
-            result.setMsg(ApiErrorCode.DB_ERROR.getMsg());
-            return result;
-        }
-        
+//        DataPopulation dataPopulation = new DataPopulation();
+//        
+//        dataPopulation.setName(body.getName());
+//        if (body.getGender() == null) {
+//        	dataPopulation.setGender((byte) 3);
+//        } else {
+//        	dataPopulation.setGender(Byte.parseByte(GenderUtils.charToInt(body.getGender()) + ""));
+//        }
+//		dataPopulation.setBirthday(date);
+//		dataPopulation.setBloodType(body.getBloodType());
+//		dataPopulation.setIq(body.getIq());
+//		dataPopulation.setCitizenship(body.getCitizenship());
+//		dataPopulation.setProvice(body.getProvice());
+//		dataPopulation.setCity(body.getCity());
+//		dataPopulation.setJob(body.getJob());
+//		dataPopulation.setNationality(body.getNationality());
+//		dataPopulation.setMonthlyIncome(monthIncome);
+//		dataPopulation.setMonthlyConsume(monthConsume);
+//		dataPopulation.setMaritalStatus(body.getMaritalStatus());
+//		dataPopulation.setEducation(body.getEducation());
+//		dataPopulation.setEmployment(body.getEmployment());
+//		dataPopulation.setMobile(mobile);
+//        
+//        int count = dataPopulationDao.updateDataPopulation(dataPopulation);
+//        if (count == 0) {
+//            result.setCode(ApiErrorCode.DB_ERROR.getCode());
+//            result.setMsg(ApiErrorCode.DB_ERROR.getMsg());
+//            return result;
+//        }
+//        
         return mainBasicInfoGetService.getMainBasicInfo(body.getContactId(), body.getDataType(), body.getUserToken());
     }
 }

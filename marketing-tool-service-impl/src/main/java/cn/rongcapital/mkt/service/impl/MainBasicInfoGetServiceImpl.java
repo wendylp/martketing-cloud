@@ -143,7 +143,7 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 		// result.setTotal(data.size());
 		// }
 		if (keyId != null) {
-			result.setCode(ApiErrorCode.BIZ_ERROR_CONTACTINFO_MOBILE.getCode());
+			result.setCode(ApiErrorCode.BIZ_ERROR_CONTACTINFO_KEYID.getCode());
 			result.setMsg("不能获取关联的keyid!");
 			return result;
 		}
