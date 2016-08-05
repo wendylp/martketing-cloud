@@ -49,7 +49,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
                 command += templateFileName;
 
                 //构造文件数组
-                files[fileIndex] = new File(templateFileName);
+                files[fileIndex] = templateFiles[Integer.parseInt(id)];
                 fileIndex++;
             }
         }else{
@@ -77,6 +77,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             byte[] buf = new byte[8192];
             int len;
             for(int i = 0; i<files.length; i++){
+                logger.info("enter loop to zip file");
                 File file = files[i];
                 if(!file.isFile()) continue;
                 logger.info("begin to read :" + files[i]);
