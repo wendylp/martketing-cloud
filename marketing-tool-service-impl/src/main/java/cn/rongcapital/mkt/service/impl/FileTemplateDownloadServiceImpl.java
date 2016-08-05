@@ -34,7 +34,6 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
         File[] templateFiles = null;
         String generateFileSimpleName = System.currentTimeMillis() + "template.zip";
         String generateFileName = ApiConstant.DOWNLOAD_BASE_DIR + generateFileSimpleName;  //正式文件
-        String command = "tar -zcvPf "+ generateFileName;
         File file = new File(ApiConstant.DOWNLOAD_TEMPLATE_FILE_DIR);
         templateFiles = getTemplateFiles(baseOutput, templateFiles, file);
         String[] idList = null;
@@ -43,23 +42,14 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             Integer fileIndex = 0;
             idList = templateIdList.split(",");
             for (String id : idList) {
-                //压缩文件有多个
-                String templateFileName = templateFiles[Integer.parseInt(id)].getAbsoluteFile().toString() + " ";
-                command += templateFileName;
-
-                //构造文件数组
+                //构造需要被压缩的文件数组
                 files[fileIndex] = templateFiles[Integer.parseInt(id)];
                 fileIndex++;
             }
         }else{
             //压缩文件有1个
-            String templateFileName = templateFiles[Integer.parseInt(templateIdList)].getAbsoluteFile().toString() + "";
-            command += templateFileName;
-
             files[0] = templateFiles[Integer.parseInt(templateIdList)];
         }
-//        logger.info("begin to execute command");
-//        this.executeCommand(command);
 
         zipTemplateFiles(files,generateFileName);
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
@@ -73,9 +63,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
     private void zipTemplateFiles(File[] files, String generateFileName) {
         try {
             logger.info("begin to execute zip action.");
-            File downloadFile = new File(generateFileName);
-            if(!downloadFile.exists()) downloadFile.createNewFile();
-            OutputStream os = new BufferedOutputStream(new FileOutputStream(downloadFile));
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(generateFileName));
             ZipOutputStream zos = new ZipOutputStream(os);
             byte[] buf = new byte[8192];
             int len;
@@ -107,15 +95,15 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
         return templateFiles;
     }
 
-    private void executeCommand(String command) {
-        Process p;
-        try {
-            logger.info("zipCommand: " + command);
-            p = Runtime.getRuntime().exec(command);
-            p.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.info(e.getMessage());
-        }
-    }
+//    private void executeCommand(String command) {
+//        Process p;
+//        try {
+//            logger.info("zipCommand: " + command);
+//            p = Runtime.getRuntime().exec(command);
+//            p.waitFor();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            logger.info(e.getMessage());
+//        }
+//    }
 }
