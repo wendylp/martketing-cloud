@@ -72,7 +72,9 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
     private void zipTemplateFiles(File[] files, String generateFileName) {
         try {
             logger.info("begin to execute zip action.");
-            OutputStream os = new BufferedOutputStream(new FileOutputStream(generateFileName));
+            File downloadFile = new File(generateFileName);
+            if(!downloadFile.exists()) downloadFile.createNewFile();
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(downloadFile));
             ZipOutputStream zos = new ZipOutputStream(os);
             byte[] buf = new byte[8192];
             int len;
