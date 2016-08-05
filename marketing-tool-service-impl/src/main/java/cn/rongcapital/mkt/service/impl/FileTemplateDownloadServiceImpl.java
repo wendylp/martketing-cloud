@@ -23,7 +23,6 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
     private Logger logger = LoggerFactory.getLogger(getClass());
 
 //    sudo tar -zcvPf /rc/downloads/1467362267553template.tar.zip /rc/templeteFiles/TYPE2_002_客户标签.csv /rc/templeteFiles/TYPE3_003_埋点统计.csv /rc/templeteFiles/TYPE4_004_会员卡记录.csv
-//    Todo:1修改文件压缩的方式，直接将文件压缩为zip文件。
     @Override
     public Object downloadFileTemplate(String templateIdList) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
@@ -56,6 +55,8 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             //压缩文件有1个
             String templateFileName = templateFiles[Integer.parseInt(templateIdList)].getAbsoluteFile().toString() + "";
             command += templateFileName;
+
+            files[0] = templateFiles[Integer.parseInt(templateIdList)];
         }
 //        logger.info("begin to execute command");
 //        this.executeCommand(command);
@@ -81,8 +82,7 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             for(int i = 0; i<files.length; i++){
                 logger.info("enter loop to zip file");
                 File file = files[i];
-                if(!file.isFile()) continue;
-                logger.info("begin to read :" + files[i]);
+                if(file == null || !file.isFile()) continue;
                 ZipEntry ze = new ZipEntry(file.getName());
                 zos.putNextEntry(ze);
                 BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
@@ -90,14 +90,11 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
                     zos.write(buf,0,len);
                 }
                 zos.closeEntry();
-                logger.info("read " + files[i] + "close");
             }
             zos.closeEntry();
             zos.close();
-        } catch (FileNotFoundException e) {
-            logger.debug("download exception:" + e.getMessage());
-        } catch (IOException e) {
-            logger.debug("download exception" + e.getMessage());
+        } catch (Exception e) {
+            logger.debug("download file exception:" + e.getMessage());
         }
     }
 
