@@ -106,7 +106,7 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 
 	public Integer getDataParyPrimaryKey(Object dataObj, String bitmap) {
 		DataParty dataParty = new DataParty();
-		dataParty.setMdType(DataTypeEnum.PARTY.getCode());
+		//dataParty.setMdType(DataTypeEnum.PARTY.getCode());
 		dataParty.setStatus(StatusEnum.DELETED.getStatusCode().byteValue());
 		// 获取keyid
 		dataParty = this.getDataParyKey(dataParty, dataObj, bitmap);
