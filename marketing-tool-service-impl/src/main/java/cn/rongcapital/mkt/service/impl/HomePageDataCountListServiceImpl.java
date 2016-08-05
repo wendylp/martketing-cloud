@@ -53,7 +53,9 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 
         // 获取data_party的数据
         HomePageDataCountListOut dataPartyCountListObj = new HomePageDataCountListOut();
-        int dataPartyCount = dataPartyDao.selectTotalOriginalCount();
+        // 暂时注释掉代码, 不记得是哪个二货告诉我这个取的数据是要原始数据总量了.以后不白纸黑字的需求落地怎么行呢.
+        // int dataPartyCount = dataPartyDao.selectTotalOriginalCount();
+        int dataPartyCount = dataPartyDao.selectListCount(null);
         dataPartyCountListObj.setId(DATA_PARTY.getId());
         dataPartyCountListObj.setCount(dataPartyCount);
         dataPartyCountListObj.setName(DATA_PARTY.getName());
