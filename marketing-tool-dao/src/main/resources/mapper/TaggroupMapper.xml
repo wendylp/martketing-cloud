@@ -149,5 +149,13 @@
 		            name = #{tagGroupName})
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
 	</select>
+	
+	<select id="selectSystemTagCount" resultType="java.lang.Integer">
+		<![CDATA[SELECT]]>
+		count(id)
+		<include refid="QUERY_FROM_TABLE" />
+		<![CDATA[WHERE level IN]]>
+		(1,2)
+	</select>
 
 </mapper>

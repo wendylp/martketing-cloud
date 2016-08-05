@@ -53,4 +53,12 @@ public interface TaggroupDao extends BaseDao<Taggroup>{
      * @return list
      */
 	List<String> selectSubNodesByGroupName(Map<String, Object> paramMap);
+	
+	/**
+     * 获取系统标签数量
+     * @param paramMap
+     * @return list
+     */
+	//按Jiangyi的说法, 叶子节点以及该节点的parent算是标签, 再往上都不是标签.
+	Integer selectSystemTagCount();
 }
