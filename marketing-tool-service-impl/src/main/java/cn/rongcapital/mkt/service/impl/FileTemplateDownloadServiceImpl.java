@@ -77,9 +77,9 @@ public class FileTemplateDownloadServiceImpl implements FileTemplateDownloadServ
             byte[] buf = new byte[8192];
             int len;
             for(int i = 0; i<files.length; i++){
-                logger.info("begin to read :" + files[i]);
                 File file = files[i];
                 if(!file.isFile()) continue;
+                logger.info("begin to read :" + files[i]);
                 ZipEntry ze = new ZipEntry(file.getName());
                 zos.putNextEntry(ze);
                 BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
