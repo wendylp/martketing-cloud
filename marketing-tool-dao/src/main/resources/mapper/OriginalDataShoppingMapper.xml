@@ -326,8 +326,8 @@
 			#{item.consignee_tel},
 			#{item.consignee_addr},
 			#{item.buyer_comment},
-			#{item.wxmp_code},
-			#{item.wxmp_openid},
+			#{item.wxmp_id},
+			#{item.wx_code},
 			#{item.product_name},
 			#{item.bitmap}
 			)

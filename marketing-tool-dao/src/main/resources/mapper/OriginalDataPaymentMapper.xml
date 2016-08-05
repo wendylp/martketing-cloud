@@ -213,8 +213,8 @@
 			#{item.source},
 			#{item.file_unique},
 			#{item.batch_id},
-			#{item.wxmp_code},
-			#{item.wxmp_openid},
+			#{item.wxmp_id},
+			#{item.wx_code},
 			#{item.bitmap}
 			)
 		</foreach>
