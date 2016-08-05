@@ -27,7 +27,7 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
     public BaseOutput getTagcount(String method, String userToken) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Taggroup paramTaggroup = new Taggroup(0, 1);
-        paramTaggroup.setOrderField("end_time");
+        paramTaggroup.setOrderField("update_time");
         paramTaggroup.setOrderFieldType("DESC");
         taggroupDao.selectList(paramTaggroup);
         int tagCount = taggroupDao.selectSystemTagCount();
