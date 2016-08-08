@@ -26,10 +26,10 @@ import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.po.TagGroupMap;
 import cn.rongcapital.mkt.po.TagRecommend;
 import cn.rongcapital.mkt.po.Taggroup;
-import cn.rongcapital.mkt.service.ZTest;
+import cn.rongcapital.mkt.service.TagRelatedImporter;
 
 @Service
-public class ZTestImpl implements ZTest {
+public class TagRelatedImporterImpl implements TagRelatedImporter {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -53,7 +53,7 @@ public class ZTestImpl implements ZTest {
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line = bufferedReader.readLine();
         while (line != null) {
-            if (StringUtils.isEmpty(line)) {
+            if (StringUtils.isEmpty(line) || !line.contains(",") || line.trim().startsWith("#")) {
                 line = bufferedReader.readLine();
                 continue;
             }
