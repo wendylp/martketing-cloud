@@ -11,6 +11,8 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,11 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.dao.TagDao;
 import cn.rongcapital.mkt.dao.TagGroupMapDao;
 import cn.rongcapital.mkt.dao.TaggroupDao;
+import cn.rongcapital.mkt.po.Tag;
+import cn.rongcapital.mkt.po.TagGroupMap;
 import cn.rongcapital.mkt.po.Taggroup;
 import cn.rongcapital.mkt.service.ZTest;
 
 @Service
 public class ZTestImpl implements ZTest {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private TagDao tagDao;
@@ -52,8 +58,12 @@ public class ZTestImpl implements ZTest {
             String self = parent + "-" + tags[1].trim();
             List<String> childList = Arrays.asList(tags[2].trim().split("/"));
             for (int i = 0; i < childList.size(); i++) {
-                System.out.println(parent + "," + self + "," + childList.get(i));
+                logger.info(parent + "," + self + "," + childList.get(i));
                 Taggroup parentTag = new Taggroup();
+                TagGroupMap tagGroupMap = new TagGroupMap();
+                tagGroupMap.setCreateTime(new Date());
+                tagGroupMap.setUpdateTime(new Date());
+                int taggroupId = 0;
                 parentTag.setName(parent);
                 List<Taggroup> parentTagList = taggroupDao.selectList(parentTag);
                 if (CollectionUtils.isEmpty(parentTagList)) {
@@ -62,6 +72,7 @@ public class ZTestImpl implements ZTest {
                     parentTag.setParentGroupId(-1L);
                     parentTag.setStatus((byte) 0);
                     taggroupDao.insert(parentTag);
+                    taggroupId = parentTag.getId();
                 } else {
                     parentTag = parentTagList.get(0);
                 }
@@ -87,6 +98,12 @@ public class ZTestImpl implements ZTest {
                 childTag.setParentGroupId(Long.parseLong(selfTag.getId() + ""));
                 childTag.setStatus((byte) 0);
                 taggroupDao.insert(childTag);
+                Tag tag = new Tag();
+                tag.setCreateTime(new Date());
+                tag.setUpdateTime(new Date());
+                tag.setName(childTag.getName());
+                tag.setStatus((byte) 0);
+                tagDao.insert(tag);
             }
 
             line = bufferedReader.readLine();
