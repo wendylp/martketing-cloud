@@ -20,9 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.dao.TagDao;
 import cn.rongcapital.mkt.dao.TagGroupMapDao;
+import cn.rongcapital.mkt.dao.TagRecommendDao;
 import cn.rongcapital.mkt.dao.TaggroupDao;
 import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.po.TagGroupMap;
+import cn.rongcapital.mkt.po.TagRecommend;
 import cn.rongcapital.mkt.po.Taggroup;
 import cn.rongcapital.mkt.service.ZTest;
 
@@ -30,6 +32,9 @@ import cn.rongcapital.mkt.service.ZTest;
 public class ZTestImpl implements ZTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private TagRecommendDao tagRecommendDao;
 
     @Autowired
     private TagDao tagDao;
@@ -57,13 +62,14 @@ public class ZTestImpl implements ZTest {
             String parent = tags[0].trim();
             String self = parent + "-" + tags[1].trim();
             List<String> childList = Arrays.asList(tags[2].trim().split("/"));
+            int taggroupId = 0;
             for (int i = 0; i < childList.size(); i++) {
                 logger.info(parent + "," + self + "," + childList.get(i));
                 Taggroup parentTag = new Taggroup();
                 TagGroupMap tagGroupMap = new TagGroupMap();
+                tagGroupMap.setGroupId(taggroupId);
                 tagGroupMap.setCreateTime(new Date());
                 tagGroupMap.setUpdateTime(new Date());
-                int taggroupId = 0;
                 parentTag.setName(parent);
                 List<Taggroup> parentTagList = taggroupDao.selectList(parentTag);
                 if (CollectionUtils.isEmpty(parentTagList)) {
@@ -72,7 +78,6 @@ public class ZTestImpl implements ZTest {
                     parentTag.setParentGroupId(-1L);
                     parentTag.setStatus((byte) 0);
                     taggroupDao.insert(parentTag);
-                    taggroupId = parentTag.getId();
                 } else {
                     parentTag = parentTagList.get(0);
                 }
@@ -87,6 +92,15 @@ public class ZTestImpl implements ZTest {
                     selfTag.setParentGroupId(Long.parseLong(parentTag.getId() + ""));
                     selfTag.setStatus((byte) 0);
                     taggroupDao.insert(selfTag);
+                    taggroupId = selfTag.getId();
+                    tagGroupMap.setGroupId(taggroupId);
+                    TagRecommend tagRecommend = new TagRecommend();
+                    tagRecommend.setTagGroupId(taggroupId);
+                    tagRecommend.setTagGroupName(tags[1].trim());
+                    tagRecommend.setStatus((byte) 0);
+                    tagRecommend.setCreateTime(new Date());
+                    tagRecommend.setUpdateTime(new Date());
+                    tagRecommendDao.insert(tagRecommend);
                 } else {
                     selfTag = selftTagList.get(0);
                 }
@@ -104,6 +118,9 @@ public class ZTestImpl implements ZTest {
                 tag.setName(childTag.getName());
                 tag.setStatus((byte) 0);
                 tagDao.insert(tag);
+                tagGroupMap.setTagId(tag.getId());
+                tagGroupMapDao.insert(tagGroupMap);
+                logger.info(tagGroupMap.getGroupId() + " : " + tag.getName() + " : " + tag.getId());
             }
 
             line = bufferedReader.readLine();
