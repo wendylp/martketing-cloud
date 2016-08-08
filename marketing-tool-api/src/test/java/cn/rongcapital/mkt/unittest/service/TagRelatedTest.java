@@ -18,7 +18,7 @@ public class TagRelatedTest extends AbstractUnitTest {
     // private BasEventExportService basEventExportService;
 
     @Test
-    private void testLogger() {
+    public void testLogger() {
         logger.info("logger works");
     }
 
