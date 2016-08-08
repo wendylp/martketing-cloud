@@ -1,26 +1,34 @@
 package cn.rongcapital.mkt.unittest.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import cn.rongcapital.mkt.service.TagRelatedImporter;
 import cn.rongcapital.mkt.unittest.AbstractUnitTest;
 
-public class TagRelatedTest extends AbstractUnitTest{
+public class TagRelatedTest extends AbstractUnitTest {
 
-    @Autowired
-    private TagRelatedImporter tagRelatedImporter; 
-    
-//    @Autowired
-//    private BasEventExportService basEventExportService;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
-//    @Test
-//	public void testImportData() throws IOException{
-//        tagRelatedImporter.importData();
-//	}
-    
-//    @Test
-//    public void testBasEventExport(){
-//        basEventExportService.exportData();
-//    }
+    // @Autowired
+    // private TagRelatedImporter tagRelatedImporter;
+
+    // @Autowired
+    // private BasEventExportService basEventExportService;
+
+    @Test
+    private void testLogger() {
+        logger.info("logger works");
+    }
+
+    // @Test
+    // public void testImportData() throws IOException{
+    // tagRelatedImporter.importData();
+    // }
+
+    // @Test
+    // public void testBasEventExport(){
+    // basEventExportService.exportData();
+    // }
 }
