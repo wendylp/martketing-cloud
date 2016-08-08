@@ -6,10 +6,12 @@ import cn.rongcapital.mkt.common.util.HttpUtils;
 import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.dao.WechatGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
+import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.job.vo.in.H5MktPubFansListResponse;
 import cn.rongcapital.mkt.job.vo.in.H5PubFan;
 import cn.rongcapital.mkt.job.vo.in.UserGroup;
+import cn.rongcapital.mkt.po.WechatRegister;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpEntity;
@@ -39,6 +41,8 @@ public class GetPubFansListServiceImpl implements TaskService {
     private WechatMemberDao wechatMemeberDao;
     @Autowired
     private WechatGroupDao wechatGroupDao;
+    @Autowired
+    private WechatRegisterDao wechatRegisterDao;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -97,6 +101,7 @@ public class GetPubFansListServiceImpl implements TaskService {
         List<Map<String,Object>> fansList = new ArrayList<Map<String,Object>>();
         for(H5PubFan h5PubFan : h5MktPubFansListResponse.getFans().getFan()){
             if(h5PubFan.getPubId() == null) continue;
+            if(isIllegalPubFan(h5PubFan.getPubId())) continue;
             for(UserGroup userGroup : h5PubFan.getUserGroups().getUserGroup()){
                 Map<String,Object> paramGroup = new HashMap<String,Object>();
                 paramGroup.put("wx_acct",h5PubFan.getPubId());
@@ -136,12 +141,21 @@ public class GetPubFansListServiceImpl implements TaskService {
 
                 fansList.add(paramFan);
             }
+            if(fansList != null && fansList.size() > 0){
+                logger.info("now page number add list size: " + fansList.size());
+                wechatMemeberDao.batchInsertFans(fansList);
+                fansList.clear();
+            }
         }
 
-        if(fansList != null && fansList.size() > 0){
-            logger.info("now page number add list size: " + fansList.size());
-            wechatMemeberDao.batchInsertFans(fansList);
-        }
+    }
+
+    private boolean isIllegalPubFan(String pubId) {
+        WechatRegister wechatRegister = new WechatRegister();
+        wechatRegister.setWxAcct(pubId);
+        Integer count = wechatRegisterDao.selectListCount(wechatRegister);
+        if(count == null || count == 0) return true;
+        return false;
     }
 
     private boolean isFansAlreadyImported(String pubId, String openId, Integer groupId) {

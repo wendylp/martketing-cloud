@@ -6,11 +6,13 @@ import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.HttpUtils;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
 import cn.rongcapital.mkt.dao.TenementDao;
+import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.job.vo.in.H5TuwenSyncResponse;
 import cn.rongcapital.mkt.job.vo.in.MaterialContent;
 import cn.rongcapital.mkt.job.vo.in.WTuwen;
 import cn.rongcapital.mkt.po.ImgTextAsset;
+import cn.rongcapital.mkt.po.WechatRegister;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpResponse;
@@ -35,6 +37,8 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     ImgTextAssetDao imgTextAssetDao;
     @Autowired
     TenementDao tenementDao;
+    @Autowired
+    WechatRegisterDao wechatRegisterDao;
 
     @Override
     public void task(Integer taskId) {
@@ -92,6 +96,7 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
         List<ImgTextAsset> imgTextAssetUpdateList = new ArrayList<ImgTextAsset>();
         for(WTuwen wtuwen : h5TuwenSyncResponse.getWtuwens().getWtuwen()){
             if(wtuwen.getPubId() == null || wtuwen.getMaterialId() == null || !checkChannelType(wtuwen.getChannelType()) || wtuwen.getMaterialContents() == null ||CollectionUtils.isEmpty(wtuwen.getMaterialContents().getMaterialContent())) continue;
+            if(isIllegalImgtext(wtuwen.getPubId())) continue;
             MaterialContent materialContent = wtuwen.getMaterialContents().getMaterialContent().get(0);
             ImgTextAsset imgTextAsset = new ImgTextAsset();
             if(isAlreadySync(wtuwen.getMaterialId())){
@@ -118,6 +123,14 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
                 imgTextAssetDao.updateById(imgTextAsset);
             }
         }
+    }
+
+    private boolean isIllegalImgtext(String pubId) {
+        WechatRegister wechatRegister = new WechatRegister();
+        wechatRegister.setWxAcct(pubId);
+        Integer count = wechatRegisterDao.selectListCount(wechatRegister);
+        if(count == null || count == 0) return true;
+        return false;
     }
 
     private void constructLegalImagetextAsset(WTuwen wtuwen, MaterialContent materialContent, ImgTextAsset imgTextAsset) {
