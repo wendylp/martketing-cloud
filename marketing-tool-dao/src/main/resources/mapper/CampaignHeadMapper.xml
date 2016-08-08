@@ -147,9 +147,10 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE status IN (1,2) 
+		WHERE publish_status IN (1,2) 
 		<![CDATA[
 		AND create_time >= #{startTime} AND create_time < #{endTime}
+		AND status = 0
 		]]>
 		ORDER BY status DESC , create_time ASC
 	</select>
@@ -158,9 +159,10 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE status IN (1,2) 
+		WHERE publish_status IN (1,2) 
 		<![CDATA[
 		AND create_time >= #{startTime} AND create_time < #{endTime}
+		AND status = 0
 		]]>
 		ORDER BY status DESC , create_time ASC
 		limit 5
