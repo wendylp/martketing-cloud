@@ -272,7 +272,7 @@
 			#{obj.loginUrl}, #{obj.identifyNo}, #{obj.drivingLicense}, #{obj.email}, #{obj.mobile},
 			#{obj.tel},#{obj.qq},#{obj.acctType},#{obj.acctNo},#{obj.idfa},#{obj.imei},
 			#{obj.udid},#{obj.phoneMac},#{obj.createTime},#{obj.updateTime},
-			#{obj.source},#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmpId,#{obj.wxCode})
+			#{obj.source},#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmpId},#{obj.wxCode})
 		</foreach>
 		on duplicate key update
 		login_time = values(login_time)

@@ -269,7 +269,7 @@
 			#{obj.idfa},
 			#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.status},
 			#{obj.createTime},#{obj.updateTime},#{obj.source},
-			#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmpId,#{obj.wxCode})
+			#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmpId},#{obj.wxCode})
 		</foreach>
 		on duplicate key update
 		member_id = values(member_id),
