@@ -20,6 +20,7 @@ import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.dao.TaggroupDao;
 import cn.rongcapital.mkt.po.CampaignHead;
+import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.Taggroup;
@@ -65,7 +66,9 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 
         // 获取标签的数据
         HomePageDataCountListOut tagCountListObj = new HomePageDataCountListOut();
-        int customTagCount = customeTagDao.selectListCount(null);
+        CustomTag paramCustomTag = new CustomTag();
+        paramCustomTag.setStatus((byte)0);
+        int customTagCount = customeTagDao.selectListCount(paramCustomTag);
         Taggroup paramTaggroup = new Taggroup();
         paramTaggroup.setLevel(CHILD_LEVEL);
         // 个人觉得以后计算叶子节点的算法不是这样的
