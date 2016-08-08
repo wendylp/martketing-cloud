@@ -201,6 +201,7 @@ public class ParseUploadFileImpl {
                             break;
                     }
                 }
+                if(tmpLine.length() < 1) continue;           //如果出现空行，则走向下一行
                 line = tmpLine.substring(0, tmpLine.length() - 1);
 
                 Integer existsDataIndex = dataCheck.get(line);
