@@ -137,46 +137,48 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
 		// 这代码写的太2了
 		MainDataVO mainDataVO = null;
-		if (CollectionUtils.isEmpty(dataTypeList)) {
-			for (Integer mdType : dataTypeList) {
-				if (mdType == dataType) {
-					if (dataType == DataTypeEnum.PARTY.getCode()) {
-						DataParty paramObj = new DataParty(index, size);
-						mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataPartyDao);
-					} else if (dataType == DataTypeEnum.POPULATION.getCode()) {
-						DataPopulation paramObj = new DataPopulation(index, size);
-						mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataPopulationDao);
-					} else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
-						DataCustomerTags paramObj = new DataCustomerTags(index, size);
-						mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataCustomerTagsDao);
-					} else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
-						DataArchPoint paramObj = new DataArchPoint(index, size);
-						mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataArchPointDao);
-					} else if (dataType == DataTypeEnum.MEMBER.getCode()) {
-						DataMember paramObj = new DataMember(index, size);
-						mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataMemberDao);
-					} else if (dataType == DataTypeEnum.LOGIN.getCode()) {
-						DataLogin paramObj = new DataLogin(index, size);
-						mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataLoginDao);
-					} else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
-						DataPayment paramObj = new DataPayment(index, size);
-						mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataPaymentDao);
-					} else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
-						DataShopping paramObj = new DataShopping(index, size);
-						mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataShoppingDao);
-					} else {
-						logger.error("传入错误的data type : {}", dataType);
-					}
-
-				}
-
-			}
+		if (dataType == DataTypeEnum.PARTY.getCode()) {
+			DataParty paramObj = new DataParty(index, size);
+			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataPartyDao);
+		} else if (dataType == DataTypeEnum.POPULATION.getCode()) {
+			DataPopulation paramObj = new DataPopulation(index, size);
+			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataPopulationDao);
+		} else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
+			DataCustomerTags paramObj = new DataCustomerTags(index, size);
+			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataCustomerTagsDao);
+		} else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
+			DataArchPoint paramObj = new DataArchPoint(index, size);
+			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataArchPointDao);
+		} else if (dataType == DataTypeEnum.MEMBER.getCode()) {
+			DataMember paramObj = new DataMember(index, size);
+			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataMemberDao);
+		} else if (dataType == DataTypeEnum.LOGIN.getCode()) {
+			DataLogin paramObj = new DataLogin(index, size);
+			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataLoginDao);
+		} else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
+			DataPayment paramObj = new DataPayment(index, size);
+			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataPaymentDao);
+		} else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
+			DataShopping paramObj = new DataShopping(index, size);
+			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataShoppingDao);
+		} else {
+			logger.error("传入错误的data type : {}", dataType);
 		}
 
 		result.setContactWayList(mainDataVO.getContactWayList());
 		result.setDataTypeList(mainDataVO.getDataTypeList());
 		result.setTimeCondition(mainDataVO.getTimeCondition());
-		result.getData().addAll(mainDataVO.getResultList());
+		if (dataType == 0) {
+			result.getData().addAll(mainDataVO.getResultList());
+		} else {
+			for (Integer dtType : dataTypeList) {
+				if(dataType == dtType){
+					result.getData().addAll(mainDataVO.getResultList());
+					break;
+				}
+			}
+		}
+
 		result.setTotal(mainDataVO.getTotalCount());
 		result.setTotalCount(mainDataVO.getTotalCount());
 		result.setCountList(mainDataVO.getCountList());
