@@ -14,7 +14,7 @@ public class DataPopulation extends BaseQuery {
     private String name;
 
     private Byte gender;
-    
+
     private String sex;
 
     private Date birthday;
@@ -74,13 +74,17 @@ public class DataPopulation extends BaseQuery {
     private String source;
 
     private String batchId;
-    
+
     private String bitmap;
 
     private Integer keyid;
-    
+
+    private String wxmpId;
+
+    private String wxCode;
+
     public DataPopulation(){}
-    
+
     public DataPopulation(Integer index , Integer size){
         super(index, size);
     }
@@ -346,9 +350,9 @@ public class DataPopulation extends BaseQuery {
     }
 
     public void setBatchId(String batchId) {
-        this.batchId = batchId;
+        this.batchId = batchId == null ? null : batchId.trim();
     }
-    
+
     public String getSex() {
         return GenderUtils.byteToChar(getGender());
     }
@@ -369,8 +373,23 @@ public class DataPopulation extends BaseQuery {
 		return keyid;
 	}
 
-	public void setKeyid(Integer keyid) {
-		this.keyid = keyid;
-	}
-    
+    public void setKeyid(Integer keyid) {
+        this.keyid = keyid;
+    }
+
+    public String getWxmpId() {
+        return wxmpId;
+    }
+
+    public void setWxmpId(String wxmpId) {
+        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
+    }
+
+    public String getWxCode() {
+        return wxCode;
+    }
+
+    public void setWxCode(String wxCode) {
+        this.wxCode = wxCode == null ? null : wxCode.trim();
+    }
 }

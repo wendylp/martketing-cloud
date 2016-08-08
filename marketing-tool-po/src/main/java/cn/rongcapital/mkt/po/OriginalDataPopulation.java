@@ -14,7 +14,7 @@ public class OriginalDataPopulation extends BaseQuery {
     private String name;
 
     private Byte gender;
-    
+
     private String sex;
 
     private Date birthday;
@@ -76,6 +76,12 @@ public class OriginalDataPopulation extends BaseQuery {
     private String batchId;
 
     private String fileUnique;
+
+    private String bitmap;
+
+    private String wxmpId;
+
+    private String wxCode;
 
     public Integer getId() {
         return id;
@@ -348,12 +354,36 @@ public class OriginalDataPopulation extends BaseQuery {
     public void setFileUnique(String fileUnique) {
         this.fileUnique = fileUnique == null ? null : fileUnique.trim();
     }
-    
+
     public String getSex() {
         return GenderUtils.byteToChar(getGender());
     }
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public String getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(String bitmap) {
+        this.bitmap = bitmap == null ? null : bitmap.trim();
+    }
+
+    public String getWxmpId() {
+        return wxmpId;
+    }
+
+    public void setWxmpId(String wxmpId) {
+        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
+    }
+
+    public String getWxCode() {
+        return wxCode;
+    }
+
+    public void setWxCode(String wxCode) {
+        this.wxCode = wxCode == null ? null : wxCode.trim();
     }
 }

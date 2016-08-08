@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,monthly_consume as monthlyConsume,marital_status as maritalStatus,education as education,employment as employment,nationality as nationality,blood_type as bloodType,citizenship as citizenship,iq as iq,identify_no as identifyNo,driving_license as drivingLicense,email as email,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,bitmap as bitmap,keyid as keyid]]>
+		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,monthly_consume as monthlyConsume,marital_status as maritalStatus,education as education,employment as employment,nationality as nationality,blood_type as bloodType,citizenship as citizenship,iq as iq,identify_no as identifyNo,driving_license as drivingLicense,email as email,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,bitmap as bitmap,keyid as keyid,wxmp_id as wxmpId,wx_code as wxCode]]>
 	</sql>
 
     <!-- Original需要更新的列 -->
@@ -12,7 +12,7 @@
         <![CDATA[ mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,
         marital_status,education,employment,nationality,blood_type,citizenship,iq,
         identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,
-        udid,phone_mac,create_time,update_time,source,batch_id,bitmap,keyid]]>
+        udid,phone_mac,create_time,update_time,source,batch_id,bitmap,keyid,wxmp_id,wx_code]]>
     </sql>
 
 	<!-- 查询列来源表-->
@@ -56,6 +56,8 @@
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
 		    	<if test="keyid != null"><![CDATA[ AND keyid = #{keyid}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
 		</where>
 	</sql>
 	
@@ -97,16 +99,18 @@
 		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
-		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId}]]></if>
-		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap}]]></if>
-		    	<if test="keyid != null"><![CDATA[keyid = #{keyid}]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataPopulation" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_population (mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,iq,identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,bitmap,keyid)
+			INSERT INTO data_population (mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,iq,identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,bitmap,keyid,wxmp_id,wx_code)
 			VALUES
 			(
 			  #{mobile},
@@ -140,7 +144,9 @@
 			  #{source},
 			  #{batchId},
 			  #{bitmap},
-			  #{keyid}
+			  #{keyid},
+			  #{wxmpId},
+			  #{wxCode}
 			)
 		]]>
 	</insert>
@@ -182,7 +188,7 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
-		
+
 
 	<!-- 总数查询,通过条件 -->
 	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.DataPopulation" resultType="int">
@@ -220,7 +226,7 @@
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
 	</select>
-	
+
 	<select id="selectMappingKeyId" parameterType="java.util.Map" resultType="java.lang.String">
 		<![CDATA[SELECT]]>
 		keyid
@@ -247,7 +253,7 @@
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
 	</select>
-	
+
 	<select id="selectCountByBatchId" parameterType="java.util.Map" resultType="java.lang.Integer">
 		<![CDATA[SELECT]]>
 		COUNT(1)
@@ -270,13 +276,13 @@
 			<![CDATA[AND create_time > #{timeCondition}]]>
 		</if>
 	</select>
-	
+
 	<select id="selectColumns" resultType="java.lang.String">
-		SELECT 
-			COLUMN_NAME 
-		FROM 
-			information_schema.columns 
-		WHERE 
+		SELECT
+			COLUMN_NAME
+		FROM
+			information_schema.columns
+		WHERE
 			table_name='data_population'
 	</select>
 
@@ -292,7 +298,7 @@
             #{obj.education},#{obj.employment},#{obj.nationality},#{obj.bloodType},#{obj.citizenship},
             #{obj.iq},#{obj.identifyNo},#{obj.drivingLicense},#{obj.email},#{obj.tel},#{obj.qq},
             #{obj.acctType},#{obj.acctNo},#{obj.idfa},#{obj.imei},#{obj.udid},#{obj.phoneMac},
-            #{obj.createTime},#{obj.updateTime},#{obj.source},#{obj.batchId},#{obj.bitmap},#{obj.keyid})
+            #{obj.createTime},#{obj.updateTime},#{obj.source},#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmpId},#{obj.wxCode})
 		</foreach>
 
         on duplicate key update
@@ -325,26 +331,28 @@
         phone_mac = COALESCE(values(phone_mac), phone_mac),
         source = COALESCE(values(source), source),
         update_time = COALESCE(values(update_time), update_time),
-        batch_id = COALESCE(values(batch_id), batch_id)
+        batch_id = COALESCE(values(batch_id), batch_id),
+		wxmp_id = COALESCE(values(wxmp_id), wxmp_id),
+		wx_code = COALESCE(values(wx_code), wx_code)
 	</insert>
-	
+
 	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
 		SELECT mobile
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE id = #{id}
 	</select>
-	
+
 	<select id="getDataPopulationByMobile" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.DataPopulation">
 		SELECT <include refid="QUERY_COLUMN_LIST" />
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE mobile = #{mobile}
 	</select>
-	
+
 	<!-- 修改记录通过手机号 -->
 	<update id="updateDataPopulation" parameterType="cn.rongcapital.mkt.po.DataPopulation">
 		<![CDATA[UPDATE data_population]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE mobile = #{mobile}]]>
 	</update>
-	
+
 </mapper>
