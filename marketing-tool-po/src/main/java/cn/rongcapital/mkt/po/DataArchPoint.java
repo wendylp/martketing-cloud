@@ -53,17 +53,21 @@ public class DataArchPoint extends BaseQuery implements Cloneable {
 
 	private Integer keyid;
 
-	// 重写Object.clone()方法,并把protected改为public
-	@Override
-	public Object clone() {
-		DataArchPoint dp = null;
-		try {
-			dp = (DataArchPoint) super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		return dp;
-	}
+    private String wxmpId;
+
+    private String wxCode;
+
+    // 重写Object.clone()方法,并把protected改为public
+    @Override
+    public Object clone() {
+        DataArchPoint dp = null;
+        try {
+            dp = (DataArchPoint) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return dp;
+    }
 
 	public DataArchPoint() {
 	}
@@ -245,7 +249,7 @@ public class DataArchPoint extends BaseQuery implements Cloneable {
 	}
 
 	public void setBatchId(String batchId) {
-		this.batchId = batchId;
+		this.batchId = batchId == null ? null : batchId.trim();
 	}
 
 	public String getBitmap() {
@@ -253,14 +257,30 @@ public class DataArchPoint extends BaseQuery implements Cloneable {
 	}
 
 	public void setBitmap(String bitmap) {
-		this.bitmap = bitmap;
+		this.bitmap = bitmap == null ? null : bitmap.trim();
 	}
 
 	public Integer getKeyid() {
 		return keyid;
 	}
 
-	public void setKeyid(Integer keyid) {
-		this.keyid = keyid;
-	}
+    public void setKeyid(Integer keyid) {
+        this.keyid = keyid;
+    }
+
+    public String getWxmpId() {
+        return wxmpId;
+    }
+
+    public void setWxmpId(String wxmpId) {
+        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
+    }
+
+    public String getWxCode() {
+        return wxCode;
+    }
+
+    public void setWxCode(String wxCode) {
+        this.wxCode = wxCode == null ? null : wxCode.trim();
+    }
 }

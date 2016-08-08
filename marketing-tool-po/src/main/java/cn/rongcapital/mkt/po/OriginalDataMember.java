@@ -56,6 +56,12 @@ public class OriginalDataMember extends BaseQuery {
 
     private String fileUnique;
 
+    private String bitmap;
+
+    private String wxmpId;
+
+    private String wxCode;
+
     public Integer getId() {
         return id;
     }
@@ -69,7 +75,7 @@ public class OriginalDataMember extends BaseQuery {
     }
 
     public void setMemberId(String memberId) {
-        this.memberId = memberId;
+        this.memberId = memberId == null ? null : memberId.trim();
     }
 
     public String getMemberPoints() {
@@ -245,7 +251,7 @@ public class OriginalDataMember extends BaseQuery {
     }
 
     public void setBatchId(String batchId) {
-        this.batchId = batchId;
+        this.batchId = batchId == null ? null : batchId.trim();
     }
 
     public String getFileUnique() {
@@ -254,5 +260,29 @@ public class OriginalDataMember extends BaseQuery {
 
     public void setFileUnique(String fileUnique) {
         this.fileUnique = fileUnique == null ? null : fileUnique.trim();
+    }
+
+    public String getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(String bitmap) {
+        this.bitmap = bitmap == null ? null : bitmap.trim();
+    }
+
+    public String getWxmpId() {
+        return wxmpId;
+    }
+
+    public void setWxmpId(String wxmpId) {
+        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
+    }
+
+    public String getWxCode() {
+        return wxCode;
+    }
+
+    public void setWxCode(String wxCode) {
+        this.wxCode = wxCode == null ? null : wxCode.trim();
     }
 }

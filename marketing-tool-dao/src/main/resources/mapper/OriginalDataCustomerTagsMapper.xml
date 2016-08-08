@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,tag_type as tagType,tag_name as tagName,birthday as birthday,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,acct_type as acctType,tel as tel,qq as qq,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique,bitmap as bitmap]]>
+		<![CDATA[ id as id,tag_type as tagType,tag_name as tagName,birthday as birthday,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,acct_type as acctType,tel as tel,qq as qq,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique,bitmap as bitmap,wxmp_id as wxmpId,wx_code as wxCode]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -35,7 +35,9 @@
 		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		    	<if test="fileUnique != null"><![CDATA[ AND file_unique = #{fileUnique}]]></if>
-			    <if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
 		</where>
 	</sql>
 	
@@ -67,14 +69,16 @@
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
 		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
 		    	<if test="fileUnique != null"><![CDATA[file_unique = #{fileUnique},]]></if>
-			    <if test="bitmap != null"><![CDATA[bitmap = #{bitmap}]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataCustomerTags" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO original_data_customer_tags (tag_type,tag_name,birthday,identify_no,driving_license,email,mobile,acct_type,tel,QQ,acct_no,IDFA,IMEI,UDID,phone_mac,create_time,source,batch_id,file_unique,bitmap)
+			INSERT INTO original_data_customer_tags (tag_type,tag_name,birthday,identify_no,driving_license,email,mobile,acct_type,tel,qq,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,file_unique,bitmap,wxmp_id,wx_code)
 			VALUES
 			(
 			  #{tagType},
@@ -96,7 +100,9 @@
 			  #{source},
 			  #{batchId},
 			  #{fileUnique},
-			  #{bitmap}
+			  #{bitmap},
+			  #{wxmpId},
+			  #{wxCode}
 			)
 		]]>
 	</insert>
@@ -146,7 +152,7 @@
 	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO original_data_customer_tags (tag_type,tag_name,birthday,identify_no,
 			driving_license,email,mobile,acct_type,tel,qq,acct_no,idfa,imei,udid,
-			phone_mac,status,create_time,source,file_unique,batch_id,bitmap)
+			phone_mac,status,create_time,source,file_unique,batch_id,bitmap,wxmp_id,wx_code)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -170,7 +176,9 @@
 			#{item.source},
 			#{item.file_unique},
 			#{item.batch_id},
-			#{item.bitmap}
+			#{item.bitmap},
+			#{item.wxmp_id},
+			#{item.wx_code}
 			)
 		</foreach>
 	</insert>

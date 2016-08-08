@@ -262,7 +262,7 @@ public class ParseUploadFileImpl {
             try {
                 Cell cell = row.getCell(cloumnIndex);
                 if(cell != null){
-                    if(cloumnCode.endsWith("time") || cloumnCode.endsWith("birthday")){
+                    if(cloumnCode.endsWith("time") || cloumnCode.endsWith("birthday") || cloumnCode.equals("expire")){
                         if(cell.getCellType() == Cell.CELL_TYPE_NUMERIC){
                             if(org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)){
                                 Date date = cell.getDateCellValue();

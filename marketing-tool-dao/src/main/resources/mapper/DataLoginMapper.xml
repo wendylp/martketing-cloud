@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,login_type as loginType,login_time as loginTime,logout_time as logoutTime,login_ip as loginIp,login_device as loginDevice,resolution_ratio as resolutionRatio,login_url as loginUrl,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,bitmap as bitmap,keyid as keyid]]>
+		<![CDATA[ id as id,login_type as loginType,login_time as loginTime,logout_time as logoutTime,login_ip as loginIp,login_device as loginDevice,resolution_ratio as resolutionRatio,login_url as loginUrl,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,bitmap as bitmap,keyid as keyid,wxmp_id as wxmpId,wx_code as wxCode]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -14,7 +14,7 @@
 	<sql id="ORIGINAL_CLEAN_COLUMN_LIST">
 		<![CDATA[ login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,
 		identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,
-		create_time,update_time,source,batch_id,bitmap,keyid]]>
+		create_time,update_time,source,batch_id,bitmap,keyid,wxmp_id,wx_code]]>
 	</sql>
 
 	<!-- 全部条件 -->
@@ -47,6 +47,8 @@
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
 		    	<if test="keyid != null"><![CDATA[ AND keyid = #{keyid}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
 		</where>
 	</sql>
 	
@@ -80,16 +82,18 @@
 		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
-		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId}]]></if>
-		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap}]]></if>
-		    	<if test="keyid != null"><![CDATA[keyid = #{keyid}]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataLogin" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_login (login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,bitmap,keyid)
+			INSERT INTO data_login (login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,bitmap,keyid,wxmp_id,wx_code)
 			VALUES
 			(
 			  #{loginType},
@@ -115,7 +119,9 @@
 			  #{source},
 			  #{batchId},
 			  #{bitmap},
-			  #{keyid}
+			  #{keyid},
+			  #{wxmpId},
+			  #{wxCode}
 			)
 		]]>
 	</insert>
@@ -194,7 +200,7 @@
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
 	</select>
-	
+
 	<select id="selectMappingKeyId" parameterType="java.util.Map" resultType="java.lang.String">
 		<![CDATA[SELECT]]>
 		keyid
@@ -221,7 +227,7 @@
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
 	</select>
-	
+
 	<select id="selectCountByBatchId" parameterType="java.util.Map" resultType="java.lang.Integer">
 		<![CDATA[SELECT]]>
 		COUNT(1)
@@ -244,13 +250,13 @@
 			<![CDATA[AND create_time > #{timeCondition}]]>
 		</if>
 	</select>
-	
+
 	<select id="selectColumns" resultType="java.lang.String">
-		SELECT 
-			COLUMN_NAME 
-		FROM 
-			information_schema.columns 
-		WHERE 
+		SELECT
+			COLUMN_NAME
+		FROM
+			information_schema.columns
+		WHERE
 			table_name='data_login'
 	</select>
 
@@ -266,18 +272,18 @@
 			#{obj.loginUrl}, #{obj.identifyNo}, #{obj.drivingLicense}, #{obj.email}, #{obj.mobile},
 			#{obj.tel},#{obj.qq},#{obj.acctType},#{obj.acctNo},#{obj.idfa},#{obj.imei},
 			#{obj.udid},#{obj.phoneMac},#{obj.createTime},#{obj.updateTime},
-			#{obj.source},#{obj.batchId},#{obj.bitmap},#{obj.keyid})
+			#{obj.source},#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmp_id},#{wx_code})
 		</foreach>
 		on duplicate key update
 		login_time = values(login_time)
 	</update>
-	
+
 	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
 		SELECT mobile
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE id = #{id}
 	</select>
-	
+
 	<select id="selectObjectById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataLogin">
 		SELECT <include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_FROM_TABLE"/>

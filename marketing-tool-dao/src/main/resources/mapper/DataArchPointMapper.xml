@@ -4,12 +4,12 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,event_id as eventId,event_name as eventName,click_time as clickTime,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,cookie as cookie,batch_id as batchId,bitmap as bitmap,keyid as keyid]]>
+		<![CDATA[ id as id,event_id as eventId,event_name as eventName,click_time as clickTime,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,cookie as cookie,batch_id as batchId,bitmap as bitmap,keyid as keyid,wxmp_id as wxmpId,wx_code as wxCode]]>
 	</sql>
-	
+
 	<!-- Original需要更新的列 -->
 	<sql id="ORIGINAL_CLEAN_COLUMN_LIST">
-		<![CDATA[ event_id,event_name,click_time,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,cookie,batch_id,bitmap,keyid]]>
+		<![CDATA[ event_id,event_name,click_time,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,cookie,batch_id,bitmap,keyid,wxmp_id,wx_code]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -42,6 +42,8 @@
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
 		    	<if test="keyid != null"><![CDATA[ AND keyid = #{keyid}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
 		</where>
 	</sql>
 	
@@ -72,16 +74,18 @@
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
 		    	<if test="cookie != null"><![CDATA[cookie = #{cookie},]]></if>
-		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId}]]></if>
-		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap}]]></if>
-		    	<if test="keyid != null"><![CDATA[keyid = #{keyid}]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataArchPoint" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_arch_point (event_id,event_name,click_time,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,cookie,batch_id,bitmap,keyid)
+			INSERT INTO data_arch_point (event_id,event_name,click_time,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,cookie,batch_id,bitmap,keyid,wxmp_id,wx_code)
 			VALUES
 			(
 			  #{eventId},
@@ -104,7 +108,9 @@
 			  #{cookie},
 			  #{batchId},
 			  #{bitmap},
-			  #{keyid}
+			  #{keyid},
+			  #{wxmpId},
+			  #{wxCode}
 			)
 		]]>
 	</insert>
@@ -183,7 +189,7 @@
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
 	</select>
-	
+
 	<select id="selectMappingKeyId" parameterType="java.util.Map" resultType="java.lang.String">
 		<![CDATA[SELECT]]>
 		keyid
@@ -210,7 +216,7 @@
 			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
 		</if>
 	</select>
-	
+
 	<select id="selectCountByBatchId" parameterType="java.util.Map" resultType="java.lang.Integer">
 		<![CDATA[SELECT]]>
 		COUNT(1)
@@ -233,13 +239,13 @@
 			<![CDATA[AND create_time > #{timeCondition}]]>
 		</if>
 	</select>
-	
+
 	<select id="selectColumns" resultType="java.lang.String">
-		SELECT 
-			COLUMN_NAME 
-		FROM 
-			information_schema.columns 
-		WHERE 
+		SELECT
+			COLUMN_NAME
+		FROM
+			information_schema.columns
+		WHERE
 			table_name='data_arch_point'
 	</select>
 
@@ -255,7 +261,7 @@
 			#{obj.mobile}, #{obj.tel}, #{obj.qq}, #{obj.acctType}, #{obj.acctNo},
 			#{obj.idfa},
 			#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.createTime},#{obj.source},
-			#{obj.cookie},#{obj.batchId},#{obj.bitmap},#{obj.keyid})
+			#{obj.cookie},#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmp_id,#{obj.wx_code}})
 		</foreach>
 		on duplicate key update
 		event_name = values(event_name),
@@ -276,19 +282,21 @@
 		cookie = values(cookie),
 		batch_id = values(batch_id),
 		bitmap = values(bitmap),
-		keyid = values(keyid)
+		keyid = values(keyid),
+		wxmp_id = values(wxmp_id),
+		wx_code = values(wx_code)
 	</update>
-	
+
 	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
 		SELECT mobile
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE id = #{id}
 	</select>
-	
+
 	<select id="selectObjectById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataArchPoint">
 		SELECT <include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE id = #{id}
 	</select>
-	
+
 </mapper>

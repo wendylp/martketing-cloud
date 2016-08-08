@@ -53,13 +53,17 @@ public class DataMember extends BaseQuery {
     private String source;
 
     private String batchId;
-    
+
     private String bitmap;
 
     private Integer keyid;
-    
+
+    private String wxmpId;
+
+    private String wxCode;
+
     public DataMember(){}
-    
+
     public DataMember(Integer index , Integer size){
         super(index, size);
     }
@@ -93,7 +97,7 @@ public class DataMember extends BaseQuery {
     }
 
     public void setMemberLevel(String memberLevel) {
-        this.memberLevel = memberLevel;
+        this.memberLevel = memberLevel == null ? null : memberLevel.trim();
     }
 
     public Date getRegistTime() {
@@ -253,23 +257,38 @@ public class DataMember extends BaseQuery {
     }
 
     public void setBatchId(String batchId) {
-        this.batchId = batchId;
+        this.batchId = batchId == null ? null : batchId.trim();
     }
 
-	public String getBitmap() {
-		return bitmap;
-	}
+    public String getBitmap() {
+        return bitmap;
+    }
 
-	public void setBitmap(String bitmap) {
-		this.bitmap = bitmap;
-	}
+    public void setBitmap(String bitmap) {
+        this.bitmap = bitmap == null ? null : bitmap.trim();
+    }
 
-	public Integer getKeyid() {
-		return keyid;
-	}
+    public Integer getKeyid() {
+        return keyid;
+    }
 
-	public void setKeyid(Integer keyid) {
-		this.keyid = keyid;
-	}
-    
+    public void setKeyid(Integer keyid) {
+        this.keyid = keyid;
+    }
+
+    public String getWxmpId() {
+        return wxmpId;
+    }
+
+    public void setWxmpId(String wxmpId) {
+        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
+    }
+
+    public String getWxCode() {
+        return wxCode;
+    }
+
+    public void setWxCode(String wxCode) {
+        this.wxCode = wxCode == null ? null : wxCode.trim();
+    }
 }
