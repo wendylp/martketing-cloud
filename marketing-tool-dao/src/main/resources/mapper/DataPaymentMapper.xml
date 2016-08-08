@@ -305,6 +305,12 @@
         WHERE id = #{id}
 	</select>
 	
+	<select id="selectObjectById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataPayment">
+		SELECT <include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+	
 	<select id="selectTotalIncomeAmountByWechatInfo" resultType="cn.rongcapital.mkt.po.ShoppingWechat">
 		SELECT sum(income_amt) as totalIncome , count(id) as totalCount ,wxmp_id as pubId , wx_code as openId  FROM data_payment
 			WHERE pay_status = '成功'

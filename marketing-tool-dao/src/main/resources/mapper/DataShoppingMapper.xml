@@ -398,7 +398,13 @@
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE id = #{id}
 	</select>
-
+	
+	<select id="selectObjectById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataShopping">
+		SELECT <include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+	
 	<select id="selectListByWxData" parameterType="cn.rongcapital.mkt.po.DataShopping" resultType="cn.rongcapital.mkt.po.OrderCount">
 		SELECT count(id) as orderCount,mobile
 		<include refid="QUERY_FROM_TABLE"/>

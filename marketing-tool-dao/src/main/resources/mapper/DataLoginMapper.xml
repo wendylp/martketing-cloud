@@ -277,5 +277,11 @@
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE id = #{id}
 	</select>
+	
+	<select id="selectObjectById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataLogin">
+		SELECT <include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
 
 </mapper>
