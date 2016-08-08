@@ -49,7 +49,6 @@ public class SegmentTagnameTagListServiceImpl implements SegmentTagnameTagListSe
 				map.put("tag_group_name", po.getTagGroupName());
 				result.getData().add(map);
 			}
-			
 		}
 		return result;
 	}
