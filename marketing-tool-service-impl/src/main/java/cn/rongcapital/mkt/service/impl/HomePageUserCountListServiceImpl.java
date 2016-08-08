@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import cn.rongcapital.mkt.vo.out.HomePageUserCountListOut;
 
 @Service
 public class HomePageUserCountListServiceImpl implements HomePageUserCountListService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private DataPartyDao dataPartyDao;
@@ -30,8 +34,8 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
         Calendar startTime = Calendar.getInstance();
         Calendar endTime = Calendar.getInstance();
 
-        startTime.set(startTime.get(Calendar.YEAR) - 1, startTime.get(Calendar.MONTH) + 1, 1, 0, 0, 0);
-        endTime.set(endTime.get(Calendar.YEAR), endTime.get(Calendar.MONTH), 1, 0, 0, 0);
+        startTime.set(startTime.get(Calendar.YEAR) - 1, startTime.get(Calendar.MONTH) + 2, 1, 0, 0, 0);
+        endTime.set(endTime.get(Calendar.YEAR), endTime.get(Calendar.MONTH) + 1, 1, 0, 0, 0);
         // 这里得把MILLISECOND设置为0,不然即便跟下一年的数据比较,也能因为MILLISECOND的微小差距查出下一年的数据
         startTime.set(Calendar.MILLISECOND, 0);
         endTime.set(Calendar.MILLISECOND, 0);
@@ -39,6 +43,8 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
         Map<String, Date> paramMap = new HashMap<>();
         paramMap.put("startTime", startTime.getTime());
         paramMap.put("endTime", endTime.getTime());
+        logger.info("start time is : " + startTime.getTime().toLocaleString());
+        logger.info("end time is : " + endTime.getTime().toLocaleString());
 
         List<HomePageMonthlyCount> homePageMonthlyCountList = dataPartyDao.selectMonthlyCount(paramMap);
         List<String> allMonth = getAllMonthInYear(startTime, endTime);

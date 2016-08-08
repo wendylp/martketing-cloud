@@ -53,6 +53,7 @@ public class TagRelatedImporterImpl implements TagRelatedImporter {
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line = bufferedReader.readLine();
         while (line != null) {
+            // 以#开头的行略过, 文件为空略过, 
             if (StringUtils.isEmpty(line) || !line.contains(",") || line.trim().startsWith("#")) {
                 line = bufferedReader.readLine();
                 continue;
@@ -112,12 +113,14 @@ public class TagRelatedImporterImpl implements TagRelatedImporter {
                 childTag.setParentGroupId(Long.parseLong(selfTag.getId() + ""));
                 childTag.setStatus((byte) 0);
                 taggroupDao.insert(childTag);
+                
                 Tag tag = new Tag();
                 tag.setCreateTime(new Date());
                 tag.setUpdateTime(new Date());
                 tag.setName(childTag.getName());
                 tag.setStatus((byte) 0);
                 tagDao.insert(tag);
+                
                 tagGroupMap.setTagId(tag.getId());
                 tagGroupMapDao.insert(tagGroupMap);
                 logger.info(tagGroupMap.getGroupId() + " : " + tag.getName() + " : " + tag.getId());
