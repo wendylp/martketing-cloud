@@ -261,7 +261,7 @@
 			#{obj.mobile}, #{obj.tel}, #{obj.qq}, #{obj.acctType}, #{obj.acctNo},
 			#{obj.idfa},
 			#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.createTime},#{obj.source},
-			#{obj.cookie},#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmp_id,#{obj.wx_code}})
+			#{obj.cookie},#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmpId,#{obj.wxCode}})
 		</foreach>
 		on duplicate key update
 		event_name = values(event_name),
