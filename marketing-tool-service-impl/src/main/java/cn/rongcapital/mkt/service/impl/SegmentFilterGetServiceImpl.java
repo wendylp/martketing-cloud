@@ -297,9 +297,9 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         }
         List<SegmentDimensionCountOut> formatedDimensionCountOut = new ArrayList<>();
         for (int i = 0; i < countArray.length; i++) {
-            String timesStr = i + "次";
+            String timesStr = (i + 1) + "次";
             if (i == countArray.length - 1) {
-                timesStr = i + "+次";
+                timesStr = (i + 1) + "+次";
             }
             formatedDimensionCountOut.add(new SegmentDimensionCountOut(timesStr, countArray[i]));
         }
