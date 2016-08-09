@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,wx_code as wxCode,wx_name as wxName,wx_group_id as wxGroupId,nickname as nickname,sex as sex,country as country,province as province,city as city,county as county,birthday as birthday,signature as signature,is_friend as isFriend,pub_id as pubId,uin as uin,subscribe_yn as subscribeYn,subscribe_time as subscribeTime,active_time as activeTime,activity_48h_yn as activity48hYn,head_image_url as headImageUrl,remark as remark,status as status,create_time as createTime,update_time as updateTime,selected as selected]]>
+		<![CDATA[ id as id,wx_code as wxCode,wx_name as wxName,wx_group_id as wxGroupId,nickname as nickname,sex as sex,country as country,province as province,city as city,county as county,birthday as birthday,signature as signature,is_friend as isFriend,pub_id as pubId,uin as uin,subscribe_yn as subscribeYn,subscribe_time as subscribeTime,active_time as activeTime,activity_48h_yn as activity48hYn,head_image_url as headImageUrl,remark as remark,status as status,create_time as createTime,update_time as updateTime,selected as selected,bitmap as bitmap,keyid as keyid]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -38,6 +38,8 @@
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		    	<if test="selected != null"><![CDATA[ AND selected = #{selected}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="keyid != null"><![CDATA[ AND keyid = #{keyid}]]></if>
 		</where>
 	</sql>
 	
@@ -71,14 +73,16 @@
 		    	<if test="headImageUrl != null"><![CDATA[head_image_url = #{headImageUrl},]]></if>
 		    	<if test="remark != null"><![CDATA[remark = #{remark},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
-		    	<if test="selected != null"><![CDATA[selected = #{selected}]]></if>
+		    	<if test="selected != null"><![CDATA[selected = #{selected},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatMember" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,pub_id,uin,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,create_time,selected)
+			INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,pub_id,uin,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,create_time,selected,bitmap,keyid)
 			VALUES
 			(
 			  #{wxCode},
@@ -102,7 +106,9 @@
 			  #{headImageUrl},
 			  #{remark},
 			  now(),
-			  #{selected}
+			  #{selected},
+			  #{bitmap},
+			  #{keyid}
 			)
 		]]>
 	</insert>
@@ -172,8 +178,8 @@
 		now()
 		)
 		</foreach>
-	</insert>	
-	
+	</insert>
+
 	<select id="selectIdByGroupIdAndWxAcct" parameterType="java.util.Map" resultType="java.lang.Long">
 		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
@@ -231,7 +237,7 @@
 			)
 		</foreach>
 	</insert>
-	
+
 	<select id="selectGroupMemeberCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT count(id)
 		<include refid="QUERY_FROM_TABLE"/>
@@ -283,5 +289,5 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE selected = 0
 	</select>
-	
+
 </mapper>

@@ -66,32 +66,64 @@ public class WechatMemberScheduleImpl implements TaskService{
         }
     }
 
+    //在这里需要做两步，data_party里有数据的弄出key_id反插入member，否则
     private boolean doSync(List<WechatMember> notSyncWechatMemberList) {
         //将同步过程改为使用PO操作数据库而不是使用Map操作数据库
-        List<DataParty> readyToSyncDataPartyList = new LinkedList<DataParty>();
         for(WechatMember wechatMember : notSyncWechatMemberList){
             DataParty dataParty = new DataParty();
-            dataParty.setProvice(wechatMember.getProvince());
-            dataParty.setName(wechatMember.getWxName());
-            dataParty.setMappingKeyid(wechatMember.getId() + "");
-            dataParty.setGender(wechatMember.getSex().byteValue());
-            if(wechatMember.getPubId() != null && !wechatMember.getPubId().isEmpty()){
-                dataParty.setSource(WECHAT_PUBFANS_SOURCE);
-            }else{
-                dataParty.setSource(WECHAT_PERSONS_SOURCE);
+            if(wechatMember.getPubId() != null){
+                if (updateWechatMemberKeyidByBitmap(wechatMember, dataParty)) continue;
+                dataParty.setWxmpId(wechatMember.getPubId());
+                dataParty.setWxCode(wechatMember.getWxCode());
+                dataParty.setBitmap(wechatMember.getBitmap());
+                dataParty.setProvice(wechatMember.getProvince());
+                dataParty.setName(wechatMember.getWxName());
+                dataParty.setGender(wechatMember.getSex().byteValue());
+                if(wechatMember.getPubId() != null && !wechatMember.getPubId().isEmpty()){
+                    dataParty.setSource(WECHAT_PUBFANS_SOURCE);
+                }else{
+                    dataParty.setSource(WECHAT_PERSONS_SOURCE);
+                }
+                dataParty.setMdType(MD_TYPE);
+                dataPartyDao.insert(dataParty);
+                wechatMember.setKeyid(dataParty.getId());
+                updateKeyIdInWechatMember(wechatMember);
             }
-            dataParty.setMdType(MD_TYPE);
-            readyToSyncDataPartyList.add(dataParty);
         }
 
-        Integer effectRows = 0;
-        for(DataParty dataParty : readyToSyncDataPartyList){
-            dataPartyDao.insert(dataParty);
-            effectRows ++;
+        return true;
+    }
+
+    private boolean updateWechatMemberKeyidByBitmap(WechatMember wechatMember, DataParty dataParty) {
+        dataParty.setWxmpId(wechatMember.getPubId());
+        dataParty.setWxCode(wechatMember.getWxCode());
+        if(isAlreadySyncedToDataParty(dataParty)){
+            Integer keyId = retrieveKeyId(dataParty);
+            if(keyId != null && keyId > 0){
+                wechatMember.setKeyid(keyId);
+                updateKeyIdInWechatMember(wechatMember);
+                return true;
+            }
         }
-        if(effectRows == readyToSyncDataPartyList.size()){
-            return true;
+        return false;
+    }
+
+    private void updateKeyIdInWechatMember(WechatMember wechatMember) {
+        wechatMemberDao.updateById(wechatMember);
+    }
+
+    private Integer retrieveKeyId(DataParty dataParty) {
+        List<DataParty> dataPartyList = dataPartyDao.selectList(dataParty);
+        if(!CollectionUtils.isEmpty(dataPartyList)){
+            DataParty idDataParty = dataPartyList.get(0);
+            return idDataParty.getId();
         }
+        return null;
+    }
+
+    private boolean isAlreadySyncedToDataParty(DataParty dataParty) {
+        Integer count = dataPartyDao.selectListCount(dataParty);
+        if(count != null && count > 0) return true;
         return false;
     }
 

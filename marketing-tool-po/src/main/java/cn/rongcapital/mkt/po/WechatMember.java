@@ -55,6 +55,10 @@ public class WechatMember extends BaseQuery {
 
     private Byte selected;
 
+    private String bitmap;
+
+    private Integer keyid;
+
     public Long getId() {
         return id;
     }
@@ -253,5 +257,21 @@ public class WechatMember extends BaseQuery {
 
     public void setSelected(Byte selected) {
         this.selected = selected;
+    }
+
+    public String getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(String bitmap) {
+        this.bitmap = bitmap == null ? null : bitmap.trim();
+    }
+
+    public Integer getKeyid() {
+        return keyid;
+    }
+
+    public void setKeyid(Integer keyid) {
+        this.keyid = keyid;
     }
 }

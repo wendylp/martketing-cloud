@@ -45,6 +45,7 @@ public class GetPubFansListServiceImpl implements TaskService {
     private WechatRegisterDao wechatRegisterDao;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+    private final String bitmap = "00000011000000000";
 
     @Override
     public void task(Integer taskId) {
@@ -138,7 +139,7 @@ public class GetPubFansListServiceImpl implements TaskService {
                 paramFan.put("head_image_url",h5PubFan.getHeadImageUrl());
                 paramFan.put("remark",h5PubFan.getRemark());
                 paramFan.put("pub_id",h5PubFan.getPubId());
-
+                paramFan.put("bitmap",bitmap);
                 fansList.add(paramFan);
             }
             if(fansList != null && fansList.size() > 0){
