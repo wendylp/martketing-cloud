@@ -1186,7 +1186,18 @@ public class MktApi {
                                            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size){
         return audienceListService.audienceList(userToken, size, index);
     }
-	
+
+
+	/**
+	 *
+	 * @param userToken
+	 * @return
+     */
+	@GET
+	@Path("/mkt.audience.count.get")
+	public BaseOutput audienceCount(@NotEmpty @QueryParam("user_token") String userToken){
+		return audienceListService.audienceCount(userToken);
+	}
 	
 	
 	/**

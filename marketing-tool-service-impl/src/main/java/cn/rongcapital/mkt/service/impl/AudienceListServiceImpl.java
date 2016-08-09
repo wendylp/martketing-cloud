@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.po.AudienceCount;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,5 +117,18 @@ public class AudienceListServiceImpl implements AudienceListService {
         result.getData().add(resultMap);
         return result;
     }
+
+	@Override
+	public BaseOutput audienceCount(String userToken) {
+		AudienceList param = new AudienceList();
+		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        AudienceCount audienceCount = audienceListDao.selectAudienceCount(param);
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                                                  ApiConstant.INT_ZERO, null);
+
+        result.getData().add(audienceCount);
+
+		return result;
+	}
 
 }

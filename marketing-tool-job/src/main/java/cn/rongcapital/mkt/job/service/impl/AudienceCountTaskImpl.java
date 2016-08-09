@@ -39,7 +39,7 @@ public class AudienceCountTaskImpl implements TaskService {
 				audienceListPartyMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				audienceListPartyMapT.setAudienceListId(audienceList.getId());
 				int audienceCount = audienceListPartyMapDao.selectListCount(audienceListPartyMapT);
-				audienceList.setAudienceRows(audienceCount+"");
+				audienceList.setAudienceRows(audienceCount);
 				audienceListDao.updateById(audienceList);
 			}
 		}

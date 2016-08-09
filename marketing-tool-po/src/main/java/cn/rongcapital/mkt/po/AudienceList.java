@@ -9,7 +9,7 @@ public class AudienceList extends BaseQuery {
 
     private String audienceName;
 
-    private String audienceRows;
+    private Integer audienceRows;
 
     private String source;
 
@@ -41,12 +41,12 @@ public class AudienceList extends BaseQuery {
         this.audienceName = audienceName == null ? null : audienceName.trim();
     }
 
-    public String getAudienceRows() {
+    public Integer getAudienceRows() {
         return audienceRows;
     }
 
-    public void setAudienceRows(String audienceRows) {
-        this.audienceRows = audienceRows == null ? null : audienceRows.trim();
+    public void setAudienceRows(Integer audienceRows) {
+        this.audienceRows = audienceRows;
     }
 
     public String getSource() {

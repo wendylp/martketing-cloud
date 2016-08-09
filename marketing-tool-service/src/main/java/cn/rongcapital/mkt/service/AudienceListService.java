@@ -20,4 +20,6 @@ public interface AudienceListService {
      */
     public BaseOutput getAudienceByListId(String userToken, Integer audienceId, Integer size, Integer index);
 
+    BaseOutput audienceCount(String userToken);
+
 }

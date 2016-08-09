@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.po.AudienceCount;
 import cn.rongcapital.mkt.po.AudienceList;
 
 import java.util.List;
@@ -67,6 +68,8 @@ public interface AudienceListDao extends BaseDao<AudienceList>{
 	 * @return int
 	 */
 	Long selectIdByAudienceName(Map<String, Object> paramMap);
-	
-	
+
+
+	AudienceCount selectAudienceCount(AudienceList audienceList);
+
 }

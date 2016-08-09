@@ -40,7 +40,7 @@ public class SaveCampaignAudienceServiceImpl implements SaveCampaignAudienceServ
         }
         
         //2.保存人群名称到audience_list表中        
-        audienceListT.setAudienceRows(0+"");
+        audienceListT.setAudienceRows(0);
         audienceListT.setSource(ApiConstant.AUDIENCE_SOUCE_NAME_CAMPAIGN);
         audienceListDao.insert(audienceListT);
 
