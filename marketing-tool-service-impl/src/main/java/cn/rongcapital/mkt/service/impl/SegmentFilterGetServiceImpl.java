@@ -13,9 +13,7 @@ import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
-import cn.rongcapital.mkt.vo.in.SegmentFilterCondition;
-import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
+import cn.rongcapital.mkt.vo.in.*;
 import cn.rongcapital.mkt.vo.out.SegmentAreaCountOut;
 import cn.rongcapital.mkt.vo.out.SegmentDimensionCountOut;
 import heracles.data.common.annotation.ReadWrite;
@@ -65,6 +63,73 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
             result.getData().add(map);            
         }
       return result;
+    }
+
+    @Override
+    public BaseOutput getSegmentFilterSum(SegmentFilterSumIn body) {
+        BaseOutput result = newSuccessBaseOutput();
+        List<SegmentFilterSumCondition> orGroups = body.getGroups();
+        if (CollectionUtils.isEmpty(orGroups)) {
+            return result;
+        }
+
+        List<Criteria> orCriteriaList = new ArrayList<>();
+        for (SegmentFilterSumCondition segmentFilterSumCondition : orGroups) {
+            List<SegmentFilterCondition> conditions = segmentFilterSumCondition.getConditions();
+            if (CollectionUtils.isEmpty(conditions)) {
+                continue;
+            }
+            orCriteriaList.add(getConditionCriteria(conditions));
+        }
+        if (CollectionUtils.isEmpty(orCriteriaList)) {
+            return result;
+        }
+        Criteria[] orCriteriaArray = new Criteria[orCriteriaList.size()];
+        orCriteriaList.toArray(orCriteriaArray);
+        Criteria allCriteria = new Criteria();
+        allCriteria.orOperator(orCriteriaArray);
+        long totalCount = mongoTemplate.count(new Query(allCriteria), DataParty.class);
+        result.setTotal(Integer.parseInt(String.valueOf(totalCount)));
+        return result;
+    }
+
+
+    private Criteria getConditionCriteria(List<SegmentFilterCondition> conditions) {
+        Criteria criteria = new Criteria();
+        if (CollectionUtils.isEmpty(conditions)) {
+            return criteria;
+        }
+        List<Criteria> andCriterias = new ArrayList<>();
+        for (SegmentFilterCondition tempSegmentFilterCondition : conditions) {
+            int tagId = Integer.parseInt(tempSegmentFilterCondition.getTag_id());
+            int tagGroupId = tempSegmentFilterCondition.getTag_group_id();
+            String excule = tempSegmentFilterCondition.getExclude();
+            Criteria oneCriteria = null;
+            if("1".equals(excule)) {
+                if(tagId == 0) {//不限
+                    oneCriteria = Criteria.where("tagList.tagGroupId").ne(tagGroupId);
+                } else {
+                    oneCriteria = Criteria.where("tagList.tagId").ne(tagId);
+                }
+            } else {
+                if(tagId == 0) {//不限
+                    oneCriteria = Criteria.where("tagList.tagGroupId").is(tagGroupId);
+                } else {
+                    oneCriteria = Criteria.where("tagList.tagId").is(tagId);
+                }
+            }
+
+            if (andCriterias != null) {
+                andCriterias.add(oneCriteria);
+            }
+        }
+
+        if (!CollectionUtils.isEmpty(andCriterias)) {
+            Criteria[] criteriaArray = new Criteria[andCriterias.size()];
+            andCriterias.toArray(criteriaArray);
+            criteria.andOperator(criteriaArray);
+        }
+        return criteria;
     }
 
     @Override

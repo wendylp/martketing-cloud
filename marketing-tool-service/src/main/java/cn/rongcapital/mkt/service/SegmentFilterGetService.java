@@ -14,6 +14,7 @@ package cn.rongcapital.mkt.service;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
 import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
+import cn.rongcapital.mkt.vo.in.SegmentFilterSumIn;
 
 import javax.ws.rs.core.SecurityContext;
 
@@ -21,6 +22,8 @@ import javax.ws.rs.core.SecurityContext;
 public interface SegmentFilterGetService {
   
     BaseOutput getSegmentFilterCount(SegmentFilterCountIn body, SecurityContext securityContext);
+
+    BaseOutput getSegmentFilterSum(SegmentFilterSumIn body);
 
     BaseOutput segmentGenderCountList(SegmentCountFilterIn input);
 

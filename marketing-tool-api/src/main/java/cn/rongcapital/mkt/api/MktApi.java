@@ -34,6 +34,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.vo.in.*;
 import cn.rongcapital.mkt.vo.out.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -149,27 +150,6 @@ import cn.rongcapital.mkt.vo.LoginInput;
 import cn.rongcapital.mkt.vo.ModifyInput;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
-import cn.rongcapital.mkt.vo.in.Audience;
-import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
-import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
-import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
-import cn.rongcapital.mkt.vo.in.CampaignHeadCreateIn;
-import cn.rongcapital.mkt.vo.in.CampaignHeadUpdateIn;
-import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
-import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
-import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
-import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
-import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
-import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
-import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
-import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
-import cn.rongcapital.mkt.vo.in.SegmentHeadDeleteIn;
-import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
-import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
-import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
-import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -1527,6 +1507,14 @@ public class MktApi {
             @Valid SegmentFilterCountIn body,
             @Context SecurityContext securityContext){
         return segmentFilterGetService.getSegmentFilterCount(body, securityContext);
+    }
+
+    @POST
+    @Path("/mkt.segment.filter.sum.get")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput getSegmentFilterSum(@Valid SegmentFilterSumIn body,
+                                                   @Context SecurityContext securityContext){
+        return segmentFilterGetService.getSegmentFilterSum(body);
     }
 	
 	
