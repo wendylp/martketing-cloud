@@ -43,15 +43,11 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
         Map<String, Date> paramMap = new HashMap<>();
         paramMap.put("startTime", startTime.getTime());
         paramMap.put("endTime", endTime.getTime());
-        logger.info("start time is : " + startTime.getTime().toLocaleString());
-        logger.info("end time is : " + endTime.getTime().toLocaleString());
 
         List<HomePageMonthlyCount> homePageMonthlyCountList = dataPartyDao.selectMonthlyCount(paramMap);
 
-        startTime.set(startTime.get(Calendar.YEAR), startTime.get(Calendar.MONTH) + 1, 1, 0, 0, 0);
+        startTime.set(startTime.get(Calendar.YEAR), startTime.get(Calendar.MONTH), 1, 0, 0, 0);
         endTime.set(endTime.get(Calendar.YEAR), endTime.get(Calendar.MONTH) - 1, 1, 0, 0, 0);
-        logger.info("start time is : " + startTime.getTime().toLocaleString());
-        logger.info("end time is : " + endTime.getTime().toLocaleString());
         List<String> allMonth = getAllMonthInYear(startTime, endTime);
 
         // 把取出来的数据放在Map里, 方便查询, 不然每次都要轮训list.明显map效率更高
