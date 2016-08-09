@@ -51,14 +51,31 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 
 			Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
 			if (keyid != null) {
+				DataParty dataParty = new DataParty();
+				dataParty.setMdType(DataTypeEnum.POPULATION.getCode());
+				dataParty.setMobile(dataObj.getMobile());
+				dataParty.setName(dataObj.getName());
+				dataParty.setGender(dataObj.getGender());
+				dataParty.setBirthday(dataObj.getBirthday());
+				dataParty.setCitizenship(dataObj.getCitizenship());
+				dataParty.setProvice(dataObj.getProvice());
+				dataParty.setCity(dataObj.getCity());
+				dataParty.setJob(dataObj.getJob());
+				dataParty.setMonthlyIncome(dataObj.getMonthlyIncome());
+				dataParty.setMonthlyConsume(dataObj.getMonthlyConsume());
+				dataParty.setSource(dataObj.getSource());
+				dataParty.setBatchId(dataObj.getBatchId());
+				dataParty.setId(keyid);
+				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
+				dataPartyDao.updateById(dataParty);
 				this.updateKeyidByid(keyid, dataObj.getId());
 			} else {
 
 				DataParty dataParty = new DataParty();
-				// dataParty.setMappingKeyid(dataObj.getId().toString());
+				dataParty.setMappingKeyid(dataObj.getId().toString());
 				dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
 				dataParty.setMdType(DataTypeEnum.POPULATION.getCode());
-				// dataParty.setMobile(dataObj.getMobile());
+				dataParty.setMobile(dataObj.getMobile());
 				dataParty.setName(dataObj.getName());
 				dataParty.setGender(dataObj.getGender());
 				dataParty.setBirthday(dataObj.getBirthday());

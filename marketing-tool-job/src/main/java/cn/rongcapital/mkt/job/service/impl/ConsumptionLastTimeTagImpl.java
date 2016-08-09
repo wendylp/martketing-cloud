@@ -55,23 +55,23 @@ public class ConsumptionLastTimeTagImpl implements TaskService {
 		List<DataPayment> dataPaymentList = dataPaymentDao.selectList(dataPayment);
 
 		// 2通过Mobile将dataParty的ID查询出来
-		for (DataPayment dPayment : dataPaymentList) {
-			DataParty dataParty = new DataParty();
-			dataParty.setMobile(dPayment.getMobile());
-			Integer id = dataPartyDao.selectIdByMappingId(new Long(dPayment.getMobile()));
-			if (id != null) {
-				Query query = Query.query(Criteria.where("mid").is(id));
-				Update update = new Update().set("payLastTime", dPayment.getUpdateTime());
-				cn.rongcapital.mkt.po.mongodb.DataParty dp = mongoTemplate.findAndModify(query, update,
-						cn.rongcapital.mkt.po.mongodb.DataParty.class);
-				if (dp != null) {
-					logger.debug("ConsumptionLastTimeTagTask-----DataPay-----id:{}-----Pay Last Time:{}", dp.getId(),
-							dp.getUpdateTime());
-				} else {
-					logger.error("ConsumptionLastTimeTagTask-----DataPayment-----id:{}-----未找到主数据", id);
-				}
-			}
-		}
+//		for (DataPayment dPayment : dataPaymentList) {
+//			DataParty dataParty = new DataParty();
+//			dataParty.setMobile(dPayment.getMobile());
+//			Integer id = dataPartyDao.selectIdByMappingId(new Long(dPayment.getMobile()));
+//			if (id != null) {
+//				Query query = Query.query(Criteria.where("mid").is(id));
+//				Update update = new Update().set("payLastTime", dPayment.getUpdateTime());
+//				cn.rongcapital.mkt.po.mongodb.DataParty dp = mongoTemplate.findAndModify(query, update,
+//						cn.rongcapital.mkt.po.mongodb.DataParty.class);
+//				if (dp != null) {
+//					logger.debug("ConsumptionLastTimeTagTask-----DataPay-----id:{}-----Pay Last Time:{}", dp.getId(),
+//							dp.getUpdateTime());
+//				} else {
+//					logger.error("ConsumptionLastTimeTagTask-----DataPayment-----id:{}-----未找到主数据", id);
+//				}
+//			}
+//		}
 		logger.debug("ConsumptionLastTimeTagTask-----end!");
 	}
 
