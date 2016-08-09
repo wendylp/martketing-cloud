@@ -46,7 +46,7 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
 
         List<HomePageMonthlyCount> homePageMonthlyCountList = dataPartyDao.selectMonthlyCount(paramMap);
 
-        startTime.set(startTime.get(Calendar.YEAR), startTime.get(Calendar.MONTH), 1, 0, 0, 0);
+        startTime.set(startTime.get(Calendar.YEAR), startTime.get(Calendar.MONTH) - 1, 1, 0, 0, 0);
         endTime.set(endTime.get(Calendar.YEAR), endTime.get(Calendar.MONTH) - 1, 1, 0, 0, 0);
         List<String> allMonth = getAllMonthInYear(startTime, endTime);
 
