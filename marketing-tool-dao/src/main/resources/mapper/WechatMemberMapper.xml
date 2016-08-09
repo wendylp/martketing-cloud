@@ -154,7 +154,7 @@
 	<insert id="batchInsertFans" parameterType="java.util.List">
 		INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,
 								   subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,pub_id,
-								   create_time)
+								   create_time,bitmap)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 		(
@@ -175,7 +175,8 @@
 		#{item.head_image_url},
 		#{item.remark},
 		#{item.pub_id},
-		now()
+		now(),
+		#{item.bitmap}
 		)
 		</foreach>
 	</insert>
