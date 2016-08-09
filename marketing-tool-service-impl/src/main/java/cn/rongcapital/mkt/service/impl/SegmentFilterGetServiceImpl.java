@@ -271,7 +271,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
         AggregationResults<SegmentDimensionCountOut> aggregationResults =  mongoTemplate.aggregate(
                 aggregation, DataParty.class, SegmentDimensionCountOut.class);
         List<SegmentDimensionCountOut> receiveCountList = aggregationResults.getMappedResults();
-        int[] countArray = new int[6];
+        int[] countArray = new int[5];
         if (!CollectionUtils.isEmpty(receiveCountList)) {
             for (SegmentDimensionCountOut tempSegmentDimensionCountOut : receiveCountList) {
                 Integer populationCount = tempSegmentDimensionCountOut.getPopulationCount();
@@ -279,37 +279,29 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
                     continue;
                 }
                 String receiveCountStr = tempSegmentDimensionCountOut.getDimensionName();
-                if (!StringUtils.hasText(receiveCountStr)) {
-                    countArray[0] += populationCount.intValue();
-                } else {
+                if (StringUtils.hasText(receiveCountStr)) {
                     int receiveCount = Integer.parseInt(receiveCountStr);
-                    switch (receiveCount) {
-                        case 0 :
-                            countArray[0] += populationCount.intValue();
-                            break;
-                        case 1 :
-                            countArray[1] += populationCount.intValue();
-                            break;
-                        case 2 :
-                            countArray[2] += populationCount.intValue();
-                            break;
-                        case 3 :
-                            countArray[3] += populationCount.intValue();
-                            break;
-                        case 4 :
-                            countArray[4] += populationCount.intValue();
-                            break;
-                        default :
-                            countArray[5] += populationCount.intValue();
-                            break;
+                    if (receiveCount == 1) {
+                        countArray[0] += populationCount.intValue();
+                    } else if (receiveCount == 2) {
+                        countArray[1] += populationCount.intValue();
+                    } else if (receiveCount == 3) {
+                        countArray[2] += populationCount.intValue();
+                    } else if (receiveCount == 4) {
+                        countArray[3] += populationCount.intValue();
+                    } else if (receiveCount >= 5) {
+                        countArray[4] += populationCount.intValue();
                     }
-
                 }
             }
         }
         List<SegmentDimensionCountOut> formatedDimensionCountOut = new ArrayList<>();
         for (int i = 0; i < countArray.length; i++) {
-            formatedDimensionCountOut.add(new SegmentDimensionCountOut(i + "次", countArray[i]));
+            String timesStr = i + "次";
+            if (i == countArray.length - 1) {
+                timesStr = i + "+次";
+            }
+            formatedDimensionCountOut.add(new SegmentDimensionCountOut(timesStr, countArray[i]));
         }
         setBaseOut(result, formatedDimensionCountOut);
         return result;
