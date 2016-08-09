@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -156,6 +157,12 @@ public class GetPubFansListServiceImpl implements TaskService {
         wechatRegister.setWxAcct(pubId);
         Integer count = wechatRegisterDao.selectListCount(wechatRegister);
         if(count == null || count == 0) return true;
+        if(count > 0){
+            List<WechatRegister> wechatRegisters = wechatRegisterDao.selectList(wechatRegister);
+            if(!CollectionUtils.isEmpty(wechatRegisters)){
+                if(wechatRegisters.get(0).getType() == -1) return true;
+            }
+        }
         return false;
     }
 
