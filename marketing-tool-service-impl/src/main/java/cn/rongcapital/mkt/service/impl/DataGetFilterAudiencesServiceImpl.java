@@ -98,8 +98,11 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
     public <T extends BaseQuery> Object getFilterAudiences(String method, String userToken, String ver, Integer index,
                     Integer size, Integer dataType, List<Integer> dataTypeList, List<Integer> contactIds,
                     List<CustomizeViewCheckboxIn> customizeViews, Integer timeCondition) {
+        // 返回的结果
+        // 建议service返回的时候都返回VO对象,不然复用就很费事
         DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+
         List<Map<String, Object>> columnList = new ArrayList<>();
         List<ImportTemplate> importTemplateList = null;
         Integer totalCount = 0;
@@ -107,6 +110,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         // 对传入的条件进行检查, 并保存选择的条件.(用于传给前端, 分页的时候还要把条件传回来)
         updateConditions(dataTypeList, contactIds, timeCondition);
 
+        // 保存自定义视图的选项状态
         if (customizeViews != null && !customizeViews.isEmpty()) {
             for (int i = 0; i < customizeViews.size(); i++) {
                 ImportTemplate paramImportTemplate = new ImportTemplate(index, size);
@@ -136,7 +140,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
             }
         }
 
-        // 这代码写的太2了
+        // 这代码写的太2了, 按王东的说法, 应该换成Factory, 但其实换汤不换药.代码会清爽一些
         MainDataVO mainDataVO = null;
         if (dataType == DataTypeEnum.PARTY.getCode()) {
             DataParty paramObj = new DataParty(index, size);
@@ -194,7 +198,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
         MainDataVO mainDataVO = new MainDataVO();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> paramMap = new HashMap<>();
-        // 这段mappingKeyIds的逻辑绝对是效率上的作大死
+        // 这段mappingKeyIds的逻辑绝对是效率上的作大死.以后肯定会改的.
         List<String> mappingKeyIds = new ArrayList<>();
         contactIdList = filterContactId(contactIdList, dao);
         if (CollectionUtils.isEmpty(mdTypeList)) {
@@ -247,6 +251,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
             }
         }
 
+        // 所有表中的mapping_key都查不到, 索性把mapping_key设为-1, 这样一定不会查到任何数据
         if (!CollectionUtils.isEmpty(mdTypeList) && CollectionUtils.isEmpty(mappingKeyIds)) {
             mappingKeyIds.add("-1");
         }
