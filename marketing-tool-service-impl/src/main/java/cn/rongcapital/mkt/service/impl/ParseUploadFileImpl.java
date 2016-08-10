@@ -456,6 +456,7 @@ public class ParseUploadFileImpl {
                 case Cell.CELL_TYPE_STRING:
                     String fieldCode = nameCodeMap.get(cell.getStringCellValue());
                     if(fieldCode != null){
+                        if("".equals(fieldCode)) continue;
                         codeIndexMap.put(fieldCode,cell.getColumnIndex());
                     }else{
                         illegalColumns.append(cell.getStringCellValue() + ",");
