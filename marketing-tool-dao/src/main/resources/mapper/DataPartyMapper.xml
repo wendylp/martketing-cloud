@@ -691,5 +691,6 @@
 		    	
 		    	<if test="status != null"><![CDATA[ AND status != #{status}]]></if>
 		    	<if test="mdType != null"><![CDATA[ AND md_type = #{mdType}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
 	</select>
 </mapper>
