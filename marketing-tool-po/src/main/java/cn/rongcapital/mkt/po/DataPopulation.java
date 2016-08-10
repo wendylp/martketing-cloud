@@ -83,6 +83,18 @@ public class DataPopulation extends BaseQuery {
 
     private String wxCode;
 
+    private String nickname;
+
+    private String headImgUrl;
+
+    private Date subscribeTime;
+
+    private String language;
+
+    private String unionid;
+
+    private String remark;
+
     public DataPopulation(){}
 
     public DataPopulation(Integer index , Integer size){
@@ -361,17 +373,17 @@ public class DataPopulation extends BaseQuery {
         this.sex = sex;
     }
 
-	public String getBitmap() {
-		return bitmap;
-	}
+    public String getBitmap() {
+        return bitmap;
+    }
 
-	public void setBitmap(String bitmap) {
-		this.bitmap = bitmap;
-	}
+    public void setBitmap(String bitmap) {
+        this.bitmap = bitmap == null ? null : bitmap.trim();
+    }
 
-	public Integer getKeyid() {
-		return keyid;
-	}
+    public Integer getKeyid() {
+        return keyid;
+    }
 
     public void setKeyid(Integer keyid) {
         this.keyid = keyid;
@@ -391,5 +403,53 @@ public class DataPopulation extends BaseQuery {
 
     public void setWxCode(String wxCode) {
         this.wxCode = wxCode == null ? null : wxCode.trim();
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname == null ? null : nickname.trim();
+    }
+
+    public String getHeadImgUrl() {
+        return headImgUrl;
+    }
+
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl == null ? null : headImgUrl.trim();
+    }
+
+    public Date getSubscribeTime() {
+        return subscribeTime;
+    }
+
+    public void setSubscribeTime(Date subscribeTime) {
+        this.subscribeTime = subscribeTime;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language == null ? null : language.trim();
+    }
+
+    public String getUnionid() {
+        return unionid;
+    }
+
+    public void setUnionid(String unionid) {
+        this.unionid = unionid == null ? null : unionid.trim();
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 }
