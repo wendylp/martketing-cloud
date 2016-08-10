@@ -50,6 +50,12 @@ public class DataGetMainCountServiceImpl implements DataGetMainCountService {
             resultList.add(map);
         }
 
+        Integer dataSourceCount = 0;
+        for(Map<String,Object> map : resultList){
+            if((Integer)map.get("md_type")!= 0 && map.get("count_rows") != null && Long.valueOf(map.get("count_rows") + "")>0) dataSourceCount++;
+        }
+
+        result.setDataSourceCount(dataSourceCount);
         result.getData().addAll(resultList);
         result.setTotal(result.getData().size());
 
