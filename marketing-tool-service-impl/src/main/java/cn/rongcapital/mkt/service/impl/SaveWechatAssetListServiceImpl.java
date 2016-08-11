@@ -66,15 +66,12 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
         //3.根据import_groupId，选出member的Id
         List<Long> idLists = wechatMemberDao.selectIdListByGroupId(importGroudIds);
 
-        //Todo:这块需要修改，从member中选出data_population的ID，然后从data_population中选出data_party
+        //Todo:4这块需要修改，从member中选出data_population的ID，然后从data_population中选出data_party
         //Todo: 的Id，然后将这些Ids插入到audience_map中去
         //1.获取data_population的Id
         List<Integer> memberKeyidList = wechatMemberDao.selectKeyidListByIdList(idLists);
         //2.获取data_party的Id
         List<Integer> populationKeyidList = dataPopulationDao.selectKeyidListByIdList(memberKeyidList);
-
-        //Todo:4.根据ucode选择出data_party_id
-//        List<Long> dataPartyIds = dataPartyDao.selectDataPartyIdsByMappinKeyIds(idLists);
 
         //Todo:5.将dataparty_id和audience_id存入audience_data_mapping表中
         List<Map<String,Object>> paramInsertLists = new ArrayList<Map<String,Object>>();
