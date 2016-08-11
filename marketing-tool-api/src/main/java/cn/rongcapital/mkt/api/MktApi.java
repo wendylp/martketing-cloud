@@ -108,6 +108,7 @@ import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.ModifyPasswdService;
 import cn.rongcapital.mkt.service.ReauthWechatAccountService;
+import cn.rongcapital.mkt.service.RegisterListService;
 import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
@@ -128,6 +129,7 @@ import cn.rongcapital.mkt.service.TagDownloadCustomAudienceService;
 import cn.rongcapital.mkt.service.TagGetCustomService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
+import cn.rongcapital.mkt.service.TagUpdateService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
 import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
 import cn.rongcapital.mkt.service.TaskGetListService;
@@ -446,6 +448,12 @@ public class MktApi {
 	@Autowired
 	private WechatChanellUpdateService wechatChanellUpdateService;
 
+	@Autowired
+	private RegisterListService regListService;
+	@Autowired
+	private TagUpdateService tagService;	
+
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
 	/**
@@ -1979,5 +1987,30 @@ public class MktApi {
 	public BaseOutput wechannelUpdate(@Valid WechatChanellUpdateIn body, @Context SecurityContext securityContext)
 	{
 		return wechatChanellUpdateService.wechatChannelUpdate(body, securityContext);
+	}
+	
+	/**
+	 * 获取公众号列表
+	 *
+	 * @param userToken
+	 * @param ver
+	 * @author chengjincheng
+	 */
+	@GET
+	@Path("/mkt.weixin.register.list")
+	public BaseOutput registerListGet(@NotEmpty @QueryParam("user_token") String userToken) {
+
+		return regListService.getRegisterList();
+	}
+	
+	/**
+	 * @功能简述 : 根据id更新标签信息
+	 */
+	@POST
+	@Path("/mkt.weixin.tag.update")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput updateTagInfo(@Valid TagBodyUpdateIn body) {
+		
+		return tagService.tagInfoUpdate(body);
 	}
 }
