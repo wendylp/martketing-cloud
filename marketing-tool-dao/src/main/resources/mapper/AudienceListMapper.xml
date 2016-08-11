@@ -93,7 +93,7 @@
 
 	<select id="selectAudienceCount" parameterType="cn.rongcapital.mkt.po.AudienceList"
             resultType="cn.rongcapital.mkt.po.AudienceCount">
-		SELECT COUNT(id) AS audienceCount,sum(audience_rows) as audiencePeopleCount
+		SELECT COUNT(id) AS audienceCount,ifNULL(sum(audience_rows),0) as audiencePeopleCount
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
