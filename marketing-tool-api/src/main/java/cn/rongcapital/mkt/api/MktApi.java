@@ -137,6 +137,8 @@ import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
+import cn.rongcapital.mkt.service.WechatChanellUpdateService;
+import cn.rongcapital.mkt.service.WechatChannelListService;
 import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
 import cn.rongcapital.mkt.service.WechatPersonalAuthService;
 import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
@@ -437,6 +439,12 @@ public class MktApi {
 
 	@Autowired
 	private HomePageCalendarPopService homePageCalendarPopService;
+	
+	@Autowired
+	private WechatChannelListService wechatChannelListService;
+	
+	@Autowired
+	private WechatChanellUpdateService wechatChanellUpdateService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -1958,6 +1966,18 @@ public class MktApi {
 		return out;
 	}
 	
-	
+	@GET
+	@Path("/mkt.weixin.channel.list")
+	public BaseOutput wechannelListGet(@NotEmpty @QueryParam("user_token") String userToken)
+	{
+		return wechatChannelListService.channelList();
+	}
 
+	@POST
+	@Path("/mkt.weixin.channel.update")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput wechannelUpdate(@Valid WechatChanellUpdateIn body, @Context SecurityContext securityContext)
+	{
+		return wechatChanellUpdateService.wechatChannelUpdate(body, securityContext);
+	}
 }

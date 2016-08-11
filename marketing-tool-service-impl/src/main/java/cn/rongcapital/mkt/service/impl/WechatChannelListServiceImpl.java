@@ -1,0 +1,48 @@
+package cn.rongcapital.mkt.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.WechatChannelDao;
+import cn.rongcapital.mkt.po.WechatChannel;
+import cn.rongcapital.mkt.service.WechatChannelListService;
+import cn.rongcapital.mkt.vo.BaseOutput;
+
+/**
+ * Created by zhaoguoying on 2016-08-11.
+ */
+@Service
+public class WechatChannelListServiceImpl implements WechatChannelListService {
+
+	@Autowired
+	WechatChannelDao wechatChannelDao;
+
+	@Override
+	public BaseOutput channelList() {
+
+		WechatChannel wechatChannel = new WechatChannel();
+		wechatChannel.setStatus("0");
+		List<WechatChannel> wechatChannels = wechatChannelDao.selectList(wechatChannel);
+
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+
+		if (CollectionUtils.isNotEmpty(wechatChannels)) {
+			result.setTotal(wechatChannels.size());
+			Map<String, Object> channelMap = new HashMap<String, Object>();
+			for (WechatChannel w : wechatChannels) {
+				channelMap.put("id",w.getId());
+				channelMap.put("name", w.getChName());
+			}
+			result.getData().add(channelMap);
+		}
+		return result;
+	}
+}
