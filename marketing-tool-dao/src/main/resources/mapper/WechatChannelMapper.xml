@@ -31,7 +31,8 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="chName != null"><![CDATA[ch_name = #{chName},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
 		</set>
 	</sql>
 
