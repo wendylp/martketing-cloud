@@ -33,13 +33,15 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
     private WechatGroupDao wechatGroupDao;
     @Autowired
     private WechatMemberDao wechatMemberDao;
+    @Autowired
+    private DataPopulationDao dataPopulationDao;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public Object saveWechatAssetList(SaveWechatAssetListIn saveWechatAssetListIn, SecurityContext securityContext) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 
-        //Todo:0.现根据传进来的name判断这个人群名称是否已经存在，存在返回，不存在继续下一步
+        //0.现根据传进来的name判断这个人群名称是否已经存在，存在返回，不存在继续下一步
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("audience_name",saveWechatAssetListIn.getPeopleGroupName());
         Long id = audienceListDao.selectIdByAudienceName(paramMap);
@@ -49,7 +51,7 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
             return Response.ok().entity(baseOutput).build();
         }
 
-        //Todo:1.统计人群总数，将人群名称和人群总数保存到audience_list表中
+        //1.统计人群总数，将人群名称和人群总数保存到audience_list表中
         Long totalAudienceNumber = wechatAssetGroupDao.sumGroupMemberCount(saveWechatAssetListIn.getGroupIds());
         paramMap = new HashMap<String,Object>();
         paramMap.put("audience_name",saveWechatAssetListIn.getPeopleGroupName());
@@ -58,21 +60,28 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
         audienceListDao.insertWechatGroups(paramMap);
         id = audienceListDao.selectIdByAudienceName(paramMap);
 
-        //Todo:2.根据groupId选出import_groupId。
+        //2.根据groupId选出import_groupId。
         List<Long> importGroudIds = wechatAssetGroupDao.selectImportGroupIdsByIds(saveWechatAssetListIn.getGroupIds());
 
-        //Todo:3.根据import_groupId，选出member的Id
+        //3.根据import_groupId，选出member的Id
         List<Long> idLists = wechatMemberDao.selectIdListByGroupId(importGroudIds);
 
+        //Todo:这块需要修改，从member中选出data_population的ID，然后从data_population中选出data_party
+        //Todo: 的Id，然后将这些Ids插入到audience_map中去
+        //1.获取data_population的Id
+        List<Integer> memberKeyidList = wechatMemberDao.selectKeyidListByIdList(idLists);
+        //2.获取data_party的Id
+        List<Integer> populationKeyidList = dataPopulationDao.selectKeyidListByIdList(memberKeyidList);
+
         //Todo:4.根据ucode选择出data_party_id
-        List<Long> dataPartyIds = dataPartyDao.selectDataPartyIdsByMappinKeyIds(idLists);
+//        List<Long> dataPartyIds = dataPartyDao.selectDataPartyIdsByMappinKeyIds(idLists);
 
         //Todo:5.将dataparty_id和audience_id存入audience_data_mapping表中
         List<Map<String,Object>> paramInsertLists = new ArrayList<Map<String,Object>>();
-        for(Long dataPartyId : dataPartyIds){
+        for(Integer populationKeyid : populationKeyidList){
             paramMap = new HashMap<String,Object>();
             paramMap.put("audience_list_id",id);
-            paramMap.put("party_id",dataPartyId);
+            paramMap.put("party_id",populationKeyid);
             paramMap.put("create_time",new Date(System.currentTimeMillis()));
             paramInsertLists.add(paramMap);
         }

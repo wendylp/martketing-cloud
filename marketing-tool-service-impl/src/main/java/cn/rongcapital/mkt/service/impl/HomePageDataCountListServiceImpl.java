@@ -1,31 +1,20 @@
 package cn.rongcapital.mkt.service.impl;
 
-import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.DATA_PARTY;
-import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.FINISHED_ACTIVITY;
-import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.IN_PROGRESS_ACTIVITY;
-import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.SEGMENTATION_HEAD;
-import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.TAG;
-import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.WECHAT;
-
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.po.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.dao.CampaignHeadDao;
-import cn.rongcapital.mkt.dao.CustomTagDao;
-import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.dao.SegmentationHeadDao;
-import cn.rongcapital.mkt.dao.TaggroupDao;
-import cn.rongcapital.mkt.po.CampaignHead;
-import cn.rongcapital.mkt.po.CustomTag;
-import cn.rongcapital.mkt.po.DataParty;
-import cn.rongcapital.mkt.po.SegmentationHead;
-import cn.rongcapital.mkt.po.Taggroup;
 import cn.rongcapital.mkt.service.HomePageDataCountListService;
 import cn.rongcapital.mkt.vo.out.HomePageDataCountListOut;
+
+import static cn.rongcapital.mkt.common.enums.HomePageDataCountListEnum.*;
 
 @Service
 public class HomePageDataCountListServiceImpl implements HomePageDataCountListService {
@@ -47,22 +36,40 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
     @Autowired
     private CampaignHeadDao campaignHeadDao;
 
+    @Autowired
+    private ImportDataHistoryDao importDataHistoryDao;
+
+    @Autowired
+    private WechatMemberDao wechatMemberDao;
+
     @Override
     public List<HomePageDataCountListOut> getDataCountList() {
 
         List<HomePageDataCountListOut> dataCountList = new ArrayList<>();
 
-        // 获取data_party的数据
-        HomePageDataCountListOut dataPartyCountListObj = new HomePageDataCountListOut();
+        // 获取接入总数据
+        HomePageDataCountListOut accessCountListObj = new HomePageDataCountListOut();
         // 暂时注释掉代码, 不记得是哪个二货告诉我这个取的数据是要原始数据总量了.以后不白纸黑字的需求落地怎么行呢.
+        // 到我改这个bug的时候，这里的数据又变成了这个二货告诉你的数据了。
         // int dataPartyCount = dataPartyDao.selectTotalOriginalCount();
-        int dataPartyCount = dataPartyDao.selectListCount(null);
-        dataPartyCountListObj.setId(DATA_PARTY.getId());
-        dataPartyCountListObj.setCount(dataPartyCount);
-        dataPartyCountListObj.setName(DATA_PARTY.getName());
-        dataPartyCountListObj.setLinkName(DATA_PARTY.getLinkName());
+//        int dataPartyCount = dataPartyDao.selectListCount(null);
+//        dataPartyCountListObj.setId(DATA_PARTY.getId());
+//        dataPartyCountListObj.setCount(dataPartyCount);
+//        dataPartyCountListObj.setName(DATA_PARTY.getName());
+//        dataPartyCountListObj.setLinkName(DATA_PARTY.getLinkName());
+        Map<String,Object> totalAccessMap = importDataHistoryDao.selectMigrationFileGeneralInfo();
+        Integer accessNumberByFileUpload = 0;
+        accessNumberByFileUpload = ((BigDecimal) totalAccessMap.get("total_rows")).intValue();
+        WechatMember wechatMember = new WechatMember();
+        wechatMember.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        Integer accessNumberByWechat = wechatMemberDao.selectListCount(wechatMember);
+        Integer accessTotalCount = accessNumberByFileUpload + accessNumberByWechat;
 
-        dataCountList.add(dataPartyCountListObj);
+        accessCountListObj.setId(ACCESS_COUNT.getId());
+        accessCountListObj.setCount(accessTotalCount);
+        accessCountListObj.setName(ACCESS_COUNT.getName());
+        accessCountListObj.setLinkName(ACCESS_COUNT.getLinkName());
+        dataCountList.add(accessCountListObj);
 
         // 获取标签的数据
         HomePageDataCountListOut tagCountListObj = new HomePageDataCountListOut();

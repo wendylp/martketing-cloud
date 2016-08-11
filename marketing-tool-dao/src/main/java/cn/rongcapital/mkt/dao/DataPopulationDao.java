@@ -74,5 +74,11 @@ public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilt
      * 
      */
 	int updateDataPopulation(DataPopulation dataPopulation);
-    
+
+	/**
+	 * @功能简述 : 根据IdList获取KeyidList(keyidList即dataparty的Idlist)
+	 * @param memberKeyidList
+	 * @return List
+	 */
+	List<Integer> selectKeyidListByIdList(@Param("idList") List<Integer> memberKeyidList);
 }

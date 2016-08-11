@@ -128,4 +128,10 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return Integer
 	 */
 	Integer selectedNotSyncCount();
+
+	/**
+	 * 根据IdList选出相应的对应到datapopulation的keyidList
+	 * @return Integer
+	 */
+	List<Integer> selectKeyidListByIdList(@Param("idList") List<Long> idLists);
 }

@@ -17,7 +17,7 @@ public class ContactTemplate extends BaseQuery {
 
     private String fieldCode;
 
-    private Boolean selected;
+    private Byte selected;
 
     private Byte status;
 
@@ -79,11 +79,11 @@ public class ContactTemplate extends BaseQuery {
         this.fieldCode = fieldCode == null ? null : fieldCode.trim();
     }
 
-    public Boolean getSelected() {
+    public Byte getSelected() {
         return selected;
     }
 
-    public void setSelected(Boolean selected) {
+    public void setSelected(Byte selected) {
         this.selected = selected;
     }
 

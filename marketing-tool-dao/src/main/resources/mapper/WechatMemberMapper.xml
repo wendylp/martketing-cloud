@@ -291,4 +291,12 @@
 		WHERE selected = 0
 	</select>
 
+	<select id="selectKeyidListByIdList" resultType="java.lang.Integer">
+		SELECT keyid
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

@@ -11,7 +11,7 @@ public class WechatQrcode extends BaseQuery {
 
     private Integer chCode;
 
-    private String isAudience;
+    private Byte isAudience;
 
     private String audienceName;
 
@@ -23,7 +23,13 @@ public class WechatQrcode extends BaseQuery {
 
     private Date expirationTime;
 
-    private String status;
+    private Byte status;
+
+    private String qrcodePic;
+
+    private String qrcodeUrl;
+
+    private Integer batchId;
 
     public Integer getId() {
         return id;
@@ -49,12 +55,12 @@ public class WechatQrcode extends BaseQuery {
         this.chCode = chCode;
     }
 
-    public String getIsAudience() {
+    public Byte getIsAudience() {
         return isAudience;
     }
 
-    public void setIsAudience(String isAudience) {
-        this.isAudience = isAudience == null ? null : isAudience.trim();
+    public void setIsAudience(Byte isAudience) {
+        this.isAudience = isAudience;
     }
 
     public String getAudienceName() {
@@ -97,11 +103,35 @@ public class WechatQrcode extends BaseQuery {
         this.expirationTime = expirationTime;
     }
 
-    public String getStatus() {
+    public Byte getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
+
+    public String getQrcodePic() {
+        return qrcodePic;
+    }
+
+    public void setQrcodePic(String qrcodePic) {
+        this.qrcodePic = qrcodePic == null ? null : qrcodePic.trim();
+    }
+
+    public String getQrcodeUrl() {
+        return qrcodeUrl;
+    }
+
+    public void setQrcodeUrl(String qrcodeUrl) {
+        this.qrcodeUrl = qrcodeUrl == null ? null : qrcodeUrl.trim();
+    }
+
+    public Integer getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(Integer batchId) {
+        this.batchId = batchId;
     }
 }
