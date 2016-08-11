@@ -2,7 +2,7 @@ package cn.rongcapital.mkt.common.enums;
 
 public enum HomePageDataCountListEnum {
 
-    DATA_PARTY(1, "接入数据", "数据接入"),
+    ACCESS_COUNT(1, "接入数据", "数据接入"),
     TAG(2, "标签", "标签管理"),
     WECHAT(3, "可触达用户", "数据洞察"),
     SEGMENTATION_HEAD(4, "细分人群", "细分管理"),
