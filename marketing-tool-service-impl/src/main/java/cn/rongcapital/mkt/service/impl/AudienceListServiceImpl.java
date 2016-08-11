@@ -2,7 +2,7 @@
  * @功能简述: AudienceListService实现类
  * @see: MkyApi
  * @author: 杨玉麟
- * @version: 1.01
+ * @version: 1.0
  * @date: 2016/6/6 
 *************************************************/
 
