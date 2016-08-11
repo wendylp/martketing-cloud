@@ -127,6 +127,9 @@ public class GetPubFansListServiceImpl implements TaskService {
                 }else{
                     paramFan.put("nickname",null);
                 }
+                if(h5PubFan.getSex() == 0){
+                    paramFan.put("sex",3);
+                }
                 paramFan.put("sex",h5PubFan.getSex());
                 paramFan.put("country",h5PubFan.getCountry());
                 paramFan.put("province",h5PubFan.getProvince());

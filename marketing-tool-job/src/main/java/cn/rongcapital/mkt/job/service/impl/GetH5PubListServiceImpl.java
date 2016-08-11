@@ -11,6 +11,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,9 @@ public class GetH5PubListServiceImpl implements TaskService {
 
     @Autowired
     private WechatRegisterDao wechatRegisterDao;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
 
     @Override
     public void task(Integer taskId) {
@@ -67,7 +72,9 @@ public class GetH5PubListServiceImpl implements TaskService {
             Integer status = wechatRegisterDao.selectStatus(h5Pub.getPubId());
             if(status == null || status == 1){
                 dirtyH5Pubs.add(h5Pub);
+                logger.info("dirty pubId: " + h5Pub.getPubId());
             }
+            logger.info("effective pubId : " + h5Pub.getPubId());
         }
         h5MktPubListResponse.getPubs().getPub().removeAll(dirtyH5Pubs);
     }

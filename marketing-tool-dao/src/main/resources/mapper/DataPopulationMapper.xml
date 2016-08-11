@@ -379,4 +379,12 @@
 		<![CDATA[WHERE mobile = #{mobile}]]>
 	</update>
 
+	<select id="selectKeyidListByIdList" parameterType="java.util.List" resultType="java.lang.Integer">
+		SELECT keyid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>
