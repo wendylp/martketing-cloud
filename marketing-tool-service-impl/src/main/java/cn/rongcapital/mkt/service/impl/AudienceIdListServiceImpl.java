@@ -33,7 +33,6 @@ import heracles.data.common.util.ReadWriteType;
 @Service
 public class AudienceIdListServiceImpl implements AudienceIdListService {
     
-    
     @Autowired
     AudienceListDao audienceListDao;
 
@@ -106,7 +105,7 @@ public class AudienceIdListServiceImpl implements AudienceIdListService {
         }
         
         
-      //固定人群
+      //固定人群,
         if(audience_type.equals("1")){
         
             
