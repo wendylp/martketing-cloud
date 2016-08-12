@@ -154,8 +154,8 @@
 		<![CDATA[SELECT]]>
 		count(id)
 		<include refid="QUERY_FROM_TABLE" />
-		<![CDATA[WHERE level IN]]>
-		(1,2)
+		<![CDATA[WHERE level = 2]]>
+
 	</select>
 
 </mapper>
