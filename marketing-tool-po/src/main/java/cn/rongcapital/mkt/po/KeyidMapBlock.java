@@ -2,7 +2,7 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class KeyidMapBlock extends BaseQuery{
+public class KeyidMapBlock extends BaseQuery {
     private Integer id;
 
     private String field;
@@ -10,7 +10,7 @@ public class KeyidMapBlock extends BaseQuery{
     private String fieldName;
 
     private Integer seq;
-    
+
     public KeyidMapBlock() {}
 
     public KeyidMapBlock(Integer startIndex, Integer pageSize) {
@@ -48,4 +48,5 @@ public class KeyidMapBlock extends BaseQuery{
     public void setSeq(Integer seq) {
         this.seq = seq;
     }
+
 }

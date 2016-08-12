@@ -1,20 +1,18 @@
 package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.dao.CustomTagDao;
-import cn.rongcapital.mkt.dao.CustomTagMapDao;
-import cn.rongcapital.mkt.dao.CustomTagOriginalDataMapDao;
-import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.po.CustomTag;
-import cn.rongcapital.mkt.po.CustomTagMap;
-import cn.rongcapital.mkt.po.CustomTagOriginalDataMap;
-import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -22,6 +20,8 @@ import java.util.List;
  */
 @Service
 public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private DataPartyDao dataPartyDao;
@@ -32,80 +32,187 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
     @Autowired
     private CustomTagDao customTagDao;
 
+    @Autowired
+    private OriginalDataPopulationDao originalDataPopulationDao;
+    @Autowired
+    private OriginalDataCustomerTagsDao originalDataCustomerTagsDao;
+    @Autowired
+    private OriginalDataArchPointDao originalDataArchPointDao;
+    @Autowired
+    private OriginalDataMemberDao originalDataMemberDao;
+    @Autowired
+    private OriginalDataLoginDao originalDataLoginDao;
+    @Autowired
+    private OriginalDataPaymentDao originalDataPaymentDao;
+    @Autowired
+    private OriginalDataShoppingDao originalDataShoppingDao;
+
+    @Autowired
+    private DataPopulationDao dataPopulationDao;
+    @Autowired
+    private DataCustomerTagsDao dataCustomerTagsDao;
+    @Autowired
+    private DataArchPointDao dataArchPointDao;
+    @Autowired
+    private DataMemberDao dataMemberDao;
+    @Autowired
+    private DataLoginDao dataLoginDao;
+    @Autowired
+    private DataPaymentDao dataPaymentDao;
+    @Autowired
+    private DataShoppingDao dataShoppingDao;
+
+    @Autowired
+    private KeyidMapBlockDao keyidMapBlockDao;
 
     @Override
     public void task(Integer taskId) {
         //1.选取状态有效的tagOriginal表中的数据
-//        CustomTagOriginalDataMap paramCustomTagOriginalDataMap = new CustomTagOriginalDataMap();
-//        paramCustomTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_VALIDATE);
-//        paramCustomTagOriginalDataMap.setPageSize(Integer.MAX_VALUE);
-//        List<CustomTagOriginalDataMap> customTagOriginalDataMapList = customTagOriginalDataMapDao.selectList(paramCustomTagOriginalDataMap);
-//
-//        //1.获取尚未同步的标签
-//        List<Integer> unhandledCustomTagIdList = customTagOriginalDataMapDao.selectDintinctUnhandleIdList(paramCustomTagOriginalDataMap);
-//        //2.通过表中的唯一标识字段查询dataParty表中的Id字段
-//        if(CollectionUtils.isEmpty(customTagOriginalDataMapList)) return;
-//        List<CustomTagMap> customTagMapList = new ArrayList<CustomTagMap>();
-//        for(CustomTagOriginalDataMap customTagOriginalDataMap : customTagOriginalDataMapList){
+        CustomTagOriginalDataMap paramCustomTagOriginalDataMap = new CustomTagOriginalDataMap();
+        paramCustomTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_VALIDATE);
+        paramCustomTagOriginalDataMap.setPageSize(Integer.MAX_VALUE);
+        List<CustomTagOriginalDataMap> customTagOriginalDataMapList = customTagOriginalDataMapDao.selectList(paramCustomTagOriginalDataMap);
+
+        //1.获取尚未完全同步的标签
+        List<Integer> unhandledCustomTagIdList = customTagOriginalDataMapDao.selectDintinctUnhandleIdList(paramCustomTagOriginalDataMap);
+        //2.打标签
+        if(CollectionUtils.isEmpty(customTagOriginalDataMapList)) return;
+        for(CustomTagOriginalDataMap customTagOriginalDataMap : customTagOriginalDataMapList){
+            Integer keyId = null;
+            List<KeyidMapBlock> uniqueFieldList = null;
             //Todo：在这里将符合条件的数据选出来，加入customTapMapList，然后将这些数据插入后，跟新相应的customTagOriginalTag的status值
+            switch (customTagOriginalDataMap.getOriginalDataType()){
+                case TypeConstant.POPULATION_TYPE:
+                    //1.根据ID获取相应的Original表中对应的的数据
+                    OriginalDataPopulation originalDataPopulation = new OriginalDataPopulation();
+                    originalDataPopulation.setId(customTagOriginalDataMap.getOriginalDataId());
+                    List<OriginalDataPopulation> originalDataPopulationList = originalDataPopulationDao.selectList(originalDataPopulation);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap, originalDataPopulationList)) break;
+                    originalDataPopulation = originalDataPopulationList.get(0);
+                    logger.info("tagInfo: " + originalDataPopulation.getBitmap());
+                    if(originalDataPopulation.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
 
+                    //2.获取该条数据的唯一标识，然后将相应的值赋予相应的data表中
+                    DataPopulation dataPopulation = new DataPopulation();
+                    dataPopulation.setBitmap(originalDataPopulation.getBitmap());
+                    uniqueFieldList = getUniqueFieldList(originalDataPopulation.getBitmap());
+                    logger.info("tagInfo uniqueFieldList size: " + (uniqueFieldList == null? 0:uniqueFieldList.size()));
+                    if(CollectionUtils.isEmpty(uniqueFieldList)) break;
+                    copyOriginUniqueValueToData(originalDataPopulation, dataPopulation, uniqueFieldList);
+                    logger.info("tagInfo copy unique field end");
+                    //3根据唯一标识选取相应的dataPopulation
+                    List<DataPopulation> dataPopulationList = dataPopulationDao.selectList(dataPopulation);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap,dataPopulationList)) break;
+                    dataPopulation = dataPopulationList.get(0);
+                    logger.info("tagInfo dataId" + dataPopulation.getId());
+                    if(dataPopulation.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+                    keyId = dataPopulation.getKeyid();
+                    logger.info("tagInfo keyId:" + keyId);
+                    break;
+                case TypeConstant.CUSTOMER_TAGS_TYPE:
+                    break;
+                case TypeConstant.ARCH_POINT_TYPE:
+                    break;
+                case TypeConstant.DATA_MEMBER_TYPE:
+                    break;
+                case TypeConstant.DATA_LOGIN_TYPE:
+                    break;
+                case TypeConstant.DATA_PAYMENT_TYPE:
+                    break;
+                case TypeConstant.DATA_SHOPPING_TYPE:
+                    //1.根据ID获取相应的Original表中对应的的数据
+                    OriginalDataShopping originalDataShopping = new OriginalDataShopping();
+                    originalDataShopping.setId(customTagOriginalDataMap.getOriginalDataId());
+                    List<OriginalDataShopping> originalDataShoppingList = originalDataShoppingDao.selectList(originalDataShopping);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap, originalDataShoppingList)) break;
+                    originalDataShopping = originalDataShoppingList.get(0);
+                    logger.info("tagInfo: " + originalDataShopping.getBitmap());
+                    if(originalDataShopping.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
 
+                    //2.获取该条数据的唯一标识，然后将相应的值赋予相应的data表中
+                    DataShopping dataShopping = new DataShopping();
+                    dataShopping.setBitmap(originalDataShopping.getBitmap());
+                    uniqueFieldList = getUniqueFieldList(originalDataShopping.getBitmap());
+                    logger.info("tagInfo uniqueFieldList size: " + (uniqueFieldList == null? 0:uniqueFieldList.size()));
+                    if(CollectionUtils.isEmpty(uniqueFieldList)) break;
+                    copyOriginUniqueValueToData(originalDataShopping, dataShopping, uniqueFieldList);
+                    logger.info("tagInfo copy unique field end");
+                    //3根据唯一标识选取相应的dataPopulation
+                    List<DataShopping> dataShoppingList = dataShoppingDao.selectList(dataShopping);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap,dataShoppingList)) break;
+                    dataShopping = dataShoppingList.get(0);
+                    logger.info("tagInfo dataId" + dataShopping.getId());
+                    if(dataShopping.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+                    keyId = dataShopping.getKeyid();
+                    logger.info("tagInfo keyId:" + keyId);
+                    break;
+                default:
+                    break;
+            }
 
-//            DataParty paramDataParty = new DataParty();
-//            paramDataParty.setMobile(customTagOriginalDataMap.getDataUniqueIdentifier());
-//            List<DataParty> dataParties = dataPartyDao.selectList(paramDataParty);
-//            if(!CollectionUtils.isEmpty(dataParties)){
-//                //4.跟新原始的tagOriginal表的字段
-//                customTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_INVALIDATE);
-//                customTagOriginalDataMapDao.updateById(customTagOriginalDataMap);
-//                //5.构造出CustomTagMap
-//                CustomTagMap customTagMap = new CustomTagMap();
-//                customTagMap.setTagId(customTagOriginalDataMap.getTagId());
-//                customTagMap.setType(customTagOriginalDataMap.getOriginalDataType().byteValue());
-//                customTagMap.setMapId(dataParties.get(0).getId());
-//                customTagMap.setStatus(new Integer(0).byteValue());
-//                customTagMapList.add(customTagMap);
-//            }
+            if(keyId != null){
+                tagMainData(unhandledCustomTagIdList, customTagOriginalDataMap, keyId);
+            }
         }
+    }
 
-//        //5.将构造号的数据插入CustomTagMap表中
-//        if(!CollectionUtils.isEmpty(customTagMapList)){
-//            for(CustomTagMap customTagMap : customTagMapList){
-//                customTagMapDao.insert(customTagMap);
-//            }
-//        }
-//
-//        //6遍历尚未同步的标签，将同步完成的标签状态置为可用状态
-//        if(!CollectionUtils.isEmpty(unhandledCustomTagIdList)){
-//            for(Integer tagId : unhandledCustomTagIdList){
-//                Integer unhandledDataCount = getUnhandledDataByTagId(tagId);
-//                if(unhandledDataCount != null && unhandledDataCount == 0){
-//                    Integer dataCountInTagId = getHandledDataByTagId(tagId);
-//                    updateCustomTagToNormal(tagId, dataCountInTagId);
-//                }
-//            }
-//        }
-//    }
-//
-//    private void updateCustomTagToNormal(Integer tagId, Integer dataCountInTagId) {
-//        CustomTag customTag = new CustomTag();
-//        customTag.setId(tagId);
-//        customTag.setCoverAudienceCount(dataCountInTagId);
-//        customTag.setStatus(ApiConstant.CUSTOM_TAG_VALIDATE);
-//        customTagDao.updateById(customTag);
-//    }
-//
-//    private Integer getHandledDataByTagId(Integer tagId) {
-//        CustomTagOriginalDataMap customTagOriginalDataMap = new CustomTagOriginalDataMap();
-//        customTagOriginalDataMap.setTagId(tagId);
-//        customTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_INVALIDATE);
-//        return customTagOriginalDataMapDao.selectHandledDataCountByTagId(customTagOriginalDataMap);
-//    }
-//
-//    private Integer getUnhandledDataByTagId(Integer tagId) {
-//        CustomTagOriginalDataMap customTagOriginalDataMap = new CustomTagOriginalDataMap();
-//        customTagOriginalDataMap.setTagId(tagId);
-//        customTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_VALIDATE);
-//        return customTagOriginalDataMapDao.selectUnhandledDataCountByTagId(customTagOriginalDataMap);
-//    }
+    private <T,D>void copyOriginUniqueValueToData(T originalData, D data, List<KeyidMapBlock> uniqueFieldList) {
+        for(KeyidMapBlock keyidMapBlock : uniqueFieldList){
+            try {
+                Field originalField = originalData.getClass().getField(keyidMapBlock.getFieldName());
+                Object obj = originalField.get(originalData);
+                Field dataField = data.getClass().getField(keyidMapBlock.getFieldName());
+                dataField.set(data,obj);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private <T> boolean invalidErrorOriginalCusomerMapData(CustomTagOriginalDataMap customTagOriginalDataMap, List<T> originalDataList) {
+        if(CollectionUtils.isEmpty(originalDataList)){
+            customTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_INVALIDATE);
+            customTagOriginalDataMapDao.updateById(customTagOriginalDataMap);
+            return true;
+        }
+        return false;
+    }
+
+    private void tagMainData(List<Integer> unhandledCustomTagIdList, CustomTagOriginalDataMap customTagOriginalDataMap, Integer keyId) {
+        for(Integer tagId : unhandledCustomTagIdList){
+            CustomTagMap customTagMap = new CustomTagMap();
+            customTagMap.setTagId(tagId);
+            customTagMap.setMapId(keyId);
+            Integer count = customTagMapDao.selectListCount(customTagMap);
+            if(count > 0) continue;
+            customTagMapDao.insert(customTagMap);
+        }
+        customTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_INVALIDATE);
+        customTagOriginalDataMapDao.updateById(customTagOriginalDataMap);
+    }
+
+    private List<KeyidMapBlock> getUniqueFieldList(String bitmap) {
+        List<Integer> keyidListSequence = new LinkedList<Integer>();
+        for(int index = 0; index < bitmap.length(); index++){
+            if('1' == bitmap.charAt(index)){
+                keyidListSequence.add(index+1);
+            }
+        }
+        List<KeyidMapBlock> keyidMapBlockList = keyidMapBlockDao.selectListBySequenceList(keyidListSequence);
+        return keyidMapBlockList;
+    }
+
+    interface TypeConstant{
+       int POPULATION_TYPE = 1;
+       int CUSTOMER_TAGS_TYPE = 2;
+       int ARCH_POINT_TYPE = 3;
+       int DATA_MEMBER_TYPE = 4;
+       int DATA_LOGIN_TYPE = 5;
+       int DATA_PAYMENT_TYPE = 6;
+       int DATA_SHOPPING_TYPE = 7;
+
+       int DATA_SYNC_COMPLETE_MARK = 2;
+    }
 }
