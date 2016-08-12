@@ -53,6 +53,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 			if (keyid != null) {
 				DataParty dataParty = new DataParty();
 				dataParty.setMdType(DataTypeEnum.POPULATION.getCode());
+				dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
 				dataParty.setMobile(dataObj.getMobile());
 				dataParty.setName(dataObj.getName());
 				dataParty.setGender(dataObj.getGender());
