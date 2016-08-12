@@ -38,11 +38,33 @@ public class WechatChannelListServiceImpl implements WechatChannelListService {
 			result.setTotal(wechatChannels.size());
 			Map<String, Object> channelMap = new HashMap<String, Object>();
 			for (WechatChannel w : wechatChannels) {
-				channelMap.put("id",w.getId());
+				channelMap.put("id", w.getId());
 				channelMap.put("name", w.getChName());
 			}
 			result.getData().add(channelMap);
 		}
+		return result;
+	}
+
+	@Override
+	public BaseOutput chanelExitLike(WechatChannel param) {
+
+		int exit_count = wechatChannelDao.selectListCount_Like(param);
+
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+
+		Map<String, Object> exit_map = new HashMap<String, Object>();
+		if (exit_count > 0) {
+			exit_map.put("is_exist", 1);
+			result.setTotal(exit_count);
+		}
+		else
+		{
+			exit_map.put("is_exist", 0);
+			result.setTotal(exit_count);
+		}
+		result.getData().add(exit_map);
 		return result;
 	}
 }

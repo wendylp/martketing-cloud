@@ -34,4 +34,11 @@ public interface WechatChannelDao extends BaseDao<WechatChannel>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * @功能简述: 查询对象总数,只要不为NULL与空则为条件,属性值之间and连接 模糊查询
+	 * @param: T t
+	 * @return: int
+	 */
+	int selectListCount_Like(WechatChannel t);
 }

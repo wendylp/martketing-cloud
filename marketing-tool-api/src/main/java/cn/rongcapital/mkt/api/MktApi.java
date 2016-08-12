@@ -48,6 +48,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
+import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.service.AudienceIdListService;
 import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
@@ -1987,6 +1988,15 @@ public class MktApi {
 	public BaseOutput wechannelUpdate(@Valid WechatChanellUpdateIn body, @Context SecurityContext securityContext)
 	{
 		return wechatChanellUpdateService.wechatChannelUpdate(body, securityContext);
+	}
+	
+	@GET
+	@Path("/mkt.weixin.channel.name.get")
+	public BaseOutput wechannelListGet(@NotEmpty @QueryParam("user_token") String userToken,@NotEmpty @QueryParam("ch_name") String ch_name)
+	{
+		WechatChannel wechatChannel = new WechatChannel();
+		wechatChannel.setChName(ch_name);
+		return wechatChannelListService.chanelExitLike(wechatChannel);
 	}
 	
 	/**
