@@ -26,30 +26,44 @@ import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
-public class SegmentTagnameTagListServiceImpl implements SegmentTagnameTagListService{
+public class SegmentTagnameTagListServiceImpl implements SegmentTagnameTagListService {
 	@Autowired
 	TagRecommendDao tagRecommendDao;
-	
+
 	@Override
-	@ReadWrite(type=ReadWriteType.READ)
+	@ReadWrite(type = ReadWriteType.READ)
 	public BaseOutput getSysRecommendedTagList() {
 		TagRecommend tr = new TagRecommend();
 		tr.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		int count = tagRecommendDao.selectListCount(tr);
 		tr.setPageSize(count);
 		List<TagRecommend> resList = tagRecommendDao.selectList(tr);
-		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
-				   ApiErrorCode.SUCCESS.getMsg(),
-				   ApiConstant.INT_ZERO,null);
-		if(CollectionUtils.isNotEmpty(resList)){
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+		if (CollectionUtils.isNotEmpty(resList)) {
 			result.setTotal(resList.size());
-			for(TagRecommend po : resList){
-				Map<String,Object> map = new HashMap<String,Object>();
+			for (TagRecommend po : resList) {
+				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("tag_group_id", po.getTagGroupId());
-				map.put("tag_group_name", po.getTagGroupName());
+				map.put("tag_group_name", getTagRecommendLastName(po.getTagGroupName()));
 				result.getData().add(map);
 			}
 		}
 		return result;
 	}
+
+	/**
+	 * 获取系统推荐标签的最后一个关键词
+	 * 
+	 * @param tagRecommend
+	 * @return
+	 */
+	private String getTagRecommendLastName(String tagRecommend) {
+		if (tagRecommend == null || tagRecommend.length() == 0) {
+			return "";
+		} else {
+			return tagRecommend.substring(tagRecommend.lastIndexOf('-') + 1);
+		}
+	}
+
 }
