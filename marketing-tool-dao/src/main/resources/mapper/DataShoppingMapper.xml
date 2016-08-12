@@ -19,7 +19,7 @@
 		identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,
 		update_time,source,batch_id,order_status,delivery_way,logistics_status,
 		shipping_fee,shipping_way,express_company,express_order,consignee,consignee_tel,consignee_addr,
-		buyer_comment,wxmp_id,wx_code,product_name,bitmap]]>
+		buyer_comment,wxmp_id,wx_code,product_name,bitmap,create_time]]>
 	</sql>
 
 
@@ -389,7 +389,7 @@
 			#{obj.source},#{obj.batchId},#{obj.orderStatus},#{obj.deliveryWay},#{obj.logisticsStatus},
 			#{obj.shippingFee},#{obj.shippingWay},#{obj.expressCompany},#{obj.expressOrder},
 			#{obj.consignee},#{obj.consigneeTel},#{obj.consigneeAddr},#{obj.buyerComment},
-			#{obj.wxmpId},#{obj.wxCode},#{obj.productName},#{obj.bitmap})
+			#{obj.wxmpId},#{obj.wxCode},#{obj.productName},#{obj.bitmap},#{obj.createTime})
 		</foreach>
 		on duplicate key update
 		order_no = values(order_no)
