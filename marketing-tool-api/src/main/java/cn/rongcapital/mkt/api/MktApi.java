@@ -1975,6 +1975,13 @@ public class MktApi {
 		return out;
 	}
 	
+	/**
+	 * 获取微信接入渠道列表
+	 *
+	 * @param userToken
+	 * @param ver
+	 * @author zhaoguoying
+	 */
 	@GET
 	@Path("/mkt.weixin.channel.list")
 	public BaseOutput wechannelListGet(@NotEmpty @QueryParam("user_token") String userToken)
@@ -1982,6 +1989,13 @@ public class MktApi {
 		return wechatChannelListService.channelList();
 	}
 
+	/**
+	 * 更新微信渠道详细信息
+	 *
+	 * @param
+	 * @param ver
+	 * @author zhaoguoying
+	 */
 	@POST
 	@Path("/mkt.weixin.channel.update")
 	@Consumes({ MediaType.APPLICATION_JSON })
