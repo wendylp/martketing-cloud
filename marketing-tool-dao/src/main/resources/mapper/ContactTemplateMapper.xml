@@ -47,7 +47,8 @@
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="qrcodeUrl != null"><![CDATA[qrcode_url = #{qrcodeUrl},]]></if>
 		    	<if test="pageViews != null"><![CDATA[page_views = #{pageViews},]]></if>
-		    	<if test="keyList != null"><![CDATA[key_list = #{keyList}]]></if>
+		    	<if test="keyList != null"><![CDATA[key_list = #{keyList},]]></if>
+		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
 		</set>
 	</sql>
 

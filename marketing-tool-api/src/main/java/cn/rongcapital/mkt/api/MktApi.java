@@ -49,104 +49,7 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.po.WechatChannel;
-import cn.rongcapital.mkt.service.AudienceIdListService;
-import cn.rongcapital.mkt.service.AudienceListDeleteService;
-import cn.rongcapital.mkt.service.AudienceListService;
-import cn.rongcapital.mkt.service.AudienceNameListService;
-import cn.rongcapital.mkt.service.AudienceSearchService;
-import cn.rongcapital.mkt.service.CampaignBodyCreateService;
-import cn.rongcapital.mkt.service.CampaignBodyGetService;
-import cn.rongcapital.mkt.service.CampaignBodyItemAudienceSearchService;
-import cn.rongcapital.mkt.service.CampaignDeleteService;
-import cn.rongcapital.mkt.service.CampaignHeaderCreateService;
-import cn.rongcapital.mkt.service.CampaignHeaderGetService;
-import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
-import cn.rongcapital.mkt.service.CampaignNodeItemListGetService;
-import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
-import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
-import cn.rongcapital.mkt.service.CampaignSummaryGetService;
-import cn.rongcapital.mkt.service.CustomTagDeleteService;
-import cn.rongcapital.mkt.service.CustomTagGetService;
-import cn.rongcapital.mkt.service.DataDeleteMainService;
-import cn.rongcapital.mkt.service.DataDownloadMainListService;
-import cn.rongcapital.mkt.service.DataDownloadQualityIllegalDataService;
-import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
-import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
-import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
-import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
-import cn.rongcapital.mkt.service.DataGetMainCountService;
-import cn.rongcapital.mkt.service.DataGetMainListService;
-import cn.rongcapital.mkt.service.DataGetQualityCountService;
-import cn.rongcapital.mkt.service.DataGetQualityListService;
-import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
-import cn.rongcapital.mkt.service.DataGetViewListService;
-import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
-import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
-import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
-import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
-import cn.rongcapital.mkt.service.FileTagUpdateService;
-import cn.rongcapital.mkt.service.FileTemplateDownloadService;
-import cn.rongcapital.mkt.service.GetCampaignConvertChartListService;
-import cn.rongcapital.mkt.service.GetCampaignCustomerSourceListService;
-import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
-import cn.rongcapital.mkt.service.GetDataMainSearchService;
-import cn.rongcapital.mkt.service.GetImgTextAssetService;
-import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
-import cn.rongcapital.mkt.service.GetImgtextCountService;
-import cn.rongcapital.mkt.service.GetWechatUserListService;
-import cn.rongcapital.mkt.service.GroupTagsSearchService;
-import cn.rongcapital.mkt.service.HomePageCalendarListService;
-import cn.rongcapital.mkt.service.HomePageCalendarPopService;
-import cn.rongcapital.mkt.service.HomePageDataCountListService;
-import cn.rongcapital.mkt.service.HomePageDataSourceListService;
-import cn.rongcapital.mkt.service.HomePageUserCountListService;
-import cn.rongcapital.mkt.service.ImgtextHostService;
-import cn.rongcapital.mkt.service.LoginService;
-import cn.rongcapital.mkt.service.MainActionInfoGetService;
-import cn.rongcapital.mkt.service.MainBasicInfoGetService;
-import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
-import cn.rongcapital.mkt.service.MigrationFileTemplateService;
-import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
-import cn.rongcapital.mkt.service.ModifyPasswdService;
-import cn.rongcapital.mkt.service.ReauthWechatAccountService;
-import cn.rongcapital.mkt.service.RegisterListService;
-import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
-import cn.rongcapital.mkt.service.SaveWechatAssetListService;
-import cn.rongcapital.mkt.service.SegmentBodyGetService;
-import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
-import cn.rongcapital.mkt.service.SegmentFilterGetService;
-import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
-import cn.rongcapital.mkt.service.SegmentHeaderGetService;
-import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
-import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
-import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
-import cn.rongcapital.mkt.service.SegmentTagGetService;
-import cn.rongcapital.mkt.service.SegmentTagUpdateService;
-import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
-import cn.rongcapital.mkt.service.SegmentTagnameTagCountService;
-import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
-import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
-import cn.rongcapital.mkt.service.TagDownloadCustomAudienceService;
-import cn.rongcapital.mkt.service.TagGetCustomService;
-import cn.rongcapital.mkt.service.TagSystemListGetService;
-import cn.rongcapital.mkt.service.TagSystemTagcountService;
-import cn.rongcapital.mkt.service.TagUpdateService;
-import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
-import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
-import cn.rongcapital.mkt.service.TaskGetListService;
-import cn.rongcapital.mkt.service.TaskListGetService;
-import cn.rongcapital.mkt.service.UpdateNicknameService;
-import cn.rongcapital.mkt.service.UploadFileService;
-import cn.rongcapital.mkt.service.WechatAssetListGetService;
-import cn.rongcapital.mkt.service.WechatAssetListService;
-import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
-import cn.rongcapital.mkt.service.WechatChanellUpdateService;
-import cn.rongcapital.mkt.service.WechatChannelListService;
-import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
-import cn.rongcapital.mkt.service.WechatPersonalAuthService;
-import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
-import cn.rongcapital.mkt.service.WechatPublicAuthService;
-import cn.rongcapital.mkt.service.WechatTypeCountGetService;
+import cn.rongcapital.mkt.service.*;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -454,6 +357,8 @@ public class MktApi {
 	@Autowired
 	private TagUpdateService tagService;	
 
+	@Autowired
+	private ContactTemplateServer contactTemplateServer;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -2037,4 +1942,32 @@ public class MktApi {
 		
 		return tagService.tagInfoUpdate(body);
 	}
+	/***
+	 * 新建联系人表单 
+	 * @param body
+	 * @param securityContext
+	 * @return baseOutput
+	 */
+	@POST
+	@Path("/mkt.contact.list.create")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput ContactListCreate(@Valid ContactTemplateIn body, @Context SecurityContext securityContext)
+	{
+		return contactTemplateServer.ContactListCreate(body);
+	}
+	
+	/**
+	 * 删除联系人表单 
+	 *
+	 * @param userToken
+	 * @param ver
+	 * @author yyl
+	 */
+	@GET
+	@Path("/mkt.contact.list.del")
+	public BaseOutput updateContextTempById(@NotEmpty @QueryParam("user_token") String userToken,@NotNull @QueryParam("id") int id)
+	{
+		return contactTemplateServer.updateContextTempById(id);
+	}
+
 }
