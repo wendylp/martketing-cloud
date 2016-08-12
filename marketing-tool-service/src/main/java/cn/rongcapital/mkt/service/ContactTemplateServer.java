@@ -11,4 +11,11 @@ public interface ContactTemplateServer {
 	 * @return
 	 */
 	public BaseOutput insert_tmp_by_info_select(ContactTemplateIn ctIn);
+	
+	/**
+	 * 根据id删除数据
+	 * @param id
+	 * @return
+	 */
+	public BaseOutput updateContextTempById(Integer id);
 }

@@ -1955,4 +1955,19 @@ public class MktApi {
 	{
 		return contactTemplateServer.insert_tmp_by_info_select(body);
 	}
+	
+	/**
+	 * 删除联系人表单 
+	 *
+	 * @param userToken
+	 * @param ver
+	 * @author yyl
+	 */
+	@GET
+	@Path("/mkt.contact.list.del")
+	public BaseOutput updateContextTempById(@NotEmpty @QueryParam("user_token") String userToken,@NotNull @QueryParam("id") int id)
+	{
+		return contactTemplateServer.updateContextTempById(id);
+	}
+
 }

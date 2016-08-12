@@ -7,6 +7,7 @@
 *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,28 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 			result.setTotal(0);
 		}
 
+		return result;
+	}
+	
+	@Override
+	public BaseOutput updateContextTempById(Integer id)
+	{
+		ContactTemplate param = new ContactTemplate();
+		param.setId(id);
+		param.setUpdateTime(new Date());
+		param.setStatus(ApiConstant.TAG_TYPE_CONTACT);
+	    int update_count = contactTemplateDao.updateById(param);
+		
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+		
+		Map<String, Object> map_r = new HashMap<String, Object>();
+		map_r.put("id", param.getId());
+		map_r.put("updatetime", DateUtil.getStringFromDate(param.getUpdateTime(), "yyyy-MM-dd HH:mm:ss"));
+		
+		result.setTotal(update_count);
+		result.getData().add(map_r);
+		
 		return result;
 	}
 
