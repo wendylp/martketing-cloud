@@ -177,9 +177,9 @@
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO original_data_payment (pay_channel,pay_acct,pay_serial,trans_serial,
-			order_no,product_name,create_time,complete_time,pay_status,counter_acct,
+			order_no,product_name,complete_time,pay_status,counter_acct,
 			income_amt,paid_amt,acct_amt,comments,identify_no,driving_license,email,mobile,tel,qq,
-			acct_type,acct_no,idfa,imei,udid,phone_mac,status,source,file_unique,batch_id,wxmp_id,wx_code,bitmap)
+			acct_type,acct_no,idfa,imei,udid,phone_mac,status,source,file_unique,batch_id,wxmp_id,wx_code,create_time,bitmap)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -189,7 +189,6 @@
 			#{item.trans_serial},
 			#{item.order_no},
 			#{item.product_name},
-			#{item.create_time,jdbcType=TIMESTAMP},
 			#{item.complete_time,jdbcType=TIMESTAMP},
 			#{item.pay_status},
 			#{item.counter_acct},
@@ -215,6 +214,7 @@
 			#{item.batch_id},
 			#{item.wxmp_id},
 			#{item.wx_code},
+			now(),
 			#{item.bitmap}
 			)
 		</foreach>
@@ -226,8 +226,8 @@
 		WHERE file_unique = #{file_unique}
 	</select>
 
-	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.String">
-		SELECT distinct mobile
+	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE file_unique = #{file_unique}
 	</select>

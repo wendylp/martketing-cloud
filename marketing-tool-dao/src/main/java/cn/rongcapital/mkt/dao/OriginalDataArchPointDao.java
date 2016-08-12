@@ -70,8 +70,8 @@ public interface OriginalDataArchPointDao extends BaseDao<OriginalDataArchPoint>
 
 	/**
 	 * 选取唯一标识列表
-	 * @param fileUnique
+	 * @param paramMap
 	 * @return
 	 */
-	List<String> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
+	List<Integer> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
 }

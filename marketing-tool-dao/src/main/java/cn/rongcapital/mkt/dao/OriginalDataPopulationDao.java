@@ -63,8 +63,8 @@ public interface OriginalDataPopulationDao extends BaseDao<OriginalDataPopulatio
 
 	/**
 	 * 根据FileUnique更新数据状态
-	 * @param fileUnique
+	 * @param paramMap
 	 * @return
 	 */
-	List<String> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
+	List<Integer> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
 }

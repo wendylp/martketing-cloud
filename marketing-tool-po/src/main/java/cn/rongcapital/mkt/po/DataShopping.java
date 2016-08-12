@@ -125,10 +125,12 @@ public class DataShopping extends BaseQuery {
     private String wxCode;
 
     private String productName;
-    
+
     private String bitmap;
 
     private Integer keyid;
+
+    private Date createTime;
 
     public DataShopping(){}
 
@@ -615,20 +617,28 @@ public class DataShopping extends BaseQuery {
     public void setProductName(String productName) {
         this.productName = productName == null ? null : productName.trim();
     }
-    
-	public String getBitmap() {
-		return bitmap;
-	}
 
-	public void setBitmap(String bitmap) {
-		this.bitmap = bitmap;
-	}
+    public String getBitmap() {
+        return bitmap;
+    }
 
-	public Integer getKeyid() {
-		return keyid;
-	}
+    public void setBitmap(String bitmap) {
+        this.bitmap = bitmap == null ? null : bitmap.trim();
+    }
 
-	public void setKeyid(Integer keyid) {
-		this.keyid = keyid;
-	}
+    public Integer getKeyid() {
+        return keyid;
+    }
+
+    public void setKeyid(Integer keyid) {
+        this.keyid = keyid;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }

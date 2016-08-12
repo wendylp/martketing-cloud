@@ -161,7 +161,7 @@
 	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO original_data_member (member_id,member_points,member_level,regist_time,
 			card_amt,expire,identify_no,driving_license,email,mobile,tel,QQ,acct_type,acct_no,
-			IDFA,IMEI,UDID,phone_mac,status,create_time,file_unique,source,batch_id,bitmap,wxmp_id,wx_code)
+			IDFA,IMEI,UDID,phone_mac,status,file_unique,source,batch_id,bitmap,wxmp_id,create_time,wx_code)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -184,12 +184,12 @@
 			#{item.udid},
 			#{item.phone_mac},
 			#{item.status},
-			#{item.create_time,jdbcType=DATE},
 			#{item.file_unique},
 			#{item.source},
 			#{item.batch_id},
 			#{item.bitmap},
 			#{item.wxmp_id},
+			now(),
 			#{item.wx_code}
 			)
 		</foreach>
@@ -201,8 +201,8 @@
 		WHERE file_unique = #{file_unique}
 	</select>
 
-	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.String">
-		SELECT distinct mobile
+	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE file_unique = #{file_unique}
 	</select>

@@ -63,8 +63,8 @@ public interface OriginalDataMemberDao extends BaseDao<OriginalDataMember>{
 
 	/**
 	 * 选取唯一标识列表
-	 * @param fileUnique
+	 * @param paramMap
 	 * @return
 	 */
-	List<String> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
+	List<Integer> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
 }

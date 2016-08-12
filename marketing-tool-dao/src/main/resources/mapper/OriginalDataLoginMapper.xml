@@ -165,7 +165,7 @@
 		INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,
 			login_device,resolution_ratio,login_url,identify_no,driving_license,
 			email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,status,
-			create_time,source,file_unique,batch_id,bitmap,wxmp_id,wx_code)
+			source,file_unique,batch_id,bitmap,wxmp_id,create_time,wx_code)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -189,12 +189,12 @@
 			#{item.udid},
 			#{item.phone_mac},
 			#{item.status},
-			#{item.create_time,jdbcType=DATE},
 			#{item.source},
 			#{item.file_unique},
 			#{item.batch_id},
 			#{item.bitmap},
 			#{item.wxmp_id},
+			now(),
 			#{item.wx_code}
 			)
 		</foreach>
@@ -206,8 +206,8 @@
 		WHERE file_unique = #{file_unique}
 	</select>
 
-	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.String">
-		SELECT distinct mobile
+	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE file_unique = #{file_unique}
 	</select>

@@ -66,5 +66,5 @@ public interface OriginalDataPaymentDao extends BaseDao<OriginalDataPayment> {
 	 * @param paramMap
 	 * @return int
 	 */
-	List<String> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
+	List<Integer> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
 }

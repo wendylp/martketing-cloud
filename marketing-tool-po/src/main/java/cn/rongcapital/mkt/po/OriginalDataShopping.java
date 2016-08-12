@@ -130,6 +130,8 @@ public class OriginalDataShopping extends BaseQuery {
 
     private String bitmap;
 
+    private Date createTime;
+
     public Integer getId() {
         return id;
     }
@@ -623,6 +625,14 @@ public class OriginalDataShopping extends BaseQuery {
     }
 
     public void setBitmap(String bitmap) {
-        this.bitmap = bitmap;
+        this.bitmap = bitmap == null ? null : bitmap.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

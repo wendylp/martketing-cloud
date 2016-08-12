@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,tag_id as tagId,original_data_type as originalDataType,data_unique_identifier as dataUniqueIdentifier,status as status]]>
+		<![CDATA[ id as id,tag_id as tagId,original_data_type as originalDataType,original_data_id as originalDataId,status as status]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -16,7 +16,7 @@
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="tagId != null"><![CDATA[ AND tag_id = #{tagId}]]></if>
 		    	<if test="originalDataType != null"><![CDATA[ AND original_data_type = #{originalDataType}]]></if>
-		    	<if test="dataUniqueIdentifier != null"><![CDATA[ AND data_unique_identifier = #{dataUniqueIdentifier}]]></if>
+		    	<if test="originalDataId != null"><![CDATA[ AND original_data_id = #{originalDataId}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		</where>
 	</sql>
@@ -32,7 +32,7 @@
 		<set>
 		    	<if test="tagId != null"><![CDATA[tag_id = #{tagId},]]></if>
 		    	<if test="originalDataType != null"><![CDATA[original_data_type = #{originalDataType},]]></if>
-		    	<if test="dataUniqueIdentifier != null"><![CDATA[data_unique_identifier = #{dataUniqueIdentifier},]]></if>
+		    	<if test="originalDataId != null"><![CDATA[original_data_id = #{originalDataId},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
@@ -40,12 +40,12 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CustomTagOriginalDataMap" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO custom_tag_original_data_map (tag_id,original_data_type,data_unique_identifier)
+			INSERT INTO custom_tag_original_data_map (tag_id,original_data_type,original_data_id)
 			VALUES
 			(
 			  #{tagId},
 			  #{originalDataType},
-			  #{dataUniqueIdentifier}
+			  #{originalDataId}
 			)
 		]]>
 	</insert>

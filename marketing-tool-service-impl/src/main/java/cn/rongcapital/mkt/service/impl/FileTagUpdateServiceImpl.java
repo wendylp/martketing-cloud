@@ -67,17 +67,13 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         if(legalRows != null && legalRows.intValue() > 0){
             if (hasTagNames(fileTagUpdateIn)) {
                 //1.将上传数据通过fileUnique选出不同的手机号
-                List<String> dataIdentifierList = getOriginalIdentifierList(importDataHistory.getFileUnique(), fileType);
+                List<Integer> originalDataIdList = getOriginalDataIdList(importDataHistory.getFileUnique(), fileType);
                 //2.这里还需要把status给扔进去，先将status置为1表示无效
-                if(!addNewCustomTag(fileTagUpdateIn)){
-                    baseOutput.setCode(ApiErrorCode.DB_ERROR.getCode());
-                    baseOutput.setMsg("自定义标签名称重复，新建标签失败");
-                    return baseOutput;
-                }
+                addNewCustomTag(fileTagUpdateIn);
                 //3.选择本次上传的customId，然后与上一步选出的数据唯一标识一起存入customTagOriginalMap表中，将status置为0
                 List<Long> tagIds =  customTagDao.selectIdsByCustomTags(fileTagUpdateIn.getTag_names());
-                if(!CollectionUtils.isEmpty(dataIdentifierList) && !CollectionUtils.isEmpty(tagIds)){
-                    insertCustomTagOriginalDataMapping(fileType, dataIdentifierList, tagIds);
+                if(!CollectionUtils.isEmpty(originalDataIdList) && !CollectionUtils.isEmpty(tagIds)){
+                    insertCustomTagOriginalDataMapping(fileType, originalDataIdList, tagIds);
                 }
             } else {
                 baseOutput.setMsg("用户没有上传标签");
@@ -114,13 +110,13 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         return "异常任务";
     }
 
-    private void insertCustomTagOriginalDataMapping(Integer fileType, List<String> dataIdentifierList, List<Long> tagIds) {
+    private void insertCustomTagOriginalDataMapping(Integer fileType, List<Integer> originalDataIdList, List<Long> tagIds) {
         for(Long tagId : tagIds){
-            for(String  dataIdentifier: dataIdentifierList){
-                if(dataIdentifier != null && dataIdentifier.length() == 11){
+            for(Integer  originalDataId: originalDataIdList){
+                if(originalDataId != null){
                     CustomTagOriginalDataMap customTagOriginalDataMap = new CustomTagOriginalDataMap();
                     customTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_VALIDATE);
-                    customTagOriginalDataMap.setDataUniqueIdentifier(dataIdentifier);
+                    customTagOriginalDataMap.setOriginalDataId(originalDataId);
                     customTagOriginalDataMap.setTagId(tagId.intValue());
                     customTagOriginalDataMap.setOriginalDataType(fileType);
                     customTagOriginalDataMapDao.insert(customTagOriginalDataMap);
@@ -144,16 +140,16 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
             customTag.setName(tagName);
             Integer count = customTagDao.selectListCount(customTag);
             if(count != null && count > 0){
-                return false;
+                continue;
             }
-            customTag.setStatus(ApiConstant.CUSTOM_TAG_INVALIDATE);
+//            customTag.setStatus(ApiConstant.CUSTOM_TAG_INVALIDATE);
             customTagList.add(customTag);
         }
 
         if(!CollectionUtils.isEmpty(customTagList)){
             for(CustomTag customTag : customTagList){
                 customTagDao.insert(customTag);
-                customTagDao.updateById(customTag);
+//                customTagDao.updateById(customTag);
             }
         }
         return true;
@@ -161,10 +157,10 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
 
     //2.根据fileUnique选出对应的original表中的idList
     //Todo:以后如果要修改mappingIdList修改这个方法即可
-    private List<String> getOriginalIdentifierList(String fileUnique, Integer fileType) {
+    private List<Integer> getOriginalDataIdList(String fileUnique, Integer fileType) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("file_unique", fileUnique);
-        List<String> identifierList = null;
+        List<Integer> identifierList = null;
         switch (fileType){
             case 1:
                 identifierList = originalDataPopulationDao.selelctIdentifierListByFileUnique(paramMap);

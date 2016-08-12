@@ -66,5 +66,5 @@ public interface OriginalDataCustomerTagsDao extends BaseDao<OriginalDataCustome
 	 * @param paramMap
 	 * @return
 	 */
-	List<String> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
+	List<Integer> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
 }

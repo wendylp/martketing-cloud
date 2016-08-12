@@ -66,5 +66,5 @@ public interface OriginalDataShoppingDao extends BaseDao<OriginalDataShopping> {
 	 * @param paramMap
 	 * @return int
 	 */
-	List<String> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
+	List<Integer> selelctIdentifierListByFileUnique(Map<String, Object> paramMap);
 }
