@@ -10,7 +10,7 @@ public interface ContactTemplateServer {
 	 * @param ctIn
 	 * @return
 	 */
-	public BaseOutput insert_tmp_by_info_select(ContactTemplateIn ctIn);
+	public BaseOutput ContactListCreate(ContactTemplateIn ctIn);
 	
 	/**
 	 * 根据id删除数据

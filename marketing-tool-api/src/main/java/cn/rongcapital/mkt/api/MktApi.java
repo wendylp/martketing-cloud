@@ -1951,9 +1951,9 @@ public class MktApi {
 	@POST
 	@Path("/mkt.contact.list.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput insert_tmp_by_info_select(@Valid ContactTemplateIn body, @Context SecurityContext securityContext)
+	public BaseOutput ContactListCreate(@Valid ContactTemplateIn body, @Context SecurityContext securityContext)
 	{
-		return contactTemplateServer.insert_tmp_by_info_select(body);
+		return contactTemplateServer.ContactListCreate(body);
 	}
 	
 	/**

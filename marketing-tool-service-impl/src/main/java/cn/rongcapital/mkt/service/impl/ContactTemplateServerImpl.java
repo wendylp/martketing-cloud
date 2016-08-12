@@ -30,7 +30,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 	ContactTemplateDao contactTemplateDao;
 
 	@Override
-	public BaseOutput insert_tmp_by_info_select(ContactTemplateIn ctIn) {
+	public BaseOutput ContactListCreate(ContactTemplateIn ctIn) {
 
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
