@@ -15,6 +15,8 @@ public class DataGetFilterAudiencesIn extends BaseInput {
 
     @NotNull
     private Integer mdType;
+    
+    private Integer contactWayList;
 
     private List<Integer> mdTypes;
 
@@ -43,8 +45,17 @@ public class DataGetFilterAudiencesIn extends BaseInput {
     public void setMdType(Integer mdType) {
         this.mdType = mdType;
     }
+    
+    @JsonProperty("contact_wayList")
+    public Integer getContactWayList() {
+		return contactWayList;
+	}
 
-    @JsonProperty("contact_ids")
+	public void setContactWayList(Integer contactWayList) {
+		this.contactWayList = contactWayList;
+	}
+
+	@JsonProperty("contact_ids")
     public List<Integer> getContactIds() {
         return contactIds;
     }

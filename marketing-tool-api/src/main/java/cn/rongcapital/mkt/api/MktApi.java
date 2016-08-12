@@ -931,7 +931,7 @@ public class MktApi {
 				dataGetFilterAudiencesIn.getIndex(), dataGetFilterAudiencesIn.getSize(),
 				dataGetFilterAudiencesIn.getMdType(), dataGetFilterAudiencesIn.getMdTypes(),
 				dataGetFilterAudiencesIn.getContactIds(), dataGetFilterAudiencesIn.getCustomizeViews(),
-				dataGetFilterAudiencesIn.getTimeCondition());
+				dataGetFilterAudiencesIn.getTimeCondition(),dataGetFilterAudiencesIn.getContactWayList());
 	}
 
 	/**
