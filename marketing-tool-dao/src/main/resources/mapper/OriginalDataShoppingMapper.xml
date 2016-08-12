@@ -266,7 +266,7 @@
             identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,
             udid,phone_mac,status,source,file_unique,batch_id,order_status,delivery_way,
 		    logistics_status,shipping_fee,shipping_way,express_company,express_order,consignee,
-		    consignee_tel,consignee_addr,buyer_comment,wxmp_id,wx_code,product_name,bitmap)
+		    consignee_tel,consignee_addr,buyer_comment,wxmp_id,wx_code,product_name,create_time,bitmap)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
@@ -329,6 +329,7 @@
 			#{item.wxmp_id},
 			#{item.wx_code},
 			#{item.product_name},
+			now(),
 			#{item.bitmap}
 			)
 		</foreach>
@@ -340,8 +341,8 @@
 		WHERE file_unique = #{file_unique}
 	</select>
 
-	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.String">
-		SELECT distinct mobile
+	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE file_unique = #{file_unique}
 	</select>
