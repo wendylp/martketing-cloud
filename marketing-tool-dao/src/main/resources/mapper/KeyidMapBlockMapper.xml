@@ -97,7 +97,7 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
-		<![CDATA[WHERE sequence IN]]>
+		<![CDATA[WHERE seq IN]]>
 		<foreach collection="sequenceList" item="sequence" open="(" separator="," close=")">
 			<![CDATA[#{sequence}]]>
 		</foreach>

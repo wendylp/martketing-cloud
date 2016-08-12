@@ -118,7 +118,33 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
                 case TypeConstant.DATA_LOGIN_TYPE:
                     break;
                 case TypeConstant.DATA_PAYMENT_TYPE:
+                    //1.根据ID获取相应的Original表中对应的的数据
+                    OriginalDataPayment originalDataPayment = new OriginalDataPayment();
+                    originalDataPayment.setId(customTagOriginalDataMap.getOriginalDataId());
+                    List<OriginalDataPayment> originalDataPaymentList = originalDataPaymentDao.selectList(originalDataPayment);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap, originalDataPaymentList)) break;
+                    originalDataPayment = originalDataPaymentList.get(0);
+                    logger.info("tagInfo: " + originalDataPayment.getBitmap());
+                    if(originalDataPayment.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+
+                    //2.获取该条数据的唯一标识，然后将相应的值赋予相应的data表中
+                    DataPayment dataPayment = new DataPayment();
+                    dataPayment.setBitmap(originalDataPayment.getBitmap());
+                    uniqueFieldList = getUniqueFieldList(originalDataPayment.getBitmap());
+                    logger.info("tagInfo uniqueFieldList size: " + (uniqueFieldList == null? 0:uniqueFieldList.size()));
+                    if(CollectionUtils.isEmpty(uniqueFieldList)) break;
+                    copyOriginUniqueValueToData(originalDataPayment, dataPayment, uniqueFieldList);
+                    logger.info("tagInfo copy unique field end");
+                    //3根据唯一标识选取相应的dataPopulation
+                    List<DataPayment> dataPaymentList = dataPaymentDao.selectList(dataPayment);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap,dataPaymentList)) break;
+                    dataPayment = dataPaymentList.get(0);
+                    logger.info("tagInfo dataId" + dataPayment.getId());
+                    if(dataPayment.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+                    keyId = dataPayment.getKeyid();
+                    logger.info("tagInfo keyId:" + keyId);
                     break;
+
                 case TypeConstant.DATA_SHOPPING_TYPE:
                     //1.根据ID获取相应的Original表中对应的的数据
                     OriginalDataShopping originalDataShopping = new OriginalDataShopping();
@@ -159,9 +185,12 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
     private <T,D>void copyOriginUniqueValueToData(T originalData, D data, List<KeyidMapBlock> uniqueFieldList) {
         for(KeyidMapBlock keyidMapBlock : uniqueFieldList){
             try {
-                Field originalField = originalData.getClass().getField(keyidMapBlock.getFieldName());
+                Field[] fields = originalData.getClass().getDeclaredFields();
+                Field originalField = originalData.getClass().getDeclaredField(toCamelUpperCode(keyidMapBlock.getField()));
+                originalField.setAccessible(true);
                 Object obj = originalField.get(originalData);
-                Field dataField = data.getClass().getField(keyidMapBlock.getFieldName());
+                Field dataField = data.getClass().getDeclaredField(toCamelUpperCode(keyidMapBlock.getField()));
+                dataField.setAccessible(true);
                 dataField.set(data,obj);
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
@@ -169,6 +198,23 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
                 e.printStackTrace();
             }
         }
+    }
+
+    private String toCamelUpperCode(String field) {
+        if(!field.contains("_")) return field;
+        String[] splitWord = field.split("_");
+        StringBuffer resultBuffer = new StringBuffer();
+        int index = 0;
+        for(String word : splitWord){
+            if(index == 0){
+                resultBuffer.append(word);
+                index++;
+                continue;
+            }
+            word = word.replace(word.charAt(0), (char) (word.charAt(0) + ('A'-'a')));
+            resultBuffer.append(word);
+        }
+        return resultBuffer.toString();
     }
 
     private <T> boolean invalidErrorOriginalCusomerMapData(CustomTagOriginalDataMap customTagOriginalDataMap, List<T> originalDataList) {
