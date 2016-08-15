@@ -7,7 +7,7 @@ import java.util.Date;
 public class ContactTemplate extends BaseQuery {
     private Integer id;
 
-    private Integer contactId;
+    private Long contactId;
 
     private String contactName;
 
@@ -19,7 +19,7 @@ public class ContactTemplate extends BaseQuery {
 
     private String fieldCode;
 
-    private Byte selected;
+    private String selected;
 
     private Byte status;
 
@@ -45,11 +45,11 @@ public class ContactTemplate extends BaseQuery {
         this.id = id;
     }
 
-    public Integer getContactId() {
+    public Long getContactId() {
         return contactId;
     }
 
-    public void setContactId(Integer contactId) {
+    public void setContactId(Long contactId) {
         this.contactId = contactId;
     }
 
@@ -93,11 +93,11 @@ public class ContactTemplate extends BaseQuery {
         this.fieldCode = fieldCode == null ? null : fieldCode.trim();
     }
 
-    public Byte getSelected() {
+    public String getSelected() {
         return selected;
     }
 
-    public void setSelected(Byte selected) {
+    public void setSelected(String selected) {
         this.selected = selected;
     }
 

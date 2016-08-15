@@ -28,7 +28,7 @@
 		    	<if test="pageViews != null"><![CDATA[ AND page_views = #{pageViews}]]></if>
 		    	<if test="keyList != null"><![CDATA[ AND key_list = #{keyList}]]></if>
 		    	<if test="required != null"><![CDATA[ AND required = #{required}]]></if>
-		    	<if test="isChecked != null"><![CDATA[ AND isChecked = #{isChecked}]]></if>
+		    	<if test="ischecked != null"><![CDATA[ AND isChecked = #{ischecked}]]></if>
 		</where>
 	</sql>
 	
@@ -53,7 +53,8 @@
 		    	<if test="pageViews != null"><![CDATA[page_views = #{pageViews},]]></if>
 		    	<if test="keyList != null"><![CDATA[key_list = #{keyList},]]></if>
 		    	<if test="required != null"><![CDATA[required = #{required},]]></if>
-		    	<if test="isChecked != null"><![CDATA[isChecked = #{isChecked}]]></if>
+		    	<if test="isChecked != null"><![CDATA[isChecked = #{isChecked},]]></if>
+		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
 		</set>
 	</sql>
 
@@ -75,7 +76,7 @@
 			  #{pageViews},
 			  #{keyList},
 			  #{required},
-			  #{isChecked}
+			  #{ischecked}
 			)
 		]]>
 	</insert>
