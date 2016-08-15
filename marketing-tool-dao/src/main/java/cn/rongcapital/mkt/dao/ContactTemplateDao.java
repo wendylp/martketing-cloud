@@ -34,4 +34,11 @@ public interface ContactTemplateDao extends BaseDao<ContactTemplate>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * 通过id更新浏览次数
+	 * @param t
+	 * @return
+	 */
+	int updatePageViewsById(ContactTemplate t);
 }
