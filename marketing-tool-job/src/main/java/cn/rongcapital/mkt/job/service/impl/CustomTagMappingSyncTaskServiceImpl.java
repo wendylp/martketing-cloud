@@ -110,12 +110,112 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
                     logger.info("tagInfo keyId:" + keyId);
                     break;
                 case TypeConstant.CUSTOMER_TAGS_TYPE:
+                    //1.根据ID获取相应的Original表中对应的的数据
+                    OriginalDataCustomerTags originalDataCustomerTags = new OriginalDataCustomerTags();
+                    originalDataCustomerTags.setId(customTagOriginalDataMap.getOriginalDataId());
+                    List<OriginalDataCustomerTags> originalDataCustomerTagsList = originalDataCustomerTagsDao.selectList(originalDataCustomerTags);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap, originalDataCustomerTagsList)) break;
+                    originalDataCustomerTags = originalDataCustomerTagsList.get(0);
+                    logger.info("tagInfo: " + originalDataCustomerTags.getBitmap());
+                    if(originalDataCustomerTags.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+
+                    //2.获取该条数据的唯一标识，然后将相应的值赋予相应的data表中
+                    DataCustomerTags dataCustomerTags = new DataCustomerTags();
+                    dataCustomerTags.setBitmap(originalDataCustomerTags.getBitmap());
+                    uniqueFieldList = getUniqueFieldList(originalDataCustomerTags.getBitmap());
+                    logger.info("tagInfo uniqueFieldList size: " + (uniqueFieldList == null? 0:uniqueFieldList.size()));
+                    if(CollectionUtils.isEmpty(uniqueFieldList)) break;
+                    copyOriginUniqueValueToData(originalDataCustomerTags, dataCustomerTags, uniqueFieldList);
+                    logger.info("tagInfo copy unique field end");
+                    //3根据唯一标识选取相应的dataPopulation
+                    List<DataCustomerTags> dataCustomerTagsList = dataCustomerTagsDao.selectList(dataCustomerTags);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap,dataCustomerTagsList)) break;
+                    dataCustomerTags = dataCustomerTagsList.get(0);
+                    logger.info("tagInfo dataId" + dataCustomerTags.getId());
+                    if(dataCustomerTags.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+                    keyId = dataCustomerTags.getKeyid();
+                    logger.info("tagInfo keyId:" + keyId);
                     break;
                 case TypeConstant.ARCH_POINT_TYPE:
+                    //1.根据ID获取相应的Original表中对应的的数据
+                    OriginalDataArchPoint originalDataArchPoint = new OriginalDataArchPoint();
+                    originalDataArchPoint.setId(customTagOriginalDataMap.getOriginalDataId());
+                    List<OriginalDataArchPoint> originalDataArchPointList = originalDataArchPointDao.selectList(originalDataArchPoint);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap, originalDataArchPointList)) break;
+                    originalDataArchPoint = originalDataArchPointList.get(0);
+                    logger.info("tagInfo: " + originalDataArchPoint.getBitmap());
+                    if(originalDataArchPoint.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+
+                    //2.获取该条数据的唯一标识，然后将相应的值赋予相应的data表中
+                    DataArchPoint dataArchPoint = new DataArchPoint();
+                    dataArchPoint.setBitmap(originalDataArchPoint.getBitmap());
+                    uniqueFieldList = getUniqueFieldList(originalDataArchPoint.getBitmap());
+                    logger.info("tagInfo uniqueFieldList size: " + (uniqueFieldList == null? 0:uniqueFieldList.size()));
+                    if(CollectionUtils.isEmpty(uniqueFieldList)) break;
+                    copyOriginUniqueValueToData(originalDataArchPoint, dataArchPoint, uniqueFieldList);
+                    logger.info("tagInfo copy unique field end");
+                    //3根据唯一标识选取相应的dataPopulation
+                    List<DataArchPoint> dataArchPointList = dataArchPointDao.selectList(dataArchPoint);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap,dataArchPointList)) break;
+                    dataArchPoint = dataArchPointList.get(0);
+                    logger.info("tagInfo dataId" + dataArchPoint.getId());
+                    if(dataArchPoint.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+                    keyId = dataArchPoint.getKeyid();
+                    logger.info("tagInfo keyId:" + keyId);
                     break;
                 case TypeConstant.DATA_MEMBER_TYPE:
+                    //1.根据ID获取相应的Original表中对应的的数据
+                    OriginalDataMember originalDataMember = new OriginalDataMember();
+                    originalDataMember.setId(customTagOriginalDataMap.getOriginalDataId());
+                    List<OriginalDataMember> originalDataMemberList = originalDataMemberDao.selectList(originalDataMember);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap, originalDataMemberList)) break;
+                    originalDataMember = originalDataMemberList.get(0);
+                    logger.info("tagInfo: " + originalDataMember.getBitmap());
+                    if(originalDataMember.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+
+                    //2.获取该条数据的唯一标识，然后将相应的值赋予相应的data表中
+                    DataMember dataMember = new DataMember();
+                    dataMember.setBitmap(originalDataMember.getBitmap());
+                    uniqueFieldList = getUniqueFieldList(originalDataMember.getBitmap());
+                    logger.info("tagInfo uniqueFieldList size: " + (uniqueFieldList == null? 0:uniqueFieldList.size()));
+                    if(CollectionUtils.isEmpty(uniqueFieldList)) break;
+                    copyOriginUniqueValueToData(originalDataMember, dataMember, uniqueFieldList);
+                    logger.info("tagInfo copy unique field end");
+                    //3根据唯一标识选取相应的dataPopulation
+                    List<DataMember> dataMemberList = dataMemberDao.selectList(dataMember);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap,dataMemberList)) break;
+                    dataMember = dataMemberList.get(0);
+                    logger.info("tagInfo dataId" + dataMember.getId());
+                    if(dataMember.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+                    keyId = dataMember.getKeyid();
+                    logger.info("tagInfo keyId:" + keyId);
                     break;
                 case TypeConstant.DATA_LOGIN_TYPE:
+                    //1.根据ID获取相应的Original表中对应的的数据
+                    OriginalDataLogin originalDataLogin = new OriginalDataLogin();
+                    originalDataLogin.setId(customTagOriginalDataMap.getOriginalDataId());
+                    List<OriginalDataLogin> originalDataLoginList = originalDataLoginDao.selectList(originalDataLogin);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap, originalDataLoginList)) break;
+                    originalDataLogin = originalDataLoginList.get(0);
+                    logger.info("tagInfo: " + originalDataLogin.getBitmap());
+                    if(originalDataLogin.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+
+                    //2.获取该条数据的唯一标识，然后将相应的值赋予相应的data表中
+                    DataLogin dataLogin = new DataLogin();
+                    dataLogin.setBitmap(originalDataLogin.getBitmap());
+                    uniqueFieldList = getUniqueFieldList(originalDataLogin.getBitmap());
+                    logger.info("tagInfo uniqueFieldList size: " + (uniqueFieldList == null? 0:uniqueFieldList.size()));
+                    if(CollectionUtils.isEmpty(uniqueFieldList)) break;
+                    copyOriginUniqueValueToData(originalDataLogin, dataLogin, uniqueFieldList);
+                    logger.info("tagInfo copy unique field end");
+                    //3根据唯一标识选取相应的dataPopulation
+                    List<DataLogin> dataLoginList = dataLoginDao.selectList(dataLogin);
+                    if (invalidErrorOriginalCusomerMapData(customTagOriginalDataMap,dataLoginList)) break;
+                    dataLogin = dataLoginList.get(0);
+                    logger.info("tagInfo dataId" + dataLogin.getId());
+                    if(dataLogin.getStatus() != TypeConstant.DATA_SYNC_COMPLETE_MARK) break;
+                    keyId = dataLogin.getKeyid();
+                    logger.info("tagInfo keyId:" + keyId);
                     break;
                 case TypeConstant.DATA_PAYMENT_TYPE:
                     //1.根据ID获取相应的Original表中对应的的数据
