@@ -360,6 +360,9 @@ public class MktApi {
 	@Autowired
 	private ContactTemplateServer contactTemplateServer;
 	
+	@Autowired
+	private ContactListPvServer contactListPvServer;
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
 	/**
@@ -1968,6 +1971,23 @@ public class MktApi {
 	public BaseOutput updateContextTempById(@NotEmpty @QueryParam("user_token") String userToken,@NotNull @QueryParam("id") int id)
 	{
 		return contactTemplateServer.updateContextTempById(id);
+	}
+	
+	/**
+	 * 统计联系人表单浏览次数
+	 * @param userToken
+	 * @param var
+	 * @param contactId
+	 * @return 
+	 */
+	
+	@GET
+	@Path("mkt.contact.list.pv")
+	public BaseOutput countPageViews(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String var,
+			@NotEmpty @QueryParam("contact_id") String contactId) {
+		return contactListPvServer.countPageViews(contactId);
 	}
 
 }
