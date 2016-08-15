@@ -7,6 +7,8 @@ import java.util.Date;
 public class ContactTemplate extends BaseQuery {
     private Integer id;
 
+    private Integer contactId;
+
     private String contactName;
 
     private String contactTitle;
@@ -31,12 +33,24 @@ public class ContactTemplate extends BaseQuery {
 
     private String keyList;
 
+    private Integer required;
+
+    private Integer ischecked;
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(Integer contactId) {
+        this.contactId = contactId;
     }
 
     public String getContactName() {
@@ -133,5 +147,21 @@ public class ContactTemplate extends BaseQuery {
 
     public void setKeyList(String keyList) {
         this.keyList = keyList == null ? null : keyList.trim();
+    }
+
+    public Integer getRequired() {
+        return required;
+    }
+
+    public void setRequired(Integer required) {
+        this.required = required;
+    }
+
+    public Integer getIschecked() {
+        return ischecked;
+    }
+
+    public void setIschecked(Integer ischecked) {
+        this.ischecked = ischecked;
     }
 }

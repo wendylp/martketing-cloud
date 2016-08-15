@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,source_filename as sourceFilename,total_rows as totalRows,success as success,status as status,create_time as createTime]]>
+		<![CDATA[ id as id,source_filename as sourceFilename,total_rows as totalRows,success as success,status as status,create_time as createTime,batch_id as batchId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -19,6 +19,7 @@
 		    	<if test="success != null"><![CDATA[ AND success = #{success}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		</where>
 	</sql>
 	
@@ -34,20 +35,22 @@
 		    	<if test="sourceFilename != null"><![CDATA[source_filename = #{sourceFilename},]]></if>
 		    	<if test="totalRows != null"><![CDATA[total_rows = #{totalRows},]]></if>
 		    	<if test="success != null"><![CDATA[success = #{success},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatQrcodeLog" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_qrcode_log (source_filename,total_rows,success,create_time)
+			INSERT INTO wechat_qrcode_log (source_filename,total_rows,success,create_time,batch_id)
 			VALUES
 			(
 			  #{sourceFilename},
 			  #{totalRows},
 			  #{success},
-			  now()
+			  now(),
+			  #{batchId}
 			)
 		]]>
 	</insert>

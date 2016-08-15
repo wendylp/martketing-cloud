@@ -17,6 +17,8 @@ public class WechatQrcodeLog extends BaseQuery {
 
     private Date createTime;
 
+    private Integer batchId;
+
     public Long getId() {
         return id;
     }
@@ -63,5 +65,13 @@ public class WechatQrcodeLog extends BaseQuery {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(Integer batchId) {
+        this.batchId = batchId;
     }
 }
