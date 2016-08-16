@@ -363,6 +363,18 @@ public class MktApi {
 	@Autowired
 	private ContactListPvServer contactListPvServer;
 	
+	@Autowired
+	private QrcodePicDownloadService qrcodePicDownloadService;
+	
+	@Autowired
+	private QrcodePicsZipDownloadService qrcodePicsZipDownloadService;
+	
+	@Autowired
+	private ContactTemplateService contactTemplateService;
+	
+	@Autowired
+	private ContactListQrcodeDownloadService contactListQrcodeDownloadService;
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
 	/**
@@ -1988,6 +2000,65 @@ public class MktApi {
 			@NotEmpty @QueryParam("ver") String var,
 			@NotEmpty @QueryParam("contact_id") String contactId) {
 		return contactListPvServer.countPageViews(contactId);
+	}
+	
+	/**
+	 * 下载单个微信二维码图片文件
+	 *
+	 * @param
+	 * @param ver
+	 * @author zhaoguoying
+	 */
+	@GET
+	@Path("/mkt.weixin.qrcode.pic.download")
+	public BaseOutput getQrcodePicDownload(@NotEmpty @QueryParam("user_token") String user_token,
+			@NotNull @QueryParam("qrcode_id")int qrcode_id)
+	{
+		return qrcodePicDownloadService.getQrcodePicDownload(qrcode_id);
+	}
+	
+	/**
+	 * 下载批量生成的二维码图片文件(zip)
+	 *
+	 * @param
+	 * @param ver
+	 * @author zhaoguoying
+	 */
+	@GET
+	@Path("/mkt.weixin.qrcode.pics.zip.download")
+	public BaseOutput getQrcodePicsZipDownload(@NotEmpty @QueryParam("user_token") String user_token,
+			@NotNull @QueryParam("batch_id")int batch_id)
+	{
+		return qrcodePicsZipDownloadService.getQrcodePicsZipDownload(batch_id);
+	}
+	
+	/**
+	 * 复制联系人表单 
+	 *
+	 * @param
+	 * @param ver
+	 * @author zhaoguoying
+	 */
+	@POST
+	@Path("/mkt.contact.list.duplicate")
+	public BaseOutput copyContact(@Valid ContactTemplateIn body, @Context SecurityContext securityContext)
+	{
+		return contactTemplateService.copyContactTemplate(body,securityContext);
+	}
+	
+	/**
+	 * 下载联系人表单的二维码图片
+	 *
+	 * @param
+	 * @param ver
+	 * @author zhaoguoying
+	 */
+	@GET
+	@Path("/mkt.contact.list.qrcode.download")
+	public BaseOutput getContactListQrcode(@NotEmpty @QueryParam("user_token") String user_token,
+			@NotNull @QueryParam("contact_id")Integer contact_id)
+	{
+		return contactListQrcodeDownloadService.getContactListQrcode(contact_id);
 	}
 
 }
