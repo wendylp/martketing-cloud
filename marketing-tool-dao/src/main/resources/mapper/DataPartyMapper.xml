@@ -395,17 +395,17 @@
 	
 	<!-- 模糊查询 -->
 	<select id="selectListByKeyName" parameterType="java.lang.String" resultType="java.util.Map">
-		<![CDATA[SELECT id,name,gender,mobile,(year(now())-year(birthday)-1) + ( DATE_FORMAT(birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age]]>
-		<include refid="QUERY_FROM_TABLE"/>		
+		<![CDATA[SELECT p.id,p.name,p.gender,p.mobile,(year(now())-year(p.birthday)-1) + ( DATE_FORMAT(p.birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age,d.head_img_url as head_image_url]]>
+		FROM data_party p,data_population d	
 		<where>
-			(mobile like CONCAT('%',#{audience_name},'%') OR name like CONCAT('%',#{audience_name},'%')) and (status = 0 or status = 2)
+			d.keyid = p.id and (p.mobile like CONCAT('%',#{audience_name},'%') OR p.name like CONCAT('%',#{audience_name},'%')) and (p.status = 0 or p.status = 2)
 		</where>				
 	</select>
 	
 	<select id="selectListByNameInList" parameterType="java.util.Map" resultType="java.util.Map">
-		<![CDATA[SELECT id,name,gender,mobile,(year(now())-year(birthday)-1) + ( DATE_FORMAT(birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age]]>
-		<include refid="QUERY_FROM_TABLE"/>
-		WHERE (mobile like CONCAT('%',#{key_word},'%') OR name like CONCAT('%',#{key_word},'%')) and (status = 0 OR status = 2) AND id in
+		<![CDATA[SELECT p.id,p.name,p.gender,p.mobile,(year(now())-year(p.birthday)-1) + ( DATE_FORMAT(p.birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age,d.head_img_url as head_image_url]]>
+		FROM data_party p,data_population d
+		WHERE d.keyid = p.id and (p.mobile like CONCAT('%',#{key_word},'%') OR p.name like CONCAT('%',#{key_word},'%')) and (p.status = 0 OR p.status = 2) AND p.id in
 		<foreach collection="partyIdList" item="item" index="index" separator="," open="(" close=")">
 			#{item}
 		</foreach>

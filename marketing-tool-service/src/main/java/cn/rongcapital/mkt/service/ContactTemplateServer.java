@@ -17,5 +17,5 @@ public interface ContactTemplateServer {
 	 * @param id
 	 * @return
 	 */
-	public BaseOutput updateContextTempById(Integer id);
+	public BaseOutput updateContextTempById(Long id);
 }

@@ -11,57 +11,92 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.TagGroupMapDao;
-import cn.rongcapital.mkt.dao.TaggroupDao;
-import cn.rongcapital.mkt.po.TagGroupMap;
-import cn.rongcapital.mkt.po.Taggroup;
+import cn.rongcapital.mkt.dao.TagRecommendDao;
+import cn.rongcapital.mkt.po.TagRecommend;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
-public class SegmentTagkeyTagListServiceImpl implements SegmentTagkeyTagListService{
-	
+public class SegmentTagkeyTagListServiceImpl implements SegmentTagkeyTagListService {
+
+	// @Autowired
+	// TaggroupDao taggroupDao;
+	// @Autowired
+	// private TagGroupMapDao tagGroupMapDao;
+
 	@Autowired
-	TaggroupDao taggroupDao;
-	@Autowired
-	private TagGroupMapDao tagGroupMapDao;
-	
+	private TagRecommendDao tagRecommendDao;
+
 	@Override
 	public BaseOutput getLastTagByKey(String tagGroupName) {
-		//根据标签组名模糊查询标签组
-		Taggroup param = new Taggroup();
-		if(StringUtils.isNotBlank(tagGroupName)) {
-			param.setName(tagGroupName);
-		}
-		param.setName(tagGroupName);
-		param.setLevel(ApiConstant.INT_ZERO);
-		List<Taggroup> resList = taggroupDao.selectByNameFuzzy(param);
+		// //根据标签组名模糊查询标签组
+		// Taggroup param = new Taggroup();
+		// if(StringUtils.isNotBlank(tagGroupName)) {
+		// param.setName(tagGroupName);
+		// }
+		// param.setName(tagGroupName);
+		// param.setLevel(ApiConstant.INT_ZERO);
+		// List<Taggroup> resList = taggroupDao.selectByNameFuzzy(param);
+		//
+		// BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+		// ApiErrorCode.SUCCESS.getMsg(),
+		// ApiConstant.INT_ZERO,null);
+		// if(CollectionUtils.isNotEmpty(resList)){
+		// result.setTotal(resList.size());
+		// for(Taggroup po : resList){
+		// TagGroupMap tagGroupMap = new TagGroupMap();
+		// tagGroupMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		// tagGroupMap.setGroupId(po.getId());
+		// List<TagGroupMap> tagGroupMapList =
+		// tagGroupMapDao.selectList(tagGroupMap);
+		// if(CollectionUtils.isNotEmpty(tagGroupMapList)) {
+		// Map<String,Object> map = new HashMap<String,Object>();
+		// map.put("tag_group_id", po.getId());
+		// map.put("tag_group_name", po.getName());
+		// result.getData().add(map);
+		// }
+		// }
+		// }
 
-		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
-				   ApiErrorCode.SUCCESS.getMsg(),
-				   ApiConstant.INT_ZERO,null);
-		if(CollectionUtils.isNotEmpty(resList)){
-			result.setTotal(resList.size());
-			for(Taggroup po : resList){
-				TagGroupMap tagGroupMap = new TagGroupMap();
-        		tagGroupMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-        		tagGroupMap.setGroupId(po.getId());
-        		List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMap);
-        		if(CollectionUtils.isNotEmpty(tagGroupMapList)) {
-        			Map<String,Object> map = new HashMap<String,Object>();
-        			map.put("tag_group_id", po.getId());
-        			map.put("tag_group_name", po.getName());
-        			result.getData().add(map);
-        		}
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+
+		TagRecommend tagRecommend = new TagRecommend();
+		if (tagGroupName != null && tagGroupName.length() > 0) {
+			tagRecommend.setTagGroupName(tagGroupName);
+		}
+
+		List<TagRecommend> tagRecommendLists = tagRecommendDao.fuzzySearch(tagRecommend);
+
+		if (!tagRecommendLists.isEmpty()) {
+			result.setTotal(tagRecommendLists.size());
+			for (TagRecommend tagRecommendList : tagRecommendLists) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tag_group_id", tagRecommendList.getTagGroupId());
+				map.put("tag_group_name", getTagRecommendLastName(tagRecommendList.getTagGroupName()));
+				result.getData().add(map);
 			}
 		}
+
 		return result;
+	}
+
+	/**
+	 * 获取系统推荐标签的最后一个关键词
+	 * 
+	 * @param tagRecommend
+	 * @return
+	 */
+	private String getTagRecommendLastName(String tagRecommend) {
+		if (tagRecommend == null || tagRecommend.length() == 0) {
+			return "";
+		} else {
+			return tagRecommend.substring(tagRecommend.lastIndexOf('-') + 1);
+		}
 	}
 }

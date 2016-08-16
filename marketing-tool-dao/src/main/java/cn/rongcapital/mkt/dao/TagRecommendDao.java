@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.TagRecommend;
 
@@ -34,4 +36,10 @@ public interface TagRecommendDao extends BaseDao<TagRecommend>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	/**
+	 * 模糊查询关键字tag_group_name
+	 * @param t
+	 * @return
+	 */
+	List<TagRecommend> fuzzySearch(TagRecommend t);
 }

@@ -58,6 +58,7 @@
 		    	<if test="ischecked != null"><![CDATA[ischecked = #{ischecked},]]></if>
 		    	<if test="isRememberImportKey != null"><![CDATA[is_remember_import_key = #{isRememberImportKey},]]></if>
 		    	<if test="index != null"><![CDATA[index = #{index}]]></if>
+		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
 		</set>
 	</sql>
 
@@ -93,7 +94,9 @@
 	<update id="updateById" parameterType="cn.rongcapital.mkt.po.ContactTemplate">
 		<![CDATA[UPDATE contact_template]]>
 		<include refid="UPDATE_COLUMN_SET"/>
-		<![CDATA[WHERE id = #{id}]]>
+		<![CDATA[WHERE 1 = 1]]>
+		<if test="id != null"><![CDATA[and id = #{id},]]></if>
+		<if test="contactId != null"><![CDATA[and contact_id = #{contactId}]]></if>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
@@ -128,5 +131,8 @@
 	<update id="updatePageViewsById" parameterType="cn.rongcapital.mkt.po.ContactTemplate" >
 		<![CDATA[update contact_template set page_views=page_views+1 where id=#{id}]]>
 	</update>
-	
+	<delete id="deleteByCId" parameterType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[delete from  contact_template  where contact_id=#{contactId}]]>
+	</delete>
+
 </mapper>

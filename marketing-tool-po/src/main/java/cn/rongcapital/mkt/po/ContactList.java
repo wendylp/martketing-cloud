@@ -62,7 +62,7 @@ public class ContactList extends BaseQuery {
 
     private String phoneMac;
 
-    private Byte status;
+    private Integer  status;
 
     private Date createTime;
 
@@ -338,11 +338,11 @@ public class ContactList extends BaseQuery {
         this.phoneMac = phoneMac == null ? null : phoneMac.trim();
     }
 
-    public Byte getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Byte status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -474,11 +474,11 @@ public class ContactList extends BaseQuery {
         this.fillDevice = fillDevice == null ? null : fillDevice.trim();
     }
 
-    public String getOs() {
+    public String getos() {
         return os;
     }
 
-    public void setOs(String os) {
+    public void setos(String os) {
         this.os = os == null ? null : os.trim();
     }
 
@@ -490,11 +490,11 @@ public class ContactList extends BaseQuery {
         this.brower = brower == null ? null : brower.trim();
     }
 
-    public String getIp() {
+    public String getip() {
         return ip;
     }
 
-    public void setIp(String ip) {
+    public void setip(String ip) {
         this.ip = ip == null ? null : ip.trim();
     }
 

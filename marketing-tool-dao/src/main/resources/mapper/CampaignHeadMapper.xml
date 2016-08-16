@@ -139,7 +139,7 @@
 	<select id="searchDataMain" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT id,name
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE name like #{name}
+		WHERE name like #{name} and status ='0'
 		limit #{size}
 	</select>
 	

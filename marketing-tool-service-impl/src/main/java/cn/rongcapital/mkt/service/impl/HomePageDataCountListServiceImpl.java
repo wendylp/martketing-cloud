@@ -93,12 +93,12 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
         // 获取可触达用户的数据
         HomePageDataCountListOut wechatCountListObj = new HomePageDataCountListOut();
         DataParty homePageDataCountListDataParty = new DataParty();
-        homePageDataCountListDataParty.setMdType(8);
-        int notNullMobileCount = dataPartyDao.selectNotNullMobile();
+        //homePageDataCountListDataParty.setMdType(8);
+        //int notNullMobileCount = dataPartyDao.selectNotNullMobile();
         int wechatMemberCount = dataPartyDao.selectListCount(homePageDataCountListDataParty);
-        int reachableUserCount = notNullMobileCount + wechatMemberCount;
+        //int reachableUserCount = notNullMobileCount + wechatMemberCount;
         wechatCountListObj.setId(WECHAT.getId());
-        wechatCountListObj.setCount(reachableUserCount);
+        wechatCountListObj.setCount(wechatMemberCount);
         wechatCountListObj.setName(WECHAT.getName());
         wechatCountListObj.setLinkName(WECHAT.getLinkName());
 
