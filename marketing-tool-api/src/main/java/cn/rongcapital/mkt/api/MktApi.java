@@ -1966,11 +1966,11 @@ public class MktApi {
 	 * @param ver
 	 * @author yyl
 	 */
-	@GET
+	@POST
 	@Path("/mkt.contact.list.del")
-	public BaseOutput updateContextTempById(@NotEmpty @QueryParam("user_token") String userToken,@NotNull @QueryParam("id") int id)
+	public BaseOutput updateContextTempById(@Valid ContactTempDIn body)
 	{
-		return contactTemplateServer.updateContextTempById(id);
+		return contactTemplateServer.updateContextTempById(body.getContact_id());
 	}
 	
 	/**
