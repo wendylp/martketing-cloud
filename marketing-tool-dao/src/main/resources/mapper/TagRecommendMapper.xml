@@ -88,6 +88,17 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<!-- 模糊查询关键字tag_group_name -->
+	<select id="fuzzySearch" parameterType="cn.rongcapital.mkt.po.TagRecommend" resultType="cn.rongcapital.mkt.po.TagRecommend">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<where>
+			<if test="tagGroupName != null and tagGroupName != ''">
+				<bind name="fuzzy" value="'%' + _parameter.tagGroupName + '%'" />
+				<![CDATA[ AND SUBSTRING_INDEX(tag_group_name,'-',-1) like #{fuzzy}]]>
+			</if>
+		</where>
+	</select>
 	
 </mapper>
