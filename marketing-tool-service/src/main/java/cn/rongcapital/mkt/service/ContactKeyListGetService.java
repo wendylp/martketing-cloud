@@ -7,6 +7,6 @@ import cn.rongcapital.mkt.vo.out.GetContactKeyListOutput;
  */
 public interface ContactKeyListGetService {
 
-    GetContactKeyListOutput getContactKeyList(Integer contactId);
+    GetContactKeyListOutput getContactKeyList(Long contactId);
 
 }
