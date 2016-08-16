@@ -41,4 +41,11 @@ public interface ContactTemplateDao extends BaseDao<ContactTemplate>{
 	 * @return
 	 */
 	int updatePageViewsById(ContactTemplate t);
+	
+	/***
+	 * 根据c_id删除
+	 * @param t
+	 * @return
+	 */
+	int deleteByCId(ContactTemplate t);
 }

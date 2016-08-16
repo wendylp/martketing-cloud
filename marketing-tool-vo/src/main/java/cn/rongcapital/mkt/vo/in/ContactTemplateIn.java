@@ -13,9 +13,9 @@ public class ContactTemplateIn {
 	@JsonProperty("user_token")
 	private String user_token;
 
-	@NotNull
+	
 	@JsonProperty("contact_id")
-	private int contact_id;
+	private long contact_id;
 
 	@NotEmpty
 	@JsonProperty("contact_name")
@@ -39,10 +39,10 @@ public class ContactTemplateIn {
 	public String getUser_token(){
 	return this.user_token;
 	}
-	public void setContact_id(int contact_id){
+	public void setContact_id(long contact_id){
 	this.contact_id = contact_id;
 	}
-	public int getContact_id(){
+	public long getContact_id(){
 	return this.contact_id;
 	}
 	public void setContact_name(String contact_name){
