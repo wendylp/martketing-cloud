@@ -53,7 +53,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
                             defaultContactTemplate1.setIsSelected(Integer.valueOf(contactTemplate1.getSelected()).byteValue());
                             defaultContactTemplate1.setIsChecked(contactTemplate1.getIschecked().byteValue());
                             defaultContactTemplate1.setIsRequired(contactTemplate1.getRequired().byteValue());
-                            defaultContactTemplate1.setStartIndex(contactTemplate1.getIndex());
+                            defaultContactTemplate1.setStartIndex(contactTemplate1.getField_index());
                             break;
                         }
                     }

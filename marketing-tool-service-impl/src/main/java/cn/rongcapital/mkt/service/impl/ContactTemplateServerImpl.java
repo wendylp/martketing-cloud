@@ -43,7 +43,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 		int chang_count = 0;
 		// 新增
 		if (ctIn.getContact_id() == 0) {
-			long cont_id = new Date().getTime();
+			long cont_id = (int) (System.currentTimeMillis() / 1000);
 			if (CollectionUtils.isNotEmpty(ctIn.getField_list())) {
 
 				for (Field_list field_list : ctIn.getField_list()) {
@@ -60,6 +60,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						param.setRequired(field_list.getRequired());
 						param.setIschecked(field_list.getIschecked());
 						param.setPageViews(0);
+						param.setField_index(field_list.getIndex());
 
 						// 插入
 						contactTemplateDao.insert(param);
@@ -103,6 +104,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 							param.setRequired(field_list.getRequired());
 							param.setIschecked(field_list.getIschecked());
 							param.setPageViews(0);
+							param.setField_index(field_list.getIndex());
 							param.setUpdateTime(new Date());
 							
 							// 插入
