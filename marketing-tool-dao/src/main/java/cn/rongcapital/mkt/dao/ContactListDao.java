@@ -13,8 +13,12 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ContactList;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 public interface ContactListDao extends BaseDao<ContactList>{
-	
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -34,4 +38,18 @@ public interface ContactListDao extends BaseDao<ContactList>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 获取不同的keyId的总数
+	 * @param contactList
+	 * @return list
+	 */
+	List<Integer> selectDistinctKeyidList(ContactList contactList);
+
+	/**
+	 * 获取今天的访问次数
+	 * @param paramMap
+	 * @return list
+	 */
+	Integer selectTodayCommitCount(Map<String, Date> paramMap);
 }

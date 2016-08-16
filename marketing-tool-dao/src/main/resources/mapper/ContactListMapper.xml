@@ -232,6 +232,15 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
-	
+	<select id="selectDistinctKeyidList" parameterType="cn.rongcapital.mkt.po.ContactList" resultType="java.lang.Integer">
+		SELECT distinct keyid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = #{status}
+	</select>
+
+	<select id="selectTodayCommitCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(id)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE create_time BETWEEN #{startTime} AND #{endTime}
+	</select>
 </mapper>

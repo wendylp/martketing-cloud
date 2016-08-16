@@ -378,6 +378,9 @@ public class MktApi {
 	
 	@Autowired
 	private ContactListQrcodeDownloadService contactListQrcodeDownloadService;
+
+	@Autowired
+	private ContactsCommitCountGetService contactsCommitCountGetService;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -2066,19 +2069,34 @@ public class MktApi {
 	}
 
 	/**
-	 * 统计联系人表单浏览次数
+	 * 获取创建联系人表单界面中，右侧的显示列表
 	 * @param userToken
 	 * @param var
 	 * @param contactId
 	 * @return
 	 */
-
 	@GET
 	@Path("mkt.contact.keylist.get")
 	public GetContactKeyListOutput getContactKeyList(
 			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String var,
-			@QueryParam("contact_id") Integer contactId) {
+			@NotEmpty @QueryParam("ver") String ver,
+			@QueryParam("contact_id") Long contactId) {
 		return contactKeyListGetService.getContactKeyList(contactId);
+	}
+
+	/**
+	 * 统计用户反馈数据
+	 * @param userToken
+	 * @param ver
+	 * @param contactId
+	 * @return
+	 */
+	@GET
+	@Path("mkt.contacts.commit.count ")
+	public ContactsCommitCountListOutput getContactsCommitCount(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver,
+			@NotEmpty @QueryParam("contact_id") Long contactId) {
+		return contactsCommitCountGetService.getContactsCommitCount(contactId);
 	}
 }

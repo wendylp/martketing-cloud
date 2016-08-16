@@ -31,7 +31,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
     private ContactTemplateDao contactTemplateDao;
 
     @Override
-    public GetContactKeyListOutput getContactKeyList(Integer contactId) {
+    public GetContactKeyListOutput getContactKeyList(Long contactId) {
 
         GetContactKeyListOutput getContactKeyListOutput = new GetContactKeyListOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO);
         DefaultContactTemplate defaultContactTemplate = new DefaultContactTemplate();
@@ -41,7 +41,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
         if(contactId != null){
             //将默认模板和现在数据库中已有的模板做对比返回给前端
             ContactTemplate contactTemplate = new ContactTemplate();
-            contactTemplate.setContactId(Long.valueOf(contactId));
+            contactTemplate.setContactId(contactId);
             List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
 
             //获取默认模板
