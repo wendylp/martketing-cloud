@@ -134,7 +134,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 				ApiConstant.INT_ZERO, null);
 
 		Map<String, Object> map_r = new HashMap<String, Object>();
-		map_r.put("id", param.getId());
+		map_r.put("id", id);
 		map_r.put("updatetime", DateUtil.getStringFromDate(param.getUpdateTime(), "yyyy-MM-dd HH:mm:ss"));
 
 		result.setTotal(update_count);
