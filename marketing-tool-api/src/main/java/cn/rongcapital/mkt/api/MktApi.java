@@ -354,6 +354,7 @@ public class MktApi {
 
 	@Autowired
 	private RegisterListService regListService;
+
 	@Autowired
 	private TagUpdateService tagService;	
 
@@ -362,6 +363,9 @@ public class MktApi {
 	
 	@Autowired
 	private ContactListPvServer contactListPvServer;
+
+	@Autowired
+	private ContactKeyListGetService contactKeyListGetService;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -1978,9 +1982,9 @@ public class MktApi {
 	 * @param userToken
 	 * @param var
 	 * @param contactId
-	 * @return 
+	 * @return
 	 */
-	
+
 	@GET
 	@Path("mkt.contact.list.pv")
 	public BaseOutput countPageViews(
@@ -1990,4 +1994,20 @@ public class MktApi {
 		return contactListPvServer.countPageViews(contactId);
 	}
 
+	/**
+	 * 统计联系人表单浏览次数
+	 * @param userToken
+	 * @param var
+	 * @param contactId
+	 * @return
+	 */
+
+	@GET
+	@Path("mkt.contact.keylist.get")
+	public GetContactKeyListOutput getContactKeyList(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String var,
+			@QueryParam("contact_id") Integer contactId) {
+		return contactKeyListGetService.getContactKeyList(contactId);
+	}
 }

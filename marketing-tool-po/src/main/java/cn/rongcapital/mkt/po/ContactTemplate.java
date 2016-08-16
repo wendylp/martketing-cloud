@@ -37,6 +37,10 @@ public class ContactTemplate extends BaseQuery {
 
     private Integer ischecked;
 
+    private Byte isRememberImportKey;
+
+    private Integer index;
+
     public Integer getId() {
         return id;
     }
@@ -163,5 +167,21 @@ public class ContactTemplate extends BaseQuery {
 
     public void setIschecked(Integer ischecked) {
         this.ischecked = ischecked;
+    }
+
+    public Byte getIsRememberImportKey() {
+        return isRememberImportKey;
+    }
+
+    public void setIsRememberImportKey(Byte isRememberImportKey) {
+        this.isRememberImportKey = isRememberImportKey;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 }

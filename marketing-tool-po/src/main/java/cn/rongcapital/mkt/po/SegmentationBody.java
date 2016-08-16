@@ -23,6 +23,8 @@ public class SegmentationBody extends BaseQuery {
 
     private Date updateTime;
 
+    private Integer groupSeq;
+
     public Integer getId() {
         return id;
     }
@@ -93,5 +95,13 @@ public class SegmentationBody extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getGroupSeq() {
+        return groupSeq;
+    }
+
+    public void setGroupSeq(Integer groupSeq) {
+        this.groupSeq = groupSeq;
     }
 }

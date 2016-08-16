@@ -334,6 +334,15 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
             Integer count = customTagMapDao.selectListCount(customTagMap);
             if(count > 0) continue;
             customTagMapDao.insert(customTagMap);
+            //该标签覆盖的人数加1
+            CustomTag customTag = new CustomTag();
+            customTag.setId(tagId);
+            List<CustomTag> customTagList = customTagDao.selectList(customTag);
+            if(!CollectionUtils.isEmpty(customTagList)){
+                customTag = customTagList.get(0);
+                customTag.setCoverAudienceCount(customTag.getCoverAudienceCount() + 1);
+                customTagDao.updateById(customTag);
+            }
         }
         customTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_INVALIDATE);
         customTagOriginalDataMapDao.updateById(customTagOriginalDataMap);
