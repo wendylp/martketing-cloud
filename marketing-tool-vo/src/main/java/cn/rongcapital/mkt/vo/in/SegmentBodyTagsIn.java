@@ -26,6 +26,9 @@ public class SegmentBodyTagsIn {
 	
 	@NotNull
 	private Integer exclude;
+	
+	@NotNull
+	private Integer groupSeq;
 
 	@JsonProperty("tag_id")
 	public Integer getTagId() {
@@ -55,6 +58,14 @@ public class SegmentBodyTagsIn {
 	@JsonProperty("exclude")
 	public void setExclude(Integer exclude) {
 		this.exclude = exclude;
+	}
+	@JsonProperty("group_seq")
+	public Integer getGroupSeq() {
+		return groupSeq;
+	}
+	@JsonProperty("group_seq")
+	public void setGroupSeq(Integer groupSeq) {
+		this.groupSeq = groupSeq;
 	}
 
 }
