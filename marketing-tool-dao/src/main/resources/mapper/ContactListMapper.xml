@@ -58,9 +58,9 @@
 		    	<if test="remark != null"><![CDATA[ AND remark = #{remark}]]></if>
 		    	<if test="commitTime != null"><![CDATA[ AND commit_time = #{commitTime}]]></if>
 		    	<if test="fillDevice != null"><![CDATA[ AND fill_device = #{fillDevice}]]></if>
-		    	<if test="oS != null"><![CDATA[ AND OS = #{oS}]]></if>
+		    	<if test="os != null"><![CDATA[ AND OS = #{os}]]></if>
 		    	<if test="brower != null"><![CDATA[ AND brower = #{brower}]]></if>
-		    	<if test="iP != null"><![CDATA[ AND IP = #{iP}]]></if>
+		    	<if test="ip != null"><![CDATA[ AND IP = #{ip}]]></if>
 		    	<if test="wxNickname != null"><![CDATA[ AND wx_nickname = #{wxNickname}]]></if>
 		    	<if test="wxGender != null"><![CDATA[ AND wx_gender = #{wxGender}]]></if>
 		    	<if test="wxOpenid != null"><![CDATA[ AND wx_openid = #{wxOpenid}]]></if>
@@ -121,9 +121,9 @@
 		    	<if test="remark != null"><![CDATA[remark = #{remark},]]></if>
 		    	<if test="commitTime != null"><![CDATA[commit_time = #{commitTime},]]></if>
 		    	<if test="fillDevice != null"><![CDATA[fill_device = #{fillDevice},]]></if>
-		    	<if test="oS != null"><![CDATA[OS = #{oS},]]></if>
+		    	<if test="os != null"><![CDATA[OS = #{os},]]></if>
 		    	<if test="brower != null"><![CDATA[brower = #{brower},]]></if>
-		    	<if test="iP != null"><![CDATA[IP = #{iP},]]></if>
+		    	<if test="ip != null"><![CDATA[IP = #{ip},]]></if>
 		    	<if test="wxNickname != null"><![CDATA[wx_nickname = #{wxNickname},]]></if>
 		    	<if test="wxGender != null"><![CDATA[wx_gender = #{wxGender},]]></if>
 		    	<if test="wxOpenid != null"><![CDATA[wx_openid = #{wxOpenid},]]></if>
@@ -181,9 +181,9 @@
 			  #{remark},
 			  #{commitTime},
 			  #{fillDevice},
-			  #{oS},
+			  #{os},
 			  #{brower},
-			  #{iP},
+			  #{ip},
 			  #{wxNickname},
 			  #{wxGender},
 			  #{wxOpenid},
