@@ -74,6 +74,7 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 						insertBody.setCreateTime(now);
 						insertBody.setGroupIndex(groupIndex);
 						insertBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+						insertBody.setGroupSeq(tag.getGroupSeq());
 						segmentationBodyDao.insert(insertBody);
 					}
 				}

@@ -123,6 +123,6 @@
 		LEFT JOIN taggroup tg
 		ON sb.tag_group_id = tg.id
 		WHERE sb.status = 0 and sb.head_id = #{headId}
-		ORDER BY group_index, tag_id ASC
+		ORDER BY group_index, group_seq,tag_id ASC
 	</select>
 </mapper>
