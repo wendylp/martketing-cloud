@@ -114,6 +114,12 @@ public class ContactList extends BaseQuery {
 
     private String wxCity;
 
+    private Integer contactTemplId;
+
+    private Integer age;
+
+    private String address;
+
     public Integer getId() {
         return id;
     }
@@ -474,11 +480,11 @@ public class ContactList extends BaseQuery {
         this.fillDevice = fillDevice == null ? null : fillDevice.trim();
     }
 
-    public String getos() {
+    public String getOs() {
         return os;
     }
 
-    public void setos(String os) {
+    public void setOs(String os) {
         this.os = os == null ? null : os.trim();
     }
 
@@ -490,11 +496,11 @@ public class ContactList extends BaseQuery {
         this.brower = brower == null ? null : brower.trim();
     }
 
-    public String getip() {
+    public String getIp() {
         return ip;
     }
 
-    public void setip(String ip) {
+    public void setIp(String ip) {
         this.ip = ip == null ? null : ip.trim();
     }
 
@@ -544,5 +550,29 @@ public class ContactList extends BaseQuery {
 
     public void setWxCity(String wxCity) {
         this.wxCity = wxCity == null ? null : wxCity.trim();
+    }
+
+    public Integer getContactTemplId() {
+        return contactTemplId;
+    }
+
+    public void setContactTemplId(Integer contactTemplId) {
+        this.contactTemplId = contactTemplId;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
     }
 }
