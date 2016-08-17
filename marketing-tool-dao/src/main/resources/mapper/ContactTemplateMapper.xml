@@ -58,6 +58,7 @@
 		    	<if test="ischecked != null"><![CDATA[ischecked = #{ischecked},]]></if>
 		    	<if test="isRememberImportKey != null"><![CDATA[is_remember_import_key = #{isRememberImportKey},]]></if>
 		    	<if test="fieldIndex != null"><![CDATA[field_index = #{fieldIndex}]]></if>
+		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
 		</set>
 	</sql>
 
@@ -86,7 +87,7 @@
 		]]>
 	</insert>
 	
-	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<!-- 返回插入的编号,在事务开启状态下有效  -->
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
 	<!-- 修改记录通过主键 -->
