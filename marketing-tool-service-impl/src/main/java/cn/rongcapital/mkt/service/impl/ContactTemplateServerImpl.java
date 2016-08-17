@@ -60,7 +60,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						param.setRequired(field_list.getRequired());
 						param.setIschecked(field_list.getIschecked());
 						param.setPageViews(0);
-						param.setField_index(field_list.getIndex());
+						param.setFieldIndex(field_list.getIndex());
 
 						// 插入
 						contactTemplateDao.insert(param);
@@ -104,7 +104,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 							param.setRequired(field_list.getRequired());
 							param.setIschecked(field_list.getIschecked());
 							param.setPageViews(0);
-							param.setField_index(field_list.getIndex());
+							param.setFieldIndex(field_list.getIndex());
 							param.setUpdateTime(new Date());
 							
 							// 插入
