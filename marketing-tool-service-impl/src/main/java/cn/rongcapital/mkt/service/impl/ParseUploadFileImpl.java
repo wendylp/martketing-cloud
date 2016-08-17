@@ -313,6 +313,7 @@ public class ParseUploadFileImpl {
      * @param: ArrayList<String> illegalColumns, Map<String, Object> codeIndexMap, Map<String, String> nameCodeMap, String[] uploadFileColumns
      */
     private int validateData(Map<String, Object> insertMap,int fileType, String bitmap) {
+        if(!bitmap.contains("1")) return ImportConstant.VALIDATE_KEYMAPPINGID_FAILED;
         char[] bitmapSequence = bitmap.toCharArray();
         Integer seqIndex = 1;
         for(char seqValue : bitmapSequence){

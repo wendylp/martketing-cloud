@@ -155,24 +155,24 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
         imgTextAsset.setPcPreviewUrl(materialContent.getPcUrl());
         imgTextAsset.setThumbReady(materialContent.getThumbReady().byteValue());
         if(wtuwen.getChannelType() != null){
-            switch (wtuwen.getChannelType()){
-                case 1:
+//            switch (wtuwen.getChannelType()){
+//                case 1:
                     imgTextAsset.setType(ApiConstant.WECHAT_IMGTEXT_TYPE);
                     imgTextAsset.setOwnerName(wtuwen.getPubName());
-                    break;
-                case 2:
-                    imgTextAsset.setType(H5ImgtextType.YI_QI_XIU.getType().byteValue());
-                    imgTextAsset.setOwnerName(H5ImgtextType.YI_QI_XIU.getOwnerName());
-                    break;
-                case 3:
-                    imgTextAsset.setType(H5ImgtextType.TU_ZHAN.getType().byteValue());
-                    imgTextAsset.setOwnerName(H5ImgtextType.TU_ZHAN.getOwnerName());
-                    break;
-                case 4:
-                    imgTextAsset.setType(H5ImgtextType.MAKA.getType().byteValue());
-                    imgTextAsset.setOwnerName(H5ImgtextType.MAKA.getOwnerName());
-                    break;
-            }
+//                    break;
+//                case 2:
+//                    imgTextAsset.setType(H5ImgtextType.YI_QI_XIU.getType().byteValue());
+//                    imgTextAsset.setOwnerName(H5ImgtextType.YI_QI_XIU.getOwnerName());
+//                    break;
+//                case 3:
+//                    imgTextAsset.setType(H5ImgtextType.TU_ZHAN.getType().byteValue());
+//                    imgTextAsset.setOwnerName(H5ImgtextType.TU_ZHAN.getOwnerName());
+//                    break;
+//                case 4:
+//                    imgTextAsset.setType(H5ImgtextType.MAKA.getType().byteValue());
+//                    imgTextAsset.setOwnerName(H5ImgtextType.MAKA.getOwnerName());
+//                    break;
+//            }
         }
     }
 
