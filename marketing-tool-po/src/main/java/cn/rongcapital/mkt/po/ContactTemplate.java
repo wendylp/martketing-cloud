@@ -2,9 +2,10 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ContactTemplate extends BaseQuery {
+public class ContactTemplate extends BaseQuery implements Serializable {
     private Integer id;
 
     private Long contactId;

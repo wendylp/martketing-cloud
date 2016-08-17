@@ -1,5 +1,9 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +22,7 @@ import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContactTemplateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.ContactTempDIn;
+import javassist.bytecode.stackmap.BasicBlock.Catch;
 
 @Service
 public class ContactTemplateServiceImpl implements ContactTemplateService {
@@ -34,17 +39,13 @@ public class ContactTemplateServiceImpl implements ContactTemplateService {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		if (CollectionUtils.isNotEmpty(contactTemplates) && contactTemplates.size() > 0) {
+			result.setTotal(contactTemplates.size());
 			for (ContactTemplate w : contactTemplates) {
-				ContactTemplate copyContactTemplate = new ContactTemplate();
+				ContactTemplate copyContactTemplate = (ContactTemplate) deepClone(w);
 				copyContactTemplate.setContactName("[幅本]" + w.getContactName());
-				copyContactTemplate.setContactTitle(w.getContactTitle());
-				copyContactTemplate.setContactDescript(w.getContactDescript());
-				copyContactTemplate.setFieldName(w.getFieldName());
-				copyContactTemplate.setFieldCode(w.getFieldCode());
-				copyContactTemplate.setSelected(w.getSelected());
-				copyContactTemplate.setQrcodeUrl(w.getQrcodeUrl());
-				copyContactTemplate.setPageViews(w.getPageViews());
-				copyContactTemplate.setKeyList(w.getKeyList());
+				copyContactTemplate.setCreateTime(null);
+				copyContactTemplate.setUpdateTime(null);
+				copyContactTemplate.setStatus(null);
 				contactTemplateDao.insert(copyContactTemplate);
 				List<ContactTemplate> copyContactTemplates = contactTemplateDao.selectList(copyContactTemplate);
 				if (CollectionUtils.isNotEmpty(copyContactTemplates) && copyContactTemplates.size() > 0) {
@@ -57,5 +58,20 @@ public class ContactTemplateServiceImpl implements ContactTemplateService {
 			}
 		}
 		return result;
+	}
+
+	private Object deepClone(Object obj) {
+		try {
+			ByteArrayOutputStream bo = new ByteArrayOutputStream();
+			ObjectOutputStream oo = new ObjectOutputStream(bo);
+			oo.writeObject(obj);// 从流里读出来
+			ByteArrayInputStream bi = new ByteArrayInputStream(bo.toByteArray());
+			ObjectInputStream oi = new ObjectInputStream(bi);
+			return (oi.readObject());
+		}
+
+		catch (Exception ex) {
+			return null;
+		}
 	}
 }
