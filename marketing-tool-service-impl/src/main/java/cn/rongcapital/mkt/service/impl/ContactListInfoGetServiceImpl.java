@@ -50,7 +50,7 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 					list.setField_code(c.getFieldCode());
 					list.setSelected(c.getSelected());
 					// list.setField_type(field_type);
-					// list.setIndex(c.getStartIndex());
+					list.setIndex(c.getFieldIndex().toString());
 					list.setRequired(c.getRequired());
 					list.setIschecked(c.getIschecked());
 					lists.add(list);
