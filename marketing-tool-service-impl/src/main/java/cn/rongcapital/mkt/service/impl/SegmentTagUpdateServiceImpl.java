@@ -15,6 +15,9 @@ import javax.ws.rs.core.SecurityContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +49,9 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 	@Autowired
 	CustomTagDao customTagDao;
 
+	@Autowired
+	private MongoTemplate mongoTemplate;
+	
 	@ReadWrite(type = ReadWriteType.WRITE)
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
@@ -59,6 +65,9 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		List<Integer> tagIdList = new ArrayList<Integer>();
 		CustomTag tagExample = null;
 		List<CustomTag> tag = null;
+        Query query = Query.query(Criteria.where("segmentation_head_id").is(headerId));
+		
+		long count = mongoTemplate.count(query, "segment");
 		// 标签名保存至自定义标签表
 		if (tagNames != null) {
 			for (String tagName : tagNames) {
@@ -70,6 +79,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 					CustomTag insertTag = new CustomTag();
 					insertTag.setName(tagName);
 					insertTag.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+					insertTag.setCoverAudienceCount((int)count);
 //					insertTag.setCreateTime(now);
 //					insertTag.setUpdateTime(now);
 					customTagDao.insert(insertTag);
@@ -100,6 +110,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		headUpdate.setTagIds(StringUtils.join(tagIdList, ","));
 //		headUpdate.setUpdateTime(now);
 		segmentationHeadDao.updateById(headUpdate);
+		
 		return baseOutput;
 	}
 
