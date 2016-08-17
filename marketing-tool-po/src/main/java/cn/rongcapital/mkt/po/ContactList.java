@@ -119,6 +119,7 @@ public class ContactList extends BaseQuery {
     private Integer age;
 
     private String address;
+    private Integer commitId;
 
     public Integer getId() {
         return id;
@@ -573,6 +574,15 @@ public class ContactList extends BaseQuery {
     }
 
     public void setAddress(String address) {
-        this.address = address == null ? null : address.trim();
+		this.address = address == null ? null : address.trim();
     }
+
+	public Integer getCommitId() {
+		return commitId;
+	}
+
+	public void setCommitId(Integer commitId) {
+		this.commitId = commitId;
+	}
+    
 }
