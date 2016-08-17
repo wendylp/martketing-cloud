@@ -17,8 +17,7 @@ import cn.rongcapital.mkt.dao.ContactTemplateDao;
 import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContactTemplateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.ContactTemplateIn;
-import cn.rongcapital.mkt.vo.in.ContactTemplateIn2;
+import cn.rongcapital.mkt.vo.in.ContactTempDIn;
 
 @Service
 public class ContactTemplateServiceImpl implements ContactTemplateService {
@@ -27,7 +26,7 @@ public class ContactTemplateServiceImpl implements ContactTemplateService {
 	ContactTemplateDao contactTemplateDao;
 
 	@Override
-	public BaseOutput copyContactTemplate(ContactTemplateIn body, SecurityContext securityContext) {
+	public BaseOutput copyContactTemplate(ContactTempDIn body, SecurityContext securityContext) {
 		ContactTemplate contactTemplate = new ContactTemplate();
 		contactTemplate.setContactId(body.getContact_id());
 		List<ContactTemplate> contactTemplates = contactTemplateDao.selectList(contactTemplate);

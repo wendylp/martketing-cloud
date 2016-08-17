@@ -2054,7 +2054,7 @@ public class MktApi {
 	 */
 	@POST
 	@Path("/mkt.contact.list.duplicate")
-	public BaseOutput copyContact(@Valid ContactTemplateIn body, @Context SecurityContext securityContext)
+	public BaseOutput copyContact(@Valid ContactTempDIn body, @Context SecurityContext securityContext)
 	{
 		return contactTemplateService.copyContactTemplate(body,securityContext);
 	}
