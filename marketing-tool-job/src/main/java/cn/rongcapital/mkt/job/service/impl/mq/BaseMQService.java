@@ -18,6 +18,7 @@ import javax.jms.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import cn.rongcapital.mkt.dao.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang3.StringUtils;
@@ -42,14 +43,6 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.HttpClientUtil;
 import cn.rongcapital.mkt.common.util.HttpUrl;
-import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
-import cn.rongcapital.mkt.dao.CampaignHeadDao;
-import cn.rongcapital.mkt.dao.CampaignSwitchDao;
-import cn.rongcapital.mkt.dao.SegmentationHeadDao;
-import cn.rongcapital.mkt.dao.TenementDao;
-import cn.rongcapital.mkt.dao.WechatGroupDao;
-import cn.rongcapital.mkt.dao.WechatMemberDao;
-import cn.rongcapital.mkt.dao.WechatPersonalUuidDao;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.CampaignSwitch;
@@ -96,6 +89,8 @@ public class BaseMQService {
 	private CampaignAudienceTargetDao campaignAudienceTargetDao;
 	@Autowired
 	private SegmentationHeadDao segmentationHeadDao;
+	@Autowired
+	private DataPartyDao dataPartyDao;
 	
 	public synchronized void initJndiEvironment() {
 		if(isJndiInited) {
@@ -212,12 +207,21 @@ public class BaseMQService {
 	
 	protected boolean isPubWechatFans(DataParty dp,String pubId,Byte subscribeTimeType) {
 		boolean isFans = false;
-		if(dp!= null && StringUtils.equals(dp.getPubId(), pubId)) {
-			if(null == subscribeTimeType) {//为空表示不限订阅时间
-				isFans = true;
-			} else {
-				String realSubscribeTime = dp.getSubscribeTime();
-				isFans = checkSubscriberTime(subscribeTimeType,realSubscribeTime);
+		if(dp==null) return isFans;
+		Integer mid = dp.getMid();
+		cn.rongcapital.mkt.po.DataParty dataParty = new cn.rongcapital.mkt.po.DataParty();
+		dataParty.setId(mid);
+		List<cn.rongcapital.mkt.po.DataParty> dataPartyList = dataPartyDao.selectList(dataParty);
+		logger.info("判断是否是微信粉丝");
+		if(!CollectionUtils.isEmpty(dataPartyList)){
+			dataParty = dataPartyList.get(0);
+			if(dataParty!= null && StringUtils.equals(dataParty.getWxmpId(), pubId)) {
+				if(null == subscribeTimeType) {//为空表示不限订阅时间
+					isFans = true;
+				} else {
+					String realSubscribeTime = dp.getSubscribeTime();
+					isFans = checkSubscriberTime(subscribeTimeType,realSubscribeTime);
+				}
 			}
 		}
 		return isFans;
