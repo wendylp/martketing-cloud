@@ -39,7 +39,7 @@ public class ContactTemplate extends BaseQuery {
 
     private Byte isRememberImportKey;
 
-    private Integer index;
+    private Integer fieldIndex;
 
     public Integer getId() {
         return id;
@@ -177,11 +177,11 @@ public class ContactTemplate extends BaseQuery {
         this.isRememberImportKey = isRememberImportKey;
     }
 
-    public Integer getIndex() {
-        return index;
+    public Integer getFieldIndex() {
+        return fieldIndex;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
+    public void setFieldIndex(Integer fieldIndex) {
+        this.fieldIndex = fieldIndex;
     }
 }
