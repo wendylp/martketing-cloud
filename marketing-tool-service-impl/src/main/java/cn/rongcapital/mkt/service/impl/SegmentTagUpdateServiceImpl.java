@@ -85,6 +85,14 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 					customTagDao.insert(insertTag);
 					tagIdList.add(insertTag.getId());
 				} else {
+					CustomTag insertTag = new CustomTag();
+					insertTag.setName(tagName);
+					insertTag.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+					insertTag.setCoverAudienceCount((int)count);
+					insertTag.setId(tag.get(0).getId());
+//					insertTag.setCreateTime(now);
+//					insertTag.setUpdateTime(now);
+					customTagDao.updateById(insertTag);
 					tagIdList.add(tag.get(0).getId());
 				}
 			}
