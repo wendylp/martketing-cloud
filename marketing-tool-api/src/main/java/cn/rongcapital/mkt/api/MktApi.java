@@ -382,6 +382,9 @@ public class MktApi {
 	@Autowired
 	private ContactsCommitCountGetService contactsCommitCountGetService;
 	
+	@Autowired
+	private ContactListInfoGetService contactListInfoGetService;
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
 	/**
@@ -2098,5 +2101,21 @@ public class MktApi {
 			@NotEmpty @QueryParam("ver") String ver,
 			@NotEmpty @QueryParam("contact_id") Long contactId) {
 		return contactsCommitCountGetService.getContactsCommitCount(contactId);
+	}
+	
+
+	/**
+	 * 根据表单编号查询出表单数据(表单预览、表单编辑).
+	 *
+	 * @param
+	 * @param ver
+	 * @author zhaoguoying
+	 */
+	@GET
+	@Path("/mkt.contact.list.info.get")
+	public BaseOutput getContactListInfo(@NotEmpty @QueryParam("user_token") String user_token,
+			@NotNull @QueryParam("contact_id")String contact_id)
+	{
+		return contactListInfoGetService.getContactListInfo(contact_id);
 	}
 }
