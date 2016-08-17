@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,monthly_consume as monthlyConsume,marital_status as maritalStatus,education as education,employment as employment,nationality as nationality,blood_type as bloodType,citizenship as citizenship,iq as iq,identify_no as identifyNo,driving_license as drivingLicense,email as email,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,bitmap as bitmap,keyid as keyid,wxmp_id as wxmpId,wx_code as wxCode,nickname as nickname,head_img_url as headImgUrl,subscribe_time as subscribeTime,language as language,unionid as unionid,remark as remark,commit_time as commitTime,fill_device as fillDevice,OS as oS,brower as brower,IP as iP,wx_nickname as wxNickname,wx_gender as wxGender,wx_openid as wxOpenid,wx_header_url as wxHeaderUrl,wx_country as wxCountry,wx_city as wxCity]]>
+		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,monthly_consume as monthlyConsume,marital_status as maritalStatus,education as education,employment as employment,nationality as nationality,blood_type as bloodType,citizenship as citizenship,iq as iq,identify_no as identifyNo,driving_license as drivingLicense,email as email,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,bitmap as bitmap,keyid as keyid,wxmp_id as wxmpId,wx_code as wxCode,nickname as nickname,head_img_url as headImgUrl,subscribe_time as subscribeTime,language as language,unionid as unionid,remark as remark,commit_time as commitTime,fill_device as fillDevice,OS as oS,brower as brower,IP as iP,wx_nickname as wxNickname,wx_gender as wxGender,wx_openid as wxOpenid,wx_header_url as wxHeaderUrl,wx_country as wxCountry,wx_city as wxCity,contact_templ_id as contactTemplId,age as age,address as address,commit_id as commitId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -58,15 +58,19 @@
 		    	<if test="remark != null"><![CDATA[ AND remark = #{remark}]]></if>
 		    	<if test="commitTime != null"><![CDATA[ AND commit_time = #{commitTime}]]></if>
 		    	<if test="fillDevice != null"><![CDATA[ AND fill_device = #{fillDevice}]]></if>
-		    	<if test="os != null"><![CDATA[ AND OS = #{os}]]></if>
+		    	<if test="oS != null"><![CDATA[ AND OS = #{oS}]]></if>
 		    	<if test="brower != null"><![CDATA[ AND brower = #{brower}]]></if>
-		    	<if test="ip != null"><![CDATA[ AND IP = #{ip}]]></if>
+		    	<if test="iP != null"><![CDATA[ AND IP = #{iP}]]></if>
 		    	<if test="wxNickname != null"><![CDATA[ AND wx_nickname = #{wxNickname}]]></if>
 		    	<if test="wxGender != null"><![CDATA[ AND wx_gender = #{wxGender}]]></if>
 		    	<if test="wxOpenid != null"><![CDATA[ AND wx_openid = #{wxOpenid}]]></if>
 		    	<if test="wxHeaderUrl != null"><![CDATA[ AND wx_header_url = #{wxHeaderUrl}]]></if>
 		    	<if test="wxCountry != null"><![CDATA[ AND wx_country = #{wxCountry}]]></if>
 		    	<if test="wxCity != null"><![CDATA[ AND wx_city = #{wxCity}]]></if>
+		    	<if test="contactTemplId != null"><![CDATA[ AND contact_templ_id = #{contactTemplId}]]></if>
+		    	<if test="age != null"><![CDATA[ AND age = #{age}]]></if>
+		    	<if test="address != null"><![CDATA[ AND address = #{address}]]></if>
+		    	<if test="commitId != null"><![CDATA[ AND commit_id = #{commitId}]]></if>
 		</where>
 	</sql>
 	
@@ -121,22 +125,26 @@
 		    	<if test="remark != null"><![CDATA[remark = #{remark},]]></if>
 		    	<if test="commitTime != null"><![CDATA[commit_time = #{commitTime},]]></if>
 		    	<if test="fillDevice != null"><![CDATA[fill_device = #{fillDevice},]]></if>
-		    	<if test="os != null"><![CDATA[OS = #{os},]]></if>
+		    	<if test="oS != null"><![CDATA[OS = #{oS},]]></if>
 		    	<if test="brower != null"><![CDATA[brower = #{brower},]]></if>
-		    	<if test="ip != null"><![CDATA[IP = #{ip},]]></if>
+		    	<if test="iP != null"><![CDATA[IP = #{iP},]]></if>
 		    	<if test="wxNickname != null"><![CDATA[wx_nickname = #{wxNickname},]]></if>
 		    	<if test="wxGender != null"><![CDATA[wx_gender = #{wxGender},]]></if>
 		    	<if test="wxOpenid != null"><![CDATA[wx_openid = #{wxOpenid},]]></if>
 		    	<if test="wxHeaderUrl != null"><![CDATA[wx_header_url = #{wxHeaderUrl},]]></if>
 		    	<if test="wxCountry != null"><![CDATA[wx_country = #{wxCountry},]]></if>
-		    	<if test="wxCity != null"><![CDATA[wx_city = #{wxCity}]]></if>
+		    	<if test="wxCity != null"><![CDATA[wx_city = #{wxCity},]]></if>
+		    	<if test="contactTemplId != null"><![CDATA[contact_templ_id = #{contactTemplId},]]></if>
+		    	<if test="age != null"><![CDATA[age = #{age},]]></if>
+		    	<if test="address != null"><![CDATA[address = #{address},]]></if>
+		    	<if test="commitId != null"><![CDATA[commit_id = #{commitId}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ContactList" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO contact_list (mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,iq,identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,bitmap,keyid,wxmp_id,wx_code,nickname,head_img_url,subscribe_time,language,unionid,remark,commit_time,fill_device,OS,brower,IP,wx_nickname,wx_gender,wx_openid,wx_header_url,wx_country,wx_city)
+			INSERT INTO contact_list (mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,iq,identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,bitmap,keyid,wxmp_id,wx_code,nickname,head_img_url,subscribe_time,language,unionid,remark,commit_time,fill_device,OS,brower,IP,wx_nickname,wx_gender,wx_openid,wx_header_url,wx_country,wx_city,contact_templ_id,age,address,commit_id)
 			VALUES
 			(
 			  #{mobile},
@@ -181,15 +189,19 @@
 			  #{remark},
 			  #{commitTime},
 			  #{fillDevice},
-			  #{os},
+			  #{oS},
 			  #{brower},
-			  #{ip},
+			  #{iP},
 			  #{wxNickname},
 			  #{wxGender},
 			  #{wxOpenid},
 			  #{wxHeaderUrl},
 			  #{wxCountry},
-			  #{wxCity}
+			  #{wxCity},
+			  #{contactTemplId},
+			  #{age},
+			  #{address},
+			  #{commit_id}
 			)
 		]]>
 	</insert>

@@ -385,6 +385,9 @@ public class MktApi {
 	@Autowired
 	private ContactListInfoGetService contactListInfoGetService;
 	
+	@Autowired
+	private ContactListUsedService contactListUsedService;
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
 	/**
@@ -2051,7 +2054,7 @@ public class MktApi {
 	 */
 	@POST
 	@Path("/mkt.contact.list.duplicate")
-	public BaseOutput copyContact(@Valid ContactTemplateIn body, @Context SecurityContext securityContext)
+	public BaseOutput copyContact(@Valid ContactTempDIn body, @Context SecurityContext securityContext)
 	{
 		return contactTemplateService.copyContactTemplate(body,securityContext);
 	}
@@ -2117,5 +2120,20 @@ public class MktApi {
 			@NotNull @QueryParam("contact_id")String contact_id)
 	{
 		return contactListInfoGetService.getContactListInfo(contact_id);
+	}
+	
+	/**
+	 * 启用联系人表单
+	 *
+	 * @param
+	 * @param ver
+	 * @author chengjincheng
+	 */
+	@POST
+	@Path("/mkt.contact.list.used")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput contactStatusUpdate(@Valid ContactStatusUpdateIn body) {
+		
+		return contactListUsedService.contactStatusUpdate(body);
 	}
 }

@@ -340,6 +340,7 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
             List<CustomTag> customTagList = customTagDao.selectList(customTag);
             if(!CollectionUtils.isEmpty(customTagList)){
                 customTag = customTagList.get(0);
+                if(customTag.getCoverAudienceCount() == null) customTag.setCoverAudienceCount(0);
                 customTag.setCoverAudienceCount(customTag.getCoverAudienceCount() + 1);
                 customTagDao.updateById(customTag);
             }
