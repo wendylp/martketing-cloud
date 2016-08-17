@@ -68,7 +68,6 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
     @Override
     public void task(Integer taskId) {
         //1.选取状态有效的tagOriginal表中的数据
-        if(true) return;
         CustomTagOriginalDataMap paramCustomTagOriginalDataMap = new CustomTagOriginalDataMap();
         paramCustomTagOriginalDataMap.setStatus(ApiConstant.CUSTOM_TAG_ORIGINAL_DATA_MAP_VALIDATE);
         paramCustomTagOriginalDataMap.setPageSize(Integer.MAX_VALUE);
