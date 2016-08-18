@@ -53,7 +53,6 @@ public class ContactListTagGetServiceImpl implements ContactListTagGetService {
 				{
 					for(CustomTagMap custom:customTagMaps)
 					{
-						List<CustomTag> customs = new ArrayList<>();
 						CustomTag customTag = new CustomTag();
 						customTag.setId(custom.getTagId());
 						List<CustomTag> customTags= customTagDao.selectList(customTag);
