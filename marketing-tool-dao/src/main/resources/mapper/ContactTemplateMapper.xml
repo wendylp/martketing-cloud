@@ -95,8 +95,8 @@
 		<![CDATA[UPDATE contact_template]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE 1 = 1]]>
-		<if test="id != null"><![CDATA[and id = #{id},]]></if>
-		<if test="contactId != null"><![CDATA[and contact_id = #{contactId}]]></if>
+		<if test="id != null"><![CDATA[ and id = #{id}]]></if>
+		<if test="contactId != null"><![CDATA[ and contact_id = #{contactId}]]></if>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
