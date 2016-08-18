@@ -109,4 +109,15 @@
 		where campaign_head_id = #{campaignHeadId}
 	</delete>
 	
+	<!-- 查询,通过条件 -->
+	<select id="selectImgAssetName" parameterType="cn.rongcapital.mkt.po.CampaignActionSendPub" resultType="cn.rongcapital.mkt.po.CampaignActionSendPub">
+		<![CDATA[SELECT i.name as name
+		FROM campaign_action_send_pub p,img_text_asset i
+		where p.img_text_asset_id = i.id]]>
+    	<if test="campaignHeadId != null"><![CDATA[ AND p.campaign_head_id = #{campaignHeadId}]]></if>
+    	<if test="status != null"><![CDATA[ AND p.status = #{status}]]></if>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+
+	</select>
+	
 </mapper>

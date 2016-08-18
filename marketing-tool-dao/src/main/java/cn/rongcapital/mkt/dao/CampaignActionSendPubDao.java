@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CampaignActionSendPub;
 
@@ -35,4 +37,7 @@ public interface CampaignActionSendPubDao extends BaseDao<CampaignActionSendPub>
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
 	int deleteByCampaignHeadId(int campaignHeadId);
+	
+	List<CampaignActionSendPub> selectImgAssetName(CampaignActionSendPub t);
+
 }
