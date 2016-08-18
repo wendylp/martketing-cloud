@@ -22,7 +22,6 @@ import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContactTemplateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.ContactTempDIn;
-import javassist.bytecode.stackmap.BasicBlock.Catch;
 
 @Service
 public class ContactTemplateServiceImpl implements ContactTemplateService {

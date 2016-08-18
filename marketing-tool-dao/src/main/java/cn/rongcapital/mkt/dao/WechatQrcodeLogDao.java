@@ -34,11 +34,4 @@ public interface WechatQrcodeLogDao extends BaseDao<WechatQrcodeLog>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
-	
-	/**
-	 * 
-	 * @param batchId
-	 * @return
-	 */
-	WechatQrcodeLog selectCountByBatchId(WechatQrcodeLog batchId);
 }

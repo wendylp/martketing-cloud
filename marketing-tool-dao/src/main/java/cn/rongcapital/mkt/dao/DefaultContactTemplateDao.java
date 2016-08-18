@@ -10,10 +10,7 @@
 
 package cn.rongcapital.mkt.dao;
 
-import java.util.List;
-
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.po.DefaultContactTemplate;
 
 public interface DefaultContactTemplateDao extends BaseDao<DefaultContactTemplate>{
@@ -37,14 +34,4 @@ public interface DefaultContactTemplateDao extends BaseDao<DefaultContactTemplat
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
-	
-	/**
-	 * 根据ContactTemplate的contactId选取必填项 且 在DefaultContactTemplate表中为主键 根据field_name 和field_code 关联
-	 * @param T
-	 * @return field_name field_code isSelected
-	 * @version: 0.0.1
-	 * @author shuiyangyang
-	 * @Data 2016.08.18
-	 */
-	List<DefaultContactTemplate> selectKeyByContactId(ContactTemplate T);
 }
