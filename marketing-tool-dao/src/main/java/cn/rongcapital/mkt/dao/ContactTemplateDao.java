@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ContactTemplate;
 
@@ -48,4 +50,20 @@ public interface ContactTemplateDao extends BaseDao<ContactTemplate>{
 	 * @return
 	 */
 	int deleteByCId(ContactTemplate t);
+	
+	
+	/***
+	 * 根据ContactTemplate的contactId选取必填项 且 在DefaultContactTemplate表中为主键 根据field_name 和field_code 关联
+	 * @param t
+	 * @return id
+	 */
+	List<ContactTemplate> selectIdByContactId(ContactTemplate t);
+	
+	/**
+	 * 基类自动生成的updateById有问题，这个和基类的功能相同
+	 * @param t
+	 * @return
+	 */
+	int updateById1(ContactTemplate t);
+ 	
 }
