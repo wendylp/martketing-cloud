@@ -129,7 +129,7 @@
 	<update id="deActivateTaskByCampaignHeadId" parameterType="int">
 		update 
 		task_schedule
-		set task_status = 1
+		set task_status = 1, status = 1
 		where campaign_head_id = #{campaignHeadId} and status = 0
 	</update>
 
