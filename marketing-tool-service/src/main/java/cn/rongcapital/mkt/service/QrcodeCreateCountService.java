@@ -6,5 +6,5 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  * Created by chengjincheng on 2016-8-15.
  */
 public interface QrcodeCreateCountService {
-	BaseOutput getCreateCount(Long batch_id);
+	BaseOutput getCreateCount(Integer batch_id);
 }
