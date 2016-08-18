@@ -75,9 +75,10 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 			TaskSchedule v = taskScheduleList.get(0);
 			logger.info("bbb: " + JSON.toJSONString(v));
 			if(v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID || 
-			   v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_INVALID ||
+			   v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_INVALID
 //			   (v.getStartTime() != null && v.getStartTime().after(Calendar.getInstance().getTime())) ||
-			   (v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime()))) {
+//			   (v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime()))
+					) {
 				isNeedCancel = true;
 			}
 		}
