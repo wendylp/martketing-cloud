@@ -126,6 +126,7 @@ public class ApiConstant {
     public static final String TASK_NAME_CAMPAIGN_DECISION_PROP_COMPARE = "campaignDecisionPropTask";
 	
 	public static final int DATA_PARTY_MD_TYPE_WECHAT = 8;//data_party表:微信类型数据
+	public static final int DATA_PARTY_MD_TYPE_POPULATION = 1; //data_party表:人口属性数据
 	/**
 	 * campaign_decision_wechat_forward表:forward_times
 	 */
