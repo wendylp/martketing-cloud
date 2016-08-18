@@ -390,6 +390,9 @@ public class MktApi {
 	
 	@Autowired
 	private QrcodeUsedCountService qrcodeUsedCountService;
+
+	@Autowired
+	private ContactListTagGetService contactListTagGetService;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -2057,7 +2060,7 @@ public class MktApi {
 	 */
 	@POST
 	@Path("/mkt.contact.list.duplicate")
-	public BaseOutput copyContact(@Valid ContactTemplateIn body, @Context SecurityContext securityContext)
+	public BaseOutput copyContact(@Valid ContactTempDIn body, @Context SecurityContext securityContext)
 	{
 		return contactTemplateService.copyContactTemplate(body,securityContext);
 	}
@@ -2151,6 +2154,21 @@ public class MktApi {
 	@Path("/mkt.weixin.qrcode.used.count")
 	public BaseOutput getListCount(@NotEmpty @QueryParam("wx_name") String wx_name)
 	{
-		return qrcodeUsedCountService.getListCount(wx_name);
+			return qrcodeUsedCountService.getListCount(wx_name);
+	}
+
+	/**
+	 * 根据表单编号查询出表单数据(表单预览、表单编辑).
+	 *
+	 * @param
+	 * @param ver
+	 * @author zhaoguoying
+	 */
+	@GET
+	@Path("/mkt.contact.list.tag.get")
+	public BaseOutput getContactListTag(@NotEmpty @QueryParam("user_token") String user_token,
+			@NotNull @QueryParam("contact_id")Integer contact_id)
+	{
+		return contactListTagGetService.getContactListTag(contact_id);
 	}
 }
