@@ -83,7 +83,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		contact.setContactTemplId(body.getContact_id());
 		contact.setStatus(2);
 		
-		contactDao.updateById(contact);
+		contactDao.updateByContactId(contact);
 
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
