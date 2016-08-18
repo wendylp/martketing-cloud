@@ -13,6 +13,8 @@ import cn.rongcapital.mkt.job.service.impl.mq.BaseMQService;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.SegmentationHead;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.spi.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -43,8 +45,11 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
 	private CampaignHeadDao campaignHeadDao;
 	@Autowired
 	private TaskScheduleDao taskScheduleDao;
-	
-	@Override
+
+    private static Logger logger = org.slf4j.LoggerFactory.getLogger(CampaignHeaderUpdateServiceImpl.class);
+
+
+    @Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public BaseOutput campaignHeaderUpdate(CampaignHeadUpdateIn body, SecurityContext securityContext) {
         Integer campaignHeadId = body.getCampaignId();
@@ -85,22 +90,27 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
     }
 
 	private void modifyReferData(CampaignHead existsCampaignHead, byte publishStatus, Byte triggerType) {
+        logger.info("CampaignHead Info: 开始修改相关数据");
         Integer campaignHeadId = existsCampaignHead.getId();
         Byte oldPublishStatus = existsCampaignHead.getPublishStatus();
         if (triggerType != null && triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL) {
             if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus) {
+                logger.info("CampaignHeader Info: 进入第一重处理逻辑" );
                 changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(1));
                 taskScheduleDao.activateTaskByCampaignHeadId(campaignHeadId);
             } else if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH == publishStatus ||
                                ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH == publishStatus) {
+                logger.info("CampaignHeader Info: 进入第二重处理逻辑" );
                 if (oldPublishStatus != null &&
                             oldPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH) {
                     changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(-1));
                 }
+                logger.info("CampaignHeader Info: 进入第三重处理逻辑" );
                 taskScheduleDao.deActivateTaskByCampaignHeadId(campaignHeadId);
             }
         } else {
 
+            logger.info("CampaignHeader Info:进入活动预约的处理逻辑");
             if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus) {
                 changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(1));
             }
@@ -110,6 +120,7 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
             taskScheduleT.setCampaignHeadId(campaignHeadId);
             taskScheduleT.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_TRUGGER_TIME);
             List<TaskSchedule> taskScheduleList = taskScheduleDao.selectList(taskScheduleT);
+            logger.info("CampaignHeader Info:选出的需要更新的任务总数" + taskScheduleList.size() );
             if(CollectionUtils.isNotEmpty(taskScheduleList)){
                 for(TaskSchedule taskSchedule : taskScheduleList) {
                     if(publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH){
@@ -163,12 +174,15 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
              if (publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH &&
                          (existsPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH &&
                                   existsPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH)) {
+                 logger.info("CampaingnHeaderUpdate Info:第一次验证拦住了数据");
                  return getResponse(existsPublishStatus);
              } else if (publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH &&
                     existsPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH) {
+                 logger.info("CampaignHeaderUpdate Info:第二次验证拦住了数据");
                  return getResponse(existsPublishStatus);
              } else if (publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH &&
                     existsPublishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
+                 logger.info("CampaignHeaderUpdate Info:第三次验证拦住了数据");
                  return getResponse(existsPublishStatus);
              }
 
@@ -177,6 +191,7 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
 								ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(),
 								ApiConstant.INT_ZERO,null);
 		 }
+        logger.info("CampaignHeaderUpdate Info:数据通过了验证");
 		 return ur;
 	 }
 
