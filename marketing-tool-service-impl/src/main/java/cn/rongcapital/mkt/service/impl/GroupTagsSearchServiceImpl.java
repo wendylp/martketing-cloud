@@ -56,7 +56,8 @@ public class GroupTagsSearchServiceImpl implements GroupTagsSearchService {
 				if (null != tagGroupMapList && tagGroupMapList.size() > 0) {
 					SerarchTagGroupTagsDataOut serarchTagGroupTagsDataOut = new SerarchTagGroupTagsDataOut();
 					serarchTagGroupTagsDataOut.setTagGroupId(tg.getId());
-					serarchTagGroupTagsDataOut.setTagGroupName(tg.getName());
+					String name = tg.getName();
+					serarchTagGroupTagsDataOut.setTagGroupName(name.substring(name.lastIndexOf('-') + 1));
 					for (TagGroupMap tgmp : tagGroupMapList) {
 						Tag tag = new Tag();
 						tag.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
