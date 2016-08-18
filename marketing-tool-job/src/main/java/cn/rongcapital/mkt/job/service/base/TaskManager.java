@@ -91,6 +91,7 @@ public class TaskManager {
         	}
         	for (TaskSchedule ts : taskScheduleList) {
         		if (StringUtils.isNotBlank(ts.getServiceName())) {
+                    logger.info(ts.getId() + "是任务" + ts.getServiceName() + "的taskStatus是:" + ts.getTaskStatus() + " ");
         			taskPropMapTmp.put(ts.getId().toString(), ts);
         			TaskManager.taskPropMap.put(ts.getId().toString(), ts);
         		}
