@@ -134,6 +134,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		CampaignBody campaignBodyQuery = new CampaignBody();
 		campaignBodyQuery.setHeadId(campaignHeadId);
 		campaignBodyQuery.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		campaignBodyQuery.setPageSize(Integer.MAX_VALUE);
 		List<CampaignBody> campaignBodyList = campaignBodyDao.selectList(campaignBodyQuery);
 		
 		if(CollectionUtils.isNotEmpty(campaignBodyList)) {
