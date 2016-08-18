@@ -6,6 +6,7 @@ import java.util.List;
 import javax.jms.MessageConsumer;
 
 import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,8 +70,10 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		taskScheduleT.setCampaignHeadId(campaignHeadId);
 		taskScheduleT.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_TRUGGER_TIME);
 		List<TaskSchedule> taskScheduleList = taskScheduleDao.selectList(taskScheduleT);
+		logger.info("aaa: " + JSON.toJSONString(taskScheduleT));
 		if(CollectionUtils.isNotEmpty(taskScheduleList)){ 
 			TaskSchedule v = taskScheduleList.get(0);
+			logger.info("bbb: " + JSON.toJSONString(v));
 			if(v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID || 
 			   v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_INVALID ||
 //			   (v.getStartTime() != null && v.getStartTime().after(Calendar.getInstance().getTime())) ||
