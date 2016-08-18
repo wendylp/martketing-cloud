@@ -79,6 +79,17 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
 	public CampaignProfileOut campaignProfileList(String userToken, String ver, Integer campaignHeadId) {
         CampaignProfileOut campaignProfileOut = new CampaignProfileOut(ApiConstant.INT_ZERO,
                 ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO);
+        
+		CampaignHead t = new CampaignHead();
+		t.setId(campaignHeadId);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		List<CampaignHead> list = campaignHeadDao.selectList(t);
+		
+		if(CollectionUtils.isNotEmpty(list)){
+			CampaignHead obj = list.get(0);
+			campaignProfileOut.setCampaignName(obj.getName());
+		}
+
         queryAndSetTime(campaignHeadId, campaignProfileOut);
         queryAndSetAudience(campaignHeadId, campaignProfileOut);
         queryAndSetContent(campaignHeadId, campaignProfileOut);
