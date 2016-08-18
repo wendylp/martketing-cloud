@@ -62,6 +62,7 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
+		if(true) return;
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		boolean isNeedCancel = false;//double check,查询数据库的任务表，看是否真的需要停止任务
 		TaskSchedule taskScheduleT = new TaskSchedule();
