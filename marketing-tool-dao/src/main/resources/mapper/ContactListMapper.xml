@@ -255,4 +255,14 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE create_time BETWEEN #{startTime} AND #{endTime}
 	</select>
+	
+	<update id="updateByContactId" parameterType="cn.rongcapital.mkt.po.ContactList">
+		<![CDATA[UPDATE contact_list]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE 1 = 1]]>
+		<if test="contactTemplId != null"><![CDATA[and contact_templ_id = #{contactTemplId}]]></if>
+		<if test="commitId != null"><![CDATA[and commit_id = #{commitId}]]></if>
+	</update>
+
+	
 </mapper>
