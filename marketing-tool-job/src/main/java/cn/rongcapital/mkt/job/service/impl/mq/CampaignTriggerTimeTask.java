@@ -70,11 +70,9 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		taskScheduleT.setCampaignHeadId(campaignHeadId);
 		taskScheduleT.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_TRUGGER_TIME);
 		List<TaskSchedule> taskScheduleList = taskScheduleDao.selectList(taskScheduleT);
-		logger.info("aaa: " + JSON.toJSONString(taskScheduleT));
-		if(CollectionUtils.isNotEmpty(taskScheduleList)){ 
+		if(CollectionUtils.isNotEmpty(taskScheduleList)){
 			TaskSchedule v = taskScheduleList.get(0);
-			logger.info("bbb: " + JSON.toJSONString(v));
-			if(v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID || 
+			if(v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID ||
 			   v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_INVALID
 //			   (v.getStartTime() != null && v.getStartTime().after(Calendar.getInstance().getTime())) ||
 //			   (v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime()))
