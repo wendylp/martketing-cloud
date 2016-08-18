@@ -89,8 +89,8 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_DECISION_TAG_RULE_MATCH_ONE = 1;//匹配其一
 	public static final byte CAMPAIGN_DECISION_TAG_RULE_MATCH_TWO_MORE = 2;//匹配二个及以上
 	
-	public static final long TASK_SCAN_INTERVAL_MILLS = 1000*30; //扫描任务表的时间间隔:毫秒
-	public static final long TASK_DO_INTERVAL_MILLS = 1000*30; //扫描执行列表的时间间隔:毫秒
+	public static final long TASK_SCAN_INTERVAL_MILLS = 1000*3; //扫描任务表的时间间隔:毫秒
+	public static final long TASK_DO_INTERVAL_MILLS = 1000*3; //扫描执行列表的时间间隔:毫秒
 	
 	public static final int SEGMENTATION_GROUP_MEMBER_MOST_COUNT = 3;//细分每个分组内标签的最多数量
 
