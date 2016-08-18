@@ -389,6 +389,9 @@ public class MktApi {
 	private ContactListUsedService contactListUsedService;
 	
 	@Autowired
+	private QrcodeUsedCountService qrcodeUsedCountService;
+
+	@Autowired
 	private ContactListTagGetService contactListTagGetService;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -2140,6 +2143,20 @@ public class MktApi {
 		return contactListUsedService.contactStatusUpdate(body);
 	}
 	
+	/**
+	 * 统计公众号已用二维码个数 
+	 *
+	 * @param
+	 * @param ver
+	 * @author chengjincheng
+	 */
+	@GET
+	@Path("/mkt.weixin.qrcode.used.count")
+	public BaseOutput getListCount(@NotEmpty @QueryParam("wx_name") String wx_name)
+	{
+			return qrcodeUsedCountService.getListCount(wx_name);
+	}
+
 	/**
 	 * 根据表单编号查询出表单数据(表单预览、表单编辑).
 	 *

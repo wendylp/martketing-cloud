@@ -86,6 +86,4 @@ public interface CustomTagDao extends BaseDao<CustomTag>{
      * @return: List<CustomTag>
      */
 	List<CustomTag> selectListUndeleteTags(CustomTag t);
-	
-	List<CustomTag> selectByNameFuzzy(CustomTag param);
 }

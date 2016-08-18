@@ -1,11 +1,9 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,43 +26,21 @@ public class WechatChanellUpdateServiceImpl implements WechatChanellUpdateServic
 	@Autowired
 	WechatChannelDao wechatChannelDao;
 
-	public BaseOutput wechatChannelUpdate(WechatChanellUpdateIn wechatChanellUpdateIn,
-			SecurityContext securityContext) {
+	public BaseOutput wechatChannelUpdate(WechatChanellUpdateIn wechatChanellUpdateIn, SecurityContext securityContext) {
 		WechatChannel wechatChannel = new WechatChannel();
 		wechatChannel.setId(wechatChanellUpdateIn.getChannelId());
-		Integer count = wechatChannelDao.selectListCount(wechatChannel);
+		wechatChannel.setChName(wechatChanellUpdateIn.getChName());
+		wechatChannel.setStatus(Integer.toString(wechatChanellUpdateIn.getStatus()));
+		wechatChannel.setUpdateTime(new Date());
+
+		wechatChannelDao.updateById(wechatChannel);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
-		if (count > 0) {
-			wechatChannel.setChName(wechatChanellUpdateIn.getChName());
-			wechatChannel.setStatus(Integer.toString(wechatChanellUpdateIn.getStatus()));
-			wechatChannel.setUpdateTime(new Date());
-			wechatChannelDao.updateById(wechatChannel);
-			result.setTotal(count);
-			WechatChanellUpdateOut wechatChanellUpdateOut = new WechatChanellUpdateOut();
-			wechatChanellUpdateOut.setId(wechatChanellUpdateIn.getChannelId());
-			wechatChanellUpdateOut
-					.setUpdatetime(DateUtil.getStringFromDate(wechatChannel.getUpdateTime(), "yyyy-MM-dd HH:mm:ss"));
-			result.getData().add(wechatChanellUpdateOut);
-		} else {
-			wechatChannel = new WechatChannel();
-			wechatChannel.setChName(wechatChanellUpdateIn.getChName());
-			List<WechatChannel> wechatChannels = wechatChannelDao.selectList(wechatChannel);
-			if (CollectionUtils.isEmpty(wechatChannels) || wechatChannels.size() == 0) {
-				wechatChannelDao.insert(wechatChannel);
-				wechatChannel.setId(null);
-				wechatChannels = wechatChannelDao.selectList(wechatChannel);
-				if (CollectionUtils.isNotEmpty(wechatChannels) || wechatChannels.size() > 0) {
-					wechatChannel.setId(wechatChannels.get(0).getId());
-					result.setTotal(1);
-					WechatChanellUpdateOut wechatChanellUpdateOut = new WechatChanellUpdateOut();
-					wechatChanellUpdateOut.setId(wechatChannels.get(0).getId());
-					wechatChanellUpdateOut.setUpdatetime(
-							DateUtil.getStringFromDate(wechatChannels.get(0).getUpdateTime(), "yyy-MM-dd HH:mm:ss"));
-					result.getData().add(wechatChanellUpdateOut);
-				}
-			}
-		}
+		WechatChanellUpdateOut wechatChanellUpdateOut = new WechatChanellUpdateOut();
+		wechatChanellUpdateOut.setId(wechatChanellUpdateIn.getChannelId());
+		wechatChanellUpdateOut
+				.setUpdatetime(DateUtil.getStringFromDate(wechatChannel.getUpdateTime(), "yyyy-MM-dd HH:mm:ss"));
+		result.getData().add(wechatChanellUpdateOut);
 		return result;
 	}
 }

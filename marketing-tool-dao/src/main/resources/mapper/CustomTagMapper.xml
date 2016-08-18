@@ -153,20 +153,5 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
-	
-		<!-- 根据关键字模糊查询系统最末级标签组列表 -->
-	<select id="selectByNameFuzzy" parameterType="cn.rongcapital.mkt.po.CustomTag"
-		resultType="cn.rongcapital.mkt.po.CustomTag">
-	    <![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST" />
-		<include refid="QUERY_FROM_TABLE" />
-		<where>
-			<if test="name != null and name != ''">
-				<bind name="fuzzy" value="'%' + _parameter.name + '%'" />
-				<![CDATA[ AND name like #{fuzzy}]]>
-			</if>
-		</where>
-		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
-	</select>
 
 </mapper>
