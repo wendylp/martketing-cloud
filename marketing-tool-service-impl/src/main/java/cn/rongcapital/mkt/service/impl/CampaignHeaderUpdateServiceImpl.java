@@ -126,14 +126,16 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
                     if(publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH){
                         logger.info("CampaignHeader Info: 设置task_status为0");
                         taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_VALID);
+                        taskSchedule.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
                     } else if(publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH ||
                                       publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH) {
-                        taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);
+                        taskSchedule.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
                     } else {
                         continue;
                     }
                     logger.info("CampaignHeader Info:当前任务的taskStatus: " + taskSchedule.getTaskStatus());
                     taskScheduleDao.updateById(taskSchedule);
+                    logger.info("CampaignHeader Info:执行跟新任务后的taskStatus: " );
                 }
             }
         }
