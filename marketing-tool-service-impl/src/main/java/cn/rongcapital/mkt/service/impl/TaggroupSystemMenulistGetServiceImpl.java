@@ -38,7 +38,7 @@ public class TaggroupSystemMenulistGetServiceImpl implements TaggroupSystemMenul
 
         Taggroup paramTaggroup = new Taggroup(0, 0);
         paramTaggroup.setParentGroupId(TOP_LEVEL);
-        paramTaggroup.setStatus((byte)0); // 如果状态是0显示，是1则不显示
+        paramTaggroup.setStatus((byte)1); // 如果状态是0则不显示，是1则显示
         List<Taggroup> topTaggroups = TaggroupDao.selectList(paramTaggroup);
         List<Map<String, Object>> resultList = new ArrayList<>();
 

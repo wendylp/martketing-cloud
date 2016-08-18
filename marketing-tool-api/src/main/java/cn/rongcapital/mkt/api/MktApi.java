@@ -389,13 +389,7 @@ public class MktApi {
 	private ContactListUsedService contactListUsedService;
 	
 	@Autowired
-	private QrcodeUsedCountService qrcodeUsedCountService;
-
-	@Autowired
 	private ContactListTagGetService contactListTagGetService;
-	
-	@Autowired
-	private ContactListKeyListService contactListKeyListService;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -2147,20 +2141,6 @@ public class MktApi {
 	}
 	
 	/**
-	 * 统计公众号已用二维码个数 
-	 *
-	 * @param
-	 * @param ver
-	 * @author chengjincheng
-	 */
-	@GET
-	@Path("/mkt.weixin.qrcode.used.count")
-	public BaseOutput getListCount(@NotEmpty @QueryParam("wx_name") String wx_name)
-	{
-			return qrcodeUsedCountService.getListCount(wx_name);
-	}
-
-	/**
 	 * 根据表单编号查询出表单数据(表单预览、表单编辑).
 	 *
 	 * @param
@@ -2173,24 +2153,5 @@ public class MktApi {
 			@NotNull @QueryParam("contact_id")Integer contact_id)
 	{
 		return contactListTagGetService.getContactListTag(contact_id);
-	}
-	
-	/**
-	 * 将联系人表单导入数据时选择的数据主键保存到数据库中
-	 * 
-	 * @param userToken
-	 * @param ver
-	 * @param contactId
-	 * @return
-	 * @author shuiyangyang
-	 */
-	@GET
-	@Path("mkt.contact.list.key.list")
-	public BaseOutput getContactListKeyList(
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver,
-			@NotEmpty @QueryParam("contact_id") String contactId) {
-		
-		return contactListKeyListService.getContactListKeyList(contactId);
 	}
 }

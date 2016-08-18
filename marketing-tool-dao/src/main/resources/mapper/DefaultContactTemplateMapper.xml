@@ -101,16 +101,5 @@
 	
 	<!-- 其它SQL语句 -->
 	
-	<!-- 详情见对应dao文件 -->
-	<select id="selectKeyByContactId" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="cn.rongcapital.mkt.po.DefaultContactTemplate">
-		<![CDATA[SELECT]]>
-		<![CDATA[dct.id as id, dct.field_name as fieldName, dct.field_code as fieldCode, dct.is_selected as isSelected]]>
-		<![CDATA[from default_contact_template dct, contact_template ct]]>
-		<![CDATA[where dct.field_name=ct.field_name ]]>
-		<![CDATA[and dct.field_code=ct.field_code ]]>
-		<![CDATA[and ct.contact_id = #{contactId} ]]>
-		<![CDATA[and ct.required=1]]>
-		<![CDATA[and dct.is_primary_key=1]]>
-	</select>
-		
+	
 </mapper>

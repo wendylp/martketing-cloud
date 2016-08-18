@@ -11,7 +11,6 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
-import cn.rongcapital.mkt.dao.DataPartyDao;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -42,8 +41,6 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private CampaignActionSendPubDao campaignActionSendPubDao;
-	@Autowired
-	private DataPartyDao dataPartyDao;
 	
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -113,16 +110,12 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 				//从mongo的主数据表中查询该条id对应的主数据详细信息
 				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
 				if(null!=dp && null !=dp.getMdType() &&
-				   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_POPULATION) {
+				   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
 					boolean isFans = isPubWechatFans(dp, pubId, null);
 					if(isFans) {
 //						String h5MobileUrl = getH5MobileUrl(campaignActionSendPub.getImgTextAssetId());
 //						segment.setH5MobileUrl(h5MobileUrl);
-						Integer mid = dp.getMid();
-						cn.rongcapital.mkt.po.DataParty dataParty = new cn.rongcapital.mkt.po.DataParty();
-						dataParty.setId(mid);
-						List<cn.rongcapital.mkt.po.DataParty> dataPartyList = dataPartyDao.selectList(dataParty);
-						fansWeixinIds.add(dataPartyList.get(0).getWxCode());
+						fansWeixinIds.add(dp.getFansOpenId());
 						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
                         dataPartyIds.add(dp.getMid());
 					} else {

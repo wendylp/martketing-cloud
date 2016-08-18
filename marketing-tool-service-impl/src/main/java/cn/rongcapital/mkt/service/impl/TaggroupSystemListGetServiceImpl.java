@@ -31,7 +31,7 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
         Taggroup paramTaggroup = new Taggroup(index, size);
 
         paramTaggroup.setParentGroupId(Long.valueOf(tagGroupId));
-        paramTaggroup.setStatus((byte)0);   // 如果状态为0则显示，如果状态为1则不显示
+        paramTaggroup.setStatus((byte)1);   // 如果状态为1则显示，如果状态为0则不显示
 
         int total = taggroupDao.selectListCount(paramTaggroup);
         baseOutput.setTotalCount(total);
