@@ -394,6 +394,9 @@ public class MktApi {
 	@Autowired
 	private ContactListTagGetService contactListTagGetService;
 	
+	@Autowired
+	private ContactListKeyListService contactListKeyListService;
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
 	/**
@@ -2170,5 +2173,25 @@ public class MktApi {
 			@NotNull @QueryParam("contact_id")Integer contact_id)
 	{
 		return contactListTagGetService.getContactListTag(contact_id);
+	}
+	
+	
+	/**
+	 * 将联系人表单导入数据时选择的数据主键保存到数据库中
+	 * 
+	 * @param userToken
+	 * @param ver
+	 * @param contactId
+	 * @return
+	 * @author shuiyangyang
+	 */
+	@GET
+	@Path("mkt.contact.list.key.list")
+	public BaseOutput getContactListKeyList(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver,
+			@NotEmpty @QueryParam("contact_id") String contactId) {
+		
+		return contactListKeyListService.getContactListKeyList(contactId);
 	}
 }
