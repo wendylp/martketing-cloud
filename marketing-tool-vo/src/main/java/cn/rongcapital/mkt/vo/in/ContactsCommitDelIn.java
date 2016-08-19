@@ -1,8 +1,11 @@
 package cn.rongcapital.mkt.vo.in;
 
+import javax.validation.constraints.NotNull;
+
 public class ContactsCommitDelIn {
+	@NotNull
 	private Integer contact_id;
-	
+	@NotNull
 	private Integer commit_id;
 
 	public Integer getContact_id() {
