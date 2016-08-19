@@ -59,4 +59,11 @@ public interface ContactListDao extends BaseDao<ContactList>{
 	 * @return
 	 */
 	int updateByContactId(ContactList t);
+	
+	/**
+	 * 
+	 * @param contactList
+	 * @return
+	 */
+	List<ContactList> selectListByContactIdAndCommitTime(ContactList contactList);
 }

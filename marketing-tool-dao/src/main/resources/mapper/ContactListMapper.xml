@@ -126,9 +126,9 @@
 		    	<if test="remark != null"><![CDATA[remark = #{remark},]]></if>
 		    	<if test="commitTime != null"><![CDATA[commit_time = #{commitTime},]]></if>
 		    	<if test="fillDevice != null"><![CDATA[fill_device = #{fillDevice},]]></if>
-		    	<if test="oS != null"><![CDATA[OS = #{oS},]]></if>
+		    	<if test="os != null"><![CDATA[OS = #{os},]]></if>
 		    	<if test="brower != null"><![CDATA[brower = #{brower},]]></if>
-		    	<if test="iP != null"><![CDATA[IP = #{iP},]]></if>
+		    	<if test="ip != null"><![CDATA[IP = #{ip},]]></if>
 		    	<if test="wxNickname != null"><![CDATA[wx_nickname = #{wxNickname},]]></if>
 		    	<if test="wxGender != null"><![CDATA[wx_gender = #{wxGender},]]></if>
 		    	<if test="wxOpenid != null"><![CDATA[wx_openid = #{wxOpenid},]]></if>
@@ -266,4 +266,11 @@
 		<if test="contactTemplId != null"><![CDATA[and contact_templ_id = #{contactTemplId}]]></if>
 		<if test="commitId != null"><![CDATA[and commit_id = #{commitId}]]></if>
 	</update>
+	
+	<select id="selectListByContactIdAndCommitTime" parameterType="cn.rongcapital.mkt.po.ContactList" resultType="cn.rongcapital.mkt.po.ContactList">
+		<![CDATA[select mobile as mobile,name as name,gender as gender,provice as provice,city as city,job as job, email as email,source as source,download_url as downloadUrl From contact_list]]>
+		<![CDATA[WHERE 1 = 1]]>
+		<if test="contactTemplId != null"><![CDATA[and contact_templ_id = #{contactTemplId}]]></if>
+		<if test="startTime != null and endTime != null"><![CDATA[and commit_time BETWEEN #{startTime} AND #{endTime}]]></if>
+	</select>
 </mapper>

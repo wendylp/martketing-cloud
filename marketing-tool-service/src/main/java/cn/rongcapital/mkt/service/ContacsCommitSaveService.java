@@ -12,9 +12,9 @@ import cn.rongcapital.mkt.vo.in.ContactsCommitSaveIn;
 public interface ContacsCommitSaveService {
 	BaseOutput contactsCommitSave(ContactsCommitSaveIn body);
 	
-	BaseOutput contactsCommitGet(Integer contact_id,Date commit_time);
+	BaseOutput contactsCommitGet(Integer contact_id,Integer commit_time);
 	
 	BaseOutput contactsCommitDel(ContactsCommitDelIn body);
 	
-	BaseOutput contactsCommitDownload(Integer contact_id,Date commit_time);
+	BaseOutput contactsCommitDownload(Integer contact_id,Integer commit_time);
 }
