@@ -397,6 +397,9 @@ public class MktApi {
 	@Autowired
 	private ContactListKeyListService contactListKeyListService;
 	
+	@Autowired
+	private WeixinQrcodeListService  weixinQrcodeListService;
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
 	/**
@@ -2193,5 +2196,49 @@ public class MktApi {
 			@NotEmpty @QueryParam("contact_id") String contactId) {
 		
 		return contactListKeyListService.getContactListKeyList(contactId);
+	}
+	
+	/**
+	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表 
+	 * 
+	 * @param userToken
+	 * @param ver
+	 * @param wxmpName
+	 * @param expirationTime
+	 * @param qrcodeStatus
+	 * @return
+	 * @author shuiyangyang
+	 */
+	@GET
+	@Path("mkt.weixin.qrcode.list")
+	public BaseOutput getWeixinQrcodeList(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver,
+			@QueryParam("wxmp_name") String wxmpName,
+			@QueryParam("expiration_time") Integer expirationTime,
+			@DefaultValue("0")@QueryParam("qrcode_status") Byte qrcodeStatus) {
+			
+		return weixinQrcodeListService.getWeixinQrcodeList(wxmpName, expirationTime, qrcodeStatus);
+	}
+	
+	/**
+	 * 
+	 * 根据输入的二维码名称模糊查询表wechat_qrcode
+	 * 
+	 * @param userToken
+	 * @param ver
+	 * @param qrcodeName
+	 * @return
+	 * @author xiaoshui
+	 */
+	@GET
+	@Path("mkt.weixin.qrcode.list.qrname")
+	public BaseOutput getWeixinQrcodeListQrname(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver,
+			@QueryParam("qrcode_name") String qrcodeName) {
+		
+		return weixinQrcodeListService.getWeixinQrcodeListQrname(qrcodeName);
+		
 	}
 }

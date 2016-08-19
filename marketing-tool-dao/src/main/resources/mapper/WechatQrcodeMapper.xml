@@ -118,5 +118,18 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<!-- 根据输入的二维码名称模糊查询表wechat_qrcode -->
+	<select id="fuzzySearchQrcodeName" parameterType="cn.rongcapital.mkt.po.WechatQrcode" resultType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<where>
+			<if test="qrcodeName != null and qrcodeName != ''">
+				<bind name="fuzzy" value="'%' + _parameter.qrcodeName + '%'" />
+				<![CDATA[ AND qrcode_name like #{fuzzy}]]>
+			</if>
+		</where>
+	</select>
+	
 	
 </mapper>
