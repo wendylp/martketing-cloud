@@ -13,25 +13,30 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatQrcodeLog;
 
-public interface WechatQrcodeLogDao extends BaseDao<WechatQrcodeLog>{
-	
-	//自定义扩展
+public interface WechatQrcodeLogDao extends BaseDao<WechatQrcodeLog> {
+
+	// 自定义扩展
 	/**
-	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
-	 * 查询对象list;
-	 * 自定义条件查询,只要不为NULL与空则为条件,属性值之间and连接
+	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展 查询对象list; 自定义条件查询,只要不为NULL与空则为条件,属性值之间and连接
+	 * 
 	 * @param paramMap
 	 * @return list
 	 */
-	//List<T> selectListBycustomMap(Map<String,Object> paramMap);
-	
-	//自定义扩展
+	// List<T> selectListBycustomMap(Map<String,Object> paramMap);
+
+	// 自定义扩展
 	/**
-	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
-	 * 查询对象总数
-	 * 自定义条件查询,只要不为NULL与空则为条件,属性值之间and连接
+	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展 查询对象总数 自定义条件查询,只要不为NULL与空则为条件,属性值之间and连接
+	 * 
 	 * @param paramMap
 	 * @return list
 	 */
-	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	// List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * 
+	 * @param batchId
+	 * @return
+	 */
+	WechatQrcodeLog selectCountByBatchId(WechatQrcodeLog batchId);
 }

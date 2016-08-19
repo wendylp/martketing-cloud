@@ -36,12 +36,12 @@ public class WechatChannelListServiceImpl implements WechatChannelListService {
 
 		if (CollectionUtils.isNotEmpty(wechatChannels)) {
 			result.setTotal(wechatChannels.size());
-			Map<String, Object> channelMap = new HashMap<String, Object>();
 			for (WechatChannel w : wechatChannels) {
-				channelMap.put("id", w.getId());
-				channelMap.put("name", w.getChName());
+				Map<String, Object> channelMap = new HashMap<String, Object>();
+				channelMap.put("channel_id", w.getId());
+				channelMap.put("channel_name", w.getChName());
+				result.getData().add(channelMap);
 			}
-			result.getData().add(channelMap);
 		}
 		return result;
 	}

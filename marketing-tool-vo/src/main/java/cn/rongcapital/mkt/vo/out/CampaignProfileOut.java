@@ -21,6 +21,9 @@ public class CampaignProfileOut extends BaseOutput {
 
     @JsonProperty("campaign_content")
     private List<CampaignContentOut> contentList;
+    
+    @JsonProperty("campaign_name")
+    private String campaignName;
 
 //    @JsonProperty("campaign_touch_population")
 //    private List<CampaignTouchPopulationOut> touchPopulationList;
@@ -63,7 +66,7 @@ public class CampaignProfileOut extends BaseOutput {
     public void setContentList(List<CampaignContentOut> contentList) {
         this.contentList = contentList;
     }
-
+    
 //    public List<CampaignTouchPopulationOut> getTouchPopulationList() {
 //        return touchPopulationList;
 //    }
@@ -72,7 +75,13 @@ public class CampaignProfileOut extends BaseOutput {
 //        this.touchPopulationList = touchPopulationList;
 //    }
 
-    public String getSendChannel() {
+    public String getCampaignName() {
+		return campaignName;
+	}
+	public void setCampaignName(String campaignName) {
+		this.campaignName = campaignName;
+	}
+	public String getSendChannel() {
         return sendChannel;
     }
 

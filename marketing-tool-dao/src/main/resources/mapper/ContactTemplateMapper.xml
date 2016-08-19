@@ -95,8 +95,8 @@
 		<![CDATA[UPDATE contact_template]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE 1 = 1]]>
-		<if test="id != null"><![CDATA[and id = #{id},]]></if>
-		<if test="contactId != null"><![CDATA[and contact_id = #{contactId}]]></if>
+		<if test="id != null"><![CDATA[ and id = #{id}]]></if>
+		<if test="contactId != null"><![CDATA[ and contact_id = #{contactId}]]></if>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
@@ -134,5 +134,25 @@
 	<delete id="deleteByCId" parameterType="cn.rongcapital.mkt.po.ContactTemplate">
 		<![CDATA[delete from  contact_template  where contact_id=#{contactId}]]>
 	</delete>
+	
+	<select id="selectIdByContactId" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[SELECT]]>
+		<![CDATA[ct.id as id]]>
+		<![CDATA[from default_contact_template dct, contact_template ct]]>
+		<![CDATA[where dct.field_name=ct.field_name ]]>
+		<![CDATA[and dct.field_code=ct.field_code ]]>
+		<![CDATA[and ct.contact_id = #{contactId} ]]>
+		<![CDATA[and ct.required=1]]>
+		<![CDATA[and dct.is_primary_key=1]]>
+	</select>
+	
+	
+	<!-- 修改记录通过主键  和基类功能相同  因基类方法updateById有问题   注：近在原方法后加字符 '1'-->
+	<update id="updateById1" parameterType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[UPDATE contact_template]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE 1 = 1]]>
+		<if test="id != null"><![CDATA[and id = #{id}]]></if>
+	</update>
 
 </mapper>

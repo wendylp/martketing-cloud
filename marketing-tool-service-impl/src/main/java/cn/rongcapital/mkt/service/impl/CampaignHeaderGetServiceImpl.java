@@ -48,7 +48,7 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
 
     @Autowired
     private WechatAssetDao wechatAssetDao;
-
+    
     @Override
 	public CampaignHeaderGetOut campaignHeaderGet(String userToken, String ver, int campaignHeadId) {
 		CampaignHead t = new CampaignHead();
@@ -79,6 +79,17 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
 	public CampaignProfileOut campaignProfileList(String userToken, String ver, Integer campaignHeadId) {
         CampaignProfileOut campaignProfileOut = new CampaignProfileOut(ApiConstant.INT_ZERO,
                 ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO);
+        
+		CampaignHead t = new CampaignHead();
+		t.setId(campaignHeadId);
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		List<CampaignHead> list = campaignHeadDao.selectList(t);
+		
+		if(CollectionUtils.isNotEmpty(list)){
+			CampaignHead obj = list.get(0);
+			campaignProfileOut.setCampaignName(obj.getName());
+		}
+
         queryAndSetTime(campaignHeadId, campaignProfileOut);
         queryAndSetAudience(campaignHeadId, campaignProfileOut);
         queryAndSetContent(campaignHeadId, campaignProfileOut);
@@ -193,7 +204,7 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
         if (!CollectionUtils.isEmpty(audienceTargetList)) {
             Map<String, Long> populationCountMap = new HashMap<>();
             for (CampaignAudienceTarget tempCampaignAudienceTarget : audienceTargetList) {
-                String audienceName = tempCampaignAudienceTarget.getName();
+                String audienceName = tempCampaignAudienceTarget.getSegmentationName();
                 Integer segmentHeadId = tempCampaignAudienceTarget.getSegmentationId();
                 Long populationCount = populationCountMap.get(segmentHeadId.toString());
                 if (populationCount == null) {
@@ -219,9 +230,10 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
         campaignActionSendPub.setCampaignHeadId(campaignHeadId);
         campaignActionSendPub.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         List<CampaignActionSendPub> campaignActionSendPubList =
-                campaignActionSendPubDao.selectList(campaignActionSendPub);
+                campaignActionSendPubDao.selectImgAssetName(campaignActionSendPub);
         if (!CollectionUtils.isEmpty(campaignActionSendPubList)) {
             for (CampaignActionSendPub sendPub : campaignActionSendPubList) {
+
                 CampaignContentOut contentOut = new CampaignContentOut();
                 contentOut.setContentType(ApiConstant.CAMPAIGN_CONTENT_WECHAT);
                 contentOut.setContentName(sendPub.getName());

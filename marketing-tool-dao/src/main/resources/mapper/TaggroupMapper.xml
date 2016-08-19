@@ -105,9 +105,10 @@
 		<where>
 			<if test="name != null and name != ''">
 				<bind name="fuzzy" value="'%' + _parameter.name + '%'" />
-				<![CDATA[ AND name like #{fuzzy}]]>
+				<![CDATA[ AND substring(substring(name,LOCATE('-',name)+1),LOCATE('-',name)) like #{fuzzy}]]>
 			</if>
 			<if test="level != null"><![CDATA[ AND level = #{level}]]></if>
+			<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		</where>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
 	</select>
@@ -154,7 +155,7 @@
 		<![CDATA[SELECT]]>
 		count(id)
 		<include refid="QUERY_FROM_TABLE" />
-		<![CDATA[WHERE level = 2 AND status = 1]]>
+		<![CDATA[WHERE level = 2 AND status = 0]]>
 
 	</select>
 
