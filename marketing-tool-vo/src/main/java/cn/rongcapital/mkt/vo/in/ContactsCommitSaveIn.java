@@ -3,7 +3,10 @@ package cn.rongcapital.mkt.vo.in;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 public class ContactsCommitSaveIn {
+	@NotNull
 	private Integer contact_templ_id;
 	
 	private Integer age;

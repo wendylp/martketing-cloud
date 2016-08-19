@@ -85,5 +85,12 @@ public interface CustomTagMapDao extends BaseDao<CustomTagMap>{
      * @return List
      */
     List<CustomTagMap> selectCustomTagMapByTagNameandMapId(Map<String, Object> paramMap);
+    
+    /**
+     * @功能简述 : 根据tagId逻辑删除细分关联的人群
+     * @param tagId
+     * @author zhuxuelong
+     */
+	void batchDeleteUseTagId(Integer tagId);
 	
 }

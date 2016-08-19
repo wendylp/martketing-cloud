@@ -554,7 +554,7 @@
 		        FROM
 		            custom_tag_map
 		        WHERE
-		            tag_id = #{tagId});
+		            tag_id = #{tagId} and type =2 and status =0);
 	</select>
 
 	<insert id="batchInsertWechatDatas" parameterType="java.util.List">

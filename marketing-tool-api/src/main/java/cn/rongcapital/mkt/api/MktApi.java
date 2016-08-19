@@ -397,6 +397,18 @@ public class MktApi {
 	@Autowired
 	private ContactListKeyListService contactListKeyListService;
 	
+	@Autowired
+	private WeixinQrcodeListService  weixinQrcodeListService;
+	
+	@Autowired
+	private QrcodeCreateCountService qrcodeCreateCountService;
+	
+	@Autowired
+	private ContacsCommitSaveService contactsCommitSaveService;
+	
+	@Autowired
+	private ContactListTagService contactListTagService;
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
 	/**
@@ -2193,5 +2205,137 @@ public class MktApi {
 			@NotEmpty @QueryParam("contact_id") String contactId) {
 		
 		return contactListKeyListService.getContactListKeyList(contactId);
+	}
+	
+	/**
+	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表 
+	 * 
+	 * @param userToken
+	 * @param ver
+	 * @param wxmpName
+	 * @param expirationTime
+	 * @param qrcodeStatus
+	 * @return
+	 * @author shuiyangyang
+	 */
+	@GET
+	@Path("mkt.weixin.qrcode.list")
+	public BaseOutput getWeixinQrcodeList(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver,
+			@QueryParam("wxmp_name") String wxmpName,
+			@QueryParam("expiration_time") Integer expirationTime,
+			@DefaultValue("0")@QueryParam("qrcode_status") Byte qrcodeStatus) {
+			
+		return weixinQrcodeListService.getWeixinQrcodeList(wxmpName, expirationTime, qrcodeStatus);
+	}
+	
+	/**
+	 * 
+	 * 根据输入的二维码名称模糊查询表wechat_qrcode
+	 * 
+	 * @param userToken
+	 * @param ver
+	 * @param qrcodeName
+	 * @return
+	 * @author xiaoshui
+	 */
+	@GET
+	@Path("mkt.weixin.qrcode.list.qrname")
+	public BaseOutput getWeixinQrcodeListQrname(
+			@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver,
+			@QueryParam("qrcode_name") String qrcodeName) {
+		
+		return weixinQrcodeListService.getWeixinQrcodeListQrname(qrcodeName);
+		
+	}
+	
+	/**
+	 * 批量生成二维码时，统计成功和失败个数
+	 *
+	 * @param
+	 * @param ver
+	 * @author chengjincheng
+	 */
+	@GET
+	@Path("/mkt.weixin.qrcode.create.count")
+	public BaseOutput getCreateCount(@NotNull @QueryParam("batch_id") Integer batch_id)
+	{
+		return qrcodeCreateCountService.getCreateCount(batch_id);
+	}
+	
+	/**
+	 * 保存用户反馈数据 
+	 *
+	 * @param
+	 * @param ver
+	 * @author chengjincheng
+	 */
+	@POST
+	@Path("/mkt.contacts.commit.save")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput contactsCommitSave(@Valid ContactsCommitSaveIn body) {
+		
+		return contactsCommitSaveService.contactsCommitSave(body);
+	}
+
+	/**
+	 * 保存用户反馈数据 
+	 *
+	 * @param
+	 * @param ver
+	 * @author chengjincheng
+	 */
+	@POST
+	@Path("/mkt.contacts.commit.del")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput contactsCommitDel(@Valid ContactsCommitDelIn body) {
+		
+		return contactsCommitSaveService.contactsCommitDel(body);
+	}
+	/**
+	 * 查询用户反馈数据 
+	 *
+	 * @param
+	 * @param ver
+	 * @author chengjincheng
+	 */
+	@GET
+	@Path("/mkt.contacts.commit.get")
+	public BaseOutput  contactsCommitGet(@NotNull @QueryParam("contact_id") Integer contact_id, 
+			@NotNull @QueryParam("commit_time") Integer commit_time) 
+	{
+		return contactsCommitSaveService.contactsCommitGet(contact_id ,commit_time);
+	}
+
+	/**
+	 * 下载用户反馈详情 
+	 *
+	 * @param
+	 * @param ver
+	 * @author chengjincheng
+	 */
+	@GET
+	@Path("/mkt.contacts.commit.download")
+	public BaseOutput  contactsCommitDownload(@NotNull @QueryParam("contact_id") Integer contact_id, 
+			@NotNull @QueryParam("commit_time") Integer commit_time) 
+	{
+		return contactsCommitSaveService.contactsCommitDownload(contact_id ,commit_time);
+	}
+	
+	/**
+	 * 联系人表单打标签 
+	 *
+	 * @param
+	 * @param ver
+	 * @author chengjincheng
+	 */
+	@POST
+	@Path("/mkt.contact.list.tag")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput contactListTag(@Valid ContactListTagIn body) {
+		
+		return contactListTagService.contactListTag(body);
 	}
 }

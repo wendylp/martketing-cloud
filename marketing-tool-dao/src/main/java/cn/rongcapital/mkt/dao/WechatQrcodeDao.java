@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatQrcode;
 
@@ -34,4 +36,12 @@ public interface WechatQrcodeDao extends BaseDao<WechatQrcode>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * 根据输入的二维码名称模糊查询表wechat_qrcode
+	 * @param t
+	 * @return
+	 */
+	List<WechatQrcode> fuzzySearchQrcodeName(WechatQrcode t);
+	
 }

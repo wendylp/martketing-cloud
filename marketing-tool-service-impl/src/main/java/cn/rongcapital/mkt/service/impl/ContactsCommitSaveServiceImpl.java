@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,27 +50,53 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
-	public BaseOutput contactsCommitGet(Integer contact_id, Date commit_time) {
+	public BaseOutput contactsCommitGet(Integer contact_id, Integer commit_time) {
 		ContactList contact = new ContactList();
 		contact.setContactTemplId(contact_id);
-		contact.setCommitTime(commit_time);
+
+		Date startTime = null;
+		Date endTime = null;
+		Calendar canlendar = Calendar.getInstance();
+		switch (commit_time) {
+		case 1:
+			startTime = DateUtil.getDateFromString(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd");
+			endTime = new Date();
+			break;
+		case 2:
+			canlendar.add(Calendar.WEEK_OF_YEAR, -1);
+			startTime = canlendar.getTime();
+			endTime = new Date();
+			break;
+		case 3:
+			canlendar.add(Calendar.MONTH, -1);
+			startTime = canlendar.getTime();
+			endTime = new Date();
+			break;
+		case 4:
+			canlendar.add(Calendar.MONTH, -3);
+			startTime = canlendar.getTime();
+			endTime = new Date();
+			break;
+		}
+		contact.setStartTime(startTime);
+		contact.setEndTime(endTime);
 
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
-		List<ContactList> list = contactDao.selectList(contact);
-		if (CollectionUtils.isEmpty(list)) {
+		List<ContactList> list = contactDao.selectListByContactIdAndCommitTime(contact);
+		if (!CollectionUtils.isEmpty(list)) {
 			result.setTotal(list.size());
 			for (ContactList item : list) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("name", item.getName());
-				map.put("mobile", item.getName());
-				map.put("email", item.getName());
-				map.put("gender", item.getName());
-				map.put("provice", item.getName());
-				map.put("city", item.getName());
-				map.put("job", item.getName());
-				map.put("source", item.getName());
+				map.put("mobile", item.getMobile());
+				map.put("email", item.getEmail());
+				map.put("gender", item.getGender());
+				map.put("provice", item.getProvice());
+				map.put("city", item.getCity());
+				map.put("job", item.getJob());
+				map.put("source", item.getSource());
 				result.getData().add(map);
 			}
 		}
@@ -101,20 +128,46 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
-	public BaseOutput contactsCommitDownload(Integer contact_id, Date commit_time) {
+	public BaseOutput contactsCommitDownload(Integer contact_id, Integer commit_time) {
 		ContactList contact = new ContactList();
 		contact.setContactTemplId(contact_id);
-		contact.setCommitTime(commit_time);
+
+		Date startTime = null;
+		Date endTime = null;
+		Calendar canlendar = Calendar.getInstance();
+		switch (commit_time) {
+		case 1:
+			startTime = DateUtil.getDateFromString(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd");
+			endTime = new Date();
+			break;
+		case 2:
+			canlendar.add(Calendar.WEEK_OF_YEAR, -1);
+			startTime = canlendar.getTime();
+			endTime = new Date();
+			break;
+		case 3:
+			canlendar.add(Calendar.MONTH, -1);
+			startTime = canlendar.getTime();
+			endTime = new Date();
+			break;
+		case 4:
+			canlendar.add(Calendar.MONTH, -3);
+			startTime = canlendar.getTime();
+			endTime = new Date();
+			break;
+		}
+		contact.setStartTime(startTime);
+		contact.setEndTime(endTime);
 
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
-		List<ContactList> list = contactDao.selectList(contact);
-		if (CollectionUtils.isEmpty(list)) {
+		List<ContactList> list = contactDao.selectListByContactIdAndCommitTime(contact);
+		if (!CollectionUtils.isEmpty(list)) {
 			result.setTotal(list.size());
 			for (ContactList item : list) {
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("download_url", "");
+				map.put("download_url", item.getDownloadUrl());
 				result.getData().add(map);
 			}
 		}

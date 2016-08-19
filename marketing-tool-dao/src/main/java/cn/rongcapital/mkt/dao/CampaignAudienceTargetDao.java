@@ -44,4 +44,11 @@ public interface CampaignAudienceTargetDao extends BaseDao<CampaignAudienceTarge
 	 * @return list
 	 */
 	List<String> selectItemIdList(CampaignAudienceTarget campaignAudienceTarget);
+	
+	/**
+	 * 返回没有重复的SegmentationName
+	 * @param t
+	 * @return
+	 */
+	List<CampaignAudienceTarget> selectSegmentationName(CampaignAudienceTarget t);
 }
