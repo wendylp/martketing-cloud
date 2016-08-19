@@ -132,9 +132,25 @@ public class GetPubFansListServiceImpl implements TaskService {
                 }else{
                     paramFan.put("sex",h5PubFan.getSex());
                 }
-                paramFan.put("country",h5PubFan.getCountry());
-                paramFan.put("province",h5PubFan.getProvince());
-                paramFan.put("city",h5PubFan.getCity());
+                if(h5PubFan.getCountry() == null || "中国".equals(h5PubFan.getCountry())){
+                    paramFan.put("country","中国");
+                    if(h5PubFan.getProvince() == null || "槟榔屿".equals(h5PubFan.getProvince())){
+                        paramFan.put("province","北京");
+                        paramFan.put("city","北京");
+                    }else {
+                        paramFan.put("province",h5PubFan.getProvince());
+                    }
+                    if(h5PubFan.getCity() == null || "北海".equals(h5PubFan.getCity())){
+                        paramFan.put("province","北京");
+                        paramFan.put("city","北京");
+                    }else{
+                        paramFan.put("city",h5PubFan.getCity());
+                    }
+                }else {
+                    paramFan.put("country",h5PubFan.getCountry());
+                }
+//                paramFan.put("province",h5PubFan.getProvince());
+//                paramFan.put("city",h5PubFan.getCity());
                 paramFan.put("county",h5PubFan.getCounty());
                 paramFan.put("birthday",h5PubFan.getBirthday());
                 paramFan.put("subscribe_yn",h5PubFan.getSubscribeYn());
