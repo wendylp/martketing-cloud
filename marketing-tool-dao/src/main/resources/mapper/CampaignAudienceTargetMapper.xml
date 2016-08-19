@@ -117,4 +117,12 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
+	
+	<!-- 返回没有重复的SegmentationName -->
+	<select id="selectSegmentationName" parameterType="cn.rongcapital.mkt.po.CampaignAudienceTarget" resultType="cn.rongcapital.mkt.po.CampaignAudienceTarget">
+		<![CDATA[SELECT distinct segmentation_name as segmentationName]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
 </mapper>

@@ -95,7 +95,7 @@ public class CampaignProgressStatusListServiceImpl implements
 				CampaignAudienceTarget cat = new CampaignAudienceTarget();
 				cat.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				cat.setCampaignHeadId(c.getId());
-				List<CampaignAudienceTarget> catList = campaignAudienceTargetDao.selectList(cat);
+				List<CampaignAudienceTarget> catList = campaignAudienceTargetDao.selectSegmentationName(cat);
 				if(CollectionUtils.isNotEmpty(catList)){
 					List<String> audienceNameList = new ArrayList<String>();
 					for(CampaignAudienceTarget campaignAudienceTarget:catList) {
