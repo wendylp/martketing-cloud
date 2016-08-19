@@ -93,9 +93,10 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	<select id="selectCountByBatchId" parameterType="cn.rongcapital.mkt.po.WechatQrcode" resultType="cn.rongcapital.mkt.po.WechatQrcode">
+	<select id="selectCountByBatchId" parameterType="cn.rongcapital.mkt.po.WechatQrcodeLog" resultType="cn.rongcapital.mkt.po.WechatQrcodeLog">
 		<![CDATA[SELECT total_rows as totalRows,success from wechat_qrcode_log]]>
-		<![CDATA[WHERE batch_id = #{batchId} limit 1]]>
+		<![CDATA[WHERE batch_id = #{batchId}]]>
+		<![CDATA[limit 1]]>
 	</select>
 	
 </mapper>
