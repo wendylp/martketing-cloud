@@ -30,6 +30,7 @@ import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.CustomTagMap;
 import cn.rongcapital.mkt.po.SegmentationHead;
+import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
@@ -51,23 +52,34 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
+
 	@ReadWrite(type = ReadWriteType.WRITE)
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public BaseOutput updateSegmentTag(SegmentTagUpdateIn body,
-			SecurityContext securityContext) {
-		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
-				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+	public BaseOutput updateSegmentTag(SegmentTagUpdateIn body, SecurityContext securityContext) {
+		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
 		Integer headerId = Integer.valueOf(body.getSegmentHeadId());
 		List<String> tagNames = body.getTagNames();
-//		Date now = new Date();
-		List<Integer> tagIdList = new ArrayList<Integer>();
+		// Date now = new Date();
+
 		CustomTag tagExample = null;
 		List<CustomTag> tag = null;
-        Query query = Query.query(Criteria.where("segmentation_head_id").is(headerId));
-		
-		long count = mongoTemplate.count(query, "segment");
+
+		List<Segment> segmentList = mongoTemplate.find(new Query(new Criteria("segmentation_head_id").is(headerId)),
+				Segment.class);
+
+		List<Integer> personIdList = new ArrayList<Integer>();
+
+		if (CollectionUtils.isEmpty(segmentList)) {
+			segmentList = new ArrayList<Segment>();
+		} else {
+			for (Segment segment : segmentList) {
+				personIdList.add(segment.getDataId());
+			}
+
+		}
+		List<Integer> tagIdList = new ArrayList<Integer>();
 		// 标签名保存至自定义标签表
 		if (tagNames != null) {
 			for (String tagName : tagNames) {
@@ -79,19 +91,19 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 					CustomTag insertTag = new CustomTag();
 					insertTag.setName(tagName);
 					insertTag.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-					insertTag.setCoverAudienceCount((int)count);
-//					insertTag.setCreateTime(now);
-//					insertTag.setUpdateTime(now);
+					insertTag.setCoverAudienceCount(segmentList.size());
+					// insertTag.setCreateTime(now);
+					// insertTag.setUpdateTime(now);
 					customTagDao.insert(insertTag);
 					tagIdList.add(insertTag.getId());
 				} else {
 					CustomTag insertTag = new CustomTag();
 					insertTag.setName(tagName);
 					insertTag.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-					insertTag.setCoverAudienceCount((int)count);
+					insertTag.setCoverAudienceCount(segmentList.size());
 					insertTag.setId(tag.get(0).getId());
-//					insertTag.setCreateTime(now);
-//					insertTag.setUpdateTime(now);
+					// insertTag.setCreateTime(now);
+					// insertTag.setUpdateTime(now);
 					customTagDao.updateById(insertTag);
 					tagIdList.add(tag.get(0).getId());
 				}
@@ -99,26 +111,42 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		}
 		// 删除标签与细分对应关系
 		customTagMapDao.batchDeleteUseHeadId(headerId);
-
+		
 		// 建立标签与细分对应关系
 		for (Integer customTag : tagIdList) {
+			
+			Integer tagId = customTag.intValue();
 			CustomTagMap tagMap = new CustomTagMap();
-			tagMap.setTagId(customTag.intValue());
+			tagMap.setTagId(tagId);
 			tagMap.setType(ApiConstant.TAG_TYPE_SEGMENT);
 			tagMap.setMapId(headerId);
-			tagMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 //			tagMap.setCreateTime(now);
 //			tagMap.setUpdateTime(now);
 			customTagMapDao.insert(tagMap);
+			
+			// 删除标签与人群对应关系
+			customTagMapDao.batchDeleteUseTagId(tagId);
+			
+			// 建立细分与人群对应关系
+			for (Integer personId : personIdList) {
+				CustomTagMap pensonTagMap = new CustomTagMap();
+				pensonTagMap.setTagId(tagId);
+				pensonTagMap.setType(ApiConstant.TAG_TYPE_CONTACT);
+				pensonTagMap.setMapId(personId);
+				// tagMap.setCreateTime(now);
+				// tagMap.setUpdateTime(now);
+				customTagMapDao.insert(pensonTagMap);
+			}
+			
 		}
-
+	
 		// 标签ID保存至segmentation_head
 		SegmentationHead headUpdate = new SegmentationHead();
 		headUpdate.setId(headerId);
 		headUpdate.setTagIds(StringUtils.join(tagIdList, ","));
-//		headUpdate.setUpdateTime(now);
+		// headUpdate.setUpdateTime(now);
 		segmentationHeadDao.updateById(headUpdate);
-		
+
 		return baseOutput;
 	}
 
