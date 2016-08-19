@@ -30,11 +30,13 @@ public class QrcodeCreateCountServiceImpl implements QrcodeCreateCountService {
 				ApiConstant.INT_ZERO, null);
 
 		WechatQrcodeLog qrcodeLog = qrcodeDao.selectCountByBatchId(qlog);
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("qrcode_succ", qrcodeLog.getSuccess());
-		map.put("qrcode_fail", qrcodeLog.getTotalRows() - qrcodeLog.getSuccess());
-		result.setTotal(1);
-		result.getData().add(map);
+		if (qrcodeLog != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("qrcode_succ", qrcodeLog.getSuccess());
+			map.put("qrcode_fail", qrcodeLog.getTotalRows() - qrcodeLog.getSuccess());
+			result.setTotal(1);
+			result.getData().add(map);
+		}
 
 		return result;
 	}
