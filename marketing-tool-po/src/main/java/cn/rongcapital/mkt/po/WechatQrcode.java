@@ -21,7 +21,7 @@ public class WechatQrcode extends BaseQuery {
 
     private Date createTime;
 
-    private Date expirationTime;
+    private Integer expirationTime;
 
     private Byte status;
 
@@ -30,6 +30,8 @@ public class WechatQrcode extends BaseQuery {
     private String qrcodeUrl;
 
     private Integer batchId;
+
+    private String ticket;
 
     public Integer getId() {
         return id;
@@ -95,11 +97,11 @@ public class WechatQrcode extends BaseQuery {
         this.createTime = createTime;
     }
 
-    public Date getExpirationTime() {
+    public Integer getExpirationTime() {
         return expirationTime;
     }
 
-    public void setExpirationTime(Date expirationTime) {
+    public void setExpirationTime(Integer expirationTime) {
         this.expirationTime = expirationTime;
     }
 
@@ -133,5 +135,13 @@ public class WechatQrcode extends BaseQuery {
 
     public void setBatchId(Integer batchId) {
         this.batchId = batchId;
+    }
+
+    public String getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(String ticket) {
+        this.ticket = ticket == null ? null : ticket.trim();
     }
 }
