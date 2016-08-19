@@ -406,6 +406,9 @@ public class MktApi {
 	@Autowired
 	private ContacsCommitSaveService contactsCommitSaveService;
 	
+	@Autowired
+	private ContactListTagService contactListTagService;
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
 	/**
@@ -2319,5 +2322,20 @@ public class MktApi {
 			@NotNull @QueryParam("commit_time") Integer commit_time) 
 	{
 		return contactsCommitSaveService.contactsCommitDownload(contact_id ,commit_time);
+	}
+	
+	/**
+	 * 联系人表单打标签 
+	 *
+	 * @param
+	 * @param ver
+	 * @author chengjincheng
+	 */
+	@POST
+	@Path("/mkt.contact.list.tag")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput contactListTag(@Valid ContactListTagIn body) {
+		
+		return contactListTagService.contactListTag(body);
 	}
 }
