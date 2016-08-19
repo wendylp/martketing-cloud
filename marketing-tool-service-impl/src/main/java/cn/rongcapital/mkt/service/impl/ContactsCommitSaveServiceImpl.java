@@ -59,8 +59,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		Calendar canlendar = Calendar.getInstance();
 		switch (commit_time) {
 		case 1:
-			String aaa = DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd");
-			startTime = DateUtil.getDateFromString(aaa, "yyyy-MM-dd");
+			startTime = DateUtil.getDateFromString(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd");
 			endTime = new Date();
 			break;
 		case 2:
@@ -138,8 +137,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		Calendar canlendar = Calendar.getInstance();
 		switch (commit_time) {
 		case 1:
-			String aaa = DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd");
-			startTime = DateUtil.getDateFromString(aaa, "yyyy-MM-dd");
+			startTime = DateUtil.getDateFromString(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd");
 			endTime = new Date();
 			break;
 		case 2:
