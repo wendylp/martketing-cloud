@@ -111,7 +111,7 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 				if (CollectionUtils.isNotEmpty(dataPartyList)) {
 					for (DataParty dataParty : dataPartyList) {
 
-						mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId())), Segment.class);
+						mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId()).and("dataId").is(dataParty.getMid())), Segment.class);
 						List<Segment> sListT = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId")
 								.is(segmentationHead.getId()).and("dataId").is(dataParty.getMid())), Segment.class);
 
