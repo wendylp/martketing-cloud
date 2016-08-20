@@ -166,7 +166,7 @@
             <properties>
                 <mvnvar.log.path>/rc/logs/mkt/production</mvnvar.log.path>
                 <mvnvar.conf.path>conf</mvnvar.conf.path>
-                <maven.repository.remote.url></maven.repository.remote.url>
+                <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
             </properties>
         </profile>
     </profiles>
