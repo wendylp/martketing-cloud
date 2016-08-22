@@ -160,10 +160,10 @@ public class ApiConstant {
 	public static final String DL_PRV_SEND_API_PATH = "/auth-template/api/?method=ruixue.hfive.mkt.personal.send&pid=";
 	
 	
-    public static final String DOWNLOAD_TEMPLATE_FILE_DIR = "//rc//templeteFiles";
-	public static final String DOWNLOAD_BASE_DIR = "/rc/downloads/";
+    public static final String DOWNLOAD_TEMPLATE_FILE_DIR = "//rc/data/templeteFiles";
+	public static final String DOWNLOAD_BASE_DIR = "/rc/data/downloads/";
 	
-	public static final String UPLOAD_BASE_DIR = "//rc//uploads/";
+	public static final String UPLOAD_BASE_DIR = "//rc/data/uploads/";
 	
 	public static final String AUDIENCE_SOUCE_NAME_CAMPAIGN = "营销活动";
 	public static final Byte WECHAT_IMGTEXT_TYPE = 0;
