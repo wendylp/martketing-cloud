@@ -136,15 +136,18 @@ public class GetPubFansListServiceImpl implements TaskService {
                     paramFan.put("country","中国");
                     if(h5PubFan.getProvince() == null || "槟榔屿".equals(h5PubFan.getProvince())){
                         paramFan.put("province","北京");
-                        paramFan.put("city","北京");
+                        paramFan.put("city","北京市");
                     }else {
                         paramFan.put("province",h5PubFan.getProvince());
                     }
                     if(h5PubFan.getCity() == null || "北海".equals(h5PubFan.getCity())){
                         paramFan.put("province","北京");
-                        paramFan.put("city","北京");
+                        paramFan.put("city","北京市");
                     }else{
                         paramFan.put("city",h5PubFan.getCity());
+                    }
+                    if(h5PubFan.getProvince() != null && "北京".equals(h5PubFan.getProvince())){
+                        paramFan.put("city","北京市");
                     }
                 }else {
                     paramFan.put("country",h5PubFan.getCountry());
