@@ -150,7 +150,12 @@
             <properties>
                 <mvnvar.log.path>/rc/logs/mkt/dev</mvnvar.log.path>
                 <mvnvar.conf.path>conf_dev</mvnvar.conf.path>
-                <maven.repository.rongcapital.url>https://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <!-- 本机编译 -->
+                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <!-- 服务器编译 -->
+                <!--  
+                <maven.repository.rongcapital.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                -->
             </properties>
         </profile>
         <profile>
@@ -166,7 +171,7 @@
             <properties>
                 <mvnvar.log.path>/rc/logs/mkt/production</mvnvar.log.path>
                 <mvnvar.conf.path>conf</mvnvar.conf.path>
-                <maven.repository.remote.url></maven.repository.remote.url>
+                <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
             </properties>
         </profile>
     </profiles>
