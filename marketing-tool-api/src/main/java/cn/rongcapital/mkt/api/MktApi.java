@@ -408,6 +408,12 @@ public class MktApi {
 	
 	@Autowired
 	private ContactListTagService contactListTagService;
+
+	@Autowired
+	private ContactListKeysSaveService contactListKeysSaveService;
+
+	@Autowired
+	private ImportContactsDataToMDataService importContactsDataToMDataService;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -2337,5 +2343,31 @@ public class MktApi {
 	public BaseOutput contactListTag(@Valid ContactListTagIn body) {
 		
 		return contactListTagService.contactListTag(body);
+	}
+
+	/**
+	 * 存储联系人表单所选择的主键
+	 * @param
+	 * @param saveContactListKeysIn
+	 * @author baiyunfeng
+	 */
+	@POST
+	@Path("/mkt.contact.list.keys.save")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput saveContactListKeys(@Valid SaveContactListKeysIn saveContactListKeysIn) {
+		return contactListKeysSaveService.saveContactListKeys(saveContactListKeysIn);
+	}
+
+	/**
+	 * 将联系人表单的数据导入主数据
+	 * @param
+	 * @param importContactsDataIn
+	 * @author baiyunfeng
+	 */
+	@POST
+	@Path("/mkt.contacts.mdata.import")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput importContactsDataToMData(@Valid ImportContactsDataIn importContactsDataIn) {
+		return importContactsDataToMDataService.importContactsDataToMData(importContactsDataIn);
 	}
 }
