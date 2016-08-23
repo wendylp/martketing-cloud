@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.ContacsCommitSaveService;
 import cn.rongcapital.mkt.service.ContactKeyListGetService;
+import cn.rongcapital.mkt.service.ContactListGetByStatusService;
 import cn.rongcapital.mkt.service.ContactListInfoGetService;
 import cn.rongcapital.mkt.service.ContactListKeyListService;
 import cn.rongcapital.mkt.service.ContactListKeysSaveService;
@@ -104,6 +105,9 @@ public class MktContactApi {
 
 	@Autowired
 	private ContactListInfoGetService contactListInfoGetService;
+	
+	@Autowired
+	private ContactListGetByStatusService contactListGetByStatusService;
 
 	/***
 	 * 新建联系人表单
@@ -365,4 +369,17 @@ public class MktContactApi {
 		return contactsCommitSaveService.contactsCommitDownload(contact_id, commit_time);
 	}
 
+	/**
+	 * 根据状态查询联系人表单
+	 *
+	 * @param
+	 * @param ver
+	 * @author zhaoguoying
+	 */
+	@GET
+	@Path("/mkt.contact.list.get")
+	public BaseOutput getContactList(@NotNull @QueryParam("contact_status") Integer contact_status,
+			 @QueryParam("contact_id") String contact_id) {
+		return contactListGetByStatusService.getContactList(contact_status, contact_id);
+	}
 }
