@@ -57,7 +57,7 @@
 		    	<if test="required != null"><![CDATA[required = #{required},]]></if>
 		    	<if test="ischecked != null"><![CDATA[ischecked = #{ischecked},]]></if>
 		    	<if test="isRememberImportKey != null"><![CDATA[is_remember_import_key = #{isRememberImportKey},]]></if>
-		    	<if test="fieldIndex != null"><![CDATA[field_index = #{fieldIndex}]]></if>
+		    	<if test="fieldIndex != null"><![CDATA[field_index = #{fieldIndex},]]></if>
 		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime}]]></if>
 		</set>
 	</sql>
