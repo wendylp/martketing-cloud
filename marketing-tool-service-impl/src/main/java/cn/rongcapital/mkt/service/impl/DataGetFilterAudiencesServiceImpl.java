@@ -212,7 +212,10 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 					mdDataList.add(mdType);
 				}
 			}
-
+		} else {
+			for (Integer dataType : mdTypeList) {
+				mdDataList.add(dataType);
+			}
 		}
 
 		paramMap.put("contactIdList", contactIdList);
