@@ -274,7 +274,10 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 		paramMap.put("mappingKeyIds", mappingKeyIds);
 
 		List<T> dataList = dao.selectByBatchId(paramMap);
-		Integer totalCount = dao.selectCountByBatchId(paramMap);
+		Integer totalCount = 0;
+		if (mdDataList != null && mdDataList.size() > 0) {
+			totalCount = dao.selectCountByBatchId(paramMap);
+		}
 
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		if (dataList != null && !dataList.isEmpty()) {
