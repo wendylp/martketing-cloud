@@ -129,7 +129,7 @@
 	<!-- 其它SQL语句 -->
 	<!-- 通过id更新浏览次数 -->
 	<update id="updatePageViewsById" parameterType="cn.rongcapital.mkt.po.ContactTemplate" >
-		<![CDATA[update contact_template set page_views=page_views+1 where id=#{id}]]>
+		<![CDATA[update contact_template set page_views=page_views+1 where contact_id=#{contactId}]]>
 	</update>
 	<delete id="deleteByCId" parameterType="cn.rongcapital.mkt.po.ContactTemplate">
 		<![CDATA[delete from  contact_template  where contact_id=#{contactId}]]>
