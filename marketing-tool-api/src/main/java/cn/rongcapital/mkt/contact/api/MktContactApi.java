@@ -36,7 +36,7 @@ import cn.rongcapital.mkt.service.ContactListGetByStatusService;
 import cn.rongcapital.mkt.service.ContactListInfoGetService;
 import cn.rongcapital.mkt.service.ContactListKeyListService;
 import cn.rongcapital.mkt.service.ContactListKeysSaveService;
-import cn.rongcapital.mkt.service.ContactListPvServer;
+import cn.rongcapital.mkt.service.ContactListPvService;
 import cn.rongcapital.mkt.service.ContactListQrcodeDownloadService;
 import cn.rongcapital.mkt.service.ContactListTagGetService;
 import cn.rongcapital.mkt.service.ContactListTagService;
@@ -80,7 +80,7 @@ public class MktContactApi {
 	private ContactListTagGetService contactListTagGetService;
 
 	@Autowired
-	private ContactListPvServer contactListPvServer;
+	private ContactListPvService contactListPvService;
 
 	@Autowired
 	private ContactListQrcodeDownloadService contactListQrcodeDownloadService;
@@ -220,7 +220,7 @@ public class MktContactApi {
 	@Path("mkt.contact.list.pv")
 	public BaseOutput countPageViews(@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("ver") String var, @NotEmpty @QueryParam("contact_id") String contactId) {
-		return contactListPvServer.countPageViews(contactId);
+		return contactListPvService.countPageViews(contactId);
 	}
 
 	/**
