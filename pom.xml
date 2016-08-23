@@ -152,7 +152,7 @@
                 <mvnvar.conf.path>conf_dev</mvnvar.conf.path>
                 <!-- 本机编译 -->
                 <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
-                <!-- 服务器编译 -->
+                <!-- 服务器编译  -->
                 <!--  
                 <maven.repository.rongcapital.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.rongcapital.url>
                 -->
