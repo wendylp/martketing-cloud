@@ -104,6 +104,7 @@
 	<!-- 详情见对应dao文件 -->
 	<select id="selectKeyByContactId" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="cn.rongcapital.mkt.po.DefaultContactTemplate">
 		<![CDATA[SELECT]]>
+		<![CDATA[distinct]]>
 		<![CDATA[dct.id as id, dct.field_name as fieldName, dct.field_code as fieldCode, dct.is_selected as isSelected]]>
 		<![CDATA[from default_contact_template dct, contact_template ct]]>
 		<![CDATA[where dct.field_name=ct.field_name ]]>

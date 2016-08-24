@@ -58,9 +58,9 @@
 		    	<if test="remark != null"><![CDATA[ AND remark = #{remark}]]></if>
 		    	<if test="commitTime != null"><![CDATA[ AND commit_time = #{commitTime}]]></if>
 		    	<if test="fillDevice != null"><![CDATA[ AND fill_device = #{fillDevice}]]></if>
-		    	<if test="oS != null"><![CDATA[ AND OS = #{oS}]]></if>
+		    	<if test="os != null"><![CDATA[ AND OS = #{os}]]></if>
 		    	<if test="brower != null"><![CDATA[ AND brower = #{brower}]]></if>
-		    	<if test="iP != null"><![CDATA[ AND IP = #{iP}]]></if>
+		    	<if test="ip != null"><![CDATA[ AND IP = #{ip}]]></if>
 		    	<if test="wxNickname != null"><![CDATA[ AND wx_nickname = #{wxNickname}]]></if>
 		    	<if test="wxGender != null"><![CDATA[ AND wx_gender = #{wxGender}]]></if>
 		    	<if test="wxOpenid != null"><![CDATA[ AND wx_openid = #{wxOpenid}]]></if>

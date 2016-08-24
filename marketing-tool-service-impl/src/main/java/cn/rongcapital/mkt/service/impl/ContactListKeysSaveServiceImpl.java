@@ -52,7 +52,7 @@ public class ContactListKeysSaveServiceImpl implements ContactListKeysSaveServic
     private String getContactTemplateKeyList(ArrayList<ContactListKeyAttribute> fieldNameList) {
         StringBuffer stringBuffer = new StringBuffer();
         for(ContactListKeyAttribute contactListKeyAttribute : fieldNameList){
-            stringBuffer.append(contactListKeyAttribute + ",");
+            stringBuffer.append(contactListKeyAttribute.getFieldName() + ",");
         }
         return stringBuffer.substring(0,stringBuffer.length()-1).toString();
     }

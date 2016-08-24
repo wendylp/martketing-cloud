@@ -23,6 +23,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
 
     //Todo: 1.这块需要分两种情况,contactId为null则代表为创建接口
     //Todo: 2.contactId不为null则代表编辑接口。
+    private final long DEFAULT_TEMPLATE_CONTACT_ID = -1;
 
     @Autowired
     private DefaultContactTemplateDao defaultContactTemplateDao;
@@ -38,7 +39,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
         defaultContactTemplate.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         List<DefaultContactTemplate> defaultContactTemplateList = defaultContactTemplateDao.selectList(defaultContactTemplate);
 
-        if(contactId != null){
+        if(contactId != DEFAULT_TEMPLATE_CONTACT_ID){
             //将默认模板和现在数据库中已有的模板做对比返回给前端
             ContactTemplate contactTemplate = new ContactTemplate();
             contactTemplate.setContactId(contactId);
