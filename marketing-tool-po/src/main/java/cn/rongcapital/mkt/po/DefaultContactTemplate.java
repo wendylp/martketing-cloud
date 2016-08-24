@@ -21,6 +21,8 @@ public class DefaultContactTemplate extends BaseQuery {
 
     private Byte isPrimaryKey;
 
+    private Integer fieldType;
+
     public Integer getId() {
         return id;
     }
@@ -91,5 +93,13 @@ public class DefaultContactTemplate extends BaseQuery {
 
     public void setIsPrimaryKey(Byte isPrimaryKey) {
         this.isPrimaryKey = isPrimaryKey;
+    }
+
+    public Integer getFieldType() {
+        return fieldType;
+    }
+
+    public void setFieldType(Integer fieldType) {
+        this.fieldType = fieldType;
     }
 }
