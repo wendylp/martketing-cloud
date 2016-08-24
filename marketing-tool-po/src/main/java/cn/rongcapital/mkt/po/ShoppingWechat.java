@@ -293,7 +293,21 @@ public class ShoppingWechat {
 	public void setBitmap(String bitmap) {
 		this.bitmap = bitmap;
 	}
-    
-    
+
+	public String getOpenId() {
+		return openId;
+	}
+
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
+
+	public String getPubId() {
+		return pubId;
+	}
+
+	public void setPubId(String pubId) {
+		this.pubId = pubId;
+	}
 
 }
