@@ -4,6 +4,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
 /**
@@ -12,9 +13,9 @@ import java.util.ArrayList;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class SaveContactListKeysIn {
 
-    @NotEmpty
+    @NotNull
     private Long contactId;
-    @NotEmpty
+    @NotNull
     private Integer saveFlag;
     @NotEmpty
     private ArrayList<ContactListKeyAttribute> fieldNameList;
