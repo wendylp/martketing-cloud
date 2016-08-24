@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
 public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
+	
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private WechatQrcodeDao wechatQrcodeDao;
@@ -63,6 +67,8 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 */
 	@Override
 	public BaseOutput getWeixinQrcodeListQrname(String qrcodeName) {
+		
+		logger.error(" 前端传入的qrcodeName内容为: {}", qrcodeName);
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
