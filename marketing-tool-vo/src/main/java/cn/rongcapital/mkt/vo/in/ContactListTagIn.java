@@ -11,7 +11,6 @@ import cn.rongcapital.mkt.vo.BaseInput;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class ContactListTagIn extends BaseInput {
-
 	@NotNull
 	private Integer contact_id;
 	@NotEmpty

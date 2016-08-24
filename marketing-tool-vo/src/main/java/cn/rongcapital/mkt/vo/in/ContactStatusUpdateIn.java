@@ -9,7 +9,6 @@ import cn.rongcapital.mkt.vo.BaseInput;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class ContactStatusUpdateIn extends BaseInput {
-
 	@NotNull
 	private Long contactId;
 	@NotNull

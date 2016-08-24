@@ -5,7 +5,10 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-public class ContactsCommitSaveIn {
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class ContactsCommitSaveIn  extends BaseInput {
+	
 	@NotNull
 	private Integer contact_templ_id;
 	
