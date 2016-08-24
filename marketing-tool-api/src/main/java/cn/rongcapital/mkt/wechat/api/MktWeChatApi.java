@@ -34,6 +34,7 @@ import cn.rongcapital.mkt.service.QrcodePicDownloadService;
 import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
 import cn.rongcapital.mkt.service.QrcodeUsedCountService;
 import cn.rongcapital.mkt.service.TagUpdateService;
+import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
 import cn.rongcapital.mkt.service.WeixinQrcodeListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.TagBodyUpdateIn;
@@ -62,6 +63,9 @@ public class MktWeChatApi {
 
 	@Autowired
 	private QrcodeUsedCountService qrcodeUsedCountService;
+	
+	@Autowired
+	private WeixinQrcodeInfoService weixinQrcodeInfoService;
 
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
@@ -166,6 +170,21 @@ public class MktWeChatApi {
 	@Path("/mkt.weixin.qrcode.used.count")
 	public BaseOutput getListCount(@NotEmpty @QueryParam("wx_name") String wx_name) {
 		return qrcodeUsedCountService.getListCount(wx_name);
+	}
+	
+	/**
+	 * 
+	 * 查询二维码详细信息 
+	 * 
+	 * @param qrcodeId
+	 * @return
+	 * @author shuiyangyang
+	 * @Data 2016.08.24
+	 */
+	@GET
+	@Path("/mkt.weixin.qrcode.info")
+	public BaseOutput getWeiXinQrocdeInfo(@NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
+		return weixinQrcodeInfoService.getWeiXinQrocdeInfo(qrcodeId);
 	}
 
 }

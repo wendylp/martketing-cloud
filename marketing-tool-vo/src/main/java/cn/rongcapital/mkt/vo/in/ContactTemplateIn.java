@@ -25,7 +25,6 @@ public class ContactTemplateIn {
 	@JsonProperty("contact_title")
 	private String contact_title;
 
-	@NotEmpty
 	@JsonProperty("contact_descript")
 	private String contact_descript;
 

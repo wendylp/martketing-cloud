@@ -13,12 +13,12 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
 import cn.rongcapital.mkt.po.ContactTemplate;
-import cn.rongcapital.mkt.service.ContactListPvServer;
+import cn.rongcapital.mkt.service.ContactListPvService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 
 @Service
-public class ContactListPvServerImpl implements ContactListPvServer{
+public class ContactListPvServiceImpl implements ContactListPvService{
 	
 	@Autowired
 	ContactTemplateDao contactTemplateDao;
@@ -31,7 +31,7 @@ public class ContactListPvServerImpl implements ContactListPvServer{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		ContactTemplate contactTemplate = new ContactTemplate(); 
-		contactTemplate.setId(Integer.valueOf(contactId));
+		contactTemplate.setContactId(Long.valueOf(contactId));
 		
 		
 		int num = contactTemplateDao.updatePageViewsById(contactTemplate); // 更新pageview

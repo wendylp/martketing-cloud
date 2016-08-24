@@ -24,7 +24,7 @@ public class ContactListQrcodeDownloadServiceImpl implements ContactListQrcodeDo
 	@Override
 	public BaseOutput getContactListQrcode(Integer contactId) {
 		ContactTemplate contactTemplate = new ContactTemplate();
-		contactTemplate.setId(contactId);
+		contactTemplate.setContactId(Long.valueOf(contactId));
 		List<ContactTemplate> contactTemplates = contactTemplateDao.selectList(contactTemplate);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);

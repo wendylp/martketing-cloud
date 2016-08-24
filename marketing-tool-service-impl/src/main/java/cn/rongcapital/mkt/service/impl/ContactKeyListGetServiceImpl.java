@@ -32,7 +32,6 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
 
     @Override
     public GetContactKeyListOutput getContactKeyList(Long contactId) {
-
         GetContactKeyListOutput getContactKeyListOutput = new GetContactKeyListOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO);
         DefaultContactTemplate defaultContactTemplate = new DefaultContactTemplate();
         defaultContactTemplate.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
@@ -47,6 +46,10 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
             //获取默认模板
             if(!CollectionUtils.isEmpty(contactTemplateList)){
                 getContactKeyListOutput.setKeyList(contactTemplateList.get(0).getKeyList());
+                getContactKeyListOutput.setContactName(contactTemplateList.get(0).getContactName());
+                getContactKeyListOutput.setContactTitle(contactTemplateList.get(0).getContactTitle());
+                getContactKeyListOutput.setContactDescription(contactTemplateList.get(0).getContactDescript());
+                getContactKeyListOutput.setStatus(new Integer(contactTemplateList.get(0).getStatus()));
                 for(DefaultContactTemplate defaultContactTemplate1 : defaultContactTemplateList){
                     for(ContactTemplate contactTemplate1 : contactTemplateList){
                         if(defaultContactTemplate1.getFieldCode().equals(contactTemplate1.getFieldCode())){
@@ -70,6 +73,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
             contactKeyOutput.setSelected(Integer.valueOf(defaultTemplate.getIsSelected()));
             contactKeyOutput.setRequired(Integer.valueOf(defaultTemplate.getIsRequired()));
             contactKeyOutput.setIndex(defaultTemplate.getDefaultShownSeq());
+            contactKeyOutput.setFieldType(defaultTemplate.getFieldType());
             getContactKeyListOutput.getDataKeyList().add(contactKeyOutput);
         }
         return getContactKeyListOutput;
