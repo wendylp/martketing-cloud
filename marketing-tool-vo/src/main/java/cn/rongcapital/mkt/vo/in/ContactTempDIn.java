@@ -5,7 +5,9 @@ import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class ContactTempDIn{
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class ContactTempDIn extends BaseInput{
 	
 	@NotEmpty
 	@JsonProperty("user_token")
