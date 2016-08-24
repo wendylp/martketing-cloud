@@ -89,6 +89,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 			result.setTotal(list.size());
 			for (ContactList item : list) {
 				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("id",item.getId());
 				map.put("name", item.getName());
 				map.put("mobile", item.getMobile());
 				map.put("email", item.getEmail());
