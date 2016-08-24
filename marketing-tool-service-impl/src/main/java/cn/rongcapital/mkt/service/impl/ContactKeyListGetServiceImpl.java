@@ -24,6 +24,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
     //Todo: 1.这块需要分两种情况,contactId为null则代表为创建接口
     //Todo: 2.contactId不为null则代表编辑接口。
     private static final Integer PAGE_SIZE = 100;
+    private static final Integer NON_SELECTED_VALUE = 0;
 
     @Autowired
     private DefaultContactTemplateDao defaultContactTemplateDao;
@@ -52,6 +53,9 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
                 getContactKeyListOutput.setContactTitle(contactTemplateList.get(0).getContactTitle());
                 getContactKeyListOutput.setContactDescription(contactTemplateList.get(0).getContactDescript());
                 getContactKeyListOutput.setStatus(new Integer(contactTemplateList.get(0).getStatus()));
+                for(DefaultContactTemplate defaultContactTemplate1 : defaultContactTemplateList){
+                    defaultContactTemplate1.setIsSelected(NON_SELECTED_VALUE.byteValue());
+                }
                 for(DefaultContactTemplate defaultContactTemplate1 : defaultContactTemplateList){
                     for(ContactTemplate contactTemplate1 : contactTemplateList){
                         if(defaultContactTemplate1.getFieldCode().equals(contactTemplate1.getFieldCode())){
