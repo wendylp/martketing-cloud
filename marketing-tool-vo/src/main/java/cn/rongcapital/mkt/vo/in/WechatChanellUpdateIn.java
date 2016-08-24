@@ -6,11 +6,13 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import cn.rongcapital.mkt.vo.BaseInput;
+
 /**
  * Created by zhaoguoying on 2016-08-11.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class WechatChanellUpdateIn {
+public class WechatChanellUpdateIn extends BaseInput {
 
 	@NotNull
 	private Integer channelId;

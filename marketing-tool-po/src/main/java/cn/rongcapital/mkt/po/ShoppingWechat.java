@@ -11,11 +11,11 @@ public class ShoppingWechat {
     // data_party的主键, 在mongodb中是mid
     private Integer dataPartyId;
 
-//    // openId, 对应数据库中的wx_code
-//    private String openId;
-//
-//    // pubId, 对应数据库中的wxmp_id
-//    private String pubId;
+    // openId, 对应数据库中的wx_code
+    private String openId;
+
+    // pubId, 对应数据库中的wxmp_id
+    private String pubId;
 
     // 购物记录中单个微信用户（公众号标识＋openid）最后一次购买（取订单号的消费时间记最后一次购买时间）的时间
     private Date lastShoppingTime;
@@ -293,7 +293,21 @@ public class ShoppingWechat {
 	public void setBitmap(String bitmap) {
 		this.bitmap = bitmap;
 	}
-    
-    
+
+	public String getOpenId() {
+		return openId;
+	}
+
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
+
+	public String getPubId() {
+		return pubId;
+	}
+
+	public void setPubId(String pubId) {
+		this.pubId = pubId;
+	}
 
 }
