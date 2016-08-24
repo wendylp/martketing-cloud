@@ -320,9 +320,9 @@ public class MktContactApi {
 	 * @return
 	 */
 	@GET
-	@Path("mkt.contacts.commit.count ")
+	@Path("mkt.contacts.commit.count")
 	public ContactsCommitCountListOutput getContactsCommitCount(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("contact_id") Long contactId) {
+			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("contact_id") Long contactId) {
 		return contactsCommitCountGetService.getContactsCommitCount(contactId);
 	}
 
