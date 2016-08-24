@@ -60,7 +60,7 @@ public class GetContactKeyListOutput extends BaseOutput {
         this.contactDescription = contactDescription;
     }
 
-    @JsonProperty("status")
+    @JsonProperty("contact_status")
     public Integer getStatus() {
         return status;
     }
