@@ -44,8 +44,6 @@ public class ContactListKeyListServiceImpl implements ContactListKeyListService{
 		
 		List<DefaultContactTemplate> defaultContactTemplateLists = defaultContactTemplateDao.selectKeyByContactId(contactTemplate);
 		
-		List<Map<String, Object>> mapLists = new ArrayList<Map<String, Object>>();
-		
 		if(!defaultContactTemplateLists.isEmpty()){
 			result.setTotal(defaultContactTemplateLists.size());
 			
@@ -56,7 +54,7 @@ public class ContactListKeyListServiceImpl implements ContactListKeyListService{
 				map.put("field_name", defaultContactTemplateList.getFieldName());
 				map.put("field_code", defaultContactTemplateList.getFieldCode());
 				map.put("is_selected", defaultContactTemplateList.getIsSelected());
-				mapLists.add(map);
+				result.getData().add(map);
 				
 				keyLists.add(defaultContactTemplateList.getFieldName());
 			}
@@ -71,7 +69,6 @@ public class ContactListKeyListServiceImpl implements ContactListKeyListService{
 				}
 			}
 			
-			result.getData().add(mapLists);
 		}
 		
 		return result;
