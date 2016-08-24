@@ -9,6 +9,7 @@ import cn.rongcapital.mkt.vo.BaseInput;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class TagBodyUpdateIn extends BaseInput {
 
+	
 	@NotNull
 	private Integer tag_id;
 	@NotEmpty
