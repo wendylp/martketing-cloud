@@ -68,7 +68,6 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	@Override
 	public BaseOutput getWeixinQrcodeListQrname(String qrcodeName) {
 		
-		logger.error(" 前端传入的qrcodeName内容为: {}", qrcodeName);
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
@@ -78,7 +77,12 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.fuzzySearchQrcodeName(wechatQrcode);
 		
-		result = addData(result, wechatQrcodeLists);
+		if (wechatQrcodeLists != null && !wechatQrcodeLists.isEmpty()) {
+			result = addData(result, wechatQrcodeLists);
+		} else {
+			logger.debug("根据微信号名：{}查不到信息",qrcodeName);
+		}
+		
 		
 		return result;
 	}
@@ -92,7 +96,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 * @Data 2016.08.19
 	 */
 	private BaseOutput addData(BaseOutput result, List<WechatQrcode> wechatQrcodeLists) {
-		if (wechatQrcodeLists != null && !wechatQrcodeLists.isEmpty()) {
+		
 			result.setTotal(wechatQrcodeLists.size());
 
 			for (WechatQrcode wechatQrcodeList : wechatQrcodeLists) {
@@ -131,7 +135,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 
 				result.getData().add(map);
 			}
-		}
+		
 		
 		return result;
 	}
