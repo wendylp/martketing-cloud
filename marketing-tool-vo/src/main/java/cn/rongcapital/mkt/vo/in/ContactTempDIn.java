@@ -9,6 +9,7 @@ import cn.rongcapital.mkt.vo.BaseInput;
 
 public class ContactTempDIn extends BaseInput{
 	
+	
 	@NotEmpty
 	@JsonProperty("user_token")
 	private String userToken;
