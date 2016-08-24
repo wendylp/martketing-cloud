@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import cn.rongcapital.mkt.vo.BaseInput;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class TagBodyUpdateIn {
+public class TagBodyUpdateIn extends BaseInput {
 
 	@NotNull
 	private Integer tag_id;

@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 
+import cn.rongcapital.mkt.vo.BaseInput;
+
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class ContactListTagIn {
+public class ContactListTagIn extends BaseInput {
 
 	@NotNull
 	private Integer contact_id;
