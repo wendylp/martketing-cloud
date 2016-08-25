@@ -8,6 +8,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
@@ -19,20 +21,19 @@ import java.util.Map;
  */
 public class HttpUtils {
 
-    @Value("${runxue.h5.api.base.url}")
-    private String hostname;
+    private static Logger logger = LoggerFactory.getLogger(HttpUtils.class);
+
     public static final String baseUrl = "http://h5plus.net/auth-template/api/?";
 
     public static HttpResponse requestH5Interface(Map<String, String> paramMap){
         HttpClient httpClient = new DefaultHttpClient();
-        HttpUtils httpUtils = new HttpUtils();
-        String url = "http://" + httpUtils.hostname;
-//        String url = baseUrl;
+        String url = baseUrl;
         for(String key : paramMap.keySet()){
             url = url + key + "=" + paramMap.get(key) + "&";
         }
         url = url.replace(" ","");
         try {
+            logger.info("h5PlusUrl: " + url);
             HttpGet httpGet = new HttpGet(url);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             if(httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) return httpResponse;
