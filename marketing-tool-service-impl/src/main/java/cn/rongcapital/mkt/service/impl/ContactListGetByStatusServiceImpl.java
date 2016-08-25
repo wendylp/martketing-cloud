@@ -37,8 +37,9 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 
 		if (CollectionUtils.isNotEmpty(contactLists)) {
 			result.setTotal(contactLists.size());
-			Map<String, Object> contactListMap = new HashMap<String, Object>();
+			
 			for (ContactList w : contactLists) {
+				Map<String, Object> contactListMap = new HashMap<String, Object>();
 				contactListMap.put("contact_id", w.getId());
 				contactListMap.put("contact_name", w.getName());
 				result.getData().add(contactListMap);
