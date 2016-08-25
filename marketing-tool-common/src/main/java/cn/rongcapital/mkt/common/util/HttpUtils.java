@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class HttpUtils {
 
-    public static final String baseUrl = "http://test.h5plus.net/auth-template/api/?";
+    public static final String baseUrl = "http://h5plus.net/auth-template/api/?";
 
     public static HttpResponse requestH5Interface(Map<String, String> paramMap){
         HttpClient httpClient = new DefaultHttpClient();
