@@ -20,6 +20,8 @@ public class ContactTemplate extends BaseQuery implements Serializable {
 
     private String fieldCode;
 
+    private Integer fieldType;
+
     private String selected;
 
     private Byte status;
@@ -96,6 +98,14 @@ public class ContactTemplate extends BaseQuery implements Serializable {
 
     public void setFieldCode(String fieldCode) {
         this.fieldCode = fieldCode == null ? null : fieldCode.trim();
+    }
+
+    public Integer getFieldType() {
+        return fieldType;
+    }
+
+    public void setFieldType(Integer fieldType) {
+        this.fieldType = fieldType;
     }
 
     public String getSelected() {
