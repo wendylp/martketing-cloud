@@ -264,7 +264,7 @@
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE 1 = 1]]>
 		<if test="contactTemplId != null"><![CDATA[and contact_templ_id = #{contactTemplId}]]></if>
-		<if test="commitId != null"><![CDATA[and commit_id = #{commitId}]]></if>
+		<if test="commitId != null"><![CDATA[and id = #{commitId}]]></if>
 	</update>
 	
 	<select id="selectListByContactIdAndCommitTime" parameterType="cn.rongcapital.mkt.po.ContactList" resultType="cn.rongcapital.mkt.po.ContactList">
