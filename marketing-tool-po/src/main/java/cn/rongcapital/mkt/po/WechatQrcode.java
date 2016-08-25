@@ -8,6 +8,8 @@ public class WechatQrcode extends BaseQuery {
     private Integer id;
 
     private String wxName;
+    
+    private String wxAcct;
 
     private Integer chCode;
 
@@ -45,6 +47,14 @@ public class WechatQrcode extends BaseQuery {
 
     public String getWxName() {
         return wxName;
+    }
+    
+    public String getWxAcct() {
+        return wxAcct;
+    }
+
+    public void setWxAcct(String wxAcct) {
+        this.wxAcct = wxAcct == null ? null : wxAcct.trim();
     }
 
     public void setWxName(String wxName) {
