@@ -37,7 +37,7 @@ import cn.rongcapital.mkt.service.QrcodePicDownloadService;
 import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
 import cn.rongcapital.mkt.service.QrcodeUsedCountService;
 import cn.rongcapital.mkt.service.TagUpdateService;
-import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
+//import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
 import cn.rongcapital.mkt.service.WeixinQrcodeErrorDownloadService;
 import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
@@ -86,8 +86,8 @@ public class MktWeChatApi {
 	@Autowired
 	private WeixinQrcodeErrorDownloadService weixinQrcodeErrorDownloadService;
 	
-	@Autowired
-	private WeixinQrcodeBatchSaveService weixinQrcodeBatchSaveService;
+//	@Autowired
+//	private WeixinQrcodeBatchSaveService weixinQrcodeBatchSaveService;
 
 
 	/**
@@ -286,14 +286,14 @@ public class MktWeChatApi {
 		return weixinQrcodeErrorDownloadService.weixinQrcodeErrorDownload(batchId);
 	}
 	
-	@GET
-	@Path("/mkt.weixin.qrcode.batch.save")
-	public BaseOutput weixinQrcodeBatchSave(
-			@NotNull @QueryParam("batch_id") Integer batchId,
-			@NotNull @QueryParam("expiration_time") Date expirationTime,
-			@NotEmpty @QueryParam("qrcode_tag_ids") String qrcodeTagIds,
-			@NotNull @QueryParam("qrcode_status") Integer qrcodeStatus) {
-		return weixinQrcodeBatchSaveService.weixinQrcodeBatchSave(batchId, expirationTime, qrcodeTagIds, qrcodeStatus);
-	}
+//	@GET
+//	@Path("/mkt.weixin.qrcode.batch.save")
+//	public BaseOutput weixinQrcodeBatchSave(
+//			@NotNull @QueryParam("batch_id") Integer batchId,
+//			@NotNull @QueryParam("expiration_time") Date expirationTime,
+//			@NotEmpty @QueryParam("qrcode_tag_ids") String qrcodeTagIds,
+//			@NotNull @QueryParam("qrcode_status") Integer qrcodeStatus) {
+//		return weixinQrcodeBatchSaveService.weixinQrcodeBatchSave(batchId, expirationTime, qrcodeTagIds, qrcodeStatus);
+//	}
 
 }
