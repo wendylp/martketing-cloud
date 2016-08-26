@@ -1,5 +1,8 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +52,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		WechatQrcode wechatQrcode = new WechatQrcode();
 
 		wechatQrcode.setWxName(wxmpName);
-		wechatQrcode.setExpirationTime(expirationTime);
+		wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
 		wechatQrcode.setStatus(Byte.valueOf(qrcodeStatus));
 
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectList(wechatQrcode);
@@ -140,5 +143,22 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		return result;
 	}
 	
+	private Date getExpirationTime(Integer expirationTimeInteger) {
+		Date expirationTime = new Date();
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(expirationTime);
+		switch(expirationTimeInteger.intValue()) {
+			case 0 : break;
+			case 1 : calendar.add(Calendar.DATE, 3); break;
+			case 2 : calendar.add(Calendar.DATE, 7); break;
+			case 3 : calendar.add(Calendar.MONTH, 1); break;
+			case 4 : calendar.add(Calendar.MONTH, 3); break;
+			case 5 : calendar.add(Calendar.MONTH, 6); break;
+			case 6 : calendar.add(Calendar.YEAR, 1); break;
+			case 7 : calendar.add(Calendar.YEAR, 3); break;
+			case 8 : calendar.add(Calendar.YEAR, 10); break;
+		}
+		return calendar.getTime();
+	}
 
 }

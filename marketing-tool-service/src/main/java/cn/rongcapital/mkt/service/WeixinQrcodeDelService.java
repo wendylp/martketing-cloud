@@ -14,23 +14,23 @@ public interface WeixinQrcodeDelService {
 	 * 删除二维码接口 （逻辑删除，状态改为2）
 	 * 接口：mkt.weixin.qrcode.del
 	 * 
-	 * @param qrcodeId
+	 * @param id
 	 * @return
 	 * @author shuiyangyang
 	 * @Date 2016.08.25
 	 */
-	BaseOutput weixinQrocdeDel(String qrcodeId);
+	BaseOutput weixinQrocdeDel(int id);
 
 	/**
 	 * 删除二维码接口 （微信记录物理删除）
 	 * 接口：mkt.weixin.qrcode.records.del
 	 * 
-	 * @param qrcodeId
+	 * @param id
 	 * @return
 	 * @author shuiyangyang
 	 * @Date 2016.08.25
 	 */
-	BaseOutput weixinQrcodeRecordsDel(String qrcodeId);
+	BaseOutput weixinQrcodeRecordsDel(int qrcodeId);
 	
 	
 }

@@ -14,11 +14,11 @@ public interface WeixinQrcodeMatchGetService {
 	 * 精确查询微信二维码名称是否存在
 	 * 接口：mkt.weixin.qrcode.match.get
 	 * 
-	 * @param wxAcct
+	 * @param qrcode_name
 	 * @param wxName
 	 * @return
 	 * @author shuiyangyang
 	 * @Date 2016.08.25
 	 */
-	BaseOutput weixinQrcodeMatchGet(String wxAcct, String wxName);
+	BaseOutput weixinQrcodeMatchGet(String qrcodeName, String wxName);
 }
