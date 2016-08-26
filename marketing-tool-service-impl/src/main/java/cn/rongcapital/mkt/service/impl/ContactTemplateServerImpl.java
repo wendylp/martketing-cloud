@@ -59,7 +59,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 		// 计数器
 		int chang_count = 0;
 		// 新增
-		if (ctIn.getContact_id() == 0) {
+		if (ctIn.getContact_id() == null) {
 			long cont_id = (int) (System.currentTimeMillis() / 1000);
 			if (CollectionUtils.isNotEmpty(ctIn.getField_list())) {
 
@@ -78,6 +78,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						param.setIschecked(field_list.getIschecked());
 						param.setPageViews(0);
 						param.setFieldIndex(field_list.getIndex());
+						param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
 
 						// 插入
 						contactTemplateDao.insert(param);
