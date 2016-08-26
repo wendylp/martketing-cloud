@@ -5,6 +5,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by Yunfeng on 2016-8-22.
  */
@@ -13,7 +15,7 @@ public class ImportContactsDataIn extends BaseInput{
 
     @NotEmpty
     private String userToken;
-    @NotEmpty
+    @NotNull
     private Long contactId;
 
     @JsonProperty("user_token")

@@ -14,6 +14,7 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.KeyidMapBlock;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface KeyidMapBlockDao extends BaseDao<KeyidMapBlock>{
@@ -53,4 +54,11 @@ public interface KeyidMapBlockDao extends BaseDao<KeyidMapBlock>{
 	KeyidMapBlock selectKeyIdMapBolckBySeq(KeyidMapBlock keyidMapBlock);
 
 	List<KeyidMapBlock> selectListBySequenceList(@Param("sequenceList") List<Integer> keyidListSequence);
+
+	/**
+	 * @功能简述: 根据名称选择KeyIdMapBlock
+	 * @Param:keyidMapBlock
+	 * @return: KeyidMapBlock
+	 */
+	List<KeyidMapBlock> selectListByNameList(@Param("field_name_list") ArrayList<String> contactTemplateKeys);
 }
