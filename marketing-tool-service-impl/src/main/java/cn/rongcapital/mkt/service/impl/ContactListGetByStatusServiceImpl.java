@@ -47,7 +47,7 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 			contactTemplate.setPageSize(10);
 		}
 		
-		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
+		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListGroupByCId(contactTemplate);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 

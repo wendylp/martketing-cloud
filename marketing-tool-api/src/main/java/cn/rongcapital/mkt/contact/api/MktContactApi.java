@@ -310,8 +310,10 @@ public class MktContactApi {
 	@GET
 	@Path("/mkt.contacts.commit.get")
 	public BaseOutput contactsCommitGet(@NotNull @QueryParam("contact_id") Integer contact_id,
-			@NotNull @QueryParam("commit_time") Integer commit_time) {
-		return contactsCommitSaveService.contactsCommitGet(contact_id, commit_time);
+			@NotNull @QueryParam("commit_time") Integer commit_time,
+			 @DefaultValue("0") @Min(0) @QueryParam("index") int index,
+			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
+		return contactsCommitSaveService.contactsCommitGet(contact_id, commit_time, index, size);
 	}
 
 	/**
