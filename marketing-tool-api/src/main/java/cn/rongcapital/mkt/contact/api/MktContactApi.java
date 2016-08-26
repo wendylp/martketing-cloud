@@ -311,7 +311,7 @@ public class MktContactApi {
 	@Path("/mkt.contacts.commit.get")
 	public BaseOutput contactsCommitGet(@NotNull @QueryParam("contact_id") Integer contact_id,
 			@NotNull @QueryParam("commit_time") Integer commit_time,
-			 @DefaultValue("0") @Min(0) @QueryParam("index") int index,
+			 @DefaultValue("1") @Min(1) @QueryParam("index") int index,
 			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 		return contactsCommitSaveService.contactsCommitGet(contact_id, commit_time, index, size);
 	}
@@ -385,7 +385,7 @@ public class MktContactApi {
 	@Path("/mkt.contact.list.get")
 	public BaseOutput getContactList(@NotNull @QueryParam("contact_status") Integer contact_status,
 			 @QueryParam("contact_id") String contact_id, @QueryParam("contact_name") String contact_name,
-			 @DefaultValue("0") @Min(0) @QueryParam("index") int index,
+			 @DefaultValue("1") @Min(1) @QueryParam("index") int index,
 			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 		return contactListGetByStatusService.getContactList(contact_status, contact_id, contact_name, index, size);
 	}
