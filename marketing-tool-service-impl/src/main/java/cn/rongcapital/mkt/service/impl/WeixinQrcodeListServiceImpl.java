@@ -44,14 +44,14 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 * @Data 2016.08.19
 	 */
 	@Override
-	public BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus, int index, int size) {
+	public BaseOutput getWeixinQrcodeList(String wxmpId, Integer expirationTime, Byte qrcodeStatus, int index, int size) {
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
 		WechatQrcode wechatQrcode = new WechatQrcode();
 
-		wechatQrcode.setWxName(wxmpName);
+		wechatQrcode.setWxAcct(wxmpId);
 		//wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
 		wechatQrcode.setStatus(Byte.valueOf(qrcodeStatus));
 		wechatQrcode.setPageSize(size);
