@@ -16,6 +16,7 @@ import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.job.service.BaseTagData;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.ShoppingWechat;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 
 @Service
 public class TagDataWeimobServiceImpl extends BaseTagData implements TaskService {
@@ -32,7 +33,20 @@ public class TagDataWeimobServiceImpl extends BaseTagData implements TaskService
     public void task(Integer taskId) {
         logger.info("tag task : 公众号下，openid有购买记录的用户标记为是购买用户，其余的标记为不是购买用户");
         logger.info("（新增）品牌联系强度－客户流失概率－是否购买用户－（是／否）");
-        handleData(getWeimob());
+        //handleData(getWeimob());
+        
+        Criteria criteriaAll = Criteria.where("mid").gt(-1);
+        List<DataParty> dataPartyList = mongoTemplate.find(new Query(criteriaAll),cn.rongcapital.mkt.po.mongodb.DataParty.class);
+        for (DataParty dataParty : dataPartyList) {
+			//获取mid
+			Integer mid = dataParty.getMid();
+			//获取渠道偏好
+			String weimob = dataShoppingDao.selectWeimobByKeyid(mid);
+			if(null != weimob){
+				Update update = new Update().set("weimob", weimob);
+				updateMongodbTag(mongoTemplate,mid, update);
+			}
+		}
     }
 
     public List<ShoppingWechat> getWeimob() {

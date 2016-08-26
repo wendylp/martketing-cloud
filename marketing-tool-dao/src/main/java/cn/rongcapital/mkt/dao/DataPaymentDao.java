@@ -71,5 +71,36 @@ public interface DataPaymentDao extends BaseDao<DataPayment>, BaseDataFilterDao<
      * @return ShoppingWechat
      */
 	List<ShoppingWechat> selectAllDataByWechatInfo();
+	
+	/**
+	 * @Title: selectWxCodeIsNullStatus   
+	 * @Description: 通过keyId查询wx_code是否为空  
+	 * @param: @param keyId
+	 * @param: @return      
+	 * @return: Integer      
+	 * @throws
+	 */
+	Integer selectWxCodeIsNullStatus(@Param("keyId")Integer keyId);
+	
+	/**
+	 * @Title: selectAverageIncomeAmountByKeyid   
+	 * @Description: 通过keyId查询单个微信用户收入金额平均额   
+	 * @param: @param keyId
+	 * @param: @return      
+	 * @return: Float      
+	 * @throws
+	 */
+	Float selectAverageIncomeAmountByKeyid(@Param("keyId")Integer keyId);
+	
+	/**
+	 * 
+	 * @Title: selectTotalIncomeAmountByKeyid   
+	 * @Description: 通过keyId查询单个微信用户收入金额总额 
+	 * @param: @param keyId
+	 * @param: @return      
+	 * @return: Float      
+	 * @throws
+	 */
+	Float selectTotalIncomeAmountByKeyid(@Param("keyId")Integer keyId);
 
 }

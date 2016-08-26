@@ -327,5 +327,38 @@
 		SELECT wxmp_id as pubId , wx_code as openId  FROM data_payment
 			WHERE wx_code is not null;
 	</select>
+	
+	<select id="selectWxCodeIsNullStatus" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM
+			data_payment
+		WHERE
+			keyid = #{keyId}
+		AND wx_code IS NOT NULL
+	</select>
+	
+	
+	<select id="selectAverageIncomeAmountByKeyid" resultType="java.lang.Float" parameterType="java.lang.Integer">
+		SELECT
+			IFNULL(AVG(income_amt),0) AS averageIncome
+		FROM 
+			data_payment
+		WHERE
+			pay_status = '成功'
+		AND keyid = #{keyId}
+	</select>
+	
+	
+	<select id="selectTotalIncomeAmountByKeyid"  resultType="java.lang.Float" parameterType="java.lang.Integer">
+		SELECT
+			IFNULL(SUM(income_amt),0) AS totalIncome
+		FROM 
+			data_payment
+		WHERE
+			pay_status = '成功'
+		AND keyid = #{keyId}
+	</select>
+	
 
 </mapper>
