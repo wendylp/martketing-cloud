@@ -68,7 +68,10 @@ public class ContactListKeyListServiceImpl implements ContactListKeyListService{
 				return getContactListKeyListOut;
 			}else{
 				String lastKeyidList = requiredContactTemplateList.get(0).getKeyList();
-				ArrayList<String> lastKeyids = transferStringFormatToArrayListFormat(lastKeyidList);
+				ArrayList<String> lastKeyids = null;
+				if(lastKeyidList != null){
+					lastKeyids = transferStringFormatToArrayListFormat(lastKeyidList);
+				}
 
 				for(ContactTemplate keyContactTemplate : requiredContactTemplateList){
 					KeyidMapBlock keyidMapBlock = new KeyidMapBlock();
@@ -78,7 +81,7 @@ public class ContactListKeyListServiceImpl implements ContactListKeyListService{
 					ImportContactKeyInfo importContactKeyInfo = new ImportContactKeyInfo();
 					importContactKeyInfo.setFieldName(keyContactTemplate.getFieldName());
 					importContactKeyInfo.setFieldCode(keyContactTemplate.getFieldCode());
-					if(lastKeyids.contains(keyContactTemplate.getFieldName())){
+					if(lastKeyidList != null && lastKeyids.contains(keyContactTemplate.getFieldName())){
 						importContactKeyInfo.setIsSelected(SELECTED);
 					}else{
 						importContactKeyInfo.setIsSelected(UN_SELECTED);
