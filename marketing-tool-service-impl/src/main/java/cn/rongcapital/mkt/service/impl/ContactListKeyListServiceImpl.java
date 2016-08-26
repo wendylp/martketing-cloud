@@ -52,7 +52,7 @@ public class ContactListKeyListServiceImpl implements ContactListKeyListService{
 		contactTemplate.setRequired(REQUIRED);
 		List<ContactTemplate> requiredContactTemplateList = contactTemplateDao.selectList(contactTemplate);
 		if(!CollectionUtils.isEmpty(requiredContactTemplateList)){
-			if(requiredContactTemplateList.get(0).getIsRememberImportKey() == REMEMBERED_IMPORT_KEY.byteValue()){
+			if(requiredContactTemplateList.get(0).getIsRememberImportKey() != null && requiredContactTemplateList.get(0).getIsRememberImportKey() == REMEMBERED_IMPORT_KEY.byteValue()){
 				//Todo:执行导入数据的方法
 
 				getContactListKeyListOut.setShowKeylistWindowStatus(UN_SHOWN_KEYWINDOW_STATUS);
