@@ -32,26 +32,45 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
 	public BaseOutput contactListTag(ContactListTagIn body) {
-		CustomTag tag = new CustomTag();
-		tag.setName(body.getTag_name());
-
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
-
-		int count = tagDao.selectListCount(tag);
-		if (count > 0) {
+		
+		//获取标签名称
+		String[] tag_names = body.getTag_names();
+		
+		CustomTag tag = new CustomTag();
+		int temp = 0;
+		
+		for (String tagName : tag_names) {
+			tag.setName(tagName);
+			int count = tagDao.selectListCount(tag);
+			if(count > 0){
+				continue;
+			}
+			tagDao.insert(tag);
+			temp++;
+		}
+		//当temp为0时，表示传入的所有标签名称已经存在。
+		if (temp == 0) {
 			result = new BaseOutput();
 			result.setCode(10001);
 			result.setMsg("标签名称已存在");
 			return result;
 		}
-
-		tagDao.insert(tag);
-
 		CustomTagMap tagMap = new CustomTagMap();
 		tagMap.setTagId(tag.getId());
 		tagMap.setMapId(body.getContact_id());
 		tagMapDao.insert(tagMap);
+		
+//		tag.setName(body.getTag_name());
+
+//		int count = tagDao.selectListCount(tag);
+		//tagDao.insert(tag);
+
+//		CustomTagMap tagMap = new CustomTagMap();
+//		tagMap.setTagId(tag.getId());
+//		tagMap.setMapId(body.getContact_id());
+//		tagMapDao.insert(tagMap);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", body.getContact_id());

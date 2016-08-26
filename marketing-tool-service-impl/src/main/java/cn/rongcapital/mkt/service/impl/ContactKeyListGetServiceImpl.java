@@ -25,6 +25,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
     //Todo: 2.contactId不为null则代表编辑接口。
     private static final Integer PAGE_SIZE = 100;
     private static final Integer NON_SELECTED_VALUE = 0;
+    private static final Integer MODIFY_DEFAULT_INDEX = 0;
 
     @Autowired
     private DefaultContactTemplateDao defaultContactTemplateDao;
@@ -55,6 +56,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
                 getContactKeyListOutput.setStatus(new Integer(contactTemplateList.get(0).getStatus()));
                 for(DefaultContactTemplate defaultContactTemplate1 : defaultContactTemplateList){
                     defaultContactTemplate1.setIsSelected(NON_SELECTED_VALUE.byteValue());
+                    defaultContactTemplate1.setDefaultShownSeq(MODIFY_DEFAULT_INDEX);
                 }
                 for(DefaultContactTemplate defaultContactTemplate1 : defaultContactTemplateList){
                     for(ContactTemplate contactTemplate1 : contactTemplateList){
@@ -62,7 +64,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
                             defaultContactTemplate1.setIsSelected(Integer.valueOf(contactTemplate1.getSelected()).byteValue());
                             defaultContactTemplate1.setIsChecked(contactTemplate1.getIschecked().byteValue());
                             defaultContactTemplate1.setIsRequired(contactTemplate1.getRequired().byteValue());
-                            defaultContactTemplate1.setStartIndex(contactTemplate1.getFieldIndex());
+                            defaultContactTemplate1.setDefaultShownSeq(contactTemplate1.getFieldIndex());
                             break;
                         }
                     }

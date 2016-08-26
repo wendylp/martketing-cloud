@@ -29,13 +29,13 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 	private WechatQrcodeDao wechatQrcodeDao;
 	
 	@Override
-	public BaseOutput weixinQrocdeDel(String qrcodeId) {
+	public BaseOutput weixinQrocdeDel(int id) {
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE,null);
 		
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		
-		wechatQrcode.setId(Integer.valueOf(qrcodeId));
+		wechatQrcode.setId(id);
 		wechatQrcode.setStatus((byte)2);
 		
 		int count = wechatQrcodeDao.updateById(wechatQrcode);
@@ -46,7 +46,7 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
 		} else {
 			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("id", qrcodeId);
+			map.put("id", id);
 			map.put("status", 2);
 			result.getData().add(map);
 		}
@@ -58,18 +58,18 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 	 * 删除二维码接口 （微信记录物理删除）
 	 * 接口：mkt.weixin.qrcode.records.del
 	 * 
-	 * @param qrcodeId
+	 * @param id
 	 * @return
 	 * @author shuiyangyang
 	 * @Date 2016.08.25
 	 */
 	@Override
-	public BaseOutput weixinQrcodeRecordsDel(String qrcodeId) {
+	public BaseOutput weixinQrcodeRecordsDel(int id) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE,null);
 		
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		
-		wechatQrcode.setId(Integer.valueOf(qrcodeId));
+		wechatQrcode.setId(id);
 		
 		int count = wechatQrcodeDao.deleteById(wechatQrcode);
 		if(count<=0) {
@@ -78,7 +78,7 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
 		} else {
 			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("id", qrcodeId);
+			map.put("id", id);
 			result.getData().add(map);
 		}
 		return result;

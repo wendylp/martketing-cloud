@@ -132,6 +132,7 @@
 				<![CDATA[ AND qrcode_name like #{fuzzy}]]>
 			</if>
 		</where>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
 	
 	<!-- 通过id删除数据 -->
@@ -140,5 +141,13 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</delete>
+	
+	<!-- 通过BatchId更新 expiration_time qrcode_tag_ids qrcode_status -->
+	<update id="updataByBatchId" parameterType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[update wechat_qrcode]]>
+		set expiration_time = #{expirationTime}, related_tags = #{relatedTags}, status = #{status}
+		<![CDATA[where batch_id = #{batchId}]]>
+		
+	</update>
 	
 </mapper>

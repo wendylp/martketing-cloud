@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.ContactListDao;
-import cn.rongcapital.mkt.po.ContactList;
+import cn.rongcapital.mkt.dao.ContactTemplateDao;
+import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContactListGetByStatusService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -22,29 +22,53 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public class ContactListGetByStatusServiceImpl implements ContactListGetByStatusService {
 
 	@Autowired
-	ContactListDao contactListdao;
+	ContactTemplateDao contactTemplateDao;
 
 	@Override
-	public BaseOutput getContactList(Integer contactStatus, String contactId) {
-		ContactList contactList = new ContactList();
-		contactList.setStatus(contactStatus);
-		if (contactId != null)
-			contactList.setId(Integer.parseInt(contactId));
-
-		List<ContactList> contactLists = contactListdao.selectList(contactList);
+	public BaseOutput getContactList(Integer contactStatus, String contactId, String contactName, int index, int size) {
+		//ContactList contactList = new ContactList();
+		ContactTemplate contactTemplate = new ContactTemplate();
+		contactTemplate.setStatus(contactStatus.byteValue());
+		if (contactId != null){
+			contactTemplate.setContactId(Long.valueOf(contactId));
+		}
+		if (contactName != null){
+			contactTemplate.setContactName(contactName);
+		}
+		//set index and size
+		if (index >= 0) {
+			contactTemplate.setStartIndex(index);
+		} else {
+			contactTemplate.setStartIndex(0);
+		}
+		if (size != 0) {
+			contactTemplate.setPageSize(size);
+		} else {
+			contactTemplate.setPageSize(10);
+		}
+		
+		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListGroupByCId(contactTemplate);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
-		if (CollectionUtils.isNotEmpty(contactLists)) {
-			result.setTotal(contactLists.size());
-			
-			for (ContactList w : contactLists) {
+		//Map<String, Object> cloMap = new HashMap<>();
+		if (CollectionUtils.isNotEmpty(contactTemplateList)) {
+			result.setTotal(contactTemplateList.size());
+			List<Object> resultData = result.getData();
+			for (ContactTemplate contactTem : contactTemplateList) {
+				
 				Map<String, Object> contactListMap = new HashMap<String, Object>();
-				contactListMap.put("contact_id", w.getId());
-				contactListMap.put("contact_name", w.getName());
-				result.getData().add(contactListMap);
+				contactListMap.put("contact_id", contactTem.getContactId());
+				contactListMap.put("contact_name", contactTem.getContactName());
+				contactListMap.put("qrcode_url", contactTem.getQrcodeUrl());
+				contactListMap.put("qrcode_pic", contactTem.getQrcodePic());
+				contactListMap.put("user_count", contactTemplateList.size());
+				contactListMap.put("contact_status", contactStatus);
+				//cloMap.put(contactTemplate.getFieldCode(), contactTemplate.getFieldName());
+				resultData.add(contactListMap);
 			}
 		}
+		//result.getColNames().add(cloMap);
 		return result;
 	}
 

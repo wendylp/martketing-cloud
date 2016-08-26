@@ -11,8 +11,11 @@
 package cn.rongcapital.mkt.contact.api;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -249,7 +252,7 @@ public class MktContactApi {
 	@GET
 	@Path("mkt.contact.list.key.list")
 	public BaseOutput getContactListKeyList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("contact_id") String contactId) {
+			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("contact_id") Integer contactId) {
 
 		return contactListKeyListService.getContactListKeyList(contactId);
 	}
@@ -307,8 +310,10 @@ public class MktContactApi {
 	@GET
 	@Path("/mkt.contacts.commit.get")
 	public BaseOutput contactsCommitGet(@NotNull @QueryParam("contact_id") Integer contact_id,
-			@NotNull @QueryParam("commit_time") Integer commit_time) {
-		return contactsCommitSaveService.contactsCommitGet(contact_id, commit_time);
+			@NotNull @QueryParam("commit_time") Integer commit_time,
+			 @DefaultValue("0") @Min(0) @QueryParam("index") int index,
+			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
+		return contactsCommitSaveService.contactsCommitGet(contact_id, commit_time, index, size);
 	}
 
 	/**
@@ -379,7 +384,9 @@ public class MktContactApi {
 	@GET
 	@Path("/mkt.contact.list.get")
 	public BaseOutput getContactList(@NotNull @QueryParam("contact_status") Integer contact_status,
-			 @QueryParam("contact_id") String contact_id) {
-		return contactListGetByStatusService.getContactList(contact_status, contact_id);
+			 @QueryParam("contact_id") String contact_id, @QueryParam("contact_name") String contact_name,
+			 @DefaultValue("0") @Min(0) @QueryParam("index") int index,
+			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
+		return contactListGetByStatusService.getContactList(contact_status, contact_id, contact_name, index, size);
 	}
 }
