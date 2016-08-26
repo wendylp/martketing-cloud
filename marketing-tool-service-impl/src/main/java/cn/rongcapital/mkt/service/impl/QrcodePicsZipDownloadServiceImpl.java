@@ -33,16 +33,23 @@ public class QrcodePicsZipDownloadServiceImpl implements QrcodePicsZipDownloadSe
 		List<WechatQrcode> wechatQrcodes = wechatQrcodeDao.selectList(wechatQrcode);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
+		
 		if (CollectionUtils.isNotEmpty(wechatQrcodes)) {
-			result.setTotal(wechatQrcodes.size());
 			
-			for (WechatQrcode w : wechatQrcodes) {
-				Map<String, Object> wechatQrcodetMap = new HashMap<String, Object>();
-				wechatQrcodetMap.put("qrcode_pic", w.getQrcodePic());
-				wechatQrcodetMap.put("qrcode_url", w.getQrcodeUrl());
-				result.getData().add(wechatQrcodetMap);
-			}
+			
+			Map<String, Object> wechatQrcodetMap = new HashMap<String, Object>();
+			wechatQrcodetMap.put("qrcode_pic1_zip", "/large/" + batchId + ".zip");
+			wechatQrcodetMap.put("qrcode_pic2_zip", "/middle/" + batchId + ".zip");
+			wechatQrcodetMap.put("qrcode_pic3_zip", "/small/" + batchId + ".zip");
+			result.getData().add(wechatQrcodetMap);
+			result.setTotal(1);
+			
+		} else {
+			result.setCode(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode());
+			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
 		}
+		
+		
 		return result;
 	}
 
