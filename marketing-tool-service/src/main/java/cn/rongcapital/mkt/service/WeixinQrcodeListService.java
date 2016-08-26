@@ -13,7 +13,7 @@ public interface WeixinQrcodeListService {
 	 * @return
 	 * @author shuiyangyang
 	 */
-	BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus);
+	BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus, int index, int size);
 	
 	/**
 	 * 根据输入的二维码名称模糊查询表wechat_qrcode
@@ -22,5 +22,5 @@ public interface WeixinQrcodeListService {
 	 * @return
 	 * @author shuiyangyang
 	 */
-	BaseOutput getWeixinQrcodeListQrname(String qrcodeName);
+	BaseOutput getWeixinQrcodeListQrname(String qrcodeName, int size,int index);
 }
