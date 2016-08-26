@@ -40,6 +40,8 @@ public class WechatChannelListServiceImpl implements WechatChannelListService {
 				Map<String, Object> channelMap = new HashMap<String, Object>();
 				channelMap.put("channel_id", w.getId());
 				channelMap.put("channel_name", w.getChName());
+				channelMap.put("channel_type", w.getType());
+				channelMap.put("channel_removed", w.getIsRemoved());
 				result.getData().add(channelMap);
 			}
 		}

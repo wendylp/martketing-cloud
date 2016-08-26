@@ -53,4 +53,11 @@ public interface WechatQrcodeDao extends BaseDao<WechatQrcode>{
 	 */
 	int deleteById(WechatQrcode t);
 	
+	/**
+	 * 通过BatchId更新 expiration_time qrcode_tag_ids qrcode_status
+	 * @param t
+	 * @return
+	 */
+	int updataByBatchId(WechatQrcode t);
+	
 }

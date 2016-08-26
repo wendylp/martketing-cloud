@@ -13,6 +13,8 @@ package cn.rongcapital.mkt.wechat.api;
 import java.util.Date;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -37,6 +39,7 @@ import cn.rongcapital.mkt.service.QrcodePicDownloadService;
 import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
 import cn.rongcapital.mkt.service.QrcodeUsedCountService;
 import cn.rongcapital.mkt.service.TagUpdateService;
+import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 //import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
 import cn.rongcapital.mkt.service.WeixinQrcodeErrorDownloadService;
@@ -86,8 +89,8 @@ public class MktWeChatApi {
 	@Autowired
 	private WeixinQrcodeErrorDownloadService weixinQrcodeErrorDownloadService;
 	
-//	@Autowired
-//	private WeixinQrcodeBatchSaveService weixinQrcodeBatchSaveService;
+	@Autowired
+	private WeixinQrcodeBatchSaveService weixinQrcodeBatchSaveService;
 
 
 	/**
@@ -104,11 +107,13 @@ public class MktWeChatApi {
 	@GET
 	@Path("mkt.weixin.qrcode.list")
 	public BaseOutput getWeixinQrcodeList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @QueryParam("wxmp_name") String wxmpName,
+			@NotEmpty @QueryParam("ver") String ver, @QueryParam("wxmp_name") String wxmpId,
 			@QueryParam("expiration_time") Integer expirationTime,
-			@DefaultValue("0") @QueryParam("qrcode_status") Byte qrcodeStatus) {
+			@DefaultValue("0") @QueryParam("qrcode_status") Byte qrcodeStatus,
+			@DefaultValue("1") @Min(1) @QueryParam("index") int index,
+			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 
-		return weixinQrcodeListService.getWeixinQrcodeList(wxmpName, expirationTime, qrcodeStatus);
+		return weixinQrcodeListService.getWeixinQrcodeList(wxmpId, expirationTime, qrcodeStatus,index, size);
 	}
 
 	/**
@@ -124,9 +129,11 @@ public class MktWeChatApi {
 	@GET
 	@Path("mkt.weixin.qrcode.list.qrname")
 	public BaseOutput getWeixinQrcodeListQrname(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @QueryParam("qrcode_name") String qrcodeName) {
+			@NotEmpty @QueryParam("ver") String ver, @QueryParam("qrcode_name") String qrcodeName,
+			@DefaultValue("1") @Min(1) @QueryParam("index") int index,
+			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 
-		return weixinQrcodeListService.getWeixinQrcodeListQrname(qrcodeName);
+		return weixinQrcodeListService.getWeixinQrcodeListQrname(qrcodeName,index,size);
 
 	}
 
@@ -278,6 +285,8 @@ public class MktWeChatApi {
 	 * 
 	 * @param batchId
 	 * @return
+	 * @author shuiyangyang
+	 * @Date 2016.08.26
 	 */
 	@GET
 	@Path("/mkt.weixin.qrcode.error.download")
@@ -285,15 +294,26 @@ public class MktWeChatApi {
 			@NotNull @QueryParam("batch_id") Integer batchId) {
 		return weixinQrcodeErrorDownloadService.weixinQrcodeErrorDownload(batchId);
 	}
-	
-//	@GET
-//	@Path("/mkt.weixin.qrcode.batch.save")
-//	public BaseOutput weixinQrcodeBatchSave(
-//			@NotNull @QueryParam("batch_id") Integer batchId,
-//			@NotNull @QueryParam("expiration_time") Date expirationTime,
-//			@NotEmpty @QueryParam("qrcode_tag_ids") String qrcodeTagIds,
-//			@NotNull @QueryParam("qrcode_status") Integer qrcodeStatus) {
-//		return weixinQrcodeBatchSaveService.weixinQrcodeBatchSave(batchId, expirationTime, qrcodeTagIds, qrcodeStatus);
-//	}
+	/**
+	 * 
+	 * 根据batch_id，在表wechat_qrcode 中查找到对应二维码记录，更新：失效时间、标签、备注信息、状态(status=0)
+	 * 
+	 * @param batchId
+	 * @param expirationTime
+	 * @param qrcodeTagIds
+	 * @param qrcodeStatus
+	 * @return
+	 * @author shuiyangyang
+	 * @Date 2016.08.26
+	 */
+	@GET
+	@Path("/mkt.weixin.qrcode.batch.save")
+	public BaseOutput weixinQrcodeBatchSave(
+			@NotNull @QueryParam("batch_id") Integer batchId,
+			@NotNull @QueryParam("expiration_time") String expirationTime,
+			@NotEmpty @QueryParam("qrcode_tag_ids") String qrcodeTagIds,
+			@NotNull @QueryParam("qrcode_status") Integer qrcodeStatus) {
+		return weixinQrcodeBatchSaveService.weixinQrcodeBatchSave(batchId, expirationTime, qrcodeTagIds, qrcodeStatus);
+	}
 
 }
