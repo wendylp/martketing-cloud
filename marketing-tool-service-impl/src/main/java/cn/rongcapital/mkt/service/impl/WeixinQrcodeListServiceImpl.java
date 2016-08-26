@@ -52,7 +52,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		WechatQrcode wechatQrcode = new WechatQrcode();
 
 		wechatQrcode.setWxName(wxmpName);
-		wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
+		//wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
 		wechatQrcode.setStatus(Byte.valueOf(qrcodeStatus));
 		wechatQrcode.setPageSize(size);
 		wechatQrcode.setStartIndex((index-1)*size);
