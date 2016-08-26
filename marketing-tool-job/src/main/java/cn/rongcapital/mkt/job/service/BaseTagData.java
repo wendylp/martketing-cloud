@@ -7,6 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.po.DataParty;
@@ -18,8 +22,7 @@ public class BaseTagData {
 
     @Autowired
     private DataPartyDao dataPartyDao;
-
-
+    
     public void handleData(List<ShoppingWechat> shoppingWechats) {
         if (CollectionUtils.isEmpty(shoppingWechats)) {
             return;
@@ -55,5 +58,20 @@ public class BaseTagData {
     protected void tagData(ShoppingWechat data) {
         // do nothing
     }
+    
+    /**
+     * @Title: updateMongodbTag   
+     * @Description: 更新Mongodb标签
+     * @param: @param mid	主键
+     * @param: @param update      
+     * @return: void      
+     * @throws
+     */
+    public void updateMongodbTag(MongoTemplate mongoTemplate,Integer mid,Update update){
+    	Criteria criteria = Criteria.where("mid").is(mid);
+    	mongoTemplate.findAndModify(new Query(criteria), update,cn.rongcapital.mkt.po.mongodb.DataParty.class);
+    }
+    
+    
 
 }
