@@ -46,6 +46,8 @@ public class ContactTemplate extends BaseQuery implements Serializable {
 
     private Integer fieldIndex;
 
+    private Byte isShownInFeedback;
+
     public Integer getId() {
         return id;
     }
@@ -204,5 +206,13 @@ public class ContactTemplate extends BaseQuery implements Serializable {
 
     public void setFieldIndex(Integer fieldIndex) {
         this.fieldIndex = fieldIndex;
+    }
+
+    public Byte getIsShownInFeedback() {
+        return isShownInFeedback;
+    }
+
+    public void setIsShownInFeedback(Byte isShownInFeedback) {
+        this.isShownInFeedback = isShownInFeedback;
     }
 }

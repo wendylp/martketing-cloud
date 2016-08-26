@@ -11,11 +11,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.rongcapital.mkt.dao.ContactListDao;
+import cn.rongcapital.mkt.po.ContactList;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.mysql.fabric.xmlrpc.base.Data;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -30,14 +31,30 @@ import cn.rongcapital.mkt.vo.in.Field_list;
 @Service
 public class ContactTemplateServerImpl implements ContactTemplateServer {
 
+	private static final Integer NO_CHOICE_FOR_IMPORTED_DATA = 0;
+	private static final Integer UN_IMPORTED_DATA = 1;
+	private static final Integer IMPORTED_DATA = 2;
+	private static final Integer NO_CHOICE_FOR_SHOWN = 0;
+	private static final Integer SHOWN_NEW = 1;
+	private static final Integer SHOWN_ORIGIN = 2;
+	private static final Integer UN_REMEMBER_IMPORTLIST = 0;
+	private static final Integer SHOWN_IN_FEEDBACK = 0;
+	private static final Integer NO_SHOWN_IN_FEEDBACK = 1;
+
 	@Autowired
-	ContactTemplateDao contactTemplateDao;
+	private ContactTemplateDao contactTemplateDao;
+
+	@Autowired
+	private ContactListDao contactListDao;
 
 	@Override
 	public BaseOutput ContactListCreate(ContactTemplateIn ctIn) {
 
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
+
+		Integer keyModifyStatus = ctIn.getKeyModifyStatus();
+		Integer columnShownStatus = ctIn.getColumnShownStatus();
 
 		// 计数器
 		int chang_count = 0;
@@ -78,18 +95,75 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 				result.setTotal(0);
 			}
 
-		}// 修改 
+		}// 修改 先删除再新增
 		else{
 				if (CollectionUtils.isNotEmpty(ctIn.getField_list())) {
+					//1.先处理数据导入
+					if(keyModifyStatus != NO_CHOICE_FOR_IMPORTED_DATA){
+						if(keyModifyStatus == UN_IMPORTED_DATA){
+							ContactList contactList = new ContactList();
+							contactList.setContactTemplId(ctIn.getContact_id().intValue());
+							contactList.setStatus(Integer.valueOf(ApiConstant.TABLE_DATA_STATUS_VALID));
+							List<ContactList> contactLists = contactListDao.selectList(contactList);
+							if(!CollectionUtils.isEmpty(contactLists)){
+								for(ContactList validContactList : contactLists){
+									validContactList.setStatus(Integer.valueOf(ApiConstant.TABLE_DATA_STATUS_INVALID));
+									contactListDao.updateById(validContactList);
+								}
+							}
+						}else if(keyModifyStatus == IMPORTED_DATA){
+							//导入数据
+
+						}
+						//更新相应模板表中的keyList和isRemember字段
+						ContactTemplate contactTemplate = new ContactTemplate();
+						contactTemplate.setContactId(ctIn.getContact_id());
+						List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
+						if(!CollectionUtils.isEmpty(contactTemplateList)){
+							for(ContactTemplate updateContactTemplate : contactTemplateList){
+								updateContactTemplate.setKeyList(null);
+								updateContactTemplate.setIsRememberImportKey(UN_REMEMBER_IMPORTLIST.byteValue());
+								contactTemplateDao.updateById(updateContactTemplate);
+							}
+						}
+					}
+
+					//2.处理显示逻辑
+					if(columnShownStatus != NO_CHOICE_FOR_SHOWN){
+						if(columnShownStatus == SHOWN_NEW){
+							ContactTemplate contactTemplate = new ContactTemplate();
+							contactTemplate.setContactId(ctIn.getContact_id());
+							List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
+							if(!CollectionUtils.isEmpty(contactTemplateList)){
+								for(ContactTemplate updateContactTemplate : contactTemplateList){
+									updateContactTemplate.setIsShownInFeedback(NO_SHOWN_IN_FEEDBACK.byteValue());
+									contactTemplateDao.updateById(updateContactTemplate);
+								}
+							}
+						}else if(columnShownStatus == SHOWN_ORIGIN){
+							//不对数据库进行任何更新
+						}
+					}
+
 					// 先删除
-					ContactTemplate parm_up = new ContactTemplate();
-					parm_up.setContactId(ctIn.getContact_id());
-					contactTemplateDao.deleteByCId(parm_up);
+//					ContactTemplate parm_up = new ContactTemplate();
+//					parm_up.setContactId(ctIn.getContact_id());
+//					contactTemplateDao.deleteByCId(parm_up);
 //					List<ContactTemplate> piew_list =contactTemplateDao.selectList(parm_up) ;
 //					//浏览次数
 //					int page_view_count = piew_list.get(0).getPageSize();
 
-					// 在新增
+					// 再新增
+					ContactTemplate contactTemplate = new ContactTemplate();
+					contactTemplate.setContactId(ctIn.getContact_id());
+					contactTemplate.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+					List<ContactTemplate> oriContactTemplateList = contactTemplateDao.selectList(contactTemplate);
+					if(!CollectionUtils.isEmpty(oriContactTemplateList)){
+						for(ContactTemplate oriContactTemplate : oriContactTemplateList){
+							oriContactTemplate.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+							contactTemplateDao.updateById(oriContactTemplate);
+						}
+					}
 					for (Field_list field_list : ctIn.getField_list()) {
 						if (field_list.getSelected().equals("1")) {
 							ContactTemplate param = new ContactTemplate();
@@ -106,10 +180,13 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 							param.setPageViews(0);
 							param.setFieldIndex(field_list.getIndex());
 							param.setUpdateTime(new Date());
-							
-							// 插入
-							contactTemplateDao.insert(param);
-							chang_count++;
+
+							if(isInOldTemplate(param,oriContactTemplateList)){
+								param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+								contactTemplateDao.updateById(param);
+							}else {
+								contactTemplateDao.insert(param);
+							}
 						}
 					}
 					        // 影响行数
@@ -122,6 +199,17 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 			}
 
 		return result;
+	}
+
+	private boolean isInOldTemplate(ContactTemplate param, List<ContactTemplate> oriContactTemplateList) {
+		boolean flag = false;
+		for(ContactTemplate contactTemplate : oriContactTemplateList){
+			if(contactTemplate.getFieldName().equals(param.getFieldName())){
+				flag = true;
+				break;
+			}
+		}
+		return flag;
 	}
 
 	@Override
