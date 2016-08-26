@@ -23,7 +23,7 @@ public class WechatQrcode extends BaseQuery {
 
     private Date createTime;
 
-    private Integer expirationTime;
+    private Date expirationTime;
 
     private Byte status;
 
@@ -109,11 +109,11 @@ public class WechatQrcode extends BaseQuery {
         this.createTime = createTime;
     }
 
-    public Integer getExpirationTime() {
+    public Date getExpirationTime() {
         return expirationTime;
     }
 
-    public void setExpirationTime(Integer expirationTime) {
+    public void setExpirationTime(Date expirationTime) {
         this.expirationTime = expirationTime;
     }
 
