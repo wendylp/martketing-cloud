@@ -11,8 +11,11 @@
 package cn.rongcapital.mkt.contact.api;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -379,7 +382,9 @@ public class MktContactApi {
 	@GET
 	@Path("/mkt.contact.list.get")
 	public BaseOutput getContactList(@NotNull @QueryParam("contact_status") Integer contact_status,
-			 @QueryParam("contact_id") String contact_id) {
-		return contactListGetByStatusService.getContactList(contact_status, contact_id);
+			 @QueryParam("contact_id") String contact_id, @QueryParam("contact_name") String contact_name,
+			 @DefaultValue("0") @Min(0) @QueryParam("index") int index,
+			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
+		return contactListGetByStatusService.getContactList(contact_status, contact_id, contact_name, index, size);
 	}
 }
