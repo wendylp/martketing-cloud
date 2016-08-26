@@ -120,10 +120,8 @@ public class ContactList extends BaseQuery {
 
     private String address;
 
-    private Integer commitId;
-
     private String downloadUrl;
-    
+
 	private Date startTime;
 	private Date endTime;
 
@@ -581,14 +579,6 @@ public class ContactList extends BaseQuery {
 
     public void setAddress(String address) {
         this.address = address == null ? null : address.trim();
-    }
-
-    public Integer getCommitId() {
-        return commitId;
-    }
-
-    public void setCommitId(Integer commitId) {
-        this.commitId = commitId;
     }
 
     public String getDownloadUrl() {

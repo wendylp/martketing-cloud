@@ -15,6 +15,10 @@ public class WechatChannel extends BaseQuery {
 
     private Date updateTime;
 
+    private Integer type;
+
+    private Integer isRemoved;
+
     public Integer getId() {
         return id;
     }
@@ -53,5 +57,21 @@ public class WechatChannel extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Integer getIsRemoved() {
+        return isRemoved;
+    }
+
+    public void setIsRemoved(Integer isRemoved) {
+        this.isRemoved = isRemoved;
     }
 }
