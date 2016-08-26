@@ -1,8 +1,10 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +16,9 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.ContactListDao;
+import cn.rongcapital.mkt.dao.ContactTemplateDao;
 import cn.rongcapital.mkt.po.ContactList;
+import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContacsCommitSaveService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.ContactsCommitDelIn;
@@ -28,6 +32,9 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 	@Autowired
 	ContactListDao contactDao;
 
+	@Autowired
+	ContactTemplateDao contactTemplateDao;
+	
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
 	public BaseOutput contactsCommitSave(ContactsCommitSaveIn body) {
@@ -50,14 +57,27 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
-	public BaseOutput contactsCommitGet(Integer contact_id, Integer commit_time) {
+	public BaseOutput contactsCommitGet(Integer contact_id, Integer commit_time, Integer index, Integer size) {
 		ContactList contact = new ContactList();
+		ContactTemplate contactTemplate = new ContactTemplate();
+		contactTemplate.setContactId(Long.valueOf(contact_id));
+		contactTemplate.setSelected("1");//选中的
+		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListAll(contactTemplate);
+		
+		Map<String, Object> cloMap = new LinkedHashMap<>();
+		List<String> filedNameList = new ArrayList<>();
+		for(ContactTemplate template : contactTemplateList){
+			cloMap.put(template.getFieldCode(), template.getFieldName());
+			filedNameList.add(template.getFieldCode());
+		}
 		contact.setContactTemplId(contact_id);
 
 		Date startTime = null;
 		Date endTime = null;
 		Calendar canlendar = Calendar.getInstance();
 		switch (commit_time) {
+		case 0:
+			break;
 		case 1:
 			startTime = DateUtil.getDateFromString(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd");
 			endTime = new Date();
@@ -80,6 +100,9 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		}
 		contact.setStartTime(startTime);
 		contact.setEndTime(endTime);
+		
+		contact.setStartIndex(index);
+		contact.setPageSize(size);
 
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
@@ -88,20 +111,52 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		if (!CollectionUtils.isEmpty(list)) {
 			result.setTotal(list.size());
 			for (ContactList item : list) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("id",item.getId());
-				map.put("name", item.getName());
-				map.put("mobile", item.getMobile());
-				map.put("email", item.getEmail());
-				map.put("gender", item.getGender());
-				map.put("provice", item.getProvice());
-				map.put("city", item.getCity());
-				map.put("job", item.getJob());
-				map.put("source", item.getSource());
+				Map<String, Object> map = new LinkedHashMap<>();
+				for(String filedName : filedNameList){
+					if(filedName.equals("name")){
+						map.put(filedName, item.getName());
+					}else if(filedName.equals("gender")){
+						map.put(filedName, item.getGender());
+					}else if(filedName.equals("birthday")){
+						map.put(filedName, item.getBirthday());
+					}else if(filedName.equals("mobile")){
+						map.put(filedName, item.getMobile());
+					}else if(filedName.equals("tel")){
+						map.put(filedName, item.getTel());
+					}else if(filedName.equals("email")){
+						map.put(filedName, item.getEmail());
+					}else if(filedName.equals("qq")){
+						map.put(filedName, item.getQq());
+					}else if(filedName.equals("blood_type")){
+						map.put(filedName, item.getBloodType());
+					}else if(filedName.equals("nationality")){
+						map.put(filedName, item.getNationality());
+					}else if(filedName.equals("citizenship")){
+						map.put(filedName, item.getCitizenship());
+					}else if(filedName.equals("city")){
+						map.put(filedName, item.getCity());
+					}else if(filedName.equals("monthly_income")){
+						map.put(filedName, item.getMonthlyIncome());
+					}else if(filedName.equals("job")){
+						map.put(filedName, item.getJob());
+					}else if(filedName.equals("education")){
+						map.put(filedName, item.getEducation());
+					}else if(filedName.equals("employment")){
+						map.put(filedName, item.getEmployment());
+					}else if(filedName.equals("iq")){
+						map.put(filedName, item.getIq());
+					}else if(filedName.equals("identify_no")){
+						map.put(filedName, item.getIdentifyNo());
+					}else if(filedName.equals("driving_license")){
+						map.put(filedName, item.getDrivingLicense());
+					}else if(filedName.equals("marital_status")){
+						map.put(filedName, item.getMaritalStatus());
+					}
+				}
 				result.getData().add(map);
 			}
 		}
-
+		result.getColNames().add(cloMap);
 		return result;
 	}
 

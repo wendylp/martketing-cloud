@@ -44,7 +44,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 * @Data 2016.08.19
 	 */
 	@Override
-	public BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus) {
+	public BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus, int index, int size) {
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
@@ -54,6 +54,8 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		wechatQrcode.setWxName(wxmpName);
 		wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
 		wechatQrcode.setStatus(Byte.valueOf(qrcodeStatus));
+		wechatQrcode.setPageSize(size);
+		wechatQrcode.setStartIndex((index-1)*size);
 
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectList(wechatQrcode);
 
@@ -69,7 +71,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 * @Data 2016.08.19
 	 */
 	@Override
-	public BaseOutput getWeixinQrcodeListQrname(String qrcodeName) {
+	public BaseOutput getWeixinQrcodeListQrname(String qrcodeName, int size, int index) {
 		
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
@@ -77,6 +79,10 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		wechatQrcode.setQrcodeName(qrcodeName);
+		wechatQrcode.setPageSize(size);
+		wechatQrcode.setStartIndex((index-1)*size);
+
+
 		
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.fuzzySearchQrcodeName(wechatQrcode);
 		

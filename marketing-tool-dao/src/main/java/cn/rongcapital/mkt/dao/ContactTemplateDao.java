@@ -64,4 +64,8 @@ public interface ContactTemplateDao extends BaseDao<ContactTemplate>{
 	 * @return
 	 */
 	int updateById1(ContactTemplate t);
+	
+	List<ContactTemplate> selectListAll(ContactTemplate t);
+	
+	List<ContactTemplate> selectListGroupByCId(ContactTemplate t);
 }

@@ -15,7 +15,7 @@ public class ContactTemplateIn {
 
 	
 	@JsonProperty("contact_id")
-	private long contact_id;
+	private Long contact_id;
 
 	@NotEmpty
 	@JsonProperty("contact_name")
@@ -28,6 +28,9 @@ public class ContactTemplateIn {
 	@JsonProperty("contact_descript")
 	private String contact_descript;
 
+	private Integer keyModifyStatus;
+	private Integer columnShownStatus;
+
 	@JsonProperty("field_list")
 	private List<Field_list> field_list ;
 
@@ -38,12 +41,15 @@ public class ContactTemplateIn {
 	public String getUser_token(){
 	return this.user_token;
 	}
-	public void setContact_id(long contact_id){
-	this.contact_id = contact_id;
+
+	public Long getContact_id() {
+		return contact_id;
 	}
-	public long getContact_id(){
-	return this.contact_id;
+
+	public void setContact_id(Long contact_id) {
+		this.contact_id = contact_id;
 	}
+
 	public void setContact_name(String contact_name){
 	this.contact_name = contact_name;
 	}
@@ -69,4 +75,21 @@ public class ContactTemplateIn {
 	return this.field_list;
 	}
 
+	@JsonProperty("key_modify_status")
+	public Integer getKeyModifyStatus() {
+		return keyModifyStatus;
+	}
+
+	public void setKeyModifyStatus(Integer keyModifyStatus) {
+		this.keyModifyStatus = keyModifyStatus;
+	}
+
+	@JsonProperty("column_shown_status")
+	public Integer getColumnShownStatus() {
+		return columnShownStatus;
+	}
+
+	public void setColumnShownStatus(Integer columnShownStatus) {
+		this.columnShownStatus = columnShownStatus;
+	}
 }
