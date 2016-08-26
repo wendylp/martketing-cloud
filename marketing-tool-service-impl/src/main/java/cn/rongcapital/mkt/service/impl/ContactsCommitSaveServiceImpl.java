@@ -109,7 +109,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 	@ReadWrite(type = ReadWriteType.READ)
 	public BaseOutput contactsCommitDel(ContactsCommitDelIn body) {
 		ContactList contact = new ContactList();
-		contact.setCommitId(body.getCommit_id());
+		contact.setId(body.getCommit_id());
 		contact.setContactTemplId(body.getContact_id());
 		contact.setStatus(2);
 
