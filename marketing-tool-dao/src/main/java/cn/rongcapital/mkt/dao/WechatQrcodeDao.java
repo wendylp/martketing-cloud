@@ -44,4 +44,13 @@ public interface WechatQrcodeDao extends BaseDao<WechatQrcode>{
 	 */
 	List<WechatQrcode> fuzzySearchQrcodeName(WechatQrcode t);
 	
+	/**
+	 * 同过Id删除数据
+	 * @param t
+	 * @return
+	 * @author shuiyangyang
+	 * @Date 2016.08.25
+	 */
+	int deleteById(WechatQrcode t);
+	
 }

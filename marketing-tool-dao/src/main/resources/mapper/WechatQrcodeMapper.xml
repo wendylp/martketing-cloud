@@ -134,5 +134,11 @@
 		</where>
 	</select>
 	
+	<!-- 通过id删除数据 -->
+	<delete id="deleteById" parameterType="cn.rongcapital.mkt.po.WechatQrcode" >
+		<![CDATA[delete]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</delete>
 	
 </mapper>

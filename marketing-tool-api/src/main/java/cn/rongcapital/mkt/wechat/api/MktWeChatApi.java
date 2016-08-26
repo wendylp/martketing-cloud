@@ -29,13 +29,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
 import cn.rongcapital.mkt.service.QrcodeCreateCountService;
 import cn.rongcapital.mkt.service.QrcodePicDownloadService;
 import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
 import cn.rongcapital.mkt.service.QrcodeUsedCountService;
 import cn.rongcapital.mkt.service.TagUpdateService;
+import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
 import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
 import cn.rongcapital.mkt.service.WeixinQrcodeListService;
+import cn.rongcapital.mkt.service.WeixinQrcodeMatchGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.TagBodyUpdateIn;
 
@@ -66,6 +69,16 @@ public class MktWeChatApi {
 	
 	@Autowired
 	private WeixinQrcodeInfoService weixinQrcodeInfoService;
+	
+	@Autowired
+	private WeixinQrcodeDelService weixinQrcodeDelService;
+	
+	@Autowired
+	private WeixinQrcodeMatchGetService weixinQrcodeMatchGetService;
+
+	@Autowired
+	private AssetWechatAudiencelistMatchGetService assetWechatAudiencelistMatchGetService;
+
 
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
@@ -185,6 +198,68 @@ public class MktWeChatApi {
 	@Path("/mkt.weixin.qrcode.info")
 	public BaseOutput getWeiXinQrocdeInfo(@NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
 		return weixinQrcodeInfoService.getWeiXinQrocdeInfo(qrcodeId);
+	}
+	
+	/**
+	 * 删除二维码接口 （逻辑删除，状态改为2）
+	 * @param qrcodeId
+	 * @return
+	 * @author shuiyangyang
+	 * @Data 2016.08.25
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.del")
+	public BaseOutput weixinQrocdeDel(
+			@NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
+		return weixinQrcodeDelService.weixinQrocdeDel(qrcodeId);
+	}
+	
+	/**
+	 * 精确查询微信二维码名称是否存在
+	 * 
+	 * @param wxAcct
+	 * @param wxName
+	 * @return
+	 * @author shuiyangyang
+	 * @Data 2016.08.25
+	 */
+	
+	@GET
+	@Path("/mkt.weixin.qrcode.match.get")
+	public BaseOutput weixinQrcodeMatchGet(
+			@NotEmpty @QueryParam("wx_acct") String wxAcct,
+			@NotEmpty @QueryParam("wx_name") String wxName) {
+		return weixinQrcodeMatchGetService.weixinQrcodeMatchGet(wxAcct, wxName);
+	}
+	
+	/**
+	 * 删除二维码接口 （微信记录物理删除）
+	 * 
+	 * @param qrcodeId
+	 * @return
+	 * @author shuiyangyang
+	 * @Data 2016.08.25
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.records.del")
+	public BaseOutput weixinQrcodeRecordsDel(
+			@NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
+		return weixinQrcodeDelService.weixinQrcodeRecordsDel(qrcodeId);
+	}
+	
+	/**
+	 * 精确查询固定人群是否存在
+	 * 
+	 * @param audienceName
+	 * @return
+	 * @author shuiyangyang
+	 * @Data 2016.08.25
+	 */
+	@GET
+	@Path("/mkt.asset.wechat.audiencelist.match.get")
+	public BaseOutput assetWechatAudiencelistMatchGet(
+			@NotEmpty @QueryParam("audience_name") String audienceName) {
+		return assetWechatAudiencelistMatchGetService.assetWechatAudiencelistMatchGet(audienceName);
 	}
 
 }
