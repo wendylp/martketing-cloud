@@ -56,6 +56,7 @@ public class ContactListKeyListServiceImpl implements ContactListKeyListService{
 				//Todo:执行导入数据的方法
 
 				getContactListKeyListOut.setShowKeylistWindowStatus(UN_SHOWN_KEYWINDOW_STATUS);
+				return getContactListKeyListOut;
 			}
 			if(requiredContactTemplateList.size() == 1){
 				ImportContactKeyInfo importContactKeyInfo = new ImportContactKeyInfo();
