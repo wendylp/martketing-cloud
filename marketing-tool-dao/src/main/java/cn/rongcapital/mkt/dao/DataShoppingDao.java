@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -88,5 +89,55 @@ public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDa
      * @return ShoppingWechat
      */
     List<ShoppingWechat> selectAllDataByWechatInfo();
+    
+    /**
+     * @Title: selectLastTransTimeandByKeyid   
+     * @Description: 根据keyId获取单个微信用户最后一次购买的时间  
+     * @param: @param keyId
+     * @param: @return      
+     * @return: Date      
+     * @throws
+     */
+    Date selectLastTransTimeByKeyid(@Param("keyId")Integer keyId);
+    
+    /**
+     * @Title: selectTotalShoppingCountByKeyid   
+     * @Description: 根据keyId获取单个微信用户购买的总次数
+     * @param: @param keyId
+     * @param: @return      
+     * @return: Integer      
+     * @throws
+     */
+    Integer selectTotalShoppingCountByKeyid(@Param("keyId")Integer keyId);
+    
+    /**
+     * @Title: selectWeimobByKeyid   
+     * @Description: 根据keyId获取单个微信用户购买渠道偏好
+     * @param: @param keyId
+     * @param: @return      
+     * @return: String      
+     * @throws
+     */
+    String selectWeimobByKeyid(@Param("keyId")Integer keyId);
+    
+    /**
+     * @Title: selectSingleMonthShoppingCountByKeyid   
+     * @Description: 查询单个微信用户单月购买数量  
+     * @param: @param keyId
+     * @param: @return      
+     * @return: Integer      
+     * @throws
+     */
+    Integer selectSingleMonthShoppingCountByKeyid(@Param("keyId")Integer keyId);
+    
+    /**
+     * @Title: selectOrderStatusByKeyid   
+     * @Description: 通过keyId查询单个微信用户订单状态   
+     * @param: @param keyId
+     * @param: @return      
+     * @return: String      
+     * @throws
+     */
+    List<ShoppingWechat> selectOrderStatusByKeyid(@Param("keyId")Integer keyId);
     
 }
