@@ -99,7 +99,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 		else{
 				if (CollectionUtils.isNotEmpty(ctIn.getField_list())) {
 					//1.先处理数据导入
-					if(keyModifyStatus != NO_CHOICE_FOR_IMPORTED_DATA){
+					if(keyModifyStatus != null && keyModifyStatus != NO_CHOICE_FOR_IMPORTED_DATA){
 						if(keyModifyStatus == UN_IMPORTED_DATA){
 							ContactList contactList = new ContactList();
 							contactList.setContactTemplId(ctIn.getContact_id().intValue());
@@ -129,7 +129,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 					}
 
 					//2.处理显示逻辑
-					if(columnShownStatus != NO_CHOICE_FOR_SHOWN){
+					if(columnShownStatus != null && columnShownStatus != NO_CHOICE_FOR_SHOWN){
 						if(columnShownStatus == SHOWN_NEW){
 							ContactTemplate contactTemplate = new ContactTemplate();
 							contactTemplate.setContactId(ctIn.getContact_id());
