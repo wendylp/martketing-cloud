@@ -252,7 +252,7 @@ public class MktContactApi {
 	@GET
 	@Path("mkt.contact.list.key.list")
 	public BaseOutput getContactListKeyList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("contact_id") String contactId) {
+			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("contact_id") Integer contactId) {
 
 		return contactListKeyListService.getContactListKeyList(contactId);
 	}

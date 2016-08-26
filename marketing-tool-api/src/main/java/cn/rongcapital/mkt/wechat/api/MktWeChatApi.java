@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.wechat.api;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -35,6 +37,8 @@ import cn.rongcapital.mkt.service.QrcodePicDownloadService;
 import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
 import cn.rongcapital.mkt.service.QrcodeUsedCountService;
 import cn.rongcapital.mkt.service.TagUpdateService;
+import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
+//import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
 import cn.rongcapital.mkt.service.WeixinQrcodeErrorDownloadService;
 import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
@@ -82,6 +86,9 @@ public class MktWeChatApi {
 	
 	@Autowired
 	private WeixinQrcodeErrorDownloadService weixinQrcodeErrorDownloadService;
+	
+	@Autowired
+	private WeixinQrcodeBatchSaveService weixinQrcodeBatchSaveService;
 
 
 	/**
@@ -206,7 +213,7 @@ public class MktWeChatApi {
 	
 	/**
 	 * 删除二维码接口 （逻辑删除，状态改为2）
-	 * @param qrcodeId
+	 * @param id
 	 * @return
 	 * @author shuiyangyang
 	 * @Data 2016.08.25
@@ -214,14 +221,14 @@ public class MktWeChatApi {
 	@POST
 	@Path("/mkt.weixin.qrcode.del")
 	public BaseOutput weixinQrocdeDel(
-			@NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
-		return weixinQrcodeDelService.weixinQrocdeDel(qrcodeId);
+			@NotNull @QueryParam("id") int id) {
+		return weixinQrcodeDelService.weixinQrocdeDel(id);
 	}
 	
 	/**
 	 * 精确查询微信二维码名称是否存在
 	 * 
-	 * @param wxAcct
+	 * @param qrcode_name
 	 * @param wxName
 	 * @return
 	 * @author shuiyangyang
@@ -231,24 +238,24 @@ public class MktWeChatApi {
 	@GET
 	@Path("/mkt.weixin.qrcode.match.get")
 	public BaseOutput weixinQrcodeMatchGet(
-			@NotEmpty @QueryParam("wx_acct") String wxAcct,
+			@NotEmpty @QueryParam("qrcode_name") String qrcodeName,
 			@NotEmpty @QueryParam("wx_name") String wxName) {
-		return weixinQrcodeMatchGetService.weixinQrcodeMatchGet(wxAcct, wxName);
+		return weixinQrcodeMatchGetService.weixinQrcodeMatchGet(qrcodeName, wxName);
 	}
 	
 	/**
 	 * 删除二维码接口 （微信记录物理删除）
 	 * 
-	 * @param qrcodeId
+	 * @param id
 	 * @return
 	 * @author shuiyangyang
-	 * @Data 2016.08.25
+	 * @Date 2016.08.25
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.records.del")
 	public BaseOutput weixinQrcodeRecordsDel(
-			@NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
-		return weixinQrcodeDelService.weixinQrcodeRecordsDel(qrcodeId);
+			@NotNull @QueryParam("id") int id) {
+		return weixinQrcodeDelService.weixinQrcodeRecordsDel(id);
 	}
 	
 	/**
@@ -257,7 +264,7 @@ public class MktWeChatApi {
 	 * @param audienceName
 	 * @return
 	 * @author shuiyangyang
-	 * @Data 2016.08.25
+	 * @Date 2016.08.25
 	 */
 	@GET
 	@Path("/mkt.asset.wechat.audiencelist.match.get")
@@ -272,12 +279,35 @@ public class MktWeChatApi {
 	 * 
 	 * @param batchId
 	 * @return
+	 * @author shuiyangyang
+	 * @Date 2016.08.26
 	 */
 	@GET
 	@Path("/mkt.weixin.qrcode.error.download")
 	public BaseOutput weixinQrcodeErrorDownload(
 			@NotNull @QueryParam("batch_id") Integer batchId) {
 		return weixinQrcodeErrorDownloadService.weixinQrcodeErrorDownload(batchId);
+	}
+	/**
+	 * 
+	 * 根据batch_id，在表wechat_qrcode 中查找到对应二维码记录，更新：失效时间、标签、备注信息、状态(status=0)
+	 * 
+	 * @param batchId
+	 * @param expirationTime
+	 * @param qrcodeTagIds
+	 * @param qrcodeStatus
+	 * @return
+	 * @author shuiyangyang
+	 * @Date 2016.08.26
+	 */
+	@GET
+	@Path("/mkt.weixin.qrcode.batch.save")
+	public BaseOutput weixinQrcodeBatchSave(
+			@NotNull @QueryParam("batch_id") Integer batchId,
+			@NotNull @QueryParam("expiration_time") String expirationTime,
+			@NotEmpty @QueryParam("qrcode_tag_ids") String qrcodeTagIds,
+			@NotNull @QueryParam("qrcode_status") Integer qrcodeStatus) {
+		return weixinQrcodeBatchSaveService.weixinQrcodeBatchSave(batchId, expirationTime, qrcodeTagIds, qrcodeStatus);
 	}
 
 }

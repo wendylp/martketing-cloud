@@ -34,13 +34,13 @@ public class WeixinQrcodeMatchGetServiceImpl implements WeixinQrcodeMatchGetServ
 	 * @Date 2016.08.25
 	 */
 	@Override
-	public BaseOutput weixinQrcodeMatchGet(String wxAcct, String wxName) {
+	public BaseOutput weixinQrcodeMatchGet(String qrcodeName, String wxName) {
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE,null);
 		
 		WechatQrcode wechatQrcode = new WechatQrcode();
-		wechatQrcode.setWxAcct(wxAcct);
 		wechatQrcode.setWxName(wxName);
+		wechatQrcode.setQrcodeName(qrcodeName);
 		
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectList(wechatQrcode);
 		
