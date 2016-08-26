@@ -40,6 +40,7 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 		
 		CustomTag tag = new CustomTag();
 		int temp = 0;
+		
 		for (String tagName : tag_names) {
 			tag.setName(tagName);
 			int count = tagDao.selectListCount(tag);
