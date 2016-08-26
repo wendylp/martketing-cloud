@@ -1,8 +1,6 @@
 package cn.rongcapital.mkt.vo.in;
 
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 
@@ -12,7 +10,7 @@ import cn.rongcapital.mkt.vo.BaseInput;
 public class ContactListTagIn extends BaseInput {
 	@NotNull
 	private Integer contact_id;
-	@NotEmpty
+	
 	private String[] tag_names;
 	
  
