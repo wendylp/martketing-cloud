@@ -132,6 +132,7 @@
 				<![CDATA[ AND qrcode_name like #{fuzzy}]]>
 			</if>
 		</where>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
 	
 	<!-- 通过id删除数据 -->

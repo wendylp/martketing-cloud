@@ -13,6 +13,8 @@ package cn.rongcapital.mkt.wechat.api;
 import java.util.Date;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -107,9 +109,11 @@ public class MktWeChatApi {
 	public BaseOutput getWeixinQrcodeList(@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("ver") String ver, @QueryParam("wxmp_name") String wxmpName,
 			@QueryParam("expiration_time") Integer expirationTime,
-			@DefaultValue("0") @QueryParam("qrcode_status") Byte qrcodeStatus) {
+			@DefaultValue("0") @QueryParam("qrcode_status") Byte qrcodeStatus,
+			@DefaultValue("1") @Min(1) @QueryParam("index") int index,
+			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 
-		return weixinQrcodeListService.getWeixinQrcodeList(wxmpName, expirationTime, qrcodeStatus);
+		return weixinQrcodeListService.getWeixinQrcodeList(wxmpName, expirationTime, qrcodeStatus,index, size);
 	}
 
 	/**
@@ -125,9 +129,11 @@ public class MktWeChatApi {
 	@GET
 	@Path("mkt.weixin.qrcode.list.qrname")
 	public BaseOutput getWeixinQrcodeListQrname(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @QueryParam("qrcode_name") String qrcodeName) {
+			@NotEmpty @QueryParam("ver") String ver, @QueryParam("qrcode_name") String qrcodeName,
+			@DefaultValue("1") @Min(1) @QueryParam("index") int index,
+			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 
-		return weixinQrcodeListService.getWeixinQrcodeListQrname(qrcodeName);
+		return weixinQrcodeListService.getWeixinQrcodeListQrname(qrcodeName,index,size);
 
 	}
 
