@@ -36,6 +36,7 @@ import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
 import cn.rongcapital.mkt.service.QrcodeUsedCountService;
 import cn.rongcapital.mkt.service.TagUpdateService;
 import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
+import cn.rongcapital.mkt.service.WeixinQrcodeErrorDownloadService;
 import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
 import cn.rongcapital.mkt.service.WeixinQrcodeListService;
 import cn.rongcapital.mkt.service.WeixinQrcodeMatchGetService;
@@ -78,6 +79,9 @@ public class MktWeChatApi {
 
 	@Autowired
 	private AssetWechatAudiencelistMatchGetService assetWechatAudiencelistMatchGetService;
+	
+	@Autowired
+	private WeixinQrcodeErrorDownloadService weixinQrcodeErrorDownloadService;
 
 
 	/**
@@ -260,6 +264,20 @@ public class MktWeChatApi {
 	public BaseOutput assetWechatAudiencelistMatchGet(
 			@NotEmpty @QueryParam("audience_name") String audienceName) {
 		return assetWechatAudiencelistMatchGetService.assetWechatAudiencelistMatchGet(audienceName);
+	}
+	
+	/**
+	 * 下载导入失败的数据
+	 * 
+	 * 
+	 * @param batchId
+	 * @return
+	 */
+	@GET
+	@Path("/mkt.weixin.qrcode.error.download")
+	public BaseOutput weixinQrcodeErrorDownload(
+			@NotNull @QueryParam("batch_id") Integer batchId) {
+		return weixinQrcodeErrorDownloadService.weixinQrcodeErrorDownload(batchId);
 	}
 
 }
