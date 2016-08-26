@@ -4,7 +4,6 @@ package cn.rongcapital.mkt.vo.in;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 
 import cn.rongcapital.mkt.vo.BaseInput;
@@ -14,14 +13,14 @@ public class ContactListTagIn extends BaseInput {
 	@NotNull
 	private Integer contact_id;
 	@NotEmpty
-	private String tag_name;
+	private String[] tag_names;
 	
  
-	public String getTag_name() {
-		return tag_name;
+	public String[] getTag_names() {
+		return tag_names;
 	}
-	public void setTag_name(String tag_name) {
-		this.tag_name = tag_name;
+	public void setTag_names(String[] tag_names) {
+		this.tag_names = tag_names;
 	}
 	public Integer getContact_id() {
 		return contact_id;
@@ -29,4 +28,5 @@ public class ContactListTagIn extends BaseInput {
 	public void setContact_id(Integer contact_id) {
 		this.contact_id = contact_id;
 	}
+	
 }
