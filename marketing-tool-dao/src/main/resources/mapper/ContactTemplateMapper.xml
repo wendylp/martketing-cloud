@@ -180,4 +180,12 @@
 		<if test="id != null"><![CDATA[and id = #{id}]]></if>
 	</update>
 
+	<select id="selectFieldCodeListByFieldNameList" parameterType="java.util.List" resultType="java.lang.String">
+		SELECT field_code
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE field_name in
+		<foreach collection="filedNameList" item="fieldName" index="index" separator="," open="(" close=")">
+			#{fieldName}
+		</foreach>
+	</select>
 </mapper>

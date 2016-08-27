@@ -14,6 +14,7 @@ import java.util.Map;
 
 import cn.rongcapital.mkt.dao.ContactListDao;
 import cn.rongcapital.mkt.po.ContactList;
+import cn.rongcapital.mkt.service.ImportContactsDataToMDataService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,9 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 
 	@Autowired
 	private ContactListDao contactListDao;
+
+	@Autowired
+	private ImportContactsDataToMDataService importContactsDataToMDataService;
 
 	@Override
 	public BaseOutput ContactListCreate(ContactTemplateIn ctIn) {
@@ -114,7 +118,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 							}
 						}else if(keyModifyStatus == IMPORTED_DATA){
 							//导入数据
-
+							importContactsDataToMDataService.importContactsDataToMData(ctIn.getContact_id());
 						}
 						//更新相应模板表中的keyList和isRemember字段
 						ContactTemplate contactTemplate = new ContactTemplate();
@@ -146,18 +150,9 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						}
 					}
 
-					// 先删除
-//					ContactTemplate parm_up = new ContactTemplate();
-//					parm_up.setContactId(ctIn.getContact_id());
-//					contactTemplateDao.deleteByCId(parm_up);
-//					List<ContactTemplate> piew_list =contactTemplateDao.selectList(parm_up) ;
-//					//浏览次数
-//					int page_view_count = piew_list.get(0).getPageSize();
-
 					// 再新增
 					ContactTemplate contactTemplate = new ContactTemplate();
 					contactTemplate.setContactId(ctIn.getContact_id());
-					contactTemplate.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 					List<ContactTemplate> oriContactTemplateList = contactTemplateDao.selectList(contactTemplate);
 					if(!CollectionUtils.isEmpty(oriContactTemplateList)){
 						for(ContactTemplate oriContactTemplate : oriContactTemplateList){
@@ -183,9 +178,11 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 							param.setUpdateTime(new Date());
 
 							if(isInOldTemplate(param,oriContactTemplateList)){
+								param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
 								param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 								contactTemplateDao.updateById(param);
 							}else {
+								param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
 								contactTemplateDao.insert(param);
 							}
 						}
@@ -206,6 +203,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 		boolean flag = false;
 		for(ContactTemplate contactTemplate : oriContactTemplateList){
 			if(contactTemplate.getFieldName().equals(param.getFieldName())){
+				param.setId(contactTemplate.getId());
 				flag = true;
 				break;
 			}

@@ -10,10 +10,12 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ContactTemplate;
+import org.apache.ibatis.annotations.Param;
 
 public interface ContactTemplateDao extends BaseDao<ContactTemplate>{
 	
@@ -68,4 +70,11 @@ public interface ContactTemplateDao extends BaseDao<ContactTemplate>{
 	List<ContactTemplate> selectListAll(ContactTemplate t);
 	
 	List<ContactTemplate> selectListGroupByCId(ContactTemplate t);
+
+	/***
+	 * 根据ContactTemplate的contactId选取必填项 且 在DefaultContactTemplate表中为主键 根据field_name 和field_code 关联
+	 * @param contactTemplateKeys
+	 * @return ArrayList<String>
+	 */
+	ArrayList<String> selectFieldCodeListByFieldNameList(@Param("filedNameList") ArrayList<String> contactTemplateKeys);
 }

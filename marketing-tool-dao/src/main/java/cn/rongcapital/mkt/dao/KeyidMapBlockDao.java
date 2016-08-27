@@ -60,5 +60,5 @@ public interface KeyidMapBlockDao extends BaseDao<KeyidMapBlock>{
 	 * @Param:keyidMapBlock
 	 * @return: KeyidMapBlock
 	 */
-	List<KeyidMapBlock> selectListByNameList(@Param("field_name_list") ArrayList<String> contactTemplateKeys);
+	List<KeyidMapBlock> selectListByCodeList(@Param("fieldCodeList") ArrayList<String> contactTemplateKeys);
 }

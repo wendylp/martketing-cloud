@@ -2,14 +2,8 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.ContactListDao;
-import cn.rongcapital.mkt.dao.ContactTemplateDao;
-import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.dao.KeyidMapBlockDao;
-import cn.rongcapital.mkt.po.ContactList;
-import cn.rongcapital.mkt.po.ContactTemplate;
-import cn.rongcapital.mkt.po.DataParty;
-import cn.rongcapital.mkt.po.KeyidMapBlock;
+import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.service.ImportContactsDataToMDataService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.ImportContactsDataIn;
@@ -36,6 +30,8 @@ public class ImportContactsDataToMDataServiceImpl implements ImportContactsDataT
     private static final Integer TEMPLATE_LIST_DATA_PAGE_SIZE = 500;
     private static final Integer DATA_PARTY_VALID_VALUE = 0;
 
+    private static final String DATA_SOURCE = "联系人表单";
+
     @Autowired
     private ContactTemplateDao contactTemplateDao;
 
@@ -48,18 +44,20 @@ public class ImportContactsDataToMDataServiceImpl implements ImportContactsDataT
     @Autowired
     private DataPartyDao dataPartyDao;
 
+    @Autowired
+    private DataPopulationDao dataPopulationDao;
+
     @Override
-    public BaseOutput importContactsDataToMData(ImportContactsDataIn importContactsDataIn) {
+    public BaseOutput importContactsDataToMData(Long contactId) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
 
-        Long contactId = importContactsDataIn.getContactId();
         if(contactId == null){
             baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
             baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
             return baseOutput;
         }
 
-        //Todo:1先从Template里选出keyList
+        //Todo:1先从Template里选出keyList并且转化为列名形式
         ContactTemplate contactTemplate = new ContactTemplate();
         contactTemplate.setContactId(contactId);
         contactTemplate.setPageSize(TEMPLATE_PAGE_SIZE);
@@ -68,8 +66,9 @@ public class ImportContactsDataToMDataServiceImpl implements ImportContactsDataT
             contactTemplate = contactTemplateList.get(0);
             String keyList = contactTemplate.getKeyList();
             ArrayList<String> contactTemplateKeys = transferStringFormatToArrayListFormat(keyList);
+            ArrayList<String> contactTemplateKeyColumns = contactTemplateDao.selectFieldCodeListByFieldNameList(contactTemplateKeys);
             //Todo:2然后从keyblock表中构造出bitmap
-            List<KeyidMapBlock> keyidMapBlockList = keyidMapBlockDao.selectListByNameList(contactTemplateKeys);
+            List<KeyidMapBlock> keyidMapBlockList = keyidMapBlockDao.selectListByCodeList(contactTemplateKeyColumns);
             ArrayList<String> templateKeyColumnList = getKeyListColumn(keyidMapBlockList);
             String bitmap = calculateBitmapByKeyidMapBlockList(keyidMapBlockList);
             if(bitmap == null || templateKeyColumnList == null){
@@ -85,7 +84,8 @@ public class ImportContactsDataToMDataServiceImpl implements ImportContactsDataT
             if(!CollectionUtils.isEmpty(contactListList)){
                 for(ContactList upContactList : contactListList){
                     //Todo:4将数据导入主数据，并且获得主数据的id，然后设置到contactList中
-                    Integer keyId = syncContactDataToMData(upContactList,templateKeyColumnList,bitmap);
+//                    Integer keyId = syncContactDataToMData(upContactList,templateKeyColumnList,bitmap);
+                    Integer keyId = syncContactDataToPopulationData(upContactList,templateKeyColumnList,bitmap);
                     upContactList.setKeyid(keyId);
                     upContactList.setStatus(SYNCED_TO_DATA_PARTY);
                     upContactList.setBitmap(bitmap);
@@ -98,6 +98,49 @@ public class ImportContactsDataToMDataServiceImpl implements ImportContactsDataT
             return baseOutput;
         }
         return baseOutput;
+    }
+
+    private Integer syncContactDataToPopulationData(ContactList upContactList, ArrayList<String> templateKeyColumnList, String bitmap) {
+        Integer keyId = null;
+        DataPopulation dataPopulation = new DataPopulation();
+        dataPopulation.setBitmap(bitmap);
+        dataPopulation.setMobile(upContactList.getMobile());
+        dataPopulation.setName(upContactList.getName());
+        dataPopulation.setGender(upContactList.getGender());
+        dataPopulation.setBirthday(upContactList.getBirthday());
+        dataPopulation.setProvice(upContactList.getProvice());
+        dataPopulation.setCity(upContactList.getCity());
+        dataPopulation.setMonthlyIncome(upContactList.getMonthlyIncome());
+        dataPopulation.setMonthlyConsume(upContactList.getMonthlyConsume());
+        dataPopulation.setMaritalStatus(upContactList.getMaritalStatus());
+        dataPopulation.setEducation(upContactList.getEducation());
+        dataPopulation.setEmployment(upContactList.getEmployment());
+        dataPopulation.setNationality(upContactList.getNationality());
+        dataPopulation.setBloodType(upContactList.getBloodType());
+        dataPopulation.setCitizenship(upContactList.getCitizenship());
+        dataPopulation.setIq(upContactList.getIq());
+        dataPopulation.setIdentifyNo(upContactList.getIdentifyNo());
+        dataPopulation.setDrivingLicense(upContactList.getDrivingLicense());
+        dataPopulation.setEmail(upContactList.getEmail());
+        dataPopulation.setQq(upContactList.getQq());
+        dataPopulation.setAcctType(upContactList.getAcctType());
+        dataPopulation.setAcctNo(upContactList.getAcctNo());
+        dataPopulation.setIdfa(upContactList.getIdfa());
+        dataPopulation.setImei(upContactList.getImei());
+        dataPopulation.setUdid(upContactList.getUdid());
+        dataPopulation.setPhoneMac(upContactList.getPhoneMac());
+        dataPopulation.setSource(DATA_SOURCE);
+        dataPopulation.setWxmpId(upContactList.getWxmpId());
+        dataPopulation.setWxCode(upContactList.getWxCode());
+        dataPopulation.setNickname(upContactList.getNickname());
+        dataPopulation.setHeadImgUrl(upContactList.getHeadImgUrl());
+        dataPopulation.setSubscribeTime(upContactList.getSubscribeTime());
+        dataPopulation.setLanguage(upContactList.getLanguage());
+        dataPopulation.setUnionid(upContactList.getUnionid());
+        dataPopulation.setRemark(upContactList.getRemark());
+        dataPopulationDao.insert(dataPopulation);
+        keyId = dataPopulation.getId();
+        return keyId;
     }
 
     private Integer syncContactDataToMData(ContactList upContactList, ArrayList<String> templateKeyColumnList, String bitmap) {
@@ -189,16 +232,16 @@ public class ImportContactsDataToMDataServiceImpl implements ImportContactsDataT
     }
 
     private ArrayList<String> transferStringFormatToArrayListFormat(String keyList) {
-        ArrayList<String> keys = new ArrayList<String>();
+        ArrayList<String> keysInChinese = new ArrayList<String>();
         if(keyList.contains(",")){
             String[] keyArray = keyList.split(",");
             for(String key : keyArray){
-                keys.add(key);
+                keysInChinese.add(key);
             }
         }else {
-            keys.add(keyList);
+            keysInChinese.add(keyList);
         }
-        return keys;
+        return keysInChinese;
     }
 
 }

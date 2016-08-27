@@ -338,12 +338,12 @@ public class MktContactApi {
 	 * @param importContactsDataIn
 	 * @author baiyunfeng
 	 */
-	@POST
-	@Path("/mkt.contacts.mdata.import")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput importContactsDataToMData(@Valid ImportContactsDataIn importContactsDataIn) {
-		return importContactsDataToMDataService.importContactsDataToMData(importContactsDataIn);
-	}
+//	@POST
+//	@Path("/mkt.contacts.mdata.import")
+//	@Consumes({ MediaType.APPLICATION_JSON })
+//	public BaseOutput importContactsDataToMData(@Valid ImportContactsDataIn importContactsDataIn) {
+//		return importContactsDataToMDataService.importContactsDataToMData(importContactsDataIn);
+//	}
 
 	/**
 	 * 保存用户反馈数据
