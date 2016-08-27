@@ -29,23 +29,15 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 		//ContactList contactList = new ContactList();
 		ContactTemplate contactTemplate = new ContactTemplate();
 		contactTemplate.setStatus(contactStatus.byteValue());
-		if (contactId != null){
+		if (contactId != null && contactId.length()>0){
 			contactTemplate.setContactId(Long.valueOf(contactId));
 		}
-		if (contactName != null){
+		if (contactName != null && contactName.length() >0){
 			contactTemplate.setContactName(contactName);
 		}
 		//set index and size
-		if (index >= 0) {
-			contactTemplate.setStartIndex(index);
-		} else {
-			contactTemplate.setStartIndex(0);
-		}
-		if (size != 0) {
-			contactTemplate.setPageSize(size);
-		} else {
-			contactTemplate.setPageSize(10);
-		}
+		contactTemplate.setPageSize(size);
+		contactTemplate.setStartIndex((index-1)*size);
 		
 		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListGroupByCId(contactTemplate);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
