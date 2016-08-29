@@ -188,4 +188,10 @@
 			#{fieldName}
 		</foreach>
 	</select>
+
+	<select id="selectRealContactTemplateListCount" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="java.lang.Integer">
+		<![CDATA[SELECT count(distinct contact_id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
 </mapper>

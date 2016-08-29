@@ -41,20 +41,22 @@ public class TagDataShoppingDataStatusServiceImpl extends BaseTagData implements
 			//获取渠道偏好
 			List<ShoppingWechat> shoppingWechatList = dataShoppingDao.selectOrderStatusByKeyid(mid);
 			 Update update = new Update();
+			 StringBuffer sb = new StringBuffer();
 			 for (ShoppingWechat shoppingWechat : shoppingWechatList) {
 				 String status = shoppingWechat.getOrderStatus();
 				 switch (status){
 		            case "交易关闭":
-		            	update.set("orderStatus_close", "交易关闭");
+		            	sb.append(status+",");
 		            	break;
 		            case "交易完成":
-		            	update.set("orderStatus_finash", "交易完成");
+		            	sb.append(status+",");
 		            	break;
 		            case "待支付":
-		            	update.set("orderStatus_waite", "待支付");
+		            	sb.append(status+",");
 		                break;
 		        }
 			}
+			 update.set("orderStatus", sb.toString());
 		   updateMongodbTag(mongoTemplate,mid, update);
 		}
     }

@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -44,20 +45,27 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 * @Data 2016.08.19
 	 */
 	@Override
-	public BaseOutput getWeixinQrcodeList(String wxmpId, Integer expirationTime, Byte qrcodeStatus, int index, int size) {
+	public BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus, int index, int size) {
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
 		WechatQrcode wechatQrcode = new WechatQrcode();
 
-		wechatQrcode.setWxAcct(wxmpId);
-		//wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
+		if(wxmpName != null && !wxmpName.isEmpty()) {
+			wechatQrcode.setWxAcct(wxmpName);
+		}
+		if(wxmpName.equals("0")) {
+			wechatQrcode.setWxAcct(null);
+		}
+		if(expirationTime != null) {
+			wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
+		}
 		wechatQrcode.setStatus(Byte.valueOf(qrcodeStatus));
 		wechatQrcode.setPageSize(size);
 		wechatQrcode.setStartIndex((index-1)*size);
 
-		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectList(wechatQrcode);
+		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectListExpirationTime(wechatQrcode);// 如果修改表结构需要修改对应的mapper文件
 
 		result = addData(result, wechatQrcodeLists);
 		
@@ -71,7 +79,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 * @Data 2016.08.19
 	 */
 	@Override
-	public BaseOutput getWeixinQrcodeListQrname(String qrcodeName, int size, int index) {
+	public BaseOutput getWeixinQrcodeListQrname(String qrcodeName, int index, int size) {
 		
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
@@ -107,9 +115,13 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	private BaseOutput addData(BaseOutput result, List<WechatQrcode> wechatQrcodeLists) {
 		
 			result.setTotal(wechatQrcodeLists.size());
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 			for (WechatQrcode wechatQrcodeList : wechatQrcodeLists) {
 				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("id", wechatQrcodeList.getId());
 				
 				map.put("qrcode_pic", wechatQrcodeList.getQrcodeUrl());// 返回二维码图片文件url 
 																		
@@ -125,8 +137,12 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 				}
 				
 				map.put("ch_name", chName);
-				
-				map.put("expiration_time", wechatQrcodeList.getExpirationTime());
+				if(wechatQrcodeList.getExpirationTime() != null) {
+					map.put("expiration_time", format.format(wechatQrcodeList.getExpirationTime()));
+				} else {
+					map.put("expiration_time", wechatQrcodeList.getExpirationTime());
+				}
+				map.put("expiration_time", format.format(wechatQrcodeList.getExpirationTime()));
 				map.put("qrcode_status", wechatQrcodeList.getStatus());
 
 				if (wechatQrcodeList.getRelatedTags() == null || wechatQrcodeList.getRelatedTags().length() <= 0) { // 根据related_tags是否为空判断是否有关联
@@ -154,7 +170,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(expirationTime);
 		switch(expirationTimeInteger.intValue()) {
-			case 0 : break;
+			case 0 : return null;
 			case 1 : calendar.add(Calendar.DATE, 3); break;
 			case 2 : calendar.add(Calendar.DATE, 7); break;
 			case 3 : calendar.add(Calendar.MONTH, 1); break;

@@ -27,25 +27,31 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 	@Override
 	public BaseOutput getContactList(Integer contactStatus, String contactId, String contactName, int index, int size) {
 		//ContactList contactList = new ContactList();
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+
 		ContactTemplate contactTemplate = new ContactTemplate();
 		contactTemplate.setStatus(contactStatus.byteValue());
+		if(contactStatus == 3){
+			contactTemplate.setStatus(null);
+		}
 		if (contactId != null && contactId.length()>0){
 			contactTemplate.setContactId(Long.valueOf(contactId));
 		}
 		if (contactName != null && contactName.length() >0){
 			contactTemplate.setContactName(contactName);
 		}
+
+		Integer totalCount = contactTemplateDao.selectRealContactTemplateListCount(contactTemplate);
+		result.setTotal(totalCount);
 		//set index and size
 		contactTemplate.setPageSize(size);
 		contactTemplate.setStartIndex((index-1)*size);
-		
+
 		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListGroupByCId(contactTemplate);
-		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-				ApiConstant.INT_ZERO, null);
 
 		//Map<String, Object> cloMap = new HashMap<>();
 		if (CollectionUtils.isNotEmpty(contactTemplateList)) {
-			result.setTotal(contactTemplateList.size());
 			List<Object> resultData = result.getData();
 			for (ContactTemplate contactTem : contactTemplateList) {
 				
@@ -55,7 +61,7 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 				contactListMap.put("qrcode_url", contactTem.getQrcodeUrl());
 				contactListMap.put("qrcode_pic", contactTem.getQrcodePic());
 				contactListMap.put("user_count", contactTemplateList.size());
-				contactListMap.put("contact_status", contactStatus);
+				contactListMap.put("contact_status",contactTem.getStatus());
 				//cloMap.put(contactTemplate.getFieldCode(), contactTemplate.getFieldName());
 				resultData.add(contactListMap);
 			}
