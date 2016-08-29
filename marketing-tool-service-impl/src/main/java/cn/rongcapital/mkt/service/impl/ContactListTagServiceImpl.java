@@ -39,7 +39,6 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 		String[] tag_names = body.getTag_names();
 		
 		CustomTag tag = new CustomTag();
-		int temp = 0;
 		
 		for (String tagName : tag_names) {
 			tag.setName(tagName);
@@ -48,14 +47,6 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 				continue;
 			}
 			tagDao.insert(tag);
-			temp++;
-		}
-		//当temp为0时，表示传入的所有标签名称已经存在。
-		if (temp == 0) {
-			result = new BaseOutput();
-			result.setCode(10001);
-			result.setMsg("标签名称已存在");
-			return result;
 		}
 		CustomTagMap tagMap = new CustomTagMap();
 		tagMap.setTagId(tag.getId());
