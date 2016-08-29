@@ -8,6 +8,7 @@ public class ContactListInfoOut {
 	private String qrcode_url;
 	private String qrcode_pic;
 	private String contact_status;
+	private String contact_descript;
 	private List<Field_List> field_list;
 
 	public String getContact_id() {
@@ -57,4 +58,14 @@ public class ContactListInfoOut {
 	public void setField_list(List<Field_List> field_list) {
 		this.field_list = field_list;
 	}
+
+	public String getContact_descript() {
+		return contact_descript;
+	}
+
+	public void setContact_descript(String contact_descript) {
+		this.contact_descript = contact_descript;
+	}
+	
+	
 }

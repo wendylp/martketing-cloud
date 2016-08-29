@@ -42,6 +42,7 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 				contactListInfoOut.setContact_name(contactTemplates.get(0).getContactName());
 				contactListInfoOut.setQrcode_url(contactTemplates.get(0).getQrcodeUrl());
 				// contactListInfoOut.setQrcode_pic(contactTemplates.get(0).getqr);
+				contactListInfoOut.setContact_descript(contactTemplates.get(0).getContactDescript());
 				contactListInfoOut.setContact_status(contactTemplates.get(0).getStatus().toString());
 				List<Field_List> lists = new ArrayList<Field_List>();
 				for (ContactTemplate c : contactTemplates) {
@@ -53,6 +54,7 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 					list.setIndex(c.getFieldIndex().toString());
 					list.setRequired(c.getRequired());
 					list.setIschecked(c.getIschecked());
+					list.setSelect_data(getSelectData(c.getFieldName()));
 					lists.add(list);
 				}
 				contactListInfoOut.setField_list(lists);
@@ -60,5 +62,35 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 			}
 		}
 		return result;
+	}
+	
+	
+	
+	private Map<String, Object> getSelectData(String fieldName) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if(fieldName.equals("性别")) {
+			map.put("男", 1);
+			map.put("女",0);
+		} else if(fieldName.equals("婚否")) {
+			map.put("已婚", 1);
+			map.put("未婚", 0);
+		} else if(fieldName.equals("血型")) {
+			map.put("A", 1);
+			map.put("B", 0);
+		} else if(fieldName.equals("职业")) {
+			map.put("医生", 1);
+			map.put("杀手", 0);
+		} else if(fieldName.equals("教育程度")) {
+			map.put("幼儿园", 1);
+			map.put("小学", 0);
+		} else if(fieldName.equals("国籍")) {
+			map.put("中国", 1);
+			map.put("外国", 0);
+		} else if(fieldName.equals("就业情况")) {
+			map.put("已就业", 1);
+			map.put("待业", 0);
+		}
+		return map;
 	}
 }
