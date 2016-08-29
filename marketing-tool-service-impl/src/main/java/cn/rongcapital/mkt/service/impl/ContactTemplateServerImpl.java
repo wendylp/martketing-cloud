@@ -83,6 +83,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						param.setPageViews(0);
 						param.setFieldIndex(field_list.getIndex());
 						param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
+						param.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 
 						// 插入
 						contactTemplateDao.insert(param);
