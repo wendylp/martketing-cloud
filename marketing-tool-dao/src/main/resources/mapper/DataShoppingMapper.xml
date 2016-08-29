@@ -481,15 +481,16 @@
 	</select>
 	
 	<!-- 查询单个微信用户交易渠道偏好 -->
-	<select id="selectWeimobByKeyid" resultType="java.lang.String" parameterType="java.lang.Integer">
+	<select id="selectWeimobByKeyid" resultType="cn.rongcapital.mkt.po.ShoppingWechat" parameterType="java.lang.Integer">
 		SELECT
-			CASE channel_name
+			CASE channel_name 
 		WHEN '官网' THEN '旺铺'
 		WHEN '分销' THEN '其他'
-		END 
+		END AS weimob
 		FROM data_shopping
 		WHERE channel_type = '微盟'
-		AND id = (SELECT MAX(id) FROM data_shopping WHERE keyid = #{keyId})
+		AND keyid = #{keyId}
+		GROUP BY channel_name
 	</select>
 	
 	<!-- 查询单个微信用户单月交易数量 -->
