@@ -159,6 +159,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 						map.put(filedName, item.getMaritalStatus());
 					}
 				}
+				map.put("contact_id", item.getId());
 				result.getData().add(map);
 			}
 		}
