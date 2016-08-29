@@ -60,4 +60,6 @@ public interface WechatQrcodeDao extends BaseDao<WechatQrcode>{
 	 */
 	int updataByBatchId(WechatQrcode t);
 	
+	
+	List<WechatQrcode> selectListExpirationTime(WechatQrcode t);
 }
