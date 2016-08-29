@@ -143,7 +143,6 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 				} else {
 					map.put("expiration_time", wechatQrcodeList.getExpirationTime());
 				}
-				map.put("expiration_time", format.format(wechatQrcodeList.getExpirationTime()));
 				map.put("qrcode_status", wechatQrcodeList.getStatus());
 
 				if (wechatQrcodeList.getRelatedTags() == null || wechatQrcodeList.getRelatedTags().length() <= 0) { // 根据related_tags是否为空判断是否有关联
