@@ -60,7 +60,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		if(wxmpName.equals("0")) {
 			wechatQrcode.setWxAcct(null);
 		}
-		if(expirationTime != null) {
+		if(expirationTime != null && getExpirationTime(expirationTime) != null) {
 			wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
 		}
 		wechatQrcode.setStatus(Byte.valueOf(qrcodeStatus));
