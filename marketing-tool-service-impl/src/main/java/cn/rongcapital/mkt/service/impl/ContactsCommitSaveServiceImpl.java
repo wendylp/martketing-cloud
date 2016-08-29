@@ -29,6 +29,8 @@ import heracles.data.common.util.ReadWriteType;
 @Service
 public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 
+	private static final Integer SHOWN_IN_FEEDBACK_STATUS = 0;
+
 	@Autowired
 	ContactListDao contactDao;
 
@@ -61,7 +63,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		ContactList contact = new ContactList();
 		ContactTemplate contactTemplate = new ContactTemplate();
 		contactTemplate.setContactId(Long.valueOf(contact_id));
-		contactTemplate.setSelected("1");//选中的
+		contactTemplate.setIsShownInFeedback(SHOWN_IN_FEEDBACK_STATUS.byteValue());
 		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListAll(contactTemplate);
 		
 		Map<String, Object> cloMap = new LinkedHashMap<>();
