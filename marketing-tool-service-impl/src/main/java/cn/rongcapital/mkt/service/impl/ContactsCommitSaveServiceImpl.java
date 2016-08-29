@@ -116,8 +116,10 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 				ApiConstant.INT_ZERO, null);
 
 		List<ContactList> list = contactDao.selectListByContactIdAndCommitTime(contact);
+		
 		if (!CollectionUtils.isEmpty(list)) {
-			result.setTotal(list.size());
+			int selectListCount = contactDao.selectListCount(contact);
+			result.setTotal(selectListCount);
 			for (ContactList item : list) {
 				Map<String, Object> map = new LinkedHashMap<>();
 				for(String filedName : filedNameList){
