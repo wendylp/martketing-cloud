@@ -61,7 +61,7 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 				contactListMap.put("qrcode_url", contactTem.getQrcodeUrl());
 				contactListMap.put("qrcode_pic", contactTem.getQrcodePic());
 				contactListMap.put("user_count", contactTemplateList.size());
-				contactListMap.put("contact_status", contactStatus);
+				contactListMap.put("contact_status",contactTem.getStatus());
 				//cloMap.put(contactTemplate.getFieldCode(), contactTemplate.getFieldName());
 				resultData.add(contactListMap);
 			}
