@@ -67,6 +67,7 @@ public class ContactListTagGetServiceImpl implements ContactListTagGetService {
 						}
 					}
 				}
+				
 				result.getData().add(contactListTagOut);
 			}
 		}
