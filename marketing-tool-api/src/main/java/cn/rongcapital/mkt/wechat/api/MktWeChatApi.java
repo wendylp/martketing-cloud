@@ -107,13 +107,14 @@ public class MktWeChatApi {
 	@GET
 	@Path("mkt.weixin.qrcode.list")
 	public BaseOutput getWeixinQrcodeList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @QueryParam("wxmp_name") String wxmpId,
+			@NotEmpty @QueryParam("ver") String ver, 
+			@QueryParam("wxmp_name") String wxmpName,
 			@QueryParam("expiration_time") Integer expirationTime,
 			@DefaultValue("0") @QueryParam("qrcode_status") Byte qrcodeStatus,
 			@DefaultValue("1") @Min(1) @QueryParam("index") int index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 
-		return weixinQrcodeListService.getWeixinQrcodeList(wxmpId, expirationTime, qrcodeStatus,index, size);
+		return weixinQrcodeListService.getWeixinQrcodeList(wxmpName, expirationTime, qrcodeStatus,index, size);
 	}
 
 	/**

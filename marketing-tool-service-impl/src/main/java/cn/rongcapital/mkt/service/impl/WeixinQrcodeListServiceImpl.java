@@ -44,20 +44,22 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 * @Data 2016.08.19
 	 */
 	@Override
-	public BaseOutput getWeixinQrcodeList(String wxmpId, Integer expirationTime, Byte qrcodeStatus, int index, int size) {
+	public BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus, int index, int size) {
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
 		WechatQrcode wechatQrcode = new WechatQrcode();
 
-		wechatQrcode.setWxAcct(wxmpId);
-		//wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
+		if(wxmpName != null && !wxmpName.isEmpty()) {
+			wechatQrcode.setWxName(wxmpName);
+		}
+		wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
 		wechatQrcode.setStatus(Byte.valueOf(qrcodeStatus));
 		wechatQrcode.setPageSize(size);
 		wechatQrcode.setStartIndex((index-1)*size);
 
-		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectList(wechatQrcode);
+		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectListExpirationTime(wechatQrcode);// 如果修改表结构需要修改对应的mapper文件
 
 		result = addData(result, wechatQrcodeLists);
 		
@@ -71,7 +73,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 * @Data 2016.08.19
 	 */
 	@Override
-	public BaseOutput getWeixinQrcodeListQrname(String qrcodeName, int size, int index) {
+	public BaseOutput getWeixinQrcodeListQrname(String qrcodeName, int index, int size) {
 		
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
@@ -110,6 +112,8 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 
 			for (WechatQrcode wechatQrcodeList : wechatQrcodeLists) {
 				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("id", wechatQrcodeList.getId());
 				
 				map.put("qrcode_pic", wechatQrcodeList.getQrcodeUrl());// 返回二维码图片文件url 
 																		
@@ -154,7 +158,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(expirationTime);
 		switch(expirationTimeInteger.intValue()) {
-			case 0 : break;
+			case 0 : return null;
 			case 1 : calendar.add(Calendar.DATE, 3); break;
 			case 2 : calendar.add(Calendar.DATE, 7); break;
 			case 3 : calendar.add(Calendar.MONTH, 1); break;
