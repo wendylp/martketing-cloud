@@ -156,7 +156,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 					List<ContactTemplate> oriContactTemplateList = contactTemplateDao.selectList(contactTemplate);
 					if(!CollectionUtils.isEmpty(oriContactTemplateList)){
 						for(ContactTemplate oriContactTemplate : oriContactTemplateList){
-							oriContactTemplate.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+							oriContactTemplate.setDelStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
 							contactTemplateDao.updateById(oriContactTemplate);
 						}
 					}
@@ -179,7 +179,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 
 							if(isInOldTemplate(param,oriContactTemplateList)){
 								param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
-								param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+								param.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 								contactTemplateDao.updateById(param);
 							}else {
 								param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
