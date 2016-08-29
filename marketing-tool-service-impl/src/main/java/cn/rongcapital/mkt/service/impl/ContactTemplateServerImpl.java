@@ -182,6 +182,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 								param.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 								contactTemplateDao.updateById(param);
 							}else {
+								param.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 								param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
 								contactTemplateDao.insert(param);
 							}
