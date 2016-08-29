@@ -46,8 +46,10 @@ import cn.rongcapital.mkt.service.WeixinQrcodeErrorDownloadService;
 import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
 import cn.rongcapital.mkt.service.WeixinQrcodeListService;
 import cn.rongcapital.mkt.service.WeixinQrcodeMatchGetService;
+import cn.rongcapital.mkt.service.WeixinQrcodeSaveOrUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.TagBodyUpdateIn;
+import cn.rongcapital.mkt.vo.in.WechatQrcodeInData;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -91,6 +93,9 @@ public class MktWeChatApi {
 	
 	@Autowired
 	private WeixinQrcodeBatchSaveService weixinQrcodeBatchSaveService;
+	
+	@Autowired
+	private WeixinQrcodeSaveOrUpdateService weixinQrcodeSaveOrUpdateService;
 
 
 	/**
@@ -315,6 +320,13 @@ public class MktWeChatApi {
 			@NotEmpty @QueryParam("qrcode_tag_ids") String qrcodeTagIds,
 			@NotNull @QueryParam("qrcode_status") Integer qrcodeStatus) {
 		return weixinQrcodeBatchSaveService.weixinQrcodeBatchSave(batchId, expirationTime, qrcodeTagIds, qrcodeStatus);
+	}
+	
+	@POST
+	@Path("/mkt.weixin.qrcode.saveorupdate")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput weixinSaveOrUpdate(@Valid WechatQrcodeInData body){
+		return weixinQrcodeSaveOrUpdateService.weixinSaveOrUpdate(body);
 	}
 
 }
