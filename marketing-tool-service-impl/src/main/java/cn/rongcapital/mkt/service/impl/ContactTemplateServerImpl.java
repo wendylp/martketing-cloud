@@ -215,16 +215,15 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 	public BaseOutput updateContextTempById(Long id) {
 		ContactTemplate param = new ContactTemplate();
 		param.setContactId(id);
-		param.setUpdateTime(new Date());
-		param.setStatus(ApiConstant.TAG_TYPE_CONTACT);
-		int update_count = contactTemplateDao.updateById(param);
+
+		int update_count = contactTemplateDao.deleteByCId(param);
 
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
 		Map<String, Object> map_r = new HashMap<String, Object>();
 		map_r.put("id", id);
-		map_r.put("updatetime", DateUtil.getStringFromDate(param.getUpdateTime(), "yyyy-MM-dd HH:mm:ss"));
+		map_r.put("updatetime", DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
 
 		result.setTotal(update_count);
 		result.getData().add(map_r);
