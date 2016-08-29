@@ -34,34 +34,29 @@ public class ContactListTagGetServiceImpl implements ContactListTagGetService {
 	public BaseOutput getContactListTag(Integer contactId) {
 		ContactTemplate contactTemplate = new ContactTemplate();
 		contactTemplate.setContactId(Long.parseLong(contactId.toString()));
-		List<ContactTemplate> contactTemplates= contactTemplateDao.selectList(contactTemplate);
+		List<ContactTemplate> contactTemplates = contactTemplateDao.selectList(contactTemplate);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
-		if(CollectionUtils.isNotEmpty(contactTemplates))
-		{
+		if (CollectionUtils.isNotEmpty(contactTemplates)) {
 			result.setTotal(contactTemplates.size());
 			ContactListTagOut contactListTagOut = new ContactListTagOut();
 			List<Contact_Tags> contact_Tags = new ArrayList<>();
 			contactListTagOut.setContact_tags(contact_Tags);
-			for(ContactTemplate contact:contactTemplates)
-			{
-				contactListTagOut.setContact_id(contact.getContactId().toString());
+			Long cId = contactTemplates.get(0).getContactId();
+			if (null != cId) {
+				contactListTagOut.setContact_id(cId.toString());
 				CustomTagMap customTagMap = new CustomTagMap();
-				customTagMap.setMapId(Integer.parseInt(contact.getContactId().toString()));
+				customTagMap.setMapId(Integer.parseInt(cId.toString()));
 				List<CustomTagMap> customTagMaps = customTagMapDao.selectList(customTagMap);
-				if(CollectionUtils.isNotEmpty(customTagMaps))
-				{
-					for(CustomTagMap custom:customTagMaps)
-					{
-						List<CustomTag> customs = new ArrayList<>();
+				if (CollectionUtils.isNotEmpty(customTagMaps)) {
+					for (CustomTagMap custom : customTagMaps) {
+						// List<CustomTag> customs = new ArrayList<>();
 						CustomTag customTag = new CustomTag();
 						customTag.setId(custom.getTagId());
-						List<CustomTag> customTags= customTagDao.selectList(customTag);
-						if(CollectionUtils.isNotEmpty(customTags))
-						{
+						List<CustomTag> customTags = customTagDao.selectList(customTag);
+						if (CollectionUtils.isNotEmpty(customTags)) {
 							List<Contact_Tags> contacttags = new ArrayList<>();
-							for(CustomTag c:customTags)
-							{
+							for (CustomTag c : customTags) {
 								Contact_Tags contactTags = new Contact_Tags();
 								contactTags.setTag_id(c.getId().toString());
 								contactTags.setTag_name(c.getName());
@@ -71,10 +66,9 @@ public class ContactListTagGetServiceImpl implements ContactListTagGetService {
 						}
 					}
 				}
+				result.getData().add(contactListTagOut);
 			}
-			result.getData().add(contactListTagOut);
 		}
-		
 		return result;
 	}
 
