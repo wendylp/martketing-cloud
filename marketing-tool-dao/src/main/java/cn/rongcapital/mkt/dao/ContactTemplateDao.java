@@ -77,4 +77,11 @@ public interface ContactTemplateDao extends BaseDao<ContactTemplate>{
 	 * @return ArrayList<String>
 	 */
 	ArrayList<String> selectFieldCodeListByFieldNameList(@Param("filedNameList") ArrayList<String> contactTemplateKeys);
+
+	/***
+	 * 获取联系人模板的总数
+	 * @param contactTemplate
+	 * @return ArrayList<String>
+	 */
+	Integer selectRealContactTemplateListCount(ContactTemplate contactTemplate);
 }

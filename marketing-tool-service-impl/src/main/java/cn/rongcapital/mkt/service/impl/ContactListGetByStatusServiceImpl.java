@@ -27,6 +27,9 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 	@Override
 	public BaseOutput getContactList(Integer contactStatus, String contactId, String contactName, int index, int size) {
 		//ContactList contactList = new ContactList();
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+
 		ContactTemplate contactTemplate = new ContactTemplate();
 		contactTemplate.setStatus(contactStatus.byteValue());
 		if (contactId != null && contactId.length()>0){
@@ -35,17 +38,17 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 		if (contactName != null && contactName.length() >0){
 			contactTemplate.setContactName(contactName);
 		}
+
+		Integer totalCount = contactTemplateDao.selectRealContactTemplateListCount(contactTemplate);
+		result.setTotal(totalCount);
 		//set index and size
 		contactTemplate.setPageSize(size);
 		contactTemplate.setStartIndex((index-1)*size);
-		
+
 		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListGroupByCId(contactTemplate);
-		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-				ApiConstant.INT_ZERO, null);
 
 		//Map<String, Object> cloMap = new HashMap<>();
 		if (CollectionUtils.isNotEmpty(contactTemplateList)) {
-			result.setTotal(contactTemplateList.size());
 			List<Object> resultData = result.getData();
 			for (ContactTemplate contactTem : contactTemplateList) {
 				
