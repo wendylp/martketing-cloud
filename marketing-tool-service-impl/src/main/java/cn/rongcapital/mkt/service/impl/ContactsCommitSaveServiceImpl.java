@@ -66,11 +66,17 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		contactTemplate.setIsShownInFeedback(SHOWN_IN_FEEDBACK_STATUS.byteValue());
 		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListAll(contactTemplate);
 		
-		Map<String, Object> cloMap = new LinkedHashMap<>();
+		//Map<String, Object> cloMap = new LinkedHashMap<>();
+		Map<String, Object> cloMap = null;
+		List<Map<String, Object>> columnList = new ArrayList<>();
 		List<String> filedNameList = new ArrayList<>();
 		for(ContactTemplate template : contactTemplateList){
-			cloMap.put(template.getFieldCode(), template.getFieldName());
+			cloMap = new LinkedHashMap<>();
+			cloMap.put("col_id",template.getFieldIndex());
+			cloMap.put("col_name",template.getFieldName());
+			cloMap.put("col_code",template.getFieldCode());
 			filedNameList.add(template.getFieldCode());
+			columnList.add(cloMap);
 		}
 		contact.setContactTemplId(contact_id);
 
@@ -158,7 +164,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 				result.getData().add(map);
 			}
 		}
-		result.getColNames().add(cloMap);
+		result.getColNames().add(columnList);
 		return result;
 	}
 
