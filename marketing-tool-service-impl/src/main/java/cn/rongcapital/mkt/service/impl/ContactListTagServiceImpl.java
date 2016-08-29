@@ -47,11 +47,13 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 				continue;
 			}
 			tagDao.insert(tag);
+			
+			CustomTagMap tagMap = new CustomTagMap();
+			tagMap.setTagId(tag.getId());
+			tagMap.setMapId(body.getContact_id());
+			tagMapDao.insert(tagMap);
 		}
-		CustomTagMap tagMap = new CustomTagMap();
-		tagMap.setTagId(tag.getId());
-		tagMap.setMapId(body.getContact_id());
-		tagMapDao.insert(tagMap);
+
 		
 //		tag.setName(body.getTag_name());
 
