@@ -46,6 +46,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
             ContactTemplate contactTemplate = new ContactTemplate();
             contactTemplate.setContactId(contactId);
             contactTemplate.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+            contactTemplate.setPageSize(Integer.MAX_VALUE);
             List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
 
             //获取默认模板
