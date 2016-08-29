@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -114,6 +115,8 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	private BaseOutput addData(BaseOutput result, List<WechatQrcode> wechatQrcodeLists) {
 		
 			result.setTotal(wechatQrcodeLists.size());
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 			for (WechatQrcode wechatQrcodeList : wechatQrcodeLists) {
 				Map<String, Object> map = new HashMap<String, Object>();
@@ -134,8 +137,12 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 				}
 				
 				map.put("ch_name", chName);
-				
-				map.put("expiration_time", wechatQrcodeList.getExpirationTime());
+				if(wechatQrcodeList.getExpirationTime() != null) {
+					map.put("expiration_time", format.format(wechatQrcodeList.getExpirationTime()));
+				} else {
+					map.put("expiration_time", wechatQrcodeList.getExpirationTime());
+				}
+				map.put("expiration_time", format.format(wechatQrcodeList.getExpirationTime()));
 				map.put("qrcode_status", wechatQrcodeList.getStatus());
 
 				if (wechatQrcodeList.getRelatedTags() == null || wechatQrcodeList.getRelatedTags().length() <= 0) { // 根据related_tags是否为空判断是否有关联
