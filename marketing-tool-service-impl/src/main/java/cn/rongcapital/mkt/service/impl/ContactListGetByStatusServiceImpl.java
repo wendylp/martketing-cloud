@@ -32,6 +32,9 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 
 		ContactTemplate contactTemplate = new ContactTemplate();
 		contactTemplate.setStatus(contactStatus.byteValue());
+		if(contactStatus == 3){
+			contactTemplate.setStatus(null);
+		}
 		if (contactId != null && contactId.length()>0){
 			contactTemplate.setContactId(Long.valueOf(contactId));
 		}
