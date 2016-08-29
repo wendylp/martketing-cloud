@@ -51,6 +51,7 @@ public class RegisterListServiceImpl implements RegisterListService {
 			for (WechatRegister s : reList) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("wxmp_id", s.getId());
+				map.put("wx_acct", s.getWxAcct());
 				map.put("name", s.getName());
 				result.getData().add(map);
 			}
