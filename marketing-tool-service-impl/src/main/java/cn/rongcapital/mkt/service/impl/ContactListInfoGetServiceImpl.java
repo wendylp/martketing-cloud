@@ -42,6 +42,7 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 				contactListInfoOut.setContact_name(contactTemplates.get(0).getContactName());
 				contactListInfoOut.setQrcode_url(contactTemplates.get(0).getQrcodeUrl());
 				// contactListInfoOut.setQrcode_pic(contactTemplates.get(0).getqr);
+				contactListInfoOut.setContact_descript(contactTemplates.get(0).getContactDescript());
 				contactListInfoOut.setContact_status(contactTemplates.get(0).getStatus().toString());
 				List<Field_List> lists = new ArrayList<Field_List>();
 				for (ContactTemplate c : contactTemplates) {
