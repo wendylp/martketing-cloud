@@ -154,6 +154,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 					// 再新增
 					ContactTemplate contactTemplate = new ContactTemplate();
 					contactTemplate.setContactId(ctIn.getContact_id());
+					contactTemplate.setPageSize(Integer.MAX_VALUE);
 					List<ContactTemplate> oriContactTemplateList = contactTemplateDao.selectList(contactTemplate);
 					if(!CollectionUtils.isEmpty(oriContactTemplateList)){
 						for(ContactTemplate oriContactTemplate : oriContactTemplateList){
