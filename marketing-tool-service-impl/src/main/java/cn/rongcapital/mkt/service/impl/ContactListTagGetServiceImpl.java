@@ -43,6 +43,7 @@ public class ContactListTagGetServiceImpl implements ContactListTagGetService {
 			List<Contact_Tags> contact_Tags = new ArrayList<>();
 			contactListTagOut.setContact_tags(contact_Tags);
 			Long cId = contactTemplates.get(0).getContactId();
+			
 			if (null != cId) {
 				contactListTagOut.setContact_id(cId.toString());
 				CustomTagMap customTagMap = new CustomTagMap();
