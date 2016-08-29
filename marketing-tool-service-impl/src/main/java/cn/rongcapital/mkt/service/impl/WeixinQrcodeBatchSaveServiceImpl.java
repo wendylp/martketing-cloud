@@ -66,11 +66,9 @@ public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveSe
 		wechatQrcode.setStatus((byte) qrcodeStatus.intValue());
 
 		int count = wechatQrcodeDao.updataByBatchId(wechatQrcode);
-
-		if (count <= 0) {
-			result.setCode(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode());
-			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
-		}
+		
+		
+		logger.debug("更新数据id:{}",wechatQrcode.getId());
 
 		return result;
 	}
