@@ -233,7 +233,7 @@ public class MktWeChatApi {
 	@POST
 	@Path("/mkt.weixin.qrcode.del")
 	public BaseOutput weixinQrocdeDel(
-			@NotNull @QueryParam("id") int id) {
+			@NotNull @QueryParam("id") Integer id) {
 		return weixinQrcodeDelService.weixinQrocdeDel(id);
 	}
 	
