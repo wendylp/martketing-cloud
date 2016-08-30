@@ -42,6 +42,8 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 	private static final Integer SHOWN_IN_FEEDBACK = 0;
 	private static final Integer NO_SHOWN_IN_FEEDBACK = 1;
 
+	private static final String EMPTY_KEY_LIST = "";
+
 	@Autowired
 	private ContactTemplateDao contactTemplateDao;
 
@@ -127,7 +129,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
 						if(!CollectionUtils.isEmpty(contactTemplateList)){
 							for(ContactTemplate updateContactTemplate : contactTemplateList){
-								updateContactTemplate.setKeyList(null);
+								updateContactTemplate.setKeyList("");
 								updateContactTemplate.setIsRememberImportKey(UN_REMEMBER_IMPORTLIST.byteValue());
 								contactTemplateDao.updateById(updateContactTemplate);
 							}
