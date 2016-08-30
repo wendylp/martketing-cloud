@@ -35,6 +35,9 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		
+		//对自定义标签进行删除
+		deleteTagsByContactId(body.getContact_id());
+		
 		//获取标签名称
 		String[] tag_names = body.getTag_names();
 		
@@ -54,17 +57,6 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 			tagMapDao.insert(tagMap);
 		}
 
-		
-//		tag.setName(body.getTag_name());
-
-//		int count = tagDao.selectListCount(tag);
-		//tagDao.insert(tag);
-
-//		CustomTagMap tagMap = new CustomTagMap();
-//		tagMap.setTagId(tag.getId());
-//		tagMap.setMapId(body.getContact_id());
-//		tagMapDao.insert(tagMap);
-
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", body.getContact_id());
 		map.put("updatetime", DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
@@ -73,4 +65,20 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 
 		return result;
 	}
+	
+	/**
+	 * @Title: deleteTagsByContactId   
+	 * @Description: 添加之前进行自定义标签删除  
+	 * @param: @param contactId      
+	 * @return: void      
+	 * @throws
+	 */
+	private void deleteTagsByContactId(Integer contactId){
+		if(null != contactId){
+			tagDao.delecteCustomTagByContactId(contactId);
+			tagMapDao.deleteCustomTagMapByMapId(contactId);
+		}
+	}
+	
+	
 }
