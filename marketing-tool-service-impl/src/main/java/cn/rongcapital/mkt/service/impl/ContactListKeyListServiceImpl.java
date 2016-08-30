@@ -51,6 +51,7 @@ public class ContactListKeyListServiceImpl implements ContactListKeyListService{
 				ApiConstant.INT_ZERO);
 		ContactTemplate contactTemplate = new ContactTemplate();
 		contactTemplate.setContactId(Long.valueOf(contactId));
+		contactTemplate.setPageSize(Integer.MAX_VALUE);
 		contactTemplate.setRequired(REQUIRED);
 		List<ContactTemplate> requiredContactTemplateList = contactTemplateDao.selectList(contactTemplate);
 		if(!CollectionUtils.isEmpty(requiredContactTemplateList)){

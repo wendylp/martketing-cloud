@@ -83,6 +83,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						param.setPageViews(0);
 						param.setFieldIndex(field_list.getIndex());
 						param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
+						param.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 
 						// 插入
 						contactTemplateDao.insert(param);
@@ -153,10 +154,11 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 					// 再新增
 					ContactTemplate contactTemplate = new ContactTemplate();
 					contactTemplate.setContactId(ctIn.getContact_id());
+					contactTemplate.setPageSize(Integer.MAX_VALUE);
 					List<ContactTemplate> oriContactTemplateList = contactTemplateDao.selectList(contactTemplate);
 					if(!CollectionUtils.isEmpty(oriContactTemplateList)){
 						for(ContactTemplate oriContactTemplate : oriContactTemplateList){
-							oriContactTemplate.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+							oriContactTemplate.setDelStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
 							contactTemplateDao.updateById(oriContactTemplate);
 						}
 					}
@@ -179,9 +181,10 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 
 							if(isInOldTemplate(param,oriContactTemplateList)){
 								param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
-								param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+								param.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 								contactTemplateDao.updateById(param);
 							}else {
+								param.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 								param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
 								contactTemplateDao.insert(param);
 							}

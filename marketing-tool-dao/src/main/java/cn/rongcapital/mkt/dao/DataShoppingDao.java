@@ -118,7 +118,7 @@ public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDa
      * @return: String      
      * @throws
      */
-    String selectWeimobByKeyid(@Param("keyId")Integer keyId);
+    List<ShoppingWechat> selectWeimobByKeyid(@Param("keyId")Integer keyId);
     
     /**
      * @Title: selectSingleMonthShoppingCountByKeyid   

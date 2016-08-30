@@ -48,6 +48,8 @@ public class ContactTemplate extends BaseQuery implements Serializable {
 
     private Byte isShownInFeedback;
 
+    private Byte delStatus;
+
     public Integer getId() {
         return id;
     }
@@ -214,5 +216,13 @@ public class ContactTemplate extends BaseQuery implements Serializable {
 
     public void setIsShownInFeedback(Byte isShownInFeedback) {
         this.isShownInFeedback = isShownInFeedback;
+    }
+
+    public Byte getDelStatus() {
+        return delStatus;
+    }
+
+    public void setDelStatus(Byte delStatus) {
+        this.delStatus = delStatus;
     }
 }

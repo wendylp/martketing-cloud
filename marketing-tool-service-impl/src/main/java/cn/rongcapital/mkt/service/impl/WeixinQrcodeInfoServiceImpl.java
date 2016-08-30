@@ -56,6 +56,8 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			List<WechatChannel> wechatChannelLists = wechatChannelDao.selectList(wechatChannel);
 			if(!(wechatChannelLists == null) && !wechatChannelLists.isEmpty()) {
 				map.put("ch_name", wechatChannelLists.get(0).getChName());
+			}else {
+				map.put("ch_name", "");//查询不到的时候默认传空字符串
 			}
 			
 			
