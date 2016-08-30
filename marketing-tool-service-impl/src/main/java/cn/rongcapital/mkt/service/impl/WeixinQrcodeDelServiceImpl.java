@@ -15,6 +15,7 @@ import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.WechatQrcodeInId;
 
 /**
  * 删除二维码接口 （逻辑删除，状态改为2）
@@ -29,13 +30,13 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 	private WechatQrcodeDao wechatQrcodeDao;
 	
 	@Override
-	public BaseOutput weixinQrocdeDel(int id) {
+	public BaseOutput weixinQrocdeDel(WechatQrcodeInId body) {
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE,null);
 		
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		
-		wechatQrcode.setId(id);
+		wechatQrcode.setId(body.getId());
 		wechatQrcode.setStatus((byte)2);
 		
 		int count = wechatQrcodeDao.updateById(wechatQrcode);
@@ -46,7 +47,7 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
 		} else {
 			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("id", id);
+			map.put("id", body.getId());
 			map.put("status", 2);
 			result.getData().add(map);
 		}
