@@ -44,7 +44,7 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 	@Override
 	public BaseOutput getWeiXinQrocdeInfo(String qrcodeId) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE,null);
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		wechatQrcode.setId(Integer.valueOf(qrcodeId));
 		
@@ -72,12 +72,11 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			
 			// create_time为空检查
 			if(wechatQrcodeLists.get(0).getCreateTime() != null) {
-				map.put("create_time", format.format(wechatQrcodeLists.get(0).getCreateTime()));
+				map.put("create_time", sdf.format(wechatQrcodeLists.get(0).getCreateTime()));
 			} else {
 				map.put("create_time", "");
 			}
 			//日期格式化处理
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date expirationTime = wechatQrcodeLists.get(0).getExpirationTime();
 			expirationTime = null == expirationTime ? new Date() : expirationTime;
 			map.put("expiration_time", sdf.format(expirationTime));
