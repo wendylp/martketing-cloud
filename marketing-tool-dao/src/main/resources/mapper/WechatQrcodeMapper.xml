@@ -150,6 +150,13 @@
 		
 	</update>
 	
+	<!-- 通过Id更新 status -->
+	<update id="updateStatusById" parameterType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[UPDATE wechat_qrcode]]>
+		set status = #{status}		
+		<![CDATA[WHERE id = #{id}]]>	
+	</update>
+	
 	<!-- 查询列表，其中expirationTime是根据范围来查找 -->
 	<select id="selectListExpirationTime" parameterType="cn.rongcapital.mkt.po.WechatQrcode" resultType="cn.rongcapital.mkt.po.WechatQrcode">
 		<![CDATA[SELECT]]>

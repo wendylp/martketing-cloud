@@ -39,6 +39,7 @@ import cn.rongcapital.mkt.service.QrcodePicDownloadService;
 import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
 import cn.rongcapital.mkt.service.QrcodeUsedCountService;
 import cn.rongcapital.mkt.service.TagUpdateService;
+import cn.rongcapital.mkt.service.WechatQrcodeActivateService;
 import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 //import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
@@ -96,6 +97,9 @@ public class MktWeChatApi {
 	
 	@Autowired
 	private WeixinQrcodeSaveOrUpdateService weixinQrcodeSaveOrUpdateService;
+	
+	@Autowired
+	private WechatQrcodeActivateService wechatQrcodeActivateService;
 
 
 	/**
@@ -283,6 +287,22 @@ public class MktWeChatApi {
 	public BaseOutput assetWechatAudiencelistMatchGet(
 			@NotEmpty @QueryParam("audience_name") String audienceName) {
 		return assetWechatAudiencelistMatchGetService.assetWechatAudiencelistMatchGet(audienceName);
+	}
+	
+	
+	/**
+	 * 生效微信二维码
+	 * 
+	 * @param id
+	 * @return
+	 * @author zhouqi
+	 * @Date 2016.08.29
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.activate")	
+	public BaseOutput wechatQrcodeActivate(
+			@NotNull @QueryParam("id") Integer id) {
+		return wechatQrcodeActivateService.weChatQrocdeActivate(id);
 	}
 	
 	/**
