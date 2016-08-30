@@ -94,13 +94,18 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 
 		
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.fuzzySearchQrcodeName(wechatQrcode);
-		
+		result.setTotal(wechatQrcodeLists.size());
+		wechatQrcode = new WechatQrcode();
+		wechatQrcode.setQrcodeName(qrcodeName);
+		wechatQrcode.setStartIndex(null);
+		wechatQrcode.setPageSize(null);
+		List<WechatQrcode> wqList = wechatQrcodeDao.fuzzySearchQrcodeName(wechatQrcode);
 		if (wechatQrcodeLists != null && !wechatQrcodeLists.isEmpty()) {
 			result = addData(result, wechatQrcodeLists);
 		} else {
 			logger.debug("根据微信号名：{}查不到信息",qrcodeName);
 		}
-		
+		result.setTotalCount(wqList.size());
 		
 		return result;
 	}
@@ -115,7 +120,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 */
 	private BaseOutput addData(BaseOutput result, List<WechatQrcode> wechatQrcodeLists) {
 		
-			result.setTotal(wechatQrcodeLists.size());
+			//result.setTotal(wechatQrcodeLists.size());
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
