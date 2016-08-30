@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,13 +45,11 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 		CustomTag tag = new CustomTag();
 		
 		for (String tagName : tag_names) {
-			tag.setName(tagName);
-			int count = tagDao.selectListCount(tag);
-			if(count > 0){
+			if(StringUtils.isNotEmpty(tagName)){
 				continue;
 			}
+			tag.setName(tagName);
 			tagDao.insert(tag);
-			
 			CustomTagMap tagMap = new CustomTagMap();
 			tagMap.setTagId(tag.getId());
 			tagMap.setMapId(body.getContact_id());
