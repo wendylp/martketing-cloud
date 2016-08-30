@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.TagDao;
 import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
@@ -74,8 +76,11 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			} else {
 				map.put("create_time", "");
 			}
-			
-			map.put("expiration_time", wechatQrcodeLists.get(0).getExpirationTime());
+			//日期格式化处理
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date expirationTime = wechatQrcodeLists.get(0).getExpirationTime();
+			expirationTime = null == expirationTime ? new Date() : expirationTime;
+			map.put("expiration_time", sdf.format(expirationTime));
 			map.put("fixed_audience", wechatQrcodeLists.get(0).getAudienceName());// 固定人群
 			//关联标签
 			String relatedTag = wechatQrcodeLists.get(0).getRelatedTags();
