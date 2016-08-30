@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
+import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.service.WeixinQrcodeSaveOrUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -23,6 +25,9 @@ public class WeixinQrcodeSaveOrUpdateServiceImpl implements WeixinQrcodeSaveOrUp
 
 	@Autowired
 	private WechatQrcodeDao wechatQrcodeDao;
+	
+	@Autowired
+	private WechatChannelDao wechatChannelDao;
 	
 	@Override
 	public BaseOutput weixinSaveOrUpdate(WechatQrcodeInData body) {
@@ -35,6 +40,13 @@ public class WeixinQrcodeSaveOrUpdateServiceImpl implements WeixinQrcodeSaveOrUp
 		WechatQrcode wechatQrcodeQuery = new WechatQrcode();
 		wechatQrcodeQuery.setWxAcct(wxAcct);
 		wechatQrcodeQuery.setQrcodeName(qrcodeName);
+		
+		//渠道表
+		WechatChannel wechatChannel =  new WechatChannel();
+		wechatChannel.setId(body.getChCode());
+		wechatChannel.setChName(body.getChName());
+		List<WechatChannel> wechatChannelList = wechatChannelDao.selectList(wechatChannel);
+		
 		
 		List<WechatQrcode> wechatQrcodeList = wechatQrcodeDao.selectList(wechatQrcodeQuery);
 		result.setTotal(1);
@@ -62,16 +74,24 @@ public class WeixinQrcodeSaveOrUpdateServiceImpl implements WeixinQrcodeSaveOrUp
 			
 			Integer id = wechatQrcodeList.get(0).getId();
 			wechatQrcode.setId(id);
-			
 			wechatQrcodeDao.updateById(wechatQrcode);
+			
 		}else {
 			wechatQrcodeDao.insert(wechatQrcode);
 		}
 		
+		//更新或者插入channel表
+		if(wechatChannelList != null && !wechatChannelList.isEmpty()){
+			wechatChannelDao.updateById(wechatChannel);
+		}else {
+			wechatChannelDao.insert(wechatChannel);
+		}
+		
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("id", wechatQrcode.getId());
 		resultMap.put("wx_name", wechatQrcode.getWxName());
-		resultMap.put("ch_name", wechatQrcode.getChCode());//TODO 没有ch_name
+		resultMap.put("ch_name", body.getChName());
 		resultMap.put("qrcode_name", wechatQrcode.getQrcodeName());
 		resultMap.put("create_time", wechatQrcode.getCreateTime());
 		resultMap.put("expiration_time", wechatQrcode.getExpirationTime());

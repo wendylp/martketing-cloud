@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.vo.in;
 
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -14,6 +16,7 @@ public class WechatQrcodeInData {
 	@JsonProperty("ch_code")
 	private Integer chCode;
 	
+	@NotEmpty
 	@JsonProperty("ch_name")
 	private String chName;
 	
