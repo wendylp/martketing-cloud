@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.vo.out;
 
+import java.util.List;
 import java.util.Map;
 
 public class Field_List {
@@ -10,13 +11,14 @@ public class Field_List {
 	private Integer field_type;
 	private Integer required;
 	private Integer ischecked;
-	private Map<String, Object> select_data;
+	private List<Map<String, Object>> select_data;
 
-	public Map<String, Object> getSelect_data() {
+
+	public List<Map<String, Object>> getSelect_data() {
 		return select_data;
 	}
 
-	public void setSelect_data(Map<String, Object> select_data) {
+	public void setSelect_data(List<Map<String, Object>> select_data) {
 		this.select_data = select_data;
 	}
 

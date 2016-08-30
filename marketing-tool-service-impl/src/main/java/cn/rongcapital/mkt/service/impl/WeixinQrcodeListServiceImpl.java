@@ -47,8 +47,6 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	@Override
 	public BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus, int index, int size) {
 		
-		
-		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		WechatQrcode wechatQrcode = new WechatQrcode();
@@ -67,9 +65,16 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		wechatQrcode.setStartIndex((index-1)*size);
 		
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectListExpirationTime(wechatQrcode);// 如果修改表结构需要修改对应的mapper文件
+		//查询总条数用
+		wechatQrcode.setStartIndex(null);
+		wechatQrcode.setPageSize(null);
+		List<WechatQrcode> countList = wechatQrcodeDao.selectListExpirationTime(wechatQrcode);
+		
+		result.setTotal(wechatQrcodeLists.size());
 		if (wechatQrcodeLists != null && !wechatQrcodeLists.isEmpty()) {
 			result = addData(result, wechatQrcodeLists);
 		}
+		result.setTotalCount(countList.size());
 		return result;
 	}
 	
@@ -94,13 +99,18 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 
 		
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.fuzzySearchQrcodeName(wechatQrcode);
-		
+		result.setTotal(wechatQrcodeLists.size());
+		wechatQrcode = new WechatQrcode();
+		wechatQrcode.setQrcodeName(qrcodeName);
+		wechatQrcode.setStartIndex(null);
+		wechatQrcode.setPageSize(null);
+		List<WechatQrcode> wqList = wechatQrcodeDao.fuzzySearchQrcodeName(wechatQrcode);
 		if (wechatQrcodeLists != null && !wechatQrcodeLists.isEmpty()) {
 			result = addData(result, wechatQrcodeLists);
 		} else {
 			logger.debug("根据微信号名：{}查不到信息",qrcodeName);
 		}
-		
+		result.setTotalCount(wqList.size());
 		
 		return result;
 	}
@@ -115,7 +125,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 */
 	private BaseOutput addData(BaseOutput result, List<WechatQrcode> wechatQrcodeLists) {
 		
-			result.setTotal(wechatQrcodeLists.size());
+			//result.setTotal(wechatQrcodeLists.size());
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
