@@ -13,6 +13,8 @@ package cn.rongcapital.mkt.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CustomTagMap;
 import cn.rongcapital.mkt.po.CustomTagWithName;
@@ -92,5 +94,15 @@ public interface CustomTagMapDao extends BaseDao<CustomTagMap>{
      * @author zhuxuelong
      */
 	void batchDeleteUseTagId(Integer tagId);
+	
+	/**
+	 * @Title: deleteCustomTagMapByMapId   
+	 * @Description: 通过mapId进行删除 
+	 * @param: @param mapId
+	 * @param: @return      
+	 * @return: int      
+	 * @throws
+	 */
+	int deleteCustomTagMapByMapId(@Param("mapId") Integer mapId);
 	
 }

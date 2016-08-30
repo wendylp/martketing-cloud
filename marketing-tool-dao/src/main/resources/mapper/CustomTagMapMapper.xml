@@ -151,4 +151,13 @@
 		and map_id=#{mapId}
 	</select>
 	
+	<!-- 通过mapId进行删除 -->
+	<delete id="deleteCustomTagMapByMapId" parameterType="java.lang.Integer">
+		DELETE
+		FROM
+			custom_tag_map
+		WHERE
+			map_id = #{mapId}
+	</delete>
+	
 </mapper>
