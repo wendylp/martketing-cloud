@@ -30,6 +30,7 @@ public class ContactImportkeyListGetServiceImpl implements ContactImportkeyListG
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 
         ContactTemplate contactTemplate = new ContactTemplate();
+        contactTemplate.setContactId(contactId);
         contactTemplate.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
         if(!CollectionUtils.isEmpty(contactTemplateList)){
