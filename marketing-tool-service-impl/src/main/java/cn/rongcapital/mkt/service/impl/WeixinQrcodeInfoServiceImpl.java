@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.TagDao;
 import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
+import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
@@ -32,6 +34,9 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 	
 	@Autowired
 	private WechatChannelDao wechatChannelDao;
+	
+	@Autowired
+	private TagDao tagDao;
 	
 	
 	@Override
@@ -61,7 +66,7 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			}
 			
 			
-			map.put("qrcode_name", wechatQrcodeLists.get(0).getQrcodeName());
+			map.put("qrcode_name",wechatQrcodeLists.get(0).getQrcodeName());
 			
 			// create_time为空检查
 			if(wechatQrcodeLists.get(0).getCreateTime() != null) {
@@ -72,7 +77,19 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			
 			map.put("expiration_time", wechatQrcodeLists.get(0).getExpirationTime());
 			map.put("fixed_audience", wechatQrcodeLists.get(0).getAudienceName());// 固定人群
-			map.put("qrcode_tags", wechatQrcodeLists.get(0).getRelatedTags());
+			//关联标签
+			String relatedTag = wechatQrcodeLists.get(0).getRelatedTags();
+			 //标签查询
+			List<Tag> tagList = tagDao.selectTagsByIds(relatedTag.split(";"));
+			List<Map<String, Object>> returnDataList = new ArrayList<>();
+			for (Tag tag : tagList) {
+				Map<String, Object> dataMap = new HashMap<>();
+				dataMap.put("group_id", tag.getTagGroupId());
+				dataMap.put("id", tag.getId());
+				dataMap.put("name", tag.getName());
+				returnDataList.add(dataMap);
+			}
+			map.put("association_tags",returnDataList);
 			map.put("comment", wechatQrcodeLists.get(0).getComments());
 			
 			result.getData().add(map);
@@ -80,5 +97,7 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 		
 		return result;
 	}
+	
+	
 
 }
