@@ -47,8 +47,6 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	@Override
 	public BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus, int index, int size) {
 		
-		
-		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		WechatQrcode wechatQrcode = new WechatQrcode();
@@ -67,9 +65,16 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		wechatQrcode.setStartIndex((index-1)*size);
 		
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectListExpirationTime(wechatQrcode);// 如果修改表结构需要修改对应的mapper文件
+		//查询总条数用
+		wechatQrcode.setStartIndex(null);
+		wechatQrcode.setPageSize(null);
+		List<WechatQrcode> countList = wechatQrcodeDao.selectListExpirationTime(wechatQrcode);
+		
+		result.setTotal(wechatQrcodeLists.size());
 		if (wechatQrcodeLists != null && !wechatQrcodeLists.isEmpty()) {
 			result = addData(result, wechatQrcodeLists);
 		}
+		result.setTotalCount(countList.size());
 		return result;
 	}
 	
