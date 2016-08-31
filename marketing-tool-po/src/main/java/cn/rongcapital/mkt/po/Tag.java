@@ -1,8 +1,11 @@
 package cn.rongcapital.mkt.po;
 
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
 import java.util.Date;
 
-public class Tag {
+public class Tag extends BaseQuery {
+	
     private Integer id;
 
     private String name;
@@ -12,10 +15,6 @@ public class Tag {
     private Date createTime;
 
     private Date updateTime;
-<<<<<<< HEAD
-
-    private String tagGroupId;
-=======
     
     private String tagGroupId;
     
@@ -23,7 +22,6 @@ public class Tag {
     public String getTagGroupId() {
 		return tagGroupId;
 	}
->>>>>>> branch 'dev' of http://gitlab.dataengine.com/songshitao/marketing-cloud.git
 
 	public void setTagGroupId(String tagGroupId) {
 		this.tagGroupId = tagGroupId;
@@ -67,13 +65,5 @@ public class Tag {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getTagGroupId() {
-        return tagGroupId;
-    }
-
-    public void setTagGroupId(String tagGroupId) {
-        this.tagGroupId = tagGroupId == null ? null : tagGroupId.trim();
     }
 }
