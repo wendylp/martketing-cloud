@@ -30,6 +30,7 @@ public class ContactImportkeyListGetServiceImpl implements ContactImportkeyListG
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 
         ContactTemplate contactTemplate = new ContactTemplate();
+        contactTemplate.setContactId(contactId);
         contactTemplate.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
         if(!CollectionUtils.isEmpty(contactTemplateList)){
@@ -40,7 +41,8 @@ public class ContactImportkeyListGetServiceImpl implements ContactImportkeyListG
                 for(ContactTemplate templ : contactTemplateList){
                     if(key.equals(templ.getFieldName())){
                         Map<String,String> map = new HashMap<String,String>();
-                        map.put(templ.getFieldName(),templ.getFieldCode());
+                        map.put("field_name",templ.getFieldName());
+                        map.put("field_code",templ.getFieldCode());
                         baseOutput.getData().add(map);
                     }
                 }

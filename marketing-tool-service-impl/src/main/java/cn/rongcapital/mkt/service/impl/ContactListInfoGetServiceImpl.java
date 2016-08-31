@@ -9,8 +9,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
@@ -66,31 +64,79 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 	
 	
 	
-	private Map<String, Object> getSelectData(String fieldName) {
-		Map<String, Object> map = new HashMap<String, Object>();
+	private List<Map<String, Object>> getSelectData(String fieldName) {
+		List<Map<String, Object>> dataList = new ArrayList<>();
 		
-		if(fieldName.equals("性别")) {
-			map.put("男", 1);
-			map.put("女",0);
-		} else if(fieldName.equals("婚否")) {
-			map.put("已婚", 1);
-			map.put("未婚", 0);
-		} else if(fieldName.equals("血型")) {
-			map.put("A", 1);
-			map.put("B", 0);
-		} else if(fieldName.equals("职业")) {
-			map.put("医生", 1);
-			map.put("杀手", 0);
-		} else if(fieldName.equals("教育程度")) {
-			map.put("幼儿园", 1);
-			map.put("小学", 0);
-		} else if(fieldName.equals("国籍")) {
-			map.put("中国", 1);
-			map.put("外国", 0);
-		} else if(fieldName.equals("就业情况")) {
-			map.put("已就业", 1);
-			map.put("待业", 0);
+		switch (fieldName) {
+		case "性别":
+			dataList.add(getMap("男", 1));
+			dataList.add(getMap("女", 0));
+			break;
+		case "婚否":
+			dataList.add(getMap("已婚", 1));
+			dataList.add(getMap("未婚", 0));
+			break;
+		case "血型":
+			dataList.add(getMap("A", 1));
+			dataList.add(getMap("B", 0));
+			break;
+		case "教育程度":
+			dataList.add(getMap("幼儿园", 1));
+			dataList.add(getMap("小学", 0));
+			break;
+		case "国籍":
+			dataList.add(getMap("中国", 1));
+			dataList.add(getMap("外国", 0));
+			break;
+		case "就业情况":
+			dataList.add(getMap("已就业", 1));
+			dataList.add(getMap("待业", 0));
+			break;
 		}
+		
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		if(fieldName.equals("性别")) {
+//			map.put("name", "男");
+//			map.put("value", 1);
+//			dataList.add(map);
+//			map.put("男", 1);
+//			map.put("女",0);
+//		} else if(fieldName.equals("婚否")) {
+//			map.put("已婚", 1);
+//			map.put("未婚", 0);
+//		} else if(fieldName.equals("血型")) {
+//			map.put("A", 1);
+//			map.put("B", 0);
+//		} else if(fieldName.equals("职业")) {
+//			map.put("医生", 1);
+//			map.put("杀手", 0);
+//		} else if(fieldName.equals("教育程度")) {
+//			map.put("幼儿园", 1);
+//			map.put("小学", 0);
+//		} else if(fieldName.equals("国籍")) {
+//			map.put("中国", 1);
+//			map.put("外国", 0);
+//		} else if(fieldName.equals("就业情况")) {
+//			map.put("已就业", 1);
+//			map.put("待业", 0);
+//		}
+//		return map;
+		return dataList;
+	}
+	
+	/**
+	 * @Title: getMap   
+	 * @Description: 返回封装后数组
+	 * @param: @param name
+	 * @param: @param value
+	 * @param: @return      
+	 * @return: Map<String,Object>      
+	 * @throws
+	 */
+	private Map<String, Object> getMap(String name,Object value){
+		Map<String, Object> map = new HashMap<>();
+		map.put("name", name);
+		map.put("value", value);
 		return map;
 	}
 }

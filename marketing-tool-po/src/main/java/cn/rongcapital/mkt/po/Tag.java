@@ -12,10 +12,24 @@ public class Tag {
     private Date createTime;
 
     private Date updateTime;
+<<<<<<< HEAD
 
     private String tagGroupId;
+=======
+    
+    private String tagGroupId;
+    
+    
+    public String getTagGroupId() {
+		return tagGroupId;
+	}
+>>>>>>> branch 'dev' of http://gitlab.dataengine.com/songshitao/marketing-cloud.git
 
-    public Integer getId() {
+	public void setTagGroupId(String tagGroupId) {
+		this.tagGroupId = tagGroupId;
+	}
+
+	public Integer getId() {
         return id;
     }
 

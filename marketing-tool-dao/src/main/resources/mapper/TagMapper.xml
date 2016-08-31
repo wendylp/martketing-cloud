@@ -123,4 +123,18 @@
 	    WHERE tm.group_id = #{_parameter}
 	</select>
 	
+	<!-- 通过Id进行查询 -->
+	<select id="selectTagsByIds" resultType="cn.rongcapital.mkt.po.Tag">
+		SELECT
+			id,name,status,create_time AS createTime,update_time AS updateTime,tag_group_id AS tagGroupId
+		FROM
+			tag
+		WHERE
+			id 
+		IN
+	 	<foreach collection="array" index="index" item="item" open="(" separator="," close=")">  
+          	#{item}   
+ 		 </foreach>  
+	</select>
+	
 </mapper>

@@ -51,6 +51,7 @@ import cn.rongcapital.mkt.service.WeixinQrcodeSaveOrUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.TagBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInData;
+import cn.rongcapital.mkt.vo.in.WechatQrcodeInId;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -237,8 +238,8 @@ public class MktWeChatApi {
 	@POST
 	@Path("/mkt.weixin.qrcode.del")
 	public BaseOutput weixinQrocdeDel(
-			@NotNull @QueryParam("id") Integer id) {
-		return weixinQrcodeDelService.weixinQrocdeDel(id);
+			@Valid WechatQrcodeInId body) {
+		return weixinQrcodeDelService.weixinQrocdeDel(body);
 	}
 	
 	/**
