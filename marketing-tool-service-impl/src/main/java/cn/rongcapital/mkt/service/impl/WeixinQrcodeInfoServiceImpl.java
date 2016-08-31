@@ -14,9 +14,11 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.TagDao;
+import cn.rongcapital.mkt.dao.TaggroupDao;
 import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.po.Tag;
+import cn.rongcapital.mkt.po.Taggroup;
 import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
@@ -39,6 +41,9 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 	
 	@Autowired
 	private TagDao tagDao;
+	
+	@Autowired
+	private TaggroupDao taggroupDao;
 	
 	
 	@Override
@@ -88,9 +93,12 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			List<Map<String, Object>> returnDataList = new ArrayList<>();
 			for (Tag tag : tagList) {
 				Map<String, Object> dataMap = new HashMap<>();
-				dataMap.put("group_id", tag.getTagGroupId());
+				String tagGroupId = tag.getTagGroupId();
+				dataMap.put("group_id",tagGroupId);
+				String name = taggroupDao.selectNameById(Integer.valueOf(tagGroupId));
 				dataMap.put("id", tag.getId());
-				dataMap.put("name", tag.getName());
+				String[] split = name.split("-");
+				dataMap.put("name", split[split.length-1]+"-"+tag.getName());
 				returnDataList.add(dataMap);
 			}
 			map.put("association_tags",returnDataList);
@@ -102,6 +110,7 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 		return result;
 	}
 	
+
 	
 
 }
