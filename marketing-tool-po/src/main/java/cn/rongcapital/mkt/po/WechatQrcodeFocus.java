@@ -9,6 +9,8 @@ public class WechatQrcodeFocus extends BaseQuery {
 
     private String wxName;
 
+    private Integer chCode;
+
     private String openid;
 
     private String focusDatetime;
@@ -37,6 +39,14 @@ public class WechatQrcodeFocus extends BaseQuery {
 
     public void setWxName(String wxName) {
         this.wxName = wxName == null ? null : wxName.trim();
+    }
+
+    public Integer getChCode() {
+        return chCode;
+    }
+
+    public void setChCode(Integer chCode) {
+        this.chCode = chCode;
     }
 
     public String getOpenid() {
