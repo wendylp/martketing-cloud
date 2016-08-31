@@ -2,14 +2,23 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -35,20 +44,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.csvreader.CsvWriter;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.IllegalDataHeadTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.IllegalDataDao;
 import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
 import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
+import cn.rongcapital.mkt.dao.WechatChannelDao;
+import cn.rongcapital.mkt.dao.WechatQrcodeDao;
+import cn.rongcapital.mkt.dao.WechatQrcodeLogDao;
+import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.po.IllegalData;
 import cn.rongcapital.mkt.po.ImportDataHistory;
 import cn.rongcapital.mkt.po.ImportDataModifyLog;
+import cn.rongcapital.mkt.po.WechatChannel;
+import cn.rongcapital.mkt.po.WechatQrcode;
+import cn.rongcapital.mkt.po.WechatQrcodeLog;
+import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.impl.vo.UploadFileProcessVO;
 import cn.rongcapital.mkt.service.impl.vo.UploadFileVO;
+import cn.rongcapital.mkt.service.impl.vo.WXMoudelVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.IllegalDataUploadModifyLogOut;
 import cn.rongcapital.mkt.vo.out.IllegalDataUploadOut;
@@ -62,6 +83,10 @@ public class UploadFileServiceImpl implements UploadFileService{
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final String directory = "//rc//";
+    public static char CSV_WRITER_SEPARATOR=',';
+    public static String UPLOADED_FILE_PATH = "/rc/uploadFiles/";
+    public static String[] channels = new String[] {"经销商","渠道商","员工","区域","门店","活动"};
+    public static String FAIL_FILE_PATH = "/rc/uploadFiles/";
 
     @Autowired
     private ImportDataHistoryDao importDataHistoryDao;
@@ -74,6 +99,18 @@ public class UploadFileServiceImpl implements UploadFileService{
 
     @Autowired
     private ParseUploadFileImpl parseUploadFile;
+    
+	@Autowired
+	private WechatQrcodeDao wechatQrcodeDao;
+	
+	@Autowired
+	private WechatChannelDao wechatChannelDao;
+	
+	@Autowired
+	private WechatRegisterDao wechatRegisterDao;
+	
+	@Autowired
+	private WechatQrcodeLogDao wechatQrcodeLogDao;
 
     @Override
     public Object uploadFile(String fileUnique, MultipartFormDataInput fileInput) {
@@ -420,5 +457,178 @@ public class UploadFileServiceImpl implements UploadFileService{
         return "unknown";
     }
 
+	@Override
+	public Object uploadFileBatch(String fileUnique, MultipartFormDataInput fileInput) {
+		Map<String, List<InputPart>> uploadForm = fileInput.getFormDataMap();
+		List<InputPart> inputParts = uploadForm.get("file");
+		BaseOutput baseOutput = new BaseOutput();
+		baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+		baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+		
+		CsvWriter csvWriter = null;
+		for (InputPart inputPart : inputParts) {
+			try {
+				String fileName = getFileName(inputPart.getHeaders());
+				if (!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx")) {
+					baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+					baseOutput.setMsg("上传的文件不是预定格式");
+					return baseOutput;
+				}
 
+				InputStream inputStream = inputPart.getBody(InputStream.class, null);
+				byte[] bytes = IOUtils.toByteArray(inputStream);
+
+				InputStream is = new ByteArrayInputStream(bytes);
+
+				Workbook workbook = WorkbookFactory.create(is);
+				Sheet sheet = workbook.getSheetAt(0);
+				Iterator<Row> rowIterator = sheet.rowIterator();
+				
+				WXMoudelVO wxMoudel= null; 
+				List<WXMoudelVO> wxList = new ArrayList<>();
+				List<WXMoudelVO> wxSuccessList = new ArrayList<>();
+				//List<WXMoudelVO> wxFailList = new ArrayList<>();
+				Map<String, WXMoudelVO> wxFailMap = new HashMap<>();
+				while (rowIterator.hasNext()) {
+					Row row = rowIterator.next();
+					Integer rowIndex = row.getRowNum();
+					if (rowIndex == 0) {
+						continue;
+					}
+					Iterator<Cell> dataCellIterator = row.cellIterator();
+					
+					wxMoudel= new WXMoudelVO();
+					
+					int index = 0;
+					while (dataCellIterator.hasNext()) {
+						Cell dataColumnCell = dataCellIterator.next();
+						if( Cell.CELL_TYPE_STRING != dataColumnCell.getCellType()){
+							continue;
+						}
+						if(index == 0){
+							wxMoudel.setQrName(dataColumnCell.getStringCellValue());
+						}else if(index == 1){
+							wxMoudel.setChannelType(dataColumnCell.getStringCellValue());
+						}else if(index == 2){
+							wxMoudel.setOfficialName(dataColumnCell.getStringCellValue());
+						}
+						
+						index++;
+					}
+					wxList.add(wxMoudel);
+				}
+				
+				
+				List<String> qrNameList = new ArrayList<>();//判断单批次二维码名称是否重复的集合
+				for(WXMoudelVO wmo : wxList){
+					String qrName = wmo.getQrName();
+					//一批数据里面有重复
+					if(qrNameList.contains(qrName)) {
+						//wxFailList.add(wmo);
+						wxFailMap.put(qrName + "二维码重复", wmo);
+						continue;
+					}
+					qrNameList.add(qrName);
+					
+					String channelType = wmo.getChannelType();
+					//查询渠道名字是否重复
+					WechatChannel wechatChannel =  new WechatChannel();
+					wechatChannel.setChName(channelType);
+					List<String> channelNmaeList = new ArrayList<>();
+					for(String channelName : channels){
+						channelNmaeList.add(channelName);
+					}
+					int channelTypeCount = wechatChannelDao.selectListCount(wechatChannel);
+					if(channelTypeCount == 0 && !channelNmaeList.contains(channelType)){
+						wxFailMap.put("渠道名字不存在" + wechatChannel, wmo);
+						continue;
+					}
+					
+					//不是必填，可以为空
+					String officialName = wmo.getOfficialName();
+					if(officialName != null && officialName.length() >0){
+						WechatRegister wechatRegister = new WechatRegister();
+						wechatRegister.setName(officialName);
+						int officialNameCount = wechatRegisterDao.selectListCount(wechatRegister);
+						if(officialNameCount > 0){
+							wxFailMap.put("公众号名字已存在" + wechatChannel, wmo);
+							continue;
+						}
+					}
+					
+					//符合条件的数据
+					wxSuccessList.add(wmo);
+				}
+				
+				//保存成功的数据
+				 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddHHmmss");
+				String bachId = simpleDateFormat.format(new Date());
+				for(WXMoudelVO wmo : wxSuccessList){
+					WechatQrcode wq = new WechatQrcode();
+					wq.setBatchId(Integer.valueOf(bachId));
+					wq.setQrcodeName(wmo.getQrName());
+					wq.setStatus((byte)0);
+					//TODO 尹恒接口获取值
+					wechatQrcodeDao.insert(wq);
+				}
+				
+				
+				//生成错误文件csv并把错误文件写到服务器
+				//csvWriter = new CsvWriter(new FileWriter(new File("e:\\fail.csv")), CSV_WRITER_SEPARATOR);
+				String failFile = FAIL_FILE_PATH + bachId + "_fail.csv";
+				csvWriter = new CsvWriter(failFile, CSV_WRITER_SEPARATOR, Charset.forName("GBK"));
+				
+				//把头写进去
+				csvWriter.write("二维码名称(必填，20字以内，不可重复)");
+				csvWriter.write("渠道分类(必填，须系统中渠道分类选框中医存在的分类，选择其一)");
+				csvWriter.write("公众号名称");
+				csvWriter.write("失败原因");
+				csvWriter.endRecord();
+				
+				Set<Entry<String, WXMoudelVO>> entrySet = wxFailMap.entrySet();
+				
+				for(Entry<String, WXMoudelVO> entry : entrySet){
+					WXMoudelVO value = entry.getValue();
+					csvWriter.write(value.getQrName());
+					csvWriter.write(value.getChannelType());
+					csvWriter.write(value.getOfficialName());
+					csvWriter.write(entry.getKey());
+					csvWriter.endRecord();
+				}
+				
+				//上传文件到服务器
+				 fileName = UPLOADED_FILE_PATH + bachId +fileName;
+	             writeFile(bytes,fileName);
+	             
+	           //往log表写数据
+				WechatQrcodeLog wql = new WechatQrcodeLog();
+				wql.setSourceFilename(fileName);
+				wql.setTotalRows(wxList.size());
+				wql.setSuccess((byte)wxSuccessList.size());
+				wql.setStatus((byte)0);
+				wql.setBatchId(Integer.valueOf(bachId));
+				wechatQrcodeLogDao.insert(wql);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally{
+				if (csvWriter != null) {
+					csvWriter.close();
+				}
+			}
+		}
+		return baseOutput;
+	}
+	
+	 private void writeFile(byte[] content, String fileName) throws IOException{
+	        File file = new File(fileName);
+	        if(!file.exists()){
+	            file.createNewFile();
+	        }
+	        FileOutputStream fop = new FileOutputStream(file);
+	        fop.write(content);
+	        fop.flush();
+	        fop.close();
+	    }
+	 
 }

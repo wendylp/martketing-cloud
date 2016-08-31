@@ -84,6 +84,9 @@ public class WeixinQrcodeSaveOrUpdateServiceImpl implements WeixinQrcodeSaveOrUp
 		if(wechatChannelList != null && !wechatChannelList.isEmpty()){
 			wechatChannelDao.updateById(wechatChannel);
 		}else {
+			wechatChannel.setType(1);
+			wechatChannel.setIsRemoved(1);
+			wechatChannel.setStatus("0");
 			wechatChannelDao.insert(wechatChannel);
 		}
 		

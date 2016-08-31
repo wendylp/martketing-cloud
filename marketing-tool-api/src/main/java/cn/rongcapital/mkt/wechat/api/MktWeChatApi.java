@@ -26,6 +26,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ import cn.rongcapital.mkt.service.QrcodePicDownloadService;
 import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
 import cn.rongcapital.mkt.service.QrcodeUsedCountService;
 import cn.rongcapital.mkt.service.TagUpdateService;
+import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatQrcodeActivateService;
 import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 //import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
@@ -101,6 +103,9 @@ public class MktWeChatApi {
 	
 	@Autowired
 	private WechatQrcodeActivateService wechatQrcodeActivateService;
+	
+	@Autowired
+	private UploadFileService uploadFileService;
 
 
 	/**
@@ -348,6 +353,19 @@ public class MktWeChatApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public BaseOutput weixinSaveOrUpdate(@Valid WechatQrcodeInData body){
 		return weixinQrcodeSaveOrUpdateService.weixinSaveOrUpdate(body);
+	}
+	
+	/**
+	 * 批量新建上传处理
+	 * @param fileUnique
+	 * @param input
+	 * @return
+	 */
+	@POST
+	@Path("/mkt.service.file.uploadBatch")
+	@Consumes("multipart/form-data")
+	public Object fileUploadBatch(@QueryParam("file_unique") String fileUnique, MultipartFormDataInput input){
+		return uploadFileService.uploadFileBatch(fileUnique, input);
 	}
 
 }

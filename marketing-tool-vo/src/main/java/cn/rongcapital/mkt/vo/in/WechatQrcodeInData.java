@@ -3,7 +3,9 @@ package cn.rongcapital.mkt.vo.in;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class WechatQrcodeInData {
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class WechatQrcodeInData extends BaseInput{
 	@NotEmpty
 	@JsonProperty("wx_acct")
 	private String wxAcct;
@@ -30,6 +32,10 @@ public class WechatQrcodeInData {
 	
 	@JsonProperty("audience_name")
 	private String audienceName;
+	
+	@NotEmpty
+    @JsonProperty("user_token")
+    private String userToken;
 
 	public String getWxAcct() {
 		return wxAcct;
@@ -95,6 +101,14 @@ public class WechatQrcodeInData {
 
 	public void setAudienceName(String audienceName) {
 		this.audienceName = audienceName;
+	}
+	
+	public String getUserToken() {
+		return userToken;
+	}
+
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
 	}
 	
 	

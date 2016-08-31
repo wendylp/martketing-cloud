@@ -10,5 +10,7 @@ public interface UploadFileService {
     Object uploadFile(String fileUnique, MultipartFormDataInput fileInput);
 
     Object uploadRepairFile(String fileUnique, MultipartFormDataInput fileInput);
+    
+    Object uploadFileBatch(String fileUnique, MultipartFormDataInput fileInput);
 
 }
