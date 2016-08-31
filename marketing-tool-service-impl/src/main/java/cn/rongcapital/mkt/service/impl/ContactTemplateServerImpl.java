@@ -79,6 +79,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						param.setContactId(cont_id);
 						param.setFieldName(field_list.getField_name());
 						param.setFieldCode(field_list.getField_code());
+						param.setFieldType(field_list.getField_type());
 						param.setSelected(field_list.getSelected());
 						param.setRequired(field_list.getRequired());
 						param.setIschecked(field_list.getIschecked());
