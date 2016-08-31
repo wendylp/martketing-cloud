@@ -84,4 +84,11 @@ public interface ContactTemplateDao extends BaseDao<ContactTemplate>{
 	 * @return ArrayList<String>
 	 */
 	Integer selectRealContactTemplateListCount(ContactTemplate contactTemplate);
+
+	/***
+	 * 更改联系人表单
+	 * @param updateContactTemplate
+	 * @return ArrayList<String>
+	 */
+	void updateKeyListById(ContactTemplate updateContactTemplate);
 }

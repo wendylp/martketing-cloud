@@ -197,4 +197,15 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
+
+	<update id="updateKeyListById" parameterType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[UPDATE contact_template]]>
+		<set>
+		<![CDATA[key_list = #{keyList},]]>
+		<![CDATA[is_remember_import_key = #{isRememberImportKey},]]>
+		</set>
+		<![CDATA[WHERE 1 = 1]]>
+		<if test="id != null"><![CDATA[ and id = #{id}]]></if>
+		<if test="contactId != null"><![CDATA[ and contact_id = #{contactId}]]></if>
+	</update>
 </mapper>

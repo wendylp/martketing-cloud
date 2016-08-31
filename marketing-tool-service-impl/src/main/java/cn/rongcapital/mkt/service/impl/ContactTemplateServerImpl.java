@@ -129,9 +129,9 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
 						if(!CollectionUtils.isEmpty(contactTemplateList)){
 							for(ContactTemplate updateContactTemplate : contactTemplateList){
-								updateContactTemplate.setKeyList("");
+								updateContactTemplate.setKeyList(null);
 								updateContactTemplate.setIsRememberImportKey(UN_REMEMBER_IMPORTLIST.byteValue());
-								contactTemplateDao.updateById(updateContactTemplate);
+								contactTemplateDao.updateKeyListById(updateContactTemplate);
 							}
 						}
 					}
