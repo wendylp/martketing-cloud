@@ -62,7 +62,7 @@ public class ContactKeyOutput {
         this.required = required;
     }
 
-    @JsonProperty("is_checked")
+    @JsonProperty("ischecked")
     public Integer getIsChecked() {
         return isChecked;
     }
