@@ -100,6 +100,9 @@ public class MktContactApi {
 
 	@Autowired
 	private ContactImportkeyListGetService contactImportkeyListGetService;
+	
+	@Autowired
+	private ContactsLongurlGetService contactsLongurlGetService;
 
 	/***
 	 * 新建联系人表单
@@ -392,5 +395,16 @@ public class MktContactApi {
 										 @NotEmpty @QueryParam("ver") String ver,
 										 @NotNull @QueryParam("contact_id") Long contact_id) {
 		return contactImportkeyListGetService.getContactImportkeyList(contact_id);
+	}
+	
+	/*
+	 * 获取联系人表单对应长链接URL
+	 * @author shuiyangyang
+	 * @Date 2016.08.31
+	 */
+	@GET
+	@Path("mkt.contacts.longurl.get")
+	public BaseOutput getLongurl(@NotNull @QueryParam("short_url") String shortUrl) {
+		return contactsLongurlGetService.getLongurl(shortUrl);
 	}
 }
