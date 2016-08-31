@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
+import java.util.Date;
 
 public class WechatQrcodeFocus extends BaseQuery {
     private Integer id;
@@ -13,9 +14,9 @@ public class WechatQrcodeFocus extends BaseQuery {
 
     private String openid;
 
-    private String focusDatetime;
+    private Date focusDatetime;
 
-    private String unfocusDatetime;
+    private Date unfocusDatetime;
 
     public Integer getId() {
         return id;
@@ -57,19 +58,19 @@ public class WechatQrcodeFocus extends BaseQuery {
         this.openid = openid == null ? null : openid.trim();
     }
 
-    public String getFocusDatetime() {
+    public Date getFocusDatetime() {
         return focusDatetime;
     }
 
-    public void setFocusDatetime(String focusDatetime) {
-        this.focusDatetime = focusDatetime == null ? null : focusDatetime.trim();
+    public void setFocusDatetime(Date focusDatetime) {
+        this.focusDatetime = focusDatetime;
     }
 
-    public String getUnfocusDatetime() {
+    public Date getUnfocusDatetime() {
         return unfocusDatetime;
     }
 
-    public void setUnfocusDatetime(String unfocusDatetime) {
-        this.unfocusDatetime = unfocusDatetime == null ? null : unfocusDatetime.trim();
+    public void setUnfocusDatetime(Date unfocusDatetime) {
+        this.unfocusDatetime = unfocusDatetime;
     }
 }
