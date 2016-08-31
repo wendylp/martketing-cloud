@@ -32,6 +32,8 @@ public class ContactTemplate extends BaseQuery implements Serializable {
 
     private String qrcodeUrl;
 
+    private String qrcodeShorturl;
+
     private String qrcodePic;
 
     private Integer pageViews;
@@ -152,6 +154,14 @@ public class ContactTemplate extends BaseQuery implements Serializable {
 
     public void setQrcodeUrl(String qrcodeUrl) {
         this.qrcodeUrl = qrcodeUrl == null ? null : qrcodeUrl.trim();
+    }
+
+    public String getQrcodeShorturl() {
+        return qrcodeShorturl;
+    }
+
+    public void setQrcodeShorturl(String qrcodeShorturl) {
+        this.qrcodeShorturl = qrcodeShorturl == null ? null : qrcodeShorturl.trim();
     }
 
     public String getQrcodePic() {
