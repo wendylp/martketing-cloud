@@ -101,4 +101,22 @@
 		<include refid="QUERY_FROM_TABLE"/>
 	    ORDER BY focus_datetime
 	</select>
+	
+	<!-- 统计微信二维码关注数量和取消关注数量 -->
+	<select id="getFocusOrUnFocusCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			wechat_qrcode_focus
+		WHERE
+		<if test="fieldName != null and fieldName == 'focus_datetime' ">
+			<![CDATA[ DATE_FORMAT(focus_datetime,'%Y-%m-%d') = #{searchDate} ]]>
+		</if>
+		<if test="fieldName != null and fieldName == 'unfocus_datetime' ">
+			<![CDATA[ DATE_FORMAT(unfocus_datetime,'%Y-%m-%d') = #{searchDate} ]]>
+		</if>
+		AND ch_code = #{chCode}
+		AND wx_name = #{wxName}
+		AND #{fieldName} IS NOT NULL
+	</select>
 </mapper>
