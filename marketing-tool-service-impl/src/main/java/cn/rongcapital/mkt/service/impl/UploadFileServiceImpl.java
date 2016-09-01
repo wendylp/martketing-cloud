@@ -461,7 +461,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 	public BaseOutput uploadFileBatch(String fileUnique, MultipartFormDataInput fileInput) {
 		Map<String, List<InputPart>> uploadForm = fileInput.getFormDataMap();
 		//List<InputPart> inputParts = uploadForm.get("file");
-		List<InputPart> inputParts = uploadForm.get("uploadedFile");
+		List<InputPart> inputParts = uploadForm.get("file");
 		BaseOutput baseOutput = new BaseOutput();
 		baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
 		baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
