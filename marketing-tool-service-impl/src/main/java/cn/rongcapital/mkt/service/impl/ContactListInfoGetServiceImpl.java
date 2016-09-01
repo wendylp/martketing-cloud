@@ -21,6 +21,8 @@ import cn.rongcapital.mkt.vo.out.Field_List;
 @Service
 public class ContactListInfoGetServiceImpl implements ContactListInfoGetService {
 
+	private static Integer DEFAULT_TEMPLATE_PAGE_SIZE = 50;
+
 	@Autowired
 	ContactTemplateDao contactTemplateDao;
 
@@ -30,6 +32,7 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 		ContactTemplate contactTemplate = new ContactTemplate();
 		contactTemplate.setContactId(Long.parseLong(contactId));
 		contactTemplate.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		contactTemplate.setPageSize(DEFAULT_TEMPLATE_PAGE_SIZE);
 		List<ContactTemplate> contactTemplates = contactTemplateDao.selectList(contactTemplate);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
