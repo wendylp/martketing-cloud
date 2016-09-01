@@ -211,7 +211,7 @@ public class MktWeChatApi {
 	@GET
 	@Path("/mkt.weixin.qrcode.pics.zip.download")
 	public BaseOutput getQrcodePicsZipDownload(@NotEmpty @QueryParam("user_token") String user_token,
-			@NotNull @QueryParam("batch_id") int batch_id) {
+			@NotNull @QueryParam("batch_id") String batch_id) {
 		return qrcodePicsZipDownloadService.getQrcodePicsZipDownload(batch_id);
 	}
 
@@ -345,7 +345,7 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.weixin.qrcode.batch.save")
-	public BaseOutput weixinQrcodeBatchSave(@NotNull @QueryParam("batch_id") Integer batchId,
+	public BaseOutput weixinQrcodeBatchSave(@NotNull @QueryParam("batch_id") String batchId,
 			@NotNull @QueryParam("expiration_time") String expirationTime,
 			@NotEmpty @QueryParam("qrcode_tag_ids") String qrcodeTagIds,
 			@NotNull @QueryParam("qrcode_status") Integer qrcodeStatus) {

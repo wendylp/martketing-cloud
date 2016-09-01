@@ -86,7 +86,7 @@ public class UploadFileServiceImpl implements UploadFileService{
     public static char CSV_WRITER_SEPARATOR=',';
     public static String UPLOADED_FILE_PATH = "/rc/uploadFiles/";
     public static String[] channels = new String[] {"经销商","渠道商","员工","区域","门店","活动"};
-    public static String FAIL_FILE_PATH = "/rc/uploadFiles/";
+    public static String FAIL_FILE_PATH = "/rc/downloads/batchQrcodeErr/";
 
     @Autowired
     private ImportDataHistoryDao importDataHistoryDao;
@@ -473,8 +473,6 @@ public class UploadFileServiceImpl implements UploadFileService{
 		
 		CsvWriter csvWriter = null;
 		for (InputPart inputPart : inputParts) {
-			
-			System.out.println("=======================" + inputParts.size());
 			try {
 				String fileName = getFileName(inputPart.getHeaders());
 				if (!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx")) {
@@ -534,7 +532,6 @@ public class UploadFileServiceImpl implements UploadFileService{
 					if(qrNameList.contains(qrName)) {
 						//wxFailList.add(wmo);
 						wxFailMap.put(qrName + "二维码重复", wmo);
-						System.out.println(qrName + "二维码重复");
 						continue;
 					}
 					qrNameList.add(qrName);
@@ -547,7 +544,6 @@ public class UploadFileServiceImpl implements UploadFileService{
 					int channelTypeCount = wechatChannelDao.selectListCount(wechatChannel);
 					if(channelTypeCount == 0 && !channelNmaeList.contains(channelType)){
 						wxFailMap.put("渠道名字不存在" + wechatChannel, wmo);
-						System.out.println("渠道名字不存在" + wechatChannel);
 						continue;
 					}
 					
@@ -559,7 +555,6 @@ public class UploadFileServiceImpl implements UploadFileService{
 						int officialNameCount = wechatRegisterDao.selectListCount(wechatRegister);
 						if(officialNameCount > 0){
 							wxFailMap.put("公众号名字已存在" + wechatChannel, wmo);
-							System.out.println("公众号名字已存在" + wechatChannel);
 							continue;
 						}
 					}
@@ -569,13 +564,22 @@ public class UploadFileServiceImpl implements UploadFileService{
 				}
 				
 				//保存成功的数据
-				 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddHHmmss");
+				 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 				String bachId = simpleDateFormat.format(new Date());
 				for(WXMoudelVO wmo : wxSuccessList){
 					WechatQrcode wq = new WechatQrcode();
-					wq.setBatchId(Integer.valueOf(bachId));
+					wq.setBatchId(bachId);
 					wq.setQrcodeName(wmo.getQrName());
 					wq.setStatus((byte)0);
+					wq.setWxName(wmo.getOfficialName());
+					Integer chCode = null;
+					WechatChannel wc = new WechatChannel();
+					wc.setChName(wmo.getChannelType());
+					List<WechatChannel> selectList = wechatChannelDao.selectList(wc);
+					if(selectList != null && selectList.size() > 0){
+						chCode = selectList.get(0).getId();
+					}
+					wq.setChCode(chCode);
 					//TODO 尹恒接口获取值
 					wechatQrcodeDao.insert(wq);
 				}
@@ -622,6 +626,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 				map.put("succ_count", wxSuccessList.size());
 				map.put("fail_count", wxFailMap.size());
 				map.put("batch_id", bachId);
+				map.put("fail_url", failFile);
 				baseOutput.getData().add(map);
 			} catch (Exception e) {
 				e.printStackTrace();
