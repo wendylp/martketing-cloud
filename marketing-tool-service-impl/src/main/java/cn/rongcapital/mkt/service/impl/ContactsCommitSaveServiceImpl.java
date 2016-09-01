@@ -71,6 +71,8 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 	@ReadWrite(type = ReadWriteType.READ)
 	public BaseOutput contactsCommitGet(Integer contact_id, Integer commit_time, Integer index, Integer size) {
 		ContactList contact = new ContactList();
+
+		//选择联系人列表对应的表头
 		ContactTemplate contactTemplate = new ContactTemplate();
 		contactTemplate.setContactId(Long.valueOf(contact_id));
 		contactTemplate.setIsShownInFeedback(SHOWN_IN_FEEDBACK_STATUS.byteValue());
@@ -88,6 +90,8 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 			filedNameList.add(template.getFieldCode());
 			columnList.add(cloMap);
 		}
+
+		//选择具体的联系人
 		contact.setContactTemplId(contact_id);
 
 		Date startTime = null;
@@ -138,7 +142,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 					}else if(filedName.equals("gender")){
 						map.put(filedName, item.getGender());
 					}else if(filedName.equals("birthday")){
-						map.put(filedName, item.getBirthday());
+						map.put(filedName, DateUtil.getStringFromDate(item.getBirthday(),"yyyy-MM-dd"));
 					}else if(filedName.equals("mobile")){
 						map.put(filedName, item.getMobile());
 					}else if(filedName.equals("tel")){
