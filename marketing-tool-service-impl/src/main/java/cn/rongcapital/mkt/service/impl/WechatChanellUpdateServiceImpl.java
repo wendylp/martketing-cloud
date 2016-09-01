@@ -1,5 +1,8 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ws.rs.core.SecurityContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +39,20 @@ public class WechatChanellUpdateServiceImpl implements WechatChanellUpdateServic
 				continue;
 			}
 			wechatChannel.setChName(chaName);
-			wechatChannelDao.insert(wechatChannel);
+			int newid=wechatChannelDao.insert(wechatChannel);
+			
+			Map<String, Object> channelMap = new HashMap<String, Object>();
+			
+			channelMap.put("channel_id", newid);
+			channelMap.put("channel_name", chaName);
+			channelMap.put("channel_type", 1);
+			channelMap.put("channel_removed", 1);
+			result.getData().add(channelMap);
 		}
+		result.setTotal(result.getData().size());
+		
+		
+		
 //		List<WechatChannel> wechatChaList = wechatChannelDao.selectWechatChaList(chaNames);
 //		if(CollectionUtils.isNotEmpty(wechatChaList)){
 //			result.setTotal(wechatChaList.size());
