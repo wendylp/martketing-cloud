@@ -461,13 +461,20 @@ public class UploadFileServiceImpl implements UploadFileService{
 	public BaseOutput uploadFileBatch(String fileUnique, MultipartFormDataInput fileInput) {
 		Map<String, List<InputPart>> uploadForm = fileInput.getFormDataMap();
 		//List<InputPart> inputParts = uploadForm.get("file");
-		List<InputPart> inputParts = uploadForm.get("file");
+		List<InputPart> inputParts = uploadForm.get("uploadedFile");
 		BaseOutput baseOutput = new BaseOutput();
 		baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
 		baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
 		
+		List<String> channelNmaeList = new ArrayList<>();
+		for(String channelName : channels){
+			channelNmaeList.add(channelName);
+		}
+		
 		CsvWriter csvWriter = null;
 		for (InputPart inputPart : inputParts) {
+			
+			System.out.println("=======================" + inputParts.size());
 			try {
 				String fileName = getFileName(inputPart.getHeaders());
 				if (!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx")) {
@@ -527,6 +534,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 					if(qrNameList.contains(qrName)) {
 						//wxFailList.add(wmo);
 						wxFailMap.put(qrName + "二维码重复", wmo);
+						System.out.println(qrName + "二维码重复");
 						continue;
 					}
 					qrNameList.add(qrName);
@@ -535,13 +543,11 @@ public class UploadFileServiceImpl implements UploadFileService{
 					//查询渠道名字是否重复
 					WechatChannel wechatChannel =  new WechatChannel();
 					wechatChannel.setChName(channelType);
-					List<String> channelNmaeList = new ArrayList<>();
-					for(String channelName : channels){
-						channelNmaeList.add(channelName);
-					}
+				
 					int channelTypeCount = wechatChannelDao.selectListCount(wechatChannel);
 					if(channelTypeCount == 0 && !channelNmaeList.contains(channelType)){
 						wxFailMap.put("渠道名字不存在" + wechatChannel, wmo);
+						System.out.println("渠道名字不存在" + wechatChannel);
 						continue;
 					}
 					
@@ -553,6 +559,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 						int officialNameCount = wechatRegisterDao.selectListCount(wechatRegister);
 						if(officialNameCount > 0){
 							wxFailMap.put("公众号名字已存在" + wechatChannel, wmo);
+							System.out.println("公众号名字已存在" + wechatChannel);
 							continue;
 						}
 					}
@@ -618,6 +625,9 @@ public class UploadFileServiceImpl implements UploadFileService{
 				baseOutput.getData().add(map);
 			} catch (Exception e) {
 				e.printStackTrace();
+				baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+				baseOutput.setMsg("系统异常");
+				return baseOutput;
 			}finally{
 				if (csvWriter != null) {
 					csvWriter.close();
