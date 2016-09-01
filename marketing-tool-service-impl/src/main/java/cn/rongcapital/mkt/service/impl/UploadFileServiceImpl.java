@@ -458,7 +458,7 @@ public class UploadFileServiceImpl implements UploadFileService{
     }
 
 	@Override
-	public Object uploadFileBatch(String fileUnique, MultipartFormDataInput fileInput) {
+	public BaseOutput uploadFileBatch(String fileUnique, MultipartFormDataInput fileInput) {
 		Map<String, List<InputPart>> uploadForm = fileInput.getFormDataMap();
 		//List<InputPart> inputParts = uploadForm.get("file");
 		List<InputPart> inputParts = uploadForm.get("uploadedFile");
@@ -610,6 +610,12 @@ public class UploadFileServiceImpl implements UploadFileService{
 				wql.setBatchId(Integer.valueOf(bachId));
 				wechatQrcodeLogDao.insert(wql);
 				
+				baseOutput.setTotal(1);
+				Map<String, Object> map = new HashMap<>();
+				map.put("succ_count", wxSuccessList.size());
+				map.put("fail_count", wxFailMap.size());
+				map.put("batch_id", bachId);
+				baseOutput.getData().add(map);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}finally{

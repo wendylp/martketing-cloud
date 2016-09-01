@@ -1997,9 +1997,9 @@ public class MktApi {
 	 * @return
 	 */
 	@POST
-	@Path("/mkt.service.file.uploadBatch")
+	@Path("/mkt.weixin.qrcode.batch.upload")
 	@Consumes("multipart/form-data")
-	public Object fileUploadBatch(@QueryParam("file_unique") String fileUnique, MultipartFormDataInput input){
+	public BaseOutput fileUploadBatch(@QueryParam("file_unique") String fileUnique, MultipartFormDataInput input){
 		return uploadFileService.uploadFileBatch(fileUnique, input);
 	}
 	
