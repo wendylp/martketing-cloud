@@ -64,7 +64,7 @@ public class ContactsCommitCountGetServiceImpl implements ContactsCommitCountGet
         contactsCommitCountOutput.setTodayCount(todayCount);
         //4.获取产生的主数据条数
         contactList = new ContactList();
-        contactList.setStatus(1);
+        contactList.setStatus(2);
         contactList.setContactTemplId(contactId.intValue());
         List<Integer> distinctKeyidList = contactListDao.selectDistinctKeyidList(contactList);
         if(distinctKeyidList.contains(null)){
