@@ -51,7 +51,7 @@ public interface ContactListDao extends BaseDao<ContactList>{
 	 * @param paramMap
 	 * @return list
 	 */
-	Integer selectTodayCommitCount(Map<String, Date> paramMap);
+	Integer selectTodayCommitCount(Map<String, Object> paramMap);
 	
 	/**
 	 * 根据表单id更新
