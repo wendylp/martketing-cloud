@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import cn.rongcapital.mkt.vo.BaseInput;
 
 public class ContactsCommitSaveIn  extends BaseInput {
@@ -32,10 +34,13 @@ public class ContactsCommitSaveIn  extends BaseInput {
 
     private String job;
 
+    @JsonProperty("monthly_income")
     private BigDecimal monthlyIncome;
 
+    @JsonProperty("monthly_consume")
     private BigDecimal monthlyConsume;
 
+    @JsonProperty("marital_status")
     private String maritalStatus;
 
     private String education;
@@ -44,14 +49,17 @@ public class ContactsCommitSaveIn  extends BaseInput {
 
     private String nationality;
 
+    @JsonProperty("blood_type")
     private String bloodType;
 
     private String citizenship;
 
     private Integer iq;
 
+    @JsonProperty("identify_no")
     private String identifyNo;
 
+    @JsonProperty("driving_license")
     private String drivingLicense;
 
     private String email;
