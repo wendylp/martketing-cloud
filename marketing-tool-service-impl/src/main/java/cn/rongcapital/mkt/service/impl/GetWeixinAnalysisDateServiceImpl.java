@@ -25,16 +25,6 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
     @Autowired
     private WechatQrcodeFocusDao wechatQrcodeFocusDao;
 
-//    "data": [  {"Today":"2016-1-1","StarDate":"2016-1-1","EndDate":"2016-1-1"},
-//
-//    {"Yestoday":"2015-12-31","StarDate":"2015-12-31","EndDate":"2015-12-31"},
-//
-//    {"Day7":"","StarDate":"2015-12-24","EndDate":"2016-1-1"},
-//
-//    {"Day30":"","StarDate":"2015-12-1","EndDate":"2016-1-1"},
-//
-//    {"RecordScope":"","StarDate":"2014-12-1","EndDate":"2016-1-1"} ]
-
     @Override
     public BaseOutput getWeixinAnalysisDate() {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
