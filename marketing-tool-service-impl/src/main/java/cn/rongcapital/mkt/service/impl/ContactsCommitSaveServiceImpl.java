@@ -58,6 +58,57 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		contact.setMobile(body.getMobile());
 		contact.setEmail(body.getEmail());
 		contact.setAddress(body.getAddress());
+		
+		//新增保存2016-09-01
+		contact.setBirthday(body.getBirthday());
+		contact.setProvice(body.getProvice());
+		contact.setCity(body.getCity());
+		contact.setJob(body.getJob());
+		contact.setMonthlyIncome(body.getMonthlyIncome());
+		contact.setMonthlyConsume(body.getMonthlyIncome());
+		contact.setMaritalStatus(body.getMaritalStatus());
+		contact.setEducation(body.getEducation());
+		contact.setEmployment(body.getEmployment());
+		contact.setNationality(body.getNationality());
+		contact.setBloodType(body.getBloodType());
+		contact.setCitizenship(body.getCitizenship());
+		contact.setIq(body.getIq());
+		contact.setIdentifyNo(body.getIdentifyNo());
+		contact.setDrivingLicense(body.getDrivingLicense());
+		contact.setTel(body.getTel());
+		contact.setQq(body.getQq());
+		contact.setAcctType(body.getAcctType());
+		contact.setAcctNo(body.getAcctNo());
+		contact.setIdfa(body.getIdfa());
+		contact.setImei(body.getImei());
+		contact.setUdid(body.getUdid());
+		contact.setPhoneMac(body.getPhoneMac());
+		if(body.getStatus() != null){
+			contact.setStatus(body.getStatus().intValue());
+		}
+		contact.setUpdateTime(body.getUpdateTime());
+		contact.setSource(body.getSource());
+		contact.setBitmap(body.getBitmap());
+		contact.setKeyid(body.getKeyid());
+		contact.setWxmpId(body.getWxmpId());
+		contact.setWxCode(body.getWxCode());
+		contact.setNickname(body.getNickname());
+		contact.setHeadImgUrl(body.getHeadImgUrl());
+		contact.setSubscribeTime(body.getSubscribeTime());
+		contact.setLanguage(body.getLanguage());
+		contact.setUnionid(body.getUnionid());
+		contact.setRemark(body.getRemark());
+		contact.setFillDevice(body.getFillDevice());
+		contact.setOs(body.getOs());
+		contact.setBrower(body.getBrower());
+		contact.setIp(body.getIp());
+		contact.setWxNickname(body.getWxNickname());
+		contact.setWxGender(body.getWxGender());
+		contact.setWxOpenid(body.getWxOpenid());
+		contact.setWxHeaderUrl(body.getWxHeaderUrl());
+		contact.setWxCountry(body.getWxCountry());
+		contact.setWxCity(body.getWxCity());
+		contact.setContactTemplId(body.getContact_templ_id());
 
 		contactDao.insert(contact);
 

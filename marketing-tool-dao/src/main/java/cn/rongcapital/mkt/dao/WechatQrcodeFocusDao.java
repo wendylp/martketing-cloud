@@ -14,6 +14,7 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatQrcodeFocus;
 
 import java.util.List;
+import java.util.Map;
 
 public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
 
@@ -42,5 +43,15 @@ public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
 	 * @return list
 	 */
 	List<WechatQrcodeFocus> selectTheEarliestFocus();
+	
+	/**
+	 * @Title: getFocusOrUnFocusCount   
+	 * @Description: 统计微信二维码关注数量和取消关注数量  
+	 * @param: @param map
+	 * @param: @return      
+	 * @return: Integer      
+	 * @throws
+	 */
+	Integer getFocusOrUnFocusCount(Map<String, Object> map);
 
 }
