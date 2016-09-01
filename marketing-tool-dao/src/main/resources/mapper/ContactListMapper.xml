@@ -248,12 +248,14 @@
 		SELECT distinct keyid
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE status = #{status}
+		AND contact_templ_id = #{contactTemplId}
 	</select>
 
 	<select id="selectTodayCommitCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT count(id)
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE create_time BETWEEN #{startTime} AND #{endTime}
+		AND contact_templ_id = #{contactTemplId}
 	</select>
 	
 	<update id="updateByContactId" parameterType="cn.rongcapital.mkt.po.ContactList">

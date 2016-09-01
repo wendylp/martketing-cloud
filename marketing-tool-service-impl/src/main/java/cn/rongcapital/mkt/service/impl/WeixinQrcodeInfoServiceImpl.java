@@ -68,12 +68,16 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			List<WechatChannel> wechatChannelLists = wechatChannelDao.selectList(wechatChannel);
 			if(!(wechatChannelLists == null) && !wechatChannelLists.isEmpty()) {
 				map.put("ch_name", wechatChannelLists.get(0).getChName());
+				//渠道id
+				map.put("ch_id", wechatChannelLists.get(0).getId());
 			}else {
 				map.put("ch_name", "");//查询不到的时候默认传空字符串
 			}
 			
 			
 			map.put("qrcode_name",wechatQrcodeLists.get(0).getQrcodeName());
+			//微信公众号
+			map.put("wx_acct",wechatQrcodeLists.get(0).getWxAcct());
 			
 			// create_time为空检查
 			if(wechatQrcodeLists.get(0).getCreateTime() != null) {

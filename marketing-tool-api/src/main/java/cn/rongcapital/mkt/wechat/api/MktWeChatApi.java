@@ -10,8 +10,6 @@
 
 package cn.rongcapital.mkt.wechat.api;
 
-import java.util.Date;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -25,8 +23,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import cn.rongcapital.mkt.service.*;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,22 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
-import cn.rongcapital.mkt.service.QrcodeCreateCountService;
-import cn.rongcapital.mkt.service.QrcodePicDownloadService;
-import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
-import cn.rongcapital.mkt.service.QrcodeUsedCountService;
-import cn.rongcapital.mkt.service.TagUpdateService;
-import cn.rongcapital.mkt.service.UploadFileService;
-import cn.rongcapital.mkt.service.WechatQrcodeActivateService;
 import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
-//import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
-import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
-import cn.rongcapital.mkt.service.WeixinQrcodeErrorDownloadService;
-import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
-import cn.rongcapital.mkt.service.WeixinQrcodeListService;
-import cn.rongcapital.mkt.service.WeixinQrcodeMatchGetService;
-import cn.rongcapital.mkt.service.WeixinQrcodeSaveOrUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.TagBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInData;
@@ -106,6 +89,12 @@ public class MktWeChatApi {
 	
 	@Autowired
 	private UploadFileService uploadFileService;
+
+	@Autowired
+	private GetWeixinAnalysisDateService getWeixinAnalysisDateService;
+	
+	@Autowired 
+	WeixinAnalysisQrcodeScanService weixinAnalysisQrcodeScanService;
 
 
 	/**
@@ -355,4 +344,33 @@ public class MktWeChatApi {
 		return weixinQrcodeSaveOrUpdateService.weixinSaveOrUpdate(body);
 	}
 
+	/**
+	 *  获取微信Analysis选择的时间
+	 */
+	@GET
+	@Path("/mkt.weixin.analysis.days.list")
+	public BaseOutput weixinQrcodeBatchSave(@NotEmpty @QueryParam("user_token") String userToken,
+											@NotEmpty @QueryParam("ver") String ver) {
+		return getWeixinAnalysisDateService.getWeixinAnalysisDate();
+	}
+	
+	/**
+	 * 保存扫描微信二维码次数和人数 
+	 * 接口：mkt.weixin.analysis.qrcode.scan
+	 * 
+	 * @param userId
+	 * @param userHost
+	 * @param qrcodeId
+	 * @return
+	 * @author shuiyangyang
+	 * @date 2016.09.01
+	 */
+	@POST
+	@Path("/mkt.weixin.analysis.qrcode.scan")
+	public BaseOutput instertToWechatQrcodeScan(
+			@NotEmpty @QueryParam("user_id") String userId,
+			@QueryParam("user_host") String userHost, 
+			@NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
+		return weixinAnalysisQrcodeScanService.instertToWechatQrcodeScan(userId, userHost, qrcodeId);
+	}
 }

@@ -13,8 +13,11 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatQrcodeFocus;
 
+import java.util.List;
+import java.util.Map;
+
 public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
-	
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -34,4 +37,21 @@ public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 选择最早的关注时间
+	 * @return list
+	 */
+	List<WechatQrcodeFocus> selectTheEarliestFocus();
+	
+	/**
+	 * @Title: getFocusOrUnFocusCount   
+	 * @Description: 统计微信二维码关注数量和取消关注数量  
+	 * @param: @param map
+	 * @param: @return      
+	 * @return: Integer      
+	 * @throws
+	 */
+	Integer getFocusOrUnFocusCount(Map<String, Object> map);
+
 }
