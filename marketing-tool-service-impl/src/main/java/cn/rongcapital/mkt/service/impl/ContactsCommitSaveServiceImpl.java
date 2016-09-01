@@ -109,6 +109,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		contact.setWxCountry(body.getWxCountry());
 		contact.setWxCity(body.getWxCity());
 		contact.setContactTemplId(body.getContact_templ_id());
+		contact.setCommitTime(new Date());
 
 		contactDao.insert(contact);
 
