@@ -23,7 +23,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import cn.rongcapital.mkt.service.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
@@ -32,7 +31,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
+import cn.rongcapital.mkt.service.GetWeixinAnalysisDateService;
+import cn.rongcapital.mkt.service.QrcodeCreateCountService;
+import cn.rongcapital.mkt.service.QrcodePicDownloadService;
+import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
+import cn.rongcapital.mkt.service.QrcodeUsedCountService;
+import cn.rongcapital.mkt.service.TagUpdateService;
+import cn.rongcapital.mkt.service.UploadFileService;
+import cn.rongcapital.mkt.service.WechatAnalysisDaysListService;
+import cn.rongcapital.mkt.service.WechatQrcodeActivateService;
+import cn.rongcapital.mkt.service.WeixinAnalysisQrcodeScanService;
 import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
+import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
+import cn.rongcapital.mkt.service.WeixinQrcodeErrorDownloadService;
+import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
+import cn.rongcapital.mkt.service.WeixinQrcodeListService;
+import cn.rongcapital.mkt.service.WeixinQrcodeMatchGetService;
+import cn.rongcapital.mkt.service.WeixinQrcodeSaveOrUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.TagBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInData;
@@ -62,40 +78,42 @@ public class MktWeChatApi {
 
 	@Autowired
 	private QrcodeUsedCountService qrcodeUsedCountService;
-	
+
 	@Autowired
 	private WeixinQrcodeInfoService weixinQrcodeInfoService;
-	
+
 	@Autowired
 	private WeixinQrcodeDelService weixinQrcodeDelService;
-	
+
 	@Autowired
 	private WeixinQrcodeMatchGetService weixinQrcodeMatchGetService;
 
 	@Autowired
 	private AssetWechatAudiencelistMatchGetService assetWechatAudiencelistMatchGetService;
-	
+
 	@Autowired
 	private WeixinQrcodeErrorDownloadService weixinQrcodeErrorDownloadService;
-	
+
 	@Autowired
 	private WeixinQrcodeBatchSaveService weixinQrcodeBatchSaveService;
-	
+
 	@Autowired
 	private WeixinQrcodeSaveOrUpdateService weixinQrcodeSaveOrUpdateService;
-	
+
 	@Autowired
 	private WechatQrcodeActivateService wechatQrcodeActivateService;
-	
+
 	@Autowired
 	private UploadFileService uploadFileService;
 
 	@Autowired
 	private GetWeixinAnalysisDateService getWeixinAnalysisDateService;
-	
-	@Autowired 
-	WeixinAnalysisQrcodeScanService weixinAnalysisQrcodeScanService;
 
+	@Autowired
+	WeixinAnalysisQrcodeScanService weixinAnalysisQrcodeScanService;
+	
+	@Autowired
+	private WechatAnalysisDaysListService analysisDaysList;
 
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
@@ -111,14 +129,13 @@ public class MktWeChatApi {
 	@GET
 	@Path("mkt.weixin.qrcode.list")
 	public BaseOutput getWeixinQrcodeList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, 
-			@QueryParam("wxmp_name") String wxmpName,
+			@NotEmpty @QueryParam("ver") String ver, @QueryParam("wxmp_name") String wxmpName,
 			@QueryParam("expiration_time") Integer expirationTime,
 			@DefaultValue("0") @QueryParam("qrcode_status") Byte qrcodeStatus,
 			@DefaultValue("1") @Min(1) @QueryParam("index") int index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 
-		return weixinQrcodeListService.getWeixinQrcodeList(wxmpName, expirationTime, qrcodeStatus,index, size);
+		return weixinQrcodeListService.getWeixinQrcodeList(wxmpName, expirationTime, qrcodeStatus, index, size);
 	}
 
 	/**
@@ -138,7 +155,7 @@ public class MktWeChatApi {
 			@DefaultValue("1") @Min(1) @QueryParam("index") int index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 
-		return weixinQrcodeListService.getWeixinQrcodeListQrname(qrcodeName,index,size);
+		return weixinQrcodeListService.getWeixinQrcodeListQrname(qrcodeName, index, size);
 
 	}
 
@@ -206,10 +223,10 @@ public class MktWeChatApi {
 	public BaseOutput getListCount(@NotEmpty @QueryParam("wx_name") String wx_name) {
 		return qrcodeUsedCountService.getListCount(wx_name);
 	}
-	
+
 	/**
 	 * 
-	 * 查询二维码详细信息 
+	 * 查询二维码详细信息
 	 * 
 	 * @param qrcodeId
 	 * @return
@@ -221,9 +238,10 @@ public class MktWeChatApi {
 	public BaseOutput getWeiXinQrocdeInfo(@NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
 		return weixinQrcodeInfoService.getWeiXinQrocdeInfo(qrcodeId);
 	}
-	
+
 	/**
 	 * 删除二维码接口 （逻辑删除，状态改为2）
+	 * 
 	 * @param id
 	 * @return
 	 * @author shuiyangyang
@@ -231,11 +249,10 @@ public class MktWeChatApi {
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.del")
-	public BaseOutput weixinQrocdeDel(
-			@Valid WechatQrcodeInId body) {
+	public BaseOutput weixinQrocdeDel(@Valid WechatQrcodeInId body) {
 		return weixinQrcodeDelService.weixinQrocdeDel(body);
 	}
-	
+
 	/**
 	 * 精确查询微信二维码名称是否存在
 	 * 
@@ -245,15 +262,14 @@ public class MktWeChatApi {
 	 * @author shuiyangyang
 	 * @Data 2016.08.25
 	 */
-	
+
 	@GET
 	@Path("/mkt.weixin.qrcode.match.get")
-	public BaseOutput weixinQrcodeMatchGet(
-			@NotEmpty @QueryParam("qrcode_name") String qrcodeName,
+	public BaseOutput weixinQrcodeMatchGet(@NotEmpty @QueryParam("qrcode_name") String qrcodeName,
 			@NotEmpty @QueryParam("wx_name") String wxName) {
 		return weixinQrcodeMatchGetService.weixinQrcodeMatchGet(qrcodeName, wxName);
 	}
-	
+
 	/**
 	 * 删除二维码接口 （微信记录物理删除）
 	 * 
@@ -264,11 +280,10 @@ public class MktWeChatApi {
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.records.del")
-	public BaseOutput weixinQrcodeRecordsDel(
-			@NotNull @QueryParam("id") int id) {
+	public BaseOutput weixinQrcodeRecordsDel(@NotNull @QueryParam("id") int id) {
 		return weixinQrcodeDelService.weixinQrcodeRecordsDel(id);
 	}
-	
+
 	/**
 	 * 精确查询固定人群是否存在
 	 * 
@@ -279,12 +294,10 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.asset.wechat.audiencelist.match.get")
-	public BaseOutput assetWechatAudiencelistMatchGet(
-			@NotEmpty @QueryParam("audience_name") String audienceName) {
+	public BaseOutput assetWechatAudiencelistMatchGet(@NotEmpty @QueryParam("audience_name") String audienceName) {
 		return assetWechatAudiencelistMatchGetService.assetWechatAudiencelistMatchGet(audienceName);
 	}
-	
-	
+
 	/**
 	 * 生效微信二维码
 	 * 
@@ -294,12 +307,11 @@ public class MktWeChatApi {
 	 * @Date 2016.08.29
 	 */
 	@POST
-	@Path("/mkt.weixin.qrcode.activate")	
-	public BaseOutput wechatQrcodeActivate(
-			@NotNull @QueryParam("id") Integer id) {
+	@Path("/mkt.weixin.qrcode.activate")
+	public BaseOutput wechatQrcodeActivate(@NotNull @QueryParam("id") Integer id) {
 		return wechatQrcodeActivateService.weChatQrocdeActivate(id);
 	}
-	
+
 	/**
 	 * 下载导入失败的数据
 	 * 
@@ -311,10 +323,10 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.weixin.qrcode.error.download")
-	public BaseOutput weixinQrcodeErrorDownload(
-			@NotNull @QueryParam("batch_id") Integer batchId) {
+	public BaseOutput weixinQrcodeErrorDownload(@NotNull @QueryParam("batch_id") Integer batchId) {
 		return weixinQrcodeErrorDownloadService.weixinQrcodeErrorDownload(batchId);
 	}
+
 	/**
 	 * 
 	 * 根据batch_id，在表wechat_qrcode 中查找到对应二维码记录，更新：失效时间、标签、备注信息、状态(status=0)
@@ -329,34 +341,32 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.weixin.qrcode.batch.save")
-	public BaseOutput weixinQrcodeBatchSave(
-			@NotNull @QueryParam("batch_id") Integer batchId,
+	public BaseOutput weixinQrcodeBatchSave(@NotNull @QueryParam("batch_id") Integer batchId,
 			@NotNull @QueryParam("expiration_time") String expirationTime,
 			@NotEmpty @QueryParam("qrcode_tag_ids") String qrcodeTagIds,
 			@NotNull @QueryParam("qrcode_status") Integer qrcodeStatus) {
 		return weixinQrcodeBatchSaveService.weixinQrcodeBatchSave(batchId, expirationTime, qrcodeTagIds, qrcodeStatus);
 	}
-	
+
 	@POST
 	@Path("/mkt.weixin.qrcode.saveorupdate")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput weixinSaveOrUpdate(@Valid WechatQrcodeInData body){
+	public BaseOutput weixinSaveOrUpdate(@Valid WechatQrcodeInData body) {
 		return weixinQrcodeSaveOrUpdateService.weixinSaveOrUpdate(body);
 	}
 
 	/**
-	 *  获取微信Analysis选择的时间
+	 * 获取微信Analysis选择的时间
 	 */
 	@GET
 	@Path("/mkt.weixin.analysis.days.list")
 	public BaseOutput weixinQrcodeBatchSave(@NotEmpty @QueryParam("user_token") String userToken,
-											@NotEmpty @QueryParam("ver") String ver) {
+			@NotEmpty @QueryParam("ver") String ver) {
 		return getWeixinAnalysisDateService.getWeixinAnalysisDate();
 	}
-	
+
 	/**
-	 * 保存扫描微信二维码次数和人数 
-	 * 接口：mkt.weixin.analysis.qrcode.scan
+	 * 保存扫描微信二维码次数和人数 接口：mkt.weixin.analysis.qrcode.scan
 	 * 
 	 * @param userId
 	 * @param userHost
@@ -367,10 +377,29 @@ public class MktWeChatApi {
 	 */
 	@POST
 	@Path("/mkt.weixin.analysis.qrcode.scan")
-	public BaseOutput instertToWechatQrcodeScan(
-			@NotEmpty @QueryParam("user_id") String userId,
-			@QueryParam("user_host") String userHost, 
-			@NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
+	public BaseOutput instertToWechatQrcodeScan(@NotEmpty @QueryParam("user_id") String userId,
+			@QueryParam("user_host") String userHost, @NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
 		return weixinAnalysisQrcodeScanService.instertToWechatQrcodeScan(userId, userHost, qrcodeId);
 	}
+
+	/**
+	 * @Title: analysisDaysList   
+	 * @Description: 微信二维码关注数据分析   
+	 * @param: @param startDate
+	 * @param: @param endDate
+	 * @param: @param daysType
+	 * @param: @param chCode
+	 * @param: @param wxName
+	 * @param: @return      
+	 * @return: BaseOutput      
+	 * @throws
+	 */
+	@GET
+	@Path("mkt.weixin.analysis.days.list")
+	public BaseOutput analysisDaysList(@NotEmpty @QueryParam("start_date")String startDate,
+			@NotEmpty @QueryParam("end_date")String endDate,@NotEmpty @QueryParam("ch_code")String chCode,
+			@NotEmpty @QueryParam("wx_name")String wxName,@NotNull @QueryParam("days_type") Integer daysType) {
+		return analysisDaysList.analysisDaysList(startDate, endDate, daysType, chCode, wxName);
+	}
+	
 }
