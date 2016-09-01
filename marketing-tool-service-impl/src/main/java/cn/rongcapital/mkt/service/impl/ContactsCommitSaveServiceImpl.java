@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.GenderEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.ContactListDao;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
@@ -41,9 +42,18 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 	@ReadWrite(type = ReadWriteType.READ)
 	public BaseOutput contactsCommitSave(ContactsCommitSaveIn body) {
 		ContactList contact = new ContactList();
+		String gender = body.getGender();
 		contact.setContactTemplId(body.getContact_templ_id());
 		contact.setName(body.getName());
-		contact.setGender(body.getGender());
+		if (GenderEnum.MALE.getDescription().equals(gender)) {
+			contact.setGender(GenderEnum.MALE.getStatusCode());
+		} else if (GenderEnum.FEMALE.getDescription().equals(gender)) {
+			contact.setGender(GenderEnum.FEMALE.getStatusCode());
+		} else if (GenderEnum.OTHER.getDescription().equals(gender)) {
+			contact.setGender(GenderEnum.OTHER.getStatusCode());
+		} else if (GenderEnum.UNSURE.getDescription().equals(gender)) {
+			contact.setGender(GenderEnum.UNSURE.getStatusCode());
+		}
 		contact.setAge(body.getAge());
 		contact.setMobile(body.getMobile());
 		contact.setEmail(body.getEmail());
@@ -240,5 +250,20 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		}
 
 		return result;
+	}
+	
+	public static void main(String[] args) {
+		String gender = "女";
+		 if (gender != null) {
+	            if (GenderEnum.MALE.getDescription().equals(gender)) {
+	             System.out.println(GenderEnum.MALE.getStatusCode());
+	            } else if (GenderEnum.FEMALE.getDescription().equals(gender)) {
+	            	  System.out.println(GenderEnum.FEMALE.getStatusCode());
+	            } else if (GenderEnum.OTHER.getDescription().equals(gender)) {
+	            	  System.out.println(GenderEnum.OTHER.getStatusCode());
+	            } else if (GenderEnum.UNSURE.getDescription().equals(gender)) {
+	            	  System.out.println(GenderEnum.UNSURE.getStatusCode());
+	            }
+	        }
 	}
 }

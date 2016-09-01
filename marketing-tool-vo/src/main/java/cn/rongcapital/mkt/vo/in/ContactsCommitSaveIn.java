@@ -22,7 +22,7 @@ public class ContactsCommitSaveIn  extends BaseInput {
 
     private String name;
 
-    private Byte gender;
+    private String gender;
 
     private Date birthday;
 
@@ -148,15 +148,17 @@ public class ContactsCommitSaveIn  extends BaseInput {
         this.name = name == null ? null : name.trim();
     }
 
-    public Byte getGender() {
-        return gender;
-    }
+    
 
-    public void setGender(Byte gender) {
-        this.gender = gender;
-    }
+    public String getGender() {
+		return gender;
+	}
 
-    public Date getBirthday() {
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public Date getBirthday() {
         return birthday;
     }
 
