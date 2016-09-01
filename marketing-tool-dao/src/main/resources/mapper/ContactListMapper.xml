@@ -270,7 +270,7 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
-		<![CDATA[WHERE 1 = 1]]>
+		<![CDATA[WHERE 1 = 1 AND status != 3]]>
 		<if test="contactTemplId != null"><![CDATA[and contact_templ_id = #{contactTemplId}]]></if>
 		<if test="startTime != null and endTime != null"><![CDATA[and commit_time BETWEEN #{startTime} AND #{endTime}]]></if>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
