@@ -35,7 +35,8 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 	@Override
 	public BaseOutput analysisDaysList(String startDate, String endDate, Integer daysType, String chCode,
 			String wxName) {
-		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
+		  BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                  ApiConstant.INT_ZERO, null);
 		try {
 			  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			  //返回结果集
@@ -46,18 +47,20 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			  //计算数组长度
 			  long s = sDate.getTime()/CALCULATE_VARI; 
 			  long e = eDate.getTime()/CALCULATE_VARI;
+			  //数组长度
+			  int arrayLenth = (int)(e - s)+1;
 			  //参数数组定义
-			  String[] dateArray = new String[(int)(e - s)];	//查询日期
-			  Integer[] focusCountArray = new Integer[(int)(e - s)];	//关注数量
-			  Integer[] unFocusCountArray = new Integer[(int)(e - s)];	//取消关注数量
-			  Integer[] creFocusCountArray = new Integer[(int)(e - s)];	//净增关注数量
+			  String[] dateArray = new String[arrayLenth];	//查询日期
+			  Integer[] focusCountArray = new Integer[arrayLenth];	//关注数量
+			  Integer[] unFocusCountArray = new Integer[arrayLenth];	//取消关注数量
+			  Integer[] creFocusCountArray = new Integer[arrayLenth];	//净增关注数量
 			  //临时日期变量
 			  Date tempDate = sDate;
 			  //数量记录
 			  int i = 0;
 			  Calendar calendar = new GregorianCalendar(); 
 			  calendar.setTime(tempDate);
-			  while(sDate.compareTo(eDate) <= 0){
+			  while(tempDate.compareTo(eDate) <= 0){
 				  Integer foucusCount = getCunt(tempDate, FOCUS_FIELDNAME, chCode, wxName);	//关注数量
 				  Integer unFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName);//取消关注数量
 				  Integer creFocusCount = foucusCount - unFocusCount;	//净增数量
@@ -74,9 +77,12 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			 paramList.add(getMap("新增关注",ArrayUtils.subarray(focusCountArray, 0, i)));
 			 paramList.add(getMap("流失关注",ArrayUtils.subarray(unFocusCountArray, 0, i)));
 			 paramList.add(getMap("净增关注",ArrayUtils.subarray(creFocusCountArray, 0, i)));
-			 resultMap.put("date", ArrayUtils.subarray(dateArray, 0, i));
 			 resultMap.put("series",paramList);
-			 baseOutput.getData().add(paramList);
+			 resultMap.put("date", ArrayUtils.subarray(dateArray, 0, i));
+			 resultMap.put("days_type", daysType);
+			 resultMap.put("wx_name", wxName);
+			 resultMap.put("ch_code", chCode);
+			 baseOutput.getData().add(resultMap);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
