@@ -34,4 +34,19 @@ public interface WechatQrcodeScanDao extends BaseDao<WechatQrcodeScan>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * 总扫码次数
+	 * @param qrcodeId
+	 * @return
+	 */
+	int getTotalScan(String qrcodeId);
+	
+	/**
+	 * 总扫码人数
+	 * @param qrcodeId
+	 * @return
+	 */
+	int getTotalScanUser(String qrcodeId);
+
 }

@@ -41,6 +41,7 @@ import cn.rongcapital.mkt.service.TagUpdateService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAnalysisDaysListService;
 import cn.rongcapital.mkt.service.WechatQrcodeActivateService;
+import cn.rongcapital.mkt.service.WeixinAnalysisChdataListService;
 import cn.rongcapital.mkt.service.WeixinAnalysisQrcodeScanService;
 import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
@@ -114,6 +115,9 @@ public class MktWeChatApi {
 	
 	@Autowired
 	private WechatAnalysisDaysListService analysisDaysList;
+	
+	@Autowired
+	private WeixinAnalysisChdataListService weixinAnalysisChdataListService;
 
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
@@ -402,4 +406,23 @@ public class MktWeChatApi {
 		return analysisDaysList.analysisDaysList(startDate, endDate, daysType, chCode, wxName);
 	}
 	
+	/**
+	 *  按公众号和渠道,以及时间区间内获取关注数据(扫码、关注、新增...), 支持分页 
+	 * @param wxName
+	 * @param chCode
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 * @author shuiyangyang
+	 * @date 2016.09.01
+	 */
+	@GET
+	@Path("/mkt.weixin.analysis.chdata.list")
+	public BaseOutput getAnalysisChdata(
+			@NotNull @QueryParam("wx_name") String wxName,
+			@NotEmpty @QueryParam("ch_code") String chCode,
+			@NotEmpty @QueryParam("start_date") String startDate,
+			@NotEmpty @QueryParam("end_date") String endDate) {
+		return weixinAnalysisChdataListService.getAnalysisChdata(wxName, chCode, startDate, endDate);
+	}
 }
