@@ -29,6 +29,7 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 
 		ContactTemplate contactTemplate = new ContactTemplate();
 		contactTemplate.setContactId(Long.parseLong(contactId));
+		contactTemplate.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		List<ContactTemplate> contactTemplates = contactTemplateDao.selectList(contactTemplate);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
