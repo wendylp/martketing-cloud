@@ -83,7 +83,9 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		contact.setImei(body.getImei());
 		contact.setUdid(body.getUdid());
 		contact.setPhoneMac(body.getPhoneMac());
-		contact.setStatus(body.getStatus().intValue());
+		if(body.getStatus() != null){
+			contact.setStatus(body.getStatus().intValue());
+		}
 		contact.setUpdateTime(body.getUpdateTime());
 		contact.setSource(body.getSource());
 		contact.setBitmap(body.getBitmap());
