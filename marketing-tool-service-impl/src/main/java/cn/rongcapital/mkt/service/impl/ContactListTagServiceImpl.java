@@ -45,7 +45,7 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 		CustomTag tag = new CustomTag();
 		
 		for (String tagName : tag_names) {
-			if(StringUtils.isNotEmpty(tagName)){
+			if(StringUtils.isEmpty(tagName)){
 				continue;
 			}
 			tag.setName(tagName);
