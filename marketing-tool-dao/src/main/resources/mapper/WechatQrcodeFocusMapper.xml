@@ -95,6 +95,10 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
-	
+	<select id="selectTheEarliestFocus" resultType="cn.rongcapital.mkt.po.WechatQrcodeFocus">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+	    ORDER BY focus_datetime
+	</select>
 </mapper>
