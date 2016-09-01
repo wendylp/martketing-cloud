@@ -243,7 +243,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		ContactList contact = new ContactList();
 		contact.setId(body.getCommit_id());
 		contact.setContactTemplId(body.getContact_id());
-		contact.setStatus(2);
+		contact.setStatus(3);
 
 		contactDao.updateByContactId(contact);
 
