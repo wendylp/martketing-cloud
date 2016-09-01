@@ -78,6 +78,7 @@ public class ImportContactsDataToMDataServiceImpl implements ImportContactsDataT
             }
             //Todo:3更新这批数据的bitmap以及相应的状态
             ContactList contactList = new ContactList();
+            contactList.setPageSize(Integer.MAX_VALUE);
             contactList.setStatus(NOT_UPDATE_BITMAP_MARK);
             contactList.setContactTemplId(contactId.intValue());
             List<ContactList> contactListList = contactListDao.selectList(contactList);
