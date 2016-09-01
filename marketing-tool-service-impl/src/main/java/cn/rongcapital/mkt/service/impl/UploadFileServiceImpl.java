@@ -84,9 +84,11 @@ public class UploadFileServiceImpl implements UploadFileService{
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final String directory = "//rc//";
     public static char CSV_WRITER_SEPARATOR=',';
+    //public static String UPLOADED_FILE_PATH = "e://";
     public static String UPLOADED_FILE_PATH = "/rc/uploadFiles/";
     public static String[] channels = new String[] {"经销商","渠道商","员工","区域","门店","活动"};
     public static String FAIL_FILE_PATH = "/rc/downloads/batchQrcodeErr/";
+    //public static String FAIL_FILE_PATH = "e://";
 
     @Autowired
     private ImportDataHistoryDao importDataHistoryDao;
@@ -618,7 +620,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 				wql.setTotalRows(wxList.size());
 				wql.setSuccess((byte)wxSuccessList.size());
 				wql.setStatus((byte)0);
-				wql.setBatchId(Integer.valueOf(bachId));
+				wql.setBatchId(bachId);
 				wechatQrcodeLogDao.insert(wql);
 				
 				baseOutput.setTotal(1);

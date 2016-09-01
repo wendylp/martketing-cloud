@@ -183,7 +183,7 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.weixin.qrcode.create.count")
-	public BaseOutput getCreateCount(@NotNull @QueryParam("batch_id") Integer batch_id) {
+	public BaseOutput getCreateCount(@NotNull @QueryParam("batch_id") String batch_id) {
 		return qrcodeCreateCountService.getCreateCount(batch_id);
 	}
 
@@ -327,7 +327,7 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.weixin.qrcode.error.download")
-	public BaseOutput weixinQrcodeErrorDownload(@NotNull @QueryParam("batch_id") Integer batchId) {
+	public BaseOutput weixinQrcodeErrorDownload(@NotNull @QueryParam("batch_id") String batchId) {
 		return weixinQrcodeErrorDownloadService.weixinQrcodeErrorDownload(batchId);
 	}
 
