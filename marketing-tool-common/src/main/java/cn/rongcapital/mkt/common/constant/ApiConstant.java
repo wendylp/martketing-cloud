@@ -206,4 +206,34 @@ public class ApiConstant {
 	public static final Byte DATA_PARTY_TAG_RULE_TYPE_COMMON = 0;
 	public static final Byte DATA_PARTY_TAG_RULE_TYPE_JS = 1;
 
+	
+	
+	/**
+	 * 微信公众号ID
+	 */
+	public static final String APPID = "wx00f7d56d549f82ce";	
+//	public static final String APPID = "wxa3f1b781590bb2c5";
+	/**
+	 * 微信公众号appsecret
+	 */
+
+	public static final String SECRET = "4fcc525e82dd03422ea139733d318fc2";
+//	public static final String SECRET = "bdf1650396a6c9059835b5777df1b77a";
+//	public static final String SECRET = "60ba94dd8d1590c896edbc5f0f3d5e5e";
+
+	public static final String upload_img_path_large = "/rc/data/downloads/large/";
+	public static final String upload_img_path_middle = "/rc/data/downloads/middle/";
+	public static final String upload_img_path_small = "/rc/data/downloads/small/";
+	
+	public static final String upload_img_path = "D:\\soft\\";
+	
+	public static String component_verify_ticket = "ticket@@@Pqd1HooYMLuhKeSIUPh5SjZC43_g7JYLtyVyHN6fDP3WQ9lSRLSZMg_juXv8E9uoE-wKb0LVHiTwqPHVxSYxww";	
+	
+/*	public static App getComponentAccessToken() {
+		App app = new App(ApiConstant.APPID,ApiConstant.SECRET);
+		app.setComponentTicket(ApiConstant.component_verify_ticket);
+		WxComponentServerApi.accessToken(app);
+		return app;
+	}*/
+	
 }

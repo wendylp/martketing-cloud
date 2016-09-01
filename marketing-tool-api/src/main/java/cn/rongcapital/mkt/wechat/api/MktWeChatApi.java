@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.mkt.biz.WechatQrcodeBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
 import cn.rongcapital.mkt.service.GetWeixinAnalysisDateService;
@@ -52,6 +53,7 @@ import cn.rongcapital.mkt.service.WeixinQrcodeMatchGetService;
 import cn.rongcapital.mkt.service.WeixinQrcodeSaveOrUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.TagBodyUpdateIn;
+import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInData;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInId;
 
@@ -119,6 +121,9 @@ public class MktWeChatApi {
 	@Autowired
 	private WeixinAnalysisChdataListService weixinAnalysisChdataListService;
 
+	@Autowired
+	private WechatQrcodeBiz wechatQrcodeBiz;	
+	
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
 	 * 
@@ -425,4 +430,50 @@ public class MktWeChatApi {
 			@NotEmpty @QueryParam("end_date") String endDate) {
 		return weixinAnalysisChdataListService.getAnalysisChdata(wxName, chCode, startDate, endDate);
 	}
+	
+	/**
+	 * @功能简述 : 根据id更新标签信息
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.getWechatQrcodeTicket")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput getWechatQrcodeTicket() {
+		BaseOutput baseOutput = wechatQrcodeBiz.getWechatQrcodeTicket();
+		return baseOutput;
+	}
+	
+	/**
+	 * @功能简述 : 根据id更新标签信息
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.pics.create")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput getQrcodes(@NotEmpty @QueryParam("action_name") String actionName,@DefaultValue("1") @Min(1) @Max(100000) @QueryParam("start_scene_id") int startSceneId,@DefaultValue("100000") @Min(1) @Max(100000) @QueryParam("end_scene_id") int endSceneId) {
+		BaseOutput baseOutput = wechatQrcodeBiz.getQrcodes(startSceneId, endSceneId, actionName);
+		return baseOutput;
+	}
+	
+	@POST
+	@Path("/mkt.weixin.qrcode.create")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput createQrcode(@NotEmpty @QueryParam("user_token") String userToken,@Valid WechatQrcodeIn body) {
+//		String wechatQrcodeStr="{\"wx_name\": \"果倍爽\",     \"ch_code\": 112,     \"is_audience\": 0,     \"audience_name\": \"90后\",     \"related_tags\": \"101;103;112\",     \"comments\": \"备注1\",     \"status\": 1,     \"qrcode_pic\": \"果倍爽\",     \"qrcode_url\": \"https://www.baidu.com\",\"ticket\":\"gQFH7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xLzNqdDh5SXZsRnh0dXhhZVFXeGNXAAIEEH61VwMEAAAAAA==\"}";
+//		String wechatQrcodeStr="{\"wxName\":\"sfasfa\"}";
+		BaseOutput baseOutput = wechatQrcodeBiz.createQrcode(body);
+		//@NotEmpty @QueryParam("user_token") String userToken,@NotNull @QueryParam("wechat_qrcode") String wechatQrcodeStr
+//		return tagService.tagInfoUpdate(body);
+		return baseOutput;
+	}
+	
+	/**
+	 * @功能简述 : 根据id更新标签信息
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput getQrcode(@NotEmpty @QueryParam("action_name") String actionName,@DefaultValue("10") @Min(1) @Max(100000) @QueryParam("scene_id") int sceneId) {
+		BaseOutput baseOutput = wechatQrcodeBiz.getQrcode(sceneId,actionName);
+		return baseOutput;
+	}
+	
 }
