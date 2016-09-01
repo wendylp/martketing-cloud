@@ -92,6 +92,9 @@ public class MktWeChatApi {
 
 	@Autowired
 	private GetWeixinAnalysisDateService getWeixinAnalysisDateService;
+	
+	@Autowired 
+	WeixinAnalysisQrcodeScanService weixinAnalysisQrcodeScanService;
 
 
 	/**
@@ -349,5 +352,25 @@ public class MktWeChatApi {
 	public BaseOutput weixinQrcodeBatchSave(@NotEmpty @QueryParam("user_token") String userToken,
 											@NotEmpty @QueryParam("ver") String ver) {
 		return getWeixinAnalysisDateService.getWeixinAnalysisDate();
+	}
+	
+	/**
+	 * 保存扫描微信二维码次数和人数 
+	 * 接口：mkt.weixin.analysis.qrcode.scan
+	 * 
+	 * @param userId
+	 * @param userHost
+	 * @param qrcodeId
+	 * @return
+	 * @author shuiyangyang
+	 * @date 2016.09.01
+	 */
+	@POST
+	@Path("/mkt.weixin.analysis.qrcode.scan")
+	public BaseOutput instertToWechatQrcodeScan(
+			@NotEmpty @QueryParam("user_id") String userId,
+			@QueryParam("user_host") String userHost, 
+			@NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
+		return weixinAnalysisQrcodeScanService.instertToWechatQrcodeScan(userId, userHost, qrcodeId);
 	}
 }
