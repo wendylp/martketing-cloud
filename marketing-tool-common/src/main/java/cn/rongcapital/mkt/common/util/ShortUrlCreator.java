@@ -32,7 +32,7 @@ public class ShortUrlCreator{
 //       
 //    }
  
-    private static String generateShortUrl(String url) {
+    public static String generateShortUrl(String url) {
         
         String sMD5EncryptResult = getMd5(key + url);
         String hex = sMD5EncryptResult; 
@@ -53,7 +53,7 @@ public class ShortUrlCreator{
         return resUrl[0]; 
     }
      
-    public static String getMd5(String s) {
+    private static String getMd5(String s) {
         byte[] b = s.getBytes();
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
