@@ -287,6 +287,7 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 			List<Object> data = new ArrayList<Object>();
 			Map<String,Object> mapBack = new HashMap<String,Object>();
 			mapBack.put("id", wechatQrcode.getId());
+			mapBack.put("id", wechatQrcode.getQrcodePic());
 			mapBack.put("createtime", wechatQrcode.getCreateTime());
 			data.add(mapBack);
 			baseOutput.setData(data);
