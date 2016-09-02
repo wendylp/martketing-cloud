@@ -5,7 +5,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
@@ -14,7 +15,9 @@ import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 
 import cn.rongcapital.mkt.biz.WechatGroupBiz;
+import cn.rongcapital.mkt.biz.WechatRegisterBiz;
 import cn.rongcapital.mkt.po.WechatGroup;
+import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.vo.weixin.WXTag;
 
 @Service
@@ -55,6 +58,9 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 		    ]
 		}
 	 */
+	@Autowired
+	private WechatRegisterBiz wechatRegisterBiz;
+	
 	@Override
 	public List<WechatGroup> getTags(String authAppId,String authorizer_refresh_token) {
 		List<WechatGroup> list = new ArrayList<WechatGroup>();
@@ -62,11 +68,17 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 		app.setAuthAppId(authAppId);
 		app.setAuthRefreshToken(authorizer_refresh_token);
 		String tagsString = WxComponentServerApi.getBaseWxSdk().getTags(app);
-		list = this.getTagsFromTagsString(authAppId, tagsString);
+		if(StringUtils.isNotBlank(tagsString)) {
+			list = this.getTagsFromTagsString(app, tagsString);
+		}
+
 		return list;
 	}
 
-	public List<WechatGroup> getTagsFromTagsString(String authAppId, String tagsString) {
+	public List<WechatGroup> getTagsFromTagsString(App app,String tagsString) {
+		WechatRegister wechatRegister = wechatRegisterBiz.getAuthInfo(app.getAuthAppId(),
+				app.getAuthRefreshToken());
+		
 		List<WechatGroup> list = new ArrayList<WechatGroup>();
 		JSONObject jsonObject = JSONObject.parseObject(tagsString);
 		JSONArray jsonArray = jsonObject.getJSONArray("tags");
@@ -78,7 +90,7 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 					WechatGroup wechatGroup = new WechatGroup();
 					wechatGroup.setGroupName(wxTag.getName());
 					wechatGroup.setGroupId(String.valueOf(wxTag.getId()));
-					wechatGroup.setWxAcct(authAppId);
+					wechatGroup.setWxAcct(wechatRegister.getWxAcct());
 					wechatGroup.setGroupNickname(wxTag.getAlias());
 					wechatGroup.setHeaderImage(wxTag.getHead_img());
 					wechatGroup.setCreateTime(new Date());
