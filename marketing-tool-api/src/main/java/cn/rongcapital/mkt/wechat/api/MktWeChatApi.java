@@ -562,12 +562,9 @@ public class MktWeChatApi {
 	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
 	@Consumes({MediaType.TEXT_XML})
 	public String getComponentVerifyTicket1( String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){
-		
-		try {
-			
-			if(textxml.contentEquals("Event")){
-				
-			}
+		logger.info("getComponentVerifyTicket1:"+textxml+"*******************************");		
+		try {			
+			if(textxml.contentEquals("Event")){}
 			
 			JAXBContext context = JAXBContext.newInstance(SubscribeVO.class);  
 			Unmarshaller unmarshaller = context.createUnmarshaller();
