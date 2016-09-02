@@ -1,10 +1,13 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,19 +42,47 @@ public class WechatChanellUpdateServiceImpl implements WechatChanellUpdateServic
 				continue;
 			}
 			wechatChannel.setChName(chaName);
-			int newid=wechatChannelDao.insert(wechatChannel);
-			
-			Map<String, Object> channelMap = new HashMap<String, Object>();
-			
-			channelMap.put("channel_id", newid);
-			channelMap.put("channel_name", chaName);
-			channelMap.put("channel_type", 1);
-			channelMap.put("channel_removed", 1);
-			result.getData().add(channelMap);
+			wechatChannelDao.insert(wechatChannel);
+
 		}
-		result.setTotal(result.getData().size());
 		
+		//增加默认六项系统默认渠道
+		List<String> sysChannel = new ArrayList<String>();
+		sysChannel.add("经销商");
+		sysChannel.add("渠道商");
+		sysChannel.add("区域");
+		sysChannel.add("员工");
+		sysChannel.add("门店");
+		sysChannel.add("活动");
 		
+		WechatChannel wechatChannel = new WechatChannel();
+		wechatChannel.setStatus("0");
+		List<WechatChannel> wechatChannels = wechatChannelDao.selectList(wechatChannel);
+		
+		if (CollectionUtils.isNotEmpty(wechatChannels)) {
+			result.setTotal(wechatChannels.size() + sysChannel.size());
+			for (WechatChannel w : wechatChannels) {
+				Map<String, Object> channelMap = new HashMap<String, Object>();
+				channelMap.put("channel_id", w.getId());
+				channelMap.put("channel_name", w.getChName());
+				channelMap.put("channel_type", w.getType());
+				channelMap.put("channel_removed", w.getIsRemoved());
+				result.getData().add(channelMap);
+			}
+			
+			Map<String, Object> channelMap = null;
+			int channel_id = 1;
+			for(String channelName : sysChannel){
+			    channelMap = new HashMap<String, Object>();
+				channelMap.put("channel_id", channel_id);
+				channelMap.put("channel_name", channelName);
+				channelMap.put("channel_type",0);
+				channelMap.put("channel_removed",0);
+				result.getData().add(channelMap);
+				channel_id++;
+			}
+			
+		}
 		
 //		List<WechatChannel> wechatChaList = wechatChannelDao.selectWechatChaList(chaNames);
 //		if(CollectionUtils.isNotEmpty(wechatChaList)){

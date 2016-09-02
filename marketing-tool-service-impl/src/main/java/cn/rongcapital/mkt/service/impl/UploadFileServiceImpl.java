@@ -58,6 +58,7 @@ import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
 import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeLogDao;
+import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.po.IllegalData;
 import cn.rongcapital.mkt.po.ImportDataHistory;
@@ -65,6 +66,7 @@ import cn.rongcapital.mkt.po.ImportDataModifyLog;
 import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeLog;
+import cn.rongcapital.mkt.po.WechatQrcodeTicket;
 import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.impl.vo.UploadFileProcessVO;
@@ -113,6 +115,9 @@ public class UploadFileServiceImpl implements UploadFileService{
 	
 	@Autowired
 	private WechatQrcodeLogDao wechatQrcodeLogDao;
+	
+	@Autowired
+	WechatQrcodeTicketDao wechatQrcodeTicketDao;
 
     @Override
     public Object uploadFile(String fileUnique, MultipartFormDataInput fileInput) {
@@ -568,6 +573,13 @@ public class UploadFileServiceImpl implements UploadFileService{
 				//保存成功的数据
 				 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 				String bachId = simpleDateFormat.format(new Date());
+				
+				//初始化Ticket对象
+				WechatQrcodeTicket wechatQrcodeTicket = new WechatQrcodeTicket();
+				wechatQrcodeTicket.setState(0);
+				wechatQrcodeTicket.setOrderField("id");
+				wechatQrcodeTicket.setOrderFieldType("ASC");
+				
 				for(WXMoudelVO wmo : wxSuccessList){
 					WechatQrcode wq = new WechatQrcode();
 					wq.setBatchId(bachId);
@@ -582,7 +594,16 @@ public class UploadFileServiceImpl implements UploadFileService{
 						chCode = selectList.get(0).getId();
 					}
 					wq.setChCode(chCode);
+					
 					//TODO 尹恒接口获取值
+					List<WechatQrcodeTicket> wechatQrcodeTickets = wechatQrcodeTicketDao.selectList(wechatQrcodeTicket);
+					if(wechatQrcodeTickets!=null && wechatQrcodeTickets.size()>0){
+						WechatQrcodeTicket wechatQrcodeTicketTemp = wechatQrcodeTickets.get(0);
+						wq.setQrcodePic(String.valueOf(wechatQrcodeTicketTemp.getId())+".jpg");
+						//wq.setQrcodeUrl(wechatQrcodeIn.getQrcode_url());				
+						wq.setTicket(String.valueOf(wechatQrcodeTicketTemp.getId()));
+						wechatQrcodeTicketTemp.setState(1);
+					}
 					wechatQrcodeDao.insert(wq);
 				}
 				

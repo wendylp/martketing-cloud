@@ -127,7 +127,6 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						//更新相应模板表中的keyList和isRemember字段
 						ContactTemplate contactTemplate = new ContactTemplate();
 						contactTemplate.setContactId(ctIn.getContact_id());
-						contactTemplate.setPageSize(Integer.MAX_VALUE);
 						List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
 						if(!CollectionUtils.isEmpty(contactTemplateList)){
 							for(ContactTemplate updateContactTemplate : contactTemplateList){

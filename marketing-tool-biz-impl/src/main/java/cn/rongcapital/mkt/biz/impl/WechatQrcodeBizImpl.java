@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.biz.impl;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -198,7 +199,7 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 				baseOutput.setTotal(1);
 				List<Object> data = new ArrayList<Object>();
 				Map<String,Object> mapBack = new HashMap<String,Object>();
-				mapBack.put("scene_id", wechatQrcodeTicketBack.getId());
+				mapBack.put("scene_id", ApiConstant.upload_img_path_small+wechatQrcodeTicketBack.getId()+".jpg");
 				mapBack.put("url", wechatQrcodeTicketBack.getUrl());
 				data.add(mapBack);
 				baseOutput.setData(data);
@@ -287,7 +288,11 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 			List<Object> data = new ArrayList<Object>();
 			Map<String,Object> mapBack = new HashMap<String,Object>();
 			mapBack.put("id", wechatQrcode.getId());
-			mapBack.put("createtime", wechatQrcode.getCreateTime());
+			mapBack.put("qrcodePic", ApiConstant.upload_img_path_small+wechatQrcode.getQrcodePic());
+			Date createTime = wechatQrcode.getCreateTime();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			mapBack.put("createtime", sdf.format(createTime));
+			
 			data.add(mapBack);
 			baseOutput.setData(data);
 		} catch (Exception e) {

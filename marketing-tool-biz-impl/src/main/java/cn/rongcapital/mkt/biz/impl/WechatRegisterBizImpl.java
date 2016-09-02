@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.biz.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -44,7 +45,12 @@ public class WechatRegisterBizImpl extends BaseBiz implements WechatRegisterBiz 
 		app.setAuthRefreshToken(refreshToken);
 		
 		String authInfoString =  WxComponentServerApi.getAuthInfo(app,authAppId);
-		WechatRegister  wechatRegister =  this.getWechatRegisterFromAuthInfo(authInfoString);		
+		
+		WechatRegister  wechatRegister =  null;
+		if(StringUtils.isNoneBlank(authInfoString)){
+			wechatRegister =  this.getWechatRegisterFromAuthInfo(authInfoString);	
+		}
+	
 		return wechatRegister;
 	}
 

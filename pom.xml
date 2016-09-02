@@ -9,6 +9,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <jetty.version>8.0.0.RC0</jetty.version>
 	</properties>
 	<!-- modules -->
 	<modules>
@@ -170,7 +171,7 @@
             <properties>
             	<mvnvar.log.path>/rc/log/mkt/test</mvnvar.log.path>
                 <mvnvar.conf.path>conf_test</mvnvar.conf.path>
-                <maven.repository.rongcapital.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
             </properties>
         </profile>
         <profile>
