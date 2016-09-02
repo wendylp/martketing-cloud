@@ -94,29 +94,39 @@ public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveSe
 			} catch (ParseException e) {
 				logger.error("转换expirationTime到日期出错,expirationTime = {} ", expirationTime);
 			}
+		}else {
+			Calendar expirationTimeCalendar = Calendar.getInstance();
+			expirationTimeCalendar.setTime(new Date());
+			expirationTimeCalendar.add(Calendar.YEAR, 100);
+			wechatQrcode.setExpirationTime(expirationTimeCalendar.getTime());
 		}
 		
 		wechatQrcode.setComments(body.getComment());
 		
 		List<AssociationTag> associationTags = body.getAssociation_tags();
-		List<String> tagList = new ArrayList<String>();
 		
-		for(AssociationTag at : associationTags){
-			tagList.add(String.valueOf(at.getId()));
-		}
-		StringBuilder related = new StringBuilder();;
-		for(String tag :tagList){
-			related.append(tag);
-			related.append(";");
-		}
-		if(related != null &&related.length() > 0){
-			String relatedTags = related.toString().substring(0,related.length()-1);
-			wechatQrcode.setRelatedTags(relatedTags);
+		if(associationTags != null && associationTags.size() >0){
+			List<String> tagList = new ArrayList<String>();
+			
+			for(AssociationTag at : associationTags){
+				tagList.add(String.valueOf(at.getId()));
+			}
+			StringBuilder related = new StringBuilder();;
+			for(String tag :tagList){
+				related.append(tag);
+				related.append(";");
+			}
+			if(related != null &&related.length() > 0){
+				String relatedTags = related.toString().substring(0,related.length()-1);
+				wechatQrcode.setRelatedTags(relatedTags);
+			}
+		}else {
+			wechatQrcode.setRelatedTags("");
 		}
 		
 		wechatQrcodeDao.updataByBatchId(wechatQrcode);
 		
 		return result;
 	}
-
+	
 }

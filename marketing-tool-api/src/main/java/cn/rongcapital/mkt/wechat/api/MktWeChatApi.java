@@ -47,6 +47,7 @@ import cn.rongcapital.mkt.biz.WechatMemberBiz;
 import cn.rongcapital.mkt.biz.WechatQrcodeBiz;
 import cn.rongcapital.mkt.biz.WechatRegisterBiz;
 import cn.rongcapital.mkt.biz.impl.BaseBiz;
+import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXin;
 //import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXin;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -78,6 +79,7 @@ import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInData;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInId;
 //import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
+import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -536,7 +538,7 @@ public class MktWeChatApi {
 	 * @return
 	 */
 	@POST
-	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
+	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket1")
 	@Consumes({MediaType.TEXT_XML})
 //	public String getComponentVerifyTicket(@Valid ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
 	public String getComponentVerifyTicket( ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
@@ -557,38 +559,37 @@ public class MktWeChatApi {
 	 * @return
 	 */
 	@POST
-	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket1")
+	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
 	@Consumes({MediaType.TEXT_XML})
 	public String getComponentVerifyTicket1( String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){
-		
-/*		try {
+		logger.info("getComponentVerifyTicket1:"+textxml+"*******************************");		
+		try {			
+			if(textxml.contentEquals("Event")){}
 			
-			if(textxml.contentEquals("Event")){
-				
-			}
+			JAXBContext context = JAXBContext.newInstance(SubscribeVO.class);  
+			Unmarshaller unmarshaller = context.createUnmarshaller();
 			
-//			JAXBContext context = JAXBContext.newInstance(SubscribeVO.class);  
-//			Unmarshaller unmarshaller = context.createUnmarshaller();
-//			
-//			XMLInputFactory xmlFactory  = XMLInputFactory.newInstance();  
-//
-//			InputStream   textxmlis   =   new   ByteArrayInputStream(textxml.getBytes());   
-//			
-//			SubscribeVO subscribeVO = (SubscribeVO)unmarshaller.unmarshal(textxmlis);
+			XMLInputFactory xmlFactory  = XMLInputFactory.newInstance();  
+
+			InputStream   textxmlis   =   new   ByteArrayInputStream(textxml.getBytes());   
 			
-//			ProcessReceiveMessageOfWeiXin handler = new ProcessReceiveMessageOfWeiXin();
-//			String textxmlBack = handler.process(textxml.getBytes());			
-//			System.out.println(textxmlBack);
+			SubscribeVO subscribeVO = (SubscribeVO)unmarshaller.unmarshal(textxmlis);
+			
+			ProcessReceiveMessageOfWeiXin handler = new ProcessReceiveMessageOfWeiXin();
+			String textxmlBack = handler.process(textxml.getBytes());	
+			
+			System.out.println(textxmlBack);
 		} catch (JAXBException e) {			
 			e.printStackTrace();
 		} catch (FactoryConfigurationError e) {			
 			e.printStackTrace();
-		}*/
+		}
 
 		
 //		webchatComponentVerifyTicketService.insert(componentVerifyTicketIn,msg_signature, timestamp, nonce);
 		return "success";		
 	}
+	
 	/**
 	 * @param userToken
 	 * @param ver
