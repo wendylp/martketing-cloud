@@ -61,32 +61,35 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 		App app = this.getApp();
 		app.setAuthAppId(authAppId);
 		app.setAuthRefreshToken(authorizer_refresh_token);
-		String tagsString = WxComponentServerApi.getBaseWxSdk().getTags(app);		
-		list = this.getTagsFromTagsString(authAppId,tagsString);
+		String tagsString = WxComponentServerApi.getBaseWxSdk().getTags(app);
+		list = this.getTagsFromTagsString(authAppId, tagsString);
 		return list;
 	}
 
-	public List<WechatGroup> getTagsFromTagsString(String authAppId,String tagsString) {
+	public List<WechatGroup> getTagsFromTagsString(String authAppId, String tagsString) {
 		List<WechatGroup> list = new ArrayList<WechatGroup>();
-		JSONObject jsonObject =  JSONObject.parseObject(tagsString);
+		JSONObject jsonObject = JSONObject.parseObject(tagsString);
 		JSONArray jsonArray = jsonObject.getJSONArray("tags");
 		List<WXTag> wxTags = JSONArray.parseArray(jsonArray.toJSONString(), WXTag.class);
-		if(wxTags!=null&&wxTags.size()>0){
-			for(Iterator<WXTag> iter = wxTags.iterator();iter.hasNext();){
+		if (wxTags != null && wxTags.size() > 0) {
+			for (Iterator<WXTag> iter = wxTags.iterator(); iter.hasNext();) {
 				WXTag wxTag = iter.next();
-				if(wxTag!=null){
+				if (wxTag != null) {
 					WechatGroup wechatGroup = new WechatGroup();
-					wechatGroup.setGroupName(wxTag.getTagName());
-					wechatGroup.setGroupId(String.valueOf(wxTag.getTagId()));
+					wechatGroup.setGroupName(wxTag.getName());
+					wechatGroup.setGroupId(String.valueOf(wxTag.getId()));
 					wechatGroup.setWxAcct(authAppId);
+					wechatGroup.setGroupNickname(wxTag.getAlias());
+					wechatGroup.setHeaderImage(wxTag.getHead_img());
 					wechatGroup.setCreateTime(new Date());
-//					BeanUtils.copyProperties(wxTag, wechatGroup);
+					wechatGroup.setCount(wxTag.getCount());
+					// BeanUtils.copyProperties(wxTag, wechatGroup);
 					list.add(wechatGroup);
 				}
-				
+
 			}
 		}
-		return list;		
+		return list;
 	}
-	
+
 }

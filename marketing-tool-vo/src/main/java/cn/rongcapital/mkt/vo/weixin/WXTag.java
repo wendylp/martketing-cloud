@@ -1,34 +1,34 @@
 package cn.rongcapital.mkt.vo.weixin;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
 public class WXTag {
 
-	private String tagName;
+	private String name;
 	
-	private Integer tagId;
+	private Integer id;
 	
 	private Integer count;
-
-	@JsonProperty("name")
-	public String getTagName() {
-		return tagName;
-	}
-
-	public void setTagName(String tagName) {
-		this.tagName = tagName;
-	}
 	
-	@JsonProperty("id")
-	public Integer getTagId() {
-		return tagId;
+	private String alias;
+	
+	private String head_img;
+	
+	
+	public String getName() {
+		return name;
 	}
 
-	public void setTagId(Integer tagId) {
-		this.tagId = tagId;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@JsonProperty("count")
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public Integer getCount() {
 		return count;
 	}
@@ -37,6 +37,20 @@ public class WXTag {
 		this.count = count;
 	}
 
-	
-	
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	public String getHead_img() {
+		return head_img;
+	}
+
+	public void setHead_img(String head_img) {
+		this.head_img = head_img;
+	}
+
 }
