@@ -82,7 +82,7 @@ public class GetH5PubListServiceImpl implements TaskService {
 		// 获取授权的微信公众号的appid
 		List<WebchatAuthInfo> selectListByIdList = webchatAuthInfoDao.selectList(new WebchatAuthInfo());
 		if (!CollectionUtils.isEmpty(selectListByIdList)) {
-			// this.synPubInfoMethod(selectListByIdList);
+			this.synPubInfoMethod(selectListByIdList);
 			this.synPubGroupInfoMethod(selectListByIdList);
 		}
 	}
@@ -100,22 +100,23 @@ public class GetH5PubListServiceImpl implements TaskService {
 		for (WebchatAuthInfo info : list) {
 			List<WechatGroup> WechatGroupList = wechatGroupBiz.getTags(info.getAuthorizerAppid(),
 					info.getAuthorizerRefreshToken());
+			if (!CollectionUtils.isEmpty(WechatGroupList)) {
+				for (WechatGroup wechatGroupinfo : WechatGroupList) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("group_id", wechatGroupinfo.getGroupId());
+					map.put("wx_acct", wechatGroupinfo.getWxAcct());
+					Long id = wechatGroupDao.selectGroupIdByUcode(map);
 
-			for (WechatGroup wechatGroupinfo : WechatGroupList) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("group_id", wechatGroupinfo.getGroupId());
-				map.put("wx_acct", wechatGroupinfo.getWxAcct());
-				Long id = wechatGroupDao.selectGroupIdByUcode(map);
-
-				if (id == null) {
-					wechatGroupDao.insert(wechatGroupinfo);
-					logger.info("insert into wechat_group id:" + wechatGroupinfo.getId());
-				} else {
-					wechatGroupinfo.setId(Integer.valueOf(id.toString()));
-					wechatGroupDao.updateById(wechatGroupinfo);
-					logger.info("update wechat_group id:" + id);
+					if (id == null) {
+						wechatGroupDao.insert(wechatGroupinfo);
+						logger.info("insert into wechat_group id:" + wechatGroupinfo.getId());
+					} else {
+						wechatGroupinfo.setId(Integer.valueOf(id.toString()));
+						wechatGroupDao.updateById(wechatGroupinfo);
+						logger.info("update wechat_group id:" + id);
+					}
+					map.clear();
 				}
-				map.clear();
 			}
 		}
 
@@ -130,6 +131,7 @@ public class GetH5PubListServiceImpl implements TaskService {
 	 * 
 	 */
 	public void synPubInfoMethod(List<WebchatAuthInfo> list) {
+
 		for (WebchatAuthInfo info : list) {
 			WechatRegister wechatRegister = wechatRegisterBiz.getAuthInfo(info.getAuthorizerAppid(),
 					info.getAuthorizerRefreshToken());
