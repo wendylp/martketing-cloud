@@ -117,5 +117,11 @@
 		WHERE ch_name = #{chaName}
 	</select>
 	
+	<!--  通过名称查询是否存在-->
+	<delete id="delete" parameterType="cn.rongcapital.mkt.po.WechatChannel">
+		delete <include refid="QUERY_FROM_TABLE"/>
+		where type = #{type} and is_removed = #{isRemoved}
+	</delete>
+	
 	
 </mapper>
