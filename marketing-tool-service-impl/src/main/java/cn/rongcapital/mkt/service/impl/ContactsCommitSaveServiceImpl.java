@@ -31,6 +31,7 @@ import heracles.data.common.util.ReadWriteType;
 public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 
 	private static final Integer SHOWN_IN_FEEDBACK_STATUS = 0;
+	private static final Integer CONTACT_LIST_DEL_STATUS = 3;
 
 	@Autowired
 	ContactListDao contactDao;
@@ -185,7 +186,12 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		
 		if (!CollectionUtils.isEmpty(list)) {
 			int selectListCount = contactDao.selectListCount(contact);
-			result.setTotal(selectListCount);
+			ContactList deletedContactList = new ContactList();
+			deletedContactList.setContactTemplId(contact_id);
+			deletedContactList.setStatus(CONTACT_LIST_DEL_STATUS);
+			int invalidListCount = contactDao.selectListCount(deletedContactList);
+			int validListCount = selectListCount - invalidListCount;
+			result.setTotal(validListCount);
 			for (ContactList item : list) {
 				Map<String, Object> map = new LinkedHashMap<>();
 				for(String filedName : filedNameList){
