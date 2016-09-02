@@ -164,8 +164,9 @@
                 <!--  
                 <maven.repository.rongcapital.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.rongcapital.url>
                 -->
-                <contact_list_pc_url>/ml/asset/contactform-write.html</contact_list_pc_url>
-                <contact_list_mobile_url>/m/contactform/preview.html</contact_list_mobile_url>
+                <contact_list_pc_url>http://mc.ruixuesoft.com/ml/asset/contactform-write.html</contact_list_pc_url>
+                <contact_list_mobile_url>http://mc.ruixuesoft.com/m/contactform/preview.html</contact_list_mobile_url>
+                <contact_list_short_url>http://mc.ruixuesoft.com/short/</contact_list_short_url>
             </properties>
         </profile>
         <profile>
@@ -174,8 +175,9 @@
             	<mvnvar.log.path>/rc/log/mkt/test</mvnvar.log.path>
                 <mvnvar.conf.path>conf_test</mvnvar.conf.path>
                 <maven.repository.rongcapital.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.rongcapital.url>
-                <contact_list_pc_url>/ml/asset/contactform-write.html</contact_list_pc_url>
-                <contact_list_mobile_url>/m/contactform/preview.html</contact_list_mobile_url>
+                <contact_list_pc_url>http://mc.ruixuesoft.com/ml/asset/contactform-write.html</contact_list_pc_url>
+                <contact_list_mobile_url>http://mc.ruixuesoft.com/m/contactform/preview.html</contact_list_mobile_url>
+                <contact_list_short_url>http://mc.ruixuesoft.com/short/</contact_list_short_url>
             </properties>
         </profile>
         <profile>
@@ -184,8 +186,9 @@
                 <mvnvar.log.path>/rc/log/mkt/production</mvnvar.log.path>
                 <mvnvar.conf.path>conf</mvnvar.conf.path>
                 <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
-                <contact_list_pc_url>/ml/asset/contactform-write.html</contact_list_pc_url>
-                <contact_list_mobile_url>/m/contactform/preview.html</contact_list_mobile_url>
+                <contact_list_pc_url>http://mc.ruixuesoft.com/ml/asset/contactform-write.html</contact_list_pc_url>
+                <contact_list_mobile_url>http://mc.ruixuesoft.com/m/contactform/preview.html</contact_list_mobile_url>
+                <contact_list_short_url>http://mc.ruixuesoft.com/short/</contact_list_short_url>
             </properties>
         </profile>
     </profiles>

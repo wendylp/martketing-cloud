@@ -82,7 +82,7 @@ public class GetH5PubListServiceImpl implements TaskService {
 		// 获取授权的微信公众号的appid
 		List<WebchatAuthInfo> selectListByIdList = webchatAuthInfoDao.selectList(new WebchatAuthInfo());
 		if (!CollectionUtils.isEmpty(selectListByIdList)) {
-			//this.synPubInfoMethod(selectListByIdList);
+			// this.synPubInfoMethod(selectListByIdList);
 			this.synPubGroupInfoMethod(selectListByIdList);
 		}
 	}
@@ -133,19 +133,21 @@ public class GetH5PubListServiceImpl implements TaskService {
 		for (WebchatAuthInfo info : list) {
 			WechatRegister wechatRegister = wechatRegisterBiz.getAuthInfo(info.getAuthorizerAppid(),
 					info.getAuthorizerRefreshToken());
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("wx_acct", wechatRegister.getWxAcct());
-			Long id = wechatRegisterDao.selectPersonalId(map);
+			if (wechatRegister != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("wx_acct", wechatRegister.getWxAcct());
+				Long id = wechatRegisterDao.selectPersonalId(map);
 
-			if (id == null) {
-				wechatRegisterDao.insert(wechatRegister);
-				logger.info("insert into wechat_register id:" + wechatRegister.getId());
-			} else {
-				wechatRegister.setId(Integer.valueOf(id.toString()));
-				wechatRegisterDao.updateById(wechatRegister);
-				logger.info("update wechat_register id:" + wechatRegister.getId());
+				if (id == null) {
+					wechatRegisterDao.insert(wechatRegister);
+					logger.info("insert into wechat_register id:" + wechatRegister.getId());
+				} else {
+					wechatRegister.setId(Integer.valueOf(id.toString()));
+					wechatRegisterDao.updateById(wechatRegister);
+					logger.info("update wechat_register id:" + wechatRegister.getId());
+				}
+				map.clear();
 			}
-			map.clear();
 		}
 
 	}

@@ -76,12 +76,13 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 				WXTag wxTag = iter.next();
 				if (wxTag != null) {
 					WechatGroup wechatGroup = new WechatGroup();
-					wechatGroup.setGroupName(wxTag.getTagName());
-					wechatGroup.setGroupId(String.valueOf(wxTag.getTagId()));
+					wechatGroup.setGroupName(wxTag.getName());
+					wechatGroup.setGroupId(String.valueOf(wxTag.getId()));
 					wechatGroup.setWxAcct(authAppId);
 					wechatGroup.setGroupNickname(wxTag.getAlias());
-					wechatGroup.setHeaderImage(wxTag.getHeadImg());
+					wechatGroup.setHeaderImage(wxTag.getHead_img());
 					wechatGroup.setCreateTime(new Date());
+					wechatGroup.setCount(wxTag.getCount());
 					// BeanUtils.copyProperties(wxTag, wechatGroup);
 					list.add(wechatGroup);
 				}
