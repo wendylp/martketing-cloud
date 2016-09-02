@@ -18,5 +18,5 @@ public interface WeixinQrcodeBatchSaveService {
 	 * @Date 2016.08.26
 	 *
 	 */
-	BaseOutput weixinQrcodeBatchSave(Integer batchId, String expirationTime, String qrcodeTagIds, Integer qrcodeStatus);
+	BaseOutput weixinQrcodeBatchSave(String batchId, String expirationTime, String qrcodeTagIds, Integer qrcodeStatus);
 }

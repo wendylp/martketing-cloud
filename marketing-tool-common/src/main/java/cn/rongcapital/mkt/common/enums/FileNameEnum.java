@@ -15,6 +15,7 @@ public enum FileNameEnum {
     ILLEGAL_DATA(10,"illegal_data"),
     BAS_EVENT(11,"bas_event"),
     BAS_USER(12,"bas_user"),
+    CONTACT_LIST(13,"contact_list"),
 
     ;
 

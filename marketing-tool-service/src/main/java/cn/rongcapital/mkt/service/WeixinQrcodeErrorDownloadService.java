@@ -18,5 +18,5 @@ public interface WeixinQrcodeErrorDownloadService {
 	 * @author shuiyangyang
 	 * @Date 2016.08.26
 	 */
-	BaseOutput weixinQrcodeErrorDownload(Integer batchId);
+	BaseOutput weixinQrcodeErrorDownload(String batchId);
 }

@@ -22,6 +22,26 @@
 		</dependency>
 		<dependency>
 			<groupId>cn.rongcapital.mkt</groupId>
+			<artifactId>marketing-tool-biz</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.rongcapital.mkt</groupId>
+			<artifactId>marketing-tool-biz-impl</artifactId>
+			<version>${project.parent.version}</version>
+			<exclusions>				
+				<exclusion>
+					<groupId>org.freemarker</groupId>
+					<artifactId>freemarker</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>		
+		<dependency>
+			<groupId>cn.rongcapital.mkt</groupId>
 			<artifactId>marketing-tool-vo</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>

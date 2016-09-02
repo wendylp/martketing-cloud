@@ -26,7 +26,7 @@ public class QrcodePicsZipDownloadServiceImpl implements QrcodePicsZipDownloadSe
 	WechatQrcodeDao wechatQrcodeDao;
 	
 	@Override
-	public BaseOutput getQrcodePicsZipDownload(Integer batchId) {
+	public BaseOutput getQrcodePicsZipDownload(String batchId) {
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		wechatQrcode.setBatchId(batchId);
 		

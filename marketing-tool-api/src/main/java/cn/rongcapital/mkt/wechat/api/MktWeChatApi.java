@@ -30,7 +30,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.tagsin.wechat_sdk.App;
+
+import cn.rongcapital.mkt.biz.ImgTextAssetBiz;
+import cn.rongcapital.mkt.biz.MessageSendBiz;
+import cn.rongcapital.mkt.biz.WechatGroupBiz;
+import cn.rongcapital.mkt.biz.WechatMemberBiz;
+import cn.rongcapital.mkt.biz.WechatQrcodeBiz;
+import cn.rongcapital.mkt.biz.WechatRegisterBiz;
+import cn.rongcapital.mkt.biz.impl.BaseBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
 import cn.rongcapital.mkt.service.GetWeixinAnalysisDateService;
 import cn.rongcapital.mkt.service.QrcodeCreateCountService;
@@ -39,6 +49,7 @@ import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
 import cn.rongcapital.mkt.service.QrcodeUsedCountService;
 import cn.rongcapital.mkt.service.TagUpdateService;
 import cn.rongcapital.mkt.service.UploadFileService;
+import cn.rongcapital.mkt.service.WebchatComponentVerifyTicketService;
 import cn.rongcapital.mkt.service.WechatAnalysisDaysListService;
 import cn.rongcapital.mkt.service.WechatQrcodeActivateService;
 import cn.rongcapital.mkt.service.WeixinAnalysisChdataListService;
@@ -51,7 +62,9 @@ import cn.rongcapital.mkt.service.WeixinQrcodeListService;
 import cn.rongcapital.mkt.service.WeixinQrcodeMatchGetService;
 import cn.rongcapital.mkt.service.WeixinQrcodeSaveOrUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
 import cn.rongcapital.mkt.vo.in.TagBodyUpdateIn;
+import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInData;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInId;
 
@@ -119,6 +132,30 @@ public class MktWeChatApi {
 	@Autowired
 	private WeixinAnalysisChdataListService weixinAnalysisChdataListService;
 
+	@Autowired
+	private WechatQrcodeBiz wechatQrcodeBiz;	
+
+	@Autowired
+	private WebchatComponentVerifyTicketService webchatComponentVerifyTicketService;
+	
+	@Autowired
+	private BaseBiz baseBiz;
+	
+	@Autowired
+	private WechatRegisterBiz wechatRegisterBiz;
+	
+	@Autowired
+	private WechatMemberBiz wechatMemberBiz;
+	
+	@Autowired
+	private WechatGroupBiz wechatGroupBiz;
+	
+	@Autowired
+	private ImgTextAssetBiz imgTextAssetBiz;
+	
+	@Autowired
+	private MessageSendBiz messageSendBiz;
+	
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
 	 * 
@@ -183,7 +220,7 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.weixin.qrcode.create.count")
-	public BaseOutput getCreateCount(@NotNull @QueryParam("batch_id") Integer batch_id) {
+	public BaseOutput getCreateCount(@NotNull @QueryParam("batch_id") String batch_id) {
 		return qrcodeCreateCountService.getCreateCount(batch_id);
 	}
 
@@ -211,7 +248,7 @@ public class MktWeChatApi {
 	@GET
 	@Path("/mkt.weixin.qrcode.pics.zip.download")
 	public BaseOutput getQrcodePicsZipDownload(@NotEmpty @QueryParam("user_token") String user_token,
-			@NotNull @QueryParam("batch_id") int batch_id) {
+			@NotNull @QueryParam("batch_id") String batch_id) {
 		return qrcodePicsZipDownloadService.getQrcodePicsZipDownload(batch_id);
 	}
 
@@ -327,7 +364,7 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.weixin.qrcode.error.download")
-	public BaseOutput weixinQrcodeErrorDownload(@NotNull @QueryParam("batch_id") Integer batchId) {
+	public BaseOutput weixinQrcodeErrorDownload(@NotNull @QueryParam("batch_id") String batchId) {
 		return weixinQrcodeErrorDownloadService.weixinQrcodeErrorDownload(batchId);
 	}
 
@@ -345,7 +382,7 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.weixin.qrcode.batch.save")
-	public BaseOutput weixinQrcodeBatchSave(@NotNull @QueryParam("batch_id") Integer batchId,
+	public BaseOutput weixinQrcodeBatchSave(@NotNull @QueryParam("batch_id") String batchId,
 			@NotNull @QueryParam("expiration_time") String expirationTime,
 			@NotEmpty @QueryParam("qrcode_tag_ids") String qrcodeTagIds,
 			@NotNull @QueryParam("qrcode_status") Integer qrcodeStatus) {
@@ -425,4 +462,136 @@ public class MktWeChatApi {
 			@NotEmpty @QueryParam("end_date") String endDate) {
 		return weixinAnalysisChdataListService.getAnalysisChdata(wxName, chCode, startDate, endDate);
 	}
+	
+	/**
+	 * @功能简述 : 根据id更新标签信息
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.getWechatQrcodeTicket")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput getWechatQrcodeTicket() {
+		BaseOutput baseOutput = wechatQrcodeBiz.getWechatQrcodeTicket();
+		return baseOutput;
+	}
+	
+	/**
+	 * @功能简述 : 根据id更新标签信息
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.pics.create")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput getQrcodes(@NotEmpty @QueryParam("action_name") String actionName,@DefaultValue("1") @Min(1) @Max(100000) @QueryParam("start_scene_id") int startSceneId,@DefaultValue("100000") @Min(1) @Max(100000) @QueryParam("end_scene_id") int endSceneId) {
+		BaseOutput baseOutput = wechatQrcodeBiz.getQrcodes(startSceneId, endSceneId, actionName);
+		return baseOutput;
+	}
+	
+	@POST
+	@Path("/mkt.weixin.qrcode.create")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput createQrcode(@NotEmpty @QueryParam("user_token") String userToken,@Valid WechatQrcodeIn body) {
+//		String wechatQrcodeStr="{\"wx_name\": \"果倍爽\",     \"ch_code\": 112,     \"is_audience\": 0,     \"audience_name\": \"90后\",     \"related_tags\": \"101;103;112\",     \"comments\": \"备注1\",     \"status\": 1,     \"qrcode_pic\": \"果倍爽\",     \"qrcode_url\": \"https://www.baidu.com\",\"ticket\":\"gQFH7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xLzNqdDh5SXZsRnh0dXhhZVFXeGNXAAIEEH61VwMEAAAAAA==\"}";
+//		String wechatQrcodeStr="{\"wxName\":\"sfasfa\"}";
+		BaseOutput baseOutput = wechatQrcodeBiz.createQrcode(body);
+		//@NotEmpty @QueryParam("user_token") String userToken,@NotNull @QueryParam("wechat_qrcode") String wechatQrcodeStr
+//		return tagService.tagInfoUpdate(body);
+		return baseOutput;
+	}
+	
+	/**
+	 * @功能简述 : 根据id更新标签信息
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.get")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput getQrcode(@NotEmpty @QueryParam("action_name") String actionName,@DefaultValue("10") @Min(1) @Max(100000) @QueryParam("scene_id") int sceneId) {
+		BaseOutput baseOutput = wechatQrcodeBiz.getQrcode(sceneId,actionName);
+		return baseOutput;
+	}
+	
+	
+	/**
+	 * @param componentVerifyTicketIn
+	 * @param msg_signature
+	 * @param timestamp
+	 * @param nonce
+	 * 测试
+	 * @return
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
+	@Consumes({MediaType.TEXT_XML})
+//	public String getComponentVerifyTicket(@Valid ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
+	public String getComponentVerifyTicket( ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
+	logger.info(System.currentTimeMillis()+"mkt.weixin.qrcode.getComponentVerifyTicket satrt 0000000000000000000000000000000000000000000000"+msg_signature+":"+timestamp+":"+nonce);
+	logger.info("0000000000000000000000000000000000000000000000"+componentVerifyTicketIn.getAppId()+":"+componentVerifyTicketIn.getToUserName()+":"+componentVerifyTicketIn.getEncrypt());
+		webchatComponentVerifyTicketService.insert(componentVerifyTicketIn,msg_signature, timestamp, nonce);
+		logger.info("0000000000000000000000000000000000000000000000getComponentVerifyTicket");	
+	//	System.out.println(System.currentTimeMillis()+"mkt.weixin.qrcode.getComponentVerifyTicket end 0000000000000000000000000000000000000000000000");
+		return "success";		
+	}
+	
+	
+	/**
+	 * @param userToken
+	 * @param ver
+	 * 测试
+	 * @return
+	 */
+	@GET
+	@Path("/shui")
+	public BaseOutput shui(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver) {
+		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
+		App app = baseBiz.getApp();
+		String authAppId = "wxa5fb7dea54673299";
+		String authRefreshToken = "refreshtoken@@@kkMVjC90JS9ooW_zsUUhfvjFbwAlfvB9pmBTZArGYMM";
+		String authorizer_appid = "wxeb10897c0cd98e36";
+		//wechatMemberBiz.getUserList(authorizer_appid, authRefreshToken);
+		messageSendBiz.send(app, "", "hahhhh", "12233");
+//		return wechatPublicAuthService.authWechatPublicAccount();
+//		return wechatPublicAuthBiz.authWechatPublicAccount();
+	    
+	    baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+	    baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+		return baseOutput;
+	}
+	
+	
+
+
+
+
+	/**
+	 * @return
+	 * 测试
+	 */
+	@GET
+	@Path("/testInterface")
+	public BaseOutput testInterface() {
+		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
+		App app = baseBiz.getApp();
+		app.setAuthAppId("wx1f363449a14a1ad8");
+		app.setAuthRefreshToken("refreshtoken@@@gcxmruaeql5C84jx-VHSnt99pOxbEWycsHz7tKgL-ao");
+		/*
+		 * 测试获取监测微信公众号下群组(标签)信息
+		 */
+//		List<WechatGroup> wechatGroups = wechatGroupBiz.getTags(app.getAuthAppId(), app.getAuthRefreshToken());
+		/*
+		 * 获取监测微信公众号下图文信息    图片（image）、视频（video）、语音 （voice）、图文（news）
+		 */
+//		List<ImgTextAsset> imgTextAssetes = imgTextAssetBiz.getMaterialList(app.getAuthAppId(), app.getAuthRefreshToken(), "news");
+		/*
+		 * 发送文字图文信息给群组(标签)  ZGmSwfoayacvqtasO_W58OgIlD_ayGsB1LVkAAtNCqA    ZGmSwfoayacvqtasO_W58JMM4Szs9TuUR755HUw3hP8
+		 */
+		messageSendBiz.sendAll(app, false, "101", "mpnews", "-8KrDZ9iuLst-DXJl-s6EYEbyafPAw1OTJY59lS7P6g");
+		
+//		wechatMemberBiz.getUserList("", "");
+//		return wechatPublicAuthService.authWechatPublicAccount();
+//		return wechatPublicAuthBiz.authWechatPublicAccount();
+//		baseOutput.setData(wechatGroups);
+	    baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+	    baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+		return baseOutput;
+	}
+	
 }

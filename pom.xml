@@ -20,6 +20,8 @@
    		<module>marketing-tool-vo</module>
    		<module>marketing-tool-job</module>
    		<module>marketing-tool-common</module>
+		<module>marketing-tool-biz</module>
+		<module>marketing-tool-biz-impl</module>   		
 	</modules>
 	<!-- parent -->
 	<parent>
@@ -137,6 +139,11 @@
 		   <groupId>joda-time</groupId>
 		   <artifactId>joda-time</artifactId>
 	   </dependency>
+
+<!-- 		<dependency>  
+		    <groupId>org.springframework.boot</groupId>  
+		    <artifactId>spring-boot-starter-freemarker</artifactId>  
+		</dependency>  --> 
 	      
     </dependencies>
 

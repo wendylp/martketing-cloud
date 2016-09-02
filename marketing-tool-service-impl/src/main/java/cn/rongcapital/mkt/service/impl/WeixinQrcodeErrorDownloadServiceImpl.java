@@ -34,7 +34,7 @@ public class WeixinQrcodeErrorDownloadServiceImpl implements WeixinQrcodeErrorDo
 	 * @Date 2016.08.26
 	 */
 	@Override
-	public BaseOutput weixinQrcodeErrorDownload(Integer batchId) {
+	public BaseOutput weixinQrcodeErrorDownload(String batchId) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE,null);
 		
 		WechatQrcodeLog wechatQrcodeLog = new WechatQrcodeLog();

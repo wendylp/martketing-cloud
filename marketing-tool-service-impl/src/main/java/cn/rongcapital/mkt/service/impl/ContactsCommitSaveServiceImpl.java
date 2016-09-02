@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,12 +15,18 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.FileNameEnum;
 import cn.rongcapital.mkt.common.enums.GenderEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.ContactListDao;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
+import cn.rongcapital.mkt.dao.DefaultContactTemplateDao;
+import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ContactList;
 import cn.rongcapital.mkt.po.ContactTemplate;
+import cn.rongcapital.mkt.po.DefaultContactTemplate;
+import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.service.ContacsCommitSaveService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.ContactsCommitDelIn;
@@ -38,6 +45,9 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 
 	@Autowired
 	ContactTemplateDao contactTemplateDao;
+	
+	 @Autowired
+	 private DefaultContactTemplateDao defaultContactTemplateDao;
 	
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
@@ -302,30 +312,48 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 				ApiConstant.INT_ZERO, null);
 
 		List<ContactList> list = contactDao.selectListByContactIdAndCommitTime(contact);
-		if (!CollectionUtils.isEmpty(list)) {
-			result.setTotal(list.size());
-			for (ContactList item : list) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("download_url", item.getDownloadUrl());
-				result.getData().add(map);
-			}
-		}
+		
+		 Map<String, Object> map = new HashMap<String, Object>();
+		 String fileName = generateDownloadFile(list);
+		 map.put("download_url", fileName);
+		 result.getData().add(map);
 
 		return result;
 	}
 	
-	public static void main(String[] args) {
-		String gender = "女";
-		 if (gender != null) {
-	            if (GenderEnum.MALE.getDescription().equals(gender)) {
-	             System.out.println(GenderEnum.MALE.getStatusCode());
-	            } else if (GenderEnum.FEMALE.getDescription().equals(gender)) {
-	            	  System.out.println(GenderEnum.FEMALE.getStatusCode());
-	            } else if (GenderEnum.OTHER.getDescription().equals(gender)) {
-	            	  System.out.println(GenderEnum.OTHER.getStatusCode());
-	            } else if (GenderEnum.UNSURE.getDescription().equals(gender)) {
-	            	  System.out.println(GenderEnum.UNSURE.getStatusCode());
-	            }
-	        }
-	}
+	
+    @SuppressWarnings("rawtypes")
+	private <T extends BaseQuery, D extends BaseDao> String generateDownloadFile(List<T> dataList) {
+        DefaultContactTemplate defaultContactTemplate = new DefaultContactTemplate();
+        defaultContactTemplate.setPageSize(50);
+        List<DefaultContactTemplate> defaultContactTemplateList = defaultContactTemplateDao.selectList(defaultContactTemplate);
+        List<Map<String, String>> columnsMap = transferNameListtoMap(defaultContactTemplateList);
+
+        File file = FileUtil.generateFileforDownload(columnsMap, dataList,FileNameEnum.getNameByCode(13));
+
+        return file.getName();
+    }
+
+    // 用于转换ImportTemplate,转换后map的key为字段名,value为对应的中文名
+    public static List<Map<String, String>> transferNameListtoMap(List<DefaultContactTemplate> defaultContactTemplateList) {
+        List<Map<String, String>> columnNamesMap = new ArrayList<>();
+        if (CollectionUtils.isEmpty(defaultContactTemplateList)) {
+            Map<String, String> emptyMap = new HashMap<>();
+            emptyMap.put("", "");
+            columnNamesMap.add(emptyMap);
+        } else {
+            Map<String, String> idMap = new HashMap<>();
+            idMap.put("id", "id");
+            columnNamesMap.add(idMap);
+
+            for (DefaultContactTemplate defaultContactTemplate : defaultContactTemplateList) {
+                Map<String, String> map = new HashMap<>();
+                map.put(defaultContactTemplate.getFieldCode(), defaultContactTemplate.getFieldName());
+                columnNamesMap.add(map);
+            }
+        }
+        return columnNamesMap;
+    }
+    
+   
 }
