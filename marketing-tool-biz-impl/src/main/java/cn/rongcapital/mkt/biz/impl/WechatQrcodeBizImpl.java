@@ -217,12 +217,24 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 		try {
 //			WechatQrcode wechatQrcode = (WechatQrcode) JSONObject.parseObject(wechatQrcodeStr, WechatQrcode.class); 
 			WechatQrcode wechatQrcode = new WechatQrcode();
+			
+			if(wechatQrcodeIn.getId()!=0){
+//				wechatQrcode.setWxName(wechatQrcodeIn.getWx_name());
+			}
+			
+			if(StringUtils.isNotEmpty(wechatQrcodeIn.getWx_acct())){
+				wechatQrcode.setWxAcct(wechatQrcodeIn.getWx_acct());
+			}
+			
 			if(StringUtils.isNotEmpty(wechatQrcodeIn.getWx_name())){
 				wechatQrcode.setWxName(wechatQrcodeIn.getWx_name());
 			}			
 			if(wechatQrcodeIn.getCh_code()!=null){
 				wechatQrcode.setChCode(wechatQrcodeIn.getCh_code());
 			}
+/*			if(StringUtils.isNotEmpty(wechatQrcodeIn.getCh_name())){
+				wechatQrcode.setc(wechatQrcodeIn.getCh_code());
+			}*/
 			if(StringUtils.isNotEmpty(wechatQrcodeIn.getFixed_audience())){
 				wechatQrcode.setAudienceName(wechatQrcodeIn.getFixed_audience());
 				wechatQrcode.setIsAudience(int2OneByte(1));
@@ -232,6 +244,11 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 			if(wechatQrcode.getExpirationTime()!=null){
 				wechatQrcode.setExpirationTime(wechatQrcode.getExpirationTime());
 			}
+			
+			if(StringUtils.isNotEmpty(wechatQrcodeIn.getQrcode_name())){
+				wechatQrcode.setQrcodeName(wechatQrcodeIn.getQrcode_name());
+			}
+			
 			if(StringUtils.isNotEmpty(wechatQrcodeIn.getComments())){
 				wechatQrcode.setComments(wechatQrcodeIn.getComments());
 			}			
@@ -258,8 +275,7 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 			if(wechatQrcodeTickets!=null&&wechatQrcodeTickets.size()>0){
 				WechatQrcodeTicket wechatQrcodeTicketTemp = wechatQrcodeTickets.get(0);
 				wechatQrcode.setQrcodePic(String.valueOf(wechatQrcodeTicketTemp.getId())+".jpg");
-				wechatQrcode.setQrcodeUrl(wechatQrcodeIn.getQrcode_url());
-				wechatQrcode.setQrcodeName(String.valueOf(wechatQrcodeTicketTemp.getId()));
+				wechatQrcode.setQrcodeUrl(wechatQrcodeIn.getQrcode_url());				
 				wechatQrcode.setTicket(String.valueOf(wechatQrcodeTicketTemp.getId()));
 				wechatQrcodeTicketTemp.setState(1);
 				wechatQrcodeTicketDao.updateById(wechatQrcodeTicketTemp);
