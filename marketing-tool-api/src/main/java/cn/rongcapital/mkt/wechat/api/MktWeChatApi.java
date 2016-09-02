@@ -505,7 +505,8 @@ public class MktWeChatApi {
 	@POST
 	@Path("/mkt.weixin.qrcode.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput createQrcode(@NotEmpty @QueryParam("user_token") String userToken,@Valid WechatQrcodeIn body) {
+	public BaseOutput createQrcode(@Valid WechatQrcodeIn body) {
+		logger.info("createQrcode is start .....................");
 //		String wechatQrcodeStr="{\"wx_name\": \"果倍爽\",     \"ch_code\": 112,     \"is_audience\": 0,     \"audience_name\": \"90后\",     \"related_tags\": \"101;103;112\",     \"comments\": \"备注1\",     \"status\": 1,     \"qrcode_pic\": \"果倍爽\",     \"qrcode_url\": \"https://www.baidu.com\",\"ticket\":\"gQFH7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xLzNqdDh5SXZsRnh0dXhhZVFXeGNXAAIEEH61VwMEAAAAAA==\"}";
 //		String wechatQrcodeStr="{\"wxName\":\"sfasfa\"}";
 		BaseOutput baseOutput = wechatQrcodeBiz.createQrcode(body);
