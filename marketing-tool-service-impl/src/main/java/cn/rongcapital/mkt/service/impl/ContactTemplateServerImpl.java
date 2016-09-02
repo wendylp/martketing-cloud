@@ -100,13 +100,13 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						// 二维码链接
 						String qr = env.getProperty("contact.pc.url") + "?contact_id=" + cont_id;
 						// 生成短链
-						String qrShort = env.getProperty("contact.short.url") + ShortUrlCreator.generateShortUrl(qr);
+						String qrShort = ShortUrlCreator.generateShortUrl(qr);
 						
 						param.setQrcodeUrl(qr);
 						param.setQrcodeShorturl(qrShort);
 						
 						// 生成二维码
-						boolean qrCreaterSuccess = QrCreater.generateQr(qrShort, "/rc/data/downloads/contactlist/" + cont_id + ".jpg");
+						boolean qrCreaterSuccess = QrCreater.generateQr( env.getProperty("contact.short.url") + qrShort, "/rc/data/downloads/contactlist/" + param.getContactId() + ".jpg");
 						if(qrCreaterSuccess) {
 							// 设置二维码名
 							param.setQrcodePic(cont_id + ".jpg");
@@ -211,13 +211,13 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 							// 二维码链接
 							String qr = env.getProperty("contact.pc.url") + "?contact_id=" + param.getContactId();
 							// 生成短链
-							String qrShort = env.getProperty("contact.short.url") + ShortUrlCreator.generateShortUrl(qr);
+							String qrShort = ShortUrlCreator.generateShortUrl(qr);
 							
 							param.setQrcodeUrl(qr);
 							param.setQrcodeShorturl(qrShort);
 							
 							// 生成二维码
-							boolean qrCreaterSuccess = QrCreater.generateQr(qrShort, "/rc/data/downloads/contactlist/" + param.getContactId() + ".jpg");
+							boolean qrCreaterSuccess = QrCreater.generateQr( env.getProperty("contact.short.url") + qrShort, "/rc/data/downloads/contactlist/" + param.getContactId() + ".jpg");
 							
 							if(qrCreaterSuccess) {
 								// 设置二维码名
