@@ -22,4 +22,16 @@ public interface WechatAnalysisDaysListService {
 	 * @throws
 	 */
 	BaseOutput analysisDaysList(String startDate,String endDate,Integer daysType,String chCode,String wxName);
+	
+	/**
+	 * @Title: analysisHoursList   
+	 * @Description: 统计时间点的关注信息  
+	 * @param: @param date		查询日期
+	 * @param: @param chCode	渠道编码
+	 * @param: @param wxName	微信名称
+	 * @param: @return      
+	 * @return: BaseOutput      
+	 * @throws
+	 */
+	BaseOutput analysisHoursList(String date,String chCode,String wxName);  
 }

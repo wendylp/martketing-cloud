@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,114 +23,189 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 @Service
 public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysListService {
 	
-	//关注时间数据库字段
+	// 关注时间数据库字段
 	private static final String FOCUS_FIELDNAME = "focus_datetime";
-	//取消关注时间数据库字段
+	// 取消关注时间数据库字段
 	private static final String UNFOCUS_FIELDNAME = "unfocus_datetime";
-	//计算天数
+	// 按天查询标识
+	private static final Integer DAY_FLAG = 1;
+	// 按小时查询标识
+	private static final Integer HOUR_FLAG = 2;
+	// 计算天数
 	private static final Long CALCULATE_VARI = 86400000L;
 
 	@Autowired
 	private WechatQrcodeFocusDao wechatQrcodeFocusDao;
 	
+	/**
+	 * 按天统计
+	 */
 	@Override
 	public BaseOutput analysisDaysList(String startDate, String endDate, Integer daysType, String chCode,
 			String wxName) {
-		  BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-                  ApiConstant.INT_ZERO, null);
+		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
 		try {
-			  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			  //返回结果集
-			  Map<String, Object> resultMap = new HashMap<>();
-			  //日期格式化
-			  Date sDate = sdf.parse(startDate);
-			  Date eDate = sdf.parse(endDate);
-			  //计算数组长度
-			  long s = sDate.getTime()/CALCULATE_VARI; 
-			  long e = eDate.getTime()/CALCULATE_VARI;
-			  //数组长度
-			  int arrayLenth = (int)(e - s)+1;
-			  //参数数组定义
-			  String[] dateArray = new String[arrayLenth];	//查询日期
-			  Integer[] focusCountArray = new Integer[arrayLenth];	//关注数量
-			  Integer[] unFocusCountArray = new Integer[arrayLenth];	//取消关注数量
-			  Integer[] creFocusCountArray = new Integer[arrayLenth];	//净增关注数量
-			  //临时日期变量
-			  Date tempDate = sDate;
-			  //数量记录
-			  int i = 0;
-			  Calendar calendar = new GregorianCalendar(); 
-			  calendar.setTime(tempDate);
-			  while(tempDate.compareTo(eDate) <= 0){
-				  Integer foucusCount = getCunt(tempDate, FOCUS_FIELDNAME, chCode, wxName);	//关注数量
-				  Integer unFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName);//取消关注数量
-				  Integer creFocusCount = foucusCount - unFocusCount;	//净增数量
-				  focusCountArray[i] = foucusCount;
-				  unFocusCountArray[i] = unFocusCount;
-				  creFocusCountArray[i] = creFocusCount;
-				  dateArray[i] = sdf.format(tempDate);
-				  //向后加一天
-				  calendar.add(Calendar.DATE,1);
-				  tempDate=calendar.getTime();
-				  i++;
-			  }
-			 List<Map<String, Object>> paramList = new ArrayList<>();
-			 paramList.add(getMap("新增关注",ArrayUtils.subarray(focusCountArray, 0, i)));
-			 paramList.add(getMap("流失关注",ArrayUtils.subarray(unFocusCountArray, 0, i)));
-			 paramList.add(getMap("净增关注",ArrayUtils.subarray(creFocusCountArray, 0, i)));
-			 resultMap.put("series",paramList);
-			 resultMap.put("date", ArrayUtils.subarray(dateArray, 0, i));
-			 resultMap.put("days_type", daysType);
-			 resultMap.put("wx_name", wxName);
-			 resultMap.put("ch_code", chCode);
-			 baseOutput.getData().add(resultMap);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			// 返回结果集
+			Map<String, Object> resultMap = new HashMap<>();
+			// 日期格式化
+			Date sDate = sdf.parse(startDate);
+			Date eDate = sdf.parse(endDate);
+			// 计算数组长度
+			long s = sDate.getTime() / CALCULATE_VARI;
+			long e = eDate.getTime() / CALCULATE_VARI;
+			// 数组长度
+			int arrayLenth = (int) (e - s) + 1;
+			// 参数数组定义
+			String[] dateArray = new String[arrayLenth]; // 查询日期
+			Integer[] focusCountArray = new Integer[arrayLenth]; // 关注数量
+			Integer[] unFocusCountArray = new Integer[arrayLenth]; // 取消关注数量
+			Integer[] creFocusCountArray = new Integer[arrayLenth]; // 净增关注数量
+			// 临时日期变量
+			Date tempDate = sDate;
+			// 数量记录
+			int i = 0;
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(tempDate);
+			while (tempDate.compareTo(eDate) <= 0) {
+				Integer foucusCount = getCunt(tempDate, FOCUS_FIELDNAME, chCode, wxName, DAY_FLAG); // 关注数量
+				Integer unFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName, DAY_FLAG);// 取消关注数量
+				Integer creFocusCount = foucusCount - unFocusCount; // 净增数量
+				focusCountArray[i] = foucusCount;
+				unFocusCountArray[i] = unFocusCount;
+				creFocusCountArray[i] = creFocusCount;
+				dateArray[i] = sdf.format(tempDate);
+				// 向后加一天
+				calendar.add(Calendar.DATE, 1);
+				tempDate = calendar.getTime();
+				i++;
+			}
+			List<Map<String, Object>> paramList = new ArrayList<>();
+			paramList.add(getMap("新增关注", ArrayUtils.subarray(focusCountArray, 0, i)));
+			paramList.add(getMap("流失关注", ArrayUtils.subarray(unFocusCountArray, 0, i)));
+			paramList.add(getMap("净增关注", ArrayUtils.subarray(creFocusCountArray, 0, i)));
+			resultMap.put("series", paramList);
+			resultMap.put("date", ArrayUtils.subarray(dateArray, 0, i));
+			resultMap.put("days_type", daysType);
+			resultMap.put("wx_name", wxName);
+			resultMap.put("ch_code", chCode);
+			baseOutput.getData().add(resultMap);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return baseOutput;
 	}
-	
-	
-	
+
 	
 	/**
-	 * @Title: getCunt   
-	 * @Description: 获取相应数量 
-	 * @param: @param searchDate	查询日期
-	 * @param: @param fieldName		字段名称
-	 * @param: @param chCode		渠道编码
-	 * @param: @param wxName		微信名称
-	 * @param: @return      
-	 * @return: Integer      
-	 * @throws
+	 * 按小时统计
 	 */
-	private Integer getCunt(Date searchDate,String fieldName,String chCode,String wxName ){
-		//参数集合
+	@Override
+	public BaseOutput analysisHoursList(String date, String chCode, String wxName) {
+		Calendar calendar = Calendar.getInstance();
+		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		try {
+			// 参数数组定义
+			String[] dateArray = new String[24]; // 查询日期
+			Integer[] focusCountArray = new Integer[24]; // 关注数量
+			Integer[] unFocusCountArray = new Integer[24]; // 取消关注数量
+			Integer[] creFocusCountArray = new Integer[24]; // 净增关注数量
+			// 返回结果集
+			Map<String, Object> resultMap = new HashMap<>();
+
+			Map<String, Date> dateMap = getDate(date);
+			// 日期参数（yMdH)
+			Date hourDate = dateMap.get("hourDate");
+			// 日期参数（yMd)
+			Date dayDate = dateMap.get("dayDate");
+			// 当前日期（yMd)
+			Date nowDayDate = dateMap.get("nowDayDate");
+			// 当前日期（yMdH)
+			Date nowhourDate = dateMap.get("nowhourDate");
+			// 今天0点(ymd 00)
+			Date todayZero = dateMap.get("todayZero");
+
+			// 判断今天昨天,值为-1为昨天，否则为今天
+			int compareValue = dayDate.compareTo(nowDayDate);
+			Date tempDate = hourDate;
+			int i = 0;
+			Date maxDate = compareValue == -1 ? todayZero : nowhourDate;
+			while (tempDate.compareTo(maxDate) <= 0) {
+				Integer foucusCount = getCunt(tempDate, FOCUS_FIELDNAME, chCode, wxName, HOUR_FLAG); // 关注数量
+				Integer unFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName, HOUR_FLAG);// 取消关注数量
+				Integer creFocusCount = foucusCount - unFocusCount; // 净增数量
+				focusCountArray[i] = foucusCount;
+				unFocusCountArray[i] = unFocusCount;
+				creFocusCountArray[i] = creFocusCount;
+				dateArray[i] = sdf.format(tempDate);
+				calendar.setTime(tempDate);
+				calendar.add(Calendar.HOUR_OF_DAY, 1);
+				tempDate = calendar.getTime();
+				i++;
+			}
+
+			List<Map<String, Object>> paramList = new ArrayList<>();
+			paramList.add(getMap("新增关注", ArrayUtils.subarray(focusCountArray, 0, i)));
+			paramList.add(getMap("流失关注", ArrayUtils.subarray(unFocusCountArray, 0, i)));
+			paramList.add(getMap("净增关注", ArrayUtils.subarray(creFocusCountArray, 0, i)));
+			resultMap.put("series", paramList);
+			resultMap.put("date", ArrayUtils.subarray(dateArray, 0, i));
+			resultMap.put("wx_name", wxName);
+			resultMap.put("ch_code", chCode);
+			baseOutput.getData().add(resultMap);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return baseOutput;
+	}
+
+	/**
+	 * 获取不同格式的日期
+	 */
+	private Map<String, Date> getDate(String strDate) {
+		Map<String, Date> dateMap = new HashMap<>();
+		try {
+			SimpleDateFormat hourFormat = new SimpleDateFormat("yyyy-MM-dd HH");
+			SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date dayDate = dayFormat.parse(strDate);
+			dateMap.put("dayDate", dayDate);
+			dateMap.put("hourDate", hourFormat.parse(hourFormat.format(dayDate)));
+			Date nowDayDate = dayFormat.parse(dayFormat.format(new Date()));
+			dateMap.put("nowDayDate", nowDayDate);
+			dateMap.put("nowhourDate", hourFormat.parse(hourFormat.format(new Date())));
+			dateMap.put("todayZero", hourFormat.parse(hourFormat.format(nowDayDate)));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return dateMap;
+	}
+
+	/**
+	 * 获取相应数量
+	 */
+	private Integer getCunt(Date searchDate, String fieldName, String chCode, String wxName, Integer flag) {
+		String sqlField = flag == 1 ? "searchDate" : "searchHours";
+		// 参数集合
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put("searchDate", searchDate);
+		paramMap.put(sqlField, searchDate);
 		paramMap.put("fieldName", fieldName);
 		paramMap.put("chCode", chCode);
 		paramMap.put("wxName", wxName);
 		return wechatQrcodeFocusDao.getFocusOrUnFocusCount(paramMap);
 	}
-	
-	
+
 	/**
-	 * @Title: getMap   
-	 * @Description: 封装参数集合  
-	 * @param: @param value1
-	 * @param: @param value2
-	 * @param: @return      
-	 * @return: Map<String,Object>      
-	 * @throws
+	 * 封装参数集合 
 	 */
-	private Map<String, Object> getMap(String value1,Object value2){
+	private Map<String, Object> getMap(String value1, Object value2) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("name", value1);
 		map.put("data", value2);
 		return map;
 	}
-	
-	
 
 }

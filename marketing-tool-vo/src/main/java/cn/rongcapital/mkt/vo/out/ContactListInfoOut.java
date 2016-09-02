@@ -5,7 +5,7 @@ import java.util.List;
 public class ContactListInfoOut {
 	private String contact_id;
 	private String contact_name;
-	private String qrcode_url;
+	private String qrcode_shorturl;
 	private String qrcode_pic;
 	private String contact_status;
 	private String contact_descript;
@@ -27,12 +27,13 @@ public class ContactListInfoOut {
 		this.contact_name = contact_name;
 	}
 
-	public String getQrcode_url() {
-		return qrcode_url;
+
+	public String getQrcode_shorturl() {
+		return qrcode_shorturl;
 	}
 
-	public void setQrcode_url(String qrcode_url) {
-		this.qrcode_url = qrcode_url;
+	public void setQrcode_shorturl(String qrcode_shorturl) {
+		this.qrcode_shorturl = qrcode_shorturl;
 	}
 
 	public String getQrcode_pic() {

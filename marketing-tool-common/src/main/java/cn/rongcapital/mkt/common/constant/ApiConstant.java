@@ -224,6 +224,11 @@ public class ApiConstant {
 	public static final String upload_img_path_large = "/rc/data/downloads/large/";
 	public static final String upload_img_path_middle = "/rc/data/downloads/middle/";
 	public static final String upload_img_path_small = "/rc/data/downloads/small/";
+		
+	public static final String return_img_path_large = "large/";
+	public static final String return_img_path_middle = "middle/";
+	public static final String return_img_path_small = "small/";
+	
 	
 	public static final String upload_img_path = "D:\\soft\\";
 	

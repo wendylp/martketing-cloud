@@ -32,15 +32,16 @@ public class WechatChanellUpdateServiceImpl implements WechatChanellUpdateServic
 			SecurityContext securityContext) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
+		WechatChannel wChannel = new WechatChannel();
+		wChannel.setType(1);
+		wChannel.setIsRemoved(1);
 		
+		wechatChannelDao.delete(wChannel);
 		//获取渠道名称数组
 		String[] chaNames = wechatChanellUpdateIn.getChaNames();
 		for (String chaName : chaNames) {
 			WechatChannel wechatChannel = new WechatChannel();
-			Integer count = wechatChannelDao.getWechatChaCountByName(chaName);
-			if(count > 0){
-				continue;
-			}
+
 			wechatChannel.setChName(chaName);
 			wechatChannelDao.insert(wechatChannel);
 

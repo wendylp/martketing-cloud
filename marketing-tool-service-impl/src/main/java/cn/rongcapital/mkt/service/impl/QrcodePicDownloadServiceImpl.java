@@ -39,9 +39,9 @@ public class QrcodePicDownloadServiceImpl implements QrcodePicDownloadService {
 			
 			for (WechatQrcode w : wechatQrcodes) {
 				Map<String, Object> wechatQrcodetMap = new HashMap<String, Object>();
-				wechatQrcodetMap.put("qrcode_pic1", "/large/" + w.getQrcodePic());
-				wechatQrcodetMap.put("qrcode_pic2", "/middle/" + w.getQrcodePic());
-				wechatQrcodetMap.put("qrcode_pic3", "/small/" + w.getQrcodePic());
+				wechatQrcodetMap.put("qrcode_pic1", "large/" + w.getQrcodePic());
+				wechatQrcodetMap.put("qrcode_pic2", "middle/" + w.getQrcodePic());
+				wechatQrcodetMap.put("qrcode_pic3", "small/" + w.getQrcodePic());
 				wechatQrcodetMap.put("qrcode_url", w.getQrcodeUrl());
 				result.getData().add(wechatQrcodetMap);
 			}
