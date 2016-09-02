@@ -58,7 +58,7 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 				Map<String, Object> contactListMap = new HashMap<String, Object>();
 				contactListMap.put("contact_id", contactTem.getContactId());
 				contactListMap.put("contact_name", contactTem.getContactName());
-				contactListMap.put("qrcode_url", contactTem.getQrcodeUrl());
+				contactListMap.put("qrcode_url", contactTem.getQrcodeShorturl());
 				contactListMap.put("qrcode_pic", contactTem.getQrcodePic());
 				contactListMap.put("user_count", contactTemplateList.size());
 				contactListMap.put("contact_status",contactTem.getStatus());
