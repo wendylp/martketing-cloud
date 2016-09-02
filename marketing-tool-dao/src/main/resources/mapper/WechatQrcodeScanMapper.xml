@@ -89,5 +89,19 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<!-- 总扫码次数  -->
+	<select id="getTotalScan" parameterType="java.lang.String" resultType="int">
+		<![CDATA[SELECT COUNT(id) as dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		where qrcode_id = #{qrcodeId}
+	</select>
+	
+	<!-- 总扫码人数  -->
+	<select id="getTotalScanUser" parameterType="java.lang.String" resultType="int">
+		<![CDATA[SELECT COUNT(DISTINCT user_id) as dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		where qrcode_id = #{qrcodeId}
+	</select>
+	
 	
 </mapper>

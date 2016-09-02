@@ -43,7 +43,7 @@ public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveSe
 	 * @Date 2016.08.26
 	 */
 	@Override
-	public BaseOutput weixinQrcodeBatchSave(Integer batchId, String expirationTime, String qrcodeTagIds,
+	public BaseOutput weixinQrcodeBatchSave(String batchId, String expirationTime, String qrcodeTagIds,
 			Integer qrcodeStatus) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
