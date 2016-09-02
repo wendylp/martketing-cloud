@@ -47,7 +47,7 @@ import cn.rongcapital.mkt.biz.WechatMemberBiz;
 import cn.rongcapital.mkt.biz.WechatQrcodeBiz;
 import cn.rongcapital.mkt.biz.WechatRegisterBiz;
 import cn.rongcapital.mkt.biz.impl.BaseBiz;
-import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXin;
+//import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXin;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
@@ -575,10 +575,9 @@ public class MktWeChatApi {
 			
 			SubscribeVO subscribeVO = (SubscribeVO)unmarshaller.unmarshal(textxmlis);
 			
-			ProcessReceiveMessageOfWeiXin handler = new ProcessReceiveMessageOfWeiXin();
-			String textxmlBack = handler.process(textxml.getBytes());
-			
-			System.out.println(textxmlBack);
+//			ProcessReceiveMessageOfWeiXin handler = new ProcessReceiveMessageOfWeiXin();
+//			String textxmlBack = handler.process(textxml.getBytes());			
+//			System.out.println(textxmlBack);
 		} catch (JAXBException e) {			
 			e.printStackTrace();
 		} catch (FactoryConfigurationError e) {			
