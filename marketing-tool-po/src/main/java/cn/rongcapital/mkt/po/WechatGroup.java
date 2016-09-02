@@ -23,6 +23,8 @@ public class WechatGroup extends BaseQuery {
 
     private Date updateTime;
 
+    private Integer count;
+
     public Integer getId() {
         return id;
     }
@@ -93,5 +95,13 @@ public class WechatGroup extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }
