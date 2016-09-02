@@ -307,6 +307,8 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 		}
 		contact.setStartTime(startTime);
 		contact.setEndTime(endTime);
+		contact.setStartIndex(null);
+		contact.setPageSize(null);
 
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
