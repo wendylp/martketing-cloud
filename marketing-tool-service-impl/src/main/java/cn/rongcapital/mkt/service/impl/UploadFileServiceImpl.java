@@ -600,7 +600,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 					if(wechatQrcodeTickets!=null && wechatQrcodeTickets.size()>0){
 						WechatQrcodeTicket wechatQrcodeTicketTemp = wechatQrcodeTickets.get(0);
 						wq.setQrcodePic(String.valueOf(wechatQrcodeTicketTemp.getId())+".jpg");
-						//wq.setQrcodeUrl(wechatQrcodeIn.getQrcode_url());				
+						//wq.setQrcodeUrl(wechatQrcodeIn.getQrcode_url());
 						wq.setTicket(String.valueOf(wechatQrcodeTicketTemp.getId()));
 						wechatQrcodeTicketTemp.setState(1);
 					}
@@ -615,7 +615,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 				
 				//把头写进去
 				csvWriter.write("二维码名称(必填，20字以内，不可重复)");
-				csvWriter.write("渠道分类(必填，须系统中渠道分类选框中医存在的分类，选择其一)");
+				csvWriter.write("渠道分类(必填，须系统中渠道分类选框中已存在的分类，选择其一)");
 				csvWriter.write("公众号名称");
 				csvWriter.write("失败原因");
 				csvWriter.endRecord();

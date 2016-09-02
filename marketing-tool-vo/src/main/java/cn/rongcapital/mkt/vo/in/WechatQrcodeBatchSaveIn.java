@@ -13,7 +13,6 @@ public class WechatQrcodeBatchSaveIn extends BaseInput{
 	@JsonProperty("batch_id")
 	private String batchId;
 	
-	@NotEmpty
     private List<AssociationTag> association_tags;
 	
 	@NotEmpty
