@@ -13,12 +13,19 @@ import org.hibernate.validator.constraints.NotEmpty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class WechatQrcodeIn{
 
+	private long id;
+	
+	private String wx_acct;
+	
 	@NotEmpty
     private String wx_name;
-    
-	private String qrcode_name;
 	
     private Integer ch_code;
+    
+    private String ch_name;
+    
+    private String qrcode_name;
+    
 //    @NotNull
     private Byte is_audience;
     @NotEmpty
@@ -131,6 +138,35 @@ public class WechatQrcodeIn{
 
 	public void setQrcode_name(String qrcode_name) {
 		this.qrcode_name = qrcode_name;
+	}
+
+	@JsonProperty("id")
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	@JsonProperty("wx_acct")
+	public String getWx_acct() {
+		return wx_acct;
+	}
+
+	public void setWx_acct(String wx_acct) {
+		this.wx_acct = wx_acct;
+	}
+
+	@JsonProperty("ch_name")
+	public String getCh_name() {
+		return ch_name;
+	}
+
+	public void setCh_name(String ch_name) {
+		this.ch_name = ch_name;
 	}    
+	
+	
 	
 }
