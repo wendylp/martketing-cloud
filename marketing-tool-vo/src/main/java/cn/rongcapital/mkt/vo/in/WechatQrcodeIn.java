@@ -9,9 +9,11 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import cn.rongcapital.mkt.vo.BaseInput;
+
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class WechatQrcodeIn{
+public class WechatQrcodeIn extends BaseInput{
 
 	private long id;
 	
