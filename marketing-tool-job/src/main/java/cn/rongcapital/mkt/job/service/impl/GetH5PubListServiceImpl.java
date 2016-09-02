@@ -29,9 +29,15 @@ import cn.rongcapital.mkt.job.vo.in.H5Pub;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.po.WechatRegister;
 
-/**
- * Created by Yunfeng on 2016-6-17.
- */
+/*************************************************
+ * @功能及特点的描述简述: 同步微信公众号接口
+ * 
+ * @see （与该类关联的类): TaskService
+ * @对应项目名称: MC系统
+ * @author: 白云峰
+ * @version: v1.2 @date(创建、开发日期): 2016-6-17 最后修改日期: 2016-09-02
+ * @复审人: 丛树林
+ *************************************************/
 @Service
 public class GetH5PubListServiceImpl implements TaskService {
 
@@ -69,17 +75,18 @@ public class GetH5PubListServiceImpl implements TaskService {
 			for (WebchatAuthInfo info : selectListByIdList) {
 				WechatRegister wechatRegister = wechatRegisterBiz.getAuthInfo(info.getAuthorizerAppid(),
 						info.getAuthorizerRefreshToken());
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("wx_acct", wechatRegister.getWxAcct());
+				Long id = wechatRegisterDao.selectPersonalId(map);
 
-				int count = wechatRegisterDao.selectListCount(wechatRegister);
-
-				if (count == 0) {
+				if (id == null) {
 					wechatRegisterDao.insert(wechatRegister);
-					logger.debug("insert into wechat_register id:" + wechatRegister.getId());
+					logger.info("insert into wechat_register id:" + wechatRegister.getId());
 				} else {
-					wechatRegisterDao.updateInforByWxAcct(wechatRegister);
-					logger.debug("update wechat_register id:" + wechatRegister.getId());
+					wechatRegister.setId(Integer.valueOf(id.toString()));
+					wechatRegisterDao.updateById(wechatRegister);
+					logger.info("update wechat_register id:" + wechatRegister.getId());
 				}
-
 			}
 		}
 	}
