@@ -292,6 +292,7 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 			Date createTime = wechatQrcode.getCreateTime();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			mapBack.put("createtime", sdf.format(createTime));
+			
 			data.add(mapBack);
 			baseOutput.setData(data);
 		} catch (Exception e) {
