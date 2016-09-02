@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.wechat.api;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -22,6 +24,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.FactoryConfigurationError;
+import javax.xml.stream.XMLInputFactory;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -31,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tagsin.wechat_sdk.App;
+import com.tagsin.wechat_sdk.msg.WxMsgHandler;
 
 import cn.rongcapital.mkt.biz.ImgTextAssetBiz;
 import cn.rongcapital.mkt.biz.MessageSendBiz;
@@ -39,6 +47,7 @@ import cn.rongcapital.mkt.biz.WechatMemberBiz;
 import cn.rongcapital.mkt.biz.WechatQrcodeBiz;
 import cn.rongcapital.mkt.biz.WechatRegisterBiz;
 import cn.rongcapital.mkt.biz.impl.BaseBiz;
+import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXin;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
@@ -68,6 +77,7 @@ import cn.rongcapital.mkt.vo.in.WechatQrcodeBatchSaveIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInData;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInId;
+import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -537,7 +547,48 @@ public class MktWeChatApi {
 		return "success";		
 	}
 	
-	
+	/**
+	 * @param componentVerifyTicketIn
+	 * @param msg_signature
+	 * @param timestamp
+	 * @param nonce
+	 * 测试
+	 * @return
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket1")
+	@Consumes({MediaType.TEXT_XML})
+	public String getComponentVerifyTicket1( String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){
+		
+		try {
+			
+			if(textxml.contentEquals("Event")){
+				
+			}
+			
+			JAXBContext context = JAXBContext.newInstance(SubscribeVO.class);  
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			
+			XMLInputFactory xmlFactory  = XMLInputFactory.newInstance();  
+
+			InputStream   textxmlis   =   new   ByteArrayInputStream(textxml.getBytes());   
+			
+			SubscribeVO subscribeVO = (SubscribeVO)unmarshaller.unmarshal(textxmlis);
+			
+			ProcessReceiveMessageOfWeiXin handler = new ProcessReceiveMessageOfWeiXin();
+			String textxmlBack = handler.process(textxml.getBytes());
+			
+			System.out.println(textxmlBack);
+		} catch (JAXBException e) {			
+			e.printStackTrace();
+		} catch (FactoryConfigurationError e) {			
+			e.printStackTrace();
+		}
+
+		
+//		webchatComponentVerifyTicketService.insert(componentVerifyTicketIn,msg_signature, timestamp, nonce);
+		return "success";		
+	}
 	/**
 	 * @param userToken
 	 * @param ver
