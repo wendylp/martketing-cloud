@@ -417,7 +417,7 @@ public class MktWeChatApi {
 	 * 获取微信Analysis选择的时间
 	 */
 	@GET
-	@Path("/mkt.weixin.analysis.days.list")
+	@Path("/mkt.weixin.analysis.date")
 	public BaseOutput weixinQrcodeBatchSave(@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("ver") String ver) {
 		return getWeixinAnalysisDateService.getWeixinAnalysisDate();
@@ -650,6 +650,22 @@ public class MktWeChatApi {
 	    baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
 	    baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
 		return baseOutput;
+	}
+	
+	/**
+	 * @Title: analysisHoursList   
+	 * @Description: 按小时查询关注数据  
+	 * @param: @param date
+	 * @param: @param chCode
+	 * @param: @param wxName
+	 * @param: @return      
+	 * @return: BaseOutput      
+	 * @throws
+	 */
+	@GET
+	@Path("mkt.weixin.analysis.hours.list")
+	public BaseOutput analysisHoursList(@NotEmpty @QueryParam("date")String date,@NotEmpty @QueryParam("ch_code")String chCode,@NotEmpty @QueryParam("wx_name")String wxName) {
+		return analysisDaysList.analysisHoursList(date, chCode, wxName);
 	}
 	
 }
