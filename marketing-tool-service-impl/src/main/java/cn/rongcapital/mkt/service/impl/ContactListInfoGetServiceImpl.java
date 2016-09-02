@@ -49,7 +49,7 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 				contactListInfoOut.setContact_id(contactTemplates.get(0).getContactId().toString());
 				contactListInfoOut.setContact_name(contactTemplates.get(0).getContactName());
 				contactListInfoOut.setQrcode_shorturl(env.getProperty("contact.short.url") + contactTemplates.get(0).getQrcodeShorturl());
-				contactListInfoOut.setQrcode_pic("small/" + contactTemplates.get(0).getQrcodePic());
+				contactListInfoOut.setQrcode_pic("contactlist/" + contactTemplates.get(0).getQrcodePic());
 				contactListInfoOut.setContact_descript(contactTemplates.get(0).getContactDescript());
 				contactListInfoOut.setContact_status(contactTemplates.get(0).getStatus().toString());
 				List<Field_List> lists = new ArrayList<Field_List>();
