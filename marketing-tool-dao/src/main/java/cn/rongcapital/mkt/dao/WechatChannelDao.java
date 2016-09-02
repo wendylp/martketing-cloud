@@ -52,4 +52,11 @@ public interface WechatChannelDao extends BaseDao<WechatChannel>{
 	 * @throws
 	 */
 	int getWechatChaCountByName(@Param("chaName") String chaName);
+	
+	/**
+	 * @功能简述: 删除渠道信息
+	 * @param: WechatChannel t
+	 * @return: int
+	 */
+	int delete(WechatChannel t);
 }
