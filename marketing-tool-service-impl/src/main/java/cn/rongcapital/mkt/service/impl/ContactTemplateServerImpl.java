@@ -7,6 +7,7 @@
 *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,11 +18,15 @@ import cn.rongcapital.mkt.po.ContactList;
 import cn.rongcapital.mkt.service.ImportContactsDataToMDataService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.common.util.QrCreater;
+import cn.rongcapital.mkt.common.util.ShortUrlCreator;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
 import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContactTemplateServer;
@@ -30,6 +35,7 @@ import cn.rongcapital.mkt.vo.in.ContactTemplateIn;
 import cn.rongcapital.mkt.vo.in.Field_list;
 
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class ContactTemplateServerImpl implements ContactTemplateServer {
 
 	private static final Integer NO_CHOICE_FOR_IMPORTED_DATA = 0;
@@ -44,6 +50,9 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 
 	private static final String EMPTY_KEY_LIST = "";
 
+	@Autowired
+	Environment env;
+	
 	@Autowired
 	private ContactTemplateDao contactTemplateDao;
 
@@ -87,6 +96,21 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						param.setFieldIndex(field_list.getIndex());
 						param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
 						param.setDelStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+						
+						// 二维码链接
+						String qr = env.getProperty("contact.pc.url") + "?contact_id=" + cont_id;
+						// 生成短链
+						String qrShort = env.getProperty("contact.short.url") + ShortUrlCreator.generateShortUrl(qr);
+						
+						param.setQrcodeUrl(qr);
+						param.setQrcodeShorturl(qrShort);
+						
+						// 生成二维码
+						boolean qrCreaterSuccess = QrCreater.generateQr(qrShort, "/rc/data/downloads/contactlist/" + cont_id + ".jpg");
+						if(qrCreaterSuccess) {
+							// 设置二维码名
+							param.setQrcodePic(cont_id + ".jpg");
+						}
 
 						// 插入
 						contactTemplateDao.insert(param);
@@ -182,6 +206,24 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 							param.setPageViews(0);
 							param.setFieldIndex(field_list.getIndex());
 							param.setUpdateTime(new Date());
+							
+							
+							// 二维码链接
+							String qr = env.getProperty("contact.pc.url") + "?contact_id=" + param.getContactId();
+							// 生成短链
+							String qrShort = env.getProperty("contact.short.url") + ShortUrlCreator.generateShortUrl(qr);
+							
+							param.setQrcodeUrl(qr);
+							param.setQrcodeShorturl(qrShort);
+							
+							// 生成二维码
+							boolean qrCreaterSuccess = QrCreater.generateQr(qrShort, "/rc/data/downloads/contactlist/" + param.getContactId() + ".jpg");
+							
+							if(qrCreaterSuccess) {
+								// 设置二维码名
+								param.setQrcodePic(param.getContactId() + ".jpg");
+							}
+							
 
 							if(isInOldTemplate(param,oriContactTemplateList)){
 								param.setIsShownInFeedback(SHOWN_IN_FEEDBACK.byteValue());
