@@ -72,6 +72,7 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 				map.put("ch_id", wechatChannelLists.get(0).getId());
 			}else {
 				map.put("ch_name", "");//查询不到的时候默认传空字符串
+				map.put("ch_id", "");
 			}
 			
 			
