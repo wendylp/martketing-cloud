@@ -198,7 +198,7 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 				baseOutput.setTotal(1);
 				List<Object> data = new ArrayList<Object>();
 				Map<String,Object> mapBack = new HashMap<String,Object>();
-				mapBack.put("scene_id", wechatQrcodeTicketBack.getId());
+				mapBack.put("scene_id", wechatQrcodeTicketBack.getId()+".jpg");
 				mapBack.put("url", wechatQrcodeTicketBack.getUrl());
 				data.add(mapBack);
 				baseOutput.setData(data);
@@ -287,7 +287,7 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 			List<Object> data = new ArrayList<Object>();
 			Map<String,Object> mapBack = new HashMap<String,Object>();
 			mapBack.put("id", wechatQrcode.getId());
-			mapBack.put("id", wechatQrcode.getQrcodePic());
+			mapBack.put("qrcodePic", wechatQrcode.getQrcodePic());
 			mapBack.put("createtime", wechatQrcode.getCreateTime());
 			data.add(mapBack);
 			baseOutput.setData(data);
