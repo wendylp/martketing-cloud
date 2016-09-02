@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -19,9 +21,13 @@ import cn.rongcapital.mkt.vo.out.ContactListInfoOut;
 import cn.rongcapital.mkt.vo.out.Field_List;
 
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class ContactListInfoGetServiceImpl implements ContactListInfoGetService {
 
 	private static Integer DEFAULT_TEMPLATE_PAGE_SIZE = 50;
+	
+	@Autowired
+	Environment env;
 
 	@Autowired
 	ContactTemplateDao contactTemplateDao;
@@ -42,8 +48,8 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 				ContactListInfoOut contactListInfoOut = new ContactListInfoOut();
 				contactListInfoOut.setContact_id(contactTemplates.get(0).getContactId().toString());
 				contactListInfoOut.setContact_name(contactTemplates.get(0).getContactName());
-				contactListInfoOut.setQrcode_url(contactTemplates.get(0).getQrcodeUrl());
-				// contactListInfoOut.setQrcode_pic(contactTemplates.get(0).getqr);
+				contactListInfoOut.setQrcode_shorturl(env.getProperty("contact.short.url") + contactTemplates.get(0).getQrcodeShorturl());
+				contactListInfoOut.setQrcode_pic("small/" + contactTemplates.get(0).getQrcodePic());
 				contactListInfoOut.setContact_descript(contactTemplates.get(0).getContactDescript());
 				contactListInfoOut.setContact_status(contactTemplates.get(0).getStatus().toString());
 				List<Field_List> lists = new ArrayList<Field_List>();
