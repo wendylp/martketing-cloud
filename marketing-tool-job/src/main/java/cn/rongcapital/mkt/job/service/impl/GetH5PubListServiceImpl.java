@@ -69,17 +69,18 @@ public class GetH5PubListServiceImpl implements TaskService {
 			for (WebchatAuthInfo info : selectListByIdList) {
 				WechatRegister wechatRegister = wechatRegisterBiz.getAuthInfo(info.getAuthorizerAppid(),
 						info.getAuthorizerRefreshToken());
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("wx_acct", wechatRegister.getWxAcct());
+				Long id = wechatRegisterDao.selectPersonalId(map);
 
-				int count = wechatRegisterDao.selectListCount(wechatRegister);
-
-				if (count == 0) {
+				if (id == null) {
 					wechatRegisterDao.insert(wechatRegister);
-					logger.debug("insert into wechat_register id:" + wechatRegister.getId());
+					logger.info("insert into wechat_register id:" + wechatRegister.getId());
 				} else {
-					wechatRegisterDao.updateInforByWxAcct(wechatRegister);
-					logger.debug("update wechat_register id:" + wechatRegister.getId());
+					wechatRegister.setId(Integer.valueOf(id.toString()));
+					wechatRegisterDao.updateById(wechatRegister);
+					logger.info("update wechat_register id:" + wechatRegister.getId());
 				}
-
 			}
 		}
 	}
