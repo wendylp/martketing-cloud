@@ -19,7 +19,7 @@ public class WechatQrcodeIn extends BaseInput{
 	
 	private String wx_acct;
 	
-	@NotEmpty
+
     private String wx_name;
 	
     private Integer ch_code;
@@ -30,11 +30,11 @@ public class WechatQrcodeIn extends BaseInput{
     
 //    @NotNull
     private Byte is_audience;
-    @NotEmpty
+
     private String fixed_audience;
-    @NotEmpty
+
     private List<AssociationTag> association_tags;
-    @NotEmpty
+    
     private String comments;
     
     private Byte status;
