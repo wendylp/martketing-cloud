@@ -77,7 +77,7 @@ import cn.rongcapital.mkt.vo.in.WechatQrcodeBatchSaveIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInData;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInId;
-import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
+//import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -560,20 +560,20 @@ public class MktWeChatApi {
 	@Consumes({MediaType.TEXT_XML})
 	public String getComponentVerifyTicket1( String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){
 		
-		try {
+/*		try {
 			
 			if(textxml.contentEquals("Event")){
 				
 			}
 			
-			JAXBContext context = JAXBContext.newInstance(SubscribeVO.class);  
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			
-			XMLInputFactory xmlFactory  = XMLInputFactory.newInstance();  
-
-			InputStream   textxmlis   =   new   ByteArrayInputStream(textxml.getBytes());   
-			
-			SubscribeVO subscribeVO = (SubscribeVO)unmarshaller.unmarshal(textxmlis);
+//			JAXBContext context = JAXBContext.newInstance(SubscribeVO.class);  
+//			Unmarshaller unmarshaller = context.createUnmarshaller();
+//			
+//			XMLInputFactory xmlFactory  = XMLInputFactory.newInstance();  
+//
+//			InputStream   textxmlis   =   new   ByteArrayInputStream(textxml.getBytes());   
+//			
+//			SubscribeVO subscribeVO = (SubscribeVO)unmarshaller.unmarshal(textxmlis);
 			
 //			ProcessReceiveMessageOfWeiXin handler = new ProcessReceiveMessageOfWeiXin();
 //			String textxmlBack = handler.process(textxml.getBytes());			
@@ -582,7 +582,7 @@ public class MktWeChatApi {
 			e.printStackTrace();
 		} catch (FactoryConfigurationError e) {			
 			e.printStackTrace();
-		}
+		}*/
 
 		
 //		webchatComponentVerifyTicketService.insert(componentVerifyTicketIn,msg_signature, timestamp, nonce);
