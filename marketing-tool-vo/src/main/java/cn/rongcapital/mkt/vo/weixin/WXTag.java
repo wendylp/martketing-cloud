@@ -9,6 +9,10 @@ public class WXTag {
 	private Integer tagId;
 	
 	private Integer count;
+	
+	private String alias;
+	
+	private String headImg;
 
 	@JsonProperty("name")
 	public String getTagName() {
@@ -37,6 +41,19 @@ public class WXTag {
 		this.count = count;
 	}
 
-	
-	
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+	@JsonProperty("head_img")
+	public String getHeadImg() {
+		return headImg;
+	}
+
+	public void setHeadImg(String headImg) {
+		this.headImg = headImg;
+	}
 }
