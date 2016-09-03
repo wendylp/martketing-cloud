@@ -79,6 +79,7 @@ import cn.rongcapital.mkt.vo.in.WechatQrcodeBatchSaveIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInData;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInId;
+import cn.rongcapital.mkt.vo.in.WechatQrcodeScanIn;
 //import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
 import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
 
@@ -441,9 +442,8 @@ public class MktWeChatApi {
 	 */
 	@POST
 	@Path("/mkt.weixin.analysis.qrcode.scan")
-	public BaseOutput instertToWechatQrcodeScan(@NotEmpty @QueryParam("user_id") String userId,
-			@QueryParam("user_host") String userHost, @NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
-		return weixinAnalysisQrcodeScanService.instertToWechatQrcodeScan(userId, userHost, qrcodeId);
+	public BaseOutput instertToWechatQrcodeScan(@Valid WechatQrcodeScanIn body) {
+		return weixinAnalysisQrcodeScanService.instertToWechatQrcodeScan(body);
 	}
 
 	/**
