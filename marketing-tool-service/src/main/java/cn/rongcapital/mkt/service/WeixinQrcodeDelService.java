@@ -31,7 +31,7 @@ public interface WeixinQrcodeDelService {
 	 * @author shuiyangyang
 	 * @Date 2016.08.25
 	 */
-	BaseOutput weixinQrcodeRecordsDel(int qrcodeId);
+	BaseOutput weixinQrcodeRecordsDel(WechatQrcodeInId body);
 	
 	
 }
