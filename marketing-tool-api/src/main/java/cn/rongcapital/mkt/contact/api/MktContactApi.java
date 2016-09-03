@@ -404,7 +404,9 @@ public class MktContactApi {
 	 */
 	@GET
 	@Path("mkt.contacts.longurl.get")
-	public BaseOutput getLongurl(@NotNull @QueryParam("short_url") String shortUrl) {
-		return contactsLongurlGetService.getLongurl(shortUrl);
+	public BaseOutput getLongurl(
+			@NotEmpty @QueryParam("short_url") String shortUrl,
+			@QueryParam("device") String device) {
+		return contactsLongurlGetService.getLongurl(shortUrl, device);
 	}
 }

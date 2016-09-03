@@ -45,7 +45,7 @@ public class ContactsLongurlGetServiceImpl implements ContactsLongurlGetService{
 	 * @Date 2016.08.31
 	 */
 	@Override
-	public BaseOutput getLongurl(String shortUrl) {
+	public BaseOutput getLongurl(String shortUrl, String device) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ONE, null);
 		
@@ -56,20 +56,21 @@ public class ContactsLongurlGetServiceImpl implements ContactsLongurlGetService{
 		contactTemplate.setQrcodeShorturl(shortUrl);
 		
 		List<ContactTemplate> contactTemplateLists = contactTemplateDao.selectList(contactTemplate);
+		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if(contactTemplateLists== null || contactTemplateLists.size()<=0) {
-			result.setCode(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode());
-			result.setMsg(shortUrl + "在数据库中不存在");
 			result.setTotal(0);
 			logger.debug("{} 在数据库中不存在", shortUrl);
 		} else {
 			
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("long_url", env.getProperty("contact.pc.url") + "?contact_id=" + contactTemplateLists.get(0).getContactId());
-			result.getData().add(map);
+			if(device.equals("mobile")) {
+				map.put("long_url", env.getProperty("contact.mobile.url") + "?contact_id=" + contactTemplateLists.get(0).getContactId());
+			} else {
+				map.put("long_url", env.getProperty("contact.pc.url") + "?contact_id=" + contactTemplateLists.get(0).getContactId());
+			}
 			logger.debug("根据短链：{}, 总共查出{}条数据", shortUrl, contactTemplateLists.size());
 		}
-		
+		result.getData().add(map);
 		return result;
 	}
 
