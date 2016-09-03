@@ -164,4 +164,81 @@
 		GROUP BY qrcode_id
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
+	
+	<!-- 获取最大浏览次数 -->
+	<select id="getAmountFocusMax" parameterType="cn.rongcapital.mkt.po.WechatQrcodeFocus" resultType="java.util.Map">
+		<![CDATA[SELECT DATE_FORMAT(focus_datetime,'%Y-%m-%d') as time, count(id) as value]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<where>
+		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
+		</where>
+		<![CDATA[GROUP BY time order by value desc limit 1]]>
+	</select>
+	
+	<!-- 获取最大新关注的信息 -->
+	<select id="getNewFocusMax" parameterType="cn.rongcapital.mkt.po.WechatQrcodeFocus" resultType="java.util.Map">
+		<![CDATA[SELECT DATE_FORMAT(focus_datetime,'%Y-%m-%d') as time, count(id) as value]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<where>
+				and focus_datetime between #{focusDatetime} and #{unfocusDatetime}
+		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
+		</where>
+		<![CDATA[GROUP BY time order by value desc limit 1]]>
+	</select>
+	
+	<!-- 获取最大净增关注的信息 -->
+	<select id="getAddFocusMax" parameterType="cn.rongcapital.mkt.po.WechatQrcodeFocus" resultType="java.util.Map">
+		<![CDATA[SELECT  newFocusData.newFocusTime as time, (newFocusData.newFocusValue - lostFocusData.lostFocusValue) value]]>
+		<![CDATA[from]]>
+		
+		(<![CDATA[select DATE_FORMAT(focus_datetime,'%Y-%m-%d') as newFocusTime, count(id) as newFocusValue ]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<where>
+				<![CDATA[and focus_datetime between #{focusDatetime} and #{unfocusDatetime}]]>
+		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
+		</where>
+		<![CDATA[GROUP BY newFocusTime]]>) <![CDATA[as newFocusData]]>
+		
+		<![CDATA[JOIN]]>
+		
+		(<![CDATA[SELECT DATE_FORMAT(focus_datetime,'%Y-%m-%d') as lostFocusTime, count(id) as lostFocusValue]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<where>
+				<![CDATA[and unfocus_datetime between #{focusDatetime} and #{unfocusDatetime}]]>
+		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
+		</where>
+		<![CDATA[GROUP BY lostFocusTime]]>)  <![CDATA[as lostFocusData]]>
+		
+		<![CDATA[on newFocusData.newFocusTime = lostFocusData.lostFocusTime]]>
+		<![CDATA[order by value desc limit 1]]>
+		
+	</select>
+	
+	<!-- 获取最大流失关注的信息 -->
+	<select id="getLostFocusMax" parameterType="cn.rongcapital.mkt.po.WechatQrcodeFocus" resultType="java.util.Map">
+		<![CDATA[SELECT DATE_FORMAT(focus_datetime,'%Y-%m-%d') as time, count(id) as value]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<where>
+				and unfocus_datetime between #{focusDatetime} and #{unfocusDatetime}
+		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
+		</where>
+		<![CDATA[GROUP BY time order by value desc limit 1]]>
+	</select>
+	
+	<!-- 根据微信名和渠道号获取二维码id -->
+	<select id="getQrcodeIdList" parameterType="cn.rongcapital.mkt.po.WechatQrcodeFocus" resultType="java.lang.String">
+		<![CDATA[SELECT qrcode_id]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<where>
+			    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+			    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
+			    	qrcode_id IS NOT NULL
+		</where>
+		GROUP BY qrcode_id
+	</select>
 </mapper>

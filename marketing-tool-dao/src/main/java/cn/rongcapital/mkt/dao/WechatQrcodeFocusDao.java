@@ -76,5 +76,33 @@ public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
 	 * @return
 	 */
 	List<Map<String, Object>> getLostFocus(WechatQrcodeFocus t);
+	
+	/**
+	 * 获取最大浏览次数
+	 * @param t
+	 * @return
+	 */
+	Map<String, Object> getAmountFocusMax(WechatQrcodeFocus t);
+	
+	/**
+	 * 获取最大新关注的信息
+	 * @param t
+	 * @return
+	 */
+	Map<String, Object> getNewFocusMax(WechatQrcodeFocus t);
+	
+	Map<String, Object> getAddFocusMax(WechatQrcodeFocus t);
+	
+	/**
+	 * 获取最大流失关注的信息
+	 * @param t
+	 * @return
+	 */
+	Map<String, Object> getLostFocusMax(WechatQrcodeFocus t);
+	
+	/**
+	 * 根据微信名和渠道号获取二维码id
+	 */
+	List<String> getQrcodeIdList(WechatQrcodeFocus t);
 
 }

@@ -63,6 +63,7 @@ import cn.rongcapital.mkt.service.WebchatComponentVerifyTicketService;
 import cn.rongcapital.mkt.service.WechatAnalysisDaysListService;
 import cn.rongcapital.mkt.service.WechatQrcodeActivateService;
 import cn.rongcapital.mkt.service.WeixinAnalysisChdataListService;
+import cn.rongcapital.mkt.service.WeixinAnalysisChdataSummaryService;
 import cn.rongcapital.mkt.service.WeixinAnalysisQrcodeScanService;
 import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
@@ -168,6 +169,9 @@ public class MktWeChatApi {
 	
 	@Autowired
 	private MessageSendBiz messageSendBiz;
+	
+	@Autowired
+	WeixinAnalysisChdataSummaryService weixinAnalysisChdataSummaryService;
 	
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
@@ -669,4 +673,13 @@ public class MktWeChatApi {
 		return analysisDaysList.analysisHoursList(date, chCode, wxName);
 	}
 	
+	@GET
+	@Path("/mkt.weixin.analysis.chdata.summary")
+	public BaseOutput getAnalysisChdataSummary(
+			@NotNull @QueryParam("wx_name") String wxName,
+			@NotEmpty @QueryParam("ch_code") String chCode,
+			@NotEmpty @QueryParam("start_date") String startDate,
+			@NotEmpty @QueryParam("end_date") String endDate) {
+		return weixinAnalysisChdataSummaryService.getAnalysisChdataSummary(wxName, chCode, startDate, endDate);
+	}
 }
