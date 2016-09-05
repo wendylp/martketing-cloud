@@ -1,22 +1,27 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import cn.rongcapital.mkt.biz.ImgTextAssetBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.H5ImgtextType;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.HttpUtils;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
 import cn.rongcapital.mkt.dao.TenementDao;
+import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.job.vo.in.H5TuwenSyncResponse;
 import cn.rongcapital.mkt.job.vo.in.MaterialContent;
 import cn.rongcapital.mkt.job.vo.in.WTuwen;
 import cn.rongcapital.mkt.po.ImgTextAsset;
+import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.po.WechatRegister;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -32,6 +37,8 @@ import java.util.Map;
  */
 @Service
 public class ImgtextAssetSyncServiceImpl implements TaskService{
+	
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     ImgTextAssetDao imgTextAssetDao;
@@ -39,10 +46,60 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     TenementDao tenementDao;
     @Autowired
     WechatRegisterDao wechatRegisterDao;
+    @Autowired
+    WebchatAuthInfoDao webchatAuthInfoDao;
+    @Autowired
+    ImgTextAssetBiz imgTextAssetBiz;
 
     @Override
     public void task(Integer taskId) {
-        Map<String,String> h5ParamMap = new HashMap<String,String>();
+    	// callH5PlusMethod(Integer taskId);
+    	// 需要pub_id pub_name
+    	List<WebchatAuthInfo> selectListByIdList = webchatAuthInfoDao.selectList(new WebchatAuthInfo());
+    	if (!CollectionUtils.isEmpty(selectListByIdList)) {
+    		for (WebchatAuthInfo info : selectListByIdList) {
+    			WechatRegister wechatRegister = new WechatRegister();
+    			wechatRegister.setAppId(info.getAuthorizerAppid());
+    			List<WechatRegister> wechatRegisterLists = wechatRegisterDao.selectList(wechatRegister);
+    			
+//    			if(wechatRegisterLists != null && wechatRegisterLists.size() > 0) {
+//    				wechatRegister = wechatRegisterLists.get(0);
+//    			} else {
+//    				logger.debug("在wechat_register表中根据app_id查不到信息，app_id = {}", info.getAuthorizerAppid());
+//    				continue;
+//    			}
+    			
+    			List<ImgTextAsset> imgTextAssetLists = imgTextAssetBiz.getMaterialList(info.getAuthorizerAppid(),
+    					info.getAuthorizerRefreshToken(),"news");
+    			
+    			if(!CollectionUtils.isEmpty(imgTextAssetLists)) {
+    				for(ImgTextAsset imgTextAssetList : imgTextAssetLists) {
+    					
+    					// 设置pub_id,pub_name,下载状态
+    					imgTextAssetList.setPubId(wechatRegister.getWxAcct());
+    					imgTextAssetList.setPubName(wechatRegister.getName());
+    					imgTextAssetList.setThumbReady((byte)0);
+    					
+    					Integer id = imgTextAssetDao.selectImgtextIdByMaterialId(imgTextAssetList.getMaterialId());
+    					if(id != null) {
+    						imgTextAssetList.setMaterialId(id.toString());
+    						imgTextAssetDao.updateById(imgTextAssetList);
+    					} else {
+    						imgTextAssetDao.insert(imgTextAssetList);
+    					}
+    				}
+    			} else {
+    				logger.debug("查不到图文信息, AuthorizerAppid = {}, AuthorizerRefreshToken = {}",
+    						info.getAuthorizerAppid(), info.getAuthorizerRefreshToken());
+    			}
+    		}
+		}
+        
+    }
+    
+    public void callH5PlusMethod(Integer taskId) {
+    	
+    	Map<String,String> h5ParamMap = new HashMap<String,String>();
         H5TuwenSyncResponse h5TuwenSyncResponse = null;
         Map<String,String> pidMap = tenementDao.selectPid();
         h5ParamMap.put(ApiConstant.DL_API_PARAM_METHOD,ApiConstant.DL_WUWEN_SYNC);
@@ -67,6 +124,7 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
                 e.printStackTrace();
             }
         }
+    	
     }
 
     private void syncImgtextByPageNum(Map<String, String> h5ParamMap, Integer totalNumber) {
