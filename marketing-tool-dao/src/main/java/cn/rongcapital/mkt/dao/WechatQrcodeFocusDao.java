@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatQrcodeFocus;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -105,4 +106,8 @@ public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
 	 */
 	List<String> getQrcodeIdList(WechatQrcodeFocus t);
 
+	/**
+	 * 根据qrcodeId选取这个二维码的关注时间
+	 */
+	List<WechatQrcodeFocus> selectTheEarliestFocusByQrcodeId(@Param("qrcodeId") String qrcodeId);
 }

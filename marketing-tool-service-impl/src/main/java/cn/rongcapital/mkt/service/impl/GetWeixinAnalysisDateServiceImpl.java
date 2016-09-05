@@ -3,7 +3,11 @@ package cn.rongcapital.mkt.service.impl;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.dao.WechatChannelDao;
+import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeFocusDao;
+import cn.rongcapital.mkt.po.WechatChannel;
+import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeFocus;
 import cn.rongcapital.mkt.service.GetWeixinAnalysisDateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -25,13 +29,24 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
     @Autowired
     private WechatQrcodeFocusDao wechatQrcodeFocusDao;
 
+    @Autowired
+    private WechatQrcodeDao wechatQrcodeDao;
+
+    @Autowired
+    private WechatChannelDao wechatChannelDao;
+
     @Override
-    public BaseOutput getWeixinAnalysisDate() {
+    public BaseOutput getWeixinAnalysisDate(String qrcodeId) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
 
         Date minDateInMysql = null;
         Date maxDateInMysql = null;
-        List<WechatQrcodeFocus> wechatQrcodeFocusList = wechatQrcodeFocusDao.selectTheEarliestFocus();
+        List<WechatQrcodeFocus> wechatQrcodeFocusList;
+        if(qrcodeId == null){
+            wechatQrcodeFocusList = wechatQrcodeFocusDao.selectTheEarliestFocus();
+        }else{
+            wechatQrcodeFocusList = wechatQrcodeFocusDao.selectTheEarliestFocusByQrcodeId(qrcodeId);
+        }
         if(!CollectionUtils.isEmpty(wechatQrcodeFocusList)){
             for(WechatQrcodeFocus wechatQrcodeFocus: wechatQrcodeFocusList){
                 if(wechatQrcodeFocus.getFocusDatetime() != null){
@@ -75,8 +90,48 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
         focusMap.put("EndDate",DateUtil.getStringFromDate(maxDateInMysql,"yyyy-MM-dd"));
         result.getData().add(focusMap);
 
+        Map<String,Object> channelMap = new HashMap<String,Object>();
+        Map<String,Object> wxInfoMap = new HashMap<String, Object>();
+        if(qrcodeId == null){
+            constructNullResultForWxInfoAndChannelInfo(result, channelMap, wxInfoMap);
+        }else {
+            WechatQrcode wechatQrcode = new WechatQrcode();
+            wechatQrcode.setId(Integer.valueOf(qrcodeId));
+            List<WechatQrcode> wechatQrcodeList = wechatQrcodeDao.selectList(wechatQrcode);
+            if(!CollectionUtils.isEmpty(wechatQrcodeList)){
+                wxInfoMap.put("wxmp_name",wechatQrcodeList.get(0).getWxName());
+                wxInfoMap.put("wx_acct",wechatQrcodeList.get(0).getWxAcct());
+                result.getData().add(wxInfoMap);
+
+                WechatChannel wechatChannel = new WechatChannel();
+                wechatChannel.setId(wechatQrcode.getChCode());
+                List<WechatChannel> wechatChannelList = wechatChannelDao.selectList(wechatChannel);
+                if(!CollectionUtils.isEmpty(wechatChannelList)){
+                    channelMap.put("ch_name",wechatChannelList.get(0).getChName());
+                    channelMap.put("ch_code",wechatChannelList.get(0).getId());
+                    result.getData().add(channelMap);
+                }else {
+                    channelMap.put("ch_name",null);
+                    channelMap.put("ch_code",null);
+                    result.getData().add(channelMap);
+                }
+            }else{
+                constructNullResultForWxInfoAndChannelInfo(result, channelMap, wxInfoMap);
+            }
+        }
+
         result.setTotal(result.getData().size());
         return result;
+    }
+
+    private void constructNullResultForWxInfoAndChannelInfo(BaseOutput result, Map<String, Object> channelMap, Map<String, Object> wxInfoMap) {
+        channelMap.put("ch_name",null);
+        channelMap.put("ch_code",null);
+        result.getData().add(channelMap);
+
+        wxInfoMap.put("wxmp_name",null);
+        wxInfoMap.put("wx_acct",null);
+        result.getData().add(wxInfoMap);
     }
 
     private Map<String, String> generateResultMap(String scope,Date minDateInMysql, Calendar calendar, String todayDate) {

@@ -426,8 +426,9 @@ public class MktWeChatApi {
 	@GET
 	@Path("/mkt.weixin.analysis.date")
 	public BaseOutput weixinQrcodeBatchSave(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
-		return getWeixinAnalysisDateService.getWeixinAnalysisDate();
+			@NotEmpty @QueryParam("ver") String ver,
+	        @QueryParam("qrcode_id") String qrcodeId) {
+		return getWeixinAnalysisDateService.getWeixinAnalysisDate(qrcodeId);
 	}
 
 	/**

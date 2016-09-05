@@ -241,4 +241,12 @@
 		</where>
 		GROUP BY qrcode_id
 	</select>
+
+	<select id="selectTheEarliestFocusByQrcodeId" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.WechatQrcodeFocus">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE qrcode_id = #{qrcodeId}
+		ORDER BY focus_datetime
+	</select>
 </mapper>
