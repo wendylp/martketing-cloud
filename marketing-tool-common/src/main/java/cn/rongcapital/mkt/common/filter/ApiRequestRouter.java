@@ -77,7 +77,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 					.path(requestContext.getUriInfo().getPath()+"/"+method).build();
 			requestContext.setRequestUri(newRequestURI);
 		}
-		logger.info("ApiRequestRouter.getMsgEvent end*******************************");	
+//		logger.info("ApiRequestRouter.getMsgEvent end*******************************");	
 //	    if(HttpMethod.POST.equals(requestContext.getMethod()) 
 //	                && MediaType.APPLICATION_JSON_TYPE.equals(requestContext.getMediaType())
 //	                && requestContext.getEntityStream() != null) {

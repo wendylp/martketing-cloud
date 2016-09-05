@@ -544,7 +544,7 @@ public class MktWeChatApi {
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
-	@Consumes({MediaType.TEXT_XML})
+	@Consumes({MediaType.APPLICATION_XML})
 //	public String getComponentVerifyTicket(@Valid ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
 	public String getComponentVerifyTicket( ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
 	logger.info(System.currentTimeMillis()+"mkt.weixin.qrcode.getComponentVerifyTicket satrt 0000000000000000000000000000000000000000000000"+msg_signature+":"+timestamp+":"+nonce);
