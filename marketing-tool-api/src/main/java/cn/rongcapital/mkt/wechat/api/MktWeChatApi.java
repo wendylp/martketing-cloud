@@ -463,7 +463,7 @@ public class MktWeChatApi {
 	@Path("mkt.weixin.analysis.days.list")
 	public BaseOutput analysisDaysList(@NotEmpty @QueryParam("start_date")String startDate,
 			@NotEmpty @QueryParam("end_date")String endDate,@NotEmpty @QueryParam("ch_code")String chCode,
-			@NotEmpty @QueryParam("wx_name")String wxName,@NotNull @QueryParam("days_type") Integer daysType) {
+			@NotEmpty @QueryParam("wx_name")String wxName,@QueryParam("days_type") String daysType) {
 		return analysisDaysList.analysisDaysList(startDate, endDate, daysType, chCode, wxName);
 	}
 	
