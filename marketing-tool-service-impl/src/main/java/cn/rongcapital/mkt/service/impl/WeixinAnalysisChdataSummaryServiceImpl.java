@@ -83,7 +83,7 @@ public class WeixinAnalysisChdataSummaryServiceImpl implements WeixinAnalysisChd
 			analysisChdataInt[1] += (int) map.get("total_scan_user");
 			analysisChdataInt[2] += (long) map.get("total_focus");
 			analysisChdataInt[3] += (long) map.get("new_focus");
-			analysisChdataInt[4] += (long) map.get("lost_focus");
+			analysisChdataInt[4] += Long.valueOf(map.get("lost_focus").toString());
 		}
 		
 		// 获取总扫码次数最大值
