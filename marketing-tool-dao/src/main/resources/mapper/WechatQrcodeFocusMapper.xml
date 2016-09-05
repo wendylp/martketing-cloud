@@ -121,8 +121,12 @@
 		<if test="fieldName != null and fieldName == 'unfocus_datetime' and searchHours != null ">
 			<![CDATA[ DATE_FORMAT(unfocus_datetime,'%Y-%m-%d %H') = #{searchHours} ]]>
 		</if>
-		AND ch_code = #{chCode}
-		AND wx_name = #{wxName}
+		<if test="ch_code != null and ch_code != '0' ">
+			AND ch_code = #{chCode}
+		</if>
+		<if test="wx_name != null and wx_name != '0' ">
+			AND wx_name = #{wxName}
+		</if>
 		AND #{fieldName} IS NOT NULL
 	</select>
 	

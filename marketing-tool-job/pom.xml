@@ -35,6 +35,12 @@
 			<artifactId>marketing-tool-biz</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>cn.rongcapital.mkt</groupId>
+			<artifactId>marketing-tool-biz-impl</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+						
   		<!-- 引入elastic-job核心模块
 		<dependency>
 		    <groupId>com.dangdang</groupId>

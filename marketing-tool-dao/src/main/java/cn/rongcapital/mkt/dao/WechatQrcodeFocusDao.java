@@ -92,6 +92,11 @@ public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
 	 */
 	Map<String, Object> getNewFocusMax(WechatQrcodeFocus t);
 	
+	/**
+	 * 获取最大净增关注数
+	 * @param t
+	 * @return
+	 */
 	Map<String, Object> getAddFocusMax(WechatQrcodeFocus t);
 	
 	/**
