@@ -673,6 +673,15 @@ public class MktWeChatApi {
 		return analysisDaysList.analysisHoursList(date, chCode, wxName);
 	}
 	
+	/**
+	 * 获取平均、汇总、历史最高关注数据(扫码、关注、新增...) 
+	 * @param wxName
+	 * @param chCode
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 * @author shuiyangyang
+	 */
 	@GET
 	@Path("/mkt.weixin.analysis.chdata.summary")
 	public BaseOutput getAnalysisChdataSummary(

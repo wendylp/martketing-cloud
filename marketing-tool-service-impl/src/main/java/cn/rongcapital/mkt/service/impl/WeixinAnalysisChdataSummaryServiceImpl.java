@@ -48,6 +48,11 @@ public class WeixinAnalysisChdataSummaryServiceImpl implements WeixinAnalysisChd
 	@Autowired
 	WeixinAnalysisChdataListService weixinAnalysisChdataListService;
 
+	/**
+	 * 获取平均、汇总、历史最高关注数据(扫码、关注、新增...) 
+	 * 接口：mkt.weixin.analysis.chdata.summary
+	 * @author shuiyangyang
+	 */
 	@Override
 	public BaseOutput getAnalysisChdataSummary(String wxName, String chCode, String startDate, String endDate) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
