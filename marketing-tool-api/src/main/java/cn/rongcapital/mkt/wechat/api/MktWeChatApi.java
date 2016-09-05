@@ -463,7 +463,7 @@ public class MktWeChatApi {
 	@Path("mkt.weixin.analysis.days.list")
 	public BaseOutput analysisDaysList(@NotEmpty @QueryParam("start_date")String startDate,
 			@NotEmpty @QueryParam("end_date")String endDate,@NotEmpty @QueryParam("ch_code")String chCode,
-			@NotEmpty @QueryParam("wx_name")String wxName,@NotNull @QueryParam("days_type") Integer daysType) {
+			@NotEmpty @QueryParam("wx_name")String wxName,@QueryParam("days_type") String daysType) {
 		return analysisDaysList.analysisDaysList(startDate, endDate, daysType, chCode, wxName);
 	}
 	
@@ -544,7 +544,7 @@ public class MktWeChatApi {
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
-	@Consumes({MediaType.APPLICATION_XML})
+	@Consumes({MediaType.TEXT_XML})
 //	public String getComponentVerifyTicket(@Valid ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
 	public String getComponentVerifyTicket( ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
 	logger.info(System.currentTimeMillis()+"mkt.weixin.qrcode.getComponentVerifyTicket satrt 0000000000000000000000000000000000000000000000"+msg_signature+":"+timestamp+":"+nonce);

@@ -18,10 +18,13 @@ import javax.xml.stream.XMLInputFactory;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.mkt.biz.ProcessReceiveMessageOfWeiXinBiz;
 import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXin;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
 import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
 
 @Component
@@ -31,7 +34,9 @@ import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
 public class MktWeChatMsgApi {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-
+	@Autowired
+	private ProcessReceiveMessageOfWeiXinBiz processReceiveMessageOfWeiXinBiz;
+	
 	/**
 	 * @param componentVerifyTicketIn
 	 * @param msg_signature
@@ -42,29 +47,24 @@ public class MktWeChatMsgApi {
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.getMsgEvent")
-	@Consumes({MediaType.TEXT_PLAIN})
-	public String getMsgEvent(SubscribeVO subscribeVO){
+	@Consumes({MediaType.TEXT_XML})
+	public String getMsgEvent(String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce, @QueryParam("signature") String signature, @QueryParam("openid") String openid){	
 		
-		logger.info("getMsgEvent:*******************************");		
-/*		try {			
-			if(textxml.contentEquals("Event")){}			
-			JAXBContext context = JAXBContext.newInstance(SubscribeVO.class);  
-			Unmarshaller unmarshaller = context.createUnmarshaller();			
-			XMLInputFactory xmlFactory  = XMLInputFactory.newInstance();  
-			InputStream   textxmlis   =   new   ByteArrayInputStream(textxml.getBytes());   			
-			SubscribeVO subscribeVO = (SubscribeVO)unmarshaller.unmarshal(textxmlis);			
+		logger.info("getMsgEvent:"+textxml+"*******************************");		
+
+			if(textxml.contentEquals("Event")){}	
+			
+			
+			processReceiveMessageOfWeiXinBiz.getMsgLog(textxml, msg_signature, timestamp, nonce, signature, openid);
+			
+			
 			ProcessReceiveMessageOfWeiXin handler = new ProcessReceiveMessageOfWeiXin();
 			String textxmlBack = handler.process(textxml.getBytes());	
 			
 			System.out.println(textxmlBack);
-		} catch (JAXBException e) {			
-			e.printStackTrace();
-		} catch (FactoryConfigurationError e) {			
-			e.printStackTrace();
-		}
+		
 
-*/		
-//		webchatComponentVerifyTicketService.insert(componentVerifyTicketIn,msg_signature, timestamp, nonce);
+		
 		return "success";		
 	}
 
