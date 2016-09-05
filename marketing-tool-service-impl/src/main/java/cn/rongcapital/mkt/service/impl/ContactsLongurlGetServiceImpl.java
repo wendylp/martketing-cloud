@@ -63,7 +63,7 @@ public class ContactsLongurlGetServiceImpl implements ContactsLongurlGetService{
 			logger.debug("{} 在数据库中不存在", shortUrl);
 		} else {
 			
-			if(device.equals("mobile")) {
+			if("mobile".equals(device)) {
 				map.put("long_url", env.getProperty("contact.mobile.url") + "?contact_id=" + contactTemplateLists.get(0).getContactId());
 			} else {
 				map.put("long_url", env.getProperty("contact.pc.url") + "?contact_id=" + contactTemplateLists.get(0).getContactId());
