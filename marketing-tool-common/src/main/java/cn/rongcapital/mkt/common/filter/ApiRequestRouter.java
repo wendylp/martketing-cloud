@@ -42,6 +42,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 		if(StringUtils.isBlank(url) || !(url.equals(ApiConstant.API_PATH)||url.equals(ApiConstant.API_PATH_APPID))){
 			requestContext.abortWith(Response.status(404).entity("Api not found").build());
 		}
+		
 		if(
 		    (HttpMethod.GET.equals(requestContext.getMethod()) ||
 		      (HttpMethod.POST.equals(requestContext.getMethod())
