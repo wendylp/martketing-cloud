@@ -42,7 +42,6 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
         Date minDateInMysql = null;
         Date maxDateInMysql = null;
         List<WechatQrcodeFocus> wechatQrcodeFocusList;
-        System.out.println(qrcodeId.length());
         if(qrcodeId == null || qrcodeId.length() == 0){
             wechatQrcodeFocusList = wechatQrcodeFocusDao.selectTheEarliestFocus();
         }else{
