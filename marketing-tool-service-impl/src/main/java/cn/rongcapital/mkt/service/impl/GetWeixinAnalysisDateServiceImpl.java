@@ -61,72 +61,70 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
         Calendar calendar = Calendar.getInstance();
         String todayDate = DateUtil.getStringFromDate(calendar.getTime(),"yyyy-MM-dd");
         Map<String,String> todayMap = new HashMap<String, String>();
-        Map<String,Map<String,String>> todayMapResult = new HashMap<>();
+        Map<String,Object> MapResult = new HashMap<>();
         todayMap.put("Today",todayDate);
         todayMap.put("StarDate",todayDate);
         todayMap.put("EndDate",todayDate);
-        todayMapResult.put("Today", todayMap);
-        result.getData().add(todayMapResult);
+        MapResult.put("Today", todayMap);
+        //result.getData().add(MapResult);
 
         calendar.add(Calendar.DAY_OF_MONTH,-1);
         String yesToday = DateUtil.getStringFromDate(calendar.getTime(),"yyyy-MM-dd");
         Map<String,String> yesTodayMap = new HashMap<String,String>();
-        Map<String,Map<String,String>> yesTodayMapResult = new HashMap<>();
         yesTodayMap.put("Yestoday",yesToday);
         yesTodayMap.put("StarDate",yesToday);
         yesTodayMap.put("EndDate",todayDate);
-        yesTodayMapResult.put("Yestoday", yesTodayMap);
-        result.getData().add(yesTodayMapResult);
+        MapResult.put("Yestoday", yesTodayMap);
+        //result.getData().add(yesTodayMapResult);
 
         calendar.add(calendar.DAY_OF_MONTH,1);
         calendar.add(calendar.DAY_OF_MONTH,-7);
-        Map<String,Map<String,String>> daySevenMapResult = new HashMap<>();
+        //Map<String,Map<String,String>> daySevenMapResult = new HashMap<>();
         Map<String, String> daySevenMap = generateResultMap(DAY_7_SCOPE,minDateInMysql, calendar, todayDate);
-        daySevenMapResult.put(DAY_7_SCOPE, daySevenMap);
-        result.getData().add(daySevenMapResult);
+        MapResult.put(DAY_7_SCOPE, daySevenMap);
+        //result.getData().add(MapResult);
 
         calendar.add(calendar.DAY_OF_MONTH,7);
         calendar.add(calendar.DAY_OF_MONTH,-30);
-        Map<String,Map<String,String>> dayMonthMapResult = new HashMap<>();
         Map<String,String> dayMonthMap = generateResultMap(DAY_30_SCOPE,minDateInMysql,calendar,todayDate);
-        dayMonthMapResult.put(DAY_30_SCOPE, dayMonthMap);
-        result.getData().add(dayMonthMapResult);
+        MapResult.put(DAY_30_SCOPE, dayMonthMap);
+        //result.getData().add(MapResult);
 
         Map<String,String> focusMap = new HashMap<String, String>();
-        Map<String,Map<String,String>> focusMapResult = new HashMap<>();
+        //Map<String,Map<String,String>> focusMapResult = new HashMap<>();
         focusMap.put("RecordScope","");
         focusMap.put("StarDate",DateUtil.getStringFromDate(minDateInMysql,"yyyy-MM-dd"));
         focusMap.put("EndDate",DateUtil.getStringFromDate(maxDateInMysql,"yyyy-MM-dd"));
-        focusMapResult.put("RecordScope", focusMap);
-        result.getData().add(focusMapResult);
+        MapResult.put("RecordScope", focusMap);
+        //result.getData().add(MapResult);
 
-        Map<String,Object> channelMap = new HashMap<String,Object>();
-        Map<String,Object> wxInfoMap = new HashMap<String, Object>();
+        //Map<String,Object> channelMap = new HashMap<String,Object>();
+        //Map<String,Object> wxInfoMap = new HashMap<String, Object>();
         if(qrcodeId == null || qrcodeId.length()==0){
-            constructNullResultForWxInfoAndChannelInfo(result, channelMap, wxInfoMap);
+            constructNullResultForWxInfoAndChannelInfo(result, MapResult);
         }else {
             WechatQrcode wechatQrcode = new WechatQrcode();
             wechatQrcode.setId(Integer.valueOf(qrcodeId));
             List<WechatQrcode> wechatQrcodeList = wechatQrcodeDao.selectList(wechatQrcode);
             if(!CollectionUtils.isEmpty(wechatQrcodeList)){
-                wxInfoMap.put("wxmp_name",wechatQrcodeList.get(0).getWxName());
-                wxInfoMap.put("wx_acct",wechatQrcodeList.get(0).getWxAcct());
-                result.getData().add(wxInfoMap);
+            	MapResult.put("wxmp_name",wechatQrcodeList.get(0).getWxName());
+            	MapResult.put("wx_acct",wechatQrcodeList.get(0).getWxAcct());
+                //result.getData().add(MapResult);
 
                 WechatChannel wechatChannel = new WechatChannel();
                 wechatChannel.setId(wechatQrcode.getChCode());
                 List<WechatChannel> wechatChannelList = wechatChannelDao.selectList(wechatChannel);
                 if(!CollectionUtils.isEmpty(wechatChannelList)){
-                    channelMap.put("ch_name",wechatChannelList.get(0).getChName());
-                    channelMap.put("ch_code",wechatChannelList.get(0).getId());
-                    result.getData().add(channelMap);
+                	MapResult.put("ch_name",wechatChannelList.get(0).getChName());
+                	MapResult.put("ch_code",wechatChannelList.get(0).getId());
+                    result.getData().add(MapResult);
                 }else {
-                    channelMap.put("ch_name","");
-                    channelMap.put("ch_code","");
-                    result.getData().add(channelMap);
+                	MapResult.put("ch_name","");
+                	MapResult.put("ch_code","");
+                    result.getData().add(MapResult);
                 }
             }else{
-                constructNullResultForWxInfoAndChannelInfo(result, channelMap, wxInfoMap);
+                constructNullResultForWxInfoAndChannelInfo(result,  MapResult);
             }
         }
 
@@ -134,14 +132,14 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
         return result;
     }
 
-    private void constructNullResultForWxInfoAndChannelInfo(BaseOutput result, Map<String, Object> channelMap, Map<String, Object> wxInfoMap) {
+    private void constructNullResultForWxInfoAndChannelInfo(BaseOutput result, Map<String, Object> channelMap) {
         channelMap.put("ch_name","");
         channelMap.put("ch_code","");
-        result.getData().add(channelMap);
+        //result.getData().add(channelMap);
 
-        wxInfoMap.put("wxmp_name","");
-        wxInfoMap.put("wx_acct","");
-        result.getData().add(wxInfoMap);
+        channelMap.put("wxmp_name","");
+        channelMap.put("wx_acct","");
+        result.getData().add(channelMap);
     }
 
     private Map<String, String> generateResultMap(String scope,Date minDateInMysql, Calendar calendar, String todayDate) {
