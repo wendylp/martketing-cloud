@@ -21,7 +21,7 @@ public interface WechatAnalysisDaysListService {
 	 * @return: BaseOutput      
 	 * @throws
 	 */
-	BaseOutput analysisDaysList(String startDate,String endDate,Integer daysType,String chCode,String wxName);
+	BaseOutput analysisDaysList(String startDate,String endDate,String daysType,String chCode,String wxName);
 	
 	/**
 	 * @Title: analysisHoursList   
