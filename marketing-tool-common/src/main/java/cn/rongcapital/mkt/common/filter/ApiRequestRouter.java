@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.common.filter;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 
@@ -21,10 +22,13 @@ import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 
@@ -44,6 +48,11 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		logger.info("ApiRequestRouter.getMsgEvent*******************************");		
 		String url = requestContext.getUriInfo().getPath();
+		InputStream inputStream = requestContext.getEntityStream();
+		byte[] postDat = IOUtils.toByteArray(inputStream);
+		String encrypt =  new String(postDat);
+		logger.info("reqbody:" + new String(postDat,"UTF-8"));
+
 		logger.info(url+"*******************************");	
 		if(StringUtils.isBlank(url) || !(url.equals(ApiConstant.API_PATH)||url.equals(ApiConstant.API_PATH_APPID))){
 			requestContext.abortWith(Response.status(404).entity("Api not found").build());
