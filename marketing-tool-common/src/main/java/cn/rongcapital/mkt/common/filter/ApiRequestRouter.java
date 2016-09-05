@@ -49,10 +49,10 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 //		logger.info("ApiRequestRouter.getMsgEvent*******************************");		
 		String url = requestContext.getUriInfo().getPath();
 		
-/*		InputStream inputStream = requestContext.getEntityStream();
+		InputStream inputStream = requestContext.getEntityStream();
 		byte[] postDat = IOUtils.toByteArray(inputStream);
 		String encrypt =  new String(postDat);
-		logger.info("reqbody:" + new String(postDat,"UTF-8"));*/
+		logger.info("reqbody:" + new String(postDat,"UTF-8"));
 
 //		logger.info(url+"*******************************");	
 /*		if(StringUtils.isBlank(url) || !(url.equals(ApiConstant.API_PATH)||url.equals(ApiConstant.API_PATH_APPID))){
