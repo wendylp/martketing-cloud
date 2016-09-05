@@ -43,10 +43,10 @@ public class MktWeChatMsgApi {
 	@POST
 	@Path("/mkt.weixin.qrcode.getMsgEvent")
 	@Consumes({MediaType.TEXT_XML})
-	public String getMsgEvent(SubscribeVO subscribeVO){	
+	public String getMsgEvent(String textxml){	
 		
-		logger.info("getMsgEvent:*******************************");		
-/*		try {			
+		logger.info("getMsgEvent:"+textxml+"*******************************");		
+		try {			
 			if(textxml.contentEquals("Event")){}			
 			JAXBContext context = JAXBContext.newInstance(SubscribeVO.class);  
 			Unmarshaller unmarshaller = context.createUnmarshaller();			
@@ -63,8 +63,7 @@ public class MktWeChatMsgApi {
 			e.printStackTrace();
 		}
 
-*/		
-//		webchatComponentVerifyTicketService.insert(componentVerifyTicketIn,msg_signature, timestamp, nonce);
+		
 		return "success";		
 	}
 
