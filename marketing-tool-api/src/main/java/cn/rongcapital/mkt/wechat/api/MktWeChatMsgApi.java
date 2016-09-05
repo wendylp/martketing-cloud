@@ -43,20 +43,16 @@ public class MktWeChatMsgApi {
 	@POST
 	@Path("/mkt.weixin.qrcode.getMsgEvent")
 	@Consumes({MediaType.TEXT_XML})
-	public String getMsgEvent( String textxml){
+	public String getMsgEvent(String textxml){
+		
 		logger.info("getMsgEvent:"+textxml+"*******************************");		
 		try {			
-			if(textxml.contentEquals("Event")){}
-			
+			if(textxml.contentEquals("Event")){}			
 			JAXBContext context = JAXBContext.newInstance(SubscribeVO.class);  
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			
+			Unmarshaller unmarshaller = context.createUnmarshaller();			
 			XMLInputFactory xmlFactory  = XMLInputFactory.newInstance();  
-
-			InputStream   textxmlis   =   new   ByteArrayInputStream(textxml.getBytes());   
-			
-			SubscribeVO subscribeVO = (SubscribeVO)unmarshaller.unmarshal(textxmlis);
-			
+			InputStream   textxmlis   =   new   ByteArrayInputStream(textxml.getBytes());   			
+			SubscribeVO subscribeVO = (SubscribeVO)unmarshaller.unmarshal(textxmlis);			
 			ProcessReceiveMessageOfWeiXin handler = new ProcessReceiveMessageOfWeiXin();
 			String textxmlBack = handler.process(textxml.getBytes());	
 			
