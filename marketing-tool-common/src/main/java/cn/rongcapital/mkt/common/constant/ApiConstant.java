@@ -16,6 +16,7 @@ public class ApiConstant {
 	
 	public static final String API_METHOD = "method";//api的method参数
 	public static final String API_PATH = "/api";//api的路径
+	public static final String API_PATH_APPID = "/api/wx00f7d56d549f82ce";//api的路径
 	public static final byte TABLE_DATA_STATUS_VALID = 0;//数据正常
 	public static final byte TABLE_DATA_STATUS_INVALID = 1;//数据已被逻辑删除
 	

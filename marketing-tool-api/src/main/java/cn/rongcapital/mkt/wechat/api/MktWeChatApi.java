@@ -542,7 +542,7 @@ public class MktWeChatApi {
 	 * @return
 	 */
 	@POST
-	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket1")
+	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
 	@Consumes({MediaType.TEXT_XML})
 //	public String getComponentVerifyTicket(@Valid ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
 	public String getComponentVerifyTicket( ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
@@ -563,7 +563,7 @@ public class MktWeChatApi {
 	 * @return
 	 */
 	@POST
-	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
+	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket1")
 	@Consumes({MediaType.TEXT_XML})
 	public String getComponentVerifyTicket1( String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){
 		logger.info("getComponentVerifyTicket1:"+textxml+"*******************************");		
