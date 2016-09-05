@@ -39,7 +39,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		String url = requestContext.getUriInfo().getPath();
-		if(StringUtils.isBlank(url) || !url.equals(ApiConstant.API_PATH)){
+		if(StringUtils.isBlank(url) || !(url.equals(ApiConstant.API_PATH)||url.equals(ApiConstant.API_PATH_APPID))){
 			requestContext.abortWith(Response.status(404).entity("Api not found").build());
 		}
 		if(
