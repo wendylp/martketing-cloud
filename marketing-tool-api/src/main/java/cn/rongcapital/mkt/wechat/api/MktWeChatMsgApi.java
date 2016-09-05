@@ -42,7 +42,7 @@ public class MktWeChatMsgApi {
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.getMsgEvent")
-	@Consumes({MediaType.TEXT_XML})
+	@Consumes({MediaType.TEXT_PLAIN})
 	public String getMsgEvent(String textxml){
 		
 		logger.info("getMsgEvent:"+textxml+"*******************************");		
