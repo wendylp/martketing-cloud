@@ -43,6 +43,7 @@ import cn.rongcapital.mkt.biz.ProcessReceiveMessageOfWeiXinBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.Xml2JsonUtil;
 import cn.rongcapital.mkt.dao.WebchatComponentVerifyTicketDao;
+import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.po.WebchatComponentVerifyTicket;
 import cn.rongcapital.mkt.po.WechatMember;
 import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
@@ -57,6 +58,8 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	@Autowired
 	private WebchatComponentVerifyTicketDao webchatComponentVerifyTicketDao;
 
+	@Autowired
+	private WechatMemberDao wechatMemberDao;
 	
 	@Override
 	public void enableMsgEncopt(String aesKey) {
@@ -249,24 +252,38 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 				app.setAuthRefreshToken("refreshtoken@@@gcxmruaeql5C84jx-VHSnt99pOxbEWycsHz7tKgL-ao");
 				app.setAuthAppId("wx1f363449a14a1ad8");
 				
-				UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常
-				WechatMember wechatMember = new WechatMember();
-				// subscribe 无对应
-				// openid
-				wechatMember.setWxCode(openid);
-				wechatMember.setNickname(userInfo.getNickname());
-				wechatMember.setSex(userInfo.getSex());
-				wechatMember.setCity(userInfo.getCity());
-				wechatMember.setCountry(userInfo.getCountry());
-				wechatMember.setProvince(userInfo.getProvince());
-				// language
-				wechatMember.setHeadImageUrl(userInfo.getHeadimgurl());
-				//关注时间
-				wechatMember.setSubscribeTime(userInfo.getSubscribe_time());
-				// unionid
-				wechatMember.setRemark(userInfo.getRemark());
-
-				
+				WechatMember wechatMemberTemp = new WechatMember();
+				wechatMemberTemp.setWxCode(openid);				
+				List<WechatMember> wechatMemberTemps =  wechatMemberDao.selectList(wechatMemberTemp);
+				if(wechatMemberTemps!=null&&wechatMemberTemps.size()>0){
+					WechatMember wechatMemberBack = wechatMemberTemps.get(0);
+					if(event.equals("subscribe")){
+						wechatMemberBack.setSubscribeYn("Y");
+					}else{
+						wechatMemberBack.setSubscribeYn("N");
+					}
+					wechatMemberDao.updateById(wechatMemberBack);
+				}else{
+					UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常
+					WechatMember wechatMember = new WechatMember();
+					// subscribe 无对应
+					// openid
+					wechatMember.setWxCode(openid);
+					wechatMember.setNickname(userInfo.getNickname());
+					wechatMember.setSex(userInfo.getSex());
+					wechatMember.setCity(userInfo.getCity());
+					wechatMember.setCountry(userInfo.getCountry());
+					wechatMember.setProvince(userInfo.getProvince());
+					// language
+					wechatMember.setHeadImageUrl(userInfo.getHeadimgurl());
+					//关注时间
+					wechatMember.setSubscribeTime(userInfo.getSubscribe_time());
+					// unionid
+					wechatMember.setRemark(userInfo.getRemark());
+					wechatMember.setSubscribeYn("Y");
+					wechatMember.setSelected(int2OneByte(0));
+					wechatMemberDao.insert(wechatMember);
+				}
 /*				WebchatComponentVerifyTicket webchatComponentVerifyTicket = new WebchatComponentVerifyTicket();
 				webchatComponentVerifyTicket.setAppId(appIdTemp);
 				webchatComponentVerifyTicket.setCreateTime(Long.parseLong(createTime));
@@ -311,5 +328,10 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	        WxComponentServerApi.accessToken(app);
 		return app;		
 	}
+
+	
+	public static byte int2OneByte(int num) {  
+        return (byte) (num & 0x000000ff);  
+    }
 
 }
