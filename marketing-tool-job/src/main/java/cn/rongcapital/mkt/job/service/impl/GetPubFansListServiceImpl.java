@@ -143,7 +143,9 @@ public class GetPubFansListServiceImpl implements TaskService {
 					} else {
 						paramFan.put("country", wechatMember.getCountry());
 					}
-	
+					String wxGroupId = wechatMember.getWxGroupId();
+					wxGroupId = wxGroupId == null ? "" : wxGroupId;
+					paramFan.put("wx_group_id", wxGroupId);
 					paramFan.put("county", wechatMember.getCounty());
 					paramFan.put("birthday", wechatMember.getBirthday());
 					paramFan.put("subscribe_yn", "Y");
@@ -159,6 +161,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 			}
 			if (fansList != null && fansList.size() > 0) {
 				logger.info("now page number add list size: " + fansList.size());
+				wechatMemberDao.deleteFansByWxcode(fansList);
 				wechatMemberDao.batchInsertFans(fansList);
 				fansList.clear();
 			}
