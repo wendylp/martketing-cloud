@@ -81,50 +81,46 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
 		WechatRegister wechatRegister = new WechatRegister();
 		wechatRegister.setAppId(app.getAuthAppId());
 		List<WechatRegister> wechatRegisterLists = wechatRegisterDao.selectList(wechatRegister);
-		WechatRegister wg = wechatRegisterLists.get(0);
-		
 		List<WechatMember> wechatMemberLists = new ArrayList<WechatMember>();
-		// 根据粉丝的openid获取粉丝信息
-		for (String openid : openidLists) {
-			UserInfo userInfo = WxComponentServerApi.getUserInfo(app, openid);// 如果openid出错，sdk会直接抛出异常
-			WechatMember wechatMember = new WechatMember();
-			// subscribe 无对应
-			// openid
-			wechatMember.setWxCode(userInfo.getOpenid());
-			wechatMember.setWxName(userInfo.getNickname());
-			wechatMember.setNickname(userInfo.getNickname());
-			wechatMember.setSex(userInfo.getSex());
-			wechatMember.setCity(userInfo.getCity());
-			wechatMember.setCountry(userInfo.getCountry());
-			wechatMember.setProvince(userInfo.getProvince());
-			// language
-			wechatMember.setHeadImageUrl(userInfo.getHeadimgurl());
-			
-			Long millisecond = new Long(userInfo.getSubscribe_time())*1000;
-			
-			Date data = new Date(millisecond);
-			// 关注时间
-			wechatMember.setSubscribeTime(DateUtil.getStringFromDate(data, "yyyy-MM-dd HH:mm:ss"));
-			// unionid
-			wechatMember.setRemark(userInfo.getRemark());
-			StringBuffer sb = new StringBuffer();
-			List<String> tagList = userInfo.getTagid_list();
+		if(wechatRegisterLists!=null&&wechatRegisterLists.size()>0){
+			WechatRegister wg = wechatRegisterLists.get(0);
+			// 根据粉丝的openid获取粉丝信息
+			for (String openid : openidLists) {
+				UserInfo userInfo = WxComponentServerApi.getUserInfo(app, openid);// 如果openid出错，sdk会直接抛出异常
+				WechatMember wechatMember = new WechatMember();
+				// subscribe 无对应
+				// openid
+				wechatMember.setWxCode(userInfo.getOpenid());
+				wechatMember.setWxName(userInfo.getNickname());
+				wechatMember.setNickname(userInfo.getNickname());
+				wechatMember.setSex(userInfo.getSex());
+				wechatMember.setCity(userInfo.getCity());
+				wechatMember.setCountry(userInfo.getCountry());
+				wechatMember.setProvince(userInfo.getProvince());
+				// language
+				wechatMember.setHeadImageUrl(userInfo.getHeadimgurl());
+				
+				Long millisecond = new Long(userInfo.getSubscribe_time())*1000;
+				
+				Date data = new Date(millisecond);
+				// 关注时间
+				wechatMember.setSubscribeTime(DateUtil.getStringFromDate(data, "yyyy-MM-dd HH:mm:ss"));
+				// unionid
+				wechatMember.setRemark(userInfo.getRemark());
+				StringBuffer sb = new StringBuffer();
+				List<String> tagList = userInfo.getTagid_list();
 
-			if (tagList != null && tagList.size() > 0) {
-				for (int i = 0; i < tagList.size(); i++) {
-					sb.append(tagList.get(i));
-					sb.append(",");
+				if (tagList != null && tagList.size() > 0) {
+					for (int i = 0; i < tagList.size(); i++) {
+						sb.append(tagList.get(i));
+						sb.append(",");
+					}
 				}
+				wechatMember.setWxGroupId(sb.toString());
+				wechatMember.setPubId(wg.getWxAcct());
+				wechatMemberLists.add(wechatMember);
 			}
-			wechatMember.setWxGroupId(sb.toString());
-			wechatMember.setPubId(wg.getWxAcct());
-			// groupid
-			// privilege
-			// tagid_list
-
-			wechatMemberLists.add(wechatMember);
 		}
-
 		logger.debug("获取的粉丝信息共：{} 条", wechatMemberLists.size());
 
 		return wechatMemberLists;
