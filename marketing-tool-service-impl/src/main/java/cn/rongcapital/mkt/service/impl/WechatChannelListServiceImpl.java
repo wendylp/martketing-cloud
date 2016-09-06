@@ -37,12 +37,6 @@ public class WechatChannelListServiceImpl implements WechatChannelListService {
 		
 		//增加默认六项系统默认渠道
 		List<String> sysChannel = new ArrayList<String>();
-		sysChannel.add("经销商");
-		sysChannel.add("渠道商");
-		sysChannel.add("区域");
-		sysChannel.add("员工");
-		sysChannel.add("门店");
-		sysChannel.add("活动");
 
 		if (CollectionUtils.isNotEmpty(wechatChannels)) {
 			result.setTotal(wechatChannels.size() + sysChannel.size());
@@ -53,20 +47,7 @@ public class WechatChannelListServiceImpl implements WechatChannelListService {
 				channelMap.put("channel_type", w.getType());
 				channelMap.put("channel_removed", w.getIsRemoved());
 				result.getData().add(channelMap);
-			}
-			
-			Map<String, Object> channelMap = null;
-			int channel_id = 1;
-			for(String channelName : sysChannel){
-			    channelMap = new HashMap<String, Object>();
-				channelMap.put("channel_id", channel_id);
-				channelMap.put("channel_name", channelName);
-				channelMap.put("channel_type",0);
-				channelMap.put("channel_removed",0);
-				result.getData().add(channelMap);
-				channel_id++;
-			}
-			
+			}	
 		}
 		return result;
 	}
