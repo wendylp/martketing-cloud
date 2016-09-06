@@ -14,6 +14,8 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -41,6 +43,8 @@ import heracles.data.common.util.ReadWriteType;
 @Transactional
 public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	SegmentationHeadDao segmentationHeadDao;
 
@@ -59,7 +63,18 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 	public BaseOutput updateSegmentTag(SegmentTagUpdateIn body, SecurityContext securityContext) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
-		Integer headerId = Integer.valueOf(body.getSegmentHeadId());
+		
+		
+		Integer headerId;
+		try {
+			headerId = Integer.valueOf(body.getSegmentHeadId());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			baseOutput.setCode(9001);
+			baseOutput.setMsg("细分人群编号不能为空");
+			return baseOutput;
+		}
+		
 		List<String> tagNames = body.getTagNames();
 		// Date now = new Date();
 

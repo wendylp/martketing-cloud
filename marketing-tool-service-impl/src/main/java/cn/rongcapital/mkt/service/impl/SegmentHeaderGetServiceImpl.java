@@ -58,7 +58,7 @@ public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			out.setCode(9001);
-			out.setMsg(e.getMessage());
+			out.setMsg("细分人群编号不能为空");
 //			e.printStackTrace();
 		}
 		return out;
