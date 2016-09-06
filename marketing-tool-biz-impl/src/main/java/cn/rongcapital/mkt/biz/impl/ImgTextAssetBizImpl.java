@@ -60,10 +60,27 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 		App app = this.getApp();
 		app.setAuthAppId(authAppId);
 		app.setAuthRefreshToken(authorizer_refresh_token);
-		long materialCount = this.getMaterialCount(app);
-		String materialListStr= WxComponentServerApi.getBaseWxSdk().getMaterialList(app,type,0,materialCount);
-		System.out.println(materialListStr);
-		List<ImgTextAsset> imgTextAssetes = this.getImgTextAssetes(materialListStr);
+		
+		long materialCountAll = this.getMaterialCount(app);
+		if(materialCountAll <= 0) {
+			return null;
+		}
+		
+		List<ImgTextAsset> imgTextAssetes = new ArrayList<ImgTextAsset>();
+		
+		long offset = 0;
+		long materialCount = 0;
+		while(offset  < materialCountAll) {
+			materialCount = materialCountAll - offset;
+			if(materialCount > 20) {
+				materialCount = 20;
+			}
+			String materialListStr= WxComponentServerApi.getBaseWxSdk().getMaterialList(app,type,offset,materialCount);
+			System.out.println(materialListStr);
+			imgTextAssetes.addAll(this.getImgTextAssetes(materialListStr));
+			offset += materialCount;
+		}
+		
 		return imgTextAssetes;
 	}
 	
@@ -121,7 +138,7 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 	public List<ImgTextAsset> getImgTextAssete(WXImgText wxImgText){
 		ImgTextAsset imgTextAsset = new ImgTextAsset();
 		imgTextAsset.setMaterialId(wxImgText.getMedia_id());		
-		imgTextAsset.setUpdateTime(new Date(wxImgText.getUpdate_time()));
+		imgTextAsset.setUpdateTime(new Date(wxImgText.getUpdate_time() * 1000));
 		WXImgTextContent wxImgTextContent = wxImgText.getContent();
 		List<ImgTextAsset> imgTextAssets = this.getImgTextAsseteFromWXImgTextContent(imgTextAsset, wxImgTextContent);
 		return imgTextAssets;		
@@ -130,7 +147,7 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 	public List<ImgTextAsset> getImgTextAsseteFromWXImgTextContent(ImgTextAsset imgTextAsset,WXImgTextContent wxImgTextContent){
 		List<ImgTextAsset> imgTextAssets = new ArrayList<ImgTextAsset>();
 		List<WXNewsItem> wxNewsItems = wxImgTextContent.getNewsItem();
-		imgTextAsset.setCreateTime(new Date(wxImgTextContent.getCreate_time()));
+		imgTextAsset.setCreateTime(new Date(wxImgTextContent.getCreate_time() * 1000));
 		if(wxNewsItems!=null&&wxNewsItems.size()>0){
 			for(Iterator<WXNewsItem> iter = wxNewsItems.iterator();iter.hasNext();){
 				WXNewsItem wxNewsItem = iter.next();

@@ -54,7 +54,6 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     @Override
     public void task(Integer taskId) {
     	// callH5PlusMethod(Integer taskId);
-    	// 需要pub_id pub_name
     	List<WebchatAuthInfo> selectListByIdList = webchatAuthInfoDao.selectList(new WebchatAuthInfo());
     	if (!CollectionUtils.isEmpty(selectListByIdList)) {
     		for (WebchatAuthInfo info : selectListByIdList) {
@@ -62,12 +61,12 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     			wechatRegister.setAppId(info.getAuthorizerAppid());
     			List<WechatRegister> wechatRegisterLists = wechatRegisterDao.selectList(wechatRegister);
     			
-//    			if(wechatRegisterLists != null && wechatRegisterLists.size() > 0) {
-//    				wechatRegister = wechatRegisterLists.get(0);
-//    			} else {
-//    				logger.debug("在wechat_register表中根据app_id查不到信息，app_id = {}", info.getAuthorizerAppid());
-//    				continue;
-//    			}
+    			if(wechatRegisterLists != null && wechatRegisterLists.size() > 0) {
+    				wechatRegister = wechatRegisterLists.get(0);
+    			} else {
+    				logger.debug("在wechat_register表中根据app_id查不到信息，app_id = {}", info.getAuthorizerAppid());
+    				//continue;
+    			}
     			
     			List<ImgTextAsset> imgTextAssetLists = imgTextAssetBiz.getMaterialList(info.getAuthorizerAppid(),
     					info.getAuthorizerRefreshToken(),"news");
@@ -82,10 +81,10 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     					
     					Integer id = imgTextAssetDao.selectImgtextIdByMaterialId(imgTextAssetList.getMaterialId());
     					if(id != null) {
-    						imgTextAssetList.setMaterialId(id.toString());
-    						imgTextAssetDao.updateById(imgTextAssetList);
+    						imgTextAssetList.setId(id);
+    						imgTextAssetDao.updateByIdWithDate(imgTextAssetList);
     					} else {
-    						imgTextAssetDao.insert(imgTextAssetList);
+    						imgTextAssetDao.insertWithDate(imgTextAssetList);
     					}
     				}
     			} else {
