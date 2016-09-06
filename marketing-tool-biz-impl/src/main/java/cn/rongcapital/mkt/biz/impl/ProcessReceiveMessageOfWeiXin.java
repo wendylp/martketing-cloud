@@ -347,6 +347,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	 * @return
 	 */
 	public Token accessToken(App app){
+		
 		try {
 			String url = "https://api.weixin.qq.com/cgi-bin/component/api_component_token";
 			Map<String, Object> params = new HashMap<String, Object>();
