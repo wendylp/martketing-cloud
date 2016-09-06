@@ -71,11 +71,11 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		wechatQrcode.setPageSize(null);
 		List<WechatQrcode> countList = wechatQrcodeDao.selectListExpirationTime(wechatQrcode);
 		
-		result.setTotalCount(wechatQrcodeLists.size());
+		result.setTotal(wechatQrcodeLists.size());
 		if (wechatQrcodeLists != null && !wechatQrcodeLists.isEmpty()) {
 			result = addData(result, wechatQrcodeLists);
 		}
-		result.setTotal(countList.size());
+		result.setTotalCount(countList.size());
 		return result;
 	}
 	
