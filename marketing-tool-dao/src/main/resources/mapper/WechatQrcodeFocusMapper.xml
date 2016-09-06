@@ -237,7 +237,7 @@
 		<where>
 			    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
 			    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
-			    	qrcode_id IS NOT NULL
+			    	and qrcode_id IS NOT NULL
 		</where>
 		GROUP BY qrcode_id
 	</select>

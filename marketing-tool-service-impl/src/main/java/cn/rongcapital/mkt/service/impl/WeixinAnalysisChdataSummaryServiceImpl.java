@@ -67,6 +67,7 @@ public class WeixinAnalysisChdataSummaryServiceImpl implements WeixinAnalysisChd
 		}
 		// 根据微信名和渠道号获取二维码id
 		List<String> qrcodeIdLists = wechatQrcodeFocusDao.getQrcodeIdList(wechatQrcodeFocus);
+		qrcodeIdLists.add("0");
 		// 用两个关注时间来存储设置的开始和结束时间
 		wechatQrcodeFocus.setFocusDatetime(DateUtil.getDateFromString(startDate, "yyyy-MM-dd"));
 		wechatQrcodeFocus.setUnfocusDatetime(DateUtil.getDateFromString(endDate, "yyyy-MM-dd"));
@@ -74,18 +75,22 @@ public class WeixinAnalysisChdataSummaryServiceImpl implements WeixinAnalysisChd
 		BaseOutput baseOutput = weixinAnalysisChdataListService.getAnalysisChdata(wxName, chCode, startDate, endDate);
 		
 		List<Object> analysisChdataMap = baseOutput.getData();
-		
-		int analysisChdataMapSize = analysisChdataMap.size();
 		long[] analysisChdataInt = { 0, 0, 0, 0, 0 };
-		for (int i = 0; i < analysisChdataMapSize; i++) {
-			Map<String, Object> map = (Map<String, Object>) analysisChdataMap.get(i);
-			analysisChdataInt[0] += Integer.valueOf(map.get("total_scan").toString());
-			analysisChdataInt[1] += Integer.valueOf(map.get("total_scan_user").toString());
-			analysisChdataInt[2] += Integer.valueOf(map.get("total_focus").toString());
-			analysisChdataInt[3] += Integer.valueOf(map.get("new_focus").toString());
-			analysisChdataInt[4] += Integer.valueOf(map.get("lost_focus").toString());
-			
+		int analysisChdataMapSize = analysisChdataMap.size();
+		if(analysisChdataMapSize == 0) {
+			analysisChdataMapSize = 1; 
+		} else {
+			for (int i = 0; i < analysisChdataMapSize; i++) {
+				Map<String, Object> map = (Map<String, Object>) analysisChdataMap.get(i);
+				analysisChdataInt[0] += Integer.valueOf(map.get("total_scan").toString());
+				analysisChdataInt[1] += Integer.valueOf(map.get("total_scan_user").toString());
+				analysisChdataInt[2] += Integer.valueOf(map.get("total_focus").toString());
+				analysisChdataInt[3] += Integer.valueOf(map.get("new_focus").toString());
+				analysisChdataInt[4] += Integer.valueOf(map.get("lost_focus").toString());
+				
+			}
 		}
+		
 		
 		// 获取总扫码次数最大值
 		Map<String, Object> amountScanMax = wechatQrcodeScanDao.getAmountScanMax(qrcodeIdLists);
@@ -123,21 +128,54 @@ public class WeixinAnalysisChdataSummaryServiceImpl implements WeixinAnalysisChd
 		Alldata.put("sum", sumData);
 		
 		
-		Map<String, Object> max = new HashMap<String, Object>();
 		Map<String, Object> maxData = new HashMap<String, Object>();
-		maxData.put("amount_scan", amountScanMax.get("value"));
-		maxData.put("amount_scan_user", amountScanUserMax.get("value"));
-		maxData.put("amount_focus", amountFocusMax.get("value"));
-		maxData.put("new_focus", newFocusMax.get("value"));
-		maxData.put("add_focus", AddFocusMax.get("value"));
-		maxData.put("lost_focus", lostFocusMax.get("value"));
+		if(amountScanMax != null) {
+			maxData.put("amount_scan", amountScanMax.get("value"));
+			maxData.put("amount_scan_date", amountScanMax.get("time"));
+		} else {
+			maxData.put("amount_scan", "");
+			maxData.put("amount_scan_date", "");
+		}
 		
-		maxData.put("amount_scan_date", amountScanMax.get("time"));
-		maxData.put("amount_scan_user_date", amountScanUserMax.get("time"));
-		maxData.put("amount_focus_date", amountFocusMax.get("time"));
-		maxData.put("new_focus_date", newFocusMax.get("time"));
-		maxData.put("add_focus_date", AddFocusMax.get("time"));
-		maxData.put("lost_focus_date", lostFocusMax.get("time"));
+		if(amountScanUserMax != null) {
+			maxData.put("amount_scan_user", amountScanUserMax.get("value"));
+			maxData.put("amount_scan_user_date", amountScanUserMax.get("time"));
+		} else {
+			maxData.put("amount_scan_user", "");
+			maxData.put("amount_scan_user_date", "");
+		}
+		
+		if(amountFocusMax != null) {
+			maxData.put("amount_focus", amountFocusMax.get("value"));
+			maxData.put("amount_focus_date", amountFocusMax.get("time"));
+		} else {
+			maxData.put("amount_focus", "");
+			maxData.put("amount_focus_date", "");
+		}
+		
+		if(newFocusMax != null) {
+			maxData.put("new_focus", newFocusMax.get("value"));
+			maxData.put("new_focus_date", newFocusMax.get("time"));
+		} else {
+			maxData.put("new_focus", "");
+			maxData.put("new_focus_date", "");
+		}
+		
+		if(AddFocusMax != null) {
+			maxData.put("add_focus", AddFocusMax.get("value"));
+			maxData.put("add_focus_date", AddFocusMax.get("time"));
+		} else {
+			maxData.put("add_focus", "");
+			maxData.put("add_focus_date", "");
+		}
+		
+		if(lostFocusMax != null) {
+			maxData.put("lost_focus", lostFocusMax.get("value"));
+			maxData.put("lost_focus_date", lostFocusMax.get("time"));
+		} else {
+			maxData.put("lost_focus", "");
+			maxData.put("lost_focus_date", "");
+		}
 		
 		Alldata.put("max", maxData);
 		
