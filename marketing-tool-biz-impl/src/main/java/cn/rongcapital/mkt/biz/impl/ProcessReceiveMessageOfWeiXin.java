@@ -328,7 +328,12 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	        	app.setComponentTicket(componentTicket);	        	
 	        }
 	        logger.info("44444444444444444444444444444444444444444");
-	        WxComponentServerApi.accessToken(app);
+	        try {
+				WxComponentServerApi.accessToken(app);
+			} catch (Exception e) {
+				logger.info(e.getMessage());
+				e.printStackTrace();
+			}
 	        logger.info("5555555555555555555555555555555555555");
 		return app;		
 	}
