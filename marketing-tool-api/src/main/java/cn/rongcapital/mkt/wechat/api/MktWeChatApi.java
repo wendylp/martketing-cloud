@@ -686,8 +686,8 @@ public class MktWeChatApi {
 	@GET
 	@Path("/mkt.weixin.analysis.chdata.summary")
 	public BaseOutput getAnalysisChdataSummary(
-			@NotNull @QueryParam("wx_name") String wxName,
-			@NotEmpty @QueryParam("ch_code") String chCode,
+			@QueryParam("wx_name") String wxName,
+			@QueryParam("ch_code") String chCode,
 			@NotEmpty @QueryParam("start_date") String startDate,
 			@NotEmpty @QueryParam("end_date") String endDate) {
 		return weixinAnalysisChdataSummaryService.getAnalysisChdataSummary(wxName, chCode, startDate, endDate);
