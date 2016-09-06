@@ -324,7 +324,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	        	WebchatComponentVerifyTicket webchatComponentVerifyTicket = list.get(0);
 	        	logger.info("22222222222222222222222222");
 	        	String componentTicket = webchatComponentVerifyTicket.getComponentVerifyTicket();
-	        	logger.info("33333333333333333333333333333333333");
+	        	logger.info("*************************componentTicket:"+componentTicket+"componentTicketId:"+webchatComponentVerifyTicket.getId());
 	        	app.setComponentTicket(componentTicket);	        	
 	        }
 	        logger.info("44444444444444444444444444444444444444444");
