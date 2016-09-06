@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.tagsin.wechat_sdk.App;
-import com.tagsin.wechat_sdk.WXServerApi;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 
 import cn.rongcapital.mkt.biz.MessageSendBiz;
@@ -35,11 +34,11 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 	@Override
 	public Boolean send(App app,String touser, String content, String media_id) {
 		Boolean issended = false;
-		touser = "o6Sp6v63INZWYn-b2e0bIVepgoMY";
-		
-		app = this.getApp();
-		app.setAuthAppId("wxeb10897c0cd98e36");
-		app.setAuthRefreshToken("refreshtoken@@@kkMVjC90JS9ooW_zsUUhfvjFbwAlfvB9pmBTZArGYMM");
+//		touser = "o6Sp6v63INZWYn-b2e0bIVepgoMY";
+//		
+//		app = this.getApp();
+//		app.setAuthAppId("wxeb10897c0cd98e36");
+//		app.setAuthRefreshToken("refreshtoken@@@kkMVjC90JS9ooW_zsUUhfvjFbwAlfvB9pmBTZArGYMM");
 		
 		// 发送文字消息
 		if(content != null && content.length() > 0) {
@@ -73,13 +72,21 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 	 */
 	@Override
 	public Boolean sendAll(App app, boolean isToAll, String tagId, String msgType, String media_id) {
+		
 		Boolean issended = false;
-		String issendedBack =  WxComponentServerApi.getBaseWxSdk().sendAll(app, isToAll, Long.parseLong(tagId), msgType, media_id);
-		System.out.println(issendedBack);
-		if(issended == false) {
-			logger.debug("群发消息发送图片消息失败，tagId:"+tagId);
-		}
-		return null;
+		try {
+			String issendedBack =  WxComponentServerApi.getBaseWxSdk().sendAll(app, isToAll, Long.parseLong(tagId), msgType, media_id);
+			//获取
+			String flag = issendedBack.substring(issendedBack.indexOf(":", 0)+1, issendedBack.indexOf("errmsg")-2);
+			if("0".equals(flag))issended = true;
+			if(issended == false) {
+				logger.debug("群发消息发送图片消息失败，tagId:"+tagId);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("批量发送图文方法出现异常："+e.getMessage());
+		} 
+		return issended;
 	}
 	
 	
