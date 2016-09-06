@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 
@@ -76,9 +78,10 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 		Boolean issended = false;
 		try {
 			String issendedBack =  WxComponentServerApi.getBaseWxSdk().sendAll(app, isToAll, Long.parseLong(tagId), msgType, media_id);
-			//获取
-			String flag = issendedBack.substring(issendedBack.indexOf(":", 0)+1, issendedBack.indexOf("errmsg")-2);
-			if("0".equals(flag))issended = true;
+			//获取errcode
+			JSONObject userJson = JSON.parseObject(issendedBack);
+			Integer jsonInt = userJson.getInteger("errcode");
+			if(0 == jsonInt)issended = true;
 			if(issended == false) {
 				logger.debug("群发消息发送图片消息失败，tagId:"+tagId);
 			}
