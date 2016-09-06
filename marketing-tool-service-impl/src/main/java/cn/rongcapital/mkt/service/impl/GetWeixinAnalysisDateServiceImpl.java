@@ -51,6 +51,7 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
             for(WechatQrcodeFocus wechatQrcodeFocus: wechatQrcodeFocusList){
                 if(wechatQrcodeFocus.getFocusDatetime() != null){
                     minDateInMysql = wechatQrcodeFocus.getFocusDatetime();
+                    break;
                 }
             }
             if(wechatQrcodeFocusList.get(wechatQrcodeFocusList.size()-1).getFocusDatetime() != null){
@@ -66,7 +67,6 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
         todayMap.put("StarDate",todayDate);
         todayMap.put("EndDate",todayDate);
         MapResult.put("Today", todayMap);
-        //result.getData().add(MapResult);
 
         calendar.add(Calendar.DAY_OF_MONTH,-1);
         String yesToday = DateUtil.getStringFromDate(calendar.getTime(),"yyyy-MM-dd");
@@ -75,31 +75,23 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
         yesTodayMap.put("StarDate",yesToday);
         yesTodayMap.put("EndDate",todayDate);
         MapResult.put("Yestoday", yesTodayMap);
-        //result.getData().add(yesTodayMapResult);
 
         calendar.add(calendar.DAY_OF_MONTH,1);
         calendar.add(calendar.DAY_OF_MONTH,-7);
-        //Map<String,Map<String,String>> daySevenMapResult = new HashMap<>();
         Map<String, String> daySevenMap = generateResultMap(DAY_7_SCOPE,minDateInMysql, calendar, todayDate);
         MapResult.put(DAY_7_SCOPE, daySevenMap);
-        //result.getData().add(MapResult);
 
         calendar.add(calendar.DAY_OF_MONTH,7);
         calendar.add(calendar.DAY_OF_MONTH,-30);
         Map<String,String> dayMonthMap = generateResultMap(DAY_30_SCOPE,minDateInMysql,calendar,todayDate);
         MapResult.put(DAY_30_SCOPE, dayMonthMap);
-        //result.getData().add(MapResult);
 
         Map<String,String> focusMap = new HashMap<String, String>();
-        //Map<String,Map<String,String>> focusMapResult = new HashMap<>();
         focusMap.put("RecordScope","");
-        focusMap.put("StarDate",DateUtil.getStringFromDate(minDateInMysql,"yyyy-MM-dd"));
-        focusMap.put("EndDate",DateUtil.getStringFromDate(maxDateInMysql,"yyyy-MM-dd"));
+        focusMap.put("StarDate",minDateInMysql == null? null:DateUtil.getStringFromDate(minDateInMysql,"yyyy-MM-dd"));
+        focusMap.put("EndDate",maxDateInMysql == null? null:DateUtil.getStringFromDate(maxDateInMysql,"yyyy-MM-dd"));
         MapResult.put("RecordScope", focusMap);
-        //result.getData().add(MapResult);
 
-        //Map<String,Object> channelMap = new HashMap<String,Object>();
-        //Map<String,Object> wxInfoMap = new HashMap<String, Object>();
         if(qrcodeId == null || qrcodeId.length()==0){
             constructNullResultForWxInfoAndChannelInfo(result, MapResult);
         }else {
@@ -109,7 +101,6 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
             if(!CollectionUtils.isEmpty(wechatQrcodeList)){
             	MapResult.put("wxmp_name",wechatQrcodeList.get(0).getWxName());
             	MapResult.put("wx_acct",wechatQrcodeList.get(0).getWxAcct());
-                //result.getData().add(MapResult);
 
                 WechatChannel wechatChannel = new WechatChannel();
                 wechatChannel.setId(wechatQrcode.getChCode());
@@ -148,7 +139,7 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
         if(minDateInMysql != null){
             daySevenMap.put("StarDate", DateUtil.getStringFromDate((minDateInMysql.before(calendar.getTime())? calendar.getTime():minDateInMysql),"yyyy-MM-dd"));
         }else{
-            daySevenMap.put("StarDate",DateUtil.getStringFromDate(calendar.getTime(),"yyyy-MM-dd"));
+            daySevenMap.put("StarDate",todayDate);
         }
         daySevenMap.put("EndDate",todayDate);
         return daySevenMap;
