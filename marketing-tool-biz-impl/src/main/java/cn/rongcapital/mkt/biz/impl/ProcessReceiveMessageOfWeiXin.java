@@ -203,31 +203,24 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 			XMLInputFactory xmlFactory  = XMLInputFactory.newInstance();  
 			InputStream   textxmlis   =   new   ByteArrayInputStream(textXml.getBytes());   			
 			ComponentVerifyTicketIn componentVerifyTicketIn = (ComponentVerifyTicketIn)unmarshaller.unmarshal(textxmlis);	
-
-			
 			String appId= componentVerifyTicketIn.getAppId();
 			String encrypt = componentVerifyTicketIn.getEncrypt();
 			appId ="wx1f363449a14a1ad8";
-			appId ="wx00f7d56d549f82ce";
-			logger.info("000000000000000000000000000000000000000000000000" );
+			appId ="wx00f7d56d549f82ce";			
 /*	        encrypt = "<xml>"+
 	        		"<AppId><![CDATA["+componentVerifyTicketIn.getAppId()+"]]></AppId>"+
 	        		"<ToUserName><![CDATA["+componentVerifyTicketIn.getToUserName()+"]]></ToUserName>"+
 	    	        "<Encrypt><![CDATA["+componentVerifyTicketIn.getEncrypt()+"]]></Encrypt>"+
 	    	        "</xml>";*/
-			encrypt=textXml;
-			logger.info("11111111111111111111111111111111111111111111" );
-			WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);
-			logger.info("333333333333333333333333333333333333333333333" );
+			encrypt=textXml;			
+			WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);			
 //			String newencrypt = new String(encrypt.getBytes(), "UTF-8");  
 			// 第三方收到公众号平台发送的消息
 			logger.info(encrypt );
-			String result2 = pc.decryptMsg(msg_signature, timestamp, nonce, encrypt);
-			logger.info("444444444444444444444444444444444444444444444444" );
+			String result2 = pc.decryptMsg(msg_signature, timestamp, nonce, encrypt);			
 			System.out.println("解密后明文: " + result2);
 			logger.info("解密后明文: " + result2);			
-			String webchatComponentVerifyTicketJson = Xml2JsonUtil.xml2JSON(result2);
-			logger.info("555555555555555555555555555555555555555555555555555" );
+			String webchatComponentVerifyTicketJson = Xml2JsonUtil.xml2JSON(result2);			
 			try {
 				JSONObject myJsonObject = JSONObject.parseObject(webchatComponentVerifyTicketJson);
 				webchatComponentVerifyTicketJson = myJsonObject.get("xml").toString();
@@ -244,8 +237,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 				String fromUserName = myJsonObject.getString("FromUserName");
 				fromUserName = fromUserName.substring(2, fromUserName.length()-2);
 				String msgType = myJsonObject.getString("MsgType");
-				msgType = msgType.substring(2, msgType.length()-2);
-				logger.info("6666666666666666666666666666666666666666666666" );
+				msgType = msgType.substring(2, msgType.length()-2);				
 				App app = this.getApp();				
 //				app.setAuthRefreshToken(authRefreshToken);
 //				app.setAuthAppId(authorizer_appid);
@@ -324,13 +316,20 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	        webchatComponentVerifyTicketq.setOrderFieldType("desc");
 	        webchatComponentVerifyTicketq.setStartIndex(0);
 	        webchatComponentVerifyTicketq.setPageSize(1);
+	        logger.info("00000000000000000000000000000000000000" );
 	        List<WebchatComponentVerifyTicket> list = webchatComponentVerifyTicketDao.selectList(webchatComponentVerifyTicketq);
+	        logger.info("1111111111111111111111111111111111111" );
 	        if(list!=null&&list.size()>0){
+	        	logger.info("**************************" +list.size());
 	        	WebchatComponentVerifyTicket webchatComponentVerifyTicket = list.get(0);
+	        	logger.info("22222222222222222222222222");
 	        	String componentTicket = webchatComponentVerifyTicket.getComponentVerifyTicket();
-	        	app.setComponentTicket(componentTicket);
+	        	logger.info("33333333333333333333333333333333333");
+	        	app.setComponentTicket(componentTicket);	        	
 	        }
+	        logger.info("44444444444444444444444444444444444444444");
 	        WxComponentServerApi.accessToken(app);
+	        logger.info("5555555555555555555555555555555555555");
 		return app;		
 	}
 
