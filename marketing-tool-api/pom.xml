@@ -30,11 +30,11 @@
 			<artifactId>marketing-tool-biz-impl</artifactId>
 			<version>${project.parent.version}</version>
 			<exclusions>				
-				<exclusion>
+<!-- 				<exclusion>
 					<groupId>org.freemarker</groupId>
 					<artifactId>freemarker</artifactId>
 				</exclusion>
-				<exclusion>
+ -->				<exclusion>
 					<groupId>org.mortbay.jetty</groupId>
 					<artifactId>servlet-api</artifactId>
 				</exclusion>
