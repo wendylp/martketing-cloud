@@ -245,16 +245,17 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 				fromUserName = fromUserName.substring(2, fromUserName.length()-2);
 				String msgType = myJsonObject.getString("MsgType");
 				msgType = msgType.substring(2, msgType.length()-2);
-				
+				logger.info("6666666666666666666666666666666666666666666666" );
 				App app = this.getApp();				
 //				app.setAuthRefreshToken(authRefreshToken);
 //				app.setAuthAppId(authorizer_appid);
 				app.setAuthRefreshToken("refreshtoken@@@gcxmruaeql5C84jx-VHSnt99pOxbEWycsHz7tKgL-ao");
 				app.setAuthAppId("wx1f363449a14a1ad8");
-				
+				logger.info("7777777777777777777777777777777" );
 				WechatMember wechatMemberTemp = new WechatMember();
 				wechatMemberTemp.setWxCode(openid);				
 				List<WechatMember> wechatMemberTemps =  wechatMemberDao.selectList(wechatMemberTemp);
+				logger.info("88888888888888888888888888888888888888888888" );
 				if(wechatMemberTemps!=null&&wechatMemberTemps.size()>0){
 					WechatMember wechatMemberBack = wechatMemberTemps.get(0);
 					if(event.equals("subscribe")){
@@ -263,7 +264,9 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 						wechatMemberBack.setSubscribeYn("N");
 					}
 					wechatMemberDao.updateById(wechatMemberBack);
+					logger.info("9999999999999999999999999999999999999999999999" );
 				}else{
+					logger.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" );
 					UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常
 					WechatMember wechatMember = new WechatMember();
 					// subscribe 无对应
@@ -282,7 +285,9 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 					wechatMember.setRemark(userInfo.getRemark());
 					wechatMember.setSubscribeYn("Y");
 					wechatMember.setSelected(int2OneByte(0));
+					logger.info("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" );
 					wechatMemberDao.insert(wechatMember);
+					logger.info("cccccccccccccccccccccccccccccccccccccccccccccccccc" );
 				}
 /*				WebchatComponentVerifyTicket webchatComponentVerifyTicket = new WebchatComponentVerifyTicket();
 				webchatComponentVerifyTicket.setAppId(appIdTemp);
