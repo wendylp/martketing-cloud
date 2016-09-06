@@ -193,8 +193,8 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void getMsgLog(String textXml,String msg_signature,String timestamp,String nonce,String signature,String openid) {
-		
+	public void getMsgLog(String textXml,String msg_signature,String timestamp,String nonce,String signature,String openid) {		
+		logger.info("WebchatComponentVerifyTicketServiceImpl: 开始调试。。。。。。。。。。。。。。。。。。。。。。。" );
 		App app = this.getApp();
 		if(app==null){
 			logger.info("app is null ******************************" );
@@ -205,33 +205,25 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 		app.setAuthAppId("wx1f363449a14a1ad8");
 		logger.info("7777777777777777777777777777777" );
 		
-		logger.info("WebchatComponentVerifyTicketServiceImpl: 开始调试。。。。。。。。。。。。。。。。。。。。。。。" );
 		String encodingAesKey = "abcdefghijklmnopqrstuvwxyz12345678900987654";
 		String token = "ruixuemarketingcloud";				
 		try {
 			JAXBContext context = JAXBContext.newInstance(ComponentVerifyTicketIn.class);  
-			Unmarshaller unmarshaller = context.createUnmarshaller();			
-			XMLInputFactory xmlFactory  = XMLInputFactory.newInstance();  
+			Unmarshaller unmarshaller = context.createUnmarshaller(); 
 			InputStream   textxmlis   =   new   ByteArrayInputStream(textXml.getBytes());   			
 			ComponentVerifyTicketIn componentVerifyTicketIn = (ComponentVerifyTicketIn)unmarshaller.unmarshal(textxmlis);	
 			String appId= componentVerifyTicketIn.getAppId();
 			String encrypt = componentVerifyTicketIn.getEncrypt();
+
 			appId ="wx00f7d56d549f82ce";			
-/*	        encrypt = "<xml>"+
-	        		"<AppId><![CDATA["+componentVerifyTicketIn.getAppId()+"]]></AppId>"+
-	        		"<ToUserName><![CDATA["+componentVerifyTicketIn.getToUserName()+"]]></ToUserName>"+
-	    	        "<Encrypt><![CDATA["+componentVerifyTicketIn.getEncrypt()+"]]></Encrypt>"+
-	    	        "</xml>";*/
 			encrypt=textXml;			
 			WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);			
 //			String newencrypt = new String(encrypt.getBytes(), "UTF-8");  
 			// 第三方收到公众号平台发送的消息
 			logger.info(encrypt );
-			String result2 = pc.decryptMsg(msg_signature, timestamp, nonce, encrypt);			
-			System.out.println("解密后明文: " + result2);
+			String result2 = pc.decryptMsg(msg_signature, timestamp, nonce, encrypt);		
 			logger.info("解密后明文: " + result2);			
 			String webchatComponentVerifyTicketJson = Xml2JsonUtil.xml2JSON(result2);			
-			try {
 				JSONObject myJsonObject = JSONObject.parseObject(webchatComponentVerifyTicketJson);
 				webchatComponentVerifyTicketJson = myJsonObject.get("xml").toString();
 				myJsonObject = JSONObject.parseObject(webchatComponentVerifyTicketJson);
@@ -267,6 +259,8 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 					UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常
 					if(userInfo==null){
 						logger.info("userInfo is null ******************************" );
+					}else{
+						logger.info("userInfo is not null ******************************" );
 					}
 
 					WechatMember wechatMember = new WechatMember();
@@ -290,25 +284,6 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 					wechatMemberDao.insert(wechatMember);
 					logger.info("cccccccccccccccccccccccccccccccccccccccccccccccccc" );
 				}
-/*				WebchatComponentVerifyTicket webchatComponentVerifyTicket = new WebchatComponentVerifyTicket();
-				webchatComponentVerifyTicket.setAppId(appIdTemp);
-				webchatComponentVerifyTicket.setCreateTime(Long.parseLong(createTime));
-				webchatComponentVerifyTicket.setComponentVerifyTicket(componentVerifyTicket);
-				webchatComponentVerifyTicket.setInfoType(infoType);	
-				logger.info("插入数据库开始。。。。。。。。。。。。。。webchatComponentVerifyTicketDao ");
-//				webchatComponentVerifyTicketDao.insert(webchatComponentVerifyTicket);
-				ApiConstant.component_verify_ticket = webchatComponentVerifyTicket.getComponentVerifyTicket();
-				logger.info("插入数据库成功。。。。。。。。。。。。。。webchatComponentVerifyTicketDao ");
-*/
-				//				System.out.println("");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				logger.info(e.getMessage());
-			}
- //           WebchatComponentVerifyTicket webchatComponentVerifyTicket = new WebchatComponentVerifyTicket();
- //   		BeanUtils.copyProperties(componentVerifyTicketIn, webchatComponentVerifyTicket);
- //   		webchatComponentVerifyTicketDao.insert(webchatComponentVerifyTicket);	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
