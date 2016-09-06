@@ -1,19 +1,11 @@
 package cn.rongcapital.mkt.wechat.api;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLInputFactory;
 
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
@@ -22,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.biz.ProcessReceiveMessageOfWeiXinBiz;
-import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXin;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
-import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
 
 @Component
 @Path(ApiConstant.API_PATH_APPID)
@@ -36,6 +25,7 @@ public class MktWeChatMsgApi {
 	
 	@Autowired
 	private ProcessReceiveMessageOfWeiXinBiz processReceiveMessageOfWeiXinBiz;
+	
 	
 	/**
 	 * @param componentVerifyTicketIn
@@ -48,23 +38,13 @@ public class MktWeChatMsgApi {
 	@POST
 	@Path("/mkt.weixin.qrcode.getMsgEvent")
 	@Consumes({MediaType.TEXT_XML})
-	public String getMsgEvent(String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce, @QueryParam("signature") String signature, @QueryParam("openid") String openid){	
+	public String getMsgEvent(String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce, @QueryParam("signature") String signature, @QueryParam("openid") String openid){
 		
-		logger.info("getMsgEvent:"+textxml+"*******************************");		
-
+		logger.info("getMsgEvent:"+textxml+"*******************************");				
 			if(textxml.contentEquals("Event")){}	
-			
-			
 			processReceiveMessageOfWeiXinBiz.getMsgLog(textxml, msg_signature, timestamp, nonce, signature, openid);
-			
-			
-			ProcessReceiveMessageOfWeiXin handler = new ProcessReceiveMessageOfWeiXin();
-			String textxmlBack = handler.process(textxml.getBytes());	
-			
-			System.out.println(textxmlBack);
-		
-
-		
+/*			ProcessReceiveMessageOfWeiXin handler = new ProcessReceiveMessageOfWeiXin();
+			String textxmlBack = handler.process(textxml.getBytes());*/
 		return "success";		
 	}
 
