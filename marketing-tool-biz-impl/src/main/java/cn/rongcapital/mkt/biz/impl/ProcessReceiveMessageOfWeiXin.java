@@ -316,7 +316,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 				WxComponentServerApi.accessToken(app);
 			} catch (Exception e) {
 				logger.info("66666666666666666666666666666666666666666");
-				logger.info(e.getMessage());
+				logger.info(e.getMessage(),e);
 				logger.info("77777777777777777777777777777777777777777");
 				e.printStackTrace();
 			}
