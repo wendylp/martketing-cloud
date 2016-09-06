@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 import com.qq.weixin.mp.aes.WXBizMsgCrypt;
 import com.tagsin.wechat_sdk.App;
+import com.tagsin.wechat_sdk.WXServerApiException;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 
 //import javax.xml.bind.JAXBContext;
@@ -287,7 +288,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			logger.info(e.getMessage());
+			logger.info(e.getMessage(),e);
 		}
 		
 			
@@ -314,9 +315,11 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	        logger.info("44444444444444444444444444444444444444444");
 	        try {
 				WxComponentServerApi.accessToken(app);
+//				throw new WXServerApiException(new Exception("afdasfasfdasfa"));
 			} catch (Exception e) {
 				logger.info("66666666666666666666666666666666666666666");
 				logger.info(e.getMessage(),e);
+				logger.error("Failed to format {}",e.getMessage(), e);
 				logger.info("77777777777777777777777777777777777777777");
 				e.printStackTrace();
 			}
