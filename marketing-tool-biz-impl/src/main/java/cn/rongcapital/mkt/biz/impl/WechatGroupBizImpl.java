@@ -83,32 +83,33 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 		WechatRegister wechatRegister = new WechatRegister();
 		wechatRegister.setAppId(app.getAuthAppId());
 		List<WechatRegister> wechatRegisterLists = wechatRegisterDao.selectList(wechatRegister);
-		WechatRegister wg = wechatRegisterLists.get(0);
 		List<WechatGroup> list = new ArrayList<WechatGroup>();
-		JSONObject jsonObject = JSONObject.parseObject(tagsString);
-		JSONArray jsonArray = jsonObject.getJSONArray("tags");
-		if(jsonArray != null){
-
-		List<WXTag> wxTags = JSONArray.parseArray(jsonArray.toJSONString(), WXTag.class);
-			if (wxTags != null && wxTags.size() > 0) {
-				for (Iterator<WXTag> iter = wxTags.iterator(); iter.hasNext();) {
-					WXTag wxTag = iter.next();
-					if (wxTag != null) {
-						WechatGroup wechatGroup = new WechatGroup();
-						wechatGroup.setGroupName(wxTag.getName());
-						wechatGroup.setGroupId(String.valueOf(wxTag.getId()));
-						wechatGroup.setWxAcct(wg.getWxAcct());
-						wechatGroup.setGroupNickname(wxTag.getAlias());
-						wechatGroup.setHeaderImage(wxTag.getHead_img());
-						wechatGroup.setCreateTime(new Date());
-						wechatGroup.setCount(wxTag.getCount());
-						// BeanUtils.copyProperties(wxTag, wechatGroup);
-						list.add(wechatGroup);
+		if(wechatRegisterLists!=null&&wechatRegisterLists.size()>0){
+			WechatRegister wg = wechatRegisterLists.get(0);			
+			JSONObject jsonObject = JSONObject.parseObject(tagsString);
+			JSONArray jsonArray = jsonObject.getJSONArray("tags");
+			if(jsonArray != null){
+				List<WXTag> wxTags = JSONArray.parseArray(jsonArray.toJSONString(), WXTag.class);
+				if (wxTags != null && wxTags.size() > 0) {
+					for (Iterator<WXTag> iter = wxTags.iterator(); iter.hasNext();) {
+						WXTag wxTag = iter.next();
+						if (wxTag != null) {
+							WechatGroup wechatGroup = new WechatGroup();
+							wechatGroup.setGroupName(wxTag.getName());
+							wechatGroup.setGroupId(String.valueOf(wxTag.getId()));
+							wechatGroup.setWxAcct(wg.getWxAcct());
+							wechatGroup.setGroupNickname(wxTag.getAlias());
+							wechatGroup.setHeaderImage(wxTag.getHead_img());
+							wechatGroup.setCreateTime(new Date());
+							wechatGroup.setCount(wxTag.getCount());
+							// BeanUtils.copyProperties(wxTag, wechatGroup);
+							list.add(wechatGroup);
+						}		
 					}
-	
 				}
-			}
+			}	
 		}
+
 		return list;
 	}
 
