@@ -52,6 +52,11 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			// 日期格式化
 			Date sDate = sdf.parse(startDate);
 			Date eDate = sdf.parse(endDate);
+			if(sDate.compareTo(eDate) == 1){
+				baseOutput.setCode(1003);
+				baseOutput.setMsg("日期参数有无！");
+				return baseOutput;
+			}
 			// 计算数组长度
 			long s = sDate.getTime() / CALCULATE_VARI;
 			long e = eDate.getTime() / CALCULATE_VARI;
