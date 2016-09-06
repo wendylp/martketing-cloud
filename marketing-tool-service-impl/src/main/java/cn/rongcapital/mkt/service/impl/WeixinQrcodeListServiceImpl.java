@@ -51,16 +51,17 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 				ApiConstant.INT_ZERO, null);
 		WechatQrcode wechatQrcode = new WechatQrcode();
 
-		if(wxmpName != null && !wxmpName.isEmpty()) {
+		if(wxmpName != null && !wxmpName.isEmpty() && wxmpName.equals("0")) {
 			wechatQrcode.setWxAcct(wxmpName);
 		}
-		if(wxmpName.equals("0")) {
-			wechatQrcode.setWxAcct(null);
-		}
+		
 		if(expirationTime != null && getExpirationTime(expirationTime) != null) {
 			wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
 		}
-		wechatQrcode.setStatus(Byte.valueOf(qrcodeStatus));
+		if(qrcodeStatus != null && qrcodeStatus.toString().equals("0")) {
+			wechatQrcode.setStatus(Byte.valueOf(qrcodeStatus));
+		}
+		
 		wechatQrcode.setPageSize(size);
 		wechatQrcode.setStartIndex((index-1)*size);
 		
@@ -70,11 +71,11 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		wechatQrcode.setPageSize(null);
 		List<WechatQrcode> countList = wechatQrcodeDao.selectListExpirationTime(wechatQrcode);
 		
-		result.setTotal(wechatQrcodeLists.size());
+		result.setTotalCount(wechatQrcodeLists.size());
 		if (wechatQrcodeLists != null && !wechatQrcodeLists.isEmpty()) {
 			result = addData(result, wechatQrcodeLists);
 		}
-		result.setTotalCount(countList.size());
+		result.setTotal(countList.size());
 		return result;
 	}
 	
