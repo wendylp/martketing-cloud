@@ -15,7 +15,7 @@ import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 
 import cn.rongcapital.mkt.biz.WechatGroupBiz;
-import cn.rongcapital.mkt.biz.WechatRegisterBiz;
+import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.po.WechatGroup;
 import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.vo.weixin.WXTag;
@@ -59,7 +59,7 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 		}
 	 */
 	@Autowired
-	private WechatRegisterBiz wechatRegisterBiz;
+	private WechatRegisterDao wechatRegisterDao;
 	
 	@Override
 	public List<WechatGroup> getTags(String authAppId,String authorizer_refresh_token) {
@@ -68,7 +68,11 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 		app.setAuthAppId(authAppId);
 		app.setAuthRefreshToken(authorizer_refresh_token);
 		String tagsString = WxComponentServerApi.getBaseWxSdk().getTags(app);
-		if(StringUtils.isNotBlank(tagsString)) {
+		// {"errcode":48001,"errmsg":"api unauthorized hint: [BQS5ma0929vr29!]"}
+		
+		JSONObject jsonObject = JSONObject.parseObject(tagsString);
+		Integer jsonInt = jsonObject.getInteger("errcode");
+		if(StringUtils.isNotBlank(tagsString) && jsonInt == null) {
 			list = this.getTagsFromTagsString(app, tagsString);
 		}
 
@@ -76,29 +80,33 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 	}
 
 	public List<WechatGroup> getTagsFromTagsString(App app,String tagsString) {
-		WechatRegister wechatRegister = wechatRegisterBiz.getAuthInfo(app.getAuthAppId(),
-				app.getAuthRefreshToken());
-		
+		WechatRegister wechatRegister = new WechatRegister();
+		wechatRegister.setAppId(app.getAuthAppId());
+		List<WechatRegister> wechatRegisterLists = wechatRegisterDao.selectList(wechatRegister);
+		WechatRegister wg = wechatRegisterLists.get(0);
 		List<WechatGroup> list = new ArrayList<WechatGroup>();
 		JSONObject jsonObject = JSONObject.parseObject(tagsString);
 		JSONArray jsonArray = jsonObject.getJSONArray("tags");
-		List<WXTag> wxTags = JSONArray.parseArray(jsonArray.toJSONString(), WXTag.class);
-		if (wxTags != null && wxTags.size() > 0) {
-			for (Iterator<WXTag> iter = wxTags.iterator(); iter.hasNext();) {
-				WXTag wxTag = iter.next();
-				if (wxTag != null) {
-					WechatGroup wechatGroup = new WechatGroup();
-					wechatGroup.setGroupName(wxTag.getName());
-					wechatGroup.setGroupId(String.valueOf(wxTag.getId()));
-					wechatGroup.setWxAcct(wechatRegister.getWxAcct());
-					wechatGroup.setGroupNickname(wxTag.getAlias());
-					wechatGroup.setHeaderImage(wxTag.getHead_img());
-					wechatGroup.setCreateTime(new Date());
-					wechatGroup.setCount(wxTag.getCount());
-					// BeanUtils.copyProperties(wxTag, wechatGroup);
-					list.add(wechatGroup);
-				}
+		if(jsonArray != null){
 
+		List<WXTag> wxTags = JSONArray.parseArray(jsonArray.toJSONString(), WXTag.class);
+			if (wxTags != null && wxTags.size() > 0) {
+				for (Iterator<WXTag> iter = wxTags.iterator(); iter.hasNext();) {
+					WXTag wxTag = iter.next();
+					if (wxTag != null) {
+						WechatGroup wechatGroup = new WechatGroup();
+						wechatGroup.setGroupName(wxTag.getName());
+						wechatGroup.setGroupId(String.valueOf(wxTag.getId()));
+						wechatGroup.setWxAcct(wg.getWxAcct());
+						wechatGroup.setGroupNickname(wxTag.getAlias());
+						wechatGroup.setHeaderImage(wxTag.getHead_img());
+						wechatGroup.setCreateTime(new Date());
+						wechatGroup.setCount(wxTag.getCount());
+						// BeanUtils.copyProperties(wxTag, wechatGroup);
+						list.add(wechatGroup);
+					}
+	
+				}
 			}
 		}
 		return list;
