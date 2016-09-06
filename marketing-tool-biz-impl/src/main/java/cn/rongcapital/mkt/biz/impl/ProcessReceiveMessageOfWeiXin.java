@@ -2,14 +2,17 @@ package cn.rongcapital.mkt.biz.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 //import java.io.ByteArrayInputStream;
 //import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLInputFactory;
 
+import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qq.weixin.mp.aes.WXBizMsgCrypt;
+import com.tagsin.tutils.json.JsonUtils;
+import com.tagsin.tutils.okhttp.OkHttpUtil;
+import com.tagsin.tutils.okhttp.OkHttpUtil.RequestMediaType;
 import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WXServerApiException;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
@@ -38,6 +44,8 @@ import com.tagsin.wechat_sdk.msg.in.SimpleMsgs.LocationMsg;
 import com.tagsin.wechat_sdk.msg.in.SimpleMsgs.TextMsg;
 import com.tagsin.wechat_sdk.msg.in.WxMsg;
 import com.tagsin.wechat_sdk.msg.out.News;
+import com.tagsin.wechat_sdk.token.Token;
+import com.tagsin.wechat_sdk.token.TokenType;
 import com.tagsin.wechat_sdk.user.UserInfo;
 
 import cn.rongcapital.mkt.biz.ProcessReceiveMessageOfWeiXinBiz;
@@ -48,6 +56,7 @@ import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.po.WebchatComponentVerifyTicket;
 import cn.rongcapital.mkt.po.WechatMember;
 import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
+import okhttp3.Response;
 
 //import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
 
@@ -314,7 +323,8 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	        }
 	        logger.info("44444444444444444444444444444444444444444");
 	        try {
-				WxComponentServerApi.accessToken(app);
+//				WxComponentServerApi.accessToken(app);
+	        	this.accessToken(app);
 			} catch (Exception e) {
 				logger.info("66666666666666666666666666666666666666666");
 				logger.info(e.getMessage(),e);
@@ -330,5 +340,36 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	public static byte int2OneByte(int num) {  
         return (byte) (num & 0x000000ff);  
     }
+	
+	/**
+	 * 获取ComponentAccessToken
+	 * @param app
+	 * @return
+	 */
+	public Token accessToken(App app){
+		try {
+			String url = "https://api.weixin.qq.com/cgi-bin/component/api_component_token";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("component_appid", app.getId());
+			params.put("component_appsecret", app.getSecret());
+			params.put("component_verify_ticket", app.getComponentTicket());
+			Response response = OkHttpUtil.requestByPost(url, RequestMediaType.JSON, JsonUtils.toJson(params));
+			if(response.code() == 200){
+				
+				String bodystr = response.body().string();
+				logger.info(bodystr);
+				ObjectNode jsonObj = JsonUtils.readJsonObject(bodystr);
+//				System.out.println("component_access_token:"+jsonObj.toString());
+				logger.info("component_access_token:"+jsonObj.toString());
+				String access_token = jsonObj.get("component_access_token").getTextValue();
+				long expires_in = jsonObj.get("expires_in").getLongValue();
+				return new Token(TokenType.COMPONENT_ACCESS_TOKEN, access_token, System.currentTimeMillis() + (expires_in-60) * 1000);
+			}else{
+				throw new WXServerApiException("Invalid statu code : " + response.code() + " , url : " + url);
+			}
+		} catch (Exception e) {
+			throw new WXServerApiException(e);
+		}
+	}
 
 }
