@@ -40,8 +40,7 @@ public class MktWeChatMsgApi {
 	@Consumes({MediaType.TEXT_XML})
 	public String getMsgEvent(String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce, @QueryParam("signature") String signature, @QueryParam("openid") String openid){
 		
-		logger.info("getMsgEvent:"+textxml+"*******************************");				
-			if(textxml.contentEquals("Event")){}	
+			logger.info("getMsgEvent:"+textxml+"*******************************");	
 			processReceiveMessageOfWeiXinBiz.getMsgLog(textxml, msg_signature, timestamp, nonce, signature, openid);
 /*			ProcessReceiveMessageOfWeiXin handler = new ProcessReceiveMessageOfWeiXin();
 			String textxmlBack = handler.process(textxml.getBytes());*/

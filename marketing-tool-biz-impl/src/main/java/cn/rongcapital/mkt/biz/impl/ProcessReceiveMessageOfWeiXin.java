@@ -206,14 +206,10 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	public void getMsgLog(String textXml,String msg_signature,String timestamp,String nonce,String signature,String openid) {		
 		logger.info("WebchatComponentVerifyTicketServiceImpl: 开始调试。。。。。。。。。。。。。。。。。。。。。。。" );
 		App app = this.getApp();
-		if(app==null){
-			logger.info("app is null ******************************" );
-		}
 //		app.setAuthRefreshToken(authRefreshToken);
 //		app.setAuthAppId(authorizer_appid);
 		app.setAuthRefreshToken("refreshtoken@@@gcxmruaeql5C84jx-VHSnt99pOxbEWycsHz7tKgL-ao");
 		app.setAuthAppId("wx1f363449a14a1ad8");
-		logger.info("7777777777777777777777777777777" );
 		
 		String encodingAesKey = "abcdefghijklmnopqrstuvwxyz12345678900987654";
 		String token = "ruixuemarketingcloud";				
@@ -253,8 +249,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 
 				WechatMember wechatMemberTemp = new WechatMember();
 				wechatMemberTemp.setWxCode(openid);				
-				List<WechatMember> wechatMemberTemps =  wechatMemberDao.selectList(wechatMemberTemp);
-				logger.info("88888888888888888888888888888888888888888888" );
+				List<WechatMember> wechatMemberTemps =  wechatMemberDao.selectList(wechatMemberTemp);				
 				if(wechatMemberTemps!=null&&wechatMemberTemps.size()>0){
 					WechatMember wechatMemberBack = wechatMemberTemps.get(0);
 					if(event.equals("subscribe")){
@@ -263,16 +258,8 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 						wechatMemberBack.setSubscribeYn("N");
 					}
 					wechatMemberDao.updateById(wechatMemberBack);
-					logger.info("9999999999999999999999999999999999999999999999" );
 				}else{
-					logger.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" );
 					UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常
-					if(userInfo==null){
-						logger.info("userInfo is null ******************************" );
-					}else{
-						logger.info("userInfo is not null ******************************" );
-					}
-
 					WechatMember wechatMember = new WechatMember();
 					// subscribe 无对应
 					// openid
@@ -290,9 +277,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 					wechatMember.setRemark(userInfo.getRemark());
 					wechatMember.setSubscribeYn("Y");
 					wechatMember.setSelected(int2OneByte(0));
-					logger.info("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" );
 					wechatMemberDao.insert(wechatMember);
-					logger.info("cccccccccccccccccccccccccccccccccccccccccccccccccc" );
 				}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -309,30 +294,21 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	        webchatComponentVerifyTicketq.setOrderField("id");
 	        webchatComponentVerifyTicketq.setOrderFieldType("desc");
 	        webchatComponentVerifyTicketq.setStartIndex(0);
-	        webchatComponentVerifyTicketq.setPageSize(1);
-	        logger.info("00000000000000000000000000000000000000" );
+	        webchatComponentVerifyTicketq.setPageSize(1);	       
 	        List<WebchatComponentVerifyTicket> list = webchatComponentVerifyTicketDao.selectList(webchatComponentVerifyTicketq);
-	        logger.info("1111111111111111111111111111111111111" );
 	        if(list!=null&&list.size()>0){
-	        	logger.info("**************************" +list.size());
 	        	WebchatComponentVerifyTicket webchatComponentVerifyTicket = list.get(0);
-	        	logger.info("22222222222222222222222222");
 	        	String componentTicket = webchatComponentVerifyTicket.getComponentVerifyTicket();
 	        	logger.info("*************************componentTicket:"+componentTicket+"componentTicketId:"+webchatComponentVerifyTicket.getId());
 	        	app.setComponentTicket(componentTicket);	        	
-	        }
-	        logger.info("44444444444444444444444444444444444444444");
+	        }	      
 	        try {
 //				WxComponentServerApi.accessToken(app);
 	        	this.accessToken(app);
-			} catch (Exception e) {
-				logger.info("66666666666666666666666666666666666666666");
-				logger.info(e.getMessage(),e);
-				logger.error("Failed to format {}",e.getMessage(), e);
-				logger.info("77777777777777777777777777777777777777777");
+			} catch (Exception e) {				
+				logger.info(e.getMessage(),e);				
 				e.printStackTrace();
-			}
-	        logger.info("5555555555555555555555555555555555555");
+			}	       
 		return app;		
 	}
 
@@ -355,8 +331,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 			params.put("component_appsecret", app.getSecret());
 			params.put("component_verify_ticket", app.getComponentTicket());
 			Response response = OkHttpUtil.requestByPost(url, RequestMediaType.JSON, JsonUtils.toJson(params));
-			if(response.code() == 200){
-				
+			if(response.code() == 200){				
 				String bodystr = response.body().string();
 				logger.info(bodystr);
 				ObjectNode jsonObj = JsonUtils.readJsonObject(bodystr);
