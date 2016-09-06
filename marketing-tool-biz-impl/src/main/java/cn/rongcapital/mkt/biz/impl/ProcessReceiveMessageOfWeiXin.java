@@ -195,7 +195,10 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void getMsgLog(String textXml,String msg_signature,String timestamp,String nonce,String signature,String openid) {
 		
-		App app = this.getApp();				
+		App app = this.getApp();
+		if(app==null){
+			logger.info("app is null ******************************" );
+		}
 //		app.setAuthRefreshToken(authRefreshToken);
 //		app.setAuthAppId(authorizer_appid);
 		app.setAuthRefreshToken("refreshtoken@@@gcxmruaeql5C84jx-VHSnt99pOxbEWycsHz7tKgL-ao");
@@ -262,6 +265,10 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 				}else{
 					logger.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" );
 					UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常
+					if(userInfo==null){
+						logger.info("userInfo is null ******************************" );
+					}
+
 					WechatMember wechatMember = new WechatMember();
 					// subscribe 无对应
 					// openid
