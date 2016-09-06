@@ -194,6 +194,14 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void getMsgLog(String textXml,String msg_signature,String timestamp,String nonce,String signature,String openid) {
+		
+		App app = this.getApp();				
+//		app.setAuthRefreshToken(authRefreshToken);
+//		app.setAuthAppId(authorizer_appid);
+		app.setAuthRefreshToken("refreshtoken@@@gcxmruaeql5C84jx-VHSnt99pOxbEWycsHz7tKgL-ao");
+		app.setAuthAppId("wx1f363449a14a1ad8");
+		logger.info("7777777777777777777777777777777" );
+		
 		logger.info("WebchatComponentVerifyTicketServiceImpl: 开始调试。。。。。。。。。。。。。。。。。。。。。。。" );
 		String encodingAesKey = "abcdefghijklmnopqrstuvwxyz12345678900987654";
 		String token = "ruixuemarketingcloud";				
@@ -205,7 +213,6 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 			ComponentVerifyTicketIn componentVerifyTicketIn = (ComponentVerifyTicketIn)unmarshaller.unmarshal(textxmlis);	
 			String appId= componentVerifyTicketIn.getAppId();
 			String encrypt = componentVerifyTicketIn.getEncrypt();
-			appId ="wx1f363449a14a1ad8";
 			appId ="wx00f7d56d549f82ce";			
 /*	        encrypt = "<xml>"+
 	        		"<AppId><![CDATA["+componentVerifyTicketIn.getAppId()+"]]></AppId>"+
@@ -238,12 +245,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 				fromUserName = fromUserName.substring(2, fromUserName.length()-2);
 				String msgType = myJsonObject.getString("MsgType");
 				msgType = msgType.substring(2, msgType.length()-2);				
-				App app = this.getApp();				
-//				app.setAuthRefreshToken(authRefreshToken);
-//				app.setAuthAppId(authorizer_appid);
-				app.setAuthRefreshToken("refreshtoken@@@gcxmruaeql5C84jx-VHSnt99pOxbEWycsHz7tKgL-ao");
-				app.setAuthAppId("wx1f363449a14a1ad8");
-				logger.info("7777777777777777777777777777777" );
+
 				WechatMember wechatMemberTemp = new WechatMember();
 				wechatMemberTemp.setWxCode(openid);				
 				List<WechatMember> wechatMemberTemps =  wechatMemberDao.selectList(wechatMemberTemp);
