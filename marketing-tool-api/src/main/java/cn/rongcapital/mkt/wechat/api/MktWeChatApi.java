@@ -63,6 +63,7 @@ import cn.rongcapital.mkt.service.WebchatComponentVerifyTicketService;
 import cn.rongcapital.mkt.service.WechatAnalysisDaysListService;
 import cn.rongcapital.mkt.service.WechatQrcodeActivateService;
 import cn.rongcapital.mkt.service.WeixinAnalysisChdataListService;
+import cn.rongcapital.mkt.service.WeixinAnalysisChdataSummaryService;
 import cn.rongcapital.mkt.service.WeixinAnalysisQrcodeScanService;
 import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
@@ -78,6 +79,7 @@ import cn.rongcapital.mkt.vo.in.WechatQrcodeBatchSaveIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInData;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeInId;
+import cn.rongcapital.mkt.vo.in.WechatQrcodeScanIn;
 //import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
 import cn.rongcapital.mkt.vo.weixin.SubscribeVO;
 
@@ -168,6 +170,9 @@ public class MktWeChatApi {
 	
 	@Autowired
 	private MessageSendBiz messageSendBiz;
+	
+	@Autowired
+	WeixinAnalysisChdataSummaryService weixinAnalysisChdataSummaryService;
 	
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
@@ -334,8 +339,8 @@ public class MktWeChatApi {
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.records.del")
-	public BaseOutput weixinQrcodeRecordsDel(@NotNull @QueryParam("id") int id) {
-		return weixinQrcodeDelService.weixinQrcodeRecordsDel(id);
+	public BaseOutput weixinQrcodeRecordsDel(@Valid WechatQrcodeInId body) {
+		return weixinQrcodeDelService.weixinQrcodeRecordsDel(body);
 	}
 
 	/**
@@ -421,8 +426,9 @@ public class MktWeChatApi {
 	@GET
 	@Path("/mkt.weixin.analysis.date")
 	public BaseOutput weixinQrcodeBatchSave(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
-		return getWeixinAnalysisDateService.getWeixinAnalysisDate();
+			@NotEmpty @QueryParam("ver") String ver,
+	        @QueryParam("qrcode_id") String qrcodeId) {
+		return getWeixinAnalysisDateService.getWeixinAnalysisDate(qrcodeId);
 	}
 
 	/**
@@ -437,9 +443,8 @@ public class MktWeChatApi {
 	 */
 	@POST
 	@Path("/mkt.weixin.analysis.qrcode.scan")
-	public BaseOutput instertToWechatQrcodeScan(@NotEmpty @QueryParam("user_id") String userId,
-			@QueryParam("user_host") String userHost, @NotEmpty @QueryParam("qrcode_id") String qrcodeId) {
-		return weixinAnalysisQrcodeScanService.instertToWechatQrcodeScan(userId, userHost, qrcodeId);
+	public BaseOutput instertToWechatQrcodeScan(@Valid WechatQrcodeScanIn body) {
+		return weixinAnalysisQrcodeScanService.instertToWechatQrcodeScan(body);
 	}
 
 	/**
@@ -458,7 +463,7 @@ public class MktWeChatApi {
 	@Path("mkt.weixin.analysis.days.list")
 	public BaseOutput analysisDaysList(@NotEmpty @QueryParam("start_date")String startDate,
 			@NotEmpty @QueryParam("end_date")String endDate,@NotEmpty @QueryParam("ch_code")String chCode,
-			@NotEmpty @QueryParam("wx_name")String wxName,@NotNull @QueryParam("days_type") Integer daysType) {
+			@NotEmpty @QueryParam("wx_name")String wxName,@QueryParam("days_type") String daysType) {
 		return analysisDaysList.analysisDaysList(startDate, endDate, daysType, chCode, wxName);
 	}
 	
@@ -538,7 +543,7 @@ public class MktWeChatApi {
 	 * @return
 	 */
 	@POST
-	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket1")
+	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
 	@Consumes({MediaType.TEXT_XML})
 //	public String getComponentVerifyTicket(@Valid ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
 	public String getComponentVerifyTicket( ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
@@ -559,7 +564,7 @@ public class MktWeChatApi {
 	 * @return
 	 */
 	@POST
-	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
+	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket1")
 	@Consumes({MediaType.TEXT_XML})
 	public String getComponentVerifyTicket1( String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){
 		logger.info("getComponentVerifyTicket1:"+textxml+"*******************************");		
@@ -669,4 +674,22 @@ public class MktWeChatApi {
 		return analysisDaysList.analysisHoursList(date, chCode, wxName);
 	}
 	
+	/**
+	 * 获取平均、汇总、历史最高关注数据(扫码、关注、新增...) 
+	 * @param wxName
+	 * @param chCode
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 * @author shuiyangyang
+	 */
+	@GET
+	@Path("/mkt.weixin.analysis.chdata.summary")
+	public BaseOutput getAnalysisChdataSummary(
+			@QueryParam("wx_name") String wxName,
+			@QueryParam("ch_code") String chCode,
+			@NotEmpty @QueryParam("start_date") String startDate,
+			@NotEmpty @QueryParam("end_date") String endDate) {
+		return weixinAnalysisChdataSummaryService.getAnalysisChdataSummary(wxName, chCode, startDate, endDate);
+	}
 }

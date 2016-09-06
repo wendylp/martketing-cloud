@@ -121,29 +121,34 @@ public class WechatRegisterBizImpl extends BaseBiz implements WechatRegisterBiz 
 	 * @return
 	 */
 	public WechatRegister getWechatRegisterFromAuthInfo(String authInfoString){
-		WechatRegister  wechatRegister = new WechatRegister();
 		JSONObject jsonObject = JSON.parseObject(authInfoString);
 		JSONObject authorizerInfo = jsonObject.getJSONObject("authorizer_info");
-		String name = authorizerInfo.getString("nick_name");
-		String alias = authorizerInfo.getString("alias");
-		String userName = authorizerInfo.getString("user_name");
-		String headImg = authorizerInfo.getString("head_img");
-		
-		String wechatQrcode = authorizerInfo.getString("qrcode_url");
-		
-		JSONObject authorizationInfo = jsonObject.getJSONObject("authorization_info");
-		String appId = authorizationInfo.getString("authorizer_appid");
-		
-		wechatRegister.setWxAcct(userName);
-		wechatRegister.setName(name);
-		wechatRegister.setType(0);
-		wechatRegister.setNickname(alias);
-		wechatRegister.setHeaderImage(headImg);
-		wechatRegister.setAppId(appId);
-		wechatRegister.setWechatQrcode(wechatQrcode);
-		
-		return wechatRegister;
-		
+		if(authorizerInfo != null){
+			WechatRegister  wechatRegister = new WechatRegister();
+
+			String name = authorizerInfo.getString("nick_name");
+			String alias = authorizerInfo.getString("alias");
+			String userName = authorizerInfo.getString("user_name");
+			String headImg = authorizerInfo.getString("head_img");
+			
+			String wechatQrcode = authorizerInfo.getString("qrcode_url");
+			
+			JSONObject authorizationInfo = jsonObject.getJSONObject("authorization_info");
+			String appId = authorizationInfo.getString("authorizer_appid");
+			
+			wechatRegister.setWxAcct(userName);
+			wechatRegister.setName(name);
+			wechatRegister.setType(0);
+			wechatRegister.setNickname(alias);
+			wechatRegister.setHeaderImage(headImg);
+			wechatRegister.setAppId(appId);
+			wechatRegister.setWechatQrcode(wechatQrcode);
+			
+			return wechatRegister;
+			
+		}
+		return null;
+
 	}
 	
 }

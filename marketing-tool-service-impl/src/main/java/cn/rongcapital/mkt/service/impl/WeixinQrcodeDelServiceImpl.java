@@ -6,6 +6,8 @@ package cn.rongcapital.mkt.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ import cn.rongcapital.mkt.vo.in.WechatQrcodeInId;
  */
 @Service
 public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
+	
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private WechatQrcodeDao wechatQrcodeDao;
@@ -43,8 +47,9 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 		
 		if(count<=0) {
 			result.setTotal(0);
-			result.setCode(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode());
-			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
+//			result.setCode(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode());
+//			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
+			logger.debug("数据不存在, id={}", body.getId());
 		} else {
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("id", body.getId());
@@ -65,21 +70,22 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 	 * @Date 2016.08.25
 	 */
 	@Override
-	public BaseOutput weixinQrcodeRecordsDel(int id) {
+	public BaseOutput weixinQrcodeRecordsDel(WechatQrcodeInId body) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE,null);
 		
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		
-		wechatQrcode.setId(id);
+		wechatQrcode.setId(body.getId());
 		
 		int count = wechatQrcodeDao.deleteById(wechatQrcode);
 		if(count<=0) {
 			result.setTotal(0);
-			result.setCode(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode());
-			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
+//			result.setCode(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode());
+//			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
+			logger.debug("数据不存在, id={}", body.getId());
 		} else {
 			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("id", id);
+			map.put("id", body.getId());
 			result.getData().add(map);
 		}
 		return result;

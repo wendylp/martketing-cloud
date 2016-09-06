@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.common.filter;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 
@@ -21,8 +22,13 @@ import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 
@@ -31,6 +37,8 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 @PreMatching
 public class ApiRequestRouter implements ContainerRequestFilter {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	/**
 	 * @功能简述: 根据传入的method参数把请求转发到相应接口
 	 * @param: ContainerRequestContext requestContext
@@ -38,10 +46,19 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	 */
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
+//		logger.info("ApiRequestRouter.getMsgEvent*******************************");		
 		String url = requestContext.getUriInfo().getPath();
-		if(StringUtils.isBlank(url) || !url.equals(ApiConstant.API_PATH)){
+		
+/*		InputStream inputStream = requestContext.getEntityStream();
+		byte[] postDat = IOUtils.toByteArray(inputStream);
+		String encrypt =  new String(postDat);
+		logger.info("reqbody:" + new String(postDat,"UTF-8"));*/
+
+//		logger.info(url+"*******************************");	
+/*		if(StringUtils.isBlank(url) || !(url.equals(ApiConstant.API_PATH)||url.equals(ApiConstant.API_PATH_APPID))){
 			requestContext.abortWith(Response.status(404).entity("Api not found").build());
 		}
+*/		
 		if(
 		    (HttpMethod.GET.equals(requestContext.getMethod()) ||
 		      (HttpMethod.POST.equals(requestContext.getMethod())
@@ -60,6 +77,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 					.path(requestContext.getUriInfo().getPath()+"/"+method).build();
 			requestContext.setRequestUri(newRequestURI);
 		}
+//		logger.info("ApiRequestRouter.getMsgEvent end*******************************");	
 //	    if(HttpMethod.POST.equals(requestContext.getMethod()) 
 //	                && MediaType.APPLICATION_JSON_TYPE.equals(requestContext.getMediaType())
 //	                && requestContext.getEntityStream() != null) {

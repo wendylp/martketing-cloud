@@ -16,5 +16,5 @@ public interface ContactsLongurlGetService {
 	 * @author shuiyangyang
 	 * @Date 2016.08.31
 	 */
-	BaseOutput getLongurl(String shortUrl);
+	BaseOutput getLongurl(String shortUrl, String device);
 }

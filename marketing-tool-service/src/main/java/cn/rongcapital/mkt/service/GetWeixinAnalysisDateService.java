@@ -7,6 +7,6 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  */
 public interface GetWeixinAnalysisDateService {
 
-    BaseOutput getWeixinAnalysisDate();
+    BaseOutput getWeixinAnalysisDate(String qrcodeId);
 
 }

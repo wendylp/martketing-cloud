@@ -101,4 +101,19 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * @return list
 	 */
 	Integer selectImgtextIdByMaterialId(@Param("material_id") String materialId);
+	
+	/**
+	 * 带创建时间和更新时间的插入方法
+	 * @param imgTextAsset
+	 * @return
+	 */
+	int insertWithDate(ImgTextAsset imgTextAsset);
+	
+	/**
+	 * 带创建时间和更新时间的更新方法
+	 * @param imgTextAsset
+	 * @return
+	 */
+	int updateByIdWithDate(ImgTextAsset imgTextAsset);
+	
 }

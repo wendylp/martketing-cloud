@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,8 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 @Service
 public class WeixinQrcodeErrorDownloadServiceImpl implements WeixinQrcodeErrorDownloadService{
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	WechatQrcodeLogDao wechatQrcodeLogDao;
 	
@@ -48,8 +52,9 @@ public class WeixinQrcodeErrorDownloadServiceImpl implements WeixinQrcodeErrorDo
 			result.getData().add(map);
 		} else {
 			result.setTotal(0);
-			result.setCode(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode());
-			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
+//			result.setCode(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode());
+//			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
+			logger.info("数据在数据库中不存在, batch_id = {}", batchId);
 		}
 		
 		return result;

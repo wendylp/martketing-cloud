@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -19,7 +21,11 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  * Created by zhaoguoying on 2016-08-12.
  */
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class ContactListGetByStatusServiceImpl implements ContactListGetByStatusService {
+	
+	@Autowired
+	Environment env;
 
 	@Autowired
 	ContactTemplateDao contactTemplateDao;
@@ -58,8 +64,8 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 				Map<String, Object> contactListMap = new HashMap<String, Object>();
 				contactListMap.put("contact_id", contactTem.getContactId());
 				contactListMap.put("contact_name", contactTem.getContactName());
-				contactListMap.put("qrcode_url", contactTem.getQrcodeShorturl());
-				contactListMap.put("qrcode_pic", contactTem.getQrcodePic());
+				contactListMap.put("qrcode_shorturl", env.getProperty("contact.short.url") + contactTem.getQrcodeShorturl());
+				contactListMap.put("qrcode_pic", "contactlist/" + contactTem.getQrcodePic());
 				contactListMap.put("user_count", contactTemplateList.size());
 				contactListMap.put("contact_status",contactTem.getStatus());
 				//cloMap.put(contactTemplate.getFieldCode(), contactTemplate.getFieldName());

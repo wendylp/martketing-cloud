@@ -68,30 +68,24 @@ public class WeixinAnalysisChdataListServiceImpl implements WeixinAnalysisChdata
 		wechatQrcodeFocus.setFocusDatetime(DateUtil.getDateFromString(startDate, "yyyy-MM-dd"));
 		wechatQrcodeFocus.setUnfocusDatetime(DateUtil.getDateFromString(endDate, "yyyy-MM-dd"));
 		
-		// 获取总关注数
-		List<Map<String, Object>> totalFocusLists = wechatQrcodeFocusDao.getTotalFocus(wechatQrcodeFocus);
-		Map<String, Object> totalFocusMap = MapListToMap(totalFocusLists);
-		// 获取新关注的信息
-		List<Map<String, Object>> newFocusLists = wechatQrcodeFocusDao.getNewFocus(wechatQrcodeFocus);
-		Map<String, Object> newFocusMap = MapListToMap(newFocusLists);
-		// 获取流失关注的信息
-		List<Map<String, Object>> lostFocusLists = wechatQrcodeFocusDao.getLostFocus(wechatQrcodeFocus);
-		Map<String, Object> lostFocusMap = MapListToMap(lostFocusLists);
+		List<Map<String, Object>> allFocusDataLists = wechatQrcodeFocusDao.getAllFocusData(wechatQrcodeFocus);
 		
+		if(allFocusDataLists != null && allFocusDataLists.size() > 0) {
+			int total = allFocusDataLists.size();
 		
-		if(totalFocusLists != null && totalFocusLists.size() > 0) {
-			int total = totalFocusLists.size();
-		
-			for(Object obj : totalFocusMap.keySet()){
+			for(Map<String, Object> allFocusDataList : allFocusDataLists){
+				String qrcodeId = allFocusDataList.get("qrcodeId").toString();
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("wx_name", getWechatQrcode(obj.toString()).getWxName());
-				map.put("ch_name", getChName(getWechatQrcode(obj.toString())));
-				map.put("total_scan", wechatQrcodeScanDao.getTotalScan(obj.toString()));
-				map.put("total_scan_user", wechatQrcodeScanDao.getTotalScanUser(obj.toString()));
-				map.put("total_focus", totalFocusMap.get(obj));
-				map.put("new_focus", newFocusMap.get(obj) == null ? 0 : newFocusMap.get(obj));
-				map.put("lost_focus", lostFocusMap.get(obj) == null ? 0 : lostFocusMap.get(obj));
-				map.put("add_focus", (Long)map.get("new_focus") - (Long)map.get("lost_focus"));
+				map.put("wx_name", getWechatQrcode(qrcodeId).getWxName());
+				map.put("ch_name", getChName(getWechatQrcode(qrcodeId)));
+				map.put("total_scan", wechatQrcodeScanDao.getTotalScan(qrcodeId));
+				map.put("total_scan_user", wechatQrcodeScanDao.getTotalScanUser(qrcodeId));
+				map.put("total_focus", allFocusDataList.get("totalFocus"));
+				map.put("new_focus", allFocusDataList.get("newFocus") == null ? 0 : allFocusDataList.get("newFocus"));
+				map.put("lost_focus", allFocusDataList.get("lostFocus") == null ? 0 : allFocusDataList.get("lostFocus"));
+				map.put("add_focus", 
+						Integer.valueOf(map.get("new_focus").toString()) 
+							- Integer.valueOf(map.get("lost_focus").toString()));
 				result.getData().add(map);
 			}
 			result.setTotal(total);
@@ -125,7 +119,7 @@ public class WeixinAnalysisChdataListServiceImpl implements WeixinAnalysisChdata
 		String chName;
 		if(wechatChannelLists == null || wechatChannelLists.isEmpty()) {
 			chName = "";
-			logger.debug("根据渠道号：{} 找不到渠道名");
+			logger.debug("根据渠道号：{} 找不到渠道名", wechatQrcode.getChCode());
 		} else {
 			chName = wechatChannelLists.get(0).getChName();
 		}
@@ -133,21 +127,4 @@ public class WeixinAnalysisChdataListServiceImpl implements WeixinAnalysisChdata
 		return chName;
 	}
 	
-	/**
-	 * 根据mapList 获取map
-	 * @param mapLists
-	 * @return
-	 */
-	private Map<String, Object> MapListToMap(List<Map<String, Object>> mapLists) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		if(mapLists == null || mapLists.size() <= 0) {
-			return map;
-		}
-		for(Map<String, Object> mapList : mapLists) {
-			map.put( mapList.get("qrcodeId").toString(), mapList.get("value"));
-		}
-		
-		return map;
-	}
-
 }

@@ -41,7 +41,7 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 	 * 按天统计
 	 */
 	@Override
-	public BaseOutput analysisDaysList(String startDate, String endDate, Integer daysType, String chCode,
+	public BaseOutput analysisDaysList(String startDate, String endDate, String daysType, String chCode,
 			String wxName) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
@@ -52,6 +52,11 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			// 日期格式化
 			Date sDate = sdf.parse(startDate);
 			Date eDate = sdf.parse(endDate);
+			if(sDate.compareTo(eDate) == 1){
+				baseOutput.setCode(1003);
+				baseOutput.setMsg("日期参数有误！");
+				return baseOutput;
+			}
 			// 计算数组长度
 			long s = sDate.getTime() / CALCULATE_VARI;
 			long e = eDate.getTime() / CALCULATE_VARI;
@@ -125,8 +130,20 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			Date nowDayDate = dateMap.get("nowDayDate");
 			// 当前日期（yMdH)
 			Date nowhourDate = dateMap.get("nowhourDate");
+			//超出日期范围返回
+			calendar.setTime(nowDayDate);
+			calendar.add(Calendar.DATE, -1);
+			Date yesterday  = calendar.getTime();
+			if(dayDate.compareTo(yesterday) == -1 || dayDate.compareTo(nowDayDate) == 1){
+				baseOutput.setCode(1003);
+				baseOutput.setMsg("日期超出范围");
+				return baseOutput;
+			}
 			// 今天0点(ymd 00)
 			Date todayZero = dateMap.get("todayZero");
+			calendar.setTime(todayZero);
+			calendar.add(Calendar.HOUR_OF_DAY, -1);
+			todayZero = calendar.getTime();
 
 			// 判断今天昨天,值为-1为昨天，否则为今天
 			int compareValue = dayDate.compareTo(nowDayDate);
@@ -188,7 +205,7 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 	 * 获取相应数量
 	 */
 	private Integer getCunt(Date searchDate, String fieldName, String chCode, String wxName, Integer flag) {
-		String sqlField = flag == 1 ? "searchDate" : "searchHours";
+		String sqlField = flag == DAY_FLAG ? "searchDate" : "searchHours";
 		// 参数集合
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(sqlField, searchDate);

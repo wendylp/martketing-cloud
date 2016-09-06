@@ -9,4 +9,5 @@ import cn.rongcapital.mkt.po.WechatMember;
 public interface WechatMemberBiz {
 
 	public List<WechatMember> getUserList(String authorizer_appid, String authRefreshToken);
+
 }

@@ -10,6 +10,9 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatQrcodeScan;
 
@@ -48,5 +51,19 @@ public interface WechatQrcodeScanDao extends BaseDao<WechatQrcodeScan>{
 	 * @return
 	 */
 	int getTotalScanUser(String qrcodeId);
+	
+	/**
+	 * 总扫码次数最大
+	 * @param list
+	 * @return
+	 */
+	Map<String, Object> getAmountScanMax(List<String> list);
+	
+	/**
+	 * 总扫码人数最大值
+	 * @param list
+	 * @return
+	 */
+	Map<String, Object> getamountScanUserMax(List<String> list);
 
 }

@@ -19,6 +19,7 @@ import cn.rongcapital.mkt.common.enums.FileNameEnum;
 import cn.rongcapital.mkt.common.enums.GenderEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.FileUtil;
+import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.dao.ContactListDao;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
 import cn.rongcapital.mkt.dao.DefaultContactTemplateDao;
@@ -208,7 +209,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 					if(filedName.equals("name")){
 						map.put(filedName, item.getName());
 					}else if(filedName.equals("gender")){
-						map.put(filedName, item.getGender());
+						map.put(filedName, GenderUtils.byteToChar(item.getGender()));
 					}else if(filedName.equals("birthday")){
 						map.put(filedName, DateUtil.getStringFromDate(item.getBirthday(),"yyyy-MM-dd"));
 					}else if(filedName.equals("mobile")){

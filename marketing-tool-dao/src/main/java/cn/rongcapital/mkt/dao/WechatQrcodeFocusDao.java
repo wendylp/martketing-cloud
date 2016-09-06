@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatQrcodeFocus;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -55,26 +56,48 @@ public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
 	Integer getFocusOrUnFocusCount(Map<String, Object> map);
 	
 	/**
-	 * 获取总浏览次数
+	 * 获取总浏览次数，关注的信息，流失关注的信息
 	 * @param t
 	 * @return
 	 */
-	List<Map<String, Object>> getTotalFocus(WechatQrcodeFocus t);
+	List<Map<String, Object>> getAllFocusData(WechatQrcodeFocus t);
+	
 	
 	/**
-	 * 获取新关注的信息
-	 * 
+	 * 获取最大浏览次数
 	 * @param t
 	 * @return
 	 */
-	List<Map<String, Object>> getNewFocus(WechatQrcodeFocus t);
+	Map<String, Object> getAmountFocusMax(WechatQrcodeFocus t);
 	
 	/**
-	 * 获取流失关注的信息
-	 * 
+	 * 获取最大新关注的信息
 	 * @param t
 	 * @return
 	 */
-	List<Map<String, Object>> getLostFocus(WechatQrcodeFocus t);
+	Map<String, Object> getNewFocusMax(WechatQrcodeFocus t);
+	
+	/**
+	 * 获取最大净增关注数
+	 * @param t
+	 * @return
+	 */
+	Map<String, Object> getAddFocusMax(WechatQrcodeFocus t);
+	
+	/**
+	 * 获取最大流失关注的信息
+	 * @param t
+	 * @return
+	 */
+	Map<String, Object> getLostFocusMax(WechatQrcodeFocus t);
+	
+	/**
+	 * 根据微信名和渠道号获取二维码id
+	 */
+	List<String> getQrcodeIdList(WechatQrcodeFocus t);
 
+	/**
+	 * 根据qrcodeId选取这个二维码的关注时间
+	 */
+	List<WechatQrcodeFocus> selectTheEarliestFocusByQrcodeId(@Param("qrcodeId") String qrcodeId);
 }

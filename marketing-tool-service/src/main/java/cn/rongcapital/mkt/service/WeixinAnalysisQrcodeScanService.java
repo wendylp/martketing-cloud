@@ -4,6 +4,7 @@
 package cn.rongcapital.mkt.service;
 
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.WechatQrcodeScanIn;
 
 /**
  * @author shuiyangyang
@@ -22,5 +23,5 @@ public interface WeixinAnalysisQrcodeScanService {
 	 * @author shuiyangyang
 	 * @date 2016.09.01
 	 */
-	BaseOutput instertToWechatQrcodeScan(String userId, String userHost, String qrcodeId);
+	BaseOutput instertToWechatQrcodeScan(WechatQrcodeScanIn body);
 }
