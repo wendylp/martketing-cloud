@@ -218,7 +218,7 @@ public class ApiConstant {
 	 * 微信公众号appsecret
 	 */
 
-	public static final String SECRET = "4fcc525e82dd03422ea139733d318fc2";
+	public static final String SECRET = "d30f3c2bdd6f0769673c94365031e588";
 //	public static final String SECRET = "bdf1650396a6c9059835b5777df1b77a";
 //	public static final String SECRET = "60ba94dd8d1590c896edbc5f0f3d5e5e";
 

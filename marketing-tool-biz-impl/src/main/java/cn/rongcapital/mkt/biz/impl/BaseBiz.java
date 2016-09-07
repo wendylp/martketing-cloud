@@ -35,4 +35,20 @@ public class BaseBiz {
 		return app;		
 	}
 	
+	public App getAppAddComponentTicket(){
+		 App app = new App(ApiConstant.APPID,ApiConstant.SECRET);
+	        WebchatComponentVerifyTicket webchatComponentVerifyTicketq = new WebchatComponentVerifyTicket();
+	        webchatComponentVerifyTicketq.setOrderField("id");
+	        webchatComponentVerifyTicketq.setOrderFieldType("desc");
+	        webchatComponentVerifyTicketq.setStartIndex(0);
+	        webchatComponentVerifyTicketq.setPageSize(1);
+	        List<WebchatComponentVerifyTicket> list = webchatComponentVerifyTicketDao.selectList(webchatComponentVerifyTicketq);
+	        if(list!=null&&list.size()>0){
+	        	WebchatComponentVerifyTicket webchatComponentVerifyTicket = list.get(0);
+	        	String componentTicket = webchatComponentVerifyTicket.getComponentVerifyTicket();
+	        	app.setComponentTicket(componentTicket);
+	        }	       
+		return app;		
+	}
+	
 }
