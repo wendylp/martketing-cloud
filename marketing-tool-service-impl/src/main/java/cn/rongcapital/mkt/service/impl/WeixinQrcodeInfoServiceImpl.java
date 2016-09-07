@@ -93,20 +93,24 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			map.put("fixed_audience", wechatQrcodeLists.get(0).getAudienceName());// 固定人群
 			//关联标签
 			String relatedTag = wechatQrcodeLists.get(0).getRelatedTags();
-			 //标签查询
-			List<Tag> tagList = tagDao.selectTagsByIds(relatedTag.split(";"));
-			List<Map<String, Object>> returnDataList = new ArrayList<>();
-			for (Tag tag : tagList) {
-				Map<String, Object> dataMap = new HashMap<>();
-				String tagGroupId = tag.getTagGroupId();
-				dataMap.put("group_id",tagGroupId);
-				String name = taggroupDao.selectNameById(Integer.valueOf(tagGroupId));
-				dataMap.put("id", tag.getId());
-				String[] split = name.split("-");
-				dataMap.put("name", split[split.length-1]+"-"+tag.getName());
-				returnDataList.add(dataMap);
+			
+			if(relatedTag != null && !"".equals(relatedTag)){
+				 //标签查询
+				List<Tag> tagList = tagDao.selectTagsByIds(relatedTag.split(";"));
+				List<Map<String, Object>> returnDataList = new ArrayList<>();
+				for (Tag tag : tagList) {
+					Map<String, Object> dataMap = new HashMap<>();
+					String tagGroupId = tag.getTagGroupId();
+					dataMap.put("group_id",tagGroupId);
+					String name = taggroupDao.selectNameById(Integer.valueOf(tagGroupId));
+					dataMap.put("id", tag.getId());
+					String[] split = name.split("-");
+					dataMap.put("name", split[split.length-1]+"-"+tag.getName());
+					returnDataList.add(dataMap);
+				}
+				map.put("association_tags",returnDataList);
 			}
-			map.put("association_tags",returnDataList);
+
 			map.put("comment", wechatQrcodeLists.get(0).getComments());
 			
 			result.getData().add(map);
