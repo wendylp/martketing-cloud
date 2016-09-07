@@ -51,7 +51,7 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 
 	@Override
 	public void task(Integer taskId) {
-		// synWAssetInfoMethod();
+		synWAssetInfoMethod();
 		synWAssetGroupMethod();
 	}
 
