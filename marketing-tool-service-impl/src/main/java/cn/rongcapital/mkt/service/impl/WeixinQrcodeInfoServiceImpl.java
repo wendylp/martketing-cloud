@@ -109,6 +109,9 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 					returnDataList.add(dataMap);
 				}
 				map.put("association_tags",returnDataList);
+			}else{
+				
+				map.put("association_tags","");
 			}
 
 			map.put("comment", wechatQrcodeLists.get(0).getComments());

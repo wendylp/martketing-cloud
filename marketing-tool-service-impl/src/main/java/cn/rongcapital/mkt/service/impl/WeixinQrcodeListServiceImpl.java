@@ -142,7 +142,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		
 			//result.setTotal(wechatQrcodeLists.size());
 			
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 			for (WechatQrcode wechatQrcodeList : wechatQrcodeLists) {
 				Map<String, Object> map = new HashMap<String, Object>();
