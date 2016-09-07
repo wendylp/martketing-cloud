@@ -242,6 +242,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			
 			if(wechatQrcodeIn.getId()!=0){
 //				wechatQrcode.setWxName(wechatQrcodeIn.getWx_name());
+				wechatQrcode.setId(Integer.valueOf(wechatQrcodeIn.getId()+""));
 			}
 			
 			if(StringUtils.isNotEmpty(wechatQrcodeIn.getWx_acct())){
@@ -303,7 +304,12 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				wechatQrcodeTicketDao.updateById(wechatQrcodeTicketTemp);
 			}			
 			wechatQrcode.setCreateTime(new Date());
-			wechatQrcodeDao.insert(wechatQrcode);
+			//有Id更新无id新增
+			if(wechatQrcode.getId() != 0){
+				wechatQrcodeDao.updateById(wechatQrcode);
+			}else{
+				wechatQrcodeDao.insert(wechatQrcode);
+			}
 			
 			baseOutput.setTotal(1);
 			List<Object> data = new ArrayList<Object>();
