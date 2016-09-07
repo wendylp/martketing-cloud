@@ -14,6 +14,8 @@ import javax.imageio.stream.FileImageOutputStream;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.node.ObjectNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,16 +26,18 @@ import com.tagsin.tutils.http.Requester;
 import com.tagsin.tutils.http.Requester.Method;
 import com.tagsin.tutils.json.JsonUtils;
 import com.tagsin.wechat_sdk.App;
-import com.tagsin.wechat_sdk.WXServerApi;
+
+import com.tagsin.wechat_sdk.WxComponentServerApi;
 import com.tagsin.wechat_sdk.token.Token;
 import com.tagsin.wechat_sdk.token.TokenType;
 
 import cn.rongcapital.mkt.biz.WechatQrcodeBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
+import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeTicket;
 
@@ -42,13 +46,16 @@ import cn.rongcapital.mkt.vo.in.AssociationTag;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
 
 @Service
-public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
+public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	WechatQrcodeDao wechatQrcodeDao;
 	@Autowired
 	WechatQrcodeTicketDao wechatQrcodeTicketDao;	
-	
+	@Autowired
+	WebchatAuthInfoDao webchatAuthInfoDao;
 	
 	
 	@Override
@@ -57,7 +64,7 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		try {
-			App app = new App(ApiConstant.APPID, ApiConstant.SECRET);
+			App app = this.getApp();
 			long expireSeconds = 0;
 			if(actionName.equals("QR_LIMIT_SCENE")){
 				expireSeconds=0;
@@ -66,7 +73,7 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 			
 			Requester req = Requester.builder().setMethod(Method.POST)
 					.setUrl("https://api.weixin.qq.com/cgi-bin/qrcode/create")
-					.addUrlParm("access_token", this.accessToken().getToken());					
+					.addUrlParm("access_token", WxComponentServerApi.accessToken(app).toString());					
 			Map<String,Object> reqData = convertPathValueToMap(sceneId, "action_info","scene","scene_id");
 			reqData.put("action_name", actionName);		
 			req.setBody(JsonUtils.toJson(reqData));
@@ -103,8 +110,10 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 					String respBodyString = Base64.encodeBase64String(result.getRespBody());
 					sb.append("data:image/").append(fileType).append(";base64, ").append(respBodyString);
 					byte[] streamByte = Base64.decodeBase64(respBodyString);
-					System.out.println(sb.toString());
-					this.byte2image(streamByte,ApiConstant.upload_img_path+wechatQrcodeTicket.getSceneId()+".jpg");
+					logger.info(sb.toString());					
+					this.byte2image(streamByte,ApiConstant.upload_img_path_large+wechatQrcodeTicket.getSceneId()+".jpg");
+					this.byte2image(streamByte,ApiConstant.upload_img_path_middle+wechatQrcodeTicket.getSceneId()+".jpg");
+					this.byte2image(streamByte,ApiConstant.upload_img_path_small+wechatQrcodeTicket.getSceneId()+".jpg");
 				}				
 			}
 			} catch (Exception e) {
@@ -122,61 +131,72 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 			List<Object> data = new ArrayList<Object>();
 			int totalSucc=0;
-			App app = new App(ApiConstant.APPID, ApiConstant.SECRET);
-/*			app.setAuthAppId(authAppId);
-			app.setComponentTicket(componentTicket);*/
-			for(int i=startSceneId;i<=endSceneId;i++){
-				long expireSeconds = 0;
-				if(actionName.equals("QR_LIMIT_SCENE")){
-					expireSeconds=0;
-				}
-//				String qrcodeStr = WXServerApi.getQrCode(app, i, 0);
-//				System.out.println(qrcodeStr);
-				Requester req = Requester.builder().setMethod(Method.POST)
-						.setUrl("https://api.weixin.qq.com/cgi-bin/qrcode/create")
-						.addUrlParm("access_token", this.accessToken().getToken());	
-				Map<String,Object> reqData = convertPathValueToMap(i, "action_info","scene","scene_id");
-				reqData.put("action_name", actionName);		
-				req.setBody(JsonUtils.toJson(reqData));
-				try {
-					HttpResult result = req.execute();			
-					if(result.getCode()==200){
-						ObjectNode objNode = JsonUtils.readJsonObject(result.getRespBody());
-						String ticket = objNode.get("ticket").getTextValue();
-						String url = objNode.get("url").getTextValue();
-						WechatQrcodeTicket wechatQrcodeTicket = new WechatQrcodeTicket();
-						wechatQrcodeTicket.setSceneId(i);
-						wechatQrcodeTicket.setTicket(ticket);
-						wechatQrcodeTicket.setUrl(url);
-						wechatQrcodeTicketDao.insert(wechatQrcodeTicket);
-						long id = wechatQrcodeTicket.getId();
-						wechatQrcodeTicket.setSceneId(Integer.parseInt(String.valueOf(id)));
+			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();		
+			List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);
+			if(webchatAuthInfos!=null&&webchatAuthInfos.size()>0){
+				App app = this.getApp();
+				for(Iterator<WebchatAuthInfo> iter = webchatAuthInfos.iterator();iter.hasNext();){
+					WebchatAuthInfo webchatAuthInfoTemp = iter.next();
+					app.setAuthAppId(webchatAuthInfoTemp.getAuthorizerAppid());
+					app.setAuthRefreshToken(webchatAuthInfoTemp.getAuthorizerRefreshToken());
+					app.tokenManager.getAuthToken(TokenType.AUTHORIZER_ACCESS_TOKEN);
+					for(int i=startSceneId;i<=endSceneId;i++){
+						long expireSeconds = 0;
+						if(actionName.equals("QR_LIMIT_SCENE")){
+							expireSeconds=0;
+						}
+						Requester req = Requester.builder().setMethod(Method.POST)
+								.setUrl("https://api.weixin.qq.com/cgi-bin/qrcode/create")
+								.addUrlParm("access_token",app.tokenManager.getAuthToken(TokenType.AUTHORIZER_ACCESS_TOKEN));	
 						
-						Map<String,Object> mapBack = new HashMap<String,Object>();
-						mapBack.put("ticket", ticket);
-						mapBack.put("url", url);
-						data.add(mapBack);
-						totalSucc++;
-						
-						req = Requester.builder()
-								.setUrl("https://mp.weixin.qq.com/cgi-bin/showqrcode")
-								.addUrlParm("ticket", ticket);				
-						result = req.execute();
-						if(result.getCode()==200){
-							String fileType = result.getContentType().toLowerCase().replace("image/", "");
-							StringBuilder sb = new StringBuilder();
-							String respBodyString = Base64.encodeBase64String(result.getRespBody());
-							sb.append("data:image/").append(fileType).append(";base64, ").append(respBodyString);
-							byte[] streamByte = Base64.decodeBase64(respBodyString);
-							System.out.println(sb.toString());
-							this.byte2image(streamByte,ApiConstant.upload_img_path+wechatQrcodeTicket.getSceneId()+".jpg");
-						}	
+						Map<String,Object> reqData = convertPathValueToMap(i, "action_info","scene","scene_id");
+						reqData.put("action_name", actionName);		
+						req.setBody(JsonUtils.toJson(reqData));
+						try {
+							HttpResult result = req.execute();			
+							if(result.getCode()==200){
+								ObjectNode objNode = JsonUtils.readJsonObject(result.getRespBody());
+								String ticket = objNode.get("ticket").getTextValue();
+								String url = objNode.get("url").getTextValue();
+								WechatQrcodeTicket wechatQrcodeTicket = new WechatQrcodeTicket();
+								wechatQrcodeTicket.setSceneId(i);
+								wechatQrcodeTicket.setTicket(ticket);
+								wechatQrcodeTicket.setUrl(url);
+								wechatQrcodeTicketDao.insert(wechatQrcodeTicket);
+								long id = wechatQrcodeTicket.getId();
+								wechatQrcodeTicket.setSceneId(Integer.parseInt(String.valueOf(id)));
+								
+								Map<String,Object> mapBack = new HashMap<String,Object>();
+								mapBack.put("ticket", ticket);
+								mapBack.put("url", url);
+								data.add(mapBack);
+								totalSucc++;
+								
+								req = Requester.builder()
+										.setUrl("https://mp.weixin.qq.com/cgi-bin/showqrcode")
+										.addUrlParm("ticket", ticket);				
+								result = req.execute();
+								if(result.getCode()==200){
+									String fileType = result.getContentType().toLowerCase().replace("image/", "");
+									StringBuilder sb = new StringBuilder();
+									String respBodyString = Base64.encodeBase64String(result.getRespBody());
+									sb.append("data:image/").append(fileType).append(";base64, ").append(respBodyString);
+									byte[] streamByte = Base64.decodeBase64(respBodyString);
+									logger.info(sb.toString());
+									this.byte2image(streamByte,ApiConstant.upload_img_path_large+wechatQrcodeTicket.getSceneId()+".jpg");
+									this.byte2image(streamByte,ApiConstant.upload_img_path_middle+wechatQrcodeTicket.getSceneId()+".jpg");
+									this.byte2image(streamByte,ApiConstant.upload_img_path_small+wechatQrcodeTicket.getSceneId()+".jpg");
+//									this.byte2image(streamByte,ApiConstant.upload_img_path+wechatQrcodeTicket.getSceneId()+".jpg");
+								}	
+							}
+						} catch (Exception e) {
+							e.printStackTrace();					
+//							throw new Exception(e.getMessage(),e);
+						}
 					}
-				} catch (Exception e) {
-					e.printStackTrace();					
-//					throw new Exception(e.getMessage(),e);
 				}
-			}
+			}			
+
 			baseOutput.setTotal(totalSucc);
 			baseOutput.setData(data);
 		return baseOutput;
@@ -244,10 +264,8 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 			}else{
 				wechatQrcode.setIsAudience(int2OneByte(0));
 			}
-
-			//失效时间补足时分秒00:00:00
-			if(wechatQrcodeIn.getExpiration_time() !=null && !"".equals(wechatQrcodeIn.getExpiration_time())){
-				wechatQrcode.setExpirationTime(DateUtil.getDateFromString(wechatQrcodeIn.getExpiration_time()+" 00:00:00","yyyy-MM-dd hh:mm:ss"));
+			if(wechatQrcode.getExpirationTime()!=null){
+				wechatQrcode.setExpirationTime(wechatQrcode.getExpirationTime());
 			}
 			
 			if(StringUtils.isNotEmpty(wechatQrcodeIn.getQrcode_name())){

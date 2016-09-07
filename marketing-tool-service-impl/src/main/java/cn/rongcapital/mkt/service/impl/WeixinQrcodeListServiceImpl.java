@@ -149,7 +149,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 				
 				map.put("id", wechatQrcodeList.getId());
 				
-				map.put("qrcode_pic", ApiConstant.return_img_path_small + wechatQrcodeList.getQrcodeUrl());// 返回二维码图片文件url 
+				map.put("qrcode_pic", ApiConstant.return_img_path_small + wechatQrcodeList.getQrcodePic());// 返回二维码图片文件url 
 																		
 				map.put("qrcode_name", wechatQrcodeList.getQrcodeName());
 
@@ -171,7 +171,12 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 				
 				map.put("qrcode_status", statusToString(wechatQrcodeList.getStatus()));
 
-				map.put("qrcode_tag", getRelatedTags(wechatQrcodeList.getRelatedTags()));
+				if(wechatQrcodeList.getRelatedTags() != null && wechatQrcodeList.getRelatedTags().length() > 0) {
+					map.put("qrcode_tag", "有");
+				} else {
+					map.put("qrcode_tag", "无");
+				}
+				
 
 				// 获取 关注者数
 				WechatQrcodeFocus wechatQrcodeFocus = new WechatQrcodeFocus();
@@ -220,34 +225,5 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
         return "删除";
 	}
 	
-	// 根据标签id获取标签name
-	private String getRelatedTags(String tagStr) {
-		String tagNameString = "";
-		if(tagStr != null && tagStr.length()>=0) {
-			String[] tagStrLists = tagStr.split(";");
-			for(String tagStrList : tagStrLists) {
-				Tag tag = new Tag();
-				try {
-					tag.setId(Integer.valueOf(tagStrList));
-				} catch (NumberFormatException e) {
-					logger.debug("标签tagStrList=“{}”转换到Integer失败", tagStrList);
-					continue;
-					//e.printStackTrace();
-				}
-				List<Tag> tagLists = tagDao.selectList(tag);
-				if(tagLists != null && tagLists.size()>0) {
-					tagNameString = tagNameString + tagLists.get(0).getName() + ";";
-				} else {
-					logger.debug("标签id=“{}”在tag表中不存在", tagStrList);
-				}
-			}
-
-			if(tagNameString.length()>0) {
-				tagNameString = tagNameString.substring(0, tagNameString.lastIndexOf(";"));
-			}
-		}
-		
-		return tagNameString;
-	}
 
 }

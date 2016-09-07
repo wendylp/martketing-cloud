@@ -340,7 +340,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 				logger.info(bodystr);
 				ObjectNode jsonObj = JsonUtils.readJsonObject(bodystr);
 				logger.info("component_access_token:"+jsonObj.toString());
-				String access_token = jsonObj.get("component_access_token").getTextValue();
+				String access_token = jsonObj.get("component_access_token").getTextValue();				
 				long expires_in = jsonObj.get("expires_in").getLongValue();
 				return new Token(TokenType.COMPONENT_ACCESS_TOKEN, access_token, System.currentTimeMillis() + (expires_in-60) * 1000);
 			}else{
