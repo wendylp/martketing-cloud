@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.TagDao;
 import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeFocusDao;
+import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeFocus;
@@ -37,6 +39,9 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 
 	@Autowired
 	private WechatQrcodeFocusDao wechatQrcodeFocusDao;
+	
+	@Autowired
+	private TagDao tagDao;
 
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
@@ -58,8 +63,17 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		if(expirationTime != null && getExpirationTime(expirationTime) != null) {
 			wechatQrcode.setExpirationTime(getExpirationTime(expirationTime));
 		}
-		if(qrcodeStatus != null && !qrcodeStatus.toString().equals("0")) {
+		
+		/*
+		 * 如果qrcodeStatus==0查询除删除以外的数据
+		 */
+		if(qrcodeStatus != null) {
+//			if(qrcodeStatus == 2) {
+//				qrcodeStatus++;
+//			}
 			wechatQrcode.setStatus(Byte.valueOf(qrcodeStatus));
+		} else {
+			wechatQrcode.setStatus((byte)0);
 		}
 		
 		wechatQrcode.setPageSize(size);
@@ -154,13 +168,10 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 				} else {
 					map.put("expiration_time", wechatQrcodeList.getExpirationTime());
 				}
-				map.put("qrcode_status", wechatQrcodeList.getStatus());
+				
+				map.put("qrcode_status", statusToString(wechatQrcodeList.getStatus()));
 
-				if (wechatQrcodeList.getRelatedTags() == null || wechatQrcodeList.getRelatedTags().length() <= 0) { // 根据related_tags是否为空判断是否有关联
-					map.put("qrcode_tag", 0);
-				} else {
-					map.put("qrcode_tag", 1);
-				}
+				map.put("qrcode_tag", getRelatedTags(wechatQrcodeList.getRelatedTags()));
 
 				// 获取 关注者数
 				WechatQrcodeFocus wechatQrcodeFocus = new WechatQrcodeFocus();
@@ -192,6 +203,51 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 			case 8 : calendar.add(Calendar.YEAR, 10); break;
 		}
 		return calendar.getTime();
+	}
+	
+	// 根据状态获取对应的文字
+	private String statusToString(Byte status) {
+		if(status != null){
+            switch (status){
+                case 1:
+                    return "使用中";
+                case 2:
+                    return "已删除";
+                case 3:
+                    return "已失效";
+            }
+        }
+        return "删除";
+	}
+	
+	// 根据标签id获取标签name
+	private String getRelatedTags(String tagStr) {
+		String tagNameString = "";
+		if(tagStr != null && tagStr.length()>=0) {
+			String[] tagStrLists = tagStr.split(";");
+			for(String tagStrList : tagStrLists) {
+				Tag tag = new Tag();
+				try {
+					tag.setId(Integer.valueOf(tagStrList));
+				} catch (NumberFormatException e) {
+					logger.debug("标签tagStrList=“{}”转换到Integer失败", tagStrList);
+					continue;
+					//e.printStackTrace();
+				}
+				List<Tag> tagLists = tagDao.selectList(tag);
+				if(tagLists != null && tagLists.size()>0) {
+					tagNameString = tagNameString + tagLists.get(0).getName() + ";";
+				} else {
+					logger.debug("标签id=“{}”在tag表中不存在", tagStrList);
+				}
+			}
+
+			if(tagNameString.length()>0) {
+				tagNameString = tagNameString.substring(0, tagNameString.lastIndexOf(";"));
+			}
+		}
+		
+		return tagNameString;
 	}
 
 }

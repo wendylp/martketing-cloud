@@ -173,8 +173,9 @@
 		    	<if test="relatedTags != null"><![CDATA[ AND related_tags = #{relatedTags}]]></if>
 		    	<if test="comments != null"><![CDATA[ AND comments = #{comments}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
-		    	<if test="expirationTime != null"><![CDATA[ AND expiration_time <= #{expirationTime}]]></if>
-		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="expirationTime != null"><![CDATA[ AND expiration_time <= #{expirationTime} AND expiration_time>=now()]]></if>
+		    	<if test="status != null and status != 0"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="status == 0"><![CDATA[ AND status in (1, 3)]]></if>
 		    	<if test="qrcodePic != null"><![CDATA[ AND qrcode_pic = #{qrcodePic}]]></if>
 		    	<if test="qrcodeUrl != null"><![CDATA[ AND qrcode_url = #{qrcodeUrl}]]></if>
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
