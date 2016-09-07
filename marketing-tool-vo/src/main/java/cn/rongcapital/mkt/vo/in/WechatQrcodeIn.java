@@ -28,6 +28,8 @@ public class WechatQrcodeIn extends BaseInput{
     
     private String qrcode_name;
     
+    private String expiration_time;
+    
 //    @NotNull
     private Byte is_audience;
 
@@ -167,8 +169,15 @@ public class WechatQrcodeIn extends BaseInput{
 
 	public void setCh_name(String ch_name) {
 		this.ch_name = ch_name;
-	}    
-	
-	
-	
+	}
+
+	@JsonProperty("expiration_time")
+	public String getExpiration_time() {
+		return expiration_time;
+	}
+
+	public void setExpiration_time(String expiration_time) {
+		this.expiration_time = expiration_time;
+	}
+
 }
