@@ -34,6 +34,7 @@ import com.tagsin.wechat_sdk.token.TokenType;
 import cn.rongcapital.mkt.biz.WechatQrcodeBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
@@ -264,9 +265,11 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			}else{
 				wechatQrcode.setIsAudience(int2OneByte(0));
 			}
-			if(wechatQrcode.getExpirationTime()!=null){
-				wechatQrcode.setExpirationTime(wechatQrcode.getExpirationTime());
-			}
+			
+			//失效时间补足时分秒00:00:00
+			if(wechatQrcodeIn.getExpiration_time() !=null && !"".equals(wechatQrcodeIn.getExpiration_time())){
+				wechatQrcode.setExpirationTime(DateUtil.getDateFromString(wechatQrcodeIn.getExpiration_time()+" 00:00:00","yyyy-MM-dd hh:mm:ss"));
+			 }
 			
 			if(StringUtils.isNotEmpty(wechatQrcodeIn.getQrcode_name())){
 				wechatQrcode.setQrcodeName(wechatQrcodeIn.getQrcode_name());
