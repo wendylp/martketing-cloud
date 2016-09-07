@@ -151,6 +151,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		DateFormat formatter = new SimpleDateFormat(ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
 		jacksonObjectMapper.setDateFormat(formatter);
 		int campaignHeadId = body.getCampaignHeadId();
+		
+		
 		CampaignBodyCreateOut out = checkCampaignBiz(campaignHeadId);
 		if(null != out) {
 			return out;
@@ -800,8 +802,10 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			List<ImgTextAsset> imgTextAssetList = imgTextAssetDao.selectList(imgTextAssetT);
 			if(CollectionUtils.isNotEmpty(imgTextAssetList)) {
 				ImgTextAsset imgTextAsset = imgTextAssetList.get(0);
+				//TODO  需要修改字段类型
 				if(StringUtils.isNotBlank(imgTextAsset.getMaterialId())) {
-					campaignActionSendPub.setMaterialId(Integer.parseInt(imgTextAsset.getMaterialId()));
+					//campaignActionSendPub.setMaterialId(Integer.parseInt(imgTextAsset.getMaterialId()));
+					campaignActionSendPub.setMaterialId(imgTextAsset.getMaterialId());
 				}
 			}
 		}
