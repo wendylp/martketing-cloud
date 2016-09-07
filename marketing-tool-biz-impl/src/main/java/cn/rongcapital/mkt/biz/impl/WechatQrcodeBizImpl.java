@@ -298,7 +298,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			if(wechatQrcodeTickets!=null&&wechatQrcodeTickets.size()>0){
 				WechatQrcodeTicket wechatQrcodeTicketTemp = wechatQrcodeTickets.get(0);
 				wechatQrcode.setQrcodePic(String.valueOf(wechatQrcodeTicketTemp.getId())+".jpg");
-				wechatQrcode.setQrcodeUrl(wechatQrcodeIn.getQrcode_url());				
+				wechatQrcode.setQrcodeUrl(wechatQrcodeTicketTemp.getUrl());				
 				wechatQrcode.setTicket(String.valueOf(wechatQrcodeTicketTemp.getId()));
 				wechatQrcodeTicketTemp.setState(1);
 				wechatQrcodeTicketDao.updateById(wechatQrcodeTicketTemp);
