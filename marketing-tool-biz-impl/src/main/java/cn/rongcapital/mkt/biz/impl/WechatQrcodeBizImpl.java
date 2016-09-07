@@ -287,7 +287,7 @@ public class WechatQrcodeBizImpl implements WechatQrcodeBiz {
 			}			
 			wechatQrcode.setCreateTime(new Date());
 			//有Id更新无id新增
-			if(wechatQrcode.getId() != 0){
+			if(wechatQrcode.getId() != null && wechatQrcode.getId() != 0){
 				wechatQrcodeDao.updateById(wechatQrcode);
 			}else{
 				wechatQrcodeDao.insert(wechatQrcode);
