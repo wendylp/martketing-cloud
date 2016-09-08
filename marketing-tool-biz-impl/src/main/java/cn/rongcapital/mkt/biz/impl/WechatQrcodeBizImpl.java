@@ -27,7 +27,6 @@ import com.tagsin.tutils.http.Requester.Method;
 import com.tagsin.tutils.json.JsonUtils;
 import com.tagsin.wechat_sdk.App;
 
-import com.tagsin.wechat_sdk.WxComponentServerApi;
 import com.tagsin.wechat_sdk.token.Token;
 import com.tagsin.wechat_sdk.token.TokenType;
 
@@ -35,6 +34,7 @@ import cn.rongcapital.mkt.biz.WechatQrcodeBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.common.util.ImageCompressUtil;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
@@ -70,11 +70,9 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			if(actionName.equals("QR_LIMIT_SCENE")){
 				expireSeconds=0;
 			}
-//			String QrcodeStr = WXServerApi.getQrCode(app, sceneId, 0);
-			
 			Requester req = Requester.builder().setMethod(Method.POST)
 					.setUrl("https://api.weixin.qq.com/cgi-bin/qrcode/create")
-					.addUrlParm("access_token", WxComponentServerApi.accessToken(app).toString());					
+					.addUrlParm("access_token", app.tokenManager.getAuthToken(TokenType.AUTHORIZER_ACCESS_TOKEN));					
 			Map<String,Object> reqData = convertPathValueToMap(sceneId, "action_info","scene","scene_id");
 			reqData.put("action_name", actionName);		
 			req.setBody(JsonUtils.toJson(reqData));
@@ -90,8 +88,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				wechatQrcodeTicketDao.insert(wechatQrcodeTicket);
 				long id = wechatQrcodeTicket.getId();
 				wechatQrcodeTicket.setSceneId(Integer.parseInt(String.valueOf(id)));
-//				wechatQrcodeTicketDao.updateById(wechatQrcodeTicket);
-//				int expire_seconds = 60;
 				
 				baseOutput.setTotal(1);
 				List<Object> data = new ArrayList<Object>();
@@ -112,9 +108,9 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 					sb.append("data:image/").append(fileType).append(";base64, ").append(respBodyString);
 					byte[] streamByte = Base64.decodeBase64(respBodyString);
 					logger.info(sb.toString());					
-					this.byte2image(streamByte,ApiConstant.upload_img_path_large+wechatQrcodeTicket.getSceneId()+".jpg");
-					this.byte2image(streamByte,ApiConstant.upload_img_path_middle+wechatQrcodeTicket.getSceneId()+".jpg");
-					this.byte2image(streamByte,ApiConstant.upload_img_path_small+wechatQrcodeTicket.getSceneId()+".jpg");
+					this.byte2image(streamByte,ApiConstant.upload_img_path_large+wechatQrcodeTicket.getSceneId()+".jpg",1200,1200);
+					this.byte2image(streamByte,ApiConstant.upload_img_path_middle+wechatQrcodeTicket.getSceneId()+".jpg",800,800);
+					this.byte2image(streamByte,ApiConstant.upload_img_path_small+wechatQrcodeTicket.getSceneId()+".jpg",200,200);
 				}				
 			}
 			} catch (Exception e) {
@@ -184,10 +180,10 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 									sb.append("data:image/").append(fileType).append(";base64, ").append(respBodyString);
 									byte[] streamByte = Base64.decodeBase64(respBodyString);
 									logger.info(sb.toString());
-									this.byte2image(streamByte,ApiConstant.upload_img_path_large+wechatQrcodeTicket.getSceneId()+".jpg");
-									this.byte2image(streamByte,ApiConstant.upload_img_path_middle+wechatQrcodeTicket.getSceneId()+".jpg");
-									this.byte2image(streamByte,ApiConstant.upload_img_path_small+wechatQrcodeTicket.getSceneId()+".jpg");
-//									this.byte2image(streamByte,ApiConstant.upload_img_path+wechatQrcodeTicket.getSceneId()+".jpg");
+									this.byte2image(streamByte,ApiConstant.upload_img_path_large+wechatQrcodeTicket.getSceneId()+".jpg",1200,1200);
+									this.byte2image(streamByte,ApiConstant.upload_img_path_middle+wechatQrcodeTicket.getSceneId()+".jpg",800,800);
+									this.byte2image(streamByte,ApiConstant.upload_img_path_small+wechatQrcodeTicket.getSceneId()+".jpg",200,200);
+//									this.byte2image(streamByte,ApiConstant.upload_img_path+wechatQrcodeTicket.getSceneId()+".jpg",200,200);
 								}	
 							}
 						} catch (Exception e) {
@@ -379,15 +375,15 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	
 	
 	//byte数组到图片
-	public static void byte2image(byte[] data,String path){
+	public void byte2image(byte[] data,String path,int width,int height){
 	    if(data.length<3||path.equals("")){
 	    	 return;
-	    }
+	    }	   
 	    try{
 		    FileImageOutputStream imageOutput = new FileImageOutputStream(new File(path));
 		    imageOutput.write(data, 0, data.length);
 		    imageOutput.close();
-		    System.out.println("Make Picture success,Please find image in " + path);
+		    ImageCompressUtil.zipImageFile(path, width, height, 1f, "");
 		} catch(Exception ex) {
 	        System.out.println("Exception: " + ex);
 	        ex.printStackTrace();
