@@ -1,10 +1,8 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.jms.Message;
@@ -122,8 +120,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 								  List<CampaignSwitch> campaignEndsList,
 								  CampaignActionSendPub campaignActionSendPub) {
 		//获取app
-		Map<String, Object> param = getParam(campaignActionSendPub);
-		App app = (App) param.get("app");
+		App app = getApp(campaignActionSendPub);
 		
 		List<Segment> segmentListToNext = new ArrayList<Segment>();//要传递给下面节点的数据(执行了发送微信操作的数据)
 		String queueKey = campaignHeadId+"-"+itemId;
@@ -142,8 +139,6 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 					boolean isFans = isPubWechatFans(dp, pubId, null);
 					logger.info("是否是微信公众号粉丝标识------------------------------------>："+isFans);
 					if(isFans) {
-//						String h5MobileUrl = getH5MobileUrl(campaignActionSendPub.getImgTextAssetId());
-//						segment.setH5MobileUrl(h5MobileUrl);
 						Integer mid = dp.getMid();
 						cn.rongcapital.mkt.po.DataParty dataParty = new cn.rongcapital.mkt.po.DataParty();
 						dataParty.setId(mid);
@@ -161,7 +156,10 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 			//boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,fansWeixinIds,campaignHeadId,itemId);
 			for(String wxCode : fansWeixinIds){
 				
-				boolean isPubSent = messageSendBiz.send(app, wxCode, null, materialId);
+				boolean isPubSent = false;
+				if(null != app){
+					isPubSent = messageSendBiz.send(app, wxCode, null, materialId);
+				}
 				logger.info("向受众人群粉丝发送微信图文成功标识------------------------------------>："+isPubSent);
 				
 				if(!isPubSent) {//公众号执行发送动作失败
@@ -188,6 +186,44 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 		}
 	}
 	
+
+	/**
+	 * @Title: getApp   
+	 * @Description: 封装APP 
+	 * @param: @param campaignActionSendPub	动作属性对象
+	 * @param: @return      
+	 * @return: App      
+	 * @throws
+	 */
+	private App getApp(CampaignActionSendPub campaignActionSendPub) {
+		App app = baseBiz.getApp();
+		try {
+			String pubId = campaignActionSendPub.getPubId();
+			WechatRegister wechatRegister = new WechatRegister();
+			wechatRegister.setType(0);
+			wechatRegister.setWxAcct(pubId);
+			WechatRegister register = wechatRegisterDao.selectList(wechatRegister).get(0);
+			//公众号不存在
+			if(register == null){
+				return null;
+			}
+			// 获取appId
+			String appId =  register.getAppId();
+			// 获取authorizerRefreshToken
+			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();
+			webchatAuthInfo.setAuthorizerAppid(appId);
+			String authorizerRefreshToken = webchatAuthInfoDao.selectList(webchatAuthInfo).get(0)
+					.getAuthorizerRefreshToken();
+			// 封装公众号信息
+			app.setAuthAppId(appId);
+			app.setAuthRefreshToken(authorizerRefreshToken);
+		} catch (Exception e) {
+			logger.info("获取参数方法出现异常：" + e.getMessage());
+		}
+		return app;
+	}
+	
+	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
 		super.cancelCampaignInnerTask(taskSchedule);
 	}
@@ -196,59 +232,6 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 	public void task(Integer taskId) {
 
 	}
-	
-		/**
-		 * @Title: getParam   
-		 * @Description:  获取批量发送图文方法所需参数 
-		 * @param: @param campaignActionSendPub
-		 * @param: @return      
-		 * @return: Map<String,Object>      
-		 * @throws
-		 */
-		private Map<String, Object> getParam(CampaignActionSendPub campaignActionSendPub) {
-			Map<String, Object> paramMap = new HashMap<>();
-			try {
-				String pubId = campaignActionSendPub.getPubId();
-				WechatRegister wechatRegister = new WechatRegister();
-				wechatRegister.setType(0);
-				wechatRegister.setWxAcct(pubId);
-				// 获取appId
-				WechatRegister register = wechatRegisterDao.selectList(wechatRegister).get(0);
-				String appId = register == null ? null : register.getAppId(); // 获取appId
-				// 获取authorizerRefreshToken
-				WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();
-				webchatAuthInfo.setAuthorizerAppid(appId);
-				String authorizerRefreshToken = webchatAuthInfoDao.selectList(webchatAuthInfo).get(0)
-						.getAuthorizerRefreshToken();
-
-				// 封装公众号信息
-				App app = baseBiz.getApp();
-				app.setAuthAppId(appId);
-				app.setAuthRefreshToken(authorizerRefreshToken);
-				paramMap.put("app", app);
-
-				// 获取materialId
-//				Integer imgTextAssetId = campaignActionSendPub.getImgTextAssetId();
-//				ImgTextAsset imgTextAsset = new ImgTextAsset();
-//				imgTextAsset.setId(imgTextAssetId);
-//				imgTextAsset = imgTextAssetDao.selectList(imgTextAsset).get(0);
-//				paramMap.put("materialId", imgTextAsset.getMaterialId());
-
-				// 获取组id
-//				WechatGroup wechatGroup = new WechatGroup();
-//				wechatGroup.setPageSize(null);
-//				wechatGroup.setWxAcct(pubId);
-//				List<WechatGroup> wechatGroupList = wechatGroupDao.selectList(wechatGroup);
-//				paramMap.put("wechatGroupList", wechatGroupList);
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.info("获取参数方法出现异常：" + e.getMessage());
-			}
-
-			return paramMap;
-		}
-		
-		
 		
 		
 }
