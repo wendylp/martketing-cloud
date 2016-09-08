@@ -89,23 +89,24 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
 		return baseOutput;
 	}
-
-	@Override	
-	public App getComponentAccessToken() {
-		App app = new App(ApiConstant.APPID,ApiConstant.SECRET);
-		app.setComponentTicket(ApiConstant.component_verify_ticket);
-		WxComponentServerApi.accessToken(app);
-		return app;
-	}
 	
 	@Override
 	public Boolean isPubIdGranted(String authAppid) {
 		Boolean isGranted = false;
 		WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();
 		webchatAuthInfo.setAuthorizerAppid(authAppid);
-		List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);
+		List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);		
 		if(webchatAuthInfos!=null&&webchatAuthInfos.size()>0){
-			isGranted = true;
+			WebchatAuthInfo webchatAuthInfoTemp = webchatAuthInfos.get(0);
+			if(webchatAuthInfoTemp!=null){
+				App app = this.getApp();
+				try {
+					WxComponentServerApi.getAuthAccessToken(app, webchatAuthInfoTemp.getAuthorizerAppid(), webchatAuthInfoTemp.getAuthorizerRefreshToken());
+					isGranted = true;
+				} catch (Exception e) {
+					logger.info("公众号"+webchatAuthInfoTemp.getAuthorizerAppid()+"已经取消了授权");					
+				}
+			}			
 		}		
 		return isGranted;
 	}

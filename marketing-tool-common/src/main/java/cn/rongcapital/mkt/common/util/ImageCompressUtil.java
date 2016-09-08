@@ -9,12 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;  
   
 import javax.imageio.ImageIO;  
-  
-import com.sun.image.codec.jpeg.JPEGCodec;  
-import com.sun.image.codec.jpeg.JPEGEncodeParam;  
-import com.sun.image.codec.jpeg.JPEGImageEncoder;  
-  
-@SuppressWarnings("restriction")
+
 public class ImageCompressUtil {  
     /** 
      * 直接指定压缩后的宽高： 
@@ -42,14 +37,10 @@ public class ImageCompressUtil {
             String filePrex = oldFile.substring(0, oldFile.indexOf('.'));  
             /** 压缩后的文件名 */  
             newImage = filePrex + smallIcon + oldFile.substring(filePrex.length());  
-            /** 压缩之后临时存放位置 */  
-            FileOutputStream out = new FileOutputStream(newImage);  
-            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);  
-            JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);  
-            /** 压缩质量 */  
-            jep.setQuality(quality, true);  
-            encoder.encode(tag, jep);  
-            out.close();  
+            /** 压缩之后临时存放位置 */              
+            String formatName = newImage.substring(newImage.lastIndexOf(".") + 1);    
+            ImageIO.write(tag,  formatName  , new File(newImage)); 
+            
         } catch (FileNotFoundException e) {  
             e.printStackTrace();  
         } catch (IOException e) {  
@@ -133,13 +124,12 @@ public class ImageCompressUtil {
         }  
         BufferedImage tag = new BufferedImage(deskWidth, deskHeight, BufferedImage.TYPE_3BYTE_BGR);  
         tag.getGraphics().drawImage(src, 0, 0, deskWidth, deskHeight, null); //绘制缩小后的图  
-        FileOutputStream deskImage = new FileOutputStream(deskURL); //输出到文件流  
-        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(deskImage);  
-        encoder.encode(tag); //近JPEG编码  
-        deskImage.close();  
+        
+         String formatName = deskURL.substring(deskURL.lastIndexOf(".") + 1);    
+         ImageIO.write(tag,  formatName  , new File(deskURL)); 
     }  
   
     public static void main(String args[]) throws Exception {  
-        ImageCompressUtil.zipImageFile("D:/soft/2000x2.jpg", 200, 200, 1f, "");  
+        ImageCompressUtil.zipImageFile("D:/soft/2000x2.jpg", 300, 300, 1f, "");  
     }  
 }  
