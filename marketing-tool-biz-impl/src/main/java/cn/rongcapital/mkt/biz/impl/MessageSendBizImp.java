@@ -14,6 +14,8 @@ import cn.rongcapital.mkt.biz.MessageSendBiz;
 @Service
 public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -29,9 +31,6 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 	 * 		"touser":"OPENID", "msgtype":"text", "text": {"content":"Hello World" }
 	 * }
 	 */
-	
-	private Logger logger = LoggerFactory.getLogger(getClass());
-
 	
 	@Override
 	public Boolean send(App app,String touser, String content, String media_id) {

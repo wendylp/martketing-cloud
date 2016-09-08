@@ -70,7 +70,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				expireSeconds=0;
 			}
 			Requester req = Requester.builder().setMethod(Method.POST)
-					.setUrl("https://api.weixin.qq.com/cgi-bin/qrcode/create")
+					.setUrl(ApiConstant.weixin_qrcode_create)
 					.addUrlParm("access_token", app.tokenManager.getAuthToken(TokenType.AUTHORIZER_ACCESS_TOKEN));					
 			Map<String,Object> reqData = convertPathValueToMap(sceneId, "action_info","scene","scene_id");
 			reqData.put("action_name", actionName);		
@@ -97,7 +97,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				baseOutput.setData(data);
 				
 				req = Requester.builder()
-						.setUrl("https://mp.weixin.qq.com/cgi-bin/showqrcode")
+						.setUrl(ApiConstant.weixin_qrcode_show)
 						.addUrlParm("ticket", ticket);				
 				result = req.execute();
 				if(result.getCode()==200){
@@ -113,7 +113,8 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				}				
 			}
 			} catch (Exception e) {
-			e.printStackTrace();
+				baseOutput.setCode(9001);
+				baseOutput.setMsg(e.getMessage());
 		}
 
 		return baseOutput;
@@ -122,9 +123,12 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public BaseOutput getQrcodes(int startSceneId, int endSceneId, String actionName) {
+		App app = this.getApp();
+		
+		
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
-			List<Object> data = new ArrayList<Object>();
+/*			List<Object> data = new ArrayList<Object>();
 			int totalSucc=0;
 			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();		
 			List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);
@@ -183,14 +187,15 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 								}	
 							}
 						} catch (Exception e) {
-							e.printStackTrace();					
+							baseOutput.setCode(9001);
+							baseOutput.setMsg(e.getMessage());
 						}
 					}
 				}
 			}			
 
 			baseOutput.setTotal(totalSucc);
-			baseOutput.setData(data);
+			baseOutput.setData(data);*/
 		return baseOutput;
 	}
 
@@ -214,7 +219,8 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				baseOutput.setData(data);
 			}
 		} catch (Exception e) {			
-			e.printStackTrace();
+			baseOutput.setCode(9001);
+			baseOutput.setMsg(e.getMessage());
 		}
 		return baseOutput;
 	}
