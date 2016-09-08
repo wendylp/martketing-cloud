@@ -77,7 +77,7 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 				wAsset.setWxAcct(wxAcct);
 				wAsset.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				WechatAsset wechatAsset = new WechatAsset();
-				wechatAsset.setAssetId(0);
+				wechatAsset.setAssetId(wechatRegister.getId());
 				wechatAsset.setGroupIds(groupIds);
 				wechatAsset.setAssetName(wechatRegister.getName());
 				wechatAsset.setConsignationTime(wechatRegister.getCreateTime());
@@ -153,7 +153,7 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 						wechatAssetGroup.setCreateTime(new Date());
 
 						wechatAssetGroupDao.updateByWxacctIGroupId(wechatAssetGroup);
-						logger.info("insert into wechat_asset_group id:" + wxAcct);
+						logger.info("update wechat_asset_group id:" + wxAcct);
 					}
 				}
 			}
