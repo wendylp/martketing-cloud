@@ -31,233 +31,222 @@ import cn.rongcapital.mkt.biz.MessageSendBiz;
 import cn.rongcapital.mkt.biz.impl.BaseBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
-import cn.rongcapital.mkt.dao.ImgTextAssetDao;
+import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
-import cn.rongcapital.mkt.dao.WechatGroupDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignActionSendPub;
 import cn.rongcapital.mkt.po.CampaignSwitch;
-import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
-import cn.rongcapital.mkt.po.WechatGroup;
 import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
 public class CampaignActionPubWechatSendH5Task extends BaseMQService implements TaskService {
-
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
-
 	@Autowired
 	private MongoTemplate mongoTemplate;
-
 	@Autowired
 	private CampaignActionSendPubDao campaignActionSendPubDao;
-
 	@Autowired
-	private MessageSendBiz messageSendBiz;
-
+	private DataPartyDao dataPartyDao;
+	
 	@Autowired
 	private WechatRegisterDao wechatRegisterDao;
-
+	
 	@Autowired
 	private WebchatAuthInfoDao webchatAuthInfoDao;
-
-	@Autowired
-	private WechatGroupDao wechatGroupDao;
-
-	@Autowired
-	private ImgTextAssetDao imgTextAssetDao;
-
+	
 	@Autowired
 	private BaseBiz baseBiz;
-
+	
+	@Autowired
+	private MessageSendBiz messageSendBiz;
+	
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
+		
 		List<CampaignSwitch> campaignEndsList = queryCampaignEndsList(campaignHeadId, itemId);
+		
 		CampaignActionSendPub campaignActionSendPubT = new CampaignActionSendPub();
 		campaignActionSendPubT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		campaignActionSendPubT.setCampaignHeadId(campaignHeadId);
 		campaignActionSendPubT.setItemId(itemId);
-		List<CampaignActionSendPub> campaignActionSendPubList = campaignActionSendPubDao
-				.selectList(campaignActionSendPubT);
-		if (CollectionUtils.isEmpty(campaignActionSendPubList)
-				|| StringUtils.isBlank(campaignActionSendPubList.get(0).getPubId())
-				|| null == campaignActionSendPubList.get(0).getMaterialId()) {
-			logger.error("没有配置公众号和图文属性,return,campaignHeadId:" + campaignHeadId + ",itemId:" + itemId);
+		List<CampaignActionSendPub> campaignActionSendPubList = campaignActionSendPubDao.selectList(campaignActionSendPubT);
+		if(CollectionUtils.isEmpty(campaignActionSendPubList) ||
+		   StringUtils.isBlank(campaignActionSendPubList.get(0).getPubId()) || 
+		   null == campaignActionSendPubList.get(0).getMaterialId()) {
+			logger.error("没有配置公众号和图文属性,return,campaignHeadId:"+campaignHeadId+",itemId:"+itemId);
 			return;
 		}
 		CampaignActionSendPub campaignActionSendPub = campaignActionSendPubList.get(0);
-		Queue queue = getDynamicQueue(campaignHeadId + "-" + itemId);// 获取MQ中的当前节点对应的queue
-		MessageConsumer consumer = getQueueConsumer(queue);// 获取queue的消费者对象
-		// 监听MQ的listener
+		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
+		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onMessage(Message message) {
-				if (message != null) {
+				if(message!=null) {
 					try {
-						// 获取segment list数据对象
-						List<Segment> segmentList = (List<Segment>) ((ObjectMessage) message).getObject();
-						if (CollectionUtils.isNotEmpty(segmentList)) {
-							processMqMessage(segmentList, campaignHeadId, itemId, campaignEndsList,
-									campaignActionSendPub);
+						//获取segment list数据对象
+						List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
+						if(CollectionUtils.isNotEmpty(segmentList)) {
+							processMqMessage(segmentList,campaignHeadId,
+											 itemId,campaignEndsList,campaignActionSendPub);
 						}
 					} catch (Exception e) {
-						logger.error(e.getMessage(), e);
+						logger.error(e.getMessage(),e);
 					}
 				}
 			}
 		};
-		if (null != consumer) {
+		if(null != consumer){
 			try {
-				// 设置监听器
+				//设置监听器
 				consumer.setMessageListener(listener);
-				consumerMap.put(campaignHeadId + "-" + itemId, consumer);
+				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
 			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
+				logger.error(e.getMessage(),e);
+			}     
 		}
-
+		
 	}
-
-	/**
-	 * @Title: processMqMessage   
-	 * @Description: 处理消息 
-	 * @param: @param segmentList
-	 * @param: @param campaignHeadId
-	 * @param: @param itemId
-	 * @param: @param campaignEndsList
-	 * @param: @param campaignActionSendPub      
-	 * @return: void      
-	 * @throws
-	 */
-	@SuppressWarnings("unchecked")
-	private void processMqMessage(List<Segment> segmentList, Integer campaignHeadId, String itemId,
-			List<CampaignSwitch> campaignEndsList, CampaignActionSendPub campaignActionSendPub) {
-
-		try {
-			// 批量发送图文
-			Map<String, Object> param = getParam(campaignActionSendPub);
-			App app = (App) param.get("app");
-			String materialId = (String) param.get("materialId");
-			List<WechatGroup> wechatGroupList = (List<WechatGroup>) param.get("wechatGroupList");
-
-			boolean flag = false;
-			for (WechatGroup group : wechatGroupList) {
-				Boolean isPubSent = messageSendBiz.sendAll(app, true, group.getGroupId(), "mpnews", materialId);
-				if (isPubSent){
-					flag = true;
-				}
-			}
-
-			List<Segment> segmentListToNext = new ArrayList<Segment>();// 要传递给下面节点的数据(执行了发送微信操作的数据)
-			String queueKey = campaignHeadId + "-" + itemId;
-
-			Set<Integer> dataPartyIds = new HashSet<>();
-			for (Segment segment : segmentList) {
-				if (!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
-					insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
-					Integer dataId = segment.getDataId();
-
-					// 从mongo的主数据表中查询该条id对应的主数据详细信息
-					DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
-					if (null != dp && null != dp.getMdType()
-							&& dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_POPULATION) {
-
-						dataPartyIds.add(dp.getMid());
-						if (flag) {
-							segmentListToNext.add(segment);// 数据放入向后面节点传递的list里
-							// 更新mongo里node_audience表的发送状态
-							updateSentStatus(segmentList, campaignHeadId, itemId,
-									ApiConstant.MONGO_NODEAUDIENCE_SENTSTATUS_H5_SENT);
-							if (!CollectionUtils.isEmpty(dataPartyIds)) {
-								Query query = new Query(Criteria.where("mid").in(dataPartyIds));
-								Update update = new Update();
-								update.inc("receiveCount", Integer.valueOf(1));
-								mongoTemplate.updateMulti(query, update, DataParty.class);
-							}
-						}
+	
+	private void processMqMessage(List<Segment> segmentList,
+								  Integer campaignHeadId,String itemId,
+								  List<CampaignSwitch> campaignEndsList,
+								  CampaignActionSendPub campaignActionSendPub) {
+		//获取app
+		Map<String, Object> param = getParam(campaignActionSendPub);
+		App app = (App) param.get("app");
+		
+		List<Segment> segmentListToNext = new ArrayList<Segment>();//要传递给下面节点的数据(执行了发送微信操作的数据)
+		String queueKey = campaignHeadId+"-"+itemId;
+		List<String> fansWeixinIds = new ArrayList<String>();
+		String pubId = campaignActionSendPub.getPubId();
+		String materialId = campaignActionSendPub.getMaterialId();
+        Set<Integer> dataPartyIds = new HashSet<>();
+		for(Segment segment:segmentList) {
+			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
+				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
+				Integer dataId = segment.getDataId();
+				//从mongo的主数据表中查询该条id对应的主数据详细信息
+				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
+				if(null!=dp && null !=dp.getMdType() &&
+				   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_POPULATION) {
+					boolean isFans = isPubWechatFans(dp, pubId, null);
+					if(isFans) {
+//						String h5MobileUrl = getH5MobileUrl(campaignActionSendPub.getImgTextAssetId());
+//						segment.setH5MobileUrl(h5MobileUrl);
+						Integer mid = dp.getMid();
+						cn.rongcapital.mkt.po.DataParty dataParty = new cn.rongcapital.mkt.po.DataParty();
+						dataParty.setId(mid);
+						List<cn.rongcapital.mkt.po.DataParty> dataPartyList = dataPartyDao.selectList(dataParty);
+						fansWeixinIds.add(dataPartyList.get(0).getWxCode());
+						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+                        dataPartyIds.add(dp.getMid());
+					} else {
+						logger.info("不是公众号粉丝,无法发送,"+JSON.toJSONString(segment));
 					}
 				}
 			}
-
-			if (CollectionUtils.isNotEmpty(campaignEndsList) && CollectionUtils.isNotEmpty(segmentListToNext)) {
-				for (CampaignSwitch cs : campaignEndsList) {
-					// 发送segment数据到后面的节点
-					sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
-					logicDeleteNodeAudience(campaignHeadId, itemId, segmentListToNext);
-					logger.info(queueKey + "-out:" + JSON.toJSONString(segmentListToNext));
+		}
+		if(fansWeixinIds.size() > 0) {
+			//boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,fansWeixinIds,campaignHeadId,itemId);
+			for(String wxCode : fansWeixinIds){
+				
+				boolean isPubSent = messageSendBiz.send(app, wxCode, null, materialId);
+				
+				if(!isPubSent) {//公众号执行发送动作失败
+					segmentListToNext = null;
+				} else {
+					//更新mongo里node_audience表的发送状态
+					updateSentStatus(segmentList,campaignHeadId,itemId,ApiConstant.MONGO_NODEAUDIENCE_SENTSTATUS_H5_SENT);
+	                if (!CollectionUtils.isEmpty(dataPartyIds)) {
+	                    Query query = new Query(Criteria.where("mid").in(dataPartyIds));
+	                    Update update = new Update();
+	                    update.inc("receiveCount", Integer.valueOf(1));
+	                    mongoTemplate.updateMulti(query, update, DataParty.class);
+	                }
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		}
+		if(CollectionUtils.isNotEmpty(campaignEndsList) && CollectionUtils.isNotEmpty(segmentListToNext)) {
+			for(CampaignSwitch cs:campaignEndsList) {
+				//发送segment数据到后面的节点
+				sendDynamicQueue(segmentListToNext, cs.getCampaignHeadId()+"-"+cs.getNextItemId());
+				logicDeleteNodeAudience(campaignHeadId,itemId,segmentListToNext);
+				logger.info(queueKey+"-out:"+JSON.toJSONString(segmentListToNext));
+			}
 		}
 	}
-
-
-	/**
-	 * @Title: getParam   
-	 * @Description:  获取批量发送图文方法所需参数 
-	 * @param: @param campaignActionSendPub
-	 * @param: @return      
-	 * @return: Map<String,Object>      
-	 * @throws
-	 */
-	private Map<String, Object> getParam(CampaignActionSendPub campaignActionSendPub) {
-		Map<String, Object> paramMap = new HashMap<>();
-		try {
-			String pubId = campaignActionSendPub.getPubId();
-			WechatRegister wechatRegister = new WechatRegister();
-			wechatRegister.setType(0);
-			wechatRegister.setWxAcct(pubId);
-			// 获取appId
-			WechatRegister register = wechatRegisterDao.selectList(wechatRegister).get(0);
-			String appId = register == null ? null : register.getAppId(); // 获取appId
-			// 获取authorizerRefreshToken
-			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();
-			webchatAuthInfo.setAuthorizerAppid(appId);
-			String authorizerRefreshToken = webchatAuthInfoDao.selectList(webchatAuthInfo).get(0)
-					.getAuthorizerRefreshToken();
-
-			// 封装公众号信息
-			App app = baseBiz.getApp();
-			app.setAuthAppId(appId);
-			app.setAuthRefreshToken(authorizerRefreshToken);
-			paramMap.put("app", app);
-
-			// 获取materialId
-			Integer imgTextAssetId = campaignActionSendPub.getImgTextAssetId();
-			ImgTextAsset imgTextAsset = new ImgTextAsset();
-			imgTextAsset.setId(imgTextAssetId);
-			imgTextAsset = imgTextAssetDao.selectList(imgTextAsset).get(0);
-			paramMap.put("materialId", imgTextAsset.getMaterialId());
-
-			// 获取组id
-			WechatGroup wechatGroup = new WechatGroup();
-			wechatGroup.setPageSize(null);
-			wechatGroup.setWxAcct(pubId);
-			List<WechatGroup> wechatGroupList = wechatGroupDao.selectList(wechatGroup);
-			paramMap.put("wechatGroupList", wechatGroupList);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.info("获取参数方法出现异常：" + e.getMessage());
-		}
-
-		return paramMap;
-	}
-
+	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
 		super.cancelCampaignInnerTask(taskSchedule);
 	}
-
+	
 	@Override
 	public void task(Integer taskId) {
 
 	}
+	
+		/**
+		 * @Title: getParam   
+		 * @Description:  获取批量发送图文方法所需参数 
+		 * @param: @param campaignActionSendPub
+		 * @param: @return      
+		 * @return: Map<String,Object>      
+		 * @throws
+		 */
+		private Map<String, Object> getParam(CampaignActionSendPub campaignActionSendPub) {
+			Map<String, Object> paramMap = new HashMap<>();
+			try {
+				String pubId = campaignActionSendPub.getPubId();
+				WechatRegister wechatRegister = new WechatRegister();
+				wechatRegister.setType(0);
+				wechatRegister.setWxAcct(pubId);
+				// 获取appId
+				WechatRegister register = wechatRegisterDao.selectList(wechatRegister).get(0);
+				String appId = register == null ? null : register.getAppId(); // 获取appId
+				// 获取authorizerRefreshToken
+				WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();
+				webchatAuthInfo.setAuthorizerAppid(appId);
+				String authorizerRefreshToken = webchatAuthInfoDao.selectList(webchatAuthInfo).get(0)
+						.getAuthorizerRefreshToken();
 
+				// 封装公众号信息
+				App app = baseBiz.getApp();
+				app.setAuthAppId(appId);
+				app.setAuthRefreshToken(authorizerRefreshToken);
+				paramMap.put("app", app);
+
+				// 获取materialId
+//				Integer imgTextAssetId = campaignActionSendPub.getImgTextAssetId();
+//				ImgTextAsset imgTextAsset = new ImgTextAsset();
+//				imgTextAsset.setId(imgTextAssetId);
+//				imgTextAsset = imgTextAssetDao.selectList(imgTextAsset).get(0);
+//				paramMap.put("materialId", imgTextAsset.getMaterialId());
+
+				// 获取组id
+//				WechatGroup wechatGroup = new WechatGroup();
+//				wechatGroup.setPageSize(null);
+//				wechatGroup.setWxAcct(pubId);
+//				List<WechatGroup> wechatGroupList = wechatGroupDao.selectList(wechatGroup);
+//				paramMap.put("wechatGroupList", wechatGroupList);
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.info("获取参数方法出现异常：" + e.getMessage());
+			}
+
+			return paramMap;
+		}
+		
+		
+		
+		
 }

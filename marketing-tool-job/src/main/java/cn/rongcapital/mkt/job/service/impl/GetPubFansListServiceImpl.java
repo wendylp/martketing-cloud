@@ -94,6 +94,9 @@ public class GetPubFansListServiceImpl implements TaskService {
 	private void synFansInfoMethod(List<WebchatAuthInfo> list) {
 
 		for (WebchatAuthInfo info : list) {
+			if(null == info){
+				continue;
+			}
 			List<WechatMember> wechatMemberList = wechatMemberBiz.getUserList(info.getAuthorizerAppid(),
 					info.getAuthorizerRefreshToken());
 			
