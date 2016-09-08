@@ -176,8 +176,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 									StringBuilder sb = new StringBuilder();
 									String respBodyString = Base64.encodeBase64String(result.getRespBody());
 									sb.append("data:image/").append(fileType).append(";base64, ").append(respBodyString);
-									byte[] streamByte = Base64.decodeBase64(respBodyString);
-									logger.info(sb.toString());
+									byte[] streamByte = Base64.decodeBase64(respBodyString);									
 									this.byte2image(streamByte,ApiConstant.upload_img_path_large+wechatQrcodeTicket.getSceneId()+".jpg",1200,1200);
 									this.byte2image(streamByte,ApiConstant.upload_img_path_middle+wechatQrcodeTicket.getSceneId()+".jpg",800,800);
 									this.byte2image(streamByte,ApiConstant.upload_img_path_small+wechatQrcodeTicket.getSceneId()+".jpg",200,200);
