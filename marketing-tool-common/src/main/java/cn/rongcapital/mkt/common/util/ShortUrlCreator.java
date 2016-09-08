@@ -23,15 +23,6 @@ public class ShortUrlCreator{
         "I" , "J" , "K" , "L" , "M" , "N" , "O" , "P" , "Q" , "R" , "S" , "T" ,
         "U" , "V" , "W" , "X" , "Y" , "Z"}; 
     
-     
-//    public static void main(String[] args) {
-//        String sLongUrl = "http://mktdev.rc.dataengine.com/html/contactlist/newform.html?id=123" ;
-//        String results = generateShortUrl(sLongUrl);
-//        
-//            System.out.println("���ɵĶ����ӵ�ַ��http://mc.ruixuesoft.com/short/" + results);
-//       
-//    }
- 
     public static String generateShortUrl(String url) {
         
         String sMD5EncryptResult = getMd5(key + url);

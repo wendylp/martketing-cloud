@@ -27,7 +27,6 @@ import com.tagsin.tutils.http.Requester.Method;
 import com.tagsin.tutils.json.JsonUtils;
 import com.tagsin.wechat_sdk.App;
 
-import com.tagsin.wechat_sdk.token.Token;
 import com.tagsin.wechat_sdk.token.TokenType;
 
 import cn.rongcapital.mkt.biz.WechatQrcodeBiz;
@@ -115,7 +114,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			}
 			} catch (Exception e) {
 			e.printStackTrace();
-//			throw new Exception(e.getMessage(),e);
 		}
 
 		return baseOutput;
@@ -183,12 +181,10 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 									this.byte2image(streamByte,ApiConstant.upload_img_path_large+wechatQrcodeTicket.getSceneId()+".jpg",1200,1200);
 									this.byte2image(streamByte,ApiConstant.upload_img_path_middle+wechatQrcodeTicket.getSceneId()+".jpg",800,800);
 									this.byte2image(streamByte,ApiConstant.upload_img_path_small+wechatQrcodeTicket.getSceneId()+".jpg",200,200);
-//									this.byte2image(streamByte,ApiConstant.upload_img_path+wechatQrcodeTicket.getSceneId()+".jpg",200,200);
 								}	
 							}
 						} catch (Exception e) {
 							e.printStackTrace();					
-//							throw new Exception(e.getMessage(),e);
 						}
 					}
 				}
@@ -199,9 +195,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		return baseOutput;
 	}
 
-
-
-
 	@Override
 	public BaseOutput getWechatQrcodeTicket() {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
@@ -209,7 +202,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 
 		try {
 			WechatQrcodeTicket  wechatQrcodeTicket  = new WechatQrcodeTicket();
-//		wechatQrcodeTicket.s
 			List<WechatQrcodeTicket> wechatQrcodeTickets = wechatQrcodeTicketDao.selectList(wechatQrcodeTicket);
 			if(wechatQrcodeTickets!=null&&wechatQrcodeTickets.size()>0){
 				WechatQrcodeTicket wechatQrcodeTicketBack = wechatQrcodeTickets.get(0);
@@ -234,11 +226,9 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);		
 		try {
-//			WechatQrcode wechatQrcode = (WechatQrcode) JSONObject.parseObject(wechatQrcodeStr, WechatQrcode.class); 
 			WechatQrcode wechatQrcode = new WechatQrcode();
 			
 			if(wechatQrcodeIn.getId()!=0){
-//				wechatQrcode.setWxName(wechatQrcodeIn.getWx_name());
 				wechatQrcode.setId(Integer.valueOf(wechatQrcodeIn.getId()+""));
 			}
 			
@@ -252,16 +242,12 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			if(wechatQrcodeIn.getCh_code()!=null){
 				wechatQrcode.setChCode(wechatQrcodeIn.getCh_code());
 			}
-/*			if(StringUtils.isNotEmpty(wechatQrcodeIn.getCh_name())){
-				wechatQrcode.setc(wechatQrcodeIn.getCh_code());
-			}*/
 			if(StringUtils.isNotEmpty(wechatQrcodeIn.getFixed_audience())){
 				wechatQrcode.setAudienceName(wechatQrcodeIn.getFixed_audience());
 				wechatQrcode.setIsAudience(int2OneByte(1));
 			}else{
 				wechatQrcode.setIsAudience(int2OneByte(0));
-			}
-			
+			}			
 			//失效时间补足时分秒00:00:00
 			if(wechatQrcodeIn.getExpiration_time() !=null && !"".equals(wechatQrcodeIn.getExpiration_time())){
 				wechatQrcode.setExpirationTime(DateUtil.getDateFromString(wechatQrcodeIn.getExpiration_time()+" 00:00:00","yyyy-MM-dd hh:mm:ss"));
@@ -349,30 +335,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		return root;
 	}
 	
-	public static Token accessToken(){
-		try {
-			Requester req = Requester.builder()
-				.setUrl("https://api.weixin.qq.com/cgi-bin/token")
-				.addUrlParm("grant_type", "client_credential")
-				.addUrlParm("appid", ApiConstant.APPID)
-				.addUrlParm("secret", ApiConstant.SECRET);
-			HttpResult result = req.execute();
-			
-			if(result.getCode()==200){
-				ObjectNode jsonObj = JsonUtils.readJsonObject(result.getRespBody());
-				String access_token = jsonObj.get("access_token").getTextValue();
-				long expires_in = jsonObj.get("expires_in").getLongValue();
-				return new Token(TokenType.ACCESS_TOKEN, access_token, System.currentTimeMillis() + (expires_in-60) * 1000);
-			}else{				
-//				throw new WXServerApiException("Invalid statu code : " + result.getCode() + " , url : " + req.getUrl());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-//			throw new WXServerApiException(e);
-		}
-		return null;
-	}
-	
 	
 	//byte数组到图片
 	public void byte2image(byte[] data,String path,int width,int height){
@@ -384,8 +346,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		    imageOutput.write(data, 0, data.length);
 		    imageOutput.close();
 		    ImageCompressUtil.zipImageFile(path, width, height, 1f, "");
-		} catch(Exception ex) {
-	        System.out.println("Exception: " + ex);
+		} catch(Exception ex) {	       
 	        ex.printStackTrace();
 	    }
 	  }

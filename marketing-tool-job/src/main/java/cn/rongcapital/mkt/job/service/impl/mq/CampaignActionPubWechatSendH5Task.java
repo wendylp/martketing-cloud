@@ -140,6 +140,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 				if(null!=dp && null !=dp.getMdType() &&
 				   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_POPULATION) {
 					boolean isFans = isPubWechatFans(dp, pubId, null);
+					logger.info("是否是微信公众号粉丝标识------------------------------------>："+isFans);
 					if(isFans) {
 //						String h5MobileUrl = getH5MobileUrl(campaignActionSendPub.getImgTextAssetId());
 //						segment.setH5MobileUrl(h5MobileUrl);
@@ -161,6 +162,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 			for(String wxCode : fansWeixinIds){
 				
 				boolean isPubSent = messageSendBiz.send(app, wxCode, null, materialId);
+				logger.info("向受众人群粉丝发送微信图文成功标识------------------------------------>："+isPubSent);
 				
 				if(!isPubSent) {//公众号执行发送动作失败
 					segmentListToNext = null;

@@ -60,7 +60,6 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
         String component_appid = app.getId();
         String redirect_uri = "http://mktsrv.rc.dataengine.com/api?method=mkt.data.inbound.wechat.public.auth.code.callback";
         String url = "https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid="+component_appid+"&pre_auth_code="+pre_auth_code+"&redirect_uri="+redirect_uri;
-        System.out.println(url);
         logger.info(url);	
         publicAuthOut.setUrl(url);
         baseOutput.getData().add(publicAuthOut);
@@ -96,8 +95,6 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 		App app = new App(ApiConstant.APPID,ApiConstant.SECRET);
 		app.setComponentTicket(ApiConstant.component_verify_ticket);
 		WxComponentServerApi.accessToken(app);
-//		String component_access_token_back = token.toString();		
-//		return component_access_token_back;
 		return app;
 	}
 	
@@ -111,15 +108,6 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 			isGranted = true;
 		}		
 		return isGranted;
-	}
-
-
-	public static void main(String[] args) {
-//		ApiConstant.component_verify_ticket = "ticket@@@86UEaYgnQWa5DXjOueoLsXTTq2SAomGW9xIOrbiWiLpaSjSHeYW8ckPpak5XBFVIaerwc41XXr_XIR6eycekLQ";
-//		 App app = ApiConstant.getComponentAccessToken();
-//		 App app = BaseBiz.getApp();
-//		 String appctk = app.tokenManager.getToken(TokenType.COMPONENT_ACCESS_TOKEN);
-//		 System.out.println(appctk);
 	}
 
 }

@@ -34,21 +34,6 @@ public class DemoTaskServiceImpl implements TaskService {
 	@Override
 	public void task(Integer taskId) {
 		test();
-//		List<DataParty> dpList = null;
-////		dpList = dataPartyRepository.findAll();
-////		for(DataParty dp:dpList) {
-////			System.out.println(JSON.toJSONString(dp));
-////		}
-////		dpList = dataPartyRepository.findByMid("101");
-////		for(DataParty dp:dpList) {
-////			System.out.println(JSON.toJSONString(dp));
-////		}
-////		dpList = mongoTemplate.find(new Query(Criteria.where("mid").is("102")),DataParty.class);
-//		dpList = mongoTemplate.find(new Query(Criteria.where("mid").is(102)),DataParty.class);
-////		dpList = mongoTemplate.find(new Query(Criteria.where("tagList.tagName").is("男")),DataParty.class);
-//		for(DataParty dp:dpList) {
-//			System.out.println(JSON.toJSONString(dp));
-//		}
 	}
 	
 	private void test() {
