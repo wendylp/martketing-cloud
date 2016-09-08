@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qq.weixin.mp.aes.WXBizMsgCrypt;
+import com.tagsin.tutils.http.HttpResult;
+import com.tagsin.tutils.http.Requester;
 import com.tagsin.tutils.json.JsonUtils;
 import com.tagsin.tutils.okhttp.OkHttpUtil;
 import com.tagsin.tutils.okhttp.OkHttpUtil.RequestMediaType;
@@ -249,7 +251,8 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 
 				WechatMember wechatMemberTemp = new WechatMember();
 				wechatMemberTemp.setWxCode(openid);				
-				List<WechatMember> wechatMemberTemps =  wechatMemberDao.selectList(wechatMemberTemp);				
+				List<WechatMember> wechatMemberTemps =  wechatMemberDao.selectList(wechatMemberTemp);
+				UserInfo userInfo = this.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常
 				if(wechatMemberTemps!=null&&wechatMemberTemps.size()>0){
 					WechatMember wechatMemberBack = wechatMemberTemps.get(0);
 					if(event.equals("subscribe")){
@@ -259,7 +262,8 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 					}
 					wechatMemberDao.updateById(wechatMemberBack);
 				}else{
-					UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常
+//					UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常
+//					UserInfo userInfo = this.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常
 					WechatMember wechatMember = new WechatMember();
 					// subscribe 无对应
 					// openid
@@ -287,7 +291,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 		
 			
 	}
-
+	
 	public App getApp(){
 		 App app = new App(ApiConstant.APPID,ApiConstant.SECRET);
 	        WebchatComponentVerifyTicket webchatComponentVerifyTicketq = new WebchatComponentVerifyTicket();
@@ -336,7 +340,7 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 				logger.info(bodystr);
 				ObjectNode jsonObj = JsonUtils.readJsonObject(bodystr);
 				logger.info("component_access_token:"+jsonObj.toString());
-				String access_token = jsonObj.get("component_access_token").getTextValue();
+				String access_token = jsonObj.get("component_access_token").getTextValue();				
 				long expires_in = jsonObj.get("expires_in").getLongValue();
 				return new Token(TokenType.COMPONENT_ACCESS_TOKEN, access_token, System.currentTimeMillis() + (expires_in-60) * 1000);
 			}else{
@@ -347,4 +351,25 @@ public class ProcessReceiveMessageOfWeiXin extends WxMsgHandler implements Proce
 		}
 	}
 
+	public UserInfo getUserInfo(App app,String openid){
+		try {
+			Requester req = Requester.builder()
+					.setUrl("https://api.weixin.qq.com/cgi-bin/user/info")
+					.addUrlParm("access_token", app.tokenManager.getAuthToken(TokenType.AUTHORIZER_ACCESS_TOKEN))
+					.addUrlParm("lang", "zh_CN")
+					.addUrlParm("openid", openid);
+					
+			HttpResult result = req.execute();
+			if(result.getCode()==200){
+				byte[] respBody = result.getRespBody();
+				String bodystr = new String(respBody,"UTF-8");
+				logger.info(bodystr);
+				return JsonUtils.fromJson(respBody, UserInfo.class);
+			}
+			throw new WXServerApiException("faild get user info: " + result.getCode());
+		} catch (Exception e) {
+			throw new WXServerApiException(e.getMessage(),e);
+		}
+	}
+	
 }

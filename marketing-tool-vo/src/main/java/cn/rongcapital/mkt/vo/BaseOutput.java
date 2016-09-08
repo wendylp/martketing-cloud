@@ -29,6 +29,8 @@ public class BaseOutput {
 
 	private List<Object> data = new ArrayList<Object>();
 
+	private String date;
+	
 	public BaseOutput(){}
 	
 	public BaseOutput(int code, String msg, int total, List<Object> data) {
@@ -81,6 +83,15 @@ public class BaseOutput {
 	
 	public void setData(List<Object> data) {
 		this.data = data;
+	}
+	
+	@JsonProperty("date")
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
 	}
 
 	@JsonProperty("total_count")

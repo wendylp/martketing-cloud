@@ -181,4 +181,10 @@
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE name = #{name}
 	</select>
+	
+	<update id="updateByWxacctIGroupId" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup">
+		<![CDATA[UPDATE wechat_asset_group]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE wx_acct = #{wxAcct} and import_group_id = #{importGroupId}]]>
+	</update>
 </mapper>

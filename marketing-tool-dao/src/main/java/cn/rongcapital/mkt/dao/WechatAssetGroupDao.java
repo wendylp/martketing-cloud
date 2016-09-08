@@ -10,13 +10,14 @@
 
 package cn.rongcapital.mkt.dao;
 
-import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.WechatAssetGroup;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.po.WechatAssetGroup;
 
 public interface WechatAssetGroupDao extends BaseDao<WechatAssetGroup>{
 
@@ -119,4 +120,11 @@ public interface WechatAssetGroupDao extends BaseDao<WechatAssetGroup>{
 	 * @return list
 	 */
 	Integer selectFriendCount(WechatAssetGroup wechatAssetGroup);
+	
+	/**
+	 * 根据微信号和组更新微信资产相关信息
+	 * @param wechatAssetGroup
+	 * @return int
+	 */
+	void updateByWxacctIGroupId(WechatAssetGroup wechatAssetGroup);
 }
