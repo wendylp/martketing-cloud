@@ -98,24 +98,6 @@
 //		return isSuccess;
 //	}
 //
-////	public static void main(String[] args) {
-////		HttpUrl httpUrl = new HttpUrl();
-////		httpUrl.setHost("test.h5plus.net");
-////		httpUrl.setPath(ApiConstant.DL_PUB_ISSENT_API_PATH);
-////		HashMap<Object , Object> params = new HashMap<Object , Object>();
-////		params.put("pid","55cbf3a3986a9b483376f279");
-////		params.put("pub_id", "gh_e611846d32ed");
-////		params.put("task_id", 1226);
-////		httpUrl.setParams(params);
-////		try {
-////			PostMethod postResult = HttpClientUtil.getInstance().post(httpUrl);
-////			String postResStr = postResult.getResponseBodyAsString();
-////			String status = JSON.parseObject(postResStr).getJSONObject("hfive_mkt_wtuwen_sent_response").getString("status");
-////			System.out.println(status);
-////		} catch (Exception e) {
-////			e.printStackTrace();
-////		}
-////	}
 //	@Override
 //	public void task(Integer taskId) {
 //		// TODO Auto-generated method stub

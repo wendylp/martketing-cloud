@@ -96,18 +96,4 @@ public class Xml2JsonUtil {
         }  
         return obj;  
     }  
-  
-    // 测试  
-    public static void main(String[] args) {  
-        System.out.println(  Xml2JsonUtil.xml2JSON("<MapSet>"  
-                + "<MapGroup id='Sheboygan'>" + "<Map>"  
-                + "<Type>MapGuideddddddd</Type>"  
-                + "<SingleTile>true</SingleTile>" + "<Extension>"  
-                + "<ResourceId>ddd</ResourceId>" + "</Extension>" + "</Map>"  
-                + "<Map>" + "<Type>ccc</Type>" + "<SingleTile>ggg</SingleTile>"  
-                + "<Extension>" + "<ResourceId>aaa</ResourceId>"  
-                + "</Extension>" + "</Map>" + "<Extension />" + "</MapGroup>"  
-                + "<ddd>" + "33333333" + "</ddd>" + "<ddd>" + "444" + "</ddd>"  
-                + "</MapSet>"));  
-    }  
 }
