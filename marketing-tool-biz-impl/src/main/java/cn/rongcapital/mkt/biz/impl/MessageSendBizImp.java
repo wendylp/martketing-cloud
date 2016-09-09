@@ -14,6 +14,8 @@ import cn.rongcapital.mkt.biz.MessageSendBiz;
 @Service
 public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -30,34 +32,26 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 	 * }
 	 */
 	
-	private Logger logger = LoggerFactory.getLogger(getClass());
-
-	
 	@Override
 	public Boolean send(App app,String touser, String content, String media_id) {
 		Boolean issended = false;
-//		touser = "o6Sp6v63INZWYn-b2e0bIVepgoMY";
-//		
-//		app = this.getApp();
-//		app.setAuthAppId("wxeb10897c0cd98e36");
-//		app.setAuthRefreshToken("refreshtoken@@@kkMVjC90JS9ooW_zsUUhfvjFbwAlfvB9pmBTZArGYMM");
 		
 		// 发送文字消息
 		if(content != null && content.length() > 0) {
 			String msg = "{\"touser\":\"" + touser + "\",\"msgtype\":\"text\",\"text\":{\"content\":\"" + content + "\"}}";
 			issended = WxComponentServerApi.getBaseWxSdk().send(app, msg);
 			if(issended == false) {
-				logger.debug("发送文字消息失败， msg内容为：{}", msg);
+				logger.info("发送文字消息失败， msg内容为：{}", msg);
 			}
 			
 		}
 		
 		// 发送图片消息
-		if(content != null && content.length() > 0) {
+		if(media_id != null && media_id.length() > 0) {
 			String msg = "{\"touser\":\"" + touser + "\",\"msgtype\":\"image\",\"image\":{\"media_id\":\"" + media_id + "\"}}";
 			issended = WxComponentServerApi.getBaseWxSdk().send(app, msg);
 			if(issended == false) {
-				logger.debug("发送图片消息失败， msg内容为：{}", msg);
+				logger.info("发送图片消息失败， msg内容为：{}", msg);
 			}
 			
 		}
@@ -83,7 +77,7 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 			Integer jsonInt = userJson.getInteger("errcode");
 			if(0 == jsonInt)issended = true;
 			if(issended == false) {
-				logger.debug("群发消息发送图片消息失败，tagId:"+tagId);
+				logger.info("群发消息发送图片消息失败，tagId:"+tagId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

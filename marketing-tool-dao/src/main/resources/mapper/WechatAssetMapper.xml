@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,asset_id as assetId,asset_type as assetType,asset_name as assetName,nickname as nickname,wx_acct as wxAcct,consignation_time as consignationTime,total_count as totalCount,group_ids as groupIds,imgfile_url as imgfileUrl,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,asset_id as assetId,asset_type as assetType,asset_name as assetName,nickname as nickname,wx_acct as wxAcct,consignation_time as consignationTime,total_count as totalCount,group_ids as groupIds,imgfile_url as imgfileUrl,status as status,create_time as createTime,update_time as updateTime,app_id as appId,wechat_qrcode as wechatQrcode]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -26,6 +26,8 @@
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="appId != null"><![CDATA[ AND app_id = #{appId}]]></if>
+		    	<if test="wechatQrcode != null"><![CDATA[ AND wechat_qrcode = #{wechatQrcode}]]></if>
 		</where>
 	</sql>
 	
@@ -47,14 +49,16 @@
 		    	<if test="totalCount != null"><![CDATA[total_count = #{totalCount},]]></if>
 		    	<if test="groupIds != null"><![CDATA[group_ids = #{groupIds},]]></if>
 		    	<if test="imgfileUrl != null"><![CDATA[imgfile_url = #{imgfileUrl},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="appId != null"><![CDATA[app_id = #{appId},]]></if>
+		    	<if test="wechatQrcode != null"><![CDATA[wechat_qrcode = #{wechatQrcode}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatAsset" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_asset (asset_id,asset_type,asset_name,nickname,wx_acct,consignation_time,total_count,group_ids,imgfile_url,create_time)
+			INSERT INTO wechat_asset (asset_id,asset_type,asset_name,nickname,wx_acct,consignation_time,total_count,group_ids,imgfile_url,create_time,app_id,wechat_qrcode)
 			VALUES
 			(
 			  #{assetId},
@@ -66,7 +70,9 @@
 			  #{totalCount},
 			  #{groupIds},
 			  #{imgfileUrl},
-			  now()
+			  now(),
+			  #{appId},
+			  #{wechatQrcode}
 			)
 		]]>
 	</insert>
@@ -134,9 +140,9 @@
 
 	<select id="selectWechatAssetDetai" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT
-		asset_name,wx_acct,nickname,status,consignation_time,group_ids
-		FROM wechat_asset
-		WHERE asset_id = #{asset_id}
+		a.asset_name,a.wx_acct,a.nickname,a.status,a.consignation_time,a.group_ids,i.authorizer_appid
+		FROM wechat_asset a,webchat_auth_info i 
+		WHERE a.asset_id = #{asset_id} and a.status = #{status} and a.app_id = i.authorizer_appid 
     </select>
 
 	<update id="updateNicknameById" parameterType="java.util.Map">

@@ -149,38 +149,8 @@ public class CampaignDecisionWechatForwardTask extends BaseMQService implements 
 		return isForward;
 	}
 	
-//	public static void main(String[] args) {
-//		int c = test();
-//		System.out.println(c);
-//	}
-//	
-//	private static int test() {
-//		int share_count = -1;
-//		boolean isForward = false;
-//		HttpUrl httpUrl = new HttpUrl();
-//		httpUrl.setHost("test.h5plus.net");
-//		httpUrl.setPath(ApiConstant.DL_PUB_ISFORWARD_API_PATH + "55cbf3a3986a9b483376f279");
-//		HashMap<Object , Object> params = new HashMap<Object , Object>();
-//		params.put("pub_id", "gh_e611846d32ee");
-//		params.put("fans_open_id", "ozn8st4fvXQ3oGzB__j6gMt9Va7A");
-//		params.put("material_id", 1349);
-//		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
-//		httpUrl.setRequetsBody(JSON.toJSONString(params));
-//		try {
-//		PostMethod postResult = HttpClientUtil.getInstance().postExt(httpUrl);
-//		String postResStr = postResult.getResponseBodyAsString();
-//		JSONObject resJson = JSON.parseObject(postResStr).getJSONObject("hfive_mkt_wtuwen_shared_response");
-//		share_count = resJson.getInteger("share_count");//转发次数
-//		} catch (Exception e) {
-//		 e.printStackTrace();
-//		}
-//		return share_count;
-//	}
-	
-	
 	@Override
-	public void task(Integer taskId) {
-		// TODO Auto-generated method stub
+	public void task(Integer taskId) {		
 		
 	}
 

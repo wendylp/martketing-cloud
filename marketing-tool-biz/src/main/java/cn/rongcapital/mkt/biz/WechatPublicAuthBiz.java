@@ -10,9 +10,6 @@ public interface WechatPublicAuthBiz {
 	
 	public BaseOutput authWechatPublicCodeAccount(String authorizationCode);
 	
-	public App getComponentAccessToken();
-	
 	public Boolean isPubIdGranted(String authAppid);
 	
-//	public App getApp();
 }
