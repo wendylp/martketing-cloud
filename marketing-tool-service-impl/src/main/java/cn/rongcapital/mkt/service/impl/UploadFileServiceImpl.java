@@ -87,6 +87,8 @@ public class UploadFileServiceImpl implements UploadFileService{
     private final String directory = "//rc//";
     public static char CSV_WRITER_SEPARATOR=',';
     //public static String UPLOADED_FILE_PATH = "e://";
+    public static String UPLOADED_FILE_NAME = "_upload.xlsx";
+    public static String UPLOADED_FAIL_FILE_NAME = "_fail.csv";
     public static String UPLOADED_FILE_PATH = "/rc/uploadFiles/";
     public static String[] channels = new String[] {"经销商","渠道商","员工","区域","门店","活动"};
     public static String FAIL_FILE_PATH = "/rc/downloads/batchQrcodeErr/";
@@ -515,15 +517,25 @@ public class UploadFileServiceImpl implements UploadFileService{
 					int index = 0;
 					while (dataCellIterator.hasNext()) {
 						Cell dataColumnCell = dataCellIterator.next();
-						if( Cell.CELL_TYPE_STRING != dataColumnCell.getCellType()){
-							continue;
-						}
 						if(index == 0){
-							wxMoudel.setQrName(dataColumnCell.getStringCellValue());
+							if(Cell.CELL_TYPE_STRING == dataColumnCell.getCellType()) {
+								wxMoudel.setQrName(dataColumnCell.getStringCellValue());
+							}else if(Cell.CELL_TYPE_NUMERIC == dataColumnCell.getCellType()){
+								wxMoudel.setQrName(String.valueOf(dataColumnCell.getNumericCellValue()));
+							}
+							
 						}else if(index == 1){
-							wxMoudel.setChannelType(dataColumnCell.getStringCellValue());
+							if(Cell.CELL_TYPE_STRING == dataColumnCell.getCellType()) {
+								wxMoudel.setChannelType(dataColumnCell.getStringCellValue());
+							}else if(Cell.CELL_TYPE_NUMERIC == dataColumnCell.getCellType()){
+								wxMoudel.setChannelType(String.valueOf(dataColumnCell.getNumericCellValue()));
+							}
 						}else if(index == 2){
-							wxMoudel.setOfficialName(dataColumnCell.getStringCellValue());
+							if(Cell.CELL_TYPE_STRING == dataColumnCell.getCellType()) {
+								wxMoudel.setOfficialName(dataColumnCell.getStringCellValue());
+							}else if(Cell.CELL_TYPE_NUMERIC == dataColumnCell.getCellType()){
+								wxMoudel.setOfficialName(String.valueOf(dataColumnCell.getNumericCellValue()));
+							}
 						}
 						
 						index++;
@@ -550,7 +562,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 				
 					int channelTypeCount = wechatChannelDao.selectListCount(wechatChannel);
 					if(channelTypeCount == 0 && !channelNmaeList.contains(channelType)){
-						wxFailMap.put("渠道名字不存在" + wechatChannel, wmo);
+						wxFailMap.put(qrName + "渠道名字不存在" + channelType, wmo);
 						continue;
 					}
 					
@@ -561,7 +573,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 						wechatRegister.setName(officialName);
 						int officialNameCount = wechatRegisterDao.selectListCount(wechatRegister);
 						if(officialNameCount > 0){
-							wxFailMap.put("公众号名字已存在" + wechatChannel, wmo);
+							wxFailMap.put(qrName+ "公众号名字已存在" + officialName, wmo);
 							continue;
 						}
 					}
@@ -610,7 +622,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 				
 				//生成错误文件csv并把错误文件写到服务器
 				//csvWriter = new CsvWriter(new FileWriter(new File("e:\\fail.csv")), CSV_WRITER_SEPARATOR);
-				String failFile = FAIL_FILE_PATH + bachId + "_fail.csv";
+				String failFile = FAIL_FILE_PATH + bachId + UPLOADED_FAIL_FILE_NAME;
 				csvWriter = new CsvWriter(failFile, CSV_WRITER_SEPARATOR, Charset.forName("GBK"));
 				
 				//把头写进去
@@ -632,7 +644,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 				}
 				
 				//上传文件到服务器
-				 fileName = UPLOADED_FILE_PATH + bachId +fileName;
+				fileName = UPLOADED_FILE_PATH + bachId + UPLOADED_FILE_NAME;
 	             writeFile(bytes,fileName);
 	             
 	           //往log表写数据
