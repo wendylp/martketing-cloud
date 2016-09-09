@@ -31,6 +31,10 @@ public class WechatAsset extends BaseQuery {
 
     private Date updateTime;
 
+    private String appId;
+
+    private String wechatQrcode;
+
     public Integer getId() {
         return id;
     }
@@ -133,5 +137,21 @@ public class WechatAsset extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId == null ? null : appId.trim();
+    }
+
+    public String getWechatQrcode() {
+        return wechatQrcode;
+    }
+
+    public void setWechatQrcode(String wechatQrcode) {
+        this.wechatQrcode = wechatQrcode == null ? null : wechatQrcode.trim();
     }
 }
