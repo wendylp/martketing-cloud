@@ -45,28 +45,9 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	 * @return: Response
 	 */
 	@Override
-	public void filter(ContainerRequestContext requestContext) throws IOException {
-//		logger.info("ApiRequestRouter.getMsgEvent*******************************");		
-		String url = requestContext.getUriInfo().getPath();
-		
-/*		InputStream inputStream = requestContext.getEntityStream();
-		byte[] postDat = IOUtils.toByteArray(inputStream);
-		String encrypt =  new String(postDat);
-		logger.info("reqbody:" + new String(postDat,"UTF-8"));*/
-
-//		logger.info(url+"*******************************");	
-/*		if(StringUtils.isBlank(url) || !(url.equals(ApiConstant.API_PATH)||url.equals(ApiConstant.API_PATH_APPID))){
-			requestContext.abortWith(Response.status(404).entity("Api not found").build());
-		}
-*/		
-		if(
-		    (HttpMethod.GET.equals(requestContext.getMethod()) ||
-		      (HttpMethod.POST.equals(requestContext.getMethod())
-//					  &&
-//		       MediaType.APPLICATION_JSON_TYPE.equals(requestContext.getMediaType())
-			  )
-		    ) 
-		  ) { 
+	public void filter(ContainerRequestContext requestContext) throws IOException {	
+/*		String url = requestContext.getUriInfo().getPath();	*/
+		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 
 			List<String> pList = requestContext.getUriInfo().getQueryParameters()
 								 .get(ApiConstant.API_METHOD);
 			String method = pList==null?null:pList.get(0);
@@ -77,22 +58,6 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 					.path(requestContext.getUriInfo().getPath()+"/"+method).build();
 			requestContext.setRequestUri(newRequestURI);
 		}
-//		logger.info("ApiRequestRouter.getMsgEvent end*******************************");	
-//	    if(HttpMethod.POST.equals(requestContext.getMethod()) 
-//	                && MediaType.APPLICATION_JSON_TYPE.equals(requestContext.getMediaType())
-//	                && requestContext.getEntityStream() != null) {
-//	    	 try {
-//	    		 ByteArrayOutputStream out = new ByteArrayOutputStream();
-//	    		 IOUtils.copy(requestContext.getEntityStream(), out);
-//	    		 byte[] requestEntity = out.toByteArray();
-//	    		 String jsonStr = new String(requestEntity,CharEncoding.UTF_8);
-//	    		 System.out.println(jsonStr);
-//	    		 method = (String)JSON.parseObject(jsonStr).get(ApiConstant.API_METHOD);
-//	    		 requestContext.setEntityStream(new ByteArrayInputStream(requestEntity));
-//			} catch (Exception e) {
-//				 method = null;
-//			}
-//		}
 	}
 
 }

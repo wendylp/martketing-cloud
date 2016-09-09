@@ -99,6 +99,9 @@ public class GetH5PubListServiceImpl implements TaskService {
 	public void synPubGroupInfoMethod(List<WebchatAuthInfo> list) {
 
 		for (WebchatAuthInfo info : list) {
+			if(info == null){
+				continue;
+			}
 			List<WechatGroup> WechatGroupList = wechatGroupBiz.getTags(info.getAuthorizerAppid(),
 					info.getAuthorizerRefreshToken());
 			if (!CollectionUtils.isEmpty(WechatGroupList)) {
@@ -148,6 +151,9 @@ public class GetH5PubListServiceImpl implements TaskService {
 	public void synPubInfoMethod(List<WebchatAuthInfo> list) {
 
 		for (WebchatAuthInfo info : list) {
+			if(info == null){
+				continue;
+			}
 			WechatRegister wechatRegister = wechatRegisterBiz.getAuthInfo(info.getAuthorizerAppid(),
 					info.getAuthorizerRefreshToken());
 			if (wechatRegister != null) {

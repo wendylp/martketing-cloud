@@ -34,27 +34,6 @@ public class TagStatTaskServiceImpl implements TaskService {
     @Override
     public void task(Integer taskId) {
 
-        // 1.从mysql tag表中读取所有标签名称
-        // Tag tag=new Tag();
-        // tag.setStatus(0);
-        // List<String> tags=tagDao.selectList(tag);
 
-
-        // 2.在mongo中逐个统计标签所包含人数
-
-        logger.info(taskId.toString());
-        List<DataParty> dpList = null;
-        dpList = dataPartyRepository.findAll();
-        for (DataParty dp : dpList) {
-            System.out.println(JSON.toJSONString(dp));
-        }
-        dpList = dataPartyRepository.findByMid("101");
-        for (DataParty dp : dpList) {
-            System.out.println(JSON.toJSONString(dp));
-        }
-        dpList = mongoTemplate.find(new Query(Criteria.where("mid").is("101")), DataParty.class);
-        for (DataParty dp : dpList) {
-            System.out.println(JSON.toJSONString(dp));
-        }
     }
 }

@@ -134,9 +134,9 @@
 
 	<select id="selectWechatAssetDetai" parameterType="java.util.Map" resultType="java.util.Map">
 		SELECT
-		asset_name,wx_acct,nickname,status,consignation_time,group_ids
-		FROM wechat_asset
-		WHERE asset_id = #{asset_id}
+		a.asset_name,a.wx_acct,a.nickname,a.status,a.consignation_time,a.group_ids,i.authorizer_appid
+		FROM wechat_asset a,webchat_auth_info i 
+		WHERE a.asset_id = #{asset_id} and a.status = #{status} and a.app_id = i.app_id 
     </select>
 
 	<update id="updateNicknameById" parameterType="java.util.Map">

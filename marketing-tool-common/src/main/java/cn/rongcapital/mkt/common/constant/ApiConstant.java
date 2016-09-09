@@ -235,11 +235,9 @@ public class ApiConstant {
 	
 	public static String component_verify_ticket = "ticket@@@Pqd1HooYMLuhKeSIUPh5SjZC43_g7JYLtyVyHN6fDP3WQ9lSRLSZMg_juXv8E9uoE-wKb0LVHiTwqPHVxSYxww";	
 	
-/*	public static App getComponentAccessToken() {
-		App app = new App(ApiConstant.APPID,ApiConstant.SECRET);
-		app.setComponentTicket(ApiConstant.component_verify_ticket);
-		WxComponentServerApi.accessToken(app);
-		return app;
-	}*/
+	public static final String weixin_qrcode_create = "https://api.weixin.qq.com/cgi-bin/qrcode/create";
+	
+	public static final String weixin_qrcode_show = "https://mp.weixin.qq.com/cgi-bin/showqrcode";
+
 	
 }

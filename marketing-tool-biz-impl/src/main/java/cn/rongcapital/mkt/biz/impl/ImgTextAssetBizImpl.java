@@ -75,8 +75,7 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 			if(materialCount > 20) {
 				materialCount = 20;
 			}
-			String materialListStr= WxComponentServerApi.getBaseWxSdk().getMaterialList(app,type,offset,materialCount);
-			System.out.println(materialListStr);
+			String materialListStr= WxComponentServerApi.getBaseWxSdk().getMaterialList(app,type,offset,materialCount);			
 			imgTextAssetes.addAll(this.getImgTextAssetes(materialListStr));
 			offset += materialCount;
 		}
