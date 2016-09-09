@@ -59,8 +59,7 @@ public class BaseBiz {
 						JedisClient.set(app.getId(), tokenStr);
 	        		}
 	        	}
-			} catch (JedisException e) {				
-				e.printStackTrace();
+			} catch (JedisException e) {
 				logger.info(e.getMessage());
 			}
 		return app;		
