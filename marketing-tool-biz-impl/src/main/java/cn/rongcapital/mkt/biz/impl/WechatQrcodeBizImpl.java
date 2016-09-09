@@ -187,7 +187,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 					}
 				}
 			}			
-
 			baseOutput.setTotal(totalSucc);
 			baseOutput.setData(data);
 		return baseOutput;
