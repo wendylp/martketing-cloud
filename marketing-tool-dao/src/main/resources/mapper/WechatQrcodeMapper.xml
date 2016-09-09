@@ -128,6 +128,7 @@
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		<where>
+			<![CDATA[AND status != 2]]>
 			<if test="qrcodeName != null and qrcodeName != ''">
 				<bind name="fuzzy" value="'%' + _parameter.qrcodeName + '%'" />
 				<![CDATA[ AND qrcode_name like #{fuzzy}]]>
