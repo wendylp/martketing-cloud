@@ -15,6 +15,7 @@ import javax.imageio.stream.FileImageOutputStream;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,14 +125,14 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			List<Object> data = new ArrayList<Object>();
 			int totalSucc=0;
 			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();		
-			List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);
+			List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);			
 			if(webchatAuthInfos!=null&&webchatAuthInfos.size()>0){
+				List<WebchatAuthInfo> webchatAuthInfosTemp = new ArrayList<WebchatAuthInfo>();
 				App app = this.getApp();
 				for(Iterator<WebchatAuthInfo> iter = webchatAuthInfos.iterator();iter.hasNext();){
 					WebchatAuthInfo webchatAuthInfoTemp = iter.next();
 					app.setAuthAppId(webchatAuthInfoTemp.getAuthorizerAppid());
 					app.setAuthRefreshToken(webchatAuthInfoTemp.getAuthorizerRefreshToken());
-					app.tokenManager.getAuthToken(TokenType.AUTHORIZER_ACCESS_TOKEN);
 					for(int i=startSceneId;i<=endSceneId;i++){
 						long expireSeconds = 0;
 						if(actionName.equals("QR_LIMIT_SCENE")){
@@ -147,12 +148,17 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 						HttpResult result = req.execute();			
 						if(result.getCode()==200){
 							ObjectNode objNode = JsonUtils.readJsonObject(result.getRespBody());
-							String ticket = objNode.get("ticket").getTextValue();
+							JsonNode jsonNode = objNode.get("ticket");
+							if(jsonNode==null){
+								break;
+							}
+							String ticket = jsonNode.getTextValue();
 							String url = objNode.get("url").getTextValue();
 							WechatQrcodeTicket wechatQrcodeTicket = new WechatQrcodeTicket();
 							wechatQrcodeTicket.setSceneId(i);
 							wechatQrcodeTicket.setTicket(ticket);
 							wechatQrcodeTicket.setUrl(url);
+							wechatQrcodeTicket.setState(0);
 							wechatQrcodeTicketDao.insert(wechatQrcodeTicket);
 							long id = wechatQrcodeTicket.getId();
 							wechatQrcodeTicket.setSceneId(Integer.parseInt(String.valueOf(id)));
