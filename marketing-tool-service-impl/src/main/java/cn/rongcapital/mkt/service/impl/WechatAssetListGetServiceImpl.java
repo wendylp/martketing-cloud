@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.biz.WechatPublicAuthBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
@@ -59,18 +61,26 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 			return Response.ok().entity(baseOutput).build();
 		}
 		// setNicknameFlag(assetDetaiMap);
-		String authAppid = (String) assetDetaiMap.get("app_id");
+		String authAppid = (String) assetDetaiMap.get("authorizer_appid");
 		Boolean flag = wechatPublicAuthBiz.isPubIdGranted(authAppid);
-		resultMap.put("flag",flag);
+		if(flag == null || !flag){
+			resultMap.put("flag",false);
+			baseOutput.getData().add(resultMap);
+			baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+			baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+			baseOutput.setTotal(baseOutput.getData().size());
+			return Response.ok().entity(baseOutput).build();
+		}else {
+			resultMap.put("flag",flag);
+		}
+
 		ArrayList<Map<String, Object>> groups = new ArrayList<Map<String, Object>>();
 		
-		Object consignationTime = assetDetaiMap.remove("consignation_time");
-		if (consignationTime != null) {
-			assetDetaiMap.put("consignation_time", consignationTime.toString().substring(0, 19));
-		} else {
-			assetDetaiMap.put("consignation_time", "");
-		}
-		resultMap.put("consignation_time",assetDetaiMap.get("consignation_time"));
+		Date consignationTime = (Date)assetDetaiMap.get("consignation_time");
+
+		String condate = DateUtil.getStringFromDate(consignationTime, "yyyy-MM-dd HH:mm:ss");
+
+		resultMap.put("consignation_time",condate);
 
 		String wxAcct = (String) assetDetaiMap.get("wx_acct");
 		resultMap.put("wx_acct",wxAcct);
@@ -87,13 +97,11 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 					WechatAssetGroup assetGroup = getAssetGroup(wxAcct, groupId);
 					assetGroupInfo = getAssetGroupInfo(assetGroup);
 					groups.add(assetGroupInfo);
-					assetGroupInfo.clear();
 				}
 			} else {
 				WechatAssetGroup assetGroup = getAssetGroup(wxAcct, groupIds);
 				assetGroupInfo = getAssetGroupInfo(assetGroup);
 				groups.add(assetGroupInfo);
-				assetGroupInfo.clear();
 			}
 
 			// if(groupIds.contains(",")){
@@ -114,7 +122,7 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 		assetDetaiMap.clear();
 
 		baseOutput.getData().add(resultMap);
-		resultMap.clear();
+		//resultMap.clear();
 		// if(reauthRelation != null){
 		// assetDetaiMap.putAll(reauthRelation);
 		// }

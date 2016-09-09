@@ -155,4 +155,9 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE wx_acct = #{uin}
 	</delete>
+	<select id="selectObjectByWxacctIGroupId" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup" resultType="cn.rongcapital.mkt.po.WechatAssetGroup">
+		SELECT <include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE wx_acct = #{wxAcct} and import_group_id = #{importGroupId}]]>
+	</select>
 </mapper>
