@@ -41,7 +41,9 @@ public class BaseBiz {
 	        	app.setComponentTicket(componentTicket);
 	        }
 	        
-	        try {
+	        WxComponentServerApi.accessToken(app);
+	        
+/*	        try {
 	        	String tokenStrBack = JedisClient.get(app.getId());
 	        	if(StringUtils.isEmpty(tokenStrBack)){
 	        		Token token = WxComponentServerApi.accessToken(app);
@@ -60,7 +62,7 @@ public class BaseBiz {
 			} catch (JedisException e) {				
 				e.printStackTrace();
 				logger.info(e.getMessage());
-			}
+			}*/
 		return app;		
 	}
 	
