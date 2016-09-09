@@ -86,6 +86,8 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 				wechatAsset.setWxAcct(wxAcct);
 				wechatAsset.setNickname(wechatRegister.getNickname());
 				wechatAsset.setTotalCount(getWechatMemberCount(wxAcct));
+				wechatAsset.setAppId(wechatRegister.getAppId());
+				wechatAsset.setWechatQrcode(wechatRegister.getWechatQrcode());
 
 				int count = wechatAssetDao.selectListCount(wAsset);
 				if (count == 0) {
@@ -132,13 +134,18 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 				if (count == 0) {
 
 					for (WechatGroup wechatGroup : selectList) {
-
+						Long groupId = new Long(wechatGroup.getGroupId());
 						WechatAssetGroup wechatAssetGroup = new WechatAssetGroup();
-						wechatAssetGroup.setImportGroupId(new Long(wechatGroup.getGroupId()));
+						wechatAssetGroup.setImportGroupId(groupId);
 						wechatAssetGroup.setName(wechatGroup.getGroupName());
 						wechatAssetGroup.setMembers(wechatGroup.getCount());
 						wechatAssetGroup.setWxAcct(wxAcct);
 						wechatAssetGroup.setCreateTime(new Date());
+						if (groupId >= 100) {
+							wechatAssetGroup.setIsSysGroup(ApiConstant.TAG_ITEM_CUSTOM);
+						} else {
+							wechatAssetGroup.setIsSysGroup(ApiConstant.TAG_ITEM_SYSTEM);
+						}
 
 						wechatAssetGroupDao.insert(wechatAssetGroup);
 						logger.info("insert into wechat_asset_group id:" + wechatAssetGroup.getId());
