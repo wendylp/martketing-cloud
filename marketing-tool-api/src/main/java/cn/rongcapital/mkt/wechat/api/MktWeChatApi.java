@@ -11,6 +11,8 @@
 package cn.rongcapital.mkt.wechat.api;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -502,12 +504,14 @@ public class MktWeChatApi {
 	}
 	
 	/**
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 * @功能简述 : 根据id更新标签信息
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.pics.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput getQrcodes(@NotEmpty @QueryParam("action_name") String actionName,@DefaultValue("1") @Min(1) @Max(100000) @QueryParam("start_scene_id") int startSceneId,@DefaultValue("100000") @Min(1) @Max(100000) @QueryParam("end_scene_id") int endSceneId) {
+	public BaseOutput getQrcodes(@NotEmpty @QueryParam("action_name") String actionName,@DefaultValue("1") @Min(1) @Max(100000) @QueryParam("start_scene_id") int startSceneId,@DefaultValue("100000") @Min(1) @Max(100000) @QueryParam("end_scene_id") int endSceneId) throws FileNotFoundException, IOException {
 		BaseOutput baseOutput = wechatQrcodeBiz.getQrcodes(startSceneId, endSceneId, actionName);
 		return baseOutput;
 	}
@@ -521,12 +525,14 @@ public class MktWeChatApi {
 	}
 	
 	/**
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 * @功能简述 : 根据id更新标签信息
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput getQrcode(@NotEmpty @QueryParam("action_name") String actionName,@DefaultValue("10") @Min(1) @Max(100000) @QueryParam("scene_id") int sceneId) {
+	public BaseOutput getQrcode(@NotEmpty @QueryParam("action_name") String actionName,@DefaultValue("10") @Min(1) @Max(100000) @QueryParam("scene_id") int sceneId) throws FileNotFoundException, IOException {
 		BaseOutput baseOutput = wechatQrcodeBiz.getQrcode(sceneId,actionName);
 		return baseOutput;
 	}
