@@ -104,38 +104,42 @@ public class GetH5PubListServiceImpl implements TaskService {
 			}
 			List<WechatGroup> WechatGroupList = wechatGroupBiz.getTags(info.getAuthorizerAppid(),
 					info.getAuthorizerRefreshToken());
-			if (!CollectionUtils.isEmpty(WechatGroupList)) {
-				
-				// 增加“未分组”
-				WechatGroup wechatGroup = new WechatGroup();
-				wechatGroup.setGroupId("999");
-				wechatGroup.setGroupName("未分组");
-				wechatGroup.setWxAcct(WechatGroupList.get(0).getWxAcct());
-				wechatGroup.setCreateTime(new Date());
-				wechatGroup.setStatus((byte)0);
-				wechatGroup.setCount(0);
-				WechatGroupList.add(wechatGroup);
-				
-				
-				for (WechatGroup wechatGroupinfo : WechatGroupList) {
-					
-					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("group_id", wechatGroupinfo.getGroupId());
-					map.put("wx_acct", wechatGroupinfo.getWxAcct());
-					Long id = wechatGroupDao.selectGroupIdByUcode(map);
-
-					if (id == null) {
-						wechatGroupDao.insert(wechatGroupinfo);
-						logger.info("insert into wechat_group id:" + wechatGroupinfo.getId());
-					} else {
-						wechatGroupinfo.setId(Integer.valueOf(id.toString()));
-						wechatGroupDao.updateById(wechatGroupinfo);
-						logger.info("update wechat_group id:" + id);
-					}
-					map.clear();
-				}
-				
+			
+			if(WechatGroupList == null) {
+				WechatGroupList = new ArrayList<WechatGroup>();
 			}
+			
+			// 增加“未分组”
+			WechatGroup wechatGroup = new WechatGroup();
+			wechatGroup.setGroupId("999");
+			wechatGroup.setGroupName("未分组");
+			wechatGroup.setWxAcct(WechatGroupList.get(0).getWxAcct());
+			wechatGroup.setCreateTime(new Date());
+			wechatGroup.setStatus((byte)0);
+			wechatGroup.setCount(0);
+			WechatGroupList.add(wechatGroup);
+			
+//			if (!CollectionUtils.isEmpty(WechatGroupList)) {
+				
+			for (WechatGroup wechatGroupinfo : WechatGroupList) {
+					
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("group_id", wechatGroupinfo.getGroupId());
+				map.put("wx_acct", wechatGroupinfo.getWxAcct());
+				Long id = wechatGroupDao.selectGroupIdByUcode(map);
+
+				if (id == null) {
+					wechatGroupDao.insert(wechatGroupinfo);
+					logger.info("insert into wechat_group id:" + wechatGroupinfo.getId());
+				} else {
+					wechatGroupinfo.setId(Integer.valueOf(id.toString()));
+					wechatGroupDao.updateById(wechatGroupinfo);
+					logger.info("update wechat_group id:" + id);
+				}
+				map.clear();
+			}
+				
+//			}
 		}
 
 	}
