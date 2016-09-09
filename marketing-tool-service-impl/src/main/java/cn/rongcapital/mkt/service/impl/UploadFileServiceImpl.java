@@ -24,6 +24,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.chainsaw.Main;
 import org.apache.poi.hssf.eventusermodel.HSSFEventFactory;
 import org.apache.poi.hssf.eventusermodel.HSSFListener;
 import org.apache.poi.hssf.eventusermodel.HSSFRequest;
@@ -90,9 +91,9 @@ public class UploadFileServiceImpl implements UploadFileService{
     public static String UPLOADED_FILE_NAME = "_upload.xlsx";
     public static String UPLOADED_FAIL_FILE_NAME = "_fail.csv";
     //TODO 以后放到配置文件中
-    public static String UPLOADED_FILE_PATH = "/rc/data/uploadFiles";
+    public static String UPLOADED_FILE_PATH = "/rc/data/uploadFiles/";
     public static String[] channels = new String[] {"经销商","渠道商","员工","区域","门店","活动"};
-    public static String FAIL_FILE_PATH = "/rc/data/downloads/batchQrcodeErr";
+    public static String FAIL_FILE_PATH = "/rc/data/downloads/batchQrcodeErr/";
     //public static String FAIL_FILE_PATH = "e://";
 
     @Autowired
@@ -522,7 +523,9 @@ public class UploadFileServiceImpl implements UploadFileService{
 							if(Cell.CELL_TYPE_STRING == dataColumnCell.getCellType()) {
 								wxMoudel.setQrName(dataColumnCell.getStringCellValue());
 							}else if(Cell.CELL_TYPE_NUMERIC == dataColumnCell.getCellType()){
-								wxMoudel.setQrName(String.valueOf(dataColumnCell.getNumericCellValue()));
+								String qrName = String.valueOf(dataColumnCell.getNumericCellValue());
+								qrName = qrName.substring(0, qrName.lastIndexOf("."));
+								wxMoudel.setQrName(qrName);
 							}
 							
 						}else if(index == 1){
@@ -686,5 +689,4 @@ public class UploadFileServiceImpl implements UploadFileService{
 	        fop.flush();
 	        fop.close();
 	    }
-	 
 }
