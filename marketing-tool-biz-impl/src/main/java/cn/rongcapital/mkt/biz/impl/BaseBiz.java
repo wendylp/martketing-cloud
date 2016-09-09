@@ -43,26 +43,6 @@ public class BaseBiz {
 	        
 	        WxComponentServerApi.accessToken(app);
 	        
-/*	        try {
-	        	String tokenStrBack = JedisClient.get(app.getId());
-	        	if(StringUtils.isEmpty(tokenStrBack)){
-	        		Token token = WxComponentServerApi.accessToken(app);
-		        	String tokenStr = JSONObject.toJSONString(token);
-					JedisClient.set(app.getId(), tokenStr);
-	        	}else{
-	        		long currentTimeMillis = System.currentTimeMillis();
-	        		Token token = JSONObject.parseObject(tokenStrBack, Token.class);
-	        		long expireAt = token.getExpireAt();
-	        		if(currentTimeMillis>=expireAt){
-	        			token = WxComponentServerApi.accessToken(app);
-			        	String tokenStr = JSONObject.toJSONString(token);
-						JedisClient.set(app.getId(), tokenStr);
-	        		}
-	        	}
-			} catch (JedisException e) {				
-				e.printStackTrace();
-				logger.info(e.getMessage());
-			}*/
 		return app;		
 	}
 	
