@@ -43,8 +43,6 @@ public class BaseBiz {
 	        	app.setComponentTicket(componentTicket);
 	        }
 	        
-	        
-	        
 	        try {
 	        	String tokenStrBack = JedisClient.get(app.getId());
 	        	if(StringUtils.isEmpty(tokenStrBack)){
