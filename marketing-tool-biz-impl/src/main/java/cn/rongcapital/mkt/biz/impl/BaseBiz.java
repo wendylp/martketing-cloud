@@ -3,12 +3,14 @@ package cn.rongcapital.mkt.biz.impl;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tagsin.tutils.json.JsonUtils;
 import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 import com.tagsin.wechat_sdk.token.Token;
@@ -49,16 +51,15 @@ public class BaseBiz {
 					JedisClient.set(app.getId(), tokenStr);
 	        	}else{
 	        		long currentTimeMillis = System.currentTimeMillis();
-	        		Token token = JSONObject.parseObject(tokenStrBack, Token.class);
-	        		long expireAt = token.getExpireAt();
+		        	ObjectNode jsonObj = JsonUtils.readJsonObject(tokenStrBack);
+		        	long expireAt = jsonObj.get("expireAt").getLongValue();
 	        		if(currentTimeMillis>=expireAt){
-	        			token = WxComponentServerApi.accessToken(app);
+	        			Token token = WxComponentServerApi.accessToken(app);
 			        	String tokenStr = JSONObject.toJSONString(token);
 						JedisClient.set(app.getId(), tokenStr);
 	        		}
 	        	}
-			} catch (JedisException e) {				
-				e.printStackTrace();
+			} catch (JedisException e) {
 				logger.info(e.getMessage());
 			}
 		return app;		
