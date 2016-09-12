@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -523,8 +524,8 @@ public class UploadFileServiceImpl implements UploadFileService{
 							if(Cell.CELL_TYPE_STRING == dataColumnCell.getCellType()) {
 								wxMoudel.setQrName(dataColumnCell.getStringCellValue());
 							}else if(Cell.CELL_TYPE_NUMERIC == dataColumnCell.getCellType()){
-								String qrName = String.valueOf(dataColumnCell.getNumericCellValue());
-								qrName = qrName.substring(0, qrName.lastIndexOf("."));
+								DecimalFormat df = new DecimalFormat("0");
+								String qrName = df.format(dataColumnCell.getNumericCellValue());
 								wxMoudel.setQrName(qrName);
 							}
 							
