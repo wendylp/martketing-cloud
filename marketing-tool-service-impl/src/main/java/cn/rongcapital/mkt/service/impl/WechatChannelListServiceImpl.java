@@ -30,7 +30,6 @@ public class WechatChannelListServiceImpl implements WechatChannelListService {
 
 		WechatChannel wechatChannel = new WechatChannel();
 		wechatChannel.setStatus(Byte.toString(ApiConstant.TABLE_DATA_STATUS_VALID));
-		wechatChannel.setType(ApiConstant.WECHAT_CHANNEL_TYPE_SYSTEM);
 		List<WechatChannel> wechatChannels = wechatChannelDao.selectList(wechatChannel);
 
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
