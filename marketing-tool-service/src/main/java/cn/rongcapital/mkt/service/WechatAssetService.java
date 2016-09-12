@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.service;
 
+import com.tagsin.wechat_sdk.user.UserInfo;
+
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 /**
@@ -16,5 +18,14 @@ public interface WechatAssetService {
 	 * @return
 	 */
 	public BaseOutput unfollow(String wxCode, String pubId);
+	
+	
+	/**
+	 * 关注公众号
+	 * @param UserInfo userInfo
+	 * @param pubId 公众号ID
+	 * @return
+	 */
+	public BaseOutput follow(UserInfo userInfo, String pubId);
 	
 }
