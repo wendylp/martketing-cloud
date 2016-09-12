@@ -66,6 +66,10 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_TARGET = 0;//目标人群
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_EVENT = 1;//事件人群
 	
+	public static final int TAG_ITEM_SYSTEM = 0;//系统标签
+	public static final int TAG_ITEM_CUSTOM = 1;//自定义标签
+	
+	
 	public static final byte CAMPAIGN_ITEM_DECISION_PROP_COMPARE = 0;//联系人属性比较
 	public static final byte CAMPAIGN_ITEM_DECISION_WECHAT_SENT = 1;//微信图文是否发送
 	public static final byte CAMPAIGN_ITEM_DECISION_WECHAT_READ = 2;//微信图文是否阅读

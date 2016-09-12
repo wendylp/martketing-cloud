@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.ContactListDao;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
+import cn.rongcapital.mkt.po.ContactList;
 import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContactListGetByStatusService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -29,14 +31,17 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 
 	@Autowired
 	ContactTemplateDao contactTemplateDao;
+	
+	@Autowired
+	ContactListDao contactListDao;
 
 	@Override
 	public BaseOutput getContactList(Integer contactStatus, String contactId, String contactName, int index, int size) {
-		//ContactList contactList = new ContactList();
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
 		ContactTemplate contactTemplate = new ContactTemplate();
+		
 		contactTemplate.setStatus(contactStatus.byteValue());
 		if(contactStatus == 3){
 			contactTemplate.setStatus(null);
@@ -56,7 +61,7 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 
 		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListGroupByCId(contactTemplate);
 
-		//Map<String, Object> cloMap = new HashMap<>();
+		ContactList contactList = null;
 		if (CollectionUtils.isNotEmpty(contactTemplateList)) {
 			List<Object> resultData = result.getData();
 			for (ContactTemplate contactTem : contactTemplateList) {
@@ -66,13 +71,16 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 				contactListMap.put("contact_name", contactTem.getContactName());
 				contactListMap.put("qrcode_shorturl", env.getProperty("contact.short.url") + contactTem.getQrcodeShorturl());
 				contactListMap.put("qrcode_pic", "contactlist/" + contactTem.getQrcodePic());
-				contactListMap.put("user_count", contactTemplateList.size());
+				contactList = new ContactList();
+				contactList.setStartIndex(null);
+				contactList.setPageSize(null);
+				contactList.setContactTemplId(contactTem.getContactId().intValue());
+				List<ContactList> selectContactList = contactListDao.selectList(contactList);
+				contactListMap.put("user_count", selectContactList.size());
 				contactListMap.put("contact_status",contactTem.getStatus());
-				//cloMap.put(contactTemplate.getFieldCode(), contactTemplate.getFieldName());
 				resultData.add(contactListMap);
 			}
 		}
-		//result.getColNames().add(cloMap);
 		return result;
 	}
 

@@ -22,6 +22,7 @@ import cn.rongcapital.mkt.po.WechatAssetGroup;
 import cn.rongcapital.mkt.service.ReauthWechatAccountService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.PublicAuthOut;
 
 /**
  * Created by Yunfeng on 2016-6-1.
@@ -47,7 +48,7 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 			baseOutput.setMsg("请求参数传递错误");
 			return Response.ok().entity(baseOutput).build();
 		}
-		
+
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -63,31 +64,34 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 		// setNicknameFlag(assetDetaiMap);
 		String authAppid = (String) assetDetaiMap.get("authorizer_appid");
 		Boolean flag = wechatPublicAuthBiz.isPubIdGranted(authAppid);
-		if(flag == null || !flag){
-			resultMap.put("flag",false);
-			baseOutput.getData().add(resultMap);
-			baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
-			baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
-			baseOutput.setTotal(baseOutput.getData().size());
-			return Response.ok().entity(baseOutput).build();
-		}else {
-			resultMap.put("flag",flag);
-		}
+
+		resultMap.put("flag", flag);
+		
+		BaseOutput baseOutPut = wechatPublicAuthBiz.authWechatPublicAccount();
+		PublicAuthOut publicAuthOut = (PublicAuthOut)baseOutPut.getData().get(0);
+		resultMap.put("url", publicAuthOut.getUrl());
 
 		ArrayList<Map<String, Object>> groups = new ArrayList<Map<String, Object>>();
-		
-		Date consignationTime = (Date)assetDetaiMap.get("consignation_time");
+
+		Date consignationTime = (Date) assetDetaiMap.get("consignation_time");
 
 		String condate = DateUtil.getStringFromDate(consignationTime, "yyyy-MM-dd HH:mm:ss");
 
-		resultMap.put("consignation_time",condate);
+		resultMap.put("consignation_time", condate);
 
 		String wxAcct = (String) assetDetaiMap.get("wx_acct");
-		resultMap.put("wx_acct",wxAcct);
-		resultMap.put("asset_name",assetDetaiMap.get("asset_name"));
-		resultMap.put("status",assetDetaiMap.get("status"));
-		resultMap.put("nickname",assetDetaiMap.get("nickname"));
-		
+		resultMap.put("wx_acct", wxAcct);
+		resultMap.put("asset_name", assetDetaiMap.get("asset_name"));
+		resultMap.put("status", assetDetaiMap.get("status"));
+
+		String nikename = (String) assetDetaiMap.get("nickname");
+		resultMap.put("nickname", nikename);
+		if (StringUtils.isNotBlank(nikename)) {
+			resultMap.put("nickname_flag", true);
+		} else {
+			resultMap.put("nickname_flag", false);
+		}
+
 		String groupIds = (String) assetDetaiMap.get("group_ids");
 		if (StringUtils.isNotBlank(groupIds)) {
 			Map<String, Object> assetGroupInfo = new HashMap<String, Object>();
@@ -122,7 +126,7 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 		assetDetaiMap.clear();
 
 		baseOutput.getData().add(resultMap);
-		//resultMap.clear();
+		// resultMap.clear();
 		// if(reauthRelation != null){
 		// assetDetaiMap.putAll(reauthRelation);
 		// }
@@ -143,6 +147,7 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 
 	private Map<String, Object> getAssetGroupInfo(WechatAssetGroup wechatAGroup) {
 		Map<String, Object> group = new HashMap<String, Object>();
+		group.put("group_id", wechatAGroup.getImportGroupId());
 		group.put("group_name", wechatAGroup.getName());
 		group.put("member_count", wechatAGroup.getMembers());
 		return group;
