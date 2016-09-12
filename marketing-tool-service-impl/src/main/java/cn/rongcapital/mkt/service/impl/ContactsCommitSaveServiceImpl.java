@@ -24,6 +24,7 @@ import cn.rongcapital.mkt.dao.ContactListDao;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
 import cn.rongcapital.mkt.dao.DefaultContactTemplateDao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.po.ContactDownLoadField;
 import cn.rongcapital.mkt.po.ContactList;
 import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.po.DefaultContactTemplate;
@@ -316,8 +317,15 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 
 		List<ContactList> list = contactDao.selectListByContactIdAndCommitTime(contact);
 		
+		List<ContactDownLoadField> dataList = new ArrayList<ContactDownLoadField>();
+		for (ContactList contactList : list) {
+			String gender = 1 == contactList.getGender()?"男":"女";
+			 ContactDownLoadField contactDownLoadField = new ContactDownLoadField(contactList.getId(), contactList.getName(), gender, 
+					 contactList.getBirthday(), contactList.getMobile(), contactList.getTel(), contactList.getEmail());
+			dataList.add(contactDownLoadField);
+		}
 		 Map<String, Object> map = new HashMap<String, Object>();
-		 String fileName = generateDownloadFile(list);
+		 String fileName = generateDownloadFile(dataList);
 		 map.put("download_url", fileName);
 		 result.getData().add(map);
 
@@ -328,7 +336,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
     @SuppressWarnings("rawtypes")
 	private <T extends BaseQuery, D extends BaseDao> String generateDownloadFile(List<T> dataList) {
         DefaultContactTemplate defaultContactTemplate = new DefaultContactTemplate();
-        defaultContactTemplate.setPageSize(50);
+        defaultContactTemplate.setPageSize(6);
         List<DefaultContactTemplate> defaultContactTemplateList = defaultContactTemplateDao.selectList(defaultContactTemplate);
         List<Map<String, String>> columnsMap = transferNameListtoMap(defaultContactTemplateList);
 
