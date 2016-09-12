@@ -119,6 +119,8 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			result.getData().add(map);
 		}
 		
+		result.setDate(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"));
+		
 		return result;
 	}
 	
