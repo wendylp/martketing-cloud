@@ -95,6 +95,7 @@ public class UploadFileServiceImpl implements UploadFileService{
     public static String UPLOADED_FILE_PATH = "/rc/data/uploadFiles/";
     public static String[] channels = new String[] {"经销商","渠道商","员工","区域","门店","活动"};
     public static String FAIL_FILE_PATH = "/rc/data/downloads/batchQrcodeErr/";
+    public static String DOWN_LOAD_FAIL_FILE_PATH = "batchQrcodeErr/";
     //public static String FAIL_FILE_PATH = "e://";
 
     @Autowired
@@ -577,8 +578,8 @@ public class UploadFileServiceImpl implements UploadFileService{
 						WechatRegister wechatRegister = new WechatRegister();
 						wechatRegister.setName(officialName);
 						int officialNameCount = wechatRegisterDao.selectListCount(wechatRegister);
-						if(officialNameCount > 0){
-							wxFailMap.put(qrName+ "公众号名字已存在" + officialName, wmo);
+						if(officialNameCount <= 0){
+							wxFailMap.put(qrName+ "公众号名字不存在" + officialName, wmo);
 							continue;
 						}
 					}
@@ -588,7 +589,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 				}
 				
 				//保存成功的数据
-				 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 				String bachId = simpleDateFormat.format(new Date());
 				
 				//初始化Ticket对象
@@ -611,6 +612,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 						chCode = selectList.get(0).getId();
 					}
 					wq.setChCode(chCode);
+					wq.setStatus((byte) 1);
 					
 					List<WechatQrcodeTicket> wechatQrcodeTickets = wechatQrcodeTicketDao.selectList(wechatQrcodeTicket);
 					if(wechatQrcodeTickets!=null && wechatQrcodeTickets.size()>0){
@@ -664,7 +666,8 @@ public class UploadFileServiceImpl implements UploadFileService{
 				map.put("succ_count", wxSuccessList.size());
 				map.put("fail_count", wxFailMap.size());
 				map.put("batch_id", bachId);
-				map.put("fail_url", failFile);
+				String failNamePath = DOWN_LOAD_FAIL_FILE_PATH + bachId + UPLOADED_FAIL_FILE_NAME;
+				map.put("fail_url", failNamePath);
 				baseOutput.getData().add(map);
 			} catch (Exception e) {
 				e.printStackTrace();
