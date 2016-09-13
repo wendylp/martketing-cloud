@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,tag_type as tagType,tag_name as tagName,birthday as birthday,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,acct_type as acctType,tel as tel,qq as qq,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique,bitmap as bitmap,wxmp_id as wxmpId,wx_code as wxCode]]>
+		<![CDATA[ id as id,tag_source as tagSource,tag_type_layer_one as tagTypeLayerOne,tag_type_layer_two as tagTypeLayerTwo,tag_type_layer_three as tagTypeLayerThree,tag_name as tagName,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,unionid as unionid,wxmp_id as wxmpId,wx_code as wxCode,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique,bitmap as bitmap]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -14,20 +14,24 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="tagType != null"><![CDATA[ AND tag_type = #{tagType}]]></if>
+		    	<if test="tagSource != null"><![CDATA[ AND tag_source = #{tagSource}]]></if>
+		    	<if test="tagTypeLayerOne != null"><![CDATA[ AND tag_type_layer_one = #{tagTypeLayerOne}]]></if>
+		    	<if test="tagTypeLayerTwo != null"><![CDATA[ AND tag_type_layer_two = #{tagTypeLayerTwo}]]></if>
+		    	<if test="tagTypeLayerThree != null"><![CDATA[ AND tag_type_layer_three = #{tagTypeLayerThree}]]></if>
 		    	<if test="tagName != null"><![CDATA[ AND tag_name = #{tagName}]]></if>
-		    	<if test="birthday != null"><![CDATA[ AND birthday = #{birthday}]]></if>
 		    	<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
 		    	<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
 		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
 		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
-		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
 		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
 		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
+		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
 		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
 		    	<if test="idfa != null"><![CDATA[ AND idfa = #{idfa}]]></if>
 		    	<if test="imei != null"><![CDATA[ AND imei = #{imei}]]></if>
-		    	<if test="udid != null"><![CDATA[ AND udid = #{udid}]]></if>
+		    	<if test="unionid != null"><![CDATA[ AND unionid = #{unionid}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
 		    	<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
@@ -36,8 +40,6 @@
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		    	<if test="fileUnique != null"><![CDATA[ AND file_unique = #{fileUnique}]]></if>
 		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
-		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
-		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
 		</where>
 	</sql>
 	
@@ -50,59 +52,63 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-		    	<if test="tagType != null"><![CDATA[tag_type = #{tagType},]]></if>
+		    	<if test="tagSource != null"><![CDATA[tag_source = #{tagSource},]]></if>
+		    	<if test="tagTypeLayerOne != null"><![CDATA[tag_type_layer_one = #{tagTypeLayerOne},]]></if>
+		    	<if test="tagTypeLayerTwo != null"><![CDATA[tag_type_layer_two = #{tagTypeLayerTwo},]]></if>
+		    	<if test="tagTypeLayerThree != null"><![CDATA[tag_type_layer_three = #{tagTypeLayerThree},]]></if>
 		    	<if test="tagName != null"><![CDATA[tag_name = #{tagName},]]></if>
-		    	<if test="birthday != null"><![CDATA[birthday = #{birthday},]]></if>
 		    	<if test="identifyNo != null"><![CDATA[identify_no = #{identifyNo},]]></if>
 		    	<if test="drivingLicense != null"><![CDATA[driving_license = #{drivingLicense},]]></if>
 		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
 		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
-		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
 		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
 		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
+		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
 		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
 		    	<if test="idfa != null"><![CDATA[idfa = #{idfa},]]></if>
 		    	<if test="imei != null"><![CDATA[imei = #{imei},]]></if>
-		    	<if test="udid != null"><![CDATA[udid = #{udid},]]></if>
+		    	<if test="unionid != null"><![CDATA[unionid = #{unionid},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode},]]></if>
 		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
 		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
 		    	<if test="fileUnique != null"><![CDATA[file_unique = #{fileUnique},]]></if>
-		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
-		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
-		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode}]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataCustomerTags" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO original_data_customer_tags (tag_type,tag_name,birthday,identify_no,driving_license,email,mobile,acct_type,tel,qq,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,file_unique,bitmap,wxmp_id,wx_code)
+			INSERT INTO original_data_customer_tags (tag_source,tag_type_layer_one,tag_type_layer_two,tag_type_layer_three,tag_name,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,unionid,wxmp_id,wx_code,phone_mac,create_time,source,batch_id,file_unique,bitmap)
 			VALUES
 			(
-			  #{tagType},
+			  #{tagSource},
+			  #{tagTypeLayerOne},
+			  #{tagTypeLayerTwo},
+			  #{tagTypeLayerThree},
 			  #{tagName},
-			  #{birthday},
 			  #{identifyNo},
 			  #{drivingLicense},
 			  #{email},
 			  #{mobile},
-			  #{acctType},
 			  #{tel},
 			  #{qq},
+			  #{acctType},
 			  #{acctNo},
 			  #{idfa},
 			  #{imei},
-			  #{udid},
+			  #{unionid},
+			  #{wxmpId},
+			  #{wxCode},
 			  #{phoneMac},
 			  now(),
 			  #{source},
 			  #{batchId},
 			  #{fileUnique},
-			  #{bitmap},
-			  #{wxmpId},
-			  #{wxCode}
+			  #{bitmap}
 			)
 		]]>
 	</insert>
