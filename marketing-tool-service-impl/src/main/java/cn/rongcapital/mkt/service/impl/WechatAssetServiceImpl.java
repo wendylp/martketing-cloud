@@ -2,7 +2,6 @@ package cn.rongcapital.mkt.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,14 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tagsin.wechat_sdk.App;
-import com.tagsin.wechat_sdk.WxComponentServerApi;
 import com.tagsin.wechat_sdk.user.UserInfo;
-
-import cn.rongcapital.mkt.biz.impl.BaseBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;

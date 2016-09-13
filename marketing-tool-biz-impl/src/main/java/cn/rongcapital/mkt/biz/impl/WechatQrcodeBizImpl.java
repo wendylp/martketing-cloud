@@ -38,16 +38,19 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.ImageCompressUtil;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
+import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
+import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeTicket;
 
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.AssociationTag;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
-
+import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
+import cn.rongcapital.mkt.vo.in.Audience;
 @Service
 public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 
@@ -59,6 +62,10 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	WechatQrcodeTicketDao wechatQrcodeTicketDao;	
 	@Autowired
 	WebchatAuthInfoDao webchatAuthInfoDao;
+	@Autowired
+	WechatChannelDao wechatChannelDao;
+	@Autowired
+	SaveCampaignAudienceService saveCampaignAudienceService;
 	
 	
 	@Override
@@ -243,13 +250,34 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			
 			if(StringUtils.isNotEmpty(wechatQrcodeIn.getWx_name())){
 				wechatQrcode.setWxName(wechatQrcodeIn.getWx_name());
-			}			
-			if(wechatQrcodeIn.getCh_code()!=null){
-				wechatQrcode.setChCode(wechatQrcodeIn.getCh_code());
+			}		
+			//渠道Code
+			Integer channelCode = wechatQrcodeIn.getCh_code(); 
+			if(channelCode != null){
+				
+				WechatChannel wechatChannel = new WechatChannel();
+				wechatChannel.setId(channelCode);
+				List<WechatChannel> channelList = wechatChannelDao.selectList(wechatChannel);
+				//设置自定义渠道为不了编辑
+				if(channelList != null && channelList.size() > 0){
+					
+					wechatChannel = channelList.get(0);
+					if(wechatChannel.getIsRemoved() == 1){
+						wechatChannel.setIsRemoved(0);
+						wechatChannelDao.updateById(wechatChannel);
+					}
+				}
+				
+				wechatQrcode.setChCode(channelCode);
 			}
 			if(StringUtils.isNotEmpty(wechatQrcodeIn.getFixed_audience())){
 				wechatQrcode.setAudienceName(wechatQrcodeIn.getFixed_audience());
 				wechatQrcode.setIsAudience(int2OneByte(1));
+				
+				//新建人群管理保存
+				Audience audience = new Audience();
+				audience.setAudience_name(wechatQrcodeIn.getFixed_audience());
+				saveCampaignAudienceService.saveCampaignAudience(audience, null);
 			}else{
 				wechatQrcode.setIsAudience(int2OneByte(0));
 			}			
@@ -279,7 +307,12 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				wechatQrcode.setRelatedTags(tagIdsb.toString());
 			}			
 			
-			wechatQrcode.setStatus(int2OneByte(1));
+			if(wechatQrcodeIn.getStatus() == null){
+				wechatQrcode.setStatus(int2OneByte(0));
+			}else{
+				wechatQrcode.setStatus(wechatQrcodeIn.getStatus());
+			}
+			
 			WechatQrcodeTicket wechatQrcodeTicket = new WechatQrcodeTicket();
 			wechatQrcodeTicket.setState(0);
 			wechatQrcodeTicket.setOrderField("id");
@@ -315,6 +348,40 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		return baseOutput;
 	}
 
+	
+	/**
+	 * 启用
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public BaseOutput enableQrcode(WechatQrcodeIn wechatQrcodeIn) {
+		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+			WechatQrcode wechatQrcode = new WechatQrcode();
+			
+			if(wechatQrcodeIn.getId()!=0){
+				wechatQrcode.setId(Integer.valueOf(wechatQrcodeIn.getId()+""));
+			}else{
+
+				baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+				baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
+				return baseOutput;
+
+			}
+			
+			wechatQrcode.setStatus(int2OneByte(1));
+			wechatQrcodeDao.updateById(wechatQrcode);
+
+			baseOutput.setTotal(1);
+			List<Object> data = new ArrayList<Object>();
+			Map<String,Object> mapBack = new HashMap<String,Object>();
+			mapBack.put("id", wechatQrcode.getId());
+			
+			data.add(mapBack);
+			baseOutput.setData(data);
+		return baseOutput;
+	}
+	
+	
 	public static byte int2OneByte(int num) {  
         return (byte) (num & 0x000000ff);  
     }
