@@ -294,7 +294,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 					Object value = ReflectionUtil.getObjectPropertyByName(tempT,
 							ReflectionUtil.recoverFieldName(importTemplate.getFieldCode()));
 					if (value != null && value.getClass().getSimpleName().equals(Date.class.getSimpleName())) {
-						simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 						value = simpleDateFormat.format((Date) value);
 					}
 					map.put(importTemplate.getFieldCode(), value);

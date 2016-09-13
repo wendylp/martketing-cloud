@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +29,17 @@ public class WechatChannelListServiceImpl implements WechatChannelListService {
 	public BaseOutput channelList() {
 
 		WechatChannel wechatChannel = new WechatChannel();
-		wechatChannel.setStatus("0");
+		wechatChannel.setStatus(Byte.toString(ApiConstant.TABLE_DATA_STATUS_VALID));
 		List<WechatChannel> wechatChannels = wechatChannelDao.selectList(wechatChannel);
 
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
+		
+		//增加默认六项系统默认渠道
+		List<String> sysChannel = new ArrayList<String>();
 
 		if (CollectionUtils.isNotEmpty(wechatChannels)) {
-			result.setTotal(wechatChannels.size());
+			result.setTotal(wechatChannels.size() + sysChannel.size());
 			for (WechatChannel w : wechatChannels) {
 				Map<String, Object> channelMap = new HashMap<String, Object>();
 				channelMap.put("channel_id", w.getId());
@@ -43,7 +47,7 @@ public class WechatChannelListServiceImpl implements WechatChannelListService {
 				channelMap.put("channel_type", w.getType());
 				channelMap.put("channel_removed", w.getIsRemoved());
 				result.getData().add(channelMap);
-			}
+			}	
 		}
 		return result;
 	}

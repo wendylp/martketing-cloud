@@ -11,7 +11,6 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
-import cn.rongcapital.mkt.dao.DataPartyDao;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,13 +23,21 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.tagsin.wechat_sdk.App;
 
+import cn.rongcapital.mkt.biz.MessageSendBiz;
+import cn.rongcapital.mkt.biz.impl.BaseBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
+import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
+import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignActionSendPub;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
+import cn.rongcapital.mkt.po.WebchatAuthInfo;
+import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
@@ -44,6 +51,18 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 	private CampaignActionSendPubDao campaignActionSendPubDao;
 	@Autowired
 	private DataPartyDao dataPartyDao;
+	
+	@Autowired
+	private WechatRegisterDao wechatRegisterDao;
+	
+	@Autowired
+	private WebchatAuthInfoDao webchatAuthInfoDao;
+	
+	@Autowired
+	private BaseBiz baseBiz;
+	
+	@Autowired
+	private MessageSendBiz messageSendBiz;
 	
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -100,11 +119,14 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 								  Integer campaignHeadId,String itemId,
 								  List<CampaignSwitch> campaignEndsList,
 								  CampaignActionSendPub campaignActionSendPub) {
+		//获取app
+		App app = getApp(campaignActionSendPub);
+		
 		List<Segment> segmentListToNext = new ArrayList<Segment>();//要传递给下面节点的数据(执行了发送微信操作的数据)
 		String queueKey = campaignHeadId+"-"+itemId;
 		List<String> fansWeixinIds = new ArrayList<String>();
 		String pubId = campaignActionSendPub.getPubId();
-		Integer materialId = campaignActionSendPub.getMaterialId();
+		String materialId = campaignActionSendPub.getMaterialId();
         Set<Integer> dataPartyIds = new HashSet<>();
 		for(Segment segment:segmentList) {
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
@@ -115,9 +137,8 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 				if(null!=dp && null !=dp.getMdType() &&
 				   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_POPULATION) {
 					boolean isFans = isPubWechatFans(dp, pubId, null);
+					logger.info("是否是微信公众号粉丝标识------------------------------------>："+isFans);
 					if(isFans) {
-//						String h5MobileUrl = getH5MobileUrl(campaignActionSendPub.getImgTextAssetId());
-//						segment.setH5MobileUrl(h5MobileUrl);
 						Integer mid = dp.getMid();
 						cn.rongcapital.mkt.po.DataParty dataParty = new cn.rongcapital.mkt.po.DataParty();
 						dataParty.setId(mid);
@@ -132,20 +153,28 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 			}
 		}
 		if(fansWeixinIds.size() > 0) {
-			boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,fansWeixinIds,campaignHeadId,itemId);
-			if(!isPubSent) {//公众号执行发送动作失败
-				segmentListToNext = null;
-			} else {
-				//更新mongo里node_audience表的发送状态
-				updateSentStatus(segmentList,campaignHeadId,itemId,ApiConstant.MONGO_NODEAUDIENCE_SENTSTATUS_H5_SENT);
-                if (!CollectionUtils.isEmpty(dataPartyIds)) {
-                    Query query = new Query(Criteria.where("mid").in(dataPartyIds));
-                    Update update = new Update();
-                    update.inc("receiveCount", Integer.valueOf(1));
-                    mongoTemplate.updateMulti(query, update, DataParty.class);
-                }
+			//boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,fansWeixinIds,campaignHeadId,itemId);
+			for(String wxCode : fansWeixinIds){
+				
+				boolean isPubSent = false;
+				if(null != app){
+					isPubSent = messageSendBiz.send(app, wxCode, null, materialId);
+				}
+				logger.info("向受众人群粉丝发送微信图文成功标识------------------------------------>："+isPubSent);
+				
+				if(!isPubSent) {//公众号执行发送动作失败
+					segmentListToNext = null;
+				} else {
+					//更新mongo里node_audience表的发送状态
+					updateSentStatus(segmentList,campaignHeadId,itemId,ApiConstant.MONGO_NODEAUDIENCE_SENTSTATUS_H5_SENT);
+	                if (!CollectionUtils.isEmpty(dataPartyIds)) {
+	                    Query query = new Query(Criteria.where("mid").in(dataPartyIds));
+	                    Update update = new Update();
+	                    update.inc("receiveCount", Integer.valueOf(1));
+	                    mongoTemplate.updateMulti(query, update, DataParty.class);
+	                }
+				}
 			}
-
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList) && CollectionUtils.isNotEmpty(segmentListToNext)) {
 			for(CampaignSwitch cs:campaignEndsList) {
@@ -157,66 +186,43 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 		}
 	}
 	
-//	private String getH5MobileUrl(Integer imgTextAssetId){
-//		String h5Url = null;
-//		ImgTextAsset imgTextAssetT = new ImgTextAsset();
-//		imgTextAssetT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-//		imgTextAssetT.setId(imgTextAssetId);
-//		List<ImgTextAsset> imgTextAssetList = imgTextAssetDao.selectList(imgTextAssetT);
-//		if(CollectionUtils.isNotEmpty(imgTextAssetList)) {
-//			h5Url = imgTextAssetList.get(0).getMobilePreviewUrl();
-//		}
-//		return h5Url;
-//		
-//	}
+
+	/**
+	 * @Title: getApp   
+	 * @Description: 封装APP 
+	 * @param: @param campaignActionSendPub	动作属性对象
+	 * @param: @return      
+	 * @return: App      
+	 * @throws
+	 */
+	private App getApp(CampaignActionSendPub campaignActionSendPub) {
+		App app = baseBiz.getApp();
+		try {
+			String pubId = campaignActionSendPub.getPubId();
+			WechatRegister wechatRegister = new WechatRegister();
+			wechatRegister.setType(0);
+			wechatRegister.setWxAcct(pubId);
+			WechatRegister register = wechatRegisterDao.selectList(wechatRegister).get(0);
+			//公众号不存在
+			if(register == null){
+				return null;
+			}
+			// 获取appId
+			String appId =  register.getAppId();
+			// 获取authorizerRefreshToken
+			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();
+			webchatAuthInfo.setAuthorizerAppid(appId);
+			String authorizerRefreshToken = webchatAuthInfoDao.selectList(webchatAuthInfo).get(0)
+					.getAuthorizerRefreshToken();
+			// 封装公众号信息
+			app.setAuthAppId(appId);
+			app.setAuthRefreshToken(authorizerRefreshToken);
+		} catch (Exception e) {
+			logger.info("获取参数方法出现异常：" + e.getMessage());
+		}
+		return app;
+	}
 	
-//	public static void main(String[] args) {
-//		testPub();
-//	}
-//	
-//	private static void testPub() {
-//		HttpUrl httpUrl = new HttpUrl();
-//		httpUrl.setHost("test.h5plus.net");
-//		httpUrl.setPath(ApiConstant.DL_PUB_SEND_API_PATH + "55cbf3a3986a9b483376f279");
-//		Map<Object , Object> params = new HashMap<Object , Object>();
-//		params.put("pub_id", "gh_e611846d32ee");
-//		params.put("message_type","news");
-//		params.put("send_type","publish");
-//		params.put("material_id",1349);
-//		List<String> fansWeixinIds = new ArrayList<String>();
-//		fansWeixinIds.add("ozn8st4fvXQ3oGzB__j6gMt9Va7A");
-//		fansWeixinIds.add("ozn8st3oEbZt2GYrlerD84rx8Zj0");
-//		params.put("fans_weixin_ids",JSON.toJSON(fansWeixinIds));
-//		httpUrl.setRequetsBody(JSON.toJSONString(params));
-//		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
-//		try {
-//			PostMethod postResult = HttpClientUtil.getInstance().postExt(httpUrl);
-//			String postResStr = postResult.getResponseBodyAsString();
-//			System.out.println(postResStr);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-	
-//	private static void testPrv() {
-//		HttpUrl httpUrl = new HttpUrl();
-//		httpUrl.setHost("test.h5plus.net");
-//		httpUrl.setPath(ApiConstant.DL_PRV_SEND_API_PATH + "55cbf3a3986a9b483376f279");
-//		Map<Object , Object> params = new HashMap<Object , Object>();
-//		params.put("uuid", "oa4_0np3jA==");
-////		params.put("ucode", "@be3d68b35fa5b895c61174bab67930ea86f34bc3d22ee4dc0c9d34caa430b94e");
-//		params.put("ucode", "@@4b065096120320eabe6eb3ff771437f8bb85224139581eb1c147d085f0e31721");
-//		params.put("message","个人号发送文本测试");
-//		httpUrl.setRequetsBody(JSON.toJSONString(params));
-//		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
-//		try {
-//			PostMethod postResult = HttpClientUtil.getInstance().postExt(httpUrl);
-//			String postResStr = postResult.getResponseBodyAsString();
-//			System.out.println(postResStr);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
 		super.cancelCampaignInnerTask(taskSchedule);
@@ -226,5 +232,6 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 	public void task(Integer taskId) {
 
 	}
-
+		
+		
 }

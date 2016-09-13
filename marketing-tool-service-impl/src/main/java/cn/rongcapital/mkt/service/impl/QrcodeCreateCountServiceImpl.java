@@ -22,7 +22,7 @@ public class QrcodeCreateCountServiceImpl implements QrcodeCreateCountService {
 
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
-	public BaseOutput getCreateCount(Integer batch_id) {
+	public BaseOutput getCreateCount(String batch_id) {
 		WechatQrcodeLog qlog = new WechatQrcodeLog();
 		qlog.setBatchId(batch_id);
 

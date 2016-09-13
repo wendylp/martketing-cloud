@@ -15,11 +15,14 @@ import cn.rongcapital.mkt.dao.ContactTemplateDao;
 import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContactListPvService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import org.springframework.util.CollectionUtils;
 
 
 @Service
 public class ContactListPvServiceImpl implements ContactListPvService{
-	
+
+	private static final Integer FIRST_PV = 1;
+
 	@Autowired
 	ContactTemplateDao contactTemplateDao;
 	
@@ -29,19 +32,34 @@ public class ContactListPvServiceImpl implements ContactListPvService{
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
+		Integer upNumber = null;
+
 		ContactTemplate contactTemplate = new ContactTemplate(); 
 		contactTemplate.setContactId(Long.valueOf(contactId));
-		
-		
-		int num = contactTemplateDao.updatePageViewsById(contactTemplate); // 更新pageview
-		
-		if(num<=0) {
+        List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
+		if(!CollectionUtils.isEmpty(contactTemplateList)){
+			ContactTemplate upContactTemplate = contactTemplateList.get(0);
+			if(upContactTemplate.getPageViews() == null){
+				upContactTemplate.setPageViews(FIRST_PV);
+				contactTemplateDao.updatePageViewsById(upContactTemplate);
+			}else{
+				upContactTemplate.setPageSize(upContactTemplate.getPageViews() + 1);
+				contactTemplateDao.updatePageViewsById(upContactTemplate);
+			}
+		}else {
+			result.setMsg("该联系人表单");
+			return result;
+		}
+
+
+//		int num = contactTemplateDao.updatePageViewsById(contactTemplate); // 更新pageview
+
+		if(upNumber == null) {
 			result.setCode(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode());
 			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
 		} else {
 			Map<String, Object> map = new HashMap<String, Object>();
-			List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
+			contactTemplateList = contactTemplateDao.selectList(contactTemplate);
 			map.put("id", contactId);
 			map.put("updatetime", format.format(contactTemplateList.get(0).getUpdateTime()));
 			

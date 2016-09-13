@@ -16,9 +16,16 @@ public class ApiConstant {
 	
 	public static final String API_METHOD = "method";//api的method参数
 	public static final String API_PATH = "/api";//api的路径
+	public static final String API_PATH_APPID = "/api/wx1f363449a14a1ad8";//api的路径
 	public static final byte TABLE_DATA_STATUS_VALID = 0;//数据正常
 	public static final byte TABLE_DATA_STATUS_INVALID = 1;//数据已被逻辑删除
 	
+	public static final int WECHAT_CHANNEL_TYPE_SYSTEM = 0;//渠道类型0系统默认渠道
+	public static final int WECHAT_CHANNEL_TYPE_CUSTOM = 1;//渠道类型1自定义渠道
+	
+	public static final int TABLE_DATA_REMOVED_NOTDEL = 0;//不可以删除
+	public static final int TABLE_DATA_REMOVED_DEL = 1;//可以删除
+
 	public static final byte SEGMENT_PUBLISH_STATUS_NOT_PUBLISH = 0;//未发布
 	public static final byte SEGMENT_PUBLISH_STATUS_PUBLISH = 1;//已发布
 	public static final byte SEGMENT_PUBLISH_STATUS_ALL = 3;//全部细分
@@ -64,6 +71,10 @@ public class ApiConstant {
 
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_TARGET = 0;//目标人群
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_EVENT = 1;//事件人群
+	
+	public static final int TAG_ITEM_SYSTEM = 0;//系统标签
+	public static final int TAG_ITEM_CUSTOM = 1;//自定义标签
+	
 	
 	public static final byte CAMPAIGN_ITEM_DECISION_PROP_COMPARE = 0;//联系人属性比较
 	public static final byte CAMPAIGN_ITEM_DECISION_WECHAT_SENT = 1;//微信图文是否发送
@@ -206,4 +217,37 @@ public class ApiConstant {
 	public static final Byte DATA_PARTY_TAG_RULE_TYPE_COMMON = 0;
 	public static final Byte DATA_PARTY_TAG_RULE_TYPE_JS = 1;
 
+	
+	
+	/**
+	 * 微信公众号ID
+	 */
+	public static final String APPID = "wx00f7d56d549f82ce";	
+//	public static final String APPID = "wxa3f1b781590bb2c5";
+	/**
+	 * 微信公众号appsecret
+	 */
+
+	public static final String SECRET = "d30f3c2bdd6f0769673c94365031e588";
+//	public static final String SECRET = "bdf1650396a6c9059835b5777df1b77a";
+//	public static final String SECRET = "60ba94dd8d1590c896edbc5f0f3d5e5e";
+
+	public static final String upload_img_path_large = "/rc/data/downloads/large/";
+	public static final String upload_img_path_middle = "/rc/data/downloads/middle/";
+	public static final String upload_img_path_small = "/rc/data/downloads/small/";
+		
+	public static final String return_img_path_large = "large/";
+	public static final String return_img_path_middle = "middle/";
+	public static final String return_img_path_small = "small/";
+	
+	
+	public static final String upload_img_path = "D:\\soft\\";
+	
+	public static String component_verify_ticket = "ticket@@@Pqd1HooYMLuhKeSIUPh5SjZC43_g7JYLtyVyHN6fDP3WQ9lSRLSZMg_juXv8E9uoE-wKb0LVHiTwqPHVxSYxww";	
+	
+	public static final String weixin_qrcode_create = "https://api.weixin.qq.com/cgi-bin/qrcode/create";
+	
+	public static final String weixin_qrcode_show = "https://mp.weixin.qq.com/cgi-bin/showqrcode";
+
+	
 }

@@ -32,6 +32,10 @@ public class Field_list {
 	@NotNull
 	@JsonProperty("ischecked")
 	private int ischecked;
+	
+	@NotNull
+	@JsonProperty("field_type")
+	private int field_type;
 
 	public void setField_name(String field_name){
 	this.field_name = field_name;
@@ -69,5 +73,13 @@ public class Field_list {
 	public int getIschecked(){
 	return this.ischecked;
 	}
+	public int getField_type() {
+		return field_type;
+	}
+	public void setField_type(int field_type) {
+		this.field_type = field_type;
+	}
+	
+	
 
 }

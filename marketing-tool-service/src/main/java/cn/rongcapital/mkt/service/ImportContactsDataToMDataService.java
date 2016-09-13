@@ -8,5 +8,5 @@ import cn.rongcapital.mkt.vo.in.ImportContactsDataIn;
  */
 public interface ImportContactsDataToMDataService {
 
-    BaseOutput importContactsDataToMData(ImportContactsDataIn importContactsDataIn);
+    BaseOutput importContactsDataToMData(Long contactId);
 }

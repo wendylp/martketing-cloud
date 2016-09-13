@@ -154,4 +154,20 @@
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
 
+	<delete id="delecteCustomTagByContactId" parameterType="java.lang.Integer">
+		DELETE
+		FROM
+			custom_tag
+		WHERE id 
+		IN (
+			 SELECT
+				tag_id
+			 FROM
+				custom_tag_map
+			WHERE
+				map_id = #{contactId}
+		   )
+	</delete>
+
+
 </mapper>

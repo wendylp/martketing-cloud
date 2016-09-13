@@ -5,6 +5,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,8 @@ import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.AssociationTag;
+import cn.rongcapital.mkt.vo.in.WechatQrcodeBatchSaveIn;
 import cn.rongcapital.mkt.vo.out.HomePageCalendarPopOut;
 
 /**
@@ -31,6 +34,7 @@ import cn.rongcapital.mkt.vo.out.HomePageCalendarPopOut;
 public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Autowired
 	WechatQrcodeDao wechatQrcodeDao;
@@ -43,7 +47,7 @@ public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveSe
 	 * @Date 2016.08.26
 	 */
 	@Override
-	public BaseOutput weixinQrcodeBatchSave(Integer batchId, String expirationTime, String qrcodeTagIds,
+	public BaseOutput weixinQrcodeBatchSave(String batchId, String expirationTime, String qrcodeTagIds,
 			Integer qrcodeStatus) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
@@ -66,13 +70,63 @@ public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveSe
 		wechatQrcode.setStatus((byte) qrcodeStatus.intValue());
 
 		int count = wechatQrcodeDao.updataByBatchId(wechatQrcode);
-
-		if (count <= 0) {
-			result.setCode(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode());
-			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
-		}
+		
+		
+		logger.debug("更新数据id:{}",wechatQrcode.getId());
 
 		return result;
 	}
 
+	@Override
+	public BaseOutput weixinQrcodeBatchSave(WechatQrcodeBatchSaveIn body) {
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+		WechatQrcode wechatQrcode = new WechatQrcode();
+		wechatQrcode.setBatchId(body.getBatchId());
+		
+		String expirationTime = body.getExpirationTime();
+		
+		if (expirationTime != null && !expirationTime.isEmpty()) {
+			try {
+				Calendar expirationTimeCalendar = Calendar.getInstance();
+				expirationTimeCalendar.setTime(simpleDateFormat.parse(expirationTime));
+				wechatQrcode.setExpirationTime(expirationTimeCalendar.getTime());
+			} catch (ParseException e) {
+				logger.error("转换expirationTime到日期出错,expirationTime = {} ", expirationTime);
+			}
+		}else {
+			Calendar expirationTimeCalendar = Calendar.getInstance();
+			expirationTimeCalendar.setTime(new Date());
+			expirationTimeCalendar.add(Calendar.YEAR, 100);
+			wechatQrcode.setExpirationTime(expirationTimeCalendar.getTime());
+		}
+		
+		wechatQrcode.setComments(body.getComment());
+		
+		List<AssociationTag> associationTags = body.getAssociation_tags();
+		
+		if(associationTags != null && associationTags.size() >0){
+			List<String> tagList = new ArrayList<String>();
+			
+			for(AssociationTag at : associationTags){
+				tagList.add(String.valueOf(at.getId()));
+			}
+			StringBuilder related = new StringBuilder();;
+			for(String tag :tagList){
+				related.append(tag);
+				related.append(";");
+			}
+			if(related != null &&related.length() > 0){
+				String relatedTags = related.toString().substring(0,related.length()-1);
+				wechatQrcode.setRelatedTags(relatedTags);
+			}
+		}else {
+			wechatQrcode.setRelatedTags("");
+		}
+		
+		wechatQrcodeDao.updataByBatchId(wechatQrcode);
+		
+		return result;
+	}
+	
 }

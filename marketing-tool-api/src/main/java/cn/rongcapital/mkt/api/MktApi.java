@@ -1990,5 +1990,18 @@ public class MktApi {
 		return out;
 	}
 	
+	/**
+	 * 批量新建上传处理
+	 * @param fileUnique
+	 * @param input
+	 * @return
+	 */
+	@POST
+	@Path("/mkt.weixin.qrcode.batch.upload")
+	@Consumes("multipart/form-data")
+	public BaseOutput fileUploadBatch(@QueryParam("file_unique") String fileUnique, MultipartFormDataInput input){
+		return uploadFileService.uploadFileBatch(fileUnique, input);
+	}
+	
 
 }

@@ -13,6 +13,8 @@ package cn.rongcapital.mkt.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.Taggroup;
 
@@ -61,4 +63,14 @@ public interface TaggroupDao extends BaseDao<Taggroup>{
      */
 	//按Jiangyi的说法, 叶子节点以及该节点的parent算是标签, 再往上都不是标签.
 	Integer selectSystemTagCount();
+	
+	/**
+	 * @Title: selectNameById   
+	 * @Description: 通过id查询name   
+	 * @param: @param id
+	 * @param: @return      
+	 * @return: String      
+	 * @throws
+	 */
+	String selectNameById(@Param("id")Integer id);
 }

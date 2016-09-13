@@ -25,6 +25,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.service.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
@@ -33,21 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.service.ContacsCommitSaveService;
-import cn.rongcapital.mkt.service.ContactKeyListGetService;
-import cn.rongcapital.mkt.service.ContactListGetByStatusService;
-import cn.rongcapital.mkt.service.ContactListInfoGetService;
-import cn.rongcapital.mkt.service.ContactListKeyListService;
-import cn.rongcapital.mkt.service.ContactListKeysSaveService;
-import cn.rongcapital.mkt.service.ContactListPvService;
-import cn.rongcapital.mkt.service.ContactListQrcodeDownloadService;
-import cn.rongcapital.mkt.service.ContactListTagGetService;
-import cn.rongcapital.mkt.service.ContactListTagService;
-import cn.rongcapital.mkt.service.ContactListUsedService;
-import cn.rongcapital.mkt.service.ContactTemplateServer;
-import cn.rongcapital.mkt.service.ContactTemplateService;
-import cn.rongcapital.mkt.service.ContactsCommitCountGetService;
-import cn.rongcapital.mkt.service.ImportContactsDataToMDataService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.ContactListTagIn;
 import cn.rongcapital.mkt.vo.in.ContactStatusUpdateIn;
@@ -111,6 +97,12 @@ public class MktContactApi {
 	
 	@Autowired
 	private ContactListGetByStatusService contactListGetByStatusService;
+
+	@Autowired
+	private ContactImportkeyListGetService contactImportkeyListGetService;
+	
+	@Autowired
+	private ContactsLongurlGetService contactsLongurlGetService;
 
 	/***
 	 * 新建联系人表单
@@ -311,7 +303,7 @@ public class MktContactApi {
 	@Path("/mkt.contacts.commit.get")
 	public BaseOutput contactsCommitGet(@NotNull @QueryParam("contact_id") Integer contact_id,
 			@NotNull @QueryParam("commit_time") Integer commit_time,
-			 @DefaultValue("0") @Min(0) @QueryParam("index") int index,
+			 @DefaultValue("1") @Min(1) @QueryParam("index") int index,
 			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 		return contactsCommitSaveService.contactsCommitGet(contact_id, commit_time, index, size);
 	}
@@ -338,12 +330,12 @@ public class MktContactApi {
 	 * @param importContactsDataIn
 	 * @author baiyunfeng
 	 */
-	@POST
-	@Path("/mkt.contacts.mdata.import")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput importContactsDataToMData(@Valid ImportContactsDataIn importContactsDataIn) {
-		return importContactsDataToMDataService.importContactsDataToMData(importContactsDataIn);
-	}
+//	@POST
+//	@Path("/mkt.contacts.mdata.import")
+//	@Consumes({ MediaType.APPLICATION_JSON })
+//	public BaseOutput importContactsDataToMData(@Valid ImportContactsDataIn importContactsDataIn) {
+//		return importContactsDataToMDataService.importContactsDataToMData(importContactsDataIn);
+//	}
 
 	/**
 	 * 保存用户反馈数据
@@ -385,8 +377,36 @@ public class MktContactApi {
 	@Path("/mkt.contact.list.get")
 	public BaseOutput getContactList(@NotNull @QueryParam("contact_status") Integer contact_status,
 			 @QueryParam("contact_id") String contact_id, @QueryParam("contact_name") String contact_name,
-			 @DefaultValue("0") @Min(0) @QueryParam("index") int index,
+			 @DefaultValue("1") @Min(1) @QueryParam("index") int index,
 			 @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 		return contactListGetByStatusService.getContactList(contact_status, contact_id, contact_name, index, size);
+	}
+
+	/**
+	 * 获取导入数据的主键
+	 *
+	 * @param
+	 * @param ver
+	 * @author zhaoguoying
+	 */
+	@GET
+	@Path("/mkt.contact.importkeylist.get")
+	public BaseOutput getContactListInfo(@NotEmpty @QueryParam("user_token") String user_token,
+										 @NotEmpty @QueryParam("ver") String ver,
+										 @NotNull @QueryParam("contact_id") Long contact_id) {
+		return contactImportkeyListGetService.getContactImportkeyList(contact_id);
+	}
+	
+	/*
+	 * 获取联系人表单对应长链接URL
+	 * @author shuiyangyang
+	 * @Date 2016.08.31
+	 */
+	@GET
+	@Path("mkt.contacts.longurl.get")
+	public BaseOutput getLongurl(
+			@NotEmpty @QueryParam("short_url") String shortUrl,
+			@QueryParam("device") String device) {
+		return contactsLongurlGetService.getLongurl(shortUrl, device);
 	}
 }

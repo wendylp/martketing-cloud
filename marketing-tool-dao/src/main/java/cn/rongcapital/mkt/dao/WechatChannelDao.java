@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatChannel;
 
@@ -41,4 +43,20 @@ public interface WechatChannelDao extends BaseDao<WechatChannel>{
 	 * @return: int
 	 */
 	int selectListCount_Like(WechatChannel t);
+	/**
+	 * @Title: getWechatChaCountByName   
+	 * @Description: 通过名称查询是否存在  
+	 * @param: @param chaName
+	 * @param: @return      
+	 * @return: int      
+	 * @throws
+	 */
+	int getWechatChaCountByName(@Param("chaName") String chaName);
+	
+	/**
+	 * @功能简述: 删除渠道信息
+	 * @param: WechatChannel t
+	 * @return: int
+	 */
+	int delete(WechatChannel t);
 }

@@ -134,4 +134,13 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return Integer
 	 */
 	List<Integer> selectKeyidListByIdList(@Param("idList") List<Long> idLists);
+	
+	/**
+	 * @Title: deleteAllUser   
+	 * @Description: 删除所有粉丝
+	 * @param: @return      
+	 * @return: int      
+	 * @throws
+	 */
+	int deleteFansByWxcode(List<Map<String, Object>> fansList);
 }

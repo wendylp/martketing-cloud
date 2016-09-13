@@ -13,7 +13,7 @@ public class CampaignActionSendPub extends BaseQuery {
 
     private String name;
 
-    private Integer materialId;
+    private String materialId;
 
     private Integer imgTextAssetId;
 
@@ -59,11 +59,11 @@ public class CampaignActionSendPub extends BaseQuery {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getMaterialId() {
+    public String getMaterialId() {
         return materialId;
     }
 
-    public void setMaterialId(Integer materialId) {
+    public void setMaterialId(String materialId) {
         this.materialId = materialId;
     }
 

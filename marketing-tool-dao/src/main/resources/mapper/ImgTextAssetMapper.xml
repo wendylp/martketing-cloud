@@ -216,4 +216,51 @@
         WHERE material_id = #{material_id}
 		limit 1
 	</select>
+	
+	<!-- 带创建时间和更新时间的插入方法 -->
+	<insert id="insertWithDate" parameterType="cn.rongcapital.mkt.po.ImgTextAsset" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,material_id,create_time,update_time,pub_id,pub_name,wechat_status,show_cover_pic,thumb_ready)
+			VALUES
+			(
+			  #{name},
+			  #{type},
+			  #{ownerName},
+			  #{pcPreviewUrl},
+			  #{mobilePreviewUrl},
+			  #{imgfileUrl},
+			  #{materialId},
+			  #{createTime},
+			  #{updateTime},
+			  #{pubId},
+			  #{pubName},
+			  #{wechatStatus},
+			  #{showCoverPic},
+			  #{thumbReady}
+			)
+		]]>
+	</insert>
+	
+	<!-- 带创建时间和更新时间的更新方法 -->
+	<update id="updateByIdWithDate" parameterType="cn.rongcapital.mkt.po.ImgTextAsset">
+		<![CDATA[UPDATE img_text_asset]]>
+		<set>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="ownerName != null"><![CDATA[owner_name = #{ownerName},]]></if>
+		    	<if test="pcPreviewUrl != null"><![CDATA[pc_preview_url = #{pcPreviewUrl},]]></if>
+		    	<if test="mobilePreviewUrl != null"><![CDATA[mobile_preview_url = #{mobilePreviewUrl},]]></if>
+		    	<if test="imgfileUrl != null"><![CDATA[imgfile_url = #{imgfileUrl},]]></if>
+		    	<if test="materialId != null"><![CDATA[material_id = #{materialId},]]></if>
+		    	<if test="materialId != null"><![CDATA[create_time = #{createTime},]]></if>
+		    	<if test="materialId != null"><![CDATA[update_time = #{updateTime},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="pubId != null"><![CDATA[pub_id = #{pubId},]]></if>
+		    	<if test="pubName != null"><![CDATA[pub_name = #{pubName},]]></if>
+		    	<if test="wechatStatus != null"><![CDATA[wechat_status = #{wechatStatus},]]></if>
+		    	<if test="showCoverPic != null"><![CDATA[show_cover_pic = #{showCoverPic},]]></if>
+		    	<if test="thumbReady != null"><![CDATA[thumb_ready = #{thumbReady}]]></if>
+		</set>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+	
 </mapper>

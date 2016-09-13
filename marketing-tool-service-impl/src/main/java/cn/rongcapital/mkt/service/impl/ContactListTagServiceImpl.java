@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,42 +36,25 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		
+		//对自定义标签进行删除
+		deleteTagsByContactId(body.getContact_id());
+		
 		//获取标签名称
 		String[] tag_names = body.getTag_names();
 		
 		CustomTag tag = new CustomTag();
-		int temp = 0;
 		
 		for (String tagName : tag_names) {
-			tag.setName(tagName);
-			int count = tagDao.selectListCount(tag);
-			if(count > 0){
+			if(StringUtils.isEmpty(tagName)){
 				continue;
 			}
+			tag.setName(tagName);
 			tagDao.insert(tag);
-			temp++;
+			CustomTagMap tagMap = new CustomTagMap();
+			tagMap.setTagId(tag.getId());
+			tagMap.setMapId(body.getContact_id());
+			tagMapDao.insert(tagMap);
 		}
-		//当temp为0时，表示传入的所有标签名称已经存在。
-		if (temp == 0) {
-			result = new BaseOutput();
-			result.setCode(10001);
-			result.setMsg("标签名称已存在");
-			return result;
-		}
-		CustomTagMap tagMap = new CustomTagMap();
-		tagMap.setTagId(tag.getId());
-		tagMap.setMapId(body.getContact_id());
-		tagMapDao.insert(tagMap);
-		
-//		tag.setName(body.getTag_name());
-
-//		int count = tagDao.selectListCount(tag);
-		//tagDao.insert(tag);
-
-//		CustomTagMap tagMap = new CustomTagMap();
-//		tagMap.setTagId(tag.getId());
-//		tagMap.setMapId(body.getContact_id());
-//		tagMapDao.insert(tagMap);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", body.getContact_id());
@@ -80,4 +64,20 @@ public class ContactListTagServiceImpl implements ContactListTagService {
 
 		return result;
 	}
+	
+	/**
+	 * @Title: deleteTagsByContactId   
+	 * @Description: 添加之前进行自定义标签删除  
+	 * @param: @param contactId      
+	 * @return: void      
+	 * @throws
+	 */
+	private void deleteTagsByContactId(Integer contactId){
+		if(null != contactId){
+			tagDao.delecteCustomTagByContactId(contactId);
+			tagMapDao.deleteCustomTagMapByMapId(contactId);
+		}
+	}
+	
+	
 }

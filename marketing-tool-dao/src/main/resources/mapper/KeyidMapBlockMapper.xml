@@ -121,13 +121,13 @@
 		order by seq
 	</select>
 
-	<select id="selectListByNameList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.KeyidMapBlock">
+	<select id="selectListByCodeList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.KeyidMapBlock">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
-		<![CDATA[WHERE field_name IN]]>
-		<foreach collection="field_name_list" item="field_name" open="(" separator="," close=")">
-			<![CDATA[#{field_name}]]>
+		<![CDATA[WHERE field IN]]>
+		<foreach collection="fieldCodeList" item="fieldCode" index="index" open="(" separator="," close=")">
+			<![CDATA[#{fieldCode}]]>
 		</foreach>
 	</select>
 </mapper>

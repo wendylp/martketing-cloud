@@ -248,12 +248,14 @@
 		SELECT distinct keyid
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE status = #{status}
+		AND contact_templ_id = #{contactTemplId}
 	</select>
 
 	<select id="selectTodayCommitCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT count(id)
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE create_time BETWEEN #{startTime} AND #{endTime}
+		AND contact_templ_id = #{contactTemplId}
 	</select>
 	
 	<update id="updateByContactId" parameterType="cn.rongcapital.mkt.po.ContactList">
@@ -261,14 +263,14 @@
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE 1 = 1]]>
 		<if test="contactTemplId != null"><![CDATA[and contact_templ_id = #{contactTemplId}]]></if>
-		<if test="commitId != null"><![CDATA[and id = #{commitId}]]></if>
+		<if  test="id != null"><![CDATA[and id = #{id}]]></if>
 	</update>
 
 	<select id="selectListByContactIdAndCommitTime" parameterType="cn.rongcapital.mkt.po.ContactList" resultType="cn.rongcapital.mkt.po.ContactList">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
-		<![CDATA[WHERE 1 = 1]]>
+		<![CDATA[WHERE 1 = 1 AND status != 3]]>
 		<if test="contactTemplId != null"><![CDATA[and contact_templ_id = #{contactTemplId}]]></if>
 		<if test="startTime != null and endTime != null"><![CDATA[and commit_time BETWEEN #{startTime} AND #{endTime}]]></if>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>

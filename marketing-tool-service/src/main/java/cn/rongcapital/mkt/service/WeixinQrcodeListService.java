@@ -22,5 +22,5 @@ public interface WeixinQrcodeListService {
 	 * @return
 	 * @author shuiyangyang
 	 */
-	BaseOutput getWeixinQrcodeListQrname(String qrcodeName, int size,int index);
+	BaseOutput getWeixinQrcodeListQrname(String qrcodeName, int index,int size);
 }

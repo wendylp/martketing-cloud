@@ -18,7 +18,7 @@ import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.ShoppingWechat;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 
-@Service("tagDataIsShoppingUserService")
+@Service
 public class TagDataIsShoppingUserServiceImpl extends BaseTagData implements TaskService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -33,7 +33,7 @@ public class TagDataIsShoppingUserServiceImpl extends BaseTagData implements Tas
     public void task(Integer taskId) {
         logger.info("tag task : 公众号下，openid有购买记录的用户标记为是购买用户，其余的标记为不是购买用户");
         logger.info("（新增）品牌联系强度－客户流失概率－是否购买用户－（是／否）");
-        Criteria criteriaAll = Criteria.where("mid").gt(-1).where("isShoppingUser").ne(true);
+        Criteria criteriaAll = Criteria.where("mid").gt(-1).and("isShoppingUser").ne(true);
        // Update updateAll = new Update().set("isShoppingUser", false);
         //mongoTemplate.findAndModify(new Query(criteriaAll), updateAll, cn.rongcapital.mkt.po.mongodb.DataParty.class);
       //  handleData(getShoppingUserList());

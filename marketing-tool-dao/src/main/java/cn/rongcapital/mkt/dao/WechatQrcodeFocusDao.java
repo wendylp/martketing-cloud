@@ -12,9 +12,13 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatQrcodeFocus;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
-	
+
 	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
@@ -34,4 +38,66 @@ public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 选择最早的关注时间
+	 * @return list
+	 */
+	List<WechatQrcodeFocus> selectTheEarliestFocus();
+	
+	/**
+	 * @Title: getFocusOrUnFocusCount   
+	 * @Description: 统计微信二维码关注数量和取消关注数量  
+	 * @param: @param map
+	 * @param: @return      
+	 * @return: Integer      
+	 * @throws
+	 */
+	Integer getFocusOrUnFocusCount(Map<String, Object> map);
+	
+	/**
+	 * 获取总浏览次数，关注的信息，流失关注的信息
+	 * @param t
+	 * @return
+	 */
+	List<Map<String, Object>> getAllFocusData(WechatQrcodeFocus t);
+	
+	
+	/**
+	 * 获取最大浏览次数
+	 * @param t
+	 * @return
+	 */
+	Map<String, Object> getAmountFocusMax(WechatQrcodeFocus t);
+	
+	/**
+	 * 获取最大新关注的信息
+	 * @param t
+	 * @return
+	 */
+	Map<String, Object> getNewFocusMax(WechatQrcodeFocus t);
+	
+	/**
+	 * 获取最大净增关注数
+	 * @param t
+	 * @return
+	 */
+	Map<String, Object> getAddFocusMax(WechatQrcodeFocus t);
+	
+	/**
+	 * 获取最大流失关注的信息
+	 * @param t
+	 * @return
+	 */
+	Map<String, Object> getLostFocusMax(WechatQrcodeFocus t);
+	
+	/**
+	 * 根据微信名和渠道号获取二维码id
+	 */
+	List<String> getQrcodeIdList(WechatQrcodeFocus t);
+
+	/**
+	 * 根据qrcodeId选取这个二维码的关注时间
+	 */
+	List<WechatQrcodeFocus> selectTheEarliestFocusByQrcodeId(@Param("qrcodeId") String qrcodeId);
 }

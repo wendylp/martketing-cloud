@@ -5,9 +5,11 @@ import java.util.List;
 public class ContactListInfoOut {
 	private String contact_id;
 	private String contact_name;
-	private String qrcode_url;
+	private String contact_title;
+	private String qrcode_shorturl;
 	private String qrcode_pic;
 	private String contact_status;
+	private String contact_descript;
 	private List<Field_List> field_list;
 
 	public String getContact_id() {
@@ -26,12 +28,20 @@ public class ContactListInfoOut {
 		this.contact_name = contact_name;
 	}
 
-	public String getQrcode_url() {
-		return qrcode_url;
+	public String getContact_title() {
+		return contact_title;
 	}
 
-	public void setQrcode_url(String qrcode_url) {
-		this.qrcode_url = qrcode_url;
+	public void setContact_title(String contact_title) {
+		this.contact_title = contact_title;
+	}
+
+	public String getQrcode_shorturl() {
+		return qrcode_shorturl;
+	}
+
+	public void setQrcode_shorturl(String qrcode_shorturl) {
+		this.qrcode_shorturl = qrcode_shorturl;
 	}
 
 	public String getQrcode_pic() {
@@ -57,4 +67,14 @@ public class ContactListInfoOut {
 	public void setField_list(List<Field_List> field_list) {
 		this.field_list = field_list;
 	}
+
+	public String getContact_descript() {
+		return contact_descript;
+	}
+
+	public void setContact_descript(String contact_descript) {
+		this.contact_descript = contact_descript;
+	}
+	
+	
 }

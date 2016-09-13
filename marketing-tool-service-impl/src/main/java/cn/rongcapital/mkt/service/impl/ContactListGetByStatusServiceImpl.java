@@ -6,11 +6,15 @@ import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.ContactListDao;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
+import cn.rongcapital.mkt.po.ContactList;
 import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContactListGetByStatusService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -19,56 +23,64 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  * Created by zhaoguoying on 2016-08-12.
  */
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class ContactListGetByStatusServiceImpl implements ContactListGetByStatusService {
+	
+	@Autowired
+	Environment env;
 
 	@Autowired
 	ContactTemplateDao contactTemplateDao;
+	
+	@Autowired
+	ContactListDao contactListDao;
 
 	@Override
 	public BaseOutput getContactList(Integer contactStatus, String contactId, String contactName, int index, int size) {
-		//ContactList contactList = new ContactList();
-		ContactTemplate contactTemplate = new ContactTemplate();
-		contactTemplate.setStatus(contactStatus.byteValue());
-		if (contactId != null){
-			contactTemplate.setContactId(Long.valueOf(contactId));
-		}
-		if (contactName != null){
-			contactTemplate.setContactName(contactName);
-		}
-		//set index and size
-		if (index >= 0) {
-			contactTemplate.setStartIndex(index);
-		} else {
-			contactTemplate.setStartIndex(0);
-		}
-		if (size != 0) {
-			contactTemplate.setPageSize(size);
-		} else {
-			contactTemplate.setPageSize(10);
-		}
-		
-		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListGroupByCId(contactTemplate);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
-		//Map<String, Object> cloMap = new HashMap<>();
+		ContactTemplate contactTemplate = new ContactTemplate();
+		
+		contactTemplate.setStatus(contactStatus.byteValue());
+		if(contactStatus == 3){
+			contactTemplate.setStatus(null);
+		}
+		if (contactId != null && contactId.length()>0){
+			contactTemplate.setContactId(Long.valueOf(contactId));
+		}
+		if (contactName != null && contactName.length() >0){
+			contactTemplate.setContactName(contactName);
+		}
+
+		Integer totalCount = contactTemplateDao.selectRealContactTemplateListCount(contactTemplate);
+		result.setTotal(totalCount);
+		//set index and size
+		contactTemplate.setPageSize(size);
+		contactTemplate.setStartIndex((index-1)*size);
+
+		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListGroupByCId(contactTemplate);
+
+		ContactList contactList = null;
 		if (CollectionUtils.isNotEmpty(contactTemplateList)) {
-			result.setTotal(contactTemplateList.size());
 			List<Object> resultData = result.getData();
 			for (ContactTemplate contactTem : contactTemplateList) {
 				
 				Map<String, Object> contactListMap = new HashMap<String, Object>();
 				contactListMap.put("contact_id", contactTem.getContactId());
 				contactListMap.put("contact_name", contactTem.getContactName());
-				contactListMap.put("qrcode_url", contactTem.getQrcodeUrl());
-				contactListMap.put("qrcode_pic", contactTem.getQrcodePic());
-				contactListMap.put("user_count", contactTemplateList.size());
-				contactListMap.put("contact_status", contactStatus);
-				//cloMap.put(contactTemplate.getFieldCode(), contactTemplate.getFieldName());
+				contactListMap.put("qrcode_shorturl", env.getProperty("contact.short.url") + contactTem.getQrcodeShorturl());
+				contactListMap.put("qrcode_pic", "contactlist/" + contactTem.getQrcodePic());
+				contactList = new ContactList();
+				contactList.setStartIndex(null);
+				contactList.setPageSize(null);
+				contactList.setContactTemplId(contactTem.getContactId().intValue());
+				List<ContactList> selectContactList = contactListDao.selectList(contactList);
+				contactListMap.put("user_count", selectContactList.size());
+				contactListMap.put("contact_status",contactTem.getStatus());
 				resultData.add(contactListMap);
 			}
 		}
-		//result.getColNames().add(cloMap);
 		return result;
 	}
 

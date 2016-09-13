@@ -156,25 +156,6 @@ public class CampaignDecisionWechatReadTask extends BaseMQService implements Tas
 		return isRead;
 	}
 	
-//	public static void main(String[] args) throws Exception {
-//		test();
-//	}
-//	
-//	private static void test() throws Exception {
-//		HttpUrl httpUrl = new HttpUrl();
-//		httpUrl.setHost("test.h5plus.net");
-//		httpUrl.setPath(ApiConstant.DL_PUB_ISREAD_API_PATH + "55cbf3a3986a9b483376f279");
-//		HashMap<Object , Object> params = new HashMap<Object , Object>();
-//		params.put("pub_id", "gh_e611846d32ee");
-//		params.put("fans_open_id", "ozn8st4fvXQ3oGzB__j6gMt9Va7A");
-//		params.put("material_id", 1349);
-//		httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
-//		httpUrl.setRequetsBody(JSON.toJSONString(params));
-//		PostMethod postResult = HttpClientUtil.getInstance().postExt(httpUrl);
-//		String postResStr = postResult.getResponseBodyAsString();
-//		System.out.println(postResStr);
-//	}
-//	
 	@Override
 	public void task(Integer taskId) {
 		// TODO Auto-generated method stub

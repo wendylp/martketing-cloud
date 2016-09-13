@@ -299,4 +299,14 @@
 			#{item}
 		</foreach>
 	</select>
+	
+	<!-- 根据微信号删除 -->
+	<delete id="deleteFansByWxcode" parameterType="java.util.List">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_code 
+		<foreach collection="list" item="item" index="index" separator="," open="IN (" close=")">
+			#{item.wx_code}
+		</foreach>
+	</delete>
 </mapper>

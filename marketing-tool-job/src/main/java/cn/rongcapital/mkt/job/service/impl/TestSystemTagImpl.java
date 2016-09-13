@@ -63,6 +63,5 @@ public class TestSystemTagImpl implements TaskService{
             Update update = new Update().set("totalCount", orderCount.getOrderCount());
             mongoTemplate.findAndModify(query,update,cn.rongcapital.mkt.po.mongodb.DataParty.class);
         }
-        System.out.print(0);
     }
 }
