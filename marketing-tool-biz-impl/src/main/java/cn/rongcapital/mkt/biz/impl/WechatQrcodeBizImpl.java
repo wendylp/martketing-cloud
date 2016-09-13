@@ -222,6 +222,19 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			
 			if(wechatQrcodeIn.getId()!=0){
 				wechatQrcode.setId(Integer.valueOf(wechatQrcodeIn.getId()+""));
+			}else{
+				//同一公众号下,微信二维码名称重复校验
+				wechatQrcode.setWxAcct(wechatQrcodeIn.getWx_acct());
+				wechatQrcode.setQrcodeName(wechatQrcodeIn.getQrcode_name());
+				wechatQrcode.setStatus(int2OneByte(1));
+				List<WechatQrcode> selectList = wechatQrcodeDao.selectList(wechatQrcode);
+				
+				if(selectList != null && selectList.size() > 0){
+					
+					baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+					baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
+					return baseOutput;
+				}
 			}
 			
 			if(StringUtils.isNotEmpty(wechatQrcodeIn.getWx_acct())){
