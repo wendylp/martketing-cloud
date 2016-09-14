@@ -1,6 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +40,8 @@ public class WechatChanellUpdateServiceImpl implements WechatChanellUpdateServic
 
 		//删除未使用渠道
 		WechatChannel wechatChannel = new WechatChannel();
-		wechatChannel.setIsRemoved(1);
-		wechatChannel.setType(1);
+		wechatChannel.setIsRemoved(ApiConstant.TABLE_DATA_REMOVED_DEL);
+		wechatChannel.setType(ApiConstant.WECHAT_CHANNEL_TYPE_CUSTOM);
 		wechatChannelDao.delete(wechatChannel);
 		
 		//获取渠道名称数组

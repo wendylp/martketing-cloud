@@ -262,8 +262,8 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				if(channelList != null && channelList.size() > 0){
 					
 					wechatChannel = channelList.get(0);
-					if(wechatChannel.getIsRemoved() == 1){
-						wechatChannel.setIsRemoved(0);
+					if(wechatChannel != null && wechatChannel.getIsRemoved() == ApiConstant.TABLE_DATA_REMOVED_DEL){
+						wechatChannel.setIsRemoved(ApiConstant.TABLE_DATA_REMOVED_NOTDEL);
 						wechatChannelDao.updateById(wechatChannel);
 					}
 				}
