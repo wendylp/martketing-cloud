@@ -523,7 +523,14 @@ public class MktWeChatApi {
 		BaseOutput baseOutput = wechatQrcodeBiz.createQrcode(body);
 		return baseOutput;
 	}
-	
+
+	@POST
+	@Path("/mkt.weixin.qrcode.enable")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput enableQrcode(@Valid WechatQrcodeIn body) {
+		BaseOutput baseOutput = wechatQrcodeBiz.enableQrcode(body);
+		return baseOutput;
+	}
 	/**
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
