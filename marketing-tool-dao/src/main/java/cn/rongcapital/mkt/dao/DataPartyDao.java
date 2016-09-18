@@ -201,4 +201,14 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @return Integer
 	 */
 	Integer getDataPartyIdByKey(DataParty dataParty);
+	
+	/**
+	 * @Title: getPubUserCount   
+	 * @Description: 获取公众号用户数量  
+	 * @param: @param map
+	 * @param: @return      
+	 * @return: Integer      
+	 * @throws
+	 */
+	Integer getPubUserCount(Map<String, Object> map);
 }

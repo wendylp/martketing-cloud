@@ -1901,12 +1901,8 @@ public class MktApi {
 	@GET
 	@Path("/mkt.homepage.usercount.list")
 	public BaseOutput homePageUserCountList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
-		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-				ApiConstant.INT_ZERO, null);
-		result.getData().add(homePageUserCountListService.getHomePageUserCountList());
-
-		return result;
+			@NotEmpty @QueryParam("ver") String ver,@NotNull @QueryParam("date_type") Integer dateType) {
+		return homePageUserCountListService.getHomePageUserCountList(dateType);
 	}
 
 	/**
