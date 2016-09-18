@@ -42,8 +42,7 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 			issended = WxComponentServerApi.getBaseWxSdk().send(app, msg);
 			if(issended == false) {
 				logger.info("发送文字消息失败， msg内容为：{}", msg);
-			}
-			
+			}			
 		}
 		
 		// 发送图片消息
@@ -52,10 +51,22 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 			issended = WxComponentServerApi.getBaseWxSdk().send(app, msg);
 			if(issended == false) {
 				logger.info("发送图片消息失败， msg内容为：{}", msg);
-			}
-			
+			}			
 		}
-		
+		return (issended);
+	}
+	
+	@Override
+	public Boolean sendMpnews(App app,String touser,String media_id) {
+		Boolean issended = false;
+		// 发送图片消息
+		if(media_id != null && media_id.length() > 0) {			
+			String msg = "{\"touser\":\""+touser+"\",\"msgtype\":\"mpnews\",\"mpnews\":{\"media_id\":\""+media_id+"\"}}";			
+			issended = WxComponentServerApi.getBaseWxSdk().send(app, msg);
+			if(issended == false) {
+				logger.info("发送图片消息失败， msg内容为：{}", msg);
+			}			
+		}
 		return (issended);
 	}
 
