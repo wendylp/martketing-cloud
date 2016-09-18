@@ -51,7 +51,7 @@ import cn.rongcapital.mkt.biz.WechatMemberBiz;
 import cn.rongcapital.mkt.biz.WechatQrcodeBiz;
 import cn.rongcapital.mkt.biz.WechatRegisterBiz;
 import cn.rongcapital.mkt.biz.impl.BaseBiz;
-import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXin;
+import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXinImpl;
 //import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXin;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
