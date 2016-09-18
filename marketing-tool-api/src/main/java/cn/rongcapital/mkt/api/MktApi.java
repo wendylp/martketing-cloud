@@ -2011,6 +2011,40 @@ public class MktApi {
             @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("user_id") String userId) {
         return userInfoService.getUserInfo(userId);
     }
+	
+	   /**
+     * 根据输入名字模糊查询都有哪些人在人群中
+     * @param head_id
+     * @param query_name
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.segment.search.get")
+    public BaseOutput segmentSearch(@NotNull @QueryParam("head_id") Integer head_id,
+             @NotEmpty @QueryParam("query_name") String query_name) {
+         
+        return segmentSearchGetServer.SegmentSearch(head_id, query_name);
+    }
+    
+    @GET
+    @Path("/mkt.segment.search.download")
+    public BaseOutput getSegmentSearchDownload(@NotEmpty @QueryParam("user_token") String user_token,
+            @NotEmpty @QueryParam("ver") String ver,
+            @NotNull @QueryParam("head_id") Integer head_id) {
+        return segmentSearchDownloadService.getSegmentSearchDownload(head_id);
+    }
+    
+    /**
+     * 下载人群管理详情
+     * @param audience_id
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.audience.search.download")
+    public BaseOutput searchData(@NotNull @QueryParam("audience_id") Integer audience_id) {
+         
+        return audienceSearchDownloadService.searchData(audience_id);
+    }
    
   
 	
