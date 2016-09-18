@@ -13,12 +13,10 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.dao.TagDao;
-import cn.rongcapital.mkt.dao.TaggroupDao;
+import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
-import cn.rongcapital.mkt.po.Tag;
-import cn.rongcapital.mkt.po.Taggroup;
+import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
@@ -40,11 +38,7 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 	private WechatChannelDao wechatChannelDao;
 	
 	@Autowired
-	private TagDao tagDao;
-	
-	@Autowired
-	private TaggroupDao taggroupDao;
-	
+	CustomTagDao customTagDao;
 	
 	@Override
 	public BaseOutput getWeiXinQrocdeInfo(String qrcodeId) {
@@ -95,19 +89,18 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			String relatedTag = wechatQrcodeLists.get(0).getRelatedTags();
 			
 			if(relatedTag != null && !"".equals(relatedTag)){
+
 				 //标签查询
-				List<Tag> tagList = tagDao.selectTagsByIds(relatedTag.split(";"));
+				List<CustomTag> customTagList = customTagDao.selectCustomTagsByIds(relatedTag.split(";"));
 				List<Map<String, Object>> returnDataList = new ArrayList<>();
-				for (Tag tag : tagList) {
+				for (CustomTag customTag : customTagList) {
 					Map<String, Object> dataMap = new HashMap<>();
-					String tagGroupId = tag.getTagGroupId();
-					dataMap.put("group_id",tagGroupId);
-					String name = taggroupDao.selectNameById(Integer.valueOf(tagGroupId));
-					dataMap.put("id", tag.getId());
-					String[] split = name.split("-");
-					dataMap.put("name", split[split.length-1]+"-"+tag.getName());
+
+					dataMap.put("id", customTag.getId());
+					dataMap.put("name", customTag.getName());
 					returnDataList.add(dataMap);
 				}
+				
 				map.put("association_tags",returnDataList);
 			}else{
 				
@@ -118,6 +111,8 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			
 			result.getData().add(map);
 		}
+		
+		result.setDate(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"));
 		
 		return result;
 	}

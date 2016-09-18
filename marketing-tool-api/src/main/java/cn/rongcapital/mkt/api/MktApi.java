@@ -88,6 +88,7 @@ import cn.rongcapital.mkt.service.GetDataMainSearchService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
 import cn.rongcapital.mkt.service.GetImgtextCountService;
+import cn.rongcapital.mkt.service.GetUserInfoService;
 import cn.rongcapital.mkt.service.GetWechatUserListService;
 import cn.rongcapital.mkt.service.GroupTagsSearchService;
 import cn.rongcapital.mkt.service.HomePageCalendarListService;
@@ -103,7 +104,6 @@ import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
 import cn.rongcapital.mkt.service.MigrationFileTemplateService;
 import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.ModifyPasswdService;
-import cn.rongcapital.mkt.service.ReauthWechatAccountService;
 import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
@@ -127,7 +127,6 @@ import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
 import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
 import cn.rongcapital.mkt.service.TaskGetListService;
-import cn.rongcapital.mkt.service.TaskListGetService;
 import cn.rongcapital.mkt.service.UpdateNicknameService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WechatAssetListGetService;
@@ -321,9 +320,6 @@ public class MktApi {
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 
 	@Autowired
-	private TaskListGetService taskListGetService;
-
-	@Autowired
 	private CampaignDeleteService campaignDeleteService;
 
 	@Autowired
@@ -420,9 +416,6 @@ public class MktApi {
 	private WechatPersonalAuthService wechatPersonalAuthService;
 
 	@Autowired
-	private ReauthWechatAccountService reauthWechatAccountService;
-
-	@Autowired
 	private TaskGetListService taskGetListService;
 
 	@Autowired
@@ -469,6 +462,9 @@ public class MktApi {
 
 	@Autowired
 	private HomePageCalendarPopService homePageCalendarPopService;
+	
+	 @Autowired
+	 private GetUserInfoService userInfoService;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -1901,12 +1897,8 @@ public class MktApi {
 	@GET
 	@Path("/mkt.homepage.usercount.list")
 	public BaseOutput homePageUserCountList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
-		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-				ApiConstant.INT_ZERO, null);
-		result.getData().add(homePageUserCountListService.getHomePageUserCountList());
-
-		return result;
+			@NotEmpty @QueryParam("ver") String ver,@NotNull @QueryParam("date_type") Integer dateType) {
+		return homePageUserCountListService.getHomePageUserCountList(dateType);
 	}
 
 	/**
@@ -2002,6 +1994,25 @@ public class MktApi {
 	public BaseOutput fileUploadBatch(@QueryParam("file_unique") String fileUnique, MultipartFormDataInput input){
 		return uploadFileService.uploadFileBatch(fileUnique, input);
 	}
+	
+	/**
+	 * @Title: getUserInfo   
+	 * @Description: 通过userID查询用户信息  
+	 * @param: @param userToken
+	 * @param: @param ver
+	 * @param: @param userId
+	 * @param: @return      
+	 * @return: BaseOutput      
+	 * @throws
+	 */
+	@GET
+    @Path("/mkt.data.userinfo.get")
+    public BaseOutput getUserInfo(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("user_id") String userId) {
+        return userInfoService.getUserInfo(userId);
+    }
+   
+  
 	
 
 }

@@ -43,7 +43,7 @@ public class ContactTemplateServiceImpl implements ContactTemplateService {
 			for (ContactTemplate w : contactTemplates) {
 				ContactTemplate copyContactTemplate = (ContactTemplate) deepClone(w);
 				copyContactTemplate.setContactId(Long.valueOf(System.currentTimeMillis() / 1000));
-				copyContactTemplate.setContactName("[幅本]" + w.getContactName());
+				copyContactTemplate.setContactName("[副本]" + w.getContactName());
 				copyContactTemplate.setCreateTime(null);
 				copyContactTemplate.setUpdateTime(null);
 				copyContactTemplate.setStatus(null);

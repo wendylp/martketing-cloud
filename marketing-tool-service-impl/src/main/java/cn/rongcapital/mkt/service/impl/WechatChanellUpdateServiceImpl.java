@@ -1,6 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +9,8 @@ import javax.ws.rs.core.SecurityContext;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -28,40 +29,45 @@ public class WechatChanellUpdateServiceImpl implements WechatChanellUpdateServic
 	@Autowired
 	WechatChannelDao wechatChannelDao;
 
+	/**
+	 * 设置渠道
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public BaseOutput wechatChannelUpdate(WechatChanellUpdateIn wechatChanellUpdateIn,
 			SecurityContext securityContext) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
-		WechatChannel wChannel = new WechatChannel();
-		wChannel.setType(1);
-		wChannel.setIsRemoved(1);
+
+		//删除未使用渠道
+		WechatChannel wechatChannel = new WechatChannel();
+		wechatChannel.setIsRemoved(ApiConstant.TABLE_DATA_REMOVED_DEL);
+		wechatChannel.setType(ApiConstant.WECHAT_CHANNEL_TYPE_CUSTOM);
+		wechatChannelDao.delete(wechatChannel);
 		
-		wechatChannelDao.delete(wChannel);
 		//获取渠道名称数组
 		String[] chaNames = wechatChanellUpdateIn.getChaNames();
-		for (String chaName : chaNames) {
-			WechatChannel wechatChannel = new WechatChannel();
-
-			wechatChannel.setChName(chaName);
-			wechatChannelDao.insert(wechatChannel);
-
+		//重新插入渠道
+		if(chaNames != null && chaNames.length != 0){
+			for (String chaName : chaNames) {
+				
+				wechatChannel = new WechatChannel();
+				wechatChannel.setChName(chaName);
+				//如果存在不插入
+				int count = wechatChannelDao.selectListCount(wechatChannel);
+				if(count == 0){
+					wechatChannel.setType(ApiConstant.WECHAT_CHANNEL_TYPE_CUSTOM);
+					wechatChannel.setIsRemoved(ApiConstant.TABLE_DATA_REMOVED_DEL);
+					wechatChannelDao.insert(wechatChannel);
+				}
+			}
 		}
-		
-		//增加默认六项系统默认渠道
-		List<String> sysChannel = new ArrayList<String>();
-		sysChannel.add("经销商");
-		sysChannel.add("渠道商");
-		sysChannel.add("区域");
-		sysChannel.add("员工");
-		sysChannel.add("门店");
-		sysChannel.add("活动");
-		
-		WechatChannel wechatChannel = new WechatChannel();
-		wechatChannel.setStatus("0");
+
+		wechatChannel = new WechatChannel();
+		wechatChannel.setStatus(Byte.toString(ApiConstant.TABLE_DATA_STATUS_VALID));
 		List<WechatChannel> wechatChannels = wechatChannelDao.selectList(wechatChannel);
 		
 		if (CollectionUtils.isNotEmpty(wechatChannels)) {
-			result.setTotal(wechatChannels.size() + sysChannel.size());
+			result.setTotal(wechatChannels.size());
 			for (WechatChannel w : wechatChannels) {
 				Map<String, Object> channelMap = new HashMap<String, Object>();
 				channelMap.put("channel_id", w.getId());
@@ -70,67 +76,8 @@ public class WechatChanellUpdateServiceImpl implements WechatChanellUpdateServic
 				channelMap.put("channel_removed", w.getIsRemoved());
 				result.getData().add(channelMap);
 			}
-			
-			Map<String, Object> channelMap = null;
-			int channel_id = 1;
-			for(String channelName : sysChannel){
-			    channelMap = new HashMap<String, Object>();
-				channelMap.put("channel_id", channel_id);
-				channelMap.put("channel_name", channelName);
-				channelMap.put("channel_type",0);
-				channelMap.put("channel_removed",0);
-				result.getData().add(channelMap);
-				channel_id++;
-			}
-			
 		}
 		
-//		List<WechatChannel> wechatChaList = wechatChannelDao.selectWechatChaList(chaNames);
-//		if(CollectionUtils.isNotEmpty(wechatChaList)){
-//			result.setTotal(wechatChaList.size());
-//			WechatChanellUpdateOut wechatChanellUpdateOut = new WechatChanellUpdateOut();
-//			wechatChanellUpdateOut.setId(wechatChanellUpdateIn.getChannelId());
-//			wechatChanellUpdateOut
-//					.setUpdatetime(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
-//			result.getData().add(wechatChanellUpdateOut);
-//		}
-		
-		
-//		wechatChannel.setId(wechatChanellUpdateIn.getChannelId());
-//
-//		Integer count = wechatChannelDao.selectListCount(wechatChannel);
-//		
-//
-//		if (count > 0) {
-//			wechatChannel.setChName(wechatChanellUpdateIn.getChName());
-//			//wechatChannel.setStatus(Integer.toString(wechatChanellUpdateIn.getStatus()));
-//			wechatChannel.setUpdateTime(new Date());
-//			wechatChannelDao.updateById(wechatChannel);
-//			result.setTotal(count);
-//			WechatChanellUpdateOut wechatChanellUpdateOut = new WechatChanellUpdateOut();
-//			wechatChanellUpdateOut.setId(wechatChanellUpdateIn.getChannelId());
-//			wechatChanellUpdateOut	
-//					.setUpdatetime(DateUtil.getStringFromDate(wechatChannel.getUpdateTime(), "yyyy-MM-dd HH:mm:ss"));
-//			result.getData().add(wechatChanellUpdateOut);
-//		} else {
-//			wechatChannel = new WechatChannel();
-//			wechatChannel.setChName(wechatChanellUpdateIn.getChName());
-//			List<WechatChannel> wechatChannels = wechatChannelDao.selectList(wechatChannel);
-//			if (CollectionUtils.isEmpty(wechatChannels) || wechatChannels.size() == 0) {
-//				wechatChannelDao.insert(wechatChannel);
-//				wechatChannel.setId(null);
-//				wechatChannels = wechatChannelDao.selectList(wechatChannel);
-//				if (CollectionUtils.isNotEmpty(wechatChannels) || wechatChannels.size() > 0) {
-//					wechatChannel.setId(wechatChannels.get(0).getId());
-//					result.setTotal(1);
-//					WechatChanellUpdateOut wechatChanellUpdateOut = new WechatChanellUpdateOut();
-//					wechatChanellUpdateOut.setId(wechatChannels.get(0).getId());
-//					wechatChanellUpdateOut.setUpdatetime(
-//							DateUtil.getStringFromDate(wechatChannels.get(0).getUpdateTime(), "yyy-MM-dd HH:mm:ss"));
-//					result.getData().add(wechatChanellUpdateOut);
-//				}
-//			}
-//		}
 		return result;
 	}
 }
