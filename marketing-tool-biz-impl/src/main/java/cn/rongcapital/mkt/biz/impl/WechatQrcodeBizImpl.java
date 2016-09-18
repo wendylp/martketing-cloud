@@ -236,6 +236,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				//同一公众号下,微信二维码名称重复校验
 				wechatQrcode.setWxAcct(wechatQrcodeIn.getWx_acct());
 				wechatQrcode.setQrcodeName(wechatQrcodeIn.getQrcode_name());
+				wechatQrcode.setChCode(wechatQrcodeIn.getCh_code());
 				wechatQrcode.setStatus(int2OneByte(1));
 				List<WechatQrcode> selectList = wechatQrcodeDao.selectList(wechatQrcode);
 				
