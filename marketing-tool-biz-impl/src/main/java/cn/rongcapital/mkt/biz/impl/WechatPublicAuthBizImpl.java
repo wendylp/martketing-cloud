@@ -35,21 +35,7 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
-	private WechatPublicAuthService wechatPublicAuthService;
-	
-	@Autowired
-	private WebchatComponentVerifyTicketDao webchatComponentVerifyTicketDao;
-	@Autowired
 	private WebchatAuthInfoDao webchatAuthInfoDao;
-	
-	private String get_access_token_url="https://api.weixin.qq.com/sns/oauth2/access_token?" +
-	        "appid=APPID" +
-	        "&secret=SECRET&" +
-	        "code=CODE&grant_type=authorization_code";
-	private String get_userinfo="https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
-
-
-	
 	
 	@Override	
 	public BaseOutput authWechatPublicAccount() {		
@@ -58,10 +44,12 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 		App app = this.getApp();
     	String pre_auth_code = WxComponentServerApi.getPreAuthCode(app);
         String component_appid = app.getId();
-        String redirect_uri = "http://mktsrv.rc.dataengine.com/api?method=mkt.data.inbound.wechat.public.auth.code.callback";
-        String url = "https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid="+component_appid+"&pre_auth_code="+pre_auth_code+"&redirect_uri="+redirect_uri;
-        logger.info(url);	
-        publicAuthOut.setUrl(url);
+        StringBuffer sbUrl = new StringBuffer(ApiConstant.WEIXIN_AUTH_COMPONENT_LOGIN_PAGE);
+        sbUrl.append("component_appid=").append(component_appid);
+        sbUrl.append("&pre_auth_code=").append(pre_auth_code);
+        sbUrl.append("&redirect_uri=").append(ApiConstant.WEIXIN_AUTH_CALLBACK_URI);
+        logger.info(sbUrl.toString());	
+        publicAuthOut.setUrl(sbUrl.toString());
         baseOutput.getData().add(publicAuthOut);
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
@@ -83,7 +71,6 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 		webchatAuthInfo.setAuthorizerRefreshToken(authorizer_refresh_token);
 		webchatAuthInfo.setExpiresIn(expires_in);
 		webchatAuthInfoDao.insert(webchatAuthInfo);
-		logger.info("authorizer_appid:"+authorizer_appid+"authorizer_access_token:"+authorizer_access_token+"authorizer_refresh_token:"+authorizer_refresh_token);
 		baseOutput.getData().add(webchatAuthInfo);
 		baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());

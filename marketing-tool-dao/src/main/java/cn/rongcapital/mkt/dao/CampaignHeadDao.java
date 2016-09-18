@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CampaignHead;
 
@@ -88,4 +90,12 @@ public interface CampaignHeadDao extends BaseDao<CampaignHead>{
      * @return list
      */
     List<CampaignHead> selectInProgressandPrepareStatusCampaignHeadLimitation(Map<String, Date> paramMap);
+    
+    /**
+     * 通过传入月份查询活动
+     * @param searchDate
+     * @return
+     */
+    List<CampaignHead> selectCampaignHeadListBySearchDate(@Param("searchDate") String searchDate);
+    
 }

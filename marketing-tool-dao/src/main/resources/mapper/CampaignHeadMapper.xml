@@ -167,5 +167,19 @@
 		ORDER BY status DESC , create_time ASC
 		limit 5
 	</select>
+	
+	<select id="selectCampaignHeadListBySearchDate" resultType="cn.rongcapital.mkt.po.CampaignHead" parameterType="java.lang.String">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 
+			publish_status IN (1,2) 
+		<![CDATA[
+			AND DATE_FORMAT(create_time,'%Y%m') = #{searchDate}
+			AND status = 0
+ 		]]>
+			ORDER BY status DESC , create_time ASC
+			limit 5
+	</select>
 		
 </mapper>

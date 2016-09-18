@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
@@ -13,6 +15,7 @@ import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 
 import cn.rongcapital.mkt.biz.ImgTextAssetBiz;
+import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.vo.weixin.WXImgText;
 import cn.rongcapital.mkt.vo.weixin.WXImgTextContent;
@@ -21,6 +24,8 @@ import cn.rongcapital.mkt.vo.weixin.WXNewsItem;
 @Service
 public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -161,10 +166,10 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 					imgTextAssetTemp.setCreateTime(imgTextAsset.getCreateTime());
 					imgTextAssetTemp.setUpdateTime(imgTextAsset.getUpdateTime());
 					int show_cover_pic = wxNewsItem.getShow_cover_pic();
-					imgTextAssetTemp.setShowCoverPic(int2OneByte(show_cover_pic));					
-					imgTextAssetTemp.setWechatStatus(int2OneByte(1));
-					imgTextAssetTemp.setType(int2OneByte(0));
-					imgTextAssetTemp.setStatus(int2OneByte(0));	
+					imgTextAssetTemp.setShowCoverPic(NumUtil.int2OneByte(show_cover_pic));					
+					imgTextAssetTemp.setWechatStatus(NumUtil.int2OneByte(1));
+					imgTextAssetTemp.setType(NumUtil.int2OneByte(0));
+					imgTextAssetTemp.setStatus(NumUtil.int2OneByte(0));	
 					imgTextAssets.add(imgTextAssetTemp);
 				}				
 			}
@@ -195,9 +200,5 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 
 		return 1l;
 	}
-	
-	public static byte int2OneByte(int num) {  
-        return (byte) (num & 0x000000ff);  
-    }
 	
 }
