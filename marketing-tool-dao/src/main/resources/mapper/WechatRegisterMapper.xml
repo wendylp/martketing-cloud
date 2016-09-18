@@ -208,4 +208,13 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE status = #{status}
 	</select>
+	
+	<update id="batchUpdateStatusList" parameterType="java.util.List">
+		<![CDATA[UPDATE wechat_register]]>
+		<![CDATA[ set status = 1]]>
+        <![CDATA[ WHERE wx_acct not in]]>
+		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</update>
 </mapper>
