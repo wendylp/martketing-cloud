@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.jedis;
 
+import java.io.IOException;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -14,7 +16,7 @@ public class JedisConnectionManager {
 	private static JedisPool pool;
 	
 	@SuppressWarnings("unused")
-	public JedisConnectionManager(){
+	public JedisConnectionManager() throws IOException{
 		JedisProperties prop = JedisProperties.getInstance();
 		String REDIS_IP = prop.getValue("redis.host");
 		int REDIS_PORT = prop.getIntValue("redis.host.port");
@@ -47,8 +49,4 @@ public class JedisConnectionManager {
 	public static void destroy(){
 		pool.destroy();
 	}
-	
-
 }
-
- 
