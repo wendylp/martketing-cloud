@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import cn.rongcapital.mkt.job.vo.in.H5MktPubFansListResponse;
 import cn.rongcapital.mkt.job.vo.in.H5PubFan;
 import cn.rongcapital.mkt.job.vo.in.UserGroup;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
+import cn.rongcapital.mkt.po.WechatGroup;
 import cn.rongcapital.mkt.po.WechatMember;
 import cn.rongcapital.mkt.po.WechatRegister;
 
@@ -105,12 +107,14 @@ public class GetPubFansListServiceImpl implements TaskService {
 			if (!CollectionUtils.isEmpty(wechatMemberList)) {
 			
 				for (WechatMember wechatMember : wechatMemberList) {
-					if (wechatMember.getWxCode() == null)
+					
+					String wxCode = wechatMember.getWxCode();
+					if (StringUtils.isNotBlank(wxCode))
 						continue;
 	
 					Map<String, Object> paramFan = new HashMap<String, Object>();
 	
-					paramFan.put("wx_code", wechatMember.getWxCode());
+					paramFan.put("wx_code", wxCode);
 					if (wechatMember.getWxName() != null && wechatMember.getWxName().length() > 0) {
 						paramFan.put("wx_name", wechatMember.getWxName().replaceAll("[^\\u0000-\\uFFFF]", ""));
 					} else {
@@ -165,6 +169,23 @@ public class GetPubFansListServiceImpl implements TaskService {
 				wechatMemberDao.deleteFansByWxcode(fansList);
 				wechatMemberDao.batchInsertFans(fansList);
 				fansList.clear();
+			}
+			
+			for (WechatMember wechatMember : wechatMemberList) {
+				String wxCode = wechatMember.getWxCode();
+				
+				if (StringUtils.isNotBlank(wxCode))
+					continue;
+				WechatMember member = new WechatMember();
+				member.setWxGroupId(ApiConstant.WECHAT_GROUP);
+				member.setWxCode(wxCode);
+				int count = wechatMemberDao.selectListCount(member);
+				WechatGroup wechatGroup = new WechatGroup();
+				wechatGroup.setCount(count);
+				wechatGroup.setWxAcct(wxCode);
+				wechatGroup.setGroupId(ApiConstant.WECHAT_GROUP);
+				
+				wechatGroupDao.updateInfoByGroupWxCode(wechatGroup);
 			}
 		}
 	}
