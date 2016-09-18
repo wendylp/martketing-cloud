@@ -37,6 +37,10 @@ public class ImgTextAsset extends BaseQuery {
 
     private Byte thumbReady;
 
+    private Byte wxType;
+
+    private String digest;
+
     public Integer getId() {
         return id;
     }
@@ -163,5 +167,21 @@ public class ImgTextAsset extends BaseQuery {
 
     public void setThumbReady(Byte thumbReady) {
         this.thumbReady = thumbReady;
+    }
+
+    public Byte getWxType() {
+        return wxType;
+    }
+
+    public void setWxType(Byte wxType) {
+        this.wxType = wxType;
+    }
+
+    public String getDigest() {
+        return digest;
+    }
+
+    public void setDigest(String digest) {
+        this.digest = digest == null ? null : digest.trim();
     }
 }

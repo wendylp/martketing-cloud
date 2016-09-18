@@ -12,7 +12,10 @@ public class ImgAsset extends BaseInput{
     private int imgtextId;
     private int assetType;
     private String ownerName;
-
+    private String wxType;
+    private String searchKey;
+    private String pubId;
+    
     @JsonProperty("imgtext_id")
     public int getImgtextId() {
         return imgtextId;
@@ -39,4 +42,30 @@ public class ImgAsset extends BaseInput{
     public void setAssetType(int assetType) {
         this.assetType = assetType;
     }
+    @JsonProperty("wx_type")
+	public String getWxType() {
+		return wxType;
+	}
+
+	public void setWxType(String wxType) {
+		this.wxType = wxType;
+	}
+    @JsonProperty("search_key")
+	public String getSearchKey() {
+		return searchKey;
+	}
+
+	public void setSearchKey(String searchKey) {
+		this.searchKey = searchKey;
+	}
+    @JsonProperty("pub_id")
+	public String getPubId() {
+		return pubId;
+	}
+
+	public void setPubId(String pubId) {
+		this.pubId = pubId;
+	}
+    
+    
 }

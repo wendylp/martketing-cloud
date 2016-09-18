@@ -58,6 +58,7 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
 import cn.rongcapital.mkt.service.GetWeixinAnalysisDateService;
+import cn.rongcapital.mkt.service.GetWxImgTextAssetService;
 import cn.rongcapital.mkt.service.QrcodeCreateCountService;
 import cn.rongcapital.mkt.service.QrcodePicDownloadService;
 import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
@@ -66,6 +67,7 @@ import cn.rongcapital.mkt.service.TagUpdateService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.service.WebchatComponentVerifyTicketService;
 import cn.rongcapital.mkt.service.WechatAnalysisDaysListService;
+import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.service.WechatQrcodeActivateService;
 import cn.rongcapital.mkt.service.WeixinAnalysisChdataListService;
 import cn.rongcapital.mkt.service.WeixinAnalysisChdataSummaryService;
@@ -78,6 +80,7 @@ import cn.rongcapital.mkt.service.WeixinQrcodeListService;
 import cn.rongcapital.mkt.service.WeixinQrcodeMatchGetService;
 import cn.rongcapital.mkt.service.WeixinQrcodeSaveOrUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.ImgAsset;
 import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
 import cn.rongcapital.mkt.vo.in.TagBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeBatchSaveIn;
@@ -178,6 +181,12 @@ public class MktWeChatApi {
 	
 	@Autowired
 	WeixinAnalysisChdataSummaryService weixinAnalysisChdataSummaryService;
+	
+	@Autowired
+	private WechatAssetListService wechatAssetListService;
+	
+	@Autowired
+	private GetWxImgTextAssetService etWxImgTextAssetService;
 	
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
@@ -595,4 +604,59 @@ public class MktWeChatApi {
 			@NotEmpty @QueryParam("end_date") String endDate) {
 		return weixinAnalysisChdataSummaryService.getAnalysisChdataSummary(wxName, chCode, startDate, endDate);
 	}
+	
+	/**
+	 * @功能简述: 获取公众号资产列表
+	 * @param: String
+	 *             method, String userToken, String ver, int
+	 *             index, int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.wechat.register.list.get")
+	public Object getWechatAssetListByType(@NotEmpty @QueryParam("method") String method,
+			@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver,
+			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
+		return wechatAssetListService.getWechatAssetList( index, size);
+	}
+	
+	
+	/**
+	 * @功能简述: 获取公众号下的图文资产列表
+	 * @param:String user_token,String
+	 *                   ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.register.imgtext.get")
+	public Object getImgTextAsset(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver,
+			@NotNull @QueryParam("type") Integer type,
+			@NotNull @QueryParam("wx_type") String wxType,
+			@NotNull @QueryParam("pub_id") String pubId, 
+			@QueryParam("search_key") String searchKey, 
+			@DefaultValue("1") @Min(1) @QueryParam("index") int index,
+			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
+		ImgAsset imgAsset = new ImgAsset();
+		imgAsset.setAssetType(type);
+		imgAsset.setVer(ver);
+		imgAsset.setWxType(wxType);
+		imgAsset.setPubId(pubId);
+		if (searchKey != null && !"".equals(searchKey)) {
+			imgAsset.setSearchKey(searchKey);
+		} 
+		
+		if (index != 0) {
+			imgAsset.setIndex(index);
+		} else {
+			imgAsset.setIndex(1);
+		}
+		if (size != 0) {
+			imgAsset.setSize(size);
+		} else {
+			imgAsset.setSize(10);
+		}
+		return etWxImgTextAssetService.getWxImgTextAssetService(imgAsset);
+	}	
 }
