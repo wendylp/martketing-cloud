@@ -1951,7 +1951,7 @@ public class MktApi {
 	@GET
 	@Path("/mkt.homepage.calendar.list")
 	public BaseOutput homePageCalendarList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @QueryParam("date") String date) {
+			@NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("date") String date) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		result.getData().add(homePageCalendarListService.getCalendarList(date));
