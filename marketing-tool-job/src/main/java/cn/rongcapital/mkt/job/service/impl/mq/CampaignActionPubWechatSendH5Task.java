@@ -158,7 +158,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 				
 				boolean isPubSent = false;
 				if(null != app){
-					isPubSent = messageSendBiz.send(app, wxCode, null, materialId);
+					isPubSent = messageSendBiz.sendMpnews(app, wxCode, materialId);
 				}
 				logger.info("向受众人群粉丝发送微信图文成功标识------------------------------------>："+isPubSent);
 				

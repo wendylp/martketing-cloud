@@ -7,7 +7,7 @@ public class JedisProperties {
 
 	private static final Logger log = Logger.getLogger(JedisProperties.class);
 
-	public static String JEDIS_CONFIG = "/conf_dev/jedisConfig.properties";
+	public static String JEDIS_CONFIG = "/cloud_dev/jedisConfig.properties";
 	private static JedisProperties properties = null;
 	private JedisConfiguration config = null;
 	private String classesPath = null;

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,qrcode_id as qrcodeId,wx_name as wxName,ch_code as chCode,openid as openid,focus_datetime as focusDatetime,unfocus_datetime as unfocusDatetime,focus_status as focusStatus]]>
+		<![CDATA[ id as id,qrcode_id as qrcodeId,wx_name as wxName,ch_code as chCode,openid as openid,focus_datetime as focusDatetime,unfocus_datetime as unfocusDatetime,focus_status as focusStatus,wxmp_id as wxmpId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -21,6 +21,7 @@
 		    	<if test="focusDatetime != null"><![CDATA[ AND focus_datetime = #{focusDatetime}]]></if>
 		    	<if test="unfocusDatetime != null"><![CDATA[ AND unfocus_datetime = #{unfocusDatetime}]]></if>
 		    	<if test="focusStatus != null"><![CDATA[ AND focus_status = #{focusStatus}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
 		</where>
 	</sql>
 	
@@ -39,14 +40,15 @@
 		    	<if test="openid != null"><![CDATA[openid = #{openid},]]></if>
 		    	<if test="focusDatetime != null"><![CDATA[focus_datetime = #{focusDatetime},]]></if>
 		    	<if test="unfocusDatetime != null"><![CDATA[unfocus_datetime = #{unfocusDatetime},]]></if>
-		    	<if test="focusStatus != null"><![CDATA[focus_status = #{focusStatus}]]></if>
+		    	<if test="focusStatus != null"><![CDATA[focus_status = #{focusStatus},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatQrcodeFocus" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_qrcode_focus (qrcode_id,wx_name,ch_code,openid,focus_datetime,unfocus_datetime,focus_status)
+			INSERT INTO wechat_qrcode_focus (qrcode_id,wx_name,ch_code,openid,focus_datetime,unfocus_datetime,focus_status,wxmp_id)
 			VALUES
 			(
 			  #{qrcodeId},
@@ -55,7 +57,8 @@
 			  #{openid},
 			  #{focusDatetime},
 			  #{unfocusDatetime},
-			  #{focusStatus}
+			  #{focusStatus},
+			  #{wxmpId}
 			)
 		]]>
 	</insert>

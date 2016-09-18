@@ -93,4 +93,14 @@ public interface CustomTagDao extends BaseDao<CustomTag>{
 	
 	int delecteCustomTagByContactId(@Param("contactId")Integer contactId);
 	
+	/**
+	 * @Title: selectCustomTagsByIds   
+	 * @Description: 根据id查询标自定义签列表
+	 * @param: @param ids
+	 * @param: @return      
+	 * @return: List<Tag>      
+	 * @throws
+	 */
+	List<CustomTag> selectCustomTagsByIds(String[]ids);
+	
 }
