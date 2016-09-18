@@ -37,10 +37,12 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.ImageCompressUtil;
+import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
 import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
+import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatQrcode;
@@ -66,7 +68,8 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	WechatChannelDao wechatChannelDao;
 	@Autowired
 	SaveCampaignAudienceService saveCampaignAudienceService;
-	
+	@Autowired
+	CustomTagDao customTagDao;
 	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -296,15 +299,33 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			List<AssociationTag> associationTags = wechatQrcodeIn.getAssociation_tags();
 			if(associationTags!=null&&associationTags.size()>0){
 				StringBuffer tagIdsb = new StringBuffer();
+				
+				CustomTag customTag = null;
+				
 				for(Iterator<AssociationTag> iter = associationTags.iterator();iter.hasNext();){
 					AssociationTag associationTag = iter.next();
+					
+					customTag = new CustomTag();
 					if(associationTag!=null){
-						long tagId = associationTag.getId();						
+						
+						customTag.setName(associationTag.getName());
+						customTag.setStatus(ApiConstant.CUSTOM_TAG_VALIDATE);
+						
+						List<CustomTag> customTagList = customTagDao.selectList(customTag);
+						if(customTagList == null || customTagList.size() == 0){
+							
+							customTag.setCoverAudienceCount(0);
+							customTagDao.insert(customTag);
+						}else{
+							customTag = customTagList.get(0);
+						}
+						
+						long tagId = customTag.getId();						
 						tagIdsb.append(tagId).append(";");
 					}					
 				}
-				tagIdsb.substring(0, tagIdsb.length()-1);
-				wechatQrcode.setRelatedTags(tagIdsb.toString());
+				String tagIds = tagIdsb.substring(0, tagIdsb.length()-1);
+				wechatQrcode.setRelatedTags(tagIds);
 			}			
 			
 			if(wechatQrcodeIn.getStatus() == null){
