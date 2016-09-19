@@ -71,4 +71,13 @@ public interface WechatQrcodeDao extends BaseDao<WechatQrcode>{
 	
 	
 	List<WechatQrcode> selectListExpirationTime(WechatQrcode t);
+	
+	/**
+	 * 更新数据的状态为失效
+	 *
+	 * @param WechatQrcode
+	 * @return 
+	 * @author congshulin
+	 */
+	int updateStatusByExpirationTime(WechatQrcode t);
 }
