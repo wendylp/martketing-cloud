@@ -47,6 +47,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {	
 		String url = requestContext.getUriInfo().getPath();
+		logger.info("url:"+url);
 		String appId = "";
 		if(StringUtils.isNotEmpty(url)&&url.contains(ApiConstant.API_PATH)){
 			if(url.length()>=5){
@@ -66,6 +67,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 			if(StringUtils.isNotEmpty(appId)){
 				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
 						.path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
+				logger.info(ApiConstant.API_PATH+"/"+method+"/"+appId);
 				requestContext.setRequestUri(newRequestURI);				
 			}else{
 				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
