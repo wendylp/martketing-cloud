@@ -209,6 +209,15 @@ public class ApiConstant {
 	// 国籍
     public static final String NATIONALITY_CHINA = "中国";
     public static final String NATIONALITY_FOREIGN = "外国";
+    
+    // 地区
+    public static final String PROVINCE_FOREIGN = "槟榔屿";
+    public static final String PROVINCE_CHINA_CAPITAL = "北京";
+    
+    //城市
+    public static final String CITY = "市";
+    public static final String CITY_CHINA_CAPITAL = "北京市";
+    public static final String CITY_CHINA_BEIHAI = "北海";
 
 	public static final String CAMPAIGN_CONTENT_WECHAT = "微信图文";
 	public static final String CAMPAIGN_CONTENT_H5 = "H5活动";
@@ -252,4 +261,9 @@ public class ApiConstant {
 	public static final String WEIXIN_MSG_EVENT_TYPE_SCAN="SCAN";
 	public static final String WEIXIN_MSG_EVENT_TYPE_SUBSCRIBE="subscribe";
 	public static final String WEIXIN_MSG_EVENT_TYPE_UNSUBSCRIBE="unsubscribe";
+	
+	public static final String SORT_DESC = "desc";
+	public static final String SORT_ASC ="asc";
+	public static final String SORT_ORDER_FIELD = "orderField";
+	public static final String SORT_ORDER_FIELD_TYPE = "orderFieldType";
 }

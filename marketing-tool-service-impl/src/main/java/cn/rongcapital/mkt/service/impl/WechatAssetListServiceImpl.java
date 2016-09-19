@@ -55,7 +55,7 @@ public class WechatAssetListServiceImpl implements WechatAssetListService{
         List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAsset);
         
         int tatal = wechatAssetDao.selectListCount(null);
-        baseOutput.getData().add(wechatAssetList);
+        baseOutput.getData().addAll(wechatAssetList);
 
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());

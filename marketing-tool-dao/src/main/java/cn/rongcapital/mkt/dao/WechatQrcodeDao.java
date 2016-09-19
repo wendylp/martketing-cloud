@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatQrcode;
@@ -70,7 +71,7 @@ public interface WechatQrcodeDao extends BaseDao<WechatQrcode>{
 	int updateStatusById(WechatQrcode t);
 	
 	
-	List<WechatQrcode> selectListExpirationTime(WechatQrcode t);
+	List<WechatQrcode> selectListExpirationTime(Map<String,Object> paramMap);
 	
 	/**
 	 * 更新数据的状态为失效
