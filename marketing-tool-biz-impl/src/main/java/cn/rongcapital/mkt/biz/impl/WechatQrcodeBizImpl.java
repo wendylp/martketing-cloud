@@ -331,7 +331,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	 * 抽取李金凯代码，待其梳理
 	 * @return
 	 */
-	private WechatQrcode getWechatQrcode(WechatQrcode wechatQrcode, WechatQrcodeIn wechatQrcodeIn, WechatQrcodeTicket wechatQrcodeTicket){
+	private WechatQrcode getWechatQrcode(WechatQrcode wechatQrcode, WechatQrcodeIn wechatQrcodeIn){
 		if(wechatQrcodeIn.getId()!=0){
 			wechatQrcode.setId(Integer.valueOf(wechatQrcodeIn.getId()+""));
 		}else{
@@ -434,9 +434,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			wechatQrcode.setStatus(wechatQrcodeIn.getStatus());
 		}
 		
-		wechatQrcode.setQrcodePic(String.valueOf(wechatQrcodeTicket.getId())+".jpg");
-		wechatQrcode.setQrcodeUrl(wechatQrcodeTicket.getUrl());				
-		wechatQrcode.setTicket(String.valueOf(wechatQrcodeTicket.getId()));			
 		wechatQrcode.setCreateTime(new Date());
 
 		return wechatQrcode;		
@@ -448,19 +445,27 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 			
-			WechatQrcodeTicket wechatQrcodeTicket = this.getWechatQrcodeTicketByState();			
-			wechatQrcodeTicket.setState(1);
-			wechatQrcodeTicketDao.updateById(wechatQrcodeTicket); 
-			WechatQrcode wechatQrcode = this.getWechatQrcodeFromWechatQrcodeIn(wechatQrcodeIn, wechatQrcodeTicket);
+
+			//WechatQrcode wechatQrcode = this.getWechatQrcodeFromWechatQrcodeIn(wechatQrcodeIn, wechatQrcodeTicket);
 			
-			/**
-			 * 抽取李金凯代码,待其梳理
-			 */
-			wechatQrcode = this.getWechatQrcode(wechatQrcode, wechatQrcodeIn, wechatQrcodeTicket);
+			WechatQrcode wechatQrcode = new WechatQrcode();
+			
+			wechatQrcode = this.getWechatQrcode(wechatQrcode, wechatQrcodeIn);
 			if(wechatQrcode==null){
 				baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
 				baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
 				return baseOutput;
+			}
+			
+			WechatQrcodeTicket wechatQrcodeTicket = this.getWechatQrcodeTicketByState();	
+			if(wechatQrcodeTicket != null){
+				
+				wechatQrcodeTicket.setState(1);
+				wechatQrcodeTicketDao.updateById(wechatQrcodeTicket); 
+				
+				wechatQrcode.setQrcodePic(String.valueOf(wechatQrcodeTicket.getId())+".jpg");
+				wechatQrcode.setQrcodeUrl(wechatQrcodeTicket.getUrl());				
+				wechatQrcode.setTicket(String.valueOf(wechatQrcodeTicket.getId()));		
 			}
 			
 			//有Id更新,无id新增

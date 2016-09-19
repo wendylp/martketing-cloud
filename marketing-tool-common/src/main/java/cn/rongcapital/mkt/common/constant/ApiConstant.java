@@ -252,4 +252,9 @@ public class ApiConstant {
 	public static final String WEIXIN_MSG_EVENT_TYPE_SCAN="SCAN";
 	public static final String WEIXIN_MSG_EVENT_TYPE_SUBSCRIBE="subscribe";
 	public static final String WEIXIN_MSG_EVENT_TYPE_UNSUBSCRIBE="unsubscribe";
+	
+	public static final String SORT_DESC = "desc";
+	public static final String SORT_ASC ="asc";
+	public static final String SORT_ORDER_FIELD = "orderField";
+	public static final String SORT_ORDER_FIELD_TYPE = "orderFieldType";
 }
