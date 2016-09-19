@@ -277,7 +277,8 @@ public class ParseUploadFileImpl {
                                 insertMap.put(cloumnCode,cell.getStringCellValue());
                                 break;
                             case Cell.CELL_TYPE_NUMERIC:
-                                if(cloumnCode.endsWith("consignee_tel") || cloumnCode.endsWith("mobile")){
+                                if(cloumnCode.endsWith("consignee_tel") || cloumnCode.endsWith("mobile") || cloumnCode.endsWith("identify_no")
+                                        || cloumnCode.endsWith("driving_license") || cloumnCode.endsWith("tel") || cloumnCode.endsWith("qq")){
                                     DecimalFormat df = new DecimalFormat("0");
                                     insertMap.put(cloumnCode,df.format(cell.getNumericCellValue()));
                                     break;
@@ -403,9 +404,16 @@ public class ParseUploadFileImpl {
                     return ImportConstant.VALIDATE_OTHER_FAILED;
                 }
             } else if (fileType == ImportConstant.CUSTOMER_TAG_FILE) {
-                String tagType = (String) insertMap.get("tag_type");
-                if(StringUtils.hasText(tagType) && !ImportConstant.TAG_TYPE_DATE.equals(tagType) &&
-                           !ImportConstant.TAG_TYPE_TEXT.equals(tagType)){
+                String tagSource = (String) insertMap.get("tag_source");
+                String tagTypeLayerOne = (String) insertMap.get("tag_type_layer_one");
+                String tagTypeLayerTwo = (String) insertMap.get("tag_type_layer_two");
+                String tagTypeLayerThree = (String) insertMap.get("tag_type_layer_three");
+                String tagName = (String) insertMap.get("tag_name");
+                String source = (String) insertMap.get("source");
+                if(!StringUtils.hasText(tagSource) || !StringUtils.hasText(tagTypeLayerOne) || !StringUtils.hasText(tagName) || !StringUtils.hasText(source)){
+                    return ImportConstant.VALIDATE_OTHER_FAILED;
+                }
+                if(StringUtils.hasText(tagTypeLayerOne) && StringUtils.hasText(tagTypeLayerThree) && !StringUtils.hasText(tagTypeLayerTwo)){
                     return ImportConstant.VALIDATE_OTHER_FAILED;
                 }
 
@@ -501,17 +509,6 @@ public class ParseUploadFileImpl {
                 insertMap.put(ImportConstant.GENDER_FIELD, GenderEnum.OTHER.getStatusCode());
             } else if (GenderEnum.UNSURE.getDescription().equals(gender)) {
                 insertMap.put(ImportConstant.GENDER_FIELD, GenderEnum.UNSURE.getStatusCode());
-            }
-        }
-
-        if (fileType == ImportConstant.CUSTOMER_TAG_FILE) {
-            String tagType = (String) insertMap.get("tag_type");
-            if(tagType != null && tagType.length() > 0){
-                if(ImportConstant.TAG_TYPE_DATE.equals(tagType)){
-                    insertMap.put("tag_type", Integer.valueOf(1));
-                }else if(ImportConstant.TAG_TYPE_TEXT.equals(tagType)){
-                    insertMap.put("tag_type",Integer.valueOf(0));
-                }
             }
         }
 

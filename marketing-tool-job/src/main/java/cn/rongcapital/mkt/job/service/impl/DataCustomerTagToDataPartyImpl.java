@@ -26,7 +26,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
 	@Override
 	public int queryTotalCount() {
 		DataCustomerTags dataCustomerTags = new DataCustomerTags();
-		dataCustomerTags.setStatus(StatusEnum.ACTIVE.getStatusCode());
+		dataCustomerTags.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
 		return dataCustomerTagsDao.selectListCount(dataCustomerTags);
 	}
 
@@ -34,7 +34,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
 	public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
 
 		DataCustomerTags dataCustomerTags = new DataCustomerTags();
-		dataCustomerTags.setStatus(StatusEnum.ACTIVE.getStatusCode());
+		dataCustomerTags.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
 		dataCustomerTags.setPageSize(pageSize);
 		dataCustomerTags.setStartIndex(startIndex);
 		List<DataCustomerTags> dataCustomerTagsList = dataCustomerTagsDao.selectList(dataCustomerTags);
@@ -59,6 +59,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
 				dataParty.setMdType(DataTypeEnum.CUSTOMER_TAGS.getCode());
 				dataParty.setSource(dataObj.getSource());
 				dataParty.setBatchId(dataObj.getBatchId());
+				dataParty.setMobile(dataObj.getMobile());
 
 				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
 
