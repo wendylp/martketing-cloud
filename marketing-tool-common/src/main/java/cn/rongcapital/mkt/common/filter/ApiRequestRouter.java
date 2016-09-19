@@ -46,7 +46,16 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	 */
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {	
-/*		String url = requestContext.getUriInfo().getPath();	*/
+		String url = requestContext.getUriInfo().getPath();
+		String appId = "";
+		if(StringUtils.isNotEmpty(url)&&url.contains(ApiConstant.API_PATH)){
+			if(url.length()>=5){
+				appId = url.substring(5);
+			}							
+		}else{
+			requestContext.abortWith(Response.status(404).entity("Api not found").build());
+		}
+
 		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 
 			List<String> pList = requestContext.getUriInfo().getQueryParameters()
 								 .get(ApiConstant.API_METHOD);
@@ -54,9 +63,15 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 			if(StringUtils.isBlank(method)){
 				requestContext.abortWith(Response.status(404).entity("Api method not found").build());
 			}
-			URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
-					.path(requestContext.getUriInfo().getPath()+"/"+method).build();
-			requestContext.setRequestUri(newRequestURI);
+			if(StringUtils.isNotEmpty(appId)){
+				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
+						.path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
+				requestContext.setRequestUri(newRequestURI);				
+			}else{
+				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
+						.path(ApiConstant.API_PATH+"/"+method).build();
+				requestContext.setRequestUri(newRequestURI);
+			}
 		}
 	}
 

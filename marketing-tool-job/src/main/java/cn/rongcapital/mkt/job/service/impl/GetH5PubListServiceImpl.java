@@ -68,7 +68,7 @@ public class GetH5PubListServiceImpl implements TaskService {
 
 	@Autowired
 	private WechatGroupDao wechatGroupDao;
-	
+
 	@Autowired
 	private WechatAssetDao wechatAssetDao;
 
@@ -104,69 +104,112 @@ public class GetH5PubListServiceImpl implements TaskService {
 	public void synPubGroupInfoMethod(List<WebchatAuthInfo> list) {
 
 		for (WebchatAuthInfo info : list) {
-			if(info == null){
+			if (info == null) {
 				continue;
 			}
+
 			List<WechatGroup> WechatGroupList = wechatGroupBiz.getTags(info.getAuthorizerAppid(),
 					info.getAuthorizerRefreshToken());
 			// 统计已分组人数总和
-			int count = 0;
-			
+			// int count = 0;
 			if (!CollectionUtils.isEmpty(WechatGroupList)) {
-				
 				for (WechatGroup wechatGroupinfo : WechatGroupList) {
-					
-					count += wechatGroupinfo.getCount(); // 统计已分组人数总和
-						
-					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("group_id", wechatGroupinfo.getGroupId());
-					map.put("wx_acct", wechatGroupinfo.getWxAcct());
-					Long id = wechatGroupDao.selectGroupIdByUcode(map);
-	
-					if (id == null) {
-						wechatGroupDao.insert(wechatGroupinfo);
-						logger.info("insert into wechat_group id:" + wechatGroupinfo.getId());
-					} else {
-						wechatGroupinfo.setId(Integer.valueOf(id.toString()));
-						wechatGroupDao.updateById(wechatGroupinfo);
-						logger.info("update wechat_group id:" + id);
-					}
-					map.clear();
-				}
-			}
-			
-			// 根据Appid获取微信号和粉丝数
-			WechatAsset wechatAsset = new WechatAsset();
-			wechatAsset.setAppId(info.getAuthorizerAppid());
-			List<WechatAsset> wechatAssetLists = wechatAssetDao.selectList(wechatAsset);
-			
-			if(!CollectionUtils.isEmpty(wechatAssetLists)) {
-				// 增加“未分组”
-				WechatGroup wechatGroup = new WechatGroup();
-				wechatGroup.setGroupId("999");
-				wechatGroup.setGroupName("未分组");
-				wechatGroup.setWxAcct(wechatAssetLists.get(0).getWxAcct());
-				wechatGroup.setCreateTime(new Date());
-				wechatGroup.setStatus((byte)0);
-				wechatGroup.setCount(wechatAssetLists.get(0).getTotalCount()-count);
-				WechatGroupList.add(wechatGroup);
-				
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("group_id", wechatGroup.getGroupId());
-				map.put("wx_acct", wechatGroup.getWxAcct());
-				Long id = wechatGroupDao.selectGroupIdByUcode(map);
+					// count += wechatGroupinfo.getCount(); // 统计已分组人数总和
+					if (wechatGroupinfo != null) {
+						updateWechatGroup(wechatGroupinfo);
+						updateWechatUngrouped(wechatGroupinfo);
 
-				if (id == null) {
-					wechatGroupDao.insert(wechatGroup);
-					logger.info("insert into wechat_group id:" + wechatGroup.getId());
-				} else {
-					wechatGroup.setId(Integer.valueOf(id.toString()));
-					wechatGroupDao.updateById(wechatGroup);
-					logger.info("update wechat_group id:" + id);
+					}
+
 				}
 			}
+
+			// 根据Appid获取微信号和粉丝数
+			// WechatAsset wechatAsset = new WechatAsset();
+			// wechatAsset.setAppId(info.getAuthorizerAppid());
+			// List<WechatAsset> wechatAssetLists =
+			// wechatAssetDao.selectList(wechatAsset);
+
+			// if(!CollectionUtils.isEmpty(wechatAssetLists)) {
+			//
+			//
+			// Map<String, Object> map = new HashMap<String, Object>();
+			// map.put("group_id", wechatGroup.getGroupId());
+			// map.put("wx_acct", wechatGroup.getWxAcct());
+			// Long id = wechatGroupDao.selectGroupIdByUcode(map);
+			//
+			// if (id == null) {
+			// wechatGroupDao.insert(wechatGroup);
+			// logger.info("insert into wechat_group id:" +
+			// wechatGroup.getId());
+			// } else {
+			// wechatGroup.setId(Integer.valueOf(id.toString()));
+			// wechatGroupDao.updateById(wechatGroup);
+			// logger.info("update wechat_group id:" + id);
+			// }
+			// }
 		}
 
+	}
+
+	/**
+	 * @功能简述 同步微信组信息
+	 * 
+	 * @param: WechatGroup
+	 *             授权公众号未分组组信息
+	 * @return:
+	 * 
+	 */
+	private void updateWechatUngrouped(WechatGroup wechatGroupinfo) {
+
+		// 增加“未分组”
+		WechatGroup wechatGroup = new WechatGroup();
+		wechatGroup.setGroupId(ApiConstant.WECHAT_GROUP);
+		wechatGroup.setGroupName(ApiConstant.WECHAT_GROUP_NAME);
+		wechatGroup.setWxAcct(wechatGroupinfo.getWxAcct());
+		wechatGroup.setCreateTime(new Date());
+		wechatGroup.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		wechatGroup.setCount(0);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("group_id", ApiConstant.WECHAT_GROUP);
+		map.put("wx_acct", wechatGroupinfo.getWxAcct());
+		Long id = wechatGroupDao.selectGroupIdByUcode(map);
+
+		if (id == null) {
+			wechatGroupDao.insert(wechatGroup);
+			logger.info("insert into wechat_group id:" + wechatGroup.getId());
+		} else {
+			wechatGroupinfo.setId(Integer.valueOf(id.toString()));
+			wechatGroupDao.updateById(wechatGroup);
+			logger.info("update wechat_group id:" + id);
+		}
+		map.clear();
+	}
+
+	/**
+	 * @功能简述 同步微信组信息
+	 * 
+	 * @param: WechatGroup
+	 *             授权公众号组信息
+	 * @return:
+	 * 
+	 */
+	private void updateWechatGroup(WechatGroup wechatGroupinfo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("group_id", wechatGroupinfo.getGroupId());
+		map.put("wx_acct", wechatGroupinfo.getWxAcct());
+		Long id = wechatGroupDao.selectGroupIdByUcode(map);
+
+		if (id == null) {
+			wechatGroupDao.insert(wechatGroupinfo);
+			logger.info("insert into wechat_group id:" + wechatGroupinfo.getId());
+		} else {
+			wechatGroupinfo.setId(Integer.valueOf(id.toString()));
+			wechatGroupDao.updateById(wechatGroupinfo);
+			logger.info("update wechat_group id:" + id);
+		}
+		map.clear();
 	}
 
 	/**
@@ -179,8 +222,10 @@ public class GetH5PubListServiceImpl implements TaskService {
 	 */
 	public void synPubInfoMethod(List<WebchatAuthInfo> list) {
 
+		ArrayList<String> resultList = new ArrayList<String>();
+
 		for (WebchatAuthInfo info : list) {
-			if(info == null){
+			if (info == null) {
 				continue;
 			}
 			WechatRegister wechatRegister = wechatRegisterBiz.getAuthInfo(info.getAuthorizerAppid(),
@@ -199,9 +244,11 @@ public class GetH5PubListServiceImpl implements TaskService {
 					logger.info("update wechat_register id:" + wechatRegister.getId());
 				}
 				map.clear();
+				resultList.add(wechatRegister.getWxAcct());
 			}
 		}
-
+		// 批量更新数据库中未授权公众号的状态为删除
+		wechatRegisterDao.batchUpdateStatusList(resultList);
 	}
 
 	private void callH5PlusMethod() {

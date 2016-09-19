@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tagsin.wechat_sdk.user.UserInfo;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
@@ -184,7 +186,8 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 		WechatMember wechatMember = new WechatMember();
 		
 		wechatMember.setWxCode(userInfo.getOpenid());			
-		wechatMember.setNickname(wechatMember.getNickname());
+		wechatMember.setNickname(userInfo.getNickname());
+		wechatMember.setWxName(userInfo.getNickname());
 		wechatMember.setSex(userInfo.getSex());
 			
 		wechatMember.setCountry(userInfo.getCountry());
@@ -193,7 +196,8 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 		// language
 		wechatMember.setHeadImageUrl(userInfo.getHeadimgurl());
 		//关注时间
-		wechatMember.setSubscribeTime(userInfo.getSubscribe_time());
+		Date date = new Date(Long.valueOf(userInfo.getSubscribe_time()) * 1000);
+		wechatMember.setSubscribeTime(DateUtil.getStringFromDate(date, "yyyy-MM-dd HH:mm:ss"));
 		// unionid
 		wechatMember.setRemark(userInfo.getRemark());
 		wechatMember.setSubscribeYn("Y");

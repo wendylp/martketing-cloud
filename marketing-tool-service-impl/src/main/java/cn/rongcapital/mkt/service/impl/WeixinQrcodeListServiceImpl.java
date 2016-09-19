@@ -149,7 +149,7 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 				
 				map.put("id", wechatQrcodeList.getId());
 				
-				map.put("qrcode_pic", ApiConstant.return_img_path_small + wechatQrcodeList.getQrcodePic());// 返回二维码图片文件url 
+				map.put("qrcode_pic", ApiConstant.RETURN_IMG_PATH_SMALL + wechatQrcodeList.getQrcodePic());// 返回二维码图片文件url 
 																		
 				map.put("qrcode_name", wechatQrcodeList.getQrcodeName());
 

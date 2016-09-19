@@ -1,18 +1,31 @@
 package cn.rongcapital.mkt.jedis;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import org.apache.log4j.Logger;
+import org.springframework.context.annotation.PropertySource;
 
 
+@PropertySource("classpath:application.properties")
 public class JedisProperties {
 
 	private static final Logger log = Logger.getLogger(JedisProperties.class);
 
-	public static String JEDIS_CONFIG = "/cloud_dev/jedisConfig.properties";
+	public static String APPLICATION_CONFIG = "/application.properties";
+	public static String JEDIS_CONFIG = "/jedisConfig.properties";
 	private static JedisProperties properties = null;
 	private JedisConfiguration config = null;
 	private String classesPath = null;
-
-	public static JedisProperties getInstance() {
+	private static Properties applicationConfig = new Properties();
+	
+	
+	public static JedisProperties getInstance() throws IOException {		
+		InputStream  inputStream = JedisProperties.class.getResourceAsStream(APPLICATION_CONFIG);
+		applicationConfig.load(inputStream);				
+		String jedis_config = applicationConfig.getProperty("conf.dir");
+		JEDIS_CONFIG ="/"+jedis_config+JEDIS_CONFIG;
 		if (properties == null) {
 			properties = new JedisProperties();
 			try {
@@ -70,7 +83,7 @@ public class JedisProperties {
 		this.classesPath = classesPath;
 	}
 
-	public static void main(String[] args) throws JedisConfigurationException {
+	public static void main(String[] args) throws JedisConfigurationException, IOException {
 		String ips = getInstance().getValue("dns.list");
 		System.out.println(ips);
 	}
