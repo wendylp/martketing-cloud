@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,11 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
 		List<HomePageCalendarData> homePageCalendarDatas = new ArrayList<>();
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat monthFormat = new SimpleDateFormat("yyyyMM");
 		try {
+			if(StringUtils.isEmpty(date) || "0".equals(date)){
+				date = monthFormat.format(new Date());
+			}
 			// wangweiqiang update 2016-09-18
 			List<CampaignHead> campaignHeads = campaignHeadDao.selectCampaignHeadListBySearchDate(date);
 
@@ -59,6 +64,7 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
 			homePageCalendarDatas = filterCalendarList(homePageCalendarDatas);
 			result.setCalendarData(homePageCalendarDatas);
 			result.setToday(simpleDateFormat.format(new Date()));
+			result.setCurrentMonth(date);
 		} catch (Exception e) {
 			logger.error("统计出当月日历日被客户标记当月定时的活动，按启动时间算方法出现异常:" + e.getMessage());
 		}
