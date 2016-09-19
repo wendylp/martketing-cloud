@@ -4,7 +4,6 @@ import static cn.rongcapital.mkt.common.enums.CampaignHeadStatusEnum.CAMPAIGN_PU
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,26 +38,6 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			// Calendar now = Calendar.getInstance();
-			// Calendar startTime = Calendar.getInstance();
-			// Calendar endTime = Calendar.getInstance();
-			//
-			// if (!StringUtils.isEmpty(date)) {
-			// try {
-			// now.setTime(simpleDateFormat.parse(date));
-			// } catch (ParseException e) {
-			// logger.error("活动日历传送了错误的格式 : {}", date);
-			// }
-			// }
-
-			// 初始化下开始结束时间
-			// initParamTime(startTime, endTime, now);
-			// Map<String, Date> paramMap = new HashMap<>();
-			// paramMap.put("startTime", startTime.getTime());
-			// paramMap.put("endTime", endTime.getTime());
-			// List<CampaignHead> campaignHeads =
-			// campaignHeadDao.selectInProgressandPrepareStatusCampaignHead(paramMap);
-
 			// wangweiqiang update 2016-09-18
 			List<CampaignHead> campaignHeads = campaignHeadDao.selectCampaignHeadListBySearchDate(date);
 
@@ -87,16 +66,6 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
 		return result;
 	}
 
-	// 将开始结束时间分别定为本月开始时间(本月1号0点0分0秒),下个月的开始时间(下月1号0点0分0秒)
-	private void initParamTime(Calendar startTime, Calendar endTime, Calendar now) {
-		startTime.setTime(now.getTime());
-		endTime.setTime(now.getTime());
-
-		startTime.set(startTime.get(Calendar.YEAR), startTime.get(Calendar.MONTH), 1, 0, 0, 0);
-		endTime.set(endTime.get(Calendar.YEAR), endTime.get(Calendar.MONTH) + 1, 1, 0, 0, 0);
-		startTime.set(Calendar.MILLISECOND, 0);
-		endTime.set(Calendar.MILLISECOND, 0);
-	}
 
 	// 将数据按日期排序, 同一天有运行中与发布的数据, 优先显示运行中的数据
 	private List<HomePageCalendarData> filterCalendarList(List<HomePageCalendarData> homePageCalendarDatas) {
