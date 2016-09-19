@@ -281,15 +281,13 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		if(StringUtils.isNotEmpty(wechatQrcodeIn.getComments())){
 			wechatQrcode.setComments(wechatQrcodeIn.getComments());
 		}			
-		List<AssociationTag> associationTags = wechatQrcodeIn.getAssociation_tags();
+		List<String> associationTags = wechatQrcodeIn.getAssociation_tags();
 		if(associationTags!=null&&associationTags.size()>0){
 			StringBuffer tagIdsb = new StringBuffer();
-			for(Iterator<AssociationTag> iter = associationTags.iterator();iter.hasNext();){
-				AssociationTag associationTag = iter.next();
-				if(associationTag!=null){
-					long tagId = associationTag.getId();						
-					tagIdsb.append(tagId).append(";");
-				}					
+			for(Iterator<String> iter = associationTags.iterator();iter.hasNext();){
+				String associationTag = iter.next();
+					
+				tagIdsb.append(associationTag).append(";");				
 			}
 			tagIdsb.substring(0, tagIdsb.length()-1);
 			wechatQrcode.setRelatedTags(tagIdsb.toString());
@@ -396,19 +394,19 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		if(StringUtils.isNotEmpty(wechatQrcodeIn.getComments())){
 			wechatQrcode.setComments(wechatQrcodeIn.getComments());
 		}			
-		List<AssociationTag> associationTags = wechatQrcodeIn.getAssociation_tags();
+		List<String> associationTags = wechatQrcodeIn.getAssociation_tags();
 		if(associationTags!=null&&associationTags.size()>0){
 			StringBuffer tagIdsb = new StringBuffer();
 			
 			CustomTag customTag = null;
 			
-			for(Iterator<AssociationTag> iter = associationTags.iterator();iter.hasNext();){
-				AssociationTag associationTag = iter.next();
+			for(Iterator<String> iter = associationTags.iterator();iter.hasNext();){
+				String associationTag = iter.next();
 				
 				customTag = new CustomTag();
 				if(associationTag!=null){
 					
-					customTag.setName(associationTag.getName());
+					customTag.setName(associationTag);
 					customTag.setStatus(ApiConstant.CUSTOM_TAG_VALIDATE);
 					
 					List<CustomTag> customTagList = customTagDao.selectList(customTag);
