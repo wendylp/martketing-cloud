@@ -37,7 +37,7 @@ public class GetWxImgTextAssetServiceImpl implements GetWxImgTextAssetService {
         List<Map<String,Object>> list = constructOutData(listBySearchKeyLike);
         
         int total = imgTextAssetDao.selectListBySearchKeyLikeCount(paramMap);
-        baseOutput.getData().add(list);
+        baseOutput.getData().addAll(list);
         baseOutput.setTotalCount(listBySearchKeyLike.size());
         baseOutput.setTotal(total);
         return Response.ok().entity(baseOutput).build();

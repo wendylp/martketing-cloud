@@ -7,6 +7,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class HomePageCalendarListOut {
 
     private String today;
+    
+    private String currentMonth;
 
     private List<HomePageCalendarData> calendarData;
 
@@ -26,5 +28,16 @@ public class HomePageCalendarListOut {
     public void setCalendarData(List<HomePageCalendarData> calendarData) {
         this.calendarData = calendarData;
     }
+    
+    @JsonProperty("current_month")
+	public String getCurrentMonth() {
+		return currentMonth;
+	}
+
+	public void setCurrentMonth(String currentMonth) {
+		this.currentMonth = currentMonth;
+	}
+    
+    
 
 }

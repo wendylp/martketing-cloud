@@ -115,6 +115,7 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
 						sb.append(tagList.get(i));
 						sb.append(",");
 					}
+					sb.deleteCharAt(sb.length() - 1);
 				}
 				wechatMember.setWxGroupId(sb.toString());
 				wechatMember.setPubId(wg.getWxAcct());
