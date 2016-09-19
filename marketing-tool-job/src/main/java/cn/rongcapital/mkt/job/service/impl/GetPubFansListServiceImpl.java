@@ -145,8 +145,9 @@ public class GetPubFansListServiceImpl implements TaskService {
 						} else {
 							if (ApiConstant.CITY_CHINA_CAPITAL.equals(paramFan.get("province"))) {
 								paramFan.put("city", ApiConstant.CITY_CHINA_CAPITAL);
+							} else {
+								paramFan.put("city", city + ApiConstant.CITY);
 							}
-							paramFan.put("city", city + ApiConstant.CITY);
 						}
 					} else {
 						paramFan.put("country", wechatMember.getCountry());
