@@ -12,9 +12,9 @@
 
 	<!-- Original需要更新的列 -->
 	<sql id="ORIGINAL_CLEAN_COLUMN_LIST">
-		<![CDATA[ tag_type,tag_name,birthday,identify_no,driving_license,email,mobile,
-		acct_type,tel,qq,acct_no,idfa,imei,udid,phone_mac,
-		create_time,update_time,source,batch_id,bitmap,keyid,wxmp_id,wx_code]]>
+		<![CDATA[ tag_source,tag_type_layer_one,tag_type_layer_two,tag_type_layer_three,tag_name,
+		identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,unionid,
+		phone_mac,wxmp_id,wx_code,create_time,update_time,source,batch_id,bitmap,keyid]]>
 	</sql>
 
 	<!-- 全部条件 -->
@@ -254,6 +254,11 @@
 			table_name='data_customer_tags'
 	</select>
 
+	<!--<sql id="ORIGINAL_CLEAN_COLUMN_LIST">-->
+		<!--<![CDATA[ tag_source,tag_type_layer_one,tag_type_layer_two,tag_type_layer_three,tag_name,-->
+		<!--identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,unionid,-->
+		<!--phone_mac,wxmp_id,wx_code,create_time,update_time,source,batch_id,bitmap,keyid]]>-->
+	<!--</sql>-->
 	<update id="cleanAndUpdateByOriginal" parameterType="map">
 		<![CDATA[INSERT INTO data_customer_tags]]>
 		(
@@ -261,15 +266,12 @@
 		)
 		values
 		<foreach collection="list" item="obj" index="index" separator=",">
-			( #{obj.tagType}, #{obj.tagName},#{obj.birthday},
-			#{obj.identifyNo}, #{obj.drivingLicense}, #{obj.email},
-			#{obj.mobile}, #{obj.acctType}, #{obj.tel}, #{obj.qq}, #{obj.acctNo},
-			#{obj.idfa},#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.createTime},
-			#{obj.updateTime},#{obj.source},#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmpId},#{obj.wxCode})
+			( #{obj.tagSource}, #{obj.tagTypeLayerOne},#{obj.tagTypeLayerTwo},#{obj.tagTypeLayerThree},
+			#{obj.tagName}, #{obj.identifyNo}, #{obj.drivingLicense},
+			#{obj.email}, #{obj.mobile}, #{obj.tel}, #{obj.qq},#{obj.acctType}, #{obj.acctNo},
+			#{obj.idfa},#{obj.imei},#{obj.unionid},#{obj.phoneMac},#{obj.wxmpId},#{obj.wxCode},#{obj.createTime},
+			#{obj.updateTime},#{obj.source},#{obj.batchId},#{obj.bitmap},#{obj.keyid})
 		</foreach>
-		on duplicate key update
-		tag_type = values(tag_type),
-		tag_name = values(tag_name)
 	</update>
 
 	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">

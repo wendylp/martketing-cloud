@@ -45,12 +45,12 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
             if (originalDataCustomerTags.isEmpty()) {
                 continue;
             }
-            handleOriginalDataArchPoint(originalDataCustomerTags);
+            handleOriginalDataCustomTags(originalDataCustomerTags);
         }
     }
 
     // 处理OriginalDataArchPoint的数据
-    private void handleOriginalDataArchPoint(List<OriginalDataCustomerTags> tmpOriginalDataCustomTags) {
+    private void handleOriginalDataCustomTags(List<OriginalDataCustomerTags> tmpOriginalDataCustomTags) {
         if (tmpOriginalDataCustomTags.isEmpty()) {
             return;
         }

@@ -59,6 +59,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
 				dataParty.setMdType(DataTypeEnum.CUSTOMER_TAGS.getCode());
 				dataParty.setSource(dataObj.getSource());
 				dataParty.setBatchId(dataObj.getBatchId());
+				dataParty.setMobile(dataObj.getMobile());
 
 				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
 
