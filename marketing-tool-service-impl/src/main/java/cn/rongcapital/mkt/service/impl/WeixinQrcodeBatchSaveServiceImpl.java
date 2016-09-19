@@ -34,7 +34,7 @@ import cn.rongcapital.mkt.vo.out.HomePageCalendarPopOut;
 public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Autowired
 	WechatQrcodeDao wechatQrcodeDao;
