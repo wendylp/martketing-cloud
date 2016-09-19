@@ -22,40 +22,42 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  * @Date 2016.08.25
  */
 @Service
-public class WeixinQrcodeMatchGetServiceImpl implements WeixinQrcodeMatchGetService{
+public class WeixinQrcodeMatchGetServiceImpl implements WeixinQrcodeMatchGetService {
 
 	@Autowired
 	private WechatQrcodeDao wechatQrcodeDao;
-	
+
 	/**
-	 * 精确查询微信二维码名称是否存在
-	 * 接口：mkt.weixin.qrcode.match.get
+	 * 精确查询微信二维码名称是否存在 接口：mkt.weixin.qrcode.match.get
+	 * 
 	 * @author shuiyangyang
 	 * @Date 2016.08.25
 	 */
 	@Override
-	public BaseOutput weixinQrcodeMatchGet(String qrcodeName, String wxName) {
-		
-		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE,null);
-		
+	public BaseOutput weixinQrcodeMatchGet(String qrcodeName, String channelId, String wxName) {
+
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ONE, null);
+
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		wechatQrcode.setWxName(wxName);
+		wechatQrcode.setChCode(Integer.parseInt(channelId));
 		wechatQrcode.setQrcodeName(qrcodeName);
-		
+
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectList(wechatQrcode);
-		
-		Map<String,Object> map = new HashMap<String,Object>();
-		
-		if(wechatQrcodeLists == null || wechatQrcodeLists.isEmpty()) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		if (wechatQrcodeLists == null || wechatQrcodeLists.isEmpty()) {
 			map.put("is_match", 0);
 			map.put("id", "");
 		} else {
 			map.put("is_match", 1);
 			map.put("id", wechatQrcodeLists.get(0).getId());
 		}
-		
+
 		result.getData().add(map);
-		
+
 		return result;
 	}
 

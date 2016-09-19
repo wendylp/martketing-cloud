@@ -148,46 +148,46 @@ public class MktWeChatApi {
 
 	@Autowired
 	WeixinAnalysisQrcodeScanService weixinAnalysisQrcodeScanService;
-	
+
 	@Autowired
 	private WechatAnalysisDaysListService analysisDaysList;
-	
+
 	@Autowired
 	private WeixinAnalysisChdataListService weixinAnalysisChdataListService;
 
 	@Autowired
-	private WechatQrcodeBiz wechatQrcodeBiz;	
+	private WechatQrcodeBiz wechatQrcodeBiz;
 
 	@Autowired
 	private WebchatComponentVerifyTicketService webchatComponentVerifyTicketService;
-	
+
 	@Autowired
 	private BaseBiz baseBiz;
-	
+
 	@Autowired
 	private WechatRegisterBiz wechatRegisterBiz;
-	
+
 	@Autowired
 	private WechatMemberBiz wechatMemberBiz;
-	
+
 	@Autowired
 	private WechatGroupBiz wechatGroupBiz;
-	
+
 	@Autowired
 	private ImgTextAssetBiz imgTextAssetBiz;
-	
+
 	@Autowired
 	private MessageSendBiz messageSendBiz;
-	
+
 	@Autowired
 	WeixinAnalysisChdataSummaryService weixinAnalysisChdataSummaryService;
-	
+
 	@Autowired
 	private WechatAssetListService wechatAssetListService;
-	
+
 	@Autowired
 	private GetWxImgTextAssetService etWxImgTextAssetService;
-	
+
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
 	 * 
@@ -339,8 +339,8 @@ public class MktWeChatApi {
 	@GET
 	@Path("/mkt.weixin.qrcode.match.get")
 	public BaseOutput weixinQrcodeMatchGet(@NotEmpty @QueryParam("qrcode_name") String qrcodeName,
-			@NotEmpty @QueryParam("wx_name") String wxName) {
-		return weixinQrcodeMatchGetService.weixinQrcodeMatchGet(qrcodeName, wxName);
+			@NotEmpty @QueryParam("channel_id") String channelId, @NotEmpty @QueryParam("wx_name") String wxName) {
+		return weixinQrcodeMatchGetService.weixinQrcodeMatchGet(qrcodeName, channelId, wxName);
 	}
 
 	/**
@@ -412,21 +412,27 @@ public class MktWeChatApi {
 	 * @author shuiyangyang
 	 * @Date 2016.08.26
 	 */
-	/*@GET
-	@Path("/mkt.weixin.qrcode.batch.save")
-	public BaseOutput weixinQrcodeBatchSave(@NotNull @QueryParam("batch_id") String batchId,
-			@NotNull @QueryParam("expiration_time") String expirationTime,
-			@NotEmpty @QueryParam("qrcode_tag_ids") String qrcodeTagIds,
-			@NotNull @QueryParam("qrcode_status") Integer qrcodeStatus) {
-		return weixinQrcodeBatchSaveService.weixinQrcodeBatchSave(batchId, expirationTime, qrcodeTagIds, qrcodeStatus);
-	}*/
-	
+	/*
+	 * @GET
+	 * 
+	 * @Path("/mkt.weixin.qrcode.batch.save") public BaseOutput
+	 * weixinQrcodeBatchSave(@NotNull @QueryParam("batch_id") String batchId,
+	 * 
+	 * @NotNull @QueryParam("expiration_time") String expirationTime,
+	 * 
+	 * @NotEmpty @QueryParam("qrcode_tag_ids") String qrcodeTagIds,
+	 * 
+	 * @NotNull @QueryParam("qrcode_status") Integer qrcodeStatus) { return
+	 * weixinQrcodeBatchSaveService.weixinQrcodeBatchSave(batchId,
+	 * expirationTime, qrcodeTagIds, qrcodeStatus); }
+	 */
+
 	@POST
 	@Path("/mkt.weixin.qrcode.batch.save")
-	public BaseOutput weixinQrcodeBatchSave(@Valid WechatQrcodeBatchSaveIn body){
+	public BaseOutput weixinQrcodeBatchSave(@Valid WechatQrcodeBatchSaveIn body) {
 		return weixinQrcodeBatchSaveService.weixinQrcodeBatchSave(body);
 	}
-	
+
 	@POST
 	@Path("/mkt.weixin.qrcode.saveorupdate")
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -440,8 +446,7 @@ public class MktWeChatApi {
 	@GET
 	@Path("/mkt.weixin.analysis.date")
 	public BaseOutput weixinQrcodeBatchSave(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver,
-	        @QueryParam("qrcode_id") String qrcodeId) {
+			@NotEmpty @QueryParam("ver") String ver, @QueryParam("qrcode_id") String qrcodeId) {
 		return getWeixinAnalysisDateService.getWeixinAnalysisDate(qrcodeId);
 	}
 
@@ -462,27 +467,22 @@ public class MktWeChatApi {
 	}
 
 	/**
-	 * @Title: analysisDaysList   
-	 * @Description: 微信二维码关注数据分析   
-	 * @param: @param startDate
-	 * @param: @param endDate
-	 * @param: @param daysType
-	 * @param: @param chCode
-	 * @param: @param wxName
-	 * @param: @return      
-	 * @return: BaseOutput      
-	 * @throws
+	 * @Title: analysisDaysList @Description: 微信二维码关注数据分析 @param: @param
+	 *         startDate @param: @param endDate @param: @param
+	 *         daysType @param: @param chCode @param: @param
+	 *         wxName @param: @return @return: BaseOutput @throws
 	 */
 	@GET
 	@Path("mkt.weixin.analysis.days.list")
-	public BaseOutput analysisDaysList(@NotEmpty @QueryParam("start_date")String startDate,
-			@NotEmpty @QueryParam("end_date")String endDate,@NotEmpty @QueryParam("ch_code")String chCode,
-			@NotEmpty @QueryParam("wx_name")String wxName,@QueryParam("days_type") String daysType) {
+	public BaseOutput analysisDaysList(@NotEmpty @QueryParam("start_date") String startDate,
+			@NotEmpty @QueryParam("end_date") String endDate, @NotEmpty @QueryParam("ch_code") String chCode,
+			@NotEmpty @QueryParam("wx_name") String wxName, @QueryParam("days_type") String daysType) {
 		return analysisDaysList.analysisDaysList(startDate, endDate, daysType, chCode, wxName);
 	}
-	
+
 	/**
-	 *  按公众号和渠道,以及时间区间内获取关注数据(扫码、关注、新增...), 支持分页 
+	 * 按公众号和渠道,以及时间区间内获取关注数据(扫码、关注、新增...), 支持分页
+	 * 
 	 * @param wxName
 	 * @param chCode
 	 * @param startDate
@@ -493,14 +493,12 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.weixin.analysis.chdata.list")
-	public BaseOutput getAnalysisChdata(
-			@NotNull @QueryParam("wx_name") String wxName,
-			@NotEmpty @QueryParam("ch_code") String chCode,
-			@NotEmpty @QueryParam("start_date") String startDate,
+	public BaseOutput getAnalysisChdata(@NotNull @QueryParam("wx_name") String wxName,
+			@NotEmpty @QueryParam("ch_code") String chCode, @NotEmpty @QueryParam("start_date") String startDate,
 			@NotEmpty @QueryParam("end_date") String endDate) {
 		return weixinAnalysisChdataListService.getAnalysisChdata(wxName, chCode, startDate, endDate);
 	}
-	
+
 	/**
 	 * @功能简述 : 根据id更新标签信息
 	 */
@@ -511,20 +509,23 @@ public class MktWeChatApi {
 		BaseOutput baseOutput = wechatQrcodeBiz.getWechatQrcodeTicket();
 		return baseOutput;
 	}
-	
+
 	/**
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
+	 * @throws IOException
+	 * @throws FileNotFoundException
 	 * @功能简述 : 根据id更新标签信息
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.pics.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput getQrcodes(@NotEmpty @QueryParam("action_name") String actionName,@DefaultValue("1") @Min(1) @Max(100000) @QueryParam("start_scene_id") int startSceneId,@DefaultValue("100000") @Min(1) @Max(100000) @QueryParam("end_scene_id") int endSceneId) throws FileNotFoundException, IOException {
+	public BaseOutput getQrcodes(@NotEmpty @QueryParam("action_name") String actionName,
+			@DefaultValue("1") @Min(1) @Max(100000) @QueryParam("start_scene_id") int startSceneId,
+			@DefaultValue("100000") @Min(1) @Max(100000) @QueryParam("end_scene_id") int endSceneId)
+			throws FileNotFoundException, IOException {
 		BaseOutput baseOutput = wechatQrcodeBiz.getQrcodes(startSceneId, endSceneId, actionName);
 		return baseOutput;
 	}
-	
+
 	@POST
 	@Path("/mkt.weixin.qrcode.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -540,54 +541,55 @@ public class MktWeChatApi {
 		BaseOutput baseOutput = wechatQrcodeBiz.enableQrcode(body);
 		return baseOutput;
 	}
+
 	/**
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
+	 * @throws IOException
+	 * @throws FileNotFoundException
 	 * @功能简述 : 根据id更新标签信息
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput getQrcode(@NotEmpty @QueryParam("action_name") String actionName,@DefaultValue("10") @Min(1) @Max(100000) @QueryParam("scene_id") int sceneId) throws FileNotFoundException, IOException {
-		BaseOutput baseOutput = wechatQrcodeBiz.getQrcode(sceneId,actionName);
+	public BaseOutput getQrcode(@NotEmpty @QueryParam("action_name") String actionName,
+			@DefaultValue("10") @Min(1) @Max(100000) @QueryParam("scene_id") int sceneId)
+			throws FileNotFoundException, IOException {
+		BaseOutput baseOutput = wechatQrcodeBiz.getQrcode(sceneId, actionName);
 		return baseOutput;
 	}
-	
-	
+
 	/**
 	 * @param componentVerifyTicketIn
 	 * @param msg_signature
 	 * @param timestamp
 	 * @param nonce
-	 * 测试
+	 *            测试
 	 * @return
 	 */
 	@POST
 	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
-	@Consumes({MediaType.TEXT_XML})
-	public String getComponentVerifyTicket( ComponentVerifyTicketIn componentVerifyTicketIn,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce){		
-		webchatComponentVerifyTicketService.insert(componentVerifyTicketIn,msg_signature, timestamp, nonce);
-		return "success";		
+	@Consumes({ MediaType.TEXT_XML })
+	public String getComponentVerifyTicket(ComponentVerifyTicketIn componentVerifyTicketIn,
+			@QueryParam("msg_signature") String msg_signature, @QueryParam("timestamp") String timestamp,
+			@QueryParam("nonce") String nonce) {
+		webchatComponentVerifyTicketService.insert(componentVerifyTicketIn, msg_signature, timestamp, nonce);
+		return "success";
 	}
-		
+
 	/**
-	 * @Title: analysisHoursList   
-	 * @Description: 按小时查询关注数据  
-	 * @param: @param date
-	 * @param: @param chCode
-	 * @param: @param wxName
-	 * @param: @return      
-	 * @return: BaseOutput      
-	 * @throws
+	 * @Title: analysisHoursList @Description: 按小时查询关注数据 @param: @param
+	 *         date @param: @param chCode @param: @param
+	 *         wxName @param: @return @return: BaseOutput @throws
 	 */
 	@GET
 	@Path("mkt.weixin.analysis.hours.list")
-	public BaseOutput analysisHoursList(@NotEmpty @QueryParam("date")String date,@NotEmpty @QueryParam("ch_code")String chCode,@NotEmpty @QueryParam("wx_name")String wxName) {
+	public BaseOutput analysisHoursList(@NotEmpty @QueryParam("date") String date,
+			@NotEmpty @QueryParam("ch_code") String chCode, @NotEmpty @QueryParam("wx_name") String wxName) {
 		return analysisDaysList.analysisHoursList(date, chCode, wxName);
 	}
-	
+
 	/**
-	 * 获取平均、汇总、历史最高关注数据(扫码、关注、新增...) 
+	 * 获取平均、汇总、历史最高关注数据(扫码、关注、新增...)
+	 * 
 	 * @param wxName
 	 * @param chCode
 	 * @param startDate
@@ -597,19 +599,16 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.weixin.analysis.chdata.summary")
-	public BaseOutput getAnalysisChdataSummary(
-			@QueryParam("wx_name") String wxName,
-			@QueryParam("ch_code") String chCode,
-			@NotEmpty @QueryParam("start_date") String startDate,
+	public BaseOutput getAnalysisChdataSummary(@QueryParam("wx_name") String wxName,
+			@QueryParam("ch_code") String chCode, @NotEmpty @QueryParam("start_date") String startDate,
 			@NotEmpty @QueryParam("end_date") String endDate) {
 		return weixinAnalysisChdataSummaryService.getAnalysisChdataSummary(wxName, chCode, startDate, endDate);
 	}
-	
+
 	/**
 	 * @功能简述: 获取公众号资产列表
 	 * @param: String
-	 *             method, String userToken, String ver, int
-	 *             index, int size
+	 *             method, String userToken, String ver, int index, int size
 	 * @return: Object
 	 */
 	@GET
@@ -618,10 +617,9 @@ public class MktWeChatApi {
 			@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver,
 			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
-		return wechatAssetListService.getWechatAssetList( index, size);
+		return wechatAssetListService.getWechatAssetList(index, size);
 	}
-	
-	
+
 	/**
 	 * @功能简述: 获取公众号下的图文资产列表
 	 * @param:String user_token,String
@@ -631,12 +629,9 @@ public class MktWeChatApi {
 	@GET
 	@Path("/mkt.asset.register.imgtext.get")
 	public Object getImgTextAsset(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver,
-			@NotNull @QueryParam("type") Integer type,
-			@NotNull @QueryParam("wx_type") String wxType,
-			@NotNull @QueryParam("pub_id") String pubId, 
-			@QueryParam("search_key") String searchKey, 
-			@DefaultValue("1") @Min(1) @QueryParam("index") int index,
+			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("type") Integer type,
+			@NotNull @QueryParam("wx_type") String wxType, @NotNull @QueryParam("pub_id") String pubId,
+			@QueryParam("search_key") String searchKey, @DefaultValue("1") @Min(1) @QueryParam("index") int index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 		ImgAsset imgAsset = new ImgAsset();
 		imgAsset.setAssetType(type);
@@ -645,8 +640,8 @@ public class MktWeChatApi {
 		imgAsset.setPubId(pubId);
 		if (searchKey != null && !"".equals(searchKey)) {
 			imgAsset.setSearchKey(searchKey);
-		} 
-		
+		}
+
 		if (index != 0) {
 			imgAsset.setIndex(index);
 		} else {
@@ -658,5 +653,5 @@ public class MktWeChatApi {
 			imgAsset.setSize(10);
 		}
 		return etWxImgTextAssetService.getWxImgTextAssetService(imgAsset);
-	}	
+	}
 }
