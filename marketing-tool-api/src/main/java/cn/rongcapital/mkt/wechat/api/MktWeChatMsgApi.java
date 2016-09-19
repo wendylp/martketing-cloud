@@ -45,6 +45,8 @@ public class MktWeChatMsgApi {
 	@Path("/mkt.weixin.qrcode.getMsgEvent/{appId}")
 	@Consumes({MediaType.TEXT_XML})
 	public String getMsgEvent(String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce, @QueryParam("signature") String signature, @QueryParam("openid") String openid, @PathParam("appId") String appId) throws JAXBException, AesException{		
+		logger.info("获取监听事件的消息     textxml:"+textxml);
+		logger.info("获取监听事件的消息参数:   msg_signature："+msg_signature+";timestamp:"+timestamp+";nonce:"+nonce+";signature:"+signature+";openid:"+openid+";appId:"+appId);
 		processReceiveMessageOfWeiXinBiz.getMsgLog(textxml, msg_signature, timestamp, nonce, signature, openid,appId);
 		return "success";		
 	}
