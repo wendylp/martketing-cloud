@@ -181,6 +181,7 @@ public class ApiConstant {
 	public static final String UPLOAD_BASE_DIR = "//rc/data/uploads/";
 	
 	public static final String AUDIENCE_SOUCE_NAME_CAMPAIGN = "营销活动";
+	public static final String AUDIENCE_SOUCE_NAME_WX = "微信二维码";
 	public static final Byte WECHAT_IMGTEXT_TYPE = 0;
 
 	public static String IMPORT_FILE_SOURCE = "文件接入";

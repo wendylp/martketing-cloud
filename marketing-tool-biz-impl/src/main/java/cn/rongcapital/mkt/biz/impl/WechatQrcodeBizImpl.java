@@ -49,9 +49,8 @@ import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeTicket;
 
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.AssociationTag;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
-import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
+import cn.rongcapital.mkt.service.SaveAudienceListService;
 import cn.rongcapital.mkt.vo.in.Audience;
 @Service
 public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
@@ -67,7 +66,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	@Autowired
 	WechatChannelDao wechatChannelDao;
 	@Autowired
-	SaveCampaignAudienceService saveCampaignAudienceService;
+	SaveAudienceListService saveAudienceListService;
 	@Autowired
 	CustomTagDao customTagDao;
 	
@@ -378,7 +377,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			//新建人群管理保存
 			Audience audience = new Audience();
 			audience.setAudience_name(wechatQrcodeIn.getFixed_audience());
-			saveCampaignAudienceService.saveCampaignAudience(audience, null);
+			saveAudienceListService.saveAudienceList(audience);
 		}else{
 			wechatQrcode.setIsAudience(NumUtil.int2OneByte(0));
 		}			
