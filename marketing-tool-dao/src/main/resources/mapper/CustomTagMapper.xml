@@ -169,5 +169,16 @@
 		   )
 	</delete>
 
-
+	<!-- 通过Id进行查询 -->
+	<select id="selectCostomTagsByIds" resultType="cn.rongcapital.mkt.po.CustomTag">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE
+			id 
+		IN
+	 	<foreach collection="array" index="index" item="item" open="(" separator="," close=")">  
+          	#{item}   
+ 		 </foreach>  
+	</select>
 </mapper>

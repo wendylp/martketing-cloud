@@ -101,4 +101,10 @@ public interface WechatRegisterDao extends BaseDao<WechatRegister>{
 	 * @param wechatRegister
 	 */
 	List<String> selectWxacctList(WechatRegister wechatRegister);
+	
+	/**
+	 * 根据微信账号批量更新微信状态
+	 * @param wxAcctList
+	 */
+	void batchUpdateStatusList(List<String> wxAcctList);
 }

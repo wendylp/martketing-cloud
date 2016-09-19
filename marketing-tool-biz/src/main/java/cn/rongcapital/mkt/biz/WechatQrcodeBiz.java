@@ -15,5 +15,7 @@ public interface WechatQrcodeBiz {
 	BaseOutput createQrcode(WechatQrcodeIn wechatQrcodeIn);
 	
 	BaseOutput getWechatQrcodeTicket();
+	
+	BaseOutput enableQrcode(WechatQrcodeIn wechatQrcodeIn);
 
 }

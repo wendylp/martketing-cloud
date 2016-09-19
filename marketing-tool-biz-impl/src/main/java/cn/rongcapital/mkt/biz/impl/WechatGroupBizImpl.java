@@ -68,8 +68,6 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 		app.setAuthAppId(authAppId);
 		app.setAuthRefreshToken(authorizer_refresh_token);
 		String tagsString = WxComponentServerApi.getBaseWxSdk().getTags(app);
-		// {"errcode":48001,"errmsg":"api unauthorized hint: [BQS5ma0929vr29!]"}
-		
 		JSONObject jsonObject = JSONObject.parseObject(tagsString);
 		Integer jsonInt = jsonObject.getInteger("errcode");
 		if(StringUtils.isNotBlank(tagsString) && jsonInt == null) {

@@ -240,7 +240,9 @@ public class FileUtil {
                             DateTime dateTime = new DateTime(field.get(entity));
                             stringBuilder.append(dateTime.toString(ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
                         } else {
-                            stringBuilder.append(field.get(entity));
+                        	//stringBuilder.append(field.get(entity));
+                        	// 将导出文件中显示null的单元格内容变为""
+                            stringBuilder.append(field.get(entity) == null ? "" : field.get(entity));
                         }
 
                     }

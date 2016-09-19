@@ -1,11 +1,13 @@
 package cn.rongcapital.mkt.wechat.api;
 
+import javax.websocket.server.PathParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.JAXBException;
 
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
@@ -13,11 +15,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.qq.weixin.mp.aes.AesException;
+
 import cn.rongcapital.mkt.biz.ProcessReceiveMessageOfWeiXinBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 
 @Component
-@Path(ApiConstant.API_PATH_APPID)
+@Path(ApiConstant.API_PATH)
 @Produces({ MediaType.APPLICATION_JSON })
 @ValidateRequest
 public class MktWeChatMsgApi {
@@ -34,13 +38,14 @@ public class MktWeChatMsgApi {
 	 * @param nonce
 	 * 测试
 	 * @return
+	 * @throws AesException 
+	 * @throws JAXBException 
 	 */
 	@POST
-	@Path("/mkt.weixin.qrcode.getMsgEvent")
+	@Path("/mkt.weixin.qrcode.getMsgEvent/{appId}")
 	@Consumes({MediaType.TEXT_XML})
-	public String getMsgEvent(String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce, @QueryParam("signature") String signature, @QueryParam("openid") String openid){
-			logger.info(textxml);
-			processReceiveMessageOfWeiXinBiz.getMsgLog(textxml, msg_signature, timestamp, nonce, signature, openid);
+	public String getMsgEvent(String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce, @QueryParam("signature") String signature, @QueryParam("openid") String openid, @PathParam("appId") String appId) throws JAXBException, AesException{		
+		processReceiveMessageOfWeiXinBiz.getMsgLog(textxml, msg_signature, timestamp, nonce, signature, openid,appId);
 		return "success";		
 	}
 

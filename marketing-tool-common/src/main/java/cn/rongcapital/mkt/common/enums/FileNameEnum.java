@@ -16,6 +16,7 @@ public enum FileNameEnum {
     BAS_EVENT(11,"bas_event"),
     BAS_USER(12,"bas_user"),
     CONTACT_LIST(13,"contact_list"),
+    CONTACT_USER_DOWNLOAD(14,"contact_user_download")
 
     ;
 

@@ -693,4 +693,22 @@
 		    	<if test="mdType != null"><![CDATA[ AND md_type = #{mdType}]]></if>
 		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
 	</select>
+	
+	<!-- 统计公众号增长数量 -->
+	<select id="getPubUserCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			data_party
+		<where>
+			<if test="searchDate != null ">
+				<![CDATA[ DATE_FORMAT(create_time,'%Y-%m-%d') = #{searchDate} ]]>
+			</if>
+			<if test="searchHours != null ">
+				<![CDATA[ DATE_FORMAT(create_time,'%Y-%m-%d %H') = #{searchHours} ]]>
+			</if>
+		</where>
+	</select>
+	
+	
 </mapper>

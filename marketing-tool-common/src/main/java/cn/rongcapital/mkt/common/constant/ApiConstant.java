@@ -39,6 +39,9 @@ public class ApiConstant {
 	public static final int INT_ZERO = 0;
 	public static final int INT_ONE = 1;
 	
+	public static final String WECHAT_GROUP = "999";
+	public static final String WECHAT_GROUP_NAME = "未分组";
+	
 	public static final int PAGE_START_INDEX_DEFAULT = 0;//默认分页起始index值
 	public static final int PAGE_PAGE_SIZE_DEFAULT = 10;//默认每页记录数
 
@@ -216,38 +219,36 @@ public class ApiConstant {
 
 	public static final Byte DATA_PARTY_TAG_RULE_TYPE_COMMON = 0;
 	public static final Byte DATA_PARTY_TAG_RULE_TYPE_JS = 1;
-
-	
-	
 	/**
 	 * 微信公众号ID
 	 */
 	public static final String APPID = "wx00f7d56d549f82ce";	
-//	public static final String APPID = "wxa3f1b781590bb2c5";
 	/**
 	 * 微信公众号appsecret
 	 */
-
 	public static final String SECRET = "d30f3c2bdd6f0769673c94365031e588";
-//	public static final String SECRET = "bdf1650396a6c9059835b5777df1b77a";
-//	public static final String SECRET = "60ba94dd8d1590c896edbc5f0f3d5e5e";
+	
+	public static final String ENCODING_AES_KEY = "abcdefghijklmnopqrstuvwxyz12345678900987654";
+	public static final String TOKEN = "ruixuemarketingcloud";	
 
-	public static final String upload_img_path_large = "/rc/data/downloads/large/";
-	public static final String upload_img_path_middle = "/rc/data/downloads/middle/";
-	public static final String upload_img_path_small = "/rc/data/downloads/small/";
-		
-	public static final String return_img_path_large = "large/";
-	public static final String return_img_path_middle = "middle/";
-	public static final String return_img_path_small = "small/";
+	public static final String UPLOAD_IMG_PATH_LARGE = "/rc/data/downloads/large/";
+	public static final String UPLOAD_IMG_PATH_MIDDLE = "/rc/data/downloads/middle/";
+	public static final String UPLOAD_IMG_PATH_SMALL = "/rc/data/downloads/small/";		
+	public static final String RETURN_IMG_PATH_LARGE = "large/";
+	public static final String RETURN_IMG_PATH_MIDDLE = "middle/";
+	public static final String RETURN_IMG_PATH_SMALL = "small/";
+	public static final String UPLOAD_IMG_PATH = "D:\\soft\\";	
+	public static String COMPONENT_VERIFY_TICKET = "ticket@@@Pqd1HooYMLuhKeSIUPh5SjZC43_g7JYLtyVyHN6fDP3WQ9lSRLSZMg_juXv8E9uoE-wKb0LVHiTwqPHVxSYxww";		
 	
-	
-	public static final String upload_img_path = "D:\\soft\\";
-	
-	public static String component_verify_ticket = "ticket@@@Pqd1HooYMLuhKeSIUPh5SjZC43_g7JYLtyVyHN6fDP3WQ9lSRLSZMg_juXv8E9uoE-wKb0LVHiTwqPHVxSYxww";	
-	
-	public static final String weixin_qrcode_create = "https://api.weixin.qq.com/cgi-bin/qrcode/create";
-	
-	public static final String weixin_qrcode_show = "https://mp.weixin.qq.com/cgi-bin/showqrcode";
-
-	
+	public static final String WEIXIN_QRCODE_CREATE = "https://api.weixin.qq.com/cgi-bin/qrcode/create";	
+	public static final String WEIXIN_QRCODE_SHOW = "https://mp.weixin.qq.com/cgi-bin/showqrcode";
+	public static final String WEIXIN_REDIRECT_URL = "http://mktpro.rc.dataengine.com/html/data-access/weixin.html";	
+	public static final String WEIXIN_AUTH_CALLBACK_URI = "http://mktsrv.cssrv.dataengine.com/api?method=mkt.data.inbound.wechat.public.auth.code.callback";	
+	public static final String WEIXIN_AUTH_COMPONENT_LOGIN_PAGE ="https://mp.weixin.qq.com/cgi-bin/componentloginpage?";
+	/**
+	 * 微信关注、取消关注、扫描
+	 */
+	public static final String WEIXIN_MSG_EVENT_TYPE_SCAN="SCAN";
+	public static final String WEIXIN_MSG_EVENT_TYPE_SUBSCRIBE="subscribe";
+	public static final String WEIXIN_MSG_EVENT_TYPE_UNSUBSCRIBE="unsubscribe";
 }

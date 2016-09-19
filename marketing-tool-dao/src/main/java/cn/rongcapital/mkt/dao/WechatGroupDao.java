@@ -10,11 +10,11 @@
 
 package cn.rongcapital.mkt.dao;
 
-import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.WechatGroup;
-
 import java.util.List;
 import java.util.Map;
+
+import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.po.WechatGroup;
 
 public interface WechatGroupDao extends BaseDao<WechatGroup>{
 
@@ -93,4 +93,11 @@ public interface WechatGroupDao extends BaseDao<WechatGroup>{
 	 * @return Integer
 	 */
 	void deleteRecordByUin(String uin);
+	
+	/**
+	 * 更新微信未分组人数
+	 * @param wechatGroup
+	 * @return 
+	 */
+	void updateInfoByGroupWxCode(WechatGroup wechatGroup);
 }

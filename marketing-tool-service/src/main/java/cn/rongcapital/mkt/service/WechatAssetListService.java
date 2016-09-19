@@ -5,4 +5,6 @@ package cn.rongcapital.mkt.service;
  */
 public interface WechatAssetListService {
     Object getWechatAssetListByType(Integer assetType,Integer index,Integer size);
+    
+    Object getWechatAssetList(Integer index,Integer size);
 }
