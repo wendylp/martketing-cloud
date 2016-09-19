@@ -84,7 +84,13 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 			Date expirationTime = wechatQrcodeLists.get(0).getExpirationTime();
 			expirationTime = null == expirationTime ? new Date() : expirationTime;
 			map.put("expiration_time", sdf.format(expirationTime));
-			map.put("fixed_audience", wechatQrcodeLists.get(0).getAudienceName());// 固定人群
+			
+			if(wechatQrcodeLists.get(0).getAudienceName() != null) {
+				map.put("fixed_audience", wechatQrcodeLists.get(0).getAudienceName());
+			} else {
+				map.put("fixed_audience", "");
+			}
+			
 			//关联标签
 			String relatedTag = wechatQrcodeLists.get(0).getRelatedTags();
 			
@@ -104,10 +110,14 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService{
 				map.put("association_tags",returnDataList);
 			}else{
 				
-				map.put("association_tags","");
+				map.put("association_tags",new ArrayList<String>());
 			}
 
-			map.put("comment", wechatQrcodeLists.get(0).getComments());
+			if(wechatQrcodeLists.get(0).getComments() != null) {
+				map.put("comment", wechatQrcodeLists.get(0).getComments());
+			} else {
+				map.put("comment", "");
+			}
 			
 			result.getData().add(map);
 		}
