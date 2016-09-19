@@ -181,6 +181,7 @@ public class ApiConstant {
 	public static final String UPLOAD_BASE_DIR = "//rc/data/uploads/";
 	
 	public static final String AUDIENCE_SOUCE_NAME_CAMPAIGN = "营销活动";
+	public static final String AUDIENCE_SOUCE_NAME_WX = "微信二维码";
 	public static final Byte WECHAT_IMGTEXT_TYPE = 0;
 
 	public static String IMPORT_FILE_SOURCE = "文件接入";
@@ -266,4 +267,7 @@ public class ApiConstant {
 	public static final String SORT_ASC ="asc";
 	public static final String SORT_ORDER_FIELD = "orderField";
 	public static final String SORT_ORDER_FIELD_TYPE = "orderFieldType";
+	
+	public static final String AUDIENCE_LIST_ADD_MSG = "人群名称已经重复";
+	
 }

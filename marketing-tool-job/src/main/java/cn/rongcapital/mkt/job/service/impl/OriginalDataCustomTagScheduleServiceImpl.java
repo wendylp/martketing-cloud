@@ -34,7 +34,7 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void cleanData() {
         OriginalDataCustomerTags paramOriginalDataCustomTags = new OriginalDataCustomerTags();
-        paramOriginalDataCustomTags.setStatus(StatusEnum.ACTIVE.getStatusCode());
+        paramOriginalDataCustomTags.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
         int totalCount = originalDataCustomerTagsDao.selectListCount(paramOriginalDataCustomTags);
         int totalPages = (totalCount + BATCH_NUM - 1) / BATCH_NUM;
         paramOriginalDataCustomTags.setPageSize(BATCH_NUM);
@@ -45,12 +45,12 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
             if (originalDataCustomerTags.isEmpty()) {
                 continue;
             }
-            handleOriginalDataArchPoint(originalDataCustomerTags);
+            handleOriginalDataCustomTags(originalDataCustomerTags);
         }
     }
 
     // 处理OriginalDataArchPoint的数据
-    private void handleOriginalDataArchPoint(List<OriginalDataCustomerTags> tmpOriginalDataCustomTags) {
+    private void handleOriginalDataCustomTags(List<OriginalDataCustomerTags> tmpOriginalDataCustomTags) {
         if (tmpOriginalDataCustomTags.isEmpty()) {
             return;
         }
@@ -65,7 +65,7 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
             BeanUtils.copyProperties(tmpOriginalDataCustomerTag, paramDataCustomTags);
 
             // 因为在一个事务里 , 直接修改OriginalDataCustomTags的状态
-            tmpOriginalDataCustomerTag.setStatus(StatusEnum.PROCESSED.getStatusCode());
+            tmpOriginalDataCustomerTag.setStatus(StatusEnum.PROCESSED.getStatusCode().byteValue());
             originalDataCustomerTagsDao.updateById(tmpOriginalDataCustomerTag);
             dataCustomerTags.add(paramDataCustomTags);
         }

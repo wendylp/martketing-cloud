@@ -39,10 +39,12 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat monthFormat = new SimpleDateFormat("yyyyMM");
+		String currentMonth = "";
 		try {
 			if(StringUtils.isEmpty(date) || "0".equals(date)){
 				date = monthFormat.format(new Date());
 			}
+			currentMonth = new SimpleDateFormat("yyyy-MM").format(monthFormat.parse(date));
 			// wangweiqiang update 2016-09-18
 			List<CampaignHead> campaignHeads = campaignHeadDao.selectCampaignHeadListBySearchDate(date);
 
@@ -64,7 +66,7 @@ public class HomePageCalendarListServiceImpl implements HomePageCalendarListServ
 			homePageCalendarDatas = filterCalendarList(homePageCalendarDatas);
 			result.setCalendarData(homePageCalendarDatas);
 			result.setToday(simpleDateFormat.format(new Date()));
-			result.setCurrentMonth(date);
+			result.setCurrentMonth(currentMonth);
 		} catch (Exception e) {
 			logger.error("统计出当月日历日被客户标记当月定时的活动，按启动时间算方法出现异常:" + e.getMessage());
 		}
