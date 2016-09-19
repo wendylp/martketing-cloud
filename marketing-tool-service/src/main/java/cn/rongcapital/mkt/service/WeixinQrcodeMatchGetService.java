@@ -15,10 +15,11 @@ public interface WeixinQrcodeMatchGetService {
 	 * 接口：mkt.weixin.qrcode.match.get
 	 * 
 	 * @param qrcode_name
+	 * @param channelId
 	 * @param wxName
 	 * @return
 	 * @author shuiyangyang
 	 * @Date 2016.08.25
 	 */
-	BaseOutput weixinQrcodeMatchGet(String qrcodeName, String wxName);
+	BaseOutput weixinQrcodeMatchGet(String qrcodeName, String channelId,String wxName);
 }
