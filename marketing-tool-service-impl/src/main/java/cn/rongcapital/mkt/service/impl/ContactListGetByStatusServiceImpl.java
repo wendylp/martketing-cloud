@@ -58,6 +58,9 @@ public class ContactListGetByStatusServiceImpl implements ContactListGetByStatus
 		//set index and size
 		contactTemplate.setPageSize(size);
 		contactTemplate.setStartIndex((index-1)*size);
+		//wangweiqiang update 2016-09-19(添加创建时间倒叙)
+		contactTemplate.setOrderField("create_time");
+		contactTemplate.setOrderFieldType("DESC");
 
 		List<ContactTemplate> contactTemplateList = contactTemplateDao.selectListGroupByCId(contactTemplate);
 
