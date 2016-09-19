@@ -25,6 +25,7 @@ public class ApiConstant {
 	
 	public static final int TABLE_DATA_REMOVED_NOTDEL = 0;//不可以删除
 	public static final int TABLE_DATA_REMOVED_DEL = 1;//可以删除
+	public static final byte TABLE_DATA_REMOVED_FAIL = 3;//失效
 
 	public static final byte SEGMENT_PUBLISH_STATUS_NOT_PUBLISH = 0;//未发布
 	public static final byte SEGMENT_PUBLISH_STATUS_PUBLISH = 1;//已发布

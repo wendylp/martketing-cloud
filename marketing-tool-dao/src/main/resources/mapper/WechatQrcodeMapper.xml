@@ -185,4 +185,11 @@
 		</where>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
+	
+	<!-- 通过失效时间更新 status -->
+	<update id="updateStatusByExpirationTime" parameterType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[UPDATE wechat_qrcode]]>
+		set status = #{status}		
+		<![CDATA[WHERE expiration_time < DATE_FORMAT(#{expirationTime},'%Y-%m-%d %h:%i:%s')]]>	
+	</update>
 </mapper>

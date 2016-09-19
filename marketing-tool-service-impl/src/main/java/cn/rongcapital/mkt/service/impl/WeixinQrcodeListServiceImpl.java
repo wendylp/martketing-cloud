@@ -225,5 +225,27 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
         return "删除";
 	}
 	
+	/**
+	 * 定时更新失效时间状态wechat_qrcode
+	 *
+	 * @param nowDate(格式
+	 *            yyyy-MM-dd HH:mm:ss)
+	 * @return
+	 * @author congshulin
+	 */
+	public void updateStatusByExpirationTime(Date nowDate) {
+		WechatQrcode wechatQrcode = new WechatQrcode();
+		if (nowDate != null) {
+			wechatQrcode.setExpirationTime(nowDate);
+		} else {
+			wechatQrcode.setExpirationTime(new Date());
+		}
 
+		wechatQrcode.setStatus(ApiConstant.TABLE_DATA_REMOVED_FAIL);
+
+		int count = wechatQrcodeDao.updateStatusByExpirationTime(wechatQrcode);
+		
+		logger.debug("根据当前时间{}更新状态为失效条数",new Date(),count);
+		
+	}
 }

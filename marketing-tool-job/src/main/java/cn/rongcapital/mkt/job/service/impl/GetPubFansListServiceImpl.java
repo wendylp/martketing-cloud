@@ -109,7 +109,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 				for (WechatMember wechatMember : wechatMemberList) {
 					
 					String wxCode = wechatMember.getWxCode();
-					if (StringUtils.isNotBlank(wxCode))
+					if (StringUtils.isBlank(wxCode))
 						continue;
 	
 					Map<String, Object> paramFan = new HashMap<String, Object>();
@@ -149,7 +149,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 						paramFan.put("country", wechatMember.getCountry());
 					}
 					String wxGroupId = wechatMember.getWxGroupId();
-					wxGroupId = wxGroupId == null ? "" : wxGroupId;
+					wxGroupId = wxGroupId == null || "".equals(wxGroupId) ? ApiConstant.WECHAT_GROUP : wxGroupId;
 					paramFan.put("wx_group_id", wxGroupId);
 					paramFan.put("county", wechatMember.getCounty());
 					paramFan.put("birthday", wechatMember.getBirthday());
@@ -171,24 +171,37 @@ public class GetPubFansListServiceImpl implements TaskService {
 				fansList.clear();
 			}
 			
-			for (WechatMember wechatMember : wechatMemberList) {
-				String wxCode = wechatMember.getWxCode();
+			this.updateUngroupedCount();			
+		}
+	}
+	
+	private void updateUngroupedCount(){
+		// Todo:获取wechat_wegister表中的状态是0的公众号信息
+		WechatRegister wechatRinfo = new WechatRegister();
+		wechatRinfo.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		List<WechatRegister> wechatRegisterList = wechatRegisterDao.selectList(wechatRinfo);
+		if (!CollectionUtils.isEmpty(wechatRegisterList)) {
+
+			for (WechatRegister wechatRegister : wechatRegisterList) {
+				String pubId = wechatRegister.getWxAcct();
 				
-				if (StringUtils.isNotBlank(wxCode))
+				if (StringUtils.isBlank(pubId))
 					continue;
 				WechatMember member = new WechatMember();
 				member.setWxGroupId(ApiConstant.WECHAT_GROUP);
-				member.setWxCode(wxCode);
+				member.setPubId(pubId);
 				int count = wechatMemberDao.selectListCount(member);
 				WechatGroup wechatGroup = new WechatGroup();
 				wechatGroup.setCount(count);
-				wechatGroup.setWxAcct(wxCode);
+				wechatGroup.setWxAcct(pubId);
 				wechatGroup.setGroupId(ApiConstant.WECHAT_GROUP);
 				
-				wechatGroupDao.updateInfoByGroupWxCode(wechatGroup);
+				wechatGroupDao.updateInfoByGroupWxCode(wechatGroup);	
 			}
 		}
 	}
+	
+	
 
 	private void callH5PlusMethod() {
 		Map<String, String> h5ParamMap = new HashMap<String, String>();
