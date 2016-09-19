@@ -181,6 +181,9 @@ import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListOut;
 import cn.rongcapital.mkt.vo.out.SerarchTagGroupTagsOut;
 import cn.rongcapital.mkt.vo.out.WechatUserListOut;
+import cn.rongcapital.mkt.service.AudienceSearchDownloadService;
+import cn.rongcapital.mkt.service.SegmentSearchGetService;
+import cn.rongcapital.mkt.service.SegmentSearchDownloadService;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -465,6 +468,15 @@ public class MktApi {
 	
 	 @Autowired
 	 private GetUserInfoService userInfoService;
+	 
+	@Autowired
+	private AudienceSearchDownloadService audienceSearchDownloadService;
+	@Autowired
+	private SegmentSearchGetService segmentSearchGetServer;
+	
+	@Autowired
+	private SegmentSearchDownloadService segmentSearchDownloadService;
+	
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -2026,6 +2038,12 @@ public class MktApi {
         return segmentSearchGetServer.SegmentSearch(head_id, query_name);
     }
     
+    /**
+     * 根据主键id下载相应人群数
+     * @param head_id
+     * @param query_name
+     * @return BaseOutput
+     */
     @GET
     @Path("/mkt.segment.search.download")
     public BaseOutput getSegmentSearchDownload(@NotEmpty @QueryParam("user_token") String user_token,

@@ -18,7 +18,8 @@ import org.apache.ibatis.annotations.Param;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
 import cn.rongcapital.mkt.po.DataPopulation;
-
+import cn.rongcapital.mkt.vo.in.SegmentSearchIn;
+import cn.rongcapital.mkt.vo.out.SegmentSearchDownloadOut;
 public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilterDao<DataPopulation>{
 	
 	//自定义扩展
@@ -81,4 +82,24 @@ public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilt
 	 * @return List
 	 */
 	List<Integer> selectKeyidListByIdList(@Param("idList") List<Integer> memberKeyidList);
+
+	/**
+	 * @功能简述 : mkt.audience.search.download
+	 * @param 
+	 * @return List
+	 */
+	List<DataPopulation> searchDataByAudienceId(@Param("audience_id") Integer audience_id);
+	/**
+	 * @功能简述 : mkt.segment.search.get
+	 * @param 
+	 * @return List
+	 */
+	List<DataPopulation> segmentSearch(SegmentSearchIn searchIn);
+	
+	/**
+	 * mkt.segment.search.download 下载
+	 * @param head_ids
+	 * @return
+	 */
+	List<SegmentSearchDownloadOut> getSegmentSearchDownload(@Param("headidList") List<Integer> head_ids);
 }
