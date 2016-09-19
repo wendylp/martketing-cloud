@@ -130,20 +130,23 @@ public class GetPubFansListServiceImpl implements TaskService {
 					} else {
 						paramFan.put("sex", wechatMember.getSex());
 					}
-					if (wechatMember.getCountry() == null || "".equals(wechatMember.getCountry())
-							|| "中国".equals(wechatMember.getCountry())) {
-						paramFan.put("country", "中国");
-						if (wechatMember.getProvince() == null || "".equals(wechatMember.getProvince())
-								|| "槟榔屿".equals(wechatMember.getProvince())) {
-							paramFan.put("province", "北京");
+					String country = wechatMember.getCountry();
+					if (StringUtils.isBlank(country) || ApiConstant.NATIONALITY_CHINA.equals(country)) {
+						paramFan.put("country", ApiConstant.NATIONALITY_CHINA);
+						String province = wechatMember.getProvince();
+						if (StringUtils.isBlank(province) || ApiConstant.PROVINCE_FOREIGN.equals(province)) {
+							paramFan.put("province", ApiConstant.PROVINCE_CHINA_CAPITAL);
 						} else {
 							paramFan.put("province", wechatMember.getProvince());
 						}
-						if (wechatMember.getCity() == null || "".equals(wechatMember.getCity())
-								|| "北海".equals(wechatMember.getCity())) {
-							paramFan.put("city", "北京市");
+						String city = wechatMember.getCity();
+						if (StringUtils.isBlank(city) || ApiConstant.CITY_CHINA_BEIHAI.equals(wechatMember.getCity())) {
+							paramFan.put("city", ApiConstant.CITY_CHINA_CAPITAL);
 						} else {
-							paramFan.put("city", wechatMember.getCity() + "市");
+							if (ApiConstant.CITY_CHINA_CAPITAL.equals(paramFan.get("province"))) {
+								paramFan.put("city", ApiConstant.CITY_CHINA_CAPITAL);
+							}
+							paramFan.put("city", city + ApiConstant.CITY);
 						}
 					} else {
 						paramFan.put("country", wechatMember.getCountry());
