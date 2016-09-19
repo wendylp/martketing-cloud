@@ -267,4 +267,7 @@ public class ApiConstant {
 	public static final String SORT_ASC ="asc";
 	public static final String SORT_ORDER_FIELD = "orderField";
 	public static final String SORT_ORDER_FIELD_TYPE = "orderFieldType";
+	
+	public static final String AUDIENCE_LIST_ADD_MSG = "人群名称已经重复";
+	
 }

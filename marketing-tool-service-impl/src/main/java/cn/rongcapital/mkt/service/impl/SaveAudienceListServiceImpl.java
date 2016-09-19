@@ -34,7 +34,7 @@ public class SaveAudienceListServiceImpl implements SaveAudienceListService{
         int count = audienceListDao.selectListCount(audienceListT);
         if(count > 0) {
         	baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
-            baseOutput.setMsg("人群名称已经重复");
+            baseOutput.setMsg(ApiConstant.AUDIENCE_LIST_ADD_MSG);
             return Response.ok().entity(baseOutput).build();
         }
         
