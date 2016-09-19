@@ -5,7 +5,6 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -15,16 +14,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
+import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.AssociationTag;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeBatchSaveIn;
-import cn.rongcapital.mkt.vo.out.HomePageCalendarPopOut;
 
 /**
  * @author shuiyangyang
@@ -38,6 +38,9 @@ public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveSe
 
 	@Autowired
 	WechatQrcodeDao wechatQrcodeDao;
+	
+	@Autowired
+	private CustomTagDao customTagDao;
 
 	/**
 	 * 根据batch_id，在表wechat_qrcode 中查找到对应二维码记录，更新：失效时间、标签、备注信息、状态(status=0)
@@ -102,22 +105,26 @@ public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveSe
 		}
 		
 		wechatQrcode.setComments(body.getComment());
-		
-		List<AssociationTag> associationTags = body.getAssociation_tags();
-		
-		if(associationTags != null && associationTags.size() >0){
-			List<String> tagList = new ArrayList<String>();
-			
-			for(AssociationTag at : associationTags){
-				tagList.add(String.valueOf(at.getId()));
+		//wangweiqiang update 2016-09-19 
+		List<String> tagNames = body.getTagNames();
+		if(!CollectionUtils.isEmpty(tagNames)){
+			CustomTag customTag = new CustomTag();
+			customTag.setCoverAudienceCount(0);
+			//id拼接
+			StringBuilder ids = new StringBuilder();
+			for (String name : tagNames) {
+				//判断是否存在
+				Integer id = customTagDao.selectIdByName(name);
+				if(null == id){
+					customTag.setName(name);
+					customTagDao.insertCustomTagResId(customTag);
+					ids.append(customTag.getId()+";");
+					continue;
+				}
+				ids.append(id+";");
 			}
-			StringBuilder related = new StringBuilder();;
-			for(String tag :tagList){
-				related.append(tag);
-				related.append(";");
-			}
-			if(related != null &&related.length() > 0){
-				String relatedTags = related.toString().substring(0,related.length()-1);
+			if(!StringUtils.isEmpty(ids)){
+				String relatedTags = ids.toString().substring(0,ids.length()-1);
 				wechatQrcode.setRelatedTags(relatedTags);
 			}
 		}else {
@@ -128,5 +135,7 @@ public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveSe
 		
 		return result;
 	}
+	
+	
 	
 }

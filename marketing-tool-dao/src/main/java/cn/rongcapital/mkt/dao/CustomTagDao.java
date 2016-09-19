@@ -103,4 +103,18 @@ public interface CustomTagDao extends BaseDao<CustomTag>{
 	 */
 	List<CustomTag> selectCustomTagsByIds(String[]ids);
 	
+	/**
+	 * 通过名称获取id
+	 * @param name
+	 * @return
+	 */
+	Integer selectIdByName(@Param("name") String name);
+	
+	/**
+	 * 插入返回主键
+	 * @param customTag
+	 * @return
+	 */
+	Integer insertCustomTagResId(CustomTag customTag);
+	
 }
