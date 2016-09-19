@@ -2,7 +2,7 @@ package cn.rongcapital.mkt.po;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
+import javax.validation.constraints.Null;
 import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
@@ -18,6 +18,7 @@ public class DataPopulation extends BaseQuery {
     private String sex;
 
     private Date birthday;
+    private String birthdayExport;
 
     private String provice;
 
@@ -452,4 +453,12 @@ public class DataPopulation extends BaseQuery {
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
     }
+
+	public String getBirthdayExport() {
+		return birthdayExport;
+	}
+
+	public void setBirthdayExport(String birthdayExport) {
+		this.birthdayExport = birthdayExport;
+	}
 }
