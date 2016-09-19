@@ -13,7 +13,7 @@ public class WechatQrcodeBatchSaveIn extends BaseInput{
 	@JsonProperty("batch_id")
 	private String batchId;
 	
-    private List<AssociationTag> association_tags;
+    private List<String> tagNames;
 	
 	@NotEmpty
     @JsonProperty("user_token")
@@ -23,6 +23,15 @@ public class WechatQrcodeBatchSaveIn extends BaseInput{
 	private String expirationTime;
 	
 	private String comment;
+	
+
+	public List<String> getTagNames() {
+		return tagNames;
+	}
+
+	public void setTagNames(List<String> tagNames) {
+		this.tagNames = tagNames;
+	}
 
 	public String getBatchId() {
 		return batchId;
@@ -30,14 +39,6 @@ public class WechatQrcodeBatchSaveIn extends BaseInput{
 
 	public void setBatchId(String batchId) {
 		this.batchId = batchId;
-	}
-
-	public List<AssociationTag> getAssociation_tags() {
-		return association_tags;
-	}
-
-	public void setAssociation_tags(List<AssociationTag> association_tags) {
-		this.association_tags = association_tags;
 	}
 
 	public String getUserToken() {

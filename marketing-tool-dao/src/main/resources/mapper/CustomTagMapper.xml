@@ -181,4 +181,31 @@
           	#{item}   
  		 </foreach>  
 	</select>
+	
+	<!-- 通过名称获取id -->
+	<select id="selectIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+			id
+		FROM
+			custom_tag
+		WHERE
+			name = #{name}
+	</select>
+	
+	<!-- 插入返回主键 -->
+	<insert id="insertCustomTagResId" parameterType="cn.rongcapital.mkt.po.CustomTag" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO custom_tag (
+			name,
+			cover_audience_count,
+			oper,
+			create_time
+		)
+		VALUES
+			(
+				#{name},
+				#{coverAudienceCount},
+				#{oper},
+				now()
+			)
+	</insert>
 </mapper>

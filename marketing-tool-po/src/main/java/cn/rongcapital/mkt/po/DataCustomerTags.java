@@ -7,11 +7,15 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 public class DataCustomerTags extends BaseQuery {
     private Integer id;
 
-    private String tagType;
+    private String tagSource;
+
+    private String tagTypeLayerOne;
+
+    private String tagTypeLayerTwo;
+
+    private String tagTypeLayerThree;
 
     private String tagName;
-
-    private Date birthday;
 
     private String identifyNo;
 
@@ -21,11 +25,11 @@ public class DataCustomerTags extends BaseQuery {
 
     private String mobile;
 
-    private String acctType;
-
     private String tel;
 
     private String qq;
+
+    private String acctType;
 
     private String acctNo;
 
@@ -33,11 +37,15 @@ public class DataCustomerTags extends BaseQuery {
 
     private String imei;
 
-    private String udid;
+    private String unionid;
+
+    private String wxmpId;
+
+    private String wxCode;
 
     private String phoneMac;
 
-    private Integer status;
+    private Byte status;
 
     private Date createTime;
 
@@ -50,10 +58,6 @@ public class DataCustomerTags extends BaseQuery {
     private String bitmap;
 
     private Integer keyid;
-
-    private String wxmpId;
-
-    private String wxCode;
 
     public DataCustomerTags(){}
 
@@ -69,12 +73,36 @@ public class DataCustomerTags extends BaseQuery {
         this.id = id;
     }
 
-    public String getTagType() {
-        return tagType;
+    public String getTagSource() {
+        return tagSource;
     }
 
-    public void setTagType(String tagType) {
-        this.tagType = tagType == null ? null : tagType.trim();
+    public void setTagSource(String tagSource) {
+        this.tagSource = tagSource == null ? null : tagSource.trim();
+    }
+
+    public String getTagTypeLayerOne() {
+        return tagTypeLayerOne;
+    }
+
+    public void setTagTypeLayerOne(String tagTypeLayerOne) {
+        this.tagTypeLayerOne = tagTypeLayerOne == null ? null : tagTypeLayerOne.trim();
+    }
+
+    public String getTagTypeLayerTwo() {
+        return tagTypeLayerTwo;
+    }
+
+    public void setTagTypeLayerTwo(String tagTypeLayerTwo) {
+        this.tagTypeLayerTwo = tagTypeLayerTwo == null ? null : tagTypeLayerTwo.trim();
+    }
+
+    public String getTagTypeLayerThree() {
+        return tagTypeLayerThree;
+    }
+
+    public void setTagTypeLayerThree(String tagTypeLayerThree) {
+        this.tagTypeLayerThree = tagTypeLayerThree == null ? null : tagTypeLayerThree.trim();
     }
 
     public String getTagName() {
@@ -83,14 +111,6 @@ public class DataCustomerTags extends BaseQuery {
 
     public void setTagName(String tagName) {
         this.tagName = tagName == null ? null : tagName.trim();
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
     }
 
     public String getIdentifyNo() {
@@ -125,14 +145,6 @@ public class DataCustomerTags extends BaseQuery {
         this.mobile = mobile == null ? null : mobile.trim();
     }
 
-    public String getAcctType() {
-        return acctType;
-    }
-
-    public void setAcctType(String acctType) {
-        this.acctType = acctType == null ? null : acctType.trim();
-    }
-
     public String getTel() {
         return tel;
     }
@@ -147,6 +159,14 @@ public class DataCustomerTags extends BaseQuery {
 
     public void setQq(String qq) {
         this.qq = qq == null ? null : qq.trim();
+    }
+
+    public String getAcctType() {
+        return acctType;
+    }
+
+    public void setAcctType(String acctType) {
+        this.acctType = acctType == null ? null : acctType.trim();
     }
 
     public String getAcctNo() {
@@ -173,12 +193,28 @@ public class DataCustomerTags extends BaseQuery {
         this.imei = imei == null ? null : imei.trim();
     }
 
-    public String getUdid() {
-        return udid;
+    public String getUnionid() {
+        return unionid;
     }
 
-    public void setUdid(String udid) {
-        this.udid = udid == null ? null : udid.trim();
+    public void setUnionid(String unionid) {
+        this.unionid = unionid == null ? null : unionid.trim();
+    }
+
+    public String getWxmpId() {
+        return wxmpId;
+    }
+
+    public void setWxmpId(String wxmpId) {
+        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
+    }
+
+    public String getWxCode() {
+        return wxCode;
+    }
+
+    public void setWxCode(String wxCode) {
+        this.wxCode = wxCode == null ? null : wxCode.trim();
     }
 
     public String getPhoneMac() {
@@ -189,11 +225,11 @@ public class DataCustomerTags extends BaseQuery {
         this.phoneMac = phoneMac == null ? null : phoneMac.trim();
     }
 
-    public Integer getStatus() {
+    public Byte getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Byte status) {
         this.status = status;
     }
 
@@ -243,21 +279,5 @@ public class DataCustomerTags extends BaseQuery {
 
     public void setKeyid(Integer keyid) {
         this.keyid = keyid;
-    }
-
-    public String getWxmpId() {
-        return wxmpId;
-    }
-
-    public void setWxmpId(String wxmpId) {
-        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
-    }
-
-    public String getWxCode() {
-        return wxCode;
-    }
-
-    public void setWxCode(String wxCode) {
-        this.wxCode = wxCode == null ? null : wxCode.trim();
     }
 }

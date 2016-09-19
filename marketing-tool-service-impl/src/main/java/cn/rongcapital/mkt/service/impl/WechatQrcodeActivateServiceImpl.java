@@ -39,9 +39,21 @@ public class WechatQrcodeActivateServiceImpl implements WechatQrcodeActivateServ
 			map.put("id", id);
 			map.put("status", WECHAT_QRCODE_ACTIVITY);
 			result.getData().add(map);
+			result.setTotalCount(count);
 		}
 		
 		return result;	
 	}
 
+	public WechatQrcodeDao getWechatQrcodeDao() {
+		return wechatQrcodeDao;
+	}
+
+	public void setWechatQrcodeDao(WechatQrcodeDao wechatQrcodeDao) {
+		this.wechatQrcodeDao = wechatQrcodeDao;
+	}
+
+	
+	
+	
 }

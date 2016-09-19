@@ -50,14 +50,14 @@ DROP TABLE IF EXISTS `audience_columns`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `audience_columns` (
   `id` int(5) unsigned NOT NULL DEFAULT '1',
-  `field_name` varchar(45) NOT NULL COMMENT 'ÁĞÃû',
-  `field_code` varchar(45) NOT NULL COMMENT 'Ó¢ÎÄÁĞÃû£¬¶ÔÓ¦data_appµÈ±íµÄcolumn',
-  `field_order` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Ë³Ğò',
+  `field_name` varchar(45) NOT NULL COMMENT 'åˆ—å',
+  `field_code` varchar(45) NOT NULL COMMENT 'è‹±æ–‡åˆ—åï¼Œå¯¹åº”data_appç­‰è¡¨çš„column',
+  `field_order` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'é¡ºåº',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÈËÈºÁĞ±íÁĞÃû';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='äººç¾¤åˆ—è¡¨åˆ—å';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `audience_columns` (
 
 LOCK TABLES `audience_columns` WRITE;
 /*!40000 ALTER TABLE `audience_columns` DISABLE KEYS */;
-INSERT INTO `audience_columns` VALUES (1,'Ãû³Æ','audience_list_name',1,0,'2016-06-12 15:50:42','2016-06-12 08:53:55'),(2,'ÈËÊı','audience_count',2,0,'2016-06-12 15:50:42','2016-06-12 08:53:55'),(3,'À´Ô´','source_name',3,0,'2016-06-12 15:50:42','2016-06-12 08:53:55'),(4,'´´½¨Ê±¼ä','create_time',4,0,'2016-06-12 15:50:42','2016-06-12 07:51:20');
+INSERT INTO `audience_columns` VALUES (1,'åç§°','audience_list_name',1,0,'2016-06-12 15:50:42','2016-06-12 08:53:55'),(2,'äººæ•°','audience_count',2,0,'2016-06-12 15:50:42','2016-06-12 08:53:55'),(3,'æ¥æº','source_name',3,0,'2016-06-12 15:50:42','2016-06-12 08:53:55'),(4,'åˆ›å»ºæ—¶é—´','create_time',4,0,'2016-06-12 15:50:42','2016-06-12 07:51:20');
 /*!40000 ALTER TABLE `audience_columns` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -78,15 +78,15 @@ DROP TABLE IF EXISTS `audience_list`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `audience_list` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ÈËÈº±àºÅ',
-  `audience_name` varchar(45) DEFAULT NULL COMMENT 'ÈËÈºÃû³Æ',
-  `audience_rows` int(45) DEFAULT '0' COMMENT 'ÈËÈº°üº¬ÁªÏµÈËÊı',
-  `source` varchar(512) DEFAULT NULL COMMENT 'À´Ô´',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'äººç¾¤ç¼–å·',
+  `audience_name` varchar(45) DEFAULT NULL COMMENT 'äººç¾¤åç§°',
+  `audience_rows` int(45) DEFAULT '0' COMMENT 'äººç¾¤åŒ…å«è”ç³»äººæ•°',
+  `source` varchar(512) DEFAULT NULL COMMENT 'æ¥æº',
   `status` tinyint(4) NOT NULL DEFAULT '0',
-  `create_time` datetime DEFAULT NULL COMMENT '²úÉúÊ±¼ä',
+  `create_time` datetime DEFAULT NULL COMMENT 'äº§ç”Ÿæ—¶é—´',
   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÈËÈº¹ÜÀí';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='äººç¾¤ç®¡ç†';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,14 +107,14 @@ DROP TABLE IF EXISTS `audience_list_party_map`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `audience_list_party_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `audience_list_id` int(11) NOT NULL COMMENT 'ÈËÈºID',
-  `party_id` int(11) NOT NULL COMMENT 'Ö÷Êı¾İ(ÁªÏµÈË)ID',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç 0-Î´É¾³ı  1-É¾³ı ',
+  `audience_list_id` int(11) NOT NULL COMMENT 'äººç¾¤ID',
+  `party_id` int(11) NOT NULL COMMENT 'ä¸»æ•°æ®(è”ç³»äºº)ID',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®° 0-æœªåˆ é™¤  1-åˆ é™¤ ',
   `oper` varchar(45) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÈËÈº¹ÜÀíÏêÏ¸ĞÅÏ¢£¬Ä³¸öÈËÈº°üº¬µÄÁªÏµÈË\n';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='äººç¾¤ç®¡ç†è¯¦ç»†ä¿¡æ¯ï¼ŒæŸä¸ªäººç¾¤åŒ…å«çš„è”ç³»äºº\n';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,15 +136,15 @@ DROP TABLE IF EXISTS `campaign_action_save_audience`;
 CREATE TABLE `campaign_action_save_audience` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
-  `name` varchar(200) DEFAULT NULL COMMENT '¶¯×÷Ãû³Æ',
-  `audience_id` int(11) DEFAULT NULL COMMENT 'audience_list±íÀïµÄid',
-  `audience_name` varchar(45) DEFAULT NULL COMMENT 'audience_list±íÀïµÄaudience_name',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç,0:Î´É¾³ı£¬1£ºÒÑÉ¾³ı',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
+  `name` varchar(200) DEFAULT NULL COMMENT 'åŠ¨ä½œåç§°',
+  `audience_id` int(11) DEFAULT NULL COMMENT 'audience_listè¡¨é‡Œçš„id',
+  `audience_name` varchar(45) DEFAULT NULL COMMENT 'audience_listè¡¨é‡Œçš„audience_name',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°,0:æœªåˆ é™¤ï¼Œ1ï¼šå·²åˆ é™¤',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='¶¯×÷ÊôĞÔ±í:±£´æÈËÈº';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='åŠ¨ä½œå±æ€§è¡¨:ä¿å­˜äººç¾¤';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -166,21 +166,21 @@ DROP TABLE IF EXISTS `campaign_action_send_h5`;
 CREATE TABLE `campaign_action_send_h5` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
-  `name` varchar(200) DEFAULT NULL COMMENT '¶¯×÷Ãû³Æ',
-  `pub_asset_id` int(11) DEFAULT NULL COMMENT '¶ÔÓ¦wechat_asset±íµÄasset_id',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
+  `name` varchar(200) DEFAULT NULL COMMENT 'åŠ¨ä½œåç§°',
+  `pub_asset_id` int(11) DEFAULT NULL COMMENT 'å¯¹åº”wechat_assetè¡¨çš„asset_id',
   `prv_asset_id` int(11) DEFAULT NULL,
-  `group_id` int(11) DEFAULT NULL COMMENT '¹ØÁªwechat_asset_group±íµÄid,²»ÏŞÈº×é£¬Ôò´«null',
-  `img_text_asset_id` int(11) DEFAULT NULL COMMENT '¶ÔÓ¦img_text_asset±íµÄid',
-  `pub_id` varchar(512) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬ÄÇ±ßµÄ¹«ÖÚºÅpub_id',
-  `uin` varchar(512) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬ÄÇ±ßµÄ¸öÈËºÅuin',
-  `ucode` varchar(512) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬µÄÈº×éucode',
-  `material_id` int(11) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬ÄÇ±ßµÄmaterial_id',
+  `group_id` int(11) DEFAULT NULL COMMENT 'å…³è”wechat_asset_groupè¡¨çš„id,ä¸é™ç¾¤ç»„ï¼Œåˆ™ä¼ null',
+  `img_text_asset_id` int(11) DEFAULT NULL COMMENT 'å¯¹åº”img_text_assetè¡¨çš„id',
+  `pub_id` varchar(512) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿é‚£è¾¹çš„å…¬ä¼—å·pub_id',
+  `uin` varchar(512) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿é‚£è¾¹çš„ä¸ªäººå·uin',
+  `ucode` varchar(512) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿çš„ç¾¤ç»„ucode',
+  `material_id` int(11) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿é‚£è¾¹çš„material_id',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='¶¯×÷ÊôĞÔ±í:·¢ËÍh5Í¼ÎÄ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='åŠ¨ä½œå±æ€§è¡¨:å‘é€h5å›¾æ–‡';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -202,18 +202,18 @@ DROP TABLE IF EXISTS `campaign_action_send_privt`;
 CREATE TABLE `campaign_action_send_privt` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
-  `name` varchar(200) DEFAULT NULL COMMENT '½ÚµãÃû³Æ',
-  `uin` varchar(200) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬µÄ¸öÈËºÅuin',
-  `asset_id` int(11) DEFAULT NULL COMMENT '¹ØÁªwechat_asset±íµÄasset_id',
-  `ucode` varchar(500) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬µÄÈº×éucode',
-  `group_id` int(11) DEFAULT NULL COMMENT '¹ØÁªwechat_asset_group±íµÄid,²»ÏŞÈº×é£¬Ôò´«null',
-  `text_info` varchar(2048) DEFAULT NULL COMMENT 'Òª·¢ËÍµÄÎÄ±¾ĞÅÏ¢',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
+  `name` varchar(200) DEFAULT NULL COMMENT 'èŠ‚ç‚¹åç§°',
+  `uin` varchar(200) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿çš„ä¸ªäººå·uin',
+  `asset_id` int(11) DEFAULT NULL COMMENT 'å…³è”wechat_assetè¡¨çš„asset_id',
+  `ucode` varchar(500) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿çš„ç¾¤ç»„ucode',
+  `group_id` int(11) DEFAULT NULL COMMENT 'å…³è”wechat_asset_groupè¡¨çš„id,ä¸é™ç¾¤ç»„ï¼Œåˆ™ä¼ null',
+  `text_info` varchar(2048) DEFAULT NULL COMMENT 'è¦å‘é€çš„æ–‡æœ¬ä¿¡æ¯',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='¶¯×÷ÊôĞÔ±í:·¢ËÍ¸öÈËºÅĞÅÏ¢';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='åŠ¨ä½œå±æ€§è¡¨:å‘é€ä¸ªäººå·ä¿¡æ¯';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -235,17 +235,17 @@ DROP TABLE IF EXISTS `campaign_action_send_pub`;
 CREATE TABLE `campaign_action_send_pub` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
   `name` varchar(200) DEFAULT NULL,
-  `material_id` int(11) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬µÄmaterial_id',
-  `img_text_asset_id` int(11) DEFAULT NULL COMMENT 'img_text_asset±íµÄid',
-  `pub_id` varchar(512) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬µÄ¹«ÖÚºÅpub_id',
-  `asset_id` int(11) DEFAULT NULL COMMENT '¶ÔÓ¦wechat_asset±íµÄasset_id',
+  `material_id` int(11) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿çš„material_id',
+  `img_text_asset_id` int(11) DEFAULT NULL COMMENT 'img_text_assetè¡¨çš„id',
+  `pub_id` varchar(512) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿çš„å…¬ä¼—å·pub_id',
+  `asset_id` int(11) DEFAULT NULL COMMENT 'å¯¹åº”wechat_assetè¡¨çš„asset_id',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='¶¯×÷ÊôĞÔ±í:·¢ËÍ¹«ÖÚºÅÏûÏ¢';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='åŠ¨ä½œå±æ€§è¡¨:å‘é€å…¬ä¼—å·æ¶ˆæ¯';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -267,15 +267,15 @@ DROP TABLE IF EXISTS `campaign_action_set_tag`;
 CREATE TABLE `campaign_action_set_tag` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
   `name` varchar(200) DEFAULT NULL,
-  `tag_ids` varchar(512) DEFAULT NULL COMMENT '¶ÔÓ¦custom_tag±íµÄid,¶à¸öÓÃ¶ººÅ·Ö¸ô',
-  `tag_names` varchar(512) DEFAULT NULL COMMENT '×Ô¶¨Òå±êÇ©Ãû£¬¶à¸öÓÃ¶ººÅ·Ö¸ô',
+  `tag_ids` varchar(512) DEFAULT NULL COMMENT 'å¯¹åº”custom_tagè¡¨çš„id,å¤šä¸ªç”¨é€—å·åˆ†éš”',
+  `tag_names` varchar(512) DEFAULT NULL COMMENT 'è‡ªå®šä¹‰æ ‡ç­¾åï¼Œå¤šä¸ªç”¨é€—å·åˆ†éš”',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='¶¯×÷ÊôĞÔ±í:ÉèÖÃ±êÇ© ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='åŠ¨ä½œå±æ€§è¡¨:è®¾ç½®æ ‡ç­¾ ';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -297,17 +297,17 @@ DROP TABLE IF EXISTS `campaign_action_wait`;
 CREATE TABLE `campaign_action_wait` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
   `name` varchar(200) DEFAULT NULL,
-  `type` tinyint(4) DEFAULT NULL COMMENT '0:Ïà¶ÔÊ±¼ä1:Ö¸¶¨Ê±¼ä',
+  `type` tinyint(4) DEFAULT NULL COMMENT '0:ç›¸å¯¹æ—¶é—´1:æŒ‡å®šæ—¶é—´',
   `relative_value` int(11) DEFAULT NULL,
-  `relative_type` tinyint(4) DEFAULT NULL COMMENT '0:Ğ¡Ê±£¬1£ºÌì£¬2£ºÖÜ£¬3£ºÔÂ',
-  `specific_time` datetime DEFAULT NULL COMMENT 'Ö¸¶¨Ê±¼ä',
+  `relative_type` tinyint(4) DEFAULT NULL COMMENT '0:å°æ—¶ï¼Œ1ï¼šå¤©ï¼Œ2ï¼šå‘¨ï¼Œ3ï¼šæœˆ',
+  `specific_time` datetime DEFAULT NULL COMMENT 'æŒ‡å®šæ—¶é—´',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='¶¯×÷ÊôĞÔ±í:µÈ´ı';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='åŠ¨ä½œå±æ€§è¡¨:ç­‰å¾…';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -329,18 +329,18 @@ DROP TABLE IF EXISTS `campaign_audience_target`;
 CREATE TABLE `campaign_audience_target` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
   `name` varchar(200) DEFAULT NULL,
   `segmentation_id` int(11) DEFAULT NULL,
   `segmentation_name` varchar(200) DEFAULT NULL,
-  `allowed_new` tinyint(4) DEFAULT '0' COMMENT '0:ÔÊĞí,1:²»ÔÊĞí',
+  `allowed_new` tinyint(4) DEFAULT '0' COMMENT '0:å…è®¸,1:ä¸å…è®¸',
   `refresh_interval` int(11) DEFAULT NULL,
-  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:Ğ¡Ê±,1:Ìì,2:ÖÜ,3:ÔÂ',
+  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:å°æ—¶,1:å¤©,2:å‘¨,3:æœˆ',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ä¿±êÈËÈº';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ç›®æ ‡äººç¾¤';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -362,22 +362,22 @@ DROP TABLE IF EXISTS `campaign_body`;
 CREATE TABLE `campaign_body` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `head_id` int(11) DEFAULT NULL,
-  `node_type` tinyint(4) DEFAULT '0' COMMENT '0:´¥·¢,1:ÊÜÖÚ,2¾ö²ß,3ĞĞ¶¯,4:·ÖÖ§Ïß',
-  `item_type` tinyint(4) DEFAULT NULL COMMENT '0,1,2,3...°´ÕÕÔ­ĞÍÀï³öÏÖµÄË³Ğò',
-  `item_id` varchar(200) DEFAULT NULL COMMENT '¹ØÁª¾ßÌå½Úµã±íµÄÒµÎñid',
-  `statistics_url` varchar(1024) DEFAULT NULL COMMENT '±¨±íurl',
-  `pos_x` varchar(20) DEFAULT NULL COMMENT '×é¼şx×ø±ê',
-  `pos_y` varchar(20) DEFAULT NULL COMMENT '×é¼şy×ø±ê',
+  `node_type` tinyint(4) DEFAULT '0' COMMENT '0:è§¦å‘,1:å—ä¼—,2å†³ç­–,3è¡ŒåŠ¨,4:åˆ†æ”¯çº¿',
+  `item_type` tinyint(4) DEFAULT NULL COMMENT '0,1,2,3...æŒ‰ç…§åŸå‹é‡Œå‡ºç°çš„é¡ºåº',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'å…³è”å…·ä½“èŠ‚ç‚¹è¡¨çš„ä¸šåŠ¡id',
+  `statistics_url` varchar(1024) DEFAULT NULL COMMENT 'æŠ¥è¡¨url',
+  `pos_x` varchar(20) DEFAULT NULL COMMENT 'ç»„ä»¶xåæ ‡',
+  `pos_y` varchar(20) DEFAULT NULL COMMENT 'ç»„ä»¶yåæ ‡',
   `pos_z` varchar(20) DEFAULT NULL,
-  `audience_count` int(11) DEFAULT '0' COMMENT 'µ±Ç°½ÚµãÊÜÖÚÈËÊı',
-  `task_id` int(11) DEFAULT NULL COMMENT '¹ØÁªtask_schedule±íµÄid',
-  `description` varchar(512) DEFAULT NULL COMMENT '½ÚµãÃèÊö',
+  `audience_count` int(11) DEFAULT '0' COMMENT 'å½“å‰èŠ‚ç‚¹å—ä¼—äººæ•°',
+  `task_id` int(11) DEFAULT NULL COMMENT 'å…³è”task_scheduleè¡¨çš„id',
+  `description` varchar(512) DEFAULT NULL COMMENT 'èŠ‚ç‚¹æè¿°',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `head_item_unq` (`head_id`,`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÓªÏú»î¶¯body±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='è¥é”€æ´»åŠ¨bodyè¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -398,14 +398,14 @@ DROP TABLE IF EXISTS `campaign_columns`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `campaign_columns` (
   `id` int(5) unsigned NOT NULL DEFAULT '1',
-  `field_name` varchar(45) NOT NULL COMMENT 'ÁĞÃû',
-  `field_code` varchar(45) NOT NULL COMMENT 'Ó¢ÎÄÁĞÃû',
+  `field_name` varchar(45) NOT NULL COMMENT 'åˆ—å',
+  `field_code` varchar(45) NOT NULL COMMENT 'è‹±æ–‡åˆ—å',
   `field_order` int(11) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='»î¶¯ÁĞ±íÖĞÎÄÁĞÃû';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='æ´»åŠ¨åˆ—è¡¨ä¸­æ–‡åˆ—å';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -414,7 +414,7 @@ CREATE TABLE `campaign_columns` (
 
 LOCK TABLES `campaign_columns` WRITE;
 /*!40000 ALTER TABLE `campaign_columns` DISABLE KEYS */;
-INSERT INTO `campaign_columns` VALUES (1,'Ãû³Æ','name',1,0,'2016-06-12 16:15:42','2016-06-12 08:53:25'),(2,'×´Ì¬','status',2,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(3,'´´½¨Ê±¼ä','create_time',3,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(4,'¼Æ»®¿ªÊ¼Ê±¼ä','start_time',4,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(5,'¼Æ»®½áÊøÊ±¼ä','end_time',5,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(6,'ÊÜÖÚÈËÈº','segmentation_name',6,0,'2016-06-12 16:15:42','2016-06-12 08:15:42');
+INSERT INTO `campaign_columns` VALUES (1,'åç§°','name',1,0,'2016-06-12 16:15:42','2016-06-12 08:53:25'),(2,'çŠ¶æ€','status',2,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(3,'åˆ›å»ºæ—¶é—´','create_time',3,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(4,'è®¡åˆ’å¼€å§‹æ—¶é—´','start_time',4,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(5,'è®¡åˆ’ç»“æŸæ—¶é—´','end_time',5,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(6,'å—ä¼—äººç¾¤','segmentation_name',6,0,'2016-06-12 16:15:42','2016-06-12 08:15:42');
 /*!40000 ALTER TABLE `campaign_columns` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -428,17 +428,17 @@ DROP TABLE IF EXISTS `campaign_decision_prop_compare`;
 CREATE TABLE `campaign_decision_prop_compare` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
   `name` varchar(200) DEFAULT NULL,
-  `prop_type` tinyint(4) DEFAULT NULL COMMENT 'ÊôĞÔÀàĞÍ,0:ÎÄ±¾,1:Êı×Ö,2:ÈÕÆÚ',
-  `rule` tinyint(4) DEFAULT NULL COMMENT '0£ºµÈÓÚ,1:°üº¬2:starts_with£¬3£ºends_with4:empty,5:´óÓÚ,6:Ğ¡ÓÚ,7:´óÓÚµÈÓÚ,8:Ğ¡ÓÚµÈÓÚ',
-  `exclude` tinyint(4) DEFAULT NULL COMMENT '0:²»Ñ¡ÖĞ"²»",1:Ñ¡ÖĞ¡°²»¡±',
-  `value` varchar(1024) DEFAULT NULL COMMENT 'ÊäÈëµÄÎÄ±¾',
+  `prop_type` tinyint(4) DEFAULT NULL COMMENT 'å±æ€§ç±»å‹,0:æ–‡æœ¬,1:æ•°å­—,2:æ—¥æœŸ',
+  `rule` tinyint(4) DEFAULT NULL COMMENT '0ï¼šç­‰äº,1:åŒ…å«2:starts_withï¼Œ3ï¼šends_with4:empty,5:å¤§äº,6:å°äº,7:å¤§äºç­‰äº,8:å°äºç­‰äº',
+  `exclude` tinyint(4) DEFAULT NULL COMMENT '0:ä¸é€‰ä¸­"ä¸",1:é€‰ä¸­â€œä¸â€',
+  `value` varchar(1024) DEFAULT NULL COMMENT 'è¾“å…¥çš„æ–‡æœ¬',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÁªÏµÈËÊôĞÔ±È½Ï±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='è”ç³»äººå±æ€§æ¯”è¾ƒè¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -460,19 +460,19 @@ DROP TABLE IF EXISTS `campaign_decision_prvt_friends`;
 CREATE TABLE `campaign_decision_prvt_friends` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
   `name` varchar(200) DEFAULT NULL,
-  `uin` varchar(200) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬ÄÇ±ßµÄuin',
-  `asset_id` int(11) DEFAULT NULL COMMENT '¹ØÁªwechat_asset±íµÄasset_id',
-  `ucode` varchar(500) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬µÄÈº×éucode',
-  `group_id` int(11) DEFAULT NULL COMMENT '¹ØÁªwechat_asset_group±íµÄid,²»ÏŞÈº×é,´«null',
-  `refresh_interval` int(11) DEFAULT NULL COMMENT '×´Ì¬Ë¢ĞÂÆµÂÊÊıÖµ',
-  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:Ğ¡Ê±,1:Ìì,2;ÖÜ,3:ÔÂ',
+  `uin` varchar(200) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿é‚£è¾¹çš„uin',
+  `asset_id` int(11) DEFAULT NULL COMMENT 'å…³è”wechat_assetè¡¨çš„asset_id',
+  `ucode` varchar(500) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿çš„ç¾¤ç»„ucode',
+  `group_id` int(11) DEFAULT NULL COMMENT 'å…³è”wechat_asset_groupè¡¨çš„id,ä¸é™ç¾¤ç»„,ä¼ null',
+  `refresh_interval` int(11) DEFAULT NULL COMMENT 'çŠ¶æ€åˆ·æ–°é¢‘ç‡æ•°å€¼',
+  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:å°æ—¶,1:å¤©,2;å‘¨,3:æœˆ',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÊÇ·ñÊÇ¸öÈËºÅºÃÓÑ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='æ˜¯å¦æ˜¯ä¸ªäººå·å¥½å‹';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -494,18 +494,18 @@ DROP TABLE IF EXISTS `campaign_decision_pub_fans`;
 CREATE TABLE `campaign_decision_pub_fans` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
   `name` varchar(200) DEFAULT NULL,
-  `pub_id` varchar(500) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬µÄ¹«ÖÚºÅpub_id',
-  `asset_id` int(11) DEFAULT NULL COMMENT '¹«ÖÚºÅÃû³Æ,¶ÔÓ¦wechat_asset±íµÄasset_id',
-  `subscribe_time` tinyint(4) DEFAULT NULL COMMENT '¶©ÔÄÊ±¼ä,0:Ò»Ìì£¬1£ºÒ»ÖÜ£¬2£ºÒ»ÔÂ£¬3£ºÈıÔÂ£¬4£ºÁùÔÂ£¬5£ºÒ»Äê£¬6£ºÒ»ÄêÒÔÉÏ',
-  `refresh_interval` int(11) DEFAULT NULL COMMENT '×´Ì¬Ë¢ĞÂÆµÂÊÊıÖµ',
-  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:Ğ¡Ê±,1:Ìì,2;ÖÜ,3:ÔÂ,4:·ÖÖÓ',
+  `pub_id` varchar(500) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿çš„å…¬ä¼—å·pub_id',
+  `asset_id` int(11) DEFAULT NULL COMMENT 'å…¬ä¼—å·åç§°,å¯¹åº”wechat_assetè¡¨çš„asset_id',
+  `subscribe_time` tinyint(4) DEFAULT NULL COMMENT 'è®¢é˜…æ—¶é—´,0:ä¸€å¤©ï¼Œ1ï¼šä¸€å‘¨ï¼Œ2ï¼šä¸€æœˆï¼Œ3ï¼šä¸‰æœˆï¼Œ4ï¼šå…­æœˆï¼Œ5ï¼šä¸€å¹´ï¼Œ6ï¼šä¸€å¹´ä»¥ä¸Š',
+  `refresh_interval` int(11) DEFAULT NULL COMMENT 'çŠ¶æ€åˆ·æ–°é¢‘ç‡æ•°å€¼',
+  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:å°æ—¶,1:å¤©,2;å‘¨,3:æœˆ,4:åˆ†é’Ÿ',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÊÇ·ñ¶©ÔÄÁË¹«ÖÚºÅ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='æ˜¯å¦è®¢é˜…äº†å…¬ä¼—å·';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -526,16 +526,16 @@ DROP TABLE IF EXISTS `campaign_decision_tag`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `campaign_decision_tag` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
   `campaign_head_id` int(11) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL,
-  `rule` tinyint(4) DEFAULT '0' COMMENT '0:È«²¿Æ¥Åä£¬1£ºÆ¥ÅäÆäÒ»£¬2£ºÆ¥Åä¶ş¸ö¼°ÒÔÉÏ',
-  `tag_ids` varchar(1024) DEFAULT NULL COMMENT '±êÇ©id,¶à¸öÓÃ¶ººÅ·Ö¸ô',
+  `rule` tinyint(4) DEFAULT '0' COMMENT '0:å…¨éƒ¨åŒ¹é…ï¼Œ1ï¼šåŒ¹é…å…¶ä¸€ï¼Œ2ï¼šåŒ¹é…äºŒä¸ªåŠä»¥ä¸Š',
+  `tag_ids` varchar(1024) DEFAULT NULL COMMENT 'æ ‡ç­¾id,å¤šä¸ªç”¨é€—å·åˆ†éš”',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='±êÇ©ÅĞ¶Ï';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='æ ‡ç­¾åˆ¤æ–­';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -556,13 +556,13 @@ DROP TABLE IF EXISTS `campaign_decision_tag_map`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `campaign_decision_tag_map` (
   `id` int(11) NOT NULL DEFAULT '0',
-  `campaign_decision_tag_id` int(11) DEFAULT NULL COMMENT '¹ØÁªcampaign_decision_tag±íµÄid',
+  `campaign_decision_tag_id` int(11) DEFAULT NULL COMMENT 'å…³è”campaign_decision_tagè¡¨çš„id',
   `tag_id` int(11) DEFAULT NULL,
   `tag_name` varchar(200) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='campaign_decision_tagºÍtagµÄ¹ØÁª±í\n¸Ã±íÍ£Ö¹Ê¹ÓÃ,tagĞÅÏ¢·Åµ½campaign_decision_tag±íµÄtag_idsÁĞÀï';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='campaign_decision_tagå’Œtagçš„å…³è”è¡¨\nè¯¥è¡¨åœæ­¢ä½¿ç”¨,tagä¿¡æ¯æ”¾åˆ°campaign_decision_tagè¡¨çš„tag_idsåˆ—é‡Œ';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -584,20 +584,20 @@ DROP TABLE IF EXISTS `campaign_decision_wechat_forward`;
 CREATE TABLE `campaign_decision_wechat_forward` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
   `name` varchar(200) DEFAULT NULL,
-  `asset_id` int(11) DEFAULT NULL COMMENT '¶ÔÓ¦wechat_asset±íµÄasset_id',
-  `pub_id` varchar(512) DEFAULT NULL COMMENT '¶ÔµÄ´óÁ¬µÄ¹«ÖÚºÅpub_id',
-  `img_text_asset_id` int(11) DEFAULT NULL COMMENT 'img_text_asset±íµÄid',
-  `material_id` int(11) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬µÄmaterial_id',
-  `refresh_interval` int(11) DEFAULT NULL COMMENT 'ËÍ´ï×´Ì¬Ë¢ĞÂÆµÂÊÊıÖµ',
-  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:Ğ¡Ê±,1:Ìì,2;ÖÜ,3:ÔÂ',
-  `forward_times` tinyint(4) DEFAULT NULL COMMENT '×ª·¢´ÎÊı,0:²»ÏŞ,1:³¬Ò»ÈË´Î£¬2£º³¬Ê®£¬3£º³¬Ò»°Ù£¬4£º³¬Îå°Ù',
+  `asset_id` int(11) DEFAULT NULL COMMENT 'å¯¹åº”wechat_assetè¡¨çš„asset_id',
+  `pub_id` varchar(512) DEFAULT NULL COMMENT 'å¯¹çš„å¤§è¿çš„å…¬ä¼—å·pub_id',
+  `img_text_asset_id` int(11) DEFAULT NULL COMMENT 'img_text_assetè¡¨çš„id',
+  `material_id` int(11) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿çš„material_id',
+  `refresh_interval` int(11) DEFAULT NULL COMMENT 'é€è¾¾çŠ¶æ€åˆ·æ–°é¢‘ç‡æ•°å€¼',
+  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:å°æ—¶,1:å¤©,2;å‘¨,3:æœˆ',
+  `forward_times` tinyint(4) DEFAULT NULL COMMENT 'è½¬å‘æ¬¡æ•°,0:ä¸é™,1:è¶…ä¸€äººæ¬¡ï¼Œ2ï¼šè¶…åï¼Œ3ï¼šè¶…ä¸€ç™¾ï¼Œ4ï¼šè¶…äº”ç™¾',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Î¢ĞÅÍ¼ÎÄÊÇ·ñ×ª·¢';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å¾®ä¿¡å›¾æ–‡æ˜¯å¦è½¬å‘';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -619,21 +619,21 @@ DROP TABLE IF EXISTS `campaign_decision_wechat_read`;
 CREATE TABLE `campaign_decision_wechat_read` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
   `name` varchar(200) DEFAULT NULL,
-  `asset_id` int(11) DEFAULT NULL COMMENT '¶ÔÓ¦wechat_asset±íµÄasset_id',
-  `pub_id` varchar(512) DEFAULT NULL COMMENT '¶ÔµÄ´óÁ¬µÄ¹«ÖÚºÅpub_id',
-  `refresh_interval` int(11) DEFAULT NULL COMMENT '×´Ì¬Ë¢ĞÂÆµÂÊÊıÖµ',
-  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:Ğ¡Ê±,1:Ìì,2;ÖÜ,3:ÔÂ',
-  `img_text_asset_id` int(11) DEFAULT NULL COMMENT 'img_text_asset±íµÄid',
-  `material_id` int(11) DEFAULT NULL COMMENT '¶ÔÓ¦´óÁ¬µÄmaterial_id',
-  `read_time` tinyint(4) DEFAULT NULL COMMENT '²é¿´Ê±³¤,0:²»ÏŞ,1:³¬Ò»·ÖÖÓ,2:³¬Èı·ÖÖÓ,3:³¬Îå·ÖÖÓ,4:³¬Ê®·ÖÖÓ',
-  `read_percent` tinyint(4) DEFAULT NULL COMMENT '²é¿´Íê³É¶È£¬0£º²»ÏŞ£¬1£º³¬Ò»°ë£¬2:È«²¿ÔÄ¶Á',
+  `asset_id` int(11) DEFAULT NULL COMMENT 'å¯¹åº”wechat_assetè¡¨çš„asset_id',
+  `pub_id` varchar(512) DEFAULT NULL COMMENT 'å¯¹çš„å¤§è¿çš„å…¬ä¼—å·pub_id',
+  `refresh_interval` int(11) DEFAULT NULL COMMENT 'çŠ¶æ€åˆ·æ–°é¢‘ç‡æ•°å€¼',
+  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:å°æ—¶,1:å¤©,2;å‘¨,3:æœˆ',
+  `img_text_asset_id` int(11) DEFAULT NULL COMMENT 'img_text_assetè¡¨çš„id',
+  `material_id` int(11) DEFAULT NULL COMMENT 'å¯¹åº”å¤§è¿çš„material_id',
+  `read_time` tinyint(4) DEFAULT NULL COMMENT 'æŸ¥çœ‹æ—¶é•¿,0:ä¸é™,1:è¶…ä¸€åˆ†é’Ÿ,2:è¶…ä¸‰åˆ†é’Ÿ,3:è¶…äº”åˆ†é’Ÿ,4:è¶…ååˆ†é’Ÿ',
+  `read_percent` tinyint(4) DEFAULT NULL COMMENT 'æŸ¥çœ‹å®Œæˆåº¦ï¼Œ0ï¼šä¸é™ï¼Œ1ï¼šè¶…ä¸€åŠï¼Œ2:å…¨éƒ¨é˜…è¯»',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Î¢ĞÅÍ¼ÎÄÊÇ·ñ²é¿´';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å¾®ä¿¡å›¾æ–‡æ˜¯å¦æŸ¥çœ‹';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -655,19 +655,19 @@ DROP TABLE IF EXISTS `campaign_decision_wechat_sent`;
 CREATE TABLE `campaign_decision_wechat_sent` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬ÓÉÇ°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œç”±å‰ç«¯ç”Ÿæˆ',
   `name` varchar(200) DEFAULT NULL,
-  `pub_id` varchar(1024) DEFAULT NULL COMMENT '¹«ÖÚºÅid',
-  `pub_name` varchar(1024) DEFAULT NULL COMMENT '¹«ÖÚºÅÃû³Æ',
-  `refresh_interval` int(11) DEFAULT NULL COMMENT 'ËÍ´ï×´Ì¬Ë¢ĞÂÆµÂÊÊıÖµ',
-  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:Ğ¡Ê±,1:Ìì,2;ÖÜ,3:ÔÂ',
+  `pub_id` varchar(1024) DEFAULT NULL COMMENT 'å…¬ä¼—å·id',
+  `pub_name` varchar(1024) DEFAULT NULL COMMENT 'å…¬ä¼—å·åç§°',
+  `refresh_interval` int(11) DEFAULT NULL COMMENT 'é€è¾¾çŠ¶æ€åˆ·æ–°é¢‘ç‡æ•°å€¼',
+  `refresh_interval_type` tinyint(4) DEFAULT '0' COMMENT '0:å°æ—¶,1:å¤©,2;å‘¨,3:æœˆ',
   `wechat_h5_id` int(11) DEFAULT NULL,
   `wechat_h5_name` varchar(1024) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Î¢ĞÅÍ¼ÎÄÊÇ·ñ·¢ËÍ\n´óÁ¬½Ó¿Ú²»Ö§³Ö£¬ÔİÊ±Í£ÓÃ¸Ã±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å¾®ä¿¡å›¾æ–‡æ˜¯å¦å‘é€\nå¤§è¿æ¥å£ä¸æ”¯æŒï¼Œæš‚æ—¶åœç”¨è¯¥è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -689,12 +689,12 @@ DROP TABLE IF EXISTS `campaign_head`;
 CREATE TABLE `campaign_head` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) DEFAULT NULL,
-  `publish_status` tinyint(4) DEFAULT '0' COMMENT '0:Î´·¢²¼,1:ÒÑ·¢²¼,2:»î¶¯ÖĞ,3:ÒÑ½áÊø',
+  `publish_status` tinyint(4) DEFAULT '0' COMMENT '0:æœªå‘å¸ƒ,1:å·²å‘å¸ƒ,2:æ´»åŠ¨ä¸­,3:å·²ç»“æŸ',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÓªÏú»î¶¯head±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='è¥é”€æ´»åŠ¨headè¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -715,12 +715,12 @@ DROP TABLE IF EXISTS `campaign_node_item`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `campaign_node_item` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ptype` tinyint(4) NOT NULL COMMENT 'ptype=-1±íÊ¾¸ÃÔªËØÎª¸¸½ÚµãÀàĞÍ',
+  `ptype` tinyint(4) NOT NULL COMMENT 'ptype=-1è¡¨ç¤ºè¯¥å…ƒç´ ä¸ºçˆ¶èŠ‚ç‚¹ç±»å‹',
   `type` tinyint(4) NOT NULL,
   `name` varchar(200) DEFAULT NULL,
   `code` varchar(100) DEFAULT NULL,
   `icon` varchar(45) DEFAULT NULL,
-  `display_index` int(11) DEFAULT NULL COMMENT 'Ò³ÃæÉÏÏÔÊ¾µÄË³Ğò',
+  `display_index` int(11) DEFAULT NULL COMMENT 'é¡µé¢ä¸Šæ˜¾ç¤ºçš„é¡ºåº',
   `url` varchar(1024) DEFAULT NULL,
   `color` varchar(45) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
@@ -737,7 +737,7 @@ CREATE TABLE `campaign_node_item` (
 
 LOCK TABLES `campaign_node_item` WRITE;
 /*!40000 ALTER TABLE `campaign_node_item` DISABLE KEYS */;
-INSERT INTO `campaign_node_item` VALUES (1,-1,0,'´¥·¢','trigger',NULL,0,NULL,NULL,0,NULL,'2016-06-08 06:11:03'),(2,-1,1,'ÊÜÖÚ','audiences',NULL,1,NULL,NULL,0,NULL,'2016-06-08 06:11:03'),(3,-1,2,'¾ö²ß','decisions',NULL,2,NULL,NULL,0,NULL,'2016-06-08 06:11:03'),(4,-1,3,'ĞĞ¶¯','activity',NULL,3,NULL,NULL,0,NULL,'2016-06-08 06:11:03'),(5,0,0,'Ô¤Ô¼´¥·¢','timer-trigger','&#xe63f;',0,NULL,NULL,0,NULL,'2016-07-21 09:20:34'),(6,0,2,'ÊÖ¶¯´¥·¢','manual-trigger','&#xe63e;',2,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(7,1,0,'Ä¿±êÈËÈº','target-group','&#xe639;',0,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(8,2,0,'ÁªÏµÈËÊôĞÔ±È½Ï','attr-comparison','&#xe66e;',0,NULL,NULL,1,NULL,'2016-07-01 02:07:47'),(9,2,1,'Î¢ĞÅÍ¼ÎÄÊÇ·ñ·¢ËÍ','wechat-send','&#xe66d;',1,NULL,NULL,1,NULL,'2016-06-27 07:23:36'),(10,2,2,'Î¢ĞÅÍ¼ÎÄÊÇ·ñ²é¿´','wechat-check','&#xe66c;',2,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(11,2,3,'Î¢ĞÅÍ¼ÎÄÊÇ·ñ×ª·¢','wechat-forwarded','&#xe673;',3,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(12,2,4,'ÊÇ·ñ¶©ÔÄ¹«ÖÚºÅ','subscriber-public','&#xe66b;',4,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(14,2,6,'±êÇ©ÅĞ¶Ï','label-judgment','&#xe671;',6,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(15,3,0,'µÈ´ı','wait-set','&#xe670;',0,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(16,3,1,'±£´æµ±Ç°ÈËÈº','save-current-group','&#xe669;',1,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(17,3,2,'ÉèÖÃ±êÇ©','set-tag','&#xe668;',2,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(18,3,3,'Ìí¼Óµ½ÆäËü»î¶¯',NULL,NULL,3,NULL,NULL,1,NULL,'2016-06-08 03:31:10'),(19,3,4,'×ªÒÆµ½ÆäËü»î¶¯',NULL,NULL,4,NULL,NULL,1,NULL,'2016-06-08 03:31:10'),(20,3,5,'·¢ËÍÎ¢ĞÅÍ¼ÎÄ','send-img','&#xe63a;',5,NULL,NULL,0,NULL,'2016-06-08 06:16:10');
+INSERT INTO `campaign_node_item` VALUES (1,-1,0,'è§¦å‘','trigger',NULL,0,NULL,NULL,0,NULL,'2016-06-08 06:11:03'),(2,-1,1,'å—ä¼—','audiences',NULL,1,NULL,NULL,0,NULL,'2016-06-08 06:11:03'),(3,-1,2,'å†³ç­–','decisions',NULL,2,NULL,NULL,0,NULL,'2016-06-08 06:11:03'),(4,-1,3,'è¡ŒåŠ¨','activity',NULL,3,NULL,NULL,0,NULL,'2016-06-08 06:11:03'),(5,0,0,'é¢„çº¦è§¦å‘','timer-trigger','&#xe63f;',0,NULL,NULL,0,NULL,'2016-07-21 09:20:34'),(6,0,2,'æ‰‹åŠ¨è§¦å‘','manual-trigger','&#xe63e;',2,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(7,1,0,'ç›®æ ‡äººç¾¤','target-group','&#xe639;',0,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(8,2,0,'è”ç³»äººå±æ€§æ¯”è¾ƒ','attr-comparison','&#xe66e;',0,NULL,NULL,1,NULL,'2016-07-01 02:07:47'),(9,2,1,'å¾®ä¿¡å›¾æ–‡æ˜¯å¦å‘é€','wechat-send','&#xe66d;',1,NULL,NULL,1,NULL,'2016-06-27 07:23:36'),(10,2,2,'å¾®ä¿¡å›¾æ–‡æ˜¯å¦æŸ¥çœ‹','wechat-check','&#xe66c;',2,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(11,2,3,'å¾®ä¿¡å›¾æ–‡æ˜¯å¦è½¬å‘','wechat-forwarded','&#xe673;',3,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(12,2,4,'æ˜¯å¦è®¢é˜…å…¬ä¼—å·','subscriber-public','&#xe66b;',4,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(14,2,6,'æ ‡ç­¾åˆ¤æ–­','label-judgment','&#xe671;',6,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(15,3,0,'ç­‰å¾…','wait-set','&#xe670;',0,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(16,3,1,'ä¿å­˜å½“å‰äººç¾¤','save-current-group','&#xe669;',1,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(17,3,2,'è®¾ç½®æ ‡ç­¾','set-tag','&#xe668;',2,NULL,NULL,0,NULL,'2016-06-08 06:16:10'),(18,3,3,'æ·»åŠ åˆ°å…¶å®ƒæ´»åŠ¨',NULL,NULL,3,NULL,NULL,1,NULL,'2016-06-08 03:31:10'),(19,3,4,'è½¬ç§»åˆ°å…¶å®ƒæ´»åŠ¨',NULL,NULL,4,NULL,NULL,1,NULL,'2016-06-08 03:31:10'),(20,3,5,'å‘é€å¾®ä¿¡å›¾æ–‡','send-img','&#xe63a;',5,NULL,NULL,0,NULL,'2016-06-08 06:16:10');
 /*!40000 ALTER TABLE `campaign_node_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -751,16 +751,16 @@ DROP TABLE IF EXISTS `campaign_switch`;
 CREATE TABLE `campaign_switch` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(255) DEFAULT NULL COMMENT '¹ØÁªcampaign_body±íÖĞµÄitem_id',
-  `type` tinyint(4) DEFAULT NULL COMMENT '·ÖÖ§ÀàĞÍ:0:ÊÇ·ÖÖ§,1:·Ç·ÖÖ§,2:¶àÌõ¼ş·ÖÖ§',
-  `draw_type` tinyint(4) DEFAULT '0' COMMENT 'Á¬ÏßÀàĞÍ,0:curveTriangle',
+  `item_id` varchar(255) DEFAULT NULL COMMENT 'å…³è”campaign_bodyè¡¨ä¸­çš„item_id',
+  `type` tinyint(4) DEFAULT NULL COMMENT 'åˆ†æ”¯ç±»å‹:0:æ˜¯åˆ†æ”¯,1:éåˆ†æ”¯,2:å¤šæ¡ä»¶åˆ†æ”¯',
+  `draw_type` tinyint(4) DEFAULT '0' COMMENT 'è¿çº¿ç±»å‹,0:curveTriangle',
   `color` varchar(100) DEFAULT NULL,
-  `next_item_id` varchar(255) DEFAULT NULL COMMENT '¹ØÁªcampaign_body±íÖĞµÄitem_id',
+  `next_item_id` varchar(255) DEFAULT NULL COMMENT 'å…³è”campaign_bodyè¡¨ä¸­çš„item_id',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÓªÏú»î¶¯ÖĞµÄÁ¬Ïß±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='è¥é”€æ´»åŠ¨ä¸­çš„è¿çº¿è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -782,7 +782,7 @@ DROP TABLE IF EXISTS `campaign_trigger_timer`;
 CREATE TABLE `campaign_trigger_timer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_head_id` int(11) DEFAULT NULL,
-  `item_id` varchar(200) DEFAULT NULL COMMENT 'ÒµÎñid£¬Ç°¶ËÉú³É',
+  `item_id` varchar(200) DEFAULT NULL COMMENT 'ä¸šåŠ¡idï¼Œå‰ç«¯ç”Ÿæˆ',
   `name` varchar(100) DEFAULT NULL,
   `start_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
@@ -790,7 +790,7 @@ CREATE TABLE `campaign_trigger_timer` (
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='¶¨Ê±´¥·¢Æ÷±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å®šæ—¶è§¦å‘å™¨è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -810,39 +810,39 @@ DROP TABLE IF EXISTS `contact_list`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `contact_list` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `name` varchar(100) DEFAULT NULL COMMENT 'ĞÕÃû',
-  `gender` tinyint(4) DEFAULT NULL COMMENT 'ĞÔ±ğ\n1-ÄĞ\n2-Å® \n3-Î´È·¶¨ \n4-²»È·¶¨',
-  `birthday` date DEFAULT NULL COMMENT '³öÉúÄêÔÂÈÕ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `name` varchar(100) DEFAULT NULL COMMENT 'å§“å',
+  `gender` tinyint(4) DEFAULT NULL COMMENT 'æ€§åˆ«\n1-ç”·\n2-å¥³ \n3-æœªç¡®å®š \n4-ä¸ç¡®å®š',
+  `birthday` date DEFAULT NULL COMMENT 'å‡ºç”Ÿå¹´æœˆæ—¥',
   `provice` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
-  `job` varchar(100) DEFAULT NULL COMMENT 'Ö°Òµ',
-  `monthly_income` decimal(22,2) DEFAULT NULL COMMENT 'ÔÂÊÕÈë',
-  `monthly_consume` decimal(22,2) DEFAULT NULL COMMENT 'ÔÂ¾ùÏû·Ñ',
-  `marital_status` varchar(45) DEFAULT NULL COMMENT '»éÒö×´¿ö',
-  `education` varchar(45) DEFAULT NULL COMMENT '½ÌÓı³Ì¶È',
-  `employment` varchar(45) DEFAULT NULL COMMENT '¾ÍÒµÇé¿ö',
-  `nationality` varchar(45) DEFAULT NULL COMMENT 'Ãñ×å',
-  `blood_type` varchar(45) DEFAULT NULL COMMENT 'ÑªĞÍ',
-  `citizenship` varchar(45) DEFAULT NULL COMMENT '¹ú¼®',
+  `job` varchar(100) DEFAULT NULL COMMENT 'èŒä¸š',
+  `monthly_income` decimal(22,2) DEFAULT NULL COMMENT 'æœˆæ”¶å…¥',
+  `monthly_consume` decimal(22,2) DEFAULT NULL COMMENT 'æœˆå‡æ¶ˆè´¹',
+  `marital_status` varchar(45) DEFAULT NULL COMMENT 'å©šå§»çŠ¶å†µ',
+  `education` varchar(45) DEFAULT NULL COMMENT 'æ•™è‚²ç¨‹åº¦',
+  `employment` varchar(45) DEFAULT NULL COMMENT 'å°±ä¸šæƒ…å†µ',
+  `nationality` varchar(45) DEFAULT NULL COMMENT 'æ°‘æ—',
+  `blood_type` varchar(45) DEFAULT NULL COMMENT 'è¡€å‹',
+  `citizenship` varchar(45) DEFAULT NULL COMMENT 'å›½ç±',
   `iq` int(11) DEFAULT NULL,
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:Î´µ¼ÈëÖ÷Êı¾İ 1:ÒÑ¾­ÎªÊı¾İÌîĞ´ÁËbitmap 2:Êı¾İÒÑ¾­½øÈëÖ÷Êı¾İ±í 3:É¾³ı',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:æœªå¯¼å…¥ä¸»æ•°æ® 1:å·²ç»ä¸ºæ•°æ®å¡«å†™äº†bitmap 2:æ•°æ®å·²ç»è¿›å…¥ä¸»æ•°æ®è¡¨ 3:åˆ é™¤',
   `create_time` datetime DEFAULT NULL,
-  `update_time` datetime NOT NULL DEFAULT '1970-01-01 01:00:00' COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `update_time` datetime NOT NULL DEFAULT '1970-01-01 01:00:00' COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `bitmap` varchar(18) DEFAULT NULL,
   `keyid` int(11) DEFAULT NULL,
   `wxmp_id` varchar(128) DEFAULT NULL,
@@ -853,17 +853,17 @@ CREATE TABLE `contact_list` (
   `language` varchar(100) DEFAULT NULL,
   `unionid` varchar(45) DEFAULT NULL,
   `remark` varchar(1000) DEFAULT NULL,
-  `commit_time` datetime DEFAULT NULL COMMENT 'Ìá½»Ê±¼ä',
-  `fill_device` varchar(45) DEFAULT NULL COMMENT 'ÌîĞ´Éè±¸',
-  `OS` varchar(45) DEFAULT NULL COMMENT '²Ù×÷ÏµÍ³',
-  `brower` varchar(45) DEFAULT NULL COMMENT 'ä¯ÀÀÆ÷',
+  `commit_time` datetime DEFAULT NULL COMMENT 'æäº¤æ—¶é—´',
+  `fill_device` varchar(45) DEFAULT NULL COMMENT 'å¡«å†™è®¾å¤‡',
+  `OS` varchar(45) DEFAULT NULL COMMENT 'æ“ä½œç³»ç»Ÿ',
+  `brower` varchar(45) DEFAULT NULL COMMENT 'æµè§ˆå™¨',
   `IP` varchar(45) DEFAULT NULL COMMENT 'IP',
-  `wx_nickname` varchar(45) DEFAULT NULL COMMENT 'Î¢ĞÅ-êÇ³Æ',
-  `wx_gender` varchar(45) DEFAULT NULL COMMENT 'Î¢ĞÅ-ĞÔ±ğ',
-  `wx_openid` varchar(45) DEFAULT NULL COMMENT 'Î¢ĞÅ-openid',
-  `wx_header_url` varchar(45) DEFAULT NULL COMMENT 'Î¢ĞÅ-Í·Ïñ',
-  `wx_country` varchar(45) DEFAULT NULL COMMENT 'Î¢ĞÅ-¹ú¼Ò',
-  `wx_city` varchar(45) DEFAULT NULL COMMENT 'Î¢ĞÅ-³ÇÊĞ',
+  `wx_nickname` varchar(45) DEFAULT NULL COMMENT 'å¾®ä¿¡-æ˜µç§°',
+  `wx_gender` varchar(45) DEFAULT NULL COMMENT 'å¾®ä¿¡-æ€§åˆ«',
+  `wx_openid` varchar(45) DEFAULT NULL COMMENT 'å¾®ä¿¡-openid',
+  `wx_header_url` varchar(45) DEFAULT NULL COMMENT 'å¾®ä¿¡-å¤´åƒ',
+  `wx_country` varchar(45) DEFAULT NULL COMMENT 'å¾®ä¿¡-å›½å®¶',
+  `wx_city` varchar(45) DEFAULT NULL COMMENT 'å¾®ä¿¡-åŸå¸‚',
   `contact_templ_id` int(11) DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
   `address` varchar(500) DEFAULT NULL,
@@ -891,29 +891,29 @@ DROP TABLE IF EXISTS `contact_template`;
 CREATE TABLE `contact_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `contact_id` bigint(11) DEFAULT NULL,
-  `contact_name` varchar(45) DEFAULT NULL COMMENT '±íµ¥Ãû³Æ',
-  `contact_title` varchar(50) DEFAULT NULL COMMENT '±êÌâ',
-  `contact_descript` varchar(100) DEFAULT NULL COMMENT 'ÃèÊö',
-  `field_name` varchar(45) DEFAULT NULL COMMENT 'ÁĞÃû',
-  `field_code` varchar(45) DEFAULT NULL COMMENT 'Ó¢ÎÄÁĞÃû£¬¶ÔÓ¦contact_list±íµÄcolumn',
+  `contact_name` varchar(45) DEFAULT NULL COMMENT 'è¡¨å•åç§°',
+  `contact_title` varchar(50) DEFAULT NULL COMMENT 'æ ‡é¢˜',
+  `contact_descript` varchar(100) DEFAULT NULL COMMENT 'æè¿°',
+  `field_name` varchar(45) DEFAULT NULL COMMENT 'åˆ—å',
+  `field_code` varchar(45) DEFAULT NULL COMMENT 'è‹±æ–‡åˆ—åï¼Œå¯¹åº”contact_listè¡¨çš„column',
   `field_type` int(11) DEFAULT NULL,
-  `selected` tinyint(4) DEFAULT '1' COMMENT 'Ñ¡ÖĞ 0-Î´Ñ¡ÖĞ 1-Ñ¡ÖĞ',
-  `status` tinyint(4) DEFAULT '0' COMMENT '0-Î´ÆôÓÃ\n1-ÆôÓÃ\n2-É¾³ı',
+  `selected` tinyint(4) DEFAULT '1' COMMENT 'é€‰ä¸­ 0-æœªé€‰ä¸­ 1-é€‰ä¸­',
+  `status` tinyint(4) DEFAULT '0' COMMENT '0-æœªå¯ç”¨\n1-å¯ç”¨\n2-åˆ é™¤',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `qrcode_url` varchar(128) DEFAULT NULL COMMENT '¶şÎ¬Âë\n°üº¬ÄÚÈİÎª£ºĞÂ½¨±íµ¥µÄurl',
-  `qrcode_pic` varchar(128) DEFAULT NULL COMMENT '¶şÎ¬ÂëÍ¼Æ¬ÎÄ¼şÃû³Æ',
-  `page_views` int(11) DEFAULT '0' COMMENT 'ä¯ÀÀ´ÎÊı',
-  `key_list` varchar(500) DEFAULT NULL COMMENT 'Ö÷¼üÃû³Æ£¬ÀıÈç\nĞÕÃû,µç»°\n',
-  `required` int(11) DEFAULT NULL COMMENT '0:·Ç±ØĞë 1:±ØĞë',
-  `ischecked` int(11) DEFAULT NULL COMMENT '0:²»Ğ£Ñé 1:Ğ£Ñé',
-  `is_remember_import_key` tinyint(4) DEFAULT '0' COMMENT '0:Ã»ÓĞ¼Ç×¡Ä¬ÈÏµÄµ¼Èëkey 1:ÒÑ¾­ÊÇÄ¬ÈÏµÄµ¼Èëkey',
-  `field_index` int(11) DEFAULT NULL COMMENT 'ÁªÏµÈËÄ£°åµÄÏÔÊ¾Ë³Ğò',
-  `is_shown_in_feedback` tinyint(4) DEFAULT '0' COMMENT '0:ÏÔÊ¾ 1:²»ÏÔÊ¾',
-  `del_status` tinyint(4) DEFAULT '0' COMMENT '0:Õı³£ÏÔÊ¾ 1:Âß¼­É¾³ı',
-  `qrcode_shorturl` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '¶şÎ¬Âë¶ÌÁ´½Ó\\n',
+  `qrcode_url` varchar(128) DEFAULT NULL COMMENT 'äºŒç»´ç \nåŒ…å«å†…å®¹ä¸ºï¼šæ–°å»ºè¡¨å•çš„url',
+  `qrcode_pic` varchar(128) DEFAULT NULL COMMENT 'äºŒç»´ç å›¾ç‰‡æ–‡ä»¶åç§°',
+  `page_views` int(11) DEFAULT '0' COMMENT 'æµè§ˆæ¬¡æ•°',
+  `key_list` varchar(500) DEFAULT NULL COMMENT 'ä¸»é”®åç§°ï¼Œä¾‹å¦‚\nå§“å,ç”µè¯\n',
+  `required` int(11) DEFAULT NULL COMMENT '0:éå¿…é¡» 1:å¿…é¡»',
+  `ischecked` int(11) DEFAULT NULL COMMENT '0:ä¸æ ¡éªŒ 1:æ ¡éªŒ',
+  `is_remember_import_key` tinyint(4) DEFAULT '0' COMMENT '0:æ²¡æœ‰è®°ä½é»˜è®¤çš„å¯¼å…¥key 1:å·²ç»æ˜¯é»˜è®¤çš„å¯¼å…¥key',
+  `field_index` int(11) DEFAULT NULL COMMENT 'è”ç³»äººæ¨¡æ¿çš„æ˜¾ç¤ºé¡ºåº',
+  `is_shown_in_feedback` tinyint(4) DEFAULT '0' COMMENT '0:æ˜¾ç¤º 1:ä¸æ˜¾ç¤º',
+  `del_status` tinyint(4) DEFAULT '0' COMMENT '0:æ­£å¸¸æ˜¾ç¤º 1:é€»è¾‘åˆ é™¤',
+  `qrcode_shorturl` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT 'äºŒç»´ç çŸ­é“¾æ¥\\n',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÁªÏµÈË±íµ¥Ä£°å';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='è”ç³»äººè¡¨å•æ¨¡æ¿';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -939,7 +939,7 @@ CREATE TABLE `contact_way` (
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÁªÏµ·½Ê½';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='è”ç³»æ–¹å¼';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -948,7 +948,7 @@ CREATE TABLE `contact_way` (
 
 LOCK TABLES `contact_way` WRITE;
 /*!40000 ALTER TABLE `contact_way` DISABLE KEYS */;
-INSERT INTO `contact_way` VALUES (1,'ÊÖ»ú',0,NULL,'0000-00-00 00:00:00'),(2,'µç×ÓÓÊ¼ş',0,NULL,'0000-00-00 00:00:00'),(3,'Î¢ĞÅºÅ',0,NULL,'0000-00-00 00:00:00');
+INSERT INTO `contact_way` VALUES (1,'æ‰‹æœº',0,NULL,'0000-00-00 00:00:00'),(2,'ç”µå­é‚®ä»¶',0,NULL,'0000-00-00 00:00:00'),(3,'å¾®ä¿¡å·',0,NULL,'0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `contact_way` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -961,11 +961,11 @@ DROP TABLE IF EXISTS `contact_way_map`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `contact_way_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `contact_way_id` int(11) NOT NULL COMMENT 'contact_way¶ÔÓ¦µÄId',
+  `contact_way_id` int(11) NOT NULL COMMENT 'contact_wayå¯¹åº”çš„Id',
   `contact_way_name` varchar(45) DEFAULT NULL,
-  `status` tinyint(1) DEFAULT '0' COMMENT '0ÎªÎ´¹´Ñ¡,1Îª¹´Ñ¡',
+  `status` tinyint(1) DEFAULT '0' COMMENT '0ä¸ºæœªå‹¾é€‰,1ä¸ºå‹¾é€‰',
   `time_condition` datetime DEFAULT NULL,
-  `time_condition_abbreviation` varchar(1) DEFAULT NULL COMMENT 'ËõĞ´H:Ğ¡Ê± , D:Ìì , W:ÖÜ',
+  `time_condition_abbreviation` varchar(1) DEFAULT NULL COMMENT 'ç¼©å†™H:å°æ—¶ , D:å¤© , W:å‘¨',
   `time_condition_status` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
@@ -977,7 +977,7 @@ CREATE TABLE `contact_way_map` (
 
 LOCK TABLES `contact_way_map` WRITE;
 /*!40000 ALTER TABLE `contact_way_map` DISABLE KEYS */;
-INSERT INTO `contact_way_map` VALUES (1,0,'È«²¿',1,NULL,'A',NULL),(2,1,'ÊÖ»ú',0,NULL,'A',NULL),(3,2,'µã×ÓÓÊ¼ş',0,NULL,'A',NULL);
+INSERT INTO `contact_way_map` VALUES (1,0,'å…¨éƒ¨',1,NULL,'A',NULL),(2,1,'æ‰‹æœº',0,NULL,'A',NULL),(3,2,'ç‚¹å­é‚®ä»¶',0,NULL,'A',NULL);
 /*!40000 ALTER TABLE `contact_way_map` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -989,15 +989,15 @@ DROP TABLE IF EXISTS `custom_tag`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `custom_tag` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '±êÇ©±àºÅ',
-  `name` varchar(40) DEFAULT NULL COMMENT '±êÇ©Ãû³Æ',
-  `cover_audience_count` int(11) DEFAULT NULL COMMENT '¸²¸ÇÈËÈºÊıÁ¿',
-  `oper` varchar(45) DEFAULT NULL COMMENT '²Ù×÷Õß',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç 0-Î´É¾³ı 1-É¾³ı',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'æ ‡ç­¾ç¼–å·',
+  `name` varchar(40) DEFAULT NULL COMMENT 'æ ‡ç­¾åç§°',
+  `cover_audience_count` int(11) DEFAULT NULL COMMENT 'è¦†ç›–äººç¾¤æ•°é‡',
+  `oper` varchar(45) DEFAULT NULL COMMENT 'æ“ä½œè€…',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®° 0-æœªåˆ é™¤ 1-åˆ é™¤',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='×Ô¶¨Òå±êÇ©£¨Ï¸·Ö/»î¶¯/ÁªÏµÈË£©';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='è‡ªå®šä¹‰æ ‡ç­¾ï¼ˆç»†åˆ†/æ´»åŠ¨/è”ç³»äººï¼‰';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1018,14 +1018,14 @@ DROP TABLE IF EXISTS `custom_tag_map`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `custom_tag_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `tag_id` int(20) NOT NULL COMMENT '±êÇ©±àºÅ',
-  `type` tinyint(40) DEFAULT NULL COMMENT 'ÀàĞÍ£º0-Ï¸·Ö 1-»î¶¯ 2-ÁªÏµÈËµµ°¸  3-ÎÄ¼ş½ÓÈë 4-¿Í»§ÉÏ´«±êÇ©',
-  `map_id` int(11) DEFAULT NULL COMMENT 'tag±êÊ¶µÄÏ¸·Ö/»î¶¯/ÁªÏµÈËµÄID',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±êÊ¶ 0-Î´É¾³ı 1-É¾³ı',
+  `tag_id` int(20) NOT NULL COMMENT 'æ ‡ç­¾ç¼–å·',
+  `type` tinyint(40) DEFAULT NULL COMMENT 'ç±»å‹ï¼š0-ç»†åˆ† 1-æ´»åŠ¨ 2-è”ç³»äººæ¡£æ¡ˆ  3-æ–‡ä»¶æ¥å…¥ 4-å®¢æˆ·ä¸Šä¼ æ ‡ç­¾',
+  `map_id` int(11) DEFAULT NULL COMMENT 'tagæ ‡è¯†çš„ç»†åˆ†/æ´»åŠ¨/è”ç³»äººçš„ID',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è¯† 0-æœªåˆ é™¤ 1-åˆ é™¤',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='×Ô¶¨Òå±êÇ©Ó³Éä±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='è‡ªå®šä¹‰æ ‡ç­¾æ˜ å°„è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1045,10 +1045,10 @@ DROP TABLE IF EXISTS `custom_tag_original_data_map`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `custom_tag_original_data_map` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
   `tag_id` int(11) NOT NULL,
   `original_data_type` int(11) NOT NULL,
-  `original_data_id` int(11) NOT NULL COMMENT 'ÉÏ´«Êı¾İµÄÖ÷¼üID',
+  `original_data_id` int(11) NOT NULL COMMENT 'ä¸Šä¼ æ•°æ®çš„ä¸»é”®ID',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1071,35 +1071,35 @@ DROP TABLE IF EXISTS `data_arch_point`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_arch_point` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `event_id` int(11) DEFAULT NULL COMMENT 'ÊÂ¼şID',
-  `event_name` varchar(45) DEFAULT NULL COMMENT 'ÊÂ¼şÃû³Æ',
-  `click_time` datetime DEFAULT NULL COMMENT 'µã»÷Ê±¼ä',
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `event_id` int(11) DEFAULT NULL COMMENT 'äº‹ä»¶ID',
+  `event_name` varchar(45) DEFAULT NULL COMMENT 'äº‹ä»¶åç§°',
+  `click_time` datetime DEFAULT NULL COMMENT 'ç‚¹å‡»æ—¶é—´',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
-  `create_time` datetime DEFAULT NULL COMMENT '´´½¨Ê±¼ä',
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
+  `create_time` datetime DEFAULT NULL COMMENT 'åˆ›å»ºæ—¶é—´',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
   `cookie` varchar(128) DEFAULT NULL,
-  `batch_id` varchar(45) NOT NULL DEFAULT '' COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `batch_id` varchar(45) NOT NULL DEFAULT '' COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `bitmap` varchar(18) DEFAULT NULL,
   `keyid` int(11) DEFAULT NULL,
   `wxmp_id` varchar(128) DEFAULT NULL,
   `wx_code` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `event_id_click_time_unq` (`event_id`,`click_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÂñµãÍ³¼Æ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='åŸ‹ç‚¹ç»Ÿè®¡';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1119,34 +1119,34 @@ DROP TABLE IF EXISTS `data_customer_tags`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_customer_tags` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
   `tag_type` varchar(45) DEFAULT NULL,
   `tag_name` varchar(45) DEFAULT NULL,
-  `birthday` date DEFAULT NULL COMMENT '³öÉúÄêÔÂÈÕ',
-  `identify_no` varchar(19) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `birthday` date DEFAULT NULL COMMENT 'å‡ºç”Ÿå¹´æœˆæ—¥',
+  `identify_no` varchar(19) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
-  `update_time` timestamp NOT NULL DEFAULT '1970-06-30 16:00:00' COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `update_time` timestamp NOT NULL DEFAULT '1970-06-30 16:00:00' COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `bitmap` varchar(18) DEFAULT NULL,
   `keyid` int(11) DEFAULT NULL,
   `wxmp_id` varchar(128) DEFAULT NULL,
   `wx_code` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_data_customer_tags_tag_type_tag_name` (`tag_type`,`tag_name`) COMMENT '¿Í»§Ãû³ÆºÍ¿Í»§ÀàĞÍÎ¨Ò»'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='¿Í»§±êÇ©';
+  UNIQUE KEY `idx_data_customer_tags_tag_type_tag_name` (`tag_type`,`tag_name`) COMMENT 'å®¢æˆ·åç§°å’Œå®¢æˆ·ç±»å‹å”¯ä¸€'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å®¢æˆ·æ ‡ç­¾';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1166,38 +1166,38 @@ DROP TABLE IF EXISTS `data_login`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_login` (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `login_type` varchar(100) DEFAULT NULL COMMENT 'µÇÂ¼·½Ê½',
-  `login_time` datetime DEFAULT NULL COMMENT 'µÇÂ¼Ê±¼ä',
-  `logout_time` datetime DEFAULT NULL COMMENT 'ÍË³öÊ±¼ä',
-  `login_ip` varchar(45) DEFAULT NULL COMMENT 'µÇÂ¼IP',
-  `login_device` varchar(45) DEFAULT NULL COMMENT 'µÇÂ¼Éè±¸',
-  `resolution_ratio` varchar(100) DEFAULT NULL COMMENT '·Ö±æÂÊ',
-  `login_url` varchar(100) DEFAULT NULL COMMENT 'µÇÂ¼Ò³Ãæ',
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `login_type` varchar(100) DEFAULT NULL COMMENT 'ç™»å½•æ–¹å¼',
+  `login_time` datetime DEFAULT NULL COMMENT 'ç™»å½•æ—¶é—´',
+  `logout_time` datetime DEFAULT NULL COMMENT 'é€€å‡ºæ—¶é—´',
+  `login_ip` varchar(45) DEFAULT NULL COMMENT 'ç™»å½•IP',
+  `login_device` varchar(45) DEFAULT NULL COMMENT 'ç™»å½•è®¾å¤‡',
+  `resolution_ratio` varchar(100) DEFAULT NULL COMMENT 'åˆ†è¾¨ç‡',
+  `login_url` varchar(100) DEFAULT NULL COMMENT 'ç™»å½•é¡µé¢',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `bitmap` varchar(18) DEFAULT NULL,
   `keyid` int(11) DEFAULT NULL,
   `wxmp_id` varchar(128) DEFAULT NULL,
   `wx_code` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_data_login_login_time` (`login_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='µÇÂ¼ĞĞÎª';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ç™»å½•è¡Œä¸º';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1217,37 +1217,37 @@ DROP TABLE IF EXISTS `data_member`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_member` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `member_id` varchar(45) DEFAULT NULL COMMENT '»áÔ±¿¨ºÅ',
-  `member_points` varchar(10) DEFAULT NULL COMMENT '»áÔ±»ı·Ö',
-  `member_level` varchar(45) DEFAULT NULL COMMENT '»áÔ±µÈ¼¶',
-  `regist_time` date DEFAULT NULL COMMENT '¿ª¿¨Ê±¼ä',
-  `card_amt` decimal(22,2) DEFAULT NULL COMMENT '¿¨ÄÚÓà¶î',
-  `expire` date DEFAULT NULL COMMENT '¹ıÆÚÈÕ',
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `member_id` varchar(45) DEFAULT NULL COMMENT 'ä¼šå‘˜å¡å·',
+  `member_points` varchar(10) DEFAULT NULL COMMENT 'ä¼šå‘˜ç§¯åˆ†',
+  `member_level` varchar(45) DEFAULT NULL COMMENT 'ä¼šå‘˜ç­‰çº§',
+  `regist_time` date DEFAULT NULL COMMENT 'å¼€å¡æ—¶é—´',
+  `card_amt` decimal(22,2) DEFAULT NULL COMMENT 'å¡å†…ä½™é¢',
+  `expire` date DEFAULT NULL COMMENT 'è¿‡æœŸæ—¥',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `bitmap` varchar(18) DEFAULT NULL,
   `keyid` int(11) DEFAULT NULL,
   `wxmp_id` varchar(128) DEFAULT NULL,
   `wx_code` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_memberid` (`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='»áÔ±¿¨¼ÇÂ¼';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ä¼šå‘˜å¡è®°å½•';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1268,9 +1268,9 @@ DROP TABLE IF EXISTS `data_option_map`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_option_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `table_id` int(11) NOT NULL COMMENT 'Êı¾İ±í¶ÔÓ¦µÄId',
-  `table_name` varchar(45) NOT NULL COMMENT 'Êı¾İ±íµÄÃû×Ö',
-  `option_status` tinyint(1) DEFAULT '0' COMMENT 'Êı¾İ±íµÄ×´Ì¬ : 0ÎªÎ´¹´Ñ¡,1Îª¹´Ñ¡',
+  `table_id` int(11) NOT NULL COMMENT 'æ•°æ®è¡¨å¯¹åº”çš„Id',
+  `table_name` varchar(45) NOT NULL COMMENT 'æ•°æ®è¡¨çš„åå­—',
+  `option_status` tinyint(1) DEFAULT '0' COMMENT 'æ•°æ®è¡¨çš„çŠ¶æ€ : 0ä¸ºæœªå‹¾é€‰,1ä¸ºå‹¾é€‰',
   PRIMARY KEY (`id`),
   UNIQUE KEY `table_name_UNIQUE` (`table_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
@@ -1294,46 +1294,46 @@ DROP TABLE IF EXISTS `data_party`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_party` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid,Ö÷Êı¾İID,Ö÷Êı¾İÉú³ÉÊ±²úÉúµÄID',
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `name` varchar(200) DEFAULT NULL COMMENT 'ĞÕÃû',
-  `gender` tinyint(4) DEFAULT NULL COMMENT 'ĞÔ±ğ\n1-ÄĞ\n2-Å® \n3-Î´È·¶¨ \n4-²»È·¶¨',
-  `birthday` date DEFAULT NULL COMMENT 'ÄêÁä',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id,ä¸»æ•°æ®ID,ä¸»æ•°æ®ç”Ÿæˆæ—¶äº§ç”Ÿçš„ID',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `name` varchar(200) DEFAULT NULL COMMENT 'å§“å',
+  `gender` tinyint(4) DEFAULT NULL COMMENT 'æ€§åˆ«\n1-ç”·\n2-å¥³ \n3-æœªç¡®å®š \n4-ä¸ç¡®å®š',
+  `birthday` date DEFAULT NULL COMMENT 'å¹´é¾„',
   `citizenship` varchar(45) DEFAULT NULL,
   `provice` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
-  `job` varchar(100) DEFAULT NULL COMMENT 'Ö°Òµ',
-  `monthly_income` decimal(22,2) DEFAULT NULL COMMENT 'ÔÂÊÕÈë',
-  `member_level` varchar(10) DEFAULT NULL COMMENT '»áÔ±µÈ¼¶',
-  `member_points` varchar(11) DEFAULT NULL COMMENT '»áÔ±»ı·Ö',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `monthly_consume` decimal(22,2) DEFAULT NULL COMMENT 'ÔÂ¾ùÏû·Ñ',
+  `job` varchar(100) DEFAULT NULL COMMENT 'èŒä¸š',
+  `monthly_income` decimal(22,2) DEFAULT NULL COMMENT 'æœˆæ”¶å…¥',
+  `member_level` varchar(10) DEFAULT NULL COMMENT 'ä¼šå‘˜ç­‰çº§',
+  `member_points` varchar(11) DEFAULT NULL COMMENT 'ä¼šå‘˜ç§¯åˆ†',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `monthly_consume` decimal(22,2) DEFAULT NULL COMMENT 'æœˆå‡æ¶ˆè´¹',
   `last_login` datetime DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
-  `md_type` int(11) DEFAULT NULL COMMENT 'Ö÷Êı¾İÀàĞÍ\\n0-Ö÷Êı¾İ\\n8-Î¢ĞÅ',
-  `mapping_keyid` varchar(100) DEFAULT NULL COMMENT 'Ö÷Êı¾İID¶ÔÓ¦µÄkeyid£¬Èç£ºÊÖ»úºÅ¡¢Éí·İÖ¤ºÅ¡¢Î¢ĞÅopenidµÈ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
-  `email` varchar(45) DEFAULT NULL COMMENT 'ÓÊÏä',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
+  `md_type` int(11) DEFAULT NULL COMMENT 'ä¸»æ•°æ®ç±»å‹\\n0-ä¸»æ•°æ®\\n8-å¾®ä¿¡',
+  `mapping_keyid` varchar(100) DEFAULT NULL COMMENT 'ä¸»æ•°æ®IDå¯¹åº”çš„keyidï¼Œå¦‚ï¼šæ‰‹æœºå·ã€èº«ä»½è¯å·ã€å¾®ä¿¡openidç­‰',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
+  `email` varchar(45) DEFAULT NULL COMMENT 'é‚®ç®±',
   `qq` varchar(45) DEFAULT NULL,
-  `identify_no` varchar(45) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `identify_no` varchar(45) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `wxmp_id` varchar(45) DEFAULT NULL,
   `wx_code` varchar(45) DEFAULT NULL,
-  `wx_uin` varchar(45) DEFAULT NULL COMMENT 'Î¢ĞÅ¸öÈËºÅ',
-  `wxperson_id` varchar(45) DEFAULT NULL COMMENT 'Î¢ĞÅ¸öÈËºÅÏÂ·ÛË¿Î¨Ò»±êÊ¶',
+  `wx_uin` varchar(45) DEFAULT NULL COMMENT 'å¾®ä¿¡ä¸ªäººå·',
+  `wxperson_id` varchar(45) DEFAULT NULL COMMENT 'å¾®ä¿¡ä¸ªäººå·ä¸‹ç²‰ä¸å”¯ä¸€æ ‡è¯†',
   `IDFA` varchar(45) DEFAULT NULL,
   `IMEI` varchar(45) DEFAULT NULL,
   `unionid` varchar(45) DEFAULT NULL,
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `flag1` varchar(45) DEFAULT NULL COMMENT 'Ô¤Áô×Ö¶Î1',
-  `flag2` varchar(45) DEFAULT NULL COMMENT 'Ô¤Áô×Ö¶Î2',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `flag1` varchar(45) DEFAULT NULL COMMENT 'é¢„ç•™å­—æ®µ1',
+  `flag2` varchar(45) DEFAULT NULL COMMENT 'é¢„ç•™å­—æ®µ2',
   `bitmap` varchar(18) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_key` (`mobile`,`tel`,`email`,`qq`,`identify_no`,`driving_license`,`wxmp_id`,`wx_code`,`wx_uin`,`wxperson_id`,`IDFA`,`IMEI`,`unionid`,`acct_no`,`flag1`,`flag2`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ö÷Êı¾İ±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ä¸»æ•°æ®è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1354,18 +1354,18 @@ DROP TABLE IF EXISTS `data_party_tag_rule_map`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_party_tag_rule_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `rule_type` tinyint(4) DEFAULT '0' COMMENT '¹æÔòÀàĞÍ:0:Ò»Ò»¶ÔÓ¦,1:Êı×Ö·¶Î§¶ÔÓ¦',
-  `tag_id` int(11) NOT NULL COMMENT 'tag±íµÄid',
-  `md_type` int(11) DEFAULT NULL COMMENT '¶ÔÓ¦MongoDBµÄdata_party±íÖĞµÄmd_type\n1-ÈË¿ÚÊôĞÔ\n2-¿Í»§±êÇ©\n3-ÂñµãÍ³¼Æ\n4-»áÔ±¿¨¼ÇÂ¼\n5-µÇÂ¼ĞĞÎª\n6-Ö§¸¶¼ÇÂ¼\n7-¹ºÎï¼ÇÂ¼\n8-Î¢ĞÅ',
-  `field_name` varchar(512) NOT NULL COMMENT 'mongoµÄdataPartyµÄpoÀàµÄ×Ö¶ÎÃû',
-  `field_value` varchar(512) DEFAULT NULL COMMENT 'mongoµÄdataPartyµÄpoÀàµÄ×Ö¶ÎÖµ',
-  `min` float DEFAULT NULL COMMENT 'type=1Ê±£¬»áÓĞÖµ£¬null±íÊ¾ÎŞÏŞĞ¡',
-  `max` float DEFAULT NULL COMMENT 'type=1Ê±£¬»áÓĞÖµ,null±íÊ¾ÎŞÏŞ´ó',
+  `rule_type` tinyint(4) DEFAULT '0' COMMENT 'è§„åˆ™ç±»å‹:0:ä¸€ä¸€å¯¹åº”,1:æ•°å­—èŒƒå›´å¯¹åº”',
+  `tag_id` int(11) NOT NULL COMMENT 'tagè¡¨çš„id',
+  `md_type` int(11) DEFAULT NULL COMMENT 'å¯¹åº”MongoDBçš„data_partyè¡¨ä¸­çš„md_type\n1-äººå£å±æ€§\n2-å®¢æˆ·æ ‡ç­¾\n3-åŸ‹ç‚¹ç»Ÿè®¡\n4-ä¼šå‘˜å¡è®°å½•\n5-ç™»å½•è¡Œä¸º\n6-æ”¯ä»˜è®°å½•\n7-è´­ç‰©è®°å½•\n8-å¾®ä¿¡',
+  `field_name` varchar(512) NOT NULL COMMENT 'mongoçš„dataPartyçš„poç±»çš„å­—æ®µå',
+  `field_value` varchar(512) DEFAULT NULL COMMENT 'mongoçš„dataPartyçš„poç±»çš„å­—æ®µå€¼',
+  `min` float DEFAULT NULL COMMENT 'type=1æ—¶ï¼Œä¼šæœ‰å€¼ï¼Œnullè¡¨ç¤ºæ— é™å°',
+  `max` float DEFAULT NULL COMMENT 'type=1æ—¶ï¼Œä¼šæœ‰å€¼,nullè¡¨ç¤ºæ— é™å¤§',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=699 DEFAULT CHARSET=utf8 COMMENT='¸ødata_party±í´ò±êÇ©µÄ¹æÔò:data_party±íµÄÁĞºÍtagÏà¹Ø±íµÄ¶ÔÓ¦¹ØÏµ';
+) ENGINE=InnoDB AUTO_INCREMENT=699 DEFAULT CHARSET=utf8 COMMENT='ç»™data_partyè¡¨æ‰“æ ‡ç­¾çš„è§„åˆ™:data_partyè¡¨çš„åˆ—å’Œtagç›¸å…³è¡¨çš„å¯¹åº”å…³ç³»';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1374,7 +1374,7 @@ CREATE TABLE `data_party_tag_rule_map` (
 
 LOCK TABLES `data_party_tag_rule_map` WRITE;
 /*!40000 ALTER TABLE `data_party_tag_rule_map` DISABLE KEYS */;
-INSERT INTO `data_party_tag_rule_map` VALUES (1,0,5869,1,'gender','1',NULL,NULL,0,NULL,'2016-08-09 03:17:01'),(2,0,5870,1,'gender','2',NULL,NULL,0,NULL,'2016-08-09 03:17:01'),(13,0,5889,1,'maritalStatus','ÒÑ»é',NULL,NULL,0,NULL,'2016-08-09 06:22:34'),(14,0,5890,1,'maritalStatus','Î´»é',NULL,NULL,0,NULL,'2016-08-09 06:22:34'),(15,0,5891,1,'maritalStatus','Î´Öª',NULL,NULL,0,NULL,'2016-08-09 06:22:34'),(16,0,5895,1,'bloodType','O',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(17,0,5892,1,'bloodType','A',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(18,0,5893,1,'bloodType','B',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(19,0,5894,1,'bloodType','AB',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(20,0,6068,1,'citizenship','ÖĞ¹ú',NULL,NULL,0,NULL,'2016-08-09 06:24:12'),(21,0,6068,1,'citizenship','china',NULL,NULL,0,NULL,'2016-08-09 06:24:12'),(31,0,5869,8,'sex','1',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(32,0,5870,8,'sex','2',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(34,1,6631,0,'lastShoppingTime','dataValue != null && dataValue<=1',NULL,NULL,0,NULL,'2016-08-08 03:45:32'),(35,1,6632,0,'lastShoppingTime','dataValue != null && dataValue<=3',NULL,NULL,0,NULL,'2016-08-08 03:45:32'),(36,1,6633,0,'lastShoppingTime','dataValue != null && dataValue<=6',NULL,NULL,0,NULL,'2016-08-12 11:15:14'),(37,1,6627,0,'totalShoppingCount','dataValue != null && dataValue==1',NULL,NULL,0,NULL,'2016-08-08 03:46:37'),(38,1,6628,0,'totalShoppingCount','dataValue != null && dataValue==2',NULL,NULL,0,NULL,'2016-08-08 03:46:37'),(39,1,6629,0,'totalShoppingCount','dataValue != null && dataValue==3',NULL,NULL,0,NULL,'2016-08-08 03:46:37'),(40,1,6630,0,'totalShoppingCount','dataValue != null && dataValue>3',NULL,NULL,0,NULL,'2016-08-08 03:46:37'),(41,1,6634,0,'singleMonthShoppingCount','dataValue != null && dataValue<3',NULL,NULL,0,NULL,'2016-08-08 05:07:28'),(42,1,6635,0,'singleMonthShoppingCount','dataValue != null && dataValue>=3',NULL,NULL,0,NULL,'2016-08-08 05:07:28'),(43,1,6636,0,'totalIncome','dataValue != null && dataValue<=50',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(44,1,6637,0,'totalIncome','dataValue != null && dataValue>50&& dataValue<=100',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(45,1,6638,0,'totalIncome','dataValue != null && dataValue>100&& dataValue<=150',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(46,1,6639,0,'totalIncome','dataValue != null && dataValue>150&& dataValue<=200',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(47,1,6640,0,'totalIncome','dataValue != null && dataValue>200&& dataValue<=300',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(48,1,6641,0,'totalIncome','dataValue != null && dataValue>300',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(50,1,6642,0,'averageIncome','dataValue != null && dataValue<=50',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(51,1,6643,0,'averageIncome','dataValue != null && dataValue>100&& dataValue<=150',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(52,1,6644,0,'averageIncome','dataValue != null && dataValue != null && dataValue>50&& dataValue<=100',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(53,1,6645,0,'averageIncome','dataValue != null && dataValue>150&& dataValue<=200',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(54,1,6646,0,'averageIncome','dataValue != null && dataValue>200&& dataValue<=300',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(55,1,6647,0,'averageIncome','dataValue != null && dataValue>300',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(56,1,6652,0,'isShoppingUser','dataValue == null || dataValue!=true',NULL,NULL,0,NULL,'2016-08-19 10:02:18'),(57,1,6651,0,'isShoppingUser','dataValue != null && dataValue==true',NULL,NULL,0,NULL,'2016-08-08 05:10:23'),(58,1,6626,0,'weimob','dataValue == null || dataValue.contains(\"ÆäËü\")',NULL,NULL,0,NULL,'2016-08-29 08:13:32'),(59,1,6625,0,'weimob','dataValue != null && dataValue.contains(\"ÍúÆÌ\")',NULL,NULL,0,NULL,'2016-08-29 03:13:41'),(60,1,6649,0,'orderStatus','dataValue != null && dataValue.contains(\"½»Ò×¹Ø±Õ\")',NULL,NULL,0,NULL,'2016-08-29 03:13:44'),(61,1,6648,0,'orderStatus','dataValue != null && dataValue.contains(\"½»Ò×Íê³É\")',NULL,NULL,0,NULL,'2016-08-29 03:13:47'),(62,1,6650,0,'orderStatus','dataValue != null && dataValue.contains(\"´ıÖ§¸¶\")',NULL,NULL,0,NULL,'2016-08-29 03:13:51'),(63,0,5871,0,'gender','3',NULL,NULL,0,NULL,'2016-08-12 10:30:33'),(65,0,5871,0,'sex','3',NULL,NULL,0,NULL,'2016-08-20 04:55:15'),(66,0,6183,1,'provice','±±¾©',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(67,0,6184,1,'provice','Ìì½ò',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(68,0,6185,1,'provice','ÉÏº£',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(69,0,6186,1,'provice','ÖØÇì',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(70,0,6187,1,'provice','ºÓ±±Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(71,0,6188,1,'provice','É½Î÷Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(72,0,6189,1,'provice','Ì¨ÍåÊ¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(73,0,6190,1,'provice','ÁÉÄşÊ¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(74,0,6191,1,'provice','¼ªÁÖÊ¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(75,0,6192,1,'provice','ºÚÁú½­Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(76,0,6193,1,'provice','½­ËÕÊ¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(77,0,6194,1,'provice','Õã½­Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(78,0,6195,1,'provice','°²»ÕÊ¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(79,0,6196,1,'provice','¸£½¨Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(80,0,6197,1,'provice','½­Î÷Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(81,0,6198,1,'provice','É½¶«Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(82,0,6199,1,'provice','ºÓÄÏÊ¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(83,0,6200,1,'provice','ºş±±Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(84,0,6201,1,'provice','ºşÄÏÊ¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(85,0,6202,1,'provice','¹ã¶«Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(86,0,6203,1,'provice','¸ÊËàÊ¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(87,0,6204,1,'provice','ËÄ´¨Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(88,0,6205,1,'provice','¹óÖİÊ¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(89,0,6206,1,'provice','º£ÄÏÊ¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(90,0,6207,1,'provice','ÔÆÄÏÊ¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(91,0,6208,1,'provice','Çàº£Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(92,0,6209,1,'provice','ÉÂÎ÷Ê¡',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(93,0,6210,1,'provice','¹ãÎ÷×³×å×ÔÖÎÇø',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(94,0,6211,1,'provice','Î÷²Ø×ÔÖÎÇø',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(95,0,6212,1,'provice','ÄşÏÄ»Ø×å×ÔÖÎÇø',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(96,0,6213,1,'provice','ĞÂ½®Î¬Îá¶û×ÔÖÎÇø',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(97,0,6214,1,'provice','ÄÚÃÉ¹Å×ÔÖÎÇø',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(98,0,6215,1,'provice','°ÄÃÅÌØ±ğĞĞÕşÇø',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(99,0,6216,1,'provice','Ïã¸ÛÌØ±ğĞĞÕşÇø',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(129,0,6217,1,'city','±±¾©ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(130,0,6218,1,'city','Ìì½òÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(131,0,6219,1,'city','ÉÏº£ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(132,0,6220,1,'city','ÖØÇìÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(133,0,6221,1,'city','Ê¯¼Ò×¯ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(134,0,6222,1,'city','ÌÆÉ½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(135,0,6223,1,'city','ÇØ»ÊµºÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(136,0,6224,1,'city','ºªµ¦ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(137,0,6225,1,'city','ĞÏÌ¨ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(138,0,6226,1,'city','±£¶¨ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(139,0,6227,1,'city','ÕÅ¼Ò¿ÚÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(140,0,6228,1,'city','³ĞµÂÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(141,0,6229,1,'city','²×ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(142,0,6230,1,'city','ÀÈ·»ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(143,0,6231,1,'city','ºâË®ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(144,0,6232,1,'city','Ì«Ô­ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(145,0,6233,1,'city','´óÍ¬ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(146,0,6234,1,'city','ÑôÈªÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(147,0,6235,1,'city','³¤ÖÎÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(148,0,6236,1,'city','½ú³ÇÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(149,0,6237,1,'city','Ë·ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(150,0,6238,1,'city','½úÖĞÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(151,0,6239,1,'city','ÔË³ÇÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(152,0,6240,1,'city','ĞÃÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(153,0,6241,1,'city','ÁÙ·ÚÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(154,0,6242,1,'city','ÂÀÁºÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(155,0,6243,1,'city','Ì¨±±ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(156,0,6244,1,'city','¸ßĞÛÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(157,0,6245,1,'city','»ùÂ¡ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(158,0,6246,1,'city','Ì¨ÖĞÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(159,0,6247,1,'city','Ì¨ÄÏÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(160,0,6248,1,'city','ĞÂÖñÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(161,0,6249,1,'city','¼ÎÒåÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(162,0,6250,1,'city','Ì¨±±ÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(163,0,6251,1,'city','ÒËÀ¼ÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(164,0,6252,1,'city','ÌÒÔ°ÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(165,0,6253,1,'city','ĞÂÖñÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(166,0,6254,1,'city','ÃçÀõÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(167,0,6255,1,'city','Ì¨ÖĞÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(168,0,6256,1,'city','ÕÃ»¯ÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(169,0,6257,1,'city','ÄÏÍ¶ÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(170,0,6258,1,'city','ÔÆÁÖÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(171,0,6259,1,'city','¼ÎÒåÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(172,0,6260,1,'city','Ì¨ÄÏÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(173,0,6261,1,'city','¸ßĞÛÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(174,0,6262,1,'city','ÆÁ¶«ÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(175,0,6263,1,'city','ÅìºşÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(176,0,6264,1,'city','Ì¨¶«ÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(177,0,6265,1,'city','»¨Á«ÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(178,0,6266,1,'city','ÉòÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(179,0,6267,1,'city','´óÁ¬ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(180,0,6268,1,'city','°°É½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(181,0,6269,1,'city','¸§Ë³ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(182,0,6270,1,'city','±¾ÏªÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(183,0,6271,1,'city','µ¤¶«ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(184,0,6272,1,'city','½õÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(185,0,6273,1,'city','Óª¿ÚÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(186,0,6274,1,'city','¸·ĞÂÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(187,0,6275,1,'city','ÁÉÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(188,0,6276,1,'city','ÅÌ½õÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(189,0,6277,1,'city','ÌúÁëÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(190,0,6278,1,'city','³¯ÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(191,0,6279,1,'city','ºùÂ«µºÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(192,0,6280,1,'city','³¤´ºÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(193,0,6281,1,'city','¼ªÁÖÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(194,0,6282,1,'city','ËÄÆ½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(195,0,6283,1,'city','ÁÉÔ´ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(196,0,6284,1,'city','Í¨»¯ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(197,0,6285,1,'city','°×É½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(198,0,6286,1,'city','ËÉÔ­ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(199,0,6287,1,'city','°×³ÇÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(200,0,6288,1,'city','ÑÓ±ß³¯ÏÊ×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(201,0,6289,1,'city','¹ş¶û±õÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(202,0,6290,1,'city','ÆëÆë¹ş¶ûÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(203,0,6291,1,'city','º×¸ÚÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(204,0,6292,1,'city','Ë«Ñ¼É½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(205,0,6293,1,'city','¼¦Î÷ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(206,0,6294,1,'city','´óÇìÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(207,0,6295,1,'city','ÒÁ´ºÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(208,0,6296,1,'city','Äµµ¤½­ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(209,0,6297,1,'city','¼ÑÄ¾Ë¹ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(210,0,6298,1,'city','ÆßÌ¨ºÓÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(211,0,6299,1,'city','ºÚºÓÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(212,0,6300,1,'city','Ëç»¯ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(213,0,6301,1,'city','´óĞË°²ÁëµØÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(214,0,6302,1,'city','ÄÏ¾©ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(215,0,6303,1,'city','ÎŞÎıÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(216,0,6304,1,'city','ĞìÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(217,0,6305,1,'city','³£ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(218,0,6306,1,'city','ËÕÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(219,0,6307,1,'city','ÄÏÍ¨ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(220,0,6308,1,'city','Á¬ÔÆ¸ÛÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(221,0,6309,1,'city','»´°²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(222,0,6310,1,'city','ÑÎ³ÇÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(223,0,6311,1,'city','ÑïÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(224,0,6312,1,'city','Õò½­ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(225,0,6313,1,'city','Ì©ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(226,0,6314,1,'city','ËŞÇ¨ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(227,0,6315,1,'city','º¼ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(228,0,6316,1,'city','Äş²¨ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(229,0,6317,1,'city','ÎÂÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(230,0,6318,1,'city','¼ÎĞËÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(231,0,6319,1,'city','ºşÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(232,0,6320,1,'city','ÉÜĞËÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(233,0,6321,1,'city','½ğ»ªÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(234,0,6322,1,'city','áéÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(235,0,6323,1,'city','ÖÛÉ½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(236,0,6324,1,'city','Ì¨ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(237,0,6325,1,'city','ÀöË®ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(238,0,6326,1,'city','ºÏ·ÊÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(239,0,6327,1,'city','ÎßºşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(240,0,6328,1,'city','°ö²ºÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(241,0,6329,1,'city','»´ÄÏÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(242,0,6330,1,'city','Âí°°É½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(243,0,6331,1,'city','»´±±ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(244,0,6332,1,'city','Í­ÁêÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(245,0,6333,1,'city','°²ÇìÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(246,0,6334,1,'city','»ÆÉ½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(247,0,6335,1,'city','³üÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(248,0,6336,1,'city','¸·ÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(249,0,6337,1,'city','ËŞÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(250,0,6338,1,'city','³²ºşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(251,0,6339,1,'city','Áù°²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(252,0,6340,1,'city','ÙñÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(253,0,6341,1,'city','³ØÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(254,0,6342,1,'city','Ğû³ÇÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(255,0,6343,1,'city','¸£ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(256,0,6344,1,'city','ÏÃÃÅÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(257,0,6345,1,'city','ÆÎÌïÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(258,0,6346,1,'city','ÈıÃ÷ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(259,0,6347,1,'city','ÈªÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(260,0,6348,1,'city','ÕÄÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(261,0,6349,1,'city','ÄÏÆ½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(262,0,6350,1,'city','ÁúÑÒÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(263,0,6351,1,'city','ÄşµÂÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(264,0,6352,1,'city','ÄÏ²ıÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(265,0,6353,1,'city','¾°µÂÕòÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(266,0,6354,1,'city','Æ¼ÏçÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(267,0,6355,1,'city','¾Å½­ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(268,0,6356,1,'city','ĞÂÓàÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(269,0,6357,1,'city','Ó¥Ì¶ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(270,0,6358,1,'city','¸ÓÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(271,0,6359,1,'city','¼ª°²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(272,0,6360,1,'city','ÒË´ºÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(273,0,6361,1,'city','¸§ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(274,0,6362,1,'city','ÉÏÈÄÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(275,0,6363,1,'city','¼ÃÄÏÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(276,0,6364,1,'city','ÇàµºÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(277,0,6365,1,'city','×Í²©ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(278,0,6366,1,'city','Ôæ×¯ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(279,0,6367,1,'city','¶«ÓªÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(280,0,6368,1,'city','ÑÌÌ¨ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(281,0,6369,1,'city','Î«·»ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(282,0,6370,1,'city','¼ÃÄşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(283,0,6371,1,'city','Ì©°²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(284,0,6372,1,'city','Íşº£ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(285,0,6373,1,'city','ÈÕÕÕÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(286,0,6374,1,'city','À³ÎßÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(287,0,6375,1,'city','ÁÙÒÊÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(288,0,6376,1,'city','µÂÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(289,0,6377,1,'city','ÁÄ³ÇÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(290,0,6378,1,'city','±õÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(291,0,6379,1,'city','ºÊÔóÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(292,0,6380,1,'city','Ö£ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(293,0,6381,1,'city','¿ª·âÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(294,0,6382,1,'city','ÂåÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(295,0,6383,1,'city','Æ½¶¥É½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(296,0,6384,1,'city','°²ÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(297,0,6385,1,'city','º×±ÚÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(298,0,6386,1,'city','ĞÂÏçÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(299,0,6387,1,'city','½¹×÷ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(300,0,6388,1,'city','å§ÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(301,0,6389,1,'city','Ğí²ıÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(302,0,6390,1,'city','äğºÓÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(303,0,6391,1,'city','ÈıÃÅÏ¿ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(304,0,6392,1,'city','ÄÏÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(305,0,6393,1,'city','ÉÌÇğÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(306,0,6394,1,'city','ĞÅÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(307,0,6395,1,'city','ÖÜ¿ÚÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(308,0,6396,1,'city','×¤ÂíµêÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(309,0,6397,1,'city','¼ÃÔ´ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(310,0,6398,1,'city','ÎäººÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(311,0,6399,1,'city','»ÆÊ¯ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(312,0,6400,1,'city','Ê®ÑßÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(313,0,6401,1,'city','¾£ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(314,0,6402,1,'city','ÒË²ıÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(315,0,6403,1,'city','Ïå·®ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(316,0,6404,1,'city','¶õÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(317,0,6405,1,'city','¾£ÃÅÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(318,0,6406,1,'city','Ğ¢¸ĞÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(319,0,6407,1,'city','»Æ¸ÔÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(320,0,6408,1,'city','ÏÌÄşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(321,0,6409,1,'city','ËæÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(322,0,6410,1,'city','ÏÉÌÒÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(323,0,6411,1,'city','ÌìÃÅÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(324,0,6412,1,'city','Ç±½­ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(325,0,6413,1,'city','ÉñÅ©¼ÜÁÖÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(326,0,6414,1,'city','¶÷Ê©ÍÁ¼Ò×åÃç×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(327,0,6415,1,'city','³¤É³ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(328,0,6416,1,'city','ÖêÖŞÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(329,0,6417,1,'city','ÏæÌ¶ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(330,0,6418,1,'city','ºâÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(331,0,6419,1,'city','ÉÛÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(332,0,6420,1,'city','ÔÀÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(333,0,6421,1,'city','³£µÂÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(334,0,6422,1,'city','ÕÅ¼Ò½çÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(335,0,6423,1,'city','ÒæÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(336,0,6424,1,'city','³»ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(337,0,6425,1,'city','ÓÀÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(338,0,6426,1,'city','»³»¯ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(339,0,6427,1,'city','Â¦µ×ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(340,0,6428,1,'city','ÏæÎ÷ÍÁ¼Ò×åÃç×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(341,0,6429,1,'city','¹ãÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(342,0,6430,1,'city','ÉîÛÚÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(343,0,6431,1,'city','Öéº£ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(344,0,6432,1,'city','ÉÇÍ·ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(345,0,6433,1,'city','ÉØ¹ØÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(346,0,6434,1,'city','·ğÉ½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(347,0,6435,1,'city','½­ÃÅÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(348,0,6436,1,'city','Õ¿½­ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(349,0,6437,1,'city','Ã¯ÃûÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(350,0,6438,1,'city','ÕØÇìÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(351,0,6439,1,'city','»İÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(352,0,6440,1,'city','Ã·ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(353,0,6441,1,'city','ÉÇÎ²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(354,0,6442,1,'city','ºÓÔ´ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(355,0,6443,1,'city','Ñô½­ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(356,0,6444,1,'city','ÇåÔ¶ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(357,0,6445,1,'city','¶«İ¸ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(358,0,6446,1,'city','ÖĞÉ½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(359,0,6447,1,'city','³±ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(360,0,6448,1,'city','½ÒÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(361,0,6449,1,'city','ÔÆ¸¡ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(362,0,6450,1,'city','À¼ÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(363,0,6451,1,'city','½ğ²ıÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(364,0,6452,1,'city','°×ÒøÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(365,0,6453,1,'city','ÌìË®ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(366,0,6454,1,'city','¼ÎÓø¹ØÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(367,0,6455,1,'city','ÎäÍşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(368,0,6456,1,'city','ÕÅÒ´ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(369,0,6457,1,'city','Æ½Á¹ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(370,0,6458,1,'city','¾ÆÈªÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(371,0,6459,1,'city','ÇìÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(372,0,6460,1,'city','¶¨Î÷ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(373,0,6461,1,'city','Â¤ÄÏÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(374,0,6462,1,'city','ÁÙÏÄ»Ø×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(375,0,6463,1,'city','¸ÊÄÏ²Ø×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(376,0,6464,1,'city','³É¶¼ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(377,0,6465,1,'city','×Ô¹±ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(378,0,6466,1,'city','ÅÊÖ¦»¨ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(379,0,6467,1,'city','ãòÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(380,0,6468,1,'city','µÂÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(381,0,6469,1,'city','ÃàÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(382,0,6470,1,'city','¹ãÔªÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(383,0,6471,1,'city','ËìÄşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(384,0,6472,1,'city','ÄÚ½­ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(385,0,6473,1,'city','ÀÖÉ½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(386,0,6474,1,'city','ÄÏ³äÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(387,0,6475,1,'city','Ã¼É½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(388,0,6476,1,'city','ÒË±öÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(389,0,6477,1,'city','¹ã°²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(390,0,6478,1,'city','´ïÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(391,0,6479,1,'city','ÑÅ°²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(392,0,6480,1,'city','°ÍÖĞÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(393,0,6481,1,'city','×ÊÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(394,0,6482,1,'city','°¢°Ó²Ø×åÇ¼×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(395,0,6483,1,'city','¸Ê×Î²Ø×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(396,0,6484,1,'city','Á¹É½ÒÍ×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(397,0,6485,1,'city','¼ÃÄÏÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(398,0,6486,1,'city','ÇàµºÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(399,0,6487,1,'city','×Í²©ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(400,0,6488,1,'city','Ôæ×¯ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(401,0,6489,1,'city','¶«ÓªÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(402,0,6490,1,'city','ÑÌÌ¨ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(403,0,6491,1,'city','Î«·»ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(404,0,6492,1,'city','¼ÃÄşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(405,0,6493,1,'city','Ì©°²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(406,0,6494,1,'city','Íşº£ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(407,0,6495,1,'city','ÈÕÕÕÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(408,0,6496,1,'city','À³ÎßÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(409,0,6497,1,'city','ÁÙÒÊÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(410,0,6498,1,'city','µÂÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(411,0,6499,1,'city','ÁÄ³ÇÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(412,0,6500,1,'city','±õÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(413,0,6501,1,'city','ºÊÔóÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(414,0,6502,1,'city','¹óÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(415,0,6503,1,'city','ÁùÅÌË®ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(416,0,6504,1,'city','×ñÒåÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(417,0,6505,1,'city','°²Ë³ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(418,0,6506,1,'city','Í­ÈÊµØÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(419,0,6507,1,'city','±Ï½ÚµØÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(420,0,6508,1,'city','Ç­Î÷ÄÏ²¼ÒÀ×åÃç×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(421,0,6509,1,'city','Ç­¶«ÄÏÃç×å¶±×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(422,0,6510,1,'city','Ç­ÄÏ²¼ÒÀ×åÃç×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(423,0,6511,1,'city','º£¿ÚÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(424,0,6512,1,'city','ÈıÑÇÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(425,0,6513,1,'city','ÎåÖ¸É½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(426,0,6514,1,'city','Çíº£ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(427,0,6515,1,'city','ÙÙÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(428,0,6516,1,'city','ÎÄ²ıÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(429,0,6517,1,'city','ÍòÄşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(430,0,6518,1,'city','¶«·½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(431,0,6519,1,'city','³ÎÂõÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(432,0,6520,1,'city','¶¨°²ÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(433,0,6521,1,'city','ÍÍ²ıÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(434,0,6522,1,'city','ÁÙ¸ßÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(435,0,6523,1,'city','°×É³Àè×å×ÔÖÎÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(436,0,6524,1,'city','²ı½­Àè×å×ÔÖÎÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(437,0,6525,1,'city','ÀÖ¶«Àè×å×ÔÖÎÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(438,0,6526,1,'city','ÁêË®Àè×å×ÔÖÎÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(439,0,6527,1,'city','±£Í¤Àè×åÃç×å×ÔÖÎÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(440,0,6528,1,'city','ÇíÖĞÀè×åÃç×å×ÔÖÎÏØ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(441,0,6529,1,'city','À¥Ã÷ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(442,0,6530,1,'city','Çú¾¸ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(443,0,6531,1,'city','ÓñÏªÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(444,0,6532,1,'city','±£É½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(445,0,6533,1,'city','ÕÑÍ¨ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(446,0,6534,1,'city','Àö½­ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(447,0,6535,1,'city','Ë¼Ã©ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(448,0,6536,1,'city','ÁÙ²×ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(449,0,6537,1,'city','ÎÄÉ½×³×åÃç×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(450,0,6538,1,'city','ºìºÓ¹şÄá×åÒÍ×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(451,0,6539,1,'city','Î÷Ë«°æÄÉ´ö×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(452,0,6540,1,'city','³şĞÛÒÍ×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(453,0,6541,1,'city','´óÀí°××å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(454,0,6542,1,'city','µÂºê´ö×å¾°ÆÄ×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(455,0,6543,1,'city','Å­½­ÀüÀü×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(456,0,6544,1,'city','µÏÇì²Ø×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(457,0,6545,1,'city','Î÷ÄşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(458,0,6546,1,'city','º£¶«µØÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(459,0,6547,1,'city','º£±±²Ø×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(460,0,6548,1,'city','»ÆÄÏ²Ø×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(461,0,6549,1,'city','º£ÄÏ²Ø×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(462,0,6550,1,'city','¹ûÂå²Ø×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(463,0,6551,1,'city','ÓñÊ÷²Ø×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(464,0,6552,1,'city','º£Î÷ÃÉ¹Å×å²Ø×å×ÔÖÎÖİ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(465,0,6553,1,'city','Î÷°²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(466,0,6554,1,'city','Í­´¨ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(467,0,6555,1,'city','±¦¼¦ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(468,0,6556,1,'city','ÏÌÑôÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(469,0,6557,1,'city','Î¼ÄÏÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(470,0,6558,1,'city','ÑÓ°²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(471,0,6559,1,'city','ººÖĞÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(472,0,6560,1,'city','ÓÜÁÖÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(473,0,6561,1,'city','°²¿µÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(474,0,6562,1,'city','ÉÌÂåÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(475,0,6563,1,'city','ÄÏÄşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(476,0,6564,1,'city','ÁøÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(477,0,6565,1,'city','¹ğÁÖÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(478,0,6566,1,'city','ÎàÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(479,0,6567,1,'city','±±º£ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(480,0,6568,1,'city','·À³Ç¸ÛÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(481,0,6569,1,'city','ÇÕÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(482,0,6570,1,'city','¹ó¸ÛÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(483,0,6571,1,'city','ÓñÁÖÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(484,0,6572,1,'city','°ÙÉ«ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(485,0,6573,1,'city','ºØÖİÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(486,0,6574,1,'city','ºÓ³ØÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(487,0,6575,1,'city','À´±öÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(488,0,6576,1,'city','³ç×óÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(489,0,6577,1,'city','À­ÈøÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(490,0,6578,1,'city','ÄÇÇúµØÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(491,0,6579,1,'city','²ı¶¼µØÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(492,0,6580,1,'city','É½ÄÏµØÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(493,0,6581,1,'city','ÈÕ¿¦ÔòµØÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(494,0,6582,1,'city','°¢ÀïµØÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(495,0,6583,1,'city','ÁÖÖ¥µØÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(496,0,6584,1,'city','Òø´¨ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(497,0,6585,1,'city','Ê¯×ìÉ½ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(498,0,6586,1,'city','ÎâÖÒÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(499,0,6587,1,'city','¹ÌÔ­ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(500,0,6588,1,'city','ÖĞÎÀÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(501,0,6589,1,'city','ÎÚÂ³Ä¾ÆëÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(502,0,6590,1,'city','¿ËÀ­ÂêÒÀÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(503,0,6591,1,'city','Ê¯ºÓ×ÓÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(504,0,6592,1,'city','°¢À­¶ûÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(505,0,6593,1,'city','Í¼Ä¾Êæ¿ËÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(506,0,6594,1,'city','Îå¼ÒÇşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(507,0,6595,1,'city','ÍÂÂ³·¬ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(508,0,6596,1,'city','°¢¿ËËÕÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(509,0,6597,1,'city','¿¦Ê²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(510,0,6598,1,'city','¹şÃÜÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(511,0,6599,1,'city','ºÍÌïÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(512,0,6600,1,'city','°¢Í¼Ê²ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(513,0,6601,1,'city','¿â¶ûÀÕÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(514,0,6602,1,'city','²ı¼ªÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(515,0,6603,1,'city','¸·¿µÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(516,0,6604,1,'city','Ã×ÈªÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(517,0,6605,1,'city','²©ÀÖÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(518,0,6606,1,'city','ÒÁÄşÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(519,0,6607,1,'city','¿üÍÍÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(520,0,6608,1,'city','Ëş³ÇÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(521,0,6609,1,'city','ÎÚËÕÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(522,0,6610,1,'city','°¢ÀÕÌ©ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(523,0,6611,1,'city','ºôºÍºÆÌØÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(524,0,6612,1,'city','°üÍ·ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(525,0,6613,1,'city','ÎÚº£ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(526,0,6614,1,'city','³à·åÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(527,0,6615,1,'city','Í¨ÁÉÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(528,0,6616,1,'city','¶õ¶û¶àË¹ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(529,0,6617,1,'city','ºôÂ×±´¶ûÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(530,0,6618,1,'city','°ÍÑåÄ×¶ûÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(531,0,6619,1,'city','ÎÚÀ¼²ì²¼ÊĞ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(532,0,6620,1,'city','ÎıÁÖ¹ùÀÕÃË',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(533,0,6621,1,'city','ĞË°²ÃË',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(534,0,6622,1,'city','°¢À­ÉÆÃË',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(535,0,6623,1,'city','°ÄÃÅÌØ±ğĞĞÕşÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(536,0,6624,1,'city','Ïã¸ÛÌØ±ğĞĞÕşÇø',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(640,0,6068,1,'citizenship','ÖĞ¹ú',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(641,0,6069,1,'citizenship','ÃÀ¹ú',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(642,0,6070,1,'citizenship','ÈÕ±¾',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(643,0,6071,1,'citizenship','Ó¢¹ú',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(644,0,6072,1,'citizenship','µÂ¹ú',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(645,0,6073,1,'citizenship','º«¹ú',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(646,0,6074,1,'citizenship','Ïã¸Û',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(647,0,6075,1,'citizenship','Òâ´óÀû',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(648,0,6076,1,'citizenship','¼ÓÄÃ´ó',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(649,0,6077,1,'citizenship','°Ä´óÀûÑÇ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(650,0,6078,1,'citizenship','·¨¹ú',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(651,0,6079,1,'citizenship','·ÆÂÉ±ö',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(652,0,6080,1,'citizenship','ÒÔÉ«ÁĞ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(653,0,6081,1,'citizenship','Î÷°àÑÀ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(654,0,6082,1,'citizenship','Ì¨Íå',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(655,0,6083,1,'citizenship','±ÈÀûÊ±',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(656,0,6084,1,'citizenship','ĞÂ¼ÓÆÂ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(657,0,6085,1,'citizenship','·ÒÀ¼',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(658,0,6086,1,'citizenship','ºÉÀ¼',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(659,0,6087,1,'citizenship','²¨À¼',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(660,0,6088,1,'citizenship','ÈğÊ¿',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(661,0,6089,1,'citizenship','Èğµä',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(662,0,6090,1,'citizenship','Ì©¹ú',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(663,0,6091,1,'citizenship','ÆÏÌÑÑÀ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(664,0,6092,1,'citizenship','ÖÇÀû',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(665,0,6093,1,'citizenship','ĞÂÎ÷À¼',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(666,0,6094,1,'citizenship','°ÍÎ÷',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(667,0,6095,1,'citizenship','µ¤Âó',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(668,0,6096,1,'citizenship','°ÂµØÀû',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(669,0,6097,1,'citizenship','Ô½ÄÏ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(670,0,6098,1,'citizenship','Ë¹ÀïÀ¼¿¨',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(671,0,6099,1,'citizenship','ÂíÀ´Î÷ÑÇ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(672,0,6100,1,'citizenship','ÍÁ¶úÆä',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(673,0,6101,1,'citizenship','¹Å°Í',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(674,0,6102,1,'citizenship','Ö±²¼ÂŞÍÓ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(675,0,6103,1,'citizenship','ÎÚ¿ËÀ¼',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(676,0,6104,1,'citizenship','°¢¸ùÍ¢',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(677,0,6105,1,'citizenship','¶íÂŞË¹',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(678,0,6106,1,'citizenship','Ï£À°',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(679,0,6107,1,'citizenship','Å²Íş',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(680,0,6108,1,'citizenship','ÄÏ·Ç',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(681,0,6109,1,'citizenship','Ä«Î÷¸ç',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(682,0,6110,1,'citizenship','°®¶ûÀ¼',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(683,0,6111,1,'citizenship','Ó¡¶ÈÄáÎ÷ÑÇ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(684,0,6112,1,'citizenship','Ó¡¶È',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(685,0,6113,1,'citizenship','ÎÚÀ­¹ç',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(686,0,6114,1,'citizenship','°¢ÁªÇõ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(687,0,6115,1,'citizenship','½İ¿Ë',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(688,0,6116,1,'citizenship','°¢Âü',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(689,0,6117,1,'citizenship','ÈûÆÖÂ·Ë¹',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(690,0,6118,1,'citizenship','ĞÙÑÀÀû',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(691,0,6119,1,'citizenship','ÂŞÂíÄáÑÇ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(692,0,6120,1,'citizenship','ËÕ¸ñÀ¼',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(693,0,6121,1,'citizenship','±£¼ÓÀûÑÇ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(694,0,6122,1,'citizenship','¼íÆÒÕ¯',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(695,0,6123,1,'citizenship','Ë¹Âå·¥¿Ë',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(696,0,6124,1,'citizenship','À­ÍÑÎ¬ÑÇ',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(697,0,6125,1,'citizenship','±ùµº',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(698,0,6126,1,'citizenship','°ÄÃÅ',NULL,NULL,0,NULL,'2016-08-26 07:00:32');
+INSERT INTO `data_party_tag_rule_map` VALUES (1,0,5869,1,'gender','1',NULL,NULL,0,NULL,'2016-08-09 03:17:01'),(2,0,5870,1,'gender','2',NULL,NULL,0,NULL,'2016-08-09 03:17:01'),(13,0,5889,1,'maritalStatus','å·²å©š',NULL,NULL,0,NULL,'2016-08-09 06:22:34'),(14,0,5890,1,'maritalStatus','æœªå©š',NULL,NULL,0,NULL,'2016-08-09 06:22:34'),(15,0,5891,1,'maritalStatus','æœªçŸ¥',NULL,NULL,0,NULL,'2016-08-09 06:22:34'),(16,0,5895,1,'bloodType','O',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(17,0,5892,1,'bloodType','A',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(18,0,5893,1,'bloodType','B',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(19,0,5894,1,'bloodType','AB',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(20,0,6068,1,'citizenship','ä¸­å›½',NULL,NULL,0,NULL,'2016-08-09 06:24:12'),(21,0,6068,1,'citizenship','china',NULL,NULL,0,NULL,'2016-08-09 06:24:12'),(31,0,5869,8,'sex','1',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(32,0,5870,8,'sex','2',NULL,NULL,0,NULL,'2016-08-09 06:23:33'),(34,1,6631,0,'lastShoppingTime','dataValue != null && dataValue<=1',NULL,NULL,0,NULL,'2016-08-08 03:45:32'),(35,1,6632,0,'lastShoppingTime','dataValue != null && dataValue<=3',NULL,NULL,0,NULL,'2016-08-08 03:45:32'),(36,1,6633,0,'lastShoppingTime','dataValue != null && dataValue<=6',NULL,NULL,0,NULL,'2016-08-12 11:15:14'),(37,1,6627,0,'totalShoppingCount','dataValue != null && dataValue==1',NULL,NULL,0,NULL,'2016-08-08 03:46:37'),(38,1,6628,0,'totalShoppingCount','dataValue != null && dataValue==2',NULL,NULL,0,NULL,'2016-08-08 03:46:37'),(39,1,6629,0,'totalShoppingCount','dataValue != null && dataValue==3',NULL,NULL,0,NULL,'2016-08-08 03:46:37'),(40,1,6630,0,'totalShoppingCount','dataValue != null && dataValue>3',NULL,NULL,0,NULL,'2016-08-08 03:46:37'),(41,1,6634,0,'singleMonthShoppingCount','dataValue != null && dataValue<3',NULL,NULL,0,NULL,'2016-08-08 05:07:28'),(42,1,6635,0,'singleMonthShoppingCount','dataValue != null && dataValue>=3',NULL,NULL,0,NULL,'2016-08-08 05:07:28'),(43,1,6636,0,'totalIncome','dataValue != null && dataValue<=50',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(44,1,6637,0,'totalIncome','dataValue != null && dataValue>50&& dataValue<=100',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(45,1,6638,0,'totalIncome','dataValue != null && dataValue>100&& dataValue<=150',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(46,1,6639,0,'totalIncome','dataValue != null && dataValue>150&& dataValue<=200',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(47,1,6640,0,'totalIncome','dataValue != null && dataValue>200&& dataValue<=300',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(48,1,6641,0,'totalIncome','dataValue != null && dataValue>300',NULL,NULL,0,NULL,'2016-08-08 05:08:17'),(50,1,6642,0,'averageIncome','dataValue != null && dataValue<=50',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(51,1,6643,0,'averageIncome','dataValue != null && dataValue>100&& dataValue<=150',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(52,1,6644,0,'averageIncome','dataValue != null && dataValue != null && dataValue>50&& dataValue<=100',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(53,1,6645,0,'averageIncome','dataValue != null && dataValue>150&& dataValue<=200',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(54,1,6646,0,'averageIncome','dataValue != null && dataValue>200&& dataValue<=300',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(55,1,6647,0,'averageIncome','dataValue != null && dataValue>300',NULL,NULL,0,NULL,'2016-08-08 05:09:55'),(56,1,6652,0,'isShoppingUser','dataValue == null || dataValue!=true',NULL,NULL,0,NULL,'2016-08-19 10:02:18'),(57,1,6651,0,'isShoppingUser','dataValue != null && dataValue==true',NULL,NULL,0,NULL,'2016-08-08 05:10:23'),(58,1,6626,0,'weimob','dataValue == null || dataValue.contains(\"å…¶å®ƒ\")',NULL,NULL,0,NULL,'2016-08-29 08:13:32'),(59,1,6625,0,'weimob','dataValue != null && dataValue.contains(\"æ—ºé“º\")',NULL,NULL,0,NULL,'2016-08-29 03:13:41'),(60,1,6649,0,'orderStatus','dataValue != null && dataValue.contains(\"äº¤æ˜“å…³é—­\")',NULL,NULL,0,NULL,'2016-08-29 03:13:44'),(61,1,6648,0,'orderStatus','dataValue != null && dataValue.contains(\"äº¤æ˜“å®Œæˆ\")',NULL,NULL,0,NULL,'2016-08-29 03:13:47'),(62,1,6650,0,'orderStatus','dataValue != null && dataValue.contains(\"å¾…æ”¯ä»˜\")',NULL,NULL,0,NULL,'2016-08-29 03:13:51'),(63,0,5871,0,'gender','3',NULL,NULL,0,NULL,'2016-08-12 10:30:33'),(65,0,5871,0,'sex','3',NULL,NULL,0,NULL,'2016-08-20 04:55:15'),(66,0,6183,1,'provice','åŒ—äº¬',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(67,0,6184,1,'provice','å¤©æ´¥',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(68,0,6185,1,'provice','ä¸Šæµ·',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(69,0,6186,1,'provice','é‡åº†',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(70,0,6187,1,'provice','æ²³åŒ—çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(71,0,6188,1,'provice','å±±è¥¿çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(72,0,6189,1,'provice','å°æ¹¾çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(73,0,6190,1,'provice','è¾½å®çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(74,0,6191,1,'provice','å‰æ—çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(75,0,6192,1,'provice','é»‘é¾™æ±Ÿçœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(76,0,6193,1,'provice','æ±Ÿè‹çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(77,0,6194,1,'provice','æµ™æ±Ÿçœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(78,0,6195,1,'provice','å®‰å¾½çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(79,0,6196,1,'provice','ç¦å»ºçœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(80,0,6197,1,'provice','æ±Ÿè¥¿çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(81,0,6198,1,'provice','å±±ä¸œçœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(82,0,6199,1,'provice','æ²³å—çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(83,0,6200,1,'provice','æ¹–åŒ—çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(84,0,6201,1,'provice','æ¹–å—çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(85,0,6202,1,'provice','å¹¿ä¸œçœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(86,0,6203,1,'provice','ç”˜è‚ƒçœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(87,0,6204,1,'provice','å››å·çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(88,0,6205,1,'provice','è´µå·çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(89,0,6206,1,'provice','æµ·å—çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(90,0,6207,1,'provice','äº‘å—çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(91,0,6208,1,'provice','é’æµ·çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(92,0,6209,1,'provice','é™•è¥¿çœ',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(93,0,6210,1,'provice','å¹¿è¥¿å£®æ—è‡ªæ²»åŒº',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(94,0,6211,1,'provice','è¥¿è—è‡ªæ²»åŒº',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(95,0,6212,1,'provice','å®å¤å›æ—è‡ªæ²»åŒº',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(96,0,6213,1,'provice','æ–°ç–†ç»´å¾å°”è‡ªæ²»åŒº',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(97,0,6214,1,'provice','å†…è’™å¤è‡ªæ²»åŒº',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(98,0,6215,1,'provice','æ¾³é—¨ç‰¹åˆ«è¡Œæ”¿åŒº',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(99,0,6216,1,'provice','é¦™æ¸¯ç‰¹åˆ«è¡Œæ”¿åŒº',NULL,NULL,0,NULL,'2016-08-26 06:41:19'),(129,0,6217,1,'city','åŒ—äº¬å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(130,0,6218,1,'city','å¤©æ´¥å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(131,0,6219,1,'city','ä¸Šæµ·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(132,0,6220,1,'city','é‡åº†å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(133,0,6221,1,'city','çŸ³å®¶åº„å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(134,0,6222,1,'city','å”å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(135,0,6223,1,'city','ç§¦çš‡å²›å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(136,0,6224,1,'city','é‚¯éƒ¸å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(137,0,6225,1,'city','é‚¢å°å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(138,0,6226,1,'city','ä¿å®šå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(139,0,6227,1,'city','å¼ å®¶å£å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(140,0,6228,1,'city','æ‰¿å¾·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(141,0,6229,1,'city','æ²§å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(142,0,6230,1,'city','å»ŠåŠå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(143,0,6231,1,'city','è¡¡æ°´å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(144,0,6232,1,'city','å¤ªåŸå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(145,0,6233,1,'city','å¤§åŒå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(146,0,6234,1,'city','é˜³æ³‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(147,0,6235,1,'city','é•¿æ²»å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(148,0,6236,1,'city','æ™‹åŸå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(149,0,6237,1,'city','æœ”å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(150,0,6238,1,'city','æ™‹ä¸­å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(151,0,6239,1,'city','è¿åŸå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(152,0,6240,1,'city','å¿»å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(153,0,6241,1,'city','ä¸´æ±¾å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(154,0,6242,1,'city','å•æ¢å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(155,0,6243,1,'city','å°åŒ—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(156,0,6244,1,'city','é«˜é›„å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(157,0,6245,1,'city','åŸºéš†å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(158,0,6246,1,'city','å°ä¸­å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(159,0,6247,1,'city','å°å—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(160,0,6248,1,'city','æ–°ç«¹å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(161,0,6249,1,'city','å˜‰ä¹‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(162,0,6250,1,'city','å°åŒ—å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(163,0,6251,1,'city','å®œå…°å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(164,0,6252,1,'city','æ¡ƒå›­å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(165,0,6253,1,'city','æ–°ç«¹å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(166,0,6254,1,'city','è‹—æ —å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(167,0,6255,1,'city','å°ä¸­å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(168,0,6256,1,'city','å½°åŒ–å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(169,0,6257,1,'city','å—æŠ•å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(170,0,6258,1,'city','äº‘æ—å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(171,0,6259,1,'city','å˜‰ä¹‰å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(172,0,6260,1,'city','å°å—å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(173,0,6261,1,'city','é«˜é›„å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(174,0,6262,1,'city','å±ä¸œå¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(175,0,6263,1,'city','æ¾æ¹–å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(176,0,6264,1,'city','å°ä¸œå¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(177,0,6265,1,'city','èŠ±è²å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(178,0,6266,1,'city','æ²ˆé˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(179,0,6267,1,'city','å¤§è¿å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(180,0,6268,1,'city','éå±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(181,0,6269,1,'city','æŠšé¡ºå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(182,0,6270,1,'city','æœ¬æºªå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(183,0,6271,1,'city','ä¸¹ä¸œå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(184,0,6272,1,'city','é”¦å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(185,0,6273,1,'city','è¥å£å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(186,0,6274,1,'city','é˜œæ–°å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(187,0,6275,1,'city','è¾½é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(188,0,6276,1,'city','ç›˜é”¦å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(189,0,6277,1,'city','é“å²­å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(190,0,6278,1,'city','æœé˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(191,0,6279,1,'city','è‘«èŠ¦å²›å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(192,0,6280,1,'city','é•¿æ˜¥å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(193,0,6281,1,'city','å‰æ—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(194,0,6282,1,'city','å››å¹³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(195,0,6283,1,'city','è¾½æºå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(196,0,6284,1,'city','é€šåŒ–å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(197,0,6285,1,'city','ç™½å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(198,0,6286,1,'city','æ¾åŸå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(199,0,6287,1,'city','ç™½åŸå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(200,0,6288,1,'city','å»¶è¾¹æœé²œæ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(201,0,6289,1,'city','å“ˆå°”æ»¨å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(202,0,6290,1,'city','é½é½å“ˆå°”å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(203,0,6291,1,'city','é¹¤å²—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(204,0,6292,1,'city','åŒé¸­å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(205,0,6293,1,'city','é¸¡è¥¿å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(206,0,6294,1,'city','å¤§åº†å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(207,0,6295,1,'city','ä¼Šæ˜¥å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(208,0,6296,1,'city','ç‰¡ä¸¹æ±Ÿå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(209,0,6297,1,'city','ä½³æœ¨æ–¯å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(210,0,6298,1,'city','ä¸ƒå°æ²³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(211,0,6299,1,'city','é»‘æ²³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(212,0,6300,1,'city','ç»¥åŒ–å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(213,0,6301,1,'city','å¤§å…´å®‰å²­åœ°åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(214,0,6302,1,'city','å—äº¬å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(215,0,6303,1,'city','æ— é”¡å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(216,0,6304,1,'city','å¾å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(217,0,6305,1,'city','å¸¸å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(218,0,6306,1,'city','è‹å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(219,0,6307,1,'city','å—é€šå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(220,0,6308,1,'city','è¿äº‘æ¸¯å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(221,0,6309,1,'city','æ·®å®‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(222,0,6310,1,'city','ç›åŸå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(223,0,6311,1,'city','æ‰¬å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(224,0,6312,1,'city','é•‡æ±Ÿå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(225,0,6313,1,'city','æ³°å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(226,0,6314,1,'city','å®¿è¿å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(227,0,6315,1,'city','æ­å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(228,0,6316,1,'city','å®æ³¢å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(229,0,6317,1,'city','æ¸©å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(230,0,6318,1,'city','å˜‰å…´å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(231,0,6319,1,'city','æ¹–å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(232,0,6320,1,'city','ç»å…´å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(233,0,6321,1,'city','é‡‘åå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(234,0,6322,1,'city','è¡¢å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(235,0,6323,1,'city','èˆŸå±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(236,0,6324,1,'city','å°å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(237,0,6325,1,'city','ä¸½æ°´å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(238,0,6326,1,'city','åˆè‚¥å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(239,0,6327,1,'city','èŠœæ¹–å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(240,0,6328,1,'city','èšŒåŸ å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(241,0,6329,1,'city','æ·®å—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(242,0,6330,1,'city','é©¬éå±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(243,0,6331,1,'city','æ·®åŒ—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(244,0,6332,1,'city','é“œé™µå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(245,0,6333,1,'city','å®‰åº†å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(246,0,6334,1,'city','é»„å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(247,0,6335,1,'city','æ»å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(248,0,6336,1,'city','é˜œé˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(249,0,6337,1,'city','å®¿å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(250,0,6338,1,'city','å·¢æ¹–å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(251,0,6339,1,'city','å…­å®‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(252,0,6340,1,'city','äº³å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(253,0,6341,1,'city','æ± å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(254,0,6342,1,'city','å®£åŸå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(255,0,6343,1,'city','ç¦å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(256,0,6344,1,'city','å¦é—¨å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(257,0,6345,1,'city','è†ç”°å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(258,0,6346,1,'city','ä¸‰æ˜å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(259,0,6347,1,'city','æ³‰å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(260,0,6348,1,'city','æ¼³å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(261,0,6349,1,'city','å—å¹³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(262,0,6350,1,'city','é¾™å²©å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(263,0,6351,1,'city','å®å¾·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(264,0,6352,1,'city','å—æ˜Œå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(265,0,6353,1,'city','æ™¯å¾·é•‡å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(266,0,6354,1,'city','èä¹¡å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(267,0,6355,1,'city','ä¹æ±Ÿå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(268,0,6356,1,'city','æ–°ä½™å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(269,0,6357,1,'city','é¹°æ½­å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(270,0,6358,1,'city','èµ£å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(271,0,6359,1,'city','å‰å®‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(272,0,6360,1,'city','å®œæ˜¥å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(273,0,6361,1,'city','æŠšå·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(274,0,6362,1,'city','ä¸Šé¥¶å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(275,0,6363,1,'city','æµå—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(276,0,6364,1,'city','é’å²›å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(277,0,6365,1,'city','æ·„åšå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(278,0,6366,1,'city','æ£åº„å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(279,0,6367,1,'city','ä¸œè¥å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(280,0,6368,1,'city','çƒŸå°å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(281,0,6369,1,'city','æ½åŠå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(282,0,6370,1,'city','æµå®å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(283,0,6371,1,'city','æ³°å®‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(284,0,6372,1,'city','å¨æµ·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(285,0,6373,1,'city','æ—¥ç…§å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(286,0,6374,1,'city','è±èŠœå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(287,0,6375,1,'city','ä¸´æ²‚å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(288,0,6376,1,'city','å¾·å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(289,0,6377,1,'city','èŠåŸå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(290,0,6378,1,'city','æ»¨å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(291,0,6379,1,'city','èæ³½å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(292,0,6380,1,'city','éƒ‘å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(293,0,6381,1,'city','å¼€å°å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(294,0,6382,1,'city','æ´›é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(295,0,6383,1,'city','å¹³é¡¶å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(296,0,6384,1,'city','å®‰é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(297,0,6385,1,'city','é¹¤å£å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(298,0,6386,1,'city','æ–°ä¹¡å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(299,0,6387,1,'city','ç„¦ä½œå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(300,0,6388,1,'city','æ¿®é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(301,0,6389,1,'city','è®¸æ˜Œå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(302,0,6390,1,'city','æ¼¯æ²³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(303,0,6391,1,'city','ä¸‰é—¨å³¡å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(304,0,6392,1,'city','å—é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(305,0,6393,1,'city','å•†ä¸˜å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(306,0,6394,1,'city','ä¿¡é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(307,0,6395,1,'city','å‘¨å£å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(308,0,6396,1,'city','é©»é©¬åº—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(309,0,6397,1,'city','æµæºå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(310,0,6398,1,'city','æ­¦æ±‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(311,0,6399,1,'city','é»„çŸ³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(312,0,6400,1,'city','åå °å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(313,0,6401,1,'city','è†å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(314,0,6402,1,'city','å®œæ˜Œå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(315,0,6403,1,'city','è¥„æ¨Šå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(316,0,6404,1,'city','é„‚å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(317,0,6405,1,'city','è†é—¨å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(318,0,6406,1,'city','å­æ„Ÿå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(319,0,6407,1,'city','é»„å†ˆå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(320,0,6408,1,'city','å’¸å®å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(321,0,6409,1,'city','éšå·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(322,0,6410,1,'city','ä»™æ¡ƒå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(323,0,6411,1,'city','å¤©é—¨å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(324,0,6412,1,'city','æ½œæ±Ÿå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(325,0,6413,1,'city','ç¥å†œæ¶æ—åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(326,0,6414,1,'city','æ©æ–½åœŸå®¶æ—è‹—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(327,0,6415,1,'city','é•¿æ²™å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(328,0,6416,1,'city','æ ªæ´²å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(329,0,6417,1,'city','æ¹˜æ½­å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(330,0,6418,1,'city','è¡¡é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(331,0,6419,1,'city','é‚µé˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(332,0,6420,1,'city','å²³é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(333,0,6421,1,'city','å¸¸å¾·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(334,0,6422,1,'city','å¼ å®¶ç•Œå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(335,0,6423,1,'city','ç›Šé˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(336,0,6424,1,'city','éƒ´å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(337,0,6425,1,'city','æ°¸å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(338,0,6426,1,'city','æ€€åŒ–å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(339,0,6427,1,'city','å¨„åº•å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(340,0,6428,1,'city','æ¹˜è¥¿åœŸå®¶æ—è‹—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(341,0,6429,1,'city','å¹¿å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(342,0,6430,1,'city','æ·±åœ³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(343,0,6431,1,'city','ç æµ·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(344,0,6432,1,'city','æ±•å¤´å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(345,0,6433,1,'city','éŸ¶å…³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(346,0,6434,1,'city','ä½›å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(347,0,6435,1,'city','æ±Ÿé—¨å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(348,0,6436,1,'city','æ¹›æ±Ÿå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(349,0,6437,1,'city','èŒ‚åå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(350,0,6438,1,'city','è‚‡åº†å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(351,0,6439,1,'city','æƒ å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(352,0,6440,1,'city','æ¢…å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(353,0,6441,1,'city','æ±•å°¾å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(354,0,6442,1,'city','æ²³æºå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(355,0,6443,1,'city','é˜³æ±Ÿå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(356,0,6444,1,'city','æ¸…è¿œå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(357,0,6445,1,'city','ä¸œèå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(358,0,6446,1,'city','ä¸­å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(359,0,6447,1,'city','æ½®å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(360,0,6448,1,'city','æ­é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(361,0,6449,1,'city','äº‘æµ®å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(362,0,6450,1,'city','å…°å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(363,0,6451,1,'city','é‡‘æ˜Œå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(364,0,6452,1,'city','ç™½é“¶å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(365,0,6453,1,'city','å¤©æ°´å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(366,0,6454,1,'city','å˜‰å³ªå…³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(367,0,6455,1,'city','æ­¦å¨å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(368,0,6456,1,'city','å¼ æ–å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(369,0,6457,1,'city','å¹³å‡‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(370,0,6458,1,'city','é…’æ³‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(371,0,6459,1,'city','åº†é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(372,0,6460,1,'city','å®šè¥¿å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(373,0,6461,1,'city','é™‡å—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(374,0,6462,1,'city','ä¸´å¤å›æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(375,0,6463,1,'city','ç”˜å—è—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(376,0,6464,1,'city','æˆéƒ½å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(377,0,6465,1,'city','è‡ªè´¡å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(378,0,6466,1,'city','æ”€æèŠ±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(379,0,6467,1,'city','æ³¸å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(380,0,6468,1,'city','å¾·é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(381,0,6469,1,'city','ç»µé˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(382,0,6470,1,'city','å¹¿å…ƒå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(383,0,6471,1,'city','é‚å®å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(384,0,6472,1,'city','å†…æ±Ÿå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(385,0,6473,1,'city','ä¹å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(386,0,6474,1,'city','å—å……å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(387,0,6475,1,'city','çœ‰å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(388,0,6476,1,'city','å®œå®¾å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(389,0,6477,1,'city','å¹¿å®‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(390,0,6478,1,'city','è¾¾å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(391,0,6479,1,'city','é›…å®‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(392,0,6480,1,'city','å·´ä¸­å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(393,0,6481,1,'city','èµ„é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(394,0,6482,1,'city','é˜¿åè—æ—ç¾Œæ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(395,0,6483,1,'city','ç”˜å­œè—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(396,0,6484,1,'city','å‡‰å±±å½æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(397,0,6485,1,'city','æµå—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(398,0,6486,1,'city','é’å²›å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(399,0,6487,1,'city','æ·„åšå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(400,0,6488,1,'city','æ£åº„å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(401,0,6489,1,'city','ä¸œè¥å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(402,0,6490,1,'city','çƒŸå°å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(403,0,6491,1,'city','æ½åŠå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(404,0,6492,1,'city','æµå®å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(405,0,6493,1,'city','æ³°å®‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(406,0,6494,1,'city','å¨æµ·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(407,0,6495,1,'city','æ—¥ç…§å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(408,0,6496,1,'city','è±èŠœå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(409,0,6497,1,'city','ä¸´æ²‚å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(410,0,6498,1,'city','å¾·å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(411,0,6499,1,'city','èŠåŸå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(412,0,6500,1,'city','æ»¨å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(413,0,6501,1,'city','èæ³½å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(414,0,6502,1,'city','è´µé˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(415,0,6503,1,'city','å…­ç›˜æ°´å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(416,0,6504,1,'city','éµä¹‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(417,0,6505,1,'city','å®‰é¡ºå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(418,0,6506,1,'city','é“œä»åœ°åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(419,0,6507,1,'city','æ¯•èŠ‚åœ°åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(420,0,6508,1,'city','é»”è¥¿å—å¸ƒä¾æ—è‹—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(421,0,6509,1,'city','é»”ä¸œå—è‹—æ—ä¾—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(422,0,6510,1,'city','é»”å—å¸ƒä¾æ—è‹—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(423,0,6511,1,'city','æµ·å£å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(424,0,6512,1,'city','ä¸‰äºšå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(425,0,6513,1,'city','äº”æŒ‡å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(426,0,6514,1,'city','ç¼æµ·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(427,0,6515,1,'city','å„‹å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(428,0,6516,1,'city','æ–‡æ˜Œå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(429,0,6517,1,'city','ä¸‡å®å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(430,0,6518,1,'city','ä¸œæ–¹å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(431,0,6519,1,'city','æ¾„è¿ˆå¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(432,0,6520,1,'city','å®šå®‰å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(433,0,6521,1,'city','å±¯æ˜Œå¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(434,0,6522,1,'city','ä¸´é«˜å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(435,0,6523,1,'city','ç™½æ²™é»æ—è‡ªæ²»å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(436,0,6524,1,'city','æ˜Œæ±Ÿé»æ—è‡ªæ²»å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(437,0,6525,1,'city','ä¹ä¸œé»æ—è‡ªæ²»å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(438,0,6526,1,'city','é™µæ°´é»æ—è‡ªæ²»å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(439,0,6527,1,'city','ä¿äº­é»æ—è‹—æ—è‡ªæ²»å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(440,0,6528,1,'city','ç¼ä¸­é»æ—è‹—æ—è‡ªæ²»å¿',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(441,0,6529,1,'city','æ˜†æ˜å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(442,0,6530,1,'city','æ›²é–å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(443,0,6531,1,'city','ç‰æºªå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(444,0,6532,1,'city','ä¿å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(445,0,6533,1,'city','æ˜­é€šå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(446,0,6534,1,'city','ä¸½æ±Ÿå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(447,0,6535,1,'city','æ€èŒ…å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(448,0,6536,1,'city','ä¸´æ²§å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(449,0,6537,1,'city','æ–‡å±±å£®æ—è‹—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(450,0,6538,1,'city','çº¢æ²³å“ˆå°¼æ—å½æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(451,0,6539,1,'city','è¥¿åŒç‰ˆçº³å‚£æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(452,0,6540,1,'city','æ¥šé›„å½æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(453,0,6541,1,'city','å¤§ç†ç™½æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(454,0,6542,1,'city','å¾·å®å‚£æ—æ™¯é¢‡æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(455,0,6543,1,'city','æ€’æ±Ÿå‚ˆå‚ˆæ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(456,0,6544,1,'city','è¿ªåº†è—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(457,0,6545,1,'city','è¥¿å®å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(458,0,6546,1,'city','æµ·ä¸œåœ°åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(459,0,6547,1,'city','æµ·åŒ—è—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(460,0,6548,1,'city','é»„å—è—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(461,0,6549,1,'city','æµ·å—è—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(462,0,6550,1,'city','æœæ´›è—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(463,0,6551,1,'city','ç‰æ ‘è—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(464,0,6552,1,'city','æµ·è¥¿è’™å¤æ—è—æ—è‡ªæ²»å·',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(465,0,6553,1,'city','è¥¿å®‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(466,0,6554,1,'city','é“œå·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(467,0,6555,1,'city','å®é¸¡å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(468,0,6556,1,'city','å’¸é˜³å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(469,0,6557,1,'city','æ¸­å—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(470,0,6558,1,'city','å»¶å®‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(471,0,6559,1,'city','æ±‰ä¸­å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(472,0,6560,1,'city','æ¦†æ—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(473,0,6561,1,'city','å®‰åº·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(474,0,6562,1,'city','å•†æ´›å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(475,0,6563,1,'city','å—å®å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(476,0,6564,1,'city','æŸ³å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(477,0,6565,1,'city','æ¡‚æ—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(478,0,6566,1,'city','æ¢§å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(479,0,6567,1,'city','åŒ—æµ·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(480,0,6568,1,'city','é˜²åŸæ¸¯å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(481,0,6569,1,'city','é’¦å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(482,0,6570,1,'city','è´µæ¸¯å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(483,0,6571,1,'city','ç‰æ—å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(484,0,6572,1,'city','ç™¾è‰²å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(485,0,6573,1,'city','è´ºå·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(486,0,6574,1,'city','æ²³æ± å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(487,0,6575,1,'city','æ¥å®¾å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(488,0,6576,1,'city','å´‡å·¦å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(489,0,6577,1,'city','æ‹‰è¨å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(490,0,6578,1,'city','é‚£æ›²åœ°åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(491,0,6579,1,'city','æ˜Œéƒ½åœ°åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(492,0,6580,1,'city','å±±å—åœ°åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(493,0,6581,1,'city','æ—¥å–€åˆ™åœ°åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(494,0,6582,1,'city','é˜¿é‡Œåœ°åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(495,0,6583,1,'city','æ—èŠåœ°åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(496,0,6584,1,'city','é“¶å·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(497,0,6585,1,'city','çŸ³å˜´å±±å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(498,0,6586,1,'city','å´å¿ å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(499,0,6587,1,'city','å›ºåŸå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(500,0,6588,1,'city','ä¸­å«å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(501,0,6589,1,'city','ä¹Œé²æœ¨é½å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(502,0,6590,1,'city','å…‹æ‹‰ç›ä¾å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(503,0,6591,1,'city','çŸ³æ²³å­å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(504,0,6592,1,'city','é˜¿æ‹‰å°”å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(505,0,6593,1,'city','å›¾æœ¨èˆ’å…‹å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(506,0,6594,1,'city','äº”å®¶æ¸ å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(507,0,6595,1,'city','åé²ç•ªå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(508,0,6596,1,'city','é˜¿å…‹è‹å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(509,0,6597,1,'city','å–€ä»€å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(510,0,6598,1,'city','å“ˆå¯†å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(511,0,6599,1,'city','å’Œç”°å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(512,0,6600,1,'city','é˜¿å›¾ä»€å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(513,0,6601,1,'city','åº“å°”å‹’å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(514,0,6602,1,'city','æ˜Œå‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(515,0,6603,1,'city','é˜œåº·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(516,0,6604,1,'city','ç±³æ³‰å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(517,0,6605,1,'city','åšä¹å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(518,0,6606,1,'city','ä¼Šå®å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(519,0,6607,1,'city','å¥å±¯å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(520,0,6608,1,'city','å¡”åŸå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(521,0,6609,1,'city','ä¹Œè‹å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(522,0,6610,1,'city','é˜¿å‹’æ³°å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(523,0,6611,1,'city','å‘¼å’Œæµ©ç‰¹å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(524,0,6612,1,'city','åŒ…å¤´å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(525,0,6613,1,'city','ä¹Œæµ·å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(526,0,6614,1,'city','èµ¤å³°å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(527,0,6615,1,'city','é€šè¾½å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(528,0,6616,1,'city','é„‚å°”å¤šæ–¯å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(529,0,6617,1,'city','å‘¼ä¼¦è´å°”å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(530,0,6618,1,'city','å·´å½¦æ·–å°”å¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(531,0,6619,1,'city','ä¹Œå…°å¯Ÿå¸ƒå¸‚',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(532,0,6620,1,'city','é”¡æ—éƒ­å‹’ç›Ÿ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(533,0,6621,1,'city','å…´å®‰ç›Ÿ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(534,0,6622,1,'city','é˜¿æ‹‰å–„ç›Ÿ',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(535,0,6623,1,'city','æ¾³é—¨ç‰¹åˆ«è¡Œæ”¿åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(536,0,6624,1,'city','é¦™æ¸¯ç‰¹åˆ«è¡Œæ”¿åŒº',NULL,NULL,0,NULL,'2016-08-26 06:47:02'),(640,0,6068,1,'citizenship','ä¸­å›½',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(641,0,6069,1,'citizenship','ç¾å›½',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(642,0,6070,1,'citizenship','æ—¥æœ¬',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(643,0,6071,1,'citizenship','è‹±å›½',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(644,0,6072,1,'citizenship','å¾·å›½',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(645,0,6073,1,'citizenship','éŸ©å›½',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(646,0,6074,1,'citizenship','é¦™æ¸¯',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(647,0,6075,1,'citizenship','æ„å¤§åˆ©',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(648,0,6076,1,'citizenship','åŠ æ‹¿å¤§',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(649,0,6077,1,'citizenship','æ¾³å¤§åˆ©äºš',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(650,0,6078,1,'citizenship','æ³•å›½',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(651,0,6079,1,'citizenship','è²å¾‹å®¾',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(652,0,6080,1,'citizenship','ä»¥è‰²åˆ—',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(653,0,6081,1,'citizenship','è¥¿ç­ç‰™',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(654,0,6082,1,'citizenship','å°æ¹¾',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(655,0,6083,1,'citizenship','æ¯”åˆ©æ—¶',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(656,0,6084,1,'citizenship','æ–°åŠ å¡',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(657,0,6085,1,'citizenship','èŠ¬å…°',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(658,0,6086,1,'citizenship','è·å…°',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(659,0,6087,1,'citizenship','æ³¢å…°',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(660,0,6088,1,'citizenship','ç‘å£«',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(661,0,6089,1,'citizenship','ç‘å…¸',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(662,0,6090,1,'citizenship','æ³°å›½',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(663,0,6091,1,'citizenship','è‘¡è„ç‰™',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(664,0,6092,1,'citizenship','æ™ºåˆ©',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(665,0,6093,1,'citizenship','æ–°è¥¿å…°',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(666,0,6094,1,'citizenship','å·´è¥¿',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(667,0,6095,1,'citizenship','ä¸¹éº¦',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(668,0,6096,1,'citizenship','å¥¥åœ°åˆ©',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(669,0,6097,1,'citizenship','è¶Šå—',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(670,0,6098,1,'citizenship','æ–¯é‡Œå…°å¡',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(671,0,6099,1,'citizenship','é©¬æ¥è¥¿äºš',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(672,0,6100,1,'citizenship','åœŸè€³å…¶',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(673,0,6101,1,'citizenship','å¤å·´',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(674,0,6102,1,'citizenship','ç›´å¸ƒç½—é™€',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(675,0,6103,1,'citizenship','ä¹Œå…‹å…°',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(676,0,6104,1,'citizenship','é˜¿æ ¹å»·',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(677,0,6105,1,'citizenship','ä¿„ç½—æ–¯',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(678,0,6106,1,'citizenship','å¸Œè…Š',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(679,0,6107,1,'citizenship','æŒªå¨',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(680,0,6108,1,'citizenship','å—é',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(681,0,6109,1,'citizenship','å¢¨è¥¿å“¥',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(682,0,6110,1,'citizenship','çˆ±å°”å…°',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(683,0,6111,1,'citizenship','å°åº¦å°¼è¥¿äºš',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(684,0,6112,1,'citizenship','å°åº¦',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(685,0,6113,1,'citizenship','ä¹Œæ‹‰åœ­',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(686,0,6114,1,'citizenship','é˜¿è”é…‹',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(687,0,6115,1,'citizenship','æ·å…‹',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(688,0,6116,1,'citizenship','é˜¿æ›¼',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(689,0,6117,1,'citizenship','å¡æµ¦è·¯æ–¯',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(690,0,6118,1,'citizenship','åŒˆç‰™åˆ©',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(691,0,6119,1,'citizenship','ç½—é©¬å°¼äºš',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(692,0,6120,1,'citizenship','è‹æ ¼å…°',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(693,0,6121,1,'citizenship','ä¿åŠ åˆ©äºš',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(694,0,6122,1,'citizenship','æŸ¬åŸ”å¯¨',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(695,0,6123,1,'citizenship','æ–¯æ´›ä¼å…‹',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(696,0,6124,1,'citizenship','æ‹‰è„±ç»´äºš',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(697,0,6125,1,'citizenship','å†°å²›',NULL,NULL,0,NULL,'2016-08-26 07:00:32'),(698,0,6126,1,'citizenship','æ¾³é—¨',NULL,NULL,0,NULL,'2016-08-26 07:00:32');
 /*!40000 ALTER TABLE `data_party_tag_rule_map` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1386,45 +1386,45 @@ DROP TABLE IF EXISTS `data_payment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_payment` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `pay_channel` varchar(10) DEFAULT NULL COMMENT 'Ö§¸¶ÇşµÀ',
-  `pay_acct` varchar(45) DEFAULT NULL COMMENT 'Ö§¸¶ÕËºÅ',
-  `pay_serial` varchar(45) DEFAULT NULL COMMENT 'Ö§¸¶Á÷Ë®',
-  `trans_serial` varchar(45) DEFAULT NULL COMMENT 'ÒµÎñÁ÷Ë®',
-  `order_no` varchar(45) DEFAULT NULL COMMENT '¶©µ¥±àºÅ',
-  `product_name` varchar(100) DEFAULT NULL COMMENT 'ÉÌÆ·Ãû³Æ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `pay_channel` varchar(10) DEFAULT NULL COMMENT 'æ”¯ä»˜æ¸ é“',
+  `pay_acct` varchar(45) DEFAULT NULL COMMENT 'æ”¯ä»˜è´¦å·',
+  `pay_serial` varchar(45) DEFAULT NULL COMMENT 'æ”¯ä»˜æµæ°´',
+  `trans_serial` varchar(45) DEFAULT NULL COMMENT 'ä¸šåŠ¡æµæ°´',
+  `order_no` varchar(45) DEFAULT NULL COMMENT 'è®¢å•ç¼–å·',
+  `product_name` varchar(100) DEFAULT NULL COMMENT 'å•†å“åç§°',
   `create_time` datetime DEFAULT NULL,
-  `complete_time` datetime DEFAULT NULL COMMENT '½áÊøÊ±¼ä',
-  `pay_status` varchar(45) DEFAULT NULL COMMENT 'Ö§¸¶×´Ì¬',
-  `counter_acct` varchar(45) DEFAULT NULL COMMENT '¶Ô·½ÕËºÅ',
-  `income_amt` decimal(22,2) DEFAULT NULL COMMENT 'ÊÕÈë½ğ¶î',
-  `paid_amt` decimal(22,2) DEFAULT NULL COMMENT 'Ö§³ö½ğ¶î',
-  `acct_amt` decimal(22,2) DEFAULT NULL COMMENT 'ÕËºÅÓà¶î',
-  `comments` varchar(100) DEFAULT NULL COMMENT '±¸×¢',
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `complete_time` datetime DEFAULT NULL COMMENT 'ç»“æŸæ—¶é—´',
+  `pay_status` varchar(45) DEFAULT NULL COMMENT 'æ”¯ä»˜çŠ¶æ€',
+  `counter_acct` varchar(45) DEFAULT NULL COMMENT 'å¯¹æ–¹è´¦å·',
+  `income_amt` decimal(22,2) DEFAULT NULL COMMENT 'æ”¶å…¥é‡‘é¢',
+  `paid_amt` decimal(22,2) DEFAULT NULL COMMENT 'æ”¯å‡ºé‡‘é¢',
+  `acct_amt` decimal(22,2) DEFAULT NULL COMMENT 'è´¦å·ä½™é¢',
+  `comments` varchar(100) DEFAULT NULL COMMENT 'å¤‡æ³¨',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
-  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `wxmp_id` varchar(128) DEFAULT NULL,
   `wx_code` varchar(128) DEFAULT NULL,
   `bitmap` varchar(18) DEFAULT NULL,
   `keyid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_data_payment_pay_serial` (`pay_serial`) COMMENT 'Á÷Ë®ÕËºÅ',
+  UNIQUE KEY `idx_data_payment_pay_serial` (`pay_serial`) COMMENT 'æµæ°´è´¦å·',
   UNIQUE KEY `idx_data_payment_order_no` (`order_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ö§¸¶¼ÇÂ¼';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='æ”¯ä»˜è®°å½•';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1444,15 +1444,15 @@ DROP TABLE IF EXISTS `data_personal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_personal` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `task_id` int(10) NOT NULL COMMENT 'ËùÔÚµÄÈÎÎñId',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `task_id` int(10) NOT NULL COMMENT 'æ‰€åœ¨çš„ä»»åŠ¡Id',
   `open_id` int(15) DEFAULT NULL COMMENT 'openid',
-  `personal_name` varchar(20) DEFAULT NULL COMMENT '¸öÈËºÅÃû³Æ',
-  `nick_name` varchar(20) DEFAULT NULL COMMENT 'êÇ³Æ',
-  `deleted` tinyint(1) unsigned DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
-  `delete_time` datetime DEFAULT NULL COMMENT 'É¾³ıÊ±¼ä',
+  `personal_name` varchar(20) DEFAULT NULL COMMENT 'ä¸ªäººå·åç§°',
+  `nick_name` varchar(20) DEFAULT NULL COMMENT 'æ˜µç§°',
+  `deleted` tinyint(1) unsigned DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
+  `delete_time` datetime DEFAULT NULL COMMENT 'åˆ é™¤æ—¶é—´',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Î¢ĞÅ¸öÈËºÅÊı¾İ';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='å¾®ä¿¡ä¸ªäººå·æ•°æ®';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1473,39 +1473,39 @@ DROP TABLE IF EXISTS `data_population`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_population` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `name` varchar(100) DEFAULT NULL COMMENT 'ĞÕÃû',
-  `gender` tinyint(1) DEFAULT NULL COMMENT 'ĞÔ±ğ\n1-ÄĞ\n2-Å® \n3-Î´È·¶¨ \n4-²»È·¶¨',
-  `birthday` date DEFAULT NULL COMMENT '³öÉúÄêÔÂÈÕ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `name` varchar(100) DEFAULT NULL COMMENT 'å§“å',
+  `gender` tinyint(1) DEFAULT NULL COMMENT 'æ€§åˆ«\n1-ç”·\n2-å¥³ \n3-æœªç¡®å®š \n4-ä¸ç¡®å®š',
+  `birthday` date DEFAULT NULL COMMENT 'å‡ºç”Ÿå¹´æœˆæ—¥',
   `provice` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
-  `job` varchar(100) DEFAULT NULL COMMENT 'Ö°Òµ',
-  `monthly_income` decimal(22,2) DEFAULT NULL COMMENT 'ÔÂÊÕÈë',
-  `monthly_consume` decimal(22,2) DEFAULT NULL COMMENT 'ÔÂ¾ùÏû·Ñ',
-  `marital_status` varchar(45) DEFAULT NULL COMMENT '»éÒö×´¿ö',
-  `education` varchar(45) DEFAULT NULL COMMENT '½ÌÓı³Ì¶È',
-  `employment` varchar(45) DEFAULT NULL COMMENT '¾ÍÒµÇé¿ö',
-  `nationality` varchar(45) DEFAULT NULL COMMENT 'Ãñ×å',
-  `blood_type` varchar(45) DEFAULT NULL COMMENT 'ÑªĞÍ',
-  `citizenship` varchar(45) DEFAULT NULL COMMENT '¹ú¼®',
+  `job` varchar(100) DEFAULT NULL COMMENT 'èŒä¸š',
+  `monthly_income` decimal(22,2) DEFAULT NULL COMMENT 'æœˆæ”¶å…¥',
+  `monthly_consume` decimal(22,2) DEFAULT NULL COMMENT 'æœˆå‡æ¶ˆè´¹',
+  `marital_status` varchar(45) DEFAULT NULL COMMENT 'å©šå§»çŠ¶å†µ',
+  `education` varchar(45) DEFAULT NULL COMMENT 'æ•™è‚²ç¨‹åº¦',
+  `employment` varchar(45) DEFAULT NULL COMMENT 'å°±ä¸šæƒ…å†µ',
+  `nationality` varchar(45) DEFAULT NULL COMMENT 'æ°‘æ—',
+  `blood_type` varchar(45) DEFAULT NULL COMMENT 'è¡€å‹',
+  `citizenship` varchar(45) DEFAULT NULL COMMENT 'å›½ç±',
   `iq` int(11) DEFAULT NULL,
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `bitmap` varchar(18) DEFAULT NULL,
   `keyid` int(11) DEFAULT NULL,
   `wxmp_id` varchar(128) DEFAULT NULL,
@@ -1517,7 +1517,7 @@ CREATE TABLE `data_population` (
   `unionid` varchar(45) DEFAULT NULL,
   `remark` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÈË¿ÚÊôĞÔ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='äººå£å±æ€§';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1537,18 +1537,18 @@ DROP TABLE IF EXISTS `data_public`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_public` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `task_id` int(10) NOT NULL COMMENT 'ËùÔÚµÄÈÎÎñId',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `task_id` int(10) NOT NULL COMMENT 'æ‰€åœ¨çš„ä»»åŠ¡Id',
   `open_id` int(15) unsigned DEFAULT NULL COMMENT 'openid',
-  `public_name` varchar(20) DEFAULT NULL COMMENT '¹«ÖÚºÅÃû³Æ',
-  `nick_name` varchar(20) DEFAULT NULL COMMENT 'êÇ³Æ',
-  `icon_url` varchar(45) DEFAULT NULL COMMENT 'Í·Ïñurl',
-  `gender` tinyint(1) DEFAULT NULL COMMENT 'ĞÔ±ğ\n1-ÄĞ\n2-Å® \n3-Î´È·¶¨ \n4-²»È·¶¨',
-  `area` varchar(20) DEFAULT NULL COMMENT 'ÇøÓò',
-  `deleted` tinyint(1) unsigned DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
-  `delete_time` datetime DEFAULT NULL COMMENT 'É¾³ıÊ±¼ä',
+  `public_name` varchar(20) DEFAULT NULL COMMENT 'å…¬ä¼—å·åç§°',
+  `nick_name` varchar(20) DEFAULT NULL COMMENT 'æ˜µç§°',
+  `icon_url` varchar(45) DEFAULT NULL COMMENT 'å¤´åƒurl',
+  `gender` tinyint(1) DEFAULT NULL COMMENT 'æ€§åˆ«\n1-ç”·\n2-å¥³ \n3-æœªç¡®å®š \n4-ä¸ç¡®å®š',
+  `area` varchar(20) DEFAULT NULL COMMENT 'åŒºåŸŸ',
+  `deleted` tinyint(1) unsigned DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
+  `delete_time` datetime DEFAULT NULL COMMENT 'åˆ é™¤æ—¶é—´',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='Î¢ĞÅ¹«ÖÚºÅÊı¾İ';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='å¾®ä¿¡å…¬ä¼—å·æ•°æ®';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1569,72 +1569,72 @@ DROP TABLE IF EXISTS `data_shopping`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_shopping` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `channel_type` varchar(45) DEFAULT NULL COMMENT '¹ºÎïÇşµÀ·ÖÀà',
-  `channel_id` varchar(10) DEFAULT NULL COMMENT '¹ºÎïÇşµÀID',
-  `channel_name` varchar(45) DEFAULT NULL COMMENT '¹ºÎïÇşµÀÃû³Æ',
-  `pay_type` varchar(45) DEFAULT NULL COMMENT 'Ö§¸¶·½Ê½',
-  `trans_serial` varchar(45) DEFAULT NULL COMMENT 'ÒµÎñÁ÷Ë®',
-  `order_no` varchar(100) DEFAULT NULL COMMENT 'ÉÌÆ·¶©µ¥ºÅ',
-  `trans_time` datetime DEFAULT NULL COMMENT 'Ïû·ÑÊ±¼ä',
-  `product_id` varchar(100) DEFAULT NULL COMMENT 'ÉÌÆ·±àºÅ',
-  `specification` varchar(45) DEFAULT NULL COMMENT 'ÉÌÆ·¹æ¸ñ',
-  `color` varchar(45) DEFAULT NULL COMMENT 'ÑÕÉ«',
-  `discount_type` varchar(45) DEFAULT NULL COMMENT 'ÕÛ¿ÛÀàĞÍ',
-  `discount_amt` decimal(22,2) DEFAULT NULL COMMENT 'ÕÛ¿Û½ğ¶î',
-  `price` decimal(22,2) DEFAULT NULL COMMENT 'µ¥¼Û',
-  `amount` int(11) DEFAULT NULL COMMENT 'ÊıÁ¿',
-  `inventory` int(11) DEFAULT NULL COMMENT '¿â´æÁ¿',
-  `brand_id` varchar(45) DEFAULT NULL COMMENT 'Æ·ÅÆiD',
-  `brand_name` varchar(45) DEFAULT NULL COMMENT 'Æ·ÅÆÃû³Æ',
-  `class1_id` varchar(45) DEFAULT NULL COMMENT 'Ò»¼¶Æ·ÀàID',
-  `class1_name` varchar(45) DEFAULT NULL COMMENT 'Ò»¼¶Æ·ÀàÃû³Æ',
-  `class2_id` varchar(45) DEFAULT NULL COMMENT '¶ş¼¶Æ·ÀàID',
-  `class2_name` varchar(45) DEFAULT NULL COMMENT '¶ş¼¶Æ·ÀàÃû³Æ',
-  `class3_id` varchar(45) DEFAULT NULL COMMENT 'Èı¼¶Æ·ÀàID',
-  `class3_name` varchar(45) DEFAULT NULL COMMENT 'Èı¼¶Æ·ÀàÃû³Æ',
-  `class4_id` varchar(45) DEFAULT NULL COMMENT 'ËÄ¼¶Æ·ÀàID',
-  `class4_name` varchar(45) DEFAULT NULL COMMENT '¶ş¼¶Æ·ÀàÃû³Æ',
-  `sale_assist_id` varchar(45) DEFAULT NULL COMMENT 'µ¼¹ºÔ±±àºÅ',
-  `sale_assistance` varchar(45) DEFAULT NULL COMMENT 'µ¼¹ºÔ±',
-  `settlement_clerk_id` varchar(45) DEFAULT NULL COMMENT '½áËãÈËÔ±±àºÅ',
-  `settlement_clerk` varchar(45) DEFAULT NULL COMMENT '½áËãÈËÔ±',
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `channel_type` varchar(45) DEFAULT NULL COMMENT 'è´­ç‰©æ¸ é“åˆ†ç±»',
+  `channel_id` varchar(10) DEFAULT NULL COMMENT 'è´­ç‰©æ¸ é“ID',
+  `channel_name` varchar(45) DEFAULT NULL COMMENT 'è´­ç‰©æ¸ é“åç§°',
+  `pay_type` varchar(45) DEFAULT NULL COMMENT 'æ”¯ä»˜æ–¹å¼',
+  `trans_serial` varchar(45) DEFAULT NULL COMMENT 'ä¸šåŠ¡æµæ°´',
+  `order_no` varchar(100) DEFAULT NULL COMMENT 'å•†å“è®¢å•å·',
+  `trans_time` datetime DEFAULT NULL COMMENT 'æ¶ˆè´¹æ—¶é—´',
+  `product_id` varchar(100) DEFAULT NULL COMMENT 'å•†å“ç¼–å·',
+  `specification` varchar(45) DEFAULT NULL COMMENT 'å•†å“è§„æ ¼',
+  `color` varchar(45) DEFAULT NULL COMMENT 'é¢œè‰²',
+  `discount_type` varchar(45) DEFAULT NULL COMMENT 'æŠ˜æ‰£ç±»å‹',
+  `discount_amt` decimal(22,2) DEFAULT NULL COMMENT 'æŠ˜æ‰£é‡‘é¢',
+  `price` decimal(22,2) DEFAULT NULL COMMENT 'å•ä»·',
+  `amount` int(11) DEFAULT NULL COMMENT 'æ•°é‡',
+  `inventory` int(11) DEFAULT NULL COMMENT 'åº“å­˜é‡',
+  `brand_id` varchar(45) DEFAULT NULL COMMENT 'å“ç‰ŒiD',
+  `brand_name` varchar(45) DEFAULT NULL COMMENT 'å“ç‰Œåç§°',
+  `class1_id` varchar(45) DEFAULT NULL COMMENT 'ä¸€çº§å“ç±»ID',
+  `class1_name` varchar(45) DEFAULT NULL COMMENT 'ä¸€çº§å“ç±»åç§°',
+  `class2_id` varchar(45) DEFAULT NULL COMMENT 'äºŒçº§å“ç±»ID',
+  `class2_name` varchar(45) DEFAULT NULL COMMENT 'äºŒçº§å“ç±»åç§°',
+  `class3_id` varchar(45) DEFAULT NULL COMMENT 'ä¸‰çº§å“ç±»ID',
+  `class3_name` varchar(45) DEFAULT NULL COMMENT 'ä¸‰çº§å“ç±»åç§°',
+  `class4_id` varchar(45) DEFAULT NULL COMMENT 'å››çº§å“ç±»ID',
+  `class4_name` varchar(45) DEFAULT NULL COMMENT 'äºŒçº§å“ç±»åç§°',
+  `sale_assist_id` varchar(45) DEFAULT NULL COMMENT 'å¯¼è´­å‘˜ç¼–å·',
+  `sale_assistance` varchar(45) DEFAULT NULL COMMENT 'å¯¼è´­å‘˜',
+  `settlement_clerk_id` varchar(45) DEFAULT NULL COMMENT 'ç»“ç®—äººå‘˜ç¼–å·',
+  `settlement_clerk` varchar(45) DEFAULT NULL COMMENT 'ç»“ç®—äººå‘˜',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
-  `order_status` varchar(10) DEFAULT NULL COMMENT '¶©µ¥×´Ì¬',
-  `delivery_way` varchar(10) DEFAULT NULL COMMENT 'ÅäËÍ·½Ê½',
-  `logistics_status` varchar(10) DEFAULT NULL COMMENT 'ÎïÁ÷×´Ì¬',
-  `shipping_fee` decimal(22,2) DEFAULT NULL COMMENT 'ÔË·Ñ',
-  `shipping_way` varchar(10) DEFAULT NULL COMMENT 'ÔËËÍ·½Ê½',
-  `express_company` varchar(100) DEFAULT NULL COMMENT '¿ìµİ¹«Ë¾',
-  `express_order` varchar(50) DEFAULT NULL COMMENT '¿ìµİµ¥ºÅ',
-  `consignee` varchar(50) DEFAULT NULL COMMENT 'ÊÕ»õÈË',
-  `consignee_tel` varchar(20) DEFAULT NULL COMMENT 'ÊÕ»õÈËµç»°',
-  `consignee_addr` varchar(100) DEFAULT NULL COMMENT 'ÊÕ»õµØÖ·',
-  `buyer_comment` varchar(200) DEFAULT NULL COMMENT 'Âò¼Ò±¸×¢',
-  `wxmp_id` varchar(128) DEFAULT NULL COMMENT '¹«ÖÚºÅ±êÊ¶',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
+  `order_status` varchar(10) DEFAULT NULL COMMENT 'è®¢å•çŠ¶æ€',
+  `delivery_way` varchar(10) DEFAULT NULL COMMENT 'é…é€æ–¹å¼',
+  `logistics_status` varchar(10) DEFAULT NULL COMMENT 'ç‰©æµçŠ¶æ€',
+  `shipping_fee` decimal(22,2) DEFAULT NULL COMMENT 'è¿è´¹',
+  `shipping_way` varchar(10) DEFAULT NULL COMMENT 'è¿é€æ–¹å¼',
+  `express_company` varchar(100) DEFAULT NULL COMMENT 'å¿«é€’å…¬å¸',
+  `express_order` varchar(50) DEFAULT NULL COMMENT 'å¿«é€’å•å·',
+  `consignee` varchar(50) DEFAULT NULL COMMENT 'æ”¶è´§äºº',
+  `consignee_tel` varchar(20) DEFAULT NULL COMMENT 'æ”¶è´§äººç”µè¯',
+  `consignee_addr` varchar(100) DEFAULT NULL COMMENT 'æ”¶è´§åœ°å€',
+  `buyer_comment` varchar(200) DEFAULT NULL COMMENT 'ä¹°å®¶å¤‡æ³¨',
+  `wxmp_id` varchar(128) DEFAULT NULL COMMENT 'å…¬ä¼—å·æ ‡è¯†',
   `wx_code` varchar(128) DEFAULT NULL COMMENT 'openid',
-  `product_name` varchar(200) DEFAULT NULL COMMENT 'ÉÌÆ·Ãû³Æ',
+  `product_name` varchar(200) DEFAULT NULL COMMENT 'å•†å“åç§°',
   `bitmap` varchar(18) DEFAULT NULL,
   `keyid` int(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_data_shopping_order_no` (`order_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='¹ºÎï¼ÇÂ¼';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='è´­ç‰©è®°å½•';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1655,14 +1655,14 @@ DROP TABLE IF EXISTS `datareport_columns`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `datareport_columns` (
   `id` int(5) unsigned NOT NULL AUTO_INCREMENT,
-  `field_name` varchar(45) NOT NULL COMMENT 'ÁĞÃû',
-  `field_code` varchar(45) NOT NULL COMMENT 'Ó¢ÎÄÁĞÃû',
-  `field_order` int(11) DEFAULT NULL COMMENT 'ÁĞµÄË³Ğò',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç,0:Î´É¾³ı,1:ÒÑÉ¾³ı',
+  `field_name` varchar(45) NOT NULL COMMENT 'åˆ—å',
+  `field_code` varchar(45) NOT NULL COMMENT 'è‹±æ–‡åˆ—å',
+  `field_order` int(11) DEFAULT NULL COMMENT 'åˆ—çš„é¡ºåº',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°,0:æœªåˆ é™¤,1:å·²åˆ é™¤',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='Êı¾İÖÊÁ¿±¨¸æÖĞÎÄÁĞÃû';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='æ•°æ®è´¨é‡æŠ¥å‘Šä¸­æ–‡åˆ—å';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1671,7 +1671,7 @@ CREATE TABLE `datareport_columns` (
 
 LOCK TABLES `datareport_columns` WRITE;
 /*!40000 ALTER TABLE `datareport_columns` DISABLE KEYS */;
-INSERT INTO `datareport_columns` VALUES (1,'¿ªÊ¼Ê±¼ä','import_start_time',1,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(2,'Íê³ÉÊ±¼ä','import_end_time',2,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(3,'Êı¾İÔ´','source',3,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(4,'ºÏ·¨¼ÇÂ¼','legal_rows',4,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(5,'·Ç·¨¼ÇÂ¼','illegal_rows',5,0,'2016-06-12 16:15:42','2016-06-12 08:15:53'),(6,'ĞŞÕı¼ÇÂ¼','modify_rows',6,0,'2016-06-12 16:15:42','2016-06-12 08:15:42');
+INSERT INTO `datareport_columns` VALUES (1,'å¼€å§‹æ—¶é—´','import_start_time',1,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(2,'å®Œæˆæ—¶é—´','import_end_time',2,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(3,'æ•°æ®æº','source',3,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(4,'åˆæ³•è®°å½•','legal_rows',4,0,'2016-06-12 16:15:42','2016-06-12 08:15:42'),(5,'éæ³•è®°å½•','illegal_rows',5,0,'2016-06-12 16:15:42','2016-06-12 08:15:53'),(6,'ä¿®æ­£è®°å½•','modify_rows',6,0,'2016-06-12 16:15:42','2016-06-12 08:15:42');
 /*!40000 ALTER TABLE `datareport_columns` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1686,13 +1686,13 @@ CREATE TABLE `default_contact_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `field_name` varchar(100) DEFAULT NULL,
   `field_code` varchar(100) DEFAULT NULL,
-  `is_selected` tinyint(4) DEFAULT NULL COMMENT '0:Î´Ñ¡ÖĞ 1:Ñ¡ÖĞ',
-  `is_required` tinyint(4) DEFAULT NULL COMMENT '0:·Ç±ØĞë 1:±ØĞë',
-  `is_checked` tinyint(4) DEFAULT NULL COMMENT '0:²»ĞèÒªĞ£Ñé 1:ĞèÒªĞ£Ñé',
+  `is_selected` tinyint(4) DEFAULT NULL COMMENT '0:æœªé€‰ä¸­ 1:é€‰ä¸­',
+  `is_required` tinyint(4) DEFAULT NULL COMMENT '0:éå¿…é¡» 1:å¿…é¡»',
+  `is_checked` tinyint(4) DEFAULT NULL COMMENT '0:ä¸éœ€è¦æ ¡éªŒ 1:éœ€è¦æ ¡éªŒ',
   `default_shown_seq` int(11) DEFAULT NULL,
   `status` tinyint(4) DEFAULT '0',
-  `is_primary_key` tinyint(4) DEFAULT NULL COMMENT '0:²»ÊÇÖ÷¼ü 1:ÊÇÖ÷¼ü',
-  `field_type` int(11) DEFAULT '0' COMMENT '0:ÊäÈë¿ò 1:ÏÂÀ­¿ò 2:ÈÕÀúÑ¡Ôñ 3:µØÇøÁª¶¯ 4:ÊÖ»ú(ÑéÖ¤Âë)',
+  `is_primary_key` tinyint(4) DEFAULT NULL COMMENT '0:ä¸æ˜¯ä¸»é”® 1:æ˜¯ä¸»é”®',
+  `field_type` int(11) DEFAULT '0' COMMENT '0:è¾“å…¥æ¡† 1:ä¸‹æ‹‰æ¡† 2:æ—¥å†é€‰æ‹© 3:åœ°åŒºè”åŠ¨ 4:æ‰‹æœº(éªŒè¯ç )',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1703,7 +1703,7 @@ CREATE TABLE `default_contact_template` (
 
 LOCK TABLES `default_contact_template` WRITE;
 /*!40000 ALTER TABLE `default_contact_template` DISABLE KEYS */;
-INSERT INTO `default_contact_template` VALUES (1,'ĞÕÃû','name',1,1,1,1,0,1,0),(2,'ĞÔ±ğ','gender',1,1,0,2,0,0,1),(3,'ÉúÈÕ','birthday',1,1,0,3,0,0,2),(4,'ÊÖ»úºÅÂë','mobile',1,1,1,4,0,1,0),(5,'¹Ì»°ºÅÂë','tel',1,1,1,5,0,1,0),(6,'ÓÊÏäµØÖ·','email',1,1,1,6,0,1,0),(7,'QQºÅ','qq',1,1,0,7,0,1,0),(8,'ÑªĞÍ','blood_type',0,0,0,NULL,0,0,1),(9,'Ãñ×å','nationality',0,0,0,NULL,0,0,0),(10,'¹ú¼®','citizenship',0,0,0,NULL,0,0,0),(11,'µØÇø','city',0,0,0,NULL,0,0,3),(12,'ÔÂÊÕÈë','monthly_income',0,0,0,NULL,0,0,0),(13,'ÔÂÏû·Ñ','monthly_consume',0,0,0,NULL,0,0,0),(14,'Ö°Òµ','job',0,0,0,NULL,0,0,0),(15,'½ÌÓı³Ì¶È','education',0,0,0,NULL,0,0,1),(16,'¾ÍÒµÇé¿ö','employment',0,0,0,NULL,0,0,1),(17,'IQ','iq',0,0,1,NULL,0,0,0),(18,'Éí·İÖ¤ºÅ','identify_no',0,0,1,NULL,0,1,0),(19,'¼İÊ»Ö¤ºÅ','driving_license',0,0,1,NULL,0,1,0),(21,'»é·ñ','marital_status',0,0,0,NULL,0,0,1);
+INSERT INTO `default_contact_template` VALUES (1,'å§“å','name',1,1,1,1,0,1,0),(2,'æ€§åˆ«','gender',1,1,0,2,0,0,1),(3,'ç”Ÿæ—¥','birthday',1,1,0,3,0,0,2),(4,'æ‰‹æœºå·ç ','mobile',1,1,1,4,0,1,0),(5,'å›ºè¯å·ç ','tel',1,1,1,5,0,1,0),(6,'é‚®ç®±åœ°å€','email',1,1,1,6,0,1,0),(7,'QQå·','qq',1,1,0,7,0,1,0),(8,'è¡€å‹','blood_type',0,0,0,NULL,0,0,1),(9,'æ°‘æ—','nationality',0,0,0,NULL,0,0,0),(10,'å›½ç±','citizenship',0,0,0,NULL,0,0,0),(11,'åœ°åŒº','city',0,0,0,NULL,0,0,3),(12,'æœˆæ”¶å…¥','monthly_income',0,0,0,NULL,0,0,0),(13,'æœˆæ¶ˆè´¹','monthly_consume',0,0,0,NULL,0,0,0),(14,'èŒä¸š','job',0,0,0,NULL,0,0,0),(15,'æ•™è‚²ç¨‹åº¦','education',0,0,0,NULL,0,0,1),(16,'å°±ä¸šæƒ…å†µ','employment',0,0,0,NULL,0,0,1),(17,'IQ','iq',0,0,1,NULL,0,0,0),(18,'èº«ä»½è¯å·','identify_no',0,0,1,NULL,0,1,0),(19,'é©¾é©¶è¯å·','driving_license',0,0,1,NULL,0,1,0),(21,'å©šå¦','marital_status',0,0,0,NULL,0,0,1);
 /*!40000 ALTER TABLE `default_contact_template` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1717,14 +1717,14 @@ DROP TABLE IF EXISTS `illegal_data`;
 CREATE TABLE `illegal_data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `batch_id` bigint(20) NOT NULL,
-  `type` char(10) DEFAULT NULL COMMENT 'Êı¾İÀàĞÍ£º app,pos\n',
-  `origin_data` varchar(10000) DEFAULT NULL COMMENT 'Ô­Ê¼ÎÄ±¾Êı¾İ',
+  `type` char(10) DEFAULT NULL COMMENT 'æ•°æ®ç±»å‹ï¼š app,pos\n',
+  `origin_data` varchar(10000) DEFAULT NULL COMMENT 'åŸå§‹æ–‡æœ¬æ•°æ®',
   `create_time` datetime DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `head_type` varchar(1) DEFAULT NULL COMMENT 'ÊÇ·ñ·Ç·¨Êı¾İ£¬0²»ÊÇ£¬1ÊÇ',
+  `head_type` varchar(1) DEFAULT NULL COMMENT 'æ˜¯å¦éæ³•æ•°æ®ï¼Œ0ä¸æ˜¯ï¼Œ1æ˜¯',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='·Ç·¨Êı¾İ¼ÇÂ¼±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='éæ³•æ•°æ®è®°å½•è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1744,24 +1744,24 @@ DROP TABLE IF EXISTS `img_text_asset`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `img_text_asset` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `name` varchar(200) DEFAULT NULL COMMENT 'Í¼ÎÄÃû³Æ',
-  `type` tinyint(4) DEFAULT '0' COMMENT '0:Î¢ĞÅ×Ê²ú,1:h5×Ê²ú',
-  `owner_name` varchar(200) DEFAULT NULL COMMENT '´´½¨ÕßÃû³Æ:Î¢ĞÅºÅ/h5Æ½Ì¨Ãû',
-  `pc_preview_url` varchar(1000) DEFAULT NULL COMMENT 'µçÄÔÔ¤ÀÀurl',
-  `mobile_preview_url` varchar(1000) DEFAULT NULL COMMENT 'ÊÖ»úÔ¤ÀÀurl',
-  `imgfile_url` varchar(1000) DEFAULT NULL COMMENT 'ËõÂÔÍ¼url',
-  `material_id` varchar(200) DEFAULT NULL COMMENT 'Í¼ÎÄËØ²ÄÔÚ´óÁ¬H5Êı¾İ¿âÖĞµÄÖ÷¼ü',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `name` varchar(200) DEFAULT NULL COMMENT 'å›¾æ–‡åç§°',
+  `type` tinyint(4) DEFAULT '0' COMMENT '0:å¾®ä¿¡èµ„äº§,1:h5èµ„äº§',
+  `owner_name` varchar(200) DEFAULT NULL COMMENT 'åˆ›å»ºè€…åç§°:å¾®ä¿¡å·/h5å¹³å°å',
+  `pc_preview_url` varchar(1000) DEFAULT NULL COMMENT 'ç”µè„‘é¢„è§ˆurl',
+  `mobile_preview_url` varchar(1000) DEFAULT NULL COMMENT 'æ‰‹æœºé¢„è§ˆurl',
+  `imgfile_url` varchar(1000) DEFAULT NULL COMMENT 'ç¼©ç•¥å›¾url',
+  `material_id` varchar(200) DEFAULT NULL COMMENT 'å›¾æ–‡ç´ æåœ¨å¤§è¿H5æ•°æ®åº“ä¸­çš„ä¸»é”®',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `pub_id` varchar(45) DEFAULT NULL COMMENT 'Í¼ÎÄËùÊô¹«ÖÚºÅid',
-  `pub_name` varchar(200) DEFAULT NULL COMMENT 'Í¼ÎÄËùÊô¹«ÖÚºÅÃû³Æ',
-  `wechat_status` tinyint(4) DEFAULT NULL COMMENT 'Î¢ĞÅÍ¼ÎÄ×´Ì¬  1:ÈÔÔÚÎ¢ĞÅ·şÎñÆ÷ÉÏ  0:´ÓÎ¢ĞÅ·şÎñÆ÷ÉÏ±»É¾³ıÁË',
-  `show_cover_pic` tinyint(4) DEFAULT NULL COMMENT 'ÊÇ·ñÏÔÊ¾·âÃæ 0:²»ÏÔÊ¾  1:ÏÔÊ¾',
-  `thumb_ready` tinyint(4) DEFAULT NULL COMMENT 'Î¢ĞÅÍ¼ÎÄÊÇ·ñÏÂÔØÍê±Ï: 0´ú±íÒÑ¾­ÏÂÔØÍê±Ï 1´ú±íÉĞÎ´ÏÂÔØÍê±Ï',
+  `pub_id` varchar(45) DEFAULT NULL COMMENT 'å›¾æ–‡æ‰€å±å…¬ä¼—å·id',
+  `pub_name` varchar(200) DEFAULT NULL COMMENT 'å›¾æ–‡æ‰€å±å…¬ä¼—å·åç§°',
+  `wechat_status` tinyint(4) DEFAULT NULL COMMENT 'å¾®ä¿¡å›¾æ–‡çŠ¶æ€  1:ä»åœ¨å¾®ä¿¡æœåŠ¡å™¨ä¸Š  0:ä»å¾®ä¿¡æœåŠ¡å™¨ä¸Šè¢«åˆ é™¤äº†',
+  `show_cover_pic` tinyint(4) DEFAULT NULL COMMENT 'æ˜¯å¦æ˜¾ç¤ºå°é¢ 0:ä¸æ˜¾ç¤º  1:æ˜¾ç¤º',
+  `thumb_ready` tinyint(4) DEFAULT NULL COMMENT 'å¾®ä¿¡å›¾æ–‡æ˜¯å¦ä¸‹è½½å®Œæ¯•: 0ä»£è¡¨å·²ç»ä¸‹è½½å®Œæ¯• 1ä»£è¡¨å°šæœªä¸‹è½½å®Œæ¯•',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Í¼ÎÄ×Ê²ú±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å›¾æ–‡èµ„äº§è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1782,29 +1782,29 @@ DROP TABLE IF EXISTS `import_data_history`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `import_data_history` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL COMMENT 'ÈÎÎñÃû³Æ',
+  `name` varchar(100) DEFAULT NULL COMMENT 'ä»»åŠ¡åç§°',
   `import_start_time` timestamp NULL DEFAULT NULL,
   `import_end_time` timestamp NULL DEFAULT NULL,
-  `total_rows` int(11) DEFAULT NULL COMMENT '±¾Åú´ÎÊı¾İ½ÓÈë×ÜÌõÊı',
-  `legal_rows` int(11) DEFAULT NULL COMMENT '±¾Åú´ÎÊı¾İ½ÓÈëºÏ·¨Êı¾İÌõÊı',
+  `total_rows` int(11) DEFAULT NULL COMMENT 'æœ¬æ‰¹æ¬¡æ•°æ®æ¥å…¥æ€»æ¡æ•°',
+  `legal_rows` int(11) DEFAULT NULL COMMENT 'æœ¬æ‰¹æ¬¡æ•°æ®æ¥å…¥åˆæ³•æ•°æ®æ¡æ•°',
   `success` tinyint(4) DEFAULT NULL,
-  `source` varchar(50) DEFAULT NULL COMMENT 'Êı¾İÔ´ÀàĞÍ',
-  `source_filename` varchar(128) DEFAULT NULL COMMENT 'Êı¾İÔ´ÎÄ¼şÃû³Æ',
+  `source` varchar(50) DEFAULT NULL COMMENT 'æ•°æ®æºç±»å‹',
+  `source_filename` varchar(128) DEFAULT NULL COMMENT 'æ•°æ®æºæ–‡ä»¶åç§°',
   `download_filename` varchar(128) DEFAULT NULL,
-  `email_rows` int(11) DEFAULT NULL COMMENT '·Ç·¨emailÌõÊı',
-  `mobile_rows` int(11) DEFAULT NULL COMMENT '·Ç·¨ÊÖ»úºÅÌõÊı',
-  `duplicate_rows` int(11) DEFAULT NULL COMMENT 'ÖØ¸´ÌõÊı',
-  `illegal_rows` int(11) DEFAULT NULL COMMENT '·Ç·¨¼ÇÂ¼×ÜÌõÊı',
+  `email_rows` int(11) DEFAULT NULL COMMENT 'éæ³•emailæ¡æ•°',
+  `mobile_rows` int(11) DEFAULT NULL COMMENT 'éæ³•æ‰‹æœºå·æ¡æ•°',
+  `duplicate_rows` int(11) DEFAULT NULL COMMENT 'é‡å¤æ¡æ•°',
+  `illegal_rows` int(11) DEFAULT NULL COMMENT 'éæ³•è®°å½•æ€»æ¡æ•°',
   `summary` varchar(512) DEFAULT NULL,
   `no_recognize_property` varchar(1024) DEFAULT NULL,
   `file_unique` varchar(50) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç,0:Î´É¾³ı,1:ÒÑÉ¾³ı',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°,0:æœªåˆ é™¤,1:å·²åˆ é™¤',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `file_type` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_file_unique` (`file_unique`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Êı¾İ½ÓÈëÖÊÁ¿±¨¸æ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='æ•°æ®æ¥å…¥è´¨é‡æŠ¥å‘Š';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1830,9 +1830,9 @@ CREATE TABLE `import_data_modify_log` (
   `total_rows` int(11) DEFAULT NULL,
   `modify_rows` int(11) DEFAULT NULL,
   `illegal_rows` int(11) DEFAULT NULL,
-  `modify_filename` varchar(128) DEFAULT NULL COMMENT 'ÉÏ´«ĞŞÕıÎÄ¼şÃû³Æ',
+  `modify_filename` varchar(128) DEFAULT NULL COMMENT 'ä¸Šä¼ ä¿®æ­£æ–‡ä»¶åç§°',
   `success` tinyint(4) DEFAULT NULL,
-  `modify_download_filename` varchar(128) DEFAULT NULL COMMENT 'ÉÏ´«ĞŞÕıÎÄ¼şÃû³Æ',
+  `modify_download_filename` varchar(128) DEFAULT NULL COMMENT 'ä¸Šä¼ ä¿®æ­£æ–‡ä»¶åç§°',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1855,17 +1855,17 @@ DROP TABLE IF EXISTS `import_template`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `import_template` (
   `id` int(5) unsigned NOT NULL AUTO_INCREMENT,
-  `templ_type` int(5) NOT NULL COMMENT 'Ä£°åÀàĞÍ\n0-Ö÷Êı¾İ\n1-ÈË¿ÚÊôĞÔ\n2-¿Í»§±êÇ©\n3-ÂñµãÍ³¼Æ\n4-»áÔ±¿¨¼ÇÂ¼\n5-µÇÂ¼ĞĞÎª\n6-Ö§¸¶¼ÇÂ¼\n7-¹ºÎï¼ÇÂ¼',
-  `templ_name` varchar(45) NOT NULL DEFAULT '' COMMENT 'Ä£°åÃû³Æ',
-  `field_name` varchar(45) NOT NULL COMMENT 'ÁĞÃû',
-  `field_code` varchar(45) NOT NULL COMMENT 'Ó¢ÎÄÁĞÃû£¬¶ÔÓ¦data_appµÈ±íµÄcolumn',
-  `selected` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Ñ¡ÖĞ 0-Î´Ñ¡ÖĞ 1-Ñ¡ÖĞ',
+  `templ_type` int(5) NOT NULL COMMENT 'æ¨¡æ¿ç±»å‹\n0-ä¸»æ•°æ®\n1-äººå£å±æ€§\n2-å®¢æˆ·æ ‡ç­¾\n3-åŸ‹ç‚¹ç»Ÿè®¡\n4-ä¼šå‘˜å¡è®°å½•\n5-ç™»å½•è¡Œä¸º\n6-æ”¯ä»˜è®°å½•\n7-è´­ç‰©è®°å½•',
+  `templ_name` varchar(45) NOT NULL DEFAULT '' COMMENT 'æ¨¡æ¿åç§°',
+  `field_name` varchar(45) NOT NULL COMMENT 'åˆ—å',
+  `field_code` varchar(45) NOT NULL COMMENT 'è‹±æ–‡åˆ—åï¼Œå¯¹åº”data_appç­‰è¡¨çš„column',
+  `selected` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'é€‰ä¸­ 0-æœªé€‰ä¸­ 1-é€‰ä¸­',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unq_templ_name_field_name` (`field_name`,`templ_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=243 DEFAULT CHARSET=utf8 COMMENT='µ¼ÈëÄ£°å±í';
+) ENGINE=InnoDB AUTO_INCREMENT=243 DEFAULT CHARSET=utf8 COMMENT='å¯¼å…¥æ¨¡æ¿è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1874,7 +1874,7 @@ CREATE TABLE `import_template` (
 
 LOCK TABLES `import_template` WRITE;
 /*!40000 ALTER TABLE `import_template` DISABLE KEYS */;
-INSERT INTO `import_template` VALUES (1,0,'Ö÷Êı¾İ','ÊÖ»úºÅ','mobile',1,0,NULL,'2016-07-22 09:54:00'),(2,0,'Ö÷Êı¾İ','ĞÕÃû','name',1,0,NULL,'2016-07-22 09:54:00'),(3,0,'Ö÷Êı¾İ','ĞÔ±ğ','gender',1,0,NULL,'2016-07-22 09:54:00'),(4,0,'Ö÷Êı¾İ','³öÉúÄêÔÂÈÕ','birthday',1,0,NULL,'2016-07-18 09:12:11'),(5,0,'Ö÷Êı¾İ','Ê¡','provice',1,0,NULL,'2016-07-18 09:30:10'),(6,0,'Ö÷Êı¾İ','ÊĞ','city',1,0,NULL,'2016-07-22 09:54:00'),(7,0,'Ö÷Êı¾İ','Ö°Òµ','job',1,0,NULL,'2016-07-22 09:54:00'),(8,0,'Ö÷Êı¾İ','ÔÂÊÕÈë','monthly_income',1,0,NULL,'2016-07-22 09:54:00'),(9,0,'Ö÷Êı¾İ','»áÔ±µÈ¼¶','member_level',1,0,NULL,'2016-07-18 09:41:36'),(10,0,'Ö÷Êı¾İ','»áÔ±»ı·Ö','member_points',1,0,NULL,'2016-07-22 09:54:00'),(11,0,'Ö÷Êı¾İ','Êı¾İÀ´Ô´','source',1,0,NULL,'2016-07-22 09:54:00'),(12,0,'Ö÷Êı¾İ','ÔÂ¾ùÏû·Ñ','monthly_consume',1,0,NULL,'2016-07-22 09:54:00'),(13,0,'Ö÷Êı¾İ','×îºóµÇÂ¼Ê±¼ä','last_login',0,0,NULL,'2016-07-22 07:06:06'),(14,0,'Ö÷Êı¾İ','É¾³ı±ê¼Ç','status',0,0,NULL,'2016-07-22 07:06:06'),(15,0,'Ö÷Êı¾İ','²úÉúÊ±¼ä','create_time',0,0,NULL,'2016-07-22 09:54:00'),(16,0,'Ö÷Êı¾İ','É¾³ıÊ±¼ä','update_time',0,0,NULL,'2016-07-19 08:27:38'),(17,1,'ÈË¿ÚÊôĞÔ','ÊÖ»úºÅ','mobile',0,0,NULL,'2016-08-10 07:12:24'),(18,1,'ÈË¿ÚÊôĞÔ','ĞÕÃû','name',0,0,NULL,'2016-08-10 07:12:24'),(19,1,'ÈË¿ÚÊôĞÔ','ĞÔ±ğ','gender',0,0,NULL,'2016-08-10 07:12:24'),(20,1,'ÈË¿ÚÊôĞÔ','ÉúÈÕ','birthday',0,0,NULL,'2016-08-10 07:12:24'),(21,1,'ÈË¿ÚÊôĞÔ','Ê¡','provice',1,0,NULL,'2016-07-08 11:48:20'),(22,1,'ÈË¿ÚÊôĞÔ','ÊĞ','city',1,0,NULL,'2016-07-08 11:48:20'),(23,1,'ÈË¿ÚÊôĞÔ','Ö°Òµ','job',0,0,NULL,'2016-08-10 07:12:24'),(24,1,'ÈË¿ÚÊôĞÔ','ÔÂÊÕÈë','monthly_income',0,0,NULL,'2016-08-10 07:12:24'),(25,1,'ÈË¿ÚÊôĞÔ','ÔÂÏû·Ñ','monthly_consume',0,0,NULL,'2016-08-10 07:12:24'),(26,1,'ÈË¿ÚÊôĞÔ','»é·ñ','marital_status',0,0,NULL,'2016-08-10 07:12:24'),(27,1,'ÈË¿ÚÊôĞÔ','½ÌÓı³Ì¶È','education',0,0,NULL,'2016-08-10 07:12:24'),(28,1,'ÈË¿ÚÊôĞÔ','¾ÍÒµÇé¿ö','employment',0,0,NULL,'2016-08-10 07:12:24'),(29,1,'ÈË¿ÚÊôĞÔ','Ãñ×å','nationality',0,0,NULL,'2016-08-10 07:12:24'),(30,1,'ÈË¿ÚÊôĞÔ','ÑªĞÍ','blood_type',0,0,NULL,'2016-08-10 07:12:24'),(31,1,'ÈË¿ÚÊôĞÔ','¹ú¼®','citizenship',1,0,NULL,'2016-07-19 08:28:28'),(32,1,'ÈË¿ÚÊôĞÔ','IQ','iq',0,0,NULL,'2016-08-10 07:12:24'),(33,1,'ÈË¿ÚÊôĞÔ','Éí·İÖ¤ºÅ','identify_no',0,0,NULL,'2016-08-10 07:12:24'),(34,1,'ÈË¿ÚÊôĞÔ','¼İÊ»Ö¤ºÅ','driving_license',0,0,NULL,'2016-08-10 07:12:25'),(35,1,'ÈË¿ÚÊôĞÔ','ÓÊÏä','email',0,0,NULL,'2016-08-10 07:12:25'),(36,1,'ÈË¿ÚÊôĞÔ','¹Ì»°ºÅÂë','tel',0,0,NULL,'2016-08-10 07:12:25'),(37,1,'ÈË¿ÚÊôĞÔ','QQ','qq',0,0,NULL,'2016-08-10 07:12:25'),(38,1,'ÈË¿ÚÊôĞÔ','Ë½ÓĞÕËºÅÀàĞÍ','acct_type',0,0,NULL,'2016-08-10 07:12:25'),(39,1,'ÈË¿ÚÊôĞÔ','Ë½ÓĞÕËºÅ','acct_no',0,0,NULL,'2016-08-10 07:12:25'),(40,1,'ÈË¿ÚÊôĞÔ','IDFA','idfa',0,0,NULL,'2016-08-05 08:34:09'),(41,1,'ÈË¿ÚÊôĞÔ','IMEI','imei',0,0,NULL,'2016-08-05 08:34:18'),(42,1,'ÈË¿ÚÊôĞÔ','unionid','udid',0,0,NULL,'2016-08-05 08:34:36'),(43,1,'ÈË¿ÚÊôĞÔ','MAC','phone_mac',0,0,NULL,'2016-08-05 08:34:39'),(44,1,'ÈË¿ÚÊôĞÔ','É¾³ı±ê¼Ç','status',0,0,NULL,'2016-06-23 06:18:27'),(45,1,'ÈË¿ÚÊôĞÔ','´´½¨Ê±¼ä','create_time',0,0,NULL,'2016-06-23 06:18:27'),(46,1,'ÈË¿ÚÊôĞÔ','É¾³ıÊ±¼ä','update_time',0,0,NULL,'2016-06-23 06:18:27'),(47,1,'ÈË¿ÚÊôĞÔ','Êı¾İÀ´Ô´','source',0,0,NULL,'2016-06-23 06:18:27'),(48,2,'¿Í»§±êÇ©','±êÇ©ÀàĞÍ','tag_type',1,0,NULL,'2016-06-13 09:47:50'),(49,2,'¿Í»§±êÇ©','±êÇ©Ãû³Æ','tag_name',1,0,NULL,'2016-07-01 11:21:42'),(50,2,'¿Í»§±êÇ©','ÈÕÆÚ','birthday',0,0,NULL,'2016-08-08 08:39:53'),(51,2,'¿Í»§±êÇ©','Éí·İÖ¤ºÅ','identify_no',0,0,NULL,'2016-07-07 11:22:35'),(52,2,'¿Í»§±êÇ©','¼İÊ»Ö¤ºÅ','driving_license',1,0,NULL,'2016-07-07 11:31:13'),(53,2,'¿Í»§±êÇ©','ÓÊÏä','email',1,0,NULL,'2016-08-05 08:44:48'),(54,2,'¿Í»§±êÇ©','ÊÖ»úºÅ','mobile',1,0,NULL,'2016-07-08 10:56:30'),(55,2,'¿Í»§±êÇ©','Ë½ÓĞÕËºÅÀàĞÍ','acct_type',0,0,NULL,'2016-07-07 11:22:35'),(56,2,'¿Í»§±êÇ©','¹Ì»°ºÅÂë','tel',0,0,NULL,'2016-08-05 08:56:33'),(57,2,'¿Í»§±êÇ©','QQ','qq',0,0,NULL,'2016-06-30 06:42:40'),(58,2,'¿Í»§±êÇ©','Ë½ÓĞÕËºÅ','acct_no',0,0,NULL,'2016-06-28 07:09:34'),(59,2,'¿Í»§±êÇ©','IDFA','idfa',0,0,NULL,'2016-08-05 08:56:53'),(60,2,'¿Í»§±êÇ©','IMEI','imei',0,0,NULL,'2016-08-05 08:56:59'),(61,2,'¿Í»§±êÇ©','unionid','udid',0,0,NULL,'2016-08-05 08:57:09'),(62,2,'¿Í»§±êÇ©','MAC','phone_mac',0,0,NULL,'2016-08-05 08:57:13'),(63,2,'¿Í»§±êÇ©','É¾³ı±ê¼Ç','status',0,0,NULL,'2016-06-28 07:09:34'),(64,2,'¿Í»§±êÇ©','²úÉúÊ±¼ä','create_time',0,0,NULL,'2016-06-28 07:09:34'),(65,2,'¿Í»§±êÇ©','É¾³ıÊ±¼ä','update_time',0,0,NULL,'2016-06-28 07:09:34'),(66,2,'¿Í»§±êÇ©','Êı¾İÀ´Ô´','source',0,0,NULL,'2016-06-28 07:09:34'),(67,3,'ÂñµãÍ³¼Æ','ÊÂ¼şID','event_id',1,0,NULL,'2016-06-24 11:50:41'),(68,3,'ÂñµãÍ³¼Æ','ÊÂ¼şÃû³Æ','event_name',1,0,NULL,'2016-06-24 11:50:41'),(69,3,'ÂñµãÍ³¼Æ','µã»÷Ê±¼ä','click_time',1,0,NULL,'2016-06-24 11:50:41'),(70,3,'ÂñµãÍ³¼Æ','Éí·İÖ¤ºÅ','identify_no',1,0,NULL,'2016-06-13 09:47:51'),(71,3,'ÂñµãÍ³¼Æ','¼İÊ»Ö¤ºÅ','driving_license',1,0,NULL,'2016-06-13 09:47:51'),(72,3,'ÂñµãÍ³¼Æ','cookie','cookie',1,0,NULL,'2016-06-13 09:47:51'),(73,3,'ÂñµãÍ³¼Æ','ÓÊÏä','email',1,0,NULL,'2016-08-05 09:50:01'),(74,3,'ÂñµãÍ³¼Æ','ÊÖ»úºÅ','mobile',1,0,NULL,'2016-06-13 09:47:51'),(75,3,'ÂñµãÍ³¼Æ','Ë½ÓĞÕËºÅÀàĞÍ','acct_type',0,0,NULL,'2016-06-23 02:27:02'),(76,3,'ÂñµãÍ³¼Æ','¹Ì»°ºÅÂë','tel',0,0,NULL,'2016-08-05 09:50:34'),(77,3,'ÂñµãÍ³¼Æ','QQ','qq',0,0,NULL,'2016-06-23 02:27:02'),(78,3,'ÂñµãÍ³¼Æ','Ë½ÓĞÕËºÅ','acct_no',0,0,NULL,'2016-07-08 09:55:51'),(79,3,'ÂñµãÍ³¼Æ','iphoneÊÖ»úÊ¶±ğÂë','idfa',0,0,NULL,'2016-07-08 09:55:51'),(80,3,'ÂñµãÍ³¼Æ','ÊÖ»úÊ¶±ğÂë','imei',0,0,NULL,'2016-07-08 09:55:51'),(81,3,'ÂñµãÍ³¼Æ','unionid','udid',0,0,NULL,'2016-08-05 09:50:56'),(82,3,'ÂñµãÍ³¼Æ','ÊÖ»úÍø¿¨MAC','phone_mac',0,0,NULL,'2016-06-23 02:27:02'),(83,3,'ÂñµãÍ³¼Æ','É¾³ı±ê¼Ç','status',0,0,NULL,'2016-06-23 02:27:02'),(84,3,'ÂñµãÍ³¼Æ','´´½¨Ê±¼ä','create_time',0,0,NULL,'2016-08-05 09:51:46'),(85,3,'ÂñµãÍ³¼Æ','É¾³ıÊ±¼ä','update_time',0,0,NULL,'2016-07-08 09:55:51'),(86,3,'ÂñµãÍ³¼Æ','Êı¾İÀ´Ô´','source',1,0,NULL,'2016-06-13 09:47:52'),(87,4,'»áÔ±¿¨¼ÇÂ¼','»áÔ±¿¨ºÅ','member_id',1,0,NULL,'2016-06-13 09:47:52'),(88,4,'»áÔ±¿¨¼ÇÂ¼','»áÔ±»ı·Ö','member_points',0,0,NULL,'2016-06-27 09:51:00'),(89,4,'»áÔ±¿¨¼ÇÂ¼','»áÔ±µÈ¼¶','member_level',1,0,NULL,'2016-07-07 11:32:47'),(90,4,'»áÔ±¿¨¼ÇÂ¼','¿ª¿¨Ê±¼ä','regist_time',1,0,NULL,'2016-06-13 09:47:52'),(91,4,'»áÔ±¿¨¼ÇÂ¼','¿¨ÄÚÓà¶î','card_amt',1,0,NULL,'2016-06-13 09:47:52'),(92,4,'»áÔ±¿¨¼ÇÂ¼','¹ıÆÚÈÕ','expire',1,0,NULL,'2016-06-13 09:47:52'),(93,4,'»áÔ±¿¨¼ÇÂ¼','Éí·İÖ¤ºÅ','identify_no',1,0,NULL,'2016-06-13 09:47:52'),(94,4,'»áÔ±¿¨¼ÇÂ¼','¼İÊ»Ö¤ºÅ','driving_license',1,0,NULL,'2016-06-13 09:47:52'),(95,4,'»áÔ±¿¨¼ÇÂ¼','cookie','cookie',1,0,NULL,'2016-06-13 09:47:52'),(96,4,'»áÔ±¿¨¼ÇÂ¼','µç×ÓÓÊ¼ş','email',1,0,NULL,'2016-06-13 09:47:52'),(97,4,'»áÔ±¿¨¼ÇÂ¼','ÊÖ»úºÅ','mobile',1,0,NULL,'2016-06-13 09:47:52'),(98,4,'»áÔ±¿¨¼ÇÂ¼','Ë½ÓĞÕËºÅÀàĞÍ','acct_type',1,0,NULL,'2016-06-13 09:47:52'),(99,4,'»áÔ±¿¨¼ÇÂ¼','¹Ì»°ºÅÂë','tel',1,0,NULL,'2016-08-05 09:53:37'),(100,4,'»áÔ±¿¨¼ÇÂ¼','QQ','qq',1,0,NULL,'2016-06-14 05:50:36'),(101,4,'»áÔ±¿¨¼ÇÂ¼','Ë½ÓĞÕËºÅ','acct_no',1,0,NULL,'2016-06-13 09:47:52'),(102,4,'»áÔ±¿¨¼ÇÂ¼','iphoneÊÖ»úÊ¶±ğÂë','idfa',1,0,NULL,'2016-06-14 05:50:36'),(103,4,'»áÔ±¿¨¼ÇÂ¼','ÊÖ»úÊ¶±ğÂë','imei',1,0,NULL,'2016-06-14 05:50:35'),(104,4,'»áÔ±¿¨¼ÇÂ¼','unionid','udid',1,0,NULL,'2016-08-05 09:53:57'),(105,4,'»áÔ±¿¨¼ÇÂ¼','ÊÖ»úÍø¿¨MAC','phone_mac',1,0,NULL,'2016-06-13 09:47:53'),(106,4,'»áÔ±¿¨¼ÇÂ¼','É¾³ı±ê¼Ç','status',1,0,NULL,'2016-06-13 09:47:53'),(107,4,'»áÔ±¿¨¼ÇÂ¼','²úÉúÊ±¼ä','create_time',0,0,NULL,'2016-06-27 09:51:00'),(108,4,'»áÔ±¿¨¼ÇÂ¼','É¾³ıÊ±¼ä','update_time',1,0,NULL,'2016-06-13 09:47:53'),(109,4,'»áÔ±¿¨¼ÇÂ¼','Êı¾İÀ´Ô´','source',0,0,NULL,'2016-06-27 09:51:00'),(110,5,'µÇÂ¼ĞĞÎª','µÇÂ¼·½Ê½','login_type',1,0,NULL,'2016-06-13 09:47:53'),(111,5,'µÇÂ¼ĞĞÎª','µÇÂ¼Ê±¼ä','login_time',1,0,NULL,'2016-06-13 09:47:53'),(112,5,'µÇÂ¼ĞĞÎª','ÍË³öÊ±¼ä','logout_time',1,0,NULL,'2016-06-13 09:47:53'),(113,5,'µÇÂ¼ĞĞÎª','µÇÂ¼IP','login_ip',1,0,NULL,'2016-06-13 09:47:53'),(114,5,'µÇÂ¼ĞĞÎª','µÇÂ¼Éè±¸','login_device',1,0,NULL,'2016-06-13 09:47:53'),(115,5,'µÇÂ¼ĞĞÎª','·Ö±æÂÊ','resolution_ratio',1,0,NULL,'2016-06-13 09:47:53'),(116,5,'µÇÂ¼ĞĞÎª','µÇÂ¼Ò³Ãæ','login_url',1,0,NULL,'2016-06-13 09:47:53'),(117,5,'µÇÂ¼ĞĞÎª','Éí·İÖ¤ºÅ','identify_no',1,0,NULL,'2016-06-13 09:47:53'),(118,5,'µÇÂ¼ĞĞÎª','¼İÊ»Ö¤ºÅ','driving_license',1,0,NULL,'2016-06-13 09:47:53'),(119,5,'µÇÂ¼ĞĞÎª','cookie','cookie',1,0,NULL,'2016-06-13 09:47:53'),(120,5,'µÇÂ¼ĞĞÎª','µç×ÓÓÊ¼ş','email',1,0,NULL,'2016-06-13 09:47:53'),(121,5,'µÇÂ¼ĞĞÎª','ÊÖ»úºÅ','mobile',1,0,NULL,'2016-06-13 09:47:53'),(122,5,'µÇÂ¼ĞĞÎª','Ë½ÓĞÕËºÅÀàĞÍ','acct_type',1,0,NULL,'2016-06-13 09:47:53'),(123,5,'µÇÂ¼ĞĞÎª','¹Ì»°ºÅÂë','tel',1,0,NULL,'2016-08-05 09:54:51'),(124,5,'µÇÂ¼ĞĞÎª','QQ','qq',1,0,NULL,'2016-06-14 05:50:35'),(125,5,'µÇÂ¼ĞĞÎª','Ë½ÓĞÕËºÅ','acct_no',1,0,NULL,'2016-06-13 09:47:53'),(126,5,'µÇÂ¼ĞĞÎª','iphoneÊÖ»úÊ¶±ğÂë','idfa',1,0,NULL,'2016-06-14 05:50:35'),(127,5,'µÇÂ¼ĞĞÎª','ÊÖ»úÊ¶±ğÂë','imei',1,0,NULL,'2016-06-14 05:50:35'),(128,5,'µÇÂ¼ĞĞÎª','unionid','udid',1,0,NULL,'2016-08-05 09:55:05'),(129,5,'µÇÂ¼ĞĞÎª','ÊÖ»úÍø¿¨MAC','phone_mac',1,0,NULL,'2016-06-13 09:47:53'),(130,5,'µÇÂ¼ĞĞÎª','É¾³ı±ê¼Ç','status',1,0,NULL,'2016-06-13 09:47:53'),(131,5,'µÇÂ¼ĞĞÎª','²úÉúÊ±¼ä','create_time',1,0,NULL,'2016-06-13 09:47:53'),(132,5,'µÇÂ¼ĞĞÎª','É¾³ıÊ±¼ä','update_time',1,0,NULL,'2016-06-13 09:47:53'),(133,5,'µÇÂ¼ĞĞÎª','Êı¾İÀ´Ô´','source',1,0,NULL,'2016-06-13 09:47:54'),(134,6,'Ö§¸¶¼ÇÂ¼','Ö§¸¶ÇşµÀ','pay_channel',1,0,NULL,'2016-06-13 09:47:54'),(135,6,'Ö§¸¶¼ÇÂ¼','Ö§¸¶±¦ÕËºÅ','pay_acct',1,0,NULL,'2016-07-21 10:11:32'),(136,6,'Ö§¸¶¼ÇÂ¼','ÕËÎñÁ÷Ë®ºÅ','pay_serial',0,0,NULL,'2016-07-21 11:09:57'),(137,6,'Ö§¸¶¼ÇÂ¼','ÒµÎñÁ÷Ë®ºÅ','trans_serial',0,0,NULL,'2016-07-21 10:14:24'),(138,6,'Ö§¸¶¼ÇÂ¼','ÉÌ»§¶©µ¥ºÅ','order_no',0,0,NULL,'2016-07-21 10:14:38'),(139,6,'Ö§¸¶¼ÇÂ¼','ÉÌÆ·Ãû³Æ','product_name',0,0,NULL,'2016-06-28 07:22:29'),(140,6,'Ö§¸¶¼ÇÂ¼','½áÊøÊ±¼ä','complete_time',1,0,NULL,'2016-07-07 11:31:02'),(141,6,'Ö§¸¶¼ÇÂ¼','Ö§¸¶×´Ì¬','pay_status',1,0,NULL,'2016-06-13 09:47:54'),(142,6,'Ö§¸¶¼ÇÂ¼','¶Ô·½ÕËºÅ','counter_acct',0,0,NULL,'2016-06-28 07:22:29'),(143,6,'Ö§¸¶¼ÇÂ¼','ÊÕÈë½ğ¶î','income_amt',0,0,NULL,'2016-06-28 07:22:29'),(144,6,'Ö§¸¶¼ÇÂ¼','Ö§³ö½ğ¶î','paid_amt',0,0,NULL,'2016-06-28 07:22:29'),(145,6,'Ö§¸¶¼ÇÂ¼','ÕË»§Óà¶î','acct_amt',0,0,NULL,'2016-07-21 11:10:25'),(146,6,'Ö§¸¶¼ÇÂ¼','±¸×¢','comments',1,0,NULL,'2016-06-13 09:47:54'),(147,6,'Ö§¸¶¼ÇÂ¼','Éí·İÖ¤ºÅ','identify_no',0,0,NULL,'2016-07-07 09:27:52'),(148,6,'Ö§¸¶¼ÇÂ¼','¼İÊ»Ö¤ºÅ','driving_license',0,0,NULL,'2016-07-07 09:27:52'),(149,6,'Ö§¸¶¼ÇÂ¼','cookie','cookie',0,0,NULL,'2016-06-28 07:22:29'),(150,6,'Ö§¸¶¼ÇÂ¼','ÓÊÏä','email',1,0,NULL,'2016-07-21 10:15:35'),(151,6,'Ö§¸¶¼ÇÂ¼','ÊÖ»úºÅ','mobile',1,0,NULL,'2016-06-13 09:47:54'),(152,6,'Ö§¸¶¼ÇÂ¼','Ë½ÓĞÕËºÅÌåÏµ','acct_type',1,0,NULL,'2016-07-21 10:16:06'),(153,6,'Ö§¸¶¼ÇÂ¼','¹Ì»°ºÅÂë','tel',0,0,NULL,'2016-07-21 10:16:12'),(154,6,'Ö§¸¶¼ÇÂ¼','QQ','qq',0,0,NULL,'2016-06-28 07:22:29'),(155,6,'Ö§¸¶¼ÇÂ¼','Ë½ÓĞÕËºÅ','acct_no',0,0,NULL,'2016-06-28 07:22:29'),(156,6,'Ö§¸¶¼ÇÂ¼','IDFA','idfa',0,0,NULL,'2016-07-21 10:16:29'),(157,6,'Ö§¸¶¼ÇÂ¼','IMEI','imei',0,0,NULL,'2016-07-21 10:16:34'),(158,6,'Ö§¸¶¼ÇÂ¼','UDID','udid',0,0,NULL,'2016-06-28 07:22:29'),(159,6,'Ö§¸¶¼ÇÂ¼','MAC','phone_mac',0,0,NULL,'2016-07-21 10:16:54'),(160,6,'Ö§¸¶¼ÇÂ¼','É¾³ı±ê¼Ç','status',0,0,NULL,'2016-06-28 07:22:29'),(161,6,'Ö§¸¶¼ÇÂ¼','·¢ÉúÊ±¼ä','create_time',0,0,NULL,'2016-07-21 10:17:14'),(162,6,'Ö§¸¶¼ÇÂ¼','É¾³ıÊ±¼ä','update_time',0,0,NULL,'2016-06-28 07:22:29'),(163,6,'Ö§¸¶¼ÇÂ¼','Êı¾İÀ´Ô´','source',0,0,NULL,'2016-06-28 07:22:29'),(164,7,'¹ºÎï¼ÇÂ¼','ÇşµÀ·ÖÀà','channel_type',1,0,NULL,'2016-07-21 09:29:50'),(165,7,'¹ºÎï¼ÇÂ¼','¹ºÎïÇşµÀID','channel_id',1,0,NULL,'2016-06-13 09:47:55'),(166,7,'¹ºÎï¼ÇÂ¼','¹ºÎïÇşµÀ','channel_name',1,0,NULL,'2016-07-21 09:29:58'),(167,7,'¹ºÎï¼ÇÂ¼','Ö§¸¶·½Ê½','pay_type',1,0,NULL,'2016-06-13 09:47:55'),(168,7,'¹ºÎï¼ÇÂ¼','ÒµÎñÁ÷Ë®ºÅ','trans_serial',0,0,NULL,'2016-07-21 09:15:16'),(169,7,'¹ºÎï¼ÇÂ¼','ÉÌ»§¶©µ¥ºÅ','order_no',1,0,NULL,'2016-07-21 09:15:12'),(170,7,'¹ºÎï¼ÇÂ¼','Ïû·ÑÊ±¼ä','trans_time',1,0,NULL,'2016-06-13 09:47:55'),(171,7,'¹ºÎï¼ÇÂ¼','ÉÌÆ·ID','product_id',1,0,NULL,'2016-07-21 09:30:43'),(172,7,'¹ºÎï¼ÇÂ¼','¹æ¸ñ','specification',1,0,NULL,'2016-07-21 09:30:46'),(173,7,'¹ºÎï¼ÇÂ¼','ÑÕÉ«','color',1,0,NULL,'2016-06-13 09:47:55'),(174,7,'¹ºÎï¼ÇÂ¼','ÕÛ¿ÛÀàĞÍ','discount_type',1,0,NULL,'2016-06-13 09:47:55'),(175,7,'¹ºÎï¼ÇÂ¼','ÕÛ¿Û½ğ¶î','discount_amt',1,0,NULL,'2016-06-13 09:47:55'),(176,7,'¹ºÎï¼ÇÂ¼','µ¥¼Û','price',1,0,NULL,'2016-06-13 09:47:55'),(177,7,'¹ºÎï¼ÇÂ¼','ÊıÁ¿','amount',1,0,NULL,'2016-06-13 09:47:55'),(178,7,'¹ºÎï¼ÇÂ¼','¿â´æÁ¿','inventory',1,0,NULL,'2016-06-13 09:47:55'),(179,7,'¹ºÎï¼ÇÂ¼','Æ·ÅÆID','brand_id',1,0,NULL,'2016-07-21 09:31:26'),(180,7,'¹ºÎï¼ÇÂ¼','Æ·ÅÆ','brand_name',1,0,NULL,'2016-07-21 09:41:53'),(181,7,'¹ºÎï¼ÇÂ¼','Ò»¼¶Æ·ÀàÃû³ÆID','class1_id',1,0,NULL,'2016-07-21 09:31:32'),(182,7,'¹ºÎï¼ÇÂ¼','Ò»¼¶Æ·ÀàÃû³Æ','class1_name',1,0,NULL,'2016-06-13 09:47:55'),(183,7,'¹ºÎï¼ÇÂ¼','¶ş¼¶Æ·ÀàÃû³ÆID','class2_id',1,0,NULL,'2016-07-21 09:31:39'),(184,7,'¹ºÎï¼ÇÂ¼','¶ş¼¶Æ·ÀàÃû³Æ','class2_name',1,0,NULL,'2016-06-13 09:47:56'),(185,7,'¹ºÎï¼ÇÂ¼','Èı¼¶Æ·ÀàÃû³ÆID','class3_id',1,0,NULL,'2016-07-21 09:31:50'),(186,7,'¹ºÎï¼ÇÂ¼','Èı¼¶Æ·ÀàÃû³Æ','class3_name',1,0,NULL,'2016-06-13 09:47:56'),(187,7,'¹ºÎï¼ÇÂ¼','ËÄ¼¶Æ·ÀàÃû³ÆID','class4_id',1,0,NULL,'2016-07-21 09:31:57'),(188,7,'¹ºÎï¼ÇÂ¼','ËÄ¼¶Æ·ÀàÃû³Æ','class4_name',1,0,NULL,'2016-06-13 09:47:56'),(189,7,'¹ºÎï¼ÇÂ¼','µ¼¹ºÈËÔ±ID','sale_assist_id',1,0,NULL,'2016-07-21 09:32:41'),(190,7,'¹ºÎï¼ÇÂ¼','µ¼¹ºÈËÔ±','sale_assistance',1,0,NULL,'2016-07-21 09:32:28'),(191,7,'¹ºÎï¼ÇÂ¼','½áËãÈËÔ±ID','settlement_clerk_id',1,0,NULL,'2016-07-21 09:32:54'),(192,7,'¹ºÎï¼ÇÂ¼','½áËãÈËÔ±','settlement_clerk',1,0,NULL,'2016-06-13 09:47:56'),(193,7,'¹ºÎï¼ÇÂ¼','Éí·İÖ¤ºÅ','identify_no',0,0,NULL,'2016-07-01 11:51:42'),(194,7,'¹ºÎï¼ÇÂ¼','¼İÊ»Ö¤ºÅ','driving_license',0,0,NULL,'2016-07-01 11:51:42'),(195,7,'¹ºÎï¼ÇÂ¼','cookie','cookie',0,0,NULL,'2016-07-01 11:51:42'),(196,7,'¹ºÎï¼ÇÂ¼','ÓÊÏä','email',0,0,NULL,'2016-07-21 09:33:54'),(197,7,'¹ºÎï¼ÇÂ¼','ÊÖ»úºÅ','mobile',1,0,NULL,'2016-06-13 09:47:56'),(198,7,'¹ºÎï¼ÇÂ¼','Ë½ÓĞÕËºÅÌåÏµ','acct_type',0,0,NULL,'2016-07-21 09:34:12'),(199,7,'¹ºÎï¼ÇÂ¼','¹Ì»°ºÅÂë','tel',0,0,NULL,'2016-07-21 09:34:05'),(200,7,'¹ºÎï¼ÇÂ¼','QQ','qq',0,0,NULL,'2016-07-01 11:51:42'),(201,7,'¹ºÎï¼ÇÂ¼','Ë½ÓĞÕËºÅ','acct_no',0,0,NULL,'2016-07-01 11:51:42'),(202,7,'¹ºÎï¼ÇÂ¼','IDFA','idfa',0,0,NULL,'2016-07-21 09:43:41'),(203,7,'¹ºÎï¼ÇÂ¼','IMEI','imei',0,0,NULL,'2016-07-21 09:43:36'),(204,7,'¹ºÎï¼ÇÂ¼','UDID','udid',0,0,NULL,'2016-07-01 11:51:42'),(205,7,'¹ºÎï¼ÇÂ¼','MAC','phone_mac',0,0,NULL,'2016-07-21 09:43:31'),(206,7,'¹ºÎï¼ÇÂ¼','É¾³ı±ê¼Ç','status',0,0,NULL,'2016-07-01 11:51:42'),(207,7,'¹ºÎï¼ÇÂ¼','²úÉúÊ±¼ä','create_time',0,0,NULL,'2016-07-01 11:51:42'),(208,7,'¹ºÎï¼ÇÂ¼','É¾³ıÊ±¼ä','update_time',0,0,NULL,'2016-07-01 11:51:42'),(209,7,'¹ºÎï¼ÇÂ¼','Êı¾İÀ´Ô´','source',0,0,NULL,'2016-07-01 11:51:42'),(210,7,'¹ºÎï¼ÇÂ¼','¶©µ¥×´Ì¬','order_status',0,0,NULL,'2016-07-19 02:50:22'),(211,7,'¹ºÎï¼ÇÂ¼','ÅäËÍ·½Ê½','delivery_way',0,0,NULL,'2016-07-19 02:50:22'),(212,7,'¹ºÎï¼ÇÂ¼','ÎïÁ÷×´Ì¬','logistics_status',0,0,NULL,'2016-07-19 02:50:22'),(213,7,'¹ºÎï¼ÇÂ¼','ÔË·Ñ','shipping_fee',0,0,NULL,'2016-07-19 02:50:22'),(214,7,'¹ºÎï¼ÇÂ¼','ÔËËÍ·½Ê½','shipping_way',0,0,NULL,'2016-07-19 02:50:22'),(215,7,'¹ºÎï¼ÇÂ¼','¿ìµİ¹«Ë¾','express_company',0,0,NULL,'2016-07-19 02:50:22'),(216,7,'¹ºÎï¼ÇÂ¼','¿ìµİµ¥ºÅ','express_order',0,0,NULL,'2016-07-19 02:50:22'),(217,7,'¹ºÎï¼ÇÂ¼','ÊÕ»õÈË','consignee',0,0,NULL,'2016-07-19 02:50:22'),(218,7,'¹ºÎï¼ÇÂ¼','ÊÕ»õÈËµç»°','consignee_tel',0,0,NULL,'2016-07-19 02:50:22'),(219,7,'¹ºÎï¼ÇÂ¼','ÊÕ»õµØÖ·','consignee_addr',0,0,NULL,'2016-07-19 02:50:22'),(220,7,'¹ºÎï¼ÇÂ¼','Âò¼Ò±¸×¢','buyer_comment',0,0,NULL,'2016-07-19 02:50:22'),(221,7,'¹ºÎï¼ÇÂ¼','¹«ÖÚºÅ±êÊ¶','wxmp_id',0,0,NULL,'2016-08-04 11:14:55'),(222,7,'¹ºÎï¼ÇÂ¼','openid','wx_code',0,0,NULL,'2016-08-04 11:15:02'),(223,6,'Ö§¸¶¼ÇÂ¼','¹«ÖÚºÅ±êÊ¶','wxmp_id',0,0,NULL,'2016-08-04 11:12:59'),(224,6,'Ö§¸¶¼ÇÂ¼','openid','wx_code',0,0,NULL,'2016-08-04 11:13:02'),(225,7,'¹ºÎï¼ÇÂ¼','ÉÌÆ·Ãû³Æ','product_name',1,0,NULL,'2016-07-21 09:53:01'),(227,1,'ÈË¿ÚÊôĞÔ','¹«ÖÚºÅ±êÊ¶','wxmp_id',1,0,NULL,'2016-08-05 09:57:54'),(228,2,'¿Í»§±êÇ©','¹«ÖÚºÅ±êÊ¶','wxmp_id',1,0,NULL,'2016-08-05 09:57:44'),(229,3,'ÂñµãÍ³¼Æ','¹«ÖÚºÅ±êÊ¶','wxmp_id',1,0,NULL,'2016-08-05 09:58:44'),(230,4,'»áÔ±¿¨¼ÇÂ¼','¹«ÖÚºÅ±êÊ¶','wxmp_id',1,0,NULL,'2016-08-05 09:59:06'),(231,5,'µÇÂ¼ĞĞÎª','¹«ÖÚºÅ±êÊ¶','wxmp_id',1,0,NULL,'2016-08-05 09:59:39'),(232,1,'ÈË¿ÚÊôĞÔ','openid','wx_code',1,0,NULL,'2016-08-05 10:00:45'),(233,2,'¿Í»§±êÇ©','openid','wx_code',1,0,NULL,'2016-08-05 10:01:39'),(234,3,'ÂñµãÍ³¼Æ','openid','wx_code',1,0,NULL,'2016-08-05 10:01:57'),(235,4,'»áÔ±¿¨¼ÇÂ¼','openid','wx_code',1,0,NULL,'2016-08-05 10:02:14'),(236,5,'µÇÂ¼ĞĞÎª','openid','wx_code',1,0,NULL,'2016-08-05 10:02:33'),(237,1,'ÈË¿ÚÊôĞÔ','êÇ³Æ','nickname',1,0,NULL,'2016-08-10 06:54:44'),(238,1,'ÈË¿ÚÊôĞÔ','Í·Ïñ','head_img_url',1,0,NULL,'2016-08-10 06:55:18'),(239,1,'ÈË¿ÚÊôĞÔ','¹Ø×¢Ê±¼ä','subscribe_time',1,0,NULL,'2016-08-10 06:55:56'),(240,1,'ÈË¿ÚÊôĞÔ','ÓïÑÔ','language',1,0,NULL,'2016-08-10 06:56:35'),(241,1,'ÈË¿ÚÊôĞÔ','Î¢ĞÅunionid','unionid',1,0,NULL,'2016-08-10 06:57:14'),(242,1,'ÈË¿ÚÊôĞÔ','ÆÀÂÛ','remark',1,0,NULL,'2016-08-10 06:57:32');
+INSERT INTO `import_template` VALUES (1,0,'ä¸»æ•°æ®','æ‰‹æœºå·','mobile',1,0,NULL,'2016-07-22 09:54:00'),(2,0,'ä¸»æ•°æ®','å§“å','name',1,0,NULL,'2016-07-22 09:54:00'),(3,0,'ä¸»æ•°æ®','æ€§åˆ«','gender',1,0,NULL,'2016-07-22 09:54:00'),(4,0,'ä¸»æ•°æ®','å‡ºç”Ÿå¹´æœˆæ—¥','birthday',1,0,NULL,'2016-07-18 09:12:11'),(5,0,'ä¸»æ•°æ®','çœ','provice',1,0,NULL,'2016-07-18 09:30:10'),(6,0,'ä¸»æ•°æ®','å¸‚','city',1,0,NULL,'2016-07-22 09:54:00'),(7,0,'ä¸»æ•°æ®','èŒä¸š','job',1,0,NULL,'2016-07-22 09:54:00'),(8,0,'ä¸»æ•°æ®','æœˆæ”¶å…¥','monthly_income',1,0,NULL,'2016-07-22 09:54:00'),(9,0,'ä¸»æ•°æ®','ä¼šå‘˜ç­‰çº§','member_level',1,0,NULL,'2016-07-18 09:41:36'),(10,0,'ä¸»æ•°æ®','ä¼šå‘˜ç§¯åˆ†','member_points',1,0,NULL,'2016-07-22 09:54:00'),(11,0,'ä¸»æ•°æ®','æ•°æ®æ¥æº','source',1,0,NULL,'2016-07-22 09:54:00'),(12,0,'ä¸»æ•°æ®','æœˆå‡æ¶ˆè´¹','monthly_consume',1,0,NULL,'2016-07-22 09:54:00'),(13,0,'ä¸»æ•°æ®','æœ€åç™»å½•æ—¶é—´','last_login',0,0,NULL,'2016-07-22 07:06:06'),(14,0,'ä¸»æ•°æ®','åˆ é™¤æ ‡è®°','status',0,0,NULL,'2016-07-22 07:06:06'),(15,0,'ä¸»æ•°æ®','äº§ç”Ÿæ—¶é—´','create_time',0,0,NULL,'2016-07-22 09:54:00'),(16,0,'ä¸»æ•°æ®','åˆ é™¤æ—¶é—´','update_time',0,0,NULL,'2016-07-19 08:27:38'),(17,1,'äººå£å±æ€§','æ‰‹æœºå·','mobile',0,0,NULL,'2016-08-10 07:12:24'),(18,1,'äººå£å±æ€§','å§“å','name',0,0,NULL,'2016-08-10 07:12:24'),(19,1,'äººå£å±æ€§','æ€§åˆ«','gender',0,0,NULL,'2016-08-10 07:12:24'),(20,1,'äººå£å±æ€§','ç”Ÿæ—¥','birthday',0,0,NULL,'2016-08-10 07:12:24'),(21,1,'äººå£å±æ€§','çœ','provice',1,0,NULL,'2016-07-08 11:48:20'),(22,1,'äººå£å±æ€§','å¸‚','city',1,0,NULL,'2016-07-08 11:48:20'),(23,1,'äººå£å±æ€§','èŒä¸š','job',0,0,NULL,'2016-08-10 07:12:24'),(24,1,'äººå£å±æ€§','æœˆæ”¶å…¥','monthly_income',0,0,NULL,'2016-08-10 07:12:24'),(25,1,'äººå£å±æ€§','æœˆæ¶ˆè´¹','monthly_consume',0,0,NULL,'2016-08-10 07:12:24'),(26,1,'äººå£å±æ€§','å©šå¦','marital_status',0,0,NULL,'2016-08-10 07:12:24'),(27,1,'äººå£å±æ€§','æ•™è‚²ç¨‹åº¦','education',0,0,NULL,'2016-08-10 07:12:24'),(28,1,'äººå£å±æ€§','å°±ä¸šæƒ…å†µ','employment',0,0,NULL,'2016-08-10 07:12:24'),(29,1,'äººå£å±æ€§','æ°‘æ—','nationality',0,0,NULL,'2016-08-10 07:12:24'),(30,1,'äººå£å±æ€§','è¡€å‹','blood_type',0,0,NULL,'2016-08-10 07:12:24'),(31,1,'äººå£å±æ€§','å›½ç±','citizenship',1,0,NULL,'2016-07-19 08:28:28'),(32,1,'äººå£å±æ€§','IQ','iq',0,0,NULL,'2016-08-10 07:12:24'),(33,1,'äººå£å±æ€§','èº«ä»½è¯å·','identify_no',0,0,NULL,'2016-08-10 07:12:24'),(34,1,'äººå£å±æ€§','é©¾é©¶è¯å·','driving_license',0,0,NULL,'2016-08-10 07:12:25'),(35,1,'äººå£å±æ€§','é‚®ç®±','email',0,0,NULL,'2016-08-10 07:12:25'),(36,1,'äººå£å±æ€§','å›ºè¯å·ç ','tel',0,0,NULL,'2016-08-10 07:12:25'),(37,1,'äººå£å±æ€§','QQ','qq',0,0,NULL,'2016-08-10 07:12:25'),(38,1,'äººå£å±æ€§','ç§æœ‰è´¦å·ç±»å‹','acct_type',0,0,NULL,'2016-08-10 07:12:25'),(39,1,'äººå£å±æ€§','ç§æœ‰è´¦å·','acct_no',0,0,NULL,'2016-08-10 07:12:25'),(40,1,'äººå£å±æ€§','IDFA','idfa',0,0,NULL,'2016-08-05 08:34:09'),(41,1,'äººå£å±æ€§','IMEI','imei',0,0,NULL,'2016-08-05 08:34:18'),(42,1,'äººå£å±æ€§','unionid','udid',0,0,NULL,'2016-08-05 08:34:36'),(43,1,'äººå£å±æ€§','MAC','phone_mac',0,0,NULL,'2016-08-05 08:34:39'),(44,1,'äººå£å±æ€§','åˆ é™¤æ ‡è®°','status',0,0,NULL,'2016-06-23 06:18:27'),(45,1,'äººå£å±æ€§','åˆ›å»ºæ—¶é—´','create_time',0,0,NULL,'2016-06-23 06:18:27'),(46,1,'äººå£å±æ€§','åˆ é™¤æ—¶é—´','update_time',0,0,NULL,'2016-06-23 06:18:27'),(47,1,'äººå£å±æ€§','æ•°æ®æ¥æº','source',0,0,NULL,'2016-06-23 06:18:27'),(48,2,'å®¢æˆ·æ ‡ç­¾','æ ‡ç­¾ç±»å‹','tag_type',1,0,NULL,'2016-06-13 09:47:50'),(49,2,'å®¢æˆ·æ ‡ç­¾','æ ‡ç­¾åç§°','tag_name',1,0,NULL,'2016-07-01 11:21:42'),(50,2,'å®¢æˆ·æ ‡ç­¾','æ—¥æœŸ','birthday',0,0,NULL,'2016-08-08 08:39:53'),(51,2,'å®¢æˆ·æ ‡ç­¾','èº«ä»½è¯å·','identify_no',0,0,NULL,'2016-07-07 11:22:35'),(52,2,'å®¢æˆ·æ ‡ç­¾','é©¾é©¶è¯å·','driving_license',1,0,NULL,'2016-07-07 11:31:13'),(53,2,'å®¢æˆ·æ ‡ç­¾','é‚®ç®±','email',1,0,NULL,'2016-08-05 08:44:48'),(54,2,'å®¢æˆ·æ ‡ç­¾','æ‰‹æœºå·','mobile',1,0,NULL,'2016-07-08 10:56:30'),(55,2,'å®¢æˆ·æ ‡ç­¾','ç§æœ‰è´¦å·ç±»å‹','acct_type',0,0,NULL,'2016-07-07 11:22:35'),(56,2,'å®¢æˆ·æ ‡ç­¾','å›ºè¯å·ç ','tel',0,0,NULL,'2016-08-05 08:56:33'),(57,2,'å®¢æˆ·æ ‡ç­¾','QQ','qq',0,0,NULL,'2016-06-30 06:42:40'),(58,2,'å®¢æˆ·æ ‡ç­¾','ç§æœ‰è´¦å·','acct_no',0,0,NULL,'2016-06-28 07:09:34'),(59,2,'å®¢æˆ·æ ‡ç­¾','IDFA','idfa',0,0,NULL,'2016-08-05 08:56:53'),(60,2,'å®¢æˆ·æ ‡ç­¾','IMEI','imei',0,0,NULL,'2016-08-05 08:56:59'),(61,2,'å®¢æˆ·æ ‡ç­¾','unionid','udid',0,0,NULL,'2016-08-05 08:57:09'),(62,2,'å®¢æˆ·æ ‡ç­¾','MAC','phone_mac',0,0,NULL,'2016-08-05 08:57:13'),(63,2,'å®¢æˆ·æ ‡ç­¾','åˆ é™¤æ ‡è®°','status',0,0,NULL,'2016-06-28 07:09:34'),(64,2,'å®¢æˆ·æ ‡ç­¾','äº§ç”Ÿæ—¶é—´','create_time',0,0,NULL,'2016-06-28 07:09:34'),(65,2,'å®¢æˆ·æ ‡ç­¾','åˆ é™¤æ—¶é—´','update_time',0,0,NULL,'2016-06-28 07:09:34'),(66,2,'å®¢æˆ·æ ‡ç­¾','æ•°æ®æ¥æº','source',0,0,NULL,'2016-06-28 07:09:34'),(67,3,'åŸ‹ç‚¹ç»Ÿè®¡','äº‹ä»¶ID','event_id',1,0,NULL,'2016-06-24 11:50:41'),(68,3,'åŸ‹ç‚¹ç»Ÿè®¡','äº‹ä»¶åç§°','event_name',1,0,NULL,'2016-06-24 11:50:41'),(69,3,'åŸ‹ç‚¹ç»Ÿè®¡','ç‚¹å‡»æ—¶é—´','click_time',1,0,NULL,'2016-06-24 11:50:41'),(70,3,'åŸ‹ç‚¹ç»Ÿè®¡','èº«ä»½è¯å·','identify_no',1,0,NULL,'2016-06-13 09:47:51'),(71,3,'åŸ‹ç‚¹ç»Ÿè®¡','é©¾é©¶è¯å·','driving_license',1,0,NULL,'2016-06-13 09:47:51'),(72,3,'åŸ‹ç‚¹ç»Ÿè®¡','cookie','cookie',1,0,NULL,'2016-06-13 09:47:51'),(73,3,'åŸ‹ç‚¹ç»Ÿè®¡','é‚®ç®±','email',1,0,NULL,'2016-08-05 09:50:01'),(74,3,'åŸ‹ç‚¹ç»Ÿè®¡','æ‰‹æœºå·','mobile',1,0,NULL,'2016-06-13 09:47:51'),(75,3,'åŸ‹ç‚¹ç»Ÿè®¡','ç§æœ‰è´¦å·ç±»å‹','acct_type',0,0,NULL,'2016-06-23 02:27:02'),(76,3,'åŸ‹ç‚¹ç»Ÿè®¡','å›ºè¯å·ç ','tel',0,0,NULL,'2016-08-05 09:50:34'),(77,3,'åŸ‹ç‚¹ç»Ÿè®¡','QQ','qq',0,0,NULL,'2016-06-23 02:27:02'),(78,3,'åŸ‹ç‚¹ç»Ÿè®¡','ç§æœ‰è´¦å·','acct_no',0,0,NULL,'2016-07-08 09:55:51'),(79,3,'åŸ‹ç‚¹ç»Ÿè®¡','iphoneæ‰‹æœºè¯†åˆ«ç ','idfa',0,0,NULL,'2016-07-08 09:55:51'),(80,3,'åŸ‹ç‚¹ç»Ÿè®¡','æ‰‹æœºè¯†åˆ«ç ','imei',0,0,NULL,'2016-07-08 09:55:51'),(81,3,'åŸ‹ç‚¹ç»Ÿè®¡','unionid','udid',0,0,NULL,'2016-08-05 09:50:56'),(82,3,'åŸ‹ç‚¹ç»Ÿè®¡','æ‰‹æœºç½‘å¡MAC','phone_mac',0,0,NULL,'2016-06-23 02:27:02'),(83,3,'åŸ‹ç‚¹ç»Ÿè®¡','åˆ é™¤æ ‡è®°','status',0,0,NULL,'2016-06-23 02:27:02'),(84,3,'åŸ‹ç‚¹ç»Ÿè®¡','åˆ›å»ºæ—¶é—´','create_time',0,0,NULL,'2016-08-05 09:51:46'),(85,3,'åŸ‹ç‚¹ç»Ÿè®¡','åˆ é™¤æ—¶é—´','update_time',0,0,NULL,'2016-07-08 09:55:51'),(86,3,'åŸ‹ç‚¹ç»Ÿè®¡','æ•°æ®æ¥æº','source',1,0,NULL,'2016-06-13 09:47:52'),(87,4,'ä¼šå‘˜å¡è®°å½•','ä¼šå‘˜å¡å·','member_id',1,0,NULL,'2016-06-13 09:47:52'),(88,4,'ä¼šå‘˜å¡è®°å½•','ä¼šå‘˜ç§¯åˆ†','member_points',0,0,NULL,'2016-06-27 09:51:00'),(89,4,'ä¼šå‘˜å¡è®°å½•','ä¼šå‘˜ç­‰çº§','member_level',1,0,NULL,'2016-07-07 11:32:47'),(90,4,'ä¼šå‘˜å¡è®°å½•','å¼€å¡æ—¶é—´','regist_time',1,0,NULL,'2016-06-13 09:47:52'),(91,4,'ä¼šå‘˜å¡è®°å½•','å¡å†…ä½™é¢','card_amt',1,0,NULL,'2016-06-13 09:47:52'),(92,4,'ä¼šå‘˜å¡è®°å½•','è¿‡æœŸæ—¥','expire',1,0,NULL,'2016-06-13 09:47:52'),(93,4,'ä¼šå‘˜å¡è®°å½•','èº«ä»½è¯å·','identify_no',1,0,NULL,'2016-06-13 09:47:52'),(94,4,'ä¼šå‘˜å¡è®°å½•','é©¾é©¶è¯å·','driving_license',1,0,NULL,'2016-06-13 09:47:52'),(95,4,'ä¼šå‘˜å¡è®°å½•','cookie','cookie',1,0,NULL,'2016-06-13 09:47:52'),(96,4,'ä¼šå‘˜å¡è®°å½•','ç”µå­é‚®ä»¶','email',1,0,NULL,'2016-06-13 09:47:52'),(97,4,'ä¼šå‘˜å¡è®°å½•','æ‰‹æœºå·','mobile',1,0,NULL,'2016-06-13 09:47:52'),(98,4,'ä¼šå‘˜å¡è®°å½•','ç§æœ‰è´¦å·ç±»å‹','acct_type',1,0,NULL,'2016-06-13 09:47:52'),(99,4,'ä¼šå‘˜å¡è®°å½•','å›ºè¯å·ç ','tel',1,0,NULL,'2016-08-05 09:53:37'),(100,4,'ä¼šå‘˜å¡è®°å½•','QQ','qq',1,0,NULL,'2016-06-14 05:50:36'),(101,4,'ä¼šå‘˜å¡è®°å½•','ç§æœ‰è´¦å·','acct_no',1,0,NULL,'2016-06-13 09:47:52'),(102,4,'ä¼šå‘˜å¡è®°å½•','iphoneæ‰‹æœºè¯†åˆ«ç ','idfa',1,0,NULL,'2016-06-14 05:50:36'),(103,4,'ä¼šå‘˜å¡è®°å½•','æ‰‹æœºè¯†åˆ«ç ','imei',1,0,NULL,'2016-06-14 05:50:35'),(104,4,'ä¼šå‘˜å¡è®°å½•','unionid','udid',1,0,NULL,'2016-08-05 09:53:57'),(105,4,'ä¼šå‘˜å¡è®°å½•','æ‰‹æœºç½‘å¡MAC','phone_mac',1,0,NULL,'2016-06-13 09:47:53'),(106,4,'ä¼šå‘˜å¡è®°å½•','åˆ é™¤æ ‡è®°','status',1,0,NULL,'2016-06-13 09:47:53'),(107,4,'ä¼šå‘˜å¡è®°å½•','äº§ç”Ÿæ—¶é—´','create_time',0,0,NULL,'2016-06-27 09:51:00'),(108,4,'ä¼šå‘˜å¡è®°å½•','åˆ é™¤æ—¶é—´','update_time',1,0,NULL,'2016-06-13 09:47:53'),(109,4,'ä¼šå‘˜å¡è®°å½•','æ•°æ®æ¥æº','source',0,0,NULL,'2016-06-27 09:51:00'),(110,5,'ç™»å½•è¡Œä¸º','ç™»å½•æ–¹å¼','login_type',1,0,NULL,'2016-06-13 09:47:53'),(111,5,'ç™»å½•è¡Œä¸º','ç™»å½•æ—¶é—´','login_time',1,0,NULL,'2016-06-13 09:47:53'),(112,5,'ç™»å½•è¡Œä¸º','é€€å‡ºæ—¶é—´','logout_time',1,0,NULL,'2016-06-13 09:47:53'),(113,5,'ç™»å½•è¡Œä¸º','ç™»å½•IP','login_ip',1,0,NULL,'2016-06-13 09:47:53'),(114,5,'ç™»å½•è¡Œä¸º','ç™»å½•è®¾å¤‡','login_device',1,0,NULL,'2016-06-13 09:47:53'),(115,5,'ç™»å½•è¡Œä¸º','åˆ†è¾¨ç‡','resolution_ratio',1,0,NULL,'2016-06-13 09:47:53'),(116,5,'ç™»å½•è¡Œä¸º','ç™»å½•é¡µé¢','login_url',1,0,NULL,'2016-06-13 09:47:53'),(117,5,'ç™»å½•è¡Œä¸º','èº«ä»½è¯å·','identify_no',1,0,NULL,'2016-06-13 09:47:53'),(118,5,'ç™»å½•è¡Œä¸º','é©¾é©¶è¯å·','driving_license',1,0,NULL,'2016-06-13 09:47:53'),(119,5,'ç™»å½•è¡Œä¸º','cookie','cookie',1,0,NULL,'2016-06-13 09:47:53'),(120,5,'ç™»å½•è¡Œä¸º','ç”µå­é‚®ä»¶','email',1,0,NULL,'2016-06-13 09:47:53'),(121,5,'ç™»å½•è¡Œä¸º','æ‰‹æœºå·','mobile',1,0,NULL,'2016-06-13 09:47:53'),(122,5,'ç™»å½•è¡Œä¸º','ç§æœ‰è´¦å·ç±»å‹','acct_type',1,0,NULL,'2016-06-13 09:47:53'),(123,5,'ç™»å½•è¡Œä¸º','å›ºè¯å·ç ','tel',1,0,NULL,'2016-08-05 09:54:51'),(124,5,'ç™»å½•è¡Œä¸º','QQ','qq',1,0,NULL,'2016-06-14 05:50:35'),(125,5,'ç™»å½•è¡Œä¸º','ç§æœ‰è´¦å·','acct_no',1,0,NULL,'2016-06-13 09:47:53'),(126,5,'ç™»å½•è¡Œä¸º','iphoneæ‰‹æœºè¯†åˆ«ç ','idfa',1,0,NULL,'2016-06-14 05:50:35'),(127,5,'ç™»å½•è¡Œä¸º','æ‰‹æœºè¯†åˆ«ç ','imei',1,0,NULL,'2016-06-14 05:50:35'),(128,5,'ç™»å½•è¡Œä¸º','unionid','udid',1,0,NULL,'2016-08-05 09:55:05'),(129,5,'ç™»å½•è¡Œä¸º','æ‰‹æœºç½‘å¡MAC','phone_mac',1,0,NULL,'2016-06-13 09:47:53'),(130,5,'ç™»å½•è¡Œä¸º','åˆ é™¤æ ‡è®°','status',1,0,NULL,'2016-06-13 09:47:53'),(131,5,'ç™»å½•è¡Œä¸º','äº§ç”Ÿæ—¶é—´','create_time',1,0,NULL,'2016-06-13 09:47:53'),(132,5,'ç™»å½•è¡Œä¸º','åˆ é™¤æ—¶é—´','update_time',1,0,NULL,'2016-06-13 09:47:53'),(133,5,'ç™»å½•è¡Œä¸º','æ•°æ®æ¥æº','source',1,0,NULL,'2016-06-13 09:47:54'),(134,6,'æ”¯ä»˜è®°å½•','æ”¯ä»˜æ¸ é“','pay_channel',1,0,NULL,'2016-06-13 09:47:54'),(135,6,'æ”¯ä»˜è®°å½•','æ”¯ä»˜å®è´¦å·','pay_acct',1,0,NULL,'2016-07-21 10:11:32'),(136,6,'æ”¯ä»˜è®°å½•','è´¦åŠ¡æµæ°´å·','pay_serial',0,0,NULL,'2016-07-21 11:09:57'),(137,6,'æ”¯ä»˜è®°å½•','ä¸šåŠ¡æµæ°´å·','trans_serial',0,0,NULL,'2016-07-21 10:14:24'),(138,6,'æ”¯ä»˜è®°å½•','å•†æˆ·è®¢å•å·','order_no',0,0,NULL,'2016-07-21 10:14:38'),(139,6,'æ”¯ä»˜è®°å½•','å•†å“åç§°','product_name',0,0,NULL,'2016-06-28 07:22:29'),(140,6,'æ”¯ä»˜è®°å½•','ç»“æŸæ—¶é—´','complete_time',1,0,NULL,'2016-07-07 11:31:02'),(141,6,'æ”¯ä»˜è®°å½•','æ”¯ä»˜çŠ¶æ€','pay_status',1,0,NULL,'2016-06-13 09:47:54'),(142,6,'æ”¯ä»˜è®°å½•','å¯¹æ–¹è´¦å·','counter_acct',0,0,NULL,'2016-06-28 07:22:29'),(143,6,'æ”¯ä»˜è®°å½•','æ”¶å…¥é‡‘é¢','income_amt',0,0,NULL,'2016-06-28 07:22:29'),(144,6,'æ”¯ä»˜è®°å½•','æ”¯å‡ºé‡‘é¢','paid_amt',0,0,NULL,'2016-06-28 07:22:29'),(145,6,'æ”¯ä»˜è®°å½•','è´¦æˆ·ä½™é¢','acct_amt',0,0,NULL,'2016-07-21 11:10:25'),(146,6,'æ”¯ä»˜è®°å½•','å¤‡æ³¨','comments',1,0,NULL,'2016-06-13 09:47:54'),(147,6,'æ”¯ä»˜è®°å½•','èº«ä»½è¯å·','identify_no',0,0,NULL,'2016-07-07 09:27:52'),(148,6,'æ”¯ä»˜è®°å½•','é©¾é©¶è¯å·','driving_license',0,0,NULL,'2016-07-07 09:27:52'),(149,6,'æ”¯ä»˜è®°å½•','cookie','cookie',0,0,NULL,'2016-06-28 07:22:29'),(150,6,'æ”¯ä»˜è®°å½•','é‚®ç®±','email',1,0,NULL,'2016-07-21 10:15:35'),(151,6,'æ”¯ä»˜è®°å½•','æ‰‹æœºå·','mobile',1,0,NULL,'2016-06-13 09:47:54'),(152,6,'æ”¯ä»˜è®°å½•','ç§æœ‰è´¦å·ä½“ç³»','acct_type',1,0,NULL,'2016-07-21 10:16:06'),(153,6,'æ”¯ä»˜è®°å½•','å›ºè¯å·ç ','tel',0,0,NULL,'2016-07-21 10:16:12'),(154,6,'æ”¯ä»˜è®°å½•','QQ','qq',0,0,NULL,'2016-06-28 07:22:29'),(155,6,'æ”¯ä»˜è®°å½•','ç§æœ‰è´¦å·','acct_no',0,0,NULL,'2016-06-28 07:22:29'),(156,6,'æ”¯ä»˜è®°å½•','IDFA','idfa',0,0,NULL,'2016-07-21 10:16:29'),(157,6,'æ”¯ä»˜è®°å½•','IMEI','imei',0,0,NULL,'2016-07-21 10:16:34'),(158,6,'æ”¯ä»˜è®°å½•','UDID','udid',0,0,NULL,'2016-06-28 07:22:29'),(159,6,'æ”¯ä»˜è®°å½•','MAC','phone_mac',0,0,NULL,'2016-07-21 10:16:54'),(160,6,'æ”¯ä»˜è®°å½•','åˆ é™¤æ ‡è®°','status',0,0,NULL,'2016-06-28 07:22:29'),(161,6,'æ”¯ä»˜è®°å½•','å‘ç”Ÿæ—¶é—´','create_time',0,0,NULL,'2016-07-21 10:17:14'),(162,6,'æ”¯ä»˜è®°å½•','åˆ é™¤æ—¶é—´','update_time',0,0,NULL,'2016-06-28 07:22:29'),(163,6,'æ”¯ä»˜è®°å½•','æ•°æ®æ¥æº','source',0,0,NULL,'2016-06-28 07:22:29'),(164,7,'è´­ç‰©è®°å½•','æ¸ é“åˆ†ç±»','channel_type',1,0,NULL,'2016-07-21 09:29:50'),(165,7,'è´­ç‰©è®°å½•','è´­ç‰©æ¸ é“ID','channel_id',1,0,NULL,'2016-06-13 09:47:55'),(166,7,'è´­ç‰©è®°å½•','è´­ç‰©æ¸ é“','channel_name',1,0,NULL,'2016-07-21 09:29:58'),(167,7,'è´­ç‰©è®°å½•','æ”¯ä»˜æ–¹å¼','pay_type',1,0,NULL,'2016-06-13 09:47:55'),(168,7,'è´­ç‰©è®°å½•','ä¸šåŠ¡æµæ°´å·','trans_serial',0,0,NULL,'2016-07-21 09:15:16'),(169,7,'è´­ç‰©è®°å½•','å•†æˆ·è®¢å•å·','order_no',1,0,NULL,'2016-07-21 09:15:12'),(170,7,'è´­ç‰©è®°å½•','æ¶ˆè´¹æ—¶é—´','trans_time',1,0,NULL,'2016-06-13 09:47:55'),(171,7,'è´­ç‰©è®°å½•','å•†å“ID','product_id',1,0,NULL,'2016-07-21 09:30:43'),(172,7,'è´­ç‰©è®°å½•','è§„æ ¼','specification',1,0,NULL,'2016-07-21 09:30:46'),(173,7,'è´­ç‰©è®°å½•','é¢œè‰²','color',1,0,NULL,'2016-06-13 09:47:55'),(174,7,'è´­ç‰©è®°å½•','æŠ˜æ‰£ç±»å‹','discount_type',1,0,NULL,'2016-06-13 09:47:55'),(175,7,'è´­ç‰©è®°å½•','æŠ˜æ‰£é‡‘é¢','discount_amt',1,0,NULL,'2016-06-13 09:47:55'),(176,7,'è´­ç‰©è®°å½•','å•ä»·','price',1,0,NULL,'2016-06-13 09:47:55'),(177,7,'è´­ç‰©è®°å½•','æ•°é‡','amount',1,0,NULL,'2016-06-13 09:47:55'),(178,7,'è´­ç‰©è®°å½•','åº“å­˜é‡','inventory',1,0,NULL,'2016-06-13 09:47:55'),(179,7,'è´­ç‰©è®°å½•','å“ç‰ŒID','brand_id',1,0,NULL,'2016-07-21 09:31:26'),(180,7,'è´­ç‰©è®°å½•','å“ç‰Œ','brand_name',1,0,NULL,'2016-07-21 09:41:53'),(181,7,'è´­ç‰©è®°å½•','ä¸€çº§å“ç±»åç§°ID','class1_id',1,0,NULL,'2016-07-21 09:31:32'),(182,7,'è´­ç‰©è®°å½•','ä¸€çº§å“ç±»åç§°','class1_name',1,0,NULL,'2016-06-13 09:47:55'),(183,7,'è´­ç‰©è®°å½•','äºŒçº§å“ç±»åç§°ID','class2_id',1,0,NULL,'2016-07-21 09:31:39'),(184,7,'è´­ç‰©è®°å½•','äºŒçº§å“ç±»åç§°','class2_name',1,0,NULL,'2016-06-13 09:47:56'),(185,7,'è´­ç‰©è®°å½•','ä¸‰çº§å“ç±»åç§°ID','class3_id',1,0,NULL,'2016-07-21 09:31:50'),(186,7,'è´­ç‰©è®°å½•','ä¸‰çº§å“ç±»åç§°','class3_name',1,0,NULL,'2016-06-13 09:47:56'),(187,7,'è´­ç‰©è®°å½•','å››çº§å“ç±»åç§°ID','class4_id',1,0,NULL,'2016-07-21 09:31:57'),(188,7,'è´­ç‰©è®°å½•','å››çº§å“ç±»åç§°','class4_name',1,0,NULL,'2016-06-13 09:47:56'),(189,7,'è´­ç‰©è®°å½•','å¯¼è´­äººå‘˜ID','sale_assist_id',1,0,NULL,'2016-07-21 09:32:41'),(190,7,'è´­ç‰©è®°å½•','å¯¼è´­äººå‘˜','sale_assistance',1,0,NULL,'2016-07-21 09:32:28'),(191,7,'è´­ç‰©è®°å½•','ç»“ç®—äººå‘˜ID','settlement_clerk_id',1,0,NULL,'2016-07-21 09:32:54'),(192,7,'è´­ç‰©è®°å½•','ç»“ç®—äººå‘˜','settlement_clerk',1,0,NULL,'2016-06-13 09:47:56'),(193,7,'è´­ç‰©è®°å½•','èº«ä»½è¯å·','identify_no',0,0,NULL,'2016-07-01 11:51:42'),(194,7,'è´­ç‰©è®°å½•','é©¾é©¶è¯å·','driving_license',0,0,NULL,'2016-07-01 11:51:42'),(195,7,'è´­ç‰©è®°å½•','cookie','cookie',0,0,NULL,'2016-07-01 11:51:42'),(196,7,'è´­ç‰©è®°å½•','é‚®ç®±','email',0,0,NULL,'2016-07-21 09:33:54'),(197,7,'è´­ç‰©è®°å½•','æ‰‹æœºå·','mobile',1,0,NULL,'2016-06-13 09:47:56'),(198,7,'è´­ç‰©è®°å½•','ç§æœ‰è´¦å·ä½“ç³»','acct_type',0,0,NULL,'2016-07-21 09:34:12'),(199,7,'è´­ç‰©è®°å½•','å›ºè¯å·ç ','tel',0,0,NULL,'2016-07-21 09:34:05'),(200,7,'è´­ç‰©è®°å½•','QQ','qq',0,0,NULL,'2016-07-01 11:51:42'),(201,7,'è´­ç‰©è®°å½•','ç§æœ‰è´¦å·','acct_no',0,0,NULL,'2016-07-01 11:51:42'),(202,7,'è´­ç‰©è®°å½•','IDFA','idfa',0,0,NULL,'2016-07-21 09:43:41'),(203,7,'è´­ç‰©è®°å½•','IMEI','imei',0,0,NULL,'2016-07-21 09:43:36'),(204,7,'è´­ç‰©è®°å½•','UDID','udid',0,0,NULL,'2016-07-01 11:51:42'),(205,7,'è´­ç‰©è®°å½•','MAC','phone_mac',0,0,NULL,'2016-07-21 09:43:31'),(206,7,'è´­ç‰©è®°å½•','åˆ é™¤æ ‡è®°','status',0,0,NULL,'2016-07-01 11:51:42'),(207,7,'è´­ç‰©è®°å½•','äº§ç”Ÿæ—¶é—´','create_time',0,0,NULL,'2016-07-01 11:51:42'),(208,7,'è´­ç‰©è®°å½•','åˆ é™¤æ—¶é—´','update_time',0,0,NULL,'2016-07-01 11:51:42'),(209,7,'è´­ç‰©è®°å½•','æ•°æ®æ¥æº','source',0,0,NULL,'2016-07-01 11:51:42'),(210,7,'è´­ç‰©è®°å½•','è®¢å•çŠ¶æ€','order_status',0,0,NULL,'2016-07-19 02:50:22'),(211,7,'è´­ç‰©è®°å½•','é…é€æ–¹å¼','delivery_way',0,0,NULL,'2016-07-19 02:50:22'),(212,7,'è´­ç‰©è®°å½•','ç‰©æµçŠ¶æ€','logistics_status',0,0,NULL,'2016-07-19 02:50:22'),(213,7,'è´­ç‰©è®°å½•','è¿è´¹','shipping_fee',0,0,NULL,'2016-07-19 02:50:22'),(214,7,'è´­ç‰©è®°å½•','è¿é€æ–¹å¼','shipping_way',0,0,NULL,'2016-07-19 02:50:22'),(215,7,'è´­ç‰©è®°å½•','å¿«é€’å…¬å¸','express_company',0,0,NULL,'2016-07-19 02:50:22'),(216,7,'è´­ç‰©è®°å½•','å¿«é€’å•å·','express_order',0,0,NULL,'2016-07-19 02:50:22'),(217,7,'è´­ç‰©è®°å½•','æ”¶è´§äºº','consignee',0,0,NULL,'2016-07-19 02:50:22'),(218,7,'è´­ç‰©è®°å½•','æ”¶è´§äººç”µè¯','consignee_tel',0,0,NULL,'2016-07-19 02:50:22'),(219,7,'è´­ç‰©è®°å½•','æ”¶è´§åœ°å€','consignee_addr',0,0,NULL,'2016-07-19 02:50:22'),(220,7,'è´­ç‰©è®°å½•','ä¹°å®¶å¤‡æ³¨','buyer_comment',0,0,NULL,'2016-07-19 02:50:22'),(221,7,'è´­ç‰©è®°å½•','å…¬ä¼—å·æ ‡è¯†','wxmp_id',0,0,NULL,'2016-08-04 11:14:55'),(222,7,'è´­ç‰©è®°å½•','openid','wx_code',0,0,NULL,'2016-08-04 11:15:02'),(223,6,'æ”¯ä»˜è®°å½•','å…¬ä¼—å·æ ‡è¯†','wxmp_id',0,0,NULL,'2016-08-04 11:12:59'),(224,6,'æ”¯ä»˜è®°å½•','openid','wx_code',0,0,NULL,'2016-08-04 11:13:02'),(225,7,'è´­ç‰©è®°å½•','å•†å“åç§°','product_name',1,0,NULL,'2016-07-21 09:53:01'),(227,1,'äººå£å±æ€§','å…¬ä¼—å·æ ‡è¯†','wxmp_id',1,0,NULL,'2016-08-05 09:57:54'),(228,2,'å®¢æˆ·æ ‡ç­¾','å…¬ä¼—å·æ ‡è¯†','wxmp_id',1,0,NULL,'2016-08-05 09:57:44'),(229,3,'åŸ‹ç‚¹ç»Ÿè®¡','å…¬ä¼—å·æ ‡è¯†','wxmp_id',1,0,NULL,'2016-08-05 09:58:44'),(230,4,'ä¼šå‘˜å¡è®°å½•','å…¬ä¼—å·æ ‡è¯†','wxmp_id',1,0,NULL,'2016-08-05 09:59:06'),(231,5,'ç™»å½•è¡Œä¸º','å…¬ä¼—å·æ ‡è¯†','wxmp_id',1,0,NULL,'2016-08-05 09:59:39'),(232,1,'äººå£å±æ€§','openid','wx_code',1,0,NULL,'2016-08-05 10:00:45'),(233,2,'å®¢æˆ·æ ‡ç­¾','openid','wx_code',1,0,NULL,'2016-08-05 10:01:39'),(234,3,'åŸ‹ç‚¹ç»Ÿè®¡','openid','wx_code',1,0,NULL,'2016-08-05 10:01:57'),(235,4,'ä¼šå‘˜å¡è®°å½•','openid','wx_code',1,0,NULL,'2016-08-05 10:02:14'),(236,5,'ç™»å½•è¡Œä¸º','openid','wx_code',1,0,NULL,'2016-08-05 10:02:33'),(237,1,'äººå£å±æ€§','æ˜µç§°','nickname',1,0,NULL,'2016-08-10 06:54:44'),(238,1,'äººå£å±æ€§','å¤´åƒ','head_img_url',1,0,NULL,'2016-08-10 06:55:18'),(239,1,'äººå£å±æ€§','å…³æ³¨æ—¶é—´','subscribe_time',1,0,NULL,'2016-08-10 06:55:56'),(240,1,'äººå£å±æ€§','è¯­è¨€','language',1,0,NULL,'2016-08-10 06:56:35'),(241,1,'äººå£å±æ€§','å¾®ä¿¡unionid','unionid',1,0,NULL,'2016-08-10 06:57:14'),(242,1,'äººå£å±æ€§','è¯„è®º','remark',1,0,NULL,'2016-08-10 06:57:32');
 /*!40000 ALTER TABLE `import_template` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1892,7 +1892,7 @@ CREATE TABLE `keyid_map_block` (
   `seq` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `field` (`field`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='id mappingÖ÷¼üÓ³ÉäÇøÓò';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='id mappingä¸»é”®æ˜ å°„åŒºåŸŸ';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1901,7 +1901,7 @@ CREATE TABLE `keyid_map_block` (
 
 LOCK TABLES `keyid_map_block` WRITE;
 /*!40000 ALTER TABLE `keyid_map_block` DISABLE KEYS */;
-INSERT INTO `keyid_map_block` VALUES (1,'mobile','ÊÖ»úºÅ',1),(2,'tel','¹Ì¶¨µç»°',2),(3,'email','ÓÊÏä',3),(4,'qq','qqºÅ',4),(5,'identify_no','Éí·İÖ¤ºÅ',5),(6,'driving_license','¼İÊ»Ö¤ºÅ',6),(7,'wxmp_id','Î¢ĞÅ¹«ÖÚºÅ',7),(8,'wx_code','openid',8),(9,'wx_uin','Î¢ĞÅ¸öÈËºÅ',9),(10,'wxperson_id','Î¢ĞÅ¸öÈËºÅÏÂ·ÛË¿Î¨Ò»±êÊ¶',10),(11,'IDFA','IDFA',11),(12,'IMEI','IMEI',12),(13,'unionid','unionid',13),(14,'acct_no','Ë½ÓĞÕËºÅ',14),(15,'flag1','Ô¤Áô×Ö¶Î1',15),(16,'flag2','Ô¤Áô×Ö¶Î2',16),(17,'flag3','Ô¤Áô×Ö¶Î3',17);
+INSERT INTO `keyid_map_block` VALUES (1,'mobile','æ‰‹æœºå·',1),(2,'tel','å›ºå®šç”µè¯',2),(3,'email','é‚®ç®±',3),(4,'qq','qqå·',4),(5,'identify_no','èº«ä»½è¯å·',5),(6,'driving_license','é©¾é©¶è¯å·',6),(7,'wxmp_id','å¾®ä¿¡å…¬ä¼—å·',7),(8,'wx_code','openid',8),(9,'wx_uin','å¾®ä¿¡ä¸ªäººå·',9),(10,'wxperson_id','å¾®ä¿¡ä¸ªäººå·ä¸‹ç²‰ä¸å”¯ä¸€æ ‡è¯†',10),(11,'IDFA','IDFA',11),(12,'IMEI','IMEI',12),(13,'unionid','unionid',13),(14,'acct_no','ç§æœ‰è´¦å·',14),(15,'flag1','é¢„ç•™å­—æ®µ1',15),(16,'flag2','é¢„ç•™å­—æ®µ2',16),(17,'flag3','é¢„ç•™å­—æ®µ3',17);
 /*!40000 ALTER TABLE `keyid_map_block` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1915,13 +1915,13 @@ DROP TABLE IF EXISTS `operation_log`;
 CREATE TABLE `operation_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(100) DEFAULT NULL,
-  `operate_desc` varchar(100) DEFAULT NULL COMMENT '²Ù×÷ÃèÊö',
+  `operate_desc` varchar(100) DEFAULT NULL COMMENT 'æ“ä½œæè¿°',
   `operate_time` datetime NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÓÃ»§²Ù×÷ÈÕÖ¾±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ç”¨æˆ·æ“ä½œæ—¥å¿—è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1941,28 +1941,28 @@ DROP TABLE IF EXISTS `original_data_arch_point`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `original_data_arch_point` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `event_id` int(11) DEFAULT NULL COMMENT 'ÊÂ¼şID',
-  `event_name` varchar(45) DEFAULT NULL COMMENT 'ÊÂ¼şÃû³Æ',
-  `click_time` datetime DEFAULT NULL COMMENT 'µã»÷Ê±¼ä',
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `event_id` int(11) DEFAULT NULL COMMENT 'äº‹ä»¶ID',
+  `event_name` varchar(45) DEFAULT NULL COMMENT 'äº‹ä»¶åç§°',
+  `click_time` datetime DEFAULT NULL COMMENT 'ç‚¹å‡»æ—¶é—´',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
-  `create_time` datetime DEFAULT NULL COMMENT '´´½¨Ê±¼ä',
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
+  `create_time` datetime DEFAULT NULL COMMENT 'åˆ›å»ºæ—¶é—´',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
   `cookie` varchar(128) DEFAULT NULL,
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `file_unique` varchar(45) DEFAULT NULL,
   `bitmap` varchar(18) DEFAULT NULL,
   `wxmp_id` varchar(128) DEFAULT NULL,
@@ -1988,27 +1988,27 @@ DROP TABLE IF EXISTS `original_data_customer_tags`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `original_data_customer_tags` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `tag_type` varchar(1) DEFAULT NULL COMMENT '0 - ÎÄ±¾ÀàĞÍ , 1 - ÈÕÆÚÀàĞÍ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `tag_type` varchar(1) DEFAULT NULL COMMENT '0 - æ–‡æœ¬ç±»å‹ , 1 - æ—¥æœŸç±»å‹',
   `tag_name` varchar(45) DEFAULT NULL,
-  `birthday` date DEFAULT NULL COMMENT '³öÉúÄêÔÂÈÕ',
-  `identify_no` varchar(19) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `birthday` date DEFAULT NULL COMMENT 'å‡ºç”Ÿå¹´æœˆæ—¥',
+  `identify_no` varchar(19) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `file_unique` varchar(45) DEFAULT NULL,
   `bitmap` varchar(18) DEFAULT NULL,
   `wxmp_id` varchar(128) DEFAULT NULL,
@@ -2034,31 +2034,31 @@ DROP TABLE IF EXISTS `original_data_login`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `original_data_login` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `login_type` varchar(100) DEFAULT NULL COMMENT 'µÇÂ¼·½Ê½',
-  `login_time` datetime DEFAULT NULL COMMENT 'µÇÂ¼Ê±¼ä',
-  `logout_time` datetime DEFAULT NULL COMMENT 'ÍË³öÊ±¼ä',
-  `login_ip` varchar(45) DEFAULT NULL COMMENT 'µÇÂ¼IP',
-  `login_device` varchar(45) DEFAULT NULL COMMENT 'µÇÂ¼Éè±¸',
-  `resolution_ratio` varchar(100) DEFAULT NULL COMMENT '·Ö±æÂÊ',
-  `login_url` varchar(100) DEFAULT NULL COMMENT 'µÇÂ¼Ò³Ãæ',
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `login_type` varchar(100) DEFAULT NULL COMMENT 'ç™»å½•æ–¹å¼',
+  `login_time` datetime DEFAULT NULL COMMENT 'ç™»å½•æ—¶é—´',
+  `logout_time` datetime DEFAULT NULL COMMENT 'é€€å‡ºæ—¶é—´',
+  `login_ip` varchar(45) DEFAULT NULL COMMENT 'ç™»å½•IP',
+  `login_device` varchar(45) DEFAULT NULL COMMENT 'ç™»å½•è®¾å¤‡',
+  `resolution_ratio` varchar(100) DEFAULT NULL COMMENT 'åˆ†è¾¨ç‡',
+  `login_url` varchar(100) DEFAULT NULL COMMENT 'ç™»å½•é¡µé¢',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `file_unique` varchar(45) DEFAULT NULL,
   `bitmap` varchar(18) DEFAULT NULL,
   `wxmp_id` varchar(128) DEFAULT NULL,
@@ -2084,30 +2084,30 @@ DROP TABLE IF EXISTS `original_data_member`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `original_data_member` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `member_id` varchar(45) DEFAULT NULL COMMENT '»áÔ±¿¨ºÅ',
-  `member_points` varchar(10) DEFAULT NULL COMMENT '»áÔ±»ı·Ö',
-  `member_level` varchar(45) DEFAULT NULL COMMENT '»áÔ±µÈ¼¶',
-  `regist_time` date DEFAULT NULL COMMENT '¿ª¿¨Ê±¼ä',
-  `card_amt` decimal(22,2) DEFAULT NULL COMMENT '¿¨ÄÚÓà¶î',
-  `expire` date DEFAULT NULL COMMENT '¹ıÆÚÈÕ',
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `member_id` varchar(45) DEFAULT NULL COMMENT 'ä¼šå‘˜å¡å·',
+  `member_points` varchar(10) DEFAULT NULL COMMENT 'ä¼šå‘˜ç§¯åˆ†',
+  `member_level` varchar(45) DEFAULT NULL COMMENT 'ä¼šå‘˜ç­‰çº§',
+  `regist_time` date DEFAULT NULL COMMENT 'å¼€å¡æ—¶é—´',
+  `card_amt` decimal(22,2) DEFAULT NULL COMMENT 'å¡å†…ä½™é¢',
+  `expire` date DEFAULT NULL COMMENT 'è¿‡æœŸæ—¥',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `file_unique` varchar(45) DEFAULT NULL,
   `bitmap` varchar(18) DEFAULT NULL,
   `wxmp_id` varchar(128) DEFAULT NULL,
@@ -2133,40 +2133,40 @@ DROP TABLE IF EXISTS `original_data_payment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `original_data_payment` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `pay_channel` varchar(10) DEFAULT NULL COMMENT 'Ö§¸¶ÇşµÀ',
-  `pay_acct` varchar(45) DEFAULT NULL COMMENT 'Ö§¸¶ÕËºÅ',
-  `pay_serial` varchar(45) DEFAULT NULL COMMENT 'Ö§¸¶Á÷Ë®',
-  `trans_serial` varchar(45) DEFAULT NULL COMMENT 'ÒµÎñÁ÷Ë®',
-  `order_no` varchar(45) DEFAULT NULL COMMENT '¶©µ¥±àºÅ',
-  `product_name` varchar(100) DEFAULT NULL COMMENT 'ÉÌÆ·Ãû³Æ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `pay_channel` varchar(10) DEFAULT NULL COMMENT 'æ”¯ä»˜æ¸ é“',
+  `pay_acct` varchar(45) DEFAULT NULL COMMENT 'æ”¯ä»˜è´¦å·',
+  `pay_serial` varchar(45) DEFAULT NULL COMMENT 'æ”¯ä»˜æµæ°´',
+  `trans_serial` varchar(45) DEFAULT NULL COMMENT 'ä¸šåŠ¡æµæ°´',
+  `order_no` varchar(45) DEFAULT NULL COMMENT 'è®¢å•ç¼–å·',
+  `product_name` varchar(100) DEFAULT NULL COMMENT 'å•†å“åç§°',
   `create_time` datetime DEFAULT NULL,
-  `complete_time` datetime DEFAULT NULL COMMENT '½áÊøÊ±¼ä',
-  `pay_status` varchar(45) DEFAULT NULL COMMENT 'Ö§¸¶×´Ì¬',
-  `counter_acct` varchar(45) DEFAULT NULL COMMENT '¶Ô·½ÕËºÅ',
-  `income_amt` decimal(22,2) DEFAULT NULL COMMENT 'ÊÕÈë½ğ¶î',
-  `paid_amt` decimal(22,2) DEFAULT NULL COMMENT 'Ö§³ö½ğ¶î',
-  `acct_amt` decimal(22,2) DEFAULT NULL COMMENT 'ÕËºÅÓà¶î',
-  `comments` varchar(100) DEFAULT NULL COMMENT '±¸×¢',
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `complete_time` datetime DEFAULT NULL COMMENT 'ç»“æŸæ—¶é—´',
+  `pay_status` varchar(45) DEFAULT NULL COMMENT 'æ”¯ä»˜çŠ¶æ€',
+  `counter_acct` varchar(45) DEFAULT NULL COMMENT 'å¯¹æ–¹è´¦å·',
+  `income_amt` decimal(22,2) DEFAULT NULL COMMENT 'æ”¶å…¥é‡‘é¢',
+  `paid_amt` decimal(22,2) DEFAULT NULL COMMENT 'æ”¯å‡ºé‡‘é¢',
+  `acct_amt` decimal(22,2) DEFAULT NULL COMMENT 'è´¦å·ä½™é¢',
+  `comments` varchar(100) DEFAULT NULL COMMENT 'å¤‡æ³¨',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `file_unique` varchar(45) DEFAULT NULL,
-  `wxmp_id` varchar(45) DEFAULT NULL COMMENT 'Î¢ĞÅ¹«ÖÚºÅ±êÊ¶',
-  `wx_code` varchar(45) DEFAULT NULL COMMENT 'Î¢ĞÅopenid',
+  `wxmp_id` varchar(45) DEFAULT NULL COMMENT 'å¾®ä¿¡å…¬ä¼—å·æ ‡è¯†',
+  `wx_code` varchar(45) DEFAULT NULL COMMENT 'å¾®ä¿¡openid',
   `bitmap` varchar(18) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2189,39 +2189,39 @@ DROP TABLE IF EXISTS `original_data_population`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `original_data_population` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `name` varchar(100) DEFAULT NULL COMMENT 'ĞÕÃû',
-  `gender` tinyint(1) DEFAULT NULL COMMENT 'ĞÔ±ğ\n1-ÄĞ\n2-Å® \n3-Î´È·¶¨ \n4-²»È·¶¨',
-  `birthday` date DEFAULT NULL COMMENT '³öÉúÄêÔÂÈÕ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `name` varchar(100) DEFAULT NULL COMMENT 'å§“å',
+  `gender` tinyint(1) DEFAULT NULL COMMENT 'æ€§åˆ«\n1-ç”·\n2-å¥³ \n3-æœªç¡®å®š \n4-ä¸ç¡®å®š',
+  `birthday` date DEFAULT NULL COMMENT 'å‡ºç”Ÿå¹´æœˆæ—¥',
   `provice` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
-  `job` varchar(100) DEFAULT NULL COMMENT 'Ö°Òµ',
-  `monthly_income` decimal(22,2) DEFAULT NULL COMMENT 'ÔÂÊÕÈë',
-  `monthly_consume` decimal(22,2) DEFAULT NULL COMMENT 'ÔÂ¾ùÏû·Ñ',
-  `marital_status` varchar(45) DEFAULT NULL COMMENT '»éÒö×´¿ö',
-  `education` varchar(45) DEFAULT NULL COMMENT '½ÌÓı³Ì¶È',
-  `employment` varchar(45) DEFAULT NULL COMMENT '¾ÍÒµÇé¿ö',
-  `nationality` varchar(45) DEFAULT NULL COMMENT 'Ãñ×å',
-  `blood_type` varchar(45) DEFAULT NULL COMMENT 'ÑªĞÍ',
-  `citizenship` varchar(45) DEFAULT NULL COMMENT '¹ú¼®',
+  `job` varchar(100) DEFAULT NULL COMMENT 'èŒä¸š',
+  `monthly_income` decimal(22,2) DEFAULT NULL COMMENT 'æœˆæ”¶å…¥',
+  `monthly_consume` decimal(22,2) DEFAULT NULL COMMENT 'æœˆå‡æ¶ˆè´¹',
+  `marital_status` varchar(45) DEFAULT NULL COMMENT 'å©šå§»çŠ¶å†µ',
+  `education` varchar(45) DEFAULT NULL COMMENT 'æ•™è‚²ç¨‹åº¦',
+  `employment` varchar(45) DEFAULT NULL COMMENT 'å°±ä¸šæƒ…å†µ',
+  `nationality` varchar(45) DEFAULT NULL COMMENT 'æ°‘æ—',
+  `blood_type` varchar(45) DEFAULT NULL COMMENT 'è¡€å‹',
+  `citizenship` varchar(45) DEFAULT NULL COMMENT 'å›½ç±',
   `iq` int(11) DEFAULT NULL,
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `file_unique` varchar(45) DEFAULT NULL,
   `bitmap` varchar(18) DEFAULT NULL,
   `wxmp_id` varchar(128) DEFAULT NULL,
@@ -2247,65 +2247,65 @@ DROP TABLE IF EXISTS `original_data_shopping`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `original_data_shopping` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼üid',
-  `channel_type` varchar(45) DEFAULT NULL COMMENT '¹ºÎïÇşµÀ·ÖÀà',
-  `channel_id` varchar(10) DEFAULT NULL COMMENT '¹ºÎïÇşµÀID',
-  `channel_name` varchar(45) DEFAULT NULL COMMENT '¹ºÎïÇşµÀÃû³Æ',
-  `pay_type` varchar(45) DEFAULT NULL COMMENT 'Ö§¸¶·½Ê½',
-  `trans_serial` varchar(45) DEFAULT NULL COMMENT 'ÒµÎñÁ÷Ë®',
-  `order_no` varchar(100) DEFAULT NULL COMMENT 'ÉÌÆ·¶©µ¥ºÅ',
-  `trans_time` datetime DEFAULT NULL COMMENT 'Ïû·ÑÊ±¼ä',
-  `product_id` varchar(100) DEFAULT NULL COMMENT 'ÉÌÆ·±àºÅ',
-  `specification` varchar(45) DEFAULT NULL COMMENT 'ÉÌÆ·¹æ¸ñ',
-  `color` varchar(45) DEFAULT NULL COMMENT 'ÑÕÉ«',
-  `discount_type` varchar(45) DEFAULT NULL COMMENT 'ÕÛ¿ÛÀàĞÍ',
-  `discount_amt` decimal(22,2) DEFAULT NULL COMMENT 'ÕÛ¿Û½ğ¶î',
-  `price` decimal(22,2) DEFAULT NULL COMMENT 'µ¥¼Û',
-  `amount` int(11) DEFAULT NULL COMMENT 'ÊıÁ¿',
-  `inventory` int(11) DEFAULT NULL COMMENT '¿â´æÁ¿',
-  `brand_id` varchar(45) DEFAULT NULL COMMENT 'Æ·ÅÆiD',
-  `brand_name` varchar(45) DEFAULT NULL COMMENT 'Æ·ÅÆÃû³Æ',
-  `class1_id` varchar(45) DEFAULT NULL COMMENT 'Ò»¼¶Æ·ÀàID',
-  `class1_name` varchar(45) DEFAULT NULL COMMENT 'Ò»¼¶Æ·ÀàÃû³Æ',
-  `class2_id` varchar(45) DEFAULT NULL COMMENT '¶ş¼¶Æ·ÀàID',
-  `class2_name` varchar(45) DEFAULT NULL COMMENT '¶ş¼¶Æ·ÀàÃû³Æ',
-  `class3_id` varchar(45) DEFAULT NULL COMMENT 'Èı¼¶Æ·ÀàID',
-  `class3_name` varchar(45) DEFAULT NULL COMMENT 'Èı¼¶Æ·ÀàÃû³Æ',
-  `class4_id` varchar(45) DEFAULT NULL COMMENT 'ËÄ¼¶Æ·ÀàID',
-  `class4_name` varchar(45) DEFAULT NULL COMMENT '¶ş¼¶Æ·ÀàÃû³Æ',
-  `sale_assist_id` varchar(45) DEFAULT NULL COMMENT 'µ¼¹ºÔ±±àºÅ',
-  `sale_assistance` varchar(45) DEFAULT NULL COMMENT 'µ¼¹ºÔ±',
-  `settlement_clerk_id` varchar(45) DEFAULT NULL COMMENT '½áËãÈËÔ±±àºÅ',
-  `settlement_clerk` varchar(45) DEFAULT NULL COMMENT '½áËãÈËÔ±',
-  `identify_no` varchar(18) DEFAULT NULL COMMENT 'Éí·İÖ¤ºÅ',
-  `driving_license` varchar(45) DEFAULT NULL COMMENT '¼İÊ»Ö¤ºÅ',
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `channel_type` varchar(45) DEFAULT NULL COMMENT 'è´­ç‰©æ¸ é“åˆ†ç±»',
+  `channel_id` varchar(10) DEFAULT NULL COMMENT 'è´­ç‰©æ¸ é“ID',
+  `channel_name` varchar(45) DEFAULT NULL COMMENT 'è´­ç‰©æ¸ é“åç§°',
+  `pay_type` varchar(45) DEFAULT NULL COMMENT 'æ”¯ä»˜æ–¹å¼',
+  `trans_serial` varchar(45) DEFAULT NULL COMMENT 'ä¸šåŠ¡æµæ°´',
+  `order_no` varchar(100) DEFAULT NULL COMMENT 'å•†å“è®¢å•å·',
+  `trans_time` datetime DEFAULT NULL COMMENT 'æ¶ˆè´¹æ—¶é—´',
+  `product_id` varchar(100) DEFAULT NULL COMMENT 'å•†å“ç¼–å·',
+  `specification` varchar(45) DEFAULT NULL COMMENT 'å•†å“è§„æ ¼',
+  `color` varchar(45) DEFAULT NULL COMMENT 'é¢œè‰²',
+  `discount_type` varchar(45) DEFAULT NULL COMMENT 'æŠ˜æ‰£ç±»å‹',
+  `discount_amt` decimal(22,2) DEFAULT NULL COMMENT 'æŠ˜æ‰£é‡‘é¢',
+  `price` decimal(22,2) DEFAULT NULL COMMENT 'å•ä»·',
+  `amount` int(11) DEFAULT NULL COMMENT 'æ•°é‡',
+  `inventory` int(11) DEFAULT NULL COMMENT 'åº“å­˜é‡',
+  `brand_id` varchar(45) DEFAULT NULL COMMENT 'å“ç‰ŒiD',
+  `brand_name` varchar(45) DEFAULT NULL COMMENT 'å“ç‰Œåç§°',
+  `class1_id` varchar(45) DEFAULT NULL COMMENT 'ä¸€çº§å“ç±»ID',
+  `class1_name` varchar(45) DEFAULT NULL COMMENT 'ä¸€çº§å“ç±»åç§°',
+  `class2_id` varchar(45) DEFAULT NULL COMMENT 'äºŒçº§å“ç±»ID',
+  `class2_name` varchar(45) DEFAULT NULL COMMENT 'äºŒçº§å“ç±»åç§°',
+  `class3_id` varchar(45) DEFAULT NULL COMMENT 'ä¸‰çº§å“ç±»ID',
+  `class3_name` varchar(45) DEFAULT NULL COMMENT 'ä¸‰çº§å“ç±»åç§°',
+  `class4_id` varchar(45) DEFAULT NULL COMMENT 'å››çº§å“ç±»ID',
+  `class4_name` varchar(45) DEFAULT NULL COMMENT 'äºŒçº§å“ç±»åç§°',
+  `sale_assist_id` varchar(45) DEFAULT NULL COMMENT 'å¯¼è´­å‘˜ç¼–å·',
+  `sale_assistance` varchar(45) DEFAULT NULL COMMENT 'å¯¼è´­å‘˜',
+  `settlement_clerk_id` varchar(45) DEFAULT NULL COMMENT 'ç»“ç®—äººå‘˜ç¼–å·',
+  `settlement_clerk` varchar(45) DEFAULT NULL COMMENT 'ç»“ç®—äººå‘˜',
+  `identify_no` varchar(18) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
   `email` varchar(100) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL COMMENT 'ÊÖ»úºÅ',
-  `tel` varchar(45) DEFAULT NULL COMMENT '¹Ì¶¨µç»°',
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºå®šç”µè¯',
   `qq` varchar(45) DEFAULT NULL,
-  `acct_type` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅÀàĞÍ',
-  `acct_no` varchar(45) DEFAULT NULL COMMENT 'Ë½ÓĞÕËºÅ',
-  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneÊÖ»úÊ¶±ğÂë',
-  `imei` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÊ¶±ğÂë',
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
   `udid` varchar(45) DEFAULT NULL,
-  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'ÊÖ»úÍø¿¨MAC',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'É¾³ıÊ±¼ä',
-  `source` varchar(45) DEFAULT NULL COMMENT 'Êı¾İÀ´Ô´',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Êı¾İµ¼ÈëÅú´ÎiD',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
   `file_unique` varchar(45) DEFAULT NULL,
-  `order_status` varchar(10) DEFAULT NULL COMMENT '¶©µ¥×´Ì¬',
-  `delivery_way` varchar(10) DEFAULT NULL COMMENT 'ÅäËÍ·½Ê½',
-  `logistics_status` varchar(10) DEFAULT NULL COMMENT 'ÎïÁ÷×´Ì¬',
-  `shipping_fee` decimal(22,2) DEFAULT NULL COMMENT 'ÔË·Ñ',
-  `shipping_way` varchar(10) DEFAULT NULL COMMENT 'ÔËËÍ·½Ê½',
-  `express_company` varchar(100) DEFAULT NULL COMMENT '¿ìµİ¹«Ë¾',
-  `express_order` varchar(50) DEFAULT NULL COMMENT '¿ìµİµ¥ºÅ',
-  `consignee` varchar(50) DEFAULT NULL COMMENT 'ÊÕ»õÈË',
-  `consignee_tel` varchar(20) DEFAULT NULL COMMENT 'ÊÕ»õÈËµç»°',
-  `consignee_addr` varchar(200) DEFAULT NULL COMMENT 'ÊÕ»õµØÖ·',
-  `buyer_comment` varchar(200) DEFAULT NULL COMMENT 'Âò¼Ò±¸×¢',
-  `wxmp_id` varchar(128) DEFAULT NULL COMMENT '¹«ÖÚºÅ±êÊ¶',
+  `order_status` varchar(10) DEFAULT NULL COMMENT 'è®¢å•çŠ¶æ€',
+  `delivery_way` varchar(10) DEFAULT NULL COMMENT 'é…é€æ–¹å¼',
+  `logistics_status` varchar(10) DEFAULT NULL COMMENT 'ç‰©æµçŠ¶æ€',
+  `shipping_fee` decimal(22,2) DEFAULT NULL COMMENT 'è¿è´¹',
+  `shipping_way` varchar(10) DEFAULT NULL COMMENT 'è¿é€æ–¹å¼',
+  `express_company` varchar(100) DEFAULT NULL COMMENT 'å¿«é€’å…¬å¸',
+  `express_order` varchar(50) DEFAULT NULL COMMENT 'å¿«é€’å•å·',
+  `consignee` varchar(50) DEFAULT NULL COMMENT 'æ”¶è´§äºº',
+  `consignee_tel` varchar(20) DEFAULT NULL COMMENT 'æ”¶è´§äººç”µè¯',
+  `consignee_addr` varchar(200) DEFAULT NULL COMMENT 'æ”¶è´§åœ°å€',
+  `buyer_comment` varchar(200) DEFAULT NULL COMMENT 'ä¹°å®¶å¤‡æ³¨',
+  `wxmp_id` varchar(128) DEFAULT NULL COMMENT 'å…¬ä¼—å·æ ‡è¯†',
   `wx_code` varchar(128) DEFAULT NULL COMMENT 'openid',
   `product_name` varchar(200) DEFAULT NULL,
   `bitmap` varchar(18) DEFAULT NULL,
@@ -2332,8 +2332,8 @@ DROP TABLE IF EXISTS `party_behavior`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `party_behavior` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `contact_id` varchar(20) NOT NULL COMMENT 'ÁªÏµÈËID',
-  `behavior_type` varchar(45) DEFAULT NULL COMMENT 'ĞĞÎªÀàĞÍ\n0-Î¢ĞÅ¡¢1-web¡¢2-ÓªÏú»î¶¯',
+  `contact_id` varchar(20) NOT NULL COMMENT 'è”ç³»äººID',
+  `behavior_type` varchar(45) DEFAULT NULL COMMENT 'è¡Œä¸ºç±»å‹\n0-å¾®ä¿¡ã€1-webã€2-è¥é”€æ´»åŠ¨',
   `behavior_name` varchar(45) DEFAULT NULL,
   `wechat_type` varchar(45) DEFAULT NULL,
   `wechat_name` varchar(45) DEFAULT NULL,
@@ -2349,7 +2349,7 @@ CREATE TABLE `party_behavior` (
 
 LOCK TABLES `party_behavior` WRITE;
 /*!40000 ALTER TABLE `party_behavior` DISABLE KEYS */;
-INSERT INTO `party_behavior` VALUES (1,'1','0','²é¿´ ','0','¹«ÖÚºÅ1','ĞÂ²úÆ·ÂúÒâ¶Èµ÷²é','2016-06-07 11:58:11'),(2,'193','1','²é¿´ ','0','¹«ÖÚºÅ2','3~24¸öÔÂ±¦±¦ÓªÑø´îÅäÎ¢ĞÅÈº½²×ù','2016-06-07 10:32:13');
+INSERT INTO `party_behavior` VALUES (1,'1','0','æŸ¥çœ‹ ','0','å…¬ä¼—å·1','æ–°äº§å“æ»¡æ„åº¦è°ƒæŸ¥','2016-06-07 11:58:11'),(2,'193','1','æŸ¥çœ‹ ','0','å…¬ä¼—å·2','3~24ä¸ªæœˆå®å®è¥å…»æ­é…å¾®ä¿¡ç¾¤è®²åº§','2016-06-07 10:32:13');
 /*!40000 ALTER TABLE `party_behavior` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2361,13 +2361,13 @@ DROP TABLE IF EXISTS `party_radar`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `party_radar` (
-  `contact_id` varchar(20) NOT NULL DEFAULT '0' COMMENT 'ÁªÏµÈËID',
-  `contact_name` varchar(20) DEFAULT NULL COMMENT 'ÁªÏµÈËĞÕÃû',
-  `recent_buy_time` datetime DEFAULT NULL COMMENT '	×î½ü¹ºÂòÊ±¼ä',
-  `buy_rate` decimal(5,2) DEFAULT NULL COMMENT 'Ïû·ÑÆµÂÊ',
-  `goods_types` int(11) DEFAULT NULL COMMENT '¹ºÂòÉÌÆ·Æ·ÀàÊı',
-  `average_trans_amt` decimal(22,2) DEFAULT NULL COMMENT 'Æ½¾ù½»Ò×½ğ¶î',
-  `top_trans_amt` decimal(22,2) DEFAULT NULL COMMENT 'µ¥´Î×î¸ß½»Ò×¶î',
+  `contact_id` varchar(20) NOT NULL DEFAULT '0' COMMENT 'è”ç³»äººID',
+  `contact_name` varchar(20) DEFAULT NULL COMMENT 'è”ç³»äººå§“å',
+  `recent_buy_time` datetime DEFAULT NULL COMMENT '	æœ€è¿‘è´­ä¹°æ—¶é—´',
+  `buy_rate` decimal(5,2) DEFAULT NULL COMMENT 'æ¶ˆè´¹é¢‘ç‡',
+  `goods_types` int(11) DEFAULT NULL COMMENT 'è´­ä¹°å•†å“å“ç±»æ•°',
+  `average_trans_amt` decimal(22,2) DEFAULT NULL COMMENT 'å¹³å‡äº¤æ˜“é‡‘é¢',
+  `top_trans_amt` decimal(22,2) DEFAULT NULL COMMENT 'å•æ¬¡æœ€é«˜äº¤æ˜“é¢',
   PRIMARY KEY (`contact_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2378,7 +2378,7 @@ CREATE TABLE `party_radar` (
 
 LOCK TABLES `party_radar` WRITE;
 /*!40000 ALTER TABLE `party_radar` DISABLE KEYS */;
-INSERT INTO `party_radar` VALUES ('1','ÕÅÑà','2016-04-03 14:32:22',5.00,1,1002.56,458.21);
+INSERT INTO `party_radar` VALUES ('1','å¼ ç‡•','2016-04-03 14:32:22',5.00,1,1002.56,458.21);
 /*!40000 ALTER TABLE `party_radar` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2393,12 +2393,12 @@ CREATE TABLE `resource` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `resource_id` varbinary(20) DEFAULT NULL,
   `resource_action` varchar(100) DEFAULT NULL,
-  `description` varchar(100) DEFAULT NULL COMMENT '×ÊÔ´ÃèÊö',
+  `description` varchar(100) DEFAULT NULL COMMENT 'èµ„æºæè¿°',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='×ÊÔ´±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='èµ„æºè¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2419,13 +2419,13 @@ DROP TABLE IF EXISTS `role`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `role` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(20) DEFAULT NULL COMMENT '½ÇÉ«Ãû',
-  `branch_id` bigint(20) DEFAULT NULL COMMENT '²¿ÃÅid',
+  `role_name` varchar(20) DEFAULT NULL COMMENT 'è§’è‰²å',
+  `branch_id` bigint(20) DEFAULT NULL COMMENT 'éƒ¨é—¨id',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `crated_time` timestamp NULL DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='½ÇÉ«±í';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='è§’è‰²è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2434,7 +2434,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'¹ÜÀíÔ±',1,0,'2016-05-17 07:51:01','2016-05-27 07:51:07');
+INSERT INTO `role` VALUES (1,'ç®¡ç†å‘˜',1,0,'2016-05-17 07:51:01','2016-05-27 07:51:07');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2453,7 +2453,7 @@ CREATE TABLE `role_resource_map` (
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='½ÇÉ«-×ÊÔ´¹ØÁª±í';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='è§’è‰²-èµ„æºå…³è”è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2482,7 +2482,7 @@ CREATE TABLE `segment` (
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index2` (`segmentation_head_id`,`data_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='1.±£´æ×î½ü3Ğ¡Ê±µÄ½á¹û';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='1.ä¿å­˜æœ€è¿‘3å°æ—¶çš„ç»“æœ';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2509,7 +2509,7 @@ CREATE TABLE `segment_distribution` (
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ï¸·ÖµÄ¸²¸ÇÈËÊı';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ç»†åˆ†çš„è¦†ç›–äººæ•°';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2530,17 +2530,17 @@ DROP TABLE IF EXISTS `segmentation_body`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `segmentation_body` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `head_id` int(11) DEFAULT NULL COMMENT '¹ÜÀísegmentation_head±íµÄid',
-  `tag_group_id` int(11) DEFAULT NULL COMMENT '±êÇ©ËùÊô·Ö×éµÄid',
-  `tag_id` int(11) DEFAULT NULL COMMENT '±êÇ©id',
-  `exclude` tinyint(4) DEFAULT '0' COMMENT 'ÊÇ·ñÅÅ³ı,0:²»ÅÅ³ı,1:ÅÅ³ı',
-  `group_index` int(11) DEFAULT NULL COMMENT '·Ö×éĞòºÅ,0¿ªÊ¼µİÔö',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç,0:Î´É¾³ı,1:ÒÑÉ¾³ı',
+  `head_id` int(11) DEFAULT NULL COMMENT 'ç®¡ç†segmentation_headè¡¨çš„id',
+  `tag_group_id` int(11) DEFAULT NULL COMMENT 'æ ‡ç­¾æ‰€å±åˆ†ç»„çš„id',
+  `tag_id` int(11) DEFAULT NULL COMMENT 'æ ‡ç­¾id',
+  `exclude` tinyint(4) DEFAULT '0' COMMENT 'æ˜¯å¦æ’é™¤,0:ä¸æ’é™¤,1:æ’é™¤',
+  `group_index` int(11) DEFAULT NULL COMMENT 'åˆ†ç»„åºå·,0å¼€å§‹é€’å¢',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°,0:æœªåˆ é™¤,1:å·²åˆ é™¤',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `group_seq` int(11) DEFAULT NULL COMMENT '×éÄÚË³ĞòºÅ',
+  `group_seq` int(11) DEFAULT NULL COMMENT 'ç»„å†…é¡ºåºå·',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ï¸·Öbody±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ç»†åˆ†bodyè¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2560,17 +2560,17 @@ DROP TABLE IF EXISTS `segmentation_head`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `segmentation_head` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Ï¸·Ö±àºÅ',
-  `name` varchar(40) DEFAULT NULL COMMENT 'Ï¸·ÖÃû³Æ',
-  `publish_status` tinyint(4) DEFAULT '0' COMMENT '0:Î´ÉúĞ§,1:ÒÑÉúĞ§',
-  `oper` varchar(45) DEFAULT NULL COMMENT '²Ù×÷Õß',
-  `tag_ids` varchar(200) DEFAULT NULL COMMENT '¹ØÁªcutom_tag±íµÄid\nÏ¸·ÖËù¹ØÁªµÄ±êÇ©id£¬¶à¸öÓÃ¶ººÅ·Ö¸ô',
-  `refer_campaign_count` int(11) NOT NULL DEFAULT '0' COMMENT '±»»î¶¯Ê¹ÓÃ´ÎÊı',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:Î´É¾³ı,1:ÒÑÉ¾³ı',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ç»†åˆ†ç¼–å·',
+  `name` varchar(40) DEFAULT NULL COMMENT 'ç»†åˆ†åç§°',
+  `publish_status` tinyint(4) DEFAULT '0' COMMENT '0:æœªç”Ÿæ•ˆ,1:å·²ç”Ÿæ•ˆ',
+  `oper` varchar(45) DEFAULT NULL COMMENT 'æ“ä½œè€…',
+  `tag_ids` varchar(200) DEFAULT NULL COMMENT 'å…³è”cutom_tagè¡¨çš„id\nç»†åˆ†æ‰€å…³è”çš„æ ‡ç­¾idï¼Œå¤šä¸ªç”¨é€—å·åˆ†éš”',
+  `refer_campaign_count` int(11) NOT NULL DEFAULT '0' COMMENT 'è¢«æ´»åŠ¨ä½¿ç”¨æ¬¡æ•°',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:æœªåˆ é™¤,1:å·²åˆ é™¤',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÊÜÖÚÏ¸·Ö';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å—ä¼—ç»†åˆ†';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2590,14 +2590,14 @@ DROP TABLE IF EXISTS `tag`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tag` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '±êÇ©±àºÅ',
-  `name` varchar(40) DEFAULT NULL COMMENT '±êÇ©Ãû³Æ',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'æ ‡ç­¾ç¼–å·',
+  `name` varchar(40) DEFAULT NULL COMMENT 'æ ‡ç­¾åç§°',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `tag_group_id` varchar(500) DEFAULT NULL COMMENT '±êÇ©ËùÊô×éµÄid(ËùÓĞ¸¸½ÚµãµÄid)',
+  `tag_group_id` varchar(500) DEFAULT NULL COMMENT 'æ ‡ç­¾æ‰€å±ç»„çš„id(æ‰€æœ‰çˆ¶èŠ‚ç‚¹çš„id)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6653 DEFAULT CHARSET=utf8 COMMENT='±êÇ©±í';
+) ENGINE=InnoDB AUTO_INCREMENT=6653 DEFAULT CHARSET=utf8 COMMENT='æ ‡ç­¾è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2606,7 +2606,7 @@ CREATE TABLE `tag` (
 
 LOCK TABLES `tag` WRITE;
 /*!40000 ALTER TABLE `tag` DISABLE KEYS */;
-INSERT INTO `tag` VALUES (5869,'ÄĞ',0,'2016-08-08 11:40:47','2016-08-30 09:44:37','14069'),(5870,'Å®',0,'2016-08-08 11:40:47','2016-09-07 07:53:44','14069'),(5871,'ĞÂÎ´Öª',0,'2016-08-08 11:40:47','2016-08-29 07:09:21','55'),(5872,'00ºó',0,'2016-08-08 11:40:47','2016-09-07 07:53:53','14069'),(5873,'90ºó',0,'2016-08-08 11:40:47','2016-08-30 09:47:57','14073'),(5874,'80ºó',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5875,'70ºó',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5876,'69Ç°',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5877,'Ë®Æ¿×ù',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5878,'Ë«Óã×ù',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5879,'°×Ñò×ù',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5880,'½ğÅ£×ù',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5881,'Ë«×Ó×ù',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5882,'¾ŞĞ·×ù',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5883,'Ê¨×Ó×ù',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5884,'´¦Å®×ù',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5885,'Ìì³Ó×ù',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5886,'ÌìĞ«×ù',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5887,'ÉäÊÖ×ù',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5888,'Ä¦ôÉ×ù',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5889,'ÒÑ»é',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5890,'Î´»é',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5891,'Î´Öª',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5892,'A',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5893,'B',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5894,'AB',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5895,'O',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5896,'Î´Öª',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5897,'ÏúÊÛ',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5898,'¿Í·ş',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5899,'ÊĞ³¡',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5900,'¹ÜÀí',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5901,'ÇşµÀ',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5902,'ĞĞÕş',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5903,'ÉÌÎñ',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5904,'ÔËÓª',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5905,'Êı¾İ·ÖÎö',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5906,'ÊÛÇ°',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5907,'ÊÛºó',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5908,'²úÆ·¾­Àí',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5909,'Æ·ÅÆ¾­Àí',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5910,'×ÉÑ¯',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5911,'²ß»®',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5912,'ÎÄ°¸',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5913,'¹«¹Ø',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5914,'Ã½½é',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5915,'Æó»®',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5916,'ÊĞ³¡µ÷ÑĞ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5917,'ÒµÎñÍØÕ¹',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5918,'¹ã¸æ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5919,'»áÕ¹',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5920,'¿Í»§¾­Àí',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5921,'´´Òâ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5922,'Éè¼Æ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5923,'ÃÀÊõ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5924,'²ß»®',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5925,'²ÆÎñ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5926,'Éó¼Æ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5927,'Ë°Îñ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5928,'ÈËÁ¦×ÊÔ´',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5929,'»á¼Æ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5930,'³öÄÉ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5931,'ÅàÑµ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5932,'ÁÔÍ·',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5933,'ºóÇÚ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5934,'ÎÄÃØ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5935,'Ç°Ì¨',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5936,'ÏîÄ¿¹ÜÀí',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5937,'IT',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5938,'Ö¤„»',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5939,'Í¶×Ê',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5940,'Í¨ĞÅ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5941,'·¿µØ²ú',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5942,'±£ÏÕ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5943,'Æû³µ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5944,'µç×Ó',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5945,'µçÆ÷',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5946,'·ş×°',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5947,'·ÄÖ¯',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5948,'ÄÜÔ´',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5949,'¿ó²ú',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5950,'ÎïÁ÷',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5951,'²Ö´¢',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5952,'Ò½Ò©',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5953,'»¯¹¤',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5954,'°²È«¹ÜÀí',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5955,'»¯Ñé',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5956,'ÈÏÖ¤',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5957,'¹©Ó¦ÉÌ',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5958,'²É¹º',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5959,'±à¼­',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5960,'»¥ÁªÍø',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5961,'µçÉÌ',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5962,'Èí¼ş',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5963,'¿ª·¢',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5964,'ÏµÍ³¼¯³É',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5965,'ÒÆ¶¯»¥ÁªÍø',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5966,'UEÉè¼Æ',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5967,'UIÉè¼Æ',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5968,'ÒÆ¶¯»¥ÁªÍø',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5969,'ÓÎÏ·²ß»®',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5970,'ÓÎÏ·ÊıÖµ',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5971,'ÓÎÏ·¿ª·¢',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5972,'ÓÎÏ·Éè¼Æ',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5973,'ÓÎÏ·²âÊÔ',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5974,'Ó²¼ş',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5975,'ĞÅÏ¢±ê×¼»¯',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5976,'ÍøÂç°²È«',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5977,'µçĞÅ',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5978,'·¿²ú',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5979,'½¨Öş',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5980,'ÎïÒµ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5981,'ÍÁÄ¾',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5982,'×°ĞŞ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5983,'ÊĞÕş¹¤³Ì',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5984,'µÀÂ·',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5985,'ÇÅÁº',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5986,'ËíµÀ¹¤³Ì',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5987,'Ë®Àû',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5988,'¸Û¿Ú',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5989,'ÅÅË®',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5990,'¹ÜÍ¨',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5991,'¿Õµ÷',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5992,'Ô°ÁÖ¾°¹ÛÉè¼Æ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5993,'³ÇÊĞ¹æ»®Éè¼Æ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5994,'ÒøĞĞ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5995,'½ø³ö¿Ú',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5996,'·çÏÕ¿ØÖÆ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5997,'Àí²Æ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5998,'ÈÚ×Ê',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5999,'ĞÅÍĞ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6000,'µ£±£',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6001,'ÅÄÂô',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6002,'µäµ±',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6003,'Öé±¦',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6004,'ÊÕ²Ø',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6005,'Ã³Ò×',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6006,'ÂòÊÖ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6007,'±¨¹Ø',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6008,'Ë¾»ú',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6009,'º½¿Õ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6010,'¹«½»',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6011,'´¬²°',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6012,'ÁĞ³µ',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6013,'¿ìµİ',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6014,'°á¼Ò',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6015,'¼ÒÕş',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6016,'¹¤ÒµÖÆÔì',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6017,'°ëµ¼Ìå',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6018,'´«µ¼Æ÷',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6019,'ÕÕÃ÷',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6020,'¼¤¹â',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6021,'µçÆ÷',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6022,'¶şÊÖ³µ',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6023,'4Sµê',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6024,'Æû³µÎ¬ĞŞ',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6025,'Æû³µ±£Ñø',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6026,'»úĞµ¹¤³Ì',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6027,'ÉúÎï',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6028,'ÖÆÒ©',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6029,'Ò½ÁÆÆ÷Ğµ',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6030,'´«Ã½',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6031,'Ó¡Ë¢',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6032,'Ó°ÊÓ',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6033,'Ã½Ìå',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6034,'³ö°æ',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6035,'µ¼Ñİ',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6036,'ÑİÔ±',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6037,'±à¾ç',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6038,'¼ÇÕß',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6039,'×÷¼Ò',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6040,'Íøºì',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6041,'ÅäÒô',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6042,'·¨ÂÉ',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6043,'½ÌÓı',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6044,'·­Òë',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6045,'ÉÌ³¬',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6046,'¾Æµê',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6047,'ÓéÀÖ',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6048,'ÂÃÓÎ',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6049,'Åëâ¿',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6050,'±£½¡',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6051,'ÃÀÈİ',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6052,'ÃÀ·¢',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6053,'½¡Éí',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6054,'Ò½ÁÆ',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6055,'Å©Òµ',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6056,'¿ÆÑĞ',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6057,'»·±£',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6058,'¹«ÎñÔ±',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6059,'Ö¾Ô¸Õß',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6060,'Òå¹¤',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6061,'´ÈÉÆ',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6062,'ÌåÓı',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6063,'Íâ°ü·şÎñ',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6064,'¿ìËÙÏû·ÑÆ·',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6065,'Éİ³ŞÆ·',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6066,'ÖØ¹¤Òµ',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6067,'ÆäËû',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6068,'ÖĞ¹ú',0,'2016-08-08 11:40:53','2016-08-30 09:49:30','14274'),(6069,'ÃÀ¹ú',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6070,'ÈÕ±¾',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6071,'Ó¢¹ú',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6072,'µÂ¹ú',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6073,'º«¹ú',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6074,'Ïã¸Û',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6075,'Òâ´óÀû',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6076,'¼ÓÄÃ´ó',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6077,'°Ä´óÀûÑÇ',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6078,'·¨¹ú',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6079,'·ÆÂÉ±ö',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6080,'ÒÔÉ«ÁĞ',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6081,'Î÷°àÑÀ',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6082,'Ì¨Íå',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6083,'±ÈÀûÊ±',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6084,'ĞÂ¼ÓÆÂ',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6085,'·ÒÀ¼',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6086,'ºÉÀ¼',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6087,'²¨À¼',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6088,'ÈğÊ¿',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6089,'Èğµä',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6090,'Ì©¹ú',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6091,'ÆÏÌÑÑÀ',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6092,'ÖÇÀû',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6093,'ĞÂÎ÷À¼',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6094,'°ÍÎ÷',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6095,'µ¤Âó',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6096,'°ÂµØÀû',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6097,'Ô½ÄÏ',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6098,'Ë¹ÀïÀ¼¿¨',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6099,'ÂíÀ´Î÷ÑÇ',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6100,'ÍÁ¶úÆä',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6101,'¹Å°Í',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6102,'Ö±²¼ÂŞÍÓ',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6103,'ÎÚ¿ËÀ¼',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6104,'°¢¸ùÍ¢',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6105,'¶íÂŞË¹',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6106,'Ï£À°',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6107,'Å²Íş',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6108,'ÄÏ·Ç',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6109,'Ä«Î÷¸ç',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6110,'°®¶ûÀ¼',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6111,'Ó¡¶ÈÄáÎ÷ÑÇ',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6112,'Ó¡¶È',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6113,'ÎÚÀ­¹ç',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6114,'°¢ÁªÇõ',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6115,'½İ¿Ë',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6116,'°¢Âü',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6117,'ÈûÆÖÂ·Ë¹',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6118,'ĞÙÑÀÀû',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6119,'ÂŞÂíÄáÑÇ',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6120,'ËÕ¸ñÀ¼',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6121,'±£¼ÓÀûÑÇ',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6122,'¼íÆÒÕ¯',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6123,'Ë¹Âå·¥¿Ë',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6124,'À­ÍÑÎ¬ÑÇ',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6125,'±ùµº',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6126,'°ÄÃÅ',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6127,'ºº×å',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6128,'ÃÉ¹Å×å',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6129,'»Ø×å',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6130,'²Ø×å',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6131,'Î¬Îá¶û×å',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6132,'Ãç×å',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6133,'ÒÍ×å',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6134,'×³×å',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6135,'²¼ÒÀ×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6136,'³¯ÏÊ×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6137,'Âú×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6138,'¶±×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6139,'Ñş×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6140,'°××å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6141,'ÍÁ¼Ò×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6142,'¹şÄá×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6143,'¹şÈø¿Ë×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6144,'´ö×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6145,'Àè×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6146,'ÀüËÛ×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6147,'Øô×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6148,'î´×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6149,'¸ßÉ½×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6150,'À­ìï×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6151,'Ë®×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6152,'¶«Ïç×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6153,'ÄÉÎ÷×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6154,'¾°ÆÄ×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6155,'¿Â¶û¿Ë×Î×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6156,'ÍÁ×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6157,'´ïÎÓ¶û×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6158,'ØïÀĞ×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6159,'Ç¼×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6160,'²¼ÀÊ×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6161,'ÈöÀ­×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6162,'Ã«ÄÑ×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6163,'ØîÀĞ×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6164,'Îı²®×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6165,'°¢²ı×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6166,'ÆÕÃ××å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6167,'Ëş¼ª¿Ë×å',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6168,'Å­×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6169,'ÎÚ×Î±ğ¿Ë×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6170,'¶íÂŞË¹×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6171,'¶õÎÂ¿Ë×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6172,'±ÀÁú×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6173,'±£°²×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6174,'Ô£¹Ì×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6175,'¾©×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6176,'ËşËş¶û×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6177,'¶ÀÁú×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6178,'¶õÂ×´º×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6179,'ºÕÕÜ×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6180,'ÃÅ°Í×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6181,'çó°Í×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6182,'»ùÅµ×å',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6183,'±±¾©',0,'2016-08-08 11:40:58','2016-08-23 09:34:12',NULL),(6184,'Ìì½ò',0,'2016-08-08 11:40:58','2016-08-23 09:34:13',NULL),(6185,'ÉÏº£',0,'2016-08-08 11:40:58','2016-08-23 09:34:14',NULL),(6186,'ÖØÇì',0,'2016-08-08 11:40:58','2016-08-23 09:34:19',NULL),(6187,'ºÓ±±Ê¡',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6188,'É½Î÷Ê¡',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6189,'Ì¨ÍåÊ¡',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6190,'ÁÉÄşÊ¡',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6191,'¼ªÁÖÊ¡',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6192,'ºÚÁú½­Ê¡',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6193,'½­ËÕÊ¡',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6194,'Õã½­Ê¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6195,'°²»ÕÊ¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6196,'¸£½¨Ê¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6197,'½­Î÷Ê¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6198,'É½¶«Ê¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6199,'ºÓÄÏÊ¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6200,'ºş±±Ê¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6201,'ºşÄÏÊ¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6202,'¹ã¶«Ê¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6203,'¸ÊËàÊ¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6204,'ËÄ´¨Ê¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6205,'¹óÖİÊ¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6206,'º£ÄÏÊ¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6207,'ÔÆÄÏÊ¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6208,'Çàº£Ê¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6209,'ÉÂÎ÷Ê¡',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6210,'¹ãÎ÷×³×å×ÔÖÎÇø',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6211,'Î÷²Ø×ÔÖÎÇø',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6212,'ÄşÏÄ»Ø×å×ÔÖÎÇø',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6213,'ĞÂ½®Î¬Îá¶û×ÔÖÎÇø',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6214,'ÄÚÃÉ¹Å×ÔÖÎÇø',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6215,'°ÄÃÅÌØ±ğĞĞÕşÇø',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6216,'Ïã¸ÛÌØ±ğĞĞÕşÇø',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6217,'±±¾©ÊĞ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6218,'Ìì½òÊĞ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6219,'ÉÏº£ÊĞ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6220,'ÖØÇìÊĞ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6221,'Ê¯¼Ò×¯ÊĞ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6222,'ÌÆÉ½ÊĞ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6223,'ÇØ»ÊµºÊĞ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6224,'ºªµ¦ÊĞ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6225,'ĞÏÌ¨ÊĞ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6226,'±£¶¨ÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6227,'ÕÅ¼Ò¿ÚÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6228,'³ĞµÂÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6229,'²×ÖİÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6230,'ÀÈ·»ÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6231,'ºâË®ÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6232,'Ì«Ô­ÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6233,'´óÍ¬ÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6234,'ÑôÈªÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6235,'³¤ÖÎÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6236,'½ú³ÇÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6237,'Ë·ÖİÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6238,'½úÖĞÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6239,'ÔË³ÇÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6240,'ĞÃÖİÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6241,'ÁÙ·ÚÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6242,'ÂÀÁºÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6243,'Ì¨±±ÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6244,'¸ßĞÛÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6245,'»ùÂ¡ÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6246,'Ì¨ÖĞÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6247,'Ì¨ÄÏÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6248,'ĞÂÖñÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6249,'¼ÎÒåÊĞ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6250,'Ì¨±±ÏØ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6251,'ÒËÀ¼ÏØ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6252,'ÌÒÔ°ÏØ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6253,'ĞÂÖñÏØ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6254,'ÃçÀõÏØ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6255,'Ì¨ÖĞÏØ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6256,'ÕÃ»¯ÏØ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6257,'ÄÏÍ¶ÏØ',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6258,'ÔÆÁÖÏØ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6259,'¼ÎÒåÏØ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6260,'Ì¨ÄÏÏØ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6261,'¸ßĞÛÏØ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6262,'ÆÁ¶«ÏØ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6263,'ÅìºşÏØ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6264,'Ì¨¶«ÏØ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6265,'»¨Á«ÏØ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6266,'ÉòÑôÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6267,'´óÁ¬ÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6268,'°°É½ÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6269,'¸§Ë³ÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6270,'±¾ÏªÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6271,'µ¤¶«ÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6272,'½õÖİÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6273,'Óª¿ÚÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6274,'¸·ĞÂÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6275,'ÁÉÑôÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6276,'ÅÌ½õÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6277,'ÌúÁëÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6278,'³¯ÑôÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6279,'ºùÂ«µºÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6280,'³¤´ºÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6281,'¼ªÁÖÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6282,'ËÄÆ½ÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6283,'ÁÉÔ´ÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6284,'Í¨»¯ÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6285,'°×É½ÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6286,'ËÉÔ­ÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6287,'°×³ÇÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6288,'ÑÓ±ß³¯ÏÊ×å×ÔÖÎÖİ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6289,'¹ş¶û±õÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6290,'ÆëÆë¹ş¶ûÊĞ',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6291,'º×¸ÚÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6292,'Ë«Ñ¼É½ÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6293,'¼¦Î÷ÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6294,'´óÇìÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6295,'ÒÁ´ºÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6296,'Äµµ¤½­ÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6297,'¼ÑÄ¾Ë¹ÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6298,'ÆßÌ¨ºÓÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6299,'ºÚºÓÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6300,'Ëç»¯ÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6301,'´óĞË°²ÁëµØÇø',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6302,'ÄÏ¾©ÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6303,'ÎŞÎıÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6304,'ĞìÖİÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6305,'³£ÖİÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6306,'ËÕÖİÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6307,'ÄÏÍ¨ÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6308,'Á¬ÔÆ¸ÛÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6309,'»´°²ÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6310,'ÑÎ³ÇÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6311,'ÑïÖİÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6312,'Õò½­ÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6313,'Ì©ÖİÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6314,'ËŞÇ¨ÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6315,'º¼ÖİÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6316,'Äş²¨ÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6317,'ÎÂÖİÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6318,'¼ÎĞËÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6319,'ºşÖİÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6320,'ÉÜĞËÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6321,'½ğ»ªÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6322,'áéÖİÊĞ',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6323,'ÖÛÉ½ÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6324,'Ì¨ÖİÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6325,'ÀöË®ÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6326,'ºÏ·ÊÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6327,'ÎßºşÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6328,'°ö²ºÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6329,'»´ÄÏÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6330,'Âí°°É½ÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6331,'»´±±ÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6332,'Í­ÁêÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6333,'°²ÇìÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6334,'»ÆÉ½ÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6335,'³üÖİÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6336,'¸·ÑôÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6337,'ËŞÖİÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6338,'³²ºşÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6339,'Áù°²ÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6340,'ÙñÖİÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6341,'³ØÖİÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6342,'Ğû³ÇÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6343,'¸£ÖİÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6344,'ÏÃÃÅÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6345,'ÆÎÌïÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6346,'ÈıÃ÷ÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6347,'ÈªÖİÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6348,'ÕÄÖİÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6349,'ÄÏÆ½ÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6350,'ÁúÑÒÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6351,'ÄşµÂÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6352,'ÄÏ²ıÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6353,'¾°µÂÕòÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6354,'Æ¼ÏçÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6355,'¾Å½­ÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6356,'ĞÂÓàÊĞ',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6357,'Ó¥Ì¶ÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6358,'¸ÓÖİÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6359,'¼ª°²ÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6360,'ÒË´ºÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6361,'¸§ÖİÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6362,'ÉÏÈÄÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6363,'¼ÃÄÏÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6364,'ÇàµºÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6365,'×Í²©ÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6366,'Ôæ×¯ÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6367,'¶«ÓªÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6368,'ÑÌÌ¨ÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6369,'Î«·»ÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6370,'¼ÃÄşÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6371,'Ì©°²ÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6372,'Íşº£ÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6373,'ÈÕÕÕÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6374,'À³ÎßÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6375,'ÁÙÒÊÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6376,'µÂÖİÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6377,'ÁÄ³ÇÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6378,'±õÖİÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6379,'ºÊÔóÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6380,'Ö£ÖİÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6381,'¿ª·âÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6382,'ÂåÑôÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6383,'Æ½¶¥É½ÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6384,'°²ÑôÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6385,'º×±ÚÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6386,'ĞÂÏçÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6387,'½¹×÷ÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6388,'å§ÑôÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6389,'Ğí²ıÊĞ',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6390,'äğºÓÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6391,'ÈıÃÅÏ¿ÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6392,'ÄÏÑôÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6393,'ÉÌÇğÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6394,'ĞÅÑôÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6395,'ÖÜ¿ÚÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6396,'×¤ÂíµêÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6397,'¼ÃÔ´ÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6398,'ÎäººÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6399,'»ÆÊ¯ÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6400,'Ê®ÑßÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6401,'¾£ÖİÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6402,'ÒË²ıÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6403,'Ïå·®ÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6404,'¶õÖİÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6405,'¾£ÃÅÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6406,'Ğ¢¸ĞÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6407,'»Æ¸ÔÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6408,'ÏÌÄşÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6409,'ËæÖİÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6410,'ÏÉÌÒÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6411,'ÌìÃÅÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6412,'Ç±½­ÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6413,'ÉñÅ©¼ÜÁÖÇø',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6414,'¶÷Ê©ÍÁ¼Ò×åÃç×å×ÔÖÎÖİ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6415,'³¤É³ÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6416,'ÖêÖŞÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6417,'ÏæÌ¶ÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6418,'ºâÑôÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6419,'ÉÛÑôÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6420,'ÔÀÑôÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6421,'³£µÂÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6422,'ÕÅ¼Ò½çÊĞ',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6423,'ÒæÑôÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6424,'³»ÖİÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6425,'ÓÀÖİÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6426,'»³»¯ÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6427,'Â¦µ×ÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6428,'ÏæÎ÷ÍÁ¼Ò×åÃç×å×ÔÖÎÖİ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6429,'¹ãÖİÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6430,'ÉîÛÚÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6431,'Öéº£ÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6432,'ÉÇÍ·ÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6433,'ÉØ¹ØÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6434,'·ğÉ½ÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6435,'½­ÃÅÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6436,'Õ¿½­ÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6437,'Ã¯ÃûÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6438,'ÕØÇìÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6439,'»İÖİÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6440,'Ã·ÖİÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6441,'ÉÇÎ²ÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6442,'ºÓÔ´ÊĞ',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6443,'Ñô½­ÊĞ',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6444,'ÇåÔ¶ÊĞ',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6445,'¶«İ¸ÊĞ',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6446,'ÖĞÉ½ÊĞ',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6447,'³±ÖİÊĞ',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6448,'½ÒÑôÊĞ',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6449,'ÔÆ¸¡ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6450,'À¼ÖİÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6451,'½ğ²ıÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6452,'°×ÒøÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6453,'ÌìË®ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6454,'¼ÎÓø¹ØÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6455,'ÎäÍşÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6456,'ÕÅÒ´ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6457,'Æ½Á¹ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6458,'¾ÆÈªÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6459,'ÇìÑôÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6460,'¶¨Î÷ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6461,'Â¤ÄÏÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6462,'ÁÙÏÄ»Ø×å×ÔÖÎÖİ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6463,'¸ÊÄÏ²Ø×å×ÔÖÎÖİ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6464,'³É¶¼ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6465,'×Ô¹±ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6466,'ÅÊÖ¦»¨ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6467,'ãòÖİÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6468,'µÂÑôÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6469,'ÃàÑôÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6470,'¹ãÔªÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6471,'ËìÄşÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6472,'ÄÚ½­ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6473,'ÀÖÉ½ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6474,'ÄÏ³äÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6475,'Ã¼É½ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6476,'ÒË±öÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6477,'¹ã°²ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6478,'´ïÖİÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6479,'ÑÅ°²ÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6480,'°ÍÖĞÊĞ',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6481,'×ÊÑôÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6482,'°¢°Ó²Ø×åÇ¼×å×ÔÖÎÖİ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6483,'¸Ê×Î²Ø×å×ÔÖÎÖİ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6484,'Á¹É½ÒÍ×å×ÔÖÎÖİ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6485,'¼ÃÄÏÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6486,'ÇàµºÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6487,'×Í²©ÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6488,'Ôæ×¯ÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6489,'¶«ÓªÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6490,'ÑÌÌ¨ÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6491,'Î«·»ÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6492,'¼ÃÄşÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6493,'Ì©°²ÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6494,'Íşº£ÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6495,'ÈÕÕÕÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6496,'À³ÎßÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6497,'ÁÙÒÊÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6498,'µÂÖİÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6499,'ÁÄ³ÇÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6500,'±õÖİÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6501,'ºÊÔóÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6502,'¹óÑôÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6503,'ÁùÅÌË®ÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6504,'×ñÒåÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6505,'°²Ë³ÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6506,'Í­ÈÊµØÇø',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6507,'±Ï½ÚµØÇø',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6508,'Ç­Î÷ÄÏ²¼ÒÀ×åÃç×å×ÔÖÎÖİ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6509,'Ç­¶«ÄÏÃç×å¶±×å×ÔÖÎÖİ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6510,'Ç­ÄÏ²¼ÒÀ×åÃç×å×ÔÖÎÖİ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6511,'º£¿ÚÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6512,'ÈıÑÇÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6513,'ÎåÖ¸É½ÊĞ',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6514,'Çíº£ÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6515,'ÙÙÖİÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6516,'ÎÄ²ıÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6517,'ÍòÄşÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6518,'¶«·½ÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6519,'³ÎÂõÏØ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6520,'¶¨°²ÏØ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6521,'ÍÍ²ıÏØ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6522,'ÁÙ¸ßÏØ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6523,'°×É³Àè×å×ÔÖÎÏØ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6524,'²ı½­Àè×å×ÔÖÎÏØ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6525,'ÀÖ¶«Àè×å×ÔÖÎÏØ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6526,'ÁêË®Àè×å×ÔÖÎÏØ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6527,'±£Í¤Àè×åÃç×å×ÔÖÎÏØ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6528,'ÇíÖĞÀè×åÃç×å×ÔÖÎÏØ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6529,'À¥Ã÷ÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6530,'Çú¾¸ÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6531,'ÓñÏªÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6532,'±£É½ÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6533,'ÕÑÍ¨ÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6534,'Àö½­ÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6535,'Ë¼Ã©ÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6536,'ÁÙ²×ÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6537,'ÎÄÉ½×³×åÃç×å×ÔÖÎÖİ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6538,'ºìºÓ¹şÄá×åÒÍ×å×ÔÖÎÖİ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6539,'Î÷Ë«°æÄÉ´ö×å×ÔÖÎÖİ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6540,'³şĞÛÒÍ×å×ÔÖÎÖİ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6541,'´óÀí°××å×ÔÖÎÖİ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6542,'µÂºê´ö×å¾°ÆÄ×å×ÔÖÎÖİ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6543,'Å­½­ÀüÀü×å×ÔÖÎÖİ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6544,'µÏÇì²Ø×å×ÔÖÎÖİ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6545,'Î÷ÄşÊĞ',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6546,'º£¶«µØÇø',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6547,'º£±±²Ø×å×ÔÖÎÖİ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6548,'»ÆÄÏ²Ø×å×ÔÖÎÖİ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6549,'º£ÄÏ²Ø×å×ÔÖÎÖİ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6550,'¹ûÂå²Ø×å×ÔÖÎÖİ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6551,'ÓñÊ÷²Ø×å×ÔÖÎÖİ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6552,'º£Î÷ÃÉ¹Å×å²Ø×å×ÔÖÎÖİ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6553,'Î÷°²ÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6554,'Í­´¨ÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6555,'±¦¼¦ÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6556,'ÏÌÑôÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6557,'Î¼ÄÏÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6558,'ÑÓ°²ÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6559,'ººÖĞÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6560,'ÓÜÁÖÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6561,'°²¿µÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6562,'ÉÌÂåÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6563,'ÄÏÄşÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6564,'ÁøÖİÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6565,'¹ğÁÖÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6566,'ÎàÖİÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6567,'±±º£ÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6568,'·À³Ç¸ÛÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6569,'ÇÕÖİÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6570,'¹ó¸ÛÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6571,'ÓñÁÖÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6572,'°ÙÉ«ÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6573,'ºØÖİÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6574,'ºÓ³ØÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6575,'À´±öÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6576,'³ç×óÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6577,'À­ÈøÊĞ',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6578,'ÄÇÇúµØÇø',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6579,'²ı¶¼µØÇø',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6580,'É½ÄÏµØÇø',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6581,'ÈÕ¿¦ÔòµØÇø',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6582,'°¢ÀïµØÇø',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6583,'ÁÖÖ¥µØÇø',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6584,'Òø´¨ÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6585,'Ê¯×ìÉ½ÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6586,'ÎâÖÒÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6587,'¹ÌÔ­ÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6588,'ÖĞÎÀÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6589,'ÎÚÂ³Ä¾ÆëÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6590,'¿ËÀ­ÂêÒÀÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6591,'Ê¯ºÓ×ÓÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6592,'°¢À­¶ûÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6593,'Í¼Ä¾Êæ¿ËÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6594,'Îå¼ÒÇşÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6595,'ÍÂÂ³·¬ÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6596,'°¢¿ËËÕÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6597,'¿¦Ê²ÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6598,'¹şÃÜÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6599,'ºÍÌïÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6600,'°¢Í¼Ê²ÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6601,'¿â¶ûÀÕÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6602,'²ı¼ªÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6603,'¸·¿µÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6604,'Ã×ÈªÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6605,'²©ÀÖÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6606,'ÒÁÄşÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6607,'¿üÍÍÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6608,'Ëş³ÇÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6609,'ÎÚËÕÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6610,'°¢ÀÕÌ©ÊĞ',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6611,'ºôºÍºÆÌØÊĞ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6612,'°üÍ·ÊĞ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6613,'ÎÚº£ÊĞ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6614,'³à·åÊĞ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6615,'Í¨ÁÉÊĞ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6616,'¶õ¶û¶àË¹ÊĞ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6617,'ºôÂ×±´¶ûÊĞ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6618,'°ÍÑåÄ×¶ûÊĞ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6619,'ÎÚÀ¼²ì²¼ÊĞ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6620,'ÎıÁÖ¹ùÀÕÃË',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6621,'ĞË°²ÃË',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6622,'°¢À­ÉÆÃË',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6623,'°ÄÃÅÌØ±ğĞĞÕşÇø',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6624,'Ïã¸ÛÌØ±ğĞĞÕşÇø',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6625,'ÍúÆÌ',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6626,'ÆäËü',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6627,'1´Î',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6628,'2´Î',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6629,'3´Î',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6630,'4´ÎÒÔÉÏ',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6631,'±¾ÔÂÄÚ',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6632,'Èı¸öÔÂÄÚ',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6633,'°ëÄêÄÚ',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6634,'1£­2´Î',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6635,'3´ÎÒÔÉÏ',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6636,'50ÒÔÏÂ',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6637,'51-100',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6638,'101-150',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6639,'151-200',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6640,'201-300',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6641,'300ÒÔÉÏ',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6642,'50ÒÔÏÂ',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6643,'51-100',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6644,'101-150',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6645,'151-200',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6646,'201-300',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6647,'300ÒÔÉÏ',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6648,'½»Ò×Íê³É',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6649,'½»Ò×¹Ø±Õ',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6650,'´ıÖ§¸¶',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6651,'ÊÇ',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6652,'·ñ',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL);
+INSERT INTO `tag` VALUES (5869,'ç”·',0,'2016-08-08 11:40:47','2016-08-30 09:44:37','14069'),(5870,'å¥³',0,'2016-08-08 11:40:47','2016-09-07 07:53:44','14069'),(5871,'æ–°æœªçŸ¥',0,'2016-08-08 11:40:47','2016-08-29 07:09:21','55'),(5872,'00å',0,'2016-08-08 11:40:47','2016-09-07 07:53:53','14069'),(5873,'90å',0,'2016-08-08 11:40:47','2016-08-30 09:47:57','14073'),(5874,'80å',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5875,'70å',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5876,'69å‰',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5877,'æ°´ç“¶åº§',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5878,'åŒé±¼åº§',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5879,'ç™½ç¾Šåº§',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5880,'é‡‘ç‰›åº§',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5881,'åŒå­åº§',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5882,'å·¨èŸ¹åº§',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5883,'ç‹®å­åº§',0,'2016-08-08 11:40:47','2016-08-08 03:40:47',NULL),(5884,'å¤„å¥³åº§',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5885,'å¤©ç§¤åº§',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5886,'å¤©èåº§',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5887,'å°„æ‰‹åº§',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5888,'æ‘©ç¾¯åº§',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5889,'å·²å©š',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5890,'æœªå©š',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5891,'æœªçŸ¥',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5892,'A',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5893,'B',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5894,'AB',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5895,'O',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5896,'æœªçŸ¥',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5897,'é”€å”®',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5898,'å®¢æœ',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5899,'å¸‚åœº',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5900,'ç®¡ç†',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5901,'æ¸ é“',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5902,'è¡Œæ”¿',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5903,'å•†åŠ¡',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5904,'è¿è¥',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5905,'æ•°æ®åˆ†æ',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5906,'å”®å‰',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5907,'å”®å',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5908,'äº§å“ç»ç†',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5909,'å“ç‰Œç»ç†',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5910,'å’¨è¯¢',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5911,'ç­–åˆ’',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5912,'æ–‡æ¡ˆ',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5913,'å…¬å…³',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5914,'åª’ä»‹',0,'2016-08-08 11:40:48','2016-08-08 03:40:48',NULL),(5915,'ä¼åˆ’',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5916,'å¸‚åœºè°ƒç ”',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5917,'ä¸šåŠ¡æ‹“å±•',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5918,'å¹¿å‘Š',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5919,'ä¼šå±•',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5920,'å®¢æˆ·ç»ç†',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5921,'åˆ›æ„',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5922,'è®¾è®¡',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5923,'ç¾æœ¯',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5924,'ç­–åˆ’',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5925,'è´¢åŠ¡',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5926,'å®¡è®¡',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5927,'ç¨åŠ¡',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5928,'äººåŠ›èµ„æº',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5929,'ä¼šè®¡',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5930,'å‡ºçº³',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5931,'åŸ¹è®­',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5932,'çŒå¤´',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5933,'åå‹¤',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5934,'æ–‡ç§˜',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5935,'å‰å°',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5936,'é¡¹ç›®ç®¡ç†',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5937,'IT',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5938,'è¯åŠµ',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5939,'æŠ•èµ„',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5940,'é€šä¿¡',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5941,'æˆ¿åœ°äº§',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5942,'ä¿é™©',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5943,'æ±½è½¦',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5944,'ç”µå­',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5945,'ç”µå™¨',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5946,'æœè£…',0,'2016-08-08 11:40:49','2016-08-08 03:40:49',NULL),(5947,'çººç»‡',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5948,'èƒ½æº',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5949,'çŸ¿äº§',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5950,'ç‰©æµ',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5951,'ä»“å‚¨',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5952,'åŒ»è¯',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5953,'åŒ–å·¥',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5954,'å®‰å…¨ç®¡ç†',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5955,'åŒ–éªŒ',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5956,'è®¤è¯',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5957,'ä¾›åº”å•†',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5958,'é‡‡è´­',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5959,'ç¼–è¾‘',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5960,'äº’è”ç½‘',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5961,'ç”µå•†',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5962,'è½¯ä»¶',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5963,'å¼€å‘',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5964,'ç³»ç»Ÿé›†æˆ',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5965,'ç§»åŠ¨äº’è”ç½‘',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5966,'UEè®¾è®¡',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5967,'UIè®¾è®¡',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5968,'ç§»åŠ¨äº’è”ç½‘',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5969,'æ¸¸æˆç­–åˆ’',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5970,'æ¸¸æˆæ•°å€¼',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5971,'æ¸¸æˆå¼€å‘',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5972,'æ¸¸æˆè®¾è®¡',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5973,'æ¸¸æˆæµ‹è¯•',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5974,'ç¡¬ä»¶',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5975,'ä¿¡æ¯æ ‡å‡†åŒ–',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5976,'ç½‘ç»œå®‰å…¨',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5977,'ç”µä¿¡',0,'2016-08-08 11:40:50','2016-08-08 03:40:50',NULL),(5978,'æˆ¿äº§',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5979,'å»ºç­‘',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5980,'ç‰©ä¸š',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5981,'åœŸæœ¨',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5982,'è£…ä¿®',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5983,'å¸‚æ”¿å·¥ç¨‹',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5984,'é“è·¯',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5985,'æ¡¥æ¢',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5986,'éš§é“å·¥ç¨‹',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5987,'æ°´åˆ©',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5988,'æ¸¯å£',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5989,'æ’æ°´',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5990,'ç®¡é€š',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5991,'ç©ºè°ƒ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5992,'å›­æ—æ™¯è§‚è®¾è®¡',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5993,'åŸå¸‚è§„åˆ’è®¾è®¡',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5994,'é“¶è¡Œ',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5995,'è¿›å‡ºå£',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5996,'é£é™©æ§åˆ¶',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5997,'ç†è´¢',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5998,'èèµ„',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(5999,'ä¿¡æ‰˜',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6000,'æ‹…ä¿',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6001,'æ‹å–',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6002,'å…¸å½“',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6003,'ç å®',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6004,'æ”¶è—',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6005,'è´¸æ˜“',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6006,'ä¹°æ‰‹',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6007,'æŠ¥å…³',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6008,'å¸æœº',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6009,'èˆªç©º',0,'2016-08-08 11:40:51','2016-08-08 03:40:51',NULL),(6010,'å…¬äº¤',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6011,'èˆ¹èˆ¶',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6012,'åˆ—è½¦',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6013,'å¿«é€’',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6014,'æ¬å®¶',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6015,'å®¶æ”¿',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6016,'å·¥ä¸šåˆ¶é€ ',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6017,'åŠå¯¼ä½“',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6018,'ä¼ å¯¼å™¨',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6019,'ç…§æ˜',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6020,'æ¿€å…‰',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6021,'ç”µå™¨',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6022,'äºŒæ‰‹è½¦',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6023,'4Såº—',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6024,'æ±½è½¦ç»´ä¿®',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6025,'æ±½è½¦ä¿å…»',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6026,'æœºæ¢°å·¥ç¨‹',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6027,'ç”Ÿç‰©',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6028,'åˆ¶è¯',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6029,'åŒ»ç–—å™¨æ¢°',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6030,'ä¼ åª’',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6031,'å°åˆ·',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6032,'å½±è§†',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6033,'åª’ä½“',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6034,'å‡ºç‰ˆ',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6035,'å¯¼æ¼”',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6036,'æ¼”å‘˜',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6037,'ç¼–å‰§',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6038,'è®°è€…',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6039,'ä½œå®¶',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6040,'ç½‘çº¢',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6041,'é…éŸ³',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6042,'æ³•å¾‹',0,'2016-08-08 11:40:52','2016-08-08 03:40:52',NULL),(6043,'æ•™è‚²',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6044,'ç¿»è¯‘',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6045,'å•†è¶…',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6046,'é…’åº—',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6047,'å¨±ä¹',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6048,'æ—…æ¸¸',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6049,'çƒ¹é¥ª',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6050,'ä¿å¥',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6051,'ç¾å®¹',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6052,'ç¾å‘',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6053,'å¥èº«',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6054,'åŒ»ç–—',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6055,'å†œä¸š',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6056,'ç§‘ç ”',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6057,'ç¯ä¿',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6058,'å…¬åŠ¡å‘˜',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6059,'å¿—æ„¿è€…',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6060,'ä¹‰å·¥',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6061,'æ…ˆå–„',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6062,'ä½“è‚²',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6063,'å¤–åŒ…æœåŠ¡',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6064,'å¿«é€Ÿæ¶ˆè´¹å“',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6065,'å¥¢ä¾ˆå“',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6066,'é‡å·¥ä¸š',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6067,'å…¶ä»–',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6068,'ä¸­å›½',0,'2016-08-08 11:40:53','2016-08-30 09:49:30','14274'),(6069,'ç¾å›½',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6070,'æ—¥æœ¬',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6071,'è‹±å›½',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6072,'å¾·å›½',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6073,'éŸ©å›½',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6074,'é¦™æ¸¯',0,'2016-08-08 11:40:53','2016-08-08 03:40:53',NULL),(6075,'æ„å¤§åˆ©',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6076,'åŠ æ‹¿å¤§',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6077,'æ¾³å¤§åˆ©äºš',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6078,'æ³•å›½',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6079,'è²å¾‹å®¾',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6080,'ä»¥è‰²åˆ—',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6081,'è¥¿ç­ç‰™',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6082,'å°æ¹¾',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6083,'æ¯”åˆ©æ—¶',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6084,'æ–°åŠ å¡',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6085,'èŠ¬å…°',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6086,'è·å…°',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6087,'æ³¢å…°',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6088,'ç‘å£«',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6089,'ç‘å…¸',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6090,'æ³°å›½',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6091,'è‘¡è„ç‰™',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6092,'æ™ºåˆ©',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6093,'æ–°è¥¿å…°',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6094,'å·´è¥¿',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6095,'ä¸¹éº¦',0,'2016-08-08 11:40:54','2016-08-08 03:40:54',NULL),(6096,'å¥¥åœ°åˆ©',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6097,'è¶Šå—',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6098,'æ–¯é‡Œå…°å¡',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6099,'é©¬æ¥è¥¿äºš',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6100,'åœŸè€³å…¶',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6101,'å¤å·´',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6102,'ç›´å¸ƒç½—é™€',0,'2016-08-08 11:40:55','2016-08-08 03:40:55',NULL),(6103,'ä¹Œå…‹å…°',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6104,'é˜¿æ ¹å»·',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6105,'ä¿„ç½—æ–¯',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6106,'å¸Œè…Š',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6107,'æŒªå¨',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6108,'å—é',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6109,'å¢¨è¥¿å“¥',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6110,'çˆ±å°”å…°',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6111,'å°åº¦å°¼è¥¿äºš',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6112,'å°åº¦',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6113,'ä¹Œæ‹‰åœ­',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6114,'é˜¿è”é…‹',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6115,'æ·å…‹',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6116,'é˜¿æ›¼',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6117,'å¡æµ¦è·¯æ–¯',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6118,'åŒˆç‰™åˆ©',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6119,'ç½—é©¬å°¼äºš',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6120,'è‹æ ¼å…°',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6121,'ä¿åŠ åˆ©äºš',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6122,'æŸ¬åŸ”å¯¨',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6123,'æ–¯æ´›ä¼å…‹',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6124,'æ‹‰è„±ç»´äºš',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6125,'å†°å²›',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6126,'æ¾³é—¨',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6127,'æ±‰æ—',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6128,'è’™å¤æ—',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6129,'å›æ—',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6130,'è—æ—',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6131,'ç»´å¾å°”æ—',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6132,'è‹—æ—',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6133,'å½æ—',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6134,'å£®æ—',0,'2016-08-08 11:40:56','2016-08-08 03:40:56',NULL),(6135,'å¸ƒä¾æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6136,'æœé²œæ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6137,'æ»¡æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6138,'ä¾—æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6139,'ç‘¶æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6140,'ç™½æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6141,'åœŸå®¶æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6142,'å“ˆå°¼æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6143,'å“ˆè¨å…‹æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6144,'å‚£æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6145,'é»æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6146,'å‚ˆåƒ³æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6147,'ä½¤æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6148,'ç•²æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6149,'é«˜å±±æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6150,'æ‹‰ç¥œæ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6151,'æ°´æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6152,'ä¸œä¹¡æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6153,'çº³è¥¿æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6154,'æ™¯é¢‡æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6155,'æŸ¯å°”å…‹å­œæ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6156,'åœŸæ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6157,'è¾¾æ–¡å°”æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6158,'ä»«ä½¬æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6159,'ç¾Œæ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6160,'å¸ƒæœ—æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6161,'æ’’æ‹‰æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6162,'æ¯›éš¾æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6163,'ä»¡ä½¬æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6164,'é”¡ä¼¯æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6165,'é˜¿æ˜Œæ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6166,'æ™®ç±³æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6167,'å¡”å‰å…‹æ—',0,'2016-08-08 11:40:57','2016-08-08 03:40:57',NULL),(6168,'æ€’æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6169,'ä¹Œå­œåˆ«å…‹æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6170,'ä¿„ç½—æ–¯æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6171,'é„‚æ¸©å…‹æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6172,'å´©é¾™æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6173,'ä¿å®‰æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6174,'è£•å›ºæ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6175,'äº¬æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6176,'å¡”å¡”å°”æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6177,'ç‹¬é¾™æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6178,'é„‚ä¼¦æ˜¥æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6179,'èµ«å“²æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6180,'é—¨å·´æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6181,'çå·´æ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6182,'åŸºè¯ºæ—',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6183,'åŒ—äº¬',0,'2016-08-08 11:40:58','2016-08-23 09:34:12',NULL),(6184,'å¤©æ´¥',0,'2016-08-08 11:40:58','2016-08-23 09:34:13',NULL),(6185,'ä¸Šæµ·',0,'2016-08-08 11:40:58','2016-08-23 09:34:14',NULL),(6186,'é‡åº†',0,'2016-08-08 11:40:58','2016-08-23 09:34:19',NULL),(6187,'æ²³åŒ—çœ',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6188,'å±±è¥¿çœ',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6189,'å°æ¹¾çœ',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6190,'è¾½å®çœ',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6191,'å‰æ—çœ',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6192,'é»‘é¾™æ±Ÿçœ',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6193,'æ±Ÿè‹çœ',0,'2016-08-08 11:40:58','2016-08-08 03:40:58',NULL),(6194,'æµ™æ±Ÿçœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6195,'å®‰å¾½çœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6196,'ç¦å»ºçœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6197,'æ±Ÿè¥¿çœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6198,'å±±ä¸œçœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6199,'æ²³å—çœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6200,'æ¹–åŒ—çœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6201,'æ¹–å—çœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6202,'å¹¿ä¸œçœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6203,'ç”˜è‚ƒçœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6204,'å››å·çœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6205,'è´µå·çœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6206,'æµ·å—çœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6207,'äº‘å—çœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6208,'é’æµ·çœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6209,'é™•è¥¿çœ',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6210,'å¹¿è¥¿å£®æ—è‡ªæ²»åŒº',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6211,'è¥¿è—è‡ªæ²»åŒº',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6212,'å®å¤å›æ—è‡ªæ²»åŒº',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6213,'æ–°ç–†ç»´å¾å°”è‡ªæ²»åŒº',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6214,'å†…è’™å¤è‡ªæ²»åŒº',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6215,'æ¾³é—¨ç‰¹åˆ«è¡Œæ”¿åŒº',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6216,'é¦™æ¸¯ç‰¹åˆ«è¡Œæ”¿åŒº',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6217,'åŒ—äº¬å¸‚',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6218,'å¤©æ´¥å¸‚',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6219,'ä¸Šæµ·å¸‚',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6220,'é‡åº†å¸‚',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6221,'çŸ³å®¶åº„å¸‚',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6222,'å”å±±å¸‚',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6223,'ç§¦çš‡å²›å¸‚',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6224,'é‚¯éƒ¸å¸‚',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6225,'é‚¢å°å¸‚',0,'2016-08-08 11:40:59','2016-08-08 03:40:59',NULL),(6226,'ä¿å®šå¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6227,'å¼ å®¶å£å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6228,'æ‰¿å¾·å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6229,'æ²§å·å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6230,'å»ŠåŠå¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6231,'è¡¡æ°´å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6232,'å¤ªåŸå¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6233,'å¤§åŒå¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6234,'é˜³æ³‰å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6235,'é•¿æ²»å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6236,'æ™‹åŸå¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6237,'æœ”å·å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6238,'æ™‹ä¸­å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6239,'è¿åŸå¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6240,'å¿»å·å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6241,'ä¸´æ±¾å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6242,'å•æ¢å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6243,'å°åŒ—å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6244,'é«˜é›„å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6245,'åŸºéš†å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6246,'å°ä¸­å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6247,'å°å—å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6248,'æ–°ç«¹å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6249,'å˜‰ä¹‰å¸‚',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6250,'å°åŒ—å¿',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6251,'å®œå…°å¿',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6252,'æ¡ƒå›­å¿',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6253,'æ–°ç«¹å¿',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6254,'è‹—æ —å¿',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6255,'å°ä¸­å¿',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6256,'å½°åŒ–å¿',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6257,'å—æŠ•å¿',0,'2016-08-08 11:41:00','2016-08-08 03:41:00',NULL),(6258,'äº‘æ—å¿',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6259,'å˜‰ä¹‰å¿',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6260,'å°å—å¿',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6261,'é«˜é›„å¿',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6262,'å±ä¸œå¿',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6263,'æ¾æ¹–å¿',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6264,'å°ä¸œå¿',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6265,'èŠ±è²å¿',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6266,'æ²ˆé˜³å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6267,'å¤§è¿å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6268,'éå±±å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6269,'æŠšé¡ºå¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6270,'æœ¬æºªå¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6271,'ä¸¹ä¸œå¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6272,'é”¦å·å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6273,'è¥å£å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6274,'é˜œæ–°å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6275,'è¾½é˜³å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6276,'ç›˜é”¦å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6277,'é“å²­å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6278,'æœé˜³å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6279,'è‘«èŠ¦å²›å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6280,'é•¿æ˜¥å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6281,'å‰æ—å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6282,'å››å¹³å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6283,'è¾½æºå¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6284,'é€šåŒ–å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6285,'ç™½å±±å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6286,'æ¾åŸå¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6287,'ç™½åŸå¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6288,'å»¶è¾¹æœé²œæ—è‡ªæ²»å·',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6289,'å“ˆå°”æ»¨å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6290,'é½é½å“ˆå°”å¸‚',0,'2016-08-08 11:41:01','2016-08-08 03:41:01',NULL),(6291,'é¹¤å²—å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6292,'åŒé¸­å±±å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6293,'é¸¡è¥¿å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6294,'å¤§åº†å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6295,'ä¼Šæ˜¥å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6296,'ç‰¡ä¸¹æ±Ÿå¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6297,'ä½³æœ¨æ–¯å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6298,'ä¸ƒå°æ²³å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6299,'é»‘æ²³å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6300,'ç»¥åŒ–å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6301,'å¤§å…´å®‰å²­åœ°åŒº',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6302,'å—äº¬å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6303,'æ— é”¡å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6304,'å¾å·å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6305,'å¸¸å·å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6306,'è‹å·å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6307,'å—é€šå¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6308,'è¿äº‘æ¸¯å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6309,'æ·®å®‰å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6310,'ç›åŸå¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6311,'æ‰¬å·å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6312,'é•‡æ±Ÿå¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6313,'æ³°å·å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6314,'å®¿è¿å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6315,'æ­å·å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6316,'å®æ³¢å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6317,'æ¸©å·å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6318,'å˜‰å…´å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6319,'æ¹–å·å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6320,'ç»å…´å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6321,'é‡‘åå¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6322,'è¡¢å·å¸‚',0,'2016-08-08 11:41:02','2016-08-08 03:41:02',NULL),(6323,'èˆŸå±±å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6324,'å°å·å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6325,'ä¸½æ°´å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6326,'åˆè‚¥å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6327,'èŠœæ¹–å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6328,'èšŒåŸ å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6329,'æ·®å—å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6330,'é©¬éå±±å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6331,'æ·®åŒ—å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6332,'é“œé™µå¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6333,'å®‰åº†å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6334,'é»„å±±å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6335,'æ»å·å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6336,'é˜œé˜³å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6337,'å®¿å·å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6338,'å·¢æ¹–å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6339,'å…­å®‰å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6340,'äº³å·å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6341,'æ± å·å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6342,'å®£åŸå¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6343,'ç¦å·å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6344,'å¦é—¨å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6345,'è†ç”°å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6346,'ä¸‰æ˜å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6347,'æ³‰å·å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6348,'æ¼³å·å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6349,'å—å¹³å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6350,'é¾™å²©å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6351,'å®å¾·å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6352,'å—æ˜Œå¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6353,'æ™¯å¾·é•‡å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6354,'èä¹¡å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6355,'ä¹æ±Ÿå¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6356,'æ–°ä½™å¸‚',0,'2016-08-08 11:41:03','2016-08-08 03:41:03',NULL),(6357,'é¹°æ½­å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6358,'èµ£å·å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6359,'å‰å®‰å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6360,'å®œæ˜¥å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6361,'æŠšå·å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6362,'ä¸Šé¥¶å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6363,'æµå—å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6364,'é’å²›å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6365,'æ·„åšå¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6366,'æ£åº„å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6367,'ä¸œè¥å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6368,'çƒŸå°å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6369,'æ½åŠå¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6370,'æµå®å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6371,'æ³°å®‰å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6372,'å¨æµ·å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6373,'æ—¥ç…§å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6374,'è±èŠœå¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6375,'ä¸´æ²‚å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6376,'å¾·å·å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6377,'èŠåŸå¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6378,'æ»¨å·å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6379,'èæ³½å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6380,'éƒ‘å·å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6381,'å¼€å°å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6382,'æ´›é˜³å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6383,'å¹³é¡¶å±±å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6384,'å®‰é˜³å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6385,'é¹¤å£å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6386,'æ–°ä¹¡å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6387,'ç„¦ä½œå¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6388,'æ¿®é˜³å¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6389,'è®¸æ˜Œå¸‚',0,'2016-08-08 11:41:04','2016-08-08 03:41:04',NULL),(6390,'æ¼¯æ²³å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6391,'ä¸‰é—¨å³¡å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6392,'å—é˜³å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6393,'å•†ä¸˜å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6394,'ä¿¡é˜³å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6395,'å‘¨å£å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6396,'é©»é©¬åº—å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6397,'æµæºå¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6398,'æ­¦æ±‰å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6399,'é»„çŸ³å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6400,'åå °å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6401,'è†å·å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6402,'å®œæ˜Œå¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6403,'è¥„æ¨Šå¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6404,'é„‚å·å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6405,'è†é—¨å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6406,'å­æ„Ÿå¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6407,'é»„å†ˆå¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6408,'å’¸å®å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6409,'éšå·å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6410,'ä»™æ¡ƒå¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6411,'å¤©é—¨å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6412,'æ½œæ±Ÿå¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6413,'ç¥å†œæ¶æ—åŒº',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6414,'æ©æ–½åœŸå®¶æ—è‹—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6415,'é•¿æ²™å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6416,'æ ªæ´²å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6417,'æ¹˜æ½­å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6418,'è¡¡é˜³å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6419,'é‚µé˜³å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6420,'å²³é˜³å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6421,'å¸¸å¾·å¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6422,'å¼ å®¶ç•Œå¸‚',0,'2016-08-08 11:41:05','2016-08-08 03:41:05',NULL),(6423,'ç›Šé˜³å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6424,'éƒ´å·å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6425,'æ°¸å·å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6426,'æ€€åŒ–å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6427,'å¨„åº•å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6428,'æ¹˜è¥¿åœŸå®¶æ—è‹—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6429,'å¹¿å·å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6430,'æ·±åœ³å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6431,'ç æµ·å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6432,'æ±•å¤´å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6433,'éŸ¶å…³å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6434,'ä½›å±±å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6435,'æ±Ÿé—¨å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6436,'æ¹›æ±Ÿå¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6437,'èŒ‚åå¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6438,'è‚‡åº†å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6439,'æƒ å·å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6440,'æ¢…å·å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6441,'æ±•å°¾å¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6442,'æ²³æºå¸‚',0,'2016-08-08 11:41:06','2016-08-08 03:41:06',NULL),(6443,'é˜³æ±Ÿå¸‚',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6444,'æ¸…è¿œå¸‚',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6445,'ä¸œèå¸‚',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6446,'ä¸­å±±å¸‚',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6447,'æ½®å·å¸‚',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6448,'æ­é˜³å¸‚',0,'2016-08-08 11:41:07','2016-08-08 03:41:07',NULL),(6449,'äº‘æµ®å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6450,'å…°å·å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6451,'é‡‘æ˜Œå¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6452,'ç™½é“¶å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6453,'å¤©æ°´å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6454,'å˜‰å³ªå…³å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6455,'æ­¦å¨å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6456,'å¼ æ–å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6457,'å¹³å‡‰å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6458,'é…’æ³‰å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6459,'åº†é˜³å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6460,'å®šè¥¿å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6461,'é™‡å—å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6462,'ä¸´å¤å›æ—è‡ªæ²»å·',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6463,'ç”˜å—è—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6464,'æˆéƒ½å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6465,'è‡ªè´¡å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6466,'æ”€æèŠ±å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6467,'æ³¸å·å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6468,'å¾·é˜³å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6469,'ç»µé˜³å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6470,'å¹¿å…ƒå¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6471,'é‚å®å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6472,'å†…æ±Ÿå¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6473,'ä¹å±±å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6474,'å—å……å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6475,'çœ‰å±±å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6476,'å®œå®¾å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6477,'å¹¿å®‰å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6478,'è¾¾å·å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6479,'é›…å®‰å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6480,'å·´ä¸­å¸‚',0,'2016-08-08 11:41:08','2016-08-08 03:41:08',NULL),(6481,'èµ„é˜³å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6482,'é˜¿åè—æ—ç¾Œæ—è‡ªæ²»å·',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6483,'ç”˜å­œè—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6484,'å‡‰å±±å½æ—è‡ªæ²»å·',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6485,'æµå—å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6486,'é’å²›å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6487,'æ·„åšå¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6488,'æ£åº„å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6489,'ä¸œè¥å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6490,'çƒŸå°å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6491,'æ½åŠå¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6492,'æµå®å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6493,'æ³°å®‰å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6494,'å¨æµ·å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6495,'æ—¥ç…§å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6496,'è±èŠœå¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6497,'ä¸´æ²‚å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6498,'å¾·å·å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6499,'èŠåŸå¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6500,'æ»¨å·å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6501,'èæ³½å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6502,'è´µé˜³å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6503,'å…­ç›˜æ°´å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6504,'éµä¹‰å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6505,'å®‰é¡ºå¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6506,'é“œä»åœ°åŒº',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6507,'æ¯•èŠ‚åœ°åŒº',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6508,'é»”è¥¿å—å¸ƒä¾æ—è‹—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6509,'é»”ä¸œå—è‹—æ—ä¾—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6510,'é»”å—å¸ƒä¾æ—è‹—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6511,'æµ·å£å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6512,'ä¸‰äºšå¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6513,'äº”æŒ‡å±±å¸‚',0,'2016-08-08 11:41:09','2016-08-08 03:41:09',NULL),(6514,'ç¼æµ·å¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6515,'å„‹å·å¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6516,'æ–‡æ˜Œå¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6517,'ä¸‡å®å¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6518,'ä¸œæ–¹å¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6519,'æ¾„è¿ˆå¿',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6520,'å®šå®‰å¿',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6521,'å±¯æ˜Œå¿',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6522,'ä¸´é«˜å¿',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6523,'ç™½æ²™é»æ—è‡ªæ²»å¿',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6524,'æ˜Œæ±Ÿé»æ—è‡ªæ²»å¿',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6525,'ä¹ä¸œé»æ—è‡ªæ²»å¿',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6526,'é™µæ°´é»æ—è‡ªæ²»å¿',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6527,'ä¿äº­é»æ—è‹—æ—è‡ªæ²»å¿',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6528,'ç¼ä¸­é»æ—è‹—æ—è‡ªæ²»å¿',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6529,'æ˜†æ˜å¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6530,'æ›²é–å¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6531,'ç‰æºªå¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6532,'ä¿å±±å¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6533,'æ˜­é€šå¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6534,'ä¸½æ±Ÿå¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6535,'æ€èŒ…å¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6536,'ä¸´æ²§å¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6537,'æ–‡å±±å£®æ—è‹—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6538,'çº¢æ²³å“ˆå°¼æ—å½æ—è‡ªæ²»å·',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6539,'è¥¿åŒç‰ˆçº³å‚£æ—è‡ªæ²»å·',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6540,'æ¥šé›„å½æ—è‡ªæ²»å·',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6541,'å¤§ç†ç™½æ—è‡ªæ²»å·',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6542,'å¾·å®å‚£æ—æ™¯é¢‡æ—è‡ªæ²»å·',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6543,'æ€’æ±Ÿå‚ˆå‚ˆæ—è‡ªæ²»å·',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6544,'è¿ªåº†è—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6545,'è¥¿å®å¸‚',0,'2016-08-08 11:41:10','2016-08-08 03:41:10',NULL),(6546,'æµ·ä¸œåœ°åŒº',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6547,'æµ·åŒ—è—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6548,'é»„å—è—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6549,'æµ·å—è—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6550,'æœæ´›è—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6551,'ç‰æ ‘è—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6552,'æµ·è¥¿è’™å¤æ—è—æ—è‡ªæ²»å·',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6553,'è¥¿å®‰å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6554,'é“œå·å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6555,'å®é¸¡å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6556,'å’¸é˜³å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6557,'æ¸­å—å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6558,'å»¶å®‰å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6559,'æ±‰ä¸­å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6560,'æ¦†æ—å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6561,'å®‰åº·å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6562,'å•†æ´›å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6563,'å—å®å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6564,'æŸ³å·å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6565,'æ¡‚æ—å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6566,'æ¢§å·å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6567,'åŒ—æµ·å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6568,'é˜²åŸæ¸¯å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6569,'é’¦å·å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6570,'è´µæ¸¯å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6571,'ç‰æ—å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6572,'ç™¾è‰²å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6573,'è´ºå·å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6574,'æ²³æ± å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6575,'æ¥å®¾å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6576,'å´‡å·¦å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6577,'æ‹‰è¨å¸‚',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6578,'é‚£æ›²åœ°åŒº',0,'2016-08-08 11:41:11','2016-08-08 03:41:11',NULL),(6579,'æ˜Œéƒ½åœ°åŒº',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6580,'å±±å—åœ°åŒº',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6581,'æ—¥å–€åˆ™åœ°åŒº',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6582,'é˜¿é‡Œåœ°åŒº',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6583,'æ—èŠåœ°åŒº',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6584,'é“¶å·å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6585,'çŸ³å˜´å±±å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6586,'å´å¿ å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6587,'å›ºåŸå¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6588,'ä¸­å«å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6589,'ä¹Œé²æœ¨é½å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6590,'å…‹æ‹‰ç›ä¾å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6591,'çŸ³æ²³å­å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6592,'é˜¿æ‹‰å°”å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6593,'å›¾æœ¨èˆ’å…‹å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6594,'äº”å®¶æ¸ å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6595,'åé²ç•ªå¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6596,'é˜¿å…‹è‹å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6597,'å–€ä»€å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6598,'å“ˆå¯†å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6599,'å’Œç”°å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6600,'é˜¿å›¾ä»€å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6601,'åº“å°”å‹’å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6602,'æ˜Œå‰å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6603,'é˜œåº·å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6604,'ç±³æ³‰å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6605,'åšä¹å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6606,'ä¼Šå®å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6607,'å¥å±¯å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6608,'å¡”åŸå¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6609,'ä¹Œè‹å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6610,'é˜¿å‹’æ³°å¸‚',0,'2016-08-08 11:41:12','2016-08-08 03:41:12',NULL),(6611,'å‘¼å’Œæµ©ç‰¹å¸‚',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6612,'åŒ…å¤´å¸‚',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6613,'ä¹Œæµ·å¸‚',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6614,'èµ¤å³°å¸‚',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6615,'é€šè¾½å¸‚',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6616,'é„‚å°”å¤šæ–¯å¸‚',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6617,'å‘¼ä¼¦è´å°”å¸‚',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6618,'å·´å½¦æ·–å°”å¸‚',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6619,'ä¹Œå…°å¯Ÿå¸ƒå¸‚',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6620,'é”¡æ—éƒ­å‹’ç›Ÿ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6621,'å…´å®‰ç›Ÿ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6622,'é˜¿æ‹‰å–„ç›Ÿ',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6623,'æ¾³é—¨ç‰¹åˆ«è¡Œæ”¿åŒº',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6624,'é¦™æ¸¯ç‰¹åˆ«è¡Œæ”¿åŒº',0,'2016-08-08 11:41:13','2016-08-08 03:41:13',NULL),(6625,'æ—ºé“º',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6626,'å…¶å®ƒ',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6627,'1æ¬¡',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6628,'2æ¬¡',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6629,'3æ¬¡',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6630,'4æ¬¡ä»¥ä¸Š',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6631,'æœ¬æœˆå†…',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6632,'ä¸‰ä¸ªæœˆå†…',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6633,'åŠå¹´å†…',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6634,'1ï¼2æ¬¡',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6635,'3æ¬¡ä»¥ä¸Š',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6636,'50ä»¥ä¸‹',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6637,'51-100',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6638,'101-150',0,'2016-08-08 11:41:13','2016-08-19 06:25:00',NULL),(6639,'151-200',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6640,'201-300',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6641,'300ä»¥ä¸Š',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6642,'50ä»¥ä¸‹',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6643,'51-100',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6644,'101-150',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6645,'151-200',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6646,'201-300',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6647,'300ä»¥ä¸Š',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6648,'äº¤æ˜“å®Œæˆ',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6649,'äº¤æ˜“å…³é—­',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6650,'å¾…æ”¯ä»˜',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6651,'æ˜¯',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL),(6652,'å¦',0,'2016-08-08 11:41:14','2016-08-19 06:25:00',NULL);
 /*!40000 ALTER TABLE `tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2622,12 +2622,12 @@ CREATE TABLE `tag_distribution` (
   `tag_id` int(11) DEFAULT NULL,
   `coverage_percent` varchar(10) DEFAULT NULL,
   `inuse_tag_percent` varchar(10) DEFAULT NULL,
-  `audience_count` char(10) DEFAULT NULL COMMENT '±êÇ©¸²¸ÇµÄÈËÊı',
+  `audience_count` char(10) DEFAULT NULL COMMENT 'æ ‡ç­¾è¦†ç›–çš„äººæ•°',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='±êÇ©·Ö²¼';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='æ ‡ç­¾åˆ†å¸ƒ';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2654,7 +2654,7 @@ CREATE TABLE `tag_group_map` (
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5568 DEFAULT CHARSET=utf8 COMMENT='±êÇ©ºÍ·Ö×éµÄ¹ØÁª¹ØÏµ±í';
+) ENGINE=InnoDB AUTO_INCREMENT=5568 DEFAULT CHARSET=utf8 COMMENT='æ ‡ç­¾å’Œåˆ†ç»„çš„å…³è”å…³ç³»è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2677,7 +2677,7 @@ DROP TABLE IF EXISTS `tag_party_relation`;
 CREATE TABLE `tag_party_relation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tag_id` int(11) NOT NULL,
-  `party_id` int(11) NOT NULL COMMENT 'Ö÷Êı¾İ(ÁªÏµÈË)ID',
+  `party_id` int(11) NOT NULL COMMENT 'ä¸»æ•°æ®(è”ç³»äºº)ID',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -2709,7 +2709,7 @@ CREATE TABLE `tag_recommend` (
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=171 DEFAULT CHARSET=utf8 COMMENT='ÏµÍ³ÍÆ¼ö±êÇ©×é±í';
+) ENGINE=InnoDB AUTO_INCREMENT=171 DEFAULT CHARSET=utf8 COMMENT='ç³»ç»Ÿæ¨èæ ‡ç­¾ç»„è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2718,7 +2718,7 @@ CREATE TABLE `tag_recommend` (
 
 LOCK TABLES `tag_recommend` WRITE;
 /*!40000 ALTER TABLE `tag_recommend` DISABLE KEYS */;
-INSERT INTO `tag_recommend` VALUES (153,14069,'×ÔÈ»ÈËÊôĞÔ-¸öÈËĞÅÏ¢-ĞÔ±ğ',0,'2016-08-08 11:40:47','2016-08-09 02:33:38'),(159,14274,'×ÔÈ»ÈËÊôĞÔ-¸öÈËĞÅÏ¢-¹ú¼®',0,'2016-08-08 11:40:53','2016-08-09 02:37:49'),(161,14392,'×ÔÈ»ÈËÊôĞÔ-µØÀíÇøÓò-Ê¡',0,'2016-08-08 11:40:58','2016-08-09 02:37:49'),(162,14427,'×ÔÈ»ÈËÊôĞÔ-µØÀíÇøÓò-ÊĞ',0,'2016-08-08 17:48:00','2016-08-18 02:43:33'),(163,14837,'½Ó´¥µãÆ«ºÃ-½»Ò×ÇşµÀÆ«ºÃ-Î¢ÃËÇşµÀÈËÈº',0,'2016-08-08 11:41:13','2016-08-17 09:44:37'),(164,14841,'ÓÃ»§¼ÛÖµ-¹ºÂò¼ÛÖµ(RFM)-×Ü¹ºÂòÆµ´Î',0,'2016-08-08 11:41:13','2016-08-09 02:37:49'),(165,14846,'ÓÃ»§¼ÛÖµ-¹ºÂò¼ÛÖµ(RFM)-×îºóÒ»´Î¹ºÂò',0,'2016-08-08 11:41:13','2016-08-09 02:37:49'),(166,14850,'ÓÃ»§¼ÛÖµ-¹ºÂò¼ÛÖµ(RFM)-ÔÂ¾ù¹ºÂòÆµ´Î',0,'2016-08-08 11:41:13','2016-08-09 02:37:49'),(167,14853,'ÓÃ»§¼ÛÖµ-¹ºÂò¼ÛÖµ(RFM)-×Ü¼Æ½»Ò×½ğ¶î',0,'2016-08-08 11:41:13','2016-08-09 02:37:49'),(168,14860,'ÓÃ»§¼ÛÖµ-¹ºÂò¼ÛÖµ(RFM)-¿Íµ¥¼Û',0,'2016-08-08 11:41:14','2016-08-09 02:37:49'),(169,14868,'Æ·ÅÆÁªÏµÇ¿¶È-ÓÃ»§Á÷Ê§¸ÅÂÊ-Ö§¸¶×´Ì¬',0,'2016-08-08 11:41:14','2016-08-09 02:37:49'),(170,14872,'Æ·ÅÆÁªÏµÇ¿¶È-ÓÃ»§Á÷Ê§¸ÅÂÊ-¹ºÂòÈËÈº',0,'2016-08-08 11:41:14','2016-08-17 09:44:52');
+INSERT INTO `tag_recommend` VALUES (153,14069,'è‡ªç„¶äººå±æ€§-ä¸ªäººä¿¡æ¯-æ€§åˆ«',0,'2016-08-08 11:40:47','2016-08-09 02:33:38'),(159,14274,'è‡ªç„¶äººå±æ€§-ä¸ªäººä¿¡æ¯-å›½ç±',0,'2016-08-08 11:40:53','2016-08-09 02:37:49'),(161,14392,'è‡ªç„¶äººå±æ€§-åœ°ç†åŒºåŸŸ-çœ',0,'2016-08-08 11:40:58','2016-08-09 02:37:49'),(162,14427,'è‡ªç„¶äººå±æ€§-åœ°ç†åŒºåŸŸ-å¸‚',0,'2016-08-08 17:48:00','2016-08-18 02:43:33'),(163,14837,'æ¥è§¦ç‚¹åå¥½-äº¤æ˜“æ¸ é“åå¥½-å¾®ç›Ÿæ¸ é“äººç¾¤',0,'2016-08-08 11:41:13','2016-08-17 09:44:37'),(164,14841,'ç”¨æˆ·ä»·å€¼-è´­ä¹°ä»·å€¼(RFM)-æ€»è´­ä¹°é¢‘æ¬¡',0,'2016-08-08 11:41:13','2016-08-09 02:37:49'),(165,14846,'ç”¨æˆ·ä»·å€¼-è´­ä¹°ä»·å€¼(RFM)-æœ€åä¸€æ¬¡è´­ä¹°',0,'2016-08-08 11:41:13','2016-08-09 02:37:49'),(166,14850,'ç”¨æˆ·ä»·å€¼-è´­ä¹°ä»·å€¼(RFM)-æœˆå‡è´­ä¹°é¢‘æ¬¡',0,'2016-08-08 11:41:13','2016-08-09 02:37:49'),(167,14853,'ç”¨æˆ·ä»·å€¼-è´­ä¹°ä»·å€¼(RFM)-æ€»è®¡äº¤æ˜“é‡‘é¢',0,'2016-08-08 11:41:13','2016-08-09 02:37:49'),(168,14860,'ç”¨æˆ·ä»·å€¼-è´­ä¹°ä»·å€¼(RFM)-å®¢å•ä»·',0,'2016-08-08 11:41:14','2016-08-09 02:37:49'),(169,14868,'å“ç‰Œè”ç³»å¼ºåº¦-ç”¨æˆ·æµå¤±æ¦‚ç‡-æ”¯ä»˜çŠ¶æ€',0,'2016-08-08 11:41:14','2016-08-09 02:37:49'),(170,14872,'å“ç‰Œè”ç³»å¼ºåº¦-ç”¨æˆ·æµå¤±æ¦‚ç‡-è´­ä¹°äººç¾¤',0,'2016-08-08 11:41:14','2016-08-17 09:44:52');
 /*!40000 ALTER TABLE `tag_recommend` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2730,15 +2730,15 @@ DROP TABLE IF EXISTS `taggroup`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `taggroup` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '±êÇ©×éID',
-  `name` varchar(40) DEFAULT NULL COMMENT '±êÇ©×éÃû³Æ',
-  `parent_group_id` bigint(20) DEFAULT NULL COMMENT '¸¸±êÇ©×éID',
-  `level` int(11) DEFAULT NULL COMMENT '±êÇ©×é²ã¼¶ 0-×îÎ´¼¶ 1-´Î¼¶   n-×î¸ß¼¶(×î´ó·ÖÀà)',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'æ ‡ç­¾ç»„ID',
+  `name` varchar(40) DEFAULT NULL COMMENT 'æ ‡ç­¾ç»„åç§°',
+  `parent_group_id` bigint(20) DEFAULT NULL COMMENT 'çˆ¶æ ‡ç­¾ç»„ID',
+  `level` int(11) DEFAULT NULL COMMENT 'æ ‡ç­¾ç»„å±‚çº§ 0-æœ€æœªçº§ 1-æ¬¡çº§   n-æœ€é«˜çº§(æœ€å¤§åˆ†ç±»)',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14875 DEFAULT CHARSET=utf8 COMMENT='±êÇ©×é±í';
+) ENGINE=InnoDB AUTO_INCREMENT=14875 DEFAULT CHARSET=utf8 COMMENT='æ ‡ç­¾ç»„è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2747,7 +2747,7 @@ CREATE TABLE `taggroup` (
 
 LOCK TABLES `taggroup` WRITE;
 /*!40000 ALTER TABLE `taggroup` DISABLE KEYS */;
-INSERT INTO `taggroup` VALUES (14068,'×ÔÈ»ÈËÊôĞÔ-¸öÈËĞÅÏ¢',-1,0,0,'2016-08-08 11:40:47','2016-08-18 03:50:59'),(14069,'×ÔÈ»ÈËÊôĞÔ-¸öÈËĞÅÏ¢-ĞÔ±ğ',14068,1,0,'2016-08-08 11:40:47','2016-08-18 03:51:00'),(14070,'ÄĞ',14069,2,0,'2016-08-08 11:40:47','2016-08-18 03:51:01'),(14071,'Å®',14069,2,0,'2016-08-08 11:40:47','2016-08-18 03:51:03'),(14072,'Î´Öª',14069,2,0,'2016-08-08 11:40:47','2016-08-18 03:51:05'),(14073,'×ÔÈ»ÈËÊôĞÔ-¸öÈËĞÅÏ¢-ÄêÁä¶Î',14068,1,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14074,'00ºó',14073,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14075,'90ºó',14073,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14076,'80ºó',14073,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14077,'70ºó',14073,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14078,'69Ç°',14073,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14079,'×ÔÈ»ÈËÊôĞÔ-¸öÈËĞÅÏ¢-ĞÇ×ù',14068,1,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14080,'Ë®Æ¿×ù',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14081,'Ë«Óã×ù',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14082,'°×Ñò×ù',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14083,'½ğÅ£×ù',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14084,'Ë«×Ó×ù',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14085,'¾ŞĞ·×ù',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14086,'Ê¨×Ó×ù',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14087,'´¦Å®×ù',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14088,'Ìì³Ó×ù',14079,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14089,'ÌìĞ«×ù',14079,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14090,'ÉäÊÖ×ù',14079,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14091,'Ä¦ôÉ×ù',14079,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14092,'×ÔÈ»ÈËÊôĞÔ-¸öÈËĞÅÏ¢-»éÒö×´¿ö',14068,1,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14093,'ÒÑ»é',14092,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14094,'Î´»é',14092,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14095,'Î´Öª',14092,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14096,'×ÔÈ»ÈËÊôĞÔ-¸öÈËĞÅÏ¢-ÑªĞÍ',14068,1,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14097,'A',14096,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14098,'B',14096,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14099,'AB',14096,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14100,'O',14096,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14101,'Î´Öª',14096,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14102,'×ÔÈ»ÈËÊôĞÔ-¸öÈËĞÅÏ¢-Ö°Òµ',14068,1,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14103,'ÏúÊÛ',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14104,'¿Í·ş',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14105,'ÊĞ³¡',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14106,'¹ÜÀí',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14107,'ÇşµÀ',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14108,'ĞĞÕş',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14109,'ÉÌÎñ',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14110,'ÔËÓª',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14111,'Êı¾İ·ÖÎö',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14112,'ÊÛÇ°',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14113,'ÊÛºó',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14114,'²úÆ·¾­Àí',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14115,'Æ·ÅÆ¾­Àí',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14116,'×ÉÑ¯',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14117,'²ß»®',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14118,'ÎÄ°¸',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14119,'¹«¹Ø',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14120,'Ã½½é',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14121,'Æó»®',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14122,'ÊĞ³¡µ÷ÑĞ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14123,'ÒµÎñÍØÕ¹',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14124,'¹ã¸æ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14125,'»áÕ¹',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14126,'¿Í»§¾­Àí',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14127,'´´Òâ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14128,'Éè¼Æ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14129,'ÃÀÊõ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14130,'²ß»®',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14131,'²ÆÎñ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14132,'Éó¼Æ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14133,'Ë°Îñ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14134,'ÈËÁ¦×ÊÔ´',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14135,'»á¼Æ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14136,'³öÄÉ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14137,'ÅàÑµ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14138,'ÁÔÍ·',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14139,'ºóÇÚ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14140,'ÎÄÃØ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14141,'Ç°Ì¨',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14142,'ÏîÄ¿¹ÜÀí',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14143,'IT',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14144,'Ö¤„»',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14145,'Í¶×Ê',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14146,'Í¨ĞÅ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14147,'·¿µØ²ú',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14148,'±£ÏÕ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14149,'Æû³µ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14150,'µç×Ó',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14151,'µçÆ÷',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14152,'·ş×°',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14153,'·ÄÖ¯',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14154,'ÄÜÔ´',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14155,'¿ó²ú',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14156,'ÎïÁ÷',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14157,'²Ö´¢',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14158,'Ò½Ò©',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14159,'»¯¹¤',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14160,'°²È«¹ÜÀí',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14161,'»¯Ñé',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14162,'ÈÏÖ¤',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14163,'¹©Ó¦ÉÌ',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14164,'²É¹º',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14165,'±à¼­',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14166,'»¥ÁªÍø',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14167,'µçÉÌ',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14168,'Èí¼ş',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14169,'¿ª·¢',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14170,'ÏµÍ³¼¯³É',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14171,'ÒÆ¶¯»¥ÁªÍø',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14172,'UEÉè¼Æ',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14173,'UIÉè¼Æ',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14174,'ÒÆ¶¯»¥ÁªÍø',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14175,'ÓÎÏ·²ß»®',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14176,'ÓÎÏ·ÊıÖµ',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14177,'ÓÎÏ·¿ª·¢',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14178,'ÓÎÏ·Éè¼Æ',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14179,'ÓÎÏ·²âÊÔ',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14180,'Ó²¼ş',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14181,'ĞÅÏ¢±ê×¼»¯',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14182,'ÍøÂç°²È«',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14183,'µçĞÅ',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14184,'·¿²ú',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14185,'½¨Öş',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14186,'ÎïÒµ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14187,'ÍÁÄ¾',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14188,'×°ĞŞ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14189,'ÊĞÕş¹¤³Ì',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14190,'µÀÂ·',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14191,'ÇÅÁº',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14192,'ËíµÀ¹¤³Ì',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14193,'Ë®Àû',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14194,'¸Û¿Ú',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14195,'ÅÅË®',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14196,'¹ÜÍ¨',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14197,'¿Õµ÷',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14198,'Ô°ÁÖ¾°¹ÛÉè¼Æ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14199,'³ÇÊĞ¹æ»®Éè¼Æ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14200,'ÒøĞĞ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14201,'½ø³ö¿Ú',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14202,'·çÏÕ¿ØÖÆ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14203,'Àí²Æ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14204,'ÈÚ×Ê',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14205,'ĞÅÍĞ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14206,'µ£±£',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14207,'ÅÄÂô',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14208,'µäµ±',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14209,'Öé±¦',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14210,'ÊÕ²Ø',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14211,'Ã³Ò×',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14212,'ÂòÊÖ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14213,'±¨¹Ø',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14214,'Ë¾»ú',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14215,'º½¿Õ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14216,'¹«½»',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14217,'´¬²°',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14218,'ÁĞ³µ',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14219,'¿ìµİ',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14220,'°á¼Ò',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14221,'¼ÒÕş',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14222,'¹¤ÒµÖÆÔì',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14223,'°ëµ¼Ìå',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14224,'´«µ¼Æ÷',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14225,'ÕÕÃ÷',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14226,'¼¤¹â',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14227,'µçÆ÷',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14228,'¶şÊÖ³µ',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14229,'4Sµê',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14230,'Æû³µÎ¬ĞŞ',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14231,'Æû³µ±£Ñø',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14232,'»úĞµ¹¤³Ì',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14233,'ÉúÎï',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14234,'ÖÆÒ©',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14235,'Ò½ÁÆÆ÷Ğµ',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14236,'´«Ã½',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14237,'Ó¡Ë¢',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14238,'Ó°ÊÓ',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14239,'Ã½Ìå',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14240,'³ö°æ',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14241,'µ¼Ñİ',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14242,'ÑİÔ±',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14243,'±à¾ç',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14244,'¼ÇÕß',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14245,'×÷¼Ò',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14246,'Íøºì',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14247,'ÅäÒô',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14248,'·¨ÂÉ',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14249,'½ÌÓı',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14250,'·­Òë',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14251,'ÉÌ³¬',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14252,'¾Æµê',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14253,'ÓéÀÖ',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14254,'ÂÃÓÎ',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14255,'Åëâ¿',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14256,'±£½¡',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14257,'ÃÀÈİ',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14258,'ÃÀ·¢',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14259,'½¡Éí',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14260,'Ò½ÁÆ',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14261,'Å©Òµ',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14262,'¿ÆÑĞ',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14263,'»·±£',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14264,'¹«ÎñÔ±',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14265,'Ö¾Ô¸Õß',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14266,'Òå¹¤',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14267,'´ÈÉÆ',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14268,'ÌåÓı',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14269,'Íâ°ü·şÎñ',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14270,'¿ìËÙÏû·ÑÆ·',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14271,'Éİ³ŞÆ·',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14272,'ÖØ¹¤Òµ',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14273,'ÆäËû',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14274,'×ÔÈ»ÈËÊôĞÔ-¸öÈËĞÅÏ¢-¹ú¼®',14068,1,0,'2016-08-08 11:40:53','2016-08-18 06:04:53'),(14275,'ÖĞ¹ú',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14276,'ÃÀ¹ú',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14277,'ÈÕ±¾',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14278,'Ó¢¹ú',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14279,'µÂ¹ú',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14280,'º«¹ú',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14281,'Ïã¸Û',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14282,'Òâ´óÀû',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14283,'¼ÓÄÃ´ó',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14284,'°Ä´óÀûÑÇ',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14285,'·¨¹ú',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14286,'·ÆÂÉ±ö',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14287,'ÒÔÉ«ÁĞ',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14288,'Î÷°àÑÀ',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14289,'Ì¨Íå',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14290,'±ÈÀûÊ±',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14291,'ĞÂ¼ÓÆÂ',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14292,'·ÒÀ¼',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14293,'ºÉÀ¼',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14294,'²¨À¼',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14295,'ÈğÊ¿',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14296,'Èğµä',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14297,'Ì©¹ú',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14298,'ÆÏÌÑÑÀ',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14299,'ÖÇÀû',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14300,'ĞÂÎ÷À¼',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14301,'°ÍÎ÷',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14302,'µ¤Âó',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14303,'°ÂµØÀû',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14304,'Ô½ÄÏ',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14305,'Ë¹ÀïÀ¼¿¨',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14306,'ÂíÀ´Î÷ÑÇ',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14307,'ÍÁ¶úÆä',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14308,'¹Å°Í',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14309,'Ö±²¼ÂŞÍÓ',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14310,'ÎÚ¿ËÀ¼',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14311,'°¢¸ùÍ¢',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14312,'¶íÂŞË¹',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14313,'Ï£À°',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14314,'Å²Íş',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14315,'ÄÏ·Ç',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14316,'Ä«Î÷¸ç',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14317,'°®¶ûÀ¼',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14318,'Ó¡¶ÈÄáÎ÷ÑÇ',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14319,'Ó¡¶È',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14320,'ÎÚÀ­¹ç',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14321,'°¢ÁªÇõ',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14322,'½İ¿Ë',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14323,'°¢Âü',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14324,'ÈûÆÖÂ·Ë¹',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14325,'ĞÙÑÀÀû',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14326,'ÂŞÂíÄáÑÇ',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14327,'ËÕ¸ñÀ¼',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14328,'±£¼ÓÀûÑÇ',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14329,'¼íÆÒÕ¯',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14330,'Ë¹Âå·¥¿Ë',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14331,'À­ÍÑÎ¬ÑÇ',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14332,'±ùµº',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14333,'°ÄÃÅ',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14334,'×ÔÈ»ÈËÊôĞÔ-¸öÈËĞÅÏ¢-Ãñ×å',14068,1,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14335,'ºº×å',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14336,'ÃÉ¹Å×å',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14337,'»Ø×å',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14338,'²Ø×å',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14339,'Î¬Îá¶û×å',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14340,'Ãç×å',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14341,'ÒÍ×å',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14342,'×³×å',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14343,'²¼ÒÀ×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14344,'³¯ÏÊ×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14345,'Âú×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14346,'¶±×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14347,'Ñş×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14348,'°××å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14349,'ÍÁ¼Ò×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14350,'¹şÄá×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14351,'¹şÈø¿Ë×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14352,'´ö×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14353,'Àè×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14354,'ÀüËÛ×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14355,'Øô×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14356,'î´×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14357,'¸ßÉ½×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14358,'À­ìï×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14359,'Ë®×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14360,'¶«Ïç×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14361,'ÄÉÎ÷×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14362,'¾°ÆÄ×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14363,'¿Â¶û¿Ë×Î×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14364,'ÍÁ×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14365,'´ïÎÓ¶û×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14366,'ØïÀĞ×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14367,'Ç¼×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14368,'²¼ÀÊ×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14369,'ÈöÀ­×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14370,'Ã«ÄÑ×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14371,'ØîÀĞ×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14372,'Îı²®×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14373,'°¢²ı×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14374,'ÆÕÃ××å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14375,'Ëş¼ª¿Ë×å',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14376,'Å­×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14377,'ÎÚ×Î±ğ¿Ë×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14378,'¶íÂŞË¹×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14379,'¶õÎÂ¿Ë×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14380,'±ÀÁú×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14381,'±£°²×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14382,'Ô£¹Ì×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14383,'¾©×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14384,'ËşËş¶û×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14385,'¶ÀÁú×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14386,'¶õÂ×´º×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14387,'ºÕÕÜ×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14388,'ÃÅ°Í×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14389,'çó°Í×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14390,'»ùÅµ×å',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14391,'×ÔÈ»ÈËÊôĞÔ-µØÀíÇøÓò',-1,0,0,'2016-08-08 11:40:58','2016-08-18 03:55:32'),(14392,'×ÔÈ»ÈËÊôĞÔ-µØÀíÇøÓò-Ê¡',14391,1,0,'2016-08-08 11:40:58','2016-08-18 03:55:34'),(14393,'±±¾©',14392,2,0,'2016-08-08 11:40:58','2016-08-23 09:35:05'),(14394,'Ìì½ò',14392,2,0,'2016-08-08 11:40:58','2016-08-23 09:35:06'),(14395,'ÉÏº£',14392,2,0,'2016-08-08 11:40:58','2016-08-23 09:35:06'),(14396,'ÖØÇì',14392,2,0,'2016-08-08 11:40:58','2016-08-23 09:35:09'),(14397,'ºÓ±±Ê¡',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14398,'É½Î÷Ê¡',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14399,'Ì¨ÍåÊ¡',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14400,'ÁÉÄşÊ¡',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14401,'¼ªÁÖÊ¡',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14402,'ºÚÁú½­Ê¡',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14403,'½­ËÕÊ¡',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14404,'Õã½­Ê¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14405,'°²»ÕÊ¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14406,'¸£½¨Ê¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14407,'½­Î÷Ê¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14408,'É½¶«Ê¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14409,'ºÓÄÏÊ¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14410,'ºş±±Ê¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14411,'ºşÄÏÊ¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14412,'¹ã¶«Ê¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14413,'¸ÊËàÊ¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14414,'ËÄ´¨Ê¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14415,'¹óÖİÊ¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14416,'º£ÄÏÊ¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14417,'ÔÆÄÏÊ¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14418,'Çàº£Ê¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14419,'ÉÂÎ÷Ê¡',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14420,'¹ãÎ÷×³×å×ÔÖÎÇø',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14421,'Î÷²Ø×ÔÖÎÇø',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14422,'ÄşÏÄ»Ø×å×ÔÖÎÇø',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14423,'ĞÂ½®Î¬Îá¶û×ÔÖÎÇø',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14424,'ÄÚÃÉ¹Å×ÔÖÎÇø',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14425,'°ÄÃÅÌØ±ğĞĞÕşÇø',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14426,'Ïã¸ÛÌØ±ğĞĞÕşÇø',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14427,'×ÔÈ»ÈËÊôĞÔ-µØÀíÇøÓò-ÊĞ',14391,1,0,'2016-08-08 11:40:59','2016-08-18 03:55:48'),(14428,'±±¾©ÊĞ',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14429,'Ìì½òÊĞ',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14430,'ÉÏº£ÊĞ',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14431,'ÖØÇìÊĞ',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14432,'Ê¯¼Ò×¯ÊĞ',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14433,'ÌÆÉ½ÊĞ',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14434,'ÇØ»ÊµºÊĞ',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14435,'ºªµ¦ÊĞ',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14436,'ĞÏÌ¨ÊĞ',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14437,'±£¶¨ÊĞ',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14438,'ÕÅ¼Ò¿ÚÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14439,'³ĞµÂÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14440,'²×ÖİÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14441,'ÀÈ·»ÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14442,'ºâË®ÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14443,'Ì«Ô­ÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14444,'´óÍ¬ÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14445,'ÑôÈªÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14446,'³¤ÖÎÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14447,'½ú³ÇÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14448,'Ë·ÖİÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14449,'½úÖĞÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14450,'ÔË³ÇÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14451,'ĞÃÖİÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14452,'ÁÙ·ÚÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14453,'ÂÀÁºÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14454,'Ì¨±±ÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14455,'¸ßĞÛÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14456,'»ùÂ¡ÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14457,'Ì¨ÖĞÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14458,'Ì¨ÄÏÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14459,'ĞÂÖñÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14460,'¼ÎÒåÊĞ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14461,'Ì¨±±ÏØ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14462,'ÒËÀ¼ÏØ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14463,'ÌÒÔ°ÏØ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14464,'ĞÂÖñÏØ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14465,'ÃçÀõÏØ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14466,'Ì¨ÖĞÏØ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14467,'ÕÃ»¯ÏØ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14468,'ÄÏÍ¶ÏØ',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14469,'ÔÆÁÖÏØ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14470,'¼ÎÒåÏØ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14471,'Ì¨ÄÏÏØ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14472,'¸ßĞÛÏØ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14473,'ÆÁ¶«ÏØ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14474,'ÅìºşÏØ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14475,'Ì¨¶«ÏØ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14476,'»¨Á«ÏØ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14477,'ÉòÑôÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14478,'´óÁ¬ÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14479,'°°É½ÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14480,'¸§Ë³ÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14481,'±¾ÏªÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14482,'µ¤¶«ÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14483,'½õÖİÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14484,'Óª¿ÚÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14485,'¸·ĞÂÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14486,'ÁÉÑôÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14487,'ÅÌ½õÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14488,'ÌúÁëÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14489,'³¯ÑôÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14490,'ºùÂ«µºÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14491,'³¤´ºÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14492,'¼ªÁÖÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14493,'ËÄÆ½ÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14494,'ÁÉÔ´ÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14495,'Í¨»¯ÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14496,'°×É½ÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14497,'ËÉÔ­ÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14498,'°×³ÇÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14499,'ÑÓ±ß³¯ÏÊ×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14500,'¹ş¶û±õÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14501,'ÆëÆë¹ş¶ûÊĞ',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14502,'º×¸ÚÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14503,'Ë«Ñ¼É½ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14504,'¼¦Î÷ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14505,'´óÇìÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14506,'ÒÁ´ºÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14507,'Äµµ¤½­ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14508,'¼ÑÄ¾Ë¹ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14509,'ÆßÌ¨ºÓÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14510,'ºÚºÓÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14511,'Ëç»¯ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14512,'´óĞË°²ÁëµØÇø',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14513,'ÄÏ¾©ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14514,'ÎŞÎıÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14515,'ĞìÖİÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14516,'³£ÖİÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14517,'ËÕÖİÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14518,'ÄÏÍ¨ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14519,'Á¬ÔÆ¸ÛÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14520,'»´°²ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14521,'ÑÎ³ÇÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14522,'ÑïÖİÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14523,'Õò½­ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14524,'Ì©ÖİÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14525,'ËŞÇ¨ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14526,'º¼ÖİÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14527,'Äş²¨ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14528,'ÎÂÖİÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14529,'¼ÎĞËÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14530,'ºşÖİÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14531,'ÉÜĞËÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14532,'½ğ»ªÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14533,'áéÖİÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14534,'ÖÛÉ½ÊĞ',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14535,'Ì¨ÖİÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14536,'ÀöË®ÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14537,'ºÏ·ÊÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14538,'ÎßºşÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14539,'°ö²ºÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14540,'»´ÄÏÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14541,'Âí°°É½ÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14542,'»´±±ÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14543,'Í­ÁêÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14544,'°²ÇìÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14545,'»ÆÉ½ÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14546,'³üÖİÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14547,'¸·ÑôÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14548,'ËŞÖİÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14549,'³²ºşÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14550,'Áù°²ÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14551,'ÙñÖİÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14552,'³ØÖİÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14553,'Ğû³ÇÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14554,'¸£ÖİÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14555,'ÏÃÃÅÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14556,'ÆÎÌïÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14557,'ÈıÃ÷ÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14558,'ÈªÖİÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14559,'ÕÄÖİÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14560,'ÄÏÆ½ÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14561,'ÁúÑÒÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14562,'ÄşµÂÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14563,'ÄÏ²ıÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14564,'¾°µÂÕòÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14565,'Æ¼ÏçÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14566,'¾Å½­ÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14567,'ĞÂÓàÊĞ',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14568,'Ó¥Ì¶ÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14569,'¸ÓÖİÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14570,'¼ª°²ÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14571,'ÒË´ºÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14572,'¸§ÖİÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14573,'ÉÏÈÄÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14574,'¼ÃÄÏÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14575,'ÇàµºÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14576,'×Í²©ÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14577,'Ôæ×¯ÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14578,'¶«ÓªÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14579,'ÑÌÌ¨ÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14580,'Î«·»ÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14581,'¼ÃÄşÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14582,'Ì©°²ÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14583,'Íşº£ÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14584,'ÈÕÕÕÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14585,'À³ÎßÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14586,'ÁÙÒÊÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14587,'µÂÖİÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14588,'ÁÄ³ÇÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14589,'±õÖİÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14590,'ºÊÔóÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14591,'Ö£ÖİÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14592,'¿ª·âÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14593,'ÂåÑôÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14594,'Æ½¶¥É½ÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14595,'°²ÑôÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14596,'º×±ÚÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14597,'ĞÂÏçÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14598,'½¹×÷ÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14599,'å§ÑôÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14600,'Ğí²ıÊĞ',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14601,'äğºÓÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14602,'ÈıÃÅÏ¿ÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14603,'ÄÏÑôÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14604,'ÉÌÇğÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14605,'ĞÅÑôÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14606,'ÖÜ¿ÚÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14607,'×¤ÂíµêÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14608,'¼ÃÔ´ÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14609,'ÎäººÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14610,'»ÆÊ¯ÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14611,'Ê®ÑßÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14612,'¾£ÖİÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14613,'ÒË²ıÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14614,'Ïå·®ÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14615,'¶õÖİÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14616,'¾£ÃÅÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14617,'Ğ¢¸ĞÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14618,'»Æ¸ÔÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14619,'ÏÌÄşÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14620,'ËæÖİÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14621,'ÏÉÌÒÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14622,'ÌìÃÅÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14623,'Ç±½­ÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14624,'ÉñÅ©¼ÜÁÖÇø',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14625,'¶÷Ê©ÍÁ¼Ò×åÃç×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14626,'³¤É³ÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14627,'ÖêÖŞÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14628,'ÏæÌ¶ÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14629,'ºâÑôÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14630,'ÉÛÑôÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14631,'ÔÀÑôÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14632,'³£µÂÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14633,'ÕÅ¼Ò½çÊĞ',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14634,'ÒæÑôÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14635,'³»ÖİÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14636,'ÓÀÖİÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14637,'»³»¯ÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14638,'Â¦µ×ÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14639,'ÏæÎ÷ÍÁ¼Ò×åÃç×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14640,'¹ãÖİÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14641,'ÉîÛÚÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14642,'Öéº£ÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14643,'ÉÇÍ·ÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14644,'ÉØ¹ØÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14645,'·ğÉ½ÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14646,'½­ÃÅÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14647,'Õ¿½­ÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14648,'Ã¯ÃûÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14649,'ÕØÇìÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14650,'»İÖİÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14651,'Ã·ÖİÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14652,'ÉÇÎ²ÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14653,'ºÓÔ´ÊĞ',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14654,'Ñô½­ÊĞ',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14655,'ÇåÔ¶ÊĞ',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14656,'¶«İ¸ÊĞ',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14657,'ÖĞÉ½ÊĞ',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14658,'³±ÖİÊĞ',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14659,'½ÒÑôÊĞ',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14660,'ÔÆ¸¡ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14661,'À¼ÖİÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14662,'½ğ²ıÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14663,'°×ÒøÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14664,'ÌìË®ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14665,'¼ÎÓø¹ØÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14666,'ÎäÍşÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14667,'ÕÅÒ´ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14668,'Æ½Á¹ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14669,'¾ÆÈªÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14670,'ÇìÑôÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14671,'¶¨Î÷ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14672,'Â¤ÄÏÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14673,'ÁÙÏÄ»Ø×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14674,'¸ÊÄÏ²Ø×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14675,'³É¶¼ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14676,'×Ô¹±ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14677,'ÅÊÖ¦»¨ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14678,'ãòÖİÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14679,'µÂÑôÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14680,'ÃàÑôÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14681,'¹ãÔªÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14682,'ËìÄşÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14683,'ÄÚ½­ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14684,'ÀÖÉ½ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14685,'ÄÏ³äÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14686,'Ã¼É½ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14687,'ÒË±öÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14688,'¹ã°²ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14689,'´ïÖİÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14690,'ÑÅ°²ÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14691,'°ÍÖĞÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14692,'×ÊÑôÊĞ',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14693,'°¢°Ó²Ø×åÇ¼×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14694,'¸Ê×Î²Ø×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14695,'Á¹É½ÒÍ×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14696,'¼ÃÄÏÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14697,'ÇàµºÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14698,'×Í²©ÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14699,'Ôæ×¯ÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14700,'¶«ÓªÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14701,'ÑÌÌ¨ÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14702,'Î«·»ÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14703,'¼ÃÄşÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14704,'Ì©°²ÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14705,'Íşº£ÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14706,'ÈÕÕÕÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14707,'À³ÎßÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14708,'ÁÙÒÊÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14709,'µÂÖİÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14710,'ÁÄ³ÇÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14711,'±õÖİÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14712,'ºÊÔóÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14713,'¹óÑôÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14714,'ÁùÅÌË®ÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14715,'×ñÒåÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14716,'°²Ë³ÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14717,'Í­ÈÊµØÇø',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14718,'±Ï½ÚµØÇø',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14719,'Ç­Î÷ÄÏ²¼ÒÀ×åÃç×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14720,'Ç­¶«ÄÏÃç×å¶±×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14721,'Ç­ÄÏ²¼ÒÀ×åÃç×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14722,'º£¿ÚÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14723,'ÈıÑÇÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14724,'ÎåÖ¸É½ÊĞ',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14725,'Çíº£ÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14726,'ÙÙÖİÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14727,'ÎÄ²ıÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14728,'ÍòÄşÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14729,'¶«·½ÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14730,'³ÎÂõÏØ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14731,'¶¨°²ÏØ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14732,'ÍÍ²ıÏØ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14733,'ÁÙ¸ßÏØ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14734,'°×É³Àè×å×ÔÖÎÏØ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14735,'²ı½­Àè×å×ÔÖÎÏØ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14736,'ÀÖ¶«Àè×å×ÔÖÎÏØ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14737,'ÁêË®Àè×å×ÔÖÎÏØ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14738,'±£Í¤Àè×åÃç×å×ÔÖÎÏØ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14739,'ÇíÖĞÀè×åÃç×å×ÔÖÎÏØ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14740,'À¥Ã÷ÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14741,'Çú¾¸ÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14742,'ÓñÏªÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14743,'±£É½ÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14744,'ÕÑÍ¨ÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14745,'Àö½­ÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14746,'Ë¼Ã©ÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14747,'ÁÙ²×ÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14748,'ÎÄÉ½×³×åÃç×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14749,'ºìºÓ¹şÄá×åÒÍ×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14750,'Î÷Ë«°æÄÉ´ö×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14751,'³şĞÛÒÍ×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14752,'´óÀí°××å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14753,'µÂºê´ö×å¾°ÆÄ×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14754,'Å­½­ÀüÀü×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14755,'µÏÇì²Ø×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14756,'Î÷ÄşÊĞ',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14757,'º£¶«µØÇø',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14758,'º£±±²Ø×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14759,'»ÆÄÏ²Ø×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14760,'º£ÄÏ²Ø×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14761,'¹ûÂå²Ø×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14762,'ÓñÊ÷²Ø×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14763,'º£Î÷ÃÉ¹Å×å²Ø×å×ÔÖÎÖİ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14764,'Î÷°²ÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14765,'Í­´¨ÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14766,'±¦¼¦ÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14767,'ÏÌÑôÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14768,'Î¼ÄÏÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14769,'ÑÓ°²ÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14770,'ººÖĞÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14771,'ÓÜÁÖÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14772,'°²¿µÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14773,'ÉÌÂåÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14774,'ÄÏÄşÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14775,'ÁøÖİÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14776,'¹ğÁÖÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14777,'ÎàÖİÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14778,'±±º£ÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14779,'·À³Ç¸ÛÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14780,'ÇÕÖİÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14781,'¹ó¸ÛÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14782,'ÓñÁÖÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14783,'°ÙÉ«ÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14784,'ºØÖİÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14785,'ºÓ³ØÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14786,'À´±öÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14787,'³ç×óÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14788,'À­ÈøÊĞ',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14789,'ÄÇÇúµØÇø',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14790,'²ı¶¼µØÇø',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14791,'É½ÄÏµØÇø',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14792,'ÈÕ¿¦ÔòµØÇø',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14793,'°¢ÀïµØÇø',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14794,'ÁÖÖ¥µØÇø',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14795,'Òø´¨ÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14796,'Ê¯×ìÉ½ÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14797,'ÎâÖÒÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14798,'¹ÌÔ­ÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14799,'ÖĞÎÀÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14800,'ÎÚÂ³Ä¾ÆëÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14801,'¿ËÀ­ÂêÒÀÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14802,'Ê¯ºÓ×ÓÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14803,'°¢À­¶ûÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14804,'Í¼Ä¾Êæ¿ËÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14805,'Îå¼ÒÇşÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14806,'ÍÂÂ³·¬ÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14807,'°¢¿ËËÕÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14808,'¿¦Ê²ÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14809,'¹şÃÜÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14810,'ºÍÌïÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14811,'°¢Í¼Ê²ÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14812,'¿â¶ûÀÕÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14813,'²ı¼ªÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14814,'¸·¿µÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14815,'Ã×ÈªÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14816,'²©ÀÖÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14817,'ÒÁÄşÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14818,'¿üÍÍÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14819,'Ëş³ÇÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14820,'ÎÚËÕÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14821,'°¢ÀÕÌ©ÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14822,'ºôºÍºÆÌØÊĞ',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14823,'°üÍ·ÊĞ',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14824,'ÎÚº£ÊĞ',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14825,'³à·åÊĞ',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14826,'Í¨ÁÉÊĞ',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14827,'¶õ¶û¶àË¹ÊĞ',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14828,'ºôÂ×±´¶ûÊĞ',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14829,'°ÍÑåÄ×¶ûÊĞ',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14830,'ÎÚÀ¼²ì²¼ÊĞ',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14831,'ÎıÁÖ¹ùÀÕÃË',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14832,'ĞË°²ÃË',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14833,'°¢À­ÉÆÃË',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14834,'°ÄÃÅÌØ±ğĞĞÕşÇø',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14835,'Ïã¸ÛÌØ±ğĞĞÕşÇø',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14836,'½Ó´¥µãÆ«ºÃ-½»Ò×ÇşµÀÆ«ºÃ',-1,0,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14837,'½Ó´¥µãÆ«ºÃ-½»Ò×ÇşµÀÆ«ºÃ-Î¢ÃËÇşµÀÈËÈº',14836,1,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14838,'ÍúÆÌ',14837,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14839,'ÆäËü',14837,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14840,'ÓÃ»§¼ÛÖµ-¹ºÂò¼ÛÖµ(RFM)',-1,0,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14841,'ÓÃ»§¼ÛÖµ-¹ºÂò¼ÛÖµ(RFM)-×Ü¹ºÂòÆµ´Î',14840,1,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14842,'1´Î',14841,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14843,'2´Î',14841,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14844,'3´Î',14841,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14845,'4´ÎÒÔÉÏ',14841,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14846,'ÓÃ»§¼ÛÖµ-¹ºÂò¼ÛÖµ(RFM)-×îºóÒ»´Î¹ºÂò',14840,1,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14847,'±¾ÔÂÄÚ',14846,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14848,'Èı¸öÔÂÄÚ',14846,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14849,'°ëÄêÄÚ',14846,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14850,'ÓÃ»§¼ÛÖµ-¹ºÂò¼ÛÖµ(RFM)-ÔÂ¾ù¹ºÂòÆµ´Î',14840,1,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14851,'1£­2´Î',14850,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14852,'3´ÎÒÔÉÏ',14850,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14853,'ÓÃ»§¼ÛÖµ-¹ºÂò¼ÛÖµ(RFM)-×Ü¼Æ½»Ò×½ğ¶î',14840,1,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14854,'50ÒÔÏÂ',14853,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14855,'51-100',14853,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14856,'101-150',14853,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14857,'151-200',14853,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14858,'201-300',14853,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14859,'300ÒÔÉÏ',14853,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14860,'ÓÃ»§¼ÛÖµ-¹ºÂò¼ÛÖµ(RFM)-¿Íµ¥¼Û',14840,1,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14861,'50ÒÔÏÂ',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14862,'51-100',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14863,'101-150',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14864,'151-200',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14865,'201-300',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14866,'300ÒÔÉÏ',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14867,'Æ·ÅÆÁªÏµÇ¿¶È-ÓÃ»§Á÷Ê§¸ÅÂÊ',-1,0,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14868,'Æ·ÅÆÁªÏµÇ¿¶È-ÓÃ»§Á÷Ê§¸ÅÂÊ-Ö§¸¶×´Ì¬',14867,1,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14869,'½»Ò×Íê³É',14868,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14870,'½»Ò×¹Ø±Õ',14868,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14871,'´ıÖ§¸¶',14868,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14872,'Æ·ÅÆÁªÏµÇ¿¶È-ÓÃ»§Á÷Ê§¸ÅÂÊ-¹ºÂòÈËÈº',14867,1,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14873,'ÊÇ',14872,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14874,'·ñ',14872,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52');
+INSERT INTO `taggroup` VALUES (14068,'è‡ªç„¶äººå±æ€§-ä¸ªäººä¿¡æ¯',-1,0,0,'2016-08-08 11:40:47','2016-08-18 03:50:59'),(14069,'è‡ªç„¶äººå±æ€§-ä¸ªäººä¿¡æ¯-æ€§åˆ«',14068,1,0,'2016-08-08 11:40:47','2016-08-18 03:51:00'),(14070,'ç”·',14069,2,0,'2016-08-08 11:40:47','2016-08-18 03:51:01'),(14071,'å¥³',14069,2,0,'2016-08-08 11:40:47','2016-08-18 03:51:03'),(14072,'æœªçŸ¥',14069,2,0,'2016-08-08 11:40:47','2016-08-18 03:51:05'),(14073,'è‡ªç„¶äººå±æ€§-ä¸ªäººä¿¡æ¯-å¹´é¾„æ®µ',14068,1,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14074,'00å',14073,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14075,'90å',14073,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14076,'80å',14073,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14077,'70å',14073,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14078,'69å‰',14073,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14079,'è‡ªç„¶äººå±æ€§-ä¸ªäººä¿¡æ¯-æ˜Ÿåº§',14068,1,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14080,'æ°´ç“¶åº§',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14081,'åŒé±¼åº§',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14082,'ç™½ç¾Šåº§',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14083,'é‡‘ç‰›åº§',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14084,'åŒå­åº§',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14085,'å·¨èŸ¹åº§',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14086,'ç‹®å­åº§',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14087,'å¤„å¥³åº§',14079,2,1,'2016-08-08 11:40:47','2016-08-18 03:49:06'),(14088,'å¤©ç§¤åº§',14079,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14089,'å¤©èåº§',14079,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14090,'å°„æ‰‹åº§',14079,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14091,'æ‘©ç¾¯åº§',14079,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14092,'è‡ªç„¶äººå±æ€§-ä¸ªäººä¿¡æ¯-å©šå§»çŠ¶å†µ',14068,1,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14093,'å·²å©š',14092,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14094,'æœªå©š',14092,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14095,'æœªçŸ¥',14092,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14096,'è‡ªç„¶äººå±æ€§-ä¸ªäººä¿¡æ¯-è¡€å‹',14068,1,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14097,'A',14096,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14098,'B',14096,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14099,'AB',14096,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14100,'O',14096,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14101,'æœªçŸ¥',14096,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14102,'è‡ªç„¶äººå±æ€§-ä¸ªäººä¿¡æ¯-èŒä¸š',14068,1,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14103,'é”€å”®',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14104,'å®¢æœ',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14105,'å¸‚åœº',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14106,'ç®¡ç†',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14107,'æ¸ é“',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14108,'è¡Œæ”¿',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14109,'å•†åŠ¡',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14110,'è¿è¥',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14111,'æ•°æ®åˆ†æ',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14112,'å”®å‰',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14113,'å”®å',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14114,'äº§å“ç»ç†',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14115,'å“ç‰Œç»ç†',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14116,'å’¨è¯¢',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14117,'ç­–åˆ’',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14118,'æ–‡æ¡ˆ',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14119,'å…¬å…³',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14120,'åª’ä»‹',14102,2,1,'2016-08-08 11:40:48','2016-08-18 03:49:06'),(14121,'ä¼åˆ’',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14122,'å¸‚åœºè°ƒç ”',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14123,'ä¸šåŠ¡æ‹“å±•',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14124,'å¹¿å‘Š',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14125,'ä¼šå±•',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14126,'å®¢æˆ·ç»ç†',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14127,'åˆ›æ„',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14128,'è®¾è®¡',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14129,'ç¾æœ¯',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14130,'ç­–åˆ’',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14131,'è´¢åŠ¡',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14132,'å®¡è®¡',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14133,'ç¨åŠ¡',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14134,'äººåŠ›èµ„æº',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14135,'ä¼šè®¡',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14136,'å‡ºçº³',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14137,'åŸ¹è®­',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14138,'çŒå¤´',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14139,'åå‹¤',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14140,'æ–‡ç§˜',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14141,'å‰å°',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14142,'é¡¹ç›®ç®¡ç†',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14143,'IT',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14144,'è¯åŠµ',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14145,'æŠ•èµ„',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14146,'é€šä¿¡',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14147,'æˆ¿åœ°äº§',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14148,'ä¿é™©',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14149,'æ±½è½¦',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14150,'ç”µå­',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14151,'ç”µå™¨',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14152,'æœè£…',14102,2,1,'2016-08-08 11:40:49','2016-08-18 03:49:06'),(14153,'çººç»‡',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14154,'èƒ½æº',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14155,'çŸ¿äº§',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14156,'ç‰©æµ',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14157,'ä»“å‚¨',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14158,'åŒ»è¯',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14159,'åŒ–å·¥',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14160,'å®‰å…¨ç®¡ç†',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14161,'åŒ–éªŒ',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14162,'è®¤è¯',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14163,'ä¾›åº”å•†',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14164,'é‡‡è´­',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14165,'ç¼–è¾‘',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14166,'äº’è”ç½‘',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14167,'ç”µå•†',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14168,'è½¯ä»¶',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14169,'å¼€å‘',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14170,'ç³»ç»Ÿé›†æˆ',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14171,'ç§»åŠ¨äº’è”ç½‘',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14172,'UEè®¾è®¡',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14173,'UIè®¾è®¡',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14174,'ç§»åŠ¨äº’è”ç½‘',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14175,'æ¸¸æˆç­–åˆ’',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14176,'æ¸¸æˆæ•°å€¼',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14177,'æ¸¸æˆå¼€å‘',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14178,'æ¸¸æˆè®¾è®¡',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14179,'æ¸¸æˆæµ‹è¯•',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14180,'ç¡¬ä»¶',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14181,'ä¿¡æ¯æ ‡å‡†åŒ–',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14182,'ç½‘ç»œå®‰å…¨',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14183,'ç”µä¿¡',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14184,'æˆ¿äº§',14102,2,1,'2016-08-08 11:40:50','2016-08-18 03:49:06'),(14185,'å»ºç­‘',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14186,'ç‰©ä¸š',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14187,'åœŸæœ¨',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14188,'è£…ä¿®',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14189,'å¸‚æ”¿å·¥ç¨‹',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14190,'é“è·¯',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14191,'æ¡¥æ¢',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14192,'éš§é“å·¥ç¨‹',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14193,'æ°´åˆ©',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14194,'æ¸¯å£',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14195,'æ’æ°´',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14196,'ç®¡é€š',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14197,'ç©ºè°ƒ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14198,'å›­æ—æ™¯è§‚è®¾è®¡',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14199,'åŸå¸‚è§„åˆ’è®¾è®¡',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14200,'é“¶è¡Œ',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14201,'è¿›å‡ºå£',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14202,'é£é™©æ§åˆ¶',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14203,'ç†è´¢',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14204,'èèµ„',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14205,'ä¿¡æ‰˜',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14206,'æ‹…ä¿',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14207,'æ‹å–',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14208,'å…¸å½“',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14209,'ç å®',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14210,'æ”¶è—',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14211,'è´¸æ˜“',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14212,'ä¹°æ‰‹',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14213,'æŠ¥å…³',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14214,'å¸æœº',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14215,'èˆªç©º',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14216,'å…¬äº¤',14102,2,1,'2016-08-08 11:40:51','2016-08-18 03:49:06'),(14217,'èˆ¹èˆ¶',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14218,'åˆ—è½¦',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14219,'å¿«é€’',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14220,'æ¬å®¶',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14221,'å®¶æ”¿',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14222,'å·¥ä¸šåˆ¶é€ ',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14223,'åŠå¯¼ä½“',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14224,'ä¼ å¯¼å™¨',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14225,'ç…§æ˜',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14226,'æ¿€å…‰',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14227,'ç”µå™¨',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14228,'äºŒæ‰‹è½¦',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14229,'4Såº—',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14230,'æ±½è½¦ç»´ä¿®',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14231,'æ±½è½¦ä¿å…»',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14232,'æœºæ¢°å·¥ç¨‹',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14233,'ç”Ÿç‰©',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14234,'åˆ¶è¯',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14235,'åŒ»ç–—å™¨æ¢°',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14236,'ä¼ åª’',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14237,'å°åˆ·',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14238,'å½±è§†',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14239,'åª’ä½“',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14240,'å‡ºç‰ˆ',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14241,'å¯¼æ¼”',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14242,'æ¼”å‘˜',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14243,'ç¼–å‰§',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14244,'è®°è€…',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14245,'ä½œå®¶',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14246,'ç½‘çº¢',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14247,'é…éŸ³',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14248,'æ³•å¾‹',14102,2,1,'2016-08-08 11:40:52','2016-08-18 03:49:06'),(14249,'æ•™è‚²',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14250,'ç¿»è¯‘',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14251,'å•†è¶…',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14252,'é…’åº—',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14253,'å¨±ä¹',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14254,'æ—…æ¸¸',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14255,'çƒ¹é¥ª',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14256,'ä¿å¥',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14257,'ç¾å®¹',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14258,'ç¾å‘',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14259,'å¥èº«',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14260,'åŒ»ç–—',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14261,'å†œä¸š',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14262,'ç§‘ç ”',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14263,'ç¯ä¿',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14264,'å…¬åŠ¡å‘˜',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14265,'å¿—æ„¿è€…',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14266,'ä¹‰å·¥',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14267,'æ…ˆå–„',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14268,'ä½“è‚²',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14269,'å¤–åŒ…æœåŠ¡',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14270,'å¿«é€Ÿæ¶ˆè´¹å“',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14271,'å¥¢ä¾ˆå“',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14272,'é‡å·¥ä¸š',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14273,'å…¶ä»–',14102,2,1,'2016-08-08 11:40:53','2016-08-18 03:49:06'),(14274,'è‡ªç„¶äººå±æ€§-ä¸ªäººä¿¡æ¯-å›½ç±',14068,1,0,'2016-08-08 11:40:53','2016-08-18 06:04:53'),(14275,'ä¸­å›½',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14276,'ç¾å›½',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14277,'æ—¥æœ¬',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14278,'è‹±å›½',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14279,'å¾·å›½',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14280,'éŸ©å›½',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14281,'é¦™æ¸¯',14274,2,0,'2016-08-08 11:40:53','2016-08-18 03:54:41'),(14282,'æ„å¤§åˆ©',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14283,'åŠ æ‹¿å¤§',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14284,'æ¾³å¤§åˆ©äºš',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14285,'æ³•å›½',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14286,'è²å¾‹å®¾',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14287,'ä»¥è‰²åˆ—',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14288,'è¥¿ç­ç‰™',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14289,'å°æ¹¾',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14290,'æ¯”åˆ©æ—¶',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14291,'æ–°åŠ å¡',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14292,'èŠ¬å…°',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14293,'è·å…°',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14294,'æ³¢å…°',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14295,'ç‘å£«',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14296,'ç‘å…¸',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14297,'æ³°å›½',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14298,'è‘¡è„ç‰™',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14299,'æ™ºåˆ©',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14300,'æ–°è¥¿å…°',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14301,'å·´è¥¿',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14302,'ä¸¹éº¦',14274,2,0,'2016-08-08 11:40:54','2016-08-18 03:54:41'),(14303,'å¥¥åœ°åˆ©',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14304,'è¶Šå—',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14305,'æ–¯é‡Œå…°å¡',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14306,'é©¬æ¥è¥¿äºš',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14307,'åœŸè€³å…¶',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14308,'å¤å·´',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14309,'ç›´å¸ƒç½—é™€',14274,2,0,'2016-08-08 11:40:55','2016-08-18 03:54:41'),(14310,'ä¹Œå…‹å…°',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14311,'é˜¿æ ¹å»·',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14312,'ä¿„ç½—æ–¯',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14313,'å¸Œè…Š',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14314,'æŒªå¨',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14315,'å—é',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14316,'å¢¨è¥¿å“¥',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14317,'çˆ±å°”å…°',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14318,'å°åº¦å°¼è¥¿äºš',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14319,'å°åº¦',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14320,'ä¹Œæ‹‰åœ­',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14321,'é˜¿è”é…‹',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14322,'æ·å…‹',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14323,'é˜¿æ›¼',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14324,'å¡æµ¦è·¯æ–¯',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14325,'åŒˆç‰™åˆ©',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14326,'ç½—é©¬å°¼äºš',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14327,'è‹æ ¼å…°',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14328,'ä¿åŠ åˆ©äºš',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14329,'æŸ¬åŸ”å¯¨',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14330,'æ–¯æ´›ä¼å…‹',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14331,'æ‹‰è„±ç»´äºš',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14332,'å†°å²›',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14333,'æ¾³é—¨',14274,2,0,'2016-08-08 11:40:56','2016-08-18 03:54:41'),(14334,'è‡ªç„¶äººå±æ€§-ä¸ªäººä¿¡æ¯-æ°‘æ—',14068,1,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14335,'æ±‰æ—',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14336,'è’™å¤æ—',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14337,'å›æ—',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14338,'è—æ—',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14339,'ç»´å¾å°”æ—',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14340,'è‹—æ—',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14341,'å½æ—',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14342,'å£®æ—',14334,2,1,'2016-08-08 11:40:56','2016-08-18 03:49:06'),(14343,'å¸ƒä¾æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14344,'æœé²œæ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14345,'æ»¡æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14346,'ä¾—æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14347,'ç‘¶æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14348,'ç™½æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14349,'åœŸå®¶æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14350,'å“ˆå°¼æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14351,'å“ˆè¨å…‹æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14352,'å‚£æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14353,'é»æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14354,'å‚ˆåƒ³æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14355,'ä½¤æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14356,'ç•²æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14357,'é«˜å±±æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14358,'æ‹‰ç¥œæ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14359,'æ°´æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14360,'ä¸œä¹¡æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14361,'çº³è¥¿æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14362,'æ™¯é¢‡æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14363,'æŸ¯å°”å…‹å­œæ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14364,'åœŸæ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14365,'è¾¾æ–¡å°”æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14366,'ä»«ä½¬æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14367,'ç¾Œæ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14368,'å¸ƒæœ—æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14369,'æ’’æ‹‰æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14370,'æ¯›éš¾æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14371,'ä»¡ä½¬æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14372,'é”¡ä¼¯æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14373,'é˜¿æ˜Œæ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14374,'æ™®ç±³æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14375,'å¡”å‰å…‹æ—',14334,2,1,'2016-08-08 11:40:57','2016-08-18 03:49:06'),(14376,'æ€’æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14377,'ä¹Œå­œåˆ«å…‹æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14378,'ä¿„ç½—æ–¯æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14379,'é„‚æ¸©å…‹æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14380,'å´©é¾™æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14381,'ä¿å®‰æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14382,'è£•å›ºæ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14383,'äº¬æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14384,'å¡”å¡”å°”æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14385,'ç‹¬é¾™æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14386,'é„‚ä¼¦æ˜¥æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14387,'èµ«å“²æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14388,'é—¨å·´æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14389,'çå·´æ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14390,'åŸºè¯ºæ—',14334,2,1,'2016-08-08 11:40:58','2016-08-18 03:49:06'),(14391,'è‡ªç„¶äººå±æ€§-åœ°ç†åŒºåŸŸ',-1,0,0,'2016-08-08 11:40:58','2016-08-18 03:55:32'),(14392,'è‡ªç„¶äººå±æ€§-åœ°ç†åŒºåŸŸ-çœ',14391,1,0,'2016-08-08 11:40:58','2016-08-18 03:55:34'),(14393,'åŒ—äº¬',14392,2,0,'2016-08-08 11:40:58','2016-08-23 09:35:05'),(14394,'å¤©æ´¥',14392,2,0,'2016-08-08 11:40:58','2016-08-23 09:35:06'),(14395,'ä¸Šæµ·',14392,2,0,'2016-08-08 11:40:58','2016-08-23 09:35:06'),(14396,'é‡åº†',14392,2,0,'2016-08-08 11:40:58','2016-08-23 09:35:09'),(14397,'æ²³åŒ—çœ',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14398,'å±±è¥¿çœ',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14399,'å°æ¹¾çœ',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14400,'è¾½å®çœ',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14401,'å‰æ—çœ',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14402,'é»‘é¾™æ±Ÿçœ',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14403,'æ±Ÿè‹çœ',14392,2,0,'2016-08-08 11:40:58','2016-08-18 03:54:41'),(14404,'æµ™æ±Ÿçœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14405,'å®‰å¾½çœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14406,'ç¦å»ºçœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14407,'æ±Ÿè¥¿çœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14408,'å±±ä¸œçœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14409,'æ²³å—çœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14410,'æ¹–åŒ—çœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14411,'æ¹–å—çœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14412,'å¹¿ä¸œçœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14413,'ç”˜è‚ƒçœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14414,'å››å·çœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14415,'è´µå·çœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14416,'æµ·å—çœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14417,'äº‘å—çœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14418,'é’æµ·çœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14419,'é™•è¥¿çœ',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14420,'å¹¿è¥¿å£®æ—è‡ªæ²»åŒº',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14421,'è¥¿è—è‡ªæ²»åŒº',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14422,'å®å¤å›æ—è‡ªæ²»åŒº',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14423,'æ–°ç–†ç»´å¾å°”è‡ªæ²»åŒº',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14424,'å†…è’™å¤è‡ªæ²»åŒº',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14425,'æ¾³é—¨ç‰¹åˆ«è¡Œæ”¿åŒº',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14426,'é¦™æ¸¯ç‰¹åˆ«è¡Œæ”¿åŒº',14392,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14427,'è‡ªç„¶äººå±æ€§-åœ°ç†åŒºåŸŸ-å¸‚',14391,1,0,'2016-08-08 11:40:59','2016-08-18 03:55:48'),(14428,'åŒ—äº¬å¸‚',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14429,'å¤©æ´¥å¸‚',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14430,'ä¸Šæµ·å¸‚',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14431,'é‡åº†å¸‚',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14432,'çŸ³å®¶åº„å¸‚',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14433,'å”å±±å¸‚',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14434,'ç§¦çš‡å²›å¸‚',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14435,'é‚¯éƒ¸å¸‚',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14436,'é‚¢å°å¸‚',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14437,'ä¿å®šå¸‚',14427,2,0,'2016-08-08 11:40:59','2016-08-18 03:54:41'),(14438,'å¼ å®¶å£å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14439,'æ‰¿å¾·å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14440,'æ²§å·å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14441,'å»ŠåŠå¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14442,'è¡¡æ°´å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14443,'å¤ªåŸå¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14444,'å¤§åŒå¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14445,'é˜³æ³‰å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14446,'é•¿æ²»å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14447,'æ™‹åŸå¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14448,'æœ”å·å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14449,'æ™‹ä¸­å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14450,'è¿åŸå¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14451,'å¿»å·å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14452,'ä¸´æ±¾å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14453,'å•æ¢å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14454,'å°åŒ—å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14455,'é«˜é›„å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14456,'åŸºéš†å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14457,'å°ä¸­å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14458,'å°å—å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14459,'æ–°ç«¹å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14460,'å˜‰ä¹‰å¸‚',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14461,'å°åŒ—å¿',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14462,'å®œå…°å¿',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14463,'æ¡ƒå›­å¿',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14464,'æ–°ç«¹å¿',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14465,'è‹—æ —å¿',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14466,'å°ä¸­å¿',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14467,'å½°åŒ–å¿',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14468,'å—æŠ•å¿',14427,2,0,'2016-08-08 11:41:00','2016-08-18 03:54:41'),(14469,'äº‘æ—å¿',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14470,'å˜‰ä¹‰å¿',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14471,'å°å—å¿',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14472,'é«˜é›„å¿',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14473,'å±ä¸œå¿',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14474,'æ¾æ¹–å¿',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14475,'å°ä¸œå¿',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14476,'èŠ±è²å¿',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14477,'æ²ˆé˜³å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14478,'å¤§è¿å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14479,'éå±±å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14480,'æŠšé¡ºå¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14481,'æœ¬æºªå¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14482,'ä¸¹ä¸œå¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14483,'é”¦å·å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14484,'è¥å£å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14485,'é˜œæ–°å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14486,'è¾½é˜³å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14487,'ç›˜é”¦å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14488,'é“å²­å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14489,'æœé˜³å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14490,'è‘«èŠ¦å²›å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14491,'é•¿æ˜¥å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14492,'å‰æ—å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14493,'å››å¹³å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14494,'è¾½æºå¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14495,'é€šåŒ–å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14496,'ç™½å±±å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14497,'æ¾åŸå¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14498,'ç™½åŸå¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14499,'å»¶è¾¹æœé²œæ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14500,'å“ˆå°”æ»¨å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14501,'é½é½å“ˆå°”å¸‚',14427,2,0,'2016-08-08 11:41:01','2016-08-18 03:54:41'),(14502,'é¹¤å²—å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14503,'åŒé¸­å±±å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14504,'é¸¡è¥¿å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14505,'å¤§åº†å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14506,'ä¼Šæ˜¥å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14507,'ç‰¡ä¸¹æ±Ÿå¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14508,'ä½³æœ¨æ–¯å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14509,'ä¸ƒå°æ²³å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14510,'é»‘æ²³å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14511,'ç»¥åŒ–å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14512,'å¤§å…´å®‰å²­åœ°åŒº',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14513,'å—äº¬å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14514,'æ— é”¡å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14515,'å¾å·å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14516,'å¸¸å·å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14517,'è‹å·å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14518,'å—é€šå¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14519,'è¿äº‘æ¸¯å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14520,'æ·®å®‰å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14521,'ç›åŸå¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14522,'æ‰¬å·å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14523,'é•‡æ±Ÿå¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14524,'æ³°å·å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14525,'å®¿è¿å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14526,'æ­å·å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14527,'å®æ³¢å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14528,'æ¸©å·å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14529,'å˜‰å…´å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14530,'æ¹–å·å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14531,'ç»å…´å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14532,'é‡‘åå¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14533,'è¡¢å·å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14534,'èˆŸå±±å¸‚',14427,2,0,'2016-08-08 11:41:02','2016-08-18 03:54:41'),(14535,'å°å·å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14536,'ä¸½æ°´å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14537,'åˆè‚¥å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14538,'èŠœæ¹–å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14539,'èšŒåŸ å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14540,'æ·®å—å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14541,'é©¬éå±±å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14542,'æ·®åŒ—å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14543,'é“œé™µå¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14544,'å®‰åº†å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14545,'é»„å±±å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14546,'æ»å·å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14547,'é˜œé˜³å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14548,'å®¿å·å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14549,'å·¢æ¹–å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14550,'å…­å®‰å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14551,'äº³å·å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14552,'æ± å·å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14553,'å®£åŸå¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14554,'ç¦å·å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14555,'å¦é—¨å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14556,'è†ç”°å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14557,'ä¸‰æ˜å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14558,'æ³‰å·å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14559,'æ¼³å·å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14560,'å—å¹³å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14561,'é¾™å²©å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14562,'å®å¾·å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14563,'å—æ˜Œå¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14564,'æ™¯å¾·é•‡å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14565,'èä¹¡å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14566,'ä¹æ±Ÿå¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14567,'æ–°ä½™å¸‚',14427,2,0,'2016-08-08 11:41:03','2016-08-18 03:54:41'),(14568,'é¹°æ½­å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14569,'èµ£å·å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14570,'å‰å®‰å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14571,'å®œæ˜¥å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14572,'æŠšå·å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14573,'ä¸Šé¥¶å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14574,'æµå—å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14575,'é’å²›å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14576,'æ·„åšå¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14577,'æ£åº„å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14578,'ä¸œè¥å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14579,'çƒŸå°å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14580,'æ½åŠå¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14581,'æµå®å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14582,'æ³°å®‰å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14583,'å¨æµ·å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14584,'æ—¥ç…§å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14585,'è±èŠœå¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14586,'ä¸´æ²‚å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14587,'å¾·å·å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14588,'èŠåŸå¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14589,'æ»¨å·å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14590,'èæ³½å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14591,'éƒ‘å·å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14592,'å¼€å°å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14593,'æ´›é˜³å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14594,'å¹³é¡¶å±±å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14595,'å®‰é˜³å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14596,'é¹¤å£å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14597,'æ–°ä¹¡å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14598,'ç„¦ä½œå¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14599,'æ¿®é˜³å¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14600,'è®¸æ˜Œå¸‚',14427,2,0,'2016-08-08 11:41:04','2016-08-18 03:54:41'),(14601,'æ¼¯æ²³å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14602,'ä¸‰é—¨å³¡å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14603,'å—é˜³å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14604,'å•†ä¸˜å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14605,'ä¿¡é˜³å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14606,'å‘¨å£å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14607,'é©»é©¬åº—å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14608,'æµæºå¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14609,'æ­¦æ±‰å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14610,'é»„çŸ³å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14611,'åå °å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14612,'è†å·å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14613,'å®œæ˜Œå¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14614,'è¥„æ¨Šå¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14615,'é„‚å·å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14616,'è†é—¨å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14617,'å­æ„Ÿå¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14618,'é»„å†ˆå¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14619,'å’¸å®å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14620,'éšå·å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14621,'ä»™æ¡ƒå¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14622,'å¤©é—¨å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14623,'æ½œæ±Ÿå¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14624,'ç¥å†œæ¶æ—åŒº',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14625,'æ©æ–½åœŸå®¶æ—è‹—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14626,'é•¿æ²™å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14627,'æ ªæ´²å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14628,'æ¹˜æ½­å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14629,'è¡¡é˜³å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14630,'é‚µé˜³å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14631,'å²³é˜³å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14632,'å¸¸å¾·å¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14633,'å¼ å®¶ç•Œå¸‚',14427,2,0,'2016-08-08 11:41:05','2016-08-18 03:54:41'),(14634,'ç›Šé˜³å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14635,'éƒ´å·å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14636,'æ°¸å·å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14637,'æ€€åŒ–å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14638,'å¨„åº•å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14639,'æ¹˜è¥¿åœŸå®¶æ—è‹—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14640,'å¹¿å·å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14641,'æ·±åœ³å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14642,'ç æµ·å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14643,'æ±•å¤´å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14644,'éŸ¶å…³å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14645,'ä½›å±±å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14646,'æ±Ÿé—¨å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14647,'æ¹›æ±Ÿå¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14648,'èŒ‚åå¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14649,'è‚‡åº†å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14650,'æƒ å·å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14651,'æ¢…å·å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14652,'æ±•å°¾å¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14653,'æ²³æºå¸‚',14427,2,0,'2016-08-08 11:41:06','2016-08-18 03:54:41'),(14654,'é˜³æ±Ÿå¸‚',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14655,'æ¸…è¿œå¸‚',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14656,'ä¸œèå¸‚',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14657,'ä¸­å±±å¸‚',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14658,'æ½®å·å¸‚',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14659,'æ­é˜³å¸‚',14427,2,0,'2016-08-08 11:41:07','2016-08-18 03:54:41'),(14660,'äº‘æµ®å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14661,'å…°å·å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14662,'é‡‘æ˜Œå¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14663,'ç™½é“¶å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14664,'å¤©æ°´å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14665,'å˜‰å³ªå…³å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14666,'æ­¦å¨å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14667,'å¼ æ–å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14668,'å¹³å‡‰å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14669,'é…’æ³‰å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14670,'åº†é˜³å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14671,'å®šè¥¿å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14672,'é™‡å—å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14673,'ä¸´å¤å›æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14674,'ç”˜å—è—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14675,'æˆéƒ½å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14676,'è‡ªè´¡å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14677,'æ”€æèŠ±å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14678,'æ³¸å·å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14679,'å¾·é˜³å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14680,'ç»µé˜³å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14681,'å¹¿å…ƒå¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14682,'é‚å®å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14683,'å†…æ±Ÿå¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14684,'ä¹å±±å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14685,'å—å……å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14686,'çœ‰å±±å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14687,'å®œå®¾å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14688,'å¹¿å®‰å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14689,'è¾¾å·å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14690,'é›…å®‰å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14691,'å·´ä¸­å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14692,'èµ„é˜³å¸‚',14427,2,0,'2016-08-08 11:41:08','2016-08-18 03:54:41'),(14693,'é˜¿åè—æ—ç¾Œæ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14694,'ç”˜å­œè—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14695,'å‡‰å±±å½æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14696,'æµå—å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14697,'é’å²›å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14698,'æ·„åšå¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14699,'æ£åº„å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14700,'ä¸œè¥å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14701,'çƒŸå°å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14702,'æ½åŠå¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14703,'æµå®å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14704,'æ³°å®‰å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14705,'å¨æµ·å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14706,'æ—¥ç…§å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14707,'è±èŠœå¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14708,'ä¸´æ²‚å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14709,'å¾·å·å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14710,'èŠåŸå¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14711,'æ»¨å·å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14712,'èæ³½å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14713,'è´µé˜³å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14714,'å…­ç›˜æ°´å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14715,'éµä¹‰å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14716,'å®‰é¡ºå¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14717,'é“œä»åœ°åŒº',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14718,'æ¯•èŠ‚åœ°åŒº',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14719,'é»”è¥¿å—å¸ƒä¾æ—è‹—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14720,'é»”ä¸œå—è‹—æ—ä¾—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14721,'é»”å—å¸ƒä¾æ—è‹—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14722,'æµ·å£å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14723,'ä¸‰äºšå¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14724,'äº”æŒ‡å±±å¸‚',14427,2,0,'2016-08-08 11:41:09','2016-08-18 03:54:41'),(14725,'ç¼æµ·å¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14726,'å„‹å·å¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14727,'æ–‡æ˜Œå¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14728,'ä¸‡å®å¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14729,'ä¸œæ–¹å¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14730,'æ¾„è¿ˆå¿',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14731,'å®šå®‰å¿',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14732,'å±¯æ˜Œå¿',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14733,'ä¸´é«˜å¿',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14734,'ç™½æ²™é»æ—è‡ªæ²»å¿',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14735,'æ˜Œæ±Ÿé»æ—è‡ªæ²»å¿',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14736,'ä¹ä¸œé»æ—è‡ªæ²»å¿',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14737,'é™µæ°´é»æ—è‡ªæ²»å¿',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14738,'ä¿äº­é»æ—è‹—æ—è‡ªæ²»å¿',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14739,'ç¼ä¸­é»æ—è‹—æ—è‡ªæ²»å¿',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14740,'æ˜†æ˜å¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14741,'æ›²é–å¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14742,'ç‰æºªå¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14743,'ä¿å±±å¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14744,'æ˜­é€šå¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14745,'ä¸½æ±Ÿå¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14746,'æ€èŒ…å¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14747,'ä¸´æ²§å¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14748,'æ–‡å±±å£®æ—è‹—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14749,'çº¢æ²³å“ˆå°¼æ—å½æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14750,'è¥¿åŒç‰ˆçº³å‚£æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14751,'æ¥šé›„å½æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14752,'å¤§ç†ç™½æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14753,'å¾·å®å‚£æ—æ™¯é¢‡æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14754,'æ€’æ±Ÿå‚ˆå‚ˆæ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14755,'è¿ªåº†è—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14756,'è¥¿å®å¸‚',14427,2,0,'2016-08-08 11:41:10','2016-08-18 03:54:41'),(14757,'æµ·ä¸œåœ°åŒº',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14758,'æµ·åŒ—è—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14759,'é»„å—è—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14760,'æµ·å—è—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14761,'æœæ´›è—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14762,'ç‰æ ‘è—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14763,'æµ·è¥¿è’™å¤æ—è—æ—è‡ªæ²»å·',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14764,'è¥¿å®‰å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14765,'é“œå·å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14766,'å®é¸¡å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14767,'å’¸é˜³å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14768,'æ¸­å—å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14769,'å»¶å®‰å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14770,'æ±‰ä¸­å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14771,'æ¦†æ—å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14772,'å®‰åº·å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14773,'å•†æ´›å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14774,'å—å®å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14775,'æŸ³å·å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14776,'æ¡‚æ—å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14777,'æ¢§å·å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14778,'åŒ—æµ·å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14779,'é˜²åŸæ¸¯å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14780,'é’¦å·å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14781,'è´µæ¸¯å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14782,'ç‰æ—å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14783,'ç™¾è‰²å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14784,'è´ºå·å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14785,'æ²³æ± å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14786,'æ¥å®¾å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14787,'å´‡å·¦å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14788,'æ‹‰è¨å¸‚',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14789,'é‚£æ›²åœ°åŒº',14427,2,0,'2016-08-08 11:41:11','2016-08-18 03:54:41'),(14790,'æ˜Œéƒ½åœ°åŒº',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14791,'å±±å—åœ°åŒº',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14792,'æ—¥å–€åˆ™åœ°åŒº',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14793,'é˜¿é‡Œåœ°åŒº',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14794,'æ—èŠåœ°åŒº',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14795,'é“¶å·å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14796,'çŸ³å˜´å±±å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14797,'å´å¿ å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14798,'å›ºåŸå¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14799,'ä¸­å«å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14800,'ä¹Œé²æœ¨é½å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14801,'å…‹æ‹‰ç›ä¾å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14802,'çŸ³æ²³å­å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14803,'é˜¿æ‹‰å°”å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14804,'å›¾æœ¨èˆ’å…‹å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14805,'äº”å®¶æ¸ å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14806,'åé²ç•ªå¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14807,'é˜¿å…‹è‹å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14808,'å–€ä»€å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14809,'å“ˆå¯†å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14810,'å’Œç”°å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14811,'é˜¿å›¾ä»€å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14812,'åº“å°”å‹’å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14813,'æ˜Œå‰å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14814,'é˜œåº·å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14815,'ç±³æ³‰å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14816,'åšä¹å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14817,'ä¼Šå®å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14818,'å¥å±¯å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14819,'å¡”åŸå¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14820,'ä¹Œè‹å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14821,'é˜¿å‹’æ³°å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14822,'å‘¼å’Œæµ©ç‰¹å¸‚',14427,2,0,'2016-08-08 11:41:12','2016-08-18 03:54:41'),(14823,'åŒ…å¤´å¸‚',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14824,'ä¹Œæµ·å¸‚',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14825,'èµ¤å³°å¸‚',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14826,'é€šè¾½å¸‚',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14827,'é„‚å°”å¤šæ–¯å¸‚',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14828,'å‘¼ä¼¦è´å°”å¸‚',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14829,'å·´å½¦æ·–å°”å¸‚',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14830,'ä¹Œå…°å¯Ÿå¸ƒå¸‚',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14831,'é”¡æ—éƒ­å‹’ç›Ÿ',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14832,'å…´å®‰ç›Ÿ',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14833,'é˜¿æ‹‰å–„ç›Ÿ',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14834,'æ¾³é—¨ç‰¹åˆ«è¡Œæ”¿åŒº',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14835,'é¦™æ¸¯ç‰¹åˆ«è¡Œæ”¿åŒº',14427,2,0,'2016-08-08 11:41:13','2016-08-18 03:54:41'),(14836,'æ¥è§¦ç‚¹åå¥½-äº¤æ˜“æ¸ é“åå¥½',-1,0,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14837,'æ¥è§¦ç‚¹åå¥½-äº¤æ˜“æ¸ é“åå¥½-å¾®ç›Ÿæ¸ é“äººç¾¤',14836,1,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14838,'æ—ºé“º',14837,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14839,'å…¶å®ƒ',14837,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14840,'ç”¨æˆ·ä»·å€¼-è´­ä¹°ä»·å€¼(RFM)',-1,0,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14841,'ç”¨æˆ·ä»·å€¼-è´­ä¹°ä»·å€¼(RFM)-æ€»è´­ä¹°é¢‘æ¬¡',14840,1,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14842,'1æ¬¡',14841,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14843,'2æ¬¡',14841,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14844,'3æ¬¡',14841,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14845,'4æ¬¡ä»¥ä¸Š',14841,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14846,'ç”¨æˆ·ä»·å€¼-è´­ä¹°ä»·å€¼(RFM)-æœ€åä¸€æ¬¡è´­ä¹°',14840,1,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14847,'æœ¬æœˆå†…',14846,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14848,'ä¸‰ä¸ªæœˆå†…',14846,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14849,'åŠå¹´å†…',14846,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14850,'ç”¨æˆ·ä»·å€¼-è´­ä¹°ä»·å€¼(RFM)-æœˆå‡è´­ä¹°é¢‘æ¬¡',14840,1,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14851,'1ï¼2æ¬¡',14850,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14852,'3æ¬¡ä»¥ä¸Š',14850,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14853,'ç”¨æˆ·ä»·å€¼-è´­ä¹°ä»·å€¼(RFM)-æ€»è®¡äº¤æ˜“é‡‘é¢',14840,1,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14854,'50ä»¥ä¸‹',14853,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14855,'51-100',14853,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14856,'101-150',14853,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14857,'151-200',14853,2,0,'2016-08-08 11:41:13','2016-08-18 03:48:52'),(14858,'201-300',14853,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14859,'300ä»¥ä¸Š',14853,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14860,'ç”¨æˆ·ä»·å€¼-è´­ä¹°ä»·å€¼(RFM)-å®¢å•ä»·',14840,1,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14861,'50ä»¥ä¸‹',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14862,'51-100',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14863,'101-150',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14864,'151-200',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14865,'201-300',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14866,'300ä»¥ä¸Š',14860,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14867,'å“ç‰Œè”ç³»å¼ºåº¦-ç”¨æˆ·æµå¤±æ¦‚ç‡',-1,0,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14868,'å“ç‰Œè”ç³»å¼ºåº¦-ç”¨æˆ·æµå¤±æ¦‚ç‡-æ”¯ä»˜çŠ¶æ€',14867,1,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14869,'äº¤æ˜“å®Œæˆ',14868,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14870,'äº¤æ˜“å…³é—­',14868,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14871,'å¾…æ”¯ä»˜',14868,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14872,'å“ç‰Œè”ç³»å¼ºåº¦-ç”¨æˆ·æµå¤±æ¦‚ç‡-è´­ä¹°äººç¾¤',14867,1,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14873,'æ˜¯',14872,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52'),(14874,'å¦',14872,2,0,'2016-08-08 11:41:14','2016-08-18 03:48:52');
 /*!40000 ALTER TABLE `taggroup` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2767,9 +2767,9 @@ CREATE TABLE `task_run_log` (
   `end_time` datetime(6) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `task_type` tinyint(4) NOT NULL DEFAULT '2' COMMENT 'ÈÎÎñÊÇ·ñÔÚÇ°¶ËÏÔÊ¾,1:ÏÔÊ¾,2:²»ÏÔÊ¾',
+  `task_type` tinyint(4) NOT NULL DEFAULT '2' COMMENT 'ä»»åŠ¡æ˜¯å¦åœ¨å‰ç«¯æ˜¾ç¤º,1:æ˜¾ç¤º,2:ä¸æ˜¾ç¤º',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ºóÌ¨ÈÎÎñÖ´ĞĞÈÕÖ¾';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='åå°ä»»åŠ¡æ‰§è¡Œæ—¥å¿—';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2790,22 +2790,22 @@ DROP TABLE IF EXISTS `task_schedule`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_schedule` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `task_name` varchar(45) DEFAULT NULL COMMENT 'ÈÎÎñÀàĞÍ',
-  `task_descript` varchar(45) DEFAULT NULL COMMENT 'ÈÎÎñÃèÊö',
-  `task_type` varchar(45) DEFAULT NULL COMMENT 'ÈÎÎñÀàĞÍ',
-  `start_time` datetime DEFAULT NULL COMMENT 'ÈÎÎñ¿ªÊ¼Ê±¼ä£¬Îª¿Õ±íÊ¾Á¢¼´Æô¶¯',
-  `end_time` datetime DEFAULT NULL COMMENT 'ÈÎÎñ½áÊøÊ±¼ä£¬Îª¿Õ±íÊ¾Ã»ÓĞ½áÊøÊ±¼ä',
-  `interval_minutes` float DEFAULT NULL COMMENT 'ÈÎÎñÔËĞĞ¼ä¸ôÊ±¼ä,Ğ¡ÓÚµÈÓÚ0ÔòÖ»ÔËĞĞ1´Î',
-  `schedule` varchar(45) DEFAULT NULL COMMENT 'Ö´ĞĞÊ±¼ä°²ÅÅcron table,Èç¹ûÎª¿Õ£¬±íÊ¾Ö»ÔËĞĞ1´Î',
-  `service_name` varchar(512) DEFAULT NULL COMMENT '¶¨Ê±Ö´ĞĞµÄserviceÀàÃû',
-  `task_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'ÈÎÎñ×´Ì¬,0:¿ÉÔËĞĞ,1:²»¿ÉÔËĞĞ',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç,0:Õı³£,1:ÒÑÉ¾³ı',
+  `task_name` varchar(45) DEFAULT NULL COMMENT 'ä»»åŠ¡ç±»å‹',
+  `task_descript` varchar(45) DEFAULT NULL COMMENT 'ä»»åŠ¡æè¿°',
+  `task_type` varchar(45) DEFAULT NULL COMMENT 'ä»»åŠ¡ç±»å‹',
+  `start_time` datetime DEFAULT NULL COMMENT 'ä»»åŠ¡å¼€å§‹æ—¶é—´ï¼Œä¸ºç©ºè¡¨ç¤ºç«‹å³å¯åŠ¨',
+  `end_time` datetime DEFAULT NULL COMMENT 'ä»»åŠ¡ç»“æŸæ—¶é—´ï¼Œä¸ºç©ºè¡¨ç¤ºæ²¡æœ‰ç»“æŸæ—¶é—´',
+  `interval_minutes` float DEFAULT NULL COMMENT 'ä»»åŠ¡è¿è¡Œé—´éš”æ—¶é—´,å°äºç­‰äº0åˆ™åªè¿è¡Œ1æ¬¡',
+  `schedule` varchar(45) DEFAULT NULL COMMENT 'æ‰§è¡Œæ—¶é—´å®‰æ’cron table,å¦‚æœä¸ºç©ºï¼Œè¡¨ç¤ºåªè¿è¡Œ1æ¬¡',
+  `service_name` varchar(512) DEFAULT NULL COMMENT 'å®šæ—¶æ‰§è¡Œçš„serviceç±»å',
+  `task_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'ä»»åŠ¡çŠ¶æ€,0:å¯è¿è¡Œ,1:ä¸å¯è¿è¡Œ',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°,0:æ­£å¸¸,1:å·²åˆ é™¤',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `campaign_head_id` int(11) DEFAULT NULL COMMENT '¹ØÁªcampagin_head±íµÄid',
+  `campaign_head_id` int(11) DEFAULT NULL COMMENT 'å…³è”campagin_headè¡¨çš„id',
   `campaign_item_id` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2678 DEFAULT CHARSET=utf8 COMMENT='ÈÎÎñ±àÅÅ±í';
+) ENGINE=InnoDB AUTO_INCREMENT=2678 DEFAULT CHARSET=utf8 COMMENT='ä»»åŠ¡ç¼–æ’è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2814,7 +2814,7 @@ CREATE TABLE `task_schedule` (
 
 LOCK TABLES `task_schedule` WRITE;
 /*!40000 ALTER TABLE `task_schedule` DISABLE KEYS */;
-INSERT INTO `task_schedule` VALUES (1082,'ÉÏ´«¿Í»§±êÇ©Í¬²½ÈÎÎñ',NULL,NULL,NULL,NULL,1,NULL,'originalDataCustomTagScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1083,'ÉÏ´«ÂñµãÍ³¼ÆÍ¬²½ÈÎÎñ',NULL,NULL,NULL,NULL,1,NULL,'originalDataArchPointScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1084,'ÉÏ´«ÓÃ»§µÇÂ¼Í¬²½ÈÎÎñ',NULL,NULL,NULL,NULL,1,NULL,'originalDataLoginScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1085,'ÉÏ´«»áÔ±ĞÅÏ¢Í¬²½ÈÎÎñ',NULL,NULL,NULL,NULL,1,NULL,'originalDataMemberScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1086,'ÉÏ´«Ö§¸¶¼ÇÂ¼Í¬²½ÈÎÎñ',NULL,NULL,NULL,NULL,1,NULL,'originalDataPaymentScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1087,'ÉÏ´«ÈË¿ÚÊôĞÔÍ¬²½ÈÎÎñ',NULL,NULL,NULL,NULL,1,NULL,'originalDataPopulationServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1088,'ÉÏ´«¹ºÎï¼ÇÂ¼Í¬²½ÈÎÎñ',NULL,NULL,NULL,NULL,1,NULL,'originalDataShoppingScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1089,'dataPartySyncTaskServiceImpl',NULL,NULL,NULL,NULL,1,NULL,'dataPartySyncTaskServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(1090,'dataPartySyncMongoTaskServiceImpl',NULL,NULL,NULL,NULL,1,NULL,'dataPartySyncMongoTaskServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(1091,'WechatMemberScheduleToPopulationServiceImpl',NULL,NULL,NULL,NULL,1,NULL,'WechatMemberScheduleToPopulationServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1092,'ImgtextAssetSyncServiceImplTask',NULL,NULL,NULL,NULL,1,'','ImgtextAssetSyncServiceImpl',1,1,NULL,'2016-09-05 09:36:08',NULL,NULL),(1098,'»ñÈ¡¸öÈËºÅÁĞ±íÈÎÎñÆô¶¯',NULL,NULL,NULL,NULL,NULL,'0 0 1 ? * *','GetH5PersonalListImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1099,'GetPersonContactsListTask',NULL,NULL,NULL,NULL,NULL,'0 0 1 ? * *','GetPersonContactsList',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1100,'GetH5PersonalGroupListImplTask',NULL,NULL,NULL,NULL,NULL,'0 0 1 ? * *','GetH5PersonalGroupListImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1101,'WechatToWechatAssetSyncServiceImplTask',NULL,NULL,NULL,NULL,1,'','WechatToWechatAssetSyncServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1102,'GetH5PubListServiceImplTask',NULL,NULL,NULL,NULL,NULL,'0 0 1 ? * *','GetH5PubListServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1103,'GetPubFansListServiceImplTask',NULL,NULL,NULL,NULL,NULL,'0 0 1 ? * *','GetPubFansListServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1232,'DataPartyTagSyncMongoTaskImpl',NULL,NULL,NULL,NULL,2,NULL,'DataPartyTagSyncMongoTaskImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(1233,'DataSegmentSyncTaskServiceImpl',NULL,NULL,NULL,NULL,1,NULL,'DataSegmentSyncTaskServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1234,'DataSegmentClearTaskServiceImpl','Ã¿ÌìÁè³¿1µãÇå³ımongodbµÄsegmentÊı¾İ',NULL,NULL,NULL,NULL,'0 0 1 ? * *','DataSegmentClearTaskServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1304,'AudienceCountTaskImpl',NULL,NULL,NULL,NULL,1,NULL,'AudienceCountTaskImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1449,'CustomTagAudienceCountTask',NULL,NULL,NULL,NULL,1,NULL,'CustomTagAudienceCountTask',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1727,'ÉÏ´«ÎÄ¼ş×Ô¶¨Òå±êÇ©Í¬²½ÈÎÎñ',NULL,NULL,NULL,NULL,1,NULL,'CustomTagMappingSyncTaskServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(2491,'»º´æÃ¿ÌìµÄ¹«ÖÚºÅ£¬¶©ÔÄºÅµÄÈËÊı£¬¸öÈËºÅµÄºÃÓÑÊı',NULL,NULL,'2016-07-26 00:00:00',NULL,1440,NULL,'CacheWechatMemberCountByTypeServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(2500,'consumptionLastTimeTask',NULL,NULL,NULL,NULL,1,'','consumptionLastTimeTagImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(2544,'TagDataIsShoppingUserServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 1/8 * * * *','TagDataIsShoppingUserServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2546,'TagDataLastTransTimeServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 2/8 * * * *','TagDataIsShoppingUserServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2547,'TagDataShoppingDataStatusServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 3/8 * * * *','TagDataShoppingDataStatusServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2548,'TagDataSingleMonthShoppingCountServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 4/8 * * * *','TagDataSingleMonthShoppingCountServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2549,'TagDataTotalIncomeAmountServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 5/8 * * * *','TagDataTotalIncomeAmountServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2550,'TagDataTotalShoppingCountServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 6/8 * * * *','TagDataTotalShoppingCountServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2551,'TagDataWeimobServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 7/8 * * * *','TagDataWeimobServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2552,'TagDataAverageIncomeAmountServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 8/8 * * * *','TagDataAverageIncomeAmountServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2602,NULL,NULL,NULL,'2016-08-15 14:56:00','2016-08-22 14:56:00',NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-08-15 14:57:55','2016-08-22 06:56:30',4,'1471244201145'),(2603,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-08-15 14:57:55','2016-08-22 06:56:30',4,'1471244203688'),(2604,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionSaveAudienceTask',1,1,'2016-08-15 14:57:55','2016-08-22 06:56:30',4,'1471244206985'),(2617,'campaignActionPubWechatSendH5Task',NULL,NULL,NULL,NULL,1,NULL,'campaignActionPubWechatSendH5Task',1,1,'2016-08-15 14:59:43','2016-09-05 09:39:48',5,'1471244293612'),(2618,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionSaveAudienceTask',1,1,'2016-08-15 14:59:43','2016-08-22 06:58:30',5,'1471244301610'),(2619,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-08-15 14:59:43','2016-08-22 06:58:30',5,'1471244304672'),(2620,NULL,NULL,NULL,'2016-08-15 14:58:00','2016-08-22 14:58:00',NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-08-15 14:59:43','2016-08-22 06:58:30',5,'1471244331664'),(2624,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-08-17 13:38:37','2016-08-26 12:57:09',10,'1471412145831'),(2625,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionSaveAudienceTask',1,1,'2016-08-17 13:38:37','2016-08-26 12:57:09',10,'1471412195502'),(2626,NULL,NULL,NULL,NULL,NULL,1,NULL,'campaignActionPubWechatSendH5Task',1,1,'2016-08-17 13:38:37','2016-09-05 09:43:44',10,'1471412225493'),(2640,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-09-07 11:22:13','2016-09-07 03:22:16',1,'1473216720873'),(2641,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionPubWechatSendH5Task',1,1,'2016-09-07 11:22:13','2016-09-07 03:22:16',1,'1473218429180'),(2642,NULL,NULL,NULL,'2016-09-07 11:20:00','2016-09-14 11:20:00',NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-09-07 11:22:13','2016-09-07 03:22:13',1,'1473218443596'),(2643,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignAudienceTargetTask',1,1,'2016-09-08 18:17:53','2016-09-12 06:25:42',2,'1473329857332'),(2644,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-09-08 18:22:22','2016-09-08 10:22:24',4,'1473330142260'),(2645,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignAudienceTargetTask',1,1,'2016-09-09 11:13:41','2016-09-12 06:25:43',6,'1473390819119'),(2646,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-09-09 11:14:26','2016-09-12 06:25:44',7,'1473390865451'),(2647,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignDecisionWechatReadTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:45',8,'1473390886031'),(2648,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignDecisionWechatForwardTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:47',8,'1473390887262'),(2649,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignDecisionWechatSubscribeTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:48',8,'1473390888027'),(2650,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignDecisionWechatPrivFriendTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:49',8,'1473390888857'),(2651,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignDecisionTagTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:50',8,'1473390889760'),(2652,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionPrvWechatSendInfoTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:50',8,'1473390904360'),(2653,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionWaitTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:51',8,'1473390905602'),(2654,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionSaveAudienceTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:52',8,'1473390907313'),(2655,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionSetTagTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:53',8,'1473390908559'),(2656,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionPubWechatSendH5Task',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:54',8,'1473390909888'),(2657,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionWechatSendH5Task',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:54',8,'1473390910945'),(2658,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionPrvWechatSendInfoTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:55',8,'1473390912161'),(2660,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-09-09 11:40:38','2016-09-12 06:25:56',11,'1473392117431'),(2661,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignDecisionWechatForwardTask',1,1,'2016-09-09 11:40:38','2016-09-12 06:25:57',11,'1473392431784'),(2662,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignDecisionWechatReadTask',1,1,'2016-09-09 11:40:38','2016-09-12 06:25:58',11,'1473392435482'),(2663,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionPubWechatSendH5Task',1,1,'2016-09-09 11:40:38','2016-09-12 06:25:59',11,'1473392439809'),(2665,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignDecisionWechatForwardTask',1,1,'2016-09-09 14:36:27','2016-09-09 06:36:27',12,'1473402894135'),(2666,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignAudienceTargetTask',1,1,'2016-09-09 14:36:27','2016-09-09 06:36:27',12,'1473402926413'),(2667,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-09-09 14:36:27','2016-09-09 06:36:27',12,'1473402971769'),(2668,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,0,'2016-09-13 09:06:12','2016-09-13 01:06:12',13,'1473728763367'),(2669,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignAudienceTargetTask',1,0,'2016-09-13 09:06:45','2016-09-13 01:06:45',14,'1473728803121'),(2670,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,0,'2016-09-13 10:16:16','2016-09-13 02:16:16',15,'1473732974467'),(2672,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,0,'2016-09-13 10:19:22','2016-09-13 02:19:22',16,'1473733090565'),(2676,NULL,NULL,NULL,'2016-09-13 00:00:00','2016-09-20 00:00:00',NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-09-13 10:51:50','2016-09-13 02:51:51',17,'1473735070428'),(2677,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-09-13 10:51:50','2016-09-13 02:51:52',17,'1473735078417');
+INSERT INTO `task_schedule` VALUES (1082,'ä¸Šä¼ å®¢æˆ·æ ‡ç­¾åŒæ­¥ä»»åŠ¡',NULL,NULL,NULL,NULL,1,NULL,'originalDataCustomTagScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1083,'ä¸Šä¼ åŸ‹ç‚¹ç»Ÿè®¡åŒæ­¥ä»»åŠ¡',NULL,NULL,NULL,NULL,1,NULL,'originalDataArchPointScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1084,'ä¸Šä¼ ç”¨æˆ·ç™»å½•åŒæ­¥ä»»åŠ¡',NULL,NULL,NULL,NULL,1,NULL,'originalDataLoginScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1085,'ä¸Šä¼ ä¼šå‘˜ä¿¡æ¯åŒæ­¥ä»»åŠ¡',NULL,NULL,NULL,NULL,1,NULL,'originalDataMemberScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1086,'ä¸Šä¼ æ”¯ä»˜è®°å½•åŒæ­¥ä»»åŠ¡',NULL,NULL,NULL,NULL,1,NULL,'originalDataPaymentScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1087,'ä¸Šä¼ äººå£å±æ€§åŒæ­¥ä»»åŠ¡',NULL,NULL,NULL,NULL,1,NULL,'originalDataPopulationServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1088,'ä¸Šä¼ è´­ç‰©è®°å½•åŒæ­¥ä»»åŠ¡',NULL,NULL,NULL,NULL,1,NULL,'originalDataShoppingScheduleServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1089,'dataPartySyncTaskServiceImpl',NULL,NULL,NULL,NULL,1,NULL,'dataPartySyncTaskServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(1090,'dataPartySyncMongoTaskServiceImpl',NULL,NULL,NULL,NULL,1,NULL,'dataPartySyncMongoTaskServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(1091,'WechatMemberScheduleToPopulationServiceImpl',NULL,NULL,NULL,NULL,1,NULL,'WechatMemberScheduleToPopulationServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1092,'ImgtextAssetSyncServiceImplTask',NULL,NULL,NULL,NULL,1,'','ImgtextAssetSyncServiceImpl',1,1,NULL,'2016-09-05 09:36:08',NULL,NULL),(1098,'è·å–ä¸ªäººå·åˆ—è¡¨ä»»åŠ¡å¯åŠ¨',NULL,NULL,NULL,NULL,NULL,'0 0 1 ? * *','GetH5PersonalListImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1099,'GetPersonContactsListTask',NULL,NULL,NULL,NULL,NULL,'0 0 1 ? * *','GetPersonContactsList',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1100,'GetH5PersonalGroupListImplTask',NULL,NULL,NULL,NULL,NULL,'0 0 1 ? * *','GetH5PersonalGroupListImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1101,'WechatToWechatAssetSyncServiceImplTask',NULL,NULL,NULL,NULL,1,'','WechatToWechatAssetSyncServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1102,'GetH5PubListServiceImplTask',NULL,NULL,NULL,NULL,NULL,'0 0 1 ? * *','GetH5PubListServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1103,'GetPubFansListServiceImplTask',NULL,NULL,NULL,NULL,NULL,'0 0 1 ? * *','GetPubFansListServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1232,'DataPartyTagSyncMongoTaskImpl',NULL,NULL,NULL,NULL,2,NULL,'DataPartyTagSyncMongoTaskImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(1233,'DataSegmentSyncTaskServiceImpl',NULL,NULL,NULL,NULL,1,NULL,'DataSegmentSyncTaskServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1234,'DataSegmentClearTaskServiceImpl','æ¯å¤©å‡Œæ™¨1ç‚¹æ¸…é™¤mongodbçš„segmentæ•°æ®',NULL,NULL,NULL,NULL,'0 0 1 ? * *','DataSegmentClearTaskServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1304,'AudienceCountTaskImpl',NULL,NULL,NULL,NULL,1,NULL,'AudienceCountTaskImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1449,'CustomTagAudienceCountTask',NULL,NULL,NULL,NULL,1,NULL,'CustomTagAudienceCountTask',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(1727,'ä¸Šä¼ æ–‡ä»¶è‡ªå®šä¹‰æ ‡ç­¾åŒæ­¥ä»»åŠ¡',NULL,NULL,NULL,NULL,1,NULL,'CustomTagMappingSyncTaskServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(2491,'ç¼“å­˜æ¯å¤©çš„å…¬ä¼—å·ï¼Œè®¢é˜…å·çš„äººæ•°ï¼Œä¸ªäººå·çš„å¥½å‹æ•°',NULL,NULL,'2016-07-26 00:00:00',NULL,1440,NULL,'CacheWechatMemberCountByTypeServiceImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(2500,'consumptionLastTimeTask',NULL,NULL,NULL,NULL,1,'','consumptionLastTimeTagImpl',1,1,NULL,'2016-08-26 12:57:09',NULL,NULL),(2544,'TagDataIsShoppingUserServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 1/8 * * * *','TagDataIsShoppingUserServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2546,'TagDataLastTransTimeServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 2/8 * * * *','TagDataIsShoppingUserServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2547,'TagDataShoppingDataStatusServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 3/8 * * * *','TagDataShoppingDataStatusServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2548,'TagDataSingleMonthShoppingCountServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 4/8 * * * *','TagDataSingleMonthShoppingCountServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2549,'TagDataTotalIncomeAmountServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 5/8 * * * *','TagDataTotalIncomeAmountServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2550,'TagDataTotalShoppingCountServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 6/8 * * * *','TagDataTotalShoppingCountServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2551,'TagDataWeimobServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 7/8 * * * *','TagDataWeimobServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2552,'TagDataAverageIncomeAmountServiceImpl',NULL,NULL,NULL,NULL,NULL,'0 8/8 * * * *','TagDataAverageIncomeAmountServiceImpl',1,1,NULL,'2016-09-01 08:35:46',NULL,NULL),(2602,NULL,NULL,NULL,'2016-08-15 14:56:00','2016-08-22 14:56:00',NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-08-15 14:57:55','2016-08-22 06:56:30',4,'1471244201145'),(2603,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-08-15 14:57:55','2016-08-22 06:56:30',4,'1471244203688'),(2604,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionSaveAudienceTask',1,1,'2016-08-15 14:57:55','2016-08-22 06:56:30',4,'1471244206985'),(2617,'campaignActionPubWechatSendH5Task',NULL,NULL,NULL,NULL,1,NULL,'campaignActionPubWechatSendH5Task',1,1,'2016-08-15 14:59:43','2016-09-05 09:39:48',5,'1471244293612'),(2618,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionSaveAudienceTask',1,1,'2016-08-15 14:59:43','2016-08-22 06:58:30',5,'1471244301610'),(2619,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-08-15 14:59:43','2016-08-22 06:58:30',5,'1471244304672'),(2620,NULL,NULL,NULL,'2016-08-15 14:58:00','2016-08-22 14:58:00',NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-08-15 14:59:43','2016-08-22 06:58:30',5,'1471244331664'),(2624,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-08-17 13:38:37','2016-08-26 12:57:09',10,'1471412145831'),(2625,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionSaveAudienceTask',1,1,'2016-08-17 13:38:37','2016-08-26 12:57:09',10,'1471412195502'),(2626,NULL,NULL,NULL,NULL,NULL,1,NULL,'campaignActionPubWechatSendH5Task',1,1,'2016-08-17 13:38:37','2016-09-05 09:43:44',10,'1471412225493'),(2640,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-09-07 11:22:13','2016-09-07 03:22:16',1,'1473216720873'),(2641,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionPubWechatSendH5Task',1,1,'2016-09-07 11:22:13','2016-09-07 03:22:16',1,'1473218429180'),(2642,NULL,NULL,NULL,'2016-09-07 11:20:00','2016-09-14 11:20:00',NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-09-07 11:22:13','2016-09-07 03:22:13',1,'1473218443596'),(2643,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignAudienceTargetTask',1,1,'2016-09-08 18:17:53','2016-09-12 06:25:42',2,'1473329857332'),(2644,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-09-08 18:22:22','2016-09-08 10:22:24',4,'1473330142260'),(2645,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignAudienceTargetTask',1,1,'2016-09-09 11:13:41','2016-09-12 06:25:43',6,'1473390819119'),(2646,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-09-09 11:14:26','2016-09-12 06:25:44',7,'1473390865451'),(2647,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignDecisionWechatReadTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:45',8,'1473390886031'),(2648,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignDecisionWechatForwardTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:47',8,'1473390887262'),(2649,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignDecisionWechatSubscribeTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:48',8,'1473390888027'),(2650,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignDecisionWechatPrivFriendTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:49',8,'1473390888857'),(2651,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignDecisionTagTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:50',8,'1473390889760'),(2652,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionPrvWechatSendInfoTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:50',8,'1473390904360'),(2653,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionWaitTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:51',8,'1473390905602'),(2654,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionSaveAudienceTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:52',8,'1473390907313'),(2655,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionSetTagTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:53',8,'1473390908559'),(2656,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionPubWechatSendH5Task',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:54',8,'1473390909888'),(2657,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionWechatSendH5Task',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:54',8,'1473390910945'),(2658,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionPrvWechatSendInfoTask',1,1,'2016-09-09 11:16:03','2016-09-12 06:25:55',8,'1473390912161'),(2660,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-09-09 11:40:38','2016-09-12 06:25:56',11,'1473392117431'),(2661,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignDecisionWechatForwardTask',1,1,'2016-09-09 11:40:38','2016-09-12 06:25:57',11,'1473392431784'),(2662,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignDecisionWechatReadTask',1,1,'2016-09-09 11:40:38','2016-09-12 06:25:58',11,'1473392435482'),(2663,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignActionPubWechatSendH5Task',1,1,'2016-09-09 11:40:38','2016-09-12 06:25:59',11,'1473392439809'),(2665,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignDecisionWechatForwardTask',1,1,'2016-09-09 14:36:27','2016-09-09 06:36:27',12,'1473402894135'),(2666,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignAudienceTargetTask',1,1,'2016-09-09 14:36:27','2016-09-09 06:36:27',12,'1473402926413'),(2667,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-09-09 14:36:27','2016-09-09 06:36:27',12,'1473402971769'),(2668,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,0,'2016-09-13 09:06:12','2016-09-13 01:06:12',13,'1473728763367'),(2669,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'campaignAudienceTargetTask',1,0,'2016-09-13 09:06:45','2016-09-13 01:06:45',14,'1473728803121'),(2670,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,0,'2016-09-13 10:16:16','2016-09-13 02:16:16',15,'1473732974467'),(2672,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,0,'2016-09-13 10:19:22','2016-09-13 02:19:22',16,'1473733090565'),(2676,NULL,NULL,NULL,'2016-09-13 00:00:00','2016-09-20 00:00:00',NULL,NULL,'campaignTriggerTimeTask',1,1,'2016-09-13 10:51:50','2016-09-13 02:51:51',17,'1473735070428'),(2677,NULL,NULL,NULL,NULL,NULL,60,NULL,'campaignAudienceTargetTask',1,1,'2016-09-13 10:51:50','2016-09-13 02:51:52',17,'1473735078417');
 /*!40000 ALTER TABLE `task_schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2861,7 +2861,7 @@ CREATE TABLE `tb_app` (
 
 LOCK TABLES `tb_app` WRITE;
 /*!40000 ALTER TABLE `tb_app` DISABLE KEYS */;
-INSERT INTO `tb_app` VALUES ('ff80808155fca4490155fcb0c1110002','DMP',NULL,NULL,NULL,'',1,NULL,'2016-07-18 14:28:10',NULL,'002001',NULL,NULL,NULL,'','DMP','',NULL,'0','0',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbb7f990016','ÊĞ³¡ÓªÏú',NULL,NULL,NULL,'',2,NULL,'2016-07-18 14:39:54',NULL,'002001',NULL,NULL,NULL,'','ÊĞ³¡ÓªÏú','',NULL,'0','0',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbc0b590018','Êı¾İ¶´²ì',NULL,NULL,NULL,'',3,NULL,'2016-07-18 14:40:30',NULL,'002001',NULL,NULL,NULL,'','Êı¾İ¶´²ì','',NULL,'0','0',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `tb_app` VALUES ('ff80808155fca4490155fcb0c1110002','DMP',NULL,NULL,NULL,'',1,NULL,'2016-07-18 14:28:10',NULL,'002001',NULL,NULL,NULL,'','DMP','',NULL,'0','0',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbb7f990016','å¸‚åœºè¥é”€',NULL,NULL,NULL,'',2,NULL,'2016-07-18 14:39:54',NULL,'002001',NULL,NULL,NULL,'','å¸‚åœºè¥é”€','',NULL,'0','0',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbc0b590018','æ•°æ®æ´å¯Ÿ',NULL,NULL,NULL,'',3,NULL,'2016-07-18 14:40:30',NULL,'002001',NULL,NULL,NULL,'','æ•°æ®æ´å¯Ÿ','',NULL,'0','0',NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tb_app` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2914,7 +2914,7 @@ CREATE TABLE `tb_ci_element` (
 
 LOCK TABLES `tb_ci_element` WRITE;
 /*!40000 ALTER TABLE `tb_ci_element` DISABLE KEYS */;
-INSERT INTO `tb_ci_element` VALUES ('007002','portal_toggle_show_flg','Ò»¼¶²Ëµ¥Ñ¡Ïî¿¨ÊÇ·ñÏÔÊ¾ËµÃ÷ĞÅÏ¢','false:²»ÏÔÊ¾ true:ÏÔÊ¾','true','boolean'),('007003','portal_one_tab_show_flg','Ò»¼¶²Ëµ¥Ñ¡Ïî¿¨ÊÇ·ñÏÔÊ¾','false:ÏÔÊ¾Á½²ã true:ÏÔÊ¾Ò»²ã','false','boolean'),('007004','portal_page_show_type_flg','Ò¶×Ó½ÚµãÑ¡Ïî¿¨ÊÇ·ñÏÔÊ¾','false:²»Ê¹ÓÃ true:Ê¹ÓÃTab','true','boolean'),('007005','portal_redis_deploy_flg','PortalÏµÍ³ÊÇ·ñÊ¹ÓÃredis»º´æ','false:²»Ê¹ÓÃ true:Ê¹ÓÃ  Ó¦ÓÃÄ£¿éÈç¹ûÃ»ÓĞredis»º´æ£¬redis»º´æ¼´Ê¹ÉèÖÃÎªtrueÒ²ÎŞ·¨Ê¹ÓÃ¡£','false','boolean'),('007007','portal_tree_view_app_flg','Portal×ó²àµ¼º½²Ëµ¥ÊÇ·ñÏÔÊ¾Ò»¼¶²Ëµ¥','false:²»ÏÔÊ¾ true:ÏÔÊ¾  Èç¹ûÓ¦ÓÃÄ£¿éÖ»ÓĞÒ»¸ö²ã¼¶£¬²»½¨ÒéÏÔÊ¾ÔÚµ¼º½ÖĞÏÔÊ¾Ò»¼¶²Ëµ¥£¬½¨ÒéÖ±½ÓÏÔÊ¾Ò»¼¶²Ëµ¥Ä¿Â¼ÏÂµÄÓ¦ÓÃ½Úµã¡£','true','boolean'),('007008','portal_login_send_request_flg','PortalµÇÂ½ºóÊÇ·ñÄ¬ÈÏ·¢ËÍAPPÇëÇó','false:²»Ê¹ÓÃ true:Ê¹ÓÃ','true','boolean'),('007009','portal_login_send_request_way','PortalµÇÂ½ºó·¢ËÍÇëÇó·½Ê½','false:JS¶Ë·¢ËÍÇëÇó true:JAVA¶Ë·¢ËÍÇëÇó   ×¢£¨portal_login_send_request_flgÎªtrue²ÅÉúĞ§£©','false','boolean'),('007010','portal_foot_info_flg','PortalÒ³½ÅÊÇ·ñÏÔÊ¾','false:²»Ê¹ÓÃ true:Ê¹ÓÃ','true','boolean'),('007011','portal_users_registration_protocol_flg','PortalÓÃ»§×¢²áĞ­ÒéÊÇ·ñÏÔÊ¾','false:²»Ê¹ÓÃ true:Ê¹ÓÃ','true','boolean'),('007012','portal_company_registration_flg','PortalÆóÒµ×¢²áÊÇ·ñÊ¹ÓÃ','false:²»Ê¹ÓÃ true:Ê¹ÓÃ','true','boolean'),('007013','portal_personal_registration_flg','Portal¸öÈË×¢²áÊÇ·ñÊ¹ÓÃ','false:²»Ê¹ÓÃ true:Ê¹ÓÃ×¢£¨h5Ã»ÓĞ¸öÈË×¢²á£¬h5Ê¹ÓÃÎªfalse£©','true','boolean'),('007014','portal_login_way_with_colon_flg','PortalÆóÒµ¹ÜÀíÔ±µÇÂ¼·½Ê½ÊÇ·ñ¼Óadmin','false:²»Ê¹ÓÃ true:Ê¹ÓÃ ×¢£¨h5µÇÂ¼·½Ê½²»ĞèÒªÃ°ºÅ£¬h5Ê¹ÓÃÎªfalse£©','false','boolean'),('007015','portal_company_registration_qy_flg','ÆóÒµ×¢²á½çÃæÊÇ·ñÓĞÆóÒµ¶ş×Ö','false:²»ÏÔÊ¾ true:ÏÔÊ¾×¢£¨h5ÀïÆóÒµ×¢²áÖ¸¸öÈË×¢²á£¬h5Ê¹ÓÃÎªfalse£©','false','boolean'),('007016','portal_tab_refresh_button_flg','PortalµÄtab±êÇ©ÊÇ·ñÓĞË¢ĞÂ°´Å¥','false:²»ÏÔÊ¾ true:ÏÔÊ¾×¢£¨Ä¬ÈÏÎªfalse£¬h5Ê¹ÓÃÎªtrue£©','false','boolean'),('007017','portal_login_frist_send_url','PortalÊ×´ÎµÇÂ½ÊÇ·ñ·¢ËÍÇëÇó','false:²»·¢ËÍ true:·¢ËÍ','false','boolean'),('007018','portal_black_list_flg','PortalºÚÃûµ¥ÊÇ·ñÊ¹ÓÃ','false:²»Ê¹ÓÃ true:Ê¹ÓÃ','false','boolean'),('007019','portal_data_mode_flg','PortalÊı¾İÄ£ĞÍÊÇ·ñÊ¹ÓÃ','false:²»Ê¹ÓÃ true:Ê¹ÓÃ','false','boolean'),('007020','portal_h5plus_create_flg','H5PLUSÉÌ³Ç´´½¨ÓÃ»§ÊÇ·ñÊ¹ÓÃ','false:²»Ê¹ÓÃ true:Ê¹ÓÃ','false','boolean');
+INSERT INTO `tb_ci_element` VALUES ('007002','portal_toggle_show_flg','ä¸€çº§èœå•é€‰é¡¹å¡æ˜¯å¦æ˜¾ç¤ºè¯´æ˜ä¿¡æ¯','false:ä¸æ˜¾ç¤º true:æ˜¾ç¤º','true','boolean'),('007003','portal_one_tab_show_flg','ä¸€çº§èœå•é€‰é¡¹å¡æ˜¯å¦æ˜¾ç¤º','false:æ˜¾ç¤ºä¸¤å±‚ true:æ˜¾ç¤ºä¸€å±‚','false','boolean'),('007004','portal_page_show_type_flg','å¶å­èŠ‚ç‚¹é€‰é¡¹å¡æ˜¯å¦æ˜¾ç¤º','false:ä¸ä½¿ç”¨ true:ä½¿ç”¨Tab','true','boolean'),('007005','portal_redis_deploy_flg','Portalç³»ç»Ÿæ˜¯å¦ä½¿ç”¨redisç¼“å­˜','false:ä¸ä½¿ç”¨ true:ä½¿ç”¨  åº”ç”¨æ¨¡å—å¦‚æœæ²¡æœ‰redisç¼“å­˜ï¼Œredisç¼“å­˜å³ä½¿è®¾ç½®ä¸ºtrueä¹Ÿæ— æ³•ä½¿ç”¨ã€‚','false','boolean'),('007007','portal_tree_view_app_flg','Portalå·¦ä¾§å¯¼èˆªèœå•æ˜¯å¦æ˜¾ç¤ºä¸€çº§èœå•','false:ä¸æ˜¾ç¤º true:æ˜¾ç¤º  å¦‚æœåº”ç”¨æ¨¡å—åªæœ‰ä¸€ä¸ªå±‚çº§ï¼Œä¸å»ºè®®æ˜¾ç¤ºåœ¨å¯¼èˆªä¸­æ˜¾ç¤ºä¸€çº§èœå•ï¼Œå»ºè®®ç›´æ¥æ˜¾ç¤ºä¸€çº§èœå•ç›®å½•ä¸‹çš„åº”ç”¨èŠ‚ç‚¹ã€‚','true','boolean'),('007008','portal_login_send_request_flg','Portalç™»é™†åæ˜¯å¦é»˜è®¤å‘é€APPè¯·æ±‚','false:ä¸ä½¿ç”¨ true:ä½¿ç”¨','true','boolean'),('007009','portal_login_send_request_way','Portalç™»é™†åå‘é€è¯·æ±‚æ–¹å¼','false:JSç«¯å‘é€è¯·æ±‚ true:JAVAç«¯å‘é€è¯·æ±‚   æ³¨ï¼ˆportal_login_send_request_flgä¸ºtrueæ‰ç”Ÿæ•ˆï¼‰','false','boolean'),('007010','portal_foot_info_flg','Portalé¡µè„šæ˜¯å¦æ˜¾ç¤º','false:ä¸ä½¿ç”¨ true:ä½¿ç”¨','true','boolean'),('007011','portal_users_registration_protocol_flg','Portalç”¨æˆ·æ³¨å†Œåè®®æ˜¯å¦æ˜¾ç¤º','false:ä¸ä½¿ç”¨ true:ä½¿ç”¨','true','boolean'),('007012','portal_company_registration_flg','Portalä¼ä¸šæ³¨å†Œæ˜¯å¦ä½¿ç”¨','false:ä¸ä½¿ç”¨ true:ä½¿ç”¨','true','boolean'),('007013','portal_personal_registration_flg','Portalä¸ªäººæ³¨å†Œæ˜¯å¦ä½¿ç”¨','false:ä¸ä½¿ç”¨ true:ä½¿ç”¨æ³¨ï¼ˆh5æ²¡æœ‰ä¸ªäººæ³¨å†Œï¼Œh5ä½¿ç”¨ä¸ºfalseï¼‰','true','boolean'),('007014','portal_login_way_with_colon_flg','Portalä¼ä¸šç®¡ç†å‘˜ç™»å½•æ–¹å¼æ˜¯å¦åŠ admin','false:ä¸ä½¿ç”¨ true:ä½¿ç”¨ æ³¨ï¼ˆh5ç™»å½•æ–¹å¼ä¸éœ€è¦å†’å·ï¼Œh5ä½¿ç”¨ä¸ºfalseï¼‰','false','boolean'),('007015','portal_company_registration_qy_flg','ä¼ä¸šæ³¨å†Œç•Œé¢æ˜¯å¦æœ‰ä¼ä¸šäºŒå­—','false:ä¸æ˜¾ç¤º true:æ˜¾ç¤ºæ³¨ï¼ˆh5é‡Œä¼ä¸šæ³¨å†ŒæŒ‡ä¸ªäººæ³¨å†Œï¼Œh5ä½¿ç”¨ä¸ºfalseï¼‰','false','boolean'),('007016','portal_tab_refresh_button_flg','Portalçš„tabæ ‡ç­¾æ˜¯å¦æœ‰åˆ·æ–°æŒ‰é’®','false:ä¸æ˜¾ç¤º true:æ˜¾ç¤ºæ³¨ï¼ˆé»˜è®¤ä¸ºfalseï¼Œh5ä½¿ç”¨ä¸ºtrueï¼‰','false','boolean'),('007017','portal_login_frist_send_url','Portalé¦–æ¬¡ç™»é™†æ˜¯å¦å‘é€è¯·æ±‚','false:ä¸å‘é€ true:å‘é€','false','boolean'),('007018','portal_black_list_flg','Portalé»‘åå•æ˜¯å¦ä½¿ç”¨','false:ä¸ä½¿ç”¨ true:ä½¿ç”¨','false','boolean'),('007019','portal_data_mode_flg','Portalæ•°æ®æ¨¡å‹æ˜¯å¦ä½¿ç”¨','false:ä¸ä½¿ç”¨ true:ä½¿ç”¨','false','boolean'),('007020','portal_h5plus_create_flg','H5PLUSå•†åŸåˆ›å»ºç”¨æˆ·æ˜¯å¦ä½¿ç”¨','false:ä¸ä½¿ç”¨ true:ä½¿ç”¨','false','boolean');
 /*!40000 ALTER TABLE `tb_ci_element` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2951,7 +2951,7 @@ CREATE TABLE `tb_company` (
 
 LOCK TABLES `tb_company` WRITE;
 /*!40000 ALTER TABLE `tb_company` DISABLE KEYS */;
-INSERT INTO `tb_company` VALUES ('004001',1,'¸öÈËÓÃ»§','personal',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `tb_company` VALUES ('004001',1,'ä¸ªäººç”¨æˆ·','personal',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tb_company` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3202,7 +3202,7 @@ CREATE TABLE `tb_element_type` (
 
 LOCK TABLES `tb_element_type` WRITE;
 /*!40000 ALTER TABLE `tb_element_type` DISABLE KEYS */;
-INSERT INTO `tb_element_type` VALUES ('008001','Checkbox','1',NULL,NULL,NULL,NULL),('008002','Radio Button','2',NULL,NULL,NULL,NULL),('008003','Text Field','3',NULL,NULL,NULL,NULL),('008004','Text Area','4',NULL,NULL,NULL,NULL),('008005','Droplist','5',NULL,NULL,NULL,NULL),('008006','List Box','6',NULL,NULL,NULL,NULL),('008007','HTML Button','7',NULL,NULL,NULL,NULL),('008008','Ä£°å','8',NULL,NULL,NULL,NULL);
+INSERT INTO `tb_element_type` VALUES ('008001','Checkbox','1',NULL,NULL,NULL,NULL),('008002','Radio Button','2',NULL,NULL,NULL,NULL),('008003','Text Field','3',NULL,NULL,NULL,NULL),('008004','Text Area','4',NULL,NULL,NULL,NULL),('008005','Droplist','5',NULL,NULL,NULL,NULL),('008006','List Box','6',NULL,NULL,NULL,NULL),('008007','HTML Button','7',NULL,NULL,NULL,NULL),('008008','æ¨¡æ¿','8',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tb_element_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3360,7 +3360,7 @@ CREATE TABLE `tb_login_page_manage_info` (
 
 LOCK TABLES `tb_login_page_manage_info` WRITE;
 /*!40000 ALTER TABLE `tb_login_page_manage_info` DISABLE KEYS */;
-INSERT INTO `tb_login_page_manage_info` VALUES ('2c9485a8504a899401504a8aa2e40000','index.action','portalÄ¬ÈÏURL',NULL,NULL,NULL,NULL,NULL,'2014-09-22 00:00:00','2014-09-22 00:00:00','002001','002001',NULL,NULL);
+INSERT INTO `tb_login_page_manage_info` VALUES ('2c9485a8504a899401504a8aa2e40000','index.action','portalé»˜è®¤URL',NULL,NULL,NULL,NULL,NULL,'2014-09-22 00:00:00','2014-09-22 00:00:00','002001','002001',NULL,NULL);
 /*!40000 ALTER TABLE `tb_login_page_manage_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3459,7 +3459,7 @@ CREATE TABLE `tb_page` (
 
 LOCK TABLES `tb_page` WRITE;
 /*!40000 ALTER TABLE `tb_page` DISABLE KEYS */;
-INSERT INTO `tb_page` VALUES ('ff80808155fca4490155fcb1b1d40004','Êı¾İ½ÓÈë','',NULL,NULL,'2016-07-18 14:29:11',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb1e9230006','ÎÄ¼ş½ÓÈë','http://mktpro.rc.dataengine.com/html/data-access/file.html',NULL,NULL,'2016-07-18 14:29:25',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb27d7b0008','Î¢ĞÅ½ÓÈë','http://mktpro.rc.dataengine.com/html/data-access/weixin.html',NULL,NULL,'2016-07-18 14:30:03',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb2e888000a','Êı¾İ¹ÜÀí','',NULL,NULL,'2016-07-18 14:30:31',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb88cef000c','Êı¾İÖÊÁ¿±¨¸æ','http://mktpro.rc.dataengine.com/html/data-supervise/quality-report.html',NULL,NULL,'2016-07-18 14:36:41',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb8f1a4000e','Ö÷Êı¾İ¹ÜÀí','http://mktpro.rc.dataengine.com/html/data-supervise/master-data.html',NULL,NULL,'2016-07-18 14:37:06',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb989ff0010','±êÇ©¹ÜÀí','',NULL,NULL,'2016-07-18 14:37:45',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcba1edf0012','ÏµÍ³±êÇ©','http://mktpro.rc.dataengine.com/html/label-management/system.html',NULL,NULL,'2016-07-18 14:38:23',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcba83ae0014','×Ô¶¨Òå±êÇ©','http://mktpro.rc.dataengine.com/html/label-management/custom.html',NULL,NULL,'2016-07-18 14:38:49',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbc78c5001a','ÊÜÖÚ¹ÜÀí','',NULL,NULL,'2016-07-18 14:40:58',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbcb44b001c','Ï¸·Ö¹ÜÀí','http://mktpro.rc.dataengine.com/html/audience/manage.html',NULL,NULL,'2016-07-18 14:41:13',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbd28ac001e','ÊÜÖÚÏ¸·Ö','http://mktpro.rc.dataengine.com/html/audience/segment.html',NULL,NULL,'2016-07-18 14:41:43',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbd81b40020','ÈËÈº¹ÜÀí','http://mktpro.rc.dataengine.com/html/audience/crowd.html',NULL,NULL,'2016-07-18 14:42:05',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbdd1c90022','ÓªÏú»î¶¯','',NULL,NULL,'2016-07-18 14:42:26',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbe29200024','»î¶¯±àÅÅ','http://mktpro.rc.dataengine.com/html/activity/plan.html',NULL,NULL,'2016-07-18 14:42:48',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbea6930026','»î¶¯¹ÜÀí','http://mktpro.rc.dataengine.com/html/activity/supervise.html',NULL,NULL,'2016-07-18 14:43:20',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbefde50028','Êı×Ö×Ê²ú','',NULL,NULL,'2016-07-18 14:43:43',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbf4c61002a','Í¼ÎÄ×Ê²ú','http://mktpro.rc.dataengine.com/html/asset/graphic.html',NULL,NULL,'2016-07-18 14:44:03',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbfc413002c','Î¢ĞÅ×Ê²ú','http://mktpro.rc.dataengine.com/html/asset/weixin.html',NULL,NULL,'2016-07-18 14:44:33',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcc0610a002e','Êı¾İ¶´²ì','',NULL,NULL,'2016-07-18 14:45:14',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcc09e220030','×ÛºÏ·ÖÎö','http://mktpro.rc.dataengine.com/html/data-lnsight/comprehensive-analysis.html',NULL,NULL,'2016-07-18 14:45:29',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcc0f48a0032','¶¨ÖÆ±¨±í','http://mktpro.rc.dataengine.com/html/data-lnsight/custom-report.html',NULL,NULL,'2016-07-18 14:45:51',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `tb_page` VALUES ('ff80808155fca4490155fcb1b1d40004','æ•°æ®æ¥å…¥','',NULL,NULL,'2016-07-18 14:29:11',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb1e9230006','æ–‡ä»¶æ¥å…¥','http://mktpro.rc.dataengine.com/html/data-access/file.html',NULL,NULL,'2016-07-18 14:29:25',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb27d7b0008','å¾®ä¿¡æ¥å…¥','http://mktpro.rc.dataengine.com/html/data-access/weixin.html',NULL,NULL,'2016-07-18 14:30:03',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb2e888000a','æ•°æ®ç®¡ç†','',NULL,NULL,'2016-07-18 14:30:31',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb88cef000c','æ•°æ®è´¨é‡æŠ¥å‘Š','http://mktpro.rc.dataengine.com/html/data-supervise/quality-report.html',NULL,NULL,'2016-07-18 14:36:41',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb8f1a4000e','ä¸»æ•°æ®ç®¡ç†','http://mktpro.rc.dataengine.com/html/data-supervise/master-data.html',NULL,NULL,'2016-07-18 14:37:06',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcb989ff0010','æ ‡ç­¾ç®¡ç†','',NULL,NULL,'2016-07-18 14:37:45',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcba1edf0012','ç³»ç»Ÿæ ‡ç­¾','http://mktpro.rc.dataengine.com/html/label-management/system.html',NULL,NULL,'2016-07-18 14:38:23',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcba83ae0014','è‡ªå®šä¹‰æ ‡ç­¾','http://mktpro.rc.dataengine.com/html/label-management/custom.html',NULL,NULL,'2016-07-18 14:38:49',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbc78c5001a','å—ä¼—ç®¡ç†','',NULL,NULL,'2016-07-18 14:40:58',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbcb44b001c','ç»†åˆ†ç®¡ç†','http://mktpro.rc.dataengine.com/html/audience/manage.html',NULL,NULL,'2016-07-18 14:41:13',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbd28ac001e','å—ä¼—ç»†åˆ†','http://mktpro.rc.dataengine.com/html/audience/segment.html',NULL,NULL,'2016-07-18 14:41:43',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbd81b40020','äººç¾¤ç®¡ç†','http://mktpro.rc.dataengine.com/html/audience/crowd.html',NULL,NULL,'2016-07-18 14:42:05',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbdd1c90022','è¥é”€æ´»åŠ¨','',NULL,NULL,'2016-07-18 14:42:26',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbe29200024','æ´»åŠ¨ç¼–æ’','http://mktpro.rc.dataengine.com/html/activity/plan.html',NULL,NULL,'2016-07-18 14:42:48',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbea6930026','æ´»åŠ¨ç®¡ç†','http://mktpro.rc.dataengine.com/html/activity/supervise.html',NULL,NULL,'2016-07-18 14:43:20',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbefde50028','æ•°å­—èµ„äº§','',NULL,NULL,'2016-07-18 14:43:43',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbf4c61002a','å›¾æ–‡èµ„äº§','http://mktpro.rc.dataengine.com/html/asset/graphic.html',NULL,NULL,'2016-07-18 14:44:03',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcbfc413002c','å¾®ä¿¡èµ„äº§','http://mktpro.rc.dataengine.com/html/asset/weixin.html',NULL,NULL,'2016-07-18 14:44:33',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcc0610a002e','æ•°æ®æ´å¯Ÿ','',NULL,NULL,'2016-07-18 14:45:14',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcc09e220030','ç»¼åˆåˆ†æ','http://mktpro.rc.dataengine.com/html/data-lnsight/comprehensive-analysis.html',NULL,NULL,'2016-07-18 14:45:29',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL),('ff80808155fca4490155fcc0f48a0032','å®šåˆ¶æŠ¥è¡¨','http://mktpro.rc.dataengine.com/html/data-lnsight/custom-report.html',NULL,NULL,'2016-07-18 14:45:51',NULL,'002001',NULL,NULL,NULL,'0',NULL,'',NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tb_page` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3518,7 +3518,7 @@ CREATE TABLE `tb_portal` (
 
 LOCK TABLES `tb_portal` WRITE;
 /*!40000 ALTER TABLE `tb_portal` DISABLE KEYS */;
-INSERT INTO `tb_portal` VALUES ('003001','d39f769bea5c4a13a64e0ddd42b3c2f2','ÈğÑ©','ÈğÑ©','2014-09-22 00:00:00',NULL,'002001',NULL,NULL);
+INSERT INTO `tb_portal` VALUES ('003001','d39f769bea5c4a13a64e0ddd42b3c2f2','ç‘é›ª','ç‘é›ª','2014-09-22 00:00:00',NULL,'002001',NULL,NULL);
 /*!40000 ALTER TABLE `tb_portal` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3584,7 +3584,7 @@ CREATE TABLE `tb_role` (
 
 LOCK TABLES `tb_role` WRITE;
 /*!40000 ALTER TABLE `tb_role` DISABLE KEYS */;
-INSERT INTO `tb_role` VALUES ('010001','commRole','',NULL,'2015-07-16 11:59:55','2015-07-16 11:59:55','002002','002002','004001'),('ff80808155fca4490155fcadb0c00001','tester','\0','²âÊÔ½ÇÉ«','2016-07-18 14:24:49','2016-07-18 14:24:49','002002','002002','004001');
+INSERT INTO `tb_role` VALUES ('010001','commRole','',NULL,'2015-07-16 11:59:55','2015-07-16 11:59:55','002002','002002','004001'),('ff80808155fca4490155fcadb0c00001','tester','\0','æµ‹è¯•è§’è‰²','2016-07-18 14:24:49','2016-07-18 14:24:49','002002','002002','004001');
 /*!40000 ALTER TABLE `tb_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3727,7 +3727,7 @@ CREATE TABLE `tb_user` (
 
 LOCK TABLES `tb_user` WRITE;
 /*!40000 ALTER TABLE `tb_user` DISABLE KEYS */;
-INSERT INTO `tb_user` VALUES ('002001',1,'admin','¹ÜÀíÔ±',NULL,NULL,NULL,'abc.1234',NULL,NULL,NULL,NULL,NULL,NULL,'2016-07-22 13:44:15',NULL,NULL,NULL,NULL,NULL,0,'\0'),('002002',2,'admin','ÆóÒµ¹ÜÀíÔ±',NULL,NULL,NULL,'abc.1234',NULL,NULL,NULL,NULL,NULL,NULL,'2016-08-05 15:00:56',NULL,NULL,NULL,NULL,'004001',0,'\0'),('ff80808155fca4490155fcad0e310000',3,'tester1','²âÊÔ1','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,'2016-07-18 15:07:29','2016-07-18 14:24:07','2016-07-18 14:24:07',NULL,'002002','004001',0,'\0'),('ff808081565980f901565981f1200000',4,'tester2','²âÊÔ2','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,'2016-08-05 15:03:48','2016-08-05 15:01:43','2016-08-05 15:01:43',NULL,'002002','004001',0,'\0'),('ff808081565980f90156598218b80001',5,'tester3','²âÊÔ3','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:01:53','2016-08-05 15:01:53',NULL,'002002','004001',0,'\0'),('ff808081565980f9015659823e010002',6,'tester4','²âÊÔ4','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:02:03','2016-08-05 15:02:03',NULL,'002002','004001',0,'\0'),('ff808081565980f901565982688f0003',7,'tester5','²âÊÔ5','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:02:13','2016-08-05 15:02:13',NULL,'002002','004001',0,'\0'),('ff808081565980f901565982b6aa0004',8,'tester6','²âÊÔ6','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:02:33','2016-08-05 15:02:33',NULL,'002002','004001',0,'\0'),('ff808081565980f901565982dbee0005',9,'tester7','²âÊÔ7','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:02:43','2016-08-05 15:02:43',NULL,'002002','004001',0,'\0'),('ff808081565980f901565982fe330006',10,'tester8','²âÊÔ8','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:02:52','2016-08-05 15:02:52',NULL,'002002','004001',0,'\0');
+INSERT INTO `tb_user` VALUES ('002001',1,'admin','ç®¡ç†å‘˜',NULL,NULL,NULL,'abc.1234',NULL,NULL,NULL,NULL,NULL,NULL,'2016-07-22 13:44:15',NULL,NULL,NULL,NULL,NULL,0,'\0'),('002002',2,'admin','ä¼ä¸šç®¡ç†å‘˜',NULL,NULL,NULL,'abc.1234',NULL,NULL,NULL,NULL,NULL,NULL,'2016-08-05 15:00:56',NULL,NULL,NULL,NULL,'004001',0,'\0'),('ff80808155fca4490155fcad0e310000',3,'tester1','æµ‹è¯•1','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,'2016-07-18 15:07:29','2016-07-18 14:24:07','2016-07-18 14:24:07',NULL,'002002','004001',0,'\0'),('ff808081565980f901565981f1200000',4,'tester2','æµ‹è¯•2','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,'2016-08-05 15:03:48','2016-08-05 15:01:43','2016-08-05 15:01:43',NULL,'002002','004001',0,'\0'),('ff808081565980f90156598218b80001',5,'tester3','æµ‹è¯•3','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:01:53','2016-08-05 15:01:53',NULL,'002002','004001',0,'\0'),('ff808081565980f9015659823e010002',6,'tester4','æµ‹è¯•4','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:02:03','2016-08-05 15:02:03',NULL,'002002','004001',0,'\0'),('ff808081565980f901565982688f0003',7,'tester5','æµ‹è¯•5','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:02:13','2016-08-05 15:02:13',NULL,'002002','004001',0,'\0'),('ff808081565980f901565982b6aa0004',8,'tester6','æµ‹è¯•6','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:02:33','2016-08-05 15:02:33',NULL,'002002','004001',0,'\0'),('ff808081565980f901565982dbee0005',9,'tester7','æµ‹è¯•7','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:02:43','2016-08-05 15:02:43',NULL,'002002','004001',0,'\0'),('ff808081565980f901565982fe330006',10,'tester8','æµ‹è¯•8','','','','abc.1234',NULL,NULL,NULL,NULL,'',NULL,NULL,'2016-08-05 15:02:52','2016-08-05 15:02:52',NULL,'002002','004001',0,'\0');
 /*!40000 ALTER TABLE `tb_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3821,25 +3821,25 @@ DROP TABLE IF EXISTS `tenement`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tenement` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL COMMENT 'ÆóÒµÃû³Æ',
-  `shortname` varchar(50) DEFAULT NULL COMMENT 'ÆóÒµ¼ò³Æ',
-  `pid` varchar(45) NOT NULL COMMENT 'ÆóÒµ×¢²áH5plusµÄpid',
-  `email` varchar(100) DEFAULT NULL COMMENT 'ÆóÒµÓÊÏä',
-  `mobile` varchar(45) DEFAULT NULL COMMENT '¸ºÔğÈËÊÖ»ú',
-  `province` varchar(100) DEFAULT NULL COMMENT 'Ê¡',
-  `city` varchar(100) DEFAULT NULL COMMENT 'ÊĞ',
-  `area` varchar(100) DEFAULT NULL COMMENT 'Çø',
-  `address` varchar(200) DEFAULT NULL COMMENT 'µØÖ·',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `name` varchar(100) DEFAULT NULL COMMENT 'ä¼ä¸šåç§°',
+  `shortname` varchar(50) DEFAULT NULL COMMENT 'ä¼ä¸šç®€ç§°',
+  `pid` varchar(45) NOT NULL COMMENT 'ä¼ä¸šæ³¨å†ŒH5plusçš„pid',
+  `email` varchar(100) DEFAULT NULL COMMENT 'ä¼ä¸šé‚®ç®±',
+  `mobile` varchar(45) DEFAULT NULL COMMENT 'è´Ÿè´£äººæ‰‹æœº',
+  `province` varchar(100) DEFAULT NULL COMMENT 'çœ',
+  `city` varchar(100) DEFAULT NULL COMMENT 'å¸‚',
+  `area` varchar(100) DEFAULT NULL COMMENT 'åŒº',
+  `address` varchar(200) DEFAULT NULL COMMENT 'åœ°å€',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `session_token` varchar(200) DEFAULT NULL,
   `bas_id` varchar(100) DEFAULT NULL,
-  `register_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:´ú±í×¢²áÎ¢ĞÅpidµÄĞÅÏ¢  1:´ú±í×¢²ábas_idµÄĞÅÏ¢',
+  `register_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:ä»£è¡¨æ³¨å†Œå¾®ä¿¡pidçš„ä¿¡æ¯  1:ä»£è¡¨æ³¨å†Œbas_idçš„ä¿¡æ¯',
   PRIMARY KEY (`id`),
   UNIQUE KEY `pid_UNIQUE` (`pid`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='ÆóÒµ¿Í»§(×â»§)±í';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='ä¼ä¸šå®¢æˆ·(ç§Ÿæˆ·)è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3870,7 +3870,7 @@ CREATE TABLE `user` (
   `created_time` datetime DEFAULT '0000-00-00 00:00:00',
   `update_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='ÓÃ»§±í';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='ç”¨æˆ·è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3898,7 +3898,7 @@ CREATE TABLE `user_role_relation` (
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ÓÃ»§½ÇÉ«¹ØÏµ±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ç”¨æˆ·è§’è‰²å…³ç³»è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3928,7 +3928,7 @@ CREATE TABLE `webchart_event_msg_log` (
   `ticket` text,
   `latitude` varchar(255) DEFAULT NULL,
   `longitude` varchar(255) DEFAULT NULL,
-  `precision` varchar(255) DEFAULT NULL COMMENT 'µØÀíÎ»ÖÃ¾«¶È',
+  `precision` varchar(255) DEFAULT NULL COMMENT 'åœ°ç†ä½ç½®ç²¾åº¦',
   `menuId` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4007,15 +4007,15 @@ DROP TABLE IF EXISTS `wechat_asset`;
 CREATE TABLE `wechat_asset` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `asset_id` int(11) NOT NULL DEFAULT '0',
-  `asset_type` int(11) NOT NULL DEFAULT '0' COMMENT '0:·şÎñºÅ 1:¸öÈËºÅ 2:¶©ÔÄºÅ',
-  `asset_name` varchar(500) DEFAULT NULL COMMENT '×Ê²úÃû³Æ',
-  `nickname` varchar(500) DEFAULT NULL COMMENT 'êÇ³Æ',
-  `wx_acct` varchar(200) DEFAULT NULL COMMENT 'Î¢ĞÅÕËºÅ',
+  `asset_type` int(11) NOT NULL DEFAULT '0' COMMENT '0:æœåŠ¡å· 1:ä¸ªäººå· 2:è®¢é˜…å·',
+  `asset_name` varchar(500) DEFAULT NULL COMMENT 'èµ„äº§åç§°',
+  `nickname` varchar(500) DEFAULT NULL COMMENT 'æ˜µç§°',
+  `wx_acct` varchar(200) DEFAULT NULL COMMENT 'å¾®ä¿¡è´¦å·',
   `consignation_time` datetime DEFAULT NULL,
   `total_count` int(11) DEFAULT NULL,
   `group_ids` varchar(1000) DEFAULT NULL,
-  `imgfile_url` varchar(1000) DEFAULT NULL COMMENT 'Í·ÏñËõÂÔÍ¼',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `imgfile_url` varchar(1000) DEFAULT NULL COMMENT 'å¤´åƒç¼©ç•¥å›¾',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `app_id` varchar(22) NOT NULL,
@@ -4044,9 +4044,9 @@ DROP TABLE IF EXISTS `wechat_asset_group`;
 CREATE TABLE `wechat_asset_group` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `import_group_id` bigint(20) DEFAULT NULL,
-  `name` varchar(500) DEFAULT NULL COMMENT 'Èº×éÃû³Æ',
-  `members` int(11) DEFAULT NULL COMMENT 'Èº×éÈËÊı',
-  `wx_acct` varchar(500) DEFAULT NULL COMMENT '¶ÔÓ¦wechat_asset.wx_acct',
+  `name` varchar(500) DEFAULT NULL COMMENT 'ç¾¤ç»„åç§°',
+  `members` int(11) DEFAULT NULL COMMENT 'ç¾¤ç»„äººæ•°',
+  `wx_acct` varchar(500) DEFAULT NULL COMMENT 'å¯¹åº”wechat_asset.wx_acct',
   `is_sys_group` int(11) DEFAULT NULL,
   `asset_id` int(11) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
@@ -4073,16 +4073,16 @@ DROP TABLE IF EXISTS `wechat_channel`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wechat_channel` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ÇşµÀ±àºÅ',
-  `ch_name` varchar(100) NOT NULL COMMENT 'ÇşµÀÃû³Æ',
-  `status` varchar(1) NOT NULL DEFAULT '0' COMMENT '×´Ì¬\n0-Õı³£\n1-É¾³ı',
-  `type` int(11) DEFAULT '0' COMMENT 'ÇşµÀÀàĞÍ\n0-ÏµÍ³Ä¬ÈÏÇşµÀ\n1-×Ô¶¨ÒåÇşµÀ',
-  `is_removed` int(11) DEFAULT '0' COMMENT '0-²»¿ÉÉ¾³ı\n1-¿ÉÒÔÉ¾³ı',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'æ¸ é“ç¼–å·',
+  `ch_name` varchar(100) NOT NULL COMMENT 'æ¸ é“åç§°',
+  `status` varchar(1) NOT NULL DEFAULT '0' COMMENT 'çŠ¶æ€\n0-æ­£å¸¸\n1-åˆ é™¤',
+  `type` int(11) DEFAULT '0' COMMENT 'æ¸ é“ç±»å‹\n0-ç³»ç»Ÿé»˜è®¤æ¸ é“\n1-è‡ªå®šä¹‰æ¸ é“',
+  `is_removed` int(11) DEFAULT '0' COMMENT '0-ä¸å¯åˆ é™¤\n1-å¯ä»¥åˆ é™¤',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ch_name` (`ch_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Î¢ĞÅ¶şÎ¬ÂëÇşµÀ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å¾®ä¿¡äºŒç»´ç æ¸ é“';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4102,18 +4102,18 @@ DROP TABLE IF EXISTS `wechat_group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wechat_group` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Èº×é±àºÅ',
-  `group_id` varchar(100) DEFAULT NULL COMMENT 'H5·µ»ØµÄgroup_id',
-  `group_name` varchar(500) DEFAULT NULL COMMENT 'Èº×éÃû³Æ£¬ºÃÓÑÈ«²¿¶Ôµ½ºÃÓÑ×é',
-  `group_nickname` varchar(500) DEFAULT NULL COMMENT 'Èº×éµÄ±ğ³Æ',
-  `header_image` varchar(500) DEFAULT NULL COMMENT 'Èº×éÍ·ÏñËõÂÔÍ¼',
-  `wx_acct` varchar(500) NOT NULL COMMENT '¶ÔÓ¦Î¢ĞÅºÅ£ºwechat_register.wx_acct\n',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ç¾¤ç»„ç¼–å·',
+  `group_id` varchar(100) DEFAULT NULL COMMENT 'H5è¿”å›çš„group_id',
+  `group_name` varchar(500) DEFAULT NULL COMMENT 'ç¾¤ç»„åç§°ï¼Œå¥½å‹å…¨éƒ¨å¯¹åˆ°å¥½å‹ç»„',
+  `group_nickname` varchar(500) DEFAULT NULL COMMENT 'ç¾¤ç»„çš„åˆ«ç§°',
+  `header_image` varchar(500) DEFAULT NULL COMMENT 'ç¾¤ç»„å¤´åƒç¼©ç•¥å›¾',
+  `wx_acct` varchar(500) NOT NULL COMMENT 'å¯¹åº”å¾®ä¿¡å·ï¼šwechat_register.wx_acct\n',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `count` int(11) DEFAULT NULL COMMENT 'Èº×éÈËÊı',
+  `count` int(11) DEFAULT NULL COMMENT 'ç¾¤ç»„äººæ•°',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Î¢ĞÅÈº×éĞÅÏ¢';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å¾®ä¿¡ç¾¤ç»„ä¿¡æ¯';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4133,21 +4133,21 @@ DROP TABLE IF EXISTS `wechat_member`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wechat_member` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Ö÷¼ü',
-  `wx_code` varchar(200) DEFAULT NULL COMMENT '³ÉÔ±Î¢ĞÅÕËºÅ£º\n¹«ÖÚºÅ£ºopenid\n¸öÈËºÅ £ºucode',
-  `wx_name` varchar(200) DEFAULT NULL COMMENT '³ÉÔ±Î¢ĞÅÃû³Æ',
-  `wx_group_id` varchar(200) DEFAULT NULL COMMENT 'ËùÊôÎ¢ĞÅÈº×éµÄID£¬wechat_group.id',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®',
+  `wx_code` varchar(200) DEFAULT NULL COMMENT 'æˆå‘˜å¾®ä¿¡è´¦å·ï¼š\nå…¬ä¼—å·ï¼šopenid\nä¸ªäººå· ï¼šucode',
+  `wx_name` varchar(200) DEFAULT NULL COMMENT 'æˆå‘˜å¾®ä¿¡åç§°',
+  `wx_group_id` varchar(200) DEFAULT NULL COMMENT 'æ‰€å±å¾®ä¿¡ç¾¤ç»„çš„IDï¼Œwechat_group.id',
   `nickname` varchar(1000) DEFAULT NULL,
   `sex` int(11) DEFAULT NULL,
   `country` varchar(500) DEFAULT NULL,
   `province` varchar(500) DEFAULT NULL,
   `city` varchar(500) DEFAULT NULL,
-  `county` varchar(500) DEFAULT NULL COMMENT 'Î»ÖÃ',
+  `county` varchar(500) DEFAULT NULL COMMENT 'ä½ç½®',
   `birthday` varchar(500) DEFAULT NULL,
-  `signature` varchar(1000) DEFAULT NULL COMMENT 'Ç©Ãû',
-  `is_friend` varchar(45) DEFAULT NULL COMMENT 'ÊÇ·ñºÃÓÑ',
-  `pub_id` varchar(200) DEFAULT NULL COMMENT '¹«ÖÚºÅÎ¨Ò»±êÊ¶',
-  `uin` varchar(200) DEFAULT NULL COMMENT '¸öÈËºÅÎ¨Ò»±êÊ¶',
+  `signature` varchar(1000) DEFAULT NULL COMMENT 'ç­¾å',
+  `is_friend` varchar(45) DEFAULT NULL COMMENT 'æ˜¯å¦å¥½å‹',
+  `pub_id` varchar(200) DEFAULT NULL COMMENT 'å…¬ä¼—å·å”¯ä¸€æ ‡è¯†',
+  `uin` varchar(200) DEFAULT NULL COMMENT 'ä¸ªäººå·å”¯ä¸€æ ‡è¯†',
   `subscribe_yn` varchar(200) DEFAULT NULL,
   `subscribe_time` varchar(500) DEFAULT NULL,
   `active_time` varchar(500) DEFAULT NULL,
@@ -4157,11 +4157,11 @@ CREATE TABLE `wechat_member` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `selected` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Íùdata_party±íÀïµÄÍ¬²½×´Ì¬',
+  `selected` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'å¾€data_partyè¡¨é‡Œçš„åŒæ­¥çŠ¶æ€',
   `bitmap` varchar(18) DEFAULT NULL,
   `keyid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Î¢ĞÅ³ÉÔ±(ºÃÓÑ¡¢·ÛË¿)ĞÅÏ¢±í';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å¾®ä¿¡æˆå‘˜(å¥½å‹ã€ç²‰ä¸)ä¿¡æ¯è¡¨';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4211,7 +4211,7 @@ DROP TABLE IF EXISTS `wechat_personal_uuid`;
 CREATE TABLE `wechat_personal_uuid` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `uuid` varchar(50) NOT NULL,
-  `status` int(10) unsigned zerofill NOT NULL DEFAULT '0000000000' COMMENT 'uuidµÄ×´Ì¬£¬ÓĞĞ§Îª0£¬ÎŞĞ§Îª1',
+  `status` int(10) unsigned zerofill NOT NULL DEFAULT '0000000000' COMMENT 'uuidçš„çŠ¶æ€ï¼Œæœ‰æ•ˆä¸º0ï¼Œæ— æ•ˆä¸º1',
   `uin` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uuid_index` (`uuid`)
@@ -4236,23 +4236,23 @@ DROP TABLE IF EXISTS `wechat_qrcode`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wechat_qrcode` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `wx_name` varchar(100) DEFAULT NULL COMMENT 'Î¢ĞÅ¹«ÖÚºÅÃû³Æ',
-  `wx_acct` varchar(500) DEFAULT NULL COMMENT 'Î¢ĞÅÕËºÅ\n¸öÈËºÅ£º uin\n·şÎñºÅ/¶©ÔÄºÅ£ºweixin_id',
-  `ch_code` int(11) DEFAULT NULL COMMENT 'ÇşµÀ±àºÅ\nwechat_channel.id',
-  `is_audience` tinyint(4) DEFAULT NULL COMMENT 'ÊÇ·ñĞÂ½¨¹Ì¶¨ÈËÈº\n0-·ñ\n1-ÊÇ',
-  `audience_name` varchar(100) DEFAULT NULL COMMENT '¹Ì¶¨ÈËÈºÃû³Æ\n',
-  `related_tags` varchar(2000) DEFAULT NULL COMMENT '¹ØÁªÏµÍ³±êÇ©ID£¬¶à¸ö±êÇ©ID£¬ÒÔ;·Ö¸ô£¬ÀıÈç£º\n101;102;103',
-  `comments` varchar(100) DEFAULT NULL COMMENT '±¸×¢',
-  `create_time` datetime DEFAULT NULL COMMENT '´´½¨Ê±¼ä',
-  `expiration_time` datetime DEFAULT NULL COMMENT 'Ê§Ğ§Ê±¼ä',
-  `status` tinyint(4) DEFAULT NULL COMMENT '×´Ì¬\n0-Î´ÓÃ\n1-ÒÑÓÃ\n2-É¾³ı3-¹ıÆÚ',
-  `qrcode_pic` varchar(128) DEFAULT NULL COMMENT '¶şÎ¬ÂëÍ¼Æ¬ÎÄ¼şÃû³Æ',
-  `qrcode_url` varchar(128) DEFAULT NULL COMMENT '¶şÎ¬Âëurl',
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Åú´ÎºÅ£ºÅúÁ¿²úÉú¶şÎ¬ÂëµÄ±àºÅ',
+  `wx_name` varchar(100) DEFAULT NULL COMMENT 'å¾®ä¿¡å…¬ä¼—å·åç§°',
+  `wx_acct` varchar(500) DEFAULT NULL COMMENT 'å¾®ä¿¡è´¦å·\nä¸ªäººå·ï¼š uin\næœåŠ¡å·/è®¢é˜…å·ï¼šweixin_id',
+  `ch_code` int(11) DEFAULT NULL COMMENT 'æ¸ é“ç¼–å·\nwechat_channel.id',
+  `is_audience` tinyint(4) DEFAULT NULL COMMENT 'æ˜¯å¦æ–°å»ºå›ºå®šäººç¾¤\n0-å¦\n1-æ˜¯',
+  `audience_name` varchar(100) DEFAULT NULL COMMENT 'å›ºå®šäººç¾¤åç§°\n',
+  `related_tags` varchar(2000) DEFAULT NULL COMMENT 'å…³è”ç³»ç»Ÿæ ‡ç­¾IDï¼Œå¤šä¸ªæ ‡ç­¾IDï¼Œä»¥;åˆ†éš”ï¼Œä¾‹å¦‚ï¼š\n101;102;103',
+  `comments` varchar(100) DEFAULT NULL COMMENT 'å¤‡æ³¨',
+  `create_time` datetime DEFAULT NULL COMMENT 'åˆ›å»ºæ—¶é—´',
+  `expiration_time` datetime DEFAULT NULL COMMENT 'å¤±æ•ˆæ—¶é—´',
+  `status` tinyint(4) DEFAULT NULL COMMENT 'çŠ¶æ€\n0-æœªç”¨\n1-å·²ç”¨\n2-åˆ é™¤3-è¿‡æœŸ',
+  `qrcode_pic` varchar(128) DEFAULT NULL COMMENT 'äºŒç»´ç å›¾ç‰‡æ–‡ä»¶åç§°',
+  `qrcode_url` varchar(128) DEFAULT NULL COMMENT 'äºŒç»´ç url',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ‰¹æ¬¡å·ï¼šæ‰¹é‡äº§ç”ŸäºŒç»´ç çš„ç¼–å·',
   `ticket` text,
-  `qrcode_name` varchar(128) DEFAULT NULL COMMENT '¶şÎ¬ÂëÃû³Æ',
+  `qrcode_name` varchar(128) DEFAULT NULL COMMENT 'äºŒç»´ç åç§°',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Î¢ĞÅ¹«ÖÚºÅ¶şÎ¬Âë';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å¾®ä¿¡å…¬ä¼—å·äºŒç»´ç ';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4273,15 +4273,15 @@ DROP TABLE IF EXISTS `wechat_qrcode_focus`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wechat_qrcode_focus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `qrcode_id` varchar(45) DEFAULT NULL COMMENT '¶şÎ¬Âë±àºÅ',
-  `wx_name` varchar(100) DEFAULT NULL COMMENT 'Î¢ĞÅ¹«ÖÚºÅÃû³Æ',
-  `ch_code` int(11) DEFAULT NULL COMMENT 'ÇşµÀ±àºÅ\nwechat_channel.id',
-  `openid` varchar(128) DEFAULT NULL COMMENT '¹Ø×¢Õßopenid',
-  `focus_datetime` datetime DEFAULT NULL COMMENT '¹Ø×¢Ê±¼ä',
-  `unfocus_datetime` datetime DEFAULT NULL COMMENT 'È¡Ïû¹Ø×¢Ê±¼ä',
-  `focus_status` tinyint(4) DEFAULT NULL COMMENT '0:¹Ø×¢Ê±¼ä 1:È¡Ïû¹Ø×¢Ê±¼ä',
+  `qrcode_id` varchar(45) DEFAULT NULL COMMENT 'äºŒç»´ç ç¼–å·',
+  `wx_name` varchar(100) DEFAULT NULL COMMENT 'å¾®ä¿¡å…¬ä¼—å·åç§°',
+  `ch_code` int(11) DEFAULT NULL COMMENT 'æ¸ é“ç¼–å·\nwechat_channel.id',
+  `openid` varchar(128) DEFAULT NULL COMMENT 'å…³æ³¨è€…openid',
+  `focus_datetime` datetime DEFAULT NULL COMMENT 'å…³æ³¨æ—¶é—´',
+  `unfocus_datetime` datetime DEFAULT NULL COMMENT 'å–æ¶ˆå…³æ³¨æ—¶é—´',
+  `focus_status` tinyint(4) DEFAULT NULL COMMENT '0:å…³æ³¨æ—¶é—´ 1:å–æ¶ˆå…³æ³¨æ—¶é—´',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='¹Ø×¢¶şÎ¬Âë¼ÇÂ¼';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å…³æ³¨äºŒç»´ç è®°å½•';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4302,12 +4302,12 @@ DROP TABLE IF EXISTS `wechat_qrcode_log`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wechat_qrcode_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `source_filename` varchar(128) DEFAULT NULL COMMENT 'Êı¾İÔ´ÎÄ¼şÃû³Æ',
-  `total_rows` int(11) DEFAULT NULL COMMENT '×ÜÌõÊı',
-  `success` tinyint(4) DEFAULT NULL COMMENT '³É¹¦ÌõÊı',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0-Ê§°Ü\n1-³É¹¦',
+  `source_filename` varchar(128) DEFAULT NULL COMMENT 'æ•°æ®æºæ–‡ä»¶åç§°',
+  `total_rows` int(11) DEFAULT NULL COMMENT 'æ€»æ¡æ•°',
+  `success` tinyint(4) DEFAULT NULL COMMENT 'æˆåŠŸæ¡æ•°',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0-å¤±è´¥\n1-æˆåŠŸ',
   `create_time` datetime DEFAULT NULL,
-  `batch_id` varchar(45) DEFAULT NULL COMMENT 'Åú´ÎºÅ£ºÅúÁ¿²úÉú¶şÎ¬ÂëµÄ±àºÅ',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ‰¹æ¬¡å·ï¼šæ‰¹é‡äº§ç”ŸäºŒç»´ç çš„ç¼–å·',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4330,12 +4330,12 @@ DROP TABLE IF EXISTS `wechat_qrcode_scan`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wechat_qrcode_scan` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(100) DEFAULT NULL COMMENT 'ÓÃ»§ID',
-  `user_host` varchar(500) DEFAULT NULL COMMENT 'É¨ÃèÓÃ»§ÊÖ»úhost name',
-  `qrcode_id` int(11) DEFAULT NULL COMMENT '¶şÎ¬Âë³¡¾°±àºÅ£¬wechat_qrcode.id',
-  `create_time` datetime DEFAULT NULL COMMENT 'É¨ÃèÊ±¼ä',
+  `user_id` varchar(100) DEFAULT NULL COMMENT 'ç”¨æˆ·ID',
+  `user_host` varchar(500) DEFAULT NULL COMMENT 'æ‰«æç”¨æˆ·æ‰‹æœºhost name',
+  `qrcode_id` int(11) DEFAULT NULL COMMENT 'äºŒç»´ç åœºæ™¯ç¼–å·ï¼Œwechat_qrcode.id',
+  `create_time` datetime DEFAULT NULL COMMENT 'æ‰«ææ—¶é—´',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='¼ÇÂ¼É¨Ãè´ÎÊıºÍÈËÊı';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='è®°å½•æ‰«ææ¬¡æ•°å’Œäººæ•°';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4356,10 +4356,10 @@ DROP TABLE IF EXISTS `wechat_qrcode_ticket`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wechat_qrcode_ticket` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `ticket` text COMMENT '»ñÈ¡µÄ¶şÎ¬Âëticket£¬Æ¾½è´Ëticket¿ÉÒÔÔÚÓĞĞ§Ê±¼äÄÚ»»È¡¶şÎ¬Âë',
-  `url` varchar(128) DEFAULT NULL COMMENT '¶şÎ¬ÂëÍ¼Æ¬½âÎöºóµÄµØÖ·£¬¿ª·¢Õß¿É¸ù¾İ¸ÃµØÖ·×ÔĞĞÉú³ÉĞèÒªµÄ¶şÎ¬ÂëÍ¼Æ¬',
-  `scene_id` int(11) DEFAULT NULL COMMENT '³¡¾°ÖµID',
-  `create_time` datetime DEFAULT NULL COMMENT '´´½¨Ê±¼ä',
+  `ticket` text COMMENT 'è·å–çš„äºŒç»´ç ticketï¼Œå‡­å€Ÿæ­¤ticketå¯ä»¥åœ¨æœ‰æ•ˆæ—¶é—´å†…æ¢å–äºŒç»´ç ',
+  `url` varchar(128) DEFAULT NULL COMMENT 'äºŒç»´ç å›¾ç‰‡è§£æåçš„åœ°å€ï¼Œå¼€å‘è€…å¯æ ¹æ®è¯¥åœ°å€è‡ªè¡Œç”Ÿæˆéœ€è¦çš„äºŒç»´ç å›¾ç‰‡',
+  `scene_id` int(11) DEFAULT NULL COMMENT 'åœºæ™¯å€¼ID',
+  `create_time` datetime DEFAULT NULL COMMENT 'åˆ›å»ºæ—¶é—´',
   `state` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4383,16 +4383,16 @@ DROP TABLE IF EXISTS `wechat_register`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wechat_register` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `wx_acct` varchar(500) NOT NULL COMMENT 'Î¢ĞÅÕËºÅ\n¸öÈËºÅ£º uin\n·şÎñºÅ/¶©ÔÄºÅ£ºweixin_id',
-  `name` varchar(500) DEFAULT NULL COMMENT 'Î¢ĞÅ(¸öÈË¡¢¶©ÔÄ¡¢·şÎñºÅ)Ãû³Æ',
-  `type` int(11) NOT NULL DEFAULT '-1' COMMENT 'Î¢ĞÅ½ÓÈëÀàĞÍ\n0-·şÎñºÅ\n1-¸öÈËºÅ\n2-¶©ÔÄºÅ\n3-Î´ÈÏÖ¤·şÎñºÅ\n4-Î´ÈÏÖ¤¶©ÔÄºÅ',
-  `nickname` varchar(500) DEFAULT NULL COMMENT '¸öÈËºÅµÄêÇ³Æ',
-  `header_image` varchar(1000) DEFAULT NULL COMMENT '¸öÈËºÅµÄÍ·ÏñËõÂÔÍ¼',
-  `sex` varchar(10) DEFAULT NULL COMMENT '¸öÈËºÅµÄĞÔ±ğ',
-  `province` varchar(50) DEFAULT NULL COMMENT '¸öÈËºÅµÄÊ¡',
-  `city` varchar(50) DEFAULT NULL COMMENT '¸öÈËºÅµÄÊĞ',
-  `signature` varchar(100) DEFAULT NULL COMMENT '¸öÈËºÅµÄÇ©ÃûÎÄ×Ö',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'É¾³ı±ê¼Ç',
+  `wx_acct` varchar(500) NOT NULL COMMENT 'å¾®ä¿¡è´¦å·\nä¸ªäººå·ï¼š uin\næœåŠ¡å·/è®¢é˜…å·ï¼šweixin_id',
+  `name` varchar(500) DEFAULT NULL COMMENT 'å¾®ä¿¡(ä¸ªäººã€è®¢é˜…ã€æœåŠ¡å·)åç§°',
+  `type` int(11) NOT NULL DEFAULT '-1' COMMENT 'å¾®ä¿¡æ¥å…¥ç±»å‹\n0-æœåŠ¡å·\n1-ä¸ªäººå·\n2-è®¢é˜…å·\n3-æœªè®¤è¯æœåŠ¡å·\n4-æœªè®¤è¯è®¢é˜…å·',
+  `nickname` varchar(500) DEFAULT NULL COMMENT 'ä¸ªäººå·çš„æ˜µç§°',
+  `header_image` varchar(1000) DEFAULT NULL COMMENT 'ä¸ªäººå·çš„å¤´åƒç¼©ç•¥å›¾',
+  `sex` varchar(10) DEFAULT NULL COMMENT 'ä¸ªäººå·çš„æ€§åˆ«',
+  `province` varchar(50) DEFAULT NULL COMMENT 'ä¸ªäººå·çš„çœ',
+  `city` varchar(50) DEFAULT NULL COMMENT 'ä¸ªäººå·çš„å¸‚',
+  `signature` varchar(100) DEFAULT NULL COMMENT 'ä¸ªäººå·çš„ç­¾åæ–‡å­—',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
   `create_time` datetime DEFAULT NULL,
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `app_id` varchar(22) NOT NULL,
@@ -4420,13 +4420,94 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2016-09-13 15:14:03
--- ¸ù¾İÒüºãÄÇ±ßÎ¢ĞÅ¶şÎ¬ÂëµÄÒªÇóĞŞ¸ÄÎªwechat_qrcode_focus±íÌí¼ÓÒ»ÁĞÓÃÀ´´æ´¢Î¢ĞÅ¹«ÖÚºÅ
-ALTER TABLE wechat_qrcode_focus add column wxmp_id varchar(45) DEFAULT null COMMENT 'Î¢ĞÅ¹«ÖÚºÅÎ¨Ò»ID';
+-- æ ¹æ®Jira MCPRO-125ä¿®æ”¹å®¢æˆ·æ ‡ç­¾æ¨¡æ¿(ä¿®æ”¹original_data_customè¡¨ç»“æ„ï¼Œdata_customè¡¨ç»“æ„ï¼Œimport_templateçš„æ•°æ®)
+DROP TABLE IF EXISTS `original_data_customer_tags`;
 
+CREATE TABLE `original_data_customer_tags` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `tag_source` varchar(45) DEFAULT NULL COMMENT 'æ ‡ç­¾æ¥æº',
+  `tag_type_layer_one` varchar(100) DEFAULT NULL COMMENT 'ä¸€çº§æ ‡ç­¾åˆ†ç±»', 
+  `tag_type_layer_two` varchar(100) DEFAULT NULL COMMENT 'äºŒçº§æ ‡ç­¾åˆ†ç±»', 
+  `tag_type_layer_three` varchar(100) DEFAULT NULL COMMENT 'ä¸‰çº§æ ‡ç­¾åˆ†ç±»', 
+  `tag_name` varchar(100) DEFAULT NULL COMMENT 'æ ‡ç­¾åç§°',
+  `identify_no` varchar(19) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
+  `email` varchar(100) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºè¯å·ç ',
+  `qq` varchar(45) DEFAULT NULL,
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
+  `unionid` varchar(45) DEFAULT NULL,
+  `wxmp_id` varchar(128) DEFAULT NULL COMMENT 'å…¬ä¼—å·æ ‡è¯†',
+  `wx_code` varchar(128) DEFAULT NULL COMMENT 'openId',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
+  `file_unique` varchar(45) DEFAULT NULL,
+  `bitmap` varchar(18) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `data_customer_tags`;
 
+CREATE TABLE `data_customer_tags` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ä¸»é”®id',
+  `tag_source` varchar(45) DEFAULT NULL COMMENT 'æ ‡ç­¾æ¥æº',
+  `tag_type_layer_one` varchar(100) DEFAULT NULL COMMENT 'ä¸€çº§æ ‡ç­¾åˆ†ç±»', 
+  `tag_type_layer_two` varchar(100) DEFAULT NULL COMMENT 'äºŒçº§æ ‡ç­¾åˆ†ç±»', 
+  `tag_type_layer_three` varchar(100) DEFAULT NULL COMMENT 'ä¸‰çº§æ ‡ç­¾åˆ†ç±»', 
+  `tag_name` varchar(45) DEFAULT NULL COMMENT 'æ ‡ç­¾åç§°',
+  `identify_no` varchar(19) DEFAULT NULL COMMENT 'èº«ä»½è¯å·',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT 'é©¾é©¶è¯å·',
+  `email` varchar(100) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `tel` varchar(45) DEFAULT NULL COMMENT 'å›ºè¯å·ç ',
+  `qq` varchar(45) DEFAULT NULL,
+  `acct_type` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·ç±»å‹',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT 'ç§æœ‰è´¦å·',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphoneæ‰‹æœºè¯†åˆ«ç ',
+  `imei` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºè¯†åˆ«ç ',
+  `unionid` varchar(45) DEFAULT NULL,
+  `wxmp_id` varchar(128) DEFAULT NULL COMMENT 'å…¬ä¼—å·æ ‡è¯†',
+  `wx_code` varchar(128) DEFAULT NULL COMMENT 'å¾®ä¿¡openid',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT 'æ‰‹æœºç½‘å¡MAC',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'åˆ é™¤æ ‡è®°',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` timestamp NOT NULL DEFAULT '1970-07-01 00:00:00' COMMENT 'åˆ é™¤æ—¶é—´',
+  `source` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®æ¥æº',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT 'æ•°æ®å¯¼å…¥æ‰¹æ¬¡iD',
+  `bitmap` varchar(18) DEFAULT NULL,
+  `keyid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='å®¢æˆ·æ ‡ç­¾';
 
+DELETE FROM import_template WHERE templ_type = 2;
 
-
-
-
+INSERT INTO `import_template`(templ_type,templ_name,field_name,field_code,selected,status) VALUES 
+(2,'å®¢æˆ·æ ‡ç­¾','æ ‡ç­¾æ¥æº','tag_source',1,0),
+(2,'å®¢æˆ·æ ‡ç­¾','ä¸€çº§æ ‡ç­¾åˆ†ç±»','tag_type_layer_one',1,0),
+(2,'å®¢æˆ·æ ‡ç­¾','äºŒçº§æ ‡ç­¾åˆ†ç±»','tag_type_layer_two',1,0),
+(2,'å®¢æˆ·æ ‡ç­¾','ä¸‰çº§æ ‡ç­¾åˆ†ç±»','tag_type_layer_three',1,0),
+(2,'å®¢æˆ·æ ‡ç­¾','æ ‡ç­¾åç§°','tag_name',1,0),
+(2,'å®¢æˆ·æ ‡ç­¾','èº«ä»½è¯å·','identify_no',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','é©¾é©¶è¯å·','driving_license',1,0),
+(2,'å®¢æˆ·æ ‡ç­¾','é‚®ç®±','email',1,0),
+(2,'å®¢æˆ·æ ‡ç­¾','æ‰‹æœºå·','mobile',1,0),
+(2,'å®¢æˆ·æ ‡ç­¾','å›ºè¯å·ç ','tel',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','QQ','qq',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','ç§æœ‰è´¦å·ç±»å‹','acct_type',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','ç§æœ‰è´¦å·','acct_no',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','IDFA','idfa',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','IMEI','imei',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','unionid','unionid',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','MAC','phone_mac',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','åˆ é™¤æ ‡è®°','status',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','äº§ç”Ÿæ—¶é—´','create_time',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','åˆ é™¤æ—¶é—´','update_time',0,0),
+(2,'å®¢æˆ·æ ‡ç­¾','æ•°æ®æ¥æº','source',0,0);
