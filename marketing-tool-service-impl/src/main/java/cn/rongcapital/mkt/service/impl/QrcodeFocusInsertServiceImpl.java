@@ -2,8 +2,10 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeFocusDao;
+import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeFocus;
+import cn.rongcapital.mkt.po.WechatQrcodeTicket;
 import cn.rongcapital.mkt.service.QrcodeFocusInsertService;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.BeanUtils;
@@ -28,18 +30,26 @@ public class QrcodeFocusInsertServiceImpl implements QrcodeFocusInsertService{
 
     @Autowired
     private WechatQrcodeFocusDao wechatQrcodeFocusDao;
-
+    
+    @Autowired
+    private WechatQrcodeTicketDao wechatQrcodeTicketDao;
+    
     @Override
     public boolean insertQrcodeFoucsInfo(String qrCodeTicket,String openId, Date scanQrTime, Integer focusStatus,String wxmpId) {
         boolean insertSuccess = false;
         Integer effectRow = 0;
         if (validateParameter(scanQrTime, focusStatus)) return insertSuccess;
-
         if(!StringUtils.isEmpty(qrCodeTicket)){
-            WechatQrcode wechatQrcode = new WechatQrcode();
-            wechatQrcode.setTicket(qrCodeTicket);
-            List<WechatQrcode> wechatQrcodeList = wechatQrcodeDao.selectList(wechatQrcode);
-            effectRow = InsertNewFocusTime(openId, scanQrTime, focusStatus, wxmpId, effectRow, wechatQrcodeList);
+        	WechatQrcodeTicket wechatQrcodeTicketTemp = new WechatQrcodeTicket();
+        	wechatQrcodeTicketTemp.setTicket(qrCodeTicket);
+        	List<WechatQrcodeTicket> wechatQrcodeTicketes = wechatQrcodeTicketDao.selectList(wechatQrcodeTicketTemp);
+        	if(wechatQrcodeTicketes!=null&&wechatQrcodeTicketes.size()>0){
+        		WechatQrcodeTicket wechatQrcodeTicket = wechatQrcodeTicketes.get(0);
+                WechatQrcode wechatQrcode = new WechatQrcode();
+                wechatQrcode.setTicket(String.valueOf(wechatQrcodeTicket.getId()));
+                List<WechatQrcode> wechatQrcodeList = wechatQrcodeDao.selectList(wechatQrcode);
+                effectRow = InsertNewFocusTime(openId, scanQrTime, focusStatus, wxmpId, effectRow, wechatQrcodeList);
+        	}
         }else {
             WechatQrcodeFocus wechatQrcodeFocus = new WechatQrcodeFocus();
             wechatQrcodeFocus.setWxmpId(wxmpId);
