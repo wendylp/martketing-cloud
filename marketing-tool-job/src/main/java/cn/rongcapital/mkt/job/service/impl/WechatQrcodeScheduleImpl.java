@@ -23,7 +23,7 @@ public class WechatQrcodeScheduleImpl implements TaskService {
 	public void task(Integer taskId) {
 		//给每个授权的账号每天批量生成二维码2000个
 		try {
-			wechatQrcodeBiz.getQrcodes(1, 2000, "QR_LIMIT_SCENE");
+			wechatQrcodeBiz.getQrcodes(1, 100, "QR_LIMIT_SCENE");
 		} catch (FileNotFoundException e) {			
 			logger.info(e.getMessage());
 		} catch (IOException e) {			
