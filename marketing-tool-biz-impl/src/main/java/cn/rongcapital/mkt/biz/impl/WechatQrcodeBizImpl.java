@@ -186,28 +186,32 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 					app.setAuthAppId(webchatAuthInfoTemp.getAuthorizerAppid());
 					app.setAuthRefreshToken(webchatAuthInfoTemp.getAuthorizerRefreshToken());
 					for(int i=startSceneId;i<=endSceneId;i++){
-						WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName);
-						if(wechatQrcodeTicket!=null){
-							/**
-							 * 生成二维码对象到数据库
-							 */
-							wechatQrcodeTicketDao.insert(wechatQrcodeTicket);
-							
-							long id = wechatQrcodeTicket.getId();
-							wechatQrcodeTicket.setSceneId(Integer.parseInt(String.valueOf(id)));
-							/**
-							 * 创建二维码图片到服务器
-							 */
-							createQrcodeFromWechatQrcodeTicket(wechatQrcodeTicket);
-							
-							/**
-							 * 构建返回信息
-							 */
-							Map<String,Object> mapBack = new HashMap<String,Object>();
-							mapBack.put("ticket", wechatQrcodeTicket.getTicket());
-							mapBack.put("url", wechatQrcodeTicket.getUrl());
-							data.add(mapBack);
-							totalSucc++;
+						try {
+							WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName);
+							if(wechatQrcodeTicket!=null){
+								/**
+								 * 生成二维码对象到数据库
+								 */
+								wechatQrcodeTicketDao.insert(wechatQrcodeTicket);
+								
+								long id = wechatQrcodeTicket.getId();
+								wechatQrcodeTicket.setSceneId(Integer.parseInt(String.valueOf(id)));
+								/**
+								 * 创建二维码图片到服务器
+								 */
+								createQrcodeFromWechatQrcodeTicket(wechatQrcodeTicket);
+								
+								/**
+								 * 构建返回信息
+								 */
+								Map<String,Object> mapBack = new HashMap<String,Object>();
+								mapBack.put("ticket", wechatQrcodeTicket.getTicket());
+								mapBack.put("url", wechatQrcodeTicket.getUrl());
+								data.add(mapBack);
+								totalSucc++;
+							}
+						} catch (Exception e) {
+							continue;
 						}
 					}
 				}
