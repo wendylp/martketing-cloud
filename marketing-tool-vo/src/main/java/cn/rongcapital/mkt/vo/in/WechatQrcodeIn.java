@@ -35,7 +35,7 @@ public class WechatQrcodeIn extends BaseInput{
 
     private String fixed_audience;
 
-    private List<AssociationTag> association_tags;
+    private List<String> association_tags;
     
     private String comments;
     
@@ -82,18 +82,26 @@ public class WechatQrcodeIn extends BaseInput{
 		this.fixed_audience = fixed_audience;
 	}
 
-	@JsonProperty("association_tags")
-	public List<AssociationTag> getAssociation_tags() {
-		return association_tags;
-	}
-
-	public void setAssociation_tags(List<AssociationTag> association_tags) {
-		this.association_tags = association_tags;
-	}
+//	@JsonProperty("association_tags")
+//	public List<AssociationTag> getAssociation_tags() {
+//		return association_tags;
+//	}
+//
+//	public void setAssociation_tags(List<AssociationTag> association_tags) {
+//		this.association_tags = association_tags;
+//	}
 
 	@JsonProperty("comments")
 	public String getComments() {
 		return comments;
+	}
+
+	public List<String> getAssociation_tags() {
+		return association_tags;
+	}
+
+	public void setAssociation_tags(List<String> association_tags) {
+		this.association_tags = association_tags;
 	}
 
 	public void setComments(String comments) {
