@@ -4,6 +4,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.ContactListDao;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
+import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.po.ContactList;
 import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContactsCommitCountGetService;
@@ -26,6 +27,9 @@ public class ContactsCommitCountGetServiceImpl implements ContactsCommitCountGet
 
     @Autowired
     private ContactListDao contactListDao;
+
+    @Autowired
+    private DataPopulationDao dataPopulationDao;
 
     @Override
     public ContactsCommitCountListOutput getContactsCommitCount(Long contactId) {
@@ -68,9 +72,13 @@ public class ContactsCommitCountGetServiceImpl implements ContactsCommitCountGet
         contactList.setContactTemplId(contactId.intValue());
         List<Integer> distinctKeyidList = contactListDao.selectDistinctKeyidList(contactList);
         if(distinctKeyidList.contains(null)){
-            contactsCommitCountOutput.setMdCount(distinctKeyidList.size() - 1);
+            distinctKeyidList.remove(null);
+        }
+        if(distinctKeyidList.size() > 0){
+            Integer mainDataCount = dataPopulationDao.selectCountFromContactList(distinctKeyidList);
+            contactsCommitCountOutput.setMdCount(mainDataCount);
         }else{
-            contactsCommitCountOutput.setMdCount(distinctKeyidList.size());
+            contactsCommitCountOutput.setMdCount(ApiConstant.INT_ZERO);
         }
 
         //5.获取未导入的主数据条数

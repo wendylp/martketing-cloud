@@ -102,4 +102,10 @@ public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilt
 	 * @return
 	 */
 	List<SegmentSearchDownloadOut> getSegmentSearchDownload(@Param("headidList") List<Integer> head_ids);
+
+	/**
+	 * @功能简述 : 查询产生主数据的条数
+	 * @param      distinctKeyidList
+	 */
+	Integer selectCountFromContactList(@Param("idList") List<Integer> distinctKeyidList);
 }
