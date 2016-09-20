@@ -227,7 +227,7 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			int status = 0;
 			String event = msgMap.get("event");
 			String createTime = msgMap.get("createTime");
-			Date date = new Date(Long.parseLong(createTime));
+			Date date = new Date(Long.parseLong(createTime)*1000);
 			switch(event){
 			  case "SCAN":{
 				  break; 
