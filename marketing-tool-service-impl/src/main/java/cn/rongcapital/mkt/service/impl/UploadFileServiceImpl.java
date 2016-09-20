@@ -124,6 +124,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 	
 	@Autowired
 	WechatQrcodeTicketDao wechatQrcodeTicketDao;
+	
 
     @Override
     public Object uploadFile(String fileUnique, MultipartFormDataInput fileInput) {
@@ -612,14 +613,25 @@ public class UploadFileServiceImpl implements UploadFileService{
 						chCode = selectList.get(0).getId();
 					}
 					wq.setChCode(chCode);
+					wq.setIsAudience((byte) 0);
 					wq.setStatus((byte) 1);
+					
+                    WechatRegister wechatRegister = new WechatRegister();
+                    wechatRegister.setName(wmo.getOfficialName());
+					List<WechatRegister> registerList = wechatRegisterDao.selectList(wechatRegister);
+					WechatRegister register = registerList.get(0);
+					if(register != null){
+					    wq.setWxAcct(register.getWxAcct());
+					}
 					
 					List<WechatQrcodeTicket> wechatQrcodeTickets = wechatQrcodeTicketDao.selectList(wechatQrcodeTicket);
 					if(wechatQrcodeTickets!=null && wechatQrcodeTickets.size()>0){
 						WechatQrcodeTicket wechatQrcodeTicketTemp = wechatQrcodeTickets.get(0);
-						wq.setQrcodePic(String.valueOf(wechatQrcodeTicketTemp.getId())+".jpg");
+						wq.setQrcodeUrl(wechatQrcodeTicketTemp.getUrl());
+						wq.setQrcodePic(String.valueOf(wechatQrcodeTicketTemp.getId()) + ".jpg");
 						wq.setTicket(String.valueOf(wechatQrcodeTicketTemp.getId()));
 						wechatQrcodeTicketTemp.setState(1);
+						wechatQrcodeTicketDao.updateById(wechatQrcodeTicketTemp);
 					}
 					wechatQrcodeDao.insert(wq);
 				}
