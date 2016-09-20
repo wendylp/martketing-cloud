@@ -88,8 +88,11 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 			dataList.add(getMap("未婚", 0));
 			break;
 		case "血型":
-			dataList.add(getMap("A", 1));
-			dataList.add(getMap("B", 0));
+			dataList.add(getMap("AB", 1));
+			dataList.add(getMap("A", 2));
+			dataList.add(getMap("B", 3));
+			dataList.add(getMap("O", 4));
+			dataList.add(getMap("未知", 0));
 			break;
 		case "教育程度":
 			dataList.add(getMap("幼儿园", 1));
