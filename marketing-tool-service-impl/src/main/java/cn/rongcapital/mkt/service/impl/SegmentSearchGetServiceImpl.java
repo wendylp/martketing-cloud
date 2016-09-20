@@ -71,7 +71,6 @@ public class SegmentSearchGetServiceImpl implements SegmentSearchGetService {
 			}
 		}
 		
-
 		return result;
 	}
 }

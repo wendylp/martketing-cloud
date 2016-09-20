@@ -66,7 +66,6 @@ public class SegmentSearchDownloadServiceImpl implements SegmentSearchDownloadSe
 				result.getData().add(resultMap);
 			}
 		}
-		
 		return result;
 	}
 }
