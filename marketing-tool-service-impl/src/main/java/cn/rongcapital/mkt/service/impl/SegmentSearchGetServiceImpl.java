@@ -55,20 +55,22 @@ public class SegmentSearchGetServiceImpl implements SegmentSearchGetService {
 			}
 		}
 
-		SegmentSearchIn searchIn = new SegmentSearchIn();
-		searchIn.setHeadidList(head_ids);
-		searchIn.setQueryName(query_name);
+		if (CollectionUtils.isNotEmpty(head_ids)) {
+			SegmentSearchIn searchIn = new SegmentSearchIn();
+			searchIn.setHeadidList(head_ids);
+			searchIn.setQueryName(query_name);
 
-		List<DataPopulation> dataList = dataPopulationDao.segmentSearch(searchIn);
-		if (CollectionUtils.isNotEmpty(dataList)) {
-			result.setTotal(dataList.size());
-			for (DataPopulation data : dataList) {
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("name", data.getName());
-				result.getData().add(map);
+			List<DataPopulation> dataList = dataPopulationDao.segmentSearch(searchIn);
+			if (CollectionUtils.isNotEmpty(dataList)) {
+				result.setTotal(dataList.size());
+				for (DataPopulation data : dataList) {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("name", data.getName());
+					result.getData().add(map);
+				}
 			}
 		}
- 
+
 		return result;
 	}
 }

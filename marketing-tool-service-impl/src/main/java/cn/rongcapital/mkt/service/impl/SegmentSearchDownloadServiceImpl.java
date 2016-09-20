@@ -45,25 +45,26 @@ public class SegmentSearchDownloadServiceImpl implements SegmentSearchDownloadSe
 				head_ids.add(segment.getDataId());
 			}
 		}
-		List<SegmentSearchDownloadOut> searchDownloads = segmentSearchDownloadServiceDao
-				.getSegmentSearchDownload(head_ids);
-		if (CollectionUtils.isNotEmpty(searchDownloads)) {
-			Map<String, String> resultMap = new HashMap<>();
-			List<Map<String, String>> columnsMapList = new ArrayList<>();
-			String[][] excelTitles = { { "name", "姓名" }, { "mobile", "手机号" },{ "gender", "性别" }, 
-					{ "birthday", "出生年月日" }, { "provice", "省" } , { "city", "市" }, { "email", "邮箱" }, 
-					{ "identifyNo", "身份证号" }, { "drivingLicense", "驾驶证号" }, { "wxCode", "微信号" },
-					{ "qq", "qq号" }};
-			for(String[] a : excelTitles)
-			{
-				Map<String, String> map = new HashMap<>();
-				map.put(a[0], a[1]);
-				columnsMapList.add(map);
+		if (CollectionUtils.isNotEmpty(head_ids)) {
+			List<SegmentSearchDownloadOut> searchDownloads = segmentSearchDownloadServiceDao
+					.getSegmentSearchDownload(head_ids);
+
+			if (CollectionUtils.isNotEmpty(searchDownloads)) {
+				Map<String, String> resultMap = new HashMap<>();
+				List<Map<String, String>> columnsMapList = new ArrayList<>();
+				String[][] excelTitles = { { "name", "姓名" }, { "mobile", "手机号" }, { "gender", "性别" },
+						{ "birthday", "出生年月日" }, { "provice", "省" }, { "city", "市" }, { "email", "邮箱" },
+						{ "identifyNo", "身份证号" }, { "drivingLicense", "驾驶证号" }, { "wxCode", "微信号" }, { "qq", "qq号" } };
+				for (String[] a : excelTitles) {
+					Map<String, String> map = new HashMap<>();
+					map.put(a[0], a[1]);
+					columnsMapList.add(map);
+				}
+				File file = FileUtil.generateFileforDownload(columnsMapList, searchDownloads,
+						FileNameEnum.CUSTOM_AUDIENCE.getDetailName());
+				resultMap.put("download_url", file.getName());
+				result.getData().add(resultMap);
 			}
-			File file = FileUtil.generateFileforDownload(columnsMapList, searchDownloads,
-					FileNameEnum.CUSTOM_AUDIENCE.getDetailName());
-			resultMap.put("download_url", file.getName());
-			result.getData().add(resultMap);
 		}
 		return result;
 	}
