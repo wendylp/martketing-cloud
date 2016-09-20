@@ -9,13 +9,17 @@ public class TagRecommend extends BaseQuery {
 
     private Integer tagGroupId;
 
+    private String tagGroupName;
+
     private Byte status;
 
     private Date createTime;
 
     private Date updateTime;
 
-    private String tagGroupName;
+    private String tagDesc;
+
+    private Boolean flag;
 
     public Integer getId() {
         return id;
@@ -31,6 +35,14 @@ public class TagRecommend extends BaseQuery {
 
     public void setTagGroupId(Integer tagGroupId) {
         this.tagGroupId = tagGroupId;
+    }
+
+    public String getTagGroupName() {
+        return tagGroupName;
+    }
+
+    public void setTagGroupName(String tagGroupName) {
+        this.tagGroupName = tagGroupName == null ? null : tagGroupName.trim();
     }
 
     public Byte getStatus() {
@@ -57,11 +69,19 @@ public class TagRecommend extends BaseQuery {
         this.updateTime = updateTime;
     }
 
-    public String getTagGroupName() {
-        return tagGroupName;
+    public String getTagDesc() {
+        return tagDesc;
     }
 
-    public void setTagGroupName(String tagGroupName) {
-        this.tagGroupName = tagGroupName;
+    public void setTagDesc(String tagDesc) {
+        this.tagDesc = tagDesc == null ? null : tagDesc.trim();
+    }
+
+    public Boolean getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
     }
 }
