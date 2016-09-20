@@ -45,7 +45,7 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService {
 	public BaseOutput getWeiXinQrocdeInfo(String qrcodeId) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ONE, null);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		wechatQrcode.setId(Integer.valueOf(qrcodeId));
 
@@ -56,43 +56,65 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService {
 			result.setMsg(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg());
 		} else {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("wxmp_name", wechatQrcodeLists.get(0).getWxName());
+			wechatQrcode = wechatQrcodeLists.get(0);
+			
+			this.getWechatQrcodeMap(map,wechatQrcode);
+			
+			result.getData().add(map);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 构建输出结果
+	 * @param map
+	 * @param wechatQrcode
+	 */
+	private void getWechatQrcodeMap(Map<String, Object> map, WechatQrcode wechatQrcode) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		if(wechatQrcode != null){
+			map.put("wxmp_name", wechatQrcode.getWxName());
 
 			// 根据渠道号获取渠道名
 			WechatChannel wechatChannel = new WechatChannel();
-			wechatChannel.setId(wechatQrcodeLists.get(0).getChCode());
+			wechatChannel.setId(wechatQrcode.getChCode());
 			List<WechatChannel> wechatChannelLists = wechatChannelDao.selectList(wechatChannel);
 			if (!(wechatChannelLists == null) && !wechatChannelLists.isEmpty()) {
 				map.put("ch_name", wechatChannelLists.get(0).getChName());
-				// 渠道id
 				map.put("ch_id", wechatChannelLists.get(0).getId());
 			} else {
 				map.put("ch_name", "");// 查询不到的时候默认传空字符串
 				map.put("ch_id", "");
 			}
-
-			map.put("qrcode_name", wechatQrcodeLists.get(0).getQrcodeName());
+			//微信公众号名称
+			map.put("qrcode_name", wechatQrcode.getQrcodeName());
 			// 微信公众号
-			map.put("wx_acct", wechatQrcodeLists.get(0).getWxAcct());
+			map.put("wx_acct", wechatQrcode.getWxAcct());
 
 			// create_time为空检查
-			if (wechatQrcodeLists.get(0).getCreateTime() != null) {
-				map.put("create_time", sdf.format(wechatQrcodeLists.get(0).getCreateTime()));
+			if (wechatQrcode.getCreateTime() != null) {
+				map.put("create_time", sdf.format(wechatQrcode.getCreateTime()));
 			} else {
 				map.put("create_time", "");
 			}
 			// 日期格式化处理
-			Date expirationTime = wechatQrcodeLists.get(0).getExpirationTime();
-			expirationTime = null == expirationTime ? new Date() : expirationTime;
-			map.put("expiration_time", sdf.format(expirationTime));
-
-			if (wechatQrcodeLists.get(0).getAudienceName() != null) {
-				map.put("fixed_audience", wechatQrcodeLists.get(0).getAudienceName());
+			Date expirationTime = wechatQrcode.getExpirationTime();
+			if(expirationTime == null ){
+				map.put("expiration_time", "");
+			}else{
+				map.put("expiration_time", sdf.format(expirationTime));
+			}
+			//人群信息
+			if (wechatQrcode.getAudienceName() != null) {
+				map.put("fixed_audience", wechatQrcode.getAudienceName());
 			} else {
 				map.put("fixed_audience", "");
 			}
 			// 关联标签
-			String relatedTag = wechatQrcodeLists.get(0).getRelatedTags();
+			String relatedTag = wechatQrcode.getRelatedTags();
 			if (relatedTag != null && !"".equals(relatedTag)) {
 				// 标签查询
 				List<CustomTag> customTagList = customTagDao.selectCustomTagsByIds(relatedTag.split(";"));
@@ -109,18 +131,13 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService {
 				map.put("association_tags", new ArrayList<String>());
 			}
 
-			if (wechatQrcodeLists.get(0).getComments() != null) {
-				map.put("comment", wechatQrcodeLists.get(0).getComments());
+			if (wechatQrcode.getComments() != null) {
+				map.put("comment", wechatQrcode.getComments());
 			} else {
 				map.put("comment", "");
 			}
-
-			result.getData().add(map);
 		}
-
-		result.setDate(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"));
-
-		return result;
+		
 	}
 
 }
