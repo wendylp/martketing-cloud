@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.mkt.biz.WechatPublicAuthBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
@@ -476,6 +477,9 @@ public class MktApi {
 	
 	@Autowired
 	private SegmentSearchDownloadService segmentSearchDownloadService;
+	
+	@Autowired
+	private WechatPublicAuthBiz wechatPublicAuthBiz;
 	
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -1717,7 +1721,15 @@ public class MktApi {
 	@Path("/mkt.data.inbound.wechat.public.auth")
 	public BaseOutput authWechatPublicAccount(@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("ver") String ver) {
-		return wechatPublicAuthService.authWechatPublicAccount();
+		return wechatPublicAuthBiz.authWechatPublicAccount();
+	}
+
+	@GET
+	@Path("/mkt.data.inbound.wechat.public.auth.code.callback")
+	public Response authWechatPublicCodeAccount(@NotEmpty @QueryParam("auth_code") String authorizationCode,@NotEmpty @QueryParam("expires_in") String expiresIn) throws URISyntaxException {
+		BaseOutput baseOutput = wechatPublicAuthBiz.authWechatPublicCodeAccount(authorizationCode);
+		URI location = new java.net.URI(ApiConstant.WEIXIN_REDIRECT_URL);
+		return Response.temporaryRedirect(location).build();		
 	}
 
 	/**

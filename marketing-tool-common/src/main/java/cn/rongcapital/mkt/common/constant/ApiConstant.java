@@ -252,7 +252,7 @@ public class ApiConstant {
 	
 	public static final String WEIXIN_QRCODE_CREATE = "https://api.weixin.qq.com/cgi-bin/qrcode/create";	
 	public static final String WEIXIN_QRCODE_SHOW = "https://mp.weixin.qq.com/cgi-bin/showqrcode";
-	public static final String WEIXIN_REDIRECT_URL = "http://mktpro.rc.dataengine.com/html/data-access/weixin.html";	
+	public static final String WEIXIN_REDIRECT_URL = "http://mkttest.cssrv.dataengine.com/html/data-access/weixin.html";	
 	public static final String WEIXIN_AUTH_CALLBACK_URI = "http://mktsrv.cssrv.dataengine.com/api?method=mkt.data.inbound.wechat.public.auth.code.callback";	
 	public static final String WEIXIN_AUTH_COMPONENT_LOGIN_PAGE ="https://mp.weixin.qq.com/cgi-bin/componentloginpage?";
 	/**
