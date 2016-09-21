@@ -60,7 +60,7 @@ public class ContactsLongurlGetServiceImpl implements ContactsLongurlGetService{
 		
 		if(contactTemplateLists== null || contactTemplateLists.size()<=0) {
 			result.setTotal(0);
-			logger.debug("{} 在数据库中不存在", shortUrl);
+			logger.info("{} 在数据库中不存在", shortUrl);
 		} else {
 			
 			if("mobile".equals(device)) {
@@ -68,7 +68,7 @@ public class ContactsLongurlGetServiceImpl implements ContactsLongurlGetService{
 			} else {
 				map.put("long_url", env.getProperty("contact.pc.url") + "?contact_id=" + contactTemplateLists.get(0).getContactId());
 			}
-			logger.debug("根据短链：{}, 总共查出{}条数据", shortUrl, contactTemplateLists.size());
+			logger.info("根据短链：{}, 总共查出{}条数据", shortUrl, contactTemplateLists.size());
 		}
 		result.getData().add(map);
 		return result;
