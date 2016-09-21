@@ -108,33 +108,6 @@ public class ContactListInfoGetServiceImpl implements ContactListInfoGetService 
 			break;
 		}
 		
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		if(fieldName.equals("性别")) {
-//			map.put("name", "男");
-//			map.put("value", 1);
-//			dataList.add(map);
-//			map.put("男", 1);
-//			map.put("女",0);
-//		} else if(fieldName.equals("婚否")) {
-//			map.put("已婚", 1);
-//			map.put("未婚", 0);
-//		} else if(fieldName.equals("血型")) {
-//			map.put("A", 1);
-//			map.put("B", 0);
-//		} else if(fieldName.equals("职业")) {
-//			map.put("医生", 1);
-//			map.put("杀手", 0);
-//		} else if(fieldName.equals("教育程度")) {
-//			map.put("幼儿园", 1);
-//			map.put("小学", 0);
-//		} else if(fieldName.equals("国籍")) {
-//			map.put("中国", 1);
-//			map.put("外国", 0);
-//		} else if(fieldName.equals("就业情况")) {
-//			map.put("已就业", 1);
-//			map.put("待业", 0);
-//		}
-//		return map;
 		return dataList;
 	}
 	
