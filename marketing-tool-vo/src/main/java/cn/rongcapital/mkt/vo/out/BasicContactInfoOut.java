@@ -72,6 +72,27 @@ public class BasicContactInfoOut {
         
         private String photo;
 
+        /**
+         * 微信别名
+         */
+        private String wx_nickname;
+        /**
+         * 微信性别
+         */
+        private String wx_gender;
+        /**
+         * 微信_国家
+         */
+        private String wx_country;
+        /**
+         * 微信_省份
+         */
+        private String wx_provice;
+        /**
+         * 微信_市区
+         */
+        private String wx_city;
+
         @JsonProperty("contact_id")
 		public Integer getContactId() {
 			return contactId;
@@ -281,5 +302,47 @@ public class BasicContactInfoOut {
 		public void setPhoto(String photo) {
 			this.photo = photo;
 		}
+
+		public String getWx_nickname() {
+			return wx_nickname;
+		}
+
+		public void setWx_nickname(String wx_nickname) {
+			this.wx_nickname = wx_nickname;
+		}
+
+		public String getWx_gender() {
+			return wx_gender;
+		}
+
+		public void setWx_gender(String wx_gender) {
+			this.wx_gender = wx_gender;
+		}
+
+		public String getWx_country() {
+			return wx_country;
+		}
+
+		public void setWx_country(String wx_country) {
+			this.wx_country = wx_country;
+		}
+
+		public String getWx_provice() {
+			return wx_provice;
+		}
+
+		public void setWx_provice(String wx_provice) {
+			this.wx_provice = wx_provice;
+		}
+
+		public String getWx_city() {
+			return wx_city;
+		}
+
+		public void setWx_city(String wx_city) {
+			this.wx_city = wx_city;
+		}
+		
+		
 		
 }
