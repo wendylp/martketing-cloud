@@ -38,8 +38,8 @@ public class GetWxImgTextAssetServiceImpl implements GetWxImgTextAssetService {
         
         int total = imgTextAssetDao.selectListBySearchKeyLikeCount(paramMap);
         baseOutput.getData().addAll(list);
-        baseOutput.setTotalCount(listBySearchKeyLike.size());
-        baseOutput.setTotal(total);
+        baseOutput.setTotalCount(total);
+        baseOutput.setTotal(listBySearchKeyLike.size());
         return Response.ok().entity(baseOutput).build();
     }
 
@@ -69,20 +69,24 @@ public class GetWxImgTextAssetServiceImpl implements GetWxImgTextAssetService {
     		
     		List<Map<String,Object>> newItems = new ArrayList<Map<String,Object>>();
     		
+    		Map<String,Object> tempDataMap = new HashMap<String, Object>();
+    		
     		for(Map<String,Object> map : listBySearchKeyLike){
     			
-    			String materialId = map.get("materialId")+"";
+    			tempDataMap = constructMap(map);
+    			
+    			String materialId = tempDataMap.get("materialId")+"";
     			
     			if(items.containsKey(materialId)){
     				
     				newItems = items.get(materialId);
-    				newItems.add(map);
+    				newItems.add(tempDataMap);
     				items.put(materialId, newItems);
     				
     			}else{
     				
     				newItems = new ArrayList<Map<String,Object>>();
-    				newItems.add(map);
+    				newItems.add(tempDataMap);
     				items.put(materialId, newItems);
     				
     			}
@@ -99,9 +103,7 @@ public class GetWxImgTextAssetServiceImpl implements GetWxImgTextAssetService {
     		datamap.put("media_id", key);
     		String createTime = items.get(key).get(0).get("createTime") + "";
     		datamap.put("create_time",createTime );
-    		Map<String,List<Map<String,Object>>> newsItem = new HashMap<String,List<Map<String,Object>>>();
-    		newsItem.put("news_item", items.get(key));
-    		datamap.put("content", newsItem);
+    		datamap.put("content", items.get(key));
     		
     		list.add(datamap);
     		
@@ -109,4 +111,29 @@ public class GetWxImgTextAssetServiceImpl implements GetWxImgTextAssetService {
     	
     	return list;
     }
+
+    /**
+     * 重新组装Map
+     * @param map
+     */
+	private Map<String, Object> constructMap(Map<String, Object> map) {
+		
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+		
+		tempMap.put("materialId", map.get("materialId"));
+		String createTime = map.get("createTime")+"";
+		tempMap.put("createTime",createTime.substring(0, 10));
+		tempMap.put("name", map.get("name"));
+		tempMap.put("ownerName", map.get("ownerName"));
+		tempMap.put("imgfileUrl", map.get("imgfileUrl"));
+		
+		Object digest = map.get("digest");
+		if(digest != null){
+			tempMap.put("digest", digest);
+		}else{
+			tempMap.put("digest", "");
+		}
+		
+		return tempMap;
+	}
 }
