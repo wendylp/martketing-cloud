@@ -9,8 +9,10 @@ package cn.rongcapital.mkt.service.impl;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,7 @@ import cn.rongcapital.mkt.dao.DataPaymentDao;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.DataPopulation;
 import cn.rongcapital.mkt.service.MainBasicInfoGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.BasicContactInfoOut;
@@ -92,6 +95,79 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 		return keyid;
 	}
 
+	/**
+	 * 微信视图显示信息
+	 */
+	private BasicContactInfoOut getWeiXinDataVo(Integer dataType,Integer keyId){
+		BasicContactInfoOut dataVo = null;
+		if (dataType == DataTypeEnum.WECHAT.getCode()){
+			dataVo = new BasicContactInfoOut();
+			DataPopulation dataPopulationTemp = new DataPopulation();
+			dataPopulationTemp.setKeyid(keyId);
+//			dataPopulationTemp.setBitmap(ApiConstant.WEIXIN_BITMAP);
+			List<DataPopulation> dataPopulations = dataPopulationDao.selectList(dataPopulationTemp);
+			if(CollectionUtils.isNotEmpty(dataPopulations)){
+				for(Iterator<DataPopulation> iter = dataPopulations.iterator();iter.hasNext();){
+					DataPopulation dataPopulation = iter.next();
+					String bitMap = dataPopulation.getBitmap();
+					if(bitMap.equals(ApiConstant.WEIXIN_BITMAP)){
+						dataVo.setWx_country(dataPopulation.getCitizenship());			
+						dataVo.setWx_provice(dataPopulation.getProvice());
+						dataVo.setWx_city(dataPopulation.getCity());
+						dataVo.setWx_gender(String.valueOf(dataPopulation.getGender()));
+						dataVo.setWx_nickname(dataPopulation.getNickname());
+					}else{
+						dataVo.setContactId(keyId);
+						dataVo.setName(dataPopulation.getName());
+						String gender = GenderUtils.byteToChar(dataPopulation.getGender());
+						dataVo.setGender(gender);
+						String birthday = DateUtil.getStringFromDate(dataPopulation.getBirthday(), "yyyy-MM-dd");
+						dataVo.setBirthday(birthday);
+
+						String identifyNo = dataPopulation.getIdentifyNo();
+						if (StringUtils.isNotBlank(identifyNo)) {
+							dataVo.setIdentifyNo(Long.valueOf(dataPopulation.getIdentifyNo()));
+						}
+
+						String drivingLicense = dataPopulation.getDrivingLicense();
+						if (StringUtils.isNotBlank(drivingLicense)) {
+							dataVo.setDrivingLicense(Long.valueOf(drivingLicense));
+						}
+
+						dataVo.setMobile(dataPopulation.getMobile());
+						dataVo.setTel(dataPopulation.getTel());
+						dataVo.setEmail(dataPopulation.getEmail());
+						dataVo.setQq(dataPopulation.getQq());
+						dataVo.setWechat(null);
+						dataVo.setAcctNo(dataPopulation.getAcctNo());
+						dataVo.setCitizenship(dataPopulation.getCitizenship());
+						dataVo.setProvice(dataPopulation.getProvice());
+						dataVo.setCity(dataPopulation.getCity());
+						dataVo.setJob(dataPopulation.getJob());
+
+						DecimalFormat df = new DecimalFormat("0.00");
+						BigDecimal monthlyIncome = dataPopulation.getMonthlyIncome();
+						if (monthlyIncome != null) {
+							String monthIncome = df.format(monthlyIncome);
+							dataVo.setMonthlyIncome(monthIncome);
+						}
+
+						BigDecimal monthlyConsume = dataPopulation.getMonthlyConsume();
+
+						if (monthlyConsume != null) {
+							String monthConsume = df.format(monthlyConsume);
+							dataVo.setMonthlyConsume(monthConsume);
+						}
+					}
+				}
+				
+				
+			}
+		}
+		return dataVo;
+		
+	}
+	
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
 	public BaseOutput getMainBasicInfo(Integer contactId, Integer dataType, String userToken) {
@@ -147,123 +223,134 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 			result.setMsg("不能获取关联的keyid!");
 			return result;
 		}
-		DataParty dataParty = dataPartyDao.getDataById(keyId);
-
-		if (dataParty != null) {
+		if (dataType == DataTypeEnum.WECHAT.getCode()){
+			/**
+			 * 微信视图显示信息
+			 */
+			BasicContactInfoOut dataVo = this.getWeiXinDataVo(dataType, keyId);
 			List<Object> data = new ArrayList<Object>();
-			BasicContactInfoOut dataVo = new BasicContactInfoOut();
-
-			dataVo.setContactId(contactId);
-			dataVo.setName(dataParty.getName());
-			String gender = GenderUtils.byteToChar(dataParty.getGender());
-			dataVo.setGender(gender);
-			String birthday = DateUtil.getStringFromDate(dataParty.getBirthday(), "yyyy-MM-dd");
-			dataVo.setBirthday(birthday);
-			// dataVo.setBloodType(dataParty.getBloodType());
-			// dataVo.setIq(dataParty.getIq());
-
-			String identifyNo = dataParty.getIdentifyNo();
-			if (StringUtils.isNotBlank(identifyNo)) {
-				dataVo.setIdentifyNo(Long.valueOf(dataParty.getIdentifyNo()));
-			}
-
-			String drivingLicense = dataParty.getDrivingLicense();
-			if (StringUtils.isNotBlank(drivingLicense)) {
-				dataVo.setDrivingLicense(Long.valueOf(drivingLicense));
-			}
-
-			dataVo.setMobile(dataParty.getMobile());
-			dataVo.setTel(dataParty.getTel());
-			dataVo.setEmail(dataParty.getEmail());
-			dataVo.setQq(dataParty.getQq());
-			dataVo.setWechat(null);
-			// dataVo.setAcctType(dataParty.getAcctType());
-			dataVo.setAcctNo(dataParty.getAcctNo());
-			dataVo.setCitizenship(dataParty.getCitizenship());
-			dataVo.setProvice(dataParty.getProvice());
-			dataVo.setCity(dataParty.getCity());
-			// dataVo.setNationality(dataParty.getNationality());
-			dataVo.setJob(dataParty.getJob());
-
-			DecimalFormat df = new DecimalFormat("0.00");
-
-			BigDecimal monthlyIncome = dataParty.getMonthlyIncome();
-
-			if (monthlyIncome != null) {
-				String monthIncome = df.format(monthlyIncome);
-				dataVo.setMonthlyIncome(monthIncome);
-			}
-
-			BigDecimal monthlyConsume = dataParty.getMonthlyConsume();
-
-			if (monthlyConsume != null) {
-				String monthConsume = df.format(monthlyConsume);
-				dataVo.setMonthlyConsume(monthConsume);
-			}
-
-			// dataVo.setMaritalStatus(dataParty.getMaritalStatus());
-			// dataVo.setEducation(dataParty.getEducation());
-			// dataVo.setEmployment(dataParty.getEmployment());
 			data.add(dataVo);
 			result.setData(data);
 			result.setTotal(data.size());
+		}else{
+			DataParty dataParty = dataPartyDao.getDataById(keyId);
+			if (dataParty != null) {
+				List<Object> data = new ArrayList<Object>();
+				BasicContactInfoOut dataVo = new BasicContactInfoOut();
 
-			// dataVo.setContactId(contactId);
-			// dataVo.setName(dataPopulation.getName());
-			// String gender =
-			// GenderUtils.byteToChar(dataPopulation.getGender());
-			// dataVo.setGender(gender);
-			// String birthday =
-			// DateUtil.getStringFromDate(dataPopulation.getBirthday(),"yyyy-MM-dd");
-			// dataVo.setBirthday(birthday);
-			// dataVo.setBloodType(dataPopulation.getBloodType());
-			// dataVo.setIq(dataPopulation.getIq());
-			//
-			// String identifyNo = dataPopulation.getIdentifyNo();
-			// if(StringUtils.isNotBlank(identifyNo)){
-			// dataVo.setIdentifyNo(Long.valueOf(dataPopulation.getIdentifyNo()));
-			// }
-			//
-			// String drivingLicense = dataPopulation.getDrivingLicense();
-			// if(StringUtils.isNotBlank(drivingLicense)){
-			// dataVo.setDrivingLicense(Long.valueOf(drivingLicense));
-			// }
-			//
-			// dataVo.setMobile(dataPopulation.getMobile());
-			// dataVo.setTel(dataPopulation.getTel());
-			// dataVo.setEmail(dataPopulation.getEmail());
-			// dataVo.setQq(dataPopulation.getQq());
-			// dataVo.setWechat(null);
-			// dataVo.setAcctType(dataPopulation.getAcctType());
-			// dataVo.setAcctNo(dataPopulation.getAcctNo());
-			// dataVo.setCitizenship(dataPopulation.getCitizenship());
-			// dataVo.setProvice(dataPopulation.getProvice());
-			// dataVo.setCity(dataPopulation.getCity());
-			// dataVo.setNationality(dataPopulation.getNationality());
-			// dataVo.setJob(dataPopulation.getJob());
-			//
-			// DecimalFormat df = new DecimalFormat("0.00");
-			//
-			// BigDecimal monthlyIncome = dataPopulation.getMonthlyIncome();
-			//
-			// if(monthlyIncome != null ){
-			// String monthIncome = df.format(monthlyIncome);
-			// dataVo.setMonthlyIncome(monthIncome);
-			// }
-			//
-			// BigDecimal monthlyConsume = dataPopulation.getMonthlyConsume();
-			//
-			// if(monthlyConsume != null ){
-			// String monthConsume = df.format(monthlyConsume);
-			// dataVo.setMonthlyConsume(monthConsume);
-			// }
-			//
-			// dataVo.setMaritalStatus(dataPopulation.getMaritalStatus());
-			// dataVo.setEducation(dataPopulation.getEducation());
-			// dataVo.setEmployment(dataPopulation.getEmployment());
-			// data.add(dataVo);
-			// result.setData(data);
-			// result.setTotal(data.size());
+				dataVo.setContactId(contactId);
+				dataVo.setName(dataParty.getName());
+				String gender = GenderUtils.byteToChar(dataParty.getGender());
+				dataVo.setGender(gender);
+				String birthday = DateUtil.getStringFromDate(dataParty.getBirthday(), "yyyy-MM-dd");
+				dataVo.setBirthday(birthday);
+				// dataVo.setBloodType(dataParty.getBloodType());
+				// dataVo.setIq(dataParty.getIq());
+
+				String identifyNo = dataParty.getIdentifyNo();
+				if (StringUtils.isNotBlank(identifyNo)) {
+					dataVo.setIdentifyNo(Long.valueOf(dataParty.getIdentifyNo()));
+				}
+
+				String drivingLicense = dataParty.getDrivingLicense();
+				if (StringUtils.isNotBlank(drivingLicense)) {
+					dataVo.setDrivingLicense(Long.valueOf(drivingLicense));
+				}
+
+				dataVo.setMobile(dataParty.getMobile());
+				dataVo.setTel(dataParty.getTel());
+				dataVo.setEmail(dataParty.getEmail());
+				dataVo.setQq(dataParty.getQq());
+				dataVo.setWechat(null);
+				// dataVo.setAcctType(dataParty.getAcctType());
+				dataVo.setAcctNo(dataParty.getAcctNo());
+				dataVo.setCitizenship(dataParty.getCitizenship());
+				dataVo.setProvice(dataParty.getProvice());
+				dataVo.setCity(dataParty.getCity());
+				// dataVo.setNationality(dataParty.getNationality());
+				dataVo.setJob(dataParty.getJob());
+
+				DecimalFormat df = new DecimalFormat("0.00");
+
+				BigDecimal monthlyIncome = dataParty.getMonthlyIncome();
+
+				if (monthlyIncome != null) {
+					String monthIncome = df.format(monthlyIncome);
+					dataVo.setMonthlyIncome(monthIncome);
+				}
+
+				BigDecimal monthlyConsume = dataParty.getMonthlyConsume();
+
+				if (monthlyConsume != null) {
+					String monthConsume = df.format(monthlyConsume);
+					dataVo.setMonthlyConsume(monthConsume);
+				}
+				
+				// dataVo.setMaritalStatus(dataParty.getMaritalStatus());
+				// dataVo.setEducation(dataParty.getEducation());
+				// dataVo.setEmployment(dataParty.getEmployment());
+				data.add(dataVo);
+				result.setData(data);
+				result.setTotal(data.size());
+
+				// dataVo.setContactId(contactId);
+				// dataVo.setName(dataPopulation.getName());
+				// String gender =
+				// GenderUtils.byteToChar(dataPopulation.getGender());
+				// dataVo.setGender(gender);
+				// String birthday =
+				// DateUtil.getStringFromDate(dataPopulation.getBirthday(),"yyyy-MM-dd");
+				// dataVo.setBirthday(birthday);
+				// dataVo.setBloodType(dataPopulation.getBloodType());
+				// dataVo.setIq(dataPopulation.getIq());
+				//
+				// String identifyNo = dataPopulation.getIdentifyNo();
+				// if(StringUtils.isNotBlank(identifyNo)){
+				// dataVo.setIdentifyNo(Long.valueOf(dataPopulation.getIdentifyNo()));
+				// }
+				//
+				// String drivingLicense = dataPopulation.getDrivingLicense();
+				// if(StringUtils.isNotBlank(drivingLicense)){
+				// dataVo.setDrivingLicense(Long.valueOf(drivingLicense));
+				// }
+				//
+				// dataVo.setMobile(dataPopulation.getMobile());
+				// dataVo.setTel(dataPopulation.getTel());
+				// dataVo.setEmail(dataPopulation.getEmail());
+				// dataVo.setQq(dataPopulation.getQq());
+				// dataVo.setWechat(null);
+				// dataVo.setAcctType(dataPopulation.getAcctType());
+				// dataVo.setAcctNo(dataPopulation.getAcctNo());
+				// dataVo.setCitizenship(dataPopulation.getCitizenship());
+				// dataVo.setProvice(dataPopulation.getProvice());
+				// dataVo.setCity(dataPopulation.getCity());
+				// dataVo.setNationality(dataPopulation.getNationality());
+				// dataVo.setJob(dataPopulation.getJob());
+				//
+				// DecimalFormat df = new DecimalFormat("0.00");
+				//
+				// BigDecimal monthlyIncome = dataPopulation.getMonthlyIncome();
+				//
+				// if(monthlyIncome != null ){
+				// String monthIncome = df.format(monthlyIncome);
+				// dataVo.setMonthlyIncome(monthIncome);
+				// }
+				//
+				// BigDecimal monthlyConsume = dataPopulation.getMonthlyConsume();
+				//
+				// if(monthlyConsume != null ){
+				// String monthConsume = df.format(monthlyConsume);
+				// dataVo.setMonthlyConsume(monthConsume);
+				// }
+				//
+				// dataVo.setMaritalStatus(dataPopulation.getMaritalStatus());
+				// dataVo.setEducation(dataPopulation.getEducation());
+				// dataVo.setEmployment(dataPopulation.getEmployment());
+				// data.add(dataVo);
+				// result.setData(data);
+				// result.setTotal(data.size());
+			}
+
 		}
 		return result;
 	}
