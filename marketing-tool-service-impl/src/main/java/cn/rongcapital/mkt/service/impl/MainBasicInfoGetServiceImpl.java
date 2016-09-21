@@ -114,7 +114,8 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 						dataVo.setWx_country(dataPopulation.getCitizenship());			
 						dataVo.setWx_provice(dataPopulation.getProvice());
 						dataVo.setWx_city(dataPopulation.getCity());
-						dataVo.setWx_gender(String.valueOf(dataPopulation.getGender()));
+						String gender = GenderUtils.byteToChar(dataPopulation.getGender());
+						dataVo.setWx_gender(String.valueOf(gender));
 						dataVo.setWx_nickname(dataPopulation.getNickname());
 					}else{
 						dataVo.setContactId(keyId);
