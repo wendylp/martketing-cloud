@@ -2032,7 +2032,7 @@ public class MktApi {
 	@GET
     @Path("/mkt.data.userinfo.get")
     public BaseOutput getUserInfo(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("user_id") String userId) {
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("personnel_id") String userId) {
         return userInfoService.getUserInfo(userId);
     }
 	
