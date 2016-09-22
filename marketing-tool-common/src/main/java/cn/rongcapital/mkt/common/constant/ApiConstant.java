@@ -276,4 +276,14 @@ public class ApiConstant {
 	 * 微信粉丝在 data_population 中的bitmap 字段的数值
 	 */
 	public static final String WEIXIN_BITMAP = "00000011000000000";
+	
+	/**
+	 * 标签级别
+	 */
+	public static final int TAG_LEVEL = 1;
+	
+	/**
+	 * 标签级别
+	 */
+	public static final String TAG_LINE = "-";
 }
