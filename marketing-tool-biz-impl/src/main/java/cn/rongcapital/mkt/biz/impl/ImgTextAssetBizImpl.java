@@ -17,6 +17,7 @@ import com.tagsin.wechat_sdk.WxComponentServerApi;
 import cn.rongcapital.mkt.biz.ImgTextAssetBiz;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.po.ImgTextAsset;
+import cn.rongcapital.mkt.po.WechatInterfaceLog;
 import cn.rongcapital.mkt.vo.weixin.WXImgText;
 import cn.rongcapital.mkt.vo.weixin.WXImgTextContent;
 import cn.rongcapital.mkt.vo.weixin.WXNewsItem;
@@ -80,7 +81,9 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 			if(materialCount > 20) {
 				materialCount = 20;
 			}
-			String materialListStr= WxComponentServerApi.getBaseWxSdk().getMaterialList(app,type,offset,materialCount);			
+			String materialListStr= WxComponentServerApi.getBaseWxSdk().getMaterialList(app,type,offset,materialCount);	
+			WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("ImgTextAssetBizImpl","getMaterialList",materialListStr,new Date());
+			wechatInterfaceLogService.insert(wechatInterfaceLog);			
 			imgTextAssetes.addAll(this.getImgTextAssetes(materialListStr));
 			offset += materialCount;
 		}
@@ -179,26 +182,11 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 	
 	public Long getMaterialCount(App app) {
 		String materialCountStr = WxComponentServerApi.getBaseWxSdk().getMaterialCount(app);
+		WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("ImgTextAssetBizImpl","getMaterialCount",materialCountStr,new Date());
+		wechatInterfaceLogService.insert(wechatInterfaceLog);
 		JSONObject jsonObject = JSONObject.parseObject(materialCountStr);
 		long materialCount = jsonObject.getLongValue("news_count");
 		return materialCount;
-	}
-
-	public Long getMaterialCountFromMaterialCountStr(String materialCountStr) {
-		long materialCount = 0;
-
-		return materialCount;
-	}
-
-	@Override
-	public Long getMaterialCount(String authAppId, String authorizer_refresh_token) {
-		App app = this.getApp();
-		app.setAuthAppId(authAppId);
-		app.setAuthRefreshToken(authorizer_refresh_token);		
-		String materialCountStr = WxComponentServerApi.getBaseWxSdk().getMaterialCount(app);
-		
-
-		return 1l;
 	}
 	
 }

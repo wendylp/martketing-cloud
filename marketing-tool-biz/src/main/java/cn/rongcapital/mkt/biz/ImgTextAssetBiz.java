@@ -8,5 +8,4 @@ public interface ImgTextAssetBiz {
 
 	public List<ImgTextAsset> getMaterialList(String authAppId,String authorizer_refresh_token,String type);
 	
-	public Long getMaterialCount(String authAppId,String authorizer_refresh_token);
 }

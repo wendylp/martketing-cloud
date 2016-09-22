@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.biz.impl;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,9 +12,10 @@ import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 
 import cn.rongcapital.mkt.biz.MessageSendBiz;
+import cn.rongcapital.mkt.po.WechatInterfaceLog;
 
 @Service
-public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
+public class MessageSendBizImpl extends BaseBiz implements MessageSendBiz {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -35,11 +38,12 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 	@Override
 	public Boolean send(App app,String touser, String content, String media_id) {
 		Boolean issended = false;
-		
+		WechatInterfaceLog wechatInterfaceLog = null;
 		// 发送文字消息
 		if(content != null && content.length() > 0) {
 			String msg = "{\"touser\":\"" + touser + "\",\"msgtype\":\"text\",\"text\":{\"content\":\"" + content + "\"}}";
 			issended = WxComponentServerApi.getBaseWxSdk().send(app, msg);
+			wechatInterfaceLog = new WechatInterfaceLog("MessageSendBizImpl","send",msg,new Date());
 			if(issended == false) {
 				logger.info("发送文字消息失败， msg内容为：{}", msg);
 			}			
@@ -49,11 +53,12 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 		if(media_id != null && media_id.length() > 0) {
 			String msg = "{\"touser\":\"" + touser + "\",\"msgtype\":\"image\",\"image\":{\"media_id\":\"" + media_id + "\"}}";
 			issended = WxComponentServerApi.getBaseWxSdk().send(app, msg);
+			wechatInterfaceLog = new WechatInterfaceLog("MessageSendBizImpl","send",msg,new Date());
 			if(issended == false) {
 				logger.info("发送图片消息失败， msg内容为：{}", msg);
 			}			
 		}
-		return (issended);
+		return issended;
 	}
 	
 	@Override
@@ -63,11 +68,13 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 		if(media_id != null && media_id.length() > 0) {			
 			String msg = "{\"touser\":\""+touser+"\",\"msgtype\":\"mpnews\",\"mpnews\":{\"media_id\":\""+media_id+"\"}}";			
 			issended = WxComponentServerApi.getBaseWxSdk().send(app, msg);
+			WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("MessageSendBizImpl","sendMpnews",msg,new Date());
+			wechatInterfaceLogService.insert(wechatInterfaceLog);
 			if(issended == false) {
 				logger.info("发送图片消息失败， msg内容为：{}", msg);
 			}			
 		}
-		return (issended);
+		return issended;
 	}
 
 	/* (non-Javadoc)
@@ -83,11 +90,14 @@ public class MessageSendBizImp extends BaseBiz implements MessageSendBiz {
 		Boolean issended = false;
 		try {
 			String issendedBack =  WxComponentServerApi.getBaseWxSdk().sendAll(app, isToAll, Long.parseLong(tagId), msgType, media_id);
+			String msg ="消息ID："+media_id+"消息类型："+msgType;
+			WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("MessageSendBizImpl","sendAll",msg,new Date());
+			wechatInterfaceLogService.insert(wechatInterfaceLog);
 			//获取errcode
 			JSONObject userJson = JSON.parseObject(issendedBack);
 			Integer jsonInt = userJson.getInteger("errcode");
 			if(0 == jsonInt)issended = true;
-			if(issended == false) {
+	 		if(issended == false) {
 				logger.info("群发消息发送图片消息失败，tagId:"+tagId);
 			}
 		} catch (Exception e) {

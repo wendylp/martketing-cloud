@@ -17,6 +17,7 @@ import com.tagsin.wechat_sdk.WxComponentServerApi;
 import cn.rongcapital.mkt.biz.WechatGroupBiz;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.po.WechatGroup;
+import cn.rongcapital.mkt.po.WechatInterfaceLog;
 import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.vo.weixin.WXTag;
 
@@ -68,6 +69,8 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 		app.setAuthAppId(authAppId);
 		app.setAuthRefreshToken(authorizer_refresh_token);
 		String tagsString = WxComponentServerApi.getBaseWxSdk().getTags(app);
+		WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatGroupBizImpl","getTags",tagsString,new Date());
+		wechatInterfaceLogService.insert(wechatInterfaceLog);			
 		JSONObject jsonObject = JSONObject.parseObject(tagsString);
 		Integer jsonInt = jsonObject.getInteger("errcode");
 		if(StringUtils.isNotBlank(tagsString) && jsonInt == null) {
