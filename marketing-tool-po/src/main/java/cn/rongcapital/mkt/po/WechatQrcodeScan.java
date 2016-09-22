@@ -15,6 +15,12 @@ public class WechatQrcodeScan extends BaseQuery{
 
     private Date createTime;
 
+    private Integer chCode;
+
+    private String wxName;
+
+    private String wxAcct;
+
     public Integer getId() {
         return id;
     }
@@ -53,5 +59,29 @@ public class WechatQrcodeScan extends BaseQuery{
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getChCode() {
+        return chCode;
+    }
+
+    public void setChCode(Integer chCode) {
+        this.chCode = chCode;
+    }
+
+    public String getWxName() {
+        return wxName;
+    }
+
+    public void setWxName(String wxName) {
+        this.wxName = wxName == null ? null : wxName.trim();
+    }
+
+    public String getWxAcct() {
+        return wxAcct;
+    }
+
+    public void setWxAcct(String wxAcct) {
+        this.wxAcct = wxAcct == null ? null : wxAcct.trim();
     }
 }
