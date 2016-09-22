@@ -1485,7 +1485,8 @@ public class MktApi {
 	@Path("/mkt.tag.system.tagcount.get")
 	public BaseOutput getTagcount(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken) {
-		return tagSystemTagcountService.getTagcount(method, userToken);
+		//tagSystemTagcountService.getTagcount(method, userToken);
+		return tagSystemTagcountService.getMonggTagcount(method, userToken);
 	}
 
 	/**
@@ -1650,7 +1651,8 @@ public class MktApi {
 			@NotEmpty @QueryParam("user_token") String userToken,
 			@NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
 			@QueryParam("size") Integer size) {
-		return taggroupSystemListGetService.getTagGroupByParentGroupId(method, userToken, tagGroupId, index, size);
+		//taggroupSystemListGetService.getTagGroupByParentGroupId(method, userToken, tagGroupId, index, size);
+		return taggroupSystemListGetService.getMongoTagRecommendByTagTreeId(method, userToken, tagGroupId, index, size);
 	}
 
 	/**
@@ -1679,7 +1681,8 @@ public class MktApi {
 	public BaseOutput getTaggroupSystemMenulist(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken, @QueryParam("index") Integer index,
 			@QueryParam("size") Integer size) {
-		return taggroupSystemMenulistGetService.getTaggroupSystemMenulist(method, userToken, index, size);
+		//taggroupSystemMenulistGetService.getTaggroupSystemMenulist(method, userToken, index, size);
+		return taggroupSystemMenulistGetService.getMonggTagTreelist(method, userToken, index, size);
 	}
 
 	/**
