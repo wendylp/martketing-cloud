@@ -1,11 +1,17 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
 import cn.rongcapital.mkt.dao.OriginalDataCustomerTagsDao;
+import cn.rongcapital.mkt.dao.mongo.MongoBaseTagDaoImpl;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.DataCustomerTags;
 import cn.rongcapital.mkt.po.OriginalDataCustomerTags;
+import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
+import cn.rongcapital.mkt.service.InsertCustomTagService;
+import cn.rongcapital.mkt.service.IsExistsCustomTagService;
 import cn.rongcapital.mkt.service.OriginalDataCustomTagScheduleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +35,15 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
 
     @Autowired
     private DataCustomerTagsDao dataCustomerTagsDao;
+
+    @Autowired
+    private MongoBaseTagDaoImpl mongoBaseTagDao;
+
+    @Autowired
+    private IsExistsCustomTagService isExistsCustomTagService;
+
+    @Autowired
+    private InsertCustomTagService insertCustomTagService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -64,6 +79,9 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
             OriginalDataCustomerTags tmpOriginalDataCustomerTag = tmpOriginalDataCustomTags.get(i);
             BeanUtils.copyProperties(tmpOriginalDataCustomerTag, paramDataCustomTags);
 
+            //将用户上传文件上传的CustomTag保存到Mongo中
+            insertCustomTagByCustomTagFile(paramDataCustomTags);
+
             // 因为在一个事务里 , 直接修改OriginalDataCustomTags的状态
             tmpOriginalDataCustomerTag.setStatus(StatusEnum.PROCESSED.getStatusCode().byteValue());
             originalDataCustomerTagsDao.updateById(tmpOriginalDataCustomerTag);
@@ -74,6 +92,36 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
         paramMap.put("list", dataCustomerTags);
 
         dataCustomerTagsDao.cleanAndUpdateByOriginal(paramMap);
+    }
+
+    private void insertCustomTagByCustomTagFile(DataCustomerTags paramDataCustomTags) {
+        BaseTag baseTag = buildBaseTag(paramDataCustomTags);
+        if(!isExistsCustomTagService.isExistsCustomTag(baseTag)){
+            insertCustomTagService.cascadingInsertCustomTag(baseTag);
+        }
+    }
+
+    private BaseTag buildBaseTag(DataCustomerTags paramDataCustomTags) {
+        BaseTag baseTag = new CustomTagLeaf();
+        baseTag.setTagName(paramDataCustomTags.getTagName());
+        baseTag.setSource(paramDataCustomTags.getSource());
+        String tagPath = null;
+        if(paramDataCustomTags.getTagTypeLayerThree() != null){
+            tagPath = ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerThree()
+                       + ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerTwo()
+                       + ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerOne()
+                       + ApiConstant.CUSTOM_TAG_ROOT;
+        }else if(paramDataCustomTags.getTagTypeLayerTwo() != null){
+            tagPath = ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerTwo()
+                       + ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerOne()
+                       + ApiConstant.CUSTOM_TAG_ROOT;
+        }else{
+            tagPath = ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerOne()
+                       + ApiConstant.CUSTOM_TAG_ROOT;
+        }
+        baseTag.setPath(tagPath);
+        baseTag.setCreateTime(paramDataCustomTags.getCreateTime());
+        return baseTag;
     }
 
     @Override
