@@ -37,7 +37,7 @@ public class ContactListPvServiceImpl implements ContactListPvService {
         List<ContactTemplate> contactTemplateList = contactTemplateDao.selectList(contactTemplate);
         if (!CollectionUtils.isEmpty(contactTemplateList)) {
             ContactTemplate upContactTemplate = contactTemplateList.get(0);
-            upContactTemplate.setPageSize(upContactTemplate.getPageViews() + 1);
+            upContactTemplate.setPageViews(upContactTemplate.getPageViews() + 1);
             contactTemplateDao.updatePageViewsById(upContactTemplate);
         } else {
             result.setCode(ApiErrorCode.PARAMETER_ERROR.getCode());
