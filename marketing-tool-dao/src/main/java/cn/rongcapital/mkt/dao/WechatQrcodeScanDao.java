@@ -57,13 +57,13 @@ public interface WechatQrcodeScanDao extends BaseDao<WechatQrcodeScan>{
 	 * @param list
 	 * @return
 	 */
-	Map<String, Object> getAmountScanMax(List<String> list);
+	Map<String, Object> getAmountScanMax(Map<String,Object> paramMap);
 	
 	/**
 	 * 总扫码人数最大值
 	 * @param list
 	 * @return
 	 */
-	Map<String, Object> getamountScanUserMax(List<String> list);
+	Map<String, Object> getamountScanUserMax(Map<String,Object> paramMap);
 
 }

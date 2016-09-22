@@ -53,7 +53,6 @@ public class GetWxImgTextAssetServiceImpl implements GetWxImgTextAssetService {
         paramMap.put("pageSize",imgAsset.getSize());
         return paramMap;
     }
-
     /**
      * 根据接口要求重组数据格式
      * @param listBySearchKeyLike

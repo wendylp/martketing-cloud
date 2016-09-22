@@ -15,10 +15,11 @@ public interface WeixinAnalysisChdataSummaryService {
 	 * 接口：mkt.weixin.analysis.chdata.summary
 	 * @param wxName
 	 * @param chCode
+	 * @param qrcodeId
 	 * @param startDate
 	 * @param endDate
 	 * @return
 	 * @author shuiyangyang
 	 */
-	BaseOutput getAnalysisChdataSummary(String wxName, String chCode, String startDate, String endDate);
+	BaseOutput getAnalysisChdataSummary(String wxName, String chCode,String qrcodeId, String startDate, String endDate);
 }
