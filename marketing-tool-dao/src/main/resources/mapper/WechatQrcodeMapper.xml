@@ -185,7 +185,7 @@
 	<select id="selectUsedChannelCountBychCode" parameterType="int" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
-		<![CDATA[where ch_code = #{chCode}]]>
+		<![CDATA[where ch_code = #{chCode} AND status in('1','3')]]>
 	</select>
 	
 </mapper>
