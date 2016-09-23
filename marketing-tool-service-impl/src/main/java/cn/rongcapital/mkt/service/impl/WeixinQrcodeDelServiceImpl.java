@@ -50,6 +50,13 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		
 		wechatQrcode.setId(body.getId());
+		
+		List<WechatQrcode> wechatQrcodeList = wechatQrcodeDao.selectList(wechatQrcode);
+		
+		if(wechatQrcodeList != null){
+			wechatQrcode = wechatQrcodeList.get(0);
+		}
+		
 		wechatQrcode.setStatus((byte)2);
 		
 		int count = wechatQrcodeDao.updateById(wechatQrcode);
