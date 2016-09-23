@@ -4,6 +4,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeScanDao;
+import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeScan;
 import cn.rongcapital.mkt.service.WeixinAnalysisQrcodeScanService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -30,6 +33,9 @@ public class WeixinAnalysisQrcodeScanServiceImpl implements WeixinAnalysisQrcode
 	@Autowired
 	WechatQrcodeScanDao wechatQrcodeScanDao;
 
+	@Autowired
+	WechatQrcodeDao wechatQrcodeDao;
+	
 	/**
 	 * 保存扫描微信二维码次数和人数 接口：mkt.weixin.analysis.qrcode.scan
 	 * 
@@ -42,10 +48,23 @@ public class WeixinAnalysisQrcodeScanServiceImpl implements WeixinAnalysisQrcode
 				ApiConstant.INT_ZERO, null);
 
 		WechatQrcodeScan wechatQrcodeScan = new WechatQrcodeScan();
-
+		Integer qrcodeId = Integer.valueOf(body.getQrcodeId());
+		
+		//获取渠道,公众号信息
+		WechatQrcode wechatQrcode = new WechatQrcode();
+		wechatQrcode.setId(qrcodeId);
+		List<WechatQrcode> wechatQrcodeList = wechatQrcodeDao.selectList(wechatQrcode);
+		if(wechatQrcodeList != null && wechatQrcodeList.size() > 0 && wechatQrcodeList.get(0) != null){
+			
+			wechatQrcode = wechatQrcodeList.get(0);
+			wechatQrcodeScan.setChCode(wechatQrcode.getChCode());
+			wechatQrcodeScan.setWxName(wechatQrcode.getWxName());
+			wechatQrcodeScan.setWxAcct(wechatQrcode.getWxAcct());
+		}
+		
 		wechatQrcodeScan.setUserId(body.getUserId());
 		wechatQrcodeScan.setUserHost(body.getUserHost());
-		wechatQrcodeScan.setQrcodeId(Integer.valueOf(body.getQrcodeId()));
+		wechatQrcodeScan.setQrcodeId(qrcodeId);
 		wechatQrcodeScan.setCreateTime(new Date());
 
 		int num = wechatQrcodeScanDao.insert(wechatQrcodeScan);

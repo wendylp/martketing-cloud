@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.biz.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tagsin.tutils.http.HttpResult;
 import com.tagsin.tutils.http.Requester;
 import com.tagsin.tutils.http.Requester.Method;
@@ -25,6 +27,7 @@ import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
 import cn.rongcapital.mkt.dao.WebchatComponentVerifyTicketDao;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.po.WebchatComponentVerifyTicket;
+import cn.rongcapital.mkt.po.WechatInterfaceLog;
 import cn.rongcapital.mkt.service.WechatPublicAuthService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.PublicAuthOut;
@@ -43,6 +46,14 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 		PublicAuthOut publicAuthOut = new PublicAuthOut();
 		App app = this.getApp();
     	String pre_auth_code = WxComponentServerApi.getPreAuthCode(app);
+    	/**
+    	 * 记入接口日志到数据库
+    	 */
+		WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatPublicAuthBizImpl","authWechatPublicAccount",pre_auth_code,new Date());
+		wechatInterfaceLogService.insert(wechatInterfaceLog);
+		/**
+		 * 组装授权二维码页面
+		 */
         String component_appid = app.getId();
         StringBuffer sbUrl = new StringBuffer(ApiConstant.WEIXIN_AUTH_COMPONENT_LOGIN_PAGE);
         sbUrl.append("component_appid=").append(component_appid);
@@ -61,6 +72,14 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 		App app = this.getApp();
 		AuthInfo authInfo = WxComponentServerApi.queryAuthByAuthCode(app, authorizationCode);
+    	/**
+    	 * 记入接口日志到数据库
+    	 */
+		WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatPublicAuthBizImpl","authWechatPublicCodeAccount",authInfoToString(authInfo),new Date());
+		wechatInterfaceLogService.insert(wechatInterfaceLog);
+		/**
+		 * 记入授权公众号到数据库
+		 */
 		String authorizer_appid = authInfo.getAuthorizer_appid();
 		String authorizer_access_token = authInfo.getAuthorizer_access_token();
 		String authorizer_refresh_token = authInfo.getAuthorizer_refresh_token();
@@ -96,6 +115,14 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 			}			
 		}		
 		return isGranted;
+	}
+	
+	private String authInfoToString(AuthInfo authInfo){		
+		if(authInfo!=null){
+			String authInfoString = JSONObject.toJSONString(authInfo);
+			return authInfoString;
+		}
+		return null;
 	}
 
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,13 +100,17 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 			if (groupIds.contains(",")) {
 				for (String groupId : ids) {
 					WechatAssetGroup assetGroup = getAssetGroup(wxAcct, groupId);
-					assetGroupInfo = getAssetGroupInfo(assetGroup);
-					groups.add(assetGroupInfo);
+					if(assetGroup!=null){
+						assetGroupInfo = getAssetGroupInfo(assetGroup);
+						groups.add(assetGroupInfo);
+					}					
 				}
 			} else {
 				WechatAssetGroup assetGroup = getAssetGroup(wxAcct, groupIds);
-				assetGroupInfo = getAssetGroupInfo(assetGroup);
-				groups.add(assetGroupInfo);
+				if(assetGroup!=null){
+					assetGroupInfo = getAssetGroupInfo(assetGroup);
+					groups.add(assetGroupInfo);
+				}
 			}
 
 			// if(groupIds.contains(",")){
@@ -141,8 +146,11 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 		wechatAssetGroup.setImportGroupId(new Long(groupId));
 		wechatAssetGroup.setWxAcct(wxAcct);
 		List<WechatAssetGroup> selectList = wechatAssetGroupDao.selectList(wechatAssetGroup);
-		WechatAssetGroup wechatAGroup = selectList.get(0);
-		return wechatAGroup;
+		if(CollectionUtils.isNotEmpty(selectList)){
+			WechatAssetGroup wechatAGroup = selectList.get(0);
+			return wechatAGroup;
+		}
+		return null;
 	}
 
 	private Map<String, Object> getAssetGroupInfo(WechatAssetGroup wechatAGroup) {

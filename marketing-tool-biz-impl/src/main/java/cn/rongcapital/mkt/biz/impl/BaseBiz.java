@@ -20,11 +20,15 @@ import cn.rongcapital.mkt.dao.WebchatComponentVerifyTicketDao;
 import cn.rongcapital.mkt.jedis.JedisClient;
 import cn.rongcapital.mkt.jedis.JedisException;
 import cn.rongcapital.mkt.po.WebchatComponentVerifyTicket;
+import cn.rongcapital.mkt.service.WechatInterfaceLogService;
 
 @Service
 public class BaseBiz {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Autowired
+	WechatInterfaceLogService wechatInterfaceLogService;
 	
 	@Autowired
 	private WebchatComponentVerifyTicketDao webchatComponentVerifyTicketDao;
@@ -79,6 +83,10 @@ public class BaseBiz {
 	        	app.setComponentTicket(componentTicket);
 	        }	       
 		return app;		
+	}
+	
+	public void setWechatInterfaceLogService(WechatInterfaceLogService wechatInterfaceLogService) {
+		this.wechatInterfaceLogService = wechatInterfaceLogService;
 	}
 	
 }

@@ -23,5 +23,19 @@ public interface TagSystemListGetService {
      * @return
      */
     public BaseOutput getTagcount(String method, String userToken, Integer tagGroupId, Integer index, Integer size);
+    
+    /**
+     * 获取系统标签内容列表
+     * 
+     * @author congshulin
+     * @功能简述 : 获取系统标签内容列表
+     * @param method
+     * @param userToken
+     * @param tagGroupId
+     * @param index
+     * @param size
+     * @return
+     */
+    public BaseOutput getMongoTagList(String method, String userToken, Integer tagGroupId, Integer index, Integer size);
 
 }

@@ -7,8 +7,6 @@ import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeFocus;
 import cn.rongcapital.mkt.po.WechatQrcodeTicket;
 import cn.rongcapital.mkt.service.QrcodeFocusInsertService;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -52,7 +50,7 @@ public class QrcodeFocusInsertServiceImpl implements QrcodeFocusInsertService{
         	}
         }else {
             WechatQrcodeFocus wechatQrcodeFocus = new WechatQrcodeFocus();
-            wechatQrcodeFocus.setWxmpId(wxmpId);
+            wechatQrcodeFocus.setWxAcct(wxmpId);
             wechatQrcodeFocus.setOpenid(openId);
             List<WechatQrcodeFocus> wechatQrcodeFocusList = wechatQrcodeFocusDao.selectList(wechatQrcodeFocus);
             effectRow = updateUnfocusTime(scanQrTime, focusStatus, effectRow, wechatQrcodeFocusList);
@@ -81,7 +79,7 @@ public class QrcodeFocusInsertServiceImpl implements QrcodeFocusInsertService{
             wechatQrcode = wechatQrcodeList.get(FIRST_INDEX);
             WechatQrcodeFocus wechatQrcodeFocus = new WechatQrcodeFocus();
             wechatQrcodeFocus.setQrcodeId(String.valueOf(wechatQrcode.getId()));
-            wechatQrcodeFocus.setWxmpId(wxmpId);
+            wechatQrcodeFocus.setWxAcct(wxmpId);
             wechatQrcodeFocus.setWxName(wechatQrcode.getWxName());
             wechatQrcodeFocus.setOpenid(openId);
             wechatQrcodeFocus.setChCode(wechatQrcode.getChCode());

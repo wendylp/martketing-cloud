@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 @Service
 public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysListService {
 	
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	// 关注时间数据库字段
 	private static final String FOCUS_FIELDNAME = "focus_datetime";
 	// 取消关注时间数据库字段
@@ -33,6 +36,10 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 	private static final Integer HOUR_FLAG = 2;
 	// 计算天数
 	private static final Long CALCULATE_VARI = 86400000L;
+	
+	private static final String WX_NAME_ALL = "全部";
+	
+	private static final String CH_CODE_ALL = "0";
 
 	@Autowired
 	private WechatQrcodeFocusDao wechatQrcodeFocusDao;
@@ -42,10 +49,11 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 	 */
 	@Override
 	public BaseOutput analysisDaysList(String startDate, String endDate, String daysType, String chCode,
-			String wxName) {
+			String wxName,String qrcodeId) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		try {
+			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			// 返回结果集
 			Map<String, Object> resultMap = new HashMap<>();
@@ -74,8 +82,8 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			Calendar calendar = new GregorianCalendar();
 			calendar.setTime(tempDate);
 			while (tempDate.compareTo(eDate) <= 0) {
-				Integer foucusCount = getCunt(tempDate, FOCUS_FIELDNAME, chCode, wxName, DAY_FLAG); // 关注数量
-				Integer unFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName, DAY_FLAG);// 取消关注数量
+				Integer foucusCount = getCunt(tempDate, FOCUS_FIELDNAME, chCode, wxName,qrcodeId, DAY_FLAG); // 关注数量
+				Integer unFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName,qrcodeId, DAY_FLAG);// 取消关注数量
 				Integer creFocusCount = foucusCount - unFocusCount; // 净增数量
 				focusCountArray[i] = foucusCount;
 				unFocusCountArray[i] = unFocusCount;
@@ -95,6 +103,7 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			resultMap.put("days_type", daysType);
 			resultMap.put("wx_name", wxName);
 			resultMap.put("ch_code", chCode);
+			resultMap.put("qrcode_id", qrcodeId);
 			baseOutput.getData().add(resultMap);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,12 +116,13 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 	 * 按小时统计
 	 */
 	@Override
-	public BaseOutput analysisHoursList(String date, String chCode, String wxName) {
+	public BaseOutput analysisHoursList(String date, String chCode, String wxName,String qrcodeId) {
 		Calendar calendar = Calendar.getInstance();
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		try {
+			
 			// 参数数组定义
 			String[] dateArray = new String[24]; // 查询日期
 			Integer[] focusCountArray = new Integer[24]; // 关注数量
@@ -151,8 +161,8 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			int i = 0;
 			Date maxDate = compareValue == -1 ? todayZero : nowhourDate;
 			while (tempDate.compareTo(maxDate) <= 0) {
-				Integer foucusCount = getCunt(tempDate, FOCUS_FIELDNAME, chCode, wxName, HOUR_FLAG); // 关注数量
-				Integer unFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName, HOUR_FLAG);// 取消关注数量
+				Integer foucusCount = getCunt(tempDate, FOCUS_FIELDNAME, chCode, wxName,qrcodeId, HOUR_FLAG); // 关注数量
+				Integer unFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName,qrcodeId, HOUR_FLAG);// 取消关注数量
 				Integer creFocusCount = foucusCount - unFocusCount; // 净增数量
 				focusCountArray[i] = foucusCount;
 				unFocusCountArray[i] = unFocusCount;
@@ -172,6 +182,7 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			resultMap.put("date", ArrayUtils.subarray(dateArray, 0, i));
 			resultMap.put("wx_name", wxName);
 			resultMap.put("ch_code", chCode);
+			resultMap.put("qrcode_id", qrcodeId);
 			baseOutput.getData().add(resultMap);
 
 		} catch (Exception e) {
@@ -204,14 +215,25 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 	/**
 	 * 获取相应数量
 	 */
-	private Integer getCunt(Date searchDate, String fieldName, String chCode, String wxName, Integer flag) {
+	private Integer getCunt(Date searchDate, String fieldName, String chCode, String wxName,String qrcodeId, Integer flag) {
 		String sqlField = flag == DAY_FLAG ? "searchDate" : "searchHours";
 		// 参数集合
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put(sqlField, searchDate);
 		paramMap.put("fieldName", fieldName);
-		paramMap.put("chCode", chCode);
-		paramMap.put("wxName", wxName);
+		
+		if(!CH_CODE_ALL.equals(chCode) && ! "".equals(chCode)){
+			paramMap.put("chCode", chCode);
+		}
+		
+		if(!WX_NAME_ALL.equals(wxName) && ! "".equals(wxName)){
+			paramMap.put("wxName", wxName);
+		}
+		
+		if(!"".equals(qrcodeId)){
+			paramMap.put("qrcodeId", qrcodeId);
+		}
+		logger.info(paramMap.toString());
 		return wechatQrcodeFocusDao.getFocusOrUnFocusCount(paramMap);
 	}
 

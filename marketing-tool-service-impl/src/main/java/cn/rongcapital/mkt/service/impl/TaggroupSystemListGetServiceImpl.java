@@ -8,12 +8,18 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.TaggroupDao;
 import cn.rongcapital.mkt.po.Taggroup;
+import cn.rongcapital.mkt.po.mongodb.TagRecommend;
+import cn.rongcapital.mkt.po.mongodb.TagTree;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -22,6 +28,10 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 
     @Autowired
     TaggroupDao taggroupDao;
+    
+	@Autowired
+	MongoOperations mongoOperations;
+
 
     @Override
     public BaseOutput getTagGroupByParentGroupId(String method, String userToken, Integer tagGroupId, Integer index,
@@ -79,5 +89,68 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 
         return columnList;
     }
+    
+	/**
+	 * 根据标签树的id从mongodb中获取推荐标签值
+	 * 
+	 * @author congshulin
+	 * @功能简述 : 获取系统标签组列表
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupId
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	public BaseOutput getMongoTagRecommendByTagTreeId(String method, String userToken, Integer tagGroupId,
+			Integer index, Integer size) {
+
+		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+
+		List<Map<String, Object>> resultList = new ArrayList<>();
+
+		Query query = new Query();
+		Criteria criteria = Criteria.where("tag_id").is(tagGroupId);
+		query.addCriteria(criteria);
+
+		TagTree findOne = mongoOperations.findOne(query, TagTree.class);
+
+		if (findOne == null) {
+			return baseOutput;
+		}
+
+		List<Integer> childrenList = findOne.getChildren();
+
+		if (index * size > childrenList.size()) {
+			size = childrenList.size();
+		}
+
+		for (int i = (index - 1) * size; i < size; i++) {
+			Integer tagRecommendId = childrenList.get(i);
+
+			TagRecommend tagRecommend = mongoOperations.findOne(new Query(Criteria.where("tag_id").is(tagRecommendId)),
+					TagRecommend.class);
+
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tag_group_id", tagRecommend.getTagId());
+
+			// map.put("tag_group_name", tagGroup.getName());
+			// 截取原字符串倒数第一个 '-' 后面的字符串
+			map.put("tag_group_name", tagRecommend.getTagName());
+			map.put("tag_group_creat_time", DateUtil.getStringFromDate(tagRecommend.getUpdateTime(),
+					ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
+			map.put("tag_count", tagRecommend.getTagList().size());
+			map.put("tag_desc", tagRecommend.getTagDesc());
+			map.put("tag_cover", 0);
+
+			resultList.add(map);
+		}
+		
+		baseOutput.getData().addAll(resultList);
+		baseOutput.setTotal(resultList.size());
+
+		return baseOutput;
+	}
 
 }

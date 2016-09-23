@@ -22,7 +22,19 @@ public interface TaggroupSystemMenulistGetService {
 	 * @param size
 	 * @return
 	 */
-	public BaseOutput getTaggroupSystemMenulist(String method, String userToken,
-			Integer index, Integer size);
+	public BaseOutput getTaggroupSystemMenulist(String method, String userToken, Integer index, Integer size);
+
+	/**
+	 * 从mongo中获取系统标签组列表
+	 * 
+	 * @author congshulin
+	 * @功能简述 : 获取系统标签组列表
+	 * @param method
+	 * @param userToken
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	public BaseOutput getMonggTagTreelist(String method, String userToken, Integer index, Integer size);
 
 }

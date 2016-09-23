@@ -3,7 +3,10 @@
  */
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -13,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
+import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.service.WeixinQrcodeDelService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -32,6 +37,10 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 
 	@Autowired
 	private WechatQrcodeDao wechatQrcodeDao;
+	
+	@Autowired
+	private WechatChannelDao wechatChannelDao;
+	
 	
 	@Override
 	public BaseOutput weixinQrocdeDel(WechatQrcodeInId body) {
@@ -54,6 +63,9 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("id", body.getId());
 			map.put("status", 2);
+			
+			handleWechatChannel(wechatQrcode.getChCode());
+			
 			result.getData().add(map);
 		}
 		
@@ -77,6 +89,12 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 		
 		wechatQrcode.setId(body.getId());
 		
+		List<WechatQrcode> wechatQrcodeList = wechatQrcodeDao.selectList(wechatQrcode);
+		
+		if(wechatQrcodeList != null){
+			wechatQrcode = wechatQrcodeList.get(0);
+		}
+		
 		int count = wechatQrcodeDao.deleteById(wechatQrcode);
 		if(count<=0) {
 			result.setTotal(0);
@@ -86,9 +104,43 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 		} else {
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("id", body.getId());
+			
+			handleWechatChannel(wechatQrcode.getChCode());
+			
 			result.getData().add(map);
 		}
 		return result;
 	}
 
+	/**
+	 * 处理未使用自定义渠道状态
+	 * @param chCode
+	 */
+	private void handleWechatChannel(Integer chCode) {
+
+		WechatChannel wechatChannel = new WechatChannel();
+		
+		if(chCode != null){
+			
+			wechatChannel.setId(chCode);
+			List<WechatChannel> wechatChannelList = wechatChannelDao.selectList(wechatChannel);
+
+			if(wechatChannelList != null && wechatChannelList.size() > 0 && wechatChannelList.get(0) != null){
+				wechatChannel = wechatChannelList.get(0);
+
+				Integer type = wechatChannel.getType();
+				//系统渠道不处理
+				if(type == ApiConstant.WECHAT_CHANNEL_TYPE_CUSTOM){
+						
+					int count = wechatQrcodeDao.selectUsedChannelCountBychCode(chCode);
+					//没有二维码使用的渠道 设置为删除状态
+					if(count == 0){
+						wechatChannel.setId(chCode);
+						wechatChannel.setStatus(ApiConstant.WECHAT_CHANNEL_STATUS_INVALID);
+						wechatChannelDao.updateById(wechatChannel);
+					}
+				}
+			}
+		}
+	}
 }

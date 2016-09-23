@@ -23,6 +23,9 @@ public class ApiConstant {
 	public static final int WECHAT_CHANNEL_TYPE_SYSTEM = 0;//渠道类型0系统默认渠道
 	public static final int WECHAT_CHANNEL_TYPE_CUSTOM = 1;//渠道类型1自定义渠道
 	
+	public static final String WECHAT_CHANNEL_STATUS_VALID = "0";//渠道状态正常
+	public static final String WECHAT_CHANNEL_STATUS_INVALID = "1";//渠道状态正常删除
+	
 	public static final int TABLE_DATA_REMOVED_NOTDEL = 0;//不可以删除
 	public static final int TABLE_DATA_REMOVED_DEL = 1;//可以删除
 	public static final byte TABLE_DATA_REMOVED_FAIL = 3;//失效
@@ -54,6 +57,8 @@ public class ApiConstant {
 	
     public static final String DATE_FORMAT_yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_FORMAT_yyyy_MM_dd = "yyyy-MM-dd";
+    public static final String DATE_FORMAT_CONSTANT_BEGIN = " 00:00:00";
+    public static final String DATE_FORMAT_CONSTANT_END = " 23:59:59";
 	
 	public static final byte TAG_TYPE_SEGMENT = 0;// 细分
 	public static final byte TAG_TYPE_ACTIVITY = 1;// 活动
@@ -277,4 +282,18 @@ public class ApiConstant {
 	public static final Integer CUSTOM_TAG_LAYER_TYPE = 1;
 	public static final Integer CUSTOM_TAG_LEAF_TYPE = 2;
 	
+	/**
+	 * 微信粉丝在 data_population 中的bitmap 字段的数值
+	 */
+	public static final String WEIXIN_BITMAP = "00000011000000000";
+	
+	/**
+	 * 标签级别
+	 */
+	public static final int TAG_LEVEL = 1;
+	
+	/**
+	 * 标签级别
+	 */
+	public static final String TAG_LINE = "-";
 }

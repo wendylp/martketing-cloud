@@ -251,6 +251,9 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 				  qrcodeFocusInsertService.insertQrcodeFoucsInfo(qrCodeTicket, openid, date, status, wechatRegister.getWxAcct());				  
 				  break;
 			  }
+			  default :{
+				  break;
+			  }
 			}
 	}
 	

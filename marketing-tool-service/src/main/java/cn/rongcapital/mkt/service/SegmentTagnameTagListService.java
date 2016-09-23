@@ -11,4 +11,15 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface SegmentTagnameTagListService {
 	BaseOutput getSysRecommendedTagList();
+
+	/**
+	 * 根据标签树的id从mongodb中获取推荐标签列表
+	 * 
+	 * @author congshulin
+	 * @功能简述 : 获取系统标签组列表
+	 * @param method
+	 * @param userToken
+	 * @return BaseOutput
+	 */
+	BaseOutput getMongoTagRecommendList(String method, String userToken);
 }

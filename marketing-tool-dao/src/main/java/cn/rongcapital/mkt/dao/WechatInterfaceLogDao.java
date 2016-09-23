@@ -10,13 +10,10 @@
 
 package cn.rongcapital.mkt.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.WechatQrcodeScan;
+import cn.rongcapital.mkt.po.WechatInterfaceLog;
 
-public interface WechatQrcodeScanDao extends BaseDao<WechatQrcodeScan>{
+public interface WechatInterfaceLogDao extends BaseDao<WechatInterfaceLog>{
 	
 	//自定义扩展
 	/**
@@ -37,33 +34,4 @@ public interface WechatQrcodeScanDao extends BaseDao<WechatQrcodeScan>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
-	
-	/**
-	 * 总扫码次数
-	 * @param qrcodeId
-	 * @return
-	 */
-	int getTotalScan(String qrcodeId);
-	
-	/**
-	 * 总扫码人数
-	 * @param qrcodeId
-	 * @return
-	 */
-	int getTotalScanUser(String qrcodeId);
-	
-	/**
-	 * 总扫码次数最大
-	 * @param list
-	 * @return
-	 */
-	Map<String, Object> getAmountScanMax(Map<String,Object> paramMap);
-	
-	/**
-	 * 总扫码人数最大值
-	 * @param list
-	 * @return
-	 */
-	Map<String, Object> getamountScanUserMax(Map<String,Object> paramMap);
-
 }

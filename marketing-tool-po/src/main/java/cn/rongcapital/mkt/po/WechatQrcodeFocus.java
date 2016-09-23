@@ -21,7 +21,7 @@ public class WechatQrcodeFocus extends BaseQuery {
 
     private Byte focusStatus;
 
-    private String wxmpId;
+    private String wxAcct;
 
     public Integer getId() {
         return id;
@@ -87,11 +87,12 @@ public class WechatQrcodeFocus extends BaseQuery {
         this.focusStatus = focusStatus;
     }
 
-    public String getWxmpId() {
-        return wxmpId;
-    }
+	public String getWxAcct() {
+		return wxAcct;
+	}
 
-    public void setWxmpId(String wxmpId) {
-        this.wxmpId = wxmpId == null ? null : wxmpId.trim();
-    }
+	public void setWxAcct(String wxAcct) {
+		this.wxAcct = wxAcct;
+	}
+
 }

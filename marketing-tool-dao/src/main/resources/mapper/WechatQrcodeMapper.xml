@@ -180,4 +180,12 @@
 		set status = #{status}		
 		<![CDATA[WHERE expiration_time < DATE_FORMAT(#{expirationTime},'%Y-%m-%d %h:%i:%s')]]>	
 	</update>
+	
+	<!-- 根据渠道Id查询已经使用渠道的二维码数量 -->
+	<select id="selectUsedChannelCountBychCode" parameterType="int" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[where ch_code = #{chCode}]]>
+	</select>
+	
 </mapper>

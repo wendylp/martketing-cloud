@@ -45,6 +45,7 @@ import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.po.WechatChannel;
+import cn.rongcapital.mkt.po.WechatInterfaceLog;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeTicket;
 
@@ -88,6 +89,14 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		HttpResult result = req.execute();			
 		if(result.getCode()==200){
 			ObjectNode objNode = JsonUtils.readJsonObject(result.getRespBody());
+			/**
+	    	 * 记入接口日志到数据库
+	    	 */
+			WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatQrcodeBizImpl","getWechatQrcodeTicketFromWeiXin",objNode.toString(),new Date());
+			wechatInterfaceLogService.insert(wechatInterfaceLog);	
+			/**
+			 * 组装二维码对象
+			 */
 			String ticket = objNode.get("ticket").getTextValue();
 			String url = objNode.get("url").getTextValue();
 			wechatQrcodeTicket = new WechatQrcodeTicket();
@@ -425,12 +434,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			wechatQrcode.setRelatedTags(tagIds);
 		}			
 		
-		if(wechatQrcodeIn.getStatus() == null){
-			wechatQrcode.setStatus(NumUtil.int2OneByte(0));
-		}else{
-			wechatQrcode.setStatus(wechatQrcodeIn.getStatus());
-		}
-		
 		wechatQrcode.setCreateTime(new Date());
 
 		return wechatQrcode;		
@@ -441,9 +444,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	public BaseOutput createQrcode(WechatQrcodeIn wechatQrcodeIn) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
-			
-
-			//WechatQrcode wechatQrcode = this.getWechatQrcodeFromWechatQrcodeIn(wechatQrcodeIn, wechatQrcodeTicket);
 			
 			WechatQrcode wechatQrcode = new WechatQrcode();
 			
@@ -469,6 +469,8 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			if(wechatQrcode.getId() != null && wechatQrcode.getId() != 0){
 				wechatQrcodeDao.updateById(wechatQrcode);
 			}else{
+				
+				wechatQrcode.setStatus(NumUtil.int2OneByte(0));
 				wechatQrcodeDao.insert(wechatQrcode);
 			}
 			

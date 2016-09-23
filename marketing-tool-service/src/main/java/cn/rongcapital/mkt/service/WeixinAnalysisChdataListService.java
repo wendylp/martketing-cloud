@@ -22,5 +22,5 @@ public interface WeixinAnalysisChdataListService {
 	 * @author shuiyangyang
 	 * @date 2016.09.01
 	 */
-	BaseOutput getAnalysisChdata(String wxName, String chCode, String startDate, String endDate);
+	BaseOutput getAnalysisChdata(String wxName, String chCode, String qrcodeId, String startDate, String endDate);
 }

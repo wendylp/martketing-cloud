@@ -476,8 +476,9 @@ public class MktWeChatApi {
 	@Path("mkt.weixin.analysis.days.list")
 	public BaseOutput analysisDaysList(@NotEmpty @QueryParam("start_date") String startDate,
 			@NotEmpty @QueryParam("end_date") String endDate, @NotEmpty @QueryParam("ch_code") String chCode,
+			@QueryParam("qrcode_id") String qrcodeId,
 			@NotEmpty @QueryParam("wx_name") String wxName, @QueryParam("days_type") String daysType) {
-		return analysisDaysList.analysisDaysList(startDate, endDate, daysType, chCode, wxName);
+		return analysisDaysList.analysisDaysList(startDate, endDate, daysType, chCode, wxName,qrcodeId);
 	}
 
 	/**
@@ -494,9 +495,11 @@ public class MktWeChatApi {
 	@GET
 	@Path("/mkt.weixin.analysis.chdata.list")
 	public BaseOutput getAnalysisChdata(@NotNull @QueryParam("wx_name") String wxName,
-			@NotEmpty @QueryParam("ch_code") String chCode, @NotEmpty @QueryParam("start_date") String startDate,
+			@NotEmpty @QueryParam("ch_code") String chCode,
+			@QueryParam("qrcode_id") String qrcodeId, 
+			@NotEmpty @QueryParam("start_date") String startDate,
 			@NotEmpty @QueryParam("end_date") String endDate) {
-		return weixinAnalysisChdataListService.getAnalysisChdata(wxName, chCode, startDate, endDate);
+		return weixinAnalysisChdataListService.getAnalysisChdata(wxName, chCode, qrcodeId, startDate, endDate);
 	}
 
 	/**
@@ -583,8 +586,10 @@ public class MktWeChatApi {
 	@GET
 	@Path("mkt.weixin.analysis.hours.list")
 	public BaseOutput analysisHoursList(@NotEmpty @QueryParam("date") String date,
-			@NotEmpty @QueryParam("ch_code") String chCode, @NotEmpty @QueryParam("wx_name") String wxName) {
-		return analysisDaysList.analysisHoursList(date, chCode, wxName);
+			@NotEmpty @QueryParam("ch_code") String chCode, 
+			@QueryParam("qrcode_id") String qrcodeId,
+			@NotEmpty @QueryParam("wx_name") String wxName) {
+		return analysisDaysList.analysisHoursList(date, chCode, wxName,qrcodeId);
 	}
 
 	/**
@@ -600,9 +605,11 @@ public class MktWeChatApi {
 	@GET
 	@Path("/mkt.weixin.analysis.chdata.summary")
 	public BaseOutput getAnalysisChdataSummary(@QueryParam("wx_name") String wxName,
-			@QueryParam("ch_code") String chCode, @NotEmpty @QueryParam("start_date") String startDate,
+			@QueryParam("ch_code") String chCode, 
+			@QueryParam("qrcode_id") String qrcodeId, 
+			@NotEmpty @QueryParam("start_date") String startDate,
 			@NotEmpty @QueryParam("end_date") String endDate) {
-		return weixinAnalysisChdataSummaryService.getAnalysisChdataSummary(wxName, chCode, startDate, endDate);
+		return weixinAnalysisChdataSummaryService.getAnalysisChdataSummary(wxName, chCode,qrcodeId, startDate, endDate);
 	}
 
 	/**
