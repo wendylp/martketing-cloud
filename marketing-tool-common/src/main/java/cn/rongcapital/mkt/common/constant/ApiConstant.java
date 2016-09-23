@@ -23,6 +23,9 @@ public class ApiConstant {
 	public static final int WECHAT_CHANNEL_TYPE_SYSTEM = 0;//渠道类型0系统默认渠道
 	public static final int WECHAT_CHANNEL_TYPE_CUSTOM = 1;//渠道类型1自定义渠道
 	
+	public static final String WECHAT_CHANNEL_STATUS_VALID = "0";//渠道状态正常
+	public static final String WECHAT_CHANNEL_STATUS_INVALID = "1";//渠道状态正常删除
+	
 	public static final int TABLE_DATA_REMOVED_NOTDEL = 0;//不可以删除
 	public static final int TABLE_DATA_REMOVED_DEL = 1;//可以删除
 	public static final byte TABLE_DATA_REMOVED_FAIL = 3;//失效

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 @Service
 public class WechatChannelListServiceImpl implements WechatChannelListService {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	WechatChannelDao wechatChannelDao;
 
@@ -30,8 +33,10 @@ public class WechatChannelListServiceImpl implements WechatChannelListService {
 
 		WechatChannel wechatChannel = new WechatChannel();
 		wechatChannel.setStatus(Byte.toString(ApiConstant.TABLE_DATA_STATUS_VALID));
+		wechatChannel.setStartIndex(null);
+		wechatChannel.setPageSize(null);
 		List<WechatChannel> wechatChannels = wechatChannelDao.selectList(wechatChannel);
-
+		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		
@@ -39,6 +44,7 @@ public class WechatChannelListServiceImpl implements WechatChannelListService {
 		List<String> sysChannel = new ArrayList<String>();
 
 		if (CollectionUtils.isNotEmpty(wechatChannels)) {
+
 			result.setTotal(wechatChannels.size() + sysChannel.size());
 			for (WechatChannel w : wechatChannels) {
 				Map<String, Object> channelMap = new HashMap<String, Object>();
@@ -49,6 +55,8 @@ public class WechatChannelListServiceImpl implements WechatChannelListService {
 				result.getData().add(channelMap);
 			}	
 		}
+		
+		logger.info(result.getData().toString());
 		return result;
 	}
 
