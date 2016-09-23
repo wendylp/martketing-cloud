@@ -103,7 +103,7 @@ public class GetWeixinAnalysisDateServiceImpl implements GetWeixinAnalysisDateSe
             	MapResult.put("wx_acct",wechatQrcodeList.get(0).getWxAcct());
 
                 WechatChannel wechatChannel = new WechatChannel();
-                wechatChannel.setId(wechatQrcode.getChCode());
+                wechatChannel.setId(wechatQrcodeList.get(0).getChCode());
                 List<WechatChannel> wechatChannelList = wechatChannelDao.selectList(wechatChannel);
                 if(!CollectionUtils.isEmpty(wechatChannelList)){
                 	MapResult.put("ch_name",wechatChannelList.get(0).getChName());

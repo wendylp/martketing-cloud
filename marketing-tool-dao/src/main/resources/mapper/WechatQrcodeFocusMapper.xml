@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,qrcode_id as qrcodeId,wx_name as wxName,ch_code as chCode,openid as openid,focus_datetime as focusDatetime,unfocus_datetime as unfocusDatetime,focus_status as focusStatus,wxmp_id as wxmpId]]>
+		<![CDATA[ id as id,qrcode_id as qrcodeId,wx_name as wxName,ch_code as chCode,openid as openid,focus_datetime as focusDatetime,unfocus_datetime as unfocusDatetime,focus_status as focusStatus,wx_acct as wxAcct]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -21,7 +21,7 @@
 		    	<if test="focusDatetime != null"><![CDATA[ AND focus_datetime = #{focusDatetime}]]></if>
 		    	<if test="unfocusDatetime != null"><![CDATA[ AND unfocus_datetime = #{unfocusDatetime}]]></if>
 		    	<if test="focusStatus != null"><![CDATA[ AND focus_status = #{focusStatus}]]></if>
-		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		</where>
 	</sql>
 	
@@ -41,14 +41,14 @@
 		    	<if test="focusDatetime != null"><![CDATA[focus_datetime = #{focusDatetime},]]></if>
 		    	<if test="unfocusDatetime != null"><![CDATA[unfocus_datetime = #{unfocusDatetime},]]></if>
 		    	<if test="focusStatus != null"><![CDATA[focus_status = #{focusStatus},]]></if>
-		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[wx_acct = #{wxAcct}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatQrcodeFocus" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_qrcode_focus (qrcode_id,wx_name,ch_code,openid,focus_datetime,unfocus_datetime,focus_status,wxmp_id)
+			INSERT INTO wechat_qrcode_focus (qrcode_id,wx_name,ch_code,openid,focus_datetime,unfocus_datetime,focus_status,wx_acct)
 			VALUES
 			(
 			  #{qrcodeId},
@@ -58,7 +58,7 @@
 			  #{focusDatetime},
 			  #{unfocusDatetime},
 			  #{focusStatus},
-			  #{wxmpId}
+			  #{wxAcct}
 			)
 		]]>
 	</insert>
@@ -133,6 +133,9 @@
 		<if test="wx_name != null and wx_name != '0' ">
 			AND wx_name = #{wxName}
 		</if>
+		<if test="qrcode_id != null and qrcode_id != '0' ">
+			AND qrcode_id = #{qrcodeId}
+		</if>		
 		AND #{fieldName} IS NOT NULL
 	</select>
 
@@ -140,6 +143,7 @@
 	<select id="getAllFocusData" parameterType="java.util.Map" resultType="java.util.Map">
 
 		select 
+		  	totalFocus.wx_acct AS wxAcct,
 		  	totalFocus.wx_name AS wxName,
   			totalFocus.ch_code AS chCode,
   			wc.ch_name AS chName,
@@ -149,61 +153,61 @@
   			IFNULL(newFocus.value,0) AS newFocus,
   			IFNULL(lostFocus.value,0) AS lostFocus 
 		from
-			(<![CDATA[SELECT wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
+			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
 			<include refid="QUERY_FROM_TABLE"/>
 			<where>
-			    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	    <if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 			    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 			    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 			</where>
-			<![CDATA[GROUP BY wx_name,ch_code) as totalFocus]]>
+			<![CDATA[GROUP BY wx_acct,wx_name,ch_code) as totalFocus]]>
 			<![CDATA[left join]]>
-			(<![CDATA[SELECT wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
+			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
 			<include refid="QUERY_FROM_TABLE"/>
 			<where>
 				<![CDATA[and focus_datetime between #{startTime} and #{endTime}]]>
-		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 		    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 			</where>
-			<![CDATA[GROUP BY wx_name,ch_code) as newFocus]]>
-			<![CDATA[ON totalFocus.wx_name = newFocus.wx_name AND totalFocus.ch_code = newFocus.ch_code ]]>
+			<![CDATA[GROUP BY wx_acct,wx_name,ch_code) as newFocus]]>
+			<![CDATA[ON totalFocus.wx_acct = newFocus.wx_acct AND totalFocus.ch_code = newFocus.ch_code ]]>
 			<![CDATA[LEFT JOIN]]>
-			(<![CDATA[SELECT wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
+			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
 			<include refid="QUERY_FROM_TABLE"/>
 			<where>
 				<![CDATA[and unfocus_datetime between #{startTime} and #{endTime}]]>
-		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 		    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 			</where>
-			<![CDATA[GROUP BY wx_name,ch_code) as lostFocus]]>
-			<![CDATA[ON totalFocus.wx_name = lostFocus.wx_name AND totalFocus.ch_code = lostFocus.ch_code ]]>
+			<![CDATA[GROUP BY wx_acct,wx_name,ch_code) as lostFocus]]>
+			<![CDATA[ON totalFocus.wx_acct = lostFocus.wx_acct AND totalFocus.ch_code = lostFocus.ch_code ]]>
 			
 			<![CDATA[LEFT JOIN]]>
-			(<![CDATA[SELECT wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
+			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
 			<![CDATA[ FROM wechat_qrcode_scan ]]>
 			<where>
 				<![CDATA[and create_time between #{startTime} and #{endTime}]]>
-		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 		    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 			</where>
-			<![CDATA[GROUP BY wx_name,ch_code) as totalScan]]>
-			<![CDATA[ON totalFocus.wx_name = totalScan.wx_name AND totalFocus.ch_code = totalScan.ch_code]]>
+			<![CDATA[GROUP BY wx_acct,wx_name,ch_code) as totalScan]]>
+			<![CDATA[ON totalFocus.wx_acct = totalScan.wx_acct AND totalFocus.ch_code = totalScan.ch_code]]>
 			<![CDATA[LEFT JOIN]]>
-			(<![CDATA[SELECT wx_name AS wx_name,ch_code AS ch_code, COUNT(*) as value]]>
-			<![CDATA[ FROM ( SELECT DISTINCT USER_ID, wx_name AS wx_name,ch_code AS ch_code ]]>
+			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(*) as value]]>
+			<![CDATA[ FROM ( SELECT DISTINCT USER_ID, wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code ]]>
 			<![CDATA[     FROM wechat_qrcode_scan ]]>
 				<where>
 					<![CDATA[and create_time between #{startTime} and #{endTime}]]>
-		    		<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	    <if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		    		<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 		    		<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 				</where>
-			<![CDATA[GROUP BY wx_name,ch_code,USER_ID)  AS qrcodeScan  ]]>
-			<![CDATA[	GROUP BY wx_name,ch_code) as totalScanUser]]>
-			<![CDATA[ON totalFocus.wx_name = totalScanUser.wx_name AND totalFocus.ch_code = totalScanUser.ch_code]]>
+			<![CDATA[GROUP BY wx_acct,wx_name,ch_code,USER_ID)  AS qrcodeScan  ]]>
+			<![CDATA[	GROUP BY wx_acct,wx_name,ch_code) as totalScanUser]]>
+			<![CDATA[ON totalFocus.wx_acct = totalScanUser.wx_acct AND totalFocus.ch_code = totalScanUser.ch_code]]>
 			<![CDATA[LEFT JOIN wechat_channel wc ON wc.id = totalFocus.ch_code ]]>
 	</select>
 
@@ -212,7 +216,7 @@
 		<![CDATA[SELECT DATE_FORMAT(focus_datetime,'%Y-%m-%d') as time, count(id) as value]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<where>
-		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 		    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 		</where>
@@ -225,7 +229,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<where>
 				<![CDATA[and focus_datetime between #{startTime} and #{endTime}]]>
-		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 		    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 		</where>
@@ -240,7 +244,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<where>
 				<![CDATA[and focus_datetime between #{startTime} and #{endTime}]]>
-		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 		    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 		</where>
@@ -252,7 +256,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<where>
 				<![CDATA[and unfocus_datetime between #{startTime} and #{endTime}]]>
-		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 		    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 		</where>
@@ -268,7 +272,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<where>
 				and unfocus_datetime between #{startTime} and #{endTime}
-		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 		    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 		</where>
