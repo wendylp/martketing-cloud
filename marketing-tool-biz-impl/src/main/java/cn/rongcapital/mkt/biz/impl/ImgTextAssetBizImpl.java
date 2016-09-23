@@ -81,9 +81,15 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 			if(materialCount > 20) {
 				materialCount = 20;
 			}
-			String materialListStr= WxComponentServerApi.getBaseWxSdk().getMaterialList(app,type,offset,materialCount);	
+			String materialListStr= WxComponentServerApi.getBaseWxSdk().getMaterialList(app,type,offset,materialCount);
+			/**
+			 * 记入接口日志到数据库
+			 */
 			WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("ImgTextAssetBizImpl","getMaterialList",materialListStr,new Date());
-			wechatInterfaceLogService.insert(wechatInterfaceLog);			
+			wechatInterfaceLogService.insert(wechatInterfaceLog);
+			/**
+			 * 组装图文资产
+			 */
 			imgTextAssetes.addAll(this.getImgTextAssetes(materialListStr));
 			offset += materialCount;
 		}
@@ -182,8 +188,15 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 	
 	public Long getMaterialCount(App app) {
 		String materialCountStr = WxComponentServerApi.getBaseWxSdk().getMaterialCount(app);
+		/**
+		 * 记入接口日志到数据库
+		 */
 		WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("ImgTextAssetBizImpl","getMaterialCount",materialCountStr,new Date());
 		wechatInterfaceLogService.insert(wechatInterfaceLog);
+		/**
+		 * 组装图文资产总数
+		 */
+
 		JSONObject jsonObject = JSONObject.parseObject(materialCountStr);
 		long materialCount = jsonObject.getLongValue("news_count");
 		return materialCount;

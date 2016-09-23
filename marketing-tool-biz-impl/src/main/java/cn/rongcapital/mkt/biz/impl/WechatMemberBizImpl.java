@@ -122,7 +122,7 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
 			// 根据粉丝的openid获取粉丝信息
 			for (String openid : openidLists) {
 				UserInfo userInfo = WxComponentServerApi.getUserInfo(app, openid);// 如果openid出错，sdk会直接抛出异常
-				WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatMemberBizImpl","getWechatMemberLists",userInfo.toString(),new Date());
+				WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatMemberBizImpl","getWechatMemberLists",userInfoToString(userInfo),new Date());
 				wechatInterfaceLogService.insert(wechatInterfaceLog);
 
 				WechatMember wechatMember = new WechatMember();			
@@ -169,6 +169,12 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
 		wechatMember.setWxGroupId(sb.toString());
 		wechatMember.setPubId(wxAcct);
 		return wechatMember;		
+	}
+	
+	private String userInfoToString(UserInfo userInfo){		
+		String userInfoStr = JSONObject.toJSONString(userInfo);
+		return userInfoStr;
+		
 	}
 	
 }

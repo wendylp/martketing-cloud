@@ -68,8 +68,12 @@ public class MessageSendBizImpl extends BaseBiz implements MessageSendBiz {
 		if(media_id != null && media_id.length() > 0) {			
 			String msg = "{\"touser\":\""+touser+"\",\"msgtype\":\"mpnews\",\"mpnews\":{\"media_id\":\""+media_id+"\"}}";			
 			issended = WxComponentServerApi.getBaseWxSdk().send(app, msg);
+			/**
+			 * 记入接口日志到数据库
+			 */
 			WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("MessageSendBizImpl","sendMpnews",msg,new Date());
 			wechatInterfaceLogService.insert(wechatInterfaceLog);
+			
 			if(issended == false) {
 				logger.info("发送图片消息失败， msg内容为：{}", msg);
 			}			

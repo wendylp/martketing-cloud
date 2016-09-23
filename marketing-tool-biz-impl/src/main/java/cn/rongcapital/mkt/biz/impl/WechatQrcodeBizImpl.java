@@ -45,6 +45,7 @@ import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.po.WechatChannel;
+import cn.rongcapital.mkt.po.WechatInterfaceLog;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeTicket;
 
@@ -88,6 +89,14 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		HttpResult result = req.execute();			
 		if(result.getCode()==200){
 			ObjectNode objNode = JsonUtils.readJsonObject(result.getRespBody());
+			/**
+	    	 * 记入接口日志到数据库
+	    	 */
+			WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatQrcodeBizImpl","getWechatQrcodeTicketFromWeiXin",objNode.toString(),new Date());
+			wechatInterfaceLogService.insert(wechatInterfaceLog);	
+			/**
+			 * 组装二维码对象
+			 */
 			String ticket = objNode.get("ticket").getTextValue();
 			String url = objNode.get("url").getTextValue();
 			wechatQrcodeTicket = new WechatQrcodeTicket();

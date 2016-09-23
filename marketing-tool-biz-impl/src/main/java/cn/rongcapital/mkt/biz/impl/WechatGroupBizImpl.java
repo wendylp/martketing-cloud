@@ -24,6 +24,9 @@ import cn.rongcapital.mkt.vo.weixin.WXTag;
 @Service
 public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 
+	@Autowired
+	private WechatRegisterDao wechatRegisterDao;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -58,10 +61,7 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 		        }
 		    ]
 		}
-	 */
-	@Autowired
-	private WechatRegisterDao wechatRegisterDao;
-	
+	 */	
 	@Override
 	public List<WechatGroup> getTags(String authAppId,String authorizer_refresh_token) {
 		List<WechatGroup> list = new ArrayList<WechatGroup>();
@@ -69,14 +69,19 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 		app.setAuthAppId(authAppId);
 		app.setAuthRefreshToken(authorizer_refresh_token);
 		String tagsString = WxComponentServerApi.getBaseWxSdk().getTags(app);
+		/**
+		 * 记入接口日志到数据库
+		 */
 		WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatGroupBizImpl","getTags",tagsString,new Date());
-		wechatInterfaceLogService.insert(wechatInterfaceLog);			
+		wechatInterfaceLogService.insert(wechatInterfaceLog);
+		/**
+		 * 组装标签数据
+		 */
 		JSONObject jsonObject = JSONObject.parseObject(tagsString);
 		Integer jsonInt = jsonObject.getInteger("errcode");
 		if(StringUtils.isNotBlank(tagsString) && jsonInt == null) {
 			list = this.getTagsFromTagsString(app, tagsString);
 		}
-
 		return list;
 	}
 
@@ -110,7 +115,6 @@ public class WechatGroupBizImpl extends BaseBiz implements WechatGroupBiz {
 				}
 			}	
 		}
-
 		return list;
 	}
 
