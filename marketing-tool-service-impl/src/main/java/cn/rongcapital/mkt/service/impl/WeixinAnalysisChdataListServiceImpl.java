@@ -68,7 +68,7 @@ public class WeixinAnalysisChdataListServiceImpl implements WeixinAnalysisChdata
 			paraMap.put("wxName", wxName);
 		}
 		//微信二维码id
-		if(!"0".equals(qrcodeId)) {
+		if(!"".equals(qrcodeId)) {
 			paraMap.put("qrcodeId", qrcodeId);
 		}
 		//起始时间
