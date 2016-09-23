@@ -1282,7 +1282,8 @@ public class MktApi {
 	@Path("/mkt.segment.tagname.taglist.get")
 	public BaseOutput getSysRecommendedTagList(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken) {
-		return segmentTagnameTagListService.getSysRecommendedTagList();
+		// segmentTagnameTagListService.getSysRecommendedTagList();
+		return segmentTagnameTagListService.getMongoTagRecommendList(method, userToken);
 	}
 
 	/**
@@ -1386,7 +1387,8 @@ public class MktApi {
 	@Path("/mkt.segment.tagkey.taglist.get")
 	public BaseOutput getLastTagByKey(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken, @QueryParam("tag_group_name") String tagGroupName) {
-		return segmentTagkeyTagListService.getLastTagByKey(tagGroupName);
+		//segmentTagkeyTagListService.getLastTagByKey(tagGroupName);
+		return segmentTagkeyTagListService.getMongoTagRecommendByLike(tagGroupName);
 	}
 
 	/*
