@@ -11,4 +11,14 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface SegmentTagnameTagValueService {
 	BaseOutput getTagValueByGroupId(String tagGroupId);
+	
+	/**
+	 * 模糊查询从mongodb中获取推荐标签列表
+	 * 
+	 * @author congshulin
+	 * @功能简述 : 模糊查询从mongodb中获取推荐标签列表
+	 * @param tagName
+	 * @return BaseOutput
+	 */
+	BaseOutput getMongoTagValueByTagId(String tagGroupId);
 }
