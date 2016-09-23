@@ -274,6 +274,13 @@ public class ApiConstant {
 	public static final String SORT_ORDER_FIELD_TYPE = "orderFieldType";
 	
 	public static final String AUDIENCE_LIST_ADD_MSG = "人群名称已经重复";
+
+	public static final String CUSTOM_TAG_ROOT = ",自定义";
+	public static final String CUSTOM_TAG_SYSTEM_ROOT = ",其他,自定义";
+	public static final String CUSTOM_TAG_SYSTEM_PARENT = "其他";
+	public static final String CUSTOM_TAG_SEPARATOR = ",";
+	public static final Integer CUSTOM_TAG_LAYER_TYPE = 1;
+	public static final Integer CUSTOM_TAG_LEAF_TYPE = 2;
 	
 	/**
 	 * 微信粉丝在 data_population 中的bitmap 字段的数值
