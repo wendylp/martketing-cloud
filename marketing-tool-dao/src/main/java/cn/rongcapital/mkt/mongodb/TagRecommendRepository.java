@@ -19,5 +19,21 @@ public interface TagRecommendRepository extends MongoRepository<TagRecommend, Lo
 	public List<TagRecommend> findByTagId(int tagId);
 
 	Page<TagRecommend> findAll(Pageable pageable);
+	
+	/**
+	 * 方法以findBy开头，后面跟TagTree中的属性名(首字母大写)
+	 * 
+	 * @param mid
+	 * @return
+	 */
+	public List<TagRecommend> findByStatus(int status);
+	
+	/**
+	 * 方法以findBy开头，后面跟TagTree中的属性名(首字母大写)
+	 * 
+	 * @param mid
+	 * @return
+	 */
+	public List<TagRecommend> findByTagNameLike(String tagName);
 
 }

@@ -7,9 +7,6 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
-import heracles.data.common.annotation.ReadWrite;
-import heracles.data.common.util.ReadWriteType;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,14 +18,19 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.TagRecommendDao;
+import cn.rongcapital.mkt.mongodb.TagRecommendRepository;
 import cn.rongcapital.mkt.po.TagRecommend;
 import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 
 @Service
 public class SegmentTagnameTagListServiceImpl implements SegmentTagnameTagListService {
 	@Autowired
 	TagRecommendDao tagRecommendDao;
+	@Autowired
+	TagRecommendRepository tagRecommendRepository;
 
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
@@ -64,6 +66,36 @@ public class SegmentTagnameTagListServiceImpl implements SegmentTagnameTagListSe
 		} else {
 			return tagRecommend.substring(tagRecommend.lastIndexOf('-') + 1);
 		}
+	}
+
+	/**
+	 * 根据标签树的id从mongodb中获取推荐标签列表
+	 * 
+	 * @author congshulin
+	 * @功能简述 : 获取系统标签组列表
+	 * @param method
+	 * @param userToken
+	 * @return BaseOutput
+	 */
+	@Override
+	public BaseOutput getMongoTagRecommendList(String method, String userToken) {
+
+		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+
+		List<cn.rongcapital.mkt.po.mongodb.TagRecommend> tagRecommendList = tagRecommendRepository
+				.findByStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		if (CollectionUtils.isNotEmpty(tagRecommendList)) {
+
+			for (cn.rongcapital.mkt.po.mongodb.TagRecommend tagRecommend : tagRecommendList) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tag_group_id", tagRecommend.getTagId());
+				map.put("tag_group_name", tagRecommend.getTagName());
+				baseOutput.getData().add(map);
+			}
+		}
+		baseOutput.setTotal(tagRecommendList.size());
+		return baseOutput;
 	}
 
 }
