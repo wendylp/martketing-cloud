@@ -425,12 +425,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			wechatQrcode.setRelatedTags(tagIds);
 		}			
 		
-		if(wechatQrcodeIn.getStatus() == null){
-			wechatQrcode.setStatus(NumUtil.int2OneByte(0));
-		}else{
-			wechatQrcode.setStatus(wechatQrcodeIn.getStatus());
-		}
-		
 		wechatQrcode.setCreateTime(new Date());
 
 		return wechatQrcode;		
@@ -441,9 +435,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	public BaseOutput createQrcode(WechatQrcodeIn wechatQrcodeIn) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
-			
-
-			//WechatQrcode wechatQrcode = this.getWechatQrcodeFromWechatQrcodeIn(wechatQrcodeIn, wechatQrcodeTicket);
 			
 			WechatQrcode wechatQrcode = new WechatQrcode();
 			
@@ -469,6 +460,8 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			if(wechatQrcode.getId() != null && wechatQrcode.getId() != 0){
 				wechatQrcodeDao.updateById(wechatQrcode);
 			}else{
+				
+				wechatQrcode.setStatus(NumUtil.int2OneByte(0));
 				wechatQrcodeDao.insert(wechatQrcode);
 			}
 			
