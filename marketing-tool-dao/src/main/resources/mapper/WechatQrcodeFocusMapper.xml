@@ -127,13 +127,13 @@
 		<if test="fieldName != null and fieldName == 'unfocus_datetime' and searchHours != null ">
 			<![CDATA[ DATE_FORMAT(unfocus_datetime,'%Y-%m-%d %H') = #{searchHours} ]]>
 		</if>
-		<if test="chCode != null and chCode != '0' ">
+		<if test="chCode != null">
 			AND ch_code = #{chCode}
 		</if>
-		<if test="wxName != null and wxName != '0'.toString() ">
+		<if test="wxName != null">
 			AND wx_name = #{wxName}
 		</if>
-		<if test="qrcodeId != null and qrcodeId != '' ">
+		<if test="qrcodeId != null">
 			AND qrcode_id = #{qrcodeId}
 		</if>		
 		AND #{fieldName} IS NOT NULL
