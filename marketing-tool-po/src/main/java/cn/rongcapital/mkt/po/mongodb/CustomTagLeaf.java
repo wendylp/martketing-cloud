@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.po.mongodb;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.po.base.BaseTag;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.util.CollectionUtils;
@@ -13,6 +14,7 @@ import java.util.List;
 public class CustomTagLeaf extends BaseTag{
 
     public CustomTagLeaf(){
+        this.setTagType(ApiConstant.CUSTOM_TAG_LEAF_TYPE);
         this.setTagId(RandomStringUtils.random(10,true,true) + System.currentTimeMillis());
     }
 

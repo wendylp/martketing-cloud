@@ -18,7 +18,6 @@ import java.util.List;
 public abstract class BaseTag implements Serializable {
 
     private static final long serialVersionUID = -8650105374962428497L;
-    private static final String TAG_PATH_SEPARATOR = ",";
 
     @Id
     private String id;
@@ -28,6 +27,9 @@ public abstract class BaseTag implements Serializable {
 
     @Field(value = "tag_name")
     private String tagName;
+
+    @Field(value = "tag_type")
+    private Integer tagType;
 
     @Field(value = "level")
     private Integer level;
@@ -141,6 +143,14 @@ public abstract class BaseTag implements Serializable {
         this.source = source;
     }
 
+    public Integer getTagType() {
+        return tagType;
+    }
+
+    public void setTagType(Integer tagType) {
+        this.tagType = tagType;
+    }
+
     public boolean validateTag(){
         if(this.getTagName() == null || (this.getPath() == null && !"自定义".equals(this.getTagName()))){
             return false;
@@ -159,7 +169,7 @@ public abstract class BaseTag implements Serializable {
         if(this.getParent() == null) return null;
         BaseTag parentTag = new CustomTagTypeLayer();
         parentTag.setTagName(this.getParent());
-        parentTag.setPath(this.getPath().substring(this.getParent().length()+TAG_PATH_SEPARATOR.length()));
+        parentTag.setPath(this.getPath().substring(this.getParent().length()+ApiConstant.CUSTOM_TAG_SEPARATOR.length()));
         if("".equals(parentTag.getPath())) parentTag.setPath(null);
         return parentTag;
     }

@@ -106,19 +106,24 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
         baseTag.setTagName(paramDataCustomTags.getTagName());
         baseTag.setSource(paramDataCustomTags.getSource());
         String tagPath = null;
+        String tagParent = null;
         if(paramDataCustomTags.getTagTypeLayerThree() != null){
             tagPath = ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerThree()
                        + ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerTwo()
                        + ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerOne()
                        + ApiConstant.CUSTOM_TAG_ROOT;
+            tagParent = paramDataCustomTags.getTagTypeLayerThree();
         }else if(paramDataCustomTags.getTagTypeLayerTwo() != null){
             tagPath = ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerTwo()
                        + ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerOne()
                        + ApiConstant.CUSTOM_TAG_ROOT;
+            tagParent = paramDataCustomTags.getTagTypeLayerTwo();
         }else{
             tagPath = ApiConstant.CUSTOM_TAG_SEPARATOR + paramDataCustomTags.getTagTypeLayerOne()
                        + ApiConstant.CUSTOM_TAG_ROOT;
+            tagParent = paramDataCustomTags.getTagTypeLayerOne();
         }
+        baseTag.setParent(tagParent);
         baseTag.setPath(tagPath);
         baseTag.setCreateTime(paramDataCustomTags.getCreateTime());
         return baseTag;

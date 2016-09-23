@@ -274,5 +274,7 @@ public class ApiConstant {
 	public static final String CUSTOM_TAG_SYSTEM_ROOT = ",其他,自定义";
 	public static final String CUSTOM_TAG_SYSTEM_PARENT = "其他";
 	public static final String CUSTOM_TAG_SEPARATOR = ",";
+	public static final Integer CUSTOM_TAG_LAYER_TYPE = 1;
+	public static final Integer CUSTOM_TAG_LEAF_TYPE = 2;
 	
 }

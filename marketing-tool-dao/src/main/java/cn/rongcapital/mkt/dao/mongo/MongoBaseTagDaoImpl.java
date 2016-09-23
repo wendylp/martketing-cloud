@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -55,6 +56,13 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
             targetTag = mongoTemplate.findOne(query,BaseTag.class);
         }
         return targetTag;
+    }
+
+    @Override
+    public List<BaseTag> findBaseTagListByTagType(Integer tagType) {
+        Query query = new Query(Criteria.where("tag_type").is(tagType));
+        List<BaseTag> baseTags = mongoTemplate.find(query,BaseTag.class);
+        return baseTags;
     }
 
     @Override

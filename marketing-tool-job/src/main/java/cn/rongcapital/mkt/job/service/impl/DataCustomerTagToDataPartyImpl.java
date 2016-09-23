@@ -64,7 +64,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
 				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
 
 				dataPartyDao.insert(dataParty);
-				this.updateKeyidByid(dataObj.getId(), dataObj.getId());
+				this.updateKeyidByid(dataParty.getId(), dataObj.getId());
 				// dataPartyList.add(dataParty);
 			}
 			idList.add(dataObj.getId());
