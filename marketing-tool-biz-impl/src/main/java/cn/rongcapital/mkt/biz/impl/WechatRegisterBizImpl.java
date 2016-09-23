@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.biz.impl;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,7 @@ import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 
 import cn.rongcapital.mkt.biz.WechatRegisterBiz;
+import cn.rongcapital.mkt.po.WechatInterfaceLog;
 import cn.rongcapital.mkt.po.WechatRegister;
 
 @Service
@@ -45,7 +48,14 @@ public class WechatRegisterBizImpl extends BaseBiz implements WechatRegisterBiz 
 		app.setAuthRefreshToken(refreshToken);
 		
 		String authInfoString =  WxComponentServerApi.getAuthInfo(app,authAppId);
-		
+		/**
+    	 * 记入接口日志到数据库
+    	 */
+		WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatRegisterBizImpl","getAuthInfo",authInfoString,new Date());
+		wechatInterfaceLogService.insert(wechatInterfaceLog);	
+		/**
+		 * 组装授权公众号对象
+		 */
 		WechatRegister  wechatRegister =  null;
 		if(StringUtils.isNoneBlank(authInfoString)){
 			wechatRegister =  this.getWechatRegisterFromAuthInfo(authInfoString);	
