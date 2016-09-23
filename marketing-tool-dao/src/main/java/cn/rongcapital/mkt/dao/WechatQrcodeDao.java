@@ -81,4 +81,10 @@ public interface WechatQrcodeDao extends BaseDao<WechatQrcode>{
 	 * @author congshulin
 	 */
 	int updateStatusByExpirationTime(WechatQrcode t);
+	
+	/**
+	 * 根据渠道Id查询已经使用渠道的二维码数量
+	 * @return
+	 */
+	int selectUsedChannelCountBychCode(Integer chCode);
 }
