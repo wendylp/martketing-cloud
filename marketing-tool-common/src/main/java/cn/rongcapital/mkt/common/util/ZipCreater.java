@@ -1,6 +1,14 @@
-/**
- * 功能描述：创建zip文件包
- */
+/*************************************************
+ * @功能简述: 创建zip包
+ * 该类被编译测试过
+ * @对应项目名称：
+ * @see 
+ * @author: shuiyangyang
+ * @version: 0.0.1
+ * @date: 2016.09.26
+ * 最后修改日期：2016.09.26
+ * @复审人：
+*************************************************/
 package cn.rongcapital.mkt.common.util;
 
 import java.io.BufferedInputStream;
@@ -18,23 +26,18 @@ import java.util.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author shuiyangyang
- * @Data 2016.09.26
- * 最后修改日期：2016.09.26
- */
 public class ZipCreater {
 	
 	private static Logger logger = LoggerFactory.getLogger(ZipCreater.class);
 	
 	/**
 	 * 功能描述：创建zip文件包
+	 * 
 	 * @param files 需要被压缩的文件名数组(需要绝对路径)
 	 * @param fileName 压缩后的文件名(需要绝对路径)
 	 * @throws IOException
 	 * @author shuiyangyang
-	 * @Data 2016.09.26 
-	 * 最后修改日期：2016.09.26
+	 * @Data 2016.09.26
 	 */
 	public static void generateZip(File[] files, String fileName) throws IOException {
 		
@@ -67,7 +70,6 @@ public class ZipCreater {
             for(int i = 0; i<fileLists.size(); i++){
                 logger.debug("enter loop to zip file");
                 File file = fileLists.get(i);
-//                if(file == null || !file.isFile()) continue;
                 ZipEntry ze = new ZipEntry(file.getName());
                 zos.putNextEntry(ze);
                 bis = new BufferedInputStream(new FileInputStream(file));
@@ -78,7 +80,7 @@ public class ZipCreater {
             }
             zos.closeEntry();
         } catch (Exception e) {
-        	logger.info("download file exception:" + e.getMessage());
+        	logger.info(e.toString());
         } finally {
 			if (os != null) {
 				os.close();
