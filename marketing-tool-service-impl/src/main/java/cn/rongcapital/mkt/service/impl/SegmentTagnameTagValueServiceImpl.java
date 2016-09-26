@@ -79,7 +79,7 @@ public class SegmentTagnameTagValueServiceImpl implements SegmentTagnameTagValue
 
 		for (int i = 0; i < tagList.size(); i++) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("tag_id", tagGroupId + "_" + i);
+			map.put("tag_id", tagGroupId + "_" + i + 1);
 			map.put("tag_name", tagList.get(i));
 			result.getData().add(map);
 		}

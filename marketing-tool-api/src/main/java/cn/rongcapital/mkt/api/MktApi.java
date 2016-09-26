@@ -1420,7 +1420,8 @@ public class MktApi {
 	public BaseOutput getTagValueByGroupId(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("tag_group_id") String tagGroupId) {
-		return segmentTagnameTagValueService.getTagValueByGroupId(tagGroupId);
+		//segmentTagnameTagValueService.getTagValueByGroupId(tagGroupId);
+		return segmentTagnameTagValueService.getMongoTagValueByTagId(tagGroupId);
 	}
 
 	/**
