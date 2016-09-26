@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,19 +24,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.chainsaw.Main;
-import org.apache.poi.hssf.eventusermodel.HSSFEventFactory;
-import org.apache.poi.hssf.eventusermodel.HSSFListener;
-import org.apache.poi.hssf.eventusermodel.HSSFRequest;
-import org.apache.poi.hssf.record.CommonObjectDataSubRecord;
-import org.apache.poi.hssf.record.ObjRecord;
-import org.apache.poi.hssf.record.Record;
-import org.apache.poi.hssf.record.SubRecord;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.WorkbookUtil;
-import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
@@ -52,8 +39,8 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.IllegalDataHeadTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
-import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.FileUtil;
+import cn.rongcapital.mkt.common.util.ZipCreater;
 import cn.rongcapital.mkt.dao.IllegalDataDao;
 import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
 import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
@@ -599,6 +586,9 @@ public class UploadFileServiceImpl implements UploadFileService{
 				wechatQrcodeTicket.setOrderField("id");
 				wechatQrcodeTicket.setOrderFieldType("ASC");
 				
+				// 保存该批次二维码图片
+				List<String> qrcodePicLists = new ArrayList<String>();
+				
 				for(WXMoudelVO wmo : wxSuccessList){
 					WechatQrcode wq = new WechatQrcode();
 					wq.setBatchId(bachId);
@@ -634,8 +624,13 @@ public class UploadFileServiceImpl implements UploadFileService{
 						wechatQrcodeTicketDao.updateById(wechatQrcodeTicketTemp);
 					}
 					wechatQrcodeDao.insert(wq);
+					qrcodePicLists.add(wq.getQrcodePic());
 				}
 				
+				// 生成该批次，二维码图片的zip包，并写入到服务器
+				if(qrcodePicLists != null && qrcodePicLists.size() > 0) {
+					createQrocdePicZip(qrcodePicLists, bachId);
+				}
 				
 				//生成错误文件csv并把错误文件写到服务器
 				//csvWriter = new CsvWriter(new FileWriter(new File("e:\\fail.csv")), CSV_WRITER_SEPARATOR);
@@ -705,4 +700,41 @@ public class UploadFileServiceImpl implements UploadFileService{
 	        fop.flush();
 	        fop.close();
 	    }
+	 
+	 /**
+	  * 根据批次号，和该批次二维码图片，给二维码图片打包
+	  * 
+	  * @param qrcodePicLists
+	  * @param bachId
+	  * @author shuiyangyang
+	  * @Data 2016.09.26
+	  * 最后修改日期：2016.09.26
+	  */
+	 private void createQrocdePicZip(List<String> qrcodePicLists, String bachId) {
+		 
+		 // 此处利用了需要压缩的文件和压缩后文件放在同一路径下的特殊情况
+		 String[] fileNamePaths = {ApiConstant.UPLOAD_IMG_PATH_LARGE, 
+								 ApiConstant.UPLOAD_IMG_PATH_MIDDLE, 
+								 ApiConstant.UPLOAD_IMG_PATH_SMALL};
+		 
+		 int qrcodePicListsSize = qrcodePicLists.size();
+		 
+		 for(String fileNamePath : fileNamePaths) {
+			 
+			 // 设置zip文件的全名
+			 String fileName = fileNamePath + bachId + ".zip";
+			 File[] files = new File[qrcodePicListsSize];
+			 // 设置要压缩文件的全名
+			 for(int i = 0; i < qrcodePicListsSize; i++) {
+				 files[i] = new File(fileNamePath + qrcodePicLists.get(i));
+			 }
+			 
+			 // 调用common里创建压缩包方法
+			try {
+				ZipCreater.generateZip(files, fileName);
+			} catch (IOException e) {
+				logger.info(e.getMessage());
+			} 
+		 }
+	 }
 }
