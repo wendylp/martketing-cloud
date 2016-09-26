@@ -19,21 +19,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author 
+ * @author shuiyangyang
  * @Data 2016.09.26
+ * 最后修改日期：2016.09.26
  */
 public class ZipCreater {
 	
-	static private Logger logger = LoggerFactory.getLogger(ZipCreater.class);
+	private static Logger logger = LoggerFactory.getLogger(ZipCreater.class);
 	
 	/**
 	 * 功能描述：创建zip文件包
 	 * @param files 需要被压缩的文件名数组(需要绝对路径)
 	 * @param fileName 压缩后的文件名(需要绝对路径)
 	 * @throws IOException
+	 * @author shuiyangyang
 	 * @Data 2016.09.26 
+	 * 最后修改日期：2016.09.26
 	 */
-	static public void generateZip(File[] files, String fileName) throws IOException {
+	public static void generateZip(File[] files, String fileName) throws IOException {
+		
+		if(files == null || files.length <= 0) {
+			return;
+		}
 		
 		// 去除文件不存在的文件名
 		List<File> fileLists = new ArrayList<File>();
@@ -43,7 +50,7 @@ public class ZipCreater {
 			}
 		}
 		
-		if(fileLists == null || fileLists.size() < 1) {
+		if(fileLists == null || fileLists.size() <= 0) {
 			return;
 		}
 		
@@ -67,17 +74,17 @@ public class ZipCreater {
                 while((len = bis.read(buf)) > 0 ){
                     zos.write(buf,0,len);
                 }
-                bis.close();
                 zos.closeEntry();
             }
             zos.closeEntry();
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.info("download file exception:" + e.getMessage());
         } finally {
 			if (os != null) {
 				os.close();
 			}
 			if (zos != null) {
+				zos.closeEntry();
 				zos.close();
 			}
 			if (bis != null) {
