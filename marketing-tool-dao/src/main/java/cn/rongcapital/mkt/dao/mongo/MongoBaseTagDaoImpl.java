@@ -74,6 +74,14 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
         return null;
     }
 
+    @Override
+    public BaseTag findCustomTagLeafByTagId(String tagId) {
+        BaseTag targetTag = null;
+        Query query = new Query(Criteria.where("tag_id").is(tagId));
+        targetTag = mongoTemplate.findOne(query,BaseTag.class);
+        return targetTag;
+    }
+
     //Todo:这个方法要改的可以获取父类的属性,并且去除掉static final这样的属性
     private Update buildBaseUpdate(BaseTag t) {
         Update update = new Update();
