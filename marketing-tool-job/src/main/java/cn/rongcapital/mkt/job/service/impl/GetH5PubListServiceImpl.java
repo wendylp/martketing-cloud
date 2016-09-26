@@ -24,14 +24,12 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.HttpUtils;
 import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
-import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatGroupDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.job.vo.in.H5MktPubListResponse;
 import cn.rongcapital.mkt.job.vo.in.H5Pub;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
-import cn.rongcapital.mkt.po.WechatAsset;
 import cn.rongcapital.mkt.po.WechatGroup;
 import cn.rongcapital.mkt.po.WechatRegister;
 
@@ -68,9 +66,6 @@ public class GetH5PubListServiceImpl implements TaskService {
 
 	@Autowired
 	private WechatGroupDao wechatGroupDao;
-
-	@Autowired
-	private WechatAssetDao wechatAssetDao;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -113,15 +108,20 @@ public class GetH5PubListServiceImpl implements TaskService {
 			// 统计已分组人数总和
 			// int count = 0;
 			if (!CollectionUtils.isEmpty(WechatGroupList)) {
+				String wxAcct = WechatGroupList.get(0).getWxAcct();
+				WechatGroup wechatGroup = new WechatGroup();
+				wechatGroup.setWxAcct(wxAcct);
+				// 批量更新数据库中组的状态为删除
+				wechatGroupDao.updateStatusByWxAcct(wechatGroup);
+
 				for (WechatGroup wechatGroupinfo : WechatGroupList) {
 					// count += wechatGroupinfo.getCount(); // 统计已分组人数总和
 					if (wechatGroupinfo != null) {
 						updateWechatGroup(wechatGroupinfo);
 						updateWechatUngrouped(wechatGroupinfo);
-
 					}
-
 				}
+
 			}
 
 			// 根据Appid获取微信号和粉丝数

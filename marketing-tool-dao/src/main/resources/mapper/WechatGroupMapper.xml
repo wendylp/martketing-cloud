@@ -160,4 +160,11 @@
 		UPDATE wechat_group SET count = #{count}
 		<![CDATA[WHERE wx_acct = #{wxAcct} and group_id = #{groupId}]]>
 	</update>
+	
+	<update id="updateStatusByWxAcct" parameterType="cn.rongcapital.mkt.po.WechatGroup">
+		<![CDATA[UPDATE wechat_group]]>
+		<![CDATA[ set status = 1]]>
+        <![CDATA[ WHERE wx_acct = #{wxAcct}]]>
+	</update>
+	
 </mapper>

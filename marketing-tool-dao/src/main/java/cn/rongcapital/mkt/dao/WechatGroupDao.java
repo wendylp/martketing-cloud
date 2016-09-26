@@ -100,4 +100,10 @@ public interface WechatGroupDao extends BaseDao<WechatGroup>{
 	 * @return 
 	 */
 	void updateInfoByGroupWxCode(WechatGroup wechatGroup);
+	
+	/**
+	 * 根据微信账号更新微信公众号状态
+	 * @param WechatGroupList
+	 */
+	void updateStatusByWxAcct(WechatGroup wechatGroup);
 }
