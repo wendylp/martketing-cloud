@@ -24,6 +24,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
 
     private Logger logger = LoggerFactory.getLogger(MongoBaseTagDaoImpl.class);
+    private final String TAG_NAME="tag_name";
+    private final String PATH = "path";
+    private final String SOURCE = "source";
+    private final String TAG_TYPE = "tag_type";
+    private final String TAG_ID = "tag_id";
+    private final String SERIAL_VERSION_UID = "serialVersionUID";
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -34,7 +40,7 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
     public boolean insertBaseTagDao(BaseTag baseTag) {
         mongoTemplate.insert(baseTag);
         BaseTag insertedTag = null;
-        Query query = new Query(Criteria.where("tag_name").is(baseTag.getTagName()).and("path").is(baseTag));
+        Query query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag));
         insertedTag = mongoTemplate.findOne(query,BaseTag.class);
         if(insertedTag == null) return false;
         return true;
@@ -46,13 +52,13 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
         if(baseTag instanceof CustomTagTypeLayer){
             Query query = null;
             if(baseTag.getPath() != null){
-                query = new Query(Criteria.where("tag_name").is(baseTag.getTagName()).and("path").is(baseTag.getPath()));
+                query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag.getPath()));
             }else{
-                query = new Query(Criteria.where("tag_name").is(baseTag.getTagName()));
+                query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()));
             }
             targetTag = mongoTemplate.findOne(query,BaseTag.class);
         }else if(baseTag instanceof CustomTagLeaf){
-            Query query = new Query(Criteria.where("tag_name").is(baseTag.getTagName()).and("path").is(baseTag.getPath()).and("source").is(baseTag.getSource()));
+            Query query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag.getPath()).and(SOURCE).is(baseTag.getSource()));
             targetTag = mongoTemplate.findOne(query,BaseTag.class);
         }
         return targetTag;
@@ -60,7 +66,7 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
 
     @Override
     public List<BaseTag> findBaseTagListByTagType(Integer tagType) {
-        Query query = new Query(Criteria.where("tag_type").is(tagType));
+        Query query = new Query(Criteria.where(TAG_TYPE).is(tagType));
         List<BaseTag> baseTags = mongoTemplate.find(query,BaseTag.class);
         return baseTags;
     }
@@ -68,7 +74,7 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
     @Override
     public BaseTag updateBaseTag(BaseTag baseTag) {
         BaseTag updatedTag = null;
-        Query query = new Query(Criteria.where("tag_name").is(baseTag.getTagName()).and("path").is(baseTag.getPath()));
+        Query query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag.getPath()));
         Update update = buildBaseUpdate(baseTag);
         mongoTemplate.updateFirst(query,update,baseTag.getClass());
         return null;
@@ -77,7 +83,7 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
     @Override
     public BaseTag findCustomTagLeafByTagId(String tagId) {
         BaseTag targetTag = null;
-        Query query = new Query(Criteria.where("tag_id").is(tagId));
+        Query query = new Query(Criteria.where(TAG_ID).is(tagId));
         targetTag = mongoTemplate.findOne(query,BaseTag.class);
         return targetTag;
     }
@@ -92,7 +98,7 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
             filedMap.putIfAbsent(className, fields);
         }
         for (Field field : fields) {
-            if(field.getName().equals("serialVersionUID")) continue;
+            if(field.getName().equals(SERIAL_VERSION_UID)) continue;
             field.setAccessible(true);
             try {
                 Object value = field.get(t);
