@@ -8,6 +8,7 @@ import cn.rongcapital.mkt.po.mongodb.CustomTagTypeLayer;
 import cn.rongcapital.mkt.service.FindCustomTagInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -44,5 +45,15 @@ public class FindCustomTagInfoServiceImpl implements FindCustomTagInfoService {
     @Override
     public List<BaseTag> findAllCustomTagLeaf() {
         return mongoBaseTagDao.findBaseTagListByTagType(ApiConstant.CUSTOM_TAG_LEAF_TYPE);
+    }
+
+    @Override
+    public BaseTag findCustomTagInfoByTagId(String tagId) {
+        if(StringUtils.isEmpty(tagId)) return null;
+        BaseTag targetTag = mongoBaseTagDao.findCustomTagLeafByTagId(tagId);
+        if(targetTag != null && targetTag instanceof CustomTagLeaf){
+            return targetTag;
+        }
+        return null;
     }
 }

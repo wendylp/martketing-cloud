@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service;
 
 import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
 
 import java.util.List;
 
@@ -11,4 +12,5 @@ public interface FindCustomTagInfoService {
     BaseTag findCustomTagByTagNameAndTagPath(String tagName,String tagPath,String tagSource);
     BaseTag findCustomTagByTag(BaseTag baseTag);
     List<BaseTag> findAllCustomTagLeaf();
+    BaseTag findCustomTagInfoByTagId(String tagId);
 }

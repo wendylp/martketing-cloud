@@ -8,6 +8,7 @@ import cn.rongcapital.mkt.service.InsertCustomTagService;
 import cn.rongcapital.mkt.service.IsExistsCustomTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,7 +31,7 @@ public class InsertCustomTagServiceImpl implements InsertCustomTagService {
     @Override
     public BaseTag insertCustomTag(BaseTag baseTag) {
         if(!baseTag.validateTag()) return null;
-        if(mongoBaseTagDao.findOneBaseTag(baseTag)!=null) return baseTag;
+        if(mongoBaseTagDao.findOneBaseTag(baseTag)!=null) return mongoBaseTagDao.findOneBaseTag(baseTag);
         BaseTag parentTag = baseTag.getParentTag();
         parentTag = mongoBaseTagDao.findOneBaseTag(parentTag);
         if(parentTag == null) return null;
@@ -69,7 +70,7 @@ public class InsertCustomTagServiceImpl implements InsertCustomTagService {
 
     @Override
     public BaseTag insertCustomTagLeafFromSystemIn(String tagName, String tagSource) {
-        if(tagName == null || tagSource == null) return null;
+        if(StringUtils.isEmpty(tagName) || StringUtils.isEmpty(tagSource)) return null;
         BaseTag baseTag = new CustomTagLeaf();
         baseTag.setTagName(tagName);
         baseTag.setSource(tagSource);

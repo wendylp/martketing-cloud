@@ -17,4 +17,5 @@ public interface MongoBaseTagDao {
 
     BaseTag updateBaseTag(BaseTag baseTag);
 
+    BaseTag findCustomTagLeafByTagId(String tagId);
 }
