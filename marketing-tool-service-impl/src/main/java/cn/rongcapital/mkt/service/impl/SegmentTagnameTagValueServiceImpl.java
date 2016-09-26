@@ -79,7 +79,7 @@ public class SegmentTagnameTagValueServiceImpl implements SegmentTagnameTagValue
 
 		for (int i = 0; i < tagList.size(); i++) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("tag_id", tagGroupId + "_" + i + 1);
+			map.put("tag_id", tagGroupId + "_" + (i + 1));
 			map.put("tag_name", tagList.get(i));
 			result.getData().add(map);
 		}
@@ -87,10 +87,8 @@ public class SegmentTagnameTagValueServiceImpl implements SegmentTagnameTagValue
 		Map<String, Object> mapUnlimited = new HashMap<String, Object>();
 		mapUnlimited.put("tag_id", "0");
 		mapUnlimited.put("tag_name", "不限");
-
-		result.getData().addAll(tagList);
-
-		result.setTotal(tagList.size());
+		result.getData().add(mapUnlimited);
+		result.setTotal(tagList.size() + 1);
 
 		return result;
 	}
