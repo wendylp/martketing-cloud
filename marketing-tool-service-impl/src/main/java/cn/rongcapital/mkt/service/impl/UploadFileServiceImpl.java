@@ -708,6 +708,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 	  * @param bachId
 	  * @author shuiyangyang
 	  * @Data 2016.09.26
+	  * 最后修改日期：2016.09.26
 	  */
 	 private void createQrocdePicZip(List<String> qrcodePicLists, String bachId) {
 		 
@@ -728,13 +729,12 @@ public class UploadFileServiceImpl implements UploadFileService{
 				 files[i] = new File(fileNamePath + qrcodePicLists.get(i));
 			 }
 			 
-			 try {
-				// 调用common里创建压缩包方法
+			 // 调用common里创建压缩包方法
+			try {
 				ZipCreater.generateZip(files, fileName);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				logger.info(e.getMessage());
+			} 
 		 }
 	 }
 }
