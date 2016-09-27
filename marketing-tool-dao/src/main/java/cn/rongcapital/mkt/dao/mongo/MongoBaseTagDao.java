@@ -23,4 +23,6 @@ public interface MongoBaseTagDao {
     List<DataParty> findMDataByTagId(String tagId, Integer startIndex, Integer pageSize);
 
     Long findTotalMDataCount(String tagId);
+    
+    BaseTag findOneCustomTagBySource(BaseTag baseTag);
 }
