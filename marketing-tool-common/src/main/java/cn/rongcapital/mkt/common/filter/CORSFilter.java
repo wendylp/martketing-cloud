@@ -17,14 +17,19 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CORSFilter implements Filter {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    
 	@Value("${api.cors.domain}")
 	private String CORSDomain;
 	private static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
@@ -35,11 +40,14 @@ public class CORSFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain fc)
 			throws IOException, ServletException {
-		
+/*	    HttpServletRequest request = (HttpServletRequest) req;
+	    String url = request.getRequestURL().toString();
+	    logger.info(url);
+	    
 	    HttpServletResponse response = (HttpServletResponse) res;
 	    response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, CORSDomain);
 	    response.setHeader("Access-Control-Allow-Headers","X-Requested-With, Content-Type");
-	    fc.doFilter(req, res);
+	    fc.doFilter(req, res);*/
 	}
 
 	@Override
