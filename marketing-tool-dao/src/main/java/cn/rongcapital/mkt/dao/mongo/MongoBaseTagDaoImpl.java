@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -109,6 +110,25 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
         Query query = new Query(Criteria.where(CUSTOM_TAG_LIST).is(tagId));
         totalCount = mongoTemplate.count(query,DataParty.class);
         return totalCount;
+    }
+
+    @Override
+    public void deleteCustomTag(BaseTag baseTag) {
+        if(baseTag == null || StringUtils.isEmpty(baseTag.getTagName()) || StringUtils.isEmpty(baseTag.getPath())) return;
+        Query query = null;
+        if(baseTag instanceof CustomTagTypeLayer){
+            query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag.getPath()));
+            mongoTemplate.findAllAndRemove(query,BaseTag.class);
+        }else if( baseTag instanceof  CustomTagLeaf && !StringUtils.isEmpty(baseTag.getSource())){
+            query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag.getPath()).and(SOURCE).is(baseTag.getSource()));
+            mongoTemplate.findAllAndRemove(query,BaseTag.class);
+        }
+    }
+
+    @Override
+    public void deleteCustomTagLeafByTagId(BaseTag baseTag) {
+        Query query = new Query(Criteria.where(TAG_ID).is(baseTag.getTagId()));
+        mongoTemplate.findAllAndRemove(query,BaseTag.class);
     }
 
     //Todo:这个方法要改的可以获取父类的属性,并且去除掉static final这样的属性
