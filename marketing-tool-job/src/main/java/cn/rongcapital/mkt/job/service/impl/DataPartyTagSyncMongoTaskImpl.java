@@ -106,7 +106,7 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
             Tag tagInfo = tagInfoMap.get(tagId);
             if (tagInfo == null) {
                 tagInfo = new Tag();
-                tagInfo.setTagId(tagId);
+                tagInfo.setTagId(tagId.toString());
 
                 cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
                 tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
