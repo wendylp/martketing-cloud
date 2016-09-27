@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.dao.mongo;
 import cn.rongcapital.mkt.po.base.BaseTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
 import cn.rongcapital.mkt.po.mongodb.CustomTagTypeLayer;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
     private final String TAG_TYPE = "tag_type";
     private final String TAG_ID = "tag_id";
     private final String SERIAL_VERSION_UID = "serialVersionUID";
+    private final String CUSTOM_TAG_LIST = "custom_tag_list";
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -86,6 +88,27 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
         Query query = new Query(Criteria.where(TAG_ID).is(tagId));
         targetTag = mongoTemplate.findOne(query,BaseTag.class);
         return targetTag;
+    }
+
+    @Override
+    public List<DataParty> findMDataByTagId(String tagId, Integer startIndex, Integer pageSize) {
+        List<DataParty> dataPartyList = null;
+        Query query = new Query(Criteria.where(CUSTOM_TAG_LIST).is(tagId));
+        if(startIndex == null || pageSize == null){
+            dataPartyList = mongoTemplate.find(query,DataParty.class);
+        }else{
+            query = query.skip(startIndex).limit(pageSize);
+            dataPartyList = mongoTemplate.find(query,DataParty.class);
+        }
+        return dataPartyList;
+    }
+
+    @Override
+    public Long findTotalMDataCount(String tagId) {
+        Long totalCount = null;
+        Query query = new Query(Criteria.where(CUSTOM_TAG_LIST).is(tagId));
+        totalCount = mongoTemplate.count(query,DataParty.class);
+        return totalCount;
     }
 
     //Todo:这个方法要改的可以获取父类的属性,并且去除掉static final这样的属性

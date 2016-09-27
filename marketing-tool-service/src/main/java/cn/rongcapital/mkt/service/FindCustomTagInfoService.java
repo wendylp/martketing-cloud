@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service;
 
 import cn.rongcapital.mkt.po.base.BaseTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface FindCustomTagInfoService {
     BaseTag findCustomTagByTag(BaseTag baseTag);
     List<BaseTag> findAllCustomTagLeaf();
     BaseTag findCustomTagInfoByTagId(String tagId);
+    List<DataParty> findMDataByTagId(String tagId,Integer pagNum,Integer pageSize);
+    Integer queryMDataCountByTagId(String tagId);
 }

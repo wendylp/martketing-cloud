@@ -5,7 +5,10 @@ import cn.rongcapital.mkt.dao.mongo.MongoBaseTagDaoImpl;
 import cn.rongcapital.mkt.po.base.BaseTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
 import cn.rongcapital.mkt.po.mongodb.CustomTagTypeLayer;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.service.FindCustomTagInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -17,6 +20,8 @@ import java.util.List;
  */
 @Service
 public class FindCustomTagInfoServiceImpl implements FindCustomTagInfoService {
+
+    private Logger logger = LoggerFactory.getLogger(MongoBaseTagDaoImpl.class);
 
     @Autowired
     private MongoBaseTagDaoImpl mongoBaseTagDao;
@@ -56,4 +61,30 @@ public class FindCustomTagInfoServiceImpl implements FindCustomTagInfoService {
         }
         return null;
     }
+
+    @Override
+    public List<DataParty> findMDataByTagId(String tagId, Integer pagNum, Integer pageSize) {
+        List<DataParty> dataPartyList = null;
+        if(pagNum == null || pageSize == null ||pagNum < 1 || pageSize < 1){
+            dataPartyList = mongoBaseTagDao.findMDataByTagId(tagId,null,null);
+        }else{
+            Long totalCount = mongoBaseTagDao.findTotalMDataCount(tagId);
+            Integer startIndex = (pagNum - 1) * pageSize;
+            if(startIndex > totalCount){
+                logger.error("起始索引大于记录总数，业务错误");
+                return null;
+            }
+            dataPartyList = mongoBaseTagDao.findMDataByTagId(tagId,startIndex,pageSize);
+        }
+
+        return dataPartyList;
+    }
+
+    @Override
+    public Integer queryMDataCountByTagId(String tagId) {
+        if(StringUtils.isEmpty(tagId)) return ApiConstant.INT_ZERO;
+        Long totalCount = mongoBaseTagDao.findTotalMDataCount(tagId);
+        return totalCount.intValue();
+    }
+
 }

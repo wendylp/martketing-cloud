@@ -37,4 +37,23 @@ public enum TagSourceEnum {
     public void setTagSourceName(String tagSourceName) {
         this.tagSourceName = tagSourceName;
     }
+
+    public static TagSourceEnum getTagSourceEnum(Integer tagSourceId){
+        switch (tagSourceId){
+            case 0:
+                return TagSourceEnum.SEGMENTATION_SOURCE_ACCESS;
+            case 1:
+                return TagSourceEnum.CAMPAIGN_SOURCE_ACCESS;
+            case 2:
+                return TagSourceEnum.CONTACT_DOCUMENT_SOURCE_ACCESS;
+            case 3:
+                return TagSourceEnum.FILE_SOURCE_ACCESS;
+            case 4:
+                return TagSourceEnum.WECHAT_QRCODE_SOURCE_ACCESS;
+            case 5:
+                return TagSourceEnum.CUSTOM_TAG_SOURCE_ACCESS;
+            default:
+                return null;
+        }
+    }
 }
