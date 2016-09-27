@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -568,15 +569,21 @@ public class MktWeChatApi {
 	 *            测试
 	 * @return
 	 */
-	@POST
-	@Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
-	@Consumes({ MediaType.TEXT_XML })
-	public String getComponentVerifyTicket(ComponentVerifyTicketIn componentVerifyTicketIn,
-			@QueryParam("msg_signature") String msg_signature, @QueryParam("timestamp") String timestamp,
-			@QueryParam("nonce") String nonce) {
-		webchatComponentVerifyTicketService.insert(componentVerifyTicketIn, msg_signature, timestamp, nonce);
-		return "success";
-	}
+    @POST
+    @Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
+    @Consumes({MediaType.TEXT_XML})
+    public BaseOutput getComponentVerifyTicket(ComponentVerifyTicketIn componentVerifyTicketIn,
+                    @QueryParam("msg_signature") String msg_signature,
+                    @QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce) {
+        webchatComponentVerifyTicketService.insert(componentVerifyTicketIn, msg_signature,
+                        timestamp, nonce);
+        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+                        ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+        List<Object> data = new ArrayList<Object>();
+        data.add("success");
+        baseOutput.setData(data);
+        return baseOutput;
+    }
 
 	/**
 	 * @Title: analysisHoursList @Description: 按小时查询关注数据 @param: @param
