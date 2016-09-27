@@ -91,8 +91,8 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
 		int tagCount = 0;
 
 		for (TagTree tagTree : tagTreeList) {
-			List<Integer> childrenList = tagTree.getChildren();
-			for (Integer children : childrenList) {
+			List<String> childrenList = tagTree.getChildren();
+			for (String children : childrenList) {
 				List<TagRecommend> find = mongoOperations.find(new Query(new Criteria("tag_id").is(children)),
 						TagRecommend.class);
 				if (CollectionUtils.isNotEmpty(tagTreeList)) {
