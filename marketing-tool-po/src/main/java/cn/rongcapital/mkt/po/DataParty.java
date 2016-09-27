@@ -360,14 +360,14 @@ public class DataParty extends BaseQuery {
     }
 
     public String getAcctType() {
-        return acctType;
-    }
+		return acctType;
+	}
 
-    public void setAcctType(String acctType) {
-        this.acctType = acctType == null ? null : acctType.trim();
-    }
+	public void setAcctType(String acctType) {
+		this.acctType = acctType;
+	}
 
-    public String getFlag2() {
+	public String getFlag2() {
         return flag2;
     }
 
