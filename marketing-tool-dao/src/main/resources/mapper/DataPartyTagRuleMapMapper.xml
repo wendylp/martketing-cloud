@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,rule_type as ruleType,tag_id as tagId,md_type as mdType,field_name as fieldName,field_value as fieldValue,min as min,max as max,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,rule_type as ruleType,tag_name as tagName,md_type as mdType,field_name as fieldName,field_value as fieldValue,min as min,max as max,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -15,7 +15,7 @@
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="ruleType != null"><![CDATA[ AND rule_type = #{ruleType}]]></if>
-		    	<if test="tagId != null"><![CDATA[ AND tag_id = #{tagId}]]></if>
+		    	<if test="tagName != null"><![CDATA[ AND tag_name = #{tagName}]]></if>
 		    	<if test="mdType != null"><![CDATA[ AND md_type = #{mdType}]]></if>
 		    	<if test="fieldName != null"><![CDATA[ AND field_name = #{fieldName}]]></if>
 		    	<if test="fieldValue != null"><![CDATA[ AND field_value = #{fieldValue}]]></if>
@@ -37,7 +37,7 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="ruleType != null"><![CDATA[rule_type = #{ruleType},]]></if>
-		    	<if test="tagId != null"><![CDATA[tag_id = #{tagId},]]></if>
+		    	<if test="tagName != null"><![CDATA[tag_name = #{tagName},]]></if>
 		    	<if test="mdType != null"><![CDATA[md_type = #{mdType},]]></if>
 		    	<if test="fieldName != null"><![CDATA[field_name = #{fieldName},]]></if>
 		    	<if test="fieldValue != null"><![CDATA[field_value = #{fieldValue},]]></if>
@@ -50,11 +50,11 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataPartyTagRuleMap" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO data_party_tag_rule_map (rule_type,tag_id,md_type,field_name,field_value,min,max,create_time)
+			INSERT INTO data_party_tag_rule_map (rule_type,tag_name,md_type,field_name,field_value,min,max,create_time)
 			VALUES
 			(
 			  #{ruleType},
-			  #{tagId},
+			  #{tagName},
 			  #{mdType},
 			  #{fieldName},
 			  #{fieldValue},
