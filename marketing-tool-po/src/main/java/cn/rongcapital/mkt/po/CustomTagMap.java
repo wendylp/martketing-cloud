@@ -1,26 +1,26 @@
 package cn.rongcapital.mkt.po;
 
-import java.util.Date;
-
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
+import java.util.Date;
+
 public class CustomTagMap extends BaseQuery {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	public CustomTagMap() {
-		
+
 	}
 	public CustomTagMap(Integer startIndex, Integer pageSize) {
 		super(startIndex, pageSize);
 	}
     private Integer id;
 
-    private Integer tagId;
+    private String tagId;
 
-    private Byte type;
+    private Integer tagSource;
 
-    private Integer mapId;
+    private String mapId;
 
     private Byte status;
 
@@ -36,28 +36,28 @@ public class CustomTagMap extends BaseQuery {
         this.id = id;
     }
 
-    public Integer getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
-    public void setTagId(Integer tagId) {
-        this.tagId = tagId;
+    public void setTagId(String tagId) {
+        this.tagId = tagId == null ? null : tagId.trim();
     }
 
-    public Byte getType() {
-        return type;
+    public Integer getTagSource() {
+        return tagSource;
     }
 
-    public void setType(Byte type) {
-        this.type = type;
+    public void setTagSource(Integer tagSource) {
+        this.tagSource = tagSource;
     }
 
-    public Integer getMapId() {
+    public String getMapId() {
         return mapId;
     }
 
-    public void setMapId(Integer mapId) {
-        this.mapId = mapId;
+    public void setMapId(String mapId) {
+        this.mapId = mapId == null ? null : mapId.trim();
     }
 
     public Byte getStatus() {
