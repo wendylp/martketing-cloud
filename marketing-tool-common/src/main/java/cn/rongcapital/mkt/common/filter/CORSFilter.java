@@ -40,14 +40,14 @@ public class CORSFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain fc)
 			throws IOException, ServletException {
-	    HttpServletRequest request = (HttpServletRequest) req;
+/*	    HttpServletRequest request = (HttpServletRequest) req;
 	    String url = request.getRequestURL().toString();
 	    logger.info(url);
 	    
 	    HttpServletResponse response = (HttpServletResponse) res;
 	    response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, CORSDomain);
 	    response.setHeader("Access-Control-Allow-Headers","X-Requested-With, Content-Type");
-	    fc.doFilter(req, res);
+	    fc.doFilter(req, res);*/
 	}
 
 	@Override
