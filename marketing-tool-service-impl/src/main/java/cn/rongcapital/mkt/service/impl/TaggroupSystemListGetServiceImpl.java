@@ -120,14 +120,14 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 			return baseOutput;
 		}
 
-		List<Integer> childrenList = findOne.getChildren();
+		List<String> childrenList = findOne.getChildren();
 
 		if (index * size > childrenList.size()) {
 			size = childrenList.size();
 		}
 
 		for (int i = (index - 1) * size; i < size; i++) {
-			Integer tagRecommendId = childrenList.get(i);
+			String tagRecommendId = childrenList.get(i);
 
 			TagRecommend tagRecommend = mongoOperations.findOne(new Query(Criteria.where("tag_id").is(tagRecommendId)),
 					TagRecommend.class);

@@ -25,7 +25,7 @@ public class TagRecommend implements Serializable {
 	@Id
 	private String id;
 	@Field(value = "tag_id")
-	private int tagId;
+	private String tagId;
 	@Field(value = "tag_name")
 	private String tagName;
 	@Field(value = "tag_list")
@@ -39,6 +39,9 @@ public class TagRecommend implements Serializable {
 	@Field(value = "update_time")
 	private Date updateTime;
 
+    @Field(value = "source")
+    private String source;
+
 	public String getId() {
 		return id;
 	}
@@ -47,11 +50,11 @@ public class TagRecommend implements Serializable {
 		this.id = id;
 	}
 
-	public int getTagId() {
+	public String getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(int tagId) {
+	public void setTagId(String tagId) {
 		this.tagId = tagId;
 	}
 
@@ -110,4 +113,13 @@ public class TagRecommend implements Serializable {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
 }

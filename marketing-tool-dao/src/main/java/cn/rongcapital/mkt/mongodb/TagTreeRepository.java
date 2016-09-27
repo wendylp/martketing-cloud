@@ -24,8 +24,16 @@ public interface TagTreeRepository extends MongoRepository<TagTree, Long> {
 	 * @param mid
 	 * @return
 	 */
-	public List<TagTree> findByTagId(int tagId);
+	public List<TagTree> findByTagId(String tagId);
 
 	Page<TagTree> findAll(Pageable pageable);
+
+	/**
+	 * 方法以findBy开头，后面跟TagTree中的属性名(首字母大写)
+	 * 
+	 * @param mid
+	 * @return
+	 */
+	public List<TagTree> findByTagName(String tagName);
 
 }

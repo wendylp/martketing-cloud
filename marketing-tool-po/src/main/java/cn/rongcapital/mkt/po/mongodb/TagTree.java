@@ -25,7 +25,7 @@ public class TagTree implements Serializable {
 	@Id
 	private String id;
 	@Field(value = "tag_id")
-	private int tagId;
+	private String tagId;
 	@Field(value = "tag_name")
 	private String tagName;
 	private int level;
@@ -36,8 +36,11 @@ public class TagTree implements Serializable {
 	private Date createTime;
 	@Field(value = "update_time")
 	private Date updateTime;
+	
+    @Field(value = "source")
+    private String source;
 
-	private List<Integer> children;
+	private List<String> children;
 
 	public String getId() {
 		return id;
@@ -47,11 +50,11 @@ public class TagTree implements Serializable {
 		this.id = id;
 	}
 
-	public void setTagId(int tagId) {
+	public void setTagId(String tagId) {
 		this.tagId = tagId;
 	}
 
-	public int getTagId() {
+	public String getTagId() {
 		return tagId;
 	}
 
@@ -111,12 +114,20 @@ public class TagTree implements Serializable {
 		return updateTime;
 	}
 
-	public void setChildren(List<Integer> children) {
+	public void setChildren(List<String> children) {
 		this.children = children;
 	}
 
-	public List<Integer> getChildren() {
+	public List<String> getChildren() {
 		return children;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 }
