@@ -35,5 +35,13 @@ public interface TagTreeRepository extends MongoRepository<TagTree, Long> {
 	 * @return
 	 */
 	public List<TagTree> findByTagName(String tagName);
+	
+	/**
+	 * 方法以findBy开头，后面跟TagTree中的属性名(首字母大写)
+	 * 
+	 * @param mid
+	 * @return
+	 */
+	public List<TagTree> findByLevelAndStatusAndTagNameLike(int level, int Status,String tagName);
 
 }
