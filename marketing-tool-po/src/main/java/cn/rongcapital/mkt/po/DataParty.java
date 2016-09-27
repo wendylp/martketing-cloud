@@ -81,7 +81,7 @@ public class DataParty extends BaseQuery {
 
     private String acctNo;
 
-    private String flag1;
+    private String acctType;
 
     private String flag2;
 
@@ -359,12 +359,12 @@ public class DataParty extends BaseQuery {
         this.acctNo = acctNo == null ? null : acctNo.trim();
     }
 
-    public String getFlag1() {
-        return flag1;
+    public String getAcctType() {
+        return acctType;
     }
 
-    public void setFlag1(String flag1) {
-        this.flag1 = flag1 == null ? null : flag1.trim();
+    public void setAcctType(String acctType) {
+        this.acctType = acctType == null ? null : acctType.trim();
     }
 
     public String getFlag2() {

@@ -83,6 +83,8 @@ public class OriginalDataPopulation extends BaseQuery {
 
     private String wxCode;
 
+    private String openid;
+
     public Integer getId() {
         return id;
     }
@@ -385,5 +387,13 @@ public class OriginalDataPopulation extends BaseQuery {
 
     public void setWxCode(String wxCode) {
         this.wxCode = wxCode == null ? null : wxCode.trim();
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid == null ? null : openid.trim();
     }
 }
