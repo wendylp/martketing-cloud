@@ -34,6 +34,7 @@ import com.tagsin.wechat_sdk.token.TokenType;
 import cn.rongcapital.mkt.biz.WechatQrcodeBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.TagSourceEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.ImageCompressUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
@@ -48,9 +49,11 @@ import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatInterfaceLog;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeTicket;
-
+import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
+import cn.rongcapital.mkt.service.InsertCustomTagService;
 import cn.rongcapital.mkt.service.SaveAudienceListService;
 import cn.rongcapital.mkt.vo.in.Audience;
 @Service
@@ -70,7 +73,8 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	SaveAudienceListService saveAudienceListService;
 	@Autowired
 	CustomTagDao customTagDao;
-	
+	@Autowired
+	InsertCustomTagService insertCustomTagService;
 	/**
 	 * 从微信获取二维码信息
 	 * @param sceneId
@@ -406,27 +410,15 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		if(associationTags!=null&&associationTags.size()>0){
 			StringBuffer tagIdsb = new StringBuffer();
 			
-			CustomTag customTag = null;
+			BaseTag tag = null;
 			
 			for(Iterator<String> iter = associationTags.iterator();iter.hasNext();){
 				String associationTag = iter.next();
 				
-				customTag = new CustomTag();
 				if(associationTag!=null){
 					
-					customTag.setName(associationTag);
-					customTag.setStatus(ApiConstant.CUSTOM_TAG_VALIDATE);
-					
-					List<CustomTag> customTagList = customTagDao.selectList(customTag);
-					if(customTagList == null || customTagList.size() == 0){
-						
-						customTag.setCoverAudienceCount(0);
-						customTagDao.insert(customTag);
-					}else{
-						customTag = customTagList.get(0);
-					}
-					
-					long tagId = customTag.getId();						
+					tag = insertCustomTagService.insertCustomTagLeafFromSystemIn(associationTag,TagSourceEnum.WECHAT_QRCODE_SOURCE_ACCESS.getTagSourceName());
+					String tagId = tag == null ? "":tag.getTagId();					
 					tagIdsb.append(tagId).append(";");
 				}					
 			}
