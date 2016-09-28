@@ -113,13 +113,13 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
         List<DataParty> lists=findCustomTagInfoService.findMDataByTagId(existBaseTag.getTagId(), null, null);
         
         CustomTagMap paramCustomTagMap = new CustomTagMap();
-        paramCustomTagMap.setTagId(Integer.valueOf(existBaseTag.getTagId()));
-        paramCustomTagMap.setMapId(contactId);       
+        paramCustomTagMap.setTagId(existBaseTag.getTagId());
+        paramCustomTagMap.setMapId(Integer.toString(contactId));       
 
         // step 2.2 如果没有将该tag关联用户 , 则插入数据库数据
         if (lists==null || lists.size()<1) {
-            paramCustomTagMap.setType(Byte.valueOf(CustomTagMapEnum.AUDIENCE.getCode() + ""));
-            paramCustomTagMap.setTagId(Integer.valueOf(existBaseTag.getTagId()));
+            paramCustomTagMap.setTagSource(Integer.valueOf(CustomTagMapEnum.AUDIENCE.getCode()));
+            paramCustomTagMap.setTagId(existBaseTag.getTagId());
             paramCustomTagMap.setStatus(Byte.valueOf(StatusEnum.ACTIVE.getStatusCode().toString()));
             paramCustomTagMap.setCreateTime(createTime);
             customTagMapDao.insert(paramCustomTagMap);
@@ -137,12 +137,12 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
                         ApiConstant.INT_ZERO, null);
 
         CustomTagMap customTagMap = new CustomTagMap();
-        customTagMap.setMapId(map_id);
+        customTagMap.setMapId(Integer.toString(map_id));
         customTagMap.setStatus(new Byte("0"));
         List<CustomTagMap> customTagMapList = customTagMapDao.selectList(customTagMap);
 
         for (CustomTagMap customTagMap2 : customTagMapList) {
-            BaseTag baseTag=findCustomTagInfoService.findCustomTagInfoByTagId(Integer.toString(customTagMap2.getTagId()));
+            BaseTag baseTag=findCustomTagInfoService.findCustomTagInfoByTagId(customTagMap2.getTagId());
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("tag_name", baseTag.getTagName());
 
