@@ -73,8 +73,7 @@ public class TagSystemListGetServiceImpl implements TagSystemListGetService {
 	 * @return
 	 */
 	@Override
-	public BaseOutput getMongoTagList(String method, String userToken, Integer tagGroupId, Integer index,
-			Integer size) {
+	public BaseOutput getMongoTagList(String method, String userToken, String tagGroupId, Integer index, Integer size) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
