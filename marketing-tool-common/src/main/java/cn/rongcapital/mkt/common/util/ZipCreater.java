@@ -79,6 +79,7 @@ public class ZipCreater {
                 zos.closeEntry();
             }
             zos.closeEntry();
+            zos.close();
         } catch (Exception e) {
         	logger.info(e.toString());
         } finally {
@@ -86,7 +87,6 @@ public class ZipCreater {
 				os.close();
 			}
 			if (zos != null) {
-				zos.closeEntry();
 				zos.close();
 			}
 			if (bis != null) {
