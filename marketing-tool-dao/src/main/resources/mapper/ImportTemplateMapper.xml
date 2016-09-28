@@ -173,10 +173,9 @@
 	</select>
 	
 	<select id="selectTemplTypePairs" resultType="cn.rongcapital.mkt.po.ImportTemplate">
-		SELECT
-		<include refid="QUERY_COLUMN_LIST"/>
+		SELECT templ_type as templType,templ_name as templName
 		<include refid="QUERY_FROM_TABLE"/>
-		group by templ_type
+		group by templ_type,templ_name
 	</select>
 	
 	<update id="updateSelectedByTemplType" parameterType="cn.rongcapital.mkt.po.ImportTemplate">

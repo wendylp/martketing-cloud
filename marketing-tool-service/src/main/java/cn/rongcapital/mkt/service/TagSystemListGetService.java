@@ -36,6 +36,6 @@ public interface TagSystemListGetService {
      * @param size
      * @return
      */
-    public BaseOutput getMongoTagList(String method, String userToken, Integer tagGroupId, Integer index, Integer size);
+    public BaseOutput getMongoTagList(String method, String userToken, String tagGroupId, Integer index, Integer size);
 
 }
