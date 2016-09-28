@@ -28,6 +28,7 @@ import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.po.AudienceList;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.service.AudienceSearchService;
+import cn.rongcapital.mkt.service.FindCustomTagInfoService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
@@ -44,7 +45,7 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 	AudienceListPartyMapDao audienceListPartyMapDao;
 	
 	@Autowired
-	FindCustomTagInfoServiceImpl findCustomTagInfoServiceImpl;
+	FindCustomTagInfoService findCustomTagInfoServiceImpl;
 	
 	@Autowired
 	CustomTagMapDao  customTagMapDao;

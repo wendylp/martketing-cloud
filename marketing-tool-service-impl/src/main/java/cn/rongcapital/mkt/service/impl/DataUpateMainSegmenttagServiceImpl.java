@@ -29,6 +29,8 @@ import cn.rongcapital.mkt.po.base.BaseTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagTypeLayer;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
+import cn.rongcapital.mkt.service.FindCustomTagInfoService;
+import cn.rongcapital.mkt.service.InsertCustomTagService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
@@ -49,10 +51,10 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
     private MongoBaseTagDaoImpl mongoBaseTagDao;
     
     @Autowired
-    private InsertCustomTagServiceImpl insertCustomTagService;
+    private InsertCustomTagService insertCustomTagService;
     
     @Autowired
-    private FindCustomTagInfoServiceImpl findCustomTagInfoService;
+    private FindCustomTagInfoService findCustomTagInfoService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
