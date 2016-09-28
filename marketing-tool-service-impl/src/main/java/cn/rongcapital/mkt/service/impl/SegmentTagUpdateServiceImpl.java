@@ -120,12 +120,12 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 				
 				if (CollectionUtils.isEmpty(customTagLeafs)) {
 					BaseTag baseTagResult = insertCustomTagServiceImpl.insertCustomTagLeafFromSystemIn(tagName, tagSource);
-					tagIdList.add(Integer.valueOf(baseTagResult.getId()));
+					tagIdList.add(Integer.valueOf(baseTagResult.getTagId()));
 					
 				}else {
 				    Update update = buildBaseUpdate(baseTag);
 				    mongoTemplate.updateFirst(query, update, baseTag.getClass());
-				    tagIdList.add(Integer.valueOf(customTagLeafs.get(0).getId()));
+				    tagIdList.add(Integer.valueOf(customTagLeafs.get(0).getTagId()));
 				}
 			}
 		}

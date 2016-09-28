@@ -71,7 +71,7 @@ public class SegmentTagGetServiceImpl implements SegmentTagGetService {
 			SegmentTagGetOut out = null;
 			for (BaseTag tags : data) {
 				out = new SegmentTagGetOut();
-				out.setTagId(tags.getId());
+				out.setTagId(tags.getTagId());
 				out.setTagName(tags.getTagName());
 				result.add(out);
 			}
