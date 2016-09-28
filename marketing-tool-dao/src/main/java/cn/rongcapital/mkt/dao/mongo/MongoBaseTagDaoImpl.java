@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.dao.mongo;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.po.base.BaseTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
 import cn.rongcapital.mkt.po.mongodb.CustomTagTypeLayer;
@@ -70,6 +71,17 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
     @Override
     public List<BaseTag> findBaseTagListByTagType(Integer tagType) {
         Query query = new Query(Criteria.where(TAG_TYPE).is(tagType));
+        List<BaseTag> baseTags = mongoTemplate.find(query,BaseTag.class);
+        return baseTags;
+    }
+    
+    /**
+     * 根据自定义标签名，模糊查询所有叶子节点的自定义标签
+     */
+    @Override
+    public List<BaseTag> findCustomTagLeafListByFuzzyTagName(String tagName)
+    {
+    	Query query = new Query(Criteria.where(TAG_TYPE).is(ApiConstant.CUSTOM_TAG_LEAF_TYPE).and(TAG_NAME).regex(tagName));
         List<BaseTag> baseTags = mongoTemplate.find(query,BaseTag.class);
         return baseTags;
     }

@@ -22,6 +22,7 @@ import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.enums.TagSourceEnum;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.CustomTagMapDao;
+import cn.rongcapital.mkt.dao.mongo.MongoBaseTagDao;
 import cn.rongcapital.mkt.dao.mongo.MongoBaseTagDaoImpl;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.CustomTagMap;
@@ -48,7 +49,7 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
     private CustomTagMapDao customTagMapDao;
     
     @Autowired
-    private MongoBaseTagDaoImpl mongoBaseTagDao;
+    private MongoBaseTagDao mongoBaseTagDao;
     
     @Autowired
     private InsertCustomTagService insertCustomTagService;

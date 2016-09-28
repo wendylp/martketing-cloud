@@ -29,4 +29,6 @@ public interface MongoBaseTagDao {
     void deleteCustomTagLeafByTagId(BaseTag baseTag);
 
     BaseTag findOneCustomTagBySource(BaseTag baseTag);
+    
+    List<BaseTag> findCustomTagLeafListByFuzzyTagName(String tagName);
 }
