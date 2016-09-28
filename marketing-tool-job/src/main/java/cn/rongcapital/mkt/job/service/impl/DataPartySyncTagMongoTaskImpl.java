@@ -48,8 +48,7 @@ public class DataPartySyncTagMongoTaskImpl implements TaskService {
 			}
 			ArrayList<Integer> arrayList = new ArrayList<Integer>();
 			for (DataParty dp : dataPartyList) {
-				String id = dp.getId();
-				arrayList.add(Integer.valueOf(id));
+				arrayList.add(dp.getMid());
 			}
 			Boolean flag = ruleEngineService.requestRuleEngine(arrayList);
 			if (flag) {
