@@ -26,7 +26,7 @@ public interface MongoBaseTagDao {
 
     void deleteCustomTag(BaseTag baseTag);
 
-    void deleteCustomTagLeafByTagId(BaseTag baseTag);
+    void deleteCustomTagLeafByTagId(String tagId);
 
     BaseTag findOneCustomTagBySource(BaseTag baseTag);
     

@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.imageio.stream.FileImageOutputStream;
 
+import cn.rongcapital.mkt.dao.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.node.ObjectNode;
@@ -38,11 +39,6 @@ import cn.rongcapital.mkt.common.enums.TagSourceEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.ImageCompressUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
-import cn.rongcapital.mkt.dao.CustomTagDao;
-import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
-import cn.rongcapital.mkt.dao.WechatChannelDao;
-import cn.rongcapital.mkt.dao.WechatQrcodeDao;
-import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.po.WechatChannel;
@@ -72,9 +68,9 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	@Autowired
 	SaveAudienceListService saveAudienceListService;
 	@Autowired
-	CustomTagDao customTagDao;
-	@Autowired
 	InsertCustomTagService insertCustomTagService;
+	@Autowired
+	CustomTagMapDao customTagMapDao;
 	/**
 	 * 从微信获取二维码信息
 	 * @param sceneId
@@ -405,18 +401,15 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		
 		if(StringUtils.isNotEmpty(wechatQrcodeIn.getComments())){
 			wechatQrcode.setComments(wechatQrcodeIn.getComments());
-		}			
+		}
+
 		List<String> associationTags = wechatQrcodeIn.getAssociation_tags();
 		if(associationTags!=null&&associationTags.size()>0){
 			StringBuffer tagIdsb = new StringBuffer();
-			
 			BaseTag tag = null;
-			
 			for(Iterator<String> iter = associationTags.iterator();iter.hasNext();){
 				String associationTag = iter.next();
-				
 				if(associationTag!=null){
-					
 					tag = insertCustomTagService.insertCustomTagLeafFromSystemIn(associationTag,TagSourceEnum.WECHAT_QRCODE_SOURCE_ACCESS.getTagSourceName());
 					String tagId = tag == null ? "":tag.getTagId();					
 					tagIdsb.append(tagId).append(";");
@@ -424,10 +417,10 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			}
 			String tagIds = tagIdsb.substring(0, tagIdsb.length()-1);
 			wechatQrcode.setRelatedTags(tagIds);
-		}			
-		
-		wechatQrcode.setCreateTime(new Date());
 
+			//添加二维码与自定义标签关联表的信息
+		}
+		wechatQrcode.setCreateTime(new Date());
 		return wechatQrcode;		
 	}
 	
@@ -461,7 +454,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			if(wechatQrcode.getId() != null && wechatQrcode.getId() != 0){
 				wechatQrcodeDao.updateById(wechatQrcode);
 			}else{
-				
 				wechatQrcode.setStatus(NumUtil.int2OneByte(0));
 				wechatQrcodeDao.insert(wechatQrcode);
 			}

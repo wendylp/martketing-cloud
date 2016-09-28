@@ -30,9 +30,7 @@ public class DeleteCustomTagServiceImpl implements DeleteCustomTagService {
     @Override
     public void deleteCustomTagLeafByTagId(String tagId) {
         if(StringUtils.isEmpty(tagId)) return;
-        BaseTag baseTag = new CustomTagLeaf();
-        baseTag.setTagId(tagId);
-        mongoBaseTagDao.deleteCustomTagLeafByTagId(baseTag);
+        mongoBaseTagDao.deleteCustomTagLeafByTagId(tagId);
     }
 
 }

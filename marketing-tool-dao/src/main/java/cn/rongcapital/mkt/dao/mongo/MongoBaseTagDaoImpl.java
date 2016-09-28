@@ -153,8 +153,8 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
     }
 
     @Override
-    public void deleteCustomTagLeafByTagId(BaseTag baseTag) {
-        Query query = new Query(Criteria.where(TAG_ID).is(baseTag.getTagId()));
+    public void deleteCustomTagLeafByTagId(String tagId) {
+        Query query = new Query(Criteria.where(TAG_ID).is(tagId));
         mongoTemplate.findAllAndRemove(query,BaseTag.class);
     }
 

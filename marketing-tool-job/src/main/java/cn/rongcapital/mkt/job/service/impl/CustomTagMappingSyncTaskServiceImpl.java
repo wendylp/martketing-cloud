@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -38,17 +39,24 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
     @Autowired
     private ContactListDao contactListDao;
     @Autowired
+    private WechatQrcodeDao wechatQrcodeDao;
+    @Autowired
+    private WechatQrcodeFocusDao wechatQrcodeFocusDao;
+    @Autowired
+    private DataPopulationDao dataPopulationDao;
+    @Autowired
     private TagCustomTagToDataPartyService tagCustomTagToDataPartyService;
     @Autowired
     private FindCustomTagInfoService findCustomTagInfoService;
 
     private final Integer BATCH_SIZE = 500;
+    private final String SEPARATE_QRCODE_TAGS = ",";
+    private final String WECHAT_BITMAP = "00000011000000000";
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void task(Integer taskId) {
         int totalPage = queryTotalPage();
-
         for(int i = 0; i<totalPage; i++){
             List<CustomTagMap> customTagMapList = this.queryCustomTagMapByBatchSize(i*BATCH_SIZE);
             if(CollectionUtils.isEmpty(customTagMapList)) return;
@@ -70,20 +78,50 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
                         List<ContactList> contactLists = contactListDao.selectList(paramContactList);
                         if(!CollectionUtils.isEmpty(contactLists)){
                             for(ContactList targetContactList : contactLists){
-                                DataParty dataParty = new DataParty();
-                                dataParty.setMid(targetContactList.getKeyid());
-                                BaseTag baseTag = new CustomTagLeaf();
-                                baseTag.setTagId(customTagMap.getTagId());
-                                tagCustomTagToDataPartyService.tagCustomTagToDataParty(dataParty,baseTag);
+                                tagCustomTagToDataPartyService.tagCustomTagToDataPartyById(customTagMap.getTagId(),targetContactList.getKeyid());
                             }
                         }
-                        break;
-                    case WECHAT_QRCODE_SOURCE_ACCESS:
                         break;
                 }
             }
         }
 
+        WechatQrcode wechatQrcode = new WechatQrcode();
+        wechatQrcode.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        wechatQrcode.setPageSize(Integer.MAX_VALUE);
+        List<WechatQrcode> wechatQrcodeList = wechatQrcodeDao.selectList(wechatQrcode);
+        if(CollectionUtils.isEmpty(wechatQrcodeList)) return;
+        for(WechatQrcode targetWechatQrcode : wechatQrcodeList){
+            String relationTags = targetWechatQrcode.getRelatedTags();
+            if(StringUtils.isEmpty(relationTags)) continue;
+            if(relationTags.contains(SEPARATE_QRCODE_TAGS)){
+                String[] relationTag = relationTags.split(SEPARATE_QRCODE_TAGS);
+                for(String tag : relationTag){
+                    if (tagWechatQrcodeData(targetWechatQrcode, tag)) break;
+                }
+            }else{
+                tagWechatQrcodeData(targetWechatQrcode,relationTags);
+            }
+        }
+
+    }
+
+    private boolean tagWechatQrcodeData(WechatQrcode targetWechatQrcode, String tag) {
+        WechatQrcodeFocus paramWechatQrcodeFocus = new WechatQrcodeFocus();
+        paramWechatQrcodeFocus.setPageSize(Integer.MAX_VALUE);
+        paramWechatQrcodeFocus.setQrcodeId(String.valueOf(targetWechatQrcode.getId()));
+        List<WechatQrcodeFocus> wechatQrcodeFocusList = wechatQrcodeFocusDao.selectList(paramWechatQrcodeFocus);
+        if(CollectionUtils.isEmpty(wechatQrcodeFocusList)) return true;
+        for(WechatQrcodeFocus wechatQrcodeFocus : wechatQrcodeFocusList){
+            DataPopulation paramDataPopulation = new DataPopulation();
+            paramDataPopulation.setBitmap(WECHAT_BITMAP);
+            paramDataPopulation.setWxmpId(wechatQrcodeFocus.getWxAcct());
+            paramDataPopulation.setWxCode(wechatQrcodeFocus.getWxName());
+            List<DataPopulation> dataPopulationList = dataPopulationDao.selectList(paramDataPopulation);
+            if(CollectionUtils.isEmpty(dataPopulationList)) continue;
+            tagCustomTagToDataPartyService.tagCustomTagToDataPartyById(tag,dataPopulationList.get(0).getKeyid());
+        }
+        return false;
     }
 
     private List<CustomTagMap> queryCustomTagMapByBatchSize(Integer startIndex) {
