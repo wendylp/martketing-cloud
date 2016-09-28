@@ -14,16 +14,16 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class SegmentTagGetOut {
 
-	private Long tagId;
+	private String tagId;
 
 	private String tagName;
 
 	@JsonProperty("tag_id")
-	public Long getTagId() {
+	public String getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(Long tagId) {
+	public void setTagId(String tagId) {
 		this.tagId = tagId;
 	}
 
