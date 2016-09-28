@@ -155,7 +155,7 @@
         <property name="basePackage" value="cn.rongcapital.mkt.dao"/>
     </bean>
 
-	<bean class="cn.rongcapital.mkt.jedis.JedisConnectionManager">
+	<bean class="cn.rongcapital.mkt.common.jedis.JedisConnectionManager">
 	</bean>
 
 <!-- 

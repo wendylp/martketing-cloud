@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.jedis;
+package cn.rongcapital.mkt.common.jedis;
 
 import java.io.IOException;
 import java.io.InputStream;
