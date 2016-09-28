@@ -4,12 +4,6 @@ package cn.rongcapital.mkt.common.enums;
  * Created by Yunfeng on 2016-9-28.
  */
 public enum CustomTagShownEnum {
-
-//    columnNameA.put("col_code", "tag_name");
-//    columnNameB.put("col_code", "create_time");
-//    columnNameC.put("col_code", "cover_audience_count");
-//    columnNameD.put("col_code", "tag_source");
-
     COLUMN_TAG_NAME(1,"tag_name","标签名称"),
     COLUMN_CREATE_TIEM(2,"create_time","添加时间"),
     COLUMN_TAG_SOURCE(3,"tag_source","标签来源"),
