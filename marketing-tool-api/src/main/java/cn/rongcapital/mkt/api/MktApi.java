@@ -1434,7 +1434,8 @@ public class MktApi {
 	@Path("/mkt.segment.tagname.tagcount.get")
 	public BaseOutput getTagCountByGroupId(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("tag_ids") String tagIds) {
-		return segmentTagnameTagCountService.getTagCountById(tagIds);
+		//segmentTagnameTagCountService.getTagCountById(tagIds);
+		return segmentTagnameTagCountService.getMongoTagCountByTagIdList(tagIds);
 	}
 
 	/**

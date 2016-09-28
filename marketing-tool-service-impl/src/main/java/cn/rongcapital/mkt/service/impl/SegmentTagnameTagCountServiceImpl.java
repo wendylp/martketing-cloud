@@ -28,25 +28,24 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCountService{
-	
-//    private Logger logger = LoggerFactory.getLogger(getClass());
-    @Autowired
-    private MongoTemplate mongoTemplate;
+public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCountService {
+
+	// private Logger logger = LoggerFactory.getLogger(getClass());
+	@Autowired
+	private MongoTemplate mongoTemplate;
 
 	@Autowired
 	TagDao tagDao;
-	
+
 	@Override
-	@ReadWrite(type=ReadWriteType.READ)
+	@ReadWrite(type = ReadWriteType.READ)
 	public BaseOutput getTagCountById(String tagIds) {
-	    String ids[]=tagIds.split(",");
-	    BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
-	                    ApiErrorCode.SUCCESS.getMsg(),
-	                    ApiConstant.INT_ZERO,null);
+		String ids[] = tagIds.split(",");
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
 
 		List<Integer> idList = new ArrayList<>(ids.length);
-		for(String tagidStr : ids){
+		for (String tagidStr : ids) {
 			idList.add(Integer.valueOf(tagidStr));
 		}
 		List<cn.rongcapital.mkt.po.Tag> dbTags = tagDao.selectListByIdList(idList);
@@ -55,24 +54,52 @@ public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCount
 			tagMap.put(tag.getId().toString(), tag);
 		}
 
-	    for(String tagidStr : ids){
-	        int tagId = Integer.parseInt(tagidStr);
+		for (String tagidStr : ids) {
+			int tagId = Integer.parseInt(tagidStr);
 			cn.rongcapital.mkt.po.Tag tag = tagMap.get(tagidStr);
 			if (tag == null) {
 				continue;
 			}
-			List<DataParty> restList =mongoTemplate.find(new Query(Criteria.where("tagList.tagId").is(tagId)),DataParty.class);
-	        int tagCount = 0;
-			if(!CollectionUtils.isEmpty(restList)) {
+			List<DataParty> restList = mongoTemplate.find(new Query(Criteria.where("tagList.tagId").is(tagId)),
+					DataParty.class);
+			int tagCount = 0;
+			if (!CollectionUtils.isEmpty(restList)) {
 				tagCount = restList.size();
-	        }
-			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("tag_id",tagId);
+			}
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tag_id", tagId);
 			map.put("tag_name", tag.getName());
 			map.put("tag_count", tagCount);
-            result.getData().add(map);
-	    }
-	    result.setTotal(result.getData().size());
+			result.getData().add(map);
+		}
+		result.setTotal(result.getData().size());
+		return result;
+	}
+
+	/**
+	 * 获取标签的柱状图数据
+	 * 
+	 * @author congshulin
+	 * @功能简述 : 获取标签的柱状图数据
+	 * @param tagIds
+	 *            tag集合
+	 * 
+	 * @return BaseOutput
+	 */
+	@Override
+	@ReadWrite(type = ReadWriteType.READ)
+	public BaseOutput getMongoTagCountByTagIdList(String tagIds) {
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+
+		String tagIdList[] = tagIds.split(",");
+
+		for (String tagidStr : tagIdList) {
+
+			String str = tagidStr.substring(0, tagidStr.indexOf("_"));
+
+		}
+
 		return result;
 	}
 }
