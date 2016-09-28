@@ -102,7 +102,7 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 	 * @param size
 	 * @return BaseOutput
 	 */
-	public BaseOutput getMongoTagRecommendByTagTreeId(String method, String userToken, Integer tagGroupId,
+	public BaseOutput getMongoTagRecommendByTagTreeId(String method, String userToken, String tagGroupId,
 			Integer index, Integer size) {
 
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
@@ -111,7 +111,7 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 		List<Map<String, Object>> resultList = new ArrayList<>();
 
 		Query query = new Query();
-		Criteria criteria = Criteria.where("tag_id").is(tagGroupId);
+		Criteria criteria = Criteria.where("tag_id").ne(tagGroupId);
 		query.addCriteria(criteria);
 
 		TagTree findOne = mongoOperations.findOne(query, TagTree.class);

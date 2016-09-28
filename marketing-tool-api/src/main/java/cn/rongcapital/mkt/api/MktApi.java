@@ -1653,7 +1653,7 @@ public class MktApi {
 	@Path("/mkt.taggroup.system.list.get")
 	public BaseOutput getTagGroupByParentGroupId(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
+			@NotNull @QueryParam("tag_group_id") String tagGroupId, @QueryParam("index") Integer index,
 			@QueryParam("size") Integer size) {
 		//taggroupSystemListGetService.getTagGroupByParentGroupId(method, userToken, tagGroupId, index, size);
 		return taggroupSystemListGetService.getMongoTagRecommendByTagTreeId(method, userToken, tagGroupId, index, size);
