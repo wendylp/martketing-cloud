@@ -74,7 +74,7 @@ public class SegmentTagnameTagValueServiceImpl implements SegmentTagnameTagValue
 				ApiConstant.INT_ZERO, null);
 
 		TagRecommend tagRecommend = mongoOperations
-				.findOne(new Query(Criteria.where("tag_id").is(new Integer(tagGroupId))), TagRecommend.class);
+				.findOne(new Query(Criteria.where("tag_id").is(tagGroupId)), TagRecommend.class);
 		List<String> tagList = tagRecommend.getTagList();
 
 		for (int i = 0; i < tagList.size(); i++) {
