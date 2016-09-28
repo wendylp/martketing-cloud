@@ -38,7 +38,9 @@ import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.base.BaseTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
 import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.service.InsertCustomTagService;
 import cn.rongcapital.mkt.service.SegmentTagUpdateService;
+import cn.rongcapital.mkt.service.TagCustomTagToDataPartyService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import heracles.data.common.annotation.ReadWrite;
@@ -65,10 +67,10 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 	private MongoTemplate mongoTemplate;
 	
 	@Autowired
-	private InsertCustomTagServiceImpl insertCustomTagServiceImpl;
+	private InsertCustomTagService insertCustomTagServiceImpl;
 	
 	@Autowired
-	private TagCustomTagToDataPartyServiceImpl tagCustomTagToDataPartyServiceImpl;
+	private TagCustomTagToDataPartyService tagCustomTagToDataPartyServiceImpl;
 
 	@ReadWrite(type = ReadWriteType.WRITE)
 	@Transactional(propagation = Propagation.REQUIRED)
