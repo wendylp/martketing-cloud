@@ -111,7 +111,7 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 		List<Map<String, Object>> resultList = new ArrayList<>();
 
 		Query query = new Query();
-		Criteria criteria = Criteria.where("tag_id").ne(tagGroupId);
+		Criteria criteria = Criteria.where("tag_id").is(tagGroupId);
 		query.addCriteria(criteria);
 
 		TagTree findOne = mongoOperations.findOne(query, TagTree.class);
