@@ -28,6 +28,8 @@ public class TagRecommend implements Serializable {
 	private String tagId;
 	@Field(value = "tag_name")
 	private String tagName;
+	@Field(value = "tag_name_eng")
+	private String tagNameEng;
 	@Field(value = "tag_list")
 	private List<String> tagList;
 	private int status;
@@ -64,6 +66,15 @@ public class TagRecommend implements Serializable {
 
 	public void setTagName(String tagName) {
 		this.tagName = tagName;
+	}
+	
+	
+	public String getTagNameEng() {
+		return tagNameEng;
+	}
+
+	public void setTagNameEng(String tagNameEng) {
+		this.tagNameEng = tagNameEng;
 	}
 
 	public List<String> getTagList() {

@@ -21,14 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.util.GenerateUUid;
 import cn.rongcapital.mkt.mongodb.TagRecommendRepository;
 import cn.rongcapital.mkt.mongodb.TagTreeRepository;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.po.mongodb.TagTree;
+import cn.rongcapital.mkt.service.AnalysisTagFile;
 
-public class AnalysisTagFileImpl {
+@Service
+public class AnalysisTagFileImpl implements AnalysisTagFile{
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -48,12 +51,12 @@ public class AnalysisTagFileImpl {
 	 *            the path of the excel file
 	 * @return
 	 * @throws IOException
+	 * 
 	 */
+	@Override
 	public List<TagTree> readXlsx(String path) throws IOException {
 		InputStream is = new FileInputStream(path);
 		XSSFWorkbook xssfWorkbook = new XSSFWorkbook(is);
-		List<String> twoTagChildrenList = new ArrayList<String>();
-		List<String> oneTagChildrenList = new ArrayList<String>();
 		// Read the Sheet
 		for (int numSheet = 0; numSheet < xssfWorkbook.getNumberOfSheets(); numSheet++) {
 			XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(numSheet);
@@ -65,6 +68,11 @@ public class AnalysisTagFileImpl {
 				XSSFRow xssfRow = xssfSheet.getRow(rowNum);
 				String uuid = "";
 				if (xssfRow != null) {
+					
+					// 一级标签
+					XSSFCell tagZero = xssfRow.getCell(0);
+					String oneTagName = getCellValue(tagZero);
+					
 					// 标签
 					XSSFCell tagTwo = xssfRow.getCell(2);
 
@@ -74,22 +82,26 @@ public class AnalysisTagFileImpl {
 					XSSFCell tagFour = xssfRow.getCell(4);
 					// 标签来源
 					XSSFCell tagFive = xssfRow.getCell(5);
-					String tagSource = getCellValue(tagFive);
 					// 是否推荐标签
 					XSSFCell tagSix = xssfRow.getCell(6);
+					
+					String tagSource = getCellValue(tagSix);
+					// 是否推荐标签
+					XSSFCell tagSeven = xssfRow.getCell(7);
 
-					if (tagTwo != null && tagFour != null) {
+					if (tagTwo != null && tagFive != null) {
 						String tagName = getCellValue(tagTwo);
 						// 标签存在跳出本次循环
 						boolean flag = findTagRecommend(tagName);
 						if (flag)
 							continue;
 
-						String tagDesc = getCellValue(tagThree);
-						String tagValue = getCellValue(tagFour);
+						String tagNameEng = getCellValue(tagThree);
+						String tagDesc = getCellValue(tagFour);
+						String tagValue = getCellValue(tagFive);
 
-						String tagFlag = getCellValue(tagSix);
-						uuid = insertTagRecommendMongoDB(tagName, tagDesc, tagValue, tagSource, tagFlag);
+						String tagFlag = getCellValue(tagSeven);
+						uuid = insertTagRecommendMongoDB(tagName, tagNameEng, tagDesc, tagValue, tagSource, tagFlag);
 					}
 					// -------------------------------------------------
 					// 二级标签插入
@@ -101,27 +113,54 @@ public class AnalysisTagFileImpl {
 						if ("".equals(tagId)) {
 							ArrayList<String> arrayList = new ArrayList<String>();
 							arrayList.add(uuid);
-							uuid = getTagTree(twoTagName, 2, null, null, arrayList, tagSource);
+							uuid = getTagTree(twoTagName, 2, null, oneTagName, arrayList, tagSource);
 						} else {
-
+							// 更新Children标签
+							TagTree tagTree = getTagTree(twoTagName);
+							List<String> childrenLists = tagTree.getChildren();
+							if(childrenLists != null) {
+								if(childrenLists.contains(uuid) == false) {
+									childrenLists.add(uuid);
+									getTagTree(twoTagName, 2, null, null, childrenLists, tagSource);
+								} else {
+									childrenLists = new ArrayList<String>();
+									childrenLists.add(uuid);
+									getTagTree(twoTagName, 2, null, null, childrenLists, tagSource);
+								}
+							}
 						}
 					}
+					
+					
 					// 一级标签插入
-					XSSFCell tagZero = xssfRow.getCell(0);
-
 					if (tagZero != null) {
-						String oneTagName = getCellValue(tagZero);
 						String tagId = findTagTree(oneTagName);
 						if ("".equals(tagId)) {
-							uuid = getTagTree(oneTagName, 2, null, null, null, tagSource);
-							oneTagChildrenList.add(uuid);
+							ArrayList<String> arrayList = new ArrayList<String>();
+							arrayList.add(uuid);
+							uuid = getTagTree(oneTagName, 1, null, null, arrayList, tagSource);
 
+						} else {
+							// 更新Children标签
+							TagTree tagTree = getTagTree(oneTagName);
+							List<String> childrenLists = tagTree.getChildren();
+							if(childrenLists != null) {
+								if(childrenLists.contains(uuid) == false) {
+									childrenLists.add(uuid);
+									getTagTree(oneTagName, 1, null, null, childrenLists, tagSource);
+								
+							} else {
+								childrenLists = new ArrayList<String>();
+								childrenLists.add(uuid);
+								getTagTree(oneTagName, 1, null, null, childrenLists, tagSource);
+							}
 						}
 					}
-
+				}
 				}
 			}
 		}
+		xssfWorkbook.close();
 		return null;
 	}
 
@@ -132,6 +171,17 @@ public class AnalysisTagFileImpl {
 			return tagTree.getTagId();
 		}
 		return "";
+	}
+	
+	/**
+	 * 根据tagName获取TagTree
+	 * @param tagName
+	 * @return
+	 */
+	public TagTree getTagTree(String tagName) {
+		TagTree tagTree = mongoOperations.findOne(new Query(Criteria.where("tag_name").is(tagName)), TagTree.class);
+
+		return tagTree;
 	}
 
 	public boolean findTagRecommend(String tagName) {
@@ -149,7 +199,6 @@ public class AnalysisTagFileImpl {
 
 		String uuid = GenerateUUid.generateShortUuid();
 
-		tagTree.setTagId(uuid);
 		tagTree.setTagName(tagName);
 		tagTree.setLevel(level);
 		tagTree.setPath(path);
@@ -157,13 +206,24 @@ public class AnalysisTagFileImpl {
 		tagTree.setChildren(children);
 		tagTree.setSource(source);
 		tagTree.setStatus(0);
+		tagTree.setCreateTime(new Date());
+		tagTree.setUpdateTime(new Date());
 
-		tagTreeRepository.insert(tagTree);
+		TagTree tagTreeByTagName = getTagTree(tagName);
+		if(tagTreeByTagName == null) {
+			// 如果不存在，新插入
+			tagTree.setTagId(uuid);
+			tagTreeRepository.insert(tagTree);
+		} else {
+			// 如果已经存在，修改
+			tagTreeByTagName.setChildren(children);
+			tagTreeRepository.save(tagTreeByTagName);
+		}
 		return uuid;
 
 	}
 
-	public String insertTagRecommendMongoDB(String tagName, String tagDesc, String tagValue, String source,
+	public String insertTagRecommendMongoDB(String tagName, String tagNameEng, String tagDesc, String tagValue, String source,
 			String flag) {
 		TagRecommend tagRecommend = new TagRecommend();
 
@@ -171,6 +231,7 @@ public class AnalysisTagFileImpl {
 
 		tagRecommend.setTagId(uuid);
 		tagRecommend.setTagName(tagName);
+		tagRecommend.setTagNameEng(tagNameEng);
 		tagRecommend.setStatus(0);
 		if ("true".equals(flag.toLowerCase())) {
 			tagRecommend.setFlag(true);
