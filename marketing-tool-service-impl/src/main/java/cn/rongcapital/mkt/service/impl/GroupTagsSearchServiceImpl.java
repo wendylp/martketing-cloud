@@ -42,7 +42,7 @@ public class GroupTagsSearchServiceImpl implements GroupTagsSearchService {
 	private CustomTagDao customTagDao;
 	
 	@Autowired
-	private MongoBaseTagDao mongoBaseTagDao;
+	private MongoBaseTagDaoImpl mongoBaseTagDao;
 	
 	
 	@Autowired

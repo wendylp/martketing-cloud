@@ -49,7 +49,7 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
     private CustomTagMapDao customTagMapDao;
     
     @Autowired
-    private MongoBaseTagDao mongoBaseTagDao;
+    private MongoBaseTagDaoImpl mongoBaseTagDao;
     
     @Autowired
     private InsertCustomTagService insertCustomTagService;
