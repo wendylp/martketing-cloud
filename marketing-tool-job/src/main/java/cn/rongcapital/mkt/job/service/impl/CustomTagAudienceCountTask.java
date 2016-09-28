@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cn.rongcapital.mkt.common.enums.TagSourceEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.CustomTagMap;
 
+
+//感觉这个定时任务没有用了
 @Service
 public class CustomTagAudienceCountTask implements TaskService {
 
@@ -57,21 +60,21 @@ public class CustomTagAudienceCountTask implements TaskService {
 	private Set<Integer> getCampaginTagDataPartyIdList(Set<Integer> dataPartyIdSet,int customTagId) {
 		CustomTagMap customTagMapT = new CustomTagMap();
 		customTagMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		customTagMapT.setTagId(customTagId);
-		customTagMapT.setType(ApiConstant.TAG_TYPE_ACTIVITY);
+		customTagMapT.setTagId(String.valueOf(customTagId));
+		customTagMapT.setTagSource(TagSourceEnum.CAMPAIGN_SOURCE_ACCESS.getTagSourceId());
 		int totalRecord = customTagMapDao.selectListCount(customTagMapT);
 		int totalPage = (totalRecord + pageSize -1) / pageSize;
 		for(int index = 1;index <= totalPage; index++) {
 			customTagMapT = new CustomTagMap(index,pageSize);
 			customTagMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-			customTagMapT.setTagId(customTagId);
-			customTagMapT.setType(ApiConstant.TAG_TYPE_ACTIVITY);
+			customTagMapT.setTagId(String.valueOf(customTagId));
+			customTagMapT.setTagSource(TagSourceEnum.CAMPAIGN_SOURCE_ACCESS.getTagSourceId());
 			List<CustomTagMap> customTagMapList = customTagMapDao.selectList(customTagMapT);
 			if(CollectionUtils.isEmpty(customTagMapList)) {
 				break;
 			}
 			for(CustomTagMap customTagMap:customTagMapList) {
-				dataPartyIdSet.add(customTagMap.getMapId());
+				dataPartyIdSet.add(Integer.valueOf(customTagMap.getMapId()));
 			}
 		}
 		return dataPartyIdSet;
@@ -85,21 +88,21 @@ public class CustomTagAudienceCountTask implements TaskService {
 	private Set<Integer> getContactTagDataPartyIdList(Set<Integer> dataPartyIdSet,int customTagId) {
 		CustomTagMap customTagMapT = new CustomTagMap();
 		customTagMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		customTagMapT.setTagId(customTagId);
-		customTagMapT.setType(ApiConstant.TAG_TYPE_CONTACT);
+		customTagMapT.setTagId(String.valueOf(customTagId));
+//		customTagMapT.setTagSource(ApiConstant.TAG_TYPE_CONTACT);
 		int totalRecord = customTagMapDao.selectListCount(customTagMapT);
 		int totalPage = (totalRecord + pageSize -1) / pageSize;
 		for(int index = 1;index <= totalPage; index++) {
 			customTagMapT = new CustomTagMap(index,pageSize);
 			customTagMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-			customTagMapT.setTagId(customTagId);
-			customTagMapT.setType(ApiConstant.TAG_TYPE_CONTACT);
+//			customTagMapT.setTagId(customTagId);
+//			customTagMapT.setType(ApiConstant.TAG_TYPE_CONTACT);
 			List<CustomTagMap> customTagMapList = customTagMapDao.selectList(customTagMapT);
 			if(CollectionUtils.isEmpty(customTagMapList)) {
 				break;
 			}
 			for(CustomTagMap customTagMap:customTagMapList) {
-				dataPartyIdSet.add(customTagMap.getMapId());
+//				dataPartyIdSet.add(customTagMap.getMapId());
 			}
 		}
 		return dataPartyIdSet;
