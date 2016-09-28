@@ -111,6 +111,21 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
         totalCount = mongoTemplate.count(query,DataParty.class);
         return totalCount;
     }
+    
+    /*
+     * 根据tag_name和tag_source查询custom_tag
+     * @see cn.rongcapital.mkt.dao.mongo.MongoBaseTagDao#findOneCustomTagBySource(cn.rongcapital.mkt.po.base.BaseTag)
+     */
+    @Override    
+    public BaseTag findOneCustomTagBySource(BaseTag baseTag)
+    {
+         BaseTag targetTag = null;
+         if(baseTag instanceof CustomTagTypeLayer){            
+             Query query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(SOURCE).is(baseTag.getSource()));
+             targetTag = mongoTemplate.findOne(query,BaseTag.class);        
+         }
+         return targetTag;         
+    }
 
     @Override
     public void deleteCustomTag(BaseTag baseTag) {

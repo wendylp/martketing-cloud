@@ -19,11 +19,18 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.CustomTagMapEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.enums.TagSourceEnum;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.CustomTagMapDao;
+import cn.rongcapital.mkt.dao.mongo.MongoBaseTagDaoImpl;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.CustomTagMap;
+import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.po.mongodb.CustomTagTypeLayer;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
+import cn.rongcapital.mkt.service.FindCustomTagInfoService;
+import cn.rongcapital.mkt.service.InsertCustomTagService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
@@ -39,6 +46,15 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
 
     @Autowired
     private CustomTagMapDao customTagMapDao;
+    
+    @Autowired
+    private MongoBaseTagDaoImpl mongoBaseTagDao;
+    
+    @Autowired
+    private InsertCustomTagService insertCustomTagService;
+    
+    @Autowired
+    private FindCustomTagInfoService findCustomTagInfoService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -78,43 +94,32 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
 
     private boolean updateTag(String tagName, Integer contactId) {
         // step 1 检查tag是否已经存在数据库中
-        CustomTag paramCustomTag = new CustomTag();
-        Date createTime = new Date();
-        paramCustomTag.setName(tagName);
-        List<CustomTag> customTags = customTagDao.selectListforUpdate(paramCustomTag);
+    	Date createTime = new Date();
+        CustomTagTypeLayer customTagTypeLayer=new CustomTagTypeLayer();
+        customTagTypeLayer.setTagName(tagName);
+        customTagTypeLayer.setSource(TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.getTagSourceName());
+        BaseTag baseTag=mongoBaseTagDao.findOneCustomTagBySource(customTagTypeLayer);
+        
         // 不存在则入库
-        if (customTags.isEmpty()) {
-            paramCustomTag.setStatus(Byte.valueOf(StatusEnum.ACTIVE.getStatusCode().toString()));
-            paramCustomTag.setCreateTime(createTime);
-            // 覆盖人群,目前有一个覆盖
-            paramCustomTag.setCoverAudienceCount(1);
-            customTagDao.insert(paramCustomTag);
-        } else {
-            // 标签已经存在, 更新受覆盖人群数量
-            Map<String, Object> paramMap = new HashMap<>();
-            paramMap.put("tagName", tagName);
-            paramMap.put("mapId", contactId);
-            List<CustomTagMap> tagMaps = customTagMapDao.selectCustomTagMapByTagNameandMapId(paramMap);
-            if (CollectionUtils.isEmpty(tagMaps)) {
-                customTagDao.increaseCoverAudienceCount(paramCustomTag);
-                paramCustomTag = customTags.get(0);
-            } else {
-                return true;
-            }
-        }
-
+        if (baseTag==null) {
+        	insertCustomTagService.insertCustomTagLeafFromSystemIn(tagName, TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.getTagSourceName());
+            
+        } //存在则不处理，不用在更新覆盖人群，因为mongo中已无覆盖人群字段
+        
+        
         // step 2 将用户id与tag关联起来
-        // step 2.1 查询用户是否已经关联该tag
+        // step 2.1 根据tag_id查询用户是否已经关联该tag
+        BaseTag existBaseTag=mongoBaseTagDao.findOneCustomTagBySource(customTagTypeLayer);       
+        List<DataParty> lists=findCustomTagInfoService.findMDataByTagId(existBaseTag.getTagId(), null, null);
+        
         CustomTagMap paramCustomTagMap = new CustomTagMap();
-        paramCustomTagMap.setTagId(paramCustomTag.getId());
-        paramCustomTagMap.setMapId(contactId);
-
-        List<CustomTagMap> customTagMaps = customTagMapDao.selectList(paramCustomTagMap);
+        paramCustomTagMap.setTagId(Integer.valueOf(existBaseTag.getTagId()));
+        paramCustomTagMap.setMapId(contactId);       
 
         // step 2.2 如果没有将该tag关联用户 , 则插入数据库数据
-        if (customTagMaps.isEmpty()) {
+        if (lists==null || lists.size()<1) {
             paramCustomTagMap.setType(Byte.valueOf(CustomTagMapEnum.AUDIENCE.getCode() + ""));
-            paramCustomTagMap.setTagId(paramCustomTag.getId());
+            paramCustomTagMap.setTagId(Integer.valueOf(existBaseTag.getTagId()));
             paramCustomTagMap.setStatus(Byte.valueOf(StatusEnum.ACTIVE.getStatusCode().toString()));
             paramCustomTagMap.setCreateTime(createTime);
             customTagMapDao.insert(paramCustomTagMap);
@@ -137,22 +142,14 @@ public class DataUpateMainSegmenttagServiceImpl implements DataUpateMainSegmentt
         List<CustomTagMap> customTagMapList = customTagMapDao.selectList(customTagMap);
 
         for (CustomTagMap customTagMap2 : customTagMapList) {
-
-
-            List<Integer> idList = new ArrayList<Integer>();
-            idList.add(customTagMap2.getTagId());
-            List<CustomTag> customTagList = customTagDao.selectListByIdList(idList);
-
+            BaseTag baseTag=findCustomTagInfoService.findCustomTagInfoByTagId(Integer.toString(customTagMap2.getTagId()));
             Map<String, Object> map = new HashMap<String, Object>();
-
-            map.put("tag_name", customTagList.get(0).getName());
+            map.put("tag_name", baseTag.getTagName());
 
             result.getData().add(map);
         }
 
         result.setTotal(customTagMapList.size());
-
-
         return result;
     }
 
