@@ -290,7 +290,7 @@ public class ApiConstant {
 	/**
 	 * 标签级别
 	 */
-	public static final int TAG_LEVEL = 1;
+	public static final int TAG_LEVEL = 2;
 	
 	/**
 	 * 标签级别
