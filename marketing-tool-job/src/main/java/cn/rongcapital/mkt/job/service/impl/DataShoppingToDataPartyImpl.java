@@ -36,7 +36,6 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 
 	@Override
 	public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
-		logger.info("---------------------------------------");
 		DataShopping dataShopping = new DataShopping();
 		dataShopping.setStatus(StatusEnum.ACTIVE.getStatusCode());
 		dataShopping.setPageSize(pageSize);
@@ -45,7 +44,6 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 		if (CollectionUtils.isEmpty(dataShoppingList)) {
 			return null;
 		}
-		logger.info("-------------------11111--------------------");
 		// List<DataParty> dataPartyList = new
 		// ArrayList<>(dataShoppingList.size());
 		List<Integer> idList = new ArrayList<>(dataShoppingList.size());
@@ -73,7 +71,6 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 			}
 			idList.add(dataObj.getId());
 		}
-		logger.info("-------------------33333--------------------");
 		DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
 		// dataPartySyncVO.setDataPartyList(dataPartyList);
 		dataPartySyncVO.setExtendDataList(idList);
