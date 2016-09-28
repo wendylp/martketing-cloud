@@ -77,9 +77,9 @@ public class ZipCreater {
                     zos.write(buf,0,len);
                 }
                 zos.closeEntry();
-                zos.close();
             }
             zos.closeEntry();
+            zos.close();
         } catch (Exception e) {
         	logger.info(e.toString());
         } finally {
