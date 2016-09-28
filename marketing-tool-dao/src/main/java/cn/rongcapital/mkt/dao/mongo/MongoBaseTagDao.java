@@ -23,6 +23,12 @@ public interface MongoBaseTagDao {
     List<DataParty> findMDataByTagId(String tagId, Integer startIndex, Integer pageSize);
 
     Long findTotalMDataCount(String tagId);
-    
+
+    void deleteCustomTag(BaseTag baseTag);
+
+    void deleteCustomTagLeafByTagId(String tagId);
+
     BaseTag findOneCustomTagBySource(BaseTag baseTag);
+    
+    List<BaseTag> findCustomTagLeafListByFuzzyTagName(String tagName);
 }

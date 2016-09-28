@@ -45,7 +45,7 @@ public class InsertCustomTagServiceImpl implements InsertCustomTagService {
             mongoBaseTagDao.updateBaseTag(parentTag);
         }
         if(mongoBaseTagDao.insertBaseTagDao(baseTag)){
-            return baseTag;
+            return mongoBaseTagDao.findOneBaseTag(baseTag);
         }
         return null;
     }
@@ -74,6 +74,7 @@ public class InsertCustomTagServiceImpl implements InsertCustomTagService {
         BaseTag baseTag = new CustomTagLeaf();
         baseTag.setTagName(tagName);
         baseTag.setSource(tagSource);
+        baseTag.setStatus(Integer.valueOf(ApiConstant.TABLE_DATA_STATUS_VALID));
         baseTag.setCreateTime(Calendar.getInstance().getTime());
         baseTag.setParent(ApiConstant.CUSTOM_TAG_SYSTEM_PARENT);
         baseTag.setPath(ApiConstant.CUSTOM_TAG_SYSTEM_ROOT);

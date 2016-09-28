@@ -1,7 +1,5 @@
 package cn.rongcapital.mkt.vo.in;
 
-import javax.validation.constraints.NotNull;
-
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -12,24 +10,24 @@ public class CustomTagDeleteIn {
 	@NotEmpty
 	private String userToken = null;
 	
-	@NotNull
-	private Integer tagId = null;
+	@NotEmpty
+	private String tagId = null;
 
 	@JsonProperty("user_token")
 	public String getUserToken() {
 		return userToken;
 	}
 
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
+	}
+
 	@JsonProperty("tag_id")
-	public Integer getTagId() {
+	public String getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(Integer tagId) {
+	public void setTagId(String tagId) {
 		this.tagId = tagId;
-	}
-
-	public void setUserToken(String userToken) {
-		this.userToken = userToken;
 	}
 }
