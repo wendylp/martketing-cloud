@@ -74,12 +74,12 @@ public class SegmentTagnameTagValueServiceImpl implements SegmentTagnameTagValue
 				ApiConstant.INT_ZERO, null);
 
 		TagRecommend tagRecommend = mongoOperations
-				.findOne(new Query(Criteria.where("tag_id").is(new Integer(tagGroupId))), TagRecommend.class);
+				.findOne(new Query(Criteria.where("tag_id").is(tagGroupId)), TagRecommend.class);
 		List<String> tagList = tagRecommend.getTagList();
 
 		for (int i = 0; i < tagList.size(); i++) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("tag_id", tagGroupId + "_" + (i + 1));
+			map.put("tag_id", tagGroupId + "_" + i);
 			map.put("tag_name", tagList.get(i));
 			result.getData().add(map);
 		}

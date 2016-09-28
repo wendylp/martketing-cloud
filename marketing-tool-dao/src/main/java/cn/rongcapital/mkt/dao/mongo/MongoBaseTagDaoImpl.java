@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.dao.mongo;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.po.base.BaseTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
 import cn.rongcapital.mkt.po.mongodb.CustomTagTypeLayer;
@@ -13,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -72,6 +74,17 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
         List<BaseTag> baseTags = mongoTemplate.find(query,BaseTag.class);
         return baseTags;
     }
+    
+    /**
+     * 根据自定义标签名，模糊查询所有叶子节点的自定义标签
+     */
+    @Override
+    public List<BaseTag> findCustomTagLeafListByFuzzyTagName(String tagName)
+    {
+    	Query query = new Query(Criteria.where(TAG_TYPE).is(ApiConstant.CUSTOM_TAG_LEAF_TYPE).and(TAG_NAME).regex(tagName));
+        List<BaseTag> baseTags = mongoTemplate.find(query,BaseTag.class);
+        return baseTags;
+    }
 
     @Override
     public BaseTag updateBaseTag(BaseTag baseTag) {
@@ -109,6 +122,40 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
         Query query = new Query(Criteria.where(CUSTOM_TAG_LIST).is(tagId));
         totalCount = mongoTemplate.count(query,DataParty.class);
         return totalCount;
+    }
+    
+    /*
+     * 根据tag_name和tag_source查询custom_tag
+     * @see cn.rongcapital.mkt.dao.mongo.MongoBaseTagDao#findOneCustomTagBySource(cn.rongcapital.mkt.po.base.BaseTag)
+     */
+    @Override    
+    public BaseTag findOneCustomTagBySource(BaseTag baseTag)
+    {
+         BaseTag targetTag = null;
+         if(baseTag instanceof CustomTagTypeLayer){            
+             Query query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(SOURCE).is(baseTag.getSource()));
+             targetTag = mongoTemplate.findOne(query,BaseTag.class);        
+         }
+         return targetTag;         
+    }
+
+    @Override
+    public void deleteCustomTag(BaseTag baseTag) {
+        if(baseTag == null || StringUtils.isEmpty(baseTag.getTagName()) || StringUtils.isEmpty(baseTag.getPath())) return;
+        Query query = null;
+        if(baseTag instanceof CustomTagTypeLayer){
+            query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag.getPath()));
+            mongoTemplate.findAllAndRemove(query,BaseTag.class);
+        }else if( baseTag instanceof  CustomTagLeaf && !StringUtils.isEmpty(baseTag.getSource())){
+            query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag.getPath()).and(SOURCE).is(baseTag.getSource()));
+            mongoTemplate.findAllAndRemove(query,BaseTag.class);
+        }
+    }
+
+    @Override
+    public void deleteCustomTagLeafByTagId(String tagId) {
+        Query query = new Query(Criteria.where(TAG_ID).is(tagId));
+        mongoTemplate.findAllAndRemove(query,BaseTag.class);
     }
 
     //Todo:这个方法要改的可以获取父类的属性,并且去除掉static final这样的属性

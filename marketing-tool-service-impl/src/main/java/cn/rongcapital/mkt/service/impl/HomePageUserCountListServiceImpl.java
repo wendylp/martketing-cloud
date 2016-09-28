@@ -81,6 +81,8 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
                     i++;
                 }
             }
+            ArrayUtils.reverse(dateArray);
+            ArrayUtils.reverse(countArray);
             resultMap.put("date_array", ArrayUtils.subarray(dateArray, 0, i));
             resultMap.put("count_array", ArrayUtils.subarray(countArray, 0, i));
             baseOutput.getData().add(resultMap);

@@ -9,7 +9,7 @@ public class DataPartyTagRuleMap extends BaseQuery {
 
     private Byte ruleType;
 
-    private Integer tagId;
+    private String tagName;
 
     private Integer mdType;
 
@@ -43,15 +43,15 @@ public class DataPartyTagRuleMap extends BaseQuery {
         this.ruleType = ruleType;
     }
 
-    public Integer getTagId() {
-        return tagId;
-    }
+    public String getTagName() {
+		return tagName;
+	}
 
-    public void setTagId(Integer tagId) {
-        this.tagId = tagId;
-    }
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
+	}
 
-    public Integer getMdType() {
+	public Integer getMdType() {
         return mdType;
     }
 

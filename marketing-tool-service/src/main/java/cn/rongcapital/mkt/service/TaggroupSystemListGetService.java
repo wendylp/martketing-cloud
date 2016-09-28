@@ -39,6 +39,6 @@ public interface TaggroupSystemListGetService {
 	 * @param size
 	 * @return BaseOutput
 	 */
-	public BaseOutput getMongoTagRecommendByTagTreeId(String method, String userToken, Integer tagGroupId,
+	public BaseOutput getMongoTagRecommendByTagTreeId(String method, String userToken, String tagGroupId,
 			Integer index, Integer size);
 }

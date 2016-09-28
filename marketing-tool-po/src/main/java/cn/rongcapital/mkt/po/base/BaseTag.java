@@ -2,7 +2,6 @@ package cn.rongcapital.mkt.po.base;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.po.mongodb.CustomTagTypeLayer;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;

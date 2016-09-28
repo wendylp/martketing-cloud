@@ -47,6 +47,18 @@ public class TagCustomTagToDataPartyServiceImpl implements TagCustomTagToDataPar
         return false;
     }
 
+    @Override
+    public boolean tagCustomTagToDataPartyById(String tagId, Integer dataPartyId) {
+        Query dataPartyQuery = new Query(Criteria.where("mid").is(dataPartyId));
+        DataParty targetDataParty = mongoTemplate.findOne(dataPartyQuery,DataParty.class);
+        if(targetDataParty == null) return false;
+        Query baseTagQuery = new Query(Criteria.where("tag_id").is(tagId));
+        BaseTag baseTag = mongoTemplate.findOne(baseTagQuery,BaseTag.class);
+        if(baseTag == null) return false;
+        return tagCustomTagToDataParty(targetDataParty,baseTag);
+    }
+
+
     private <T> Update buildBaseUpdate(T t) {
         Update update = new Update();
         String className = t.getClass().getName();
