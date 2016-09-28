@@ -8,4 +8,5 @@ import cn.rongcapital.mkt.po.mongodb.DataParty;
  */
 public interface TagCustomTagToDataPartyService {
     boolean tagCustomTagToDataParty(DataParty dataParty, BaseTag baseTag);
+    boolean tagCustomTagToDataPartyById(String tagId,Integer dataPartyId);
 }

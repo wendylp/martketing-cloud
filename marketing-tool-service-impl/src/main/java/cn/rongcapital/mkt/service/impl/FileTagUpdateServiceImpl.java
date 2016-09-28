@@ -6,9 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.common.enums.TagSourceEnum;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.po.CustomTag;
+import cn.rongcapital.mkt.po.CustomTagMap;
 import cn.rongcapital.mkt.po.CustomTagOriginalDataMap;
+import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.service.InsertCustomTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +59,8 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
     private CustomTagOriginalDataMapDao customTagOriginalDataMapDao;
     @Autowired
     private TaskManager taskManager;
+    @Autowired
+    private InsertCustomTagService insertCustomTagService;
     
     @Transactional
     @Override
@@ -66,19 +72,11 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         Integer legalRows = importDataHistory.getLegalRows();
         if(legalRows != null && legalRows.intValue() > 0){
             if (hasTagNames(fileTagUpdateIn)) {
-                //1.将上传数据通过fileUnique选出不同的手机号
-                List<Integer> originalDataIdList = getOriginalDataIdList(importDataHistory.getFileUnique(), fileType);
-                //2.这里还需要把status给扔进去，先将status置为1表示无效
-                addNewCustomTag(fileTagUpdateIn);
-                //3.选择本次上传的customId，然后与上一步选出的数据唯一标识一起存入customTagOriginalMap表中，将status置为0
-                List<Long> tagIds =  customTagDao.selectIdsByCustomTags(fileTagUpdateIn.getTag_names());
-                if(!CollectionUtils.isEmpty(originalDataIdList) && !CollectionUtils.isEmpty(tagIds)){
-                    insertCustomTagOriginalDataMapping(fileType, originalDataIdList, tagIds);
-                }
+                List<BaseTag> baseTags = addNewCustomTag(fileTagUpdateIn);   //将新的标签插入到MongoDB
+                addCustomTagMap(importDataHistory, baseTags);   //将CustomTag与Batch的对应关系
             } else {
                 baseOutput.setMsg("用户没有上传标签");
             }
-
             updateOriginalDataStatus(fileUnique, fileType);
             importDataHistory.setStatus(Byte.valueOf((byte)0));
             importDataHistory.setImportEndTime(new Date(System.currentTimeMillis()));
@@ -88,6 +86,18 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
             baseOutput.setMsg("数据上传失败");
         }
         return baseOutput;
+    }
+
+    private void addCustomTagMap(ImportDataHistory importDataHistory, List<BaseTag> baseTags) {
+        if(!CollectionUtils.isEmpty(baseTags)){
+            for(BaseTag tag : baseTags){
+                CustomTagMap customTagMap = new CustomTagMap();
+                customTagMap.setTagId(tag.getTagId());
+                customTagMap.setMapId(String.valueOf(importDataHistory.getId()));
+                customTagMap.setTagSource(TagSourceEnum.FILE_SOURCE_ACCESS.getTagSourceId());
+                customTagMapDao.insert(customTagMap);
+            }
+        }
     }
 
     private String getTaskName(Integer fileType) {
@@ -126,33 +136,20 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
     }
 
     private boolean hasTagNames(FileTagUpdateIn fileTagUpdateIn) {
-        if(fileTagUpdateIn.getTag_names() == null || fileTagUpdateIn.getTag_names().size() < 1){
+        if(fileTagUpdateIn.getTagNames() == null || fileTagUpdateIn.getTagNames().size() < 1){
             return false;
         }
         return true;
     }
 
     //1将上传上来的标签名称列表以及上一步选出的总人群数量插入到custom_tag表中
-    private boolean addNewCustomTag(FileTagUpdateIn fileTagUpdateIn) {
-        List<CustomTag> customTagList = new ArrayList<CustomTag>();
-        for(String tagName : fileTagUpdateIn.getTag_names()){
-            CustomTag customTag = new CustomTag();
-            customTag.setName(tagName);
-            Integer count = customTagDao.selectListCount(customTag);
-            if(count != null && count > 0){
-                continue;
-            }
-//            customTag.setStatus(ApiConstant.CUSTOM_TAG_INVALIDATE);
-            customTagList.add(customTag);
+    private List<BaseTag> addNewCustomTag(FileTagUpdateIn fileTagUpdateIn) {
+        List<BaseTag> newTagList = new ArrayList<>();
+        for(String tagName : fileTagUpdateIn.getTagNames()){
+            BaseTag baseTag = insertCustomTagService.insertCustomTagLeafFromSystemIn(tagName, TagSourceEnum.FILE_SOURCE_ACCESS.getTagSourceName());
+            if(baseTag != null) newTagList.add(baseTag);
         }
-
-        if(!CollectionUtils.isEmpty(customTagList)){
-            for(CustomTag customTag : customTagList){
-                customTagDao.insert(customTag);
-//                customTagDao.updateById(customTag);
-            }
-        }
-        return true;
+        return newTagList;
     }
 
     //2.根据fileUnique选出对应的original表中的idList

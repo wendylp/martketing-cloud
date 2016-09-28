@@ -1,19 +1,19 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import org.apache.commons.lang3.StringUtils;
+import cn.rongcapital.mkt.common.enums.TagSourceEnum;
+import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.service.DeleteCustomTagService;
+import cn.rongcapital.mkt.service.InsertCustomTagService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.CustomTagMapDao;
-import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.CustomTagMap;
 import cn.rongcapital.mkt.service.ContactListTagService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -25,59 +25,65 @@ import heracles.data.common.util.ReadWriteType;
 public class ContactListTagServiceImpl implements ContactListTagService {
 
 	@Autowired
-	CustomTagDao tagDao;
+	private DeleteCustomTagService deleteCustomTagService;
 
 	@Autowired
-	CustomTagMapDao tagMapDao;
+	private InsertCustomTagService insertCustomTagService;
+
+	@Autowired
+	CustomTagMapDao customTagMapDao;
 
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
 	public BaseOutput contactListTag(ContactListTagIn body) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
-		
+
 		//对自定义标签进行删除
-		deleteTagsByContactId(body.getContact_id());
-		
+		deleteTagsByContactId(body.getContactId());
+
 		//获取标签名称
-		String[] tag_names = body.getTag_names();
-		
-		CustomTag tag = new CustomTag();
-		
-		for (String tagName : tag_names) {
-			if(StringUtils.isEmpty(tagName)){
-				continue;
-			}
-			tag.setName(tagName);
-			tagDao.insert(tag);
-			CustomTagMap tagMap = new CustomTagMap();
-			tagMap.setTagId(tag.getId());
-			tagMap.setMapId(body.getContact_id());
-			tagMapDao.insert(tagMap);
+		if(CollectionUtils.isEmpty(body.getTagNames())) return result;
+		for(String tagName : body.getTagNames()){
+			BaseTag insertedTag = insertCustomTagService.insertCustomTagLeafFromSystemIn(tagName,TagSourceEnum.CONTACT_DOCUMENT_SOURCE_ACCESS.getTagSourceName());
+		    CustomTagMap customTagMap = new CustomTagMap();
+			customTagMap.setTagId(insertedTag.getTagId());
+			customTagMap.setTagSource(TagSourceEnum.CONTACT_DOCUMENT_SOURCE_ACCESS.getTagSourceId());
+			customTagMap.setMapId(String.valueOf(body.getContactId()));
+			customTagMapDao.insert(customTagMap);
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", body.getContact_id());
+		map.put("id", body.getContactId());
 		map.put("updatetime", DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		result.getData().add(map);
 		result.setTotal(1);
 
 		return result;
 	}
-	
+
 	/**
-	 * @Title: deleteTagsByContactId   
-	 * @Description: 添加之前进行自定义标签删除  
-	 * @param: @param contactId      
-	 * @return: void      
+	 * @Title: deleteTagsByContactId
+	 * @Description: 添加之前进行自定义标签删除
+	 * @param: @param contactId
+	 * @return: void
 	 * @throws
 	 */
 	private void deleteTagsByContactId(Integer contactId){
+		//先筛选出TagId，然后用TagId和来源对标签进行删除。
 		if(null != contactId){
-			tagDao.delecteCustomTagByContactId(contactId);
-			tagMapDao.deleteCustomTagMapByMapId(contactId);
+			CustomTagMap paramCustomTagMap = new CustomTagMap();
+			paramCustomTagMap.setMapId(String.valueOf(contactId));
+			paramCustomTagMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			paramCustomTagMap.setTagSource(TagSourceEnum.CONTACT_DOCUMENT_SOURCE_ACCESS.getTagSourceId());
+			List<CustomTagMap> tagMaps = customTagMapDao.selectList(paramCustomTagMap);
+			if(CollectionUtils.isEmpty(tagMaps)) return;
+			for(CustomTagMap customTagMap : tagMaps){
+				customTagMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+				customTagMapDao.updateById(customTagMap);
+			}
 		}
 	}
-	
-	
+
+
 }
