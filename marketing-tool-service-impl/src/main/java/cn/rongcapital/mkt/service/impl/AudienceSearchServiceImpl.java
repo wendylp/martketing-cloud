@@ -26,6 +26,7 @@ import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
 import cn.rongcapital.mkt.dao.CustomTagMapDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.po.AudienceList;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.service.AudienceSearchService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import heracles.data.common.annotation.ReadWrite;
@@ -41,6 +42,9 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 	
 	@Autowired
 	AudienceListPartyMapDao audienceListPartyMapDao;
+	
+	@Autowired
+	FindCustomTagInfoServiceImpl findCustomTagInfoServiceImpl;
 	
 	@Autowired
 	CustomTagMapDao  customTagMapDao;
@@ -86,10 +90,24 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 		}else if(audience_type.equals("2")){
             //自定义标签:在人群中查找
             //1.根据自定义标签ID查出人群ID列表
-			partyIdList = customTagMapDao.selectTagIdList(audience_id);
+			//partyIdList = customTagMapDao.selectTagIdList(audience_id);
 
             //2.在人群(自定义标签)中查找名字匹配的
-			resultList = SearchAudienceByName(audience_name, partyIdList, resultList);
+			//resultList = SearchAudienceByName(audience_name, partyIdList, resultList);
+			
+			//根据tag_id,从mongo获得关联的人群
+			List<DataParty> audiences=findCustomTagInfoServiceImpl.findMDataByTagId(Integer.toString(audience_id),null,null);
+			List<Integer> partyIds=new ArrayList<Integer>();
+			if(audiences!=null && audiences.size()>0){
+				for(DataParty myDataParty:audiences){
+					if(myDataParty!=null)
+					{
+					partyIds.add(Integer.valueOf(myDataParty.getId()));
+					}
+				}
+				
+			}
+			resultList = SearchAudienceByName(audience_name, partyIds, resultList);
 		}
 
 		if(resultList != null && resultList.size() > 0){

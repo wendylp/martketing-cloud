@@ -477,7 +477,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 					if(CollectionUtils.isNotEmpty(tagList)) {
 						tagName = tagList.get(0).getName();
 					}
-					tagOut.setTagId(tagId);
+					tagOut.setTagId(Integer.toString(tagId));
 					tagOut.setTagName(tagName);
 					tags.add(tagOut);
 				}
