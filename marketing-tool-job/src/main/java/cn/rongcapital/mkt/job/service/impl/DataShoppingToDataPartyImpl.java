@@ -3,6 +3,8 @@ package cn.rongcapital.mkt.job.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -20,7 +22,8 @@ import cn.rongcapital.mkt.po.DataShopping;
  */
 @Service
 public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
-
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	private DataShoppingDao dataShoppingDao;
 
@@ -33,7 +36,7 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 
 	@Override
 	public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
-
+		logger.info("---------------------------------------");
 		DataShopping dataShopping = new DataShopping();
 		dataShopping.setStatus(StatusEnum.ACTIVE.getStatusCode());
 		dataShopping.setPageSize(pageSize);
@@ -42,6 +45,7 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 		if (CollectionUtils.isEmpty(dataShoppingList)) {
 			return null;
 		}
+		logger.info("-------------------11111--------------------");
 		// List<DataParty> dataPartyList = new
 		// ArrayList<>(dataShoppingList.size());
 		List<Integer> idList = new ArrayList<>(dataShoppingList.size());
@@ -69,7 +73,7 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 			}
 			idList.add(dataObj.getId());
 		}
-
+		logger.info("-------------------33333--------------------");
 		DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
 		// dataPartySyncVO.setDataPartyList(dataPartyList);
 		dataPartySyncVO.setExtendDataList(idList);

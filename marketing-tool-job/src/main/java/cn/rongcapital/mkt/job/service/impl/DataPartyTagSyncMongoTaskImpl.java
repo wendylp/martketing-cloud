@@ -102,34 +102,34 @@ public class DataPartyTagSyncMongoTaskImpl implements TaskService {
                 tempRuleList = new ArrayList<>();
                 tagRuleMap.put(fileName, tempRuleList);
             }
-            Integer tagId = tempDataPartyTagRuleMap.getTagId();
-            Tag tagInfo = tagInfoMap.get(tagId);
-            if (tagInfo == null) {
-                tagInfo = new Tag();
-                tagInfo.setTagId(tagId.toString());
+//            String tagName = tempDataPartyTagRuleMap.getTagName();
+//            Tag tagInfo = tagInfoMap.get(tagId);
+//            if (tagInfo == null) {
+//                tagInfo = new Tag();
+//                tagInfo.setTagId(tagId.toString());
+//
+//                cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
+//                tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+//                tagOfMysqlT.setId(tagId);
+//                List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
+//                if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
+//                    tagInfo.setTagName(tagOfMysqlList.get(0).getName());
+//                }
+//                TagGroupMap tagGroupMapT = new TagGroupMap();
+//                tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+//                tagGroupMapT.setTagId(tagId);
+//                List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
+//                if (CollectionUtils.isNotEmpty(tagGroupMapList)) {
+//                    tagInfo.setTagGroupId(tagGroupMapList.get(0).getGroupId());
+//                }
+//
+//                tagInfoMap.put(tagId.toString(), tagInfo);
+            //}
 
-                cn.rongcapital.mkt.po.Tag tagOfMysqlT = new cn.rongcapital.mkt.po.Tag();
-                tagOfMysqlT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-                tagOfMysqlT.setId(tagId);
-                List<cn.rongcapital.mkt.po.Tag> tagOfMysqlList =  tagDao.selectList(tagOfMysqlT);
-                if(CollectionUtils.isNotEmpty(tagOfMysqlList)) {
-                    tagInfo.setTagName(tagOfMysqlList.get(0).getName());
-                }
-                TagGroupMap tagGroupMapT = new TagGroupMap();
-                tagGroupMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-                tagGroupMapT.setTagId(tagId);
-                List<TagGroupMap> tagGroupMapList = tagGroupMapDao.selectList(tagGroupMapT);
-                if (CollectionUtils.isNotEmpty(tagGroupMapList)) {
-                    tagInfo.setTagGroupId(tagGroupMapList.get(0).getGroupId());
-                }
-
-                tagInfoMap.put(tagId.toString(), tagInfo);
-            }
-
-            TagRuleExtraVO tagRuleExtraVO = new TagRuleExtraVO();
-            tagRuleExtraVO.setRuleMap(tempDataPartyTagRuleMap);
-            tagRuleExtraVO.setTag(tagInfo);
-            tempRuleList.add(tagRuleExtraVO);
+//            TagRuleExtraVO tagRuleExtraVO = new TagRuleExtraVO();
+//            tagRuleExtraVO.setRuleMap(tempDataPartyTagRuleMap);
+//            tagRuleExtraVO.setTag(tagInfo);
+//            tempRuleList.add(tagRuleExtraVO);
         }
 
 		return tagRuleMap;
