@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.jedis;
+package cn.rongcapital.mkt.common.jedis;
 
 import java.io.IOException;
 
@@ -14,14 +14,15 @@ import redis.clients.jedis.JedisPoolConfig;
 public class JedisConnectionManager {
 
 	private static JedisPool pool;
+	private static JedisPool pool_user;
 	
-	@SuppressWarnings("unused")
 	public JedisConnectionManager() throws IOException{
 		JedisProperties prop = JedisProperties.getInstance();
 		String REDIS_IP = prop.getValue("redis.host");
 		int REDIS_PORT = prop.getIntValue("redis.host.port");
 		String REDIA_PASS = prop.getValue("redis.host.pass");
 		int DATA_BASE = prop.getIntValue("redis.host.database");
+		int DATA_BASE_USER = prop.getIntValue("redis.host.database.user");
 		
 		JedisPoolConfig jpc = new JedisPoolConfig();
 		jpc.setTestOnBorrow(true);
@@ -35,6 +36,7 @@ public class JedisConnectionManager {
 		}*/
 		/**这里我们必须使用密码*/
 		JedisConnectionManager.pool = new JedisPool(jpc, REDIS_IP, REDIS_PORT, 2000, REDIA_PASS,DATA_BASE);
+		JedisConnectionManager.pool_user = new JedisPool(jpc, REDIS_IP, REDIS_PORT, 2000, REDIA_PASS,DATA_BASE_USER);
 	}
 	
 	public static Jedis getConnection(){
@@ -49,4 +51,17 @@ public class JedisConnectionManager {
 	public static void destroy(){
 		pool.destroy();
 	}
+	
+    public static Jedis getConnectionUser(){
+        Jedis jedis = pool_user.getResource();
+        return jedis;
+    }
+    
+    public static void closeConnectionUser(Jedis jedis){
+        pool_user.returnResource(jedis);
+    }
+    
+    public static void destroyUser(){
+        pool_user.destroy();
+    }	
 }
