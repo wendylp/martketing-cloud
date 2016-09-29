@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.api;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +41,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSONObject;
+
 import cn.rongcapital.mkt.biz.WechatPublicAuthBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.AudienceIdListService;
@@ -1724,11 +1728,12 @@ public class MktApi {
 	 * @param:String user_token,String
 	 *                   ver,Integer type,String ownerName,int index,int size
 	 * @return: Object
+	 * @throws JedisException 
 	 */
 	@GET
 	@Path("/mkt.data.inbound.wechat.public.auth")
 	public BaseOutput authWechatPublicAccount(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
+			@NotEmpty @QueryParam("ver") String ver) throws JedisException {
 		return wechatPublicAuthBiz.authWechatPublicAccount();
 	}
 
@@ -2084,8 +2089,5 @@ public class MktApi {
          
         return audienceSearchDownloadService.searchData(audience_id);
     }
-   
-  
-	
 
 }

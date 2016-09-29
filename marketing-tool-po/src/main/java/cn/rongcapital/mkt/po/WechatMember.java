@@ -59,6 +59,8 @@ public class WechatMember extends BaseQuery {
 
     private Integer keyid;
 
+    private String fansJson;
+    
     public Long getId() {
         return id;
     }
@@ -274,4 +276,13 @@ public class WechatMember extends BaseQuery {
     public void setKeyid(Integer keyid) {
         this.keyid = keyid;
     }
+
+	public String getFansJson() {
+		return fansJson;
+	}
+
+	public void setFansJson(String fansJson) {
+		this.fansJson = fansJson;
+	}    
+    
 }
