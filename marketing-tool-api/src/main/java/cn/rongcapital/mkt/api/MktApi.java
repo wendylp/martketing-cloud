@@ -2041,6 +2041,7 @@ public class MktApi {
     @Path("/mkt.data.userinfo.get")
     public BaseOutput getUserInfo(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("personnel_id") String userId) {
+		logger.info(" into mkt.data.userinfo.get");
         return userInfoService.getUserInfo(userId);
     }
 	

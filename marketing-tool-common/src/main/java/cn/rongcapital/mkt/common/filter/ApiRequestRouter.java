@@ -87,20 +87,24 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 		    	logger.info("33333333333333333333333333333333333333");
 		        requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
 		    }
-		    
+		    logger.info("aaaaaaaaaaaaaaaaaaaa");
 			List<String> pList = requestContext.getUriInfo().getQueryParameters()
 								 .get(ApiConstant.API_METHOD);
 			String method = pList==null?null:pList.get(0);
 			if(StringUtils.isBlank(method)){
+				logger.info("bbbbbbbbbbbbbbbbbbbbbb");
 				requestContext.abortWith(Response.status(404).entity("Api method not found").build());
 			}
-			if(StringUtils.isNotEmpty(appId)){
+			if(StringUtils.isNotEmpty(appId)){				
 				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
 						.path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
+				logger.info("ccccccccccccccccccccc");
 				requestContext.setRequestUri(newRequestURI);
+				
 			}else{
 				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
 						.path(ApiConstant.API_PATH+"/"+method).build();
+				logger.info("dddddddddddddddddddddddddddd");
 				requestContext.setRequestUri(newRequestURI);
 			}
 		}
