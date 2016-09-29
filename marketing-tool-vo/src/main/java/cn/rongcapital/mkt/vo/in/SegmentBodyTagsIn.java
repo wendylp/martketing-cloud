@@ -15,38 +15,38 @@ import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SegmentBodyTagsIn {
 
 	@NotNull
-	private Integer tagId;
-	
+	private String tagId;
+
 	@NotNull
-	private Integer tagGroupId;
-	
+	private String tagGroupId;
+
 	@NotNull
 	private Integer exclude;
-	
+
 	@NotNull
 	private Integer groupSeq;
 
 	@JsonProperty("tag_id")
-	public Integer getTagId() {
+	public String getTagId() {
 		return tagId;
 	}
 
 	@JsonProperty("tag_id")
-	public void setTagId(Integer tagId) {
+	public void setTagId(String tagId) {
 		this.tagId = tagId;
 	}
 
 	@JsonProperty("tag_group_id")
-	public Integer getTagGroupId() {
+	public String getTagGroupId() {
 		return tagGroupId;
 	}
 
 	@JsonProperty("tag_group_id")
-	public void setTagGroupId(Integer tagGroupId) {
+	public void setTagGroupId(String tagGroupId) {
 		this.tagGroupId = tagGroupId;
 	}
 
@@ -59,10 +59,12 @@ public class SegmentBodyTagsIn {
 	public void setExclude(Integer exclude) {
 		this.exclude = exclude;
 	}
+
 	@JsonProperty("group_seq")
 	public Integer getGroupSeq() {
 		return groupSeq;
 	}
+
 	@JsonProperty("group_seq")
 	public void setGroupSeq(Integer groupSeq) {
 		this.groupSeq = groupSeq;
