@@ -67,8 +67,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	        logger.info(JSONObject.toJSONString(redisUserTokenVO));
         } catch (JedisException e) {           
             logger.info(e.getMessage());
-        }
-	    
+        }	    
         if(redisUserTokenVO.getCode()!=0){	       	
 //            requestContext.abortWith(Response.status(redisUserTokenVO.getCode()).entity(getBaseOutputBack(redisUserTokenVO)).build());
         	ResponseBuilderImpl builder = new ResponseBuilderImpl();
