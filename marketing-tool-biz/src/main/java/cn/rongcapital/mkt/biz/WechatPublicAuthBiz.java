@@ -1,12 +1,11 @@
 package cn.rongcapital.mkt.biz;
 
-import com.tagsin.wechat_sdk.App;
-
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface WechatPublicAuthBiz {
 
-	public BaseOutput authWechatPublicAccount();
+	public BaseOutput authWechatPublicAccount()throws JedisException;
 	
 	public BaseOutput authWechatPublicCodeAccount(String authorizationCode);
 	
