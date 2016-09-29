@@ -262,7 +262,7 @@ public class ApiConstant {
 	public static final String WEIXIN_QRCODE_CREATE = "https://api.weixin.qq.com/cgi-bin/qrcode/create";	
 	public static final String WEIXIN_QRCODE_SHOW = "https://mp.weixin.qq.com/cgi-bin/showqrcode";
 	public static final String WEIXIN_REDIRECT_URL = "http://mc6666.ruixuesoft.com/html/data-access/weixin.html";	
-	public static final String WEIXIN_AUTH_CALLBACK_URI = "http://mc6666.ruixuesoft.com/api?method=mkt.data.inbound.wechat.public.auth.code.callback";	
+	public static final String WEIXIN_AUTH_CALLBACK_URI = "http://mc6666srv.ruixuesoft.com/api?method=mkt.data.inbound.wechat.public.auth.code.callback";	
 	public static final String WEIXIN_AUTH_COMPONENT_LOGIN_PAGE ="https://mp.weixin.qq.com/cgi-bin/componentloginpage?";
 	/**
 	 * 微信关注、取消关注、扫描
