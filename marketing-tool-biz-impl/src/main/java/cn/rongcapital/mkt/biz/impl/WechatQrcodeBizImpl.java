@@ -13,7 +13,9 @@ import java.util.Map;
 
 import javax.imageio.stream.FileImageOutputStream;
 
+import cn.rongcapital.mkt.dao.*;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
@@ -38,17 +40,13 @@ import cn.rongcapital.mkt.common.enums.TagSourceEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.ImageCompressUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
-import cn.rongcapital.mkt.dao.CustomTagDao;
-import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
-import cn.rongcapital.mkt.dao.WechatChannelDao;
-import cn.rongcapital.mkt.dao.WechatQrcodeDao;
-import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatInterfaceLog;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeTicket;
+import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.po.base.BaseTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -72,9 +70,11 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	@Autowired
 	SaveAudienceListService saveAudienceListService;
 	@Autowired
-	CustomTagDao customTagDao;
-	@Autowired
 	InsertCustomTagService insertCustomTagService;
+	@Autowired
+	CustomTagMapDao customTagMapDao;
+	@Autowired
+	WechatRegisterDao wechatRegisterDao;
 	/**
 	 * 从微信获取二维码信息
 	 * @param sceneId
@@ -82,7 +82,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	private WechatQrcodeTicket getWechatQrcodeTicketFromWeiXin(App app,int sceneId,String actionName){
+	private WechatQrcodeTicket getWechatQrcodeTicketFromWeiXin(App app,int sceneId,String actionName,String wxAcct){
 		WechatQrcodeTicket wechatQrcodeTicket =null;				
 		Requester req = Requester.builder().setMethod(Method.POST)
 				.setUrl(ApiConstant.WEIXIN_QRCODE_CREATE)
@@ -104,6 +104,11 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			String ticket = objNode.get("ticket").getTextValue();
 			String url = objNode.get("url").getTextValue();
 			wechatQrcodeTicket = new WechatQrcodeTicket();
+			/**
+			 * 获取授权的微信公众号账号
+			 */
+			WechatRegister wechatRegister = getWechatRegisterByAuthAppId(wxAcct);
+			wechatQrcodeTicket.setWxAcct(wechatRegister.getWxAcct());
 			wechatQrcodeTicket.setSceneId(sceneId);
 			wechatQrcodeTicket.setTicket(ticket);
 			wechatQrcodeTicket.setUrl(url);
@@ -111,6 +116,18 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		}
 		return wechatQrcodeTicket;
 	}
+	
+	private WechatRegister getWechatRegisterByAuthAppId(String authAppId){
+		WechatRegister wechatRegisterTemp = new WechatRegister();
+		wechatRegisterTemp.setAppId(authAppId);
+		List<WechatRegister> wechatRegisters = wechatRegisterDao.selectList(wechatRegisterTemp);
+		if(CollectionUtils.isNotEmpty(wechatRegisters)){
+			WechatRegister wechatRegister = wechatRegisters.get(0);
+			return wechatRegister;
+		}
+		return null;
+	}
+	
 	
 	/**
 	 * 根据从微信获取的二维码ticket生成二维码图片
@@ -143,13 +160,14 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public BaseOutput getQrcode(int sceneId,String actionName) throws FileNotFoundException, IOException {
+	public BaseOutput getQrcode(int sceneId,String actionName,String wxAcct) throws FileNotFoundException, IOException {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		App app = this.getApp();
 		/**
 		 * 从微信获取二维码信息
 		 */
-		WechatQrcodeTicket  wechatQrcodeTicket  = this.getWechatQrcodeTicketFromWeiXin(app,sceneId,actionName);
+		getWechatRegisterByAuthAppId(app.getAuthAppId());
+		WechatQrcodeTicket  wechatQrcodeTicket  = this.getWechatQrcodeTicketFromWeiXin(app,sceneId,actionName,wxAcct);
 		
 		List<Object> data = new ArrayList<Object>();
 		if(wechatQrcodeTicket!=null){
@@ -191,15 +209,15 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			int totalSucc=0;
 			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();		
 			List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);			
-			if(webchatAuthInfos!=null&&webchatAuthInfos.size()>0){
-				App app = this.getApp();
+			if(webchatAuthInfos!=null&&webchatAuthInfos.size()>0){				
 				for(Iterator<WebchatAuthInfo> iter = webchatAuthInfos.iterator();iter.hasNext();){
+					App app = this.getApp();
 					WebchatAuthInfo webchatAuthInfoTemp = iter.next();
 					app.setAuthAppId(webchatAuthInfoTemp.getAuthorizerAppid());
 					app.setAuthRefreshToken(webchatAuthInfoTemp.getAuthorizerRefreshToken());
 					for(int i=startSceneId;i<=endSceneId;i++){
 						try {
-							WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName);
+							WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName,webchatAuthInfoTemp.getAuthorizerAppid());
 							if(wechatQrcodeTicket!=null){
 								/**
 								 * 生成二维码对象到数据库
@@ -319,12 +337,13 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	 * 获取未被使用的ticket
 	 * @return
 	 */
-	private WechatQrcodeTicket getWechatQrcodeTicketByState(){
+	private WechatQrcodeTicket getWechatQrcodeTicketByState(String wxAcct){
 		WechatQrcodeTicket wechatQrcodeTicketBack = null;
 		WechatQrcodeTicket wechatQrcodeTicket = new WechatQrcodeTicket();
 		wechatQrcodeTicket.setState(0);
 		wechatQrcodeTicket.setOrderField("id");
 		wechatQrcodeTicket.setOrderFieldType("ASC");
+		wechatQrcodeTicket.setWxAcct(wxAcct);
 		List<WechatQrcodeTicket> wechatQrcodeTickets = wechatQrcodeTicketDao.selectList(wechatQrcodeTicket);
 		if(wechatQrcodeTickets!=null&&wechatQrcodeTickets.size()>0){
 			wechatQrcodeTicketBack = wechatQrcodeTickets.get(0);				
@@ -405,18 +424,15 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 		
 		if(StringUtils.isNotEmpty(wechatQrcodeIn.getComments())){
 			wechatQrcode.setComments(wechatQrcodeIn.getComments());
-		}			
+		}
+
 		List<String> associationTags = wechatQrcodeIn.getAssociation_tags();
 		if(associationTags!=null&&associationTags.size()>0){
 			StringBuffer tagIdsb = new StringBuffer();
-			
 			BaseTag tag = null;
-			
 			for(Iterator<String> iter = associationTags.iterator();iter.hasNext();){
 				String associationTag = iter.next();
-				
 				if(associationTag!=null){
-					
 					tag = insertCustomTagService.insertCustomTagLeafFromSystemIn(associationTag,TagSourceEnum.WECHAT_QRCODE_SOURCE_ACCESS.getTagSourceName());
 					String tagId = tag == null ? "":tag.getTagId();					
 					tagIdsb.append(tagId).append(";");
@@ -424,10 +440,10 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			}
 			String tagIds = tagIdsb.substring(0, tagIdsb.length()-1);
 			wechatQrcode.setRelatedTags(tagIds);
-		}			
-		
-		wechatQrcode.setCreateTime(new Date());
 
+			//添加二维码与自定义标签关联表的信息
+		}
+		wechatQrcode.setCreateTime(new Date());
 		return wechatQrcode;		
 	}
 	
@@ -446,7 +462,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				return baseOutput;
 			}
 			
-			WechatQrcodeTicket wechatQrcodeTicket = this.getWechatQrcodeTicketByState();	
+			WechatQrcodeTicket wechatQrcodeTicket = this.getWechatQrcodeTicketByState(wechatQrcodeIn.getWx_acct());	
 			if(wechatQrcodeTicket != null){
 				
 				wechatQrcodeTicket.setState(1);
@@ -461,7 +477,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			if(wechatQrcode.getId() != null && wechatQrcode.getId() != 0){
 				wechatQrcodeDao.updateById(wechatQrcode);
 			}else{
-				
 				wechatQrcode.setStatus(NumUtil.int2OneByte(0));
 				wechatQrcodeDao.insert(wechatQrcode);
 			}

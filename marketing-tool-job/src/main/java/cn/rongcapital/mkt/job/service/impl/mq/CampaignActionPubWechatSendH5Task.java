@@ -26,7 +26,6 @@ import com.alibaba.fastjson.JSON;
 import com.tagsin.wechat_sdk.App;
 
 import cn.rongcapital.mkt.biz.MessageSendBiz;
-import cn.rongcapital.mkt.biz.impl.BaseBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
@@ -37,6 +36,7 @@ import cn.rongcapital.mkt.po.CampaignActionSendPub;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
+
 import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
@@ -57,9 +57,6 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 	
 	@Autowired
 	private WebchatAuthInfoDao webchatAuthInfoDao;
-	
-	@Autowired
-	private BaseBiz baseBiz;
 	
 	@Autowired
 	private MessageSendBiz messageSendBiz;
@@ -158,7 +155,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 				
 				boolean isPubSent = false;
 				if(null != app){
-					isPubSent = messageSendBiz.sendMpnews(app, wxCode, materialId);
+					isPubSent = messageSendBiz.sendMpnews(app.getAuthAppId(), app.getAuthRefreshToken(), wxCode, materialId);
 				}
 				logger.info("向受众人群粉丝发送微信图文成功标识------------------------------------>："+isPubSent);
 				
@@ -196,7 +193,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 	 * @throws
 	 */
 	private App getApp(CampaignActionSendPub campaignActionSendPub) {
-		App app = baseBiz.getApp();
+		App app = new App("","");
 		try {
 			String pubId = campaignActionSendPub.getPubId();
 			WechatRegister wechatRegister = new WechatRegister();
@@ -222,7 +219,6 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 		}
 		return app;
 	}
-	
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
 		super.cancelCampaignInnerTask(taskSchedule);

@@ -12,12 +12,16 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.TagSourceEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.CampaignActionSaveAudienceDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendH5Dao;
@@ -68,7 +72,10 @@ import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.WechatAsset;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
 import cn.rongcapital.mkt.po.WechatGroup;
+import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
+import cn.rongcapital.mkt.service.InsertCustomTagService;
 import cn.rongcapital.mkt.vo.in.CampaignActionSaveAudienceIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionSendH5In;
 import cn.rongcapital.mkt.vo.in.CampaignActionSendPrivtIn;
@@ -142,6 +149,12 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private ImgTextAssetDao imgTextAssetDao;
 	@Autowired
 	private CustomTagDao customTagDao;
+	//mongo要用到的dao
+	@Autowired
+	private MongoTemplate mongoTemplate;
+	
+	@Autowired
+	private InsertCustomTagService insertCustomTagServiceImpl;
 	
 	private static final ObjectMapper jacksonObjectMapper = new ObjectMapper();
 	
@@ -830,10 +843,32 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSetTag.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSetTag.setCampaignHeadId(campaignHeadId);
 		List<String> tagNameList = campaignActionSetTagIn.getTagNames();
+		if(tagNameList == null || tagNameList.isEmpty()) {
+		    campaignActionSetTag.setTagNames("");
+		}
 		if(CollectionUtils.isNotEmpty(tagNameList)) {
-			List<Integer> tagIdList = new ArrayList<Integer>();
+			List<String> tagIdList = new ArrayList<String>();
 			for(String tagName:tagNameList) {
-				CustomTag customTagT = new CustomTag();
+			    //将这个逻辑存到mongo
+			    BaseTag baseTag =  new CustomTagLeaf();
+			    baseTag.setStatus((int)ApiConstant.TABLE_DATA_STATUS_VALID);//数据正常
+			    baseTag.setTagName(tagName);
+			    String tagSource = TagSourceEnum.CAMPAIGN_SOURCE_ACCESS.getTagSourceName();
+			    baseTag.setSource(tagSource);
+			    Query query = new Query(Criteria.where("tag_name").is(baseTag.getTagName()).and("status").is(baseTag.getStatus()).and("source").is(tagSource));
+			    BaseTag baseTagTemp = mongoTemplate.findOne(query,BaseTag.class);
+			    String cutomTagId = null;
+			    if(baseTagTemp != null){
+			        cutomTagId = baseTagTemp.getTagId();
+			    }else {
+			       // mongoTemplate.insert(objectToSave);
+			        BaseTag baseTagResult = insertCustomTagServiceImpl.insertCustomTagLeafFromSystemIn(tagName, tagSource);
+			        cutomTagId = baseTagResult.getTagId();
+			    }
+			    if(null != cutomTagId) {
+                    tagIdList.add(cutomTagId);
+                }
+			/*	CustomTag customTagT = new CustomTag();
 				customTagT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				customTagT.setName(tagName);
 				List<CustomTag> customTagList = customTagDao.selectList(customTagT);
@@ -849,9 +884,14 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				}
 				if(null != cutomTagId) {
 					tagIdList.add(cutomTagId);
-				}
+				}*/
 			}
-			campaignActionSetTag.setTagIds(StringUtils.join(tagIdList,","));
+			if(tagIdList.size() > 0){
+			    campaignActionSetTag.setTagIds(StringUtils.join(tagIdList,","));
+			}else {
+			    campaignActionSetTag.setTagIds("");
+			}
+			
 			campaignActionSetTag.setTagNames(StringUtils.join(tagNameList,","));
 		}
 		return campaignActionSetTag;

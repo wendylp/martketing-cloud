@@ -129,4 +129,10 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * @return
 	 */
 	int selectListBySearchKeyLikeCount(Map<String, Object> paramMap);
+	
+	/**
+	 * @param pubId
+	 * 修改公众号下的图文消息的WechatStatus，是否被公众号删除了
+	 */
+	void batchUpdateWechatStatusByPubId(String pubId);
 }

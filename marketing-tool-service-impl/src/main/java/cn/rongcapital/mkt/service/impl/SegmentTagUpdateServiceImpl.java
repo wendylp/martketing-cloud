@@ -7,8 +7,10 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ws.rs.core.SecurityContext;
 
@@ -20,20 +22,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.TagSourceEnum;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.CustomTagMapDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
-import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.CustomTagMap;
 import cn.rongcapital.mkt.po.SegmentationHead;
+import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
 import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.service.InsertCustomTagService;
 import cn.rongcapital.mkt.service.SegmentTagUpdateService;
+import cn.rongcapital.mkt.service.TagCustomTagToDataPartyService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import heracles.data.common.annotation.ReadWrite;
@@ -45,6 +52,8 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
+	private ConcurrentHashMap<String, Field[]> filedMap = new ConcurrentHashMap<>();
+	
 	@Autowired
 	SegmentationHeadDao segmentationHeadDao;
 
@@ -53,9 +62,15 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
 	@Autowired
 	CustomTagDao customTagDao;
-
+	
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	
+	@Autowired
+	private InsertCustomTagService insertCustomTagServiceImpl;
+	
+	@Autowired
+	private TagCustomTagToDataPartyService tagCustomTagToDataPartyServiceImpl;
 
 	@ReadWrite(type = ReadWriteType.WRITE)
 	@Transactional(propagation = Propagation.REQUIRED)
@@ -76,13 +91,8 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		}
 		
 		List<String> tagNames = body.getTagNames();
-		// Date now = new Date();
 
-		CustomTag tagExample = null;
-		List<CustomTag> tag = null;
-
-		List<Segment> segmentList = mongoTemplate.find(new Query(new Criteria("segmentation_head_id").is(headerId)),
-				Segment.class);
+		List<Segment> segmentList = mongoTemplate.find(new Query(new Criteria("segmentation_head_id").is(headerId)), Segment.class);
 
 		List<Integer> personIdList = new ArrayList<Integer>();
 
@@ -96,31 +106,26 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		}
 		List<Integer> tagIdList = new ArrayList<Integer>();
 		// 标签名保存至自定义标签表
+		BaseTag baseTag = null;
+		String tagSource = TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.getTagSourceName();
 		if (tagNames != null) {
 			for (String tagName : tagNames) {
-				tagExample = new CustomTag();
-				tagExample.setName(tagName);
-				tagExample.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-				tag = customTagDao.selectList(tagExample);
-				if (CollectionUtils.isEmpty(tag)) {
-					CustomTag insertTag = new CustomTag();
-					insertTag.setName(tagName);
-					insertTag.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-					insertTag.setCoverAudienceCount(segmentList.size());
-					// insertTag.setCreateTime(now);
-					// insertTag.setUpdateTime(now);
-					customTagDao.insert(insertTag);
-					tagIdList.add(insertTag.getId());
-				} else {
-					CustomTag insertTag = new CustomTag();
-					insertTag.setName(tagName);
-					insertTag.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-					insertTag.setCoverAudienceCount(segmentList.size());
-					insertTag.setId(tag.get(0).getId());
-					// insertTag.setCreateTime(now);
-					// insertTag.setUpdateTime(now);
-					customTagDao.updateById(insertTag);
-					tagIdList.add(tag.get(0).getId());
+				baseTag = new CustomTagLeaf();
+				baseTag.setTagName(tagName);
+				baseTag.setStatus((int)ApiConstant.TABLE_DATA_STATUS_VALID);
+				baseTag.setSource(TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.getTagSourceName());
+				
+				Query query = new Query(Criteria.where("tag_name").is(baseTag.getTagName()).and("status").is(baseTag.getStatus()).and("source").is(tagSource));
+				List<BaseTag> customTagLeafs = mongoTemplate.find(query,BaseTag.class);
+				
+				if (CollectionUtils.isEmpty(customTagLeafs)) {
+					BaseTag baseTagResult = insertCustomTagServiceImpl.insertCustomTagLeafFromSystemIn(tagName, tagSource);
+					tagIdList.add(Integer.valueOf(baseTagResult.getTagId()));
+					
+				}else {
+				    Update update = buildBaseUpdate(baseTag);
+				    mongoTemplate.updateFirst(query, update, baseTag.getClass());
+				    tagIdList.add(Integer.valueOf(customTagLeafs.get(0).getTagId()));
 				}
 			}
 		}
@@ -132,27 +137,26 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 			
 			Integer tagId = customTag.intValue();
 			CustomTagMap tagMap = new CustomTagMap();
-			tagMap.setTagId(tagId);
-			tagMap.setType(ApiConstant.TAG_TYPE_SEGMENT);
-			tagMap.setMapId(headerId);
-//			tagMap.setCreateTime(now);
-//			tagMap.setUpdateTime(now);
+			tagMap.setTagId(String.valueOf(tagId));
+			tagMap.setTagSource(TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.getTagSourceId());
+			tagMap.setMapId(String.valueOf(headerId));
 			customTagMapDao.insert(tagMap);
 			
 			// 删除标签与人群对应关系
 			customTagMapDao.batchDeleteUseTagId(tagId);
 			
 			// 建立细分与人群对应关系
-			for (Integer personId : personIdList) {
+			/*for (Integer personId : personIdList) {
 				CustomTagMap pensonTagMap = new CustomTagMap();
-				pensonTagMap.setTagId(tagId);
-				pensonTagMap.setType(ApiConstant.TAG_TYPE_CONTACT);
-				pensonTagMap.setMapId(personId);
-				// tagMap.setCreateTime(now);
-				// tagMap.setUpdateTime(now);
+				pensonTagMap.setTagId(String.valueOf(tagId));
+				tagMap.setTagSource(TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.getTagSourceId());
+				pensonTagMap.setMapId(String.valueOf(personId));
 				customTagMapDao.insert(pensonTagMap);
+			}*/
+			//给人打上标签
+			for(Integer personId : personIdList) {
+				tagCustomTagToDataPartyServiceImpl.tagCustomTagToDataPartyById(String.valueOf(tagId), personId);
 			}
-			
 		}
 	
 		// 标签ID保存至segmentation_head
@@ -164,5 +168,28 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
 		return baseOutput;
 	}
+	
+    private <T> Update buildBaseUpdate(T t) {
+        Update update = new Update();
+        String className = t.getClass().getName();
+        Field[] fields = filedMap.get(className);
+        if (fields == null) {
+            fields = t.getClass().getDeclaredFields();
+            filedMap.putIfAbsent(className, fields);
+        }
+        for (Field field : fields) {
+            if(field.getName().equals("serialVersionUID")) continue;
+            field.setAccessible(true);
+            try {
+                Object value = field.get(t);
+                if (value != null) {
+                    update.set(field.getName(), value);
+                }
+            } catch (Exception e) {
+                logger.error("buildBaseUpdate failed", e);
+            }
+        }
+        return update;
+    }
 
 }

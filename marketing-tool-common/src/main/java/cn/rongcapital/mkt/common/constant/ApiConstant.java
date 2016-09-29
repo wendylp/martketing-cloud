@@ -16,6 +16,9 @@ public class ApiConstant {
 	
 	public static final String API_METHOD = "method";//api的method参数
 	public static final String API_PATH = "/api";//api的路径
+	public static final String API_USER_TOKEN = "user_token";//api的user_token参数
+	public static final String API_USER_TOKEN_VALUE = "123";//api的user_token参数
+	public static final String API_USER_ID = "user_id";//api的user_id参数	
 	public static final String API_PATH_APPID = "/api/wx1f363449a14a1ad8";//api的路径
 	public static final byte TABLE_DATA_STATUS_VALID = 0;//数据正常
 	public static final byte TABLE_DATA_STATUS_INVALID = 1;//数据已被逻辑删除
@@ -258,8 +261,8 @@ public class ApiConstant {
 	
 	public static final String WEIXIN_QRCODE_CREATE = "https://api.weixin.qq.com/cgi-bin/qrcode/create";	
 	public static final String WEIXIN_QRCODE_SHOW = "https://mp.weixin.qq.com/cgi-bin/showqrcode";
-	public static final String WEIXIN_REDIRECT_URL = "http://mkttest.cssrv.dataengine.com/html/data-access/weixin.html";	
-	public static final String WEIXIN_AUTH_CALLBACK_URI = "http://mktsrv.cssrv.dataengine.com/api?method=mkt.data.inbound.wechat.public.auth.code.callback";	
+	public static final String WEIXIN_REDIRECT_URL = "http://mc6666.ruixuesoft.com/html/data-access/weixin.html";	
+	public static final String WEIXIN_AUTH_CALLBACK_URI = "http://mc6666srv.ruixuesoft.com/api?method=mkt.data.inbound.wechat.public.auth.code.callback";	
 	public static final String WEIXIN_AUTH_COMPONENT_LOGIN_PAGE ="https://mp.weixin.qq.com/cgi-bin/componentloginpage?";
 	/**
 	 * 微信关注、取消关注、扫描
@@ -296,4 +299,29 @@ public class ApiConstant {
 	 * 标签级别
 	 */
 	public static final String TAG_LINE = "-";
+	
+	public static final int WEIXIN_BATCH_GET_USER_INFO_SIZE=100;
+	
+	
+	/**
+	 * 登录冲突
+	 */
+	public static final int USER_TOKEN_LOGIN_CONFLICT =3001;
+    /**
+     * 回话超时
+     */
+    public static final int USER_TOKEN_LOGIN_TIMEOUT =3002;
+    /**
+     * 参数缺失
+     */
+    public static final int USER_TOKEN_PARAMS_MISSING =3003;
+    /**
+     * redis保存错误
+     */
+    public static final int USER_TOKEN_REDIS_SAVE_ERR =3004;
+    /**
+     * redis信息错误
+     */
+    public static final int USER_TOKEN_REDIS_INFO_ERR =3005;
+	
 }

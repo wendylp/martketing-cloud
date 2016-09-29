@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.api;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +41,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSONObject;
+
 import cn.rongcapital.mkt.biz.WechatPublicAuthBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.AudienceIdListService;
@@ -1434,7 +1438,8 @@ public class MktApi {
 	@Path("/mkt.segment.tagname.tagcount.get")
 	public BaseOutput getTagCountByGroupId(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("tag_ids") String tagIds) {
-		return segmentTagnameTagCountService.getTagCountById(tagIds);
+		//segmentTagnameTagCountService.getTagCountById(tagIds);
+		return segmentTagnameTagCountService.getMongoTagCountByTagIdList(tagIds);
 	}
 
 	/**
@@ -1633,7 +1638,7 @@ public class MktApi {
 	@Path("/mkt.tag.system.list.get")
 	public BaseOutput getTagcountByParentGroupId(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
+			@NotNull @QueryParam("tag_group_id") String tagGroupId, @QueryParam("index") Integer index,
 			@QueryParam("size") Integer size) {
 		//tagSystemListGetService.getTagcount(method, userToken, tagGroupId, index, size);
 		return tagSystemListGetService.getMongoTagList(method, userToken, tagGroupId, index, size);
@@ -1653,7 +1658,7 @@ public class MktApi {
 	@Path("/mkt.taggroup.system.list.get")
 	public BaseOutput getTagGroupByParentGroupId(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
+			@NotNull @QueryParam("tag_group_id") String tagGroupId, @QueryParam("index") Integer index,
 			@QueryParam("size") Integer size) {
 		//taggroupSystemListGetService.getTagGroupByParentGroupId(method, userToken, tagGroupId, index, size);
 		return taggroupSystemListGetService.getMongoTagRecommendByTagTreeId(method, userToken, tagGroupId, index, size);
@@ -1723,11 +1728,12 @@ public class MktApi {
 	 * @param:String user_token,String
 	 *                   ver,Integer type,String ownerName,int index,int size
 	 * @return: Object
+	 * @throws JedisException 
 	 */
 	@GET
 	@Path("/mkt.data.inbound.wechat.public.auth")
 	public BaseOutput authWechatPublicAccount(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
+			@NotEmpty @QueryParam("ver") String ver) throws JedisException {
 		return wechatPublicAuthBiz.authWechatPublicAccount();
 	}
 
@@ -2040,6 +2046,7 @@ public class MktApi {
     @Path("/mkt.data.userinfo.get")
     public BaseOutput getUserInfo(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("personnel_id") String userId) {
+		logger.info(" into mkt.data.userinfo.get");
         return userInfoService.getUserInfo(userId);
     }
 	
@@ -2082,8 +2089,5 @@ public class MktApi {
          
         return audienceSearchDownloadService.searchData(audience_id);
     }
-   
-  
-	
 
 }

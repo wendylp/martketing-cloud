@@ -555,9 +555,9 @@ public class MktWeChatApi {
 	@Path("/mkt.weixin.qrcode.get")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public BaseOutput getQrcode(@NotEmpty @QueryParam("action_name") String actionName,
-			@DefaultValue("10") @Min(1) @Max(100000) @QueryParam("scene_id") int sceneId)
+			@DefaultValue("10") @Min(1) @Max(100000) @QueryParam("scene_id") int sceneId,@NotEmpty @QueryParam("wxAcct") String wxAcct)
 			throws FileNotFoundException, IOException {
-		BaseOutput baseOutput = wechatQrcodeBiz.getQrcode(sceneId, actionName);
+		BaseOutput baseOutput = wechatQrcodeBiz.getQrcode(sceneId, actionName,wxAcct);
 		return baseOutput;
 	}
 
@@ -656,7 +656,9 @@ public class MktWeChatApi {
 			imgAsset.setSearchKey(searchKey);
 		}
 
-		if (index != 0) {
+		imgAsset.setIndex((index-1)*size);
+		imgAsset.setSize(size);
+		/*if (index != 0) {
 			imgAsset.setIndex(index);
 		} else {
 			imgAsset.setIndex(1);
@@ -665,7 +667,7 @@ public class MktWeChatApi {
 			imgAsset.setSize(size);
 		} else {
 			imgAsset.setSize(10);
-		}
+		}*/
 		return etWxImgTextAssetService.getWxImgTextAssetService(imgAsset);
 	}
 }

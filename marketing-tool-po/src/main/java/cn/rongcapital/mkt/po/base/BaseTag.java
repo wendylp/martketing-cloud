@@ -2,7 +2,6 @@ package cn.rongcapital.mkt.po.base;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.po.mongodb.CustomTagTypeLayer;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -15,7 +14,7 @@ import java.util.List;
  * Created by Yunfeng on 2016-9-21.
  */
 @Document(collection = "custom_tag_tree")
-public abstract class BaseTag implements Serializable {
+public class BaseTag implements Serializable {
 
     private static final long serialVersionUID = -8650105374962428497L;
 
@@ -158,11 +157,17 @@ public abstract class BaseTag implements Serializable {
         return true;
     }
 
-    public abstract List<BaseTag> getChildrenTags();
+    public List<BaseTag> getChildrenTags(){
+        return null;
+    }
 
-    public abstract boolean removeChildrenTags(String tagName);
+    public boolean removeChildrenTags(String tagName){
+        return false;
+    }
 
-    public abstract boolean addChildren(String tagName);
+    public boolean addChildren(String tagName){
+        return false;
+    }
 
     //返回的ParentTag只包含了ParentTag的唯一标识，要获取完整的信息，需要从数据库里搜索，数据库里搜索不到则认为是非法Tag
     public BaseTag getParentTag(){

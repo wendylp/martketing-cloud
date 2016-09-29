@@ -90,6 +90,8 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 			keyid = dataPaymentDao.selectObjectById(contactId).getKeyid();
 		} else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
 			keyid = dataShoppingDao.selectObjectById(contactId).getKeyid();
+		}else if (dataType == DataTypeEnum.WECHAT.getCode()) {
+			keyid = contactId;
 		}
 
 		return keyid;
@@ -117,6 +119,7 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 						String gender = GenderUtils.byteToChar(dataPopulation.getGender());
 						dataVo.setWx_gender(String.valueOf(gender));
 						dataVo.setWx_nickname(dataPopulation.getNickname());
+						dataVo.setPhoto(dataPopulation.getHeadImgUrl());
 					}else{
 						dataVo.setContactId(keyId);
 						dataVo.setName(dataPopulation.getName());
@@ -145,7 +148,8 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 						dataVo.setProvice(dataPopulation.getProvice());
 						dataVo.setCity(dataPopulation.getCity());
 						dataVo.setJob(dataPopulation.getJob());
-
+						dataVo.setPhoto(dataPopulation.getHeadImgUrl());
+						
 						DecimalFormat df = new DecimalFormat("0.00");
 						BigDecimal monthlyIncome = dataPopulation.getMonthlyIncome();
 						if (monthlyIncome != null) {
@@ -219,7 +223,7 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 		// result.setData(data);
 		// result.setTotal(data.size());
 		// }
-		if (keyId != null) {
+		if (keyId == null) {
 			result.setCode(ApiErrorCode.BIZ_ERROR_CONTACTINFO_KEYID.getCode());
 			result.setMsg("不能获取关联的keyid!");
 			return result;

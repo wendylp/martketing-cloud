@@ -304,4 +304,17 @@ public class GetH5PubListServiceImpl implements TaskService {
 			wechatRegisterDao.updatePubInfo(paramMap);
 		}
 	}
+
+	@Override
+	public void task() {
+		// callH5PlusMethod();
+		// 获取授权的微信公众号的appid
+		List<WebchatAuthInfo> selectListByIdList = webchatAuthInfoDao.selectList(new WebchatAuthInfo());
+		if (!CollectionUtils.isEmpty(selectListByIdList)) {
+			this.synPubInfoMethod(selectListByIdList);
+			this.synPubGroupInfoMethod(selectListByIdList);
+		}
+	}
+	
+	
 }

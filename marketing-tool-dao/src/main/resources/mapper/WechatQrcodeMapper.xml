@@ -169,7 +169,7 @@
 		    	<if test="status != null and status != 0"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="status == 0"><![CDATA[ AND status in (1, 3)]]></if>
 		    	<if test="expirationTimeStatus == 8"><![CDATA[ AND expiration_time IS NULL]]></if>		    	
-		    	<if test="expirationTime != null"><![CDATA[ AND expiration_time <= #{expirationTime} AND expiration_time>=now()]]></if>	
+		    	<if test="expirationTime != null"><![CDATA[ AND expiration_time < #{expirationTime} AND expiration_time> #{expirationTimeNow}]]></if>
 		</where>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>

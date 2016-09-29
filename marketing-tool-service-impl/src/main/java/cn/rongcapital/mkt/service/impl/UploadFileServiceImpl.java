@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -495,7 +496,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 				List<WXMoudelVO> wxList = new ArrayList<>();
 				List<WXMoudelVO> wxSuccessList = new ArrayList<>();
 				//List<WXMoudelVO> wxFailList = new ArrayList<>();
-				Map<String, WXMoudelVO> wxFailMap = new HashMap<>();
+				Map<String, WXMoudelVO> wxFailMap = new LinkedHashMap<>();
 				while (rowIterator.hasNext()) {
 					Row row = rowIterator.next();
 					Integer rowIndex = row.getRowNum();
@@ -538,29 +539,23 @@ public class UploadFileServiceImpl implements UploadFileService{
 				}
 				
 				
-				List<String> qrNameList = new ArrayList<>();//判断单批次二维码名称是否重复的集合
 				for(WXMoudelVO wmo : wxList){
-					String qrName = wmo.getQrName();
-					//一批数据里面有重复
-					if(qrNameList.contains(qrName)) {
-						//wxFailList.add(wmo);
-						wxFailMap.put(qrName + "二维码重复", wmo);
-						continue;
-					}
-					qrNameList.add(qrName);
-					
+				    //二维码名称
+				    String qrName = wmo.getQrName();
+					//渠道名字
 					String channelType = wmo.getChannelType();
-					//查询渠道名字是否重复
+					//查询渠道名字是否存在
 					WechatChannel wechatChannel =  new WechatChannel();
 					wechatChannel.setChName(channelType);
+					List<WechatChannel> channeltList = wechatChannelDao.selectList(wechatChannel);
 				
-					int channelTypeCount = wechatChannelDao.selectListCount(wechatChannel);
-					if(channelTypeCount == 0 && !channelNmaeList.contains(channelType)){
+					//int channelTypeCount = wechatChannelDao.selectListCount(wechatChannel);
+					if(channeltList.isEmpty() && !channelNmaeList.contains(channelType)){
 						wxFailMap.put(qrName + "渠道名字不存在" + channelType, wmo);
 						continue;
 					}
 					
-					//不是必填，可以为空
+					//公众号名称不是必填，可以为空，有值就要校验是否存在
 					String officialName = wmo.getOfficialName();
 					if(officialName != null && officialName.length() >0){
 						WechatRegister wechatRegister = new WechatRegister();
@@ -572,6 +567,22 @@ public class UploadFileServiceImpl implements UploadFileService{
 						}
 					}
 					
+					//新建的二维码，在同一公众号、同一渠道下不可以重复
+					Integer chCode = null;
+					WechatQrcode wechatQrcode = new WechatQrcode();
+					wechatQrcode.setWxName(officialName);
+                    if(channeltList != null && channeltList.size() > 0){
+                        chCode = channeltList.get(0).getId();
+                    }
+                    wechatQrcode.setChCode(chCode);
+                    wechatQrcode.setQrcodeName(qrName);
+                    wechatQrcode.setStatus((byte) 1);
+                    int qrListCount = wechatQrcodeDao.selectListCount(wechatQrcode);
+                    if(qrListCount > 0) {
+                        wxFailMap.put(qrName+ "在同一公众号同一渠道下重复", wmo);
+                        continue;
+                    }
+                    
 					//符合条件的数据
 					wxSuccessList.add(wmo);
 				}

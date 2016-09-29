@@ -78,7 +78,7 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 				segmentationBodyT.setHeadId(segmentationHead.getId());
 				segmentationBodyT.setGroupIndex(groupIndex);
 				List<SegmentationBody> segmentationBodyList = segmentationBodyDao.selectList(segmentationBodyT);
-				if (CollectionUtils.isEmpty(segmentationBodyList)) {
+				if (segmentationBodyList == null || CollectionUtils.isEmpty(segmentationBodyList) || segmentationBodyList.size() == 0 ) {
 					continue;
 				}
 				List<Criteria> criteriasList = new ArrayList<Criteria>();

@@ -13,11 +13,14 @@ import cn.rongcapital.mkt.dao.CustomTagMapDao;
 import cn.rongcapital.mkt.dao.TagDao;
 import cn.rongcapital.mkt.dao.TagGroupMapDao;
 import cn.rongcapital.mkt.dao.TaggroupDao;
+import cn.rongcapital.mkt.dao.mongo.MongoBaseTagDao;
+import cn.rongcapital.mkt.dao.mongo.MongoBaseTagDaoImpl;
 import cn.rongcapital.mkt.mongodb.TagRecommendRepository;
 import cn.rongcapital.mkt.mongodb.TagTreeRepository;
 import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.po.TagGroupMap;
 import cn.rongcapital.mkt.po.Taggroup;
+import cn.rongcapital.mkt.po.base.BaseTag;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.po.mongodb.TagTree;
 import cn.rongcapital.mkt.service.GroupTagsSearchService;
@@ -37,6 +40,9 @@ public class GroupTagsSearchServiceImpl implements GroupTagsSearchService {
 
 	@Autowired
 	private CustomTagDao customTagDao;
+	
+	@Autowired
+	private MongoBaseTagDaoImpl mongoBaseTagDao;
 	
 	
 	@Autowired
@@ -58,12 +64,14 @@ public class GroupTagsSearchServiceImpl implements GroupTagsSearchService {
 			taggroup.setName(tagGroupName);
 		}
 		
-				
+		SerarchTagGroupTagsDataOut serarchTagGroupTagsDataOut = new SerarchTagGroupTagsDataOut();
+		
+		//获得系统标签
 		List<TagTree> tagTrees=tagTreeRepository.findByLevelAndStatusAndTagNameLike(ApiConstant.INT_ONE, ApiConstant.TABLE_DATA_STATUS_VALID,tagGroupName);
 		
 		if(tagTrees!=null && tagTrees.size()>0) {
 			for(TagTree tgt:tagTrees){
-				SerarchTagGroupTagsDataOut serarchTagGroupTagsDataOut = new SerarchTagGroupTagsDataOut();
+
 				List<String> childen=tgt.getChildren();
 				for(String childTagId:childen){					
 										
@@ -74,13 +82,22 @@ public class GroupTagsSearchServiceImpl implements GroupTagsSearchService {
 						tagOut.setTagName(tagList.get(0).getTagName());
 						serarchTagGroupTagsDataOut.getTagList().add(tagOut);
 					}
-				}
-				
-				out.getDataCustom().add(serarchTagGroupTagsDataOut);
-			}
-			
-		}		
+				}				
+			}			
+		}	
 		
+		//获得自定义标签
+		List<BaseTag> customTags =mongoBaseTagDao.findCustomTagLeafListByFuzzyTagName(tagGroupName);
+		if(customTags!=null && customTags.size()>0) {
+			for(BaseTag customTag:customTags){
+				TagOut tagOut = new TagOut();
+				tagOut.setTagId(customTag.getTagId());
+				tagOut.setTagName(customTag.getTagName());				
+				serarchTagGroupTagsDataOut.getTagList().add(tagOut);
+			}
+		}
+			
+		out.getDataCustom().add(serarchTagGroupTagsDataOut);		
 		out.setTotal(out.getDataCustom().size());
 		return out;
 	}
