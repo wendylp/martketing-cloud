@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,8 +74,6 @@ public class DataGetFilterAudiencesPartyServiceImpl implements DataGetFilterAudi
 		Date timeConditionDate = TaskConditionEnum.getEnumByCode(timeCondition).getTime();
 		paramMap.put("timeCondition", timeConditionDate);
 		
-		//Map<String, String> popuKeyIdsMap = GetFilterAudiencesStrategyFacade.doGetAudiencesIds(paramMap);
-		
 		if (!CollectionUtils.isEmpty(mdDataList)) {
 			for (Integer dataType : mdDataList) {
 				List<String> tmpList = new ArrayList<String>();
@@ -138,11 +135,6 @@ public class DataGetFilterAudiencesPartyServiceImpl implements DataGetFilterAudi
 
 		List<DataParty> dataList = dataPartyDao.selectByBatchId(paramMap);
 		
-		Integer totalCount = 0;
-		if (mdDataList != null && mdDataList.size() > 0) {
-			totalCount = dataPartyDao.selectCountByBatchId(paramMap);
-		}
-
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		if (dataList != null && !dataList.isEmpty()) {
 			ImportTemplate paramImportTemplate = new ImportTemplate();
@@ -182,7 +174,7 @@ public class DataGetFilterAudiencesPartyServiceImpl implements DataGetFilterAudi
 		outMap.put("partyKeyIds", mappingKeyIds);
 		outMap.put("partyCount", data_party_rows);
 		outMap.put("resultList", resultList);
-		outMap.put("totalCount", totalCount);
+		outMap.put("totalCount", data_party_rows);
 		outMap.put("total", dataList.size());
 		
 		return outMap;
