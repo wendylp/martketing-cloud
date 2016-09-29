@@ -9,6 +9,8 @@ package cn.rongcapital.mkt.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -25,6 +27,8 @@ import cn.rongcapital.mkt.service.SynchroMongodbCityService;
 
 @Service
 public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private static String CITY = "市";
 	private static String MEDIA_TRENCH_GENERA = "媒体渠道大类";
@@ -51,9 +55,13 @@ public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
 	@Override
 	public Map<String, Object> synchroMongodbCity(DataParty dataParty) {
 	    
+	    logger.info("判断dataParty是否为空:-------------------------------------->" + dataParty.toString());
+	    
         Map<String, Object> map = new HashMap<String, Object>();
 
         Integer keyId = dataParty.getMid();
+        
+        logger.info("同步属性标签方法开始执行, kayId:-----------------------》" + keyId);
         
         // 根据tag_name查询TagRecommend
         TagRecommend tagRecommend = getTagRecommend(CITY);
@@ -91,6 +99,7 @@ public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
                 map.put(tagRecommend.getTagNameEng(), tag);
             }
         }
+        logger.info("同步属性标签方法执行结束，返回值为--------------->" + map);
         return map;
 		
 	}
