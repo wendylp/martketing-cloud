@@ -107,14 +107,8 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			/**
 			 * 获取授权的微信公众号账号
 			 */
-/*			WechatRegister wechatRegisterTemp = new WechatRegister();
-			wechatRegisterTemp.setAppId(app.getAuthAppId());
-			List<WechatRegister> wechatRegisters = wechatRegisterDao.selectList(wechatRegisterTemp);
-			if(CollectionUtils.isNotEmpty(wechatRegisters)){
-				WechatRegister wechatRegister = wechatRegisters.get(0);
-				wechatQrcodeTicket.setWxAcct(wechatRegister.getWxAcct());
-			}*/			
-			wechatQrcodeTicket.setWxAcct(wxAcct);
+			WechatRegister wechatRegister = getWechatRegisterByAuthAppId(wxAcct);
+			wechatQrcodeTicket.setWxAcct(wechatRegister.getWxAcct());
 			wechatQrcodeTicket.setSceneId(sceneId);
 			wechatQrcodeTicket.setTicket(ticket);
 			wechatQrcodeTicket.setUrl(url);
@@ -215,15 +209,15 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			int totalSucc=0;
 			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();		
 			List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);			
-			if(webchatAuthInfos!=null&&webchatAuthInfos.size()>0){
-				App app = this.getApp();
+			if(webchatAuthInfos!=null&&webchatAuthInfos.size()>0){				
 				for(Iterator<WebchatAuthInfo> iter = webchatAuthInfos.iterator();iter.hasNext();){
+					App app = this.getApp();
 					WebchatAuthInfo webchatAuthInfoTemp = iter.next();
 					app.setAuthAppId(webchatAuthInfoTemp.getAuthorizerAppid());
 					app.setAuthRefreshToken(webchatAuthInfoTemp.getAuthorizerRefreshToken());
 					for(int i=startSceneId;i<=endSceneId;i++){
 						try {
-							WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName,app.getAuthAppId());
+							WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName,webchatAuthInfoTemp.getAuthorizerAppid());
 							if(wechatQrcodeTicket!=null){
 								/**
 								 * 生成二维码对象到数据库
