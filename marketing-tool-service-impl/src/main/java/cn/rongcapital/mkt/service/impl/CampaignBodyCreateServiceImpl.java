@@ -843,6 +843,9 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSetTag.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSetTag.setCampaignHeadId(campaignHeadId);
 		List<String> tagNameList = campaignActionSetTagIn.getTagNames();
+		if(tagNameList == null || tagNameList.isEmpty()) {
+		    campaignActionSetTag.setTagNames("");
+		}
 		if(CollectionUtils.isNotEmpty(tagNameList)) {
 			List<String> tagIdList = new ArrayList<String>();
 			for(String tagName:tagNameList) {
@@ -883,7 +886,12 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					tagIdList.add(cutomTagId);
 				}*/
 			}
-			campaignActionSetTag.setTagIds(StringUtils.join(tagIdList,","));
+			if(tagIdList.size() > 0){
+			    campaignActionSetTag.setTagIds(StringUtils.join(tagIdList,","));
+			}else {
+			    campaignActionSetTag.setTagIds("");
+			}
+			
 			campaignActionSetTag.setTagNames(StringUtils.join(tagNameList,","));
 		}
 		return campaignActionSetTag;
