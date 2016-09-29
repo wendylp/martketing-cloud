@@ -67,10 +67,9 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	        logger.info(JSONObject.toJSONString(redisUserTokenVO));
         } catch (JedisException e) {           
             logger.info(e.getMessage());
-        }
-	    
+        }	    
         if(redisUserTokenVO.getCode()!=0){	       	
-            requestContext.abortWith(Response.status(redisUserTokenVO.getCode()).entity(getBaseOutputBack(redisUserTokenVO)).build());
+//            requestContext.abortWith(Response.status(redisUserTokenVO.getCode()).entity(getBaseOutputBack(redisUserTokenVO)).build());
         	ResponseBuilderImpl builder = new ResponseBuilderImpl();
             builder.header("Content-Type", "application/json; charset=utf-8");
             builder.entity(JSONObject.toJSONString(redisUserTokenVO));           
@@ -100,7 +99,6 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 		   			}else{
 		   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
 		   						.path(ApiConstant.API_PATH+"/"+method).build();
-		   				logger.info("dddddddddddddddddddddddddddd");
 		   				requestContext.setRequestUri(newRequestURI);
 		   			}
 		   		}
