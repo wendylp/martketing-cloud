@@ -108,4 +108,12 @@ public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilt
 	 * @param      distinctKeyidList
 	 */
 	Integer selectCountFromContactList(@Param("idList") List<Integer> distinctKeyidList);
+	
+	/**
+	 * 描述：根据keyid获取渠道名和渠道大类
+	 * 
+	 * @param keyId
+	 * @return
+	 */
+	Map<String, Object> selectMediaChannel(@Param("keyId") Integer keyId);
 }

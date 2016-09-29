@@ -570,7 +570,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 					//新建的二维码，在同一公众号、同一渠道下不可以重复
 					Integer chCode = null;
 					WechatQrcode wechatQrcode = new WechatQrcode();
-					wechatQrcode.setWxAcct(officialName);
+					wechatQrcode.setWxName(officialName);
                     if(channeltList != null && channeltList.size() > 0){
                         chCode = channeltList.get(0).getId();
                     }

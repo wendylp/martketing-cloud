@@ -426,4 +426,11 @@
 			#{item}
 		</foreach>
 	</select>
+	
+	<!-- 根据keyid获取渠道名和渠道大类 -->
+	<select id="selectMediaChannel" parameterType="java.lang.Integer" resultType="java.util.Map">
+       <![CDATA[SELECT dp.source as source, ctm.media_channel as media_channel ]]>
+       <![CDATA[FROM data_population as dp, channel_type_mapping as ctm ]]>
+       <![CDATA[WHERE dp.source = ctm.media_channel_name AND dp.keyid = #{keyId}]]>
+    </select>
 </mapper>
