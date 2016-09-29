@@ -6,7 +6,7 @@ package cn.rongcapital.mkt.service.base;
 
 public interface OriginalDataScheduleService {
 
-    int BATCH_NUM = 500;
+    int BATCH_NUM = 5000;
 
     public void cleanData();
 }
