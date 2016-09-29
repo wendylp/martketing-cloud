@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ import cn.rongcapital.mkt.vo.RedisUserTokenVO;
 @PreMatching
 public class ApiRequestRouter implements ContainerRequestFilter {
 
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(getClass());	
 	
 	/**
 	 * @功能简述: 根据传入的method参数把请求转发到相应接口
@@ -133,9 +134,19 @@ public class ApiRequestRouter implements ContainerRequestFilter {
     
 	
 	
+    /**
+     * @param requestContext
+     * 验证UserToken
+     * @return
+     * @throws JedisException
+     */
     public RedisUserTokenVO validateUserToken(ContainerRequestContext requestContext) throws JedisException{
-    	logger.info("is into validateUserToken");
-        RedisUserTokenVO redisUserTokenVO = new RedisUserTokenVO();
+    	RedisUserTokenVO redisUserTokenVO = this.validateWhiteListOfMethod(requestContext);
+    	if(redisUserTokenVO!=null){
+    		return redisUserTokenVO;
+    	}
+        redisUserTokenVO = new RedisUserTokenVO();
+        
         String backStr = "";
         MultivaluedMap<String, String> multivaluedMap = requestContext.getUriInfo().getQueryParameters();
         List<String> user_token_pList = multivaluedMap.get(ApiConstant.API_USER_TOKEN);
@@ -170,5 +181,55 @@ public class ApiRequestRouter implements ContainerRequestFilter {
         return redisUserTokenVO;
 	}
 	
-	
+    /**
+     * @param requestContext
+     * 添加方法白名单
+     * @return
+     */
+    public RedisUserTokenVO validateWhiteListOfMethod(ContainerRequestContext requestContext){
+    	RedisUserTokenVO redisUserTokenVO = null;
+    	 MultivaluedMap<String, String> multivaluedMap = requestContext.getUriInfo().getQueryParameters();
+			List<String> pList = multivaluedMap.get(ApiConstant.API_METHOD);
+			String method = pList==null?null:pList.get(0);	       
+	        List<String> user_token_pList = multivaluedMap.get(ApiConstant.API_USER_TOKEN);
+	        String user_token = user_token_pList==null?null:user_token_pList.get(0);
+
+			if(!StringUtils.isBlank(method)){	
+				Map<String,String> whiteMapOfMethod = getWhiteMapOfMethod();
+				if(whiteMapOfMethod.containsKey(method)){
+					redisUserTokenVO = new RedisUserTokenVO();
+			        if(StringUtils.isBlank(user_token)){
+			            String backStr="&"+ApiConstant.API_USER_TOKEN+"="+ApiConstant.API_USER_TOKEN_VALUE;			           
+			            redisUserTokenVO.setCode(0);
+			            redisUserTokenVO.setMsg(backStr);            
+			        }else{
+			        	redisUserTokenVO.setCode(0);
+			        	/**
+			        	 * 延长session  出现异常 捕获 继续
+			        	 */
+			        	List<String> user_id_pList = multivaluedMap.get(ApiConstant.API_USER_ID);
+			            String user_id = user_id_pList==null?null:user_id_pList.get(0);
+			            String userKey ="user:"+user_id;
+	                    int seconds = 36000;
+	                    try {
+							JedisClient.expireUser(userKey, seconds);
+						} catch (JedisException e) {}
+			        }
+				}
+			}
+		return redisUserTokenVO;    	
+    }
+    
+    /**
+     * 跳过验证的方法白名单
+     * @return
+     */
+    public Map<String,String> getWhiteMapOfMethod(){
+    	Map<String,String> whiteMapOfMethod = new HashMap<String,String>();
+    	whiteMapOfMethod.put("mkt.contact.list.pv", "mkt.contact.list.pv");
+    	whiteMapOfMethod.put("mkt.contact.list.info.get","mkt.contact.list.info.get");
+    	whiteMapOfMethod.put("mkt.contacts.commit.save","mkt.contacts.commit.save");
+    	whiteMapOfMethod.put("mkt.contacts.longurl.get","mkt.contacts.longurl.get");
+		return whiteMapOfMethod;   	
+    }
 }
