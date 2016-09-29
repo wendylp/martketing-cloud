@@ -40,13 +40,15 @@ public class DataPartySyncTagMongoTaskImpl implements TaskService {
 	public void task(Integer taskId) {
 		long totalRecord = mongoTemplate.count(null, DataParty.class);
 		long totalPage = (totalRecord + pageSize - 1) / pageSize;
+		ArrayList<Integer> arrayList = new ArrayList<Integer>();
+		
 		for (int index = 0; index < totalPage; index++) {
 			List<DataParty> dataPartyList = mongoTemplate.find(new Query().skip(index * pageSize).limit(pageSize),
 					DataParty.class);
 			if (CollectionUtils.isEmpty(dataPartyList)) {
 				break;
 			}
-			ArrayList<Integer> arrayList = new ArrayList<Integer>();
+
 			for (DataParty dp : dataPartyList) {
 				arrayList.add(dp.getMid());
 			}
