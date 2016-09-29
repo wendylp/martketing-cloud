@@ -7,7 +7,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.job.service.impl.mq.BaseMQService;
-import cn.rongcapital.mkt.job.service.impl.mq.MQTopicService;
+import cn.rongcapital.mkt.service.MQTopicService;
+
  
 @Component
 public class ContextRefreshedListenerCustom implements ApplicationListener<ContextRefreshedEvent>{

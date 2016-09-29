@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -42,9 +41,16 @@ public class MongoBaseTagDaoImpl implements MongoBaseTagDao{
 
     @Override
     public boolean insertBaseTagDao(BaseTag baseTag) {
-        mongoTemplate.insert(baseTag);
+        Query checkQuery = null;
+        if(baseTag instanceof CustomTagTypeLayer){
+            checkQuery = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag));
+            mongoTemplate.upsert(checkQuery,buildBaseUpdate(baseTag),BaseTag.class);
+        }else{
+            checkQuery = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag.getPath()).and(SOURCE).is(baseTag.getSource()));
+            mongoTemplate.upsert(checkQuery,buildBaseUpdate(baseTag),BaseTag.class);
+        }
         BaseTag insertedTag = null;
-        Query query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag));
+        Query query = new Query(Criteria.where(TAG_NAME).is(baseTag.getTagName()).and(PATH).is(baseTag.getPath()));
         insertedTag = mongoTemplate.findOne(query,BaseTag.class);
         if(insertedTag == null) return false;
         return true;

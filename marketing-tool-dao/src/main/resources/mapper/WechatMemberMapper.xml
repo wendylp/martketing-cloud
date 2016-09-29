@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,wx_code as wxCode,wx_name as wxName,wx_group_id as wxGroupId,nickname as nickname,sex as sex,country as country,province as province,city as city,county as county,birthday as birthday,signature as signature,is_friend as isFriend,pub_id as pubId,uin as uin,subscribe_yn as subscribeYn,subscribe_time as subscribeTime,active_time as activeTime,activity_48h_yn as activity48hYn,head_image_url as headImageUrl,remark as remark,status as status,create_time as createTime,update_time as updateTime,selected as selected,bitmap as bitmap,keyid as keyid]]>
+		<![CDATA[ id as id,wx_code as wxCode,wx_name as wxName,wx_group_id as wxGroupId,nickname as nickname,sex as sex,country as country,province as province,city as city,county as county,birthday as birthday,signature as signature,is_friend as isFriend,pub_id as pubId,uin as uin,subscribe_yn as subscribeYn,subscribe_time as subscribeTime,active_time as activeTime,activity_48h_yn as activity48hYn,head_image_url as headImageUrl,remark as remark,status as status,create_time as createTime,update_time as updateTime,selected as selected,bitmap as bitmap,keyid as keyid,fans_json as fansJson]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -76,13 +76,14 @@
 		    	<if test="selected != null"><![CDATA[selected = #{selected},]]></if>
 		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
 		    	<if test="keyid != null"><![CDATA[keyid = #{keyid}]]></if>
+		    	<if test="fansJson != null"><![CDATA[fans_json = #{fansJson}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatMember" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,pub_id,uin,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,create_time,selected,bitmap,keyid)
+			INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,pub_id,uin,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,create_time,selected,bitmap,keyid,fans_json)
 			VALUES
 			(
 			  #{wxCode},
@@ -108,7 +109,8 @@
 			  now(),
 			  #{selected},
 			  #{bitmap},
-			  #{keyid}
+			  #{keyid},
+			  #{fansJson}
 			)
 		]]>
 	</insert>
@@ -154,7 +156,7 @@
 	<insert id="batchInsertFans" parameterType="java.util.List">
 		INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,
 								   subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,pub_id,
-								   create_time,bitmap)
+								   create_time,bitmap,fans_json,selected)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 		(
@@ -176,7 +178,9 @@
 		#{item.remark},
 		#{item.pub_id},
 		now(),
-		#{item.bitmap}
+		#{item.bitmap},
+		#{item.fans_json},
+		#{item.selected}
 		)
 		</foreach>
 	</insert>
@@ -309,4 +313,15 @@
 			#{item.wx_code}
 		</foreach>
 	</delete>
+
+	<!-- 根据微信号删除 -->
+	<delete id="deleteFansByVO" parameterType="cn.rongcapital.mkt.vo.weixin.WXFansListVO">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE pub_id=#{pubId} AND wx_code 
+		<foreach collection="fansList" item="item" index="index" separator="," open="IN (" close=")">
+			#{item.wx_code}
+		</foreach>
+	</delete>	
+		
 </mapper>

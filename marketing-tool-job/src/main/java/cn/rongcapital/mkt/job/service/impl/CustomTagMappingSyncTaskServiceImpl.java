@@ -52,6 +52,7 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
     private final Integer BATCH_SIZE = 500;
     private final String SEPARATE_QRCODE_TAGS = ",";
     private final String WECHAT_BITMAP = "00000011000000000";
+    private final String BATCHID = "batchId";
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -63,7 +64,7 @@ public class CustomTagMappingSyncTaskServiceImpl implements TaskService{
             for(CustomTagMap customTagMap : customTagMapList){
                 switch (TagSourceEnum.getTagSourceEnum(customTagMap.getTagSource())){
                     case FILE_SOURCE_ACCESS:
-                        Query query = new Query(Criteria.where("batch_id").is(customTagMap.getMapId()));
+                        Query query = new Query(Criteria.where(BATCHID).is(customTagMap.getMapId()));
                         List<cn.rongcapital.mkt.po.mongodb.DataParty> dataPartyList = mongoTemplate.find(query,cn.rongcapital.mkt.po.mongodb.DataParty.class);
                         if(CollectionUtils.isEmpty(dataPartyList)) continue;
                         for(DataParty dataParty : dataPartyList){

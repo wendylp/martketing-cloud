@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.biz.WechatPublicAuthBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
@@ -42,7 +43,7 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 	private WechatPublicAuthBiz wechatPublicAuthBiz;
 
 	@Override
-	public Object getWechatAssetList(Integer assetId) {
+	public Object getWechatAssetList(Integer assetId) throws JedisException {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		if (assetId == null) {
