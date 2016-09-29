@@ -58,7 +58,6 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException{
 		logger.info("is  into ApiRequestRouter ");
-		logger.info(JSONObject.toJSONString(requestContext));
 	    RedisUserTokenVO redisUserTokenVO = null;
 	    try {
 	    	logger.info("0000000000000000000000000000000");
@@ -108,6 +107,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	}
 	
     public RedisUserTokenVO validateUserToken(ContainerRequestContext requestContext) throws JedisException{
+    	logger.info("is into validateUserToken");
         RedisUserTokenVO redisUserTokenVO = new RedisUserTokenVO();
         String backStr = "";
         MultivaluedMap<String, String> multivaluedMap = requestContext.getUriInfo().getQueryParameters();
@@ -116,24 +116,29 @@ public class ApiRequestRouter implements ContainerRequestFilter {
         List<String> user_id_pList = multivaluedMap.get(ApiConstant.API_USER_ID);
         String user_id = user_id_pList==null?null:user_id_pList.get(0);
         String userKey ="user:"+user_id;
-        
+        logger.info("33333333333333333333333333333333333333333333");
         if(StringUtils.isBlank(user_token)){
+        	 logger.info("444444444444444444444444444444");
             backStr="&"+ApiConstant.API_USER_TOKEN+"="+ApiConstant.API_USER_TOKEN_VALUE;
             redisUserTokenVO.setCode(0);
             redisUserTokenVO.setMsg(backStr);            
         }else{
             if(StringUtils.isBlank(user_id)){
+            	logger.info("5555555555555555555555555555555");
                 redisUserTokenVO.setCode(ApiConstant.USER_TOKEN_PARAMS_MISSING);
                 backStr="登录验证缺少参数！";
                 redisUserTokenVO.setMsg(backStr);
             }else{
+            	logger.info("666666666666666666666666666666");
                 Map<String, String> user_token_map = JedisClient.getuser(userKey);
                 String userValue = user_token_map.get("token");
                 if(!user_token.equals(userValue)){
+                	logger.info("7777777777777777777777777777777777777");
                     redisUserTokenVO.setCode(ApiConstant.USER_TOKEN_LOGIN_CONFLICT);
                     backStr="登录冲突，请重新登录！";
                     redisUserTokenVO.setMsg(backStr);
                 }else{
+                	logger.info("8888888888888888888888888888888888888888");
                     redisUserTokenVO.setCode(0);
                     int seconds = 36000;
                     JedisClient.expireUser(userKey, seconds);
