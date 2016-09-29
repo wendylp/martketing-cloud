@@ -31,8 +31,13 @@ public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
     private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private static String CITY = "市";
+	
 	private static String MEDIA_TRENCH_GENERA = "媒体渠道大类";
+	
 	private static String MEDIA_NAME = "媒体名称";
+	
+	private static String SEX = "性别";
+	
 	
 	@Autowired
 	MongoOperations mongoOperations;
@@ -73,6 +78,25 @@ public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
                             dataParty.getCity(), 1);
             map.put(tagRecommend.getTagNameEng(), tag);
         }
+        //性别
+        String sex = dataParty.getSex();
+        String gender = "";
+        if("1".equals(sex)){
+            gender = "男";
+        }else{
+            gender = "2".equals(sex)?"女":"未知";
+        }
+        tagRecommend = getTagRecommend(SEX);
+        if (dataParty != null && tagRecommend != null && dataParty.getCity() != null
+                        && !"".equals(dataParty.getCity())) {
+            // 设置tag
+            Tag tag = new Tag(tagRecommend.getTagId(), SEX, tagRecommend.getTagNameEng(),
+                            gender, 1);
+            map.put(tagRecommend.getTagNameEng(), tag);
+        }
+       
+        
+        
 
         // 获取"媒体名称"的TagRecommend
         tagRecommend = getTagRecommend(MEDIA_NAME);
