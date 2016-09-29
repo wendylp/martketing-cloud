@@ -84,7 +84,6 @@ public class DataParty implements Serializable {
 
     private Byte status;
 
-	@Field(value = "batch_id")
     private String batchId;
 
     private String updateTime;
