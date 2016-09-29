@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatQrcode;
@@ -44,4 +45,46 @@ public interface WechatQrcodeDao extends BaseDao<WechatQrcode>{
 	 */
 	List<WechatQrcode> fuzzySearchQrcodeName(WechatQrcode t);
 	
+	/**
+	 * 同过Id删除数据
+	 * @param t
+	 * @return
+	 * @author shuiyangyang
+	 * @Date 2016.08.25
+	 */
+	int deleteById(WechatQrcode t);
+	
+	/**
+	 * 通过BatchId更新 expiration_time qrcode_tag_ids qrcode_status
+	 * @param t
+	 * @return
+	 */
+	int updataByBatchId(WechatQrcode t);
+	
+	/**
+	 * 通过Id更新status
+	 * @param t
+	 * @return
+	 * @author zhouqi
+	 * @Date 2016.08.29
+	 */
+	int updateStatusById(WechatQrcode t);
+	
+	
+	List<WechatQrcode> selectListExpirationTime(Map<String,Object> paramMap);
+	
+	/**
+	 * 更新数据的状态为失效
+	 *
+	 * @param WechatQrcode
+	 * @return 
+	 * @author congshulin
+	 */
+	int updateStatusByExpirationTime(WechatQrcode t);
+	
+	/**
+	 * 根据渠道Id查询已经使用渠道的二维码数量
+	 * @return
+	 */
+	int selectUsedChannelCountBychCode(Integer chCode);
 }

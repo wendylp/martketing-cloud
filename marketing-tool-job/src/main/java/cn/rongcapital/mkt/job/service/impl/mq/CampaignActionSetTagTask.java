@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.enums.TagSourceEnum;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CustomTagMapDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -98,9 +99,10 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 					int tagId = Integer.parseInt(idStr);
 					CustomTagMap customTagMapT = new CustomTagMap();
 					customTagMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-					customTagMapT.setTagId(tagId);
-					customTagMapT.setType(ApiConstant.TAG_TYPE_ACTIVITY);
-					customTagMapT.setMapId(dataId);
+					customTagMapT.setTagId(String.valueOf(tagId));
+					//customTagMapT.setType(ApiConstant.TAG_TYPE_ACTIVITY);
+					customTagMapT.setTagSource(TagSourceEnum.CAMPAIGN_SOURCE_ACCESS.getTagSourceId());
+					customTagMapT.setMapId(String.valueOf(dataId));
 					int count = customTagMapDao.selectListCount(customTagMapT);
 					if(count == 0) {
 						customTagMapDao.insert(customTagMapT);

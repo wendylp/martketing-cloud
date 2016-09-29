@@ -12,8 +12,6 @@ package cn.rongcapital.mkt.api;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +32,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.vo.in.*;
-import cn.rongcapital.mkt.vo.out.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -44,12 +40,104 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.mkt.biz.WechatPublicAuthBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
-import cn.rongcapital.mkt.po.WechatChannel;
-import cn.rongcapital.mkt.service.*;
+import cn.rongcapital.mkt.service.AudienceIdListService;
+import cn.rongcapital.mkt.service.AudienceListDeleteService;
+import cn.rongcapital.mkt.service.AudienceListService;
+import cn.rongcapital.mkt.service.AudienceNameListService;
+import cn.rongcapital.mkt.service.AudienceSearchService;
+import cn.rongcapital.mkt.service.CampaignBodyCreateService;
+import cn.rongcapital.mkt.service.CampaignBodyGetService;
+import cn.rongcapital.mkt.service.CampaignBodyItemAudienceSearchService;
+import cn.rongcapital.mkt.service.CampaignDeleteService;
+import cn.rongcapital.mkt.service.CampaignHeaderCreateService;
+import cn.rongcapital.mkt.service.CampaignHeaderGetService;
+import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
+import cn.rongcapital.mkt.service.CampaignNodeItemListGetService;
+import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
+import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
+import cn.rongcapital.mkt.service.CampaignSummaryGetService;
+import cn.rongcapital.mkt.service.CustomTagDeleteService;
+import cn.rongcapital.mkt.service.CustomTagGetService;
+import cn.rongcapital.mkt.service.DataDeleteMainService;
+import cn.rongcapital.mkt.service.DataDownloadMainListService;
+import cn.rongcapital.mkt.service.DataDownloadQualityIllegalDataService;
+import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
+import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
+import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
+import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
+import cn.rongcapital.mkt.service.DataGetMainCountService;
+import cn.rongcapital.mkt.service.DataGetMainListService;
+import cn.rongcapital.mkt.service.DataGetQualityCountService;
+import cn.rongcapital.mkt.service.DataGetQualityListService;
+import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
+import cn.rongcapital.mkt.service.DataGetViewListService;
+import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
+import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
+import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
+import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
+import cn.rongcapital.mkt.service.FileTagUpdateService;
+import cn.rongcapital.mkt.service.FileTemplateDownloadService;
+import cn.rongcapital.mkt.service.GetCampaignConvertChartListService;
+import cn.rongcapital.mkt.service.GetCampaignCustomerSourceListService;
+import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
+import cn.rongcapital.mkt.service.GetDataMainSearchService;
+import cn.rongcapital.mkt.service.GetImgTextAssetService;
+import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
+import cn.rongcapital.mkt.service.GetImgtextCountService;
+import cn.rongcapital.mkt.service.GetUserInfoService;
+import cn.rongcapital.mkt.service.GetWechatUserListService;
+import cn.rongcapital.mkt.service.GroupTagsSearchService;
+import cn.rongcapital.mkt.service.HomePageCalendarListService;
+import cn.rongcapital.mkt.service.HomePageCalendarPopService;
+import cn.rongcapital.mkt.service.HomePageDataCountListService;
+import cn.rongcapital.mkt.service.HomePageDataSourceListService;
+import cn.rongcapital.mkt.service.HomePageUserCountListService;
+import cn.rongcapital.mkt.service.ImgtextHostService;
+import cn.rongcapital.mkt.service.LoginService;
+import cn.rongcapital.mkt.service.MainActionInfoGetService;
+import cn.rongcapital.mkt.service.MainBasicInfoGetService;
+import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
+import cn.rongcapital.mkt.service.MigrationFileTemplateService;
+import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
+import cn.rongcapital.mkt.service.ModifyPasswdService;
+import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
+import cn.rongcapital.mkt.service.SaveWechatAssetListService;
+import cn.rongcapital.mkt.service.SegmentBodyGetService;
+import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
+import cn.rongcapital.mkt.service.SegmentFilterGetService;
+import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
+import cn.rongcapital.mkt.service.SegmentHeaderGetService;
+import cn.rongcapital.mkt.service.SegmentHeaderUpdateService;
+import cn.rongcapital.mkt.service.SegmentPublishStatusCountService;
+import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
+import cn.rongcapital.mkt.service.SegmentTagGetService;
+import cn.rongcapital.mkt.service.SegmentTagUpdateService;
+import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
+import cn.rongcapital.mkt.service.SegmentTagnameTagCountService;
+import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
+import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
+import cn.rongcapital.mkt.service.TagDownloadCustomAudienceService;
+import cn.rongcapital.mkt.service.TagGetCustomService;
+import cn.rongcapital.mkt.service.TagSystemListGetService;
+import cn.rongcapital.mkt.service.TagSystemTagcountService;
+import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
+import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
+import cn.rongcapital.mkt.service.TaskGetListService;
+import cn.rongcapital.mkt.service.UpdateNicknameService;
+import cn.rongcapital.mkt.service.UploadFileService;
+import cn.rongcapital.mkt.service.WechatAssetListGetService;
+import cn.rongcapital.mkt.service.WechatAssetListService;
+import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
+import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
+import cn.rongcapital.mkt.service.WechatPersonalAuthService;
+import cn.rongcapital.mkt.service.WechatPublicAuthCallbackService;
+import cn.rongcapital.mkt.service.WechatPublicAuthService;
+import cn.rongcapital.mkt.service.WechatTypeCountGetService;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -58,6 +146,45 @@ import cn.rongcapital.mkt.vo.LoginInput;
 import cn.rongcapital.mkt.vo.ModifyInput;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
+import cn.rongcapital.mkt.vo.in.Audience;
+import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
+import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
+import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
+import cn.rongcapital.mkt.vo.in.CampaignHeadCreateIn;
+import cn.rongcapital.mkt.vo.in.CampaignHeadUpdateIn;
+import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
+import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
+import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
+import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
+import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
+import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
+import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
+import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
+import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
+import cn.rongcapital.mkt.vo.in.SegmentFilterSumIn;
+import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
+import cn.rongcapital.mkt.vo.in.SegmentHeadDeleteIn;
+import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
+import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
+import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
+import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
+import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
+import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
+import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
+import cn.rongcapital.mkt.vo.out.CampaignConvertChartListOut;
+import cn.rongcapital.mkt.vo.out.CampaignCustomSourceListOut;
+import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
+import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
+import cn.rongcapital.mkt.vo.out.CampaignProfileOut;
+import cn.rongcapital.mkt.vo.out.CampaignProgressStatusCountOut;
+import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
+import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
+import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListOut;
+import cn.rongcapital.mkt.vo.out.SerarchTagGroupTagsOut;
+import cn.rongcapital.mkt.vo.out.WechatUserListOut;
+import cn.rongcapital.mkt.service.AudienceSearchDownloadService;
+import cn.rongcapital.mkt.service.SegmentSearchGetService;
+import cn.rongcapital.mkt.service.SegmentSearchDownloadService;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -197,9 +324,6 @@ public class MktApi {
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 
 	@Autowired
-	private TaskListGetService taskListGetService;
-
-	@Autowired
 	private CampaignDeleteService campaignDeleteService;
 
 	@Autowired
@@ -296,9 +420,6 @@ public class MktApi {
 	private WechatPersonalAuthService wechatPersonalAuthService;
 
 	@Autowired
-	private ReauthWechatAccountService reauthWechatAccountService;
-
-	@Autowired
 	private TaskGetListService taskGetListService;
 
 	@Autowired
@@ -346,74 +467,20 @@ public class MktApi {
 	@Autowired
 	private HomePageCalendarPopService homePageCalendarPopService;
 	
+	 @Autowired
+	 private GetUserInfoService userInfoService;
+	 
 	@Autowired
-	private WechatChannelListService wechatChannelListService;
+	private AudienceSearchDownloadService audienceSearchDownloadService;
+	@Autowired
+	private SegmentSearchGetService segmentSearchGetServer;
 	
 	@Autowired
-	private WechatChanellUpdateService wechatChanellUpdateService;
-
-	@Autowired
-	private RegisterListService regListService;
-
-	@Autowired
-	private TagUpdateService tagService;	
-
-	@Autowired
-	private ContactTemplateServer contactTemplateServer;
+	private SegmentSearchDownloadService segmentSearchDownloadService;
 	
 	@Autowired
-	private ContactListPvServer contactListPvServer;
-
-	@Autowired
-	private ContactKeyListGetService contactKeyListGetService;
+	private WechatPublicAuthBiz wechatPublicAuthBiz;
 	
-	@Autowired
-	private QrcodePicDownloadService qrcodePicDownloadService;
-	
-	@Autowired
-	private QrcodePicsZipDownloadService qrcodePicsZipDownloadService;
-	
-	@Autowired
-	private ContactTemplateService contactTemplateService;
-	
-	@Autowired
-	private ContactListQrcodeDownloadService contactListQrcodeDownloadService;
-
-	@Autowired
-	private ContactsCommitCountGetService contactsCommitCountGetService;
-	
-	@Autowired
-	private ContactListInfoGetService contactListInfoGetService;
-	
-	@Autowired
-	private ContactListUsedService contactListUsedService;
-	
-	@Autowired
-	private QrcodeUsedCountService qrcodeUsedCountService;
-
-	@Autowired
-	private ContactListTagGetService contactListTagGetService;
-	
-	@Autowired
-	private ContactListKeyListService contactListKeyListService;
-	
-	@Autowired
-	private WeixinQrcodeListService  weixinQrcodeListService;
-	
-	@Autowired
-	private QrcodeCreateCountService qrcodeCreateCountService;
-	
-	@Autowired
-	private ContacsCommitSaveService contactsCommitSaveService;
-	
-	@Autowired
-	private ContactListTagService contactListTagService;
-
-	@Autowired
-	private ContactListKeysSaveService contactListKeysSaveService;
-
-	@Autowired
-	private ImportContactsDataToMDataService importContactsDataToMDataService;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -1215,7 +1282,8 @@ public class MktApi {
 	@Path("/mkt.segment.tagname.taglist.get")
 	public BaseOutput getSysRecommendedTagList(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken) {
-		return segmentTagnameTagListService.getSysRecommendedTagList();
+		// segmentTagnameTagListService.getSysRecommendedTagList();
+		return segmentTagnameTagListService.getMongoTagRecommendList(method, userToken);
 	}
 
 	/**
@@ -1319,7 +1387,8 @@ public class MktApi {
 	@Path("/mkt.segment.tagkey.taglist.get")
 	public BaseOutput getLastTagByKey(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken, @QueryParam("tag_group_name") String tagGroupName) {
-		return segmentTagkeyTagListService.getLastTagByKey(tagGroupName);
+		//segmentTagkeyTagListService.getLastTagByKey(tagGroupName);
+		return segmentTagkeyTagListService.getMongoTagRecommendByLike(tagGroupName);
 	}
 
 	/*
@@ -1351,7 +1420,8 @@ public class MktApi {
 	public BaseOutput getTagValueByGroupId(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("tag_group_id") String tagGroupId) {
-		return segmentTagnameTagValueService.getTagValueByGroupId(tagGroupId);
+		//segmentTagnameTagValueService.getTagValueByGroupId(tagGroupId);
+		return segmentTagnameTagValueService.getMongoTagValueByTagId(tagGroupId);
 	}
 
 	/**
@@ -1364,7 +1434,8 @@ public class MktApi {
 	@Path("/mkt.segment.tagname.tagcount.get")
 	public BaseOutput getTagCountByGroupId(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("tag_ids") String tagIds) {
-		return segmentTagnameTagCountService.getTagCountById(tagIds);
+		//segmentTagnameTagCountService.getTagCountById(tagIds);
+		return segmentTagnameTagCountService.getMongoTagCountByTagIdList(tagIds);
 	}
 
 	/**
@@ -1418,7 +1489,8 @@ public class MktApi {
 	@Path("/mkt.tag.system.tagcount.get")
 	public BaseOutput getTagcount(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken) {
-		return tagSystemTagcountService.getTagcount(method, userToken);
+		//tagSystemTagcountService.getTagcount(method, userToken);
+		return tagSystemTagcountService.getMonggTagcount(method, userToken);
 	}
 
 	/**
@@ -1562,9 +1634,10 @@ public class MktApi {
 	@Path("/mkt.tag.system.list.get")
 	public BaseOutput getTagcountByParentGroupId(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
+			@NotNull @QueryParam("tag_group_id") String tagGroupId, @QueryParam("index") Integer index,
 			@QueryParam("size") Integer size) {
-		return tagSystemListGetService.getTagcount(method, userToken, tagGroupId, index, size);
+		//tagSystemListGetService.getTagcount(method, userToken, tagGroupId, index, size);
+		return tagSystemListGetService.getMongoTagList(method, userToken, tagGroupId, index, size);
 	}
 
 	/**
@@ -1581,9 +1654,10 @@ public class MktApi {
 	@Path("/mkt.taggroup.system.list.get")
 	public BaseOutput getTagGroupByParentGroupId(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("tag_group_id") Integer tagGroupId, @QueryParam("index") Integer index,
+			@NotNull @QueryParam("tag_group_id") String tagGroupId, @QueryParam("index") Integer index,
 			@QueryParam("size") Integer size) {
-		return taggroupSystemListGetService.getTagGroupByParentGroupId(method, userToken, tagGroupId, index, size);
+		//taggroupSystemListGetService.getTagGroupByParentGroupId(method, userToken, tagGroupId, index, size);
+		return taggroupSystemListGetService.getMongoTagRecommendByTagTreeId(method, userToken, tagGroupId, index, size);
 	}
 
 	/**
@@ -1612,7 +1686,8 @@ public class MktApi {
 	public BaseOutput getTaggroupSystemMenulist(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken, @QueryParam("index") Integer index,
 			@QueryParam("size") Integer size) {
-		return taggroupSystemMenulistGetService.getTaggroupSystemMenulist(method, userToken, index, size);
+		//taggroupSystemMenulistGetService.getTaggroupSystemMenulist(method, userToken, index, size);
+		return taggroupSystemMenulistGetService.getMonggTagTreelist(method, userToken, index, size);
 	}
 
 	/**
@@ -1654,7 +1729,15 @@ public class MktApi {
 	@Path("/mkt.data.inbound.wechat.public.auth")
 	public BaseOutput authWechatPublicAccount(@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("ver") String ver) {
-		return wechatPublicAuthService.authWechatPublicAccount();
+		return wechatPublicAuthBiz.authWechatPublicAccount();
+	}
+
+	@GET
+	@Path("/mkt.data.inbound.wechat.public.auth.code.callback")
+	public Response authWechatPublicCodeAccount(@NotEmpty @QueryParam("auth_code") String authorizationCode,@NotEmpty @QueryParam("expires_in") String expiresIn) throws URISyntaxException {
+		BaseOutput baseOutput = wechatPublicAuthBiz.authWechatPublicCodeAccount(authorizationCode);
+		URI location = new java.net.URI(ApiConstant.WEIXIN_REDIRECT_URL);
+		return Response.temporaryRedirect(location).build();		
 	}
 
 	/**
@@ -1846,12 +1929,8 @@ public class MktApi {
 	@GET
 	@Path("/mkt.homepage.usercount.list")
 	public BaseOutput homePageUserCountList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
-		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-				ApiConstant.INT_ZERO, null);
-		result.getData().add(homePageUserCountListService.getHomePageUserCountList());
-
-		return result;
+			@NotEmpty @QueryParam("ver") String ver,@NotNull @QueryParam("date_type") Integer dateType) {
+		return homePageUserCountListService.getHomePageUserCountList(dateType);
 	}
 
 	/**
@@ -1900,7 +1979,7 @@ public class MktApi {
 	@GET
 	@Path("/mkt.homepage.calendar.list")
 	public BaseOutput homePageCalendarList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @QueryParam("date") String date) {
+			@NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("date") String date) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		result.getData().add(homePageCalendarListService.getCalendarList(date));
@@ -1936,438 +2015,76 @@ public class MktApi {
 	}
 	
 	/**
-	 * 获取微信接入渠道列表
-	 *
-	 * @param userToken
-	 * @param ver
-	 * @author zhaoguoying
-	 */
-	@GET
-	@Path("/mkt.weixin.channel.list")
-	public BaseOutput wechannelListGet(@NotEmpty @QueryParam("user_token") String userToken)
-	{
-		return wechatChannelListService.channelList();
-	}
-
-	/**
-	 * 更新微信渠道详细信息
-	 *
-	 * @param
-	 * @param ver
-	 * @author zhaoguoying
-	 */
-	@POST
-	@Path("/mkt.weixin.channel.update")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput wechannelUpdate(@Valid WechatChanellUpdateIn body, @Context SecurityContext securityContext)
-	{
-		return wechatChanellUpdateService.wechatChannelUpdate(body, securityContext);
-	}
-	
-	@GET
-	@Path("/mkt.weixin.channel.name.get")
-	public BaseOutput wechannelListGet(@NotEmpty @QueryParam("user_token") String userToken,@NotEmpty @QueryParam("ch_name") String ch_name)
-	{
-		WechatChannel wechatChannel = new WechatChannel();
-		wechatChannel.setChName(ch_name);
-		return wechatChannelListService.chanelExitLike(wechatChannel);
-	}
-	
-	/**
-	 * 获取公众号列表
-	 *
-	 * @param userToken
-	 * @param ver
-	 * @author chengjincheng
-	 */
-	@GET
-	@Path("/mkt.weixin.register.list")
-	public BaseOutput registerListGet(@NotEmpty @QueryParam("user_token") String userToken) {
-
-		return regListService.getRegisterList();
-	}
-	
-	/**
-	 * @功能简述 : 根据id更新标签信息
-	 */
-	@POST
-	@Path("/mkt.weixin.tag.update")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput updateTagInfo(@Valid TagBodyUpdateIn body) {
-		
-		return tagService.tagInfoUpdate(body);
-	}
-	/***
-	 * 新建联系人表单 
-	 * @param body
-	 * @param securityContext
-	 * @return baseOutput
-	 */
-	@POST
-	@Path("/mkt.contact.list.create")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput ContactListCreate(@Valid ContactTemplateIn body, @Context SecurityContext securityContext)
-	{
-		return contactTemplateServer.ContactListCreate(body);
-	}
-	
-	/**
-	 * 删除联系人表单 
-	 *
-	 * @param userToken
-	 * @param ver
-	 * @author yyl
-	 */
-	@POST
-	@Path("/mkt.contact.list.del")
-	public BaseOutput updateContextTempById(@Valid ContactTempDIn body)
-	{
-		return contactTemplateServer.updateContextTempById(body.getContact_id());
-	}
-	
-	/**
-	 * 统计联系人表单浏览次数
-	 * @param userToken
-	 * @param var
-	 * @param contactId
+	 * 批量新建上传处理
+	 * @param fileUnique
+	 * @param input
 	 * @return
 	 */
-
-	@GET
-	@Path("mkt.contact.list.pv")
-	public BaseOutput countPageViews(
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String var,
-			@NotEmpty @QueryParam("contact_id") String contactId) {
-		return contactListPvServer.countPageViews(contactId);
-	}
-	
-	/**
-	 * 下载单个微信二维码图片文件
-	 *
-	 * @param
-	 * @param ver
-	 * @author zhaoguoying
-	 */
-	@GET
-	@Path("/mkt.weixin.qrcode.pic.download")
-	public BaseOutput getQrcodePicDownload(@NotEmpty @QueryParam("user_token") String user_token,
-			@NotNull @QueryParam("qrcode_id")int qrcode_id)
-	{
-		return qrcodePicDownloadService.getQrcodePicDownload(qrcode_id);
-	}
-	
-	/**
-	 * 下载批量生成的二维码图片文件(zip)
-	 *
-	 * @param
-	 * @param ver
-	 * @author zhaoguoying
-	 */
-	@GET
-	@Path("/mkt.weixin.qrcode.pics.zip.download")
-	public BaseOutput getQrcodePicsZipDownload(@NotEmpty @QueryParam("user_token") String user_token,
-			@NotNull @QueryParam("batch_id")int batch_id)
-	{
-		return qrcodePicsZipDownloadService.getQrcodePicsZipDownload(batch_id);
-	}
-	
-	/**
-	 * 复制联系人表单 
-	 *
-	 * @param
-	 * @param ver
-	 * @author zhaoguoying
-	 */
 	@POST
-	@Path("/mkt.contact.list.duplicate")
-	public BaseOutput copyContact(@Valid ContactTempDIn body, @Context SecurityContext securityContext)
-	{
-		return contactTemplateService.copyContactTemplate(body,securityContext);
+	@Path("/mkt.weixin.qrcode.batch.upload")
+	@Consumes("multipart/form-data")
+	public BaseOutput fileUploadBatch(@QueryParam("file_unique") String fileUnique, MultipartFormDataInput input){
+		return uploadFileService.uploadFileBatch(fileUnique, input);
 	}
 	
 	/**
-	 * 下载联系人表单的二维码图片
-	 *
-	 * @param
-	 * @param ver
-	 * @author zhaoguoying
+	 * @Title: getUserInfo   
+	 * @Description: 通过userID查询用户信息  
+	 * @param: @param userToken
+	 * @param: @param ver
+	 * @param: @param userId
+	 * @param: @return      
+	 * @return: BaseOutput      
+	 * @throws
 	 */
 	@GET
-	@Path("/mkt.contact.list.qrcode.download")
-	public BaseOutput getContactListQrcode(@NotEmpty @QueryParam("user_token") String user_token,
-			@NotNull @QueryParam("contact_id")Integer contact_id)
-	{
-		return contactListQrcodeDownloadService.getContactListQrcode(contact_id);
-	}
+    @Path("/mkt.data.userinfo.get")
+    public BaseOutput getUserInfo(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("personnel_id") String userId) {
+        return userInfoService.getUserInfo(userId);
+    }
+	
+	   /**
+     * 根据输入名字模糊查询都有哪些人在人群中
+     * @param head_id
+     * @param query_name
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.segment.search.get")
+    public BaseOutput segmentSearch(@NotNull @QueryParam("head_id") Integer head_id,
+             @NotEmpty @QueryParam("query_name") String query_name) {
+         
+        return segmentSearchGetServer.SegmentSearch(head_id, query_name);
+    }
+    
+    /**
+     * 根据主键id下载相应人群数
+     * @param head_id
+     * @param query_name
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.segment.search.download")
+    public BaseOutput getSegmentSearchDownload(@NotEmpty @QueryParam("user_token") String user_token,
+            @NotEmpty @QueryParam("ver") String ver,
+            @NotNull @QueryParam("head_id") Integer head_id) {
+        return segmentSearchDownloadService.getSegmentSearchDownload(head_id);
+    }
+    
+    /**
+     * 下载人群管理详情
+     * @param audience_id
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.audience.search.download")
+    public BaseOutput searchData(@NotNull @QueryParam("audience_id") Integer audience_id) {
+         
+        return audienceSearchDownloadService.searchData(audience_id);
+    }
+   
+  
+	
 
-	/**
-	 * 获取创建联系人表单界面中，右侧的显示列表
-	 * @param userToken
-	 * @param var
-	 * @param contactId
-	 * @return
-	 */
-	@GET
-	@Path("mkt.contact.keylist.get")
-	public GetContactKeyListOutput getContactKeyList(
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver,
-			@QueryParam("contact_id") Long contactId) {
-		return contactKeyListGetService.getContactKeyList(contactId);
-	}
-
-	/**
-	 * 统计用户反馈数据
-	 * @param userToken
-	 * @param ver
-	 * @param contactId
-	 * @return
-	 */
-	@GET
-	@Path("mkt.contacts.commit.count ")
-	public ContactsCommitCountListOutput getContactsCommitCount(
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver,
-			@NotEmpty @QueryParam("contact_id") Long contactId) {
-		return contactsCommitCountGetService.getContactsCommitCount(contactId);
-	}
-	
-
-	/**
-	 * 根据表单编号查询出表单数据(表单预览、表单编辑).
-	 *
-	 * @param
-	 * @param ver
-	 * @author zhaoguoying
-	 */
-	@GET
-	@Path("/mkt.contact.list.info.get")
-	public BaseOutput getContactListInfo(@NotEmpty @QueryParam("user_token") String user_token,
-			@NotNull @QueryParam("contact_id")String contact_id)
-	{
-		return contactListInfoGetService.getContactListInfo(contact_id);
-	}
-	
-	/**
-	 * 启用联系人表单
-	 *
-	 * @param
-	 * @param ver
-	 * @author chengjincheng
-	 */
-	@POST
-	@Path("/mkt.contact.list.used")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput contactStatusUpdate(@Valid ContactStatusUpdateIn body) {
-		
-		return contactListUsedService.contactStatusUpdate(body);
-	}
-	
-	/**
-	 * 统计公众号已用二维码个数 
-	 *
-	 * @param
-	 * @param ver
-	 * @author chengjincheng
-	 */
-	@GET
-	@Path("/mkt.weixin.qrcode.used.count")
-	public BaseOutput getListCount(@NotEmpty @QueryParam("wx_name") String wx_name)
-	{
-			return qrcodeUsedCountService.getListCount(wx_name);
-	}
-
-	/**
-	 * 根据表单编号查询出表单数据(表单预览、表单编辑).
-	 *
-	 * @param
-	 * @param ver
-	 * @author zhaoguoying
-	 */
-	@GET
-	@Path("/mkt.contact.list.tag.get")
-	public BaseOutput getContactListTag(@NotEmpty @QueryParam("user_token") String user_token,
-			@NotNull @QueryParam("contact_id")Integer contact_id)
-	{
-		return contactListTagGetService.getContactListTag(contact_id);
-	}
-	
-	
-	/**
-	 * 将联系人表单导入数据时选择的数据主键保存到数据库中
-	 * 
-	 * @param userToken
-	 * @param ver
-	 * @param contactId
-	 * @return
-	 * @author shuiyangyang
-	 */
-	@GET
-	@Path("mkt.contact.list.key.list")
-	public BaseOutput getContactListKeyList(
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver,
-			@NotEmpty @QueryParam("contact_id") String contactId) {
-		
-		return contactListKeyListService.getContactListKeyList(contactId);
-	}
-	
-	/**
-	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表 
-	 * 
-	 * @param userToken
-	 * @param ver
-	 * @param wxmpName
-	 * @param expirationTime
-	 * @param qrcodeStatus
-	 * @return
-	 * @author shuiyangyang
-	 */
-	@GET
-	@Path("mkt.weixin.qrcode.list")
-	public BaseOutput getWeixinQrcodeList(
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver,
-			@QueryParam("wxmp_name") String wxmpName,
-			@QueryParam("expiration_time") Integer expirationTime,
-			@DefaultValue("0")@QueryParam("qrcode_status") Byte qrcodeStatus) {
-			
-		return weixinQrcodeListService.getWeixinQrcodeList(wxmpName, expirationTime, qrcodeStatus);
-	}
-	
-	/**
-	 * 
-	 * 根据输入的二维码名称模糊查询表wechat_qrcode
-	 * 
-	 * @param userToken
-	 * @param ver
-	 * @param qrcodeName
-	 * @return
-	 * @author xiaoshui
-	 */
-	@GET
-	@Path("mkt.weixin.qrcode.list.qrname")
-	public BaseOutput getWeixinQrcodeListQrname(
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver,
-			@QueryParam("qrcode_name") String qrcodeName) {
-		
-		return weixinQrcodeListService.getWeixinQrcodeListQrname(qrcodeName);
-		
-	}
-	
-	/**
-	 * 批量生成二维码时，统计成功和失败个数
-	 *
-	 * @param
-	 * @param ver
-	 * @author chengjincheng
-	 */
-	@GET
-	@Path("/mkt.weixin.qrcode.create.count")
-	public BaseOutput getCreateCount(@NotNull @QueryParam("batch_id") Integer batch_id)
-	{
-		return qrcodeCreateCountService.getCreateCount(batch_id);
-	}
-	
-	/**
-	 * 保存用户反馈数据 
-	 *
-	 * @param
-	 * @param ver
-	 * @author chengjincheng
-	 */
-	@POST
-	@Path("/mkt.contacts.commit.save")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput contactsCommitSave(@Valid ContactsCommitSaveIn body) {
-		
-		return contactsCommitSaveService.contactsCommitSave(body);
-	}
-
-	/**
-	 * 保存用户反馈数据 
-	 *
-	 * @param
-	 * @param ver
-	 * @author chengjincheng
-	 */
-	@POST
-	@Path("/mkt.contacts.commit.del")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput contactsCommitDel(@Valid ContactsCommitDelIn body) {
-		
-		return contactsCommitSaveService.contactsCommitDel(body);
-	}
-	/**
-	 * 查询用户反馈数据 
-	 *
-	 * @param
-	 * @param ver
-	 * @author chengjincheng
-	 */
-	@GET
-	@Path("/mkt.contacts.commit.get")
-	public BaseOutput  contactsCommitGet(@NotNull @QueryParam("contact_id") Integer contact_id, 
-			@NotNull @QueryParam("commit_time") Integer commit_time) 
-	{
-		return contactsCommitSaveService.contactsCommitGet(contact_id ,commit_time);
-	}
-
-	/**
-	 * 下载用户反馈详情 
-	 *
-	 * @param
-	 * @param ver
-	 * @author chengjincheng
-	 */
-	@GET
-	@Path("/mkt.contacts.commit.download")
-	public BaseOutput  contactsCommitDownload(@NotNull @QueryParam("contact_id") Integer contact_id, 
-			@NotNull @QueryParam("commit_time") Integer commit_time) 
-	{
-		return contactsCommitSaveService.contactsCommitDownload(contact_id ,commit_time);
-	}
-	
-	/**
-	 * 联系人表单打标签 
-	 *
-	 * @param
-	 * @param ver
-	 * @author chengjincheng
-	 */
-	@POST
-	@Path("/mkt.contact.list.tag")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput contactListTag(@Valid ContactListTagIn body) {
-		
-		return contactListTagService.contactListTag(body);
-	}
-
-	/**
-	 * 存储联系人表单所选择的主键
-	 * @param
-	 * @param saveContactListKeysIn
-	 * @author baiyunfeng
-	 */
-	@POST
-	@Path("/mkt.contact.list.keys.save")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput saveContactListKeys(@Valid SaveContactListKeysIn saveContactListKeysIn) {
-		return contactListKeysSaveService.saveContactListKeys(saveContactListKeysIn);
-	}
-
-	/**
-	 * 将联系人表单的数据导入主数据
-	 * @param
-	 * @param importContactsDataIn
-	 * @author baiyunfeng
-	 */
-	@POST
-	@Path("/mkt.contacts.mdata.import")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput importContactsDataToMData(@Valid ImportContactsDataIn importContactsDataIn) {
-		return importContactsDataToMDataService.importContactsDataToMData(importContactsDataIn);
-	}
 }

@@ -1,24 +1,29 @@
 package cn.rongcapital.mkt.vo.out;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactListTagOut {
-	private String contact_id;
-	private List<Contact_Tags> contact_tags;
+	private String contactId;
+	private List<ContactTags> contactTags = new ArrayList<>();
 
-	public String getContact_id() {
-		return contact_id;
+	@JsonProperty("contact_id")
+	public String getContactId() {
+		return contactId;
 	}
 
-	public void setContact_id(String contact_id) {
-		this.contact_id = contact_id;
+	public void setContactId(String contactId) {
+		this.contactId = contactId;
 	}
 
-	public List<Contact_Tags> getContact_tags() {
-		return contact_tags;
+	@JsonProperty("contact_tags")
+	public List<ContactTags> getContactTags() {
+		return contactTags;
 	}
 
-	public void setContact_tags(List<Contact_Tags> contact_tags) {
-		this.contact_tags = contact_tags;
+	public void setContactTags(List<ContactTags> contactTags) {
+		this.contactTags = contactTags;
 	}
 }

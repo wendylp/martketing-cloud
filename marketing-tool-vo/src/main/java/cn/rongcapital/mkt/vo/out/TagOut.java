@@ -6,7 +6,7 @@ public class TagOut {
 	
 	private String tagName;
 	
-	private Integer tagId;
+	private String tagId;
 
 	@JsonProperty("tag_name")
 	public String getTagName() {
@@ -18,11 +18,11 @@ public class TagOut {
 	}
 
 	@JsonProperty("tag_id")
-	public Integer getTagId() {
+	public String getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(Integer tagId) {
+	public void setTagId(String tagId) {
 		this.tagId = tagId;
 	}
 	

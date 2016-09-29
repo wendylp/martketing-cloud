@@ -16,9 +16,23 @@ public class ApiConstant {
 	
 	public static final String API_METHOD = "method";//api的method参数
 	public static final String API_PATH = "/api";//api的路径
+	public static final String API_USER_TOKEN = "user_token";//api的user_token参数
+	public static final String API_USER_TOKEN_VALUE = "123";//api的user_token参数
+	public static final String API_USER_ID = "user_id";//api的user_id参数	
+	public static final String API_PATH_APPID = "/api/wx1f363449a14a1ad8";//api的路径
 	public static final byte TABLE_DATA_STATUS_VALID = 0;//数据正常
 	public static final byte TABLE_DATA_STATUS_INVALID = 1;//数据已被逻辑删除
 	
+	public static final int WECHAT_CHANNEL_TYPE_SYSTEM = 0;//渠道类型0系统默认渠道
+	public static final int WECHAT_CHANNEL_TYPE_CUSTOM = 1;//渠道类型1自定义渠道
+	
+	public static final String WECHAT_CHANNEL_STATUS_VALID = "0";//渠道状态正常
+	public static final String WECHAT_CHANNEL_STATUS_INVALID = "1";//渠道状态正常删除
+	
+	public static final int TABLE_DATA_REMOVED_NOTDEL = 0;//不可以删除
+	public static final int TABLE_DATA_REMOVED_DEL = 1;//可以删除
+	public static final byte TABLE_DATA_REMOVED_FAIL = 3;//失效
+
 	public static final byte SEGMENT_PUBLISH_STATUS_NOT_PUBLISH = 0;//未发布
 	public static final byte SEGMENT_PUBLISH_STATUS_PUBLISH = 1;//已发布
 	public static final byte SEGMENT_PUBLISH_STATUS_ALL = 3;//全部细分
@@ -32,6 +46,9 @@ public class ApiConstant {
 	public static final int INT_ZERO = 0;
 	public static final int INT_ONE = 1;
 	
+	public static final String WECHAT_GROUP = "999";
+	public static final String WECHAT_GROUP_NAME = "未分组";
+	
 	public static final int PAGE_START_INDEX_DEFAULT = 0;//默认分页起始index值
 	public static final int PAGE_PAGE_SIZE_DEFAULT = 10;//默认每页记录数
 
@@ -43,6 +60,8 @@ public class ApiConstant {
 	
     public static final String DATE_FORMAT_yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_FORMAT_yyyy_MM_dd = "yyyy-MM-dd";
+    public static final String DATE_FORMAT_CONSTANT_BEGIN = " 00:00:00";
+    public static final String DATE_FORMAT_CONSTANT_END = " 23:59:59";
 	
 	public static final byte TAG_TYPE_SEGMENT = 0;// 细分
 	public static final byte TAG_TYPE_ACTIVITY = 1;// 活动
@@ -64,6 +83,10 @@ public class ApiConstant {
 
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_TARGET = 0;//目标人群
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_EVENT = 1;//事件人群
+	
+	public static final int TAG_ITEM_SYSTEM = 0;//系统标签
+	public static final int TAG_ITEM_CUSTOM = 1;//自定义标签
+	
 	
 	public static final byte CAMPAIGN_ITEM_DECISION_PROP_COMPARE = 0;//联系人属性比较
 	public static final byte CAMPAIGN_ITEM_DECISION_WECHAT_SENT = 1;//微信图文是否发送
@@ -166,6 +189,7 @@ public class ApiConstant {
 	public static final String UPLOAD_BASE_DIR = "//rc/data/uploads/";
 	
 	public static final String AUDIENCE_SOUCE_NAME_CAMPAIGN = "营销活动";
+	public static final String AUDIENCE_SOUCE_NAME_WX = "微信二维码";
 	public static final Byte WECHAT_IMGTEXT_TYPE = 0;
 
 	public static String IMPORT_FILE_SOURCE = "文件接入";
@@ -194,6 +218,15 @@ public class ApiConstant {
 	// 国籍
     public static final String NATIONALITY_CHINA = "中国";
     public static final String NATIONALITY_FOREIGN = "外国";
+    
+    // 地区
+    public static final String PROVINCE_FOREIGN = "槟榔屿";
+    public static final String PROVINCE_CHINA_CAPITAL = "北京";
+    
+    //城市
+    public static final String CITY = "市";
+    public static final String CITY_CHINA_CAPITAL = "北京市";
+    public static final String CITY_CHINA_BEIHAI = "北海";
 
 	public static final String CAMPAIGN_CONTENT_WECHAT = "微信图文";
 	public static final String CAMPAIGN_CONTENT_H5 = "H5活动";
@@ -205,5 +238,90 @@ public class ApiConstant {
 
 	public static final Byte DATA_PARTY_TAG_RULE_TYPE_COMMON = 0;
 	public static final Byte DATA_PARTY_TAG_RULE_TYPE_JS = 1;
+	/**
+	 * 微信公众号ID
+	 */
+	public static final String APPID = "wx00f7d56d549f82ce";	
+	/**
+	 * 微信公众号appsecret
+	 */
+	public static final String SECRET = "d30f3c2bdd6f0769673c94365031e588";
+	
+	public static final String ENCODING_AES_KEY = "abcdefghijklmnopqrstuvwxyz12345678900987654";
+	public static final String TOKEN = "ruixuemarketingcloud";	
 
+	public static final String UPLOAD_IMG_PATH_LARGE = "/rc/data/downloads/large/";
+	public static final String UPLOAD_IMG_PATH_MIDDLE = "/rc/data/downloads/middle/";
+	public static final String UPLOAD_IMG_PATH_SMALL = "/rc/data/downloads/small/";		
+	public static final String RETURN_IMG_PATH_LARGE = "large/";
+	public static final String RETURN_IMG_PATH_MIDDLE = "middle/";
+	public static final String RETURN_IMG_PATH_SMALL = "small/";
+	public static final String UPLOAD_IMG_PATH = "D:\\soft\\";	
+	public static String COMPONENT_VERIFY_TICKET = "ticket@@@Pqd1HooYMLuhKeSIUPh5SjZC43_g7JYLtyVyHN6fDP3WQ9lSRLSZMg_juXv8E9uoE-wKb0LVHiTwqPHVxSYxww";		
+	
+	public static final String WEIXIN_QRCODE_CREATE = "https://api.weixin.qq.com/cgi-bin/qrcode/create";	
+	public static final String WEIXIN_QRCODE_SHOW = "https://mp.weixin.qq.com/cgi-bin/showqrcode";
+	public static final String WEIXIN_REDIRECT_URL = "http://mkttest.cssrv.dataengine.com/html/data-access/weixin.html";	
+	public static final String WEIXIN_AUTH_CALLBACK_URI = "http://mktsrv.cssrv.dataengine.com/api?method=mkt.data.inbound.wechat.public.auth.code.callback";	
+	public static final String WEIXIN_AUTH_COMPONENT_LOGIN_PAGE ="https://mp.weixin.qq.com/cgi-bin/componentloginpage?";
+	/**
+	 * 微信关注、取消关注、扫描
+	 */
+	public static final String WEIXIN_MSG_EVENT_TYPE_SCAN="SCAN";
+	public static final String WEIXIN_MSG_EVENT_TYPE_SUBSCRIBE="subscribe";
+	public static final String WEIXIN_MSG_EVENT_TYPE_UNSUBSCRIBE="unsubscribe";
+	
+	public static final String SORT_DESC = "desc";
+	public static final String SORT_ASC ="asc";
+	public static final String SORT_ORDER_FIELD = "orderField";
+	public static final String SORT_ORDER_FIELD_TYPE = "orderFieldType";
+	
+	public static final String AUDIENCE_LIST_ADD_MSG = "人群名称已经重复";
+
+	public static final String CUSTOM_TAG_ROOT = ",自定义";
+	public static final String CUSTOM_TAG_SYSTEM_ROOT = ",其他,自定义";
+	public static final String CUSTOM_TAG_SYSTEM_PARENT = "其他";
+	public static final String CUSTOM_TAG_SEPARATOR = ",";
+	public static final Integer CUSTOM_TAG_LAYER_TYPE = 1;
+	public static final Integer CUSTOM_TAG_LEAF_TYPE = 2;
+	
+	/**
+	 * 微信粉丝在 data_population 中的bitmap 字段的数值
+	 */
+	public static final String WEIXIN_BITMAP = "00000011000000000";
+	
+	/**
+	 * 标签级别
+	 */
+	public static final int TAG_LEVEL = 2;
+	
+	/**
+	 * 标签级别
+	 */
+	public static final String TAG_LINE = "-";
+	
+	public static final int WEIXIN_BATCH_GET_USER_INFO_SIZE=100;
+	
+	
+	/**
+	 * 登录冲突
+	 */
+	public static final int USER_TOKEN_LOGIN_CONFLICT =3001;
+    /**
+     * 回话超时
+     */
+    public static final int USER_TOKEN_LOGIN_TIMEOUT =3002;
+    /**
+     * 参数缺失
+     */
+    public static final int USER_TOKEN_PARAMS_MISSING =3003;
+    /**
+     * redis保存错误
+     */
+    public static final int USER_TOKEN_REDIS_SAVE_ERR =3004;
+    /**
+     * redis信息错误
+     */
+    public static final int USER_TOKEN_REDIS_INFO_ERR =3005;
+	
 }

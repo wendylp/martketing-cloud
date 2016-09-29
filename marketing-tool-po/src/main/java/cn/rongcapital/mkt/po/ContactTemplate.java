@@ -20,6 +20,8 @@ public class ContactTemplate extends BaseQuery implements Serializable {
 
     private String fieldCode;
 
+    private Integer fieldType;
+
     private String selected;
 
     private Byte status;
@@ -29,6 +31,10 @@ public class ContactTemplate extends BaseQuery implements Serializable {
     private Date updateTime;
 
     private String qrcodeUrl;
+
+    private String qrcodeShorturl;
+
+    private String qrcodePic;
 
     private Integer pageViews;
 
@@ -41,6 +47,10 @@ public class ContactTemplate extends BaseQuery implements Serializable {
     private Byte isRememberImportKey;
 
     private Integer fieldIndex;
+
+    private Byte isShownInFeedback;
+
+    private Byte delStatus;
 
     public Integer getId() {
         return id;
@@ -98,6 +108,14 @@ public class ContactTemplate extends BaseQuery implements Serializable {
         this.fieldCode = fieldCode == null ? null : fieldCode.trim();
     }
 
+    public Integer getFieldType() {
+        return fieldType;
+    }
+
+    public void setFieldType(Integer fieldType) {
+        this.fieldType = fieldType;
+    }
+
     public String getSelected() {
         return selected;
     }
@@ -136,6 +154,22 @@ public class ContactTemplate extends BaseQuery implements Serializable {
 
     public void setQrcodeUrl(String qrcodeUrl) {
         this.qrcodeUrl = qrcodeUrl == null ? null : qrcodeUrl.trim();
+    }
+
+    public String getQrcodeShorturl() {
+        return qrcodeShorturl;
+    }
+
+    public void setQrcodeShorturl(String qrcodeShorturl) {
+        this.qrcodeShorturl = qrcodeShorturl == null ? null : qrcodeShorturl.trim();
+    }
+
+    public String getQrcodePic() {
+        return qrcodePic;
+    }
+
+    public void setQrcodePic(String qrcodePic) {
+        this.qrcodePic = qrcodePic == null ? null : qrcodePic.trim();
     }
 
     public Integer getPageViews() {
@@ -184,5 +218,21 @@ public class ContactTemplate extends BaseQuery implements Serializable {
 
     public void setFieldIndex(Integer fieldIndex) {
         this.fieldIndex = fieldIndex;
+    }
+
+    public Byte getIsShownInFeedback() {
+        return isShownInFeedback;
+    }
+
+    public void setIsShownInFeedback(Byte isShownInFeedback) {
+        this.isShownInFeedback = isShownInFeedback;
+    }
+
+    public Byte getDelStatus() {
+        return delStatus;
+    }
+
+    public void setDelStatus(Byte delStatus) {
+        this.delStatus = delStatus;
     }
 }

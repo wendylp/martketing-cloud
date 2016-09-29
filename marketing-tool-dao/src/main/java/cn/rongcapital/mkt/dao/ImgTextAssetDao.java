@@ -101,4 +101,32 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * @return list
 	 */
 	Integer selectImgtextIdByMaterialId(@Param("material_id") String materialId);
+	
+	/**
+	 * 带创建时间和更新时间的插入方法
+	 * @param imgTextAsset
+	 * @return
+	 */
+	int insertWithDate(ImgTextAsset imgTextAsset);
+	
+	/**
+	 * 带创建时间和更新时间的更新方法
+	 * @param imgTextAsset
+	 * @return
+	 */
+	int updateByIdWithDate(ImgTextAsset imgTextAsset);
+	
+	/**
+	 * 根据pubId type wxType searchKey 查询图文信息
+	 * @param paramMap
+	 * @return
+	 */
+	List<Map<String,Object>> selectListBySearchKeyLike(Map<String, Object> paramMap);
+	
+	/**
+	 * 根据pubId type wxType searchKey 查询图文信息数量
+	 * @param paramMap
+	 * @return
+	 */
+	int selectListBySearchKeyLikeCount(Map<String, Object> paramMap);
 }

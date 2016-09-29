@@ -14,6 +14,10 @@ import java.util.List;
 public class GetContactKeyListOutput extends BaseOutput {
 
     private String keyList;
+    private String contactName;
+    private String contactTitle;
+    private String contactDescription;
+    private Integer status;
     private List<ContactKeyOutput> dataKeyList = new ArrayList<ContactKeyOutput>();
 
     public GetContactKeyListOutput(int code, String msg, int total) {
@@ -27,6 +31,42 @@ public class GetContactKeyListOutput extends BaseOutput {
 
     public void setKeyList(String keyList) {
         this.keyList = keyList;
+    }
+
+    @JsonProperty("contact_name")
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    @JsonProperty("contact_title")
+    public String getContactTitle() {
+        return contactTitle;
+    }
+
+    public void setContactTitle(String contactTitle) {
+        this.contactTitle = contactTitle;
+    }
+
+    @JsonProperty("contact_descript")
+    public String getContactDescription() {
+        return contactDescription;
+    }
+
+    public void setContactDescription(String contactDescription) {
+        this.contactDescription = contactDescription;
+    }
+
+    @JsonProperty("contact_status")
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     @JsonProperty("data")

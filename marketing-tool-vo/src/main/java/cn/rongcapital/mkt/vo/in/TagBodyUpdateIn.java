@@ -7,14 +7,13 @@ import org.hibernate.validator.constraints.NotEmpty;
 import cn.rongcapital.mkt.vo.BaseInput;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class TagBodyUpdateIn {
-
+public class TagBodyUpdateIn extends BaseInput {
 	@NotNull
 	private Integer tag_id;
 	@NotEmpty
 	private String tag_name = null;
-	@NotNull
-	private Byte status;
+	@NotEmpty
+	private String tag_group_id = null;
 	
 	@JsonProperty("tag_id")
 	public Integer getTag_id() {
@@ -34,12 +33,14 @@ public class TagBodyUpdateIn {
 		this.tag_name = tag_name;
 	}
 
-	@JsonProperty("status")
-	public Byte getStatus() {
-		return status;
+	@JsonProperty("tag_group_id")
+	public String getTag_group_id() {
+		return tag_group_id;
 	}
 
-	public void setStatus(Byte status) {
-		this.status = status;
-	}	
+	public void setTag_group_id(String tag_group_id) {
+		this.tag_group_id = tag_group_id;
+	}
+
+	
 }

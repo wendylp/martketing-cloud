@@ -1,80 +1,53 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import cn.rongcapital.mkt.common.enums.TagSourceEnum;
+import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.service.FindCustomTagInfoService;
+import cn.rongcapital.mkt.vo.out.ContactTags;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
-import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.CustomTagMapDao;
-import cn.rongcapital.mkt.po.ContactTemplate;
-import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.CustomTagMap;
 import cn.rongcapital.mkt.service.ContactListTagGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.ContactListTagOut;
-import cn.rongcapital.mkt.vo.out.Contact_Tags;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class ContactListTagGetServiceImpl implements ContactListTagGetService {
 
 	@Autowired
-	ContactTemplateDao contactTemplateDao;
+	private CustomTagMapDao customTagMapDao;
 	@Autowired
-	CustomTagMapDao customTagMapDao;
-	@Autowired
-	CustomTagDao customTagDao;
+	private FindCustomTagInfoService findCustomTagInfoService;
 
 	@Override
 	public BaseOutput getContactListTag(Integer contactId) {
-		ContactTemplate contactTemplate = new ContactTemplate();
-		contactTemplate.setContactId(Long.parseLong(contactId.toString()));
-		List<ContactTemplate> contactTemplates= contactTemplateDao.selectList(contactTemplate);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
-		if(CollectionUtils.isNotEmpty(contactTemplates))
-		{
-			result.setTotal(contactTemplates.size());
-			ContactListTagOut contactListTagOut = new ContactListTagOut();
-			List<Contact_Tags> contact_Tags = new ArrayList<>();
-			contactListTagOut.setContact_tags(contact_Tags);
-			for(ContactTemplate contact:contactTemplates)
-			{
-				contactListTagOut.setContact_id(contact.getContactId().toString());
-				CustomTagMap customTagMap = new CustomTagMap();
-				customTagMap.setMapId(Integer.parseInt(contact.getContactId().toString()));
-				List<CustomTagMap> customTagMaps = customTagMapDao.selectList(customTagMap);
-				if(CollectionUtils.isNotEmpty(customTagMaps))
-				{
-					for(CustomTagMap custom:customTagMaps)
-					{
-						List<CustomTag> customs = new ArrayList<>();
-						CustomTag customTag = new CustomTag();
-						customTag.setId(custom.getTagId());
-						List<CustomTag> customTags= customTagDao.selectList(customTag);
-						if(CollectionUtils.isNotEmpty(customTags))
-						{
-							List<Contact_Tags> contacttags = new ArrayList<>();
-							for(CustomTag c:customTags)
-							{
-								Contact_Tags contactTags = new Contact_Tags();
-								contactTags.setTag_id(c.getId().toString());
-								contactTags.setTag_name(c.getName());
-								contacttags.add(contactTags);
-							}
-							contactListTagOut.getContact_tags().addAll(contacttags);
-						}
-					}
-				}
+		ContactListTagOut contactListTagOut = new ContactListTagOut();
+		CustomTagMap paramCustomTagMap = new CustomTagMap();
+		paramCustomTagMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		paramCustomTagMap.setMapId(String.valueOf(contactId));
+		paramCustomTagMap.setTagSource(TagSourceEnum.CONTACT_DOCUMENT_SOURCE_ACCESS.getTagSourceId());
+		List<CustomTagMap> customTagMapList = customTagMapDao.selectList(paramCustomTagMap);
+		if(!CollectionUtils.isEmpty(customTagMapList)){
+			for(CustomTagMap customTagMap : customTagMapList){
+				BaseTag baseTag = findCustomTagInfoService.findCustomTagInfoByTagId(customTagMap.getTagId());
+				ContactTags contactTags = new ContactTags();
+				contactTags.setTagId(baseTag.getTagId());
+				contactTags.setTagName(baseTag.getTagName());
+				contactListTagOut.getContactTags().add(contactTags);
 			}
-			result.getData().add(contactListTagOut);
 		}
-		
+
+		result.getData().add(contactListTagOut);
 		return result;
 	}
 

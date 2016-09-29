@@ -154,4 +154,58 @@
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
 
+	<delete id="delecteCustomTagByContactId" parameterType="java.lang.Integer">
+		DELETE
+		FROM
+			custom_tag
+		WHERE id 
+		IN (
+			 SELECT
+				tag_id
+			 FROM
+				custom_tag_map
+			WHERE
+				map_id = #{contactId}
+		   )
+	</delete>
+
+	<!-- 通过Id进行查询 -->
+	<select id="selectCustomTagsByIds" resultType="cn.rongcapital.mkt.po.CustomTag">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE
+			id 
+		IN
+	 	<foreach collection="array" index="index" item="item" open="(" separator="," close=")">  
+          	#{item}   
+ 		 </foreach>  
+	</select>
+	
+	<!-- 通过名称获取id -->
+	<select id="selectIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+			id
+		FROM
+			custom_tag
+		WHERE
+			name = #{name}
+	</select>
+	
+	<!-- 插入返回主键 -->
+	<insert id="insertCustomTagResId" parameterType="cn.rongcapital.mkt.po.CustomTag" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO custom_tag (
+			name,
+			cover_audience_count,
+			oper,
+			create_time
+		)
+		VALUES
+			(
+				#{name},
+				#{coverAudienceCount},
+				#{oper},
+				now()
+			)
+	</insert>
 </mapper>

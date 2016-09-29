@@ -15,8 +15,19 @@ public class Tag extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+    
+    private String tagGroupId;
+    
+    
+    public String getTagGroupId() {
+		return tagGroupId;
+	}
 
-    public Integer getId() {
+	public void setTagGroupId(String tagGroupId) {
+		this.tagGroupId = tagGroupId;
+	}
+
+	public Integer getId() {
         return id;
     }
 

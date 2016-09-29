@@ -10,12 +10,17 @@
 
 package cn.rongcapital.mkt.vo;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class BaseOutput {
+	
+	private String format = "yyyy-MM-dd";
+    SimpleDateFormat sdf = new SimpleDateFormat(format);
 	
 	private int code;
 	
@@ -29,6 +34,8 @@ public class BaseOutput {
 
 	private List<Object> data = new ArrayList<Object>();
 
+	private String date = sdf.format(new Date());
+	
 	public BaseOutput(){}
 	
 	public BaseOutput(int code, String msg, int total, List<Object> data) {
@@ -81,6 +88,15 @@ public class BaseOutput {
 	
 	public void setData(List<Object> data) {
 		this.data = data;
+	}
+	
+	@JsonProperty("date")
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
 	}
 
 	@JsonProperty("total_count")

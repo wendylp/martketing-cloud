@@ -105,8 +105,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
 		List<Map<String, Object>> columnList = new ArrayList<>();
 		List<ImportTemplate> importTemplateList = null;
-		Integer totalCount = 0;
-		
+
 		contactIds.add(contactWayList);
 
 		// 对传入的条件进行检查, 并保存选择的条件.(用于传给前端, 分页的时候还要把条件传回来)
@@ -206,9 +205,21 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 		if (CollectionUtils.isEmpty(mdTypeList)) {
 			mdTypeList = null;
 		}
+		List<Integer> mdDataList = new ArrayList<Integer>();
+		if (mdType != 0) {
+			for (Integer dataType : mdTypeList) {
+				if (mdType == dataType) {
+					mdDataList.add(mdType);
+				}
+			}
+		} else {
+			for (Integer dataType : mdTypeList) {
+				mdDataList.add(dataType);
+			}
+		}
 
 		paramMap.put("contactIdList", contactIdList);
-		paramMap.put("mdTypes", mdTypeList);
+		paramMap.put("mdTypes", mdDataList);
 
 		if (timeCondition == null) {
 			timeCondition = 0;
@@ -216,8 +227,8 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
 		Date timeConditionDate = TaskConditionEnum.getEnumByCode(timeCondition).getTime();
 		paramMap.put("timeCondition", timeConditionDate);
-		if (!CollectionUtils.isEmpty(mdTypeList)) {
-			for (Integer dataType : mdTypeList) {
+		if (!CollectionUtils.isEmpty(mdDataList)) {
+			for (Integer dataType : mdDataList) {
 				List<String> tmpList = new ArrayList<String>();
 				if (dataType == DataTypeEnum.POPULATION.getCode()) {
 					tmpList = dataPopulationDao.selectMappingKeyId(paramMap);
@@ -248,7 +259,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 					if (!CollectionUtils.isEmpty(tmpList))
 						mappingKeyIds.addAll(tmpList);
 				} else {
-					logger.error("传入错误的data type : {}", dataType);
+					logger.warn("传入错误的data type : {}", dataType);
 				}
 			}
 		}
@@ -263,7 +274,10 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 		paramMap.put("mappingKeyIds", mappingKeyIds);
 
 		List<T> dataList = dao.selectByBatchId(paramMap);
-		Integer totalCount = dao.selectCountByBatchId(paramMap);
+		Integer totalCount = 0;
+		if (mdDataList != null && mdDataList.size() > 0) {
+			totalCount = dao.selectCountByBatchId(paramMap);
+		}
 
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		if (dataList != null && !dataList.isEmpty()) {
@@ -280,7 +294,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 					Object value = ReflectionUtil.getObjectPropertyByName(tempT,
 							ReflectionUtil.recoverFieldName(importTemplate.getFieldCode()));
 					if (value != null && value.getClass().getSimpleName().equals(Date.class.getSimpleName())) {
-						simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 						value = simpleDateFormat.format((Date) value);
 					}
 					map.put(importTemplate.getFieldCode(), value);

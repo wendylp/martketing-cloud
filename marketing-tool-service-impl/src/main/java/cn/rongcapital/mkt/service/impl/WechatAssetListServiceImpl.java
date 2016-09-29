@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.service.impl;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
+import cn.rongcapital.mkt.po.WechatAsset;
 import cn.rongcapital.mkt.service.WechatAssetListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,35 @@ public class WechatAssetListServiceImpl implements WechatAssetListService{
         return Response.ok().entity(baseOutput).build();
     }
 
+    /**
+     * 获取公众号资产列表
+     */
+    @Override
+    public Object getWechatAssetList(Integer index, Integer size) {
+        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
+        
+        WechatAsset wechatAsset = new WechatAsset();
+        
+        if(index != null){
+        	//wechatAsset.setStartIndex(index);
+        	wechatAsset.setStartIndex((index-1)*size);
+        }
+        if(size != null){
+        	wechatAsset.setPageSize(size);
+        }
+        
+        List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAsset);
+        
+        int tatal = wechatAssetDao.selectListCount(null);
+        baseOutput.getData().addAll(wechatAssetList);
+
+        baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+        baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+        baseOutput.setTotal(wechatAssetList.size());
+        baseOutput.setTotalCount(tatal);
+        return Response.ok().entity(baseOutput).build();
+    }    
+    
     private void constructRightResult(BaseOutput baseOutput, Map<String, Object> paramMap) {
         List<Map<String,Object>> resultList = null;
         if(paramMap.get("asset_type") instanceof Integer){

@@ -155,6 +155,9 @@
         <property name="basePackage" value="cn.rongcapital.mkt.dao"/>
     </bean>
 
+	<bean class="cn.rongcapital.mkt.common.jedis.JedisConnectionManager">
+	</bean>
+
 <!-- 
     <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg ref="sqlSessionFactory"/>

@@ -8,6 +8,7 @@
 
 
 package cn.rongcapital.mkt.service.impl;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.AudienceColumnsDao;
 import cn.rongcapital.mkt.dao.AudienceListDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
@@ -51,10 +53,13 @@ public class RegisterListServiceImpl implements RegisterListService {
 			for (WechatRegister s : reList) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("wxmp_id", s.getId());
+				map.put("wx_acct", s.getWxAcct());
 				map.put("name", s.getName());
 				result.getData().add(map);
 			}
 		}
+		
+		result.setDate(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"));
 		
 		return result;
 	}

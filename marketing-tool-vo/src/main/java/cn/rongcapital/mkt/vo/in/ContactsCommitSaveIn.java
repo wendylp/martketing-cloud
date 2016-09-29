@@ -5,7 +5,12 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-public class ContactsCommitSaveIn {
+import org.codehaus.jackson.annotate.JsonProperty;
+
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class ContactsCommitSaveIn  extends BaseInput {
+	
 	@NotNull
 	private Integer contact_templ_id;
 	
@@ -19,7 +24,7 @@ public class ContactsCommitSaveIn {
 
     private String name;
 
-    private Byte gender;
+    private String gender;
 
     private Date birthday;
 
@@ -29,10 +34,13 @@ public class ContactsCommitSaveIn {
 
     private String job;
 
+    @JsonProperty("monthly_income")
     private BigDecimal monthlyIncome;
 
+    @JsonProperty("monthly_consume")
     private BigDecimal monthlyConsume;
 
+    @JsonProperty("marital_status")
     private String maritalStatus;
 
     private String education;
@@ -41,14 +49,17 @@ public class ContactsCommitSaveIn {
 
     private String nationality;
 
+    @JsonProperty("blood_type")
     private String bloodType;
 
     private String citizenship;
 
     private Integer iq;
 
+    @JsonProperty("identify_no")
     private String identifyNo;
 
+    @JsonProperty("driving_license")
     private String drivingLicense;
 
     private String email;
@@ -145,15 +156,17 @@ public class ContactsCommitSaveIn {
         this.name = name == null ? null : name.trim();
     }
 
-    public Byte getGender() {
-        return gender;
-    }
+    
 
-    public void setGender(Byte gender) {
-        this.gender = gender;
-    }
+    public String getGender() {
+		return gender;
+	}
 
-    public Date getBirthday() {
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public Date getBirthday() {
         return birthday;
     }
 

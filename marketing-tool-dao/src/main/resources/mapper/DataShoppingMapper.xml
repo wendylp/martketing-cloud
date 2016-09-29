@@ -22,7 +22,6 @@
 		buyer_comment,wxmp_id,wx_code,product_name,bitmap,create_time]]>
 	</sql>
 
-
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
@@ -461,4 +460,60 @@
 		    wxmp_id is not null and wx_code is not null and order_status is not null;
 	</select>
 	
+	<!-- 查询单个微信用户最后一次购买时间 -->
+	<select id="selectLastTransTimeByKeyid" resultType="java.util.Date" parameterType="java.lang.Integer">
+		SELECT
+			MAX(trans_time)
+		FROM
+			data_shopping
+		WHERE
+			keyid = #{keyId}
+	</select>
+	
+	<!-- 查询单个微信用户购买总次数 -->
+	<select id="selectTotalShoppingCountByKeyid" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			data_shopping
+		WHERE
+			keyid = #{keyId}
+	</select>
+	
+	<!-- 查询单个微信用户交易渠道偏好 -->
+	<select id="selectWeimobByKeyid" resultType="cn.rongcapital.mkt.po.ShoppingWechat" parameterType="java.lang.Integer">
+		SELECT
+			CASE channel_name 
+		WHEN '官网' THEN '旺铺'
+		WHEN '分销' THEN '其他'
+		END AS weimob
+		FROM data_shopping
+		WHERE channel_type = '微盟'
+		AND keyid = #{keyId}
+		GROUP BY channel_name
+	</select>
+	
+	<!-- 查询单个微信用户单月交易数量 -->
+	<select id="selectSingleMonthShoppingCountByKeyid" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			data_shopping
+		WHERE
+			keyid = #{keyId}
+		AND <![CDATA[DATE_FORMAT(trans_time, '%Y-%m-%d') BETWEEN DATE_ADD(CURRENT_DATE (),INTERVAL - 1 MONTH) AND CURRENT_DATE ()]]>
+	</select>
+	
+	<!-- 查询单个微信用户订单状态 -->
+	<select id="selectOrderStatusByKeyid" resultType="cn.rongcapital.mkt.po.ShoppingWechat"  parameterType="java.lang.Integer">
+		SELECT
+			order_status AS orderStatus
+		FROM
+			data_shopping
+		WHERE wxmp_id IS NOT NULL
+		AND wx_code IS NOT NULL
+		AND order_status IS NOT NULL
+		AND  keyid = #{keyId}
+		GROUP BY order_status
+	</select>
 </mapper>

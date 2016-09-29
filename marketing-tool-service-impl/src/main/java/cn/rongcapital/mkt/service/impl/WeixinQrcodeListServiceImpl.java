@@ -1,17 +1,25 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.TagDao;
 import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeFocusDao;
+import cn.rongcapital.mkt.po.Tag;
 import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.po.WechatQrcodeFocus;
@@ -20,6 +28,8 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
 public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
+	
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private WechatQrcodeDao wechatQrcodeDao;
@@ -29,6 +39,9 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 
 	@Autowired
 	private WechatQrcodeFocusDao wechatQrcodeFocusDao;
+	
+	@Autowired
+	private TagDao tagDao;
 
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
@@ -37,21 +50,47 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 * @Data 2016.08.19
 	 */
 	@Override
-	public BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus) {
+	public BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus, int index, int size) {
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
-		WechatQrcode wechatQrcode = new WechatQrcode();
-
-		wechatQrcode.setWxName(wxmpName);
-		wechatQrcode.setExpirationTime(expirationTime);
-		wechatQrcode.setStatus(Byte.valueOf(qrcodeStatus));
-
-		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectList(wechatQrcode);
-
-		result = addData(result, wechatQrcodeLists);
+		Map<String,Object> paramMap = new HashMap<String,Object>();
 		
+		if(wxmpName != null && !wxmpName.isEmpty() && !wxmpName.equals("0")) {
+			paramMap.put("wxAcct", wxmpName);
+		}
+		
+		if(expirationTime != null) {
+			
+			paramMap.put("expirationTimeStatus", expirationTime);//查询状态
+			paramMap.put("expirationTime", getExpirationTime(expirationTime));//失效时间
+		}
+		
+		/*
+		 * 如果qrcodeStatus==0查询除删除以外的数据
+		 */
+		if(qrcodeStatus != null) {
+			paramMap.put("status", Byte.valueOf(qrcodeStatus));
+		} else {
+			paramMap.put("status", Byte.valueOf("0"));
+		}
+		paramMap.put("pageSize", size);
+		paramMap.put("startIndex", (index-1)*size);
+
+		paramMap.put(ApiConstant.SORT_ORDER_FIELD, "createTime");
+		paramMap.put(ApiConstant.SORT_ORDER_FIELD_TYPE, ApiConstant.SORT_DESC);
+		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectListExpirationTime(paramMap);// 如果修改表结构需要修改对应的mapper文件
+		//查询总条数用
+		paramMap.put("pageSize", null);
+		paramMap.put("startIndex", null);
+		List<WechatQrcode> countList = wechatQrcodeDao.selectListExpirationTime(paramMap);
+		
+		result.setTotal(wechatQrcodeLists.size());
+		if (wechatQrcodeLists != null && !wechatQrcodeLists.isEmpty()) {
+			result = addData(result, wechatQrcodeLists);
+		}
+		result.setTotalCount(countList.size());
 		return result;
 	}
 	
@@ -62,17 +101,32 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 * @Data 2016.08.19
 	 */
 	@Override
-	public BaseOutput getWeixinQrcodeListQrname(String qrcodeName) {
+	public BaseOutput getWeixinQrcodeListQrname(String qrcodeName, int index, int size) {
+		
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		wechatQrcode.setQrcodeName(qrcodeName);
+		wechatQrcode.setPageSize(size);
+		wechatQrcode.setStartIndex((index-1)*size);
+
+
 		
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.fuzzySearchQrcodeName(wechatQrcode);
-		
-		result = addData(result, wechatQrcodeLists);
+		result.setTotal(wechatQrcodeLists.size());
+		wechatQrcode = new WechatQrcode();
+		wechatQrcode.setQrcodeName(qrcodeName);
+		wechatQrcode.setStartIndex(null);
+		wechatQrcode.setPageSize(null);
+		List<WechatQrcode> wqList = wechatQrcodeDao.fuzzySearchQrcodeName(wechatQrcode);
+		if (wechatQrcodeLists != null && !wechatQrcodeLists.isEmpty()) {
+			result = addData(result, wechatQrcodeLists);
+		} else {
+			logger.debug("根据微信号名：{}查不到信息",qrcodeName);
+		}
+		result.setTotalCount(wqList.size());
 		
 		return result;
 	}
@@ -86,13 +140,17 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	 * @Data 2016.08.19
 	 */
 	private BaseOutput addData(BaseOutput result, List<WechatQrcode> wechatQrcodeLists) {
-		if (wechatQrcodeLists != null && !wechatQrcodeLists.isEmpty()) {
-			result.setTotal(wechatQrcodeLists.size());
+		
+			//result.setTotal(wechatQrcodeLists.size());
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 			for (WechatQrcode wechatQrcodeList : wechatQrcodeLists) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				
-				map.put("qrcode_pic", wechatQrcodeList.getQrcodeUrl());// 返回二维码图片文件url 
+				map.put("id", wechatQrcodeList.getId());
+				
+				map.put("qrcode_pic", ApiConstant.RETURN_IMG_PATH_SMALL + wechatQrcodeList.getQrcodePic());// 返回二维码图片文件url 
 																		
 				map.put("qrcode_name", wechatQrcodeList.getQrcodeName());
 
@@ -106,15 +164,20 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 				}
 				
 				map.put("ch_name", chName);
-				
-				map.put("expiration_time", wechatQrcodeList.getExpirationTime());
-				map.put("qrcode_status", wechatQrcodeList.getStatus());
-
-				if (wechatQrcodeList.getRelatedTags() == null || wechatQrcodeList.getRelatedTags().length() <= 0) { // 根据related_tags是否为空判断是否有关联
-					map.put("qrcode_tag", 0);
+				if(wechatQrcodeList.getExpirationTime() != null) {
+					map.put("expiration_time", format.format(wechatQrcodeList.getExpirationTime()));
 				} else {
-					map.put("qrcode_tag", 1);
+					map.put("expiration_time", wechatQrcodeList.getExpirationTime());
 				}
+				
+				map.put("qrcode_status", statusToString(wechatQrcodeList.getStatus()));
+
+				if(wechatQrcodeList.getRelatedTags() != null && wechatQrcodeList.getRelatedTags().length() > 0) {
+					map.put("qrcode_tag", "有");
+				} else {
+					map.put("qrcode_tag", "无");
+				}
+				
 
 				// 获取 关注者数
 				WechatQrcodeFocus wechatQrcodeFocus = new WechatQrcodeFocus();
@@ -125,10 +188,65 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 
 				result.getData().add(map);
 			}
-		}
+		
 		
 		return result;
 	}
 	
+	private Date getExpirationTime(Integer expirationTimeInteger) {
+		Date expirationTime = new Date();
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(expirationTime);
+		switch(expirationTimeInteger.intValue()) {
+			case 0 : return null;
+			case 1 : calendar.add(Calendar.DATE, 3); break;
+			case 2 : calendar.add(Calendar.DATE, 7); break;
+			case 3 : calendar.add(Calendar.MONTH, 1); break;
+			case 4 : calendar.add(Calendar.MONTH, 3); break;
+			case 5 : calendar.add(Calendar.MONTH, 6); break;
+			case 6 : calendar.add(Calendar.YEAR, 1); break;
+			case 7 : calendar.add(Calendar.YEAR, 3); break;
+			case 8 : return null;
+		}
+		return calendar.getTime();
+	}
+	
+	// 根据状态获取对应的文字
+	private String statusToString(Byte status) {
+		if(status != null){
+            switch (status){
+                case 1:
+                    return "使用中";
+                case 2:
+                    return "已删除";
+                case 3:
+                    return "已失效";
+            }
+        }
+        return "删除";
+	}
+	
+	/**
+	 * 定时更新失效时间状态wechat_qrcode
+	 *
+	 * @param nowDate(格式
+	 *            yyyy-MM-dd HH:mm:ss)
+	 * @return
+	 * @author congshulin
+	 */
+	public void updateStatusByExpirationTime(Date nowDate) {
+		WechatQrcode wechatQrcode = new WechatQrcode();
+		if (nowDate != null) {
+			wechatQrcode.setExpirationTime(nowDate);
+		} else {
+			wechatQrcode.setExpirationTime(new Date());
+		}
 
+		wechatQrcode.setStatus(ApiConstant.TABLE_DATA_REMOVED_FAIL);
+
+		int count = wechatQrcodeDao.updateStatusByExpirationTime(wechatQrcode);
+		
+		logger.debug("根据当前时间{}更新状态为失效条数",new Date(),count);
+		
+	}
 }

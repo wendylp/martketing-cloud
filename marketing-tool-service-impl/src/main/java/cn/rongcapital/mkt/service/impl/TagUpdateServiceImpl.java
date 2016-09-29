@@ -29,7 +29,7 @@ public class TagUpdateServiceImpl implements TagUpdateService{
 		Tag tag = new Tag();
 		tag.setId(body.getTag_id());
 		tag.setName(body.getTag_name());
-		tag.setStatus(body.getStatus());
+		tag.setTagGroupId(body.getTag_group_id());
 		tag.setUpdateTime(new Date());
 		tagDao.updateById(tag);
 

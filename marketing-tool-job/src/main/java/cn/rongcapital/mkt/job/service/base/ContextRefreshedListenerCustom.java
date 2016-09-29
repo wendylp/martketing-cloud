@@ -7,6 +7,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.job.service.impl.mq.BaseMQService;
+import cn.rongcapital.mkt.job.service.impl.mq.MQTopicService;
  
 @Component
 public class ContextRefreshedListenerCustom implements ApplicationListener<ContextRefreshedEvent>{
@@ -17,10 +18,14 @@ public class ContextRefreshedListenerCustom implements ApplicationListener<Conte
 	@Autowired
 	private BaseMQService baseMQService;
 	
+	@Autowired
+	private MQTopicService mQTopicService;
+	
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		baseMQService.initJndiEvironment();
 		taskManager.initTask();
+		mQTopicService.initReceiver();
 	}
 
 }

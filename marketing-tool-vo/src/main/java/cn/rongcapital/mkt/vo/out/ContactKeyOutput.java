@@ -15,6 +15,7 @@ public class ContactKeyOutput {
     private Integer index;
     private Integer required;
     private Integer isChecked;
+    private Integer fieldType;
 
     @JsonProperty("field_name")
     public String getFieldName() {
@@ -61,12 +62,21 @@ public class ContactKeyOutput {
         this.required = required;
     }
 
-    @JsonProperty("is_checked")
+    @JsonProperty("ischecked")
     public Integer getIsChecked() {
         return isChecked;
     }
 
     public void setIsChecked(Integer isChecked) {
         this.isChecked = isChecked;
+    }
+
+    @JsonProperty("field_type")
+    public Integer getFieldType() {
+        return fieldType;
+    }
+
+    public void setFieldType(Integer fieldType) {
+        this.fieldType = fieldType;
     }
 }

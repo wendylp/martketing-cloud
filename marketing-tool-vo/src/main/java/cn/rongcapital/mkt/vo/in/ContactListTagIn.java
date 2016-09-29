@@ -1,31 +1,32 @@
 package cn.rongcapital.mkt.vo.in;
 
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
+import cn.rongcapital.mkt.vo.BaseInput;
+import org.codehaus.jackson.annotate.JsonProperty;
+import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class ContactListTagIn {
-
+public class ContactListTagIn extends BaseInput {
 	@NotNull
-	private Integer contact_id;
-	@NotEmpty
-	private String tag_name;
-	
- 
-	public String getTag_name() {
-		return tag_name;
+	private Integer contactId;
+	private ArrayList<String> tagNames;
+
+	@JsonProperty("tag_names")
+	public ArrayList<String> getTagNames() {
+		return tagNames;
 	}
-	public void setTag_name(String tag_name) {
-		this.tag_name = tag_name;
+
+	public void setTagNames(ArrayList<String> tagNames) {
+		this.tagNames = tagNames;
 	}
-	public Integer getContact_id() {
-		return contact_id;
+
+	@JsonProperty("contact_id")
+	public Integer getContactId() {
+		return contactId;
 	}
-	public void setContact_id(Integer contact_id) {
-		this.contact_id = contact_id;
+
+	public void setContactId(Integer contactId) {
+		this.contactId = contactId;
 	}
 }

@@ -5,6 +5,7 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
 import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContactListKeysSaveService;
+import cn.rongcapital.mkt.service.ImportContactsDataToMDataService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.ContactListKeyAttribute;
 import cn.rongcapital.mkt.vo.in.SaveContactListKeysIn;
@@ -20,6 +21,9 @@ import java.util.List;
  */
 @Service
 public class ContactListKeysSaveServiceImpl implements ContactListKeysSaveService {
+
+    @Autowired
+    private ImportContactsDataToMDataService importContactsDataToMDataService;
 
     @Autowired
     private ContactTemplateDao contactTemplateDao;
@@ -46,13 +50,14 @@ public class ContactListKeysSaveServiceImpl implements ContactListKeysSaveServic
             contactTemplateDao.updateById(upContactTemplate);
         }
 
+        importContactsDataToMDataService.importContactsDataToMData(contactId);
         return baseOutput;
     }
 
     private String getContactTemplateKeyList(ArrayList<ContactListKeyAttribute> fieldNameList) {
         StringBuffer stringBuffer = new StringBuffer();
         for(ContactListKeyAttribute contactListKeyAttribute : fieldNameList){
-            stringBuffer.append(contactListKeyAttribute + ",");
+            stringBuffer.append(contactListKeyAttribute.getFieldName() + ",");
         }
         return stringBuffer.substring(0,stringBuffer.length()-1).toString();
     }

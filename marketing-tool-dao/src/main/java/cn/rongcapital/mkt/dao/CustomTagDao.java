@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CustomTag;
 
@@ -88,4 +90,31 @@ public interface CustomTagDao extends BaseDao<CustomTag>{
 	List<CustomTag> selectListUndeleteTags(CustomTag t);
 	
 	List<CustomTag> selectByNameFuzzy(CustomTag param);
+	
+	int delecteCustomTagByContactId(@Param("contactId")Integer contactId);
+	
+	/**
+	 * @Title: selectCustomTagsByIds   
+	 * @Description: 根据id查询标自定义签列表
+	 * @param: @param ids
+	 * @param: @return      
+	 * @return: List<Tag>      
+	 * @throws
+	 */
+	List<CustomTag> selectCustomTagsByIds(String[]ids);
+	
+	/**
+	 * 通过名称获取id
+	 * @param name
+	 * @return
+	 */
+	Integer selectIdByName(@Param("name") String name);
+	
+	/**
+	 * 插入返回主键
+	 * @param customTag
+	 * @return
+	 */
+	Integer insertCustomTagResId(CustomTag customTag);
+	
 }

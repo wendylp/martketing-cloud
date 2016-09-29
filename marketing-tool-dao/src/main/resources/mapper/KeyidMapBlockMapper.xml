@@ -120,4 +120,14 @@
 		from keyid_map_block
 		order by seq
 	</select>
+
+	<select id="selectListByCodeList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.KeyidMapBlock">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE field IN]]>
+		<foreach collection="fieldCodeList" item="fieldCode" index="index" open="(" separator="," close=")">
+			<![CDATA[#{fieldCode}]]>
+		</foreach>
+	</select>
 </mapper>

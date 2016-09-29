@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.service;
 
+import java.util.Date;
+
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface WeixinQrcodeListService {
@@ -13,7 +15,7 @@ public interface WeixinQrcodeListService {
 	 * @return
 	 * @author shuiyangyang
 	 */
-	BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus);
+	BaseOutput getWeixinQrcodeList(String wxmpName, Integer expirationTime, Byte qrcodeStatus, int index, int size);
 	
 	/**
 	 * 根据输入的二维码名称模糊查询表wechat_qrcode
@@ -22,5 +24,15 @@ public interface WeixinQrcodeListService {
 	 * @return
 	 * @author shuiyangyang
 	 */
-	BaseOutput getWeixinQrcodeListQrname(String qrcodeName);
+	BaseOutput getWeixinQrcodeListQrname(String qrcodeName, int index,int size);
+	
+	/**
+	 * 定时更新失效时间状态wechat_qrcode
+	 *
+	 * @param nowDate 
+	 * 				设置的失效时间
+	 * @return
+	 * @author congshulin
+	 */
+	void updateStatusByExpirationTime(Date nowDate);
 }

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,tag_id as tagId,type as type,map_id as mapId,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,tag_id as tagId,tag_source as tagSource,map_id as mapId,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -15,7 +15,7 @@
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="tagId != null"><![CDATA[ AND tag_id = #{tagId}]]></if>
-		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		    	<if test="tagSource != null"><![CDATA[ AND tag_source = #{tagSource}]]></if>
 		    	<if test="mapId != null"><![CDATA[ AND map_id = #{mapId}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
@@ -33,7 +33,7 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="tagId != null"><![CDATA[tag_id = #{tagId},]]></if>
-		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
+		    	<if test="tagSource != null"><![CDATA[tag_source = #{tagSource},]]></if>
 		    	<if test="mapId != null"><![CDATA[map_id = #{mapId},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
@@ -42,11 +42,11 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CustomTagMap" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO custom_tag_map (tag_id,type,map_id,create_time)
+			INSERT INTO custom_tag_map (tag_id,tag_source,map_id,create_time)
 			VALUES
 			(
 			  #{tagId},
-			  #{type},
+			  #{tagSource},
 			  #{mapId},
 			  now()
 			)
@@ -98,14 +98,14 @@
 		<![CDATA[SET status = 1, update_time = NOW()]]>
 		<![CDATA[WHERE type = 0 AND map_id = #{headerId} AND STATUS = 0]]>
 	</update>
-	
+
 	<!-- 通过tag_id批量删除记录 -->
 	<update id="batchDeleteUseTagId" parameterType="java.lang.Integer">
 		<![CDATA[UPDATE custom_tag_map]]>
 		<![CDATA[SET status = 1, update_time = NOW()]]>
 		<![CDATA[WHERE type = 2 AND tag_id = #{tagId} AND STATUS = 0]]>
 	</update>
-	
+
 	<!-- 通过head_id获取受众细分关联的tag -->
 	<select id="getTagUseHeadId" parameterType="java.lang.Long" resultType="cn.rongcapital.mkt.po.CustomTagWithName">
 		SELECT ct.id AS id, ct.name AS name
@@ -133,15 +133,15 @@
 			)
 		</foreach>
 	</insert>
-	
+
 	<select id="selectCustomTagMapByTagName" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.CustomTagWithName">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		<![CDATA[WHERE tag_id IN]]>
-		(select id from custom_tag where name=#{tagName,jdbcType=VARCHAR})	
+		(select id from custom_tag where name=#{tagName,jdbcType=VARCHAR})
 	</select>
-	
+
 	<select id="selectCustomTagMapByTagNameandMapId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.CustomTagWithName">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
@@ -150,5 +150,14 @@
 		(select id from custom_tag where name=#{tagName})
 		and map_id=#{mapId}
 	</select>
-	
+
+	<!-- 通过mapId进行删除 -->
+	<delete id="deleteCustomTagMapByMapId" parameterType="java.lang.Integer">
+		DELETE
+		FROM
+			custom_tag_map
+		WHERE
+			map_id = #{mapId}
+	</delete>
+
 </mapper>

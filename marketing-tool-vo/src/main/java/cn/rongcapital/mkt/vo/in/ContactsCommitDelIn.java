@@ -2,7 +2,10 @@ package cn.rongcapital.mkt.vo.in;
 
 import javax.validation.constraints.NotNull;
 
-public class ContactsCommitDelIn {
+import cn.rongcapital.mkt.vo.BaseInput;
+
+public class ContactsCommitDelIn extends BaseInput {
+	
 	@NotNull
 	private Integer contact_id;
 	@NotNull

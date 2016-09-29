@@ -387,4 +387,43 @@
 			#{item}
 		</foreach>
 	</select>
+		<select id="searchDataByAudienceId" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataPopulation">
+		select IFNULL(a.name,'') as name,IFNULL(a.mobile,'') as mobile,IFNULL(a.gender,'') as gender,IFNULL(a.birthday,'') as birthdayExport,IFNULL(a.provice,'') as provice,IFNULL(a.city,'') as city,IFNULL(a.email,'') as email,IFNULL(a.identify_no,'') as identifyNo,IFNULL(a.driving_license,'') as drivingLicense 
+		from data_population a
+ 		inner join audience_list_party_map b on a.keyid = b.party_id
+		where b.id =  #{audience_id}
+	</select>
+	
+	<select id="segmentSearch" parameterType="cn.rongcapital.mkt.vo.in.SegmentSearchIn" resultType="cn.rongcapital.mkt.po.DataPopulation">
+		SELECT population.name from data_population population  
+		WHERE population.keyid in
+		<foreach collection="headidList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+		<![CDATA[and population.name like  CONCAT('%',#{queryName},'%')]]>
+	</select>
+	<select id="getSegmentSearchDownload" parameterType="java.util.List" resultType="cn.rongcapital.mkt.vo.out.SegmentSearchDownloadOut">
+	SELECT population.name,population.mobile,
+	case population.gender
+	when '1' then '男'
+	when '2' then '女'
+	when '3' then '未知'
+	end gender,
+	population.birthday,population.provice,population.city,
+	population.email,population.identify_no as identifyNo,population.driving_license as drivingLicense,population.wx_code as wxCode,population.qq 
+	from data_population population INNER JOIN data_party party on population.keyid = party.id 
+	WHERE party.id in
+	<foreach collection="headidList" index="index" item="item" separator="," open="(" close=")">
+		#{item}
+	</foreach>
+</select>
+
+	<select id="selectCountFromContactList" parameterType="java.util.List" resultType="java.lang.Integer">
+		SELECT count(distinct keyid)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id in
+		<foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

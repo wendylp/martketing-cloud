@@ -42,7 +42,8 @@ public class ContactTemplateServiceImpl implements ContactTemplateService {
 			result.setTotal(contactTemplates.size());
 			for (ContactTemplate w : contactTemplates) {
 				ContactTemplate copyContactTemplate = (ContactTemplate) deepClone(w);
-				copyContactTemplate.setContactName("[幅本]" + w.getContactName());
+				copyContactTemplate.setContactId(Long.valueOf(System.currentTimeMillis() / 1000));
+				copyContactTemplate.setContactName("[副本]" + w.getContactName());
 				copyContactTemplate.setCreateTime(null);
 				copyContactTemplate.setUpdateTime(null);
 				copyContactTemplate.setStatus(null);
@@ -50,7 +51,7 @@ public class ContactTemplateServiceImpl implements ContactTemplateService {
 				List<ContactTemplate> copyContactTemplates = contactTemplateDao.selectList(copyContactTemplate);
 				if (CollectionUtils.isNotEmpty(copyContactTemplates) && copyContactTemplates.size() > 0) {
 					Map<String, Object> map = new HashMap<>();
-					map.put("id", copyContactTemplates.get(0).getId());
+					map.put("contact_id", copyContactTemplates.get(0).getContactId());
 					map.put("updatetime", DateUtil.getStringFromDate(copyContactTemplates.get(0).getUpdateTime(),
 							"yyyy-MM-dd HH:mm:ss"));
 					result.getData().add(map);

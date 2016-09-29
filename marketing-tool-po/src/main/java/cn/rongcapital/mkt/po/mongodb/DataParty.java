@@ -84,6 +84,7 @@ public class DataParty implements Serializable {
 
     private Byte status;
 
+	@Field(value = "batch_id")
     private String batchId;
 
     private String updateTime;
@@ -112,6 +113,9 @@ public class DataParty implements Serializable {
 
 	// 购物记录的订单状态中，交易完成／交易关闭／待支付
 	private String orderStatus;
+
+	@Field(value = "custom_tag_list")
+	private List<String> customTagList;
 
 	public String getId() {
 		return id;
@@ -431,5 +435,13 @@ public class DataParty implements Serializable {
 
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+
+	public List<String> getCustomTagList() {
+		return customTagList;
+	}
+
+	public void setCustomTagList(List<String> customTagList) {
+		this.customTagList = customTagList;
 	}
 }

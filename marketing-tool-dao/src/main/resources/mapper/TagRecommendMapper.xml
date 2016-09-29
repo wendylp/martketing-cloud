@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,tag_group_id as tagGroupId,tag_group_name as tagGroupName,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,tag_group_id as tagGroupId,tag_group_name as tagGroupName,status as status,create_time as createTime,update_time as updateTime,tag_desc as tagDesc,flag as flag]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -19,6 +19,8 @@
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="tagDesc != null"><![CDATA[ AND tag_desc = #{tagDesc}]]></if>
+		    	<if test="flag != null"><![CDATA[ AND flag = #{flag}]]></if>
 		</where>
 	</sql>
 	
@@ -33,19 +35,23 @@
 		<set>
 		    	<if test="tagGroupId != null"><![CDATA[tag_group_id = #{tagGroupId},]]></if>
 		    	<if test="tagGroupName != null"><![CDATA[tag_group_name = #{tagGroupName},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="tagDesc != null"><![CDATA[tag_desc = #{tagDesc},]]></if>
+		    	<if test="flag != null"><![CDATA[flag = #{flag}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.TagRecommend" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tag_recommend (tag_group_id,tag_group_name,create_time)
+			INSERT INTO tag_recommend (tag_group_id,tag_group_name,create_time,tag_desc,flag)
 			VALUES
 			(
 			  #{tagGroupId},
 			  #{tagGroupName},
-			  now()
+			  now(),
+			  #{tagDesc},
+			  #{flag}
 			)
 		]]>
 	</insert>

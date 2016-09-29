@@ -5,10 +5,23 @@
 	<artifactId>marketing-cloud</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	<build>
+	<plugins>
+		     <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-surefire-plugin</artifactId>
+		        <configuration>
+		          <skip>true</skip>
+		        </configuration>
+		      </plugin>
+	</plugins>
+	</build>
+	
 	<!-- properties -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <jetty.version>8.0.0.RC0</jetty.version>   
 	</properties>
 	<!-- modules -->
 	<modules>
@@ -20,6 +33,8 @@
    		<module>marketing-tool-vo</module>
    		<module>marketing-tool-job</module>
    		<module>marketing-tool-common</module>
+		<module>marketing-tool-biz</module>
+		<module>marketing-tool-biz-impl</module>   		
 	</modules>
 	<!-- parent -->
 	<parent>
@@ -137,6 +152,22 @@
 		   <groupId>joda-time</groupId>
 		   <artifactId>joda-time</artifactId>
 	   </dependency>
+
+<!-- 		<dependency>  
+		    <groupId>org.springframework.boot</groupId>  
+		    <artifactId>spring-boot-starter-freemarker</artifactId>  
+		</dependency>  --> 
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+			<scope>test</scope>
+		</dependency>
 	      
     </dependencies>
 
@@ -163,7 +194,7 @@
             <properties>
             	<mvnvar.log.path>/rc/log/mkt/test</mvnvar.log.path>
                 <mvnvar.conf.path>conf_test</mvnvar.conf.path>
-                <maven.repository.rongcapital.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
             </properties>
         </profile>
         <profile>
@@ -172,6 +203,22 @@
                 <mvnvar.log.path>/rc/log/mkt/production</mvnvar.log.path>
                 <mvnvar.conf.path>conf</mvnvar.conf.path>
                 <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>cloud_dev</id>
+            <properties>
+            	<mvnvar.log.path>/rc/log/mkt/dev</mvnvar.log.path>
+                <mvnvar.conf.path>cloud_dev</mvnvar.conf.path>
+                <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>cloud_test</id>
+            <properties>
+            	<mvnvar.log.path>/rc/log/mkt/test</mvnvar.log.path>
+                <mvnvar.conf.path>cloud_test</mvnvar.conf.path>
+				<maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
             </properties>
         </profile>
     </profiles>
@@ -189,5 +236,5 @@
 	        </snapshots>
     	</repository>
 	</repositories>
-    
+	
 </project>	

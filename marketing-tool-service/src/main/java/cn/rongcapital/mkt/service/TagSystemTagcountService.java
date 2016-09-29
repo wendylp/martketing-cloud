@@ -21,5 +21,18 @@ public interface TagSystemTagcountService {
 	 * @return
 	 */
 	public BaseOutput getTagcount(String method, String userToken);
+	
+	/**
+	 * 从mongo中获取系统标签组数量
+	 * 
+	 * @author congshulin
+	 * @功能简述 : 获取系统标签组列表
+	 * @param method
+	 * @param userToken
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	public BaseOutput getMonggTagcount(String method, String userToken);
 
 }

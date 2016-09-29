@@ -103,9 +103,9 @@ public class ImportTemplate extends BaseQuery implements Comparable<ImportTempla
 
     @Override
     public int compareTo(ImportTemplate o) {
-        if (this.id > o.id) {
+        if (this.templType > o.templType) {
             return 1;
-        } else if (this.id < o.id) {
+        } else if (this.templType < o.templType) {
             return -1;
         }
         return 0;

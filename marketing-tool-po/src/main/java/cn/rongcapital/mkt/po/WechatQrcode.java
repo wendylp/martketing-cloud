@@ -8,6 +8,8 @@ public class WechatQrcode extends BaseQuery {
     private Integer id;
 
     private String wxName;
+    
+    private String wxAcct;
 
     private Integer chCode;
 
@@ -21,7 +23,7 @@ public class WechatQrcode extends BaseQuery {
 
     private Date createTime;
 
-    private Integer expirationTime;
+    private Date expirationTime;
 
     private Byte status;
 
@@ -29,7 +31,7 @@ public class WechatQrcode extends BaseQuery {
 
     private String qrcodeUrl;
 
-    private Integer batchId;
+    private String batchId;
 
     private String qrcodeName;
 
@@ -45,6 +47,14 @@ public class WechatQrcode extends BaseQuery {
 
     public String getWxName() {
         return wxName;
+    }
+    
+    public String getWxAcct() {
+        return wxAcct;
+    }
+
+    public void setWxAcct(String wxAcct) {
+        this.wxAcct = wxAcct == null ? null : wxAcct.trim();
     }
 
     public void setWxName(String wxName) {
@@ -99,11 +109,11 @@ public class WechatQrcode extends BaseQuery {
         this.createTime = createTime;
     }
 
-    public Integer getExpirationTime() {
+    public Date getExpirationTime() {
         return expirationTime;
     }
 
-    public void setExpirationTime(Integer expirationTime) {
+    public void setExpirationTime(Date expirationTime) {
         this.expirationTime = expirationTime;
     }
 
@@ -131,12 +141,12 @@ public class WechatQrcode extends BaseQuery {
         this.qrcodeUrl = qrcodeUrl == null ? null : qrcodeUrl.trim();
     }
 
-    public Integer getBatchId() {
+    public String getBatchId() {
         return batchId;
     }
 
-    public void setBatchId(Integer batchId) {
-        this.batchId = batchId;
+    public void setBatchId(String batchId) {
+        this.batchId = batchId == null ? null : batchId.trim();
     }
 
     public String getQrcodeName() {

@@ -26,4 +26,19 @@ public interface TaggroupSystemListGetService {
     public BaseOutput getTagGroupByParentGroupId(String method, 
     		String userToken, Integer tagGroupId,
     		Integer index, Integer size);
+    
+	/**
+	 * 根据标签树的id从mongodb中获取推荐标签值
+	 * 
+	 * @author congshulin
+	 * @功能简述 : 获取系统标签组列表
+	 * @param method
+	 * @param userToken
+	 * @param tagGroupId
+	 * @param index
+	 * @param size
+	 * @return BaseOutput
+	 */
+	public BaseOutput getMongoTagRecommendByTagTreeId(String method, String userToken, String tagGroupId,
+			Integer index, Integer size);
 }

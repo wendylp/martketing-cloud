@@ -14,7 +14,7 @@ public class FileTagUpdateIn extends BaseInput{
 
     private String fileUnique;
     private String fileType;
-    private ArrayList<String> tag_names;
+    private ArrayList<String> tagNames;
 
     @JsonProperty("file_unique")
     public String getFileUnique() {
@@ -35,11 +35,11 @@ public class FileTagUpdateIn extends BaseInput{
     }
 
     @JsonProperty("tag_names")
-    public ArrayList<String> getTag_names() {
-        return tag_names;
+    public ArrayList<String> getTagNames() {
+        return tagNames;
     }
 
-    public void setTag_names(ArrayList<String> tag_names) {
-        this.tag_names = tag_names;
+    public void setTagNames(ArrayList<String> tagNames) {
+        this.tagNames = tagNames;
     }
 }
