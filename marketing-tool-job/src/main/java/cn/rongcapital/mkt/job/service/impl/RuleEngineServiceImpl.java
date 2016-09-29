@@ -136,12 +136,12 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                                     tagRecommend.getTagNameEng(), tagValue, 1);
                     tagList.add(tag);
                 }
-                //属性标签
-                Map<String, Object> map = synchroMongodbCityService.synchroMongodbCity(dataParty);
-                tagList.add((Tag) map.get("city"));
-                tagList.add((Tag) map.get("mediaTrenchGenera"));
-                tagList.add((Tag) map.get("mediaName"));
                 if (!CollectionUtils.isEmpty(tagList)) {
+                    //属性标签
+                    Map<String, Object> map = synchroMongodbCityService.synchroMongodbCity(dataParty);
+                    tagList.add((Tag) map.get("city"));
+                    tagList.add((Tag) map.get("mediaTrenchGenera"));
+                    tagList.add((Tag) map.get("mediaName"));
                     // 更新插入
                     Update update = new Update().set("tag_list", tagList);
                     logger.info("同步标签数据方法开始执行：----------->标签属性为，Mid:" + bizCode);
