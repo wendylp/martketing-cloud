@@ -19,7 +19,7 @@
 			<artifactId>marketing-tool-vo</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
@@ -54,6 +54,10 @@
 			<groupId>com.google.zxing</groupId>
 			<artifactId>core</artifactId>
 			<version>3.2.1</version>
+		</dependency>
+		<dependency>
+		  <groupId>redis.clients</groupId>
+		  <artifactId>jedis</artifactId>
 		</dependency>
 	</dependencies>
 	

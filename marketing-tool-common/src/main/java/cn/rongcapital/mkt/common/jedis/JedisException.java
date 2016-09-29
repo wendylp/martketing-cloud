@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.jedis;
+package cn.rongcapital.mkt.common.jedis;
 
 public class JedisException extends Exception {
 	

@@ -38,6 +38,8 @@ public class TagRecommend implements Serializable {
 	private Date createTime;
 	@Field(value = "update_time")
 	private Date updateTime;
+	@Field(value = "tag_name_eng")
+	private String tagNameEng;
 
     @Field(value = "source")
     private String source;
@@ -65,7 +67,7 @@ public class TagRecommend implements Serializable {
 	public void setTagName(String tagName) {
 		this.tagName = tagName;
 	}
-
+	
 	public List<String> getTagList() {
 		return tagList;
 	}
@@ -74,52 +76,61 @@ public class TagRecommend implements Serializable {
 		this.tagList = tagList;
 	}
 
-	public int getStatus() {
-		return status;
-	}
+    public int getStatus() {
+        return status;
+    }
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-	public Boolean getFlag() {
-		return flag;
-	}
+    public Boolean getFlag() {
+        return flag;
+    }
 
-	public void setFlag(Boolean flag) {
-		this.flag = flag;
-	}
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
+    }
 
-	public String getTagDesc() {
-		return tagDesc;
-	}
+    public String getTagDesc() {
+        return tagDesc;
+    }
 
-	public void setTagDesc(String tagDesc) {
-		this.tagDesc = tagDesc;
-	}
+    public void setTagDesc(String tagDesc) {
+        this.tagDesc = tagDesc;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
+    public Date getUpdateTime() {
+        return updateTime;
+    }
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
-	public String getSource() {
-		return source;
-	}
+    public String getTagNameEng() {
+        return tagNameEng;
+    }
 
-	public void setSource(String source) {
-		this.source = source;
-	}
+    public void setTagNameEng(String tagNameEng) {
+        this.tagNameEng = tagNameEng;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
 
 }

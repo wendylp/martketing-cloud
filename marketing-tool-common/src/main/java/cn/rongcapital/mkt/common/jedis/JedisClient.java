@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.jedis;
+package cn.rongcapital.mkt.common.jedis;
 
 import java.util.List;
 import java.util.Map;
@@ -73,6 +73,20 @@ public class JedisClient {
 		
 		return rs;
 	}
+	
+   public static Map<String, String> getuser(String key) throws JedisException {
+        Jedis jedis = JedisConnectionManager.getConnectionUser();
+        Map<String, String> rs = null;
+        try {
+//            Map<String, String> map =jedis.hgetAll(key);
+            rs = jedis.hgetAll(key);
+        } catch (Exception e) {
+            throw new JedisException("获取单个key值异常!",e);
+        } finally {
+            JedisConnectionManager.closeConnectionUser(jedis);
+        }        
+        return rs;
+    }
 
 	public static List<String> get(String[] keys) throws JedisException {
 
@@ -122,6 +136,51 @@ public class JedisClient {
 		return rsb;
 	}
 
+	/**
+	 * @param key
+	 * @param value
+	 * 临时为解决用户验证的方法
+	 * @return
+	 * @throws JedisException
+	 */
+	public static boolean setUser(String key, String value) throws JedisException {
+        Jedis jedis = JedisConnectionManager.getConnectionUser();
+        boolean rsb;
+        try {
+            String rs = jedis.set(key, value);
+            rsb = rs != null && rs.equals("OK") ? true : false;
+        }
+        catch (Exception e) {
+            throw new JedisException("添加单个String key, String value值异常!", e);
+        }
+        finally {
+            JedisConnectionManager.closeConnectionUser(jedis);
+        }
+        return rsb;
+	 }
+
+    /**
+     * @param key
+     * @param value
+     * @param seconds
+     * 临时为解决用户验证的方法
+     * @return
+     * @throws JedisException
+     */
+    public static boolean expireUser(String key, int seconds) throws JedisException {
+        Jedis jedis = JedisConnectionManager.getConnectionUser();
+        boolean rsb;
+        try {
+            Long rs = jedis.expire(key, seconds);
+            rsb = rs == 1 ? true : false;
+        } catch (Exception e) {
+            throw new JedisException("添加单个String key, String value, int seconds值异常!",e);
+        } finally {
+            JedisConnectionManager.closeConnectionUser(jedis);
+        }	        
+        return rsb;
+    }
+	
 	public static boolean set(byte[] key, byte[] value) throws JedisException {
 
 		Jedis jedis = JedisConnectionManager.getConnection();

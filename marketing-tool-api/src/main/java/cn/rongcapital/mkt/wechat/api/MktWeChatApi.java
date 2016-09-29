@@ -656,7 +656,9 @@ public class MktWeChatApi {
 			imgAsset.setSearchKey(searchKey);
 		}
 
-		if (index != 0) {
+		imgAsset.setIndex((index-1)*size);
+		imgAsset.setSize(size);
+		/*if (index != 0) {
 			imgAsset.setIndex(index);
 		} else {
 			imgAsset.setIndex(1);
@@ -665,7 +667,7 @@ public class MktWeChatApi {
 			imgAsset.setSize(size);
 		} else {
 			imgAsset.setSize(10);
-		}
+		}*/
 		return etWxImgTextAssetService.getWxImgTextAssetService(imgAsset);
 	}
 }
