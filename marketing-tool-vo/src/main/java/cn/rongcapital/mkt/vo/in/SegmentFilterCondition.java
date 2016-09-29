@@ -6,56 +6,55 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
-public class SegmentFilterCondition{
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SegmentFilterCondition {
 
-    @NotEmpty
-    private String tag_id;
-    
-    @NotEmpty
-    private String tag_name;
-	
-    @NotEmpty
+	@NotEmpty
+	private String tagId;
+
+	@NotEmpty
+	private String tagName;
+
+	@NotEmpty
 	private String exclude;
-   
-    @NotNull
-    private Integer tag_group_id;
-    
-	
-    @JsonProperty("tag_id")
-	public String getTag_id() {
-		return tag_id;
+
+	@NotNull
+	private String tagGroupId;
+
+	@JsonProperty("tag_id")
+	public String getTagId() {
+		return tagId;
 	}
 
-	public void setTag_id(String tag_id) {
-		this.tag_id = tag_id;
+	public void setTag_id(String tagId) {
+		this.tagId = tagId;
 	}
-	
-	@JsonProperty("tag_name")
-	public String getTag_name() {
-        return tag_name;
-    }
 
-    public void setTag_name(String tag_name) {
-        this.tag_name = tag_name;
-    }
-	
-    @JsonProperty("exclude")
+	@JsonProperty("exclude")
 	public String getExclude() {
-        return exclude;
-    }
-
-    public void setExclude(String exclude) {
-        this.exclude = exclude;
-    }
-
-    @JsonProperty("tag_group_id")
-	public Integer getTag_group_id() {
-		return tag_group_id;
+		return exclude;
 	}
 
-	public void setTag_group_id(Integer tag_group_id) {
-		this.tag_group_id = tag_group_id;
+	public void setExclude(String exclude) {
+		this.exclude = exclude;
 	}
-	
+
+	@JsonProperty("tag_name")
+	public String getTagName() {
+		return tagName;
+	}
+
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
+	}
+
+	@JsonProperty("tag_group_id")
+	public String getTagGroupId() {
+		return tagGroupId;
+	}
+
+	public void setTagGroupId(String tagGroupId) {
+		this.tagGroupId = tagGroupId;
+	}
+
 }
