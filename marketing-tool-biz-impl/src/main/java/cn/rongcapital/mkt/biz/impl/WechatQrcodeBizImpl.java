@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tagsin.tutils.http.HttpResult;
 import com.tagsin.tutils.http.Requester;
 import com.tagsin.tutils.http.Requester.Method;
@@ -208,16 +209,20 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			List<Object> data = new ArrayList<Object>();
 			int totalSucc=0;
 			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();		
-			List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);			
+			List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);
+			logger.info(JSONObject.toJSONString(webchatAuthInfos)+"**************************************");
 			if(webchatAuthInfos!=null&&webchatAuthInfos.size()>0){				
 				for(Iterator<WebchatAuthInfo> iter = webchatAuthInfos.iterator();iter.hasNext();){
 					App app = this.getApp();
 					WebchatAuthInfo webchatAuthInfoTemp = iter.next();
+					logger.info(JSONObject.toJSONString(webchatAuthInfoTemp)+"**********************************");
 					app.setAuthAppId(webchatAuthInfoTemp.getAuthorizerAppid());
 					app.setAuthRefreshToken(webchatAuthInfoTemp.getAuthorizerRefreshToken());
 					for(int i=startSceneId;i<=endSceneId;i++){
 						try {
+							logger.info(JSONObject.toJSONString(webchatAuthInfoTemp.getAuthorizerAppid())+"*********************");
 							WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName,webchatAuthInfoTemp.getAuthorizerAppid());
+							logger.info(JSONObject.toJSONString(wechatQrcodeTicket)+"***********************************");
 							if(wechatQrcodeTicket!=null){
 								/**
 								 * 生成二维码对象到数据库
