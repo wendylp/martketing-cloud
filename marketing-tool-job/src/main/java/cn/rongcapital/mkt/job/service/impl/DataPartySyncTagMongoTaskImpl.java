@@ -41,7 +41,8 @@ public class DataPartySyncTagMongoTaskImpl implements TaskService {
 		long totalRecord = mongoTemplate.count(null, DataParty.class);
 		long totalPage = (totalRecord + pageSize - 1) / pageSize;
 		ArrayList<Integer> arrayList = new ArrayList<Integer>();
-		
+		logger.info("----------dataParty----tag_list----同步");
+		logger.info("----------dataParty----未同步记录数:" + totalRecord);
 		for (int index = 0; index < totalPage; index++) {
 			List<DataParty> dataPartyList = mongoTemplate.find(new Query().skip(index * pageSize).limit(pageSize),
 					DataParty.class);
@@ -52,10 +53,12 @@ public class DataPartySyncTagMongoTaskImpl implements TaskService {
 			for (DataParty dp : dataPartyList) {
 				arrayList.add(dp.getMid());
 			}
+			logger.info("----------调用规则规则引擎----start");
 			Boolean flag = ruleEngineService.requestRuleEngine(arrayList);
 			if (flag) {
 				ruleEngineService.synchMongoTagData();
 			}
+			logger.info("----------调用规则规则引擎----end");
 		}
 	}
 }
