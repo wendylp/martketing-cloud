@@ -31,17 +31,21 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
     @Autowired
     private FindCustomTagInfoService findCustomTagInfoService;
 
+    private final String TAG_TYPE = "tag_type";
+    private final String CUSTOM_TAG_LIST = "custom_tag_list";
+    private final String FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public BaseOutput getCustomTagList(String method, String userToken, Integer index, Integer size) {
         CustomTagOutput customTagOutput = new CustomTagOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO);
         getShownColumnsInfo(customTagOutput);
 
-        Query countQuery = new Query(Criteria.where("tag_type").is(ApiConstant.CUSTOM_TAG_LEAF_TYPE));
+        Query countQuery = new Query(Criteria.where(TAG_TYPE).is(ApiConstant.CUSTOM_TAG_LEAF_TYPE));
         Long totalTagCount = mongoTemplate.count(countQuery,BaseTag.class);
         customTagOutput.setTotal(totalTagCount.intValue());
 
-        Query tagQuery = new Query(Criteria.where("tag_type").is(ApiConstant.CUSTOM_TAG_LEAF_TYPE)).skip((index -1 ) * size).limit(size);
+        Query tagQuery = new Query(Criteria.where(TAG_TYPE).is(ApiConstant.CUSTOM_TAG_LEAF_TYPE)).skip((index -1 ) * size).limit(size);
         List<BaseTag> customTagLeafs = mongoTemplate.find(tagQuery,BaseTag.class);
         if(!CollectionUtils.isEmpty(customTagLeafs)){
             for(BaseTag baseTag : customTagLeafs){
@@ -49,8 +53,8 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
                 customTagShown.setTagId(baseTag.getTagId());
                 customTagShown.setTagName(baseTag.getTagName());
                 customTagShown.setTagSource(baseTag.getSource());
-                customTagShown.setCreateTime(DateUtil.getStringFromDate(baseTag.getCreateTime(),"yyyy-MM-dd hh:mm:ss"));
-                Query query = new Query(Criteria.where("custom_tag_list").is(baseTag.getTagId()));
+                customTagShown.setCreateTime(DateUtil.getStringFromDate(baseTag.getCreateTime(),FORMAT_STRING));
+                Query query = new Query(Criteria.where(CUSTOM_TAG_LIST).is(baseTag.getTagId()));
                 Long audienceCoverCount = mongoTemplate.count(query, DataParty.class);
                 customTagShown.setCoverAudienceCount(audienceCoverCount.intValue());
                 customTagOutput.getCustomTagShownList().add(customTagShown);
