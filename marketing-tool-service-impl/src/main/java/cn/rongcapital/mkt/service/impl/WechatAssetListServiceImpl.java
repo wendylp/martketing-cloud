@@ -46,7 +46,8 @@ public class WechatAssetListServiceImpl implements WechatAssetListService{
         WechatAsset wechatAsset = new WechatAsset();
         
         if(index != null){
-        	wechatAsset.setStartIndex(index);
+        	//wechatAsset.setStartIndex(index);
+        	wechatAsset.setStartIndex((index-1)*size);
         }
         if(size != null){
         	wechatAsset.setPageSize(size);
