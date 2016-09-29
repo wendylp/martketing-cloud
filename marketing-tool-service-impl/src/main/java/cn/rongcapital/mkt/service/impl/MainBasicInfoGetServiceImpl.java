@@ -119,6 +119,7 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 						String gender = GenderUtils.byteToChar(dataPopulation.getGender());
 						dataVo.setWx_gender(String.valueOf(gender));
 						dataVo.setWx_nickname(dataPopulation.getNickname());
+						dataVo.setPhoto(dataPopulation.getHeadImgUrl());
 					}else{
 						dataVo.setContactId(keyId);
 						dataVo.setName(dataPopulation.getName());
@@ -147,7 +148,8 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 						dataVo.setProvice(dataPopulation.getProvice());
 						dataVo.setCity(dataPopulation.getCity());
 						dataVo.setJob(dataPopulation.getJob());
-
+						dataVo.setPhoto(dataPopulation.getHeadImgUrl());
+						
 						DecimalFormat df = new DecimalFormat("0.00");
 						BigDecimal monthlyIncome = dataPopulation.getMonthlyIncome();
 						if (monthlyIncome != null) {
