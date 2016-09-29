@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -495,7 +496,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 				List<WXMoudelVO> wxList = new ArrayList<>();
 				List<WXMoudelVO> wxSuccessList = new ArrayList<>();
 				//List<WXMoudelVO> wxFailList = new ArrayList<>();
-				Map<String, WXMoudelVO> wxFailMap = new HashMap<>();
+				Map<String, WXMoudelVO> wxFailMap = new LinkedHashMap<>();
 				while (rowIterator.hasNext()) {
 					Row row = rowIterator.next();
 					Integer rowIndex = row.getRowNum();
