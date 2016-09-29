@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.common.filter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,10 +23,12 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jboss.resteasy.specimpl.ResponseBuilderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -33,8 +36,10 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisException;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.RedisUserTokenVO;
 
 
@@ -52,7 +57,6 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	 * 带上user_token的需要去redis数据库校验，校验通过则继续往下走，如果不通过则返回错误信息，前端跳转到登录页面或者错误信息页面
 	 * 不带user_token的链接则加上user_token=123 继续往下走
 	 * redis校验规则：
-	 * 
 	 * @return: Response
 	 */
 	@Override
@@ -65,49 +69,58 @@ public class ApiRequestRouter implements ContainerRequestFilter {
             logger.info(e.getMessage());
         }
 	    
-        if(redisUserTokenVO.getCode()!=0){	
-       	   logger.info("1111111111111111111111111111111111111111");
-           requestContext.abortWith(Response.status(redisUserTokenVO.getCode()).entity(JSONObject.toJSONString(redisUserTokenVO)).build());           
+        if(redisUserTokenVO.getCode()!=0){	       	
+            requestContext.abortWith(Response.status(redisUserTokenVO.getCode()).entity(getBaseOutputBack(redisUserTokenVO)).build());
+        	ResponseBuilderImpl builder = new ResponseBuilderImpl();
+            builder.header("Content-Type", "application/json; charset=utf-8");
+            builder.entity(JSONObject.toJSONString(redisUserTokenVO));           
+            requestContext.abortWith(builder.build());
        }else{
 	   		String url = requestContext.getUriInfo().getPath();
 	   		String appId = "";
 	   		if(StringUtils.isNotEmpty(url)&&url.contains(ApiConstant.API_PATH)){
 	   			if(url.length()>=5){
 	   				appId = url.substring(5);
-	   			}							
+	   			}
+	   			
+		   		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 	   			
+		   		    if(redisUserTokenVO.getCode()==0&&StringUtils.isNotEmpty(redisUserTokenVO.getMsg())){	   		    	
+		   		        requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
+		   		    }
+		   		   
+		   			List<String> pList = requestContext.getUriInfo().getQueryParameters().get(ApiConstant.API_METHOD);
+		   			String method = pList==null?null:pList.get(0);
+		   			if(StringUtils.isBlank(method)){	   				
+		   				requestContext.abortWith(Response.status(404).entity("Api method not found").build());
+		   			}
+		   			if(StringUtils.isNotEmpty(appId)){				
+		   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
+		   				requestContext.setRequestUri(newRequestURI);
+		   				
+		   			}else{
+		   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
+		   						.path(ApiConstant.API_PATH+"/"+method).build();
+		   				logger.info("dddddddddddddddddddddddddddd");
+		   				requestContext.setRequestUri(newRequestURI);
+		   			}
+		   		}
+		   		
 	   		}else{
 	   			requestContext.abortWith(Response.status(404).entity("Api not found").build());
 	   		}
-	
-	   		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 
-	   			logger.info("2222222222222222222222222222222222222222222");
-	   		    if(redisUserTokenVO.getCode()==0&&StringUtils.isNotEmpty(redisUserTokenVO.getMsg())){
-	   		    	logger.info("33333333333333333333333333333333333333");
-	   		        requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
-	   		    }
-	   		    logger.info("aaaaaaaaaaaaaaaaaaaa");
-	   			List<String> pList = requestContext.getUriInfo().getQueryParameters()
-	   								 .get(ApiConstant.API_METHOD);
-	   			String method = pList==null?null:pList.get(0);
-	   			if(StringUtils.isBlank(method)){
-	   				logger.info("bbbbbbbbbbbbbbbbbbbbbb");
-	   				requestContext.abortWith(Response.status(404).entity("Api method not found").build());
-	   			}
-	   			if(StringUtils.isNotEmpty(appId)){				
-	   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
-	   						.path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
-	   				logger.info("ccccccccccccccccccccc");
-	   				requestContext.setRequestUri(newRequestURI);
-	   				
-	   			}else{
-	   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
-	   						.path(ApiConstant.API_PATH+"/"+method).build();
-	   				logger.info("dddddddddddddddddddddddddddd");
-	   				requestContext.setRequestUri(newRequestURI);
-	   			}
-	   		}
        }
 	}
+	
+	public BaseOutput getBaseOutputBack(RedisUserTokenVO redisUserTokenVO){
+		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+	            ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+	List<Object> data = new ArrayList<Object>();
+	data.add(JSONObject.toJSONString(redisUserTokenVO));
+	baseOutput.setData(data);
+	return baseOutput;
+	} 
+    
+	
 	
     public RedisUserTokenVO validateUserToken(ContainerRequestContext requestContext) throws JedisException{
     	logger.info("is into validateUserToken");
