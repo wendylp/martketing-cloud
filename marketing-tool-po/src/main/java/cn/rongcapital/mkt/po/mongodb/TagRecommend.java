@@ -67,7 +67,7 @@ public class TagRecommend implements Serializable {
 	public void setTagName(String tagName) {
 		this.tagName = tagName;
 	}
-
+	
 	public List<String> getTagList() {
 		return tagList;
 	}
