@@ -57,10 +57,15 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	 */
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException{
+		logger.info("is  into ApiRequestRouter ");
+		logger.info(JSONObject.toJSONString(requestContext));
 	    RedisUserTokenVO redisUserTokenVO = null;
 	    try {
+	    	logger.info("0000000000000000000000000000000");
 	        redisUserTokenVO = validateUserToken(requestContext);
-	        if(redisUserTokenVO.getCode()!=0){	            
+	        logger.info(JSONObject.toJSONString(redisUserTokenVO));
+	        if(redisUserTokenVO.getCode()!=0){	
+	        	 logger.info("1111111111111111111111111111111111111111");
 	            requestContext.abortWith(Response.status(redisUserTokenVO.getCode()).entity(JSONObject.toJSONString(redisUserTokenVO)).build());
 	        }
         } catch (JedisException e) {           
@@ -78,7 +83,9 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 		}
 
 		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 
+			logger.info("2222222222222222222222222222222222222222222");
 		    if(redisUserTokenVO.getCode()==0&&StringUtils.isNotEmpty(redisUserTokenVO.getMsg())){
+		    	logger.info("33333333333333333333333333333333333333");
 		        requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
 		    }
 		    
