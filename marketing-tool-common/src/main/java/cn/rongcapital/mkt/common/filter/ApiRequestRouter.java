@@ -63,13 +63,16 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext requestContext) throws IOException{
 	    RedisUserTokenVO redisUserTokenVO = null;
 	    try {
+	    	 logger.info("00000000000000000000000000000000000000");
 	        redisUserTokenVO = validateUserToken(requestContext);
 	        logger.info(JSONObject.toJSONString(redisUserTokenVO));
         } catch (JedisException e) {           
             logger.info(e.getMessage());
-        }	    
+        }
+	    
         if(redisUserTokenVO.getCode()!=0){	       	
 //            requestContext.abortWith(Response.status(redisUserTokenVO.getCode()).entity(getBaseOutputBack(redisUserTokenVO)).build());
+        	logger.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         	ResponseBuilderImpl builder = new ResponseBuilderImpl();
             builder.header("Content-Type", "application/json; charset=utf-8");
             builder.entity(JSONObject.toJSONString(redisUserTokenVO));           
@@ -78,35 +81,52 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	   		String url = requestContext.getUriInfo().getPath();
 	   		String appId = "";
 	   		if(StringUtils.isNotEmpty(url)&&url.contains(ApiConstant.API_PATH)){
+	   			logger.info("bbbbbbbbbbbbbbbbbbbbbbbbbb");
 	   			if(url.length()>=5){
 	   				appId = url.substring(5);
-	   			}
-	   			
+	   			}	   			
 		   		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 	   			
-		   		    if(redisUserTokenVO.getCode()==0&&StringUtils.isNotEmpty(redisUserTokenVO.getMsg())){	   		    	
+		   		    if(redisUserTokenVO.getCode()==0&&StringUtils.isNotEmpty(redisUserTokenVO.getMsg())){
+		   		    	logger.info("cccccccccccccccccccccccccccccc");
 		   		        requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
 		   		    }
 		   		   
 		   			List<String> pList = requestContext.getUriInfo().getQueryParameters().get(ApiConstant.API_METHOD);
 		   			String method = pList==null?null:pList.get(0);
 		   			if(StringUtils.isBlank(method)){	   				
-		   				requestContext.abortWith(Response.status(404).entity("Api method not found").build());
-		   			}
-		   			if(StringUtils.isNotEmpty(appId)){				
-		   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
-		   				requestContext.setRequestUri(newRequestURI);
-		   				
+//		   				requestContext.abortWith(Response.status(404).entity("Api method not found").build());
+		   				logger.info("dddddddddddddddddddddddddddddddddd");
+		   				ResponseBuilderImpl builder = getBuilder();           
+			            requestContext.abortWith(builder.build());
 		   			}else{
-		   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
-		   						.path(ApiConstant.API_PATH+"/"+method).build();
-		   				requestContext.setRequestUri(newRequestURI);
-		   			}
+		   				logger.info("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+		   				if(StringUtils.isNotEmpty(appId)){				
+			   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
+			   				requestContext.setRequestUri(newRequestURI);			   				
+			   			}else{
+			   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
+			   						.path(ApiConstant.API_PATH+"/"+method).build();
+			   				requestContext.setRequestUri(newRequestURI);
+			   			}
+		   			}		   			
 		   		}
 		   		
 	   		}else{
-	   			requestContext.abortWith(Response.status(404).entity("Api not found").build());
+//	   			requestContext.abortWith(Response.status(404).entity("Api not found").build());	   			
+	   			ResponseBuilderImpl builder = getBuilder();         
+	            requestContext.abortWith(builder.build());
 	   		}
        }
+	}
+	
+	private ResponseBuilderImpl getBuilder(){
+		RedisUserTokenVO redisUserTokenVO = new RedisUserTokenVO();
+		redisUserTokenVO.setCode(404);
+		redisUserTokenVO.setMsg("Api not found");
+    	ResponseBuilderImpl builder = new ResponseBuilderImpl();
+        builder.header("Content-Type", "application/json; charset=utf-8");
+        builder.entity(JSONObject.toJSONString(redisUserTokenVO));
+		return builder;        
 	}
 	
 	public BaseOutput getBaseOutputBack(RedisUserTokenVO redisUserTokenVO){
@@ -149,6 +169,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
                 if(!user_token.equals(userValue)){
                 	logger.info("7777777777777777777777777777777777777");
                     redisUserTokenVO.setCode(ApiConstant.USER_TOKEN_LOGIN_CONFLICT);
+                    logger.info("user_token:"+user_token+";user_token1:"+userValue);
                     backStr="登录冲突，请重新登录！";
                     redisUserTokenVO.setMsg(backStr);
                 }else{
