@@ -18,8 +18,23 @@ public class Tag {
 	
 	@Field(value = "tag_group_id")
 	private Integer tagGroupId;
+	
+	
+	public Tag(){}
+	
+	public Tag(String tagId, String tagName, String tagNameEng, String tagValue,
+                    Integer tagGroupId) {
+        super();
+        this.tagId = tagId;
+        this.tagName = tagName;
+        this.tagNameEng = tagNameEng;
+        this.tagValue = tagValue;
+        this.tagGroupId = tagGroupId;
+    }
 
-	public String getTagId() {
+
+
+    public String getTagId() {
 		return tagId;
 	}
 
