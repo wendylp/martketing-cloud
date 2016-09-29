@@ -400,10 +400,10 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			if(channelList != null && channelList.size() > 0){
 				
 				wechatChannel = channelList.get(0);
-				if(wechatChannel != null && wechatChannel.getIsRemoved() == ApiConstant.TABLE_DATA_REMOVED_DEL){
+				/*if(wechatChannel != null && wechatChannel.getIsRemoved() == ApiConstant.TABLE_DATA_REMOVED_DEL){
 					wechatChannel.setIsRemoved(ApiConstant.TABLE_DATA_REMOVED_NOTDEL);
 					wechatChannelDao.updateById(wechatChannel);
-				}
+				}*/
 			}
 			
 			wechatQrcode.setChCode(channelCode);
@@ -516,7 +516,18 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
 				baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
 				return baseOutput;
-			}			
+			}
+			//修改是否可删除逻辑
+			Integer chCode = wechatQrcodeIn.getCh_code();
+			WechatChannel channel = new WechatChannel();
+			channel.setId(chCode);
+			List<WechatChannel> selectChannelList = wechatChannelDao.selectList(channel);
+			if(selectChannelList != null && selectChannelList.size() > 0) {
+			    channel =   selectChannelList.get(0);
+			    channel.setIsRemoved(ApiConstant.TABLE_DATA_REMOVED_NOTDEL);
+			    wechatChannelDao.updateById(channel);
+			}
+			
 			wechatQrcode.setStatus(NumUtil.int2OneByte(1));
 			wechatQrcodeDao.updateById(wechatQrcode);
 
