@@ -21,6 +21,8 @@ public class WechatQrcodeTicket extends BaseQuery {
     private String ticket;
     
     private Integer state;
+    
+    private String wxAcct;
 
     public Long getId() {
         return id;
@@ -70,5 +72,11 @@ public class WechatQrcodeTicket extends BaseQuery {
 		this.state = state;
 	}
     
-    
+    public String getWxAcct() {
+        return wxAcct;
+    }
+
+    public void setWxAcct(String wxAcct) {
+        this.wxAcct = wxAcct == null ? null : wxAcct.trim();
+    }
 }

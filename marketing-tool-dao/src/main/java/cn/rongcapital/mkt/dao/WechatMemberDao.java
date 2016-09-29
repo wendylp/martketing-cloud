@@ -12,6 +12,8 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.WechatMember;
+import cn.rongcapital.mkt.vo.weixin.WXFansListVO;
+
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -143,4 +145,14 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @throws
 	 */
 	int deleteFansByWxcode(List<Map<String, Object>> fansList);
+	
+	/**
+	 * @Title: deleteAllUser   
+	 * @Description: 删除所有粉丝
+	 * @param: @return      
+	 * @return: int      
+	 * @throws
+	 */
+	int deleteFansByVO(WXFansListVO wxFansListVO);
+	
 }

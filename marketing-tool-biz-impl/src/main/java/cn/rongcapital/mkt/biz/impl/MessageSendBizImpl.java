@@ -62,7 +62,10 @@ public class MessageSendBizImpl extends BaseBiz implements MessageSendBiz {
 	}
 	
 	@Override
-	public Boolean sendMpnews(App app,String touser,String media_id) {
+	public Boolean sendMpnews(String authAppId,String authorizerRefreshToken,String touser,String media_id) {
+		App app = this.getApp();
+		app.setAuthAppId(authAppId);
+		app.setAuthRefreshToken(authorizerRefreshToken);
 		Boolean issended = false;
 		// 发送图片消息
 		if(media_id != null && media_id.length() > 0) {			

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,ticket as ticket,url as url,scene_id as sceneId,create_time as createTime,state as state]]>
+		<![CDATA[ id as id,ticket as ticket,url as url,scene_id as sceneId,create_time as createTime,state as state,wx_acct as wxAcct]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -19,6 +19,7 @@
 		    	<if test="sceneId != null"><![CDATA[ AND scene_id = #{sceneId}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="state != null"><![CDATA[ AND state = #{state}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		</where>
 	</sql>
 	
@@ -34,21 +35,23 @@
 		    	<if test="ticket != null"><![CDATA[ticket = #{ticket},]]></if>
 		    	<if test="url != null"><![CDATA[url = #{url},]]></if>
 		    	<if test="sceneId != null"><![CDATA[scene_id = #{sceneId},]]></if>
-		    	<if test="state != null"><![CDATA[state = #{state}]]></if>
+		    	<if test="state != null"><![CDATA[state = #{state},]]></if>
+		    	<if test="wxAcct != null"><![CDATA[wx_acct = #{wxAcct}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatQrcodeTicket" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_qrcode_ticket (ticket,url,scene_id,create_time,state)
+			INSERT INTO wechat_qrcode_ticket (ticket,url,scene_id,create_time,state,wx_acct)
 			VALUES
 			(
 			  #{ticket},
 			  #{url},
 			  #{sceneId},
 			  now(),
-			  #{state}
+			  #{state},
+			  #{wxAcct}
 			)
 		]]>
 	</insert>

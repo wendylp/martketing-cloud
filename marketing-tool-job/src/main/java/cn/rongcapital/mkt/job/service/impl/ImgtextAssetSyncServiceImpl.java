@@ -53,7 +53,10 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
 
     @Override
     public void task(Integer taskId) {
-    	// callH5PlusMethod(Integer taskId);
+    	this.syncImgtextAsset();        
+    }
+    
+    public void syncImgtextAsset(){
     	List<WebchatAuthInfo> selectListByIdList = webchatAuthInfoDao.selectList(new WebchatAuthInfo());
     	if (!CollectionUtils.isEmpty(selectListByIdList)) {
     		for (WebchatAuthInfo info : selectListByIdList) {
@@ -72,13 +75,19 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     					info.getAuthorizerRefreshToken(),"news");
     			
     			if(!CollectionUtils.isEmpty(imgTextAssetLists)) {
-    				for(ImgTextAsset imgTextAssetList : imgTextAssetLists) {
-    					
+    				/**
+					 * 更新微信公众号下图文信息为删除状态
+					 */
+					imgTextAssetDao.batchUpdateWechatStatusByPubId(wechatRegister.getWxAcct());
+    				for(ImgTextAsset imgTextAssetList : imgTextAssetLists) {   					
     					// 设置pub_id,pub_name,下载状态
     					imgTextAssetList.setPubId(wechatRegister.getWxAcct());
     					imgTextAssetList.setPubName(wechatRegister.getName());
     					imgTextAssetList.setThumbReady((byte)0);
     					
+    					/**
+    					 * 插入、更新数据
+    					 */
     					Integer id = imgTextAssetDao.selectImgtextIdByMaterialId(imgTextAssetList.getMaterialId());
     					if(id != null) {
     						imgTextAssetList.setId(id);
@@ -93,7 +102,6 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     			}
     		}
 		}
-        
     }
     
     public void callH5PlusMethod(Integer taskId) {
@@ -243,4 +251,9 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
         return id != null;
     }
 
+	@Override
+	public void task() {
+		this.syncImgtextAsset();
+	}
+    
 }

@@ -8,7 +8,7 @@ import cn.rongcapital.mkt.vo.in.WechatQrcodeIn;
 
 public interface WechatQrcodeBiz {
 
-	BaseOutput getQrcode(int sceneId,String actionName)  throws FileNotFoundException, IOException;
+	BaseOutput getQrcode(int sceneId,String actionName,String wxAcct)  throws FileNotFoundException, IOException;
 	
 	BaseOutput getQrcodes(int startSceneId,int endSceneId,String actionName)  throws FileNotFoundException, IOException;
 	
