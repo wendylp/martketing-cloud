@@ -60,47 +60,57 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	    RedisUserTokenVO redisUserTokenVO = null;
 	    try {
 	        redisUserTokenVO = validateUserToken(requestContext);
-	        if(redisUserTokenVO.getCode()!=0){	            
-	            requestContext.abortWith(Response.status(redisUserTokenVO.getCode()).entity(JSONObject.toJSONString(redisUserTokenVO)).build());
-	        }
+	        logger.info(JSONObject.toJSONString(redisUserTokenVO));
         } catch (JedisException e) {           
             logger.info(e.getMessage());
         }
 	    
-		String url = requestContext.getUriInfo().getPath();
-		String appId = "";
-		if(StringUtils.isNotEmpty(url)&&url.contains(ApiConstant.API_PATH)){
-			if(url.length()>=5){
-				appId = url.substring(5);
-			}							
-		}else{
-			requestContext.abortWith(Response.status(404).entity("Api not found").build());
-		}
-
-		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 
-		    if(redisUserTokenVO.getCode()==0&&StringUtils.isNotEmpty(redisUserTokenVO.getMsg())){
-		        requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
-		    }
-		    
-			List<String> pList = requestContext.getUriInfo().getQueryParameters()
-								 .get(ApiConstant.API_METHOD);
-			String method = pList==null?null:pList.get(0);
-			if(StringUtils.isBlank(method)){
-				requestContext.abortWith(Response.status(404).entity("Api method not found").build());
-			}
-			if(StringUtils.isNotEmpty(appId)){
-				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
-						.path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
-				requestContext.setRequestUri(newRequestURI);
-			}else{
-				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
-						.path(ApiConstant.API_PATH+"/"+method).build();
-				requestContext.setRequestUri(newRequestURI);
-			}
-		}
+        if(redisUserTokenVO.getCode()!=0){	
+       	   logger.info("1111111111111111111111111111111111111111");
+           requestContext.abortWith(Response.status(redisUserTokenVO.getCode()).entity(JSONObject.toJSONString(redisUserTokenVO)).build());           
+       }else{
+	   		String url = requestContext.getUriInfo().getPath();
+	   		String appId = "";
+	   		if(StringUtils.isNotEmpty(url)&&url.contains(ApiConstant.API_PATH)){
+	   			if(url.length()>=5){
+	   				appId = url.substring(5);
+	   			}							
+	   		}else{
+	   			requestContext.abortWith(Response.status(404).entity("Api not found").build());
+	   		}
+	
+	   		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 
+	   			logger.info("2222222222222222222222222222222222222222222");
+	   		    if(redisUserTokenVO.getCode()==0&&StringUtils.isNotEmpty(redisUserTokenVO.getMsg())){
+	   		    	logger.info("33333333333333333333333333333333333333");
+	   		        requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
+	   		    }
+	   		    logger.info("aaaaaaaaaaaaaaaaaaaa");
+	   			List<String> pList = requestContext.getUriInfo().getQueryParameters()
+	   								 .get(ApiConstant.API_METHOD);
+	   			String method = pList==null?null:pList.get(0);
+	   			if(StringUtils.isBlank(method)){
+	   				logger.info("bbbbbbbbbbbbbbbbbbbbbb");
+	   				requestContext.abortWith(Response.status(404).entity("Api method not found").build());
+	   			}
+	   			if(StringUtils.isNotEmpty(appId)){				
+	   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
+	   						.path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
+	   				logger.info("ccccccccccccccccccccc");
+	   				requestContext.setRequestUri(newRequestURI);
+	   				
+	   			}else{
+	   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
+	   						.path(ApiConstant.API_PATH+"/"+method).build();
+	   				logger.info("dddddddddddddddddddddddddddd");
+	   				requestContext.setRequestUri(newRequestURI);
+	   			}
+	   		}
+       }
 	}
 	
     public RedisUserTokenVO validateUserToken(ContainerRequestContext requestContext) throws JedisException{
+    	logger.info("is into validateUserToken");
         RedisUserTokenVO redisUserTokenVO = new RedisUserTokenVO();
         String backStr = "";
         MultivaluedMap<String, String> multivaluedMap = requestContext.getUriInfo().getQueryParameters();
@@ -109,24 +119,29 @@ public class ApiRequestRouter implements ContainerRequestFilter {
         List<String> user_id_pList = multivaluedMap.get(ApiConstant.API_USER_ID);
         String user_id = user_id_pList==null?null:user_id_pList.get(0);
         String userKey ="user:"+user_id;
-        
+        logger.info("33333333333333333333333333333333333333333333");
         if(StringUtils.isBlank(user_token)){
+        	 logger.info("444444444444444444444444444444");
             backStr="&"+ApiConstant.API_USER_TOKEN+"="+ApiConstant.API_USER_TOKEN_VALUE;
             redisUserTokenVO.setCode(0);
             redisUserTokenVO.setMsg(backStr);            
         }else{
             if(StringUtils.isBlank(user_id)){
+            	logger.info("5555555555555555555555555555555");
                 redisUserTokenVO.setCode(ApiConstant.USER_TOKEN_PARAMS_MISSING);
                 backStr="登录验证缺少参数！";
                 redisUserTokenVO.setMsg(backStr);
             }else{
+            	logger.info("666666666666666666666666666666");
                 Map<String, String> user_token_map = JedisClient.getuser(userKey);
                 String userValue = user_token_map.get("token");
                 if(!user_token.equals(userValue)){
+                	logger.info("7777777777777777777777777777777777777");
                     redisUserTokenVO.setCode(ApiConstant.USER_TOKEN_LOGIN_CONFLICT);
                     backStr="登录冲突，请重新登录！";
                     redisUserTokenVO.setMsg(backStr);
                 }else{
+                	logger.info("8888888888888888888888888888888888888888");
                     redisUserTokenVO.setCode(0);
                     int seconds = 36000;
                     JedisClient.expireUser(userKey, seconds);

@@ -59,7 +59,9 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 //        dataPartyCountListObj.setLinkName(DATA_PARTY.getLinkName());
         Map<String,Object> totalAccessMap = importDataHistoryDao.selectMigrationFileGeneralInfo();
         Integer accessNumberByFileUpload = 0;
-        accessNumberByFileUpload = ((BigDecimal) totalAccessMap.get("total_rows")).intValue();
+        if(totalAccessMap != null) {
+            accessNumberByFileUpload = ((BigDecimal) totalAccessMap.get("total_rows")).intValue();
+        }
         WechatMember wechatMember = new WechatMember();
         wechatMember.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         Integer accessNumberByWechat = wechatMemberDao.selectListCount(wechatMember);
