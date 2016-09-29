@@ -1,20 +1,24 @@
 /**
- * 描述：把mongodb中data_paty表市的值插入到tag_list
+ * 描述：描述：返回渠道名，渠道大类，和市的tag
  * 
  * @author shuiyangyang
  * @date 2016.09.28
  */
 package cn.rongcapital.mkt.service;
 
+import java.util.Map;
+
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 
 public interface SynchroMongodbCityService {
 	
 	/**
-	 * 根据mid把市的值写入到tag_list
+	 * 描述：返回渠道名，渠道大类，和市的tag
 	 * 
 	 * @param mid 
 	 * @author shuiyangyang
+	 * @return Map<String, Object>
 	 * @date 2016.09.28
 	 */
-	public void synchroMongodbCity(Integer mid);
+    public Map<String, Object> synchroMongodbCity(DataParty dataParty);
 }
