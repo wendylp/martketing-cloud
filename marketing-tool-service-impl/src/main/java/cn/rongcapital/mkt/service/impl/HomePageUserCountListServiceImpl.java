@@ -1,13 +1,15 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +44,8 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
             // 判断是否是当天
             Integer arrayLength = dateType == 0 ? 24 : dateType;
             // 结果数组
-            String[] dateArray = new String[arrayLength];
-            Integer[] countArray = new Integer[arrayLength];
+            List<String> dataList = new ArrayList<>();
+            List<Integer> countList = new ArrayList<>();
             // 当前日期_yyyy-MM-dd
             Date nowDateDay = dayFormat.parse(dayFormat.format(new Date()));
             // 当前日期_yyyy-MM-dd HH
@@ -59,8 +61,8 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
                 while (i < arrayLength) {
                     // 数量
                     Integer count = getCount(tempDate, 1);
-                    countArray[i] = count;
-                    dateArray[i] = dayFormat.format(tempDate);
+                    countList.add(count);
+                    dataList.add(dayFormat.format(tempDate));
                     // 向前推一天
                     calendar.add(Calendar.DATE, -1);
                     tempDate = calendar.getTime();
@@ -73,18 +75,18 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
                 while (tempDate.compareTo(minTime) >= 0) {
                     // 数量
                     Integer count = getCount(tempDate, 0);
-                    countArray[i] = count;
-                    dateArray[i] = hourMinus.format(tempDate);
+                    countList.add(count);
+                    dataList.add(hourMinus.format(tempDate));
                     // 向前推一小时
                     calendar.add(Calendar.HOUR_OF_DAY, -1);
                     tempDate = calendar.getTime();
                     i++;
                 }
             }
-            ArrayUtils.reverse(dateArray);
-            ArrayUtils.reverse(countArray);
-            resultMap.put("date_array", ArrayUtils.subarray(dateArray, 0, i));
-            resultMap.put("count_array", ArrayUtils.subarray(countArray, 0, i));
+            Collections.reverse(dataList);
+            Collections.reverse(countList);
+            resultMap.put("date_array", dataList);
+            resultMap.put("count_array", countList);
             baseOutput.getData().add(resultMap);
         } catch (Exception e) {
             e.printStackTrace();

@@ -27,6 +27,7 @@ import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Tag;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.service.RuleEngineService;
+import cn.rongcapital.mkt.service.SynchroMongodbCityService;
 import okhttp3.Response;
 
 @Service
@@ -52,6 +53,9 @@ public class RuleEngineServiceImpl implements RuleEngineService {
 
     @Autowired
     Environment env;
+    
+    @Autowired
+    private SynchroMongodbCityService synchroMongodbCityService;
 
     @Override
     public Boolean requestRuleEngine(List<Integer> keyIds) {
@@ -133,6 +137,11 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                     tagList.add(tag);
                 }
                 if (!CollectionUtils.isEmpty(tagList)) {
+                    //属性标签
+                    Map<String, Object> map = synchroMongodbCityService.synchroMongodbCity(dataParty);
+                    tagList.add((Tag) map.get("city"));
+                    tagList.add((Tag) map.get("mediaTrenchGenera"));
+                    tagList.add((Tag) map.get("mediaName"));
                     // 更新插入
                     Update update = new Update().set("tag_list", tagList);
                     logger.info("同步标签数据方法开始执行：----------->标签属性为，Mid:" + bizCode);
@@ -144,6 +153,8 @@ public class RuleEngineServiceImpl implements RuleEngineService {
         }
 
     }
+    
+    
 
 
 

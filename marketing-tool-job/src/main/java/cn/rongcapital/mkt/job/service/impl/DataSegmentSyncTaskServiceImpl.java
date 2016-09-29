@@ -19,6 +19,7 @@ import cn.rongcapital.mkt.po.SegmentationBody;
 import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 
 @Service
 public class DataSegmentSyncTaskServiceImpl implements TaskService {
@@ -78,32 +79,49 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 				segmentationBodyT.setHeadId(segmentationHead.getId());
 				segmentationBodyT.setGroupIndex(groupIndex);
 				List<SegmentationBody> segmentationBodyList = segmentationBodyDao.selectList(segmentationBodyT);
-				if (segmentationBodyList == null || CollectionUtils.isEmpty(segmentationBodyList) || segmentationBodyList.size() == 0 ) {
+				if (segmentationBodyList == null || CollectionUtils.isEmpty(segmentationBodyList)
+						|| segmentationBodyList.size() == 0) {
 					continue;
 				}
 				List<Criteria> criteriasList = new ArrayList<Criteria>();
 				for (SegmentationBody segmentationBody : segmentationBodyList) {
-					Integer tagId = segmentationBody.getTagId();
-					Integer tagGroupId = segmentationBody.getTagGroupId();
+					String tagId = segmentationBody.getTagId();
+					String tagGroupId = segmentationBody.getTagGroupId();
 					Byte exclude = segmentationBody.getExclude();
+					Criteria oneCriteria = null;
 					if (exclude == 0) {
-						if (tagId == 0) {// 不限
-							Criteria criteria = Criteria.where("tagList.tagGroupId").is(tagGroupId);
-							criteriasList.add(criteria);
+						if ("0".equals(tagId)) {// 不限
+							oneCriteria = Criteria.where("tagList.tagId").is(tagGroupId);
 						} else {
-							Criteria criteria = Criteria.where("tagList.tagId").is(tagId);
-							criteriasList.add(criteria);
+
+							String tagIndex = tagId.substring(tagId.indexOf("_") + 1);
+
+							TagRecommend findOne = mongoTemplate
+									.findOne(new Query(Criteria.where("tagId").is(tagGroupId)), TagRecommend.class);
+							List<String> tagList = findOne.getTagList();
+							String tagValue = tagList.get(Integer.valueOf(tagIndex));
+
+							oneCriteria = Criteria.where("tagList.tagId").is(tagGroupId).and("tagList.tagValue")
+									.is(tagValue);
 						}
 					} else {
-						if (tagId == 0) {// 不限
-							Criteria criteria = Criteria.where("tagList.tagGroupId").ne(tagGroupId);
-							criteriasList.add(criteria);
+						if ("0".equals(tagId)) {// 不限
+							oneCriteria = Criteria.where("tagList.tagId").ne(tagGroupId);
 						} else {
-							Criteria criteria = Criteria.where("tagList.tagId").ne(tagId);
-							criteriasList.add(criteria);
+
+							String tagIndex = tagId.substring(tagId.indexOf("_") + 1);
+
+							TagRecommend findOne = mongoTemplate
+									.findOne(new Query(Criteria.where("tagId").is(tagGroupId)), TagRecommend.class);
+							List<String> tagList = findOne.getTagList();
+							String tagValue = tagList.get(Integer.valueOf(tagIndex));
+							oneCriteria = Criteria.where("tagList.tagId").ne(tagGroupId).and("tagList.tagValue")
+									.ne(tagValue);
 						}
 					}
+					criteriasList.add(oneCriteria);
 				}
+
 				Criteria criteriaAll = new Criteria()
 						.andOperator(criteriasList.toArray(new Criteria[criteriasList.size()]));
 				List<DataParty> dataPartyList = mongoTemplate.find(new Query().addCriteria(criteriaAll),
@@ -111,7 +129,9 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 				if (CollectionUtils.isNotEmpty(dataPartyList)) {
 					for (DataParty dataParty : dataPartyList) {
 
-						//mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId()).and("dataId").is(dataParty.getMid())), Segment.class);
+						// mongoTemplate.remove(new
+						// Query(Criteria.where("segmentationHeadId").is(segmentationHead.getId()).and("dataId").is(dataParty.getMid())),
+						// Segment.class);
 						List<Segment> sListT = mongoTemplate.find(new Query(Criteria.where("segmentationHeadId")
 								.is(segmentationHead.getId()).and("dataId").is(dataParty.getMid())), Segment.class);
 

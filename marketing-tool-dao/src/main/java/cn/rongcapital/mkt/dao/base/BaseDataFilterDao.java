@@ -57,5 +57,19 @@ public interface BaseDataFilterDao<T> {
 	 * @return: List<String>
 	 */
 	List<String> selectMappingKeyId(Map<String, Object> paramMap);
+	
+	/**
+	 * 查询人口数量
+	 * @param paramMap
+	 * @return
+	 */
+	Integer getAudiencesCount(Map<String, Object> paramMap);
+	
+	/**
+	 * 查询人口对应主数据id(需要去重)
+	 * @param paramMap
+	 * @return
+	 */
+	List<String> selectMappingKeyIds(Map<String, Object> paramMap);
 
 }
