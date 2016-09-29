@@ -1,6 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,34 +23,18 @@ import cn.rongcapital.mkt.common.enums.ContactwayEnum;
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.ImportTemplTypeEnum;
 import cn.rongcapital.mkt.common.enums.TaskConditionEnum;
-import cn.rongcapital.mkt.common.util.GenderUtils;
-import cn.rongcapital.mkt.common.util.ReflectionUtil;
 import cn.rongcapital.mkt.dao.ContactWayMapDao;
-import cn.rongcapital.mkt.dao.DataArchPointDao;
-import cn.rongcapital.mkt.dao.DataCustomerTagsDao;
-import cn.rongcapital.mkt.dao.DataLoginDao;
-import cn.rongcapital.mkt.dao.DataMemberDao;
 import cn.rongcapital.mkt.dao.DataOptionMapDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.dao.DataPaymentDao;
-import cn.rongcapital.mkt.dao.DataPopulationDao;
-import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.dao.ImportTemplateDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
+import cn.rongcapital.mkt.factory.GetFilterAudiencesStrategyFacade;
 import cn.rongcapital.mkt.po.ContactWayMap;
-import cn.rongcapital.mkt.po.DataArchPoint;
-import cn.rongcapital.mkt.po.DataCustomerTags;
-import cn.rongcapital.mkt.po.DataLogin;
-import cn.rongcapital.mkt.po.DataMember;
 import cn.rongcapital.mkt.po.DataOptionMap;
 import cn.rongcapital.mkt.po.DataParty;
-import cn.rongcapital.mkt.po.DataPayment;
-import cn.rongcapital.mkt.po.DataPopulation;
-import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.ImportTemplate;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
-import cn.rongcapital.mkt.service.impl.vo.MainDataVO;
 import cn.rongcapital.mkt.vo.in.CustomizeViewCheckboxIn;
 import cn.rongcapital.mkt.vo.out.DataGetMainListOut;
 
@@ -65,27 +48,6 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
 	@Autowired
 	private DataPartyDao dataPartyDao;
-
-	@Autowired
-	private DataPopulationDao dataPopulationDao;
-
-	@Autowired
-	private DataCustomerTagsDao dataCustomerTagsDao;
-
-	@Autowired
-	private DataArchPointDao dataArchPointDao;
-
-	@Autowired
-	private DataMemberDao dataMemberDao;
-
-	@Autowired
-	private DataLoginDao dataLoginDao;
-
-	@Autowired
-	private DataPaymentDao dataPaymentDao;
-
-	@Autowired
-	private DataShoppingDao dataShoppingDao;
 
 	@Autowired
 	private DataOptionMapDao dataOptionMapDao;
@@ -121,7 +83,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 				importTemplateDao.updateSelectedByTemplType(paramImportTemplate);
 			}
 		}
-
+		
 		ImportTemplate paramImportTemplate = new ImportTemplate(index, size);
 		paramImportTemplate.setSelected(Boolean.TRUE);
 		paramImportTemplate.setTemplType(dataType);
@@ -140,85 +102,28 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 				result.setMdType(importTemplate.getTemplType());
 			}
 		}
-
-		// 这代码写的太2了, 按王东的说法, 应该换成Factory, 但其实换汤不换药.代码会清爽一些
-		MainDataVO mainDataVO = null;
-		if (dataType == DataTypeEnum.PARTY.getCode()) {
-			DataParty paramObj = new DataParty(index, size);
-			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataPartyDao);
-		} else if (dataType == DataTypeEnum.POPULATION.getCode()) {
-			DataPopulation paramObj = new DataPopulation(index, size);
-			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataPopulationDao);
-		} else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
-			DataCustomerTags paramObj = new DataCustomerTags(index, size);
-			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataCustomerTagsDao);
-		} else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
-			DataArchPoint paramObj = new DataArchPoint(index, size);
-			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataArchPointDao);
-		} else if (dataType == DataTypeEnum.MEMBER.getCode()) {
-			DataMember paramObj = new DataMember(index, size);
-			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataMemberDao);
-		} else if (dataType == DataTypeEnum.LOGIN.getCode()) {
-			DataLogin paramObj = new DataLogin(index, size);
-			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataLoginDao);
-		} else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
-			DataPayment paramObj = new DataPayment(index, size);
-			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataPaymentDao);
-		} else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
-			DataShopping paramObj = new DataShopping(index, size);
-			mainDataVO = getData(dataType, dataTypeList, contactIds, timeCondition, paramObj, dataShoppingDao);
-		} else {
-			logger.error("传入错误的data type : {}", dataType);
-		}
-
-		result.setContactWayList(mainDataVO.getContactWayList());
-		result.setDataTypeList(mainDataVO.getDataTypeList());
-		result.setTimeCondition(mainDataVO.getTimeCondition());
-		if (dataType == 0) {
-			result.getData().addAll(mainDataVO.getResultList());
-		} else {
-			for (Integer dtType : dataTypeList) {
-				if (dataType == dtType) {
-					result.getData().addAll(mainDataVO.getResultList());
-					break;
-				}
-			}
-		}
-
-		result.setTotal(mainDataVO.getTotalCount());
-		result.setTotalCount(mainDataVO.getTotalCount());
-		result.setCountList(mainDataVO.getCountList());
-		result.getColNames().addAll(columnList);
-		return Response.ok().entity(result).build();
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private <T extends BaseQuery, D extends BaseDataFilterDao> MainDataVO getData(Integer mdType,
-			List<Integer> mdTypeList, List<Integer> contactIdList, Integer timeCondition, T paramObj, D dao) {
-
-		MainDataVO mainDataVO = new MainDataVO();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		DataParty paramObj = new DataParty(index, size);
+		
 		Map<String, Object> paramMap = new HashMap<>();
-		// 这段mappingKeyIds的逻辑绝对是效率上的作大死.以后肯定会改的.
-		List<String> mappingKeyIds = new ArrayList<>();
-		contactIdList = filterContactId(contactIdList, dao);
-		if (CollectionUtils.isEmpty(mdTypeList)) {
-			mdTypeList = null;
+		contactIds = filterContactId(contactIds);
+		if (CollectionUtils.isEmpty(dataTypeList)) {
+			dataTypeList = null;
 		}
 		List<Integer> mdDataList = new ArrayList<Integer>();
-		if (mdType != 0) {
-			for (Integer dataType : mdTypeList) {
+		if (dataType != 0) {
+			for (Integer mdType : dataTypeList) {
 				if (mdType == dataType) {
-					mdDataList.add(mdType);
+					mdDataList.add(dataType);
 				}
 			}
 		} else {
-			for (Integer dataType : mdTypeList) {
-				mdDataList.add(dataType);
+			for (Integer mdType : dataTypeList) {
+				mdDataList.add(mdType);
 			}
 		}
 
-		paramMap.put("contactIdList", contactIdList);
+		paramMap.put("contactIdList", contactIds);
 		paramMap.put("mdTypes", mdDataList);
 
 		if (timeCondition == null) {
@@ -227,109 +132,33 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
 		Date timeConditionDate = TaskConditionEnum.getEnumByCode(timeCondition).getTime();
 		paramMap.put("timeCondition", timeConditionDate);
-		if (!CollectionUtils.isEmpty(mdDataList)) {
-			for (Integer dataType : mdDataList) {
-				List<String> tmpList = new ArrayList<String>();
-				if (dataType == DataTypeEnum.POPULATION.getCode()) {
-					tmpList = dataPopulationDao.selectMappingKeyId(paramMap);
-					if (!CollectionUtils.isEmpty(tmpList))
-						mappingKeyIds.addAll(tmpList);
-				} else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
-					tmpList = dataCustomerTagsDao.selectMappingKeyId(paramMap);
-					if (!CollectionUtils.isEmpty(tmpList))
-						mappingKeyIds.addAll(tmpList);
-				} else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
-					tmpList = dataArchPointDao.selectMappingKeyId(paramMap);
-					if (!CollectionUtils.isEmpty(tmpList))
-						mappingKeyIds.addAll(tmpList);
-				} else if (dataType == DataTypeEnum.MEMBER.getCode()) {
-					tmpList = dataMemberDao.selectMappingKeyId(paramMap);
-					if (!CollectionUtils.isEmpty(tmpList))
-						mappingKeyIds.addAll(tmpList);
-				} else if (dataType == DataTypeEnum.LOGIN.getCode()) {
-					tmpList = dataLoginDao.selectMappingKeyId(paramMap);
-					if (!CollectionUtils.isEmpty(tmpList))
-						mappingKeyIds.addAll(tmpList);
-				} else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
-					tmpList = dataPaymentDao.selectMappingKeyId(paramMap);
-					if (!CollectionUtils.isEmpty(tmpList))
-						mappingKeyIds.addAll(tmpList);
-				} else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
-					tmpList = dataShoppingDao.selectMappingKeyId(paramMap);
-					if (!CollectionUtils.isEmpty(tmpList))
-						mappingKeyIds.addAll(tmpList);
-				} else {
-					logger.warn("传入错误的data type : {}", dataType);
-				}
-			}
-		}
-
-		// 所有表中的mapping_key都查不到, 索性把mapping_key设为-1, 这样一定不会查到任何数据
-		if (!CollectionUtils.isEmpty(mdTypeList) && CollectionUtils.isEmpty(mappingKeyIds)) {
-			mappingKeyIds.add("-1");
-		}
-
-		paramMap.put("startIndex", paramObj.getStartIndex());
-		paramMap.put("pageSize", paramObj.getPageSize());
-		paramMap.put("mappingKeyIds", mappingKeyIds);
-
-		List<T> dataList = dao.selectByBatchId(paramMap);
-		Integer totalCount = 0;
-		if (mdDataList != null && mdDataList.size() > 0) {
-			totalCount = dao.selectCountByBatchId(paramMap);
-		}
-
-		List<Map<String, Object>> resultList = new ArrayList<>();
-		if (dataList != null && !dataList.isEmpty()) {
-			ImportTemplate paramImportTemplate = new ImportTemplate();
-			paramImportTemplate.setSelected(Boolean.TRUE);
-			paramImportTemplate.setTemplType(mdType);
-
-			List<ImportTemplate> importTemplateList = importTemplateDao.selectSelectedTemplateList(paramImportTemplate);
-
-			for (T tempT : dataList) {
-				Map<String, Object> map = new HashMap<>();
-				map.put("id", ReflectionUtil.getObjectPropertyByName(tempT, "id"));
-				for (ImportTemplate importTemplate : importTemplateList) {
-					Object value = ReflectionUtil.getObjectPropertyByName(tempT,
-							ReflectionUtil.recoverFieldName(importTemplate.getFieldCode()));
-					if (value != null && value.getClass().getSimpleName().equals(Date.class.getSimpleName())) {
-						simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-						value = simpleDateFormat.format((Date) value);
-					}
-					map.put(importTemplate.getFieldCode(), value);
-				}
-
-				if (mdType == 0 || mdType == 1) {
-					Object sexByte = ReflectionUtil.getObjectPropertyByName(tempT, "gender");
-					if (sexByte != null) {
-						String sex = GenderUtils.byteToChar(Byte.valueOf(sexByte + ""));
-						map.put("sex", sex);
-					}
-				}
-
-				resultList.add(map);
-			}
-		}
-
-		Map<String, Object> countRowsMap = dataPartyDao.selectMainCount(paramMap);
+		
+		Map<String,Object> mapResult = GetFilterAudiencesStrategyFacade.doGetData(dataType, dataTypeList, contactIds, timeCondition, paramObj);
+		
+		Map<String,Integer> countRowsMap = getCounts(paramMap,dataTypeList);
+		
+		countRowsMap.put(ImportTemplTypeEnum.PARTY.getCountName(), Integer.valueOf(mapResult.get("partyCount").toString()));
+		
 		List<Map<String, Object>> countList = new ArrayList<>();
-		List<ImportTemplate> importTemplateList = importTemplateDao.selectTemplTypePairs();
-		for (ImportTemplate importTemplate : importTemplateList) {
+		List<ImportTemplate> importTemplateList2 = importTemplateDao.selectTemplTypePairs();
+		for (ImportTemplate importTemplate : importTemplateList2) {
 			Map<String, Object> countMap = new LinkedHashMap<>();
 			String tagName = importTemplate.getTemplName();
 			countMap.put("md_type", importTemplate.getTemplType());
 			countMap.put("tag_name", tagName);
-			Object count = countRowsMap.get(ImportTemplTypeEnum.getCountNameByName(tagName));
+			
+			Integer count = countRowsMap.get(ImportTemplTypeEnum.getCountNameByName(tagName));
+			
 			// 主数据不在此列中
-			if (!CollectionUtils.isEmpty(mdTypeList)
+			if (!CollectionUtils.isEmpty(dataTypeList)
 					&& !importTemplate.getTemplType().equals(DataTypeEnum.PARTY.getCode())
-					&& !isDataTypeListContainType(mdTypeList, importTemplate.getTemplType())) {
-				count = "0";
+					&& !isDataTypeListContainType(dataTypeList, importTemplate.getTemplType())) {
+				count = 0;
 			}
 			countMap.put("count_rows", count);
 			countList.add(countMap);
 		}
+		
 
 		List<Integer> dataOptionMapList = new ArrayList<>();
 		List<Integer> contactWayMapList = new ArrayList<>();
@@ -354,17 +183,69 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 			resultTimeCondition = contactWayMaps.get(0).getTimeConditionAbbreviation();
 		}
 
-		mainDataVO.setTimeCondition(
-				Byte.valueOf(TaskConditionEnum.getEnumByAbbreviation(resultTimeCondition).getCode() + ""));
-		mainDataVO.setContactWayList(contactWayMapList);
-		mainDataVO.setDataTypeList(dataOptionMapList);
-		mainDataVO.setResultList(resultList);
-		mainDataVO.setCountList(countList);
-		mainDataVO.setTotalCount(totalCount);
-		return mainDataVO;
+		
+		result.setContactWayList(contactWayMapList);
+		result.setDataTypeList(dataOptionMapList);
+		result.setTimeCondition(Byte.valueOf(TaskConditionEnum.getEnumByAbbreviation(resultTimeCondition).getCode() + ""));
+		
+		result.getData().addAll((List<Map<String, Object>>)mapResult.get("resultList"));
+		result.setTotalCount(Integer.valueOf(mapResult.get("totalCount").toString()));
+		result.setTotal(Integer.valueOf(mapResult.get("total").toString()));
+		result.setCountList(countList);
+		result.getColNames().addAll(columnList);
+		return Response.ok().entity(result).build();
 	}
 
-	private <D extends BaseDataFilterDao<?>> List<Integer> filterContactId(List<Integer> contactIdList, D dao) {
+	/**
+	 * 获取所有的数量
+	 * @param paramMap
+	 * @param dataTypeList
+	 */
+	private Map<String, Integer> getCounts(Map<String, Object> paramMap, List<Integer> dataTypeList) {
+
+		Map<String, Integer> countRowsMap = new HashMap<String, Integer>();
+		
+		if (!CollectionUtils.isEmpty(dataTypeList)) {
+			for (Integer dataType : dataTypeList) {
+				if (dataType == DataTypeEnum.POPULATION.getCode()) {
+					paramMap.put("mdType", dataType);
+					countRowsMap.put(ImportTemplTypeEnum.POPULATION.getCountName(), 
+							GetFilterAudiencesStrategyFacade.doGetAudiencesCount(paramMap)) ;
+				} else if (dataType == DataTypeEnum.CUSTOMER_TAGS.getCode()) {
+					paramMap.put("mdType", dataType);
+					countRowsMap.put(ImportTemplTypeEnum.CUSTOMER_TAGS.getCountName(), 
+							GetFilterAudiencesStrategyFacade.doGetAudiencesCount(paramMap)) ;
+				} else if (dataType == DataTypeEnum.ARCH_POINT.getCode()) {
+					paramMap.put("mdType", dataType);
+					countRowsMap.put(ImportTemplTypeEnum.ARCH_POINT.getCountName(), 
+							GetFilterAudiencesStrategyFacade.doGetAudiencesCount(paramMap)) ;
+				} else if (dataType == DataTypeEnum.MEMBER.getCode()) {
+					paramMap.put("mdType", dataType);
+					countRowsMap.put(ImportTemplTypeEnum.MEMBER.getCountName(), 
+							GetFilterAudiencesStrategyFacade.doGetAudiencesCount(paramMap)) ;
+				} else if (dataType == DataTypeEnum.LOGIN.getCode()) {
+					paramMap.put("mdType", dataType);
+					countRowsMap.put(ImportTemplTypeEnum.LOGIN.getCountName(), 
+							GetFilterAudiencesStrategyFacade.doGetAudiencesCount(paramMap)) ;
+				} else if (dataType == DataTypeEnum.PAYMENT.getCode()) {
+					paramMap.put("mdType", dataType);
+					countRowsMap.put(ImportTemplTypeEnum.PAYMENT.getCountName(), 
+							GetFilterAudiencesStrategyFacade.doGetAudiencesCount(paramMap)) ;
+				} else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
+					paramMap.put("mdType", dataType);
+					countRowsMap.put(ImportTemplTypeEnum.SHOPPING.getCountName(), 
+							GetFilterAudiencesStrategyFacade.doGetAudiencesCount(paramMap)) ;
+				} else {
+					logger.warn("传入错误的data type : {}", dataType);
+				}
+			}
+		}
+		
+		return countRowsMap;
+		
+	}
+
+	private <D extends BaseDataFilterDao<?>> List<Integer> filterContactId(List<Integer> contactIdList) {
 		List<Integer> resultList = new ArrayList<>();
 
 		if (CollectionUtils.isEmpty(contactIdList)) {
@@ -376,7 +257,7 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 			if (columnName == null) {
 				continue;
 			} else {
-				List<String> columnNameList = dao.selectColumns();
+				List<String> columnNameList = dataPartyDao.selectColumns();
 				for (String str : columnNameList) {
 					if (columnName.equalsIgnoreCase(str)) {
 						resultList.add(contactId);

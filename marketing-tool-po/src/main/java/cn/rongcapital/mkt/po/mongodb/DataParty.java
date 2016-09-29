@@ -443,4 +443,28 @@ public class DataParty implements Serializable {
 	public void setCustomTagList(List<String> customTagList) {
 		this.customTagList = customTagList;
 	}
+
+    @Override
+    public String toString() {
+        return "DataParty [id=" + id + ", mid=" + mid + ", mdType=" + mdType + ", name=" + name
+                        + ", wxName=" + wxName + ", mappingKeyid=" + mappingKeyid
+                        + ", audienceList=" + audienceList + ", tagList=" + tagList
+                        + ", fansOpenId=" + fansOpenId + ", pubId=" + pubId + ", subscribeTime="
+                        + subscribeTime + ", mobile=" + mobile + ", maritalStatus=" + maritalStatus
+                        + ", education=" + education + ", employment=" + employment + ", sex=" + sex
+                        + ", gender=" + gender + ", birthday=" + birthday + ", citizenship="
+                        + citizenship + ", provice=" + provice + ", city=" + city + ", job=" + job
+                        + ", monthlyIncome=" + monthlyIncome + ", memberLevel=" + memberLevel
+                        + ", memberPoints=" + memberPoints + ", source=" + source
+                        + ", monthlyConsume=" + monthlyConsume + ", lastLogin=" + lastLogin
+                        + ", status=" + status + ", batchId=" + batchId + ", updateTime="
+                        + updateTime + ", receiveCount=" + receiveCount + ", lastShoppingTime="
+                        + lastShoppingTime + ", totalShoppingCount=" + totalShoppingCount
+                        + ", singleMonthShoppingCount=" + singleMonthShoppingCount
+                        + ", totalIncome=" + totalIncome + ", averageIncome=" + averageIncome
+                        + ", isShoppingUser=" + isShoppingUser + ", weimob=" + weimob
+                        + ", orderStatus=" + orderStatus + ", customTagList=" + customTagList + "]";
+    }
+	
+	
 }
