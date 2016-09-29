@@ -290,4 +290,49 @@
         WHERE id = #{id}
 	</select>
 
+	<!-- 查询人口对应主数据id(需要去重) -->
+	<select id="selectMappingKeyIds" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[SELECT]]>
+		DISTINCT keyid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1 and keyid is not null
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+	</select>
+	
+	<!-- 计算人口数量 -->
+	<select id="getAudiencesCount" parameterType="java.util.Map" resultType="int">
+		<![CDATA[SELECT]]>
+			count(id) as data_login_rows
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE 1=1]]> 
+				
+		<if test="contactIdList != null">
+			<foreach collection="contactIdList" item="contactId">
+				<if test="contactId != null and contactId == 1">
+					<![CDATA[AND mobile is not null]]>
+				</if>
+				<if test="contactId != null and contactId == 2">
+					<![CDATA[AND email is not null]]>
+				</if>
+			</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+	</select>
 </mapper>
