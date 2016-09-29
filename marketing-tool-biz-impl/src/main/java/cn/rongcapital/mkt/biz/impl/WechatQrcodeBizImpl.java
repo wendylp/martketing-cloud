@@ -210,17 +210,14 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			int totalSucc=0;
 			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();		
 			List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);
-			logger.info(JSONObject.toJSONString(webchatAuthInfos)+"**************************************");
 			if(webchatAuthInfos!=null&&webchatAuthInfos.size()>0){				
 				for(Iterator<WebchatAuthInfo> iter = webchatAuthInfos.iterator();iter.hasNext();){
 					App app = this.getApp();
 					WebchatAuthInfo webchatAuthInfoTemp = iter.next();
-					logger.info(JSONObject.toJSONString(webchatAuthInfoTemp)+"**********************************");
 					app.setAuthAppId(webchatAuthInfoTemp.getAuthorizerAppid());
 					app.setAuthRefreshToken(webchatAuthInfoTemp.getAuthorizerRefreshToken());
 					for(int i=startSceneId;i<=endSceneId;i++){
 						try {
-							logger.info(JSONObject.toJSONString(webchatAuthInfoTemp.getAuthorizerAppid())+"*********************");
 							WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName,webchatAuthInfoTemp.getAuthorizerAppid());
 							logger.info(JSONObject.toJSONString(wechatQrcodeTicket)+"***********************************");
 							if(wechatQrcodeTicket!=null){
@@ -246,6 +243,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 								totalSucc++;
 							}
 						} catch (Exception e) {
+							logger.info(e.getMessage());
 							continue;
 						}
 					}
