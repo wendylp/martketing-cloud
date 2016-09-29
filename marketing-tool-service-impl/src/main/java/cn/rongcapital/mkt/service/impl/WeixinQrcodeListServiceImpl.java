@@ -62,16 +62,23 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 		}
 		
 		if(expirationTime != null) {
-			
 			paramMap.put("expirationTimeStatus", expirationTime);//查询状态
 			paramMap.put("expirationTime", getExpirationTime(expirationTime));//失效时间
+			Calendar calendar = Calendar.getInstance();
+			Date date = new Date();
+			date.setHours(23);
+			date.setMinutes(59);
+			date.setSeconds(59);
+			calendar.setTime(date);
+			calendar.add(Calendar.DATE,-1);
+			paramMap.put("expirationTimeNow", calendar.getTime());
 		}
 		
 		/*
 		 * 如果qrcodeStatus==0查询除删除以外的数据
 		 */
 		if(qrcodeStatus != null) {
-			paramMap.put("status", Byte.valueOf(qrcodeStatus));
+			paramMap.put("status", qrcodeStatus);
 		} else {
 			paramMap.put("status", Byte.valueOf("0"));
 		}
@@ -194,9 +201,12 @@ public class WeixinQrcodeListServiceImpl implements WeixinQrcodeListService {
 	}
 	
 	private Date getExpirationTime(Integer expirationTimeInteger) {
-		Date expirationTime = new Date();
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(expirationTime);
+		Date date = new Date();
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
 		switch(expirationTimeInteger.intValue()) {
 			case 0 : return null;
 			case 1 : calendar.add(Calendar.DATE, 3); break;
