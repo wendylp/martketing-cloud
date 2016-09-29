@@ -28,10 +28,10 @@ import cn.rongcapital.mkt.mongodb.TagRecommendRepository;
 import cn.rongcapital.mkt.mongodb.TagTreeRepository;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.po.mongodb.TagTree;
-import cn.rongcapital.mkt.service.AnalysisTagFile;
+import cn.rongcapital.mkt.service.AnalysisTagFileService;
 
 @Service
-public class AnalysisTagFileImpl implements AnalysisTagFile{
+public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 

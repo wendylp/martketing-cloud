@@ -12,7 +12,7 @@ import java.util.List;
 import cn.rongcapital.mkt.po.mongodb.TagTree;
 
 
-public interface AnalysisTagFile {
+public interface AnalysisTagFileService {
 	
 	/**
 	 * Read the Excel 2010
