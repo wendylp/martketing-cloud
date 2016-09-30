@@ -438,8 +438,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 				}
 			}
 		}
-		return wechatMemberList;
-		
+		return wechatMemberList;		
 	}
 	
 }
