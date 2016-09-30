@@ -38,7 +38,7 @@ public class WechatRegister extends BaseQuery {
     /**
      * 0-未认证,1-已认证
      */
-    private int isAuth;
+    private Integer isAuth;
 
     public Integer getId() {
         return id;
@@ -160,11 +160,11 @@ public class WechatRegister extends BaseQuery {
         this.wechatQrcode = wechatQrcode == null ? null : wechatQrcode.trim();
     }
 
-	public int getIsAuth() {
+	public Integer getIsAuth() {
 		return isAuth;
 	}
 
-	public void setIsAuth(int isAuth) {
+	public void setIsAuth(Integer isAuth) {
 		this.isAuth = isAuth;
 	}
     
