@@ -48,15 +48,18 @@ public class DataGetFilterAudiencesCustomTagServiceImpl implements DataGetFilter
 			mdTypeList = null;
 		}
 		List<Integer> mdDataList = new ArrayList<Integer>();
-		if (mdType != 0) {
-			for (Integer dataType : mdTypeList) {
-				if (mdType == dataType) {
-					mdDataList.add(mdType);
+		//逻辑写的有点复杂，待优化
+		if(mdTypeList != null && mdTypeList.size() > 0){
+			if (mdType != 0) {
+				for (Integer dataType : mdTypeList) {
+					if (mdType == dataType) {
+						mdDataList.add(mdType);
+					}
 				}
-			}
-		} else {
-			for (Integer dataType : mdTypeList) {
-				mdDataList.add(dataType);
+			} else {
+				for (Integer dataType : mdTypeList) {
+					mdDataList.add(dataType);
+				}
 			}
 		}
 
@@ -75,12 +78,13 @@ public class DataGetFilterAudiencesCustomTagServiceImpl implements DataGetFilter
 		paramMap.put("pageSize", paramObj.getPageSize());
 
 		List<DataCustomerTags> dataList = new ArrayList<DataCustomerTags>();
-		
+		List<String> keyIds =new ArrayList<String>();
 		Integer totalCount = 0;
 		if (mdDataList != null && mdDataList.size() > 0) {
 			
 			dataList = dataCustomerTagsDao.selectByBatchId(paramMap);
 			totalCount = dataCustomerTagsDao.selectCountByBatchId(paramMap);
+			keyIds = getAudiencesIds(paramMap);
 		}
 
 		logger.info("dataList 列表数据----" + dataList.toString());
@@ -117,10 +121,7 @@ public class DataGetFilterAudiencesCustomTagServiceImpl implements DataGetFilter
 			}
 		}
 
-		List<String> keyIds = getAudiencesIds(paramMap);
-		
 		logger.info("keyIds 主数据----" + keyIds.size());
-
 		outMap.put("customTagKeyIds", keyIds);
 		outMap.put("partyCount", keyIds.size());
 		outMap.put("resultList", resultList);

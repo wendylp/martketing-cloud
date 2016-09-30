@@ -52,18 +52,20 @@ public class DataGetFilterAudiencesPartyServiceImpl implements DataGetFilterAudi
 			mdTypeList = null;
 		}
 		List<Integer> mdDataList = new ArrayList<Integer>();
-		if (mdType != 0) {
-			for (Integer dataType : mdTypeList) {
-				if (mdType == dataType) {
-					mdDataList.add(mdType);
+		//逻辑写的有点复杂，待优化
+		if(mdTypeList != null && mdTypeList.size() > 0){
+			if (mdType != 0) {
+				for (Integer dataType : mdTypeList) {
+					if (mdType == dataType) {
+						mdDataList.add(mdType);
+					}
+				}
+			} else {
+				for (Integer dataType : mdTypeList) {
+					mdDataList.add(dataType);
 				}
 			}
-		} else {
-			for (Integer dataType : mdTypeList) {
-				mdDataList.add(dataType);
-			}
 		}
-
 		paramMap.put("contactIdList", contactIdList);
 		paramMap.put("mdTypes", mdDataList);
 		
@@ -129,12 +131,7 @@ public class DataGetFilterAudiencesPartyServiceImpl implements DataGetFilterAudi
 		List<String> selectIds = splitPage(mappingKeyIds,paramObj.getStartIndex(),paramObj.getPageSize());
 		
 		// 所有表中的mapping_key都查不到, 索性把mapping_key设为-1, 这样一定不会查到任何数据
-		if (!CollectionUtils.isEmpty(selectIds) && CollectionUtils.isEmpty(selectIds)) {
-			selectIds.add("-1");
-		}
-
-//		paramMap.put("startIndex", paramObj.getStartIndex());
-//		paramMap.put("pageSize", paramObj.getPageSize());
+		selectIds.add("-1");
 		paramMap.put("mappingKeyIds", selectIds);
 
 		List<DataParty> dataList = dataPartyDao.selectByBatchId(paramMap);
