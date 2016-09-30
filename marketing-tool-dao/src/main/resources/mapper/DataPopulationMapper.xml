@@ -468,15 +468,15 @@
 		<if test="contactIdList != null">
 			<foreach collection="contactIdList" item="contactId">
 				<if test="contactId != null and contactId == 1">
-					<![CDATA[AND data_population.mobile is not null]]>
+					<![CDATA[AND mobile is not null]]>
 				</if>
 				<if test="contactId != null and contactId == 2">
-					<![CDATA[AND data_population.email is not null]]>
+					<![CDATA[AND email is not null]]>
 				</if>
 			</foreach>
 		</if>
 		<if test="timeCondition != null">
-			<![CDATA[AND data_population.create_time > #{timeCondition}]]>
+			<![CDATA[AND create_time > #{timeCondition}]]>
 		</if>
 	</select>
 </mapper>
