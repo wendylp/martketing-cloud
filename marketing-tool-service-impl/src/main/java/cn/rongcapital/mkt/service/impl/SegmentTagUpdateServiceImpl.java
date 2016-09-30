@@ -130,7 +130,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 			}
 		}
 		// 删除标签与细分对应关系
-		customTagMapDao.batchDeleteUseHeadId(headerId);
+		customTagMapDao.batchDeleteUseHeadId(String.valueOf(headerId));
 		
 		// 建立标签与细分对应关系
 		for (String customTag : tagIdList) {
