@@ -113,7 +113,7 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      * @author nianjun
      * @return map
      */
-	List<DataParty> selectCustomAudiencesByTagId(Map<String, Integer> paramMap);
+	List<DataParty> selectCustomAudiencesByTagId(Map<String, String> paramMap);
 	
 
     /**

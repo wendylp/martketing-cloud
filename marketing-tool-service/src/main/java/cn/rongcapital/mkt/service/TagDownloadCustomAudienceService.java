@@ -12,5 +12,5 @@ public interface TagDownloadCustomAudienceService {
      * @param contactId
      * @return
      */
-    public BaseOutput downloadCustomAudience(Integer tagId);
+    public BaseOutput downloadCustomAudience(String tagId);
 }
