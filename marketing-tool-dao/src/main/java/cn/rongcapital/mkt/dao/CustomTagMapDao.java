@@ -46,7 +46,7 @@ public interface CustomTagMapDao extends BaseDao<CustomTagMap>{
      * @param headId
      * @author zhuxuelong
      */
-	void batchDeleteUseHeadId(Integer headerId);
+	void batchDeleteUseHeadId(String headerId);
 	
     /**
      * @功能简述 : 根据细分Id获取细分关联的标签
