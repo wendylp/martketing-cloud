@@ -8,8 +8,6 @@ package cn.rongcapital.mkt.service;
 
 import java.util.Map;
 
-import cn.rongcapital.mkt.po.mongodb.DataParty;
-
 public interface SynchroMongodbCityService {
 	
 	/**
@@ -20,5 +18,5 @@ public interface SynchroMongodbCityService {
 	 * @return Map<String, Object>
 	 * @date 2016.09.28
 	 */
-    public Map<String, Object> synchroMongodbCity(DataParty dataParty);
+    public Map<String, Object> synchroMongodbCity(Integer keyId);
 }
