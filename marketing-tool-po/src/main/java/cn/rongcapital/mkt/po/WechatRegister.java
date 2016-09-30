@@ -34,6 +34,11 @@ public class WechatRegister extends BaseQuery {
     private String appId;
 
     private String wechatQrcode;
+    
+    /**
+     * 0-未认证,1-已认证
+     */
+    private int isAuth;
 
     public Integer getId() {
         return id;
@@ -154,4 +159,13 @@ public class WechatRegister extends BaseQuery {
     public void setWechatQrcode(String wechatQrcode) {
         this.wechatQrcode = wechatQrcode == null ? null : wechatQrcode.trim();
     }
+
+	public int getIsAuth() {
+		return isAuth;
+	}
+
+	public void setIsAuth(int isAuth) {
+		this.isAuth = isAuth;
+	}
+    
 }
