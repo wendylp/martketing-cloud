@@ -91,11 +91,13 @@ public class DataGetFilterAudiencesShoppingServiceImpl implements DataGetFilterA
 		paramMap.put("pageSize", paramObj.getPageSize());
 
 		List<DataShopping> dataList = new ArrayList<DataShopping>();
+		List<String> keyIds = new ArrayList<String>();
 		
 		Integer totalCount = 0;
 		if (mdDataList != null && mdDataList.size() > 0) {
 			dataList = dataShoppingDao.selectByBatchId(paramMap);
 			totalCount = dataShoppingDao.selectCountByBatchId(paramMap);
+			keyIds = getAudiencesIds(paramMap);
 		}
 		logger.info("dataList 列表数据----" + dataList.toString());
 		List<Map<String, Object>> resultList = new ArrayList<>();
@@ -131,9 +133,6 @@ public class DataGetFilterAudiencesShoppingServiceImpl implements DataGetFilterA
 			}
 		}
 
-		List<String> keyIds = getAudiencesIds(paramMap);
-
-		logger.info("keyIds 主数据ID列表----" + keyIds.toString());
 		logger.info("keyIds 主数据----" + keyIds.size());
 		
 		outMap.put("customTagKeyIds", keyIds);

@@ -48,15 +48,19 @@ public class DataGetFilterAudiencesPaymentServiceImpl implements DataGetFilterAu
 			mdTypeList = null;
 		}
 		List<Integer> mdDataList = new ArrayList<Integer>();
-		if (mdType != 0) {
-			for (Integer dataType : mdTypeList) {
-				if (mdType == dataType) {
-					mdDataList.add(mdType);
+		
+		//逻辑写的有点复杂，待优化
+		if(mdTypeList != null && mdTypeList.size() > 0){
+			if (mdType != 0) {
+				for (Integer dataType : mdTypeList) {
+					if (mdType == dataType) {
+						mdDataList.add(mdType);
+					}
 				}
-			}
-		} else {
-			for (Integer dataType : mdTypeList) {
-				mdDataList.add(dataType);
+			} else {
+				for (Integer dataType : mdTypeList) {
+					mdDataList.add(dataType);
+				}
 			}
 		}
 
@@ -75,11 +79,12 @@ public class DataGetFilterAudiencesPaymentServiceImpl implements DataGetFilterAu
 		paramMap.put("pageSize", paramObj.getPageSize());
 
 		List<DataPayment> dataList = new ArrayList<DataPayment>();
-		
+		List<String> keyIds = new ArrayList<String>();
 		Integer totalCount = 0;
 		if (mdDataList != null && mdDataList.size() > 0) {
 			dataList = dataPaymentDao.selectByBatchId(paramMap);
 			totalCount = dataPaymentDao.selectCountByBatchId(paramMap);
+			keyIds = getAudiencesIds(paramMap);
 		}
 		logger.info("dataList 列表数据----" + dataList.toString());
 		List<Map<String, Object>> resultList = new ArrayList<>();
@@ -114,8 +119,6 @@ public class DataGetFilterAudiencesPaymentServiceImpl implements DataGetFilterAu
 				resultList.add(map);
 			}
 		}
-
-		List<String> keyIds = getAudiencesIds(paramMap);
 
 		logger.info("keyIds 主数据----" + keyIds.size());
 
