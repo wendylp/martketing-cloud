@@ -143,7 +143,9 @@ public class WeixinQrcodeDelServiceImpl implements WeixinQrcodeDelService{
 					//没有二维码使用的渠道 设置为删除状态
 					if(count == 0){
 						wechatChannel.setId(chCode);
-						wechatChannel.setIsRemoved(ApiConstant.TABLE_DATA_REMOVED_NOTDEL);
+						//这个地方要改成可以删除 2016-9-30 by lihaiguang
+						//wechatChannel.setIsRemoved(ApiConstant.TABLE_DATA_REMOVED_NOTDEL);
+						wechatChannel.setIsRemoved(ApiConstant.TABLE_DATA_REMOVED_DEL);
 						wechatChannelDao.updateById(wechatChannel);
 					}
 				}
