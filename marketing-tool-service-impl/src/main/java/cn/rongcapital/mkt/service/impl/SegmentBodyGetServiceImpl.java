@@ -17,12 +17,16 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.SegmentationBodyDao;
 import cn.rongcapital.mkt.po.SegmentBodyWithName;
+import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.SegmentBodyGetOut;
@@ -33,6 +37,9 @@ public class SegmentBodyGetServiceImpl implements SegmentBodyGetService {
 
 	@Autowired
 	SegmentationBodyDao segmentationBodyDao;
+	
+	@Autowired
+    private MongoTemplate mongoTemplate;
 
 	@ReadWrite(type = ReadWriteType.READ)
 	@Override
@@ -47,9 +54,18 @@ public class SegmentBodyGetServiceImpl implements SegmentBodyGetService {
 			for (SegmentBodyWithName body : bodyList) {
 				SegmentBodyTagsOut tag = new  SegmentBodyTagsOut();
 				tag.setTagId(body.getTagId());
-				tag.setTagName(body.getTagName());
 				tag.setTagGroupId(body.getTagGroupId());
-				tag.setTagGroupName(body.getTagGroupName());
+				
+				// 从mongodb查找tag
+				TagRecommend findOne = mongoTemplate.findOne(new Query(Criteria.where("tagId").is(body.getTagGroupId())), TagRecommend.class);
+				if(findOne != null) {
+				    tag.setTagName(findOne.getTagName());
+				    String tagId = body.getTagId();
+                    int tagListIndex = Integer.valueOf(tagId.substring(tagId.lastIndexOf('_') + 1));
+				    if(findOne.getTagList() != null && findOne.getTagList().size() > tagListIndex) {
+				        tag.setTagGroupName(findOne.getTagList().get(tagListIndex));
+				    }
+				}
 				tag.setExclude(body.getExclude());
 				if (dataMap.containsKey(body.getGroupIndex())){
 					dataMap.get(body.getGroupIndex()).add(tag);
