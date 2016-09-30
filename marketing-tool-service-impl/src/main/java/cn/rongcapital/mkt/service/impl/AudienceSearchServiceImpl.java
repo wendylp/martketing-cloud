@@ -72,7 +72,7 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 		
 		List<Integer> idList=new ArrayList<Integer>();
 
-		List<Integer> partyIdList=new ArrayList<Integer>();
+		List<String> partyIdList=new ArrayList<>();
 
 		List<Map<String,Object>> resultList = null;
 				
@@ -98,12 +98,12 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 			
 			//根据tag_id,从mongo获得关联的人群
 			List<DataParty> audiences=findCustomTagInfoServiceImpl.findMDataByTagId(audience_id,null,null);
-			List<Integer> partyIds=new ArrayList<Integer>();
+			List<String> partyIds=new ArrayList<String>();
 			if(audiences!=null && audiences.size()>0){
 				for(DataParty myDataParty:audiences){
 					if(myDataParty!=null)
 					{
-					partyIds.add(Integer.valueOf(myDataParty.getId()));
+					partyIds.add(myDataParty.getId());
 					}
 				}
 				
@@ -128,7 +128,7 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 		return result;
 	}
 
-	private List<Map<String, Object>> SearchAudienceByName(String audience_name, List<Integer> partyIdList, List<Map<String, Object>> resultList) {
+	private List<Map<String, Object>> SearchAudienceByName(String audience_name, List<String> partyIdList, List<Map<String, Object>> resultList) {
 		if(partyIdList.size() != 0){
             Map<String,Object> paramMap = new HashMap<String,Object>();
             paramMap.put("partyIdList",partyIdList);
