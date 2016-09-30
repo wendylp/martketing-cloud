@@ -93,7 +93,7 @@ public interface CustomTagMapDao extends BaseDao<CustomTagMap>{
      * @param tagId
      * @author zhuxuelong
      */
-	void batchDeleteUseTagId(Integer tagId);
+	void batchDeleteUseTagId(String tagId);
 	
 	/**
 	 * @Title: deleteCustomTagMapByMapId   

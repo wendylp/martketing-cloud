@@ -100,7 +100,7 @@
 	</update>
 
 	<!-- 通过tag_id批量删除记录 -->
-	<update id="batchDeleteUseTagId" parameterType="java.lang.Integer">
+	<update id="batchDeleteUseTagId" parameterType="java.lang.String">
 		<![CDATA[UPDATE custom_tag_map]]>
 		<![CDATA[SET status = 1, update_time = NOW()]]>
 		<![CDATA[WHERE type = 2 AND tag_id = #{tagId} AND STATUS = 0]]>
