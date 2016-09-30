@@ -29,11 +29,11 @@ public class TagDownloadCustomAudienceServiceImpl implements TagDownloadCustomAu
     private ImportTemplateDao importTemplateDao;
 
     @Override
-    public BaseOutput downloadCustomAudience(Integer tagId) {
+    public BaseOutput downloadCustomAudience(String tagId) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
         Map<String, String> resultMap = new HashMap<>();
-        Map<String, Integer> paramMap = new HashMap<>();
+        Map<String, String> paramMap = new HashMap<>();
         paramMap.put("tagId", tagId);
         List<DataParty> dataList = dataPartyDao.selectCustomAudiencesByTagId(paramMap);
         ImportTemplate paramImportTemplate = new ImportTemplate();

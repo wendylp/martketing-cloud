@@ -135,4 +135,9 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * 修改公众号下的图文消息的WechatStatus，是否被公众号删除了
 	 */
 	void batchUpdateWechatStatusByPubId(String pubId);
+	/**
+	 * @param pubId
+	 * 删除公众号下的图文消息
+	 */
+	void batchDeleteWechatStatusByPubId(String pubId);
 }

@@ -1534,7 +1534,7 @@ public class MktApi {
 	@Path("mkt.tag.custom.audience.download")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public BaseOutput downloadCustomAudience(@NotEmpty @QueryParam("method") String method,
-			@NotNull @QueryParam("tag_id") Integer tagId) {
+			@NotNull @QueryParam("tag_id") String tagId) {
 		return tagDownloadCustomAudienceService.downloadCustomAudience(tagId);
 	}
 
