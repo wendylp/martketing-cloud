@@ -104,7 +104,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 			}
 
 		}
-		List<Integer> tagIdList = new ArrayList<Integer>();
+		List<String> tagIdList = new ArrayList<String>();
 		// 标签名保存至自定义标签表
 		BaseTag baseTag = null;
 		String tagSource = TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.getTagSourceName();
@@ -120,12 +120,12 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 				
 				if (CollectionUtils.isEmpty(customTagLeafs)) {
 					BaseTag baseTagResult = insertCustomTagServiceImpl.insertCustomTagLeafFromSystemIn(tagName, tagSource);
-					tagIdList.add(Integer.valueOf(baseTagResult.getTagId()));
+					tagIdList.add(baseTagResult.getTagId());
 					
 				}else {
 				    Update update = buildBaseUpdate(baseTag);
 				    mongoTemplate.updateFirst(query, update, baseTag.getClass());
-				    tagIdList.add(Integer.valueOf(customTagLeafs.get(0).getTagId()));
+				    tagIdList.add(customTagLeafs.get(0).getTagId());
 				}
 			}
 		}
@@ -133,9 +133,9 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		customTagMapDao.batchDeleteUseHeadId(headerId);
 		
 		// 建立标签与细分对应关系
-		for (Integer customTag : tagIdList) {
+		for (String customTag : tagIdList) {
 			
-			Integer tagId = customTag.intValue();
+			String tagId = customTag;
 			CustomTagMap tagMap = new CustomTagMap();
 			tagMap.setTagId(String.valueOf(tagId));
 			tagMap.setTagSource(TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.getTagSourceId());
