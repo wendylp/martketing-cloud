@@ -17,7 +17,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import cn.rongcapital.mkt.dao.ChannelTypeMappingDao;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.po.DataPopulation;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
@@ -45,8 +44,7 @@ public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
 	@Autowired
 	DataPopulationDao dataPopulationDao;
 	
-	@Autowired
-	ChannelTypeMappingDao channelTypeMappingDao;
+
 	
 	
 	/**
@@ -79,8 +77,8 @@ public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
                             dataParty.getCity(), 1);
             map.put(tagRecommend.getTagNameEng(), tag);
         }
-        //性别
-        String sex = dataParty.getSex();
+        //性别 getSex()方法自动会换取字符串“男”等
+        String sex = dataParty.getGender().toString();
         String gender = "";
         if("1".equals(sex)){
             gender = "男";
@@ -88,8 +86,8 @@ public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
             gender = "2".equals(sex)?"女":"未知";
         }
         tagRecommend = getTagRecommend(SEX);
-        if (dataParty != null && tagRecommend != null && dataParty.getCity() != null
-                        && !"".equals(dataParty.getCity())) {
+        if (dataParty != null && tagRecommend != null && dataParty.getGender() != null
+                        ) {
             // 设置tag
             Tag tag = new Tag(tagRecommend.getTagId(), SEX, tagRecommend.getTagNameEng(),
                             gender, 1);
