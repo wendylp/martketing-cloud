@@ -578,8 +578,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			}
 		}
 		return root;
-	}
-	
+	}	
 	
 	//byte数组到图片
 	public void byte2image(byte[] data,String path,int width,int height) throws FileNotFoundException, IOException{
