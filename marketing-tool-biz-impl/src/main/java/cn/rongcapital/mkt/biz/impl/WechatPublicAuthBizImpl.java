@@ -182,7 +182,7 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 				} catch (Exception e) {
 					logger.info("公众号"+webchatAuthInfoTemp.getAuthorizerAppid()+"已经取消了授权");					
 				}
-			}			
+			}		
 		}		
 		return isGranted;
 	}
