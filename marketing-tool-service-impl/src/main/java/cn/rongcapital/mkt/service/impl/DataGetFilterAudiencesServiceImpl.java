@@ -111,15 +111,19 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 			dataTypeList = null;
 		}
 		List<Integer> mdDataList = new ArrayList<Integer>();
-		if (dataType != 0) {
-			for (Integer mdType : dataTypeList) {
-				if (mdType == dataType) {
-					mdDataList.add(dataType);
+		
+		//逻辑写的有点复杂，待优化
+		if(dataTypeList != null && dataTypeList.size() > 0){
+			if (dataType != 0) {
+				for (Integer mdType : dataTypeList) {
+					if (mdType == dataType) {
+						mdDataList.add(dataType);
+					}
 				}
-			}
-		} else {
-			for (Integer mdType : dataTypeList) {
-				mdDataList.add(mdType);
+			} else {
+				for (Integer mdType : dataTypeList) {
+					mdDataList.add(mdType);
+				}
 			}
 		}
 
@@ -272,11 +276,11 @@ public class DataGetFilterAudiencesServiceImpl implements DataGetFilterAudiences
 
 	private void updateConditions(List<Integer> dataTypeList, List<Integer> contactIds, Integer timeCondition) {
 
-		if (CollectionUtils.isEmpty(dataTypeList)) {
-			for (int i = 1; i < 8; i++) {
-				dataTypeList.add(i);
-			}
-		}
+//		if (CollectionUtils.isEmpty(dataTypeList)) {
+//			for (int i = 1; i < 8; i++) {
+//				dataTypeList.add(i);
+//			}
+//		}
 
 		// 将数据类型的下拉列表里的状态保存起来
 		if (!CollectionUtils.isEmpty(dataTypeList)) {
