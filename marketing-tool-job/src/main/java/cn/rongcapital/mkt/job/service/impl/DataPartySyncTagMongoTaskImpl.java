@@ -55,9 +55,6 @@ public class DataPartySyncTagMongoTaskImpl implements TaskService {
 			}
 			logger.info("----------调用规则规则引擎----start");
 			Boolean flag = ruleEngineService.requestRuleEngine(arrayList);
-			if (flag) {
-				ruleEngineService.synchMongoTagData();
-			}
 			logger.info("----------调用规则规则引擎----end");
 		}
 	}
