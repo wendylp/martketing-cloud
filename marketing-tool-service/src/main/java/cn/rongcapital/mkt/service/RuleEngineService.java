@@ -14,8 +14,4 @@ public interface RuleEngineService {
      */
     public Boolean requestRuleEngine(List<Integer> keyIds);
     
-    /**
-     * 数据同步到MongoDB
-     */
-    public void synchMongoTagData();
 }
