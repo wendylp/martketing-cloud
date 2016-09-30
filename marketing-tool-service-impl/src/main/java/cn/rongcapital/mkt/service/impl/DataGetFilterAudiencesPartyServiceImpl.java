@@ -52,18 +52,20 @@ public class DataGetFilterAudiencesPartyServiceImpl implements DataGetFilterAudi
 			mdTypeList = null;
 		}
 		List<Integer> mdDataList = new ArrayList<Integer>();
-		if (mdType != 0) {
-			for (Integer dataType : mdTypeList) {
-				if (mdType == dataType) {
-					mdDataList.add(mdType);
+		//逻辑写的有点复杂，待优化
+		if(mdTypeList != null && mdTypeList.size() > 0){
+			if (mdType != 0) {
+				for (Integer dataType : mdTypeList) {
+					if (mdType == dataType) {
+						mdDataList.add(mdType);
+					}
+				}
+			} else {
+				for (Integer dataType : mdTypeList) {
+					mdDataList.add(dataType);
 				}
 			}
-		} else {
-			for (Integer dataType : mdTypeList) {
-				mdDataList.add(dataType);
-			}
 		}
-
 		paramMap.put("contactIdList", contactIdList);
 		paramMap.put("mdTypes", mdDataList);
 		
@@ -122,19 +124,18 @@ public class DataGetFilterAudiencesPartyServiceImpl implements DataGetFilterAudi
 		
 		Integer data_party_rows = mappingKeyIds.size();
 		
+		if(data_party_rows <= paramObj.getStartIndex()){
+			paramObj.setStartIndex(0);
+		}
+		
 		List<String> selectIds = splitPage(mappingKeyIds,paramObj.getStartIndex(),paramObj.getPageSize());
 		
 		// 所有表中的mapping_key都查不到, 索性把mapping_key设为-1, 这样一定不会查到任何数据
-		if (!CollectionUtils.isEmpty(selectIds) && CollectionUtils.isEmpty(selectIds)) {
-			selectIds.add("-1");
-		}
-
-		paramMap.put("startIndex", paramObj.getStartIndex());
-		paramMap.put("pageSize", paramObj.getPageSize());
+		selectIds.add("-1");
 		paramMap.put("mappingKeyIds", selectIds);
 
 		List<DataParty> dataList = dataPartyDao.selectByBatchId(paramMap);
-		
+		logger.info("dataList 列表数据----" + dataList.toString());
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		if (dataList != null && !dataList.isEmpty()) {
 			ImportTemplate paramImportTemplate = new ImportTemplate();
@@ -168,7 +169,6 @@ public class DataGetFilterAudiencesPartyServiceImpl implements DataGetFilterAudi
 			}
 		}
 
-		logger.info("keyIds 主数据ID列表----" + mappingKeyIds.toString());
 		logger.info("keyIds 主数据----" + mappingKeyIds.size());
 		
 		outMap.put("partyKeyIds", mappingKeyIds);
@@ -180,7 +180,6 @@ public class DataGetFilterAudiencesPartyServiceImpl implements DataGetFilterAudi
 		return outMap;
 	}
 	
-	
 	/**
 	 * 手动分页（由于查询出的ID数据比较大,程序处理获取先事业ids）
 	 * @param mappingKeyIds
@@ -189,9 +188,11 @@ public class DataGetFilterAudiencesPartyServiceImpl implements DataGetFilterAudi
 	 */
 	private List<String> splitPage(List<String> mappingKeyIds, Integer startIndex, Integer pageSize) {
 		
+		logger.info("程序分页:startIndex: "+ startIndex + ",pageSize=" +pageSize );
+		
 		List<String> pageList = new ArrayList<String>();
 		
-		for(int i = startIndex; i<(startIndex+ pageSize) && startIndex < mappingKeyIds.size() ; i++ ){
+		for(int i = startIndex; i<(startIndex + pageSize) && i <  mappingKeyIds.size() ; i++ ){
 			pageList.add(mappingKeyIds.get(i));
 		}
 	

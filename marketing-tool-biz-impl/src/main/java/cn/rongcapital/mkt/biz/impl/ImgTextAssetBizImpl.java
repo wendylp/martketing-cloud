@@ -179,6 +179,7 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 					imgTextAssetTemp.setWechatStatus(NumUtil.int2OneByte(1));
 					imgTextAssetTemp.setType(NumUtil.int2OneByte(0));
 					imgTextAssetTemp.setStatus(NumUtil.int2OneByte(0));	
+					imgTextAssetTemp.setDigest(wxNewsItem.getDigest());
 					imgTextAssets.add(imgTextAssetTemp);
 				}				
 			}

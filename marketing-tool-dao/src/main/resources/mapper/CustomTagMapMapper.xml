@@ -93,17 +93,17 @@
 	<!-- 其它SQL语句 -->
 	
 	<!-- 通过head_id批量删除记录 -->
-	<update id="batchDeleteUseHeadId" parameterType="java.lang.Integer">
+	<update id="batchDeleteUseHeadId" parameterType="java.lang.String">
 		<![CDATA[UPDATE custom_tag_map]]>
 		<![CDATA[SET status = 1, update_time = NOW()]]>
-		<![CDATA[WHERE type = 0 AND map_id = #{headerId} AND STATUS = 0]]>
+		<![CDATA[WHERE tag_source = 0 AND map_id = #{headerId} AND STATUS = 0]]>
 	</update>
 
 	<!-- 通过tag_id批量删除记录 -->
-	<update id="batchDeleteUseTagId" parameterType="java.lang.Integer">
+	<update id="batchDeleteUseTagId" parameterType="java.lang.String">
 		<![CDATA[UPDATE custom_tag_map]]>
 		<![CDATA[SET status = 1, update_time = NOW()]]>
-		<![CDATA[WHERE type = 2 AND tag_id = #{tagId} AND STATUS = 0]]>
+		<![CDATA[WHERE tag_source = 2 AND tag_id = #{tagId} AND STATUS = 0]]>
 	</update>
 
 	<!-- 通过head_id获取受众细分关联的tag -->

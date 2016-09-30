@@ -431,10 +431,14 @@ public class GetPubFansListServiceImpl implements TaskService {
 						wechatMember.setSelected(NumUtil.int2OneByte(0));
 					}
 				}
+			}else{
+				for(Iterator<WechatMember> iter =wechatMemberList.iterator();iter.hasNext();){
+					WechatMember wechatMember = iter.next();
+					wechatMember.setSelected(NumUtil.int2OneByte(0));					
+				}
 			}
 		}
-		return wechatMemberList;
-		
+		return wechatMemberList;		
 	}
 	
 }

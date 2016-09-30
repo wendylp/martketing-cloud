@@ -154,8 +154,8 @@
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO original_data_arch_point (event_id,event_name,click_time,identify_no,driving_license,
-            email,mobile,tel,QQ,acct_type,acct_no,idfa,imei,udid,phone_mac,status,
-		    source,cookie,file_unique,batch_id,bitmap,wxmp_id,create_time,wx_code,)
+            email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,status,
+		    source,cookie,file_unique,batch_id,bitmap,wxmp_id,create_time,wx_code)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(

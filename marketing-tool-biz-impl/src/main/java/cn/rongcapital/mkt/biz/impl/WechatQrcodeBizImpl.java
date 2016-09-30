@@ -216,6 +216,12 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 					WebchatAuthInfo webchatAuthInfoTemp = iter.next();
 					app.setAuthAppId(webchatAuthInfoTemp.getAuthorizerAppid());
 					app.setAuthRefreshToken(webchatAuthInfoTemp.getAuthorizerRefreshToken());
+					WechatQrcodeTicket wechatQrcodeTicketTemp =getWechatQrcodeTicketOfLast(webchatAuthInfoTemp.getAuthorizerAppid());
+					if(wechatQrcodeTicketTemp!=null){
+						int pageSize = endSceneId-startSceneId;
+						startSceneId = Integer.parseInt(String.valueOf(wechatQrcodeTicketTemp.getSceneId()+1));
+						endSceneId = startSceneId+pageSize;
+					}
 					for(int i=startSceneId;i<=endSceneId;i++){
 						try {
 							WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName,webchatAuthInfoTemp.getAuthorizerAppid());							
@@ -354,6 +360,21 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 
 	}
 	
+	private WechatQrcodeTicket getWechatQrcodeTicketOfLast(String authorizerAppid){
+		WechatQrcodeTicket wechatQrcodeTicketBack = new WechatQrcodeTicket();
+		WechatRegister wechatRegister = getWechatRegisterByAuthAppId(authorizerAppid);
+		WechatQrcodeTicket wechatQrcodeTicket = new WechatQrcodeTicket();
+		wechatQrcodeTicket.setWxAcct(wechatRegister.getWxAcct());
+		wechatQrcodeTicket.setOrderField("id");
+		wechatQrcodeTicket.setOrderFieldType("DESC");
+		wechatQrcodeTicket.setStartIndex(0);
+		wechatQrcodeTicket.setPageSize(1);
+		List<WechatQrcodeTicket> wechatQrcodeTicketes = wechatQrcodeTicketDao.selectList(wechatQrcodeTicket);
+		if(CollectionUtils.isNotEmpty(wechatQrcodeTicketes)){
+			wechatQrcodeTicketBack = wechatQrcodeTicketes.get(0);
+		}
+		return wechatQrcodeTicketBack;
+	}
 	
 	/**
 	 * @param wechatQrcode
@@ -396,10 +417,10 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			if(channelList != null && channelList.size() > 0){
 				
 				wechatChannel = channelList.get(0);
-				if(wechatChannel != null && wechatChannel.getIsRemoved() == ApiConstant.TABLE_DATA_REMOVED_DEL){
+				/*if(wechatChannel != null && wechatChannel.getIsRemoved() == ApiConstant.TABLE_DATA_REMOVED_DEL){
 					wechatChannel.setIsRemoved(ApiConstant.TABLE_DATA_REMOVED_NOTDEL);
 					wechatChannelDao.updateById(wechatChannel);
-				}
+				}*/
 			}
 			
 			wechatQrcode.setChCode(channelCode);
@@ -512,7 +533,24 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
 				baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
 				return baseOutput;
-			}			
+			}
+
+            //修改是否可删除逻辑2016-9-30 by lihaiguang
+            WechatQrcode wechatQ =  new WechatQrcode();
+            wechatQ.setId(Integer.valueOf(String.valueOf(wechatQrcodeIn.getId())));
+            List<WechatQrcode> wechatQList = wechatQrcodeDao.selectList(wechatQ);
+            if(wechatQList != null && wechatQList.size() > 0){
+                Integer chCode = wechatQList.get(0).getChCode();
+                WechatChannel channel = new WechatChannel();
+                channel.setId(chCode);
+                List<WechatChannel> selectChannelList = wechatChannelDao.selectList(channel);
+                if(selectChannelList != null && selectChannelList.size() > 0) {
+                    channel = selectChannelList.get(0);
+                    channel.setIsRemoved(ApiConstant.TABLE_DATA_REMOVED_NOTDEL);
+                    wechatChannelDao.updateById(channel);
+                }
+            }
+			
 			wechatQrcode.setStatus(NumUtil.int2OneByte(1));
 			wechatQrcodeDao.updateById(wechatQrcode);
 
@@ -540,8 +578,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			}
 		}
 		return root;
-	}
-	
+	}	
 	
 	//byte数组到图片
 	public void byte2image(byte[] data,String path,int width,int height) throws FileNotFoundException, IOException{

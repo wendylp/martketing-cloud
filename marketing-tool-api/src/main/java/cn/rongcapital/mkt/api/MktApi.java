@@ -1257,7 +1257,7 @@ public class MktApi {
 	@GET
 	@Path("/mkt.audience.search.get")
 	public BaseOutput audienceByName(@NotEmpty @QueryParam("user_token") String userToken,
-			@QueryParam("audience_type") String audience_type, @QueryParam("audience_id") int audience_id,
+			@QueryParam("audience_type") String audience_type, @QueryParam("audience_id") String audience_id,
 			@QueryParam("search_field") String audience_name,
 			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
@@ -1534,7 +1534,7 @@ public class MktApi {
 	@Path("mkt.tag.custom.audience.download")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public BaseOutput downloadCustomAudience(@NotEmpty @QueryParam("method") String method,
-			@NotNull @QueryParam("tag_id") Integer tagId) {
+			@NotNull @QueryParam("tag_id") String tagId) {
 		return tagDownloadCustomAudienceService.downloadCustomAudience(tagId);
 	}
 
