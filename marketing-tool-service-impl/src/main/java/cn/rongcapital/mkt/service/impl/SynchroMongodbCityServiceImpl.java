@@ -58,13 +58,14 @@ public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
 	 * @date 2016.09.28
 	 */
 	@Override
-	public Map<String, Object> synchroMongodbCity(DataParty dataParty) {
+	public Map<String, Object> synchroMongodbCity(Integer keyId) {
 	    
-	    logger.info("判断dataParty是否为空:-------------------------------------->" + dataParty.toString());
+		DataParty dataParty = mongoOperations.findOne(new Query(Criteria.where("mid").is(keyId)), DataParty.class);
+		if(dataParty == null){
+			return null;
+		}
 	    
         Map<String, Object> map = new HashMap<String, Object>();
-
-        Integer keyId = dataParty.getMid();
         
         logger.info("同步属性标签方法开始执行, kayId:-----------------------》" + keyId);
         
@@ -95,8 +96,6 @@ public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
             map.put(tagRecommend.getTagNameEng(), tag);
         }
        
-        
-        
 
         // 获取"媒体名称"的TagRecommend
         tagRecommend = getTagRecommend(MEDIA_NAME);
