@@ -44,7 +44,7 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-	private static final String PRE_AUTH_CODE_URL = "https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=";
+	private final String PRE_AUTH_CODE_URL = "https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=";
 	
 	@Autowired
 	private WebchatAuthInfoDao webchatAuthInfoDao;
@@ -221,5 +221,4 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 			throw new WXServerApiException(e);
 		}
 	}
-
 }
