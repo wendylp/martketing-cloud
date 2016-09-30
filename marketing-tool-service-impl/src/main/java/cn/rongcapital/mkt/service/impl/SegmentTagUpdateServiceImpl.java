@@ -154,8 +154,11 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 				customTagMapDao.insert(pensonTagMap);
 			}*/
 			//给人打上标签
+			logger.info("==================" + personIdList.size() + "tagId is" + customTag);
 			for(Integer personId : personIdList) {
+			    
 				tagCustomTagToDataPartyServiceImpl.tagCustomTagToDataPartyById(String.valueOf(tagId), personId);
+				logger.info("===================tagId is {} and personId is {}",tagId , personId );
 			}
 		}
 	
