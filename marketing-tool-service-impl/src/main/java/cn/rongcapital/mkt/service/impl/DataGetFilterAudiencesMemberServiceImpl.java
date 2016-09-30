@@ -74,13 +74,15 @@ public class DataGetFilterAudiencesMemberServiceImpl implements DataGetFilterAud
 		paramMap.put("startIndex", paramObj.getStartIndex());
 		paramMap.put("pageSize", paramObj.getPageSize());
 
-		List<DataMember> dataList = dataMemberDao.selectByBatchId(paramMap);
+		List<DataMember> dataList = new ArrayList<DataMember>();
 		
 		Integer totalCount = 0;
 		if (mdDataList != null && mdDataList.size() > 0) {
+			
+			dataList = dataMemberDao.selectByBatchId(paramMap);
 			totalCount = dataMemberDao.selectCountByBatchId(paramMap);
 		}
-
+		logger.info("dataList 列表数据----" + dataList.toString());
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		if (dataList != null && !dataList.isEmpty()) {
 			ImportTemplate paramImportTemplate = new ImportTemplate();
@@ -116,7 +118,6 @@ public class DataGetFilterAudiencesMemberServiceImpl implements DataGetFilterAud
 
 		List<String> keyIds = getAudiencesIds(paramMap);
 
-		logger.info("keyIds 主数据ID列表----" + keyIds.toString());
 		logger.info("keyIds 主数据----" + keyIds.size());
 		
 		outMap.put("customTagKeyIds", keyIds);

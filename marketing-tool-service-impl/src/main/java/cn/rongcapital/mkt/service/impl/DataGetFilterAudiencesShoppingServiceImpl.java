@@ -90,13 +90,14 @@ public class DataGetFilterAudiencesShoppingServiceImpl implements DataGetFilterA
 		paramMap.put("startIndex", paramObj.getStartIndex());
 		paramMap.put("pageSize", paramObj.getPageSize());
 
-		List<DataShopping> dataList = dataShoppingDao.selectByBatchId(paramMap);
+		List<DataShopping> dataList = new ArrayList<DataShopping>();
 		
 		Integer totalCount = 0;
 		if (mdDataList != null && mdDataList.size() > 0) {
+			dataList = dataShoppingDao.selectByBatchId(paramMap);
 			totalCount = dataShoppingDao.selectCountByBatchId(paramMap);
 		}
-
+		logger.info("dataList 列表数据----" + dataList.toString());
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		if (dataList != null && !dataList.isEmpty()) {
 			ImportTemplate paramImportTemplate = new ImportTemplate();

@@ -74,13 +74,15 @@ public class DataGetFilterAudiencesPopulationServiceImpl implements DataGetFilte
 		paramMap.put("startIndex", paramObj.getStartIndex());
 		paramMap.put("pageSize", paramObj.getPageSize());
 
-		List<DataPopulation> dataList = dataPopulationDao.selectByBatchId(paramMap);
+		List<DataPopulation> dataList = new ArrayList<DataPopulation>();
 		
 		Integer totalCount = 0;
 		if (mdDataList != null && mdDataList.size() > 0) {
+			
+			dataList = dataPopulationDao.selectByBatchId(paramMap);
 			totalCount = dataPopulationDao.selectCountByBatchId(paramMap);
 		}
-
+		logger.info("dataList 列表数据----" + dataList.toString());
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		if (dataList != null && !dataList.isEmpty()) {
 			ImportTemplate paramImportTemplate = new ImportTemplate();
@@ -116,7 +118,6 @@ public class DataGetFilterAudiencesPopulationServiceImpl implements DataGetFilte
 
 		List<String> keyIds = getAudiencesIds(paramMap);
 
-		logger.info("keyIds 主数据ID列表----" + keyIds.toString());
 		logger.info("keyIds 主数据----" + keyIds.size());
 		
 		outMap.put("populationKeyIds", keyIds);
