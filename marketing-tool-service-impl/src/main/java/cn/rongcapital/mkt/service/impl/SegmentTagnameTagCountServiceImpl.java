@@ -103,22 +103,28 @@ public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCount
 		}
 
 		TagRecommend findOne = mongoTemplate.findOne(new Query(Criteria.where("tagId").is(tagIds)), TagRecommend.class);
+		if (findOne != null) {
+			List<String> tagList = findOne.getTagList();
+			int count = tagList.size();
+			if (count > 10) {
+				count = 10;
+			}
+			for (int i = 0; i < count; i++) {
+				List<DataParty> restList = mongoTemplate.find(
+						new Query(
+								Criteria.where("tagList.tagId").is(tagIds).and("tagList.tagValue").is(tagList.get(i))),
+						DataParty.class);
 
-		List<String> tagList = findOne.getTagList();
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tag_id", tagIds);
+				map.put("tag_name", tagList.get(i));
+				map.put("tag_count", restList.size());
+				result.getData().add(map);
+			}
 
-		for (String tagvalue : tagList) {
-			List<DataParty> restList = mongoTemplate.find(
-					new Query(Criteria.where("tagList.tagId").is(tagIds).and("tagList.tagValue").is(tagvalue)),
-					DataParty.class);
-
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("tag_id", tagIds);
-			map.put("tag_name", tagvalue);
-			map.put("tag_count", restList.size());
-			result.getData().add(map);
+			result.setTotal(result.getData().size());
 		}
 
-		result.setTotal(result.getData().size());
 		return result;
 	}
 }

@@ -10,16 +10,15 @@
 
 package cn.rongcapital.mkt.po;
 
-
 public class SegmentBodyWithName {
 
 	private Integer groupIndex;
 
-	private Integer tagId;
+	private String tagId;
 
 	private String tagName;
 
-	private Integer tagGroupId;
+	private String tagGroupId;
 
 	private String tagGroupName;
 
@@ -33,11 +32,11 @@ public class SegmentBodyWithName {
 		this.groupIndex = groupIndex;
 	}
 
-	public Integer getTagId() {
+	public String getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(Integer tagId) {
+	public void setTagId(String tagId) {
 		this.tagId = tagId;
 	}
 
@@ -49,11 +48,11 @@ public class SegmentBodyWithName {
 		this.tagName = tagName;
 	}
 
-	public Integer getTagGroupId() {
+	public String getTagGroupId() {
 		return tagGroupId;
 	}
 
-	public void setTagGroupId(Integer tagGroupId) {
+	public void setTagGroupId(String tagGroupId) {
 		this.tagGroupId = tagGroupId;
 	}
 
