@@ -110,6 +110,7 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                             "SELECT ruleCode,result FROM rsk_result WHERE bizCode = ?AND bizTypeCode = ? AND ruleSetCode = ? AND ruleSetVersion = ? GROUP BY ruleCode ORDER BY sortId,time DESC",
                             searchParam);
             for (Map<String, Object> resMap : resultLit) {
+            	if(resMap == null) continue;
                 String ruleCode = (String) resMap.get("ruleCode"); // 规则code
                 String result = (String) resMap.get("result"); // 返回结果
                 // 结果为空，不进行后续打标签操作
@@ -134,6 +135,22 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                 Tag tag = new Tag(tagRecommend.getTagId(), tagRecommend.getTagName(),
                                 tagRecommend.getTagNameEng(), tagValue, 1);
                 tagList.add(tag);
+            }
+            //获取人员的属性标签
+            Map<String, Object> tagMap = synchroMongodbCityService.synchroMongodbCity(Integer.valueOf(keyId));
+            if(tagMap != null){
+            	 Tag cityTag = (Tag) tagMap.get("city");
+                 if(cityTag != null){
+                 	tagList.add(cityTag);
+                 }
+                 Tag mediaTrenchGeneraTag = (Tag) tagMap.get("mediaTrenchGenera");
+                 if(mediaTrenchGeneraTag != null){
+                 	tagList.add(mediaTrenchGeneraTag);
+                 }
+                 Tag mediaNameTag = (Tag) tagMap.get("mediaName");
+                 if(mediaNameTag != null){
+                 	tagList.add(mediaNameTag);
+                 }
             }
             if (!CollectionUtils.isEmpty(tagList)) {
                 // 更新插入
