@@ -67,5 +67,5 @@ public interface AudienceListPartyMapDao extends BaseDao<AudienceListPartyMap>{
 	 * @param Integer
 	 * @return 影响条目
 	 */
-	List<Integer> selectPartyIdLIistByAudienceId(int audience_list_id);
+	List<Integer> selectPartyIdLIistByAudienceId(String audience_list_id);
 }

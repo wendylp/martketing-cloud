@@ -57,7 +57,7 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 	
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
-	public BaseOutput audienceByName(String userToken,String audience_type,int audience_id,String audience_name,Integer size,Integer index) {
+	public BaseOutput audienceByName(String userToken,String audience_type,String audience_id,String audience_name,Integer size,Integer index) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO,null);
@@ -97,7 +97,7 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 			//resultList = SearchAudienceByName(audience_name, partyIdList, resultList);
 			
 			//根据tag_id,从mongo获得关联的人群
-			List<DataParty> audiences=findCustomTagInfoServiceImpl.findMDataByTagId(Integer.toString(audience_id),null,null);
+			List<DataParty> audiences=findCustomTagInfoServiceImpl.findMDataByTagId(audience_id,null,null);
 			List<Integer> partyIds=new ArrayList<Integer>();
 			if(audiences!=null && audiences.size()>0){
 				for(DataParty myDataParty:audiences){
