@@ -9,6 +9,9 @@ import cn.rongcapital.mkt.po.OriginalDataLogin;
 import cn.rongcapital.mkt.service.OriginalDataLoginScheduleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,7 @@ import java.util.List;
  * Created by bianyulong on 16/6/22.
  */
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class OriginalDataLoginScheduleServiceImpl implements OriginalDataLoginScheduleService,TaskService {
 
     @Autowired
@@ -27,11 +31,17 @@ public class OriginalDataLoginScheduleServiceImpl implements OriginalDataLoginSc
 
     @Autowired
     private DataLoginDao dataLoginDao;
-
+    
+	@Autowired
+	Environment env;
+	
+    
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void cleanData() {
 
+        int BATCH_NUM = Integer.valueOf(env.getProperty("orginal.to.data.batch.num"));
+        
         OriginalDataLogin paramOriginalDataLogin = new OriginalDataLogin();
         paramOriginalDataLogin.setStatus(StatusEnum.ACTIVE.getStatusCode());
 

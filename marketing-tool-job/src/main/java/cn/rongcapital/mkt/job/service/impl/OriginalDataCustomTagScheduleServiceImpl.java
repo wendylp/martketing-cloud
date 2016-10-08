@@ -15,6 +15,8 @@ import cn.rongcapital.mkt.service.IsExistsCustomTagService;
 import cn.rongcapital.mkt.service.OriginalDataCustomTagScheduleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,7 @@ import java.util.Map;
  * Created by bianyulong on 16/6/24.
  */
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCustomTagScheduleService, TaskService {
 
     @Autowired
@@ -44,10 +47,16 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
 
     @Autowired
     private InsertCustomTagService insertCustomTagService;
-
+    
+	@Autowired
+	Environment env;
+	
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void cleanData() {
+    	
+        int BATCH_NUM = Integer.valueOf(env.getProperty("orginal.to.data.batch.num"));
+        
         OriginalDataCustomerTags paramOriginalDataCustomTags = new OriginalDataCustomerTags();
         paramOriginalDataCustomTags.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
         int totalCount = originalDataCustomerTagsDao.selectListCount(paramOriginalDataCustomTags);
