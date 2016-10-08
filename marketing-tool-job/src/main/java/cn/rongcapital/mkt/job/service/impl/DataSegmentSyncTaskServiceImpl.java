@@ -91,7 +91,7 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 					Criteria oneCriteria = null;
 					if (exclude == 0) {
 						if ("0".equals(tagId)) {// 不限
-							oneCriteria = Criteria.where("tagList.tagId").is(tagGroupId);
+							oneCriteria = Criteria.where("tagList").elemMatch(Criteria.where("tagId").is(tagGroupId));
 						} else {
 
 							String tagIndex = tagId.substring(tagId.indexOf("_") + 1);
@@ -101,12 +101,13 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 							List<String> tagList = findOne.getTagList();
 							String tagValue = tagList.get(Integer.valueOf(tagIndex));
 
-							oneCriteria = Criteria.where("tagList.tagId").is(tagGroupId).and("tagList.tagValue")
-									.is(tagValue);
+							oneCriteria = Criteria.where("tagList")
+									.elemMatch(Criteria.where("tagId").is(tagGroupId).and("tagValue").is(tagValue));
+
 						}
 					} else {
 						if ("0".equals(tagId)) {// 不限
-							oneCriteria = Criteria.where("tagList.tagId").ne(tagGroupId);
+							oneCriteria = Criteria.where("tagList").elemMatch(Criteria.where("tagId").ne(tagGroupId));
 						} else {
 
 							String tagIndex = tagId.substring(tagId.indexOf("_") + 1);
@@ -115,8 +116,8 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 									.findOne(new Query(Criteria.where("tagId").is(tagGroupId)), TagRecommend.class);
 							List<String> tagList = findOne.getTagList();
 							String tagValue = tagList.get(Integer.valueOf(tagIndex));
-							oneCriteria = Criteria.where("tagList.tagId").ne(tagGroupId).and("tagList.tagValue")
-									.ne(tagValue);
+							oneCriteria = Criteria.where("tagList")
+									.elemMatch(Criteria.where("tagId").ne(tagGroupId).and("tagValue").ne(tagValue));
 						}
 					}
 					criteriasList.add(oneCriteria);
