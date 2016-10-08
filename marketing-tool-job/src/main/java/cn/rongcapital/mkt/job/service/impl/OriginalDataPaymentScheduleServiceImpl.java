@@ -9,6 +9,8 @@ import cn.rongcapital.mkt.po.OriginalDataPayment;
 import cn.rongcapital.mkt.service.OriginalDataPaymentScheduleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import java.util.List;
  * Created by bianyulong on 16/6/23.
  */
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class OriginalDataPaymentScheduleServiceImpl implements OriginalDataPaymentScheduleService,TaskService {
 
     @Autowired
@@ -27,11 +30,16 @@ public class OriginalDataPaymentScheduleServiceImpl implements OriginalDataPayme
 
     @Autowired
     private DataPaymentDao dataPaymentDao;
-
+    
+	@Autowired
+	Environment env;
+	
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void cleanData() {
 
+        int BATCH_NUM = Integer.valueOf(env.getProperty("orginal.to.data.batch.num"));
+        
         OriginalDataPayment paramOriginalDataPayment = new OriginalDataPayment();
         paramOriginalDataPayment.setStatus(StatusEnum.ACTIVE.getStatusCode());
 

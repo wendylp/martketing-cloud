@@ -9,6 +9,8 @@ import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import cn.rongcapital.mkt.po.OriginalDataPopulation;
 import cn.rongcapital.mkt.service.OriginalDataPopulationService;
 
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class OriginalDataPopulationServiceImpl implements OriginalDataPopulationService,TaskService {
 
     @Autowired
@@ -27,10 +30,15 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
 
     @Autowired
     private DataPopulationDao dataPopulationDao;
-
+    
+	@Autowired
+	Environment env;
+	
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void cleanData() {
+    	
+        int BATCH_NUM = Integer.valueOf(env.getProperty("orginal.to.data.batch.num"));
 
         // 1. 取出需要处理的数据
         OriginalDataPopulation paramOriginalDataPopulation = new OriginalDataPopulation();
