@@ -73,9 +73,13 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                     String url = env.getProperty("rule.engine.url");
                     Response response = OkHttpUtil.requestByPost(url, RequestMediaType.JSON,
                                     JsonUtils.toJson(requestMap));
-                    // 返回码
-                    int code = response.code();
-                    requestStatus = (code > 200 && code <= 206);
+                	// 返回码
+					int code = response.code();
+					logger.info("----------调用规则规则引擎----id:?,返回code:?", keyId, code);
+					requestStatus = (code > 200 && code <= 206);
+					logger.info("----------调用规则规则引擎----requestStatus:?",requestStatus);
+					
+                    logger.info("");
                     if(requestStatus){
                         //同步标签
                         sychMongoData(keyId.toString()); 
@@ -85,6 +89,7 @@ public class RuleEngineServiceImpl implements RuleEngineService {
         } catch (Exception e) {
             logger.error("请求规则引擎出现异常：---------------->" + e.getMessage(), e);
         }
+        logger.info("----------requestRuleEngine----end----");
         return requestStatus;
     }
 
@@ -113,6 +118,7 @@ public class RuleEngineServiceImpl implements RuleEngineService {
             	if(resMap == null) continue;
                 String ruleCode = (String) resMap.get("ruleCode"); // 规则code
                 String result = (String) resMap.get("result"); // 返回结果
+                logger.info("查询结果为---------------------------------------："+"标签名称："+ruleCode+"标签值："+result);
                 // 结果为空，不进行后续打标签操作
                 if (result == null) {
                     continue;
@@ -121,7 +127,6 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                 Criteria criteriaAll = Criteria.where("tag_name_eng").is(ruleCode);
                 TagRecommend tagRecommend = mongoTemplate.findOne(new Query(criteriaAll),
                                 cn.rongcapital.mkt.po.mongodb.TagRecommend.class);
-
                 // 判断是否数据有误
                 int size = tagRecommend.getTagList().size();
                 int index = Integer.valueOf(result);
@@ -137,30 +142,32 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                 tagList.add(tag);
             }
             //获取人员的属性标签
-//            Map<String, Object> tagMap = synchroMongodbCityService.synchroMongodbCity(Integer.valueOf(keyId));
-//            if(tagMap != null){
-//            	 Tag cityTag = (Tag) tagMap.get("city");
-//                 if(cityTag != null){
-//                 	tagList.add(cityTag);
-//                 }
-//                 Tag sexTag = (Tag) tagMap.get("sex");
-//                 if(sexTag != null){
-//                 	tagList.add(sexTag);
-//                 }
-//                 Tag mediaTrenchGeneraTag = (Tag) tagMap.get("mediaTrenchGenera");
-//                 if(mediaTrenchGeneraTag != null){
-//                 	tagList.add(mediaTrenchGeneraTag);
-//                 }
-//                 Tag mediaNameTag = (Tag) tagMap.get("mediaName");
-//                 if(mediaNameTag != null){
-//                 	tagList.add(mediaNameTag);
-//                 }
-//            }
+            Map<String, Object> tagMap = synchroMongodbCityService.synchroMongodbCity(Integer.valueOf(keyId));
+            if(tagMap != null){
+            	 Tag cityTag = (Tag) tagMap.get("city");
+                 if(cityTag != null){
+                 	tagList.add(cityTag);
+                 }
+                 Tag sexTag = (Tag) tagMap.get("sex");
+                 if(sexTag != null){
+                 	tagList.add(sexTag);
+                 }
+                 Tag mediaTrenchGeneraTag = (Tag) tagMap.get("mediaTrenchGenera");
+                 if(mediaTrenchGeneraTag != null){
+                 	tagList.add(mediaTrenchGeneraTag);
+                 }
+                 Tag mediaNameTag = (Tag) tagMap.get("mediaName");
+                 if(mediaNameTag != null){
+                 	tagList.add(mediaNameTag);
+                 }
+                 logger.info("属性类标签查询结果为：------------------->"+tagMap);
+            }
             if (!CollectionUtils.isEmpty(tagList)) {
                 // 更新插入
                 Update update = new Update().set("tag_list", tagList);
                 // logger.info("同步标签数据方法开始执行：----------->标签属性为，Mid:" + bizCode);
-                mongoTemplate.findAndModify(new Query(criteria), update, DataParty.class);
+                DataParty dp = mongoTemplate.findAndModify(new Query(criteria), update, DataParty.class);
+                logger.info("打标签操作执行结束：-------------------------->更新的人员为："+dp.getMid());
             }
         } catch (Exception e) {
             logger.error("同步标签数据到mongo出现异常----------------->"+e.getMessage(),e);
