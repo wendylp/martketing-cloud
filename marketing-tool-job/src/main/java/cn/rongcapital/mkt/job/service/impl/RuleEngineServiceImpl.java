@@ -19,10 +19,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.tagsin.tutils.json.JsonUtils;
 import com.tagsin.tutils.okhttp.OkHttpUtil;
 import com.tagsin.tutils.okhttp.OkHttpUtil.RequestMediaType;
 
+import cn.rongcapital.mkt.po.RuleEngineResult;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Tag;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
@@ -98,30 +101,19 @@ public class RuleEngineServiceImpl implements RuleEngineService {
 			List<Tag> tagList = new ArrayList<>(); // 标签集合
 			// 查询主数据
 			Criteria criteria = Criteria.where("mid").is(Integer.valueOf(keyId));
-			// 业务码
-			String code = "maketing-system-tag";
-			Object[] param = { code };
-			// 获取参数
-			List<Map<String, Object>> bizType = jdbcTemplate2
-					.queryForList("SELECT ruleSetCode,ruleSetVersion FROM rsk_biztype WHERE code = ?", param);
-			Map<String, Object> map = bizType.get(0);
-			String ruleSetCode = (String) map.get("ruleSetCode"); // 集合code
-			String ruleSetVersion = map.get("ruleSetVersion").toString(); // 集合版本
-			Object[] searchParam = { keyId, code, ruleSetCode, ruleSetVersion }; // 查询参数
+			//获取规则引擎结果请求路径
+			String resultUrl = env.getProperty("rule.engine.result.url");
 
-			// 查询结果
-			List<Map<String, Object>> resultLit = jdbcTemplate2.queryForList(
-					"SELECT ruleCode,result FROM rsk_result WHERE bizCode = ?AND bizTypeCode = ? AND ruleSetCode = ? AND ruleSetVersion = ? GROUP BY ruleCode ORDER BY sortId,time DESC",
-					searchParam);
-			logger.info("resultLit查询结果为------------------------------------" + resultLit);
+			Response response = OkHttpUtil.requestByGet(resultUrl + keyId);
+			String responseString = response.body().string();
 
-			for (Map<String, Object> resMap : resultLit) {
-				if (resMap == null)
-					continue;
-				String ruleCode = (String) resMap.get("ruleCode"); // 规则code
-				String result = (String) resMap.get("result"); // 返回结果
-				logger.info("查询结果为---------------------------------------：" + "标签名称：" + ruleCode + "标签值：" + result);
-				// 结果为空，不进行后续打标签操作
+			JSONObject parseObject = JSONObject.parseObject(responseString);
+			JSONObject jsonObject = parseObject.getJSONObject("score");
+			JSONArray jsonArray = jsonObject.getJSONArray("matchresults");
+			List<RuleEngineResult> resultList = JSONArray.parseArray(jsonArray.toString(), RuleEngineResult.class);
+			for (RuleEngineResult res : resultList) {
+				String ruleCode = res.getRule_code();
+				Integer result = res.getResult();
 				if (result == null) {
 					continue;
 				}
@@ -172,7 +164,7 @@ public class RuleEngineServiceImpl implements RuleEngineService {
 				logger.info("打标签操作执行结束：-------------------------->更新的人员为：" + dp.getMid());
 			}
 		} catch (Exception e) {
-			logger.error("同步标签数据到mongo出现异常----------------->" + e.getMessage(), e);
+			e.printStackTrace();
 		}
 	}
 }
