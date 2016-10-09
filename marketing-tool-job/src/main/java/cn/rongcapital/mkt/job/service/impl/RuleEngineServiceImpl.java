@@ -143,6 +143,10 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                  if(cityTag != null){
                  	tagList.add(cityTag);
                  }
+                 Tag sexTag = (Tag) tagMap.get("sex");
+                 if(sexTag != null){
+                 	tagList.add(sexTag);
+                 }
                  Tag mediaTrenchGeneraTag = (Tag) tagMap.get("mediaTrenchGenera");
                  if(mediaTrenchGeneraTag != null){
                  	tagList.add(mediaTrenchGeneraTag);

@@ -65,7 +65,7 @@ public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
 	    
         Map<String, Object> map = new HashMap<String, Object>();
         
-        logger.info("同步属性标签方法开始执行, kayId:-----------------------》" + keyId);
+        //logger.info("同步属性标签方法开始执行, kayId:-----------------------》" + keyId);
         
         // 根据tag_name查询TagRecommend
         TagRecommend tagRecommend = getTagRecommend(CITY);
@@ -120,7 +120,7 @@ public class SynchroMongodbCityServiceImpl implements SynchroMongodbCityService{
                 map.put(tagRecommend.getTagNameEng(), tag);
             }
         }
-        logger.info("同步属性标签方法执行结束，返回值为--------------->" + map);
+      //  logger.info("同步属性标签方法执行结束，返回值为--------------->" + map);
         return map;
 		
 	}
