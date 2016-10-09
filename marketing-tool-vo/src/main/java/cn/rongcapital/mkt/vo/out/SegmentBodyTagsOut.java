@@ -14,22 +14,22 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class SegmentBodyTagsOut {
 
-	private Integer tagId;
+	private String tagId;
 
 	private String tagName;
 
-	private Integer tagGroupId;
+	private String tagGroupId;
 
 	private String tagGroupName;
 
 	private Integer exclude;
 
 	@JsonProperty("tag_id")
-	public Integer getTagId() {
+	public String getTagId() {
 		return tagId;
 	}
 
-	public void setTagId(Integer tagId) {
+	public void setTagId(String tagId) {
 		this.tagId = tagId;
 	}
 
@@ -43,11 +43,11 @@ public class SegmentBodyTagsOut {
 	}
 
 	@JsonProperty("tag_group_id")
-	public Integer getTagGroupId() {
+	public String getTagGroupId() {
 		return tagGroupId;
 	}
 
-	public void setTagGroupId(Integer tagGroupId) {
+	public void setTagGroupId(String tagGroupId) {
 		this.tagGroupId = tagGroupId;
 	}
 

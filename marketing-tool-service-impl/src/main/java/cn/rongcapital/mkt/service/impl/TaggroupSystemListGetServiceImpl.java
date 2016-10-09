@@ -149,7 +149,7 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 			map.put("tag_count", tagRecommend.getTagList().size());
 			map.put("tag_desc", tagRecommend.getTagDesc());
 			if (count != 0) {
-				map.put("tag_cover", new DecimalFormat("#.##%").format(tagCount / count));
+				map.put("tag_cover", new DecimalFormat("#.##%").format(tagCount / (double)count));
 			} else {
 				map.put("tag_cover", new DecimalFormat("#.##%").format(0));
 			}

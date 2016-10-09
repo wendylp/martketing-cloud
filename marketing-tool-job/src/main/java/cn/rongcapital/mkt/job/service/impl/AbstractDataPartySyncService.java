@@ -7,6 +7,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
@@ -20,9 +23,13 @@ import cn.rongcapital.mkt.po.KeyidMapBlock;
 /**
  * Created by ethan on 16/6/30.
  */
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public abstract class AbstractDataPartySyncService<T> implements DataPartySyncService<T> {
 
-	protected int BATCH_SIZE = 500;
+	@Autowired
+	Environment env;
+	
+	//protected int BATCH_SIZE = Integer.valueOf(env.getProperty("data.to.party.batch.size"));
 
 	protected static Integer MD_TYPE = Integer.valueOf(0);
 
@@ -39,6 +46,8 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 			return;
 		}
 
+		int BATCH_SIZE = Integer.valueOf(env.getProperty("data.to.party.batch.size"));
+		
 		int totalPages = (totalCount + BATCH_SIZE - 1) / BATCH_SIZE;
 		for (int i = 0; i < totalPages; i++) {
 			DataPartySyncVO<T> dataPartySyncVO = this.querySyncData(Integer.valueOf(i * BATCH_SIZE),

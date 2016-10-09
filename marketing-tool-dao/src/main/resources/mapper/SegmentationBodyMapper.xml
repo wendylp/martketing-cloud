@@ -111,17 +111,11 @@
 	<!-- 通过head_id 查询BODY -->
 	<select id="getSegBodyUseHeaderId" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.SegmentBodyWithName">
 		SELECT sb.tag_group_id as tagGroupId,
-		tg.name as tagGroupName,
 		sb.tag_id as tagId,
-		t.name as tagName,
 		sb.exclude as exclude,
 		sb.group_index as groupIndex
 		FROM
 		segmentation_body sb
-		LEFT JOIN tag t
-		ON sb.tag_id = t.id
-		LEFT JOIN taggroup tg
-		ON sb.tag_group_id = tg.id
 		WHERE sb.status = 0 and sb.head_id = #{headId}
 		ORDER BY group_index, group_seq,tag_id ASC
 	</select>

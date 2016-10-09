@@ -30,9 +30,9 @@ public class GetWechatUserListServiceImpl implements GetWechatUserListService{
     private static Integer MAX_MONTH_VALUE = 12;
 
     //Todo:2.组织服务号，个人号，订阅号的数据
-    private static Integer SERVER_ACCOUNT_TYPE = 0;
-    private static Integer REGISTER_ACCOUNT_TYPE = 2;
-    private static Integer PERSONAL_ACCOUNT_TYPE = 1;
+    private static Integer SERVER_ACCOUNT_TYPE = 2;
+    private static Integer REGISTER_ACCOUNT_TYPE = 1;
+    private static Integer PERSONAL_ACCOUNT_TYPE = 0;
 
     private static String SERVER_ACCOUNT_TYPE_NAME = "服务号关注量";
     private static String REGISTER_ACCOUNT_TYPE_NAME = "订阅号关注量";

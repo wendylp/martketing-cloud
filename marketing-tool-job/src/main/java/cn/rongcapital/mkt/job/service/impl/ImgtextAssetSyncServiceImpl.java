@@ -78,7 +78,8 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     				/**
 					 * 更新微信公众号下图文信息为删除状态
 					 */
-					imgTextAssetDao.batchUpdateWechatStatusByPubId(wechatRegister.getWxAcct());
+//					imgTextAssetDao.batchUpdateWechatStatusByPubId(wechatRegister.getWxAcct());	
+    				imgTextAssetDao.batchDeleteWechatStatusByPubId(wechatRegister.getWxAcct());
     				for(ImgTextAsset imgTextAssetList : imgTextAssetLists) {   					
     					// 设置pub_id,pub_name,下载状态
     					imgTextAssetList.setPubId(wechatRegister.getWxAcct());
@@ -88,13 +89,8 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     					/**
     					 * 插入、更新数据
     					 */
-    					Integer id = imgTextAssetDao.selectImgtextIdByMaterialId(imgTextAssetList.getMaterialId());
-    					if(id != null) {
-    						imgTextAssetList.setId(id);
-    						imgTextAssetDao.updateByIdWithDate(imgTextAssetList);
-    					} else {
-    						imgTextAssetDao.insertWithDate(imgTextAssetList);
-    					}
+    					imgTextAssetDao.insertWithDate(imgTextAssetList);
+
     				}
     			} else {
     				logger.debug("查不到图文信息, AuthorizerAppid = {}, AuthorizerRefreshToken = {}",

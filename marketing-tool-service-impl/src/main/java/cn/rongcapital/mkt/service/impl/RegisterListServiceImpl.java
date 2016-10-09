@@ -40,7 +40,7 @@ public class RegisterListServiceImpl implements RegisterListService {
 	public BaseOutput getRegisterList() {
 		
 		WechatRegister param = new WechatRegister();
-		param.setType(0);
+		param.setType(2);
 		
 		List<WechatRegister> reList = wechatRegisterDao.selectList(param);
 		

@@ -20,9 +20,9 @@ import java.util.Calendar;
 public class CacheWechatMemberCountByTypeServiceImpl implements TaskService{
 
     //这样我查的时候只要查这个缓存表就OK了
-    private static Integer SERVER_ACCOUNT_TYPE = 0;
-    private static Integer REGISTER_ACCOUNT_TYPE = 2;
-    private static Integer PERSONAL_ACCOUNT_TYPE = 1;
+    private static Integer SERVER_ACCOUNT_TYPE = 2;
+    private static Integer REGISTER_ACCOUNT_TYPE = 1;
+    private static Integer PERSONAL_ACCOUNT_TYPE = 0;
 
     @Autowired
     private WechatAssetDao wechatAssetDao;

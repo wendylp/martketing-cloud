@@ -43,7 +43,7 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
 
         Query countQuery = new Query(Criteria.where(TAG_TYPE).is(ApiConstant.CUSTOM_TAG_LEAF_TYPE));
         Long totalTagCount = mongoTemplate.count(countQuery,BaseTag.class);
-        customTagOutput.setTotal(totalTagCount.intValue());
+        customTagOutput.setTotalCount(totalTagCount.intValue());
 
         Query tagQuery = new Query(Criteria.where(TAG_TYPE).is(ApiConstant.CUSTOM_TAG_LEAF_TYPE)).skip((index -1 ) * size).limit(size);
         List<BaseTag> customTagLeafs = mongoTemplate.find(tagQuery,BaseTag.class);
@@ -61,6 +61,7 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
             }
         }
 
+        customTagOutput.setTotal(customTagLeafs.size());
         return customTagOutput;
     }
 

@@ -933,7 +933,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionTag.setRule(campaignDecisionTagIn.getRule());
 		List<TagIn> tagList =  campaignDecisionTagIn.getTags();
 		if(CollectionUtils.isNotEmpty(tagList)) {//TO DO:优化,前端参数直接传递1个逗号分隔的tag_id的字符串
-			List<Integer> tagIdList = new ArrayList<Integer>();
+			List<String> tagIdList = new ArrayList<String>();
 			for(TagIn tagIn:tagList) {
 				tagIdList.add(tagIn.getTag_id());
 			}
