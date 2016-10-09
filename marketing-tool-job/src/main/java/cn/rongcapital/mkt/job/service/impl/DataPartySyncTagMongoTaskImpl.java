@@ -32,7 +32,7 @@ public class DataPartySyncTagMongoTaskImpl implements TaskService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
-	private static final int pageSize = 500;
+	private static final int pageSize = 10000;
 	@Autowired
 	private RuleEngineService ruleEngineService;
 
@@ -55,8 +55,8 @@ public class DataPartySyncTagMongoTaskImpl implements TaskService {
 			}
 			logger.info("----------调用规则规则引擎----start");
 			ruleEngineService.requestRuleEngine(arrayList);
-			arrayList.clear();
 			logger.info("----------调用规则规则引擎----end,本次同步："+(arrayList == null? 0 : arrayList.size())+"(条)");
+			arrayList.clear();
 		}
 	}
 }
