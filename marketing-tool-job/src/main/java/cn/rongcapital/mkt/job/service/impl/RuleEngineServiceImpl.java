@@ -84,6 +84,7 @@ public class RuleEngineServiceImpl implements RuleEngineService {
 
 					logger.info("");
 					if (requestStatus) {
+						Thread.sleep(2000);
 						// 同步标签
 						sychMongoData(keyId.toString());
 					}
