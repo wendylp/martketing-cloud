@@ -45,15 +45,7 @@ public class WechatQrcodeActivateServiceImpl implements WechatQrcodeActivateServ
 		return result;	
 	}
 
-	public WechatQrcodeDao getWechatQrcodeDao() {
-		return wechatQrcodeDao;
-	}
-
-	public void setWechatQrcodeDao(WechatQrcodeDao wechatQrcodeDao) {
-		this.wechatQrcodeDao = wechatQrcodeDao;
-	}
-
-	
+		
 	
 	
 }

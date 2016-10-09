@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import org.junit.After;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.po.WechatQrcode;
+import cn.rongcapital.mkt.service.WechatQrcodeActivateService;
 import cn.rongcapital.mkt.service.impl.WechatQrcodeActivateServiceImpl;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -26,9 +28,9 @@ public class WechatQrcodeActivateServiceTest  {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	
-	private WechatQrcodeActivateServiceImpl wechatQrcodeActivateService; 
+	private WechatQrcodeActivateService wechatQrcodeActivateService; 
 	
-	@Mock
+	@Mock	
 	private WechatQrcodeDao wechatQrcodeDao ; //mock dao
 	
 	@Before  
@@ -47,7 +49,8 @@ public class WechatQrcodeActivateServiceTest  {
 				
 		//把mock的dao set进入service
 		wechatQrcodeActivateService =new WechatQrcodeActivateServiceImpl();		
-		wechatQrcodeActivateService.setWechatQrcodeDao(wechatQrcodeDao);
+		//wechatQrcodeActivateService.setWechatQrcodeDao(wechatQrcodeDao);
+		ReflectionTestUtils.setField(wechatQrcodeActivateService, "wechatQrcodeDao", wechatQrcodeDao);
 				
 	}  
 	
