@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.common.util;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
@@ -57,5 +58,19 @@ public class DateUtil {
         }
 
         return null;
+    }
+    
+    /**
+     * 日期计算
+     * @param date
+     * @param days
+     * @return
+     */
+    public static Date addDays(Date date,int days) {
+
+    	 Calendar theCa = Calendar.getInstance();
+    	 theCa.setTime(date);
+    	 theCa.add(Calendar.DATE,days);
+    	 return theCa.getTime();
     }
 }
