@@ -137,25 +137,25 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                 tagList.add(tag);
             }
             //获取人员的属性标签
-            Map<String, Object> tagMap = synchroMongodbCityService.synchroMongodbCity(Integer.valueOf(keyId));
-            if(tagMap != null){
-            	 Tag cityTag = (Tag) tagMap.get("city");
-                 if(cityTag != null){
-                 	tagList.add(cityTag);
-                 }
-                 Tag sexTag = (Tag) tagMap.get("sex");
-                 if(sexTag != null){
-                 	tagList.add(sexTag);
-                 }
-                 Tag mediaTrenchGeneraTag = (Tag) tagMap.get("mediaTrenchGenera");
-                 if(mediaTrenchGeneraTag != null){
-                 	tagList.add(mediaTrenchGeneraTag);
-                 }
-                 Tag mediaNameTag = (Tag) tagMap.get("mediaName");
-                 if(mediaNameTag != null){
-                 	tagList.add(mediaNameTag);
-                 }
-            }
+//            Map<String, Object> tagMap = synchroMongodbCityService.synchroMongodbCity(Integer.valueOf(keyId));
+//            if(tagMap != null){
+//            	 Tag cityTag = (Tag) tagMap.get("city");
+//                 if(cityTag != null){
+//                 	tagList.add(cityTag);
+//                 }
+//                 Tag sexTag = (Tag) tagMap.get("sex");
+//                 if(sexTag != null){
+//                 	tagList.add(sexTag);
+//                 }
+//                 Tag mediaTrenchGeneraTag = (Tag) tagMap.get("mediaTrenchGenera");
+//                 if(mediaTrenchGeneraTag != null){
+//                 	tagList.add(mediaTrenchGeneraTag);
+//                 }
+//                 Tag mediaNameTag = (Tag) tagMap.get("mediaName");
+//                 if(mediaNameTag != null){
+//                 	tagList.add(mediaNameTag);
+//                 }
+//            }
             if (!CollectionUtils.isEmpty(tagList)) {
                 // 更新插入
                 Update update = new Update().set("tag_list", tagList);
