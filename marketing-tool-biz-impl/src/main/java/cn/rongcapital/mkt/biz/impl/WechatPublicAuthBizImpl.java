@@ -12,6 +12,8 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
@@ -40,6 +42,7 @@ import cn.rongcapital.mkt.vo.out.PublicAuthOut;
 import okhttp3.Response;
 
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuthBiz {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -51,6 +54,9 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 	@Autowired
 	private MQTopicService mqTopicService;
 	
+	@Autowired
+	private Environment env;
+	
 	public static final String GET_PUB_LIST ="GetPubList";
 	
 	public static final String GET_PUB_FANS_LIST="GetPubFansList";
@@ -58,10 +64,11 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 	public static final String GET_IMG_TEXT_ASSET="GetImgtextAsset";
 	
 	@Override	
-	public BaseOutput authWechatPublicAccount() throws JedisException {		
+	public BaseOutput authWechatPublicAccount() throws JedisException {	
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 		PublicAuthOut publicAuthOut = new PublicAuthOut();
 		App app = this.getAppAddComponentTicket();
+		this.getApp();
 		/**
 		 * 保证预授权的TOKEN是最新的
 		 */
@@ -85,8 +92,9 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
         String component_appid = app.getId();
         StringBuffer sbUrl = new StringBuffer(ApiConstant.WEIXIN_AUTH_COMPONENT_LOGIN_PAGE);
         sbUrl.append("component_appid=").append(component_appid);
-        sbUrl.append("&pre_auth_code=").append(pre_auth_code);
-        sbUrl.append("&redirect_uri=").append(ApiConstant.WEIXIN_AUTH_CALLBACK_URI);
+        sbUrl.append("&pre_auth_code=").append(pre_auth_code);        
+        String weixin_auth_callback_uri = env.getProperty("weixin.auth.callback.uri");
+        sbUrl.append("&redirect_uri=").append(weixin_auth_callback_uri);
         logger.info(sbUrl.toString());	
         publicAuthOut.setUrl(sbUrl.toString());
         baseOutput.getData().add(publicAuthOut);

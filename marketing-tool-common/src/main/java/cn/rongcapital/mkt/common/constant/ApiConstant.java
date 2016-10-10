@@ -238,31 +238,29 @@ public class ApiConstant {
 
 	public static final Byte DATA_PARTY_TAG_RULE_TYPE_COMMON = 0;
 	public static final Byte DATA_PARTY_TAG_RULE_TYPE_JS = 1;
-	/**
+/*	*//**
 	 * 微信公众号ID
-	 */
+	 *//*
 	public static final String APPID = "wx00f7d56d549f82ce";	
-	/**
+	*//**
 	 * 微信公众号appsecret
-	 */
-	public static final String SECRET = "d30f3c2bdd6f0769673c94365031e588";
+	 *//*
+	public static final String SECRET = "d30f3c2bdd6f0769673c94365031e588";*/
 	
-	public static final String ENCODING_AES_KEY = "abcdefghijklmnopqrstuvwxyz12345678900987654";
-	public static final String TOKEN = "ruixuemarketingcloud";	
+/*	public static final String ENCODING_AES_KEY = "abcdefghijklmnopqrstuvwxyz12345678900987654";
+	public static final String TOKEN = "ruixuemarketingcloud";	*/
 
 	public static final String UPLOAD_IMG_PATH_LARGE = "/rc/data/downloads/large/";
 	public static final String UPLOAD_IMG_PATH_MIDDLE = "/rc/data/downloads/middle/";
 	public static final String UPLOAD_IMG_PATH_SMALL = "/rc/data/downloads/small/";		
 	public static final String RETURN_IMG_PATH_LARGE = "large/";
 	public static final String RETURN_IMG_PATH_MIDDLE = "middle/";
-	public static final String RETURN_IMG_PATH_SMALL = "small/";
-	public static final String UPLOAD_IMG_PATH = "D:\\soft\\";	
-	public static String COMPONENT_VERIFY_TICKET = "ticket@@@Pqd1HooYMLuhKeSIUPh5SjZC43_g7JYLtyVyHN6fDP3WQ9lSRLSZMg_juXv8E9uoE-wKb0LVHiTwqPHVxSYxww";		
+	public static final String RETURN_IMG_PATH_SMALL = "small/";	
 	
 	public static final String WEIXIN_QRCODE_CREATE = "https://api.weixin.qq.com/cgi-bin/qrcode/create";	
 	public static final String WEIXIN_QRCODE_SHOW = "https://mp.weixin.qq.com/cgi-bin/showqrcode";
-	public static final String WEIXIN_REDIRECT_URL = "http://mc6666.ruixuesoft.com/html/data-access/weixin.html";	
-	public static final String WEIXIN_AUTH_CALLBACK_URI = "http://mc6666srv.ruixuesoft.com/api?method=mkt.data.inbound.wechat.public.auth.code.callback";	
+//	public static final String WEIXIN_REDIRECT_URL = "http://mc6666.ruixuesoft.com/html/data-access/weixin.html";	
+//	public static final String WEIXIN_AUTH_CALLBACK_URI = "http://mc6666srv.ruixuesoft.com/api?method=mkt.data.inbound.wechat.public.auth.code.callback";	
 	public static final String WEIXIN_AUTH_COMPONENT_LOGIN_PAGE ="https://mp.weixin.qq.com/cgi-bin/componentloginpage?";
 	/**
 	 * 微信关注、取消关注、扫描

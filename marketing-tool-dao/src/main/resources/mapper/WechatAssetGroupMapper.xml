@@ -124,6 +124,16 @@
 			#{item}
 		</foreach>
 	</select>
+	
+	<select id="selectImportGroupsByIds" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.WechatAssetGroup">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>	
 
 	<select id="selectImportGroupIds" resultType="java.lang.Long">
 		SELECT import_group_id

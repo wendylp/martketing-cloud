@@ -156,7 +156,8 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 
 	private Map<String, Object> getAssetGroupInfo(WechatAssetGroup wechatAGroup) {
 		Map<String, Object> group = new HashMap<String, Object>();
-		group.put("group_id", wechatAGroup.getImportGroupId());
+//		group.put("group_id", wechatAGroup.getImportGroupId());
+		group.put("group_id", wechatAGroup.getId());
 		group.put("group_name", wechatAGroup.getName());
 		group.put("member_count", wechatAGroup.getMembers());
 		return group;
