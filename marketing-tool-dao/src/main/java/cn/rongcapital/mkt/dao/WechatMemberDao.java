@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.po.WechatAssetGroup;
 import cn.rongcapital.mkt.po.WechatMember;
 import cn.rongcapital.mkt.vo.weixin.WXFansListVO;
 
@@ -67,7 +68,7 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @param paramMap
 	 * @return list
 	 */
-	List<Long> selectIdListByGroupId(List<Long> importGroudIds);
+	List<Long> selectIdListByGroupId(List<WechatAssetGroup> wechatAssetGroups);
 
 	/**
 	 * 选取微信人群的详细信息

@@ -15,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,14 +37,17 @@ import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
+import cn.rongcapital.mkt.po.WechatInterfaceLog;
 import cn.rongcapital.mkt.po.WechatMember;
 import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.service.QrcodeFocusInsertService;
 import cn.rongcapital.mkt.service.WechatAssetService;
 import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
+import cn.rongcapital.mkt.vo.weixin.WXMsgVO;
 
 
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements ProcessReceiveMessageOfWeiXinBiz {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -61,6 +66,9 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 	
 	@Autowired
 	private WechatRegisterDao wechatRegisterDao;
+	
+	@Autowired
+	private Environment env;	
 	
 	private ComponentVerifyTicketIn getComponentVerifyTicketInFromTextXml(String textXml) throws JAXBException{
 			JAXBContext context = JAXBContext.newInstance(ComponentVerifyTicketIn.class);  
@@ -215,7 +223,19 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void getMsgLog(String textXml,String msg_signature,String timestamp,String nonce,String signature,String openid,String authAppId) throws JAXBException, AesException {		
-			WXBizMsgCrypt pc = new WXBizMsgCrypt(ApiConstant.TOKEN, ApiConstant.ENCODING_AES_KEY, ApiConstant.APPID); 
+	    	/**
+	    	 * 记入接口日志到数据库
+	    	 */
+		    WXMsgVO wxMsgVO = new WXMsgVO(textXml,msg_signature,timestamp,nonce,signature,openid,authAppId);
+			WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatPublicAuthBizImpl","authWechatPublicAccount",wxMsgVO.toString(),new Date());
+			wechatInterfaceLogService.insert(wechatInterfaceLog);
+			/**
+			 * 解析xml
+			 */
+			String weixin_appid = env.getProperty("weixin.appid");
+		    String weixin_encoding_aes_key = env.getProperty("weixin.encoding.aes.key");
+		    String weixin_token = env.getProperty("weixin.token");		    
+			WXBizMsgCrypt pc = new WXBizMsgCrypt(weixin_token, weixin_encoding_aes_key, weixin_appid); 
 			String resultXml = pc.decryptMsg(msg_signature, timestamp, nonce, textXml);		
 			logger.info("解密后明文: " + resultXml);
 			Map<String, String> msgMap = this.parserMsgToMap(resultXml);

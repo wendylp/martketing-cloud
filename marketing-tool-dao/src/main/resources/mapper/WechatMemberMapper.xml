@@ -209,12 +209,12 @@
 		</foreach>
 	</insert>
 
-	<select id="selectIdListByGroupId" parameterType="java.util.List" resultType="java.lang.String">
+	<select id="selectIdListByGroupId" parameterType="java.util.List" resultType="java.lang.Long">
 		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE wx_group_id in
-		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
-			#{item}
+		WHERE
+		<foreach collection="list" index="index" item="item" separator="OR">
+			(wx_group_id=#{item.importGroupId} and pub_id=#{item.wxAcct})
 		</foreach>
 	</select>
 
@@ -254,9 +254,9 @@
 		FROM wechat_member wm
 		LEFT JOIN data_party dp
 		ON wm.wx_code = dp.mapping_keyid
-		WHERE wx_name like CONCAT('%',#{wx_name},'%') AND wx_group_id in
-		<foreach collection="importIdList" index="index" item="item" separator="," open="(" close=")">
-			#{item}
+		WHERE wx_name like CONCAT('%',#{wx_name},'%') AND 
+		<foreach collection="wechatAssetGroups" index="index" item="item" separator="OR" open="(" close=")">
+			(wm.wx_group_id=#{item.importGroupId} and wm.pub_id=#{item.wxAcct})
 		</foreach>
 	</select>
 
