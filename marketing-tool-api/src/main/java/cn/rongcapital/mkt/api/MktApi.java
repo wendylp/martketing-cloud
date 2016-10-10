@@ -39,6 +39,8 @@ import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
@@ -194,6 +196,7 @@ import cn.rongcapital.mkt.service.SegmentSearchDownloadService;
 @Path(ApiConstant.API_PATH)
 @Produces({ MediaType.APPLICATION_JSON })
 @ValidateRequest
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class MktApi {
 	@Autowired
 	private LoginService loginService;
@@ -485,6 +488,8 @@ public class MktApi {
 	@Autowired
 	private WechatPublicAuthBiz wechatPublicAuthBiz;
 	
+	@Autowired
+	private Environment env;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -1741,7 +1746,8 @@ public class MktApi {
 	@Path("/mkt.data.inbound.wechat.public.auth.code.callback")
 	public Response authWechatPublicCodeAccount(@NotEmpty @QueryParam("auth_code") String authorizationCode,@NotEmpty @QueryParam("expires_in") String expiresIn) throws URISyntaxException {
 		BaseOutput baseOutput = wechatPublicAuthBiz.authWechatPublicCodeAccount(authorizationCode);
-		URI location = new java.net.URI(ApiConstant.WEIXIN_REDIRECT_URL);
+		String weixin_redirect_url = env.getProperty("weixin.redirect.url");
+		URI location = new java.net.URI(weixin_redirect_url);
 		return Response.temporaryRedirect(location).build();		
 	}
 
