@@ -5,6 +5,7 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
+import cn.rongcapital.mkt.po.WechatAssetGroup;
 import cn.rongcapital.mkt.service.WechatPeopleDetailDownloadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.DownloadFileName;
@@ -46,9 +47,9 @@ public class WechatPeopleDetailDownloadServiceImpl implements WechatPeopleDetail
             //通过asset_group_id查询这些group的总人数
             Long totalGroupCount = wechatAssetGroupDao.sumGroupMemberCount(groupIds);
             //通过组id查询import的group_id
-            List<Long> importGroupIds = wechatAssetGroupDao.selectImportGroupIdsByIds(groupIds);
+            List<WechatAssetGroup> wechatAssetGroups = wechatAssetGroupDao.selectImportGroupsByIds(groupIds);
             //3.根据import_id选取出人。
-            List<Map<String,Object>> peopleDetails = wechatMemberDao.selectPeopleDetails(importGroupIds);
+            List<Map<String,Object>> peopleDetails = wechatMemberDao.selectPeopleDetails(wechatAssetGroups);
             file = FileUtil.generateDownloadFile(peopleDetails,"wxDetails");
             baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
             baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());

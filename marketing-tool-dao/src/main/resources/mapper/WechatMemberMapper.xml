@@ -221,10 +221,10 @@
 	<select id="selectPeopleDetails" parameterType="java.util.List" resultType="java.util.Map">
 		SELECT wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE wx_group_id in
-		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
-			#{item}
-		</foreach>
+		WHERE
+		<foreach collection="list" index="index" item="item" separator="OR">
+			(wx_group_id=#{item.importGroupId} and pub_id=#{item.wxAcct})
+		</foreach>		
 	</select>
 
 	<insert id="batchInsertGroupMember" parameterType="java.util.List">
