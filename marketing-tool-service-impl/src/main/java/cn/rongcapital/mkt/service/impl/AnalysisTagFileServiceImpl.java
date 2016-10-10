@@ -66,7 +66,9 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 			// Read the Row
 			for (int rowNum = 1; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
 				XSSFRow xssfRow = xssfSheet.getRow(rowNum);
-				String uuid = "";
+				String uuid1 = "";
+				String uuid2 = "";
+				String uuid3 = "";
 				if (xssfRow != null) {
 					
 					// 一级标签
@@ -101,7 +103,7 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 						String tagValue = getCellValue(tagFive);
 
 						String tagFlag = getCellValue(tagSeven);
-						uuid = insertTagRecommendMongoDB(tagName, tagNameEng, tagDesc, tagValue, tagSource, tagFlag);
+						uuid3 = insertTagRecommendMongoDB(tagName, tagNameEng, tagDesc, tagValue, tagSource, tagFlag);
 					}
 					// -------------------------------------------------
 					// 二级标签插入
@@ -112,19 +114,19 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 						String tagId = findTagTree(twoTagName);
 						if ("".equals(tagId)) {
 							ArrayList<String> arrayList = new ArrayList<String>();
-							arrayList.add(uuid);
-							uuid = getTagTree(twoTagName, 2, null, oneTagName, arrayList, tagSource);
+							arrayList.add(uuid3);
+							uuid2 = getTagTree(twoTagName, 2, null, oneTagName, arrayList, tagSource);
 						} else {
 							// 更新Children标签
 							TagTree tagTree = getTagTree(twoTagName);
 							List<String> childrenLists = tagTree.getChildren();
-							if(childrenLists != null) {
-								if(childrenLists.contains(uuid) == false) {
-									childrenLists.add(uuid);
+							if(childrenLists != null && uuid3.length() > 0) {
+								if(childrenLists.contains(uuid3) == false) {
+									childrenLists.add(uuid3);
 									getTagTree(twoTagName, 2, null, null, childrenLists, tagSource);
 								} else {
 									childrenLists = new ArrayList<String>();
-									childrenLists.add(uuid);
+									childrenLists.add(uuid3);
 									getTagTree(twoTagName, 2, null, null, childrenLists, tagSource);
 								}
 							}
@@ -137,23 +139,23 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 						String tagId = findTagTree(oneTagName);
 						if ("".equals(tagId)) {
 							ArrayList<String> arrayList = new ArrayList<String>();
-							arrayList.add(uuid);
-							uuid = getTagTree(oneTagName, 1, null, null, arrayList, tagSource);
+							arrayList.add(uuid2);
+							uuid1 = getTagTree(oneTagName, 1, null, null, arrayList, tagSource);
 
 						} else {
 							// 更新Children标签
 							TagTree tagTree = getTagTree(oneTagName);
 							List<String> childrenLists = tagTree.getChildren();
-							if(childrenLists != null) {
-								if(childrenLists.contains(uuid) == false) {
-									childrenLists.add(uuid);
+							if(childrenLists != null && uuid2.length() > 0) {
+								if(childrenLists.contains(uuid2) == false) {
+									childrenLists.add(uuid2);
 									getTagTree(oneTagName, 1, null, null, childrenLists, tagSource);
 								
-							} else {
-								childrenLists = new ArrayList<String>();
-								childrenLists.add(uuid);
-								getTagTree(oneTagName, 1, null, null, childrenLists, tagSource);
-							}
+    							} else {
+    								childrenLists = new ArrayList<String>();
+    								childrenLists.add(uuid2);
+    								getTagTree(oneTagName, 1, null, null, childrenLists, tagSource);
+    							}
 						}
 					}
 				}
