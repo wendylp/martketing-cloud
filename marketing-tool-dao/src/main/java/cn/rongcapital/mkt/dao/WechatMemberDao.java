@@ -75,7 +75,7 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @param paramMap
 	 * @return list
 	 */
-	List<Map<String,Object>> selectPeopleDetails(List<Long> importGroupIds);
+	List<Map<String,Object>> selectPeopleDetails(List<WechatAssetGroup> wechatAssetGroups);
 
 	/**
 	 * 批量插入微信组成员信息
