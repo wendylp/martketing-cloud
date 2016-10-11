@@ -101,7 +101,7 @@ public class MQTopicServiceImpl implements MQTopicService {
                         logger.info("taskName is {}" , taskName);
                         logger.info("serviceName is {}" , serviceName);
                         serviceName = getServiceName(serviceName);
-                        startMqTask(serviceName);
+                        startMqTask(serviceName, taskName);
                     } catch (JMSException e) {
                         e.printStackTrace();
                     }
@@ -199,7 +199,7 @@ public class MQTopicServiceImpl implements MQTopicService {
      * 执行mq topic的任务
      * @param serviceName
      */
-    public synchronized void startMqTask(String serviceName) {
+    public synchronized void startMqTask(String serviceName, String taskName) {
         logger.info("startTask:" + serviceName);
         try {
             Object serviceBean = cotext.getBean(serviceName);
@@ -211,8 +211,8 @@ public class MQTopicServiceImpl implements MQTopicService {
                 taskRunLog = new TaskRunLog();
                 taskRunLog.setCreateTime(new Date());
                 taskRunLog.setStartTime(new Date());
-                taskRunLog.setTaskName(serviceName);
-                taskRunLog.setTaskType((byte)TaskTypeEnum.HIDE.getCode());
+                taskRunLog.setTaskName(taskName);
+                taskRunLog.setTaskType((byte)TaskTypeEnum.DISPLAY.getCode());
                 taskRunLogDao.insert(taskRunLog);
                 
                 taskService.task();

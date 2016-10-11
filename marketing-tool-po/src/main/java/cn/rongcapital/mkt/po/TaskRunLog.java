@@ -22,6 +22,8 @@ public class TaskRunLog extends BaseQuery {
     private Date updateTime;
 
     private Byte taskType;
+    
+    private Integer isChecked;
 
     public TaskRunLog() {}
 
@@ -100,4 +102,14 @@ public class TaskRunLog extends BaseQuery {
     public void setTaskType(Byte taskType) {
         this.taskType = taskType;
     }
+
+    public Integer getIsChecked() {
+        return isChecked;
+    }
+
+    public void setIsChecked(Integer isChecked) {
+        this.isChecked = isChecked;
+    }
+    
+    
 }
