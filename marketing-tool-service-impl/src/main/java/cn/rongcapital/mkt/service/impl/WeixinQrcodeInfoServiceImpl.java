@@ -130,6 +130,7 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService {
 					String[] tagIds = relatedTag.split(";");
 					for(String tagId : tagIds){
 						baseTag = findCustomTagInfoService.findCustomTagInfoByTagId(tagId);
+						if(baseTag == null) continue;
 
 						Map<String,Object> dataMap = new HashMap<>();
 						dataMap.put("id", baseTag.getTagId());
@@ -139,11 +140,13 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService {
 					map.put("association_tags", returnDataList);
 				}else{
 					baseTag = findCustomTagInfoService.findCustomTagInfoByTagId(relatedTag);
-
 					List<Map<String,Object>> returnDataList = new ArrayList<>();
-					Map<String,Object> dataMap = new HashMap<>();
-					dataMap.put("id", baseTag.getTagId());
-					dataMap.put("name",baseTag.getTagName());
+					if(baseTag != null){
+						Map<String,Object> dataMap = new HashMap<>();
+						dataMap.put("id", baseTag.getTagId());
+						dataMap.put("name",baseTag.getTagName());
+						returnDataList.add(dataMap);
+					}
 
 					map.put("association_tags", returnDataList);
 				}
