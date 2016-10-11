@@ -563,4 +563,27 @@
 			<![CDATA[AND create_time > #{timeCondition}]]>
 		</if>
 	</select>
+	
+	<select id="testFindView" resultType="java.util.Map">
+		SELECT * from v_tag_city
+	</select>
+	
+		<select id="selectVAmountCount" resultType="java.util.Map" >
+		select keyid as keyid,temp as temp from v_amount_count
+	</select>
+		
+	<select id="selectVTagRecent30" resultType="java.util.Map" >
+		select keyid as keyid from v_tag_recent30
+	</select>
+	
+	<select id="selectVTagTastePrefer" resultType="java.util.Map" >
+		select keyid as keyid, tagv as tagv from v_tag_taste_prefer
+	</select>
+	
+	<select id="selectVTagWeightPrefer" resultType="java.util.Map" >
+		select keyid as keyid, tagv as tagv from v_tag_weight_prefer
+	</select>
+	
+	
+	
 </mapper>
