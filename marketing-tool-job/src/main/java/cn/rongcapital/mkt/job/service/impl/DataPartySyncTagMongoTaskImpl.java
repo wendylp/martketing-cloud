@@ -27,7 +27,7 @@ import cn.rongcapital.mkt.service.RuleEngineService;
  * @version: v1.2 @date(创建、开发日期): 2016-09-28 最后修改日期: 2016-09-28
  * @复审人: 丛树林
  *************************************************/
-@Service("dataPartySync")
+@Service
 public class DataPartySyncTagMongoTaskImpl implements TaskService {
 
 	private static Logger logger = LoggerFactory.getLogger(DataPartySyncTagMongoTaskImpl.class);
