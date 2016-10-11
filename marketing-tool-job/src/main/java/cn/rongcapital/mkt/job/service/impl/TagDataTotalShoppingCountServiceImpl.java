@@ -94,7 +94,7 @@ public class TagDataTotalShoppingCountServiceImpl extends BaseTagData implements
 				Runnable a = new Runnable() {
 					@Override
 					public void run() {
-						test(map,tagRecommend);
+						test2(map,tagRecommend);
 					}
 				};
 				threadPoolTaskExecutor.execute(a);
