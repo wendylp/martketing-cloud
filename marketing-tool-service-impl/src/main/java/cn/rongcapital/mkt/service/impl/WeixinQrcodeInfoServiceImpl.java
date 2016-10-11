@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.service.FindCustomTagInfoService;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +43,11 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService {
 
 	@Autowired
 	CustomTagDao customTagDao;
+
+	@Autowired
+	private FindCustomTagInfoService findCustomTagInfoService;
+
+	private static final String RELATION_TAG_SEPARATOR = ";";
 
 	@Override
 	public BaseOutput getWeiXinQrocdeInfo(String qrcodeId) {
@@ -115,19 +123,31 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService {
 			}
 			// 关联标签
 			String relatedTag = wechatQrcode.getRelatedTags();
-			if (relatedTag != null && !"".equals(relatedTag)) {
-				// 标签查询
-				List<CustomTag> customTagList = customTagDao.selectCustomTagsByIds(relatedTag.split(";"));
-				List<Map<String, Object>> returnDataList = new ArrayList<>();
-				for (CustomTag customTag : customTagList) {
-					Map<String, Object> dataMap = new HashMap<>();
+			if(relatedTag != null){
+				BaseTag baseTag = null;
+				if(relatedTag.contains(";")){
+					List<Map<String,Object>> returnDataList = new ArrayList<>();
+					String[] tagIds = relatedTag.split(";");
+					for(String tagId : tagIds){
+						baseTag = findCustomTagInfoService.findCustomTagInfoByTagId(tagId);
 
-					dataMap.put("id", customTag.getId());
-					dataMap.put("name", customTag.getName());
-					returnDataList.add(dataMap);
+						Map<String,Object> dataMap = new HashMap<>();
+						dataMap.put("id", baseTag.getTagId());
+						dataMap.put("name", baseTag.getTagName());
+						returnDataList.add(dataMap);
+					}
+					map.put("association_tags", returnDataList);
+				}else{
+					baseTag = findCustomTagInfoService.findCustomTagInfoByTagId(relatedTag);
+
+					List<Map<String,Object>> returnDataList = new ArrayList<>();
+					Map<String,Object> dataMap = new HashMap<>();
+					dataMap.put("id", baseTag.getTagId());
+					dataMap.put("name",baseTag.getTagName());
+
+					map.put("association_tags", returnDataList);
 				}
-				map.put("association_tags", returnDataList);
-			} else {
+			}else {
 				map.put("association_tags", new ArrayList<String>());
 			}
 
