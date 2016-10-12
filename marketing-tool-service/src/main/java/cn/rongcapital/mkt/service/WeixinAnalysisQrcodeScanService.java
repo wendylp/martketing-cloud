@@ -3,6 +3,7 @@
  */
 package cn.rongcapital.mkt.service;
 
+import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeScanIn;
 
@@ -24,4 +25,11 @@ public interface WeixinAnalysisQrcodeScanService {
 	 * @date 2016.09.01
 	 */
 	BaseOutput instertToWechatQrcodeScan(WechatQrcodeScanIn body);
+	
+	/**
+	 * 保存扫描微信二维码次数和人数 
+	 * @param openId
+	 * @param wechatQrcode
+	 */
+	void instertToWechatQrcodeScan(String openId,WechatQrcode wechatQrcode);
 }

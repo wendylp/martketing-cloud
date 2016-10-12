@@ -34,7 +34,7 @@ public class ZipCreater {
 	 * 功能描述：创建zip文件包
 	 * 
 	 * @param files 需要被压缩的文件名数组(需要绝对路径)
-	 * @param fileName 压缩后的文件名(需要绝对路径)
+	 * @param fileName 压缩后zip包的文件名(需要绝对路径)
 	 * @throws IOException
 	 * @author shuiyangyang
 	 * @Data 2016.09.26
