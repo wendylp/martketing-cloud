@@ -206,6 +206,14 @@
             </properties>
         </profile>
         <profile>
+            <id>production_gbs</id>
+            <properties>
+                <mvnvar.log.path>/rc/log/mkt/production_gws</mvnvar.log.path>
+                <mvnvar.conf.path>conf_gbs</mvnvar.conf.path>
+                <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
+            </properties>
+        </profile>
+        <profile>
             <id>cloud_dev</id>
             <properties>
             	<mvnvar.log.path>/rc/log/mkt/dev</mvnvar.log.path>
