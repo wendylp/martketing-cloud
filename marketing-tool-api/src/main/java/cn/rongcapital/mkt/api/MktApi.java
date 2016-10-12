@@ -1323,6 +1323,34 @@ public class MktApi {
 	}
 
 	/**
+     * @功能简述: 检查后台任务列表的状态
+     * @author lihaiguang
+     * @param:
+     * @return: Object
+     */
+	@GET
+    @Path("/mkt.task.list.check")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput taskListCheck(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken) {
+        return taskGetListService.checkTaskList();
+    }
+	
+	/**
+     * @功能简述: 更改后台任务列表的状态把未查看的全部更新为已查看
+     * @author lihaiguang
+     * @param:
+     * @return: Object
+     */
+	@GET
+    @Path("/mkt.task.list.check.update")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput taskListCheckUpdate(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken) {
+        return taskGetListService.updateTaskListStatus();
+    }
+	
+	/**
 	 * @功能简述: 删除campaign
 	 * @param: campaign_head_id
 	 *             营销活动id

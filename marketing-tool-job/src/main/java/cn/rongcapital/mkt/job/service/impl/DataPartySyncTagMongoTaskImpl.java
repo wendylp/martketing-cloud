@@ -3,16 +3,19 @@ package cn.rongcapital.mkt.job.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import com.alibaba.fastjson.JSONObject;
 
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
+import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.service.RuleEngineService;
 
 /*************************************************
@@ -33,30 +36,43 @@ public class DataPartySyncTagMongoTaskImpl implements TaskService {
 	private MongoTemplate mongoTemplate;
 
 	private static final int pageSize = 10000;
+	private static final String PARAM_NAME = "SystemTag";
 	@Autowired
 	private RuleEngineService ruleEngineService;
-
+	@Autowired
+	private MQTopicService mqTopicService;
+	
 	@Override
 	public void task(Integer taskId) {
-		long totalRecord = mongoTemplate.count(null, DataParty.class);
-		long totalPage = (totalRecord + pageSize - 1) / pageSize;
-		logger.info("----------dataParty----tag_list----同步");
-		logger.info("----------dataParty----未同步记录数:" + totalRecord);
-		ArrayList<Integer> arrayList = new ArrayList<Integer>();
-		for (int index = 0; index < totalPage; index++) {
-			List<DataParty> dataPartyList = mongoTemplate.find(new Query().skip(index * pageSize).limit(pageSize),
-					DataParty.class);
-			if (CollectionUtils.isEmpty(dataPartyList)) {
-				break;
-			}
+		try {
+			long totalRecord = mongoTemplate.count(null, DataParty.class);
+			long totalPage = (totalRecord + pageSize - 1) / pageSize;
+			logger.info("----------dataParty----tag_list----同步");
+			logger.info("----------dataParty----未同步记录数:" + totalRecord);
+			ArrayList<Integer> mqParamList = new ArrayList<Integer>();
+			ArrayList<Integer> arrayList = new ArrayList<Integer>();
+			for (int index = 0; index < totalPage; index++) {
+				List<DataParty> dataPartyList = mongoTemplate.find(new Query().skip(index * pageSize).limit(pageSize),
+						DataParty.class);
+				if (CollectionUtils.isEmpty(dataPartyList)) {
+					break;
+				}
 
-			for (DataParty dp : dataPartyList) {
-				arrayList.add(dp.getMid());
+				for (DataParty dp : dataPartyList) {
+					arrayList.add(dp.getMid());
+				}
+				//logger.info("----------调用规则规则引擎----start");
+				ruleEngineService.requestRuleEngine(arrayList);
+				//logger.info("----------调用规则规则引擎----end,本次同步："+(arrayList == null? 0 : arrayList.size())+"(条)");
+				mqParamList.addAll(arrayList);
+				arrayList.clear();
 			}
-			logger.info("----------调用规则规则引擎----start");
-			ruleEngineService.requestRuleEngine(arrayList);
-			logger.info("----------调用规则规则引擎----end,本次同步："+(arrayList == null? 0 : arrayList.size())+"(条)");
-			arrayList.clear();
+			String jsonString = JSONObject.toJSONString(mqParamList);
+			mqTopicService.senderMessage(PARAM_NAME, jsonString);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
+	
+	
 }

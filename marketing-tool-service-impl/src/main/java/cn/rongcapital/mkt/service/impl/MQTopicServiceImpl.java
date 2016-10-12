@@ -30,6 +30,7 @@ import cn.rongcapital.mkt.dao.TaskRunLogDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.MQTopicService;
+import cn.rongcapital.mkt.service.SynchSystemTagService;
 import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 
 @Service
@@ -46,6 +47,7 @@ public class MQTopicServiceImpl implements MQTopicService {
 
     private static final String MQ_TASK_NAME = "taskName";
     private static final String MQ_SERVICE_NAME = "serviceName";
+    private static final String MQ_PARAM_KEY = "SystemTag";
     @Value("${spring.activemq.broker-url}")
     private String providerUrl;
     
@@ -55,6 +57,8 @@ public class MQTopicServiceImpl implements MQTopicService {
     private ApplicationContext cotext;
     @Autowired
     private TaskRunLogDao taskRunLogDao;
+    @Autowired
+	private SynchSystemTagService synchSystemTag;
     
     public void initMQService() {
         if (isJndiInited) {
@@ -97,7 +101,7 @@ public class MQTopicServiceImpl implements MQTopicService {
                         logger.info("taskName is {}" , taskName);
                         logger.info("serviceName is {}" , serviceName);
                         serviceName = getServiceName(serviceName);
-                        startMqTask(serviceName);
+                        startMqTask(serviceName, taskName);
                     } catch (JMSException e) {
                         e.printStackTrace();
                     }
@@ -112,6 +116,7 @@ public class MQTopicServiceImpl implements MQTopicService {
             receiverMessage(connection, "GetPubList");
             receiverMessage(connection, "GetPubFansList");
             receiverMessage(connection, "GetImgtextAsset");
+            getParamValue(connection, "SystemTag");
         } catch (JMSException e) {
             e.printStackTrace();
         }
@@ -194,7 +199,7 @@ public class MQTopicServiceImpl implements MQTopicService {
      * 执行mq topic的任务
      * @param serviceName
      */
-    public synchronized void startMqTask(String serviceName) {
+    public synchronized void startMqTask(String serviceName, String taskName) {
         logger.info("startTask:" + serviceName);
         try {
             Object serviceBean = cotext.getBean(serviceName);
@@ -206,8 +211,8 @@ public class MQTopicServiceImpl implements MQTopicService {
                 taskRunLog = new TaskRunLog();
                 taskRunLog.setCreateTime(new Date());
                 taskRunLog.setStartTime(new Date());
-                taskRunLog.setTaskName(serviceName);
-                taskRunLog.setTaskType((byte)TaskTypeEnum.HIDE.getCode());
+                taskRunLog.setTaskName(taskName);
+                taskRunLog.setTaskType((byte)TaskTypeEnum.DISPLAY.getCode());
                 taskRunLogDao.insert(taskRunLog);
                 
                 taskService.task();
@@ -221,6 +226,74 @@ public class MQTopicServiceImpl implements MQTopicService {
             logger.error(e.getMessage(), e);
         }
     }
+    
+    
+    @Override
+	public void senderMessage(String topicName, String message) throws JMSException {
+		// 发送的时候要新建一个链接，用完就关闭
+		TopicConnection connection = null;
+		TopicSession session = null;
+		try {
+			// 创建链接工厂
+			TopicConnectionFactory factory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER,
+					ActiveMQConnection.DEFAULT_PASSWORD, providerUrl);
+			// 通过工厂创建一个连接
+			connection = factory.createTopicConnection();
+			// 启动连接
+			connection.start();
+			// 创建一个session会话
+			session = connection.createTopicSession(Boolean.TRUE, Session.AUTO_ACKNOWLEDGE);
+			// 创建一个消息队列
+			Topic topic = session.createTopic(topicName);
+			// 创建消息发送者
+			TopicPublisher publisher = session.createPublisher(topic);
+			// 设置持久化模式
+			publisher.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+			putMessage(session, publisher, message);
+			// 提交会话
+			session.commit();
+		} catch (JMSException e) {
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// 关闭释放资源
+			if (session != null) {
+				session.close();
+			}
+			if (connection != null) {
+				connection.close();
+			}
+		}
+
+	}
+
+	public static void putMessage(TopicSession session, TopicPublisher publisher, String message) throws Exception {
+		MapMessage map = session.createMapMessage();
+		map.setString(MQ_PARAM_KEY, message);
+		publisher.send(map);
+	}
+
+	private void getParamValue(TopicConnection connection, String topicName) throws JMSException {
+		// 创建一个消息队列
+		Topic topic = session.createTopic(topicName);
+		// 创建消息制作者
+		TopicSubscriber subscriber = session.createSubscriber(topic, null, true);
+		subscriber.setMessageListener(new MessageListener() {
+			public void onMessage(Message msg) {
+				if (msg != null) {
+					MapMessage map = (MapMessage) msg;
+					try {
+						String paramValue = map.getString(MQ_PARAM_KEY);
+						synchSystemTag.synchTagToMongo(paramValue);
+					} catch (JMSException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+	}
+	
 
 
 }
