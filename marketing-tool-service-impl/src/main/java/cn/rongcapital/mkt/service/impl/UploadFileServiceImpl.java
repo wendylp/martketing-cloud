@@ -604,7 +604,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 					WechatQrcode wq = new WechatQrcode();
 					wq.setBatchId(bachId);
 					wq.setQrcodeName(wmo.getQrName());
-					wq.setStatus((byte)0);
+					wq.setStatus((byte)0);//保存的时候默认未用
 					wq.setWxName(wmo.getOfficialName());
 					Integer chCode = null;
 					WechatChannel wc = new WechatChannel();
@@ -615,7 +615,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 					}
 					wq.setChCode(chCode);
 					wq.setIsAudience((byte) 0);
-					wq.setStatus((byte) 1);
+					//wq.setStatus((byte) 1);
 					
                     WechatRegister wechatRegister = new WechatRegister();
                     wechatRegister.setName(wmo.getOfficialName());
