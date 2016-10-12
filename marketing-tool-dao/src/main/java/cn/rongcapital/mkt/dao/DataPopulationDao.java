@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.dao;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.vo.out.TagAudienceDownloadOut;
 import org.apache.ibatis.annotations.Param;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -116,4 +117,11 @@ public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilt
 	 * @return
 	 */
 	Map<String, Object> selectMediaChannel(@Param("keyId") Integer keyId);
+
+	/**
+	 * 标签人群得下载下载
+	 * @param idList
+	 * @return
+	 */
+	List<TagAudienceDownloadOut> getTagAudienceDownloadList(@Param("idList") List<Integer> idList);
 }
