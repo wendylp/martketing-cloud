@@ -216,6 +216,12 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 					WebchatAuthInfo webchatAuthInfoTemp = iter.next();
 					app.setAuthAppId(webchatAuthInfoTemp.getAuthorizerAppid());
 					app.setAuthRefreshToken(webchatAuthInfoTemp.getAuthorizerRefreshToken());
+					WechatQrcodeTicket wechatQrcodeTicketTemp =getWechatQrcodeTicketOfLast(webchatAuthInfoTemp.getAuthorizerAppid());
+					if(wechatQrcodeTicketTemp!=null){
+						int pageSize = endSceneId-startSceneId;
+						startSceneId = Integer.parseInt(String.valueOf(wechatQrcodeTicketTemp.getSceneId()+1));
+						endSceneId = startSceneId+pageSize;
+					}
 					for(int i=startSceneId;i<=endSceneId;i++){
 						try {
 							WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName,webchatAuthInfoTemp.getAuthorizerAppid());							
@@ -354,6 +360,21 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 
 	}
 	
+	private WechatQrcodeTicket getWechatQrcodeTicketOfLast(String authorizerAppid){
+		WechatQrcodeTicket wechatQrcodeTicketBack = new WechatQrcodeTicket();
+		WechatRegister wechatRegister = getWechatRegisterByAuthAppId(authorizerAppid);
+		WechatQrcodeTicket wechatQrcodeTicket = new WechatQrcodeTicket();
+		wechatQrcodeTicket.setWxAcct(wechatRegister.getWxAcct());
+		wechatQrcodeTicket.setOrderField("id");
+		wechatQrcodeTicket.setOrderFieldType("DESC");
+		wechatQrcodeTicket.setStartIndex(0);
+		wechatQrcodeTicket.setPageSize(1);
+		List<WechatQrcodeTicket> wechatQrcodeTicketes = wechatQrcodeTicketDao.selectList(wechatQrcodeTicket);
+		if(CollectionUtils.isNotEmpty(wechatQrcodeTicketes)){
+			wechatQrcodeTicketBack = wechatQrcodeTicketes.get(0);
+		}
+		return wechatQrcodeTicketBack;
+	}
 	
 	/**
 	 * @param wechatQrcode
@@ -557,8 +578,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			}
 		}
 		return root;
-	}
-	
+	}	
 	
 	//byte数组到图片
 	public void byte2image(byte[] data,String path,int width,int height) throws FileNotFoundException, IOException{

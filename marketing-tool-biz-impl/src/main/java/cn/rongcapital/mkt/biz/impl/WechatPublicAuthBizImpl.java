@@ -1,18 +1,25 @@
 package cn.rongcapital.mkt.biz.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jms.JMSException;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tagsin.tutils.json.JsonUtils;
+import com.tagsin.tutils.okhttp.OkHttpUtil;
+import com.tagsin.tutils.okhttp.OkHttpUtil.RequestMediaType;
 import com.tagsin.wechat_sdk.App;
+import com.tagsin.wechat_sdk.WXServerApiException;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 import com.tagsin.wechat_sdk.token.Token;
 import com.tagsin.wechat_sdk.vo.AuthInfo;
@@ -30,11 +37,14 @@ import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.PublicAuthOut;
+import okhttp3.Response;
 
 @Service
 public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuthBiz {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	private final String PRE_AUTH_CODE_URL = "https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=";
 	
 	@Autowired
 	private WebchatAuthInfoDao webchatAuthInfoDao;
@@ -51,17 +61,18 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 	public BaseOutput authWechatPublicAccount() throws JedisException {		
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 		PublicAuthOut publicAuthOut = new PublicAuthOut();
-		App app = this.getApp();
+		App app = this.getAppAddComponentTicket();
 		/**
 		 * 保证预授权的TOKEN是最新的
 		 */
-		Token token = WxComponentServerApi.accessToken(app);
+		Token token = WxComponentServerApi.accessToken(app);		
     	String tokenStr = JSONObject.toJSONString(token);
     	/**
     	 * 失效时间1小时50分钟：6600秒
     	 */
 		JedisClient.set(app.getId(), tokenStr,6600);
-		String pre_auth_code = WxComponentServerApi.getPreAuthCode(app);
+		
+		String pre_auth_code = this.getPreAuthCode(app, token.getToken());
 
     	/**
     	 * 记入接口日志到数据库
@@ -171,7 +182,7 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 				} catch (Exception e) {
 					logger.info("公众号"+webchatAuthInfoTemp.getAuthorizerAppid()+"已经取消了授权");					
 				}
-			}			
+			}		
 		}		
 		return isGranted;
 	}
@@ -183,5 +194,31 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 		}
 		return null;
 	}
-
+	
+	/**
+	 * 获取preAuthCode
+	 * @param app
+	 * @return
+	 */
+	private String getPreAuthCode(App app,String component_access_token){
+		try {
+			String url = this.PRE_AUTH_CODE_URL+component_access_token;
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("component_appid", app.getId());
+			Response response = OkHttpUtil.requestByPost(url, RequestMediaType.JSON, JsonUtils.toJson(params));
+			if(response.code() == 200){
+			    String responseString = response.body().string();
+			    logger.info(responseString);
+				ObjectNode jsonObj = JsonUtils.readJsonObject(responseString);
+				String pre_auth_code = jsonObj.get("pre_auth_code").getTextValue();
+				long expires_in = jsonObj.get("expires_in").getLongValue();
+				return pre_auth_code;
+				//return new Token(TokenType.PRE_AUTH_CODE, pre_auth_code, System.currentTimeMillis() + (expires_in-5) * 1000);
+			}else{
+				throw new WXServerApiException("Invalid statu code : " + response.code() + " , url : " + url);
+			}
+		} catch (Exception e) {
+			throw new WXServerApiException(e);
+		}
+	}
 }

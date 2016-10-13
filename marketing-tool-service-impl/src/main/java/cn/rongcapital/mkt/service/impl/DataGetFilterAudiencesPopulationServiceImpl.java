@@ -48,18 +48,22 @@ public class DataGetFilterAudiencesPopulationServiceImpl implements DataGetFilte
 			mdTypeList = null;
 		}
 		List<Integer> mdDataList = new ArrayList<Integer>();
-		if (mdType != 0) {
-			for (Integer dataType : mdTypeList) {
-				if (mdType == dataType) {
-					mdDataList.add(mdType);
+
+		//逻辑写的有点复杂，待优化
+		if(mdTypeList != null && mdTypeList.size() > 0){
+			if (mdType != 0) {
+				for (Integer dataType : mdTypeList) {
+					if (mdType == dataType) {
+						mdDataList.add(mdType);
+					}
+				}
+			} else {
+				for (Integer dataType : mdTypeList) {
+					mdDataList.add(dataType);
 				}
 			}
-		} else {
-			for (Integer dataType : mdTypeList) {
-				mdDataList.add(dataType);
-			}
 		}
-
+		
 		paramMap.put("contactIdList", contactIdList);
 		paramMap.put("mdTypes", mdDataList);
 		paramMap.put("mdType", mdType);
@@ -74,13 +78,17 @@ public class DataGetFilterAudiencesPopulationServiceImpl implements DataGetFilte
 		paramMap.put("startIndex", paramObj.getStartIndex());
 		paramMap.put("pageSize", paramObj.getPageSize());
 
-		List<DataPopulation> dataList = dataPopulationDao.selectByBatchId(paramMap);
+		List<DataPopulation> dataList = new ArrayList<DataPopulation>();
+		List<String> keyIds = new ArrayList<String>();
 		
 		Integer totalCount = 0;
 		if (mdDataList != null && mdDataList.size() > 0) {
+			
+			dataList = dataPopulationDao.selectByBatchId(paramMap);
 			totalCount = dataPopulationDao.selectCountByBatchId(paramMap);
+			keyIds = getAudiencesIds(paramMap);
 		}
-
+		logger.info("dataList 列表数据----" + dataList.toString());
 		List<Map<String, Object>> resultList = new ArrayList<>();
 		if (dataList != null && !dataList.isEmpty()) {
 			ImportTemplate paramImportTemplate = new ImportTemplate();
@@ -114,9 +122,6 @@ public class DataGetFilterAudiencesPopulationServiceImpl implements DataGetFilte
 			}
 		}
 
-		List<String> keyIds = getAudiencesIds(paramMap);
-
-		logger.info("keyIds 主数据ID列表----" + keyIds.toString());
 		logger.info("keyIds 主数据----" + keyIds.size());
 		
 		outMap.put("populationKeyIds", keyIds);
