@@ -117,7 +117,7 @@
 		<![CDATA[SELECT DATE_FORMAT(create_time,'%Y-%m-%d') as time, count(id) as value]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<where>
-		    <if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    <if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		    <if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 		    <if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 		</where>
@@ -129,7 +129,7 @@
 		<![CDATA[SELECT DATE_FORMAT(create_time,'%Y-%m-%d') as time, COUNT(DISTINCT user_id) as value]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<where>
-		    <if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    <if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 		    <if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
 		    <if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 		</where>

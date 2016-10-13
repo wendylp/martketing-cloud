@@ -143,9 +143,9 @@
 	<select id="getAllFocusData" parameterType="java.util.Map" resultType="java.util.Map">
 
 		select 
-		  	totalFocus.wx_acct AS wxAcct,
-		  	totalFocus.wx_name AS wxName,
-  			totalFocus.ch_code AS chCode,
+		  	totalScan.wx_acct AS wxAcct,
+		  	totalScan.wx_name AS wxName,
+  			totalScan.ch_code AS chCode,
   			wc.ch_name AS chName,
   			IFNULL(totalScan.value,0) AS totalScan,
   			IFNULL(totalScanUser.value,0) AS totalScanUser,
@@ -153,62 +153,49 @@
   			IFNULL(newFocus.value,0) AS newFocus,
   			IFNULL(lostFocus.value,0) AS lostFocus 
 		from
+		
 			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
-			<include refid="QUERY_FROM_TABLE"/>
+			<![CDATA[ FROM wechat_qrcode_scan ]]>
 			<where>
 		    	    <if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
 			    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
-			    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
+			    	<if test="qrcodeId != null"><![CDATA[ AND id = #{qrcodeId}]]></if>
 			</where>
+			<![CDATA[GROUP BY wx_acct,wx_name,ch_code) as totalScan]]>
+			
+			<![CDATA[left join]]>
+			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
+			<include refid="QUERY_FROM_TABLE"/>
 			<![CDATA[GROUP BY wx_acct,wx_name,ch_code) as totalFocus]]>
+			<![CDATA[ON totalScan.wx_acct = totalFocus.wx_acct AND totalScan.ch_code = totalFocus.ch_code ]]>
+			
 			<![CDATA[left join]]>
 			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
 			<include refid="QUERY_FROM_TABLE"/>
 			<where>
 				<![CDATA[and focus_datetime between #{startTime} and #{endTime}]]>
-		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
-		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
-		    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 			</where>
 			<![CDATA[GROUP BY wx_acct,wx_name,ch_code) as newFocus]]>
-			<![CDATA[ON totalFocus.wx_acct = newFocus.wx_acct AND totalFocus.ch_code = newFocus.ch_code ]]>
+			<![CDATA[ON totalScan.wx_acct = newFocus.wx_acct AND totalScan.ch_code = newFocus.ch_code ]]>
+			
 			<![CDATA[LEFT JOIN]]>
 			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
 			<include refid="QUERY_FROM_TABLE"/>
 			<where>
 				<![CDATA[and unfocus_datetime between #{startTime} and #{endTime}]]>
-		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
-		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
-		    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
 			</where>
 			<![CDATA[GROUP BY wx_acct,wx_name,ch_code) as lostFocus]]>
-			<![CDATA[ON totalFocus.wx_acct = lostFocus.wx_acct AND totalFocus.ch_code = lostFocus.ch_code ]]>
-			
-			<![CDATA[LEFT JOIN]]>
-			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
-			<![CDATA[ FROM wechat_qrcode_scan ]]>
-			<where>
-				<![CDATA[and create_time between #{startTime} and #{endTime}]]>
-		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
-		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
-		    	<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
-			</where>
-			<![CDATA[GROUP BY wx_acct,wx_name,ch_code) as totalScan]]>
-			<![CDATA[ON totalFocus.wx_acct = totalScan.wx_acct AND totalFocus.ch_code = totalScan.ch_code]]>
+			<![CDATA[ON totalScan.wx_acct = lostFocus.wx_acct AND totalScan.ch_code = lostFocus.ch_code ]]>
+
 			<![CDATA[LEFT JOIN]]>
 			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(*) as value]]>
 			<![CDATA[ FROM ( SELECT DISTINCT USER_ID, wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code ]]>
 			<![CDATA[     FROM wechat_qrcode_scan ]]>
-				<where>
-					<![CDATA[and create_time between #{startTime} and #{endTime}]]>
-		    	    <if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
-		    		<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
-		    		<if test="qrcodeId != null"><![CDATA[ AND qrcode_id = #{qrcodeId}]]></if>
-				</where>
 			<![CDATA[GROUP BY wx_acct,wx_name,ch_code,USER_ID)  AS qrcodeScan  ]]>
 			<![CDATA[	GROUP BY wx_acct,wx_name,ch_code) as totalScanUser]]>
-			<![CDATA[ON totalFocus.wx_acct = totalScanUser.wx_acct AND totalFocus.ch_code = totalScanUser.ch_code]]>
-			<![CDATA[LEFT JOIN wechat_channel wc ON wc.id = totalFocus.ch_code ]]>
+			<![CDATA[ON totalScan.wx_acct = totalScanUser.wx_acct AND totalScan.ch_code = totalScanUser.ch_code]]>
+			
+			<![CDATA[LEFT JOIN wechat_channel wc ON wc.id = totalScan.ch_code ]]>
 	</select>
 
 	<!-- 获取最大总关注数 -->

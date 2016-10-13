@@ -76,9 +76,12 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 				endDate = DateUtil.getStringFromDate(eTempDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd);
 			}
 			
+			startDate = startDate+ApiConstant.DATE_FORMAT_CONSTANT_BEGIN;
+			endDate = endDate+ ApiConstant.DATE_FORMAT_CONSTANT_END;
+			
 			// 日期格式化
-			Date sDate = sdf.parse(startDate);
-			Date eDate = sdf.parse(endDate);
+			Date sDate = DateUtil.getDateFromString(startDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+			Date eDate = DateUtil.getDateFromString(endDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
 			if(sDate.compareTo(eDate) == 1){
 				baseOutput.setCode(1003);
 				baseOutput.setMsg("日期参数有误！");
