@@ -75,7 +75,7 @@
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="selected != null"><![CDATA[selected = #{selected},]]></if>
 		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
-		    	<if test="keyid != null"><![CDATA[keyid = #{keyid}]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid},]]></if>
 		    	<if test="fansJson != null"><![CDATA[fans_json = #{fansJson}]]></if>
 		</set>
 	</sql>
