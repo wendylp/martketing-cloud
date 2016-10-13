@@ -17,6 +17,8 @@ public class DefaultContactTemplate extends BaseQuery {
 
     private Integer defaultShownSeq;
 
+    private Integer fixedShownSeqInRight;
+
     private Byte status;
 
     private Byte isPrimaryKey;
@@ -77,6 +79,14 @@ public class DefaultContactTemplate extends BaseQuery {
 
     public void setDefaultShownSeq(Integer defaultShownSeq) {
         this.defaultShownSeq = defaultShownSeq;
+    }
+
+    public Integer getFixedShownSeqInRight() {
+        return fixedShownSeqInRight;
+    }
+
+    public void setFixedShownSeqInRight(Integer fixedShownSeqInRight) {
+        this.fixedShownSeqInRight = fixedShownSeqInRight;
     }
 
     public Byte getStatus() {
