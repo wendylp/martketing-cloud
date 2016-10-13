@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.job.tag.service.impl;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -61,6 +62,7 @@ public class SystemTagSynMongodbServiceImpl implements TaskService {
 			for (SysTagView sys : selectList) {
 				this.getSysTagResult(sys);
 			}
+			Thread.sleep(60000);
 			logger.info("同步系统标签任务执行结束------------------>");
 		} catch (Exception e) {
 			e.printStackTrace();
