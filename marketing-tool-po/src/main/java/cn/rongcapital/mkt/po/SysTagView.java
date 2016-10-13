@@ -10,6 +10,8 @@ public class SysTagView extends BaseQuery {
     private String viewDesc;
     
     private int status;
+    
+    private String tagName;
 
     public Integer getId() {
         return id;
@@ -41,6 +43,14 @@ public class SysTagView extends BaseQuery {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public String getTagName() {
+		return tagName;
+	}
+
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
 	}
 
 }
