@@ -8,6 +8,8 @@ public class SysTagView extends BaseQuery {
     private String viewName;
 
     private String viewDesc;
+    
+    private int status;
 
     public Integer getId() {
         return id;
@@ -32,4 +34,13 @@ public class SysTagView extends BaseQuery {
     public void setViewDesc(String viewDesc) {
         this.viewDesc = viewDesc == null ? null : viewDesc.trim();
     }
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 }

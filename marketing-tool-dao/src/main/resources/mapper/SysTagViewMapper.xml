@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,view_name as viewName,view_desc as viewDesc]]>
+		<![CDATA[ id as id,view_name as viewName,view_desc as viewDesc,status as status]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -16,6 +16,7 @@
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="viewName != null"><![CDATA[ AND view_name = #{viewName}]]></if>
 		    	<if test="viewDesc != null"><![CDATA[ AND view_desc = #{viewDesc}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		</where>
 	</sql>
 	
@@ -29,7 +30,8 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="viewName != null"><![CDATA[view_name = #{viewName},]]></if>
-		    	<if test="viewDesc != null"><![CDATA[view_desc = #{viewDesc}]]></if>
+		    	<if test="viewDesc != null"><![CDATA[view_desc = #{viewDesc},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
 
