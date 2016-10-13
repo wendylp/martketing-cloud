@@ -141,17 +141,20 @@ public class WechatRegisterBizImpl extends BaseBiz implements WechatRegisterBiz 
 			String userName = authorizerInfo.getString("user_name");
 			String headImg = authorizerInfo.getString("head_img");
 			
-			String wechatQrcode = authorizerInfo.getString("qrcode_url");
-			String service_type_info = authorizerInfo.getString("service_type_info");
-			String verify_type_info = authorizerInfo.getString("verify_type_info");
+			String wechatQrcode = authorizerInfo.getString("qrcode_url");			
+			JSONObject serviceTypeInfo = authorizerInfo.getJSONObject("service_type_info");
+			JSONObject verifyTypeInfo = authorizerInfo.getJSONObject("verify_type_info");
+			Integer service_type_info = serviceTypeInfo.getInteger("id");
+			Integer verify_type_info = verifyTypeInfo.getInteger("id");
+			
 			
 			JSONObject authorizationInfo = jsonObject.getJSONObject("authorization_info");
 			String appId = authorizationInfo.getString("authorizer_appid");
 			
 			wechatRegister.setWxAcct(userName);
 			wechatRegister.setName(name);
-			wechatRegister.setType(Integer.parseInt(service_type_info));
-			wechatRegister.setIsAuth(Integer.parseInt(verify_type_info));
+			wechatRegister.setType(service_type_info);
+			wechatRegister.setIsAuth(verify_type_info);
 			wechatRegister.setNickname(alias);
 			wechatRegister.setHeaderImage(headImg);
 			wechatRegister.setAppId(appId);
