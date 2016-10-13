@@ -426,6 +426,8 @@ public class GetPubFansListServiceImpl implements TaskService {
 							}else{
 								wechatMember.setSelected(wechatMemberCS.getSelected());
 							}
+						}else{
+						    wechatMember.setSelected(NumUtil.int2OneByte(0));
 						}
 					}else{
 						wechatMember.setSelected(NumUtil.int2OneByte(0));
