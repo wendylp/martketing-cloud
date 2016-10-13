@@ -32,6 +32,8 @@ import cn.rongcapital.mkt.service.FindCustomTagInfoService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 @Service
 public class AudienceSearchServiceImpl implements AudienceSearchService {
@@ -62,9 +64,7 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 				ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO,null);
 
-		if(audience_name == null || "".equals(audience_name)){
-			return result;
-		}
+		if(StringUtils.isEmpty(audience_name)) return result;
 
 		AudienceList param = new AudienceList();
 		param.setPageSize(size);
@@ -99,11 +99,11 @@ public class AudienceSearchServiceImpl implements AudienceSearchService {
 			//根据tag_id,从mongo获得关联的人群
 			List<DataParty> audiences=findCustomTagInfoServiceImpl.findMDataByTagId(audience_id,null,null);
 			List<String> partyIds=new ArrayList<String>();
-			if(audiences!=null && audiences.size()>0){
+			if(!CollectionUtils.isEmpty(audiences)){
 				for(DataParty myDataParty:audiences){
 					if(myDataParty!=null)
 					{
-					partyIds.add(myDataParty.getId());
+					partyIds.add(String.valueOf(myDataParty.getMid()));
 					}
 				}
 				

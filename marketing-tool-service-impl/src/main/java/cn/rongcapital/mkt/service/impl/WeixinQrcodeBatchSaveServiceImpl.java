@@ -86,7 +86,7 @@ public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveSe
 				ApiConstant.INT_ZERO, null);
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		wechatQrcode.setBatchId(body.getBatchId());
-		
+		wechatQrcode.setStatus((byte) 1);//保存的时候给置为已用
 		String expirationTime = body.getExpirationTime();
 		
 		if (expirationTime != null && !expirationTime.isEmpty()) {
