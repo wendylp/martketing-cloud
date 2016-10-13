@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,view_name as viewName,view_desc as viewDesc,status as status]]>
+		<![CDATA[ id as id,view_name as viewName,view_desc as viewDesc,status as status,tag_name as tagName]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -17,6 +17,7 @@
 		    	<if test="viewName != null"><![CDATA[ AND view_name = #{viewName}]]></if>
 		    	<if test="viewDesc != null"><![CDATA[ AND view_desc = #{viewDesc}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="tagName != null"><![CDATA[ AND tag_name = #{tagName}]]></if>
 		</where>
 	</sql>
 	
@@ -31,18 +32,20 @@
 		<set>
 		    	<if test="viewName != null"><![CDATA[view_name = #{viewName},]]></if>
 		    	<if test="viewDesc != null"><![CDATA[view_desc = #{viewDesc},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="tagName != null"><![CDATA[tag_name = #{tagName}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SysTagView" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO sys_tag_view (view_name,view_desc)
+			INSERT INTO sys_tag_view (view_name,view_desc,tag_name)
 			VALUES
 			(
 			  #{viewName},
-			  #{viewDesc}
+			  #{viewDesc},
+			  #{tagName}
 			)
 		]]>
 	</insert>
