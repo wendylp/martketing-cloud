@@ -75,6 +75,7 @@ public class SystemTagSynMongodbServiceImpl implements TaskService {
 			
 			if(StringUtils.isEmpty(viewName) || StringUtils.isEmpty(tagName))	return;
 			List<SystemTagResult> resultList = systemTagResultDao.selectListByMap(viewName);
+			logger.info("开始同步"+sys.getViewDesc()+"-------->"+tagName);
 			
 			// 查询推荐标签
 			Criteria criteriaAll = Criteria.where("tag_name_eng").is(tagName);
@@ -105,7 +106,7 @@ public class SystemTagSynMongodbServiceImpl implements TaskService {
 	 */
 	private void startSynchTag(Integer keyId,String tagValue,TagRecommend tagRecommend) {
 		try {
-			logger.info("----------------------->本次更新：" + keyId);
+			//logger.info("----------------------->本次更新：" + keyId);
 			Criteria criteria = Criteria.where("mid").is(Integer.valueOf(keyId));
 			//查询Mongo是否存在此数据
 			DataParty dataParty = mongoTemplate.findOne(new Query(criteria), DataParty.class);
