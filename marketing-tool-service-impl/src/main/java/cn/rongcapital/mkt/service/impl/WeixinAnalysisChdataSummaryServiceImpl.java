@@ -67,9 +67,9 @@ public class WeixinAnalysisChdataSummaryServiceImpl implements WeixinAnalysisChd
 		if(!"0".equals(chCode)) {
 			paraMap.put("chCode", chCode);
 		}
-		//公众号
+		//公众号，这变量传的name，code不分....
 		if(!"0".equals(wxName)) {
-			paraMap.put("wxName", wxName);
+			paraMap.put("wxAcct", wxName);
 		}
 		//微信二维码id
 		if(!"".equals(qrcodeId)) {
@@ -79,8 +79,8 @@ public class WeixinAnalysisChdataSummaryServiceImpl implements WeixinAnalysisChd
 		//起始时间
 		startDate = startDate+ApiConstant.DATE_FORMAT_CONSTANT_BEGIN;
 		endDate = endDate+ ApiConstant.DATE_FORMAT_CONSTANT_END;
-		paraMap.put("startTime", DateUtil.getDateFromString(startDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd));
-		paraMap.put("endTime", DateUtil.getDateFromString(endDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd));
+		paraMap.put("startTime", DateUtil.getDateFromString(startDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
+		paraMap.put("endTime", DateUtil.getDateFromString(endDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
 		
 		List<Map<String, Object>> analysisChdataMap = wechatQrcodeFocusDao.getAllFocusData(paraMap);
 		

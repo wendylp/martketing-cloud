@@ -40,6 +40,9 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
         defaultContactTemplate.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         defaultContactTemplate.setPageSize(PAGE_SIZE);
         List<DefaultContactTemplate> defaultContactTemplateList = defaultContactTemplateDao.selectList(defaultContactTemplate);
+        for(DefaultContactTemplate tmpDefaultContactTemplate : defaultContactTemplateList){
+            tmpDefaultContactTemplate.setFixedShownSeqInRight(tmpDefaultContactTemplate.getDefaultShownSeq());
+        }
 
         if(contactId != null){
             //将默认模板和现在数据库中已有的模板做对比返回给前端
@@ -84,6 +87,7 @@ public class ContactKeyListGetServiceImpl implements ContactKeyListGetService{
             contactKeyOutput.setRequired(Integer.valueOf(defaultTemplate.getIsRequired()));
             contactKeyOutput.setIndex(defaultTemplate.getDefaultShownSeq());
             contactKeyOutput.setFieldType(defaultTemplate.getFieldType());
+            contactKeyOutput.setFixedIndex(defaultTemplate.getFixedShownSeqInRight());
             getContactKeyListOutput.getDataKeyList().add(contactKeyOutput);
         }
         getContactKeyListOutput.setTotal(getContactKeyListOutput.getDataKeyList().size());

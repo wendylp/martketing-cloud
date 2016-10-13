@@ -77,4 +77,27 @@ public class WeixinAnalysisQrcodeScanServiceImpl implements WeixinAnalysisQrcode
 		return result;
 	}
 
+    @Override
+    public void instertToWechatQrcodeScan(String openId, WechatQrcode wechatQrcode) {
+        WechatQrcodeScan wechatQrcodeScan = new WechatQrcodeScan();
+        //获取渠道,公众号信息
+        wechatQrcodeScan.setChCode(wechatQrcode.getChCode());
+        wechatQrcodeScan.setWxName(wechatQrcode.getWxName());
+        wechatQrcodeScan.setWxAcct(wechatQrcode.getWxAcct());        
+        wechatQrcodeScan.setUserId(openId);
+        wechatQrcodeScan.setQrcodeId(wechatQrcode.getId());
+        wechatQrcodeScan.setCreateTime(new Date());
+
+        int num = wechatQrcodeScanDao.insert(wechatQrcodeScan);
+
+        if (num != 1) {
+            //result.setCode(ApiErrorCode.DB_ERROR.getCode());
+            logger.info("插入数据失败userId = {}, qrcodeId = {}", openId,  wechatQrcode.getId());
+        }
+
+        
+    }
+
+	
+	
 }

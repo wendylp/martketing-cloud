@@ -16,6 +16,7 @@ import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
+import cn.rongcapital.mkt.po.WechatAssetGroup;
 import cn.rongcapital.mkt.service.WechatAssetMemberSearchService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -47,11 +48,11 @@ public class WechatAssetMemberSearchServiceImpl implements WechatAssetMemberSear
         ArrayList<Long> idList = new ArrayList<Long>();
         getIdList(groupIds, idList);
 
-        List<Long> importIdList = wechatAssetGroupDao.selectImportGroupIdsByIds(idList);
-
+        List<WechatAssetGroup> wechatAssetGroups = wechatAssetGroupDao.selectImportGroupsByIds(idList);
+        
         Map<String,Object> paramMap = new HashMap<String,Object>();
         paramMap.put("wx_name", searchField);
-        paramMap.put("importIdList",importIdList);
+        paramMap.put("wechatAssetGroups",wechatAssetGroups);
         List<Map<String,Object>> searchResult = wechatMemberDao.selectSearchInfo(paramMap);
         if(searchResult != null && searchResult.size() > 0){
             for(Map<String,Object> map : searchResult){

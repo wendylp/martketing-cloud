@@ -52,7 +52,7 @@
 		    	<if test="signature != null"><![CDATA[signature = #{signature},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="appId != null"><![CDATA[app_id = #{appId},]]></if>
-		    	<if test="wechatQrcode != null"><![CDATA[wechat_qrcode = #{wechatQrcode}]]></if>
+		    	<if test="wechatQrcode != null"><![CDATA[wechat_qrcode = #{wechatQrcode},]]></if>
 				<if test="isAuth != null"><![CDATA[is_auth = #{isAuth}]]></if>
 		</set>
 	</sql>

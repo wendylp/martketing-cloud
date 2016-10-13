@@ -66,6 +66,13 @@ public interface WechatAssetGroupDao extends BaseDao<WechatAssetGroup>{
 	List<Long> selectImportGroupIdsByIds(ArrayList<Long> groupIds);
 
 	/**
+	 * 获取导入时的组的编号
+	 * @param paramMap
+	 * @return list
+	 */
+	List<WechatAssetGroup> selectImportGroupsByIds(ArrayList<Long> groupIds);
+	
+	/**
 	 * 获取所有导入的id列表
 	 * @param paramMap
 	 * @return list

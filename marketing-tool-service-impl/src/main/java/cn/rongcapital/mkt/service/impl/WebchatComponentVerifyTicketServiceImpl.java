@@ -67,7 +67,6 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 				webchatComponentVerifyTicket.setComponentVerifyTicket(componentVerifyTicket);
 				webchatComponentVerifyTicket.setInfoType(infoType);	
 				webchatComponentVerifyTicketDao.insert(webchatComponentVerifyTicket);
-				ApiConstant.COMPONENT_VERIFY_TICKET = webchatComponentVerifyTicket.getComponentVerifyTicket();
 			} catch (Exception e) {
 				logger.info(e.getMessage());
 			}

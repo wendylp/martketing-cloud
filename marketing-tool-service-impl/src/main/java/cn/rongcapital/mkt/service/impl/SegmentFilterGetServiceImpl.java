@@ -105,7 +105,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 			Criteria oneCriteria = null;
 			if ("1".equals(excule)) {
 				if ("0".equals(tagId)) {// 不限
-					oneCriteria = Criteria.where("tagList.tagId").ne(tagGroupId);
+					oneCriteria = Criteria.where("tagList").elemMatch(Criteria.where("tagId").ne(tagGroupId));
 				} else {
 
 					String tagIndex = tagId.substring(tagId.indexOf("_") + 1);
@@ -114,11 +114,12 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 							TagRecommend.class);
 					List<String> tagList = findOne.getTagList();
 					String tagValue = tagList.get(Integer.valueOf(tagIndex));
-					oneCriteria = Criteria.where("tagList.tagId").ne(tagGroupId).and("tagList.tagValue").ne(tagValue);
+					oneCriteria = Criteria.where("tagList")
+							.elemMatch(Criteria.where("tagId").ne(tagGroupId).and("tagValue").ne(tagValue));
 				}
 			} else {
 				if ("0".equals(tagId)) {// 不限
-					oneCriteria = Criteria.where("tagList.tagId").is(tagGroupId);
+					oneCriteria = Criteria.where("tagList").elemMatch(Criteria.where("tagId").is(tagGroupId));
 				} else {
 
 					String tagIndex = tagId.substring(tagId.indexOf("_") + 1);
@@ -128,7 +129,8 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 					List<String> tagList = findOne.getTagList();
 					String tagValue = tagList.get(Integer.valueOf(tagIndex));
 
-					oneCriteria = Criteria.where("tagList.tagId").is(tagGroupId).and("tagList.tagValue").is(tagValue);
+					oneCriteria = Criteria.where("tagList")
+							.elemMatch(Criteria.where("tagId").is(tagGroupId).and("tagValue").is(tagValue));
 				}
 			}
 
@@ -337,7 +339,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 			if ("1".equals(conditions.get(i).getExclude())) {
 				Criteria criteriaCond = null;
 				if ("0".equals(tagId)) {// 不限
-					criteriaCond = Criteria.where("tagList.tagId").ne(tagGroupId);
+					criteriaCond = Criteria.where("tagList").elemMatch(Criteria.where("tagId").ne(tagGroupId));
 				} else {
 					String tagIndex = tagId.substring(tagId.indexOf("_") + 1);
 
@@ -345,25 +347,29 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 							TagRecommend.class);
 					List<String> tagList = findOne.getTagList();
 					String tagValue = tagList.get(Integer.valueOf(tagIndex));
-					criteriaCond = Criteria.where("tagList.tagId").ne(tagGroupId).and("tagList.tagValue").ne(tagValue);
+
+					criteriaCond = Criteria.where("tagList")
+							.elemMatch(Criteria.where("tagId").ne(tagGroupId).and("tagValue").ne(tagValue));
 				}
 				criterialist[i] = criteriaCond;
 			} else {
 				Criteria criteriaCond = null;
 				if ("0".equals(tagId)) {// 不限
-					criteriaCond = Criteria.where("tagList.tagGroupId").is(tagGroupId);
+					criteriaCond = Criteria.where("tagList").elemMatch(Criteria.where("tagId").is(tagGroupId));
 				} else {
 					String tagIndex = tagId.substring(tagId.indexOf("_") + 1);
 					TagRecommend findOne = mongoTemplate.findOne(new Query(Criteria.where("tagId").is(tagGroupId)),
 							TagRecommend.class);
 					List<String> tagList = findOne.getTagList();
 					String tagValue = tagList.get(Integer.valueOf(tagIndex));
-					criteriaCond = Criteria.where("tagList.tagId").is(tagGroupId).and("tagList.tagValue").is(tagValue);
+
+					criteriaCond = Criteria.where("tagList")
+							.elemMatch(Criteria.where("tagId").is(tagGroupId).and("tagValue").is(tagValue));
 				}
 				criterialist[i] = criteriaCond;
 			}
 		}
-		
+
 		query.addCriteria(new Criteria().andOperator(criterialist));
 		long tag_count = mongoTemplate.count(query, DataParty.class);
 		return Long.toString(tag_count);

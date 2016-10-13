@@ -13,6 +13,7 @@ public class ContactKeyOutput {
     private String fieldCode;
     private Integer selected;
     private Integer index;
+    private Integer fixedIndex;
     private Integer required;
     private Integer isChecked;
     private Integer fieldType;
@@ -51,6 +52,15 @@ public class ContactKeyOutput {
 
     public void setIndex(Integer index) {
         this.index = index;
+    }
+
+    @JsonProperty("fixed_index")
+    public Integer getFixedIndex() {
+        return fixedIndex;
+    }
+
+    public void setFixedIndex(Integer fixedIndex) {
+        this.fixedIndex = fixedIndex;
     }
 
     @JsonProperty("required")

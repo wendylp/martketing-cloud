@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
@@ -22,6 +24,7 @@ import cn.rongcapital.mkt.po.WebchatComponentVerifyTicket;
 import cn.rongcapital.mkt.service.WechatInterfaceLogService;
 
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class BaseBiz {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -32,8 +35,13 @@ public class BaseBiz {
 	@Autowired
 	private WebchatComponentVerifyTicketDao webchatComponentVerifyTicketDao;
 	
+	@Autowired
+	private Environment env;
+	
 	public App getApp(){
-		 	App app = new App(ApiConstant.APPID,ApiConstant.SECRET);
+		    String weixin_appid = env.getProperty("weixin.appid");
+		    String weixin_secret = env.getProperty("weixin.secret");
+		 	App app = new App(weixin_appid,weixin_secret);
 	        WebchatComponentVerifyTicket webchatComponentVerifyTicketq = new WebchatComponentVerifyTicket();
 	        webchatComponentVerifyTicketq.setOrderField("id");
 	        webchatComponentVerifyTicketq.setOrderFieldType("desc");
@@ -63,7 +71,9 @@ public class BaseBiz {
 	}
 	
 	public App getAppAddComponentTicket(){
-		 App app = new App(ApiConstant.APPID,ApiConstant.SECRET);
+		    String weixin_appid = env.getProperty("weixin.appid");
+		    String weixin_secret = env.getProperty("weixin.secret");
+		 	App app = new App(weixin_appid,weixin_secret);
 	        WebchatComponentVerifyTicket webchatComponentVerifyTicketq = new WebchatComponentVerifyTicket();
 	        webchatComponentVerifyTicketq.setOrderField("id");
 	        webchatComponentVerifyTicketq.setOrderFieldType("desc");

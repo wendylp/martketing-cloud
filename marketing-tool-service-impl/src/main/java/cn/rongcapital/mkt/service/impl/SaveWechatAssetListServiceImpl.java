@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.service.impl;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.po.WechatAssetGroup;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
@@ -61,10 +62,10 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
         id = audienceListDao.selectIdByAudienceName(paramMap);
 
         //2.根据groupId选出import_groupId。
-        List<Long> importGroudIds = wechatAssetGroupDao.selectImportGroupIdsByIds(saveWechatAssetListIn.getGroupIds());
+        List<WechatAssetGroup> wechatAssetGroups = wechatAssetGroupDao.selectImportGroupsByIds(saveWechatAssetListIn.getGroupIds());
 
         //3.根据import_groupId，选出member的Id
-        List<Long> idLists = wechatMemberDao.selectIdListByGroupId(importGroudIds);
+        List<Long> idLists = wechatMemberDao.selectIdListByGroupId(wechatAssetGroups);
 
         //Todo:4这块需要修改，从member中选出data_population的ID，然后从data_population中选出data_party
         //Todo: 的Id，然后将这些Ids插入到audience_map中去

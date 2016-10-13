@@ -1,12 +1,16 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -19,6 +23,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import java.util.Set;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -599,12 +605,14 @@ public class UploadFileServiceImpl implements UploadFileService{
 				
 				// 保存该批次二维码图片
 				List<String> qrcodePicLists = new ArrayList<String>();
+				// 保存二维码名用于重命名zip包内二维码名
+				List<String> picNewName = new ArrayList<String>();
 				
 				for(WXMoudelVO wmo : wxSuccessList){
 					WechatQrcode wq = new WechatQrcode();
 					wq.setBatchId(bachId);
 					wq.setQrcodeName(wmo.getQrName());
-					wq.setStatus((byte)0);
+					wq.setStatus((byte)0);//保存的时候默认未用
 					wq.setWxName(wmo.getOfficialName());
 					Integer chCode = null;
 					WechatChannel wc = new WechatChannel();
@@ -615,7 +623,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 					}
 					wq.setChCode(chCode);
 					wq.setIsAudience((byte) 0);
-					wq.setStatus((byte) 1);
+					//wq.setStatus((byte) 1);
 					
                     WechatRegister wechatRegister = new WechatRegister();
                     wechatRegister.setName(wmo.getOfficialName());
@@ -636,12 +644,16 @@ public class UploadFileServiceImpl implements UploadFileService{
 					}
 					wechatQrcodeDao.insert(wq);
 					qrcodePicLists.add(wq.getQrcodePic());
+					picNewName.add(wq.getQrcodeName());
 				}
 				
 				// 生成该批次，二维码图片的zip包，并写入到服务器
-				if(qrcodePicLists != null && qrcodePicLists.size() > 0) {
-					createQrocdePicZip(qrcodePicLists, bachId);
-				}
+				if(qrcodePicLists.size() > 0 && qrcodePicLists.size() == picNewName.size()) {
+					createQrocdePicZip(qrcodePicLists, picNewName, bachId);
+				} else {
+                    logger.info("创建二维码zip包失败，批次号={} ; 二维码地址数量={} ; 二维码名字数量={}", bachId, qrcodePicLists.size(),
+                            picNewName.size());
+                }
 				
 				//生成错误文件csv并把错误文件写到服务器
 				//csvWriter = new CsvWriter(new FileWriter(new File("e:\\fail.csv")), CSV_WRITER_SEPARATOR);
@@ -720,7 +732,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 	  * @author shuiyangyang
 	  * @Data 2016.09.26
 	  */
-	 private void createQrocdePicZip(List<String> qrcodePicLists, String bachId) {
+	 private void createQrocdePicZip(List<String> qrcodePicLists, List<String> picNewName, String bachId) {
 		 
 		 // 此处利用了需要压缩的文件和压缩后文件放在同一路径下的特殊情况
 		 String[] fileNamePaths = {ApiConstant.UPLOAD_IMG_PATH_LARGE, 
@@ -739,12 +751,78 @@ public class UploadFileServiceImpl implements UploadFileService{
 				 files[i] = new File(fileNamePath + qrcodePicLists.get(i));
 			 }
 			 
-			 // 调用common里创建压缩包方法
+			 // 开始创建zip包
 			try {
-				ZipCreater.generateZip(files, fileName);
+				generateZip(files, picNewName, fileName);
 			} catch (IOException e) {
 				logger.info(e.toString());
 			} 
 		 }
 	 }
+	 
+	 /**
+	  * 功能描述：创建zip文件包并重命名zip包内文件的名字
+	  * 
+	  * @param files 需要被压缩的文件名数组(需要绝对路径)
+	  * @param picNewNameLists zip包内文件的新名字
+	  * @param fileName 压缩后zip包的文件名(需要绝对路径)
+	  * @throws IOException
+	  */
+	 private void generateZip(File[] files,List<String> picNewName, String fileName) throws IOException {
+
+	        if (files == null || files.length <= 0) {
+	            return;
+	        }
+
+	        // 去除文件不存在的文件名
+	        List<File> fileLists = new ArrayList<File>();
+	        List<String> picNewNameLists = new ArrayList<String>();
+	        for (int i = 0; i < files.length; i++) {
+	            if (files[i] != null && files[i].isFile() && files[i].exists()) {
+	                fileLists.add(files[i]);
+	                picNewNameLists.add(picNewName.get(i));
+	            }
+	        }
+
+	        if (fileLists == null || fileLists.size() <= 0) {
+	            return;
+	        }
+
+	        OutputStream os = null;
+	        ZipOutputStream zos = null;
+	        BufferedInputStream bis = null;
+
+	        try {
+	            logger.debug("创建zip包开始，包名：{}", fileName);
+	            os = new BufferedOutputStream(new FileOutputStream(fileName));
+	            zos = new ZipOutputStream(os);
+	            byte[] buf = new byte[8192];
+	            int len;
+	            for (int i = 0; i < fileLists.size(); i++) {
+	                File file = fileLists.get(i);
+	                ZipEntry ze = new ZipEntry(picNewNameLists.get(i) + ".jpg");
+	                zos.putNextEntry(ze);
+	                bis = new BufferedInputStream(new FileInputStream(file));
+	                while ((len = bis.read(buf)) > 0) {
+	                    zos.write(buf, 0, len);
+	                }
+	                zos.closeEntry();
+	            }
+	            zos.closeEntry();
+	            zos.close();
+	            logger.debug("创建zip包成功，包名：{}", fileName);
+	        } catch (Exception e) {
+	            logger.info(e.toString());
+	        } finally {
+	            if (os != null) {
+	                os.close();
+	            }
+	            if (zos != null) {
+	                zos.close();
+	            }
+	            if (bis != null) {
+	                bis.close();
+	            }
+	        }
+	    }
 }

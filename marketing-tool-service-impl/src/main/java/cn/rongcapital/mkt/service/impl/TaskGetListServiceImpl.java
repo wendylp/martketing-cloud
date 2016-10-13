@@ -20,6 +20,8 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
 public class TaskGetListServiceImpl implements TaskGetListService {
+    
+    private static final Integer NOT_CHECKED = 0;
 
     @Autowired
     private TaskRunLogDao taskRunLogDao;
@@ -53,6 +55,42 @@ public class TaskGetListServiceImpl implements TaskGetListService {
         result.setTotalCount(totalCount);
         result.setTotal(resultList.size());
 
+        return result;
+    }
+
+    @Override
+    public BaseOutput checkTaskList() {
+      
+        TaskRunLog paramTaskRunLog = new TaskRunLog();
+        paramTaskRunLog.setOrderField("start_time");
+        paramTaskRunLog.setOrderFieldType("DESC");
+        paramTaskRunLog.setTaskType((byte)TaskTypeEnum.DISPLAY.getCode());
+        paramTaskRunLog.setIsChecked(NOT_CHECKED);
+        List<TaskRunLog> taskRunLogs = taskRunLogDao.selectList(paramTaskRunLog);
+        
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        result.setTotalCount(1);
+        result.setTotal(1);
+        Map<String, Object> map = new HashMap<>();
+        if (!CollectionUtils.isEmpty(taskRunLogs)) {
+            map.put("is_checked", Boolean.TRUE);
+            result.getData().add(map);
+            return result;
+        }
+        map.put("is_checked", Boolean.FALSE);
+        result.getData().add(map);
+        return result;
+    }
+
+    @Override
+    public BaseOutput updateTaskListStatus() {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+        
+        //更改任务查看状态
+        taskRunLogDao.updateTaskStatus();
+        
         return result;
     }
 

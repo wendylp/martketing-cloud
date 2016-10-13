@@ -11,10 +11,13 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,16 +36,25 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.Xml2JsonUtil;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
+import cn.rongcapital.mkt.dao.WechatQrcodeDao;
+import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
+import cn.rongcapital.mkt.po.WechatInterfaceLog;
 import cn.rongcapital.mkt.po.WechatMember;
+import cn.rongcapital.mkt.po.WechatQrcode;
+import cn.rongcapital.mkt.po.WechatQrcodeTicket;
 import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.service.QrcodeFocusInsertService;
 import cn.rongcapital.mkt.service.WechatAssetService;
+import cn.rongcapital.mkt.service.WeixinAnalysisQrcodeScanService;
 import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
+import cn.rongcapital.mkt.vo.in.WechatQrcodeScanIn;
+import cn.rongcapital.mkt.vo.weixin.WXMsgVO;
 
 
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements ProcessReceiveMessageOfWeiXinBiz {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -61,6 +73,18 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 	
 	@Autowired
 	private WechatRegisterDao wechatRegisterDao;
+    
+    @Autowired
+    private WechatQrcodeTicketDao wechatQrcodeTicketDao;
+    
+    @Autowired
+    private WeixinAnalysisQrcodeScanService weixinAnalysisQrcodeScanService;
+    
+    @Autowired
+    private WechatQrcodeDao wechatQrcodeDao;
+    
+	@Autowired
+	private Environment env;	
 	
 	private ComponentVerifyTicketIn getComponentVerifyTicketInFromTextXml(String textXml) throws JAXBException{
 			JAXBContext context = JAXBContext.newInstance(ComponentVerifyTicketIn.class);  
@@ -215,7 +239,19 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void getMsgLog(String textXml,String msg_signature,String timestamp,String nonce,String signature,String openid,String authAppId) throws JAXBException, AesException {		
-			WXBizMsgCrypt pc = new WXBizMsgCrypt(ApiConstant.TOKEN, ApiConstant.ENCODING_AES_KEY, ApiConstant.APPID); 
+	    	/**
+	    	 * 记入接口日志到数据库
+	    	 */
+		    WXMsgVO wxMsgVO = new WXMsgVO(textXml,msg_signature,timestamp,nonce,signature,openid,authAppId);
+			WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("ProcessReceiveMessageOfWeiXinImpl","getMsgLog",wxMsgVO.toString(),new Date());
+			wechatInterfaceLogService.insert(wechatInterfaceLog);
+			/**
+			 * 解析xml
+			 */
+			String weixin_appid = env.getProperty("weixin.appid");
+		    String weixin_encoding_aes_key = env.getProperty("weixin.encoding.aes.key");
+		    String weixin_token = env.getProperty("weixin.token");		    
+			WXBizMsgCrypt pc = new WXBizMsgCrypt(weixin_token, weixin_encoding_aes_key, weixin_appid); 
 			String resultXml = pc.decryptMsg(msg_signature, timestamp, nonce, textXml);		
 			logger.info("解密后明文: " + resultXml);
 			Map<String, String> msgMap = this.parserMsgToMap(resultXml);
@@ -227,26 +263,27 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			int status = 0;
 			String event = msgMap.get("event");
 			String createTime = msgMap.get("createTime");
+			String qrCodeTicket = msgMap.get("ticket");
 			Date date = new Date(Long.parseLong(createTime)*1000);
 			switch(event){
 			  case "SCAN":{
+			      this.insertWechatQrcodeScan(qrCodeTicket, openid);
 				  break; 
 			  }
 			  case "subscribe":{
 				  UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常				  
 				  if(wechatRegister!=null){
 					  wechatAssetService.follow(userInfo, wechatRegister.getWxAcct());
-				  }			  
-				  String qrCodeTicket = msgMap.get("ticket");
+				  }
 				  status = 0;
 				  qrcodeFocusInsertService.insertQrcodeFoucsInfo(qrCodeTicket, openid, date, status, wechatRegister.getWxAcct());
+				  this.insertWechatQrcodeScan(qrCodeTicket, openid);
 				  break;
 			  }
 			  case "unsubscribe":{
 				  if(wechatRegister!=null){
 					  wechatAssetService.unfollow(openid, wechatRegister.getWxAcct());
-				  }				  
-				  String qrCodeTicket = msgMap.get("ticket");
+				  }
 				  status = 1;
 				  qrcodeFocusInsertService.insertQrcodeFoucsInfo(qrCodeTicket, openid, date, status, wechatRegister.getWxAcct());				  
 				  break;
@@ -257,5 +294,31 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			}
 	}
 	
+	private WechatQrcode getWechatQrcodeScanInForSCAN(String qrCodeTicket,String openid){
+	    if(StringUtils.isNotEmpty(qrCodeTicket)&&StringUtils.isNotEmpty(openid)){
+	        WechatQrcodeTicket wechatQrcodeTicketTemp = new WechatQrcodeTicket();
+            wechatQrcodeTicketTemp.setTicket(qrCodeTicket);
+            List<WechatQrcodeTicket> wechatQrcodeTicketes = wechatQrcodeTicketDao.selectList(wechatQrcodeTicketTemp);
+            if(CollectionUtils.isNotEmpty(wechatQrcodeTicketes)){
+                WechatQrcodeTicket wechatQrcodeTicket = wechatQrcodeTicketes.get(0);
+                if(wechatQrcodeTicket!=null){
+                    WechatQrcode wechatQrcodeTemp = new WechatQrcode();
+                    wechatQrcodeTemp.setTicket(String.valueOf(wechatQrcodeTicket.getId()));
+                    List<WechatQrcode> wechatQrcodeList = wechatQrcodeDao.selectList(wechatQrcodeTemp);
+                    if(CollectionUtils.isNotEmpty(wechatQrcodeList)){
+                        WechatQrcode wechatQrcode = wechatQrcodeList.get(0);
+                        return wechatQrcode;      
+                    }
+                }
+            }
+	    }
+        return null;	    
+	}
 	
+	private void insertWechatQrcodeScan(String qrCodeTicket,String openid){
+	    WechatQrcode wechatQrcode = this.getWechatQrcodeScanInForSCAN(qrCodeTicket, openid);
+	    if(wechatQrcode!=null){
+	        weixinAnalysisQrcodeScanService.instertToWechatQrcodeScan(openid,wechatQrcode);
+	    }	    
+	}
 }

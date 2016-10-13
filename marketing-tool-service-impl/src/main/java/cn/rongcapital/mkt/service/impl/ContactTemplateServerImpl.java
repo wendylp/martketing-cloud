@@ -7,15 +7,11 @@
 *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.rongcapital.mkt.dao.ContactListDao;
-import cn.rongcapital.mkt.po.ContactList;
-import cn.rongcapital.mkt.service.ImportContactsDataToMDataService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -25,11 +21,14 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.common.util.GenerateUUid;
 import cn.rongcapital.mkt.common.util.QrCreater;
-import cn.rongcapital.mkt.common.util.ShortUrlCreator;
+import cn.rongcapital.mkt.dao.ContactListDao;
 import cn.rongcapital.mkt.dao.ContactTemplateDao;
+import cn.rongcapital.mkt.po.ContactList;
 import cn.rongcapital.mkt.po.ContactTemplate;
 import cn.rongcapital.mkt.service.ContactTemplateServer;
+import cn.rongcapital.mkt.service.ImportContactsDataToMDataService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.ContactTemplateIn;
 import cn.rongcapital.mkt.vo.in.Field_list;
@@ -100,7 +99,7 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 						// 二维码链接
 						String qr = env.getProperty("contact.pc.url") + "?contact_id=" + cont_id;
 						// 生成短链
-						String qrShort = ShortUrlCreator.generateShortUrl(qr);
+						String qrShort = GenerateUUid.generateShortUuid();
 						
 						param.setQrcodeUrl(qr);
 						param.setQrcodeShorturl(qrShort);
@@ -210,7 +209,8 @@ public class ContactTemplateServerImpl implements ContactTemplateServer {
 							// 二维码链接
 							String qr = env.getProperty("contact.pc.url") + "?contact_id=" + param.getContactId();
 							// 生成短链
-							String qrShort = ShortUrlCreator.generateShortUrl(qr);
+							String qrShort = GenerateUUid.generateShortUuid();
+							
 							
 							param.setQrcodeUrl(qr);
 							param.setQrcodeShorturl(qrShort);

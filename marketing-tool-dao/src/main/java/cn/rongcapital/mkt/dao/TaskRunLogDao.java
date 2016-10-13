@@ -55,4 +55,6 @@ public interface TaskRunLogDao extends BaseDao<TaskRunLog>{
      * @return map
      */
     List<TaskRunLog> selectByEndtime(TaskRunLog taskRunLog);
+    
+    void updateTaskStatus();
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -25,6 +27,7 @@ import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 public class DataSegmentSyncTaskServiceImpl implements TaskService {
 
 	// private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = (Logger) LoggerFactory.getLogger(getClass());
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
@@ -57,6 +60,8 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 			return;
 		}
 		for (SegmentationHead segmentationHead : segmentationHeadList) {
+		    logger.info("正在同步细分管理, id={} , name = {}", segmentationHead.getId(), segmentationHead.getName());
+		    
 			// if(segmentationHead.getPublishStatus() ==
 			// ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH) {
 			// continue;//未发布的细分不进行同步
@@ -81,17 +86,20 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 				List<SegmentationBody> segmentationBodyList = segmentationBodyDao.selectList(segmentationBodyT);
 				if (segmentationBodyList == null || CollectionUtils.isEmpty(segmentationBodyList)
 						|| segmentationBodyList.size() == 0) {
+				    logger.info("同步细分管理body失败，因为没有有效数据, id={} , name = {}", segmentationHead.getId(), segmentationHead.getName());
 					continue;
 				}
 				List<Criteria> criteriasList = new ArrayList<Criteria>();
 				for (SegmentationBody segmentationBody : segmentationBodyList) {
-					String tagId = segmentationBody.getTagId();
+                    logger.info("正在同步细分管理body, id={} , name = {}, tag_id = {}", segmentationHead.getId(),
+                            segmentationHead.getName(), segmentationBody.getTagId());
+                    String tagId = segmentationBody.getTagId();
 					String tagGroupId = segmentationBody.getTagGroupId();
 					Byte exclude = segmentationBody.getExclude();
 					Criteria oneCriteria = null;
 					if (exclude == 0) {
 						if ("0".equals(tagId)) {// 不限
-							oneCriteria = Criteria.where("tagList.tagId").is(tagGroupId);
+							oneCriteria = Criteria.where("tagList").elemMatch(Criteria.where("tagId").is(tagGroupId));
 						} else {
 
 							String tagIndex = tagId.substring(tagId.indexOf("_") + 1);
@@ -101,12 +109,13 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 							List<String> tagList = findOne.getTagList();
 							String tagValue = tagList.get(Integer.valueOf(tagIndex));
 
-							oneCriteria = Criteria.where("tagList.tagId").is(tagGroupId).and("tagList.tagValue")
-									.is(tagValue);
+							oneCriteria = Criteria.where("tagList")
+									.elemMatch(Criteria.where("tagId").is(tagGroupId).and("tagValue").is(tagValue));
+
 						}
 					} else {
 						if ("0".equals(tagId)) {// 不限
-							oneCriteria = Criteria.where("tagList.tagId").ne(tagGroupId);
+							oneCriteria = Criteria.where("tagList").elemMatch(Criteria.where("tagId").ne(tagGroupId));
 						} else {
 
 							String tagIndex = tagId.substring(tagId.indexOf("_") + 1);
@@ -115,8 +124,8 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 									.findOne(new Query(Criteria.where("tagId").is(tagGroupId)), TagRecommend.class);
 							List<String> tagList = findOne.getTagList();
 							String tagValue = tagList.get(Integer.valueOf(tagIndex));
-							oneCriteria = Criteria.where("tagList.tagId").ne(tagGroupId).and("tagList.tagValue")
-									.ne(tagValue);
+							oneCriteria = Criteria.where("tagList")
+									.elemMatch(Criteria.where("tagId").ne(tagGroupId).and("tagValue").ne(tagValue));
 						}
 					}
 					criteriasList.add(oneCriteria);

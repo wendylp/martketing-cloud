@@ -56,7 +56,7 @@ public class FindCustomTagInfoServiceImpl implements FindCustomTagInfoService {
     public BaseTag findCustomTagInfoByTagId(String tagId) {
         if(StringUtils.isEmpty(tagId)) return null;
         BaseTag targetTag = mongoBaseTagDao.findCustomTagLeafByTagId(tagId);
-        if(targetTag != null && targetTag instanceof CustomTagLeaf){
+        if(targetTag != null && targetTag.getTagType() == ApiConstant.CUSTOM_TAG_LEAF_TYPE){
             return targetTag;
         }
         return null;

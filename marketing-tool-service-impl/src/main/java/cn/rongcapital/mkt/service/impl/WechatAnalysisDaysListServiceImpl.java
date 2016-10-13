@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.WechatQrcodeFocusDao;
 import cn.rongcapital.mkt.service.WechatAnalysisDaysListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -41,6 +42,10 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 	
 	private static final String CH_CODE_ALL = "0";
 
+	private static final String SELECT_LAST7 = "last7";
+	
+	private static final String SELECT_LAST30 = "last30";
+	
 	@Autowired
 	private WechatQrcodeFocusDao wechatQrcodeFocusDao;
 	
@@ -57,9 +62,26 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			// 返回结果集
 			Map<String, Object> resultMap = new HashMap<>();
+			
+			//选择
+			if(SELECT_LAST7.equals(daysType)){
+				Date eTempDate = new Date();
+				Date sTempDate = DateUtil.addDays(eTempDate, -6);
+				startDate = DateUtil.getStringFromDate(sTempDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd);
+				endDate = DateUtil.getStringFromDate(eTempDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd);
+			}else if(SELECT_LAST30.equals(daysType)){
+				Date eTempDate = new Date();
+				Date sTempDate = DateUtil.addDays(eTempDate, -29);
+				startDate = DateUtil.getStringFromDate(sTempDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd);
+				endDate = DateUtil.getStringFromDate(eTempDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd);
+			}
+			
+			startDate = startDate+ApiConstant.DATE_FORMAT_CONSTANT_BEGIN;
+			endDate = endDate+ ApiConstant.DATE_FORMAT_CONSTANT_END;
+			
 			// 日期格式化
-			Date sDate = sdf.parse(startDate);
-			Date eDate = sdf.parse(endDate);
+			Date sDate = DateUtil.getDateFromString(startDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
+			Date eDate = DateUtil.getDateFromString(endDate, ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss);
 			if(sDate.compareTo(eDate) == 1){
 				baseOutput.setCode(1003);
 				baseOutput.setMsg("日期参数有误！");

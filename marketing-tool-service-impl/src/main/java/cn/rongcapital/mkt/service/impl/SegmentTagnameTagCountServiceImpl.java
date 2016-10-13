@@ -110,15 +110,20 @@ public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCount
 				count = 10;
 			}
 			for (int i = 0; i < count; i++) {
-				List<DataParty> restList = mongoTemplate.find(
-						new Query(
-								Criteria.where("tagList.tagId").is(tagIds).and("tagList.tagValue").is(tagList.get(i))),
+				// List<DataParty> restList = mongoTemplate.find(
+				// new Query(
+				// Criteria.where("tagList.tagId").is(tagIds).and("tagList.tagValue").is(tagList.get(i))),
+				// DataParty.class);
+
+				Long restList = mongoTemplate.count(
+						new Query(Criteria.where("tagList")
+								.elemMatch(Criteria.where("tagId").is(tagIds).and("tagValue").is(tagList.get(i)))),
 						DataParty.class);
 
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("tag_id", tagIds);
 				map.put("tag_name", tagList.get(i));
-				map.put("tag_count", restList.size());
+				map.put("tag_count", restList);
 				result.getData().add(map);
 			}
 

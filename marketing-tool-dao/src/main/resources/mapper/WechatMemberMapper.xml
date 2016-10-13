@@ -75,7 +75,7 @@
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="selected != null"><![CDATA[selected = #{selected},]]></if>
 		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
-		    	<if test="keyid != null"><![CDATA[keyid = #{keyid}]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid},]]></if>
 		    	<if test="fansJson != null"><![CDATA[fans_json = #{fansJson}]]></if>
 		</set>
 	</sql>
@@ -209,22 +209,22 @@
 		</foreach>
 	</insert>
 
-	<select id="selectIdListByGroupId" parameterType="java.util.List" resultType="java.lang.String">
+	<select id="selectIdListByGroupId" parameterType="java.util.List" resultType="java.lang.Long">
 		SELECT id
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE wx_group_id in
-		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
-			#{item}
+		WHERE
+		<foreach collection="list" index="index" item="item" separator="OR">
+			(wx_group_id=#{item.importGroupId} and pub_id=#{item.wxAcct})
 		</foreach>
 	</select>
 
 	<select id="selectPeopleDetails" parameterType="java.util.List" resultType="java.util.Map">
 		SELECT wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE wx_group_id in
-		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
-			#{item}
-		</foreach>
+		WHERE
+		<foreach collection="list" index="index" item="item" separator="OR">
+			(wx_group_id=#{item.importGroupId} and pub_id=#{item.wxAcct})
+		</foreach>		
 	</select>
 
 	<insert id="batchInsertGroupMember" parameterType="java.util.List">
@@ -254,9 +254,9 @@
 		FROM wechat_member wm
 		LEFT JOIN data_party dp
 		ON wm.wx_code = dp.mapping_keyid
-		WHERE wx_name like CONCAT('%',#{wx_name},'%') AND wx_group_id in
-		<foreach collection="importIdList" index="index" item="item" separator="," open="(" close=")">
-			#{item}
+		WHERE wx_name like CONCAT('%',#{wx_name},'%') AND 
+		<foreach collection="wechatAssetGroups" index="index" item="item" separator="OR" open="(" close=")">
+			(wm.wx_group_id=#{item.importGroupId} and wm.pub_id=#{item.wxAcct})
 		</foreach>
 	</select>
 

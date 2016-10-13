@@ -1,7 +1,6 @@
 package cn.rongcapital.mkt.service;
 
 import cn.rongcapital.mkt.po.base.BaseTag;
-import cn.rongcapital.mkt.po.mongodb.CustomTagLeaf;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 
 import java.util.List;
