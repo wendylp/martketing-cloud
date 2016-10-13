@@ -12,7 +12,6 @@ package cn.rongcapital.mkt.dao;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -140,22 +139,5 @@ public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDa
      * @throws
      */
     List<ShoppingWechat> selectOrderStatusByKeyid(@Param("keyId")Integer keyId);
-    
-    List<Map<String, Object>> testFindView();
-    
-    
-    /**
-     * 给王伟强写的查询视图的临时方法
-     * @return
-     */
-    
-    List<Map<String,Object>> selectVAmountCount();
-    
-    List<Map<String,Object>> selectVTagRecent30();
-    
-    List<Map<String,Object>> selectVTagTastePrefer();
-    
-    List<Map<String,Object>> selectVTagWeightPrefer();
-
     
 }

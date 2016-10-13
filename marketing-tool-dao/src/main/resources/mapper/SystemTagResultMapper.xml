@@ -8,8 +8,8 @@
 	</sql>
 
 	<!-- 其它SQL语句 -->
-	<select id="selectListByMap" parameterType="java.util.map"
-		resultType="cn.rongcapital.mkt.po.SystemTagGen">
+	<select id="selectListByMap" parameterType="java.util.Map"
+		resultType="cn.rongcapital.mkt.po.SystemTagResult">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST" />
 		<![CDATA[FROM #{tagView}]]>
