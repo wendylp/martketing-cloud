@@ -11,7 +11,8 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.List;
-import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 import cn.rongcapital.mkt.po.SystemTagResult;
 
@@ -23,6 +24,6 @@ public interface SystemTagResultDao {
 	 *             t
 	 * @return: List<T>
 	 */
-	List<SystemTagResult> selectList(Map<String, String> map);
+	List<SystemTagResult> selectListByMap(@Param("tagView") String tagView);
 
 }

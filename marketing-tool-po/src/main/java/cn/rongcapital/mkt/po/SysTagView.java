@@ -1,17 +1,28 @@
 package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
-
+/*************************************************
+ * @功能简述: 系统标签名称与数据库视图名称映射实体
+ * @项目名称: marketing cloud
+ * @see: 
+ * @author: 王伟强
+ * @version: 0.0.1
+ * @date: 2016/10/13
+ * @复审人: 
+*************************************************/
 public class SysTagView extends BaseQuery {
-    private Integer id;
+	
+	private static final long serialVersionUID = 1L;
 
-    private String viewName;
+	private Integer id;
 
-    private String viewDesc;
+    private String viewName;	//数据库视图名称
+
+    private String viewDesc;	//视图描述
     
-    private int status;
+    private int status;			//状态
     
-    private String tagName;
+    private String tagName;		//标签名称
 
     public Integer getId() {
         return id;
