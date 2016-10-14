@@ -63,6 +63,7 @@ public class SystemTagSynMongodbServiceImpl implements TaskService {
 			initMongoTagList();
 			SysTagView sysTagView = new SysTagView();
 			sysTagView.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			sysTagView.setPageSize(null);
 			List<SysTagView> selectList = sysTagViewDao.selectList(sysTagView);
 
 			for (SysTagView sys : selectList) {
