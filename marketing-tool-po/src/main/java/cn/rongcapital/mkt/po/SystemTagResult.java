@@ -1,11 +1,22 @@
 package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
-
+/*************************************************
+ * @功能简述: 视图结果实体
+ * @项目名称: marketing cloud
+ * @see: 
+ * @author: 王伟强
+ * @version: 0.0.1
+ * @date: 2016/10/13
+ * @复审人: 
+*************************************************/
 public class SystemTagResult extends BaseQuery {
-    private Integer keyId;
+	
+	private static final long serialVersionUID = 1L;
 
-    private String tagValue;
+	private Integer keyId;		//映射Mongo中mId
+
+    private String tagValue;	//标签值
 
 	public Integer getKeyId() {
 		return keyId;
