@@ -1,9 +1,6 @@
 package cn.rongcapital.mkt.job.tag.service.impl;
 
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -53,8 +50,6 @@ public class SystemTagSynMongodbServiceImpl implements TaskService {
 
 	@Autowired
 	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-	// private final ExecutorService executor =
-	// Executors.newFixedThreadPool(50);
 
 	@Override
 	public void task(Integer taskId) {
@@ -82,16 +77,22 @@ public class SystemTagSynMongodbServiceImpl implements TaskService {
 			String viewName = sys.getViewName(); // 视图名称
 			String tagName = sys.getTagName(); // 标签名称
 
-			if (StringUtils.isEmpty(viewName) || StringUtils.isEmpty(tagName))
+			if (StringUtils.isEmpty(viewName) || StringUtils.isEmpty(tagName)){
 				return;
+			}
+			//获取结果
 			List<SystemTagResult> resultList = systemTagResultDao.selectListByMap(viewName);
-			logger.info("开始同步" + sys.getViewDesc() + "-------->" + tagName);
+			logger.info("开始同步" + sys.getViewDesc() + "标签，-------->" + tagName);
 
 			// 查询推荐标签
 			Criteria criteriaAll = Criteria.where("tag_name_eng").is(tagName);
 
 			TagRecommend tagRecommend = mongoTemplate.findOne(new Query(criteriaAll),
 					cn.rongcapital.mkt.po.mongodb.TagRecommend.class);
+			
+			if(tagRecommend == null){
+				return;
+			}
 
 			for (SystemTagResult systemTagResult : resultList) {
 
@@ -104,16 +105,6 @@ public class SystemTagSynMongodbServiceImpl implements TaskService {
 				};
 				threadPoolTaskExecutor.execute(a);
 
-				// this.executor.submit(new Callable<Void>() {
-				//
-				// @Override
-				// public Void call() throws Exception {
-				// startSynchTag(systemTagResult.getKeyId(),
-				// systemTagResult.getTagValue(), tagRecommend);
-				// return null;
-				// }
-				//
-				// });
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -160,6 +151,7 @@ public class SystemTagSynMongodbServiceImpl implements TaskService {
 	 * 初始化Mongo数据，将tag_list字段删除
 	 */
 	private void initMongoTagList() {
+		logger.info("初始化Mongo tag_list字段方法开始执行---------->");
 		try {
 			Query query = Query.query(Criteria.where("mid").gt(-1));
 			Update update = new Update().unset("tag_list");
@@ -168,6 +160,7 @@ public class SystemTagSynMongodbServiceImpl implements TaskService {
 			e.printStackTrace();
 			logger.info("初始化Mongo tag_list字段出现异常---------->" + e.getMessage(), e);
 		}
+		logger.info("初始化Mongo tag_list字段方法执行结束---------->");
 	}
 
 }
