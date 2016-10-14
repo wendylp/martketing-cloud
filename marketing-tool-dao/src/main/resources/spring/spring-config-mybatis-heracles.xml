@@ -50,6 +50,10 @@
             </props>
         </property>
          <property name="maximumPoolSize" value="100"/>
+         <property name="maxPoolSize" value="100" />
+		<property name="minPoolSize" value="10" />
+		<property name="initialPoolSize" value="1" />
+		<property name="maxIdleTime" value="30" />
     </bean>
    <bean id="dataSourceSlave" class="com.zaxxer.hikari.HikariDataSource"  destroy-method="close">
         <property name="poolName" value="springHikariCP"/>

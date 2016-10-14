@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.mongodb.WriteResult;
@@ -50,9 +51,10 @@ public class SystemTagSynMongodbServiceImpl implements TaskService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
-	// @Autowired
-	// private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-	private final ExecutorService executor = Executors.newFixedThreadPool(50);
+	@Autowired
+	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+	// private final ExecutorService executor =
+	// Executors.newFixedThreadPool(50);
 
 	@Override
 	public void task(Integer taskId) {
@@ -91,23 +93,26 @@ public class SystemTagSynMongodbServiceImpl implements TaskService {
 					cn.rongcapital.mkt.po.mongodb.TagRecommend.class);
 
 			for (SystemTagResult systemTagResult : resultList) {
-				/*
-				 * Runnable a = new Runnable() {
-				 * 
-				 * @Override public void run() {
-				 * startSynchTag(systemTagResult.getKeyId(),systemTagResult.
-				 * getTagValue(),tagRecommend); } };
-				 * threadPoolTaskExecutor.execute(a);
-				 */
-				this.executor.submit(new Callable<Void>() {
+
+				Runnable a = new Runnable() {
 
 					@Override
-					public Void call() throws Exception {
+					public void run() {
 						startSynchTag(systemTagResult.getKeyId(), systemTagResult.getTagValue(), tagRecommend);
-						return null;
 					}
+				};
+				threadPoolTaskExecutor.execute(a);
 
-				});
+				// this.executor.submit(new Callable<Void>() {
+				//
+				// @Override
+				// public Void call() throws Exception {
+				// startSynchTag(systemTagResult.getKeyId(),
+				// systemTagResult.getTagValue(), tagRecommend);
+				// return null;
+				// }
+				//
+				// });
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
