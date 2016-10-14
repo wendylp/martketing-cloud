@@ -68,7 +68,6 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 		PublicAuthOut publicAuthOut = new PublicAuthOut();
 		App app = this.getAppAddComponentTicket();
-		this.getApp();
 		/**
 		 * 保证预授权的TOKEN是最新的
 		 */
