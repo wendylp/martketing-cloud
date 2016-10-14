@@ -572,7 +572,7 @@ public class MktWeChatApi {
     @POST
     @Path("/mkt.weixin.qrcode.getComponentVerifyTicket")
     @Consumes({MediaType.TEXT_XML})
-    public BaseOutput getComponentVerifyTicket(ComponentVerifyTicketIn componentVerifyTicketIn,
+    public String getComponentVerifyTicket(ComponentVerifyTicketIn componentVerifyTicketIn,
                     @QueryParam("msg_signature") String msg_signature,
                     @QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce) {
         webchatComponentVerifyTicketService.insert(componentVerifyTicketIn, msg_signature,
@@ -582,7 +582,7 @@ public class MktWeChatApi {
         List<Object> data = new ArrayList<Object>();
         data.add("success");
         baseOutput.setData(data);
-        return baseOutput;
+        return "success";
     }
 
 	/**
