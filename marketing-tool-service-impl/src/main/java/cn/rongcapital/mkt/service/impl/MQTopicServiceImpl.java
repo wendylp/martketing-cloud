@@ -48,6 +48,7 @@ public class MQTopicServiceImpl implements MQTopicService {
     private static final String MQ_TASK_NAME = "taskName";
     private static final String MQ_SERVICE_NAME = "serviceName";
     private static final String MQ_PARAM_KEY = "SystemTag";
+    private static final String TARGET_SERVICE = "synchSystemTagServiceImpl";
     @Value("${spring.activemq.broker-url}")
     private String providerUrl;
     
@@ -57,8 +58,6 @@ public class MQTopicServiceImpl implements MQTopicService {
     private ApplicationContext cotext;
     @Autowired
     private TaskRunLogDao taskRunLogDao;
-    @Autowired
-	private SynchSystemTagService synchSystemTag;
     
     public void initMQService() {
         if (isJndiInited) {
@@ -184,7 +183,7 @@ public class MQTopicServiceImpl implements MQTopicService {
     
     //测试任务
     public static void main(String[] args) {
-        ActiveMqMessageVO message = new ActiveMqMessageVO();
+    	ActiveMqMessageVO message = new ActiveMqMessageVO();
         message.setTaskName("任务一");
         message.setServiceName("TestTask");
         try {
@@ -284,8 +283,10 @@ public class MQTopicServiceImpl implements MQTopicService {
 				if (msg != null) {
 					MapMessage map = (MapMessage) msg;
 					try {
-						String paramValue = map.getString(MQ_PARAM_KEY);
-						synchSystemTag.synchTagToMongo(paramValue);
+						 String paramValue = map.getString(MQ_PARAM_KEY);
+						 Object serviceBean = cotext.getBean(TARGET_SERVICE);
+						 SynchSystemTagService synchSystemTag = (SynchSystemTagService) serviceBean;
+						 synchSystemTag.synchTagToMongo(paramValue);
 					} catch (JMSException e) {
 						e.printStackTrace();
 					}
@@ -294,6 +295,5 @@ public class MQTopicServiceImpl implements MQTopicService {
 		});
 	}
 	
-
 
 }
