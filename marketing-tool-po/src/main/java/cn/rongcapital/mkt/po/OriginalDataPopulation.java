@@ -7,7 +7,12 @@ import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class OriginalDataPopulation extends BaseQuery {
-    private Integer id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7524962445327590814L;
+
+	private Integer id;
 
     private String mobile;
 

@@ -2,6 +2,9 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.DataMemberDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataMember;
@@ -20,8 +24,14 @@ import cn.rongcapital.mkt.po.DataParty;
 @Service
 public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
 
+	private static final int THREAD_POOL_FIX_SIZE = 100;
+	
+	private static final int BATCH_SIZE = 500;
+	
 	@Autowired
 	private DataMemberDao dataMemberDao;
+	
+	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
 
 	@Override
 	public int queryTotalCount() {
@@ -31,48 +41,53 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
 	}
 
 	@Override
-	public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
+	public void querySyncData(Integer totalSize, Integer pageSize) {
 
+		List<DataMember> dataMemberLists = new ArrayList<DataMember>();
+		
 		DataMember dataMember = new DataMember();
 		dataMember.setStatus(StatusEnum.ACTIVE.getStatusCode());
-		dataMember.setPageSize(pageSize);
-		dataMember.setStartIndex(startIndex);
-		List<DataMember> dataMemberList = dataMemberDao.selectList(dataMember);
-		if (CollectionUtils.isEmpty(dataMemberList)) {
-			return null;
+		
+		int totalPages = (totalSize + pageSize - 1) / pageSize;
+		
+		for (int i = 0; i < totalPages; i++) {
+			
+			dataMember.setPageSize(pageSize);
+			dataMember.setStartIndex(Integer.valueOf(i * pageSize));
+			List<DataMember> dataMemberList = dataMemberDao.selectList(dataMember);
+			
+			dataMemberLists.addAll(dataMemberList);
+			
 		}
-		// List<DataParty> dataPartyList = new ArrayList<>(dataMemberList.size());
-		List<Integer> idList = new ArrayList<>(dataMemberList.size());
-		for (DataMember dataObj : dataMemberList) {
-			String bitmap = dataObj.getBitmap();
 
-			Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
-			if (keyid != null) {
-				this.updateKeyidByid(keyid, dataObj.getId());
-			} else {
-				DataParty dataParty = new DataParty();
-				dataParty.setMemberLevel(dataObj.getMemberLevel());
-				dataParty.setMemberPoints(dataObj.getMemberPoints());
-				// dataParty.setMobile(dataObj.getMobile());
-				// dataParty.setMappingKeyid(dataObj.getId().toString());
-				// dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-				dataParty.setMdType(DataTypeEnum.MEMBER.getCode());
-				dataParty.setSource(dataObj.getSource());
-				dataParty.setBatchId(dataObj.getBatchId());
+		List<List<DataMember>> dataMembersList = ListSplit.getListSplit(dataMemberLists, BATCH_SIZE);
+	    
+	    for(List<DataMember> dataMembers :dataMembersList){
+	    	
+			List<Integer> idList = new ArrayList<>(dataMemberLists.size());
+			for (DataMember dataObj : dataMembers) {
 
-				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
+	            executor.submit(new Callable<Void>() {
 
-				dataPartyDao.insert(dataParty);
-				this.updateKeyidByid(dataParty.getId(), dataObj.getId());
-
-				// dataPartyList.add(dataParty);
+	    			@Override
+	    			public Void call() throws Exception {
+	    				
+	    				
+	    				createParty(dataObj);
+	    				
+	    				return null;
+	    			}
+	    			
+	            });
+				
+				idList.add(dataObj.getId());
 			}
-			idList.add(dataObj.getId());
-		}
-		DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-		//dataPartySyncVO.setDataPartyList(dataPartyList);
-		dataPartySyncVO.setExtendDataList(idList);
-		return dataPartySyncVO;
+	    	
+			DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
+			dataPartySyncVO.setExtendDataList(idList);
+			doSyncAfter(dataPartySyncVO);
+	    }
+		
 	}
 
 	@Override
@@ -86,5 +101,33 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
 		keyidObj.setId(id);
 		keyidObj.setKeyid(keyid);
 		dataMemberDao.updateById(keyidObj);
+	}
+	
+	private void createParty(DataMember dataObj){
+		
+		String bitmap = dataObj.getBitmap();
+
+		Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
+		if (keyid != null) {
+			this.updateKeyidByid(keyid, dataObj.getId());
+		} else {
+			DataParty dataParty = new DataParty();
+			dataParty.setMemberLevel(dataObj.getMemberLevel());
+			dataParty.setMemberPoints(dataObj.getMemberPoints());
+			// dataParty.setMobile(dataObj.getMobile());
+			// dataParty.setMappingKeyid(dataObj.getId().toString());
+			// dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
+			dataParty.setMdType(DataTypeEnum.MEMBER.getCode());
+			dataParty.setSource(dataObj.getSource());
+			dataParty.setBatchId(dataObj.getBatchId());
+
+			dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
+
+			dataPartyDao.insert(dataParty);
+			this.updateKeyidByid(dataParty.getId(), dataObj.getId());
+
+			// dataPartyList.add(dataParty);
+		}
+		
 	}
 }

@@ -2,6 +2,9 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.DataLoginDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataLogin;
@@ -20,9 +24,15 @@ import cn.rongcapital.mkt.po.DataParty;
 @Service
 public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
 
+	private static final int THREAD_POOL_FIX_SIZE = 100;
+	
+	private static final int BATCH_SIZE = 500;
+	
 	@Autowired
 	private DataLoginDao dataLoginDao;
 
+	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	
 	@Override
 	public int queryTotalCount() {
 		DataLogin dataLogin = new DataLogin();
@@ -31,48 +41,52 @@ public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integ
 	}
 
 	@Override
-	public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
+	public void querySyncData(Integer totalSize, Integer pageSize) {
+		
+		List<DataLogin> dataLoginLists = new ArrayList<DataLogin>();
+		
 		DataLogin dataLogin = new DataLogin();
 		dataLogin.setStatus(StatusEnum.ACTIVE.getStatusCode());
-		dataLogin.setPageSize(pageSize);
-		dataLogin.setStartIndex(startIndex);
-		List<DataLogin> dataLoginList = dataLoginDao.selectList(dataLogin);
-		if (CollectionUtils.isEmpty(dataLoginList)) {
-			return null;
+		
+		int totalPages = (totalSize + pageSize - 1) / pageSize;
+		
+		for (int i = 0; i < totalPages; i++) {
+			
+			dataLogin.setPageSize(pageSize);
+			dataLogin.setStartIndex(Integer.valueOf(i * pageSize));
+			List<DataLogin> dataLoginList = dataLoginDao.selectList(dataLogin);
+			
+			dataLoginLists.addAll(dataLoginList);
+			
 		}
-		// List<DataParty> dataPartyList = new ArrayList<>(dataLoginList.size());
-		List<Integer> idList = new ArrayList<>(dataLoginList.size());
-		for (DataLogin dataObj : dataLoginList) {
 
-			String bitmap = dataObj.getBitmap();
+		List<List<DataLogin>> dataLoginsList = ListSplit.getListSplit(dataLoginLists, BATCH_SIZE);
+	    
+	    for(List<DataLogin> dataLogins :dataLoginsList){
+	    	
+			List<Integer> idList = new ArrayList<>(dataLoginLists.size());
+			for (DataLogin dataObj : dataLogins) {
 
-			Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
-			if (keyid != null) {
-				this.updateKeyidByid(keyid, dataObj.getId());
-			} else {
+	            executor.submit(new Callable<Void>() {
 
-				DataParty dataParty = new DataParty();
-				dataParty.setLastLogin(dataObj.getLoginTime());
-				// dataParty.setMobile(dataObj.getMobile());
-				// dataParty.setMappingKeyid(dataObj.getId().toString());
-				// dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-				dataParty.setMdType(DataTypeEnum.LOGIN.getCode());
-				dataParty.setSource(dataObj.getSource());
-				dataParty.setBatchId(dataObj.getBatchId());
-
-				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
-
-				dataPartyDao.insert(dataParty);
-				this.updateKeyidByid(dataParty.getId(), dataObj.getId());
-
-				// dataPartyList.add(dataParty);
+	    			@Override
+	    			public Void call() throws Exception {
+	    				
+	    				createParty(dataObj);
+	    				
+	    				return null;
+	    			}
+	    			
+	            });
+				
+				idList.add(dataObj.getId());
 			}
-			idList.add(dataObj.getId());
-		}
-		DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-		// dataPartySyncVO.setDataPartyList(dataPartyList);
-		dataPartySyncVO.setExtendDataList(idList);
-		return dataPartySyncVO;
+	    	
+			DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
+			dataPartySyncVO.setExtendDataList(idList);
+			doSyncAfter(dataPartySyncVO);
+	    }
+		
 	}
 
 	@Override
@@ -86,5 +100,29 @@ public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integ
 		keyidObj.setId(id);
 		keyidObj.setKeyid(keyid);
 		dataLoginDao.updateById(keyidObj);
+	}
+	
+	private void createParty(DataLogin dataObj){
+		
+		String bitmap = dataObj.getBitmap();
+
+		Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
+		if (keyid != null) {
+			this.updateKeyidByid(keyid, dataObj.getId());
+		} else {
+
+			DataParty dataParty = new DataParty();
+			dataParty.setLastLogin(dataObj.getLoginTime());
+			dataParty.setMdType(DataTypeEnum.LOGIN.getCode());
+			dataParty.setSource(dataObj.getSource());
+			dataParty.setBatchId(dataObj.getBatchId());
+
+			dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
+
+			dataPartyDao.insert(dataParty);
+			this.updateKeyidByid(dataParty.getId(), dataObj.getId());
+
+		}
+		
 	}
 }
