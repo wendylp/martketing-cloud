@@ -11,4 +11,6 @@ public interface TaskService {
 	default void cancelInnerTask(TaskSchedule taskSchedule) {}
 	
 	default void task (){}
+	
+	default void task (String jsonMessage){}
 }

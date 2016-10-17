@@ -2,17 +2,21 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.DataArchPointDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataArchPoint;
 import cn.rongcapital.mkt.po.DataParty;
+
 
 /**
  * Created by ethan on 16/6/30.
@@ -20,9 +24,15 @@ import cn.rongcapital.mkt.po.DataParty;
 @Service
 public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
 
+	private static final int THREAD_POOL_FIX_SIZE = 100;
+	
+	private static final int BATCH_SIZE = 500;
+	
 	@Autowired
 	private DataArchPointDao dataArchPointDao;
 
+	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	
 	@Override
 	public int queryTotalCount() {
 		DataArchPoint dataArchPoint = new DataArchPoint();
@@ -31,50 +41,52 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 	}
 
 	@Override
-	public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
+	public void querySyncData(Integer totalSize, Integer pageSize) {
+		
+		List<DataArchPoint> dataArchPointLists = new ArrayList<DataArchPoint>();
+		
 		DataArchPoint dataArchPoint = new DataArchPoint();
 		dataArchPoint.setStatus(StatusEnum.ACTIVE.getStatusCode());
-		dataArchPoint.setPageSize(pageSize);
-		dataArchPoint.setStartIndex(startIndex);
-		List<DataArchPoint> dataArchPointList = dataArchPointDao.selectList(dataArchPoint);
-		if (CollectionUtils.isEmpty(dataArchPointList)) {
-			return null;
+		
+		int totalPages = (totalSize + pageSize - 1) / pageSize;
+		
+		for (int i = 0; i < totalPages; i++) {
+			
+			dataArchPoint.setPageSize(pageSize);
+			dataArchPoint.setStartIndex(Integer.valueOf(i * pageSize));
+			List<DataArchPoint> dataArchPointList = dataArchPointDao.selectList(dataArchPoint);
+			
+			dataArchPointLists.addAll(dataArchPointList);
+			
 		}
-		// List<DataParty> dataPartyList = new
-		// ArrayList<>(dataArchPointList.size());
-		List<Integer> idList = new ArrayList<>(dataArchPointList.size());
-		for (DataArchPoint dataObj : dataArchPointList) {
 
-			String bitmap = dataObj.getBitmap();
+		List<List<DataArchPoint>> dataArchPointsList = ListSplit.getListSplit(dataArchPointLists, BATCH_SIZE);
+	    
+	    for(List<DataArchPoint> dataArchPoints :dataArchPointsList){
+	    	
+			List<Integer> idList = new ArrayList<>(dataArchPointLists.size());
+			for (DataArchPoint dataObj : dataArchPoints) {
 
-			Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
-			if (keyid != null) {
-				this.updateKeyidByid(keyid, dataObj.getId());
-			} else {
+	            executor.submit(new Callable<Void>() {
 
-				DataParty dataParty = new DataParty();
-				// dataParty.setMappingKeyid(dataObj.getId().toString());
-				// dataParty.setMobile(dataObj.getMobile());
-				// dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-				dataParty.setMdType(DataTypeEnum.ARCH_POINT.getCode());
-				dataParty.setSource(dataObj.getSource());
-				dataParty.setBatchId(dataObj.getBatchId());
-
-				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
-
-				dataPartyDao.insert(dataParty);
-
-				this.updateKeyidByid(dataParty.getId(), dataObj.getId());
-
-				// dataPartyList.add(dataParty);
+	    			@Override
+	    			public Void call() throws Exception {
+	    				
+	    				createParty(dataObj);
+	    				
+	    				return null;
+	    			}
+	    			
+	            });
+				
+				idList.add(dataObj.getId());
 			}
-			idList.add(dataObj.getId());
-		}
+	    	
+			DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
+			dataPartySyncVO.setExtendDataList(idList);
+			doSyncAfter(dataPartySyncVO);
+	    }
 
-		DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-		// dataPartySyncVO.setDataPartyList(dataPartyList);
-		dataPartySyncVO.setExtendDataList(idList);
-		return dataPartySyncVO;
 	}
 
 	@Override
@@ -88,5 +100,27 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 		keyidObj.setKeyid(keyid);
 		dataArchPointDao.updateById(keyidObj);
 	}
+	
+	private void createParty(DataArchPoint dataObj){
+		
+		String bitmap = dataObj.getBitmap();
 
+		Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
+		if (keyid != null) {
+			this.updateKeyidByid(keyid, dataObj.getId());
+		} else {
+
+			DataParty dataParty = new DataParty();
+			dataParty.setMdType(DataTypeEnum.ARCH_POINT.getCode());
+			dataParty.setSource(dataObj.getSource());
+			dataParty.setBatchId(dataObj.getBatchId());
+
+			dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
+
+			dataPartyDao.insert(dataParty);
+
+			this.updateKeyidByid(dataParty.getId(), dataObj.getId());
+
+		}
+	}
 }

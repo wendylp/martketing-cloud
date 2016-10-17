@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
-import cn.rongcapital.mkt.common.enums.StatusEnum;
-import cn.rongcapital.mkt.job.service.base.TaskService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -15,8 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.OriginalDataPopulationDao;
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.DataPopulation;
 import cn.rongcapital.mkt.po.OriginalDataPopulation;
 import cn.rongcapital.mkt.service.OriginalDataPopulationService;
@@ -25,7 +34,11 @@ import cn.rongcapital.mkt.service.OriginalDataPopulationService;
 @PropertySource("classpath:${conf.dir}/application-api.properties")
 public class OriginalDataPopulationServiceImpl implements OriginalDataPopulationService,TaskService {
 
-    @Autowired
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private static final int THREAD_POOL_FIX_SIZE = 100;
+
+	@Autowired
     private OriginalDataPopulationDao originalDataPopulationDao;
 
     @Autowired
@@ -34,8 +47,9 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
 	@Autowired
 	Environment env;
 	
+	private final static ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void cleanData() {
     	
         int BATCH_NUM = Integer.valueOf(env.getProperty("orginal.to.data.batch.num"));
@@ -44,23 +58,46 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
         OriginalDataPopulation paramOriginalDataPopulation = new OriginalDataPopulation();
         paramOriginalDataPopulation.setStatus(StatusEnum.ACTIVE.getStatusCode());
 
-        int totalCount = originalDataPopulationDao.selectListCount(paramOriginalDataPopulation);
-        int totalPages = (totalCount + BATCH_NUM - 1) / BATCH_NUM;
-        paramOriginalDataPopulation.setPageSize(BATCH_NUM);
-        for (int i = 0; i < totalPages; i++) {
-            paramOriginalDataPopulation.setStartIndex(Integer.valueOf(i * BATCH_NUM));
-            List<OriginalDataPopulation> originalDataPopulations =
-                    originalDataPopulationDao.selectList(paramOriginalDataPopulation);
-            if (originalDataPopulations.isEmpty()) {
-                continue;
-            }
+//        int totalCount = originalDataPopulationDao.selectListCount(paramOriginalDataPopulation);
+        
+        paramOriginalDataPopulation.setStartIndex(null);
+        paramOriginalDataPopulation.setPageSize(null);
+        List<OriginalDataPopulation> originalDataPopulationsTotal =
+                originalDataPopulationDao.selectList(paramOriginalDataPopulation);
+        
+        List<List<OriginalDataPopulation>> originalDataPopulationsList = new ArrayList<List<OriginalDataPopulation>>();
+        
+        originalDataPopulationsList = ListSplit.getListSplit(originalDataPopulationsTotal, BATCH_NUM);
+        
+        for(List<OriginalDataPopulation> originalDataPopulations : originalDataPopulationsList){
+        	
+            executor.submit(new Callable<Void>() {
 
-            handleOriginalDataPopulation(originalDataPopulations);
-
+    			@Override
+    			public Void call() throws Exception {
+    				
+    				logger.info("working thread is " + Thread.currentThread().getName());
+    				
+    				handleOriginalDataPopulation(originalDataPopulations);
+    				
+    				logger.info(Thread.currentThread().getName() + "is done");
+    				return null;
+    			}
+    			
+            });
         }
+
+        executor.isShutdown();
+        
+      try {
+    	  executor.awaitTermination(30, TimeUnit.MINUTES);
+      } catch (InterruptedException e) {
+    	  e.printStackTrace();
+      }
     }
 
     // 处理OriginalDataPopulation的数据
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     private void handleOriginalDataPopulation(
                     List<OriginalDataPopulation> tmpOriginalDataPopulations) {
         if (tmpOriginalDataPopulations.isEmpty()) {

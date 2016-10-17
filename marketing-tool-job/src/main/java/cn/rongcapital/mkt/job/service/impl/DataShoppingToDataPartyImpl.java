@@ -2,6 +2,9 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +14,12 @@ import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataArchPoint;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.DataPopulation;
 import cn.rongcapital.mkt.po.DataShopping;
 
 /**
@@ -24,9 +29,15 @@ import cn.rongcapital.mkt.po.DataShopping;
 public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
+	private static final int THREAD_POOL_FIX_SIZE = 100;
+	
+	private static final int BATCH_SIZE = 500;
+	
 	@Autowired
 	private DataShoppingDao dataShoppingDao;
 
+	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	
 	@Override
 	public int queryTotalCount() {
 		DataShopping dataShopping = new DataShopping();
@@ -35,47 +46,52 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 	}
 
 	@Override
-	public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
+	public void querySyncData(Integer totalSize, Integer pageSize) {
+
+		List<DataShopping> dataShoppingLists = new ArrayList<DataShopping>();
+		
 		DataShopping dataShopping = new DataShopping();
 		dataShopping.setStatus(StatusEnum.ACTIVE.getStatusCode());
-		dataShopping.setPageSize(pageSize);
-		dataShopping.setStartIndex(startIndex);
-		List<DataShopping> dataShoppingList = dataShoppingDao.selectList(dataShopping);
-		if (CollectionUtils.isEmpty(dataShoppingList)) {
-			return null;
+		
+		int totalPages = (totalSize + pageSize - 1) / pageSize;
+		
+		for (int i = 0; i < totalPages; i++) {
+			
+			dataShopping.setPageSize(pageSize);
+			dataShopping.setStartIndex(Integer.valueOf(i * pageSize));
+			List<DataShopping> dataShoppingList = dataShoppingDao.selectList(dataShopping);
+			
+			dataShoppingLists.addAll(dataShoppingList);
+			
 		}
-		// List<DataParty> dataPartyList = new
-		// ArrayList<>(dataShoppingList.size());
-		List<Integer> idList = new ArrayList<>(dataShoppingList.size());
-		for (DataShopping dataObj : dataShoppingList) {
 
-			String bitmap = dataObj.getBitmap();
+		List<List<DataShopping>> dataShoppingsList = ListSplit.getListSplit(dataShoppingLists, BATCH_SIZE);
+	    
+	    for(List<DataShopping> dataShoppings :dataShoppingsList){
+	    	
+			List<Integer> idList = new ArrayList<>(dataShoppingLists.size());
+			for (DataShopping dataObj : dataShoppings) {
 
-			Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
-			if (keyid != null) {
-				this.updateKeyidByid(keyid, dataObj.getId());
-			} else {
-				DataParty dataParty = new DataParty();
-				// dataParty.setMobile(dataObj.getMobile());
-				// dataParty.setMappingKeyid(dataObj.getId().toString());
-				// dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-				dataParty.setMdType(DataTypeEnum.SHOPPING.getCode());
-				dataParty.setSource(dataObj.getSource());
-				dataParty.setBatchId(dataObj.getBatchId());
+	            executor.submit(new Callable<Void>() {
 
-				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
-
-				dataPartyDao.insert(dataParty);
-				this.updateKeyidByid(dataParty.getId(), dataObj.getId());
-
+	    			@Override
+	    			public Void call() throws Exception {
+	    				
+	    				createParty(dataObj);
+	    				
+	    				return null;
+	    			}
+	    			
+	            });
+				
+				idList.add(dataObj.getId());
 			}
-			idList.add(dataObj.getId());
-		}
-		DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-		// dataPartySyncVO.setDataPartyList(dataPartyList);
-		dataPartySyncVO.setExtendDataList(idList);
-		return dataPartySyncVO;
-	}
+	    	
+			DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
+			dataPartySyncVO.setExtendDataList(idList);
+			doSyncAfter(dataPartySyncVO);
+	    }
+	}	
 
 	@Override
 	public void doSyncAfter(DataPartySyncVO<Integer> dataPartySyncVO) {
@@ -87,5 +103,27 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 		keyidObj.setId(id);
 		keyidObj.setKeyid(keyid);
 		dataShoppingDao.updateById(keyidObj);
+	}
+
+	private void createParty(DataShopping dataObj){
+		
+		String bitmap = dataObj.getBitmap();
+
+		Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
+		if (keyid != null) {
+			this.updateKeyidByid(keyid, dataObj.getId());
+		} else {
+			DataParty dataParty = new DataParty();
+
+			dataParty.setMdType(DataTypeEnum.SHOPPING.getCode());
+			dataParty.setSource(dataObj.getSource());
+			dataParty.setBatchId(dataObj.getBatchId());
+
+			dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
+
+			dataPartyDao.insert(dataParty);
+			this.updateKeyidByid(dataParty.getId(), dataObj.getId());
+
+		}
 	}
 }

@@ -34,6 +34,7 @@ import heracles.data.common.util.ReadWriteType;
 
 @Service
 public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCountService {
+	
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
@@ -96,40 +97,64 @@ public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCount
 	public BaseOutput getMongoTagCountByTagIdList(String tagIds) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
+		List<Object> data = result.getData();
 		logger.info("请求Taglist-------" + tagIds);
-
-		if (StringUtils.isBlank(tagIds)) {
-			return result;
-		}
-
-		TagRecommend findOne = mongoTemplate.findOne(new Query(Criteria.where("tagId").is(tagIds)), TagRecommend.class);
-		if (findOne != null) {
-			List<String> tagList = findOne.getTagList();
-			int count = tagList.size();
-			if (count > 10) {
-				count = 10;
-			}
-			for (int i = 0; i < count; i++) {
-				// List<DataParty> restList = mongoTemplate.find(
-				// new Query(
-				// Criteria.where("tagList.tagId").is(tagIds).and("tagList.tagValue").is(tagList.get(i))),
-				// DataParty.class);
-
-				Long restList = mongoTemplate.count(
-						new Query(Criteria.where("tagList")
-								.elemMatch(Criteria.where("tagId").is(tagIds).and("tagValue").is(tagList.get(i)))),
-						DataParty.class);
-
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("tag_id", tagIds);
-				map.put("tag_name", tagList.get(i));
-				map.put("tag_count", restList);
-				result.getData().add(map);
+		try {
+			if (StringUtils.isBlank(tagIds)) {
+				return result;
 			}
 
-			result.setTotal(result.getData().size());
+			TagRecommend findOne = mongoTemplate.findOne(new Query(Criteria.where("tagId").is(tagIds)), TagRecommend.class);
+			List<Thread> threadList = new ArrayList<>();
+			if (findOne != null) {
+				List<String> tagList = findOne.getTagList();
+				int count = tagList.size();
+				if (count > 10) {
+					tagList = tagList.subList(0, 10);
+				}
+				for (String tagValue : tagList) {
+					Runnable a = new Runnable() {
+						@Override
+						synchronized  public void run() {
+							try {
+								Map<String, Object> map = new HashMap<String, Object>();
+								Long restList = mongoTemplate.count(
+										new Query(Criteria.where("tagList").elemMatch(
+												Criteria.where("tagId").is(tagIds).and("tagValue").is(tagValue))),
+										DataParty.class);
+								map.put("tag_id", tagIds);
+								map.put("tag_name", tagValue);
+								map.put("tag_count", restList);
+								data.add(map);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					};
+					Thread thread = new Thread(a);
+					thread.start();
+					threadList.add(thread);
+				}
+				while(isLiving(threadList)){
+					Thread.sleep(100);
+				}
+				result.setTotal(result.getData().size());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
 		return result;
+	}
+	
+	public Boolean isLiving(List<Thread> threadList){
+		boolean flag = false;
+		for (Thread thread : threadList) {
+			boolean alive = thread.isAlive();
+			if(alive == true){
+				return true;
+			}
+		}
+		return flag;
 	}
 }

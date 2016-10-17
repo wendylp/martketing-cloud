@@ -2,13 +2,16 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.DataPaymentDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataParty;
@@ -20,8 +23,14 @@ import cn.rongcapital.mkt.po.DataPayment;
 @Service
 public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Integer> {
 
+	public static final int THREAD_POOL_FIX_SIZE = 100;
+	
+	private static final int BATCH_SIZE = 500;
+	
 	@Autowired
 	private DataPaymentDao dataPaymentDao;
+	
+	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
 
 	@Override
 	public int queryTotalCount() {
@@ -31,49 +40,52 @@ public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Int
 	}
 
 	@Override
-	public DataPartySyncVO<Integer> querySyncData(Integer startIndex, Integer pageSize) {
+	public void querySyncData(Integer totalSize, Integer pageSize) {
 
+		List<DataPayment> dataPaymentLists = new ArrayList<DataPayment>();
+		
 		DataPayment dataPayment = new DataPayment();
 		dataPayment.setStatus(StatusEnum.ACTIVE.getStatusCode());
-		dataPayment.setPageSize(pageSize);
-		dataPayment.setStartIndex(startIndex);
-		List<DataPayment> dataPaymentList = dataPaymentDao.selectList(dataPayment);
-		if (CollectionUtils.isEmpty(dataPaymentList)) {
-			return null;
+		
+		int totalPages = (totalSize + pageSize - 1) / pageSize;
+		
+		for (int i = 0; i < totalPages; i++) {
+			
+			dataPayment.setPageSize(pageSize);
+			dataPayment.setStartIndex(Integer.valueOf(i * pageSize));
+			List<DataPayment> dataPaymentList = dataPaymentDao.selectList(dataPayment);
+			
+			dataPaymentLists.addAll(dataPaymentList);
+			
 		}
-		// List<DataParty> dataPartyList = new
-		// ArrayList<>(dataPaymentList.size());
-		List<Integer> idList = new ArrayList<>(dataPaymentList.size());
-		for (DataPayment dataObj : dataPaymentList) {
-			String bitmap = dataObj.getBitmap();
 
-			Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
-			if (keyid != null) {
-				this.updateKeyidByid(keyid, dataObj.getId());
-			} else {
+		List<List<DataPayment>> dataPaymentsList = ListSplit.getListSplit(dataPaymentLists, BATCH_SIZE);
+	    
+	    for(List<DataPayment> dataPayments :dataPaymentsList){
+	    	
+			List<Integer> idList = new ArrayList<>(dataPaymentLists.size());
+			for (DataPayment dataObj : dataPayments) {
 
-				DataParty dataParty = new DataParty();
-				// dataParty.setMobile(dataObj.getMobile());
-				// dataParty.setMappingKeyid(dataObj.getId().toString());
-				dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-				dataParty.setMdType(DataTypeEnum.PAYMENT.getCode());
-				dataParty.setSource(dataObj.getSource());
-				dataParty.setBatchId(dataObj.getBatchId());
+	            executor.submit(new Callable<Void>() {
 
-				dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
-
-				dataPartyDao.insert(dataParty);
-				this.updateKeyidByid(dataParty.getId(), dataObj.getId());
-
-				// dataPartyList.add(dataParty);
+	    			@Override
+	    			public Void call() throws Exception {
+	    				
+	    				createParty(dataObj);
+	    				
+	    				return null;
+	    			}
+	    			
+	            });
+				
+				idList.add(dataObj.getId());
 			}
-			idList.add(dataObj.getId());
-		}
-
-		DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-		// dataPartySyncVO.setDataPartyList(dataPartyList);
-		dataPartySyncVO.setExtendDataList(idList);
-		return dataPartySyncVO;
+	    	
+			DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
+			dataPartySyncVO.setExtendDataList(idList);
+			doSyncAfter(dataPartySyncVO);
+	    }
+	    
 	}
 
 	@Override
@@ -87,5 +99,29 @@ public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Int
 		keyidObj.setId(id);
 		keyidObj.setKeyid(keyid);
 		dataPaymentDao.updateById(keyidObj);
+	}
+	
+	private void createParty(DataPayment dataObj){
+		
+		String bitmap = dataObj.getBitmap();
+
+		Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
+		if (keyid != null) {
+			this.updateKeyidByid(keyid, dataObj.getId());
+		} else {
+
+			DataParty dataParty = new DataParty();
+			dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
+			dataParty.setMdType(DataTypeEnum.PAYMENT.getCode());
+			dataParty.setSource(dataObj.getSource());
+			dataParty.setBatchId(dataObj.getBatchId());
+
+			dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
+
+			dataPartyDao.insert(dataParty);
+			this.updateKeyidByid(dataParty.getId(), dataObj.getId());
+
+		}
+		
 	}
 }

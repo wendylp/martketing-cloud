@@ -31,7 +31,7 @@ import cn.rongcapital.mkt.service.SynchroMongodbCityService;
 import okhttp3.Response;
 
 @Service
-public class SynchSystemTagServiceImpl implements SynchSystemTagService {
+public class SynchSystemTagServiceImpl  implements SynchSystemTagService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	

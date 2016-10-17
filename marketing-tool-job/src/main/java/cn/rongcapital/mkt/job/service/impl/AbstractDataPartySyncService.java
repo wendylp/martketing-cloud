@@ -48,20 +48,23 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 
 		int BATCH_SIZE = Integer.valueOf(env.getProperty("data.to.party.batch.size"));
 		
-		int totalPages = (totalCount + BATCH_SIZE - 1) / BATCH_SIZE;
-		for (int i = 0; i < totalPages; i++) {
-			DataPartySyncVO<T> dataPartySyncVO = this.querySyncData(Integer.valueOf(i * BATCH_SIZE),
-					Integer.valueOf(BATCH_SIZE));
-			if (dataPartySyncVO == null) {
-				return;
-			}
+//		int totalPages = (totalCount + BATCH_SIZE - 1) / BATCH_SIZE;
+		
+		this.querySyncData(totalCount,BATCH_SIZE);
+		
+//		for (int i = 0; i < totalPages; i++) {
+//			DataPartySyncVO<T> dataPartySyncVO = this.querySyncData(Integer.valueOf(i * BATCH_SIZE),
+//					Integer.valueOf(BATCH_SIZE));
+//			if (dataPartySyncVO == null) {
+//				return;
+//			}
 //			List<DataParty> dataPartyList = dataPartySyncVO.getDataPartyList();
 //			if (CollectionUtils.isEmpty(dataPartyList)) {
 //				return;
 //			}
 //			dataPartyDao.batchInsert(dataPartyList);
-			this.doSyncAfter(dataPartySyncVO);
-		}
+//			this.doSyncAfter(dataPartySyncVO);
+//		}
 
 	}
 
