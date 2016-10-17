@@ -20,6 +20,8 @@ import javax.jms.JMSException;
 import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +44,8 @@ import heracles.data.common.util.ReadWriteType;
 
 @Service
 public class SegmentHeaderCreateServiceImpl implements SegmentHeaderCreateService {
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	SegmentationHeadDao segmentationHeadDao;
@@ -88,6 +92,7 @@ public class SegmentHeaderCreateServiceImpl implements SegmentHeaderCreateServic
 			activeMqMessageVO.setTaskName("同步受众人群到MongoDB");
 			activeMqMessageVO.setServiceName(SEGMENT_SERVICE);
 			activeMqMessageVO.setMessage(jsonString);
+			logger.info("同步受众人群到MongoDB，开始异步调取");
 			mqTopicService.senderMessage(PARAM_NAME, activeMqMessageVO);
 		} catch (JMSException e) {
 			e.printStackTrace();
