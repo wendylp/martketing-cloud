@@ -36,7 +36,7 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final int THREAD_POOL_FIX_SIZE = 200;
+    private static final int THREAD_POOL_FIX_SIZE = 100;
 
 	@Autowired
     private OriginalDataPopulationDao originalDataPopulationDao;
