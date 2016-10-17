@@ -9,7 +9,7 @@ public interface DataPartySyncService<T> {
 
     int queryTotalCount();
 
-    DataPartySyncVO<T> querySyncData(Integer startIndex, Integer pageSize);
+    void querySyncData(Integer totalSize, Integer pageSize);
 
     void doSync();
 

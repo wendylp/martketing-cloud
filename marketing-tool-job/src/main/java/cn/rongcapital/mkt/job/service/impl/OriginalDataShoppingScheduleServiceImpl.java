@@ -1,10 +1,12 @@
 package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.DataShoppingDao;
 import cn.rongcapital.mkt.dao.OriginalDataShoppingDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.DataShopping;
+import cn.rongcapital.mkt.po.OriginalDataShopping;
 import cn.rongcapital.mkt.po.OriginalDataShopping;
 import cn.rongcapital.mkt.service.OriginalDataShoppingScheduleService;
 import org.springframework.beans.BeanUtils;
@@ -17,6 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by bianyulong on 16/6/23.
@@ -25,6 +31,8 @@ import java.util.List;
 @PropertySource("classpath:${conf.dir}/application-api.properties")
 public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShoppingScheduleService, TaskService {
 
+	private static final int THREAD_POOL_FIX_SIZE = 200;
+	
     @Autowired
     private OriginalDataShoppingDao originalDataShoppingDao;
 
@@ -34,31 +42,52 @@ public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShop
 	@Autowired
 	Environment env;	
 	
+	private final static ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void cleanData() {
 
         int BATCH_NUM = Integer.valueOf(env.getProperty("orginal.to.data.batch.num"));
-        
+
         // 1. 取出需要处理的数据
         OriginalDataShopping paramOriginalDataShopping = new OriginalDataShopping();
         paramOriginalDataShopping.setStatus(StatusEnum.ACTIVE.getStatusCode());
 
-        int totalCount = originalDataShoppingDao.selectListCount(paramOriginalDataShopping);
-        int totalPages = (totalCount + BATCH_NUM - 1) / BATCH_NUM;
-        paramOriginalDataShopping.setPageSize(BATCH_NUM);
-        for (int i = 0; i < totalPages; i++) {
-            paramOriginalDataShopping.setStartIndex(Integer.valueOf(i * BATCH_NUM));
-            List<OriginalDataShopping> originalDataShoppings =
-                    originalDataShoppingDao.selectList(paramOriginalDataShopping);
+//        int totalCount = originalDataShoppingDao.selectListCount(paramOriginalDataShopping);
+        
+        paramOriginalDataShopping.setStartIndex(null);
+        paramOriginalDataShopping.setPageSize(null);
+        List<OriginalDataShopping> originalDataShoppingsTotal =
+                originalDataShoppingDao.selectList(paramOriginalDataShopping);
+        
+        List<List<OriginalDataShopping>> originalDataShoppingsList = new ArrayList<List<OriginalDataShopping>>();
+        
+        originalDataShoppingsList = ListSplit.getListSplit(originalDataShoppingsTotal, BATCH_NUM);
+        
+        for(List<OriginalDataShopping> originalDataShoppings : originalDataShoppingsList){
+        	
+            executor.submit(new Callable<Void>() {
 
-            if (originalDataShoppings.isEmpty()) {
-                continue;
-            }
-
-            handleOriginalDataLogin(originalDataShoppings);
+    			@Override
+    			public Void call() throws Exception {
+    				
+    				handleOriginalDataLogin(originalDataShoppings);
+    				
+    				return null;
+    			}
+    			
+            });
         }
 
+        executor.isShutdown();
+        
+      try {
+    	  executor.awaitTermination(30, TimeUnit.MINUTES);
+      } catch (InterruptedException e) {
+    	  e.printStackTrace();
+      }
+    	
     }
 
     // 处理OriginalDataPayment的数据
