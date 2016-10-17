@@ -210,7 +210,9 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 					mongoTemplate.insert(segmentLists, Segment.class);
 				}
 			}
-			// if(CollectionUtils.isNotEmpty(lastSegmentDataIdSet)) {
+            logger.info("已经完成导入到segment表中  共导入{}条", mongoTemplate.count(
+                    new Query(Criteria.where("segmentation_head_id").is(segmentationHead.getId())), Segment.class));
+            // if(CollectionUtils.isNotEmpty(lastSegmentDataIdSet)) {
 			// for(String dataId:lastSegmentDataIdSet) {
 			// mongoTemplate.remove(new
 			// Query(Criteria.where("segmentationHeadId")
@@ -330,7 +332,9 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 				// 批量插入
 				mongoTemplate.insert(segmentLists, Segment.class);
 			}
-		}
+            logger.info("已经完成导入到segment表中  共导入{}条", mongoTemplate.count(
+                    new Query(Criteria.where("segmentation_head_id").is(segmentationHead.getId())), Segment.class));
+        }
 	}
 
 }
