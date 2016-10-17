@@ -55,7 +55,7 @@ public class SegmentHeaderCreateServiceImpl implements SegmentHeaderCreateServic
 
 	private static final String PARAM_NAME = "mq.synSegment";
 	
-	private static final String SEGMENT_SERVICE = "DataSegmentSyncTaskServiceImpl";
+	private static final String SEGMENT_SERVICE = "dataSegmentSyncTaskServiceImpl";
 
 	/**
 	 * @功能简述: 创建segment header
