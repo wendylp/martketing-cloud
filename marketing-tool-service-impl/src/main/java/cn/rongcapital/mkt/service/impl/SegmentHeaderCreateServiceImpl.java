@@ -86,17 +86,17 @@ public class SegmentHeaderCreateServiceImpl implements SegmentHeaderCreateServic
 			ur.setTotal(ur.getData().size());
 		}
 
-		try {
-			String jsonString = JSONObject.toJSONString(t);
-			ActiveMqMessageVO activeMqMessageVO = new ActiveMqMessageVO();
-			activeMqMessageVO.setTaskName("同步受众人群到MongoDB");
-			activeMqMessageVO.setServiceName(SEGMENT_SERVICE);
-			activeMqMessageVO.setMessage(jsonString);
-			logger.info("同步受众人群到MongoDB，开始异步调取");
-			mqTopicService.senderMessage(PARAM_NAME, activeMqMessageVO);
-		} catch (JMSException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			String jsonString = JSONObject.toJSONString(t);
+//			ActiveMqMessageVO activeMqMessageVO = new ActiveMqMessageVO();
+//			activeMqMessageVO.setTaskName("同步受众人群到MongoDB");
+//			activeMqMessageVO.setServiceName(SEGMENT_SERVICE);
+//			activeMqMessageVO.setMessage(jsonString);
+//			logger.info("同步受众人群到MongoDB，开始异步调取");
+//			mqTopicService.senderMessage(PARAM_NAME, activeMqMessageVO);
+//		} catch (JMSException e) {
+//			e.printStackTrace();
+//		}
 		return ur;
 	}
 
