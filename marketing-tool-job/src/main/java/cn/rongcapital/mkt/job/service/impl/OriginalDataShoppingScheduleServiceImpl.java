@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 @PropertySource("classpath:${conf.dir}/application-api.properties")
 public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShoppingScheduleService, TaskService {
 
-	private static final int THREAD_POOL_FIX_SIZE = 200;
+	private static final int THREAD_POOL_FIX_SIZE = 100;
 	
     @Autowired
     private OriginalDataShoppingDao originalDataShoppingDao;
