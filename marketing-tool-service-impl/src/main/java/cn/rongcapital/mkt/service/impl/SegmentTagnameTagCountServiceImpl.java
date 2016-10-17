@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -41,6 +42,9 @@ public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCount
 
 	@Autowired
 	TagDao tagDao;
+	
+	@Autowired
+	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
@@ -107,24 +111,26 @@ public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCount
 			List<String> tagList = findOne.getTagList();
 			int count = tagList.size();
 			if (count > 10) {
-				count = 10;
+				tagList = tagList.subList(0, 10);
 			}
-			for (int i = 0; i < count; i++) {
-				// List<DataParty> restList = mongoTemplate.find(
-				// new Query(
-				// Criteria.where("tagList.tagId").is(tagIds).and("tagList.tagValue").is(tagList.get(i))),
-				// DataParty.class);
-
-				Long restList = mongoTemplate.count(
-						new Query(Criteria.where("tagList")
-								.elemMatch(Criteria.where("tagId").is(tagIds).and("tagValue").is(tagList.get(i)))),
-						DataParty.class);
-
+			
+			for (String tagValue : tagList) {
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("tag_id", tagIds);
-				map.put("tag_name", tagList.get(i));
-				map.put("tag_count", restList);
-				result.getData().add(map);
+				Runnable a = new Runnable() {
+					@Override
+					public void run() {
+						Long restList = mongoTemplate.count(
+								new Query(Criteria.where("tagList")
+										.elemMatch(Criteria.where("tagId").is(tagIds).and("tagValue").is(tagValue))),
+								DataParty.class);
+
+						map.put("tag_id", tagIds);
+						map.put("tag_name", tagValue);
+						map.put("tag_count", restList);
+						result.getData().add(map);
+					}
+				};
+				threadPoolTaskExecutor.execute(a);
 			}
 
 			result.setTotal(result.getData().size());
