@@ -2,11 +2,13 @@ package cn.rongcapital.mkt.sms.api;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
 import cn.rongcapital.mkt.service.SmsSignatureListGetService;
+import cn.rongcapital.mkt.service.SmsTargetAudienceListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
-import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
+import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
 import cn.rongcapital.mkt.vo.out.SmsSignatureListOut;
+import cn.rongcapital.mkt.vo.out.SmsTargetAudienceListOut;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,12 @@ public class MktSmsApi {
     @Autowired
     private SmsSignatureListGetService smsSignatureListGetService;
 
+    @Autowired
+    private SmsTargetAudienceListGetService smsTargetAudienceListGetService;
+
+    @Autowired
+    private SmsActivationCreateOrUpdateService smsActivationCreateOrUpdateService;
+
     /**
      * @功能简述: For testing, will remove later
      * @param:String userToken,String
@@ -49,21 +57,6 @@ public class MktSmsApi {
     }
 
     /**
-     * @功能简述: For testing, will remove later
-     * @param:String userToken,String
-     *                   ver
-     * @return: Object
-     */
-    @POST
-    @Path("/mkt.campaign.body.update")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    public CampaignBodyCreateOut testPost(@Valid CampaignBodyCreateIn body,
-                                                    @Context SecurityContext securityContext) {
-//        return campaignBodyCreateService.campaignBodyCreate(body, securityContext);
-        return null;
-    }
-
-    /**
      * @功能简述: 获取短信签名列表
      * @param:String userToken,String
      *                   ver  ,String
@@ -74,5 +67,33 @@ public class MktSmsApi {
     public SmsSignatureListOut smsSignatureListGet(@NotEmpty @QueryParam("user_token") String userToken,
                                                    @QueryParam("ver") String ver) throws Exception {
         return smsSignatureListGetService.getSmsSignatureList();
+    }
+
+
+    /**
+     * @功能简述: 获取短信目标人群列表
+     * @param:String userToken,
+     *        String ver
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.sms.audienct.get")
+    public SmsTargetAudienceListOut smsAudienceListGet(@NotEmpty @QueryParam("user_token") String userToken,
+                                                       @QueryParam("ver") String ver) throws Exception {
+        return smsTargetAudienceListGetService.getSmsTargetAudienceList();
+    }
+
+    /**
+     * @功能简述: 保存短信活动
+     * @param:String userToken,
+     *        String ver
+     * @return: Object
+     */
+    @POST
+    @Path("/mkt.sms.message.createorupdate")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput createOrUpdateSmsMessage(@Valid SmsActivationCreateIn smsActivationCreateIn,
+                                          @Context SecurityContext securityContext) {
+        return smsActivationCreateOrUpdateService.createOrUpdateSmsActivation(smsActivationCreateIn);
     }
 }
