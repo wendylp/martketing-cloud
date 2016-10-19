@@ -19,6 +19,8 @@ public class SmsTaskTargetAudienceCache extends BaseQuery{
 
     private Integer targetType;
 
+    private Long taskHeadId;
+
     public Long getId() {
         return id;
     }
@@ -73,5 +75,13 @@ public class SmsTaskTargetAudienceCache extends BaseQuery{
 
     public void setTargetType(Integer targetType) {
         this.targetType = targetType;
+    }
+
+    public Long getTaskHeadId() {
+        return taskHeadId;
+    }
+
+    public void setTaskHeadId(Long taskHeadId) {
+        this.taskHeadId = taskHeadId;
     }
 }

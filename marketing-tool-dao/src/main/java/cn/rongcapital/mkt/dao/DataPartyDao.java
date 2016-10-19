@@ -211,4 +211,11 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @throws
 	 */
 	Integer getPubUserCount(Map<String, Object> map);
+
+	/**
+	 * @功能简述 : 根据DataPartyIdList选取去过重的MobileList
+	 * @author yunfeng
+	 * @return map
+	 */
+	List<String> selectDistinctMobileListByIdList(@Param("idList") List<Long> dataPartyIdList);
 }
