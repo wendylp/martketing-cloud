@@ -48,7 +48,7 @@ public class MessageSendRecordGetOut {
         this.smsTaskHeadId = smsTaskHeadId;
         this.receiveMobile = receiveMobile == null ? "" : receiveMobile.trim();
         this.sendMessage = sendMessage == null ? "" : sendMessage.trim();
-        this.sendMobile = sendMobile;
+        this.sendMobile = sendMobile == null ? "" : sendMobile.trim();
         this.sendTime = sendTime == null ? "" : DateUtil.formatDate(sendTime, "yyyy-MM-dd HH:mm:ss");
         this.smsTaskSendStatus = smsTaskSendStatus;
     }
@@ -75,7 +75,7 @@ public class MessageSendRecordGetOut {
 
     @JsonProperty("receive_mobile")
     public String getReceiveMobile() {
-        return receiveMobile;
+        return receiveMobile == null ? "" : receiveMobile.trim();
     }
 
     public void setReceiveMobile(String receiveMobile) {
@@ -84,7 +84,7 @@ public class MessageSendRecordGetOut {
 
     @JsonProperty("send_message")
     public String getSendMessage() {
-        return sendMessage;
+        return sendMessage == null ? "" : sendMessage.trim();
     }
 
     public void setSendMessage(String sendMessage) {
@@ -93,7 +93,7 @@ public class MessageSendRecordGetOut {
 
     @JsonProperty("send_mobile")
     public String getSendMobile() {
-        return sendMobile;
+        return sendMobile == null ? "" : sendMobile.trim();
     }
 
     public void setSendMobile(String sendMobile) {
@@ -102,7 +102,7 @@ public class MessageSendRecordGetOut {
 
     @JsonProperty("send_time")
     public String getSendTime() {
-        return sendTime;
+        return sendTime == null ? "" : sendTime;
     }
 
     public void setSendTime(Date sendTime) {
@@ -111,7 +111,7 @@ public class MessageSendRecordGetOut {
 
     @JsonProperty("sms_task_send_status")
     public Integer getSmsTaskSendStatus() {
-        return smsTaskSendStatus;
+        return smsTaskSendStatus == null ? 0 : smsTaskSendStatus;
     }
 
     public void setSmsTaskSendStatus(Integer smsTaskSendStatus) {
