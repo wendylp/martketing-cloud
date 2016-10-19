@@ -82,7 +82,7 @@ public class generateSmsDetailTask implements TaskService {
             targetDistinctReceiveMobiles.addAll(receiveMobileList);
         }
 
-        //Todo:3将受众人群+模板内容+受众类型存入Task_Detail表中
+        //3将受众人群+模板内容+受众类型存入Task_Detail表中
         for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
             SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
             smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
