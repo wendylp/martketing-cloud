@@ -20,7 +20,7 @@ import java.util.*;
  * Created by byf on 10/18/16.
  */
 @Service
-public class generateSmsDetailTask implements TaskService {
+public class GenerateSmsDetailTask implements TaskService {
 
     @Autowired
     private SmsTaskDetailDao smsTaskDetailDao;
