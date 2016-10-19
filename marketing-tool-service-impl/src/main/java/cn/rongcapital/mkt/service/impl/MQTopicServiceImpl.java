@@ -33,6 +33,10 @@ import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.service.SynchSystemTagService;
 import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 
+/**
+ * @author 李海光
+ *
+ */
 @Service
 public class MQTopicServiceImpl implements MQTopicService {
 
@@ -40,18 +44,15 @@ public class MQTopicServiceImpl implements MQTopicService {
 
 	private static TopicConnection connection = null;
 	private static TopicSession session = null;
-	private static String MY_TOPIC = "test1.mq.topic";
-	private static String MY_TOPIC1 = "test2.mq.topic";
-	private static String MY_TOPIC2 = "test3.mq.topic";
-	private static String MY_TOPIC3 = "test4.mq.topic";
 
 	private static final String MQ_TASK_NAME = "taskName";
 	private static final String MQ_SERVICE_NAME = "serviceName";
-	private static final String MESSAGE = "message";
+	private static final String MQ_MESSAGE = "message";
 	private static final String MQ_PARAM_KEY = "SystemTag";
 	private static final String TARGET_SERVICE = "synchSystemTagServiceImpl";
 	private static final String MQ_SEGMENT_KEY = "mq.synSegment";
-	private static final String SEGMENT_SERVICE = "dataSegmentSyncTaskServiceImpl";
+	//private static final String SEGMENT_SERVICE = "dataSegmentSyncTaskServiceImpl";
+	private static final String MQ_SMS_SERVICE = "smsSendTaskServiceImpl";
 
 	@Value("${spring.activemq.broker-url}")
 	private String providerUrl;
@@ -111,6 +112,67 @@ public class MQTopicServiceImpl implements MQTopicService {
 			}
 		});
 	}
+	
+	
+	/**
+	 * 用于接收处理mq里面的数据(通用)
+	 * 
+	 */
+	private void receiverMessageComm(TopicConnection connection, String topicName) throws JMSException{
+		// 创建一个消息队列
+				Topic topic = session.createTopic(topicName);
+				// 创建消息制作者
+				TopicSubscriber subscriber = session.createSubscriber(topic, null, true);
+				subscriber.setMessageListener(new MessageListener() {
+					public void onMessage(Message msg) {
+						if (msg != null) {
+							MapMessage map = (MapMessage) msg;
+							try {
+								String taskName = map.getString(MQ_TASK_NAME);
+								String serviceName = map.getString(MQ_SERVICE_NAME);
+								String message = map.getString(MQ_MESSAGE);
+								//TODO 测试用 后期改为debug
+								logger.info("taskName is {}", taskName);
+								logger.info("serviceName is {}", serviceName);
+								logger.info("message is {}" + message);
+								serviceName = getServiceName(serviceName);
+								
+								startMqTaskComm(serviceName, taskName, message);
+							} catch (JMSException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				});
+	}
+	
+	public synchronized void startMqTaskComm(String serviceName, String taskName, String message) {
+		logger.info("startTask:" + serviceName);
+		try {
+			Object serviceBean = cotext.getBean(serviceName);
+			if (serviceBean instanceof TaskService) {
+				TaskService taskService = (TaskService) serviceBean;
+				TaskRunLog taskRunLog = null;
+
+				// 记录日志
+				taskRunLog = new TaskRunLog();
+				taskRunLog.setCreateTime(new Date());
+				taskRunLog.setStartTime(new Date());
+				taskRunLog.setTaskName(taskName);
+				taskRunLog.setTaskType((byte) TaskTypeEnum.DISPLAY.getCode());
+				taskRunLogDao.insert(taskRunLog);
+
+				taskService.task(message);
+				if (null != taskRunLog) {
+					taskRunLog.setEndTime(new Date());
+					taskRunLogDao.updateById(taskRunLog);
+				}
+			}
+			Log.info("service not instanceof TaskService");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
 
 	public void initReceiver() {
 		initMQService();
@@ -120,6 +182,7 @@ public class MQTopicServiceImpl implements MQTopicService {
 			receiverMessage(connection, "GetImgtextAsset");
 			getParamValue(connection, "SystemTag");
 			synSegmentTaskService(connection, MQ_SEGMENT_KEY);
+			receiverMessageComm(connection, MQ_SMS_SERVICE);
 
 		} catch (JMSException e) {
 			e.printStackTrace();
@@ -177,7 +240,7 @@ public class MQTopicServiceImpl implements MQTopicService {
 		MapMessage map = session.createMapMessage();
 		map.setString(MQ_TASK_NAME, messageVo.getTaskName());
 		map.setString(MQ_SERVICE_NAME, messageVo.getServiceName());
-		map.setString(MESSAGE, messageVo.getMessage() == null ? "" : messageVo.getMessage());
+		map.setString(MQ_MESSAGE, messageVo.getMessage() == null ? "" : messageVo.getMessage());
 		publisher.send(map);
 	}
 
@@ -192,10 +255,11 @@ public class MQTopicServiceImpl implements MQTopicService {
 	public static void main(String[] args) {
 		ActiveMqMessageVO message = new ActiveMqMessageVO();
 		message.setTaskName("任务一");
-		message.setServiceName("TestTask");
+		message.setServiceName(MQ_SMS_SERVICE);
+		message.setMessage("100");
 		try {
 			MQTopicServiceImpl mc = new MQTopicServiceImpl();
-			mc.senderMessage(MY_TOPIC2, message);
+			mc.senderMessage(MQ_SMS_SERVICE, message);
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
