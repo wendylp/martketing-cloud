@@ -141,7 +141,7 @@ public class MQTopicServiceImpl implements MQTopicService {
 		try {
 			// 创建链接工厂
 			TopicConnectionFactory factory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER,
-					ActiveMQConnection.DEFAULT_PASSWORD, "tcp://10.200.11.12:61616");
+					ActiveMQConnection.DEFAULT_PASSWORD, providerUrl);
 			// 通过工厂创建一个连接
 			connection = factory.createTopicConnection();
 			// 启动连接
