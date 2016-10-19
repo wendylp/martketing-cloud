@@ -22,6 +22,35 @@ public class SmsTaskDetail extends BaseQuery {
     private String sendMobile;
 
     private Date sendTime;
+    
+    public SmsTaskDetail(){}
+    
+    
+
+    /**
+     * @param id
+     * @param smsTaskHeadId
+     * @param receiveMobile
+     * @param sendMessage
+     * @param status
+     * @param createTime
+     * @param updateTime
+     * @param sendMobile
+     * @param sendTime
+     */
+    public SmsTaskDetail(Long id, Long smsTaskHeadId, String receiveMobile, String sendMessage,Byte status,
+             String sendMobile, Date sendTime) {
+        super();
+        this.id = id;
+        this.smsTaskHeadId = smsTaskHeadId;
+        this.receiveMobile = receiveMobile;
+        this.sendMessage = sendMessage;
+        this.status = status;
+        this.sendMobile = sendMobile;
+        this.sendTime = sendTime;
+    }
+
+
 
     public Long getId() {
         return id;
