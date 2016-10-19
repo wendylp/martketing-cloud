@@ -54,8 +54,10 @@ public class SmsMessageSendRecordGetServiceImpl implements SmsMessageSendRecordG
         if (receiveMobile != null && receiveMobile.length() > 0) {
             smsTaskDetail.setReceiveMobile(receiveMobile);
         }
+        smsTaskDetail.setStatus((byte)0);
         smsTaskDetail.setStartIndex(index);
         smsTaskDetail.setPageSize(size);
+        
 
         List<MessageSendRecordGetOut> messageSendRecordGetOutLists =
                 smsTaskDetailDao.messageSendRecordGet(smsTaskDetail);
