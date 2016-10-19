@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -17,7 +18,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+
+import com.mongodb.WriteResult;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -58,33 +60,45 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
         if (totalCount < 1) {
             return;
         }
-        int totalPages = (totalCount + BATCH_SIZE - 1) / BATCH_SIZE;
-        dataParty.setPageSize(Integer.valueOf(BATCH_SIZE));
-        for (int i = 0; i < totalPages; i++) {
-            dataParty.setStartIndex(Integer.valueOf(i * BATCH_SIZE));
-            List<DataParty> datapartyList=dataPartyDao.selectList(dataParty);
-            if (CollectionUtils.isEmpty(datapartyList)) {
-                return;
-            }
-
+        dataParty.setStartIndex(null);
+        dataParty.setPageSize(null);
+        List<DataParty> datapartyListTotal=dataPartyDao.selectList(dataParty);
+        
+        logger.info("共"+ datapartyListTotal.size()+ "条记录");
+        
+        long starttime = System.currentTimeMillis();
+        List<List<DataParty>> datapartyLists = ListSplit.getListSplit(datapartyListTotal, BATCH_SIZE);
+        
+        logger.info("共分"+ datapartyLists.size()+ "组,每组" + BATCH_SIZE + "条" );
+        for(List<DataParty> datapartyList : datapartyLists ){
+        	long childstarttime = System.currentTimeMillis();
             //2.根据keyid在data_xxx表中查出所有字段插入mongodb data_party表中
             List<Integer> dataPartyIdList = new ArrayList<>();
             for(DataParty tempDataParty : datapartyList){
-                add2Mongo(tempDataParty);
-                dataPartyIdList.add(tempDataParty.getId());
+                if(add2Mongo(tempDataParty)){
+                	dataPartyIdList.add(tempDataParty.getId());
+                }else{
+                	logger.info("插入错误");
+                }
             }
-
+        	
             dataPartyDao.updateStatusByIds(dataPartyIdList, StatusEnum.PROCESSED.getStatusCode());
+            
+            logger.info("小组同步完成--------------------------");
+            long childendtime = System.currentTimeMillis();
+            logger.info("=========================== 小组同步完成同步完成用时"+ (childendtime- childstarttime) +"毫秒" );
         }
+        long endtime = System.currentTimeMillis();
+        logger.info("=========================== 全部同步完成同步完成用时"+ (endtime- starttime) +"毫秒" );
 	}
 	
-	private void add2Mongo(DataParty dataParty){
+	private boolean add2Mongo(DataParty dataParty){
 
         Integer dataType = dataParty.getMdType();
         Integer dataPartyId = dataParty.getId();
         String mappingKeyId = dataParty.getMappingKeyid();
         Query query = Query.query(Criteria.where("mid").is(dataPartyId));
-
+        WriteResult upsert = null;
         if(dataType.intValue() == DataTypeEnum.WECHAT.getCode() && StringUtils.isNumeric(mappingKeyId)){
             WechatMember wechatMember = new WechatMember();
             wechatMember.setId(Long.valueOf(mappingKeyId));
@@ -105,7 +119,7 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                 mongoWechatMember.setMdType(dataType);
                 mongoWechatMember.setMappingKeyid(dataObj.getId().toString());
                 logger.info("begin insert wechat data to mongo");
-                mongoTemplate.upsert(query, buildBaseUpdate(mongoWechatMember), MONGODB_COLLECTION);
+                upsert = mongoTemplate.upsert(query, buildBaseUpdate(mongoWechatMember), MONGODB_COLLECTION);
             }
 
         } else {
@@ -113,7 +127,13 @@ public class DataPartySyncMongoTaskServiceImpl implements TaskService {
                     new cn.rongcapital.mkt.po.mongodb.DataParty();
             BeanUtils.copyProperties(dataParty, mongoDataParty);
             mongoDataParty.setMid(dataPartyId);
-            mongoTemplate.upsert(query, buildBaseUpdate(mongoDataParty), MONGODB_COLLECTION);
+            upsert = mongoTemplate.upsert(query, buildBaseUpdate(mongoDataParty), MONGODB_COLLECTION);
+        }
+        
+        if(upsert != null && upsert.getN() > 0){
+        	return true;
+        }else{
+        	return false;
         }
 	}
 
