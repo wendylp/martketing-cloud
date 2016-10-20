@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.job.service.impl.mq;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
 import cn.rongcapital.mkt.common.enums.SmsTargetAudienceTypeEnum;
+import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.*;
@@ -99,7 +100,19 @@ public class GenerateSmsDetailTask implements TaskService {
             smsTaskDetailStateDao.insert(smsTaskDetailState);
         }
 
-        //Todo:4检测TaskHead的发送状态
+        //4更新SmsTaskHead表的人群相关的字段
+        targetHead.setAudienceGenerateStatus(ApiConstant.INT_ZERO);
+        targetHead.setTotalCoverNum(targetDistinctReceiveMobiles.size());
+        targetHead.setWaitingNum(targetDistinctReceiveMobiles.size());
+        smsTaskHeadDao.updateById(targetHead);
+
+        smsTaskHeads = smsTaskHeadDao.selectList(paramSmsTaskHead);
+        if(CollectionUtils.isEmpty(smsTaskHeads)) return;
+        SmsTaskHead currentTaskHead = smsTaskHeads.get(0);
+        if(currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()){
+            //Todo:4检测TaskHead的发送状态
+
+        }
         
     }
 

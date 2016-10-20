@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.dao.SmsTaskBodyDao;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
 import cn.rongcapital.mkt.po.SmsTaskBody;
@@ -50,9 +51,10 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
             insertSmsTaskHead.setSmsTaskSignatureId(smsActivationCreateIn.getTaskSignatureId());
             insertSmsTaskHead.setSmsTaskTemplateId(smsActivationCreateIn.getTaskTemplateId());
             insertSmsTaskHead.setSmsTaskTemplateContent(smsActivationCreateIn.getTaskTemplateContent());
-            insertSmsTaskHead.setSmsTaskAppType(smsActivationCreateIn.getTaskSendType());
+            insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_UNSTART.getStatusCode());
+            insertSmsTaskHead.setSmsTaskSendType(smsActivationCreateIn.getTaskSendType());
             insertSmsTaskHead.setSmsTaskAppType(smsActivationCreateIn.getTaskAppType());
-            insertSmsTaskHead.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+            insertSmsTaskHead.setAudienceGenerateStatus(ApiConstant.INT_ONE);
             smsTaskHeadDao.insert(insertSmsTaskHead);
             //2获取task_head的Id,然后将相应得信息分条存储到body表中
             if(!CollectionUtils.isEmpty(smsActivationCreateIn.getSmsTargetAudienceInArrayList())){
@@ -72,9 +74,12 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
             message.setServiceName(MQ_SMS_GENERATE_DETAIL_SERVICE);
             message.setMessage(String.valueOf(insertSmsTaskHead.getId()));
             mqTopicService.senderMessage(MQ_SMS_GENERATE_DETAIL_SERVICE,message);
+
+            return baseOutput;
         }
 
-
+        baseOutput.setCode(ApiErrorCode.BIZ_ERROR.getCode());
+        baseOutput.setMsg(ApiErrorCode.BIZ_ERROR.getMsg());
         return baseOutput;
     }
 
