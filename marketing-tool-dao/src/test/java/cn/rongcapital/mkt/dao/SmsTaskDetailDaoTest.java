@@ -56,14 +56,14 @@ public class SmsTaskDetailDaoTest extends AbstractUnitTest {
         String sendMessageFirst = "Hello World!";
         String sendMobileFirst = "1000000342423";
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2016, 10, 19, 14, 23);
+        calendar.set(2016, 10, 19, 5, 23);
         Date sendTimeFirst = calendar.getTime();
         int smsTaskSendStatusFirst = 0;
 
         String receiveMobileSecond = "13123456790";
         String sendMessageSecond = "Hello";
         String sendMobileSecond = "1000000342423";
-        calendar.add(Calendar.YEAR, 20);
+        calendar.add(Calendar.SECOND, 20);
         Date sendTimeSecond = calendar.getTime();
         int smsTaskSendStatusSecond = 1;
         // 设置对象
