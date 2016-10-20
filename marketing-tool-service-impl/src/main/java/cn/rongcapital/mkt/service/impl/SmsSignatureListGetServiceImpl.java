@@ -40,6 +40,7 @@ public class SmsSignatureListGetServiceImpl implements SmsSignatureListGetServic
             }
         }
 
+        smsSignatureListOut.setTotal(smsSignatureListOut.getSmsSignatureOutList().size());
         return smsSignatureListOut;
     }
 

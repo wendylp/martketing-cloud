@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -20,6 +22,7 @@ import java.util.*;
  * Created by byf on 10/18/16.
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class GenerateSmsDetailTask implements TaskService {
 
     @Autowired
@@ -67,7 +70,6 @@ public class GenerateSmsDetailTask implements TaskService {
         List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectList(paramSmsTaskHead);
         if(CollectionUtils.isEmpty(smsTaskHeads)) return;
         SmsTaskHead targetHead = smsTaskHeads.get(0);
-        String taskTemplateContent = targetHead.getSmsTaskTemplateContent();
 
         //2根据headId依次选出受众人群
         Set<String> targetDistinctReceiveMobiles = new HashSet<>();

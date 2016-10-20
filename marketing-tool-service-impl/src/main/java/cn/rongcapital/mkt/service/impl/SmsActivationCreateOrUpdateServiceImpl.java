@@ -6,7 +6,9 @@ import cn.rongcapital.mkt.dao.SmsTaskBodyDao;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
 import cn.rongcapital.mkt.po.SmsTaskBody;
 import cn.rongcapital.mkt.po.SmsTaskHead;
+import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
+import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
 import cn.rongcapital.mkt.vo.in.SmsTargetAudienceIn;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+
+import javax.jms.JMSException;
 
 /**
  * Created by byf on 10/18/16.
@@ -29,13 +33,18 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
     @Autowired
     private SmsTaskBodyDao smsTaskBodyDao;
 
+    @Autowired
+    private MQTopicService mqTopicService;
+
+    private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask ";
+
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public BaseOutput createOrUpdateSmsActivation(SmsActivationCreateIn smsActivationCreateIn) {
+    public BaseOutput createOrUpdateSmsActivation(SmsActivationCreateIn smsActivationCreateIn) throws JMSException {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
 
         if(smsActivationCreateIn.getTaskId() == null){
-            //Todo:1将task_head的信息存到head表中
+            //1将task_head的信息存到head表中
             SmsTaskHead insertSmsTaskHead = new SmsTaskHead();
             insertSmsTaskHead.setSmsTaskName(smsActivationCreateIn.getTaskName());
             insertSmsTaskHead.setSmsTaskSignatureId(smsActivationCreateIn.getTaskSignatureId());
@@ -43,8 +52,9 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
             insertSmsTaskHead.setSmsTaskTemplateContent(smsActivationCreateIn.getTaskTemplateContent());
             insertSmsTaskHead.setSmsTaskAppType(smsActivationCreateIn.getTaskSendType());
             insertSmsTaskHead.setSmsTaskAppType(smsActivationCreateIn.getTaskAppType());
+            insertSmsTaskHead.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
             smsTaskHeadDao.insert(insertSmsTaskHead);
-            //Todo:2获取task_head的Id,然后将相应得信息分条存储到body表中
+            //2获取task_head的Id,然后将相应得信息分条存储到body表中
             if(!CollectionUtils.isEmpty(smsActivationCreateIn.getSmsTargetAudienceInArrayList())){
                 for(SmsTargetAudienceIn smsTargetAudienceIn : smsActivationCreateIn.getSmsTargetAudienceInArrayList()){
                     SmsTaskBody insertSmsTaskBody = new SmsTaskBody();
@@ -55,8 +65,13 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
                     smsTaskBodyDao.insert(insertSmsTaskBody);
                 }
             }
-            //Todo:3将head_id做为参数发送一个Message.
 
+            //3将head_id做为参数发送一个Message.
+            ActiveMqMessageVO message = new ActiveMqMessageVO();
+            message.setTaskName("生成具体短信消息任务");
+            message.setServiceName(MQ_SMS_GENERATE_DETAIL_SERVICE);
+            message.setMessage(String.valueOf(insertSmsTaskHead.getId()));
+            mqTopicService.senderMessage(MQ_SMS_GENERATE_DETAIL_SERVICE,message);
         }
 
 

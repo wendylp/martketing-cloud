@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import javax.jms.JMSException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -92,8 +93,8 @@ public class MktSmsApi {
     @POST
     @Path("/mkt.sms.message.createorupdate")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public BaseOutput createOrUpdateSmsMessage(@Valid SmsActivationCreateIn smsActivationCreateIn,
-                                          @Context SecurityContext securityContext) {
+    public BaseOutput createOrUpdateSmsMessage (@Valid SmsActivationCreateIn smsActivationCreateIn,
+                                          @Context SecurityContext securityContext) throws JMSException {
         return smsActivationCreateOrUpdateService.createOrUpdateSmsActivation(smsActivationCreateIn);
     }
 }

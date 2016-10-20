@@ -32,8 +32,8 @@ public class WechatQrcodeDaoTest extends AbstractUnitTest {
 	WechatQrcode testWechatQrcode=new WechatQrcode(); 
 	
 	@Before  
-	public void setUp() throws Exception {  
-				
+	public void setUp() throws Exception {
+
 		testWechatQrcode.setWxAcct("zqUT1_wxAcct");
 		testWechatQrcode.setWxName("zqUT1_wxName");
 		testWechatQrcode.setChCode(1);

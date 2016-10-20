@@ -3,7 +3,9 @@ package cn.rongcapital.mkt.vo.in;
 import cn.rongcapital.mkt.vo.BaseInput;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -13,11 +15,22 @@ import java.util.List;
 public class SmsActivationCreateIn extends BaseInput{
 
     private Long taskId;
+
+    @NotEmpty
     private String taskName;
+
+    @NotNull
     private Long taskSignatureId;
+
+    @NotNull
     private Long taskTemplateId;
+
+    @NotEmpty
     private String taskTemplateContent;
+
     private List<SmsTargetAudienceIn> smsTargetAudienceInArrayList;
+
+    @NotNull
     private Integer taskSendType;
     private Integer taskAppType;
 
