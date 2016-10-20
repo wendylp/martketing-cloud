@@ -182,23 +182,5 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		}
 		
 	}
-	
-	public static void main(String[] args) {
-		Map<Long, String[]> SmsBatchMap = new HashMap<>();
-		SmsBatchMap.put(1l, new String[] {"13716932351","你好请付费1"});
-		SmsBatchMap.put(2l, new String[] {"13716932351","你好请付费2"});
-		SmsBatchMap.put(3l, new String[] {"13716932351","你好请付费3"});
-		SmsBatchMap.put(4l, new String[] {"13716932351","你好请付费4"});
-		SmsBatchMap.put(5l, new String[] {"13716932351","你好请付费5"});
-		SmsBatchMap.put(6l, new String[] {"13716932351","你好请付费6"});
-		SmsBatchMap.put(7l, new String[] {"13716932351","你好请付费7"});
-		
-		Map<Long, Integer> sendSmsApi = sendSmsBatchApi(SmsBatchMap);
-		
-		for(Entry<Long, Integer> entry : sendSmsApi.entrySet()){
-			System.out.println("id is ==============" + entry.getKey());
-			System.out.println("value is ==============" + entry.getValue());
-		}
-	}
 
 }
