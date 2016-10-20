@@ -40,7 +40,7 @@ public class SmsMessageSendRecordGetServiceTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private SmsMessageSendRecordGetServiceImpl smsMessageSendRecordGetService;
+    private SmsMessageSendRecordGetService smsMessageSendRecordGetService;
 
     @Mock
     private SmsTaskDetailDao smsTaskDetailDao;
@@ -71,9 +71,9 @@ public class SmsMessageSendRecordGetServiceTest {
         BaseOutput result = smsMessageSendRecordGetService.messageSendRecordGet((long) 0, "", 0, 0);
 
         // 断言
-        Assert.assertEquals(result.getCode(), ApiErrorCode.SUCCESS.getCode());
-        Assert.assertEquals(result.getTotal(), messageSendRecordGetOutLists.size());
-        Assert.assertEquals(result.getData(), messageSendRecordGetOutLists);
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
+        Assert.assertEquals(messageSendRecordGetOutLists.size(), result.getTotal());
+        Assert.assertEquals(messageSendRecordGetOutLists, result.getData());
     }
 
 
