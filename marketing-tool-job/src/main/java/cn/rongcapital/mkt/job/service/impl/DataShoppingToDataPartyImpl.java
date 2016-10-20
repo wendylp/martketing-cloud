@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,9 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 	@Override
 	public void querySyncData(Integer totalSize, Integer pageSize) {
 
+    	logger.info("=====================同步购物记录属性到主数据开始");
+    	long startTime = System.currentTimeMillis();
+		
 		List<DataShopping> dataShoppingLists = new ArrayList<DataShopping>();
 		
 		DataShopping dataShopping = new DataShopping();
@@ -91,6 +95,19 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 			dataPartySyncVO.setExtendDataList(idList);
 			doSyncAfter(dataPartySyncVO);
 	    }
+	    
+	    
+        executor.shutdown();
+      try {
+    	  //设置最大阻塞时间，所有线程任务执行完成再继续往下执行
+    	  executor.awaitTermination(24, TimeUnit.HOURS);
+    	  long endTime = System.currentTimeMillis();
+    	  
+    	  logger.info("=====================同步购物记录到主数据结束,用时"+ (endTime-startTime) + "毫秒" );
+    	  
+      } catch (InterruptedException e) {
+    	  logger.info("======================同步购物记录到主数据超时" );
+      }
 	}	
 
 	@Override

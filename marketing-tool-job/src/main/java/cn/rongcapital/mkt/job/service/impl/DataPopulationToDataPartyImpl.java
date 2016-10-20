@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,13 +48,16 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 	@Override
 	public void querySyncData(Integer totalSize, Integer pageSize) {
 
+    	logger.info("=====================同步人口属性到主数据开始");
+    	long startTime = System.currentTimeMillis();
+    	
 		List<DataPopulation> dataPopulationLists = new ArrayList<DataPopulation>();
 		
 		DataPopulation dataPopulation = new DataPopulation();
 		dataPopulation.setStatus(StatusEnum.ACTIVE.getStatusCode());
 		
 		int totalPages = (totalSize + pageSize - 1) / pageSize;
-		
+		//防止数据量过大，分页查询出全部待同步数据
 		for (int i = 0; i < totalPages; i++) {
 			
 			dataPopulation.setPageSize(pageSize);
@@ -62,7 +67,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 			dataPopulationLists.addAll(dataPopulationList);
 			
 		}
-
+		//拆分总总数据，分批同步
 		List<List<DataPopulation>> dataPopulationsList = ListSplit.getListSplit(dataPopulationLists, BATCH_SIZE);
 	    
 	    for(List<DataPopulation> dataPopulations :dataPopulationsList){
@@ -90,6 +95,17 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 			doSyncAfter(dataPartySyncVO);
 	    }
 		
+        executor.shutdown();
+      try {
+    	  //设置最大阻塞时间，所有线程任务执行完成再继续往下执行
+    	  executor.awaitTermination(24, TimeUnit.HOURS);
+    	  long endTime = System.currentTimeMillis();
+    	  
+    	  logger.info("=====================同步人口属性到主数据结束,用时"+ (endTime-startTime) + "毫秒" );
+    	  
+      } catch (InterruptedException e) {
+    	  logger.info("======================同步人口属性到主数据超时" );
+      }
 	}
 
 	@Override
@@ -112,20 +128,21 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 		Integer keyid = super.getDataParyPrimaryKey(dataObj, bitmap);
 		if (keyid != null) {
 			DataParty dataParty = new DataParty();
+			BeanUtils.copyProperties(dataObj, dataParty);
 			dataParty.setMdType(DataTypeEnum.POPULATION.getCode());
 			dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
-			dataParty.setMobile(dataObj.getMobile());
-			dataParty.setName(dataObj.getName());
-			dataParty.setGender(dataObj.getGender());
-			dataParty.setBirthday(dataObj.getBirthday());
-			dataParty.setCitizenship(dataObj.getCitizenship());
-			dataParty.setProvice(dataObj.getProvice());
-			dataParty.setCity(dataObj.getCity());
-			dataParty.setJob(dataObj.getJob());
-			dataParty.setMonthlyIncome(dataObj.getMonthlyIncome());
-			dataParty.setMonthlyConsume(dataObj.getMonthlyConsume());
-			dataParty.setSource(dataObj.getSource());
-			dataParty.setBatchId(dataObj.getBatchId());
+//			dataParty.setMobile(dataObj.getMobile());
+//			dataParty.setName(dataObj.getName());
+//			dataParty.setGender(dataObj.getGender());
+//			dataParty.setBirthday(dataObj.getBirthday());
+//			dataParty.setCitizenship(dataObj.getCitizenship());
+//			dataParty.setProvice(dataObj.getProvice());
+//			dataParty.setCity(dataObj.getCity());
+//			dataParty.setJob(dataObj.getJob());
+//			dataParty.setMonthlyIncome(dataObj.getMonthlyIncome());
+//			dataParty.setMonthlyConsume(dataObj.getMonthlyConsume());
+//			dataParty.setSource(dataObj.getSource());
+//			dataParty.setBatchId(dataObj.getBatchId());
 			dataParty.setId(keyid);
 			dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
 			dataPartyDao.updateById(dataParty);
@@ -133,21 +150,22 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 		} else {
 
 			DataParty dataParty = new DataParty();
+			BeanUtils.copyProperties(dataObj, dataParty);
 			dataParty.setMappingKeyid(dataObj.getId().toString());
 			dataParty.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
 			dataParty.setMdType(DataTypeEnum.POPULATION.getCode());
-			dataParty.setMobile(dataObj.getMobile());
-			dataParty.setName(dataObj.getName());
-			dataParty.setGender(dataObj.getGender());
-			dataParty.setBirthday(dataObj.getBirthday());
-			dataParty.setCitizenship(dataObj.getCitizenship());
-			dataParty.setProvice(dataObj.getProvice());
-			dataParty.setCity(dataObj.getCity());
-			dataParty.setJob(dataObj.getJob());
-			dataParty.setMonthlyIncome(dataObj.getMonthlyIncome());
-			dataParty.setMonthlyConsume(dataObj.getMonthlyConsume());
-			dataParty.setSource(dataObj.getSource());
-			dataParty.setBatchId(dataObj.getBatchId());
+//			dataParty.setMobile(dataObj.getMobile());
+//			dataParty.setName(dataObj.getName());
+//			dataParty.setGender(dataObj.getGender());
+//			dataParty.setBirthday(dataObj.getBirthday());
+//			dataParty.setCitizenship(dataObj.getCitizenship());
+//			dataParty.setProvice(dataObj.getProvice());
+//			dataParty.setCity(dataObj.getCity());
+//			dataParty.setJob(dataObj.getJob());
+//			dataParty.setMonthlyIncome(dataObj.getMonthlyIncome());
+//			dataParty.setMonthlyConsume(dataObj.getMonthlyConsume());
+//			dataParty.setSource(dataObj.getSource());
+//			dataParty.setBatchId(dataObj.getBatchId());
 
 			dataParty = super.getDataParyKey(dataParty, dataObj, bitmap);
 

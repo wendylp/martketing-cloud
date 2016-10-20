@@ -52,13 +52,13 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
     @Override
     public void cleanData() {
     	
+    	logger.info("=====================上传人口属性开始");
+    	long startTime = System.currentTimeMillis();
         int BATCH_NUM = Integer.valueOf(env.getProperty("orginal.to.data.batch.num"));
 
         // 1. 取出需要处理的数据
         OriginalDataPopulation paramOriginalDataPopulation = new OriginalDataPopulation();
         paramOriginalDataPopulation.setStatus(StatusEnum.ACTIVE.getStatusCode());
-
-//        int totalCount = originalDataPopulationDao.selectListCount(paramOriginalDataPopulation);
         
         paramOriginalDataPopulation.setStartIndex(null);
         paramOriginalDataPopulation.setPageSize(null);
@@ -76,23 +76,24 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
     			@Override
     			public Void call() throws Exception {
     				
-    				logger.info("working thread is " + Thread.currentThread().getName());
-    				
     				handleOriginalDataPopulation(originalDataPopulations);
     				
-    				logger.info(Thread.currentThread().getName() + "is done");
     				return null;
     			}
     			
             });
         }
 
-        executor.isShutdown();
-        
+        executor.shutdown();
       try {
-    	  executor.awaitTermination(30, TimeUnit.MINUTES);
+    	  //设置最大阻塞时间，所有线程任务执行完成再继续往下执行
+    	  executor.awaitTermination(24, TimeUnit.HOURS);
+    	  long endTime = System.currentTimeMillis();
+    	  
+    	  logger.info("=====================上传人口属性结束,用时"+ (endTime-startTime) + "毫秒" );
+    	  
       } catch (InterruptedException e) {
-    	  e.printStackTrace();
+    	  logger.info("=====================上传人后属性超时" );
       }
     }
 
