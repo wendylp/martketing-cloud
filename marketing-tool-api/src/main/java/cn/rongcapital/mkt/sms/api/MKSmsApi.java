@@ -23,8 +23,10 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.SmsMessageSendRecordGetService;
+import cn.rongcapital.mkt.service.SmsMessageSendTestService;
 import cn.rongcapital.mkt.service.SmsTaskDeleteService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.SmsMessageSendTestIn;
 import cn.rongcapital.mkt.vo.in.SmsTaskDeleteIn;
 
 @Component
@@ -39,6 +41,9 @@ public class MKSmsApi {
     
     @Autowired
     private SmsTaskDeleteService smsTaskDeleteService;
+    
+    @Autowired
+    private SmsMessageSendTestService smsMessageSendTestService;
     
     /**
      * 返回当前任务的发送记录列表（可以按照手机号查询）
@@ -78,5 +83,22 @@ public class MKSmsApi {
             @Context SecurityContext securityContext) {
         return smsTaskDeleteService.smsTaskDelete(body, securityContext);
     }
-
+    
+    /**
+     * 短信白名单测试发送
+     * 
+     * @param body
+     * @param securityContext
+     * @return
+     * @author shuiyangyang
+     * @Date 2016.10.20
+     */
+    @POST
+    @Path("/mkt.sms.message.send.test")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput smsTaskDelete(@Valid SmsMessageSendTestIn body,
+            @Context SecurityContext securityContext) {
+        return smsMessageSendTestService.messageSendTest(body, securityContext);
+    }
+     
 }
