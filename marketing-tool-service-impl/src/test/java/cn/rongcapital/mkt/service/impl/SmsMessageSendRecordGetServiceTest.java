@@ -45,7 +45,7 @@ public class SmsMessageSendRecordGetServiceTest {
     @Mock
     private SmsTaskDetailDao smsTaskDetailDao;
 
-    List<MessageSendRecordGetOut> messageSendRecordGetOutLists;
+    private List<MessageSendRecordGetOut> messageSendRecordGetOutLists;
 
     @Before
     public void setUp() throws Exception {
