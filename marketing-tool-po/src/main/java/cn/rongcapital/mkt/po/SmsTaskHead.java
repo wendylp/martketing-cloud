@@ -35,6 +35,8 @@ public class SmsTaskHead extends BaseQuery{
 
     private Integer sendingFailNum;
 
+    private Integer audienceGenerateStatus;
+
     public Long getId() {
         return id;
     }
@@ -153,5 +155,13 @@ public class SmsTaskHead extends BaseQuery{
 
     public void setSendingFailNum(Integer sendingFailNum) {
         this.sendingFailNum = sendingFailNum;
+    }
+
+    public Integer getAudienceGenerateStatus() {
+        return audienceGenerateStatus;
+    }
+
+    public void setAudienceGenerateStatus(Integer audienceGenerateStatus) {
+        this.audienceGenerateStatus = audienceGenerateStatus;
     }
 }
