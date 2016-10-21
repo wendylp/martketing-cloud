@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.job.service.impl.mq;
+package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
@@ -8,6 +8,7 @@ import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.service.MQTopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -23,7 +24,6 @@ import java.util.*;
  * Created by byf on 10/18/16.
  */
 @Service
-@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 public class GenerateSmsDetailTask implements TaskService {
 
     @Autowired
@@ -53,6 +53,8 @@ public class GenerateSmsDetailTask implements TaskService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    private MQTopicServiceImpl mqTopicServiceImpl= new MQTopicServiceImpl();
+
     private final String SEGMENTATION_HEAD_ID = "segmentation_head_id";
 
     @Override
@@ -60,6 +62,7 @@ public class GenerateSmsDetailTask implements TaskService {
 
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void task(String taskHeadIdStr) {
         Long taskHeadId = Long.valueOf(taskHeadIdStr);
@@ -111,7 +114,7 @@ public class GenerateSmsDetailTask implements TaskService {
         SmsTaskHead currentTaskHead = smsTaskHeads.get(0);
         if(currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()){
             //Todo:4检测TaskHead的发送状态
-
+            mqTopicServiceImpl.sendSmsByTaskId(taskHeadIdStr);
         }
         
     }
@@ -129,7 +132,7 @@ public class GenerateSmsDetailTask implements TaskService {
     private List<String> queryAndCacheAudienceDetailBySegmentationId(Long taskHeadId,Long targetId) {
         //1根据segmentation的Id在Mongo中选出相应得细分,然后取出dataPartyId
         Query query = new Query(Criteria.where(SEGMENTATION_HEAD_ID).is(targetId));
-        List<cn.rongcapital.mkt.po.mongodb.Segment> segmentList = mongoTemplate.find(query,cn.rongcapital.mkt.po.mongodb.Segment.class);
+        List<Segment> segmentList = mongoTemplate.find(query,Segment.class);
 
         //2构造出dataParty的IdList的集合
         if(CollectionUtils.isEmpty(segmentList)) return null;
