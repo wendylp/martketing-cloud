@@ -55,12 +55,13 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		//根据任务ID查询sms_task_head表 判断 sms_task_status 是否是执行中状态
 		Long taskId = Long.valueOf(jsonMessage);
 		SmsTaskHead smsHead = new SmsTaskHead();
-		smsHead.setStatus((byte)0);
+		smsHead.setSmsTaskStatus(2);//执行中
+		smsHead.setStatus((byte)0);//未删除
 		smsHead.setId(taskId);
 		try {
 			List<SmsTaskHead> smsHeadList = smsTaskHeadDao.selectList(smsHead);
 			if(CollectionUtils.isEmpty(smsHeadList)){
-				logger.warn("task state is not sending(2) or No corresponding task ，taskId：{}", jsonMessage);
+				logger.warn("task state is not sending(2) or No corresponding task ,taskId：{}", jsonMessage);
 				return;
 			}
 			smsHead = smsHeadList.get(0);
@@ -125,13 +126,13 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	 * @param SmsBatchMap
 	 * @return Map<Long, Integer> 返回一个任务id， 和 短信调用网关的状态
 	 */
-	public static Map<Long, Integer> sendSmsBatchApi(Map<Long, String[]> SmsBatchMap){
+	public  Map<Long, Integer> sendSmsBatchApi(Map<Long, String[]> SmsBatchMap){
 		Map<Long, Integer> sendResultMap = new HashMap<>();
 		for(Entry<Long, String[]> entry : SmsBatchMap.entrySet()){
 			Long id = entry.getKey();
 			String[] sms = entry.getValue();
-			System.out.println("phone is " + sms[0]);
-			System.out.println("message is " + sms[1]);
+			logger.info("phone is {}", sms[0]);
+			logger.info("message is {}", sms[1]);
 			int n = (int)(Math.random()*100);
 			
 			if(n%2 >0){

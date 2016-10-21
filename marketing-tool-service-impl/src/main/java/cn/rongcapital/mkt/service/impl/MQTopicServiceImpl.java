@@ -256,13 +256,27 @@ public class MQTopicServiceImpl implements MQTopicService {
 		ActiveMqMessageVO message = new ActiveMqMessageVO();
 		message.setTaskName("任务一");
 		message.setServiceName(MQ_SMS_SERVICE);
-		message.setMessage("100");
+		message.setMessage("1");
 		try {
 			MQTopicServiceImpl mc = new MQTopicServiceImpl();
 			mc.senderMessage(MQ_SMS_SERVICE, message);
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void sendSmsByTaskId(String taskId){
+		ActiveMqMessageVO message = new ActiveMqMessageVO();
+		message.setTaskName("短信发送任务");
+		message.setServiceName(MQ_SMS_SERVICE);
+		message.setMessage(taskId);
+		try {
+			MQTopicServiceImpl mc = new MQTopicServiceImpl();
+			mc.senderMessage(MQ_SMS_SERVICE, message);
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**

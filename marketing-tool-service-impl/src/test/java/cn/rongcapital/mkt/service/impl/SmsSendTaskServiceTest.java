@@ -54,6 +54,8 @@ public class SmsSendTaskServiceTest {
 	    	smsHeadList = new ArrayList<>();
 	    	head= new SmsTaskHead();
 	    	head.setId(1l);
+	    	head.setStatus((byte)0);
+	    	head.setSmsTaskStatus(2);//执行中
 	    	smsHeadList.add(head);
 	    	
 	    	smsDetailList = new ArrayList<>();
