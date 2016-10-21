@@ -34,4 +34,11 @@ public interface SmsTaskDetailStateDao extends BaseDao<SmsTaskDetailState>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	 /**
+     * @功能简述 : 根据任务详情id更新短信发送状态
+     * @author lihaiguang
+     */
+	
+	void updateDetailState(SmsTaskDetailState smsTaskDetailState);
 }
