@@ -36,27 +36,6 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	
 	@Autowired
 	private SmsTempletDao smsTempletDao;
-
-	@Override
-	public BaseOutput smsTempletList(SmsTempletListIn smsTempletListIn) {
-		BaseOutput output = this.newSuccessBaseOutput();
-		SmsTemplet smsTempletTemp = new SmsTemplet();		
-		smsTempletTemp.setChannelType(NumUtil.int2OneByte(smsTempletListIn.getChannelType()));
-		smsTempletTemp.setType(NumUtil.int2OneByte(smsTempletListIn.getType()));
-		if(StringUtils.isNotEmpty(smsTempletListIn.getContent())){
-			smsTempletTemp.setContent(smsTempletListIn.getContent());
-		}
-		smsTempletTemp.setOrderField("create_time");
-		smsTempletTemp.setOrderFieldType("DESC");
-		smsTempletTemp.setStartIndex((smsTempletListIn.getIndex()-1)*smsTempletListIn.getSize());
-		smsTempletTemp.setPageSize(smsTempletListIn.getSize());
-		
-		int totalCount = smsTempletDao.selectListCount(smsTempletTemp);
-		List<SmsTemplet> dataList = smsTempletDao.selectList(smsTempletTemp);
-		output.setTotalCount(totalCount);
-		this.setBaseOut(output, dataList);
-		return output;
-	}
 		
 	@Override
 	public BaseOutput smsTempletList(String userId, Integer index, Integer size, Integer channelType,
