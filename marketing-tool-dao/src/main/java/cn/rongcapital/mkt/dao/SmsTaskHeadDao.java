@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 
@@ -34,4 +36,11 @@ public interface SmsTaskHeadDao extends BaseDao<SmsTaskHead>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * 根据ID统计任务的发送消息的个数（成功、失败、等待发送）
+	 * @param id
+	 * @return
+	 */
+	public Map<Integer,Integer> countStatusById(long id);
 }

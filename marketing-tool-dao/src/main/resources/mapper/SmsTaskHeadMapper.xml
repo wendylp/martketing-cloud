@@ -14,7 +14,7 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="smsTaskName != null"><![CDATA[ AND sms_task_name = #{smsTaskName}]]></if>
+		    	<if test="smsTaskName != null"><![CDATA[ AND sms_task_name like CONCAT('%',#{smsTaskName},'%' )]]></if>
 		    	<if test="smsTaskSignatureId != null"><![CDATA[ AND sms_task_signature_id = #{smsTaskSignatureId}]]></if>
 		    	<if test="smsTaskTemplateId != null"><![CDATA[ AND sms_task_template_id = #{smsTaskTemplateId}]]></if>
 		    	<if test="smsTaskTemplateContent != null"><![CDATA[ AND sms_task_template_content = #{smsTaskTemplateContent}]]></if>
@@ -119,5 +119,19 @@
 	
 	<!-- 其它SQL语句 -->
 	
-	
+	<select id="countStatusById" parameterType="java.lang.Long" resultType="java.util.Map">
+		SELECT
+			COUNT(DISTINCT stds.id) AS COUNT,
+			stds.sms_task_send_status AS sms_task_send_status
+		FROM
+			sms_task_head sth,
+			sms_task_detail std,
+			sms_task_detail_state stds
+		WHERE
+			sth.id = #{id}
+		AND	sth.id = std.sms_task_head_id
+		AND std.id = stds.sms_task_detail_id
+		GROUP BY
+			stds.sms_task_send_status
+	</select>
 </mapper>

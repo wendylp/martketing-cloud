@@ -36,4 +36,15 @@ public enum SmsTaskStatusEnum {
     public void setStatusName(String statusName) {
         this.statusName = statusName;
     }
+    
+    public static String getDescriptionByStatus(Integer status) {
+    	SmsTaskStatusEnum[] smsTaskStatusEnums = SmsTaskStatusEnum.values();
+        for (SmsTaskStatusEnum smsTaskStatusEnum : smsTaskStatusEnums) {
+            if (smsTaskStatusEnum.getStatusCode().equals(status)) {
+                return smsTaskStatusEnum.getStatusName();
+            }
+        }
+        return "";
+    }
+
 }

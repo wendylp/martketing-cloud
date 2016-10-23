@@ -11,4 +11,6 @@ public interface MQTopicService {
 	 public void initReceiver();
 	 
 	 public void senderMessage(String topicName,String message)throws JMSException;
+	 
+	 public void sendSmsByTaskId(String taskId);
 }
