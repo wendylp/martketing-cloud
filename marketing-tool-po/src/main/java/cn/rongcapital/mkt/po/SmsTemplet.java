@@ -31,6 +31,18 @@ public class SmsTemplet extends BaseQuery{
     private String content;
     
     private String createTimeStr;
+    
+    
+    public SmsTemplet(){}
+
+
+    public SmsTemplet(Byte channelType, Byte type, Byte auditStatus, String content) {
+        super();
+        this.channelType = channelType;
+        this.type = type;
+        this.auditStatus = auditStatus;
+        this.content = content;
+    }
 
     public Integer getId() {
         return id;
