@@ -24,7 +24,6 @@ import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.service.SmsTaskHeadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.SmsTaskDeleteIn;
 
 /**
  * @author yinheng
@@ -44,14 +43,15 @@ public class SmsTaskHeadServiceTest {
 	
 	private List<SmsTaskHead> smsTaskHeads;
 	
-	private int totalCount;
 	
     @Before
     public void setUp() throws Exception {
     	smsTaskHeads = new ArrayList<SmsTaskHead>();
-    	for(int i=0;i<=300;i++){
+    	for(int i=0;i<=10;i++){
     		SmsTaskHead smsTaskHead = this.setSmsTaskHead(i);
-    		smsTaskHeads.add(smsTaskHead);
+    		if(smsTaskHead!=null){
+    			smsTaskHeads.add(smsTaskHead);
+    		}    		
     	}
         Mockito.when(smsTaskHeadDao.selectList(any())).thenReturn(smsTaskHeads);
         Mockito.when(smsTaskHeadDao.selectListCount(any())).thenReturn(smsTaskHeads.size());
@@ -59,25 +59,35 @@ public class SmsTaskHeadServiceTest {
     	smsTaskHeadService = new SmsTaskHeadServiceImpl();
     	// 把mock的dao set进入service
     	ReflectionTestUtils.setField(smsTaskHeadService, "smsTaskHeadDao", smsTaskHeadDao);
+    	ReflectionTestUtils.setField(smsTaskHeadService, "mqTopicService", mqTopicService);
     }
     
     private SmsTaskHead setSmsTaskHead(int sms_task_status){
-    	SmsTaskHead smsTaskHead = new SmsTaskHead();
-    	smsTaskHead.setId(Long.parseLong(String.valueOf(sms_task_status+1)));
-    	smsTaskHead.setSmsTaskName("测试任务"+sms_task_status);
-    	smsTaskHead.setCreateTime(new Date());
-    	smsTaskHead.setSmsTaskAppType(sms_task_status%2);
-    	smsTaskHead.setSmsTaskTemplateId(Long.parseLong(String.valueOf(sms_task_status+1)));
-    	smsTaskHead.setSmsTaskStatus(sms_task_status);
+    	SmsTaskHead smsTaskHead = null;
     	switch(sms_task_status%5){
 			case 0:{ 
+		    	smsTaskHead = new SmsTaskHead();
+		    	smsTaskHead.setId(Long.parseLong(String.valueOf(sms_task_status+1)));
+		    	smsTaskHead.setSmsTaskName("测试任务"+sms_task_status);
+		    	smsTaskHead.setCreateTime(new Date());
+		    	smsTaskHead.setSmsTaskAppType(sms_task_status%2);
+		    	smsTaskHead.setSmsTaskTemplateId(Long.parseLong(String.valueOf(sms_task_status+1)));
+		    	smsTaskHead.setSmsTaskStatus(sms_task_status);
 				smsTaskHead.setTotalCoverNum(sms_task_status+1000);
 		    	smsTaskHead.setSendingFailNum(0);
 		    	smsTaskHead.setSendingSuccessNum(0);
 		    	smsTaskHead.setWaitingNum(1000+sms_task_status);
+		    	smsTaskHead.setAudienceGenerateStatus(0);
 				break; 
 				}
 			case 2:{ 
+		    	smsTaskHead = new SmsTaskHead();
+		    	smsTaskHead.setId(Long.parseLong(String.valueOf(sms_task_status+1)));
+		    	smsTaskHead.setSmsTaskName("测试任务"+sms_task_status);
+		    	smsTaskHead.setCreateTime(new Date());
+		    	smsTaskHead.setSmsTaskAppType(sms_task_status%2);
+		    	smsTaskHead.setSmsTaskTemplateId(Long.parseLong(String.valueOf(sms_task_status+1)));
+		    	smsTaskHead.setSmsTaskStatus(sms_task_status);
 		    	smsTaskHead.setTotalCoverNum(sms_task_status+1000);
 		    	smsTaskHead.setSendingFailNum(500);
 		    	smsTaskHead.setSendingSuccessNum(300);
@@ -85,6 +95,13 @@ public class SmsTaskHeadServiceTest {
 				break; 
 				}
 			case 4:{ 
+		    	smsTaskHead = new SmsTaskHead();
+		    	smsTaskHead.setId(Long.parseLong(String.valueOf(sms_task_status+1)));
+		    	smsTaskHead.setSmsTaskName("测试任务"+sms_task_status);
+		    	smsTaskHead.setCreateTime(new Date());
+		    	smsTaskHead.setSmsTaskAppType(sms_task_status%2);
+		    	smsTaskHead.setSmsTaskTemplateId(Long.parseLong(String.valueOf(sms_task_status+1)));
+		    	smsTaskHead.setSmsTaskStatus(sms_task_status);
 				smsTaskHead.setTotalCoverNum(sms_task_status+1000);
 		    	smsTaskHead.setSendingFailNum(0);
 		    	smsTaskHead.setSendingSuccessNum(1000+sms_task_status);
@@ -93,34 +110,45 @@ public class SmsTaskHeadServiceTest {
 				}
 			default :{
 				  break;
-			  }
-			
+			  }			
     	} 
 		return smsTaskHead;   	
     }
     
-    
-    
     @Test
-    public void testSmsTaskHeadList(){
-    	
-    	// 测试成功
-    	
-        BaseOutput result = smsTaskHeadService.smsTaskHeadList("", 0, 12, 0, 0, "测试");
+    public void testSmsTaskHeadList(){    	
+    	// 测试查询任务列表
+        BaseOutput result = smsTaskHeadService.smsTaskHeadList("", 0, 12, 0, 0, "");        
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
         Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), result.getMsg());
-        
-        
-        // 测试数据在数据库中不存在
-        smsTaskHeads.clear();
-        result = smsTaskHeadService.smsTaskHeadList("", 0, 12, 0, 0, "测试");
-        Assert.assertEquals(3, result.getCode());
-        Assert.assertEquals("数据不存在", result.getMsg());
     }
+    
+    @Test
+    public void testSmsTaskHeadPublish(){    	
+    	// 发布任务
+        BaseOutput result = smsTaskHeadService.smsTaskHeadPublish("", 1);       
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), result.getMsg());
+    }
+    
     
     @After
     public void tearDown() throws Exception {
     	
     }
+
+	public void setSmsTaskHeadService(SmsTaskHeadService smsTaskHeadService) {
+		this.smsTaskHeadService = smsTaskHeadService;
+	}
+
+	public void setSmsTaskHeadDao(SmsTaskHeadDao smsTaskHeadDao) {
+		this.smsTaskHeadDao = smsTaskHeadDao;
+	}
+
+	public void setMqTopicService(MQTopicService mqTopicService) {
+		this.mqTopicService = mqTopicService;
+	}
 	
+    
+    
 }

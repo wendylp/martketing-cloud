@@ -121,8 +121,8 @@
 	
 	<select id="countStatusById" parameterType="java.lang.Long" resultType="java.util.Map">
 		SELECT
-			COUNT(DISTINCT stds.id) AS COUNT,
-			stds.sms_task_send_status AS sms_task_send_status
+			stds.sms_task_send_status AS smsTaskSendStatus,
+			COUNT(DISTINCT stds.id) AS count
 		FROM
 			sms_task_head sth,
 			sms_task_detail std,

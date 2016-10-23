@@ -53,10 +53,12 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 		smsTaskHeadTemp.setPageSize(size);		
 		
 		int totalCount = smsTaskHeadDao.selectListCount(smsTaskHeadTemp);
-		List<SmsTaskHead> dataList = smsTaskHeadDao.selectList(smsTaskHeadTemp);
-		dataList = this.getSmsTaskHeads(dataList);	
-		output.setTotalCount(totalCount);		
-		this.setBaseOut(output, dataList);
+		output.setTotalCount(totalCount);	
+		if(totalCount>0){
+			List<SmsTaskHead> dataList = smsTaskHeadDao.selectList(smsTaskHeadTemp);
+			dataList = this.getSmsTaskHeads(dataList);		
+			this.setBaseOut(output, dataList);
+		}
 		List<Object> colNames = this.getColumnsOutList();
 		output.setColNames(colNames);
 		return output;
@@ -101,16 +103,39 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 	}
 	
 	private void setSmsTaskHeadNumsById(SmsTaskHead smsTaskHead){
-		Map<Integer, Integer> smsTaskStatusCountmap = smsTaskHeadDao.countStatusById(smsTaskHead.getId());
-		if(smsTaskStatusCountmap!=null&smsTaskStatusCountmap.size()>0){
-			int waitingNum = smsTaskStatusCountmap.get(0);
-			int sendingSuccessNum = smsTaskStatusCountmap.get(1);
-			int sendingFailNum = smsTaskStatusCountmap.get(2);
-			int totalCoverNum = waitingNum+sendingSuccessNum+sendingFailNum;
-			smsTaskHead.setWaitingNum(waitingNum);
-			smsTaskHead.setSendingSuccessNum(sendingSuccessNum);
-			smsTaskHead.setSendingFailNum(sendingFailNum);
-			smsTaskHead.setTotalCoverNum(totalCoverNum);
+		List<Map<String, Object>> smsTaskStatusCountMapList = smsTaskHeadDao.countStatusById(smsTaskHead.getId());
+		if(smsTaskStatusCountMapList!=null&smsTaskStatusCountMapList.size()>0){
+			long waitingNum = 0;
+			long sendingSuccessNum = 0;
+			long sendingFailNum = 0;
+			for(Iterator<Map<String, Object>> iter = smsTaskStatusCountMapList.iterator();iter.hasNext();){
+				Map<String, Object> map = iter.next();
+				if(map!=null){
+					Integer smsTaskSendStatus = (Integer) map.get("smsTaskSendStatus");					
+					Long count = (Long) map.get("count");
+					if(smsTaskSendStatus!=null){
+						switch(smsTaskSendStatus){
+							case 0:{
+								//等待处理
+								waitingNum = count;
+							}
+							case 1:{
+								//发送成功
+								sendingSuccessNum = count;
+							}
+							case 2:{
+								//发送失败
+								sendingFailNum = count;
+							}
+						}
+					}
+				}
+			}
+			long totalCoverNum = waitingNum+sendingSuccessNum+sendingFailNum;
+			smsTaskHead.setWaitingNum(Integer.parseInt(String.valueOf(waitingNum)));
+			smsTaskHead.setSendingSuccessNum(Integer.parseInt(String.valueOf(sendingSuccessNum)));
+			smsTaskHead.setSendingFailNum(Integer.parseInt(String.valueOf(sendingFailNum)));
+			smsTaskHead.setTotalCoverNum(Integer.parseInt(String.valueOf(totalCoverNum)));
 		}
 	}
 			
@@ -162,14 +187,15 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 	public BaseOutput smsTaskHeadPublish(String userId, Integer id) {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
+		smsTaskHeadTemp.setId(Long.parseLong(String.valueOf(id)));
 		List<SmsTaskHead> smsTaskHeadList = smsTaskHeadDao.selectList(smsTaskHeadTemp);
 		if(CollectionUtils.isNotEmpty(smsTaskHeadList)){
 			SmsTaskHead smsTaskHeadBack = smsTaskHeadList.get(0);
-			if(smsTaskHeadBack!=null){
-				Integer audienceGenerateStatus = smsTaskHeadBack.getAudienceGenerateStatus();
+			if(smsTaskHeadBack!=null){				
 				smsTaskHeadBack.setSmsTaskStatus(2);
-				smsTaskHeadDao.updateById(smsTaskHeadBack);
-				if(audienceGenerateStatus!=1){					
+				smsTaskHeadDao.updateById(smsTaskHeadBack);				
+				Integer audienceGenerateStatus = smsTaskHeadBack.getAudienceGenerateStatus();
+				if(audienceGenerateStatus!=null&&audienceGenerateStatus!=1){					
 					mqTopicService.sendSmsByTaskId(String.valueOf(id));
 				}
 			}			

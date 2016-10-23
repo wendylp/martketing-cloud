@@ -10,6 +10,7 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -42,5 +43,5 @@ public interface SmsTaskHeadDao extends BaseDao<SmsTaskHead>{
 	 * @param id
 	 * @return
 	 */
-	public Map<Integer,Integer> countStatusById(long id);
+	public List<Map<String,Object>> countStatusById(Long id);
 }
