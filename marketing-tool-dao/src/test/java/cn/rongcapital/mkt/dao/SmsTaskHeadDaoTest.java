@@ -70,7 +70,7 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
 		/**
 		 * 只有名称模糊查询
 		 */
-/*		smsTaskHeadTemp.setSmsTaskName("测试");*/		
+/*		smsTaskHeadTemp.setSmsTaskName("任务");*/		
 		/**
 		 * 只有应用通道
 		 * 0:营销短信模板,1:服务通知模板,2：短信验证码模板
@@ -90,9 +90,21 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
 		 */
 /*		smsTaskHeadTemp.setSmsTaskAppType(0);
 		smsTaskHeadTemp.setSmsTaskStatus(0);*/
+/*		smsTaskHeadTemp.setSmsTaskAppType(0);
+		smsTaskHeadTemp.setSmsTaskStatus(2);*/
+/*		smsTaskHeadTemp.setSmsTaskAppType(0);
+		smsTaskHeadTemp.setSmsTaskStatus(4);*/
 /*		smsTaskHeadTemp.setSmsTaskAppType(1);
-		smsTaskHeadTemp.setSmsTaskStatus(2);*/		
+		smsTaskHeadTemp.setSmsTaskStatus(0);*/	
 /*		smsTaskHeadTemp.setSmsTaskAppType(1);
+		smsTaskHeadTemp.setSmsTaskStatus(2);*/
+		smsTaskHeadTemp.setSmsTaskAppType(1);
+		smsTaskHeadTemp.setSmsTaskStatus(4);		
+/*		smsTaskHeadTemp.setSmsTaskAppType(2);
+		smsTaskHeadTemp.setSmsTaskStatus(0);*/
+/*		smsTaskHeadTemp.setSmsTaskAppType(2);
+		smsTaskHeadTemp.setSmsTaskStatus(2);*/
+/*		smsTaskHeadTemp.setSmsTaskAppType(2);
 		smsTaskHeadTemp.setSmsTaskStatus(4);*/
 		/**
 		 * 应用通道、名称模糊查询
@@ -120,7 +132,7 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
 		smsTaskHeadTemp.setPageSize(12);
 		
 		List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectList(smsTaskHeadTemp);
-		Assert.assertEquals(5, smsTaskHeads.size());
+		Assert.assertEquals(1, smsTaskHeads.size());
 		 
     }
     

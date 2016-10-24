@@ -57,7 +57,7 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 		}
 		smsTaskHeadTemp.setOrderField("create_time");
 		smsTaskHeadTemp.setOrderFieldType("DESC");
-		smsTaskHeadTemp.setStartIndex((index-1)*index);
+		smsTaskHeadTemp.setStartIndex((index-1)*size);
 		smsTaskHeadTemp.setPageSize(size);		
 		
 		int totalCount = smsTaskHeadDao.selectListCount(smsTaskHeadTemp);
