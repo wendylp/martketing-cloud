@@ -72,7 +72,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		}
 		smsTempletTemp.setOrderField("create_time");
 		smsTempletTemp.setOrderFieldType("DESC");
-		smsTempletTemp.setStartIndex((index-1)*index);
+		smsTempletTemp.setStartIndex((index-1)*size);
 		smsTempletTemp.setPageSize(size);
 		
 		int totalCount = smsTempletDao.selectListCount(smsTempletTemp);
