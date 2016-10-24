@@ -8,10 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.collect.Lists;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -51,13 +54,15 @@ public class SmsMessageSendRecordGetServiceImpl implements SmsMessageSendRecordG
 
         SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
         smsTaskDetail.setSmsTaskHeadId(smsTaskHeadId);
-        if (receiveMobile != null && receiveMobile.length() > 0) {
+        if (StringUtils.isNotEmpty(receiveMobile)) {
             smsTaskDetail.setReceiveMobile(receiveMobile);
         }
-        smsTaskDetail.setStatus((byte)0);
+        smsTaskDetail.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         smsTaskDetail.setStartIndex(index);
         smsTaskDetail.setPageSize(size);
         
+        // 设置总数
+        result.setTotalCount(smsTaskDetailDao.selectListCount(smsTaskDetail));
 
         List<MessageSendRecordGetOut> messageSendRecordGetOutLists =
                 smsTaskDetailDao.messageSendRecordGet(smsTaskDetail);
