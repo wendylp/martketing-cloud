@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
@@ -63,7 +64,9 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTemplet smsTempletTemp = new SmsTemplet();		
 		smsTempletTemp.setChannelType(NumUtil.int2OneByte(channelType));
-		smsTempletTemp.setType(NumUtil.int2OneByte(type));
+		if(type!=null){
+			smsTempletTemp.setType(NumUtil.int2OneByte(type));
+		}		
 		if(StringUtils.isNotEmpty(content)){
 			smsTempletTemp.setContent(content);
 		}
@@ -78,6 +81,8 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			for(Iterator<SmsTemplet> iter = dataList.iterator();iter.hasNext();){
 				SmsTemplet smsTemplet = iter.next();
 				smsTemplet.setCreateTimeStr(DateUtil.getStringFromDate(smsTemplet.getCreateTime(),FORMAT_STRING));
+				int auditStatus = smsTemplet.getAuditStatus() & 0xff;
+				smsTemplet.setAuditStatusStr(SmsTempleteAuditStatusEnum.getDescriptionByStatus(auditStatus));
 			}
 		}
 		output.setTotalCount(totalCount);		
