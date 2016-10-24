@@ -10,7 +10,11 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.po.MessageSendRecordGetOut;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
 
 public interface SmsTaskDetailDao extends BaseDao<SmsTaskDetail>{
@@ -34,4 +38,12 @@ public interface SmsTaskDetailDao extends BaseDao<SmsTaskDetail>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    /**
+     * 返回当前任务的发送记录列表(如果手机号为空则查本次任务全部记录)
+     * 
+     * @param smsTaskDetail
+     * @return
+     */
+    List<MessageSendRecordGetOut> messageSendRecordGet(SmsTaskDetail smsTaskDetail);
 }

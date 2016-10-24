@@ -35,6 +35,25 @@ public class SmsTaskHead extends BaseQuery{
 
     private Integer sendingFailNum;
 
+    private Integer audienceGenerateStatus;
+    
+    /**
+     * 临时属性
+     */
+    private String smsTaskStatusStr;
+    
+    private String smsTaskAppTypeStr;
+    
+    private String createTimeStr;
+    
+    private Integer totalCoverNumPer = 100;
+    
+    private Integer sendingSuccessNumPer;
+    
+    private Integer waitingNumPer = 100;
+    
+    private Integer sendingFailNumPer = 100;
+
     public Long getId() {
         return id;
     }
@@ -154,4 +173,70 @@ public class SmsTaskHead extends BaseQuery{
     public void setSendingFailNum(Integer sendingFailNum) {
         this.sendingFailNum = sendingFailNum;
     }
+
+    public Integer getAudienceGenerateStatus() {
+        return audienceGenerateStatus;
+    }
+
+    public void setAudienceGenerateStatus(Integer audienceGenerateStatus) {
+        this.audienceGenerateStatus = audienceGenerateStatus;
+    }
+
+	public String getSmsTaskStatusStr() {
+		return smsTaskStatusStr;
+	}
+
+	public void setSmsTaskStatusStr(String smsTaskStatusStr) {
+		this.smsTaskStatusStr = smsTaskStatusStr;
+	}
+
+	public String getSmsTaskAppTypeStr() {
+		return smsTaskAppTypeStr;
+	}
+
+	public void setSmsTaskAppTypeStr(String smsTaskAppTypeStr) {
+		this.smsTaskAppTypeStr = smsTaskAppTypeStr;
+	}
+
+	public String getCreateTimeStr() {
+		return createTimeStr;
+	}
+
+	public void setCreateTimeStr(String createTimeStr) {
+		this.createTimeStr = createTimeStr;
+	}
+
+	public Integer getTotalCoverNumPer() {
+		return totalCoverNumPer;
+	}
+
+	public void setTotalCoverNumPer(Integer totalCoverNumPer) {
+		this.totalCoverNumPer = totalCoverNumPer;
+	}
+
+	public Integer getSendingSuccessNumPer() {
+		return sendingSuccessNumPer;
+	}
+
+	public void setSendingSuccessNumPer(Integer sendingSuccessNumPer) {
+		this.sendingSuccessNumPer = sendingSuccessNumPer;
+	}
+
+	public Integer getWaitingNumPer() {
+		return waitingNumPer;
+	}
+
+	public void setWaitingNumPer(Integer waitingNumPer) {
+		this.waitingNumPer = waitingNumPer;
+	}
+
+	public Integer getSendingFailNumPer() {
+		return sendingFailNumPer;
+	}
+
+	public void setSendingFailNumPer(Integer sendingFailNumPer) {
+		this.sendingFailNumPer = sendingFailNumPer;
+	}
+    
+    
 }

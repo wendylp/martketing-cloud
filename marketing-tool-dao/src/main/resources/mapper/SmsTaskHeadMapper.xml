@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,sms_task_name as smsTaskName,sms_task_signature_id as smsTaskSignatureId,sms_task_template_id as smsTaskTemplateId,sms_task_template_content as smsTaskTemplateContent,sms_task_send_type as smsTaskSendType,sms_task_app_type as smsTaskAppType,sms_task_status as smsTaskStatus,status as status,create_time as createTime,update_time as updateTime,total_cover_num as totalCoverNum,sending_success_num as sendingSuccessNum,waiting_num as waitingNum,sending_fail_num as sendingFailNum]]>
+		<![CDATA[ id as id,sms_task_name as smsTaskName,sms_task_signature_id as smsTaskSignatureId,sms_task_template_id as smsTaskTemplateId,sms_task_template_content as smsTaskTemplateContent,sms_task_send_type as smsTaskSendType,sms_task_app_type as smsTaskAppType,sms_task_status as smsTaskStatus,status as status,create_time as createTime,update_time as updateTime,total_cover_num as totalCoverNum,sending_success_num as sendingSuccessNum,waiting_num as waitingNum,sending_fail_num as sendingFailNum,audience_generate_status as audienceGenerateStatus]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -14,7 +14,7 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="smsTaskName != null"><![CDATA[ AND sms_task_name = #{smsTaskName}]]></if>
+		    	<if test="smsTaskName != null"><![CDATA[ AND sms_task_name like CONCAT('%',#{smsTaskName},'%' )]]></if>
 		    	<if test="smsTaskSignatureId != null"><![CDATA[ AND sms_task_signature_id = #{smsTaskSignatureId}]]></if>
 		    	<if test="smsTaskTemplateId != null"><![CDATA[ AND sms_task_template_id = #{smsTaskTemplateId}]]></if>
 		    	<if test="smsTaskTemplateContent != null"><![CDATA[ AND sms_task_template_content = #{smsTaskTemplateContent}]]></if>
@@ -28,6 +28,7 @@
 		    	<if test="sendingSuccessNum != null"><![CDATA[ AND sending_success_num = #{sendingSuccessNum}]]></if>
 		    	<if test="waitingNum != null"><![CDATA[ AND waiting_num = #{waitingNum}]]></if>
 		    	<if test="sendingFailNum != null"><![CDATA[ AND sending_fail_num = #{sendingFailNum}]]></if>
+			    <if test="audienceGenerateStatus != null"><![CDATA[ AND audience_generate_status = #{audienceGenerateStatus}]]></if>
 		</where>
 	</sql>
 	
@@ -51,14 +52,15 @@
 		    	<if test="totalCoverNum != null"><![CDATA[total_cover_num = #{totalCoverNum},]]></if>
 		    	<if test="sendingSuccessNum != null"><![CDATA[sending_success_num = #{sendingSuccessNum},]]></if>
 		    	<if test="waitingNum != null"><![CDATA[waiting_num = #{waitingNum},]]></if>
-		    	<if test="sendingFailNum != null"><![CDATA[sending_fail_num = #{sendingFailNum}]]></if>
+		    	<if test="sendingFailNum != null"><![CDATA[sending_fail_num = #{sendingFailNum},]]></if>
+			    <if test="audienceGenerateStatus != null"><![CDATA[audience_generate_status = #{audienceGenerateStatus}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SmsTaskHead" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO sms_task_head (sms_task_name,sms_task_signature_id,sms_task_template_id,sms_task_template_content,sms_task_send_type,sms_task_app_type,sms_task_status,create_time,total_cover_num,sending_success_num,waiting_num,sending_fail_num)
+			INSERT INTO sms_task_head (sms_task_name,sms_task_signature_id,sms_task_template_id,sms_task_template_content,sms_task_send_type,sms_task_app_type,sms_task_status,create_time,total_cover_num,sending_success_num,waiting_num,sending_fail_num,audience_generate_status)
 			VALUES
 			(
 			  #{smsTaskName},
@@ -72,7 +74,8 @@
 			  #{totalCoverNum},
 			  #{sendingSuccessNum},
 			  #{waitingNum},
-			  #{sendingFailNum}
+			  #{sendingFailNum},
+			  #{audienceGenerateStatus}
 			)
 		]]>
 	</insert>
@@ -116,5 +119,19 @@
 	
 	<!-- 其它SQL语句 -->
 	
-	
+	<select id="countStatusById" parameterType="java.lang.Long" resultType="java.util.Map">
+		SELECT
+			stds.sms_task_send_status AS smsTaskSendStatus,
+			COUNT(DISTINCT stds.id) AS count
+		FROM
+			sms_task_head sth,
+			sms_task_detail std,
+			sms_task_detail_state stds
+		WHERE
+			sth.id = #{id}
+		AND	sth.id = std.sms_task_head_id
+		AND std.id = stds.sms_task_detail_id
+		GROUP BY
+			stds.sms_task_send_status
+	</select>
 </mapper>

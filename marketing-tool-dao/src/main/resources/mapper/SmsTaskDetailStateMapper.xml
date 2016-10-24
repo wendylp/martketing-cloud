@@ -59,6 +59,12 @@
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
+	
+	<!-- 修改任务状态修改 -->
+	<update id="updateDetailState" parameterType="cn.rongcapital.mkt.po.SmsTaskDetailState">
+		<![CDATA[UPDATE sms_task_detail_state set sms_task_send_status = #{smsTaskSendStatus} 
+		where sms_task_detail_id = #{smsTaskDetailId}]]>
+	</update>
 
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.SmsTaskDetailState" resultType="cn.rongcapital.mkt.po.SmsTaskDetailState">
