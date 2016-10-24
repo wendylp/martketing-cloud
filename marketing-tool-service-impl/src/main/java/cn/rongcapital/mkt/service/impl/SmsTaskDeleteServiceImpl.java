@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.dao.SmsTaskBodyDao;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
 import cn.rongcapital.mkt.po.SmsTaskBody;
@@ -24,8 +25,6 @@ import cn.rongcapital.mkt.vo.in.SmsTaskDeleteIn;
 @Service
 public class SmsTaskDeleteServiceImpl implements SmsTaskDeleteService {
     
-    private static final Integer SMS_TASK_STATUS_IN_PROGRESS = 2; // 活动正在执行中
-
     @Autowired
     SmsTaskHeadDao smsTaskHeadDao;
 
@@ -72,7 +71,7 @@ public class SmsTaskDeleteServiceImpl implements SmsTaskDeleteService {
         }
 
         // 判断任务是否执行中
-        if (smsTaskHeadLists.get(0).getSmsTaskStatus() == SmsTaskDeleteServiceImpl.SMS_TASK_STATUS_IN_PROGRESS) {
+        if (smsTaskHeadLists.get(0).getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()) {
             result.setCode(ReturnCode.TASK_DOING.getCode());
             result.setMsg(ReturnCode.TASK_DOING.getMsg());
             return result;
