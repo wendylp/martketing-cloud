@@ -195,13 +195,20 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 		List<SmsTaskHead> smsTaskHeadList = smsTaskHeadDao.selectList(smsTaskHeadTemp);
 		if(CollectionUtils.isNotEmpty(smsTaskHeadList)){
 			SmsTaskHead smsTaskHeadBack = smsTaskHeadList.get(0);
-			if(smsTaskHeadBack!=null){				
-				smsTaskHeadBack.setSmsTaskStatus(2);
-				smsTaskHeadDao.updateById(smsTaskHeadBack);				
-				Integer audienceGenerateStatus = smsTaskHeadBack.getAudienceGenerateStatus();
-				if(audienceGenerateStatus!=null&&audienceGenerateStatus!=1){					
-					mqTopicService.sendSmsByTaskId(String.valueOf(id));
-				}
+			if(smsTaskHeadBack!=null){
+				/**
+				 * 只有未启动、暂停、已预约才可以发布任务
+				 */
+				if(smsTaskHeadBack.getSmsTaskStatus().equals(SmsTaskStatusEnum.TASK_UNSTART.getStatusCode())
+						||smsTaskHeadBack.getSmsTaskStatus().equals(SmsTaskStatusEnum.TASK_PAUSE.getStatusCode())
+						||smsTaskHeadBack.getSmsTaskStatus().equals(SmsTaskStatusEnum.TASK_RESERVATION.getStatusCode())){
+					smsTaskHeadBack.setSmsTaskStatus(2);
+					smsTaskHeadDao.updateById(smsTaskHeadBack);				
+					Integer audienceGenerateStatus = smsTaskHeadBack.getAudienceGenerateStatus();
+					if(audienceGenerateStatus!=null&&audienceGenerateStatus!=1){					
+						mqTopicService.sendSmsByTaskId(String.valueOf(id));
+					}
+				}				
 			}			
 		}		
 		return output;
