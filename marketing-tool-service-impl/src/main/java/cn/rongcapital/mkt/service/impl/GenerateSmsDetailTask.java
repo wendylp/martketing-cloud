@@ -53,7 +53,8 @@ public class GenerateSmsDetailTask implements TaskService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    private MQTopicServiceImpl mqTopicServiceImpl= new MQTopicServiceImpl();
+    @Autowired
+    private MQTopicService mqTopicService;
 
     private final String SEGMENTATION_HEAD_ID = "segmentation_head_id";
 
@@ -114,7 +115,7 @@ public class GenerateSmsDetailTask implements TaskService {
         SmsTaskHead currentTaskHead = smsTaskHeads.get(0);
         if(currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()){
             //Todo:4检测TaskHead的发送状态
-            mqTopicServiceImpl.sendSmsByTaskId(taskHeadIdStr);
+            mqTopicService.sendSmsByTaskId(taskHeadIdStr);
         }
         
     }

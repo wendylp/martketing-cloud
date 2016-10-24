@@ -17,7 +17,7 @@
 		    	<if test="code != null"><![CDATA[ AND code = #{code}]]></if>
 		    	<if test="channelType != null"><![CDATA[ AND channel_type = #{channelType}]]></if>
 		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
-		    	<if test="content != null"><![CDATA[ AND content like '% #{content} %']]></if>
+		    	<if test="content != null"><![CDATA[ AND content like CONCAT('%',#{content},'%' )]]></if>
 		    	<if test="auditStatus != null"><![CDATA[ AND audit_status = #{auditStatus}]]></if>
 		    	<if test="auditor != null"><![CDATA[ AND auditor = #{auditor}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>

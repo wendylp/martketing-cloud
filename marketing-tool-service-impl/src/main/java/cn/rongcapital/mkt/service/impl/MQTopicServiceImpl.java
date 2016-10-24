@@ -272,8 +272,8 @@ public class MQTopicServiceImpl implements MQTopicService {
 		message.setServiceName(MQ_SMS_SERVICE);
 		message.setMessage(taskId);
 		try {
-			MQTopicServiceImpl mc = new MQTopicServiceImpl();
-			mc.senderMessage(MQ_SMS_SERVICE, message);
+//			MQTopicServiceImpl mc = new MQTopicServiceImpl();
+			this.senderMessage(MQ_SMS_SERVICE, message);
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
