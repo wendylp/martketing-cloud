@@ -42,7 +42,21 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	private final String TEMPLETE_CREATE_TIME ="创建时间";
 	
 	private final String TEMPLETE_AUDIT_STATUS ="审核状态";
-		
+	
+	/**
+	 * 审核通过
+	 */
+	private final Integer AUDIT_STATUS_CHECKED = 1;
+	
+	/**
+	 * 模板有效
+	 */
+	private final Integer STATUS_VALID = 0;
+	/**
+	 * 模板无效
+	 */
+	private final Integer STATUS_NO_VALID = 1;
+	
 	@Override
 	public BaseOutput smsTempletList(String userId, Integer index, Integer size, Integer channelType,
 			Integer type, String content) {
@@ -91,7 +105,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			if(StringUtils.isNotEmpty(smsTempletIn.getAuditor())){
 				smsTemplet.setAuditor(smsTempletIn.getAuditor());
 			}			
-			smsTemplet.setAuditStatus(NumUtil.int2OneByte(1));
+			smsTemplet.setAuditStatus(NumUtil.int2OneByte(this.AUDIT_STATUS_CHECKED));
 			if(smsTempletIn.getChannelType()!=null){
 				smsTemplet.setChannelType(NumUtil.int2OneByte(smsTempletIn.getChannelType()));
 			}
@@ -105,7 +119,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 				smsTemplet.setCreator(smsTempletIn.getCreator());
 				smsTemplet.setCreateTime(new Date());
 			}			
-			smsTemplet.setStatus(NumUtil.int2OneByte(0));
+			smsTemplet.setStatus(NumUtil.int2OneByte(this.STATUS_VALID));
 			if(StringUtils.isNoneEmpty(smsTempletIn.getUpdateUser())){
 				smsTemplet.setUpdateTime(new Date());
 				smsTemplet.setUpdateUser(smsTempletIn.getUpdateUser());
