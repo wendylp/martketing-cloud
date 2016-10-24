@@ -37,7 +37,7 @@ public class SmsTempletApi {
 	private SmsTempletService smsTempletService;
 	
 	@GET
-	@Path("/mkt.sms.smsTemplet.list.get")
+	@Path("/mkt.sms.smstemplet.list.get")
 	public BaseOutput smsTempletList(@NotEmpty @QueryParam("user_token") String userToken,@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,			
 			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
@@ -49,7 +49,7 @@ public class SmsTempletApi {
 	
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
-	@Path("/mkt.sms.smsTemplet.save")
+	@Path("/mkt.sms.smstemplet.save")
 	public BaseOutput insertSmsTemplet(@Valid SmsTempletIn smsTempletIn) throws Exception {		
 		return smsTempletService.insertSmsTemplet(smsTempletIn);
 	}
