@@ -248,7 +248,9 @@ public class GetH5PubListServiceImpl implements TaskService {
 			}
 		}
 		// 批量更新数据库中未授权公众号的状态为删除
-		wechatRegisterDao.batchUpdateStatusList(resultList);
+		if(CollectionUtils.isNotEmpty(resultList)){
+			wechatRegisterDao.batchUpdateStatusList(resultList);
+		}		
 	}
 
 	private void callH5PlusMethod() {
