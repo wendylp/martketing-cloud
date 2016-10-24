@@ -33,6 +33,14 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 	@Autowired
 	private MQTopicService mqTopicService;
 
+	private final String TASK_TOTAL_COVER_NUM ="总覆盖";
+	
+	private final String TASK_SENDING_SUCCESS_NUM ="已成功";
+	
+	private final String TASK_WAITING_NUM ="等待中";
+	
+	private final String TASK_SENDING_FAIL_NUM ="已失败";
+	
 	@Override
 	public BaseOutput smsTaskHeadList(String userId, Integer index, Integer size, Integer smsTaskAppType,
 			Integer smsTaskStatus, String smsTaskName) {
@@ -150,22 +158,22 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 		//总覆盖
 		ColumnsOut columnsOut0 = new ColumnsOut();
 		columnsOut0.setColCode("totalCoverNum");
-		columnsOut0.setColName("总覆盖");
+		columnsOut0.setColName(this.TASK_TOTAL_COVER_NUM);
 		columnsOutList.add(columnsOut0);
 		//已成功
 		ColumnsOut columnsOut1 = new ColumnsOut();
 		columnsOut1.setColCode("sendingSuccessNum");
-		columnsOut1.setColName("已成功");
+		columnsOut1.setColName(this.TASK_SENDING_SUCCESS_NUM);
 		columnsOutList.add(columnsOut1);
 		//等待中
 		ColumnsOut columnsOut2 = new ColumnsOut();
 		columnsOut2.setColCode("waitingNum");
-		columnsOut2.setColName("等待中");
+		columnsOut2.setColName(this.TASK_WAITING_NUM);
 		columnsOutList.add(columnsOut2);
 		//已失败
 		ColumnsOut columnsOut3 = new ColumnsOut();
 		columnsOut3.setColCode("sendingFailNum");
-		columnsOut3.setColName("已失败");
+		columnsOut3.setColName(this.TASK_SENDING_FAIL_NUM);
 		columnsOutList.add(columnsOut3);
 		return columnsOutList;		
 	}

@@ -36,6 +36,12 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	
 	@Autowired
 	private SmsTempletDao smsTempletDao;
+	
+	private final String TEMPLETE_CONTENT_= "模板内容";
+	
+	private final String TEMPLETE_CREATE_TIME ="创建时间";
+	
+	private final String TEMPLETE_AUDIT_STATUS ="审核状态";
 		
 	@Override
 	public BaseOutput smsTempletList(String userId, Integer index, Integer size, Integer channelType,
@@ -132,28 +138,19 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		//模板内容
 		ColumnsOut columnsOut1 = new ColumnsOut();
 		columnsOut1.setColCode("content");
-		columnsOut1.setColName("模板内容");
+		columnsOut1.setColName(this.TEMPLETE_CONTENT_);
 		columnsOutList.add(columnsOut1);
 		//createTime
 		ColumnsOut columnsOut2 = new ColumnsOut();
 		columnsOut2.setColCode("createTimeStr");
-		columnsOut2.setColName("创建时间");
+		columnsOut2.setColName(this.TEMPLETE_CREATE_TIME);
 		columnsOutList.add(columnsOut2);
 		//审核状态
 		ColumnsOut columnsOut3 = new ColumnsOut();
 		columnsOut3.setColCode("auditStatus");
-		columnsOut3.setColName("审核状态");
+		columnsOut3.setColName(this.TEMPLETE_AUDIT_STATUS);
 		columnsOutList.add(columnsOut3);
 		return columnsOutList;		
-	}
-	
-	public static void main(String[] args) {
-		SmsTempletIn smsTempletIn =new SmsTempletIn();
-		smsTempletIn.setChannelType(NumUtil.int2OneByte(0));
-		smsTempletIn.setContent("小白同学。。。。。。。事发时的范范");
-		smsTempletIn.setCreator("user1");
-		smsTempletIn.setType(NumUtil.int2OneByte(0));
-		smsTempletIn.setUpdateUser("user1");
 	}
 	
 }
