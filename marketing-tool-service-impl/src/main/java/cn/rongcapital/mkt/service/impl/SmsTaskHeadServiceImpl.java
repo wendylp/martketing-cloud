@@ -101,12 +101,17 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 	
 	private void setSmsTaskHeadPers(SmsTaskHead smsTaskHead){
 		Integer totalCoverNum = smsTaskHead.getTotalCoverNum();
-		Integer sendingFailNum = smsTaskHead.getSendingFailNum();
-		Integer sendingSuccessNum = smsTaskHead.getSendingSuccessNum();
-		Integer waitingNum = smsTaskHead.getWaitingNum();
-		Integer sendingFailNumPer = sendingFailNum*100/totalCoverNum;
-		Integer sendingSuccessNumPer = sendingSuccessNum*100/totalCoverNum;
-		Integer waitingNumPer = waitingNum*100/totalCoverNum;
+		Integer sendingFailNumPer =0;
+		Integer sendingSuccessNumPer = 0;
+		Integer waitingNumPer = 0;
+		if(totalCoverNum>0){
+			Integer sendingFailNum = smsTaskHead.getSendingFailNum();
+			Integer sendingSuccessNum = smsTaskHead.getSendingSuccessNum();
+			Integer waitingNum = smsTaskHead.getWaitingNum();
+			sendingFailNumPer = sendingFailNum*100/totalCoverNum;
+			sendingSuccessNumPer = sendingSuccessNum*100/totalCoverNum;
+			waitingNumPer = waitingNum*100/totalCoverNum;
+		}		
 		smsTaskHead.setSendingFailNumPer(sendingFailNumPer);
 		smsTaskHead.setSendingSuccessNumPer(sendingSuccessNumPer);
 		smsTaskHead.setWaitingNumPer(waitingNumPer);
