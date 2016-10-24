@@ -118,7 +118,7 @@ public class SmsTaskHeadServiceTest {
     @Test
     public void testSmsTaskHeadList(){    	
     	// 测试查询任务列表
-        BaseOutput result = smsTaskHeadService.smsTaskHeadList("", 0, 12, 0, 0, "");        
+        BaseOutput result = smsTaskHeadService.smsTaskHeadList("", 0, 12, "0", "0", "");        
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
         Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), result.getMsg());
     }

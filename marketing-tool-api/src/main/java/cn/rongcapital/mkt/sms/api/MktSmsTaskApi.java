@@ -37,13 +37,12 @@ public class MktSmsTaskApi {
 	public BaseOutput smsTaskHeadList(@NotEmpty @QueryParam("user_token") String userToken,@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,			
 			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
-			@QueryParam("sms_task_app_type") Integer smsTaskAppType,
-			@QueryParam("sms_task_status") Integer smsTaskStatus,
+			@QueryParam("sms_task_app_type") String smsTaskAppType,
+			@QueryParam("sms_task_status") String smsTaskStatus,
 			@QueryParam("sms_task_name") String smsTaskName) throws Exception {		
 		return smsTaskHeadService.smsTaskHeadList(userId, index, size, smsTaskAppType, smsTaskStatus, smsTaskName);
 	}
-	
-	
+		
 	@GET
 	@Path("/mkt.sms.smstaskhead.publish")
 	public BaseOutput smsTaskHeadPublish(@NotEmpty @QueryParam("user_token") String userToken,@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,

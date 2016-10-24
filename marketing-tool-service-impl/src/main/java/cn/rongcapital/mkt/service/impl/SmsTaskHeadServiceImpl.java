@@ -42,15 +42,15 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 	private final String TASK_SENDING_FAIL_NUM ="已失败";
 	
 	@Override
-	public BaseOutput smsTaskHeadList(String userId, Integer index, Integer size, Integer smsTaskAppType,
-			Integer smsTaskStatus, String smsTaskName) {
+	public BaseOutput smsTaskHeadList(String userId, Integer index, Integer size, String smsTaskAppType,
+			String smsTaskStatus, String smsTaskName) {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
-		if(smsTaskAppType!=null){
-			smsTaskHeadTemp.setSmsTaskAppType(smsTaskAppType);
+		if(StringUtils.isNotEmpty(smsTaskAppType)){
+			smsTaskHeadTemp.setSmsTaskAppType(Integer.parseInt(smsTaskAppType));
 		}
-		if(smsTaskStatus!=null){
-			smsTaskHeadTemp.setSmsTaskStatus(smsTaskStatus);
+		if(StringUtils.isNotEmpty(smsTaskStatus)){
+			smsTaskHeadTemp.setSmsTaskStatus(Integer.parseInt(smsTaskStatus));
 		}
 		if(StringUtils.isNotEmpty(smsTaskName)){
 			smsTaskHeadTemp.setSmsTaskName(smsTaskName);
@@ -145,12 +145,6 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 			smsTaskHead.setSendingFailNum(Integer.parseInt(String.valueOf(sendingFailNum)));
 			smsTaskHead.setTotalCoverNum(Integer.parseInt(String.valueOf(totalCoverNum)));
 		}
-	}
-			
-	@Override
-	public Map<String, Integer> countStatusById(long id) {
-		
-		return null;
 	}
 
 	private List<Object> getColumnsOutList(){

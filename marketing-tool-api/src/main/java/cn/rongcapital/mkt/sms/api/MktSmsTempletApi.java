@@ -42,7 +42,7 @@ public class MktSmsTempletApi {
 			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
 			@NotNull @QueryParam("channel_type") Integer channelType,
-			@QueryParam("type") Integer type,
+			@QueryParam("type") String type,
 			@QueryParam("content") String content) throws Exception {		
 		return smsTempletService.smsTempletList(userId, index, size, channelType, type, content);
 	}

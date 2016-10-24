@@ -60,12 +60,12 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	
 	@Override
 	public BaseOutput smsTempletList(String userId, Integer index, Integer size, Integer channelType,
-			Integer type, String content) {
+			String type, String content) {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTemplet smsTempletTemp = new SmsTemplet();		
 		smsTempletTemp.setChannelType(NumUtil.int2OneByte(channelType));
-		if(type!=null){
-			smsTempletTemp.setType(NumUtil.int2OneByte(type));
+		if(StringUtils.isNotEmpty(type)){
+			smsTempletTemp.setType(NumUtil.int2OneByte(Integer.parseInt(type)));
 		}		
 		if(StringUtils.isNotEmpty(content)){
 			smsTempletTemp.setContent(content);

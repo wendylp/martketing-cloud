@@ -15,7 +15,7 @@ public interface SmsTempletService {
 	 * @param content
 	 * @return
 	 */
-	public BaseOutput smsTempletList(String userId,Integer index,Integer size,Integer channelType,Integer type,String content);
+	public BaseOutput smsTempletList(String userId,Integer index,Integer size,Integer channelType,String type,String content);
 	
 	/**
 	 * @param smsTempletIn
