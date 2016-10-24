@@ -19,7 +19,7 @@ import cn.rongcapital.mkt.vo.BaseInput;
 public class SmsTaskDeleteIn extends BaseInput{
     
     @NotNull
-    Long id;
+    private Long id;
     
     @NotEmpty
     private String userToken = null;
