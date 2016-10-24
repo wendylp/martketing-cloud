@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.vo.out;
 
 public class SegmentSearchDownloadOut {
 	
+	private Integer id;
 	private String name;
 	private String mobile;
 	private String gender;
@@ -14,6 +15,12 @@ public class SegmentSearchDownloadOut {
 	private String wxCode;
 	private String qq;
 	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}

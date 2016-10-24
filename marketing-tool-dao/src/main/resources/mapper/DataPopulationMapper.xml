@@ -403,7 +403,7 @@
 		<![CDATA[and population.name like  CONCAT('%',#{queryName},'%')]]>
 	</select>
 	<select id="getSegmentSearchDownload" parameterType="java.util.List" resultType="cn.rongcapital.mkt.vo.out.SegmentSearchDownloadOut">
-	SELECT name,mobile,
+	SELECT id,name,mobile,
 	case gender
 	when '1' then '男'
 	when '2' then '女'
