@@ -27,15 +27,15 @@ public class SmsTaskHead extends BaseQuery{
 
     private Date updateTime;
 
-    private Integer totalCoverNum =0;
+    private Integer totalCoverNum;
 
-    private Integer sendingSuccessNum =0;
+    private Integer sendingSuccessNum;
 
-    private Integer waitingNum =0;
+    private Integer waitingNum;
 
-    private Integer sendingFailNum =0;
+    private Integer sendingFailNum;
 
-    private Integer audienceGenerateStatus=1;
+    private Integer audienceGenerateStatus;
     
     /**
      * 临时属性
