@@ -37,7 +37,7 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
     @Autowired
     private MQTopicService mqTopicService;
 
-    private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask ";
+    private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask";
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
