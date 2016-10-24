@@ -46,6 +46,8 @@ public class SmsMessageSendRecordGetServiceTest {
     private SmsTaskDetailDao smsTaskDetailDao;
 
     private List<MessageSendRecordGetOut> messageSendRecordGetOutLists;
+    
+    private int totalCount = 10;
 
     @Before
     public void setUp() throws Exception {
@@ -59,6 +61,7 @@ public class SmsMessageSendRecordGetServiceTest {
         messageSendRecordGetOutLists.add(messageSendRecordGetOut);
 
         Mockito.when(smsTaskDetailDao.messageSendRecordGet(any())).thenReturn(messageSendRecordGetOutLists);
+        Mockito.when(smsTaskDetailDao.selectListCount(any())).thenReturn(totalCount);
         smsMessageSendRecordGetService = new SmsMessageSendRecordGetServiceImpl();
 
         // 把mock的dao set进入service
@@ -68,11 +71,12 @@ public class SmsMessageSendRecordGetServiceTest {
     @Test
     public void testmessageSendRecordGet() {
 
-        BaseOutput result = smsMessageSendRecordGetService.messageSendRecordGet((long) 0, "", 0, 0);
+        BaseOutput result = smsMessageSendRecordGetService.messageSendRecordGet((long) 0, "", 0, 10);
 
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
         Assert.assertEquals(messageSendRecordGetOutLists.size(), result.getTotal());
+        Assert.assertEquals(totalCount, result.getTotalCount());
         Assert.assertEquals(messageSendRecordGetOutLists, result.getData());
     }
 
