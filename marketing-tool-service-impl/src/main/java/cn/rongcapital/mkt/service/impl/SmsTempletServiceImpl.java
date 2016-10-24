@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
@@ -70,6 +71,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		if(StringUtils.isNotEmpty(content)){
 			smsTempletTemp.setContent(content);
 		}
+		smsTempletTemp.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
 		smsTempletTemp.setOrderField("create_time");
 		smsTempletTemp.setOrderFieldType("DESC");
 		smsTempletTemp.setStartIndex((index-1)*size);

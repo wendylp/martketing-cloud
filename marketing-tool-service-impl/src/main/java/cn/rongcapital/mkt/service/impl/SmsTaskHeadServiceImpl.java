@@ -14,6 +14,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTaskAppEnum;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
@@ -55,6 +56,7 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 		if(StringUtils.isNotEmpty(smsTaskName)){
 			smsTaskHeadTemp.setSmsTaskName(smsTaskName);
 		}
+		smsTaskHeadTemp.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
 		smsTaskHeadTemp.setOrderField("create_time");
 		smsTaskHeadTemp.setOrderFieldType("DESC");
 		smsTaskHeadTemp.setStartIndex((index-1)*size);
