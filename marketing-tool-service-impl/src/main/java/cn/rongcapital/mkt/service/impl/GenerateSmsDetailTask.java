@@ -142,9 +142,9 @@ public class GenerateSmsDetailTask implements TaskService {
         }
 
         SmsTaskDetail paramTaskDetail = new SmsTaskDetail();
-        paramTaskDetail.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         paramTaskDetail.setSmsTaskHeadId(taskHeadId);
         List<SmsTaskDetail> smsTaskDetails = smsTaskDetailDao.selectList(paramTaskDetail);
+        logger.info("SmsTaskDetails size : " + smsTaskDetails.size());
 
         for(SmsTaskDetail taskDetail : smsTaskDetails){
             SmsTaskDetailState smsTaskDetailState = new SmsTaskDetailState();
@@ -153,6 +153,7 @@ public class GenerateSmsDetailTask implements TaskService {
             smsTaskDetailStateList.add(smsTaskDetailState);
         }
 
+        totalNum = (smsTaskDetailStateList.size() + PAGE_SIZE) / PAGE_SIZE;
         for(int index = 0; index < totalNum; index++){
             if(index == totalNum-1){
                 logger.info("insert SmsTaskDetailState index : " + index);
