@@ -79,6 +79,7 @@ public class GenerateSmsDetailTask implements TaskService {
         paramSmsTaskHead.setId(taskHeadId);
         List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectList(paramSmsTaskHead);
         if(CollectionUtils.isEmpty(smsTaskHeads)) return;
+
         SmsTaskHead targetHead = smsTaskHeads.get(0);
 
         //2根据headId依次选出受众人群
@@ -164,6 +165,7 @@ public class GenerateSmsDetailTask implements TaskService {
         AudienceListPartyMap paramAudienceListPartyMap = new AudienceListPartyMap();
         paramAudienceListPartyMap.setAudienceListId(targetId.intValue());
         paramAudienceListPartyMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        paramAudienceListPartyMap.setPageSize(Integer.MAX_VALUE);
         List<AudienceListPartyMap> audienceListPartyMapList = audienceListPartyMapDao.selectList(paramAudienceListPartyMap);
         if(CollectionUtils.isEmpty(audienceListPartyMapList)) return null;
 
