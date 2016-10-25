@@ -71,7 +71,7 @@ public class SmsMessageSendRecordGetServiceTest {
     @Test
     public void testmessageSendRecordGet() {
 
-        BaseOutput result = smsMessageSendRecordGetService.messageSendRecordGet((long) 0, "", 0, 10);
+        BaseOutput result = smsMessageSendRecordGetService.messageSendRecordGet((long) 0, "", 1, 10);
 
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
