@@ -14,6 +14,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTaskAppEnum;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
@@ -42,22 +43,23 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 	private final String TASK_SENDING_FAIL_NUM ="已失败";
 	
 	@Override
-	public BaseOutput smsTaskHeadList(String userId, Integer index, Integer size, Integer smsTaskAppType,
-			Integer smsTaskStatus, String smsTaskName) {
+	public BaseOutput smsTaskHeadList(String userId, Integer index, Integer size, String smsTaskAppType,
+			String smsTaskStatus, String smsTaskName) {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
-		if(smsTaskAppType!=null){
-			smsTaskHeadTemp.setSmsTaskAppType(smsTaskAppType);
+		if(StringUtils.isNotEmpty(smsTaskAppType)){
+			smsTaskHeadTemp.setSmsTaskAppType(Integer.parseInt(smsTaskAppType));
 		}
-		if(smsTaskStatus!=null){
-			smsTaskHeadTemp.setSmsTaskStatus(smsTaskStatus);
+		if(StringUtils.isNotEmpty(smsTaskStatus)){
+			smsTaskHeadTemp.setSmsTaskStatus(Integer.parseInt(smsTaskStatus));
 		}
 		if(StringUtils.isNotEmpty(smsTaskName)){
 			smsTaskHeadTemp.setSmsTaskName(smsTaskName);
 		}
+		smsTaskHeadTemp.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
 		smsTaskHeadTemp.setOrderField("create_time");
 		smsTaskHeadTemp.setOrderFieldType("DESC");
-		smsTaskHeadTemp.setStartIndex((index-1)*index);
+		smsTaskHeadTemp.setStartIndex((index-1)*size);
 		smsTaskHeadTemp.setPageSize(size);		
 		
 		int totalCount = smsTaskHeadDao.selectListCount(smsTaskHeadTemp);
@@ -99,12 +101,17 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 	
 	private void setSmsTaskHeadPers(SmsTaskHead smsTaskHead){
 		Integer totalCoverNum = smsTaskHead.getTotalCoverNum();
-		Integer sendingFailNum = smsTaskHead.getSendingFailNum();
-		Integer sendingSuccessNum = smsTaskHead.getSendingSuccessNum();
-		Integer waitingNum = smsTaskHead.getWaitingNum();
-		Integer sendingFailNumPer = sendingFailNum*100/totalCoverNum;
-		Integer sendingSuccessNumPer = sendingSuccessNum*100/totalCoverNum;
-		Integer waitingNumPer = waitingNum*100/totalCoverNum;
+		Integer sendingFailNumPer =0;
+		Integer sendingSuccessNumPer = 0;
+		Integer waitingNumPer = 0;
+		if(totalCoverNum>0){
+			Integer sendingFailNum = smsTaskHead.getSendingFailNum();
+			Integer sendingSuccessNum = smsTaskHead.getSendingSuccessNum();
+			Integer waitingNum = smsTaskHead.getWaitingNum();
+			sendingFailNumPer = sendingFailNum*100/totalCoverNum;
+			sendingSuccessNumPer = sendingSuccessNum*100/totalCoverNum;
+			waitingNumPer = waitingNum*100/totalCoverNum;
+		}		
 		smsTaskHead.setSendingFailNumPer(sendingFailNumPer);
 		smsTaskHead.setSendingSuccessNumPer(sendingSuccessNumPer);
 		smsTaskHead.setWaitingNumPer(waitingNumPer);
@@ -145,12 +152,6 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 			smsTaskHead.setSendingFailNum(Integer.parseInt(String.valueOf(sendingFailNum)));
 			smsTaskHead.setTotalCoverNum(Integer.parseInt(String.valueOf(totalCoverNum)));
 		}
-	}
-			
-	@Override
-	public Map<String, Integer> countStatusById(long id) {
-		
-		return null;
 	}
 
 	private List<Object> getColumnsOutList(){
@@ -199,13 +200,20 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 		List<SmsTaskHead> smsTaskHeadList = smsTaskHeadDao.selectList(smsTaskHeadTemp);
 		if(CollectionUtils.isNotEmpty(smsTaskHeadList)){
 			SmsTaskHead smsTaskHeadBack = smsTaskHeadList.get(0);
-			if(smsTaskHeadBack!=null){				
-				smsTaskHeadBack.setSmsTaskStatus(2);
-				smsTaskHeadDao.updateById(smsTaskHeadBack);				
-				Integer audienceGenerateStatus = smsTaskHeadBack.getAudienceGenerateStatus();
-				if(audienceGenerateStatus!=null&&audienceGenerateStatus!=1){					
-					mqTopicService.sendSmsByTaskId(String.valueOf(id));
-				}
+			if(smsTaskHeadBack!=null){
+				/**
+				 * 只有未启动、暂停、已预约才可以发布任务
+				 */
+				if(smsTaskHeadBack.getSmsTaskStatus().equals(SmsTaskStatusEnum.TASK_UNSTART.getStatusCode())
+						||smsTaskHeadBack.getSmsTaskStatus().equals(SmsTaskStatusEnum.TASK_PAUSE.getStatusCode())
+						||smsTaskHeadBack.getSmsTaskStatus().equals(SmsTaskStatusEnum.TASK_RESERVATION.getStatusCode())){
+					smsTaskHeadBack.setSmsTaskStatus(2);
+					smsTaskHeadDao.updateById(smsTaskHeadBack);				
+					Integer audienceGenerateStatus = smsTaskHeadBack.getAudienceGenerateStatus();
+					if(audienceGenerateStatus!=null&&audienceGenerateStatus!=1){					
+						mqTopicService.sendSmsByTaskId(String.valueOf(id));
+					}
+				}				
 			}			
 		}		
 		return output;

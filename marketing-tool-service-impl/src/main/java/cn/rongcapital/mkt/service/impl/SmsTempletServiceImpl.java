@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
@@ -60,19 +61,20 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	
 	@Override
 	public BaseOutput smsTempletList(String userId, Integer index, Integer size, Integer channelType,
-			Integer type, String content) {
+			String type, String content) {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTemplet smsTempletTemp = new SmsTemplet();		
 		smsTempletTemp.setChannelType(NumUtil.int2OneByte(channelType));
-		if(type!=null){
-			smsTempletTemp.setType(NumUtil.int2OneByte(type));
+		if(StringUtils.isNotEmpty(type)){
+			smsTempletTemp.setType(NumUtil.int2OneByte(Integer.parseInt(type)));
 		}		
 		if(StringUtils.isNotEmpty(content)){
 			smsTempletTemp.setContent(content);
 		}
+		smsTempletTemp.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
 		smsTempletTemp.setOrderField("create_time");
 		smsTempletTemp.setOrderFieldType("DESC");
-		smsTempletTemp.setStartIndex((index-1)*index);
+		smsTempletTemp.setStartIndex((index-1)*size);
 		smsTempletTemp.setPageSize(size);
 		
 		int totalCount = smsTempletDao.selectListCount(smsTempletTemp);

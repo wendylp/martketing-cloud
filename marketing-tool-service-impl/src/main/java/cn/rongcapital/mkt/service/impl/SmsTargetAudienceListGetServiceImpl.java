@@ -63,6 +63,8 @@ public class SmsTargetAudienceListGetServiceImpl implements SmsTargetAudienceLis
             }
         }
 
+        smsTargetAudienceListOut.setTotal(smsTargetAudienceListOut.getSmsTargetAudienceOutList().size());
+        smsTargetAudienceListOut.setTotalCount(smsTargetAudienceListOut.getSmsTargetAudienceOutList().size());
         return smsTargetAudienceListOut;
     }
 

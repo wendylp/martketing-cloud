@@ -59,7 +59,7 @@ public class SmsTempletServiceTest {
 
     @Test
     public void testSmsTempletList() {
-        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, 1, 1, "Hello Wrold!");
+        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, 1, "1", "Hello Wrold!");
         
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());

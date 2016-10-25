@@ -9,6 +9,8 @@ import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.MQTopicService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -25,6 +27,8 @@ import java.util.*;
  */
 @Service
 public class GenerateSmsDetailTask implements TaskService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private SmsTaskDetailDao smsTaskDetailDao;
@@ -66,6 +70,7 @@ public class GenerateSmsDetailTask implements TaskService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void task(String taskHeadIdStr) {
+        logger.info("taskHeadId" + taskHeadIdStr);
         Long taskHeadId = Long.valueOf(taskHeadIdStr);
 
         //1根据headId选出模板内容
@@ -74,6 +79,7 @@ public class GenerateSmsDetailTask implements TaskService {
         paramSmsTaskHead.setId(taskHeadId);
         List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectList(paramSmsTaskHead);
         if(CollectionUtils.isEmpty(smsTaskHeads)) return;
+
         SmsTaskHead targetHead = smsTaskHeads.get(0);
 
         //2根据headId依次选出受众人群
@@ -159,6 +165,7 @@ public class GenerateSmsDetailTask implements TaskService {
         AudienceListPartyMap paramAudienceListPartyMap = new AudienceListPartyMap();
         paramAudienceListPartyMap.setAudienceListId(targetId.intValue());
         paramAudienceListPartyMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        paramAudienceListPartyMap.setPageSize(Integer.MAX_VALUE);
         List<AudienceListPartyMap> audienceListPartyMapList = audienceListPartyMapDao.selectList(paramAudienceListPartyMap);
         if(CollectionUtils.isEmpty(audienceListPartyMapList)) return null;
 
