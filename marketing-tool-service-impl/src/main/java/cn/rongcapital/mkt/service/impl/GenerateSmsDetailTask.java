@@ -12,6 +12,7 @@ import cn.rongcapital.mkt.service.MQTopicService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -61,6 +62,7 @@ public class GenerateSmsDetailTask implements TaskService {
     private MQTopicService mqTopicService;
 
     private final String SEGMENTATION_HEAD_ID = "segmentation_head_id";
+    private final int PAGE_SIZE = 10000;
 
     @Override
     public void task(Integer taskId) {
@@ -189,7 +191,19 @@ public class GenerateSmsDetailTask implements TaskService {
         cacheDataPartyIdInSmsAudienceCache(taskHeadId, targetId, dataPartyIdList);
 
         //4根据dataPartyIdList选出相应的不同的mobile(去重),然后做为返回值返回
-        List<String> distinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList);
+        Set<String> distinctMobileSet = new HashSet<>();
+        List<String> subDistinctMobileList = null;
+        int totalPage = (dataPartyIdList.size() + PAGE_SIZE)/PAGE_SIZE;
+        for(int index = 0; index < totalPage; index++){
+            if(index == totalPage - 1){
+                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size() -1));
+            }else {
+                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE -1));
+            }
+            distinctMobileSet.addAll(subDistinctMobileList);
+        }
+        List<String> distinctMobileList = new LinkedList<>();
+        distinctMobileList.addAll(distinctMobileSet);
         if(CollectionUtils.isEmpty(distinctMobileList)) return null;
         return distinctMobileList;
     }
