@@ -93,8 +93,8 @@ public class GenerateSmsDetailTask implements TaskService {
         if(CollectionUtils.isEmpty(smsTaskBodies)) return;
         for(SmsTaskBody smsTaskBody : smsTaskBodies){
             List<String> receiveMobileList = queryReceiveMobileListByTargetAudienceIdAndType(smsTaskBody);
-            logger.info("sms list distinct mobile size: " + receiveMobileList.size());
             if(CollectionUtils.isEmpty(receiveMobileList)) continue;
+            logger.info("sms list distinct mobile size: " + receiveMobileList.size());
             targetDistinctReceiveMobiles.addAll(receiveMobileList);
         }
 
