@@ -58,7 +58,7 @@ public class SmsMessageSendRecordGetServiceImpl implements SmsMessageSendRecordG
             smsTaskDetail.setReceiveMobile(receiveMobile);
         }
         smsTaskDetail.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-        smsTaskDetail.setStartIndex(index);
+        smsTaskDetail.setStartIndex((index-1)*size);
         smsTaskDetail.setPageSize(size);
         
         // 设置总数

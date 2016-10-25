@@ -131,7 +131,7 @@ public class MktSmsApi {
     @Path("/mkt.sms.message.send.record.get")
     public BaseOutput messageSendRecordGet(@NotNull @QueryParam("sms_task_head_id") Long smsTaskHeadId,
                                         @QueryParam("receive_mobile") String receiveMobile,
-                                        @DefaultValue("0") @Min(0) @QueryParam("index") Integer index,
+                                        @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
                                         @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
         return smsMessageSendRecordGetService.messageSendRecordGet(smsTaskHeadId, receiveMobile, index, size);
     }
