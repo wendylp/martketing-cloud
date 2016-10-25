@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.chainsaw.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ import cn.rongcapital.mkt.po.SmsTaskHead;
 @Service
 public class SmsSendTaskServiceImpl implements TaskService{
 	 private Logger logger = LoggerFactory.getLogger(getClass());
-	 private Integer SMS_SEND_BACTH_COUNT = 5;
+	 private Integer SMS_SEND_BACTH_COUNT = 500;
 	@Autowired
 	private SmsTaskHeadDao smsTaskHeadDao;
 	
@@ -93,7 +92,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				Long id = detail.getId();
 				String receiveMobile = detail.getReceiveMobile();
 				String sendMessage = detail.getSendMessage();
-				logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
+				//logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
 				String[] sms = new String[2];
 				sms[0] = receiveMobile;
 				sms[1] = sendMessage;
@@ -135,8 +134,8 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		for(Entry<Long, String[]> entry : SmsBatchMap.entrySet()){
 			Long id = entry.getKey();
 			String[] sms = entry.getValue();
-			logger.info("phone is {}", sms[0]);
-			logger.info("message is {}", sms[1]);
+			//logger.info("phone is {}", sms[0]);
+			//logger.info("message is {}", sms[1]);
 			int n = (int)(Math.random()*100);
 			
 			if(n%2 >0){
