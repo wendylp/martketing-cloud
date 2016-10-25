@@ -70,7 +70,7 @@ public class GenerateSmsDetailTask implements TaskService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void task(String taskHeadIdStr) {
-        logger.info("taskHeadId" + taskHeadIdStr);
+        logger.info("taskHeadId :" + taskHeadIdStr);
         Long taskHeadId = Long.valueOf(taskHeadIdStr);
 
         //1根据headId选出模板内容
@@ -95,6 +95,7 @@ public class GenerateSmsDetailTask implements TaskService {
             targetDistinctReceiveMobiles.addAll(receiveMobileList);
         }
 
+        logger.info("sms task audience size:" + targetDistinctReceiveMobiles.size());
         //3将受众人群+模板内容+受众类型存入Task_Detail表中
         for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
             SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
@@ -103,11 +104,13 @@ public class GenerateSmsDetailTask implements TaskService {
             smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
             smsTaskDetail.setSmsTaskHeadId(taskHeadId);
             smsTaskDetailDao.insert(smsTaskDetail);
+            logger.info("sms task detail insert finish");
 
             SmsTaskDetailState smsTaskDetailState = new SmsTaskDetailState();
             smsTaskDetailState.setSmsTaskDetailId(smsTaskDetail.getId());
             smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_WAITING.getStateCode());
             smsTaskDetailStateDao.insert(smsTaskDetailState);
+            logger.info("sms task detail state insert finish");
         }
 
         //4更新SmsTaskHead表的人群相关的字段
@@ -115,6 +118,7 @@ public class GenerateSmsDetailTask implements TaskService {
         targetHead.setTotalCoverNum(targetDistinctReceiveMobiles.size());
         targetHead.setWaitingNum(targetDistinctReceiveMobiles.size());
         smsTaskHeadDao.updateById(targetHead);
+        logger.info("sms task head update info");
 
         smsTaskHeads = smsTaskHeadDao.selectList(paramSmsTaskHead);
         if(CollectionUtils.isEmpty(smsTaskHeads)) return;
