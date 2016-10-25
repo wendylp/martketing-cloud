@@ -100,6 +100,12 @@ public class GenerateSmsDetailTask implements TaskService {
 
         logger.info("sms task audience size:" + targetDistinctReceiveMobiles.size());
         //3将受众人群+模板内容+受众类型存入Task_Detail表中
+        if(targetDistinctReceiveMobiles.contains(null)){
+            targetDistinctReceiveMobiles.remove(null);
+        }
+        if(targetDistinctReceiveMobiles.contains("")){
+            targetDistinctReceiveMobiles.remove("");
+        }
         insertDataToSmsDetailAndDetailState(taskHeadId, targetHead, targetDistinctReceiveMobiles);
 
         //4更新SmsTaskHead表的人群相关的字段
