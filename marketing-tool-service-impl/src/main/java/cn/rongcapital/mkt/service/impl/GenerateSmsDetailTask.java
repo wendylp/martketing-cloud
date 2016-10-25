@@ -91,6 +91,7 @@ public class GenerateSmsDetailTask implements TaskService {
         if(CollectionUtils.isEmpty(smsTaskBodies)) return;
         for(SmsTaskBody smsTaskBody : smsTaskBodies){
             List<String> receiveMobileList = queryReceiveMobileListByTargetAudienceIdAndType(smsTaskBody);
+            logger.info("sms list distinct mobile size: " + receiveMobileList.size());
             if(CollectionUtils.isEmpty(receiveMobileList)) continue;
             targetDistinctReceiveMobiles.addAll(receiveMobileList);
         }
@@ -144,7 +145,7 @@ public class GenerateSmsDetailTask implements TaskService {
         //1根据segmentation的Id在Mongo中选出相应得细分,然后取出dataPartyId
         Query query = new Query(Criteria.where(SEGMENTATION_HEAD_ID).is(targetId));
         List<Segment> segmentList = mongoTemplate.find(query,Segment.class);
-
+        logger.info("segment list size : " +segmentList.size());
         //2构造出dataParty的IdList的集合
         if(CollectionUtils.isEmpty(segmentList)) return null;
         List<Long> dataPartyIdList = new ArrayList<>();
@@ -153,6 +154,7 @@ public class GenerateSmsDetailTask implements TaskService {
                 dataPartyIdList.add(Long.valueOf(segment.getDataId()));
             }
         }
+        logger.info("dataParty id list size : " + dataPartyIdList.size());
 
         //3将选出来的这些数据做缓存存到cache表中,一开始先一条一条插入,后续优化成使用batchInsert进行插入
         if(CollectionUtils.isEmpty(dataPartyIdList)) return null;
@@ -160,6 +162,7 @@ public class GenerateSmsDetailTask implements TaskService {
 
         //4根据dataPartyIdList选出相应的不同的mobile(去重),然后做为返回值返回
         List<String> distinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList);
+        logger.info("dinstinct mobile list size: " + distinctMobileList.size());
         if(CollectionUtils.isEmpty(distinctMobileList)) return null;
         return distinctMobileList;
     }
@@ -192,6 +195,7 @@ public class GenerateSmsDetailTask implements TaskService {
     }
 
     private void cacheDataPartyIdInSmsAudienceCache(Long taskHeadId, Long targetId, List<Long> dataPartyIdList) {
+        logger.info("begin to cache target audience");
         for(Long dataPartyId : dataPartyIdList){
             SmsTaskTargetAudienceCache smsTaskTargetAudienceCache = new SmsTaskTargetAudienceCache();
             smsTaskTargetAudienceCache.setTaskHeadId(taskHeadId);
