@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.chainsaw.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,16 +175,22 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		//计算每批的成功和失败的个数
 		Integer smsSuccessCount = smsHead.getSendingSuccessNum();
 		Integer smsFailCount = smsHead.getSendingFailNum();
-		if(smsSuccessCount== null || smsSuccessCount ==0 ) {
+		Integer smsWaitingNum = smsHead.getWaitingNum();
+		if(smsSuccessCount== null || smsSuccessCount == 0) {
 			smsHead.setSendingSuccessNum(successCount);
+			smsWaitingNum = smsWaitingNum - successCount;
 		}else {
 			smsHead.setSendingSuccessNum(smsSuccessCount + successCount);
+			smsWaitingNum = smsWaitingNum - (smsSuccessCount + successCount);
 		}
 		if(smsFailCount == null || smsFailCount == 0){
 			smsHead.setSendingFailNum(failCount);
+			smsWaitingNum = smsWaitingNum - failCount;
 		}else {
 			smsHead.setSendingFailNum(smsFailCount + failCount);
+			smsWaitingNum = smsWaitingNum - (smsFailCount + failCount);
 		}
-		
+		//每批都更新成功失败以及等待的个数
+		smsHead.setWaitingNum(smsWaitingNum);
 	}
 }
