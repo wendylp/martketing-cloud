@@ -15,6 +15,7 @@ import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SmsTaskHead;
+import cn.rongcapital.mkt.vo.sms.out.SmsTaskSendStatusVo;
 
 public interface SmsTaskHeadDao extends BaseDao<SmsTaskHead>{
 	
@@ -43,5 +44,5 @@ public interface SmsTaskHeadDao extends BaseDao<SmsTaskHead>{
 	 * @param id
 	 * @return
 	 */
-	public List<Map<String,Object>> countStatusById(Long id);
+	public List<SmsTaskSendStatusVo> countStatusById(Long id);
 }

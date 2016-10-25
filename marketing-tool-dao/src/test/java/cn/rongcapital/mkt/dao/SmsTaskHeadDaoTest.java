@@ -17,8 +17,11 @@ import com.alibaba.fastjson.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.po.SmsTaskHead;
+import cn.rongcapital.mkt.vo.sms.out.SmsTaskSendStatusVo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SmsTaskHeadDaoTest extends AbstractUnitTest{
@@ -64,6 +67,89 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
 		/**
 		 * 全条件
 		 */
+		smsTaskHeadTemp.setSmsTaskAppType(0);
+		smsTaskHeadTemp.setSmsTaskStatus(0);
+		smsTaskHeadTemp.setSmsTaskName("测试");
+		/**
+		 * 只有名称模糊查询
+		 */
+/*		smsTaskHeadTemp.setSmsTaskName("任务");*/		
+		/**
+		 * 只有应用通道
+		 * 0:营销短信模板,1:服务通知模板,2：短信验证码模板
+		 */
+//		smsTaskHeadTemp.setSmsTaskAppType(0);
+//		smsTaskHeadTemp.setSmsTaskAppType(1);
+//		smsTaskHeadTemp.setSmsTaskAppType(2);
+		/**
+		 * 只有任务执行状态
+		 * 0:未启动\n1:已预约\n2:执行中\n3:暂停中\n4:已结束
+		 */		
+//		smsTaskHeadTemp.setSmsTaskStatus(0);
+//		smsTaskHeadTemp.setSmsTaskStatus(2);
+//		smsTaskHeadTemp.setSmsTaskStatus(4);
+		/**
+		 * 应用通道、任务执行状态查询
+		 */
+/*		smsTaskHeadTemp.setSmsTaskAppType(0);
+		smsTaskHeadTemp.setSmsTaskStatus(0);*/
+/*		smsTaskHeadTemp.setSmsTaskAppType(0);
+		smsTaskHeadTemp.setSmsTaskStatus(2);*/
+/*		smsTaskHeadTemp.setSmsTaskAppType(0);
+		smsTaskHeadTemp.setSmsTaskStatus(4);*/
+/*		smsTaskHeadTemp.setSmsTaskAppType(1);
+		smsTaskHeadTemp.setSmsTaskStatus(0);*/	
+/*		smsTaskHeadTemp.setSmsTaskAppType(1);
+		smsTaskHeadTemp.setSmsTaskStatus(2);*/
+/*		smsTaskHeadTemp.setSmsTaskAppType(1);
+		smsTaskHeadTemp.setSmsTaskStatus(4);*/		
+/*		smsTaskHeadTemp.setSmsTaskAppType(2);
+		smsTaskHeadTemp.setSmsTaskStatus(0);*/
+/*		smsTaskHeadTemp.setSmsTaskAppType(2);
+		smsTaskHeadTemp.setSmsTaskStatus(2);*/
+/*		smsTaskHeadTemp.setSmsTaskAppType(2);
+		smsTaskHeadTemp.setSmsTaskStatus(4);*/
+		/**
+		 * 应用通道、名称模糊查询
+		 */
+/*		smsTaskHeadTemp.setSmsTaskAppType(0);
+		smsTaskHeadTemp.setSmsTaskName("测试");*/
+/*		smsTaskHeadTemp.setSmsTaskAppType(1);
+		smsTaskHeadTemp.setSmsTaskName("测试");*/
+		/**
+		 * 任务执行状态、名称模糊查询
+		 */
+/*		smsTaskHeadTemp.setSmsTaskStatus(0);
+		smsTaskHeadTemp.setSmsTaskName("测试");*/
+/*		smsTaskHeadTemp.setSmsTaskStatus(1);
+		smsTaskHeadTemp.setSmsTaskName("测试");*/
+/*		smsTaskHeadTemp.setSmsTaskStatus(1);
+		smsTaskHeadTemp.setSmsTaskName("");	*/
+		
+		/**
+		 * 查询所有
+		 */
+		smsTaskHeadTemp.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
+		
+		smsTaskHeadTemp.setOrderField("create_time");
+		smsTaskHeadTemp.setOrderFieldType("DESC");
+		smsTaskHeadTemp.setStartIndex(0);
+		smsTaskHeadTemp.setPageSize(12);		
+		
+		List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectList(smsTaskHeadTemp);
+		Assert.assertEquals(1, smsTaskHeads.size());		 
+    }
+    
+    @Test
+    public void testSelectListCount(){
+    	/**
+    	 * 设置查询条件
+    	 */
+		SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
+		
+		/**
+		 * 全条件
+		 */
 /*		smsTaskHeadTemp.setSmsTaskAppType(0);
 		smsTaskHeadTemp.setSmsTaskStatus(0);
 		smsTaskHeadTemp.setSmsTaskName("测试");*/
@@ -98,8 +184,8 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
 		smsTaskHeadTemp.setSmsTaskStatus(0);*/	
 /*		smsTaskHeadTemp.setSmsTaskAppType(1);
 		smsTaskHeadTemp.setSmsTaskStatus(2);*/
-		smsTaskHeadTemp.setSmsTaskAppType(1);
-		smsTaskHeadTemp.setSmsTaskStatus(4);		
+/*		smsTaskHeadTemp.setSmsTaskAppType(1);
+		smsTaskHeadTemp.setSmsTaskStatus(4);*/		
 /*		smsTaskHeadTemp.setSmsTaskAppType(2);
 		smsTaskHeadTemp.setSmsTaskStatus(0);*/
 /*		smsTaskHeadTemp.setSmsTaskAppType(2);
@@ -120,43 +206,23 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
 		smsTaskHeadTemp.setSmsTaskName("测试");*/
 /*		smsTaskHeadTemp.setSmsTaskStatus(1);
 		smsTaskHeadTemp.setSmsTaskName("测试");*/
-/*		smsTaskHeadTemp.setSmsTaskStatus(1);
-		smsTaskHeadTemp.setSmsTaskName("");	*/
+		smsTaskHeadTemp.setSmsTaskStatus(1);
+		smsTaskHeadTemp.setSmsTaskName("");	
 		
-		/**
-		 * 查询所有
-		 */
-		smsTaskHeadTemp.setOrderField("create_time");
-		smsTaskHeadTemp.setOrderFieldType("DESC");
-		smsTaskHeadTemp.setStartIndex(0);
-		smsTaskHeadTemp.setPageSize(12);
-		
-		List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectList(smsTaskHeadTemp);
-		Assert.assertEquals(1, smsTaskHeads.size());
-		 
-    }
-    
-    @Test
-    public void testSelectListCount(){
-    	/**
-    	 * 设置查询条件
-    	 */
-		SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
-//		smsTaskHeadTemp.setSmsTaskAppType(0);
-		smsTaskHeadTemp.setSmsTaskStatus(0);
-		smsTaskHeadTemp.setSmsTaskName("测试");
+		smsTaskHeadTemp.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
 		smsTaskHeadTemp.setOrderField("create_time");
 		smsTaskHeadTemp.setOrderFieldType("DESC");
 		smsTaskHeadTemp.setStartIndex(0);
 		smsTaskHeadTemp.setPageSize(12);
 		
     	int totalCount = smsTaskHeadDao.selectListCount(smsTaskHeadTemp);
-		Assert.assertEquals(1, totalCount);
+		Assert.assertEquals(2, totalCount);
     }
     
 	@Test
     public void testCountStatusById(){
-    	List<Map<String, Object>> smsTaskStatusCountMapList = smsTaskHeadDao.countStatusById(1l);
+    	List<SmsTaskSendStatusVo> smsTaskStatusCountMapList = smsTaskHeadDao.countStatusById(21l);
+    	SmsTaskSendStatusVo smsTaskSendStatusVo = smsTaskStatusCountMapList.get(0);
     	String jsonStr = JSONObject.toJSONString(smsTaskStatusCountMapList);
     	logger.info(jsonStr);
     }
