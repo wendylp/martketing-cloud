@@ -120,49 +120,21 @@ public class GenerateSmsDetailTask implements TaskService {
     }
 
     private void insertDataToSmsDetailAndDetailState(Long taskHeadId, SmsTaskHead targetHead, Set<String> targetDistinctReceiveMobiles) {
-        List<SmsTaskDetail> smsTaskDetailList = new LinkedList<>();
-        List<SmsTaskDetailState> smsTaskDetailStateList = new LinkedList<>();
+        logger.info("begin to insert SmsTaskDetail : " + System.currentTimeMillis());
         for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
             SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
             smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
             smsTaskDetail.setSendMessage(targetHead.getSmsTaskTemplateContent());
             smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
             smsTaskDetail.setSmsTaskHeadId(taskHeadId);
-            smsTaskDetailList.add(smsTaskDetail);
-        }
-        int totalNum = (smsTaskDetailList.size() + PAGE_SIZE) / PAGE_SIZE;
-        for(int index = 0; index < totalNum; index++){
-            if(index == totalNum-1){
-                logger.info("insert SmsTaskDetail index : " + index);
-                smsTaskDetailDao.batchInsert(smsTaskDetailList.subList(index*PAGE_SIZE,smsTaskDetailList.size()));
-            }else{
-                logger.info("insert SmsTaskDetail index : " + index);
-                smsTaskDetailDao.batchInsert(smsTaskDetailList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
-            }
-        }
+            smsTaskDetailDao.insert(smsTaskDetail);
 
-        SmsTaskDetail paramTaskDetail = new SmsTaskDetail();
-        paramTaskDetail.setSmsTaskHeadId(taskHeadId);
-        List<SmsTaskDetail> smsTaskDetails = smsTaskDetailDao.selectList(paramTaskDetail);
-        logger.info("SmsTaskDetails size : " + smsTaskDetails.size());
-
-        for(SmsTaskDetail taskDetail : smsTaskDetails){
             SmsTaskDetailState smsTaskDetailState = new SmsTaskDetailState();
-            smsTaskDetailState.setSmsTaskDetailId(taskDetail.getId());
+            smsTaskDetailState.setSmsTaskDetailId(smsTaskDetail.getId());
             smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_WAITING.getStateCode());
-            smsTaskDetailStateList.add(smsTaskDetailState);
+            smsTaskDetailStateDao.insert(smsTaskDetailState);
         }
-
-        totalNum = (smsTaskDetailStateList.size() + PAGE_SIZE) / PAGE_SIZE;
-        for(int index = 0; index < totalNum; index++){
-            if(index == totalNum-1){
-                logger.info("insert SmsTaskDetailState index : " + index);
-                smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,smsTaskDetailStateList.size()));
-            }else{
-                logger.info("insert SmsTaskDetailState index : " + index);
-                smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
-            }
-        }
+        logger.info("insert SmsTaskDetailEnd : " + System.currentTimeMillis());
 
     }
 
