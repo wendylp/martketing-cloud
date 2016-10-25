@@ -221,7 +221,7 @@ public class GenerateSmsDetailTask implements TaskService {
         int totalPage = (dataPartyIdList.size() + PAGE_SIZE)/PAGE_SIZE;
         for(int index = 0; index < totalPage; index++){
             if(index == totalPage - 1){
-                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size() -1));
+                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
                 logger.info("index : " + index);
             }else {
                 subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE -1));
