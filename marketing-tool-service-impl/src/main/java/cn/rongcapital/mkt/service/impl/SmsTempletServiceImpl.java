@@ -83,8 +83,10 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			for(Iterator<SmsTemplet> iter = dataList.iterator();iter.hasNext();){
 				SmsTemplet smsTemplet = iter.next();
 				smsTemplet.setCreateTimeStr(DateUtil.getStringFromDate(smsTemplet.getCreateTime(),FORMAT_STRING));
-				int auditStatus = smsTemplet.getAuditStatus() & 0xff;
-				smsTemplet.setAuditStatusStr(SmsTempleteAuditStatusEnum.getDescriptionByStatus(auditStatus));
+				if(smsTemplet.getAuditStatus()!=null){
+					int auditStatus = smsTemplet.getAuditStatus() & 0xff;
+					smsTemplet.setAuditStatusStr(SmsTempleteAuditStatusEnum.getDescriptionByStatus(auditStatus));
+				}
 			}
 		}
 		output.setTotalCount(totalCount);		
@@ -101,6 +103,9 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		SmsTemplet smsTemplet = this.getSmsTempletBySmsTempletIn(smsTempletIn);
 		if(smsTemplet!=null){
 			smsTempletDao.insert(smsTemplet);
+		}else{
+			output.setCode(ApiErrorCode.PARAMETER_ERROR.getCode());
+			output.setMsg(ApiErrorCode.PARAMETER_ERROR.getMsg());
 		}
 		return output;
 		
@@ -115,19 +120,26 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			smsTemplet.setAuditStatus(NumUtil.int2OneByte(this.AUDIT_STATUS_CHECKED));
 			if(smsTempletIn.getChannelType()!=null){
 				smsTemplet.setChannelType(NumUtil.int2OneByte(smsTempletIn.getChannelType()));
+			}else{
+				return null;
 			}
 			if(smsTempletIn.getType()!=null){
 				smsTemplet.setType(NumUtil.int2OneByte(smsTempletIn.getType()));
+			}else{
+				return null;
 			}
-			if(StringUtils.isNoneEmpty(smsTempletIn.getContent())){
+			if(StringUtils.isNotEmpty(smsTempletIn.getContent())){
 				smsTemplet.setContent(smsTempletIn.getContent());
+			}else{
+				return null;
 			}
-			if(StringUtils.isNoneEmpty(smsTempletIn.getCreator())){
-				smsTemplet.setCreator(smsTempletIn.getCreator());
-				smsTemplet.setCreateTime(new Date());
-			}			
+			if(StringUtils.isNotEmpty(smsTempletIn.getCreator())){
+				smsTemplet.setCreator(smsTempletIn.getCreator());				
+			}
+			smsTemplet.setCreateTime(new Date());
+			
 			smsTemplet.setStatus(NumUtil.int2OneByte(this.STATUS_VALID));
-			if(StringUtils.isNoneEmpty(smsTempletIn.getUpdateUser())){
+			if(StringUtils.isNotEmpty(smsTempletIn.getUpdateUser())){
 				smsTemplet.setUpdateTime(new Date());
 				smsTemplet.setUpdateUser(smsTempletIn.getUpdateUser());
 			}			
