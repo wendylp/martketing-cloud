@@ -85,9 +85,9 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 	
 	private List<SmsTaskHead> getSmsTaskHeads(List<SmsTaskHead> dataList){
 		if(CollectionUtils.isNotEmpty(dataList)){
-			SmsTaskStatusEnum smsTaskStatusEnum = SmsTaskStatusEnum.TASK_EXECUTING;
+/*			SmsTaskStatusEnum smsTaskStatusEnum = SmsTaskStatusEnum.TASK_EXECUTING;
 			Integer status = smsTaskStatusEnum.getStatusCode();			
-			for(Iterator<SmsTaskHead> iter = dataList.iterator();iter.hasNext();){
+*/			for(Iterator<SmsTaskHead> iter = dataList.iterator();iter.hasNext();){
 				SmsTaskHead smsTaskHead = iter.next();
 				if(smsTaskHead!=null){
 					Integer smsTaskStatus = smsTaskHead.getSmsTaskStatus();
@@ -98,9 +98,9 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 					/**
 					 * 统计执行中的总数
 					 */
-					if(smsTaskStatus.byteValue()==status){
+/*					if(smsTaskStatus.byteValue()==status){
 						this.setSmsTaskHeadNumsById(smsTaskHead);
-					}
+					}*/
 					this.setSmsTaskHeadPers(smsTaskHead);
 				}
 			}
