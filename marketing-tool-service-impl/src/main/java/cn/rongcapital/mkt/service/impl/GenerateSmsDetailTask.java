@@ -163,8 +163,22 @@ public class GenerateSmsDetailTask implements TaskService {
         cacheDataPartyIdInSmsAudienceCache(taskHeadId, targetId, dataPartyIdList);
 
         //4根据dataPartyIdList选出相应的不同的mobile(去重),然后做为返回值返回
-        List<String> distinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList);
-        logger.info("dinstinct mobile list size: " + distinctMobileList.size());
+        Set<String> distinctMobileSet = new HashSet<>();
+        List<String> subDistinctMobileList = null;
+        int totalPage = (dataPartyIdList.size() + PAGE_SIZE)/PAGE_SIZE;
+        for(int index = 0; index < totalPage; index++){
+            if(index == totalPage - 1){
+                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size() -1));
+                logger.info("index : " + index);
+            }else {
+                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE -1));
+                logger.info("index : " + index);
+            }
+            distinctMobileSet.addAll(subDistinctMobileList);
+        }
+        logger.info("already search distinct mobile list " + subDistinctMobileList.size());
+        List<String> distinctMobileList = new LinkedList<>();
+        distinctMobileList.addAll(distinctMobileSet);
         if(CollectionUtils.isEmpty(distinctMobileList)) return null;
         return distinctMobileList;
     }
@@ -197,11 +211,14 @@ public class GenerateSmsDetailTask implements TaskService {
         for(int index = 0; index < totalPage; index++){
             if(index == totalPage - 1){
                 subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size() -1));
+                logger.info("index : " + index);
             }else {
                 subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE -1));
+                logger.info("index : " + index);
             }
             distinctMobileSet.addAll(subDistinctMobileList);
         }
+        logger.info("already search distinct mobile list " + subDistinctMobileList.size());
         List<String> distinctMobileList = new LinkedList<>();
         distinctMobileList.addAll(distinctMobileSet);
         if(CollectionUtils.isEmpty(distinctMobileList)) return null;
