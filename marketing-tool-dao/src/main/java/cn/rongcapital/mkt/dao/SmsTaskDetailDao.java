@@ -16,6 +16,7 @@ import java.util.Map;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.MessageSendRecordGetOut;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
+import org.apache.ibatis.annotations.Param;
 
 public interface SmsTaskDetailDao extends BaseDao<SmsTaskDetail>{
 	
@@ -46,4 +47,6 @@ public interface SmsTaskDetailDao extends BaseDao<SmsTaskDetail>{
      * @return
      */
     List<MessageSendRecordGetOut> messageSendRecordGet(SmsTaskDetail smsTaskDetail);
+
+    void batchInsert(@Param("list") List<SmsTaskDetail> smsTaskDetails);
 }

@@ -100,21 +100,7 @@ public class GenerateSmsDetailTask implements TaskService {
 
         logger.info("sms task audience size:" + targetDistinctReceiveMobiles.size());
         //3将受众人群+模板内容+受众类型存入Task_Detail表中
-        for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
-            SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
-            smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
-            smsTaskDetail.setSendMessage(targetHead.getSmsTaskTemplateContent());
-            smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
-            smsTaskDetail.setSmsTaskHeadId(taskHeadId);
-            smsTaskDetailDao.insert(smsTaskDetail);
-            logger.info("sms task detail insert finish");
-
-            SmsTaskDetailState smsTaskDetailState = new SmsTaskDetailState();
-            smsTaskDetailState.setSmsTaskDetailId(smsTaskDetail.getId());
-            smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_WAITING.getStateCode());
-            smsTaskDetailStateDao.insert(smsTaskDetailState);
-            logger.info("sms task detail state insert finish");
-        }
+        insertDataToSmsDetailAndDetailState(taskHeadId, targetHead, targetDistinctReceiveMobiles);
 
         //4更新SmsTaskHead表的人群相关的字段
         targetHead.setAudienceGenerateStatus(ApiConstant.INT_ZERO);
@@ -131,6 +117,37 @@ public class GenerateSmsDetailTask implements TaskService {
             mqTopicService.sendSmsByTaskId(taskHeadIdStr);
         }
         
+    }
+
+    private void insertDataToSmsDetailAndDetailState(Long taskHeadId, SmsTaskHead targetHead, Set<String> targetDistinctReceiveMobiles) {
+        List<SmsTaskDetail> smsTaskDetailList = new LinkedList<>();
+        List<SmsTaskDetailState> smsTaskDetailStateList = new LinkedList<>();
+        for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
+            SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
+            smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
+            smsTaskDetail.setSendMessage(targetHead.getSmsTaskTemplateContent());
+            smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
+            smsTaskDetail.setSmsTaskHeadId(taskHeadId);
+            smsTaskDetailList.add(smsTaskDetail);
+
+            SmsTaskDetailState smsTaskDetailState = new SmsTaskDetailState();
+            smsTaskDetailState.setSmsTaskDetailId(smsTaskDetail.getId());
+            smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_WAITING.getStateCode());
+            smsTaskDetailStateList.add(smsTaskDetailState);
+        }
+
+        int totalNum = (smsTaskDetailList.size() + PAGE_SIZE) / PAGE_SIZE;
+        for(int index = 0; index < totalNum; index++){
+            if(index == totalNum-1){
+                logger.info("insert index : " + index);
+                smsTaskDetailDao.batchInsert(smsTaskDetailList.subList(index*PAGE_SIZE,smsTaskDetailList.size()));
+                smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,smsTaskDetailStateList.size()));
+            }else{
+                logger.info("insert index : " + index);
+                smsTaskDetailDao.batchInsert(smsTaskDetailList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
+                smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
+            }
+        }
     }
 
     //Todo:可以进行分页处理来优化
@@ -227,13 +244,25 @@ public class GenerateSmsDetailTask implements TaskService {
 
     private void cacheDataPartyIdInSmsAudienceCache(Long taskHeadId, Long targetId, List<Long> dataPartyIdList) {
         logger.info("begin to cache target audience");
+        List<SmsTaskTargetAudienceCache> smsTaskTargetAudienceCacheList = new LinkedList<>();
         for(Long dataPartyId : dataPartyIdList){
             SmsTaskTargetAudienceCache smsTaskTargetAudienceCache = new SmsTaskTargetAudienceCache();
             smsTaskTargetAudienceCache.setTaskHeadId(taskHeadId);
             smsTaskTargetAudienceCache.setTargetId(targetId);
             smsTaskTargetAudienceCache.setDataPartyId(dataPartyId);
             smsTaskTargetAudienceCache.setTargetType(SmsTargetAudienceTypeEnum.SMS_TARGET_AUDIENCE.getTypeCode());
-            smsTaskTargetAudienceCacheDao.insert(smsTaskTargetAudienceCache);
+            smsTaskTargetAudienceCacheList.add(smsTaskTargetAudienceCache);
+        }
+
+        int totalNum = (smsTaskTargetAudienceCacheList.size() + PAGE_SIZE) / PAGE_SIZE;
+        for(int index = 0; index < totalNum; index++){
+            if(index == totalNum-1){
+                logger.info("insert index : " + index);
+                smsTaskTargetAudienceCacheDao.batchInsert(smsTaskTargetAudienceCacheList.subList(index*PAGE_SIZE,smsTaskTargetAudienceCacheList.size()));
+            }else{
+                logger.info("insert index : " + index);
+                smsTaskTargetAudienceCacheDao.batchInsert(smsTaskTargetAudienceCacheList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
+            }
         }
     }
 }

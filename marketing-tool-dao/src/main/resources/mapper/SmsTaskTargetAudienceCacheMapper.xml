@@ -94,6 +94,19 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO sms_task_target_audience_cache (data_party_id,target_id,create_time,target_type,task_head_id)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.dataPartyId},
+			#{item.targetId},
+			now(),
+			#{item.targetType},
+			#{item.taskHeadId}
+			)
+		</foreach>
+
+	</insert>
 	
 </mapper>
