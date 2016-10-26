@@ -148,6 +148,7 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 			wechatMember = getWechatMember(userInfo, pubId);
 			wechatMember.setStatus(FOLLOW_STATUS);
 			wechatMember.setBitmap(this.BITMAP);
+			wechatMember.setActivity48hYn(this.ACTIVITY_48H_YN);
 			wechatMemberDao.insert(wechatMember);
 		}
 			
