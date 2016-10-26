@@ -186,9 +186,9 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			smsHead.setSendingFailNum(smsFailCount + failCount);
 		}
 		//每批都更新成功失败以及等待的个数
-		Integer smsWaitingNum = smsHead.getWaitingNum();
+		Integer smsCoverNum = smsHead.getTotalCoverNum();
 		Integer success = smsHead.getSendingSuccessNum();
 		Integer fail = smsHead.getSendingFailNum();
-		smsHead.setWaitingNum(smsWaitingNum-(success + fail));
+		smsHead.setWaitingNum(smsCoverNum -(success + fail));
 	}
 }
