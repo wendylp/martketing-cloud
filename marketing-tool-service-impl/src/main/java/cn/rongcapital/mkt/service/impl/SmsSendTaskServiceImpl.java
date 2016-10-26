@@ -174,22 +174,21 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		//计算每批的成功和失败的个数
 		Integer smsSuccessCount = smsHead.getSendingSuccessNum();
 		Integer smsFailCount = smsHead.getSendingFailNum();
-		Integer smsWaitingNum = smsHead.getWaitingNum();
+		
 		if(smsSuccessCount== null || smsSuccessCount == 0) {
 			smsHead.setSendingSuccessNum(successCount);
-			smsWaitingNum = smsWaitingNum - successCount;
 		}else {
 			smsHead.setSendingSuccessNum(smsSuccessCount + successCount);
-			smsWaitingNum = smsWaitingNum - (smsSuccessCount + successCount);
 		}
 		if(smsFailCount == null || smsFailCount == 0){
 			smsHead.setSendingFailNum(failCount);
-			smsWaitingNum = smsWaitingNum - failCount;
 		}else {
 			smsHead.setSendingFailNum(smsFailCount + failCount);
-			smsWaitingNum = smsWaitingNum - (smsFailCount + failCount);
 		}
 		//每批都更新成功失败以及等待的个数
-		smsHead.setWaitingNum(smsWaitingNum);
+		Integer smsWaitingNum = smsHead.getWaitingNum();
+		Integer success = smsHead.getSendingSuccessNum();
+		Integer fail = smsHead.getSendingFailNum();
+		smsHead.setWaitingNum(smsWaitingNum-(success + fail));
 	}
 }
