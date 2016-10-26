@@ -134,7 +134,7 @@ public class MQTopicServiceImpl implements MQTopicService {
 								//TODO 测试用 后期改为debug
 								logger.info("taskName is {}", taskName);
 								logger.info("serviceName is {}", serviceName);
-								logger.info("message is {}" + message);
+								logger.info("message is {}" , message);
 								serviceName = getServiceName(serviceName);
 								
 								startMqTaskComm(serviceName, taskName, message);
