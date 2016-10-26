@@ -79,7 +79,7 @@ public class SmsActivationCreateIn extends BaseInput{
         this.taskTemplateContent = taskTemplateContent;
     }
 
-    @JsonProperty("task_audience_list")
+    @JsonProperty("target_audience_list")
     public List<SmsTargetAudienceIn> getSmsTargetAudienceInArrayList() {
         return smsTargetAudienceInArrayList;
     }

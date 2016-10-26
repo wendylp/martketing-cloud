@@ -37,7 +37,7 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
     @Autowired
     private MQTopicService mqTopicService;
 
-    private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask ";
+    private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask";
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -54,6 +54,10 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
             insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_UNSTART.getStatusCode());
             insertSmsTaskHead.setSmsTaskSendType(smsActivationCreateIn.getTaskSendType());
             insertSmsTaskHead.setSmsTaskAppType(smsActivationCreateIn.getTaskAppType());
+            insertSmsTaskHead.setTotalCoverNum(ApiConstant.INT_ZERO);
+            insertSmsTaskHead.setWaitingNum(ApiConstant.INT_ZERO);
+            insertSmsTaskHead.setSendingSuccessNum(ApiConstant.INT_ZERO);
+            insertSmsTaskHead.setSendingFailNum(ApiConstant.INT_ZERO);
             insertSmsTaskHead.setAudienceGenerateStatus(ApiConstant.INT_ONE);
             smsTaskHeadDao.insert(insertSmsTaskHead);
             //2获取task_head的Id,然后将相应得信息分条存储到body表中

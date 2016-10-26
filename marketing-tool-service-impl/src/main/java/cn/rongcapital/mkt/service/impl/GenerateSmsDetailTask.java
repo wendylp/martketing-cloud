@@ -9,7 +9,10 @@ import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.MQTopicService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -25,6 +28,8 @@ import java.util.*;
  */
 @Service
 public class GenerateSmsDetailTask implements TaskService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private SmsTaskDetailDao smsTaskDetailDao;
@@ -57,6 +62,7 @@ public class GenerateSmsDetailTask implements TaskService {
     private MQTopicService mqTopicService;
 
     private final String SEGMENTATION_HEAD_ID = "segmentation_head_id";
+    private final int PAGE_SIZE = 10000;
 
     @Override
     public void task(Integer taskId) {
@@ -66,6 +72,7 @@ public class GenerateSmsDetailTask implements TaskService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void task(String taskHeadIdStr) {
+        logger.info("taskHeadId :" + taskHeadIdStr);
         Long taskHeadId = Long.valueOf(taskHeadIdStr);
 
         //1根据headId选出模板内容
@@ -74,6 +81,7 @@ public class GenerateSmsDetailTask implements TaskService {
         paramSmsTaskHead.setId(taskHeadId);
         List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectList(paramSmsTaskHead);
         if(CollectionUtils.isEmpty(smsTaskHeads)) return;
+
         SmsTaskHead targetHead = smsTaskHeads.get(0);
 
         //2根据headId依次选出受众人群
@@ -86,41 +94,80 @@ public class GenerateSmsDetailTask implements TaskService {
         for(SmsTaskBody smsTaskBody : smsTaskBodies){
             List<String> receiveMobileList = queryReceiveMobileListByTargetAudienceIdAndType(smsTaskBody);
             if(CollectionUtils.isEmpty(receiveMobileList)) continue;
+            logger.info("sms list distinct mobile size: " + receiveMobileList.size());
             targetDistinctReceiveMobiles.addAll(receiveMobileList);
         }
 
+        logger.info("sms task audience size:" + targetDistinctReceiveMobiles.size());
         //3将受众人群+模板内容+受众类型存入Task_Detail表中
-        for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
-            SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
-            smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
-            smsTaskDetail.setSendMessage(targetHead.getSmsTaskTemplateContent());
-            smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
-            smsTaskDetail.setSmsTaskHeadId(taskHeadId);
-            smsTaskDetailDao.insert(smsTaskDetail);
-
-            SmsTaskDetailState smsTaskDetailState = new SmsTaskDetailState();
-            smsTaskDetailState.setSmsTaskDetailId(smsTaskDetail.getId());
-            smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_WAITING.getStateCode());
-            smsTaskDetailStateDao.insert(smsTaskDetailState);
+        if(targetDistinctReceiveMobiles.contains(null)){
+            targetDistinctReceiveMobiles.remove(null);
         }
+        if(targetDistinctReceiveMobiles.contains("")){
+            targetDistinctReceiveMobiles.remove("");
+        }
+        //3.5如果targetDistinctReceiveMobiles的容量为空,则不执行下面得短信生成语句
+        if(CollectionUtils.isEmpty(targetDistinctReceiveMobiles)) return;
+        insertDataToSmsDetailAndDetailState(taskHeadId, targetHead, targetDistinctReceiveMobiles);
 
         //4更新SmsTaskHead表的人群相关的字段
         targetHead.setAudienceGenerateStatus(ApiConstant.INT_ZERO);
         targetHead.setTotalCoverNum(targetDistinctReceiveMobiles.size());
         targetHead.setWaitingNum(targetDistinctReceiveMobiles.size());
         smsTaskHeadDao.updateById(targetHead);
+        logger.info("sms task head update info");
 
         smsTaskHeads = smsTaskHeadDao.selectList(paramSmsTaskHead);
         if(CollectionUtils.isEmpty(smsTaskHeads)) return;
         SmsTaskHead currentTaskHead = smsTaskHeads.get(0);
+        //4检测TaskHead的发送状态
         if(currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()){
-            //Todo:4检测TaskHead的发送状态
             mqTopicService.sendSmsByTaskId(taskHeadIdStr);
         }
         
     }
 
-    //Todo:可以进行分页处理来优化
+    private void insertDataToSmsDetailAndDetailState(Long taskHeadId, SmsTaskHead targetHead, Set<String> targetDistinctReceiveMobiles) {
+        List<SmsTaskDetail> smsTaskDetailList = new LinkedList<>();
+        List<SmsTaskDetailState> smsTaskDetailStateList = new LinkedList<>();
+        for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
+            SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
+            smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
+            smsTaskDetail.setSendMessage(targetHead.getSmsTaskTemplateContent());
+            smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
+            smsTaskDetail.setSmsTaskHeadId(taskHeadId);
+            smsTaskDetailList.add(smsTaskDetail);
+        }
+        int totalNum = (smsTaskDetailList.size() + PAGE_SIZE) / PAGE_SIZE;
+        for(int index = 0; index < totalNum; index++){
+            if(index == totalNum-1){
+                logger.info("insert SmsTaskDetail index : " + index);
+                smsTaskDetailDao.batchInsert(smsTaskDetailList.subList(index*PAGE_SIZE,smsTaskDetailList.size()));
+            }else{
+                logger.info("insert SmsTaskDetail index : " + index);
+                smsTaskDetailDao.batchInsert(smsTaskDetailList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
+            }
+        }
+
+        for(SmsTaskDetail taskDetail : smsTaskDetailList){
+            SmsTaskDetailState smsTaskDetailState = new SmsTaskDetailState();
+            smsTaskDetailState.setSmsTaskDetailId(taskDetail.getId());
+            smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_WAITING.getStateCode());
+            smsTaskDetailStateList.add(smsTaskDetailState);
+        }
+
+        for(int index = 0; index < totalNum; index++){
+            if(index == totalNum-1){
+                logger.info("insert SmsTaskDetailState index : " + index);
+                smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,smsTaskDetailStateList.size()));
+            }else{
+                logger.info("insert SmsTaskDetailState index : " + index);
+                smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
+            }
+        }
+
+    }
+
     private List<String> queryReceiveMobileListByTargetAudienceIdAndType(SmsTaskBody smsTaskBody) {
         if(SmsTargetAudienceTypeEnum.SMS_TARGET_SEGMENTATION.getTypeCode() == smsTaskBody.getTargetType()){
             return queryAndCacheAudienceDetailBySegmentationId(smsTaskBody.getSmsTaskHeadId(),smsTaskBody.getTargetId());
@@ -134,7 +181,7 @@ public class GenerateSmsDetailTask implements TaskService {
         //1根据segmentation的Id在Mongo中选出相应得细分,然后取出dataPartyId
         Query query = new Query(Criteria.where(SEGMENTATION_HEAD_ID).is(targetId));
         List<Segment> segmentList = mongoTemplate.find(query,Segment.class);
-
+        logger.info("segment list size : " +segmentList.size());
         //2构造出dataParty的IdList的集合
         if(CollectionUtils.isEmpty(segmentList)) return null;
         List<Long> dataPartyIdList = new ArrayList<>();
@@ -143,13 +190,29 @@ public class GenerateSmsDetailTask implements TaskService {
                 dataPartyIdList.add(Long.valueOf(segment.getDataId()));
             }
         }
+        logger.info("dataParty id list size : " + dataPartyIdList.size());
 
         //3将选出来的这些数据做缓存存到cache表中,一开始先一条一条插入,后续优化成使用batchInsert进行插入
         if(CollectionUtils.isEmpty(dataPartyIdList)) return null;
         cacheDataPartyIdInSmsAudienceCache(taskHeadId, targetId, dataPartyIdList);
 
         //4根据dataPartyIdList选出相应的不同的mobile(去重),然后做为返回值返回
-        List<String> distinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList);
+        Set<String> distinctMobileSet = new HashSet<>();
+        List<String> subDistinctMobileList = null;
+        int totalPage = (dataPartyIdList.size() + PAGE_SIZE)/PAGE_SIZE;
+        for(int index = 0; index < totalPage; index++){
+            if(index == totalPage - 1){
+                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
+                logger.info("index : " + index);
+            }else {
+                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE -1));
+                logger.info("index : " + index);
+            }
+            distinctMobileSet.addAll(subDistinctMobileList);
+        }
+        logger.info("already search distinct mobile list " + subDistinctMobileList.size());
+        List<String> distinctMobileList = new LinkedList<>();
+        distinctMobileList.addAll(distinctMobileSet);
         if(CollectionUtils.isEmpty(distinctMobileList)) return null;
         return distinctMobileList;
     }
@@ -159,6 +222,7 @@ public class GenerateSmsDetailTask implements TaskService {
         AudienceListPartyMap paramAudienceListPartyMap = new AudienceListPartyMap();
         paramAudienceListPartyMap.setAudienceListId(targetId.intValue());
         paramAudienceListPartyMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        paramAudienceListPartyMap.setPageSize(Integer.MAX_VALUE);
         List<AudienceListPartyMap> audienceListPartyMapList = audienceListPartyMapDao.selectList(paramAudienceListPartyMap);
         if(CollectionUtils.isEmpty(audienceListPartyMapList)) return null;
 
@@ -175,19 +239,47 @@ public class GenerateSmsDetailTask implements TaskService {
         cacheDataPartyIdInSmsAudienceCache(taskHeadId, targetId, dataPartyIdList);
 
         //4根据dataPartyIdList选出相应的不同的mobile(去重),然后做为返回值返回
-        List<String> distinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList);
+        Set<String> distinctMobileSet = new HashSet<>();
+        List<String> subDistinctMobileList = null;
+        int totalPage = (dataPartyIdList.size() + PAGE_SIZE)/PAGE_SIZE;
+        for(int index = 0; index < totalPage; index++){
+            if(index == totalPage - 1){
+                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
+                logger.info("index : " + index);
+            }else {
+                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE -1));
+                logger.info("index : " + index);
+            }
+            distinctMobileSet.addAll(subDistinctMobileList);
+        }
+        logger.info("already search distinct mobile list " + subDistinctMobileList.size());
+        List<String> distinctMobileList = new LinkedList<>();
+        distinctMobileList.addAll(distinctMobileSet);
         if(CollectionUtils.isEmpty(distinctMobileList)) return null;
         return distinctMobileList;
     }
 
     private void cacheDataPartyIdInSmsAudienceCache(Long taskHeadId, Long targetId, List<Long> dataPartyIdList) {
+        logger.info("begin to cache target audience");
+        List<SmsTaskTargetAudienceCache> smsTaskTargetAudienceCacheList = new LinkedList<>();
         for(Long dataPartyId : dataPartyIdList){
             SmsTaskTargetAudienceCache smsTaskTargetAudienceCache = new SmsTaskTargetAudienceCache();
             smsTaskTargetAudienceCache.setTaskHeadId(taskHeadId);
             smsTaskTargetAudienceCache.setTargetId(targetId);
             smsTaskTargetAudienceCache.setDataPartyId(dataPartyId);
             smsTaskTargetAudienceCache.setTargetType(SmsTargetAudienceTypeEnum.SMS_TARGET_AUDIENCE.getTypeCode());
-            smsTaskTargetAudienceCacheDao.insert(smsTaskTargetAudienceCache);
+            smsTaskTargetAudienceCacheList.add(smsTaskTargetAudienceCache);
+        }
+
+        int totalNum = (smsTaskTargetAudienceCacheList.size() + PAGE_SIZE) / PAGE_SIZE;
+        for(int index = 0; index < totalNum; index++){
+            if(index == totalNum-1){
+                logger.info("insert index : " + index);
+                smsTaskTargetAudienceCacheDao.batchInsert(smsTaskTargetAudienceCacheList.subList(index*PAGE_SIZE,smsTaskTargetAudienceCacheList.size()));
+            }else{
+                logger.info("insert index : " + index);
+                smsTaskTargetAudienceCacheDao.batchInsert(smsTaskTargetAudienceCacheList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
+            }
         }
     }
 }

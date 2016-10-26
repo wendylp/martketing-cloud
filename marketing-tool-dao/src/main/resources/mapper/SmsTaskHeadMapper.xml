@@ -119,7 +119,7 @@
 	
 	<!-- 其它SQL语句 -->
 	
-	<select id="countStatusById" parameterType="java.lang.Long" resultType="java.util.Map">
+	<select id="countStatusById" parameterType="java.lang.Long" resultType="cn.rongcapital.mkt.vo.sms.out.SmsTaskSendStatusVo">
 		SELECT
 			stds.sms_task_send_status AS smsTaskSendStatus,
 			COUNT(DISTINCT stds.id) AS count

@@ -30,7 +30,12 @@ public class SmsTemplet extends BaseQuery{
 
     private String content;
     
+    /**
+     * 临时属性
+     */
     private String createTimeStr;
+    
+    private String auditStatusStr;
     
     
     public SmsTemplet(){}
@@ -147,6 +152,15 @@ public class SmsTemplet extends BaseQuery{
 	public void setCreateTimeStr(String createTimeStr) {
 		this.createTimeStr = createTimeStr;
 	}
-    
+
+
+	public String getAuditStatusStr() {
+		return auditStatusStr;
+	}
+
+
+	public void setAuditStatusStr(String auditStatusStr) {
+		this.auditStatusStr = auditStatusStr;
+	}
     
 }

@@ -715,7 +715,7 @@
 	<select id="selectDistinctMobileListByIdList" parameterType="java.util.List" resultType="java.lang.String">
 		SELECT distinct mobile
 		<include refid="QUERY_FROM_TABLE"/>
-        WHERE status = 0 AND id in
+        WHERE status = 2 AND id in
 		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
 			#{item}
 		</foreach>
