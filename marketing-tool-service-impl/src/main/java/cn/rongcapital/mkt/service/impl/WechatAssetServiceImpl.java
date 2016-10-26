@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tagsin.wechat_sdk.user.UserInfo;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -41,6 +42,10 @@ public class WechatAssetServiceImpl implements WechatAssetService {
     private static final byte UN_FOLLOW_STATUS = 1;
     //未分组
     private static final String NO_GROUP = "999";
+    
+    private final String BITMAP = "00000011000000000";
+    
+    private final String ACTIVITY_48H_YN = "N";
     
     @Autowired
     private WechatAssetDao wechatAssetDao;
@@ -140,10 +145,9 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 			
 		}else{
 			
-			wechatMember = getWechatMember(userInfo);
-			wechatMember.setPubId(pubId);
+			wechatMember = getWechatMember(userInfo, pubId);
 			wechatMember.setStatus(FOLLOW_STATUS);
-			wechatMember.setWxGroupId(NO_GROUP);
+			wechatMember.setBitmap(this.BITMAP);
 			wechatMemberDao.insert(wechatMember);
 		}
 			
@@ -174,36 +178,44 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 			
 		return result;
 	}
+	
+    /**
+     * @param userInfo 获取粉丝基本信息
+     * @param wxAcct
+     * @return
+     */
+    private WechatMember getWechatMember(UserInfo userInfo, String wxAcct) {
+        WechatMember wechatMember = new WechatMember();
+        wechatMember.setWxCode(userInfo.getOpenid());
+        wechatMember.setWxName(userInfo.getNickname());
+        wechatMember.setNickname(userInfo.getNickname());
+        wechatMember.setSex(userInfo.getSex());
+        wechatMember.setCity(userInfo.getCity());
+        wechatMember.setCountry(userInfo.getCountry());
+        wechatMember.setProvince(userInfo.getProvince());
+        // language
+        wechatMember.setHeadImageUrl(userInfo.getHeadimgurl());
+        Long millisecond = new Long(userInfo.getSubscribe_time()) * 1000;
+        Date data = new Date(millisecond);
+        // 关注时间
+        wechatMember.setSubscribeTime(DateUtil.getStringFromDate(data, "yyyy-MM-dd HH:mm:ss"));
+        // unionid
+        wechatMember.setRemark(userInfo.getRemark());
+        StringBuffer sb = new StringBuffer();
+        List<String> tagList = userInfo.getTagid_list();
 
-	/**
-	 * 获取微信粉丝信息
-	 * @param openId
-	 * @return
-	 * @throws Exception 
-	 */
-	private WechatMember getWechatMember(UserInfo userInfo){
-		
-		WechatMember wechatMember = new WechatMember();
-		
-		wechatMember.setWxCode(userInfo.getOpenid());			
-		wechatMember.setNickname(userInfo.getNickname());
-		wechatMember.setWxName(userInfo.getNickname());
-		wechatMember.setSex(userInfo.getSex());
-			
-		wechatMember.setCountry(userInfo.getCountry());
-		wechatMember.setProvince(userInfo.getProvince());
-		wechatMember.setCity(userInfo.getCity());
-		// language
-		wechatMember.setHeadImageUrl(userInfo.getHeadimgurl());
-		//关注时间
-		Date date = new Date(Long.valueOf(userInfo.getSubscribe_time()) * 1000);
-		wechatMember.setSubscribeTime(DateUtil.getStringFromDate(date, "yyyy-MM-dd HH:mm:ss"));
-		// unionid
-		wechatMember.setRemark(userInfo.getRemark());
-		wechatMember.setSubscribeYn("Y");
-		wechatMember.setSelected((byte) 0);
-			
-		return wechatMember;
-	}
+        if (tagList != null && tagList.size() > 0) {
+            for (int i = 0; i < tagList.size(); i++) {
+                sb.append(tagList.get(i));
+                sb.append(",");
+            }
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        wechatMember.setWxGroupId(sb.toString());
+        wechatMember.setPubId(wxAcct);
+        String fansJson = JSONObject.toJSONString(wechatMember);
+        wechatMember.setFansJson(fansJson);
+        return wechatMember;
+    }
 	
 }
