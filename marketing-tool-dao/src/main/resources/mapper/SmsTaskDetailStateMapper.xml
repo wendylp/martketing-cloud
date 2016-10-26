@@ -94,7 +94,7 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	<insert id="batchInsert" parameterType="java.util.List">
+	<insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
 		INSERT INTO sms_task_detail_state (sms_task_detail_id,sms_task_send_status,create_time)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator=",">

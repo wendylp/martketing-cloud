@@ -106,6 +106,8 @@ public class GenerateSmsDetailTask implements TaskService {
         if(targetDistinctReceiveMobiles.contains("")){
             targetDistinctReceiveMobiles.remove("");
         }
+        //3.5如果targetDistinctReceiveMobiles的容量为空,则不执行下面得短信生成语句
+        if(CollectionUtils.isEmpty(targetDistinctReceiveMobiles)) return;
         insertDataToSmsDetailAndDetailState(taskHeadId, targetHead, targetDistinctReceiveMobiles);
 
         //4更新SmsTaskHead表的人群相关的字段
@@ -118,33 +120,54 @@ public class GenerateSmsDetailTask implements TaskService {
         smsTaskHeads = smsTaskHeadDao.selectList(paramSmsTaskHead);
         if(CollectionUtils.isEmpty(smsTaskHeads)) return;
         SmsTaskHead currentTaskHead = smsTaskHeads.get(0);
+        //4检测TaskHead的发送状态
         if(currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()){
-            //Todo:4检测TaskHead的发送状态
             mqTopicService.sendSmsByTaskId(taskHeadIdStr);
         }
         
     }
 
     private void insertDataToSmsDetailAndDetailState(Long taskHeadId, SmsTaskHead targetHead, Set<String> targetDistinctReceiveMobiles) {
-        logger.info("begin to insert SmsTaskDetail : " + System.currentTimeMillis());
+        List<SmsTaskDetail> smsTaskDetailList = new LinkedList<>();
+        List<SmsTaskDetailState> smsTaskDetailStateList = new LinkedList<>();
         for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
             SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
             smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
             smsTaskDetail.setSendMessage(targetHead.getSmsTaskTemplateContent());
             smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
             smsTaskDetail.setSmsTaskHeadId(taskHeadId);
-            smsTaskDetailDao.insert(smsTaskDetail);
-
-            SmsTaskDetailState smsTaskDetailState = new SmsTaskDetailState();
-            smsTaskDetailState.setSmsTaskDetailId(smsTaskDetail.getId());
-            smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_WAITING.getStateCode());
-            smsTaskDetailStateDao.insert(smsTaskDetailState);
+            smsTaskDetailList.add(smsTaskDetail);
         }
-        logger.info("insert SmsTaskDetailEnd : " + System.currentTimeMillis());
+        int totalNum = (smsTaskDetailList.size() + PAGE_SIZE) / PAGE_SIZE;
+        for(int index = 0; index < totalNum; index++){
+            if(index == totalNum-1){
+                logger.info("insert SmsTaskDetail index : " + index);
+                smsTaskDetailDao.batchInsert(smsTaskDetailList.subList(index*PAGE_SIZE,smsTaskDetailList.size()));
+            }else{
+                logger.info("insert SmsTaskDetail index : " + index);
+                smsTaskDetailDao.batchInsert(smsTaskDetailList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
+            }
+        }
+
+        for(SmsTaskDetail taskDetail : smsTaskDetailList){
+            SmsTaskDetailState smsTaskDetailState = new SmsTaskDetailState();
+            smsTaskDetailState.setSmsTaskDetailId(taskDetail.getId());
+            smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_WAITING.getStateCode());
+            smsTaskDetailStateList.add(smsTaskDetailState);
+        }
+
+        for(int index = 0; index < totalNum; index++){
+            if(index == totalNum-1){
+                logger.info("insert SmsTaskDetailState index : " + index);
+                smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,smsTaskDetailStateList.size()));
+            }else{
+                logger.info("insert SmsTaskDetailState index : " + index);
+                smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
+            }
+        }
 
     }
 
-    //Todo:可以进行分页处理来优化
     private List<String> queryReceiveMobileListByTargetAudienceIdAndType(SmsTaskBody smsTaskBody) {
         if(SmsTargetAudienceTypeEnum.SMS_TARGET_SEGMENTATION.getTypeCode() == smsTaskBody.getTargetType()){
             return queryAndCacheAudienceDetailBySegmentationId(smsTaskBody.getSmsTaskHeadId(),smsTaskBody.getTargetId());
