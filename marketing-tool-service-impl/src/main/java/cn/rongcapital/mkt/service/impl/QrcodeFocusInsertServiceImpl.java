@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeFocusDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
@@ -52,6 +53,7 @@ public class QrcodeFocusInsertServiceImpl implements QrcodeFocusInsertService{
             WechatQrcodeFocus wechatQrcodeFocus = new WechatQrcodeFocus();
             wechatQrcodeFocus.setWxAcct(wxmpId);
             wechatQrcodeFocus.setOpenid(openId);
+            wechatQrcodeFocus.setFocusStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
             List<WechatQrcodeFocus> wechatQrcodeFocusList = wechatQrcodeFocusDao.selectList(wechatQrcodeFocus);
             effectRow = updateUnfocusTime(scanQrTime, focusStatus, effectRow, wechatQrcodeFocusList);
         }
