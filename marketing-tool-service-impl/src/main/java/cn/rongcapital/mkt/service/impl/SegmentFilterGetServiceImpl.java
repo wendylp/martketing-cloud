@@ -6,19 +6,13 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.enums.GenderEnum;
-import cn.rongcapital.mkt.po.mongodb.DataParty;
-import cn.rongcapital.mkt.po.mongodb.Segment;
-import cn.rongcapital.mkt.po.mongodb.TagRecommend;
-import cn.rongcapital.mkt.service.SegmentFilterGetService;
-import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.*;
-import cn.rongcapital.mkt.vo.out.SegmentAreaCountOut;
-import cn.rongcapital.mkt.vo.out.SegmentDimensionCountOut;
-import heracles.data.common.annotation.ReadWrite;
-import heracles.data.common.util.ReadWriteType;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.ws.rs.core.SecurityContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +26,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.ws.rs.core.SecurityContext;
-import java.util.*;
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.GenderEnum;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
+import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.po.mongodb.TagRecommend;
+import cn.rongcapital.mkt.service.SegmentFilterGetService;
+import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
+import cn.rongcapital.mkt.vo.in.SegmentFilterCondition;
+import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
+import cn.rongcapital.mkt.vo.in.SegmentFilterSumCondition;
+import cn.rongcapital.mkt.vo.in.SegmentFilterSumIn;
+import cn.rongcapital.mkt.vo.out.SegmentAreaCountOut;
+import cn.rongcapital.mkt.vo.out.SegmentDimensionCountOut;
+import cn.rongcapital.mkt.vo.out.SystemTagFilterOut;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 
 @Service
 public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
@@ -52,14 +62,45 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		List<SegmentFilterCondition> conditions = body.getConditions();
 		int count = conditions.size();
 		BaseOutput result = newSuccessBaseOutput();
+		List<Object> data = result.getData();
 		result.setTotal(count);
-		for (int i = 0; i < count; i++) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("tag_id", conditions.get(i).getTagId());
-			map.put("tag_name", conditions.get(i).getTagName());
-			String tag_count = getPeopleCount(i, conditions);
-			map.put("tag_count", tag_count);
-			result.getData().add(map);
+		List<Criteria> criterialist = new ArrayList<>();
+		for (SegmentFilterCondition condition : conditions) {
+			//查询所需参数
+			String tagId = condition.getTagId();
+			String tagGroupId = condition.getTagGroupId();
+			String tagName = condition.getTagName();
+			String tagValue = tagName.substring(tagName.indexOf("-")+1, tagName.length());
+			String exclude = condition.getExclude();
+			Query query = new Query();
+				// 根据getExclude()拼条件
+				if ("1".equals(exclude)) {
+					Criteria criteriaCond = null;
+					if ("0".equals(tagId)) {// 不限
+						criteriaCond = Criteria.where("tagList").elemMatch(Criteria.where("tagId").ne(tagGroupId));
+					} else {
+						criteriaCond = Criteria.where("tagList")
+								.elemMatch(Criteria.where("tagId").ne(tagGroupId).and("tagValue").ne(tagValue));
+					}
+					criterialist.add(criteriaCond);
+				} else {
+					Criteria criteriaCond = null;
+					if ("0".equals(tagId)) {// 不限
+						criteriaCond = Criteria.where("tagList").elemMatch(Criteria.where("tagId").is(tagGroupId));
+					} else {
+						criteriaCond = Criteria.where("tagList")
+								.elemMatch(Criteria.where("tagId").is(tagGroupId).and("tagValue").is(tagValue));
+					}
+					criterialist.add(criteriaCond);
+				}
+			//查询标签值的人数
+			Criteria[] crieriaArray = criterialist.toArray(new Criteria[criterialist.size()]);
+			query.addCriteria(new Criteria().andOperator(crieriaArray));
+			long tagCount = mongoTemplate.count(query, DataParty.class);
+			//封装返回结果
+			
+			SystemTagFilterOut systemTagFilterOut = new SystemTagFilterOut(tagId, tagName, tagCount);
+			data.add(systemTagFilterOut);
 		}
 		return result;
 	}
