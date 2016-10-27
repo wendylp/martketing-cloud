@@ -36,7 +36,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 	@Autowired
 	private DataPopulationDao dataPopulationDao;
 
-	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	private ExecutorService executor = null;
 	
 	@Override
 	public int queryTotalCount() {
@@ -48,6 +48,8 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 	@Override
 	public void querySyncData(Integer totalSize, Integer pageSize) {
 
+		executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+		
     	logger.info("=====================同步人口属性到主数据开始");
     	long startTime = System.currentTimeMillis();
     	

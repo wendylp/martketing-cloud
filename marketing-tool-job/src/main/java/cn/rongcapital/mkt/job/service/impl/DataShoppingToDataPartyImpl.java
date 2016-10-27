@@ -37,7 +37,7 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 	@Autowired
 	private DataShoppingDao dataShoppingDao;
 
-	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	private ExecutorService executor = null;
 	
 	@Override
 	public int queryTotalCount() {
@@ -49,6 +49,8 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 	@Override
 	public void querySyncData(Integer totalSize, Integer pageSize) {
 
+		executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+		
     	logger.info("=====================同步购物记录属性到主数据开始");
     	long startTime = System.currentTimeMillis();
 		

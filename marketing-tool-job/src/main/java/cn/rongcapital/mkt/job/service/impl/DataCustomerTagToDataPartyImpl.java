@@ -30,7 +30,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
 	@Autowired
 	private DataCustomerTagsDao dataCustomerTagsDao;
 	
-	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	private ExecutorService executor = null;
 
 	@Override
 	public int queryTotalCount() {
@@ -42,6 +42,8 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
 	@Override
 	public void querySyncData(Integer totalSize, Integer pageSize) {
 
+		executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+		
 		List<DataCustomerTags> dataCustomerTagsLists = new ArrayList<DataCustomerTags>();
 		
 		DataCustomerTags dataCustomerTags = new DataCustomerTags();
