@@ -22,6 +22,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -55,6 +56,9 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	
+	@Autowired
+	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@ReadWrite(type = ReadWriteType.READ)
 	@Override
@@ -96,11 +100,23 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 			//查询标签值的人数
 			Criteria[] crieriaArray = criterialist.toArray(new Criteria[criterialist.size()]);
 			query.addCriteria(new Criteria().andOperator(crieriaArray));
-			long tagCount = mongoTemplate.count(query, DataParty.class);
-			//封装返回结果
-			
-			SystemTagFilterOut systemTagFilterOut = new SystemTagFilterOut(tagId, tagName, tagCount);
-			data.add(systemTagFilterOut);
+			Runnable runnable = new Runnable() {
+				@Override
+				public void run() {
+					long tagCount = mongoTemplate.count(query, DataParty.class);
+					//封装返回结果
+					SystemTagFilterOut systemTagFilterOut = new SystemTagFilterOut(tagId, tagName, tagCount);
+					data.add(systemTagFilterOut);
+				}
+			};
+			threadPoolTaskExecutor.execute(runnable);
+		}
+		while(data.size() < count){
+			try {
+				Thread.sleep(1L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		return result;
 	}
@@ -429,5 +445,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		out.setTotal(dataList.size());
 		out.getData().addAll(dataList);
 	}
+	
+	
 
 }
