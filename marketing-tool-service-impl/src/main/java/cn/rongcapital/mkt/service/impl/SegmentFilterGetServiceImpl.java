@@ -9,8 +9,6 @@ package cn.rongcapital.mkt.service.impl;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.GenderEnum;
-import cn.rongcapital.mkt.common.util.ListOperateUtil;
-import cn.rongcapital.mkt.po.DataMember;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
@@ -36,10 +34,6 @@ import org.springframework.util.StringUtils;
 
 import javax.ws.rs.core.SecurityContext;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
