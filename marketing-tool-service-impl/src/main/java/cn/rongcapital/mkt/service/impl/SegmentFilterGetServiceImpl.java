@@ -54,6 +54,8 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 	private String FRONT_PROVINCE_NAME = "北京,天津,上海,重庆,河北,河南,云南,辽宁,黑龙江,湖南,安徽,"
 			+ "山东,新疆,江苏,浙江,江西,湖北,广西,甘肃,山西,内蒙古,陕西,吉林,福建,贵州," + "广东,青海,西藏,四川,宁夏,海南,台湾,香港,澳门";
 
+	private final static int selectBatchSize  = 10000;
+
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
@@ -256,6 +258,9 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		if (midCriteria == null) {
 			return result;
 		}
+		
+		long start = System.currentTimeMillis();
+		logger.info("=============细分管理地区查询开始=========================");
 		Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(midCriteria),
 				Aggregation.group("provice").count().as("populationCount").first("provice").as("dimensionName"),
 				Aggregation.sort(Sort.Direction.DESC, "populationCount"));
@@ -315,7 +320,9 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		segmentAreaCountOut.setProvinceList(formartedProvinceCountOutList);
 		result.setTotal(1);
 		result.getData().add(segmentAreaCountOut);
-
+		long end = System.currentTimeMillis();
+		
+		logger.info("=============细分管理地区查询结束,用时:"+(end-start)+"毫秒");
 		return result;
 	}
 
@@ -371,15 +378,34 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		if (CollectionUtils.isEmpty(segmentHeadIds)) {
 			return null;
 		}
+		
+		long start = System.currentTimeMillis();
+		logger.info("=================================查询细分管理主数据开始================================");
+
+		List<Segment> segmentLists = new ArrayList<Segment>();
+
 		Query query = new Query(Criteria.where("segmentationHeadId").in(segmentHeadIds));
-		List<Segment> segmentList = mongoTemplate.find(query, Segment.class);
-		if (CollectionUtils.isEmpty(segmentList)) {
-			return null;
+
+		int totalSize = (int) mongoTemplate.count(query, Segment.class);
+		int pageSize = selectBatchSize;
+		int totalPages = (totalSize + pageSize - 1) / pageSize;
+
+		logger.info("=========分批查询细分管理主数据共" + totalSize + "条，分为" + totalPages+ "页===============");
+
+		for (int i = 0; i < totalPages; i++) {
+
+			Query queryChild = new Query(Criteria.where("segmentationHeadId").in(segmentHeadIds)).skip(i * pageSize).limit(pageSize);
+			List<Segment> segmentList = mongoTemplate.find(queryChild, Segment.class);
+			segmentLists.addAll(segmentList);
+
 		}
+
+		long end = System.currentTimeMillis();
+		logger.info("=========查询细分管理主数据结束,查询数据总:" + segmentLists.size() + "条,用时:" + (end - start) + "毫秒=================");
 
 		Criteria midCriteria = Criteria.where("mid");
 		Set<Integer> dataPartyIdSet = new HashSet<>();
-		for (Segment segment : segmentList) {
+		for (Segment segment : segmentLists) {
 			dataPartyIdSet.add(segment.getDataId());
 		}
 		midCriteria.in(dataPartyIdSet);
