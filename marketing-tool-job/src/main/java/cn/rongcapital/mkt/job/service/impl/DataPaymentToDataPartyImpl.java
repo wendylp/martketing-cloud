@@ -30,7 +30,7 @@ public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Int
 	@Autowired
 	private DataPaymentDao dataPaymentDao;
 	
-	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	private ExecutorService executor = null;
 
 	@Override
 	public int queryTotalCount() {
@@ -42,6 +42,8 @@ public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Int
 	@Override
 	public void querySyncData(Integer totalSize, Integer pageSize) {
 
+		executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+		
 		List<DataPayment> dataPaymentLists = new ArrayList<DataPayment>();
 		
 		DataPayment dataPayment = new DataPayment();

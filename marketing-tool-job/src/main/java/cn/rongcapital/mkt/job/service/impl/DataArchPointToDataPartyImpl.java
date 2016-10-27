@@ -31,7 +31,7 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 	@Autowired
 	private DataArchPointDao dataArchPointDao;
 
-	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	private ExecutorService executor = null;
 	
 	@Override
 	public int queryTotalCount() {
@@ -42,6 +42,8 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 
 	@Override
 	public void querySyncData(Integer totalSize, Integer pageSize) {
+		
+		executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
 		
 		List<DataArchPoint> dataArchPointLists = new ArrayList<DataArchPoint>();
 		
