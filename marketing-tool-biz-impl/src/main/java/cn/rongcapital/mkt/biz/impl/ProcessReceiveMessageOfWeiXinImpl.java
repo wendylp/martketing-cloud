@@ -264,33 +264,39 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			String event = msgMap.get("event");
 			String createTime = msgMap.get("createTime");
 			String qrCodeTicket = msgMap.get("ticket");
-			Date date = new Date(Long.parseLong(createTime)*1000);
-			switch(event){
-			  case "SCAN":{
-			      this.insertWechatQrcodeScan(qrCodeTicket, openid);
-				  break; 
-			  }
-			  case "subscribe":{
-				  UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常				  
-				  if(wechatRegister!=null){
-					  wechatAssetService.follow(userInfo, wechatRegister.getWxAcct());
+			Date date = null;
+			if(StringUtils.isNotEmpty(createTime)){
+				date = new Date(Long.parseLong(createTime)*1000);
+			}
+			
+			if(StringUtils.isNotEmpty(event)){
+				switch(event){
+				  case "SCAN":{
+				      this.insertWechatQrcodeScan(qrCodeTicket, openid);
+					  break; 
 				  }
-				  status = 0;
-				  qrcodeFocusInsertService.insertQrcodeFoucsInfo(qrCodeTicket, openid, date, status, wechatRegister.getWxAcct());
-				  this.insertWechatQrcodeScan(qrCodeTicket, openid);
-				  break;
-			  }
-			  case "unsubscribe":{
-				  if(wechatRegister!=null){
-					  wechatAssetService.unfollow(openid, wechatRegister.getWxAcct());
+				  case "subscribe":{
+					  UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常				  
+					  if(wechatRegister!=null){
+						  wechatAssetService.follow(userInfo, wechatRegister.getWxAcct());
+					  }
+					  status = 0;
+					  qrcodeFocusInsertService.insertQrcodeFoucsInfo(qrCodeTicket, openid, date, status, wechatRegister.getWxAcct());
+					  this.insertWechatQrcodeScan(qrCodeTicket, openid);
+					  break;
 				  }
-				  status = 1;
-				  qrcodeFocusInsertService.insertQrcodeFoucsInfo(qrCodeTicket, openid, date, status, wechatRegister.getWxAcct());				  
-				  break;
-			  }
-			  default :{
-				  break;
-			  }
+				  case "unsubscribe":{
+					  if(wechatRegister!=null){
+						  wechatAssetService.unfollow(openid, wechatRegister.getWxAcct());
+					  }
+					  status = 1;
+					  qrcodeFocusInsertService.insertQrcodeFoucsInfo(qrCodeTicket, openid, date, status, wechatRegister.getWxAcct());				  
+					  break;
+				  }
+				  default :{
+					  break;
+				  }
+				}
 			}
 	}
 	
