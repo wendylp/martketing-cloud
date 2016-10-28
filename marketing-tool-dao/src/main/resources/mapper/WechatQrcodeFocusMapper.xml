@@ -108,8 +108,36 @@
 	    ORDER BY focus_datetime
 	</select>
 
-	<!-- 统计微信二维码关注数量和取消关注数量 -->
-	<select id="getFocusOrUnFocusCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+	<!-- 统计微信二维码关注数量 -->
+	<select id="getFocusCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) FROM
+		(
+		SELECT
+			openid ,COUNT(1)
+		FROM
+			wechat_qrcode_focus
+		WHERE
+		<if test="fieldName != null and fieldName == 'focus_datetime' and searchDate != null ">
+			<![CDATA[ DATE_FORMAT(focus_datetime,'%Y-%m-%d') = #{searchDate} ]]>
+		</if>		
+		<if test="fieldName != null and fieldName == 'focus_datetime' and searchHours != null ">
+			<![CDATA[ DATE_FORMAT(focus_datetime,'%Y-%m-%d %H') = #{searchHours} ]]>
+		</if>		
+		<if test="chCode != null">
+			AND ch_code = #{chCode}
+		</if>
+		<if test="wxName != null">
+			AND wx_name = #{wxName}
+		</if>
+		<if test="qrcodeId != null">
+			AND qrcode_id = #{qrcodeId}
+		</if>		
+		AND #{fieldName} IS NOT NULL
+		group by openid ) addcount
+	</select>
+	
+	<!-- 统计微信二维码净关注数量 -->
+	<select id="getNetFocusCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT
 			COUNT(1)
 		FROM
@@ -118,15 +146,10 @@
 		<if test="fieldName != null and fieldName == 'focus_datetime' and searchDate != null ">
 			<![CDATA[ DATE_FORMAT(focus_datetime,'%Y-%m-%d') = #{searchDate} ]]>
 		</if>
-		<if test="fieldName != null and fieldName == 'unfocus_datetime' and searchDate != null ">
-			<![CDATA[ DATE_FORMAT(unfocus_datetime,'%Y-%m-%d') = #{searchDate} ]]>
-		</if>
 		<if test="fieldName != null and fieldName == 'focus_datetime' and searchHours != null ">
 			<![CDATA[ DATE_FORMAT(focus_datetime,'%Y-%m-%d %H') = #{searchHours} ]]>
 		</if>
-		<if test="fieldName != null and fieldName == 'unfocus_datetime' and searchHours != null ">
-			<![CDATA[ DATE_FORMAT(unfocus_datetime,'%Y-%m-%d %H') = #{searchHours} ]]>
-		</if>
+		<![CDATA[and focus_status='0' ]]>
 		<if test="chCode != null">
 			AND ch_code = #{chCode}
 		</if>

@@ -105,8 +105,8 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			calendar.setTime(tempDate);
 			while (tempDate.compareTo(eDate) <= 0) {
 				Integer foucusCount = getCunt(tempDate, FOCUS_FIELDNAME, chCode, wxName,qrcodeId, DAY_FLAG); // 关注数量
-				Integer unFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName,qrcodeId, DAY_FLAG);// 取消关注数量
-				Integer creFocusCount = foucusCount - unFocusCount; // 净增数量
+				Integer creFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName,qrcodeId, DAY_FLAG);// 净关注数量				
+				Integer unFocusCount = foucusCount - creFocusCount; // 取消关注数量
 				focusCountArray[i] = foucusCount;
 				unFocusCountArray[i] = unFocusCount;
 				creFocusCountArray[i] = creFocusCount;
@@ -184,8 +184,8 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			Date maxDate = compareValue == -1 ? todayZero : nowhourDate;
 			while (tempDate.compareTo(maxDate) <= 0) {
 				Integer foucusCount = getCunt(tempDate, FOCUS_FIELDNAME, chCode, wxName,qrcodeId, HOUR_FLAG); // 关注数量
-				Integer unFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName,qrcodeId, HOUR_FLAG);// 取消关注数量
-				Integer creFocusCount = foucusCount - unFocusCount; // 净增数量
+				Integer creFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName,qrcodeId, HOUR_FLAG);// 净关注数量				
+				Integer unFocusCount = foucusCount - creFocusCount; // 取消关注数量
 				focusCountArray[i] = foucusCount;
 				unFocusCountArray[i] = unFocusCount;
 				creFocusCountArray[i] = creFocusCount;
@@ -256,7 +256,13 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			paramMap.put("qrcodeId", qrcodeId);
 		}
 		logger.info(paramMap.toString());
-		return wechatQrcodeFocusDao.getFocusOrUnFocusCount(paramMap);
+		if(FOCUS_FIELDNAME.equals(fieldName)) {
+		    return wechatQrcodeFocusDao.getFocusCount(paramMap);
+		} 	
+		else if(UNFOCUS_FIELDNAME.equals(fieldName)) {   //当输入取消关注时间时，先计算净关注数，再通过关注-净关注=取消关注
+		    return wechatQrcodeFocusDao.getNetFocusCount(paramMap);   
+		}
+		return 0;
 	}
 
 	/**

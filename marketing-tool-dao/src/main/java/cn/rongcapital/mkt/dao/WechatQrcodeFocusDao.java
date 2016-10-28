@@ -46,14 +46,24 @@ public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
 	List<WechatQrcodeFocus> selectTheEarliestFocus();
 	
 	/**
-	 * @Title: getFocusOrUnFocusCount   
-	 * @Description: 统计微信二维码关注数量和取消关注数量  
+	 * @Title: getFocusCount   
+	 * @Description: 统计微信二维码关注数量
 	 * @param: @param map
 	 * @param: @return      
 	 * @return: Integer      
 	 * @throws
 	 */
-	Integer getFocusOrUnFocusCount(Map<String, Object> map);
+	Integer getFocusCount(Map<String, Object> map);
+	
+	/**
+     * @Title: getNetFocusCount   
+     * @Description: 统计微信二维码净关注数量
+     * @param: @param map
+     * @param: @return      
+     * @return: Integer      
+     * @throws
+     */
+	Integer getNetFocusCount(Map<String, Object> map);
 	
 	/**
 	 * 获取总浏览次数，关注的信息，流失关注的信息

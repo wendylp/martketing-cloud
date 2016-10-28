@@ -108,9 +108,27 @@ public class WechatQrcodeFocusDaoTest extends AbstractUnitTest {
 	}
 	
 	@Test
-	public void testGetFocusOrUnFocusCount() {
-	    logger.info("测试方法: getFocusOrUnFocusCount ");    
+	public void testGetFocusCount() {
+	    logger.info("测试方法: getFocusCount ");   
+	    Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("searchDate", "2016-10-26");
+        paramMap.put("fieldName", "focus_datetime");
+        paramMap.put("chCode", "1");
+        paramMap.put("wxName", "瑞雪营销云");
+        logger.info("Day FocusCount="+wechatQrcodeFocusDao.getFocusCount(paramMap));
+               
 	}
+	
+	@Test
+	public void testGetNetFocusCount() {
+        logger.info("测试方法: getNetFocusCount ");  
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("searchDate", "2016-10-26");
+        paramMap.put("fieldName", "focus_datetime");
+        paramMap.put("chCode", "1");
+        paramMap.put("wxName", "瑞雪营销云");
+        logger.info("Day NetFocusCount="+wechatQrcodeFocusDao.getNetFocusCount(paramMap));
+    }
 	
 	@Test
 	public void testInsert() {
