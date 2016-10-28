@@ -43,6 +43,8 @@ public class TagRecommend implements Serializable {
 
     @Field(value = "source")
     private String source;
+    
+    private Integer seq;
 
 	public String getId() {
 		return id;
@@ -99,7 +101,7 @@ public class TagRecommend implements Serializable {
     public void setTagDesc(String tagDesc) {
         this.tagDesc = tagDesc;
     }
-
+    
     public Date getCreateTime() {
         return createTime;
     }
@@ -130,6 +132,14 @@ public class TagRecommend implements Serializable {
 
     public void setSource(String source) {
         this.source = source;
+    }
+    
+    public Integer getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Integer seq) {
+        this.seq = seq;
     }
 
 

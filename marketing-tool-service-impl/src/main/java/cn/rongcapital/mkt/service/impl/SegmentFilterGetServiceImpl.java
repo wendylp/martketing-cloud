@@ -6,19 +6,13 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.enums.GenderEnum;
-import cn.rongcapital.mkt.po.mongodb.DataParty;
-import cn.rongcapital.mkt.po.mongodb.Segment;
-import cn.rongcapital.mkt.po.mongodb.TagRecommend;
-import cn.rongcapital.mkt.service.SegmentFilterGetService;
-import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.*;
-import cn.rongcapital.mkt.vo.out.SegmentAreaCountOut;
-import cn.rongcapital.mkt.vo.out.SegmentDimensionCountOut;
-import heracles.data.common.annotation.ReadWrite;
-import heracles.data.common.util.ReadWriteType;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.ws.rs.core.SecurityContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +22,29 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.ws.rs.core.SecurityContext;
-import java.util.*;
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.GenderEnum;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
+import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.po.mongodb.TagRecommend;
+import cn.rongcapital.mkt.service.SegmentFilterGetService;
+import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
+import cn.rongcapital.mkt.vo.in.SegmentFilterCondition;
+import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
+import cn.rongcapital.mkt.vo.in.SegmentFilterSumCondition;
+import cn.rongcapital.mkt.vo.in.SegmentFilterSumIn;
+import cn.rongcapital.mkt.vo.out.SegmentAreaCountOut;
+import cn.rongcapital.mkt.vo.out.SegmentDimensionCountOut;
+import cn.rongcapital.mkt.vo.out.SystemTagFilterOut;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 
 @Service
 public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
@@ -43,8 +54,13 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 	private String FRONT_PROVINCE_NAME = "北京,天津,上海,重庆,河北,河南,云南,辽宁,黑龙江,湖南,安徽,"
 			+ "山东,新疆,江苏,浙江,江西,湖北,广西,甘肃,山西,内蒙古,陕西,吉林,福建,贵州," + "广东,青海,西藏,四川,宁夏,海南,台湾,香港,澳门";
 
+	private final static int selectBatchSize  = 10000;
+
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	
+	@Autowired
+	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@ReadWrite(type = ReadWriteType.READ)
 	@Override
@@ -52,14 +68,57 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		List<SegmentFilterCondition> conditions = body.getConditions();
 		int count = conditions.size();
 		BaseOutput result = newSuccessBaseOutput();
+		List<Object> data = result.getData();
 		result.setTotal(count);
-		for (int i = 0; i < count; i++) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("tag_id", conditions.get(i).getTagId());
-			map.put("tag_name", conditions.get(i).getTagName());
-			String tag_count = getPeopleCount(i, conditions);
-			map.put("tag_count", tag_count);
-			result.getData().add(map);
+		List<Criteria> criterialist = new ArrayList<>();
+		for (SegmentFilterCondition condition : conditions) {
+			//查询所需参数
+			String tagId = condition.getTagId();
+			String tagGroupId = condition.getTagGroupId();
+			String tagName = condition.getTagName();
+			String tagValue = tagName.substring(tagName.indexOf("-")+1, tagName.length());
+			String exclude = condition.getExclude();
+			Query query = new Query();
+				// 根据getExclude()拼条件
+				if ("1".equals(exclude)) {
+					Criteria criteriaCond = null;
+					if ("0".equals(tagId)) {// 不限
+						criteriaCond = Criteria.where("tagList").elemMatch(Criteria.where("tagId").ne(tagGroupId));
+					} else {
+						criteriaCond = Criteria.where("tagList")
+								.elemMatch(Criteria.where("tagId").ne(tagGroupId).and("tagValue").ne(tagValue));
+					}
+					criterialist.add(criteriaCond);
+				} else {
+					Criteria criteriaCond = null;
+					if ("0".equals(tagId)) {// 不限
+						criteriaCond = Criteria.where("tagList").elemMatch(Criteria.where("tagId").is(tagGroupId));
+					} else {
+						criteriaCond = Criteria.where("tagList")
+								.elemMatch(Criteria.where("tagId").is(tagGroupId).and("tagValue").is(tagValue));
+					}
+					criterialist.add(criteriaCond);
+				}
+			//查询标签值的人数
+			Criteria[] crieriaArray = criterialist.toArray(new Criteria[criterialist.size()]);
+			query.addCriteria(new Criteria().andOperator(crieriaArray));
+			Runnable runnable = new Runnable() {
+				@Override
+				public void run() {
+					long tagCount = mongoTemplate.count(query, DataParty.class);
+					//封装返回结果
+					SystemTagFilterOut systemTagFilterOut = new SystemTagFilterOut(tagId, tagName, tagCount);
+					data.add(systemTagFilterOut);
+				}
+			};
+			threadPoolTaskExecutor.execute(runnable);
+		}
+		while(data.size() < count){
+			try {
+				Thread.sleep(1L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		return result;
 	}
@@ -199,6 +258,9 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		if (midCriteria == null) {
 			return result;
 		}
+		
+		long start = System.currentTimeMillis();
+		logger.info("=============细分管理地区查询开始=========================");
 		Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(midCriteria),
 				Aggregation.group("provice").count().as("populationCount").first("provice").as("dimensionName"),
 				Aggregation.sort(Sort.Direction.DESC, "populationCount"));
@@ -258,7 +320,9 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		segmentAreaCountOut.setProvinceList(formartedProvinceCountOutList);
 		result.setTotal(1);
 		result.getData().add(segmentAreaCountOut);
-
+		long end = System.currentTimeMillis();
+		
+		logger.info("=============细分管理地区查询结束,用时:"+(end-start)+"毫秒");
 		return result;
 	}
 
@@ -314,15 +378,34 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		if (CollectionUtils.isEmpty(segmentHeadIds)) {
 			return null;
 		}
+		
+		long start = System.currentTimeMillis();
+		logger.info("=================================查询细分管理主数据开始================================");
+
+		List<Segment> segmentLists = new ArrayList<Segment>();
+
 		Query query = new Query(Criteria.where("segmentationHeadId").in(segmentHeadIds));
-		List<Segment> segmentList = mongoTemplate.find(query, Segment.class);
-		if (CollectionUtils.isEmpty(segmentList)) {
-			return null;
+
+		int totalSize = (int) mongoTemplate.count(query, Segment.class);
+		int pageSize = selectBatchSize;
+		int totalPages = (totalSize + pageSize - 1) / pageSize;
+
+		logger.info("=========分批查询细分管理主数据共" + totalSize + "条，分为" + totalPages+ "页===============");
+
+		for (int i = 0; i < totalPages; i++) {
+
+			Query queryChild = new Query(Criteria.where("segmentationHeadId").in(segmentHeadIds)).skip(i * pageSize).limit(pageSize);
+			List<Segment> segmentList = mongoTemplate.find(queryChild, Segment.class);
+			segmentLists.addAll(segmentList);
+
 		}
+
+		long end = System.currentTimeMillis();
+		logger.info("=========查询细分管理主数据结束,查询数据总:" + segmentLists.size() + "条,用时:" + (end - start) + "毫秒=================");
 
 		Criteria midCriteria = Criteria.where("mid");
 		Set<Integer> dataPartyIdSet = new HashSet<>();
-		for (Segment segment : segmentList) {
+		for (Segment segment : segmentLists) {
 			dataPartyIdSet.add(segment.getDataId());
 		}
 		midCriteria.in(dataPartyIdSet);
@@ -388,5 +471,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		out.setTotal(dataList.size());
 		out.getData().addAll(dataList);
 	}
+	
+	
 
 }

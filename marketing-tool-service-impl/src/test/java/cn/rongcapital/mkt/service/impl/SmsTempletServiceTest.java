@@ -17,6 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.SmsTaskAppEnum;
+import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
+import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
+import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsTempletService;
@@ -44,6 +48,7 @@ public class SmsTempletServiceTest {
         
         dataList = new ArrayList<SmsTemplet>();
         SmsTemplet smsTemplet = new SmsTemplet();
+        smsTemplet.setAuditStatus(NumUtil.int2OneByte(SmsTempleteAuditStatusEnum.AUDIT_STATUS_PASS.getStatusCode()));
         dataList.add(smsTemplet);
         dataList.add(smsTemplet);
         
@@ -70,6 +75,13 @@ public class SmsTempletServiceTest {
     @Test
     public void testInsertSmsTemplet() {
         SmsTempletIn smsTempletIn = new SmsTempletIn();
+        /**
+         * 插入参数
+         */
+/*        smsTempletIn.setType(NumUtil.int2OneByte(SmsTempletTypeEnum.FIXED.getStatusCode()));
+        smsTempletIn.setChannelType(SmsTaskAppEnum.ADVERT_SMS.getStatus());
+        smsTempletIn.setContent("测试模板");
+*/
         BaseOutput result = smsTempletService.insertSmsTemplet(smsTempletIn);
         
         // 断言

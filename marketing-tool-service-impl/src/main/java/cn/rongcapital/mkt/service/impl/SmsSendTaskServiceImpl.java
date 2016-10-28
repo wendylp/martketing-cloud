@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.chainsaw.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ import cn.rongcapital.mkt.po.SmsTaskHead;
 @Service
 public class SmsSendTaskServiceImpl implements TaskService{
 	 private Logger logger = LoggerFactory.getLogger(getClass());
-	 private Integer SMS_SEND_BACTH_COUNT = 5;
+	 private Integer SMS_SEND_BACTH_COUNT = 500;
 	@Autowired
 	private SmsTaskHeadDao smsTaskHeadDao;
 	
@@ -93,7 +92,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				Long id = detail.getId();
 				String receiveMobile = detail.getReceiveMobile();
 				String sendMessage = detail.getSendMessage();
-				logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
+				//logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
 				String[] sms = new String[2];
 				sms[0] = receiveMobile;
 				sms[1] = sendMessage;
@@ -135,8 +134,8 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		for(Entry<Long, String[]> entry : SmsBatchMap.entrySet()){
 			Long id = entry.getKey();
 			String[] sms = entry.getValue();
-			logger.info("phone is {}", sms[0]);
-			logger.info("message is {}", sms[1]);
+			//logger.info("phone is {}", sms[0]);
+			//logger.info("message is {}", sms[1]);
 			int n = (int)(Math.random()*100);
 			
 			if(n%2 >0){
@@ -175,22 +174,21 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		//计算每批的成功和失败的个数
 		Integer smsSuccessCount = smsHead.getSendingSuccessNum();
 		Integer smsFailCount = smsHead.getSendingFailNum();
-		Integer smsWaitingNum = smsHead.getWaitingNum();
+		
 		if(smsSuccessCount== null || smsSuccessCount == 0) {
 			smsHead.setSendingSuccessNum(successCount);
-			smsWaitingNum = smsWaitingNum - successCount;
 		}else {
 			smsHead.setSendingSuccessNum(smsSuccessCount + successCount);
-			smsWaitingNum = smsWaitingNum - (smsSuccessCount + successCount);
 		}
 		if(smsFailCount == null || smsFailCount == 0){
 			smsHead.setSendingFailNum(failCount);
-			smsWaitingNum = smsWaitingNum - failCount;
 		}else {
 			smsHead.setSendingFailNum(smsFailCount + failCount);
-			smsWaitingNum = smsWaitingNum - (smsFailCount + failCount);
 		}
 		//每批都更新成功失败以及等待的个数
-		smsHead.setWaitingNum(smsWaitingNum);
+		Integer smsCoverNum = smsHead.getTotalCoverNum();
+		Integer success = smsHead.getSendingSuccessNum();
+		Integer fail = smsHead.getSendingFailNum();
+		smsHead.setWaitingNum(smsCoverNum -(success + fail));
 	}
 }

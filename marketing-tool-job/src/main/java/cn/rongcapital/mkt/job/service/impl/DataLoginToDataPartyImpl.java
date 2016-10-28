@@ -31,7 +31,7 @@ public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integ
 	@Autowired
 	private DataLoginDao dataLoginDao;
 
-	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	private ExecutorService executor = null;
 	
 	@Override
 	public int queryTotalCount() {
@@ -42,6 +42,8 @@ public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integ
 
 	@Override
 	public void querySyncData(Integer totalSize, Integer pageSize) {
+		
+		executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
 		
 		List<DataLogin> dataLoginLists = new ArrayList<DataLogin>();
 		

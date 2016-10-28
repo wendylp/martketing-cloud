@@ -9,6 +9,9 @@ import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.OriginalDataShopping;
 import cn.rongcapital.mkt.po.OriginalDataShopping;
 import cn.rongcapital.mkt.service.OriginalDataShoppingScheduleService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -31,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 @PropertySource("classpath:${conf.dir}/application-api.properties")
 public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShoppingScheduleService, TaskService {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	private static final int THREAD_POOL_FIX_SIZE = 100;
 	
     @Autowired
@@ -42,12 +47,16 @@ public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShop
 	@Autowired
 	Environment env;	
 	
-	private final static ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	private ExecutorService executor = null;
 	
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void cleanData() {
 
+    	executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+    	
+    	logger.info("=====================上传购物记录属性开始");
+    	long startTime = System.currentTimeMillis();
         int BATCH_NUM = Integer.valueOf(env.getProperty("orginal.to.data.batch.num"));
 
         // 1. 取出需要处理的数据
@@ -80,10 +89,12 @@ public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShop
             });
         }
 
-        executor.isShutdown();
+        executor.shutdown();
         
       try {
-    	  executor.awaitTermination(30, TimeUnit.MINUTES);
+    	  executor.awaitTermination(24, TimeUnit.HOURS);
+    	  long endTime = System.currentTimeMillis();
+    	  logger.info("=====================上传人口属性结束,用时"+ (endTime-startTime) + "毫秒" );
       } catch (InterruptedException e) {
     	  e.printStackTrace();
       }
