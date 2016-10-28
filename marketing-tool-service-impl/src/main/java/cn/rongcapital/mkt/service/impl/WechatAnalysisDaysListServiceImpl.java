@@ -106,8 +106,7 @@ public class WechatAnalysisDaysListServiceImpl implements WechatAnalysisDaysList
 			while (tempDate.compareTo(eDate) <= 0) {
 				Integer foucusCount = getCunt(tempDate, FOCUS_FIELDNAME, chCode, wxName,qrcodeId, DAY_FLAG); // 关注数量
 				Integer creFocusCount = getCunt(tempDate, UNFOCUS_FIELDNAME, chCode, wxName,qrcodeId, DAY_FLAG);// 净关注数量				
-				Integer unFocusCount = foucusCount - creFocusCount; // 取消关注数量
-				logger.info("Zhouqi"+i+"foucusCount:"+foucusCount+"=creFocusCount"+creFocusCount);
+				Integer unFocusCount = foucusCount - creFocusCount; // 取消关注数量				
 				focusCountArray[i] = foucusCount;
 				unFocusCountArray[i] = unFocusCount;
 				creFocusCountArray[i] = creFocusCount;

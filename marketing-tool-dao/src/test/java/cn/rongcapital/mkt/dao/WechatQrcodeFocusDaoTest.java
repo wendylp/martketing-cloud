@@ -123,11 +123,12 @@ public class WechatQrcodeFocusDaoTest extends AbstractUnitTest {
 	public void testGetNetFocusCount() {
         logger.info("测试方法: getNetFocusCount ");  
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("searchDate", "2016-10-26");
-        paramMap.put("fieldName", "focus_datetime");
+        paramMap.put("searchDate", "2016-10-22");
+        paramMap.put("fieldName", "unfocus_datetime");
         paramMap.put("chCode", "1");
         paramMap.put("wxName", "瑞雪营销云");
-        logger.info("Day NetFocusCount="+wechatQrcodeFocusDao.getNetFocusCount(paramMap));
+        Integer count=wechatQrcodeFocusDao.getNetFocusCount(paramMap);
+        logger.info("Day NetFocusCount="+count);
     }
 	
 	@Test
