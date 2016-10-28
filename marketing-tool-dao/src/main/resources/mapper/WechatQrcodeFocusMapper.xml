@@ -116,12 +116,12 @@
 			openid ,COUNT(1)
 		FROM
 			wechat_qrcode_focus
-		WHERE
+		WHERE 1=1
 		<if test="fieldName != null and fieldName == 'focus_datetime' and searchDate != null ">
-			<![CDATA[ DATE_FORMAT(focus_datetime,'%Y-%m-%d') = #{searchDate} ]]>
+			<![CDATA[ and DATE_FORMAT(focus_datetime,'%Y-%m-%d') = #{searchDate} ]]>
 		</if>		
 		<if test="fieldName != null and fieldName == 'focus_datetime' and searchHours != null ">
-			<![CDATA[ DATE_FORMAT(focus_datetime,'%Y-%m-%d %H') = #{searchHours} ]]>
+			<![CDATA[ and DATE_FORMAT(focus_datetime,'%Y-%m-%d %H') = #{searchHours} ]]>
 		</if>		
 		<if test="chCode != null">
 			AND ch_code = #{chCode}
@@ -142,12 +142,12 @@
 			COUNT(1)
 		FROM
 			wechat_qrcode_focus
-		WHERE
+		WHERE 1=1 
 		<if test="fieldName != null and fieldName == 'focus_datetime' and searchDate != null ">
-			<![CDATA[ DATE_FORMAT(focus_datetime,'%Y-%m-%d') = #{searchDate} ]]>
+			<![CDATA[ and DATE_FORMAT(focus_datetime,'%Y-%m-%d') = #{searchDate} ]]>
 		</if>
 		<if test="fieldName != null and fieldName == 'focus_datetime' and searchHours != null ">
-			<![CDATA[ DATE_FORMAT(focus_datetime,'%Y-%m-%d %H') = #{searchHours} ]]>
+			<![CDATA[ and DATE_FORMAT(focus_datetime,'%Y-%m-%d %H') = #{searchHours} ]]>
 		</if>
 		<![CDATA[and focus_status='0' ]]>
 		<if test="chCode != null">
