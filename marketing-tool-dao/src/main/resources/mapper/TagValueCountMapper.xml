@@ -93,7 +93,14 @@
 	
 	<!-- 删除所有数据 -->
 	<delete id="clearStockData">
-		DELECT <include refid="QUERY_FROM_TABLE"/>
+		DELETE <include refid="QUERY_FROM_TABLE"/>
 	</delete>
+	
+	<!-- 查询标签值数量 -->
+	<select id="selectValueAmmount" parameterType="cn.rongcapital.mkt.po.TagValueCount" resultType="java.lang.Long">
+		SELECT value_count 
+		FROM tag_id = #{tagId}
+		AND tag_value = #{tagValue}
+	</select>
 	
 </mapper>
