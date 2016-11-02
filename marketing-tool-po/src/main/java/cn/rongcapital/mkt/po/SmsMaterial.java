@@ -1,10 +1,10 @@
 package cn.rongcapital.mkt.po;
 
-import java.util.Date;
-
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
-public class SmsTemplet extends BaseQuery{
+import java.util.Date;
+
+public class SmsMaterial extends BaseQuery {
 	
     /**
 	 * 
@@ -15,13 +15,17 @@ public class SmsTemplet extends BaseQuery{
 
     private String code;
 
+    private String name;
+
     private Byte channelType;
 
-    private Byte type;
+    private Byte smsType;
 
-    private Byte auditStatus;
+    private Integer smsTempletId;
 
-    private String auditor;
+    private Integer smsSignId;
+
+    private String smsSignName;
 
     private Byte status;
 
@@ -33,28 +37,7 @@ public class SmsTemplet extends BaseQuery{
 
     private Date updateTime;
 
-    private String name;
-
-    private String content;
-    
-    /**
-     * 临时属性
-     */
-    private String createTimeStr;
-    
-    private String auditStatusStr;
-    
-    
-    public SmsTemplet(){}
-
-
-    public SmsTemplet(Byte channelType, Byte type, Byte auditStatus, String content) {
-        super();
-        this.channelType = channelType;
-        this.type = type;
-        this.auditStatus = auditStatus;
-        this.content = content;
-    }
+    private String smsTempletContent;
 
     public Integer getId() {
         return id;
@@ -72,6 +55,14 @@ public class SmsTemplet extends BaseQuery{
         this.code = code == null ? null : code.trim();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
     public Byte getChannelType() {
         return channelType;
     }
@@ -80,28 +71,36 @@ public class SmsTemplet extends BaseQuery{
         this.channelType = channelType;
     }
 
-    public Byte getType() {
-        return type;
+    public Byte getSmsType() {
+        return smsType;
     }
 
-    public void setType(Byte type) {
-        this.type = type;
+    public void setSmsType(Byte smsType) {
+        this.smsType = smsType;
     }
 
-    public Byte getAuditStatus() {
-        return auditStatus;
+    public Integer getSmsTempletId() {
+        return smsTempletId;
     }
 
-    public void setAuditStatus(Byte auditStatus) {
-        this.auditStatus = auditStatus;
+    public void setSmsTempletId(Integer smsTempletId) {
+        this.smsTempletId = smsTempletId;
     }
 
-    public String getAuditor() {
-        return auditor;
+    public Integer getSmsSignId() {
+        return smsSignId;
     }
 
-    public void setAuditor(String auditor) {
-        this.auditor = auditor == null ? null : auditor.trim();
+    public void setSmsSignId(Integer smsSignId) {
+        this.smsSignId = smsSignId;
+    }
+
+    public String getSmsSignName() {
+        return smsSignName;
+    }
+
+    public void setSmsSignName(String smsSignName) {
+        this.smsSignName = smsSignName == null ? null : smsSignName.trim();
     }
 
     public Byte getStatus() {
@@ -144,38 +143,11 @@ public class SmsTemplet extends BaseQuery{
         this.updateTime = updateTime;
     }
 
-    public String getName() {
-        return name;
+    public String getSmsTempletContent() {
+        return smsTempletContent;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setSmsTempletContent(String smsTempletContent) {
+        this.smsTempletContent = smsTempletContent == null ? null : smsTempletContent.trim();
     }
-    
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
-
-	public String getCreateTimeStr() {
-		return createTimeStr;
-	}
-
-	public void setCreateTimeStr(String createTimeStr) {
-		this.createTimeStr = createTimeStr;
-	}
-
-
-	public String getAuditStatusStr() {
-		return auditStatusStr;
-	}
-
-
-	public void setAuditStatusStr(String auditStatusStr) {
-		this.auditStatusStr = auditStatusStr;
-	}
-    
 }
