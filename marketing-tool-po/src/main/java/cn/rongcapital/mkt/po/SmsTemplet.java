@@ -34,6 +34,10 @@ public class SmsTemplet extends BaseQuery{
     private Date updateTime;
 
     private String name;
+    
+    private String auditReason;
+
+    private Date auditTime;
 
     private String content;
     
@@ -151,6 +155,24 @@ public class SmsTemplet extends BaseQuery{
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
     }
+
+
+    public String getAuditReason() {
+        return auditReason;
+    }
+
+    public void setAuditReason(String auditReason) {
+        this.auditReason = auditReason == null ? null : auditReason.trim();
+    }
+
+    public Date getAuditTime() {
+        return auditTime;
+    }
+
+    public void setAuditTime(Date auditTime) {
+        this.auditTime = auditTime;
+    }
+    
     
     public String getContent() {
         return content;

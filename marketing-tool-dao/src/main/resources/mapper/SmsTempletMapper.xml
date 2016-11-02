@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,code as code,channel_type as channelType,type as type,content as content,audit_status as auditStatus,auditor as auditor,status as status,creator as creator,create_time as createTime,update_user as updateUser,update_time as updateTime,name as name]]>
+		<![CDATA[ id as id,code as code,channel_type as channelType,type as type,content as content,audit_status as auditStatus,auditor as auditor,status as status,creator as creator,create_time as createTime,update_user as updateUser,update_time as updateTime,name as name,audit_reason as auditReason,audit_time as auditTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -25,7 +25,9 @@
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateUser != null"><![CDATA[ AND update_user = #{updateUser}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
-		    	<if test="name != null"><![CDATA[ AND name = like CONCAT('%',#{name},'%' )]]></if>
+		    	<if test="name != null"><![CDATA[ AND name like CONCAT('%',#{name},'%' )]]></if>
+		    	<if test="auditReason != null"><![CDATA[ AND audit_reason = #{auditReason}]]></if>
+		    	<if test="auditTime != null"><![CDATA[ AND audit_time = #{auditTime}]]></if>
 		</where>
 	</sql>
 	
@@ -47,14 +49,16 @@
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="creator != null"><![CDATA[creator = #{creator},]]></if>
 		    	<if test="updateUser != null"><![CDATA[update_user = #{updateUser},]]></if>
-		    	<if test="name != null"><![CDATA[name = #{name}]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="auditReason != null"><![CDATA[audit_reason = #{auditReason},]]></if>
+		    	<if test="auditTime != null"><![CDATA[audit_time = #{auditTime}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SmsTemplet" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO sms_templet (code,channel_type,type,content,audit_status,auditor,creator,create_time,update_user,name)
+			INSERT INTO sms_templet (code,channel_type,type,content,audit_status,auditor,creator,create_time,update_user,name,audit_reason,audit_time)
 			VALUES
 			(
 			  #{code},
@@ -66,7 +70,9 @@
 			  #{creator},
 			  now(),
 			  #{updateUser},
-			  #{name}
+			  #{name},
+			  #{auditReason},
+			  #{auditTime}
 			)
 		]]>
 	</insert>
