@@ -5,10 +5,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -34,10 +36,12 @@ public class SmsSendUtilByIncake {
     private static final String CONTENT_TYPE_TEXT_JSON = "text/json";
     private static final int HTTP_STATUS_OK = 200;
     private static final String HTTP_ERROR = "-99";
+    private static final Integer HTTP_ERROR_INTEGER = -99;
     private static final String MESSAGE_SEND_URL = "http://43.254.53.81:8040/YunXiangSMS/SendCRMSms";
     private static final String DEFAULT_PARTNER_NAME = "云像";
     private static final String DEFAULT_PARTNER_NO = "001";
     private static final String INCAKE_NUM = "6415DAE359507AE62A875533B90A80B6";
+    private static final String[] BATCH_RETURN_ERROR_CODE_LIST = {"-1001", "-1004", "-0000"};
     
     /* 
         -1001 数据获取失败
@@ -176,7 +180,87 @@ public class SmsSendUtilByIncake {
         return resultMap;
     }
     
+    
+    public static Map<Long, Integer> sendSms(Map<Long, String[]> SmsBatchMap) {
+        Map<Long, Integer> resultMap = new HashMap<>();
+        
+        // 处理返回空map的情况
+        if(SmsBatchMap ==null || SmsBatchMap.isEmpty()) {
+            return resultMap;
+        }
+        
+        List<Long> idLists = new ArrayList<Long>();
+
+        SmsRequestVo smsVo  =  null;
+        List<SmsRequestVo> smsVoList = new ArrayList<>();
+        for(Entry<Long, String[]> entry : SmsBatchMap.entrySet()){
+            idLists.add(entry.getKey());
+            
+            smsVo = new SmsRequestVo();
+            smsVo.setPartner_Name(DEFAULT_PARTNER_NAME);
+            smsVo.setPartner_No(DEFAULT_PARTNER_NO);
+            smsVo.setPartner_Phone(entry.getValue()[0]);
+            smsVo.setPartner_Msg(entry.getValue()[1]);
+            smsVo.setPartner_Time(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd HH:mm:ss:SSS"));
+            smsVoList.add(smsVo);
+        }
+        String jsonString = JSONObject.toJSONString(smsVoList);
+        String md5String =  stringMD5(jsonString + INCAKE_NUM);
+        
+        String requestBody = "order="+ jsonString +"&sagin="+ md5String;
+        
+        String result = send(MESSAGE_SEND_URL, requestBody);
+        // 结果返回为null或者空或者为网络错误则判断为网络错误
+        if(StringUtils.isNotBlank(result) && !result.equals(HTTP_ERROR)) {
+            List<SmsResponseVo> outVoList = JSONArray.parseArray(result, SmsResponseVo.class);
+            
+            if(outVoList == null) {
+                logger.info("返回结果解析错误,短信id:{}, 返回信息 ：{}", idLists.toString(), result);
+            } else {
+                if(outVoList.size() == 1 && isBatchReturnErrorCode(outVoList.get(0).get_Code())) {
+                    resultMap = batchSetError(idLists, Integer.valueOf(outVoList.get(0).get_Code()));
+                } else {
+                    // 检测接口是否正常
+                    if (outVoList.size() != idLists.size()) {
+                        logger.info("短信接口异常,发送{}条短信，返回{}条状态。短信id：{}, 返回信息：{}", idLists.size(),
+                                        outVoList.size(), idLists.toString(), result);
+                    }
+                    int idListsCount = 0;
+                    for(SmsResponseVo out : outVoList){
+                        resultMap.put(idLists.get(idListsCount++), Integer.valueOf(out.get_Code()));
+                    }
+                }
+            }
+        } else {
+            resultMap = batchSetError(idLists, HTTP_ERROR_INTEGER);
+        }
+        return resultMap;
+    }
+    
+    private static Map<Long, Integer> batchSetError(List<Long> idLists, Integer error) {
+        Map<Long, Integer> resultMap = new HashMap<>();
+        for(Long idList : idLists) {
+            resultMap.put(idList, error);
+        }
+        return resultMap;
+    }
+    
+    private static boolean isBatchReturnErrorCode(String code) {
+        for(String errorCode : BATCH_RETURN_ERROR_CODE_LIST) {
+            if(errorCode.equals(code)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
     public static void main(String[] args) {
+//        test1();
+        test2();
+    }
+    
+    private static void test1() {
         SmsSendUtilByIncake sms = new SmsSendUtilByIncake();
         List<String> phones = new ArrayList<String>();
         phones.add("135521347181");
@@ -184,6 +268,25 @@ public class SmsSendUtilByIncake {
         
         for(Entry<String, String> entry : sendSms.entrySet()){
            System.out.println("phone is " + entry.getKey() + "code is " + entry.getValue()); 
+        }
+    }
+    
+    private static void test2() {
+        
+        Map<Long, String[]> SmsBatchMap = new LinkedHashMap<>();
+        String[] sms1 = new String[2];
+        sms1[0] = "150019861281";
+        sms1[1] = "【INCAK】测试短信，大伟1";
+        SmsBatchMap.put((long) 1, sms1);
+        String[] sms2 = new String[2];
+        sms2[0] = "150019861282";
+        sms2[1] = "【INCAKE】测试短信，大伟2";
+        SmsBatchMap.put((long) 2, sms2);
+        
+        Map<Long, Integer> sendSms = sendSms(SmsBatchMap);
+        
+        for(Entry<Long, Integer> entry : sendSms.entrySet()){
+           System.out.println("id is " + entry.getKey() + "  code is " + entry.getValue()); 
         }
     }
     

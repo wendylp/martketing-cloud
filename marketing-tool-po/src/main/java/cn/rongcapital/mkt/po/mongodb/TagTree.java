@@ -41,8 +41,29 @@ public class TagTree implements Serializable {
     private String source;
 
 	private List<String> children;
+	
+	public TagTree() {}
+	
+	public TagTree(String id, String tagId, String tagName, int level, String path, int status,
+                    String parent, Date createTime, Date updateTime, String source,
+                    List<String> children) {
+        super();
+        this.id = id;
+        this.tagId = tagId;
+        this.tagName = tagName;
+        this.level = level;
+        this.path = path;
+        this.status = status;
+        this.parent = parent;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.source = source;
+        this.children = children;
+    }
 
-	public String getId() {
+
+
+    public String getId() {
 		return id;
 	}
 
@@ -129,5 +150,86 @@ public class TagTree implements Serializable {
 	public void setSource(String source) {
 		this.source = source;
 	}
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((children == null) ? 0 : children.hashCode());
+        result = prime * result + ((createTime == null) ? 0 : createTime.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + level;
+        result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+        result = prime * result + ((path == null) ? 0 : path.hashCode());
+        result = prime * result + ((source == null) ? 0 : source.hashCode());
+        result = prime * result + status;
+        result = prime * result + ((tagId == null) ? 0 : tagId.hashCode());
+        result = prime * result + ((tagName == null) ? 0 : tagName.hashCode());
+        result = prime * result + ((updateTime == null) ? 0 : updateTime.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        TagTree other = (TagTree) obj;
+        if (children == null) {
+            if (other.children != null)
+                return false;
+        } else if (!children.equals(other.children))
+            return false;
+        if (createTime == null) {
+            if (other.createTime != null)
+                return false;
+        } else if (!createTime.equals(other.createTime))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (level != other.level)
+            return false;
+        if (parent == null) {
+            if (other.parent != null)
+                return false;
+        } else if (!parent.equals(other.parent))
+            return false;
+        if (path == null) {
+            if (other.path != null)
+                return false;
+        } else if (!path.equals(other.path))
+            return false;
+        if (source == null) {
+            if (other.source != null)
+                return false;
+        } else if (!source.equals(other.source))
+            return false;
+        if (status != other.status)
+            return false;
+        if (tagId == null) {
+            if (other.tagId != null)
+                return false;
+        } else if (!tagId.equals(other.tagId))
+            return false;
+        if (tagName == null) {
+            if (other.tagName != null)
+                return false;
+        } else if (!tagName.equals(other.tagName))
+            return false;
+        if (updateTime == null) {
+            if (other.updateTime != null)
+                return false;
+        } else if (!updateTime.equals(other.updateTime))
+            return false;
+        return true;
+    }
+	
+	
 
 }
