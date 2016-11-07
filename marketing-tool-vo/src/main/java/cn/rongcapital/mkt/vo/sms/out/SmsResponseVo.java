@@ -4,7 +4,7 @@ public class SmsResponseVo {
 
         private String _Phone;
         private String _Code;
-        private String __Msg;
+        private String _Msg;
         public String get_Phone() {
             return _Phone;
         }
@@ -17,11 +17,12 @@ public class SmsResponseVo {
         public void set_Code(String _Code) {
             this._Code = _Code;
         }
-        public String get__Msg() {
-            return __Msg;
+        public String get_Msg() {
+            return _Msg;
         }
-        public void set__Msg(String __Msg) {
-            this.__Msg = __Msg;
+        public void set_Msg(String _Msg) {
+            this._Msg = _Msg;
         }
+      
 
 }

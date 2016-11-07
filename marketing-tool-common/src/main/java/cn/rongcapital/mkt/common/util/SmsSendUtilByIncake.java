@@ -39,6 +39,14 @@ public class SmsSendUtilByIncake {
     private static final String DEFAULT_PARTNER_NO = "001";
     private static final String INCAKE_NUM = "6415DAE359507AE62A875533B90A80B6";
     
+    /* 
+        -1001 数据获取失败
+        -1002 电话号码错误
+        -1003 短信内容错误
+        -1004 签名错误
+        -0000 系统错误
+    */
+    
     private static Logger logger = LoggerFactory.getLogger(SmsSendUtilByIncake.class);
     
     public static String send(String url, String jsonStr) {
@@ -162,7 +170,7 @@ public class SmsSendUtilByIncake {
         
         Map<String, String> resultMap = new HashMap<>();
         for(SmsResponseVo out : outVoList){
-            logger.info("msg is {}" , out.get__Msg());
+            logger.info("msg is {}" , out.get_Msg());
             resultMap.put(out.get_Phone(), out.get_Code());
         }
         return resultMap;
@@ -171,8 +179,8 @@ public class SmsSendUtilByIncake {
     public static void main(String[] args) {
         SmsSendUtilByIncake sms = new SmsSendUtilByIncake();
         List<String> phones = new ArrayList<String>();
-        phones.add("中国");
-        Map<String, String> sendSms = sms.sendSms(phones, "【INCAKE】测试短信，大伟");
+        phones.add("135521347181");
+        Map<String, String> sendSms = sms.sendSms(phones, "【INCAKE】测试短信");
         
         for(Entry<String, String> entry : sendSms.entrySet()){
            System.out.println("phone is " + entry.getKey() + "code is " + entry.getValue()); 
