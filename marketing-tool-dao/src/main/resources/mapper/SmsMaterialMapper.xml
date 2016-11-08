@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.rongcapital.mkt.dao.SmsTempletDao">
+<mapper namespace="cn.rongcapital.mkt.dao.SmsMaterialDao">
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,code as code,channel_type as channelType,type as type,content as content,audit_status as auditStatus,auditor as auditor,status as status,creator as creator,create_time as createTime,update_user as updateUser,update_time as updateTime,name as name,audit_reason as auditReason,audit_time as auditTime]]>
+		<![CDATA[ id as id,code as code,name as name,channel_type as channelType,sms_type as smsType,sms_templet_id as smsTempletId,sms_templet_content as smsTempletContent,sms_sign_id as smsSignId,sms_sign_name as smsSignName,status as status,creator as creator,create_time as createTime,update_user as updateUser,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM sms_templet]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM sms_material]]></sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="code != null"><![CDATA[ AND code = #{code}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = like CONCAT('%',#{name},'%' )]]></if>
 		    	<if test="channelType != null"><![CDATA[ AND channel_type = #{channelType}]]></if>
-		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
-		    	<if test="content != null"><![CDATA[ AND content like CONCAT('%',#{content},'%' )]]></if>
-		    	<if test="auditStatus != null"><![CDATA[ AND audit_status = #{auditStatus}]]></if>
-		    	<if test="auditor != null"><![CDATA[ AND auditor = #{auditor}]]></if>
+		    	<if test="smsType != null"><![CDATA[ AND sms_type = #{smsType}]]></if>
+		    	<if test="smsTempletId != null"><![CDATA[ AND sms_templet_id = #{smsTempletId}]]></if>
+		    	<if test="smsTempletContent != null"><![CDATA[ AND sms_templet_content = #{smsTempletContent}]]></if>
+		    	<if test="smsSignId != null"><![CDATA[ AND sms_sign_id = #{smsSignId}]]></if>
+		    	<if test="smsSignName != null"><![CDATA[ AND sms_sign_name = #{smsSignName}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="creator != null"><![CDATA[ AND creator = #{creator}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateUser != null"><![CDATA[ AND update_user = #{updateUser}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
-		    	<if test="name != null"><![CDATA[ AND name like CONCAT('%',#{name},'%' )]]></if>
-		    	<if test="auditReason != null"><![CDATA[ AND audit_reason = #{auditReason}]]></if>
-		    	<if test="auditTime != null"><![CDATA[ AND audit_time = #{auditTime}]]></if>
 		</where>
 	</sql>
 	
@@ -41,38 +40,36 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="code != null"><![CDATA[code = #{code},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
 		    	<if test="channelType != null"><![CDATA[channel_type = #{channelType},]]></if>
-		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
-		    	<if test="content != null"><![CDATA[content = #{content},]]></if>
-		    	<if test="auditStatus != null"><![CDATA[audit_status = #{auditStatus},]]></if>
-		    	<if test="auditor != null"><![CDATA[auditor = #{auditor},]]></if>
+		    	<if test="smsType != null"><![CDATA[sms_type = #{smsType},]]></if>
+		    	<if test="smsTempletId != null"><![CDATA[sms_templet_id = #{smsTempletId},]]></if>
+		    	<if test="smsTempletContent != null"><![CDATA[sms_templet_content = #{smsTempletContent},]]></if>
+		    	<if test="smsSignId != null"><![CDATA[sms_sign_id = #{smsSignId},]]></if>
+		    	<if test="smsSignName != null"><![CDATA[sms_sign_name = #{smsSignName},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="creator != null"><![CDATA[creator = #{creator},]]></if>
-		    	<if test="updateUser != null"><![CDATA[update_user = #{updateUser},]]></if>
-		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
-		    	<if test="auditReason != null"><![CDATA[audit_reason = #{auditReason},]]></if>
-		    	<if test="auditTime != null"><![CDATA[audit_time = #{auditTime}]]></if>
+		    	<if test="updateUser != null"><![CDATA[update_user = #{updateUser}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
-	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SmsTemplet" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SmsMaterial" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO sms_templet (code,channel_type,type,content,audit_status,auditor,creator,create_time,update_user,name,audit_reason,audit_time)
+			INSERT INTO sms_material (code,name,channel_type,sms_type,sms_templet_id,sms_templet_content,sms_sign_id,sms_sign_name,creator,create_time,update_user)
 			VALUES
 			(
 			  #{code},
+			  #{name},
 			  #{channelType},
-			  #{type},
-			  #{content},
-			  #{auditStatus},
-			  #{auditor},
+			  #{smsType},
+			  #{smsTempletId},
+			  #{smsTempletContent},
+			  #{smsSignId},
+			  #{smsSignName},
 			  #{creator},
 			  now(),
-			  #{updateUser},
-			  #{name},
-			  #{auditReason},
-			  #{auditTime}
+			  #{updateUser}
 			)
 		]]>
 	</insert>
@@ -81,14 +78,14 @@
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
 	<!-- 修改记录通过主键 -->
-	<update id="updateById" parameterType="cn.rongcapital.mkt.po.SmsTemplet">
-		<![CDATA[UPDATE sms_templet]]>
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.SmsMaterial">
+		<![CDATA[UPDATE sms_material]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="cn.rongcapital.mkt.po.SmsTemplet">
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.SmsMaterial" resultType="cn.rongcapital.mkt.po.SmsMaterial">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -99,7 +96,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectList" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="cn.rongcapital.mkt.po.SmsTemplet">
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.SmsMaterial" resultType="cn.rongcapital.mkt.po.SmsMaterial">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -108,7 +105,7 @@
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="int">
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.SmsMaterial" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>

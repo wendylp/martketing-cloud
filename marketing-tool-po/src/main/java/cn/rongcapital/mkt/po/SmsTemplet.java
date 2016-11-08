@@ -6,7 +6,12 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class SmsTemplet extends BaseQuery{
 	
-    private Integer id;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
 
     private String code;
 
@@ -27,6 +32,12 @@ public class SmsTemplet extends BaseQuery{
     private String updateUser;
 
     private Date updateTime;
+
+    private String name;
+    
+    private String auditReason;
+
+    private Date auditTime;
 
     private String content;
     
@@ -137,6 +148,32 @@ public class SmsTemplet extends BaseQuery{
         this.updateTime = updateTime;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+
+    public String getAuditReason() {
+        return auditReason;
+    }
+
+    public void setAuditReason(String auditReason) {
+        this.auditReason = auditReason == null ? null : auditReason.trim();
+    }
+
+    public Date getAuditTime() {
+        return auditTime;
+    }
+
+    public void setAuditTime(Date auditTime) {
+        this.auditTime = auditTime;
+    }
+    
+    
     public String getContent() {
         return content;
     }
