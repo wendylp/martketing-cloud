@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.common.jedis;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import redis.clients.jedis.Jedis;
 
 /**
@@ -272,6 +274,17 @@ public class JedisClient {
 		
 		return rs != null && rs.equals("OK") ? true : false;
 	}
+	
+	public List<String> hmget(String key,String... fields) throws JedisException{
+	    Jedis jedis = JedisConnectionManager.getConnection();
+	    try {
+            return jedis.hmget(key, fields);
+        } catch (Exception e) {
+            throw new JedisException("获取key对应的fields异常",e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+	}
 
 	/**
 	 * 
@@ -442,6 +455,29 @@ public class JedisClient {
 		
 		return rsb;
 	}
+	
+    public static void sadd(String key, String... elems) throws JedisException {
+        Jedis jedis = JedisConnectionManager.getConnection();
+        try {
+            jedis.sadd(key, elems);
+        } catch (Exception e) {
+            throw new JedisException("sadd 新增异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+
+    }
+    
+    public static Set<String> smembers(String key) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        try {
+            return jedis.smembers(key);
+        } catch (Exception e) {
+            throw new JedisException("smembers异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
 	
 	
 	public static void main(String[] args) throws JedisException {
