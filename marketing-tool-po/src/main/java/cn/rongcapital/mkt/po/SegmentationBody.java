@@ -5,103 +5,143 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
 
 public class SegmentationBody extends BaseQuery {
-	private Integer id;
+    private Integer id;
 
-	private Integer headId;
+    private Integer headId;
 
-	private String tagGroupId;
+    private String groupId;
 
-	private String tagId;
+    private String groupName;
 
-	private Byte exclude;
+    private Integer groupIndex;
 
-	private Integer groupIndex;
+    private String tagId;
 
-	private Byte status;
+    private String tagName;
 
-	private Date createTime;
+    private Integer tagExclude;
 
-	private Date updateTime;
+    private String tagValueId;
 
-	private Integer groupSeq;
+    private String tagValueName;
 
-	public Integer getId() {
-		return id;
-	}
+    private Byte status;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    private Date createTime;
 
-	public Integer getHeadId() {
-		return headId;
-	}
+    private Date updateTime;
 
-	public void setHeadId(Integer headId) {
-		this.headId = headId;
-	}
+    private Integer tagSeq;
 
-	public String getTagGroupId() {
-		return tagGroupId;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setTagGroupId(String tagGroupId) {
-		this.tagGroupId = tagGroupId == null ? null : tagGroupId.trim();
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public String getTagId() {
-		return tagId;
-	}
+    public Integer getHeadId() {
+        return headId;
+    }
 
-	public void setTagId(String tagId) {
-		this.tagId = tagId == null ? null : tagId.trim();
-	}
+    public void setHeadId(Integer headId) {
+        this.headId = headId;
+    }
 
-	public Byte getExclude() {
-		return exclude;
-	}
+    public String getGroupId() {
+        return groupId;
+    }
 
-	public void setExclude(Byte exclude) {
-		this.exclude = exclude;
-	}
+    public void setGroupId(String groupId) {
+        this.groupId = groupId == null ? null : groupId.trim();
+    }
 
-	public Integer getGroupIndex() {
-		return groupIndex;
-	}
+    public String getGroupName() {
+        return groupName;
+    }
 
-	public void setGroupIndex(Integer groupIndex) {
-		this.groupIndex = groupIndex;
-	}
+    public void setGroupName(String groupName) {
+        this.groupName = groupName == null ? null : groupName.trim();
+    }
 
-	public Byte getStatus() {
-		return status;
-	}
+    public Integer getGroupIndex() {
+        return groupIndex;
+    }
 
-	public void setStatus(Byte status) {
-		this.status = status;
-	}
+    public void setGroupIndex(Integer groupIndex) {
+        this.groupIndex = groupIndex;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public String getTagId() {
+        return tagId;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public void setTagId(String tagId) {
+        this.tagId = tagId == null ? null : tagId.trim();
+    }
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
+    public String getTagName() {
+        return tagName;
+    }
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+    public void setTagName(String tagName) {
+        this.tagName = tagName == null ? null : tagName.trim();
+    }
 
-	public Integer getGroupSeq() {
-		return groupSeq;
-	}
+    public Integer getTagExclude() {
+        return tagExclude;
+    }
 
-	public void setGroupSeq(Integer groupSeq) {
-		this.groupSeq = groupSeq;
-	}
+    public void setTagExclude(Integer tagExclude) {
+        this.tagExclude = tagExclude;
+    }
+
+    public String getTagValueId() {
+        return tagValueId;
+    }
+
+    public void setTagValueId(String tagValueId) {
+        this.tagValueId = tagValueId == null ? null : tagValueId.trim();
+    }
+
+    public String getTagValueName() {
+        return tagValueName;
+    }
+
+    public void setTagValueName(String tagValueName) {
+        this.tagValueName = tagValueName == null ? null : tagValueName.trim();
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getTagSeq() {
+        return tagSeq;
+    }
+
+    public void setTagSeq(Integer tagSeq) {
+        this.tagSeq = tagSeq;
+    }
 }
