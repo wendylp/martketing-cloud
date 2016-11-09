@@ -22,8 +22,8 @@ import cn.rongcapital.mkt.po.mongodb.TagTree;
  * @项目名称: marketing cloud
  * @see:
  * @author: 王伟强
- * @version: 0.0.1
- * @date: 2016/10/24
+ * @version: 0.0.2
+ * @date: 2016/11/09
  * @复审人:
  *************************************************/
 
@@ -70,7 +70,7 @@ public class InitTagValueCountServiceImpl implements TaskService{
 				Long tagCount = mongoTemplate.count(
 						new Query(Criteria.where("tagList").elemMatch(
 								Criteria.where("tagId").is(tagId))),DataParty.class);
-				TagValueCount tagVo = new TagValueCount(tagId,tagName,tagName,tagCount, null, tagPath,IS_TAG,searchMod);
+				TagValueCount tagVo = new TagValueCount(tagId,tagName,tagName,tagCount, tagId, tagPath,IS_TAG,searchMod);
 				tagValueCountDao.insert(tagVo);
 				int sort = 0;
 				for (String tagValue : tagValues) {
@@ -91,8 +91,5 @@ public class InitTagValueCountServiceImpl implements TaskService{
 			logger.error("初始化标签值数量出现异常"+e.getMessage(),e);
 		}
 	}
-	
-	
-	
 
 }
