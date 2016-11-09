@@ -133,7 +133,7 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
                 List<String> openidListTemps = openidLists.subList(fromIndex, size);
                 fromIndex = fromIndex + ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;;
                 size= fromIndex+ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;
-                String userInfoesStr = WxComponentServerApi.getBaseWxSdk().batchGetUserInfos(app, openidListTemps); 
+                String userInfoesStr = WxComponentServerApi.getBaseWxSdk().getBatchGetUserInfoResult(app, openidListTemps); 
 				/**
 				 * 去掉特殊字符 例如表情符等等
 				 */
