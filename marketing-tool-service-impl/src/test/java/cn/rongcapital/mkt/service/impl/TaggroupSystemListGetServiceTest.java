@@ -73,7 +73,7 @@ public class TaggroupSystemListGetServiceTest  {
         tagList.add("是");
         tagList.add("否");
         tagRecommend = new TagRecommend(null, "68QkbhSa", "蛋糕乳脂系列", tagList, 0, false,
-                        "用户购买该品类至少一次", null, null, "creamCakeSeries", "incake", 17);
+                        "用户购买该品类至少一次", null, null, "creamCakeSeries", "incake", 17, null);
 
         Mockito.when(mongoTemplate.findOne(any(),eq(TagTree.class))).thenReturn(tagTree);
         Mockito.when(mongoTemplate.count(any(),eq(DataParty.class))).thenReturn(count);
