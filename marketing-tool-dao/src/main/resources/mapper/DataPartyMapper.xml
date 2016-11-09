@@ -720,4 +720,20 @@
 			#{item}
 		</foreach>
 	</select>
+	
+	<!-- 根据联系人表单查询表单生成的主数据 -->
+	<select id="selectListByContactId" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataParty">
+		<![CDATA[SELECT dp.id as id,dp.mobile as mobile,dp.name as name,dp.gender as gender,dp.birthday as birthday,]]>
+		<![CDATA[dp.citizenship as citizenship,dp.provice as provice,dp.city as city,dp.job as job,]]>
+		<![CDATA[dp.monthly_income as monthlyIncome,dp.member_level as memberLevel,dp.member_points as memberPoints,dp.source as source,]]>
+		<![CDATA[dp.monthly_consume as monthlyConsume,dp.last_login as lastLogin,dp.status as status,dp.create_time as createTime,]]>
+		<![CDATA[dp.update_time as updateTime,dp.batch_id as batchId,dp.md_type as mdType,dp.mapping_keyid as mappingKeyid,]]>
+		<![CDATA[dp.tel as tel,dp.email as email,dp.qq as qq,dp.identify_no as identifyNo,dp.driving_license as drivingLicense,]]>
+		<![CDATA[dp.wxmp_id as wxmpId,dp.wx_code as wxCode,dp.wx_uin as wxUin,dp.wxperson_id as wxpersonId,dp.idfa as idfa,]]>
+		<![CDATA[dp.imei as imei,dp.unionid as unionid,dp.acct_no as acctNo,dp.acct_type as acctType,dp.flag2 as flag2,dp.bitmap as bitmap]]>
+		<![CDATA[ from data_party as dp ]]>
+		<![CDATA[ inner join  data_population as dpp on dp.id = dpp.keyid ]]>
+		<![CDATA[ inner join  contact_list as cl on dpp.id = cl.keyid ]]>
+		<![CDATA[ where  cl.id = #{contact_id} ]]>
+	</select>
 </mapper>

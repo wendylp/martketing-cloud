@@ -218,4 +218,13 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @return map
 	 */
 	List<String> selectDistinctMobileListByIdList(@Param("idList") List<Long> dataPartyIdList);
+	
+	
+	/**
+     * @功能简述 : 根据联系人表单Id查找所生成的主数据
+     * @author Lijinkai
+     * @return list
+     */
+	List<DataParty> selectListByContactId(Integer contactId);
+	
 }
