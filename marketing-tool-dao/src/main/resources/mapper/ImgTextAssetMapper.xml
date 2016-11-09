@@ -239,7 +239,7 @@
 	<!-- 带创建时间和更新时间的插入方法 -->
 	<insert id="insertWithDate" parameterType="cn.rongcapital.mkt.po.ImgTextAsset" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,material_id,create_time,update_time,pub_id,pub_name,wechat_status,show_cover_pic,thumb_ready)
+			INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,material_id,create_time,update_time,pub_id,pub_name,wechat_status,show_cover_pic,thumb_ready,digest)
 			VALUES
 			(
 			  #{name},
@@ -255,7 +255,8 @@
 			  #{pubName},
 			  #{wechatStatus},
 			  #{showCoverPic},
-			  #{thumbReady}
+			  #{thumbReady},
+			  #{digest}
 			)
 		]]>
 	</insert>
@@ -277,7 +278,8 @@
 		    	<if test="pubName != null"><![CDATA[pub_name = #{pubName},]]></if>
 		    	<if test="wechatStatus != null"><![CDATA[wechat_status = #{wechatStatus},]]></if>
 		    	<if test="showCoverPic != null"><![CDATA[show_cover_pic = #{showCoverPic},]]></if>
-		    	<if test="thumbReady != null"><![CDATA[thumb_ready = #{thumbReady}]]></if>
+		    	<if test="thumbReady != null"><![CDATA[thumb_ready = #{thumbReady},]]></if>
+		    	<if test="digest != null"><![CDATA[digest = #{digest}]]></if>		    	
 		</set>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>

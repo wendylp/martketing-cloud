@@ -128,7 +128,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 					} else {
 						paramFan.put("nickname", null);
 					}
-					if (wechatMember.getSex() == 0) {
+					if (wechatMember.getSex()!=null&&wechatMember.getSex() == 0) {
 						paramFan.put("sex", 3);
 					} else {
 						paramFan.put("sex", wechatMember.getSex());
@@ -154,6 +154,12 @@ public class GetPubFansListServiceImpl implements TaskService {
 						}
 					} else {
 						paramFan.put("country", wechatMember.getCountry());
+						paramFan.put("province", wechatMember.getProvince());
+						if (ApiConstant.PROVINCE_CHINA_CAPITAL.equals(paramFan.get("province"))) {
+							paramFan.put("city", ApiConstant.CITY_CHINA_CAPITAL);
+						} else {
+							paramFan.put("city", wechatMember.getCity());
+						}
 					}
 					String wxGroupId = wechatMember.getWxGroupId();
 					wxGroupId = wxGroupId == null || "".equals(wxGroupId) ? ApiConstant.WECHAT_GROUP : wxGroupId;
@@ -174,18 +180,89 @@ public class GetPubFansListServiceImpl implements TaskService {
 				}
 			}
 			if (fansList != null && fansList.size() > 0) {
-				logger.info("now page number add list size: " + fansList.size());
+				
+				int fromIndex = 0;
+                int size = ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;/** 微信定义的接口size是10000，所以我们这里也定义的10000,微信获取粉丝信息接口调用每天500次，10000*500=500W粉丝 */
+                while (fromIndex < fansList.size()) {
+                    if ((fansList.size() - fromIndex) < ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE) {
+                        size = fansList.size();
+                    }
+                    List<Map<String, Object>> fansListTemps = fansList.subList(fromIndex, size);
+                    fromIndex = fromIndex + ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;;
+                    size= fromIndex+ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;
+                    
+                    logger.info("now page number add list size: " + fansList.size());
+    				WXFansListVO wxFansListVO = new WXFansListVO();
+    				wxFansListVO.setFansList(fansListTemps);
+    				Map<String, Object> mapTemp = fansListTemps.get(0);
+    				wxFansListVO.setPubId(String.valueOf(mapTemp.get("pub_id")));				
+    				try {
+						wechatMemberDao.deleteFansByVO(wxFansListVO);
+						wechatMemberDao.batchInsertFans(fansListTemps);
+					} catch (Exception e) {
+						logger.info("更新粉丝失败："+JSONObject.toJSONString(fansListTemps));				
+						continue;
+					}
+                }    
+				/*logger.info("now page number add list size: " + fansList.size());
 				WXFansListVO wxFansListVO = new WXFansListVO();
 				wxFansListVO.setFansList(fansList);
 				Map<String, Object> mapTemp = fansList.get(0);
 				wxFansListVO.setPubId(String.valueOf(mapTemp.get("pub_id")));				
 				wechatMemberDao.deleteFansByVO(wxFansListVO);
-				wechatMemberDao.batchInsertFans(fansList);
+				wechatMemberDao.batchInsertFans(fansList);*/
 				fansList.clear();
-			}
-			
+			}			
 			this.updateUngroupedCount();			
 		}
+	}
+	
+	private List<WechatMember> setWechatMembersProperties(List<WechatMember> wechatMemberList){
+		if(!CollectionUtils.isEmpty(wechatMemberList)){
+			for(WechatMember wechatMember : wechatMemberList){
+				wechatMember = setWechatMemberProperties(wechatMember);
+			}
+		}		
+		return wechatMemberList;		
+	}
+	
+	private WechatMember setWechatMemberProperties(WechatMember wechatMember){
+		if(wechatMember!=null){
+			if (wechatMember.getWxName() != null && wechatMember.getWxName().length() > 0) {				
+				wechatMember.setWxName(wechatMember.getWxName().replaceAll("[^\\u0000-\\uFFFF]", ""));
+			} 
+			if (wechatMember.getNickname() != null && wechatMember.getNickname().length() > 0) {
+				wechatMember.setNickname(wechatMember.getNickname().replaceAll("[^\\u0000-\\uFFFF]", ""));	
+			}
+			if (wechatMember.getSex()!=null&&wechatMember.getSex() == 0) {
+				wechatMember.setSex(3);
+			}
+			String country = wechatMember.getCountry();
+			if (StringUtils.isBlank(country) || ApiConstant.NATIONALITY_CHINA.equals(country)) {
+				wechatMember.setCountry(ApiConstant.NATIONALITY_CHINA);
+				String province = wechatMember.getProvince();
+				if (StringUtils.isBlank(province) || ApiConstant.PROVINCE_FOREIGN.equals(province)) {
+					wechatMember.setProvince(ApiConstant.PROVINCE_CHINA_CAPITAL);					
+				}
+				String city = wechatMember.getCity();
+				if (StringUtils.isBlank(city) || ApiConstant.CITY_CHINA_BEIHAI.equals(wechatMember.getCity())) {
+					wechatMember.setCity(ApiConstant.CITY_CHINA_CAPITAL);
+				} else {
+					if (ApiConstant.PROVINCE_CHINA_CAPITAL.equals(wechatMember.getProvince())) {						
+						wechatMember.setCity(ApiConstant.CITY_CHINA_CAPITAL);
+					} else {
+						wechatMember.setCity(city + ApiConstant.CITY);
+					}
+				}
+			}
+			String wxGroupId = wechatMember.getWxGroupId();
+			wxGroupId = wxGroupId == null || "".equals(wxGroupId) ? ApiConstant.WECHAT_GROUP : wxGroupId;
+			wechatMember.setWxGroupId(wxGroupId);
+			wechatMember.setSubscribeYn("Y");
+			wechatMember.setActivity48hYn("N");
+			wechatMember.setBitmap(bitmap);
+		}
+		return wechatMember;		
 	}
 	
 	private void updateUngroupedCount(){
@@ -431,12 +508,12 @@ public class GetPubFansListServiceImpl implements TaskService {
 						}
 					}else{
 						wechatMember.setSelected(NumUtil.int2OneByte(0));
-					}
+					}					
 				}
 			}else{
 				for(Iterator<WechatMember> iter =wechatMemberList.iterator();iter.hasNext();){
 					WechatMember wechatMember = iter.next();
-					wechatMember.setSelected(NumUtil.int2OneByte(0));					
+					wechatMember.setSelected(NumUtil.int2OneByte(0));
 				}
 			}
 		}

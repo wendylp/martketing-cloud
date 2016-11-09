@@ -103,18 +103,18 @@ public class GetH5PubListServiceImpl implements TaskService {
 				continue;
 			}
 
-			List<WechatGroup> WechatGroupList = wechatGroupBiz.getTags(info.getAuthorizerAppid(),
+			List<WechatGroup> wechatGroupList = wechatGroupBiz.getTags(info.getAuthorizerAppid(),
 					info.getAuthorizerRefreshToken());
 			// 统计已分组人数总和
 			// int count = 0;
-			if (!CollectionUtils.isEmpty(WechatGroupList)) {
-				String wxAcct = WechatGroupList.get(0).getWxAcct();
+			if (!CollectionUtils.isEmpty(wechatGroupList)) {
+				String wxAcct = wechatGroupList.get(0).getWxAcct();
 				WechatGroup wechatGroup = new WechatGroup();
 				wechatGroup.setWxAcct(wxAcct);
 				// 批量更新数据库中组的状态为删除
 				wechatGroupDao.updateStatusByWxAcct(wechatGroup);
 
-				for (WechatGroup wechatGroupinfo : WechatGroupList) {
+				for (WechatGroup wechatGroupinfo : wechatGroupList) {
 					// count += wechatGroupinfo.getCount(); // 统计已分组人数总和
 					if (wechatGroupinfo != null) {
 						updateWechatGroup(wechatGroupinfo);
