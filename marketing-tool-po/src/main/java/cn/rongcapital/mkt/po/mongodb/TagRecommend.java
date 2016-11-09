@@ -184,6 +184,7 @@ public class TagRecommend implements Serializable {
         result = prime * result + ((createTime == null) ? 0 : createTime.hashCode());
         result = prime * result + ((flag == null) ? 0 : flag.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((searchMod == null) ? 0 : searchMod.hashCode());
         result = prime * result + ((seq == null) ? 0 : seq.hashCode());
         result = prime * result + ((source == null) ? 0 : source.hashCode());
         result = prime * result + status;
@@ -219,6 +220,11 @@ public class TagRecommend implements Serializable {
             if (other.id != null)
                 return false;
         } else if (!id.equals(other.id))
+            return false;
+        if (searchMod == null) {
+            if (other.searchMod != null)
+                return false;
+        } else if (!searchMod.equals(other.searchMod))
             return false;
         if (seq == null) {
             if (other.seq != null)
@@ -264,7 +270,5 @@ public class TagRecommend implements Serializable {
             return false;
         return true;
     }
-
-    
 
 }

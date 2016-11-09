@@ -508,6 +508,9 @@ public class MktApi {
 
 	@Autowired
 	private TagSystemFlagSetService tagSystemFlagSetService;
+	
+	@Autowired
+	private TagSystemTreeListGetService tagSystemTreeListGetService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -2195,6 +2198,19 @@ public class MktApi {
     public BaseOutput tagSystemFlagSet(@Valid TagSystemFlagSetIn body,
                     @Context SecurityContext securityContext) {
         return tagSystemFlagSetService.updateFlag(body, securityContext);
+    }
+    
+    /**
+     * 系统标签（树形）结构接口
+     * 
+     * @return
+     * @author shuiyangyang
+     * @Date 2016-11-09
+     */
+    @GET
+    @Path("/mkt.tag.system.tree.list.get")
+    public BaseOutput tagSystemTreeListGet() {
+        return tagSystemTreeListGetService.getTagSystemTreeList();
     }
 
 }
