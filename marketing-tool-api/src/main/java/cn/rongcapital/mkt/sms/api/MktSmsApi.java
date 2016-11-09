@@ -2,12 +2,7 @@ package cn.rongcapital.mkt.sms.api;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
-import cn.rongcapital.mkt.service.SmsMessageSendRecordGetService;
-import cn.rongcapital.mkt.service.SmsMessageSendTestService;
-import cn.rongcapital.mkt.service.SmsSignatureListGetService;
-import cn.rongcapital.mkt.service.SmsTargetAudienceListGetService;
-import cn.rongcapital.mkt.service.SmsTaskDeleteService;
+import cn.rongcapital.mkt.service.*;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
 import cn.rongcapital.mkt.vo.in.SmsMessageSendTestIn;
@@ -59,6 +54,9 @@ public class MktSmsApi {
     
     @Autowired
     private SmsMessageSendTestService smsMessageSendTestService;
+
+    @Autowired
+    private SmsMaterialGetService smsMaterialGetService;
 
     /**
      * @功能简述: For testing, will remove later
@@ -170,5 +168,19 @@ public class MktSmsApi {
     public BaseOutput smsTaskDelete(@Valid SmsMessageSendTestIn body,
             @Context SecurityContext securityContext) {
         return smsMessageSendTestService.messageSendTest(body, securityContext);
+    }
+
+    /**
+     * @功能简述: For testing, will remove later
+     * @param:String userToken,String
+     *                   ver
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.sms.smsmaterial.get")
+    public BaseOutput getSmsMaterial(@NotEmpty @QueryParam("user_token") String userToken,
+                                     @QueryParam("ver") String ver,
+                                     @NotNull @QueryParam("id") Long id) throws Exception {
+        return smsMaterialGetService.getSmsMaterialById(id);
     }
 }
