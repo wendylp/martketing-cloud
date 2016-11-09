@@ -22,84 +22,109 @@ public class TagValueCount extends BaseQuery{
 
     private Long valueCount;//标签值数量
 
-    private String reserve1;//预留字段
+    private String tagValueSeq;	//标签值顺序
 
-    private String reserve2;
+    private String tagPath;	//标签路径
 
-    private String reserve3;
-
-    private String reserve4;
+    private String isTag;	//是否是标签，0-标签，1-标签值
+    
+    private Integer searchMod;	//搜索标识
+    
     
     public TagValueCount() {}
 
-	public TagValueCount(String tagId, String tagName, String tagValue, Long valueCount) {
+
+	public TagValueCount(String tagId, String tagName, String tagValue, Long valueCount, String tagValueSeq,
+			String tagPath, String isTag, Integer searchMod) {
+		super();
 		this.tagId = tagId;
 		this.tagName = tagName;
 		this.tagValue = tagValue;
 		this.valueCount = valueCount;
+		this.tagValueSeq = tagValueSeq;
+		this.tagPath = tagPath;
+		this.isTag = isTag;
+		this.searchMod = searchMod;
 	}
 
-    public String getTagId() {
-        return tagId;
-    }
 
-    public void setTagId(String tagId) {
-        this.tagId = tagId == null ? null : tagId.trim();
-    }
+	public String getTagId() {
+		return tagId;
+	}
 
-    public String getTagName() {
-        return tagName;
-    }
 
-    public void setTagName(String tagName) {
-        this.tagName = tagName == null ? null : tagName.trim();
-    }
+	public void setTagId(String tagId) {
+		this.tagId = tagId;
+	}
 
-    public String getTagValue() {
-        return tagValue;
-    }
 
-    public void setTagValue(String tagValue) {
-        this.tagValue = tagValue == null ? null : tagValue.trim();
-    }
+	public String getTagName() {
+		return tagName;
+	}
 
-    public Long getValueCount() {
-        return valueCount;
-    }
 
-    public void setValueCount(Long valueCount) {
-        this.valueCount = valueCount;
-    }
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
+	}
 
-    public String getReserve1() {
-        return reserve1;
-    }
 
-    public void setReserve1(String reserve1) {
-        this.reserve1 = reserve1 == null ? null : reserve1.trim();
-    }
+	public String getTagValue() {
+		return tagValue;
+	}
 
-    public String getReserve2() {
-        return reserve2;
-    }
 
-    public void setReserve2(String reserve2) {
-        this.reserve2 = reserve2 == null ? null : reserve2.trim();
-    }
+	public void setTagValue(String tagValue) {
+		this.tagValue = tagValue;
+	}
 
-    public String getReserve3() {
-        return reserve3;
-    }
 
-    public void setReserve3(String reserve3) {
-        this.reserve3 = reserve3 == null ? null : reserve3.trim();
-    }
+	public Long getValueCount() {
+		return valueCount;
+	}
 
-    public String getReserve4() {
-        return reserve4;
-    }
 
-    public void setReserve4(String reserve4) {
-        this.reserve4 = reserve4 == null ? null : reserve4.trim();
-    }
+	public void setValueCount(Long valueCount) {
+		this.valueCount = valueCount;
+	}
+
+
+	public String getTagValueSeq() {
+		return tagValueSeq;
+	}
+
+
+	public void setTagValueSeq(String tagValueSeq) {
+		this.tagValueSeq = tagValueSeq;
+	}
+
+
+	public String getTagPath() {
+		return tagPath;
+	}
+
+
+	public void setTagPath(String tagPath) {
+		this.tagPath = tagPath;
+	}
+
+
+	public String getIsTag() {
+		return isTag;
+	}
+
+
+	public void setIsTag(String isTag) {
+		this.isTag = isTag;
+	}
+
+
+	public Integer getSearchMod() {
+		return searchMod;
+	}
+
+
+	public void setSearchMod(Integer searchMod) {
+		this.searchMod = searchMod;
+	}
+	
 }

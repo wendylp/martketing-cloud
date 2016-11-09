@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[tag_id as tagId,tag_name as tagName,tag_value as tagValue,value_count as valueCount,reserve1 as reserve1,reserve2 as reserve2,reserve3 as reserve3,reserve4 as reserve4]]>
+		<![CDATA[tag_id as tagId,tag_name as tagName,tag_value as tagValue,value_count as valueCount,tag_value_seq as tagValueSeq,tag_path as tagPath,is_tag as isTag,search_mod as searchMod]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -17,10 +17,10 @@
 		    	<if test="tagName != null"><![CDATA[ AND tag_name = #{tagName}]]></if>
 		    	<if test="tagValue != null"><![CDATA[ AND tag_value = #{tagValue}]]></if>
 		    	<if test="valueCount != null"><![CDATA[ AND value_count = #{valueCount}]]></if>
-		    	<if test="reserve1 != null"><![CDATA[ AND reserve1 = #{reserve1}]]></if>
-		    	<if test="reserve2 != null"><![CDATA[ AND reserve2 = #{reserve2}]]></if>
-		    	<if test="reserve3 != null"><![CDATA[ AND reserve3 = #{reserve3}]]></if>
-		    	<if test="reserve4 != null"><![CDATA[ AND reserve4 = #{reserve4}]]></if>
+		    	<if test="tagValueSeq != null"><![CDATA[ AND tag_value_seq = #{tagValueSeq}]]></if>
+		    	<if test="tagPath != null"><![CDATA[ AND tag_path = #{tagPath}]]></if>
+		    	<if test="isTag != null"><![CDATA[ AND is_tag = #{isTag}]]></if>
+		    	<if test="search_mod != null"><![CDATA[ AND search_mod = #{searchMod}]]></if>
 		</where>
 	</sql>
 	
@@ -37,27 +37,27 @@
 		    	<if test="tagName != null"><![CDATA[tag_name = #{tagName},]]></if>
 		    	<if test="tagValue != null"><![CDATA[tag_value = #{tagValue},]]></if>
 		    	<if test="valueCount != null"><![CDATA[value_count = #{valueCount},]]></if>
-		    	<if test="reserve1 != null"><![CDATA[reserve1 = #{reserve1},]]></if>
-		    	<if test="reserve2 != null"><![CDATA[reserve2 = #{reserve2},]]></if>
-		    	<if test="reserve3 != null"><![CDATA[reserve3 = #{reserve3},]]></if>
-		    	<if test="reserve4 != null"><![CDATA[reserve4 = #{reserve4}]]></if>
+		    	<if test="tagValueSeq != null"><![CDATA[tag_value_seq = #{tagValueSeq},]]></if>
+		    	<if test="tagPath != null"><![CDATA[tag_path = #{tagPath},]]></if>
+		    	<if test="isTag != null"><![CDATA[is_tag = #{isTag},]]></if>
+		    	<if test="search_mod != null"><![CDATA[search_mod = #{searchMod}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.TagValueCount" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tag_value_count (tag_id,tag_name,tag_value,value_count,reserve1,reserve2,reserve3,reserve4)
+			INSERT INTO tag_value_count (tag_id,tag_name,tag_value,value_count,tag_value_seq,tag_path,is_tag,search_mod)
 			VALUES
 			(
 			  #{tagId},
 			  #{tagName},
 			  #{tagValue},
 			  #{valueCount},
-			  #{reserve1},
-			  #{reserve2},
-			  #{reserve3},
-			  #{reserve4}
+			  #{tagValueSeq},
+			  #{tagPath},
+			  #{isTag},
+			  #{searchMod}
 			)
 		]]>
 	</insert>
@@ -101,6 +101,16 @@
 		SELECT value_count 
 		FROM tag_id = #{tagId}
 		AND tag_value = #{tagValue}
+	</select>
+	
+	<!-- 查询标签值的id -->
+	<select id="selectTagValueId" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT tag_value_seq 
+		FROM tag_value_count
+		<where>
+			tag_id = #{tagId}
+			AND tag_value =#{tagValue}
+		</where>
 	</select>
 	
 </mapper>

@@ -15,6 +15,7 @@ import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.TagValueCount;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
+import cn.rongcapital.mkt.po.mongodb.TagTree;
 
 /*************************************************
  * @功能简述: 初始化标签值数量
@@ -30,6 +31,10 @@ import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 public class InitTagValueCountServiceImpl implements TaskService{
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	private static final String IS_TAGVALUE = "0";
+	
+	private static final String IS_TAG = "1";
 	
 	
 	@Autowired
@@ -50,16 +55,34 @@ public class InitTagValueCountServiceImpl implements TaskService{
 				String tagId = tagRecommend.getTagId();
 				//tagName
 				String tagName = tagRecommend.getTagName();
+				
+				Integer searchMod = tagRecommend.getSearchMod();
 				//标签值集合
 				List<String> tagValues = tagRecommend.getTagList();
+				
+				List<TagTree> tagTreeList = mongoTemplate.find(new Query(Criteria.where("children").in(tagId)), TagTree.class);
+				TagTree tagTree = tagTreeList.get(0);
+				String parent = tagTree.getParent();
+				String root = tagTree.getParent();
+				String tagPath = root+">"+parent+">"+tagName+">";
+				
+				//标签数量
+				Long tagCount = mongoTemplate.count(
+						new Query(Criteria.where("tagList").elemMatch(
+								Criteria.where("tagId").is(tagId))),DataParty.class);
+				TagValueCount tagVo = new TagValueCount(tagId,tagName,tagName,tagCount, null, tagPath,IS_TAG,searchMod);
+				tagValueCountDao.insert(tagVo);
+				int sort = 0;
 				for (String tagValue : tagValues) {
+					
 					//获取标签值数量
 					Long valueCount = mongoTemplate.count(
 							new Query(Criteria.where("tagList").elemMatch(
 									Criteria.where("tagId").is(tagId).and("tagValue").is(tagValue))),DataParty.class);
-					//封装对象
-					TagValueCount tagValueCount = new TagValueCount(tagId, tagName, tagValue, valueCount);
+					
+					TagValueCount tagValueCount = new TagValueCount(tagId,tagName,tagValue,valueCount, tagId+"_"+sort, tagPath,IS_TAGVALUE,null);
 					tagValueCountDao.insert(tagValueCount);
+					sort++;
 				}
 				
 			}
