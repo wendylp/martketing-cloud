@@ -53,7 +53,7 @@ public class TagRecommend implements Serializable {
     
     public TagRecommend(String id, String tagId, String tagName, List<String> tagList, int status,
                     Boolean flag, String tagDesc, Date createTime, Date updateTime,
-                    String tagNameEng, String source, Integer seq) {
+                    String tagNameEng, String source, Integer seq, Integer searchMod) {
         super();
         this.id = id;
         this.tagId = tagId;
@@ -67,6 +67,7 @@ public class TagRecommend implements Serializable {
         this.tagNameEng = tagNameEng;
         this.source = source;
         this.seq = seq;
+        this.searchMod = searchMod;
     }
 
 
