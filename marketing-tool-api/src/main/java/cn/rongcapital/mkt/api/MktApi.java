@@ -129,6 +129,7 @@ import cn.rongcapital.mkt.service.SegmentTagnameTagListService;
 import cn.rongcapital.mkt.service.SegmentTagnameTagValueService;
 import cn.rongcapital.mkt.service.TagDownloadCustomAudienceService;
 import cn.rongcapital.mkt.service.TagGetCustomService;
+import cn.rongcapital.mkt.service.TagSystemFlagSetService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
 import cn.rongcapital.mkt.service.TagSystemTagcountService;
 import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
@@ -172,6 +173,7 @@ import cn.rongcapital.mkt.vo.in.SegmentHeadCreateIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadDeleteIn;
 import cn.rongcapital.mkt.vo.in.SegmentHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
+import cn.rongcapital.mkt.vo.in.TagSystemFlagSetIn;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
@@ -490,6 +492,9 @@ public class MktApi {
 	
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private TagSystemFlagSetService tagSystemFlagSetService;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -2123,5 +2128,22 @@ public class MktApi {
          
         return audienceSearchDownloadService.searchData(audience_id);
     }
-
+    
+    /**
+     * 推荐标签（设置）
+     * 
+     * @param body
+     * @param securityContext
+     * @return
+     * @author shuiyangyang
+     * @Date 2016-11-08
+     */
+    @POST
+    @Path("/mkt.tag.system.flag.set")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput tagSystemFlagSet(@Valid TagSystemFlagSetIn body,
+                    @Context SecurityContext securityContext) {
+        return tagSystemFlagSetService.updateFlag(body, securityContext);
+    }
+    
 }
