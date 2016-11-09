@@ -48,6 +48,12 @@ public class SmsTemplet extends BaseQuery{
     
     private String auditStatusStr;
     
+    private String typeStr;
+    
+    private Boolean editCheck;
+    
+    private Boolean deleteCheck;
+    
     
     public SmsTemplet(){}
 
@@ -199,5 +205,29 @@ public class SmsTemplet extends BaseQuery{
 	public void setAuditStatusStr(String auditStatusStr) {
 		this.auditStatusStr = auditStatusStr;
 	}
-    
+
+	public String getTypeStr() {
+		return typeStr;
+	}
+
+	public void setTypeStr(String typeStr) {
+		this.typeStr = typeStr;
+	}
+
+	public Boolean getEditCheck() {
+		return editCheck;
+	}
+
+	public void setEditCheck(Boolean editCheck) {
+		this.editCheck = editCheck;
+	}
+
+	public Boolean getDeleteCheck() {
+		return deleteCheck;
+	}
+
+	public void setDeleteCheck(Boolean deleteCheck) {
+		this.deleteCheck = deleteCheck;
+	}
+	    
 }

@@ -11,6 +11,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class SmsTempletIn {
 
+	private Integer id;
+	
 	@NotNull
     private Byte channelType;
 
@@ -26,7 +28,16 @@ public class SmsTempletIn {
     @NotEmpty
     private String content;
 
-    @JsonProperty("channel_type")
+    @JsonProperty("id")
+    public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@JsonProperty("channel_type")
 	public Byte getChannelType() {
 		return channelType;
 	}

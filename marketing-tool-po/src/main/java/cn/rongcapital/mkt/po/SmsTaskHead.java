@@ -11,9 +11,9 @@ public class SmsTaskHead extends BaseQuery{
 
     private Long smsTaskSignatureId;
 
-    private Long smsTaskTemplateId;
+    private Long smsTaskMaterialId;
 
-    private String smsTaskTemplateContent;
+    private String smsTaskMaterialContent;
 
     private Integer smsTaskSendType;
 
@@ -78,20 +78,20 @@ public class SmsTaskHead extends BaseQuery{
         this.smsTaskSignatureId = smsTaskSignatureId;
     }
 
-    public Long getSmsTaskTemplateId() {
-        return smsTaskTemplateId;
+    public Long getSmsTaskMaterialId() {
+        return smsTaskMaterialId;
     }
 
-    public void setSmsTaskTemplateId(Long smsTaskTemplateId) {
-        this.smsTaskTemplateId = smsTaskTemplateId;
+    public void setSmsTaskMaterialId(Long smsTaskMaterialId) {
+        this.smsTaskMaterialId = smsTaskMaterialId;
     }
 
-    public String getSmsTaskTemplateContent() {
-        return smsTaskTemplateContent;
+    public String getSmsTaskMaterialContent() {
+        return smsTaskMaterialContent;
     }
 
-    public void setSmsTaskTemplateContent(String smsTaskTemplateContent) {
-        this.smsTaskTemplateContent = smsTaskTemplateContent == null ? null : smsTaskTemplateContent.trim();
+    public void setSmsTaskMaterialContent(String smsTaskMaterialContent) {
+        this.smsTaskMaterialContent = smsTaskMaterialContent == null ? null : smsTaskMaterialContent.trim();
     }
 
     public Integer getSmsTaskSendType() {

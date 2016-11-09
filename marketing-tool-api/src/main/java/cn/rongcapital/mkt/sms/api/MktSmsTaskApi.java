@@ -32,6 +32,19 @@ public class MktSmsTaskApi {
 	@Autowired
 	private SmsTaskHeadService smsTaskHeadService;
 	
+	/**
+	 * 任务中心根据任务名称模糊查询
+	 * @param userToken
+	 * @param userId
+	 * @param ver
+	 * @param index
+	 * @param size
+	 * @param smsTaskAppType
+	 * @param smsTaskStatus
+	 * @param smsTaskName
+	 * @return
+	 * @throws Exception
+	 */
 	@GET
 	@Path("/mkt.sms.smstaskhead.list.get")
 	public BaseOutput smsTaskHeadList(@NotEmpty @QueryParam("user_token") String userToken,@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,			
@@ -43,6 +56,15 @@ public class MktSmsTaskApi {
 		return smsTaskHeadService.smsTaskHeadList(userId, index, size, smsTaskAppType, smsTaskStatus, smsTaskName);
 	}
 		
+	/**
+	 * 任务发布
+	 * @param userToken
+	 * @param userId
+	 * @param ver
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
 	@GET
 	@Path("/mkt.sms.smstaskhead.publish")
 	public BaseOutput smsTaskHeadPublish(@NotEmpty @QueryParam("user_token") String userToken,@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,

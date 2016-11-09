@@ -49,8 +49,8 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
             SmsTaskHead insertSmsTaskHead = new SmsTaskHead();
             insertSmsTaskHead.setSmsTaskName(smsActivationCreateIn.getTaskName());
             insertSmsTaskHead.setSmsTaskSignatureId(smsActivationCreateIn.getTaskSignatureId());
-            insertSmsTaskHead.setSmsTaskTemplateId(smsActivationCreateIn.getTaskTemplateId());
-            insertSmsTaskHead.setSmsTaskTemplateContent(smsActivationCreateIn.getTaskTemplateContent());
+            insertSmsTaskHead.setSmsTaskMaterialId(smsActivationCreateIn.getTaskMaterialId());
+            insertSmsTaskHead.setSmsTaskMaterialContent(smsActivationCreateIn.getTaskMaterialContent());
             insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_UNSTART.getStatusCode());
             insertSmsTaskHead.setSmsTaskSendType(smsActivationCreateIn.getTaskSendType());
             insertSmsTaskHead.setSmsTaskAppType(smsActivationCreateIn.getTaskAppType());

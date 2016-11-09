@@ -45,4 +45,11 @@ public interface SmsTaskHeadDao extends BaseDao<SmsTaskHead>{
 	 * @return
 	 */
 	public List<SmsTaskSendStatusVo> countStatusById(Long id);
+	
+	/**
+	 * 根据素材ID，任务执行状态查询任务列表
+	 * @param t
+	 * @return
+	 */
+	public List<SmsTaskHead> selectListByMaterial(SmsTaskHead t);
 }

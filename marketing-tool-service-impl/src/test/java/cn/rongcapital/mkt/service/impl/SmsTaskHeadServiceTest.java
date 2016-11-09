@@ -105,7 +105,7 @@ public class SmsTaskHeadServiceTest {
 		    	smsTaskHead.setSmsTaskName("测试任务"+sms_task_status);
 		    	smsTaskHead.setCreateTime(new Date());
 		    	smsTaskHead.setSmsTaskAppType(sms_task_status%2);
-		    	smsTaskHead.setSmsTaskTemplateId(Long.parseLong(String.valueOf(sms_task_status+1)));
+		    	smsTaskHead.setSmsTaskMaterialId(Long.parseLong(String.valueOf(sms_task_status+1)));
 		    	smsTaskHead.setSmsTaskStatus(sms_task_status);
 				smsTaskHead.setTotalCoverNum(sms_task_status+1000);
 		    	smsTaskHead.setSendingFailNum(0);
@@ -120,7 +120,7 @@ public class SmsTaskHeadServiceTest {
 		    	smsTaskHead.setSmsTaskName("测试任务"+sms_task_status);
 		    	smsTaskHead.setCreateTime(new Date());
 		    	smsTaskHead.setSmsTaskAppType(sms_task_status%2);
-		    	smsTaskHead.setSmsTaskTemplateId(Long.parseLong(String.valueOf(sms_task_status+1)));
+		    	smsTaskHead.setSmsTaskMaterialId(Long.parseLong(String.valueOf(sms_task_status+1)));
 		    	smsTaskHead.setSmsTaskStatus(sms_task_status);
 		    	smsTaskHead.setTotalCoverNum(sms_task_status+1000);
 		    	smsTaskHead.setSendingFailNum(500);
@@ -134,7 +134,7 @@ public class SmsTaskHeadServiceTest {
 		    	smsTaskHead.setSmsTaskName("测试任务"+sms_task_status);
 		    	smsTaskHead.setCreateTime(new Date());
 		    	smsTaskHead.setSmsTaskAppType(sms_task_status%2);
-		    	smsTaskHead.setSmsTaskTemplateId(Long.parseLong(String.valueOf(sms_task_status+1)));
+		    	smsTaskHead.setSmsTaskMaterialId(Long.parseLong(String.valueOf(sms_task_status+1)));
 		    	smsTaskHead.setSmsTaskStatus(sms_task_status);
 				smsTaskHead.setTotalCoverNum(sms_task_status+1000);
 		    	smsTaskHead.setSendingFailNum(0);
