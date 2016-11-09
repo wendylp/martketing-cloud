@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.tagsin.tutils.json.JsonUtils;
 import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 import com.tagsin.wechat_sdk.user.UserInfo;
@@ -37,7 +39,6 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
 
     /*
      * (non-Javadoc)
-     * 
      * @see cn.rongcapital.mkt.biz.WechatMemberBiz#getUserList(java.lang.String, java.lang.String)\
      * 获取公众号下的粉丝列表：1：获取粉丝openID集合，2：轮询获取粉丝详细信息
      */
@@ -89,8 +90,8 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
             String openidString = userDataJson.getString("openid");
             openidLists = JSONArray.parseArray(openidString, String.class);
 
-            // 如果粉丝大于1000 继续获取粉丝
-            while (count >= 1000) {
+            // 如果粉丝大于10000 继续获取粉丝
+            while (count >= 10000) {
                 nextOpenId = userJson.getString("next_openid");
                 userString = WxComponentServerApi.getBaseWxSdk().getUserList(app, nextOpenId);
                 wechatInterfaceLog = new WechatInterfaceLog("WechatMemberBizImpl", "getOpenidLists",
@@ -121,44 +122,58 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
         WechatRegister wechatRegister = new WechatRegister();
         wechatRegister.setAppId(app.getAuthAppId());
         List<WechatRegister> wechatRegisterLists = wechatRegisterDao.selectList(wechatRegister);
-        if (CollectionUtils.isNotEmpty(wechatRegisterLists)) {
+        if (CollectionUtils.isNotEmpty(wechatRegisterLists)&&CollectionUtils.isNotEmpty(openidLists)) {
             WechatRegister wg = wechatRegisterLists.get(0);
-            if (CollectionUtils.isNotEmpty(openidLists)) {
-                int fromIndex = 0;
-                int size = ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;/** 微信定义的接口size是100，所以我们这里也定义的100,微信获取粉丝信息接口调用每天500次，100*500=5W粉丝 */
-                while (fromIndex < openidLists.size()) {
-                    if (openidLists.size() - fromIndex < size) {
-                        size = openidLists.size() - fromIndex;
-                    }
-                    List<String> openidListTemps = openidLists.subList(fromIndex, size);
-                    fromIndex = fromIndex + size;
-                    List<UserInfo> userInfoes = WxComponentServerApi.getBaseWxSdk()
-                                    .batchGetUserInfo(app, openidListTemps);
+            int fromIndex = 0;
+            int size = ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;/** 微信定义的接口size是100,批量获取用户信息 */
+            while (fromIndex < openidLists.size()) {
+                if ((openidLists.size() - fromIndex) < ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE) {
+                    size = openidLists.size();
+                }
+                List<String> openidListTemps = openidLists.subList(fromIndex, size);
+                fromIndex = fromIndex + ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;;
+                size= fromIndex+ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;
+                String userInfoesStr = WxComponentServerApi.getBaseWxSdk().batchGetUserInfos(app, openidListTemps); 
+				/**
+				 * 去掉特殊字符 例如表情符等等
+				 */
+                userInfoesStr = super.replaceAllUTF8mb4(userInfoesStr);
+                /**
+                 * 转成用户对象
+                 */
+    			List<UserInfo> userInfoes = this.getUserInfoesByStr(userInfoesStr);
+                /**
+                 * 记入获取微信公众号的粉丝日志
+                 */
+                WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog(
+                                "WechatMemberBizImpl", "getWechatMemberLists",
+                                userInfoesStr, new Date());
+                wechatInterfaceLogService.insert(wechatInterfaceLog);
 
-                    /**
-                     * 记入获取微信公众号的粉丝日志
-                     */
-                    WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog(
-                                    "WechatMemberBizImpl", "getWechatMemberLists",
-                                    userInfoesToString(userInfoes), new Date());
-                    wechatInterfaceLogService.insert(wechatInterfaceLog);
-
-                    if (CollectionUtils.isNotEmpty(userInfoes)) {
-                        for (Iterator<UserInfo> iter = userInfoes.iterator(); iter.hasNext();) {
-                            UserInfo userInfo = iter.next();
-                            if (userInfo != null) {
-                                WechatMember wechatMember = new WechatMember();
-                                wechatMember = this.getWechatMember(userInfo, wg.getWxAcct());
-                                wechatMemberLists.add(wechatMember);
-                            }
+                if (CollectionUtils.isNotEmpty(userInfoes)) {
+                    for (Iterator<UserInfo> iter = userInfoes.iterator(); iter.hasNext();) {
+                        UserInfo userInfo = iter.next();
+                        if (userInfo != null) {
+                            WechatMember wechatMember = new WechatMember();
+                            wechatMember = this.getWechatMember(userInfo, wg.getWxAcct());								
+                            wechatMemberLists.add(wechatMember);
+                        }else{
+                        	logger.info("userInfo is null");
                         }
                     }
-                }
+                }                
             }
         }
         return wechatMemberLists;
     }
 
+    private List<UserInfo> getUserInfoesByStr(String userInfoesStr){
+		JSONObject jsonObject  = JSONObject.parseObject(userInfoesStr);
+		String json = jsonObject.getString("user_info_list");
+		List<UserInfo> userInfoes = JsonUtils.fromJson(json,new TypeReference<List<UserInfo>>() {});
+		return userInfoes;
+    }
+    
     /**
      * @param userInfo 获取粉丝基本信息
      * @param wxAcct
@@ -175,10 +190,13 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
         wechatMember.setProvince(userInfo.getProvince());
         // language
         wechatMember.setHeadImageUrl(userInfo.getHeadimgurl());
-        Long millisecond = new Long(userInfo.getSubscribe_time()) * 1000;
-        Date data = new Date(millisecond);
-        // 关注时间
-        wechatMember.setSubscribeTime(DateUtil.getStringFromDate(data, "yyyy-MM-dd HH:mm:ss"));
+    	if(userInfo.getSubscribe_time()!=null){
+			Long millisecond = new Long(userInfo.getSubscribe_time()) * 1000;
+			Date data = new Date(millisecond);
+			// 关注时间
+			wechatMember.setSubscribeTime(DateUtil.getStringFromDate(data, "yyyy-MM-dd HH:mm:ss"));        		
+    	}
+		
         // unionid
         wechatMember.setRemark(userInfo.getRemark());
         StringBuffer sb = new StringBuffer();
@@ -197,17 +215,5 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
         wechatMember.setFansJson(fansJson);
         return wechatMember;
     }
-
-    private String userInfoToString(UserInfo userInfo) {
-        String userInfoStr = JSONObject.toJSONString(userInfo);
-        return userInfoStr;
-
-    }
-
-    private String userInfoesToString(List<UserInfo> userInfoes) {
-        String userInfoStr = JSONObject.toJSONString(userInfoes);
-        return userInfoStr;
-    }
-
 
 }

@@ -16,6 +16,7 @@ import com.tagsin.wechat_sdk.user.UserInfo;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
@@ -149,6 +150,7 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 			wechatMember.setStatus(FOLLOW_STATUS);
 			wechatMember.setBitmap(this.BITMAP);
 			wechatMember.setActivity48hYn(this.ACTIVITY_48H_YN);
+			wechatMember.setSelected(NumUtil.int2OneByte(0));
 			wechatMemberDao.insert(wechatMember);
 		}
 			

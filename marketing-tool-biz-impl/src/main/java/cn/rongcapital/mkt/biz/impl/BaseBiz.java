@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.biz.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +17,6 @@ import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 import com.tagsin.wechat_sdk.token.Token;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.dao.WebchatComponentVerifyTicketDao;
@@ -55,7 +55,7 @@ public class BaseBiz {
 	        }
 	        
 	        try {	        	
-	        	String tokenStrBack = JedisClient.get(app.getId());
+	        	String tokenStrBack = JedisClient.get(app.getId());	        	
 	        	if(StringUtils.isEmpty(tokenStrBack)){
 	        		Token token = WxComponentServerApi.accessToken(app);
 		        	String tokenStr = JSONObject.toJSONString(token);
@@ -92,4 +92,25 @@ public class BaseBiz {
 		this.wechatInterfaceLogService = wechatInterfaceLogService;
 	}
 	
+	
+	public String replaceAllUTF8mb4(String text){    	
+    	try {
+			if(StringUtils.isNotEmpty(text)){    		
+				byte[] b_text = text.getBytes();
+				for (int i = 0; i < b_text.length; i++){
+			        if((b_text[i] & 0xF8)== 0xF0){
+			            for (int j = 0; j < 4; j++) {						
+			            	b_text[i+j]=0x30;					
+			            }
+			            i+=3;
+			        }
+			    }
+				String textBack = new String(b_text, "UTF-8");
+				return textBack;
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return null;   	
+    }
 }
