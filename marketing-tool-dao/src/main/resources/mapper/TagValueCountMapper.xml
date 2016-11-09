@@ -112,5 +112,12 @@
 			AND tag_value =#{tagValue}
 		</where>
 	</select>
-	
+
+	<select id="selectTagValueCountListByKeyWord" parameterType="cn.rongcapital.mkt.po.TagValueCount" resultType="cn.rongcapital.mkt.po.TagValueCount">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE tag_id = #{tagId}
+		<if test="tagValue != null"><![CDATA[ AND tag_value like CONCAT('%',#{tagValue},'%')]]></if>
+	</select>
 </mapper>

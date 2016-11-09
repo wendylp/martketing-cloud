@@ -15,6 +15,8 @@ import org.apache.ibatis.annotations.Param;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.TagValueCount;
 
+import java.util.List;
+
 public interface TagValueCountDao extends BaseDao<TagValueCount>{
 	
 	//清空存量数据
@@ -22,4 +24,7 @@ public interface TagValueCountDao extends BaseDao<TagValueCount>{
 	
 	//获取标签值id
 	String selectTagValueId(@Param("tagId")String tagId,@Param("tagValue")String tagValue);
+
+	//模糊搜索标签值和标签值Id
+    List<TagValueCount> selectTagValueCountListByKeyWord(TagValueCount paramTagValueCount);
 }
