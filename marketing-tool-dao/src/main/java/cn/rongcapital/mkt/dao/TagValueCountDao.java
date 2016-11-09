@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.TagValueCount;
 
@@ -17,4 +19,7 @@ public interface TagValueCountDao extends BaseDao<TagValueCount>{
 	
 	//清空存量数据
 	int clearStockData();
+	
+	//获取标签值id
+	String selectTagValueId(@Param("tagId")String tagId,@Param("tagValue")String tagValue);
 }

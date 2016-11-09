@@ -104,6 +104,9 @@ public class MktContactApi {
 	@Autowired
 	private ContactsLongurlGetService contactsLongurlGetService;
 
+	@Autowired
+	private ContactsCommitDatapartyDownloadService contactsCommitDatapartyDownloadService;
+	
 	/***
 	 * 新建联系人表单
 	 * 
@@ -365,7 +368,20 @@ public class MktContactApi {
 			@NotNull @QueryParam("commit_time") Integer commit_time) {
 		return contactsCommitSaveService.contactsCommitDownload(contact_id, commit_time);
 	}
-
+	
+	/**
+	 * 下载反馈详情生成主数据
+	 *
+	 * @param
+	 * @param ver
+	 * @author lijinkai
+	 */
+	@GET
+	@Path("/mkt.contacts.commit.dataparty.download")
+	public BaseOutput contactsCommitDatapartyDownload(@NotNull @QueryParam("contact_id") Integer contact_id) {
+		return contactsCommitDatapartyDownloadService.contactsCommitDatapartyDownload(contact_id);
+	}
+	
 	/**
 	 * 根据状态查询联系人表单
 	 *

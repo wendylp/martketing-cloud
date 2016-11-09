@@ -84,13 +84,13 @@ public class SegmentBodyUpdateServiceImpl implements SegmentBodyUpdateService {
 					for (SegmentBodyTagsIn tag : tags) {
 						SegmentationBody insertBody = new SegmentationBody();
 						insertBody.setHeadId(headerId);
-						insertBody.setTagGroupId(tag.getTagGroupId());
+//						insertBody.setTagGroupId(tag.getTagGroupId());
 						insertBody.setTagId(tag.getTagId());
-						insertBody.setExclude(tag.getExclude().byteValue());
+//						insertBody.setExclude(tag.getExclude().byteValue());
 						insertBody.setCreateTime(now);
 						insertBody.setGroupIndex(groupIndex);
 						insertBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-						insertBody.setGroupSeq(tag.getGroupSeq());
+//						insertBody.setGroupSeq(tag.getGroupSeq());
 						segmentationBodyDao.insert(insertBody);
 					}
 				}

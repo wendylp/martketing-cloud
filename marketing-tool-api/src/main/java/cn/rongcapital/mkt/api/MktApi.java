@@ -33,6 +33,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.service.*;
+import cn.rongcapital.mkt.vo.in.*;
+import cn.rongcapital.mkt.vo.out.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -476,11 +479,12 @@ public class MktApi {
 	@Autowired
 	private HomePageCalendarPopService homePageCalendarPopService;
 	
-	 @Autowired
-	 private GetUserInfoService userInfoService;
+	@Autowired
+	private GetUserInfoService userInfoService;
 	 
 	@Autowired
 	private AudienceSearchDownloadService audienceSearchDownloadService;
+
 	@Autowired
 	private SegmentSearchGetService segmentSearchGetServer;
 	
@@ -492,10 +496,19 @@ public class MktApi {
 	
 	@Autowired
 	private Environment env;
-	
+
+	@Autowired
+	private CreupdateSegmentService creupdateSegmentService;
+
+	@Autowired
+	private SegmentDetailGetService segmentDetailGetService;
+
+	@Autowired
+	private SegmentSecondaryTaglistSearchService segmentSecondaryTaglistSearchService;
+
 	@Autowired
 	private TagSystemFlagSetService tagSystemFlagSetService;
-	
+
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
 	/**
@@ -1314,6 +1327,45 @@ public class MktApi {
 	}
 
 	/**
+	 * @功能简述: 编辑segment body
+	 * @param: SegmentBodyUpdateIn
+	 *             body, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.segment.creupdate")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput createOrUpdateSegment(SegmentCreUpdateIn segmentCreUpdateIn, @Context SecurityContext securityContext) {
+		return creupdateSegmentService.creupdateSegment(segmentCreUpdateIn);
+	}
+
+	/**
+	 * @功能描述:查询细分的详细信息
+	 * @Param: String method, String userToken
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.segment.detail.get")
+	public BaseOutput getSegmentDetail(@NotEmpty @QueryParam("method") String method,
+									   @NotEmpty @QueryParam("user_token") String userToken,
+	                                   @NotEmpty @QueryParam("ver") String ver,
+	                                   @NotNull  @QueryParam("id") Long id) {
+		return segmentDetailGetService.getSegmentDetail(id);
+	}
+
+	/**
+	 * @功能简述: 模糊搜索受众细分标签值的列表(二级搜索)
+	 * @param:
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.segment.secondary.taglist.search")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput searchSegmentSecondaryTaglist(TagListSecondarySearchIn tagListSecondarySearchIn, @Context SecurityContext securityContext) {
+		return segmentSecondaryTaglistSearchService.searchSegmentSecondaryTaglist(tagListSecondarySearchIn);
+	}
+
+	/**
 	 * @功能简述: 获取后台任务列表
 	 * @author nianjun
 	 * @param:
@@ -2106,7 +2158,6 @@ public class MktApi {
     /**
      * 根据主键id下载相应人群数
      * @param head_id
-     * @param query_name
      * @return BaseOutput
      */
     @GET
@@ -2128,10 +2179,10 @@ public class MktApi {
          
         return audienceSearchDownloadService.searchData(audience_id);
     }
-    
+
     /**
      * 推荐标签（设置）
-     * 
+     *
      * @param body
      * @param securityContext
      * @return
@@ -2145,5 +2196,5 @@ public class MktApi {
                     @Context SecurityContext securityContext) {
         return tagSystemFlagSetService.updateFlag(body, securityContext);
     }
-    
+
 }
