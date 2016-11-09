@@ -117,8 +117,8 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 					// {}", segmentationHead.getId(),
 					// segmentationHead.getName(), segmentationBody.getTagId());
 					String tagId = segmentationBody.getTagId();
-					String tagGroupId = segmentationBody.getTagGroupId();
-					Byte exclude = segmentationBody.getExclude();
+					String tagGroupId = segmentationBody.getGroupId();
+					Byte exclude = segmentationBody.getTagExclude().byteValue();
 					Criteria oneCriteria = null;
 					if (exclude == 0) {
 						if ("0".equals(tagId)) {// 不限
@@ -226,7 +226,7 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 
 	/**
 	 * 根据传入的SegmentationHead只同步这一个SegmentationHead
-	 * 
+	 *
 	 * @param segmentationHead
 	 * @Date 2016.10.17
 	 */
@@ -259,8 +259,8 @@ public class DataSegmentSyncTaskServiceImpl implements TaskService {
 				// segmentationHead.getId(),
 				// segmentationHead.getName(), segmentationBody.getTagId());
 				String tagId = segmentationBody.getTagId();
-				String tagGroupId = segmentationBody.getTagGroupId();
-				Byte exclude = segmentationBody.getExclude();
+				String tagGroupId = segmentationBody.getGroupId();
+				Byte exclude = segmentationBody.getTagExclude().byteValue();
 				Criteria oneCriteria = null;
 				if (exclude == 0) {
 					if ("0".equals(tagId)) {// 不限
