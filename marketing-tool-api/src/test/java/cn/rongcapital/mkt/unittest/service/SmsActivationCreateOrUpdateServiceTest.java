@@ -52,8 +52,8 @@ public class SmsActivationCreateOrUpdateServiceTest {
         SmsActivationCreateIn smsActivationCreateIn = new SmsActivationCreateIn();
         smsActivationCreateIn.setTaskName("短信活动单元测试");
         smsActivationCreateIn.setTaskSignatureId(Long.valueOf(1));
-        smsActivationCreateIn.setTaskTemplateId(Long.valueOf(1));
-        smsActivationCreateIn.setTaskTemplateContent("单元测试发送短信");
+        smsActivationCreateIn.setTaskMaterialId(Long.valueOf(1));
+        smsActivationCreateIn.setTaskMaterialContent("单元测试发送短信");
         smsActivationCreateIn.setTaskSendType(0);
 
         //执行待测的service方法

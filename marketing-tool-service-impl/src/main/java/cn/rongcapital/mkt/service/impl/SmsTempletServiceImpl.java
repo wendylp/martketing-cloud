@@ -17,17 +17,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
+import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
+import cn.rongcapital.mkt.po.SmsMaterial;
+import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsTempletService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.ColumnsOut;
+import cn.rongcapital.mkt.vo.out.SmsTempletOut;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletListIn;
+import cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo;
 
 @Service
 public class SmsTempletServiceImpl implements SmsTempletService {
@@ -39,37 +45,31 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	@Autowired
 	private SmsTempletDao smsTempletDao;
 	
-	private final String TEMPLETE_CONTENT_= "模板内容";
+	@Autowired
+	private SmsMaterialDao smsMaterialDao;
 	
-	private final String TEMPLETE_CREATE_TIME ="创建时间";
+	private final String TEMPLETE_ID= "模板ID";
+	
+	private final String TEMPLETE_NAME= "模板名称";
+	
+	private final String TEMPLETE_CREATE_TIME ="提交时间";
 	
 	private final String TEMPLETE_AUDIT_STATUS ="审核状态";
 	
-	/**
-	 * 审核通过
-	 */
-	private final Integer AUDIT_STATUS_CHECKED = 1;
-	
-	/**
-	 * 模板有效
-	 */
-	private final Integer STATUS_VALID = 0;
-	/**
-	 * 模板无效
-	 */
-	private final Integer STATUS_NO_VALID = 1;
-	
+	private final String TEMPLETE_TYPE="模板类型";
+		
 	@Override
-	public BaseOutput smsTempletList(String userId, Integer index, Integer size, Integer channelType,
-			String type, String content) {
-		BaseOutput output = this.newSuccessBaseOutput();
+	public SmsTempletOut smsTempletList(String userId, Integer index, Integer size, Integer channelType,
+			String type, String name) {
+		SmsTempletOut smsTempletOut = this.newSuccessSmsTempletOut();
+
 		SmsTemplet smsTempletTemp = new SmsTemplet();		
 		smsTempletTemp.setChannelType(NumUtil.int2OneByte(channelType));
 		if(StringUtils.isNotEmpty(type)){
 			smsTempletTemp.setType(NumUtil.int2OneByte(Integer.parseInt(type)));
 		}		
-		if(StringUtils.isNotEmpty(content)){
-			smsTempletTemp.setContent(content);
+		if(StringUtils.isNotEmpty(name)){
+			smsTempletTemp.setName(name);
 		}
 		smsTempletTemp.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
 		smsTempletTemp.setOrderField("create_time");
@@ -77,47 +77,158 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		smsTempletTemp.setStartIndex((index-1)*size);
 		smsTempletTemp.setPageSize(size);
 		
+		/**
+		 * 统计总数
+		 */
 		int totalCount = smsTempletDao.selectListCount(smsTempletTemp);
+		/**
+		 * 统计模板类型总数
+		 */
+		List<SmsTempletCountVo> smsTempletCountVosByType= smsTempletDao.selectListCountGroupByType(smsTempletTemp);
+		/**
+		 * 统计审核总数
+		 */
+		List<SmsTempletCountVo> smsTempletCountVosByAuditStatus= smsTempletDao.selectListCountGroupByAuditStatus(smsTempletTemp);
+		/**
+		 * 注入输出总数
+		 */
+		smsTempletOut = this.setSmsTempletOutView(smsTempletOut, smsTempletCountVosByType, smsTempletCountVosByAuditStatus);
+		/**
+		 * 查询模板列表
+		 */
 		List<SmsTemplet> dataList = smsTempletDao.selectList(smsTempletTemp);
+		/**
+		 * 注入返回的属性
+		 */
+		dataList = this.setSmsTempletView(dataList);
+		smsTempletOut.setTotalCount(totalCount);		
+		this.setBaseOut(smsTempletOut, dataList);
+		List<Object> colNames = this.getColumnsOutList();
+		smsTempletOut.setColNames(colNames);		
+		smsTempletOut.setTotalCount(totalCount);
+		
+		return smsTempletOut;
+	}
+	
+	/**
+	 * 注入返回模板总数和审核总数
+	 * @param smsTempletOut
+	 * @param smsTempletCountVosByType
+	 * @param smsTempletCountVosByAuditStatus
+	 * @return
+	 */
+	private SmsTempletOut setSmsTempletOutView(SmsTempletOut smsTempletOut,List<SmsTempletCountVo> smsTempletCountVosByType,List<SmsTempletCountVo> smsTempletCountVosByAuditStatus){
+		if(CollectionUtils.isNotEmpty(smsTempletCountVosByType)){
+			for(SmsTempletCountVo smsTempletCountVo:smsTempletCountVosByType){
+				Integer  type = smsTempletCountVo.getType();
+				if(SmsTempletTypeEnum.FIXED.getStatusCode().equals(type)){
+					smsTempletOut.setTypeFixedCount(smsTempletCountVo.getDataCount());
+				}
+				if(SmsTempletTypeEnum.VARIABLE.getStatusCode().equals(type)){
+					smsTempletOut.setTypeVariableCount(smsTempletCountVo.getDataCount());
+				}				
+			}
+		}
+		if(CollectionUtils.isNotEmpty(smsTempletCountVosByAuditStatus)){
+			for(SmsTempletCountVo smsTempletCountVo:smsTempletCountVosByAuditStatus){
+				Integer auditStatus = smsTempletCountVo.getAuditStatus();
+				if(SmsTempleteAuditStatusEnum.AUDIT_STATUS_NO_CHECK.getStatusCode().equals(auditStatus)){
+					smsTempletOut.setAuditStatusNoCheckCount(smsTempletCountVo.getDataCount());
+				}
+				if(SmsTempleteAuditStatusEnum.AUDIT_STATUS_NO_PASS.getStatusCode().equals(auditStatus)){
+					smsTempletOut.setAuditStatusNoPassCount(smsTempletCountVo.getDataCount());
+				}
+				if(SmsTempleteAuditStatusEnum.AUDIT_STATUS_PASS.getStatusCode().equals(auditStatus)){
+					smsTempletOut.setAuditStatusPassCount(smsTempletCountVo.getDataCount());
+				}
+			}			
+		}
+		return smsTempletOut;		
+	}
+	
+	/**
+	 * 返回结果的组装
+	 * @param dataList
+	 * @return
+	 */
+	public List<SmsTemplet> setSmsTempletView(List<SmsTemplet> dataList){
 		if(CollectionUtils.isNotEmpty(dataList)){
 			for(Iterator<SmsTemplet> iter = dataList.iterator();iter.hasNext();){
 				SmsTemplet smsTemplet = iter.next();
-				smsTemplet.setCreateTimeStr(DateUtil.getStringFromDate(smsTemplet.getCreateTime(),FORMAT_STRING));
-				if(smsTemplet.getAuditStatus()!=null){
-					int auditStatus = smsTemplet.getAuditStatus() & 0xff;
-					smsTemplet.setAuditStatusStr(SmsTempleteAuditStatusEnum.getDescriptionByStatus(auditStatus));
-				}
+				if(smsTemplet!=null){
+					smsTemplet.setCreateTimeStr(DateUtil.getStringFromDate(smsTemplet.getCreateTime(),FORMAT_STRING));
+					if(smsTemplet.getAuditStatus()!=null){
+						int auditStatus = smsTemplet.getAuditStatus() & 0xff;
+						smsTemplet.setAuditStatusStr(SmsTempleteAuditStatusEnum.getDescriptionByStatus(auditStatus));
+					}
+					if(smsTemplet.getType()!=null){
+						int typeTemp = smsTemplet.getType() & 0xff;
+						smsTemplet.setTypeStr(SmsTempletTypeEnum.getDescriptionByStatus(typeTemp));						
+					}
+					smsTemplet.setEditCheck(true);
+					if(smsTempletValidate(smsTemplet.getId())){						
+						smsTemplet.setDeleteCheck(true);
+					}else{						
+						smsTemplet.setDeleteCheck(false);
+					}					
+				}				
 			}
 		}
-		output.setTotalCount(totalCount);		
-		this.setBaseOut(output, dataList);
-		List<Object> colNames = this.getColumnsOutList();
-		output.setColNames(colNames);
-		return output;
+		return dataList;		
+	}
+	
+	
+	/**
+	 * 验证模板是否可以编辑或者删除
+	 * @param id
+	 * @return
+	 */
+	public boolean smsTempletValidate(Integer id){
+		SmsMaterial smsMaterialTemp = new SmsMaterial();
+		smsMaterialTemp.setSmsTempletId(id);
+		smsMaterialTemp.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
+		List<SmsMaterial> smsMaterials = smsMaterialDao.selectList(smsMaterialTemp);		
+		if(CollectionUtils.isNotEmpty(smsMaterials)){
+			return false;
+		}else{
+			return true;
+		}
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public BaseOutput insertSmsTemplet(SmsTempletIn smsTempletIn) {
+	public BaseOutput saveOrUpdateSmsTemplet(SmsTempletIn smsTempletIn) {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTemplet smsTemplet = this.getSmsTempletBySmsTempletIn(smsTempletIn);
 		if(smsTemplet!=null){
-			smsTempletDao.insert(smsTemplet);
+			if(smsTemplet.getId()!=null&&smsTemplet.getId()!=0){
+				smsTempletDao.updateById(smsTemplet);
+			}else{
+				smsTempletDao.insert(smsTemplet);
+			}
 		}else{
 			output.setCode(ApiErrorCode.PARAMETER_ERROR.getCode());
 			output.setMsg(ApiErrorCode.PARAMETER_ERROR.getMsg());
 		}
-		return output;
-		
+		return output;		
 	}
 
+	/**
+	 * 输入转换成模板对象
+	 * @param smsTempletIn
+	 * @return
+	 */
 	private SmsTemplet getSmsTempletBySmsTempletIn(SmsTempletIn smsTempletIn){
 		SmsTemplet smsTemplet = new SmsTemplet();
-		if(smsTempletIn!=null){
+		if(smsTempletIn!=null){			
+			if(smsTempletIn.getId()!=null&&smsTempletIn.getId()!=0){
+				smsTemplet.setId(smsTempletIn.getId());
+			}			
 			if(StringUtils.isNotEmpty(smsTempletIn.getAuditor())){
 				smsTemplet.setAuditor(smsTempletIn.getAuditor());
-			}			
-			smsTemplet.setAuditStatus(NumUtil.int2OneByte(this.AUDIT_STATUS_CHECKED));
+			}	
+			
+			smsTemplet.setAuditStatus(NumUtil.int2OneByte(SmsTempleteAuditStatusEnum.AUDIT_STATUS_PASS.getStatusCode()));
 			if(smsTempletIn.getChannelType()!=null){
 				smsTemplet.setChannelType(NumUtil.int2OneByte(smsTempletIn.getChannelType()));
 			}else{
@@ -138,7 +249,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			}
 			smsTemplet.setCreateTime(new Date());
 			
-			smsTemplet.setStatus(NumUtil.int2OneByte(this.STATUS_VALID));
+			smsTemplet.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
 			if(StringUtils.isNotEmpty(smsTempletIn.getUpdateUser())){
 				smsTemplet.setUpdateTime(new Date());
 				smsTemplet.setUpdateUser(smsTempletIn.getUpdateUser());
@@ -147,32 +258,43 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		return smsTemplet;		
 	}
 
+	private SmsTempletOut newSuccessSmsTempletOut() {
+		SmsTempletOut smsTempletOut = new SmsTempletOut();
+		smsTempletOut.setCode(ApiErrorCode.SUCCESS.getCode());
+		smsTempletOut.setMsg(ApiErrorCode.SUCCESS.getMsg());
+		smsTempletOut.setTotal(ApiConstant.INT_ZERO);
+		return smsTempletOut;
+	}
+
 	private BaseOutput newSuccessBaseOutput() {
 		return new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
 				null);
 	}
-
+	
 	private <O> void setBaseOut(BaseOutput out, List<O> dataList) {
 		if (CollectionUtils.isEmpty(dataList)) {
 			return;
 		}
-
 		out.setTotal(dataList.size());
 		out.getData().addAll(dataList);
 	}
 	
+	/**
+	 * 返回列名
+	 * @return
+	 */
 	private List<Object> getColumnsOutList(){
 		List<Object> columnsOutList = new ArrayList<Object>(); 
 		//ID
 		ColumnsOut columnsOut0 = new ColumnsOut();
 		columnsOut0.setColCode("id");
-		columnsOut0.setColName("ID");
+		columnsOut0.setColName(this.TEMPLETE_ID);
 		columnsOutList.add(columnsOut0);
 		//模板内容
 		ColumnsOut columnsOut1 = new ColumnsOut();
-		columnsOut1.setColCode("content");
-		columnsOut1.setColName(this.TEMPLETE_CONTENT_);
-		columnsOutList.add(columnsOut1);
+		columnsOut1.setColCode("name");
+		columnsOut1.setColName(this.TEMPLETE_NAME);
+		columnsOutList.add(columnsOut1);		
 		//createTime
 		ColumnsOut columnsOut2 = new ColumnsOut();
 		columnsOut2.setColCode("createTimeStr");
@@ -183,6 +305,11 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		columnsOut3.setColCode("auditStatus");
 		columnsOut3.setColName(this.TEMPLETE_AUDIT_STATUS);
 		columnsOutList.add(columnsOut3);
+		//模板类型
+		ColumnsOut columnsOut4 = new ColumnsOut();
+		columnsOut4.setColCode("typeStr");
+		columnsOut4.setColName(this.TEMPLETE_TYPE);
+		columnsOutList.add(columnsOut4);
 		return columnsOutList;		
 	}
 	

@@ -33,28 +33,38 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
 	
     @Before
     public void setUp() throws Exception {
-/*    	String[] smsTaskNames = {"测试短信发送2", "测试短信发送3", "测试短信发送4"} ;
+    	String[] smsTaskNames = {"测试短信发送2", "测试短信发送3", "测试短信发送4"} ;
     	Long[] smsTaskSignatureIds = {1l,2l,3l};
-    	Long[] smsTaskTemplateIds = {1l,2l,3l};
-    	String[] smsTaskTemplateContents = {"模板内容测试2", "模板内容测试3", "模板内容测试4"} ;
+    	Long[] smsTaskMaterialIds = {1l,2l,3l};
+    	String[] smsTaskMaterialContents = {"模板内容测试2", "模板内容测试3", "模板内容测试4"} ;
         Integer[] smsTaskSendTypes = {1, 2,1};
         Integer[] smsTaskAppTypes = {0, 1, 2};
         Integer[] smsTaskStatus = {0, 2, 4};
         Byte[] status = {0, 1, 0};
-                
+        Integer[] totalCoverNums = {1000, 2000, 3000};
+        Integer[] sendingSuccessNums = {1000, 2000, 3000};
+        Integer[] waitingNums = {1000, 2000, 3000};
+        Integer[] sendingFailNums = {1000, 2000, 3000};
+        Integer[] audienceGenerateStatuses = {1000, 2000, 3000};
+        
         for(int i =0 ; i < 3; i++) {
         	SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
         	smsTaskHeadTemp.setSmsTaskName(smsTaskNames[i]);
         	smsTaskHeadTemp.setSmsTaskSignatureId(smsTaskSignatureIds[i]);
-        	smsTaskHeadTemp.setSmsTaskTemplateId(smsTaskTemplateIds[i]);
-        	smsTaskHeadTemp.setSmsTaskTemplateContent(smsTaskTemplateContents[i]);
+        	smsTaskHeadTemp.setSmsTaskMaterialId(smsTaskMaterialIds[i]);
+        	smsTaskHeadTemp.setSmsTaskMaterialContent(smsTaskMaterialContents[i]);
         	smsTaskHeadTemp.setSmsTaskSendType(smsTaskSendTypes[i]);
         	smsTaskHeadTemp.setSmsTaskAppType(smsTaskAppTypes[i]);
         	smsTaskHeadTemp.setSmsTaskStatus(smsTaskStatus[i]);
         	smsTaskHeadTemp.setStatus(status[i]);
         	smsTaskHeadTemp.setCreateTime(new Date());
+        	smsTaskHeadTemp.setTotalCoverNum(totalCoverNums[i]);
+        	smsTaskHeadTemp.setSendingSuccessNum(sendingSuccessNums[i]);
+        	smsTaskHeadTemp.setSendingFailNum(sendingFailNums[i]);
+        	smsTaskHeadTemp.setWaitingNum(waitingNums[i]);
+        	smsTaskHeadTemp.setAudienceGenerateStatus(audienceGenerateStatuses[i]);
         	smsTaskHeadDao.insert(smsTaskHeadTemp);
-        }*/
+        }
     }
     
     @Test
@@ -226,7 +236,17 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
     	String jsonStr = JSONObject.toJSONString(smsTaskStatusCountMapList);
     	logger.info(jsonStr);
     }
-       
+	
+	@Test
+    public void testSelectListByMaterial(){
+		SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
+		smsTaskHeadTemp.setSmsTaskMaterialId(1L);
+		List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectListByMaterial(smsTaskHeadTemp);
+    	String jsonStr = JSONObject.toJSONString(smsTaskHeads);
+    	logger.info(jsonStr);
+	}  
+	
+	
     @After
     public void tearDown() throws Exception {
     	

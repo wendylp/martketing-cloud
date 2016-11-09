@@ -23,10 +23,10 @@ public class SmsActivationCreateIn extends BaseInput{
     private Long taskSignatureId;
 
     @NotNull
-    private Long taskTemplateId;
+    private Long taskMaterialId;
 
     @NotEmpty
-    private String taskTemplateContent;
+    private String taskMaterialContent;
 
     private List<SmsTargetAudienceIn> smsTargetAudienceInArrayList;
 
@@ -61,25 +61,25 @@ public class SmsActivationCreateIn extends BaseInput{
         this.taskSignatureId = taskSignatureId;
     }
 
-    @JsonProperty("task_template_id")
-    public Long getTaskTemplateId() {
-        return taskTemplateId;
-    }
+    @JsonProperty("task_material_id")
+    public Long getTaskMaterialId() {
+		return taskMaterialId;
+	}
 
-    public void setTaskTemplateId(Long taskTemplateId) {
-        this.taskTemplateId = taskTemplateId;
-    }
+	public void setTaskMaterialId(Long taskMaterialId) {
+		this.taskMaterialId = taskMaterialId;
+	}
 
-    @JsonProperty("task_template_content")
-    public String getTaskTemplateContent() {
-        return taskTemplateContent;
-    }
+	@JsonProperty("task_material_content")
+	public String getTaskMaterialContent() {
+		return taskMaterialContent;
+	}
 
-    public void setTaskTemplateContent(String taskTemplateContent) {
-        this.taskTemplateContent = taskTemplateContent;
-    }
+	public void setTaskMaterialContent(String taskMaterialContent) {
+		this.taskMaterialContent = taskMaterialContent;
+	}
 
-    @JsonProperty("target_audience_list")
+	@JsonProperty("target_audience_list")
     public List<SmsTargetAudienceIn> getSmsTargetAudienceInArrayList() {
         return smsTargetAudienceInArrayList;
     }

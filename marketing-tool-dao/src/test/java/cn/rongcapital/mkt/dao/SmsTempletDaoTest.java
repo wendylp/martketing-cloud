@@ -106,8 +106,11 @@ public class SmsTempletDaoTest extends AbstractUnitTest {
     
     private SmsTemplet setSmsTemplet(){
     	SmsTemplet smsTempletTest = new SmsTemplet();
+    	smsTempletTest.setName("测试模板");
     	smsTempletTest.setAuditor("user1");
-    	smsTempletTest.setAuditStatus(NumUtil.int2OneByte(SmsTempleteAuditStatusEnum.AUDIT_STATUS_PASS.getStatusCode()));
+//    	smsTempletTest.setAuditStatus(NumUtil.int2OneByte(SmsTempleteAuditStatusEnum.AUDIT_STATUS_PASS.getStatusCode()));
+//    	smsTempletTest.setAuditStatus(NumUtil.int2OneByte(SmsTempleteAuditStatusEnum.AUDIT_STATUS_NO_CHECK.getStatusCode()));
+    	smsTempletTest.setAuditStatus(NumUtil.int2OneByte(SmsTempleteAuditStatusEnum.AUDIT_STATUS_NO_PASS.getStatusCode()));
     	smsTempletTest.setChannelType(SmsTaskAppEnum.ADVERT_SMS.getStatus());
     	smsTempletTest.setCode("abcdefg123456789");
     	smsTempletTest.setContent("测试模板");

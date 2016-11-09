@@ -113,7 +113,20 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
+
+	<select id="selectListCountGroupByType" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo">
+		<![CDATA[SELECT COUNT(id) AS dataCount,type]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<![CDATA[ GROUP BY type]]>
+	</select>
 	
+	<select id="selectListCountGroupByAuditStatus" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo">
+		<![CDATA[SELECT COUNT(id) AS dataCount,audit_status as auditStatus]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<![CDATA[ GROUP BY audit_status]]>
+	</select>		
 	<!-- 其它SQL语句 -->
 	
 	

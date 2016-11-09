@@ -133,7 +133,7 @@ public class GenerateSmsDetailTask implements TaskService {
         for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
             SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
             smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
-            smsTaskDetail.setSendMessage(targetHead.getSmsTaskTemplateContent());
+            smsTaskDetail.setSendMessage(targetHead.getSmsTaskMaterialContent());
             smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
             smsTaskDetail.setSmsTaskHeadId(taskHeadId);
             smsTaskDetailList.add(smsTaskDetail);

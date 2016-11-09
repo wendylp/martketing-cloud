@@ -21,11 +21,14 @@ import cn.rongcapital.mkt.common.enums.SmsTaskAppEnum;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
 import cn.rongcapital.mkt.common.util.NumUtil;
+import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
+import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsTempletService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
+import cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SmsTempletServiceTest {
@@ -36,12 +39,21 @@ public class SmsTempletServiceTest {
     
     @Mock
     private SmsTempletDao smsTempletDao;
+    @Mock
+	private SmsMaterialDao smsMaterialDao;
     
     private int selectListCountResult = 10;
     
     private int insertResult = 1;
     
     private List<SmsTemplet> dataList;
+    
+    private List<SmsTempletCountVo> smsTempletCountVosByType;
+    
+    private List<SmsTempletCountVo> smsTempletCountVosByAuditStatus;
+    
+    private List<SmsMaterial> smsMaterials;
+    
     
     @Before
     public void setUp() throws Exception {
@@ -51,20 +63,42 @@ public class SmsTempletServiceTest {
         smsTemplet.setAuditStatus(NumUtil.int2OneByte(SmsTempleteAuditStatusEnum.AUDIT_STATUS_PASS.getStatusCode()));
         dataList.add(smsTemplet);
         dataList.add(smsTemplet);
+
+        smsTempletCountVosByType = new ArrayList<SmsTempletCountVo>();
+        SmsTempletCountVo smsTempletCountVoType = new SmsTempletCountVo();
+        smsTempletCountVosByType.add(smsTempletCountVoType);
+        smsTempletCountVosByType.add(smsTempletCountVoType);
+        
+        smsTempletCountVosByAuditStatus = new ArrayList<SmsTempletCountVo>();
+        SmsTempletCountVo smsTempletCountVoAuditStatus = new SmsTempletCountVo();
+        smsTempletCountVosByAuditStatus.add(smsTempletCountVoAuditStatus);
+        smsTempletCountVosByAuditStatus.add(smsTempletCountVoAuditStatus);
+        
+        smsMaterials = new ArrayList<SmsMaterial>();
+        SmsMaterial smsMaterial = new SmsMaterial();
+        smsMaterials.add(smsMaterial);
+        smsMaterials.add(smsMaterial);
         
         Mockito.when(smsTempletDao.selectListCount(any())).thenReturn(selectListCountResult);
         Mockito.when(smsTempletDao.selectList(any())).thenReturn(dataList);
+        
+        Mockito.when(smsTempletDao.selectListCountGroupByType(any())).thenReturn(smsTempletCountVosByType);
+        Mockito.when(smsTempletDao.selectListCountGroupByAuditStatus(any())).thenReturn(smsTempletCountVosByAuditStatus);
+        
+        Mockito.when(smsMaterialDao.selectList(any())).thenReturn(smsMaterials);
         
         Mockito.when(smsTempletDao.insert(any())).thenReturn(insertResult);
         smsTempletService = new SmsTempletServiceImpl();
         
         // 把mock的dao set进入service
         ReflectionTestUtils.setField(smsTempletService, "smsTempletDao", smsTempletDao);
+        
+        ReflectionTestUtils.setField(smsTempletService, "smsMaterialDao", smsMaterialDao);
     }
 
     @Test
     public void testSmsTempletList() {
-        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, 1, "1", "Hello Wrold!");
+        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, 0, "0", "测试");
         
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
@@ -73,19 +107,21 @@ public class SmsTempletServiceTest {
     }
     
     @Test
-    public void testInsertSmsTemplet() {
+    public void testSaveOrUpdateSmsTemplet() {
         SmsTempletIn smsTempletIn = new SmsTempletIn();
         /**
          * 插入参数
          */
-/*        smsTempletIn.setType(NumUtil.int2OneByte(SmsTempletTypeEnum.FIXED.getStatusCode()));
+        smsTempletIn.setId(1);
+        smsTempletIn.setType(NumUtil.int2OneByte(SmsTempletTypeEnum.FIXED.getStatusCode()));
         smsTempletIn.setChannelType(SmsTaskAppEnum.ADVERT_SMS.getStatus());
         smsTempletIn.setContent("测试模板");
-*/
-        BaseOutput result = smsTempletService.insertSmsTemplet(smsTempletIn);
+
+        BaseOutput result = smsTempletService.saveOrUpdateSmsTemplet(smsTempletIn);
         
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
     }
+    
 
 }

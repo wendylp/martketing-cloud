@@ -10,8 +10,11 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SmsTemplet;
+import cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo;
 
 public interface SmsTempletDao extends BaseDao<SmsTemplet>{
 	
@@ -34,4 +37,18 @@ public interface SmsTempletDao extends BaseDao<SmsTemplet>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * 根据模板类型统计数据
+	 * @param smsTemplet
+	 * @return
+	 */
+	public List<SmsTempletCountVo> selectListCountGroupByType(SmsTemplet smsTemplet);
+	
+	/**
+	 * 根据审核状态统计数据
+	 * @param smsTemplet
+	 * @return
+	 */
+	public List<SmsTempletCountVo> selectListCountGroupByAuditStatus(SmsTemplet smsTemplet);
 }
