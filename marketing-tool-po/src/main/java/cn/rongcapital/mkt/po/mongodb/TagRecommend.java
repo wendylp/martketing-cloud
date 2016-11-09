@@ -46,6 +46,9 @@ public class TagRecommend implements Serializable {
     
     private Integer seq;
     
+    @Field(value = "search_mod")
+    private Integer searchMod;
+    
     public TagRecommend() {}
     
     public TagRecommend(String id, String tagId, String tagName, List<String> tagList, int status,
@@ -162,6 +165,15 @@ public class TagRecommend implements Serializable {
 
     public void setSeq(Integer seq) {
         this.seq = seq;
+    }
+    
+    
+    public Integer getSearchMod() {
+        return searchMod;
+    }
+
+    public void setSearchMod(Integer searchMod) {
+        this.searchMod = searchMod;
     }
 
     @Override
