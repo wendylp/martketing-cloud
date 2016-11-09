@@ -158,6 +158,14 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
             columnList.add(cloMap);
         }
 
+        //显示反馈提交时间
+        cloMap = new LinkedHashMap<>();
+        cloMap.put("col_id", contactTemplateList.size());
+        cloMap.put("col_name", "反馈提交时间");
+        cloMap.put("col_code", "commit_time");
+        filedNameList.add("commit_time");
+        columnList.add(cloMap);
+        
         // 选择具体的联系人
         contact.setContactTemplId(contact_id);
 
@@ -251,6 +259,8 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
                         map.put(filedName, item.getMaritalStatus());
                     }
                 }
+
+                map.put("commit_time", DateUtil.getStringFromDate(item.getCommitTime(), "yyyy-MM-dd HH:mm:ss"));
                 map.put("commit_id", item.getId());
                 result.getData().add(map);
             }
