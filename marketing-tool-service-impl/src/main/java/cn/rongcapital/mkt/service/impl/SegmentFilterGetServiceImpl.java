@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.vo.in.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +36,6 @@ import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
-import cn.rongcapital.mkt.vo.in.SegmentFilterCondition;
-import cn.rongcapital.mkt.vo.in.SegmentFilterCountIn;
-import cn.rongcapital.mkt.vo.in.SegmentFilterSumCondition;
-import cn.rongcapital.mkt.vo.in.SegmentFilterSumIn;
 import cn.rongcapital.mkt.vo.out.SegmentAreaCountOut;
 import cn.rongcapital.mkt.vo.out.SegmentDimensionCountOut;
 import cn.rongcapital.mkt.vo.out.SystemTagFilterOut;
@@ -471,7 +467,11 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		out.setTotal(dataList.size());
 		out.getData().addAll(dataList);
 	}
-	
-	
+
+	@Override
+	public BaseOutput getSegmentFilterResult(TagGroupsIn tagGroupsIn) {
+
+		return null;
+	}
 
 }

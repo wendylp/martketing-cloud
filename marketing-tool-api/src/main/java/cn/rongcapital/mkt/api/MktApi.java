@@ -1372,6 +1372,18 @@ public class MktApi {
 	}
 
 	/**
+	 * @功能简述: 细分漏斗过滤
+	 * @param:
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.segment.filter.get ")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput segmentFilterGet(TagGroupsIn tagGroupsIn, @Context SecurityContext securityContext) {
+		return segmentFilterGetService.getSegmentFilterResult(tagGroupsIn);
+	}
+
+	/**
 	 * @功能简述: 获取后台任务列表
 	 * @author nianjun
 	 * @param:
