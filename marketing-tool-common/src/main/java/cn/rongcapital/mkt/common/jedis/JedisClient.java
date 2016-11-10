@@ -479,7 +479,28 @@ public class JedisClient {
         }
     }
 	
+    public static Set<String> sinter(final String... keys) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        try {
+            return jedis.sinter(keys);
+        } catch (Exception e) {
+            throw new JedisException("sinter异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
 	
+    public static Set<String> sunion(final String... keys) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        try {
+            return jedis.sunion(keys);
+        } catch (Exception e) {
+            throw new JedisException("sunion异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
+    
 	public static void main(String[] args) throws JedisException {
 
 		 Jedis jedis = JedisConnectionManager.getConnection();
