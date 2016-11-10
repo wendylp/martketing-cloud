@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.TagValueCount;
+import redis.clients.jedis.Jedis;
 
 /*************************************************
  * @功能简述: 将标签信息保存到Redis中
@@ -25,10 +25,19 @@ import cn.rongcapital.mkt.po.TagValueCount;
  * @复审人:
  *************************************************/
 @Service
-public class SaveTagDataToRedis implements TaskService{
+public class SaveTagDataToRedisServiceImpl implements TaskService{
 	
 	
- private Logger logger = LoggerFactory.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(getClass());
+ 
+	private static final String REDIS_COVER_KEY_PREFIX = "tagcover:";
+	
+	private static final String REDIS_IDS_KEY_PREFIX = "tagcoverid:";
+	
+	private static final String IS_TAG = "1";
+	
+	private static final String TAG_DEFUALT_ORDER = "-1";
+ 
 	 
 	@Autowired
 	private TagValueCountDao tagValueCountDao;
@@ -44,7 +53,10 @@ public class SaveTagDataToRedis implements TaskService{
 			for (TagValueCount tagInfo : tagValueCountList) {
 				Map<String, String> paramMap = getParamMap(tagInfo);
 				String redisKey = tagInfo.getTagValueSeq();
-				JedisClient.hmset(redisKey, paramMap);
+				redisKey = REDIS_COVER_KEY_PREFIX+redisKey;
+				Jedis redis = RedistSetDBUtil.getRedisInstance();
+				redis.hmset(redisKey, paramMap);
+				RedistSetDBUtil.closeRedisConnection(redis);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,37 +76,26 @@ public class SaveTagDataToRedis implements TaskService{
 		
 		Map<String, String> paramMap = new HashMap<>(); 
 		try {
-			//标签值
-			String tagValue = tagInfo.getTagValue();
-			//标签值id
 			String tagValueSeq = tagInfo.getTagValueSeq();
-			//标签id
-			String tagId = tagInfo.getTagId();
 			//标签标识
 			String isTag = tagInfo.getIsTag();
-			//标签路径
-			String tagPath = tagInfo.getTagPath();
-			//标签名称
-			String tagName = tagInfo.getTagName();
-			//标签数量
-			String tagCount = tagInfo.getValueCount().toString();
-			if(isTag.equals("1")){
-				paramMap.put("tagValueOrder", "-1");
+			if(isTag.equals(IS_TAG)){
+				paramMap.put(RedisKey.TAG_VALUE_ORDER, TAG_DEFUALT_ORDER);
 			}else{
 				//标签排序
 				String order = tagValueSeq.substring(tagValueSeq.indexOf("_")+1,tagValueSeq.length());
-				paramMap.put("tagValueOrder", order);
+				paramMap.put(RedisKey.TAG_VALUE_ORDER, order);
 			}
 			//封装参数
-			paramMap.put("tagid", tagValueSeq);
-			paramMap.put("tagname", tagName);
-			paramMap.put("tagpath", tagPath);
-			paramMap.put("tagValue", tagValue);
-			paramMap.put("tagvalueid", tagValueSeq);
-			paramMap.put("coverCount", tagCount);
-			paramMap.put("IsTagValue", isTag);
-			paramMap.put("overUpdateTime", sdf.format(new Date()));
-			paramMap.put("TagCoverID", tagId +":"+tagValueSeq);
+			paramMap.put(RedisKey.TAG_ID, tagInfo.getTagId());
+			paramMap.put(RedisKey.TAG_NAME, tagInfo.getTagName());
+			paramMap.put(RedisKey.TAG_PATH, tagInfo.getTagPath());
+			paramMap.put(RedisKey.TAG_VALUE, tagInfo.getTagValue());
+			paramMap.put(RedisKey.TAG_VALUE_ID, tagValueSeq);
+			paramMap.put(RedisKey.COVER_COUNT, tagInfo.getValueCount().toString());
+			paramMap.put(RedisKey.IS_TAG_VALUE, isTag);
+			paramMap.put(RedisKey.OVER_UPDATE_TIME, sdf.format(new Date()));
+			paramMap.put(RedisKey.TAG_COVER_ID, REDIS_IDS_KEY_PREFIX+tagValueSeq);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Redis存放标签信息，获取标签信息数据出现异常------------->"+e.getMessage(), e);

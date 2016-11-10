@@ -19,7 +19,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import com.mongodb.WriteResult;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.dao.SystemTagResultDao;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -28,6 +27,7 @@ import cn.rongcapital.mkt.po.SystemTagResult;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Tag;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
+import redis.clients.jedis.Jedis;
 
 /*************************************************
  * @功能简述: 系统标签同步父类
@@ -39,6 +39,8 @@ import cn.rongcapital.mkt.po.mongodb.TagRecommend;
  * @复审人:
  *************************************************/
 public class BaseSystemTagSyn {
+	
+	 private static final String REDIS_IDS_KEY_PREFIX = "tagcoverid:";
 	
 	 private Logger logger = LoggerFactory.getLogger(getClass());
 	 
@@ -125,6 +127,7 @@ public class BaseSystemTagSyn {
 					threadPoolTaskExecutor.execute(thread);
 				}
 				while(true){
+					//获取线程池中活动线程数
 					int threadActiveCount = threadPoolTaskExecutor.getActiveCount();
 					if(threadActiveCount == 0){
 						//存入Redis
@@ -198,7 +201,7 @@ public class BaseSystemTagSyn {
 	 */
 	private String getKey(String tagID,String tagValue){
 		String tagValueId = tagValueCountDao.selectTagValueId(tagID,tagValue);
-		return tagID+":"+tagValueId;
+		return REDIS_IDS_KEY_PREFIX+tagValueId;
 	}
 	
 	/**
@@ -219,7 +222,9 @@ public class BaseSystemTagSyn {
 			for (String key : keySet) {
 				Vector<String> vector = dataMap.get(key);
 				String[] idArray = (String[])vector.toArray(new String[vector.size()]);
-				JedisClient.sadd(key, idArray);
+				Jedis redis = RedistSetDBUtil.getRedisInstance();
+				redis.sadd(key, idArray);
+				RedistSetDBUtil.closeRedisConnection(redis);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
