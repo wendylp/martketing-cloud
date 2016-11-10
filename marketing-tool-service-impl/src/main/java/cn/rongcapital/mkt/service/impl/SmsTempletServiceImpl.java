@@ -206,6 +206,10 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			}else{
 				smsTempletDao.insert(smsTemplet);
 			}
+			List<Object> smsTemplets = new ArrayList<Object>();
+			smsTemplets.add(smsTemplet);
+			output.setData(smsTemplets);
+			output.setDate(DateUtil.getStringFromDate(new Date(),FORMAT_STRING));
 		}else{
 			output.setCode(ApiErrorCode.PARAMETER_ERROR.getCode());
 			output.setMsg(ApiErrorCode.PARAMETER_ERROR.getMsg());
