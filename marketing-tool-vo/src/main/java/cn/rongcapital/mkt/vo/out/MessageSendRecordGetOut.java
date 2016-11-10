@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cn.rongcapital.mkt.po;
+package cn.rongcapital.mkt.vo.out;
 
 import java.util.Date;
 

@@ -99,7 +99,7 @@
 	<!-- 其它SQL语句 -->
 	
 	<!-- 返回当前任务的发送记录列表(如果手机号为空则查本次任务全部记录) -->
-    <select id="messageSendRecordGet" parameterType="cn.rongcapital.mkt.po.SmsTaskDetailState" resultType="cn.rongcapital.mkt.po.MessageSendRecordGetOut">
+    <select id="messageSendRecordGet" parameterType="cn.rongcapital.mkt.po.SmsTaskDetailState" resultType="cn.rongcapital.mkt.vo.out.MessageSendRecordGetOut">
          SELECT detail.id as id,detail.sms_task_head_id as smsTaskHeadId,detail.send_mobile as sendMobile,detail.receive_mobile as receiveMobile, detail.send_message as sendMessage, detail.send_time as sendTime, detailState.sms_task_send_status as smsTaskSendStatus
          FROM sms_task_detail AS detail LEFT JOIN sms_task_detail_state AS detailState on detail.id = detailState.sms_task_detail_id
          <where>
