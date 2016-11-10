@@ -1,6 +1,10 @@
 package cn.rongcapital.mkt.job.tag.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -15,7 +19,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import com.mongodb.WriteResult;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.dao.SystemTagResultDao;
+import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SysTagView;
 import cn.rongcapital.mkt.po.SystemTagResult;
@@ -44,6 +50,9 @@ public class BaseSystemTagSyn {
 
 	 @Autowired
 	 protected ThreadPoolTaskExecutor threadPoolTaskExecutor;
+	 
+	 @Autowired
+	 private TagValueCountDao tagValueCountDao;
 	 
 	 /**
 	  * 获取标签视图映射集合
@@ -82,21 +91,46 @@ public class BaseSystemTagSyn {
 				if(tagRecommend == null){
 					return;
 				}
-
+				
+				//存放List
+				Map<String, Vector<String>> paramMap = new HashMap<>();
 				for (SystemTagResult systemTagResult : resultList) {
 
 					Runnable thread = new Runnable() {
 
 						@Override
 						public void run() {
+							//标签Id
+							String tagId = tagRecommend.getTagId();
+							//标签值
+							String tagValue = systemTagResult.getTagValue();
+							//keyId
+							Integer keyId = systemTagResult.getKeyId();
 							// 封装Tag属性
-							Tag tag = new Tag(tagRecommend.getTagId(), tagRecommend.getTagName(), tagRecommend.getTagNameEng(),
-									systemTagResult.getTagValue(), 1);
-							startSynchTag(systemTagResult.getKeyId(), tag);
+							Tag tag = new Tag(tagId, tagRecommend.getTagName(), tagRecommend.getTagNameEng(),
+									tagValue, 1);
+							
+							//获取redis Key
+							String key = getKey(tagId, tagValue);
+							Vector<String> vector = paramMap.get(key);
+							if(null == vector){
+								vector = getVector();
+								paramMap.put(key, vector);
+							}
+							vector.add(String.valueOf(keyId));
+							
+							startSynchTag(keyId,tag);
 						}
 					};
 					threadPoolTaskExecutor.execute(thread);
-
+				}
+				while(true){
+					int threadActiveCount = threadPoolTaskExecutor.getActiveCount();
+					if(threadActiveCount == 0){
+						//存入Redis
+						saveDataToReids(paramMap);
+						break;
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -154,5 +188,43 @@ public class BaseSystemTagSyn {
 		}
 		logger.info("初始化Mongo tag_list字段方法执行结束---------->");
 	}
+	
+	
+	/**
+	 * 拼接Redis key
+	 * @param tagID
+	 * @param tagValue
+	 * @return
+	 */
+	private String getKey(String tagID,String tagValue){
+		String tagValueId = tagValueCountDao.selectTagValueId(tagID,tagValue);
+		return tagID+":"+tagValueId;
+	}
+	
+	/**
+	 * 获取集合
+	 * @return
+	 */
+	private Vector<String> getVector(){
+		return new Vector<>();
+	}
+	
+	/**
+	 * 保存数据到Redis
+	 * @param dataMap
+	 */
+	private void saveDataToReids(Map<String, Vector<String>> dataMap){
+		try {
+			Set<String> keySet = dataMap.keySet();
+			for (String key : keySet) {
+				Vector<String> vector = dataMap.get(key);
+				String[] idArray = (String[])vector.toArray(new String[vector.size()]);
+				JedisClient.sadd(key, idArray);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 }

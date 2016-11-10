@@ -20,7 +20,7 @@
 		    	<if test="tagValueSeq != null"><![CDATA[ AND tag_value_seq = #{tagValueSeq}]]></if>
 		    	<if test="tagPath != null"><![CDATA[ AND tag_path = #{tagPath}]]></if>
 		    	<if test="isTag != null"><![CDATA[ AND is_tag = #{isTag}]]></if>
-		    	<if test="search_mod != null"><![CDATA[ AND search_mod = #{searchMod}]]></if>
+		    	<if test="searchMod != null"><![CDATA[ AND search_mod = #{searchMod}]]></if>
 		</where>
 	</sql>
 	
@@ -40,7 +40,7 @@
 		    	<if test="tagValueSeq != null"><![CDATA[tag_value_seq = #{tagValueSeq},]]></if>
 		    	<if test="tagPath != null"><![CDATA[tag_path = #{tagPath},]]></if>
 		    	<if test="isTag != null"><![CDATA[is_tag = #{isTag},]]></if>
-		    	<if test="search_mod != null"><![CDATA[search_mod = #{searchMod}]]></if>
+		    	<if test="searchMod != null"><![CDATA[search_mod = #{searchMod}]]></if>
 		</set>
 	</sql>
 
