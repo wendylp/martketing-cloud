@@ -17,6 +17,10 @@ public class SmsMaterialOut {
     private String smsSignContent;
     private Integer smsTemplateId;
     private String smsTemplateContent;
+    private String smsTemplateName;
+    private String createTime;
+    private Integer editStatus;
+    private Integer deleteStatus;
 
     @JsonProperty("id")
     public Long getId() {
@@ -88,5 +92,41 @@ public class SmsMaterialOut {
 
     public void setSmsTemplateContent(String smsTemplateContent) {
         this.smsTemplateContent = smsTemplateContent;
+    }
+
+    @JsonProperty("sms_template_name")
+    public String getSmsTemplateName() {
+        return smsTemplateName;
+    }
+
+    public void setSmsTemplateName(String smsTemplateName) {
+        this.smsTemplateName = smsTemplateName;
+    }
+
+    @JsonProperty("create_time")
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    @JsonProperty("edit_status")
+    public Integer getEditStatus() {
+        return editStatus;
+    }
+
+    public void setEditStatus(Integer editStatus) {
+        this.editStatus = editStatus;
+    }
+
+    @JsonProperty("delete_status")
+    public Integer getDeleteStatus() {
+        return deleteStatus;
+    }
+
+    public void setDeleteStatus(Integer deleteStatus) {
+        this.deleteStatus = deleteStatus;
     }
 }
