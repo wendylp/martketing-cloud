@@ -27,6 +27,9 @@ public class SmsTempletIn {
 
     @NotEmpty
     private String content;
+    
+    @NotEmpty
+    private String name;
 
     @JsonProperty("id")
     public Integer getId() {
@@ -90,6 +93,13 @@ public class SmsTempletIn {
 	public void setContent(String content) {
 		this.content = content;
 	}
-    
+	@JsonProperty("name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
     
 }
