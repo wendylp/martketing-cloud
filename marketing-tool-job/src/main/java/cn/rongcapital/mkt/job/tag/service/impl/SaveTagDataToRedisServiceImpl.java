@@ -71,7 +71,7 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 	 */
 	private Map<String, String> getParamMap(TagValueCount tagInfo){
 		//日期格式化
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd MM:hh:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		Map<String, String> paramMap = new HashMap<>(); 
 		try {
