@@ -10,12 +10,19 @@ public interface SmsMaterialService {
 	 * @param smsMaterialIn
 	 * @return
 	 */
-	public BaseOutput insertOrUpdateSmsMaterial(SmsMaterialIn smsMaterialIn);
+	BaseOutput insertOrUpdateSmsMaterial(SmsMaterialIn smsMaterialIn);
 	
 	/**
 	 * 删除素材
 	 * @param id
 	 * @return
 	 */
-	public BaseOutput deleteSmsMaterial(Integer id);
+	BaseOutput deleteSmsMaterial(Integer id);
+
+	/**
+	 * 判断素材是否可以删除
+	 * @param id
+	 * @return
+	 */
+	boolean smsMaterialValidate(Integer id);
 }

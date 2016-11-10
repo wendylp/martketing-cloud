@@ -112,6 +112,13 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<select id="selectListByKeyword" parameterType="cn.rongcapital.mkt.po.SmsMaterial" resultType="cn.rongcapital.mkt.po.SmsMaterial">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1
+		<if test="name != null"><![CDATA[AND name like CONCAT('%',#{name},'%')]]></if>
+		LIMIT #{startIndex},#{pageSize}
+	</select>
 	
 </mapper>
