@@ -8,7 +8,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.dao.TagValueCountDao;
@@ -38,10 +37,6 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 	private static final String IS_TAG = "1";
 	
 	private static final String TAG_DEFUALT_ORDER = "-1";
-	
-	@Autowired
-	Environment env;
- 
 	 
 	@Autowired
 	private TagValueCountDao tagValueCountDao;
@@ -61,8 +56,6 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 				Jedis redis = RedistSetDBUtil.getRedisInstance();
 				redis.hmset(redisKey, paramMap);
 				RedistSetDBUtil.closeRedisConnection(redis);
-				
-				test();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,15 +101,6 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 		}
 		
 		return paramMap;
-	}
-	
-	private void test(){
-		try {
-			String url = env.getProperty("test.connect");
-			logger.info("测试读取外部配置文件+++++++++++++++++++++++++++++++"+url);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 }
