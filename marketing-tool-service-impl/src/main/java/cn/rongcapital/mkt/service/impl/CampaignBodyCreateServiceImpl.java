@@ -635,6 +635,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	}
 	private TaskSchedule initTaskActionSendWechatH5(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		TaskSchedule taskSchedule = new TaskSchedule();
+		taskSchedule.setTaskName(ApiConstant.TASK_NAME_CAMPAIGN_ACTION_PUBWECHAT_SEND_H5);
 		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_ACTION_PUBWECHAT_SEND_H5);
 		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
 		taskSchedule.setCampaignHeadId(campaignHeadId);

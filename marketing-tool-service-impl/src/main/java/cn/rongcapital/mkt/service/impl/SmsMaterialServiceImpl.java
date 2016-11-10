@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
@@ -54,6 +56,10 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
 			}else{
 				smsMaterialDao.insert(smsMaterial);
 			}
+			List<Object> smsMaterials = new ArrayList<Object>();
+			smsMaterials.add(smsMaterial);
+			output.setData(smsMaterials);
+			output.setDate(DateUtil.getStringFromDate(new Date(),FORMAT_STRING));			
 		}else{
 			output.setCode(ApiErrorCode.PARAMETER_ERROR.getCode());
 			output.setMsg(ApiErrorCode.PARAMETER_ERROR.getMsg());

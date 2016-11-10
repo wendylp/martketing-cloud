@@ -42,6 +42,8 @@ public class TaskManager {
 
     private static final int pageSize = 100;
     
+    private final String TASK_SCHEDULE_SERVICE_NAME="campaignActionPubWechatSendH5Task";
+    
     private static final ConcurrentHashMap<String, ScheduledFuture<?>> taskMap =
                     new ConcurrentHashMap<String, ScheduledFuture<?>>();
 
@@ -143,11 +145,17 @@ public class TaskManager {
 
     private TaskRunLog addTaskLog(TaskSchedule taskSchedulePo) {
         TaskRunLog taskRunLogT = new TaskRunLog();
-        taskRunLogT.setTaskName("Task_" + taskSchedulePo.getTaskName() + "_"
-                        + RandomStringUtils.randomAlphabetic(5).toUpperCase());
+        if(TASK_SCHEDULE_SERVICE_NAME.equals(taskSchedulePo.getServiceName())){
+            taskRunLogT.setTaskName("Task_" + taskSchedulePo.getServiceName() + "_"
+                    + RandomStringUtils.randomAlphabetic(5).toUpperCase());
+            taskRunLogT.setTaskType((byte)TaskTypeEnum.DISPLAY.getCode());
+        }else{
+            taskRunLogT.setTaskName("Task_" + taskSchedulePo.getTaskName() + "_"
+                    + RandomStringUtils.randomAlphabetic(5).toUpperCase());
+            taskRunLogT.setTaskType((byte)TaskTypeEnum.HIDE.getCode());
+        }
         taskRunLogT.setTaskId(taskSchedulePo.getId());
-        taskRunLogT.setStartTime(new Date());
-        taskRunLogT.setTaskType((byte)TaskTypeEnum.HIDE.getCode());
+        taskRunLogT.setStartTime(new Date());        
         taskRunLogDao.insert(taskRunLogT);
         return taskRunLogT;
     }
