@@ -511,6 +511,9 @@ public class MktApi {
 	
 	@Autowired
 	private TagSystemTreeListGetService tagSystemTreeListGetService;
+	
+	@Autowired
+	private TagSystemFlagListGetService tagSystemFlagListGetService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -2209,8 +2212,23 @@ public class MktApi {
      */
     @GET
     @Path("/mkt.tag.system.tree.list.get")
-    public BaseOutput tagSystemTreeListGet() {
+    public BaseOutput tagSystemTreeListGet(@NotEmpty @QueryParam("user_token") String userToken,
+                    @QueryParam("ver") String ver) {
         return tagSystemTreeListGetService.getTagSystemTreeList();
+    }
+
+    /**
+     * 获取推荐标签
+     * 
+     * @return
+     * @author shuiyangyang
+     * @Date 2016-11-09
+     */
+    @GET
+    @Path("/mkt.tag.system.flag.list.get")
+    public BaseOutput tagSystemFlagListGet(@NotEmpty @QueryParam("user_token") String userToken,
+                    @QueryParam("ver") String ver) {
+        return tagSystemFlagListGetService.getTagSystemFlagList();
     }
 
 }
