@@ -8,6 +8,7 @@ import cn.rongcapital.mkt.service.SegmentSecondaryTaglistSearchService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SystemValueIn;
 import cn.rongcapital.mkt.vo.in.TagListSecondarySearchIn;
+import cn.rongcapital.mkt.vo.out.SearchTagValueOut;
 import cn.rongcapital.mkt.vo.out.SystemTagValueOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,13 +47,14 @@ public class SegmentSecondaryTaglistSearchServiceImpl implements SegmentSecondar
         }
 
         for(TagValueCount tagValueCount : tagValueCountList){
-            if(StringUtils.isEmpty(tagValueCount.getTagValueSeq())) continue;
+            if(tagValueCount.getIsTag().equals("1")) continue;
             boolean flag = isTagValueAlreadySelected(tagValueCount.getTagValue(),tagListSecondarySearchIn.getSelectTagValueList());
             if(!flag){
-                SystemTagValueOut systemTagValueOut = new SystemTagValueOut();
-                systemTagValueOut.setTagValue(tagValueCount.getTagValue());
-                systemTagValueOut.setTagValueId(tagValueCount.getTagValueSeq());
-                baseOutput.getData().add(systemTagValueOut);
+                SearchTagValueOut searchTagValueOut = new SearchTagValueOut();
+                searchTagValueOut.setTagValue(tagValueCount.getTagValue());
+                searchTagValueOut.setTagValueSeq(tagValueCount.getTagValueSeq());
+                searchTagValueOut.setValueCount(tagValueCount.getValueCount().intValue());
+                baseOutput.getData().add(searchTagValueOut);
             }
         }
 
