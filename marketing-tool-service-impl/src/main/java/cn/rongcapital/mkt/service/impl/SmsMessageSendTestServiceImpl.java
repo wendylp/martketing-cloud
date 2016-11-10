@@ -44,7 +44,7 @@ public class SmsMessageSendTestServiceImpl implements SmsMessageSendTestService{
         Map<Long, String[]> SmsBatchMap = new LinkedHashMap<Long, String[]>();
         
         for(int i = 0; i < receiveMobileArrays.length; i++) {
-            String[] sms = {receiveMobileArrays[1],sendMessage};
+            String[] sms = {receiveMobileArrays[i],sendMessage};
             SmsBatchMap.put(Long.valueOf(i), sms);
         }
         Map<Long, Integer> sendResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
