@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,view_name as viewName,view_desc as viewDesc,status as status,tag_name as tagName]]>
+		<![CDATA[ id as id,view_name as viewName,view_desc as viewDesc,status as status,tag_name as tagName,flag as flag,field1 as field1,field2 as field2,field3 as field3]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -18,6 +18,10 @@
 		    	<if test="viewDesc != null"><![CDATA[ AND view_desc = #{viewDesc}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="tagName != null"><![CDATA[ AND tag_name = #{tagName}]]></if>
+		    	<if test="flag != null"><![CDATA[ AND flag = #{flag}]]></if>
+		    	<if test="field1 != null"><![CDATA[ AND field1 = #{field1}]]></if>
+		    	<if test="field2 != null"><![CDATA[ AND field2 = #{field2}]]></if>
+		    	<if test="field3 != null"><![CDATA[ AND field3 = #{field3}]]></if>
 		</where>
 	</sql>
 	
@@ -33,19 +37,27 @@
 		    	<if test="viewName != null"><![CDATA[view_name = #{viewName},]]></if>
 		    	<if test="viewDesc != null"><![CDATA[view_desc = #{viewDesc},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
-		    	<if test="tagName != null"><![CDATA[tag_name = #{tagName}]]></if>
+		    	<if test="tagName != null"><![CDATA[tag_name = #{tagName},]]></if>
+		    	<if test="flag != null"><![CDATA[flag = #{flag},]]></if>
+		    	<if test="field1 != null"><![CDATA[field1 = #{field1},]]></if>
+		    	<if test="field2 != null"><![CDATA[field2 = #{field2},]]></if>
+		    	<if test="field3 != null"><![CDATA[field3 = #{field3}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SysTagView" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO sys_tag_view (view_name,view_desc,tag_name)
+			INSERT INTO sys_tag_view (view_name,view_desc,tag_name,flag,field1,field2,field3)
 			VALUES
 			(
 			  #{viewName},
 			  #{viewDesc},
-			  #{tagName}
+			  #{tagName},
+			  #{flag},
+			  #{field1},
+			  #{field2},
+			  #{field3}
 			)
 		]]>
 	</insert>
