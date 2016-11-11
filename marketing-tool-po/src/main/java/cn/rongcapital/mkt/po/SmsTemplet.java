@@ -65,6 +65,29 @@ public class SmsTemplet extends BaseQuery{
         this.auditStatus = auditStatus;
         this.content = content;
     }
+    
+    public SmsTemplet(Integer id, String code, Byte channelType, Byte type, Byte auditStatus,
+                    String auditor, Byte status, String creator, Date createTime, String updateUser,
+                    Date updateTime, String name, String auditReason, Date auditTime,
+                    String content) {
+        super();
+        this.id = id;
+        this.code = code;
+        this.channelType = channelType;
+        this.type = type;
+        this.auditStatus = auditStatus;
+        this.auditor = auditor;
+        this.status = status;
+        this.creator = creator;
+        this.createTime = createTime;
+        this.updateUser = updateUser;
+        this.updateTime = updateTime;
+        this.name = name;
+        this.auditReason = auditReason;
+        this.auditTime = auditTime;
+        this.content = content;
+    }
+
 
     public Integer getId() {
         return id;
