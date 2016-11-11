@@ -105,9 +105,6 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 					
 					// 排序
 					XSSFCell tagEight = xssfRow.getCell(8);
-					
-					// 搜索模型
-                    XSSFCell tagNine = xssfRow.getCell(9);
 
 					if (tagTwo != null && tagFive != null) {
 						String tagName = getCellValue(tagTwo);
@@ -122,8 +119,7 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 
 						String tagFlag = getCellValue(tagSeven);
 						String seq = getCellValue(tagEight);
-						String searchMod = getCellValue(tagNine);
-						uuid3 = insertTagRecommendMongoDB(tagName, tagNameEng, tagDesc, tagValue, tagSource, tagFlag, seq, searchMod);
+						uuid3 = insertTagRecommendMongoDB(tagName, tagNameEng, tagDesc, tagValue, tagSource, tagFlag, seq);
 //						uuid3 = tagName;
 					}
 					// -------------------------------------------------
@@ -256,7 +252,7 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 	}
 
 	public String insertTagRecommendMongoDB(String tagName, String tagNameEng, String tagDesc, String tagValue, String source,
-			String flag, String seq , String searchMod) {
+			String flag, String seq ) {
 		TagRecommend tagRecommend = new TagRecommend();
 
 		String uuid = GenerateUUid.generateShortUuid();
@@ -277,7 +273,6 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 		tagRecommend.setUpdateTime(new Date());
 		tagRecommend.setSource(source);
 		tagRecommend.setSeq(Integer.valueOf(seq));
-        tagRecommend.setSearchMod(Integer.valueOf(searchMod));
 
 		String[] split = tagValue.split("/");
 		List<String> tagList = java.util.Arrays.asList(split);
