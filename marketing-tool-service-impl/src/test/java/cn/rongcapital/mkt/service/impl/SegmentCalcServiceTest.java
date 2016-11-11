@@ -1,4 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.service.SegmentCalcService;
 import cn.rongcapital.mkt.service.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
@@ -44,10 +45,11 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
     }
     
     @Test
-    public void testCalcSegmentCover()  {
+    public void testCalcSegmentCover() throws Exception {
         logger.info("测试方法: calcSegmentCover");  
        
-        segmentCalcService.calcSegmentCover(segment);           
+        segmentCalcService.calcSegmentCover(segment);  
+        segmentCalcService.saveSegmentCover() ;
         
     }
     
@@ -185,6 +187,7 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
         groups.add(tagGroup1);
         groups.add(tagGroup2);
         segment.setFilterGroups(groups);
+        segment.setSegmentHeadId(888L);
         tagGroup1.setGroupChange(1);
         tagGroup1.setGroupId("000FFF");
         tagGroup1.setGroupName("testGroup");

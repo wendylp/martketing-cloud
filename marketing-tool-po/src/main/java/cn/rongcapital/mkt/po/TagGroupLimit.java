@@ -2,8 +2,13 @@ package cn.rongcapital.mkt.po;
 
 import java.util.Date;
 
-public class TagGroupLimit {
-    private Integer id;
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
+public class TagGroupLimit extends BaseQuery{
+	
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
 
     private Integer groupLimit;
 
