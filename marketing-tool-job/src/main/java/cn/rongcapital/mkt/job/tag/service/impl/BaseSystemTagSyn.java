@@ -68,6 +68,7 @@ public class BaseSystemTagSyn {
 	protected void getTagViewList(BaseDao<SysTagView> targetDao) {
 		Jedis redis = null;
 		try {
+			redis = RedistSetDBUtil.getRedisInstance();
 			SysTagView sysTagView = new SysTagView();
 			sysTagView.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 			sysTagView.setPageSize(null);
@@ -75,11 +76,10 @@ public class BaseSystemTagSyn {
 			// 所有人员Id
 			Set<String> midSet = new HashSet<>();
 			for (SysTagView sys : tagViewList) {
-				this.getSysTagResult(sys, midSet);
+				this.getSysTagResult(sys,midSet,redis);
 			}
 			// 将所有人员Id保存到Redis中
 			String[] idsArray = (String[]) midSet.toArray(new String[midSet.size()]);
-			redis = RedistSetDBUtil.getRedisInstance();
 			redis.sadd(RedisKey.ALL_DATAPARY_MID, idsArray);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,7 +90,7 @@ public class BaseSystemTagSyn {
 		}
 	}
 
-	protected void getSysTagResult(SysTagView sys, Set<String> midSet) {
+	protected void getSysTagResult(SysTagView sys, Set<String> midSet,Jedis redis) {
 		try {
 			String viewName = sys.getViewName(); // 视图名称
 			String tagName = sys.getTagName(); // 标签名称
@@ -150,7 +150,7 @@ public class BaseSystemTagSyn {
 				int threadActiveCount = threadPoolTaskExecutor.getActiveCount();
 				if (threadActiveCount == 0) {
 					// 存入Redis
-					saveDataToReids(paramMap);
+					saveDataToReids(paramMap,redis);
 					break;
 				}
 			}
@@ -233,23 +233,18 @@ public class BaseSystemTagSyn {
 	 * 
 	 * @param dataMap
 	 */
-	private void saveDataToReids(Map<String, Vector<String>> dataMap) {
-		Jedis redis = null;
+	private void saveDataToReids(Map<String, Vector<String>> dataMap,Jedis redis) {
 		try {
 			Set<String> keySet = dataMap.keySet();
 			for (String key : keySet) {
 				Vector<String> vector = dataMap.get(key);
 				String[] idArray = (String[]) vector.toArray(new String[vector.size()]);
-				redis = RedistSetDBUtil.getRedisInstance();
 				redis.sadd(key, idArray);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			if(redis != null){
-				JedisConnectionManager.closeConnection(redis);
-			}
-		}
+			logger.error("保存数据到Redis方法出现异常---------->"+e.getMessage(),e);
+		} 
 	}
 
 }
