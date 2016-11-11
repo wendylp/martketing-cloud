@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ city_id as cityId,province_id as provinceId,city_code as cityCode,city_nameC as cityNamec,city_nameE as cityNamee,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ city_id as cityId,province_id as provinceId,city_code as cityCode,province_nameC as provinceNamec,city_nameC as cityNamec,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -16,8 +16,8 @@
 		    	<if test="cityId != null"><![CDATA[ AND city_id = #{cityId}]]></if>
 		    	<if test="provinceId != null"><![CDATA[ AND province_id = #{provinceId}]]></if>
 		    	<if test="cityCode != null"><![CDATA[ AND city_code = #{cityCode}]]></if>
+		    	<if test="provinceNamec != null"><![CDATA[ AND province_nameC = #{provinceNamec}]]></if>
 		    	<if test="cityNamec != null"><![CDATA[ AND city_nameC = #{cityNamec}]]></if>
-		    	<if test="cityNamee != null"><![CDATA[ AND city_nameE = #{cityNamee}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
@@ -36,8 +36,8 @@
 		    	<if test="cityId != null"><![CDATA[city_id = #{cityId},]]></if>
 		    	<if test="provinceId != null"><![CDATA[province_id = #{provinceId},]]></if>
 		    	<if test="cityCode != null"><![CDATA[city_code = #{cityCode},]]></if>
+		    	<if test="provinceNamec != null"><![CDATA[province_nameC = #{provinceNamec},]]></if>
 		    	<if test="cityNamec != null"><![CDATA[city_nameC = #{cityNamec},]]></if>
-		    	<if test="cityNamee != null"><![CDATA[city_nameE = #{cityNamee},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
@@ -45,14 +45,14 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CityDic" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO city_dic (city_id,province_id,city_code,city_nameC,city_nameE,create_time)
+			INSERT INTO city_dic (city_id,province_id,city_code,province_nameC,city_nameC,create_time)
 			VALUES
 			(
 			  #{cityId},
 			  #{provinceId},
 			  #{cityCode},
+			  #{provinceNamec},
 			  #{cityNamec},
-			  #{cityNamee},
 			  now()
 			)
 		]]>
