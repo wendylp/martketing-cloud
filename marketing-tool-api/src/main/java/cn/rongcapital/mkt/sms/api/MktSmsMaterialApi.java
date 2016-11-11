@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.SmsMaterialService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.sms.in.SmsMaterialDeleteIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsMaterialIn;
 
 @Component
@@ -52,11 +53,11 @@ public class MktSmsMaterialApi {
 	 * @return
 	 * @throws Exception
 	 */
-	@GET
+	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Path("/mkt.sms.smsmaterial.delete")
-	public BaseOutput deleteSmsMaterial(@NotNull @QueryParam("id") Integer id) throws Exception {		
-		return smsMaterialService.deleteSmsMaterial(id);
+	public BaseOutput deleteSmsMaterial(@Valid SmsMaterialDeleteIn smsMaterialDeleteIn) throws Exception {		
+		return smsMaterialService.deleteSmsMaterial(smsMaterialDeleteIn);
 	}
 
 	
