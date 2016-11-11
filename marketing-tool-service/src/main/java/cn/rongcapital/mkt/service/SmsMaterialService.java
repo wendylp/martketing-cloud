@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service;
 
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.sms.in.SmsMaterialDeleteIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsMaterialIn;
 
 public interface SmsMaterialService {
@@ -17,7 +18,7 @@ public interface SmsMaterialService {
 	 * @param id
 	 * @return
 	 */
-	BaseOutput deleteSmsMaterial(Integer id);
+	BaseOutput deleteSmsMaterial(SmsMaterialDeleteIn smsMaterialDeleteIn);
 
 	/**
 	 * 判断素材是否可以删除

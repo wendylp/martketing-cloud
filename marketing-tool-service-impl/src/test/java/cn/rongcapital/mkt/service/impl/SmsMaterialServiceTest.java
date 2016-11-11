@@ -20,6 +20,7 @@ import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.service.SmsMaterialService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.sms.in.SmsMaterialDeleteIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsMaterialIn;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -72,8 +73,9 @@ public class SmsMaterialServiceTest {
      
      @Test
      public void testDeleteSmsMaterial() {
-    	 
-    	 BaseOutput output = smsMaterialService.deleteSmsMaterial(1);
+    	 SmsMaterialDeleteIn smsMaterialDeleteIn = new SmsMaterialDeleteIn();
+    	 smsMaterialDeleteIn.setId(1);
+    	 BaseOutput output = smsMaterialService.deleteSmsMaterial(smsMaterialDeleteIn);
     	// 断言
     	 Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());    	
 
