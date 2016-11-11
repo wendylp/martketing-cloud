@@ -120,4 +120,24 @@
 		WHERE tag_id = #{tagId}
 		<if test="tagValue != null"><![CDATA[ AND tag_value like CONCAT('%',#{tagValue},'%')]]></if>
 	</select>
+	
+	<!-- 模糊搜索标签值和标签名 -->
+	<select id="selectFuzzyTagValue" parameterType="cn.rongcapital.mkt.po.TagValueCount" resultType="cn.rongcapital.mkt.po.TagValueCount">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST" />
+		<include refid="QUERY_FROM_TABLE" />
+		<where>
+			<if test="tagValue != null"><![CDATA[ tag_value like CONCAT('%',#{tagValue},'%')]]></if>
+		</where>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
+	</select>
+	
+	<!-- 模糊搜索标签值和标签名    统计总数 -->
+	<select id="selectFuzzyTagValueCount" parameterType="cn.rongcapital.mkt.po.TagValueCount" resultType="int">
+		<![CDATA[SELECT COUNT(1) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE" />
+		<where>
+			<if test="tagValue != null"><![CDATA[ tag_value like CONCAT('%',#{tagValue},'%')]]></if>
+		</where>
+	</select>
 </mapper>
