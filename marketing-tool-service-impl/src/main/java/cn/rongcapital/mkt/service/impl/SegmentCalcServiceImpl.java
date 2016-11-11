@@ -46,6 +46,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
     private SegmentRedisVO segmentRedis=null; //存储漏斗计算结果
     private String uuid="";    
     private Jedis jedis =null;
+    private ArrayList<String> tempKeys=new ArrayList<String>();
     
     /**
      * 计算整个细分覆盖
@@ -55,16 +56,12 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
        if(segment==null) return;
        uuid=GenerateUUid.generateShortUuid();
        logger.info("uuid:"+ uuid);
-       if(jedis==null) {
-           jedis = JedisConnectionManager.getConnection(); 
-           jedis.select(REDISDB_INDEX);
-       }        
-      
-           segmentRedis=new SegmentRedisVO();
-           segmentRedis.setSegmentCoverCount(0L);
-           segmentRedis.setSegmentCoverIds("");
-           segmentRedis.setSegmentHeadId(segment.getSegmentHeadId());
-           segmentRedis.setSegmentName(segment.getSegmentName());
+           
+       segmentRedis=new SegmentRedisVO();
+       segmentRedis.setSegmentCoverCount(0L);
+       segmentRedis.setSegmentCoverIds("");
+       segmentRedis.setSegmentHeadId(segment.getSegmentHeadId());
+       segmentRedis.setSegmentName(segment.getSegmentName());
            
              
        List<TagGroupsIn> tagGroups=segment.getFilterGroups();
@@ -79,6 +76,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
            }
        }       
        this.loggerSegment();
+       this.clearTempRedisKeys();
        return;
 
     }
@@ -239,7 +237,8 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                         String dstkey=this.generateKeyFromTags(KEY_PREFIX_GROUPINTER,uuid,segmentGroupTags);
                         String[] keys=getCalcTagIds(segmentGroupTags); //使用计算后产生的Ids
                       
-                        jedis.sinterstore(dstkey, keys);                        
+                        jedis.sinterstore(dstkey, keys);  
+                        tempKeys.add(dstkey);
                         Long count=jedis.scard(dstkey);
                         segmentGroup.setGroupCoverIds(dstkey);
                         segmentGroup.setGroupCoverCount(count);
@@ -261,6 +260,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                         String[] keys=getTagValueIds(segmentGroupTagValues);
                         jedis.sunionstore(dstkey, keys);
                         Long count=jedis.scard(dstkey);
+                        tempKeys.add(dstkey);
                         String tagId=segmentGroupTagValues.get(0).getTagId();
                         SegmentGroupTagRedisVO segmentGroupTag=getTag(tagId);
                         segmentGroupTag.setCalcTagCoverIds(dstkey);
@@ -284,6 +284,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                 keys[1]=segmentGroupTag.getCalcTagCoverIds();                
                 jedis.sdiffstore(diffkey, keys);
                 Long count=jedis.scard(diffkey);
+                tempKeys.add(diffkey);
                 segmentGroupTag.setCalcTagCoverCount(count);
                 segmentGroupTag.setCalcTagCoverIds(diffkey);
                 logger.info("===Diff calc Tag tagid="+tagId+" count="+count+" key[0]="+keys[0]+"- key[1]="+keys[1]);
@@ -511,7 +512,22 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
     /**
      * 清除临时产生的redis数据
      */
-    private void clearTempRedis(){
+    private void clearTempRedisKeys() {
+        try{
+            jedis = JedisConnectionManager.getConnection(); 
+            jedis.select(REDISDB_INDEX);
+            if(tempKeys!=null&&tempKeys.size()>0) {
+                String[] keys=new String[tempKeys.size()];
+                keys=tempKeys.toArray(keys);
+                jedis.del(keys);
+                tempKeys.clear();
+            }
+        } catch (Exception e) {
+            logger.info("Del tempKey Exception:"+e.toString());
+            
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
         
     }
 
