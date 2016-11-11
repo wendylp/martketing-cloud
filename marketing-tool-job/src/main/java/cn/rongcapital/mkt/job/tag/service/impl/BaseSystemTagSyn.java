@@ -19,6 +19,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import com.mongodb.WriteResult;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.jedis.JedisConnectionManager;
 import cn.rongcapital.mkt.dao.SystemTagResultDao;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -217,17 +218,18 @@ public class BaseSystemTagSyn {
 	 * @param dataMap
 	 */
 	private void saveDataToReids(Map<String, Vector<String>> dataMap){
+		Jedis redis = RedistSetDBUtil.getRedisInstance();
 		try {
 			Set<String> keySet = dataMap.keySet();
 			for (String key : keySet) {
 				Vector<String> vector = dataMap.get(key);
 				String[] idArray = (String[])vector.toArray(new String[vector.size()]);
-				Jedis redis = RedistSetDBUtil.getRedisInstance();
 				redis.sadd(key, idArray);
-				RedistSetDBUtil.closeRedisConnection(redis);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally{
+			JedisConnectionManager.closeConnection(redis);
 		}
 	}
 	

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.jedis.JedisConnectionManager;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.TagValueCount;
@@ -44,6 +45,7 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 	@Override
 	public void task(Integer taskId) {
 		logger.info("保存标签信息数据到Redis方法开始执行----------->");
+		Jedis redis = RedistSetDBUtil.getRedisInstance();
 		try {
 			TagValueCount tagValueCount = new TagValueCount();
 			tagValueCount.setPageSize(null);
@@ -53,13 +55,13 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 				Map<String, String> paramMap = getParamMap(tagInfo);
 				String redisKey = tagInfo.getTagValueSeq();
 				redisKey = REDIS_COVER_KEY_PREFIX+redisKey;
-				Jedis redis = RedistSetDBUtil.getRedisInstance();
 				redis.hmset(redisKey, paramMap);
-				RedistSetDBUtil.closeRedisConnection(redis);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("保存标签信息数据到Redis方法出现异常-------------->"+e.getMessage(),e);
+		}finally{
+			JedisConnectionManager.closeConnection(redis);
 		}
 		logger.info("保存标签信息数据到Redis方法执行结束----------->");
 	}

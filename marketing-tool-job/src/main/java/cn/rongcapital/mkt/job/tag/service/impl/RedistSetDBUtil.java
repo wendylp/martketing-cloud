@@ -21,9 +21,5 @@ public class RedistSetDBUtil {
 		 jedis.select(REDIS_DATABASE_INDEX);
 		 return jedis;
 	}
-	
-	public static void closeRedisConnection(Jedis jedis){
-		jedis.close();
-	}
 
 }
