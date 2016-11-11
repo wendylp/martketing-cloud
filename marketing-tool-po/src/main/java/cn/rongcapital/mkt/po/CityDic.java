@@ -5,20 +5,15 @@ import java.util.Date;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class CityDic extends BaseQuery{
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 8954648249184622184L;
-
-	private Integer cityId;
+    private Integer cityId;
 
     private Integer provinceId;
 
     private Integer cityCode;
 
-    private String cityNamec;
+    private String provinceNamec;
 
-    private String cityNamee;
+    private String cityNamec;
 
     private Byte status;
 
@@ -50,20 +45,20 @@ public class CityDic extends BaseQuery{
         this.cityCode = cityCode;
     }
 
+    public String getProvinceNamec() {
+        return provinceNamec;
+    }
+
+    public void setProvinceNamec(String provinceNamec) {
+        this.provinceNamec = provinceNamec == null ? null : provinceNamec.trim();
+    }
+
     public String getCityNamec() {
         return cityNamec;
     }
 
     public void setCityNamec(String cityNamec) {
         this.cityNamec = cityNamec == null ? null : cityNamec.trim();
-    }
-
-    public String getCityNamee() {
-        return cityNamee;
-    }
-
-    public void setCityNamee(String cityNamee) {
-        this.cityNamee = cityNamee == null ? null : cityNamee.trim();
     }
 
     public Byte getStatus() {
