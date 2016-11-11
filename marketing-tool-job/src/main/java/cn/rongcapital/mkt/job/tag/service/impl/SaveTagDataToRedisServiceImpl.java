@@ -45,7 +45,7 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 	@Override
 	public void task(Integer taskId) {
 		logger.info("保存标签信息数据到Redis方法开始执行----------->");
-		Jedis redis = RedistSetDBUtil.getRedisInstance();
+		Jedis redis = null;
 		try {
 			TagValueCount tagValueCount = new TagValueCount();
 			tagValueCount.setPageSize(null);
@@ -55,13 +55,16 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 				Map<String, String> paramMap = getParamMap(tagInfo);
 				String redisKey = tagInfo.getTagValueSeq();
 				redisKey = REDIS_COVER_KEY_PREFIX+redisKey;
+				redis = RedistSetDBUtil.getRedisInstance();
 				redis.hmset(redisKey, paramMap);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("保存标签信息数据到Redis方法出现异常-------------->"+e.getMessage(),e);
 		}finally{
-			JedisConnectionManager.closeConnection(redis);
+			if(redis != null){
+				JedisConnectionManager.closeConnection(redis);
+			}
 		}
 		logger.info("保存标签信息数据到Redis方法执行结束----------->");
 	}

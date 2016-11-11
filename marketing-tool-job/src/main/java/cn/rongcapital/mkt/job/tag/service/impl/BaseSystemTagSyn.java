@@ -66,7 +66,7 @@ public class BaseSystemTagSyn {
 	 * @return
 	 */
 	protected void getTagViewList(BaseDao<SysTagView> targetDao) {
-		Jedis redis = RedistSetDBUtil.getRedisInstance();
+		Jedis redis = null;
 		try {
 			SysTagView sysTagView = new SysTagView();
 			sysTagView.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
@@ -79,11 +79,14 @@ public class BaseSystemTagSyn {
 			}
 			// 将所有人员Id保存到Redis中
 			String[] idsArray = (String[]) midSet.toArray(new String[midSet.size()]);
+			redis = RedistSetDBUtil.getRedisInstance();
 			redis.sadd(RedisKey.ALL_DATAPARY_MID, idsArray);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			JedisConnectionManager.closeConnection(redis);
+			if(redis != null){
+				JedisConnectionManager.closeConnection(redis);
+			}
 		}
 	}
 
@@ -231,18 +234,21 @@ public class BaseSystemTagSyn {
 	 * @param dataMap
 	 */
 	private void saveDataToReids(Map<String, Vector<String>> dataMap) {
-		Jedis redis = RedistSetDBUtil.getRedisInstance();
+		Jedis redis = null;
 		try {
 			Set<String> keySet = dataMap.keySet();
 			for (String key : keySet) {
 				Vector<String> vector = dataMap.get(key);
 				String[] idArray = (String[]) vector.toArray(new String[vector.size()]);
+				redis = RedistSetDBUtil.getRedisInstance();
 				redis.sadd(key, idArray);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			JedisConnectionManager.closeConnection(redis);
+			if(redis != null){
+				JedisConnectionManager.closeConnection(redis);
+			}
 		}
 	}
 
