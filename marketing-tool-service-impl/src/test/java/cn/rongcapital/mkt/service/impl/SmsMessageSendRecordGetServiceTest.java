@@ -16,7 +16,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -26,10 +25,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.SmsTaskDetailDao;
-import cn.rongcapital.mkt.po.MessageSendRecordGetOut;
-import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.service.SmsMessageSendRecordGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.MessageSendRecordGetOut;
 
 /**
  * @author shuiyangyang

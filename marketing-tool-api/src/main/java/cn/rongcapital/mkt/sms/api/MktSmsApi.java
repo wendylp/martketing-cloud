@@ -57,6 +57,9 @@ public class MktSmsApi {
 
     @Autowired
     private SmsMaterialGetService smsMaterialGetService;
+    
+    @Autowired
+    private SmsSmstempletIdGetService smsSmstempletIdGetService;
 
     /**
      * @功能简述: For testing, will remove later
@@ -198,5 +201,24 @@ public class MktSmsApi {
                                      @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
                                      @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
         return smsMaterialGetService.getSmsMaterialListByKeyword(searchWord,index,size);
+    }
+    
+    
+    /**
+     * 短信模板id查询模板
+     * 
+     * 接口：mkt.sms.smstemplet.id.get
+     * 
+     * @param id
+     * @return
+     * @Date 2016-11-11
+     * @author shuiyangyang
+     */
+    @GET
+    @Path("/mkt.sms.smstemplet.id.get")
+    public BaseOutput smsSmstempletIdGet(@NotEmpty @QueryParam("user_token") String userToken,
+                    @QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id)
+                    throws Exception {
+        return smsSmstempletIdGetService.getSmsSmstempletById(id);
     }
 }

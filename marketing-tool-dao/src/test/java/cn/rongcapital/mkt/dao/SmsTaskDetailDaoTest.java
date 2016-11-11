@@ -22,9 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
-import cn.rongcapital.mkt.po.MessageSendRecordGetOut;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.po.SmsTaskDetailState;
+import cn.rongcapital.mkt.vo.out.MessageSendRecordGetOut;
 
 /**
  * @author shuiyangyang

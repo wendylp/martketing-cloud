@@ -14,8 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.MessageSendRecordGetOut;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
+import cn.rongcapital.mkt.vo.out.MessageSendRecordGetOut;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface SmsTaskDetailDao extends BaseDao<SmsTaskDetail>{
