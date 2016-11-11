@@ -33,6 +33,10 @@ public enum ApiErrorCode {
 	BIZ_ERROR_CANPAIGN_CAN_NOT_START(3009,"campaign can not start"),//活动无法开启
 	BIZ_ERROR_CONTACTINFO_KEYID(3010,"can not get the keyid"),//
 
+	SMS_ERROR_MATERIAL_CAN_NOT_DELETE(4001,"can not delete the material"),
+	SMS_ERROR_MATERIAL_CAN_NOT_UPDATE(4002,"can not update the material"),
+	SMS_ERROR_TEMPLETE_CAN_NOT_DELETE(4003,"can not delete the templete"),
+	SMS_ERROR_TEMPLETE_CAN_NOT_UPDATE(4004,"can not update the templete"),
 	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	

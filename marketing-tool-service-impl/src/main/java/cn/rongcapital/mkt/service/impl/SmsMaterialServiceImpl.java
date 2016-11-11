@@ -24,6 +24,7 @@ import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsMaterialService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.sms.in.SmsMaterialDeleteIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsMaterialIn;
 @Service
 public class SmsMaterialServiceImpl implements SmsMaterialService {
@@ -50,8 +51,8 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
 				if(smsMaterialValidate(smsMaterial.getId())){
 					smsMaterialDao.updateById(smsMaterial);
 				}else{
-					output.setCode(ApiErrorCode.PARAMETER_ERROR.getCode());
-					output.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
+					output.setCode(ApiErrorCode.SMS_ERROR_MATERIAL_CAN_NOT_UPDATE.getCode());
+					output.setMsg(ApiErrorCode.SMS_ERROR_MATERIAL_CAN_NOT_UPDATE.getMsg());
 				}				
 			}else{
 				smsMaterialDao.insert(smsMaterial);
@@ -68,17 +69,17 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
 	}
 
 	@Override
-	public BaseOutput deleteSmsMaterial(Integer id){
+	public BaseOutput deleteSmsMaterial(SmsMaterialDeleteIn smsMaterialDeleteIn){
 		BaseOutput output = this.newSuccessBaseOutput();
-		if(id!=null&&id!=0){
-				if(smsMaterialValidate(id)){
+		if(smsMaterialDeleteIn!=null&&smsMaterialDeleteIn.getId()!=null&&smsMaterialDeleteIn.getId()!=0){
+				if(smsMaterialValidate(smsMaterialDeleteIn.getId())){
 					SmsMaterial smsMaterial = new SmsMaterial();
-					smsMaterial.setId(id);
+					smsMaterial.setId(smsMaterialDeleteIn.getId());
 					smsMaterial.setStatus(NumUtil.int2OneByte(StatusEnum.DELETED.getStatusCode()));
 					smsMaterialDao.updateById(smsMaterial);
 				}else{
-					output.setCode(ApiErrorCode.PARAMETER_ERROR.getCode());
-					output.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
+					output.setCode(ApiErrorCode.SMS_ERROR_MATERIAL_CAN_NOT_DELETE.getCode());
+					output.setMsg(ApiErrorCode.SMS_ERROR_MATERIAL_CAN_NOT_DELETE.getMsg());
 				}
 		}else{
 			output.setCode(ApiErrorCode.PARAMETER_ERROR.getCode());

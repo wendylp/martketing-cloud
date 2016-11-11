@@ -257,7 +257,12 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			if(StringUtils.isNotEmpty(smsTempletIn.getUpdateUser())){
 				smsTemplet.setUpdateTime(new Date());
 				smsTemplet.setUpdateUser(smsTempletIn.getUpdateUser());
-			}			
+			}
+			
+			if(StringUtils.isNotEmpty(smsTempletIn.getName())){
+				smsTemplet.setName(smsTempletIn.getName());
+			}
+			
 		}
 		return smsTemplet;		
 	}

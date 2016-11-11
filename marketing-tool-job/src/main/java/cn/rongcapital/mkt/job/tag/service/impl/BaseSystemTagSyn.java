@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.job.tag.service.impl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,111 +41,126 @@ import redis.clients.jedis.Jedis;
  * @复审人:
  *************************************************/
 public class BaseSystemTagSyn {
-	
-	 private static final String REDIS_IDS_KEY_PREFIX = "tagcoverid:";
-	
-	 private Logger logger = LoggerFactory.getLogger(getClass());
-	 
-	 @Autowired
-	 protected MongoTemplate mongoTemplate;
 
-	 @Autowired
-	 protected SystemTagResultDao systemTagResultDao;
+	private static final String REDIS_IDS_KEY_PREFIX = "tagcoverid:";
 
-	 @Autowired
-	 protected ThreadPoolTaskExecutor threadPoolTaskExecutor;
-	 
-	 @Autowired
-	 private TagValueCountDao tagValueCountDao;
-	 
-	 /**
-	  * 获取标签视图映射集合
-	  * @param targetDao	目标表Dao
-	  * @return
-	  */
-	 protected void getTagViewList(BaseDao<SysTagView> targetDao){
-		 SysTagView sysTagView = new SysTagView();
-		 sysTagView.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		 sysTagView.setPageSize(null);
-		 List<SysTagView> tagViewList = targetDao.selectList(sysTagView);
-		 for (SysTagView sys : tagViewList) {
-				this.getSysTagResult(sys);
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	protected MongoTemplate mongoTemplate;
+
+	@Autowired
+	protected SystemTagResultDao systemTagResultDao;
+
+	@Autowired
+	protected ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+	@Autowired
+	private TagValueCountDao tagValueCountDao;
+
+	/**
+	 * 获取标签视图映射集合
+	 * 
+	 * @param targetDao
+	 *            目标表Dao
+	 * @return
+	 */
+	protected void getTagViewList(BaseDao<SysTagView> targetDao) {
+		Jedis redis = null;
+		try {
+			SysTagView sysTagView = new SysTagView();
+			sysTagView.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			sysTagView.setPageSize(null);
+			List<SysTagView> tagViewList = targetDao.selectList(sysTagView);
+			// 所有人员Id
+			Set<String> midSet = new HashSet<>();
+			for (SysTagView sys : tagViewList) {
+				this.getSysTagResult(sys, midSet);
 			}
-	 }
-	 
-	 
-	 protected void getSysTagResult(SysTagView sys) {
-			try {
-				String viewName = sys.getViewName(); // 视图名称
-				String tagName = sys.getTagName(); // 标签名称
-
-				if (StringUtils.isEmpty(viewName) || StringUtils.isEmpty(tagName)){
-					return;
-				}
-				//获取结果
-				List<SystemTagResult> resultList = systemTagResultDao.selectListByMap(viewName);
-				logger.info("开始同步" + sys.getViewDesc() + "标签，-------->" + tagName);
-
-				// 查询推荐标签
-				Criteria criteriaAll = Criteria.where("tag_name_eng").is(tagName);
-
-				TagRecommend tagRecommend = mongoTemplate.findOne(new Query(criteriaAll),
-						cn.rongcapital.mkt.po.mongodb.TagRecommend.class);
-				
-				if(tagRecommend == null){
-					return;
-				}
-				
-				//存放List
-				Map<String, Vector<String>> paramMap = new HashMap<>();
-				for (SystemTagResult systemTagResult : resultList) {
-
-					Runnable thread = new Runnable() {
-
-						@Override
-						public void run() {
-							//标签Id
-							String tagId = tagRecommend.getTagId();
-							//标签值
-							String tagValue = systemTagResult.getTagValue();
-							//keyId
-							Integer keyId = systemTagResult.getKeyId();
-							// 封装Tag属性
-							Tag tag = new Tag(tagId, tagRecommend.getTagName(), tagRecommend.getTagNameEng(),
-									tagValue, 1);
-							
-							//获取redis Key
-							String key = getKey(tagId, tagValue);
-							Vector<String> vector = paramMap.get(key);
-							if(null == vector){
-								vector = getVector();
-								paramMap.put(key, vector);
-							}
-							vector.add(String.valueOf(keyId));
-							
-							startSynchTag(keyId,tag);
-						}
-					};
-					threadPoolTaskExecutor.execute(thread);
-				}
-				while(true){
-					//获取线程池中活动线程数
-					int threadActiveCount = threadPoolTaskExecutor.getActiveCount();
-					if(threadActiveCount == 0){
-						//存入Redis
-						saveDataToReids(paramMap);
-						break;
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.error("获取视图结果数据出现异常----------------->" + e.getMessage(), e);
+			// 将所有人员Id保存到Redis中
+			String[] idsArray = (String[]) midSet.toArray(new String[midSet.size()]);
+			redis = RedistSetDBUtil.getRedisInstance();
+			redis.sadd(RedisKey.ALL_DATAPARY_MID, idsArray);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(redis != null){
+				JedisConnectionManager.closeConnection(redis);
 			}
 		}
-	 
-	 
-	 
- 	/**
+	}
+
+	protected void getSysTagResult(SysTagView sys, Set<String> midSet) {
+		try {
+			String viewName = sys.getViewName(); // 视图名称
+			String tagName = sys.getTagName(); // 标签名称
+
+			if (StringUtils.isEmpty(viewName) || StringUtils.isEmpty(tagName)) {
+				return;
+			}
+			// 获取结果
+			List<SystemTagResult> resultList = systemTagResultDao.selectListByMap(viewName);
+			logger.info("开始同步" + sys.getViewDesc() + "标签，-------->" + tagName);
+
+			// 查询推荐标签
+			Criteria criteriaAll = Criteria.where("tag_name_eng").is(tagName);
+
+			TagRecommend tagRecommend = mongoTemplate.findOne(new Query(criteriaAll),
+					cn.rongcapital.mkt.po.mongodb.TagRecommend.class);
+
+			if (tagRecommend == null) {
+				return;
+			}
+
+			// 存放List
+			Map<String, Vector<String>> paramMap = new HashMap<>();
+			for (SystemTagResult systemTagResult : resultList) {
+
+				Runnable thread = new Runnable() {
+
+					@Override
+					public void run() {
+						// 标签Id
+						String tagId = tagRecommend.getTagId();
+						// 标签值
+						String tagValue = systemTagResult.getTagValue();
+						// keyId
+						Integer keyId = systemTagResult.getKeyId();
+						// 封装Tag属性
+						Tag tag = new Tag(tagId, tagRecommend.getTagName(), tagRecommend.getTagNameEng(), tagValue, 1);
+
+						// 获取redis Key
+						String key = getKey(tagId, tagValue);
+						Vector<String> vector = paramMap.get(key);
+						if (null == vector) {
+							vector = getVector();
+							paramMap.put(key, vector);
+						}
+						String mid = String.valueOf(keyId);
+						vector.add(mid);
+						midSet.add(mid);
+
+						startSynchTag(keyId, tag);
+					}
+				};
+				threadPoolTaskExecutor.execute(thread);
+			}
+			while (true) {
+				// 获取线程池中活动线程数
+				int threadActiveCount = threadPoolTaskExecutor.getActiveCount();
+				if (threadActiveCount == 0) {
+					// 存入Redis
+					saveDataToReids(paramMap);
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("获取视图结果数据出现异常----------------->" + e.getMessage(), e);
+		}
+	}
+
+	/**
 	 * 同步标签
 	 * 
 	 * @param keyId
@@ -153,7 +169,7 @@ public class BaseSystemTagSyn {
 	 *            标签名称
 	 * @param tagRecommend
 	 */
-	 protected void startSynchTag(Integer keyId, Tag tag) {
+	protected void startSynchTag(Integer keyId, Tag tag) {
 		try {
 			Criteria criteria = Criteria.where("mid").is(Integer.valueOf(keyId));
 			// 查询Mongo是否存在此数据
@@ -174,9 +190,7 @@ public class BaseSystemTagSyn {
 			logger.error("同步Mongo中tag_list字段出现异常-------------->" + e.getMessage(), e);
 		}
 	}
-	 
-	 
-	
+
 	/**
 	 * 初始化Mongo数据，将tag_list字段删除
 	 */
@@ -192,46 +206,50 @@ public class BaseSystemTagSyn {
 		}
 		logger.info("初始化Mongo tag_list字段方法执行结束---------->");
 	}
-	
-	
+
 	/**
 	 * 拼接Redis key
+	 * 
 	 * @param tagID
 	 * @param tagValue
 	 * @return
 	 */
-	private String getKey(String tagID,String tagValue){
-		String tagValueId = tagValueCountDao.selectTagValueId(tagID,tagValue);
-		return REDIS_IDS_KEY_PREFIX+tagValueId;
+	private String getKey(String tagID, String tagValue) {
+		String tagValueId = tagValueCountDao.selectTagValueId(tagID, tagValue);
+		return REDIS_IDS_KEY_PREFIX + tagValueId;
 	}
-	
+
 	/**
 	 * 获取集合
+	 * 
 	 * @return
 	 */
-	private Vector<String> getVector(){
+	private Vector<String> getVector() {
 		return new Vector<>();
 	}
-	
+
 	/**
 	 * 保存数据到Redis
+	 * 
 	 * @param dataMap
 	 */
-	private void saveDataToReids(Map<String, Vector<String>> dataMap){
-		Jedis redis = RedistSetDBUtil.getRedisInstance();
+	private void saveDataToReids(Map<String, Vector<String>> dataMap) {
+		Jedis redis = null;
 		try {
 			Set<String> keySet = dataMap.keySet();
 			for (String key : keySet) {
 				Vector<String> vector = dataMap.get(key);
-				String[] idArray = (String[])vector.toArray(new String[vector.size()]);
+				String[] idArray = (String[]) vector.toArray(new String[vector.size()]);
+				redis = RedistSetDBUtil.getRedisInstance();
 				redis.sadd(key, idArray);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			JedisConnectionManager.closeConnection(redis);
+		} finally {
+			if(redis != null){
+				JedisConnectionManager.closeConnection(redis);
+			}
 		}
 	}
-	
 
 }
