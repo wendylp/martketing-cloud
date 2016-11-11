@@ -30,5 +30,7 @@ public class RedisKey {
 	public static final String TAG_COVER_ID = "tagcoverid";
 	
 	public static final String TAG_VALUE_ORDER = "tagvalueorder";
+	
+	public static final String ALL_DATAPARY_MID = "tagcoverid:all";
 
 }
