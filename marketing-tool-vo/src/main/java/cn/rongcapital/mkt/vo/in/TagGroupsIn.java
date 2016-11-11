@@ -22,6 +22,8 @@ public class TagGroupsIn {
     @NotNull
     private Integer groupIndex;
 
+    private Integer groupChange;
+
     private List<SystemTagIn> tagList;
 
     @JsonProperty("group_id")
@@ -49,6 +51,15 @@ public class TagGroupsIn {
 
     public void setGroupIndex(Integer groupIndex) {
         this.groupIndex = groupIndex;
+    }
+
+    @JsonProperty("group_change")
+    public Integer getGroupChange() {
+        return groupChange;
+    }
+
+    public void setGroupChange(Integer groupChange) {
+        this.groupChange = groupChange;
     }
 
     @JsonProperty("tag_list")
