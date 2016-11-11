@@ -1,13 +1,16 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisConnectionManager;
 import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.common.util.GenerateUUid;
@@ -463,13 +466,44 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
     /**
      * 保存计算的segment结果
      */
-    public void saveSegmentCover() {
+    public boolean saveSegmentCover() throws JedisException {
         if(segmentRedis==null) {
             logger.info("segmentRedis is null, nothing saved");
         }
         Long segmentHeadId=segmentRedis.getSegmentHeadId();
+        if(segmentHeadId==null) {
+            logger.info("segmentRedis:segmentHeadId is null, nothing saved");
+        }
         String segmentHeadName=segmentRedis.getSegmentName();
+        if(segmentHeadName==null) {
+            segmentHeadName="";
+        }
+        Long segmentCoverCount=segmentRedis.getSegmentCoverCount();
+        String sourceIds=segmentRedis.getSegmentCoverIds();
+        String distIds="segmentCoverIds:"+segmentHeadId+":"+uuid;    
         String key=KEY_PREFIX_SEGMENTCOVER+segmentHeadId;
+        Jedis savejedis = JedisConnectionManager.getConnection(); 
+        HashMap<String,String> segmentCover=new HashMap<String,String>();
+        segmentCover.put("segmentheadid", segmentHeadId.toString());
+        segmentCover.put("segmentheadname", segmentHeadName);
+        segmentCover.put("segmentcovercount", segmentCoverCount.toString());
+        segmentCover.put("segmentcoverid",distIds);
+                    
+        String rs;
+        try {
+            savejedis.select(REDISDB_INDEX);
+            savejedis.rename(sourceIds, distIds);
+            segmentRedis.setSegmentCoverIds(distIds);
+            rs = savejedis.hmset(key, segmentCover);
+            logger.info("Save Segment Key:"+key); 
+        } catch (Exception e) {
+            logger.info("Save Segment Exceptio:"+e.toString()); 
+            throw new JedisException("设置key和HASH值异常!",e);
+        } finally {
+            JedisConnectionManager.closeConnection(savejedis);
+        }
+        
+        return rs != null && rs.equals("OK") ? true : false;
         
     }
     

@@ -12,4 +12,5 @@ import cn.rongcapital.mkt.vo.in.TagGroupsIn;
 public interface SegmentCalcService {
     public void calcSegmentCover(SegmentCreUpdateIn segment);
     public void calcSegmentCoverByGroup(TagGroupsIn tagGroup) ;
+    public boolean saveSegmentCover() throws JedisException;
 }
