@@ -16,8 +16,6 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import cn.rongcapital.mkt.dao.testbase.SpringBootDaoTestMain;
-
 @SpringBootApplication
 @EnableTransactionManagement
 @ImportResource({"classpath:spring/spring-config-mybatis-heracles.xml"})
