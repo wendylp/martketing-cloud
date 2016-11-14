@@ -44,6 +44,8 @@ public class BaseSystemTagSyn {
 	private static final String REDIS_IDS_KEY_PREFIX = "tagcoverid:";
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	private static final Integer REDIS_DB_INDEX = 2;
 
 	@Autowired
 	protected MongoTemplate mongoTemplate;
@@ -77,7 +79,7 @@ public class BaseSystemTagSyn {
 			}
 			// 将所有人员Id保存到Redis中
 			String[] idsArray = (String[]) midSet.toArray(new String[midSet.size()]);
-			JedisClient.sadd2(RedisKey.ALL_DATAPARY_MID, idsArray);
+			JedisClient.sadd(REDIS_DB_INDEX,RedisKey.ALL_DATAPARY_MID, idsArray);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -232,7 +234,7 @@ public class BaseSystemTagSyn {
 			for (String key : keySet) {
 				Vector<String> vector = dataMap.get(key);
 				String[] idArray = (String[]) vector.toArray(new String[vector.size()]);
-				JedisClient.sadd2(key, idArray);
+				JedisClient.sadd(REDIS_DB_INDEX,key, idArray);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
