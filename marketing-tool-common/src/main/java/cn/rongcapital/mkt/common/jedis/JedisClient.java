@@ -29,7 +29,21 @@ public class JedisClient {
 		
 		return rs;
 	}
+	public static long delete(Integer index,String... keys) throws JedisException {
 
+		Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+		long rs;
+		try {
+			rs = jedis.del(keys);
+		} catch (Exception e) {
+			throw new JedisException("删除String... Key异常!", e);
+		} finally {
+			JedisConnectionManager.closeConnection(jedis);
+		}
+		
+		return rs;
+	}
 	public static boolean delete(String key) throws JedisException {
 
 		Jedis jedis = JedisConnectionManager.getConnection();
@@ -244,7 +258,21 @@ public class JedisClient {
 		
 		return rs;
 	}
+	public static long hset(Integer index,String key, String field, String value) throws JedisException {
 
+		Jedis jedis = JedisConnectionManager.getConnection();
+	    jedis.select(index);
+		long rs;
+		try {
+			rs = jedis.hset(key, field, value);
+		} catch (Exception e) {
+			throw new JedisException("设置HASH的某FIELD为某值异常!",e);
+		} finally {
+			JedisConnectionManager.closeConnection(jedis);
+		}
+		
+		return rs;
+	}
 	public static Map<String, String> hgetAll(String key) throws JedisException {
 
 		Jedis jedis = JedisConnectionManager.getConnection();
@@ -520,7 +548,18 @@ public class JedisClient {
             JedisConnectionManager.closeConnection(jedis);
         }
     }
-	
+    public static Long sinterstore(Integer index,String key,final String... keys) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+        
+        try {
+            return jedis.sinterstore(key, keys);
+        } catch (Exception e) {
+            throw new JedisException("sinter异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
     public static Set<String> sunion(final String... keys) throws JedisException{
         Jedis jedis = JedisConnectionManager.getConnection();
         try {
@@ -531,7 +570,29 @@ public class JedisClient {
             JedisConnectionManager.closeConnection(jedis);
         }
     }
+    public static Long sunionstore(Integer index,String key,final String... keys) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+        try {
+            return jedis.sunionstore(key,keys);
+        } catch (Exception e) {
+            throw new JedisException("sunion异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
     
+    public static Long scard(Integer index,String key) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+        try {
+            return jedis.scard(key);
+        } catch (Exception e) {
+            throw new JedisException("sunion异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
 	public static void main(String[] args) throws JedisException {
 
 		 Jedis jedis = JedisConnectionManager.getConnection();
