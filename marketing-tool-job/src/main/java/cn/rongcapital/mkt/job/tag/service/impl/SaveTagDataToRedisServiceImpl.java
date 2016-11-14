@@ -37,6 +37,8 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 	private static final String IS_TAG = "1";
 	
 	private static final String TAG_DEFUALT_ORDER = "-1";
+	
+	private static final Integer REDIS_DB_INDEX = 2;
 	 
 	@Autowired
 	private TagValueCountDao tagValueCountDao;
@@ -53,7 +55,7 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 				Map<String, String> paramMap = getParamMap(tagInfo);
 				String redisKey = tagInfo.getTagValueSeq();
 				redisKey = REDIS_COVER_KEY_PREFIX+redisKey;
-				JedisClient.hmset2(redisKey, paramMap);
+				JedisClient.hmset(REDIS_DB_INDEX,redisKey, paramMap);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
