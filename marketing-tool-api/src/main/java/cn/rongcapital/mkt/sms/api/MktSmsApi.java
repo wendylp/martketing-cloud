@@ -6,6 +6,7 @@ import cn.rongcapital.mkt.service.*;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
 import cn.rongcapital.mkt.vo.in.SmsMessageSendTestIn;
+import cn.rongcapital.mkt.vo.in.SmsSmstempletDelIn;
 import cn.rongcapital.mkt.vo.in.SmsTaskDeleteIn;
 import cn.rongcapital.mkt.vo.out.SmsSignatureListOut;
 import cn.rongcapital.mkt.vo.out.SmsTargetAudienceListOut;
@@ -60,6 +61,9 @@ public class MktSmsApi {
     
     @Autowired
     private SmsSmstempletIdGetService smsSmstempletIdGetService;
+    
+    @Autowired
+    private SmsSmstempletDelService smsSmstempletDelService;
 
     /**
      * @功能简述: For testing, will remove later
@@ -220,5 +224,23 @@ public class MktSmsApi {
                     @QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id)
                     throws Exception {
         return smsSmstempletIdGetService.getSmsSmstempletById(id);
+    }
+    
+    /**
+     * 短信模板删除
+     * 
+     * @param body
+     * @param securityContext
+     * @return
+     * @author shuiyangyang
+     * @Date 2016-11-14
+     */
+    @POST
+    @Path("/mkt.sms.smstemplet.del")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput smsSmstempletDel(@Valid SmsSmstempletDelIn body,
+                    @Context SecurityContext securityContext) {
+        return smsSmstempletDelService.delSmsTemple(body, securityContext);
+        
     }
 }

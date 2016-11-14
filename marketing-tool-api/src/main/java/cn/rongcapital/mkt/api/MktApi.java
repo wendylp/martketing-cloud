@@ -514,6 +514,9 @@ public class MktApi {
 	
 	@Autowired
 	private TagSystemFlagListGetService tagSystemFlagListGetService;
+	
+	@Autowired
+	private TagSystemFuzzyListGetService tagSystemFuzzyListGetService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -2241,6 +2244,26 @@ public class MktApi {
     public BaseOutput tagSystemFlagListGet(@NotEmpty @QueryParam("user_token") String userToken,
                     @QueryParam("ver") String ver) {
         return tagSystemFlagListGetService.getTagSystemFlagList();
+    }
+    
+    
+    /**
+     * 根据页面输入值模糊查询标签，返回标签或者标签值 （全路径的标签或者标签值《带有标签类型：标签值，标签》分页
+     * 
+     * @param tagName
+     * @param index
+     * @param size
+     * @return
+     * @author shuiyangyang
+     * @date 2016-11-11
+     */
+    @GET
+    @Path("/mkt.tag.system.fuzzy.list.get")
+    public BaseOutput tagSystemFuzzyListGet(@NotEmpty @QueryParam("user_token") String userToken,
+                    @NotEmpty @QueryParam("ver") String ver, @QueryParam("tag_name") String tagName,
+                    @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+                    @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
+        return tagSystemFuzzyListGetService.getTagSystemFuzzyList(tagName, index, size);
     }
 
 }
