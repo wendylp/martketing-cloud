@@ -26,6 +26,10 @@ public class JedisConnectionManager {
 		
 		JedisPoolConfig jpc = new JedisPoolConfig();
 		jpc.setTestOnBorrow(true);
+		jpc.setMaxIdle(2000);
+		jpc.setMaxTotal(3000);
+		jpc.setTestOnBorrow(true);
+		jpc.setTestOnReturn(true);
 //		jpc.setMaxActive(200);
 //		jpc.setMaxWait(100L);
 		/** 判断有无密码来生成连接池 */
