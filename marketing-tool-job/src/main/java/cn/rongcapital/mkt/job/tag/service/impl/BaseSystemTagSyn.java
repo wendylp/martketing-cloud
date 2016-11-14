@@ -234,6 +234,8 @@ public class BaseSystemTagSyn {
 			Set<String> result = new HashSet<>();
 			Set<String> keySet = dataMap.keySet();
 			for (String key : keySet) {
+				long delete = JedisClient.delete(REDIS_DB_INDEX, key);
+				logger.info("删除redis数据方法执行结束，key为------>"+key,",是否成功标识----->"+delete);
 				Vector<String> vector = dataMap.get(key);
 				result.addAll(vector);
 				String[] idArray = (String[]) vector.toArray(new String[vector.size()]);
