@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service;
 
 import cn.rongcapital.mkt.common.jedis.JedisException;
+import cn.rongcapital.mkt.vo.SegmentRedisVO;
 import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
 import cn.rongcapital.mkt.vo.in.TagGroupsIn;
 
@@ -13,4 +14,5 @@ public interface SegmentCalcService {
     public void calcSegmentCover(SegmentCreUpdateIn segment);
     public void calcSegmentCoverByGroup(TagGroupsIn tagGroup) ;
     public boolean saveSegmentCover() throws JedisException;
+    public SegmentRedisVO getSegmentRedis();
 }
