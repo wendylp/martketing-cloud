@@ -26,10 +26,12 @@ public class TagSystemFuzzyListGetOut {
     
     private Integer searchMod;  //搜索标识
     
+    private String tagValueSeq; // 标签值序号
+    
     public TagSystemFuzzyListGetOut(){}
 
     public TagSystemFuzzyListGetOut(String tagId, String tagName, String tagValue, String tagPath,
-                    String isTag, Integer searchMod) {
+                    String isTag, Integer searchMod, String tagValueSeq) {
         super();
         this.tagId = tagId;
         this.tagName = tagName;
@@ -37,6 +39,7 @@ public class TagSystemFuzzyListGetOut {
         this.tagPath = tagPath;
         this.isTag = "1".equals(isTag);
         this.searchMod = searchMod;
+        this.tagValueSeq = tagValueSeq;
     }
 
     @JsonProperty("tag_id")
@@ -93,11 +96,20 @@ public class TagSystemFuzzyListGetOut {
         this.searchMod = searchMod;
     }
 
+    @JsonProperty("tag_value_seq")
+    public String getTagValueSeq() {
+        return tagValueSeq;
+    }
+
+    public void setTagValueSeq(String tagValueSeq) {
+        this.tagValueSeq = tagValueSeq;
+    }
+
     @Override
     public String toString() {
         return "TagSystemFuzzyListGetOut [tagId=" + tagId + ", tagName=" + tagName + ", tagValue="
                         + tagValue + ", tagPath=" + tagPath + ", isTag=" + isTag + ", searchMod="
-                        + searchMod + "]";
+                        + searchMod + ", tagValueSeq=" + tagValueSeq + "]";
     }
 
     @Override
@@ -110,6 +122,7 @@ public class TagSystemFuzzyListGetOut {
         result = prime * result + ((tagName == null) ? 0 : tagName.hashCode());
         result = prime * result + ((tagPath == null) ? 0 : tagPath.hashCode());
         result = prime * result + ((tagValue == null) ? 0 : tagValue.hashCode());
+        result = prime * result + ((tagValueSeq == null) ? 0 : tagValueSeq.hashCode());
         return result;
     }
 
@@ -152,10 +165,12 @@ public class TagSystemFuzzyListGetOut {
                 return false;
         } else if (!tagValue.equals(other.tagValue))
             return false;
+        if (tagValueSeq == null) {
+            if (other.tagValueSeq != null)
+                return false;
+        } else if (!tagValueSeq.equals(other.tagValueSeq))
+            return false;
         return true;
     }
-    
-    
-    
 
 }

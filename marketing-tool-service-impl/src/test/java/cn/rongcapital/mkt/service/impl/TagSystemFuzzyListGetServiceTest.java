@@ -64,11 +64,12 @@ public class TagSystemFuzzyListGetServiceTest {
 
         List<TagSystemFuzzyListGetOut> actualData = new ArrayList<TagSystemFuzzyListGetOut>();
         
-        for(TagValueCount tagValueCountList : tagValueCountLists) {
+        for (TagValueCount tagValueCountList : tagValueCountLists) {
             TagSystemFuzzyListGetOut tagSystemFuzzyListGetOut = new TagSystemFuzzyListGetOut(
                             tagValueCountList.getTagId(), tagValueCountList.getTagName(),
                             tagValueCountList.getTagValue(), tagValueCountList.getTagPath(),
-                            tagValueCountList.getIsTag(), tagValueCountList.getSearchMod());
+                            tagValueCountList.getIsTag(), tagValueCountList.getSearchMod(),
+                            tagValueCountList.getTagValueSeq());
             actualData.add(tagSystemFuzzyListGetOut);
         }
         

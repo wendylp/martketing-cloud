@@ -132,8 +132,15 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 		for (int i = (index - 1) * size; i < size; i++) {
 			String tagRecommendId = childrenList.get(i);
 
-			TagRecommend tagRecommend = mongoTemplate.findOne(new Query(Criteria.where("tag_id").is(tagRecommendId)),
-					TagRecommend.class);
+            TagRecommend tagRecommend = mongoTemplate.findOne(
+                            new Query(Criteria.where("tag_id").is(tagRecommendId).and("status")
+                                            .is(ApiConstant.TABLE_DATA_STATUS_VALID)),
+                            TagRecommend.class);
+			
+			// 如果查询不到标签，则跳过这次循环
+			if(tagRecommend == null) {
+			    continue;
+			}
 
 			long tagCount = mongoTemplate.count(new Query(Criteria.where("tagList.tagId").is(tagRecommendId)),
 					DataParty.class);

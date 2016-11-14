@@ -145,13 +145,13 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 							if(childrenLists != null && uuid3.length() > 0) {
 								if(childrenLists.contains(uuid3) == false) {
 									childrenLists.add(uuid3);
-									uuid2 = getTagTree(twoTagName, 2, null, null, childrenLists, tagSource);
+									uuid2 = getTagTree(twoTagName, 2, null, oneTagName, childrenLists, tagSource);
 //									uuid2 = twoTagName;
 								} else {} 
 							}else {
 								childrenLists = new ArrayList<String>();
 								childrenLists.add(uuid3);
-								uuid2 = getTagTree(twoTagName, 2, null, null, childrenLists, tagSource);
+								uuid2 = getTagTree(twoTagName, 2, null, oneTagName, childrenLists, tagSource);
 //								uuid2 = twoTagName;
 							}
 						}
