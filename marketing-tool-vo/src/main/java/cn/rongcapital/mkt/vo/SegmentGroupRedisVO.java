@@ -21,6 +21,8 @@ public class SegmentGroupRedisVO {
     private Long groupCoverCount;
     
     private String groupCoverIds;    
+    
+    private Integer groupChange;
 
     private List<SegmentGroupTagRedisVO> tagList;
 
@@ -70,6 +72,14 @@ public class SegmentGroupRedisVO {
 
     public void setTagList(List<SegmentGroupTagRedisVO> tagList) {
         this.tagList = tagList;
+    }
+
+    public Integer getGroupChange() {
+        return groupChange;
+    }
+
+    public void setGroupChange(Integer groupChange) {
+        this.groupChange = groupChange;
     }
     
     
