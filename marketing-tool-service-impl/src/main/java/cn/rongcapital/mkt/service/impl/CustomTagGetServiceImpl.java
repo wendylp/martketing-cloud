@@ -9,6 +9,7 @@ import cn.rongcapital.mkt.vo.out.CustomTagColumnShown;
 import cn.rongcapital.mkt.vo.out.CustomTagOutput;
 import cn.rongcapital.mkt.vo.out.CustomTagShown;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -34,6 +35,7 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
     private final String TAG_TYPE = "tag_type";
     private final String CUSTOM_TAG_LIST = "custom_tag_list";
     private final String FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
+    private final String CREATE_TIME = "create_time";
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
@@ -42,10 +44,11 @@ public class CustomTagGetServiceImpl implements CustomTagGetService {
         getShownColumnsInfo(customTagOutput);
 
         Query countQuery = new Query(Criteria.where(TAG_TYPE).is(ApiConstant.CUSTOM_TAG_LEAF_TYPE));
+        countQuery.with(new Sort(Sort.Direction.DESC, CREATE_TIME));
         Long totalTagCount = mongoTemplate.count(countQuery,BaseTag.class);
         customTagOutput.setTotalCount(totalTagCount.intValue());
 
-        Query tagQuery = new Query(Criteria.where(TAG_TYPE).is(ApiConstant.CUSTOM_TAG_LEAF_TYPE)).skip((index -1 ) * size).limit(size);
+        Query tagQuery = new Query(Criteria.where(TAG_TYPE).is(ApiConstant.CUSTOM_TAG_LEAF_TYPE)).with(new Sort(Sort.Direction.DESC, CREATE_TIME)).skip((index -1 ) * size).limit(size);
         List<BaseTag> customTagLeafs = mongoTemplate.find(tagQuery,BaseTag.class);
         if(!CollectionUtils.isEmpty(customTagLeafs)){
             for(BaseTag baseTag : customTagLeafs){
