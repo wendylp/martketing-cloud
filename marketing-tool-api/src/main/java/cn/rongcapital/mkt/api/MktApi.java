@@ -517,6 +517,9 @@ public class MktApi {
 	
 	@Autowired
 	private TagSystemFuzzyListGetService tagSystemFuzzyListGetService;
+	
+	@Autowired
+	private TagSystemValueListGetService tagSystemValueListGetService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -2264,6 +2267,22 @@ public class MktApi {
                     @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
                     @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
         return tagSystemFuzzyListGetService.getTagSystemFuzzyList(tagName, index, size);
+    }
+    
+    /**
+     * 获取标签值
+     * 
+     * 接口：mkt.tag.system.value.list.get
+     * @param tagId
+     * @return
+     * @author shuiyangyang
+     * @Date 2016-11-14
+     */
+    @GET
+    @Path("/mkt.tag.system.value.list.get")
+    public BaseOutput tagSystemValueListGet(@NotEmpty @QueryParam("user_token") String userToken,
+                    @QueryParam("ver") String ver, @NotEmpty @QueryParam("tag_id") String tagId) {
+        return tagSystemValueListGetService.getTagSystemValueList(tagId);
     }
 
 }
