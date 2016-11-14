@@ -275,17 +275,16 @@ public class JedisClient {
 		return rs != null && rs.equals("OK") ? true : false;
 	}
 	
-	public static boolean hmset(Integer index, String key, Map<String, String> map) throws JedisException {
+	public static boolean hmset2(String key, Map<String, String> map) throws JedisException {
 
-        Jedis jedis = JedisConnectionManager.getConnection();
-        jedis.select(index);
+        Jedis jedis = JedisConnectionManager.getConnection2();
         String rs;
         try {
             rs = jedis.hmset(key, map);
         } catch (Exception e) {
             throw new JedisException("设置key和HASH值异常!",e);
         } finally {
-            JedisConnectionManager.closeConnection(jedis);
+            JedisConnectionManager.closeConnection2(jedis);
         }
         
         return rs != null && rs.equals("OK") ? true : false;
@@ -484,15 +483,14 @@ public class JedisClient {
 
     }
     
-    public static void sadd(Integer index, String key, String... elems) throws JedisException {
-        Jedis jedis = JedisConnectionManager.getConnection();
-        jedis.select(index);
+    public static void sadd2(String key, String... elems) throws JedisException {
+        Jedis jedis = JedisConnectionManager.getConnection2();
         try {
             jedis.sadd(key, elems);
         } catch (Exception e) {
             throw new JedisException("sadd 新增异常!", e);
         } finally {
-            JedisConnectionManager.closeConnection(jedis);
+            JedisConnectionManager.closeConnection2(jedis);
         }
 
     }

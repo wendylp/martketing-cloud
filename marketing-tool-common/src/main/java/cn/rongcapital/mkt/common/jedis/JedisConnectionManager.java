@@ -14,7 +14,9 @@ import redis.clients.jedis.JedisPoolConfig;
 public class JedisConnectionManager {
 
 	private static JedisPool pool;
+	private static JedisPool pool2;
 	private static JedisPool pool_user;
+	private static Integer INDEX_2 = 2;
 	
 	public JedisConnectionManager() throws IOException{
 		JedisProperties prop = JedisProperties.getInstance();
@@ -40,6 +42,7 @@ public class JedisConnectionManager {
 		}*/
 		/**这里我们必须使用密码*/
 		JedisConnectionManager.pool = new JedisPool(jpc, REDIS_IP, REDIS_PORT, 2000, REDIA_PASS,DATA_BASE);
+		JedisConnectionManager.pool2 = new JedisPool(jpc, REDIS_IP, REDIS_PORT, 2000, REDIA_PASS, INDEX_2);
 		JedisConnectionManager.pool_user = new JedisPool(jpc, REDIS_IP, REDIS_PORT, 2000, REDIA_PASS,DATA_BASE_USER);
 	}
 	
@@ -48,8 +51,17 @@ public class JedisConnectionManager {
 		return jedis;
 	}
 	
+	public static Jedis getConnection2(){
+	    Jedis jedis = pool2.getResource();
+	    return jedis;
+	}
+	
 	public static void closeConnection(Jedis jedis){
 		pool.returnResource(jedis);
+	}
+	
+	public static void closeConnection2(Jedis jedis){
+	    pool2.returnResource(jedis);
 	}
 	
 	public static void destroy(){
