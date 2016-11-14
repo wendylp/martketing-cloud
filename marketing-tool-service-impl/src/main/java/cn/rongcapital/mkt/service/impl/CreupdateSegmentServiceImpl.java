@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.SegmentationBodyDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
@@ -9,6 +10,7 @@ import cn.rongcapital.mkt.po.SegmentationBody;
 import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.CreupdateSegmentService;
+import cn.rongcapital.mkt.service.SegmentCalcService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
 import cn.rongcapital.mkt.vo.in.SystemTagIn;
@@ -16,6 +18,8 @@ import cn.rongcapital.mkt.vo.in.SystemValueIn;
 import cn.rongcapital.mkt.vo.in.TagGroupsIn;
 import cn.rongcapital.mkt.vo.out.SegmentCreupdateOut;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -24,6 +28,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -36,6 +41,8 @@ import java.util.List;
 @Service
 public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
 
+    private static Logger logger = LoggerFactory.getLogger(CreupdateSegmentServiceImpl.class);
+
     @Autowired
     private SegmentationHeadDao segmentationHeadDao;
 
@@ -45,6 +52,9 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @Autowired
+    private SegmentCalcService segmentCalcService;
+
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public BaseOutput creupdateSegment(@NotEmpty SegmentCreUpdateIn segmentCreUpdateIn) {
@@ -52,8 +62,8 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
         SegmentCreupdateOut segmentCreupdateOut = new SegmentCreupdateOut();
 
         if(segmentCreUpdateIn.getSegmentHeadId() == null){
-            //1.不包含了id,则为创建操作
-            //Todo:1.首先更新segmentHead表,将相关的数据设置进去.
+            //不包含了id,则为创建操作
+            //1.首先更新segmentHead表,将相关的数据设置进去.
             SegmentationHead segmentationHead = new SegmentationHead();
             segmentationHead.setName(segmentCreUpdateIn.getSegmentName());
             segmentationHead.setPublishStatus(segmentCreUpdateIn.getPublishStatus().byteValue());
@@ -62,7 +72,7 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
             segmentationHeadDao.insert(segmentationHead);
             segmentCreUpdateIn.setSegmentHeadId(Long.valueOf(segmentationHead.getId()));
 
-            //Todo:2.获取segmentHeadId之后,解析相应的数据,更新segmentBody表.
+            //2.获取segmentHeadId之后,解析相应的数据,更新segmentBody表.
             List<TagGroupsIn> filterGroups = segmentCreUpdateIn.getFilterGroups();
             for(TagGroupsIn tagGroupsIn : filterGroups){
                 List<SystemTagIn> tagInList = tagGroupsIn.getTagList();
@@ -139,11 +149,16 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
             }
         }
 
-        //Todo:做完所有的一切后重新更新细分的人群信息
+        //做完所有的一切后重新更新细分的人群信息
+        segmentCalcService.calcSegmentCover(segmentCreUpdateIn);
+        try {
+            segmentCalcService.saveSegmentCover();
+        } catch (JedisException e) {
+            logger.equals("segment write to jedis exception :" + e);
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
 
-
-
-        //Todo:生成返回值信息
+        //生成返回值信息
         segmentCreupdateOut.setId(segmentCreUpdateIn.getSegmentHeadId());
         segmentCreupdateOut.setUpdatetime(DateUtil.getStringFromDate(new Date(),"yyyy-MM-dd hh:mm:ss"));
         segmentCreupdateOut.setOper("Mock 奥巴马");

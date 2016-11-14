@@ -22,7 +22,7 @@ public class TagGroupsIn {
     @NotNull
     private Integer groupIndex;
 
-    private Integer groupChange;
+    private Integer groupChange = 0;
 
     private List<SystemTagIn> tagList;
 
