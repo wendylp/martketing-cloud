@@ -103,6 +103,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
         segmentGroupRedis.setGroupId(tagGroup.getGroupId());
         segmentGroupRedis.setGroupIndex(tagGroup.getGroupIndex());
         segmentGroupRedis.setGroupName(tagGroup.getGroupName());
+        segmentGroupRedis.setGroupChange(tagGroup.getGroupChange());
         List<SystemTagIn> sysTags=tagGroup.getTagList();
         if(sysTags!=null&&sysTags.size()>0) {
             List<SegmentGroupTagRedisVO> segmentGroupTags=new ArrayList<SegmentGroupTagRedisVO>();

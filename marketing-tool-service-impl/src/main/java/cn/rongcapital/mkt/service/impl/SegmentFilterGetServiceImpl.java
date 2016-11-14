@@ -13,7 +13,12 @@ import java.util.Set;
 
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.service.SegmentCalcService;
+import cn.rongcapital.mkt.vo.SegmentGroupRedisVO;
+import cn.rongcapital.mkt.vo.SegmentGroupTagRedisVO;
+import cn.rongcapital.mkt.vo.SegmentRedisVO;
 import cn.rongcapital.mkt.vo.in.*;
+import cn.rongcapital.mkt.vo.out.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +41,6 @@ import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.out.SegmentAreaCountOut;
-import cn.rongcapital.mkt.vo.out.SegmentDimensionCountOut;
-import cn.rongcapital.mkt.vo.out.SystemTagFilterOut;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
 
@@ -57,6 +59,9 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 	
 	@Autowired
 	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+	@Autowired
+	private SegmentCalcService segmentCalcService;
 
 	@ReadWrite(type = ReadWriteType.READ)
 	@Override
@@ -469,9 +474,31 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 	}
 
 	@Override
-	public BaseOutput getSegmentFilterResult(TagGroupsIn tagGroupsIn) {
+	public SegmentFilterOut getSegmentFilterResult(TagGroupsListIn tagGroupsListIn) {
+		SegmentFilterOut segmentFilterOut = new SegmentFilterOut(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO);
+		SegmentCreUpdateIn segmentCreUpdateIn = new SegmentCreUpdateIn();
+		segmentCreUpdateIn.setFilterGroups(tagGroupsListIn.getTagGroupsInList());
+		segmentCalcService.calcSegmentCover(segmentCreUpdateIn);
+		SegmentRedisVO segmentRedisVO = segmentCalcService.getSegmentRedis();
+		//将算出来的数据封装成对象
+		segmentFilterOut.setSegmentTotal(segmentRedisVO.getSegmentCoverCount());
+		for(SegmentGroupRedisVO segmentGroupRedisVO : segmentRedisVO.getSegmentGroups()){
+			TagGroupChartOut tagGroupChartOut = new TagGroupChartOut();
+			tagGroupChartOut.setGroupId(segmentGroupRedisVO.getGroupId());
+			tagGroupChartOut.setGroupName(segmentGroupRedisVO.getGroupName());
+			tagGroupChartOut.setGroupChange(segmentGroupRedisVO.getGroupChange());
+			tagGroupChartOut.setGroupIndex(segmentGroupRedisVO.getGroupIndex());
+			for(SegmentGroupTagRedisVO segmentGroupTagRedisVO : segmentGroupRedisVO.getTagList()){
+				TagChartDatas tagChartDatas = new TagChartDatas();
+				tagChartDatas.setTagId(segmentGroupTagRedisVO.getTagId());
+				tagChartDatas.setTagName(segmentGroupTagRedisVO.getTagName());
+				tagChartDatas.setTagCount(segmentGroupTagRedisVO.getCalcTagCoverCount().intValue());
+				tagGroupChartOut.getChartData().add(tagChartDatas);
+			}
+			segmentFilterOut.getTagGroupChartOutList().add(tagGroupChartOut);
+		}
 
-		return null;
+		return segmentFilterOut;
 	}
 
 }

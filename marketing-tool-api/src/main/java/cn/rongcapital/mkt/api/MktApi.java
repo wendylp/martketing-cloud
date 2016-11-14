@@ -1383,10 +1383,10 @@ public class MktApi {
 	 * @return: Object
 	 */
 	@POST
-	@Path("/mkt.segment.filter.get ")
+	@Path("/mkt.segment.filter.get")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput segmentFilterGet(TagGroupsIn tagGroupsIn, @Context SecurityContext securityContext) {
-		return segmentFilterGetService.getSegmentFilterResult(tagGroupsIn);
+	public BaseOutput segmentFilterGet(TagGroupsListIn tagGroupsListIn, @Context SecurityContext securityContext) {
+		return segmentFilterGetService.getSegmentFilterResult(tagGroupsListIn);
 	}
 
 	/**

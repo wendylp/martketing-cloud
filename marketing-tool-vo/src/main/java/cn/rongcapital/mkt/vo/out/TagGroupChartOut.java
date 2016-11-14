@@ -1,30 +1,20 @@
-package cn.rongcapital.mkt.vo.in;
+package cn.rongcapital.mkt.vo.out;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by byf on 11/4/16.
+ * Created by byf on 11/14/16.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class TagGroupsIn {
+public class TagGroupChartOut {
 
-    @NotEmpty
     private String groupId;
-
-    @NotEmpty
     private String groupName;
-
-    @NotNull
     private Integer groupIndex;
-
-    private Integer groupChange = 0;
-
-    private List<SystemTagIn> tagList;
+    private Integer groupChange;
+    private List<TagChartDatas> chartData = new ArrayList<TagChartDatas>();
 
     @JsonProperty("group_id")
     public String getGroupId() {
@@ -62,12 +52,12 @@ public class TagGroupsIn {
         this.groupChange = groupChange;
     }
 
-    @JsonProperty("tag_list")
-    public List<SystemTagIn> getTagList() {
-        return tagList;
+    @JsonProperty("chart_data")
+    public List<TagChartDatas> getChartData() {
+        return chartData;
     }
 
-    public void setTagList(List<SystemTagIn> tagList) {
-        this.tagList = tagList;
+    public void setChartData(List<TagChartDatas> chartData) {
+        this.chartData = chartData;
     }
 }

@@ -109,14 +109,14 @@ public class BaseSystemTagSyn {
 
 			// 存放List
 			Map<String, Vector<String>> paramMap = new HashMap<>();
+			// 标签Id
+			String tagId = tagRecommend.getTagId();
 			for (SystemTagResult systemTagResult : resultList) {
 
 				Runnable thread = new Runnable() {
 
 					@Override
 					public void run() {
-						// 标签Id
-						String tagId = tagRecommend.getTagId();
 						// 标签值
 						String tagValue = systemTagResult.getTagValue();
 						// keyId
@@ -145,7 +145,7 @@ public class BaseSystemTagSyn {
 				int threadActiveCount = threadPoolTaskExecutor.getActiveCount();
 				if (threadActiveCount == 0) {
 					// 存入Redis
-					saveDataToReids(paramMap);
+					saveDataToReids(paramMap,tagId);
 					break;
 				}
 			}
@@ -228,16 +228,20 @@ public class BaseSystemTagSyn {
 	 * 
 	 * @param dataMap
 	 */
-	private void saveDataToReids(Map<String, Vector<String>> dataMap) {
+	private void saveDataToReids(Map<String, Vector<String>> dataMap,String tagId) {
 		try {
+			//标签总Id
+			Set<String> result = new HashSet<>();
 			Set<String> keySet = dataMap.keySet();
 			for (String key : keySet) {
 				Vector<String> vector = dataMap.get(key);
+				result.addAll(vector);
 				String[] idArray = (String[]) vector.toArray(new String[vector.size()]);
 				JedisClient.sadd(REDIS_DB_INDEX,key, idArray);
 			}
+			String[] allIds = (String[]) result.toArray(new String[result.size()]);
+			JedisClient.sadd(REDIS_DB_INDEX,REDIS_IDS_KEY_PREFIX+tagId, allIds);
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("保存数据到Redis方法出现异常---------->"+e.getMessage(),e);
 		} 
 	}
