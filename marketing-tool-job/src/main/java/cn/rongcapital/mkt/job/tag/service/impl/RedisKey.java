@@ -33,6 +33,4 @@ public class RedisKey {
 	
 	public static final String ALL_DATAPARY_MID = "tagcoverid:all";//所有人ID
 	
-	public static final Integer REDIS_DB_INDEX = 2;
-
 }

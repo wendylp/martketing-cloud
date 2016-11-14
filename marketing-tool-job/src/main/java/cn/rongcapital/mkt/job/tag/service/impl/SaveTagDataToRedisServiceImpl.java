@@ -53,7 +53,7 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 				Map<String, String> paramMap = getParamMap(tagInfo);
 				String redisKey = tagInfo.getTagValueSeq();
 				redisKey = REDIS_COVER_KEY_PREFIX+redisKey;
-				JedisClient.hmset(RedisKey.REDIS_DB_INDEX,redisKey, paramMap);
+				JedisClient.hmset2(redisKey, paramMap);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

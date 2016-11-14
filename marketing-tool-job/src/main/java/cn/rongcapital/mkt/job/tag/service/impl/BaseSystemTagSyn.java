@@ -77,7 +77,7 @@ public class BaseSystemTagSyn {
 			}
 			// 将所有人员Id保存到Redis中
 			String[] idsArray = (String[]) midSet.toArray(new String[midSet.size()]);
-			JedisClient.sadd(RedisKey.REDIS_DB_INDEX,RedisKey.ALL_DATAPARY_MID, idsArray);
+			JedisClient.sadd2(RedisKey.ALL_DATAPARY_MID, idsArray);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -232,7 +232,7 @@ public class BaseSystemTagSyn {
 			for (String key : keySet) {
 				Vector<String> vector = dataMap.get(key);
 				String[] idArray = (String[]) vector.toArray(new String[vector.size()]);
-				JedisClient.sadd(RedisKey.REDIS_DB_INDEX,key, idArray);
+				JedisClient.sadd2(key, idArray);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
