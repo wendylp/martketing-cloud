@@ -18,6 +18,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsSmstempletIdGetService;
@@ -31,6 +32,9 @@ public class SmsSmstempletIdGetServiceTest {
 
     @Mock
     private SmsTempletDao smsTempletDao;
+    
+    @Mock
+    private SmsMaterialDao smsMaterialDao;
 
     private SmsTemplet smsTemplet;
 
@@ -47,9 +51,11 @@ public class SmsSmstempletIdGetServiceTest {
         smsSmstempletIdGetService = new SmsSmstempletIdGetServiceImpl();
 
         Mockito.when(smsTempletDao.selectList(any())).thenReturn(SmsTempletList);
+        Mockito.when(smsMaterialDao.selectList(any())).thenReturn(null);
 
         // 把mock的dao set进入service
         ReflectionTestUtils.setField(smsSmstempletIdGetService, "smsTempletDao", smsTempletDao);
+        ReflectionTestUtils.setField(smsSmstempletIdGetService, "smsMaterialDao", smsMaterialDao);
     }
 
     /**
@@ -70,7 +76,7 @@ public class SmsSmstempletIdGetServiceTest {
         SmsSmstempletIdGetOut smsSmstempletIdGetOut = new SmsSmstempletIdGetOut(smsTemplet.getId(),
                         smsTemplet.getChannelType(), smsTemplet.getType(),
                         smsTemplet.getAuditStatus(), smsTemplet.getName(),
-                        smsTemplet.getAuditReason(), null, smsTemplet.getContent());
+                        smsTemplet.getAuditReason(), null, smsTemplet.getContent(), true, true);
         smsSmstempletIdGetOut.setAuditTime(DateUtil.getStringFromDate(smsTemplet.getAuditTime(),
                         "yyyy-MM-dd HH:mm:ss"));
         result.getData().add(smsSmstempletIdGetOut);
