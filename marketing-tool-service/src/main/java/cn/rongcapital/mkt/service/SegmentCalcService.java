@@ -15,4 +15,5 @@ public interface SegmentCalcService {
     public void calcSegmentCoverByGroup(TagGroupsIn tagGroup) ;
     public boolean saveSegmentCover() throws JedisException;
     public SegmentRedisVO getSegmentRedis();
+    public void setSegmentRedis(SegmentRedisVO segmentRedis);
 }

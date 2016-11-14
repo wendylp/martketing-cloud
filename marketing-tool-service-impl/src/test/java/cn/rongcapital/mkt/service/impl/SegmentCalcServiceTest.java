@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.service.SegmentCalcService;
 import cn.rongcapital.mkt.service.testbase.AbstractUnitTest;
+import cn.rongcapital.mkt.vo.SegmentRedisVO;
 import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
 import cn.rongcapital.mkt.vo.in.SystemTagIn;
 import cn.rongcapital.mkt.vo.in.SystemValueIn;
@@ -48,9 +49,9 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
     public void testCalcSegmentCover() throws Exception {
         logger.info("测试方法: calcSegmentCover");  
        
-        segmentCalcService.calcSegmentCover(segment);  
-        segmentCalcService.saveSegmentCover() ;
-        
+        //segmentCalcService.calcSegmentCover(segment);  
+        //segmentCalcService.saveSegmentCover() ;
+        MutiThreadTest();
     }
     
     @After
@@ -249,5 +250,49 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
         systag3.setTagName("性别");
         //systag1.setTagExclude(tagExclude);
         systag3.setTagIndex(0);
+    }
+    
+    private void MutiThreadTest() {
+        Thread t1 = new Thread(new Runnable(){
+            public void run(){
+                System.out.println("Mythread 线程t1");
+                while(true){                    
+                    SegmentRedisVO vo=new SegmentRedisVO();
+                    vo.setSegmentName("00000000000000");
+                    segmentCalcService.setSegmentRedis(vo);
+                    SegmentRedisVO seg=  segmentCalcService.getSegmentRedis();                    
+                    System.out.println("线程t1 >> " + seg.getSegmentName());
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                
+            }
+        });
+        
+        Thread t2 = new Thread(new Runnable(){
+            public void run(){
+                System.out.println("Mythread 线程t2");
+                while(true){                    
+                    SegmentRedisVO vo=new SegmentRedisVO();
+                    vo.setSegmentName("111111111111111");
+                    segmentCalcService.setSegmentRedis(vo);
+                    SegmentRedisVO seg=  segmentCalcService.getSegmentRedis();                    
+                    System.out.println("线程t2>> " + seg.getSegmentName());
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                
+            }
+        });
+        t1.start();
+        t2.start();
     }
 }
