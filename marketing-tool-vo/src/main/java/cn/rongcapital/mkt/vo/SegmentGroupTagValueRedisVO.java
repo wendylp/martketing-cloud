@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.service.impl.vo;
+package cn.rongcapital.mkt.vo;
 
 import org.hibernate.validator.constraints.NotEmpty;
 

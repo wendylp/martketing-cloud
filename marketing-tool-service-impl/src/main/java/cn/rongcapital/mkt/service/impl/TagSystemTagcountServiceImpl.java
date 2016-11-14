@@ -83,7 +83,7 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
 		query.with(new Sort(Direction.DESC, "update_time"));
 		// 获取一级节点的所有子节点
 		List<TagTree> tagTreeList = mongoOperations.find(query, TagTree.class);
-
+		
 		if (CollectionUtils.isEmpty(tagTreeList)) {
 			return baseOutput;
 		}
