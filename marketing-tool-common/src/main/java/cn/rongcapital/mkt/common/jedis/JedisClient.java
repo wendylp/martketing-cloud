@@ -262,7 +262,7 @@ public class JedisClient {
 
 	public static boolean hmset(String key, Map<String, String> map) throws JedisException {
 
-		Jedis jedis = JedisConnectionManager.getConnection();
+		Jedis jedis = JedisConnectionManager.getNewConnection();
 		String rs;
 		try {
 			rs = jedis.hmset(key, map);
@@ -276,20 +276,21 @@ public class JedisClient {
 	}
 	
 	public static boolean hmset(Integer index, String key, Map<String, String> map) throws JedisException {
-
-        Jedis jedis = JedisConnectionManager.getConnection();
-        jedis.select(index);
-        String rs;
-        try {
-            rs = jedis.hmset(key, map);
-        } catch (Exception e) {
-            throw new JedisException("设置key和HASH值异常!",e);
-        } finally {
-            JedisConnectionManager.closeConnection(jedis);
-        }
-        
-        return rs != null && rs.equals("OK") ? true : false;
-    }
+	    
+	    Jedis jedis = JedisConnectionManager.getConnection();
+	    String rs;
+	    try {
+	        jedis.select(index);
+	        rs = jedis.hmset(key, map);
+	    } catch (Exception e) {
+	        throw new JedisException("设置key和HASH值异常!",e);
+	    } finally {
+	        JedisConnectionManager.closeConnection(jedis);
+	    }
+	    
+	    return rs != null && rs.equals("OK") ? true : false;
+	}
+	
 	
 	public List<String> hmget(String key,String... fields) throws JedisException{
 	    Jedis jedis = JedisConnectionManager.getConnection();
@@ -485,17 +486,18 @@ public class JedisClient {
     }
     
     public static void sadd(Integer index, String key, String... elems) throws JedisException {
-        Jedis jedis = JedisConnectionManager.getConnection();
-        jedis.select(index);
+        Jedis jedis = JedisConnectionManager.getNewConnection();
         try {
+            jedis.select(index);
             jedis.sadd(key, elems);
         } catch (Exception e) {
             throw new JedisException("sadd 新增异常!", e);
         } finally {
             JedisConnectionManager.closeConnection(jedis);
         }
-
+        
     }
+    
     
     public static Set<String> smembers(String key) throws JedisException{
         Jedis jedis = JedisConnectionManager.getConnection();
