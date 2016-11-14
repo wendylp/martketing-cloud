@@ -20,7 +20,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import com.mongodb.WriteResult;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.jedis.JedisConnectionManager;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.dao.SystemTagResultDao;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -29,7 +29,6 @@ import cn.rongcapital.mkt.po.SystemTagResult;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Tag;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
-import redis.clients.jedis.Jedis;
 
 /*************************************************
  * @功能简述: 系统标签同步父类
@@ -66,9 +65,7 @@ public class BaseSystemTagSyn {
 	 * @return
 	 */
 	protected void getTagViewList(BaseDao<SysTagView> targetDao) {
-		Jedis redis = null;
 		try {
-			redis = RedistSetDBUtil.getRedisInstance();
 			SysTagView sysTagView = new SysTagView();
 			sysTagView.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 			sysTagView.setPageSize(null);
@@ -76,21 +73,17 @@ public class BaseSystemTagSyn {
 			// 所有人员Id
 			Set<String> midSet = new HashSet<>();
 			for (SysTagView sys : tagViewList) {
-				this.getSysTagResult(sys,midSet,redis);
+				this.getSysTagResult(sys,midSet);
 			}
 			// 将所有人员Id保存到Redis中
 			String[] idsArray = (String[]) midSet.toArray(new String[midSet.size()]);
-			redis.sadd(RedisKey.ALL_DATAPARY_MID, idsArray);
+			JedisClient.sadd2(RedisKey.ALL_DATAPARY_MID, idsArray);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			if(redis != null){
-				JedisConnectionManager.closeConnection(redis);
-			}
-		}
+		} 
 	}
 
-	protected void getSysTagResult(SysTagView sys, Set<String> midSet,Jedis redis) {
+	protected void getSysTagResult(SysTagView sys, Set<String> midSet) {
 		try {
 			String viewName = sys.getViewName(); // 视图名称
 			String tagName = sys.getTagName(); // 标签名称
@@ -150,7 +143,7 @@ public class BaseSystemTagSyn {
 				int threadActiveCount = threadPoolTaskExecutor.getActiveCount();
 				if (threadActiveCount == 0) {
 					// 存入Redis
-					saveDataToReids(paramMap,redis);
+					saveDataToReids(paramMap);
 					break;
 				}
 			}
@@ -233,13 +226,13 @@ public class BaseSystemTagSyn {
 	 * 
 	 * @param dataMap
 	 */
-	private void saveDataToReids(Map<String, Vector<String>> dataMap,Jedis redis) {
+	private void saveDataToReids(Map<String, Vector<String>> dataMap) {
 		try {
 			Set<String> keySet = dataMap.keySet();
 			for (String key : keySet) {
 				Vector<String> vector = dataMap.get(key);
 				String[] idArray = (String[]) vector.toArray(new String[vector.size()]);
-				redis.sadd(key, idArray);
+				JedisClient.sadd2(key, idArray);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

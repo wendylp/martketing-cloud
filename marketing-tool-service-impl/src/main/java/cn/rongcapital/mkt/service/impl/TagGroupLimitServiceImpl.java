@@ -1,6 +1,8 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +57,12 @@ public class TagGroupLimitServiceImpl implements TagGroupLimitService {
 
 		List<TagGroupLimit> selectList = tagGroupLimitDao.selectList(param);
 		TagGroupLimit tagGroupLimit = selectList.get(0);
-
-		result.getData().add(tagGroupLimit);
+		
+		Map<String, Object> contactListMap = new HashMap<String, Object>();
+		contactListMap.put("group_limit", tagGroupLimit.getGroupLimit());
+		contactListMap.put("tag_limit", tagGroupLimit.getTagLimit());
+		result.setTotal(1);
+		result.getData().add(contactListMap);
 
 		return result;
 	}

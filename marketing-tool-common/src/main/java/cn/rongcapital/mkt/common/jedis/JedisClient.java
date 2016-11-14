@@ -275,6 +275,21 @@ public class JedisClient {
 		return rs != null && rs.equals("OK") ? true : false;
 	}
 	
+	public static boolean hmset2(String key, Map<String, String> map) throws JedisException {
+
+        Jedis jedis = JedisConnectionManager.getConnection2();
+        String rs;
+        try {
+            rs = jedis.hmset(key, map);
+        } catch (Exception e) {
+            throw new JedisException("设置key和HASH值异常!",e);
+        } finally {
+            JedisConnectionManager.closeConnection2(jedis);
+        }
+        
+        return rs != null && rs.equals("OK") ? true : false;
+    }
+	
 	public List<String> hmget(String key,String... fields) throws JedisException{
 	    Jedis jedis = JedisConnectionManager.getConnection();
 	    try {
@@ -464,6 +479,18 @@ public class JedisClient {
             throw new JedisException("sadd 新增异常!", e);
         } finally {
             JedisConnectionManager.closeConnection(jedis);
+        }
+
+    }
+    
+    public static void sadd2(String key, String... elems) throws JedisException {
+        Jedis jedis = JedisConnectionManager.getConnection2();
+        try {
+            jedis.sadd(key, elems);
+        } catch (Exception e) {
+            throw new JedisException("sadd 新增异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection2(jedis);
         }
 
     }
