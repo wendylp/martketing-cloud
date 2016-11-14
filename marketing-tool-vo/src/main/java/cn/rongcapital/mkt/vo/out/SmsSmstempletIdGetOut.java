@@ -27,10 +27,14 @@ public class SmsSmstempletIdGetOut {
 
     private String content;
     
+    private Boolean editCheck;
+    
+    private Boolean deleteCheck;
+    
     public SmsSmstempletIdGetOut() {}
 
     public SmsSmstempletIdGetOut(Integer id, Byte channelType, Byte type, Byte auditStatus,
-                    String name, String auditReason, String auditTime, String content) {
+                    String name, String auditReason, String auditTime, String content, Boolean editCheck, Boolean deleteCheck) {
         super();
         this.id = id;
         this.channelType = channelType;
@@ -40,6 +44,8 @@ public class SmsSmstempletIdGetOut {
         this.auditReason = auditReason;
         this.auditTime = auditTime;
         this.content = content;
+        this.editCheck = editCheck;
+        this.deleteCheck = deleteCheck;
     }
 
     @JsonProperty("id")
@@ -114,11 +120,30 @@ public class SmsSmstempletIdGetOut {
         this.content = content;
     }
 
+    @JsonProperty("edit_check")
+    public Boolean getEditCheck() {
+        return editCheck;
+    }
+
+    public void setEditCheck(Boolean editCheck) {
+        this.editCheck = editCheck;
+    }
+
+    @JsonProperty("delete_check")
+    public Boolean getDeleteCheck() {
+        return deleteCheck;
+    }
+
+    public void setDeleteCheck(Boolean deleteCheck) {
+        this.deleteCheck = deleteCheck;
+    }
+
     @Override
     public String toString() {
         return "SmsSmstempletIdGetOut [id=" + id + ", channelType=" + channelType + ", type=" + type
                         + ", auditStatus=" + auditStatus + ", name=" + name + ", auditReason="
-                        + auditReason + ", auditTime=" + auditTime + ", content=" + content + "]";
+                        + auditReason + ", auditTime=" + auditTime + ", content=" + content
+                        + ", editCheck=" + editCheck + ", deleteCheck=" + deleteCheck + "]";
     }
 
     @Override
@@ -130,6 +155,8 @@ public class SmsSmstempletIdGetOut {
         result = prime * result + ((auditTime == null) ? 0 : auditTime.hashCode());
         result = prime * result + ((channelType == null) ? 0 : channelType.hashCode());
         result = prime * result + ((content == null) ? 0 : content.hashCode());
+        result = prime * result + ((deleteCheck == null) ? 0 : deleteCheck.hashCode());
+        result = prime * result + ((editCheck == null) ? 0 : editCheck.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((type == null) ? 0 : type.hashCode());
@@ -170,6 +197,16 @@ public class SmsSmstempletIdGetOut {
                 return false;
         } else if (!content.equals(other.content))
             return false;
+        if (deleteCheck == null) {
+            if (other.deleteCheck != null)
+                return false;
+        } else if (!deleteCheck.equals(other.deleteCheck))
+            return false;
+        if (editCheck == null) {
+            if (other.editCheck != null)
+                return false;
+        } else if (!editCheck.equals(other.editCheck))
+            return false;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -187,7 +224,5 @@ public class SmsSmstempletIdGetOut {
             return false;
         return true;
     }
-    
-    
 
 }
