@@ -51,7 +51,7 @@ public class TagSystemFuzzyListGetServiceImpl implements TagSystemFuzzyListGetSe
                 TagSystemFuzzyListGetOut tagSystemFuzzyListGetOut =new TagSystemFuzzyListGetOut(tagValueCountList.getTagId(),
                                 tagValueCountList.getTagName(), tagValueCountList.getTagValue(),
                                 tagValueCountList.getTagPath(), tagValueCountList.getIsTag(),
-                                tagValueCountList.getSearchMod());
+                                tagValueCountList.getSearchMod(), tagValueCountList.getTagValueSeq());
                 result.getData().add(tagSystemFuzzyListGetOut);
             }
             
