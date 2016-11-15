@@ -48,6 +48,12 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return list
 	 */
 	void batchInsertFans(List<Map<String, Object>> fansList);
+	
+	/**
+	 * 批量插入粉丝人数
+	 * @param wechatMembers
+	 */
+	void batchInsert(List<WechatMember> wechatMembers);
 
 	/**
 	 * 判断这个人是否已经被保存
@@ -156,4 +162,11 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 */
 	int deleteFansByVO(WXFansListVO wxFansListVO);
 	
+	/**
+	 * 删除粉丝
+	 * @param paramMap
+	 * @return
+	 */
+	int deleteWechatMembersByIdsAndPubId(Map<String, Object> paramMap);
+		
 }
