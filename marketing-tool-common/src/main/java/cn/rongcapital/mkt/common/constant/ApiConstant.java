@@ -338,6 +338,17 @@ public class ApiConstant {
     public static final String DATA_PARTY_ACTIVE_TYPE = "2";
     
     /**
+     * 用户所在区域tag_id
+     */
+    public static final String DATA_PARTY_LOCATION_TAG_ID = "Ewg6v3z1";
+    
+    /**
+     * 用户活动区域tag_id
+     */
+    public static final String DATA_PARTY_ACTIVE_TAG_ID = "GbsBmesd";
+    
+    
+    /**
      * 省份字典表名
      */
     public static final String PROVINCE_DIC_TABLE_NAME = "province_dic";
