@@ -78,12 +78,14 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 			String tagValueSeq = tagInfo.getTagValueSeq();
 			//标签标识
 			String isTag = tagInfo.getIsTag();
-			if(isTag.equals(IS_TAG)){
+			if(IS_TAG.equals(isTag)){
 				paramMap.put(RedisKey.TAG_VALUE_ORDER, TAG_DEFUALT_ORDER);
+				isTag = "0";
 			}else{
 				//标签排序
 				String order = tagValueSeq.substring(tagValueSeq.indexOf("_")+1,tagValueSeq.length());
 				paramMap.put(RedisKey.TAG_VALUE_ORDER, order);
+				isTag = "1";
 			}
 			//封装参数
 			paramMap.put(RedisKey.TAG_ID, tagInfo.getTagId());
