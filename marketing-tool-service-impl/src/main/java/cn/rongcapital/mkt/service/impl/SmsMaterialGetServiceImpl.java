@@ -65,7 +65,7 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
         smsMaterialOut.setSmsTemplateId(rs.getSmsTempletId());
         smsMaterialOut.setSmsTemplateContent(rs.getSmsTempletContent());
         smsMaterialOut.setSmsTemplateName(smsTemplateName);
-        smsMaterialOut.setCreateTime(DateUtil.getStringFromDate(rs.getCreateTime(),"yyyy-MM-dd hh:mm:ss"));
+        smsMaterialOut.setCreateTime(DateUtil.getStringFromDate(rs.getCreateTime(),"yyyy-MM-dd HH:mm:ss"));
         smsMaterialOut.setEditStatus(smsMaterialService.smsMaterialValidate(rs.getId())?0:1);
         smsMaterialOut.setDeleteStatus(smsMaterialOut.getEditStatus());
         return smsMaterialOut;

@@ -482,6 +482,12 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		SegmentRedisVO segmentRedisVO = segmentCalcService.getSegmentRedis();
 		//将算出来的数据封装成对象
 		segmentFilterOut.setSegmentTotal(segmentRedisVO.getSegmentCoverCount());
+		//Todo:需要做验证空值的处理
+		if(CollectionUtils.isEmpty(segmentRedisVO.getSegmentGroups())){
+			segmentFilterOut.setCode(ApiErrorCode.BIZ_ERROR.getCode());
+			segmentFilterOut.setMsg(ApiErrorCode.BIZ_ERROR.getMsg());
+			return segmentFilterOut;
+		}
 		for(SegmentGroupRedisVO segmentGroupRedisVO : segmentRedisVO.getSegmentGroups()){
 			TagGroupChartOut tagGroupChartOut = new TagGroupChartOut();
 			tagGroupChartOut.setGroupId(segmentGroupRedisVO.getGroupId());

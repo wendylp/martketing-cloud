@@ -88,9 +88,10 @@ public class SaveTagDataToRedisServiceImpl implements TaskService{
 				isTag = "1";
 			}
 			//封装参数
+			String tagName = tagInfo.getTagName();
 			paramMap.put(RedisKey.TAG_ID, tagInfo.getTagId());
-			paramMap.put(RedisKey.TAG_NAME, tagInfo.getTagName());
-			paramMap.put(RedisKey.TAG_PATH, tagInfo.getTagPath());
+			paramMap.put(RedisKey.TAG_NAME, tagName);
+			paramMap.put(RedisKey.TAG_PATH, tagInfo.getTagPath()+">"+tagName+">");
 			paramMap.put(RedisKey.TAG_VALUE, tagInfo.getTagValue());
 			paramMap.put(RedisKey.TAG_VALUE_ID, tagValueSeq);
 			paramMap.put(RedisKey.COVER_COUNT, tagInfo.getValueCount().toString());
