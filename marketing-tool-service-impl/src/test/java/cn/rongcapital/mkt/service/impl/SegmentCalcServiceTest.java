@@ -49,9 +49,9 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
     public void testCalcSegmentCover() throws Exception {
         logger.info("测试方法: calcSegmentCover");  
        
-        //segmentCalcService.calcSegmentCover(segment);  
-        //segmentCalcService.saveSegmentCover() ;
-        MutiThreadTest();
+        segmentCalcService.calcSegmentCover(segment);  
+        segmentCalcService.saveSegmentCover() ;
+        //mutiThreadTest();
     }
     
     @After
@@ -252,7 +252,7 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
         systag3.setTagIndex(0);
     }
     
-    private void MutiThreadTest() {
+    private void multiThreadTest() {
         Thread t1 = new Thread(new Runnable(){
             public void run(){
                 System.out.println("Mythread 线程t1");
