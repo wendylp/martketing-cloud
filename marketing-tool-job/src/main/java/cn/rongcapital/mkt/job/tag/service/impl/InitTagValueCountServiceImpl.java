@@ -64,7 +64,7 @@ public class InitTagValueCountServiceImpl implements TaskService{
 				TagTree tagTree = tagTreeList.get(0);
 				String tName = tagTree.getTagName();
 				String root = tagTree.getParent();
-				String tagPath = root+">"+tName;
+				String tagPath = root+">"+tName+">";
 				
 				//标签数量
 				Long tagCount = mongoTemplate.count(
