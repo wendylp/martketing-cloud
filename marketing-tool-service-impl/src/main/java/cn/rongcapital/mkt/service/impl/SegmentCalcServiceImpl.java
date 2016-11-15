@@ -86,7 +86,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
        Long endTimeSegmentCalc=System.currentTimeMillis();    
        logger.info("Segment calculation costs="+(endTimeSegmentCalc-startTimeSegmentCalc)+"ms");
        this.loggerSegment();
-       this.clearTempRedisKeys();
+       //this.clearTempRedisKeys();
        return;
 
     }
