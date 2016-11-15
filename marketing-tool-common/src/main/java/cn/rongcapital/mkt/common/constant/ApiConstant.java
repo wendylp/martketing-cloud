@@ -300,6 +300,8 @@ public class ApiConstant {
 	
 	public static final int WEIXIN_BATCH_GET_USER_INFO_SIZE=100;
 	
+	public static final int WEIXIN_BATCH_INSERT_USER_INFO_SIZE=100;
+	
 	
 	/**
 	 * 登录冲突

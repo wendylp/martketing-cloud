@@ -115,6 +115,41 @@
 		]]>
 	</insert>
 	
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,pub_id,uin,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,create_time,selected,bitmap,keyid,fans_json)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			  #{item.wxCode},
+			  #{item.wxName},
+			  #{item.wxGroupId},
+			  #{item.nickname},
+			  #{item.sex},
+			  #{item.country},
+			  #{item.province},
+			  #{item.city},
+			  #{item.county},
+			  #{item.birthday},
+			  #{item.signature},
+			  #{item.isFriend},
+			  #{item.pubId},
+			  #{item.uin},
+			  #{item.subscribeYn},
+			  #{item.subscribeTime},
+			  #{item.activeTime},
+			  #{item.activity48hYn},
+			  #{item.headImageUrl},
+			  #{item.remark},
+			  now(),
+			  #{item.selected},
+			  #{item.bitmap},
+			  #{item.keyid},
+			  #{item.fansJson}
+			)
+		</foreach>
+	</insert>
+	
+	
 	<!-- 返回插入的编号,在事务开启状态下有效 -->
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
@@ -184,6 +219,7 @@
 		)
 		</foreach>
 	</insert>
+
 
 	<select id="selectIdByGroupIdAndWxAcct" parameterType="java.util.Map" resultType="java.lang.Long">
 		SELECT id
@@ -319,9 +355,18 @@
 		DELETE
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE pub_id=#{pubId} AND wx_code 
-		<foreach collection="fansList" item="item" index="index" separator="," open="IN (" close=")">
-			#{item.wx_code}
+		<foreach collection="wechatMembers" item="item" index="index" separator="," open="IN (" close=")">
+			#{item.wxCode}
 		</foreach>
 	</delete>	
+
+	<delete id="deleteWechatMembersByIdsAndPubId" parameterType="java.util.Map">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE pub_id=#{pubId} AND wx_code 
+		<foreach collection="wechatMembers" item="item" index="index" separator="," open="IN (" close=")">
+			#{item.wxCode}
+		</foreach>
+	</delete>		
 		
 </mapper>
