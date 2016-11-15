@@ -74,9 +74,9 @@ public class Segment2RedisInitServiceImpl implements TaskService{
     	
     	try {
     		
-    		JedisClient.delete(POOL_INDEX,"segment:"+headId);
-			JedisClient.hset(POOL_INDEX,"segment:"+headId, "segmentname", segmentName);
-	    	JedisClient.hset(POOL_INDEX,"segment:"+headId, "segmentcoverids", "segmentcoverids:"+headId);
+    		JedisClient.delete(POOL_INDEX,"segmentcover:"+headId);
+			JedisClient.hset(POOL_INDEX,"segmentcover:"+headId, "segmentname", segmentName);
+	    	JedisClient.hset(POOL_INDEX,"segmentcover:"+headId, "segmentcoverids", "segmentcoverids:"+headId);
 
 		} catch (JedisException e) {
 			
@@ -109,13 +109,15 @@ public class Segment2RedisInitServiceImpl implements TaskService{
 		logger.info("=========查询mongo细分管理数据结束,查询数据总:" + segmentLists.size() + "条,用时:" + (selectMongoEnd - selectMongoStart) + "毫秒=================");
     	
 		try {
-			JedisClient.hset(POOL_INDEX,"segment:"+headId, "segmentCount", segmentLists.size()+"");
-
+			
 	    	logger.info("=================================插入redisIds开始================================");
 			long insetIdsStart = System.currentTimeMillis();
 			for(Segment segment:segmentLists){
 				JedisClient.sadd(POOL_INDEX,"segmentcoverids:"+headId, segment.getDataId()+"");
 			}
+			
+			Long count = JedisClient.scard(POOL_INDEX, "segmentcoverids:"+headId);
+			JedisClient.hset(POOL_INDEX,"segmentcover:"+headId, "segmentcount", count+"");
 			
 			long insetIdsEnd= System.currentTimeMillis();
 			logger.info("=========插入redisIds结束,插入数据总:" + segmentLists.size() + "条,用时:" + (insetIdsEnd - insetIdsStart) + "毫秒=================");
