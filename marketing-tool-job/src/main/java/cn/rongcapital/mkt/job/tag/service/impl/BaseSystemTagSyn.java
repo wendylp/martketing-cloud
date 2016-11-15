@@ -17,6 +17,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import com.mongodb.Mongo;
+import com.mongodb.MongoOptions;
 import com.mongodb.WriteResult;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -58,6 +60,7 @@ public class BaseSystemTagSyn {
 
 	@Autowired
 	private TagValueCountDao tagValueCountDao;
+	
 
 	/**
 	 * 获取标签视图映射集合
@@ -68,6 +71,8 @@ public class BaseSystemTagSyn {
 	 */
 	protected void getTagViewList(BaseDao<SysTagView> targetDao) {
 		try {
+			//设置Mongo超时时间
+			setMongoConnectTimeOut();
 			SysTagView sysTagView = new SysTagView();
 			sysTagView.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 			sysTagView.setPageSize(null);
@@ -195,7 +200,7 @@ public class BaseSystemTagSyn {
 			Query query = Query.query(Criteria.where("mid").gt(-1));
 			Update update = new Update().unset("tag_list");
 			mongoTemplate.updateMulti(query, update, cn.rongcapital.mkt.po.mongodb.DataParty.class);
-		} catch (Exception e) {
+		 } catch (Exception e) {
 			e.printStackTrace();
 			logger.info("初始化Mongo tag_list字段出现异常---------->" + e.getMessage(), e);
 		}
@@ -246,6 +251,13 @@ public class BaseSystemTagSyn {
 		} catch (Exception e) {
 			logger.error("保存数据到Redis方法出现异常---------->"+e.getMessage(),e);
 		} 
+	}
+	/**
+	 * 设置Mongo连接超时时间
+	 */
+	@SuppressWarnings("deprecation")
+	private void setMongoConnectTimeOut(){
+		mongoTemplate.getCollection("mkt").getDB().getMongo().getMongoOptions().setConnectTimeout(600000);;
 	}
 
 }
