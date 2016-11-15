@@ -7,8 +7,12 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.core.SecurityContext;
@@ -36,10 +40,14 @@ import org.springframework.util.StringUtils;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.GenderEnum;
+import cn.rongcapital.mkt.common.util.GenerateUUid;
+import cn.rongcapital.mkt.dao.TagValueCountDao;
+import cn.rongcapital.mkt.po.TagValueCount;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.service.SegmentFilterGetService;
+import cn.rongcapital.mkt.service.SegmentManageCalService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
@@ -63,6 +71,18 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 	@Autowired
 	private SegmentCalcService segmentCalcService;
 
+	public static final  Integer POOL_INDEX = 2;
+	
+	@Autowired
+	private TagValueCountDao tagValueCountDao;
+	
+	@Autowired
+	private SegmentManageCalService segmentManageCalService;
+	
+    private String uuid="";   
+    
+    private ArrayList<String> tempKeys = new ArrayList<String>();
+    
 	@ReadWrite(type = ReadWriteType.READ)
 	@Override
 	public BaseOutput getSegmentFilterCount(SegmentFilterCountIn body, SecurityContext securityContext) {
@@ -210,40 +230,21 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 	@Override
 	public BaseOutput segmentGenderCountList(SegmentCountFilterIn input) {
 		BaseOutput result = newSuccessBaseOutput();
-		Criteria midCriteria = getDataPartyCriteria(input.getSegmentHeadIds());
-		if (midCriteria == null) {
-			return result;
-		}
-		Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(midCriteria),
-				Aggregation.group("gender").count().as("populationCount").first("gender").as("dimensionName"));
-		AggregationResults<SegmentDimensionCountOut> aggregationResults = mongoTemplate.aggregate(aggregation,
-				DataParty.class, SegmentDimensionCountOut.class);
-		List<SegmentDimensionCountOut> segmentDimensionCountOutList = aggregationResults.getMappedResults();
-		int maleCount = 0;
-		int femaleCount = 0;
-		int otherCount = 0;
-		if (!CollectionUtils.isEmpty(segmentDimensionCountOutList)) {
-			for (SegmentDimensionCountOut dimensionCountOut : segmentDimensionCountOutList) {
-				Integer populationCount = dimensionCountOut.getPopulationCount();
-				if (populationCount == null || populationCount.intValue() < 1) {
-					continue;
-				}
-				String gender = dimensionCountOut.getDimensionName();
-				if (StringUtils.hasText(gender)) {
-					int genderInt = Integer.parseInt(gender);
-					if (GenderEnum.MALE.getStatusCode().intValue() == genderInt) {
-						maleCount += populationCount.intValue();
-					} else if (GenderEnum.FEMALE.getStatusCode().intValue() == genderInt) {
-						femaleCount += populationCount.intValue();
-					} else {
-						otherCount += populationCount.intValue();
-					}
-				} else {
-					otherCount += populationCount.intValue();
-				}
-			}
-		}
+		
+		//获取所有headId并转换成数据格式
+		String[] arrHeadIds = getHeadIds(input);
+		
+		//获取主数据id集合(并集)
+		Long midCount = getMids(arrHeadIds);
+		
+		Map<String,Integer> genderCountMap = getGender();
+		
+		int maleCount = genderCountMap.get(ApiConstant.GENDER_TAG_KEY_MALE) == null ? 0 : genderCountMap.get(ApiConstant.GENDER_TAG_KEY_MALE);
+		int femaleCount = genderCountMap.get(ApiConstant.GENDER_TAG_KEY_FEMALE) == null ? 0 : genderCountMap.get(ApiConstant.GENDER_TAG_KEY_FEMALE);
+		int otherCount = Integer.valueOf(midCount+"") - maleCount - femaleCount;
 
+		this.clearTempRedisKeys();
+		
 		List<SegmentDimensionCountOut> formatSegmentDimensionOut = new ArrayList<>();
 		formatSegmentDimensionOut.add(new SegmentDimensionCountOut(GenderEnum.MALE.getDescription(), maleCount));
 		formatSegmentDimensionOut.add(new SegmentDimensionCountOut(GenderEnum.FEMALE.getDescription(), femaleCount));
@@ -254,67 +255,57 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 
 	@Override
 	public BaseOutput segmentProvinceCountList(SegmentCountFilterIn input) {
-		BaseOutput result = newSuccessBaseOutput();
-		Criteria midCriteria = getDataPartyCriteria(input.getSegmentHeadIds());
-		if (midCriteria == null) {
-			return result;
-		}
 		
+		logger.info("=============================细分管理区域查询开始================================");
 		long start = System.currentTimeMillis();
-		logger.info("=============细分管理地区查询开始=========================");
-		Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(midCriteria),
-				Aggregation.group("provice").count().as("populationCount").first("provice").as("dimensionName"),
-				Aggregation.sort(Sort.Direction.DESC, "populationCount"));
-		AggregationResults<SegmentDimensionCountOut> aggregationResults = mongoTemplate.aggregate(aggregation,
-				DataParty.class, SegmentDimensionCountOut.class);
-		List<SegmentDimensionCountOut> provinceCountOutList = aggregationResults.getMappedResults();
-		List<SegmentDimensionCountOut> formartedProvinceCountOutList = new ArrayList<>();
-		if (!CollectionUtils.isEmpty(provinceCountOutList)) {
-			for (SegmentDimensionCountOut tempSegmentDimensionCountOut : provinceCountOutList) {
-				String dimensionName = tempSegmentDimensionCountOut.getDimensionName();
-				if (!StringUtils.hasText(dimensionName) || dimensionName.trim().length() < 2) {
-					continue;
-				}
-				int startIndex = FRONT_PROVINCE_NAME.indexOf(dimensionName.substring(0, 2));
-				if (startIndex == -1) {
-					continue;
-				}
-				int endIdex = FRONT_PROVINCE_NAME.indexOf(",", startIndex);
-				if (endIdex == -1) {
-					endIdex = FRONT_PROVINCE_NAME.length();
-				}
-				String frontProvinceName = FRONT_PROVINCE_NAME.substring(startIndex, endIdex);
-				SegmentDimensionCountOut validProvinceCountOut = new SegmentDimensionCountOut();
-				validProvinceCountOut.setDimensionName(frontProvinceName);
-				validProvinceCountOut.setPopulationCount(tempSegmentDimensionCountOut.getPopulationCount());
-				formartedProvinceCountOutList.add(validProvinceCountOut);
-			}
-		}
-
-		Aggregation areaAggregation = Aggregation.newAggregation(Aggregation.match(midCriteria), Aggregation
-				.group("citizenship").count().as("populationCount").first("citizenship").as("dimensionName"));
-		AggregationResults<SegmentDimensionCountOut> areaAggregationResults = mongoTemplate.aggregate(areaAggregation,
-				DataParty.class, SegmentDimensionCountOut.class);
-		List<SegmentDimensionCountOut> areaCountOutList = areaAggregationResults.getMappedResults();
-
-		// merge area and province result
+		
 		int chinaCount = 0;
 		int foreignCount = 0;
-		if (!CollectionUtils.isEmpty(areaCountOutList)) {
-			for (SegmentDimensionCountOut tempSegmentAreaCountOut : areaCountOutList) {
-				String citizenship = tempSegmentAreaCountOut.getDimensionName();
-				Integer populationCount = tempSegmentAreaCountOut.getPopulationCount();
-				if (populationCount == null) {
-					continue;
-				}
-				if (citizenship != null && ApiConstant.NATIONALITY_CHINA.equals(citizenship.trim())) {
-					chinaCount += populationCount.intValue();
-				} else {
-					foreignCount += populationCount.intValue();
-				}
-			}
+		
+		//获取所有headId并转换成数据格式
+		String[] arrHeadIds = getHeadIds(input);
+		
+		//获取主数据id集合(并集)
+		Long midCount = getMids(arrHeadIds);
+		
+		//获取各省人数
+		Map<String,Integer> provinceCountMap = getProvinceByType(input.getType());
+		
+		this.clearTempRedisKeys();
+		
+		List<SegmentDimensionCountOut> formartedProvinceCountOutList = new ArrayList<>();
+		
+		for(String key:provinceCountMap.keySet()){
+			
+			SegmentDimensionCountOut validProvinceCountOut = new SegmentDimensionCountOut();
+			validProvinceCountOut.setDimensionName(getProvinceName(key));
+			validProvinceCountOut.setPopulationCount(provinceCountMap.get(key));
+			chinaCount += provinceCountMap.get(key);
+			formartedProvinceCountOutList.add(validProvinceCountOut);
+			
 		}
+		
+        Collections.sort(formartedProvinceCountOutList, new Comparator<SegmentDimensionCountOut>() {
+            @Override
+            public int compare(SegmentDimensionCountOut m1, SegmentDimensionCountOut m2) {
+            	
+                int m1Count = m1.getPopulationCount();
+                int m2Count = m2.getPopulationCount();
+                
+                if(m1Count > m2Count){
+                    return -1;
+                }else if(m1Count < m2Count){
+                    return 1;
+                }else{
+                    return 0;
+                }
+            }
+        });
+		
+		BaseOutput result = newSuccessBaseOutput();
 
+		foreignCount = Integer.valueOf(midCount+"") - chinaCount;
+		
 		SegmentAreaCountOut segmentAreaCountOut = new SegmentAreaCountOut();
 		segmentAreaCountOut.setChinaPopulationCount(chinaCount);
 		segmentAreaCountOut.setForeignPopulationCount(foreignCount);
@@ -323,7 +314,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		result.getData().add(segmentAreaCountOut);
 		long end = System.currentTimeMillis();
 		
-		logger.info("=============细分管理地区查询结束,用时:"+(end-start)+"毫秒");
+		logger.info("=============细分管理地区查询结束,用时:"+(end-start)+"毫秒==================================");
 		return result;
 	}
 
@@ -506,5 +497,181 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 
 		return segmentFilterOut;
 	}
+	private  Map<String, Integer> getProvinceByType(int type){
+		
+		Map<String,Integer> provinceCountMap = new HashMap<String,Integer>();
+		
+		List<String> provinceList = getProvinceKeysByType(type);
+		
+		for(String province : provinceList){
+			
+			segmentManageCalService.sinterstore(POOL_INDEX,province+"_"+uuid,uuid,province);
+			//JedisClient.sinterstore(POOL_INDEX,province+"_"+uuid,uuid,province);
+			
+			tempKeys.add(province+"_"+uuid);
+			Long count = segmentManageCalService.scard(POOL_INDEX, province+"_"+uuid);
+			//Long count = JedisClient.scard(POOL_INDEX, province+"_"+uuid);
+			
+			if(count > 0){
+				provinceCountMap.put(province, Integer.valueOf(count+""));
+			}
+			
+			logger.info(count+"");
+		}
+		
+		return provinceCountMap;
+		
+	}
 
+	/**
+	 * 获取性别阀盖人数
+	 * @param midSet
+	 * @return
+	 */
+	private  Map<String, Integer> getGender(){
+		
+		Map<String,Integer> genderCountMap = new HashMap<String,Integer>();
+		
+		List<String> genderList = getGenderKeys();
+		
+		for(String genderKey : genderList){
+			
+			//JedisClient.sinterstore(POOL_INDEX,genderKey+"_"+uuid,uuid,genderKey);
+			segmentManageCalService.sinterstore(POOL_INDEX,genderKey+"_"+uuid,uuid,genderKey);
+			tempKeys.add(genderKey+"_"+uuid);
+			
+			//Long count = JedisClient.scard(POOL_INDEX, genderKey+"_"+uuid);
+			Long count = segmentManageCalService.scard(POOL_INDEX, genderKey+"_"+uuid);
+			if(count > 0){
+				genderCountMap.put(genderKey, Integer.valueOf(count+""));
+			}
+			
+			logger.info(count+"");
+		}
+		
+		return genderCountMap;
+		
+	}
+	
+	
+	/**
+	 * 获取Mid集合(并集)
+	 * @param arrHeadIds
+	 * @return
+	 */
+	private Long getMids(String[] arrHeadIds ){
+		
+	    uuid=GenerateUUid.generateShortUuid();
+	    tempKeys.add(uuid);
+		segmentManageCalService.sunionstore(POOL_INDEX,uuid,arrHeadIds);
+		//return JedisClient.scard(POOL_INDEX, uuid);
+		return segmentManageCalService.scard(POOL_INDEX, uuid);
+	}
+	
+	/**
+	 * 转换headids为数组类型
+	 * @param input
+	 * @return
+	 */
+	private String[] getHeadIds(SegmentCountFilterIn input){
+		
+		List<String> headIds = new ArrayList<String>();
+		
+		for(Integer headid : input.getSegmentHeadIds()){
+			
+			headIds.add("segmentcoverids:"+headid);
+		}
+		
+		return (String[]) headIds.toArray(new String[headIds.size()]);
+		
+	}
+	
+	/**
+	 * 根据类型获取省份keys
+	 * @param type
+	 * @return
+	 */
+	private List<String> getProvinceKeysByType(int type){
+		
+		List<String> provinceKeysList = new ArrayList<String>();
+		
+		TagValueCount tagValueCount = new TagValueCount();
+		
+		if(ApiConstant.DATA_PARTY_LOCATION_TYPE.equals(type+"")){
+			tagValueCount.setTagId(ApiConstant.DATA_PARTY_LOCATION_TAG_ID);
+		} else {
+			tagValueCount.setTagId(ApiConstant.DATA_PARTY_ACTIVE_TAG_ID);
+		}
+		
+		tagValueCount.setIsTag("0");
+		tagValueCount.setStartIndex(null);
+		tagValueCount.setPageSize(null);
+		List<TagValueCount> tagValueCountList = tagValueCountDao.selectList(tagValueCount);
+		
+		if(tagValueCountList != null && tagValueCountList.size() > 0){
+			
+			for(TagValueCount tagValue : tagValueCountList){
+				provinceKeysList.add("tagcoverid:"+tagValue.getTagValueSeq());
+			}
+			
+		}
+		
+		return provinceKeysList;
+	}
+	
+	/**
+	 * 获取性别keys
+	 * @return
+	 */
+	private List<String> getGenderKeys(){
+		
+		List<String> genderList = new ArrayList<String>();
+		
+		genderList.add(ApiConstant.GENDER_TAG_KEY_MALE);
+		genderList.add(ApiConstant.GENDER_TAG_KEY_FEMALE);
+		
+		return genderList;
+	}
+	
+	/**
+	 * 根据redis省份key获取省份名称
+	 * @param provinceKey
+	 * @return
+	 */
+	private String getProvinceName(String provinceKey){
+		
+		int start = provinceKey.lastIndexOf(":") + 1;
+		String tagValue = "";
+		String tagValueSeq = provinceKey.substring(start);
+		
+		TagValueCount tagValueCount = new TagValueCount();
+		
+		tagValueCount.setTagValueSeq(tagValueSeq);
+		
+		List<TagValueCount> tagValueCountList = tagValueCountDao.selectList(tagValueCount);
+		
+		if(tagValueCountList != null && tagValueCountList.size() > 0){
+			
+			tagValue = tagValueCountList.get(0).getTagValue();
+			
+		}
+		
+		return tagValue;
+		
+	}
+
+    /**
+     * 清除临时产生的redis数据
+     */
+    private void clearTempRedisKeys() {
+
+    	if(tempKeys!=null&&tempKeys.size()>0) {
+			String[] keys=new String[tempKeys.size()];
+		            keys=tempKeys.toArray(keys);
+				//JedisClient.delete(POOL_INDEX, keys);
+				segmentManageCalService.deleteTempKey(POOL_INDEX, keys);
+		        tempKeys.clear();
+		}
+
+    }
 }
