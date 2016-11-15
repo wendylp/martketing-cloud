@@ -1679,19 +1679,19 @@ public class MktApi {
 		return segmentTagGetService.getSegmentTag(userToken, segmentHeadId);
 	}
 
-	/**
-	 * @功能简述: 获取受众细分漏斗计算结果
-	 * @param body
-	 * @param securityContext
-	 * @return BaseOutput
-	 */
-	@POST
-	@Path("/mkt.segment.filter.get")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput getSegmentFilterCount(@Valid SegmentFilterCountIn body,
-			@Context SecurityContext securityContext) {
-		return segmentFilterGetService.getSegmentFilterCount(body, securityContext);
-	}
+//	/**
+//	 * @功能简述: 获取受众细分漏斗计算结果
+//	 * @param body
+//	 * @param securityContext
+//	 * @return BaseOutput
+//	 */
+//	@POST
+//	@Path("/mkt.segment.filter.get")
+//	@Consumes({ MediaType.APPLICATION_JSON })
+//	public BaseOutput getSegmentFilterCount(@Valid SegmentFilterCountIn body,
+//			@Context SecurityContext securityContext) {
+//		return segmentFilterGetService.getSegmentFilterCount(body, securityContext);
+//	}
 
 	@POST
 	@Path("/mkt.segment.filter.sum.get")
