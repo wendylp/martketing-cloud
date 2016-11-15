@@ -17,6 +17,8 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 @Service
 public class TagSystemValueListGetServiceImpl implements TagSystemValueListGetService{
     
+    private static final String IS_TAG_VALUE = "0";
+    
     @Autowired
     private TagValueCountDao tagValueCountDao;
 
@@ -36,6 +38,9 @@ public class TagSystemValueListGetServiceImpl implements TagSystemValueListGetSe
         
         TagValueCount tagValueCountSearch = new TagValueCount();
         tagValueCountSearch.setTagId(tagId);
+        tagValueCountSearch.setIsTag(TagSystemValueListGetServiceImpl.IS_TAG_VALUE);
+        tagValueCountSearch.setStartIndex(null);
+        tagValueCountSearch.setPageSize(null);
         
         // 根据tag_id 查询数据
         List<TagValueCount> tagValueCountLists = tagValueCountDao.selectList(tagValueCountSearch);
