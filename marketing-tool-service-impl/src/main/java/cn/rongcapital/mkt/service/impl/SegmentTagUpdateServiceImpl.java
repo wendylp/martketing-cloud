@@ -53,11 +53,11 @@ import heracles.data.common.util.ReadWriteType;
 public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverids:";
-	
+
 	private ConcurrentHashMap<String, Field[]> filedMap = new ConcurrentHashMap<>();
-	
+
 	@Autowired
 	SegmentationHeadDao segmentationHeadDao;
 
@@ -66,13 +66,13 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
 	@Autowired
 	CustomTagDao customTagDao;
-	
+
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
+
 	@Autowired
 	private InsertCustomTagService insertCustomTagServiceImpl;
-	
+
 	@Autowired
 	private TagCustomTagToDataPartyService tagCustomTagToDataPartyServiceImpl;
 
@@ -82,21 +82,20 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 	public BaseOutput updateSegmentTag(SegmentTagUpdateIn body, SecurityContext securityContext) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
-		
-		
+
 		Integer headerId;
 		Set<String> smembers = null;
 		try {
 			headerId = Integer.valueOf(body.getSegmentHeadId());
-			smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + headerId);
-	        logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + headerId, smembers);
+			smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + headerId, 2);
+			logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + headerId, smembers);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			baseOutput.setCode(9001);
 			baseOutput.setMsg("细分人群编号不能为空");
 			return baseOutput;
 		}
-		
+
 		List<String> tagNames = body.getTagNames();
 
 		List<Integer> personIdList = new ArrayList<Integer>();
@@ -114,55 +113,59 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 			for (String tagName : tagNames) {
 				baseTag = new CustomTagLeaf();
 				baseTag.setTagName(tagName);
-				baseTag.setStatus((int)ApiConstant.TABLE_DATA_STATUS_VALID);
+				baseTag.setStatus((int) ApiConstant.TABLE_DATA_STATUS_VALID);
 				baseTag.setSource(TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.getTagSourceName());
-				
-				Query query = new Query(Criteria.where("tag_name").is(baseTag.getTagName()).and("status").is(baseTag.getStatus()).and("source").is(tagSource));
-				List<BaseTag> customTagLeafs = mongoTemplate.find(query,BaseTag.class);
-				
+
+				Query query = new Query(Criteria.where("tag_name").is(baseTag.getTagName()).and("status")
+						.is(baseTag.getStatus()).and("source").is(tagSource));
+				List<BaseTag> customTagLeafs = mongoTemplate.find(query, BaseTag.class);
+
 				if (CollectionUtils.isEmpty(customTagLeafs)) {
-					BaseTag baseTagResult = insertCustomTagServiceImpl.insertCustomTagLeafFromSystemIn(tagName, tagSource);
+					BaseTag baseTagResult = insertCustomTagServiceImpl.insertCustomTagLeafFromSystemIn(tagName,
+							tagSource);
 					tagIdList.add(baseTagResult.getTagId());
-					
-				}else {
-				    Update update = buildBaseUpdate(baseTag);
-				    mongoTemplate.updateFirst(query, update, baseTag.getClass());
-				    tagIdList.add(customTagLeafs.get(0).getTagId());
+
+				} else {
+					Update update = buildBaseUpdate(baseTag);
+					mongoTemplate.updateFirst(query, update, baseTag.getClass());
+					tagIdList.add(customTagLeafs.get(0).getTagId());
 				}
 			}
 		}
 		// 删除标签与细分对应关系
 		customTagMapDao.batchDeleteUseHeadId(String.valueOf(headerId));
-		
+
 		// 建立标签与细分对应关系
 		for (String customTag : tagIdList) {
-			
+
 			String tagId = customTag;
 			CustomTagMap tagMap = new CustomTagMap();
 			tagMap.setTagId(String.valueOf(tagId));
 			tagMap.setTagSource(TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.getTagSourceId());
 			tagMap.setMapId(String.valueOf(headerId));
 			customTagMapDao.insert(tagMap);
-			
+
 			// 删除标签与人群对应关系
 			customTagMapDao.batchDeleteUseTagId(tagId);
-			
+
 			// 建立细分与人群对应关系
-			/*for (Integer personId : personIdList) {
-				CustomTagMap pensonTagMap = new CustomTagMap();
-				pensonTagMap.setTagId(String.valueOf(tagId));
-				tagMap.setTagSource(TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.getTagSourceId());
-				pensonTagMap.setMapId(String.valueOf(personId));
-				customTagMapDao.insert(pensonTagMap);
-			}*/
-			//给人打上标签
+			/*
+			 * for (Integer personId : personIdList) { CustomTagMap pensonTagMap
+			 * = new CustomTagMap();
+			 * pensonTagMap.setTagId(String.valueOf(tagId));
+			 * tagMap.setTagSource(TagSourceEnum.SEGMENTATION_SOURCE_ACCESS.
+			 * getTagSourceId());
+			 * pensonTagMap.setMapId(String.valueOf(personId));
+			 * customTagMapDao.insert(pensonTagMap); }
+			 */
+			// 给人打上标签
 			logger.info("tagid is {}========================" + tagId);
-			for(Integer personId : personIdList) {
+			for (Integer personId : personIdList) {
 				tagCustomTagToDataPartyServiceImpl.tagCustomTagToDataPartyById(String.valueOf(tagId), personId);
 				logger.info("======================tagid is " + tagId + " personId is " + personId);
 			}
 		}
-	
+
 		// 标签ID保存至segmentation_head
 		SegmentationHead headUpdate = new SegmentationHead();
 		headUpdate.setId(headerId);
@@ -172,28 +175,29 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
 		return baseOutput;
 	}
-	
-    private <T> Update buildBaseUpdate(T t) {
-        Update update = new Update();
-        String className = t.getClass().getName();
-        Field[] fields = filedMap.get(className);
-        if (fields == null) {
-            fields = t.getClass().getDeclaredFields();
-            filedMap.putIfAbsent(className, fields);
-        }
-        for (Field field : fields) {
-            if(field.getName().equals("serialVersionUID")) continue;
-            field.setAccessible(true);
-            try {
-                Object value = field.get(t);
-                if (value != null) {
-                    update.set(field.getName(), value);
-                }
-            } catch (Exception e) {
-                logger.error("buildBaseUpdate failed", e);
-            }
-        }
-        return update;
-    }
+
+	private <T> Update buildBaseUpdate(T t) {
+		Update update = new Update();
+		String className = t.getClass().getName();
+		Field[] fields = filedMap.get(className);
+		if (fields == null) {
+			fields = t.getClass().getDeclaredFields();
+			filedMap.putIfAbsent(className, fields);
+		}
+		for (Field field : fields) {
+			if (field.getName().equals("serialVersionUID"))
+				continue;
+			field.setAccessible(true);
+			try {
+				Object value = field.get(t);
+				if (value != null) {
+					update.set(field.getName(), value);
+				}
+			} catch (Exception e) {
+				logger.error("buildBaseUpdate failed", e);
+			}
+		}
+		return update;
+	}
 
 }
