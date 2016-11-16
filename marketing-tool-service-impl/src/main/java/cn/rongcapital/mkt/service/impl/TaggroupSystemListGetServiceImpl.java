@@ -126,10 +126,13 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 		if (index * size > childrenList.size()) {
 			size = childrenList.size();
 		}
+		
+		int indexStart = (index - 1) * size;
+		int indexEnd = indexStart + size;
 
 		long count = mongoTemplate.count(null, DataParty.class);
 
-		for (int i = (index - 1) * size; i < size; i++) {
+		for (int i = indexStart; i < indexEnd; i++) {
 			String tagRecommendId = childrenList.get(i);
 
             TagRecommend tagRecommend = mongoTemplate.findOne(
