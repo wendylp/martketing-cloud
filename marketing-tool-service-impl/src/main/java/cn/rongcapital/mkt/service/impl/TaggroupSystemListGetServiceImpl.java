@@ -164,6 +164,9 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 				map.put("tag_cover", new DecimalFormat("#.##%").format(0));
 			}
 			
+			// 增加
+			map.put("tag_list", tagRecommend.getTagList());
+			
 			// 增加 推荐标记
 			map.put("flag", tagRecommend.getFlag());
 
