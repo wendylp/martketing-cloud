@@ -169,6 +169,7 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 
 		baseOutput.getData().addAll(resultList);
 		baseOutput.setTotal(resultList.size());
+		baseOutput.setTotalCount(childrenList.size());
 
 		return baseOutput;
 	}
