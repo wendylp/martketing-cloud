@@ -342,12 +342,12 @@ public class ApiConstant {
     /**
      * 用户所在区域tag_id
      */
-    public static final String DATA_PARTY_LOCATION_TAG_ID = "Ewg6v3z1";
+    public static final String DATA_PARTY_LOCATION_TAG_ID = "8HARIs7F";
     
     /**
      * 用户活动区域tag_id
      */
-    public static final String DATA_PARTY_ACTIVE_TAG_ID = "GbsBmesd";
+    public static final String DATA_PARTY_ACTIVE_TAG_ID = "4HAcjGd5";
     
     
     /**
