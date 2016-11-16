@@ -188,7 +188,7 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
         groups.add(tagGroup1);
         groups.add(tagGroup2);
         segment.setFilterGroups(groups);
-        segment.setSegmentHeadId(888L);
+        //segment.setSegmentHeadId(888L);
         tagGroup1.setGroupChange(1);
         tagGroup1.setGroupId("000FFF");
         tagGroup1.setGroupName("testGroup");

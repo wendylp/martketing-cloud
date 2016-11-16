@@ -42,6 +42,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
     public final static String KEY_PREFIX_GROUPINTER="tagcoverid:groupinter";//组交集前缀
     public final static String KEY_PREFIX_DIFF="tagcoverid:diff:"; //差集前缀
     public final static String KEY_PREFIX_SEGMENTCOVER="segmentcover:"; //细分segment前缀
+    public final static String KEY_PREFIX_SEGMENTCOVERID="segmentcoverid:"; //细分segmentcover ids前缀
     
     public final static int REDISDB_INDEX=2; //数据库索引
     public final static Integer GROUP_CHANGE=1; //组内容改变，需要重新计算
@@ -66,7 +67,11 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
        }
        segmentRedis.get().setSegmentCoverCount(0L);
        segmentRedis.get().setSegmentCoverIds("");
-       segmentRedis.get().setSegmentHeadId(segment.getSegmentHeadId());
+       Long defaultSegmentHeadId=new Long(0);
+       if(segment.getSegmentHeadId()!=null) {
+           defaultSegmentHeadId=segment.getSegmentHeadId();
+       }
+       segmentRedis.get().setSegmentHeadId(defaultSegmentHeadId);
        segmentRedis.get().setSegmentName(segment.getSegmentName());
        String updataTime=DateUtil.getStringFromDate(new Date(),"yyyy-MM-dd HH:mm:ss");
        segmentRedis.get().setUpdateTime(updataTime);
@@ -181,7 +186,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
        jedis.select(REDISDB_INDEX);
        if(StringUtils.isBlank(uuid.get())) {
            uuid.set(GenerateUUid.generateShortUuid());
-           logger.info("group uuid:"+ uuid);
+           logger.info("group uuid:"+ uuid.get());
        }      
        this.initSegmentRedis(tagGroup);
        List<SegmentGroupRedisVO> segmentGroups=segmentRedis.get().getSegmentGroups();
@@ -261,12 +266,12 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                         String dstkey=this.generateKeyFromTags(KEY_PREFIX_GROUPINTER,uuid.get(),segmentGroupTags);
                         String[] keys=getCalcTagIds(segmentGroupTags); //使用计算后产生的Ids
                       
-                        jedis.sinterstore(dstkey, keys);  
+                        Long count=jedis.sinterstore(dstkey, keys);  
                         tempKeys.get().add(dstkey);
-                        Long count=jedis.scard(dstkey);
+                        //Long count=jedis.scard(dstkey);
                         segmentGroup.setGroupCoverIds(dstkey);
                         segmentGroup.setGroupCoverCount(count);
-                        logger.info("===Inter calc group count="+count+" ");
+                        logger.info("===Inter calc group count="+count+" groupcoverid="+dstkey);
                         
                     } else if(items.get(0) instanceof SegmentGroupTagValueRedisVO) {
                         //标签值之间不计算交集
@@ -283,8 +288,8 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                         List<SegmentGroupTagValueRedisVO> segmentGroupTagValues=(List<SegmentGroupTagValueRedisVO>)items;
                         String dstkey=this.generateKeyFromTagValues(KEY_PREFIX_UNION,uuid.get(),segmentGroupTagValues); 
                         String[] keys=getTagValueIds(segmentGroupTagValues);
-                        jedis.sunionstore(dstkey, keys);
-                        Long count=jedis.scard(dstkey);
+                        Long count=jedis.sunionstore(dstkey, keys);
+                        //Long count=jedis.scard(dstkey);
                         tempKeys.get().add(dstkey);
                         String tagId=segmentGroupTagValues.get(0).getTagId();
                         SegmentGroupTagRedisVO segmentGroupTag=getTag(tagId);
@@ -309,8 +314,8 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                 //keys[0]=KEY_PREFIX_TAGCOVERID+segmentGroupTag.getTagCoverIds();
                 keys[0]=KEY_PREFIX_TAGCOVERID_ALL;
                 keys[1]=segmentGroupTag.getCalcTagCoverIds();                
-                jedis.sdiffstore(diffkey, keys);
-                Long count=jedis.scard(diffkey);
+                Long count=jedis.sdiffstore(diffkey, keys);
+                //Long count=jedis.scard(diffkey);
                 tempKeys.get().add(diffkey);
                 segmentGroupTag.setCalcTagCoverCount(count);
                 segmentGroupTag.setCalcTagCoverIds(diffkey);
@@ -409,14 +414,21 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
      * 计算整个细分的覆盖
      */
     private void calcSegmentTotalCover() {
-        if(segmentRedis==null) return ;
+        if(segmentRedis.get()==null) return ;
         List<SegmentGroupRedisVO> segmentGroups=segmentRedis.get().getSegmentGroups();
         if(segmentGroups==null||segmentGroups.size()<1) return ;
-        String dstkey="segmentCoverIds:"+segmentRedis.get().getSegmentHeadId()+uuid;   
+        String dstkey=KEY_PREFIX_SEGMENTCOVERID+segmentRedis.get().getSegmentHeadId();   
+        String logstr="";
         if(segmentGroups.size()==1) {
             //只有一个group
-            segmentRedis.get().setSegmentCoverCount(segmentGroups.get(0).getGroupCoverCount());        
-            segmentRedis.get().setSegmentCoverIds(segmentGroups.get(0).getGroupCoverIds());
+            segmentRedis.get().setSegmentCoverCount(segmentGroups.get(0).getGroupCoverCount());
+            String groupCoverIds=segmentGroups.get(0).getGroupCoverIds();
+            if(jedis.exists(groupCoverIds)) {
+                jedis.renamenx(groupCoverIds, dstkey);
+            }
+            segmentRedis.get().setSegmentCoverIds(dstkey);
+            segmentGroups.get(0).setGroupCoverIds(dstkey);
+            logstr="segment coverid="+dstkey+" oldGroupCoverId"+groupCoverIds+" covercount="+segmentGroups.get(0).getGroupCoverCount()+" [only 1 group]";
         } else {
         
             String[] groupKey=new String[segmentGroups.size()];
@@ -427,11 +439,13 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                 i++;
                 
             }
-            jedis.sunionstore(dstkey, groupKey);
-            Long segmentCoverCount=jedis.scard(dstkey);        
+            Long segmentCoverCount=jedis.sunionstore(dstkey, groupKey);
+            //Long segmentCoverCount=jedis.scard(dstkey);        
             segmentRedis.get().setSegmentCoverCount(segmentCoverCount);        
             segmentRedis.get().setSegmentCoverIds(dstkey);
+            logstr="segment coverid="+dstkey+" covercount="+segmentCoverCount+" [multi groups]";
         }
+        logger.info(logstr);
     }
     
     public void loggerSegment() {
@@ -496,13 +510,15 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
      * 保存计算的segment结果
      */
     public boolean saveSegmentCover() throws JedisException {
-        if(segmentRedis==null) {
+        if(segmentRedis.get()==null) {
             logger.info("segmentRedis is null, nothing saved");
+            return false;
         }
         Long saveStartTime=System.currentTimeMillis();
         Long segmentHeadId=segmentRedis.get().getSegmentHeadId();
         if(segmentHeadId==null) {
             logger.info("segmentRedis:segmentHeadId is null, nothing saved");
+            return false;
         }
         String segmentHeadName=segmentRedis.get().getSegmentName();
         if(segmentHeadName==null) {
@@ -511,21 +527,19 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
         Long segmentCoverCount=segmentRedis.get().getSegmentCoverCount();
         String sourceIds=segmentRedis.get().getSegmentCoverIds();
         String updatetime=segmentRedis.get().getUpdateTime();
-        String distIds="segmentcoverids:"+segmentHeadId;    
+        String coverIds=segmentRedis.get().getSegmentCoverIds();    
         String key=KEY_PREFIX_SEGMENTCOVER+segmentHeadId;
         Jedis savejedis = JedisConnectionManager.getConnection(); 
         HashMap<String,String> segmentCover=new HashMap<String,String>();
         segmentCover.put("segmentheadid", segmentHeadId.toString());
         segmentCover.put("segmentheadname", segmentHeadName);
         segmentCover.put("segmentcovercount", segmentCoverCount.toString());
-        segmentCover.put("segmentcoverid",distIds);
+        segmentCover.put("segmentcoverid",coverIds);
         segmentCover.put("updatetime", updatetime);
                     
         String rs;
         try {
-            savejedis.select(REDISDB_INDEX);
-            savejedis.rename(sourceIds, distIds);
-            segmentRedis.get().setSegmentCoverIds(distIds);
+            savejedis.select(REDISDB_INDEX);            
             rs = savejedis.hmset(key, segmentCover);
             logger.info("Save Segment Key:"+key); 
         } catch (Exception e) {
