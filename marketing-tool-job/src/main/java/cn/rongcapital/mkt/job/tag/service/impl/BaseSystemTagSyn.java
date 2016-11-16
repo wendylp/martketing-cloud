@@ -47,8 +47,6 @@ public class BaseSystemTagSyn {
 
 	private static final Integer REDIS_DB_INDEX = 2;
 	
-	private static final String MONGO_DB_NAME = "mkt";
-
 	@Autowired
 	protected MongoTemplate mongoTemplate;
 
@@ -70,8 +68,6 @@ public class BaseSystemTagSyn {
 	 */
 	protected void getTagViewList(BaseDao<SysTagView> targetDao) {
 		try {
-			// 设置Mongo超时时间
-			setMongoConnectTimeOut();
 			SysTagView sysTagView = new SysTagView();
 			sysTagView.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 			sysTagView.setPageSize(null);
@@ -250,19 +246,6 @@ public class BaseSystemTagSyn {
 			JedisClient.sadd(REDIS_DB_INDEX, REDIS_IDS_KEY_PREFIX + tagId, allIds);
 		} catch (Exception e) {
 			logger.error("保存数据到Redis方法出现异常---------->" + e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * 设置Mongo连接超时时间
-	 */
-	@SuppressWarnings("deprecation")
-	private void setMongoConnectTimeOut() {
-		try {
-			mongoTemplate.getCollection(MONGO_DB_NAME).getDB().getMongo().getMongoOptions().setConnectTimeout(600000);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("设置Mongo超时时间方法出现异常---------->"+e.getMessage(),e);
 		}
 	}
 
