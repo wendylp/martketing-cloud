@@ -14,6 +14,8 @@ public class SegmentCountFilterIn extends BaseInput {
 
     @NotNull
     private List<Integer> segmentHeadIds;
+    
+    private int type;
           
     @JsonProperty("user_token")
     public String getUserToken() {
@@ -32,4 +34,14 @@ public class SegmentCountFilterIn extends BaseInput {
     public void setSegmentHeadIds(List<Integer> segmentHeadIds) {
         this.segmentHeadIds = segmentHeadIds;
     }
+
+    @JsonProperty("type")
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+    
 }

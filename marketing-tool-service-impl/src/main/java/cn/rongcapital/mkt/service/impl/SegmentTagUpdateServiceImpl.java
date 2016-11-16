@@ -10,6 +10,7 @@ package cn.rongcapital.mkt.service.impl;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ws.rs.core.SecurityContext;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.TagSourceEnum;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.CustomTagMapDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
@@ -51,6 +53,8 @@ import heracles.data.common.util.ReadWriteType;
 public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverids:";
 	
 	private ConcurrentHashMap<String, Field[]> filedMap = new ConcurrentHashMap<>();
 	
@@ -81,8 +85,11 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		
 		
 		Integer headerId;
+		Set<String> smembers = null;
 		try {
 			headerId = Integer.valueOf(body.getSegmentHeadId());
+			smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + headerId);
+	        logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + headerId, smembers);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			baseOutput.setCode(9001);
@@ -92,17 +99,12 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 		
 		List<String> tagNames = body.getTagNames();
 
-		List<Segment> segmentList = mongoTemplate.find(new Query(new Criteria("segmentation_head_id").is(headerId)), Segment.class);
-
 		List<Integer> personIdList = new ArrayList<Integer>();
 
-		if (CollectionUtils.isEmpty(segmentList)) {
-			segmentList = new ArrayList<Segment>();
-		} else {
-			for (Segment segment : segmentList) {
-				personIdList.add(segment.getDataId());
+		if (CollectionUtils.isNotEmpty(smembers)) {
+			for (String segment : smembers) {
+				personIdList.add(new Integer(segment));
 			}
-
 		}
 		List<String> tagIdList = new ArrayList<String>();
 		// 标签名保存至自定义标签表

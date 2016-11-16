@@ -17,8 +17,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.mongodb.Mongo;
-import com.mongodb.MongoOptions;
 import com.mongodb.WriteResult;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -46,9 +44,9 @@ public class BaseSystemTagSyn {
 	private static final String REDIS_IDS_KEY_PREFIX = "tagcoverid:";
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	
-	private static final Integer REDIS_DB_INDEX = 2;
 
+	private static final Integer REDIS_DB_INDEX = 2;
+	
 	@Autowired
 	protected MongoTemplate mongoTemplate;
 
@@ -60,7 +58,6 @@ public class BaseSystemTagSyn {
 
 	@Autowired
 	private TagValueCountDao tagValueCountDao;
-	
 
 	/**
 	 * 获取标签视图映射集合
@@ -71,8 +68,6 @@ public class BaseSystemTagSyn {
 	 */
 	protected void getTagViewList(BaseDao<SysTagView> targetDao) {
 		try {
-			//设置Mongo超时时间
-			setMongoConnectTimeOut();
 			SysTagView sysTagView = new SysTagView();
 			sysTagView.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 			sysTagView.setPageSize(null);
@@ -80,14 +75,14 @@ public class BaseSystemTagSyn {
 			// 所有人员Id
 			Set<String> midSet = new HashSet<>();
 			for (SysTagView sys : tagViewList) {
-				this.getSysTagResult(sys,midSet);
+				this.getSysTagResult(sys, midSet);
 			}
 			// 将所有人员Id保存到Redis中
 			String[] idsArray = (String[]) midSet.toArray(new String[midSet.size()]);
-			JedisClient.sadd(REDIS_DB_INDEX,RedisKey.ALL_DATAPARY_MID, idsArray);
+			JedisClient.sadd(REDIS_DB_INDEX, RedisKey.ALL_DATAPARY_MID, idsArray);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
+		}
 	}
 
 	protected void getSysTagResult(SysTagView sys, Set<String> midSet) {
@@ -136,11 +131,12 @@ public class BaseSystemTagSyn {
 							vector = getVector();
 							paramMap.put(key, vector);
 						}
-						String mid = String.valueOf(keyId);
-						vector.add(mid);
-						midSet.add(mid);
-
-						startSynchTag(keyId, tag);
+						if (keyId != null) {
+							String mid = String.valueOf(keyId);
+							vector.add(mid);
+							midSet.add(mid);
+							startSynchTag(keyId, tag);
+						}
 					}
 				};
 				threadPoolTaskExecutor.execute(thread);
@@ -150,7 +146,7 @@ public class BaseSystemTagSyn {
 				int threadActiveCount = threadPoolTaskExecutor.getActiveCount();
 				if (threadActiveCount == 0) {
 					// 存入Redis
-					saveDataToReids(paramMap,tagId);
+					saveDataToReids(paramMap, tagId);
 					break;
 				}
 			}
@@ -200,7 +196,7 @@ public class BaseSystemTagSyn {
 			Query query = Query.query(Criteria.where("mid").gt(-1));
 			Update update = new Update().unset("tag_list");
 			mongoTemplate.updateMulti(query, update, cn.rongcapital.mkt.po.mongodb.DataParty.class);
-		 } catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info("初始化Mongo tag_list字段出现异常---------->" + e.getMessage(), e);
 		}
@@ -233,31 +229,24 @@ public class BaseSystemTagSyn {
 	 * 
 	 * @param dataMap
 	 */
-	private void saveDataToReids(Map<String, Vector<String>> dataMap,String tagId) {
+	private void saveDataToReids(Map<String, Vector<String>> dataMap, String tagId) {
 		try {
-			//标签总Id
+			// 标签总Id
 			Set<String> result = new HashSet<>();
 			Set<String> keySet = dataMap.keySet();
 			for (String key : keySet) {
 				long delete = JedisClient.delete(REDIS_DB_INDEX, key);
-				logger.info("删除redis数据方法执行结束，key为------>"+key,",是否成功标识----->"+delete);
+				logger.info("删除redis数据方法执行结束，key为------>" + key, ",是否成功标识----->" + delete);
 				Vector<String> vector = dataMap.get(key);
 				result.addAll(vector);
 				String[] idArray = (String[]) vector.toArray(new String[vector.size()]);
-				JedisClient.sadd(REDIS_DB_INDEX,key, idArray);
+				JedisClient.sadd(REDIS_DB_INDEX, key, idArray);
 			}
 			String[] allIds = (String[]) result.toArray(new String[result.size()]);
-			JedisClient.sadd(REDIS_DB_INDEX,REDIS_IDS_KEY_PREFIX+tagId, allIds);
+			JedisClient.sadd(REDIS_DB_INDEX, REDIS_IDS_KEY_PREFIX + tagId, allIds);
 		} catch (Exception e) {
-			logger.error("保存数据到Redis方法出现异常---------->"+e.getMessage(),e);
-		} 
-	}
-	/**
-	 * 设置Mongo连接超时时间
-	 */
-	@SuppressWarnings("deprecation")
-	private void setMongoConnectTimeOut(){
-		mongoTemplate.getCollection("mkt").getDB().getMongo().getMongoOptions().setConnectTimeout(600000);;
+			logger.error("保存数据到Redis方法出现异常---------->" + e.getMessage(), e);
+		}
 	}
 
 }
