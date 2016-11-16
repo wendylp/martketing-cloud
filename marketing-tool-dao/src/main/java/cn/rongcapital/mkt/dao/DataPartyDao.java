@@ -22,6 +22,7 @@ import cn.rongcapital.mkt.po.DataCountBySource;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.HomePageMonthlyCount;
 import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
+import cn.rongcapital.mkt.po.mongodb.Segment;
 
 public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<DataParty>{
 	
@@ -226,5 +227,7 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      * @return list
      */
 	List<DataParty> selectListByContactId(Integer contactId);
+	
+	List<Segment> selectSegmentByIdList(@Param("idList") List<String> dataPartyIdList);
 	
 }
