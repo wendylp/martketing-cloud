@@ -45,7 +45,7 @@
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="contactId != null"><![CDATA[ AND contact_id = #{contactId}]]></if>
 		    	<if test="contactName != null">
-		    	<bind name="fuzzy" value="'%' + contactName + '%'" />
+		    	<bind name="fuzzy" value="'%' + _parameter.contactName + '%'" />
 		    	<![CDATA[ AND contact_name like #{fuzzy}]]></if>
 		    	<if test="contactTitle != null"><![CDATA[ AND contact_title = #{contactTitle}]]></if>
 		    	<if test="contactDescript != null"><![CDATA[ AND contact_descript = #{contactDescript}]]></if>
