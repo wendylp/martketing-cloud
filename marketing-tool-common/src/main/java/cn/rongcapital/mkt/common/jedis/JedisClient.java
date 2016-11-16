@@ -320,7 +320,7 @@ public class JedisClient {
 	}
 	
 	
-	public List<String> hmget(String key,String... fields) throws JedisException{
+	public static List<String> hmget(String key,String... fields) throws JedisException{
 	    Jedis jedis = JedisConnectionManager.getConnection();
 	    try {
             return jedis.hmget(key, fields);
@@ -331,6 +331,17 @@ public class JedisClient {
         }
 	}
 
+	public static List<String> hmget(String key,int database,String... fields) throws JedisException{
+	    Jedis jedis = JedisConnectionManager.getConnection(database);
+	    try {
+            return jedis.hmget(key, fields);
+        } catch (Exception e) {
+            throw new JedisException("获取key对应的fields异常",e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis,database);
+        }
+	}
+	
 	/**
 	 * 
 	 * @Title:        incr 
@@ -537,7 +548,18 @@ public class JedisClient {
             JedisConnectionManager.closeConnection(jedis);
         }
     }
-	
+    
+	public static Set<String> smembers(String key,int database) throws JedisException{
+	    Jedis jedis = JedisConnectionManager.getConnection(database);
+	    try {
+            return jedis.smembers(key);
+        } catch (Exception e) {
+            throw new JedisException("smembers异常",e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis,database);
+        }
+	}
+    
     public static Set<String> sinter(final String... keys) throws JedisException{
         Jedis jedis = JedisConnectionManager.getConnection();
         try {

@@ -11,6 +11,8 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
 
 import org.slf4j.Logger;
@@ -20,6 +22,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.Before;
+
+import java.util.List;
+
 import org.junit.After;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -29,15 +34,25 @@ public class CampaignHeadDaoTest extends AbstractUnitTest {
     
     @Autowired
     private CampaignHeadDao campaignHeadDao;
-    
+	private static final String REDIS_KEY_PREFIX = "segmentcover:";
     @Before  
     public void setUp() throws Exception {
         logger.info("测试: CampaignHeadDao 开始---------------------");
+
     }
     
 	@Test
 	public void testSelectCampaignProgressStatusListByPublishStatusCount() {
 	    logger.info("测试方法: selectCampaignProgressStatusListByPublishStatusCount ");    
+		Long populationCount = null;
+		try {
+			List<String> hmget = JedisClient.hmget(REDIS_KEY_PREFIX + 101,2,"segmentcount");
+			populationCount = Long.parseLong(hmget.get(0));
+
+			logger.info("测试方法: campaignProfileList {}", populationCount);
+		} catch (JedisException e) {
+			logger.error(e.getMessage());
+		}
 	}
 	
 	@Test
