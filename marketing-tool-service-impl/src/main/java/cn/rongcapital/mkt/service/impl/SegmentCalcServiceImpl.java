@@ -61,11 +61,10 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
        Long startTimeSegmentCalc=System.currentTimeMillis(); 
        if(segment==null) return;
        uuid.set(GenerateUUid.generateShortUuid());
-       logger.info("uuid:"+ uuid.get());
+       logger.info("uuid:"+ uuid.get());       
+                
+       segmentRedis.set(new SegmentRedisVO());
        
-       if(segmentRedis.get()==null) {           
-           segmentRedis.set(new SegmentRedisVO());
-       }
        segmentRedis.get().setSegmentCoverCount(0L);
        segmentRedis.get().setSegmentCoverIds("");
        Long defaultSegmentHeadId=new Long(0);
