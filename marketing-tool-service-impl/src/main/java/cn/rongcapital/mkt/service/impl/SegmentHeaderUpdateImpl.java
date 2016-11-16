@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.UserSessionUtil;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
@@ -85,8 +87,14 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
 
         segmentationHeadDao.updateById(segmentationHead);
         segmentationBodyDao.batchDeleteUseHeaderId(segmentHeadId);
-        mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId").is(segmentHeadId)),Segment.class);
-
+        //mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId").is(segmentHeadId)),Segment.class);
+        try {
+			JedisClient.delete(2, "segmentcover:"+segmentHeadId);
+			JedisClient.delete(2, "segmentcoverids:"+segmentHeadId);
+		} catch (JedisException e) {
+			e.printStackTrace();
+		}
+        
         return new BaseOutput(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
     }
 
