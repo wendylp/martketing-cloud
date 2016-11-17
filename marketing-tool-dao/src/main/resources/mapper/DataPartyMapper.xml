@@ -736,4 +736,14 @@
 		<![CDATA[ inner join  contact_list as cl on dpp.id = cl.keyid ]]>
 		<![CDATA[ where  cl.id = #{contact_id} ]]>
 	</select>
+	
+		<!-- 根据dataParty的IdList统计 -->
+	<select id="selectSegmentByIdList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.mongodb.Segment">
+		SELECT id,name
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE status = 2 AND id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>
