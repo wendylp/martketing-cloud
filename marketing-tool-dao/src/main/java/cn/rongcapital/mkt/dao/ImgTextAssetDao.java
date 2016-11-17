@@ -12,6 +12,8 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.ImgTextAsset;
+import cn.rongcapital.mkt.vo.ImgAsset;
+
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -140,4 +142,34 @@ public interface ImgTextAssetDao extends BaseDao<ImgTextAsset>{
 	 * 删除公众号下的图文消息
 	 */
 	void batchDeleteWechatStatusByPubId(String pubId);
+	
+    /**
+     * 根据pubId type wxType searchKey 查询 media_id
+     * 
+     * @param paramMap
+     * @return
+     * @author shuiyangyang
+     * @Date 2016-11-17
+     */
+    List<String> selectMaterialIdListBySearchKeyLike(ImgTextAsset imgTextAsset);
+
+    /**
+     * 根据pubId type wxType searchKey 查询图文信息数量 media_id去重
+     * 
+     * @param paramMap
+     * @return
+     * @author shuiyangyang
+     * @Date 2016-11-17
+     */
+    int selectMaterialIdListBySearchKeyLikeCount(ImgTextAsset imgTextAsset);
+
+    /**
+     * 根据pubId type wxType searchKey media_id 查询图文信息
+     * 
+     * @param imgTextAsset
+     * @return
+     * @author shuiyangyang
+     * @Date 2016-11-17
+     */
+    List<Map<String, Object>> selectListBySearchKey(ImgTextAsset imgTextAsset);
 }

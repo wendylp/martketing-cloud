@@ -56,6 +56,7 @@ import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXinImpl;
 //import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXin;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
 import cn.rongcapital.mkt.service.GetWeixinAnalysisDateService;
@@ -649,7 +650,7 @@ public class MktWeChatApi {
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
 		ImgAsset imgAsset = new ImgAsset();
 		imgAsset.setAssetType(type);
-		imgAsset.setVer(ver);
+//		imgAsset.setVer(ver);
 		imgAsset.setWxType(wxType);
 		imgAsset.setPubId(pubId);
 		if (searchKey != null && !"".equals(searchKey)) {
@@ -668,6 +669,20 @@ public class MktWeChatApi {
 		} else {
 			imgAsset.setSize(10);
 		}*/
-		return etWxImgTextAssetService.getWxImgTextAssetService(imgAsset);
+//		return etWxImgTextAssetService.getWxImgTextAssetService(imgAsset);
+		
+        ImgTextAsset imgTextAsset = new ImgTextAsset();
+        imgTextAsset.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        imgTextAsset.setType(type.byteValue());
+        imgTextAsset.setWxType(Byte.valueOf(wxType));
+        imgTextAsset.setPubId(pubId);
+        // 用name存储模式搜索的关键字
+        if (searchKey != null && !"".equals(searchKey)) {
+            imgTextAsset.setName(searchKey);
+        }
+        imgTextAsset.setStartIndex((index-1)*size);
+        imgTextAsset.setPageSize(size);
+        
+        return etWxImgTextAssetService.getWxImgTextAsset(imgTextAsset);
 	}
 }

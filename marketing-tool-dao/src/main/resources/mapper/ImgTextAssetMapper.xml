@@ -308,6 +308,47 @@
 		<if test="wxType != null"><![CDATA[ AND wx_type = #{wxType}]]></if>
 		<if test="searchKey != null"><![CDATA[ AND (owner_name like CONCAT('%',#{searchKey},'%') OR digest like CONCAT('%',#{searchKey},'%') OR name like CONCAT('%',#{searchKey},'%') ) ]]></if>
 	</select>
-	
+
+	<!-- 据pubId type wxType searchKey 查询 media_id -->
+	<select id="selectMaterialIdListBySearchKeyLike" parameterType="cn.rongcapital.mkt.po.ImgTextAsset"
+		resultType="java.lang.String">
+		<![CDATA[SELECT]]>
+		material_id
+		<include refid="QUERY_FROM_TABLE" />
+		<![CDATA[WHERE 1=1 ]]>
+		<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		<if test="wxType != null"><![CDATA[ AND wx_type = #{wxType}]]></if>
+		<if test="name != null"><![CDATA[ AND (owner_name like CONCAT('%',#{name},'%') OR digest like CONCAT('%',#{name},'%') OR name like CONCAT('%',#{name},'%') ) ]]></if>
+		group by material_id
+		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
+	</select>
+
+	<!-- 根据pubId type wxType searchKey 查询图文信息数量 media_id去重 -->
+	<select id="selectMaterialIdListBySearchKeyLikeCount"
+		parameterType="cn.rongcapital.mkt.po.ImgTextAsset" resultType="java.lang.Integer">
+		<![CDATA[SELECT COUNT(DISTINCT material_id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE" />
+		<![CDATA[WHERE 1=1 ]]>
+		<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		<if test="wxType != null"><![CDATA[ AND wx_type = #{wxType}]]></if>
+		<if test="name != null"><![CDATA[ AND (owner_name like CONCAT('%',#{name},'%') OR digest like CONCAT('%',#{name},'%') OR name like CONCAT('%',#{name},'%') ) ]]></if>
+	</select>
+	<!-- 根据pubId type wxType searchKey media_id 查询图文信息 -->
+	<select id="selectListBySearchKey" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		<![CDATA[SELECT]]>
+		owner_name as ownerName, date_format(create_time,'%Y-%m-%d') as
+		createTime,imgfile_url as imgfileUrl,name as name,material_id as
+		materialId
+		<include refid="QUERY_FROM_TABLE" />
+		<![CDATA[WHERE 1=1 ]]>
+		<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		<if test="wxType != null"><![CDATA[ AND wx_type = #{wxType}]]></if>
+		<if test="name != null"><![CDATA[ AND (owner_name like CONCAT('%',#{name},'%') OR digest like CONCAT('%',#{name},'%') OR name like CONCAT('%',#{name},'%') ) ]]></if>
+		<if test="wxType != null"><![CDATA[ AND material_id = #{materialId}]]></if>
+	</select>
 	
 </mapper>
