@@ -85,7 +85,7 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 					
 					// 一级标签
 					XSSFCell tagZero = xssfRow.getCell(0);
-					String oneTagName = getCellValue(tagZero);
+					String oneTagName = getCellValue(tagZero).trim();
 					
 					// 标签
 					XSSFCell tagTwo = xssfRow.getCell(2);
@@ -110,19 +110,19 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
                     XSSFCell tagNine = xssfRow.getCell(9);
 
 					if (tagTwo != null && tagFive != null) {
-						String tagName = getCellValue(tagTwo);
+						String tagName = getCellValue(tagTwo).trim();
 //						// 标签存在跳出本次循环
 //						boolean flag = findTagRecommend(tagName);
 //						if (flag)
 //							continue;
 
-						String tagNameEng = getCellValue(tagThree);
-						String tagDesc = getCellValue(tagFour);
-						String tagValue = getCellValue(tagFive);
+						String tagNameEng = getCellValue(tagThree).trim();
+						String tagDesc = getCellValue(tagFour).trim();
+						String tagValue = getCellValue(tagFive).trim();
 
-						String tagFlag = getCellValue(tagSeven);
-						String seq = getCellValue(tagEight);
-						String searchMod = getCellValue(tagNine);
+						String tagFlag = getCellValue(tagSeven).trim();
+						String seq = getCellValue(tagEight).trim();
+						String searchMod = getCellValue(tagNine).trim();
 						uuid3 = insertTagRecommendMongoDB(tagName, tagNameEng, tagDesc, tagValue, tagSource, tagFlag, seq, searchMod);
 //						uuid3 = tagName;
 					}
