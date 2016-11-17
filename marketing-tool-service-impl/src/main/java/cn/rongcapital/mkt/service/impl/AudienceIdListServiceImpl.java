@@ -44,6 +44,8 @@ public class AudienceIdListServiceImpl implements AudienceIdListService {
     @Autowired
     SegmentationHeadDao segmentationHeadDao;
 
+    public static final Integer POOL_INDEX = 2;
+    
     @Override
     @ReadWrite(type = ReadWriteType.READ)
     public BaseOutput audienceIdList(String userToken,String audience_ids,String audience_type) {
@@ -129,7 +131,7 @@ public class AudienceIdListServiceImpl implements AudienceIdListService {
         	Set<String> mids = new HashSet<String>();
         	
         	try {
-        		 mids = JedisClient.sunion(2,arrHeadIds);
+        		 mids = JedisClient.sunion(POOL_INDEX,arrHeadIds);
 			} catch (JedisException e) {
 				e.printStackTrace();
 			}

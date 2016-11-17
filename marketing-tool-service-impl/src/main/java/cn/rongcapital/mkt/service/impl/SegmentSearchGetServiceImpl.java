@@ -43,6 +43,8 @@ public class SegmentSearchGetServiceImpl implements SegmentSearchGetService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
+    public static final Integer POOL_INDEX = 2;
+	
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
 	public BaseOutput SegmentSearch(Integer head_id, String query_name) {
@@ -62,7 +64,7 @@ public class SegmentSearchGetServiceImpl implements SegmentSearchGetService {
 		Set<String> mids = new HashSet<String>();
 		
 		try {
-			mids = JedisClient.smembers("segmentcoverids:"+head_id, 2);
+			mids = JedisClient.smembers("segmentcoverids:"+head_id, POOL_INDEX);
 		} catch (JedisException e) {
 			e.printStackTrace();
 		}

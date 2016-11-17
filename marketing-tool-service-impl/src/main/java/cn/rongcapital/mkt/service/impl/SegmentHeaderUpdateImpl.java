@@ -43,6 +43,8 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    public static final Integer POOL_INDEX = 2;
+    
     /**
      * @功能简述: 编辑segment header
      * @param: SegmentHeadIn body, SecurityContext securityContext 
@@ -89,8 +91,8 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
         segmentationBodyDao.batchDeleteUseHeaderId(segmentHeadId);
         //mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId").is(segmentHeadId)),Segment.class);
         try {
-			JedisClient.delete(2, "segmentcover:"+segmentHeadId);
-			JedisClient.delete(2, "segmentcoverids:"+segmentHeadId);
+			JedisClient.delete(POOL_INDEX, "segmentcover:"+segmentHeadId);
+			JedisClient.delete(POOL_INDEX, "segmentcoverids:"+segmentHeadId);
 		} catch (JedisException e) {
 			e.printStackTrace();
 		}

@@ -62,6 +62,8 @@ public class GenerateSmsDetailTask implements TaskService {
     private final String SEGMENTATION_HEAD_ID = "segmentation_head_id";
     private final int PAGE_SIZE = 10000;
 
+    public static final Integer POOL_INDEX = 2;
+    
     @Override
     public void task(Integer taskId) {
 
@@ -195,7 +197,7 @@ public class GenerateSmsDetailTask implements TaskService {
 		Set<String> mids = new HashSet<String>();
 		
 		try {
-			mids = JedisClient.smembers("segmentcoverids:"+targetId, 2);
+			mids = JedisClient.smembers("segmentcoverids:"+targetId, POOL_INDEX);
 		} catch (JedisException e) {
 			e.printStackTrace();
 		}

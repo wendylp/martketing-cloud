@@ -33,6 +33,8 @@ public class SegmentSearchDownloadServiceImpl implements SegmentSearchDownloadSe
 	@Autowired
 	DataPopulationDao segmentSearchDownloadServiceDao;
 
+    public static final Integer POOL_INDEX = 2;
+    
 	@Override
 	public BaseOutput getSegmentSearchDownload(Integer head_id) {
 
@@ -50,7 +52,7 @@ public class SegmentSearchDownloadServiceImpl implements SegmentSearchDownloadSe
 		Set<String> mids = new HashSet<String>();
 		
 		try {
-			mids = JedisClient.smembers("segmentcoverids:"+head_id, 2);
+			mids = JedisClient.smembers("segmentcoverids:"+head_id, POOL_INDEX);
 		} catch (JedisException e) {
 			e.printStackTrace();
 		}
