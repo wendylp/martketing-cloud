@@ -276,6 +276,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                         for(SegmentGroupTagRedisVO segmentGroupTag:segmentGroupTags) {
                             calcItemCover(segmentGroup,segmentGroupTag.getTagValueList(),OPER_UNION,segmentGroupTag.isTagExclude(),jedis); //递归求标签值
                         }
+                        /*
                         String dstkey=this.generateKeyFromTags(KEY_PREFIX_GROUPINTER,uuid.get(),segmentGroupTags);
                         String[] keys=getCalcTagIds(segmentGroupTags); //使用计算后产生的Ids
                       
@@ -283,12 +284,8 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                         jedis.expire(dstkey, REDIS_EXPIRE_SECOND);
                         tempKeys.get().add(dstkey);
                         //Long count=jedis.scard(dstkey);
-                        segmentGroup.setGroupCoverIds(dstkey);
-                        segmentGroup.setGroupCoverCount(count);
-                        SegmentGroupTagRedisVO lastTag=segmentGroupTags.get(items.size()-1);
-                        lastTag.setFunnelCount(count);
-                        logger.info("===Inter calc group count="+count+" groupcoverid="+dstkey+" lastTag="+lastTag.getTagId()+"-"+lastTag.getTagName()+" lastTag's funnelCount="+count);
-                        
+                        */
+                        funnelInterCalculation(segmentGroup,segmentGroupTags,jedis);                        
                     } else if(items.get(0) instanceof SegmentGroupTagValueRedisVO) {
                         //标签值之间不计算交集
                         logger.info("===Inter calc===TagValues should not calculate intersection"); 
@@ -575,6 +572,42 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
         
     }
     
+    /**
+     * 漏斗的各层tag的自身结论值计算和存储
+     * @return
+     */
+    private Long funnelInterCalculation(SegmentGroupRedisVO segmentGroup,List<SegmentGroupTagRedisVO> segmentGroupTags,Jedis jedis) {
+        if(segmentGroupTags==null||segmentGroupTags.size()==0) return 0L;
+        int size=segmentGroupTags.size();
+        Long funnelCount=0L;
+        String dkey="";
+        if(size==1) {
+            funnelCount=segmentGroupTags.get(0).getCalcTagCoverCount();
+            segmentGroup.setGroupCoverIds(segmentGroupTags.get(0).getCalcTagCoverIds());
+            segmentGroup.setGroupCoverCount(funnelCount);
+        } else {        
+            for(int i=0;i<size-1;i++) {
+                String[] skeys=new String[2];            
+                dkey=KEY_PREFIX_GROUPINTER+"_lv"+(i+1)+"_"+uuid.get();
+                if(i==0){
+                    skeys[0]=segmentGroupTags.get(i).getCalcTagCoverIds();
+                } else {
+                    skeys[0]=KEY_PREFIX_GROUPINTER+"_lv"+i+"_"+uuid.get(); 
+                }            
+                skeys[1]=segmentGroupTags.get(i+1).getCalcTagCoverIds();
+                funnelCount=jedis.sinterstore(dkey, skeys); 
+                segmentGroupTags.get(i+1).setFunnelCount(funnelCount);
+                jedis.expire(dkey, REDIS_EXPIRE_SECOND);
+                tempKeys.get().add(dkey);    
+                logger.info("===Inter calc group level"+(i+1)+" Tag="+segmentGroupTags.get(i+1).getGroupId()+"-"+segmentGroupTags.get(i+1).getTagName()+" funnelCount="+funnelCount+" tagCoverIds="+dkey);
+            }
+            segmentGroup.setGroupCoverIds(dkey);
+            segmentGroup.setGroupCoverCount(funnelCount);
+        }       
+        logger.info("===Inter calc group="+segmentGroup.getGroupId()+"-"+segmentGroup.getGroupName()+" groupCoverCount="+funnelCount+" groupcoverid="+dkey);
+        return funnelCount;
+      
+    }
     
     /**
      * 清除临时产生的redis数据
