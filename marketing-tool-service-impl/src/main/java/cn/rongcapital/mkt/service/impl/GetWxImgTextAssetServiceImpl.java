@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
+import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.service.GetWxImgTextAssetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -49,7 +50,7 @@ public class GetWxImgTextAssetServiceImpl implements GetWxImgTextAssetService {
         paramMap.put("type",imgAsset.getAssetType());
         paramMap.put("wxType",imgAsset.getWxType());
         paramMap.put("searchKey",imgAsset.getSearchKey());
-        paramMap.put("startIndex",(imgAsset.getIndex()-1)*imgAsset.getSize());
+        paramMap.put("startIndex",imgAsset.getIndex());
         paramMap.put("pageSize",imgAsset.getSize());
         return paramMap;
     }
@@ -135,4 +136,60 @@ public class GetWxImgTextAssetServiceImpl implements GetWxImgTextAssetService {
 		
 		return tempMap;
 	}
+	
+
+    /**
+     * 获取公众号下的图文资产列表
+     * 
+     * @param imgTextAsset
+     * @return
+     * @author shuiyangyang
+     * @Date 2016-11-17
+     */
+    @Override
+    public BaseOutput getWxImgTextAsset(ImgTextAsset imgTextAsset) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+                        ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+
+        if (imgTextAsset == null) {
+            return result;
+        }
+
+        // 获取material_id
+        List<String> materialIdLists =
+                        imgTextAssetDao.selectMaterialIdListBySearchKeyLike(imgTextAsset);
+        // 获取总数
+        int totalCount = imgTextAssetDao.selectMaterialIdListBySearchKeyLikeCount(imgTextAsset);
+        result.setTotalCount(totalCount);
+
+        // 如果 materialIdLists 为空则不返回数据
+        if (materialIdLists == null || materialIdLists.size() <= 0) {
+            return result;
+        }
+        result.setTotal(materialIdLists.size());
+
+        // 显示设置不分页
+        imgTextAsset.setStartIndex(null);
+        imgTextAsset.setPageSize(null);
+
+        for (String materialIdList : materialIdLists) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("media_id", materialIdList);
+
+            imgTextAsset.setMaterialId(materialIdList);
+            // 根据media_id获取数据
+            List<Map<String, Object>> mapBymaterialIdLists =
+                            imgTextAssetDao.selectListBySearchKey(imgTextAsset);
+            if (mapBymaterialIdLists == null || mapBymaterialIdLists.size() <= 0) {
+                map.put("create_time", "");
+            } else {
+                map.put("create_time", mapBymaterialIdLists.get(0).get("createTime"));
+            }
+            map.put("content", mapBymaterialIdLists);
+
+            result.getData().add(map);
+        }
+
+        return result;
+    }
 }
