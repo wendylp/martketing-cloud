@@ -80,7 +80,7 @@ public class InitTagValueCountServiceImpl implements TaskService{
 							new Query(Criteria.where("tagList").elemMatch(
 									Criteria.where("tagId").is(tagId).and("tagValue").is(tagValue))),DataParty.class);
 					
-					TagValueCount tagValueCount = new TagValueCount(tagId,tagName,tagValue,valueCount, tagId+"_"+sort, tagPath,IS_TAGVALUE,null);
+					TagValueCount tagValueCount = new TagValueCount(tagId,tagName,tagValue,valueCount, tagId+"_"+sort, tagPath,IS_TAGVALUE,searchMod);
 					tagValueCountDao.insert(tagValueCount);
 					sort++;
 				}
