@@ -591,6 +591,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                 dkey=KEY_PREFIX_GROUPINTER+"_lv"+(i+1)+"_"+uuid.get();
                 if(i==0){
                     skeys[0]=segmentGroupTags.get(i).getCalcTagCoverIds();
+                    segmentGroupTags.get(i).setFunnelCount(segmentGroupTags.get(i).getCalcTagCoverCount());
                 } else {
                     skeys[0]=KEY_PREFIX_GROUPINTER+"_lv"+i+"_"+uuid.get(); 
                 }            
