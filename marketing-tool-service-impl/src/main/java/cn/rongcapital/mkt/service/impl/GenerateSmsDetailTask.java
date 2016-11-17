@@ -4,18 +4,16 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
 import cn.rongcapital.mkt.common.enums.SmsTargetAudienceTypeEnum;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.*;
-import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.MQTopicService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,6 +62,8 @@ public class GenerateSmsDetailTask implements TaskService {
     private final String SEGMENTATION_HEAD_ID = "segmentation_head_id";
     private final int PAGE_SIZE = 10000;
 
+    public static final Integer POOL_INDEX = 2;
+    
     @Override
     public void task(Integer taskId) {
 
@@ -178,18 +178,31 @@ public class GenerateSmsDetailTask implements TaskService {
     }
 
     private List<String> queryAndCacheAudienceDetailBySegmentationId(Long taskHeadId,Long targetId) {
-        //1根据segmentation的Id在Mongo中选出相应得细分,然后取出dataPartyId
-        Query query = new Query(Criteria.where(SEGMENTATION_HEAD_ID).is(targetId));
-        List<Segment> segmentList = mongoTemplate.find(query,Segment.class);
-        logger.info("segment list size : " +segmentList.size());
-        //2构造出dataParty的IdList的集合
-        if(CollectionUtils.isEmpty(segmentList)) return null;
+//        Query query = new Query(Criteria.where(SEGMENTATION_HEAD_ID).is(targetId));
+//        List<Segment> segmentList = mongoTemplate.find(query,Segment.class);
+//        logger.info("segment list size : " +segmentList.size());
+//        //2构造出dataParty的IdList的集合
+//        if(CollectionUtils.isEmpty(segmentList)) return null;
+//        List<Long> dataPartyIdList = new ArrayList<>();
+//        for(Segment segment : segmentList){
+//            if(segment.getDataId() != null){
+//                dataPartyIdList.add(Long.valueOf(segment.getDataId()));
+//            }
+//        }
+//        logger.info("dataParty id list size : " + dataPartyIdList.size());
+
+        //1根据segmentation的Id在Redis中选出相应得细分,然后取出dataPartyId
         List<Long> dataPartyIdList = new ArrayList<>();
-        for(Segment segment : segmentList){
-            if(segment.getDataId() != null){
-                dataPartyIdList.add(Long.valueOf(segment.getDataId()));
-            }
-        }
+		Set<String> mids = new HashSet<String>();
+		try {
+			mids = JedisClient.smembers("segmentcoverid:"+targetId, POOL_INDEX);
+		} catch (JedisException e) {
+			e.printStackTrace();
+		}
+		if(CollectionUtils.isEmpty(mids)) return null;
+		for(String mid : mids){
+			dataPartyIdList.add(Long.valueOf(mid));
+		}
         logger.info("dataParty id list size : " + dataPartyIdList.size());
 
         //3将选出来的这些数据做缓存存到cache表中,一开始先一条一条插入,后续优化成使用batchInsert进行插入

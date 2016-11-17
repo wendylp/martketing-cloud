@@ -27,6 +27,8 @@ public class SegmentGroupTagRedisVO {
     
     private Long tagCoverCount;
     
+    private Long funnelCount;
+    
     public String getGroupId() {
         return groupId;
     }
@@ -113,6 +115,14 @@ public class SegmentGroupTagRedisVO {
 
     public void setTagValueList(List<SegmentGroupTagValueRedisVO> tagValueList) {
         this.tagValueList = tagValueList;
+    }
+
+    public Long getFunnelCount() {
+        return funnelCount;
+    }
+
+    public void setFunnelCount(Long funnelCount) {
+        this.funnelCount = funnelCount;
     }
     
     

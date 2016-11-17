@@ -485,11 +485,12 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 			tagGroupChartOut.setGroupName(segmentGroupRedisVO.getGroupName());
 			tagGroupChartOut.setGroupChange(segmentGroupRedisVO.getGroupChange());
 			tagGroupChartOut.setGroupIndex(segmentGroupRedisVO.getGroupIndex());
+			if(CollectionUtils.isEmpty(segmentGroupRedisVO.getTagList())) continue;
 			for(SegmentGroupTagRedisVO segmentGroupTagRedisVO : segmentGroupRedisVO.getTagList()){
 				TagChartDatas tagChartDatas = new TagChartDatas();
 				tagChartDatas.setTagId(segmentGroupTagRedisVO.getTagId());
 				tagChartDatas.setTagName(segmentGroupTagRedisVO.getTagName());
-				tagChartDatas.setTagCount(segmentGroupTagRedisVO.getCalcTagCoverCount().intValue());
+				tagChartDatas.setTagCount(segmentGroupTagRedisVO.getFunnelCount().intValue());
 				tagGroupChartOut.getChartData().add(tagChartDatas);
 			}
 			segmentFilterOut.getTagGroupChartOutList().add(tagGroupChartOut);
@@ -525,7 +526,6 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 
 	/**
 	 * 获取性别阀盖人数
-	 * @param midSet
 	 * @return
 	 */
 	private  Map<String, Integer> getGender(){
@@ -579,7 +579,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		
 		for(Integer headid : input.getSegmentHeadIds()){
 			
-			headIds.add("segmentcoverids:"+headid);
+			headIds.add("segmentcoverid:"+headid);
 		}
 		
 		return (String[]) headIds.toArray(new String[headIds.size()]);

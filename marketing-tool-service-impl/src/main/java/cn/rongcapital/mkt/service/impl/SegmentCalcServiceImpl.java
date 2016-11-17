@@ -50,7 +50,6 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
     
     private ThreadLocal<SegmentRedisVO> segmentRedis=new ThreadLocal<SegmentRedisVO>(); //存储漏斗计算结果
     private ThreadLocal<String> uuid=new ThreadLocal<String>();    
-    private Jedis jedis =null;
     private ThreadLocal<ArrayList<String>> tempKeys=new ThreadLocal<ArrayList<String>>();
     
     /**
@@ -61,10 +60,8 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
        Long startTimeSegmentCalc=System.currentTimeMillis(); 
        if(segment==null) return;
        uuid.set(GenerateUUid.generateShortUuid());
-       logger.info("uuid:"+ uuid.get());       
-                
+       logger.info("uuid:"+ uuid.get());  
        segmentRedis.set(new SegmentRedisVO());
-       
        segmentRedis.get().setSegmentCoverCount(0L);
        segmentRedis.get().setSegmentCoverIds("");
        Long defaultSegmentHeadId=new Long(0);
@@ -101,7 +98,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
      * @param tagGroup
      * @return
      */
-    private SegmentRedisVO initSegmentRedis(TagGroupsIn tagGroup) {
+    private SegmentRedisVO initSegmentRedis(TagGroupsIn tagGroup,Jedis jedis) {
         
         if(tagGroup==null) {
             logger.info("calcSegmentCover:initSegmentRedis:标签组对象为null");
@@ -135,20 +132,23 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                 segmentGroupTagRedis.setTagIndex(tag.getTagIndex());
                 segmentGroupTagRedis.setTagName(tag.getTagName());
                 segmentGroupTagRedis.setTagCoverIds(tag.getTagId()); //标签覆盖人群ID为标签的Tagid指针
-                //Long tagCount=jedis.scard(KEY_PREFIX_TAGCOVERID+tag.getTagId());
+                Long tagCount=jedis.scard(KEY_PREFIX_TAGCOVERID+tag.getTagId());                
+                /*
                 Long tagCount=0L;
                 String strTagCount=jedis.hget("tagcover:"+tag.getTagId(), "covercount");
                 if(StringUtils.isNumeric(strTagCount)) {
                     tagCount=Long.parseLong(strTagCount);
                 }
+                */
                 segmentGroupTagRedis.setTagCoverCount(tagCount); 
                 segmentGroupTagRedis.setGroupId(segmentGroupRedis.getGroupId());
+                segmentGroupTagRedis.setFunnelCount(tagCount);
                 segmentGroupTags.add(segmentGroupTagRedis);
                 List<SystemValueIn> tagValues=tag.getTagValueList();
                 if(tagValues==null||tagValues.size()==0) {
                     //标签无任何值
                     segmentGroupTagRedis.setCalcTagCoverCount(segmentGroupTagRedis.getTagCoverCount());
-                    segmentGroupTagRedis.setCalcTagCoverIds(KEY_PREFIX_TAGCOVERID+segmentGroupTagRedis.getTagCoverIds());
+                    segmentGroupTagRedis.setCalcTagCoverIds(KEY_PREFIX_TAGCOVERID+segmentGroupTagRedis.getTagCoverIds());                    
                 }
                 if(tagValues!=null&&tagValues.size()>0) {   
                     List<SegmentGroupTagValueRedisVO> SegmentGroupTagValues=new ArrayList<SegmentGroupTagValueRedisVO>();
@@ -160,12 +160,14 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                         segmentGroupTagValueRedis.setTagId(segmentGroupTagRedis.getTagId());
                         segmentGroupTagValueRedis.setGroupId(segmentGroupRedis.getGroupId());  
                         String idskey=KEY_PREFIX_TAGCOVERID+tagvalue.getTagValueId();  
-                        //Long count=jedis.scard(idskey);
+                        Long count=jedis.scard(idskey);
+                        /*
                         Long count=0L;
                         String strcount=jedis.hget("tagcover:"+tagvalue.getTagValueId(), "covercount");
                         if(StringUtils.isNumeric(strcount)) {
                             count=Long.parseLong(strcount);
                         }
+                        */
                         logger.info("Get TagValue's["+tagvalue.getTagValueId()+"] coverIds="+idskey+" count="+count);
                         segmentGroupTagValueRedis.setTagValueCoverCount(count);
                         segmentGroupTagValueRedis.setTagValueCoverIds(idskey);
@@ -192,13 +194,13 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
     public void calcSegmentCoverByGroup(TagGroupsIn tagGroup)  {
        Long startTime=System.currentTimeMillis();
        String curr="";
-       jedis = JedisConnectionManager.getConnection(); 
+       Jedis jedis = JedisConnectionManager.getConnection(); 
        jedis.select(REDISDB_INDEX);
        if(StringUtils.isBlank(uuid.get())) {
            uuid.set(GenerateUUid.generateShortUuid());
            logger.info("group uuid:"+ uuid.get());
        }      
-       this.initSegmentRedis(tagGroup);
+       this.initSegmentRedis(tagGroup,jedis);
        List<SegmentGroupRedisVO> segmentGroups=segmentRedis.get().getSegmentGroups();
        try{
            for(SegmentGroupRedisVO segmentGroup:segmentGroups) {
@@ -211,11 +213,11 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                        segmentGroup.setGroupCoverIds("");
                        return ;
                    }                   
-                   this.calcItemCover(segmentGroup,segmentGroupTags,OPER_INTERSECTION,false);  
+                   this.calcItemCover(segmentGroup,segmentGroupTags,OPER_INTERSECTION,false,jedis);  
                }
            }
-    
-       this.calcSegmentTotalCover();
+       
+       this.calcSegmentTotalCover(jedis);
         }catch (Exception e) {
             logger.info("redis Exception:"+e.toString());                  
         } finally {                  
@@ -227,7 +229,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
        return;
     }
     
-    private  void calcItemCover(SegmentGroupRedisVO segmentGroup,List items,int operation,boolean exclude) throws JedisException {
+    private  void calcItemCover(SegmentGroupRedisVO segmentGroup,List items,int operation,boolean exclude,Jedis jedis) throws JedisException {
         
         if(items==null||items.size()<1) {            
             return ;
@@ -247,9 +249,10 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
             if(items.get(0) instanceof SegmentGroupTagRedisVO) {               
                 SegmentGroupTagRedisVO tag=(SegmentGroupTagRedisVO)items.get(0); 
                 curr="Tag:"+tag.getTagId();
-                calcItemCover(segmentGroup,tag.getTagValueList(),OPER_UNION,tag.isTagExclude()); //递归求标签值                    
+                calcItemCover(segmentGroup,tag.getTagValueList(),OPER_UNION,tag.isTagExclude(),jedis); //递归求标签值                    
                 segmentGroup.setGroupCoverCount(tag.getCalcTagCoverCount());
                 segmentGroup.setGroupCoverIds(tag.getCalcTagCoverIds());
+                tag.setFunnelCount(tag.getCalcTagCoverCount());
                 logger.info("===Only 1  Tag calc tagid:"+tag.getTagId()+" count="+tag.getCalcTagCoverCount()+ "groupCoverIds=TagCoverIds="+tag.getCalcTagCoverIds());
             } else if (items.get(0) instanceof SegmentGroupTagValueRedisVO) {
                 SegmentGroupTagValueRedisVO tagValue=(SegmentGroupTagValueRedisVO)items.get(0);
@@ -271,8 +274,9 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                         curr="SegmentGroupTags 交集";
                         List<SegmentGroupTagRedisVO> segmentGroupTags=(List<SegmentGroupTagRedisVO>)items;                        
                         for(SegmentGroupTagRedisVO segmentGroupTag:segmentGroupTags) {
-                            calcItemCover(segmentGroup,segmentGroupTag.getTagValueList(),OPER_UNION,segmentGroupTag.isTagExclude()); //递归求标签值
+                            calcItemCover(segmentGroup,segmentGroupTag.getTagValueList(),OPER_UNION,segmentGroupTag.isTagExclude(),jedis); //递归求标签值
                         }
+                        /*
                         String dstkey=this.generateKeyFromTags(KEY_PREFIX_GROUPINTER,uuid.get(),segmentGroupTags);
                         String[] keys=getCalcTagIds(segmentGroupTags); //使用计算后产生的Ids
                       
@@ -280,10 +284,8 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                         jedis.expire(dstkey, REDIS_EXPIRE_SECOND);
                         tempKeys.get().add(dstkey);
                         //Long count=jedis.scard(dstkey);
-                        segmentGroup.setGroupCoverIds(dstkey);
-                        segmentGroup.setGroupCoverCount(count);
-                        logger.info("===Inter calc group count="+count+" groupcoverid="+dstkey);
-                        
+                        */
+                        funnelInterCalculation(segmentGroup,segmentGroupTags,jedis);                        
                     } else if(items.get(0) instanceof SegmentGroupTagValueRedisVO) {
                         //标签值之间不计算交集
                         logger.info("===Inter calc===TagValues should not calculate intersection"); 
@@ -407,7 +409,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
      */
     private SegmentGroupTagRedisVO getTag(String tagId)
     {
-        if(segmentRedis==null||StringUtils.isBlank(tagId)) return null;        
+        if(segmentRedis.get()==null||StringUtils.isBlank(tagId)) return null;        
         List<SegmentGroupRedisVO> segmentGroups=segmentRedis.get().getSegmentGroups();
         if(segmentGroups==null||segmentGroups.size()<1) return null;
         for(SegmentGroupRedisVO segmentGroup:segmentGroups) {
@@ -425,7 +427,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
     /**
      * 计算整个细分的覆盖
      */
-    private void calcSegmentTotalCover() {
+    private void calcSegmentTotalCover(Jedis jedis) throws Exception {
         if(segmentRedis.get()==null) return ;
         List<SegmentGroupRedisVO> segmentGroups=segmentRedis.get().getSegmentGroups();
         if(segmentGroups==null||segmentGroups.size()<1) return ;
@@ -440,7 +442,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
             }
             segmentRedis.get().setSegmentCoverIds(dstkey);
             segmentGroups.get(0).setGroupCoverIds(dstkey);
-            logstr="segment coverid="+dstkey+" oldGroupCoverId"+groupCoverIds+" covercount="+segmentGroups.get(0).getGroupCoverCount()+" [only 1 group]";
+            logstr="segment coverid="+dstkey+" oldGroupCoverId="+groupCoverIds+" covercount="+segmentGroups.get(0).getGroupCoverCount()+" [only 1 group]";
         } else {
         
             String[] groupKey=new String[segmentGroups.size()];
@@ -492,10 +494,11 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                 Long tagCoverCount=segmentGroupTag.getTagCoverCount();
                 String tagCoverIds=segmentGroupTag.getTagCoverIds();
                 Long calcTagCoverCount=segmentGroupTag.getCalcTagCoverCount();
+                Long funnelCount=segmentGroupTag.getFunnelCount();
                 String calcTagCoverIds=segmentGroupTag.getCalcTagCoverIds();
                 boolean exclude=segmentGroupTag.isTagExclude();
-                logger.info("segmentRedis:segmentGroups"+groupMarker+":Tags"+tagMarker+" calcTagCoverCount="+calcTagCoverCount+" calcTagCoverIds="+calcTagCoverIds+" exclude="+exclude);
-                logger.info("segmentRedis:segmentGroups"+groupMarker+":Tags"+tagMarker+" tagCoverCount="+tagCoverCount+" tagCoverIds="+tagCoverIds+" exclude="+exclude);
+                logger.info("segmentRedis:segmentGroups"+groupMarker+":Tags"+tagMarker+" calcTagCoverCount="+calcTagCoverCount+" calcTagCoverIds="+calcTagCoverIds+" exclude="+exclude+" funnelCount="+funnelCount+" tagCoverCount="+tagCoverCount+" tagCoverIds="+tagCoverIds);
+                
                 List<SegmentGroupTagValueRedisVO>  segmentGroupTagValues=segmentGroupTag.getTagValueList();
                 if(segmentGroupTagValues==null) {
                     logger.info("segmentRedis:segmentGroups"+groupMarker+":Tags"+tagMarker+": TagVaues is null");
@@ -552,8 +555,8 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
         String rs;
         try {
             savejedis.select(REDISDB_INDEX);    
-            if(jedis.exists(sourceIds)) {
-                jedis.renamenx(sourceIds, keyids);
+            if(savejedis.exists(sourceIds)) {
+                savejedis.renamenx(sourceIds, keyids);
             }
             rs = savejedis.hmset(key, segmentCover);
             logger.info("Save Segment Key:"+key); 
@@ -569,14 +572,51 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
         
     }
     
+    /**
+     * 漏斗的各层tag的自身结论值计算和存储
+     * @return
+     */
+    private Long funnelInterCalculation(SegmentGroupRedisVO segmentGroup,List<SegmentGroupTagRedisVO> segmentGroupTags,Jedis jedis) {
+        if(segmentGroupTags==null||segmentGroupTags.size()==0) return 0L;
+        int size=segmentGroupTags.size();
+        Long funnelCount=0L;
+        String dkey="";
+        if(size==1) {
+            funnelCount=segmentGroupTags.get(0).getCalcTagCoverCount();
+            segmentGroup.setGroupCoverIds(segmentGroupTags.get(0).getCalcTagCoverIds());
+            segmentGroup.setGroupCoverCount(funnelCount);
+        } else {        
+            for(int i=0;i<size-1;i++) {
+                String[] skeys=new String[2];            
+                dkey=KEY_PREFIX_GROUPINTER+"_lv"+(i+1)+"_"+uuid.get();
+                if(i==0){
+                    skeys[0]=segmentGroupTags.get(i).getCalcTagCoverIds();
+                    segmentGroupTags.get(i).setFunnelCount(segmentGroupTags.get(i).getCalcTagCoverCount());
+                } else {
+                    skeys[0]=KEY_PREFIX_GROUPINTER+"_lv"+i+"_"+uuid.get(); 
+                }            
+                skeys[1]=segmentGroupTags.get(i+1).getCalcTagCoverIds();
+                funnelCount=jedis.sinterstore(dkey, skeys); 
+                segmentGroupTags.get(i+1).setFunnelCount(funnelCount);
+                jedis.expire(dkey, REDIS_EXPIRE_SECOND);
+                tempKeys.get().add(dkey);    
+                logger.info("===Inter calc group level"+(i+1)+" Tag="+segmentGroupTags.get(i+1).getGroupId()+"-"+segmentGroupTags.get(i+1).getTagName()+" funnelCount="+funnelCount+" tagCoverIds="+dkey);
+            }
+            segmentGroup.setGroupCoverIds(dkey);
+            segmentGroup.setGroupCoverCount(funnelCount);
+        }       
+        logger.info("===Inter calc group="+segmentGroup.getGroupId()+"-"+segmentGroup.getGroupName()+" groupCoverCount="+funnelCount+" groupcoverid="+dkey);
+        return funnelCount;
+      
+    }
     
     /**
      * 清除临时产生的redis数据
      */
     private void clearTempRedisKeys() {
         Long clearStartTime=System.currentTimeMillis();
-        try{
-            jedis = JedisConnectionManager.getConnection(); 
+        Jedis jedis = JedisConnectionManager.getConnection(); 
+        try{             
             jedis.select(REDISDB_INDEX);
             if(tempKeys.get()!=null&&tempKeys.get().size()>0) {
                 String[] keys=new String[tempKeys.get().size()];

@@ -59,7 +59,22 @@ public class JedisClient {
 		return rs;
 		
 	}
+	public static boolean delete(Integer index,String key) throws JedisException {
 
+		Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+		boolean rs;
+		try {
+			rs = jedis.del(key) == 1 ? true : false;
+		} catch (Exception e) {
+			throw new JedisException("删除单个key异常!",e);
+		} finally {
+			JedisConnectionManager.closeConnection(jedis);
+		}
+		
+		return rs;
+		
+	}
 	public static boolean delete(byte[] key) throws JedisException {
 
 		Jedis jedis = JedisConnectionManager.getConnection();
@@ -592,6 +607,19 @@ public class JedisClient {
             JedisConnectionManager.closeConnection(jedis);
         }
     }
+    
+    public static Set<String> sunion(Integer index,final String... keys) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+        try {
+            return jedis.sunion(keys);
+        } catch (Exception e) {
+            throw new JedisException("sunion异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
+    
     public static Long sunionstore(Integer index,String key,final String... keys) throws JedisException{
         Jedis jedis = JedisConnectionManager.getConnection();
         jedis.select(index);
