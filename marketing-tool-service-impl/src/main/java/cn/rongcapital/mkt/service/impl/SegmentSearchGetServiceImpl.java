@@ -10,8 +10,10 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.po.DataPopulation;
 import cn.rongcapital.mkt.po.mongodb.Segment;
@@ -39,6 +43,8 @@ public class SegmentSearchGetServiceImpl implements SegmentSearchGetService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
+    public static final Integer POOL_INDEX = 2;
+	
 	@Override
 	@ReadWrite(type = ReadWriteType.READ)
 	public BaseOutput SegmentSearch(Integer head_id, String query_name) {
@@ -46,15 +52,27 @@ public class SegmentSearchGetServiceImpl implements SegmentSearchGetService {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
-		Query query = new Query(Criteria.where("segmentation_head_id").is(head_id));
-		List<Segment> segmentList = mongoTemplate.find(query, Segment.class);
+//		Query query = new Query(Criteria.where("segmentation_head_id").is(head_id));
+//		List<Segment> segmentList = mongoTemplate.find(query, Segment.class);
 		List<Integer> head_ids = new ArrayList<>();
-		if (CollectionUtils.isNotEmpty(segmentList)) {
-			for (Segment segment : segmentList) {
-				head_ids.add(segment.getDataId());
-			}
-		}
+//		if (CollectionUtils.isNotEmpty(segmentList)) {
+//			for (Segment segment : segmentList) {
+//				head_ids.add(segment.getDataId());
+//			}
+//		}
 
+		Set<String> mids = new HashSet<String>();
+		
+		try {
+			mids = JedisClient.smembers("segmentcoverids:"+head_id, POOL_INDEX);
+		} catch (JedisException e) {
+			e.printStackTrace();
+		}
+		
+		for(String mid : mids){
+			head_ids.add(Integer.valueOf(mid));
+		}
+		
 		if (CollectionUtils.isNotEmpty(head_ids)) {
 			SegmentSearchIn searchIn = new SegmentSearchIn();
 			searchIn.setHeadidList(head_ids);
