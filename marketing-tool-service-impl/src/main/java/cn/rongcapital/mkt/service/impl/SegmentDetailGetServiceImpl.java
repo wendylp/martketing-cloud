@@ -55,6 +55,7 @@ public class SegmentDetailGetServiceImpl implements SegmentDetailGetService{
         SegmentationBody paramSegmentationBody = new SegmentationBody();
         paramSegmentationBody.setHeadId(id.intValue());
         paramSegmentationBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        paramSegmentationBody.setPageSize(Integer.MAX_VALUE);
         List<SegmentationBody> segmentationBodyList = segmentationBodyDao.selectList(paramSegmentationBody);
         if(CollectionUtils.isEmpty(segmentationBodyList)){
             baseOutput.getData().add(segmentDetialOut);
