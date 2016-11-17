@@ -92,7 +92,7 @@ public class SegmentHeaderUpdateImpl implements SegmentHeaderUpdateService {
         //mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId").is(segmentHeadId)),Segment.class);
         try {
 			JedisClient.delete(POOL_INDEX, "segmentcover:"+segmentHeadId);
-			JedisClient.delete(POOL_INDEX, "segmentcoverids:"+segmentHeadId);
+			JedisClient.delete(POOL_INDEX, "segmentcoverid:"+segmentHeadId);
 		} catch (JedisException e) {
 			e.printStackTrace();
 		}

@@ -579,7 +579,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		
 		for(Integer headid : input.getSegmentHeadIds()){
 			
-			headIds.add("segmentcoverids:"+headid);
+			headIds.add("segmentcoverid:"+headid);
 		}
 		
 		return (String[]) headIds.toArray(new String[headIds.size()]);
