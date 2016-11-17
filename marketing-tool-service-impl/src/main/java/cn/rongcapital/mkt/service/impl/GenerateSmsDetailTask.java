@@ -178,7 +178,6 @@ public class GenerateSmsDetailTask implements TaskService {
     }
 
     private List<String> queryAndCacheAudienceDetailBySegmentationId(Long taskHeadId,Long targetId) {
-//        //1根据segmentation的Id在Mongo中选出相应得细分,然后取出dataPartyId
 //        Query query = new Query(Criteria.where(SEGMENTATION_HEAD_ID).is(targetId));
 //        List<Segment> segmentList = mongoTemplate.find(query,Segment.class);
 //        logger.info("segment list size : " +segmentList.size());
@@ -192,20 +191,20 @@ public class GenerateSmsDetailTask implements TaskService {
 //        }
 //        logger.info("dataParty id list size : " + dataPartyIdList.size());
 
+        //1根据segmentation的Id在Redis中选出相应得细分,然后取出dataPartyId
         List<Long> dataPartyIdList = new ArrayList<>();
-        
 		Set<String> mids = new HashSet<String>();
-		
 		try {
 			mids = JedisClient.smembers("segmentcoverids:"+targetId, POOL_INDEX);
 		} catch (JedisException e) {
 			e.printStackTrace();
 		}
-		
+		if(CollectionUtils.isEmpty(mids)) return null;
 		for(String mid : mids){
 			dataPartyIdList.add(Long.valueOf(mid));
 		}
-        
+        logger.info("dataParty id list size : " + dataPartyIdList.size());
+
         //3将选出来的这些数据做缓存存到cache表中,一开始先一条一条插入,后续优化成使用batchInsert进行插入
         if(CollectionUtils.isEmpty(dataPartyIdList)) return null;
         cacheDataPartyIdInSmsAudienceCache(taskHeadId, targetId, dataPartyIdList);
