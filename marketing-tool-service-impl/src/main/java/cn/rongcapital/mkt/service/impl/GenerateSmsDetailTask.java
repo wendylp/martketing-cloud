@@ -195,7 +195,7 @@ public class GenerateSmsDetailTask implements TaskService {
         List<Long> dataPartyIdList = new ArrayList<>();
 		Set<String> mids = new HashSet<String>();
 		try {
-			mids = JedisClient.smembers("segmentcoverids:"+targetId, POOL_INDEX);
+			mids = JedisClient.smembers("segmentcoverid:"+targetId, POOL_INDEX);
 		} catch (JedisException e) {
 			e.printStackTrace();
 		}

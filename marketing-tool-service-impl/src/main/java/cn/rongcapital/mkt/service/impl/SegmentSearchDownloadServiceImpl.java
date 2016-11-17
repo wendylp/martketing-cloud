@@ -52,7 +52,7 @@ public class SegmentSearchDownloadServiceImpl implements SegmentSearchDownloadSe
 		Set<String> mids = new HashSet<String>();
 		
 		try {
-			mids = JedisClient.smembers("segmentcoverids:"+head_id, POOL_INDEX);
+			mids = JedisClient.smembers("segmentcoverid:"+head_id, POOL_INDEX);
 		} catch (JedisException e) {
 			e.printStackTrace();
 		}

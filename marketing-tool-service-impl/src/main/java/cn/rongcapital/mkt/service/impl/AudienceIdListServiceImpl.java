@@ -115,13 +115,13 @@ public class AudienceIdListServiceImpl implements AudienceIdListService {
             	List<SegmentationHead> segmentationHeadList = segmentationHeadDao.selectList(segmentationHead);
                 
             	for(SegmentationHead segmentation : segmentationHeadList){
-            		headIds.add("segmentcoverids:"+segmentation.getId()+"");
+            		headIds.add("segmentcoverid:"+segmentation.getId()+"");
             	}
             	
             }else{
                 
             	for(Integer headids : audienceList){
-            		headIds.add("segmentcoverids:"+ headids);
+            		headIds.add("segmentcoverid:"+ headids);
             	}
             	
             }
