@@ -567,9 +567,9 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
                 savejedis.renamenx(sourceIds, keyids);
             }
             rs = savejedis.hmset(key, segmentCover);
-            logger.info("Save Segment Key:"+key); 
+            logger.info("Save Segment Key:"+key+ " 原始细分ID="+sourceIds+" 细分count="+segmentCoverCount+"-->最新细分ID="+keyids); 
         } catch (Exception e) {
-            logger.info("Save Segment Exceptio:"+e.toString()); 
+            logger.info("Save Segment Exception:"+e.toString()); 
             throw new JedisException("设置key和HASH值异常!",e);
         } finally {
             JedisConnectionManager.closeConnection(savejedis);
