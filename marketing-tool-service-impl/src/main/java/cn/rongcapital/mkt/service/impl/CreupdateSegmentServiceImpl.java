@@ -21,7 +21,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -31,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -156,6 +154,9 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
         } catch (JedisException e) {
             logger.equals("segment write to jedis exception :" + e);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            baseOutput.setCode(ApiErrorCode.BIZ_ERROR.getCode());
+            baseOutput.setMsg(ApiErrorCode.BIZ_ERROR.getMsg());
+            return baseOutput;
         }
 
         //生成返回值信息
