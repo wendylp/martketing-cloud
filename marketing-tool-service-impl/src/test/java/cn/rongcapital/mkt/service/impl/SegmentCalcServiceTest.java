@@ -1,4 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
+import cn.rongcapital.mkt.common.jedis.JedisConnectionManager;
 import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.service.SegmentCalcService;
 import cn.rongcapital.mkt.service.testbase.AbstractUnitTest;
@@ -7,6 +8,7 @@ import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
 import cn.rongcapital.mkt.vo.in.SystemTagIn;
 import cn.rongcapital.mkt.vo.in.SystemValueIn;
 import cn.rongcapital.mkt.vo.in.TagGroupsIn;
+import redis.clients.jedis.Jedis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,7 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
     @Before  
     public void setUp() throws Exception {
         logger.info("测试: SegmentCalcServiceTest 开始---------------------");
+       
         
         demoData4();
         segmentCalcService=new SegmentCalcServiceImpl();
@@ -50,7 +53,7 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
         logger.info("测试方法: calcSegmentCover");  
        
         segmentCalcService.calcSegmentCover(segment);  
-        segmentCalcService.saveSegmentCover() ;
+        //segmentCalcService.saveSegmentCover() ;
         //mutiThreadTest();
     }
     
@@ -202,28 +205,28 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
         
         List<SystemValueIn> values1=new ArrayList<SystemValueIn>();
         SystemValueIn val1=new SystemValueIn(); //男
-        val1.setTagValueId("Td29zdq8_0");
+        val1.setTagValueId("TestTagA_0");
         val1.setTagValue("男");
         SystemValueIn val2=new SystemValueIn(); //女
-        val2.setTagValueId("Td29zdq8_1");
+        val2.setTagValueId("TestTagA_1");
         val2.setTagValue("女");
         values1.add(val1);
         values1.add(val2);
-        systag1.setTagId("Td29zdq8");
+        systag1.setTagId("TestTagA");
         systag1.setTagName("性别");
         //systag1.setTagExclude(tagExclude);
         systag1.setTagIndex(0);
         
         List<SystemValueIn> values2=new ArrayList<SystemValueIn>();
         SystemValueIn val3=new SystemValueIn(); 
-        val3.setTagValueId("Zc2E7DO0_0");
+        val3.setTagValueId("TestTagB_0");
         val3.setTagValue("是");
         SystemValueIn val4=new SystemValueIn(); 
-        val4.setTagValueId("Zc2E7DO0_1");
+        val4.setTagValueId("TestTagB_1");
         val4.setTagValue("否");
         values2.add(val3);
         values2.add(val4);
-        systag2.setTagId("Zc2E7DO0");
+        systag2.setTagId("TestTagB");
         systag2.setTagName("30天内新注册会员");
         //systag1.setTagExclude(tagExclude);
         systag2.setTagIndex(1);        
@@ -242,12 +245,12 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
         
         List<SystemValueIn> valuesX=new ArrayList<SystemValueIn>();
         SystemValueIn valX=new SystemValueIn(); //男
-        valX.setTagValueId("Td29zdq8_0");
-        valX.setTagValue("男");
+        valX.setTagValueId("TestTagC_0");
+        valX.setTagValue("是");
         systag3.setTagValueList(valuesX);
         
-        systag3.setTagId("Td29zdq8");
-        systag3.setTagName("性别");
+        systag3.setTagId("TestTagC");
+        systag3.setTagName("蛋糕芝士系列");
         //systag1.setTagExclude(tagExclude);
         systag3.setTagIndex(0);
     }
