@@ -437,12 +437,12 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
             //只有一个group
             segmentRedis.get().setSegmentCoverCount(segmentGroups.get(0).getGroupCoverCount());
             String groupCoverIds=segmentGroups.get(0).getGroupCoverIds();
-            if(jedis.exists(groupCoverIds)) {
-                jedis.renamenx(groupCoverIds, dstkey);
-            }
-            segmentRedis.get().setSegmentCoverIds(dstkey);
-            segmentGroups.get(0).setGroupCoverIds(dstkey);
-            logstr="segment coverid="+dstkey+" oldGroupCoverId="+groupCoverIds+" covercount="+segmentGroups.get(0).getGroupCoverCount()+" [only 1 group]";
+            String[] keys=new String[2];
+            keys[0]=groupCoverIds;
+            keys[1]="Nothing"+uuid.get();
+            jedis.sunionstore(dstkey, keys); //用户空结合，进行copy 当前ID集合           
+            segmentRedis.get().setSegmentCoverIds(dstkey);            
+            logstr="segment coverid="+dstkey+"  covercount="+segmentGroups.get(0).getGroupCoverCount()+" [only 1 group]";
         } else {
         
             String[] groupKey=new String[segmentGroups.size()];
