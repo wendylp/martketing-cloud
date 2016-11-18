@@ -68,14 +68,18 @@ public class SmsMaterialGetServiceImplTest {
         String paramSearchWord = "测试";
         Integer paramIndex = 1;
         Integer paramPageSize = 10;
+        int totalCount = 20;
         paramSmsMaterial.setName(paramSearchWord);
         paramSmsMaterial.setStartIndex(paramIndex);
         paramSmsMaterial.setPageSize(paramPageSize);
         List<SmsMaterial> resultList = new ArrayList<>();
+        resultList.add(paramSmsMaterial);
         Mockito.when(smsMaterialDao.selectListByKeyword(Mockito.argThat(new SmsMaterialGetServiceImplTest.SmsMaterialMatcherMockTwo(paramSmsMaterial)))).thenReturn(resultList);
-
+        Mockito.when(smsMaterialDao.selectListByKeywordCount(Mockito.argThat(new SmsMaterialGetServiceImplTest.SmsMaterialMatcherMockTwo(paramSmsMaterial)))).thenReturn(totalCount);
+        
         BaseOutput baseOutput = smsMaterialGetService.getSmsMaterialListByKeyword(paramSearchWord,paramIndex,paramPageSize);
         Assert.assertEquals(baseOutput.getCode(),ApiErrorCode.SUCCESS.getCode());
+        Assert.assertEquals(totalCount, baseOutput.getTotalCount());
 
     }
 

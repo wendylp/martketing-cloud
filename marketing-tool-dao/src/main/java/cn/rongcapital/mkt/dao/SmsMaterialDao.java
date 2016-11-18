@@ -43,5 +43,12 @@ public interface SmsMaterialDao extends BaseDao<SmsMaterial>{
 	 * @return list
 	 */
 	List<SmsMaterial> selectListByKeyword(SmsMaterial paramSmsMaterial);
+	
+	 /**
+     * 模糊查询短信素材的数量
+     * @param paramSmsMaterial
+     * @return list
+     */
+    int selectListByKeywordCount(SmsMaterial paramSmsMaterial);
 
 }
