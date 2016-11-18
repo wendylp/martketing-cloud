@@ -26,7 +26,6 @@ import cn.rongcapital.mkt.vo.out.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -79,9 +78,8 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 	@Autowired
 	private SegmentManageCalService segmentManageCalService;
 	
-    private String uuid="";   
-    
-    private ArrayList<String> tempKeys = new ArrayList<String>();
+    private ThreadLocal<String> uuid=new ThreadLocal<String>();    
+    private ThreadLocal<ArrayList<String>> tempKeys=new ThreadLocal<ArrayList<String>>();
     
 	@ReadWrite(type = ReadWriteType.READ)
 	@Override
@@ -506,10 +504,10 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		
 		for(String province : provinceList){
 			
-			segmentManageCalService.sinterstore(POOL_INDEX,province+"_"+uuid,uuid,province);
+			segmentManageCalService.sinterstore(POOL_INDEX,province+"_"+uuid.get(),uuid.get(),province);
 			//JedisClient.sinterstore(POOL_INDEX,province+"_"+uuid,uuid,province);
 			
-			tempKeys.add(province+"_"+uuid);
+			tempKeys.get().add(province+"_"+uuid.get());
 			Long count = segmentManageCalService.scard(POOL_INDEX, province+"_"+uuid);
 			//Long count = JedisClient.scard(POOL_INDEX, province+"_"+uuid);
 			
@@ -537,8 +535,8 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		for(String genderKey : genderList){
 			
 			//JedisClient.sinterstore(POOL_INDEX,genderKey+"_"+uuid,uuid,genderKey);
-			segmentManageCalService.sinterstore(POOL_INDEX,genderKey+"_"+uuid,uuid,genderKey);
-			tempKeys.add(genderKey+"_"+uuid);
+			segmentManageCalService.sinterstore(POOL_INDEX,genderKey+"_"+uuid.get(),uuid.get(),genderKey);
+			tempKeys.get().add(genderKey+"_"+uuid.get());
 			
 			//Long count = JedisClient.scard(POOL_INDEX, genderKey+"_"+uuid);
 			Long count = segmentManageCalService.scard(POOL_INDEX, genderKey+"_"+uuid);
@@ -561,11 +559,12 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 	 */
 	private Long getMids(String[] arrHeadIds ){
 		
-	    uuid=GenerateUUid.generateShortUuid();
-	    tempKeys.add(uuid);
-		segmentManageCalService.sunionstore(POOL_INDEX,uuid,arrHeadIds);
+	    uuid.set(GenerateUUid.generateShortUuid());
+	    tempKeys.set(new ArrayList<String>());
+	    tempKeys.get().add(uuid.get());
+		segmentManageCalService.sunionstore(POOL_INDEX,uuid.get(),arrHeadIds);
 		//return JedisClient.scard(POOL_INDEX, uuid);
-		return segmentManageCalService.scard(POOL_INDEX, uuid);
+		return segmentManageCalService.scard(POOL_INDEX, uuid.get());
 	}
 	
 	/**
@@ -665,12 +664,17 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
      */
     private void clearTempRedisKeys() {
 
-    	if(tempKeys!=null&&tempKeys.size()>0) {
-			String[] keys=new String[tempKeys.size()];
-		            keys=tempKeys.toArray(keys);
+    	if(tempKeys!=null&&tempKeys.get().size()>0) {
+			String[] keys=new String[tempKeys.get().size()];
+		            keys=tempKeys.get().toArray(keys);
 				//JedisClient.delete(POOL_INDEX, keys);
 				segmentManageCalService.deleteTempKey(POOL_INDEX, keys);
-		        tempKeys.clear();
+				logger.info("calculate segment management over  ,delete temporary keys:");
+				for(String key :tempKeys.get()){
+					logger.info("=========================>"+key);
+				}
+				
+		        tempKeys.get().clear();
 		}
 
     }
