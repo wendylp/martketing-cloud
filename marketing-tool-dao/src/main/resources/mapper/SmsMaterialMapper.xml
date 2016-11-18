@@ -125,7 +125,7 @@
 	<select id="selectListByKeywordCount" parameterType="cn.rongcapital.mkt.po.SmsMaterial" resultType="int">
 		<![CDATA[SELECT count(id)]]>
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE 1=1
+		WHERE status = 0
 		<if test="name != null"><![CDATA[AND name like CONCAT('%',#{name},'%')]]></if>
 	</select>
 	
