@@ -188,11 +188,11 @@ public class SegmentCalcServiceTest extends AbstractUnitTest {
         List<TagGroupsIn> groups=new ArrayList<TagGroupsIn>();
         TagGroupsIn tagGroup1=new TagGroupsIn();
         TagGroupsIn tagGroup2=new TagGroupsIn();
-        groups.add(tagGroup1);
         groups.add(tagGroup2);
+        groups.add(tagGroup1);
         segment.setFilterGroups(groups);
         //segment.setSegmentHeadId(888L);
-        tagGroup1.setGroupChange(1);
+        tagGroup1.setGroupChange(0);
         tagGroup1.setGroupId("000FFF");
         tagGroup1.setGroupName("testGroup");
         tagGroup1.setGroupIndex(0);
