@@ -508,7 +508,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 			//JedisClient.sinterstore(POOL_INDEX,province+"_"+uuid,uuid,province);
 			
 			tempKeys.get().add(province+"_"+uuid.get());
-			Long count = segmentManageCalService.scard(POOL_INDEX, province+"_"+uuid);
+			Long count = segmentManageCalService.scard(POOL_INDEX, province+"_"+uuid.get());
 			//Long count = JedisClient.scard(POOL_INDEX, province+"_"+uuid);
 			
 			if(count > 0){
@@ -539,7 +539,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 			tempKeys.get().add(genderKey+"_"+uuid.get());
 			
 			//Long count = JedisClient.scard(POOL_INDEX, genderKey+"_"+uuid);
-			Long count = segmentManageCalService.scard(POOL_INDEX, genderKey+"_"+uuid);
+			Long count = segmentManageCalService.scard(POOL_INDEX, genderKey+"_"+uuid.get());
 			if(count > 0){
 				genderCountMap.put(genderKey, Integer.valueOf(count+""));
 			}
@@ -664,7 +664,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
      */
     private void clearTempRedisKeys() {
 
-    	if(tempKeys!=null&&tempKeys.get().size()>0) {
+    	if(tempKeys.get()!=null&&tempKeys.get().size()>0) {
 			String[] keys=new String[tempKeys.get().size()];
 		            keys=tempKeys.get().toArray(keys);
 				//JedisClient.delete(POOL_INDEX, keys);
