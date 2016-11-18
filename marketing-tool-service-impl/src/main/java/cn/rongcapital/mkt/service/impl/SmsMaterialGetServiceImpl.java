@@ -88,7 +88,7 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
             paramSmsTemplet.setId(smsMaterial.getSmsTempletId());
             paramSmsTemplet.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
             List<SmsTemplet> smsTempletList = smsTempletDao.selectList(paramSmsTemplet);
-            if(CollectionUtils.isEmpty(smsMaterialList)) continue;
+            if(CollectionUtils.isEmpty(smsTempletList)) continue;
             String templateName = smsTempletList.get(0).getName();
             SmsMaterialOut smsMaterialOut = getSmsMaterialOut(smsMaterial,templateName);
             baseOutput.getData().add(smsMaterialOut);
