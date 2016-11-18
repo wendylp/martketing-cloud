@@ -56,8 +56,8 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	private String FRONT_PROVINCE_NAME = "北京,天津,上海,重庆,河北,河南,云南,辽宁,黑龙江,湖南,安徽,"
-			+ "山东,新疆,江苏,浙江,江西,湖北,广西,甘肃,山西,内蒙古,陕西,吉林,福建,贵州," + "广东,青海,西藏,四川,宁夏,海南,台湾,香港,澳门";
+//	private String FRONT_PROVINCE_NAME = "北京,天津,上海,重庆,河北,河南,云南,辽宁,黑龙江,湖南,安徽,"
+//			+ "山东,新疆,江苏,浙江,江西,湖北,广西,甘肃,山西,内蒙古,陕西,吉林,福建,贵州," + "广东,青海,西藏,四川,宁夏,海南,台湾,香港,澳门";
 
 	private final static int selectBatchSize  = 10000;
 
@@ -71,6 +71,10 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 	private SegmentCalcService segmentCalcService;
 
 	public static final  Integer POOL_INDEX = 2;
+	
+	public static final String CHINA_COUNT_KEY = "chinacountkey";
+	
+	public static final String TAG_COVER_ID_STR="tagcoverid:";
 	
 	@Autowired
 	private TagValueCountDao tagValueCountDao;
@@ -269,6 +273,8 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		//获取各省人数
 		Map<String,Integer> provinceCountMap = getProvinceByType(input.getType());
 		
+		chinaCount = getChinaCountByType(input.getType());
+		
 		this.clearTempRedisKeys();
 		
 		List<SegmentDimensionCountOut> formartedProvinceCountOutList = new ArrayList<>();
@@ -278,7 +284,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 			SegmentDimensionCountOut validProvinceCountOut = new SegmentDimensionCountOut();
 			validProvinceCountOut.setDimensionName(getProvinceName(key));
 			validProvinceCountOut.setPopulationCount(provinceCountMap.get(key));
-			chinaCount += provinceCountMap.get(key);
+				//chinaCount += provinceCountMap.get(key);
 			formartedProvinceCountOutList.add(validProvinceCountOut);
 			
 		}
@@ -505,11 +511,9 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		for(String province : provinceList){
 			
 			segmentManageCalService.sinterstore(POOL_INDEX,province+"_"+uuid.get(),uuid.get(),province);
-			//JedisClient.sinterstore(POOL_INDEX,province+"_"+uuid,uuid,province);
 			
 			tempKeys.get().add(province+"_"+uuid.get());
 			Long count = segmentManageCalService.scard(POOL_INDEX, province+"_"+uuid.get());
-			//Long count = JedisClient.scard(POOL_INDEX, province+"_"+uuid);
 			
 			if(count > 0){
 				provinceCountMap.put(province, Integer.valueOf(count+""));
@@ -517,11 +521,34 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 			}
 			
 		}
-		
+
 		return provinceCountMap;
 		
 	}
 
+	/**
+	 * 计算中国总人数
+	 * @param type
+	 * @return
+	 */
+	private Integer getChinaCountByType(int type){
+		
+		if(ApiConstant.DATA_PARTY_LOCATION_TYPE.equals(type+"")){
+			//用户所在区域
+			segmentManageCalService.sinterstore(POOL_INDEX,CHINA_COUNT_KEY+"_"+uuid.get(),TAG_COVER_ID_STR+ApiConstant.DATA_PARTY_LOCATION_TAG_ID,uuid.get());
+		} else {
+			//用户活动区域
+			segmentManageCalService.sinterstore(POOL_INDEX,CHINA_COUNT_KEY+"_"+uuid.get(),TAG_COVER_ID_STR+ApiConstant.DATA_PARTY_ACTIVE_TAG_ID,uuid.get());
+		}
+
+		tempKeys.get().add(CHINA_COUNT_KEY+"_"+uuid.get());
+		Long chinaCount = segmentManageCalService.scard(POOL_INDEX, CHINA_COUNT_KEY+"_"+uuid.get());
+		
+		return Integer.valueOf(chinaCount+"");
+		
+	}
+	
+	
 	/**
 	 * 获取性别阀盖人数
 	 * @return
@@ -534,11 +561,9 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		
 		for(String genderKey : genderList){
 			
-			//JedisClient.sinterstore(POOL_INDEX,genderKey+"_"+uuid,uuid,genderKey);
 			segmentManageCalService.sinterstore(POOL_INDEX,genderKey+"_"+uuid.get(),uuid.get(),genderKey);
 			tempKeys.get().add(genderKey+"_"+uuid.get());
 			
-			//Long count = JedisClient.scard(POOL_INDEX, genderKey+"_"+uuid);
 			Long count = segmentManageCalService.scard(POOL_INDEX, genderKey+"_"+uuid.get());
 			if(count > 0){
 				genderCountMap.put(genderKey, Integer.valueOf(count+""));
@@ -562,7 +587,6 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 	    tempKeys.set(new ArrayList<String>());
 	    tempKeys.get().add(uuid.get());
 		segmentManageCalService.sunionstore(POOL_INDEX,uuid.get(),arrHeadIds);
-		//return JedisClient.scard(POOL_INDEX, uuid);
 		return segmentManageCalService.scard(POOL_INDEX, uuid.get());
 	}
 	
@@ -609,7 +633,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		if(tagValueCountList != null && tagValueCountList.size() > 0){
 			
 			for(TagValueCount tagValue : tagValueCountList){
-				provinceKeysList.add("tagcoverid:"+tagValue.getTagValueSeq());
+				provinceKeysList.add(TAG_COVER_ID_STR+tagValue.getTagValueSeq());
 			}
 			
 		}
@@ -666,7 +690,6 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
     	if(tempKeys.get()!=null&&tempKeys.get().size()>0) {
 			String[] keys=new String[tempKeys.get().size()];
 		            keys=tempKeys.get().toArray(keys);
-				//JedisClient.delete(POOL_INDEX, keys);
 				segmentManageCalService.deleteTempKey(POOL_INDEX, keys);
 				logger.info("calculate segment management over  ,delete temporary keys:");
 				for(String key :tempKeys.get()){
