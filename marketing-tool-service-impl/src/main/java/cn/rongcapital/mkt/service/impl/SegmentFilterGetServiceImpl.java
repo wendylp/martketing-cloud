@@ -513,9 +513,9 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 			
 			if(count > 0){
 				provinceCountMap.put(province, Integer.valueOf(count+""));
+				logger.info("province count==>"+"key="+province+",count="+count);
 			}
 			
-			logger.info(count+"");
 		}
 		
 		return provinceCountMap;
@@ -542,9 +542,8 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 			Long count = segmentManageCalService.scard(POOL_INDEX, genderKey+"_"+uuid.get());
 			if(count > 0){
 				genderCountMap.put(genderKey, Integer.valueOf(count+""));
+				logger.info("gender count==>"+"key="+genderKey+",count="+count);
 			}
-			
-			logger.info(count+"");
 		}
 		
 		return genderCountMap;
