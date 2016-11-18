@@ -80,6 +80,7 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
         paramSmsMaterial.setStartIndex((index - 1) * size);
         paramSmsMaterial.setPageSize(size);
         List<SmsMaterial> smsMaterialList = smsMaterialDao.selectListByKeyword(paramSmsMaterial);
+        int totalCount = smsMaterialDao.selectListByKeywordCount(paramSmsMaterial);
 
         if(CollectionUtils.isEmpty(smsMaterialList)) return baseOutput;
 
@@ -88,13 +89,18 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
             paramSmsTemplet.setId(smsMaterial.getSmsTempletId());
             paramSmsTemplet.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
             List<SmsTemplet> smsTempletList = smsTempletDao.selectList(paramSmsTemplet);
-            if(CollectionUtils.isEmpty(smsMaterialList)) continue;
-            String templateName = smsTempletList.get(0).getName();
+            String templateName;
+            if (CollectionUtils.isEmpty(smsTempletList)) {
+                templateName = "";
+            } else {
+                templateName = smsTempletList.get(0).getName();
+            }
             SmsMaterialOut smsMaterialOut = getSmsMaterialOut(smsMaterial,templateName);
             baseOutput.getData().add(smsMaterialOut);
         }
 
         baseOutput.setTotal(baseOutput.getData().size());
+        baseOutput.setTotalCount(totalCount);
         return baseOutput;
     }
 }
