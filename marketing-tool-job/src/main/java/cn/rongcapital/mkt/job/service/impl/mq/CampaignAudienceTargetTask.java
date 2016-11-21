@@ -114,6 +114,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 				try {
 					List<Segment> list = fs.get(); // 打印各个线程（任务）执行的结果
 					for (Segment segment : list) {
+						segment.setSegmentationHeadId(cat.getCampaignHeadId());
 						segmentList.add(segment);
 					}
 				} catch (InterruptedException e) {
