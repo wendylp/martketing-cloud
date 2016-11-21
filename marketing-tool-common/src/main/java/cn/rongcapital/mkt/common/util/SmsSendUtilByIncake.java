@@ -37,10 +37,13 @@ public class SmsSendUtilByIncake {
     private static final int HTTP_STATUS_OK = 200;
     private static final String HTTP_ERROR = "-99";
     private static final Integer HTTP_ERROR_INTEGER = -99;
-    private static final String MESSAGE_SEND_URL = "http://43.254.53.81:8040/YunXiangSMS/SendCRMSms";
+//    private static final String MESSAGE_SEND_URL = "http://43.254.53.81:8040/YunXiangSMS/SendCRMSms";
+//    private static final String MESSAGE_SEND_URL = "http://gk.incake.net/YiMa/YiMaOrder";
+    private static final String MESSAGE_SEND_URL = "http://gk.incake.net/YunXiangSMS/SendCRMSms";
     private static final String DEFAULT_PARTNER_NAME = "云像";
     private static final String DEFAULT_PARTNER_NO = "001";
     private static final String INCAKE_NUM = "6415DAE359507AE62A875533B90A80B6";
+//    private static final String INCAKE_NUM = "ERROR_INCAKE_NUM";
     private static final String[] BATCH_RETURN_ERROR_CODE_LIST = {"-1001", "-1004", "-0000"};
     
     /* 
@@ -279,7 +282,7 @@ public class SmsSendUtilByIncake {
         sms1[1] = "【INCAK】测试短信，大伟1";
         SmsBatchMap.put((long) 1, sms1);
         String[] sms2 = new String[2];
-        sms2[0] = "150019861282";
+        sms2[0] = "15001986128";
         sms2[1] = "【INCAKE】测试短信，大伟2";
         SmsBatchMap.put((long) 2, sms2);
         
