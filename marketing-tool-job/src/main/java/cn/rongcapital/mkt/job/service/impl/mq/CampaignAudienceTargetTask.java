@@ -44,7 +44,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 	@Autowired
 	private DataPartyDao dataPartyDao;
 
-	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverids:";
+	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverid:";
 
 	private ExecutorService executor = null;
 

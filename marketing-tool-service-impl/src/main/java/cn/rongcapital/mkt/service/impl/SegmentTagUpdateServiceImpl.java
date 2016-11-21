@@ -54,7 +54,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverids:";
+	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverid:";
 
 	private ConcurrentHashMap<String, Field[]> filedMap = new ConcurrentHashMap<>();
 
