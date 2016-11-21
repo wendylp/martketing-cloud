@@ -707,6 +707,11 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 
     }
     
+    /**
+     * 获取对应关系(细分管理页面显示用)
+     * @param provinceName
+     * @return
+     */
     private String getShortProvinceName(String provinceName){
     	
     	if(SegmentProvinceMap.S_110000.getProvinceName().equals(provinceName)){
