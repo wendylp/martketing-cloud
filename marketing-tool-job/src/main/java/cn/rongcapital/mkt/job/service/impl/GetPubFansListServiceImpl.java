@@ -116,12 +116,12 @@ public class GetPubFansListServiceImpl implements TaskService {
 			/**
 			 * 添加或者更新粉丝属性,对于数据库操作来说更新操作就是先删除,后插入,对于本地 还有添加操作 所以我们这里直接执行先删除后插入(节约判断是插入还是更新的操作)
 			 */
-			int wechatMembersCount = saveOrUpdateWechatMembers(pubId,wechatMemberList);
+			saveOrUpdateWechatMembers(pubId,wechatMemberList);
 			/**
 			 * 更新分组下粉丝数量
 			 */
 			if(StringUtils.isNotEmpty(pubId)){
-				this.updateUngroupedCountNew(wechatMembersCount,pubId);
+				this.updateUngroupedCountNew(pubId);
 			}			
 		}
 	}
@@ -131,13 +131,20 @@ public class GetPubFansListServiceImpl implements TaskService {
 	 * @param count
 	 * @param pubId
 	 */
-	private void updateUngroupedCountNew(Integer count,String pubId){
+	private void updateUngroupedCountNew(String pubId){
 		// Todo:获取wechat_wegister表中的状态是0的公众号信息
+		WechatMember member = new WechatMember();
+		member.setWxGroupId(ApiConstant.WECHAT_GROUP);
+		member.setPubId(pubId);
+		int count = wechatMemberDao.selectListCount(member);
 		WechatGroup wechatGroup = new WechatGroup();
 		wechatGroup.setCount(count);
 		wechatGroup.setWxAcct(pubId);
-		wechatGroup.setGroupId(ApiConstant.WECHAT_GROUP);			
-		wechatGroupDao.updateInfoByGroupWxCode(wechatGroup);			
+		wechatGroup.setGroupId(ApiConstant.WECHAT_GROUP);
+		
+		wechatGroupDao.updateInfoByGroupWxCode(wechatGroup);	
+		
+		
 	}
 	
 	/**

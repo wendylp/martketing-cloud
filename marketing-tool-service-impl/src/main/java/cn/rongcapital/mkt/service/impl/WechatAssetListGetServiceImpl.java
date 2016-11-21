@@ -10,8 +10,13 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import cn.rongcapital.mkt.biz.WechatPublicAuthBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -32,6 +37,8 @@ import cn.rongcapital.mkt.vo.out.PublicAuthOut;
 @Service
 public class WechatAssetListGetServiceImpl implements WechatAssetListGetService {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	private WechatAssetDao wechatAssetDao;
 	@Autowired
@@ -146,6 +153,8 @@ public class WechatAssetListGetServiceImpl implements WechatAssetListGetService 
 		WechatAssetGroup wechatAssetGroup = new WechatAssetGroup();
 		wechatAssetGroup.setImportGroupId(new Long(groupId));
 		wechatAssetGroup.setWxAcct(wxAcct);
+		wechatAssetGroup.setStartIndex(null);
+		wechatAssetGroup.setPageSize(null);
 		List<WechatAssetGroup> selectList = wechatAssetGroupDao.selectList(wechatAssetGroup);
 		if(CollectionUtils.isNotEmpty(selectList)){
 			WechatAssetGroup wechatAGroup = selectList.get(0);
