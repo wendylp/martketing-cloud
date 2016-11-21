@@ -72,11 +72,12 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
     }
 
     @Override
-    public BaseOutput getSmsMaterialListByKeyword(String searchWord, Integer index, Integer size) {
+    public BaseOutput getSmsMaterialListByKeyword(String searchWord, Integer channelType, Integer index, Integer size) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
 
         SmsMaterial paramSmsMaterial = new SmsMaterial();
         paramSmsMaterial.setName(searchWord);
+        paramSmsMaterial.setChannelType(channelType == null? null : channelType.byteValue());
         paramSmsMaterial.setStartIndex((index - 1) * size);
         paramSmsMaterial.setPageSize(size);
         List<SmsMaterial> smsMaterialList = smsMaterialDao.selectListByKeyword(paramSmsMaterial);

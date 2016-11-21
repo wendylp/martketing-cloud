@@ -127,6 +127,7 @@
 		<![CDATA[SELECT count(id)]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE status = 0
+		<if test="channelType != null"><![CDATA[AND channel_type = #{channelType}]]></if>
 		<if test="name != null"><![CDATA[AND name like CONCAT('%',#{name},'%')]]></if>
 	</select>
 	
