@@ -98,7 +98,7 @@ public class SmsTempletServiceTest {
 
     @Test
     public void testSmsTempletList() {
-        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, 0, "0", "测试");
+        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, "0", "0", "测试","");
         
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());

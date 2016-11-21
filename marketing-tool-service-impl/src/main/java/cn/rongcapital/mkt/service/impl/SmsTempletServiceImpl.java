@@ -61,17 +61,24 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	private final String AUDIT_REASON="无";
 		
 	@Override
-	public SmsTempletOut smsTempletList(String userId, Integer index, Integer size, Integer channelType,
-			String type, String name) {
+	public SmsTempletOut smsTempletList(String userId, Integer index, Integer size, String channelType,
+			String type, String name,String content) {
 		SmsTempletOut smsTempletOut = this.newSuccessSmsTempletOut();
 
-		SmsTemplet smsTempletTemp = new SmsTemplet();		
-		smsTempletTemp.setChannelType(NumUtil.int2OneByte(channelType));
+		SmsTemplet smsTempletTemp = new SmsTemplet();
+		if(StringUtils.isNotEmpty(channelType)){
+			Integer channelTypeInt = Integer.parseInt(channelType);			
+			smsTempletTemp.setChannelType(channelTypeInt.byteValue());
+		}
+		
 		if(StringUtils.isNotEmpty(type)){
 			smsTempletTemp.setType(NumUtil.int2OneByte(Integer.parseInt(type)));
 		}		
 		if(StringUtils.isNotEmpty(name)){
 			smsTempletTemp.setName(name);
+		}
+		if(StringUtils.isNotEmpty(content)){
+			smsTempletTemp.setContent(content);
 		}
 		smsTempletTemp.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
 		smsTempletTemp.setOrderField("create_time");
