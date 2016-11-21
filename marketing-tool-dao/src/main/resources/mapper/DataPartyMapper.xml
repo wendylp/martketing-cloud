@@ -734,7 +734,7 @@
 		<![CDATA[ from data_party as dp ]]>
 		<![CDATA[ inner join  data_population as dpp on dp.id = dpp.keyid ]]>
 		<![CDATA[ inner join  contact_list as cl on dpp.id = cl.keyid ]]>
-		<![CDATA[ where  cl.id = #{contact_id} ]]>
+		<![CDATA[ where  cl.contact_templ_id = #{contact_id} ]]>
 	</select>
 	
 		<!-- 根据dataParty的IdList统计 -->
