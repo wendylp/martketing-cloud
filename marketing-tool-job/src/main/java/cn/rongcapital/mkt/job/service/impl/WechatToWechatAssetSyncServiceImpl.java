@@ -113,6 +113,8 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 	public void synWAssetGroupMethod() {
 		WechatAsset WechatAssetInfo = new WechatAsset();
 		WechatAssetInfo.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		WechatAssetInfo.setStartIndex(null);
+		WechatAssetInfo.setPageSize(null);
 		List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(WechatAssetInfo);
 
 		if (!CollectionUtils.isEmpty(wechatAssetList)) {
@@ -128,10 +130,39 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 				WechatGroup wGroup = new WechatGroup();
 				wGroup.setWxAcct(wxAcct);
 				wGroup.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-
+				wGroup.setStartIndex(null);
+				wGroup.setPageSize(null);
 				List<WechatGroup> selectList = wechatGroupDao.selectList(wGroup);
 
-				if (count == 0) {
+				for (WechatGroup wechatGroup : selectList) {
+					Long groupId = new Long(wechatGroup.getGroupId());
+					WechatAssetGroup wechatAssetGroup = new WechatAssetGroup();
+					wechatAssetGroup.setImportGroupId(groupId);
+					List<WechatAssetGroup> wechatAssetGroupsTemp = wechatAssetGroupDao.selectList(wechatAssetGroup);
+					if(CollectionUtils.isEmpty(wechatAssetGroupsTemp)){
+						wechatAssetGroup.setName(wechatGroup.getGroupName());
+						wechatAssetGroup.setMembers(wechatGroup.getCount());
+						wechatAssetGroup.setWxAcct(wxAcct);
+						wechatAssetGroup.setCreateTime(new Date());
+						if (groupId >= 100) {
+							wechatAssetGroup.setIsSysGroup(ApiConstant.TAG_ITEM_CUSTOM);
+						} else {
+							wechatAssetGroup.setIsSysGroup(ApiConstant.TAG_ITEM_SYSTEM);
+						}
+						wechatAssetGroupDao.insert(wechatAssetGroup);
+						logger.info("insert into wechat_asset_group id:" + wechatAssetGroup.getId());
+					}else{
+						
+						wechatAssetGroup.setName(wechatGroup.getGroupName());
+						wechatAssetGroup.setMembers(wechatGroup.getCount());
+						wechatAssetGroup.setWxAcct(wxAcct);
+						wechatAssetGroup.setCreateTime(new Date());
+
+						wechatAssetGroupDao.updateByWxacctIGroupId(wechatAssetGroup);
+						logger.info("update wechat_asset_group id:" + wxAcct);
+					}																				
+				}							
+/*				if (count == 0) {
 
 					for (WechatGroup wechatGroup : selectList) {
 						Long groupId = new Long(wechatGroup.getGroupId());
@@ -162,7 +193,7 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 						wechatAssetGroupDao.updateByWxacctIGroupId(wechatAssetGroup);
 						logger.info("update wechat_asset_group id:" + wxAcct);
 					}
-				}
+				}*/
 			}
 		}
 
@@ -247,6 +278,8 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 	private String getWechatGroupId(String wxAcct) {
 		WechatGroup wechatGroup = new WechatGroup();
 		wechatGroup.setWxAcct(wxAcct);
+		wechatGroup.setStartIndex(null);
+		wechatGroup.setPageSize(null);
 		List<WechatGroup> selectList = wechatGroupDao.selectList(wechatGroup);
 		if (!CollectionUtils.isEmpty(selectList)) {
 			StringBuffer sb = new StringBuffer();

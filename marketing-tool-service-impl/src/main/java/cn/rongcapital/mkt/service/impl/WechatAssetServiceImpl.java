@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,18 +97,18 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 			//更新资产组
 			WechatAssetGroup wechatAssetGroup = new WechatAssetGroup();
 			wechatAssetGroup.setWxAcct(wechatMember.getPubId());
-			wechatAssetGroup.setImportGroupId(Long.parseLong(wechatMember.getWxGroupId()));
-			List<WechatAssetGroup> wechatAssetGroupList = wechatAssetGroupDao.selectList(wechatAssetGroup);
-			
-			if(wechatAssetGroupList != null && wechatAssetGroupList.size() > 0){
-				
+			if(StringUtils.isNotEmpty(wechatMember.getWxGroupId())){
+				wechatAssetGroup.setImportGroupId(Long.parseLong(wechatMember.getWxGroupId()));
+			}else{
+				wechatAssetGroup.setImportGroupId(Long.parseLong(ApiConstant.WECHAT_GROUP));
+			}
+			List<WechatAssetGroup> wechatAssetGroupList = wechatAssetGroupDao.selectList(wechatAssetGroup);			
+			if(wechatAssetGroupList != null && wechatAssetGroupList.size() > 0){				
 				wechatAssetGroup = wechatAssetGroupList.get(0);
 				wechatAssetGroup.setMembers(wechatAssetGroup.getMembers() - 1);
 				wechatAssetGroupDao.updateById(wechatAssetGroup);
 			}
-
-			logger.info(ApiErrorCode.SUCCESS.getMsg()+ "wxCode:　+"+wxCode + "pubId:" + pubId);
-			
+			logger.info(ApiErrorCode.SUCCESS.getMsg()+ "wxCode:　+"+wxCode + "pubId:" + pubId);			
 		}else{
 			
 			logger.info(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg()+ "wxCode:　+"+wxCode + "pubId:" + pubId);
@@ -169,13 +170,15 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 		//更新资产组
 		WechatAssetGroup wechatAssetGroup = new WechatAssetGroup();
 		wechatAssetGroup.setWxAcct(wechatMember.getPubId());
-		wechatAssetGroup.setImportGroupId(Long.parseLong(wechatMember.getWxGroupId()));
-		List<WechatAssetGroup> wechatAssetGroupList = wechatAssetGroupDao.selectList(wechatAssetGroup);
-			
-		if(wechatAssetGroupList != null && wechatAssetGroupList.size() > 0){
-				
+		if(StringUtils.isNotEmpty(wechatMember.getWxGroupId())){
+			wechatAssetGroup.setImportGroupId(Long.parseLong(wechatMember.getWxGroupId()));
+		}else{
+			wechatAssetGroup.setImportGroupId(Long.parseLong(ApiConstant.WECHAT_GROUP));
+		}		
+		List<WechatAssetGroup> wechatAssetGroupList = wechatAssetGroupDao.selectList(wechatAssetGroup);			
+		if(wechatAssetGroupList != null && wechatAssetGroupList.size() > 0){				
 			wechatAssetGroup = wechatAssetGroupList.get(0);
-			wechatAssetGroup.setMembers(wechatAssetGroup.getMembers() + 1);
+			wechatAssetGroup.setMembers(wechatAssetGroup.getMembers() + 1);			
 			wechatAssetGroupDao.updateById(wechatAssetGroup);
 		}
 			
