@@ -118,6 +118,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE status = 0
 		<if test="name != null"><![CDATA[AND name like CONCAT('%',#{name},'%')]]></if>
+		ORDER BY create_time desc
 		LIMIT #{startIndex},#{pageSize}
 	</select>
 	
