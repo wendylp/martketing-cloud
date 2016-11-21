@@ -71,28 +71,7 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
             segmentCreUpdateIn.setSegmentHeadId(Long.valueOf(segmentationHead.getId()));
 
             //2.获取segmentHeadId之后,解析相应的数据,更新segmentBody表.
-            List<TagGroupsIn> filterGroups = segmentCreUpdateIn.getFilterGroups();
-            for(TagGroupsIn tagGroupsIn : filterGroups){
-                List<SystemTagIn> tagInList = tagGroupsIn.getTagList();
-                for(SystemTagIn systemTagIn : tagInList){
-                    List<SystemValueIn> systemValueIns = systemTagIn.getTagValueList();
-                    for(SystemValueIn systemValueIn : systemValueIns){
-                        SegmentationBody segmentationBody = new SegmentationBody();
-                        segmentationBody.setHeadId(segmentationHead.getId());
-                        segmentationBody.setGroupId(tagGroupsIn.getGroupId());
-                        segmentationBody.setGroupName(tagGroupsIn.getGroupName());
-                        segmentationBody.setGroupIndex(tagGroupsIn.getGroupIndex());
-                        segmentationBody.setTagId(systemTagIn.getTagId());
-                        segmentationBody.setTagName(systemTagIn.getTagName());
-                        segmentationBody.setTagSeq(systemTagIn.getTagIndex());
-                        segmentationBody.setTagExclude(systemTagIn.getTagExclude());
-                        segmentationBody.setTagValueId(systemValueIn.getTagValueId());
-                        segmentationBody.setTagValueName(systemValueIn.getTagValue());
-                        segmentationBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-                        segmentationBodyDao.insert(segmentationBody);
-                    }
-                }
-            }
+            createNewSegmentationBody(segmentCreUpdateIn, baseOutput, segmentCreupdateOut, segmentationHead);
         }else {
             //2.包含了id,则为更新操作
             //1检查现在的细分状态是否能够更新,不能够更新返回相应的提示信息
@@ -123,31 +102,10 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
             segmentationBodyDao.batchDeleteUseHeaderId(segmentCreUpdateIn.getSegmentHeadId().intValue());
             mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId").is(segmentCreUpdateIn.getSegmentHeadId().intValue())),Segment.class);
             //4重新创建细分body
-            List<TagGroupsIn> filterGroups = segmentCreUpdateIn.getFilterGroups();
-            for(TagGroupsIn tagGroupsIn : filterGroups){
-                List<SystemTagIn> tagInList = tagGroupsIn.getTagList();
-                for(SystemTagIn systemTagIn : tagInList){
-                    List<SystemValueIn> systemValueIns = systemTagIn.getTagValueList();
-                    for(SystemValueIn systemValueIn : systemValueIns){
-                        SegmentationBody segmentationBody = new SegmentationBody();
-                        segmentationBody.setHeadId(segmentationHead.getId());
-                        segmentationBody.setGroupId(tagGroupsIn.getGroupId());
-                        segmentationBody.setGroupName(tagGroupsIn.getGroupName());
-                        segmentationBody.setGroupIndex(tagGroupsIn.getGroupIndex());
-                        segmentationBody.setTagId(systemTagIn.getTagId());
-                        segmentationBody.setTagName(systemTagIn.getTagName());
-                        segmentationBody.setTagSeq(systemTagIn.getTagIndex());
-                        segmentationBody.setTagExclude(systemTagIn.getTagExclude());
-                        segmentationBody.setTagValueId(systemValueIn.getTagValueId());
-                        segmentationBody.setTagValueName(systemValueIn.getTagValue());
-                        segmentationBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-                        segmentationBodyDao.insert(segmentationBody);
-                    }
-                }
-            }
+            createNewSegmentationBody(segmentCreUpdateIn, baseOutput, segmentCreupdateOut, segmentationHead);
         }
 
-        //做完所有的一切后重新更新细分的人群信息
+        //重新更新细分的人群的详细信息
         segmentCalcService.calcSegmentCover(segmentCreUpdateIn);
         try {
             segmentCalcService.saveSegmentCover();
@@ -160,12 +118,46 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
         }
 
         //生成返回值信息
+        getResultValue(segmentCreUpdateIn, baseOutput, segmentCreupdateOut);
+        return baseOutput;
+    }
+
+    private void getResultValue(@NotEmpty SegmentCreUpdateIn segmentCreUpdateIn, BaseOutput baseOutput, SegmentCreupdateOut segmentCreupdateOut) {
         segmentCreupdateOut.setId(segmentCreUpdateIn.getSegmentHeadId());
         segmentCreupdateOut.setUpdatetime(DateUtil.getStringFromDate(new Date(),"yyyy-MM-dd hh:mm:ss"));
         segmentCreupdateOut.setOper("Mock 奥巴马");
         baseOutput.getData().add(segmentCreupdateOut);
         baseOutput.setTotal(baseOutput.getData().size());
-        return baseOutput;
+    }
+
+    private void createNewSegmentationBody(@NotEmpty SegmentCreUpdateIn segmentCreUpdateIn, BaseOutput baseOutput, SegmentCreupdateOut segmentCreupdateOut, SegmentationHead segmentationHead) {
+        List<TagGroupsIn> filterGroups = segmentCreUpdateIn.getFilterGroups();
+        if(CollectionUtils.isEmpty(filterGroups)){
+            getResultValue(segmentCreUpdateIn, baseOutput, segmentCreupdateOut);
+        }
+        for(TagGroupsIn tagGroupsIn : filterGroups){
+            List<SystemTagIn> tagInList = tagGroupsIn.getTagList();
+            if(CollectionUtils.isEmpty(tagInList)) continue;
+            for(SystemTagIn systemTagIn : tagInList){
+                List<SystemValueIn> systemValueIns = systemTagIn.getTagValueList();
+                if(CollectionUtils.isEmpty(systemValueIns)) continue;
+                for(SystemValueIn systemValueIn : systemValueIns){
+                    SegmentationBody segmentationBody = new SegmentationBody();
+                    segmentationBody.setHeadId(segmentationHead.getId());
+                    segmentationBody.setGroupId(tagGroupsIn.getGroupId());
+                    segmentationBody.setGroupName(tagGroupsIn.getGroupName());
+                    segmentationBody.setGroupIndex(tagGroupsIn.getGroupIndex());
+                    segmentationBody.setTagId(systemTagIn.getTagId());
+                    segmentationBody.setTagName(systemTagIn.getTagName());
+                    segmentationBody.setTagSeq(systemTagIn.getTagIndex());
+                    segmentationBody.setTagExclude(systemTagIn.getTagExclude());
+                    segmentationBody.setTagValueId(systemValueIn.getTagValueId());
+                    segmentationBody.setTagValueName(systemValueIn.getTagValue());
+                    segmentationBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                    segmentationBodyDao.insert(segmentationBody);
+                }
+            }
+        }
     }
 
 }
