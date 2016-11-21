@@ -100,7 +100,7 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
             segmentationHeadDao.updateById(updateSegmentationHead);
             //3删除掉以前的细分body以及Mongo中对应的细分人群
             segmentationBodyDao.batchDeleteUseHeaderId(segmentCreUpdateIn.getSegmentHeadId().intValue());
-            mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId").is(segmentCreUpdateIn.getSegmentHeadId().intValue())),Segment.class);
+            // mongoTemplate.remove(new Query(Criteria.where("segmentationHeadId").is(segmentCreUpdateIn.getSegmentHeadId().intValue())),Segment.class);
             //4重新创建细分body
             createNewSegmentationBody(segmentCreUpdateIn, baseOutput, segmentCreupdateOut, segmentationHead);
         }
