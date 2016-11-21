@@ -25,9 +25,8 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisException;
-import cn.rongcapital.mkt.dao.DataPopulationDao;
-import cn.rongcapital.mkt.po.DataPopulation;
-import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.service.SegmentSearchGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentSearchIn;
@@ -38,10 +37,7 @@ import heracles.data.common.util.ReadWriteType;
 public class SegmentSearchGetServiceImpl implements SegmentSearchGetService {
 
 	@Autowired
-	DataPopulationDao dataPopulationDao;
-
-	@Autowired
-	private MongoTemplate mongoTemplate;
+	DataPartyDao dataPartyDao;
 
     public static final Integer POOL_INDEX = 2;
 	
@@ -78,10 +74,10 @@ public class SegmentSearchGetServiceImpl implements SegmentSearchGetService {
 			searchIn.setHeadidList(head_ids);
 			searchIn.setQueryName(query_name);
 
-			List<DataPopulation> dataList = dataPopulationDao.segmentSearch(searchIn);
+			List<DataParty> dataList = dataPartyDao.segmentSearch(searchIn);
 			if (CollectionUtils.isNotEmpty(dataList)) {
 				result.setTotal(dataList.size());
-				for (DataPopulation data : dataList) {
+				for (DataParty data : dataList) {
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("name", data.getName());
 					result.getData().add(map);

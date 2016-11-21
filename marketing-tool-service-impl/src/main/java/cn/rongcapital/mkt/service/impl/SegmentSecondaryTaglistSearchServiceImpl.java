@@ -47,13 +47,13 @@ public class SegmentSecondaryTaglistSearchServiceImpl implements SegmentSecondar
         }
 
         for(TagValueCount tagValueCount : tagValueCountList){
-            if(tagValueCount.getIsTag().equals("1")) continue;
+            if(tagValueCount.getIsTag() == null || tagValueCount.getIsTag().equals("1")) continue;
             boolean flag = isTagValueAlreadySelected(tagValueCount.getTagValue(),tagListSecondarySearchIn.getSelectTagValueList());
             if(!flag){
                 SearchTagValueOut searchTagValueOut = new SearchTagValueOut();
                 searchTagValueOut.setTagValue(tagValueCount.getTagValue());
                 searchTagValueOut.setTagValueSeq(tagValueCount.getTagValueSeq());
-                searchTagValueOut.setValueCount(tagValueCount.getValueCount().intValue());
+                searchTagValueOut.setValueCount(tagValueCount.getValueCount() == null? 0 : tagValueCount.getValueCount().intValue());
                 baseOutput.getData().add(searchTagValueOut);
             }
         }
