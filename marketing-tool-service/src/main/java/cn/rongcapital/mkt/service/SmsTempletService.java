@@ -19,7 +19,7 @@ public interface SmsTempletService {
 	 * @param name
 	 * @return
 	 */
-	public SmsTempletOut smsTempletList(String userId,Integer index,Integer size,Integer channelType,String type,String name);
+	public SmsTempletOut smsTempletList(String userId,Integer index,Integer size,String channelType,String type,String name,String content);
 	
 	/**
 	 * @param smsTempletIn

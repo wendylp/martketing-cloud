@@ -55,10 +55,11 @@ public class MktSmsTempletApi {
 	public SmsTempletOut smsTempletList(@NotEmpty @QueryParam("user_token") String userToken,@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,			
 			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
-			@NotNull @QueryParam("channel_type") Integer channelType,
+			@QueryParam("channel_type") String channelType,
 			@QueryParam("type") String type,
-			@QueryParam("name") String name) throws Exception {		
-		return smsTempletService.smsTempletList(userId, index, size, channelType, type, name);
+			@QueryParam("name") String name,
+			@QueryParam("content") String content) throws Exception {		
+		return smsTempletService.smsTempletList(userId, index, size, channelType, type, name,content);
 	}
 	
 	/**
