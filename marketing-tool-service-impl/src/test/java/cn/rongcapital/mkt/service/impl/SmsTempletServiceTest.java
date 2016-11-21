@@ -98,7 +98,7 @@ public class SmsTempletServiceTest {
 
     @Test
     public void testSmsTempletList() {
-        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, 0, "0", "测试");
+        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, "0", "0", "测试","");
         
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
@@ -116,6 +116,7 @@ public class SmsTempletServiceTest {
         smsTempletIn.setType(NumUtil.int2OneByte(SmsTempletTypeEnum.FIXED.getStatusCode()));
         smsTempletIn.setChannelType(SmsTaskAppEnum.ADVERT_SMS.getStatus());
         smsTempletIn.setContent("测试模板");
+        smsTempletIn.setCreator("user1");
 
         BaseOutput result = smsTempletService.saveOrUpdateSmsTemplet(smsTempletIn);
         

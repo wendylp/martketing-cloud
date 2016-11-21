@@ -57,19 +57,28 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	private final String TEMPLETE_AUDIT_STATUS ="审核状态";
 	
 	private final String TEMPLETE_TYPE="模板类型";
+	
+	private final String AUDIT_REASON="无";
 		
 	@Override
-	public SmsTempletOut smsTempletList(String userId, Integer index, Integer size, Integer channelType,
-			String type, String name) {
+	public SmsTempletOut smsTempletList(String userId, Integer index, Integer size, String channelType,
+			String type, String name,String content) {
 		SmsTempletOut smsTempletOut = this.newSuccessSmsTempletOut();
 
-		SmsTemplet smsTempletTemp = new SmsTemplet();		
-		smsTempletTemp.setChannelType(NumUtil.int2OneByte(channelType));
+		SmsTemplet smsTempletTemp = new SmsTemplet();
+		if(StringUtils.isNotEmpty(channelType)){
+			Integer channelTypeInt = Integer.parseInt(channelType);			
+			smsTempletTemp.setChannelType(channelTypeInt.byteValue());
+		}
+		
 		if(StringUtils.isNotEmpty(type)){
 			smsTempletTemp.setType(NumUtil.int2OneByte(Integer.parseInt(type)));
 		}		
 		if(StringUtils.isNotEmpty(name)){
 			smsTempletTemp.setName(name);
+		}
+		if(StringUtils.isNotEmpty(content)){
+			smsTempletTemp.setContent(content);
 		}
 		smsTempletTemp.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
 		smsTempletTemp.setOrderField("create_time");
@@ -202,8 +211,10 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		SmsTemplet smsTemplet = this.getSmsTempletBySmsTempletIn(smsTempletIn);
 		if(smsTemplet!=null){
 			if(smsTemplet.getId()!=null&&smsTemplet.getId()!=0){
+				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
 				smsTempletDao.updateById(smsTemplet);
 			}else{
+				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
 				smsTempletDao.insert(smsTemplet);
 			}
 			List<Object> smsTemplets = new ArrayList<Object>();
@@ -217,6 +228,20 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		return output;		
 	}
 
+	/**
+	 * 设置审核属性，以后加入审核流程，此方法废弃
+	 * @param smsTemplet
+	 * @return
+	 */
+	private SmsTemplet setSmsTempletAuditProperties(SmsTemplet smsTemplet){
+		if(smsTemplet!=null){
+			smsTemplet.setAuditReason(AUDIT_REASON);
+			smsTemplet.setAuditTime(new Date());
+			smsTemplet.setAuditor(smsTemplet.getCreator());
+		}
+		return smsTemplet;		
+	}
+	
 	/**
 	 * 输入转换成模板对象
 	 * @param smsTempletIn
