@@ -39,6 +39,7 @@ import org.springframework.util.StringUtils;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.GenderEnum;
+import cn.rongcapital.mkt.common.enums.SegmentProvinceMap;
 import cn.rongcapital.mkt.common.util.GenerateUUid;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.po.TagValueCount;
@@ -678,7 +679,7 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 			
 		}
 		
-		return tagValue;
+		return getShortProvinceName(tagValue);
 		
 	}
 
@@ -692,12 +693,92 @@ public class SegmentFilterGetServiceImpl implements SegmentFilterGetService {
 		            keys=tempKeys.get().toArray(keys);
 				segmentManageCalService.deleteTempKey(POOL_INDEX, keys);
 				logger.info("calculate segment management over  ,delete temporary keys:");
+				
+				StringBuffer sb = new StringBuffer();
+				
 				for(String key :tempKeys.get()){
-					logger.info("=========================>"+key);
+					sb.append(key+";");
 				}
+				
+				logger.info("=========================>"+sb.toString()+"=====================");
 				
 		        tempKeys.get().clear();
 		}
 
+    }
+    
+    private String getShortProvinceName(String provinceName){
+    	
+    	if(SegmentProvinceMap.S_110000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_110000.getShortName();
+    	}else if(SegmentProvinceMap.S_120000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_120000.getShortName();
+    	}else if(SegmentProvinceMap.S_130000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_130000.getShortName();
+    	}else if(SegmentProvinceMap.S_140000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_140000.getShortName();
+    	}else if(SegmentProvinceMap.S_150000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_150000.getShortName();
+    	}else if(SegmentProvinceMap.S_210000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_210000.getShortName();
+    	}else if(SegmentProvinceMap.S_220000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_220000.getShortName();
+    	}else if(SegmentProvinceMap.S_230000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_230000.getShortName();
+    	}else if(SegmentProvinceMap.S_310000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_310000.getShortName();
+    	}else if(SegmentProvinceMap.S_320000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_320000.getShortName();
+    	}else if(SegmentProvinceMap.S_330000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_330000.getShortName();
+    	}else if(SegmentProvinceMap.S_340000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_340000.getShortName();
+    	}else if(SegmentProvinceMap.S_350000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_350000.getShortName();
+    	}else if(SegmentProvinceMap.S_360000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_360000.getShortName();
+    	}else if(SegmentProvinceMap.S_370000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_370000.getShortName();
+    	}else if(SegmentProvinceMap.S_410000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_410000.getShortName();
+    	}else if(SegmentProvinceMap.S_420000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_420000.getShortName();
+    	}else if(SegmentProvinceMap.S_430000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_430000.getShortName();
+    	}else if(SegmentProvinceMap.S_440000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_440000.getShortName();
+    	}else if(SegmentProvinceMap.S_450000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_450000.getShortName();
+    	}else if(SegmentProvinceMap.S_460000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_460000.getShortName();
+    	}else if(SegmentProvinceMap.S_500000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_500000.getShortName();
+    	}else if(SegmentProvinceMap.S_510000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_510000.getShortName();
+    	}else if(SegmentProvinceMap.S_520000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_520000.getShortName();
+    	}else if(SegmentProvinceMap.S_530000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_530000.getShortName();
+    	}else if(SegmentProvinceMap.S_540000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_540000.getShortName();
+    	}else if(SegmentProvinceMap.S_610000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_610000.getShortName();
+    	}else if(SegmentProvinceMap.S_620000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_620000.getShortName();
+    	}else if(SegmentProvinceMap.S_630000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_630000.getShortName();
+    	}else if(SegmentProvinceMap.S_640000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_640000.getShortName();
+    	}else if(SegmentProvinceMap.S_650000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_650000.getShortName();
+    	}else if(SegmentProvinceMap.S_710000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_710000.getShortName();
+    	}else if(SegmentProvinceMap.S_810000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_820000.getShortName();
+    	}else if(SegmentProvinceMap.S_820000.getProvinceName().equals(provinceName)){
+    		return SegmentProvinceMap.S_820000.getShortName();
+    	}
+    	
+    	return null;
     }
 }
