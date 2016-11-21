@@ -177,6 +177,7 @@
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_FUZZY"/>
+		<![CDATA[ GROUP BY contact_id]]>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
 
