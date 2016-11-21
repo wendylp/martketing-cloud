@@ -23,6 +23,7 @@ import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.HomePageMonthlyCount;
 import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
 import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.vo.in.SegmentSearchIn;
 
 public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<DataParty>{
 	
@@ -229,5 +230,12 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	List<DataParty> selectListByContactId(Integer contactId);
 	
 	List<Segment> selectSegmentByIdList(@Param("idList") List<String> dataPartyIdList);
+	
+	/**
+	 * @功能简述 : mkt.segment.search.get
+	 * @param 
+	 * @return List
+	 */
+	List<DataParty> segmentSearch(SegmentSearchIn searchIn);
 	
 }

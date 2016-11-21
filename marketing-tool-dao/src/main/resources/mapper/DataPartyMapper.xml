@@ -746,4 +746,14 @@
 			#{item}
 		</foreach>
 	</select>
+	
+	<select id="segmentSearch" parameterType="cn.rongcapital.mkt.vo.in.SegmentSearchIn" resultType="cn.rongcapital.mkt.po.DataParty">
+		SELECT party.name from data_party party  
+		WHERE party.id in
+		<foreach collection="headidList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+		<![CDATA[and party.name like  CONCAT('%',#{queryName},'%')]]>
+	</select>
+
 </mapper>
