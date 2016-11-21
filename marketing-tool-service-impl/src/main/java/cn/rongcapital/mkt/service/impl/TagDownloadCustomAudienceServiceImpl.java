@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.service.FindCustomTagInfoService;
@@ -31,6 +32,9 @@ public class TagDownloadCustomAudienceServiceImpl implements TagDownloadCustomAu
 
     @Autowired
     private DataPopulationDao dataPopulationDao;
+    
+    @Autowired
+    private DataPartyDao dataPartyDao;
 
     @Override
     public BaseOutput downloadCustomAudience(String tagId) {
@@ -43,7 +47,10 @@ public class TagDownloadCustomAudienceServiceImpl implements TagDownloadCustomAu
             for(DataParty dataParty : dataPartyList){
                 idList.add(dataParty.getMid());
             }
-            List<TagAudienceDownloadOut> tagAudienceDownloadOutList = dataPopulationDao.getTagAudienceDownloadList(idList);
+//            List<TagAudienceDownloadOut> tagAudienceDownloadOutList = dataPopulationDao.getTagAudienceDownloadList(idList);
+            
+            List<cn.rongcapital.mkt.po.DataParty> dataPartyLists = dataPartyDao.selectListByIdList(idList);
+            
             Map<String, String> resultMap = new HashMap<>();
             List<Map<String, String>> columnsMapList = new ArrayList<>();
             String[][] excelTitles = { { "name", "姓名" }, { "mobile", "手机号" }, { "gender", "性别" },
@@ -54,7 +61,7 @@ public class TagDownloadCustomAudienceServiceImpl implements TagDownloadCustomAu
                 map.put(a[0], a[1]);
                 columnsMapList.add(map);
             }
-            File file = FileUtil.generateFileforDownload(columnsMapList, tagAudienceDownloadOutList,
+            File file = FileUtil.generateFileforDownload(columnsMapList, dataPartyLists,
                     FileNameEnum.CUSTOM_AUDIENCE.getDetailName());
             resultMap.put("download_file_name", file.getName());
             result.getData().add(resultMap);
