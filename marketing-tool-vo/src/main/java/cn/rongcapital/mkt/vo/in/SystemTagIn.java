@@ -5,6 +5,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public class SystemTagIn {
     private Integer tagExclude;
 
     @NotNull
-    private List<SystemValueIn> tagValueList;
+    private List<SystemValueIn> tagValueList = new ArrayList<>();
 
     @JsonProperty("tag_id")
     public String getTagId() {

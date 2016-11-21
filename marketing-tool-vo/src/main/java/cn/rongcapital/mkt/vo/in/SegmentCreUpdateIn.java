@@ -6,6 +6,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class SegmentCreUpdateIn extends BaseInput{
     @NotNull
     private Integer publishStatus;
 
-    private List<TagGroupsIn> filterGroups;
+    private List<TagGroupsIn> filterGroups = new ArrayList<>();
 
     @JsonProperty("segment_head_id")
     public Long getSegmentHeadId() {
