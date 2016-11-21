@@ -110,6 +110,7 @@ public class SegmentTagnameTagCountServiceImpl implements SegmentTagnameTagCount
 		tagValueCount.setTagId(tagIds);
 		tagValueCount.setOrderField("value_count");
 		tagValueCount.setOrderFieldType("desc");
+		tagValueCount.setIsTag("0");
 		List<TagValueCount> tagValueList = tagValueCountDao.selectList(tagValueCount);
 		if(CollectionUtils.isEmpty(tagValueList)){
 			return result;
