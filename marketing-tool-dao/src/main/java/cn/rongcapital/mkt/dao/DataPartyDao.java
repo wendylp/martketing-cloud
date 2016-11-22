@@ -24,6 +24,7 @@ import cn.rongcapital.mkt.po.HomePageMonthlyCount;
 import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.vo.in.SegmentSearchIn;
+import cn.rongcapital.mkt.vo.out.TagAudienceDownloadOut;
 
 public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<DataParty>{
 	
@@ -237,5 +238,12 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @return List
 	 */
 	List<DataParty> segmentSearch(SegmentSearchIn searchIn);
+	
+	/**
+     * 标签人群得下载下载
+     * @param idList
+     * @return
+     */
+    List<TagAudienceDownloadOut> getTagAudienceDownloadList(@Param("idList") List<Integer> idList);
 	
 }

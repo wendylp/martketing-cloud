@@ -755,5 +755,21 @@
 		</foreach>
 		<![CDATA[and party.name like  CONCAT('%',#{queryName},'%')]]>
 	</select>
+	
+	<select id="getTagAudienceDownloadList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.vo.out.TagAudienceDownloadOut">
+		SELECT name,mobile,
+		case gender
+		when '1' then '男'
+		when '2' then '女'
+		when '3' then '未知'
+		end gender,
+		birthday,provice,city,
+		email,identify_no as identifyNo,driving_license as drivingLicense,wx_code as wxCode,qq
+		from data_party
+		WHERE id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 
 </mapper>
