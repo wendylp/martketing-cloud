@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.util.CollectionUtils;
 
 import com.mongodb.WriteResult;
 
@@ -96,6 +97,10 @@ public class BaseSystemTagSyn {
 			// 获取结果
 			List<SystemTagResult> resultList = systemTagResultDao.selectListByMap(viewName);
 			logger.info("开始同步" + sys.getViewDesc() + "标签，-------->" + tagName);
+			if(CollectionUtils.isEmpty(resultList)){
+				logger.info("此标签无匹配结果,不进行后续处理---------->"+ tagName);
+				return;
+			}
 
 			// 查询推荐标签
 			Criteria criteriaAll = Criteria.where("tag_name_eng").is(tagName);

@@ -596,12 +596,12 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
         } else {        
             for(int i=0;i<size-1;i++) {
                 String[] skeys=new String[2];            
-                dkey=KEY_PREFIX_GROUPINTER+"_lv"+(i+1)+"_"+uuid.get();
+                dkey=KEY_PREFIX_GROUPINTER+":group:"+segmentGroup.getGroupId()+"_lv"+(i+1)+"_"+uuid.get();
                 if(i==0){
                     skeys[0]=segmentGroupTags.get(i).getCalcTagCoverIds();
                     segmentGroupTags.get(i).setFunnelCount(segmentGroupTags.get(i).getCalcTagCoverCount());
                 } else {
-                    skeys[0]=KEY_PREFIX_GROUPINTER+"_lv"+i+"_"+uuid.get(); 
+                    skeys[0]=KEY_PREFIX_GROUPINTER+":group:"+segmentGroup.getGroupId()+"_lv"+i+"_"+uuid.get(); 
                 }            
                 skeys[1]=segmentGroupTags.get(i+1).getCalcTagCoverIds();
                 funnelCount=jedis.sinterstore(dkey, skeys); 

@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
+import cn.rongcapital.mkt.common.util.SmsSendUtilByIncake;
 import cn.rongcapital.mkt.dao.SmsTaskDetailDao;
 import cn.rongcapital.mkt.dao.SmsTaskDetailStateDao;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
@@ -85,7 +87,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			
 			Integer count = 0;
 			
-			Map<Long, String[]> SmsBatchMap = new HashMap<>();
+			Map<Long, String[]> SmsBatchMap = new LinkedHashMap<>();
 			for(SmsTaskDetail detail : smsDetailList) {
 				//对短短信进行封装
 				count++;
@@ -100,7 +102,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				
 				if(count >= SMS_SEND_BACTH_COUNT) {
 					//调用发送API接口（批量）
-					Map<Long, Integer> sendSmsResult = sendSmsBatchApi(SmsBatchMap);
+					Map<Long, Integer> sendSmsResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
 					//统计一批短信的成功和失败的个数,根据短信API判断状态回写sms_task_detail_state表和head表
 					updateSmsDetailState(sendSmsResult, smsHead);
 					//修改当前任务这一批短信的成功和失败个数
@@ -111,7 +113,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				}
 			}
 			//处理不满一批的短信
-			updateSmsDetailState(sendSmsBatchApi(SmsBatchMap), smsHead);
+			updateSmsDetailState(SmsSendUtilByIncake.sendSms(SmsBatchMap), smsHead);
 			//最后把任务状态改为已完成,把等待的个数置为0
 			smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_FINISH.getStatusCode());
 			smsHead.setWaitingNum(0);
@@ -129,7 +131,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	 * @param SmsBatchMap
 	 * @return Map<Long, Integer> 返回一个任务id， 和 短信调用网关的状态
 	 */
-	public  Map<Long, Integer> sendSmsBatchApi(Map<Long, String[]> SmsBatchMap){
+	private  Map<Long, Integer> sendSmsBatchApi(Map<Long, String[]> SmsBatchMap){
 		Map<Long, Integer> sendResultMap = new HashMap<>();
 		for(Entry<Long, String[]> entry : SmsBatchMap.entrySet()){
 			Long id = entry.getKey();

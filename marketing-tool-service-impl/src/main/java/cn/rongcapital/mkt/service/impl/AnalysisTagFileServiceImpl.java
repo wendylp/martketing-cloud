@@ -234,7 +234,7 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 		tagTree.setParent(parent);
 		tagTree.setChildren(children);
 		tagTree.setSource(source);
-		tagTree.setStatus(0);
+		tagTree.setStatus(STATUS_VALID);
 		tagTree.setCreateTime(new Date());
 		tagTree.setUpdateTime(new Date());
 
@@ -248,6 +248,7 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 			// 如果已经存在，修改
 			tagTree.setId(tagTreeByTagName.getId());
 			tagTree.setTagId(uuid);
+			tagTree.setCreateTime(tagTreeByTagName.getCreateTime());
 			tagTreeRepository.save(tagTree);
 			
 		}
@@ -264,7 +265,7 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 		tagRecommend.setTagId(uuid);
 		tagRecommend.setTagName(tagName);
 		tagRecommend.setTagNameEng(tagNameEng);
-		tagRecommend.setStatus(0);
+		tagRecommend.setStatus(STATUS_VALID);
 		if ("true".equals(flag.toLowerCase())) {
 			tagRecommend.setFlag(true);
 		} else if ("false".equals(flag.toLowerCase())) {
@@ -289,6 +290,8 @@ public class AnalysisTagFileServiceImpl implements AnalysisTagFileService{
 		    tagRecommend.setId(tagRecommendLists.get(0).getId());
 		    uuid = tagRecommendLists.get(0).getTagId();
 		    tagRecommend.setTagId(uuid);
+		    tagRecommend.setFlag(tagRecommendLists.get(0).getFlag());
+		    tagRecommend.setCreateTime(tagRecommendLists.get(0).getCreateTime());
 		    mongoOperations.save(tagRecommend);
 		} else {
 		    tagRecommendRepository.insert(tagRecommend);

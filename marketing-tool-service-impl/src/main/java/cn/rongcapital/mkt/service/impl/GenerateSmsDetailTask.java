@@ -145,7 +145,7 @@ public class GenerateSmsDetailTask implements TaskService {
                 smsTaskDetailDao.batchInsert(smsTaskDetailList.subList(index*PAGE_SIZE,smsTaskDetailList.size()));
             }else{
                 logger.info("insert SmsTaskDetail index : " + index);
-                smsTaskDetailDao.batchInsert(smsTaskDetailList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
+                smsTaskDetailDao.batchInsert(smsTaskDetailList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE));
             }
         }
 
@@ -162,7 +162,7 @@ public class GenerateSmsDetailTask implements TaskService {
                 smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,smsTaskDetailStateList.size()));
             }else{
                 logger.info("insert SmsTaskDetailState index : " + index);
-                smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
+                smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE));
             }
         }
 
@@ -218,7 +218,7 @@ public class GenerateSmsDetailTask implements TaskService {
                 subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
                 logger.info("index : " + index);
             }else {
-                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE -1));
+                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE));
                 logger.info("index : " + index);
             }
             distinctMobileSet.addAll(subDistinctMobileList);
@@ -260,7 +260,7 @@ public class GenerateSmsDetailTask implements TaskService {
                 subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
                 logger.info("index : " + index);
             }else {
-                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE -1));
+                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE));
                 logger.info("index : " + index);
             }
             distinctMobileSet.addAll(subDistinctMobileList);
@@ -291,7 +291,7 @@ public class GenerateSmsDetailTask implements TaskService {
                 smsTaskTargetAudienceCacheDao.batchInsert(smsTaskTargetAudienceCacheList.subList(index*PAGE_SIZE,smsTaskTargetAudienceCacheList.size()));
             }else{
                 logger.info("insert index : " + index);
-                smsTaskTargetAudienceCacheDao.batchInsert(smsTaskTargetAudienceCacheList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE-1));
+                smsTaskTargetAudienceCacheDao.batchInsert(smsTaskTargetAudienceCacheList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE));
             }
         }
     }

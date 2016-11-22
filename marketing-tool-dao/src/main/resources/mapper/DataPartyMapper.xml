@@ -734,16 +734,42 @@
 		<![CDATA[ from data_party as dp ]]>
 		<![CDATA[ inner join  data_population as dpp on dp.id = dpp.keyid ]]>
 		<![CDATA[ inner join  contact_list as cl on dpp.id = cl.keyid ]]>
-		<![CDATA[ where  cl.id = #{contact_id} ]]>
+		<![CDATA[ where  cl.contact_templ_id = #{contact_id} ]]>
 	</select>
 	
 		<!-- 根据dataParty的IdList统计 -->
 	<select id="selectSegmentByIdList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.mongodb.Segment">
-		SELECT id,name
+		SELECT id,id as dataId,name
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE status = 2 AND id in
 		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
 			#{item}
 		</foreach>
 	</select>
+	
+	<select id="segmentSearch" parameterType="cn.rongcapital.mkt.vo.in.SegmentSearchIn" resultType="cn.rongcapital.mkt.po.DataParty">
+		SELECT party.name from data_party party  
+		WHERE party.id in
+		<foreach collection="headidList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+		<![CDATA[and party.name like  CONCAT('%',#{queryName},'%')]]>
+	</select>
+	
+	<select id="getTagAudienceDownloadList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.vo.out.TagAudienceDownloadOut">
+		SELECT name,mobile,
+		case gender
+		when '1' then '男'
+		when '2' then '女'
+		when '3' then '未知'
+		end gender,
+		birthday,provice,city,
+		email,identify_no as identifyNo,driving_license as drivingLicense,wx_code as wxCode,qq
+		from data_party
+		WHERE id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+
 </mapper>
