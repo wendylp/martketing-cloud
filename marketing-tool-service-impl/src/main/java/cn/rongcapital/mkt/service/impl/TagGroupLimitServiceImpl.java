@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,14 +56,15 @@ public class TagGroupLimitServiceImpl implements TagGroupLimitService {
 			param.setSource("incake");
 		}
 
-		List<TagGroupLimit> selectList = tagGroupLimitDao.selectList(param);
-		TagGroupLimit tagGroupLimit = selectList.get(0);
-		
-		Map<String, Object> contactListMap = new HashMap<String, Object>();
-		contactListMap.put("group_limit", tagGroupLimit.getGroupLimit());
-		contactListMap.put("tag_limit", tagGroupLimit.getTagLimit());
-		result.setTotal(1);
-		result.getData().add(contactListMap);
+        List<TagGroupLimit> selectList = tagGroupLimitDao.selectList(param);
+        if (CollectionUtils.isNotEmpty(selectList)) {
+            TagGroupLimit tagGroupLimit = selectList.get(0);
+            Map<String, Object> contactListMap = new HashMap<String, Object>();
+            contactListMap.put("group_limit", tagGroupLimit.getGroupLimit());
+            contactListMap.put("tag_limit", tagGroupLimit.getTagLimit());
+            result.setTotal(ApiConstant.INT_ONE);
+            result.getData().add(contactListMap);
+        }
 
 		return result;
 	}
