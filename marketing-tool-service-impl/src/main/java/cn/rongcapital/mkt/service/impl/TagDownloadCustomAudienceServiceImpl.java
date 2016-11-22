@@ -49,7 +49,7 @@ public class TagDownloadCustomAudienceServiceImpl implements TagDownloadCustomAu
             }
 //            List<TagAudienceDownloadOut> tagAudienceDownloadOutList = dataPopulationDao.getTagAudienceDownloadList(idList);
             
-            List<cn.rongcapital.mkt.po.DataParty> dataPartyLists = dataPartyDao.selectListByIdList(idList);
+            List<TagAudienceDownloadOut> tagAudienceDownloadOutList = dataPartyDao.getTagAudienceDownloadList(idList);
             
             Map<String, String> resultMap = new HashMap<>();
             List<Map<String, String>> columnsMapList = new ArrayList<>();
@@ -61,7 +61,7 @@ public class TagDownloadCustomAudienceServiceImpl implements TagDownloadCustomAu
                 map.put(a[0], a[1]);
                 columnsMapList.add(map);
             }
-            File file = FileUtil.generateFileforDownload(columnsMapList, dataPartyLists,
+            File file = FileUtil.generateFileforDownload(columnsMapList, tagAudienceDownloadOutList,
                     FileNameEnum.CUSTOM_AUDIENCE.getDetailName());
             resultMap.put("download_file_name", file.getName());
             result.getData().add(resultMap);
