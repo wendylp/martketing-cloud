@@ -10,6 +10,8 @@ import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.service.MQTopicService;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,7 +147,7 @@ public class GenerateSmsDetailTask implements TaskService {
             for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
                 SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
                 smsTaskDetail.setReceiveMobile(distinctReceiveMobile); 
-                if(smsSignature!=null){
+                if(smsSignature!=null&&StringUtils.isNotEmpty(smsSignature.getSmsSignatureName())){
                     String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
                     smsTaskDetail.setSendMessage(sendMessage);
                 }
