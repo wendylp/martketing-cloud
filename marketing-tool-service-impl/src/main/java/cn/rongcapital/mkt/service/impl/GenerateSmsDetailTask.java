@@ -58,6 +58,9 @@ public class GenerateSmsDetailTask implements TaskService {
 
     @Autowired
     private MQTopicService mqTopicService;
+    
+    @Autowired
+    private SmsSignatureDao smsSignatureDao;
 
     private final String SEGMENTATION_HEAD_ID = "segmentation_head_id";
     private final int PAGE_SIZE = 10000;
@@ -130,14 +133,26 @@ public class GenerateSmsDetailTask implements TaskService {
     private void insertDataToSmsDetailAndDetailState(Long taskHeadId, SmsTaskHead targetHead, Set<String> targetDistinctReceiveMobiles) {
         List<SmsTaskDetail> smsTaskDetailList = new LinkedList<>();
         List<SmsTaskDetailState> smsTaskDetailStateList = new LinkedList<>();
-        for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
-            SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
-            smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
-            smsTaskDetail.setSendMessage(targetHead.getSmsTaskMaterialContent());
-            smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
-            smsTaskDetail.setSmsTaskHeadId(taskHeadId);
-            smsTaskDetailList.add(smsTaskDetail);
+        if(targetHead!=null){
+        	long signatureId = targetHead.getSmsTaskSignatureId();
+        	SmsSignature smsSignature = new SmsSignature();
+        	smsSignature.setId(signatureId);
+        	List<SmsSignature> smsSignatures =smsSignatureDao.selectList(smsSignature);
+        	if(CollectionUtils.isEmpty(smsSignatures)){
+        		smsSignature = smsSignatures.get(0);
+        	}
+        	
+            for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
+                SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
+                smsTaskDetail.setReceiveMobile(distinctReceiveMobile);               
+                String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
+                smsTaskDetail.setSendMessage(sendMessage);
+                smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
+                smsTaskDetail.setSmsTaskHeadId(taskHeadId);
+                smsTaskDetailList.add(smsTaskDetail);
+            }
         }
+
         int totalNum = (smsTaskDetailList.size() + PAGE_SIZE) / PAGE_SIZE;
         for(int index = 0; index < totalNum; index++){
             if(index == totalNum-1){
