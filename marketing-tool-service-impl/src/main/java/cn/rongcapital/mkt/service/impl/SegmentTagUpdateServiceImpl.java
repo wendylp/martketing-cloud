@@ -162,7 +162,7 @@ public class SegmentTagUpdateServiceImpl implements SegmentTagUpdateService {
 			logger.info("tagid is {}========================" + tagId);
 			for (Integer personId : personIdList) {
 				tagCustomTagToDataPartyServiceImpl.tagCustomTagToDataPartyById(String.valueOf(tagId), personId);
-				logger.info("======================tagid is " + tagId + " personId is " + personId);
+//				logger.info("======================tagid is " + tagId + " personId is " + personId);
 			}
 		}
 
