@@ -10,6 +10,8 @@ import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.service.MQTopicService;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,15 +140,17 @@ public class GenerateSmsDetailTask implements TaskService {
         	SmsSignature smsSignature = new SmsSignature();
         	smsSignature.setId(signatureId);
         	List<SmsSignature> smsSignatures =smsSignatureDao.selectList(smsSignature);
-        	if(CollectionUtils.isEmpty(smsSignatures)){
+        	if(!CollectionUtils.isEmpty(smsSignatures)){
         		smsSignature = smsSignatures.get(0);
         	}
         	
             for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
                 SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
-                smsTaskDetail.setReceiveMobile(distinctReceiveMobile);               
-                String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
-                smsTaskDetail.setSendMessage(sendMessage);
+                smsTaskDetail.setReceiveMobile(distinctReceiveMobile); 
+                if(smsSignature!=null&&StringUtils.isNotEmpty(smsSignature.getSmsSignatureName())){
+                    String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
+                    smsTaskDetail.setSendMessage(sendMessage);
+                }
                 smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
                 smsTaskDetail.setSmsTaskHeadId(taskHeadId);
                 smsTaskDetailList.add(smsTaskDetail);
