@@ -161,8 +161,12 @@ public class MQTopicServiceImpl implements MQTopicService {
 				taskRunLog.setTaskName(taskName);
 				taskRunLog.setTaskType((byte) TaskTypeEnum.DISPLAY.getCode());
 				taskRunLogDao.insert(taskRunLog);
-
-				taskService.task(message);
+				//异步处理
+				new Thread(){
+				    public void run(){
+				        taskService.task(message);
+				    }
+				}.start();
 				if (null != taskRunLog) {
 					taskRunLog.setEndTime(new Date());
 					taskRunLogDao.updateById(taskRunLog);
