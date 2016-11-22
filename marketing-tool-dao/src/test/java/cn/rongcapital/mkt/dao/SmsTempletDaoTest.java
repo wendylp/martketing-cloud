@@ -90,11 +90,11 @@ public class SmsTempletDaoTest extends AbstractUnitTest {
          */
 //        smsTempletTest.setChannelType(NumUtil.int2OneByte(SmsTaskAppEnum.ADVERT_SMS.getStatus()));
 //        smsTempletTest.setChannelType(NumUtil.int2OneByte(SmsTaskAppEnum.SERVICE_SMS.getStatus()));
-        smsTempletTest.setChannelType(NumUtil.int2OneByte(SmsTaskAppEnum.IDENTIFY_CODE_SMS.getStatus()));        
+//        smsTempletTest.setChannelType(NumUtil.int2OneByte(SmsTaskAppEnum.IDENTIFY_CODE_SMS.getStatus()));        
         /**
          * 模板类型：0:固定模板,1:变量模板
          */
-        smsTempletTest.setType(NumUtil.int2OneByte(SmsTempletTypeEnum.FIXED.getStatusCode()));
+//        smsTempletTest.setType(NumUtil.int2OneByte(SmsTempletTypeEnum.FIXED.getStatusCode()));
 //        smsTempletTest.setType(NumUtil.int2OneByte(SmsTempletTypeEnum.VARIABLE.getStatusCode()));
         /**
          * 模板内容
