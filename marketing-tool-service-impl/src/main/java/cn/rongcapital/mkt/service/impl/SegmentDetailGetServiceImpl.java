@@ -6,7 +6,6 @@ import cn.rongcapital.mkt.dao.SegmentationBodyDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.po.SegmentationBody;
 import cn.rongcapital.mkt.po.SegmentationHead;
-import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.SegmentDetailGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.SegmentDetialOut;
@@ -50,7 +49,7 @@ public class SegmentDetailGetServiceImpl implements SegmentDetailGetService{
         SegmentationHead segmentationHead= segmentationHeadList.get(0);
         segmentDetialOut.setSegmentHeadId(id);
         segmentDetialOut.setSegmentName(segmentationHead.getName());
-        segmentDetialOut.setPublishStatus(Integer.valueOf(segmentationHead.getPublishStatus()));
+        segmentDetialOut.setPublishStatus(segmentationHead.getPublishStatus()==null?ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH:Integer.valueOf(segmentationHead.getPublishStatus()));
         //Todo:2其次根据细分id选出segment_body然后将其组装进入VO对象(需要思考一下)
         SegmentationBody paramSegmentationBody = new SegmentationBody();
         paramSegmentationBody.setHeadId(id.intValue());
