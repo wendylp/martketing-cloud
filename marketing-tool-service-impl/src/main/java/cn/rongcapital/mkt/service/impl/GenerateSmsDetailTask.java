@@ -138,15 +138,17 @@ public class GenerateSmsDetailTask implements TaskService {
         	SmsSignature smsSignature = new SmsSignature();
         	smsSignature.setId(signatureId);
         	List<SmsSignature> smsSignatures =smsSignatureDao.selectList(smsSignature);
-        	if(CollectionUtils.isEmpty(smsSignatures)){
+        	if(!CollectionUtils.isEmpty(smsSignatures)){
         		smsSignature = smsSignatures.get(0);
         	}
         	
             for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
                 SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
-                smsTaskDetail.setReceiveMobile(distinctReceiveMobile);               
-                String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
-                smsTaskDetail.setSendMessage(sendMessage);
+                smsTaskDetail.setReceiveMobile(distinctReceiveMobile); 
+                if(smsSignature!=null){
+                    String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
+                    smsTaskDetail.setSendMessage(sendMessage);
+                }
                 smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
                 smsTaskDetail.setSmsTaskHeadId(taskHeadId);
                 smsTaskDetailList.add(smsTaskDetail);
