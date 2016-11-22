@@ -371,7 +371,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				campaignBodyDao.insert(campaignBody);
 			}
 		}
-		out = new CampaignBodyCreateOut(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),100,null);
+		out = new CampaignBodyCreateOut(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 		return out;
 	}
 
