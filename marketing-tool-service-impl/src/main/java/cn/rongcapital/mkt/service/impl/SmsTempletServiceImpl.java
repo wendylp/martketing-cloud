@@ -63,6 +63,8 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	@Override
 	public SmsTempletOut smsTempletList(String userId, Integer index, Integer size, String channelType,
 			String type, String name,String content) {
+		logger.info("this is SmsTempletServiceImpl.smsTempletList");
+		
 		SmsTempletOut smsTempletOut = this.newSuccessSmsTempletOut();
 
 		SmsTemplet smsTempletTemp = new SmsTemplet();

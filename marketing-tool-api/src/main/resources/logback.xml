@@ -29,63 +29,6 @@
     <prudent>true</prudent>
   </appender>
 
-  <!-- Simple file output -->
-  <appender name="WEIXIN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <!-- encoder defaults to ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
-    <encoder>
-        <pattern>
-            [ %-5level] [%thread] [%date{yyyy-MM-dd HH:mm:ss}] %logger{96} [%line] - %msg%n
-        </pattern>
-        <charset>UTF-8</charset> <!-- 此处设置字符集 -->
-    </encoder>
-
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- rollover daily 配置日志所生成的目录以及生成文件名的规则 -->
-      <fileNamePattern>${LOG_FILE}/mktlog-weixin-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-      <timeBasedFileNamingAndTriggeringPolicy
-          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-        <!-- or whenever the file size reaches 64 MB -->
-        <maxFileSize>64 MB</maxFileSize>
-      </timeBasedFileNamingAndTriggeringPolicy>
-    </rollingPolicy>
-
-
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>DEBUG</level>
-    </filter>
-    <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
-    <prudent>true</prudent>
-  </appender>
-  
-    <!-- Simple file output -->
-  <appender name="SMS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <!-- encoder defaults to ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
-    <encoder>
-        <pattern>
-            [ %-5level] [%thread] [%date{yyyy-MM-dd HH:mm:ss}] %logger{96} [%line] - %msg%n
-        </pattern>
-        <charset>UTF-8</charset> <!-- 此处设置字符集 -->
-    </encoder>
-
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- rollover daily 配置日志所生成的目录以及生成文件名的规则 -->
-      <fileNamePattern>${LOG_FILE}/mktlog-sms-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-      <timeBasedFileNamingAndTriggeringPolicy
-          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-        <!-- or whenever the file size reaches 64 MB -->
-        <maxFileSize>64 MB</maxFileSize>
-      </timeBasedFileNamingAndTriggeringPolicy>
-    </rollingPolicy>
-
-
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>DEBUG</level>
-    </filter>
-    <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
-    <prudent>true</prudent>
-  </appender>
-  
-
   <!-- Console output -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <!-- encoder defaults to ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
@@ -101,13 +44,10 @@
     </filter>
   </appender>
 
-
   <!-- Enable FILE and STDOUT appenders for all log messages.
        By default, only log at level INFO and above. -->
   <root level="INFO">
     <appender-ref ref="FILE" />
-    <appender-ref ref="WEIXIN_FILE" />
-    <appender-ref ref="SMS_FILE" />
     <appender-ref ref="STDOUT" />
   </root>
 </configuration>
