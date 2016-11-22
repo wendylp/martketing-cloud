@@ -32,7 +32,7 @@ import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
 @ValidateRequest
 public class MktSmsTempletApi {
 
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger("SMS_FILE");
 	
 	@Autowired
 	private SmsTempletService smsTempletService;
@@ -58,7 +58,8 @@ public class MktSmsTempletApi {
 			@QueryParam("channel_type") String channelType,
 			@QueryParam("type") String type,
 			@QueryParam("name") String name,
-			@QueryParam("content") String content) throws Exception {		
+			@QueryParam("content") String content) throws Exception {	
+		logger.info("this is SMS_FILE, into MktSmsTempletApi.smsTempletList()");
 		return smsTempletService.smsTempletList(userId, index, size, channelType, type, name,content);
 	}
 	
