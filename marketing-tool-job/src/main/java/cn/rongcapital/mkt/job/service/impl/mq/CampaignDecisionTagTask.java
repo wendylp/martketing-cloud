@@ -68,10 +68,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 		//查询该规则对应的标签list
 		String tagIdsStr =  campaignDecisionTagList.get(0).getTagIds();
 		List<String> tagIdsStrList = Arrays.asList(tagIdsStr);
-		List<Integer> tagIdList = new ArrayList<Integer>();
-		for(String tagIdStrT:tagIdsStrList) {
-			tagIdList.add(Integer.parseInt(tagIdStrT));
-		}
+
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
 		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
@@ -84,7 +81,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 						//获取segment list数据对象
 						List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
 						if(CollectionUtils.isNotEmpty(segmentList)) {
-							processMqMessage(message,segmentList,tagIdList,campaignSwitchYesList,campaignSwitchNoList,rule,queueKey);
+							processMqMessage(message,segmentList,tagIdsStrList,campaignSwitchYesList,campaignSwitchNoList,rule,queueKey);
 						}
 					} catch (Exception e) {
 						logger.error(e.getMessage(),e);
@@ -104,7 +101,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 	
 	//处理listener接收到的数据
 	private void processMqMessage(Message message,List<Segment> segmentList,
-								  List<Integer> tagIdList,
+								  List<String> tagIdList,
 								  List<CampaignSwitch> campaignSwitchYesList,
 								  List<CampaignSwitch> campaignSwitchNoList,
 								  byte rule,String queueKey) throws Exception{
@@ -118,7 +115,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 				for(int i=0;i<tagIdList.size();i++){
 					Integer dataId = s.getDataId();
 					Criteria criteria = Criteria.where("mid").is(dataId);
-					criteria = criteria.andOperator(Criteria.where("tagList.tagId").is(tagIdList.get(i)));
+					criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
 					if(CollectionUtils.isEmpty(dpListM1)) {
 						isAllMatch = false;
@@ -137,7 +134,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 				for(int i=0;i<tagIdList.size();i++){
 					Integer dataId = s.getDataId();
 					Criteria criteria = Criteria.where("mid").is(dataId);
-					criteria = criteria.andOperator(Criteria.where("tagList.tagId").is(tagIdList.get(i)));
+					criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
 					if(CollectionUtils.isNotEmpty(dpListM1)) {
 						isMatchOne = true;
@@ -157,7 +154,7 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 				for(int i=0;i<tagIdList.size();i++){
 					Integer dataIdStr3 = s.getDataId();
 					Criteria criteria3 = Criteria.where("mid").is(dataIdStr3);
-					criteria3 = criteria3.andOperator(Criteria.where("tagList.tagId").is(tagIdList.get(i)));
+					criteria3 = criteria3.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria3), DataParty.class);
 					if(CollectionUtils.isNotEmpty(dpListM1)) {
 						++matchCount;
