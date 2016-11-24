@@ -17,10 +17,12 @@ import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.po.TagValueCount;
 import cn.rongcapital.mkt.service.*;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
+import cn.rongcapital.mkt.vo.SegmentRedisVO;
+import cn.rongcapital.mkt.vo.in.*;
 import cn.rongcapital.mkt.vo.out.SegmentAreaCountOut;
 import cn.rongcapital.mkt.vo.out.SegmentDimensionCountOut;
 
+import cn.rongcapital.mkt.vo.out.SegmentFilterOut;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -185,7 +187,43 @@ public class SegmentFilterGetServiceTest  {
         logger.info("测试方法: segmentReceiveCountList ");
     }
     
-    
+    @Test
+    public void testGetSegmentFilterResult() throws Exception{
+        //1.创建Mock数据
+        TagGroupsListIn paramTagGroupsListIn = new TagGroupsListIn();
+        List<TagGroupsIn> tagGroupsInList = new ArrayList<>();
+        paramTagGroupsListIn.setTagGroupsInList(tagGroupsInList);
+        TagGroupsIn tagGroupsIn = new TagGroupsIn();
+        tagGroupsIn.setGroupId("nfycekdboydpzmt1");
+        tagGroupsIn.setGroupName("分组");
+        tagGroupsIn.setGroupIndex(0);
+        tagGroupsIn.setGroupChange(1);
+        List<SystemTagIn> systemTagInList = new ArrayList<>();
+        tagGroupsIn.setTagList(systemTagInList);
+        SystemTagIn systemTagIn = new SystemTagIn();
+        systemTagIn.setTagId("X4yylWlQ");
+        systemTagIn.setTagName("市");
+        systemTagIn.setTagIndex(0);
+        systemTagIn.setTagExclude(1);
+        List<SystemValueIn> systemValueInList = new ArrayList<>();
+        systemTagIn.setTagValueList(systemValueInList);
+        SystemValueIn systemValueIn = new SystemValueIn();
+        systemValueIn.setTagValueId("X4yylWlQ_29");
+        systemValueIn.setTagValue("北京市");
+        systemValueInList.add(systemValueIn);
+        systemValueIn = new SystemValueIn();
+        systemValueIn.setTagValueId("X4yylWlQ_118");
+        systemValueIn.setTagValue("福州市");
+        systemValueInList.add(systemValueIn);
+        systemTagInList.add(systemTagIn);
+        tagGroupsInList.add(tagGroupsIn);
+
+        SegmentRedisVO resultSegmentRedisVO = new SegmentRedisVO();
+        resultSegmentRedisVO.setSegmentCoverCount(Long.valueOf(100));
+        Mockito.when(segmentCalcService.getSegmentRedis()).thenReturn(resultSegmentRedisVO);
+
+        SegmentFilterOut segmentFilterOut = segmentFilterGetService.getSegmentFilterResult(paramTagGroupsListIn);
+    }
     
     @After
     public void tearDown() throws Exception {
