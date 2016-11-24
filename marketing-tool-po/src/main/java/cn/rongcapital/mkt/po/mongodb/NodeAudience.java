@@ -39,6 +39,9 @@ public class NodeAudience implements Serializable {
 	@Field(value = "sent_status")
 	private Integer sentStatus;
 	
+	@Field(value = "wx_code")
+	private String wxCode;
+	
 	public Integer getSentStatus() {
 		return sentStatus;
 	}
@@ -109,6 +112,14 @@ public class NodeAudience implements Serializable {
 
 	public void setMappingKeyid(String mappingKeyid) {
 		this.mappingKeyid = mappingKeyid;
+	}
+
+	public String getWxCode() {
+		return wxCode;
+	}
+
+	public void setWxCode(String wxCode) {
+		this.wxCode = wxCode;
 	}
 	
 }

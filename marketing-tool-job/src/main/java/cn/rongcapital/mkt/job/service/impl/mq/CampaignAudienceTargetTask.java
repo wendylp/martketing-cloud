@@ -118,7 +118,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 										segment.getDataId());
 								if (!audienceExist) {// 只存node_audience表中不存在的数据
 									// 把segment保存到mongo中的node_audience表
-									insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
+									insertNodeAudience(campaignHeadId, itemId, segment);
 									segmentListUnique.add(segment);
 								}
 							}
