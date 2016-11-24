@@ -469,10 +469,6 @@ public class BaseMQService {
 		nodeAudience.setName(segment.getName());
 		nodeAudience.setStatus(0);
 		nodeAudience.setWxCode(segment.getFansFriendsOpenId());
-		if(37390==segment.getDataId())
-		{
-			logger.info("--111111111111--"+segment.getFansFriendsOpenId()+"---"+segment.getDataId());
-		}
 		mongoTemplate.insert(nodeAudience);// 插入mongo的node_audience表
 	}
 
