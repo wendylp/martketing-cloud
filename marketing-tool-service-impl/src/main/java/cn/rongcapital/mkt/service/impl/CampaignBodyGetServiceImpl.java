@@ -36,7 +36,6 @@ import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
-import cn.rongcapital.mkt.dao.mongo.MongoBaseTagDao;
 import cn.rongcapital.mkt.po.CampaignActionSaveAudience;
 import cn.rongcapital.mkt.po.CampaignActionSendH5;
 import cn.rongcapital.mkt.po.CampaignActionSendPrivt;
@@ -126,9 +125,6 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	private ImgTextAssetDao imgTextAssetDao;
 	@Autowired
 	private MongoTemplate mongoTemplate;
-
-	@Autowired
-	private MongoBaseTagDao mongoBaseTagDao;
 
 	@Override
 	public CampaignBodyGetOut campaignBodyGet(String userToken, String ver, int campaignHeadId) {
@@ -493,7 +489,8 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				List<String> tagIdsStrList = Arrays.asList(StringUtils.split(tagIds, ','));
 				for (String tagIdStr : tagIdsStrList) {
 					TagOut tagOut = new TagOut();
-					BaseTag targetTag = mongoBaseTagDao.findCustomTagLeafByTagId(tagIdStr);
+			        Query query = new Query(Criteria.where("tag_id").is(tagIdStr));
+			        BaseTag targetTag = mongoTemplate.findOne(query,BaseTag.class);
 					Log.info("--------------" + targetTag.getTagName());
 					tagOut.setTagId(tagIdStr);
 					tagOut.setTagName(targetTag.getTagName());
