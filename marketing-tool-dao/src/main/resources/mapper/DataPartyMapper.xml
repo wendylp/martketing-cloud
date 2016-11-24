@@ -747,13 +747,13 @@
 		</foreach>
 	</select>
 	
-	<select id="segmentSearch" parameterType="cn.rongcapital.mkt.vo.in.SegmentSearchIn" resultType="cn.rongcapital.mkt.po.DataParty">
-		SELECT party.name from data_party party  
-		WHERE party.id in
+	<select id="segmentSearch" parameterType="cn.rongcapital.mkt.vo.in.SegmentSearchIn" resultType="java.util.Map">
+		<![CDATA[SELECT p.id,p.name,p.gender,p.mobile,(year(now())-year(p.birthday)-1) + ( DATE_FORMAT(p.birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age,d.head_img_url as head_image_url]]>
+		<![CDATA[ FROM data_party p LEFT JOIN data_population d ON  d.keyid = p.id  Where p.id in]]>
 		<foreach collection="headidList" index="index" item="item" separator="," open="(" close=")">
 			#{item}
 		</foreach>
-		<![CDATA[and party.name like  CONCAT('%',#{queryName},'%')]]>
+		<![CDATA[and p.name like  CONCAT('%',#{queryName},'%')]]>			
 	</select>
 	
 	<select id="getTagAudienceDownloadList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.vo.out.TagAudienceDownloadOut">
