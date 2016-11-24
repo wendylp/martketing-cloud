@@ -79,7 +79,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 
 			try {
 				Set<String> smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(), 2);
-				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(), smembers);
+				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(), smembers.size());
 				if (CollectionUtils.isNotEmpty(smembers)) {
 
 					List<List<String>> setList = ListSplit.getSetSplit(smembers, BATCH_SIZE);
@@ -108,28 +108,36 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 			}
+			
 			List<Segment> segmentList = new ArrayList<Segment>();
 			// 遍历任务的结果
-			for (Future<List<Segment>> fs : resultList) {
-				try {
-					List<Segment> list = fs.get(); // 打印各个线程（任务）执行的结果
-					for (Segment segment : list) {
-						segment.setSegmentationHeadId(cat.getCampaignHeadId());
-						segmentList.add(segment);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				for (Future<List<Segment>> fs : resultList) {
+					try {
+						List<Segment> list = fs.get(); // 打印各个线程（任务）执行的结果
+						if (CollectionUtils.isNotEmpty(list)) {
+							for (Segment segment : list) {
+								segment.setSegmentationHeadId(cat.getSegmentationId());
+								segmentList.add(segment);
+							}
+						}
+					} catch (InterruptedException e) {
+						logger.error(e.getMessage());
+					} catch (ExecutionException e) {
+						executor.shutdownNow();
+						logger.error(e.getMessage());
 					}
-				} catch (InterruptedException e) {
-					logger.error(e.getMessage());
-				} catch (ExecutionException e) {
-					executor.shutdownNow();
-					logger.error(e.getMessage());
 				}
 			}
-
+			logger.info("============12345677=========：{}",segmentList.size());
 			if (CollectionUtils.isNotEmpty(segmentList)) {
+				logger.info("============22222222222=========毫秒");
 				List<Segment> segmentListUnique = new ArrayList<Segment>();// 去重后的segment
 																			// list
 				for (Segment segment : segmentList) {
+					logger.info("============333333333333=========毫秒");
 					boolean audienceExist = checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId());
+					logger.info("============444444444444========={}",audienceExist);
 					if (!audienceExist) {// 只存node_audience表中不存在的数据
 						// 把segment保存到mongo中的node_audience表
 						insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
@@ -139,9 +147,11 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 								&& dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
 							segment.setFansFriendsOpenId(dp.getFansOpenId());// 设置微信粉丝/好友的openid
 						}
+						logger.info("============555555========={}",segment);
 						segmentListUnique.add(segment);
 					}
 				}
+				logger.info("----获取队列 {}长度： {}----", queueKey, segmentListUnique.size());
 				// 查询节点后面的分支
 				List<CampaignSwitch> campaignEndsList = queryCampaignEndsList(campaignHeadId, itemId);
 				for (CampaignSwitch cs : campaignEndsList) {
