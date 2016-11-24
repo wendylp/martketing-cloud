@@ -217,7 +217,11 @@ public class WechatAssetServiceImpl implements WechatAssetService {
             }
             sb.deleteCharAt(sb.length() - 1);
         }
-        wechatMember.setWxGroupId(sb.toString());
+        if(StringUtils.isNotEmpty(sb.toString())){
+        	wechatMember.setWxGroupId(sb.toString());
+        }else{
+        	wechatMember.setWxGroupId(NO_GROUP);
+        }
         wechatMember.setPubId(wxAcct);
         String fansJson = JSONObject.toJSONString(wechatMember);
         wechatMember.setFansJson(fansJson);

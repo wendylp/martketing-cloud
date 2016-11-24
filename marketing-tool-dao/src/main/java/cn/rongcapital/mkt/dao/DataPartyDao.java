@@ -237,8 +237,8 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @param 
 	 * @return List
 	 */
-	List<DataParty> segmentSearch(SegmentSearchIn searchIn);
-	
+	//List<DataParty> segmentSearch(SegmentSearchIn searchIn);
+	List<Map<String,Object>> segmentSearch(SegmentSearchIn searchIn);
 	/**
      * 标签人群得下载下载
      * @param idList
