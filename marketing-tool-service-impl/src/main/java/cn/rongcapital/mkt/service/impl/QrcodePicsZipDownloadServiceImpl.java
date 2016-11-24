@@ -38,9 +38,9 @@ public class QrcodePicsZipDownloadServiceImpl implements QrcodePicsZipDownloadSe
 			
 			
 			Map<String, Object> wechatQrcodetMap = new HashMap<String, Object>();
-			wechatQrcodetMap.put("qrcode_pic1_zip", "/large/" + batchId + ".zip");
-			wechatQrcodetMap.put("qrcode_pic2_zip", "/middle/" + batchId + ".zip");
-			wechatQrcodetMap.put("qrcode_pic3_zip", "/small/" + batchId + ".zip");
+			wechatQrcodetMap.put("qrcode_pic1_zip", ApiConstant.RETURN_IMG_PATH_LARGE + batchId + ".zip");
+			wechatQrcodetMap.put("qrcode_pic2_zip", ApiConstant.RETURN_IMG_PATH_MIDDLE + batchId + ".zip");
+			wechatQrcodetMap.put("qrcode_pic3_zip", ApiConstant.RETURN_IMG_PATH_SMALL + batchId + ".zip");
 			result.getData().add(wechatQrcodetMap);
 			result.setTotal(1);
 			
