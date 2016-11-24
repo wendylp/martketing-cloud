@@ -14,9 +14,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -30,14 +27,12 @@ import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
-import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
 public class CampaignAudienceTargetTask extends BaseMQService implements TaskService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	@Autowired
-	private MongoTemplate mongoTemplate;
+
 	@Autowired
 	private CampaignAudienceTargetDao campaignAudienceTargetDao;
 
@@ -64,6 +59,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 		// 查询mysql中该节点对应的segmentId
 		List<CampaignAudienceTarget> campaignAudienceTargetList = campaignAudienceTargetDao
 				.selectList(campaignAudienceTarget);
+		List<Segment> segmentListUnique = new ArrayList<Segment>(); // 去重后的segment
 		if (CollectionUtils.isNotEmpty(campaignAudienceTargetList)) {
 			CampaignAudienceTarget cat = campaignAudienceTargetList.get(0);
 			// 查询mongo中该segmentId对应的segment list
@@ -79,7 +75,8 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 
 			try {
 				Set<String> smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(), 2);
-				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(), smembers.size());
+				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(),
+						smembers.size());
 				if (CollectionUtils.isNotEmpty(smembers)) {
 
 					List<List<String>> setList = ListSplit.getSetSplit(smembers, BATCH_SIZE);
@@ -108,8 +105,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 			}
-			
-			List<Segment> segmentList = new ArrayList<Segment>();
+
 			// 遍历任务的结果
 			if (CollectionUtils.isNotEmpty(resultList)) {
 				for (Future<List<Segment>> fs : resultList) {
@@ -118,7 +114,13 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 						if (CollectionUtils.isNotEmpty(list)) {
 							for (Segment segment : list) {
 								segment.setSegmentationHeadId(cat.getSegmentationId());
-								segmentList.add(segment);
+								boolean audienceExist = checkNodeAudienceExist(campaignHeadId, itemId,
+										segment.getDataId());
+								if (!audienceExist) {// 只存node_audience表中不存在的数据
+									// 把segment保存到mongo中的node_audience表
+									insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
+									segmentListUnique.add(segment);
+								}
 							}
 						}
 					} catch (InterruptedException e) {
@@ -128,42 +130,23 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 						logger.error(e.getMessage());
 					}
 				}
-			}
-			logger.info("============12345677=========：{}",segmentList.size());
-			if (CollectionUtils.isNotEmpty(segmentList)) {
-				logger.info("============22222222222=========毫秒");
-				List<Segment> segmentListUnique = new ArrayList<Segment>();// 去重后的segment
-																			// list
-				for (Segment segment : segmentList) {
-					logger.info("============333333333333=========毫秒");
-					boolean audienceExist = checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId());
-					logger.info("============444444444444========={}",audienceExist);
-					if (!audienceExist) {// 只存node_audience表中不存在的数据
-						// 把segment保存到mongo中的node_audience表
-						insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
-						DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(segment.getDataId())),
-								DataParty.class);
-						if (null != dp && dp.getMdType() != null
-								&& dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_WECHAT) {
-							segment.setFansFriendsOpenId(dp.getFansOpenId());// 设置微信粉丝/好友的openid
-						}
-						logger.info("============555555========={}",segment);
-						segmentListUnique.add(segment);
-					}
-				}
-				logger.info("----获取队列 {}长度： {}----", queueKey, segmentListUnique.size());
-				// 查询节点后面的分支
-				List<CampaignSwitch> campaignEndsList = queryCampaignEndsList(campaignHeadId, itemId);
-				for (CampaignSwitch cs : campaignEndsList) {
-					// 发送segment数据到后面的节点
-					sendDynamicQueue(segmentListUnique, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
-					// 逻辑删除传递走的数据
-					logicDeleteNodeAudience(campaignHeadId, itemId, segmentListUnique);
-					logger.info(queueKey + "-out:" + JSON.toJSONString(segmentListUnique));
-				}
+
 			}
 
 		}
+		logger.info("----获取队列 {}长度： {}----", queueKey, segmentListUnique.size());
+		if (CollectionUtils.isNotEmpty(segmentListUnique)) {
+			// 查询节点后面的分支
+			List<CampaignSwitch> campaignEndsList = queryCampaignEndsList(campaignHeadId, itemId);
+			for (CampaignSwitch cs : campaignEndsList) {
+				// 发送segment数据到后面的节点
+				sendDynamicQueue(segmentListUnique, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
+				// 逻辑删除传递走的数据
+				logicDeleteNodeAudience(campaignHeadId, itemId, segmentListUnique);
+				logger.info(queueKey + "-out:" + JSON.toJSONString(segmentListUnique));
+			}
+		}
+
 	}
 
 	@Override

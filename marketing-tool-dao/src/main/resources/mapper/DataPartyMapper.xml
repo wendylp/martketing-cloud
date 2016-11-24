@@ -739,7 +739,7 @@
 	
 		<!-- 根据dataParty的IdList统计 -->
 	<select id="selectSegmentByIdList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.mongodb.Segment">
-		SELECT id,id as dataId,name
+		SELECT id,id as dataId,name,wx_code as fansFriendsOpenId
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE status = 2 AND id in
 		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
