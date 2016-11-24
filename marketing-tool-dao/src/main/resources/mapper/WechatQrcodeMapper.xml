@@ -147,7 +147,7 @@
 	<!-- 通过BatchId更新 expiration_time qrcode_tag_ids qrcode_status -->
 	<update id="updataByBatchId" parameterType="cn.rongcapital.mkt.po.WechatQrcode">
 		<![CDATA[update wechat_qrcode]]>
-		set expiration_time = #{expirationTime}, related_tags = #{relatedTags}, comments = #{comments}
+		set expiration_time = #{expirationTime}, related_tags = #{relatedTags}, comments = #{comments}, status = #{status}
 		<![CDATA[where batch_id = #{batchId}]]>
 		
 	</update>
