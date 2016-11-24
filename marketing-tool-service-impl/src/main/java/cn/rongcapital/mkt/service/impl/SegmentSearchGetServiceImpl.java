@@ -17,16 +17,13 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisException;
+import cn.rongcapital.mkt.common.util.GenderUtils;
 import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.service.SegmentSearchGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SegmentSearchIn;
@@ -86,6 +83,16 @@ public class SegmentSearchGetServiceImpl implements SegmentSearchGetService {
 //			}
 			
 			List<Map<String,Object>> dataList = dataPartyDao.segmentSearch(searchIn);
+			
+			if(dataList != null && dataList.size() > 0){
+				for(Map<String,Object> map : dataList){
+					if(map.get("gender") != null){
+	                    Integer gender = (Integer) map.get("gender");
+						map.put("gender", GenderUtils.byteToChar(gender.byteValue()));
+					}
+				}
+			}
+			
 			result.getData().addAll(dataList);
 		}
 		
