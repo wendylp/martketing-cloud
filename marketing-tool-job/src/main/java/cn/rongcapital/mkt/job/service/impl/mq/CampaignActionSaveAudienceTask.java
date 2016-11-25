@@ -51,6 +51,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 			return;
 		}
 		CampaignActionSaveAudience campaignActionSaveAudience = campaignActionSaveAudienceList.get(0);
+		logger.info("key is ============================{}", campaignHeadId+"-"+itemId);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
 		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
@@ -61,6 +62,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 				if(message!=null) {
 					try {
 						//获取segment list数据对象
+					    logger.info("监听到消息 ================== {}", message.toString());
 						List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
 						if(CollectionUtils.isNotEmpty(segmentList)) {
 							processMqMessage(segmentList,campaignHeadId,
