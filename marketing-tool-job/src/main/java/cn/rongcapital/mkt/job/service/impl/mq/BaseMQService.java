@@ -573,20 +573,31 @@ public class BaseMQService {
 		MessageConsumer consumer = null;
 		Session session = null;
 		try {
-			/*session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			consumer = session.createConsumer(queue);*/
-		    logger.info("providerUrl is ==========" + providerUrl);
-            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(providerUrl);
-            Connection connection = connectionFactory.createConnection();
-            connection.start();
-            session =  connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            return consumer = session.createConsumer(queue);
+			session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			consumer = session.createConsumer(queue);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 		return consumer;
 	}
 
+	public MessageConsumer getQueueConsumer(String queue) {
+	    MessageConsumer consumer = null;
+        Session session = null;
+        try{
+            logger.info("providerUrl is ==========" + providerUrl);
+            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(providerUrl);
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+            session =  connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Destination destination = session.createQueue(queue);
+            consumer = session.createConsumer(destination);
+        }catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        return consumer;
+	}
+	
 	protected void deleteQueueByName(String queueName) {
 		// TO DO
 	}
