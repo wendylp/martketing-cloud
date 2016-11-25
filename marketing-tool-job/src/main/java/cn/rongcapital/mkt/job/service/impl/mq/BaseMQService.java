@@ -19,6 +19,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import cn.rongcapital.mkt.dao.*;
+
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang3.StringUtils;
@@ -571,6 +573,15 @@ public class BaseMQService {
 		MessageConsumer consumer = null;
 		Session session = null;
 		try {
+		    if(conn ==null){
+		        logger.info("conn is null need init==============");
+		        logger.info("providerUrl is ==========" + providerUrl);
+		        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(providerUrl);
+		        Connection connection = connectionFactory.createConnection();
+		        connection.start();
+		        session =  connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		        return consumer = session.createConsumer(queue);
+		    }
 			session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			consumer = session.createConsumer(queue);
 		} catch (Exception e) {

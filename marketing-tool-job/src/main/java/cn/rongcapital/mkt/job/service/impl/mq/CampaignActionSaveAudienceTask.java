@@ -38,7 +38,6 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 	private AudienceListPartyMapDao audienceListPartyMapDao;
 	
 	public void task (TaskSchedule taskSchedule) {
-	    logger.info("任务开始执行  campaignHeadId is {},itemId is {}" , taskSchedule.getCampaignHeadId(),taskSchedule.getCampaignItemId());
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
 		List<CampaignSwitch> campaignEndsList = queryCampaignEndsList(campaignHeadId, itemId);
@@ -54,21 +53,14 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 		}
 		CampaignActionSaveAudience campaignActionSaveAudience = campaignActionSaveAudienceList.get(0);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
-		try {
-            logger.info("key is ============================{}", queue.getQueueName());
-        } catch (JMSException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
 		logger.info("queue is ============================{}", campaignHeadId+"-"+itemId);
 		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
-		logger.info("consumer is ============================{}", consumer.toString());
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onMessage(Message message) {
-			    logger.info("consumer is ==========================={}", message);
+			    logger.info("message is ==========================={}", message);
 				if(message!=null) {
 					try {
 						//获取segment list数据对象
