@@ -573,17 +573,14 @@ public class BaseMQService {
 		MessageConsumer consumer = null;
 		Session session = null;
 		try {
-		    if(conn ==null){
-		        logger.info("conn is null need init==============");
-		        logger.info("providerUrl is ==========" + providerUrl);
-		        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(providerUrl);
-		        Connection connection = connectionFactory.createConnection();
-		        connection.start();
-		        session =  connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		        return consumer = session.createConsumer(queue);
-		    }
-			session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			consumer = session.createConsumer(queue);
+			/*session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			consumer = session.createConsumer(queue);*/
+		    logger.info("providerUrl is ==========" + providerUrl);
+            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(providerUrl);
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+            session =  connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            return consumer = session.createConsumer(queue);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
