@@ -391,7 +391,7 @@
 		select IFNULL(a.name,'') as name,IFNULL(a.mobile,'') as mobile,IFNULL(a.gender,'') as gender,IFNULL(a.birthday,'') as birthdayExport,IFNULL(a.provice,'') as provice,IFNULL(a.city,'') as city,IFNULL(a.email,'') as email,IFNULL(a.identify_no,'') as identifyNo,IFNULL(a.driving_license,'') as drivingLicense 
 		from data_population a
  		inner join audience_list_party_map b on a.keyid = b.party_id
-		where b.id =  #{audience_id}
+		where b.audience_list_id =  #{audience_id}
 	</select>
 	
 	<select id="segmentSearch" parameterType="cn.rongcapital.mkt.vo.in.SegmentSearchIn" resultType="cn.rongcapital.mkt.po.DataPopulation">
