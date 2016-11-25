@@ -565,6 +565,7 @@ public class SegmentCalcServiceImpl implements SegmentCalcService {
             savejedis.select(REDISDB_INDEX);    
             if(savejedis.exists(sourceIds)) {
                 savejedis.rename(sourceIds, keyids);
+                savejedis.persist(keyids);
             }
             rs = savejedis.hmset(key, segmentCover);
             logger.info("Save Segment Key:"+key+ " 原始细分ID="+sourceIds+" 细分count="+segmentCoverCount+"-->最新细分ID="+keyids); 
