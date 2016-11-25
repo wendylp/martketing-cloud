@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.job.service.impl.mq;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
@@ -52,14 +53,22 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 			return;
 		}
 		CampaignActionSaveAudience campaignActionSaveAudience = campaignActionSaveAudienceList.get(0);
-		logger.info("key is ============================{}", campaignHeadId+"-"+itemId);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
+		try {
+            logger.info("key is ============================{}", queue.getQueueName());
+        } catch (JMSException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+		logger.info("queue is ============================{}", campaignHeadId+"-"+itemId);
 		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
+		logger.info("consumer is ============================{}", consumer.toString());
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onMessage(Message message) {
+			    logger.info("consumer is ==========================={}", message);
 				if(message!=null) {
 					try {
 						//获取segment list数据对象
