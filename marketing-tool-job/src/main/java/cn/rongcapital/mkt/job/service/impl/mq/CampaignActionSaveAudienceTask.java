@@ -114,7 +114,10 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
                     }
                 }
             });
-            consumerMap.put(campaignHeadId+"-"+itemId, consumer);
+            if(null != consumer){
+                consumerMap.put(campaignHeadId+"-"+itemId, consumer);
+            }
+          
         } catch (JMSException e) {
             logger.error(e.getMessage(),e);
         }

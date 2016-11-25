@@ -582,6 +582,7 @@ public class BaseMQService {
 	}
 
 	public MessageConsumer getQueueConsumer(String queue) {
+	    logger.info("queue is ==========" + queue);
 	    MessageConsumer consumer = null;
         Session session = null;
         try{
