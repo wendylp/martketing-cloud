@@ -37,7 +37,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 	private AudienceListPartyMapDao audienceListPartyMapDao;
 	
 	public void task (TaskSchedule taskSchedule) {
-	    logger.info("任务开始执行  campaignHeadId is {},itemId is {}" , taskSchedule.getCampaignHeadId(),taskSchedule.getCampaignHeadId());
+	    logger.info("任务开始执行  campaignHeadId is {},itemId is {}" , taskSchedule.getCampaignHeadId(),taskSchedule.getCampaignItemId());
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
 		List<CampaignSwitch> campaignEndsList = queryCampaignEndsList(campaignHeadId, itemId);

@@ -80,6 +80,7 @@ public class TaskManager {
     }
 
     private synchronized void scanTask() {
+        logger.info("我三秒执行一次 + scanTask=============================");
         logger.debug("scanTask");
         ConcurrentHashMap<String, TaskSchedule> taskPropMapTmp = new ConcurrentHashMap<String, TaskSchedule>();
         TaskSchedule t = new TaskSchedule();
