@@ -66,7 +66,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onMessage(Message message) {
-				if(message!=null) {
+				//if(message!=null) {
 					try {
 						//获取segment list数据对象
 					    logger.info("监听到消息 ================================== {}", message.toString());
@@ -78,7 +78,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 					} catch (Exception e) {
 						logger.error(e.getMessage(),e);
 					}
-				}
+				//}
 			}
 		};
 		if(null != consumer){
@@ -91,7 +91,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 				logger.error(e.getMessage(),e);
 			}     
 		}else {
-		    logger.info("consumer is null ========================!!!!!!!!!!!!!!!!!!!");
+		    logger.info("consumer is null======================================");
 		}
 		
 /*		MessageConsumer consumer = getQueueConsumer(campaignHeadId+"-"+itemId);//获取queue的消费者对象

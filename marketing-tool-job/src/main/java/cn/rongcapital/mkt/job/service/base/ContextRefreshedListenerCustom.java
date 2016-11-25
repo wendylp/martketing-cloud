@@ -26,7 +26,7 @@ public class ContextRefreshedListenerCustom implements ApplicationListener<Conte
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		baseMQService.initJndiEvironment();
 		taskManager.initTask();
-		//mQTopicService.initReceiver();
+		mQTopicService.initReceiver();
 	}
 
 }
