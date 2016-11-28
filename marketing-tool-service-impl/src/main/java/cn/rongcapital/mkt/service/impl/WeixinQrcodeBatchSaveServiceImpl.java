@@ -18,10 +18,11 @@ import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.CustomTagDao;
+import cn.rongcapital.mkt.common.enums.TagSourceEnum;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
-import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.WechatQrcode;
+import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.service.InsertCustomTagService;
 import cn.rongcapital.mkt.service.WeixinQrcodeBatchSaveService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.WechatQrcodeBatchSaveIn;
@@ -37,10 +38,10 @@ public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveSe
 	private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Autowired
-	WechatQrcodeDao wechatQrcodeDao;
+	private WechatQrcodeDao wechatQrcodeDao;
 	
 	@Autowired
-	private CustomTagDao customTagDao;
+    private InsertCustomTagService insertCustomTagService;
 
 	/**
 	 * 根据batch_id，在表wechat_qrcode 中查找到对应二维码记录，更新：失效时间、标签、备注信息、状态(status=0)
@@ -108,20 +109,18 @@ public class WeixinQrcodeBatchSaveServiceImpl implements WeixinQrcodeBatchSaveSe
 		//wangweiqiang update 2016-09-19 
 		List<String> tagNames = body.getTagNames();
 		if(!CollectionUtils.isEmpty(tagNames)){
-			CustomTag customTag = new CustomTag();
-			customTag.setCoverAudienceCount(0);
 			//id拼接
 			StringBuilder ids = new StringBuilder();
-			for (String name : tagNames) {
+			for (String tagName : tagNames) {
 				//判断是否存在
-				Integer id = customTagDao.selectIdByName(name);
-				if(null == id){
-					customTag.setName(name);
-					customTagDao.insertCustomTagResId(customTag);
-					ids.append(customTag.getId()+";");
-					continue;
+				if(StringUtils.isNotEmpty(tagName)){
+				    BaseTag tag = insertCustomTagService.insertCustomTagLeafFromSystemIn(tagName,
+                                    TagSourceEnum.WECHAT_QRCODE_SOURCE_ACCESS.getTagSourceName());
+				    String tagId = tag == null ? "":tag.getTagId();
+                    if (StringUtils.isNotEmpty(tagId)){
+                        ids.append(tagId + ";");
+                    }
 				}
-				ids.append(id+";");
 			}
 			if(!StringUtils.isEmpty(ids)){
 				String relatedTags = ids.toString().substring(0,ids.length()-1);
