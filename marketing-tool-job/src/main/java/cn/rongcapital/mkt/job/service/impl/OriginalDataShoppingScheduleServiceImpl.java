@@ -47,12 +47,14 @@ public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShop
 	@Autowired
 	Environment env;	
 	
-	private final static ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	private ExecutorService executor = null;
 	
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void cleanData() {
 
+    	executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+    	
     	logger.info("=====================上传购物记录属性开始");
     	long startTime = System.currentTimeMillis();
         int BATCH_NUM = Integer.valueOf(env.getProperty("orginal.to.data.batch.num"));

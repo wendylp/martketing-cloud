@@ -98,5 +98,31 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<!-- 返回当前任务的发送记录列表(如果手机号为空则查本次任务全部记录) -->
+    <select id="messageSendRecordGet" parameterType="cn.rongcapital.mkt.po.SmsTaskDetailState" resultType="cn.rongcapital.mkt.vo.out.MessageSendRecordGetOut">
+         SELECT detail.id as id,detail.sms_task_head_id as smsTaskHeadId,detail.send_mobile as sendMobile,detail.receive_mobile as receiveMobile, detail.send_message as sendMessage, detail.send_time as sendTime, detailState.sms_task_send_status as smsTaskSendStatus
+         FROM sms_task_detail AS detail LEFT JOIN sms_task_detail_state AS detailState on detail.id = detailState.sms_task_detail_id
+         <where>
+            detail.sms_task_head_id = #{smsTaskHeadId}
+            <if test="status != null"><![CDATA[AND detail.status = #{status}]]></if>
+            <if test="receiveMobile != null"><![CDATA[ AND detail.receive_mobile = #{receiveMobile}]]></if>
+         </where>
+         <include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+    </select>
+
+	<insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+		INSERT INTO sms_task_detail (sms_task_head_id,receive_mobile,send_message,create_time,send_time)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.smsTaskHeadId},
+			#{item.receiveMobile},
+			#{item.sendMessage},
+			now(),
+			#{item.sendTime}
+			)
+		</foreach>
+
+	</insert>
 	
 </mapper>

@@ -11,6 +11,8 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
+import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 
 import org.slf4j.Logger;
@@ -20,7 +22,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.Before;
+
+import java.util.List;
+
 import org.junit.After;
+import org.junit.Assert;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DataPartyDaoTest extends AbstractUnitTest {
@@ -205,9 +211,19 @@ public class DataPartyDaoTest extends AbstractUnitTest {
 	    logger.info("测试方法: selectMappingKeyId ");    
 	}
 	
+	@Test
+	public void testSelectListByContactId() {
+		
+		List<DataParty> dataPartyList;
+		dataPartyList = dataPartyDao.selectListByContactId(4);
+		Assert.assertEquals(1, dataPartyList.size());
+	    logger.info("测试方法: selectListByContactId ");    
+	}
     
     @After
     public void tearDown() throws Exception {
         logger.info("测试: DataPartyDao 结束---------------------");
     }
+    
+
 }

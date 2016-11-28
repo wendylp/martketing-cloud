@@ -16,6 +16,23 @@ public class SmsTaskDetailState extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+    
+    public SmsTaskDetailState() {}
+    
+    
+
+    /**
+     * @param smsTaskDetailId
+     * @param smsTaskSendStatus
+     */
+    public SmsTaskDetailState(Long smsTaskDetailId, Integer smsTaskSendStatus, Byte status) {
+        super();
+        this.smsTaskDetailId = smsTaskDetailId;
+        this.smsTaskSendStatus = smsTaskSendStatus;
+        this.status = status;
+    }
+
+
 
     public Long getId() {
         return id;

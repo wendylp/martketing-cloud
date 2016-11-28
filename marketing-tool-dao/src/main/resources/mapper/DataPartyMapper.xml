@@ -711,5 +711,65 @@
 		</where>
 	</select>
 	
+	<!-- 根据dataParty的IdList统计distinct的MobileList -->
+	<select id="selectDistinctMobileListByIdList" parameterType="java.util.List" resultType="java.lang.String">
+		SELECT distinct mobile
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE status = 2 AND id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
 	
+	<!-- 根据联系人表单查询表单生成的主数据 -->
+	<select id="selectListByContactId" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataParty">
+		<![CDATA[SELECT dp.id as id,dp.mobile as mobile,dp.name as name,dp.gender as gender,dp.birthday as birthday,]]>
+		<![CDATA[dp.citizenship as citizenship,dp.provice as provice,dp.city as city,dp.job as job,]]>
+		<![CDATA[dp.monthly_income as monthlyIncome,dp.member_level as memberLevel,dp.member_points as memberPoints,dp.source as source,]]>
+		<![CDATA[dp.monthly_consume as monthlyConsume,dp.last_login as lastLogin,dp.status as status,dp.create_time as createTime,]]>
+		<![CDATA[dp.update_time as updateTime,dp.batch_id as batchId,dp.md_type as mdType,dp.mapping_keyid as mappingKeyid,]]>
+		<![CDATA[dp.tel as tel,dp.email as email,dp.qq as qq,dp.identify_no as identifyNo,dp.driving_license as drivingLicense,]]>
+		<![CDATA[dp.wxmp_id as wxmpId,dp.wx_code as wxCode,dp.wx_uin as wxUin,dp.wxperson_id as wxpersonId,dp.idfa as idfa,]]>
+		<![CDATA[dp.imei as imei,dp.unionid as unionid,dp.acct_no as acctNo,dp.acct_type as acctType,dp.flag2 as flag2,dp.bitmap as bitmap]]>
+		<![CDATA[ from data_party as dp ]]>
+		<![CDATA[ inner join  data_population as dpp on dp.id = dpp.keyid ]]>
+		<![CDATA[ inner join  contact_list as cl on dpp.id = cl.keyid ]]>
+		<![CDATA[ where  cl.contact_templ_id = #{contact_id} ]]>
+	</select>
+	
+		<!-- 根据dataParty的IdList统计 -->
+	<select id="selectSegmentByIdList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.mongodb.Segment">
+		SELECT id,id as dataId,name,wx_code as fansFriendsOpenId
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE status = 2 AND id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="segmentSearch" parameterType="cn.rongcapital.mkt.vo.in.SegmentSearchIn" resultType="java.util.Map">
+		<![CDATA[SELECT p.id,p.name,p.gender,p.mobile,(year(now())-year(p.birthday)-1) + ( DATE_FORMAT(p.birthday, '%m%d') <= DATE_FORMAT(NOW(), '%m%d') ) as age,d.head_img_url as head_image_url]]>
+		<![CDATA[ FROM data_party p LEFT JOIN data_population d ON  d.keyid = p.id  Where p.id in]]>
+		<foreach collection="headidList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+		<![CDATA[and p.name like  CONCAT('%',#{queryName},'%')]]>			
+	</select>
+	
+	<select id="getTagAudienceDownloadList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.vo.out.TagAudienceDownloadOut">
+		SELECT name,mobile,
+		case gender
+		when '1' then '男'
+		when '2' then '女'
+		when '3' then '未知'
+		end gender,
+		birthday,provice,city,
+		email,identify_no as identifyNo,driving_license as drivingLicense,wx_code as wxCode,qq
+		from data_party
+		WHERE id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+
 </mapper>

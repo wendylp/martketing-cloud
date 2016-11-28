@@ -47,10 +47,12 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
 	@Autowired
 	Environment env;
 	
-	private final static ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	private ExecutorService executor = null;
 	
     @Override
     public void cleanData() {
+    	
+    	executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
     	
     	logger.info("=====================上传人口属性开始");
     	long startTime = System.currentTimeMillis();

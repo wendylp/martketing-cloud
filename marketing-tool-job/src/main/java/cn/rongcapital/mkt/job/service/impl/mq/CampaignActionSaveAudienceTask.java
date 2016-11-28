@@ -3,12 +3,19 @@ package cn.rongcapital.mkt.job.service.impl.mq;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,15 +59,17 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 		}
 		CampaignActionSaveAudience campaignActionSaveAudience = campaignActionSaveAudienceList.get(0);
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
+		logger.info("queue is ============================{}", campaignHeadId+"-"+itemId);
 		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onMessage(Message message) {
-				if(message!=null) {
+				//if(message!=null) {
 					try {
 						//获取segment list数据对象
+					    logger.info("监听到消息 ================================== {}", message.toString());
 						List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
 						if(CollectionUtils.isNotEmpty(segmentList)) {
 							processMqMessage(segmentList,campaignHeadId,
@@ -69,10 +78,11 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 					} catch (Exception e) {
 						logger.error(e.getMessage(),e);
 					}
-				}
+				//}
 			}
 		};
 		if(null != consumer){
+		    logger.info("consumer not is null==============================");
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
@@ -80,7 +90,38 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
+		}else {
+		    logger.info("consumer is null======================================");
 		}
+		
+/*		MessageConsumer consumer = getQueueConsumer(campaignHeadId+"-"+itemId);//获取queue的消费者对象
+        try {
+            consumer.setMessageListener(new MessageListener() {
+                public void onMessage(Message message) {
+                    logger.info("message is ==========================={}", message);
+                    if(message!=null) {
+                        try {
+                            //获取segment list数据对象
+                            logger.info("监听到消息 ================== {}", message.toString());
+                            @SuppressWarnings("unchecked")
+                            List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
+                            if(CollectionUtils.isNotEmpty(segmentList)) {
+                                processMqMessage(segmentList,campaignHeadId,
+                                                 itemId,campaignEndsList,campaignActionSaveAudience);
+                            }
+                        } catch (Exception e) {
+                            logger.error(e.getMessage(),e);
+                        }
+                    }
+                }
+            });
+            if(null != consumer){
+                consumerMap.put(campaignHeadId+"-"+itemId, consumer);
+            }
+          
+        } catch (JMSException e) {
+            logger.error(e.getMessage(),e);
+        }*/
 	}
 	private void processMqMessage(List<Segment> segmentList,
 			  Integer campaignHeadId,String itemId,
@@ -90,7 +131,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
-				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
+				insertNodeAudience(campaignHeadId, itemId, segment);
 				Integer dataId = segment.getDataId();
 				AudienceListPartyMap audienceListPartyMapT = new AudienceListPartyMap();
 				audienceListPartyMapT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);

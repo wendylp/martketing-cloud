@@ -92,7 +92,7 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 		List<Segment> segmentListToNext = new ArrayList<Segment>();
 		for(Segment segment:segmentList) {
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
-				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
+				insertNodeAudience(campaignHeadId, itemId, segment);
 				Integer dataId = segment.getDataId();
 				List<String> tagIdList = Arrays.asList(tagIds);
 				for(String idStr:tagIdList) {

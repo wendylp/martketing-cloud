@@ -123,17 +123,27 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 
 		List<String> childrenList = findOne.getChildren();
 
-		if (index * size > childrenList.size()) {
-			size = childrenList.size();
-		}
+
+		int indexStart = (index - 1) * size;
+		indexStart = indexStart>childrenList.size()?childrenList.size():indexStart;
+		int indexEnd = indexStart + size;
+		indexEnd = indexEnd>childrenList.size()?childrenList.size():indexEnd;
+
 
 		long count = mongoTemplate.count(null, DataParty.class);
 
-		for (int i = (index - 1) * size; i < size; i++) {
+		for (int i = indexStart; i < indexEnd; i++) {
 			String tagRecommendId = childrenList.get(i);
 
-			TagRecommend tagRecommend = mongoTemplate.findOne(new Query(Criteria.where("tag_id").is(tagRecommendId)),
-					TagRecommend.class);
+            TagRecommend tagRecommend = mongoTemplate.findOne(
+                            new Query(Criteria.where("tag_id").is(tagRecommendId).and("status")
+                                            .is(ApiConstant.TABLE_DATA_STATUS_VALID)),
+                            TagRecommend.class);
+			
+			// 如果查询不到标签，则跳过这次循环
+			if(tagRecommend == null) {
+			    continue;
+			}
 
 			long tagCount = mongoTemplate.count(new Query(Criteria.where("tagList.tagId").is(tagRecommendId)),
 					DataParty.class);
@@ -153,12 +163,19 @@ public class TaggroupSystemListGetServiceImpl implements TaggroupSystemListGetSe
 			} else {
 				map.put("tag_cover", new DecimalFormat("#.##%").format(0));
 			}
+			
+			// 增加
+			map.put("tag_list", tagRecommend.getTagList());
+			
+			// 增加 推荐标记
+			map.put("flag", tagRecommend.getFlag());
 
 			resultList.add(map);
 		}
 
 		baseOutput.getData().addAll(resultList);
 		baseOutput.setTotal(resultList.size());
+		baseOutput.setTotalCount(childrenList.size());
 
 		return baseOutput;
 	}

@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.common.jedis;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import redis.clients.jedis.Jedis;
 
 /**
@@ -27,7 +29,21 @@ public class JedisClient {
 		
 		return rs;
 	}
+	public static long delete(Integer index,String... keys) throws JedisException {
 
+		Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+		long rs;
+		try {
+			rs = jedis.del(keys);
+		} catch (Exception e) {
+			throw new JedisException("删除String... Key异常!", e);
+		} finally {
+			JedisConnectionManager.closeConnection(jedis);
+		}
+		
+		return rs;
+	}
 	public static boolean delete(String key) throws JedisException {
 
 		Jedis jedis = JedisConnectionManager.getConnection();
@@ -43,7 +59,22 @@ public class JedisClient {
 		return rs;
 		
 	}
+	public static boolean delete(Integer index,String key) throws JedisException {
 
+		Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+		boolean rs;
+		try {
+			rs = jedis.del(key) == 1 ? true : false;
+		} catch (Exception e) {
+			throw new JedisException("删除单个key异常!",e);
+		} finally {
+			JedisConnectionManager.closeConnection(jedis);
+		}
+		
+		return rs;
+		
+	}
 	public static boolean delete(byte[] key) throws JedisException {
 
 		Jedis jedis = JedisConnectionManager.getConnection();
@@ -242,7 +273,21 @@ public class JedisClient {
 		
 		return rs;
 	}
+	public static long hset(Integer index,String key, String field, String value) throws JedisException {
 
+		Jedis jedis = JedisConnectionManager.getConnection();
+	    jedis.select(index);
+		long rs;
+		try {
+			rs = jedis.hset(key, field, value);
+		} catch (Exception e) {
+			throw new JedisException("设置HASH的某FIELD为某值异常!",e);
+		} finally {
+			JedisConnectionManager.closeConnection(jedis);
+		}
+		
+		return rs;
+	}
 	public static Map<String, String> hgetAll(String key) throws JedisException {
 
 		Jedis jedis = JedisConnectionManager.getConnection();
@@ -260,7 +305,7 @@ public class JedisClient {
 
 	public static boolean hmset(String key, Map<String, String> map) throws JedisException {
 
-		Jedis jedis = JedisConnectionManager.getConnection();
+		Jedis jedis = JedisConnectionManager.getNewConnection();
 		String rs;
 		try {
 			rs = jedis.hmset(key, map);
@@ -272,7 +317,46 @@ public class JedisClient {
 		
 		return rs != null && rs.equals("OK") ? true : false;
 	}
+	
+	public static boolean hmset(Integer index, String key, Map<String, String> map) throws JedisException {
+	    
+	    Jedis jedis = JedisConnectionManager.getConnection();
+	    String rs;
+	    try {
+	        jedis.select(index);
+	        rs = jedis.hmset(key, map);
+	    } catch (Exception e) {
+	        throw new JedisException("设置key和HASH值异常!",e);
+	    } finally {
+	        JedisConnectionManager.closeConnection(jedis);
+	    }
+	    
+	    return rs != null && rs.equals("OK") ? true : false;
+	}
+	
+	
+	public static List<String> hmget(String key,String... fields) throws JedisException{
+	    Jedis jedis = JedisConnectionManager.getConnection();
+	    try {
+            return jedis.hmget(key, fields);
+        } catch (Exception e) {
+            throw new JedisException("获取key对应的fields异常",e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+	}
 
+	public static List<String> hmget(String key,int database,String... fields) throws JedisException{
+	    Jedis jedis = JedisConnectionManager.getConnection(database);
+	    try {
+            return jedis.hmget(key, fields);
+        } catch (Exception e) {
+            throw new JedisException("获取key对应的fields异常",e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis,database);
+        }
+	}
+	
 	/**
 	 * 
 	 * @Title:        incr 
@@ -443,7 +527,122 @@ public class JedisClient {
 		return rsb;
 	}
 	
-	
+    public static void sadd(String key, String... elems) throws JedisException {
+        Jedis jedis = JedisConnectionManager.getConnection();
+        try {
+            jedis.sadd(key, elems);
+        } catch (Exception e) {
+            throw new JedisException("sadd 新增异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+
+    }
+    
+    public static void sadd(Integer index, String key, String... elems) throws JedisException {
+        Jedis jedis = JedisConnectionManager.getNewConnection();
+        try {
+            jedis.select(index);
+            jedis.sadd(key, elems);
+        } catch (Exception e) {
+            throw new JedisException("sadd 新增异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+        
+    }
+    
+    
+    public static Set<String> smembers(String key) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        try {
+            return jedis.smembers(key);
+        } catch (Exception e) {
+            throw new JedisException("smembers异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
+    
+	public static Set<String> smembers(String key,int database) throws JedisException{
+	    Jedis jedis = JedisConnectionManager.getConnection(database);
+	    try {
+            return jedis.smembers(key);
+        } catch (Exception e) {
+            throw new JedisException("smembers异常",e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis,database);
+        }
+	}
+    
+    public static Set<String> sinter(final String... keys) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        try {
+            return jedis.sinter(keys);
+        } catch (Exception e) {
+            throw new JedisException("sinter异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
+    public static Long sinterstore(Integer index,String key,final String... keys) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+        
+        try {
+            return jedis.sinterstore(key, keys);
+        } catch (Exception e) {
+            throw new JedisException("sinter异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
+    public static Set<String> sunion(final String... keys) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        try {
+            return jedis.sunion(keys);
+        } catch (Exception e) {
+            throw new JedisException("sunion异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
+    
+    public static Set<String> sunion(Integer index,final String... keys) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+        try {
+            return jedis.sunion(keys);
+        } catch (Exception e) {
+            throw new JedisException("sunion异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
+    
+    public static Long sunionstore(Integer index,String key,final String... keys) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+        try {
+            return jedis.sunionstore(key,keys);
+        } catch (Exception e) {
+            throw new JedisException("sunion异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
+    
+    public static Long scard(Integer index,String key) throws JedisException{
+        Jedis jedis = JedisConnectionManager.getConnection();
+        jedis.select(index);
+        try {
+            return jedis.scard(key);
+        } catch (Exception e) {
+            throw new JedisException("sunion异常!", e);
+        } finally {
+            JedisConnectionManager.closeConnection(jedis);
+        }
+    }
 	public static void main(String[] args) throws JedisException {
 
 		 Jedis jedis = JedisConnectionManager.getConnection();

@@ -97,7 +97,7 @@ public class CampaignActionPrvWechatSendInfoTask extends BaseMQService implement
 		String queueKey = campaignHeadId+"-"+itemId;
 		for(Segment segment:segmentList) {
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
-				insertNodeAudience(campaignHeadId, itemId, segment.getDataId(), segment.getName());
+				insertNodeAudience(campaignHeadId, itemId, segment);
 				Integer dataId = segment.getDataId();
 				//从mongo的主数据表中查询该条id对应的主数据详细信息
                 Query query = new Query(Criteria.where("mid").is(dataId));

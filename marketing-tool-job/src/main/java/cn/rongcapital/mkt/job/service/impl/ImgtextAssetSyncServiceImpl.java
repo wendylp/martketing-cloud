@@ -85,12 +85,10 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     					imgTextAssetList.setPubId(wechatRegister.getWxAcct());
     					imgTextAssetList.setPubName(wechatRegister.getName());
     					imgTextAssetList.setThumbReady((byte)0);
-    					
     					/**
     					 * 插入、更新数据
     					 */
-    					imgTextAssetDao.insertWithDate(imgTextAssetList);
-
+						imgTextAssetDao.insertWithDate(imgTextAssetList);
     				}
     			} else {
     				logger.debug("查不到图文信息, AuthorizerAppid = {}, AuthorizerRefreshToken = {}",
@@ -98,7 +96,7 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     			}
     		}
 		}
-    }
+    }   
     
     public void callH5PlusMethod(Integer taskId) {
     	

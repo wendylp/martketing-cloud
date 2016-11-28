@@ -39,6 +39,37 @@
 		</where>
 	</sql>
 	
+	<!-- 模糊条件 -->
+	<sql id="QUERY_WHERE_FUZZY">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="contactId != null"><![CDATA[ AND contact_id = #{contactId}]]></if>
+		    	<if test="contactName != null">
+		    	<bind name="fuzzy" value="'%' + _parameter.contactName + '%'" />
+		    	<![CDATA[ AND contact_name like #{fuzzy}]]></if>
+		    	<if test="contactTitle != null"><![CDATA[ AND contact_title = #{contactTitle}]]></if>
+		    	<if test="contactDescript != null"><![CDATA[ AND contact_descript = #{contactDescript}]]></if>
+		    	<if test="fieldName != null"><![CDATA[ AND field_name = #{fieldName}]]></if>
+		    	<if test="fieldCode != null"><![CDATA[ AND field_code = #{fieldCode}]]></if>
+		    	<if test="fieldType != null"><![CDATA[ AND field_type = #{fieldType}]]></if>
+		    	<if test="selected != null"><![CDATA[ AND selected = #{selected}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="qrcodeUrl != null"><![CDATA[ AND qrcode_url = #{qrcodeUrl}]]></if>
+		    	<if test="qrcodeShorturl != null"><![CDATA[ AND qrcode_shorturl = #{qrcodeShorturl}]]></if>
+		    	<if test="qrcodePic != null"><![CDATA[ AND qrcode_pic = #{qrcodePic}]]></if>
+		    	<if test="pageViews != null"><![CDATA[ AND page_views = #{pageViews}]]></if>
+		    	<if test="keyList != null"><![CDATA[ AND key_list = #{keyList}]]></if>
+		    	<if test="required != null"><![CDATA[ AND required = #{required}]]></if>
+		    	<if test="ischecked != null"><![CDATA[ AND ischecked = #{ischecked}]]></if>
+		    	<if test="isRememberImportKey != null"><![CDATA[ AND is_remember_import_key = #{isRememberImportKey}]]></if>
+		    	<if test="fieldIndex != null"><![CDATA[ AND field_index = #{fieldIndex}]]></if>
+		    	<if test="isShownInFeedback != null"><![CDATA[ AND is_shown_in_feedback = #{isShownInFeedback}]]></if>
+		    	<if test="delStatus != null"><![CDATA[ AND del_status = #{delStatus}]]></if>
+		</where>
+	</sql>
+	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
 		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
@@ -145,7 +176,7 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
-		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_WHERE_FUZZY"/>
 		<![CDATA[ GROUP BY contact_id]]>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
@@ -198,7 +229,7 @@
 	<select id="selectRealContactTemplateListCount" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="java.lang.Integer">
 		<![CDATA[SELECT count(distinct contact_id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
-		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_WHERE_FUZZY"/>
 	</select>
 
 	<update id="updateKeyListById" parameterType="cn.rongcapital.mkt.po.ContactTemplate">

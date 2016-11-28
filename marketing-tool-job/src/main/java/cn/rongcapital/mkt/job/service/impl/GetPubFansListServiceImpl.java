@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.rongcapital.mkt.biz.WechatMemberBiz;
@@ -79,15 +80,144 @@ public class GetPubFansListServiceImpl implements TaskService {
 
 	@Override
 	public void task(Integer taskId) {
-
 		// 获取授权的微信公众号的appid
 		List<WebchatAuthInfo> selectListByIdList = webchatAuthInfoDao.selectList(new WebchatAuthInfo());
 		if (!CollectionUtils.isEmpty(selectListByIdList)) {
-			this.synFansInfoMethod(selectListByIdList);
+			this.synFansInfoMethodNew(selectListByIdList);
 		}
-
 	}
 
+	private void synFansInfoMethodNew(List<WebchatAuthInfo> list) {
+		for (WebchatAuthInfo info : list) {
+			if(null == info){
+				continue;
+			}
+			/**
+			 * 获取公众号
+			 */
+			String pubId = "";
+			List<WechatMember> wechatMemberList = wechatMemberBiz.getUserList(info.getAuthorizerAppid(),
+					info.getAuthorizerRefreshToken());
+			
+			if(!CollectionUtils.isEmpty(wechatMemberList)){
+				WechatMember wechatMember = wechatMemberList.get(0);
+				if(wechatMember!=null){
+					pubId = wechatMember.getPubId();
+				}
+			}
+			/**
+			 * 注入粉丝的打标签状态
+			 */
+			wechatMemberList = setWechatMemberListSelected(pubId,wechatMemberList);
+			/**
+			 * 注入粉丝的扩展属性
+			 */
+			wechatMemberList = setWechatMembersProperties(wechatMemberList);
+			/**
+			 * 添加或者更新粉丝属性,对于数据库操作来说更新操作就是先删除,后插入,对于本地 还有添加操作 所以我们这里直接执行先删除后插入(节约判断是插入还是更新的操作)
+			 */
+			saveOrUpdateWechatMembers(pubId,wechatMemberList);
+			/**
+			 * 更新分组下粉丝数量
+			 */
+			if(StringUtils.isNotEmpty(pubId)){
+				this.updateUngroupedCountNew(pubId);
+			}			
+		}
+	}
+	
+	/**
+	 * 更新分组粉丝数据
+	 * @param count
+	 * @param pubId
+	 */
+	private void updateUngroupedCountNew(String pubId){
+		// Todo:获取wechat_wegister表中的状态是0的公众号信息
+		WechatMember member = new WechatMember();
+		member.setWxGroupId(ApiConstant.WECHAT_GROUP);
+		member.setPubId(pubId);
+		int count = wechatMemberDao.selectListCount(member);
+		WechatGroup wechatGroup = new WechatGroup();
+		wechatGroup.setCount(count);
+		wechatGroup.setWxAcct(pubId);
+		wechatGroup.setGroupId(ApiConstant.WECHAT_GROUP);
+		
+		wechatGroupDao.updateInfoByGroupWxCode(wechatGroup);	
+		
+		
+	}
+	
+	/**
+	 * 添加或者更新粉丝
+	 * @param pubId
+	 * @param wechatMembers
+	 * @return
+	 */
+	private Integer saveOrUpdateWechatMembers(String pubId,List<WechatMember> wechatMembers){
+		Integer count =0;
+		if(!CollectionUtils.isEmpty(wechatMembers)){
+			count = wechatMembers.size();
+			int fromIndex = 0;
+            int size = ApiConstant.WEIXIN_BATCH_INSERT_USER_INFO_SIZE;/** 微信定义的接口size是10000，所以我们这里也定义的10000,微信获取粉丝信息接口调用每天500次，10000*500=500W粉丝 */
+            while (fromIndex < wechatMembers.size()) {
+                if ((wechatMembers.size() - fromIndex) < ApiConstant.WEIXIN_BATCH_INSERT_USER_INFO_SIZE) {
+                    size = wechatMembers.size();
+                }
+                List<WechatMember> fansListTemps = wechatMembers.subList(fromIndex, size);
+                fromIndex = fromIndex + ApiConstant.WEIXIN_BATCH_INSERT_USER_INFO_SIZE;;
+                size= fromIndex+ApiConstant.WEIXIN_BATCH_INSERT_USER_INFO_SIZE;                
+                logger.info("now page number add list size: " + fansListTemps.size());
+				try {
+					if(StringUtils.isNotEmpty(pubId)&&!CollectionUtils.isEmpty(fansListTemps)){
+						Map<String, Object> paramMap = new HashMap<String, Object>();
+						paramMap.put("pubId", pubId);
+						paramMap.put("wechatMembers", fansListTemps);
+						wechatMemberDao.deleteWechatMembersByIdsAndPubId(paramMap);
+						wechatMemberDao.batchInsert(fansListTemps);
+					}
+				} catch (Exception e) {
+					continue;
+				}				
+            } 
+		}
+		return count;		
+	}
+	
+	
+	/**
+	 * 注入粉丝集合扩展属性
+	 * @param wechatMemberList
+	 * @return
+	 */
+	private List<WechatMember> setWechatMembersProperties(List<WechatMember> wechatMemberList){
+		if(!CollectionUtils.isEmpty(wechatMemberList)){
+			for(WechatMember wechatMember : wechatMemberList){
+				wechatMember = setWechatMemberProperties(wechatMember);
+			}
+		}		
+		return wechatMemberList;		
+	}
+	
+	/**
+	 * 注入粉丝扩展属性
+	 * @param wechatMember
+	 * @return
+	 */
+	private WechatMember setWechatMemberProperties(WechatMember wechatMember){
+		if(wechatMember!=null){
+			if (wechatMember.getSex()!=null&&wechatMember.getSex() == 0) {
+				wechatMember.setSex(3);
+			}
+			String wxGroupId = wechatMember.getWxGroupId();
+			wxGroupId = wxGroupId == null || "".equals(wxGroupId) ? ApiConstant.WECHAT_GROUP : wxGroupId;
+			wechatMember.setWxGroupId(wxGroupId);
+			wechatMember.setSubscribeYn("Y");
+			wechatMember.setActivity48hYn("N");
+			wechatMember.setBitmap(bitmap);
+		}
+		return wechatMember;		
+	}
+	
 	/**
 	 * @功能简述 同步微信粉丝信息
 	 * 
@@ -104,7 +234,16 @@ public class GetPubFansListServiceImpl implements TaskService {
 			}
 			List<WechatMember> wechatMemberList = wechatMemberBiz.getUserList(info.getAuthorizerAppid(),
 					info.getAuthorizerRefreshToken());
-			wechatMemberList = setWechatMemberListSelected(wechatMemberList);
+			
+			String pubId = "";
+			if(!CollectionUtils.isEmpty(wechatMemberList)){
+				WechatMember wechatMember = wechatMemberList.get(0);
+				if(wechatMember!=null){
+					pubId = wechatMember.getPubId();
+				}
+			}
+
+			wechatMemberList = setWechatMemberListSelected(pubId,wechatMemberList);
 			List<Map<String, Object>> fansList = new ArrayList<Map<String, Object>>();
 			
 			if (!CollectionUtils.isEmpty(wechatMemberList)) {
@@ -128,7 +267,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 					} else {
 						paramFan.put("nickname", null);
 					}
-					if (wechatMember.getSex() == 0) {
+					if (wechatMember.getSex()!=null&&wechatMember.getSex() == 0) {
 						paramFan.put("sex", 3);
 					} else {
 						paramFan.put("sex", wechatMember.getSex());
@@ -154,6 +293,12 @@ public class GetPubFansListServiceImpl implements TaskService {
 						}
 					} else {
 						paramFan.put("country", wechatMember.getCountry());
+						paramFan.put("province", wechatMember.getProvince());
+						if (ApiConstant.PROVINCE_CHINA_CAPITAL.equals(paramFan.get("province"))) {
+							paramFan.put("city", ApiConstant.CITY_CHINA_CAPITAL);
+						} else {
+							paramFan.put("city", wechatMember.getCity());
+						}
 					}
 					String wxGroupId = wechatMember.getWxGroupId();
 					wxGroupId = wxGroupId == null || "".equals(wxGroupId) ? ApiConstant.WECHAT_GROUP : wxGroupId;
@@ -174,16 +319,39 @@ public class GetPubFansListServiceImpl implements TaskService {
 				}
 			}
 			if (fansList != null && fansList.size() > 0) {
-				logger.info("now page number add list size: " + fansList.size());
+				
+				int fromIndex = 0;
+                int size = ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;/** 微信定义的接口size是10000，所以我们这里也定义的10000,微信获取粉丝信息接口调用每天500次，10000*500=500W粉丝 */
+                while (fromIndex < fansList.size()) {
+                    if ((fansList.size() - fromIndex) < ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE) {
+                        size = fansList.size();
+                    }
+                    List<Map<String, Object>> fansListTemps = fansList.subList(fromIndex, size);
+                    fromIndex = fromIndex + ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;;
+                    size= fromIndex+ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;
+                    
+                    logger.info("now page number add list size: " + fansList.size());
+    				WXFansListVO wxFansListVO = new WXFansListVO();
+    				wxFansListVO.setFansList(fansListTemps);
+    				Map<String, Object> mapTemp = fansListTemps.get(0);
+    				wxFansListVO.setPubId(String.valueOf(mapTemp.get("pub_id")));				
+    				try {
+						wechatMemberDao.deleteFansByVO(wxFansListVO);
+						wechatMemberDao.batchInsertFans(fansListTemps);
+					} catch (Exception e) {
+						logger.info("更新粉丝失败："+JSONObject.toJSONString(fansListTemps));				
+						continue;
+					}
+                }    
+				/*logger.info("now page number add list size: " + fansList.size());
 				WXFansListVO wxFansListVO = new WXFansListVO();
 				wxFansListVO.setFansList(fansList);
 				Map<String, Object> mapTemp = fansList.get(0);
 				wxFansListVO.setPubId(String.valueOf(mapTemp.get("pub_id")));				
 				wechatMemberDao.deleteFansByVO(wxFansListVO);
-				wechatMemberDao.batchInsertFans(fansList);
+				wechatMemberDao.batchInsertFans(fansList);*/
 				fansList.clear();
-			}
-			
+			}			
 			this.updateUngroupedCount();			
 		}
 	}
@@ -399,14 +567,15 @@ public class GetPubFansListServiceImpl implements TaskService {
 	 * 如果粉丝信息有变化的时候设置Selected：0，表示 同步该粉丝的job该执行该方法了(粉丝必须是同一公众号下面的)
 	 * @return
 	 */
-	private List<WechatMember> setWechatMemberListSelected(List<WechatMember> wechatMemberList){
+	private List<WechatMember> setWechatMemberListSelected(String pubId,List<WechatMember> wechatMemberList){
+		List<WechatMember> wechatMemberListBack = new ArrayList<WechatMember>();
 		if(!CollectionUtils.isEmpty(wechatMemberList)){
-			WechatMember wechatMember0 = wechatMemberList.get(0);
-			String pubId = wechatMember0.getPubId();
 			Map<String,WechatMember> mapWechatMember = new HashMap<String,WechatMember>();
 			WechatMember wechatMemberTemp = new WechatMember();
 			wechatMemberTemp.setPubId(pubId);
 			wechatMemberTemp.setSubscribeYn("Y");
+			wechatMemberTemp.setPageSize(null);
+			wechatMemberTemp.setStartIndex(null);
 			List<WechatMember> wechatMemberListTemp = wechatMemeberDao.selectList(wechatMemberTemp);
 			if(!CollectionUtils.isEmpty(wechatMemberListTemp)){
 				for(Iterator<WechatMember> iter =wechatMemberListTemp.iterator();iter.hasNext();){
@@ -423,24 +592,28 @@ public class GetPubFansListServiceImpl implements TaskService {
 						if(StringUtils.isNotEmpty(fansJson)){
 							if(!fansJson.equals(wechatMember.getFansJson())){
 								wechatMember.setSelected(NumUtil.int2OneByte(0));
+								wechatMemberListBack.add(wechatMember);
 							}else{
 								wechatMember.setSelected(wechatMemberCS.getSelected());
 							}
 						}else{
 						    wechatMember.setSelected(NumUtil.int2OneByte(0));
+						    wechatMemberListBack.add(wechatMember);
 						}
 					}else{
 						wechatMember.setSelected(NumUtil.int2OneByte(0));
-					}
+						wechatMemberListBack.add(wechatMember);
+					}					
 				}
 			}else{
 				for(Iterator<WechatMember> iter =wechatMemberList.iterator();iter.hasNext();){
 					WechatMember wechatMember = iter.next();
-					wechatMember.setSelected(NumUtil.int2OneByte(0));					
+					wechatMember.setSelected(NumUtil.int2OneByte(0));
+					wechatMemberListBack.add(wechatMember);
 				}
 			}
 		}
-		return wechatMemberList;		
+		return wechatMemberListBack;		
 	}
 	
 }

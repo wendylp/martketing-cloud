@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -82,18 +83,23 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 				materialCount = 20;
 			}
 			String materialListStr= WxComponentServerApi.getBaseWxSdk().getMaterialList(app,type,offset,materialCount);
-			/**
-			 * 记入接口日志到数据库
-			 */
-			WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("ImgTextAssetBizImpl","getMaterialList",materialListStr,new Date());
-			wechatInterfaceLogService.insert(wechatInterfaceLog);
-			/**
-			 * 组装图文资产
-			 */
-			imgTextAssetes.addAll(this.getImgTextAssetes(materialListStr));
+			if(StringUtils.isNotEmpty(materialListStr)){
+				/**
+				 * 去掉特殊字符 例如表情符等等
+				 */
+				materialListStr = super.replaceAllUTF8mb4(materialListStr);
+				/**
+				 * 记入接口日志到数据库
+				 */
+				WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("ImgTextAssetBizImpl","getMaterialList",materialListStr,new Date());				
+				wechatInterfaceLogService.insert(wechatInterfaceLog);
+				/**
+				 * 组装图文资产
+				 */
+				imgTextAssetes.addAll(this.getImgTextAssetes(materialListStr));
+			}
 			offset += materialCount;
-		}
-		
+		}		
 		return imgTextAssetes;
 	}
 	

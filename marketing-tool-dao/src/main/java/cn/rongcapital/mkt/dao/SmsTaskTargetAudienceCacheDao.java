@@ -12,10 +12,13 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface SmsTaskTargetAudienceCacheDao extends BaseDao<SmsTaskTargetAudienceCache>{
-	
-	//自定义扩展
+
+    //自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
 	 * 查询对象list;
@@ -34,4 +37,6 @@ public interface SmsTaskTargetAudienceCacheDao extends BaseDao<SmsTaskTargetAudi
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	void batchInsert(@Param("list") List<SmsTaskTargetAudienceCache> smsTaskTargetAudienceCaches);
 }

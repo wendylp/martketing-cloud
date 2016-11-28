@@ -31,7 +31,7 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
 	@Autowired
 	private DataMemberDao dataMemberDao;
 	
-	private ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+	private ExecutorService executor = null;
 
 	@Override
 	public int queryTotalCount() {
@@ -43,6 +43,8 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
 	@Override
 	public void querySyncData(Integer totalSize, Integer pageSize) {
 
+		executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+		
 		List<DataMember> dataMemberLists = new ArrayList<DataMember>();
 		
 		DataMember dataMember = new DataMember();

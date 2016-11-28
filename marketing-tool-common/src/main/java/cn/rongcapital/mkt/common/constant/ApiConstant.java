@@ -300,6 +300,8 @@ public class ApiConstant {
 	
 	public static final int WEIXIN_BATCH_GET_USER_INFO_SIZE=100;
 	
+	public static final int WEIXIN_BATCH_INSERT_USER_INFO_SIZE=100;
+	
 	
 	/**
 	 * 登录冲突
@@ -321,5 +323,36 @@ public class ApiConstant {
      * redis信息错误
      */
     public static final int USER_TOKEN_REDIS_INFO_ERR =3005;
-	
+    
+    /**
+     * redis性别标签获取主数据id key
+     */
+    public static final String GENDER_TAG_KEY_MALE = "tagcoverid:LBej3qLy_0";
+    public static final String GENDER_TAG_KEY_FEMALE = "tagcoverid:LBej3qLy_1";
+    
+    /**
+     * 用户所在区域类型
+     */
+    public static final String DATA_PARTY_LOCATION_TYPE = "1";
+    /**
+     * 用户活动区域类型
+     */
+    public static final String DATA_PARTY_ACTIVE_TYPE = "2";
+    
+    /**
+     * 用户所在区域tag_id
+     */
+    public static final String DATA_PARTY_LOCATION_TAG_ID = "8HARIs7F";
+    
+    /**
+     * 用户活动区域tag_id
+     */
+    public static final String DATA_PARTY_ACTIVE_TAG_ID = "4HAcjGd5";
+    
+    
+    /**
+     * 省份字典表名
+     */
+    public static final String PROVINCE_DIC_TABLE_NAME = "province_dic";
+    
 }

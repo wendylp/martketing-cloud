@@ -1,9 +1,11 @@
 package cn.rongcapital.mkt.job.service.impl;
 
 import cn.rongcapital.mkt.dao.DataPopulationDao;
+import cn.rongcapital.mkt.dao.ProvinceDicDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.DataPopulation;
+import cn.rongcapital.mkt.po.ProvinceDic;
 import cn.rongcapital.mkt.po.WechatMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yunfeng on 2016-8-9.
@@ -31,6 +36,11 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
     private WechatMemberDao wechatMemberDao;
     @Autowired
     private DataPopulationDao dataPopulationDao;
+    
+    @Autowired
+    private ProvinceDicDao provinceDicDao;
+    
+    private Map<String, ProvinceDic> provinceDicMap;
 
     //1选出没有被同步过的数据，根据selected为0的字段
     //2将数据同步到dataParty表中。
@@ -41,6 +51,7 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
     public void task(Integer taskId) {
         Integer totalCount = wechatMemberDao.selectedNotSyncCount();
         if(totalCount != null){
+        	provinceDicMap = getProvinceDicMap();
             for(int pageNum = 1; pageNum <= (totalCount + BATCH_SIZE -1) / BATCH_SIZE; pageNum ++ ){
                 syncWechatMemberByBatchSize();
             }
@@ -84,6 +95,7 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
                 dataPopulation.setSource(WECHAT_PUBFANS_SOURCE);
 //                dataPopulation.setSubscribeTime(DateUtil.getDateFromString(wechatMember.getSubscribeTime()));
                 dataPopulation.setRemark(wechatMember.getRemark());
+                dataPopulation = cleanProvinceDic(dataPopulation);
                 dataPopulationDao.insert(dataPopulation);
                 wechatMember.setKeyid(dataPopulation.getId());
                 updateKeyIdInWechatMember(wechatMember);
@@ -128,5 +140,38 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
 
     private void updateSyncWechatMemeberListStatus(List<Long> notSyncWechatMemberList) {
         wechatMemberDao.updateSyncDataMark(notSyncWechatMemberList);
+    }
+    
+    private Map<String, ProvinceDic> getProvinceDicMap(){
+    	provinceDicMap = new HashMap<String, ProvinceDic>();
+    	ProvinceDic provinceDicTemp = new ProvinceDic();
+    	provinceDicTemp.setPageSize(null);
+    	provinceDicTemp.setStartIndex(null);
+    	List<ProvinceDic> provinceDics = provinceDicDao.selectList(provinceDicTemp);
+    	if(!CollectionUtils.isEmpty(provinceDics)){
+    		for(Iterator<ProvinceDic> iter = provinceDics.iterator();iter.hasNext();){
+    			ProvinceDic provinceDic = iter.next();
+    			if(!provinceDicMap.containsKey(provinceDic.getProvinceNamee())){
+    				provinceDicMap.put(provinceDic.getProvinceNamee(), provinceDic);
+    			}    			
+    		}
+    	}
+		return provinceDicMap;
+    }
+    
+    private DataPopulation cleanProvinceDic(DataPopulation paramDataPopulation){
+    	if(provinceDicMap!=null&&provinceDicMap.size()>0){
+    		if(paramDataPopulation!=null){
+    			String provice = paramDataPopulation.getProvice();
+    			if(provinceDicMap.containsKey(provice)){
+    				ProvinceDic provinceDic = provinceDicMap.get(provice);
+    				if(provinceDic!=null){
+    					String provinceNamec = provinceDic.getProvinceNamec();
+    					paramDataPopulation.setProvice(provinceNamec);
+    				}
+    			}
+    		}
+    	}
+		return paramDataPopulation;   	
     }
 }
