@@ -69,7 +69,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
             logger.info(e.getMessage());
         }
 	    
-        if(false){	       	
+        if(redisUserTokenVO.getCode()!=0){	       	
 //            requestContext.abortWith(Response.status(redisUserTokenVO.getCode()).entity(getBaseOutputBack(redisUserTokenVO)).build());       	
         	ResponseBuilderImpl builder = new ResponseBuilderImpl();
             builder.header("Content-Type", "application/json; charset=utf-8");
@@ -154,18 +154,27 @@ public class ApiRequestRouter implements ContainerRequestFilter {
         List<String> user_id_pList = multivaluedMap.get(ApiConstant.API_USER_ID);
         String user_id = user_id_pList==null?null:user_id_pList.get(0);
         String userKey ="user:"+user_id;
+        logger.info("判断user_token是否为空：{}", user_token);
         if(StringUtils.isBlank(user_token)){
+            
             backStr="&"+ApiConstant.API_USER_TOKEN+"="+ApiConstant.API_USER_TOKEN_VALUE;
             redisUserTokenVO.setCode(0);
             redisUserTokenVO.setMsg(backStr);            
         }else{
+            logger.info("判断user_id是否为空：{}", user_id);
             if(StringUtils.isBlank(user_id)){
+                
                 redisUserTokenVO.setCode(ApiConstant.USER_TOKEN_PARAMS_MISSING);
                 backStr="登录验证缺少参数！";
                 redisUserTokenVO.setMsg(backStr);
             }else{
+                
+                
                 Map<String, String> user_token_map = JedisClient.getuser(userKey);
+                logger.info("根据userKey获取user_token_map,userKey={},user_token_map={}", userKey, userKey);
                 String userValue = user_token_map.get("token");
+                logger.info("userValue={}",userValue);
+                logger.info("判断user_id是否为空：{}", user_id);
                 if(!user_token.equals(userValue)){
                     redisUserTokenVO.setCode(ApiConstant.USER_TOKEN_LOGIN_CONFLICT);
                     logger.info("user_token:"+user_token+";user_token1:"+userValue);
@@ -174,6 +183,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
                 }else{
                     redisUserTokenVO.setCode(0);
                     int seconds = 36000;
+                    logger.info("设置userKey的过期时间, userKey={}", userKey);
                     JedisClient.expireUser(userKey, seconds);
                 }
             }           
