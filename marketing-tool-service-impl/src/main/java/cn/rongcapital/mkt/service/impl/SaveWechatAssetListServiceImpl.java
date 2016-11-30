@@ -77,11 +77,13 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
         //Todo:5.将dataparty_id和audience_id存入audience_data_mapping表中
         List<Map<String,Object>> paramInsertLists = new ArrayList<Map<String,Object>>();
         for(Integer populationKeyid : populationKeyidList){
-            paramMap = new HashMap<String,Object>();
-            paramMap.put("audience_list_id",id);
-            paramMap.put("party_id",populationKeyid);
-            paramMap.put("create_time",new Date(System.currentTimeMillis()));
-            paramInsertLists.add(paramMap);
+        	if(populationKeyid!=null){
+                paramMap = new HashMap<String,Object>();
+                paramMap.put("audience_list_id",id);
+                paramMap.put("party_id",populationKeyid);
+                paramMap.put("create_time",new Date(System.currentTimeMillis()));
+                paramInsertLists.add(paramMap);
+        	}
         }
         int effectRows = 0;
         if(paramInsertLists != null && paramInsertLists.size() > 0){

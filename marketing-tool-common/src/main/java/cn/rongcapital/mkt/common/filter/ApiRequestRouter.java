@@ -155,20 +155,23 @@ public class ApiRequestRouter implements ContainerRequestFilter {
         String user_id = user_id_pList==null?null:user_id_pList.get(0);
         String userKey ="user:"+user_id;
         if(StringUtils.isBlank(user_token)){
+            
             backStr="&"+ApiConstant.API_USER_TOKEN+"="+ApiConstant.API_USER_TOKEN_VALUE;
             redisUserTokenVO.setCode(0);
             redisUserTokenVO.setMsg(backStr);            
         }else{
             if(StringUtils.isBlank(user_id)){
+                
                 redisUserTokenVO.setCode(ApiConstant.USER_TOKEN_PARAMS_MISSING);
                 backStr="登录验证缺少参数！";
                 redisUserTokenVO.setMsg(backStr);
             }else{
+                
+                
                 Map<String, String> user_token_map = JedisClient.getuser(userKey);
                 String userValue = user_token_map.get("token");
                 if(!user_token.equals(userValue)){
                     redisUserTokenVO.setCode(ApiConstant.USER_TOKEN_LOGIN_CONFLICT);
-                    logger.info("user_token:"+user_token+";user_token1:"+userValue);
                     backStr="登录冲突，请重新登录！";
                     redisUserTokenVO.setMsg(backStr);
                 }else{
