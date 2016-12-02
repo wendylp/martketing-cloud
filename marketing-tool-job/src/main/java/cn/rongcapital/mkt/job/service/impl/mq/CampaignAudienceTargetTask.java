@@ -141,7 +141,11 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			for (CampaignSwitch cs : campaignEndsList) {
 				// 发送segment数据到后面的节点
 				//sendDynamicQueue(segmentListUniqueId, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
-				sendDynamicQueueByString(segmentListUnique, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
+			    List<List<Segment>> listSplit = ListSplit.getListSplit(segmentListUnique, 10);
+			    for(List<Segment> segList : listSplit){
+			        sendDynamicQueueByString(segList, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
+			    }
+				
 				// 逻辑删除传递走的数据
 				logicDeleteNodeAudience(campaignHeadId, itemId, segmentListUnique);
 				logger.info(queueKey + "-out:" + JSON.toJSONString(segmentListUnique));
