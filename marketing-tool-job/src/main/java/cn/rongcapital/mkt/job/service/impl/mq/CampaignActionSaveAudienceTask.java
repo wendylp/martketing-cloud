@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
@@ -70,11 +71,19 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 					try {
 						//获取segment list数据对象
 					    logger.info("监听到消息 ================================== {}", message.toString());
-						List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
+					    //原始的处理方法
+						/*List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
 						if(CollectionUtils.isNotEmpty(segmentList)) {
 							processMqMessage(segmentList,campaignHeadId,
 											 itemId,campaignEndsList,campaignActionSaveAudience);
-						}
+						}*/
+					    TextMessage tm = (TextMessage) message;
+					    String messageJson = tm.getText();
+					    List<Segment> segmentList = JSONArray.parseArray(messageJson, Segment.class);
+					    if(CollectionUtils.isNotEmpty(segmentList)) {
+                            processMqMessage(segmentList,campaignHeadId,
+                                             itemId,campaignEndsList,campaignActionSaveAudience);
+                        }
 					} catch (Exception e) {
 						logger.error(e.getMessage(),e);
 					}
