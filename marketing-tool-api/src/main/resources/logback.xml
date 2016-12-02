@@ -115,8 +115,8 @@
       <OnMismatch>ACCEPT</OnMismatch>
     </filter>
   </appender>
-  <!-- 配置打印sql -->
-    <logger name="cn.rongcapital.mkt.dao" level="TRACE" additivity="true">
+  <!-- 配置打印sql 打印结果：设置级别为TRACE-->
+    <logger name="cn.rongcapital.mkt.dao" level="DEBUG" additivity="true">
         <!-- 打印sql日志到sql日志文件 -->
         <appender-ref ref="SQLFILE" />
         <!-- 打印sql日志到Console -->
