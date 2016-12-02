@@ -23,6 +23,7 @@ import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignSwitch;
@@ -41,6 +42,9 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 
 	@Autowired
 	private DataPartyDao dataPartyDao;
+	
+	@Autowired
+	private TaskScheduleDao taskScheduleDao;
 
 	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverid:";
 
@@ -148,7 +152,16 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			        sendDynamicQueueByString(segList, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
 			    }
 			    //再次激活一下mq监听
-			    campaignActionSaveAudienceTask.task(taskSchedule);
+			    TaskSchedule schedule = new TaskSchedule();
+			    schedule.setServiceName("campaignActionSaveAudienceTask");
+			    schedule.setCampaignHeadId(taskSchedule.getCampaignHeadId());
+			    List<TaskSchedule> scheduleList = taskScheduleDao.selectList(schedule);
+			    if(scheduleList != null && scheduleList.size()>0) {
+			        logger.info("再次激活一下mq监听 ItemId is {}", scheduleList.get(0).getCampaignItemId());
+			        campaignActionSaveAudienceTask.task(scheduleList.get(0));
+			    }
+			   
+			   
 				// 逻辑删除传递走的数据
 				logicDeleteNodeAudience(campaignHeadId, itemId, segmentListUnique);
 				logger.info(queueKey + "-out:" + JSON.toJSONString(segmentListUnique));
