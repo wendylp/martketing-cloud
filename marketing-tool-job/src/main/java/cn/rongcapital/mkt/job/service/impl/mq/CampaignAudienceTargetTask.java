@@ -72,7 +72,6 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
 
 			List<Future<List<Segment>>> resultList = new ArrayList<Future<List<Segment>>>();
-
 			try {
 				Set<String> smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(), 2);
 				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(),
@@ -141,7 +140,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			for (CampaignSwitch cs : campaignEndsList) {
 				// 发送segment数据到后面的节点
 				//sendDynamicQueue(segmentListUniqueId, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
-			    List<List<Segment>> listSplit = ListSplit.getListSplit(segmentListUnique, 10);
+			    List<List<Segment>> listSplit = ListSplit.getListSplit(segmentListUnique, 5);
 			    for(List<Segment> segList : listSplit){
 			        sendDynamicQueueByString(segList, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
 			    }
