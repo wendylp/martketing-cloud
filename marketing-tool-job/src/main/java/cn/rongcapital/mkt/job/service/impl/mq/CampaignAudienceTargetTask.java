@@ -35,6 +35,9 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 
 	@Autowired
 	private CampaignAudienceTargetDao campaignAudienceTargetDao;
+	
+	@Autowired
+	private CampaignActionSaveAudienceTask campaignActionSaveAudienceTask;
 
 	@Autowired
 	private DataPartyDao dataPartyDao;
@@ -145,8 +148,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			        sendDynamicQueueByString(segList, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
 			    }
 			    //再次激活一下mq监听
-			    CampaignActionSaveAudienceTask task = new CampaignActionSaveAudienceTask();
-			    task.task(taskSchedule);
+			    campaignActionSaveAudienceTask.task(taskSchedule);
 				// 逻辑删除传递走的数据
 				logicDeleteNodeAudience(campaignHeadId, itemId, segmentListUnique);
 				logger.info(queueKey + "-out:" + JSON.toJSONString(segmentListUnique));
