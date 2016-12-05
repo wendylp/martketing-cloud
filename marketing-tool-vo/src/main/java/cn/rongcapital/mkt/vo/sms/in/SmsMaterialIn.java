@@ -2,8 +2,13 @@ package cn.rongcapital.mkt.vo.sms.in;
 
 import javax.validation.constraints.NotNull;
 
+import cn.rongcapital.mkt.vo.in.SmsMaterialComponentIn;
+import cn.rongcapital.mkt.vo.in.SmsMaterialVariableIn;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class SmsMaterialIn {
@@ -25,6 +30,10 @@ public class SmsMaterialIn {
     private String creator;
 
     private String updateUser;
+
+	private List<SmsMaterialComponentIn> smsMaterialComponentInList;
+
+	private List<SmsMaterialVariableIn> smsMaterialVariableInList;
     
 	public Integer getId() {
 		return id;
@@ -97,7 +106,22 @@ public class SmsMaterialIn {
 	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
 	}
-	
-    
-    
+
+	@JsonProperty("component_list")
+	public List<SmsMaterialComponentIn> getSmsMaterialComponentInList() {
+		return smsMaterialComponentInList;
+	}
+
+	public void setSmsMaterialComponentInList(List<SmsMaterialComponentIn> smsMaterialComponentInList) {
+		this.smsMaterialComponentInList = smsMaterialComponentInList;
+	}
+
+	@JsonProperty("variable_list")
+	public List<SmsMaterialVariableIn> getSmsMaterialVariableInList() {
+		return smsMaterialVariableInList;
+	}
+
+	public void setSmsMaterialVariableInList(List<SmsMaterialVariableIn> smsMaterialVariableInList) {
+		this.smsMaterialVariableInList = smsMaterialVariableInList;
+	}
 }
