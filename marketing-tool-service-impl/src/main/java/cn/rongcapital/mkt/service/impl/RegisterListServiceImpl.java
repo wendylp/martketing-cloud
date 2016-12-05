@@ -41,7 +41,7 @@ public class RegisterListServiceImpl implements RegisterListService {
 		
 		WechatRegister param = new WechatRegister();
 		param.setType(2);
-		
+		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		List<WechatRegister> reList = wechatRegisterDao.selectList(param);
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,11 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  */
 @Service
 public class WeixinQrcodeMatchGetServiceImpl implements WeixinQrcodeMatchGetService {
+    
+    private static final Byte QRCODE_NOT_USE = 0;
+    private static final Byte QRCODE_USE = 1;
+    private static final Byte QRCODE_DEL = 2;
+    private static final Byte QRCODE_INVALID = 3;
 
 	@Autowired
 	private WechatQrcodeDao wechatQrcodeDao;
@@ -47,18 +53,25 @@ public class WeixinQrcodeMatchGetServiceImpl implements WeixinQrcodeMatchGetServ
 		List<WechatQrcode> wechatQrcodeLists = wechatQrcodeDao.selectList(wechatQrcode);
 
 		Map<String, Object> map = new HashMap<String, Object>();
-
-		if (wechatQrcodeLists == null || wechatQrcodeLists.isEmpty()) {
-			map.put("is_match", 0);
-			map.put("id", "");
-		} else {
-			map.put("is_match", 1);
-			map.put("id", wechatQrcodeLists.get(0).getId());
+		
+        map.put("is_match", 0);
+        map.put("id", "");
+        
+		if (CollectionUtils.isNotEmpty(wechatQrcodeLists)) {
+		    // 如果二维码为删除状态和未使用状态，则认为该二维码名不存在
+		    for(int i = 0; i < wechatQrcodeLists.size(); i++) {
+    		    Byte status = wechatQrcodeLists.get(i).getStatus();
+    		    if(QRCODE_USE.equals(status) || QRCODE_INVALID.equals(status)) {
+    		        map.put("is_match", 1);
+    	            map.put("id", wechatQrcodeLists.get(i).getId());
+    		    }
+		    }
 		}
 
 		result.getData().add(map);
 
 		return result;
 	}
+	
 
 }

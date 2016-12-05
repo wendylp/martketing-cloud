@@ -27,19 +27,19 @@ import com.qq.weixin.mp.aes.AesException;
 import com.qq.weixin.mp.aes.WXBizMsgCrypt;
 import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
-
-
 import com.tagsin.wechat_sdk.user.UserInfo;
 
 import cn.rongcapital.mkt.biz.ProcessReceiveMessageOfWeiXinBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.Xml2JsonUtil;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
+import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
+import cn.rongcapital.mkt.po.WechatAsset;
 import cn.rongcapital.mkt.po.WechatInterfaceLog;
 import cn.rongcapital.mkt.po.WechatMember;
 import cn.rongcapital.mkt.po.WechatQrcode;
@@ -49,7 +49,6 @@ import cn.rongcapital.mkt.service.QrcodeFocusInsertService;
 import cn.rongcapital.mkt.service.WechatAssetService;
 import cn.rongcapital.mkt.service.WeixinAnalysisQrcodeScanService;
 import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
-import cn.rongcapital.mkt.vo.in.WechatQrcodeScanIn;
 import cn.rongcapital.mkt.vo.weixin.WXMsgVO;
 
 
@@ -82,6 +81,9 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
     
     @Autowired
     private WechatQrcodeDao wechatQrcodeDao;
+    
+    @Autowired
+    private WechatAssetDao wechatAssetDao;
     
 	@Autowired
 	private Environment env;	
@@ -149,6 +151,12 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			eventKey = eventKey.substring(2, eventKey.length()-2);
 		}
 		mapBack.put("eventKey", eventKey);
+		// TODO 微信公众号取消授权 congshulin
+		String infoType = myJsonObject.getString("InfoType");
+		if(StringUtils.isNotEmpty(infoType)){
+			eventKey = eventKey.substring(2, eventKey.length()-2);
+		}
+		mapBack.put("infoType", infoType);
 		
 		return mapBack;		
 	}
@@ -234,6 +242,14 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 	 * 		<Event><![CDATA[subscribe]]></Event> 
 	 * 		<EventKey><![CDATA[]]></EventKey>
 	 * </xml>
+	 * 
+	 * 微信公众号取消授权 congshulin
+	 * <xml>
+	 *		<AppId>第三方平台appid</AppId>
+	 *		<CreateTime>1413192760</CreateTime>
+	 *		<InfoType>unauthorized</InfoType>
+	 *		<AuthorizerAppid>公众号appid</AuthorizerAppid>
+	 * </xml>
 	 *
 	 */
 	@Override
@@ -298,6 +314,26 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 				  }
 				}
 			}
+			// TODO 公众号取消授权 congshulin
+			String infoType = msgMap.get("infoType");
+			if(StringUtils.isNotEmpty(infoType)){
+				logger.info("解密后明文:infoType" + infoType);
+				switch(event){
+				  case "unauthorized":{
+					  if(wechatRegister != null){
+						  String wxAcct = wechatRegister.getWxAcct();
+						  this.updateStatusForWechat(wxAcct, ApiConstant.TABLE_DATA_STATUS_INVALID);
+					  }
+
+					  break; 
+				  }
+				  default :{
+					  break;
+				  }
+				}
+			}
+			
+			
 	}
 	
 	private WechatQrcode getWechatQrcodeScanInForSCAN(String qrCodeTicket,String openid){
@@ -326,5 +362,27 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 	    if(wechatQrcode!=null){
 	        weixinAnalysisQrcodeScanService.instertToWechatQrcodeScan(openid,wechatQrcode);
 	    }	    
+	}
+	
+    /**
+     * @功能简述: 取消微信公众号授权后设置显示公众号及组
+     *      
+     *
+     * @param: wxAcct
+     *          微信公众号id
+     * @param: status 
+     * 			状态
+     * @return:
+     *      
+     */
+	private void updateStatusForWechat(String wxAcct,byte status){
+		WechatRegister wechatRegister = new WechatRegister();
+		wechatRegister.setWxAcct(wxAcct);
+		wechatRegister.setStatus(status);
+		wechatRegisterDao.updateInforByWxAcct(wechatRegister);
+		WechatAsset wechatAsset= new WechatAsset();
+		wechatAsset.setWxAcct(wxAcct);
+		wechatAsset.setStatus(status);
+		wechatAssetDao.updateByWxacct(wechatAsset);	    
 	}
 }

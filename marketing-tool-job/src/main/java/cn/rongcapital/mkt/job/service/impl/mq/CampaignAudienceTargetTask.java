@@ -23,6 +23,7 @@ import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignSwitch;
@@ -35,9 +36,15 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 
 	@Autowired
 	private CampaignAudienceTargetDao campaignAudienceTargetDao;
+	
+	@Autowired
+	private CampaignActionSaveAudienceTask campaignActionSaveAudienceTask;
 
 	@Autowired
 	private DataPartyDao dataPartyDao;
+	
+	@Autowired
+	private TaskScheduleDao taskScheduleDao;
 
 	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverid:";
 
@@ -72,7 +79,6 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
 
 			List<Future<List<Segment>>> resultList = new ArrayList<Future<List<Segment>>>();
-
 			try {
 				Set<String> smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(), 2);
 				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(),
@@ -140,7 +146,23 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			List<CampaignSwitch> campaignEndsList = queryCampaignEndsList(campaignHeadId, itemId);
 			for (CampaignSwitch cs : campaignEndsList) {
 				// 发送segment数据到后面的节点
-				sendDynamicQueue(segmentListUnique, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
+				//sendDynamicQueue(segmentListUniqueId, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
+			    /*List<List<Segment>> listSplit = ListSplit.getListSplit(segmentListUnique, 50);
+			    for(List<Segment> segList : listSplit){
+			        sendDynamicQueueByString(segList, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
+			    }*/
+			    sendDynamicQueueByString(segmentListUnique, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
+			    //再次激活一下mq监听
+			    TaskSchedule schedule = new TaskSchedule();
+			    schedule.setServiceName("campaignActionSaveAudienceTask");
+			    schedule.setCampaignHeadId(taskSchedule.getCampaignHeadId());
+			    List<TaskSchedule> scheduleList = taskScheduleDao.selectList(schedule);
+			    if(scheduleList != null && scheduleList.size()>0) {
+			        logger.info("再次激活一下mq监听 ItemId is {}", scheduleList.get(0).getCampaignItemId());
+			        campaignActionSaveAudienceTask.task(scheduleList.get(0));
+			    }
+			   
+			   
 				// 逻辑删除传递走的数据
 				logicDeleteNodeAudience(campaignHeadId, itemId, segmentListUnique);
 				logger.info(queueKey + "-out:" + JSON.toJSONString(segmentListUnique));
