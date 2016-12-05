@@ -241,8 +241,8 @@ public class GetH5PubListServiceImpl implements TaskService {
 					logger.info("insert into wechat_register id:" + wechatRegister.getId());
 				} else {
 					wechatRegister.setId(Integer.valueOf(id.toString()));
-					wechatRegisterDao.updateById(wechatRegister);
 					wechatRegister.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
+					wechatRegisterDao.updateById(wechatRegister);
 					logger.info("update wechat_register id:" + wechatRegister.getId());
 				}
 				map.clear();
