@@ -52,7 +52,7 @@ public class WechatAssetListServiceImpl implements WechatAssetListService{
         if(size != null){
         	wechatAsset.setPageSize(size);
         }
-        
+        wechatAsset.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAsset);
         
         int tatal = wechatAssetDao.selectListCount(null);
