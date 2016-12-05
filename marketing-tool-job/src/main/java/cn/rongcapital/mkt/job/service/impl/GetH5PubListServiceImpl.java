@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import cn.rongcapital.mkt.biz.WechatGroupBiz;
 import cn.rongcapital.mkt.biz.WechatRegisterBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.HttpUtils;
 import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
@@ -241,6 +242,7 @@ public class GetH5PubListServiceImpl implements TaskService {
 				} else {
 					wechatRegister.setId(Integer.valueOf(id.toString()));
 					wechatRegisterDao.updateById(wechatRegister);
+					wechatRegister.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
 					logger.info("update wechat_register id:" + wechatRegister.getId());
 				}
 				map.clear();
