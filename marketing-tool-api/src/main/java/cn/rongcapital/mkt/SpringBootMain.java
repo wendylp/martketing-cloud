@@ -29,7 +29,6 @@ public class SpringBootMain {
 	 * @return: void
 	 */
     public static void main(String[] args) {
-//         
 	    SpringApplication.run(SpringBootMain.class, args);
     }
 }
