@@ -112,14 +112,25 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
     }
 
     @Override
-    public BaseOutput deleteSmsMaterial(SmsMaterialDeleteIn smsMaterialDeleteIn) {
+    public BaseOutput deleteSmsMaterial(@NotEmpty SmsMaterialDeleteIn smsMaterialDeleteIn) {
         BaseOutput output = getNewSuccessBaseOutput();
-        if (smsMaterialDeleteIn != null && smsMaterialDeleteIn.getId() != null && smsMaterialDeleteIn.getId() != 0) {
+        if (smsMaterialDeleteIn.getId() != null) {
             if (smsMaterialValidate(smsMaterialDeleteIn.getId())) {
                 SmsMaterial smsMaterial = new SmsMaterial();
                 smsMaterial.setId(smsMaterialDeleteIn.getId());
-                smsMaterial.setStatus(NumUtil.int2OneByte(StatusEnum.DELETED.getStatusCode()));
+                smsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
                 smsMaterialDao.updateById(smsMaterial);
+
+                //1.干掉物料表
+                SmsMaterialComponentMap paramSmsMaterialComponentMap = new SmsMaterialComponentMap();
+                paramSmsMaterialComponentMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+                paramSmsMaterialComponentMap.setSmsMaterialId(Long.valueOf(smsMaterialDeleteIn.getId()));
+                smsMaterialComponentMapDao.deleteBySmsMaterialId(paramSmsMaterialComponentMap);
+                //2.干掉变量表
+                SmsMaterialVariableMap paramSmsMaterialVariableMap = new SmsMaterialVariableMap();
+                paramSmsMaterialVariableMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+                paramSmsMaterialVariableMap.setSmsMaterialId(Long.valueOf(smsMaterialDeleteIn.getId()));
+                smsMaterialVariableMapDao.deleteBySmsMaterialId(paramSmsMaterialVariableMap);
             } else {
                 output.setCode(ApiErrorCode.SMS_ERROR_MATERIAL_CAN_NOT_DELETE.getCode());
                 output.setMsg(ApiErrorCode.SMS_ERROR_MATERIAL_CAN_NOT_DELETE.getMsg());
@@ -148,7 +159,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
      */
     private SmsMaterial getSmsMaterial(@NotEmpty SmsMaterialIn smsMaterialIn) {
         SmsMaterial smsMaterial = new SmsMaterial();
-        if(smsMaterial.getId() == null){
+        if (smsMaterial.getId() == null) {
             smsMaterial.setCreator(getValidateString(smsMaterialIn.getCreator()));
             smsMaterial.setCreateTime(new Date());
             smsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
