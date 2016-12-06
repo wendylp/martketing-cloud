@@ -75,17 +75,18 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 				String groupIds = getWechatGroupId(wxAcct);
 				WechatAsset wAsset = new WechatAsset();
 				wAsset.setWxAcct(wxAcct);
-				wAsset.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+				// wAsset.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID); congshulin 删除
 				WechatAsset wechatAsset = new WechatAsset();
 				wechatAsset.setAssetId(wechatRegister.getId());
-				wechatAsset.setGroupIds(groupIds);
-				wechatAsset.setAssetName(wechatRegister.getName());
-				wechatAsset.setConsignationTime(wechatRegister.getCreateTime());
 				wechatAsset.setAssetType(wechatRegister.getType());
-				wechatAsset.setImgfileUrl(wechatRegister.getHeaderImage());
-				wechatAsset.setWxAcct(wxAcct);
+				wechatAsset.setAssetName(wechatRegister.getName());
 				wechatAsset.setNickname(wechatRegister.getNickname());
+				wechatAsset.setWxAcct(wxAcct);
+				wechatAsset.setConsignationTime(wechatRegister.getCreateTime());
 				wechatAsset.setTotalCount(getWechatMemberCount(wxAcct));
+				wechatAsset.setGroupIds(groupIds);
+				wechatAsset.setImgfileUrl(wechatRegister.getHeaderImage());
+				wechatAsset.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 				wechatAsset.setAppId(wechatRegister.getAppId());
 				wechatAsset.setWechatQrcode(wechatRegister.getWechatQrcode());
 
