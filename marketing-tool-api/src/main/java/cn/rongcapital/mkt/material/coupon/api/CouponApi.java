@@ -7,7 +7,7 @@
  * @date: 2016/12/06
  * @复审人:
  *************************************************/
-package cn.rongcapital.mkt.material.api;
+package cn.rongcapital.mkt.material.coupon.api;
 
 public class CouponApi {
 
