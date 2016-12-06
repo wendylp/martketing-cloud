@@ -3,6 +3,7 @@
  */
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,21 +71,22 @@ public class WeixinAnalysisChdataListServiceImpl implements WeixinAnalysisChdata
 		if (!"0".equals(chCode)) {
 			paraMap.put("chCode", chCode);
 		}
+		List<String> list = new ArrayList<String>();
 		// 公众号，这变量传的name，code不分....
 		if (!"0".equals(wxName)) {
-			paraMap.put("wxAcct", wxName);
+			list.add(wxName);
+			paraMap.put("wxAcctlist", list);
 		}
 		if ("0".equals(wxName)) {
 			WechatAsset wechatAsset = new WechatAsset();
 			wechatAsset.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 			List<WechatAsset> selectList = wechatAssetDao.selectList(wechatAsset);
 			if (CollectionUtils.isNotEmpty(selectList)) {
-				String wxAcct = "";
+
 				for (WechatAsset wAsset : selectList) {
-					wxAcct = wAsset.getWxAcct() + ",";
+					list.add(wAsset.getWxAcct());
 				}
-				logger.info("二维码分析列表数据获取:{}",wxAcct);
-				paraMap.put("wxAcct", wxAcct.substring(0, wxAcct.length()-1));
+				paraMap.put("wxAcctlist", list);
 			}
 
 		}
@@ -131,7 +133,7 @@ public class WeixinAnalysisChdataListServiceImpl implements WeixinAnalysisChdata
 			}
 			result.setTotal(total);
 		}
-
+		list.clear();
 		logger.info("二维码分析列表数据获取成功");
 		return result;
 	}
