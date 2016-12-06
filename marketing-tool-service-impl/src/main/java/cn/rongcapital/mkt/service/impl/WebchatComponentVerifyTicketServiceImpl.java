@@ -30,12 +30,12 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 
 	@Autowired
 	private WebchatComponentVerifyTicketDao webchatComponentVerifyTicketDao;
-	
+
 	@Autowired
 	private WechatRegisterDao wechatRegisterDao;
-    
-    @Autowired
-    private WechatAssetDao wechatAssetDao;
+
+	@Autowired
+	private WechatAssetDao wechatAssetDao;
 
 	@Override
 	public void insert(String componentVerifyTicketXml) {
@@ -60,21 +60,20 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);
 			// 第三方收到公众号平台发送的消息
 			String result2 = pc.decryptMsg(msg_signature, timestamp, nonce, encrypt);
-			logger.info("WebchatComponentVerifyTicketServiceImpl-------微信请求消息： {}",result2);
+			logger.info("WebchatComponentVerifyTicketServiceImpl-------微信请求消息： {}", result2);
 			String webchatComponentVerifyTicketJson = Xml2JsonUtil.xml2JSON(result2);
 			JSONObject myJsonObject = JSONObject.parseObject(webchatComponentVerifyTicketJson);
 			webchatComponentVerifyTicketJson = myJsonObject.get("xml").toString();
 			myJsonObject = JSONObject.parseObject(webchatComponentVerifyTicketJson);
 			String appIdTemp = myJsonObject.getString("AppId");
-			appIdTemp = appIdTemp.substring(2, appIdTemp.length() - 2);
+			appIdTemp = appIdTemp.substring(2, appIdTemp.length() - 2).trim();
 			String createTime = myJsonObject.getString("CreateTime");
-			createTime = createTime.substring(2, createTime.length() - 2);
-			String componentVerifyTicket = myJsonObject.getString("ComponentVerifyTicket");
-			componentVerifyTicket = componentVerifyTicket.substring(2, componentVerifyTicket.length() - 2);
+			createTime = createTime.substring(2, createTime.length() - 2).trim();
 			String infoType = myJsonObject.getString("InfoType");
-			infoType = infoType.substring(2, infoType.length() - 2);
-			logger.info("WebchatComponentVerifyTicketServiceImpl-------app_id： {}",appIdTemp);
-			logger.info("WebchatComponentVerifyTicketServiceImpl-------infoType： {}",infoType);
+			infoType = infoType.substring(2, infoType.length() - 2).trim();
+			logger.info("WebchatComponentVerifyTicketServiceImpl-------app_id： {}", appIdTemp);
+			logger.info("WebchatComponentVerifyTicketServiceImpl-------createTime： {}", createTime);
+			logger.info("WebchatComponentVerifyTicketServiceImpl-------infoType： {}", infoType);
 			// TODO 微信公众号取消授权 congshulin
 			/**
 			 * 
@@ -84,12 +83,20 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			 * <AuthorizerAppid>公众号appid</AuthorizerAppid> </xml>
 			 *
 			 */
+			if ("authorized".equals(infoType)) {
+
+
+			} 
 			if ("unauthorized".equals(infoType)) {
 				WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(appIdTemp);
-				logger.info("WebchatComponentVerifyTicketServiceImpl-------wx_acct： {}",wechatRegister.getWxAcct());
+				logger.info("WebchatComponentVerifyTicketServiceImpl-------wx_acct： {}", wechatRegister.getWxAcct());
 				this.updateStatusForWechat(wechatRegister.getWxAcct(), ApiConstant.TABLE_DATA_STATUS_INVALID);
 
-			} else {
+			} 
+			if ("component_verify_ticket".equals(infoType)){
+				String componentVerifyTicket = myJsonObject.getString("ComponentVerifyTicket");
+				componentVerifyTicket = componentVerifyTicket.substring(2, componentVerifyTicket.length() - 2);
+				logger.info("WebchatComponentVerifyTicketServiceImpl-------component_verify_ticket： {}", componentVerifyTicket);
 				WebchatComponentVerifyTicket webchatComponentVerifyTicket = new WebchatComponentVerifyTicket();
 				webchatComponentVerifyTicket.setAppId(appIdTemp);
 				webchatComponentVerifyTicket.setCreateTime(Long.parseLong(createTime));
@@ -99,55 +106,55 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			}
 
 		} catch (Exception e) {
-			logger.info(e.getMessage());
+			logger.info("WebchatComponentVerifyTicketServiceImpl------Exception:{}", e);
 		}
 	}
-	
-    /**
-     * @功能简述: 取消微信公众号授权后设置显示公众号及组
-     *      
-     *
-     * @param: wxAcct
-     *          微信公众号id
-     * @param: status 
-     * 			状态
-     * @return:
-     *      
-     */
-	private void updateStatusForWechat(String wxAcct,byte status){
+
+	/**
+	 * @功能简述: 取消微信公众号授权后设置显示公众号及组
+	 * 
+	 *
+	 * @param: wxAcct
+	 *             微信公众号id
+	 * @param: status
+	 *             状态
+	 * @return:
+	 * 
+	 */
+	private void updateStatusForWechat(String wxAcct, byte status) {
 		WechatRegister wechatRegister = new WechatRegister();
 		wechatRegister.setWxAcct(wxAcct);
 		wechatRegister.setStatus(status);
 		wechatRegisterDao.updateInforByWxAcct(wechatRegister);
 		logger.info("updateStatusForWechat-------11111");
-		WechatAsset wechatAsset= new WechatAsset();
+		WechatAsset wechatAsset = new WechatAsset();
 		wechatAsset.setWxAcct(wxAcct);
 		wechatAsset.setStatus(status);
 		wechatAssetDao.updateByWxacct(wechatAsset);
 		logger.info("updateStatusForWechat-------22222");
 	}
-	
-    /**
-     * @功能简述: 取消微信公众号授权后设置显示公众号及组
-     *      
-     *
-     * @param: wxAcct
-     *          微信公众号id
-     * @param: status 
-     * 			状态
-     * @return:
-     *      
-     */
-	private WechatRegister getWechatRegisterByAuthAppId(String authAppId){
+
+	/**
+	 * @功能简述: 取消微信公众号授权后设置显示公众号及组
+	 * 
+	 *
+	 * @param: wxAcct
+	 *             微信公众号id
+	 * @param: status
+	 *             状态
+	 * @return:
+	 * 
+	 */
+	private WechatRegister getWechatRegisterByAuthAppId(String authAppId) {
 		WechatRegister wechatRegisterTemp = new WechatRegister();
 		wechatRegisterTemp.setAppId(authAppId);
 		List<WechatRegister> wechatRegisters = wechatRegisterDao.selectList(wechatRegisterTemp);
-		if(wechatRegisters!=null&&wechatRegisters.size()>0){
-			WechatRegister wechatRegisterBack =  wechatRegisters.get(0);
+		if (wechatRegisters != null && wechatRegisters.size() > 0) {
+			WechatRegister wechatRegisterBack = wechatRegisters.get(0);
 			return wechatRegisterBack;
 		}
 		return null;
-		
+
 	}
 
 }
