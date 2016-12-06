@@ -60,6 +60,7 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);
 			// 第三方收到公众号平台发送的消息
 			String result2 = pc.decryptMsg(msg_signature, timestamp, nonce, encrypt);
+			logger.info("WebchatComponentVerifyTicketServiceImpl-------微信请求消息： {}",result2);
 			String webchatComponentVerifyTicketJson = Xml2JsonUtil.xml2JSON(result2);
 			JSONObject myJsonObject = JSONObject.parseObject(webchatComponentVerifyTicketJson);
 			webchatComponentVerifyTicketJson = myJsonObject.get("xml").toString();
@@ -72,6 +73,8 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			componentVerifyTicket = componentVerifyTicket.substring(2, componentVerifyTicket.length() - 2);
 			String infoType = myJsonObject.getString("InfoType");
 			infoType = infoType.substring(2, infoType.length() - 2);
+			logger.info("WebchatComponentVerifyTicketServiceImpl-------app_id： {}",appIdTemp);
+			logger.info("WebchatComponentVerifyTicketServiceImpl-------infoType： {}",infoType);
 			// TODO 微信公众号取消授权 congshulin
 			/**
 			 * 
@@ -83,6 +86,7 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			 */
 			if ("unauthorized".equals(infoType)) {
 				WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(appIdTemp);
+				logger.info("WebchatComponentVerifyTicketServiceImpl-------wx_acct： {}",wechatRegister.getWxAcct());
 				this.updateStatusForWechat(wechatRegister.getWxAcct(), ApiConstant.TABLE_DATA_STATUS_INVALID);
 
 			} else {
@@ -115,10 +119,12 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 		wechatRegister.setWxAcct(wxAcct);
 		wechatRegister.setStatus(status);
 		wechatRegisterDao.updateInforByWxAcct(wechatRegister);
+		logger.info("updateStatusForWechat-------11111");
 		WechatAsset wechatAsset= new WechatAsset();
 		wechatAsset.setWxAcct(wxAcct);
 		wechatAsset.setStatus(status);
-		wechatAssetDao.updateByWxacct(wechatAsset);	    
+		wechatAssetDao.updateByWxacct(wechatAsset);
+		logger.info("updateStatusForWechat-------22222");
 	}
 	
     /**
