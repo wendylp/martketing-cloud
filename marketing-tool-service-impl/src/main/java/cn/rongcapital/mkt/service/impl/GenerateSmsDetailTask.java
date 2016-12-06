@@ -254,8 +254,15 @@ public class GenerateSmsDetailTask implements TaskService {
         AudienceListPartyMap paramAudienceListPartyMap = new AudienceListPartyMap();
         paramAudienceListPartyMap.setAudienceListId(targetId.intValue());
         paramAudienceListPartyMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-        paramAudienceListPartyMap.setPageSize(Integer.MAX_VALUE);
-        List<AudienceListPartyMap> audienceListPartyMapList = audienceListPartyMapDao.selectList(paramAudienceListPartyMap);
+        Integer totalCount = audienceListPartyMapDao.selectListCount(paramAudienceListPartyMap);
+        int totalAudienceListPartyMapPage = (totalCount+PAGE_SIZE)/PAGE_SIZE;
+        List<AudienceListPartyMap> audienceListPartyMapList =new ArrayList<>();
+        for(int index = 0; index < totalAudienceListPartyMapPage; index++){
+            paramAudienceListPartyMap.setStartIndex(index * PAGE_SIZE + 1);
+            paramAudienceListPartyMap.setPageSize(PAGE_SIZE);
+            List<AudienceListPartyMap> subAudienceListPartyMapList = audienceListPartyMapDao.selectList(paramAudienceListPartyMap);
+            audienceListPartyMapList.addAll(subAudienceListPartyMapList);
+        }
         if(CollectionUtils.isEmpty(audienceListPartyMapList)) return null;
 
         //2构造出DataPartIdList得合集
@@ -293,12 +300,29 @@ public class GenerateSmsDetailTask implements TaskService {
 
     private void cacheDataPartyIdInSmsAudienceCache(Long taskHeadId, Long targetId, List<Long> dataPartyIdList) {
         logger.info("begin to cache target audience");
+        //Todo:根据DataParty的Id將Mobile和Id选出来然后存放成List对象
+        List<AudienceIDAndMobilePO> audienceIdAndMobilePOList = new ArrayList<>();
+        Integer totalCount = dataPartyIdList.size();
+        int totalPage = (totalCount + PAGE_SIZE)/PAGE_SIZE;
+        for(int index = 0; index < totalPage; index++){
+            List<AudienceIDAndMobilePO> subAudienceIdAndMobileList = null;
+            if(index == totalPage - 1){
+                subAudienceIdAndMobileList = dataPartyDao.selectCacheAudienceListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
+                logger.info("index : " + index);
+            }else {
+                subAudienceIdAndMobileList = dataPartyDao.selectCacheAudienceListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE));
+                logger.info("index : " + index);
+            }
+            audienceIdAndMobilePOList.addAll(subAudienceIdAndMobileList);
+        }
+
         List<SmsTaskTargetAudienceCache> smsTaskTargetAudienceCacheList = new LinkedList<>();
-        for(Long dataPartyId : dataPartyIdList){
+        for(AudienceIDAndMobilePO audienceIDAndMobilePO : audienceIdAndMobilePOList){
             SmsTaskTargetAudienceCache smsTaskTargetAudienceCache = new SmsTaskTargetAudienceCache();
             smsTaskTargetAudienceCache.setTaskHeadId(taskHeadId);
             smsTaskTargetAudienceCache.setTargetId(targetId);
-            smsTaskTargetAudienceCache.setDataPartyId(dataPartyId);
+            smsTaskTargetAudienceCache.setDataPartyId(audienceIDAndMobilePO.getDataPartyId());
+            smsTaskTargetAudienceCache.setMobile(audienceIDAndMobilePO.getMobile());
             smsTaskTargetAudienceCache.setTargetType(SmsTargetAudienceTypeEnum.SMS_TARGET_AUDIENCE.getTypeCode());
             smsTaskTargetAudienceCacheList.add(smsTaskTargetAudienceCache);
         }

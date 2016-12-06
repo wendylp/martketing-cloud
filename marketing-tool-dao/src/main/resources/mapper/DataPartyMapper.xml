@@ -772,4 +772,13 @@
 		</foreach>
 	</select>
 
+	<select id="selectCacheAudienceListByIdList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.vo.out.AudienceIDAndMobilePO">
+		SELECT id as dataPartyId,mobile
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+
 </mapper>
