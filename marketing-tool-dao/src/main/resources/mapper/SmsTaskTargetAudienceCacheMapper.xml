@@ -103,7 +103,7 @@
 		<foreach collection="list" item="item" index="index" separator=",">
 			(
 			#{item.dataPartyId},
-			#{item.mobile}
+			#{item.mobile},
 			#{item.targetId},
 			now(),
 			#{item.targetType},
