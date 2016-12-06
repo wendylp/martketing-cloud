@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,data_party_id as dataPartyId,target_id as targetId,status as status,create_time as createTime,update_time as updateTime,target_type as targetType,task_head_id as taskHeadId]]>
+		<![CDATA[ id as id,data_party_id as dataPartyId,mobile as mobile,target_id as targetId,status as status,create_time as createTime,update_time as updateTime,target_type as targetType,task_head_id as taskHeadId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -15,12 +15,13 @@
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="dataPartyId != null"><![CDATA[ AND data_party_id = #{dataPartyId}]]></if>
+		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
 		    	<if test="targetId != null"><![CDATA[ AND target_id = #{targetId}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
 		    	<if test="targetType != null"><![CDATA[ AND target_type = #{targetType}]]></if>
-			    <if test="taskHeadId != null"><![CDATA[ AND task_head_id = #{taskHeadId}]]></if>
+		    	<if test="taskHeadId != null"><![CDATA[ AND task_head_id = #{taskHeadId}]]></if>
 		</where>
 	</sql>
 	
@@ -34,20 +35,22 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="dataPartyId != null"><![CDATA[data_party_id = #{dataPartyId},]]></if>
+		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
 		    	<if test="targetId != null"><![CDATA[target_id = #{targetId},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="targetType != null"><![CDATA[target_type = #{targetType},]]></if>
-			    <if test="taskHeadId != null"><![CDATA[task_head_id = #{taskHeadId}]]></if>
+		    	<if test="taskHeadId != null"><![CDATA[task_head_id = #{taskHeadId}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO sms_task_target_audience_cache (data_party_id,target_id,create_time,target_type,task_head_id)
+			INSERT INTO sms_task_target_audience_cache (data_party_id,mobile,target_id,create_time,target_type,task_head_id)
 			VALUES
 			(
 			  #{dataPartyId},
+			  #{mobile},
 			  #{targetId},
 			  now(),
 			  #{targetType},
@@ -95,11 +98,12 @@
 	
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsert" parameterType="java.util.List">
-		INSERT INTO sms_task_target_audience_cache (data_party_id,target_id,create_time,target_type,task_head_id)
+		INSERT INTO sms_task_target_audience_cache (data_party_id,mobile,target_id,create_time,target_type,task_head_id)
 		VALUES
 		<foreach collection="list" item="item" index="index" separator=",">
 			(
 			#{item.dataPartyId},
+			#{item.mobile},
 			#{item.targetId},
 			now(),
 			#{item.targetType},
