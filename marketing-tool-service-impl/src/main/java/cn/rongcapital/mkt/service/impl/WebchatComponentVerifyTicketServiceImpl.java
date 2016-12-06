@@ -71,7 +71,6 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			createTime = createTime.substring(2, createTime.length() - 2).trim();
 			String infoType = myJsonObject.getString("InfoType");
 			infoType = infoType.substring(2, infoType.length() - 2).trim();
-			logger.info("---appid---:{}", appId);
 			logger.info("----infoType---:{}", infoType);
 			// TODO 微信公众号取消授权 congshulin
 			/**
@@ -87,10 +86,12 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 
 			} 
 			if ("unauthorized".equals(infoType)) {
-				WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(appId);
-				logger.info("WebchatComponentVerifyTicketServiceImpl-------wx_acct： {}", wechatRegister.getWxAcct());
+				String authorizerAppId = myJsonObject.getString("AuthorizerAppid");
+				authorizerAppId = authorizerAppId.substring(2, authorizerAppId.length() - 2).trim();
+				logger.info("----authorizerAppId----:{}", authorizerAppId);
+				WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(authorizerAppId);
+				logger.info("----wx_acct----:{}", wechatRegister.getWxAcct());
 				this.updateStatusForWechat(wechatRegister.getWxAcct(), ApiConstant.TABLE_DATA_STATUS_INVALID);
-
 			} 
 			if ("component_verify_ticket".equals(infoType)){
 				String componentVerifyTicket = myJsonObject.getString("ComponentVerifyTicket");
