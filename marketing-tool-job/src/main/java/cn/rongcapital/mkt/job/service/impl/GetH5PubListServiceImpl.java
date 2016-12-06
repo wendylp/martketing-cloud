@@ -21,9 +21,11 @@ import com.alibaba.fastjson.JSONObject;
 import cn.rongcapital.mkt.biz.WechatGroupBiz;
 import cn.rongcapital.mkt.biz.WechatRegisterBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.HttpUtils;
 import cn.rongcapital.mkt.dao.TenementDao;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
+import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatGroupDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -54,6 +56,8 @@ public class GetH5PubListServiceImpl implements TaskService {
 
 	@Autowired
 	private WechatRegisterDao wechatRegisterDao;
+	@Autowired
+	private WechatAssetDao wechatAssetDao;
 
 	@Autowired
 	private WechatRegisterBiz wechatRegisterBiz;
@@ -221,9 +225,7 @@ public class GetH5PubListServiceImpl implements TaskService {
 	 * 
 	 */
 	public void synPubInfoMethod(List<WebchatAuthInfo> list) {
-
 		ArrayList<String> resultList = new ArrayList<String>();
-
 		for (WebchatAuthInfo info : list) {
 			if (info == null) {
 				continue;
@@ -240,6 +242,7 @@ public class GetH5PubListServiceImpl implements TaskService {
 					logger.info("insert into wechat_register id:" + wechatRegister.getId());
 				} else {
 					wechatRegister.setId(Integer.valueOf(id.toString()));
+					wechatRegister.setStatus(StatusEnum.ACTIVE.getStatusCode().byteValue());
 					wechatRegisterDao.updateById(wechatRegister);
 					logger.info("update wechat_register id:" + wechatRegister.getId());
 				}
@@ -250,7 +253,8 @@ public class GetH5PubListServiceImpl implements TaskService {
 		// 批量更新数据库中未授权公众号的状态为删除
 		if(CollectionUtils.isNotEmpty(resultList)){
 			wechatRegisterDao.batchUpdateStatusList(resultList);
-		}		
+		}
+
 	}
 
 	private void callH5PlusMethod() {
@@ -317,6 +321,5 @@ public class GetH5PubListServiceImpl implements TaskService {
 			this.synPubGroupInfoMethod(selectListByIdList);
 		}
 	}
-	
-	
+
 }
