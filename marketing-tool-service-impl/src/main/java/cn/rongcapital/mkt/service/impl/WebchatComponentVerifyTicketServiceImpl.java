@@ -60,7 +60,7 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);
 			// 第三方收到公众号平台发送的消息
 			String result2 = pc.decryptMsg(msg_signature, timestamp, nonce, encrypt);
-			logger.info("WebchatComponentVerifyTicketServiceImpl-------微信请求消息： {}", result2);
+			logger.info("----微信请求消息---:{}", result2);
 			String webchatComponentVerifyTicketJson = Xml2JsonUtil.xml2JSON(result2);
 			JSONObject myJsonObject = JSONObject.parseObject(webchatComponentVerifyTicketJson);
 			webchatComponentVerifyTicketJson = myJsonObject.get("xml").toString();
@@ -71,9 +71,8 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			createTime = createTime.substring(2, createTime.length() - 2).trim();
 			String infoType = myJsonObject.getString("InfoType");
 			infoType = infoType.substring(2, infoType.length() - 2).trim();
-			logger.info("WebchatComponentVerifyTicketServiceImpl-------app_id： {}", appIdTemp);
-			logger.info("WebchatComponentVerifyTicketServiceImpl-------createTime： {}", createTime);
-			logger.info("WebchatComponentVerifyTicketServiceImpl-------infoType： {}", infoType);
+			logger.info("---appid---:{}", appId);
+			logger.info("----infoType---:{}", infoType);
 			// TODO 微信公众号取消授权 congshulin
 			/**
 			 * 
@@ -88,7 +87,7 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 
 			} 
 			if ("unauthorized".equals(infoType)) {
-				WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(appIdTemp);
+				WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(appId);
 				logger.info("WebchatComponentVerifyTicketServiceImpl-------wx_acct： {}", wechatRegister.getWxAcct());
 				this.updateStatusForWechat(wechatRegister.getWxAcct(), ApiConstant.TABLE_DATA_STATUS_INVALID);
 
@@ -106,7 +105,7 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			}
 
 		} catch (Exception e) {
-			logger.info("WebchatComponentVerifyTicketServiceImpl------Exception:{}", e);
+			logger.error("WebchatComponentVerifyTicketServiceImpl------Exception:", e);
 		}
 	}
 
