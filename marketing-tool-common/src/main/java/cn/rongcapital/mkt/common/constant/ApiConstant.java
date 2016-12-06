@@ -355,4 +355,16 @@ public class ApiConstant {
      */
     public static final String PROVINCE_DIC_TABLE_NAME = "province_dic";
     
+    /**
+     * 标签
+     */
+    public static final String IS_TAG = "1";
+    /**
+     * 标签值
+     */
+    public static final String IS_TAG_VALUE = "0";
+    
+    public static final String SEGMENT_SHOW_PIE = "1";//显示饼图
+    public static final String SEGMENT_SHOW_MAP = "2";//显示地图
+    
 }
