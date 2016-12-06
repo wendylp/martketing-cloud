@@ -66,13 +66,13 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			webchatComponentVerifyTicketJson = myJsonObject.get("xml").toString();
 			myJsonObject = JSONObject.parseObject(webchatComponentVerifyTicketJson);
 			String appIdTemp = myJsonObject.getString("AppId");
-			appIdTemp = appIdTemp.substring(3, appIdTemp.length() - 2);
+			appIdTemp = appIdTemp.substring(2, appIdTemp.length() - 2).trim();
 			String createTime = myJsonObject.getString("CreateTime");
-			createTime = createTime.substring(3, createTime.length() - 2);
+			createTime = createTime.substring(2, createTime.length() - 2).trim();
 			String infoType = myJsonObject.getString("InfoType");
-			infoType = infoType.substring(3, infoType.length() - 2);
+			infoType = infoType.substring(2, infoType.length() - 2).trim();
 			logger.info("WebchatComponentVerifyTicketServiceImpl-------app_id： {}", appIdTemp);
-			logger.info("WebchatComponentVerifyTicketServiceImpl-------infoType： {}", createTime);
+			logger.info("WebchatComponentVerifyTicketServiceImpl-------createTime： {}", createTime);
 			logger.info("WebchatComponentVerifyTicketServiceImpl-------infoType： {}", infoType);
 			// TODO 微信公众号取消授权 congshulin
 			/**
@@ -95,7 +95,7 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			} 
 			if ("component_verify_ticket".equals(infoType)){
 				String componentVerifyTicket = myJsonObject.getString("ComponentVerifyTicket");
-				componentVerifyTicket = componentVerifyTicket.substring(3, componentVerifyTicket.length() - 2);
+				componentVerifyTicket = componentVerifyTicket.substring(2, componentVerifyTicket.length() - 2);
 				logger.info("WebchatComponentVerifyTicketServiceImpl-------component_verify_ticket： {}", componentVerifyTicket);
 				WebchatComponentVerifyTicket webchatComponentVerifyTicket = new WebchatComponentVerifyTicket();
 				webchatComponentVerifyTicket.setAppId(appIdTemp);
