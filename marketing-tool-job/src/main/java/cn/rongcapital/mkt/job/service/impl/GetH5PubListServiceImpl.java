@@ -247,14 +247,11 @@ public class GetH5PubListServiceImpl implements TaskService {
 					logger.info("update wechat_register id:" + wechatRegister.getId());
 				}
 				map.clear();
-			} else {
-				resultList.add(info.getAuthorizerAppid());
+				resultList.add(wechatRegister.getWxAcct());
 			}
-
 		}
-
 		// 批量更新数据库中未授权公众号的状态为删除
-		if (CollectionUtils.isNotEmpty(resultList)) {
+		if(CollectionUtils.isNotEmpty(resultList)){
 			wechatRegisterDao.batchUpdateStatusList(resultList);
 		}
 

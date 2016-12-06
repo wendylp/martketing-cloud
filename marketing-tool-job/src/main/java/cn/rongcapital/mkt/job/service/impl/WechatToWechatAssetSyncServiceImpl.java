@@ -75,7 +75,7 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 				String groupIds = getWechatGroupId(wxAcct);
 				WechatAsset wAsset = new WechatAsset();
 				wAsset.setWxAcct(wxAcct);
-				wAsset.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+				// wAsset.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID); congshulin 删除
 				WechatAsset wechatAsset = new WechatAsset();
 				wechatAsset.setAssetId(wechatRegister.getId());
 				wechatAsset.setGroupIds(groupIds);
