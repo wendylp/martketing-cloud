@@ -772,7 +772,7 @@
 		</foreach>
 	</select>
 
-	<select id="selectCacheAudienceListByIdList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.vo.out.AudienceIDAndMobilePO">
+	<select id="selectCacheAudienceListByIdList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.AudienceIDAndMobilePO">
 		SELECT id as dataPartyId,mobile
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE id in
