@@ -13,7 +13,7 @@ public class MaterialAccessProperty extends BaseQuery{
 
     private String code;
 
-    private Boolean status;
+    private Integer status;
 
     private Date createTime;
 
@@ -51,11 +51,11 @@ public class MaterialAccessProperty extends BaseQuery{
         this.code = code == null ? null : code.trim();
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
