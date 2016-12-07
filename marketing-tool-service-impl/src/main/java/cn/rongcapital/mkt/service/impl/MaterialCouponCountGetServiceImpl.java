@@ -9,6 +9,9 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +41,7 @@ public class MaterialCouponCountGetServiceImpl implements MaterialCouponCountGet
      * @Date 2016-12-06
      */
     @Override
+    @ReadWrite(type = ReadWriteType.READ)
     public BaseOutput getMaterialCouponCount(String chanelCode, String keyword) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
