@@ -30,7 +30,7 @@ public class MaterialCoupon extends BaseQuery{
 
     private Date endTime;
 
-    private Boolean status;
+    private Integer status;
 
     private Date createTime;
 
@@ -132,11 +132,11 @@ public class MaterialCoupon extends BaseQuery{
         this.endTime = endTime;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
