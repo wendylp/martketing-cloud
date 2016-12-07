@@ -11,7 +11,7 @@ public class MaterialType extends BaseQuery{
 
     private String name;
 
-    private Boolean status;
+    private Integer status;
 
     private Date createTime;
 
@@ -41,11 +41,11 @@ public class MaterialType extends BaseQuery{
         this.name = name == null ? null : name.trim();
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
