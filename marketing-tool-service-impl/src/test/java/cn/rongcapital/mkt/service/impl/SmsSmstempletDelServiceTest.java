@@ -12,12 +12,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
+import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsSmstempletDelService;
@@ -34,6 +37,9 @@ public class SmsSmstempletDelServiceTest {
     @Mock
     private SmsTempletDao smsTempletDao;
     
+    @Mock
+    private SmsTempletMaterialMapDao smsTempletMaterialMapDao;
+    
     private List<SmsMaterial> smsMaterialLists;
     
     private List<SmsTemplet> smsTempletLists;
@@ -48,7 +54,11 @@ public class SmsSmstempletDelServiceTest {
         smsMaterialLists = new ArrayList<SmsMaterial>();
         
         smsTempletLists = new ArrayList<SmsTemplet>();
-        smsTempletLists.add(new SmsTemplet());
+        
+        SmsTemplet smsTemplet =  new SmsTemplet();
+        
+        smsTemplet.setType((byte) 1);
+        smsTempletLists.add(smsTemplet);
         
         body = new SmsSmstempletDelIn();
         body.setId(1);
@@ -59,9 +69,19 @@ public class SmsSmstempletDelServiceTest {
         Mockito.when(smsTempletDao.selectList(any())).thenReturn(smsTempletLists);
         Mockito.when(smsTempletDao.updateById(any())).thenReturn(delCount);
         
+
+    	Mockito.doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+
+				return null;
+			}
+		}).when(smsTempletMaterialMapDao).deleteByTempletId(any());
+        
         // 把mock的dao set进入service
         ReflectionTestUtils.setField(smsSmstempletDelService, "smsMaterialDao", smsMaterialDao);
         ReflectionTestUtils.setField(smsSmstempletDelService, "smsTempletDao", smsTempletDao);
+        ReflectionTestUtils.setField(smsSmstempletDelService, "smsTempletMaterialMapDao", smsTempletMaterialMapDao);
     }
     
     

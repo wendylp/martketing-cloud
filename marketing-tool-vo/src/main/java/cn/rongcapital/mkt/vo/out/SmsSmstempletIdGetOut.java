@@ -1,5 +1,8 @@
 package cn.rongcapital.mkt.vo.out;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -30,6 +33,8 @@ public class SmsSmstempletIdGetOut {
     private Boolean editCheck;
     
     private Boolean deleteCheck;
+    
+    private List<SmsSmstempletMaterialData> materialList = new ArrayList<SmsSmstempletMaterialData>();
     
     public SmsSmstempletIdGetOut() {}
 
@@ -138,7 +143,16 @@ public class SmsSmstempletIdGetOut {
         this.deleteCheck = deleteCheck;
     }
 
-    @Override
+    @JsonProperty("material_list")
+    public List<SmsSmstempletMaterialData> getMaterialList() {
+		return materialList;
+	}
+
+	public void setMaterialList(List<SmsSmstempletMaterialData> materialList) {
+		this.materialList = materialList;
+	}
+
+	@Override
     public String toString() {
         return "SmsSmstempletIdGetOut [id=" + id + ", channelType=" + channelType + ", type=" + type
                         + ", auditStatus=" + auditStatus + ", name=" + name + ", auditReason="

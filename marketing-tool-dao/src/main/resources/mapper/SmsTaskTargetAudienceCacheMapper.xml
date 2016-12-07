@@ -79,6 +79,17 @@
 			<![CDATA[#{id}]]>
 		</foreach>
 	</select>
+	
+	<!-- 查询,通过手机号和任务IDIN(array) -->
+	<select id="selectListByMobile" parameterType="java.util.Map" resultType="java.lang.Long">
+		<![CDATA[SELECT data_party_id]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE task_head_id = #{taskHeadId}
+		<![CDATA[and mobile IN]]>
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+       		#{item}
+   		</foreach>
+	</select>
 
 	<!-- 查询,通过条件 -->
 	<select id="selectList" parameterType="cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache" resultType="cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache">

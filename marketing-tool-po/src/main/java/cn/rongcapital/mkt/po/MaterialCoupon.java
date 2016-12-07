@@ -29,8 +29,12 @@ public class MaterialCoupon extends BaseQuery{
     private Date startTime;
 
     private Date endTime;
+    
+    private Long taskId;
 
-    private Boolean status;
+    private String taskName;
+
+    private Integer status;
 
     private Date createTime;
 
@@ -132,11 +136,27 @@ public class MaterialCoupon extends BaseQuery{
         this.endTime = endTime;
     }
 
-    public Boolean getStatus() {
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName == null ? null : taskName.trim();
+    }
+
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

@@ -15,7 +15,7 @@ public class MaterialCouponCode extends BaseQuery {
 
     private String verifyStatus;
 
-    private Boolean status;
+    private Integer status;
 
     private Date createTime;
 
@@ -61,11 +61,11 @@ public class MaterialCouponCode extends BaseQuery {
         this.verifyStatus = verifyStatus == null ? null : verifyStatus.trim();
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
