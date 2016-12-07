@@ -1,3 +1,13 @@
+/*************************************************
+ * @功能简述: 接口mkt.materiel.coupon.code.list的service接口实现类
+ * @项目名称: marketing cloud
+ * @see: 
+ * @author: guozhenchao
+ * @version: 0.0.1
+ * @date: 2016/12/7
+ * @复审人: 
+*************************************************/
+
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
