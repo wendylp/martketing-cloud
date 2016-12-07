@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SmsTemplet;
@@ -51,4 +52,11 @@ public interface SmsTempletDao extends BaseDao<SmsTemplet>{
 	 * @return
 	 */
 	public List<SmsTempletCountVo> selectListCountGroupByAuditStatus(SmsTemplet smsTemplet);
+	
+	/**
+	 * 分组计算数量
+	 * @return
+	 */
+	public List<Map<String,String>> getTempletCountByType();
+	
 }

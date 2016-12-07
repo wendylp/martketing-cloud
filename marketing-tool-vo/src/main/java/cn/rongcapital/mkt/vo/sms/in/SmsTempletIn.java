@@ -1,6 +1,9 @@
 package cn.rongcapital.mkt.vo.sms.in;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -31,6 +34,8 @@ public class SmsTempletIn {
     @NotEmpty
     private String name;
 
+    private List<SmstempletMaterialVo> materialList = new ArrayList<SmstempletMaterialVo>();
+    
     @JsonProperty("id")
     public Integer getId() {
 		return id;
@@ -100,6 +105,15 @@ public class SmsTempletIn {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@JsonProperty("material_list")
+	public List<SmstempletMaterialVo> getMaterialList() {
+		return materialList;
+	}
+
+	public void setMaterialList(List<SmstempletMaterialVo> materialList) {
+		this.materialList = materialList;
 	}
     
 }
