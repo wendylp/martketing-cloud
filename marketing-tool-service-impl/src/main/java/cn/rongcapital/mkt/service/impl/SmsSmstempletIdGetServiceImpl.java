@@ -1,20 +1,27 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
+import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
+import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTemplet;
+import cn.rongcapital.mkt.po.SmsTempletMaterialMap;
 import cn.rongcapital.mkt.service.SmsSmstempletIdGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.SmsSmstempletIdGetOut;
+import cn.rongcapital.mkt.vo.out.SmsSmstempletMaterialData;
 
 @Service
 public class SmsSmstempletIdGetServiceImpl implements SmsSmstempletIdGetService {
@@ -25,6 +32,9 @@ public class SmsSmstempletIdGetServiceImpl implements SmsSmstempletIdGetService 
     @Autowired
     private SmsMaterialDao smsMaterialDao;
 
+    @Autowired
+    private SmsTempletMaterialMapDao smsTempletMaterialMapDao;
+    
     /**
      * 短信模板id查询模板
      * 
@@ -57,6 +67,14 @@ public class SmsSmstempletIdGetServiceImpl implements SmsSmstempletIdGetService 
                             deleteCheck(smsTempletresult.getId()));
             smsSmstempletIdGetOut.setAuditTime(DateUtil.getStringFromDate(
                             smsTempletresult.getAuditTime(), "yyyy-MM-dd HH:mm:ss"));
+            
+            if(smsTempletresult.getType().intValue() == SmsTempletTypeEnum.VARIABLE.getStatusCode()){
+            	
+                List<SmsSmstempletMaterialData> materialList = getMaterialData(id);
+                
+                smsSmstempletIdGetOut.setMaterialList(materialList);
+            }
+            
             result.getData().add(smsSmstempletIdGetOut);
             result.setTotal(ApiConstant.INT_ONE);
         }
@@ -83,4 +101,30 @@ public class SmsSmstempletIdGetServiceImpl implements SmsSmstempletIdGetService 
         return true;
     }
 
+    
+    private List<SmsSmstempletMaterialData> getMaterialData(Integer id){
+    	
+        List<SmsSmstempletMaterialData> materialList = new ArrayList<SmsSmstempletMaterialData>();
+        
+        SmsTempletMaterialMap smsTempletMaterialMap = new SmsTempletMaterialMap();
+        
+        smsTempletMaterialMap.setSmsTempletId(Long.valueOf(id));
+        smsTempletMaterialMap.setStatus((byte) 0);
+        smsTempletMaterialMap.setStartIndex(null);
+        smsTempletMaterialMap.setPageSize(null);
+        
+        List<SmsTempletMaterialMap> smsTempletMaterialMapList = smsTempletMaterialMapDao.selectList(smsTempletMaterialMap);
+        
+        SmsSmstempletMaterialData smsSmstempletMaterialData;
+        
+        for(SmsTempletMaterialMap smsTempletMaterial : smsTempletMaterialMapList){
+        	smsSmstempletMaterialData = new SmsSmstempletMaterialData();
+        	
+			BeanUtils.copyProperties(smsTempletMaterial, smsSmstempletMaterialData);
+        	
+			materialList.add(smsSmstempletMaterialData);
+        }
+        
+        return materialList;
+    }
 }
