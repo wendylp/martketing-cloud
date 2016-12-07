@@ -91,7 +91,7 @@ public class MainBasicInfoGetServiceImpl implements MainBasicInfoGetService {
 		} else if (dataType == DataTypeEnum.SHOPPING.getCode()) {
 			keyid = dataShoppingDao.selectObjectById(contactId).getKeyid();
 		}else if (dataType == DataTypeEnum.WECHAT.getCode()) {
-			keyid = dataPopulationDao.selectObjectById(contactId).getKeyid();
+			keyid = contactId;
 		}
 
 		return keyid;
