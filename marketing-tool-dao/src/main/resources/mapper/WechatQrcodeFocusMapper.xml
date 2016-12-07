@@ -180,7 +180,7 @@
 			(<![CDATA[SELECT wx_acct AS wx_acct,wx_name AS wx_name,ch_code AS ch_code, COUNT(id) as value]]>
 			<![CDATA[ FROM wechat_qrcode_scan ]]>
 			<where>
-		    	    <if test="wxAcct != null">
+		    	    <if test="wxAcctlist != null">
 		    	    <![CDATA[ AND wx_acct in ]]>
 						<foreach item="item" index="index" collection="wxAcctlist" open="("
             				separator="," close=")">
