@@ -127,6 +127,7 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 		wechatRegister.setStatus(status);
 		wechatRegisterDao.updateInforByWxAcct(wechatRegister);
 		logger.info("updateStatusForWechat-------11111");
+		int i = 5/0;
 		WechatAsset wechatAsset = new WechatAsset();
 		wechatAsset.setWxAcct(wxAcct);
 		wechatAsset.setStatus(status);
