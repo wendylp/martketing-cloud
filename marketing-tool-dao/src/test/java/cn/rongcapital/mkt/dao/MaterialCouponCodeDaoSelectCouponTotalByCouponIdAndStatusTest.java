@@ -40,23 +40,24 @@ public class MaterialCouponCodeDaoSelectCouponTotalByCouponIdAndStatusTest exten
 		list.add("unreceived");
 		paramMap.put("releaseStatusList", list);
 		paramMap.put("id", 12);
-		
-		List<MeterialCouponCodeCountByStatus> result = materialCouponCodeDao.selectCouponTotalByCouponIdAndReleStatus(paramMap);
+
+		List<MeterialCouponCodeCountByStatus> result = materialCouponCodeDao
+				.selectCouponTotalByCouponIdAndReleStatus(paramMap);
 		Long receivedValue = -1l;
-		Long unreceivedValue =-1l;
+		Long unreceivedValue = -1l;
 		for (MeterialCouponCodeCountByStatus mcs : result) {
-			if("received".equals(mcs.getStatus())){
+			if ("received".equals(mcs.getStatus())) {
 				receivedValue = mcs.getCount();
-			}else if("unreceived".equals(mcs.getStatus())){
+			} else if ("unreceived".equals(mcs.getStatus())) {
 				unreceivedValue = mcs.getCount();
 			}
 		}
-		
+
 		Assert.assertEquals(6, receivedValue.longValue());
 		Assert.assertEquals(2, unreceivedValue.longValue());
 		logger.info("测试方法: selectCouponTotalByCouponIdAndReleStatus ");
 	}
-	
+
 	@Test
 	public void testselectCouponTotalByCouponIdAndVeriStatus() {
 		logger.info("测试方法: selectCouponTotalByCouponIdAndVeriStatus ");
@@ -65,15 +66,16 @@ public class MaterialCouponCodeDaoSelectCouponTotalByCouponIdAndStatusTest exten
 		list.add("verified");
 		paramMap.put("verifyStatusList", list);
 		paramMap.put("id", 12);
-		
-		List<MeterialCouponCodeCountByStatus> result = materialCouponCodeDao.selectCouponTotalByCouponIdAndVeriStatus(paramMap);
+
+		List<MeterialCouponCodeCountByStatus> result = materialCouponCodeDao
+				.selectCouponTotalByCouponIdAndVeriStatus(paramMap);
 		Long verifiedValue = -1l;
 		for (MeterialCouponCodeCountByStatus mcs : result) {
-			if("verified".equals(mcs.getStatus())){
+			if ("verified".equals(mcs.getStatus())) {
 				verifiedValue = mcs.getCount();
 			}
 		}
-		
+
 		Assert.assertEquals(3, verifiedValue.longValue());
 
 		logger.info("测试方法: selectCouponTotalByCouponIdAndVeriStatus ");

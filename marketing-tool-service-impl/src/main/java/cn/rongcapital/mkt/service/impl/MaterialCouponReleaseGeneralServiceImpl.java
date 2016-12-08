@@ -69,7 +69,7 @@ public class MaterialCouponReleaseGeneralServiceImpl implements MaterialCouponRe
 		}
 		list.clear();
 		paramMap.clear();
-		
+
 		list.add(MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());
 		paramMap.put("verifyStatusList", list);
 		paramMap.put("id", id);

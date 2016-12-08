@@ -37,7 +37,7 @@ public class MaterialCouponDaoSelectStockTotalTest extends AbstractUnitTest {
 		Assert.assertEquals(20000, result.longValue());
 		logger.info("测试方法: selectStockTotalByCouponId ");
 	}
-	
+
 	@After
 	public void tearDown() throws Exception {
 		logger.info("测试: MaterialCouponDao 结束---------------------");
