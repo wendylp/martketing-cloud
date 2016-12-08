@@ -82,7 +82,8 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			 */
 			if ("authorized".equals(infoType)) {
 
-			}
+
+			} 
 			if ("unauthorized".equals(infoType)) {
 				String authorizerAppId = myJsonObject.getString("AuthorizerAppid");
 				authorizerAppId = authorizerAppId.substring(2, authorizerAppId.length() - 2).trim();
@@ -90,12 +91,11 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 				WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(authorizerAppId);
 				logger.info("----wx_acct----:{}", wechatRegister.getWxAcct());
 				this.updateStatusForWechat(wechatRegister.getWxAcct(), ApiConstant.TABLE_DATA_STATUS_INVALID);
-			}
-			if ("component_verify_ticket".equals(infoType)) {
+			} 
+			if ("component_verify_ticket".equals(infoType)){
 				String componentVerifyTicket = myJsonObject.getString("ComponentVerifyTicket");
 				componentVerifyTicket = componentVerifyTicket.substring(2, componentVerifyTicket.length() - 2);
-				logger.info("WebchatComponentVerifyTicketServiceImpl-------component_verify_ticket： {}",
-						componentVerifyTicket);
+				logger.info("WebchatComponentVerifyTicketServiceImpl-------component_verify_ticket： {}", componentVerifyTicket);
 				WebchatComponentVerifyTicket webchatComponentVerifyTicket = new WebchatComponentVerifyTicket();
 				webchatComponentVerifyTicket.setAppId(appIdTemp);
 				webchatComponentVerifyTicket.setCreateTime(Long.parseLong(createTime));
@@ -120,19 +120,17 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 	 * @return:
 	 * 
 	 */
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class,readOnly = false)
 	public void updateStatusForWechat(String wxAcct, byte status) {
 		WechatRegister wechatRegister = new WechatRegister();
 		wechatRegister.setWxAcct(wxAcct);
 		wechatRegister.setStatus(status);
 		wechatRegisterDao.updateInforByWxAcct(wechatRegister);
-		logger.info("updateStatusForWechat-------11111");
-		int i = 5 / 0;
 		WechatAsset wechatAsset = new WechatAsset();
 		wechatAsset.setWxAcct(wxAcct);
 		wechatAsset.setStatus(status);
 		wechatAssetDao.updateByWxacct(wechatAsset);
-		logger.info("updateStatusForWechat-------22222");
+
 	}
 
 	/**
