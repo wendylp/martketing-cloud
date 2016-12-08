@@ -50,7 +50,7 @@ public class MaterialCouponStatusUpdateServiceImplTest {
     }
 
     /**
-     * TaskName = null /Status = null
+     * TaskName = null
      * 
      */
     @Test
@@ -71,12 +71,13 @@ public class MaterialCouponStatusUpdateServiceImplTest {
         ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
         MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
         vo.setId(6L);
+        vo.setStatus("1");
         service.updateMaterialCouponStatus(vo);
     }
 
     
     /**
-     * TaskName = "" /Status = ""
+     * TaskName = ""
      * 
      */
     @Test
@@ -87,7 +88,7 @@ public class MaterialCouponStatusUpdateServiceImplTest {
                 Object[] args = invocation.getArguments();
                 MaterialCoupon data = (MaterialCoupon) args[0];
                 Assert.assertEquals(6, data.getId().intValue());
-                Assert.assertNull(data.getCouponStatus());
+                Assert.assertEquals("1", data.getCouponStatus());
                 Assert.assertNull(data.getTaskId());
                 Assert.assertNull(data.getTaskName());
                 return null;
@@ -97,7 +98,7 @@ public class MaterialCouponStatusUpdateServiceImplTest {
         ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
         MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
         vo.setId(6L);
-        vo.setStatus("");
+        vo.setStatus("1");
         vo.setTaskName("");
         service.updateMaterialCouponStatus(vo);
     }

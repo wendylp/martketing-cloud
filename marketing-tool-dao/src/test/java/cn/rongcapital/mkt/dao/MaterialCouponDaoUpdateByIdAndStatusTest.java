@@ -46,7 +46,7 @@ public class MaterialCouponDaoUpdateByIdAndStatusTest extends AbstractUnitTest {
         coupon.setChanelCode("msm");
         coupon.setTitle("zhuxuelongtest");
         coupon.setCouponStatus(CouponStatusEnum.COUPONSTATUS_RELEASED.getCode());
-        coupon.setStatus(1);
+        coupon.setStatus((byte)1);
         List<MaterialCoupon> dataList = materialCouponDao.selectList(coupon);
         if (dataList.size() == 0) {
             materialCouponDao.insert(coupon);
@@ -79,7 +79,7 @@ public class MaterialCouponDaoUpdateByIdAndStatusTest extends AbstractUnitTest {
         coupon.setChanelCode("msm");
         coupon.setTitle("zhuxuelongtest");
         coupon.setCouponStatus(CouponStatusEnum.COUPONSTATUS_RELEASED.getCode());
-        coupon.setStatus(0);
+        coupon.setStatus((byte)0);
         List<MaterialCoupon> dataList = materialCouponDao.selectList(coupon);
         if (dataList.size() == 0) {
             materialCouponDao.insert(coupon);
