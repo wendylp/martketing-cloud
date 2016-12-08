@@ -151,7 +151,7 @@ public class MaterialCoupon extends BaseQuery{
     public void setTaskName(String taskName) {
         this.taskName = taskName == null ? null : taskName.trim();
     }
-
+    
     public Byte getStatus() {
         return status;
     }

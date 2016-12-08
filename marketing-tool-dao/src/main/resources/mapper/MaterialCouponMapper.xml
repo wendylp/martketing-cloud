@@ -128,4 +128,16 @@
 		<![CDATA[WHERE id = #{id} AND status = 0]]>
 	</update>
 	
+	<!-- 总数查询,通过条件 -->
+	<select id="getMaterialCouponCount" parameterType="java.util.Map" resultType="long">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE status = 0]]>
+    	<if test="title != null and title != ''">
+	    	<bind name="titlelike" value="'%'+title+'%'"/>
+	    	<![CDATA[ AND title like #{titlelike}]]>
+    	</if>
+    	<if test="chanelCode != null and chanelCode != ''"><![CDATA[ AND chanel_code = #{chanelCode}]]></if>
+    	<if test="couponStatus != null and couponStatus != ''"><![CDATA[ AND coupon_status = #{couponStatus}]]></if>
+	</select>
 </mapper>
