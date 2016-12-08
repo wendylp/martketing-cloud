@@ -3,9 +3,13 @@ package cn.rongcapital.mkt.service.impl;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.dao.SmsMaterialComponentMapDao;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
+import cn.rongcapital.mkt.dao.SmsMaterialVariableMapDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.po.SmsMaterial;
+import cn.rongcapital.mkt.po.SmsMaterialComponentMap;
+import cn.rongcapital.mkt.po.SmsMaterialVariableMap;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsMaterialGetService;
 import cn.rongcapital.mkt.service.SmsMaterialService;
@@ -30,6 +34,12 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
     private SmsTempletDao smsTempletDao;
 
     @Autowired
+    private SmsMaterialComponentMapDao smsMaterialComponentMapDao;
+
+    @Autowired
+    private SmsMaterialVariableMapDao smsMaterialVariableMapDao;
+
+    @Autowired
     private SmsMaterialService smsMaterialService;
 
     @Override
@@ -47,28 +57,23 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
         }
 
         SmsMaterial rs = smsMaterialList.get(0);
+
+        //Todo:根据短信素材Id查询出相关的物料和变量
+        SmsMaterialComponentMap paramSmsMaterialComponentMap = new SmsMaterialComponentMap();
+        paramSmsMaterialComponentMap.setSmsMaterialId(id);
+        paramSmsMaterialComponentMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        List<SmsMaterialComponentMap> smsMaterialComponentMapList = smsMaterialComponentMapDao.selectList(paramSmsMaterialComponentMap);
+
+        SmsMaterialVariableMap paramSmsMaterialVariableMap = new SmsMaterialVariableMap();
+        paramSmsMaterialVariableMap.setSmsMaterialId(id);
+        paramSmsMaterialVariableMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        List<SmsMaterialVariableMap> smsMaterialVariableMapList = smsMaterialVariableMapDao.selectList(paramSmsMaterialVariableMap);
+
         SmsMaterialOut smsMaterialOut = getSmsMaterialOut(rs, null);
 
         baseOutput.getData().add(smsMaterialOut);
         baseOutput.setTotal(baseOutput.getData().size());
         return baseOutput;
-    }
-
-    private SmsMaterialOut getSmsMaterialOut(SmsMaterial rs, String smsTemplateName) {
-        SmsMaterialOut smsMaterialOut = new SmsMaterialOut();
-        smsMaterialOut.setId(rs.getId() == null?null:Long.valueOf(rs.getId()));
-        smsMaterialOut.setMaterialId(rs.getCode());
-        smsMaterialOut.setMaterialName(rs.getName());
-        smsMaterialOut.setSmsType(rs.getSmsType()==null?null:Integer.valueOf(rs.getSmsType()));
-        smsMaterialOut.setSmsSignId(rs.getSmsSignId());
-        smsMaterialOut.setSmsSignContent(rs.getSmsSignName());
-        smsMaterialOut.setSmsTemplateId(rs.getSmsTempletId());
-        smsMaterialOut.setSmsTemplateContent(rs.getSmsTempletContent());
-        smsMaterialOut.setSmsTemplateName(smsTemplateName);
-        smsMaterialOut.setCreateTime(DateUtil.getStringFromDate(rs.getCreateTime(),"yyyy-MM-dd HH:mm:ss"));
-        smsMaterialOut.setEditStatus(smsMaterialService.smsMaterialValidate(rs.getId())?0:1);
-        smsMaterialOut.setDeleteStatus(smsMaterialOut.getEditStatus());
-        return smsMaterialOut;
     }
 
     @Override
@@ -90,12 +95,7 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
             paramSmsTemplet.setId(smsMaterial.getSmsTempletId());
             paramSmsTemplet.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
             List<SmsTemplet> smsTempletList = smsTempletDao.selectList(paramSmsTemplet);
-            String templateName;
-            if (CollectionUtils.isEmpty(smsTempletList)) {
-                templateName = "";
-            } else {
-                templateName = smsTempletList.get(0).getName();
-            }
+            String templateName = CollectionUtils.isEmpty(smsTempletList)?"":smsTempletList.get(0).getName();
             SmsMaterialOut smsMaterialOut = getSmsMaterialOut(smsMaterial,templateName);
             baseOutput.getData().add(smsMaterialOut);
         }
@@ -103,5 +103,22 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
         baseOutput.setTotal(baseOutput.getData().size());
         baseOutput.setTotalCount(totalCount);
         return baseOutput;
+    }
+
+    private SmsMaterialOut getSmsMaterialOut(SmsMaterial rs, String smsTemplateName) {
+        SmsMaterialOut smsMaterialOut = new SmsMaterialOut();
+        smsMaterialOut.setId(rs.getId() == null?null:Long.valueOf(rs.getId()));
+        smsMaterialOut.setMaterialId(rs.getCode());
+        smsMaterialOut.setMaterialName(rs.getName());
+        smsMaterialOut.setSmsType(rs.getSmsType()==null?null:Integer.valueOf(rs.getSmsType()));
+        smsMaterialOut.setSmsSignId(rs.getSmsSignId());
+        smsMaterialOut.setSmsSignContent(rs.getSmsSignName());
+        smsMaterialOut.setSmsTemplateId(rs.getSmsTempletId());
+        smsMaterialOut.setSmsTemplateContent(rs.getSmsTempletContent());
+        smsMaterialOut.setSmsTemplateName(smsTemplateName);
+        smsMaterialOut.setCreateTime(DateUtil.getStringFromDate(rs.getCreateTime(),"yyyy-MM-dd HH:mm:ss"));
+        smsMaterialOut.setEditStatus(smsMaterialService.smsMaterialValidate(rs.getId())?0:1);
+        smsMaterialOut.setDeleteStatus(smsMaterialOut.getEditStatus());
+        return smsMaterialOut;
     }
 }

@@ -11,11 +11,11 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.SmsMaterialComponentMap;
+import cn.rongcapital.mkt.po.SmsMaterialMaterielMap;
 
-public interface SmsMaterialComponentMapDao extends BaseDao<SmsMaterialComponentMap>{
-
-    //自定义扩展
+public interface SmsMaterialMaterielMapDao extends BaseDao<SmsMaterialMaterielMap>{
+	
+	//自定义扩展
 	/**
 	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
 	 * 查询对象list;
@@ -34,11 +34,4 @@ public interface SmsMaterialComponentMapDao extends BaseDao<SmsMaterialComponent
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
-
-	/**
-	 * 根据材料Id删除与这个材料相关的物料
-	 * @param paramSmsMaterialComponentMap
-	 */
-	void deleteBySmsMaterialId(SmsMaterialComponentMap paramSmsMaterialComponentMap);
-
 }
