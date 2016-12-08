@@ -24,7 +24,7 @@ public class MaterialCoupon extends BaseQuery{
 
     private BigDecimal amount;
 
-    private String chanelCode;
+    private String channelCode;
 
     private Date startTime;
 
@@ -112,12 +112,12 @@ public class MaterialCoupon extends BaseQuery{
         this.amount = amount;
     }
 
-    public String getChanelCode() {
-        return chanelCode;
+    public String getChannelCode() {
+        return channelCode;
     }
 
-    public void setChanelCode(String chanelCode) {
-        this.chanelCode = chanelCode == null ? null : chanelCode.trim();
+    public void setChannelCode(String channelCode) {
+        this.channelCode = channelCode == null ? null : channelCode.trim();
     }
 
     public Date getStartTime() {
@@ -151,7 +151,7 @@ public class MaterialCoupon extends BaseQuery{
     public void setTaskName(String taskName) {
         this.taskName = taskName == null ? null : taskName.trim();
     }
-
+    
     public Byte getStatus() {
         return status;
     }
