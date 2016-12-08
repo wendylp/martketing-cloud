@@ -31,7 +31,7 @@ public enum MaterialCouponCodeReleaseStatusEnum {
      * @since 2016年12月7日
      */
     public static MaterialCouponCodeReleaseStatusEnum getByCode(String code) {
-        if (MaterialCouponChanelCodeEnum.contains(code)) {
+        if (MaterialCouponCodeReleaseStatusEnum.contains(code)) {
             for (MaterialCouponCodeReleaseStatusEnum item : MaterialCouponCodeReleaseStatusEnum.values()) {
                 if (item.code.equals(code)) {
                     return item;
@@ -49,8 +49,8 @@ public enum MaterialCouponCodeReleaseStatusEnum {
      * @since 2016年12月7日
      */
     public static boolean contains(String code) {
-        MaterialCouponCodeReleaseStatusEnum[] chanelCodes = values();
-        for (MaterialCouponCodeReleaseStatusEnum item : chanelCodes) {
+        MaterialCouponCodeReleaseStatusEnum[] items = values();
+        for (MaterialCouponCodeReleaseStatusEnum item : items) {
             if (item.getCode().equals(code)) {
                 return true;
             }
