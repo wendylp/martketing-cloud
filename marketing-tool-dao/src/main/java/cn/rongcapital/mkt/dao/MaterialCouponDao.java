@@ -34,4 +34,12 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    /**
+     * 通过主键和有效状态更新表
+     * 
+     * @param po
+     * @author zhuxuelong
+     */
+    void updateByIdAndStatus(MaterialCoupon po);
 }
