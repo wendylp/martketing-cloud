@@ -48,8 +48,8 @@ public enum MaterialCouponSourceCodeEnum {
      * @since 2016年12月7日
      */
     public static boolean contains(String code) {
-        MaterialCouponSourceCodeEnum[] chanelCodes = values();
-        for (MaterialCouponSourceCodeEnum item : chanelCodes) {
+        MaterialCouponSourceCodeEnum[] items = values();
+        for (MaterialCouponSourceCodeEnum item : items) {
             if (item.getCode().equals(code)) {
                 return true;
             }
