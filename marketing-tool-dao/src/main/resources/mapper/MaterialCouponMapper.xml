@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,title as title,source_code as sourceCode,type as type,coupon_status as couponStatus,rule as rule,stock_total as stockTotal,stock_rest as stockRest,amount as amount,chanel_code as chanelCode,start_time as startTime,end_time as endTime,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,title as title,source_code as sourceCode,type as type,coupon_status as couponStatus,rule as rule,stock_total as stockTotal,stock_rest as stockRest,amount as amount,chanel_code as chanelCode,start_time as startTime,end_time as endTime,status as status,create_time as createTime,update_time as updateTime,task_id as taskId,task_name as taskName]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -28,6 +28,8 @@
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="taskId != null"><![CDATA[ AND task_id = #{taskId}]]></if>
+		    	<if test="taskName != null"><![CDATA[ AND task_name = #{taskName}]]></if>
 		</where>
 	</sql>
 	
@@ -52,13 +54,15 @@
 		    	<if test="startTime != null"><![CDATA[start_time = #{startTime},]]></if>
 		    	<if test="endTime != null"><![CDATA[end_time = #{endTime},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		    	<if test="taskId != null"><![CDATA[task_id = #{taskId}]]></if>
+		    	<if test="taskName != null"><![CDATA[task_name = #{taskName}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.MaterialCoupon" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO material_coupon (title,source_code,type,coupon_status,rule,stock_total,stock_rest,amount,chanel_code,start_time,end_time,create_time)
+			INSERT INTO material_coupon (title,source_code,type,coupon_status,rule,stock_total,stock_rest,amount,chanel_code,start_time,end_time,create_time,task_id,task_name)
 			VALUES
 			(
 			  #{title},
@@ -72,7 +76,9 @@
 			  #{chanelCode},
 			  #{startTime},
 			  #{endTime},
-			  now()
+			  now(),
+			  #{taskId},
+			  #{taskName}
 			)
 		]]>
 	</insert>
@@ -116,5 +122,11 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<!-- 根据优惠券ID查询优惠券生成码数量 -->
+	<select id="selectStockTotalByCouponId" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT stock_total
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id = #{id}
+	</select>
 	
 </mapper>
