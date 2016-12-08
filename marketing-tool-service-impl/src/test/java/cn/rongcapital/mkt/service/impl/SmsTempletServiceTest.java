@@ -11,7 +11,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -23,7 +25,9 @@ import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
+import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
 import cn.rongcapital.mkt.po.SmsMaterial;
+import cn.rongcapital.mkt.po.SmsTaskDetailState;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsTempletService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -41,12 +45,16 @@ public class SmsTempletServiceTest {
     private SmsTempletDao smsTempletDao;
     @Mock
 	private SmsMaterialDao smsMaterialDao;
+    @Mock
+	private SmsTempletMaterialMapDao smsTempletMaterialMapDao;
+    
     
     private int selectListCountResult = 10;
     
     private int insertResult = 1;
     
     private List<SmsTemplet> dataList;
+    private List<SmsTemplet> dataList1;
     
     private List<SmsTempletCountVo> smsTempletCountVosByType;
     
@@ -88,22 +96,42 @@ public class SmsTempletServiceTest {
         Mockito.when(smsMaterialDao.selectList(any())).thenReturn(smsMaterials);
         
         Mockito.when(smsTempletDao.insert(any())).thenReturn(insertResult);
+        
+    	Mockito.doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+
+				return null;
+			}
+		}).when(smsTempletMaterialMapDao).deleteByTempletId(any());
+        
+    	Mockito.doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+
+				return null;
+			}
+		}).when(smsTempletMaterialMapDao).insert(any());
+    	
         smsTempletService = new SmsTempletServiceImpl();
         
         // 把mock的dao set进入service
         ReflectionTestUtils.setField(smsTempletService, "smsTempletDao", smsTempletDao);
         
         ReflectionTestUtils.setField(smsTempletService, "smsMaterialDao", smsMaterialDao);
+        
+        ReflectionTestUtils.setField(smsTempletService, "smsTempletMaterialMapDao", smsTempletMaterialMapDao);
     }
 
     @Test
     public void testSmsTempletList() {
-        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, "0", "0", "测试","");
+        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, "0", "1", "测试","");
         
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
         Assert.assertEquals(selectListCountResult, result.getTotalCount());
         Assert.assertEquals(dataList, result.getData());
+        
     }
     
     @Test
@@ -122,6 +150,24 @@ public class SmsTempletServiceTest {
         
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
+        
+        
+        SmsTempletIn smsTempletIn1 = new SmsTempletIn();
+        /**
+         * 插入参数
+         */
+        smsTempletIn1.setId(2);
+        smsTempletIn.setType(NumUtil.int2OneByte(SmsTempletTypeEnum.VARIABLE.getStatusCode()));
+        smsTempletIn.setChannelType(SmsTaskAppEnum.ADVERT_SMS.getStatus());
+        smsTempletIn.setContent("测试变量模板");
+        smsTempletIn.setCreator("user2");
+
+        BaseOutput result2 = smsTempletService.saveOrUpdateSmsTemplet(smsTempletIn);
+        
+        // 断言
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result2.getCode()); 
+        
+        
     }
     
 

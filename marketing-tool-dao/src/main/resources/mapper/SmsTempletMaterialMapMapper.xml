@@ -107,5 +107,11 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<!-- 通过模板Id删除关系 -->
+	<update id="deleteByTempletId" parameterType="int">
+		<![CDATA[UPDATE sms_templet_material_map SET status = 1]]>
+		<![CDATA[WHERE status = 0 AND sms_templet_id = #{smsTempletId}]]>
+	</update>
+	
 	
 </mapper>

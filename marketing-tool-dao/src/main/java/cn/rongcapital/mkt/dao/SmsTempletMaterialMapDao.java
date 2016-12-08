@@ -34,4 +34,10 @@ public interface SmsTempletMaterialMapDao extends BaseDao<SmsTempletMaterialMap>
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * 根据模板Id删除关联关系
+	 * @param smsTempletId
+	 */
+	void deleteByTempletId(Integer smsTempletId);
 }
