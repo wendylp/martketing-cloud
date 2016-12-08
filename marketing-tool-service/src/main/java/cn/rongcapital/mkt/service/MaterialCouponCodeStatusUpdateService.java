@@ -19,10 +19,10 @@ public interface MaterialCouponCodeStatusUpdateService {
     /**
      * 批量回写优惠码状态
      * 
-     * @param vo
+     * @param voList
      * @author zhuxuelong
      * @date: 2016/12/7
      */
-    public void updateMaterialCouponCodeStatus(List<MaterialCouponCodeStatusUpdateVO> vo);
+    public void updateMaterialCouponCodeStatus(List<MaterialCouponCodeStatusUpdateVO> voList);
 
 }

@@ -39,7 +39,7 @@ public class MaterialCouponCodeStatusUpdateServiceImpl implements MaterialCoupon
      */
     @Override
     public void updateMaterialCouponCodeStatus(List<MaterialCouponCodeStatusUpdateVO> voList) {
-        if (CollectionUtils.isEmpty(voList)) {
+        if (CollectionUtils.isNotEmpty(voList)) {
             for (MaterialCouponCodeStatusUpdateVO vo : voList) {
                 logger.debug("process coupon code param is {}.", vo);
                 processMaterialCouponCode(vo);

@@ -44,12 +44,12 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
     @Before
     public void setUp() throws Exception {
         service = new MaterialCouponCodeStatusUpdateServiceImpl();
-        logger.info("测试：MaterialCouponStatusUpdateService 开始---------------------");
+        logger.info("测试：MaterialCouponCodeStatusUpdateService 开始---------------------");
     }
 
     @After
     public void tearDown() throws Exception {
-        logger.info("测试：MaterialCouponStatusUpdateService 结束---------------------");
+        logger.info("测试：MaterialCouponCodeStatusUpdateService 结束---------------------");
     }
 
     /**
@@ -72,7 +72,7 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
         vo.setId(6L);
-        vo.setStatus("1");
+        vo.setStatus("12");
         vo.setUser("12345");
         voList.add(vo);
         service.updateMaterialCouponCodeStatus(voList);
