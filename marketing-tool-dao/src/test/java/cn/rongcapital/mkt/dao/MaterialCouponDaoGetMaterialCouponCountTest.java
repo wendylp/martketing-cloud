@@ -42,7 +42,7 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         coupon.setChanelCode("msm");
         coupon.setTitle("zhuxuelongtest");
         coupon.setCouponStatus(CouponStatusEnum.COUPONSTATUS_RELEASED.getCode());
-        coupon.setStatus(0);
+        coupon.setStatus(Byte.valueOf("0"));
         int count = materialCouponDao.selectListCount(coupon);
         if (count == 0) {
             materialCouponDao.insert(coupon);
