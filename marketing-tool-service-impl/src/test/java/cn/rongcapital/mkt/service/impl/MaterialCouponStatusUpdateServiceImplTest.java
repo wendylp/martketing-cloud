@@ -138,6 +138,13 @@ public class MaterialCouponStatusUpdateServiceImplTest {
      */
     @Test
     public void testUpdateMaterialCouponStatus04() {
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                Assert.fail();
+                return null;
+            }
+        }).when(materialCouponDao).updateByIdAndStatus(Mockito.any(MaterialCoupon.class));
         ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
         MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
         vo.setStatus("1");
