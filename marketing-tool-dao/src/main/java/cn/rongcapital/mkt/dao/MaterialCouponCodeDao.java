@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.MaterialCouponCode;
 
@@ -34,4 +36,13 @@ public interface MaterialCouponCodeDao extends BaseDao<MaterialCouponCode>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    /**
+     * @功能描述: 获取
+     * @param paramMap
+     * @return MaterialCouponCode
+     * @author xie.xiaoliang
+     * @since 2016年12月8日
+     */
+    MaterialCouponCode selectByIdCodeUser(Map<String,Object> paramMap);
 }
