@@ -8,13 +8,13 @@
  *************************************************/
 package cn.rongcapital.mkt.common.enums;
 
-public enum MaterialCouponChanelCodeEnum {
-    MSM("msm", "短信渠道"), WECHAT("wechat", "微信渠道");
+public enum MaterialCouponChannelCodeEnum {
+    SMS("sms", "短信渠道"), WECHAT("wechat", "微信渠道");
 
     private String code = "";
     private String description = "";
 
-    private MaterialCouponChanelCodeEnum(String code, String description) {
+    private MaterialCouponChannelCodeEnum(String code, String description) {
         this.code = code;
         this.description = description;
     }
@@ -26,9 +26,9 @@ public enum MaterialCouponChanelCodeEnum {
      * @author xie.xiaoliang
      * @since 2016年12月7日
      */
-    public static MaterialCouponChanelCodeEnum getByCode(String code) {
-        if (MaterialCouponChanelCodeEnum.contains(code)) {
-            for (MaterialCouponChanelCodeEnum item : MaterialCouponChanelCodeEnum.values()) {
+    public static MaterialCouponChannelCodeEnum getByCode(String code) {
+        if (MaterialCouponChannelCodeEnum.contains(code)) {
+            for (MaterialCouponChannelCodeEnum item : MaterialCouponChannelCodeEnum.values()) {
                 if (item.code.equals(code)) {
                     return item;
                 }
@@ -45,8 +45,8 @@ public enum MaterialCouponChanelCodeEnum {
      * @since 2016年12月7日
      */
     public static boolean contains(String code) {
-        MaterialCouponChanelCodeEnum[] chanelCodes = values();
-        for (MaterialCouponChanelCodeEnum item : chanelCodes) {
+        MaterialCouponChannelCodeEnum[] chanelCodes = values();
+        for (MaterialCouponChannelCodeEnum item : chanelCodes) {
             if (item.getCode().equals(code)) {
                 return true;
             }
