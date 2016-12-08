@@ -10,6 +10,8 @@ public class MaterialCouponCode extends BaseQuery {
     private Long couponId;
 
     private String code;
+    
+    private String user;
 
     private String releaseStatus;
 
@@ -43,6 +45,14 @@ public class MaterialCouponCode extends BaseQuery {
 
     public void setCode(String code) {
         this.code = code == null ? null : code.trim();
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user == null ? null : user.trim();
     }
 
     public String getReleaseStatus() {
