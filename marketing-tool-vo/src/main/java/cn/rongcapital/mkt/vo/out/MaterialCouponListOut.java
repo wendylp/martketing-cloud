@@ -24,7 +24,7 @@ public class MaterialCouponListOut {
     private Integer stockTotal;
     private Integer stockRest;
     private BigDecimal amount;
-    private String chanelCode;
+    private String channelCode;
     
     /**
      * @return the id
@@ -123,15 +123,15 @@ public class MaterialCouponListOut {
     /**
      * @return the chanelCode
      */
-    @JsonProperty("chanel_code")
-    public String getChanelCode() {
-        return chanelCode;
+    @JsonProperty("channel_code")
+    public String getChannelCode() {
+        return channelCode;
     }
     /**
-     * @param chanelCode the chanelCode to set
+     * @param channelCode the chanelCode to set
      */
-    public void setChanelCode(String chanelCode) {
-        this.chanelCode = chanelCode;
+    public void setChannelCode(String channelCode) {
+        this.channelCode = channelCode;
     }
     
 }

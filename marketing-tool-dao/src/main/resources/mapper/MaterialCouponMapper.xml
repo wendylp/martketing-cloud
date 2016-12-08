@@ -142,7 +142,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE status = 0
 		AND type = 'voucher'
-		AND chanel_code = #{chanelCode}
+		AND channel_code = #{channelCode}
 		<if test="couponStatus != null"><![CDATA[AND coupon_status = #{couponStatus}]]></if>
 		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
 		ORDER BY create_time desc
@@ -155,7 +155,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE status = 0
 		AND type = 'voucher'
-		AND chanel_code = #{chanelCode}
+		AND channel_code = #{channelCode}
 		<if test="couponStatus != null"><![CDATA[AND coupon_status = #{couponStatus}]]></if>
 		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
 	</select>

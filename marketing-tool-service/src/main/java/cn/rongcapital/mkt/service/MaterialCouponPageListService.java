@@ -12,7 +12,7 @@ public interface MaterialCouponPageListService {
 
     /**
      * @功能描述: 优惠券管理页面->优惠券列表查询（分页）
-     * @param chanelCode 渠道编码
+     * @param channelCode 渠道编码
      * @param couponStatus 优惠券状态
      * @param keyword 模糊查询关键字
      * @param index 当前页
@@ -21,6 +21,6 @@ public interface MaterialCouponPageListService {
      * @author xie.xiaoliang
      * @since 2016年12月7日
      */
-    BaseOutput getMaterialCouponListByKeyword(String chanelCode, String couponStatus,
+    BaseOutput getMaterialCouponListByKeyword(String channelCode, String couponStatus,
             String keyword, Integer index, Integer size);
 }

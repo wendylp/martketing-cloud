@@ -42,7 +42,7 @@ public class MaterialCouponSelectDaoTest extends AbstractUnitTest{
     public void testSetUp() {
         paramMaterialCoupon = new MaterialCoupon();
         paramMaterialCoupon.setAmount(new BigDecimal(8));
-        paramMaterialCoupon.setChanelCode("msm");
+        paramMaterialCoupon.setChannelCode("sms");
         paramMaterialCoupon.setCouponStatus("used");
         paramMaterialCoupon.setCreateTime(new Date());
         paramMaterialCoupon.setEndTime(new Date());
@@ -71,7 +71,7 @@ public class MaterialCouponSelectDaoTest extends AbstractUnitTest{
         queryMaterialCoupon.setTitle("贝贝熊");
         queryMaterialCoupon.setStartIndex(0);
         queryMaterialCoupon.setPageSize(10);
-        queryMaterialCoupon.setChanelCode("msm");
+        queryMaterialCoupon.setChannelCode("sms");
         queryMaterialCoupon.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
         int resultCount = meterialCouponDao.selectListByKeywordCount(queryMaterialCoupon);
         Assert.assertEquals(1, resultCount);
@@ -91,7 +91,7 @@ public class MaterialCouponSelectDaoTest extends AbstractUnitTest{
         queryMaterialCoupon.setTitle("贝贝熊");
         queryMaterialCoupon.setStartIndex(0);
         queryMaterialCoupon.setPageSize(10);
-        queryMaterialCoupon.setChanelCode("msm");
+        queryMaterialCoupon.setChannelCode("sms");
         queryMaterialCoupon.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
         List<MaterialCoupon> resultList = meterialCouponDao.selectListByKeyword(queryMaterialCoupon);
         if (CollectionUtils.isEmpty(resultList)) {

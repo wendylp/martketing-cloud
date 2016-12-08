@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.enums.MaterialCouponChanelCodeEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.dao.MaterialCouponDao;
 import cn.rongcapital.mkt.po.MaterialCoupon;
@@ -35,19 +35,19 @@ public class MaterialCouponPageListServiceImpl implements MaterialCouponPageList
      * 
      * @see
      * cn.rongcapital.mkt.service.MaterialCouponPageListService#getMaterialCouponListByKeyword(cn.
-     * rongcapital.mkt.common.enums.MaterialCouponChanelCodeEnum,
+     * rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum,
      * cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum, java.lang.String,
      * java.lang.Integer, java.lang.Integer)
      */
     @Override
-    public BaseOutput getMaterialCouponListByKeyword(String chanelCode,
+    public BaseOutput getMaterialCouponListByKeyword(String channelCode,
             String couponStatus, String keyword, Integer index, Integer size) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ZERO, null);
 
         MaterialCoupon paramMaterialCoupon = new MaterialCoupon();
         
-        if(StringUtils.isEmpty(chanelCode) || !MaterialCouponChanelCodeEnum.contains(chanelCode)){
+        if(StringUtils.isEmpty(channelCode) || !MaterialCouponChannelCodeEnum.contains(channelCode)){
             return new BaseOutput(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
                 ApiConstant.INT_ZERO, null); 
         }else if(!StringUtils.isEmpty(couponStatus) && !MaterialCouponStatusEnum.contains(couponStatus)){
@@ -55,7 +55,7 @@ public class MaterialCouponPageListServiceImpl implements MaterialCouponPageList
                 ApiConstant.INT_ZERO, null);
         }
         
-        paramMaterialCoupon.setChanelCode(chanelCode);
+        paramMaterialCoupon.setChannelCode(channelCode);
         String paramCouponoStatus = StringUtils.isEmpty(couponStatus) ? null: couponStatus;
         paramMaterialCoupon.setCouponStatus(paramCouponoStatus);
         paramMaterialCoupon.setTitle(keyword);

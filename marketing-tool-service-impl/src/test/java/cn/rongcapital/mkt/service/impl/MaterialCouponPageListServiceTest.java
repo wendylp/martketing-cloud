@@ -25,7 +25,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.enums.MaterialCouponChanelCodeEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.NumUtil;
@@ -74,7 +74,7 @@ public class MaterialCouponPageListServiceTest {
     public void getMaterialCouponListByKeywordChanelCodeNull() {
         logger.info("测试方法: getContactKeyList ");
         MaterialCoupon paramMaterialCoupon = new MaterialCoupon();
-        MaterialCouponChanelCodeEnum chanelCode = MaterialCouponChanelCodeEnum.MSM;
+        MaterialCouponChannelCodeEnum chanelCode = MaterialCouponChannelCodeEnum.SMS;
         MaterialCouponStatusEnum couponStatus = MaterialCouponStatusEnum.UNUSED;
         String keyword = "贝贝熊";
         Integer index = 1;
@@ -109,7 +109,7 @@ public class MaterialCouponPageListServiceTest {
     public void getMaterialCouponListByKeyword() {
         logger.info("测试方法: getContactKeyList ");
         MaterialCoupon paramMaterialCoupon = new MaterialCoupon();
-        MaterialCouponChanelCodeEnum chanelCode = MaterialCouponChanelCodeEnum.MSM;
+        MaterialCouponChannelCodeEnum chanelCode = MaterialCouponChannelCodeEnum.SMS;
         MaterialCouponStatusEnum couponStatus = MaterialCouponStatusEnum.UNUSED;
         String keyword = "贝贝熊";
         Integer index = 1;
@@ -121,7 +121,7 @@ public class MaterialCouponPageListServiceTest {
         paramMaterialCoupon.setTitle("贝贝熊");
         paramMaterialCoupon.setStartIndex(1);
         paramMaterialCoupon.setPageSize(10);
-        paramMaterialCoupon.setChanelCode(chanelCode.getCode());
+        paramMaterialCoupon.setChannelCode(chanelCode.getCode());
         paramMaterialCoupon.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
 
         List<MaterialCoupon> resultList = new ArrayList<MaterialCoupon>();
@@ -145,8 +145,7 @@ public class MaterialCouponPageListServiceTest {
     public void getMaterialCouponListByKeywordErrorStatus() {
         logger.info("测试方法: getContactKeyList ");
         MaterialCoupon paramMaterialCoupon = new MaterialCoupon();
-        MaterialCouponChanelCodeEnum chanelCode = MaterialCouponChanelCodeEnum.MSM;
-        MaterialCouponStatusEnum couponStatus = MaterialCouponStatusEnum.UNUSED;
+        MaterialCouponChannelCodeEnum chanelCode = MaterialCouponChannelCodeEnum.SMS;
         String keyword = "贝贝熊";
         Integer index = 1;
         Integer size = 10;
@@ -155,7 +154,7 @@ public class MaterialCouponPageListServiceTest {
         paramMaterialCoupon.setTitle("贝贝熊");
         paramMaterialCoupon.setStartIndex(1);
         paramMaterialCoupon.setPageSize(10);
-        paramMaterialCoupon.setChanelCode(chanelCode.getCode());
+        paramMaterialCoupon.setChannelCode(chanelCode.getCode());
         paramMaterialCoupon.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
 
         List<MaterialCoupon> resultList = new ArrayList<MaterialCoupon>();
@@ -180,7 +179,7 @@ public class MaterialCouponPageListServiceTest {
     public void getMaterialCouponListByKeywordTestWithNoStatus() {
         logger.info("测试方法: getContactKeyList ");
         MaterialCoupon paramMaterialCoupon = new MaterialCoupon();
-        MaterialCouponChanelCodeEnum chanelCode = MaterialCouponChanelCodeEnum.MSM;
+        MaterialCouponChannelCodeEnum chanelCode = MaterialCouponChannelCodeEnum.SMS;
         MaterialCouponStatusEnum couponStatus = MaterialCouponStatusEnum.UNUSED;
         String keyword = "贝贝熊";
         Integer index = 1;
@@ -192,7 +191,7 @@ public class MaterialCouponPageListServiceTest {
         paramMaterialCoupon.setTitle("贝贝熊");
         paramMaterialCoupon.setStartIndex(1);
         paramMaterialCoupon.setPageSize(10);
-        paramMaterialCoupon.setChanelCode(chanelCode.getCode());
+        paramMaterialCoupon.setChannelCode(chanelCode.getCode());
 
         List<MaterialCoupon> resultList = new ArrayList<MaterialCoupon>();
         resultList.add(paramMaterialCoupon);
