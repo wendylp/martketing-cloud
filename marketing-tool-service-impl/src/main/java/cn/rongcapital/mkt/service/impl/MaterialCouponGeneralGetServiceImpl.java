@@ -11,6 +11,7 @@ package cn.rongcapital.mkt.service.impl;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import cn.rongcapital.mkt.dao.MaterialCouponDao;
 import cn.rongcapital.mkt.po.MaterialCoupon;
 import cn.rongcapital.mkt.service.MaterialCouponGeneralGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.MaterialCouponGeneralGetOut;
 
 @Service
 public class MaterialCouponGeneralGetServiceImpl implements MaterialCouponGeneralGetService {
@@ -41,7 +43,9 @@ public class MaterialCouponGeneralGetServiceImpl implements MaterialCouponGenera
         if (CollectionUtils.isNotEmpty(dataList)) {
             result.setTotal(ApiConstant.INT_ONE);
             result.setTotalCount(ApiConstant.INT_ONE);
-            result.getData().add(dataList.get(0));
+            MaterialCouponGeneralGetOut output = new MaterialCouponGeneralGetOut();
+            BeanUtils.copyProperties(dataList.get(0), output);
+            result.getData().add(output);
         }
         return result;
     }

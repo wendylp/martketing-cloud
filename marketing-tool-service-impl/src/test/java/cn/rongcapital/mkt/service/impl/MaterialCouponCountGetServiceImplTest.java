@@ -43,7 +43,7 @@ public class MaterialCouponCountGetServiceImplTest {
     public void setUp() throws Exception {
         service = new MaterialCouponCountGetServiceImpl();
 
-        logger.info("测试：MaterialCouponCountGetService 结束---------------------");
+        logger.info("测试：MaterialCouponCountGetService 开始---------------------");
     }
 
     @After
