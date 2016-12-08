@@ -15,6 +15,7 @@ import cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SmsTaskTargetAudienceCacheDao extends BaseDao<SmsTaskTargetAudienceCache>{
 
@@ -39,4 +40,6 @@ public interface SmsTaskTargetAudienceCacheDao extends BaseDao<SmsTaskTargetAudi
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
 
 	void batchInsert(@Param("list") List<SmsTaskTargetAudienceCache> smsTaskTargetAudienceCaches);
+	
+	List<Long> selectListByMobile(Map<String, Object> paramMap);
 }

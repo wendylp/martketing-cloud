@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.service;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface AudienceListService {
@@ -21,5 +23,7 @@ public interface AudienceListService {
     public BaseOutput getAudienceByListId(String userToken, Integer audienceId, Integer size, Integer index);
 
     BaseOutput audienceCount(String userToken);
+    
+    boolean saveAudienceByMobile(Long taskHeadId, List<String> mobileList, String audienceName );
 
 }

@@ -53,4 +53,11 @@ public interface SegmentationBodyDao extends BaseDao<SegmentationBody>{
      */
 	List<SegmentBodyWithName> getSegBodyUseHeaderId(Integer headId);
 	
+	/**
+	 * 查询细分包含标签
+	 * @param headId
+	 * @return
+	 */
+	List<String> getContainTagsByHeadId(Integer headId);
+	
 }

@@ -29,6 +29,10 @@ public class MaterialCoupon extends BaseQuery{
     private Date startTime;
 
     private Date endTime;
+    
+    private Long taskId;
+
+    private String taskName;
 
     private Integer status;
 
@@ -132,6 +136,22 @@ public class MaterialCoupon extends BaseQuery{
         this.endTime = endTime;
     }
 
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName == null ? null : taskName.trim();
+    }
+    
     public Integer getStatus() {
         return status;
     }

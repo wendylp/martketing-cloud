@@ -6,11 +6,16 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import ch.qos.logback.classic.Logger;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
+import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsSmstempletDelService;
@@ -26,6 +31,9 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
     @Autowired
     private SmsTempletDao smsTempletDao;
 
+    @Autowired
+    private SmsTempletMaterialMapDao smsTempletMaterialMapDao;
+    
     /**
      * 短信模板删除
      * 
@@ -37,6 +45,7 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
      * @Date 2016-11-14
      */
     @Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public BaseOutput delSmsTemple(SmsSmstempletDelIn body, SecurityContext securityContext) {
         
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
@@ -68,6 +77,14 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
         // 删除数据
         smsTempletDel.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
         int delCount = smsTempletDao.updateById(smsTempletDel);
+        
+		//变量模板时
+		if(SmsTempletTypeEnum.VARIABLE.getStatusCode() == smsTempletLists.get(0).getType().intValue()){
+
+			//删除物料关联
+			smsTempletMaterialMapDao.deleteByTempletId(smsTempletDel.getId());
+		}
+        
         // 设置删除个数
         result.setTotal(delCount);
         

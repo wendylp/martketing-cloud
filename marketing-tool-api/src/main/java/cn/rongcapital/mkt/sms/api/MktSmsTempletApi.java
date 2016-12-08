@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.SmsTempletService;
+import cn.rongcapital.mkt.service.SmstempletCountGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.SmsTempletOut;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
@@ -36,6 +37,10 @@ public class MktSmsTempletApi {
 	
 	@Autowired
 	private SmsTempletService smsTempletService;
+	
+	@Autowired
+	private SmstempletCountGetService smstempletCountGetService;
+	
 	
 	/**
 	 * 根据模板名称模糊查询模板列表
@@ -74,4 +79,16 @@ public class MktSmsTempletApi {
 	public BaseOutput saveOrUpdateSmsTemplet(@Valid SmsTempletIn smsTempletIn) throws Exception {		
 		return smsTempletService.saveOrUpdateSmsTemplet(smsTempletIn);
 	}
+	
+	/**
+	 * 分类获取模板数量
+	 * @return
+	 * @throws Exception
+	 */
+	@GET
+	@Path("/mkt.sms.smstemplet.count.get")
+	public BaseOutput smsTempletCountGet() throws Exception {		
+		return smstempletCountGetService.getSmsTempletCount();
+	}
+	
 }
