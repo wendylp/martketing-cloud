@@ -11,6 +11,7 @@ package cn.rongcapital.mkt.service.impl;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.weld.exceptions.IllegalArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +51,8 @@ public class MaterialCouponStatusUpdateServiceImpl implements MaterialCouponStat
         MaterialCoupon couple4Update = new MaterialCoupon();
         couple4Update.setId(vo.getId());
         couple4Update.setTaskId(vo.getTaskId());
-        couple4Update.setTaskName(vo.getTaskName() == null ? null : vo.getTaskName().trim());
-        couple4Update.setCouponStatus(vo.getStatus() == null ? null : vo.getStatus().trim());
+        couple4Update.setTaskName(StringUtils.isBlank(vo.getTaskName()) ? null : vo.getTaskName().trim());
+        couple4Update.setCouponStatus(StringUtils.isBlank(vo.getStatus()) ? null : vo.getStatus().trim());
         materialCouponDao.updateByIdAndStatus(couple4Update);
         logger.debug("coupon id={} updated. param is [{}].", vo.getId(), vo);
     }

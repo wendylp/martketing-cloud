@@ -49,6 +49,10 @@ public class MaterialCouponStatusUpdateServiceImplTest {
         logger.info("测试：MaterialCouponStatusUpdateService 结束---------------------");
     }
 
+    /**
+     * TaskName = null /Status = null
+     * 
+     */
     @Test
     public void testUpdateMaterialCouponStatus01() {
         Mockito.doAnswer(new Answer<Void>() {
@@ -67,13 +71,44 @@ public class MaterialCouponStatusUpdateServiceImplTest {
         ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
         MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
         vo.setId(6L);
-        vo.setStatus("1");
         service.updateMaterialCouponStatus(vo);
     }
 
-
+    
+    /**
+     * TaskName = "" /Status = ""
+     * 
+     */
     @Test
     public void testUpdateMaterialCouponStatus02() {
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                MaterialCoupon data = (MaterialCoupon) args[0];
+                Assert.assertEquals(6, data.getId().intValue());
+                Assert.assertNull(data.getCouponStatus());
+                Assert.assertNull(data.getTaskId());
+                Assert.assertNull(data.getTaskName());
+                return null;
+            }
+        }).when(materialCouponDao).updateByIdAndStatus(Mockito.any(MaterialCoupon.class));
+
+        ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
+        MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
+        vo.setId(6L);
+        vo.setStatus("");
+        vo.setTaskName("");
+        service.updateMaterialCouponStatus(vo);
+    }
+    
+
+    /**
+     * 有TaskName/TaskId
+     * 
+     */
+    @Test
+    public void testUpdateMaterialCouponStatus03() {
         Mockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -94,6 +129,25 @@ public class MaterialCouponStatusUpdateServiceImplTest {
         vo.setTaskId(23L);
         vo.setTaskName("task1");
         service.updateMaterialCouponStatus(vo);
+    }
+
+    /**
+     * 参数异常
+     * 
+     */
+    @Test
+    public void testUpdateMaterialCouponStatus04() {
+        ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
+        MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
+        vo.setStatus("1");
+        vo.setTaskId(23L);
+        vo.setTaskName("task1");
+        try {
+            service.updateMaterialCouponStatus(vo);
+            Assert.fail();
+        } catch (Exception e) {
+            Assert.assertEquals("param id can not be null", e.getMessage());
+        }
     }
 
 }
