@@ -12,5 +12,5 @@ public interface SmstempletCountGetService {
      * @author lijinkai
      * @Date 2016-12-07
      */
-    public BaseOutput getSmsTempletCount();
+    public BaseOutput getSmsTempletCount(String channelType);
 }

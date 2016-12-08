@@ -19,12 +19,12 @@ public class SmstempletCountGetServiceImpl implements SmstempletCountGetService 
     private SmsTempletDao smsTempletDao;
 	
 	@Override
-	public BaseOutput getSmsTempletCount() {
+	public BaseOutput getSmsTempletCount(String channelType) {
 		
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                 ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		
-		List<Map<String,String>> countMap = smsTempletDao.getTempletCountByType();
+		List<Map<String,String>> countMap = smsTempletDao.getTempletCountByType(channelType );
 		result.getData().addAll(countMap);
 		
 		return result;

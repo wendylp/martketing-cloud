@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
+import static org.mockito.Matchers.any;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +48,7 @@ public class SmstempletCountGetServiceTest {
     	mapList.add(map2);
     	
     	smstempletCountGetService = new SmstempletCountGetServiceImpl();
-        Mockito.when(smsTempletDao.getTempletCountByType()).thenReturn(mapList);
+        Mockito.when(smsTempletDao.getTempletCountByType(any())).thenReturn(mapList);
         
         // 把mock的dao set进入service
         ReflectionTestUtils.setField(smstempletCountGetService, "smsTempletDao", smsTempletDao);
@@ -55,7 +57,7 @@ public class SmstempletCountGetServiceTest {
     
     @Test
     public void testGetSmsTempletCount() throws Exception {
-        BaseOutput result = smstempletCountGetService.getSmsTempletCount();
+        BaseOutput result = smstempletCountGetService.getSmsTempletCount("1");
         
         // 测试正常情况
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
