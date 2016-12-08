@@ -1,25 +1,24 @@
 /*************************************************
- * @功能及特点的描述简述: 优惠券渠道枚举类
- * 该类被编译测试过
+ * @功能及特点的描述简述: 优惠券渠道枚举类 该类被编译测试过
  * @对应项目名称：营销云系统
  * @author: 谢小良
- * @version: 版本v1.6
+ * @version: 版本v1.6 
  * @date(创建、开发日期)：2016-12月-07 
- * 最后修改日期：2016-12月-07 
+ * @最后修改日期：2016-12月-07
  *************************************************/
 package cn.rongcapital.mkt.common.enums;
 
 public enum MaterialCouponChanelCodeEnum {
-    MSM("msm", "短信渠道"),
-    WECHAT("wechat","微信渠道");
-    
+    MSM("msm", "短信渠道"), WECHAT("wechat", "微信渠道");
+
     private String code = "";
     private String description = "";
-    
-    private MaterialCouponChanelCodeEnum(String code,String description){
+
+    private MaterialCouponChanelCodeEnum(String code, String description) {
         this.code = code;
         this.description = description;
     }
+
     /**
      * @功能描述: 通过Code获取相应的枚举值
      * @param code
@@ -27,17 +26,17 @@ public enum MaterialCouponChanelCodeEnum {
      * @author xie.xiaoliang
      * @since 2016年12月7日
      */
-    public static MaterialCouponChanelCodeEnum getByCode(String code){
-       if(MaterialCouponChanelCodeEnum.contains(code)){
-           for (MaterialCouponChanelCodeEnum item : MaterialCouponChanelCodeEnum.values()) {
-               if (item.code.equals(code)) {
-                   return item;
-               }
-           }
-       }
-    return null;
+    public static MaterialCouponChanelCodeEnum getByCode(String code) {
+        if (MaterialCouponChanelCodeEnum.contains(code)) {
+            for (MaterialCouponChanelCodeEnum item : MaterialCouponChanelCodeEnum.values()) {
+                if (item.code.equals(code)) {
+                    return item;
+                }
+            }
+        }
+        return null;
     }
-    
+
     /**
      * @功能描述: 验证是否包含此Code
      * @param code
@@ -45,10 +44,10 @@ public enum MaterialCouponChanelCodeEnum {
      * @author xie.xiaoliang
      * @since 2016年12月7日
      */
-    public static boolean contains(String code){
+    public static boolean contains(String code) {
         MaterialCouponChanelCodeEnum[] chanelCodes = values();
         for (MaterialCouponChanelCodeEnum item : chanelCodes) {
-            if(item.getCode().equals(code)){
+            if (item.getCode().equals(code)) {
                 return true;
             }
         }
@@ -83,5 +82,5 @@ public enum MaterialCouponChanelCodeEnum {
         this.description = description;
     }
 
-    
+
 }
