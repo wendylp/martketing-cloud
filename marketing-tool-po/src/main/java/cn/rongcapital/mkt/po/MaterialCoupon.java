@@ -34,7 +34,7 @@ public class MaterialCoupon extends BaseQuery{
 
     private String taskName;
 
-    private Integer status;
+    private Byte status;
 
     private Date createTime;
 
@@ -151,12 +151,12 @@ public class MaterialCoupon extends BaseQuery{
     public void setTaskName(String taskName) {
         this.taskName = taskName == null ? null : taskName.trim();
     }
-
-    public Integer getStatus() {
+    
+    public Byte getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Byte status) {
         this.status = status;
     }
 
