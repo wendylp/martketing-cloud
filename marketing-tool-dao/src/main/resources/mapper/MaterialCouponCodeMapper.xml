@@ -98,5 +98,10 @@
 	
 	<!-- 其它SQL语句 -->
 	
-	
+	<!-- 修改记录通过主键和有效状态 -->
+	<update id="updateByIdAndStatus" parameterType="cn.rongcapital.mkt.po.MaterialCouponCode">
+		<![CDATA[UPDATE material_coupon_code]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id} AND status = 0]]>
+	</update>
 </mapper>

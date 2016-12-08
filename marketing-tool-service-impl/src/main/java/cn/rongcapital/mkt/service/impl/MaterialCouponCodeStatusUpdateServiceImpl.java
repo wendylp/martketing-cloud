@@ -41,6 +41,7 @@ public class MaterialCouponCodeStatusUpdateServiceImpl implements MaterialCoupon
     public void updateMaterialCouponCodeStatus(List<MaterialCouponCodeStatusUpdateVO> voList) {
         if (CollectionUtils.isEmpty(voList)) {
             for (MaterialCouponCodeStatusUpdateVO vo : voList) {
+                logger.debug("process coupon code param is {}.", vo);
                 processMaterialCouponCode(vo);
             }
         }
@@ -56,7 +57,7 @@ public class MaterialCouponCodeStatusUpdateServiceImpl implements MaterialCoupon
         po.setId(vo.getId());
         po.setUser(vo.getUser());
         po.setReleaseStatus(vo.getStatus());
-        materialCouponCodeDao.updateById(po);
+        materialCouponCodeDao.updateByIdAndStatus(po);
     }
 
 }

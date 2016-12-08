@@ -52,6 +52,9 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         logger.info("测试：MaterialCouponStatusUpdateService 结束---------------------");
     }
 
+    /**
+     * 正常Case
+     */
     @Test
     public void test01() {
         Mockito.doAnswer(new Answer<Void>() {
@@ -60,11 +63,11 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
                 Object[] args = invocation.getArguments();
                 MaterialCouponCode data = (MaterialCouponCode) args[0];
                 Assert.assertEquals(6, data.getId().intValue());
-                Assert.assertEquals("1", data.getReleaseStatus());
+                Assert.assertEquals("12", data.getReleaseStatus());
                 Assert.assertEquals("12345", data.getUser());
                 return null;
             }
-        }).when(materialCouponCodeDao).updateById(Mockito.any(MaterialCouponCode.class));
+        }).when(materialCouponCodeDao).updateByIdAndStatus(Mockito.any(MaterialCouponCode.class));
         ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
@@ -75,7 +78,9 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         service.updateMaterialCouponCodeStatus(voList);
     }
 
-
+    /**
+     * 不传ID
+     */
     @Test
     public void test02() {
         Mockito.doAnswer(new Answer<Void>() {
@@ -84,7 +89,7 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
                 Assert.fail();
                 return null;
             }
-        }).when(materialCouponCodeDao).updateById(Mockito.any(MaterialCouponCode.class));
+        }).when(materialCouponCodeDao).updateByIdAndStatus(Mockito.any(MaterialCouponCode.class));
         ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
@@ -94,6 +99,9 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         service.updateMaterialCouponCodeStatus(voList);
     }
 
+    /**
+     * 不传Status
+     */
     @Test
     public void test03() {
         Mockito.doAnswer(new Answer<Void>() {
@@ -102,7 +110,7 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
                 Assert.fail();
                 return null;
             }
-        }).when(materialCouponCodeDao).updateById(Mockito.any(MaterialCouponCode.class));
+        }).when(materialCouponCodeDao).updateByIdAndStatus(Mockito.any(MaterialCouponCode.class));
         ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
@@ -112,6 +120,9 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         service.updateMaterialCouponCodeStatus(voList);
     }
 
+    /**
+     * 不传User
+     */
     @Test
     public void test04() {
         Mockito.doAnswer(new Answer<Void>() {
@@ -120,7 +131,7 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
                 Assert.fail();
                 return null;
             }
-        }).when(materialCouponCodeDao).updateById(Mockito.any(MaterialCouponCode.class));
+        }).when(materialCouponCodeDao).updateByIdAndStatus(Mockito.any(MaterialCouponCode.class));
         ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
