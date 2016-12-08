@@ -10,6 +10,7 @@ public class SmsTargetAudienceOut {
     private Long id;
     private Integer type;
     private String name;
+    private Long count;
 
     @JsonProperty("id")
     public Long getId() {
@@ -37,4 +38,15 @@ public class SmsTargetAudienceOut {
     public void setName(String name) {
         this.name = name;
     }
+
+    @JsonProperty("count")
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
+    
+    
 }

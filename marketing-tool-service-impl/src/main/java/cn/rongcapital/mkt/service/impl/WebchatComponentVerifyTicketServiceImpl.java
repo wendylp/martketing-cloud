@@ -46,7 +46,6 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void insert(ComponentVerifyTicketIn componentVerifyTicketIn, String msg_signature, String timestamp,
 			String nonce) {
 		String appId = componentVerifyTicketIn.getAppId();
@@ -121,17 +120,17 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 	 * @return:
 	 * 
 	 */
-	private void updateStatusForWechat(String wxAcct, byte status) {
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class,readOnly = false)
+	public void updateStatusForWechat(String wxAcct, byte status) {
 		WechatRegister wechatRegister = new WechatRegister();
 		wechatRegister.setWxAcct(wxAcct);
 		wechatRegister.setStatus(status);
 		wechatRegisterDao.updateInforByWxAcct(wechatRegister);
-		logger.info("updateStatusForWechat-------11111");
 		WechatAsset wechatAsset = new WechatAsset();
 		wechatAsset.setWxAcct(wxAcct);
 		wechatAsset.setStatus(status);
 		wechatAssetDao.updateByWxacct(wechatAsset);
-		logger.info("updateStatusForWechat-------22222");
+
 	}
 
 	/**

@@ -22,6 +22,8 @@ import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
 import cn.rongcapital.mkt.dao.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.MaterialCouponDao;
 import cn.rongcapital.mkt.po.MeterialCouponCodeCountByStatus;
@@ -49,8 +51,8 @@ public class MaterialCouponReleaseGeneralServiceImpl implements MaterialCouponRe
 		paramMap.clear();
 
 		List<String> list = new ArrayList();
-		list.add("received");
-		list.add("unreceived");
+		list.add(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
+		list.add(MaterialCouponCodeReleaseStatusEnum.UNRECEIVED.getCode());
 		paramMap.put("releaseStatusList", list);
 		paramMap.put("id", id);
 		List<MeterialCouponCodeCountByStatus> relResult = materialCouponCodeDao
@@ -58,9 +60,9 @@ public class MaterialCouponReleaseGeneralServiceImpl implements MaterialCouponRe
 		Long received = 0l, unreceived = 0l;
 		if (!CollectionUtils.isEmpty(relResult)) {
 			for (MeterialCouponCodeCountByStatus mcs : relResult) {
-				if ("received".equals(mcs.getStatus())) {
+				if (MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode().equals(mcs.getStatus())) {
 					received = mcs.getCount();
-				} else if ("unreceived".equals(mcs.getStatus())) {
+				} else if (MaterialCouponCodeReleaseStatusEnum.UNRECEIVED.getCode().equals(mcs.getStatus())) {
 					unreceived = mcs.getCount();
 				}
 			}
@@ -68,7 +70,7 @@ public class MaterialCouponReleaseGeneralServiceImpl implements MaterialCouponRe
 		list.clear();
 		paramMap.clear();
 		
-		list.add("verified");
+		list.add(MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());
 		paramMap.put("verifyStatusList", list);
 		paramMap.put("id", id);
 		List<MeterialCouponCodeCountByStatus> verRresult = materialCouponCodeDao
@@ -76,7 +78,7 @@ public class MaterialCouponReleaseGeneralServiceImpl implements MaterialCouponRe
 		Long verified = 0l;
 		if (!CollectionUtils.isEmpty(verRresult)) {
 			for (MeterialCouponCodeCountByStatus mcs : verRresult) {
-				if ("verified".equals(mcs.getStatus())) {
+				if (MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode().equals(mcs.getStatus())) {
 					verified = mcs.getCount();
 				}
 			}

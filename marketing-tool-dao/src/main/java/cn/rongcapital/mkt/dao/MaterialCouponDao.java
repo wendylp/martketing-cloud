@@ -44,4 +44,14 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
 	 */
 	Long selectStockTotalByCouponId(Map<String, Object> paramMap);
 
+    
+    /**
+     * 获取指定条件的优惠券的数量
+     * 
+     * @param paramMap
+     * @return long
+     * @author zhuxuelong
+     * @Date 2016-12-06
+     */
+    long getMaterialCouponCount(Map<String,Object> paramMap);
 }

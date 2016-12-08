@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class MaterialCouponDaoTest extends AbstractUnitTest {
+public class MaterialCouponDaoSelectStockTotalTest extends AbstractUnitTest {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -37,7 +37,7 @@ public class MaterialCouponDaoTest extends AbstractUnitTest {
 		Assert.assertEquals(20000, result.longValue());
 		logger.info("测试方法: selectStockTotalByCouponId ");
 	}
-
+	
 	@After
 	public void tearDown() throws Exception {
 		logger.info("测试: MaterialCouponDao 结束---------------------");

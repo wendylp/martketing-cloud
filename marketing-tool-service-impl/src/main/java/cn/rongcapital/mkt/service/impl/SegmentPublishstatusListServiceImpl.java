@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.SegmentationBodyDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.po.SegmentationHead;
+import cn.rongcapital.mkt.service.SegmentManageCalService;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListDataOut;
 import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListOut;
@@ -29,8 +31,18 @@ import heracles.data.common.util.ReadWriteType;
 @Service
 public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatusListService {
 
+	public static final  Integer POOL_INDEX = 2;
+	
+	public static final String SEGMENT_COVER_ID_STR="segmentcoverid:";
+	
     @Autowired
     SegmentationHeadDao segmentationHeadDao;
+    
+    @Autowired
+    SegmentationBodyDao segmentationBodyDao;
+    
+	@Autowired
+	private SegmentManageCalService segmentManageCalService;
 
     /**
      * @功能简述: mkt.segment.publishstatus.list.get
@@ -66,6 +78,13 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 				data.setSegmentHeadId(s.getId());
 				data.setPublishStatus(s.getPublishStatus());
 				data.setReferCampaignCount(s.getReferCampaignCount());
+				data.setTagNames(segmentationBodyDao.getContainTagsByHeadId(s.getId()));//获取包含标签
+				
+				//redis 中获取覆盖人数
+				Long coverCount = segmentManageCalService.scard(POOL_INDEX, SEGMENT_COVER_ID_STR+s.getId());
+
+				data.setCoverCount(coverCount.intValue());
+				
 				rseult.getDataCustom().add(data);
 			}
 		}
