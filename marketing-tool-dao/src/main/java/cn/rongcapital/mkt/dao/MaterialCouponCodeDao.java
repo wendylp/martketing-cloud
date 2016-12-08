@@ -39,7 +39,7 @@ public interface MaterialCouponCodeDao extends BaseDao<MaterialCouponCode>{
     
     /**
      * @功能描述: 获取
-     * @param paramMap
+     * @param paramMap 包含优惠码ID，券码，用户
      * @return MaterialCouponCode
      * @author xie.xiaoliang
      * @since 2016年12月8日

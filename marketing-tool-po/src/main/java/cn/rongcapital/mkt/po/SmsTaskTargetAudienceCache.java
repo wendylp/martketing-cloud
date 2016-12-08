@@ -1,13 +1,14 @@
 package cn.rongcapital.mkt.po;
 
+import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
-public class SmsTaskTargetAudienceCache extends BaseQuery{
+public class SmsTaskTargetAudienceCache extends BaseQuery {
     private Long id;
 
     private Long dataPartyId;
+
+    private String mobile;
 
     private Long targetId;
 
@@ -35,6 +36,14 @@ public class SmsTaskTargetAudienceCache extends BaseQuery{
 
     public void setDataPartyId(Long dataPartyId) {
         this.dataPartyId = dataPartyId;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile == null ? null : mobile.trim();
     }
 
     public Long getTargetId() {

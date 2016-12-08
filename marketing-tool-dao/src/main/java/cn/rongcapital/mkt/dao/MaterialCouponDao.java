@@ -12,6 +12,8 @@ package cn.rongcapital.mkt.dao;
 
 import java.util.List;
 
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.MaterialCoupon;
 
@@ -38,6 +40,16 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon>{
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
     
     /**
+     * 获取指定条件的优惠券的数量
+     * 
+     * @param paramMap
+     * @return long
+     * @author zhuxuelong
+     * @Date 2016-12-06
+     */
+    long getMaterialCouponCount(Map<String,Object> paramMap);
+    
+    /**
      * 
      * @功能描述: 模糊查询代金券
      * @param paramMaterialCoupon
@@ -55,4 +67,5 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon>{
      * @since 2016年12月6日
      */
     int selectListByKeywordCount(MaterialCoupon paramMaterialCoupon);
+    
 }
