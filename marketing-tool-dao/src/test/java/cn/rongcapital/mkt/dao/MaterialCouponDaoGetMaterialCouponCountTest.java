@@ -39,7 +39,7 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         MaterialCoupon coupon = new MaterialCoupon();
         coupon.setSourceCode("common");
         coupon.setType("voucher");
-        coupon.setChanelCode("msm");
+        coupon.setChannelCode("msm");
         coupon.setTitle("zhuxuelongtest");
         coupon.setCouponStatus(CouponStatusEnum.COUPONSTATUS_RELEASED.getCode());
         coupon.setStatus(Byte.valueOf("0"));

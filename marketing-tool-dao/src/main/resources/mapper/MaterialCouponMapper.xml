@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,title as title,source_code as sourceCode,type as type,coupon_status as couponStatus,rule as rule,stock_total as stockTotal,stock_rest as stockRest,amount as amount,channel_code as chanelCode,start_time as startTime,end_time as endTime,task_id as taskId,task_name as taskName,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,title as title,source_code as sourceCode,type as type,coupon_status as couponStatus,rule as rule,stock_total as stockTotal,stock_rest as stockRest,amount as amount,channel_code as channelCode,start_time as startTime,end_time as endTime,task_id as taskId,task_name as taskName,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -22,7 +22,7 @@
 		    	<if test="stockTotal != null"><![CDATA[ AND stock_total = #{stockTotal}]]></if>
 		    	<if test="stockRest != null"><![CDATA[ AND stock_rest = #{stockRest}]]></if>
 		    	<if test="amount != null"><![CDATA[ AND amount = #{amount}]]></if>
-		    	<if test="chanelCode != null"><![CDATA[ AND channel_code = #{chanelCode}]]></if>
+		    	<if test="channelCode != null"><![CDATA[ AND channel_code = #{channelCode}]]></if>
 		    	<if test="startTime != null"><![CDATA[ AND start_time = #{startTime}]]></if>
 		    	<if test="endTime != null"><![CDATA[ AND end_time = #{endTime}]]></if>
 		    	<if test="taskId != null"><![CDATA[ AND task_id = #{taskId}]]></if>
@@ -50,7 +50,7 @@
 		    	<if test="stockTotal != null"><![CDATA[stock_total = #{stockTotal},]]></if>
 		    	<if test="stockRest != null"><![CDATA[stock_rest = #{stockRest},]]></if>
 		    	<if test="amount != null"><![CDATA[amount = #{amount},]]></if>
-		    	<if test="chanelCode != null"><![CDATA[channel_code = #{chanelCode},]]></if>
+		    	<if test="channelCode != null"><![CDATA[channel_code = #{channelCode},]]></if>
 		    	<if test="startTime != null"><![CDATA[start_time = #{startTime},]]></if>
 		    	<if test="endTime != null"><![CDATA[end_time = #{endTime},]]></if>
 		    	<if test="taskId != null"><![CDATA[task_id = #{taskId},]]></if>
@@ -73,7 +73,7 @@
 			  #{stockTotal},
 			  #{stockRest},
 			  #{amount},
-			  #{chanelCode},
+			  #{channelCode},
 			  #{startTime},
 			  #{endTime},
 			  #{taskId},
@@ -138,7 +138,7 @@
 	    	<bind name="titlelike" value="'%'+title+'%'"/>
 	    	<![CDATA[ AND title like #{titlelike}]]>
     	</if>
-    	<if test="chanelCode != null and chanelCode != ''"><![CDATA[ AND channel_code = #{chanelCode}]]></if>
+    	<if test="channelCode != null and channelCode != ''"><![CDATA[ AND channel_code = #{channelCode}]]></if>
     	<if test="couponStatus != null and couponStatus != ''"><![CDATA[ AND coupon_status = #{couponStatus}]]></if>
 	</select>
 </mapper>
