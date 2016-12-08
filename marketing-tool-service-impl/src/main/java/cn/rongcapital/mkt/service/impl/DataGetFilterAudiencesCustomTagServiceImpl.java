@@ -98,7 +98,7 @@ public class DataGetFilterAudiencesCustomTagServiceImpl implements DataGetFilter
 
 			for (DataCustomerTags tempT : dataList) {
 				Map<String, Object> map = new HashMap<>();
-				map.put("id", ReflectionUtil.getObjectPropertyByName(tempT, "keyid"));
+				map.put("id", ReflectionUtil.getObjectPropertyByName(tempT, "id"));
 				for (ImportTemplate importTemplate : importTemplateList) {
 					Object value = ReflectionUtil.getObjectPropertyByName(tempT,
 							ReflectionUtil.recoverFieldName(importTemplate.getFieldCode()));
