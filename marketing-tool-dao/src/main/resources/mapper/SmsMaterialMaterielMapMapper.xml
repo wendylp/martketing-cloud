@@ -91,6 +91,12 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<update id="deleteBySmsMaterialId" parameterType="cn.rongcapital.mkt.po.SmsMaterialMaterielMap">
+		<![CDATA[UPDATE sms_material__materiel_map]]>
+        <set>
+			status = #{status}
+		</set>
+		WHERE sms_material_id = #{smsMaterialId}
+	</update>
 	
 </mapper>

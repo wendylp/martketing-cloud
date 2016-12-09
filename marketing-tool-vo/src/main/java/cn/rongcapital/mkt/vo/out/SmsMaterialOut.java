@@ -23,7 +23,7 @@ public class SmsMaterialOut {
     private String createTime;
     private Integer editStatus;
     private Integer deleteStatus;
-    private List<SmsMaterialComponentOut> smsMaterialComponentOutList;
+    private List<SmsMaterialMaterielOut> smsMaterialMaterielOutList;
     private List<SmsMaterialVariableOut> smsMaterialVariableOutList;
 
     @JsonProperty("id")
@@ -134,13 +134,13 @@ public class SmsMaterialOut {
         this.deleteStatus = deleteStatus;
     }
 
-    @JsonProperty("component_list")
-    public List<SmsMaterialComponentOut> getSmsMaterialComponentOutList() {
-        return smsMaterialComponentOutList;
+    @JsonProperty("materiel_list")
+    public List<SmsMaterialMaterielOut> getSmsMaterialMaterielOutList() {
+        return smsMaterialMaterielOutList;
     }
 
-    public void setSmsMaterialComponentOutList(List<SmsMaterialComponentOut> smsMaterialComponentOutList) {
-        this.smsMaterialComponentOutList = smsMaterialComponentOutList;
+    public void setSmsMaterialMaterielOutList(List<SmsMaterialMaterielOut> smsMaterialMaterielOutList) {
+        this.smsMaterialMaterielOutList = smsMaterialMaterielOutList;
     }
 
     @JsonProperty("variable_list")
