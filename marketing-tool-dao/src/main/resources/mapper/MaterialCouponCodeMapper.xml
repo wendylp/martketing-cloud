@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,coupon_id as couponId,code as code,user as user,release_status as releaseStatus,verify_status as verifyStatus,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,coupon_id as couponId,code as code,user as user,release_status as releaseStatus,verify_status as verifyStatus,verify_time as verifyTime,status as status,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -19,6 +19,7 @@
 		    	<if test="user != null"><![CDATA[ AND user = #{user}]]></if>
 		    	<if test="releaseStatus != null"><![CDATA[ AND release_status = #{releaseStatus}]]></if>
 		    	<if test="verifyStatus != null"><![CDATA[ AND verify_status = #{verifyStatus}]]></if>
+		    	<if test="verifyTime != null"><![CDATA[ AND verify_time = #{verifyTime}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
@@ -39,6 +40,7 @@
 		    	<if test="user != null"><![CDATA[user = #{user},]]></if>
 		    	<if test="releaseStatus != null"><![CDATA[release_status = #{releaseStatus},]]></if>
 		    	<if test="verifyStatus != null"><![CDATA[verify_status = #{verifyStatus},]]></if>
+		    	<if test="verifyTime != null"><![CDATA[verify_time = #{verifyTime},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
@@ -46,7 +48,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.MaterialCouponCode" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO material_coupon_code (coupon_id,code,user,release_status,verify_status,create_time)
+			INSERT INTO material_coupon_code (coupon_id,code,user,release_status,verify_status,verify_time,create_time)
 			VALUES
 			(
 			  #{couponId},
@@ -54,6 +56,7 @@
 			  #{user},
 			  #{releaseStatus},
 			  #{verifyStatus},
+			  #{verifyTime},
 			  now()
 			)
 		]]>
