@@ -29,20 +29,18 @@ public class SmstempletCountGetServiceTest {
     @Mock
     private SmsTempletDao smsTempletDao;
     
-    private List<Map<String,String>> mapList;
+    private List<Map<String,Object>> mapList;
     
     @Before
     public void setUp() throws Exception {
         
-    	mapList = new ArrayList<Map<String,String>>();
+    	mapList = new ArrayList<Map<String,Object>>();
     	
-    	Map<String,String> map1 = new HashMap<String,String>();
+    	Map<String,Object> map1 = new HashMap<String,Object>();
+    	map1.put("0", 20);
     	
-    	map1.put("0", "20");
-    	
-    	Map<String,String> map2 = new HashMap<String,String>();
-    	
-    	map2.put("1", "60");
+    	Map<String,Object> map2 = new HashMap<String,Object>();
+    	map2.put("1", 60);
     	
     	mapList.add(map1);
     	mapList.add(map2);
