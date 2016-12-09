@@ -1,7 +1,9 @@
 package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -69,45 +71,81 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 			dataPopulationLists.addAll(dataPopulationList);
 			
 		}
+		
+		logger.info("===================获取数据结束,开始同步.");
+		
+		//获取目前最大Id以便检验重复时使用
+		Integer maxId = dataPartyDao.getMaxId();
+		maxId = maxId == null ? 0 : maxId;
+		String bitmap = dataPopulationLists.get(0).getBitmap();
+		
 		//拆分总总数据，分批同步
 		List<List<DataPopulation>> dataPopulationsList = ListSplit.getListSplit(dataPopulationLists, BATCH_SIZE);
 	    
-	    for(List<DataPopulation> dataPopulations :dataPopulationsList){
+	    for(List<DataPopulation> dataPopulations : dataPopulationsList){
 	    	
-			List<Integer> idList = new ArrayList<>(dataPopulationLists.size());
-			for (DataPopulation dataObj : dataPopulations) {
+            executor.submit(new Callable<Void>() {
 
-	            executor.submit(new Callable<Void>() {
-
-	    			@Override
-	    			public Void call() throws Exception {
-	    				
+    			@Override
+    			public Void call() throws Exception {
+    				
+    				List<Integer> idList = new ArrayList<>(dataPopulationLists.size());
+    				
+    				for (DataPopulation dataObj : dataPopulations) {
 	    				createParty(dataObj);
 	    				
-	    				return null;
-	    			}
-	    			
-	            });
-				
-				idList.add(dataObj.getId());
-			}
+	    				idList.add(dataObj.getId());
+	    				
+    				}
+    				
+    				DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
+    				dataPartySyncVO.setExtendDataList(idList);
+    				doSyncAfter(dataPartySyncVO);
+    				
+    				return null;
+    			}
+    			
+            });
 	    	
-			DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-			dataPartySyncVO.setExtendDataList(idList);
-			doSyncAfter(dataPartySyncVO);
 	    }
 		
         executor.shutdown();
-      try {
-    	  //设置最大阻塞时间，所有线程任务执行完成再继续往下执行
-    	  executor.awaitTermination(24, TimeUnit.HOURS);
-    	  long endTime = System.currentTimeMillis();
+        try {
+        	//设置最大阻塞时间，所有线程任务执行完成再继续往下执行
+        	executor.awaitTermination(24, TimeUnit.HOURS);
     	  
-    	  logger.info("=====================同步人口属性到主数据结束,用时"+ (endTime-startTime) + "毫秒" );
+        	logger.info("======================校验重复数据==================== ");
     	  
-      } catch (InterruptedException e) {
-    	  logger.info("======================同步人口属性到主数据超时" );
-      }
+        	List<Map<String, Object>> repeatDatas = checkData(bitmap, maxId);
+    	  
+        	logger.info("======================重复数据"+repeatDatas.size()+"组");
+    	  
+        	if(repeatDatas != null && repeatDatas.size() > 0){
+        		for(Map<String, Object> repeatData : repeatDatas){
+        			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData);
+    			 
+        			Integer id = distinctData(repeatIds);
+    			 
+        			for(Integer repeatId : repeatIds){
+    				 
+//    					logger.info("==================repeatId:"+repeatId);
+    				 
+        				Map<String,Object> paraMap = new HashMap<String,Object>();
+    					paraMap.put("newkeyId",id);
+    					paraMap.put("oldkeyId", repeatId);
+        				dataPopulationDao.updateDataPopulationKeyid(paraMap);
+        			}
+        			
+        		}
+        	}
+    	  
+        logger.info("==========处理重复数据结束====================");
+    	long endTime = System.currentTimeMillis();
+    	logger.info("=====================同步人口属性到主数据结束,用时"+ (endTime-startTime) + "毫秒" );
+    	  
+        } catch (InterruptedException e) {
+        	logger.info("======================同步人口属性到主数据超时" );
+        }
 	}
 
 	@Override
