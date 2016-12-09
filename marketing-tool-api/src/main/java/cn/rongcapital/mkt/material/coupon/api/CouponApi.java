@@ -235,7 +235,7 @@ public class CouponApi {
      * @author zhuxuelong
      */
     @GET
-    @Path("/mkt.material.coupon.get")
+    @Path("/mkt.material.coupon.verify.list")
     @Consumes({MediaType.APPLICATION_JSON})
     public BaseOutput listMaterialCouponCodeVerfy(@NotEmpty @QueryParam("user_token") String userToken,
                     @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id,

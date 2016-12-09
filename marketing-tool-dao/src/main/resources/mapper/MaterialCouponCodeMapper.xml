@@ -154,4 +154,34 @@
 		<![CDATA[WHERE id = #{item.id} AND status = 0]]>
 		</foreach>
 	</update>
+	
+	<!-- 总数查询,通过条件 -->
+	<select id="getCouponCodeVerifyList" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.vo.out.MaterialCouponCodeVerifyListOut">
+		<![CDATA[SELECT t1.amount as amount,t1.channel_code as channelCode,t2.id,t2.code,t2.user,t2.verify_status as status,t2.verify_time as verifyTimeDate]]>
+		<![CDATA[ FROM material_coupon t1 INNER JOIN material_coupon_code t2 ON t1.id = t2.coupon_id]]>
+		<![CDATA[ WHERE t1.id = #{id} AND t1.status = 0 AND t2.status = 0]]>
+    	<if test="user != null and user != ''">
+    		<bind name="userlike" value="'%'+user+'%'"/>
+	    	<![CDATA[ AND t2.user like #{userlike}]]>
+    	</if>
+    	<if test="releaseStatus != null and releaseStatus != ''"><![CDATA[ AND t2.release_status = #{releaseStatus}]]></if>
+    	<if test="verifyStatus != null and verifyStatus != ''"><![CDATA[ AND t2.verify_status = #{verifyStatus}]]></if>
+    	<if test="expireStatus == 'expired'"><![CDATA[ AND t1.end_time IS NOT NULL AND t1.end_time < #{expireTime}]]></if>
+    	<if test="expireStatus == 'unexpired'"><![CDATA[ AND (t1.end_time IS NULL OR t1.end_time > #{expireTime})]]></if>
+    	<![CDATA[LIMIT #{index},#{size}]]>
+	</select>
+	<!-- 总数查询,通过条件 -->
+	<select id="getCouponCodeVerifyListCnt" parameterType="java.util.Map" resultType="int">
+		<![CDATA[SELECT COUNT(t2.id)]]>
+		<![CDATA[ FROM material_coupon t1 INNER JOIN material_coupon_code t2 ON t1.id = t2.coupon_id]]>
+		<![CDATA[ WHERE t1.id = #{id} AND t1.status = 0 AND t2.status = 0]]>
+    	<if test="user != null and user != ''">
+    		<bind name="userlike" value="'%'+user+'%'"/>
+	    	<![CDATA[ AND t2.user like #{userlike}]]>
+    	</if>
+    	<if test="releaseStatus != null and releaseStatus != ''"><![CDATA[ AND t2.release_status = #{releaseStatus}]]></if>
+    	<if test="verifyStatus != null and verifyStatus != ''"><![CDATA[ AND t2.verify_status = #{verifyStatus}]]></if>
+    	<if test="expireStatus == 'expired'"><![CDATA[ AND t1.end_time IS NOT NULL AND t1.end_time < #{expireTime}]]></if>
+    	<if test="expireStatus == 'unexpired'"><![CDATA[ AND (t1.end_time IS NULL OR t1.end_time > #{expireTime})]]></if>
+	</select>
 </mapper>
