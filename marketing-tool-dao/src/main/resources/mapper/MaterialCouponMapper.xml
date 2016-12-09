@@ -121,6 +121,19 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
+	<!-- 修改记录通过主键和有效状态 -->
+	<update id="updateByIdAndStatus" parameterType="cn.rongcapital.mkt.po.MaterialCoupon">
+		<![CDATA[UPDATE material_coupon]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id} AND status = 0]]>
+	</update>
+	
+	<!-- 根据优惠券ID查询优惠券生成码数量 -->
+	<select id="selectStockTotalByCouponId" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT stock_total
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id = #{id}
+	</select>
 	
 	<!-- 总数查询,通过条件 -->
 	<select id="getMaterialCouponCount" parameterType="java.util.Map" resultType="long">
@@ -133,5 +146,30 @@
     	</if>
     	<if test="channelCode != null and channelCode != ''"><![CDATA[ AND channel_code = #{channelCode}]]></if>
     	<if test="couponStatus != null and couponStatus != ''"><![CDATA[ AND coupon_status = #{couponStatus}]]></if>
+	</select>
+	
+	<!-- 模糊查询优惠券列表 -->
+	<select id="selectListByKeyword" parameterType="cn.rongcapital.mkt.po.MaterialCoupon" resultType="cn.rongcapital.mkt.po.MaterialCoupon">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = 0
+		AND type = 'voucher'
+		AND channel_code = #{channelCode}
+		<if test="couponStatus != null"><![CDATA[AND coupon_status = #{couponStatus}]]></if>
+		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
+		ORDER BY create_time desc
+		LIMIT #{startIndex},#{pageSize}
+	</select>
+	
+	<!-- 模糊查询优惠券的数量  -->
+	<select id="selectListByKeywordCount" parameterType="cn.rongcapital.mkt.po.MaterialCoupon" resultType="int">
+		<![CDATA[SELECT count(id)]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = 0
+		AND type = 'voucher'
+		AND channel_code = #{channelCode}
+		<if test="couponStatus != null"><![CDATA[AND coupon_status = #{couponStatus}]]></if>
+		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
 	</select>
 </mapper>
