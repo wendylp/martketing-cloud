@@ -11,6 +11,9 @@ package cn.rongcapital.mkt.service.impl;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
 
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.weld.exceptions.IllegalArgumentException;
 import org.slf4j.Logger;
@@ -47,6 +50,17 @@ public class MaterialCouponStatusUpdateServiceImpl implements MaterialCouponStat
     public void updateMaterialCouponStatus(MaterialCouponStatusUpdateVO vo) {
         if (vo.getId() == null) {
             throw new IllegalArgumentException("param id can not be null");
+        }
+        MaterialCoupon couple4Search = new MaterialCoupon();
+        couple4Search.setId(vo.getId());
+        couple4Search.setStatus((byte) 0);
+        List<MaterialCoupon> poList = materialCouponDao.selectList(couple4Search);
+        if (poList.size() == 0) {
+            throw new RuntimeException(String.format("coupon id=[%s] is not exist.", vo.getId()));
+        }
+        MaterialCoupon po = poList.get(0);
+        if (po.getEndTime() != null && po.getEndTime().compareTo(new Date()) < 0) {
+            throw new RuntimeException(String.format("coupon id=[%s] is expired.", vo.getId()));
         }
         MaterialCoupon couple4Update = new MaterialCoupon();
         couple4Update.setId(vo.getId());
