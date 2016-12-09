@@ -11,6 +11,8 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.List;
+
+import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -54,6 +56,22 @@ public interface MaterialCouponCodeDao extends BaseDao<MaterialCouponCode> {
 	 * @return Map<String,Object>
 	 */
 	List<MeterialCouponCodeCountByStatus> selectCouponTotalByCouponIdAndVeriStatus(Map<String, Object> paramMap);
+    
+    /**
+     * 通过主键和有效状态更新表
+     * 
+     * @param po
+     * @author zhuxuelong
+     */
+    void updateByIdAndStatus(MaterialCouponCode po);
+    
+    /**
+     * 批量通过主键和有效状态更新表
+     * 
+     * @param poList
+     * @author zhuxuelong
+     */
+    void batchUpdateByIdAndStatus(List<MaterialCouponCode> poList);
 	
 	
 	  /**@author liuhaizhan

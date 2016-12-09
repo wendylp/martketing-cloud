@@ -494,4 +494,10 @@
 			#{item}
 		</foreach>
 	</select>
+	
+		<!-- 修改keyid -->
+	<update id="updateDataPopulationKeyid" parameterType="Map">
+		<![CDATA[UPDATE data_population SET keyid = #{newkeyId} WHERE keyid = #{oldkeyId}]]>
+	</update>
+	
 </mapper>

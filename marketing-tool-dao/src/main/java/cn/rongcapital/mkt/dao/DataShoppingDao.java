@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -140,4 +141,10 @@ public interface DataShoppingDao extends BaseDao<DataShopping>, BaseDataFilterDa
      */
     List<ShoppingWechat> selectOrderStatusByKeyid(@Param("keyId")Integer keyId);
     
+	/**
+	 * 更新Keyid
+	 * newkeyId-5
+	 * oldkeyId-6
+	 */
+    void updateDataShoppingKeyid(Map<String,Object> map);
 }

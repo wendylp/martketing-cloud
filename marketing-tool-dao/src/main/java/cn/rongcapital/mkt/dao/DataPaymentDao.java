@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -102,5 +103,12 @@ public interface DataPaymentDao extends BaseDao<DataPayment>, BaseDataFilterDao<
 	 * @throws
 	 */
 	Float selectTotalIncomeAmountByKeyid(@Param("keyId")Integer keyId);
+	
+	/**
+	 * 更新Keyid
+	 * newkeyId-5
+	 * oldkeyId-6
+	 */
+	void updateDataPopulationKeyid(Map<String,Object> map);
 
 }

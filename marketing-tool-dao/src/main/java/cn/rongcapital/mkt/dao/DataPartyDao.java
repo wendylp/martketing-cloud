@@ -249,4 +249,30 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
 	 * @return
 	 */
 	List<AudienceIDAndMobilePO> selectCacheAudienceListByIdList(@Param("idList") List<Long> dataPartyIdList);
+	
+    /**
+     * 获取当前最大Id
+     * @return
+     */
+    Integer getMaxId();
+    
+    /**
+     * 获取重复的数据BitmapKeys
+     * @param paramMap
+     * @return
+     */
+    List<Map<String,Object>> getRepeatDataByBitmapKeys(Map<String,Object> map);
+    
+    /**
+     * 获取重复的数据Ids
+     * @param paramMap
+     * @return
+     */
+    List<Integer> getIdsByRepeatByBitmapKeys(DataParty dataParty);
+    
+    /**
+     * 删除主数据
+     * @param id
+     */
+    void deleteDataById(Integer id);
 }
