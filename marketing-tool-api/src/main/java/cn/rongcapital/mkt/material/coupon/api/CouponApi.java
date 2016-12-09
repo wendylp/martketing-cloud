@@ -9,12 +9,11 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.api;
 
-<<<<<<< HEAD
 import javax.validation.Valid;
-=======
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
->>>>>>> refs/remotes/origin/dev
+
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -56,15 +55,13 @@ public class CouponApi {
     @Autowired
     private MaterialCouponCountGetService materialCouponCountGetService;
 
+    @Autowired
+    private MaterialCouponReleaseGeneralService materialCouponReleaseGeneralService;
 
-	@Autowired
-	private MaterialCouponReleaseGeneralService materialCouponReleaseGeneralService;
-	
-	@Autowired
+    @Autowired
     private CouponCodeListService couponCodeListService;
     @Autowired
     private MaterialCouponPageListService couponPageListService;
-
 
     @Autowired
     private MaterialCouponPutInGeneralService materialCouponPutInGeneralService;
@@ -92,7 +89,6 @@ public class CouponApi {
             @QueryParam("keyword") String keyword) throws Exception {
         return materialCouponCountGetService.getMaterialCouponCount(chanelCode, keyword);
     }
-
 
     /**
      * @author guozhenchao
@@ -157,10 +153,10 @@ public class CouponApi {
         return materialCouponPutInGeneralService.PutInGeneral(id);
     }
 
-
-		return materialCouponReleaseGeneralService.releaseGeneralById(id, userToken, version);
-	}
+   
+  
     
+
     /**
      * @功能描述: message
      * @param userToken
