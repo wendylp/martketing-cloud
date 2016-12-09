@@ -10,12 +10,6 @@
 
 package cn.rongcapital.mkt.api;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -33,21 +27,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import cn.rongcapital.mkt.biz.WechatPublicAuthBiz;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.jedis.JedisException;
-import cn.rongcapital.mkt.po.ContactWay;
-import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.*;
 import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -55,20 +44,12 @@ import cn.rongcapital.mkt.vo.ImgAsset;
 import cn.rongcapital.mkt.vo.ImgtextHostIn;
 import cn.rongcapital.mkt.vo.LoginInput;
 import cn.rongcapital.mkt.vo.ModifyInput;
-import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
-import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.Audience;
-import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
 import cn.rongcapital.mkt.vo.in.CampaignHeadCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignHeadUpdateIn;
 import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
-import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
-import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
-import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
-import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
-import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.SegmentCountFilterIn;
 import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
@@ -80,8 +61,6 @@ import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.TagGroupsListIn;
 import cn.rongcapital.mkt.vo.in.TagListSecondarySearchIn;
 import cn.rongcapital.mkt.vo.in.TagSystemFlagSetIn;
-import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
-import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
@@ -91,11 +70,8 @@ import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
 import cn.rongcapital.mkt.vo.out.CampaignProfileOut;
 import cn.rongcapital.mkt.vo.out.CampaignProgressStatusCountOut;
-import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
-import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListOut;
 import cn.rongcapital.mkt.vo.out.SerarchTagGroupTagsOut;
-import cn.rongcapital.mkt.vo.out.WechatUserListOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -128,34 +104,13 @@ public class MktApi {
 	private ImgtextHostService imgtextHostService;
 
 	@Autowired
-	private WechatTypeCountGetService wechatTypeCountGetService;
-
-	@Autowired
-	private TagGetCustomService tagGetCustomService;
-
-	@Autowired
 	private SegmentHeaderGetService segmentHeaderGetService;
-
-	@Autowired
-	private WechatAssetListService wechatAssetListService;
-
-	@Autowired
-	private WechatAssetListGetService wechatAssetListGetService;
-
-	@Autowired
-	private UpdateNicknameService updateNicknameService;
-
-	@Autowired
-	private SaveWechatAssetListService saveWechatAssetListService;
 
 	@Autowired
 	private SaveCampaignAudienceService saveCampaignAudienceService;
 
 	@Autowired
 	private SegmentHeaderUpdateService segmentHeaderUpdateService;
-
-	@Autowired
-	private UploadFileService uploadFileService;
 
 	@Autowired
 	private CampaignHeaderGetService campaignHeaderGetService;
@@ -242,40 +197,19 @@ public class MktApi {
 	private GroupTagsSearchService groupTagsSearchService;
 
 	@Autowired
-	private WechatPublicAuthService wechatPublicAuthService;
-
-	@Autowired
-	private WechatPublicAuthCallbackService wechatPublicAuthCallbackService;
-
-	@Autowired
-	private WechatPersonalAuthService wechatPersonalAuthService;
-
-	@Autowired
 	private TaskGetListService taskGetListService;
-
-	@Autowired
-	private WechatPeopleDetailDownloadService wechatPeopleDetailDownloadService;
 
 	@Autowired
 	private CampaignBodyItemAudienceSearchService campaignBodyItemAudienceSearchService;
 
 	@Autowired
-	private WechatAssetMemberSearchService wechatAssetMemberSearchService;
-
-	@Autowired
 	private TagDownloadCustomAudienceService tagDownloadCustomAudienceService;
-
-	@Autowired
-	private HomePageUserCountListService homePageUserCountListService;
 
 	@Autowired
 	private GetCampaignConvertChartListService getCampaignConvertChartListService;
 
 	@Autowired
 	private GetCampaignCustomerSourceListService getCampaignCustomerSourceListService;
-
-	@Autowired
-	private GetWechatUserListService getWechatUserListService;
 
 	@Autowired
 	private HomePageCalendarListService homePageCalendarListService;
@@ -288,12 +222,6 @@ public class MktApi {
 	
 	@Autowired
 	private SegmentSearchDownloadService segmentSearchDownloadService;
-	
-	@Autowired
-	private WechatPublicAuthBiz wechatPublicAuthBiz;
-	
-	@Autowired
-	private Environment env;
 
 	@Autowired
 	private CreupdateSegmentService creupdateSegmentService;
@@ -644,77 +572,6 @@ public class MktApi {
 	}
 
 	/**
-	 * @功能简述: 获取不同类型微信资产的数量
-	 * @param: String
-	 *             userToken, String ver
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.asset.wechat.type.count.get")
-	public Object getWechatAssetTypeCount(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) throws Exception {
-		return wechatTypeCountGetService.getWechatTypeCount();
-	}
-
-	/**
-	 * @功能简述: 获取某个类型下的资产列表
-	 * @param: String
-	 *             method, String userToken, String ver, int asset_type, int
-	 *             index, int size
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.asset.wechat.type.list.get")
-	public Object getWechatAssetListByType(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver,
-			@NotNull @QueryParam("asset_type") Integer assetType,
-			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
-		return wechatAssetListService.getWechatAssetListByType(assetType, index, size);
-	}
-
-
-	/**
-	 * @功能简述: 获取某个微信账号下的好友/粉丝/群组信息
-	 * @param: String
-	 *             userToken, String ver, Integer asset_id
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.asset.wechat.list.get")
-	public Object getWechatAssetTypeCount(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("asset_id") Integer assetId)
-			throws Exception {
-		return wechatAssetListGetService.getWechatAssetList(assetId);
-	}
-
-	/**
-	 * @功能描述:编辑mkt系统中微信的昵称，不是微信中的昵称
-	 * @Param: String user_token, String ver, Integer asset_id, String nickname
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.asset.wechat.nickname.update")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object updateWechatNickname(@Valid UpdateNicknameIn updateNicknameIn,
-			@Context SecurityContext securityContext) {
-		return updateNicknameService.updateNickname(updateNicknameIn, securityContext);
-	}
-
-	/**
-	 * @功能描述:保存微信账号下的人群
-	 * @Param: String user_token, String ver, Integer asset_id, String nickname
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.asset.wechat.list.save")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object saveWechatAssetList(@Valid SaveWechatAssetListIn saveWechatAssetListIn,
-			@Context SecurityContext securityContext) {
-		return saveWechatAssetListService.saveWechatAssetList(saveWechatAssetListIn, securityContext);
-	}
-
-	/**
 	 * @功能描述:活动编排，保存人群
 	 * @Param: String user_token, String ver, String audience_name
 	 * @return: Object
@@ -725,20 +582,6 @@ public class MktApi {
 	public Object saveCampaignAudience(@Valid Audience audience, @Context SecurityContext securityContext) {
 		return saveCampaignAudienceService.saveCampaignAudience(audience, securityContext);
 	}
-
-	/**
-	 * @功能描述:重新授权或者重新登录
-	 * @Param: String user_token, String ver, Integer asset_id, String nickname
-	 * @return: Object
-	 */
-	// @POST
-	// @Path("/mkt.asset.wechat.reauth")
-	// @Consumes({MediaType.APPLICATION_JSON})
-	// public Object reauthWechatAccount(@Valid ReauthWechatAccountIn
-	// reauthWechatAccountIn,@Context SecurityContext securityContext){
-	// return
-	// reauthWechatAccountService.reauthWechatAccount(reauthWechatAccountIn);
-	// }
 
 	/**
 	 * @功能描述:查询系统推荐标签列表
@@ -1160,80 +1003,6 @@ public class MktApi {
 		return taggroupSystemMenulistGetService.getMonggTagTreelist(method, userToken, index, size);
 	}
 
-	/**
-	 * @功能简述: 微信公众号授权
-	 * @param:String user_token,String
-	 *                   ver,Integer type,String ownerName,int index,int size
-	 * @return: Object
-	 * @throws JedisException 
-	 */
-	@GET
-	@Path("/mkt.data.inbound.wechat.public.auth")
-	public BaseOutput authWechatPublicAccount(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) throws JedisException {
-		return wechatPublicAuthBiz.authWechatPublicAccount();
-	}
-
-	@GET
-	@Path("/mkt.data.inbound.wechat.public.auth.code.callback")
-	public Response authWechatPublicCodeAccount(@NotEmpty @QueryParam("auth_code") String authorizationCode,@NotEmpty @QueryParam("expires_in") String expiresIn) throws URISyntaxException {
-		BaseOutput baseOutput = wechatPublicAuthBiz.authWechatPublicCodeAccount(authorizationCode);
-		String weixin_redirect_url = env.getProperty("weixin.redirect.url");
-		URI location = new java.net.URI(weixin_redirect_url);
-		return Response.temporaryRedirect(location).build();		
-	}
-
-	/**
-	 * @功能简述: 微信公众号授权时大连那边所调用的回调接口
-	 * @param wechatPublicAuthCallbackIn
-	 * @return BaseOutput
-	 */
-	@POST
-	@Path("/mkt.data.inbound.wechat.public.auth.callback")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response wechatPublicAuthCallback(@Valid WechatPublicAuthCallbackIn wechatPublicAuthCallbackIn) {
-
-		wechatPublicAuthCallbackService.authWechatPublicCallback(wechatPublicAuthCallbackIn);
-
-		URI location = null;
-
-		try {
-			logger.info("redirect : before location!");
-			location = new java.net.URI("http://mktpro.rc.dataengine.com/html/data-access/weixin.html");
-			logger.info("redirect : after location!");
-		} catch (URISyntaxException e) {
-			logger.info("redirect : before exception");
-			e.printStackTrace();
-			logger.info("redirect : after exception");
-		}
-
-		return Response.temporaryRedirect(location).build();
-	}
-
-	/**
-	 * @功能简述: 获取微信个人号授权时产生的uuid
-	 * @param wechatPersonalAuthIn
-	 * @return BaseOutput
-	 */
-	@POST
-	@Path("/mkt.data.inbound.wechat.personal.auth")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput wechatPersonalAuth(WechatPersonalAuthIn wechatPersonalAuthIn) {
-		return wechatPersonalAuthService.authPersonWechat(wechatPersonalAuthIn);
-	}
-
-	/**
-	 * @功能简述: 获取微信人群的明细下载
-	 * @param: String
-	 *             userToken
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.asset.wechat.people.detail.download")
-	public Object downloadWechatPeopleDetail(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("group_ids") String group_ids) {
-		return wechatPeopleDetailDownloadService.downloadWechatPeopleDetail(group_ids);
-	}
 
 	/**
 	 * 搜索活动节点上的人
@@ -1252,22 +1021,6 @@ public class MktApi {
 			@QueryParam("search_field") String name, @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId,
 			@NotNull @QueryParam("item_id") String itemId) {
 		return campaignBodyItemAudienceSearchService.campaignBodyItemAudienceSearch(name, campaignHeadId, itemId);
-	}
-
-	/**
-	 * 查询微信小组中的人群
-	 * 
-	 * @param userToken
-	 * @param ver
-	 * @param groupIds
-	 * @return
-	 */
-	@GET
-	@Path("/mkt.asset.wechat.member.search")
-	public BaseOutput wechatAssetMemberSearch(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("group_ids") String groupIds,
-			@QueryParam("search_field") String searchField) {
-		return wechatAssetMemberSearchService.searchWechatAssetMember(groupIds, searchField);
 	}
 
 	/**
@@ -1299,34 +1052,6 @@ public class MktApi {
 			@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver,
 			@NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
 		return getCampaignCustomerSourceListService.getCampaignCustomSourceInfo(campaignHeadId);
-	}
-
-	/**
-	 * 返回当前订阅号，服务号，个人号按月累计的粉丝数量
-	 * 
-	 * @param userToken
-	 * @param ver
-	 * @return
-	 */
-	@GET
-	@Path("/mkt.wechat.user.list")
-	public WechatUserListOut getWechatUserList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
-		return getWechatUserListService.getWechatUserListByType();
-	}
-
-	/**
-	 * 按月份按公众号统计每月的用户增加数量
-	 *
-	 * @param userToken
-	 * @param ver
-	 * @author nianjun
-	 */
-	@GET
-	@Path("/mkt.homepage.usercount.list")
-	public BaseOutput homePageUserCountList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver,@NotNull @QueryParam("date_type") Integer dateType) {
-		return homePageUserCountListService.getHomePageUserCountList(dateType);
 	}
 
 	/**
@@ -1372,19 +1097,6 @@ public class MktApi {
 				null);
 		out.getData().add(campaignHeaderGetService.campaignAnalysisList(null, null, null, null));
 		return out;
-	}
-	
-	/**
-	 * 批量新建上传处理
-	 * @param fileUnique
-	 * @param input
-	 * @return
-	 */
-	@POST
-	@Path("/mkt.weixin.qrcode.batch.upload")
-	@Consumes("multipart/form-data")
-	public BaseOutput fileUploadBatch(@QueryParam("file_unique") String fileUnique, MultipartFormDataInput input){
-		return uploadFileService.uploadFileBatch(fileUnique, input);
 	}
 	
 	/**
