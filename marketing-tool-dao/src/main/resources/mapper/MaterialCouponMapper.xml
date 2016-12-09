@@ -148,6 +148,7 @@
     	<if test="couponStatus != null and couponStatus != ''"><![CDATA[ AND coupon_status = #{couponStatus}]]></if>
 	</select>
 	
+
 	 <!-- 查询单条优惠券信息 -->
 	<select id="selectOneCoupon" parameterType="long"
 		resultType="cn.rongcapital.mkt.po.MaterialCoupon">
@@ -190,4 +191,30 @@
 	
 	
 	
+
+	<!-- 模糊查询优惠券列表 -->
+	<select id="selectListByKeyword" parameterType="cn.rongcapital.mkt.po.MaterialCoupon" resultType="cn.rongcapital.mkt.po.MaterialCoupon">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = 0
+		AND type = 'voucher'
+		AND channel_code = #{channelCode}
+		<if test="couponStatus != null"><![CDATA[AND coupon_status = #{couponStatus}]]></if>
+		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
+		ORDER BY create_time desc
+		LIMIT #{startIndex},#{pageSize}
+	</select>
+	
+	<!-- 模糊查询优惠券的数量  -->
+	<select id="selectListByKeywordCount" parameterType="cn.rongcapital.mkt.po.MaterialCoupon" resultType="int">
+		<![CDATA[SELECT count(id)]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = 0
+		AND type = 'voucher'
+		AND channel_code = #{channelCode}
+		<if test="couponStatus != null"><![CDATA[AND coupon_status = #{couponStatus}]]></if>
+		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
+	</select>
+
 </mapper>

@@ -9,9 +9,15 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.api;
 
+<<<<<<< HEAD
 import javax.validation.Valid;
+=======
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+>>>>>>> refs/remotes/origin/dev
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,8 +36,10 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CouponCodeListService;
 import cn.rongcapital.mkt.service.MaterialCouponCountGetService;
+
 import cn.rongcapital.mkt.service.MaterialCouponDeleteService;
 import cn.rongcapital.mkt.service.MaterialCouponPutInGeneralService;
+import cn.rongcapital.mkt.service.MaterialCouponPageListService;
 import cn.rongcapital.mkt.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.MaterialCouponDeleteIn;
@@ -48,11 +56,15 @@ public class CouponApi {
     @Autowired
     private MaterialCouponCountGetService materialCouponCountGetService;
 
-    @Autowired
-    private CouponCodeListService couponCodeListService;
 
+	@Autowired
+	private MaterialCouponReleaseGeneralService materialCouponReleaseGeneralService;
+	
+	@Autowired
+    private CouponCodeListService couponCodeListService;
     @Autowired
-    private MaterialCouponReleaseGeneralService materialCouponReleaseGeneralService;
+    private MaterialCouponPageListService couponPageListService;
+
 
     @Autowired
     private MaterialCouponPutInGeneralService materialCouponPutInGeneralService;
@@ -80,6 +92,7 @@ public class CouponApi {
             @QueryParam("keyword") String keyword) throws Exception {
         return materialCouponCountGetService.getMaterialCouponCount(chanelCode, keyword);
     }
+
 
     /**
      * @author guozhenchao
@@ -142,6 +155,34 @@ public class CouponApi {
     public Object getPutInGeneral(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id) {
         return materialCouponPutInGeneralService.PutInGeneral(id);
+    }
+
+
+		return materialCouponReleaseGeneralService.releaseGeneralById(id, userToken, version);
+	}
+    
+    /**
+     * @功能描述: message
+     * @param userToken
+     * @param ver
+     * @param searchWord
+     * @param channelType
+     * @param index
+     * @param size
+     * @return
+     * @throws Exception BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月7日
+     */
+    @GET
+    @Path("/mkt.material.coupon.list")
+    public BaseOutput getMaterialCouponListByKeyword(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("channel_code") String channelCode,
+            @QueryParam("keyword") String keyword, @QueryParam("coupon_status") String couponStatus,
+            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("page_size") Integer size) throws Exception {
+
+        return couponPageListService.getMaterialCouponListByKeyword(channelCode, couponStatus, keyword, index, size);
     }
 
 }

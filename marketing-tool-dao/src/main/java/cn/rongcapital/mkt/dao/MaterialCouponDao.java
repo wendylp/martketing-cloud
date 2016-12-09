@@ -64,6 +64,7 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
      */
     long getMaterialCouponCount(Map<String,Object> paramMap);
     
+
     
     /**@author liuhaizhan
      * @功能简述 查询单条优惠券信息
@@ -79,5 +80,25 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
   * @return：返回data
   */
    public List<Map> getPutInCoupon(Long id);
+
+    /**
+     * 
+     * @功能描述: 模糊查询代金券
+     * @param paramMaterialCoupon
+     * @return List<MaterialCoupon>
+     * @author xie.xiaoliang
+     * @since 2016年12月6日
+     */
+    List<MaterialCoupon> selectListByKeyword(MaterialCoupon paramMaterialCoupon);
+    
+    /**
+     * @功能描述: 模糊查询代金券数量
+     * @param paramMaterialCoupon
+     * @return int
+     * @author xie.xiaoliang
+     * @since 2016年12月6日
+     */
+    int selectListByKeywordCount(MaterialCoupon paramMaterialCoupon);
+
     
 }
