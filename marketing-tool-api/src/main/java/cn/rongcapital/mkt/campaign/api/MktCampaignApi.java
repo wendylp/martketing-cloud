@@ -35,6 +35,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
+import cn.rongcapital.mkt.service.CampaignBodyItemAudienceSearchService;
 import cn.rongcapital.mkt.service.CampaignDeleteService;
 import cn.rongcapital.mkt.service.CampaignHeaderCreateService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
@@ -42,16 +43,20 @@ import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
 import cn.rongcapital.mkt.service.CampaignNodeItemListGetService;
 import cn.rongcapital.mkt.service.CampaignProgressStatusCountService;
 import cn.rongcapital.mkt.service.CampaignProgressStatusListService;
+import cn.rongcapital.mkt.service.CampaignSummaryGetService;
 import cn.rongcapital.mkt.service.GetCampaignConvertChartListService;
 import cn.rongcapital.mkt.service.GetCampaignCustomerSourceListService;
 import cn.rongcapital.mkt.service.GroupTagsSearchService;
+import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.Audience;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignDeleteIn;
 import cn.rongcapital.mkt.vo.in.CampaignHeadCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignHeadUpdateIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
+import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
 import cn.rongcapital.mkt.vo.out.CampaignConvertChartListOut;
 import cn.rongcapital.mkt.vo.out.CampaignCustomSourceListOut;
 import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
@@ -102,6 +107,17 @@ public class MktCampaignApi {
 
     @Autowired
     private CampaignBodyGetService campaignBodyGetService;
+    
+    @Autowired
+    private SaveCampaignAudienceService saveCampaignAudienceService;
+    
+    @Autowired
+    private CampaignSummaryGetService campaignSummaryGetService;
+    
+    @Autowired
+    private CampaignBodyItemAudienceSearchService campaignBodyItemAudienceSearchService;
+    
+    
 
     /**
      * @功能简述: 编辑campaign header
@@ -294,6 +310,50 @@ public class MktCampaignApi {
     public CampaignBodyGetOut campaignBodyGet(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
         return campaignBodyGetService.campaignBodyGet(userToken, ver, campaignHeadId);
+    }
+    
+    /**
+     * @功能描述:活动编排，保存人群
+     * @Param: String user_token, String ver, String audience_name
+     * @return: Object
+     */
+    @POST
+    @Path("/mkt.campaign.node.audience.save")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public Object saveCampaignAudience(@Valid Audience audience, @Context SecurityContext securityContext) {
+        return saveCampaignAudienceService.saveCampaignAudience(audience, securityContext);
+    }
+    
+    /**
+     * @功能简述: 查询营销活动个数和触达人数
+     * @param:
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.campaign.summary.get")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken) {
+        return campaignSummaryGetService.campaignSummaryGet();
+    }
+    
+    /**
+     * 搜索活动节点上的人
+     * 
+     * @param userToken
+     * @param ver
+     * @param name
+     * @param campaignHeadId
+     * @param itemId
+     * @return
+     */
+    @GET
+    @Path("/mkt.campaign.body.item.audience.search")
+    public CampaignBodyItemAudienceSearchOut campaignBodyItemAudienceSearch(
+            @NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver,
+            @QueryParam("search_field") String name, @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId,
+            @NotNull @QueryParam("item_id") String itemId) {
+        return campaignBodyItemAudienceSearchService.campaignBodyItemAudienceSearch(name, campaignHeadId, itemId);
     }
 
 }

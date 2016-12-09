@@ -104,16 +104,10 @@ public class MktApi {
 	private SegmentHeaderGetService segmentHeaderGetService;
 
 	@Autowired
-	private SaveCampaignAudienceService saveCampaignAudienceService;
-
-	@Autowired
 	private SegmentBodyUpdateService segmentBodyUpdateService;
 
 	@Autowired
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
-
-	@Autowired
-	private CampaignSummaryGetService campaignSummaryGetService;
 
 	@Autowired
 	private SegmentTagnameTagListService segmentTagnameTagListService;
@@ -144,9 +138,6 @@ public class MktApi {
 
 	@Autowired
 	private TaskGetListService taskGetListService;
-
-	@Autowired
-	private CampaignBodyItemAudienceSearchService campaignBodyItemAudienceSearchService;
 
 	@Autowired
 	private TagDownloadCustomAudienceService tagDownloadCustomAudienceService;
@@ -327,18 +318,6 @@ public class MktApi {
 	}
 
 	/**
-	 * @功能描述:活动编排，保存人群
-	 * @Param: String user_token, String ver, String audience_name
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.campaign.node.audience.save")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object saveCampaignAudience(@Valid Audience audience, @Context SecurityContext securityContext) {
-		return saveCampaignAudienceService.saveCampaignAudience(audience, securityContext);
-	}
-
-	/**
 	 * @功能描述:查询系统推荐标签列表
 	 * @Param: String method, String userToken
 	 * @return BaseOutput
@@ -434,19 +413,6 @@ public class MktApi {
         return taskGetListService.updateTaskListStatus();
     }
 	
-	/**
-	 * @功能简述: 查询营销活动个数和触达人数
-	 * @param:
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.campaign.summary.get")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken) {
-		return campaignSummaryGetService.campaignSummaryGet();
-	}
-
 	/*
 	 * @功能简述: 根据关键字查询出系统最末级标签名称列表
 	 * 
@@ -569,26 +535,6 @@ public class MktApi {
 			@QueryParam("size") Integer size) {
 		//tagSystemListGetService.getTagcount(method, userToken, tagGroupId, index, size);
 		return tagSystemListGetService.getMongoTagList(method, userToken, tagGroupId, index, size);
-	}
-
-
-	/**
-	 * 搜索活动节点上的人
-	 * 
-	 * @param userToken
-	 * @param ver
-	 * @param name
-	 * @param campaignHeadId
-	 * @param itemId
-	 * @return
-	 */
-	@GET
-	@Path("/mkt.campaign.body.item.audience.search")
-	public CampaignBodyItemAudienceSearchOut campaignBodyItemAudienceSearch(
-			@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver,
-			@QueryParam("search_field") String name, @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId,
-			@NotNull @QueryParam("item_id") String itemId) {
-		return campaignBodyItemAudienceSearchService.campaignBodyItemAudienceSearch(name, campaignHeadId, itemId);
 	}
 
 	/**
