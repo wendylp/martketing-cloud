@@ -11,11 +11,7 @@
 package cn.rongcapital.mkt.api;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -38,10 +34,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.*;
-import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.ImgAsset;
-import cn.rongcapital.mkt.vo.ImgtextHostIn;
 import cn.rongcapital.mkt.vo.LoginInput;
 import cn.rongcapital.mkt.vo.ModifyInput;
 
@@ -56,21 +49,6 @@ public class MktApi {
 
 	@Autowired
 	private ModifyPasswdService modifyPasswdService;
-
-	@Autowired
-	private DeleteImgTextAssetService deleteImgTextAssetService;
-
-	@Autowired
-	private GetImgTextAssetService getImgTextAssetService;
-
-	@Autowired
-	private ImgtextHostService imgtextHostService;
-
-	@Autowired
-	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
-
-	@Autowired
-	private GetImgtextCountService getImgtextCountService;
 
 	@Autowired
 	private TaskGetListService taskGetListService;
@@ -97,63 +75,6 @@ public class MktApi {
 		return Response.ok().entity(ur).build();
 	}
 
-	/**
-	 * @功能简述: 获取图文资产
-	 * @param:String user_token,String
-	 *                   ver,Integer type,String ownerName,int index,int size
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.asset.imgtext.get")
-	public Object getImgTextAsset(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("type") Integer type,
-			@QueryParam("owner_name") String ownerName, @DefaultValue("1") @Min(1) @QueryParam("index") int index,
-			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
-		ImgAsset imgAsset = new ImgAsset();
-		imgAsset.setAssetType(type);
-		imgAsset.setVer(ver);
-		if (ownerName != null) {
-			imgAsset.setOwnerName(ownerName);
-		}
-		if (index != 0) {
-			imgAsset.setIndex(index);
-		} else {
-			imgAsset.setIndex(1);
-		}
-		if (size != 0) {
-			imgAsset.setSize(size);
-		} else {
-			imgAsset.setSize(10);
-		}
-		return getImgTextAssetService.getImgTextAssetService(imgAsset);
-	}
-
-	/**
-	 * @功能简述: 获取图文资产
-	 * @param:String user_token,String
-	 *                   ver,Integer type,String ownerName,int index,int size
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.asset.imgtext.menulist.get")
-	public Object getImgtextAssetMenulist(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
-		BaseInput baseInput = new BaseInput();
-		return getImgtextAssetMenulistService.getImgTextAssetMenulist(baseInput);
-	}
-
-	/**
-	 * @功能简述: 获取图文资产
-	 * @param:String user_token,String
-	 *                   ver,Integer type,String ownerName,int index,int size
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.asset.imgtext.count.get")
-	public Object getImgtextAssetCount(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
-		return getImgtextCountService.getImgtextAssetCount();
-	}
 
 
 	/**
@@ -178,30 +99,6 @@ public class MktApi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Object modifyPasswd(@Valid ModifyInput input, @Context SecurityContext securityContext) {
 		return modifyPasswdService.modifyPasswd(input, securityContext);
-	}
-
-	/**
-	 * @功能描述:删除图文资产 mkt.asset.imgtext.delete
-	 * @Param: LoginIn loginIn, SecurityContext securityContext
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.asset.imgtext.delete")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object deleteImgTextAsset(@Valid ImgAsset imgAsset, @Context SecurityContext securityContext) {
-		return deleteImgTextAssetService.deleteImgTextService(imgAsset.getImgtextId());
-	}
-
-	/**
-	 * @功能描述:托管图文资产(这个功能暂时先不做) mkt.asset.imgtext.host
-	 * @Param: String asset_url, SecurityContext securityContext
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.asset.imgtext.host")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public Object imgtextHostAsset(@Valid ImgtextHostIn imgtextHostIn, @Context SecurityContext securityContext) {
-		return imgtextHostService.hostImgtextAsset(imgtextHostIn, securityContext);
 	}
 
 	/**

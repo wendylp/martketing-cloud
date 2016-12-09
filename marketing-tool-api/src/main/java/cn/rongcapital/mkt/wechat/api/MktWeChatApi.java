@@ -68,10 +68,15 @@ import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
+import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
+import cn.rongcapital.mkt.service.GetImgTextAssetService;
+import cn.rongcapital.mkt.service.GetImgtextAssetMenulistService;
+import cn.rongcapital.mkt.service.GetImgtextCountService;
 import cn.rongcapital.mkt.service.GetWechatUserListService;
 import cn.rongcapital.mkt.service.GetWeixinAnalysisDateService;
 import cn.rongcapital.mkt.service.GetWxImgTextAssetService;
 import cn.rongcapital.mkt.service.HomePageUserCountListService;
+import cn.rongcapital.mkt.service.ImgtextHostService;
 import cn.rongcapital.mkt.service.QrcodeCreateCountService;
 import cn.rongcapital.mkt.service.QrcodePicDownloadService;
 import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
@@ -102,8 +107,10 @@ import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
 import cn.rongcapital.mkt.service.WeixinQrcodeListService;
 import cn.rongcapital.mkt.service.WeixinQrcodeMatchGetService;
 import cn.rongcapital.mkt.service.WeixinQrcodeSaveOrUpdateService;
+import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
+import cn.rongcapital.mkt.vo.ImgtextHostIn;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
@@ -258,7 +265,21 @@ public class MktWeChatApi {
 	@Autowired
 	private Environment env;
 	
+	@Autowired
+	private DeleteImgTextAssetService deleteImgTextAssetService;
+
+	@Autowired
+	private GetImgTextAssetService getImgTextAssetService;
+
+	@Autowired
+	private ImgtextHostService imgtextHostService;
 	
+	@Autowired
+	private GetImgtextCountService getImgtextCountService;
+
+	@Autowired
+	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
+
 	
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
@@ -908,6 +929,88 @@ public class MktWeChatApi {
 		return uploadFileService.uploadFileBatch(fileUnique, input);
 	}
 	
+	/**
+	 * @功能简述: 获取图文资产
+	 * @param:String user_token,String
+	 *                   ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.imgtext.get")
+	public Object getImgTextAsset(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("type") Integer type,
+			@QueryParam("owner_name") String ownerName, @DefaultValue("1") @Min(1) @QueryParam("index") int index,
+			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
+		ImgAsset imgAsset = new ImgAsset();
+		imgAsset.setAssetType(type);
+		imgAsset.setVer(ver);
+		if (ownerName != null) {
+			imgAsset.setOwnerName(ownerName);
+		}
+		if (index != 0) {
+			imgAsset.setIndex(index);
+		} else {
+			imgAsset.setIndex(1);
+		}
+		if (size != 0) {
+			imgAsset.setSize(size);
+		} else {
+			imgAsset.setSize(10);
+		}
+		return getImgTextAssetService.getImgTextAssetService(imgAsset);
+	}
+
+	/**
+	 * @功能简述: 获取图文资产
+	 * @param:String user_token,String
+	 *                   ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.imgtext.menulist.get")
+	public Object getImgtextAssetMenulist(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver) {
+		BaseInput baseInput = new BaseInput();
+		return getImgtextAssetMenulistService.getImgTextAssetMenulist(baseInput);
+	}
+
+	/**
+	 * @功能简述: 获取图文资产
+	 * @param:String user_token,String
+	 *                   ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.imgtext.count.get")
+	public Object getImgtextAssetCount(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver) {
+		return getImgtextCountService.getImgtextAssetCount();
+	}
+
+	/**
+	 * @功能描述:删除图文资产 mkt.asset.imgtext.delete
+	 * @Param: LoginIn loginIn, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.asset.imgtext.delete")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object deleteImgTextAsset(@Valid ImgAsset imgAsset, @Context SecurityContext securityContext) {
+		return deleteImgTextAssetService.deleteImgTextService(imgAsset.getImgtextId());
+	}
+
+	/**
+	 * @功能描述:托管图文资产(这个功能暂时先不做) mkt.asset.imgtext.host
+	 * @Param: String asset_url, SecurityContext securityContext
+	 * @return: Object
+	 */
+	@POST
+	@Path("/mkt.asset.imgtext.host")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Object imgtextHostAsset(@Valid ImgtextHostIn imgtextHostIn, @Context SecurityContext securityContext) {
+		return imgtextHostService.hostImgtextAsset(imgtextHostIn, securityContext);
+	}
+
 	/**
 	 * @功能简述: 获取公众号下的图文资产列表
 	 * @param:String user_token,String
