@@ -16,6 +16,8 @@ public class MaterialCouponCode extends BaseQuery {
     private String releaseStatus;
 
     private String verifyStatus;
+    
+    private Date verifyTime;
 
     private Byte status;
 
@@ -70,6 +72,14 @@ public class MaterialCouponCode extends BaseQuery {
 
     public void setVerifyStatus(String verifyStatus) {
         this.verifyStatus = verifyStatus == null ? null : verifyStatus.trim();
+    }
+
+    public Date getVerifyTime() {
+        return verifyTime;
+    }
+
+    public void setVerifyTime(Date verifyTime) {
+        this.verifyTime = verifyTime;
     }
 
     public Byte getStatus() {
