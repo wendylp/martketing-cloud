@@ -47,6 +47,7 @@
                 <prop key="prepStmtCacheSize">250</prop>
                 <prop key="prepStmtCacheSqlLimit">2048</prop>
                 <prop key="useServerPrepStmts">true</prop>
+                <prop key="allowMultiQueries">true</prop>
             </props>
         </property>
         <property name="maximumPoolSize" value="500"/>
@@ -64,6 +65,7 @@
                 <prop key="prepStmtCacheSize">250</prop>
                 <prop key="prepStmtCacheSqlLimit">2048</prop>
                 <prop key="useServerPrepStmts">true</prop>
+                <prop key="allowMultiQueries">true</prop>
             </props>
         </property>
          <property name="maximumPoolSize" value="500"/>
