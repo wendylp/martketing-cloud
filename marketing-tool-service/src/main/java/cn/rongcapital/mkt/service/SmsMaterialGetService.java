@@ -7,5 +7,6 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  */
 public interface SmsMaterialGetService {
     BaseOutput getSmsMaterialById(Long id);
-    BaseOutput getSmsMaterialListByKeyword(String searchWord,Integer channelType,Integer index,Integer size);
+    BaseOutput getSmsMaterialListByKeyword(String searchWord,Integer channelType,Integer smsType, Integer index,Integer size);
+    BaseOutput getSmsMaterialCount();
 }
