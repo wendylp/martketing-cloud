@@ -166,9 +166,13 @@
     	</if>
     	<if test="releaseStatus != null and releaseStatus != ''"><![CDATA[ AND t2.release_status = #{releaseStatus}]]></if>
     	<if test="verifyStatus != null and verifyStatus != ''"><![CDATA[ AND t2.verify_status = #{verifyStatus}]]></if>
-    	<if test="expireStatus == 'expired'"><![CDATA[ AND t1.end_time IS NOT NULL AND t1.end_time < #{expireTime}]]></if>
-    	<if test="expireStatus == 'unexpired'"><![CDATA[ AND (t1.end_time IS NULL OR t1.end_time > #{expireTime})]]></if>
-    	<![CDATA[LIMIT #{index},#{size}]]>
+    	<choose>
+	    	<when test="expireStatus == 'expired'"><![CDATA[ AND t1.end_time IS NOT NULL AND t1.end_time < #{expireTime}]]></when>
+	    	<when test="expireStatus == 'unexpired'"><![CDATA[ AND (t1.end_time IS NULL OR t1.end_time >= #{expireTime})]]></when>
+	    	<otherwise></otherwise>
+    	</choose>
+    	<![CDATA[ ORDER BY t2.id ASC]]>
+    	<![CDATA[ LIMIT #{index},#{size}]]>
 	</select>
 	<!-- 总数查询,通过条件 -->
 	<select id="getCouponCodeVerifyListCnt" parameterType="java.util.Map" resultType="int">
@@ -181,7 +185,10 @@
     	</if>
     	<if test="releaseStatus != null and releaseStatus != ''"><![CDATA[ AND t2.release_status = #{releaseStatus}]]></if>
     	<if test="verifyStatus != null and verifyStatus != ''"><![CDATA[ AND t2.verify_status = #{verifyStatus}]]></if>
-    	<if test="expireStatus == 'expired'"><![CDATA[ AND t1.end_time IS NOT NULL AND t1.end_time < #{expireTime}]]></if>
-    	<if test="expireStatus == 'unexpired'"><![CDATA[ AND (t1.end_time IS NULL OR t1.end_time > #{expireTime})]]></if>
+    	<choose>
+	    	<when test="expireStatus == 'expired'"><![CDATA[ AND t1.end_time IS NOT NULL AND t1.end_time < #{expireTime}]]></when>
+	    	<when test="expireStatus == 'unexpired'"><![CDATA[ AND (t1.end_time IS NULL OR t1.end_time >= #{expireTime})]]></when>
+	    	<otherwise></otherwise>
+    	</choose>
 	</select>
 </mapper>
