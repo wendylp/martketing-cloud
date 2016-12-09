@@ -51,4 +51,10 @@ public class MaterialCouponStatusUpdateVO {
         this.taskName = taskName;
     }
 
+    @Override
+    public String toString() {
+        return "MaterialCouponStatusUpdateVO [id=" + id + ", status=" + status + ", taskId=" + taskId + ", taskName="
+                        + taskName + "]";
+    }
+
 }

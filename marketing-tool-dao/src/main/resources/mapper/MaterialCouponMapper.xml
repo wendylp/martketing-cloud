@@ -121,6 +121,19 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
+	<!-- 修改记录通过主键和有效状态 -->
+	<update id="updateByIdAndStatus" parameterType="cn.rongcapital.mkt.po.MaterialCoupon">
+		<![CDATA[UPDATE material_coupon]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id} AND status = 0]]>
+	</update>
+	
+	<!-- 根据优惠券ID查询优惠券生成码数量 -->
+	<select id="selectStockTotalByCouponId" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT stock_total
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id = #{id}
+	</select>
 	
 	<!-- 总数查询,通过条件 -->
 	<select id="getMaterialCouponCount" parameterType="java.util.Map" resultType="long">
