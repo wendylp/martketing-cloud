@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.MaterialCouponCode;
 
@@ -42,4 +44,12 @@ public interface MaterialCouponCodeDao extends BaseDao<MaterialCouponCode>{
      * @author zhuxuelong
      */
     void updateByIdAndStatus(MaterialCouponCode po);
+    
+    /**
+     * 批量通过主键和有效状态更新表
+     * 
+     * @param poList
+     * @author zhuxuelong
+     */
+    void batchUpdateByIdAndStatus(List<MaterialCouponCode> poList);
 }

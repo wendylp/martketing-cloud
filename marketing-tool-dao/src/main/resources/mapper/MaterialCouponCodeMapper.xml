@@ -104,4 +104,20 @@
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id} AND status = 0]]>
 	</update>
+	
+	<!-- 批量修改记录通过主键和有效状态 -->
+	<update id="batchUpdateByIdAndStatus" parameterType="java.util.List">
+		<foreach collection="list" index="index" item="item" separator=";" open="" close=";">
+		<![CDATA[UPDATE material_coupon_code]]>
+		<set>
+		    	<if test="item.couponId != null"><![CDATA[coupon_id = #{item.couponId},]]></if>
+		    	<if test="item.code != null"><![CDATA[code = #{item.code},]]></if>
+		    	<if test="item.user != null"><![CDATA[user = #{item.user},]]></if>
+		    	<if test="item.releaseStatus != null"><![CDATA[release_status = #{item.releaseStatus},]]></if>
+		    	<if test="item.verifyStatus != null"><![CDATA[verify_status = #{item.verifyStatus},]]></if>
+		    	<if test="item.status != null"><![CDATA[status = #{item.status}]]></if>
+		</set>
+		<![CDATA[WHERE id = #{item.id} AND status = 0]]>
+		</foreach>
+	</update>
 </mapper>
