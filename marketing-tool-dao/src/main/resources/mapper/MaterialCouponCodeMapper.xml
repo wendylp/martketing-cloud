@@ -127,4 +127,10 @@
 		group by coupon_id,verify_status
 	</select>
 	
+	
+	<!-- 至优惠码成删除状态 -->
+	<update id="updateByCouponId" parameterType="long">
+		update material_coupon_code set status=1 where coupon_id=#{id}
+	</update>
+	
 </mapper>
