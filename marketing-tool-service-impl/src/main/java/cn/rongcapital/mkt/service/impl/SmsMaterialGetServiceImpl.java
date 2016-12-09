@@ -5,14 +5,8 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsMaterialVariableTypeEnum;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.dao.SmsMaterialDao;
-import cn.rongcapital.mkt.dao.SmsMaterialMaterielMapDao;
-import cn.rongcapital.mkt.dao.SmsMaterialVariableMapDao;
-import cn.rongcapital.mkt.dao.SmsTempletDao;
-import cn.rongcapital.mkt.po.SmsMaterial;
-import cn.rongcapital.mkt.po.SmsMaterialMaterielMap;
-import cn.rongcapital.mkt.po.SmsMaterialVariableMap;
-import cn.rongcapital.mkt.po.SmsTemplet;
+import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.service.SmsMaterialGetService;
 import cn.rongcapital.mkt.service.SmsMaterialService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -47,6 +41,9 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
 
     @Autowired
     private SmsMaterialService smsMaterialService;
+
+    @Autowired
+    private MaterialCouponDao materialCouponDao;
 
     @Override
     public BaseOutput getSmsMaterialById(Long id) {
@@ -152,9 +149,19 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
         if(!CollectionUtils.isEmpty(smsMaterialMaterielMapList)){
             List<SmsMaterialMaterielOut> smsMaterialMaterielOutList = new LinkedList<>();
             for(SmsMaterialMaterielMap smsMaterialMaterielMap : smsMaterialMaterielMapList){
+
+                MaterialCoupon paramMaterialCoupon = new MaterialCoupon();
+                paramMaterialCoupon.setId(smsMaterialMaterielMap.getSmsMaterielId());
+                List<MaterialCoupon> materialCouponList = materialCouponDao.selectList(paramMaterialCoupon);
+                if(CollectionUtils.isEmpty(materialCouponList)) continue;
+
+                MaterialCoupon tempMaterialCoupon = materialCouponList.get(0);
                 SmsMaterialMaterielOut smsMaterialMaterielOut = new SmsMaterialMaterielOut();
                 smsMaterialMaterielOut.setMaterielId(smsMaterialMaterielMap.getId().intValue());
                 smsMaterialMaterielOut.setMaterielType(smsMaterialMaterielMap.getSmsMaterielType());
+                smsMaterialMaterielOut.setMaterielName(tempMaterialCoupon.getTitle());
+                smsMaterialMaterielOut.setMaterielAmount(tempMaterialCoupon.getAmount().doubleValue());
+                smsMaterialMaterielOut.setMaterielStockTotal(tempMaterialCoupon.getStockTotal());
                 smsMaterialMaterielOutList.add(smsMaterialMaterielOut);
             }
             smsMaterialOut.setSmsMaterialMaterielOutList(smsMaterialMaterielOutList);
