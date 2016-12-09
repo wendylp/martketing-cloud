@@ -148,6 +148,50 @@
     	<if test="couponStatus != null and couponStatus != ''"><![CDATA[ AND coupon_status = #{couponStatus}]]></if>
 	</select>
 	
+
+	 <!-- 查询单条优惠券信息 -->
+	<select id="selectOneCoupon" parameterType="long"
+		resultType="cn.rongcapital.mkt.po.MaterialCoupon">
+		select
+		<include refid="QUERY_COLUMN_LIST" />
+		from material_coupon where id=#{id}
+	</select>
+	
+	
+	<!-- 根据ID查询出优惠码查询各种汇总状态 -->
+	<select id="getPutInCoupon" parameterType="long" resultType="java.util.Map">
+		select
+		b.release_status as status,
+		max(a.stock_rest) as rest_count,
+		count(b.id) as tjcount
+		from
+		material_coupon a join
+		material_coupon_code b
+		on a.id=b.coupon_id
+		where a.status=0 and
+		a.id=#{id}
+		<![CDATA[ and release_status>1 ]]>
+		group by release_status
+		union all
+		select
+		b.verify_status as status,
+		max(a.stock_rest) as rest_count,
+		count(1)*a.amount as tjcount
+		from
+		material_coupon a join
+		material_coupon_code b on a.id=b.coupon_id
+		where
+		a.status=0 and a.id=#{id}
+		<![CDATA[ and verify_status<3 and  release_status=2 ]]>
+		group by
+		b.verify_status
+
+	</select>
+	
+	
+	
+	
+
 	<!-- 模糊查询优惠券列表 -->
 	<select id="selectListByKeyword" parameterType="cn.rongcapital.mkt.po.MaterialCoupon" resultType="cn.rongcapital.mkt.po.MaterialCoupon">
 		<![CDATA[SELECT]]>
@@ -172,4 +216,5 @@
 		<if test="couponStatus != null"><![CDATA[AND coupon_status = #{couponStatus}]]></if>
 		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
 	</select>
+
 </mapper>
