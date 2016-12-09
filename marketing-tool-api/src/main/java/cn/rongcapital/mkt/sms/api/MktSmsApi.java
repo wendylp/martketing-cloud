@@ -216,7 +216,7 @@ public class MktSmsApi {
                                      @QueryParam("ver") String ver,
                                      @QueryParam("search_word") String searchWord,
                                      @QueryParam("channel_type") Integer channelType,
-                                     @QueryParam("sms_type") Integer smsType,
+                                     @NotNull @QueryParam("sms_type") Integer smsType,
                                      @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
                                      @DefaultValue("10") @Min(1) @Max(100) @QueryParam("page_size") Integer size) throws Exception {
         return smsMaterialGetService.getSmsMaterialListByKeyword(searchWord,channelType,smsType,index,size);

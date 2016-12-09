@@ -49,13 +49,12 @@ public class MaterialCouponCode extends BaseQuery {
         this.code = code == null ? null : code.trim();
     }
 
-    
     public String getUser() {
         return user;
     }
 
     public void setUser(String user) {
-        this.user = user;
+        this.user = user == null ? null : user.trim();
     }
 
     public String getReleaseStatus() {
