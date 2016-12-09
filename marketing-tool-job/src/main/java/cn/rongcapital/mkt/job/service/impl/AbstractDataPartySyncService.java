@@ -1,17 +1,19 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
-import cn.rongcapital.mkt.common.enums.DataTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.KeyidMapBlockDao;
@@ -142,4 +144,107 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 		return dataParty;
 	}
 
+	protected List<Map<String, Object>> checkData(String bitmap, Integer beginId){
+		
+		List<String> strlist = this.getColumnKeyid(bitmap);
+		
+		Map<String,Object> parmMap = new HashMap<String,Object>();
+		
+		String bitmapColumn = "";
+		
+		for(String column:strlist){
+			
+			bitmapColumn += column + ",";
+		}
+		
+		bitmapColumn = bitmapColumn.substring(0,bitmapColumn.length()-1);
+		
+		
+		//查询列
+		parmMap.put("bitmapColumn", bitmapColumn);
+		//新增起始ID
+		parmMap.put("id", beginId);
+		
+		
+		List<Map<String, Object>> repeatDatas = dataPartyDao.getRepeatDataByBitmapKeys(parmMap);
+	  
+  		return repeatDatas;
+	}
+	
+	protected List<Integer> getIdsByRepeatByBitmapKeys(Map<String,Object> paramMap){
+		
+		DataParty dataParty = new DataParty();
+		
+		for(String key :paramMap.keySet()){
+			
+			if("su".equals(key)){
+				continue;
+			}
+			
+			String field = key;
+			
+			if (field.indexOf("_") > 0) {
+				String head = field.substring(0, field.indexOf("_"));
+				String upper = field.substring(field.indexOf("_") + 1, field.indexOf("_") + 2).toUpperCase();
+				String tail = field.substring(field.indexOf("_") + 2);
+				
+				field = head + upper + tail;
+			} 
+			
+			PropertyDescriptor pd;
+			try {
+				pd = new PropertyDescriptor(field, dataParty.getClass());
+				Method m = pd.getWriteMethod();
+				m.invoke(dataParty, paramMap.get(key));
+			} catch (IntrospectionException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return dataPartyDao.getIdsByRepeatByBitmapKeys(dataParty);
+	}
+	
+	protected Integer distinctData(List<Integer> ids){
+		
+		if(ids == null || ids.size() == 0){
+			
+			return 0;
+			
+		}else if (ids.size() == 1){
+			return ids.get(0);
+		}else{
+			
+			for(int i = 1; i < ids.size(); i++){
+				dataPartyDao.deleteDataById(ids.get(i));
+			}
+			return ids.get(0);
+		}
+	}
+	
+	
+	public List<String> getColumnKeyid(String bitmap) {
+		List<KeyidMapBlock> list = keyidMapBlockDao.selectKeyidMapBlockList();
+
+		int length = bitmap.length();
+		List<String> strlist = new ArrayList<String>();
+		if (length == list.size()) {
+			char[] stringArr = bitmap.toCharArray();
+
+			for (int i = 0; i < stringArr.length; i++) {
+				if (stringArr[i] == '1') {
+					String field = list.get(i).getField();
+					strlist.add(field);
+				}
+			}
+		}
+		return strlist;
+
+	}
+	
 }

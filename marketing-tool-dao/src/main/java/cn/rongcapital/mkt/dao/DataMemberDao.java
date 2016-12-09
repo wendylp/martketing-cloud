@@ -53,4 +53,10 @@ public interface DataMemberDao extends BaseDao<DataMember>, BaseDataFilterDao<Da
 	 */
 	int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
     
+	/**
+	 * 更新Keyid
+	 * newkeyId-5
+	 * oldkeyId-6
+	 */
+	void updateDataMemberKeyid(Map<String,Object> map);
 }
