@@ -107,31 +107,13 @@ public class MktApi {
 	private SaveCampaignAudienceService saveCampaignAudienceService;
 
 	@Autowired
-	private CampaignHeaderGetService campaignHeaderGetService;
-
-	@Autowired
-	private CampaignBodyGetService campaignBodyGetService;
-
-	@Autowired
-	private CampaignBodyCreateService campaignBodyCreateService;
-
-	@Autowired
 	private SegmentBodyUpdateService segmentBodyUpdateService;
 
 	@Autowired
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 
 	@Autowired
-	private CampaignDeleteService campaignDeleteService;
-
-	@Autowired
 	private CampaignSummaryGetService campaignSummaryGetService;
-
-	@Autowired
-	private CampaignProgressStatusCountService campaignProgressStatusCountService;
-
-	@Autowired
-	private CampaignProgressStatusListService campaignProgressStatusListService;
 
 	@Autowired
 	private SegmentTagnameTagListService segmentTagnameTagListService;
@@ -161,18 +143,6 @@ public class MktApi {
 	private TagSystemListGetService tagSystemListGetService;
 
 	@Autowired
-	private CampaignNodeItemListGetService campaignNodeItemListGetService;
-
-	@Autowired
-	private CampaignHeaderCreateService campaignHeaderCreateService;
-
-	@Autowired
-	private CampaignHeaderUpdateService campaignHeaderUpdateService;
-
-	@Autowired
-	private GroupTagsSearchService groupTagsSearchService;
-
-	@Autowired
 	private TaskGetListService taskGetListService;
 
 	@Autowired
@@ -180,12 +150,6 @@ public class MktApi {
 
 	@Autowired
 	private TagDownloadCustomAudienceService tagDownloadCustomAudienceService;
-
-	@Autowired
-	private GetCampaignConvertChartListService getCampaignConvertChartListService;
-
-	@Autowired
-	private GetCampaignCustomerSourceListService getCampaignCustomerSourceListService;
 
 	@Autowired
 	private HomePageCalendarListService homePageCalendarListService;
@@ -271,104 +235,6 @@ public class MktApi {
 	public Object getImgtextAssetCount(@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("ver") String ver) {
 		return getImgtextCountService.getImgtextAssetCount();
-	}
-
-	/**
-	 * @功能简述: 获取活动编排页面左侧的节点和子节点列表
-	 * @param: SegmentHeadIn
-	 *             body, SecurityContext securityContext
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.campaign.nodeitem.list.get")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public CampaignNodeItemListOut campaignBodyGet(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
-		return campaignNodeItemListGetService.campaignNodeItemListGet(userToken, ver);
-	}
-
-	/**
-	 * @功能简述: 创建/编辑campaign body
-	 * @param: SegmentHeadIn
-	 *             body, SecurityContext securityContext,Integer campaignHeadId
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.campaign.body.update")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public CampaignBodyCreateOut campaignBodyCreate(@Valid CampaignBodyCreateIn body,
-			@Context SecurityContext securityContext) {
-		return campaignBodyCreateService.campaignBodyCreate(body, securityContext);
-	}
-
-	/**
-	 * @功能简述: 根据campaign_head_id 获取campaign body
-	 * @param: SegmentHeadIn
-	 *             body, SecurityContext securityContext,Integer campaignHeadId
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.campaign.body.get")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public CampaignBodyGetOut campaignBodyGet(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
-		return campaignBodyGetService.campaignBodyGet(userToken, ver, campaignHeadId);
-	}
-
-	/**
-	 * @功能简述: 编辑campaign header
-	 * @param: CampaignHeadUpdateIn
-	 *             body, SecurityContext securityContext
-	 * @return: BaseOutput
-	 */
-	@POST
-	@Path("/mkt.campaign.header.update")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput campaignHeaderUpdate(@Valid CampaignHeadUpdateIn body, @Context SecurityContext securityContext) {
-		return campaignHeaderUpdateService.campaignHeaderUpdate(body, securityContext);
-	}
-
-	/**
-	 * @功能简述: 创建campaign header
-	 * @param: CampaignHeadCreateIn
-	 *             body, SecurityContext securityContext
-	 * @return: BaseOutput
-	 */
-	@POST
-	@Path("/mkt.campaign.header.create")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput campaignHeaderCreate(@Valid CampaignHeadCreateIn body, @Context SecurityContext securityContext) {
-		return campaignHeaderCreateService.campaignHeaderCreate(body, securityContext);
-	}
-
-	/**
-	 * @功能简述: 根据id获取segment header
-	 * @param: SegmentHeadIn
-	 *             body, SecurityContext securityContext,Integer campaignHeadId
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.campaign.header.get")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public CampaignHeaderGetOut campaignHeaderGet(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
-		return campaignHeaderGetService.campaignHeaderGet(userToken, ver, campaignHeadId);
-	}
-
-	/**
-	 * 活动概要查询
-	 * 
-	 * @param userToken
-	 * @param ver
-	 * @param campaignHeadId
-	 * @return
-	 */
-	@GET
-	@Path("/mkt.campaign.profile.list")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public CampaignProfileOut campaignProfileList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
-		return campaignHeaderGetService.campaignProfileList(userToken, ver, campaignHeadId);
 	}
 
 	/**
@@ -569,20 +435,6 @@ public class MktApi {
     }
 	
 	/**
-	 * @功能简述: 删除campaign
-	 * @param: campaign_head_id
-	 *             营销活动id
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.campaign.delete")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput campaignDelete(@Valid CampaignDeleteIn campaignDeleteIn,
-			@Context SecurityContext securityContext) {
-		return campaignDeleteService.campaignDelete(campaignDeleteIn.getCampaignId());
-	}
-
-	/**
 	 * @功能简述: 查询营销活动个数和触达人数
 	 * @param:
 	 * @return: Object
@@ -593,38 +445,6 @@ public class MktApi {
 	public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
 			@NotEmpty @QueryParam("user_token") String userToken) {
 		return campaignSummaryGetService.campaignSummaryGet();
-	}
-
-	/**
-	 * @功能简述: 获取不同状态下的campaign数量
-	 * @param:
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.campaign.progressstatus.count.get")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public CampaignProgressStatusCountOut campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken) {
-		return campaignProgressStatusCountService.campaignProgressStatusCountGet();
-	}
-
-	/**
-	 * @功能简述: 获取不同状态下的campaign列表
-	 * @param: publish_status
-	 *             0:未发布,1:已发布,2:活动中,3:已结束,4:全部 campaign_name
-	 *             活动名称摘要，如果有代表作前端界面的模糊查询 index 开始页索引，默认为1 size
-	 *             分页大小，默认为10，最大值为100
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.campaign.progressstatus.list.get")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("publish_status") Byte publishStatus, @QueryParam("campaign_name") String campaignName,
-			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
-		return campaignProgressStatusListService.campaignProgressStatusList(publishStatus, campaignName, index, size);
 	}
 
 	/*
@@ -644,24 +464,6 @@ public class MktApi {
 			@NotEmpty @QueryParam("user_token") String userToken, @QueryParam("tag_group_name") String tagGroupName) {
 		//segmentTagkeyTagListService.getLastTagByKey(tagGroupName);
 		return segmentTagkeyTagListService.getMongoTagRecommendByLike(tagGroupName);
-	}
-
-	/*
-	 * @功能简述: 根据关键字查询出系统最末级标签组名称和所关联的标签列表
-	 * 
-	 * @param method
-	 * 
-	 * @param userToken
-	 * 
-	 * @param tagGroupName
-	 * 
-	 * @return BaseOutput
-	 */
-	@GET
-	@Path("/mkt.tag.search.grouptags.get")
-	public SerarchTagGroupTagsOut getGroupTagsByKey(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken, @QueryParam("tag_group_name") String tagGroupName) {
-		return groupTagsSearchService.groupTagsSearch(method, userToken, tagGroupName);
 	}
 
 	/**
@@ -790,37 +592,6 @@ public class MktApi {
 	}
 
 	/**
-	 * 查询活动转化图表的相关数据
-	 * 
-	 * @param userToken
-	 * @param ver
-	 * @param campaignHeadId
-	 * @return
-	 */
-	@GET
-	@Path("/mkt.campaign.conversion.list")
-	public CampaignConvertChartListOut getCompaignConversionList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
-		return getCampaignConvertChartListService.getCompaignConvertChartList(campaignHeadId);
-	}
-
-	/**
-	 * 查询活动转化图表的相关数据
-	 * 
-	 * @param userToken
-	 * @param ver
-	 * @param campaignHeadId
-	 * @return
-	 */
-	@GET
-	@Path("/mkt.campaign.customer.source.list")
-	public CampaignCustomSourceListOut getCampaignCustomerSourceList(
-			@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver,
-			@NotNull @QueryParam("campaign_head_id") Integer campaignHeadId) {
-		return getCampaignCustomerSourceListService.getCampaignCustomSourceInfo(campaignHeadId);
-	}
-
-	/**
 	 * 统计出当月日历日被客户标记当月定时的活动，按启动时间算
 	 *
 	 * @param userToken
@@ -856,14 +627,5 @@ public class MktApi {
 		return result;
 	}
 
-	@GET
-	@Path("/mkt.campaign.analysis.list")
-	public BaseOutput campaignAnalysisList() {
-		BaseOutput out = new BaseOutput(ApiConstant.INT_ZERO, ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
-				null);
-		out.getData().add(campaignHeaderGetService.campaignAnalysisList(null, null, null, null));
-		return out;
-	}
-	
 
 }
