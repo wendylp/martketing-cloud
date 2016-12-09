@@ -46,6 +46,14 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
 
     
     /**
+     * 通过主键和有效状态更新表
+     * 
+     * @param po
+     * @author zhuxuelong
+     */
+    void updateByIdAndStatus(MaterialCoupon po);
+    
+    /**
      * 获取指定条件的优惠券的数量
      * 
      * @param paramMap
