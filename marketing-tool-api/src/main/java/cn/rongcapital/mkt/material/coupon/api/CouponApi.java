@@ -22,6 +22,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -30,6 +32,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CouponCodeListService;
 import cn.rongcapital.mkt.service.MaterialCouponCountGetService;
 import cn.rongcapital.mkt.service.MaterialCouponPageListService;
+import cn.rongcapital.mkt.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Component
@@ -39,48 +42,75 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 @PropertySource("classpath:${conf.dir}/application-api.properties")
 public class CouponApi {
 
-    @Autowired
-    private MaterialCouponCountGetService materialCouponCountGetService;
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+	@Autowired
+	private MaterialCouponCountGetService materialCouponCountGetService;
+
+	@Autowired
+	private MaterialCouponReleaseGeneralService materialCouponReleaseGeneralService;
+	
+	@Autowired
     private CouponCodeListService couponCodeListService;
     @Autowired
     private MaterialCouponPageListService couponPageListService;
-    /**
-     * 获取指定条件的优惠券的数量
-     * 
-     * 接口：mkt.material.coupon.counts
-     * 
-     * @param user_token
-     * @param ver
-     * @param chanel_code
-     * @param keyword
-     * @return BaseOutput
-     * @author zhuxuelong
-     * @Date 2016-12-06
-     */
-    @GET
-    @Path("/mkt.material.coupon.counts")
-    public BaseOutput getWechatAssetTypeCount(@NotEmpty @QueryParam("user_token") String userToken,
-                    @NotEmpty @QueryParam("ver") String ver, @QueryParam("chanel_code") String chanelCode,
-                    @QueryParam("keyword") String keyword) throws Exception {
-        return materialCouponCountGetService.getMaterialCouponCount(chanelCode, keyword);
-    }
 
-    /**
-     * @author guozhenchao
-     * @功能简述: 获取优惠码列表接口
-     * @param fileTagUpdateIn
-     * @return BaseOutput
-     */
-    @GET
-    @Path("/mkt.materiel.coupon.code.list")
-    @Consumes({MediaType.APPLICATION_JSON})
-    public BaseOutput couponCodeList(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id,
-            @QueryParam("index") Integer index, @QueryParam("size") Integer size) {
-        return couponCodeListService.couponCodeList(id, index, size);
-    }
+	/**
+	 * 获取指定条件的优惠券的数量
+	 * 
+	 * 接口：mkt.material.coupon.counts
+	 * 
+	 * @param user_token
+	 * @param ver
+	 * @param chanel_code
+	 * @param keyword
+	 * @return BaseOutput
+	 * @author zhuxuelong
+	 * @Date 2016-12-06
+	 */
+	@GET
+	@Path("/mkt.material.coupon.counts")
+	public BaseOutput getWechatAssetTypeCount(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver, @QueryParam("chanel_code") String chanelCode,
+			@QueryParam("keyword") String keyword) throws Exception {
+		return materialCouponCountGetService.getMaterialCouponCount(chanelCode, keyword);
+	}
+
+	/**
+	 * @author guozhenchao
+	 * @功能简述: 获取优惠码列表接口
+	 * @param fileTagUpdateIn
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.materiel.coupon.code.list")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput couponCodeList(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id,
+			@QueryParam("index") Integer index, @QueryParam("size") Integer size) {
+		return couponCodeListService.couponCodeList(id, index, size);
+	}
+
+	/**
+	 * 获取指定条件的优惠券的数量
+	 * 
+	 * 接口：mkt.material.coupon.counts
+	 * 
+	 * @param user_token
+	 * @param ver
+	 * @param chanel_code
+	 * @param keyword
+	 * @return BaseOutput
+	 * @author zhuxuelong
+	 * @Date 2016-12-06
+	 */
+	@GET
+	@Path("/mkt.material.coupon.releaseGeneral")
+	public BaseOutput releaseGeneral(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String version, @NotNull @QueryParam("id") Long id) {
+
+		return materialCouponReleaseGeneralService.releaseGeneralById(id, userToken, version);
+	}
     
     /**
      * @功能描述: message
