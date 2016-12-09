@@ -3,6 +3,8 @@ package cn.rongcapital.mkt.vo.out;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.util.List;
+
 /**
  * Created by byf on 11/9/16.
  */
@@ -21,6 +23,8 @@ public class SmsMaterialOut {
     private String createTime;
     private Integer editStatus;
     private Integer deleteStatus;
+    private List<SmsMaterialMaterielOut> smsMaterialMaterielOutList;
+    private List<SmsMaterialVariableOut> smsMaterialVariableOutList;
 
     @JsonProperty("id")
     public Long getId() {
@@ -128,5 +132,23 @@ public class SmsMaterialOut {
 
     public void setDeleteStatus(Integer deleteStatus) {
         this.deleteStatus = deleteStatus;
+    }
+
+    @JsonProperty("materiel_list")
+    public List<SmsMaterialMaterielOut> getSmsMaterialMaterielOutList() {
+        return smsMaterialMaterielOutList;
+    }
+
+    public void setSmsMaterialMaterielOutList(List<SmsMaterialMaterielOut> smsMaterialMaterielOutList) {
+        this.smsMaterialMaterielOutList = smsMaterialMaterielOutList;
+    }
+
+    @JsonProperty("variable_list")
+    public List<SmsMaterialVariableOut> getSmsMaterialVariableOutList() {
+        return smsMaterialVariableOutList;
+    }
+
+    public void setSmsMaterialVariableOutList(List<SmsMaterialVariableOut> smsMaterialVariableOutList) {
+        this.smsMaterialVariableOutList = smsMaterialVariableOutList;
     }
 }

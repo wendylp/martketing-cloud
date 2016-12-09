@@ -10,10 +10,14 @@ public class MaterialCouponCode extends BaseQuery {
     private Long couponId;
 
     private String code;
+    
+    private String user;
 
     private String releaseStatus;
 
     private String verifyStatus;
+    
+    private Date verifyTime;
 
     private Byte status;
 
@@ -45,6 +49,15 @@ public class MaterialCouponCode extends BaseQuery {
         this.code = code == null ? null : code.trim();
     }
 
+    
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
     public String getReleaseStatus() {
         return releaseStatus;
     }
@@ -59,6 +72,14 @@ public class MaterialCouponCode extends BaseQuery {
 
     public void setVerifyStatus(String verifyStatus) {
         this.verifyStatus = verifyStatus == null ? null : verifyStatus.trim();
+    }
+
+    public Date getVerifyTime() {
+        return verifyTime;
+    }
+
+    public void setVerifyTime(Date verifyTime) {
+        this.verifyTime = verifyTime;
     }
 
     public Byte getStatus() {

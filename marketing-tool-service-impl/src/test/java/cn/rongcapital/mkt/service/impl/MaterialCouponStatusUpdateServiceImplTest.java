@@ -9,6 +9,10 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -67,7 +71,13 @@ public class MaterialCouponStatusUpdateServiceImplTest {
                 return null;
             }
         }).when(materialCouponDao).updateByIdAndStatus(Mockito.any(MaterialCoupon.class));
-
+        List<MaterialCoupon> list = new ArrayList<MaterialCoupon>();
+        MaterialCoupon dto = new MaterialCoupon();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.DATE, 2);
+        dto.setEndTime(date.getTime());
+        list.add(dto);
+        Mockito.when(materialCouponDao.selectList(Mockito.any())).thenReturn(list);
         ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
         MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
         vo.setId(6L);
@@ -75,7 +85,7 @@ public class MaterialCouponStatusUpdateServiceImplTest {
         service.updateMaterialCouponStatus(vo);
     }
 
-    
+
     /**
      * TaskName = ""
      * 
@@ -94,7 +104,10 @@ public class MaterialCouponStatusUpdateServiceImplTest {
                 return null;
             }
         }).when(materialCouponDao).updateByIdAndStatus(Mockito.any(MaterialCoupon.class));
-
+        List<MaterialCoupon> list = new ArrayList<MaterialCoupon>();
+        MaterialCoupon dto = new MaterialCoupon();
+        list.add(dto);
+        Mockito.when(materialCouponDao.selectList(Mockito.any())).thenReturn(list);
         ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
         MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
         vo.setId(6L);
@@ -102,7 +115,7 @@ public class MaterialCouponStatusUpdateServiceImplTest {
         vo.setTaskName("");
         service.updateMaterialCouponStatus(vo);
     }
-    
+
 
     /**
      * 有TaskName/TaskId
@@ -122,7 +135,13 @@ public class MaterialCouponStatusUpdateServiceImplTest {
                 return null;
             }
         }).when(materialCouponDao).updateByIdAndStatus(Mockito.any(MaterialCoupon.class));
-
+        List<MaterialCoupon> list = new ArrayList<MaterialCoupon>();
+        MaterialCoupon dto = new MaterialCoupon();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.DATE, 2);
+        dto.setEndTime(date.getTime());
+        list.add(dto);
+        Mockito.when(materialCouponDao.selectList(Mockito.any())).thenReturn(list);
         ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
         MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
         vo.setId(6L);
@@ -145,6 +164,7 @@ public class MaterialCouponStatusUpdateServiceImplTest {
                 return null;
             }
         }).when(materialCouponDao).updateByIdAndStatus(Mockito.any(MaterialCoupon.class));
+
         ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
         MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
         vo.setStatus("1");
@@ -155,6 +175,69 @@ public class MaterialCouponStatusUpdateServiceImplTest {
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("param id can not be null", e.getMessage());
+        }
+    }
+
+    /**
+     * 数据不存在
+     * 
+     */
+    @Test
+    public void testUpdateMaterialCouponStatus05() {
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                Assert.fail();
+                return null;
+            }
+        }).when(materialCouponDao).updateByIdAndStatus(Mockito.any(MaterialCoupon.class));
+        List<MaterialCoupon> list = new ArrayList<MaterialCoupon>();
+        Mockito.when(materialCouponDao.selectList(Mockito.any())).thenReturn(list);
+        ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
+        MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
+        vo.setId(9L);
+        vo.setStatus("1");
+        vo.setTaskId(23L);
+        vo.setTaskName("task1");
+        try {
+            service.updateMaterialCouponStatus(vo);
+            Assert.fail();
+        } catch (Exception e) {
+            Assert.assertEquals("coupon id=[9] is not exist.", e.getMessage());
+        }
+    }
+
+    /**
+     * 数据过期
+     * 
+     */
+    @Test
+    public void testUpdateMaterialCouponStatus06() {
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                Assert.fail();
+                return null;
+            }
+        }).when(materialCouponDao).updateByIdAndStatus(Mockito.any(MaterialCoupon.class));
+        List<MaterialCoupon> list = new ArrayList<MaterialCoupon>();
+        MaterialCoupon dto = new MaterialCoupon();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.DATE, -2);
+        dto.setEndTime(date.getTime());
+        list.add(dto);
+        Mockito.when(materialCouponDao.selectList(Mockito.any())).thenReturn(list);
+        ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
+        MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
+        vo.setId(9L);
+        vo.setStatus("1");
+        vo.setTaskId(23L);
+        vo.setTaskName("task1");
+        try {
+            service.updateMaterialCouponStatus(vo);
+            Assert.fail();
+        } catch (Exception e) {
+            Assert.assertEquals("coupon id=[9] is expired.", e.getMessage());
         }
     }
 

@@ -3,14 +3,12 @@ package cn.rongcapital.mkt.service.impl;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
-import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.service.SmsMaterialService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.SmsMaterialComponentIn;
+import cn.rongcapital.mkt.vo.sms.in.SmsMaterialMaterielIn;
 import cn.rongcapital.mkt.vo.in.SmsMaterialVariableIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsMaterialDeleteIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsMaterialIn;
@@ -21,11 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 @Service
 public class SmsMaterialServiceImpl implements SmsMaterialService {
@@ -44,7 +39,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
     private SmsTempletDao smsTempletDao;
 
     @Autowired
-    private SmsMaterialComponentMapDao smsMaterialComponentMapDao;
+    private SmsMaterialMaterielMapDao smsMaterialMaterielMapDao;
 
     @Autowired
     private SmsMaterialVariableMapDao smsMaterialVariableMapDao;
@@ -53,7 +48,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
     public BaseOutput insertOrUpdateSmsMaterial(@NotEmpty SmsMaterialIn smsMaterialIn) {
         BaseOutput output = getNewSuccessBaseOutput();
         SmsMaterial smsMaterial = getSmsMaterial(smsMaterialIn);
-        if (smsMaterial.getId() != null && smsMaterial.getId() != 0) {
+        if (smsMaterial.getId() != null) {
             if (smsMaterialValidate(smsMaterial.getId())) {
                 smsMaterialDao.updateById(smsMaterial);
                 modifySmsMaterialComponentAndVariable(smsMaterialIn, MODIFY_TYPE_UPDATE);
@@ -74,26 +69,26 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
     private void modifySmsMaterialComponentAndVariable(@NotEmpty SmsMaterialIn smsMaterialIn, @NotNull Integer modifyType) {
         //0如果是修改,则删除以前的物料和变量数据
         if (modifyType.equals(MODIFY_TYPE_UPDATE)) {
-            SmsMaterialComponentMap paramSmsMaterialComponentMap = new SmsMaterialComponentMap();
-            paramSmsMaterialComponentMap.setSmsMaterialId(Long.valueOf(smsMaterialIn.getId()));
-            paramSmsMaterialComponentMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-            smsMaterialComponentMapDao.updateById(paramSmsMaterialComponentMap);
+            SmsMaterialMaterielMap paramSmsMaterialMaterielMap = new SmsMaterialMaterielMap();
+            paramSmsMaterialMaterielMap.setSmsMaterialId(Long.valueOf(smsMaterialIn.getId()));
+            paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+            smsMaterialMaterielMapDao.deleteBySmsMaterialId(paramSmsMaterialMaterielMap);
 
             SmsMaterialVariableMap paramSmsMaterialVariableMap = new SmsMaterialVariableMap();
             paramSmsMaterialVariableMap.setSmsMaterialId(Long.valueOf(smsMaterialIn.getId()));
             paramSmsMaterialVariableMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-            smsMaterialVariableMapDao.updateById(paramSmsMaterialVariableMap);
+            smsMaterialVariableMapDao.deleteBySmsMaterialId(paramSmsMaterialVariableMap);
         }
         //1修改SmsMaterialComponent表
-        List<SmsMaterialComponentIn> smsMaterialComponentInList = smsMaterialIn.getSmsMaterialComponentInList();
-        if (!org.springframework.util.CollectionUtils.isEmpty(smsMaterialComponentInList)) {
-            for (SmsMaterialComponentIn smsMaterialComponentIn : smsMaterialComponentInList) {
-                SmsMaterialComponentMap insertSmsMaterialComponentMap = new SmsMaterialComponentMap();
-                insertSmsMaterialComponentMap.setSmsMaterialId(Long.valueOf(smsMaterialIn.getId()));
-                insertSmsMaterialComponentMap.setSmsComponentId(smsMaterialComponentIn.getComponentId());
-                insertSmsMaterialComponentMap.setSmsComponentType(smsMaterialComponentIn.getComponentType());
-                insertSmsMaterialComponentMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-                smsMaterialComponentMapDao.insert(insertSmsMaterialComponentMap);
+        List<SmsMaterialMaterielIn> smsMaterialMaterielInList = smsMaterialIn.getSmsMaterialMaterielInList();
+        if (!org.springframework.util.CollectionUtils.isEmpty(smsMaterialMaterielInList)) {
+            for (SmsMaterialMaterielIn smsMaterialMaterielIn : smsMaterialMaterielInList) {
+                SmsMaterialMaterielMap insertSmsMaterialMaterielMap = new SmsMaterialMaterielMap();
+                insertSmsMaterialMaterielMap.setSmsMaterialId(Long.valueOf(smsMaterialIn.getId()));
+                insertSmsMaterialMaterielMap.setSmsMaterielId(smsMaterialMaterielIn.getComponentId());
+                insertSmsMaterialMaterielMap.setSmsMaterielType(smsMaterialMaterielIn.getComponentType());
+                insertSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                smsMaterialMaterielMapDao.insert(insertSmsMaterialMaterielMap);
             }
         }
 
@@ -122,10 +117,10 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
                 smsMaterialDao.updateById(smsMaterial);
 
                 //1.干掉物料表
-                SmsMaterialComponentMap paramSmsMaterialComponentMap = new SmsMaterialComponentMap();
-                paramSmsMaterialComponentMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-                paramSmsMaterialComponentMap.setSmsMaterialId(Long.valueOf(smsMaterialDeleteIn.getId()));
-                smsMaterialComponentMapDao.deleteBySmsMaterialId(paramSmsMaterialComponentMap);
+                SmsMaterialMaterielMap paramSmsMaterialMaterielMap = new SmsMaterialMaterielMap();
+                paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+                paramSmsMaterialMaterielMap.setSmsMaterialId(Long.valueOf(smsMaterialDeleteIn.getId()));
+                smsMaterialMaterielMapDao.deleteBySmsMaterialId(paramSmsMaterialMaterielMap);
                 //2.干掉变量表
                 SmsMaterialVariableMap paramSmsMaterialVariableMap = new SmsMaterialVariableMap();
                 paramSmsMaterialVariableMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);

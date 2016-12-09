@@ -118,6 +118,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE status = 0
 		<if test="channelType != null"><![CDATA[AND channel_type = #{channelType}]]></if>
+		<if test="smsType != null"><![CDATA[AND sms_type = #{smsType}]]></if>
 		<if test="name != null"><![CDATA[AND name like CONCAT('%',#{name},'%')]]></if>
 		ORDER BY create_time desc
 		LIMIT #{startIndex},#{pageSize}
@@ -129,6 +130,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE status = 0
 		<if test="channelType != null"><![CDATA[AND channel_type = #{channelType}]]></if>
+		<if test="smsType != null"><![CDATA[AND sms_type = #{smsType}]]></if>
 		<if test="name != null"><![CDATA[AND name like CONCAT('%',#{name},'%')]]></if>
 	</select>
 	

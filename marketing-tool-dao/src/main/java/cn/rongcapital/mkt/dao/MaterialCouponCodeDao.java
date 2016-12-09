@@ -54,4 +54,15 @@ public interface MaterialCouponCodeDao extends BaseDao<MaterialCouponCode> {
 	 * @return Map<String,Object>
 	 */
 	List<MeterialCouponCodeCountByStatus> selectCouponTotalByCouponIdAndVeriStatus(Map<String, Object> paramMap);
+	
+	
+	  /**@author liuhaizhan
+     * @功能简述 删除优惠码
+     * @param：param1 message1
+     * @return：message2
+     */
+    int updateByCouponId(long id);
+
+	
+	
 }
