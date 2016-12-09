@@ -122,6 +122,13 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<!-- 根据优惠券ID查询优惠券生成码数量 -->
+	<select id="selectStockTotalByCouponId" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT stock_total
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id = #{id}
+	</select>
+	
 	<!-- 总数查询,通过条件 -->
 	<select id="getMaterialCouponCount" parameterType="java.util.Map" resultType="long">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>

@@ -95,5 +95,30 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<!-- 根据优惠券ID和发放状态 查询优惠券数量 -->
+	<select id="selectCouponTotalByCouponIdAndReleStatus" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.MeterialCouponCodeCountByStatus">
+		SELECT coupon_id as id,release_status as status,count(coupon_id) as count <include refid="QUERY_FROM_TABLE"/> 
+		WHERE coupon_id = #{id}  
+		<if test="releaseStatusList != null">
+			and release_status in
+			<foreach collection="releaseStatusList" item="ReleaseStatus" index="index" separator="," open="(" close=")">
+				#{ReleaseStatus}
+			</foreach>
+		</if>
+		group by coupon_id,release_status
+	</select>
+	
+	<!-- 根据优惠券ID和核销状态 查询优惠券数量 -->
+	<select id="selectCouponTotalByCouponIdAndVeriStatus" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.MeterialCouponCodeCountByStatus">
+		SELECT coupon_id as id,verify_status as status,count(coupon_id) as count  <include refid="QUERY_FROM_TABLE"/>
+		WHERE coupon_id = #{id} 
+		<if test="verifyStatusList != null">
+			and verify_status in
+			<foreach collection="verifyStatusList" item="VerifyStatus" index="index" separator="," open="(" close=")">
+				#{VerifyStatus}
+			</foreach>
+		</if>
+		group by coupon_id,verify_status
+	</select>
 	
 </mapper>

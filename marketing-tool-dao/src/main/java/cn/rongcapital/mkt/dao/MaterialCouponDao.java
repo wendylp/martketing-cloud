@@ -15,27 +15,35 @@ import java.util.Map;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.MaterialCoupon;
 
-public interface MaterialCouponDao extends BaseDao<MaterialCoupon>{
-	
-	//自定义扩展
+public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
+
+	// 自定义扩展
 	/**
-	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
-	 * 查询对象list;
-	 * 自定义条件查询,只要不为NULL与空则为条件,属性值之间and连接
+	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展 查询对象list; 自定义条件查询,只要不为NULL与空则为条件,属性值之间and连接
+	 * 
 	 * @param paramMap
 	 * @return list
 	 */
-	//List<T> selectListBycustomMap(Map<String,Object> paramMap);
-	
-	//自定义扩展
+	// List<T> selectListBycustomMap(Map<String,Object> paramMap);
+
+	// 自定义扩展
 	/**
-	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展
-	 * 查询对象总数
-	 * 自定义条件查询,只要不为NULL与空则为条件,属性值之间and连接
+	 * 父类方法无法满足需求时使用,需在mapper.xml中扩展 查询对象总数 自定义条件查询,只要不为NULL与空则为条件,属性值之间and连接
+	 * 
 	 * @param paramMap
 	 * @return list
 	 */
-	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	// List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+	/**
+	 * 根据优惠券ID查询优惠券生成码数量
+	 * 
+	 * @author: 单璟琦
+	 * @param paramMap
+	 * @return List<Map<String,Object>>
+	 */
+	Long selectStockTotalByCouponId(Map<String, Object> paramMap);
+
     
     /**
      * 获取指定条件的优惠券的数量
