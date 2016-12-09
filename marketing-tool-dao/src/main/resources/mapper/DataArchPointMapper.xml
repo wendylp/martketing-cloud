@@ -343,4 +343,10 @@
 			<![CDATA[AND create_time > #{timeCondition}]]>
 		</if>
 	</select>
+	
+	<!-- 修改keyid -->
+	<update id="updateDataArchPointKeyid" parameterType="Map">
+		<![CDATA[UPDATE data_arch_point SET keyid = #{newkeyId} WHERE keyid = #{oldkeyId}]]>
+	</update>
+	
 </mapper>

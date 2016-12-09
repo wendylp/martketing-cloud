@@ -16,6 +16,7 @@ import cn.rongcapital.mkt.po.DataLogin;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DataLoginDao extends BaseDao<DataLogin>, BaseDataFilterDao<DataLogin> {
 	
@@ -51,5 +52,12 @@ public interface DataLoginDao extends BaseDao<DataLogin>, BaseDataFilterDao<Data
 	 * @return
 	 */
 	int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
+	
+	/**
+	 * 更新Keyid
+	 * newkeyId-5
+	 * oldkeyId-6
+	 */
+	void updateDataLoginKeyid(Map<String,Object> map);
 
 }

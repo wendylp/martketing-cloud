@@ -405,4 +405,9 @@
 			<![CDATA[AND create_time > #{timeCondition}]]>
 		</if>
 	</select>
+	
+	<update id="updateDataPopulationKeyid" parameterType="Map">
+		<![CDATA[UPDATE data_payment SET keyid = #{newkeyId} WHERE keyid = #{oldkeyId}]]>
+	</update>
+	
 </mapper>
