@@ -92,9 +92,6 @@ public class MktApi {
 	private SegmentPublishStatusCountService segmentPublishStatusCountService;
 
 	@Autowired
-	private SegmentPublishstatusListService segmentPublishstatusListService;
-
-	@Autowired
 	private DeleteImgTextAssetService deleteImgTextAssetService;
 
 	@Autowired
@@ -108,9 +105,6 @@ public class MktApi {
 
 	@Autowired
 	private SaveCampaignAudienceService saveCampaignAudienceService;
-
-	@Autowired
-	private SegmentHeaderUpdateService segmentHeaderUpdateService;
 
 	@Autowired
 	private CampaignHeaderGetService campaignHeaderGetService;
@@ -149,9 +143,6 @@ public class MktApi {
 	private SegmentTagnameTagValueService segmentTagnameTagValueService;
 
 	@Autowired
-	private SegmentTagnameTagCountService segmentTagnameTagCountService;
-
-	@Autowired
 	private TagSystemTagcountService tagSystemTagcountService;
 
 	@Autowired
@@ -162,15 +153,6 @@ public class MktApi {
 
 	@Autowired
 	private CustomTagDeleteService customTagDeleteService;
-
-	@Autowired
-	private SegmentTagGetService segmentTagGetService;
-
-	@Autowired
-	private SegmentFilterGetService segmentFilterGetService;
-
-	@Autowired
-	private SegmentTagUpdateService segmentTagUpdateService;
 
 	@Autowired
 	private GetImgtextCountService getImgtextCountService;
@@ -212,31 +194,10 @@ public class MktApi {
 	private HomePageCalendarPopService homePageCalendarPopService;
 
 	@Autowired
-	private SegmentSearchGetService segmentSearchGetServer;
-	
-	@Autowired
-	private SegmentSearchDownloadService segmentSearchDownloadService;
-
-	@Autowired
-	private CreupdateSegmentService creupdateSegmentService;
-
-	@Autowired
 	private SegmentDetailGetService segmentDetailGetService;
 
 	@Autowired
 	private SegmentSecondaryTaglistSearchService segmentSecondaryTaglistSearchService;
-
-	@Autowired
-	private TagSystemTreeListGetService tagSystemTreeListGetService;
-	
-	@Autowired
-	private TagSystemFlagListGetService tagSystemFlagListGetService;
-	
-	@Autowired
-	private TagSystemFuzzyListGetService tagSystemFuzzyListGetService;
-	
-	@Autowired
-	private TagSystemValueListGetService tagSystemValueListGetService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -411,19 +372,6 @@ public class MktApi {
 	}
 
 	/**
-	 * @功能简述: 编辑segment header
-	 * @param: SegmentHeadIn
-	 *             body, SecurityContext securityContext
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.segment.header.update")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput segmentHeaderUpdate(@Valid SegmentHeadUpdateIn body, @Context SecurityContext securityContext) {
-		return segmentHeaderUpdateService.segmentHeaderUpdate(body, securityContext);
-	}
-
-	/**
 	 * @功能简述: 根据id获取segment header
 	 * @param: SegmentHeadIn
 	 *             body, SecurityContext securityContext, String segmentId
@@ -451,19 +399,6 @@ public class MktApi {
 	}
 
 	/**
-	 * @功能简述: 创建segment header
-	 * @param: SegmentHeadIn
-	 *             body, SecurityContext securityContext
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.segment.header.delete")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput segmentHeaderDelete(@Valid SegmentHeadDeleteIn body, @Context SecurityContext securityContext) {
-		return segmentHeaderUpdateService.deleteSegmentHeader(body, securityContext);
-	}
-
-	/**
 	 * @功能简述: 查询不同发布状态下的segment数量
 	 * @param: String
 	 *             userToken, String ver
@@ -476,43 +411,6 @@ public class MktApi {
 		return segmentPublishStatusCountService.segmentPublishstatusCount(userToken, ver);
 	}
 
-	/**
-	 * @功能简述: 获取某个发布状态下的segemnt列表
-	 * @param: String
-	 *             userToken, String ver, String publishStatus
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.segment.publishstatus.list.get")
-	public SegmentPublishstatusListOut segmentPublishstatusList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotNull @QueryParam("publish_status") Integer publishStatus,
-			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
-			@NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword) throws Exception {
-		return segmentPublishstatusListService.segmentPublishstatusList(userToken, publishStatus, index, size, ver,
-				keyword);
-	}
-
-	@POST
-	@Path("/mkt.segment.gendercount.list")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput segmentGenderCountList(@Valid SegmentCountFilterIn input) {
-		return segmentFilterGetService.segmentGenderCountList(input);
-	}
-
-	@POST
-	@Path("/mkt.segment.provincecount.list")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput segmentProvinceCountList(@Valid SegmentCountFilterIn input) {
-		return segmentFilterGetService.segmentProvinceCountList(input);
-	}
-
-	@POST
-	@Path("/mkt.segment.receivecount.list")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput segmentReceiveCountList(@Valid SegmentCountFilterIn input) {
-		return segmentFilterGetService.segmentReceiveCountList(input);
-	}
 
 	/**
 	 * @功能描述: 登录接口
@@ -600,18 +498,6 @@ public class MktApi {
 		return segmentBodyUpdateService.segmentBodyUpdate(body, securityContext);
 	}
 
-	/**
-	 * @功能简述: 编辑segment body
-	 * @param: SegmentBodyUpdateIn
-	 *             body, SecurityContext securityContext
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.segment.creupdate")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput createOrUpdateSegment(SegmentCreUpdateIn segmentCreUpdateIn, @Context SecurityContext securityContext) {
-		return creupdateSegmentService.creupdateSegment(segmentCreUpdateIn);
-	}
 
 	/**
 	 * @功能描述:查询细分的详细信息
@@ -639,17 +525,6 @@ public class MktApi {
 		return segmentSecondaryTaglistSearchService.searchSegmentSecondaryTaglist(tagListSecondarySearchIn);
 	}
 
-	/**
-	 * @功能简述: 细分漏斗过滤
-	 * @param:
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.segment.filter.get")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput segmentFilterGet(TagGroupsListIn tagGroupsListIn, @Context SecurityContext securityContext) {
-		return segmentFilterGetService.getSegmentFilterResult(tagGroupsListIn);
-	}
 
 	/**
 	 * @功能简述: 获取后台任务列表
@@ -804,19 +679,6 @@ public class MktApi {
 		return segmentTagnameTagValueService.getMongoTagValueByTagId(tagGroupId);
 	}
 
-	/**
-	 * @功能简述: 获取标签的柱状图数据
-	 * @param method
-	 * @param userToken
-	 * @return BaseOutput
-	 */
-	@GET
-	@Path("/mkt.segment.tagname.tagcount.get")
-	public BaseOutput getTagCountByGroupId(@NotEmpty @QueryParam("method") String method,
-			@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("tag_ids") String tagIds) {
-		//segmentTagnameTagCountService.getTagCountById(tagIds);
-		return segmentTagnameTagCountService.getMongoTagCountByTagIdList(tagIds);
-	}
 
 	/**
 	 * @功能简述: 获取受众细分body信息
@@ -886,54 +748,6 @@ public class MktApi {
 		return tagDownloadCustomAudienceService.downloadCustomAudience(tagId);
 	}
 
-
-
-	/**
-	 * @功能简述: 获取受众细分关联的tag
-	 * @param userToken
-	 * @param segmentHeadId
-	 * @return BaseOutput
-	 */
-	@GET
-	@Path("/mkt.segment.tag.get")
-	public BaseOutput getSegmentHeaderTag(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("segment_head_id") String segmentHeadId) {
-		return segmentTagGetService.getSegmentTag(userToken, segmentHeadId);
-	}
-
-//	/**
-//	 * @功能简述: 获取受众细分漏斗计算结果
-//	 * @param body
-//	 * @param securityContext
-//	 * @return BaseOutput
-//	 */
-//	@POST
-//	@Path("/mkt.segment.filter.get")
-//	@Consumes({ MediaType.APPLICATION_JSON })
-//	public BaseOutput getSegmentFilterCount(@Valid SegmentFilterCountIn body,
-//			@Context SecurityContext securityContext) {
-//		return segmentFilterGetService.getSegmentFilterCount(body, securityContext);
-//	}
-
-	@POST
-	@Path("/mkt.segment.filter.sum.get")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput getSegmentFilterSum(@Valid SegmentFilterSumIn body, @Context SecurityContext securityContext) {
-		return segmentFilterGetService.getSegmentFilterSum(body);
-	}
-
-	/**
-	 * @功能简述: 打标签，增加或修改受众细分关联的tag
-	 * @param: SegmentTagUpdateIn
-	 *             body, SecurityContext securityContext
-	 * @return: Object
-	 */
-	@POST
-	@Path("/mkt.segment.tag.update")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput segmentBodyUpdate(@Valid SegmentTagUpdateIn body, @Context SecurityContext securityContext) {
-		return segmentTagUpdateService.updateSegmentTag(body, securityContext);
-	}
 
 	/**
 	 * 获取系统标签内容列表
@@ -1051,96 +865,5 @@ public class MktApi {
 		return out;
 	}
 	
-	/**
-     * 根据输入名字模糊查询都有哪些人在人群中
-     * @param head_id
-     * @param query_name
-     * @return BaseOutput
-     */
-    @GET
-    @Path("/mkt.segment.search.get")
-    public BaseOutput segmentSearch(@NotNull @QueryParam("head_id") Integer head_id,
-             @NotEmpty @QueryParam("query_name") String query_name) {
-         
-        return segmentSearchGetServer.SegmentSearch(head_id, query_name);
-    }
-    
-    /**
-     * 根据主键id下载相应人群数
-     * @param head_id
-     * @return BaseOutput
-     */
-    @GET
-    @Path("/mkt.segment.search.download")
-    public BaseOutput getSegmentSearchDownload(@NotEmpty @QueryParam("user_token") String user_token,
-            @NotEmpty @QueryParam("ver") String ver,
-            @NotNull @QueryParam("head_id") Integer head_id) {
-        return segmentSearchDownloadService.getSegmentSearchDownload(head_id);
-    }
-
-    
-    /**
-     * 系统标签（树形）结构接口
-     * 
-     * @return
-     * @author shuiyangyang
-     * @Date 2016-11-09
-     */
-    @GET
-    @Path("/mkt.tag.system.tree.list.get")
-    public BaseOutput tagSystemTreeListGet(@NotEmpty @QueryParam("user_token") String userToken,
-                    @QueryParam("ver") String ver) {
-        return tagSystemTreeListGetService.getTagSystemTreeList();
-    }
-
-    /**
-     * 获取推荐标签
-     * 
-     * @return
-     * @author shuiyangyang
-     * @Date 2016-11-09
-     */
-    @GET
-    @Path("/mkt.tag.system.flag.list.get")
-    public BaseOutput tagSystemFlagListGet(@NotEmpty @QueryParam("user_token") String userToken,
-                    @QueryParam("ver") String ver) {
-        return tagSystemFlagListGetService.getTagSystemFlagList();
-    }
-    
-    
-    /**
-     * 根据页面输入值模糊查询标签，返回标签或者标签值 （全路径的标签或者标签值《带有标签类型：标签值，标签》分页
-     * 
-     * @param tagName
-     * @param index
-     * @param size
-     * @return
-     * @author shuiyangyang
-     * @date 2016-11-11
-     */
-    @GET
-    @Path("/mkt.tag.system.fuzzy.list.get")
-    public BaseOutput tagSystemFuzzyListGet(@NotEmpty @QueryParam("user_token") String userToken,
-                    @NotEmpty @QueryParam("ver") String ver, @QueryParam("tag_name") String tagName,
-                    @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-                    @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
-        return tagSystemFuzzyListGetService.getTagSystemFuzzyList(tagName, index, size);
-    }
-    
-    /**
-     * 获取标签值
-     * 
-     * 接口：mkt.tag.system.value.list.get
-     * @param tagId
-     * @return
-     * @author shuiyangyang
-     * @Date 2016-11-14
-     */
-    @GET
-    @Path("/mkt.tag.system.value.list.get")
-    public BaseOutput tagSystemValueListGet(@NotEmpty @QueryParam("user_token") String userToken,
-                    @QueryParam("ver") String ver, @NotEmpty @QueryParam("tag_id") String tagId) {
-        return tagSystemValueListGetService.getTagSystemValueList(tagId);
-    }
 
 }
