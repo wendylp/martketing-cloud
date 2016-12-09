@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
@@ -62,4 +64,24 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
      * @Date 2016-12-06
      */
     long getMaterialCouponCount(Map<String,Object> paramMap);
+    
+    /**
+     * 
+     * @功能描述: 模糊查询代金券
+     * @param paramMaterialCoupon
+     * @return List<MaterialCoupon>
+     * @author xie.xiaoliang
+     * @since 2016年12月6日
+     */
+    List<MaterialCoupon> selectListByKeyword(MaterialCoupon paramMaterialCoupon);
+    
+    /**
+     * @功能描述: 模糊查询代金券数量
+     * @param paramMaterialCoupon
+     * @return int
+     * @author xie.xiaoliang
+     * @since 2016年12月6日
+     */
+    int selectListByKeywordCount(MaterialCoupon paramMaterialCoupon);
+    
 }

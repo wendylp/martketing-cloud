@@ -9,8 +9,11 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.api;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CouponCodeListService;
 import cn.rongcapital.mkt.service.MaterialCouponCountGetService;
+import cn.rongcapital.mkt.service.MaterialCouponPageListService;
 import cn.rongcapital.mkt.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -44,10 +48,12 @@ public class CouponApi {
 	private MaterialCouponCountGetService materialCouponCountGetService;
 
 	@Autowired
-	private CouponCodeListService couponCodeListService;
-
-	@Autowired
 	private MaterialCouponReleaseGeneralService materialCouponReleaseGeneralService;
+	
+	@Autowired
+    private CouponCodeListService couponCodeListService;
+    @Autowired
+    private MaterialCouponPageListService couponPageListService;
 
 	/**
 	 * 获取指定条件的优惠券的数量
@@ -105,4 +111,28 @@ public class CouponApi {
 
 		return materialCouponReleaseGeneralService.releaseGeneralById(id, userToken, version);
 	}
+    
+    /**
+     * @功能描述: message
+     * @param userToken
+     * @param ver
+     * @param searchWord
+     * @param channelType
+     * @param index
+     * @param size
+     * @return
+     * @throws Exception BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月7日
+     */
+    @GET
+    @Path("/mkt.material.coupon.list")
+    public BaseOutput getMaterialCouponListByKeyword(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("channel_code") String channelCode,
+            @QueryParam("keyword") String keyword, @QueryParam("coupon_status") String couponStatus,
+            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("page_size") Integer size) throws Exception {
+
+        return couponPageListService.getMaterialCouponListByKeyword(channelCode, couponStatus, keyword, index, size);
+    }
 }
