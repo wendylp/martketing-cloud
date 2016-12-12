@@ -11,13 +11,12 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.List;
-
-import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.MaterialCouponCode;
 import cn.rongcapital.mkt.po.MeterialCouponCodeCountByStatus;
+import cn.rongcapital.mkt.vo.out.MaterialCouponCodeVerifyListOut;
 
 public interface MaterialCouponCodeDao extends BaseDao<MaterialCouponCode> {
 
@@ -81,6 +80,22 @@ public interface MaterialCouponCodeDao extends BaseDao<MaterialCouponCode> {
      */
     int updateByCouponId(long id);
 
-	
+    /**
+     * 获取核销对账数据
+     * 
+     * @param paramMap
+     * @return List<MaterialCouponCodeVerifyListOut>
+     * @author zhuxuelong
+     */
+    List<MaterialCouponCodeVerifyListOut> getCouponCodeVerifyList(Map<String, Object> paramMap);
+    
+    /**
+     * 获取核销对账数据总数
+     * 
+     * @param paramMap
+     * @return long
+     * @author zhuxuelong
+     */
+    int getCouponCodeVerifyListCnt(Map<String, Object> paramMap);
 	
 }
