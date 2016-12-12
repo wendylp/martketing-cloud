@@ -2,11 +2,16 @@ package cn.rongcapital.mkt.common.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +20,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.stream.FileImageOutputStream;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -320,5 +327,70 @@ public class FileUtil {
 		}
 
 		return columnNamesMap;
+	}
+	
+
+	/**
+	   * 下载文件到本地
+	   *
+	   * @param urlString
+	   *          被下载的文件地址
+	   * @param filename
+	   *          本地文件名
+	   * @throws Exception
+	   *           各种异常
+	   */
+	public static void download(String urlString,String folder, String filename) throws Exception {
+	    // 构造URL
+	    URL url = new URL(urlString);
+	    // 打开连接
+	    URLConnection con = url.openConnection();
+	    // 输入流
+	    InputStream is = con.getInputStream();
+	    // 1K的数据缓冲
+	    byte[] bs = new byte[10240];
+	    // 读取到的数据长度
+	    int len;
+	    // 输出的文件流
+	    OutputStream os = null;
+	    String filenameNew = folder+filename;	    
+	    try {
+			os = new FileOutputStream(filenameNew);
+			// 开始读取
+			if(os!=null){
+				while ((len = is.read(bs)) != -1) {
+			      os.write(bs, 0, len);
+			    }
+			    // 完毕，关闭所有链接
+			    os.close();
+			    is.close();
+			}
+		} catch (FileNotFoundException e) {	
+				createDir(folder);
+				download(urlString,folder,filename);
+		}catch (Exception e) {					
+			logger.info(e.getMessage());
+		}	    
+	} 
+	
+    public static boolean createDir(String destDirName) {  
+        File dir = new File(destDirName);  
+        if (dir.exists()) {            
+            return false;  
+        }  
+        logger.info(File.separator);
+        if (!destDirName.endsWith(File.separator)) {  
+            destDirName = destDirName + File.separator;  
+        }  
+        //创建目录  
+        if (dir.mkdirs()) {             
+            return true;  
+        } else {           
+            return false;  
+        }  
+    } 
+	
+	public static void main(String[] args) throws Exception {
+	    download("http://mmbiz.qpic.cn/mmbiz_jpg/OiawiaOqXEjkqcB210t2A7h5m270KPIbA6KneI5VGZwYqbFRu9zDe5GyexyrOt5AE10DiazAy3hYZn3hzWcCMMW6w/0?wx_fmt=jpeg", "E:/workspace_doc/","laozizhu.com1.jpeg");
 	}
 }

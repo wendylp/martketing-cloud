@@ -1061,4 +1061,38 @@ public class MktWeChatApi {
         
         return etWxImgTextAssetService.getWxImgTextAsset(imgTextAsset);
 	}
+	
+	
+	/**
+	 * @功能简述: 获取图文资产
+	 * @param:String user_token,String
+	 *                   ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.imgtext.campaign.get")
+	public Object getCampaignImgTextAsset(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("type") Integer type,
+			@QueryParam("owner_name") String ownerName, @DefaultValue("1") @Min(1) @QueryParam("index") int index,
+			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
+		ImgAsset imgAsset = new ImgAsset();
+		imgAsset.setAssetType(type);
+		imgAsset.setVer(ver);
+		if (ownerName != null) {
+			imgAsset.setOwnerName(ownerName);
+		}
+		if (index != 0) {
+			imgAsset.setIndex(index);
+		} else {
+			imgAsset.setIndex(1);
+		}
+		if (size != 0) {
+			imgAsset.setSize(size);
+		} else {
+			imgAsset.setSize(10);
+		}
+//		return getImgTextAssetService.getImgTextAssetService(imgAsset);
+		return null;
+	}
+
 }

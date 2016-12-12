@@ -26,4 +26,12 @@ public interface SmsTaskHeadService {
 	 */
 	public BaseOutput smsTaskHeadPublish(String userId, Integer id) throws Exception;
 	
+	/**
+	 * 根据任务ID获取ID
+	 * @param id
+	 * @return
+	 */
+	public BaseOutput getSmsTaskHeadById(Integer id) throws Exception;
+	
+	
 }

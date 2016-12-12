@@ -72,4 +72,11 @@ public class MktSmsTaskApi {
 		return smsTaskHeadService.smsTaskHeadPublish(userId, id);
 	}
 	
+	@GET
+	@Path("/mkt.sms.smstaskhead.get")
+	public BaseOutput deleteSmsMaterial(@NotEmpty @QueryParam("user_token") String userToken,@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,
+			@NotNull @QueryParam("sms_task_head_id") Integer id) throws Exception {		
+		return smsTaskHeadService.getSmsTaskHeadById(id);
+	}
+	
 }
