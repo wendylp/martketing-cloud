@@ -8,7 +8,7 @@
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM sms_material__materiel_map]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM sms_material_materiel_map]]></sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
@@ -42,7 +42,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SmsMaterialMaterielMap" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO sms_material__materiel_map (sms_material_id,sms_materiel_id,sms_materiel_type,create_time)
+			INSERT INTO sms_material_materiel_map (sms_material_id,sms_materiel_id,sms_materiel_type,create_time)
 			VALUES
 			(
 			  #{smsMaterialId},
@@ -58,7 +58,7 @@
 
 	<!-- 修改记录通过主键 -->
 	<update id="updateById" parameterType="cn.rongcapital.mkt.po.SmsMaterialMaterielMap">
-		<![CDATA[UPDATE sms_material__materiel_map]]>
+		<![CDATA[UPDATE sms_material_materiel_map]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
@@ -92,7 +92,7 @@
 	
 	<!-- 其它SQL语句 -->
 	<update id="deleteBySmsMaterialId" parameterType="cn.rongcapital.mkt.po.SmsMaterialMaterielMap">
-		<![CDATA[UPDATE sms_material__materiel_map]]>
+		<![CDATA[UPDATE sms_material_materiel_map]]>
         <set>
 			status = #{status}
 		</set>
