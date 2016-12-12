@@ -8,6 +8,9 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
+
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -30,6 +33,7 @@ public class MaterialCouponGeneralGetServiceImpl implements MaterialCouponGenera
     private MaterialCouponDao materialCouponDao;
 
     @Override
+    @ReadWrite(type = ReadWriteType.READ)
     public BaseOutput getMaterialCouponGeneral(Long id) {
         BaseOutput result =
                         new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
