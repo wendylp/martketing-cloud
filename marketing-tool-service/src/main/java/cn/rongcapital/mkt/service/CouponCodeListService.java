@@ -8,4 +8,6 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  */
 public interface CouponCodeListService {
     BaseOutput couponCodeList(Long id, Integer index, Integer size);
+
+    BaseOutput couponIssuedCodeList(Long id, Integer index, Integer size);
 }

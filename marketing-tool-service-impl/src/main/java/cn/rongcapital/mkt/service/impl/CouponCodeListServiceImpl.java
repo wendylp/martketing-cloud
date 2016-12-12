@@ -10,7 +10,6 @@
 
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,11 +33,28 @@ public class CouponCodeListServiceImpl implements CouponCodeListService {
         code.setStartIndex(index);
         code.setPageSize(size);
         List<MaterialCouponCode> codeList = materialCouponCodeDao.selectList(code);
-        List<Object> list = new ArrayList<Object>();
-        list.add(codeList);
-        BaseOutput result =
-                new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
-                        list);
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+        for(MaterialCouponCode materialCouponCode : codeList){
+            result.getData().add(materialCouponCode);
+        }
+        result.setTotal(result.getData().size());
+        result.setTotalCount(codeList.size());
+        return result;
+    }
+
+    @Override
+    public BaseOutput couponIssuedCodeList(Long id, Integer index, Integer size) {
+        MaterialCouponCode code = new MaterialCouponCode();
+        code.setCouponId(id);
+        code.setStartIndex(index);
+        code.setPageSize(size);
+        List<MaterialCouponCode> codeList = materialCouponCodeDao.selectIssuedList(code);
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+        for(MaterialCouponCode materialCouponCode : codeList){
+            result.getData().add(materialCouponCode);
+        }
+        result.setTotal(result.getData().size());
+        result.setTotalCount(codeList.size());
         return result;
     }
 }

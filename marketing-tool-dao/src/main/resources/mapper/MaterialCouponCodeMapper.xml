@@ -26,6 +26,20 @@
 		</where>
 	</sql>
 	
+	<!-- 已发放条件 -->
+	<sql id="QUERY_WHERE_CLAUSE_ISSUED">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="couponId != null"><![CDATA[ AND coupon_id = #{couponId}]]></if>
+		    	<if test="code != null"><![CDATA[ AND code = #{code}]]></if>
+		    	<![CDATA[ AND release_status <> 'unreleased']]>
+		    	<if test="verifyStatus != null"><![CDATA[ AND verify_status = #{verifyStatus}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		</where>
+	</sql>
+	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
 		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
@@ -92,6 +106,15 @@
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
 
+	<!-- 查询已发放优惠码条件 -->
+	<select id="selectIssuedList" parameterType="cn.rongcapital.mkt.po.MaterialCouponCode" resultType="cn.rongcapital.mkt.po.MaterialCouponCode">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE_ISSUED"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+	
 	<!-- 总数查询,通过条件 -->
 	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.MaterialCouponCode" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
@@ -191,4 +214,23 @@
 	    	<otherwise></otherwise>
     	</choose>
 	</select>
+	
+	<!-- 批量保存优惠码 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO material_coupon_code (coupon_id,code,user,release_status,verify_status,verify_time,status,create_time,update_time)
+        VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.coupon_id},
+			#{item.code},
+			#{item.user},
+			#{item.release_status},
+			#{item.verify_status},
+			#{item.verify_time},
+			#{item.status},
+			#{item.create_time},
+			#{item.update_time}
+			)
+		</foreach>
+	</insert>
 </mapper>
