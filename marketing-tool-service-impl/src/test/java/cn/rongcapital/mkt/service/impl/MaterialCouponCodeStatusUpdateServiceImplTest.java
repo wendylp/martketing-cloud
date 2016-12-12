@@ -256,5 +256,30 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         voList.add(vo);
         ReflectionTestUtils.invokeMethod(service, "processMaterialCouponCode", voList);
     }
+    
+    /**
+     * 处理异常
+     */
+    @Test
+    public void testProcessMaterialCouponCode03() {
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                throw new Exception("XXX");
+            }
+        }).when(materialCouponCodeDao).batchUpdateByIdAndStatus(Mockito.any());
+        ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
+        List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
+        MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
+        vo.setId(6L);
+        vo.setStatus("1");
+        voList.add(vo);
+        vo = new MaterialCouponCodeStatusUpdateVO();
+        vo.setId(7L);
+        vo.setUser("12345");
+        vo.setStatus("2");
+        voList.add(vo);
+        ReflectionTestUtils.invokeMethod(service, "processMaterialCouponCode", voList);
+    }
 
 }

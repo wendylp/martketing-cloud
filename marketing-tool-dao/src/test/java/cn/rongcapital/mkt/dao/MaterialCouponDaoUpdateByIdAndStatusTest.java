@@ -17,7 +17,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.po.MaterialCoupon;
 
@@ -41,9 +44,9 @@ public class MaterialCouponDaoUpdateByIdAndStatusTest extends AbstractUnitTest {
     @Test
     public void testUpdateByIdAndStatus01() {
         MaterialCoupon coupon = new MaterialCoupon();
-        coupon.setSourceCode("common");
-        coupon.setType("voucher");
-        coupon.setChannelCode("sms");
+        coupon.setSourceCode(MaterialCouponSourceCodeEnum.COMMON.getCode());
+        coupon.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
+        coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
         coupon.setTitle("zhuxuelongtest");
         coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
         coupon.setStatus((byte)1);
