@@ -22,8 +22,8 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
+import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.material.coupon.out.MaterialCouponListOut;
 @Service
 public class MaterialCouponPageListServiceImpl implements MaterialCouponPageListService {
 

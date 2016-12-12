@@ -16,7 +16,7 @@ import java.util.Map;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.po.MeterialCouponCodeCountByStatus;
-import cn.rongcapital.mkt.vo.material.coupon.out.MaterialCouponCodeVerifyListOut;
+import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponCodeVerifyListOut;
 
 public interface MaterialCouponCodeDao extends BaseDao<MaterialCouponCode> {
 

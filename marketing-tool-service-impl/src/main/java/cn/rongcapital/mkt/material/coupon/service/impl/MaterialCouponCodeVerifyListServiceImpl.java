@@ -25,8 +25,8 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeVerifyListService;
+import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponCodeVerifyListOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.material.coupon.out.MaterialCouponCodeVerifyListOut;
 
 @Service
 public class MaterialCouponCodeVerifyListServiceImpl implements MaterialCouponCodeVerifyListService {

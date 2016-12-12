@@ -23,8 +23,8 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGeneralGetService;
+import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponGeneralGetOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.material.coupon.out.MaterialCouponGeneralGetOut;
 
 @Service
 public class MaterialCouponGeneralGetServiceImpl implements MaterialCouponGeneralGetService {
