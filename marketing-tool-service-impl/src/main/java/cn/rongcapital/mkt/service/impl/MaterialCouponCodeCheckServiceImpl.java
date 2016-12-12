@@ -51,15 +51,25 @@ public class MaterialCouponCodeCheckServiceImpl
     @Override
     public BaseOutput materialCouponCodeCheck(Long id, String couponCode,
             String user) {
-
-        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
-                ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
-
+        
         MaterialCouponCode paramMaterialCouponCode = new MaterialCouponCode();
         paramMaterialCouponCode.setId(id);
         paramMaterialCouponCode.setCode(couponCode);
         paramMaterialCouponCode.setUser(user);
 
+        return checkCode(paramMaterialCouponCode);
+    }
+
+    /**
+     * @功能描述: message
+     * @param paramMaterialCouponCode
+     * @return BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月12日
+     */
+    private BaseOutput checkCode(MaterialCouponCode paramMaterialCouponCode) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+                ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
         // 验证优惠码是否有效，有效的条件为：
         // 1.此优惠码status状态值为0
         // 2.优惠码发放状态为收到
@@ -127,6 +137,50 @@ public class MaterialCouponCodeCheckServiceImpl
                 ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
                 ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(),
                 ApiConstant.INT_ZERO, null);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cn.rongcapital.mkt.service.MaterialCouponCodeCheckService#materialCouponCodeVerify(java.lang.
+     * Long, java.lang.String, java.lang.String)
+     */
+    @Override
+    public BaseOutput materialCouponCodeVerify(Long id, String couponCode,
+            String user) {
+        BaseOutput successResult = new BaseOutput(
+                ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                ApiConstant.INT_ZERO, null);
+
+        MaterialCouponCode item = new MaterialCouponCode();
+        item.setId(id);
+        item.setCode(couponCode);
+        item.setUser(user);
+
+        
+        BaseOutput validateResult = this.checkCode(item);
+        
+        if(successResult.getCode() == validateResult.getCode()){
+            // 进行核销操作
+            item.setVerifyStatus(
+                    MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());// 将核销状态置为已使用
+            item.setVerifyTime(new Date());// 将核销时间设置为当前服务器时间
+            int updateRow = this.materialCouponCodeDao.updateById(item);
+            // 受影响的行数如果为1，则说明核销操作成功
+            if (updateRow == 1) {
+                return successResult;
+            } else {
+                return new BaseOutput(
+                        ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_VERIFY_FAILD
+                                .getCode(),
+                        ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_VERIFY_FAILD
+                                .getMsg(),
+                        ApiConstant.INT_ZERO, null);
+            }
+        }else{
+            return validateResult;
+        }
     }
 
 }

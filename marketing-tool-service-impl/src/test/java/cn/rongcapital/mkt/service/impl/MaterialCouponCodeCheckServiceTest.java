@@ -71,7 +71,6 @@ public class MaterialCouponCodeCheckServiceTest {
                 materialCouponCodeDao);
         ReflectionTestUtils.setField(checkService, "materialCouponDao",
                 materialCouponDao);
-
     }
 
     /**
@@ -524,6 +523,168 @@ public class MaterialCouponCodeCheckServiceTest {
                 ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_CHECK_NOT_IN_PERIOD
                         .getCode(),
                 output.getCode());
+    }
+    
+    /**
+     * Test method for
+     * {@link cn.rongcapital.mkt.service.impl.MaterialCouponCodeCheckServiceImpl#materialCouponCodeCheck(java.lang.Long, java.lang.String, java.lang.String)}.
+     */
+    @Test
+    public void testMaterialCouponCodeCheckVerify() {
+
+        MaterialCoupon mockMaterialCoupon = null;
+        MaterialCouponCode mockMaterialCouponCode = null;
+        mockMaterialCoupon = new MaterialCoupon();
+        mockMaterialCoupon.setId(1L);
+        mockMaterialCoupon.setAmount(new BigDecimal(8));
+        mockMaterialCoupon.setChannelCode("sms");
+        mockMaterialCoupon.setCouponStatus("used");
+        mockMaterialCoupon.setCreateTime(new Date());
+
+        Calendar endCalender = Calendar.getInstance();
+        endCalender.setTime(new Date()); // 设置当前日期
+        endCalender.add(Calendar.DATE, 1); // 日期加1
+        Date endDate = endCalender.getTime(); // 结果
+
+        mockMaterialCoupon.setEndTime(endDate);
+        mockMaterialCoupon.setSourceCode("common");
+        mockMaterialCoupon.setRule("");
+        Calendar startCalender = Calendar.getInstance();
+        startCalender.setTime(new Date()); // 设置当前日期
+        startCalender.add(Calendar.DATE, -1); // 日期加1
+        Date startDate = startCalender.getTime(); // 结果
+        mockMaterialCoupon.setStartTime(startDate);
+        mockMaterialCoupon.setStatus(
+                NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
+        mockMaterialCoupon.setStockRest(10000);
+        mockMaterialCoupon.setStockTotal(20000);
+        mockMaterialCoupon.setTitle("贝贝熊短信引流优惠码活动");
+        mockMaterialCoupon.setType("voucher");
+        mockMaterialCoupon.setUpdateTime(new Date());
+
+        mockMaterialCouponCode = new MaterialCouponCode();
+        mockMaterialCouponCode.setId(1L);
+        mockMaterialCouponCode.setCouponId(mockMaterialCoupon.getId());
+        mockMaterialCouponCode.setCode("ABCDE");
+        mockMaterialCouponCode.setUser("13888888888");
+        mockMaterialCouponCode.setReleaseStatus(
+                MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
+        mockMaterialCouponCode.setVerifyStatus(
+                MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
+        mockMaterialCouponCode.setStatus(
+                NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
+        mockMaterialCouponCode.setCreateTime(new Date());
+
+        MaterialCouponCode paramMaterialCouponCode = new MaterialCouponCode();
+        paramMaterialCouponCode.setId(mockMaterialCouponCode.getId());
+        paramMaterialCouponCode.setCode(mockMaterialCouponCode.getCode());
+        paramMaterialCouponCode.setUser(mockMaterialCouponCode.getUser());
+
+        List<MaterialCouponCode> mockCodeResult = new ArrayList<>();
+        mockCodeResult.add(mockMaterialCouponCode);
+        List<MaterialCoupon> mockCouponResult = new ArrayList<>();
+        mockCouponResult.add(mockMaterialCoupon);
+
+        Mockito.when(materialCouponCodeDao.selectList(Matchers.any()))
+                .thenReturn(mockCodeResult);
+
+        Mockito.when(materialCouponDao.selectListByIdList(Matchers.any()))
+                .thenReturn(mockCouponResult);
+        Mockito.when(materialCouponCodeDao.updateById(Matchers.any()))
+        .thenReturn(1);
+
+        //校验正确的情况
+        BaseOutput output = this.checkService.materialCouponCodeVerify(
+                paramMaterialCouponCode.getId(),
+                paramMaterialCouponCode.getCode(),
+                paramMaterialCouponCode.getUser());
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), output.getMsg());
+        
+        
+        //校验update失败的情况
+        Mockito.when(materialCouponCodeDao.updateById(Matchers.any()))
+        .thenReturn(0);
+        BaseOutput outputVerifyFaild = this.checkService.materialCouponCodeVerify(
+            paramMaterialCouponCode.getId(),
+            paramMaterialCouponCode.getCode(),
+            paramMaterialCouponCode.getUser());
+        Assert.assertEquals(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_VERIFY_FAILD.getCode(), outputVerifyFaild.getCode());
+        
+    }
+    /**
+     * Test method for
+     * {@link cn.rongcapital.mkt.service.impl.MaterialCouponCodeCheckServiceImpl#materialCouponCodeCheck(java.lang.Long, java.lang.String, java.lang.String)}.
+     */
+    @Test
+    public void testMaterialCouponCodeCheckVerifyCheckFaild() {
+
+        MaterialCoupon mockMaterialCoupon = null;
+        MaterialCouponCode mockMaterialCouponCode = null;
+        mockMaterialCoupon = new MaterialCoupon();
+        mockMaterialCoupon.setId(1L);
+        mockMaterialCoupon.setAmount(new BigDecimal(8));
+        mockMaterialCoupon.setChannelCode("sms");
+        mockMaterialCoupon.setCouponStatus("used");
+        mockMaterialCoupon.setCreateTime(new Date());
+
+        Calendar endCalender = Calendar.getInstance();
+        endCalender.setTime(new Date()); // 设置当前日期
+        endCalender.add(Calendar.DATE, -1); // 日期加1
+        Date endDate = endCalender.getTime(); // 结果
+
+        mockMaterialCoupon.setEndTime(endDate);
+        mockMaterialCoupon.setSourceCode("common");
+        mockMaterialCoupon.setRule("");
+        Calendar startCalender = Calendar.getInstance();
+        startCalender.setTime(new Date()); // 设置当前日期
+        startCalender.add(Calendar.DATE, -2); // 日期加1
+        Date startDate = startCalender.getTime(); // 结果
+        mockMaterialCoupon.setStartTime(startDate);
+        mockMaterialCoupon.setStatus(
+                NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
+        mockMaterialCoupon.setStockRest(10000);
+        mockMaterialCoupon.setStockTotal(20000);
+        mockMaterialCoupon.setTitle("贝贝熊短信引流优惠码活动");
+        mockMaterialCoupon.setType("voucher");
+        mockMaterialCoupon.setUpdateTime(new Date());
+
+        mockMaterialCouponCode = new MaterialCouponCode();
+        mockMaterialCouponCode.setId(1L);
+        mockMaterialCouponCode.setCouponId(mockMaterialCoupon.getId());
+        mockMaterialCouponCode.setCode("ABCDE");
+        mockMaterialCouponCode.setUser("13888888888");
+        mockMaterialCouponCode.setReleaseStatus(
+                MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
+        mockMaterialCouponCode.setVerifyStatus(
+                MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
+        mockMaterialCouponCode.setStatus(
+                NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
+        mockMaterialCouponCode.setCreateTime(new Date());
+
+        MaterialCouponCode paramMaterialCouponCode = new MaterialCouponCode();
+        paramMaterialCouponCode.setId(mockMaterialCouponCode.getId());
+        paramMaterialCouponCode.setCode(mockMaterialCouponCode.getCode());
+        paramMaterialCouponCode.setUser(mockMaterialCouponCode.getUser());
+
+        List<MaterialCouponCode> mockCodeResult = new ArrayList<>();
+        mockCodeResult.add(mockMaterialCouponCode);
+        List<MaterialCoupon> mockCouponResult = new ArrayList<>();
+        mockCouponResult.add(mockMaterialCoupon);
+
+        Mockito.when(materialCouponCodeDao.selectList(Matchers.any()))
+                .thenReturn(mockCodeResult);
+
+        Mockito.when(materialCouponDao.selectListByIdList(Matchers.any()))
+                .thenReturn(mockCouponResult);
+        Mockito.when(materialCouponCodeDao.updateById(Matchers.any()))
+        .thenReturn(1);
+
+        //校验正确的情况
+        BaseOutput output = this.checkService.materialCouponCodeVerify(
+                paramMaterialCouponCode.getId(),
+                paramMaterialCouponCode.getCode(),
+                paramMaterialCouponCode.getUser());
+        Assert.assertNotEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
     }
 
 }
