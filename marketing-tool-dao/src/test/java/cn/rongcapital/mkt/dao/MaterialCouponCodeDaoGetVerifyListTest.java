@@ -26,7 +26,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import cn.rongcapital.mkt.common.enums.CouponStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.po.MaterialCoupon;
 import cn.rongcapital.mkt.po.MaterialCouponCode;
@@ -53,31 +58,28 @@ public class MaterialCouponCodeDaoGetVerifyListTest extends AbstractUnitTest {
     public void setUp() throws Exception {
         codeList = new ArrayList<MaterialCouponCode>();
         coupon = new MaterialCoupon();
-        coupon.setSourceCode("common");
-        coupon.setType("voucher");
-        coupon.setChannelCode("sms");
+        coupon.setSourceCode(MaterialCouponSourceCodeEnum.COMMON.getCode());
+        coupon.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
+        coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
         coupon.setTitle(UUID.randomUUID().toString());
-        coupon.setCouponStatus(CouponStatusEnum.COUPONSTATUS_RELEASED.getCode());
+        coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
         coupon.setStatus(Byte.valueOf("0"));
         coupon.setEndTime(now);
         coupon.setAmount(BigDecimal.valueOf(10));
-        List<MaterialCoupon> dataList = materialCouponDao.selectList(coupon);
-        if (dataList.size() == 0) {
-            materialCouponDao.insert(coupon);
-        } else {
-            coupon.setId(dataList.get(0).getId());
-        }
+        materialCouponDao.insert(coupon);
         couponId = coupon.getId();
         // unreleased/unverify
         MaterialCouponCode couponCode = new MaterialCouponCode();
         couponCode.setCouponId(coupon.getId());
         couponCode.setCode(UUID.randomUUID().toString().substring(0, 20));
-        couponCode.setReleaseStatus("unreleased");
-        couponCode.setVerifyStatus("unverify");
+        couponCode.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRELEASED.getCode());
+        couponCode.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
         couponCode.setStatus((byte) 0);
         List<MaterialCouponCode> couponCodeList = materialCouponCodeDao.selectList(couponCode);
         if (couponCodeList.size() == 0) {
             materialCouponCodeDao.insert(couponCode);
+        } else {
+            couponCode.setId(couponCodeList.get(0).getId());
         }
         codeList.add(couponCode);
         // unreceived/unverify
@@ -85,12 +87,14 @@ public class MaterialCouponCodeDaoGetVerifyListTest extends AbstractUnitTest {
         couponCode.setCouponId(coupon.getId());
         couponCode.setCode(UUID.randomUUID().toString().substring(0, 20));
         couponCode.setUser("zhu");
-        couponCode.setReleaseStatus("unreceived");
-        couponCode.setVerifyStatus("unverify");
+        couponCode.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRECEIVED.getCode());
+        couponCode.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
         couponCode.setStatus((byte) 0);
         couponCodeList = materialCouponCodeDao.selectList(couponCode);
         if (couponCodeList.size() == 0) {
             materialCouponCodeDao.insert(couponCode);
+        } else {
+            couponCode.setId(couponCodeList.get(0).getId());
         }
         codeList.add(couponCode);
         // received/unverify
@@ -98,12 +102,14 @@ public class MaterialCouponCodeDaoGetVerifyListTest extends AbstractUnitTest {
         couponCode.setCouponId(coupon.getId());
         couponCode.setCode(UUID.randomUUID().toString().substring(0, 20));
         couponCode.setUser("xue");
-        couponCode.setReleaseStatus("received");
-        couponCode.setVerifyStatus("unverify");
+        couponCode.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
+        couponCode.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
         couponCode.setStatus((byte) 0);
         couponCodeList = materialCouponCodeDao.selectList(couponCode);
         if (couponCodeList.size() == 0) {
             materialCouponCodeDao.insert(couponCode);
+        } else {
+            couponCode.setId(couponCodeList.get(0).getId());
         }
         codeList.add(couponCode);
         // received/verified
@@ -111,13 +117,15 @@ public class MaterialCouponCodeDaoGetVerifyListTest extends AbstractUnitTest {
         couponCode.setCouponId(coupon.getId());
         couponCode.setCode(UUID.randomUUID().toString().substring(0, 20));
         couponCode.setUser("long");
-        couponCode.setReleaseStatus("received");
-        couponCode.setVerifyStatus("verified");
+        couponCode.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
+        couponCode.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());
         couponCode.setVerifyTime(now);
         couponCode.setStatus((byte) 0);
         couponCodeList = materialCouponCodeDao.selectList(couponCode);
         if (couponCodeList.size() == 0) {
             materialCouponCodeDao.insert(couponCode);
+        } else {
+            couponCode.setId(couponCodeList.get(0).getId());
         }
         codeList.add(couponCode);
         // received/fail
@@ -125,13 +133,15 @@ public class MaterialCouponCodeDaoGetVerifyListTest extends AbstractUnitTest {
         couponCode.setCouponId(coupon.getId());
         couponCode.setCode(UUID.randomUUID().toString().substring(0, 20));
         couponCode.setUser("XXX");
-        couponCode.setReleaseStatus("received");
-        couponCode.setVerifyStatus("fail");
+        couponCode.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
+        couponCode.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.FAIL.getCode());
         couponCode.setVerifyTime(now);
         couponCode.setStatus((byte) 0);
         couponCodeList = materialCouponCodeDao.selectList(couponCode);
         if (couponCodeList.size() == 0) {
             materialCouponCodeDao.insert(couponCode);
+        } else {
+            couponCode.setId(couponCodeList.get(0).getId());
         }
         codeList.add(couponCode);
     }
@@ -197,7 +207,7 @@ public class MaterialCouponCodeDaoGetVerifyListTest extends AbstractUnitTest {
     public void test03() {
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("id", couponId);
-        paramMap.put("releaseStatus", "received");
+        paramMap.put("releaseStatus", MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
         paramMap.put("index", 0);
         paramMap.put("size", 10);
         Assert.assertEquals(3, materialCouponCodeDao.getCouponCodeVerifyListCnt(paramMap));
@@ -244,7 +254,7 @@ public class MaterialCouponCodeDaoGetVerifyListTest extends AbstractUnitTest {
     public void test04() {
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("id", couponId);
-        paramMap.put("verifyStatus", "fail");
+        paramMap.put("verifyStatus", MaterialCouponCodeVerifyStatusEnum.FAIL.getCode());
         paramMap.put("index", 0);
         paramMap.put("size", 10);
         Assert.assertEquals(1, materialCouponCodeDao.getCouponCodeVerifyListCnt(paramMap));
@@ -372,8 +382,8 @@ public class MaterialCouponCodeDaoGetVerifyListTest extends AbstractUnitTest {
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("id", couponId);
         paramMap.put("user", "long");
-        paramMap.put("releaseStatus", "received");
-        paramMap.put("verifyStatus", "verified");
+        paramMap.put("releaseStatus", MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
+        paramMap.put("verifyStatus", MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());
         paramMap.put("expireStatus", "expired");
         Calendar date = Calendar.getInstance();
         date.setTime(new Date());

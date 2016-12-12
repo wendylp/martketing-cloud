@@ -107,8 +107,8 @@ public class CouponApi {
      */
     @GET
     @Path("/mkt.material.coupon.counts")
-    public BaseOutput getWechatAssetTypeCount(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @QueryParam("chanel_code") String chanelCode,
+    public BaseOutput getMaterialCouponCount(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @QueryParam("channel_code") String chanelCode,
             @QueryParam("keyword") String keyword) throws Exception {
         return materialCouponCountGetService.getMaterialCouponCount(chanelCode, keyword);
     }
@@ -321,5 +321,29 @@ public class CouponApi {
     @Consumes({ MediaType.APPLICATION_JSON })
     public BaseOutput couponSave(@NotEmpty @QueryParam("user_token") String userToken,@Valid CouponInfoIn couponInfo){
         return couponSaveService.save(couponInfo);
+    }
+    
+    /**
+     * @功能描述: 优惠码核销接口
+     * @param userToken
+     * @param ver
+     * @param id
+     * @param couponCode 优惠码
+     * @param user 用户ID
+     * @return
+     * @throws Exception BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月9日
+     */
+    @GET
+    @Path("/mkt.material.coupon.verify")
+    public BaseOutput MaterialCouponCodeVerify(
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, 
+            @NotNull  @QueryParam("id") Long id,
+            @NotEmpty @QueryParam("coupon_code") String couponCode,
+            @NotEmpty @QueryParam("user") String user) throws Exception {
+
+        return materialCouponCodeCheckService.materialCouponCodeVerify(id, couponCode, user);
     }
 }

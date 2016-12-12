@@ -45,7 +45,7 @@ public class MaterialCouponStatusUpdateServiceImplTest {
     @Before
     public void setUp() throws Exception {
         service = new MaterialCouponStatusUpdateServiceImpl();
-        logger.info("测试：MaterialCouponStatusUpdateService 结束---------------------");
+        logger.info("测试：MaterialCouponStatusUpdateService 开始---------------------");
     }
 
     @After

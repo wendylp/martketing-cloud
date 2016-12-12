@@ -31,12 +31,12 @@ public class MaterialCouponGetSystemTimeServiceImplTest {
     @Before
     public void setUp() throws Exception {
         service = new MaterialCouponGetSystemTimeServiceImpl();
-        logger.info("测试：MaterialCouponCountGetService 开始---------------------");
+        logger.info("测试：MaterialCouponGetSystemTimeService 开始---------------------");
     }
 
     @After
     public void tearDown() throws Exception {
-        logger.info("测试：MaterialCouponCountGetService 结束---------------------");
+        logger.info("测试：MaterialCouponGetSystemTimeService 结束---------------------");
     }
 
     @Test

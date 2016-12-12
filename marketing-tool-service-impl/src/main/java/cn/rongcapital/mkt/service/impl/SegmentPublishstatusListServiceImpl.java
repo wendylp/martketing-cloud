@@ -58,14 +58,25 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 										   Integer size, String ver,String keyword) {
 		SegmentationHead t = new SegmentationHead();
 		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		if(ApiConstant.SEGMENT_PUBLISH_STATUS_ALL != publishStatus.byteValue()){
+		if(ApiConstant.SEGMENT_PUBLISH_STATUS_ALL == publishStatus.byteValue()){
+			//t.setPublishStatus(publishStatus.byteValue());
+			t.setOrderFieldType("desc");
+			t.setOrderField("publish_status");
+		}else if(ApiConstant.SEGMENT_PUBLISH_STATUS_PUBLISH == publishStatus.byteValue()){
+			
 			t.setPublishStatus(publishStatus.byteValue());
+			t.setOrderFieldType("desc");
+			t.setOrderField("update_time");
+		}else if(ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH == publishStatus.byteValue()){
+			t.setPublishStatus(publishStatus.byteValue());
+			t.setOrderFieldType("desc");
+			t.setOrderField("create_time");
 		}
 		t.setPageSize(size);
 		t.setStartIndex((index-1)*size);
 		t.getCustomMap().put("keyword", keyword);
-		t.setOrderFieldType("desc");
-		t.setOrderField("update_time");
+//		t.setOrderFieldType("desc");
+//		t.setOrderField("update_time");
 		int totalCount = segmentationHeadDao.selectListCount(t);
 		List<SegmentationHead> reList = segmentationHeadDao.selectListByKeyword(t);
 		SegmentPublishstatusListOut rseult = new SegmentPublishstatusListOut(ApiErrorCode.SUCCESS.getCode(),
