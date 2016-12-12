@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.enums.CouponStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.dao.MaterialCouponDao;
 import cn.rongcapital.mkt.service.MaterialCouponCountGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -50,19 +50,19 @@ public class MaterialCouponCountGetServiceImpl implements MaterialCouponCountGet
         paramMap.put("title", keyword);
 
         // 未投放数量
-        paramMap.put("couponStatus", CouponStatusEnum.COUPONSTATUS_UNUSED.getCode());
+        paramMap.put("couponStatus", MaterialCouponStatusEnum.UNUSED.getCode());
         long unreleaseCount = materialCouponDao.getMaterialCouponCount(paramMap);
 
         // 已占用数量
-        paramMap.put("couponStatus", CouponStatusEnum.COUPONSTATUS_USED.getCode());
+        paramMap.put("couponStatus", MaterialCouponStatusEnum.USED.getCode());
         long occupyCount = materialCouponDao.getMaterialCouponCount(paramMap);
 
         // 投放中数量
-        paramMap.put("couponStatus", CouponStatusEnum.COUPONSTATUS_RELEASING.getCode());
+        paramMap.put("couponStatus", MaterialCouponStatusEnum.RELEASING.getCode());
         long releasingCount = materialCouponDao.getMaterialCouponCount(paramMap);
 
         // 已投放数量
-        paramMap.put("couponStatus", CouponStatusEnum.COUPONSTATUS_RELEASED.getCode());
+        paramMap.put("couponStatus", MaterialCouponStatusEnum.RELEASED.getCode());
         long releasedCount = materialCouponDao.getMaterialCouponCount(paramMap);
 
         // 全部数量

@@ -26,7 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import cn.rongcapital.mkt.common.enums.CouponStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.po.MaterialCoupon;
 import cn.rongcapital.mkt.po.MaterialCouponCode;
@@ -57,7 +57,7 @@ public class MaterialCouponCodeDaoGetVerifyListTest extends AbstractUnitTest {
         coupon.setType("voucher");
         coupon.setChannelCode("sms");
         coupon.setTitle(UUID.randomUUID().toString());
-        coupon.setCouponStatus(CouponStatusEnum.COUPONSTATUS_RELEASED.getCode());
+        coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
         coupon.setStatus(Byte.valueOf("0"));
         coupon.setEndTime(now);
         coupon.setAmount(BigDecimal.valueOf(10));

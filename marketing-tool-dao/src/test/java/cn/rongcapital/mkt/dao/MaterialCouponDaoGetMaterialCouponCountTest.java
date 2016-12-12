@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import cn.rongcapital.mkt.common.enums.CouponStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.po.MaterialCoupon;
 
@@ -39,28 +39,28 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         MaterialCoupon coupon = new MaterialCoupon();
         coupon.setSourceCode("common");
         coupon.setType("voucher");
-        coupon.setChannelCode("msm");
+        coupon.setChannelCode("sms");
         coupon.setTitle("zhuxuelongtest");
-        coupon.setCouponStatus(CouponStatusEnum.COUPONSTATUS_RELEASED.getCode());
+        coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
         coupon.setStatus(Byte.valueOf("0"));
         int count = materialCouponDao.selectListCount(coupon);
         if (count == 0) {
             materialCouponDao.insert(coupon);
         }
         coupon.setId(null);
-        coupon.setCouponStatus(CouponStatusEnum.COUPONSTATUS_RELEASING.getCode());
+        coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASING.getCode());
         count = materialCouponDao.selectListCount(coupon);
         if (count == 0) {
             materialCouponDao.insert(coupon);
         }
         coupon.setId(null);
-        coupon.setCouponStatus(CouponStatusEnum.COUPONSTATUS_UNUSED.getCode());
+        coupon.setCouponStatus(MaterialCouponStatusEnum.UNUSED.getCode());
         count = materialCouponDao.selectListCount(coupon);
         if (count == 0) {
             materialCouponDao.insert(coupon);
         }
         coupon.setId(null);
-        coupon.setCouponStatus(CouponStatusEnum.COUPONSTATUS_USED.getCode());
+        coupon.setCouponStatus(MaterialCouponStatusEnum.USED.getCode());
         count = materialCouponDao.selectListCount(coupon);
         if (count == 0) {
             materialCouponDao.insert(coupon);
@@ -105,7 +105,7 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
     @Test
     public void testGetMaterialCouponCount03() {
         Map<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("couponStatus", CouponStatusEnum.COUPONSTATUS_RELEASED.getCode());
+        paramMap.put("couponStatus", MaterialCouponStatusEnum.RELEASED.getCode());
         Assert.assertTrue(materialCouponDao.getMaterialCouponCount(paramMap) >= 1);
     }
 
@@ -130,7 +130,7 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("chanelCode", "msm");
         paramMap.put("title", "zhuxuelongtest");
-        paramMap.put("couponStatus", CouponStatusEnum.COUPONSTATUS_RELEASED.getCode());
+        paramMap.put("couponStatus", MaterialCouponStatusEnum.RELEASED.getCode());
         Assert.assertTrue(materialCouponDao.getMaterialCouponCount(paramMap) >= 1);
     }
 
