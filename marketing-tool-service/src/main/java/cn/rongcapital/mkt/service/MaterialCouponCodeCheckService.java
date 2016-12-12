@@ -25,4 +25,15 @@ public interface MaterialCouponCodeCheckService {
      * @since 2016年12月9日
      */
     BaseOutput materialCouponCodeCheck(Long id ,String couponCode,String user);
+    
+    /**
+     * @功能描述: 优惠码核销
+     * @param id
+     * @param couponCode
+     * @param user
+     * @return BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月12日
+     */
+    BaseOutput materialCouponCodeVerify(Long id ,String couponCode,String user);
 }

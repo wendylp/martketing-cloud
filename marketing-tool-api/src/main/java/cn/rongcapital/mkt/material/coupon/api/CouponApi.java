@@ -270,4 +270,28 @@ public class CouponApi {
 
         return materialCouponCodeCheckService.materialCouponCodeCheck(id, couponCode, user);
     }
+    
+    /**
+     * @功能描述: 优惠码核销接口
+     * @param userToken
+     * @param ver
+     * @param id
+     * @param couponCode 优惠码
+     * @param user 用户ID
+     * @return
+     * @throws Exception BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月9日
+     */
+    @GET
+    @Path("/mkt.material.coupon.verify")
+    public BaseOutput MaterialCouponCodeVerify(
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, 
+            @NotNull  @QueryParam("id") Long id,
+            @NotEmpty @QueryParam("coupon_code") String couponCode,
+            @NotEmpty @QueryParam("user") String user) throws Exception {
+
+        return materialCouponCodeCheckService.materialCouponCodeVerify(id, couponCode, user);
+    }
 }
