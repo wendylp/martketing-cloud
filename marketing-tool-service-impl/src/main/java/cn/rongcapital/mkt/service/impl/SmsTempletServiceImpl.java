@@ -80,7 +80,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			smsTempletTemp.setChannelType(channelTypeInt.byteValue());
 		}
 		
-		if(StringUtils.isNotEmpty(type)){
+		if(!"-1".equals(type)){
 			smsTempletTemp.setType(NumUtil.int2OneByte(Integer.parseInt(type)));
 		}		
 		if(StringUtils.isNotEmpty(name)){

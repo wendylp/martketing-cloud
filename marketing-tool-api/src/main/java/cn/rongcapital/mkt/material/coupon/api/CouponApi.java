@@ -10,10 +10,8 @@
 package cn.rongcapital.mkt.material.coupon.api;
 
 import javax.validation.Valid;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -34,14 +32,14 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CouponCodeListService;
+import cn.rongcapital.mkt.service.MaterialCouponCodeCheckService;
 import cn.rongcapital.mkt.service.MaterialCouponCodeVerifyListService;
 import cn.rongcapital.mkt.service.MaterialCouponCountGetService;
+import cn.rongcapital.mkt.service.MaterialCouponDeleteService;
 import cn.rongcapital.mkt.service.MaterialCouponGeneralGetService;
 import cn.rongcapital.mkt.service.MaterialCouponGetSystemTimeService;
-
-import cn.rongcapital.mkt.service.MaterialCouponDeleteService;
-import cn.rongcapital.mkt.service.MaterialCouponPutInGeneralService;
 import cn.rongcapital.mkt.service.MaterialCouponPageListService;
+import cn.rongcapital.mkt.service.MaterialCouponPutInGeneralService;
 import cn.rongcapital.mkt.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.MaterialCouponDeleteIn;
@@ -81,6 +79,9 @@ public class CouponApi {
 
     @Autowired
     private MaterialCouponDeleteService materialCouponDeleteService;
+    
+    @Autowired
+    private MaterialCouponCodeCheckService materialCouponCodeCheckService;//优惠码检查Service
 
     /**
      * 获取指定条件的优惠券的数量
@@ -246,4 +247,27 @@ public class CouponApi {
                         verifyStatus, expireStatus, index, size);
     }
 
+    /**
+     * @功能描述: 优惠码校验接口
+     * @param userToken
+     * @param ver
+     * @param id
+     * @param couponCode 优惠码
+     * @param user 用户ID
+     * @return
+     * @throws Exception BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月9日
+     */
+    @GET
+    @Path("/mkt.material.coupon.check")
+    public BaseOutput MaterialCouponCodeCheck(
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, 
+            @NotNull  @QueryParam("id") Long id,
+            @NotEmpty @QueryParam("coupon_code") String couponCode,
+            @NotEmpty @QueryParam("user") String user) throws Exception {
+
+        return materialCouponCodeCheckService.materialCouponCodeCheck(id, couponCode, user);
+    }
 }

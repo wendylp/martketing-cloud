@@ -1,7 +1,9 @@
 package cn.rongcapital.mkt.job.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -71,38 +73,74 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 			
 		}
 
+		logger.info("===================获取数据结束,开始同步.");
+		
+		//获取目前最大Id以便检验重复时使用
+		Integer maxId = dataPartyDao.getMaxId();
+		maxId = maxId == null ? 0 : maxId;
+		String bitmap = dataShoppingLists.get(0).getBitmap();
+		
 		List<List<DataShopping>> dataShoppingsList = ListSplit.getListSplit(dataShoppingLists, BATCH_SIZE);
 	    
 	    for(List<DataShopping> dataShoppings :dataShoppingsList){
 	    	
-			List<Integer> idList = new ArrayList<>(dataShoppingLists.size());
-			for (DataShopping dataObj : dataShoppings) {
-
 	            executor.submit(new Callable<Void>() {
 
 	    			@Override
 	    			public Void call() throws Exception {
 	    				
-	    				createParty(dataObj);
+	    				List<Integer> idList = new ArrayList<>(dataShoppingLists.size());
 	    				
+	    				for (DataShopping dataObj : dataShoppings) {
+	    					createParty(dataObj);
+	    				
+	    					idList.add(dataObj.getId());
+	    				
+	    				}
+	    				
+	    				DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
+	    				dataPartySyncVO.setExtendDataList(idList);
+	    				doSyncAfter(dataPartySyncVO);
+
 	    				return null;
 	    			}
 	    			
 	            });
 				
-				idList.add(dataObj.getId());
-			}
-	    	
-			DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-			dataPartySyncVO.setExtendDataList(idList);
-			doSyncAfter(dataPartySyncVO);
 	    }
-	    
 	    
         executor.shutdown();
       try {
     	  //设置最大阻塞时间，所有线程任务执行完成再继续往下执行
     	  executor.awaitTermination(24, TimeUnit.HOURS);
+    	  
+    	  logger.info("======================校验重复数据==================== ");
+    	  
+    	  List<Map<String, Object>> repeatDatas = checkData(bitmap, maxId);
+    	  
+    	  logger.info("======================重复数据"+repeatDatas.size()+"组,开始处理重复数据==========");
+    	  
+    	  if(repeatDatas != null && repeatDatas.size() > 0){
+    		 for(Map<String, Object> repeatData : repeatDatas){
+    			 List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData);
+    			 
+    			 Integer id = distinctData(repeatIds);
+    			 
+    			 for(Integer repeatId : repeatIds){
+    				 
+//    				 logger.info("==================repeatId:"+repeatId);
+    				 
+    				 Map<String,Object> paraMap = new HashMap<String,Object>();
+    				 paraMap.put("newkeyId",id);
+    				 paraMap.put("oldkeyId", repeatId);
+    				 dataShoppingDao.updateDataShoppingKeyid(paraMap);
+    			 }
+    			 
+    		 }
+    	  }
+    	  
+    	  logger.info("==========处理重复数据结束====================");
+    	  
     	  long endTime = System.currentTimeMillis();
     	  
     	  logger.info("=====================同步购物记录到主数据结束,用时"+ (endTime-startTime) + "毫秒" );

@@ -2,7 +2,6 @@ package cn.rongcapital.mkt.vo.sms.in;
 
 import javax.validation.constraints.NotNull;
 
-import cn.rongcapital.mkt.vo.in.SmsMaterialComponentIn;
 import cn.rongcapital.mkt.vo.in.SmsMaterialVariableIn;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -31,7 +30,7 @@ public class SmsMaterialIn {
 
     private String updateUser;
 
-	private List<SmsMaterialComponentIn> smsMaterialComponentInList;
+	private List<SmsMaterialMaterielIn> smsMaterialMaterielInList;
 
 	private List<SmsMaterialVariableIn> smsMaterialVariableInList;
     
@@ -107,13 +106,13 @@ public class SmsMaterialIn {
 		this.updateUser = updateUser;
 	}
 
-	@JsonProperty("component_list")
-	public List<SmsMaterialComponentIn> getSmsMaterialComponentInList() {
-		return smsMaterialComponentInList;
+	@JsonProperty("materiel_list")
+	public List<SmsMaterialMaterielIn> getSmsMaterialMaterielInList() {
+		return smsMaterialMaterielInList;
 	}
 
-	public void setSmsMaterialComponentInList(List<SmsMaterialComponentIn> smsMaterialComponentInList) {
-		this.smsMaterialComponentInList = smsMaterialComponentInList;
+	public void setSmsMaterialMaterielInList(List<SmsMaterialMaterielIn> smsMaterialMaterielInList) {
+		this.smsMaterialMaterielInList = smsMaterialMaterielInList;
 	}
 
 	@JsonProperty("variable_list")

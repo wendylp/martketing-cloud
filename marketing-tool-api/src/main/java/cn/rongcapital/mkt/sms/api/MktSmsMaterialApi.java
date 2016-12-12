@@ -43,7 +43,7 @@ public class MktSmsMaterialApi {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Path("/mkt.sms.smsmaterial.saveorupdate")
-	public BaseOutput insertOrUpdateSmsMaterial(@Valid SmsMaterialIn smsMaterialIn) throws Exception {		
+	public BaseOutput insertOrUpdateSmsMaterial(@Valid SmsMaterialIn smsMaterialIn) throws Exception {
 		return smsMaterialService.insertOrUpdateSmsMaterial(smsMaterialIn);
 	}
 

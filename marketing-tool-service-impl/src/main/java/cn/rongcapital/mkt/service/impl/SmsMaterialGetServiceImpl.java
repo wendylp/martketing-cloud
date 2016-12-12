@@ -2,19 +2,23 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.SmsMaterialVariableTypeEnum;
+import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.dao.SmsMaterialDao;
-import cn.rongcapital.mkt.dao.SmsTempletDao;
-import cn.rongcapital.mkt.po.SmsMaterial;
-import cn.rongcapital.mkt.po.SmsTemplet;
+import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.service.SmsMaterialGetService;
 import cn.rongcapital.mkt.service.SmsMaterialService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.SmsMaterialCountOut;
+import cn.rongcapital.mkt.vo.out.SmsMaterialMaterielOut;
 import cn.rongcapital.mkt.vo.out.SmsMaterialOut;
+import cn.rongcapital.mkt.vo.out.SmsMaterialVariableOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,7 +34,16 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
     private SmsTempletDao smsTempletDao;
 
     @Autowired
+    private SmsMaterialMaterielMapDao smsMaterialMaterielMapDao;
+
+    @Autowired
+    private SmsMaterialVariableMapDao smsMaterialVariableMapDao;
+
+    @Autowired
     private SmsMaterialService smsMaterialService;
+
+    @Autowired
+    private MaterialCouponDao materialCouponDao;
 
     @Override
     public BaseOutput getSmsMaterialById(Long id) {
@@ -38,6 +51,7 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
 
         SmsMaterial paramSmsMaterial = new SmsMaterial();
         paramSmsMaterial.setId(id.intValue());
+        paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         List<SmsMaterial> smsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
 
         if(CollectionUtils.isEmpty(smsMaterialList)){
@@ -47,14 +61,78 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
         }
 
         SmsMaterial rs = smsMaterialList.get(0);
-        SmsMaterialOut smsMaterialOut = getSmsMaterialOut(rs, null);
+
+        SmsMaterialMaterielMap paramSmsMaterialMaterielMap = new SmsMaterialMaterielMap();
+        paramSmsMaterialMaterielMap.setSmsMaterialId(id);
+        paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        List<SmsMaterialMaterielMap> smsMaterialMaterielMapList = smsMaterialMaterielMapDao.selectList(paramSmsMaterialMaterielMap);
+
+        SmsMaterialVariableMap paramSmsMaterialVariableMap = new SmsMaterialVariableMap();
+        paramSmsMaterialVariableMap.setSmsMaterialId(id);
+        paramSmsMaterialVariableMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        List<SmsMaterialVariableMap> smsMaterialVariableMapList = smsMaterialVariableMapDao.selectList(paramSmsMaterialVariableMap);
+
+        SmsMaterialOut smsMaterialOut = getSmsMaterialOut(rs, null, smsMaterialMaterielMapList, smsMaterialVariableMapList);
 
         baseOutput.getData().add(smsMaterialOut);
         baseOutput.setTotal(baseOutput.getData().size());
         return baseOutput;
     }
 
-    private SmsMaterialOut getSmsMaterialOut(SmsMaterial rs, String smsTemplateName) {
+    @Override
+    public BaseOutput getSmsMaterialListByKeyword(String searchWord, Integer channelType, Integer smsType, Integer index, Integer size) {
+        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
+
+        SmsMaterial paramSmsMaterial = new SmsMaterial();
+        paramSmsMaterial.setName(searchWord);
+        paramSmsMaterial.setChannelType(channelType == null? null : channelType.byteValue());
+        paramSmsMaterial.setSmsType(smsType == -1? null : smsType.byteValue());
+        paramSmsMaterial.setStartIndex((index - 1) * size);
+        paramSmsMaterial.setPageSize(size);
+        List<SmsMaterial> smsMaterialList = smsMaterialDao.selectListByKeyword(paramSmsMaterial);
+        int totalCount = smsMaterialDao.selectListByKeywordCount(paramSmsMaterial);
+
+        if(CollectionUtils.isEmpty(smsMaterialList)) return baseOutput;
+
+        for(SmsMaterial smsMaterial : smsMaterialList){
+            SmsTemplet paramSmsTemplet = new SmsTemplet();
+            paramSmsTemplet.setId(smsMaterial.getSmsTempletId());
+            paramSmsTemplet.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+            List<SmsTemplet> smsTempletList = smsTempletDao.selectList(paramSmsTemplet);
+            String templateName = CollectionUtils.isEmpty(smsTempletList)?"":smsTempletList.get(0).getName();
+            SmsMaterialOut smsMaterialOut = getSmsMaterialOut(smsMaterial,templateName, null, null);
+            baseOutput.getData().add(smsMaterialOut);
+        }
+
+        baseOutput.setTotal(baseOutput.getData().size());
+        baseOutput.setTotalCount(totalCount);
+        return baseOutput;
+    }
+
+    @Override
+    public BaseOutput getSmsMaterialCount() {
+        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
+
+        SmsMaterialCountOut smsMaterialCountOut = new SmsMaterialCountOut();
+        SmsMaterial paramSmsMaterial = new SmsMaterial();
+        paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        paramSmsMaterial.setSmsType(SmsTempletTypeEnum.FIXED.getStatusCode().byteValue());
+        Integer fixedCount = smsMaterialDao.selectListCount(paramSmsMaterial);
+        smsMaterialCountOut.setSmsType(SmsTempletTypeEnum.FIXED.getStatusCode());
+        smsMaterialCountOut.setSmsCount(fixedCount);
+        baseOutput.getData().add(smsMaterialCountOut);
+
+        paramSmsMaterial.setSmsType(SmsTempletTypeEnum.VARIABLE.getStatusCode().byteValue());
+        Integer variableCount = smsMaterialDao.selectListCount(paramSmsMaterial);
+        smsMaterialCountOut = new SmsMaterialCountOut();
+        smsMaterialCountOut.setSmsType(SmsTempletTypeEnum.VARIABLE.getStatusCode());
+        smsMaterialCountOut.setSmsCount(variableCount);
+        baseOutput.getData().add(smsMaterialCountOut);
+
+        return baseOutput;
+    }
+
+    private SmsMaterialOut getSmsMaterialOut(SmsMaterial rs, String smsTemplateName, List<SmsMaterialMaterielMap> smsMaterialMaterielMapList, List<SmsMaterialVariableMap> smsMaterialVariableMapList) {
         SmsMaterialOut smsMaterialOut = new SmsMaterialOut();
         smsMaterialOut.setId(rs.getId() == null?null:Long.valueOf(rs.getId()));
         smsMaterialOut.setMaterialId(rs.getCode());
@@ -68,40 +146,37 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
         smsMaterialOut.setCreateTime(DateUtil.getStringFromDate(rs.getCreateTime(),"yyyy-MM-dd HH:mm:ss"));
         smsMaterialOut.setEditStatus(smsMaterialService.smsMaterialValidate(rs.getId())?0:1);
         smsMaterialOut.setDeleteStatus(smsMaterialOut.getEditStatus());
-        return smsMaterialOut;
-    }
+        if(!CollectionUtils.isEmpty(smsMaterialMaterielMapList)){
+            List<SmsMaterialMaterielOut> smsMaterialMaterielOutList = new LinkedList<>();
+            for(SmsMaterialMaterielMap smsMaterialMaterielMap : smsMaterialMaterielMapList){
 
-    @Override
-    public BaseOutput getSmsMaterialListByKeyword(String searchWord, Integer channelType, Integer index, Integer size) {
-        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
+                MaterialCoupon paramMaterialCoupon = new MaterialCoupon();
+                paramMaterialCoupon.setId(smsMaterialMaterielMap.getSmsMaterielId());
+                List<MaterialCoupon> materialCouponList = materialCouponDao.selectList(paramMaterialCoupon);
+                if(CollectionUtils.isEmpty(materialCouponList)) continue;
 
-        SmsMaterial paramSmsMaterial = new SmsMaterial();
-        paramSmsMaterial.setName(searchWord);
-        paramSmsMaterial.setChannelType(channelType == null? null : channelType.byteValue());
-        paramSmsMaterial.setStartIndex((index - 1) * size);
-        paramSmsMaterial.setPageSize(size);
-        List<SmsMaterial> smsMaterialList = smsMaterialDao.selectListByKeyword(paramSmsMaterial);
-        int totalCount = smsMaterialDao.selectListByKeywordCount(paramSmsMaterial);
-
-        if(CollectionUtils.isEmpty(smsMaterialList)) return baseOutput;
-
-        for(SmsMaterial smsMaterial : smsMaterialList){
-            SmsTemplet paramSmsTemplet = new SmsTemplet();
-            paramSmsTemplet.setId(smsMaterial.getSmsTempletId());
-            paramSmsTemplet.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-            List<SmsTemplet> smsTempletList = smsTempletDao.selectList(paramSmsTemplet);
-            String templateName;
-            if (CollectionUtils.isEmpty(smsTempletList)) {
-                templateName = "";
-            } else {
-                templateName = smsTempletList.get(0).getName();
+                MaterialCoupon tempMaterialCoupon = materialCouponList.get(0);
+                SmsMaterialMaterielOut smsMaterialMaterielOut = new SmsMaterialMaterielOut();
+                smsMaterialMaterielOut.setMaterielId(smsMaterialMaterielMap.getId().intValue());
+                smsMaterialMaterielOut.setMaterielType(smsMaterialMaterielMap.getSmsMaterielType());
+                smsMaterialMaterielOut.setMaterielName(tempMaterialCoupon.getTitle());
+                smsMaterialMaterielOut.setMaterielAmount(tempMaterialCoupon.getAmount().doubleValue());
+                smsMaterialMaterielOut.setMaterielStockTotal(tempMaterialCoupon.getStockTotal());
+                smsMaterialMaterielOutList.add(smsMaterialMaterielOut);
             }
-            SmsMaterialOut smsMaterialOut = getSmsMaterialOut(smsMaterial,templateName);
-            baseOutput.getData().add(smsMaterialOut);
+            smsMaterialOut.setSmsMaterialMaterielOutList(smsMaterialMaterielOutList);
         }
-
-        baseOutput.setTotal(baseOutput.getData().size());
-        baseOutput.setTotalCount(totalCount);
-        return baseOutput;
+        if(!CollectionUtils.isEmpty(smsMaterialVariableMapList)){
+            List<SmsMaterialVariableOut> smsMaterialVariableOutList = new LinkedList<>();
+            for(SmsMaterialVariableMap smsMaterialVariableMap : smsMaterialVariableMapList){
+                SmsMaterialVariableOut smsMaterialVariableOut = new SmsMaterialVariableOut();
+                smsMaterialVariableOut.setVariableName(smsMaterialVariableMap.getSmsVariableName());
+                smsMaterialVariableOut.setVariableType(SmsMaterialVariableTypeEnum.getTypeValueByTypeCode(smsMaterialVariableMap.getSmsVariableType()));
+                smsMaterialVariableOut.setVariableValue(smsMaterialVariableMap.getSmsVariableValue());
+                smsMaterialVariableOutList.add(smsMaterialVariableOut);
+            }
+            smsMaterialOut.setSmsMaterialVariableOutList(smsMaterialVariableOutList);
+        }
+        return smsMaterialOut;
     }
 }

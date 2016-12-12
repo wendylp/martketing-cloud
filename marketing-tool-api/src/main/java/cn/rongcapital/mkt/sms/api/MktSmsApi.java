@@ -184,6 +184,19 @@ public class MktSmsApi {
      * @return: Object
      */
     @GET
+    @Path("/mkt.sms.smsmaterial.count.get")
+    public BaseOutput getSmsMaterialCount(@NotEmpty @QueryParam("user_token") String userToken,
+                                     @QueryParam("ver") String ver) throws Exception {
+        return smsMaterialGetService.getSmsMaterialCount();
+    }
+
+    /**
+     * @功能简述: For testing, will remove later
+     * @param:String userToken,String
+     *                   ver
+     * @return: Object
+     */
+    @GET
     @Path("/mkt.sms.smsmaterial.get")
     public BaseOutput getSmsMaterial(@NotEmpty @QueryParam("user_token") String userToken,
                                      @QueryParam("ver") String ver,
@@ -203,9 +216,10 @@ public class MktSmsApi {
                                      @QueryParam("ver") String ver,
                                      @QueryParam("search_word") String searchWord,
                                      @QueryParam("channel_type") Integer channelType,
+                                     @NotNull @QueryParam("sms_type") Integer smsType,
                                      @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
                                      @DefaultValue("10") @Min(1) @Max(100) @QueryParam("page_size") Integer size) throws Exception {
-        return smsMaterialGetService.getSmsMaterialListByKeyword(searchWord,channelType,index,size);
+        return smsMaterialGetService.getSmsMaterialListByKeyword(searchWord,channelType,smsType,index,size);
     }
     
     

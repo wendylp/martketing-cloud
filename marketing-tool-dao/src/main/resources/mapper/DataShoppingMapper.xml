@@ -563,4 +563,9 @@
 			<![CDATA[AND create_time > #{timeCondition}]]>
 		</if>
 	</select>
+	
+	<!-- 修改keyid -->
+	<update id="updateDataShoppingKeyid" parameterType="Map">
+		<![CDATA[UPDATE data_shopping SET keyid = #{newkeyId} WHERE keyid = #{oldkeyId}]]>
+	</update>
 </mapper>

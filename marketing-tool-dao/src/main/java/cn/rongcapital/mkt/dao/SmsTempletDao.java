@@ -57,6 +57,6 @@ public interface SmsTempletDao extends BaseDao<SmsTemplet>{
 	 * 分组计算数量
 	 * @return
 	 */
-	public List<Map<String,String>> getTempletCountByType(String channelType);
+	public List<Map<String,Object>> getTempletCountByType(String channelType);
 	
 }

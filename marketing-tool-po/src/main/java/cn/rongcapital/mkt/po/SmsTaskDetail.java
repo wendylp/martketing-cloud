@@ -1,8 +1,7 @@
 package cn.rongcapital.mkt.po;
 
-import java.util.Date;
-
 import cn.rongcapital.mkt.po.base.BaseQuery;
+import java.util.Date;
 
 public class SmsTaskDetail extends BaseQuery {
     private Long id;
@@ -13,6 +12,10 @@ public class SmsTaskDetail extends BaseQuery {
 
     private String sendMessage;
 
+    private Long materielCouponCodeId;
+
+    private String materielCouponCodeCode;
+
     private Byte status;
 
     private Date createTime;
@@ -22,10 +25,10 @@ public class SmsTaskDetail extends BaseQuery {
     private String sendMobile;
 
     private Date sendTime;
-    
+
     public SmsTaskDetail(){}
-    
-    
+
+
 
     /**
      * @param id
@@ -82,6 +85,22 @@ public class SmsTaskDetail extends BaseQuery {
 
     public void setSendMessage(String sendMessage) {
         this.sendMessage = sendMessage == null ? null : sendMessage.trim();
+    }
+
+    public Long getMaterielCouponCodeId() {
+        return materielCouponCodeId;
+    }
+
+    public void setMaterielCouponCodeId(Long materielCouponCodeId) {
+        this.materielCouponCodeId = materielCouponCodeId;
+    }
+
+    public String getMaterielCouponCodeCode() {
+        return materielCouponCodeCode;
+    }
+
+    public void setMaterielCouponCodeCode(String materielCouponCodeCode) {
+        this.materielCouponCodeCode = materielCouponCodeCode == null ? null : materielCouponCodeCode.trim();
     }
 
     public Byte getStatus() {

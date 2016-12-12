@@ -3,14 +3,14 @@ package cn.rongcapital.mkt.po;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
 
-public class SmsMaterialComponentMap extends BaseQuery {
+public class SmsMaterialMaterielMap extends BaseQuery {
     private Long id;
 
     private Long smsMaterialId;
 
-    private Long smsComponentId;
+    private Long smsMaterielId;
 
-    private Integer smsComponentType;
+    private Integer smsMaterielType;
 
     private Byte status;
 
@@ -34,20 +34,20 @@ public class SmsMaterialComponentMap extends BaseQuery {
         this.smsMaterialId = smsMaterialId;
     }
 
-    public Long getSmsComponentId() {
-        return smsComponentId;
+    public Long getSmsMaterielId() {
+        return smsMaterielId;
     }
 
-    public void setSmsComponentId(Long smsComponentId) {
-        this.smsComponentId = smsComponentId;
+    public void setSmsMaterielId(Long smsMaterielId) {
+        this.smsMaterielId = smsMaterielId;
     }
 
-    public Integer getSmsComponentType() {
-        return smsComponentType;
+    public Integer getSmsMaterielType() {
+        return smsMaterielType;
     }
 
-    public void setSmsComponentType(Integer smsComponentType) {
-        this.smsComponentType = smsComponentType;
+    public void setSmsMaterielType(Integer smsMaterielType) {
+        this.smsMaterielType = smsMaterielType;
     }
 
     public Byte getStatus() {
