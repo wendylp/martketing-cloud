@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
+import cn.rongcapital.mkt.service.SystemTagService;
 import cn.rongcapital.mkt.service.TagDownloadCustomAudienceService;
 import cn.rongcapital.mkt.service.TagSystemFlagSetService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
@@ -71,6 +72,9 @@ public class MktSystemTagApi {
     
     @Autowired
     private TagDownloadCustomAudienceService tagDownloadCustomAudienceService;
+    
+    @Autowired
+    private SystemTagService systemTagService;
 
 
     /**
@@ -202,6 +206,59 @@ public class MktSystemTagApi {
             @QueryParam("size") Integer size) {
         //tagSystemListGetService.getTagcount(method, userToken, tagGroupId, index, size);
         return tagSystemListGetService.getMongoTagList(method, userToken, tagGroupId, index, size);
+    }
+    
+    
+    /**
+     * 标签根节点列表获取
+     *
+	 * @param userToken
+	 * @param ver
+     * @return
+     * @author wangweiqiang
+     * @Date 2016-12-07
+     */
+	@GET
+    @Path("/mkt.tag.root.node.list.get")
+    public BaseOutput getRootNode(@NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("ver") String ver) {
+        return systemTagService.getNativeList();
+    }
+	
+    /**
+     * 获取标签列表    
+     *
+	 * @param userToken
+	 * @param ver
+	 * @param tag_id
+     * @return
+     * @author wangweiqiang
+     * @Date 2016-12-07
+     */
+    @GET
+    @Path("/mkt.tag.tree.list.get")
+    public BaseOutput getSystemtagList(@NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("ver") String ver,@NotEmpty @QueryParam("tag_id") String navigateIndex) {
+        return systemTagService.getSystemTagList(navigateIndex);
+    }
+    
+    /**
+     * 获取标签值列表   
+     * @param userToken
+     * @param ver
+     * @param tagId
+     * @param index
+     * @param size
+     * @return
+     * @author wangweiqiang
+     * @Date 2016-12-07
+     */
+    @GET
+    @Path("/mkt.tag.value.list.get")
+    public BaseOutput getSystemtagList(@NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("ver") String ver,@NotEmpty @QueryParam("tagId") String tagId,@NotNull 
+    		@QueryParam("index") Integer index,@NotNull @QueryParam("size") Integer size) {
+        return systemTagService.getSystemTagValueList(tagId, index, size);
     }
 
 }

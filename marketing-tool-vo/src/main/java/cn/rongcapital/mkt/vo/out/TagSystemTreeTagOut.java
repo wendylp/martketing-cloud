@@ -22,8 +22,29 @@ public class TagSystemTreeTagOut {
     private String tagDesc;
     
     public TagSystemTreeTagOut(){}
+    
+    
 
-    public TagSystemTreeTagOut(String tagId, String tagName, Boolean flag, String tagNameEng, Integer searchMod,
+    public TagSystemTreeTagOut(String tagId, String tagName, Boolean flag, String tagCover) {
+		super();
+		this.tagId = tagId;
+		this.tagName = tagName;
+		this.flag = flag;
+		this.tagCover = tagCover;
+	}
+
+
+	public TagSystemTreeTagOut(String tagId, String tagName, Boolean flag, List<String> tagList, String tagCover) {
+		super();
+		this.tagId = tagId;
+		this.tagName = tagName;
+		this.flag = flag;
+		this.tagList = tagList;
+		this.tagCover = tagCover;
+	}
+
+
+	public TagSystemTreeTagOut(String tagId, String tagName, Boolean flag, String tagNameEng, Integer searchMod,
                     List<String> tagList) {
         super();
         this.tagId = tagId;
