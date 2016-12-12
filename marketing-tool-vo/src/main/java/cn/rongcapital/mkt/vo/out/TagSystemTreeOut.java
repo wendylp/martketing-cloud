@@ -16,7 +16,8 @@ public class TagSystemTreeOut {
     private String tagName;
     private Integer level;
     private List<Object> children;
-
+    private Integer includeCount;	//包含标签个数
+    
     public TagSystemTreeOut() {}
 
     public TagSystemTreeOut(String tagId, String tagName, Integer level, List<Object> children) {
@@ -62,8 +63,17 @@ public class TagSystemTreeOut {
     public void setChildren(List<Object> children) {
         this.children = children;
     }
+    
+    @JsonProperty("includeCount")
+    public Integer getIncludeCount() {
+		return includeCount;
+	}
 
-    @Override
+	public void setIncludeCount(Integer includeCount) {
+		this.includeCount = includeCount;
+	}
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
