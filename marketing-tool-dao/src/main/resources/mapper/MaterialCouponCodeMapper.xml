@@ -214,4 +214,23 @@
 	    	<otherwise></otherwise>
     	</choose>
 	</select>
+	
+	<!-- 批量保存优惠码 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO material_coupon_code (coupon_id,code,user,release_status,verify_status,verify_time,status,create_time,update_time)
+        VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.coupon_id},
+			#{item.code},
+			#{item.user},
+			#{item.release_status},
+			#{item.verify_status},
+			#{item.verify_time},
+			#{item.status},
+			#{item.create_time},
+			#{item.update_time}
+			)
+		</foreach>
+	</insert>
 </mapper>

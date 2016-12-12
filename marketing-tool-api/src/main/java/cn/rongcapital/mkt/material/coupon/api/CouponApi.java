@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CouponCodeListService;
 import cn.rongcapital.mkt.service.CouponFileUploadService;
+import cn.rongcapital.mkt.service.CouponSaveService;
 import cn.rongcapital.mkt.service.MaterialCouponCodeCheckService;
 import cn.rongcapital.mkt.service.MaterialCouponCodeVerifyListService;
 import cn.rongcapital.mkt.service.MaterialCouponCountGetService;
@@ -44,6 +45,7 @@ import cn.rongcapital.mkt.service.MaterialCouponPageListService;
 import cn.rongcapital.mkt.service.MaterialCouponPutInGeneralService;
 import cn.rongcapital.mkt.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 import cn.rongcapital.mkt.vo.in.MaterialCouponDeleteIn;
 
 @Component
@@ -87,6 +89,9 @@ public class CouponApi {
 
     @Autowired
     private CouponFileUploadService couponFileUploadService;
+    
+    @Autowired
+    private CouponSaveService couponSaveService;
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -302,5 +307,19 @@ public class CouponApi {
             @NotEmpty @QueryParam("user") String user) throws Exception {
 
         return materialCouponCodeCheckService.materialCouponCodeCheck(id, couponCode, user);
+    }
+    
+    /**
+     * @author guozhenchao
+     * @功能简述:优惠券文件上传接口
+     * @param fileUnique
+     * @param input
+     * @return
+     */
+    @POST
+    @Path("/mkt.materiel.coupon.save")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput couponSave(@NotEmpty @QueryParam("user_token") String userToken,@Valid CouponInfoIn couponInfo){
+        return couponSaveService.save(couponInfo);
     }
 }
