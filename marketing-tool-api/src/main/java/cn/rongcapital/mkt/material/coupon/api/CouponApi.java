@@ -23,6 +23,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,18 +32,21 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.service.CouponCodeListService;
-import cn.rongcapital.mkt.service.MaterialCouponCodeCheckService;
-import cn.rongcapital.mkt.service.MaterialCouponCodeVerifyListService;
-import cn.rongcapital.mkt.service.MaterialCouponCountGetService;
-import cn.rongcapital.mkt.service.MaterialCouponDeleteService;
-import cn.rongcapital.mkt.service.MaterialCouponGeneralGetService;
-import cn.rongcapital.mkt.service.MaterialCouponGetSystemTimeService;
-import cn.rongcapital.mkt.service.MaterialCouponPageListService;
-import cn.rongcapital.mkt.service.MaterialCouponPutInGeneralService;
-import cn.rongcapital.mkt.service.MaterialCouponReleaseGeneralService;
+import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
+import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
+import cn.rongcapital.mkt.material.coupon.service.CouponSaveService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeCheckService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeVerifyListService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCountGetService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponDeleteService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGeneralGetService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGetSystemTimeService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPutInGeneralService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralService;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.MaterialCouponDeleteIn;
+import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -83,6 +87,11 @@ public class CouponApi {
     @Autowired
     private MaterialCouponCodeCheckService materialCouponCodeCheckService;//优惠码检查Service
 
+    @Autowired
+    private CouponFileUploadService couponFileUploadService;
+    
+    @Autowired
+    private CouponSaveService couponSaveService;
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -98,8 +107,8 @@ public class CouponApi {
      */
     @GET
     @Path("/mkt.material.coupon.counts")
-    public BaseOutput getWechatAssetTypeCount(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @QueryParam("chanel_code") String chanelCode,
+    public BaseOutput getMaterialCouponCount(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @QueryParam("channel_code") String chanelCode,
             @QueryParam("keyword") String keyword) throws Exception {
         return materialCouponCountGetService.getMaterialCouponCount(chanelCode, keyword);
     }
@@ -119,6 +128,35 @@ public class CouponApi {
         return couponCodeListService.couponCodeList(id, index, size);
     }
 
+    /**
+     * @author guozhenchao
+     * @功能简述: 获取已发放优惠码列表接口
+     * @param fileTagUpdateIn
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.materiel.coupon.issued.code.list")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput couponIssuedCodeList(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id,
+            @QueryParam("index") Integer index, @QueryParam("size") Integer size) {
+        return couponCodeListService.couponIssuedCodeList(id, index, size);
+    }
+    
+    /**
+     * @author guozhenchao
+     * @功能简述:优惠券文件上传接口
+     * @param fileUnique
+     * @param input
+     * @return
+     */
+    @POST
+    @Path("/mkt.materiel.coupon.file.upload")
+    @Consumes("multipart/form-data")
+    public BaseOutput fileUploadBatch(@NotEmpty @QueryParam("user_token") String userToken,
+                                      @NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
+        return couponFileUploadService.uploadFileBatch(input, userId);
+    }
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -269,5 +307,43 @@ public class CouponApi {
             @NotEmpty @QueryParam("user") String user) throws Exception {
 
         return materialCouponCodeCheckService.materialCouponCodeCheck(id, couponCode, user);
+    }
+    
+    /**
+     * @author guozhenchao
+     * @功能简述:优惠券文件上传接口
+     * @param fileUnique
+     * @param input
+     * @return
+     */
+    @POST
+    @Path("/mkt.materiel.coupon.save")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput couponSave(@NotEmpty @QueryParam("user_token") String userToken,@Valid CouponInfoIn couponInfo){
+        return couponSaveService.save(couponInfo);
+    }
+    
+    /**
+     * @功能描述: 优惠码核销接口
+     * @param userToken
+     * @param ver
+     * @param id
+     * @param couponCode 优惠码
+     * @param user 用户ID
+     * @return
+     * @throws Exception BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月9日
+     */
+    @GET
+    @Path("/mkt.material.coupon.verify")
+    public BaseOutput MaterialCouponCodeVerify(
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, 
+            @NotNull  @QueryParam("id") Long id,
+            @NotEmpty @QueryParam("coupon_code") String couponCode,
+            @NotEmpty @QueryParam("user") String user) throws Exception {
+
+        return materialCouponCodeCheckService.materialCouponCodeVerify(id, couponCode, user);
     }
 }
