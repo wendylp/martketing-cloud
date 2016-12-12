@@ -57,6 +57,9 @@ public class InitTagValueCountServiceImpl implements TaskService{
 				String tagName = tagRecommend.getTagName();
 				
 				Integer searchMod = tagRecommend.getSearchMod();
+				
+				String tagDesc = tagRecommend.getTagDesc();
+				Integer updateFlag = tagRecommend.getUpdateFlag();
 				//标签值集合
 				List<String> tagValues = tagRecommend.getTagList();
 				
@@ -70,7 +73,7 @@ public class InitTagValueCountServiceImpl implements TaskService{
 				Long tagCount = mongoTemplate.count(
 						new Query(Criteria.where("tagList").elemMatch(
 								Criteria.where("tagId").is(tagId))),DataParty.class);
-				TagValueCount tagVo = new TagValueCount(tagId,tagName,tagName,tagCount, tagId, tagPath,IS_TAG,searchMod);
+				TagValueCount tagVo = new TagValueCount(tagId,tagName,tagName,tagCount, tagId, tagPath,IS_TAG,searchMod,updateFlag,tagDesc);
 				tagValueCountDao.insert(tagVo);
 				int sort = 0;
 				for (String tagValue : tagValues) {

@@ -8,12 +8,22 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.service.MaterialCouponCodeVerifyListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.out.MaterialCouponCodeVerifyListOut;
 
 @Service
 public class MaterialCouponCodeVerifyListServiceImpl implements MaterialCouponCodeVerifyListService {
@@ -24,8 +34,33 @@ public class MaterialCouponCodeVerifyListServiceImpl implements MaterialCouponCo
     @Override
     public BaseOutput listMaterialCouponCodeVerfy(Long id, String blurSearch, String receiveStatus,
                     String verifyStatus, String expireStatus, Integer index, Integer size) {
-        // TODO Auto-generated method stub
-        return null;
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("id", id);
+        paramMap.put("user", blurSearch);
+        paramMap.put("releaseStatus", receiveStatus);
+        paramMap.put("verifyStatus", verifyStatus);
+        if (StringUtils.isNotBlank(expireStatus)) {
+            paramMap.put("expireStatus", expireStatus);
+            paramMap.put("expireTime", new Date());
+        }
+        int proIndex = (index == null || index.intValue() == 0) ? 1 : index;
+        int proSize = (size == null || size.intValue() == 0) ? 10 : size;
+        paramMap.put("index", (proIndex - 1) * proSize);
+        paramMap.put("size", proSize);
+
+        BaseOutput result =
+                        new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                                        ApiConstant.INT_ZERO, null);
+        int totalCnt = materialCouponCodeDao.getCouponCodeVerifyListCnt(paramMap);
+        result.setTotalCount(totalCnt);
+        if (totalCnt > 0) {
+            List<MaterialCouponCodeVerifyListOut> dataList = materialCouponCodeDao.getCouponCodeVerifyList(paramMap);
+            if (CollectionUtils.isNotEmpty(dataList)) {
+                result.setTotal(dataList.size());
+                result.getData().addAll(dataList);
+            }
+        }
+        return result;
     }
 
 }

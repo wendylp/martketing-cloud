@@ -117,18 +117,19 @@ public class BaseSystemTagSyn {
 			// 标签Id
 			String tagId = tagRecommend.getTagId();
 			for (SystemTagResult systemTagResult : resultList) {
+				// 标签值
+				String tagValue = systemTagResult.getTagValue();
+				if(StringUtils.isEmpty(tagValue)){
+					continue;
+				}
+				// keyId
+				Integer keyId = systemTagResult.getKeyId();
+				// 封装Tag属性
+				Tag tag = new Tag(tagId, tagRecommend.getTagName(), tagRecommend.getTagNameEng(), tagValue, 1);
 
 				Runnable thread = new Runnable() {
-
 					@Override
 					public void run() {
-						// 标签值
-						String tagValue = systemTagResult.getTagValue();
-						// keyId
-						Integer keyId = systemTagResult.getKeyId();
-						// 封装Tag属性
-						Tag tag = new Tag(tagId, tagRecommend.getTagName(), tagRecommend.getTagNameEng(), tagValue, 1);
-
 						// 获取redis Key
 						String key = getKey(tagId, tagValue);
 						Vector<String> vector = paramMap.get(key);
