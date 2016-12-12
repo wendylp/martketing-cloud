@@ -55,7 +55,8 @@ public class MaterialCouponCountGetServiceImplTest {
 
     @Test
     public void testGetMaterialCouponCount() {
-        Mockito.when(materialCouponDao.getMaterialCouponCount(Mockito.anyMapOf(String.class, Object.class))).thenReturn(1L);
+        Mockito.when(materialCouponDao.getMaterialCouponCount(Mockito.anyMapOf(String.class, Object.class)))
+                        .thenReturn(1L);
         ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
         BaseOutput output = service.getMaterialCouponCount("sms", "123");
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());

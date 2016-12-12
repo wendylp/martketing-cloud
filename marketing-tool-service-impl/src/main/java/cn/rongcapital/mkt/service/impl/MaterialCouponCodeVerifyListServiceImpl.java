@@ -8,6 +8,9 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +35,7 @@ public class MaterialCouponCodeVerifyListServiceImpl implements MaterialCouponCo
     private MaterialCouponCodeDao materialCouponCodeDao;
 
     @Override
+    @ReadWrite(type = ReadWriteType.READ)
     public BaseOutput listMaterialCouponCodeVerfy(Long id, String blurSearch, String receiveStatus,
                     String verifyStatus, String expireStatus, Integer index, Integer size) {
         Map<String, Object> paramMap = new HashMap<String, Object>();

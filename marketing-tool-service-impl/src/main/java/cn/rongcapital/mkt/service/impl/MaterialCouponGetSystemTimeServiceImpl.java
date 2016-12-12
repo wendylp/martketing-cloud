@@ -8,6 +8,9 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,12 +32,13 @@ public class MaterialCouponGetSystemTimeServiceImpl implements MaterialCouponGet
      * @date: 2016/12/7
      */
     @Override
+    @ReadWrite(type = ReadWriteType.READ)
     public BaseOutput getSystemTime() {
         BaseOutput result =
                         new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                                         ApiConstant.INT_ONE, null);
         result.setTotalCount(ApiConstant.INT_ONE);
-        Map<String,Object> map = new HashMap<String,Object>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("time", System.currentTimeMillis());
         result.getData().add(map);
         return result;

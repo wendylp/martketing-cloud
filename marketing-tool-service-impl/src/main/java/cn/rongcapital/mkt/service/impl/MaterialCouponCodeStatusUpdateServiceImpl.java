@@ -84,7 +84,11 @@ public class MaterialCouponCodeStatusUpdateServiceImpl implements MaterialCoupon
                 po.setReleaseStatus(vo.getStatus());
                 poList.add(po);
             }
-            materialCouponCodeDao.batchUpdateByIdAndStatus(poList);
+            try {
+                materialCouponCodeDao.batchUpdateByIdAndStatus(poList);
+            } catch (Exception e) {
+                logger.error(String.format("param [%s] process occur error.", voList), e);
+            }
         }
     }
 
