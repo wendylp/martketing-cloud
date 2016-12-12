@@ -98,8 +98,8 @@ public class CouponApi {
      */
     @GET
     @Path("/mkt.material.coupon.counts")
-    public BaseOutput getWechatAssetTypeCount(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @QueryParam("chanel_code") String chanelCode,
+    public BaseOutput getMaterialCouponCount(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @QueryParam("channel_code") String chanelCode,
             @QueryParam("keyword") String keyword) throws Exception {
         return materialCouponCountGetService.getMaterialCouponCount(chanelCode, keyword);
     }

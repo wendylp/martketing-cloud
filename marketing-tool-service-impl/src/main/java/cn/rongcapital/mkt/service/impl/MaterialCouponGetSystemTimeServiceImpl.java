@@ -34,7 +34,7 @@ public class MaterialCouponGetSystemTimeServiceImpl implements MaterialCouponGet
                         new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                                         ApiConstant.INT_ONE, null);
         result.setTotalCount(ApiConstant.INT_ONE);
-        Map<String,Object> map = new HashMap<String,Object>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("time", System.currentTimeMillis());
         result.getData().add(map);
         return result;
