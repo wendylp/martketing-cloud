@@ -23,6 +23,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CouponCodeListService;
+import cn.rongcapital.mkt.service.CouponFileUploadService;
 import cn.rongcapital.mkt.service.MaterialCouponCodeCheckService;
 import cn.rongcapital.mkt.service.MaterialCouponCodeVerifyListService;
 import cn.rongcapital.mkt.service.MaterialCouponCountGetService;
@@ -83,6 +85,8 @@ public class CouponApi {
     @Autowired
     private MaterialCouponCodeCheckService materialCouponCodeCheckService;//优惠码检查Service
 
+    @Autowired
+    private CouponFileUploadService couponFileUploadService;
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -119,6 +123,35 @@ public class CouponApi {
         return couponCodeListService.couponCodeList(id, index, size);
     }
 
+    /**
+     * @author guozhenchao
+     * @功能简述: 获取已发放优惠码列表接口
+     * @param fileTagUpdateIn
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.materiel.coupon.issued.code.list")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput couponIssuedCodeList(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id,
+            @QueryParam("index") Integer index, @QueryParam("size") Integer size) {
+        return couponCodeListService.couponIssuedCodeList(id, index, size);
+    }
+    
+    /**
+     * @author guozhenchao
+     * @功能简述:优惠券文件上传接口
+     * @param fileUnique
+     * @param input
+     * @return
+     */
+    @POST
+    @Path("/mkt.materiel.coupon.file.upload")
+    @Consumes("multipart/form-data")
+    public BaseOutput fileUploadBatch(@NotEmpty @QueryParam("user_token") String userToken,
+                                      @NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
+        return couponFileUploadService.uploadFileBatch(input, userId);
+    }
     /**
      * 获取指定条件的优惠券的数量
      * 

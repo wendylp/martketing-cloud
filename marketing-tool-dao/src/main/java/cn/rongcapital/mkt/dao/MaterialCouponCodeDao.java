@@ -97,5 +97,7 @@ public interface MaterialCouponCodeDao extends BaseDao<MaterialCouponCode> {
      * @author zhuxuelong
      */
     int getCouponCodeVerifyListCnt(Map<String, Object> paramMap);
+
+    List<MaterialCouponCode> selectIssuedList(MaterialCouponCode code);
 	
 }
