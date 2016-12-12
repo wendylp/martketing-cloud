@@ -20,8 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.material.coupon.dao.MaterialCouponCodeDao;
-import cn.rongcapital.mkt.material.coupon.dao.MaterialCouponDao;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponDeleteService;
 import cn.rongcapital.mkt.vo.BaseOutput;

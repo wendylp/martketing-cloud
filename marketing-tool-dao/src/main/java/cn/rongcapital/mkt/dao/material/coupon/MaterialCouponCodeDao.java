@@ -8,7 +8,7 @@
  * @复审人: 
 *************************************************/
 
-package cn.rongcapital.mkt.material.coupon.dao;
+package cn.rongcapital.mkt.dao.material.coupon;
 
 import java.util.List;
 import java.util.Map;

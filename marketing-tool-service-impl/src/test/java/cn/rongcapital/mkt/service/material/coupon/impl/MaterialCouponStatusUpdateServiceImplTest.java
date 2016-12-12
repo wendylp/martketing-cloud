@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import cn.rongcapital.mkt.material.coupon.dao.MaterialCouponDao;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponStatusUpdateService;
 import cn.rongcapital.mkt.material.coupon.service.impl.MaterialCouponStatusUpdateServiceImpl;

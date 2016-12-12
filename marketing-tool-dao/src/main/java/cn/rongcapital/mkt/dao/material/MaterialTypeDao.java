@@ -8,12 +8,12 @@
  * @复审人: 
 *************************************************/
 
-package cn.rongcapital.mkt.material.dao;
+package cn.rongcapital.mkt.dao.material;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.material.po.MaterialAccessProperty;
+import cn.rongcapital.mkt.material.po.MaterialType;
 
-public interface MaterialAccessPropertyDao extends BaseDao<MaterialAccessProperty>{
+public interface MaterialTypeDao extends BaseDao<MaterialType>{
 	
 	//自定义扩展
 	/**

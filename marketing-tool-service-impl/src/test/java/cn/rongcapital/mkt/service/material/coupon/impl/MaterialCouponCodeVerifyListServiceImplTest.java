@@ -28,7 +28,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.material.coupon.dao.MaterialCouponCodeDao;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeVerifyListService;
 import cn.rongcapital.mkt.material.coupon.service.impl.MaterialCouponCodeVerifyListServiceImpl;
 import cn.rongcapital.mkt.vo.BaseOutput;

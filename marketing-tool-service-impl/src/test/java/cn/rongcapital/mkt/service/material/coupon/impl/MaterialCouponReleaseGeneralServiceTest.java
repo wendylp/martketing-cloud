@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.material.coupon.dao.MaterialCouponCodeDao;
-import cn.rongcapital.mkt.material.coupon.dao.MaterialCouponDao;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MeterialCouponCodeCountByStatus;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.impl.MaterialCouponReleaseGeneralServiceImpl;

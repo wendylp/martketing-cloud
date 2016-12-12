@@ -24,8 +24,8 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
-import cn.rongcapital.mkt.material.coupon.dao.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 
 public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTest {

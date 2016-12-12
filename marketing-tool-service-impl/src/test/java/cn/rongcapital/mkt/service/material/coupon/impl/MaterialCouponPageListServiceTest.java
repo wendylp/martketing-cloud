@@ -29,7 +29,7 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.NumUtil;
-import cn.rongcapital.mkt.material.coupon.dao.MaterialCouponDao;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
 import cn.rongcapital.mkt.material.coupon.service.impl.MaterialCouponPageListServiceImpl;

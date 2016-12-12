@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
-import cn.rongcapital.mkt.material.coupon.dao.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.material.coupon.po.MeterialCouponCodeCountByStatus;
 
 @RunWith(SpringJUnit4ClassRunner.class)
