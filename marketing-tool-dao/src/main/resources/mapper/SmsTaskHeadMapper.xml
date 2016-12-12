@@ -152,4 +152,11 @@
 		GROUP BY
 			stds.sms_task_send_status
 	</select>
+	
+	<!-- 根据细分id查询除了未发布和已结束的所有短信个数  -->
+	<select id="selectTaskStatusCount" parameterType="cn.rongcapital.mkt.po.SmsTaskBody" resultType="int">
+		SELECT COUNT(h.sms_task_status) 
+		FROM sms_task_head h,sms_task_body b 
+		WHERE h.id = b.sms_task_head_id and (h.sms_task_status =1 or h.sms_task_status =2 or h.sms_task_status =3) and b.target_type = #{targetType} and b.target_id = #{targetId}
+	</select>
 </mapper>

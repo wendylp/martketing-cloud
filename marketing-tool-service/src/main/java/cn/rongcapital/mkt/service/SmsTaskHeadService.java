@@ -1,7 +1,6 @@
 package cn.rongcapital.mkt.service;
 
-import java.util.Map;
-
+import cn.rongcapital.mkt.po.SmsTaskBody;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface SmsTaskHeadService {
@@ -25,5 +24,13 @@ public interface SmsTaskHeadService {
 	 * @return
 	 */
 	public BaseOutput smsTaskHeadPublish(String userId, Integer id) throws Exception;
+	
+	/**
+	 * 根据细分id查询除了未发布和已结束的所有短信个数 
+	 * 
+	 * @param smsTaskBody
+	 * @return count
+	 */
+	public int getTaskStatusCount(SmsTaskBody smsTaskBody);
 	
 }

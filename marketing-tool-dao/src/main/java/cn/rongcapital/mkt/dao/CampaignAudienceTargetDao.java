@@ -51,4 +51,12 @@ public interface CampaignAudienceTargetDao extends BaseDao<CampaignAudienceTarge
 	 * @return
 	 */
 	List<CampaignAudienceTarget> selectSegmentationName(CampaignAudienceTarget t);
+	
+	/**
+	 * 根据细分id查询未发布和已结束的所有活动个数 
+	 * 
+	 * @param campaignAudienceTarget
+	 * @return count
+	 */
+	int selectPublishStatusCount(CampaignAudienceTarget campaignAudienceTarget);
 }

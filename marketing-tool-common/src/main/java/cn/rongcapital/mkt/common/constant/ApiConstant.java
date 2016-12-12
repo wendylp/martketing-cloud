@@ -43,6 +43,9 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_PUBLISH_STATUS_FINISH = 3;//已结束
 	public static final byte CAMPAIGN_PUBLISH_STATUS_ALL = 4;//全部活动
 	
+	public static final byte SEGMENT_COMPILE_STATUS_YES = 0;//可编辑
+	public static final byte SEGMENT_COMPILE_STATUS_NO = 1;//不可编辑
+	
 	public static final int INT_ZERO = 0;
 	public static final int INT_ONE = 1;
 	
