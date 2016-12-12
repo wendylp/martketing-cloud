@@ -217,4 +217,13 @@
 		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
 	</select>
 
+
+	<!-- 通过券码ID，查询券码价值 -->
+	<select id="selecCouponAmountByCouponId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.material.coupon.po.MaterialCoupon">
+		<![CDATA[ select amount ]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE status = 0]]>
+		<if test="id != null and id !=''"><![CDATA[ and id = #{id}]]></if>
+	</select>
+	
 </mapper>

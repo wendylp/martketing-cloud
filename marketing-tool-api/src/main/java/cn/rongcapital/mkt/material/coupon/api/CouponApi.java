@@ -44,6 +44,7 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGetSystemTimeSer
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPutInGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralService;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
@@ -92,6 +93,9 @@ public class CouponApi {
     
     @Autowired
     private CouponSaveService couponSaveService;
+    
+	@Autowired
+	private MaterialCouponVerifyGeneralService materialCouponVerifyGeneralService;
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -346,4 +350,22 @@ public class CouponApi {
 
         return materialCouponCodeCheckService.materialCouponCodeVerify(id, couponCode, user);
     }
+    
+	/**
+	 * 券码核销流失概览
+	 * 
+	 * 接口：mkt.material.coupon.verifyGeneral
+	 * 
+	 * @param user_token
+	 * @param ver
+	 * @param id
+	 * @author shanjingqi
+	 * @Date 2016-12-09
+	 */
+	@GET
+	@Path("/mkt.material.coupon.verifyGeneral")
+	public BaseOutput verifyeGeneral(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String version, @NotNull @QueryParam("id") Long id) {
+		return materialCouponVerifyGeneralService.verifyGeneralById(id, userToken, version);
+	}
 }
