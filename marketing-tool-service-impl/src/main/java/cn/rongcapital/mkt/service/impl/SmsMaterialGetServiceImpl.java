@@ -6,6 +6,8 @@ import cn.rongcapital.mkt.common.enums.SmsMaterialVariableTypeEnum;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.material.coupon.dao.MaterialCouponDao;
+import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.service.SmsMaterialGetService;
 import cn.rongcapital.mkt.service.SmsMaterialService;
@@ -14,6 +16,7 @@ import cn.rongcapital.mkt.vo.out.SmsMaterialCountOut;
 import cn.rongcapital.mkt.vo.out.SmsMaterialMaterielOut;
 import cn.rongcapital.mkt.vo.out.SmsMaterialOut;
 import cn.rongcapital.mkt.vo.out.SmsMaterialVariableOut;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

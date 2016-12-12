@@ -32,21 +32,21 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.service.CouponCodeListService;
-import cn.rongcapital.mkt.service.CouponFileUploadService;
-import cn.rongcapital.mkt.service.CouponSaveService;
-import cn.rongcapital.mkt.service.MaterialCouponCodeCheckService;
-import cn.rongcapital.mkt.service.MaterialCouponCodeVerifyListService;
-import cn.rongcapital.mkt.service.MaterialCouponCountGetService;
-import cn.rongcapital.mkt.service.MaterialCouponDeleteService;
-import cn.rongcapital.mkt.service.MaterialCouponGeneralGetService;
-import cn.rongcapital.mkt.service.MaterialCouponGetSystemTimeService;
-import cn.rongcapital.mkt.service.MaterialCouponPageListService;
-import cn.rongcapital.mkt.service.MaterialCouponPutInGeneralService;
-import cn.rongcapital.mkt.service.MaterialCouponReleaseGeneralService;
+import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
+import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
+import cn.rongcapital.mkt.material.coupon.service.CouponSaveService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeCheckService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeVerifyListService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCountGetService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponDeleteService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGeneralGetService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGetSystemTimeService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPutInGeneralService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralService;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
-import cn.rongcapital.mkt.vo.in.MaterialCouponDeleteIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
