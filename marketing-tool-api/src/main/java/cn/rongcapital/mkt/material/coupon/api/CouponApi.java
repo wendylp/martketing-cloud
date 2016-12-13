@@ -32,6 +32,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.material.coupon.service.CouponCodeDictionaryService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
 import cn.rongcapital.mkt.material.coupon.service.CouponSaveService;
@@ -46,6 +47,9 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPutInGeneralServ
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralService;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
+import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
+import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
+import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
@@ -96,6 +100,9 @@ public class CouponApi {
     
 	@Autowired
 	private MaterialCouponVerifyGeneralService materialCouponVerifyGeneralService;
+	
+	@Autowired
+    private CouponCodeDictionaryService dictionaryService; //获取核销页面数据字典
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -228,7 +235,7 @@ public class CouponApi {
      */
     @GET
     @Path("/mkt.material.coupon.list")
-    public BaseOutput getMaterialCouponListByKeyword(@NotEmpty @QueryParam("user_token") String userToken,
+    public MaterialCouponListOut getMaterialCouponListByKeyword(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("channel_code") String channelCode,
             @QueryParam("keyword") String keyword, @QueryParam("coupon_status") String couponStatus,
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
@@ -381,9 +388,29 @@ public class CouponApi {
      */
     @GET
     @Path("/mkt.material.coupon.max.count")
-    public BaseOutput materialCouponCodeCheck(@NotEmpty @QueryParam("user_token") String userToken,
+    public CouponCodeMaxCountOut materialCouponCodeCheck(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("type_code") String typeCode,
             @DefaultValue("5") @Min(5) @Max(20) @QueryParam("length") int length) throws Exception {
         return materialCouponCodeCheckService.materialCouponCodeMaxCount(typeCode, length);
+    }
+    
+    /**
+     * @功能描述: 优惠码核销接口
+     * @param userToken
+     * @param ver
+     * @param id
+     * @param couponCode 优惠码
+     * @param user 用户ID
+     * @return
+     * @throws Exception BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月9日
+     */
+    @GET
+    @Path("/mkt.material.coupon.dictionary")
+    public CouponCodeDictionaryListOut couponCodeDictionaryService(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("type") String type) throws Exception {
+
+        return this.dictionaryService.materialCouponDictionary(type);
     }
 }

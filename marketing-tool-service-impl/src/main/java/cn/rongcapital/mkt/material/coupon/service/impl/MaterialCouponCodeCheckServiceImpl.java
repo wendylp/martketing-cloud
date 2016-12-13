@@ -31,6 +31,8 @@ import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeCheckService;
+import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
+import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOutItem;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
@@ -198,7 +200,7 @@ public class MaterialCouponCodeCheckServiceImpl
      * lang.String, int)
      */
     @Override
-    public BaseOutput materialCouponCodeMaxCount(String typeCode, int length) {
+    public CouponCodeMaxCountOut materialCouponCodeMaxCount(String typeCode, int length) {
         MaterialCouponCodeMaxTypeEnum type = MaterialCouponCodeMaxTypeEnum.getByCode(typeCode);
         long maxCount = 1L;
         if (MaterialCouponCodeMaxTypeEnum.contains(typeCode)) {
@@ -221,12 +223,12 @@ public class MaterialCouponCodeCheckServiceImpl
         if (maxCount >= MAX_COUNT) {
             maxCount = MAX_COUNT;
         }
-        List<Object> data = new ArrayList<Object>();
-        Map<String, Object> mapBack = new HashMap<String, Object>();
-        mapBack.put("max_count", maxCount);
-        data.add(mapBack);
-        // data.add();
-        return new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE, data);
+        //构建结果集
+        CouponCodeMaxCountOut resultOut = new CouponCodeMaxCountOut(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE);
+        resultOut.getItems().add(new CouponCodeMaxCountOutItem(maxCount));
+        resultOut.setTotal(resultOut.getItems().size());
+        resultOut.setTotalCount(resultOut.getItems().size());
+        return resultOut;
     }
 
     private long getMaxCount(int typeLength, int length) {
