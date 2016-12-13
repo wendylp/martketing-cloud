@@ -32,5 +32,8 @@ public interface SmsTaskHeadService {
 	 * @return count
 	 */
 	public int getTaskStatusCount(SmsTaskBody smsTaskBody);
+
+	public BaseOutput getSmsTaskHeadById(Integer id) throws Exception;
+	
 	
 }

@@ -226,9 +226,10 @@ public class MktSegmentApi {
     @Path("/mkt.tag.system.fuzzy.list.get")
     public BaseOutput tagSystemFuzzyListGet(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, @QueryParam("tag_name") String tagName,
+            @QueryParam("choice_show") String choiceShow,
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
             @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
-        return tagSystemFuzzyListGetService.getTagSystemFuzzyList(tagName, index, size);
+        return tagSystemFuzzyListGetService.getTagSystemFuzzyList(tagName,choiceShow, index, size);
     }
 
     /**
