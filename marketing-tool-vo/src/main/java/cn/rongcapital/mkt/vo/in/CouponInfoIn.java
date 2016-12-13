@@ -3,32 +3,38 @@ package cn.rongcapital.mkt.vo.in;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
-
-import cn.rongcapital.mkt.vo.BaseInput;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class CouponInfoIn extends BaseInput{
+public class CouponInfoIn {
 
+    @JsonProperty("id")
     private Long id;
     @NotEmpty
+    @JsonProperty("title")
     private String title;
     @NotEmpty
+    @JsonProperty("source_code")
     private String source_code;
-    
+    @JsonProperty("rule")
     private String rule;
     @NotNull
+    @JsonProperty("stock_total")
     private Integer stock_total;
     @NotNull
+    @JsonProperty("amount")
     private BigDecimal amount;
-    
+    @JsonProperty("channel_code")
     private String channel_code;
-    
+    @NotNull
+    @JsonProperty("start_time")
     private Date start_time;
-    
+    @NotNull
+    @JsonProperty("end_time")
     private Date end_time;
 
     public Long getId() {

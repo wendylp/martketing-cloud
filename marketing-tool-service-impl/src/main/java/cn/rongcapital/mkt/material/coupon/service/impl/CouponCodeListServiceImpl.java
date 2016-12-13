@@ -34,13 +34,14 @@ public class CouponCodeListServiceImpl implements CouponCodeListService {
         code.setCouponId(id);
         code.setStartIndex(index);
         code.setPageSize(size);
+        int totle = materialCouponCodeDao.getTotleListCount(code);
         List<MaterialCouponCode> codeList = materialCouponCodeDao.selectList(code);
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
         for(MaterialCouponCode materialCouponCode : codeList){
             result.getData().add(materialCouponCode);
         }
         result.setTotal(result.getData().size());
-        result.setTotalCount(codeList.size());
+        result.setTotalCount(totle);
         return result;
     }
 
@@ -50,13 +51,15 @@ public class CouponCodeListServiceImpl implements CouponCodeListService {
         code.setCouponId(id);
         code.setStartIndex(index);
         code.setPageSize(size);
+        
+        int totle = materialCouponCodeDao.getTotleIssuedListCount(code);
         List<MaterialCouponCode> codeList = materialCouponCodeDao.selectIssuedList(code);
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
         for(MaterialCouponCode materialCouponCode : codeList){
             result.getData().add(materialCouponCode);
         }
         result.setTotal(result.getData().size());
-        result.setTotalCount(codeList.size());
+        result.setTotalCount(totle);
         return result;
     }
 }
