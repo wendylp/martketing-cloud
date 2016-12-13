@@ -60,7 +60,7 @@ public class CouponSaveServiceImpl implements CouponSaveService{
     @Autowired
     private MaterialCouponCodeDao materialCouponCodeDao;
     
-    public static final String PATTERN_STANDARD19H = "yyyy-MM-dd HH:mm:ss";
+    public static final String PATTERN_STANDARD19H = "yyyy-MM-dd 00:00:00";
 
     private static final String[] DATABASE_LETTER = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
     
@@ -227,7 +227,7 @@ public class CouponSaveServiceImpl implements CouponSaveService{
      * @return
      */
     private Date dateEnd(Date dateStr,int minute) {
-        Date afterDate = new Date(dateStr.getTime()+(1000*minute));
+        Date afterDate = new Date(dateStart(dateStr, null).getTime()+(1000*minute));
         return afterDate;
     }
     
