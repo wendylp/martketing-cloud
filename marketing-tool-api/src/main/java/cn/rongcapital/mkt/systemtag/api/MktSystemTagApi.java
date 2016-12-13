@@ -32,6 +32,11 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CustomTagDeleteService;
 import cn.rongcapital.mkt.service.CustomTagGetService;
 import cn.rongcapital.mkt.service.SystemTagService;
+import cn.rongcapital.mkt.service.TagCustomTaxonomyDelService;
+import cn.rongcapital.mkt.service.TagCustomTaxonomyListGetService;
+import cn.rongcapital.mkt.service.TagCustomTaxonomyRootListGetService;
+import cn.rongcapital.mkt.service.TagCustomTaxonomySaveService;
+import cn.rongcapital.mkt.service.TagCustomTaxonomyShowSetService;
 import cn.rongcapital.mkt.service.TagDownloadCustomAudienceService;
 import cn.rongcapital.mkt.service.TagSystemFlagSetService;
 import cn.rongcapital.mkt.service.TagSystemListGetService;
@@ -40,6 +45,9 @@ import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
 import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
+import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyDelIn;
+import cn.rongcapital.mkt.vo.in.TagCustomTaxonomySaveIn;
+import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyShowSetIn;
 import cn.rongcapital.mkt.vo.in.TagSystemFlagSetIn;
 
 @Component
@@ -75,6 +83,21 @@ public class MktSystemTagApi {
     
     @Autowired
     private SystemTagService systemTagService;
+    
+    @Autowired
+    private TagCustomTaxonomySaveService tagCustomTaxonomySaveService;
+
+    @Autowired
+    private TagCustomTaxonomyListGetService tagCustomTaxonomyListGetService;
+
+    @Autowired
+    private TagCustomTaxonomyDelService tagCustomTaxonomyDelService;
+
+    @Autowired
+    private TagCustomTaxonomyRootListGetService tagCustomTaxonomyRootListGetService;
+
+    @Autowired
+    private TagCustomTaxonomyShowSetService tagCustomTaxonomyShowSetService;
 
 
     /**
@@ -261,4 +284,82 @@ public class MktSystemTagApi {
         return systemTagService.getSystemTagValueList(tagId, index, size);
     }
 
+    /**
+     * 功能描述：创建自定义分类
+     * 
+     * @param body
+     * @param securityContext
+     * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
+     */
+    @POST
+    @Path("/mkt.tag.custom.taxonomy.save")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput tagCustomTaxonomySave(@Valid TagCustomTaxonomySaveIn body,
+            @Context SecurityContext securityContext) {
+        return tagCustomTaxonomySaveService.tagCustomTaxonomySave(body, securityContext);
+    }
+
+    /**
+     * 功能描述：获得自定义分类子分类
+     * 
+     * @param tagTreeId
+     * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
+     */
+    @GET
+    @Path("/mkt.tag.custom.taxonomy.list.get")
+    public BaseOutput tagCustomTaxonomyListGet(@NotEmpty @QueryParam("tag_tree_id") String tagTreeId) {
+        return tagCustomTaxonomyListGetService.tagCustomTaxonomyListGet(tagTreeId);
+    }
+
+    /**
+     * 功能描述：删除自定义分类（逻辑删除）
+     * 
+     * @param body
+     * @param securityContext
+     * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
+     */
+    @POST
+    @Path("/mkt.tag.custom.taxonomy.del")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput tagCustomTaxonomyDel(@Valid TagCustomTaxonomyDelIn body,
+            @Context SecurityContext securityContext) {
+        return tagCustomTaxonomyDelService.tagCustomTaxonomyDel(body, securityContext);
+    }
+
+    /**
+     * 功能描述：获取自定义标签分类全部一级分类
+     * 
+     * @param nolyShow
+     * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
+     */
+    @GET
+    @Path("/mkt.tag.custom.taxonomy.root.list.get")
+    public BaseOutput TagCustomTaxonomyRootListGetService(@QueryParam("noly_show") Boolean onlyShow) {
+        return tagCustomTaxonomyRootListGetService.tagCustomTaxonomyRootListGet(onlyShow);
+    }
+
+    /**
+     * 功能描述：设置系统标签一级分类优先显示接口
+     * 
+     * @param body
+     * @param securityContext
+     * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
+     */
+    @POST
+    @Path("/mkt.tag.custom.taxonomy.show.set")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput tagCustomTaxonomyShowSet(@Valid TagCustomTaxonomyShowSetIn body,
+            @Context SecurityContext securityContext) {
+        return tagCustomTaxonomyShowSetService.tagCustomTaxonomyShowSet(body, securityContext);
+    }
 }
