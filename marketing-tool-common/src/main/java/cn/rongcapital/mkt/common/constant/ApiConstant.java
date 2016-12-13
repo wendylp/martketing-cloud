@@ -370,4 +370,11 @@ public class ApiConstant {
     public static final String SEGMENT_SHOW_PIE = "1";//显示饼图
     public static final String SEGMENT_SHOW_MAP = "2";//显示地图
     
+    /**
+     * 微信图文的缩略图片存储
+     */
+    public static final String WEIXIN_MATERIAL_IMG_PATH = "/rc/data/downloads/material/";
+    public static final String WEIXIN_MATERIAL_IMG_PATH_TO_SHOW = "/downloads/material/";
+
+    public static final String WEIXIN_TEST_APPID = "wx570bc396a51b8ff8";
 }

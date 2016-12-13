@@ -54,9 +54,6 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 	@Autowired
 	private MQTopicService mqTopicService;
 	
-	@Autowired
-	private Environment env;
-	
 	public static final String GET_PUB_LIST ="GetPubList";
 	
 	public static final String GET_PUB_FANS_LIST="GetPubFansList";

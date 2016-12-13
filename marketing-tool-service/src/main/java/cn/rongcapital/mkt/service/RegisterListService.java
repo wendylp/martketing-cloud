@@ -7,4 +7,6 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  */
 public interface RegisterListService {
 	BaseOutput getRegisterList();
+	
+	public BaseOutput selectRegisterList();
 }
