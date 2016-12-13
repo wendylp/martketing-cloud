@@ -39,7 +39,7 @@ public enum ApiErrorCode {
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CHECK_VERIFY(3013,"coupon code verify status is not unverify"),//当前优惠码的核销状态不是未使用
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CHECK_NOT_IN_PERIOD(3014,"coupon code is not in the period of validity"),//当前优惠码不在有效期范围内
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_VERIFY_FAILD(3015,"coupon code verify faild"),//优惠码核销失败
-    
+	BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR(3016,"非未使用状态,不可操作!"),
 
 	SMS_ERROR_MATERIAL_CAN_NOT_DELETE(4001,"can not delete the material"),
 	SMS_ERROR_MATERIAL_CAN_NOT_UPDATE(4002,"can not update the material"),

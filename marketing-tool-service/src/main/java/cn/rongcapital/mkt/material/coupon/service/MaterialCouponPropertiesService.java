@@ -1,5 +1,5 @@
  /*************************************************
- * @功能及特点的描述简述: 优惠券删除
+ * @功能及特点的描述简述:获取单个物料的所有可接入配置属性
  * 该类被编译测试过
  * @see （与该类关联的类）：
  * @对应项目名称：XXX系统
@@ -11,15 +11,18 @@
  *************************************************/ 
 package cn.rongcapital.mkt.material.coupon.service;
 
+
+import cn.rongcapital.mkt.material.po.MaterialAccessProperty;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
-public interface MaterialCouponDeleteService {
+public interface MaterialCouponPropertiesService {
+    
+      /**
+         * @author liuhaizhan
+         * @功能简述: 获取单个物料所有可接入配置属性
+         * @param 
+         * @return 
+         */
+    BaseOutput getProperties(MaterialAccessProperty materialAccessProperty);
 
-    /**
-     * @author liuhaizhan
-     * @功能简述: 删除优惠券ID
-     * @param 
-     * @return 
-     */
-     BaseOutput delete(long id);
 }
