@@ -15,5 +15,5 @@ public interface TagSystemFuzzyListGetService {
      * @author shuiyangyang
      * @date 2016-11-11
      */
-    public BaseOutput getTagSystemFuzzyList(String tagName, Integer index, Integer size);
+    public BaseOutput getTagSystemFuzzyList(String tagName,String choiceShow, Integer index, Integer size);
 }

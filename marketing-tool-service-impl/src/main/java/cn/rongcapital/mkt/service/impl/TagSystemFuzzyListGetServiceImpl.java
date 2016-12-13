@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,12 +33,16 @@ public class TagSystemFuzzyListGetServiceImpl implements TagSystemFuzzyListGetSe
      * @date 2016-11-11
      */
     @Override
-    public BaseOutput getTagSystemFuzzyList(String tagName, Integer index, Integer size) {
+    public BaseOutput getTagSystemFuzzyList(String tagName, String choiceShow, Integer index, Integer size) {
         
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
         
         TagValueCount tagValueCountSelect = new TagValueCount();
         tagValueCountSelect.setTagValue(tagName);
+        // choiceShow  0:返回标签值     1:返回标签名         其他:返回标签名和标签值
+        if(StringUtils.isNotBlank(choiceShow) && (choiceShow.equals("0") || choiceShow.equals("1"))) {
+            tagValueCountSelect.setIsTag(choiceShow);
+        }
         tagValueCountSelect.setStartIndex((index - 1) * size);
         tagValueCountSelect.setPageSize(size);
         // 查询
