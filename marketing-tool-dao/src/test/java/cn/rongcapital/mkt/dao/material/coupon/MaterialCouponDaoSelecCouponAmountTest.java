@@ -9,6 +9,7 @@
 *************************************************/
 package cn.rongcapital.mkt.dao.material.coupon;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class MaterialCouponDaoSelectStockTotalTest extends AbstractUnitTest {
+public class MaterialCouponDaoSelecCouponAmountTest extends AbstractUnitTest {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -43,30 +44,30 @@ public class MaterialCouponDaoSelectStockTotalTest extends AbstractUnitTest {
 	}
 
 	@Test
-	public void testSelectStockTotalByCouponId() {
-		logger.info("测试方法: selectStockTotalByCouponId ");
-		
+	public void testSelecCouponAmountByCouponId() {
+		logger.info("测试方法: selecCouponAmountByCouponId start");
+
 		MaterialCoupon mc = new MaterialCoupon();
-		mc.setTitle("方法selectStockTotalByCouponId测试用数据" + Math.random() * 1000);
+		mc.setTitle("方法selecCouponAmountByCouponId测试用数据" + Math.random() * 1000);
 		mc.setSourceCode(MaterialCouponSourceCodeEnum.GENERATE.getCode());
 		mc.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
 		mc.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
 		mc.setStatus((byte) 0);
-		mc.setStockTotal(314159265);
+		mc.setAmount(new BigDecimal("31415926535.01"));
 		materialCouponDao.insert(mc);
-		
+
 		List<MaterialCoupon> mcl = materialCouponDao.selectList(mc);
 		mcl.get(0).getId();
-		
+
 		Map<String, Object> paramMap = new HashMap();
-		paramMap.put("id",  mcl.get(0).getId());
-		Long result = materialCouponDao.selectStockTotalByCouponId(paramMap);
-		Assert.assertEquals(314159265, result.longValue());
-		
+		paramMap.put("id", mcl.get(0).getId());
+		MaterialCoupon re = materialCouponDao.selecCouponAmountByCouponId(paramMap);
+		Assert.assertEquals(new BigDecimal("31415926535.01").doubleValue(), re.getAmount().doubleValue(), 0.001);
+
 		mc.setStatus((byte) 1);
 		materialCouponDao.updateById(mc);
-		
-		logger.info("测试方法: selectStockTotalByCouponId ");
+
+		logger.info("测试方法: selectCouponTotalByCouponIdAndReleStatus end");
 	}
 
 	@After
