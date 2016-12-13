@@ -351,23 +351,23 @@ public class CouponApi {
         return materialCouponCodeCheckService.materialCouponCodeVerify(id, couponCode, user);
     }
     
-    /**
-     * 券码核销流失概览
-     * 
-     * 接口：mkt.material.coupon.verifyGeneral
-     * 
-     * @param user_token
-     * @param ver
-     * @param id
-     * @author shanjingqi
-     * @Date 2016-12-09
-     */
-    @GET
-    @Path("/mkt.material.coupon.verifyGeneral")
-    public BaseOutput verifyeGeneral(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String version, @NotNull @QueryParam("id") Long id) {
-        return materialCouponVerifyGeneralService.verifyGeneralById(id, userToken, version);
-    }
+	/**
+	 * 券码核销流失概览
+	 * 
+	 * 接口：mkt.material.coupon.verifyGeneral
+	 * 
+	 * @param user_token
+	 * @param ver
+	 * @param id
+	 * @author shanjingqi
+	 * @Date 2016-12-09
+	 */
+	@GET
+	@Path("/mkt.material.coupon.verifyGeneral")
+	public BaseOutput verifyeGeneral(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String version, @NotNull @QueryParam("id") Long id) {
+		return materialCouponVerifyGeneralService.verifyGeneralById(id, userToken, version);
+	}    
 
     /**
      * @功能描述: 获取优惠码最大可用数量
