@@ -33,7 +33,7 @@ import org.apache.commons.collections4.CollectionUtils;
 public class RegisterListServiceImpl implements RegisterListService {
  	
 	@Autowired
-	WechatRegisterDao wechatRegisterDao;
+	private WechatRegisterDao wechatRegisterDao;
 	
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
@@ -63,5 +63,30 @@ public class RegisterListServiceImpl implements RegisterListService {
 		result.setDate(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"));
 		
 		return result;
+	}
+	
+	@Override
+	public BaseOutput selectRegisterList() {
+		BaseOutput baseOutput = newSuccessBaseOutput();
+		WechatRegister param = new WechatRegister();
+		param.setType(2);
+		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		List<WechatRegister> dataList = wechatRegisterDao.selectList(param);
+		this.setBaseOut(baseOutput, dataList);
+		baseOutput.setDate(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"));
+		return baseOutput;
+	}
+
+	private BaseOutput newSuccessBaseOutput() {
+		return new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
+				null);
+	}
+	
+	private <O> void setBaseOut(BaseOutput out, List<O> dataList) {
+		if (CollectionUtils.isEmpty(dataList)) {
+			return;
+		}
+		out.setTotal(dataList.size());
+		out.getData().addAll(dataList);
 	}
 }

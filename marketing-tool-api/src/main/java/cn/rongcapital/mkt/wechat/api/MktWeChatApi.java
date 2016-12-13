@@ -81,6 +81,7 @@ import cn.rongcapital.mkt.service.QrcodeCreateCountService;
 import cn.rongcapital.mkt.service.QrcodePicDownloadService;
 import cn.rongcapital.mkt.service.QrcodePicsZipDownloadService;
 import cn.rongcapital.mkt.service.QrcodeUsedCountService;
+import cn.rongcapital.mkt.service.RegisterListService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.service.TagGetCustomService;
 import cn.rongcapital.mkt.service.TagUpdateService;
@@ -280,6 +281,8 @@ public class MktWeChatApi {
 	@Autowired
 	private GetImgtextAssetMenulistService getImgtextAssetMenulistService;
 
+	@Autowired
+	private RegisterListService registerListService;
 	
 	/**
 	 * 根据公众号名称、失效时间、状态、二维码名称查询二维码列表
@@ -1071,28 +1074,23 @@ public class MktWeChatApi {
 	 */
 	@GET
 	@Path("/mkt.asset.imgtext.campaign.get")
-	public Object getCampaignImgTextAsset(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("type") Integer type,
-			@QueryParam("owner_name") String ownerName, @DefaultValue("1") @Min(1) @QueryParam("index") int index,
-			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") int size) {
-		ImgAsset imgAsset = new ImgAsset();
-		imgAsset.setAssetType(type);
-		imgAsset.setVer(ver);
-		if (ownerName != null) {
-			imgAsset.setOwnerName(ownerName);
-		}
-		if (index != 0) {
-			imgAsset.setIndex(index);
-		} else {
-			imgAsset.setIndex(1);
-		}
-		if (size != 0) {
-			imgAsset.setSize(size);
-		} else {
-			imgAsset.setSize(10);
-		}
-//		return getImgTextAssetService.getImgTextAssetService(imgAsset);
-		return null;
+	public BaseOutput getCampaignImgTextAsset(@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("pub_id") String pubId,
+			@QueryParam("name") String name) {
+		return getImgTextAssetService.getImgTextAssetByName(pubId, name);
+	}
+	
+	/**
+	 * @功能简述: 获取公众号
+	 * @param:String user_token,String
+	 *                   ver,Integer type,String ownerName,int index,int size
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.asset.register.list")
+	public BaseOutput getRegisterList(@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver) {
+		return registerListService.selectRegisterList();
 	}
 
 }

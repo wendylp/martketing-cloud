@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,name as name,type as type,owner_name as ownerName,pc_preview_url as pcPreviewUrl,mobile_preview_url as mobilePreviewUrl,imgfile_url as imgfileUrl,material_id as materialId,status as status,create_time as createTime,update_time as updateTime,pub_id as pubId,pub_name as pubName,wechat_status as wechatStatus,show_cover_pic as showCoverPic,thumb_ready as thumbReady,wx_type as wxType,digest as digest,imgfile_name as imgfileName]]>
+		<![CDATA[ id as id,name as name,type as type,owner_name as ownerName,pc_preview_url as pcPreviewUrl,mobile_preview_url as mobilePreviewUrl,imgfile_url as imgfileUrl,material_id as materialId,status as status,create_time as createTime,update_time as updateTime,pub_id as pubId,pub_name as pubName,wechat_status as wechatStatus,show_cover_pic as showCoverPic,thumb_ready as thumbReady,wx_type as wxType,digest as digest,imgfile_name as imgfileName,first_asset as firstAsset]]>
 	</sql>
 
 	<!-- 根据owner查询一些列 -->
@@ -36,6 +36,7 @@
 		    	<if test="wxType != null"><![CDATA[ AND wx_type = #{wxType}]]></if>
 		    	<if test="digest != null"><![CDATA[ AND digest = #{digest}]]></if>
 		    	<if test="imgfileName != null"><![CDATA[ AND imgfile_name = #{imgfileName}]]></if>
+		    	<if test="firstAsset != null"><![CDATA[ AND first_asset = #{firstAsset}]]></if>
 		</where>
 	</sql>
 	
@@ -63,14 +64,15 @@
 		    	<if test="thumbReady != null"><![CDATA[thumb_ready = #{thumbReady},]]></if>
 		    	<if test="wxType != null"><![CDATA[wx_type = #{wxType},]]></if>
 		    	<if test="digest != null"><![CDATA[digest = #{digest},]]></if>
-		    	<if test="imgfileName != null"><![CDATA[imgfile_name = #{imgfileName}]]></if>
+		    	<if test="imgfileName != null"><![CDATA[imgfile_name = #{imgfileName},]]></if>
+		    	<if test="firstAsset != null"><![CDATA[first_asset = #{firstAsset}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ImgTextAsset" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,material_id,create_time,pub_id,pub_name,wechat_status,show_cover_pic,thumb_ready,wx_type,digest,imgfile_name)
+			INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,material_id,create_time,pub_id,pub_name,wechat_status,show_cover_pic,thumb_ready,wx_type,digest,imgfile_name,first_asset)
 			VALUES
 			(
 			  #{name},
@@ -88,7 +90,8 @@
 			  #{thumbReady},
 			  #{wxType},
 			  #{digest},
-			  #{imgfileName}
+			  #{imgfileName},
+			  #{firstAsset}
 			)
 		]]>
 	</insert>
@@ -242,7 +245,7 @@
 	<!-- 带创建时间和更新时间的插入方法 -->
 	<insert id="insertWithDate" parameterType="cn.rongcapital.mkt.po.ImgTextAsset" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,material_id,create_time,update_time,pub_id,pub_name,wechat_status,show_cover_pic,thumb_ready,digest,imgfile_name)
+			INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,material_id,create_time,update_time,pub_id,pub_name,wechat_status,show_cover_pic,thumb_ready,digest,imgfile_name,first_asset)
 			VALUES
 			(
 			  #{name},
@@ -260,7 +263,8 @@
 			  #{showCoverPic},
 			  #{thumbReady},
 			  #{digest},
-			  #{imgfileName}
+			  #{imgfileName},
+			  #{firstAsset}			  
 			)
 		]]>
 	</insert>
@@ -284,7 +288,8 @@
 		    	<if test="showCoverPic != null"><![CDATA[show_cover_pic = #{showCoverPic},]]></if>
 		    	<if test="thumbReady != null"><![CDATA[thumb_ready = #{thumbReady},]]></if>
 		    	<if test="digest != null"><![CDATA[digest = #{digest},]]></if>
-		    	<if test="imgfileName != null"><![CDATA[imgfile_name = #{imgfileName},]]></if>		    	
+		    	<if test="imgfileName != null"><![CDATA[imgfile_name = #{imgfileName},]]></if>
+		    	<if test="firstAsset != null"><![CDATA[first_asset = #{firstAsset},]]></if>		    	
 		</set>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>

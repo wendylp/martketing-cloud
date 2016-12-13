@@ -48,6 +48,8 @@ public class ImgTextAsset extends BaseQuery {
     private Byte wxType;
 
     private String digest;
+    
+    private Byte firstAsset;
 
     public Integer getId() {
         return id;
@@ -201,4 +203,13 @@ public class ImgTextAsset extends BaseQuery {
 		this.imgfileName = imgfileName;
 	}
     
+    public Byte getFirstAsset() {
+        return firstAsset;
+    }
+
+    public void setFirstAsset(Byte firstAsset) {
+        this.firstAsset = firstAsset;
+    }
+
+	
 }
