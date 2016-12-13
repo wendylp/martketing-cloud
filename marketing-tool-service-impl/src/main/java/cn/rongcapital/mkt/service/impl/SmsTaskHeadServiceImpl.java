@@ -19,7 +19,6 @@ import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
-import cn.rongcapital.mkt.po.SmsTaskBody;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.service.SmsTaskHeadService;
@@ -240,15 +239,6 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 		}
 		return output;
 	}
-
-    /* (non-Javadoc)
-     * @see cn.rongcapital.mkt.service.SmsTaskHeadService#getTaskStatusCount(cn.rongcapital.mkt.po.SmsTaskBody)
-     */
-    @Override
-    public int getTaskStatusCount(SmsTaskBody smsTaskBody) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
 	
 	
 	

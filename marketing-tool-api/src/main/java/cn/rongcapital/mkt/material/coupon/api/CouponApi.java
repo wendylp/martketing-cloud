@@ -43,12 +43,13 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponEditDetailServic
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGeneralGetService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGetSystemTimeService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
-import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPropertiesService;
+
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPutInGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralService;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.material.po.MaterialAccessProperty;
+import cn.rongcapital.mkt.material.service.MaterialCouponPropertiesService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 

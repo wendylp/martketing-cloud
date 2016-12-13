@@ -10,7 +10,7 @@
  * @复审人：
  *************************************************/
 
-package cn.rongcapital.mkt.material.coupon.service.impl;
+package cn.rongcapital.mkt.material.service.impl;
 
 import static org.mockito.Matchers.any;
 
@@ -32,8 +32,9 @@ import com.alibaba.fastjson.JSON;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.material.MaterialAccessPropertyDao;
-import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPropertiesService;
 import cn.rongcapital.mkt.material.po.MaterialAccessProperty;
+import cn.rongcapital.mkt.material.service.MaterialCouponPropertiesService;
+import cn.rongcapital.mkt.material.service.impl.MaterialCouponPropertiesServiceImpl;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import junit.framework.Assert;
 

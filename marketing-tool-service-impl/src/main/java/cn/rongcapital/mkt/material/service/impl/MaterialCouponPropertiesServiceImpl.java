@@ -1,5 +1,5 @@
 /*************************************************
- * @功能及特点的描述简述: message（例如该类是用来做什么的）
+ * @功能及特点的描述简述: 获取单个物料所有可接入配置属性
  * 该类被编译测试过
  * @see （与该类关联的类）：
  * @对应项目名称：MC(营销云系统)
@@ -10,7 +10,7 @@
  * @复审人：
  *************************************************/
 
-package cn.rongcapital.mkt.material.coupon.service.impl;
+package cn.rongcapital.mkt.material.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +23,10 @@ import org.springframework.util.CollectionUtils;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.material.MaterialAccessPropertyDao;
-import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPropertiesService;
+
 import cn.rongcapital.mkt.material.coupon.vo.out.PropertiesOut;
 import cn.rongcapital.mkt.material.po.MaterialAccessProperty;
+import cn.rongcapital.mkt.material.service.MaterialCouponPropertiesService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 
