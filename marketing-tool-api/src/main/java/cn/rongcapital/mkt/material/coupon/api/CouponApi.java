@@ -205,7 +205,7 @@ public class CouponApi {
     @POST
     @Path("/mkt.material.coupon.delete")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public BaseOutput Delete(@Valid MaterialCouponDeleteIn mcdi) {
+    public BaseOutput delete(@Valid MaterialCouponDeleteIn mcdi) {
         return materialCouponDeleteService.delete(mcdi.getId());
     }
 
