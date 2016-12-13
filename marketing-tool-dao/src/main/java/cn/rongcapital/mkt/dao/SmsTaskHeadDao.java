@@ -11,9 +11,9 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.po.SmsTaskBody;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.vo.sms.out.SmsTaskSendStatusVo;
 
@@ -52,4 +52,13 @@ public interface SmsTaskHeadDao extends BaseDao<SmsTaskHead>{
 	 * @return
 	 */
 	public List<SmsTaskHead> selectListByMaterial(SmsTaskHead t);
+	
+	
+	/**
+	 * 根据细分id查询未发布和已结束的所有短信个数 
+	 * 
+	 * @param campaignAudienceTarget
+	 * @return count
+	 */
+	public int selectTaskStatusCount(SmsTaskBody smsTaskBody);
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -21,6 +22,8 @@ import cn.rongcapital.mkt.po.mongodb.TagTree;
 import cn.rongcapital.mkt.service.SystemTagService;
 import cn.rongcapital.mkt.service.TagSystemCommonUtilService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.SystemTagIn;
+import cn.rongcapital.mkt.vo.in.SystemValueIn;
 import cn.rongcapital.mkt.vo.out.TagSystemTreeOut;
 import cn.rongcapital.mkt.vo.out.TagSystemTreeTagOut;
 
@@ -97,7 +100,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 					TagTree.class);
 			List<TagSystemTreeTagOut> resultList = new ArrayList<>();
 			resultList.add(new TagSystemTreeTagOut(ALL_TAG_FLAG, ALLTAG_TAB_NAME, null, null));
-			resultList.add(new TagSystemTreeTagOut(ALL_TAG_FLAG, RECOMMEND_TAB_NAME, null, null));
+			resultList.add(new TagSystemTreeTagOut(RECOMMEND_TAG_FLAG, RECOMMEND_TAB_NAME, null, null));
 			for (TagTree tagTree : treeList) {
 				TagSystemTreeTagOut systemTreeTagOut = new TagSystemTreeTagOut();
 				systemTreeTagOut.setTagId(tagTree.getId());
@@ -180,6 +183,5 @@ public class SystemTagServiceImpl implements SystemTagService {
 		}
 		return resultList;
 	}
-	
 
 }

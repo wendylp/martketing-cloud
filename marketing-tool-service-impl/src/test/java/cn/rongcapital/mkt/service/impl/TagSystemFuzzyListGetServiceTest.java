@@ -56,7 +56,7 @@ public class TagSystemFuzzyListGetServiceTest {
 
     @Test
     public void testGetTagSystemFuzzyList() {
-        BaseOutput result = tagSystemFuzzyListGetService.getTagSystemFuzzyList("", 0, 0);
+        BaseOutput result = tagSystemFuzzyListGetService.getTagSystemFuzzyList("","", 0, 0);
 
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
         Assert.assertEquals(tagValueCountLists.size(), result.getTotal());

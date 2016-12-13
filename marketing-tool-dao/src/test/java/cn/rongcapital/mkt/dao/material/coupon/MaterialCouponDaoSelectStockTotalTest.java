@@ -1,6 +1,16 @@
+/*************************************************
+ * @功能简述: DAO接口测试类
+ * @项目名称: marketing cloud
+ * @see: 
+ * @author: shanjingqi
+ * @version: 0.0.1
+ * @date: 
+ * @复审人: 
+*************************************************/
 package cn.rongcapital.mkt.dao.material.coupon;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
@@ -13,8 +23,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
+import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
+import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MaterialCouponDaoSelectStockTotalTest extends AbstractUnitTest {
@@ -32,10 +45,27 @@ public class MaterialCouponDaoSelectStockTotalTest extends AbstractUnitTest {
 	@Test
 	public void testSelectStockTotalByCouponId() {
 		logger.info("测试方法: selectStockTotalByCouponId ");
+		
+		MaterialCoupon mc = new MaterialCoupon();
+		mc.setTitle("方法selectStockTotalByCouponId测试用数据" + Math.random() * 1000);
+		mc.setSourceCode(MaterialCouponSourceCodeEnum.GENERATE.getCode());
+		mc.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
+		mc.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
+		mc.setStatus((byte) 0);
+		mc.setStockTotal(314159265);
+		materialCouponDao.insert(mc);
+		
+		List<MaterialCoupon> mcl = materialCouponDao.selectList(mc);
+		mcl.get(0).getId();
+		
 		Map<String, Object> paramMap = new HashMap();
-		paramMap.put("id", 12);
+		paramMap.put("id",  mcl.get(0).getId());
 		Long result = materialCouponDao.selectStockTotalByCouponId(paramMap);
-		Assert.assertEquals(20000, result.longValue());
+		Assert.assertEquals(314159265, result.longValue());
+		
+		mc.setStatus((byte) 1);
+		materialCouponDao.updateById(mc);
+		
 		logger.info("测试方法: selectStockTotalByCouponId ");
 	}
 

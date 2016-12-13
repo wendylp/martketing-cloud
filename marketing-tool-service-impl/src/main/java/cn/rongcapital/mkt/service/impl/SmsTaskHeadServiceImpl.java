@@ -227,5 +227,20 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 		}		
 		return output;
 	}
+
+	@Override
+	public BaseOutput getSmsTaskHeadById(Integer id) throws Exception {
+		BaseOutput output = this.newSuccessBaseOutput();
+		SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
+		smsTaskHeadTemp.setId(Long.parseLong(String.valueOf(id)));
+		List<SmsTaskHead> smsTaskHeadList = smsTaskHeadDao.selectList(smsTaskHeadTemp);
+		if(CollectionUtils.isNotEmpty(smsTaskHeadList)){
+			this.setBaseOut(output, smsTaskHeadList);			
+		}
+		return output;
+	}
+	
+	
+	
 	
 }
