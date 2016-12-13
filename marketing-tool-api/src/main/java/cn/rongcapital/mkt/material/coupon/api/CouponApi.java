@@ -323,8 +323,9 @@ public class CouponApi {
     @POST
     @Path("/mkt.materiel.coupon.save")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public BaseOutput couponSave(@NotEmpty @QueryParam("user_token") String userToken,@Valid CouponInfoIn couponInfo){
-        return couponSaveService.save(couponInfo);
+    public BaseOutput couponSave(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @Valid CouponInfoIn couponInfo){
+        return couponSaveService.save(couponInfo, userToken);
     }
     
     /**

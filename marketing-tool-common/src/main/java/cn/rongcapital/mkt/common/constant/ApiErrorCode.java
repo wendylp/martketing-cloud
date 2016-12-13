@@ -16,6 +16,7 @@ public enum ApiErrorCode {
 	
 	PARAMETER_ERROR(1001,"parameter error"),//1001-1999,参数相关错误码
 	VALIDATE_ERROR(1002,"validation failed"),//校验失败
+	FILE_ERROR(1003,"file is null"),
 	
 	DB_ERROR(2001,"DB error"),//2001-2999,数据库相关的错误码
 	DB_ERROR_TABLE_DATA_NOT_EXIST(2002,"table data not exist"),//数据在表里不存在
