@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
-public class TagCustomTaxonomyDelIn extends BaseInput{
+public class TagCustomTaxonomyDelIn extends BaseInput {
     @NotEmpty
     private String tagTreeId;
 
@@ -18,6 +18,6 @@ public class TagCustomTaxonomyDelIn extends BaseInput{
     public void setTagTreeId(String tagTreeId) {
         this.tagTreeId = tagTreeId;
     }
-    
-    
+
+
 }

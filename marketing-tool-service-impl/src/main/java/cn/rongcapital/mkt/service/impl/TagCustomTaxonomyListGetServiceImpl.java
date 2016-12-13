@@ -33,15 +33,24 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
     @Autowired
     TagSystemCommonUtilService tagSystemCommonUtilService;
 
+    /**
+     * 功能描述：获得自定义分类子分类
+     * 
+     * 接口：mkt.tag.custom.taxonomy.list.get
+     * 
+     * @param tagTreeId
+     * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
+     */
     @Override
     public BaseOutput tagCustomTaxonomyListGet(String tagTreeId) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ZERO, null);
 
         // 查询根标签分类
-        SystemCustomTagTree systemCustomTagTree = mongoTemplate.findOne(
-                new Query(
-                        new Criteria("tag_tree_id").is(tagTreeId).and("is_deleted").is(DATA_VALID).and("is_show").is(true)),
+        SystemCustomTagTree systemCustomTagTree = mongoTemplate.findOne(new Query(
+                new Criteria("tag_tree_id").is(tagTreeId).and("is_deleted").is(DATA_VALID).and("is_show").is(true)),
                 SystemCustomTagTree.class);
 
         if (systemCustomTagTree != null) {
@@ -56,6 +65,14 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
         return result;
     }
 
+    /**
+     * 功能描述：根据childrens获取标签分类信息
+     * 
+     * @param childrens
+     * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
+     */
     public List<TagSystemCustomTreeOut> getChildrenList(List<String> childrens) {
 
         if (CollectionUtils.isEmpty(childrens)) {
@@ -103,6 +120,8 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
      * @param tagTreeId
      * @param level
      * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private SystemCustomTagTree findSystemCustomTagTreeById(String tagTreeId) {
 
@@ -110,7 +129,8 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
             return null;
         }
 
-        return mongoTemplate.findOne(new Query(new Criteria("tag_tree_id").is(tagTreeId).and("is_deleted").is(DATA_VALID)),
+        return mongoTemplate.findOne(
+                new Query(new Criteria("tag_tree_id").is(tagTreeId).and("is_deleted").is(DATA_VALID)),
                 SystemCustomTagTree.class);
     }
 
@@ -119,6 +139,8 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
      * 
      * @param tagId
      * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private TagRecommend findTagRecommendById(String tagId) {
         if (StringUtils.isEmpty(tagId)) {
@@ -134,6 +156,8 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
      * 
      * @param tagIdLists
      * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private List<TagSystemTreeTagOut> generateTagOutByTagId(List<String> tagIdLists) {
 

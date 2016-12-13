@@ -29,15 +29,25 @@ public class TagCustomTaxonomyDelServiceImpl implements TagCustomTaxonomyDelServ
     @Autowired
     MongoTemplate mongoTemplate;
 
+    /**
+     * 功能描述：删除自定义分类（逻辑删除）
+     * 
+     * 接口： mkt.tag.custom.taxonomy.del
+     * 
+     * @param body
+     * @param securityContext
+     * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
+     */
     @Override
     public BaseOutput tagCustomTaxonomyDel(TagCustomTaxonomyDelIn body, SecurityContext securityContext) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ONE, null);
         // 删除父节点的数据
         mongoTemplate.updateFirst(
-            new Query(new Criteria("children").is(body.getTagTreeId()).and("is_deleted").is(DATA_VALID)),
-            new Update().pull("children", body.getTagTreeId()),
-            SystemCustomTagTree.class);
+                new Query(new Criteria("children").is(body.getTagTreeId()).and("is_deleted").is(DATA_VALID)),
+                new Update().pull("children", body.getTagTreeId()), SystemCustomTagTree.class);
 
         // 删除数据及子节点
         List<String> children = new ArrayList<String>();
@@ -51,6 +61,8 @@ public class TagCustomTaxonomyDelServiceImpl implements TagCustomTaxonomyDelServ
      * 功能描述：根据tag_tree_list逻辑删除标签分类
      * 
      * @param children
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private void delByTagTreeIdList(List<String> children) {
 

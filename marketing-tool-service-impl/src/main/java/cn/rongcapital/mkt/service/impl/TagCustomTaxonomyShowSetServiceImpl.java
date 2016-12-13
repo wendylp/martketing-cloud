@@ -21,6 +21,7 @@ import cn.rongcapital.mkt.po.mongodb.SystemCustomTagTree;
 import cn.rongcapital.mkt.service.TagCustomTaxonomyShowSetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyShowSetIn;
+
 @Service
 public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomyShowSetService {
 
@@ -34,6 +35,17 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
     @Autowired
     MongoTemplate mongoTemplate;
 
+    /**
+     * 功能描述：设置系统标签一级分类优先显示接口
+     * 
+     * 接口：mkt.tag.custom.taxonomy.show.set
+     * 
+     * @param body
+     * @param securityContext
+     * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
+     */
     @Override
     public BaseOutput tagCustomTaxonomyShowSet(TagCustomTaxonomyShowSetIn body, SecurityContext securityContext) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
@@ -50,19 +62,15 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
 
             int size = tagTreeIdLists.size();
             size = size > MAX_SIZE ? MAX_SIZE : size;
-            
+
             List<String> newTagTreeIdLists = new ArrayList<String>();
-            for(int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {
                 newTagTreeIdLists.add(tagTreeIdLists.get(i));
             }
-//            if (size > 6) {
-//                tagTreeIdLists = tagTreeIdLists.subList(0, MAX_SIZE);
-//                size = MAX_SIZE;
-//            }
 
             // 更新数据
-            WriteResult  writeResult = mongoTemplate
-                    .updateMulti(
+            WriteResult writeResult =
+                    mongoTemplate.updateMulti(
                             new Query(new Criteria("level").is(LEVEL_ONE).and("is_deleted").is(DATA_VALID)
                                     .and("tag_tree_id").in(newTagTreeIdLists)),
                             new Update().set("is_show", IS_SHOW), SystemCustomTagTree.class);

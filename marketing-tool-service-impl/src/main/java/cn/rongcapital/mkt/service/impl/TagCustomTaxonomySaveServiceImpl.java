@@ -40,9 +40,20 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
     MongoTemplate mongoTemplate;
 
 
+    /**
+     * 功能描述：创建自定义分类
+     * 
+     * 接口：mkt.tag.custom.taxonomy.save
+     * 
+     * @param body
+     * @param securityContext
+     * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
+     */
     @Override
     public BaseOutput tagCustomTaxonomySave(TagCustomTaxonomySaveIn body, SecurityContext securityContext) {
-        
+
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ONE, null);
 
@@ -93,6 +104,8 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
      * @param parent
      * @param level
      * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private String saveChildren(TagCustomTaxonomySaveChildrenIn children, String parent, int level) {
 
@@ -156,6 +169,8 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
      * 
      * @param systemCustomTagTree
      * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private String systemCustomTagTreeInsert(SystemCustomTagTree systemCustomTagTree) {
         mongoTemplate.insert(systemCustomTagTree);
@@ -163,7 +178,7 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
     }
 
     /**
-     * 功能描述：
+     * 功能描述：根据tag_tree_id 更新系统标签分类
      * 
      * @param tagTreeId
      * @param tagTreeName
@@ -171,6 +186,8 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
      * @param children
      * @param level
      * @param childrenTag
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private void systemCustomTagTreeUpdateById(String tagTreeId, String tagTreeName, String parent,
             List<String> children, int level, List<String> childrenTag) {
@@ -196,6 +213,8 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
      * @param tagTreeId
      * @param level
      * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private SystemCustomTagTree findSystemCustomTagTreeById(String tagTreeId) {
 
@@ -203,7 +222,8 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
             return null;
         }
 
-        return mongoTemplate.findOne(new Query(new Criteria("tag_tree_id").is(tagTreeId).and("isDeleted").is(DATA_VALID)),
+        return mongoTemplate.findOne(
+                new Query(new Criteria("tag_tree_id").is(tagTreeId).and("isDeleted").is(DATA_VALID)),
                 SystemCustomTagTree.class);
     }
 
@@ -211,6 +231,8 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
      * 功能描述：生成tag_tree_id
      * 
      * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private String generateTagTreeId() {
         return GenerateUUid.generateShortUuid() + new Date().getTime();
@@ -220,6 +242,8 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
      * 功能描述：如果已经显示的数量超过6个则默认不显示
      * 
      * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private Boolean isShow() {
         long count = mongoTemplate.count(new Query(new Criteria("isDeleted").is(DATA_VALID).and("is_show").is(true)),
@@ -231,6 +255,8 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
      * 功能描述：根据tag_tree_list逻辑删除标签分类
      * 
      * @param children
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private void delByTagTreeIdList(List<String> children) {
         if (CollectionUtils.isNotEmpty(children)) {
@@ -252,6 +278,8 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
      * 
      * @param tagList
      * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
      */
     private List<String> checkTag(List<String> tagIdList) {
         List<String> tagListNew = new ArrayList<String>();

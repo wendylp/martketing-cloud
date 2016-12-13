@@ -8,8 +8,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
-public class TagCustomTaxonomyShowSetIn extends BaseInput{
-    
+public class TagCustomTaxonomyShowSetIn extends BaseInput {
+
     List<String> tagTreeId;
 
     @JsonProperty("tag_tree_id")
@@ -20,5 +20,5 @@ public class TagCustomTaxonomyShowSetIn extends BaseInput{
     public void setTagTreeId(List<String> tagTreeId) {
         this.tagTreeId = tagTreeId;
     }
-    
+
 }
