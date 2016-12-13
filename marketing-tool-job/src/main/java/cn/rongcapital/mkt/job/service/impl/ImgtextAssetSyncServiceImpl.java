@@ -4,6 +4,7 @@ import cn.rongcapital.mkt.biz.ImgTextAssetBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.H5ImgtextType;
 import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.common.util.HttpUtils;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
 import cn.rongcapital.mkt.dao.TenementDao;
@@ -18,6 +19,8 @@ import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.po.WechatRegister;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -26,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +54,8 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     WebchatAuthInfoDao webchatAuthInfoDao;
     @Autowired
     ImgTextAssetBiz imgTextAssetBiz;
+    
+    
 
     @Override
     public void task(Integer taskId) {
@@ -78,17 +84,25 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     				/**
 					 * 更新微信公众号下图文信息为删除状态
 					 */
-//					imgTextAssetDao.batchUpdateWechatStatusByPubId(wechatRegister.getWxAcct());	
     				imgTextAssetDao.batchDeleteWechatStatusByPubId(wechatRegister.getWxAcct());
-    				for(ImgTextAsset imgTextAssetList : imgTextAssetLists) {   					
+    				for(ImgTextAsset imgTextAsset : imgTextAssetLists) {   					
     					// 设置pub_id,pub_name,下载状态
-    					imgTextAssetList.setPubId(wechatRegister.getWxAcct());
-    					imgTextAssetList.setPubName(wechatRegister.getName());
-    					imgTextAssetList.setThumbReady((byte)0);
+    					imgTextAsset.setPubId(wechatRegister.getWxAcct());
+    					imgTextAsset.setPubName(wechatRegister.getName());
+    					imgTextAsset.setThumbReady((byte)0);
+    					/**
+    					 * 下载微信公众号的图文信息的缩略图到本地，页面显示的时候直接引用本地图文
+    					 */
+    					try {
+							imgTextAsset = getFileByImgTextAsset(imgTextAsset);
+						} catch (Exception e) {
+							logger.debug("下载图文素材的缩略图, imgTextAsset。imgfileUrl = {}",
+									imgTextAsset.getImgfileUrl());							
+						}
     					/**
     					 * 插入、更新数据
     					 */
-						imgTextAssetDao.insertWithDate(imgTextAssetList);
+						imgTextAssetDao.insertWithDate(imgTextAsset);
     				}
     			} else {
     				logger.debug("查不到图文信息, AuthorizerAppid = {}, AuthorizerRefreshToken = {}",
@@ -97,6 +111,23 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     		}
 		}
     }   
+    
+    private ImgTextAsset getFileByImgTextAsset(ImgTextAsset imgTextAsset) throws Exception{
+    	if(imgTextAsset!=null&&StringUtils.isNotEmpty(imgTextAsset.getImgfileUrl())){
+    		String imgfileUrl = imgTextAsset.getImgfileUrl();
+    		if(StringUtils.isNotEmpty(imgfileUrl)){
+        		String[] imgfileUrls = imgfileUrl.split(File.separator);
+        		String imgfileName = imgfileUrls[imgfileUrls.length-2];
+        		String[] imgfileUrl1s = imgfileUrl.split("=");
+        		String imgfileType = imgfileUrl1s[1];
+        		imgfileName = imgfileName+"."+imgfileType;
+        		imgTextAsset.setImgfileName(ApiConstant.WEIXIN_MATERIAL_IMG_PATH_TO_SHOW+imgfileName); 
+            	FileUtil.download(imgTextAsset.getImgfileUrl(),ApiConstant.WEIXIN_MATERIAL_IMG_PATH,imgfileName);
+    		}
+    	}
+		return imgTextAsset;
+    }
+    
     
     public void callH5PlusMethod(Integer taskId) {
     	

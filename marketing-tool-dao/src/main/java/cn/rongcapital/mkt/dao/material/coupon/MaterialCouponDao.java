@@ -100,5 +100,12 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
      */
     int selectListByKeywordCount(MaterialCoupon paramMaterialCoupon);
 
-    
+	/**
+	 * 根据优惠券ID查询优惠券生成码数量
+	 * 
+	 * @author: 单璟琦
+	 * @param paramMap
+	 * @return MaterialCoupon
+	 */
+    MaterialCoupon selecCouponAmountByCouponId(Map<String, Object> paramMap);
 }

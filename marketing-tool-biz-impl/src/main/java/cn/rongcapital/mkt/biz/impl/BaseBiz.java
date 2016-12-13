@@ -33,10 +33,10 @@ public class BaseBiz {
 	WechatInterfaceLogService wechatInterfaceLogService;
 	
 	@Autowired
-	private WebchatComponentVerifyTicketDao webchatComponentVerifyTicketDao;
+	WebchatComponentVerifyTicketDao webchatComponentVerifyTicketDao;
 	
 	@Autowired
-	private Environment env;
+	Environment env;
 	
 	public App getApp(){
 		    String weixin_appid = env.getProperty("weixin.appid");

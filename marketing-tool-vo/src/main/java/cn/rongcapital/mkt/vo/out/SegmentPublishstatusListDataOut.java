@@ -19,6 +19,8 @@ public class SegmentPublishstatusListDataOut {
 
 	private Integer coverCount;
 	
+	private Byte compileStatus;
+	
 	@JsonProperty("segment_name")
 	public String getSegmentName() {
 		return segmentName;
@@ -71,6 +73,14 @@ public class SegmentPublishstatusListDataOut {
 
 	public void setCoverCount(Integer coverCount) {
 		this.coverCount = coverCount;
+	}
+	@JsonProperty("compile_status")
+	public Byte getCompileStatus() {
+		return compileStatus;
+	}
+
+	public void setCompileStatus(Byte compileStatus) {
+		this.compileStatus = compileStatus;
 	}
 
 }

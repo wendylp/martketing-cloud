@@ -168,9 +168,11 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 		List<WXNewsItem> wxNewsItems = wxImgTextContent.getNewsItem();
 		imgTextAsset.setCreateTime(new Date(wxImgTextContent.getCreate_time() * 1000));
 		if(wxNewsItems!=null&&wxNewsItems.size()>0){
+			int i=0;
 			for(Iterator<WXNewsItem> iter = wxNewsItems.iterator();iter.hasNext();){
 				WXNewsItem wxNewsItem = iter.next();
 				if(wxNewsItem!=null){
+					
 					ImgTextAsset imgTextAssetTemp = new ImgTextAsset();
 					imgTextAssetTemp.setName(wxNewsItem.getTitle());
 					imgTextAssetTemp.setOwnerName(wxNewsItem.getAuthor());
@@ -186,10 +188,17 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 					imgTextAssetTemp.setType(NumUtil.int2OneByte(0));
 					imgTextAssetTemp.setStatus(NumUtil.int2OneByte(0));	
 					imgTextAssetTemp.setDigest(wxNewsItem.getDigest());
+					if(i==0){
+						imgTextAssetTemp.setFirstAsset(NumUtil.int2OneByte(1));
+					}else{
+						imgTextAssetTemp.setFirstAsset(NumUtil.int2OneByte(0));
+					}
 					imgTextAssets.add(imgTextAssetTemp);
+					i++;
 				}				
 			}
-		}
+			imgTextAssets.get(0);
+		}		
 		return imgTextAssets;		
 	}
 	

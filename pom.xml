@@ -34,7 +34,8 @@
    		<module>marketing-tool-job</module>
    		<module>marketing-tool-common</module>
 		<module>marketing-tool-biz</module>
-		<module>marketing-tool-biz-impl</module>   		
+		<module>marketing-tool-biz-impl</module>
+		<module>marketing-tool-jmeter</module>
 	</modules>
 	<!-- parent -->
 	<parent>
