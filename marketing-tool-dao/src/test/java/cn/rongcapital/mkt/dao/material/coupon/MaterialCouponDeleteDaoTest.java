@@ -11,6 +11,9 @@
 *************************************************/
 package cn.rongcapital.mkt.dao.material.coupon;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
@@ -53,6 +57,11 @@ public class MaterialCouponDeleteDaoTest extends AbstractUnitTest {
         mc.setChannelCode("sms");
         mc.setStatus((byte) 0);
         mc.setCouponStatus(MaterialCouponStatusEnum.UNUSED.getCode());
+        mc.setStockTotal(1500);
+        mc.setAmount(new BigDecimal(10));// 金额;
+        mc.setStockRest(200);;// 库存数量
+        mc.setStartTime(new Date());
+        mc.setEndTime(new Date());
         materialCouponDao.insert(mc);
 
         // 插入优惠码
@@ -60,6 +69,9 @@ public class MaterialCouponDeleteDaoTest extends AbstractUnitTest {
         mcc.setCode("123456AAAAAABBBB");
         mcc.setCouponId(mc.getId());
         mcc.setStatus((byte) 0);
+        mcc.setUser("13842821032");
+        mcc.setVerifyStatus("unverify");
+        mcc.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());    
         materialCouponCodeDao.insert(mcc);
     }
 

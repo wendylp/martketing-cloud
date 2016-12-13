@@ -12,6 +12,7 @@
 package cn.rongcapital.mkt.dao.material.coupon;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -56,15 +57,21 @@ public class MaterialCouponDaoPutInTest extends AbstractUnitTest {
         mc.setCouponStatus(MaterialCouponStatusEnum.USED.getCode());
         mc.setChannelCode("sms");
         mc.setStatus((byte) 0);
+        mc.setStockTotal(1500);
         mc.setAmount(new BigDecimal(10));// 金额;
         mc.setStockRest(200);;// 库存数量
+        mc.setStartTime(new Date());
+        mc.setEndTime(new Date());
         materialCouponDao.insert(mc);
 
         mcc = new MaterialCouponCode();
 
         mcc.setCouponId(mc.getId());
         mcc.setCode("1333");
-        mcc.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRELEASED.getCode()); // 未收到
+        mcc.setUser("13842821032");
+        mcc.setVerifyStatus("unverify");
+        mcc.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRELEASED.getCode());
+        // 未收到
         materialCouponCodeDao.insert(mcc);
 
         mcc.setCouponId(mc.getId());
