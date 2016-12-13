@@ -6,10 +6,16 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
+import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
@@ -73,4 +79,36 @@ public class GetImgTextAssetServiceImpl implements GetImgTextAssetService {
         }
         return baseOutput;
     }
+
+	@Override
+	public BaseOutput getImgTextAssetByName(String pubId, String name) {
+		BaseOutput output = this.newSuccessBaseOutput();
+		ImgTextAsset imgTextAsset = new ImgTextAsset();
+		imgTextAsset.setPubId(pubId);
+		if(StringUtils.isNotEmpty(name)){
+			imgTextAsset.setName(name);
+		}else{
+			imgTextAsset.setStartIndex(0);
+			imgTextAsset.setPageSize(5);
+		}		
+		imgTextAsset.setFirstAsset(NumUtil.int2OneByte(1));
+		List<ImgTextAsset> imgTextAssets = imgTextAssetDao.selectList(imgTextAsset);
+		this.setBaseOut(output, imgTextAssets);
+		return output;
+	}
+
+    
+	private BaseOutput newSuccessBaseOutput() {
+		return new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
+				null);
+	}
+	
+	private <O> void setBaseOut(BaseOutput out, List<O> dataList) {
+		if (CollectionUtils.isEmpty(dataList)) {
+			return;
+		}
+		out.setTotal(dataList.size());
+		out.getData().addAll(dataList);
+	}
 }
+
