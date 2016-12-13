@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.MaterialCouponCodeMaxTypeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
@@ -37,11 +39,12 @@ import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeCheckService;
-import cn.rongcapital.mkt.material.coupon.service.impl.MaterialCouponCodeCheckServiceImpl;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MaterialCouponCodeCheckServiceTest {
+    
+    private static final long MAX_COUNT = 1000000;
 
     /**
      * logger
@@ -688,4 +691,48 @@ public class MaterialCouponCodeCheckServiceTest {
         Assert.assertNotEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
     }
 
+    @Test
+    public void testMaxCount(){
+        System.out.println();
+        //验证以字母形式，长度为5的最大长度
+        BaseOutput baseOutput = this.checkService.materialCouponCodeMaxCount(MaterialCouponCodeMaxTypeEnum.LETTER.getCode(), 5);
+        List<Object> dataObjects =  baseOutput.getData();
+        Map<String,Long> backMap =  (Map<String,Long>)dataObjects.get(0);
+        long maxCount = backMap.get("max_count");
+        long expectedCount= 26 * 25 * 24 * 23 * 22;
+        if(expectedCount>=MAX_COUNT){
+            expectedCount = MAX_COUNT;
+        }
+        Assert.assertEquals(expectedCount, maxCount);
+        
+        //验证以数字形式，长度为10的最大长度
+        baseOutput = this.checkService.materialCouponCodeMaxCount(MaterialCouponCodeMaxTypeEnum.NUMBER.getCode(), 6);
+        dataObjects =  baseOutput.getData();
+        backMap =  (Map<String,Long>)dataObjects.get(0);
+        maxCount = backMap.get("max_count");
+        expectedCount = 10 * 9 * 8 * 7 * 6 * 5;
+        if(expectedCount>=MAX_COUNT){
+            expectedCount = MAX_COUNT;
+        }
+        Assert.assertEquals(expectedCount, maxCount);
+        
+        //验证是组合形式，长度为5的最大长度
+        baseOutput = this.checkService.materialCouponCodeMaxCount(MaterialCouponCodeMaxTypeEnum.MIXTURE.getCode(), 5);
+        dataObjects =  baseOutput.getData();
+        backMap =  (Map<String,Long>)dataObjects.get(0);
+        maxCount = backMap.get("max_count");
+        expectedCount = 36 * 35 * 34 * 33 * 32;
+        if(expectedCount>=MAX_COUNT){
+            expectedCount = MAX_COUNT;
+        }
+        Assert.assertEquals(expectedCount, maxCount);
+        
+        //验证码组合的规则不正确
+        baseOutput = this.checkService.materialCouponCodeMaxCount("ERROR", 5);
+        dataObjects =  baseOutput.getData();
+        backMap =  (Map<String,Long>)dataObjects.get(0);
+        maxCount = backMap.get("max_count");
+        expectedCount = 0;
+        Assert.assertEquals(expectedCount, maxCount);
+    }
 }

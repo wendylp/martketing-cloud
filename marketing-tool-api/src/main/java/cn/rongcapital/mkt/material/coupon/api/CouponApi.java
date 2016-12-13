@@ -367,5 +367,23 @@ public class CouponApi {
 	public BaseOutput verifyeGeneral(@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("ver") String version, @NotNull @QueryParam("id") Long id) {
 		return materialCouponVerifyGeneralService.verifyGeneralById(id, userToken, version);
-	}
+	}    
+
+    /**
+     * @功能描述: 获取优惠码最大可用数量
+     * @param userToken
+     * @param ver
+     * @param id
+     * @return
+     * @throws Exception BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月12日
+     */
+    @GET
+    @Path("/mkt.material.coupon.max.count")
+    public BaseOutput materialCouponCodeCheck(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("type_code") String typeCode,
+            @DefaultValue("5") @Min(5) @Max(20) @QueryParam("length") int length) throws Exception {
+        return materialCouponCodeCheckService.materialCouponCodeMaxCount(typeCode, length);
+    }
 }
