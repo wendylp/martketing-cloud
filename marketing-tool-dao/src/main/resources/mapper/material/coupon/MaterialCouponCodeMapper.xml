@@ -62,7 +62,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO material_coupon_code (coupon_id,code,user,release_status,verify_status,verify_time,create_time)
+			INSERT INTO material_coupon_code (coupon_id,code,user,release_status,verify_status,verify_time,create_time,status)
 			VALUES
 			(
 			  #{couponId},
@@ -71,7 +71,8 @@
 			  #{releaseStatus},
 			  #{verifyStatus},
 			  #{verifyTime},
-			  now()
+			  now(),
+			  #{status}
 			)
 		]]>
 	</insert>
@@ -237,6 +238,25 @@
 			)
 		</foreach>
 	</insert>
+	
+	<!-- 获取核销对账数据用户标识信息列表 -->
+	<select id="getCouponCodeVerifyUserInfoList" parameterType="java.util.Map" resultType="java.lang.String">
+    	<![CDATA[ select t2.user as userinfo ]]>
+    	<![CDATA[ FROM material_coupon t1 INNER JOIN material_coupon_code t2 ON t1.id = t2.coupon_id]]>
+		<![CDATA[ WHERE t1.id = #{id} AND t1.status = 0 AND t2.status = 0]]>
+    	<if test="user != null and user != ''">
+    		<bind name="userlike" value="'%'+user+'%'"/>
+	    	<![CDATA[ AND t2.user like #{userlike}]]>
+    	</if>
+    	<if test="releaseStatus != null and releaseStatus != ''"><![CDATA[ AND t2.release_status = #{releaseStatus}]]></if>
+    	<if test="verifyStatus != null and verifyStatus != ''"><![CDATA[ AND t2.verify_status = #{verifyStatus}]]></if>
+    	<choose>
+	    	<when test="expireStatus == 'expired'"><![CDATA[ AND t1.end_time IS NOT NULL AND t1.end_time < #{expireTime}]]></when>
+	    	<when test="expireStatus == 'unexpired'"><![CDATA[ AND (t1.end_time IS NULL OR t1.end_time >= #{expireTime})]]></when>
+	    	<otherwise></otherwise>
+    	</choose>
+    </select>
+	
 	
 		<!-- 已发放所有的数量 -->
 	<select id="getTotleIssuedListCount" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode" resultType="int">

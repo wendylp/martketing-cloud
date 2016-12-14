@@ -107,4 +107,12 @@ public interface MaterialCouponCodeDao extends BaseDao<MaterialCouponCode> {
     int getTotleListCount(MaterialCouponCode code);
 
     void deleteCodeByCouponId(Long id);
+    /**
+     * 获取核销对账数据用户标识信息列表
+     * 
+     * @param paramMap
+     * @return List<String>
+     * @author shanjingqi
+     */
+    List<String> getCouponCodeVerifyUserInfoList(Map<String, Object> paramMap);
 }

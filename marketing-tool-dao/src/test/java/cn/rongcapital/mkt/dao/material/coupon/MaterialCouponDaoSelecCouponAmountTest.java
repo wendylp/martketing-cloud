@@ -10,6 +10,7 @@
 package cn.rongcapital.mkt.dao.material.coupon;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
@@ -38,11 +40,14 @@ public class MaterialCouponDaoSelecCouponAmountTest extends AbstractUnitTest {
 	@Autowired
 	private MaterialCouponDao materialCouponDao;
 
+    private Long couponId;
+	
 	@Before
 	public void setUp() throws Exception {
 		logger.info("测试: MaterialCouponDao 开始---------------------");
 	}
 
+    private static final Date now = new Date();
 	@Test
 	public void testSelecCouponAmountByCouponId() {
 		logger.info("测试方法: selecCouponAmountByCouponId start");
@@ -52,15 +57,25 @@ public class MaterialCouponDaoSelecCouponAmountTest extends AbstractUnitTest {
 		mc.setSourceCode(MaterialCouponSourceCodeEnum.GENERATE.getCode());
 		mc.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
 		mc.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
+	    mc.setStockRest(2000);
 		mc.setStatus((byte) 0);
 		mc.setAmount(new BigDecimal("31415926535.01"));
-		materialCouponDao.insert(mc);
-
-		List<MaterialCoupon> mcl = materialCouponDao.selectList(mc);
-		mcl.get(0).getId();
+		mc.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
+		mc.setStartTime(now);
+        mc.setEndTime(now);
+        mc.setStockTotal(314159265);
+        
+        List<MaterialCoupon> mcl = materialCouponDao.selectList(mc);
+        if (mcl.size() == 0) {
+            materialCouponDao.insert(mc);
+        } else {
+            mc.setId(mcl.get(0).getId());
+        }
+        couponId = mc.getId();
+        
 
 		Map<String, Object> paramMap = new HashMap();
-		paramMap.put("id", mcl.get(0).getId());
+		paramMap.put("id", couponId);
 		MaterialCoupon re = materialCouponDao.selecCouponAmountByCouponId(paramMap);
 		Assert.assertEquals(new BigDecimal("31415926535.01").doubleValue(), re.getAmount().doubleValue(), 0.001);
 
