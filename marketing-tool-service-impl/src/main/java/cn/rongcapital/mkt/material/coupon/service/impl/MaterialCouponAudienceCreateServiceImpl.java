@@ -70,6 +70,7 @@ public class MaterialCouponAudienceCreateServiceImpl implements MaterialCouponAu
                 (!CollectionUtils.isEmpty(mc) && mc.get(0).getTaskId() != null) ? mc.get(0).getTaskId() : null;
 
         if (taskHeadId != null) {
+            //目前只针对短信渠道 20161214
             boolean flag = audienceListService.saveAudienceByMobile(taskHeadId, mobileList, audienceName);
             if (flag) {
                 return result;
