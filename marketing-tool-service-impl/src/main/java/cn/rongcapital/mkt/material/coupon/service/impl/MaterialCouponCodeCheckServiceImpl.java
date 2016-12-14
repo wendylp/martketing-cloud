@@ -234,7 +234,7 @@ public class MaterialCouponCodeCheckServiceImpl
     private long getMaxCount(int typeLength, int length) {
         long result = 1L;
         for (int i = 0; i < typeLength; i++) {
-            result = result * (length - i);
+            result = result * length;
         }
         return result;
     }
