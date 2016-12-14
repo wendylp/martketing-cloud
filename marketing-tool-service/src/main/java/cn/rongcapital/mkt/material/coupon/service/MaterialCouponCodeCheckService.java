@@ -11,6 +11,7 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.service;
 
+import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface MaterialCouponCodeCheckService {
@@ -43,5 +44,5 @@ public interface MaterialCouponCodeCheckService {
      * @author xie.xiaoliang
      * @since 2016年12月12日
      */
-    BaseOutput materialCouponCodeMaxCount(String typeCode, int length);
+    CouponCodeMaxCountOut materialCouponCodeMaxCount(String typeCode, int length);
 }

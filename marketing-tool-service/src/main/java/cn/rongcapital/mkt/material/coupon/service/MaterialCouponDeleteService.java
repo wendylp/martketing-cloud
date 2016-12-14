@@ -11,8 +11,15 @@
  *************************************************/ 
 package cn.rongcapital.mkt.material.coupon.service;
 
+import cn.rongcapital.mkt.vo.BaseOutput;
+
 public interface MaterialCouponDeleteService {
 
-    
-    public Object Delete(long id);
+    /**
+     * @author liuhaizhan
+     * @功能简述: 删除优惠券ID
+     * @param 
+     * @return 
+     */
+     BaseOutput delete(long id);
 }

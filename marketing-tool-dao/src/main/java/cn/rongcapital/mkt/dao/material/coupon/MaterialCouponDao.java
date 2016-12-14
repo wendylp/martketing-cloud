@@ -71,7 +71,7 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
      * @param：id 优惠券唯一主键
      * @return：优惠券实体
      */
-    MaterialCoupon selectOneCoupon(Long id);
+    MaterialCoupon selectOneCoupon(long id);
     
     /**
     @author liuhaizhan
@@ -79,7 +79,7 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
   * @param：优惠券唯一ID
   * @return：返回data
   */
-   public List<Map> getPutInCoupon(Long id);
+     List<Map> getPutInCoupon(long id);
 
     /**
      * 
@@ -108,4 +108,7 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
 	 * @return MaterialCoupon
 	 */
     MaterialCoupon selecCouponAmountByCouponId(Map<String, Object> paramMap);
+    
+    
+    
 }
