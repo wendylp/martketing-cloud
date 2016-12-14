@@ -409,16 +409,14 @@ public class CouponApi {
     }
     
     /**
-     * @功能描述: 优惠码核销接口
+     * @功能描述: 核销对账页面》获取数据字典
      * @param userToken
      * @param ver
-     * @param id
-     * @param couponCode 优惠码
-     * @param user 用户ID
+     * @param type
      * @return
-     * @throws Exception BaseOutput
+     * @throws Exception CouponCodeDictionaryListOut
      * @author xie.xiaoliang
-     * @since 2016年12月9日
+     * @since 2016-12-14
      */
     @GET
     @Path("/mkt.material.coupon.dictionary")

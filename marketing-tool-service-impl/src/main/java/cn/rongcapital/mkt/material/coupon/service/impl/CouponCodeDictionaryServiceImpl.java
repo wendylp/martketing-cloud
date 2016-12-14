@@ -14,6 +14,8 @@ package cn.rongcapital.mkt.material.coupon.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -35,6 +37,7 @@ public class CouponCodeDictionaryServiceImpl implements CouponCodeDictionaryServ
      * lang.String)
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED,readOnly=true)
     public CouponCodeDictionaryListOut materialCouponDictionary(String type) {
         CouponCodeDictionaryListOut baseOutput = new CouponCodeDictionaryListOut(ApiErrorCode.SUCCESS.getCode(),
                 ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO);
