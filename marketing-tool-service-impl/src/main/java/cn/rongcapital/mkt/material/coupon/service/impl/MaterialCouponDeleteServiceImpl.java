@@ -19,7 +19,9 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
@@ -41,7 +43,7 @@ public class MaterialCouponDeleteServiceImpl implements MaterialCouponDeleteServ
     private MaterialCouponCodeDao materialCouponCodeDao;
 
     @Override
-    public Object Delete(long id) {
+    public BaseOutput delete(long id) {
         BaseOutput baseOutput = null;
         if (findIsUse(id)) {
             MaterialCoupon mc = new MaterialCoupon();
@@ -51,19 +53,19 @@ public class MaterialCouponDeleteServiceImpl implements MaterialCouponDeleteServ
 
                 // 删除优惠券码信息
                 if (materialCouponCodeDao.updateByCouponId(id) >= 0) {
-                    baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), 1, null);
+                    baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE, null);
                 } else {
 
                     baseOutput =
-                            new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), 1, null);
+                            new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
                 }
 
             } else {
-                baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), 1, null);
+                baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ONE, null);
             }
 
         } else {
-            baseOutput = new BaseOutput(1, "非未使用状态,不可操作!", 1, null);
+            baseOutput = new BaseOutput(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getCode(),ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
         }
 
         return baseOutput;
@@ -74,12 +76,12 @@ public class MaterialCouponDeleteServiceImpl implements MaterialCouponDeleteServ
      * @param 优惠券id
      * @return 优惠券实体
      */
-    private boolean findIsUse(Long id) {
+    private boolean findIsUse(long id) {
 
         MaterialCoupon mcp = materialCouponDao.selectOneCoupon(id);
         boolean flag = true;
         if (mcp != null) {
-            if (!"unused".equals(mcp.getCouponStatus())) {
+            if (!MaterialCouponStatusEnum.UNUSED.getCode().equals(mcp.getCouponStatus())) {
                 flag = false;
             }
         }

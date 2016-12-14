@@ -163,7 +163,7 @@
 	
 	<!-- 至优惠码成删除状态 -->
 	<update id="updateByCouponId" parameterType="long">
-		update material_coupon_code set status=1 where coupon_id=#{id}
+		update material_coupon_code set status=1 where coupon_id=#{id} and status=0
 	</update>
 	
 	<!-- 批量修改记录通过主键和有效状态 -->
@@ -225,16 +225,37 @@
         VALUES
 		<foreach collection="list" item="item" index="index" separator="," >
 			(
-			#{item.coupon_id},
+			#{item.couponId},
 			#{item.code},
 			#{item.user},
-			#{item.release_status},
-			#{item.verify_status},
-			#{item.verify_time},
+			#{item.releaseStatus},
+			#{item.verifyStatus},
+			#{item.verifyTime},
 			#{item.status},
-			#{item.create_time},
-			#{item.update_time}
+			#{item.createTime},
+			#{item.updateTime}
 			)
 		</foreach>
 	</insert>
+	
+		<!-- 已发放所有的数量 -->
+	<select id="getTotleIssuedListCount" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode" resultType="int">
+		<![CDATA[SELECT count(1)]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE_ISSUED"/>
+	</select>
+	<!-- 所有的数量-->
+	<select id="getTotleListCount" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode" resultType="int">
+		<![CDATA[SELECT count(1)]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 删除优惠码  -->
+	<delete id="deleteCodeByCouponId" parameterType="Long">
+		delete 
+		<include refid="QUERY_FROM_TABLE"/>
+		where coupon_id = #{id}
+	</delete>
+	
 </mapper>

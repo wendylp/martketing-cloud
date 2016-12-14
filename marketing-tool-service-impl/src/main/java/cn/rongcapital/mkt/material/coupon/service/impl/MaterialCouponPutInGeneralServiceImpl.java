@@ -18,6 +18,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
@@ -37,14 +38,22 @@ public class MaterialCouponPutInGeneralServiceImpl implements MaterialCouponPutI
     @Autowired
     private MaterialCouponDao materialCouponDao;
 
+    
+    /**
+    @author liuhaizhan
+  * @功能简述 投放统计实体
+  * @param：优惠券Id
+  * @return：message2
+  */ 
+    
     @Override
-    public Object PutInGeneral(long id) {
+    public BaseOutput putInGeneral(long id) {
         // TODO Auto-generated method stub
         // return null;
 
         List<Map> data = materialCouponDao.getPutInCoupon(id);
         CouponPutInGeneral cpi = new CouponPutInGeneral();
-        BaseOutput outPut = new BaseOutput(0, "success", 1, null);
+        BaseOutput outPut = new BaseOutput(0, "success", ApiConstant.INT_ONE, null);
         for (Map map : data) {
             cpi.setRestCount(Integer.valueOf(map.get("rest_count").toString()));
             doPutIndata(cpi, map);

@@ -40,9 +40,11 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeCheckService
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeVerifyListService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCountGetService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponDeleteService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponEditDetailService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGeneralGetService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGetSystemTimeService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
+
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPutInGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralService;
@@ -50,6 +52,8 @@ import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
+import cn.rongcapital.mkt.material.po.MaterialAccessProperty;
+import cn.rongcapital.mkt.material.service.MaterialCouponPropertiesService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
@@ -103,6 +107,16 @@ public class CouponApi {
 	
 	@Autowired
     private CouponCodeDictionaryService dictionaryService; //获取核销页面数据字典
+	
+	 @Autowired
+    private MaterialCouponEditDetailService materialCouponEditDetailService;
+	    
+	    @Autowired
+	private MaterialCouponPropertiesService  materialCouponPropertiesService;
+	
+	
+	
+	
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -198,8 +212,8 @@ public class CouponApi {
     @POST
     @Path("/mkt.material.coupon.delete")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public Object Delete(@Valid MaterialCouponDeleteIn mcdi) {
-        return materialCouponDeleteService.Delete(mcdi.getId());
+    public BaseOutput delete(@Valid MaterialCouponDeleteIn mcdi) {
+        return materialCouponDeleteService.delete(mcdi.getId());
     }
 
     /**
@@ -210,10 +224,9 @@ public class CouponApi {
      */
     @GET
     @Path("/mkt.material.coupon.putInGeneral")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    public Object getPutInGeneral(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id) {
-        return materialCouponPutInGeneralService.PutInGeneral(id);
+    public BaseOutput getPutInGeneral(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id) {
+        return materialCouponPutInGeneralService.putInGeneral(id);
     }
 
    
@@ -310,7 +323,7 @@ public class CouponApi {
      */
     @GET
     @Path("/mkt.material.coupon.check")
-    public BaseOutput MaterialCouponCodeCheck(
+    public BaseOutput materialCouponCodeCheck(
             @NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, 
             @NotNull  @QueryParam("id") Long id,
@@ -330,8 +343,9 @@ public class CouponApi {
     @POST
     @Path("/mkt.materiel.coupon.save")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public BaseOutput couponSave(@NotEmpty @QueryParam("user_token") String userToken,@Valid CouponInfoIn couponInfo){
-        return couponSaveService.save(couponInfo);
+    public BaseOutput couponSave(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @Valid CouponInfoIn couponInfo){
+        return couponSaveService.save(couponInfo, userToken);
     }
     
     /**
@@ -348,7 +362,7 @@ public class CouponApi {
      */
     @GET
     @Path("/mkt.material.coupon.verify")
-    public BaseOutput MaterialCouponCodeVerify(
+    public BaseOutput materialCouponCodeVerify(
             @NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, 
             @NotNull  @QueryParam("id") Long id,
@@ -413,4 +427,35 @@ public class CouponApi {
 
         return this.dictionaryService.materialCouponDictionary(type);
     }
+    
+    
+    /**
+     * @author liuhaizhan
+     * @功能简述:返回编辑页
+     * @param
+     * @return
+     */
+    @GET
+    @Path("/mkt.material.coupon.editdetail")
+    public BaseOutput getEditDetail(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id) {
+        return materialCouponEditDetailService.getCouponEditdes(id);
+    }
+    
+    /**
+     * @author liuhaizhan
+     * @功能简述: 返回单个物料所有可接入配置属性
+     * @param
+     * @return
+     */
+    @GET
+    @Path("/mkt.material.coupon.properties")
+    public BaseOutput getProperties(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id) {
+        MaterialAccessProperty mapro = new MaterialAccessProperty();
+        mapro.setMaterialTypeId(id);
+        mapro.setStatus((byte) 0);
+        return materialCouponPropertiesService.getProperties(mapro);
+    }
+    
 }
