@@ -156,20 +156,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;
 import org.codehaus.jettison.json.*;
-//import org.codehaus.jettison.json.*;
 
 String userId = vars.get(&quot;user_id&quot;);
 String userToken = props.get(&quot;user_token&quot;);
 String ver = vars.get(&quot;ver&quot;);
 String method = vars.get(&quot;method&quot;);
 
-String path = vars.get(&quot;path&quot;);
-String filePath;
-if(path != null) { 
-	filePath = path + &quot;requestParameter/&quot;+ method +&quot;.json&quot;;
-} else {
-	filePath = &quot;./requestParameter/&quot;+ method +&quot;.json&quot;;
-}
+
+File jmeterBinFile = new File(&quot;&quot;);
+String jmeterPath = jmeterBinFile.getCanonicalPath();
+// 获取marketing-tool-jmeter的绝对路径
+String filePath = jmeterPath.substring(0,jmeterPath.length()-17);
+filePath = filePath + &quot;src/test/jmeter/config/requestParameter/&quot;+ method +&quot;.json&quot;;
+
 
 // 输出读入的内容
 String httpRequsetMethods = &quot;GET&quot;;

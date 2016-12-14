@@ -6,7 +6,7 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.service;
 
-import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
 
 public interface MaterialCouponPageListService {
 
@@ -21,6 +21,6 @@ public interface MaterialCouponPageListService {
      * @author xie.xiaoliang
      * @since 2016年12月7日
      */
-    BaseOutput getMaterialCouponListByKeyword(String channelCode, String couponStatus,
+    MaterialCouponListOut getMaterialCouponListByKeyword(String channelCode, String couponStatus,
             String keyword, Integer index, Integer size);
 }

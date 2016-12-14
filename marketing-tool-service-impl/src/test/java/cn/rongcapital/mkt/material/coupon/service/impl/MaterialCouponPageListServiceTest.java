@@ -32,7 +32,7 @@ import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
-import cn.rongcapital.mkt.material.coupon.service.impl.MaterialCouponPageListServiceImpl;
+import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -135,11 +135,11 @@ public class MaterialCouponPageListServiceTest {
                 .argThat(new MaterialCouponPageListServiceTest.MaterialCouponMatcherMockTwo((paramMaterialCoupon)))))
                 .thenReturn(totalCount);
 
-        BaseOutput baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), couponStatus.getCode(),
+        MaterialCouponListOut baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), couponStatus.getCode(),
                 keyword, index, size);
         Assert.assertEquals(baseOutput.getCode(), ApiErrorCode.SUCCESS.getCode());
         Assert.assertEquals(totalCount, baseOutput.getTotalCount());
-        Assert.assertEquals(1, baseOutput.getData().size());
+        Assert.assertEquals(1, baseOutput.getListItems().size());
     }
     
     @Test
@@ -204,11 +204,11 @@ public class MaterialCouponPageListServiceTest {
                 .argThat(new MaterialCouponPageListServiceTest.MaterialCouponMatcherMockTwo((paramMaterialCoupon)))))
                 .thenReturn(totalCount);
 
-        BaseOutput baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), couponStatus.getCode(),
+        MaterialCouponListOut baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), couponStatus.getCode(),
                 keyword, index, size);
         Assert.assertEquals(baseOutput.getCode(), ApiErrorCode.SUCCESS.getCode());
         Assert.assertEquals(totalCount, baseOutput.getTotalCount());
-        Assert.assertEquals(1, baseOutput.getData().size());
+        Assert.assertEquals(1, baseOutput.getListItems().size());
     }
 
     class MaterialCouponMatcherMockTwo extends ArgumentMatcher<MaterialCoupon> {
