@@ -5,7 +5,13 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
 
 public class ImgTextAsset extends BaseQuery {
-    private Integer id;
+		
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
 
     private String name;
 
@@ -18,6 +24,8 @@ public class ImgTextAsset extends BaseQuery {
     private String mobilePreviewUrl;
 
     private String imgfileUrl;
+    
+    private String imgfileName;
 
     private String materialId;
 
@@ -40,6 +48,8 @@ public class ImgTextAsset extends BaseQuery {
     private Byte wxType;
 
     private String digest;
+    
+    private Byte firstAsset;
 
     public Integer getId() {
         return id;
@@ -184,4 +194,22 @@ public class ImgTextAsset extends BaseQuery {
     public void setDigest(String digest) {
         this.digest = digest == null ? null : digest.trim();
     }
+
+	public String getImgfileName() {
+		return imgfileName;
+	}
+
+	public void setImgfileName(String imgfileName) {
+		this.imgfileName = imgfileName;
+	}
+    
+    public Byte getFirstAsset() {
+        return firstAsset;
+    }
+
+    public void setFirstAsset(Byte firstAsset) {
+        this.firstAsset = firstAsset;
+    }
+
+	
 }

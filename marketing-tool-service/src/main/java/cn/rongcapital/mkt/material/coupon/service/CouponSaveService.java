@@ -5,6 +5,6 @@ import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
 public interface CouponSaveService {
 
-    BaseOutput save(CouponInfoIn couponInfo);
+    BaseOutput save(CouponInfoIn couponInfo,String user_token);
 
 }

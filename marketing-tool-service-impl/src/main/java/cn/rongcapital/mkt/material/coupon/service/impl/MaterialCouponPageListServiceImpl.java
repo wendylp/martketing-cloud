@@ -22,6 +22,7 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
+import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListItemOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
 @Service
@@ -40,19 +41,19 @@ public class MaterialCouponPageListServiceImpl implements MaterialCouponPageList
      * java.lang.Integer, java.lang.Integer)
      */
     @Override
-    public BaseOutput getMaterialCouponListByKeyword(String channelCode,
+    public MaterialCouponListOut getMaterialCouponListByKeyword(String channelCode,
             String couponStatus, String keyword, Integer index, Integer size) {
-        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-                ApiConstant.INT_ZERO, null);
+        MaterialCouponListOut baseOutput = new MaterialCouponListOut(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                ApiConstant.INT_ZERO);
 
         MaterialCoupon paramMaterialCoupon = new MaterialCoupon();
         
         if(StringUtils.isEmpty(channelCode) || !MaterialCouponChannelCodeEnum.contains(channelCode)){
-            return new BaseOutput(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
-                ApiConstant.INT_ZERO, null); 
+            return new MaterialCouponListOut(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
+                ApiConstant.INT_ZERO); 
         }else if(!StringUtils.isEmpty(couponStatus) && !MaterialCouponStatusEnum.contains(couponStatus)){
-            return new BaseOutput(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
-                ApiConstant.INT_ZERO, null);
+            return new MaterialCouponListOut(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
+                ApiConstant.INT_ZERO);
         }
         
         paramMaterialCoupon.setChannelCode(channelCode);
@@ -68,18 +69,18 @@ public class MaterialCouponPageListServiceImpl implements MaterialCouponPageList
         if (CollectionUtils.isEmpty(meterialCouponList)) {
             return baseOutput;
         }
-        MaterialCouponListOut materialCouponListOut = null;
+        MaterialCouponListItemOut materialCouponListOut = null;
         //遍历查询的结果集
         for (MaterialCoupon item : meterialCouponList) {
-            materialCouponListOut = new MaterialCouponListOut();
+            materialCouponListOut = new MaterialCouponListItemOut();
             //按照相同字段进行复制
             BeanUtils.copyProperties(item,materialCouponListOut);
             String createTimeStamp = item.getCreateTime() != null ? String.valueOf( item.getCreateTime().getTime()/1000) :"";
             materialCouponListOut.setCreateTime(createTimeStamp);
             //保存在结果对象中
-            baseOutput.getData().add(materialCouponListOut);
+            baseOutput.getListItems().add(materialCouponListOut);
         }
-         baseOutput.setTotal(baseOutput.getData().size());
+         baseOutput.setTotal(baseOutput.getListItems().size());
          baseOutput.setTotalCount(totalCount);
         return baseOutput;
     }

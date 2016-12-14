@@ -10,128 +10,38 @@
  *************************************************/ 
 package cn.rongcapital.mkt.material.coupon.vo.out;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import cn.rongcapital.mkt.vo.BaseOutput;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MaterialCouponListOut {
-    private Long id;
-    private String couponStatus;
-    private String title;
-    private String createTime;
-    private Integer stockTotal;
-    private Integer stockRest;
-    private BigDecimal amount;
-    private String channelCode;
+public class MaterialCouponListOut extends BaseOutput{
     
-    /**
-     * @return the id
-     */
-    @JsonProperty("id")
-    public Long getId() {
-        return id;
+    private List<MaterialCouponListItemOut> listItems = new ArrayList<>();
+
+    public MaterialCouponListOut() {
+        super();
     }
+
     /**
-     * @param id the id to set
+     * @param code
+     * @param msg
+     * @param total
      */
-    public void setId(Long id) {
-        this.id = id;
-    }
-    /**
-     * @return the couponStatus
-     */
-    @JsonProperty("coupono_status")
-    public String getCouponStatus() {
-        return couponStatus;
-    }
-    /**
-     * @param couponStatus the couponStatus to set
-     */
-    public void setCouponStatus(String couponStatus) {
-        this.couponStatus = couponStatus;
-    }
-    /**
-     * @return the title
-     */
-    @JsonProperty("title")
-    public String getTitle() {
-        return title;
-    }
-    /**
-     * @param title the title to set
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    /**
-     * @return the createTime
-     */
-    @JsonProperty("create_time")
-    public String getCreateTime() {
-        return createTime;
-    }
-    /**
-     * @param createTime the createTime to set
-     */
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public MaterialCouponListOut(int code, String msg, int total) {
+        super(code, msg, total, null);
     }
     
-    /**
-     * @return the stockTotal
-     */
-    @JsonProperty("stock_total")
-    public Integer getStockTotal() {
-        return stockTotal;
+    @JsonProperty("data")
+    public List<MaterialCouponListItemOut> getListItems() {
+        return listItems;
     }
-    /**
-     * @param stockTotal the stockTotal to set
-     */
-    public void setStockTotal(Integer stockTotal) {
-        this.stockTotal = stockTotal;
+
+    public void setListItems(List<MaterialCouponListItemOut> listItems) {
+        this.listItems = listItems;
     }
-    /**
-     * @return the stockRest
-     */
-    @JsonProperty("stock_rest")
-    public Integer getStockRest() {
-        return stockRest;
-    }
-    /**
-     * @param stockRest the stockRest to set
-     */
-    public void setStockRest(Integer stockRest) {
-        this.stockRest = stockRest;
-    }
-    
-    /**
-     * @return the amount
-     */
-    @JsonProperty("amount")
-    public BigDecimal getAmount() {
-        return amount;
-    }
-   
-    /**
-     * @param amount the amount to set
-     */
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-    /**
-     * @return the chanelCode
-     */
-    @JsonProperty("channel_code")
-    public String getChannelCode() {
-        return channelCode;
-    }
-    /**
-     * @param channelCode the chanelCode to set
-     */
-    public void setChannelCode(String channelCode) {
-        this.channelCode = channelCode;
-    }
-    
 }

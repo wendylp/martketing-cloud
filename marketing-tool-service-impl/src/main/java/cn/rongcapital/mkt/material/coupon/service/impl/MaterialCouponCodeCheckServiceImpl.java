@@ -12,13 +12,16 @@ package cn.rongcapital.mkt.material.coupon.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.MaterialCouponCodeMaxTypeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
@@ -28,6 +31,8 @@ import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeCheckService;
+import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
+import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOutItem;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
@@ -41,6 +46,12 @@ public class MaterialCouponCodeCheckServiceImpl
     @Autowired
     private MaterialCouponDao materialCouponDao;
 
+    
+    private static final long MAX_COUNT = 1000000;
+    
+    private static final char[] LETTERS = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    private static final char[] NUMBERS = {0,1,2,3,4,5,6,7,8,9};
+    
     /*
      * (non-Javadoc)
      * 
@@ -182,5 +193,49 @@ public class MaterialCouponCodeCheckServiceImpl
             return validateResult;
         }
     }
+    
+    /*
+     * @see
+     * cn.rongcapital.mkt.service.MaterialCouponCodeCheckService#materialCouponCodeMaxCount(java.
+     * lang.String, int)
+     */
+    @Override
+    public CouponCodeMaxCountOut materialCouponCodeMaxCount(String typeCode, int length) {
+        MaterialCouponCodeMaxTypeEnum type = MaterialCouponCodeMaxTypeEnum.getByCode(typeCode);
+        long maxCount = 1L;
+        if (MaterialCouponCodeMaxTypeEnum.contains(typeCode)) {
+            switch (type) {
+                case LETTER:
+                    maxCount = getMaxCount(length, LETTERS.length);
+                    break;
+                case NUMBER:
+                    maxCount = getMaxCount(length, NUMBERS.length);
+                    break;
+                default:
+                    maxCount = getMaxCount(length, NUMBERS.length + LETTERS.length);
+                    break;
+            }
+        } else {
+            maxCount = 0;
+        }
 
+        // 如果组合计算出来的长度大于一百万，则只显示一百万
+        if (maxCount >= MAX_COUNT) {
+            maxCount = MAX_COUNT;
+        }
+        //构建结果集
+        CouponCodeMaxCountOut resultOut = new CouponCodeMaxCountOut(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE);
+        resultOut.getItems().add(new CouponCodeMaxCountOutItem(maxCount));
+        resultOut.setTotal(resultOut.getItems().size());
+        resultOut.setTotalCount(resultOut.getItems().size());
+        return resultOut;
+    }
+
+    private long getMaxCount(int typeLength, int length) {
+        long result = 1L;
+        for (int i = 0; i < typeLength; i++) {
+            result = result * length;
+        }
+        return result;
+    }
 }

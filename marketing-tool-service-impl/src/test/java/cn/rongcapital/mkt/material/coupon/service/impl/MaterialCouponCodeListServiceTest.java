@@ -33,7 +33,7 @@ import cn.rongcapital.mkt.service.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CouponCodeListServiceTest extends AbstractUnitTest {
+public class MaterialCouponCodeListServiceTest extends AbstractUnitTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -55,7 +55,7 @@ public class CouponCodeListServiceTest extends AbstractUnitTest {
         List<MaterialCouponCode> resultList = new ArrayList<>();
         MaterialCouponCode code = new MaterialCouponCode();
         code.setCouponId(12L);
-        Mockito.when(materialCouponCodeDao.selectList(Mockito.argThat(new CouponCodeListServiceTest.MaterialCouponCodeMatcherMockOne(code)))).thenReturn(resultList);
+        Mockito.when(materialCouponCodeDao.selectList(Mockito.argThat(new MaterialCouponCodeListServiceTest.MaterialCouponCodeMatcherMockOne(code)))).thenReturn(resultList);
         BaseOutput baseOutput = couponCodeListService.couponCodeList(12L, 0, 10);
         Assert.assertEquals(baseOutput.getCode(), ApiErrorCode.SUCCESS.getCode());
     }

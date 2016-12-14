@@ -11,8 +11,17 @@
  *************************************************/ 
 package cn.rongcapital.mkt.material.coupon.service;
 
+import cn.rongcapital.mkt.vo.BaseOutput;
+
 public interface MaterialCouponPutInGeneralService {
     
-    public Object PutInGeneral(long id);
+    /**
+     * @author liuhaizhan
+     * @功能简述: 返回获取发放统计数据
+     * @param 优惠券ID
+     * @return 
+     */
+   BaseOutput putInGeneral(long id);
+
 
 }

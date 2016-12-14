@@ -11,6 +11,7 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.service;
 
+import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface MaterialCouponCodeCheckService {
@@ -36,4 +37,12 @@ public interface MaterialCouponCodeCheckService {
      * @since 2016年12月12日
      */
     BaseOutput materialCouponCodeVerify(Long id ,String couponCode,String user);
+    
+    /**
+     * @功能描述: 获取优惠码最大可用数量
+     * @return BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月12日
+     */
+    CouponCodeMaxCountOut materialCouponCodeMaxCount(String typeCode, int length);
 }

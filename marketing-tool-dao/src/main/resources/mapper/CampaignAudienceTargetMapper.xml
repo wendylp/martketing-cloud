@@ -125,4 +125,11 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
+	
+	<!-- 根据细分id查询除了未发布的所有活动个数 -->
+	<select id="selectPublishStatusCount" parameterType="cn.rongcapital.mkt.po.CampaignAudienceTarget" resultType="int">
+		SELECT COUNT(h.publish_status) 
+		FROM campaign_audience_target t,campaign_head h 
+		where t.campaign_head_id =h.id and (h.publish_status =1 or h.publish_status =2) and t.segmentation_id = #{segmentationId}
+	</select>
 </mapper>

@@ -11,6 +11,16 @@
  *************************************************/ 
 package cn.rongcapital.mkt.material.service;
 
-public interface MaterialCouponProperties {
+import cn.rongcapital.mkt.material.po.MaterialAccessProperty;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
+public interface MaterialCouponPropertiesService {
+  
+    /**
+     * @author liuhaizhan
+     * @功能简述: 获取单个物料所有可接入配置属性
+     * @param 
+     * @return 
+     */
+BaseOutput getProperties(MaterialAccessProperty materialAccessProperty);
 }

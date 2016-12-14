@@ -16,6 +16,7 @@ public enum ApiErrorCode {
 	
 	PARAMETER_ERROR(1001,"parameter error"),//1001-1999,参数相关错误码
 	VALIDATE_ERROR(1002,"validation failed"),//校验失败
+	FILE_ERROR(1003,"file is null"),
 	
 	DB_ERROR(2001,"DB error"),//2001-2999,数据库相关的错误码
 	DB_ERROR_TABLE_DATA_NOT_EXIST(2002,"table data not exist"),//数据在表里不存在
@@ -39,11 +40,10 @@ public enum ApiErrorCode {
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CHECK_VERIFY(3013,"coupon code verify status is not unverify"),//当前优惠码的核销状态不是未使用
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CHECK_NOT_IN_PERIOD(3014,"coupon code is not in the period of validity"),//当前优惠码不在有效期范围内
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_VERIFY_FAILD(3015,"coupon code verify faild"),//优惠码核销失败
+	BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR(3016,"非未使用状态,不可操作!"),
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CREATE_AUDIENCE(3017,"coupon have not related to task yet"),//优惠券没有关联任务ID
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CREATE_AUDIENCE_FAILED(3018,"create target group of people faild"),//新建固定人群失败
-    
 
-	
 	SMS_ERROR_MATERIAL_CAN_NOT_DELETE(4001,"can not delete the material"),
 	SMS_ERROR_MATERIAL_CAN_NOT_UPDATE(4002,"can not update the material"),
 	SMS_ERROR_TEMPLETE_CAN_NOT_DELETE(4003,"can not delete the templete"),
