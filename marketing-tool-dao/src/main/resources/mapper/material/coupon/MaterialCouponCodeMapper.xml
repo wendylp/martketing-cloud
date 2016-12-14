@@ -163,7 +163,7 @@
 	
 	<!-- 至优惠码成删除状态 -->
 	<update id="updateByCouponId" parameterType="long">
-		update material_coupon_code set status=1 where coupon_id=#{id}
+		update material_coupon_code set status=1 where coupon_id=#{id} and status=0
 	</update>
 	
 	<!-- 批量修改记录通过主键和有效状态 -->
