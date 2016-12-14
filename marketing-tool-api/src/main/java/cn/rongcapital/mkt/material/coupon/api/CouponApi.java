@@ -35,6 +35,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
 import cn.rongcapital.mkt.material.coupon.service.CouponSaveService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponAudienceCreateService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeCheckService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeVerifyListService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCountGetService;
@@ -96,6 +97,9 @@ public class CouponApi {
     
 	@Autowired
 	private MaterialCouponVerifyGeneralService materialCouponVerifyGeneralService;
+	
+	@Autowired
+	private MaterialCouponAudienceCreateService materialCouponAudienceCreateService;
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -368,4 +372,27 @@ public class CouponApi {
 			@NotEmpty @QueryParam("ver") String version, @NotNull @QueryParam("id") Long id) {
 		return materialCouponVerifyGeneralService.verifyGeneralById(id, userToken, version);
 	}
+	
+    /**
+     * 根据筛选条件新建固定人群
+     * 
+     * 接口：mkt.material.coupon.verifyGeneral
+     * 
+     * @param user_token
+     * @param ver
+     * @param id
+     * @param id
+     * @author shanjingqi
+     * @Date 2016-12-13
+     */
+	@POST
+    @Path("/mkt.material.coupon.audience.create")
+    public BaseOutput createTargetAudienceGroup(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String version, @NotNull @QueryParam("id") Long id,
+            @NotEmpty @QueryParam("name") String name, @QueryParam("blur_search") String blurSearch,
+            @QueryParam("receive_status") String releaseStatus, @QueryParam("verify_status") String verifyStatus,
+            @QueryParam("expire_status") String expireStatus) {
+        return materialCouponAudienceCreateService.createTargetAudienceGroup(id, name, blurSearch, releaseStatus,
+                verifyStatus, expireStatus);
+    }
 }
