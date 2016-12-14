@@ -36,4 +36,12 @@ public interface MaterialCouponCodeCheckService {
      * @since 2016年12月12日
      */
     BaseOutput materialCouponCodeVerify(Long id ,String couponCode,String user);
+    
+    /**
+     * @功能描述: 获取优惠码最大可用数量
+     * @return BaseOutput
+     * @author xie.xiaoliang
+     * @since 2016年12月12日
+     */
+    BaseOutput materialCouponCodeMaxCount(String typeCode, int length);
 }
