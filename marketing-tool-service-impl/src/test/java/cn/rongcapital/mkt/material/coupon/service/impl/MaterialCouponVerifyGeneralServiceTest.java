@@ -2,7 +2,7 @@
  * @功能简述: MaterialCouponVerifyGeneralService实现测试类
  * @项目名称: marketing cloud
  * @see: 
- * @author: 
+ * @author: shanjingqi
  * @version: 0.0.1
  * @date: 
  * @复审人: 
@@ -79,7 +79,7 @@ public class MaterialCouponVerifyGeneralServiceTest {
 	
 	@Test
 	public void testVerifyGeneralById() {
-		logger.info("测试方法: releaseGeneralById start");
+		logger.info("测试方法: verifyGeneralById start");
 		
 		MaterialCoupon mc = new MaterialCoupon();
 		mc.setAmount(new BigDecimal("8.01"));
@@ -97,7 +97,7 @@ public class MaterialCouponVerifyGeneralServiceTest {
         Assert.assertEquals(map0.get("actual_verify_amount"),resultmap0.get("actual_verify_amount"));
         Assert.assertEquals(result0.getData().size(),1);
 		
-		logger.info("测试方法: releaseGeneralById end");
+		logger.info("测试方法: verifyGeneralById end");
 	}
 
 	@After

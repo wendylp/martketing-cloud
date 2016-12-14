@@ -9,6 +9,8 @@
 *************************************************/
 package cn.rongcapital.mkt.dao.material.coupon;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
@@ -37,6 +40,10 @@ public class MaterialCouponDaoSelectStockTotalTest extends AbstractUnitTest {
 	@Autowired
 	private MaterialCouponDao materialCouponDao;
 
+    private static final Date now = new Date();
+    
+    private Long couponId;
+    
 	@Before
 	public void setUp() throws Exception {
 		logger.info("测试: MaterialCouponDao 开始---------------------");
@@ -51,15 +58,24 @@ public class MaterialCouponDaoSelectStockTotalTest extends AbstractUnitTest {
 		mc.setSourceCode(MaterialCouponSourceCodeEnum.GENERATE.getCode());
 		mc.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
 		mc.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
+		mc.setStockRest(2000);
+		mc.setAmount(new BigDecimal("10.1"));
+		mc.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
+	    mc.setStartTime(now);
+	    mc.setEndTime(new Date());
 		mc.setStatus((byte) 0);
 		mc.setStockTotal(314159265);
-		materialCouponDao.insert(mc);
 		
-		List<MaterialCoupon> mcl = materialCouponDao.selectList(mc);
-		mcl.get(0).getId();
-		
+        List<MaterialCoupon> mcl = materialCouponDao.selectList(mc);
+        if (mcl.size() == 0) {
+            materialCouponDao.insert(mc);
+        } else {
+            mc.setId(mcl.get(0).getId());
+        }
+        couponId = mc.getId();
+        
 		Map<String, Object> paramMap = new HashMap();
-		paramMap.put("id",  mcl.get(0).getId());
+		paramMap.put("id",  couponId);
 		Long result = materialCouponDao.selectStockTotalByCouponId(paramMap);
 		Assert.assertEquals(314159265, result.longValue());
 		
