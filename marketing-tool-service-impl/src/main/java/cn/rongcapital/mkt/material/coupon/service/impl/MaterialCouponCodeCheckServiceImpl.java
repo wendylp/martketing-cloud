@@ -18,6 +18,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -34,6 +36,8 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeCheckService
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOutItem;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 
 @Service
 public class MaterialCouponCodeCheckServiceImpl
@@ -60,6 +64,7 @@ public class MaterialCouponCodeCheckServiceImpl
      * Long, java.lang.String, java.lang.String)
      */
     @Override
+    @ReadWrite(type = ReadWriteType.READ)
     public BaseOutput materialCouponCodeCheck(Long id, String couponCode,
             String user) {
         
@@ -158,6 +163,8 @@ public class MaterialCouponCodeCheckServiceImpl
      * Long, java.lang.String, java.lang.String)
      */
     @Override
+    @ReadWrite(type = ReadWriteType.WRITE)
+    @Transactional(propagation = Propagation.REQUIRED)
     public BaseOutput materialCouponCodeVerify(Long id, String couponCode,
             String user) {
         BaseOutput successResult = new BaseOutput(
@@ -200,6 +207,7 @@ public class MaterialCouponCodeCheckServiceImpl
      * lang.String, int)
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED,readOnly=true)
     public CouponCodeMaxCountOut materialCouponCodeMaxCount(String typeCode, int length) {
         MaterialCouponCodeMaxTypeEnum type = MaterialCouponCodeMaxTypeEnum.getByCode(typeCode);
         long maxCount = 1L;

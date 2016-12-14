@@ -25,6 +25,8 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListItemOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 @Service
 public class MaterialCouponPageListServiceImpl implements MaterialCouponPageListService {
 
@@ -41,6 +43,7 @@ public class MaterialCouponPageListServiceImpl implements MaterialCouponPageList
      * java.lang.Integer, java.lang.Integer)
      */
     @Override
+    @ReadWrite(type = ReadWriteType.READ)
     public MaterialCouponListOut getMaterialCouponListByKeyword(String channelCode,
             String couponStatus, String keyword, Integer index, Integer size) {
         MaterialCouponListOut baseOutput = new MaterialCouponListOut(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
