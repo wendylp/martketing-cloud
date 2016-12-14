@@ -3,6 +3,9 @@ package cn.rongcapital.mkt.vo.in;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -24,6 +27,7 @@ public class CouponInfoIn {
     private String rule;
     @NotNull
     @JsonProperty("stock_total")
+    @Min(0) @Max(1000000)
     private Integer stock_total;
     @NotNull
     @JsonProperty("amount")
