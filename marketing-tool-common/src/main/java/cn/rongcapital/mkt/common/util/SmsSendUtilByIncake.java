@@ -42,8 +42,8 @@ public class SmsSendUtilByIncake {
     private static final String MESSAGE_SEND_URL = "http://gk.incake.net/YunXiangSMS/SendCRMSms";
     private static final String DEFAULT_PARTNER_NAME = "云像";
     private static final String DEFAULT_PARTNER_NO = "001";
-//    private static final String INCAKE_NUM = "6415DAE359507AE62A875533B90A80B6";
-    private static final String INCAKE_NUM = "ERROR_INCAKE_NUM";
+    private static final String INCAKE_NUM = "6415DAE359507AE62A875533B90A80B6";
+    //private static final String INCAKE_NUM = "ERROR_INCAKE_NUM";
     private static final String[] BATCH_RETURN_ERROR_CODE_LIST = {"-1001", "-1004", "-0000"};
     
     /* 
