@@ -25,14 +25,22 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.service.SegmentHeaderGetService;
+import cn.rongcapital.mkt.service.SegmentManageCalService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
 public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
+	public static final  Integer POOL_INDEX = 2;
+	
+	public static final String SEGMENT_COVER_ID_STR="segmentcoverid:";
+	
 	@Autowired
     SegmentationHeadDao segmentationHeadDao;
+	
+	@Autowired
+	private SegmentManageCalService segmentManageCalService;
 	
 	@Override
 	public BaseOutput segmentHeaderGet(String userToken, String ver, String segmentId) {
@@ -49,6 +57,11 @@ public class SegmentHeaderGetServiceImpl implements SegmentHeaderGetService {
 				SegmentationHead s = list.get(0);
 				map.put("segment_name", s.getName());
 				map.put("publish_status", s.getPublishStatus());
+				
+				//redis 中获取覆盖人数
+				Long coverCount = segmentManageCalService.scard(POOL_INDEX, SEGMENT_COVER_ID_STR+s.getId());
+				map.put("cover_count", coverCount);
+				
 				map.put("oper", "奥巴马");//TO DO:MOCK
 				map.put("id", t.getId());
 				map.put("updatetime", "2016-06-01 14:26:01");
