@@ -15,6 +15,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.druid.support.json.JSONUtils;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
@@ -54,6 +56,7 @@ public class MaterialCouponEditDetailServiceImpl implements MaterialCouponEditDe
             List data = new ArrayList();
             CouPonEditInfoOut cpdi = new CouPonEditInfoOut();
             BeanUtils.copyProperties(mcp, cpdi);
+            cpdi.setRlObject(JSONUtils.parse(mcp.getRule()==null?"{}":mcp.getRule())); //JSON 字符串 转换成Object对象
             cpdi.setAmount(mcp.getAmount()==null?0:mcp.getAmount().doubleValue());
             cpdi.setStartTime(mcp.getStartTime() == null ? 0 : mcp.getStartTime().getTime());
             cpdi.setEndTime(mcp.getEndTime() == null ? 0 : mcp.getEndTime().getTime());
