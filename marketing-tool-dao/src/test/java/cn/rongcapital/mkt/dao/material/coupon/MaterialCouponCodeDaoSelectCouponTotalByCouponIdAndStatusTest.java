@@ -27,6 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
+import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.po.MeterialCouponCodeCountByStatus;
 
@@ -50,14 +51,28 @@ public class MaterialCouponCodeDaoSelectCouponTotalByCouponIdAndStatusTest exten
 		mcc1.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
 		mcc1.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());
 		mcc1.setStatus((byte) 0);
-		mockList.add(mcc1);
-		
+		mcc1.setUser("18600000000");
+        List<MaterialCouponCode> mcl = materialCouponCodeDao.selectList(mcc1);
+        if (mcl.size() == 0) {
+            materialCouponCodeDao.insert(mcc1);
+        } else {
+            mcc1.setId(mcl.get(0).getId());
+        }
+        mockList.add(mcc1);
+        
 		MaterialCouponCode mcc2 = new MaterialCouponCode();
 		mcc2.setCouponId(99999999999999l);
 		mcc2.setCode("UT测试数据" +(int) (Math.random() * 10000000));
 		mcc2.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRECEIVED.getCode());
 		mcc2.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
 		mcc2.setStatus((byte) 0);
+		mcc2.setUser("18600000001");
+        List<MaterialCouponCode> mc2 = materialCouponCodeDao.selectList(mcc2);
+        if (mc2.size() == 0) {
+            materialCouponCodeDao.insert(mcc2);
+        } else {
+            mcc2.setId(mcl.get(0).getId());
+        }
 		mockList.add(mcc2);
 		
 		MaterialCouponCode mcc3 = new MaterialCouponCode();
@@ -66,7 +81,14 @@ public class MaterialCouponCodeDaoSelectCouponTotalByCouponIdAndStatusTest exten
 		mcc3.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
 		mcc3.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
 		mcc3.setStatus((byte) 0);
-		mockList.add(mcc3);
+	    mcc3.setUser("18600000002");
+        List<MaterialCouponCode> mc3 = materialCouponCodeDao.selectList(mcc3);
+        if (mc3.size() == 0) {
+            materialCouponCodeDao.insert(mcc3);
+        } else {
+            mcc3.setId(mcl.get(0).getId());
+        }
+	    mockList.add(mcc3);
 		
 		MaterialCouponCode mcc4 = new MaterialCouponCode();
 		mcc4.setCouponId(99999999999999l);
@@ -74,11 +96,15 @@ public class MaterialCouponCodeDaoSelectCouponTotalByCouponIdAndStatusTest exten
 		mcc4.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
 		mcc4.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.FAIL.getCode());
 		mcc4.setStatus((byte) 0);
+		mcc4.setUser("18600000003");
+        List<MaterialCouponCode> mc4 = materialCouponCodeDao.selectList(mcc4);
+        if (mc4.size() == 0) {
+            materialCouponCodeDao.insert(mcc4);
+        } else {
+            mcc4.setId(mcl.get(0).getId());
+        }
 		mockList.add(mcc4);
 		
-		for (MaterialCouponCode mcc : mockList) {
-			materialCouponCodeDao.insert(mcc);
-		}
 	}
 
 	@Test
