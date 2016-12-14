@@ -24,7 +24,7 @@ public class CouPonEditInfoOut {
     @JsonProperty("source_code")
     private String sourceCode;
     @JsonProperty("rule")
-    private String rule;
+    private Object rlObject;
     @JsonProperty("stock_total")
     private Integer stockTotal;
     @JsonProperty("amount")
@@ -53,11 +53,12 @@ public class CouPonEditInfoOut {
     public void setSourceCode(String sourceCode) {
         this.sourceCode = sourceCode;
     }
-    public String getRule() {
-        return rule;
+    
+    public Object getRlObject() {
+        return rlObject;
     }
-    public void setRule(String rule) {
-        this.rule = rule;
+    public void setRlObject(Object rlObject) {
+        this.rlObject = rlObject;
     }
     public Integer getStockTotal() {
         return stockTotal;

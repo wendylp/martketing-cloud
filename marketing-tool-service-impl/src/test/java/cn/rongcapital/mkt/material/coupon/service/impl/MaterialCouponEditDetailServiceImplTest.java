@@ -63,7 +63,7 @@ public class MaterialCouponEditDetailServiceImplTest {
         mcp=new MaterialCoupon();
         mcp.setId(123l);
         mcp.setTitle("test");
-        mcp.setRule("{'coupon_code': 48294}");
+        mcp.setRule("{\"coupon_code\": 48294}");
         mcp.setAmount(new BigDecimal(100));
         mcp.setCouponStatus(MaterialCouponStatusEnum.UNUSED.getCode());
         mcp.setChannelCode("sms");
@@ -84,7 +84,7 @@ public class MaterialCouponEditDetailServiceImplTest {
         mcp=new MaterialCoupon();
         mcp.setId(123l);
         mcp.setTitle("test");
-        mcp.setRule("{'coupon_code': 48294}");
+        mcp.setRule("{\"coupon_code\": 48294}");
         mcp.setCouponStatus(MaterialCouponStatusEnum.USED.getCode());
         BaseOutput fbase = new BaseOutput(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getCode(), ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getMsg(), 1, null);
         Mockito.when(materialCouponDao.selectOneCoupon(Mockito.anyLong())).thenReturn(mcp);
