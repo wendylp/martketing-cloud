@@ -10,6 +10,7 @@ package cn.rongcapital.mkt.material.coupon.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +32,7 @@ public class MaterialCouponCodeStatusUpdateServiceImpl implements MaterialCoupon
     /**
      * 批量处理最大数量
      */
-    public static final int BATCH_PROCESS_CNT = 50;
+    public static final int BATCH_PROCESS_CNT = 1000;
 
     @Autowired
     private MaterialCouponCodeDao materialCouponCodeDao;
@@ -47,11 +48,13 @@ public class MaterialCouponCodeStatusUpdateServiceImpl implements MaterialCoupon
     public void updateMaterialCouponCodeStatus(List<MaterialCouponCodeStatusUpdateVO> voList) {
         // 数据拆分
         List<List<MaterialCouponCodeStatusUpdateVO>> batchList = splitList(voList);
+        AtomicInteger part = new AtomicInteger(0);
         if (CollectionUtils.isNotEmpty(batchList)) {
-            for (List<MaterialCouponCodeStatusUpdateVO> batch : batchList) {
+            batchList.parallelStream().forEach(batch -> {
                 logger.debug("process coupon code param is {}.", batch);
                 processMaterialCouponCode(batch);
-            }
+                logger.info(">>>>>>>part [{}/{}]processed >>>>>>>", part.incrementAndGet(), batchList.size());
+            });
         }
     }
 
