@@ -112,8 +112,7 @@ public class CouponApi {
 	 @Autowired
     private MaterialCouponEditDetailService materialCouponEditDetailService;
 	    
-	    @Autowired
-	private MaterialCouponPropertiesService  materialCouponPropertiesService;
+	  
 	
 	@Autowired
 	private MaterialCouponAudienceCreateService materialCouponAudienceCreateService;
@@ -363,7 +362,7 @@ public class CouponApi {
      * @author xie.xiaoliang
      * @since 2016年12月9日
      */
-    @GET
+    @POST
     @Path("/mkt.material.coupon.verify")
     public BaseOutput materialCouponCodeVerify(
             @NotEmpty @QueryParam("user_token") String userToken,
@@ -443,21 +442,7 @@ public class CouponApi {
         return materialCouponEditDetailService.getCouponEditdes(id);
     }
     
-    /**
-     * @author liuhaizhan
-     * @功能简述: 返回单个物料所有可接入配置属性
-     * @param
-     * @return
-     */
-    @GET
-    @Path("/mkt.material.coupon.properties")
-    public BaseOutput getProperties(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id) {
-        MaterialAccessProperty mapro = new MaterialAccessProperty();
-        mapro.setMaterialTypeId(id);
-        mapro.setStatus((byte) 0);
-        return materialCouponPropertiesService.getProperties(mapro);
-    }
+   
     
 	
     /**

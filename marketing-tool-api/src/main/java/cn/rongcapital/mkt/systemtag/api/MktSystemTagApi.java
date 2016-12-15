@@ -279,7 +279,7 @@ public class MktSystemTagApi {
     @GET
     @Path("/mkt.tag.value.list.get")
     public BaseOutput getSystemtagList(@NotEmpty @QueryParam("user_token") String userToken,
-            @QueryParam("ver") String ver,@NotEmpty @QueryParam("tagId") String tagId,@NotNull 
+            @QueryParam("ver") String ver,@NotEmpty @QueryParam("tag_id") String tagId,@NotNull 
     		@QueryParam("index") Integer index,@NotNull @QueryParam("size") Integer size) {
         return systemTagService.getSystemTagValueList(tagId, index, size);
     }
