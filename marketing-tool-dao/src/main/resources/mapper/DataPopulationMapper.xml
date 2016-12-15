@@ -379,6 +379,13 @@
 		<![CDATA[WHERE mobile = #{mobile}]]>
 	</update>
 
+	<!-- 修改记录通过手机号 -->
+	<update id="updateDataPopulationByPubIdAndOpenId" parameterType="cn.rongcapital.mkt.po.DataPopulation">
+		<![CDATA[UPDATE data_population]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE wxmp_id = #{wxmpId} and wx_code = #{wxCode}]]>
+	</update>
+	
 	<select id="selectKeyidListByIdList" parameterType="java.util.List" resultType="java.lang.Integer">
 		SELECT keyid
 		<include refid="QUERY_FROM_TABLE"/>
