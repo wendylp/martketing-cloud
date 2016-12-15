@@ -33,7 +33,7 @@ public class TagSystemCustomTreeOut {
         this.tagCount = tagCount;
     }
 
-    @JsonProperty("tag_id")
+    @JsonProperty("tag_tree_id")
     public String getTagTreeId() {
         return tagTreeId;
     }
@@ -42,7 +42,7 @@ public class TagSystemCustomTreeOut {
         this.tagTreeId = tagTreeId == null?this.tagTreeId:tagTreeId;
     }
 
-    @JsonProperty("tag_name")
+    @JsonProperty("tag_tree_name")
     public String getTagTreeName() {
         return tagTreeName;
     }
