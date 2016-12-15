@@ -134,6 +134,7 @@ public class TaskManager {
                 }
                 // 停止内嵌的任务/线程
                 String serviceName = getServiceName(v.getServiceName());
+                logger.info("coming {},itemid is {}, serviceName is {}", v.getId(), v.getCampaignItemId(),serviceName); 
                 Object serviceBean = cotext.getBean(serviceName);
                 if (serviceBean instanceof TaskService) {
                     TaskService taskService = (TaskService) serviceBean;
