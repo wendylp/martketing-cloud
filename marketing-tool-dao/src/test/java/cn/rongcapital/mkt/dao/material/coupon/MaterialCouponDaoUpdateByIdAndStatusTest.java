@@ -9,6 +9,8 @@
  *************************************************/
 package cn.rongcapital.mkt.dao.material.coupon;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
@@ -49,6 +51,11 @@ public class MaterialCouponDaoUpdateByIdAndStatusTest extends AbstractUnitTest {
         coupon.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
         coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
         coupon.setTitle("zhuxuelongtest");
+        coupon.setStockRest(2);
+        coupon.setStockTotal(2);
+        coupon.setAmount(BigDecimal.valueOf(333));
+        coupon.setStartTime(new Date());
+        coupon.setEndTime(new Date());
         coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
         coupon.setStatus((byte)1);
         List<MaterialCoupon> dataList = materialCouponDao.selectList(coupon);
@@ -82,6 +89,11 @@ public class MaterialCouponDaoUpdateByIdAndStatusTest extends AbstractUnitTest {
         coupon.setType("voucher");
         coupon.setChannelCode("sms");
         coupon.setTitle("zhuxuelongtest");
+        coupon.setStockRest(2);
+        coupon.setStockTotal(2);
+        coupon.setAmount(BigDecimal.valueOf(333));
+        coupon.setStartTime(new Date());
+        coupon.setEndTime(new Date());
         coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
         coupon.setStatus((byte)0);
         List<MaterialCoupon> dataList = materialCouponDao.selectList(coupon);

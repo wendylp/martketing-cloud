@@ -9,6 +9,8 @@
  *************************************************/
 package cn.rongcapital.mkt.dao.material.coupon;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +46,11 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         coupon.setSourceCode(MaterialCouponSourceCodeEnum.COMMON.getCode());
         coupon.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
         coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
+        coupon.setStockRest(2);
+        coupon.setStockTotal(2);
+        coupon.setAmount(BigDecimal.valueOf(333));
+        coupon.setStartTime(new Date());
+        coupon.setEndTime(new Date());
         coupon.setTitle("zhuxuelongtest");
         coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
         coupon.setStatus(Byte.valueOf("0"));
@@ -55,6 +62,11 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         coupon.setSourceCode(MaterialCouponSourceCodeEnum.COMMON.getCode());
         coupon.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
         coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
+        coupon.setStockRest(2);
+        coupon.setStockTotal(2);
+        coupon.setAmount(BigDecimal.valueOf(333));
+        coupon.setStartTime(new Date());
+        coupon.setEndTime(new Date());
         coupon.setTitle("zhuxuelongtest");
         coupon.setStatus(Byte.valueOf("0"));
         coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASING.getCode());
@@ -66,6 +78,11 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         coupon.setSourceCode(MaterialCouponSourceCodeEnum.COMMON.getCode());
         coupon.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
         coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
+        coupon.setStockRest(2);
+        coupon.setStockTotal(2);
+        coupon.setAmount(BigDecimal.valueOf(333));
+        coupon.setStartTime(new Date());
+        coupon.setEndTime(new Date());
         coupon.setTitle("zhuxuelongtest");
         coupon.setStatus(Byte.valueOf("0"));
         coupon.setCouponStatus(MaterialCouponStatusEnum.UNUSED.getCode());
@@ -75,6 +92,11 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         }
         coupon = new MaterialCoupon();
         coupon.setSourceCode(MaterialCouponSourceCodeEnum.COMMON.getCode());
+        coupon.setStockRest(2);
+        coupon.setStockTotal(2);
+        coupon.setAmount(BigDecimal.valueOf(333));
+        coupon.setStartTime(new Date());
+        coupon.setEndTime(new Date());
         coupon.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
         coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
         coupon.setTitle("zhuxuelongtest");
