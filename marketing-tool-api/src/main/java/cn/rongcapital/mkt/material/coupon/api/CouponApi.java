@@ -363,7 +363,7 @@ public class CouponApi {
      * @author xie.xiaoliang
      * @since 2016年12月9日
      */
-    @GET
+    @POST
     @Path("/mkt.material.coupon.verify")
     public BaseOutput materialCouponCodeVerify(
             @NotEmpty @QueryParam("user_token") String userToken,
