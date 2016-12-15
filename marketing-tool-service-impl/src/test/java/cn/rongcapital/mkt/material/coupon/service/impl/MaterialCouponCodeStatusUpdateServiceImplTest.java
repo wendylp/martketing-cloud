@@ -80,6 +80,23 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         voList.add(vo);
         service.updateMaterialCouponCodeStatus(voList);
     }
+    
+    /**
+     * 空数据
+     */
+    @Test
+    public void test01_01() {
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                Assert.fail();
+                return null;
+            }
+        }).when(materialCouponCodeDao).batchUpdateByIdAndStatus(Mockito.any());
+        ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
+        List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
+        service.updateMaterialCouponCodeStatus(voList);
+    }
 
     /**
      * 不传ID
@@ -202,6 +219,18 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
                         ReflectionTestUtils.invokeMethod(service, "splitList", voList);
         Assert.assertEquals(3, actual.size());
         Assert.assertEquals(expecList, actual);
+    }
+    
+    /**
+     * 空数据
+     */
+    @Test
+    public void testSplitList02_01() {
+        ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
+        List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
+        List<List<MaterialCouponCodeStatusUpdateVO>> actual =
+                ReflectionTestUtils.invokeMethod(service, "splitList", voList);
+        Assert.assertNull(actual);
     }
 
 
