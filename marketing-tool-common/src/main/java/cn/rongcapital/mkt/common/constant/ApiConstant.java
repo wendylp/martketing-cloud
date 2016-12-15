@@ -50,6 +50,9 @@ public class ApiConstant {
 	public static final int INT_ONE = 1;
 	
 	public static final String WECHAT_GROUP = "999";
+	
+	public static final String WECHAT_GROUP_M = "999,";
+	
 	public static final String WECHAT_GROUP_NAME = "未分组";
 	
 	public static final int PAGE_START_INDEX_DEFAULT = 0;//默认分页起始index值
