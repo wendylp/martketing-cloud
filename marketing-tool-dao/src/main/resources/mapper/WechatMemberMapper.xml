@@ -16,7 +16,7 @@
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
 		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
-		    	<if test="wxGroupId != null"><![CDATA[ AND wx_group_id = #{wxGroupId}]]></if>
+		    	<if test="wxGroupId != null"><![CDATA[ AND ((wx_group_id like CONCAT('%,',#{wxGroupId},'%')) OR (wx_group_id like CONCAT(#{wxGroupId},'%')))]]></if>
 		    	<if test="nickname != null"><![CDATA[ AND nickname = #{nickname}]]></if>
 		    	<if test="sex != null"><![CDATA[ AND sex = #{sex}]]></if>
 		    	<if test="country != null"><![CDATA[ AND country = #{country}]]></if>

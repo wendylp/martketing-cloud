@@ -18,11 +18,15 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.SegmentationBodyDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
+import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.SegmentationHead;
+import cn.rongcapital.mkt.po.SmsTaskBody;
 import cn.rongcapital.mkt.service.SegmentManageCalService;
 import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
+import cn.rongcapital.mkt.service.SmsTaskHeadService;
 import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListDataOut;
 import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListOut;
 import heracles.data.common.annotation.ReadWrite;
@@ -43,6 +47,12 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
     
 	@Autowired
 	private SegmentManageCalService segmentManageCalService;
+	
+	@Autowired
+	private CampaignAudienceTargetDao campaignAudienceTargetDao;
+
+	@Autowired
+	private SmsTaskHeadService smsTaskHeadService;
 
     /**
      * @功能简述: mkt.segment.publishstatus.list.get
@@ -90,6 +100,28 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 				data.setPublishStatus(s.getPublishStatus());
 				data.setReferCampaignCount(s.getReferCampaignCount());
 				data.setTagNames(segmentationBodyDao.getContainTagsByHeadId(s.getId()));//获取包含标签
+				
+				// 判断活动是否在使用该细分
+				CampaignAudienceTarget campaignAudienceTarget = new CampaignAudienceTarget();
+				campaignAudienceTarget.setSegmentationId(s.getId());
+				int count = campaignAudienceTargetDao.selectPublishStatusCount(campaignAudienceTarget);
+
+				if (count == 0) {
+					// 判断短信是否在使用该细分
+					SmsTaskBody smsTaskBody = new SmsTaskBody();
+					smsTaskBody.setTargetId(new Long(s.getId()));
+					smsTaskBody.setTargetType(0);
+					int num = smsTaskHeadService.getTaskStatusCount(smsTaskBody);
+					
+					if (num == 0) {
+						data.setCompileStatus(ApiConstant.SEGMENT_COMPILE_STATUS_YES);
+					} else {
+						data.setCompileStatus(ApiConstant.SEGMENT_COMPILE_STATUS_NO);
+					}
+
+				} else {
+					data.setCompileStatus(ApiConstant.SEGMENT_COMPILE_STATUS_NO);
+				}
 				
 				//redis 中获取覆盖人数
 				Long coverCount = segmentManageCalService.scard(POOL_INDEX, SEGMENT_COVER_ID_STR+s.getId());
