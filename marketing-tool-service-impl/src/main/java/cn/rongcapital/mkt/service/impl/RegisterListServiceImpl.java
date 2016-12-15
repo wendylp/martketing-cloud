@@ -88,8 +88,7 @@ public class RegisterListServiceImpl implements RegisterListService {
 				}
 			}
 		}
-		this.setBaseOut(baseOutput, registerAssetVos);
-		this.setBaseOut(baseOutput, dataList);
+		this.setBaseOut(baseOutput, registerAssetVos);		
 		baseOutput.setDate(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"));
 		return baseOutput;
 	}
