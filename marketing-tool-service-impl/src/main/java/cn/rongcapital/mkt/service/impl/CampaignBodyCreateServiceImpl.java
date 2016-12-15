@@ -206,6 +206,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					TaskSchedule taskSchedule = initTaskAudienceTarget(campaignNodeChainIn,campaignHeadId);
 					if(null != taskSchedule) {
 						taskScheduleDao.insert(taskSchedule);
+						System.out.println("目标人群,新建的id" + taskSchedule.getId());
+						
 						taskId = taskSchedule.getId();
 					}
 					CampaignAudienceTarget campaignAudienceTarget = initCampaignAudienceTarget(campaignNodeChainIn,campaignHeadId);
@@ -314,6 +316,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 //					}
 					taskSchedule = initTaskActionSaveAudience(campaignNodeChainIn,campaignHeadId);
 					taskScheduleDao.insert(taskSchedule);
+					System.out.println("保存当前人群,新建的id" + taskSchedule.getId());
 					taskId = taskSchedule.getId();
 					if(null != campaignActionSaveAudience) {
 						campaignActionSaveAudienceDao.insert(campaignActionSaveAudience);
@@ -435,6 +438,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		List<CampaignBody> campaignBodyList = campaignBodyDao.selectList(campaignBody);
 		for(CampaignBody cb:campaignBodyList) {
 			if(null != cb.getTaskId()) {
+			    System.out.println("======删除了任务di" + cb.getTaskId());
 				taskScheduleDao.physicalDeleteById(cb.getTaskId());
 			}
 		}
