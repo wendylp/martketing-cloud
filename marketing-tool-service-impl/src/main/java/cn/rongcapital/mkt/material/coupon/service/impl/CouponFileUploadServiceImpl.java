@@ -77,11 +77,7 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
                 }
                 Iterator<Cell> dataCellIterator = row.cellIterator();
                 while (dataCellIterator.hasNext()) {
-                    Cell dataColumnCell = dataCellIterator.next();
                     num++;
-                    // int cellType = dataColumnCell.getCellType();
-                    // cellType == 0 double
-                    // cellType == 1 String
                 }
             }
             out.setRecord_count(num);
