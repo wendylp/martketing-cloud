@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -35,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.CouponCodeType;
@@ -45,17 +47,19 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.service.CouponSaveService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
+
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 @Service
-public class CouponSaveServiceImpl implements CouponSaveService{
+public class CouponSaveServiceImpl implements CouponSaveService, TaskService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     
@@ -459,5 +463,11 @@ public class CouponSaveServiceImpl implements CouponSaveService{
             materialCouponCode.setUpdateTime(now);
             list.add(materialCouponCode);
         }
+    }
+
+
+    @Override
+    public void task(Integer taskId) {
+        
     }
 }
