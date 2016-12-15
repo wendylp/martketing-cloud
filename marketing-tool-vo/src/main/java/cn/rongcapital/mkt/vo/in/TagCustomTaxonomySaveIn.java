@@ -16,7 +16,7 @@ public class TagCustomTaxonomySaveIn extends BaseInput {
     @NotEmpty
     private String tagTreeName;
     private List<TagCustomTaxonomySaveChildrenIn> children;
-    private List<String> childrenTag;
+    private List<TagCustomTaxonomySaveChildrenTagIn> childrenTag;
 
     @JsonProperty("tag_tree_id")
     public String getTagTreeId() {
@@ -46,11 +46,11 @@ public class TagCustomTaxonomySaveIn extends BaseInput {
     }
 
     @JsonProperty("children_tag")
-    public List<String> getChildrenTag() {
+    public List<TagCustomTaxonomySaveChildrenTagIn> getChildrenTag() {
         return childrenTag;
     }
 
-    public void setChildrenTag(List<String> childrenTag) {
+    public void setChildrenTag(List<TagCustomTaxonomySaveChildrenTagIn> childrenTag) {
         this.childrenTag = childrenTag;
     }
 

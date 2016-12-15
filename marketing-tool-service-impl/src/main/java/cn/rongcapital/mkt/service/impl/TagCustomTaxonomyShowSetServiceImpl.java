@@ -17,6 +17,7 @@ import com.mongodb.WriteResult;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.mongo.SystemCustomTagTreeDao;
 import cn.rongcapital.mkt.po.mongodb.SystemCustomTagTree;
 import cn.rongcapital.mkt.service.TagCustomTaxonomyShowSetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -28,12 +29,10 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
     private static final Integer LEVEL_ONE = 1;
     private static final Boolean IS_SHOW = true;
     private static final Boolean NOT_SHOW = false;
-    private static final int DATA_VALID = 0;
-    private static final int DATA_NOT_VALID = 1;
     private static final int MAX_SIZE = 6;
 
     @Autowired
-    MongoTemplate mongoTemplate;
+    SystemCustomTagTreeDao systemCustomTagTreeDao;
 
     /**
      * 功能描述：设置系统标签一级分类优先显示接口
@@ -57,8 +56,7 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
 
         if (CollectionUtils.isNotEmpty(tagTreeIdLists)) {
             // 重置is_show的状态
-            mongoTemplate.updateMulti(new Query(new Criteria("level").is(LEVEL_ONE).and("is_deleted").is(DATA_VALID)),
-                    new Update().set("is_show", NOT_SHOW), SystemCustomTagTree.class);
+            systemCustomTagTreeDao.updateIsShowByLevel(LEVEL_ONE, NOT_SHOW);
 
             int size = tagTreeIdLists.size();
             size = size > MAX_SIZE ? MAX_SIZE : size;
@@ -69,12 +67,8 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
             }
 
             // 更新数据
-            WriteResult writeResult =
-                    mongoTemplate.updateMulti(
-                            new Query(new Criteria("level").is(LEVEL_ONE).and("is_deleted").is(DATA_VALID)
-                                    .and("tag_tree_id").in(newTagTreeIdLists)),
-                            new Update().set("is_show", IS_SHOW), SystemCustomTagTree.class);
-            result.setTotal(writeResult.getN());
+            int updateCount = systemCustomTagTreeDao.updateIsShowByLevelTagTreeTd(LEVEL_ONE, newTagTreeIdLists, IS_SHOW);
+            result.setTotal(updateCount);
         }
 
         return result;
