@@ -415,6 +415,7 @@ public class BaseMQService {
 		MessageConsumer consumer = consumerMap.get(consumerKey);
 		if (null != consumer) {
 			try {
+			    logger.info("============================delete {}" ,consumerKey);
 				consumer.close();
 				consumerMap.remove(consumerKey);
 			} catch (Exception e) {

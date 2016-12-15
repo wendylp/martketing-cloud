@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.ws.rs.core.MultivaluedMap;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -27,6 +29,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.stereotype.Service;
+
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -35,11 +39,10 @@ import cn.rongcapital.mkt.vo.out.UploadFileOut;
 @Service
 public class CouponFileUploadServiceImpl implements CouponFileUploadService {
 
-    public final static String UPLOADED_FILE_PATH = "\\rc\\data\\uploadFiles\\code\\";
     public final static String SLASH = File.separator;
     
     @Override
-    public BaseOutput uploadFileBatch(MultipartFormDataInput fileInput, String userId) {
+    public BaseOutput uploadFile(MultipartFormDataInput fileInput, String userId) {
 
         Map<String, List<InputPart>> uploadForm = fileInput.getFormDataMap();
         List<InputPart> inputParts = uploadForm.get("file_input");
@@ -82,9 +85,9 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
             }
             out.setRecord_count(num);
             // 上传文件到服务器
-            String fileUrl = UPLOADED_FILE_PATH + userId + SLASH + fileName;
+            String fileUrl = ApiConstant.UPLOADED_FILE_PATH + userId + SLASH + fileName;
             out.setFile_path(fileUrl);
-            String dirUrl = UPLOADED_FILE_PATH + userId;
+            String dirUrl = ApiConstant.UPLOADED_FILE_PATH + userId;
             writeFile(bytes, fileUrl, dirUrl);
             is.close();
         } catch (Exception e) {
