@@ -66,6 +66,9 @@ public class MaterialCouponCodeDaoGetVerifyListTest extends AbstractUnitTest {
         coupon.setTitle(UUID.randomUUID().toString());
         coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
         coupon.setStatus(Byte.valueOf("0"));
+        coupon.setStockRest(2);
+        coupon.setStockTotal(2);
+        coupon.setStartTime(now);
         coupon.setEndTime(now);
         coupon.setAmount(BigDecimal.valueOf(10));
         materialCouponDao.insert(coupon);

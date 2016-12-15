@@ -18,21 +18,23 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
+import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.CouponCodeType;
@@ -49,11 +51,14 @@ import cn.rongcapital.mkt.material.coupon.service.CouponSaveService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 @Service
 public class CouponSaveServiceImpl implements CouponSaveService{
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private MaterialCouponDao materialCouponDao;
     
@@ -76,7 +81,9 @@ public class CouponSaveServiceImpl implements CouponSaveService{
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public BaseOutput save(CouponInfoIn couponInfo,String user_token) {
-        
+        Date startday = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        logger.info("save 接口 start 起始时间：" + df.format(startday));
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
         Long id = couponInfo.getId();
         String title = couponInfo.getTitle();
@@ -98,7 +105,7 @@ public class CouponSaveServiceImpl implements CouponSaveService{
             baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
             return baseOutput;
         }
-        JSONObject ruleObject = JSONObject.parseObject(rule);
+        
         if(id == null){
             //保存操作
             MaterialCoupon coupon = new MaterialCoupon();
@@ -118,13 +125,20 @@ public class CouponSaveServiceImpl implements CouponSaveService{
             materialCouponDao.insert(coupon);
             if(SourceCode.equals(CouponCodeType.UNIVERSALCODE.getCode())){
                //通用码
+                JSONObject ruleObject = JSONObject.parseObject(rule);
                 getUniversalCode(ruleObject, stock_total, coupon.getId(), list, now);
             }else if(SourceCode.equals(CouponCodeType.GENERATIONCODE.getCode())){
                 //平台生成码
+                Date day1 = new Date();
+                logger.info("save 接口 平台生成码 起始时间：" + df.format(day1));
+                JSONObject ruleObject = JSONObject.parseObject(rule);
                 getGenerationCode(ruleObject, stock_total, coupon.getId(), list, now);
+                Date day2 = new Date();
+                logger.info("save 接口 平台生成码 结束时间：" + df.format(day2));
             }else{
                 //自有码
-                getOwnCode(user_token, baseOutput, coupon.getId(), list, now);
+                JSONArray rules =  JSONArray.parseArray(rule);
+                getOwnCode(getNameList(rules), user_token, baseOutput, coupon.getId(), list, now);
             }
         }else{
             //更新操作
@@ -153,21 +167,73 @@ public class CouponSaveServiceImpl implements CouponSaveService{
             materialCouponCodeDao.deleteCodeByCouponId(id);
             if(SourceCode.equals(CouponCodeType.UNIVERSALCODE.getCode())){
               //通用码
+                JSONObject ruleObject = JSONObject.parseObject(rule);
                 getUniversalCode(ruleObject, stock_total, coupon.getId(), list, now);
             }else if(SourceCode.equals(CouponCodeType.GENERATIONCODE.getCode())){
                 //平台生成码
+                Date day1 = new Date();
+                logger.info("save 接口 平台生成码 起始时间：" + df.format(day1));
+                JSONObject ruleObject = JSONObject.parseObject(rule);
                 getGenerationCode(ruleObject, stock_total, coupon.getId(), list, now);
+                Date day2 = new Date();
+                logger.info("save 接口 平台生成码 结束时间：" + df.format(day2));
             }else{
                 //自有码
-                getOwnCode(user_token, baseOutput, coupon.getId(), list, now);
+                JSONArray rules =  JSONArray.parseArray(rule);
+                getOwnCode(getNameList(rules), user_token, baseOutput, coupon.getId(), list, now);
             }
         }
-        //保存优惠码
-        if(list.size() > 0){
-            materialCouponCodeDao.batchInsert(list);
-        };
+//        保存优惠码
+//        方法1：直接插入
+//        if(list.size() > 0){
+//            materialCouponCodeDao.batchInsert(list);
+//        };
+        
+//        方法2：分批插入，平均一次插入100000条
+          int totleSize = list.size();
+          if(totleSize > 0){
+              int pageSize = 100000;
+              int num = totleSize / pageSize;
+              int surplus = totleSize % pageSize;
+              boolean surplusFlag = false;
+              if(surplus > 0){
+                   num = num +1;
+                   surplusFlag = true;
+              }
+              for(int i = 0; i < num; i++){
+                  List<MaterialCouponCode> codeList = null;
+                  if(surplusFlag && (i == num -1)){
+                      codeList = list.subList(i*pageSize, (i*pageSize + surplus));
+                  }else{
+                      codeList = list.subList(i*pageSize, (i+1)*pageSize);
+                  }
+                  materialCouponCodeDao.batchInsert(codeList);
+              }
+          }
+        
+        Date endday = new Date();
+        logger.info("save 接口 end 结束时间：" + df.format(endday));
         return baseOutput;
     }
+    
+    
+    /**
+     * 获取文件名称
+     * @param rules
+     * @return
+     */
+    private List<String> getNameList(JSONArray rules){
+        List<String> fileNames = new ArrayList<String>();
+        int size = rules.size();
+        if(size > 0){
+            for(int i = 0; i < size ; i++){
+               String fileName = rules.getJSONObject(i).getString("file_name");
+               fileNames.add(fileName);
+            }
+        }
+        return fileNames;
+    }
+    
     
     /**
      * 生成码
@@ -176,8 +242,10 @@ public class CouponSaveServiceImpl implements CouponSaveService{
      * @return
      */
     public List<String> getAllLists(String[] elements, int lengthOfList, int size) {
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < size; i++) {
+        
+        List<String> codes = new ArrayList<String>();
+        Set<String> set = new HashSet<String>();
+        while(set.size() < size){
             Random rand = new Random();
             String str = "";
             int index;
@@ -190,11 +258,12 @@ public class CouponSaveServiceImpl implements CouponSaveService{
                 str += c;
                 flags[index] = true;
             }
-            if (!list.contains(str)) {
-                list.add(str);
+            if (!set.contains(str)) {
+                set.add(str);
             }
         }
-        return list;
+        codes.addAll(set);
+        return codes;
     }
     
     
@@ -252,13 +321,15 @@ public class CouponSaveServiceImpl implements CouponSaveService{
      * @param baseOutput
      * @return
      */
-    private List<String> filesGetCode(String filesUrl, BaseOutput baseOutput){
+    private List<String> filesGetCode(List<String> fileNames, String filesUrl, BaseOutput baseOutput) {
 
         File file = new File(filesUrl);
         File[] tempList = file.listFiles();
         List<String> codeList = new ArrayList<String>();
         for (int i = 0; i < tempList.length; i++) {
-            if (tempList[i].isFile() && (tempList[i].getName().endsWith(".xls")||tempList[i].getName().endsWith(".xlsx"))) {
+            if (tempList[i].isFile()
+                    && (tempList[i].getName().endsWith(".xls") || tempList[i].getName().endsWith(".xlsx"))
+                    && (fileNames.contains(tempList[i].getName()))) {
                 File fileNew = tempList[i];
                 InputStream is = null;
                 try {
@@ -277,9 +348,9 @@ public class CouponSaveServiceImpl implements CouponSaveService{
                         Iterator<Cell> dataCellIterator = row.cellIterator();
                         while (dataCellIterator.hasNext()) {
                             Cell dataColumnCell = dataCellIterator.next();
-                          int cellType = dataColumnCell.getCellType();
-                            if(cellType == 1){
-                                if(!codeList.contains(dataColumnCell.getStringCellValue())){
+                            int cellType = dataColumnCell.getCellType();
+                            if (cellType == 1) {
+                                if (!codeList.contains(dataColumnCell.getStringCellValue())) {
                                     codeList.add(dataColumnCell.getStringCellValue());
                                 }
                             }
@@ -365,9 +436,10 @@ public class CouponSaveServiceImpl implements CouponSaveService{
      * @param list
      * @param now
      */
-    private void getOwnCode(String user_token, BaseOutput baseOutput, Long couponId, List<MaterialCouponCode> list, Date now){
+    private void getOwnCode(List<String> fileNames, String user_token, BaseOutput baseOutput, Long couponId, List<MaterialCouponCode> list, Date now){
+        
         String filesUrl = UPLOADED_FILE_PATH + user_token + SLASH;
-        List<String> codeList = filesGetCode(filesUrl, baseOutput);
+        List<String> codeList = filesGetCode(fileNames, filesUrl, baseOutput);
         for(String code : codeList){
             String couponCode = code;
             MaterialCouponCode materialCouponCode = new MaterialCouponCode();
@@ -381,19 +453,4 @@ public class CouponSaveServiceImpl implements CouponSaveService{
             list.add(materialCouponCode);
         }
     }
-//    public static void main(String[] args) {
-//        Date now = new Date();
-//        SimpleDateFormat startFormatter = new SimpleDateFormat("yyyy-MM-dd");
-//        String a1 = startFormatter.format(now);
-//        System.out.println(a1);
-//        SimpleDateFormat startFormatter1 = new SimpleDateFormat("yyyy-MM-dd");
-//        try {
-//           Date date = startFormatter1.parse(a1);
-//           System.out.println(date);
-//           System.out.println(dateStartString(date, null));
-//           System.out.println(dateStartString(dateEnd(dateStart(date, null), 23*60*60+59*60+59), null));
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

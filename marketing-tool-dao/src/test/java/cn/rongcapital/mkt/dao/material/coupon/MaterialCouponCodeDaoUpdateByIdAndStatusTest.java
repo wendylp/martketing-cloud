@@ -43,6 +43,7 @@ public class MaterialCouponCodeDaoUpdateByIdAndStatusTest extends AbstractUnitTe
         coupon.setCode("9999");
         coupon.setUser("");
         coupon.setReleaseStatus("unreleased");
+        coupon.setVerifyStatus("unverify");
         coupon.setStatus((byte) 1);
         List<MaterialCouponCode> dataList = materialCouponCodeDao.selectList(coupon);
         if (dataList.size() == 0) {
@@ -77,6 +78,7 @@ public class MaterialCouponCodeDaoUpdateByIdAndStatusTest extends AbstractUnitTe
         coupon.setCode("9999");
         coupon.setUser("");
         coupon.setReleaseStatus("unreleased");
+        coupon.setVerifyStatus("unverify");
         coupon.setStatus((byte) 0);
         List<MaterialCouponCode> dataList = materialCouponCodeDao.selectList(coupon);
         if (dataList.size() == 0) {
