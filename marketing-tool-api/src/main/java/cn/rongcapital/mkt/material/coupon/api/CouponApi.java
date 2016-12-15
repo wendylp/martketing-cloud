@@ -32,6 +32,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.file.FileService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeDictionaryService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
@@ -45,7 +46,6 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponEditDetailServic
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGeneralGetService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponGetSystemTimeService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
-
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPutInGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralService;
@@ -109,17 +109,16 @@ public class CouponApi {
 	@Autowired
     private CouponCodeDictionaryService dictionaryService; //获取核销页面数据字典
 	
-	 @Autowired
+	@Autowired
     private MaterialCouponEditDetailService materialCouponEditDetailService;
 	    
-	    @Autowired
-	private MaterialCouponPropertiesService  materialCouponPropertiesService;
+	
 	
 	@Autowired
 	private MaterialCouponAudienceCreateService materialCouponAudienceCreateService;
 	
-	
-	
+	@Autowired
+	private FileService fileService;
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -181,9 +180,9 @@ public class CouponApi {
     @POST
     @Path("/mkt.materiel.coupon.file.upload")
     @Consumes("multipart/form-data")
-    public BaseOutput fileUploadBatch(@NotEmpty @QueryParam("user_token") String userToken,
+    public BaseOutput fileUpload(@NotEmpty @QueryParam("user_token") String userToken,
                                       @NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
-        return couponFileUploadService.uploadFileBatch(input, userId);
+        return couponFileUploadService.uploadFile(input, userId);
     }
     /**
      * 获取指定条件的优惠券的数量
@@ -443,21 +442,6 @@ public class CouponApi {
         return materialCouponEditDetailService.getCouponEditdes(id);
     }
     
-    /**
-     * @author liuhaizhan
-     * @功能简述: 返回单个物料所有可接入配置属性
-     * @param
-     * @return
-     */
-    @GET
-    @Path("/mkt.material.coupon.properties")
-    public BaseOutput getProperties(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id) {
-        MaterialAccessProperty mapro = new MaterialAccessProperty();
-        mapro.setMaterialTypeId(id);
-        mapro.setStatus((byte) 0);
-        return materialCouponPropertiesService.getProperties(mapro);
-    }
     
 	
     /**
@@ -482,4 +466,19 @@ public class CouponApi {
         return materialCouponAudienceCreateService.createTargetAudienceGroup(id, name, blurSearch, releaseStatus,
                 verifyStatus, expireStatus);
     }
+	
+//    /**
+//     * @author guozhenchao
+//     * @功能简述:优惠券文件上传接口
+//     * @param fileUnique
+//     * @param input
+//     * @return
+//     */
+//    @POST
+//    @Path("/mkt.materiel.coupon.file.upload.test")
+//    @Consumes("multipart/form-data")
+//    public BaseOutput fileUploadBatch(@NotEmpty @QueryParam("user_token") String userToken,
+//                                      @NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
+//        return fileService.uploadFileBatch(input, userId);
+//    }
 }
