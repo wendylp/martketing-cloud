@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.ImgAsset;
+import cn.rongcapital.mkt.vo.weixin.ImgTextAssetVo;
 
 /**
  * Created by Yunfeng on 2016-5-27.
@@ -93,10 +95,43 @@ public class GetImgTextAssetServiceImpl implements GetImgTextAssetService {
 		}		
 		imgTextAsset.setFirstAsset(NumUtil.int2OneByte(1));
 		List<ImgTextAsset> imgTextAssets = imgTextAssetDao.selectList(imgTextAsset);
-		this.setBaseOut(output, imgTextAssets);
+		List<ImgTextAssetVo> imgTextAssetVos = this.getImgTextAssetVos(imgTextAssets);
+		this.setBaseOut(output, imgTextAssetVos);
 		return output;
 	}
 
+    private List<ImgTextAssetVo> getImgTextAssetVos(List<ImgTextAsset> imgTextAssets){
+    	List<ImgTextAssetVo> imgTextAssetVos = new ArrayList<ImgTextAssetVo>();
+    	if(CollectionUtils.isNotEmpty(imgTextAssets)){
+    		for(ImgTextAsset imgTextAsset:imgTextAssets){
+    			ImgTextAssetVo imgTextAssetVo = this.getImgTextAssetVo(imgTextAsset);
+    			imgTextAssetVos.add(imgTextAssetVo);
+    		}    		
+    	}
+		return imgTextAssetVos;
+    	
+    }
+    
+    private ImgTextAssetVo getImgTextAssetVo(ImgTextAsset imgTextAsset){
+    	if(imgTextAsset!=null){
+    		ImgTextAssetVo imgTextAssetVo = new ImgTextAssetVo();
+    		if(imgTextAsset.getCreateTime()!=null){
+    			imgTextAssetVo.setCreate_time(imgTextAsset.getCreateTime().getTime());
+    		}    		
+    		imgTextAssetVo.setImgfile_name(imgTextAsset.getImgfileName());
+    		imgTextAssetVo.setImgfile_url(imgTextAsset.getImgfileUrl());
+    		imgTextAssetVo.setImgtext_id(imgTextAsset.getId());
+    		imgTextAssetVo.setImgtext_name(imgTextAsset.getName());
+    		imgTextAssetVo.setImgtext_type(imgTextAsset.getType());
+    		imgTextAssetVo.setMobile_preview_url(imgTextAsset.getMobilePreviewUrl());
+    		imgTextAssetVo.setOwner_name(imgTextAsset.getOwnerName());
+    		imgTextAssetVo.setPc_preview_url(imgTextAsset.getPcPreviewUrl());
+    		imgTextAssetVo.setThumb_ready(imgTextAsset.getThumbReady());
+    		return imgTextAssetVo;
+    	}
+		return null;
+    	
+    }
     
 	private BaseOutput newSuccessBaseOutput() {
 		return new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
