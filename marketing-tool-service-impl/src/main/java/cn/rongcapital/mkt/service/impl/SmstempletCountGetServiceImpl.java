@@ -48,8 +48,8 @@ public class SmstempletCountGetServiceImpl implements SmstempletCountGetService 
 			
 		}
 		
-		resultMap.put(SmsTempletTypeEnum.FIXED.getStatusCode()+"", fixedCount);
-		resultMap.put(SmsTempletTypeEnum.VARIABLE.getStatusCode()+"", variableCount);
+		resultMap.put("fixed", fixedCount);
+		resultMap.put("variable", variableCount);
 		
 		result.getData().add(resultMap);
 		
