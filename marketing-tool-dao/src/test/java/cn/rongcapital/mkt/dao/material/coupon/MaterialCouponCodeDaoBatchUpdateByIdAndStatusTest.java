@@ -47,6 +47,7 @@ public class MaterialCouponCodeDaoBatchUpdateByIdAndStatusTest extends AbstractU
             coupon.setCode(UUID.randomUUID().toString().substring(0, 20));
             coupon.setUser("");
             coupon.setReleaseStatus("unreleased");
+            coupon.setVerifyStatus("unverify");
             coupon.setStatus((byte) 1);
             List<MaterialCouponCode> dataList = materialCouponCodeDao.selectList(coupon);
             if (dataList.size() == 0) {
@@ -93,6 +94,7 @@ public class MaterialCouponCodeDaoBatchUpdateByIdAndStatusTest extends AbstractU
             coupon.setCode(UUID.randomUUID().toString().substring(0, 20));
             coupon.setUser("");
             coupon.setReleaseStatus("unreleased");
+            coupon.setVerifyStatus("unverify");
             coupon.setStatus((byte) 0);
             List<MaterialCouponCode> dataList = materialCouponCodeDao.selectList(coupon);
             if (dataList.size() == 0) {
