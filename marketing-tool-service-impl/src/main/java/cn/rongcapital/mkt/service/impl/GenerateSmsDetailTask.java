@@ -1,16 +1,20 @@
 package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
-import cn.rongcapital.mkt.common.enums.SmsTargetAudienceTypeEnum;
-import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
+import cn.rongcapital.mkt.common.enums.*;
 import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisException;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
+import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponEditDetailService;
+import cn.rongcapital.mkt.material.coupon.vo.out.CouPonEditInfoOut;
 import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.service.MQTopicService;
 
+import cn.rongcapital.mkt.vo.BaseOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+
+import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.FIXED;
+import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.VARIABLE;
 
 /**
  * Created by byf on 10/18/16.
@@ -63,6 +70,22 @@ public class GenerateSmsDetailTask implements TaskService {
     
     @Autowired
     private SmsSignatureDao smsSignatureDao;
+
+    @Autowired
+    private SmsMaterialDao smsMaterialDao;
+
+    @Autowired
+    private SmsMaterialMaterielMapDao smsMaterialMaterielMapDao;
+
+    @Autowired
+    private SmsMaterialVariableMapDao smsMaterialVariableMapDao;
+
+    @Autowired
+    private MaterialCouponEditDetailService materialCouponEditDetailService;
+
+    @Autowired
+    private CouponCodeListService couponCodeListService;
+
 
     private final String SEGMENTATION_HEAD_ID = "segmentation_head_id";
     private final int PAGE_SIZE = 10000;
@@ -143,20 +166,12 @@ public class GenerateSmsDetailTask implements TaskService {
         	if(!CollectionUtils.isEmpty(smsSignatures)){
         		smsSignature = smsSignatures.get(0);
         	}
-        	
-            for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
-                SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
-                smsTaskDetail.setReceiveMobile(distinctReceiveMobile); 
-                if(smsSignature!=null&&StringUtils.isNotEmpty(smsSignature.getSmsSignatureName())){
-                    String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
-                    smsTaskDetail.setSendMessage(sendMessage);
-                }
-                smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
-                smsTaskDetail.setSmsTaskHeadId(taskHeadId);
-                smsTaskDetailList.add(smsTaskDetail);
-            }
+
+        	//Todo:添加方法,在这里根据短信类型生成不同类型的短信.
+            generateSmsTaskDetailAccordSmsType(taskHeadId, targetHead, targetDistinctReceiveMobiles, smsTaskDetailList, smsSignature);
         }
 
+        if(CollectionUtils.isEmpty(smsTaskDetailList)) return;
         int totalNum = (smsTaskDetailList.size() + PAGE_SIZE) / PAGE_SIZE;
         for(int index = 0; index < totalNum; index++){
             if(index == totalNum-1){
@@ -184,8 +199,118 @@ public class GenerateSmsDetailTask implements TaskService {
                 smsTaskDetailStateDao.batchInsert(smsTaskDetailStateList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE));
             }
         }
-
     }
+
+    //Todo:如果是固定短信,按照现有的生成方法保持不变;如果是变量短信按照规则一步一步生成.
+    private void generateSmsTaskDetailAccordSmsType(Long taskHeadId, SmsTaskHead targetHead, Set<String> targetDistinctReceiveMobiles, List<SmsTaskDetail> smsTaskDetailList, SmsSignature smsSignature) {
+        SmsMaterial paramSmsMaterial = new SmsMaterial();
+        paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        paramSmsMaterial.setId(targetHead.getSmsTaskMaterialId().intValue());
+        List<SmsMaterial> targetSmsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
+        if(CollectionUtils.isEmpty(targetSmsMaterialList)) return;
+        Integer smsType = targetSmsMaterialList.get(0).getSmsType().intValue();
+
+        if(smsType.equals(FIXED.getStatusCode())){
+            for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
+                SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
+                smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
+                if(smsSignature!=null&& StringUtils.isNotEmpty(smsSignature.getSmsSignatureName())){
+                    String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
+                    smsTaskDetail.setSendMessage(sendMessage);
+                }
+                smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
+                smsTaskDetail.setSmsTaskHeadId(taskHeadId);
+                smsTaskDetailList.add(smsTaskDetail);
+            }
+        }else if(smsType.equals(VARIABLE.getStatusCode())){
+            //Todo:整体上要完成一个变量短信的变量替换过程,那么整体上要完成获取变量目标,准备好源短信,根据短信映射规则获取建立起源到目标的Map,完成替换.
+            //Todo:1查出对应的优惠券信息
+            SmsMaterialMaterielMap paramSmsMaterialMaterielMap = new SmsMaterialMaterielMap();
+            paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+            paramSmsMaterialMaterielMap.setSmsMaterialId(targetHead.getSmsTaskMaterialId());
+            List<SmsMaterialMaterielMap> smsMaterialMaterielMapList = smsMaterialMaterielMapDao.selectList(paramSmsMaterialMaterielMap);
+
+            //Todo:2.1查出这个素材对应的具体的优惠券信息
+            BaseOutput baseOutput = materialCouponEditDetailService.getCouponEditdes(smsMaterialMaterielMapList.get(0).getSmsMaterielId());
+            CouPonEditInfoOut couPonEditInfoOut = (CouPonEditInfoOut) baseOutput.getData().get(0);
+
+            //Todo:2.2创建一个方法传入变量名称和优惠券信息,返回该变量对应的值,需要增加物料类型在传入参数中,针对优惠码等特殊变量要传入额外字段,这块可以做成策略模式，方便日后做扩展
+            //Todo:2查出对应的变量信息
+            SmsMaterialVariableMap paramSmsMaterialVariableMap = new SmsMaterialVariableMap();
+            paramSmsMaterialVariableMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+            paramSmsMaterialVariableMap.setSmsMaterialId(targetHead.getSmsTaskMaterialId());
+            List<SmsMaterialVariableMap> smsMaterialVariableMapList = smsMaterialVariableMapDao.selectList(paramSmsMaterialVariableMap);
+
+            //Todo:5优惠码必定比手机号要多,將手机号拆成1W一页的然后逐页生成
+            List<String> targetDistinctReceiveMobileList = new ArrayList<>(targetDistinctReceiveMobiles);
+            int totalPage = (targetDistinctReceiveMobileList.size() + PAGE_SIZE) / PAGE_SIZE;
+            for(int index = 0; index < totalPage; index++){
+                //Todo:1选出每页所需要的优惠码
+                BaseOutput couponCodeList = couponCodeListService.couponCodeList(smsMaterialMaterielMapList.get(0).getSmsMaterielId(),index*PAGE_SIZE,PAGE_SIZE);
+
+                //Todo:2拆分出每页的手机号
+                List<String> subTargetDistinctReceiveMobileList = null;
+                if(index == totalPage-1){
+                    subTargetDistinctReceiveMobileList = targetDistinctReceiveMobileList.subList(index*PAGE_SIZE,targetDistinctReceiveMobileList.size());
+                }else{
+                    subTargetDistinctReceiveMobileList = targetDistinctReceiveMobileList.subList(index*PAGE_SIZE,(index+1)*PAGE_SIZE);
+                }
+
+                //Todo:3进行短信内容的生成
+                for(String distinctReceiveMobile : subTargetDistinctReceiveMobileList){
+                    int couponCodeIndex = 0;
+                    MaterialCouponCode materialCouponCode = (MaterialCouponCode) couponCodeList.getData().get(couponCodeIndex);
+                    SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
+                    smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
+                    if(smsSignature != null && StringUtils.isNotEmpty(smsSignature.getSmsSignatureName())){
+                        //Todo:3进行一次初始替换,替换变量值,然后用一个Map保存起来
+                        Map<String,String> variableToValueMap = new HashMap<>();
+                        for(SmsMaterialVariableMap smsMaterialVariableMap : smsMaterialVariableMapList){
+                            if(SmsMaterialVariableEnum.VARIABLE_COUPON_COUPON_CODE.getVariableTypeName().equals(smsMaterialVariableMap.getSmsVariableValue())){
+                                setVariableValueInMaterialVariable(variableToValueMap,smsMaterialVariableMap,couPonEditInfoOut,materialCouponCode.getCode());
+                            }
+                            setVariableValueInMaterialVariable(variableToValueMap,smsMaterialVariableMap,couPonEditInfoOut,null);
+                        }
+
+                        for(String key : variableToValueMap.keySet()){
+                            targetHead.getSmsTaskMaterialContent().replace(key,variableToValueMap.get(key));
+                        }
+
+                        String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
+                        smsTaskDetail.setSendMessage(sendMessage);
+                    }
+                    smsTaskDetail.setMaterielCouponCodeId(materialCouponCode.getCouponId());
+                    smsTaskDetail.setMaterielCouponCodeCode(materialCouponCode.getCode());
+                    smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
+                    smsTaskDetail.setSmsTaskHeadId(taskHeadId);
+                    smsTaskDetailList.add(smsTaskDetail);
+                }
+            }
+
+
+        }
+    }
+
+    private void setVariableValueInMaterialVariable(Map<String, String> variableToValueMap, SmsMaterialVariableMap smsMaterialVariableMap, CouPonEditInfoOut couPonEditInfoOut, String specialTypeValue) {
+        SmsMaterialVariableEnum smsMaterialVariableEnum = SmsMaterialVariableEnum.getSmsMaterialVariableEnum(smsMaterialVariableMap.getSmsVariableType(),smsMaterialVariableMap.getSmsVariableValue());
+        switch (smsMaterialVariableEnum){
+            case VARIABLE_COUPON_EFFECTIVE_TIME:
+                String startTime = DateUtil.getStringFromDate(new Date(couPonEditInfoOut.getStartTime()),"MM月dd日-");
+                String endTime = DateUtil.getStringFromDate(new Date(couPonEditInfoOut.getEndTime()),"MM月dd日");
+                variableToValueMap.put(smsMaterialVariableMap.getSmsVariableName(),startTime + endTime);
+                break;
+            case VARIABLE_COUPON_AMOUNT:
+                variableToValueMap.put(smsMaterialVariableMap.getSmsVariableName(),couPonEditInfoOut.getAmount() + "");
+                break;
+            case VARIABLE_COUPON_CHANNEL_CODE:
+                variableToValueMap.put(smsMaterialVariableMap.getSmsVariableName(),couPonEditInfoOut.getChannelCode());
+                break;
+            case VARIABLE_COUPON_COUPON_CODE:
+                variableToValueMap.put(smsMaterialVariableMap.getSmsVariableName(),specialTypeValue);
+                break;
+        }
+    }
+
 
     private List<String> queryReceiveMobileListByTargetAudienceIdAndType(SmsTaskBody smsTaskBody) {
         if(SmsTargetAudienceTypeEnum.SMS_TARGET_SEGMENTATION.getTypeCode() == smsTaskBody.getTargetType()){
