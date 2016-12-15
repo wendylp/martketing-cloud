@@ -254,7 +254,7 @@ public class CouponApi {
             @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("channel_code") String channelCode,
             @QueryParam("keyword") String keyword, @QueryParam("coupon_status") String couponStatus,
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("page_size") Integer size) throws Exception {
+            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
     
         return couponPageListService.getMaterialCouponListByKeyword(channelCode, couponStatus, keyword, index, size);
     }
