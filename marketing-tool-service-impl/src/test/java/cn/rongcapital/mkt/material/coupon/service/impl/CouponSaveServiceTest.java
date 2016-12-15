@@ -1,14 +1,17 @@
 package cn.rongcapital.mkt.material.coupon.service.impl;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +19,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
-import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
+import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.CouponSaveService;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CouponSaveServiceTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -35,6 +39,8 @@ public class CouponSaveServiceTest {
     @Before
     public void setUp() throws Exception {
         logger.info("测试: SegmentCalcServiceTest 开始---------------------");
+//        ReflectionTestUtils.setField(couponSaveService, "materialCouponDao", materialCouponDao);
+//        ReflectionTestUtils.setField(couponSaveService, "materialCouponCodeDao", materialCouponCodeDao);
         couponSaveService = new CouponSaveServiceImpl();
     }
     
@@ -52,24 +58,23 @@ public class CouponSaveServiceTest {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
-                List<MaterialCouponCode> dataList = (List<MaterialCouponCode>) args[0];
-                Assert.assertEquals(1, dataList.size());
-                MaterialCouponCode data = dataList.get(0);
-                Assert.assertEquals(6, data.getId().intValue());
-                Assert.assertEquals("12", data.getReleaseStatus());
-                Assert.assertEquals("12345", data.getUser());
+                MaterialCoupon data = (MaterialCoupon) args[0];
+                Assert.assertEquals("2", data.getSourceCode());
                 return null;
             }
-        }).when(materialCouponCodeDao).batchUpdateByIdAndStatus(Mockito.any());
+        }).when(materialCouponDao).insert(Mockito.any(MaterialCoupon.class));
         ReflectionTestUtils.setField(couponSaveService, "materialCouponDao", materialCouponDao);
-        ReflectionTestUtils.setField(couponSaveService, "materialCouponCodeDao", materialCouponCodeDao);
         CouponInfoIn in =new CouponInfoIn();
-//        in.setAmount(5);
-//        vo.setId(6L);
-//        vo.setStatus("12");
-//        vo.setUser("12345");
-//        voList.add(vo);
-//        couponSaveService.save(couponInfo, user_token);
+        in.setAmount(new BigDecimal(5));
+        in.setRule("{\"type_code\":\"mixed\",\"length\":5}");
+        in.setTitle("新MC优惠券");
+        in.setSource_code("2");
+        in.setStock_total(1);
+        Date now = new Date();
+        in.setStart_time(now);
+        in.setEnd_time(now);
+        in.setChannel_code("sms");
+        couponSaveService.save(in, "1");
     }
-    
+
 }
