@@ -79,7 +79,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
 		Integer maxId = dataPartyDao.getMaxId();
 		maxId = maxId == null ? 0 : maxId;
 		String bitmap = dataCustomerTagsLists.get(0).getBitmap();
-		
+		int keySize = getKeySizeByBitmap(bitmap);
 		List<List<DataCustomerTags>> dataCustomerTagssList = ListSplit.getListSplit(dataCustomerTagsLists, BATCH_SIZE);
 	    
 	    for(List<DataCustomerTags> dataCustomerTagss :dataCustomerTagssList){
@@ -122,7 +122,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
     	  
     	  if(repeatDatas != null && repeatDatas.size() > 0){
     		 for(Map<String, Object> repeatData : repeatDatas){
-    			 List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData);
+    			 List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData, keySize);
     			 
     			 Integer id = distinctData(repeatIds);
     			 

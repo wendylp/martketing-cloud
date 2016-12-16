@@ -80,7 +80,7 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 		Integer maxId = dataPartyDao.getMaxId();
 		maxId = maxId == null ? 0 : maxId;
 		String bitmap = dataArchPointLists.get(0).getBitmap();
-		
+		int keySize = getKeySizeByBitmap(bitmap);
 		List<List<DataArchPoint>> dataArchPointsList = ListSplit.getListSplit(dataArchPointLists, BATCH_SIZE);
 	    
 	    for(List<DataArchPoint> dataArchPoints :dataArchPointsList){
@@ -123,7 +123,7 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
     	  
         	if(repeatDatas != null && repeatDatas.size() > 0){
         		for(Map<String, Object> repeatData : repeatDatas){
-        			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData);
+        			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData,keySize);
     			 
         			Integer id = distinctData(repeatIds);
     			 

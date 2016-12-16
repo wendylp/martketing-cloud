@@ -172,9 +172,14 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
   		return repeatDatas;
 	}
 	
-	protected List<Integer> getIdsByRepeatByBitmapKeys(Map<String,Object> paramMap){
+	protected List<Integer> getIdsByRepeatByBitmapKeys(Map<String,Object> paramMap,int keySize){
 		
 		DataParty dataParty = new DataParty();
+		
+		if(paramMap.size() <= keySize){
+			
+			return null;
+		}
 		
 		for(String key :paramMap.keySet()){
 			
@@ -195,13 +200,19 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 			PropertyDescriptor pd;
 			try {
 				pd = new PropertyDescriptor(field, dataParty.getClass());
-				Method m = pd.getWriteMethod();
+				Method sm = pd.getWriteMethod();
 				
-				if(paramMap.get(key) == null || "".equals(paramMap.get(key).toString())){
+				
+				Method rm = pd.getReadMethod();
+				
+				Object filedValue = rm.invoke(dataParty);
+				
+				if(filedValue == null || "".equals(filedValue.toString())){
+					
 					return null;
 				}
 				
-				m.invoke(dataParty, paramMap.get(key));
+				sm.invoke(dataParty, paramMap.get(key));
 			} catch (IntrospectionException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
@@ -292,4 +303,13 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 		return false;
 		
 	}
+	
+	protected int getKeySizeByBitmap(String bitmap){
+		
+		List<String> strlist = this.getColumnKeyid(bitmap);
+		
+		return strlist.size();
+		
+	}
+	
 }

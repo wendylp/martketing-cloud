@@ -80,7 +80,7 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
 		Integer maxId = dataPartyDao.getMaxId();
 		maxId = maxId == null ? 0 : maxId;
 		String bitmap = dataMemberLists.get(0).getBitmap();
-		
+		int keySize = getKeySizeByBitmap(bitmap);
 		List<List<DataMember>> dataMembersList = ListSplit.getListSplit(dataMemberLists, BATCH_SIZE);
 	    
 	    for(List<DataMember> dataMembers :dataMembersList){
@@ -124,7 +124,7 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
     	  
         	if(repeatDatas != null && repeatDatas.size() > 0){
         		for(Map<String, Object> repeatData : repeatDatas){
-        			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData);
+        			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData,keySize);
     			 
         			Integer id = distinctData(repeatIds);
     			 
