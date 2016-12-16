@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import cn.rongcapital.mkt.dao.DataMemberDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataMember;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.DataPopulation;
 
 /**
  * Created by ethan on 16/6/30.
@@ -78,7 +80,7 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
 		Integer maxId = dataPartyDao.getMaxId();
 		maxId = maxId == null ? 0 : maxId;
 		String bitmap = dataMemberLists.get(0).getBitmap();
-		
+		int keySize = getKeySizeByBitmap(bitmap);
 		List<List<DataMember>> dataMembersList = ListSplit.getListSplit(dataMemberLists, BATCH_SIZE);
 	    
 	    for(List<DataMember> dataMembers :dataMembersList){
@@ -91,7 +93,9 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
 	    			@Override
 	    			public Void call() throws Exception {
 	    				
-	    				createParty(dataObj);
+    					if(!checkBitKey(dataObj)){
+    						createParty(dataObj);
+    					}
 	    				
 	    				return null;
 	    			}
@@ -120,7 +124,7 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
     	  
         	if(repeatDatas != null && repeatDatas.size() > 0){
         		for(Map<String, Object> repeatData : repeatDatas){
-        			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData);
+        			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData,keySize);
     			 
         			Integer id = distinctData(repeatIds);
     			 
@@ -157,6 +161,29 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
 		keyidObj.setId(id);
 		keyidObj.setKeyid(keyid);
 		dataMemberDao.updateById(keyidObj);
+	}
+	
+	/**
+	 * 校验主键是否为空
+	 * @param dataObj
+	 * @return
+	 */
+	private boolean checkBitKey(DataMember dataObj){
+		String bitmap = dataObj.getBitmap();
+		
+		if (StringUtils.isNotBlank(bitmap)) {
+			try {
+				// 获取keyid
+				List<String> strlist = this.getAvailableKeyid(bitmap);
+				
+				return checkBitKeyByType(strlist, dataObj);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return true;
 	}
 	
 	private void createParty(DataMember dataObj){

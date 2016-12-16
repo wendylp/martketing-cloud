@@ -206,6 +206,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					TaskSchedule taskSchedule = initTaskAudienceTarget(campaignNodeChainIn,campaignHeadId);
 					if(null != taskSchedule) {
 						taskScheduleDao.insert(taskSchedule);
+						
 						taskId = taskSchedule.getId();
 					}
 					CampaignAudienceTarget campaignAudienceTarget = initCampaignAudienceTarget(campaignNodeChainIn,campaignHeadId);
