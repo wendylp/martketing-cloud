@@ -112,11 +112,11 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 	 * 
 	 */
 	public void synWAssetGroupMethod() {
-		WechatAsset WechatAssetInfo = new WechatAsset();
-		WechatAssetInfo.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		WechatAssetInfo.setStartIndex(null);
-		WechatAssetInfo.setPageSize(null);
-		List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(WechatAssetInfo);
+		WechatAsset wechatAssetInfo = new WechatAsset();
+		wechatAssetInfo.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		wechatAssetInfo.setStartIndex(null);
+		wechatAssetInfo.setPageSize(null);
+		List<WechatAsset> wechatAssetList = wechatAssetDao.selectList(wechatAssetInfo);
 
 		if (!CollectionUtils.isEmpty(wechatAssetList)) {
 			for (WechatAsset wechatAsset : wechatAssetList) {
@@ -132,11 +132,11 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 					Long groupId = new Long(wechatGroup.getGroupId());
 					WechatAssetGroup wechatAssetGroup = new WechatAssetGroup();
 					wechatAssetGroup.setImportGroupId(groupId);
+					wechatAssetGroup.setWxAcct(wxAcct);
 					List<WechatAssetGroup> wechatAssetGroupsTemp = wechatAssetGroupDao.selectList(wechatAssetGroup);
 					if(CollectionUtils.isEmpty(wechatAssetGroupsTemp)){
 						wechatAssetGroup.setName(wechatGroup.getGroupName());
 						wechatAssetGroup.setMembers(getWechatMemberCountByPubIdAndGroupId(wechatGroup.getWxAcct(),wechatGroup.getGroupId()));
-						wechatAssetGroup.setWxAcct(wxAcct);
 						wechatAssetGroup.setCreateTime(new Date());
 						if (groupId >= 100) {
 							wechatAssetGroup.setIsSysGroup(ApiConstant.TAG_ITEM_CUSTOM);
@@ -149,9 +149,7 @@ public class WechatToWechatAssetSyncServiceImpl implements TaskService {
 						
 						wechatAssetGroup.setName(wechatGroup.getGroupName());
 						wechatAssetGroup.setMembers(getWechatMemberCountByPubIdAndGroupId(wechatGroup.getWxAcct(),wechatGroup.getGroupId()));
-						wechatAssetGroup.setWxAcct(wxAcct);
 						wechatAssetGroup.setCreateTime(new Date());
-
 						wechatAssetGroupDao.updateByWxacctIGroupId(wechatAssetGroup);
 						logger.info("update wechat_asset_group id:" + wxAcct);
 					}																				
