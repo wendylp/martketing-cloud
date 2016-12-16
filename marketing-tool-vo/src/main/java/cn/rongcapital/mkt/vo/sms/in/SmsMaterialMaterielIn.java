@@ -12,25 +12,26 @@ import javax.validation.constraints.NotNull;
 public class SmsMaterialMaterielIn {
 
     @NotNull
-    private Long componentId;
+    private Long materielId;
     @NotNull
-    private Integer componentType;
+    private Integer materielType;
 
-    @JsonProperty("component_id")
-    public Long getComponentId() {
-        return componentId;
+    @JsonProperty("materiel_id")
+    public Long getMaterielId() {
+        return materielId;
     }
 
-    public void setComponentId(Long componentId) {
-        this.componentId = componentId;
+    public void setMaterielId(Long materielId) {
+        this.materielId = materielId;
     }
 
-    @JsonProperty("component_type")
-    public Integer getComponentType() {
-        return componentType;
+    @JsonProperty("materiel_type")
+    public Integer getMaterielType() {
+        return materielType;
     }
 
-    public void setComponentType(Integer componentType) {
-        this.componentType = componentType;
+    public void setMaterielType(Integer materielType) {
+        this.materielType = materielType;
     }
+
 }

@@ -134,7 +134,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 	private void updateUngroupedCountNew(String pubId){
 		// Todo:获取wechat_wegister表中的状态是0的公众号信息
 		WechatMember member = new WechatMember();
-		member.setWxGroupId(ApiConstant.WECHAT_GROUP);
+		member.setWxGroupId(ApiConstant.WECHAT_GROUP_M);
 		member.setPubId(pubId);
 		int count = wechatMemberDao.selectListCount(member);
 		WechatGroup wechatGroup = new WechatGroup();
@@ -209,7 +209,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 				wechatMember.setSex(3);
 			}
 			String wxGroupId = wechatMember.getWxGroupId();
-			wxGroupId = wxGroupId == null || "".equals(wxGroupId) ? ApiConstant.WECHAT_GROUP : wxGroupId;
+			wxGroupId = wxGroupId == null || "".equals(wxGroupId) ? ApiConstant.WECHAT_GROUP_M : wxGroupId;
 			wechatMember.setWxGroupId(wxGroupId);
 			wechatMember.setSubscribeYn("Y");
 			wechatMember.setActivity48hYn("N");
@@ -301,7 +301,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 						}
 					}
 					String wxGroupId = wechatMember.getWxGroupId();
-					wxGroupId = wxGroupId == null || "".equals(wxGroupId) ? ApiConstant.WECHAT_GROUP : wxGroupId;
+					wxGroupId = wxGroupId == null || "".equals(wxGroupId) ? ApiConstant.WECHAT_GROUP_M : wxGroupId;
 					paramFan.put("wx_group_id", wxGroupId);
 					paramFan.put("county", wechatMember.getCounty());
 					paramFan.put("birthday", wechatMember.getBirthday());
@@ -369,7 +369,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 				if (StringUtils.isBlank(pubId))
 					continue;
 				WechatMember member = new WechatMember();
-				member.setWxGroupId(ApiConstant.WECHAT_GROUP);
+				member.setWxGroupId(ApiConstant.WECHAT_GROUP_M);
 				member.setPubId(pubId);
 				int count = wechatMemberDao.selectListCount(member);
 				WechatGroup wechatGroup = new WechatGroup();

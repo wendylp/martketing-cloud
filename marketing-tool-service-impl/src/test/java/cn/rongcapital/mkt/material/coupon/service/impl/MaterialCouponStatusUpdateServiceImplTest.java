@@ -85,6 +85,37 @@ public class MaterialCouponStatusUpdateServiceImplTest {
         vo.setStatus("1");
         service.updateMaterialCouponStatus(vo);
     }
+    
+    /**
+     * status = null
+     * 
+     */
+    @Test
+    public void testUpdateMaterialCouponStatus01_01() {
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                MaterialCoupon data = (MaterialCoupon) args[0];
+                Assert.assertEquals(6, data.getId().intValue());
+                Assert.assertNull(data.getCouponStatus());
+                Assert.assertNull(data.getTaskId());
+                Assert.assertNull(data.getTaskName());
+                return null;
+            }
+        }).when(materialCouponDao).updateByIdAndStatus(Mockito.any(MaterialCoupon.class));
+        List<MaterialCoupon> list = new ArrayList<MaterialCoupon>();
+        MaterialCoupon dto = new MaterialCoupon();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.DATE, 2);
+        dto.setEndTime(date.getTime());
+        list.add(dto);
+        Mockito.when(materialCouponDao.selectList(Mockito.any())).thenReturn(list);
+        ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
+        MaterialCouponStatusUpdateVO vo = new MaterialCouponStatusUpdateVO();
+        vo.setId(6L);
+        service.updateMaterialCouponStatus(vo);
+    }
 
 
     /**

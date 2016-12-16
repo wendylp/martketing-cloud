@@ -42,8 +42,6 @@ public class WechatAssetServiceImpl implements WechatAssetService {
     private static final byte FOLLOW_STATUS = 0;
     //取消关注
     private static final byte UN_FOLLOW_STATUS = 1;
-    //未分组
-    private static final String NO_GROUP = "999";
     
     private final String BITMAP = "00000011000000000";
     
@@ -198,7 +196,7 @@ public class WechatAssetServiceImpl implements WechatAssetService {
         wechatMember.setSex(userInfo.getSex());
         wechatMember.setCity(userInfo.getCity());
         wechatMember.setCountry(userInfo.getCountry());
-        wechatMember.setProvince(userInfo.getProvince());
+        wechatMember.setProvince(userInfo.getProvince());       
         // language
         wechatMember.setHeadImageUrl(userInfo.getHeadimgurl());
         Long millisecond = new Long(userInfo.getSubscribe_time()) * 1000;
@@ -209,18 +207,17 @@ public class WechatAssetServiceImpl implements WechatAssetService {
         wechatMember.setRemark(userInfo.getRemark());
         StringBuffer sb = new StringBuffer();
         List<String> tagList = userInfo.getTagid_list();
-
         if (tagList != null && tagList.size() > 0) {
             for (int i = 0; i < tagList.size(); i++) {
                 sb.append(tagList.get(i));
                 sb.append(",");
             }
-            sb.deleteCharAt(sb.length() - 1);
+//            sb.deleteCharAt(sb.length() - 1);
         }
         if(StringUtils.isNotEmpty(sb.toString())){
         	wechatMember.setWxGroupId(sb.toString());
         }else{
-        	wechatMember.setWxGroupId(NO_GROUP);
+        	wechatMember.setWxGroupId(ApiConstant.WECHAT_GROUP_M);
         }
         wechatMember.setPubId(wxAcct);
         String fansJson = JSONObject.toJSONString(wechatMember);
