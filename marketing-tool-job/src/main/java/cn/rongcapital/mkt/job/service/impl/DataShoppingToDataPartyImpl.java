@@ -85,6 +85,7 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 		Integer maxId = dataPartyDao.getMaxId();
 		maxId = maxId == null ? 0 : maxId;
 		String bitmap = dataShoppingLists.get(0).getBitmap();
+		int keySize = getKeySizeByBitmap(bitmap);
 		
 		List<List<DataShopping>> dataShoppingsList = ListSplit.getListSplit(dataShoppingLists, BATCH_SIZE);
 	    
@@ -131,13 +132,13 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
     	  
     	  if(repeatDatas != null && repeatDatas.size() > 0){
     		 for(Map<String, Object> repeatData : repeatDatas){
-    			 List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData);
+    			 List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData,keySize);
     			 
     			 Integer id = distinctData(repeatIds);
     			 
     			 for(Integer repeatId : repeatIds){
     				 
-//    				 logger.info("==================repeatId:"+repeatId);
+    				 logger.info("==================repeatId:"+repeatId);
     				 
     				 Map<String,Object> paraMap = new HashMap<String,Object>();
     				 paraMap.put("newkeyId",id);

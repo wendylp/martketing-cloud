@@ -78,7 +78,7 @@ public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Int
 		Integer maxId = dataPartyDao.getMaxId();
 		maxId = maxId == null ? 0 : maxId;
 		String bitmap = dataPaymentLists.get(0).getBitmap();
-		
+		int keySize = getKeySizeByBitmap(bitmap);
 		List<List<DataPayment>> dataPaymentsList = ListSplit.getListSplit(dataPaymentLists, BATCH_SIZE);
 	    
 	    for(List<DataPayment> dataPayments :dataPaymentsList){
@@ -121,7 +121,7 @@ public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Int
     	  
         	if(repeatDatas != null && repeatDatas.size() > 0){
         		for(Map<String, Object> repeatData : repeatDatas){
-        			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData);
+        			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData,keySize);
     			 
         			Integer id = distinctData(repeatIds);
     			 
