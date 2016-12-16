@@ -96,42 +96,11 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 				//设置监听器
 				consumer.setMessageListener(listener);
 				//先放一个消息
-				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
+				consumerMap.put(campaignHeadId+"-"+itemId + taskSchedule.getId(), consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
-		}else {
-		    logger.info("consumer is null======================================");
 		}
-		
-/*		MessageConsumer consumer = getQueueConsumer(campaignHeadId+"-"+itemId);//获取queue的消费者对象
-        try {
-            consumer.setMessageListener(new MessageListener() {
-                public void onMessage(Message message) {
-                    logger.info("message is ==========================={}", message);
-                    if(message!=null) {
-                        try {
-                            //获取segment list数据对象
-                            logger.info("监听到消息 ================== {}", message.toString());
-                            @SuppressWarnings("unchecked")
-                            List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
-                            if(CollectionUtils.isNotEmpty(segmentList)) {
-                                processMqMessage(segmentList,campaignHeadId,
-                                                 itemId,campaignEndsList,campaignActionSaveAudience);
-                            }
-                        } catch (Exception e) {
-                            logger.error(e.getMessage(),e);
-                        }
-                    }
-                }
-            });
-            if(null != consumer){
-                consumerMap.put(campaignHeadId+"-"+itemId, consumer);
-            }
-          
-        } catch (JMSException e) {
-            logger.error(e.getMessage(),e);
-        }*/
 	}
 	private void processMqMessage(List<Segment> segmentList,
 			  Integer campaignHeadId,String itemId,
