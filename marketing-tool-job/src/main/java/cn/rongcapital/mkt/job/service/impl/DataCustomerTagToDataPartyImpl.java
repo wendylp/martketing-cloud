@@ -124,6 +124,10 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
     		 for(Map<String, Object> repeatData : repeatDatas){
     			 List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData, keySize);
     			 
+     			if(repeatIds == null){
+    				continue;
+    			}
+     			
     			 Integer id = distinctData(repeatIds);
     			 
     			 for(Integer repeatId : repeatIds){
