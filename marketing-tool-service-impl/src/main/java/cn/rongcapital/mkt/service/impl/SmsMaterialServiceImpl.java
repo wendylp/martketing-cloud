@@ -85,8 +85,8 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
             for (SmsMaterialMaterielIn smsMaterialMaterielIn : smsMaterialMaterielInList) {
                 SmsMaterialMaterielMap insertSmsMaterialMaterielMap = new SmsMaterialMaterielMap();
                 insertSmsMaterialMaterielMap.setSmsMaterialId(Long.valueOf(smsMaterialIn.getId()));
-                insertSmsMaterialMaterielMap.setSmsMaterielId(smsMaterialMaterielIn.getComponentId());
-                insertSmsMaterialMaterielMap.setSmsMaterielType(smsMaterialMaterielIn.getComponentType());
+                insertSmsMaterialMaterielMap.setSmsMaterielId(smsMaterialMaterielIn.getMaterielId());
+                insertSmsMaterialMaterielMap.setSmsMaterielType(smsMaterialMaterielIn.getMaterielType());
                 insertSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
                 smsMaterialMaterielMapDao.insert(insertSmsMaterialMaterielMap);
             }

@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.biz.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,7 @@ import com.tagsin.wechat_sdk.user.UserInfo;
 import com.tagsin.wechat_sdk.vo.AuthInfo;
 
 import cn.rongcapital.mkt.biz.ProcessReceiveMessageOfWeiXinBiz;
+import cn.rongcapital.mkt.biz.WechatMemberBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.Xml2JsonUtil;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
@@ -91,6 +93,9 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
     
     @Autowired
     private WechatQrcodeDao wechatQrcodeDao;
+    
+    @Autowired
+    private WechatMemberBiz wechatMemberBiz;
     
     private String QUERY_AUTH_CODE_TEXT="";
     
@@ -325,7 +330,7 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 					  break; 
 				  }
 				  case "subscribe":{
-					  UserInfo userInfo = WxComponentServerApi.getUserInfo(app,openid);//如果openid出错，sdk会直接抛出异常				  
+					  UserInfo userInfo = wechatMemberBiz.getUserInfoeByOpenid(app, openid);
 					  if(wechatRegister!=null){
 						  wechatAssetService.follow(userInfo, wechatRegister.getWxAcct());
 					  }

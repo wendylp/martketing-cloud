@@ -13,6 +13,8 @@ package cn.rongcapital.mkt.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo;
@@ -57,6 +59,5 @@ public interface SmsTempletDao extends BaseDao<SmsTemplet>{
 	 * 分组计算数量
 	 * @return
 	 */
-	public List<Map<String,Object>> getTempletCountByType(String channelType);
-	
+	public List<Map<String,Object>> getTempletCountByType(@Param(value = "channelType") String channelType);
 }

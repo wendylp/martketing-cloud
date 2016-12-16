@@ -96,7 +96,7 @@ public class MaterialCouponGeneralGetServiceImplTest {
         Assert.assertEquals(1, output.getTotal());
         Assert.assertEquals(1, output.getTotalCount());
         Assert.assertTrue(CollectionUtils.isNotEmpty(output.getData()));
-        Assert.assertTrue(output.getData().size() == 1);
+        Assert.assertEquals(output.getData().size(), 1);
         MaterialCouponGeneralGetOut expectOut = new MaterialCouponGeneralGetOut();
         BeanUtils.copyProperties(item, expectOut);
         Assert.assertEquals(expectOut.toString(), output.getData().get(0).toString());

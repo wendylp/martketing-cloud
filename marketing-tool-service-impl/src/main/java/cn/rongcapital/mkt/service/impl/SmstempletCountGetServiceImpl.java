@@ -1,6 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,11 @@ public class SmstempletCountGetServiceImpl implements SmstempletCountGetService 
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                 ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		
-		List<Map<String,Object>> countMaps = smsTempletDao.getTempletCountByType(channelType );
+        if("-1".equals(channelType)){
+        	channelType = null;
+        }
+        
+		List<Map<String,Object>> countMaps = smsTempletDao.getTempletCountByType(channelType);
 		
 		Map<String,Integer> resultMap = new HashMap<String,Integer>();
 		
@@ -48,8 +51,8 @@ public class SmstempletCountGetServiceImpl implements SmstempletCountGetService 
 			
 		}
 		
-		resultMap.put(SmsTempletTypeEnum.FIXED.getStatusCode()+"", fixedCount);
-		resultMap.put(SmsTempletTypeEnum.VARIABLE.getStatusCode()+"", variableCount);
+		resultMap.put("fixed", fixedCount);
+		resultMap.put("variable", variableCount);
 		
 		result.getData().add(resultMap);
 		

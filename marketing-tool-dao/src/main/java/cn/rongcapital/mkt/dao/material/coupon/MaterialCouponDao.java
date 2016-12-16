@@ -13,6 +13,8 @@ package cn.rongcapital.mkt.dao.material.coupon;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 
@@ -102,6 +104,12 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
 	 */
     MaterialCoupon selecCouponAmountByCouponId(Map<String, Object> paramMap);
     
-    
-    
+    /**
+     * 更新优惠券剩余库存
+     * 
+     * @param id 优惠券主键
+     * @param count 消费数量
+     * @author zhuxuelong
+     */
+    void updateCouponStockRest(@Param("id") Long id, @Param("count") int count);
 }

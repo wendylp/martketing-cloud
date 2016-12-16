@@ -1,12 +1,18 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import cn.rongcapital.mkt.common.enums.DirectlyCityEnum;
+import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.dao.CityDicDao;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.ProvinceDicDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.po.CityDic;
 import cn.rongcapital.mkt.po.DataPopulation;
 import cn.rongcapital.mkt.po.ProvinceDic;
 import cn.rongcapital.mkt.po.WechatMember;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,6 +37,9 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
     private static final Integer NOT_SYNC_TO_DATA_PARTY = 0;
     private static final Integer SYNCED_TO_DATA_PARTY = 1;
     private final Integer BATCH_SIZE = 500;
+    
+    private final String WECHAT_AREA = "其它"; 
+    private final String WECHAT_CITIZENSHIP = "中国"; 
 
     @Autowired
     private WechatMemberDao wechatMemberDao;
@@ -40,7 +49,14 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
     @Autowired
     private ProvinceDicDao provinceDicDao;
     
+    @Autowired
+    private CityDicDao cityDicDao;
+    
     private Map<String, ProvinceDic> provinceDicMap;
+    
+    private Map<String, CityDic> cityDicMap;
+    
+    private String format = "yyyy-MM-dd HH:mm:ss";
 
     //1选出没有被同步过的数据，根据selected为0的字段
     //2将数据同步到dataParty表中。
@@ -50,8 +66,9 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
     @Override
     public void task(Integer taskId) {
         Integer totalCount = wechatMemberDao.selectedNotSyncCount();
-        if(totalCount != null){
+        if(totalCount != null&&totalCount!=0){
         	provinceDicMap = getProvinceDicMap();
+        	cityDicMap = getCityDicMap();
             for(int pageNum = 1; pageNum <= (totalCount + BATCH_SIZE -1) / BATCH_SIZE; pageNum ++ ){
                 syncWechatMemberByBatchSize();
             }
@@ -81,31 +98,39 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
         for(WechatMember wechatMember : notSyncWechatMemberList){
             DataPopulation dataPopulation = new DataPopulation();
             if(wechatMember.getPubId() != null && !wechatMember.getPubId().isEmpty()){
-                if (updateWechatMemberKeyidByBitmap(wechatMember, dataPopulation)) continue;
                 dataPopulation.setWxmpId(wechatMember.getPubId());
                 dataPopulation.setWxCode(wechatMember.getWxCode());
                 dataPopulation.setBitmap(wechatMember.getBitmap());
                 dataPopulation.setProvice(wechatMember.getProvince());
                 dataPopulation.setName(wechatMember.getWxName());
-                dataPopulation.setGender(wechatMember.getSex().byteValue());
+                if(wechatMember.getSex()!=null){
+                	dataPopulation.setGender(wechatMember.getSex().byteValue());
+                }                
                 dataPopulation.setNickname(wechatMember.getNickname());
                 dataPopulation.setCity(wechatMember.getCity());
                 dataPopulation.setHeadImgUrl(wechatMember.getHeadImageUrl());
                 dataPopulation.setCitizenship(wechatMember.getCountry());
                 dataPopulation.setSource(WECHAT_PUBFANS_SOURCE);
-//                dataPopulation.setSubscribeTime(DateUtil.getDateFromString(wechatMember.getSubscribeTime()));
+                dataPopulation.setSubscribeTime(DateUtil.getDateFromString(wechatMember.getSubscribeTime(),format));
                 dataPopulation.setRemark(wechatMember.getRemark());
-                dataPopulation = cleanProvinceDic(dataPopulation);
-                dataPopulationDao.insert(dataPopulation);
-                wechatMember.setKeyid(dataPopulation.getId());
-                updateKeyIdInWechatMember(wechatMember);
+                /**
+                 * 清洗省市码表
+                 */
+                dataPopulation = cleanProvinceDicAndCityDic(dataPopulation);
+                if (updateWechatMemberKeyidByBitmap(wechatMember)){
+                	dataPopulationDao.updateDataPopulationByPubIdAndOpenId(dataPopulation);
+                }else{
+                    dataPopulationDao.insert(dataPopulation);
+                    wechatMember.setKeyid(dataPopulation.getId());
+                    updateKeyIdInWechatMember(wechatMember);
+                } 
             }
         }
-
         return true;
     }
 
-    private boolean updateWechatMemberKeyidByBitmap(WechatMember wechatMember, DataPopulation dataPopulation) {
+    private boolean updateWechatMemberKeyidByBitmap(WechatMember wechatMember) {
+    	DataPopulation dataPopulation = new DataPopulation();
         dataPopulation.setWxmpId(wechatMember.getPubId());
         dataPopulation.setWxCode(wechatMember.getWxCode());
         if(isAlreadySyncedToDataPopulation(dataPopulation)){
@@ -142,6 +167,10 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
         wechatMemberDao.updateSyncDataMark(notSyncWechatMemberList);
     }
     
+    /**
+     * 获取省码表
+     * @return
+     */
     private Map<String, ProvinceDic> getProvinceDicMap(){
     	provinceDicMap = new HashMap<String, ProvinceDic>();
     	ProvinceDic provinceDicTemp = new ProvinceDic();
@@ -159,19 +188,135 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
 		return provinceDicMap;
     }
     
-    private DataPopulation cleanProvinceDic(DataPopulation paramDataPopulation){
-    	if(provinceDicMap!=null&&provinceDicMap.size()>0){
-    		if(paramDataPopulation!=null){
-    			String provice = paramDataPopulation.getProvice();
-    			if(provinceDicMap.containsKey(provice)){
-    				ProvinceDic provinceDic = provinceDicMap.get(provice);
-    				if(provinceDic!=null){
-    					String provinceNamec = provinceDic.getProvinceNamec();
-    					paramDataPopulation.setProvice(provinceNamec);
-    				}
-    			}
+    
+    /**
+     * 获取市码表
+     * @return
+     */
+    private Map<String, CityDic> getCityDicMap(){
+    	cityDicMap = new HashMap<String, CityDic>();
+    	CityDic cityDicTemp = new CityDic();
+    	cityDicTemp.setPageSize(null);
+    	cityDicTemp.setStartIndex(null);
+    	List<CityDic> cityDics = cityDicDao.selectList(cityDicTemp);
+    	if(!CollectionUtils.isEmpty(cityDics)){
+    		for(Iterator<CityDic> iter = cityDics.iterator();iter.hasNext();){
+    			CityDic cityDic = iter.next();
+    			if(!cityDicMap.containsKey(cityDic.getCityNamee())){
+    				cityDicMap.put(cityDic.getCityNamee(), cityDic);
+    			}    			
     		}
     	}
+		return cityDicMap;
+    }
+    
+    /**
+     * 清洗省市，英文换成中文
+     * @param paramDataPopulation
+     * @return
+     */
+    private DataPopulation cleanProvinceDicAndCityDic(DataPopulation paramDataPopulation){
+		if(paramDataPopulation!=null){
+			String provice = paramDataPopulation.getProvice();
+	    	if(StringUtils.isNotEmpty(provice)&&containCode(provice)){
+	    		paramDataPopulation = cleanzhixiashi(paramDataPopulation);
+	    	}else{
+	    		paramDataPopulation = cleanProvinceDic(paramDataPopulation);
+				paramDataPopulation = cleanCityDic(paramDataPopulation);
+	    	}
+		}
 		return paramDataPopulation;   	
+    }
+    
+    
+    /**
+     * 替换直辖市的省市中文
+     * @param paramDataPopulation
+     * @return
+     */
+    private DataPopulation cleanzhixiashi(DataPopulation paramDataPopulation){
+    	String provice = paramDataPopulation.getProvice();
+		paramDataPopulation.setProvice(DirectlyCityEnum.valueOf(provice).getDescription());
+		paramDataPopulation.setCity(DirectlyCityEnum.valueOf(provice).getDescription());
+		paramDataPopulation.setCitizenship(this.WECHAT_CITIZENSHIP);
+		return paramDataPopulation;    	
+    }
+    
+    /**
+     * 验证省份是否是直辖市
+     * @param code
+     * @return
+     */
+    private boolean containCode(String code){
+    	boolean hasCode = false;
+    	switch(code){
+	    	 case "Beijing" :{
+	    		 hasCode = true;
+	    		 break;
+	    	 }
+	    	 case "Shanghai" :{
+	    		 hasCode = true;
+	    		 break;
+	    	 }
+	    	 case "Tianjin" :{
+	    		 hasCode = true;
+	    		 break;
+	    	 }
+	    	 case "Chongqing" :{
+	    		 hasCode = true;
+	    		 break;
+	    	 }
+	    	 default :{
+	    		 break; 
+	    	 }
+    	}
+		return hasCode;
+    }
+    
+    /**
+     * 替换省中文
+     * @param paramDataPopulation
+     * @return
+     */
+    private DataPopulation cleanProvinceDic(DataPopulation paramDataPopulation){
+    	String provice = paramDataPopulation.getProvice();		
+    	if(provinceDicMap!=null&&provinceDicMap.size()>0){    			
+			if(StringUtils.isNotEmpty(provice)&&provinceDicMap.containsKey(provice)){
+				ProvinceDic provinceDic = provinceDicMap.get(provice);
+				if(provinceDic!=null){
+					String provinceNamec = provinceDic.getProvinceNamec();
+					paramDataPopulation.setProvice(provinceNamec);
+					paramDataPopulation.setCitizenship(this.WECHAT_CITIZENSHIP);
+				}
+			}else{
+				paramDataPopulation.setProvice(this.WECHAT_AREA);
+				paramDataPopulation.setCitizenship(this.WECHAT_AREA);
+			}    			    		
+    	}
+    	
+		return paramDataPopulation;   
+    }
+    
+    /**
+     * 替换市中文
+     * @param paramDataPopulation
+     * @return
+     */
+    private DataPopulation cleanCityDic(DataPopulation paramDataPopulation){
+    	String city = paramDataPopulation.getCity();
+    	if(cityDicMap!=null&&cityDicMap.size()>0){
+			if(StringUtils.isNotEmpty(city)&&cityDicMap.containsKey(city)){
+				CityDic cityDic = cityDicMap.get(city);
+				if(cityDic!=null){
+					String cityNamec = cityDic.getCityNamec();
+					paramDataPopulation.setCity(cityNamec);
+					paramDataPopulation.setCitizenship(this.WECHAT_CITIZENSHIP);
+				}
+			}else{
+				paramDataPopulation.setCity(this.WECHAT_AREA);
+				paramDataPopulation.setCitizenship(this.WECHAT_AREA);
+			}    			
+    	}
+		return paramDataPopulation;
     }
 }

@@ -5,7 +5,14 @@ import java.util.Date;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class CityDic extends BaseQuery{
-    private Integer cityId;
+	
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer cityId;
 
     private Integer provinceId;
 
@@ -20,6 +27,8 @@ public class CityDic extends BaseQuery{
     private Date createTime;
 
     private Date updateTime;
+
+    private String cityNamee;
 
     public Integer getCityId() {
         return cityId;
@@ -83,5 +92,13 @@ public class CityDic extends BaseQuery{
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCityNamee() {
+        return cityNamee;
+    }
+
+    public void setCityNamee(String cityNamee) {
+        this.cityNamee = cityNamee == null ? null : cityNamee.trim();
     }
 }
