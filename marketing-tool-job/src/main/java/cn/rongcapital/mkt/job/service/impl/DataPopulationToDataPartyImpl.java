@@ -119,7 +119,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
         	//设置最大阻塞时间，所有线程任务执行完成再继续往下执行
         	executor.awaitTermination(24, TimeUnit.HOURS);
     	  
-        	logger.info("======================校验重复数据==================== ");
+        	logger.info("======================校验重复数据====================校验开始id= "+maxId);
     	  
         	List<Map<String, Object>> repeatDatas = checkData(bitmap, maxId);
     	  
@@ -137,7 +137,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
     			 
         			for(Integer repeatId : repeatIds){
     				 
-//    					logger.info("==================repeatId:"+repeatId);
+    					logger.info("==================repeatId:"+repeatId);
     				 
         				Map<String,Object> paraMap = new HashMap<String,Object>();
     					paraMap.put("newkeyId",id);
