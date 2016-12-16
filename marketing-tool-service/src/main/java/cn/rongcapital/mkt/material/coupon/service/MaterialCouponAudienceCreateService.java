@@ -6,9 +6,11 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.service;
 
+import javax.jms.JMSException;
+
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface MaterialCouponAudienceCreateService {
 
-    public BaseOutput createTargetAudienceGroup(Long id,String audienceName,String blurSearch, String releaseStatus, String verifyStatus, String expireStatus);
+    public BaseOutput createTargetAudienceGroup(Long id,String audienceName,String blurSearch, String releaseStatus, String verifyStatus, String expireStatus) throws JMSException;
 }
