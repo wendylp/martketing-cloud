@@ -8,6 +8,7 @@
 package cn.rongcapital.mkt.material.coupon.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
@@ -82,7 +83,6 @@ public class MaterialCouponPageListServiceTest {
         Integer size = 10;
         int totalCount = 20;
 
-        
 
         paramMaterialCoupon.setTitle("贝贝熊");
         paramMaterialCoupon.setStartIndex(1);
@@ -103,6 +103,11 @@ public class MaterialCouponPageListServiceTest {
         BaseOutput expected = new BaseOutput(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
             ApiConstant.INT_ZERO, null);
         Assert.assertEquals(expected.getCode(), baseOutput.getCode());
+
+        String channelCode = "ERROR";
+        baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(channelCode, null, keyword, index, size);
+
+        Assert.assertEquals(ApiErrorCode.PARAMETER_ERROR.getCode(), baseOutput.getCode());
     }
     
     
@@ -124,6 +129,7 @@ public class MaterialCouponPageListServiceTest {
         paramMaterialCoupon.setPageSize(10);
         paramMaterialCoupon.setChannelCode(chanelCode.getCode());
         paramMaterialCoupon.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
+        paramMaterialCoupon.setCreateTime(new Date());
 
         List<MaterialCoupon> resultList = new ArrayList<MaterialCoupon>();
         resultList.add(paramMaterialCoupon);
@@ -157,6 +163,7 @@ public class MaterialCouponPageListServiceTest {
         paramMaterialCoupon.setPageSize(10);
         paramMaterialCoupon.setChannelCode(chanelCode.getCode());
         paramMaterialCoupon.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
+        paramMaterialCoupon.setCreateTime(new Date());
 
         List<MaterialCoupon> resultList = new ArrayList<MaterialCoupon>();
         resultList.add(paramMaterialCoupon);
@@ -173,7 +180,13 @@ public class MaterialCouponPageListServiceTest {
         BaseOutput expected = new BaseOutput(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
             ApiConstant.INT_ZERO, null);
         Assert.assertEquals(expected.getCode(), baseOutput.getCode());
-        
+
+
+         baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(),null,
+                keyword, index, size);
+
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), baseOutput.getCode());
+
     }
     
     @Test
@@ -193,6 +206,7 @@ public class MaterialCouponPageListServiceTest {
         paramMaterialCoupon.setStartIndex(1);
         paramMaterialCoupon.setPageSize(10);
         paramMaterialCoupon.setChannelCode(chanelCode.getCode());
+        paramMaterialCoupon.setCreateTime(new Date());
 
         List<MaterialCoupon> resultList = new ArrayList<MaterialCoupon>();
         resultList.add(paramMaterialCoupon);

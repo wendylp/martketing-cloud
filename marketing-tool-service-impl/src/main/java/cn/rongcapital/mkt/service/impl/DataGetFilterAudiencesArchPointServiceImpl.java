@@ -99,7 +99,7 @@ public class DataGetFilterAudiencesArchPointServiceImpl implements DataGetFilter
 
 			for (DataArchPoint tempT : dataList) {
 				Map<String, Object> map = new HashMap<>();
-				map.put("id", ReflectionUtil.getObjectPropertyByName(tempT, "id"));
+				map.put("id", ReflectionUtil.getObjectPropertyByName(tempT, "keyid"));
 				for (ImportTemplate importTemplate : importTemplateList) {
 					Object value = ReflectionUtil.getObjectPropertyByName(tempT,
 							ReflectionUtil.recoverFieldName(importTemplate.getFieldCode()));

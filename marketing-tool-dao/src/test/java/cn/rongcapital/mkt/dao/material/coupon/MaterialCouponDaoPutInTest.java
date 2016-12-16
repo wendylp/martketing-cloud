@@ -1,14 +1,11 @@
 /*************************************************
-* @功能及特点的描述简述: 返回投放优惠券统计
-* 该类被编译测试过
-* @see （与该类关联的类）：
-* @对应项目名称：MC
-* @author: liuhaizhan
-* @version: 版本
-* @date(创建、开发日期)：2016年12月9日
-* 最后修改日期：2016年12月9日
-* @复审人:
-*************************************************/
+ * @功能及特点的描述简述: 返回投放优惠券统计 该类被编译测试过
+ * @see （与该类关联的类）：
+ * @对应项目名称：MC
+ * @author: liuhaizhan
+ * @version: 版本
+ * @date(创建、开发日期)：2016年12月9日 最后修改日期：2016年12月9日 @复审人:
+ *************************************************/
 package cn.rongcapital.mkt.dao.material.coupon;
 
 import java.math.BigDecimal;
@@ -70,12 +67,14 @@ public class MaterialCouponDaoPutInTest extends AbstractUnitTest {
         mcc.setCode("1333");
         mcc.setUser("13842821032");
         mcc.setVerifyStatus("unverify");
-        mcc.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRELEASED.getCode());
+        mcc.setStatus((byte)0);
+        mcc.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRECEIVED.getCode());
         // 未收到
         materialCouponCodeDao.insert(mcc);
 
         mcc.setCouponId(mc.getId());
         mcc.setCode("aaaauuu");
+        mcc.setStatus((byte)0);
         mcc.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
         mcc.setVerifyStatus("verified");
 
@@ -85,11 +84,22 @@ public class MaterialCouponDaoPutInTest extends AbstractUnitTest {
 
     @Test
     public void test() {
-        List<Map> map = materialCouponDao.getPutInCoupon(mc.getId());
+
+        MaterialCoupon m = materialCouponDao.selectOneCoupon(mc.getId());
+        Assert.assertEquals(mc.getStatus().toString(), m.getStatus().toString());
+        List<Map> map = materialCouponCodeDao.getCouponPutInCount(mc.getId());// 投放统计
         for (Map data : map) {
-            Assert.assertEquals(mc.getStockRest(), data.get("rest_count"));
-            logger.info(data.get("tjcount").toString());
+            // Assert.assertEquals(mcc, data.get("status").toString());
             logger.info(data.get("status").toString());
+            logger.info(data.get("cnt").toString());
+        }
+
+        map = materialCouponCodeDao.getCouponVerifyCount(mc.getId());// 投放统计
+
+        for (Map data : map) {
+            // Assert.assertEquals(mcc, data.get("status").toString());
+            logger.info(data.get("status").toString());
+            logger.info(data.get("cnt").toString());
         }
 
     }

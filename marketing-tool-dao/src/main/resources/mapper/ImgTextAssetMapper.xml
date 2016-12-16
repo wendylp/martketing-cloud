@@ -18,7 +18,7 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
-		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name like CONCAT('%',#{name},'%')]]></if>
 		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
 		    	<if test="ownerName != null"><![CDATA[ AND owner_name = #{ownerName}]]></if>
 		    	<if test="pcPreviewUrl != null"><![CDATA[ AND pc_preview_url = #{pcPreviewUrl}]]></if>

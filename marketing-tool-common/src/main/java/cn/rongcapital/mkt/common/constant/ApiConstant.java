@@ -50,6 +50,9 @@ public class ApiConstant {
 	public static final int INT_ONE = 1;
 	
 	public static final String WECHAT_GROUP = "999";
+	
+	public static final String WECHAT_GROUP_M = "999,";
+	
 	public static final String WECHAT_GROUP_NAME = "未分组";
 	
 	public static final int PAGE_START_INDEX_DEFAULT = 0;//默认分页起始index值
@@ -376,7 +379,9 @@ public class ApiConstant {
      * 微信图文的缩略图片存储
      */
     public static final String WEIXIN_MATERIAL_IMG_PATH = "/rc/data/downloads/material/";
-    public static final String WEIXIN_MATERIAL_IMG_PATH_TO_SHOW = "/downloads/material/";
+    public static final String WEIXIN_MATERIAL_IMG_PATH_TO_SHOW = "material/";
 
     public static final String WEIXIN_TEST_APPID = "wx570bc396a51b8ff8";
+    
+    public static final String WEIXIN_AUDIENCE_SOURCE = "微信人群";
 }

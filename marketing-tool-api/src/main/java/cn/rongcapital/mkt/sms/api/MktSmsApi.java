@@ -186,8 +186,9 @@ public class MktSmsApi {
     @GET
     @Path("/mkt.sms.smsmaterial.count.get")
     public BaseOutput getSmsMaterialCount(@NotEmpty @QueryParam("user_token") String userToken,
-                                     @QueryParam("ver") String ver) throws Exception {
-        return smsMaterialGetService.getSmsMaterialCount();
+                                     @QueryParam("ver") String ver,
+                                     @NotNull @QueryParam("channel_type") Integer channelType) throws Exception {
+        return smsMaterialGetService.getSmsMaterialCount(channelType);
     }
 
     /**
