@@ -18,7 +18,7 @@ public interface SystemTagService {
 	 * @param navigateIndex	导航坐标
 	 * @return
 	 */
-	BaseOutput getSystemTagList(String navigateIndex);
+	BaseOutput getSystemTagList(String navigateIndex,Integer pageSourceType);
 	
 	/**
 	 * 获取标签值列表

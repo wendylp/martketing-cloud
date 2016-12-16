@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -22,8 +22,6 @@ import cn.rongcapital.mkt.po.mongodb.TagTree;
 import cn.rongcapital.mkt.service.SystemTagService;
 import cn.rongcapital.mkt.service.TagSystemCommonUtilService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.SystemTagIn;
-import cn.rongcapital.mkt.vo.in.SystemValueIn;
 import cn.rongcapital.mkt.vo.out.TagSystemTreeOut;
 import cn.rongcapital.mkt.vo.out.TagSystemTreeTagOut;
 
@@ -50,7 +48,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 	private TagValueCountDao tagValueCountDao;
 
 	@Override
-	public BaseOutput getSystemTagList(String navigateIndex) {
+	public BaseOutput getSystemTagList(String navigateIndex, Integer pageSourceType) {
 		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
@@ -65,7 +63,26 @@ public class SystemTagServiceImpl implements SystemTagService {
 			output.getData().add(getTagTree(navigateIndex));
 			break;
 		}
+
+		if(pageSourceType != null && pageSourceType == 1){
+			filterTagCoverNonData(output);
+		}
 		return output;
+	}
+
+	private void filterTagCoverNonData(BaseOutput output) {
+		if(output == null) return;
+		if(CollectionUtils.isNotEmpty(output.getData())){
+			List<Object> filteredList = new LinkedList<>();
+			for(Object object : output.getData()){
+				if(object instanceof TagSystemTreeTagOut){
+					if(commonUtilService.isTagCoverData(((TagSystemTreeTagOut) object).getTagId())){
+						filteredList.add(object);
+					}
+				}
+			}
+			output.setData(filteredList);
+		}
 	}
 
 	@Override

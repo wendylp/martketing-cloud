@@ -10,5 +10,6 @@ public interface TagSystemCommonUtilService {
      * @return
      */
     public String getTagCover(String tagId);
-
+    public int getTagCoverAmount(String tagId);
+    public boolean isTagCoverData(String tagId);
 }
