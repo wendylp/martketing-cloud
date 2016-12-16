@@ -124,7 +124,10 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
         	if(repeatDatas != null && repeatDatas.size() > 0){
         		for(Map<String, Object> repeatData : repeatDatas){
         			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData,keySize);
-    			 
+        			
+        			if(repeatIds == null){
+        				continue;
+        			}
         			Integer id = distinctData(repeatIds);
     			 
         			for(Integer repeatId : repeatIds){

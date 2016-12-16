@@ -123,6 +123,10 @@ public class DataPaymentToDataPartyImpl extends AbstractDataPartySyncService<Int
         		for(Map<String, Object> repeatData : repeatDatas){
         			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData,keySize);
     			 
+        			if(repeatIds == null){
+        				continue;
+        			}
+        			
         			Integer id = distinctData(repeatIds);
     			 
         			for(Integer repeatId : repeatIds){
