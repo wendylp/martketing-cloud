@@ -16,7 +16,18 @@ public class SystemTagResult extends BaseQuery {
 
 	private Integer keyId;		//映射Mongo中mId
 
-    private String tagValue;	//标签值
+//    private String tagValue;	//标签值
+    
+    private String tag_value;
+    
+
+	public String getTag_value() {
+		return tag_value;
+	}
+
+	public void setTag_value(String tag_value) {
+		this.tag_value = tag_value;
+	}
 
 	public Integer getKeyId() {
 		return keyId;
@@ -26,12 +37,12 @@ public class SystemTagResult extends BaseQuery {
 		this.keyId = keyId;
 	}
 
-	public String getTagValue() {
-		return tagValue;
-	}
-
-	public void setTagValue(String tagValue) {
-		this.tagValue = tagValue;
-	}
+//	public String getTagValue() {
+//		return tagValue;
+//	}
+//
+//	public void setTagValue(String tagValue) {
+//		this.tagValue = tagValue;
+//	}
    
 }
