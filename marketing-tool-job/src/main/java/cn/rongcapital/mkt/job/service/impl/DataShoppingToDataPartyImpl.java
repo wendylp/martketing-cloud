@@ -1,5 +1,9 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,8 +13,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -92,7 +98,10 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 	    				List<Integer> idList = new ArrayList<>(dataShoppingLists.size());
 	    				
 	    				for (DataShopping dataObj : dataShoppings) {
-	    					createParty(dataObj);
+	    					
+	    					if(!checkBitKey(dataObj)){
+	    						createParty(dataObj);
+	    					}
 	    				
 	    					idList.add(dataObj.getId());
 	    				
@@ -162,6 +171,29 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 		dataShoppingDao.updateById(keyidObj);
 	}
 
+	/**
+	 * 校验主键是否为空
+	 * @param dataObj
+	 * @return
+	 */
+	private boolean checkBitKey(DataShopping dataObj){
+		String bitmap = dataObj.getBitmap();
+		
+		if (StringUtils.isNotBlank(bitmap)) {
+			try {
+				// 获取keyid
+				List<String> strlist = this.getAvailableKeyid(bitmap);
+				
+				return checkBitKeyByType(strlist, dataObj);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return true;
+	}
+	
 	private void createParty(DataShopping dataObj){
 		
 		String bitmap = dataObj.getBitmap();
@@ -171,7 +203,7 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 			this.updateKeyidByid(keyid, dataObj.getId());
 		} else {
 			DataParty dataParty = new DataParty();
-
+			BeanUtils.copyProperties(dataObj, dataParty);
 			dataParty.setMdType(DataTypeEnum.SHOPPING.getCode());
 			dataParty.setSource(dataObj.getSource());
 			dataParty.setBatchId(dataObj.getBatchId());

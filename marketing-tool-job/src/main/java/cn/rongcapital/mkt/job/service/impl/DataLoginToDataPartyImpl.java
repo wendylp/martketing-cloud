@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import cn.rongcapital.mkt.dao.DataLoginDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataLogin;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.DataPopulation;
 
 /**
  * Created by ethan on 16/6/30.
@@ -91,7 +93,9 @@ public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integ
 	    			@Override
 	    			public Void call() throws Exception {
 	    				
-	    				createParty(dataObj);
+    					if(!checkBitKey(dataObj)){
+    						createParty(dataObj);
+    					}
 	    				
 	    				return null;
 	    			}
@@ -160,6 +164,29 @@ public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integ
 		keyidObj.setId(id);
 		keyidObj.setKeyid(keyid);
 		dataLoginDao.updateById(keyidObj);
+	}
+	
+	/**
+	 * 校验主键是否为空
+	 * @param dataObj
+	 * @return
+	 */
+	private boolean checkBitKey(DataLogin dataObj){
+		String bitmap = dataObj.getBitmap();
+		
+		if (StringUtils.isNotBlank(bitmap)) {
+			try {
+				// 获取keyid
+				List<String> strlist = this.getAvailableKeyid(bitmap);
+				
+				return checkBitKeyByType(strlist, dataObj);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return true;
 	}
 	
 	private void createParty(DataLogin dataObj){

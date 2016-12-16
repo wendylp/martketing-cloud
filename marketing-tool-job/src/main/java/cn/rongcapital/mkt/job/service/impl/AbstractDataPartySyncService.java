@@ -20,6 +20,7 @@ import cn.rongcapital.mkt.dao.KeyidMapBlockDao;
 import cn.rongcapital.mkt.job.service.DataPartySyncService;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.KeyidMapBlock;
 
 /**
@@ -195,6 +196,11 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 			try {
 				pd = new PropertyDescriptor(field, dataParty.getClass());
 				Method m = pd.getWriteMethod();
+				
+				if(paramMap.get(key) == null || "".equals(paramMap.get(key).toString())){
+					return null;
+				}
+				
 				m.invoke(dataParty, paramMap.get(key));
 			} catch (IntrospectionException e) {
 				e.printStackTrace();
@@ -247,4 +253,43 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 
 	}
 	
+	/**
+	 * 校验主键类值是否为空
+	 * @param fields
+	 * @param obj
+	 * @return
+	 */
+	protected boolean checkBitKeyByType(List<String> fields,Object obj){
+		
+		if(fields == null || fields.size() == 0){
+			return true;
+		}
+		
+		for(String field : fields){
+			
+			PropertyDescriptor pd;
+			try {
+				pd = new PropertyDescriptor(field, obj.getClass());
+				Method m = pd.getReadMethod();
+				Object fieldValue = m.invoke(obj);
+				
+				if(fieldValue == null){
+					return true;	
+				}
+				
+			} catch (IntrospectionException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return false;
+		
+	}
 }
