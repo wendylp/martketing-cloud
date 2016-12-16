@@ -81,6 +81,7 @@ public class RegisterListServiceImpl implements RegisterListService {
 				WechatRegister wechatRegister = iter.next();
 				if(wechatRegister!=null){
 					RegisterAssetVo registerAssetVo = new RegisterAssetVo();
+					registerAssetVo.setAsset_id(wechatRegister.getId());
 					registerAssetVo.setWx_acct(wechatRegister.getWxAcct());
 					registerAssetVo.setAsset_name(wechatRegister.getName());
 					registerAssetVo.setHeaderImage(wechatRegister.getHeaderImage());

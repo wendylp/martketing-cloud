@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service;
 
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.TagValueUpdateIn;
 
 /*************************************************
  * @功能简述: 系统标签相关接口(前端使用)
@@ -27,7 +28,17 @@ public interface SystemTagService {
 	 */
 	BaseOutput getSystemTagValueList(String tagId,Integer index,Integer size);
 	
-	
+	/**
+	 * 获取标签节点
+	 * @return
+	 */
 	BaseOutput getNativeList();
+	
+	/**
+	 * 修改保存标签值
+	 * @param systemTagIn
+	 * @return
+	 */
+	BaseOutput saveUpdateTagValue(TagValueUpdateIn tagValueUpdateIn);
 
 }

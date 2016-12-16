@@ -119,7 +119,8 @@
 		SELECT
 		asset_id,total_count
 		FROM wechat_asset
-		WHERE asset_type = #{asset_type}
+		WHERE asset_type = #{asset_type} and status = 0
+		
 	</select>
 
 	<select id="selectAssetListByType" parameterType="java.util.Map" resultType="java.util.Map">
