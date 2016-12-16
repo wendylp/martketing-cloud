@@ -1,9 +1,11 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +17,18 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.SysTagViewDao;
+import cn.rongcapital.mkt.dao.TagSqlParamDao;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
+import cn.rongcapital.mkt.po.TagSqlParam;
 import cn.rongcapital.mkt.po.TagValueCount;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.po.mongodb.TagTree;
 import cn.rongcapital.mkt.service.SystemTagService;
 import cn.rongcapital.mkt.service.TagSystemCommonUtilService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.SystemTagIn;
-import cn.rongcapital.mkt.vo.in.SystemValueIn;
+import cn.rongcapital.mkt.vo.in.TagValueElement;
+import cn.rongcapital.mkt.vo.in.TagValueUpdateIn;
 import cn.rongcapital.mkt.vo.out.TagSystemTreeOut;
 import cn.rongcapital.mkt.vo.out.TagSystemTreeTagOut;
 
@@ -48,6 +53,12 @@ public class SystemTagServiceImpl implements SystemTagService {
 
 	@Autowired
 	private TagValueCountDao tagValueCountDao;
+	
+	@Autowired
+	private TagSqlParamDao tagSqlParamDao;
+	
+	@Autowired
+	private SysTagViewDao sysTagViewDao;
 
 	@Override
 	public BaseOutput getSystemTagList(String navigateIndex) {
@@ -72,17 +83,34 @@ public class SystemTagServiceImpl implements SystemTagService {
 	public BaseOutput getSystemTagValueList(String tagId, Integer index, Integer size) {
 		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
+		List<Object> data = output.getData();
 		try {
+			
 			TagValueCount tagValueCount = new TagValueCount();
 			tagValueCount.setStartIndex(index);
 			tagValueCount.setPageSize(size);
 			tagValueCount.setTagId(tagId);
-			tagValueCount.setIsTag(String.valueOf(ApiConstant.INT_ZERO));
-			List<TagValueCount> tagValueList = tagValueCountDao.selectList(tagValueCount);
-			if (!CollectionUtils.isEmpty(tagValueList)) {
-				output.setTotalCount(tagValueList.size());
-				output.getData().add(tagValueList);
+			List<TagValueCount> tagList = tagValueCountDao.selectList(tagValueCount);
+			List<Map<String, Object>> tagValueList = new ArrayList<>();
+			Map<String, Object> tagMap = new HashMap<>();
+			for (TagValueCount tag : tagList) {
+				String isTag = tag.getIsTag();
+				if("0".equals(isTag)){
+					Map<String, Object> tagValueMap = new HashMap<>();
+					tagValueMap.put("tag_value", tag.getTagValue());
+					tagValueMap.put("value_count", tag.getValueCount());
+					tagValueList.add(tagValueMap);
+				}else{
+					tagMap.put("tag_id", tag.getTagId());
+					tagMap.put("tag_name", tag.getTagName());
+					tagMap.put("tag_desc", tag.getTagDesc());
+					tagMap.put("update_flag", tag.getUpdateFlag());
+					data.add(tagMap);
+				}
+				
 			}
+			output.setTotalCount(tagValueList.size());
+			data.add(tagValueList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("获取标签值列表方法出现异常--------->"+e.getMessage(),e);
@@ -183,5 +211,70 @@ public class SystemTagServiceImpl implements SystemTagService {
 		}
 		return resultList;
 	}
+
+	@Override
+	public BaseOutput saveUpdateTagValue(TagValueUpdateIn tagValueUpdateIn) {
+		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+				ApiConstant.INT_ZERO, null);
+		//获取标签Id
+		String tagId = tagValueUpdateIn.getTagId();
+		List<String> tagList = new ArrayList<>();
+		//获取标签值集合
+		List<TagValueElement> elements = tagValueUpdateIn.getElements();
+		for (TagValueElement tagValueElement : elements) {
+			String startValue = tagValueElement.getStartValue();
+			String endValue = tagValueElement.getEndValue();
+			if(StringUtils.isEmpty(startValue)){
+				tagList.add("<"+endValue);
+			}else if(StringUtils.isEmpty(endValue)){
+				tagList.add(">"+startValue);
+			}else{
+				tagList.add(startValue + "-" + endValue);
+			}
+		}
+		
+		Query query = new Query(Criteria.where("tag_id").is(tagId));
+		TagRecommend tagInformation = mongoTemplate.find(query, TagRecommend.class).get(0);
+		Integer tagVersion = tagInformation.getTagVersion();
+		List<String> defualtTagList = tagInformation.getTagList();
+		
+		 Update update = new Update().set("tag_version", tagVersion+1).set("v"+tagVersion, defualtTagList).set("tag_list", tagList);
+	     mongoTemplate.findAndModify(query, update, TagRecommend.class);
+	     //更新参数表
+	     String tagName = tagInformation.getTagNameEng();
+	     int count = tagSqlParamDao.saveOrUpdateData(capsulationParam(tagId, elements,tagName));
+	     output.setTotal(count);
+	     sysTagViewDao.updateField2ByTagName(tagName);
+		return output;
+	}
+	
+	/**
+	 * 封装参数
+	 * @param tagId	标签ID
+	 * @param elements 修改值集合
+	 * @return
+	 */
+	private TagSqlParam capsulationParam(String tagId,List<TagValueElement> elements,String tagName){
+		TagSqlParam tagSqlParam = new TagSqlParam();
+		tagSqlParam.setTagId(tagId);
+		StringBuilder sb = new StringBuilder();
+		for (TagValueElement tagValueElement : elements) {
+			String startValue = tagValueElement.getStartValue();
+			String endValue = tagValueElement.getEndValue();
+			if(StringUtils.isEmpty(startValue)){
+				tagSqlParam.setLowerLimitValue(" < "+endValue);
+			}else if(StringUtils.isEmpty(endValue)){
+				tagSqlParam.setUpperLimitValue(" > "+startValue);
+			}else{
+				sb.append("BETWEEN " + startValue + " AND " + endValue+",");
+			}
+		}
+		tagSqlParam.setScopeValue(sb.toString());
+		return tagSqlParam;
+	}
+	
+	
+	
+	
 
 }

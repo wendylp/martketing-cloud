@@ -10,12 +10,15 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.SysTagView;
+import cn.rongcapital.mkt.po.SystemTagResult;
+import cn.rongcapital.mkt.po.TagDefinition;
 
-public interface SysTagViewDao extends BaseDao<SysTagView>{
+public interface TagDefinitionDao extends BaseDao<TagDefinition>{
 	
 	//自定义扩展
 	/**
@@ -37,10 +40,7 @@ public interface SysTagViewDao extends BaseDao<SysTagView>{
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
 	
-	/**
-	 * 更新
-	 * @param tagName 标签名称
-	 * @return
-	 */
-	int updateField2ByTagName(@Param("tagName")String tagName);
+	String selectDefinitionSqlByTagName(@Param("tagName") String tagName);
+	
+	List<SystemTagResult> executeSql(@Param("targetSql") String targetSql);
 }
