@@ -87,7 +87,98 @@ public class MaterialCouponCodeVerifyListServiceImplTest {
         Assert.assertEquals(0, output.getTotalCount());
         Assert.assertEquals(0, output.getData().size());
     }
+    
+    /**
+     * 页码为空
+     */
+    @Test
+    public void test01_01() {
+        Mockito.doAnswer(new Answer<Integer>() {
+            @Override
+            public Integer answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                Map<String, Object> param = (Map<String, Object>) args[0];
+                Assert.assertEquals(Integer.valueOf(0), param.get("index"));
+                Assert.assertEquals(Integer.valueOf(10), param.get("size"));
+                return 0;
+            }
+        }).when(materialCouponCodeDao).getCouponCodeVerifyListCnt(Mockito.any());
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                Assert.fail();
+                return null;
+            }
+        }).when(materialCouponCodeDao).getCouponCodeVerifyList(Mockito.any());
+        ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
+        BaseOutput output =
+                service.listMaterialCouponCodeVerfy(1L, "long", "received", "verified", "expired", null, null);
+    }
 
+    /**
+     * 页码为0
+     */
+    @Test
+    public void test01_02() {
+        Mockito.doAnswer(new Answer<Integer>() {
+            @Override
+            public Integer answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                Map<String, Object> param = (Map<String, Object>) args[0];
+                Assert.assertEquals(Integer.valueOf(0), param.get("index"));
+                Assert.assertEquals(Integer.valueOf(10), param.get("size"));
+                return 0;
+            }
+        }).when(materialCouponCodeDao).getCouponCodeVerifyListCnt(Mockito.any());
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                Assert.fail();
+                return null;
+            }
+        }).when(materialCouponCodeDao).getCouponCodeVerifyList(Mockito.any());
+        ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
+        BaseOutput output = service.listMaterialCouponCodeVerfy(1L, "long", "received", "verified", "expired", 0, 0);
+    }
+
+    
+    /**
+     * 页码数据为空
+     */
+    @Test
+    public void test01_03() {
+        Mockito.doAnswer(new Answer<Integer>() {
+            @Override
+            public Integer answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                Map<String, Object> param = (Map<String, Object>) args[0];
+                Assert.assertEquals(Long.valueOf("1"), param.get("id"));
+                Assert.assertEquals("long", param.get("user"));
+                Assert.assertEquals("received", param.get("releaseStatus"));
+                Assert.assertEquals("verified", param.get("verifyStatus"));
+                Assert.assertEquals("expired", param.get("expireStatus"));
+                Assert.assertNotNull(param.get("expireTime"));
+                Assert.assertEquals(Integer.valueOf(10), param.get("index"));
+                Assert.assertEquals(Integer.valueOf(10), param.get("size"));
+                return 2;
+            }
+        }).when(materialCouponCodeDao).getCouponCodeVerifyListCnt(Mockito.any());
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(materialCouponCodeDao).getCouponCodeVerifyList(Mockito.any());
+        ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
+        BaseOutput output = service.listMaterialCouponCodeVerfy(1L, "long", "received", "verified", "expired", 2, 10);
+
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), output.getMsg());
+        Assert.assertEquals(0, output.getTotal());
+        Assert.assertEquals(2, output.getTotalCount());
+        Assert.assertEquals(0, output.getData().size());
+    }
+    
     /**
      * 有结果
      */
