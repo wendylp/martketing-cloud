@@ -113,12 +113,13 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
     }
 
     @Override
-    public BaseOutput getSmsMaterialCount() {
+    public BaseOutput getSmsMaterialCount(Integer channelType) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 
         SmsMaterialCountOut smsMaterialCountOut = new SmsMaterialCountOut();
         SmsMaterial paramSmsMaterial = new SmsMaterial();
         paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        paramSmsMaterial.setChannelType(channelType == -1?null:channelType.byteValue());
         paramSmsMaterial.setSmsType(SmsTempletTypeEnum.FIXED.getStatusCode().byteValue());
         Integer fixedCount = smsMaterialDao.selectListCount(paramSmsMaterial);
         smsMaterialCountOut.setSmsType(SmsTempletTypeEnum.FIXED.getStatusCode());

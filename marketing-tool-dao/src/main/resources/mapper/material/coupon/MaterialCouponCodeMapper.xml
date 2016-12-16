@@ -278,4 +278,19 @@
 		where coupon_id = #{id}
 	</delete>
 	
+	
+	
+	<!-- 统计优惠券投放成功，失败数量 -->
+	<select id="getCouponPutInCount" parameterType="long" resultType="java.util.Map">
+	     SELECT  release_status as status,count(1) as cnt  FROM material_coupon_code WHERE
+	 coupon_id=#{id}  <![CDATA[ and release_status>1 ]]>  and status=0
+	 	group by release_status
+	</select>
+	
+	<!-- 统计优惠券已核销,未核销金额 -->
+	<select id="getCouponVerifyCount" parameterType="long" resultType="java.util.Map">
+		SELECT verify_status as status,count(1) as cnt FROM material_coupon_code  Where status=0 and coupon_id=#{id}
+	  <![CDATA[ and verify_status<3 and  release_status=2 ]]>
+		group by verify_status
+	</select>
 </mapper>

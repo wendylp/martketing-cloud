@@ -20,6 +20,7 @@ import cn.rongcapital.mkt.dao.KeyidMapBlockDao;
 import cn.rongcapital.mkt.job.service.DataPartySyncService;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.DataShopping;
 import cn.rongcapital.mkt.po.KeyidMapBlock;
 
 /**
@@ -171,9 +172,14 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
   		return repeatDatas;
 	}
 	
-	protected List<Integer> getIdsByRepeatByBitmapKeys(Map<String,Object> paramMap){
+	protected List<Integer> getIdsByRepeatByBitmapKeys(Map<String,Object> paramMap,int keySize){
 		
 		DataParty dataParty = new DataParty();
+		
+		if(paramMap.size() <= keySize){
+			
+			return null;
+		}
 		
 		for(String key :paramMap.keySet()){
 			
@@ -194,8 +200,16 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 			PropertyDescriptor pd;
 			try {
 				pd = new PropertyDescriptor(field, dataParty.getClass());
-				Method m = pd.getWriteMethod();
-				m.invoke(dataParty, paramMap.get(key));
+				Method sm = pd.getWriteMethod();
+				
+				Object filedValue = paramMap.get(key);
+				
+				if(filedValue == null || "".equals(filedValue.toString())){
+					
+					return null;
+				}
+				
+				sm.invoke(dataParty, paramMap.get(key));
 			} catch (IntrospectionException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
@@ -245,6 +259,54 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 		}
 		return strlist;
 
+	}
+	
+	/**
+	 * 校验主键类值是否为空
+	 * @param fields
+	 * @param obj
+	 * @return
+	 */
+	protected boolean checkBitKeyByType(List<String> fields,Object obj){
+		
+		if(fields == null || fields.size() == 0){
+			return true;
+		}
+		
+		for(String field : fields){
+			
+			PropertyDescriptor pd;
+			try {
+				pd = new PropertyDescriptor(field, obj.getClass());
+				Method m = pd.getReadMethod();
+				Object fieldValue = m.invoke(obj);
+				
+				if(fieldValue == null || "".equals((String)fieldValue)){
+					return true;	
+				}
+				
+			} catch (IntrospectionException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return false;
+		
+	}
+	
+	protected int getKeySizeByBitmap(String bitmap){
+		
+		List<String> strlist = this.getColumnKeyid(bitmap);
+		
+		return strlist.size();
+		
 	}
 	
 }
