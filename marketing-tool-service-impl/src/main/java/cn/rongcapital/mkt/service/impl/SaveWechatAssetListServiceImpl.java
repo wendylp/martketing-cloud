@@ -36,7 +36,7 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
     private WechatMemberDao wechatMemberDao;
     @Autowired
     private DataPopulationDao dataPopulationDao;
-
+    
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public Object saveWechatAssetList(SaveWechatAssetListIn saveWechatAssetListIn, SecurityContext securityContext) {
@@ -53,11 +53,14 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
         }
 
         //1.统计人群总数，将人群名称和人群总数保存到audience_list表中
-        Long totalAudienceNumber = wechatAssetGroupDao.sumGroupMemberCount(saveWechatAssetListIn.getGroupIds());
+//        Long totalAudienceNumber = wechatAssetGroupDao.sumGroupMemberCount(saveWechatAssetListIn.getGroupIds());
+        //微信保存人群总数默认是0，具体多少人通过后台job去计算
+        Long totalAudienceNumber = 0l;
         paramMap = new HashMap<String,Object>();
         paramMap.put("audience_name",saveWechatAssetListIn.getPeopleGroupName());
         paramMap.put("audience_rows",totalAudienceNumber);
         paramMap.put("create_time",new Date(System.currentTimeMillis()));
+        paramMap.put("source", ApiConstant.WEIXIN_AUDIENCE_SOURCE);        
         audienceListDao.insertWechatGroups(paramMap);
         id = audienceListDao.selectIdByAudienceName(paramMap);
 

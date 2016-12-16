@@ -380,4 +380,6 @@ public class ApiConstant {
     public static final String WEIXIN_MATERIAL_IMG_PATH_TO_SHOW = "material/";
 
     public static final String WEIXIN_TEST_APPID = "wx570bc396a51b8ff8";
+    
+    public static final String WEIXIN_AUDIENCE_SOURCE = "微信人群";
 }
