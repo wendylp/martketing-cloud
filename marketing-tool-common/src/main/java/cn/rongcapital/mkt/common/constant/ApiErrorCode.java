@@ -43,6 +43,7 @@ public enum ApiErrorCode {
 	BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR(3016,"非未使用状态,不可操作!"),
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CREATE_AUDIENCE(3017,"coupon have not related to task yet"),//优惠券没有关联任务ID
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CREATE_AUDIENCE_FAILED(3018,"create target group of people faild"),//新建固定人群失败
+	BIZ_ERROR_MATERIAL_COUPOON_UPDATE_ERROR(3019,"只有未使用的优惠券才可以编辑!"),
 
 	SMS_ERROR_MATERIAL_CAN_NOT_DELETE(4001,"can not delete the material"),
 	SMS_ERROR_MATERIAL_CAN_NOT_UPDATE(4002,"can not update the material"),

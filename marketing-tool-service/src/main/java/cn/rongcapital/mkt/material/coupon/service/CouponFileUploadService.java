@@ -6,6 +6,6 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface CouponFileUploadService {
 
-    BaseOutput uploadFileBatch(MultipartFormDataInput input, String userId);
+    BaseOutput uploadFile(MultipartFormDataInput input, String userId);
 
 }

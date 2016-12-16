@@ -50,7 +50,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 
 	private ExecutorService executor = null;
 
-	private static final int THREAD_POOL_FIX_SIZE = 100;
+	private static final int THREAD_POOL_FIX_SIZE = 10;
 
 	private static final int BATCH_SIZE = 50;
 
@@ -153,14 +153,14 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			    }*/
 			    sendDynamicQueueByString(segmentListUnique, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
 			    //再次激活一下mq监听
-			    TaskSchedule schedule = new TaskSchedule();
+			   /* TaskSchedule schedule = new TaskSchedule();
 			    schedule.setServiceName("campaignActionSaveAudienceTask");
 			    schedule.setCampaignHeadId(taskSchedule.getCampaignHeadId());
 			    List<TaskSchedule> scheduleList = taskScheduleDao.selectList(schedule);
 			    if(scheduleList != null && scheduleList.size()>0) {
 			        logger.info("再次激活一下mq监听 ItemId is {}", scheduleList.get(0).getCampaignItemId());
 			        campaignActionSaveAudienceTask.task(scheduleList.get(0));
-			    }
+			    }*/
 			   
 			   
 				// 逻辑删除传递走的数据

@@ -165,6 +165,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
+	    //logger.info("CampaignActionSaveAudienceTask delete {}" ,taskSchedule.getCampaignHeadId()+taskSchedule.getCampaignItemId());
 		super.cancelCampaignInnerTask(taskSchedule);
 	}
 	
