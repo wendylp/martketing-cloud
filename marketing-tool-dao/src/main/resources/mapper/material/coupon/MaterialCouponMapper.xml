@@ -225,5 +225,13 @@
 		<![CDATA[WHERE status = 0]]>
 		<if test="id != null and id !=''"><![CDATA[ and id = #{id}]]></if>
 	</select>
-	
+
+	<!-- 更新优惠券剩余库存 -->
+	<update id="updateCouponStockRest">
+		<![CDATA[UPDATE material_coupon]]>
+		<set>
+                <![CDATA[stock_rest = stock_rest - #{count}]]>
+		</set>
+		<![CDATA[ WHERE status = 0 AND id = #{id}]]>
+	</update>
 </mapper>

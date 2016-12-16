@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeStatusUpdateService;
-import cn.rongcapital.mkt.material.coupon.service.impl.MaterialCouponCodeStatusUpdateServiceImpl;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCodeStatusUpdateVO;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,6 +41,9 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
 
     @Mock
     private MaterialCouponCodeDao materialCouponCodeDao;
+
+    @Mock
+    private MaterialCouponDao materialCouponDao;
 
     @Before
     public void setUp() throws Exception {
@@ -71,6 +74,31 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
                 return null;
             }
         }).when(materialCouponCodeDao).batchUpdateByIdAndStatus(Mockito.any());
+        Mockito.doAnswer(new Answer<List<MaterialCouponCode>>() {
+            @Override
+            public List<MaterialCouponCode> answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                MaterialCouponCode data = (MaterialCouponCode) args[0];
+                Assert.assertEquals(6, data.getId().intValue());
+
+                List<MaterialCouponCode> dataList = new ArrayList<MaterialCouponCode>();
+                MaterialCouponCode item = new MaterialCouponCode();
+                item.setId(6L);
+                item.setCouponId(911L);
+                dataList.add(item);
+                return dataList;
+            }
+        }).when(materialCouponCodeDao).selectList(Mockito.any());
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                // Object[] args = invocation.getArguments();
+                // Assert.assertEquals(911, ((Number)args[0]).intValue());
+                // Assert.assertEquals(1, ((Number)args[1]).intValue());
+                return null;
+            }
+        }).when(materialCouponDao).updateCouponStockRest(911L, 1);
+        ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
         ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
@@ -80,7 +108,8 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         voList.add(vo);
         service.updateMaterialCouponCodeStatus(voList);
     }
-    
+
+
     /**
      * 空数据
      */
@@ -99,24 +128,51 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
     }
 
     /**
+     * 获取优惠券为空
+     */
+    @Test
+    public void test01_02() {
+        Mockito.doAnswer(new Answer<List<MaterialCouponCode>>() {
+            @Override
+            public List<MaterialCouponCode> answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                MaterialCouponCode data = (MaterialCouponCode) args[0];
+                Assert.assertEquals(6, data.getId().intValue());
+                return null;
+            }
+        }).when(materialCouponCodeDao).selectList(Mockito.any());
+        ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
+        ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
+        List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
+        MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
+        vo.setId(6L);
+        vo.setStatus("12");
+        vo.setUser("12345");
+        voList.add(vo);
+        try {
+            service.updateMaterialCouponCodeStatus(voList);
+            Assert.fail();
+        } catch (Exception e) {
+            Assert.assertEquals("coupon data not exist.", e.getMessage());
+        }
+    }
+
+    /**
      * 不传ID
      */
     @Test
     public void test02() {
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Assert.fail();
-                return null;
-            }
-        }).when(materialCouponCodeDao).batchUpdateByIdAndStatus(Mockito.any());
-        ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
         vo.setStatus("1");
         vo.setUser("12345");
         voList.add(vo);
-        service.updateMaterialCouponCodeStatus(voList);
+        try {
+            service.updateMaterialCouponCodeStatus(voList);
+            Assert.fail();
+        } catch (Exception e) {
+            Assert.assertEquals("param is illegal", e.getMessage());
+        }
     }
 
     /**
@@ -124,20 +180,18 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
      */
     @Test
     public void test03() {
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Assert.fail();
-                return null;
-            }
-        }).when(materialCouponCodeDao).batchUpdateByIdAndStatus(Mockito.any());
         ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
         vo.setId(6L);
         vo.setUser("12345");
         voList.add(vo);
-        service.updateMaterialCouponCodeStatus(voList);
+        try {
+            service.updateMaterialCouponCodeStatus(voList);
+            Assert.fail();
+        } catch (Exception e) {
+            Assert.assertEquals("param is illegal", e.getMessage());
+        }
     }
 
     /**
@@ -145,20 +199,17 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
      */
     @Test
     public void test04() {
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Assert.fail();
-                return null;
-            }
-        }).when(materialCouponCodeDao).batchUpdateByIdAndStatus(Mockito.any());
-        ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
         vo.setId(6L);
         vo.setStatus("1");
         voList.add(vo);
-        service.updateMaterialCouponCodeStatus(voList);
+        try {
+            service.updateMaterialCouponCodeStatus(voList);
+            Assert.fail();
+        } catch (Exception e) {
+            Assert.assertEquals("param is illegal", e.getMessage());
+        }
     }
 
     /**
@@ -169,7 +220,7 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         List<List<MaterialCouponCodeStatusUpdateVO>> expecList =
-                        new ArrayList<List<MaterialCouponCodeStatusUpdateVO>>();
+                new ArrayList<List<MaterialCouponCodeStatusUpdateVO>>();
         List<MaterialCouponCodeStatusUpdateVO> expecListItem = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         for (int i = 0; i < MaterialCouponCodeStatusUpdateServiceImpl.BATCH_PROCESS_CNT * 2; i++) {
             MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
@@ -186,7 +237,7 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
             }
         }
         List<List<MaterialCouponCodeStatusUpdateVO>> actual =
-                        ReflectionTestUtils.invokeMethod(service, "splitList", voList);
+                ReflectionTestUtils.invokeMethod(service, "splitList", voList);
         Assert.assertEquals(2, actual.size());
         Assert.assertEquals(expecList, actual);
     }
@@ -199,7 +250,7 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         List<List<MaterialCouponCodeStatusUpdateVO>> expecList =
-                        new ArrayList<List<MaterialCouponCodeStatusUpdateVO>>();
+                new ArrayList<List<MaterialCouponCodeStatusUpdateVO>>();
         List<MaterialCouponCodeStatusUpdateVO> expecListItem = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         for (int i = 0; i < MaterialCouponCodeStatusUpdateServiceImpl.BATCH_PROCESS_CNT * 2 + 1; i++) {
             MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
@@ -216,11 +267,11 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
             }
         }
         List<List<MaterialCouponCodeStatusUpdateVO>> actual =
-                        ReflectionTestUtils.invokeMethod(service, "splitList", voList);
+                ReflectionTestUtils.invokeMethod(service, "splitList", voList);
         Assert.assertEquals(3, actual.size());
         Assert.assertEquals(expecList, actual);
     }
-    
+
     /**
      * 空数据
      */
@@ -248,10 +299,6 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         }).when(materialCouponCodeDao).batchUpdateByIdAndStatus(Mockito.any());
         ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
-        MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
-        vo.setId(6L);
-        vo.setStatus("1");
-        voList.add(vo);
         ReflectionTestUtils.invokeMethod(service, "processMaterialCouponCode", voList);
     }
 
@@ -265,8 +312,14 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
                 List<MaterialCouponCode> dataList = (List<MaterialCouponCode>) args[0];
-                Assert.assertEquals(1, dataList.size());
+                Assert.assertEquals(2, dataList.size());
+
                 MaterialCouponCode data = dataList.get(0);
+                Assert.assertEquals(6, data.getId().intValue());
+                Assert.assertEquals("1", data.getReleaseStatus());
+                Assert.assertEquals("12345", data.getUser());
+
+                data = dataList.get(1);
                 Assert.assertEquals(7, data.getId().intValue());
                 Assert.assertEquals("2", data.getReleaseStatus());
                 Assert.assertEquals("12345", data.getUser());
@@ -277,6 +330,7 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
         MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
         vo.setId(6L);
+        vo.setUser("12345");
         vo.setStatus("1");
         voList.add(vo);
         vo = new MaterialCouponCodeStatusUpdateVO();
@@ -286,30 +340,42 @@ public class MaterialCouponCodeStatusUpdateServiceImplTest {
         voList.add(vo);
         ReflectionTestUtils.invokeMethod(service, "processMaterialCouponCode", voList);
     }
-    
+
     /**
-     * 处理异常
+     * 
      */
     @Test
-    public void testProcessMaterialCouponCode03() {
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                throw new Exception("XXX");
-            }
-        }).when(materialCouponCodeDao).batchUpdateByIdAndStatus(Mockito.any());
+    public void testGetCouponIdByCodeId01() {
+        List<MaterialCouponCode> dataList = new ArrayList<MaterialCouponCode>();
+        MaterialCouponCode item = new MaterialCouponCode();
+        item.setId(6L);
+        item.setCouponId(911L);
+        dataList.add(item);
+        Mockito.when(materialCouponCodeDao.selectList(Mockito.any())).thenReturn(dataList);
         ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
-        List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<MaterialCouponCodeStatusUpdateVO>();
-        MaterialCouponCodeStatusUpdateVO vo = new MaterialCouponCodeStatusUpdateVO();
-        vo.setId(6L);
-        vo.setStatus("1");
-        voList.add(vo);
-        vo = new MaterialCouponCodeStatusUpdateVO();
-        vo.setId(7L);
-        vo.setUser("12345");
-        vo.setStatus("2");
-        voList.add(vo);
-        ReflectionTestUtils.invokeMethod(service, "processMaterialCouponCode", voList);
+        Object res = ReflectionTestUtils.invokeMethod(service, "getCouponIdByCodeId", 6L);
+        Assert.assertEquals(911, ((Number) res).intValue());
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testGetCouponIdByCodeId02() {
+        Mockito.when(materialCouponCodeDao.selectList(Mockito.any())).thenReturn(null);
+        ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
+        Object res = ReflectionTestUtils.invokeMethod(service, "getCouponIdByCodeId", 6L);
+        Assert.assertNull(res);
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testGetCouponIdByCodeId03() {
+        Long param = null;
+        Object res = ReflectionTestUtils.invokeMethod(service, "getCouponIdByCodeId", param);
+        Assert.assertNull(res);
     }
 
 }
