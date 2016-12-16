@@ -54,7 +54,8 @@ public class MaterialCouponPageListServiceImpl implements MaterialCouponPageList
         if(StringUtils.isEmpty(channelCode) || !MaterialCouponChannelCodeEnum.contains(channelCode)){
             return new MaterialCouponListOut(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
                 ApiConstant.INT_ZERO); 
-        }else if(!StringUtils.isEmpty(couponStatus) && !MaterialCouponStatusEnum.contains(couponStatus)){
+        }
+        if(!StringUtils.isEmpty(couponStatus) && !MaterialCouponStatusEnum.contains(couponStatus)){
             return new MaterialCouponListOut(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
                 ApiConstant.INT_ZERO);
         }
@@ -78,7 +79,7 @@ public class MaterialCouponPageListServiceImpl implements MaterialCouponPageList
             materialCouponListOut = new MaterialCouponListItemOut();
             //按照相同字段进行复制
             BeanUtils.copyProperties(item,materialCouponListOut);
-            String createTimeStamp = item.getCreateTime() != null ? String.valueOf( item.getCreateTime().getTime()/1000) :"";
+            String createTimeStamp = String.valueOf( item.getCreateTime().getTime()/1000);
             materialCouponListOut.setCreateTime(createTimeStamp);
             //保存在结果对象中
             baseOutput.getListItems().add(materialCouponListOut);
