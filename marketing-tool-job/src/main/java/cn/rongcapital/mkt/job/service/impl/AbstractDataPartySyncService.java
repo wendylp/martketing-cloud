@@ -202,10 +202,7 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 				pd = new PropertyDescriptor(field, dataParty.getClass());
 				Method sm = pd.getWriteMethod();
 				
-				
-				Method rm = pd.getReadMethod();
-				
-				Object filedValue = rm.invoke(dataParty);
+				Object filedValue = paramMap.get(key);
 				
 				if(filedValue == null || "".equals(filedValue.toString())){
 					
@@ -284,7 +281,7 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 				Method m = pd.getReadMethod();
 				Object fieldValue = m.invoke(obj);
 				
-				if(fieldValue == null){
+				if(fieldValue == null || "".equals((String)fieldValue)){
 					return true;	
 				}
 				
