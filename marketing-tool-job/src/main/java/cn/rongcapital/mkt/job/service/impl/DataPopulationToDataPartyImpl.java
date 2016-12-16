@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +23,7 @@ import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.DataPopulation;
+import cn.rongcapital.mkt.po.DataShopping;
 
 /**
  * Created by ethan on 16/6/30.
@@ -92,7 +94,10 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
     				List<Integer> idList = new ArrayList<>(dataPopulationLists.size());
     				
     				for (DataPopulation dataObj : dataPopulations) {
-	    				createParty(dataObj);
+	    				
+    					if(!checkBitKey(dataObj)){
+    						createParty(dataObj);
+    					}
 	    				
 	    				idList.add(dataObj.getId());
 	    				
@@ -160,6 +165,28 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 		dataPopulationDao.updateById(keyidObj);
 	}
 	
+	/**
+	 * 校验主键是否为空
+	 * @param dataObj
+	 * @return
+	 */
+	private boolean checkBitKey(DataPopulation dataObj){
+		String bitmap = dataObj.getBitmap();
+		
+		if (StringUtils.isNotBlank(bitmap)) {
+			try {
+				// 获取keyid
+				List<String> strlist = this.getAvailableKeyid(bitmap);
+				
+				return checkBitKeyByType(strlist, dataObj);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return true;
+	}
 	
 	private void createParty(DataPopulation dataObj){
 		
