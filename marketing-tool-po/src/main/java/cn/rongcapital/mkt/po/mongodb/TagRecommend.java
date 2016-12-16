@@ -52,6 +52,9 @@ public class TagRecommend implements Serializable {
     @Field(value = "update_flag")
     private Integer updateFlag;
     
+    @Field(value = "tag_version")
+    private Integer tagVersion;
+    
     public TagRecommend() {}
     
     public TagRecommend(String id, String tagId, String tagName, List<String> tagList, int status,
@@ -186,6 +189,15 @@ public class TagRecommend implements Serializable {
 
 	public void setUpdateFlag(Integer updateFlag) {
 		this.updateFlag = updateFlag;
+	}
+	
+
+	public Integer getTagVersion() {
+		return tagVersion;
+	}
+
+	public void setTagVersion(Integer tagVersion) {
+		this.tagVersion = tagVersion;
 	}
 
 	@Override

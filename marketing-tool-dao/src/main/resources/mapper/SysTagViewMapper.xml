@@ -101,5 +101,11 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<update id="updateField2ByTagName" parameterType="java.lang.String">
+		UPDATE sys_tag_view 
+		SET field2 = '1'
+		WHERE tagName = #{tagName}
+	</update>
+	
 	
 </mapper>

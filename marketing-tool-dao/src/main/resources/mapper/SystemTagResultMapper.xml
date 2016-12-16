@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ keyid as keyId,tag_value as tagValue]]>
+		<![CDATA[ keyid as keyId,tag_value as tag_value]]>
 	</sql>
 
 	<!-- 其它SQL语句 -->
