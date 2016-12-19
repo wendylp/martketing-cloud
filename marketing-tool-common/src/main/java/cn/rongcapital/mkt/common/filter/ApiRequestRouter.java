@@ -170,8 +170,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
                 
                 Map<String, String> user_token_map = JedisClient.getuser(userKey);
                 String userValue = user_token_map.get("token");
-//                if(!user_token.equals(userValue)){
-                if(false){
+                if(!user_token.equals(userValue)){
                     redisUserTokenVO.setCode(ApiConstant.USER_TOKEN_LOGIN_CONFLICT);
                     backStr="登录冲突，请重新登录！";
                     redisUserTokenVO.setMsg(backStr);
