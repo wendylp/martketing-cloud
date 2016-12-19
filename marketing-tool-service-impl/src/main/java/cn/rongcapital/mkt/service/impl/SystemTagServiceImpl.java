@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.SegmentationBodyDao;
 import cn.rongcapital.mkt.dao.SysTagViewDao;
+import cn.rongcapital.mkt.dao.TagDefinitionDao;
 import cn.rongcapital.mkt.dao.TagSqlParamDao;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.po.TagSqlParam;
@@ -61,6 +63,12 @@ public class SystemTagServiceImpl implements SystemTagService {
 
 	@Autowired
 	private SysTagViewDao sysTagViewDao;
+	
+	@Autowired
+	private TagDefinitionDao definitionDao;
+	
+	@Autowired
+	private SegmentationBodyDao segmentationBodyDao;
 
 	@Override
 	public BaseOutput getSystemTagList(String navigateIndex, Integer pageSourceType) {
@@ -108,33 +116,35 @@ public class SystemTagServiceImpl implements SystemTagService {
 		try {
 
 			TagValueCount tagValueCount = new TagValueCount();
-			tagValueCount.setStartIndex(index);
+			tagValueCount.setStartIndex(index - 1);
 			tagValueCount.setPageSize(size);
+			tagValueCount.setIsTag("0");
 			tagValueCount.setTagId(tagId);
 			List<TagValueCount> tagList = tagValueCountDao.selectList(tagValueCount);
+			int selectListCount = tagValueCountDao.selectListCount(tagValueCount);
 			List<Map<String, Object>> tagValueList = new ArrayList<>();
-			Map<String, Object> tagMap = new HashMap<>();
 			for (TagValueCount tag : tagList) {
-				String isTag = tag.getIsTag();
-				if("0".equals(isTag)){
-					Map<String, Object> tagValueMap = new HashMap<>();
-					tagValueMap.put("tag_value", tag.getTagValue());
-					tagValueMap.put("value_count", tag.getValueCount());
-					tagValueList.add(tagValueMap);
-				}else{
-					tagMap.put("tag_id", tag.getTagId());
-					tagMap.put("tag_name", tag.getTagName());
-					tagMap.put("tag_desc", tag.getTagDesc());
-					tagMap.put("update_flag", tag.getUpdateFlag());
-					data.add(tagMap);
-				}
-
+				Map<String, Object> tagValueMap = new HashMap<>();
+				tagValueMap.put("tag_value", tag.getTagValue());
+				tagValueMap.put("value_count", tag.getValueCount());
+				tagValueList.add(tagValueMap);
 			}
-			output.setTotalCount(tagValueList.size());
+			TagValueCount tag = tagValueCountDao.selectTagByTagId(tagId);
+			Map<String, Object> tagMap = new HashMap<>();
+			if(tag != null){
+				tagMap.put("tag_id", tag.getTagId());
+				tagMap.put("tag_name", tag.getTagName());
+				tagMap.put("tag_desc", tag.getTagDesc());
+				tagMap.put("tag_count", tag.getValueCount());
+				tagMap.put("update_flag", tag.getUpdateFlag());
+			}
+			data.add(tagMap);
+			output.setTotalCount(selectListCount);
+			output.setTotal(tagValueList.size());
 			data.add(tagValueList);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("获取标签值列表方法出现异常--------->"+e.getMessage(),e);
+			logger.error("获取标签值列表方法出现异常--------->" + e.getMessage(), e);
 		}
 		return output;
 	}
@@ -237,6 +247,8 @@ public class SystemTagServiceImpl implements SystemTagService {
 	public BaseOutput saveUpdateTagValue(TagValueUpdateIn tagValueUpdateIn) {
 		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
+		//可编辑状态初始化
+		initUpdateStatus();
 		//获取标签Id
 		String tagId = tagValueUpdateIn.getTagId();
 		List<String> tagList = new ArrayList<>();
@@ -253,21 +265,48 @@ public class SystemTagServiceImpl implements SystemTagService {
 				tagList.add(startValue + "-" + endValue);
 			}
 		}
-
+		//设置Mongo中标签的相关属性
 		Query query = new Query(Criteria.where("tag_id").is(tagId));
 		TagRecommend tagInformation = mongoTemplate.find(query, TagRecommend.class).get(0);
 		Integer tagVersion = tagInformation.getTagVersion();
 		List<String> defualtTagList = tagInformation.getTagList();
 
-		 Update update = new Update().set("tag_version", tagVersion+1).set("v"+tagVersion, defualtTagList).set("tag_list", tagList);
-	     mongoTemplate.findAndModify(query, update, TagRecommend.class);
-	     //更新参数表
-	     String tagName = tagInformation.getTagNameEng();
-	     int count = tagSqlParamDao.saveOrUpdateData(capsulationParam(tagId, elements,tagName));
-	     output.setTotal(count);
-	     sysTagViewDao.updateField2ByTagName(tagName);
+		Update update = new Update().set("tag_version", tagVersion+1).set("v"+tagVersion, defualtTagList).set("tag_list", tagList);
+	    mongoTemplate.findAndModify(query, update, TagRecommend.class);
+	    //更新参数表
+	    String tagName = tagInformation.getTagNameEng();
+	    int count = tagSqlParamDao.saveOrUpdateData(capsulationParam(tagId, elements,tagName));
+	    output.setTotal(count);
+	    sysTagViewDao.updateField2ByTagName(tagName);
+	    //设置sql定义为有更新状态 
+	    definitionDao.updateIsUpdateByTagName(tagName);
 		return output;
 	}
+	
+	/**
+	 * 初始化更新状态
+	 */
+	//TODO 此方法是1.6版本临时方案，以后版本如果放开细分对标签值修改的限制修改此方法即可
+	private void initUpdateStatus(){
+		//查询所有有修改资格的标签
+		List<TagRecommend> tagRecommendList = mongoTemplate.find(Query.query(Criteria.where("update_flag").ne(2).and("status").is(ApiConstant.INT_ZERO)), TagRecommend.class);
+		for (TagRecommend tagRecommend : tagRecommendList) {
+			String tagId = tagRecommend.getTagId();
+			Integer countByTagId = segmentationBodyDao.getCountByTagId(tagId);
+			Update update = new Update();
+			if(countByTagId > 0){
+				//设置状态为不可编辑
+				update.set("update_flag", ApiConstant.INT_ZERO);
+			}else{
+			   //设置状态为可编辑
+				update.set("update_flag", ApiConstant.INT_ONE);
+			}
+			mongoTemplate.findAndModify(Query.query(Criteria.where("tag_id").is(tagId)), update, TagRecommend.class);
+		}
+	}
+	
+	
+	
 
 	/**
 	 * 封装参数
@@ -293,9 +332,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 		tagSqlParam.setScopeValue(sb.toString());
 		return tagSqlParam;
 	}
-
-
-
-
+	
+	
 
 }

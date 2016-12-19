@@ -24,6 +24,7 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponDictionaryTypeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponExpiredEnum;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeDictionaryService;
+import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryItemOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -38,38 +39,28 @@ public class CouponCodeDictionaryServiceImpl implements CouponCodeDictionaryServ
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED,readOnly=true)
-    public CouponCodeDictionaryListOut materialCouponDictionary(String type) {
+    public CouponCodeDictionaryListOut materialCouponDictionary() {
         CouponCodeDictionaryListOut baseOutput = new CouponCodeDictionaryListOut(ApiErrorCode.SUCCESS.getCode(),
                 ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO);
         List<CouponCodeDictionaryOut> dataList = baseOutput.getCodeDictionaryOuts();
-        if (MaterialCouponDictionaryTypeEnum.contains(type)) {
-            MaterialCouponDictionaryTypeEnum typeEnum = MaterialCouponDictionaryTypeEnum.getByCode(type);
-            switch (typeEnum) {
-                case RECEIVED:
-                    MaterialCouponCodeReleaseStatusEnum[] values = MaterialCouponCodeReleaseStatusEnum.values();
-                    for (MaterialCouponCodeReleaseStatusEnum item : values) {
-                        dataList.add(new CouponCodeDictionaryOut(item.getCode(), item.getDescription()));
-                    }
-                    break;
-                case VERIFY:
-                    MaterialCouponCodeVerifyStatusEnum[] statusValues = MaterialCouponCodeVerifyStatusEnum.values();
-                    for (MaterialCouponCodeVerifyStatusEnum item : statusValues) {
-                        dataList.add(new CouponCodeDictionaryOut(item.getCode(), item.getDescription()));
-                    }
-                    break;
-                default:
-                    MaterialCouponExpiredEnum[] expiredValues = MaterialCouponExpiredEnum.values();
-                    for (MaterialCouponExpiredEnum item : expiredValues) {
-                        dataList.add(new CouponCodeDictionaryOut(item.getCode(), item.getDescription()));
-                    }
-                    break;
-            }
-            baseOutput.setTotal(dataList.size());
-            baseOutput.setTotalCount(dataList.size());
-        } else {
-            baseOutput = new CouponCodeDictionaryListOut(ApiErrorCode.PARAMETER_ERROR.getCode(),
-                    ApiErrorCode.PARAMETER_ERROR.getMsg(), ApiConstant.INT_ZERO);
+        CouponCodeDictionaryOut dataItem = new CouponCodeDictionaryOut();
+
+        MaterialCouponCodeReleaseStatusEnum[] values = MaterialCouponCodeReleaseStatusEnum.values();
+        for (MaterialCouponCodeReleaseStatusEnum item : values) {
+            dataItem.getReceivedStatus().add(new CouponCodeDictionaryItemOut(item.getCode(), item.getDescription()));
         }
+        MaterialCouponCodeVerifyStatusEnum[] statusValues = MaterialCouponCodeVerifyStatusEnum.values();
+        for (MaterialCouponCodeVerifyStatusEnum item : statusValues) {
+            dataItem.getVerifyStatus().add(new CouponCodeDictionaryItemOut(item.getCode(), item.getDescription()));
+        }
+        MaterialCouponExpiredEnum[] expiredValues = MaterialCouponExpiredEnum.values();
+        for (MaterialCouponExpiredEnum item : expiredValues) {
+            dataItem.getExpiredStatus().add(new CouponCodeDictionaryItemOut(item.getCode(), item.getDescription()));
+        }
+
+        dataList.add(dataItem);
+        baseOutput.setTotal(dataList.size());
+        baseOutput.setTotalCount(dataList.size());
         return baseOutput;
     }
 

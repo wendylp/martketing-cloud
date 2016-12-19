@@ -31,6 +31,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponAudienceCreateService;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -68,8 +69,7 @@ public class MaterialCouponAudienceCreateServiceTest {
             }
         }).when(this.mqTopicService).senderMessage("", new ActiveMqMessageVO());
         
-        BaseOutput result0 = mcacService.createTargetAudienceGroup(0l, "audienceName", "blurSearch", "releaseStatus",
-                "verifyStatus", "expireStatus");
+        BaseOutput result0 = mcacService.createTargetAudienceGroup(new MaterialCouponCreateAudienceVO());
 
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result0.getCode());
         logger.info("测试方法: testCreateTargetAudienceGroup01 end");
