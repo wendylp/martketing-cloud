@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.mongodb.WriteResult;
 
@@ -25,7 +26,7 @@ import cn.rongcapital.mkt.po.mongodb.SystemCustomTagTree;
  * @author shuiyangyang
  *
  */
-@Repository
+@Service
 public class MongoSystemCustomTagTreeDaoImpl implements MongoSystemCustomTagTreeDao {
 
     private Logger logger = LoggerFactory.getLogger(MongoBaseTagDaoImpl.class);
@@ -221,7 +222,7 @@ public class MongoSystemCustomTagTreeDaoImpl implements MongoSystemCustomTagTree
         WriteResult writeResult = mongoTemplate.updateMulti(
                 new Query(new Criteria(LEVEL).is(level).and(IS_DELETED).is(DATA_VALID).and(TAG_TREE_ID)
                         .in(tagTreeIdLists)),
-                new Update().set(IS_SHOW, IS_SHOW).set(UPDATE_TIME, new Date()), SystemCustomTagTree.class);
+                new Update().set(IS_SHOW, isShow).set(UPDATE_TIME, new Date()), SystemCustomTagTree.class);
         logger.debug("updateIsShowByLevelTagTreeTd--> param:[level:{},tagTreeIdLists:{},isShow:{}] --return:{}", level,
                 tagTreeIdLists, isShow, writeResult.getN());
         return writeResult.getN();
