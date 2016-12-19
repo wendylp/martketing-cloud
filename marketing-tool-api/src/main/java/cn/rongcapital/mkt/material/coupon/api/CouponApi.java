@@ -22,7 +22,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -31,9 +30,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.file.FileService;
+import cn.rongcapital.mkt.file.FileStoreService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeDictionaryService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
@@ -54,8 +52,6 @@ import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
-import cn.rongcapital.mkt.material.po.MaterialAccessProperty;
-import cn.rongcapital.mkt.material.service.MaterialCouponPropertiesService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
@@ -119,7 +115,7 @@ public class CouponApi {
 	private MaterialCouponAudienceCreateService materialCouponAudienceCreateService;
 	
 	@Autowired
-	private FileService fileService;
+	private FileStoreService fileService;
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -468,19 +464,4 @@ public class CouponApi {
         return materialCouponAudienceCreateService.createTargetAudienceGroup(id, name, blurSearch, releaseStatus,
                 verifyStatus, expireStatus);
     }
-	
-//    /**
-//     * @author guozhenchao
-//     * @功能简述:优惠券文件上传接口
-//     * @param fileUnique
-//     * @param input
-//     * @return
-//     */
-//    @POST
-//    @Path("/mkt.materiel.coupon.file.upload.test")
-//    @Consumes("multipart/form-data")
-//    public BaseOutput fileUploadBatch(@NotEmpty @QueryParam("user_token") String userToken,
-//                                      @NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
-//        return fileService.uploadFileBatch(input, userId);
-//    }
 }
