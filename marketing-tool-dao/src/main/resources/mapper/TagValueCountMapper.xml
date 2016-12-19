@@ -106,7 +106,7 @@
 	<!-- 总数查询,通过条件 -->
 	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.TagValueCount"
 		resultType="int">
-		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<![CDATA[SELECT COUNT(1) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE" />
 		<include refid="QUERY_WHERE_CLAUSE" />
 	</select>
