@@ -26,13 +26,13 @@ import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyShowSetIn;
 @Service
 public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomyShowSetService {
 
-    private static final Integer LEVEL_ONE = 1;
+    private static final int LEVEL_ONE = 1;
     private static final Boolean IS_SHOW = true;
     private static final Boolean NOT_SHOW = false;
     private static final int MAX_SIZE = 6;
 
-    @Autowired
-    MongoSystemCustomTagTreeDao systemCustomTagTreeDao;
+//    @Autowired
+//    MongoSystemCustomTagTreeDao systemCustomTagTreeDao;
 
     /**
      * 功能描述：设置系统标签一级分类优先显示接口
@@ -47,31 +47,32 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
      */
     @Override
     public BaseOutput tagCustomTaxonomyShowSet(TagCustomTaxonomyShowSetIn body, SecurityContext securityContext) {
-        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-                ApiConstant.INT_ZERO, null);
-
-
-
-        List<String> tagTreeIdLists = body.getTagTreeId();
-
-        if (CollectionUtils.isNotEmpty(tagTreeIdLists)) {
-            // 重置is_show的状态
-            systemCustomTagTreeDao.updateIsShowByLevel(LEVEL_ONE, NOT_SHOW);
-
-            int size = tagTreeIdLists.size();
-            size = size > MAX_SIZE ? MAX_SIZE : size;
-
-            List<String> newTagTreeIdLists = new ArrayList<String>();
-            for (int i = 0; i < size; i++) {
-                newTagTreeIdLists.add(tagTreeIdLists.get(i));
-            }
-
-            // 更新数据
-            int updateCount = systemCustomTagTreeDao.updateIsShowByLevelTagTreeTd(LEVEL_ONE, newTagTreeIdLists, IS_SHOW);
-            result.setTotal(updateCount);
-        }
-
-        return result;
+//        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+//                ApiConstant.INT_ZERO, null);
+//
+//
+//
+//        List<String> tagTreeIdLists = body.getTagTreeId();
+//
+//        if (CollectionUtils.isNotEmpty(tagTreeIdLists)) {
+//            // 重置is_show的状态
+//            systemCustomTagTreeDao.updateIsShowByLevel(LEVEL_ONE, NOT_SHOW);
+//
+//            int size = tagTreeIdLists.size();
+//            size = size > MAX_SIZE ? MAX_SIZE : size;
+//
+//            List<String> newTagTreeIdLists = new ArrayList<String>();
+//            for (int i = 0; i < size; i++) {
+//                newTagTreeIdLists.add(tagTreeIdLists.get(i));
+//            }
+//
+//            // 更新数据
+//            int updateCount = systemCustomTagTreeDao.updateIsShowByLevelTagTreeTd(LEVEL_ONE, newTagTreeIdLists, IS_SHOW);
+//            result.setTotal(updateCount);
+//        }
+//
+//        return result;
+        return null;
     }
 
 }
