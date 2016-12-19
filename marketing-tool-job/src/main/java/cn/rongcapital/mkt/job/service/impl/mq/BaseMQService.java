@@ -411,7 +411,9 @@ public class BaseMQService {
 	protected void cancelCampaignInnerTask(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
-		String consumerKey = campaignHeadId + "-" + itemId;
+		Integer id = taskSchedule.getId();
+		String consumerKey = campaignHeadId + "-" + itemId + id;
+		
 		MessageConsumer consumer = consumerMap.get(consumerKey);
 		if (null != consumer) {
 			try {

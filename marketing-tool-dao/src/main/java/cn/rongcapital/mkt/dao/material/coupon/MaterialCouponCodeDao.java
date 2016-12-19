@@ -115,4 +115,23 @@ public interface MaterialCouponCodeDao extends BaseDao<MaterialCouponCode> {
      * @author shanjingqi
      */
     List<String> getCouponCodeVerifyUserInfoList(Map<String, Object> paramMap);
+    
+    
+    
+    /**
+         * @author liuhaizhan
+         * @功能简述: 统计优惠券投放成功，失败数量
+         * @param 优惠券ID
+         * @return 
+         */
+    List<Map> getCouponPutInCount(long id);
+    
+    
+    /**
+         * @author liuhaizhan
+         * @功能简述:统计优惠券已核销,未核销金额 
+         * @param 优惠券ID
+         * @return 
+         */
+    List<Map> getCouponVerifyCount(long id);
 }

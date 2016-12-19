@@ -9,10 +9,10 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.service.impl;
 
-import static org.mockito.Matchers.any;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.jms.JMSException;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -21,17 +21,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
-import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponAudienceCreateService;
-import cn.rongcapital.mkt.service.AudienceListService;
+import cn.rongcapital.mkt.service.MQTopicService;
+import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -42,13 +43,7 @@ public class MaterialCouponAudienceCreateServiceTest {
     private MaterialCouponAudienceCreateService mcacService;
 
     @Mock
-    MaterialCouponDao materialCouponDao;
-
-    @Mock
-    MaterialCouponCodeDao materialCouponCodeDao;
-
-    @Mock
-    AudienceListService audienceListService;
+    MQTopicService mqTopicService;
 
     List<String> mobileList = new ArrayList<>();
 
@@ -60,29 +55,19 @@ public class MaterialCouponAudienceCreateServiceTest {
 
         mcacService = new MaterialCouponAudienceCreateServiceImpl();
 
-        String tempMobile = "";
-        for (int a = 0; a < 6; a++) {
-            tempMobile = "1860000000" + a;
-            mobileList.add(tempMobile);
-        }
-
-        MaterialCoupon tempMc = new MaterialCoupon();
-        tempMc.setTaskId(10l);
-        mc.add(tempMc);
-
-        ReflectionTestUtils.setField(mcacService, "materialCouponDao", materialCouponDao);
-        ReflectionTestUtils.setField(mcacService, "materialCouponCodeDao", materialCouponCodeDao);
-        ReflectionTestUtils.setField(mcacService, "audienceListService", audienceListService);
+        ReflectionTestUtils.setField(mcacService, "mqTopicService", mqTopicService);
     }
 
     @Test
-    public void testCreateTargetAudienceGroup01() {
+    public void testCreateTargetAudienceGroup01() throws JMSException {
         logger.info("测试方法: testCreateTargetAudienceGroup01 start");
 
-        Mockito.when(materialCouponCodeDao.getCouponCodeVerifyUserInfoList(any())).thenReturn(mobileList);
-        Mockito.when(materialCouponDao.selectListByIdList(any())).thenReturn(mc);
-        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any())).thenReturn(true);
-
+        Mockito.doAnswer(new Answer<Void>() {
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(this.mqTopicService).senderMessage("", new ActiveMqMessageVO());
+        
         BaseOutput result0 = mcacService.createTargetAudienceGroup(0l, "audienceName", "blurSearch", "releaseStatus",
                 "verifyStatus", "expireStatus");
 
@@ -90,49 +75,7 @@ public class MaterialCouponAudienceCreateServiceTest {
         logger.info("测试方法: testCreateTargetAudienceGroup01 end");
     }
 
-    @Test
-    public void testCreateTargetAudienceGroup02() {
-        logger.info("测试方法: testCreateTargetAudienceGroup02 start");
-
-        Mockito.when(materialCouponCodeDao.getCouponCodeVerifyUserInfoList(any())).thenReturn(null);
-        Mockito.when(materialCouponDao.selectListByIdList(any())).thenReturn(mc);
-        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any())).thenReturn(false);
-
-        BaseOutput result0 = mcacService.createTargetAudienceGroup(0l, "audienceName", "blurSearch", "releaseStatus",
-                "verifyStatus", "expireStatus");
-        Assert.assertEquals(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_CREATE_AUDIENCE_FAILED.getCode(), result0.getCode());
-        logger.info("测试方法: testCreateTargetAudienceGroup02 end");
-    }
-
-    @Test
-    public void testCreateTargetAudienceGroup03() {
-        logger.info("测试方法: testCreateTargetAudienceGroup03 start");
-
-        Mockito.when(materialCouponCodeDao.getCouponCodeVerifyUserInfoList(any())).thenReturn(new ArrayList<>());
-        Mockito.when(materialCouponDao.selectListByIdList(any())).thenReturn(null);
-        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any())).thenReturn(true);
-
-        BaseOutput result0 = mcacService.createTargetAudienceGroup(0l, "audienceName", "blurSearch", "releaseStatus",
-                "verifyStatus", "expireStatus");
-        Assert.assertEquals(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_CREATE_AUDIENCE.getCode(),
-                result0.getCode());
-        logger.info("测试方法: testCreateTargetAudienceGroup03 end");
-    }
     
-    @Test
-    public void testCreateTargetAudienceGroup04() {
-        logger.info("测试方法: testCreateTargetAudienceGroup04 start");
-
-        Mockito.when(materialCouponCodeDao.getCouponCodeVerifyUserInfoList(any())).thenReturn(new ArrayList<>());
-        Mockito.when(materialCouponDao.selectListByIdList(any())).thenReturn(new ArrayList<MaterialCoupon>());
-        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any())).thenReturn(true);
-
-        BaseOutput result0 = mcacService.createTargetAudienceGroup(0l, "audienceName", "blurSearch", "releaseStatus",
-                "verifyStatus", "expireStatus");
-        Assert.assertEquals(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_CREATE_AUDIENCE.getCode(),
-                result0.getCode());
-        logger.info("测试方法: testCreateTargetAudienceGroup04 end");
-    }
 
     @After
     public void tearDown() throws Exception {

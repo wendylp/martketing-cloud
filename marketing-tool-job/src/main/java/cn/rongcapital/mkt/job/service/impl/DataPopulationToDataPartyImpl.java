@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +23,7 @@ import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.job.service.vo.DataPartySyncVO;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.DataPopulation;
+import cn.rongcapital.mkt.po.DataShopping;
 
 /**
  * Created by ethan on 16/6/30.
@@ -78,7 +80,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 		Integer maxId = dataPartyDao.getMaxId();
 		maxId = maxId == null ? 0 : maxId;
 		String bitmap = dataPopulationLists.get(0).getBitmap();
-		
+		int keySize = getKeySizeByBitmap(bitmap);
 		//拆分总总数据，分批同步
 		List<List<DataPopulation>> dataPopulationsList = ListSplit.getListSplit(dataPopulationLists, BATCH_SIZE);
 	    
@@ -92,7 +94,10 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
     				List<Integer> idList = new ArrayList<>(dataPopulationLists.size());
     				
     				for (DataPopulation dataObj : dataPopulations) {
-	    				createParty(dataObj);
+	    				
+    					if(!checkBitKey(dataObj)){
+    						createParty(dataObj);
+    					}
 	    				
 	    				idList.add(dataObj.getId());
 	    				
@@ -114,7 +119,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
         	//设置最大阻塞时间，所有线程任务执行完成再继续往下执行
         	executor.awaitTermination(24, TimeUnit.HOURS);
     	  
-        	logger.info("======================校验重复数据==================== ");
+        	logger.info("======================校验重复数据====================校验开始id= "+maxId);
     	  
         	List<Map<String, Object>> repeatDatas = checkData(bitmap, maxId);
     	  
@@ -122,13 +127,17 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
     	  
         	if(repeatDatas != null && repeatDatas.size() > 0){
         		for(Map<String, Object> repeatData : repeatDatas){
-        			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData);
+        			List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData,keySize);
     			 
+        			if(repeatIds == null){
+        				continue;
+        			}
+        			
         			Integer id = distinctData(repeatIds);
     			 
         			for(Integer repeatId : repeatIds){
     				 
-//    					logger.info("==================repeatId:"+repeatId);
+    					logger.info("==================repeatId:"+repeatId);
     				 
         				Map<String,Object> paraMap = new HashMap<String,Object>();
     					paraMap.put("newkeyId",id);
@@ -160,6 +169,28 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 		dataPopulationDao.updateById(keyidObj);
 	}
 	
+	/**
+	 * 校验主键是否为空
+	 * @param dataObj
+	 * @return
+	 */
+	private boolean checkBitKey(DataPopulation dataObj){
+		String bitmap = dataObj.getBitmap();
+		
+		if (StringUtils.isNotBlank(bitmap)) {
+			try {
+				// 获取keyid
+				List<String> strlist = this.getAvailableKeyid(bitmap);
+				
+				return checkBitKeyByType(strlist, dataObj);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return true;
+	}
 	
 	private void createParty(DataPopulation dataObj){
 		
