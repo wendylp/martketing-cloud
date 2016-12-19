@@ -112,6 +112,12 @@ public class CouponSaveServiceImpl implements CouponSaveService {
                 baseOutput.setMsg(ApiErrorCode.DB_ERROR.getMsg());
                 return baseOutput;
             }
+            //优惠码未生成完不能编辑
+            if(MaterialCouponReadyStatusType.UNREADY.getCode().equals(coupon.getReadyStatus())){
+                baseOutput.setCode(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_ERROR.getCode());
+                baseOutput.setMsg(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_ERROR.getMsg());
+                return baseOutput;
+            }
             // 只有未投放才能编辑
             if (!MaterialCouponStatusEnum.UNUSED.getCode().equals(coupon.getCouponStatus())) {
                 baseOutput.setCode(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_UPDATE_ERROR.getCode());
