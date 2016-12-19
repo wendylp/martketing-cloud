@@ -121,6 +121,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 			tagValueCount.setIsTag("0");
 			tagValueCount.setTagId(tagId);
 			List<TagValueCount> tagList = tagValueCountDao.selectList(tagValueCount);
+			int selectListCount = tagValueCountDao.selectListCount(tagValueCount);
 			List<Map<String, Object>> tagValueList = new ArrayList<>();
 			for (TagValueCount tag : tagList) {
 				Map<String, Object> tagValueMap = new HashMap<>();
@@ -137,7 +138,8 @@ public class SystemTagServiceImpl implements SystemTagService {
 				tagMap.put("update_flag", tag.getUpdateFlag());
 			}
 			data.add(tagMap);
-			output.setTotalCount(tagValueList.size());
+			output.setTotalCount(selectListCount);
+			output.setTotal(tagValueList.size());
 			data.add(tagValueList);
 		} catch (Exception e) {
 			e.printStackTrace();
