@@ -65,28 +65,54 @@ public class MaterialCouponPutInGeneralServiceImplTest {
         BaseOutput actual = materialCouponPutInGeneralService.putInGeneral(id);
         Assert.assertEquals(baseOutput.getMsg(), actual.getMsg()); // 测试没有数据
 
+        MaterialCoupon m = new MaterialCoupon();
+        m.setStatus((byte) 1);
+        Mockito.when(materialCouponDao.selectOneCoupon(id)).thenReturn(m);
+        actual = materialCouponPutInGeneralService.putInGeneral(id);
+        Assert.assertEquals(baseOutput.getMsg(), actual.getMsg()); // 已删除状态数据
+
+
+
         MaterialCoupon mc = new MaterialCoupon();
         mc.setStatus((byte) 0);
         mc.setAmount(new BigDecimal(7.00));
         Mockito.when(materialCouponDao.selectOneCoupon(id)).thenReturn(mc);
+
+        Mockito.when(materialCouponCodeDao.getCouponPutInCount(Mockito.anyLong())).thenReturn(null); // 投放数量为空
+
+        Mockito.when(materialCouponCodeDao.getCouponVerifyCount(Mockito.anyLong())).thenReturn(null); // 核销为空
+        baseOutput.setCode(0);
+        actual = materialCouponPutInGeneralService.putInGeneral(id);
+        Assert.assertEquals(baseOutput.getCode(), actual.getCode());
+
+        logger.info(JSON.toJSONString(actual));
+
         Map data = new HashMap();
         data.put("status", "received");
         data.put("cnt", 6);
+        Map data1=new HashMap();
+        data1.put("status", "unreceived");
+        data1.put("cnt", 7);
         List<Map> putIncnt = new ArrayList<Map>();
         putIncnt.add(data);
+        putIncnt.add(data1);
         Mockito.when(materialCouponCodeDao.getCouponPutInCount(Mockito.anyLong())).thenReturn(putIncnt);
         List<Map> couponVerifyCnt = new ArrayList<Map>();
         Map data2 = new HashMap();
         data2.put("status", "unverify");
         data2.put("cnt", 2);
+        Map data3 = new HashMap();
+        data3.put("status", "verified");
+        data3.put("cnt", "4");
+        couponVerifyCnt.add(data3);
         couponVerifyCnt.add(data2);
         Mockito.when(materialCouponCodeDao.getCouponVerifyCount(Mockito.anyLong())).thenReturn(couponVerifyCnt);
         baseOutput.setCode(0);
         actual = materialCouponPutInGeneralService.putInGeneral(id);
         Assert.assertEquals(baseOutput.getCode(), actual.getCode());
         logger.info(JSON.toJSONString(actual));
-        
-        //无核销数据时
+
+        // 无核销数据时
         Mockito.when(materialCouponCodeDao.getCouponVerifyCount(Mockito.anyLong())).thenReturn(null);
         actual = materialCouponPutInGeneralService.putInGeneral(id);
         Assert.assertEquals(baseOutput.getCode(), actual.getCode());
