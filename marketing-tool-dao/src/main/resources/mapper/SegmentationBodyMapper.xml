@@ -140,4 +140,14 @@
 		WHERE sb.status = 0 and sb.head_id = #{headId}
 	</select>
 	
+	<!-- 通过标签ID查询记录条数 -->
+	<select id="getCountByTagId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(1)
+		FROM 
+			segmentation_body
+		WHERE
+			tag_id = #{tagId}
+	</select>
+	
 </mapper>
