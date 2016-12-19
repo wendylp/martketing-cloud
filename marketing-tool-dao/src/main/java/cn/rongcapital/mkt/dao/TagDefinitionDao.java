@@ -40,7 +40,25 @@ public interface TagDefinitionDao extends BaseDao<TagDefinition>{
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
 	
+	/**
+	 * 通过标签名称查询拼接好的Sql
+	 * @param tagName	标签名称
+	 * @return
+	 */
 	String selectDefinitionSqlByTagName(@Param("tagName") String tagName);
-	
+	/**
+	 * 执行sql
+	 * @param targetSql	目标执行sql
+	 * @return
+	 */
 	List<SystemTagResult> executeSql(@Param("targetSql") String targetSql);
+	
+	/**
+	 * 通过标签名称设置更新状态
+	 * @param tagName	标签名称
+	 * @return
+	 */
+	int updateIsUpdateByTagName(@Param("tagName") String tagName);
+	
+	
 }

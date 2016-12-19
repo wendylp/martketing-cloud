@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.vo.in;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 /*************************************************
  * @功能简述: 系统标签标签值修改表单参数Vo
  * @项目名称: marketing cloud
@@ -9,6 +11,7 @@ package cn.rongcapital.mkt.vo.in;
  * @date: 2016/12/13
  * @复审人:
  *************************************************/
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class TagValueElement {
 	
 	private String startValue;

@@ -29,9 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.common.enums.CouponCodeType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponReadyStatusType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeTypeEnum;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 
 import com.alibaba.druid.support.json.JSONUtils;
@@ -54,6 +57,9 @@ public class CouponCodeSaveTaskImpl implements TaskService{
     
     @Autowired
     private MaterialCouponCodeDao materialCouponCodeDao;
+    
+    @Autowired
+    private MaterialCouponDao materialCouponDao;
     
     @Override
     public void task(Integer taskId) {
@@ -109,6 +115,9 @@ public class CouponCodeSaveTaskImpl implements TaskService{
                     }
                     materialCouponCodeDao.batchInsert(codeList);
                 }
+                MaterialCoupon coupon = materialCouponDao.selectOneCoupon(couponId);
+                coupon.setReadyStatus(MaterialCouponReadyStatusType.READY.getCode());
+                materialCouponDao.updateById(coupon);
                 logger.info("MQ消费，结束时间" + System.currentTimeMillis());
             }
         } catch (Exception e) {

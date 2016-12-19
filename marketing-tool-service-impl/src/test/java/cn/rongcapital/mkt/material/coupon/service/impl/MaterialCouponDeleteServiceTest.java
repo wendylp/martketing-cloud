@@ -59,10 +59,18 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
     public void del() {
-        Mockito.when(materialCouponDao.selectOneCoupon(id)).thenReturn(mcp);
+        
+        Mockito.when(materialCouponDao.selectOneCoupon(id)).thenReturn(null); //查不到数据时
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getCode(),
+            ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getMsg(), 1, null);
+    BaseOutput actual = materialCouponDeleteService.delete(id);
+    Assert.assertEquals(baseOutput.getMsg(), actual.getMsg());
+        
+        
+        Mockito.when(materialCouponDao.selectOneCoupon(id)).thenReturn(mcp);
+        baseOutput = new BaseOutput(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getCode(),
                 ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getMsg(), 1, null);
-        BaseOutput actual = materialCouponDeleteService.delete(id);
+       actual = materialCouponDeleteService.delete(id);
         Assert.assertEquals(baseOutput.getMsg(), actual.getMsg()); // 测试不是未使用状态
 
         // 测试未使用状态的删除操作
