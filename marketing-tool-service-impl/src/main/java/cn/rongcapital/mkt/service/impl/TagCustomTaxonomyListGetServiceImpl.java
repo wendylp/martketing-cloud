@@ -169,8 +169,8 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
                 if (tagRecommend != null) {
                     String tagCover = tagSystemCommonUtilService.getTagCover(tagId);
                     TagSystemTreeTagOut tagSystemTreeTagOut = new TagSystemTreeTagOut(tagRecommend.getTagId(),
-                            tagRecommend.getTagName(), tagRecommend.getFlag(), tagRecommend.getTagNameEng(), tagCover,
-                            tagRecommend.getTagDesc());
+                            tagRecommend.getTagName(), tagRecommend.getFlag(), tagRecommend.getTagNameEng(),
+                            tagRecommend.getSearchMod(), tagCover, tagRecommend.getTagDesc());
                     tagOutLists.add(tagSystemTreeTagOut);
                 }
             }

@@ -56,12 +56,14 @@ public class TagSystemTreeTagOut {
     }
     
 
-    public TagSystemTreeTagOut(String tagId, String tagName, Boolean flag, String tagNameEng, String tagCover, String tagDesc) {
+    public TagSystemTreeTagOut(String tagId, String tagName, Boolean flag, String tagNameEng, Integer searchMod,
+            String tagCover, String tagDesc) {
         super();
         this.tagId = tagId;
         this.tagName = tagName;
         this.flag = flag;
         this.tagNameEng = tagNameEng;
+        this.searchMod = searchMod;
         this.tagCover = tagCover;
         this.tagDesc = tagDesc;
     }
