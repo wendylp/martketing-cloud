@@ -623,6 +623,28 @@ public class MaterialCouponCodeCheckServiceTest {
                 ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_CHECK_NOT_IN_PERIOD
                         .getCode(),
                 output.getCode());
+        
+        //测试if分支中的判断条件，增加brunch覆盖率
+        endCalender = Calendar.getInstance();
+        endCalender.setTime(new Date()); // 设置当前日期
+        endCalender.add(Calendar.DATE,1); // 日期加1
+        endDate = endCalender.getTime(); // 结果
+        mockMaterialCoupon.setEndTime(endDate);
+        startCalender = Calendar.getInstance();
+        startCalender.setTime(new Date()); // 设置当前日期
+        startCalender.add(Calendar.DATE, 1); // 日期加1
+        startDate = endCalender.getTime(); // 结果
+        mockMaterialCoupon.setStartTime(startDate);
+        
+        output = this.checkService.materialCouponCodeCheck(
+            paramMaterialCouponCode.getId(),
+            paramMaterialCouponCode.getCode(),
+            paramMaterialCouponCode.getUser());
+        Assert.assertEquals(
+            ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_CHECK_NOT_IN_PERIOD
+                    .getCode(),
+            output.getCode());
+        
     }
     
     /**
