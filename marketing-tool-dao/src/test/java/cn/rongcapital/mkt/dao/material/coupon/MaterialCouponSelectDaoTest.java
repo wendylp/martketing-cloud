@@ -53,7 +53,7 @@ public class MaterialCouponSelectDaoTest extends AbstractUnitTest{
         paramMaterialCoupon.setStatus(NumUtil.int2OneByte(StatusEnum.ACTIVE.getStatusCode()));
         paramMaterialCoupon.setStockRest(10000);
         paramMaterialCoupon.setStockTotal(20000);
-        paramMaterialCoupon.setTitle("贝贝熊短信引流优惠码活动");
+        paramMaterialCoupon.setTitle("贝贝熊TESTByXiexl短信引流优惠码活动");
         paramMaterialCoupon.setType("voucher");
         paramMaterialCoupon.setUpdateTime(new Date());
         meterialCouponDao.insert(paramMaterialCoupon);
@@ -69,7 +69,7 @@ public class MaterialCouponSelectDaoTest extends AbstractUnitTest{
     public void testSelectListCountByKeyword() throws Exception {
 
         MaterialCoupon queryMaterialCoupon = new MaterialCoupon();
-        queryMaterialCoupon.setTitle("贝贝熊");
+        queryMaterialCoupon.setTitle("贝贝熊TESTByXiexl");
         queryMaterialCoupon.setStartIndex(0);
         queryMaterialCoupon.setPageSize(10);
         queryMaterialCoupon.setChannelCode("sms");
@@ -89,7 +89,7 @@ public class MaterialCouponSelectDaoTest extends AbstractUnitTest{
     public void testSelectListByKeyword() throws Exception {
 
         MaterialCoupon queryMaterialCoupon = new MaterialCoupon();
-        queryMaterialCoupon.setTitle("贝贝熊");
+        queryMaterialCoupon.setTitle("贝贝熊TESTByXiexl");
         queryMaterialCoupon.setStartIndex(0);
         queryMaterialCoupon.setPageSize(10);
         queryMaterialCoupon.setChannelCode("sms");
