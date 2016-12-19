@@ -16,11 +16,10 @@ public interface CouponCodeDictionaryService {
 
     /**
      * @功能描述: 获取数据字典
-     * @param type
      * @return BaseOutput
      * @author xie.xiaoliang
      * @since 2016-12-13
      */
-    CouponCodeDictionaryListOut materialCouponDictionary(String type);
+    CouponCodeDictionaryListOut materialCouponDictionary();
 
 }
