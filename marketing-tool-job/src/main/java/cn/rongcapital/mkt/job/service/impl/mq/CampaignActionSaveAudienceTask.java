@@ -71,19 +71,20 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 					try {
 						//获取segment list数据对象
 					    //原始的处理方法
-						/*List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
+						List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
+						 logger.info("监听到消息 ================================== {}", segmentList.size());
 						if(CollectionUtils.isNotEmpty(segmentList)) {
 							processMqMessage(segmentList,campaignHeadId,
 											 itemId,campaignEndsList,campaignActionSaveAudience);
-						}*/
-					    TextMessage tm = (TextMessage) message;
+						}
+					  /*  TextMessage tm = (TextMessage) message;
 					    String messageJson = tm.getText();
 					    logger.info("监听到消息 ================================== {}", messageJson);
 					    List<Segment> segmentList = JSONArray.parseArray(messageJson, Segment.class);
 					    if(CollectionUtils.isNotEmpty(segmentList)) {
                             processMqMessage(segmentList,campaignHeadId,
                                              itemId,campaignEndsList,campaignActionSaveAudience);
-                        }
+                        }*/
 					} catch (Exception e) {
 						logger.error(e.getMessage(),e);
 					}

@@ -262,8 +262,10 @@ public class MktSystemTagApi {
     @GET
     @Path("/mkt.tag.tree.list.get")
     public BaseOutput getSystemtagList(@NotEmpty @QueryParam("user_token") String userToken,
-            @QueryParam("ver") String ver,@NotEmpty @QueryParam("tag_id") String navigateIndex) {
-        return systemTagService.getSystemTagList(navigateIndex);
+                                       @QueryParam("ver") String ver,
+                                       @NotEmpty @QueryParam("tag_id") String navigateIndex,
+                                       @QueryParam("page_source_type") Integer pageSourceType) {
+        return systemTagService.getSystemTagList(navigateIndex,pageSourceType);
     }
     
     /**

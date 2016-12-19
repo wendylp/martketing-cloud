@@ -1,10 +1,12 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,15 +55,15 @@ public class SystemTagServiceImpl implements SystemTagService {
 
 	@Autowired
 	private TagValueCountDao tagValueCountDao;
-	
+
 	@Autowired
 	private TagSqlParamDao tagSqlParamDao;
-	
+
 	@Autowired
 	private SysTagViewDao sysTagViewDao;
 
 	@Override
-	public BaseOutput getSystemTagList(String navigateIndex) {
+	public BaseOutput getSystemTagList(String navigateIndex, Integer pageSourceType) {
 		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
@@ -76,7 +78,26 @@ public class SystemTagServiceImpl implements SystemTagService {
 			output.getData().add(getTagTree(navigateIndex));
 			break;
 		}
+
+		if(pageSourceType != null && pageSourceType == 1){
+			filterTagCoverNonData(output);
+		}
 		return output;
+	}
+
+	private void filterTagCoverNonData(BaseOutput output) {
+		if(output == null) return;
+		if(CollectionUtils.isNotEmpty(output.getData())){
+			List<Object> filteredList = new LinkedList<>();
+			for(Object object : output.getData()){
+				if(object instanceof TagSystemTreeTagOut){
+					if(commonUtilService.isTagCoverData(((TagSystemTreeTagOut) object).getTagId())){
+						filteredList.add(object);
+					}
+				}
+			}
+			output.setData(filteredList);
+		}
 	}
 
 	@Override
@@ -85,7 +106,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 				ApiConstant.INT_ZERO, null);
 		List<Object> data = output.getData();
 		try {
-			
+
 			TagValueCount tagValueCount = new TagValueCount();
 			tagValueCount.setStartIndex(index);
 			tagValueCount.setPageSize(size);
@@ -107,7 +128,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 					tagMap.put("update_flag", tag.getUpdateFlag());
 					data.add(tagMap);
 				}
-				
+
 			}
 			output.setTotalCount(tagValueList.size());
 			data.add(tagValueList);
@@ -232,12 +253,12 @@ public class SystemTagServiceImpl implements SystemTagService {
 				tagList.add(startValue + "-" + endValue);
 			}
 		}
-		
+
 		Query query = new Query(Criteria.where("tag_id").is(tagId));
 		TagRecommend tagInformation = mongoTemplate.find(query, TagRecommend.class).get(0);
 		Integer tagVersion = tagInformation.getTagVersion();
 		List<String> defualtTagList = tagInformation.getTagList();
-		
+
 		 Update update = new Update().set("tag_version", tagVersion+1).set("v"+tagVersion, defualtTagList).set("tag_list", tagList);
 	     mongoTemplate.findAndModify(query, update, TagRecommend.class);
 	     //更新参数表
@@ -247,7 +268,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 	     sysTagViewDao.updateField2ByTagName(tagName);
 		return output;
 	}
-	
+
 	/**
 	 * 封装参数
 	 * @param tagId	标签ID
@@ -272,9 +293,9 @@ public class SystemTagServiceImpl implements SystemTagService {
 		tagSqlParam.setScopeValue(sb.toString());
 		return tagSqlParam;
 	}
-	
-	
-	
-	
+
+
+
+
 
 }
