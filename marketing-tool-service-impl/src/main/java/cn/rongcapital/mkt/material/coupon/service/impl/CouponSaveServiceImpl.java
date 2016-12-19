@@ -17,15 +17,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
 import javax.jms.JMSException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.MaterialCouponReadyStatusType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
@@ -96,6 +100,7 @@ public class CouponSaveServiceImpl implements CouponSaveService {
             coupon.setUpdateTime(now);
             coupon.setStartTime(startTimeNew);
             coupon.setEndTime(endTimeNew);
+            coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
             materialCouponDao.insert(coupon);
             json.put("coupon_id", coupon.getId());
         } else {
@@ -127,6 +132,7 @@ public class CouponSaveServiceImpl implements CouponSaveService {
             coupon.setUpdateTime(now);
             coupon.setStartTime(startTimeNew);
             coupon.setEndTime(endTimeNew);
+            coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
             materialCouponDao.updateById(coupon);
         }
 
