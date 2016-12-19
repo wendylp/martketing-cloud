@@ -270,11 +270,11 @@ public class SystemTagServiceImpl implements SystemTagService {
 		TagRecommend tagInformation = mongoTemplate.find(query, TagRecommend.class).get(0);
 		Integer tagVersion = tagInformation.getTagVersion();
 		List<String> defualtTagList = tagInformation.getTagList();
+		String tagName = tagInformation.getTagNameEng();
 
 		Update update = new Update().set("tag_version", tagVersion+1).set("v"+tagVersion, defualtTagList).set("tag_list", tagList);
 	    mongoTemplate.findAndModify(query, update, TagRecommend.class);
 	    //更新参数表
-	    String tagName = tagInformation.getTagNameEng();
 	    int count = tagSqlParamDao.saveOrUpdateData(capsulationParam(tagId, elements,tagName));
 	    output.setTotal(count);
 	    sysTagViewDao.updateField2ByTagName(tagName);
