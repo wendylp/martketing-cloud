@@ -1,0 +1,88 @@
+/*************************************************
+ * @功能简述: 新建固定人群Vo类
+ * @项目名称: marketing cloud
+ * @see:
+ * @author: shanjingqi
+ * @version: 1.0
+ * @date: 2016/12/16
+ *************************************************/
+package cn.rongcapital.mkt.material.coupon.vo;
+
+public class MaterialCouponCreateAudienceVO {
+
+    Long id;
+    
+    String name;
+    
+    String blurSearch;
+    
+    String releaseStatus;
+    
+    String verifyStatus;
+    
+    String expireStatus;
+    public MaterialCouponCreateAudienceVO(Long id, String name, String blurSearch, String releaseStatus,
+            String verifyStatus, String expireStatus) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.blurSearch = blurSearch;
+        this.releaseStatus = releaseStatus;
+        this.verifyStatus = verifyStatus;
+        this.expireStatus = expireStatus;
+    }
+
+    public MaterialCouponCreateAudienceVO() {
+        super();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getBlurSearch() {
+        return blurSearch;
+    }
+
+    public void setBlurSearch(String blurSearch) {
+        this.blurSearch = blurSearch;
+    }
+
+    public String getReleaseStatus() {
+        return releaseStatus;
+    }
+
+    public void setReleaseStatus(String releaseStatus) {
+        this.releaseStatus = releaseStatus;
+    }
+
+    public String getVerifyStatus() {
+        return verifyStatus;
+    }
+
+    public void setVerifyStatus(String verifyStatus) {
+        this.verifyStatus = verifyStatus;
+    }
+
+    public String getExpireStatus() {
+        return expireStatus;
+    }
+
+    public void setExpireStatus(String expireStatus) {
+        this.expireStatus = expireStatus;
+    }
+    
+    
+}

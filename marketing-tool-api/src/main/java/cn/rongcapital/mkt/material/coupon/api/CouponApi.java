@@ -9,6 +9,7 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.api;
 
+import javax.jms.JMSException;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -454,6 +455,7 @@ public class CouponApi {
      * @param id
      * @param id
      * @author shanjingqi
+     * @throws JMSException 
      * @Date 2016-12-13
      */
 	@POST
@@ -462,7 +464,7 @@ public class CouponApi {
             @NotEmpty @QueryParam("ver") String version, @NotNull @QueryParam("id") Long id,
             @NotEmpty @QueryParam("name") String name, @QueryParam("blur_search") String blurSearch,
             @QueryParam("receive_status") String releaseStatus, @QueryParam("verify_status") String verifyStatus,
-            @QueryParam("expire_status") String expireStatus) {
+            @QueryParam("expire_status") String expireStatus) throws JMSException {
         return materialCouponAudienceCreateService.createTargetAudienceGroup(id, name, blurSearch, releaseStatus,
                 verifyStatus, expireStatus);
     }

@@ -54,6 +54,7 @@ public class MQTopicServiceImpl implements MQTopicService {
 	private static final String MQ_SMS_SERVICE = "smsSendTaskServiceImpl";
 	private static final String MQ_CODE_SERVICE = "couponCodeSaveTaskImpl";
 	private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask ";
+	private static final String MQ_CREATE_TARGET_AUDIENCE_SERVICE = "createTargetAudienceGroupTask";
 
 	@Value("${spring.activemq.broker-url}")
 	private String providerUrl;
@@ -190,7 +191,8 @@ public class MQTopicServiceImpl implements MQTopicService {
 			receiverMessageComm(connection, MQ_SMS_SERVICE);
 			receiverMessageComm(connection, MQ_CODE_SERVICE);
 			receiverMessageComm(connection, MQ_SMS_GENERATE_DETAIL_SERVICE);
-
+			receiverMessageComm(connection, MQ_CREATE_TARGET_AUDIENCE_SERVICE);
+			
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
