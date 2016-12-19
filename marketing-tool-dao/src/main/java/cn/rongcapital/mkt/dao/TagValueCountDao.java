@@ -45,4 +45,6 @@ public interface TagValueCountDao extends BaseDao<TagValueCount>{
      * @author shuiyangyang
      */
     int selectFuzzyTagValueCount(TagValueCount tagValueCount);
+    
+    TagValueCount selectTagByTagId(@Param("tagId") String tagId);
 }

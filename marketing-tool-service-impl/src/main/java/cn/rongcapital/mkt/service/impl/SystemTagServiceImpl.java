@@ -116,33 +116,32 @@ public class SystemTagServiceImpl implements SystemTagService {
 		try {
 
 			TagValueCount tagValueCount = new TagValueCount();
-			tagValueCount.setStartIndex(index);
+			tagValueCount.setStartIndex(index - 1);
 			tagValueCount.setPageSize(size);
+			tagValueCount.setIsTag("0");
 			tagValueCount.setTagId(tagId);
 			List<TagValueCount> tagList = tagValueCountDao.selectList(tagValueCount);
 			List<Map<String, Object>> tagValueList = new ArrayList<>();
-			Map<String, Object> tagMap = new HashMap<>();
 			for (TagValueCount tag : tagList) {
-				String isTag = tag.getIsTag();
-				if("0".equals(isTag)){
-					Map<String, Object> tagValueMap = new HashMap<>();
-					tagValueMap.put("tag_value", tag.getTagValue());
-					tagValueMap.put("value_count", tag.getValueCount());
-					tagValueList.add(tagValueMap);
-				}else{
-					tagMap.put("tag_id", tag.getTagId());
-					tagMap.put("tag_name", tag.getTagName());
-					tagMap.put("tag_desc", tag.getTagDesc());
-					tagMap.put("update_flag", tag.getUpdateFlag());
-					data.add(tagMap);
-				}
-
+				Map<String, Object> tagValueMap = new HashMap<>();
+				tagValueMap.put("tag_value", tag.getTagValue());
+				tagValueMap.put("value_count", tag.getValueCount());
+				tagValueList.add(tagValueMap);
 			}
+			TagValueCount tag = tagValueCountDao.selectTagByTagId(tagId);
+			Map<String, Object> tagMap = new HashMap<>();
+			if(tag != null){
+				tagMap.put("tag_id", tag.getTagId());
+				tagMap.put("tag_name", tag.getTagName());
+				tagMap.put("tag_desc", tag.getTagDesc());
+				tagMap.put("update_flag", tag.getUpdateFlag());
+			}
+			data.add(tagMap);
 			output.setTotalCount(tagValueList.size());
 			data.add(tagValueList);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("获取标签值列表方法出现异常--------->"+e.getMessage(),e);
+			logger.error("获取标签值列表方法出现异常--------->" + e.getMessage(), e);
 		}
 		return output;
 	}
