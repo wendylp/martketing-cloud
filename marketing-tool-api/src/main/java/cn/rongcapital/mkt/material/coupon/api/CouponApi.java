@@ -445,7 +445,7 @@ public class CouponApi {
     /**
      * 根据筛选条件新建固定人群
      * 
-     * 接口：mkt.material.coupon.verifyGeneral
+     * 接口：mkt.material.coupon.audience.create
      * 
      * @param MaterialCouponCreateAudienceVO
      * @author shanjingqi
