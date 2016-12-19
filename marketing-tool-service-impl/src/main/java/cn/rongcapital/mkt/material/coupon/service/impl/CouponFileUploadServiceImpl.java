@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -80,7 +81,11 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
                 }
                 Iterator<Cell> dataCellIterator = row.cellIterator();
                 while (dataCellIterator.hasNext()) {
-                    num++;
+                    Cell dataColumnCell = dataCellIterator.next();
+                    if(!StringUtils.isBlank(dataColumnCell.getStringCellValue())){
+                        System.out.println(dataColumnCell.getStringCellValue());
+                        num++;
+                    }
                 }
             }
             out.setRecord_count(num);

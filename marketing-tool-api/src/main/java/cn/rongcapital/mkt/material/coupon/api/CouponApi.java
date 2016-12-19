@@ -456,7 +456,7 @@ public class CouponApi {
      * @author shanjingqi
      * @throws JMSException 
      * @Date 2016-12-13
-     */
+     */ 
 	@POST
     @Path("/mkt.material.coupon.audience.create")
     public BaseOutput createTargetAudienceGroup(@NotEmpty @QueryParam("user_token") String userToken,
