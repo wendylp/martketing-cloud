@@ -135,6 +135,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 				tagMap.put("tag_id", tag.getTagId());
 				tagMap.put("tag_name", tag.getTagName());
 				tagMap.put("tag_desc", tag.getTagDesc());
+				tagMap.put("tag_count", tag.getValueCount());
 				tagMap.put("update_flag", tag.getUpdateFlag());
 			}
 			data.add(tagMap);
