@@ -50,12 +50,11 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPutInGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralService;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
-import cn.rongcapital.mkt.material.po.MaterialAccessProperty;
-import cn.rongcapital.mkt.material.service.MaterialCouponPropertiesService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
@@ -186,16 +185,15 @@ public class CouponApi {
         return couponFileUploadService.uploadFile(input, userId);
     }
     /**
-     * 获取指定条件的优惠券的数量
+     * 获取券码投放流失概览数据
      * 
-     * 接口：mkt.material.coupon.counts
+     * 接口：mkt.material.coupon.releaseGeneral
      * 
      * @param user_token
      * @param ver
-     * @param chanel_code
-     * @param keyword
+     * @param id
      * @return BaseOutput
-     * @author zhuxuelong
+     * @author shanjingqi
      * @Date 2016-12-06
      */
     @GET
@@ -450,23 +448,16 @@ public class CouponApi {
      * 
      * 接口：mkt.material.coupon.verifyGeneral
      * 
-     * @param user_token
-     * @param ver
-     * @param id
-     * @param id
+     * @param MaterialCouponCreateAudienceVO
      * @author shanjingqi
      * @throws JMSException 
      * @Date 2016-12-13
      */
 	@POST
     @Path("/mkt.material.coupon.audience.create")
-    public BaseOutput createTargetAudienceGroup(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String version, @NotNull @QueryParam("id") Long id,
-            @NotEmpty @QueryParam("name") String name, @QueryParam("blur_search") String blurSearch,
-            @QueryParam("receive_status") String releaseStatus, @QueryParam("verify_status") String verifyStatus,
-            @QueryParam("expire_status") String expireStatus) throws JMSException {
-        return materialCouponAudienceCreateService.createTargetAudienceGroup(id, name, blurSearch, releaseStatus,
-                verifyStatus, expireStatus);
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput createTargetAudienceGroup(@Valid MaterialCouponCreateAudienceVO mcca) throws JMSException {
+        return materialCouponAudienceCreateService.createTargetAudienceGroup(mcca);
     }
 	
 //    /**
