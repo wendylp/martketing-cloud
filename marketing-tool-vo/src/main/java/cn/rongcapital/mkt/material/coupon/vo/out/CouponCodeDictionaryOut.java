@@ -11,45 +11,33 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.vo.out;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CouponCodeDictionaryOut {
 
-    private String code; // 状态值枚举
-    private String desc; // 状态的实际描述
-
-    public CouponCodeDictionaryOut() {
-        super();
+    private List<CouponCodeDictionaryItemOut> receivedStatus = new ArrayList<>();
+    private List<CouponCodeDictionaryItemOut> verifyStatus = new ArrayList<>();
+    private List<CouponCodeDictionaryItemOut> expiredStatus = new ArrayList<>();
+    public List<CouponCodeDictionaryItemOut> getReceivedStatus() {
+        return receivedStatus;
     }
-
-    /**
-     * @param code
-     * @param desc
-     */
-    public CouponCodeDictionaryOut(String code, String desc) {
-        super();
-        this.code = code;
-        this.desc = desc;
+    public void setReceivedStatus(List<CouponCodeDictionaryItemOut> receivedStatus) {
+        this.receivedStatus = receivedStatus;
     }
-
-    @JsonProperty("code")
-    public String getCode() {
-        return code;
+    public List<CouponCodeDictionaryItemOut> getVerifyStatus() {
+        return verifyStatus;
     }
-
-    public void setCode(String code) {
-        this.code = code;
+    public void setVerifyStatus(List<CouponCodeDictionaryItemOut> verifyStatus) {
+        this.verifyStatus = verifyStatus;
     }
-
-    @JsonProperty("desc")
-    public String getDesc() {
-        return desc;
+    public List<CouponCodeDictionaryItemOut> getExpiredStatus() {
+        return expiredStatus;
     }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setExpiredStatus(List<CouponCodeDictionaryItemOut> expiredStatus) {
+        this.expiredStatus = expiredStatus;
     }
-
 }

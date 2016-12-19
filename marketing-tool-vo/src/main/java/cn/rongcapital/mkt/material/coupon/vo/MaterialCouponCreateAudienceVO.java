@@ -8,19 +8,41 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.vo;
 
-public class MaterialCouponCreateAudienceVO {
+import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import cn.rongcapital.mkt.vo.BaseInput;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class MaterialCouponCreateAudienceVO extends BaseInput{
+
+    @NotNull
+    @JsonProperty("id")
     Long id;
     
+	@NotEmpty
+	@JsonProperty("name")
     String name;
     
+	@JsonProperty("blur_search")
     String blurSearch;
     
+	@JsonProperty("receive_status")
     String releaseStatus;
     
+	@JsonProperty("verify_status")
     String verifyStatus;
     
+	@JsonProperty("expire_status")
     String expireStatus;
+	
+    @NotEmpty
+    @JsonProperty("user_token")
+    private String userToken = null;
     public MaterialCouponCreateAudienceVO(Long id, String name, String blurSearch, String releaseStatus,
             String verifyStatus, String expireStatus) {
         super();
@@ -83,6 +105,13 @@ public class MaterialCouponCreateAudienceVO {
     public void setExpireStatus(String expireStatus) {
         this.expireStatus = expireStatus;
     }
-    
+
+	public String getUserToken() {
+		return userToken;
+	}
+
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
+	}
     
 }

@@ -105,7 +105,7 @@
 	<!-- 查询sql -->
 	<select id="selectDefinitionSqlByTagName" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT
-			sql_definition
+			reserve2
 		FROM
 			tag_definition
 		WHERE
@@ -116,6 +116,16 @@
 	<select id="executeSql" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.SystemTagResult">
 		${targetSql}
 	</select>
+	
+	<!-- 设置更新状态 -->
+	<update id="updateIsUpdateByTagName" parameterType="java.lang.String">
+		UPDATE 
+			tag_definition
+		SET 
+			is_update = 'YES'
+		WHERE 
+			tag_name = #{tagName}
+	</update>
 	
 	
 	
