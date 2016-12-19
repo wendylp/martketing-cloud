@@ -415,7 +415,6 @@ public class CouponApi {
      * @功能描述: 核销对账页面》获取数据字典
      * @param userToken
      * @param ver
-     * @param type
      * @return
      * @throws Exception CouponCodeDictionaryListOut
      * @author xie.xiaoliang
@@ -424,9 +423,9 @@ public class CouponApi {
     @GET
     @Path("/mkt.material.coupon.dictionary")
     public CouponCodeDictionaryListOut couponCodeDictionaryService(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("type") String type) throws Exception {
+            @NotEmpty @QueryParam("ver") String ver) throws Exception {
 
-        return this.dictionaryService.materialCouponDictionary(type);
+        return this.dictionaryService.materialCouponDictionary();
     }
     
     
