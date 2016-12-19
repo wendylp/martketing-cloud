@@ -4,7 +4,7 @@ import java.util.List;
 
 import cn.rongcapital.mkt.po.mongodb.SystemCustomTagTree;
 
-public interface SystemCustomTagTreeDao {
+public interface MongoSystemCustomTagTreeDao {
 
     // 插入<--------------------------------------------------------------------------------------------------->
     /**

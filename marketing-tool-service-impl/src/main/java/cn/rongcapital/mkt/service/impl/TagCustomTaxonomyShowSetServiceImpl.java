@@ -17,7 +17,7 @@ import com.mongodb.WriteResult;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.dao.mongo.SystemCustomTagTreeDao;
+import cn.rongcapital.mkt.dao.mongo.MongoSystemCustomTagTreeDao;
 import cn.rongcapital.mkt.po.mongodb.SystemCustomTagTree;
 import cn.rongcapital.mkt.service.TagCustomTaxonomyShowSetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -32,7 +32,7 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
     private static final int MAX_SIZE = 6;
 
     @Autowired
-    SystemCustomTagTreeDao systemCustomTagTreeDao;
+    MongoSystemCustomTagTreeDao systemCustomTagTreeDao;
 
     /**
      * 功能描述：设置系统标签一级分类优先显示接口
