@@ -26,7 +26,7 @@ import cn.rongcapital.mkt.po.mongodb.SystemCustomTagTree;
  *
  */
 @Repository
-public class SystemCustomTagTreeDaoImpl implements SystemCustomTagTreeDao {
+public class MongoSystemCustomTagTreeDaoImpl implements MongoSystemCustomTagTreeDao {
 
     private Logger logger = LoggerFactory.getLogger(MongoBaseTagDaoImpl.class);
 
