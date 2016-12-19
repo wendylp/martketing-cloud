@@ -12,6 +12,8 @@
 package cn.rongcapital.mkt.material.coupon.service.impl;
 
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
-import cn.rongcapital.mkt.common.enums.MaterialCouponDictionaryTypeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponExpiredEnum;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeDictionaryService;
+import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryItemOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -61,40 +63,38 @@ public class CouponCodeDictionaryServiceTest {
 
     /**
      * Test method for
-     * {@link cn.rongcapital.mkt.material.coupon.service.impl.CouponCodeDictionaryServiceImpl#materialCouponDictionary(java.lang.String)}.
+     * {@link cn.rongcapital.mkt.material.coupon.service.impl.CouponCodeDictionaryServiceImpl#materialCouponDictionary()}.
      */
     @Test
     public void testMaterialCouponCodeCheck() {
 
-        BaseOutput output = this.service.materialCouponDictionary(MaterialCouponDictionaryTypeEnum.VERIFY.getCode());
+        BaseOutput output = this.service.materialCouponDictionary();
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
         for (Object object : output.getData()) {
             if (object instanceof CouponCodeDictionaryOut) {
                 CouponCodeDictionaryOut data = (CouponCodeDictionaryOut) object;
-                Assert.assertEquals(Boolean.TRUE, MaterialCouponCodeVerifyStatusEnum.contains(data.getCode()));
+                List<CouponCodeDictionaryItemOut>  itemList = data.getVerifyStatus();
+                 
+                for (CouponCodeDictionaryItemOut item : itemList) {
+                    Assert.assertEquals(Boolean.TRUE, MaterialCouponCodeVerifyStatusEnum.contains(item.getCode()));
+                }
+                
+                 itemList = data.getExpiredStatus();
+                
+                for (CouponCodeDictionaryItemOut item : itemList) {
+                    Assert.assertEquals(Boolean.TRUE, MaterialCouponExpiredEnum.contains(item.getCode()));
+                }
+                
+                itemList = data.getReceivedStatus();
+                
+                for (CouponCodeDictionaryItemOut item : itemList) {
+                    Assert.assertEquals(Boolean.TRUE, MaterialCouponCodeReleaseStatusEnum.contains(item.getCode()));
+                }
+                
+                
             }
         }
 
-        output = this.service.materialCouponDictionary(MaterialCouponDictionaryTypeEnum.RECEIVED.getCode());
-        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
-        for (Object object : output.getData()) {
-            if (object instanceof CouponCodeDictionaryOut) {
-                CouponCodeDictionaryOut data = (CouponCodeDictionaryOut) object;
-                Assert.assertEquals(Boolean.TRUE, MaterialCouponCodeReleaseStatusEnum.contains(data.getCode()));
-            }
-        }
-
-        output = this.service.materialCouponDictionary(MaterialCouponDictionaryTypeEnum.EXPIRED.getCode());
-        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
-        for (Object object : output.getData()) {
-            if (object instanceof CouponCodeDictionaryOut) {
-                CouponCodeDictionaryOut data = (CouponCodeDictionaryOut) object;
-                Assert.assertEquals(Boolean.TRUE, MaterialCouponExpiredEnum.contains(data.getCode()));
-            }
-        }
-
-        output = this.service.materialCouponDictionary("ERROR");
-        Assert.assertEquals(ApiErrorCode.PARAMETER_ERROR.getCode(), output.getCode());
     }
 
 }

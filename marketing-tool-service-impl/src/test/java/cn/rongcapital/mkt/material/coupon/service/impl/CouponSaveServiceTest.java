@@ -21,6 +21,7 @@ import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.CouponSaveService;
+import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,6 +37,8 @@ public class CouponSaveServiceTest {
     @Mock
     private MaterialCouponCodeDao materialCouponCodeDao;
     
+    @Mock
+    private MQTopicService mqTopicService;
     @Before
     public void setUp() throws Exception {
         logger.info("测试: SegmentCalcServiceTest 开始---------------------");
@@ -64,6 +67,8 @@ public class CouponSaveServiceTest {
             }
         }).when(materialCouponDao).insert(Mockito.any(MaterialCoupon.class));
         ReflectionTestUtils.setField(couponSaveService, "materialCouponDao", materialCouponDao);
+        ReflectionTestUtils.setField(couponSaveService, "materialCouponCodeDao", materialCouponCodeDao);
+        ReflectionTestUtils.setField(couponSaveService, "mqTopicService", mqTopicService);
         CouponInfoIn in =new CouponInfoIn();
         in.setAmount(new BigDecimal(5));
         in.setRule("{\"type_code\":\"mixed\",\"length\":5}");
