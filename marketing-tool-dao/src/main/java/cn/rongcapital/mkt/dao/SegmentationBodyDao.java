@@ -12,6 +12,8 @@ package cn.rongcapital.mkt.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SegmentBodyWithName;
 import cn.rongcapital.mkt.po.SegmentationBody;
@@ -59,5 +61,12 @@ public interface SegmentationBodyDao extends BaseDao<SegmentationBody>{
 	 * @return
 	 */
 	List<String> getContainTagsByHeadId(Integer headId);
+	 /**
+     * @功能简述 : 通过标签ID查询记录条数
+     * @param  tagId  标签ID
+     * @author wangweiqiang
+     * @return Integer
+     */
+	Integer getCountByTagId(@Param("tagId") String tagId);
 	
 }
