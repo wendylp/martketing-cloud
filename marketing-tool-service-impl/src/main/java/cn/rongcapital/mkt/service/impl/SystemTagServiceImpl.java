@@ -123,7 +123,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 		try {
 
 			TagValueCount tagValueCount = new TagValueCount();
-			tagValueCount.setStartIndex(index - 1);
+			tagValueCount.setStartIndex((index - 1)*size);
 			tagValueCount.setPageSize(size);
 			tagValueCount.setIsTag("0");
 			tagValueCount.setTagId(tagId);
