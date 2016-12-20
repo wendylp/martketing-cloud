@@ -71,6 +71,11 @@ public class CouponSaveServiceImpl implements CouponSaveService {
         Long id = couponInfo.getId();
         String title = couponInfo.getTitle();
         String SourceCode = couponInfo.getSource_code();
+        if(!("1".equals(SourceCode) || "2".equals(SourceCode) || "3".equals(SourceCode))){
+            baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+            baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
+            return baseOutput;
+        }
         String rule = couponInfo.getRule();
         Integer stock_total = couponInfo.getStock_total();
         BigDecimal amount = couponInfo.getAmount();

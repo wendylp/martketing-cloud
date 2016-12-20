@@ -22,6 +22,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -30,8 +31,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.file.FileStoreService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeDictionaryService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
@@ -110,13 +111,8 @@ public class CouponApi {
 	@Autowired
     private MaterialCouponEditDetailService materialCouponEditDetailService;
 	    
-	
-	
 	@Autowired
 	private MaterialCouponAudienceCreateService materialCouponAudienceCreateService;
-	
-	@Autowired
-	private FileStoreService fileService;
     /**
      * 获取指定条件的优惠券的数量
      * 
