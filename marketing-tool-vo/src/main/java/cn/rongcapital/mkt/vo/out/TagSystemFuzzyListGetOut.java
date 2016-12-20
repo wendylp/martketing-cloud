@@ -30,6 +30,8 @@ public class TagSystemFuzzyListGetOut {
     
     private String tagCover;
     
+    private Boolean flag;
+    
     public TagSystemFuzzyListGetOut(){}
 
     public TagSystemFuzzyListGetOut(String tagId, String tagName, String tagValue, String tagPath,
@@ -115,18 +117,28 @@ public class TagSystemFuzzyListGetOut {
     public void setTagCover(String tagCover) {
         this.tagCover = tagCover;
     }
+    
+    @JsonProperty("flag")
+    public Boolean getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
+    }
 
     @Override
     public String toString() {
         return "TagSystemFuzzyListGetOut [tagId=" + tagId + ", tagName=" + tagName + ", tagValue=" + tagValue
                 + ", tagPath=" + tagPath + ", isTag=" + isTag + ", searchMod=" + searchMod + ", tagValueSeq="
-                + tagValueSeq + ", tagCover=" + tagCover + "]";
+                + tagValueSeq + ", tagCover=" + tagCover + ", flag=" + flag + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((flag == null) ? 0 : flag.hashCode());
         result = prime * result + ((isTag == null) ? 0 : isTag.hashCode());
         result = prime * result + ((searchMod == null) ? 0 : searchMod.hashCode());
         result = prime * result + ((tagCover == null) ? 0 : tagCover.hashCode());
@@ -144,6 +156,9 @@ public class TagSystemFuzzyListGetOut {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         TagSystemFuzzyListGetOut other = (TagSystemFuzzyListGetOut) obj;
+        if (flag == null) {
+            if (other.flag != null) return false;
+        } else if (!flag.equals(other.flag)) return false;
         if (isTag == null) {
             if (other.isTag != null) return false;
         } else if (!isTag.equals(other.isTag)) return false;
