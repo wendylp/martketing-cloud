@@ -61,7 +61,7 @@ public class MaterialCouponDeleteServiceImpl implements MaterialCouponDeleteServ
                 }
 
             } else {
-                baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ONE, null);
+                baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
             }
 
         } else {
