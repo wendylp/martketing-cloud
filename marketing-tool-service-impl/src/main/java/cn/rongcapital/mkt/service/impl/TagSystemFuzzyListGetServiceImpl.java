@@ -4,12 +4,16 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.po.TagValueCount;
+import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.service.TagSystemCommonUtilService;
 import cn.rongcapital.mkt.service.TagSystemFuzzyListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -17,12 +21,17 @@ import cn.rongcapital.mkt.vo.out.TagSystemFuzzyListGetOut;
 
 @Service
 public class TagSystemFuzzyListGetServiceImpl implements TagSystemFuzzyListGetService {
+    
+    private final Boolean TRUE = true;
 
     @Autowired
     private TagValueCountDao tagValueCountDao;
     
     @Autowired
     private TagSystemCommonUtilService tagSystemCommonUtilService;
+    
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     /**
      * 根据页面输入值模糊查询标签，返回标签或者标签值 （全路径的标签或者标签值《带有标签类型：标签值，标签》分页
@@ -61,9 +70,12 @@ public class TagSystemFuzzyListGetServiceImpl implements TagSystemFuzzyListGetSe
                                 tagValueCountList.getTagName(), tagValueCountList.getTagValue(),
                                 tagValueCountList.getTagPath(), tagValueCountList.getIsTag(),
                                 tagValueCountList.getSearchMod(), tagValueCountList.getTagValueSeq());
-                
+                // 设置覆盖率
                 String tagCover = tagSystemCommonUtilService.getTagCover(tagValueCountList.getTagId());
                 tagSystemFuzzyListGetOut.setTagCover(tagCover);
+                
+                // 设置是否推荐
+                tagSystemFuzzyListGetOut.setFlag(getTagFalg(tagValueCountList.getTagId()));
                 
                 result.getData().add(tagSystemFuzzyListGetOut);
             }
@@ -74,4 +86,17 @@ public class TagSystemFuzzyListGetServiceImpl implements TagSystemFuzzyListGetSe
         return result;
     }
 
+    /**
+     * 功能描述：根据标签tag_id获取是否推荐，任何异常都为不推荐
+     * 
+     * @param tagId
+     * @return
+     */
+    private Boolean getTagFalg(String tagId) {
+
+        TagRecommend tagRecommend = mongoTemplate
+                .findOne(new Query(Criteria.where("tag_id").is(tagId).and("status").is(0)), TagRecommend.class);
+
+        return tagRecommend != null && TRUE.equals(tagRecommend.getFlag());
+    }
 }

@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +15,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.po.TagValueCount;
+import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.service.TagSystemCommonUtilService;
 import cn.rongcapital.mkt.service.TagSystemFuzzyListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -33,6 +36,9 @@ public class TagSystemFuzzyListGetServiceTest {
     
     @Mock
     private TagSystemCommonUtilService tagSystemCommonUtilService;
+    
+    @Mock
+    private MongoTemplate mongoTemplate;
 
     int count = 10;
 
@@ -57,11 +63,13 @@ public class TagSystemFuzzyListGetServiceTest {
         Mockito.when(tagValueCountDao.selectFuzzyTagValue(any())).thenReturn(tagValueCountLists);
         Mockito.when(tagValueCountDao.selectFuzzyTagValueCount(any())).thenReturn(count);
         Mockito.when(tagSystemCommonUtilService.getTagCover(any())).thenReturn(tagCover);
+        Mockito.when(mongoTemplate.findOne(any(), eq(TagRecommend.class))).thenReturn(null);
 
         ReflectionTestUtils.setField(tagSystemFuzzyListGetService, "tagValueCountDao",
                         tagValueCountDao);
         ReflectionTestUtils.setField(tagSystemFuzzyListGetService, "tagSystemCommonUtilService",
                 tagSystemCommonUtilService);
+        ReflectionTestUtils.setField(tagSystemFuzzyListGetService, "mongoTemplate", mongoTemplate);
     }
 
     @Test
@@ -81,6 +89,7 @@ public class TagSystemFuzzyListGetServiceTest {
                             tagValueCountList.getIsTag(), tagValueCountList.getSearchMod(),
                             tagValueCountList.getTagValueSeq());
             tagSystemFuzzyListGetOut.setTagCover(tagCover);
+            tagSystemFuzzyListGetOut.setFlag(false);
             actualData.add(tagSystemFuzzyListGetOut);
         }
         
