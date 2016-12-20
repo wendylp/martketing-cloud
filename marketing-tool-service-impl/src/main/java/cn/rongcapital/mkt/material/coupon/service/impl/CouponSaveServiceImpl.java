@@ -41,6 +41,7 @@ import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
 
 @Service
@@ -77,6 +78,15 @@ public class CouponSaveServiceImpl implements CouponSaveService {
             return baseOutput;
         }
         String rule = couponInfo.getRule();
+        try {
+            JSONUtils.parse(rule);
+        } catch (Exception e) {
+            baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
+            baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
+            return baseOutput;
+        }
+        
+        
         Integer stock_total = couponInfo.getStock_total();
         BigDecimal amount = couponInfo.getAmount();
         String channel_code = couponInfo.getChannel_code();
