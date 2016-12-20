@@ -61,10 +61,10 @@ private Logger logger = LoggerFactory.getLogger(getClass());
     public void del() {
         
         Mockito.when(materialCouponDao.selectOneCoupon(id)).thenReturn(null); //查不到数据时
-        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getCode(),
-            ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getMsg(), 1, null);
+        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+            ApiErrorCode.SUCCESS.getMsg(), 1, null);
     BaseOutput actual = materialCouponDeleteService.delete(id);
-    Assert.assertEquals(baseOutput.getMsg(), actual.getMsg());
+    Assert.assertEquals(baseOutput.getCode(), actual.getCode());
         
         
         Mockito.when(materialCouponDao.selectOneCoupon(id)).thenReturn(mcp);
