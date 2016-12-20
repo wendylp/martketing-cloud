@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +52,8 @@ public class CouponCodeSaveTaskImpl implements TaskService{
     
     private static final String[] DATABASE_BLEND = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","0","1","2","3","4","5","6","7","8","9"};
     
-    public final static String UPLOADED_FILE_PATH = "\\rc\\data\\uploadFiles\\code\\";
+    @Value("${uploaded.file.path}")
+    private String filePath;
     
     public final static String SLASH = File.separator;
     
@@ -121,7 +123,7 @@ public class CouponCodeSaveTaskImpl implements TaskService{
                 logger.info("MQ消费，结束时间" + System.currentTimeMillis());
             }
         } catch (Exception e) {
-            logger.error("不是正确的JSON");
+            logger.error(e.getMessage());
         }
 
     }
@@ -246,7 +248,7 @@ public class CouponCodeSaveTaskImpl implements TaskService{
      */
     private void getOwnCode(List<String> fileNames, String user_token, Long couponId, List<MaterialCouponCode> list, Date now){
         
-        String filesUrl = UPLOADED_FILE_PATH + user_token + SLASH;
+        String filesUrl = filePath + user_token + SLASH;
         List<String> codeList = filesGetCode(fileNames, filesUrl);
         for(String code : codeList){
             String couponCode = code;

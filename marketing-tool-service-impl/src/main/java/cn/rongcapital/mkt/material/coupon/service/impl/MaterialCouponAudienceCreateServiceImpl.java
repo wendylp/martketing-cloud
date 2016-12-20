@@ -37,14 +37,11 @@ public class MaterialCouponAudienceCreateServiceImpl implements MaterialCouponAu
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public BaseOutput createTargetAudienceGroup(Long id, String audienceName, String blurSearch, String releaseStatus,
-            String verifyStatus, String expireStatus) throws JMSException {
+    public BaseOutput createTargetAudienceGroup(MaterialCouponCreateAudienceVO mcca) throws JMSException {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ZERO, null);
 
-        MaterialCouponCreateAudienceVO parmVO = new MaterialCouponCreateAudienceVO(id, audienceName, blurSearch,
-                releaseStatus, verifyStatus, expireStatus);
-        String jsonString = JSONObject.toJSONString(parmVO);
+        String jsonString = JSONObject.toJSONString(mcca);
         
         ActiveMqMessageVO message = new ActiveMqMessageVO();
         message.setTaskName("优惠券新建固定人群任务");

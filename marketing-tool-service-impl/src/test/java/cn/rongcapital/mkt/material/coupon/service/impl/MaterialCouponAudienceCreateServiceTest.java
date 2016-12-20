@@ -9,9 +9,6 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.jms.JMSException;
 
 import org.junit.After;
@@ -29,8 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponAudienceCreateService;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -40,14 +37,10 @@ public class MaterialCouponAudienceCreateServiceTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private MaterialCouponAudienceCreateService mcacService;
+    MaterialCouponAudienceCreateService mcacService;
 
     @Mock
-    MQTopicService mqTopicService;
-
-    List<String> mobileList = new ArrayList<>();
-
-    List<MaterialCoupon> mc = new ArrayList<MaterialCoupon>();
+    private MQTopicService mqTopicService;
 
     @Before
     public void setUp() throws Exception {
@@ -68,8 +61,7 @@ public class MaterialCouponAudienceCreateServiceTest {
             }
         }).when(this.mqTopicService).senderMessage("", new ActiveMqMessageVO());
         
-        BaseOutput result0 = mcacService.createTargetAudienceGroup(0l, "audienceName", "blurSearch", "releaseStatus",
-                "verifyStatus", "expireStatus");
+        BaseOutput result0 = mcacService.createTargetAudienceGroup(new MaterialCouponCreateAudienceVO());
 
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result0.getCode());
         logger.info("测试方法: testCreateTargetAudienceGroup01 end");

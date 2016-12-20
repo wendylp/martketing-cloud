@@ -100,6 +100,35 @@ public class MaterialCouponVerifyGeneralServiceTest {
 		logger.info("测试方法: verifyGeneralById end");
 	}
 
+	   @Test
+    public void testVerifyGeneralById02() {
+        logger.info("测试方法: verifyGeneralById start");
+        
+        MaterialCoupon mc = null;
+
+        Mockito.when(materialCouponDao.selecCouponAmountByCouponId(any())).thenReturn(mc);
+        Mockito.when(materialCouponReleaseGeneralService.getReleaseAndVerifyCouponCount(any())).thenReturn(map);
+
+        BaseOutput result0 = materialCouponVerifyGeneralService.verifyGeneralById(0l, "", "");
+        
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result0.getCode());
+        
+        Map<String, Double> map = new HashMap<String, Double>();
+        map.put("expect_release_amount", (double)0);
+        map.put("actual_release_amount", (double)0);
+        map.put("actual_reached_amount", (double)0);
+        map.put("actual_verify_amount", (double)0);
+        
+        Map<String, Double> resultmap0 = (Map<String, Double>)result0.getData().get(0);
+        Assert.assertEquals(map.get("expect_release_amount"),resultmap0.get("expect_release_amount"));
+        Assert.assertEquals(map.get("actual_release_amount"),resultmap0.get("actual_release_amount"));
+        Assert.assertEquals(map.get("actual_reached_amount"),resultmap0.get("actual_reached_amount"));
+        Assert.assertEquals(map.get("actual_verify_amount"),resultmap0.get("actual_verify_amount"));
+        Assert.assertEquals(result0.getData().size(),1);
+        
+        logger.info("测试方法: verifyGeneralById end");
+	}
+	
 	@After
 	public void tearDown() throws Exception {
 		logger.info("测试：MaterialCouponVerifyGeneralService 结束---------------------");

@@ -143,7 +143,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
         paramSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_FINISH.getStatusCode());
         paramSmsTaskHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectListByMaterial(paramSmsTaskHead);
-        return CollectionUtils.isNotEmpty(smsTaskHeads);
+        return CollectionUtils.isEmpty(smsTaskHeads);
     }
 
     /**
