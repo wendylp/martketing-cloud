@@ -325,6 +325,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 	private TagSqlParam capsulationParam(String tagId, List<TagValueElement> elements, String tagName) {
 		TagSqlParam tagSqlParam = new TagSqlParam();
 		tagSqlParam.setTagId(tagId);
+		tagSqlParam.setTagName(tagName);
 		StringBuilder sb = new StringBuilder();
 		for (TagValueElement tagValueElement : elements) {
 			String startValue = tagValueElement.getStartValue();
