@@ -132,6 +132,36 @@ public class CreateTargetAudienceGroupTaskTest {
         
         logger.info("测试方法: testCreateTargetAudienceGroup04 end");
     }
+    
+    @Test
+    public void testCreateTargetAudienceGroup05() throws JMSException {
+        logger.info("测试方法: testCreateTargetAudienceGroup05 start");
+
+        MaterialCoupon tempMc = new MaterialCoupon();
+        mc.clear();
+        mc.add(tempMc);
+        
+        Mockito.when(materialCouponCodeDao.getCouponCodeVerifyUserInfoList(any())).thenReturn(new ArrayList<>());
+        Mockito.when(materialCouponDao.selectListByIdList(any())).thenReturn(mc);
+        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any())).thenReturn(true);
+
+        parmVO = new MaterialCouponCreateAudienceVO(282l,"test","137","received","verified","expired");
+        jsonString = JSONObject.toJSONString(parmVO);
+        
+        ctagTask.task(jsonString);
+        
+        logger.info("测试方法: testCreateTargetAudienceGroup05 end");
+    }
+    
+    @Test
+    public void testCreateTargetAudienceGroup06() throws JMSException {
+        logger.info("测试方法: testCreateTargetAudienceGroup06 start");
+        
+        ctagTask.task(1);
+        
+        logger.info("测试方法: testCreateTargetAudienceGroup06 end");
+    }
+
 
     @After
     public void tearDown() throws Exception {
