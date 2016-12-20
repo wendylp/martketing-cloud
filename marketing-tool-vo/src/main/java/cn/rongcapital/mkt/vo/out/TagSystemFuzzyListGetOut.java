@@ -28,6 +28,10 @@ public class TagSystemFuzzyListGetOut {
     
     private String tagValueSeq; // 标签值序号
     
+    private String tagCover;
+    
+    private Boolean flag;
+    
     public TagSystemFuzzyListGetOut(){}
 
     public TagSystemFuzzyListGetOut(String tagId, String tagName, String tagValue, String tagPath,
@@ -104,20 +108,40 @@ public class TagSystemFuzzyListGetOut {
     public void setTagValueSeq(String tagValueSeq) {
         this.tagValueSeq = tagValueSeq;
     }
+    
+    @JsonProperty("tag_cover")
+    public String getTagCover() {
+        return tagCover;
+    }
+
+    public void setTagCover(String tagCover) {
+        this.tagCover = tagCover;
+    }
+    
+    @JsonProperty("flag")
+    public Boolean getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
+    }
 
     @Override
     public String toString() {
-        return "TagSystemFuzzyListGetOut [tagId=" + tagId + ", tagName=" + tagName + ", tagValue="
-                        + tagValue + ", tagPath=" + tagPath + ", isTag=" + isTag + ", searchMod="
-                        + searchMod + ", tagValueSeq=" + tagValueSeq + "]";
+        return "TagSystemFuzzyListGetOut [tagId=" + tagId + ", tagName=" + tagName + ", tagValue=" + tagValue
+                + ", tagPath=" + tagPath + ", isTag=" + isTag + ", searchMod=" + searchMod + ", tagValueSeq="
+                + tagValueSeq + ", tagCover=" + tagCover + ", flag=" + flag + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((flag == null) ? 0 : flag.hashCode());
         result = prime * result + ((isTag == null) ? 0 : isTag.hashCode());
         result = prime * result + ((searchMod == null) ? 0 : searchMod.hashCode());
+        result = prime * result + ((tagCover == null) ? 0 : tagCover.hashCode());
         result = prime * result + ((tagId == null) ? 0 : tagId.hashCode());
         result = prime * result + ((tagName == null) ? 0 : tagName.hashCode());
         result = prime * result + ((tagPath == null) ? 0 : tagPath.hashCode());
@@ -128,48 +152,37 @@ public class TagSystemFuzzyListGetOut {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         TagSystemFuzzyListGetOut other = (TagSystemFuzzyListGetOut) obj;
+        if (flag == null) {
+            if (other.flag != null) return false;
+        } else if (!flag.equals(other.flag)) return false;
         if (isTag == null) {
-            if (other.isTag != null)
-                return false;
-        } else if (!isTag.equals(other.isTag))
-            return false;
+            if (other.isTag != null) return false;
+        } else if (!isTag.equals(other.isTag)) return false;
         if (searchMod == null) {
-            if (other.searchMod != null)
-                return false;
-        } else if (!searchMod.equals(other.searchMod))
-            return false;
+            if (other.searchMod != null) return false;
+        } else if (!searchMod.equals(other.searchMod)) return false;
+        if (tagCover == null) {
+            if (other.tagCover != null) return false;
+        } else if (!tagCover.equals(other.tagCover)) return false;
         if (tagId == null) {
-            if (other.tagId != null)
-                return false;
-        } else if (!tagId.equals(other.tagId))
-            return false;
+            if (other.tagId != null) return false;
+        } else if (!tagId.equals(other.tagId)) return false;
         if (tagName == null) {
-            if (other.tagName != null)
-                return false;
-        } else if (!tagName.equals(other.tagName))
-            return false;
+            if (other.tagName != null) return false;
+        } else if (!tagName.equals(other.tagName)) return false;
         if (tagPath == null) {
-            if (other.tagPath != null)
-                return false;
-        } else if (!tagPath.equals(other.tagPath))
-            return false;
+            if (other.tagPath != null) return false;
+        } else if (!tagPath.equals(other.tagPath)) return false;
         if (tagValue == null) {
-            if (other.tagValue != null)
-                return false;
-        } else if (!tagValue.equals(other.tagValue))
-            return false;
+            if (other.tagValue != null) return false;
+        } else if (!tagValue.equals(other.tagValue)) return false;
         if (tagValueSeq == null) {
-            if (other.tagValueSeq != null)
-                return false;
-        } else if (!tagValueSeq.equals(other.tagValueSeq))
-            return false;
+            if (other.tagValueSeq != null) return false;
+        } else if (!tagValueSeq.equals(other.tagValueSeq)) return false;
         return true;
     }
 

@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +24,7 @@ import cn.rongcapital.mkt.dao.SysTagViewDao;
 import cn.rongcapital.mkt.dao.TagDefinitionDao;
 import cn.rongcapital.mkt.dao.TagSqlParamDao;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
+import cn.rongcapital.mkt.job.service.SystemTagSynchService;
 import cn.rongcapital.mkt.po.TagSqlParam;
 import cn.rongcapital.mkt.po.TagValueCount;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
@@ -38,7 +39,7 @@ import cn.rongcapital.mkt.vo.out.TagSystemTreeTagOut;
 
 @Service
 public class SystemTagServiceImpl implements SystemTagService {
-	
+
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	private static final String ALL_TAG_FLAG = "0"; // 全部标签
@@ -63,12 +64,15 @@ public class SystemTagServiceImpl implements SystemTagService {
 
 	@Autowired
 	private SysTagViewDao sysTagViewDao;
-	
+
 	@Autowired
 	private TagDefinitionDao definitionDao;
-	
+
 	@Autowired
 	private SegmentationBodyDao segmentationBodyDao;
+
+	@Autowired
+	private SystemTagSynchService systemTagSynchService;
 
 	@Override
 	public BaseOutput getSystemTagList(String navigateIndex, Integer pageSourceType) {
@@ -87,19 +91,20 @@ public class SystemTagServiceImpl implements SystemTagService {
 			break;
 		}
 
-		if(pageSourceType != null && pageSourceType == 1){
+		if (pageSourceType != null && pageSourceType == 1) {
 			filterTagCoverNonData(output);
 		}
 		return output;
 	}
 
 	private void filterTagCoverNonData(BaseOutput output) {
-		if(output == null) return;
-		if(CollectionUtils.isNotEmpty(output.getData())){
+		if (output == null)
+			return;
+		if (CollectionUtils.isNotEmpty(output.getData())) {
 			List<Object> filteredList = new LinkedList<>();
-			for(Object object : output.getData()){
-				if(object instanceof TagSystemTreeTagOut){
-					if(commonUtilService.isTagCoverData(((TagSystemTreeTagOut) object).getTagId())){
+			for (Object object : output.getData()) {
+				if (object instanceof TagSystemTreeTagOut) {
+					if (commonUtilService.isTagCoverData(((TagSystemTreeTagOut) object).getTagId())) {
 						filteredList.add(object);
 					}
 				}
@@ -112,6 +117,8 @@ public class SystemTagServiceImpl implements SystemTagService {
 	public BaseOutput getSystemTagValueList(String tagId, Integer index, Integer size) {
 		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
+		// 可编辑状态初始化
+		initUpdateStatus();
 		List<Object> data = output.getData();
 		try {
 
@@ -131,7 +138,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 			}
 			TagValueCount tag = tagValueCountDao.selectTagByTagId(tagId);
 			Map<String, Object> tagMap = new HashMap<>();
-			if(tag != null){
+			if (tag != null) {
 				tagMap.put("tag_id", tag.getTagId());
 				tagMap.put("tag_name", tag.getTagName());
 				tagMap.put("tag_desc", tag.getTagDesc());
@@ -167,7 +174,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 			output.getData().add(resultList);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("获取标签根节点列表方法出现异常---------->"+e.getMessage(),e);
+			logger.error("获取标签根节点列表方法出现异常---------->" + e.getMessage(), e);
 		}
 		return output;
 	}
@@ -188,7 +195,6 @@ public class SystemTagServiceImpl implements SystemTagService {
 			String tagName = tagRecommend.getTagName();
 			Boolean flag = tagRecommend.getFlag();
 			String tagCover = commonUtilService.getTagCover(tagId);
-
 			resultList.add(new TagSystemTreeTagOut(tagId, tagName, flag, tagCover));
 		}
 		return resultList;
@@ -226,9 +232,10 @@ public class SystemTagServiceImpl implements SystemTagService {
 							new Query(Criteria.where("tag_id").is(tagId).and("status").is(ApiConstant.INT_ZERO)),
 							TagRecommend.class);
 					if (tag != null) {
-						//覆盖率计算
+						// 覆盖率计算
 						String tagCover = commonUtilService.getTagCover(tagId);
-						TagSystemTreeTagOut tagOut = new TagSystemTreeTagOut(tagId, tag.getTagName(), tag.getFlag(), tag.getTagList(), tagCover);
+						TagSystemTreeTagOut tagOut = new TagSystemTreeTagOut(tagId, tag.getTagName(), tag.getFlag(),
+								tag.getTagList(), tagCover);
 						tagTreeSecondOut.getChildren().add(tagOut);
 					}
 				}
@@ -237,7 +244,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("SystemTagServiceImpl getTagTree method Exception-------->"+e.getMessage(),e);
+			logger.error("SystemTagServiceImpl getTagTree method Exception-------->" + e.getMessage(), e);
 		}
 		return resultList;
 	}
@@ -246,92 +253,92 @@ public class SystemTagServiceImpl implements SystemTagService {
 	public BaseOutput saveUpdateTagValue(TagValueUpdateIn tagValueUpdateIn) {
 		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
-		//可编辑状态初始化
-		initUpdateStatus();
-		//获取标签Id
+		// 获取标签Id
 		String tagId = tagValueUpdateIn.getTagId();
 		List<String> tagList = new ArrayList<>();
-		//获取标签值集合
+		// 获取标签值集合
 		List<TagValueElement> elements = tagValueUpdateIn.getElements();
 		for (TagValueElement tagValueElement : elements) {
 			String startValue = tagValueElement.getStartValue();
 			String endValue = tagValueElement.getEndValue();
-			if(StringUtils.isEmpty(startValue)){
-				tagList.add("<"+endValue);
-			}else if(StringUtils.isEmpty(endValue)){
-				tagList.add(">"+startValue);
-			}else{
+			if (StringUtils.isEmpty(startValue)) {
+				tagList.add("<" + endValue);
+			} else if (StringUtils.isEmpty(endValue)) {
+				tagList.add(">" + startValue);
+			} else {
 				tagList.add(startValue + "-" + endValue);
 			}
 		}
-		//设置Mongo中标签的相关属性
+		// 设置Mongo中标签的相关属性
 		Query query = new Query(Criteria.where("tag_id").is(tagId));
 		TagRecommend tagInformation = mongoTemplate.find(query, TagRecommend.class).get(0);
 		Integer tagVersion = tagInformation.getTagVersion();
 		List<String> defualtTagList = tagInformation.getTagList();
+		String tagName = tagInformation.getTagNameEng();
 
-		Update update = new Update().set("tag_version", tagVersion+1).set("v"+tagVersion, defualtTagList).set("tag_list", tagList);
-	    mongoTemplate.findAndModify(query, update, TagRecommend.class);
-	    //更新参数表
-	    String tagName = tagInformation.getTagNameEng();
-	    int count = tagSqlParamDao.saveOrUpdateData(capsulationParam(tagId, elements,tagName));
-	    output.setTotal(count);
-	    sysTagViewDao.updateField2ByTagName(tagName);
-	    //设置sql定义为有更新状态 
-	    definitionDao.updateIsUpdateByTagName(tagName);
+		Update update = new Update().set("tag_version", tagVersion + 1).set("v" + tagVersion, defualtTagList)
+				.set("tag_list", tagList);
+		mongoTemplate.findAndModify(query, update, TagRecommend.class);
+		// 更新参数表
+		int count = tagSqlParamDao.saveOrUpdateData(capsulationParam(tagId, elements, tagName));
+		output.setTotal(count);
+		sysTagViewDao.updateField2ByTagName(tagName);
+		// 设置sql定义为有更新状态
+		definitionDao.updateIsUpdateByTagName(tagName);
+		systemTagSynchService.initTagValueCount(tagId);
 		return output;
 	}
-	
+
 	/**
 	 * 初始化更新状态
 	 */
-	//TODO 此方法是1.6版本临时方案，以后版本如果放开细分对标签值修改的限制修改此方法即可
-	private void initUpdateStatus(){
-		//查询所有有修改资格的标签
-		List<TagRecommend> tagRecommendList = mongoTemplate.find(Query.query(Criteria.where("update_flag").ne(2).and("status").is(ApiConstant.INT_ZERO)), TagRecommend.class);
+	// TODO 此方法是1.6版本临时方案，以后版本如果放开细分对标签值修改的限制修改此方法即可
+	private void initUpdateStatus() {
+		// 查询所有有修改资格的标签
+		List<TagRecommend> tagRecommendList = mongoTemplate.find(
+				Query.query(Criteria.where("update_flag").ne(2).and("status").is(ApiConstant.INT_ZERO)),
+				TagRecommend.class);
 		for (TagRecommend tagRecommend : tagRecommendList) {
 			String tagId = tagRecommend.getTagId();
 			Integer countByTagId = segmentationBodyDao.getCountByTagId(tagId);
 			Update update = new Update();
-			if(countByTagId > 0){
-				//设置状态为不可编辑
+			if (countByTagId > 0) {
+				// 设置状态为不可编辑
 				update.set("update_flag", ApiConstant.INT_ZERO);
-			}else{
-			   //设置状态为可编辑
+			} else {
+				// 设置状态为可编辑
 				update.set("update_flag", ApiConstant.INT_ONE);
 			}
 			mongoTemplate.findAndModify(Query.query(Criteria.where("tag_id").is(tagId)), update, TagRecommend.class);
 		}
 	}
-	
-	
-	
 
 	/**
 	 * 封装参数
-	 * @param tagId	标签ID
-	 * @param elements 修改值集合
+	 * 
+	 * @param tagId
+	 *            标签ID
+	 * @param elements
+	 *            修改值集合
 	 * @return
 	 */
-	private TagSqlParam capsulationParam(String tagId,List<TagValueElement> elements,String tagName){
+	private TagSqlParam capsulationParam(String tagId, List<TagValueElement> elements, String tagName) {
 		TagSqlParam tagSqlParam = new TagSqlParam();
 		tagSqlParam.setTagId(tagId);
 		StringBuilder sb = new StringBuilder();
 		for (TagValueElement tagValueElement : elements) {
 			String startValue = tagValueElement.getStartValue();
 			String endValue = tagValueElement.getEndValue();
-			if(StringUtils.isEmpty(startValue)){
-				tagSqlParam.setLowerLimitValue(" < "+endValue);
-			}else if(StringUtils.isEmpty(endValue)){
-				tagSqlParam.setUpperLimitValue(" > "+startValue);
-			}else{
-				sb.append("BETWEEN " + startValue + " AND " + endValue+",");
+			if (StringUtils.isEmpty(startValue)) {
+				tagSqlParam.setLowerLimitValue(" < " + endValue);
+			} else if (StringUtils.isEmpty(endValue)) {
+				tagSqlParam.setUpperLimitValue(" > " + startValue);
+			} else {
+				sb.append("BETWEEN " + startValue + " AND " + endValue + ",");
 			}
 		}
 		tagSqlParam.setScopeValue(sb.toString());
 		return tagSqlParam;
 	}
-	
-	
 
 }

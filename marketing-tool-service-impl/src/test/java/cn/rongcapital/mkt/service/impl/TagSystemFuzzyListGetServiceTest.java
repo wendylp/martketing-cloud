@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +14,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.po.TagValueCount;
+import cn.rongcapital.mkt.po.mongodb.TagRecommend;
+import cn.rongcapital.mkt.service.TagSystemCommonUtilService;
 import cn.rongcapital.mkt.service.TagSystemFuzzyListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.TagSystemFuzzyListGetOut;
@@ -28,10 +33,18 @@ public class TagSystemFuzzyListGetServiceTest {
 
     @Mock
     private TagValueCountDao tagValueCountDao;
+    
+    @Mock
+    private TagSystemCommonUtilService tagSystemCommonUtilService;
+    
+    @Mock
+    private MongoTemplate mongoTemplate;
 
     int count = 10;
 
     List<TagValueCount> tagValueCountLists;
+    
+    String tagCover = "10%";
 
     @Before
     public void setUp() throws Exception {
@@ -49,14 +62,19 @@ public class TagSystemFuzzyListGetServiceTest {
 
         Mockito.when(tagValueCountDao.selectFuzzyTagValue(any())).thenReturn(tagValueCountLists);
         Mockito.when(tagValueCountDao.selectFuzzyTagValueCount(any())).thenReturn(count);
+        Mockito.when(tagSystemCommonUtilService.getTagCover(any())).thenReturn(tagCover);
+        Mockito.when(mongoTemplate.findOne(any(), eq(TagRecommend.class))).thenReturn(null);
 
         ReflectionTestUtils.setField(tagSystemFuzzyListGetService, "tagValueCountDao",
                         tagValueCountDao);
+        ReflectionTestUtils.setField(tagSystemFuzzyListGetService, "tagSystemCommonUtilService",
+                tagSystemCommonUtilService);
+        ReflectionTestUtils.setField(tagSystemFuzzyListGetService, "mongoTemplate", mongoTemplate);
     }
 
     @Test
     public void testGetTagSystemFuzzyList() {
-        BaseOutput result = tagSystemFuzzyListGetService.getTagSystemFuzzyList("","", 0, 0);
+        BaseOutput result = tagSystemFuzzyListGetService.getTagSystemFuzzyList("","1", 0, 0);
 
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
         Assert.assertEquals(tagValueCountLists.size(), result.getTotal());
@@ -70,6 +88,8 @@ public class TagSystemFuzzyListGetServiceTest {
                             tagValueCountList.getTagValue(), tagValueCountList.getTagPath(),
                             tagValueCountList.getIsTag(), tagValueCountList.getSearchMod(),
                             tagValueCountList.getTagValueSeq());
+            tagSystemFuzzyListGetOut.setTagCover(tagCover);
+            tagSystemFuzzyListGetOut.setFlag(false);
             actualData.add(tagSystemFuzzyListGetOut);
         }
         

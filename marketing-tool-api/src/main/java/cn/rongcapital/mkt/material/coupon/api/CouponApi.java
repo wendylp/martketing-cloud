@@ -33,7 +33,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.file.FileService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeDictionaryService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
@@ -112,13 +111,8 @@ public class CouponApi {
 	@Autowired
     private MaterialCouponEditDetailService materialCouponEditDetailService;
 	    
-	
-	
 	@Autowired
 	private MaterialCouponAudienceCreateService materialCouponAudienceCreateService;
-	
-	@Autowired
-	private FileService fileService;
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -458,19 +452,4 @@ public class CouponApi {
     public BaseOutput createTargetAudienceGroup(@Valid MaterialCouponCreateAudienceVO mcca) throws JMSException {
         return materialCouponAudienceCreateService.createTargetAudienceGroup(mcca);
     }
-	
-//    /**
-//     * @author guozhenchao
-//     * @功能简述:优惠券文件上传接口
-//     * @param fileUnique
-//     * @param input
-//     * @return
-//     */
-//    @POST
-//    @Path("/mkt.materiel.coupon.file.upload.test")
-//    @Consumes("multipart/form-data")
-//    public BaseOutput fileUploadBatch(@NotEmpty @QueryParam("user_token") String userToken,
-//                                      @NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
-//        return fileService.uploadFileBatch(input, userId);
-//    }
 }
