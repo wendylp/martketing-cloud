@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
@@ -30,9 +31,14 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
     private static final Boolean IS_SHOW = true;
     private static final Boolean NOT_SHOW = false;
     private static final int MAX_SIZE = 6;
+    private static final int DATA_VALID = 0;
+    private static final int DATA_NOT_VALID = 1;
+    
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
 //    @Autowired
-//    MongoSystemCustomTagTreeDao systemCustomTagTreeDao;
+//    MongoSystemCustomTagTreeDao mongoSystemCustomTagTreeDao;
 
     /**
      * 功能描述：设置系统标签一级分类优先显示接口
@@ -47,32 +53,37 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
      */
     @Override
     public BaseOutput tagCustomTaxonomyShowSet(TagCustomTaxonomyShowSetIn body, SecurityContext securityContext) {
-//        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-//                ApiConstant.INT_ZERO, null);
-//
-//
-//
-//        List<String> tagTreeIdLists = body.getTagTreeId();
-//
-//        if (CollectionUtils.isNotEmpty(tagTreeIdLists)) {
-//            // 重置is_show的状态
-//            systemCustomTagTreeDao.updateIsShowByLevel(LEVEL_ONE, NOT_SHOW);
-//
-//            int size = tagTreeIdLists.size();
-//            size = size > MAX_SIZE ? MAX_SIZE : size;
-//
-//            List<String> newTagTreeIdLists = new ArrayList<String>();
-//            for (int i = 0; i < size; i++) {
-//                newTagTreeIdLists.add(tagTreeIdLists.get(i));
-//            }
-//
-//            // 更新数据
-//            int updateCount = systemCustomTagTreeDao.updateIsShowByLevelTagTreeTd(LEVEL_ONE, newTagTreeIdLists, IS_SHOW);
-//            result.setTotal(updateCount);
-//        }
-//
-//        return result;
-        return null;
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                ApiConstant.INT_ZERO, null);
+
+
+
+        List<String> tagTreeIdLists = body.getTagTreeId();
+
+        if (CollectionUtils.isNotEmpty(tagTreeIdLists)) {
+            // 重置is_show的状态
+//            mongoSystemCustomTagTreeDao.updateIsShowByLevel(LEVEL_ONE, NOT_SHOW);
+            mongoTemplate.updateMulti(new Query(new Criteria("level").is(LEVEL_ONE).and("is_deleted").is(DATA_VALID)),
+                new Update().set("is_show", NOT_SHOW).set("update_time", new Date()), SystemCustomTagTree.class);
+
+            int size = tagTreeIdLists.size();
+            size = size > MAX_SIZE ? MAX_SIZE : size;
+
+            List<String> newTagTreeIdLists = new ArrayList<String>();
+            for (int i = 0; i < size; i++) {
+                newTagTreeIdLists.add(tagTreeIdLists.get(i));
+            }
+
+            // 更新数据
+//            int updateCount = mongoSystemCustomTagTreeDao.updateIsShowByLevelTagTreeTd(LEVEL_ONE, newTagTreeIdLists, IS_SHOW);
+            WriteResult writeResult = mongoTemplate.updateMulti(
+                new Query(new Criteria("level").is(LEVEL_ONE).and("is_deleted").is(DATA_VALID).and("tag_tree_id")
+                        .in(newTagTreeIdLists)),
+                new Update().set("is_show", IS_SHOW).set("update_time", new Date()), SystemCustomTagTree.class);
+            result.setTotal(writeResult.getN());
+        }
+
+        return result;
     }
 
 }
