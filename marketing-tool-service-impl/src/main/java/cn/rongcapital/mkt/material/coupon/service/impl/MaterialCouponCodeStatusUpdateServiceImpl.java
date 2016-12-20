@@ -67,7 +67,8 @@ public class MaterialCouponCodeStatusUpdateServiceImpl implements MaterialCoupon
                 throw new RuntimeException("coupon data not exist.");
             }
             // 处理优惠码
-            batchList.parallelStream().forEach(
+//            batchList.parallelStream().forEach(
+            batchList.forEach(
                     batch -> {
                         processMaterialCouponCode(batch);
                         processCnt.addAndGet(batch.size());

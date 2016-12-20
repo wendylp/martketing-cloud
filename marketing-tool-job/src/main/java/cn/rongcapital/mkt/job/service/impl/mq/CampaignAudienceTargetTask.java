@@ -151,7 +151,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			    for(List<Segment> segList : listSplit){
 			        sendDynamicQueueByString(segList, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
 			    }*/
-			    sendDynamicQueueByString(segmentListUnique, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
+			    //sendDynamicQueueByString(segmentListUnique, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
 			    //再次激活一下mq监听
 			   /* TaskSchedule schedule = new TaskSchedule();
 			    schedule.setServiceName("campaignActionSaveAudienceTask");
@@ -161,7 +161,7 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			        logger.info("再次激活一下mq监听 ItemId is {}", scheduleList.get(0).getCampaignItemId());
 			        campaignActionSaveAudienceTask.task(scheduleList.get(0));
 			    }*/
-			   
+			    sendDynamicQueue(segmentListUnique, cs.getCampaignHeadId() + "-" + cs.getNextItemId());
 			   
 				// 逻辑删除传递走的数据
 				logicDeleteNodeAudience(campaignHeadId, itemId, segmentListUnique);

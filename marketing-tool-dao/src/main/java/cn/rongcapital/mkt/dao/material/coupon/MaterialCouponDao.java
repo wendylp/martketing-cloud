@@ -75,13 +75,6 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
      */
     MaterialCoupon selectOneCoupon(long id);
     
-    /**
-    @author liuhaizhan
-  * @功能简述 返回投放统计数据
-  * @param：优惠券唯一ID
-  * @return：返回data
-  */
-     List<Map> getPutInCoupon(long id);
 
     /**
      * 

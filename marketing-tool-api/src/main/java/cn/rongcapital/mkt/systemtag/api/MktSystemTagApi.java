@@ -49,6 +49,7 @@ import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyDelIn;
 import cn.rongcapital.mkt.vo.in.TagCustomTaxonomySaveIn;
 import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyShowSetIn;
 import cn.rongcapital.mkt.vo.in.TagSystemFlagSetIn;
+import cn.rongcapital.mkt.vo.in.TagValueUpdateIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -261,8 +262,10 @@ public class MktSystemTagApi {
     @GET
     @Path("/mkt.tag.tree.list.get")
     public BaseOutput getSystemtagList(@NotEmpty @QueryParam("user_token") String userToken,
-            @QueryParam("ver") String ver,@NotEmpty @QueryParam("tag_id") String navigateIndex) {
-        return systemTagService.getSystemTagList(navigateIndex);
+                                       @QueryParam("ver") String ver,
+                                       @NotEmpty @QueryParam("tag_id") String navigateIndex,
+                                       @QueryParam("page_source_type") Integer pageSourceType) {
+        return systemTagService.getSystemTagList(navigateIndex,pageSourceType);
     }
     
     /**
@@ -361,5 +364,22 @@ public class MktSystemTagApi {
     public BaseOutput tagCustomTaxonomyShowSet(@Valid TagCustomTaxonomyShowSetIn body,
             @Context SecurityContext securityContext) {
         return tagCustomTaxonomyShowSetService.tagCustomTaxonomyShowSet(body, securityContext);
+    }
+    
+    
+    /**
+     * 功能描述：系统标签值修改
+     * @param body
+     * @param securityContext
+     * @author shuiyangyang
+     * @Date 2016.12.16
+     * @return
+     */
+    @POST
+    @Path("/mkt.system.tag.value.update")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput systemTagValueUpdate(@Valid TagValueUpdateIn tagValueUpdateIn,
+            @Context SecurityContext securityContext) {
+		return systemTagService.saveUpdateTagValue(tagValueUpdateIn);
     }
 }

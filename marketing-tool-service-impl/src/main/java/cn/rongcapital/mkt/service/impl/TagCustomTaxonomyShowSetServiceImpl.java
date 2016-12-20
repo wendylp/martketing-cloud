@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
@@ -17,6 +18,7 @@ import com.mongodb.WriteResult;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.mongo.MongoSystemCustomTagTreeDao;
 import cn.rongcapital.mkt.po.mongodb.SystemCustomTagTree;
 import cn.rongcapital.mkt.service.TagCustomTaxonomyShowSetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -25,15 +27,18 @@ import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyShowSetIn;
 @Service
 public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomyShowSetService {
 
-    private static final Integer LEVEL_ONE = 1;
+    private static final int LEVEL_ONE = 1;
     private static final Boolean IS_SHOW = true;
     private static final Boolean NOT_SHOW = false;
+    private static final int MAX_SIZE = 6;
     private static final int DATA_VALID = 0;
     private static final int DATA_NOT_VALID = 1;
-    private static final int MAX_SIZE = 6;
-
+    
     @Autowired
-    MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
+
+//    @Autowired
+//    MongoSystemCustomTagTreeDao mongoSystemCustomTagTreeDao;
 
     /**
      * 功能描述：设置系统标签一级分类优先显示接口
@@ -57,8 +62,9 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
 
         if (CollectionUtils.isNotEmpty(tagTreeIdLists)) {
             // 重置is_show的状态
+//            mongoSystemCustomTagTreeDao.updateIsShowByLevel(LEVEL_ONE, NOT_SHOW);
             mongoTemplate.updateMulti(new Query(new Criteria("level").is(LEVEL_ONE).and("is_deleted").is(DATA_VALID)),
-                    new Update().set("is_show", NOT_SHOW), SystemCustomTagTree.class);
+                new Update().set("is_show", NOT_SHOW).set("update_time", new Date()), SystemCustomTagTree.class);
 
             int size = tagTreeIdLists.size();
             size = size > MAX_SIZE ? MAX_SIZE : size;
@@ -69,11 +75,11 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
             }
 
             // 更新数据
-            WriteResult writeResult =
-                    mongoTemplate.updateMulti(
-                            new Query(new Criteria("level").is(LEVEL_ONE).and("is_deleted").is(DATA_VALID)
-                                    .and("tag_tree_id").in(newTagTreeIdLists)),
-                            new Update().set("is_show", IS_SHOW), SystemCustomTagTree.class);
+//            int updateCount = mongoSystemCustomTagTreeDao.updateIsShowByLevelTagTreeTd(LEVEL_ONE, newTagTreeIdLists, IS_SHOW);
+            WriteResult writeResult = mongoTemplate.updateMulti(
+                new Query(new Criteria("level").is(LEVEL_ONE).and("is_deleted").is(DATA_VALID).and("tag_tree_id")
+                        .in(newTagTreeIdLists)),
+                new Update().set("is_show", IS_SHOW).set("update_time", new Date()), SystemCustomTagTree.class);
             result.setTotal(writeResult.getN());
         }
 

@@ -1,6 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -59,11 +58,45 @@ public class TagSystemCommonUtilServiceImpl implements TagSystemCommonUtilServic
         double allCount = mongoTemplate.count(null, DataParty.class);
         
         if(allCount > 0) {
-//            tagCover = new DecimalFormat("#%").format(tagCount / allCount);
             tagCover = (int)(tagCount*100 / allCount) + "%";
         }
         
         return tagCover;
+    }
+
+    /**
+     * 功能描述：根据标签tag_id获取标签覆盖率
+     * 任何异常都返回：0%
+     *
+     * @param tagId
+     * @return
+     */
+    @Override
+    public int getTagCoverAmount(String tagId) {
+
+        int tagCoverAmount = 0;
+
+        TagValueCount tagValueCount = new TagValueCount();
+        if(StringUtil.emptyToNull(tagId) == null) {
+            return tagCoverAmount;
+        }
+
+        tagValueCount.setTagId(tagId);
+        List<TagValueCount> tagValueCountLists = tagValueCountDao.selectList(tagValueCount);
+
+        if(CollectionUtils.isNotEmpty(tagValueCountLists)) {
+            tagValueCount = tagValueCountLists.get(0);
+            if(tagValueCount.getValueCount() != null) {
+                tagCoverAmount = tagValueCount.getValueCount().intValue();
+            }
+        }
+        return tagCoverAmount;
+    }
+
+    @Override
+    public boolean isTagCoverData(String tagId) {
+        if(getTagCoverAmount(tagId) > 0) return true;
+        return false;
     }
 
 }

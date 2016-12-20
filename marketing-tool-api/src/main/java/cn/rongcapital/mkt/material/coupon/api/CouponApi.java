@@ -9,6 +9,7 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.api;
 
+import javax.jms.JMSException;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -32,7 +33,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.file.FileService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeDictionaryService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
@@ -49,12 +49,11 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPutInGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralService;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
-import cn.rongcapital.mkt.material.po.MaterialAccessProperty;
-import cn.rongcapital.mkt.material.service.MaterialCouponPropertiesService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
@@ -112,13 +111,8 @@ public class CouponApi {
 	@Autowired
     private MaterialCouponEditDetailService materialCouponEditDetailService;
 	    
-	
-	
 	@Autowired
 	private MaterialCouponAudienceCreateService materialCouponAudienceCreateService;
-	
-	@Autowired
-	private FileService fileService;
     /**
      * 获取指定条件的优惠券的数量
      * 
@@ -185,16 +179,15 @@ public class CouponApi {
         return couponFileUploadService.uploadFile(input, userId);
     }
     /**
-     * 获取指定条件的优惠券的数量
+     * 获取券码投放流失概览数据
      * 
-     * 接口：mkt.material.coupon.counts
+     * 接口：mkt.material.coupon.releaseGeneral
      * 
      * @param user_token
      * @param ver
-     * @param chanel_code
-     * @param keyword
+     * @param id
      * @return BaseOutput
-     * @author zhuxuelong
+     * @author shanjingqi
      * @Date 2016-12-06
      */
     @GET
@@ -414,7 +407,6 @@ public class CouponApi {
      * @功能描述: 核销对账页面》获取数据字典
      * @param userToken
      * @param ver
-     * @param type
      * @return
      * @throws Exception CouponCodeDictionaryListOut
      * @author xie.xiaoliang
@@ -423,9 +415,9 @@ public class CouponApi {
     @GET
     @Path("/mkt.material.coupon.dictionary")
     public CouponCodeDictionaryListOut couponCodeDictionaryService(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("type") String type) throws Exception {
+            @NotEmpty @QueryParam("ver") String ver) throws Exception {
 
-        return this.dictionaryService.materialCouponDictionary(type);
+        return this.dictionaryService.materialCouponDictionary();
     }
     
     
@@ -447,38 +439,17 @@ public class CouponApi {
     /**
      * 根据筛选条件新建固定人群
      * 
-     * 接口：mkt.material.coupon.verifyGeneral
+     * 接口：mkt.material.coupon.audience.create
      * 
-     * @param user_token
-     * @param ver
-     * @param id
-     * @param id
+     * @param MaterialCouponCreateAudienceVO
      * @author shanjingqi
+     * @throws JMSException 
      * @Date 2016-12-13
-     */
+     */ 
 	@POST
     @Path("/mkt.material.coupon.audience.create")
-    public BaseOutput createTargetAudienceGroup(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String version, @NotNull @QueryParam("id") Long id,
-            @NotEmpty @QueryParam("name") String name, @QueryParam("blur_search") String blurSearch,
-            @QueryParam("receive_status") String releaseStatus, @QueryParam("verify_status") String verifyStatus,
-            @QueryParam("expire_status") String expireStatus) {
-        return materialCouponAudienceCreateService.createTargetAudienceGroup(id, name, blurSearch, releaseStatus,
-                verifyStatus, expireStatus);
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput createTargetAudienceGroup(@Valid MaterialCouponCreateAudienceVO mcca) throws JMSException {
+        return materialCouponAudienceCreateService.createTargetAudienceGroup(mcca);
     }
-	
-//    /**
-//     * @author guozhenchao
-//     * @功能简述:优惠券文件上传接口
-//     * @param fileUnique
-//     * @param input
-//     * @return
-//     */
-//    @POST
-//    @Path("/mkt.materiel.coupon.file.upload.test")
-//    @Consumes("multipart/form-data")
-//    public BaseOutput fileUploadBatch(@NotEmpty @QueryParam("user_token") String userToken,
-//                                      @NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
-//        return fileService.uploadFileBatch(input, userId);
-//    }
 }

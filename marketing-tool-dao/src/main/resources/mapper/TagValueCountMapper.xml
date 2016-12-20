@@ -106,7 +106,7 @@
 	<!-- 总数查询,通过条件 -->
 	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.TagValueCount"
 		resultType="int">
-		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<![CDATA[SELECT COUNT(1) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE" />
 		<include refid="QUERY_WHERE_CLAUSE" />
 	</select>
@@ -170,5 +170,22 @@
 			<if test="tagValue != null"><![CDATA[ AND tag_value like CONCAT('%',#{tagValue},'%')]]></if>
 			<if test="isTag != null"><![CDATA[ AND is_tag = #{isTag}]]></if>
 		</where>
+	</select>
+	
+	<!-- 通过标签ID查询标签 -->
+	<select id="selectTagByTagId" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.TagValueCount">
+		SELECT 
+			<include refid="QUERY_COLUMN_LIST" />
+			<include refid="QUERY_FROM_TABLE" />
+		WHERE is_tag = '1'
+		AND tag_id = #{tagId}
+	</select>
+	
+	<delete id="deleteTagByTagId" parameterType="java.lang.String">
+		DELETE FROM tag_value_count WHERE tag_id = #{tagId}
+	</delete>
+	
+	<select id="getTagCountByTagId" parameterType="java.lang.String" resultType="java.lang.Long">
+		SELECT value_count FROM tag_value_count WHERE tag_id = #{tagId}
 	</select>
 </mapper>

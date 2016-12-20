@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -29,6 +31,8 @@ import cn.rongcapital.mkt.po.KeyidMapBlock;
 @PropertySource("classpath:${conf.dir}/application-api.properties")
 public abstract class AbstractDataPartySyncService<T> implements DataPartySyncService<T> {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	Environment env;
 	
@@ -202,10 +206,7 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 				pd = new PropertyDescriptor(field, dataParty.getClass());
 				Method sm = pd.getWriteMethod();
 				
-				
-				Method rm = pd.getReadMethod();
-				
-				Object filedValue = rm.invoke(dataParty);
+				Object filedValue = paramMap.get(key);
 				
 				if(filedValue == null || "".equals(filedValue.toString())){
 					
@@ -238,7 +239,13 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 		}else{
 			
 			for(int i = 1; i < ids.size(); i++){
-				dataPartyDao.deleteDataById(ids.get(i));
+				
+				Integer id = ids.get(i);
+				if(id != null){
+					logger.info("======================delete repeat id :" + id +"===================");
+					dataPartyDao.deleteDataById(id);
+				}
+				
 			}
 			return ids.get(0);
 		}
@@ -284,7 +291,7 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 				Method m = pd.getReadMethod();
 				Object fieldValue = m.invoke(obj);
 				
-				if(fieldValue == null){
+				if(fieldValue == null || "".equals((String)fieldValue)){
 					return true;	
 				}
 				

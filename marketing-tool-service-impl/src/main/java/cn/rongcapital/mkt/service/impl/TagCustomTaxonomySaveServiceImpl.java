@@ -23,6 +23,7 @@ import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.service.TagCustomTaxonomySaveService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.TagCustomTaxonomySaveChildrenIn;
+import cn.rongcapital.mkt.vo.in.TagCustomTaxonomySaveChildrenTagIn;
 import cn.rongcapital.mkt.vo.in.TagCustomTaxonomySaveIn;
 
 @Service
@@ -61,8 +62,8 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
 
         String tagTreeId = body.getTagTreeId();
         String tagTreeName = body.getTagTreeName();
-        List<String> childrenTag = body.getChildrenTag();
-        childrenTag = checkTag(childrenTag);
+        List<TagCustomTaxonomySaveChildrenTagIn> tagCustomTaxonomySaveChildrenTagInLists = body.getChildrenTag();
+        List<String> childrenTag = checkTag(tagCustomTaxonomySaveChildrenTagInLists);
 
         SystemCustomTagTree systemCustomTagTreeOne = findSystemCustomTagTreeById(tagTreeId);
         if (systemCustomTagTreeOne != null) {
@@ -116,9 +117,11 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
         String tagTreeId = children.getTagTreeId();
         String tagTreeName = children.getTagTreeName();
 
-        List<String> childrenTag = children.getChildrenTag();
+        List<TagCustomTaxonomySaveChildrenTagIn> tagCustomTaxonomySaveChildrenTagInLists = children.getChildrenTag();
+        
+        
         // 去除无效的tag_id
-        childrenTag = checkTag(childrenTag);
+        List<String> childrenTag = checkTag(tagCustomTaxonomySaveChildrenTagInLists);
 
         List<String> childrenOld = null;
         SystemCustomTagTree systemCustomTagTreeOld = findSystemCustomTagTreeById(tagTreeId);
@@ -281,11 +284,12 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
      * @Date 2016.12.13
      * @author shuiyangyang
      */
-    private List<String> checkTag(List<String> tagIdList) {
+    private List<String> checkTag(List<TagCustomTaxonomySaveChildrenTagIn> tagCustomTaxonomySaveChildrenTagInLists) {
         List<String> tagListNew = new ArrayList<String>();
 
-        if (CollectionUtils.isNotEmpty(tagIdList)) {
-            for (String tagId : tagIdList) {
+        if (CollectionUtils.isNotEmpty(tagCustomTaxonomySaveChildrenTagInLists)) {
+            for (TagCustomTaxonomySaveChildrenTagIn tagCustomTaxonomySaveChildrenTagInList : tagCustomTaxonomySaveChildrenTagInLists) {
+                String tagId = tagCustomTaxonomySaveChildrenTagInList.getTagId();
                 TagRecommend tagRecommend = mongoTemplate.findOne(
                         new Query(new Criteria("tag_id").is(tagId).and("status").is(DATA_VALID)), TagRecommend.class);
                 if (tagRecommend != null) {
