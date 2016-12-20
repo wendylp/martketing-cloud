@@ -6,6 +6,7 @@ import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.factory.CalcSmsTargetAudienceStrateyFactory;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
@@ -86,6 +87,17 @@ public class GenerateSmsDetailTask implements TaskService {
     @Autowired
     private CouponCodeListService couponCodeListService;
 
+    @Autowired
+    private CalcSmsTargetAudienceStrateyFactory calcSmsTargetAudienceStrateyFactory;
+
+    @Autowired
+    private SegmentCalcSmsTargetAudienceStrategy segmentCalcSmsTargetAudienceStrategy;
+
+    @Autowired
+    private AudienceCalcSmsTargetAudienceStrategy audienceCalcSmsTargetAudienceStrategy;
+
+    private Map<Integer,AbstractCalcSmsTargetAudienceStrategy> strategyMap = new HashMap<>();
+
 
     private final String SEGMENTATION_HEAD_ID = "segmentation_head_id";
     private final int PAGE_SIZE = 10000;
@@ -100,6 +112,9 @@ public class GenerateSmsDetailTask implements TaskService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void task(String taskHeadIdStr) {
+        strategyMap.put(SmsTargetAudienceTypeEnum.SMS_TARGET_SEGMENTATION.getTypeCode(),segmentCalcSmsTargetAudienceStrategy);
+        strategyMap.put(SmsTargetAudienceTypeEnum.SMS_TARGET_AUDIENCE.getTypeCode(), audienceCalcSmsTargetAudienceStrategy);
+
         logger.info("taskHeadId :" + taskHeadIdStr);
         Long taskHeadId = Long.valueOf(taskHeadIdStr);
 
@@ -120,7 +135,8 @@ public class GenerateSmsDetailTask implements TaskService {
         List<SmsTaskBody> smsTaskBodies = smsTaskBodyDao.selectList(paramSmsTaskBody);
         if(CollectionUtils.isEmpty(smsTaskBodies)) return;
         for(SmsTaskBody smsTaskBody : smsTaskBodies){
-            List<String> receiveMobileList = queryReceiveMobileListByTargetAudienceIdAndType(smsTaskBody);
+            AbstractCalcSmsTargetAudienceStrategy strategy = strategyMap.get(smsTaskBody.getTargetType());
+            List<String> receiveMobileList = strategy.queryReceiveMobileList(smsTaskBody.getSmsTaskHeadId(),smsTaskBody.getTargetId());
             if(CollectionUtils.isEmpty(receiveMobileList)) continue;
             logger.info("sms list distinct mobile size: " + receiveMobileList.size());
             targetDistinctReceiveMobiles.addAll(receiveMobileList);
@@ -257,23 +273,25 @@ public class GenerateSmsDetailTask implements TaskService {
                 }
 
                 //Todo:3进行短信内容的生成
+                int couponCodeIndex = 0;
                 for(String distinctReceiveMobile : subTargetDistinctReceiveMobileList){
-                    int couponCodeIndex = 0;
                     MaterialCouponCode materialCouponCode = (MaterialCouponCode) couponCodeList.getData().get(couponCodeIndex);
+                    couponCodeIndex++;
                     SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
                     smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
                     if(smsSignature != null && StringUtils.isNotEmpty(smsSignature.getSmsSignatureName())){
                         //Todo:3进行一次初始替换,替换变量值,然后用一个Map保存起来
                         Map<String,String> variableToValueMap = new HashMap<>();
                         for(SmsMaterialVariableMap smsMaterialVariableMap : smsMaterialVariableMapList){
-                            if(SmsMaterialVariableEnum.VARIABLE_COUPON_COUPON_CODE.getVariableTypeName().equals(smsMaterialVariableMap.getSmsVariableValue())){
+                            if(SmsMaterialVariableEnum.VARIABLE_COUPON_COUPON_CODE.getVariableName().equals(smsMaterialVariableMap.getSmsVariableValue())){
                                 setVariableValueInMaterialVariable(variableToValueMap,smsMaterialVariableMap,couPonEditInfoOut,materialCouponCode.getCode());
+                                continue;
                             }
                             setVariableValueInMaterialVariable(variableToValueMap,smsMaterialVariableMap,couPonEditInfoOut,null);
                         }
 
                         for(String key : variableToValueMap.keySet()){
-                            targetHead.getSmsTaskMaterialContent().replace(key,variableToValueMap.get(key));
+                            targetHead.setSmsTaskMaterialContent(targetHead.getSmsTaskMaterialContent().replace(key,variableToValueMap.get(key)));
                         }
 
                         String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
@@ -312,155 +330,142 @@ public class GenerateSmsDetailTask implements TaskService {
     }
 
 
-    private List<String> queryReceiveMobileListByTargetAudienceIdAndType(SmsTaskBody smsTaskBody) {
-        if(SmsTargetAudienceTypeEnum.SMS_TARGET_SEGMENTATION.getTypeCode() == smsTaskBody.getTargetType()){
-            return queryAndCacheAudienceDetailBySegmentationId(smsTaskBody.getSmsTaskHeadId(),smsTaskBody.getTargetId());
-        }else if(SmsTargetAudienceTypeEnum.SMS_TARGET_AUDIENCE.getTypeCode() == smsTaskBody.getTargetType()){
-            return queryAndCacheAudienceDetailByAudienceListId(smsTaskBody.getSmsTaskHeadId(),smsTaskBody.getTargetId());
-        }
-        return null;
-    }
-
-    private List<String> queryAndCacheAudienceDetailBySegmentationId(Long taskHeadId,Long targetId) {
-//        Query query = new Query(Criteria.where(SEGMENTATION_HEAD_ID).is(targetId));
-//        List<Segment> segmentList = mongoTemplate.find(query,Segment.class);
-//        logger.info("segment list size : " +segmentList.size());
-//        //2构造出dataParty的IdList的集合
-//        if(CollectionUtils.isEmpty(segmentList)) return null;
+//    private List<String> queryReceiveMobileListByTargetAudienceIdAndType(SmsTaskBody smsTaskBody) {
+//        if(SmsTargetAudienceTypeEnum.SMS_TARGET_SEGMENTATION.getTypeCode() == smsTaskBody.getTargetType()){
+//            return queryAndCacheAudienceDetailBySegmentationId(smsTaskBody.getSmsTaskHeadId(),smsTaskBody.getTargetId());
+//        }else if(SmsTargetAudienceTypeEnum.SMS_TARGET_AUDIENCE.getTypeCode() == smsTaskBody.getTargetType()){
+//            return queryAndCacheAudienceDetailByAudienceListId(smsTaskBody.getSmsTaskHeadId(),smsTaskBody.getTargetId());
+//        }
+//        return null;
+//    }
+//
+//    private List<String> queryAndCacheAudienceDetailBySegmentationId(Long taskHeadId,Long targetId) {
+//        //1根据segmentation的Id在Redis中选出相应得细分,然后取出dataPartyId
 //        List<Long> dataPartyIdList = new ArrayList<>();
-//        for(Segment segment : segmentList){
-//            if(segment.getDataId() != null){
-//                dataPartyIdList.add(Long.valueOf(segment.getDataId()));
+//		Set<String> mids = new HashSet<>();
+//		try {
+//			mids = JedisClient.smembers("segmentcoverid:"+targetId, POOL_INDEX);
+//		} catch (JedisException e) {
+//			e.printStackTrace();
+//		}
+//		if(CollectionUtils.isEmpty(mids)) return null;
+//		for(String mid : mids){
+//			dataPartyIdList.add(Long.valueOf(mid));
+//		}
+//        logger.info("dataParty id list size : " + dataPartyIdList.size());
+//
+//        //3将选出来的这些数据做缓存存到cache表中,一开始先一条一条插入,后续优化成使用batchInsert进行插入
+//        if(CollectionUtils.isEmpty(dataPartyIdList)) return null;
+//        cacheDataPartyIdInSmsAudienceCache(taskHeadId, targetId, dataPartyIdList);
+//
+//        //4根据dataPartyIdList选出相应的不同的mobile(去重),然后做为返回值返回
+//        Set<String> distinctMobileSet = new HashSet<>();
+//        List<String> subDistinctMobileList = null;
+//        int totalPage = (dataPartyIdList.size() + PAGE_SIZE)/PAGE_SIZE;
+//        for(int index = 0; index < totalPage; index++){
+//            if(index == totalPage - 1){
+//                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
+//                logger.info("index : " + index);
+//            }else {
+//                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE));
+//                logger.info("index : " + index);
+//            }
+//            distinctMobileSet.addAll(subDistinctMobileList);
+//        }
+//        logger.info("already search distinct mobile list " + subDistinctMobileList.size());
+//        List<String> distinctMobileList = new LinkedList<>();
+//        distinctMobileList.addAll(distinctMobileSet);
+//        if(CollectionUtils.isEmpty(distinctMobileList)) return null;
+//        return distinctMobileList;
+//    }
+//
+//    private List<String> queryAndCacheAudienceDetailByAudienceListId(Long taskHeadId,Long targetId) {
+//        //1将data_party的Id从audienceListPartyMap表中取出来
+//        AudienceListPartyMap paramAudienceListPartyMap = new AudienceListPartyMap();
+//        paramAudienceListPartyMap.setAudienceListId(targetId.intValue());
+//        paramAudienceListPartyMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+//        Integer totalCount = audienceListPartyMapDao.selectListCount(paramAudienceListPartyMap);
+//        int totalAudienceListPartyMapPage = (totalCount+PAGE_SIZE)/PAGE_SIZE;
+//        List<AudienceListPartyMap> audienceListPartyMapList =new ArrayList<>();
+//        for(int index = 0; index < totalAudienceListPartyMapPage; index++){
+//            paramAudienceListPartyMap.setStartIndex(index * PAGE_SIZE + 1);
+//            paramAudienceListPartyMap.setPageSize(PAGE_SIZE);
+//            List<AudienceListPartyMap> subAudienceListPartyMapList = audienceListPartyMapDao.selectList(paramAudienceListPartyMap);
+//            audienceListPartyMapList.addAll(subAudienceListPartyMapList);
+//        }
+//        if(CollectionUtils.isEmpty(audienceListPartyMapList)) return null;
+//
+//        //2构造出DataPartIdList得合集
+//        List<Long> dataPartyIdList = new ArrayList<>();
+//        for(AudienceListPartyMap audienceListPartyMap : audienceListPartyMapList){
+//            if(audienceListPartyMap.getPartyId() != null){
+//                dataPartyIdList.add(Long.valueOf(audienceListPartyMap.getPartyId()));
 //            }
 //        }
-//        logger.info("dataParty id list size : " + dataPartyIdList.size());
-
-        //1根据segmentation的Id在Redis中选出相应得细分,然后取出dataPartyId
-        List<Long> dataPartyIdList = new ArrayList<>();
-		Set<String> mids = new HashSet<String>();
-		try {
-			mids = JedisClient.smembers("segmentcoverid:"+targetId, POOL_INDEX);
-		} catch (JedisException e) {
-			e.printStackTrace();
-		}
-		if(CollectionUtils.isEmpty(mids)) return null;
-		for(String mid : mids){
-			dataPartyIdList.add(Long.valueOf(mid));
-		}
-        logger.info("dataParty id list size : " + dataPartyIdList.size());
-
-        //3将选出来的这些数据做缓存存到cache表中,一开始先一条一条插入,后续优化成使用batchInsert进行插入
-        if(CollectionUtils.isEmpty(dataPartyIdList)) return null;
-        cacheDataPartyIdInSmsAudienceCache(taskHeadId, targetId, dataPartyIdList);
-
-        //4根据dataPartyIdList选出相应的不同的mobile(去重),然后做为返回值返回
-        Set<String> distinctMobileSet = new HashSet<>();
-        List<String> subDistinctMobileList = null;
-        int totalPage = (dataPartyIdList.size() + PAGE_SIZE)/PAGE_SIZE;
-        for(int index = 0; index < totalPage; index++){
-            if(index == totalPage - 1){
-                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
-                logger.info("index : " + index);
-            }else {
-                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE));
-                logger.info("index : " + index);
-            }
-            distinctMobileSet.addAll(subDistinctMobileList);
-        }
-        logger.info("already search distinct mobile list " + subDistinctMobileList.size());
-        List<String> distinctMobileList = new LinkedList<>();
-        distinctMobileList.addAll(distinctMobileSet);
-        if(CollectionUtils.isEmpty(distinctMobileList)) return null;
-        return distinctMobileList;
-    }
-
-    private List<String> queryAndCacheAudienceDetailByAudienceListId(Long taskHeadId,Long targetId) {
-        //1将data_party的Id从audienceListPartyMap表中取出来
-        AudienceListPartyMap paramAudienceListPartyMap = new AudienceListPartyMap();
-        paramAudienceListPartyMap.setAudienceListId(targetId.intValue());
-        paramAudienceListPartyMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-        Integer totalCount = audienceListPartyMapDao.selectListCount(paramAudienceListPartyMap);
-        int totalAudienceListPartyMapPage = (totalCount+PAGE_SIZE)/PAGE_SIZE;
-        List<AudienceListPartyMap> audienceListPartyMapList =new ArrayList<>();
-        for(int index = 0; index < totalAudienceListPartyMapPage; index++){
-            paramAudienceListPartyMap.setStartIndex(index * PAGE_SIZE + 1);
-            paramAudienceListPartyMap.setPageSize(PAGE_SIZE);
-            List<AudienceListPartyMap> subAudienceListPartyMapList = audienceListPartyMapDao.selectList(paramAudienceListPartyMap);
-            audienceListPartyMapList.addAll(subAudienceListPartyMapList);
-        }
-        if(CollectionUtils.isEmpty(audienceListPartyMapList)) return null;
-
-        //2构造出DataPartIdList得合集
-        List<Long> dataPartyIdList = new ArrayList<>();
-        for(AudienceListPartyMap audienceListPartyMap : audienceListPartyMapList){
-            if(audienceListPartyMap.getPartyId() != null){
-                dataPartyIdList.add(Long.valueOf(audienceListPartyMap.getPartyId()));
-            }
-        }
-        if(CollectionUtils.isEmpty(dataPartyIdList)) return null;
-
-        //3将选出来的这些数据做缓存存到cache表中,一开始先一条一条插入,后续优化成使用batchInsert进行插入
-        cacheDataPartyIdInSmsAudienceCache(taskHeadId, targetId, dataPartyIdList);
-
-        //4根据dataPartyIdList选出相应的不同的mobile(去重),然后做为返回值返回
-        Set<String> distinctMobileSet = new HashSet<>();
-        List<String> subDistinctMobileList = null;
-        int totalPage = (dataPartyIdList.size() + PAGE_SIZE)/PAGE_SIZE;
-        for(int index = 0; index < totalPage; index++){
-            if(index == totalPage - 1){
-                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
-                logger.info("index : " + index);
-            }else {
-                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE));
-                logger.info("index : " + index);
-            }
-            distinctMobileSet.addAll(subDistinctMobileList);
-        }
-        logger.info("already search distinct mobile list " + subDistinctMobileList.size());
-        List<String> distinctMobileList = new LinkedList<>();
-        distinctMobileList.addAll(distinctMobileSet);
-        if(CollectionUtils.isEmpty(distinctMobileList)) return null;
-        return distinctMobileList;
-    }
-
-    private void cacheDataPartyIdInSmsAudienceCache(Long taskHeadId, Long targetId, List<Long> dataPartyIdList) {
-        logger.info("begin to cache target audience");
-        //Todo:根据DataParty的Id將Mobile和Id选出来然后存放成List对象
-        List<AudienceIDAndMobilePO> audienceIdAndMobilePOList = new ArrayList<>();
-        Integer totalCount = dataPartyIdList.size();
-        int totalPage = (totalCount + PAGE_SIZE)/PAGE_SIZE;
-        for(int index = 0; index < totalPage; index++){
-            List<AudienceIDAndMobilePO> subAudienceIdAndMobileList = null;
-            if(index == totalPage - 1){
-                subAudienceIdAndMobileList = dataPartyDao.selectCacheAudienceListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
-                logger.info("index : " + index);
-            }else {
-                subAudienceIdAndMobileList = dataPartyDao.selectCacheAudienceListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE));
-                logger.info("index : " + index);
-            }
-            audienceIdAndMobilePOList.addAll(subAudienceIdAndMobileList);
-        }
-
-        List<SmsTaskTargetAudienceCache> smsTaskTargetAudienceCacheList = new LinkedList<>();
-        for(AudienceIDAndMobilePO audienceIDAndMobilePO : audienceIdAndMobilePOList){
-            SmsTaskTargetAudienceCache smsTaskTargetAudienceCache = new SmsTaskTargetAudienceCache();
-            smsTaskTargetAudienceCache.setTaskHeadId(taskHeadId);
-            smsTaskTargetAudienceCache.setTargetId(targetId);
-            smsTaskTargetAudienceCache.setDataPartyId(audienceIDAndMobilePO.getDataPartyId());
-            smsTaskTargetAudienceCache.setMobile(audienceIDAndMobilePO.getMobile());
-            smsTaskTargetAudienceCache.setTargetType(SmsTargetAudienceTypeEnum.SMS_TARGET_AUDIENCE.getTypeCode());
-            smsTaskTargetAudienceCacheList.add(smsTaskTargetAudienceCache);
-        }
-
-        int totalNum = (smsTaskTargetAudienceCacheList.size() + PAGE_SIZE) / PAGE_SIZE;
-        for(int index = 0; index < totalNum; index++){
-            if(index == totalNum-1){
-                logger.info("insert index : " + index);
-                smsTaskTargetAudienceCacheDao.batchInsert(smsTaskTargetAudienceCacheList.subList(index*PAGE_SIZE,smsTaskTargetAudienceCacheList.size()));
-            }else{
-                logger.info("insert index : " + index);
-                smsTaskTargetAudienceCacheDao.batchInsert(smsTaskTargetAudienceCacheList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE));
-            }
-        }
-    }
+//        if(CollectionUtils.isEmpty(dataPartyIdList)) return null;
+//
+//        //3将选出来的这些数据做缓存存到cache表中,一开始先一条一条插入,后续优化成使用batchInsert进行插入
+//        cacheDataPartyIdInSmsAudienceCache(taskHeadId, targetId, dataPartyIdList);
+//
+//        //4根据dataPartyIdList选出相应的不同的mobile(去重),然后做为返回值返回
+//        Set<String> distinctMobileSet = new HashSet<>();
+//        List<String> subDistinctMobileList = null;
+//        int totalPage = (dataPartyIdList.size() + PAGE_SIZE)/PAGE_SIZE;
+//        for(int index = 0; index < totalPage; index++){
+//            if(index == totalPage - 1){
+//                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
+//                logger.info("index : " + index);
+//            }else {
+//                subDistinctMobileList = dataPartyDao.selectDistinctMobileListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE));
+//                logger.info("index : " + index);
+//            }
+//            distinctMobileSet.addAll(subDistinctMobileList);
+//        }
+//        logger.info("already search distinct mobile list " + subDistinctMobileList.size());
+//        List<String> distinctMobileList = new LinkedList<>();
+//        distinctMobileList.addAll(distinctMobileSet);
+//        if(CollectionUtils.isEmpty(distinctMobileList)) return null;
+//        return distinctMobileList;
+//    }
+//
+//    private void cacheDataPartyIdInSmsAudienceCache(Long taskHeadId, Long targetId, List<Long> dataPartyIdList) {
+//        logger.info("begin to cache target audience");
+//        //Todo:根据DataParty的Id將Mobile和Id选出来然后存放成List对象
+//        List<AudienceIDAndMobilePO> audienceIdAndMobilePOList = new ArrayList<>();
+//        Integer totalCount = dataPartyIdList.size();
+//        int totalPage = (totalCount + PAGE_SIZE)/PAGE_SIZE;
+//        for(int index = 0; index < totalPage; index++){
+//            List<AudienceIDAndMobilePO> subAudienceIdAndMobileList = null;
+//            if(index == totalPage - 1){
+//                subAudienceIdAndMobileList = dataPartyDao.selectCacheAudienceListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,dataPartyIdList.size()));
+//                logger.info("index : " + index);
+//            }else {
+//                subAudienceIdAndMobileList = dataPartyDao.selectCacheAudienceListByIdList(dataPartyIdList.subList(index*PAGE_SIZE,(index+1) * PAGE_SIZE));
+//                logger.info("index : " + index);
+//            }
+//            audienceIdAndMobilePOList.addAll(subAudienceIdAndMobileList);
+//        }
+//
+//        List<SmsTaskTargetAudienceCache> smsTaskTargetAudienceCacheList = new LinkedList<>();
+//        for(AudienceIDAndMobilePO audienceIDAndMobilePO : audienceIdAndMobilePOList){
+//            SmsTaskTargetAudienceCache smsTaskTargetAudienceCache = new SmsTaskTargetAudienceCache();
+//            smsTaskTargetAudienceCache.setTaskHeadId(taskHeadId);
+//            smsTaskTargetAudienceCache.setTargetId(targetId);
+//            smsTaskTargetAudienceCache.setDataPartyId(audienceIDAndMobilePO.getDataPartyId());
+//            smsTaskTargetAudienceCache.setMobile(audienceIDAndMobilePO.getMobile());
+//            smsTaskTargetAudienceCache.setTargetType(SmsTargetAudienceTypeEnum.SMS_TARGET_AUDIENCE.getTypeCode());
+//            smsTaskTargetAudienceCacheList.add(smsTaskTargetAudienceCache);
+//        }
+//
+//        int totalNum = (smsTaskTargetAudienceCacheList.size() + PAGE_SIZE) / PAGE_SIZE;
+//        for(int index = 0; index < totalNum; index++){
+//            if(index == totalNum-1){
+//                logger.info("insert index : " + index);
+//                smsTaskTargetAudienceCacheDao.batchInsert(smsTaskTargetAudienceCacheList.subList(index*PAGE_SIZE,smsTaskTargetAudienceCacheList.size()));
+//            }else{
+//                logger.info("insert index : " + index);
+//                smsTaskTargetAudienceCacheDao.batchInsert(smsTaskTargetAudienceCacheList.subList(index*PAGE_SIZE,(index + 1)*PAGE_SIZE));
+//            }
+//        }
+//    }
 }
