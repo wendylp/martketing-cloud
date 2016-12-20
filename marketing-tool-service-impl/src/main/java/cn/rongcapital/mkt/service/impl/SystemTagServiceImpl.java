@@ -121,6 +121,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 			tagValueCount.setIsTag("0");
 			tagValueCount.setTagId(tagId);
 			List<TagValueCount> tagList = tagValueCountDao.selectList(tagValueCount);
+			int selectListCount = tagValueCountDao.selectListCount(tagValueCount);
 			List<Map<String, Object>> tagValueList = new ArrayList<>();
 			for (TagValueCount tag : tagList) {
 				Map<String, Object> tagValueMap = new HashMap<>();
@@ -134,10 +135,12 @@ public class SystemTagServiceImpl implements SystemTagService {
 				tagMap.put("tag_id", tag.getTagId());
 				tagMap.put("tag_name", tag.getTagName());
 				tagMap.put("tag_desc", tag.getTagDesc());
+				tagMap.put("tag_count", tag.getValueCount());
 				tagMap.put("update_flag", tag.getUpdateFlag());
 			}
 			data.add(tagMap);
-			output.setTotalCount(tagValueList.size());
+			output.setTotalCount(selectListCount);
+			output.setTotal(tagValueList.size());
 			data.add(tagValueList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -267,11 +270,11 @@ public class SystemTagServiceImpl implements SystemTagService {
 		TagRecommend tagInformation = mongoTemplate.find(query, TagRecommend.class).get(0);
 		Integer tagVersion = tagInformation.getTagVersion();
 		List<String> defualtTagList = tagInformation.getTagList();
+		String tagName = tagInformation.getTagNameEng();
 
 		Update update = new Update().set("tag_version", tagVersion+1).set("v"+tagVersion, defualtTagList).set("tag_list", tagList);
 	    mongoTemplate.findAndModify(query, update, TagRecommend.class);
 	    //更新参数表
-	    String tagName = tagInformation.getTagNameEng();
 	    int count = tagSqlParamDao.saveOrUpdateData(capsulationParam(tagId, elements,tagName));
 	    output.setTotal(count);
 	    sysTagViewDao.updateField2ByTagName(tagName);

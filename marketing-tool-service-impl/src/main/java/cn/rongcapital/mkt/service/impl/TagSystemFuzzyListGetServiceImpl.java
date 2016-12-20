@@ -10,6 +10,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.po.TagValueCount;
+import cn.rongcapital.mkt.service.TagSystemCommonUtilService;
 import cn.rongcapital.mkt.service.TagSystemFuzzyListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.TagSystemFuzzyListGetOut;
@@ -19,6 +20,9 @@ public class TagSystemFuzzyListGetServiceImpl implements TagSystemFuzzyListGetSe
 
     @Autowired
     private TagValueCountDao tagValueCountDao;
+    
+    @Autowired
+    private TagSystemCommonUtilService tagSystemCommonUtilService;
 
     /**
      * 根据页面输入值模糊查询标签，返回标签或者标签值 （全路径的标签或者标签值《带有标签类型：标签值，标签》分页
@@ -57,6 +61,10 @@ public class TagSystemFuzzyListGetServiceImpl implements TagSystemFuzzyListGetSe
                                 tagValueCountList.getTagName(), tagValueCountList.getTagValue(),
                                 tagValueCountList.getTagPath(), tagValueCountList.getIsTag(),
                                 tagValueCountList.getSearchMod(), tagValueCountList.getTagValueSeq());
+                
+                String tagCover = tagSystemCommonUtilService.getTagCover(tagValueCountList.getTagId());
+                tagSystemFuzzyListGetOut.setTagCover(tagCover);
+                
                 result.getData().add(tagSystemFuzzyListGetOut);
             }
             

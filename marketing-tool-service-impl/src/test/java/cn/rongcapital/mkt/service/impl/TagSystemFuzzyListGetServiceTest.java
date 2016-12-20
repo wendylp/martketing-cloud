@@ -13,11 +13,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.po.TagValueCount;
+import cn.rongcapital.mkt.service.TagSystemCommonUtilService;
 import cn.rongcapital.mkt.service.TagSystemFuzzyListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.TagSystemFuzzyListGetOut;
@@ -28,10 +30,15 @@ public class TagSystemFuzzyListGetServiceTest {
 
     @Mock
     private TagValueCountDao tagValueCountDao;
+    
+    @Mock
+    private TagSystemCommonUtilService tagSystemCommonUtilService;
 
     int count = 10;
 
     List<TagValueCount> tagValueCountLists;
+    
+    String tagCover = "10%";
 
     @Before
     public void setUp() throws Exception {
@@ -49,14 +56,17 @@ public class TagSystemFuzzyListGetServiceTest {
 
         Mockito.when(tagValueCountDao.selectFuzzyTagValue(any())).thenReturn(tagValueCountLists);
         Mockito.when(tagValueCountDao.selectFuzzyTagValueCount(any())).thenReturn(count);
+        Mockito.when(tagSystemCommonUtilService.getTagCover(any())).thenReturn(tagCover);
 
         ReflectionTestUtils.setField(tagSystemFuzzyListGetService, "tagValueCountDao",
                         tagValueCountDao);
+        ReflectionTestUtils.setField(tagSystemFuzzyListGetService, "tagSystemCommonUtilService",
+                tagSystemCommonUtilService);
     }
 
     @Test
     public void testGetTagSystemFuzzyList() {
-        BaseOutput result = tagSystemFuzzyListGetService.getTagSystemFuzzyList("","", 0, 0);
+        BaseOutput result = tagSystemFuzzyListGetService.getTagSystemFuzzyList("","1", 0, 0);
 
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
         Assert.assertEquals(tagValueCountLists.size(), result.getTotal());
@@ -70,6 +80,7 @@ public class TagSystemFuzzyListGetServiceTest {
                             tagValueCountList.getTagValue(), tagValueCountList.getTagPath(),
                             tagValueCountList.getIsTag(), tagValueCountList.getSearchMod(),
                             tagValueCountList.getTagValueSeq());
+            tagSystemFuzzyListGetOut.setTagCover(tagCover);
             actualData.add(tagSystemFuzzyListGetOut);
         }
         

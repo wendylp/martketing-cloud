@@ -38,8 +38,10 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
     private static final Integer SYNCED_TO_DATA_PARTY = 1;
     private final Integer BATCH_SIZE = 500;
     
-    private final String WECHAT_AREA = "其它"; 
-    private final String WECHAT_CITIZENSHIP = "中国"; 
+    private final String WECHAT_AREA = "其它";
+    private final String WECHAT_CITIZENSHIP_EN = "China";
+    private final String WECHAT_CITIZENSHIP = "中国";
+    
 
     @Autowired
     private WechatMemberDao wechatMemberDao;
@@ -290,7 +292,13 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
 				}
 			}else{
 				paramDataPopulation.setProvice(this.WECHAT_AREA);
-				paramDataPopulation.setCitizenship(this.WECHAT_AREA);
+				String citizenship = paramDataPopulation.getCitizenship();
+				if(StringUtils.isNotEmpty(citizenship)&&WECHAT_CITIZENSHIP_EN.equals(citizenship)){
+					paramDataPopulation.setCitizenship(this.WECHAT_CITIZENSHIP);
+				}else{
+					paramDataPopulation.setCitizenship(this.WECHAT_AREA);
+				}
+				
 			}    			    		
     	}
     	
@@ -314,7 +322,12 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
 				}
 			}else{
 				paramDataPopulation.setCity(this.WECHAT_AREA);
-				paramDataPopulation.setCitizenship(this.WECHAT_AREA);
+				String citizenship = paramDataPopulation.getCitizenship();
+				if(StringUtils.isNotEmpty(citizenship)&&WECHAT_CITIZENSHIP_EN.equals(citizenship)){
+					paramDataPopulation.setCitizenship(this.WECHAT_CITIZENSHIP);
+				}else{
+					paramDataPopulation.setCitizenship(this.WECHAT_AREA);
+				}
 			}    			
     	}
 		return paramDataPopulation;
