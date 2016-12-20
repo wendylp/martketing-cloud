@@ -9,9 +9,6 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.jms.JMSException;
 
 import org.junit.After;
@@ -29,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponAudienceCreateService;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.service.MQTopicService;
@@ -41,14 +37,10 @@ public class MaterialCouponAudienceCreateServiceTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private MaterialCouponAudienceCreateService mcacService;
+    MaterialCouponAudienceCreateService mcacService;
 
     @Mock
-    MQTopicService mqTopicService;
-
-    List<String> mobileList = new ArrayList<>();
-
-    List<MaterialCoupon> mc = new ArrayList<MaterialCoupon>();
+    private MQTopicService mqTopicService;
 
     @Before
     public void setUp() throws Exception {
