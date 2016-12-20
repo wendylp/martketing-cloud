@@ -47,4 +47,19 @@ public interface TagValueCountDao extends BaseDao<TagValueCount>{
     int selectFuzzyTagValueCount(TagValueCount tagValueCount);
     
     TagValueCount selectTagByTagId(@Param("tagId") String tagId);
+    
+    /**
+     * 通过tagId删除标签
+     * @param tagId
+     * @return
+     */
+    int deleteTagByTagId(@Param("tagId") String tagId);
+    
+    /**
+     * 通过标签ID查询标签覆盖率
+     * @param tagId
+     * @return
+     */
+    Long getTagCountByTagId(@Param("tagId") String tagId);
+    
 }

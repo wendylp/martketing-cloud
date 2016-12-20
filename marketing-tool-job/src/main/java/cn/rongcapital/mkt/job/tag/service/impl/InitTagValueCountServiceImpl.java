@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.tag.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.dao.TagValueCountDao;
+import cn.rongcapital.mkt.job.service.SystemTagSynchService;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.TagValueCount;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
@@ -28,7 +30,7 @@ import cn.rongcapital.mkt.po.mongodb.TagTree;
  *************************************************/
 
 @Service
-public class InitTagValueCountServiceImpl implements TaskService{
+public class InitTagValueCountServiceImpl implements TaskService,SystemTagSynchService{
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -45,11 +47,25 @@ public class InitTagValueCountServiceImpl implements TaskService{
 	
 	@Override
 	public void task(Integer taskId) {
+		initTagValueCount(null);
+	}
+
+	@Override
+	public void initTagValueCount(String targetTagId) {
+		// TODO Auto-generated method stub
 		try {
-			//清空存量数据
-			tagValueCountDao.clearStockData();
-			//从Mongo中获取所有Tag
-			List<TagRecommend> tagRecommendList = mongoTemplate.find(new Query(Criteria.where("tagId").ne(null)), TagRecommend.class);
+			List<TagRecommend> tagRecommendList = new ArrayList<>();
+			if(targetTagId == null){
+				//清空存量数据
+				tagValueCountDao.clearStockData();
+				//从Mongo中获取所有Tag
+				tagRecommendList = mongoTemplate.find(new Query(Criteria.where("tagId").ne(null)), TagRecommend.class);
+			}else{
+				//清除指定数据
+				tagValueCountDao.deleteTagByTagId(targetTagId);
+				//从Mongo中获取所有Tag
+				tagRecommendList = mongoTemplate.find(new Query(Criteria.where("tagId").is(targetTagId)), TagRecommend.class);
+			}
 			for (TagRecommend tagRecommend : tagRecommendList) {
 				//tagId
 				String tagId = tagRecommend.getTagId();
