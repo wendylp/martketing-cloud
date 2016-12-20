@@ -16,6 +16,7 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.TagValueCount;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TagValueCountDao extends BaseDao<TagValueCount>{
 	
@@ -61,5 +62,13 @@ public interface TagValueCountDao extends BaseDao<TagValueCount>{
      * @return
      */
     Long getTagCountByTagId(@Param("tagId") String tagId);
+    
+    /**
+     * 通过标签ID修改是否可编辑状态
+     * @param paramMap 参数集合
+     * @return
+     */
+    int changeUpdateFlagByTagId(TagValueCount tagValueCount);
+    
     
 }
