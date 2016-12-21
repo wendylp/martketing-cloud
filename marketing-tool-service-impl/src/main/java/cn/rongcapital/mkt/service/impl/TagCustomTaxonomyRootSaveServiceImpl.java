@@ -2,9 +2,11 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -24,6 +26,7 @@ import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyRootSaveIn;
 public class TagCustomTaxonomyRootSaveServiceImpl implements TagCustomTaxonomyRootSaveService {
 
     private static final int LEVEL_ONE = 1;
+    private static final int LEVEL_TWO = 2;
     private static final int DATA_VALID = 0;
     private static final int DATA_NOT_VALID = 1;
     private static final long MAX_SHOW = 6;
@@ -62,9 +65,19 @@ public class TagCustomTaxonomyRootSaveServiceImpl implements TagCustomTaxonomyRo
                     new Update().set("tag_tree_name", tagTreeName).set("update_time", new Date()),
                     SystemCustomTagTree.class);
         } else {
-            tagTreeId = GenerateUUid.generateShortUuid() + new Date().getTime();
-            systemCustomTagTree = new SystemCustomTagTree(null, tagTreeId, tagTreeName, LEVEL_ONE, DATA_VALID, null,
-                    new Date(), new Date(), new ArrayList<String>(), isShow(), null);
+            List<String> children = new ArrayList<String>();
+            
+            // 插入默认子标签
+            if(CollectionUtils.isNotEmpty(body.getChildren())) {
+                String tagTreeIdLevelTwo = generateTagTreeId();
+                SystemCustomTagTree systemCustomTagTreeLevelTwo = new SystemCustomTagTree(null, tagTreeIdLevelTwo, body.getChildren().get(0).getTagTreeName(), LEVEL_TWO, DATA_VALID, tagTreeName,
+                    new Date(), new Date(), new ArrayList<String>(), null, new ArrayList<String>());
+                mongoTemplate.insert(systemCustomTagTreeLevelTwo);
+                children.add(tagTreeIdLevelTwo);
+            }
+            
+            systemCustomTagTree = new SystemCustomTagTree(null, generateTagTreeId(), tagTreeName, LEVEL_ONE, DATA_VALID, null,
+                    new Date(), new Date(), children, isShow(), null);
 
             mongoTemplate.insert(systemCustomTagTree);
 
@@ -84,6 +97,17 @@ public class TagCustomTaxonomyRootSaveServiceImpl implements TagCustomTaxonomyRo
         long count = mongoTemplate.count(new Query(new Criteria("isDeleted").is(DATA_VALID).and("is_show").is(true)),
                 SystemCustomTagTree.class);
         return count < MAX_SHOW ? IS_SHOW : !IS_SHOW;
+    }
+    
+    /**
+     * 功能描述：生成tag_tree_id
+     * 
+     * @return
+     * @Date 2016.12.13
+     * @author shuiyangyang
+     */
+    private String generateTagTreeId() {
+        return GenerateUUid.generateShortUuid() + new Date().getTime();
     }
 
 }
