@@ -139,6 +139,7 @@ public class FileStorageServiceImpl implements FileStorageService{
         boolean flag = false;
         if (file.exists()) {
             flag = file.delete();
+            flag = true;
         } else {
             logger.error("delete the file, the file is not exist, fileName: {}", fileName);
             throw new FileNotFoundException("delete the file, the file is not exist");
