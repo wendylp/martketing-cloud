@@ -9,6 +9,8 @@ package cn.rongcapital.mkt.material.coupon.service.impl;
 
 import java.util.List;
 
+import cn.rongcapital.mkt.common.util.SqlConvertUtils;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,6 @@ import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListItemOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
-import cn.rongcapital.mkt.vo.BaseOutput;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
 @Service
@@ -63,7 +64,7 @@ public class MaterialCouponPageListServiceImpl implements MaterialCouponPageList
         paramMaterialCoupon.setChannelCode(channelCode);
         String paramCouponoStatus = StringUtils.isEmpty(couponStatus) ? null: couponStatus;
         paramMaterialCoupon.setCouponStatus(paramCouponoStatus);
-        paramMaterialCoupon.setTitle(keyword);
+        paramMaterialCoupon.setTitle(SqlConvertUtils.escapeSQLCharacter(keyword));
         paramMaterialCoupon.setStartIndex((index - 1) * size);
         paramMaterialCoupon.setPageSize(size);
 
