@@ -148,6 +148,7 @@
 			segmentation_body
 		WHERE
 			tag_id = #{tagId}
+		AND status = 0
 	</select>
 	
 </mapper>
