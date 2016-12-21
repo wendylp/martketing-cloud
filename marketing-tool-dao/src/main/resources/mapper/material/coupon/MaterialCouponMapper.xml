@@ -145,7 +145,7 @@
 		<![CDATA[WHERE status = 0]]>
     	<if test="title != null and title != ''">
 	    	<bind name="titlelike" value="'%'+title+'%'"/>
-	    	<![CDATA[ AND title like #{titlelike} ESCAPE '${@cn.rongcapital.mkt.common.constant.ApiConstant@SQL_ESCAPE_CHARACTER}']]>
+	    	<![CDATA[ AND title like #{titlelike}]]>
     	</if>
     	<if test="channelCode != null and channelCode != ''"><![CDATA[ AND channel_code = #{channelCode}]]></if>
     	<if test="couponStatus != null and couponStatus != ''"><![CDATA[ AND coupon_status = #{couponStatus}]]></if>
