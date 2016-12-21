@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -813,7 +812,7 @@ public class MaterialCouponCodeCheckServiceTest {
     public void testMaxCount(){
         System.out.println();
         //验证以字母形式，长度为5的最大长度
-        CouponCodeMaxCountOut baseOutput = this.checkService.materialCouponCodeMaxCount(MaterialCouponCodeMaxTypeEnum.LETTER.getCode(), 5);
+        CouponCodeMaxCountOut baseOutput = this.checkService.materialCouponCodeMaxCount(MaterialCouponCodeMaxTypeEnum.ALPHA.getCode(), 5);
         long maxCount = baseOutput.getItems().get(0).getMaxCount();
         long expectedCount= 26 * 26 * 26 * 26 * 26;
         if(expectedCount>=MAX_COUNT){
@@ -831,7 +830,7 @@ public class MaterialCouponCodeCheckServiceTest {
         Assert.assertEquals(expectedCount, maxCount);
         
         //验证是组合形式，长度为5的最大长度
-        baseOutput = this.checkService.materialCouponCodeMaxCount(MaterialCouponCodeMaxTypeEnum.MIXTURE.getCode(), 5);
+        baseOutput = this.checkService.materialCouponCodeMaxCount(MaterialCouponCodeMaxTypeEnum.MIXED.getCode(), 5);
         maxCount = baseOutput.getItems().get(0).getMaxCount();
         expectedCount = 36 * 36 * 36 * 36 * 36;
         if(expectedCount>=MAX_COUNT){
