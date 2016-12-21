@@ -4,9 +4,13 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.*;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
+import cn.rongcapital.mkt.po.WechatMember;
+import cn.rongcapital.mkt.service.DataPopulationService;
 import cn.rongcapital.mkt.service.SaveWechatAssetListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,16 +30,19 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
     private AudienceListDao audienceListDao;
     @Autowired
     private AudienceListPartyMapDao audienceListPartyMapDao;
-    @Autowired
+/*    @Autowired
     private DataPartyDao dataPartyDao;
     @Autowired
-    private WechatAssetGroupDao wechatAssetGroupDao;
+    private WechatGroupDao wechatGroupDao;*/
     @Autowired
-    private WechatGroupDao wechatGroupDao;
+    private WechatAssetGroupDao wechatAssetGroupDao;
+
     @Autowired
     private WechatMemberDao wechatMemberDao;
     @Autowired
     private DataPopulationDao dataPopulationDao;
+    @Autowired
+    private DataPopulationService dataPopulationService;
     
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -53,9 +60,9 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
         }
 
         //1.统计人群总数，将人群名称和人群总数保存到audience_list表中
-//        Long totalAudienceNumber = wechatAssetGroupDao.sumGroupMemberCount(saveWechatAssetListIn.getGroupIds());
+        Long totalAudienceNumber = wechatAssetGroupDao.sumGroupMemberCount(saveWechatAssetListIn.getGroupIds());
         //微信保存人群总数默认是0，具体多少人通过后台job去计算
-        Long totalAudienceNumber = 0l;
+//        Long totalAudienceNumber = 0l;
         paramMap = new HashMap<String,Object>();
         paramMap.put("audience_name",saveWechatAssetListIn.getPeopleGroupName());
         paramMap.put("audience_rows",totalAudienceNumber);
@@ -69,7 +76,11 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
 
         //3.根据import_groupId，选出member的Id
         List<Long> idLists = wechatMemberDao.selectIdListByGroupId(wechatAssetGroups);
-
+        //4.根据ID筛选出需要同步到data_population的member,然后同步到data_population
+        List<WechatMember> wechatMembers = wechatMemberDao.selectListByIdListNoSelected(idLists);
+        if(CollectionUtils.isNotEmpty(wechatMembers)){
+        	dataPopulationService.synchronizeMemberToDataPopulationAndUpdateMember(wechatMembers);
+        }
         //Todo:4这块需要修改，从member中选出data_population的ID，然后从data_population中选出data_party
         //Todo: 的Id，然后将这些Ids插入到audience_map中去
         //1.获取data_population的Id
