@@ -51,11 +51,12 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralSe
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralService;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
+import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponCodeVerifyIn;
+import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponInfoIn;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -175,8 +176,8 @@ public class CouponApi {
     @Path("/mkt.materiel.coupon.file.upload")
     @Consumes("multipart/form-data")
     public BaseOutput fileUpload(@NotEmpty @QueryParam("user_token") String userToken,
-                                      @NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
-        return couponFileUploadService.uploadFile(input, userId);
+                                      @NotEmpty @QueryParam("ver") String ver, MultipartFormDataInput input){
+        return couponFileUploadService.uploadFile(input, userToken);
     }
     /**
      * 获取券码投放流失概览数据
@@ -338,9 +339,8 @@ public class CouponApi {
     @POST
     @Path("/mkt.materiel.coupon.save")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public BaseOutput couponSave(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @Valid CouponInfoIn couponInfo){
-        return couponSaveService.save(couponInfo, userToken);
+    public BaseOutput couponSave(@Valid MaterialCouponInfoIn couponInfo){
+        return couponSaveService.save(couponInfo);
     }
     
     /**
@@ -355,16 +355,11 @@ public class CouponApi {
      * @author xie.xiaoliang
      * @since 2016年12月9日
      */
-    @GET
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON })
     @Path("/mkt.material.coupon.verify")
-    public BaseOutput materialCouponCodeVerify(
-            @NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, 
-            @NotNull  @QueryParam("id") Long id,
-            @NotEmpty @QueryParam("coupon_code") String couponCode,
-            @NotEmpty @QueryParam("user") String user) throws Exception {
-
-        return materialCouponCodeCheckService.materialCouponCodeVerify(id, couponCode, user);
+    public BaseOutput materialCouponCodeVerify(@Valid MaterialCouponCodeVerifyIn in) throws Exception {
+        return materialCouponCodeCheckService.materialCouponCodeVerify(in.getId(), in.getCoupon_code(), in.getUser());
     }
     
 	/**

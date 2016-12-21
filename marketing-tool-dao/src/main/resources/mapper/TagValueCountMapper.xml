@@ -188,4 +188,11 @@
 	<select id="getTagCountByTagId" parameterType="java.lang.String" resultType="java.lang.Long">
 		SELECT value_count FROM tag_value_count WHERE tag_id = #{tagId}
 	</select>
+	
+	<update id="changeUpdateFlagByTagId" parameterType="cn.rongcapital.mkt.po.TagValueCount">
+		UPDATE tag_value_count 
+		SET update_flag = #{updateFlag} 
+		WHERE tag_id = #{tagId} 
+		AND is_tag = '1'
+	</update>
 </mapper>

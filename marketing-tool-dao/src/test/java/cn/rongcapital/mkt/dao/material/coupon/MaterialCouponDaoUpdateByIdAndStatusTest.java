@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponReadyStatusType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
@@ -53,6 +54,7 @@ public class MaterialCouponDaoUpdateByIdAndStatusTest extends AbstractUnitTest {
         coupon.setTitle("zhuxuelongtest");
         coupon.setStockRest(2);
         coupon.setStockTotal(2);
+        coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
         coupon.setAmount(BigDecimal.valueOf(333));
         coupon.setStartTime(new Date());
         coupon.setEndTime(new Date());
@@ -91,6 +93,7 @@ public class MaterialCouponDaoUpdateByIdAndStatusTest extends AbstractUnitTest {
         coupon.setTitle("zhuxuelongtest");
         coupon.setStockRest(2);
         coupon.setStockTotal(2);
+        coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
         coupon.setAmount(BigDecimal.valueOf(333));
         coupon.setStartTime(new Date());
         coupon.setEndTime(new Date());

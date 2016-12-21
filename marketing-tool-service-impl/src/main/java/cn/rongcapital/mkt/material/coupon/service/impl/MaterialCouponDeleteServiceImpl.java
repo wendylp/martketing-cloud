@@ -53,7 +53,7 @@ public class MaterialCouponDeleteServiceImpl implements MaterialCouponDeleteServ
 
                 // 删除优惠券码信息
                 if (materialCouponCodeDao.updateByCouponId(id) >= 0) {
-                    baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE, null);
+                    baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
                 } else {
 
                     baseOutput =
@@ -61,7 +61,7 @@ public class MaterialCouponDeleteServiceImpl implements MaterialCouponDeleteServ
                 }
 
             } else {
-                baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ONE, null);
+                baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(), ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
             }
 
         } else {
