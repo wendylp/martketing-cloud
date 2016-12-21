@@ -8,4 +8,6 @@ public interface CouponFileUploadService {
 
     BaseOutput uploadFile(MultipartFormDataInput input, String userId);
 
+    Object getCouponFileUploadUrlGet(String userId);
+
 }

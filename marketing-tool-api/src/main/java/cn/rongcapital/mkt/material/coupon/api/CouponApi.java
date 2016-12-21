@@ -165,6 +165,21 @@ public class CouponApi {
         return couponCodeListService.couponIssuedCodeList(id, index, size);
     }
     
+    
+    /**
+     * @功能简述: 获取文件上传url
+     * @param: String
+     *      userToken, String ver,String user_id
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.materiel.coupon.file.upload.get")
+    public Object getMigrationFileUploadUrl(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("user_id") String userId) throws Exception {
+        return couponFileUploadService.getCouponFileUploadUrlGet(userId);
+    }
+    
+    
     /**
      * @author guozhenchao
      * @功能简述:优惠券文件上传接口
@@ -175,9 +190,8 @@ public class CouponApi {
     @POST
     @Path("/mkt.materiel.coupon.file.upload")
     @Consumes("multipart/form-data")
-    public BaseOutput fileUpload(@NotEmpty @QueryParam("user_token") String userToken,
-                                      @NotEmpty @QueryParam("ver") String ver, MultipartFormDataInput input){
-        return couponFileUploadService.uploadFile(input, userToken);
+    public BaseOutput fileUpload(@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
+        return couponFileUploadService.uploadFile(input, userId);
     }
     /**
      * 获取券码投放流失概览数据
