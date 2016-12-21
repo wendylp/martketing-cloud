@@ -1,8 +1,9 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,8 @@ import cn.rongcapital.mkt.dao.CityDicDao;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.ProvinceDicDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
-
+import cn.rongcapital.mkt.po.CityDic;
+import cn.rongcapital.mkt.po.ProvinceDic;
 import cn.rongcapital.mkt.po.WechatMember;
 import cn.rongcapital.mkt.service.DataPopulationService;
 import cn.rongcapital.mkt.service.testbase.AbstractUnitTest;
@@ -59,6 +61,11 @@ public class DataPopulationServiceTest extends AbstractUnitTest {
 	
 	private String format = "yyyy-MM-dd HH:mm:ss";
 	
+    private Map<String, ProvinceDic> provinceDicMap = new HashMap<String, ProvinceDic>();
+    
+    private Map<String, CityDic> cityDicMap = new HashMap<String, CityDic>();
+ 
+	
     @Before  
     public void setUp() throws Exception {
         logger.info("测试：DataMainRadarInfoGetService 准备---------------------");
@@ -95,7 +102,32 @@ public class DataPopulationServiceTest extends AbstractUnitTest {
         wechatMember.setActiveTime(null);
         wechatMember.setBirthday(null);
         wechatMembers.add(wechatMember);
-        dataPopulationService = new DataPopulationServiceImpl();       
+                
+    	/**
+    	 * 注入省的编码
+    	 */
+        ProvinceDic provinceDic = new ProvinceDic();        
+        provinceDic.setProvinceNamee("Beijing");
+        provinceDic.setProvinceNamec("北京市");        
+        provinceDicMap.put(provinceDic.getProvinceNamee(), provinceDic);
+        provinceDic = new ProvinceDic();
+        provinceDic.setProvinceNamee("Hunan");
+        provinceDic.setProvinceNamec("湖南省");        
+        provinceDicMap.put(provinceDic.getProvinceNamee(), provinceDic);
+    	
+    	/**
+    	 * 
+    	 */
+        CityDic cityDic = new CityDic();
+        cityDic.setCityNamee("");
+        cityDic.setCityNamec("北京市");
+        cityDicMap.put(cityDic.getCityNamee(), cityDic);
+        cityDic = new CityDic();
+        cityDic.setCityNamee("Changsha");
+        cityDic.setCityNamec("长沙市");
+        cityDicMap.put(cityDic.getCityNamee(), cityDic);
+        
+        dataPopulationService = new DataPopulationServiceImpl();
         // 把mock的dao set进入service
         ReflectionTestUtils.setField(dataPopulationService, "wechatMemberDao", wechatMemberDao);
         ReflectionTestUtils.setField(dataPopulationService, "dataPopulationDao", dataPopulationDao);
@@ -106,6 +138,21 @@ public class DataPopulationServiceTest extends AbstractUnitTest {
     @Test
     public void synchronizeMemberToDataPopulationAndUpdateMemberTest(){    	
     	dataPopulationService.synchronizeMemberToDataPopulationAndUpdateMember(wechatMembers);
+    }
+    
+    @Test
+    public void synchronizeMemberToDataPopulationAndUpdateMember1Test(){
+    	dataPopulationService.synchronizeMemberToDataPopulationAndUpdateMember(wechatMembers, provinceDicMap, cityDicMap);    	
+    }
+    
+    @Test
+    public void synchronizeMemberToDataPopulationTest(){
+    	dataPopulationService.synchronizeMemberToDataPopulation(wechatMembers);    	
+    }
+    
+    @Test
+    public void synchronizeMemberToDataPopulation1Test(){
+    	dataPopulationService.synchronizeMemberToDataPopulation(wechatMembers, provinceDicMap, cityDicMap);
     }
     
 }
