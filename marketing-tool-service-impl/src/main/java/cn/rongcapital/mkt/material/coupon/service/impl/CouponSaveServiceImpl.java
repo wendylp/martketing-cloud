@@ -72,7 +72,7 @@ public class CouponSaveServiceImpl implements CouponSaveService {
         Long id = couponInfo.getId();
         String title = couponInfo.getTitle();
         String SourceCode = couponInfo.getSource_code();
-        String user_token = couponInfo.getUserToken();
+        String userId = couponInfo.getUserId();
         if(!("common".equals(SourceCode) || "generate".equals(SourceCode) || "own".equals(SourceCode))){
             baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
             baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
@@ -99,7 +99,7 @@ public class CouponSaveServiceImpl implements CouponSaveService {
         json.put("rule", rule);
         json.put("source_code", SourceCode);
         json.put("stock_total", stock_total);
-        json.put("user_token", user_token);
+        json.put("user_id", userId);
         if (id == null) {
             json.put("edit", false);
             MaterialCoupon coupon = new MaterialCoupon();
