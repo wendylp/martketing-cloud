@@ -51,6 +51,7 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralSe
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralService;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
+import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponCodeVerifyIn;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
@@ -355,16 +356,11 @@ public class CouponApi {
      * @author xie.xiaoliang
      * @since 2016年12月9日
      */
-    @GET
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON })
     @Path("/mkt.material.coupon.verify")
-    public BaseOutput materialCouponCodeVerify(
-            @NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, 
-            @NotNull  @QueryParam("id") Long id,
-            @NotEmpty @QueryParam("coupon_code") String couponCode,
-            @NotEmpty @QueryParam("user") String user) throws Exception {
-
-        return materialCouponCodeCheckService.materialCouponCodeVerify(id, couponCode, user);
+    public BaseOutput materialCouponCodeVerify(@Valid MaterialCouponCodeVerifyIn in) throws Exception {
+        return materialCouponCodeCheckService.materialCouponCodeVerify(in.getId(), in.getCoupon_code(), in.getUser());
     }
     
 	/**
