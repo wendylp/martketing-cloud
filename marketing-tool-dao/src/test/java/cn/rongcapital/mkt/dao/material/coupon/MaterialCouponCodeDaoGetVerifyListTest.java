@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponReadyStatusType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
@@ -65,6 +66,7 @@ public class MaterialCouponCodeDaoGetVerifyListTest extends AbstractUnitTest {
         coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
         coupon.setTitle(UUID.randomUUID().toString());
         coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
+        coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
         coupon.setStatus(Byte.valueOf("0"));
         coupon.setStockRest(2);
         coupon.setStockTotal(2);

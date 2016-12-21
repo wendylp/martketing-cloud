@@ -382,4 +382,9 @@ public class ApiConstant {
     public static final String WEIXIN_TEST_APPID = "wx570bc396a51b8ff8";
     
     public static final String WEIXIN_AUDIENCE_SOURCE = "微信人群";
+    
+    /**
+     * SQL like ESCAPE CHAR
+     */
+    public static final String SQL_ESCAPE_CHARACTER = "|";
 }

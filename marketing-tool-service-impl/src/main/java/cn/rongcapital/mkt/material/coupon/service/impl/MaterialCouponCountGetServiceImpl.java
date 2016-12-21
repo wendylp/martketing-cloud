@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
+import cn.rongcapital.mkt.common.util.SqlConvertUtils;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCountGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -47,7 +48,7 @@ public class MaterialCouponCountGetServiceImpl implements MaterialCouponCountGet
 
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("chanelCode", chanelCode);
-        paramMap.put("title", keyword);
+        paramMap.put("title", SqlConvertUtils.escapeSQLCharacter(keyword));
 
         // 未投放数量
         paramMap.put("couponStatus", MaterialCouponStatusEnum.UNUSED.getCode());
