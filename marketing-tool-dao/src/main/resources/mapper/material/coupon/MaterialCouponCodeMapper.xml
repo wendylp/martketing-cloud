@@ -190,7 +190,7 @@
 		<![CDATA[ WHERE t1.id = #{id} AND t1.status = 0 AND t2.status = 0]]>
     	<if test="user != null and user != ''">
     		<bind name="userlike" value="'%'+user+'%'"/>
-	    	<![CDATA[ AND t2.user like #{userlike} ESCAPE '${@cn.rongcapital.mkt.common.constant.ApiConstant@SQL_ESCAPE_CHARACTER}']]>
+	    	<![CDATA[ AND t2.user like #{userlike}]]>
     	</if>
     	<if test="releaseStatus != null and releaseStatus != ''"><![CDATA[ AND t2.release_status = #{releaseStatus}]]></if>
     	<if test="verifyStatus != null and verifyStatus != ''"><![CDATA[ AND t2.verify_status = #{verifyStatus}]]></if>
@@ -209,7 +209,7 @@
 		<![CDATA[ WHERE t1.id = #{id} AND t1.status = 0 AND t2.status = 0]]>
     	<if test="user != null and user != ''">
     		<bind name="userlike" value="'%'+user+'%'"/>
-	    	<![CDATA[ AND t2.user like #{userlike} ESCAPE '${@cn.rongcapital.mkt.common.constant.ApiConstant@SQL_ESCAPE_CHARACTER}']]>
+	    	<![CDATA[ AND t2.user like #{userlike}]]>
     	</if>
     	<if test="releaseStatus != null and releaseStatus != ''"><![CDATA[ AND t2.release_status = #{releaseStatus}]]></if>
     	<if test="verifyStatus != null and verifyStatus != ''"><![CDATA[ AND t2.verify_status = #{verifyStatus}]]></if>

@@ -388,5 +388,5 @@ public class ApiConstant {
     /**
      * SQL like ESCAPE CHAR
      */
-    public static final String SQL_ESCAPE_CHARACTER = "|";
+    public static final String SQL_ESCAPE_CHARACTER = "\\";
 }
