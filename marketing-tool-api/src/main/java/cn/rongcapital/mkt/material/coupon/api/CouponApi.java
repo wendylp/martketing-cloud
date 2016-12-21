@@ -297,12 +297,13 @@ public class CouponApi {
     @Path("/mkt.material.coupon.verify.list")
     @Consumes({MediaType.APPLICATION_JSON})
     public BaseOutput listMaterialCouponCodeVerfy(@NotEmpty @QueryParam("user_token") String userToken,
-                    @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id,
-                    @QueryParam("blur_search") String blurSearch, @QueryParam("receive_status") String receiveStatus,
-                    @QueryParam("verify_status") String verifyStatus, @QueryParam("expire_status") String expireStatus,
-                    @QueryParam("index") Integer index, @QueryParam("size") Integer size) {
+            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id,
+            @QueryParam("blur_search") String blurSearch, @QueryParam("receive_status") String receiveStatus,
+            @QueryParam("verify_status") String verifyStatus, @QueryParam("expire_status") String expireStatus,
+            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
         return materialCouponCodeVerifyListService.listMaterialCouponCodeVerfy(id, blurSearch, receiveStatus,
-                        verifyStatus, expireStatus, index, size);
+                verifyStatus, expireStatus, index, size);
     }
 
     /**
