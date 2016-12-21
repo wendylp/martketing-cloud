@@ -20,7 +20,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import cn.rongcapital.mkt.file.FileStorageService;
 
 @Service
@@ -36,15 +35,15 @@ public class FileStorageServiceImpl implements FileStorageService{
 
         if (fileByte == null) {
             logger.error("save file, file is not exist");
-            throw new ValidationException("save file, file is not exist");
+            throw new IllegalArgumentException("save file, file is not exist");
         }
         if (StringUtils.isBlank(fileName)) {
             logger.error("save file, fileName is null");
-            throw new ValidationException("save file, fileName is null");
+            throw new IllegalArgumentException("save file, fileName is null");
         }
         if (StringUtils.isBlank(key)) {
             logger.error("save file, key is null");
-            throw new ValidationException("save file, key is null");
+            throw new IllegalArgumentException("save file, key is null");
         }
 
         String fileUrl = key + SLASH + fileName;
@@ -70,7 +69,7 @@ public class FileStorageServiceImpl implements FileStorageService{
             fop.flush();
         } catch (IOException e) {
             logger.error("parse file failed, fileUrl: {}, error: {}", fileUrl, e.getMessage(), e);
-            throw new IOException(e.getMessage());
+            throw e;
         } finally {
             try {
                 if(fop != null){
@@ -78,7 +77,6 @@ public class FileStorageServiceImpl implements FileStorageService{
                 }
             } catch (IOException e) {
                 logger.error("parse file, IO close failed, fileUrl: {}, error: {}", fileUrl, e.getMessage(), e);
-                throw new IOException(e.getMessage());
             }
         }
     }
@@ -88,11 +86,11 @@ public class FileStorageServiceImpl implements FileStorageService{
 
         if (StringUtils.isBlank(fileName)) {
             logger.error("get file, fileName is null");
-            throw new ValidationException("get the file, fileName is null");
+            throw new IllegalArgumentException("get the file, fileName is null");
         }
         if (StringUtils.isBlank(key)) {
             logger.error("get file, key is null");
-            throw new ValidationException("get file, key is null");
+            throw new IllegalArgumentException("get file, key is null");
         }
 
         String filesUrl = key + SLASH + fileName;
@@ -105,10 +103,10 @@ public class FileStorageServiceImpl implements FileStorageService{
                 bytes = IOUtils.toByteArray(in);
             } catch (FileNotFoundException e) {
                 logger.error("get file failed, fileName: {}, error: {}", fileName, e.getMessage(), e);
-                throw new FileNotFoundException(e.getMessage());
+                throw e;
             } catch (IOException e) {
                 logger.error("get file IO failed, fileName: {}, error: {}", fileName, e.getMessage(), e);
-                throw new IOException(e.getMessage());
+                throw e;
             } finally {
                 try {
                     if(in != null){
@@ -116,7 +114,6 @@ public class FileStorageServiceImpl implements FileStorageService{
                     }
                 } catch (IOException e) {
                     logger.error("get the file IO close failed, fileName: {}, error: {}", fileName, e.getMessage(), e);
-                    throw new IOException(e.getMessage());
                 }
             }
         } else {
@@ -131,11 +128,11 @@ public class FileStorageServiceImpl implements FileStorageService{
 
         if (StringUtils.isBlank(fileName)) {
             logger.error("delete file, fileName is null");
-            throw new ValidationException("delete file, fileName is null");
+            throw new IllegalArgumentException("delete file, fileName is null");
         }
         if (StringUtils.isBlank(key)) {
             logger.error("delete the file, key is null");
-            throw new ValidationException("delete the file, key is null");
+            throw new IllegalArgumentException("delete the file, key is null");
         }
         String filesUrl = key + SLASH + fileName;
         File file = new File(filesUrl);
