@@ -123,7 +123,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 		try {
 
 			TagValueCount tagValueCount = new TagValueCount();
-			tagValueCount.setStartIndex(index - 1);
+			tagValueCount.setStartIndex((index - 1)*size);
 			tagValueCount.setPageSize(size);
 			tagValueCount.setIsTag("0");
 			tagValueCount.setTagId(tagId);
@@ -298,18 +298,23 @@ public class SystemTagServiceImpl implements SystemTagService {
 		List<TagRecommend> tagRecommendList = mongoTemplate.find(
 				Query.query(Criteria.where("update_flag").ne(2).and("status").is(ApiConstant.INT_ZERO)),
 				TagRecommend.class);
+		TagValueCount tagValueCount = new TagValueCount();
 		for (TagRecommend tagRecommend : tagRecommendList) {
 			String tagId = tagRecommend.getTagId();
+			tagValueCount.setTagId(tagId);
 			Integer countByTagId = segmentationBodyDao.getCountByTagId(tagId);
 			Update update = new Update();
 			if (countByTagId > 0) {
 				// 设置状态为不可编辑
 				update.set("update_flag", ApiConstant.INT_ZERO);
+				tagValueCount.setUpdateFlag(ApiConstant.INT_ZERO);
 			} else {
 				// 设置状态为可编辑
 				update.set("update_flag", ApiConstant.INT_ONE);
+				tagValueCount.setUpdateFlag(ApiConstant.INT_ONE);
 			}
 			mongoTemplate.findAndModify(Query.query(Criteria.where("tag_id").is(tagId)), update, TagRecommend.class);
+			tagValueCountDao.changeUpdateFlagByTagId(tagValueCount);
 		}
 	}
 
