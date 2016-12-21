@@ -241,6 +241,9 @@ public class MaterialCouponCodeCheckServiceImpl
         long result = 1L;
         for (int i = 0; i < typeLength; i++) {
             result = result * length;
+            if(result> MAX_COUNT){
+                return result;
+            }
         }
         return result;
     }
