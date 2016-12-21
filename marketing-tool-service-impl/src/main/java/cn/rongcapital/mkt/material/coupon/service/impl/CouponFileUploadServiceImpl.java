@@ -99,7 +99,6 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
             out.setRecord_count(num);
             // 上传文件到服务器
             String fileUrl = filePath + userId + SLASH + fileName;
-            out.setFile_path(fileUrl);
             String dirUrl = filePath + userId;
             writeFile(bytes, fileUrl, dirUrl);
             is.close();
