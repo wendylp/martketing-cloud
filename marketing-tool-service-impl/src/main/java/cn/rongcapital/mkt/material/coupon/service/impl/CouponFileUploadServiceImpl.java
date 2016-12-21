@@ -14,12 +14,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -29,8 +34,11 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
+import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.UploadFileOut;
 
@@ -134,5 +142,17 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
         fop.write(content);
         fop.flush();
         fop.close();
+    }
+
+    @Override
+    public Object getCouponFileUploadUrlGet(String userId) {
+        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),1,null);
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("user_id",userId);
+        map.put("file_url", ApiConstant.COUPON_FILE_UPLOAD_URL);
+        baseOutput.getData().add(map);
+        baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+        baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+        return Response.ok().entity(baseOutput).build();
     }
 }

@@ -43,8 +43,8 @@ public class MaterialCouponInfoIn extends BaseInput{
     @JsonProperty("end_time")
     private Date end_time;
     @NotBlank
-    @JsonProperty("user_token")
-    private String userToken;
+    @JsonProperty("user_id")
+    private String userId;
     
     public Long getId() {
         return id;
@@ -118,11 +118,12 @@ public class MaterialCouponInfoIn extends BaseInput{
         this.end_time = end_time;
     }
 
-    public String getUserToken() {
-        return userToken;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserToken(String userToken) {
-        this.userToken = userToken;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
+
 }

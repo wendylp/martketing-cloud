@@ -76,7 +76,7 @@ public class CouponCodeSaveTaskImpl implements TaskService{
             Date now = new Date();
             JSONObject jsonObject = JSONObject.parseObject(taskHeadIdStr);
             String SourceCode = jsonObject.getString("source_code");
-            String user_token = jsonObject.getString("user_token");
+            String userId = jsonObject.getString("user_id");
             String rule = jsonObject.getString("rule");
             Integer stock_total = jsonObject.getInteger("stock_total");
             Long couponId = jsonObject.getLong("coupon_id");
@@ -96,7 +96,7 @@ public class CouponCodeSaveTaskImpl implements TaskService{
             } else {
                 // //自有码
                 JSONArray rules = JSONArray.parseArray(rule);
-                getOwnCode(getNameList(rules), user_token, couponId, list, now);
+                getOwnCode(getNameList(rules), userId, couponId, list, now);
             }
             int totleSize = list.size();
             if (totleSize > 0) {
