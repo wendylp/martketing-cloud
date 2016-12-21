@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.SqlConvertUtils;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeVerifyListService;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponCodeVerifyListOut;
@@ -40,7 +41,7 @@ public class MaterialCouponCodeVerifyListServiceImpl implements MaterialCouponCo
                     String verifyStatus, String expireStatus, Integer index, Integer size) {
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("id", id);
-        paramMap.put("user", blurSearch);
+        paramMap.put("user", SqlConvertUtils.escapeSQLCharacter(blurSearch));
         paramMap.put("releaseStatus", receiveStatus);
         paramMap.put("verifyStatus", verifyStatus);
         if (StringUtils.isNotBlank(expireStatus)) {
