@@ -176,8 +176,8 @@ public class CouponApi {
     @Path("/mkt.materiel.coupon.file.upload")
     @Consumes("multipart/form-data")
     public BaseOutput fileUpload(@NotEmpty @QueryParam("user_token") String userToken,
-                                      @NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
-        return couponFileUploadService.uploadFile(input, userId);
+                                      @NotEmpty @QueryParam("ver") String ver, MultipartFormDataInput input){
+        return couponFileUploadService.uploadFile(input, userToken);
     }
     /**
      * 获取券码投放流失概览数据
