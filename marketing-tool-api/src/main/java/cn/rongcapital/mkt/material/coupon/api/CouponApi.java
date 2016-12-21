@@ -167,6 +167,7 @@ public class CouponApi {
     
     
     /**
+     * @author guozhenchao
      * @功能简述: 获取文件上传url
      * @param: String
      *      userToken, String ver,String user_id
