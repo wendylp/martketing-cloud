@@ -21,8 +21,8 @@ import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.CouponSaveService;
+import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponInfoIn;
 import cn.rongcapital.mkt.service.MQTopicService;
-import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CouponSaveServiceTest {
@@ -69,7 +69,7 @@ public class CouponSaveServiceTest {
         ReflectionTestUtils.setField(couponSaveService, "materialCouponDao", materialCouponDao);
         ReflectionTestUtils.setField(couponSaveService, "materialCouponCodeDao", materialCouponCodeDao);
         ReflectionTestUtils.setField(couponSaveService, "mqTopicService", mqTopicService);
-        CouponInfoIn in =new CouponInfoIn();
+        MaterialCouponInfoIn in =new MaterialCouponInfoIn();
         in.setAmount(new BigDecimal(5));
         in.setRule("{\"type_code\":\"mixed\",\"length\":5}");
         in.setTitle("新MC优惠券");
@@ -79,7 +79,7 @@ public class CouponSaveServiceTest {
         in.setStart_time(now);
         in.setEnd_time(now);
         in.setChannel_code("sms");
-        couponSaveService.save(in, "1");
+        couponSaveService.save(in);
     }
 
 }

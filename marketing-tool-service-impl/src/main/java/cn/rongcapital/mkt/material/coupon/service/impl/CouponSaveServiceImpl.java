@@ -36,10 +36,10 @@ import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.CouponSaveService;
+import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponInfoIn;
 import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
@@ -64,7 +64,7 @@ public class CouponSaveServiceImpl implements CouponSaveService {
     
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public BaseOutput save(CouponInfoIn couponInfo, String user_token) {
+    public BaseOutput save(MaterialCouponInfoIn couponInfo) {
         JSONObject json = new JSONObject();
         BaseOutput baseOutput =
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
@@ -72,6 +72,7 @@ public class CouponSaveServiceImpl implements CouponSaveService {
         Long id = couponInfo.getId();
         String title = couponInfo.getTitle();
         String SourceCode = couponInfo.getSource_code();
+        String user_token = couponInfo.getUserToken();
         if(!("common".equals(SourceCode) || "generate".equals(SourceCode) || "own".equals(SourceCode))){
             baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
             baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());

@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.vo.in;
+package cn.rongcapital.mkt.material.coupon.vo.in;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -9,11 +9,13 @@ import javax.validation.constraints.Min;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import cn.rongcapital.mkt.vo.BaseInput;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class CouponInfoIn {
+public class MaterialCouponInfoIn extends BaseInput{
 
     @JsonProperty("id")
     private Long id;
@@ -40,7 +42,10 @@ public class CouponInfoIn {
     @NotNull
     @JsonProperty("end_time")
     private Date end_time;
-
+    @NotEmpty
+    @JsonProperty("user_token")
+    private String userToken;
+    
     public Long getId() {
         return id;
     }
@@ -112,5 +117,12 @@ public class CouponInfoIn {
     public void setEnd_time(Date end_time) {
         this.end_time = end_time;
     }
-    
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
+    }
 }
