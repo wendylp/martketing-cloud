@@ -7,44 +7,44 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.sun.istack.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class MaterialCouponInfoIn extends BaseInput{
 
     @JsonProperty("id")
     private Long id;
-    @NotEmpty
+    @NotBlank
     @JsonProperty("title")
     private String title;
-    @NotEmpty
+    @NotBlank
     @JsonProperty("source_code")
     private String source_code;
     @JsonProperty("rule")
     private String rule;
-    @NotNull
+    @NotEmpty
     @JsonProperty("stock_total")
     @Min(0) @Max(1000000)
     private Integer stock_total;
-    @NotNull
+    @NotEmpty
     @JsonProperty("amount")
     private BigDecimal amount;
     @JsonProperty("channel_code")
     private String channel_code;
-    @NotNull
+    @NotEmpty
     @JsonProperty("start_time")
     private Date start_time;
-    @NotNull
+    @NotEmpty
     @JsonProperty("end_time")
     private Date end_time;
-    @NotEmpty
-    @JsonProperty("user_token")
-    private String userToken;
+    @NotBlank
+    @JsonProperty("user_id")
+    private String userId;
     
     public Long getId() {
         return id;
@@ -118,11 +118,12 @@ public class MaterialCouponInfoIn extends BaseInput{
         this.end_time = end_time;
     }
 
-    public String getUserToken() {
-        return userToken;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserToken(String userToken) {
-        this.userToken = userToken;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
+
 }
