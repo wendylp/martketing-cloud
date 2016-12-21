@@ -9,7 +9,7 @@ package cn.rongcapital.mkt.common.enums;
 
 public enum MaterialCouponCodeMaxTypeEnum {
 
-    LETTER("letter", "字母"), NUMBER("number", "数字"), MIXTURE("mixture", "字母和数字");
+    ALPHA("alpha", "字母"), NUMBER("number", "数字"), MIXED("mixed", "字母和数字");
 
     private String code = "";
     private String description = "";

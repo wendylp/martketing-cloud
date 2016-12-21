@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.vo.in;
 
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -13,6 +15,8 @@ public class TagCustomTaxonomyRootSaveIn extends BaseInput {
     private String tagTreeId;
     @NotEmpty
     private String tagTreeName;
+    
+    private List<TagCustomTaxonomySaveChildrenIn> children;
 
     @JsonProperty("tag_tree_id")
     public String getTagTreeId() {
@@ -30,6 +34,15 @@ public class TagCustomTaxonomyRootSaveIn extends BaseInput {
 
     public void setTagTreeName(String tagTreeName) {
         this.tagTreeName = tagTreeName;
+    }
+
+    @JsonProperty("children")
+    public List<TagCustomTaxonomySaveChildrenIn> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<TagCustomTaxonomySaveChildrenIn> children) {
+        this.children = children;
     }
 
 
