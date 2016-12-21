@@ -7,42 +7,43 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.sun.istack.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class MaterialCouponInfoIn extends BaseInput{
 
     @JsonProperty("id")
     private Long id;
-    @NotBlank
+    @NotEmpty
     @JsonProperty("title")
     private String title;
-    @NotBlank
+    @NotEmpty
     @JsonProperty("source_code")
     private String source_code;
     @JsonProperty("rule")
     private String rule;
-    @NotEmpty
+    @NotNull
     @JsonProperty("stock_total")
     @Min(0) @Max(1000000)
     private Integer stock_total;
-    @NotEmpty
+    @NotNull
     @JsonProperty("amount")
     private BigDecimal amount;
+    @NotEmpty
     @JsonProperty("channel_code")
     private String channel_code;
-    @NotEmpty
+    @NotNull
     @JsonProperty("start_time")
     private Date start_time;
-    @NotEmpty
+    @NotNull
     @JsonProperty("end_time")
     private Date end_time;
-    @NotBlank
+    @NotEmpty
     @JsonProperty("user_id")
     private String userId;
     
