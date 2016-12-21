@@ -168,5 +168,12 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return
 	 */
 	int deleteWechatMembersByIdsAndPubId(Map<String, Object> paramMap);
+	
+	/**
+	 * 
+	 * @param idLists
+	 * @return
+	 */
+	List<WechatMember> selectListByIdListNoSelected(List<Long> idLists);
 		
 }

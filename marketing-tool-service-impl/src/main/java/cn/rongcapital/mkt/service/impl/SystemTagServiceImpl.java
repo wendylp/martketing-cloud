@@ -92,25 +92,29 @@ public class SystemTagServiceImpl implements SystemTagService {
 		}
 
 		if (pageSourceType != null && pageSourceType == 1) {
-			filterTagCoverNonData(output);
+			List<Object> filteredList = new LinkedList<>();
+			filterTagCoverNonData(output,filteredList);
 		}
 		return output;
 	}
 
-	private void filterTagCoverNonData(BaseOutput output) {
+	private void filterTagCoverNonData(BaseOutput output,List<Object> filteredList) {
 		if (output == null)
 			return;
 		if (CollectionUtils.isNotEmpty(output.getData())) {
-			List<Object> filteredList = new LinkedList<>();
 			for (Object object : output.getData()) {
-				if (object instanceof TagSystemTreeTagOut) {
-					if (commonUtilService.isTagCoverData(((TagSystemTreeTagOut) object).getTagId())) {
-						filteredList.add(object);
+				if(object instanceof List){
+					for(Object obj : (List)object)
+					if (obj instanceof TagSystemTreeTagOut) {
+						if (commonUtilService.isTagCoverData(((TagSystemTreeTagOut) obj).getTagId())) {
+							filteredList.add(obj);
+						}
 					}
 				}
 			}
-			output.setData(filteredList);
 		}
+		output.getData().clear();
+		output.getData().add(filteredList);
 	}
 
 	@Override

@@ -171,6 +171,17 @@
 		</foreach>
 	</select>
 
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdListNoSelected" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.WechatMember">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE selected=0 and id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
 	<!-- 查询,通过条件 -->
 	<select id="selectList" parameterType="cn.rongcapital.mkt.po.WechatMember" resultType="cn.rongcapital.mkt.po.WechatMember">
 		<![CDATA[SELECT]]>

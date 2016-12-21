@@ -86,11 +86,11 @@ public class CouponCodeSaveTaskImpl implements TaskService{
                 // 编辑
                 materialCouponCodeDao.deleteCodeByCouponId(couponId);
             }
-            if (SourceCode.equals(CouponCodeType.UNIVERSALCODE.getCode())) {
+            if (SourceCode.equals(CouponCodeType.COMMON.getCode())) {
                 // 通用码
                 JSONObject ruleObject = JSONObject.parseObject(rule);
                 getUniversalCode(ruleObject, stock_total, couponId, list, now);
-            } else if (SourceCode.equals(CouponCodeType.GENERATIONCODE.getCode())) {
+            } else if (SourceCode.equals(CouponCodeType.GENERATE.getCode())) {
                 JSONObject ruleObject = JSONObject.parseObject(rule);
                 getGenerationCode(ruleObject, stock_total, couponId, list, now);
             } else {

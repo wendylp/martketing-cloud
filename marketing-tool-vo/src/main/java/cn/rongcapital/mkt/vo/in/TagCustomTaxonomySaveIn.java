@@ -11,10 +11,8 @@ import cn.rongcapital.mkt.vo.BaseInput;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TagCustomTaxonomySaveIn extends BaseInput {
 
-
-    private String tagTreeId;
     @NotEmpty
-    private String tagTreeName;
+    private String tagTreeId;
     private List<TagCustomTaxonomySaveChildrenIn> children;
     private List<TagCustomTaxonomySaveChildrenTagIn> childrenTag;
 
@@ -25,15 +23,6 @@ public class TagCustomTaxonomySaveIn extends BaseInput {
 
     public void setTagTreeId(String tagTreeId) {
         this.tagTreeId = tagTreeId;
-    }
-
-    @JsonProperty("tag_tree_name")
-    public String getTagTreeName() {
-        return tagTreeName;
-    }
-
-    public void setTagTreeName(String tagTreeName) {
-        this.tagTreeName = tagTreeName;
     }
 
     @JsonProperty("children")

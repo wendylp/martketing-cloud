@@ -52,11 +52,11 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralSer
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponCodeVerifyIn;
+import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponInfoIn;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -176,8 +176,8 @@ public class CouponApi {
     @Path("/mkt.materiel.coupon.file.upload")
     @Consumes("multipart/form-data")
     public BaseOutput fileUpload(@NotEmpty @QueryParam("user_token") String userToken,
-                                      @NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
-        return couponFileUploadService.uploadFile(input, userId);
+                                      @NotEmpty @QueryParam("ver") String ver, MultipartFormDataInput input){
+        return couponFileUploadService.uploadFile(input, userToken);
     }
     /**
      * 获取券码投放流失概览数据
@@ -339,9 +339,8 @@ public class CouponApi {
     @POST
     @Path("/mkt.materiel.coupon.save")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public BaseOutput couponSave(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @Valid CouponInfoIn couponInfo){
-        return couponSaveService.save(couponInfo, userToken);
+    public BaseOutput couponSave(@Valid MaterialCouponInfoIn couponInfo){
+        return couponSaveService.save(couponInfo);
     }
     
     /**
