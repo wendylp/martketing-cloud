@@ -14,43 +14,44 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import javax.xml.bind.ValidationException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.file.FileStorageService;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService{
 
-    @Value("${uploaded.file.path}")
-    private String filePath;
     
     public final static String SLASH = File.separator;
     
     private final static Logger logger = LoggerFactory.getLogger(FileStorageServiceImpl.class);
     
     @Override
-    public void save(byte[] fileByte, String fileName, String key) {
+    public void save(byte[] fileByte, String fileName, String key) throws ValidationException, IOException {
 
         if (fileByte == null) {
-            logger.error("save the file, file is not exist");
+            logger.error("save file, file is not exist");
+            throw new IllegalArgumentException("save file, file is not exist");
         }
         if (StringUtils.isBlank(fileName)) {
-            logger.error("save the file, fileName is null");
+            logger.error("save file, fileName is null");
+            throw new IllegalArgumentException("save file, fileName is null");
         }
         if (StringUtils.isBlank(key)) {
-            logger.error("save the file, key is null");
+            logger.error("save file, key is null");
+            throw new IllegalArgumentException("save file, key is null");
         }
 
-        String fileUrl = filePath + key + SLASH + fileName;
-        String dirUrl = filePath + key;
+        String fileUrl = key + SLASH + fileName;
+        String dirUrl = key;
         writeFile(fileByte, fileUrl, dirUrl);
     }
     
-    private void writeFile(byte[] content, String fileUrl, String dirUrl) {
+    private void writeFile(byte[] content, String fileUrl, String dirUrl) throws IOException {
         File file = new File(fileUrl);
         File dirfile = new File(dirUrl);
         FileOutputStream fop = null;
@@ -67,27 +68,32 @@ public class FileStorageServiceImpl implements FileStorageService{
             fop.write(content);
             fop.flush();
         } catch (IOException e) {
-            logger.error("parse the file failed, fileUrl: {}, error: {}", fileUrl, e.getMessage(), e);
+            logger.error("parse file failed, fileUrl: {}, error: {}", fileUrl, e.getMessage(), e);
+            throw e;
         } finally {
             try {
-                fop.close();
+                if(fop != null){
+                    fop.close();
+                }
             } catch (IOException e) {
-                logger.error("parse the file, IO close failed, fileUrl: {}, error: {}", fileUrl, e.getMessage(), e);
+                logger.error("parse file, IO close failed, fileUrl: {}, error: {}", fileUrl, e.getMessage(), e);
             }
         }
     }
 
     @Override
-    public byte[] get(String fileName, String key) {
+    public byte[] get(String fileName, String key) throws IOException, ValidationException {
 
         if (StringUtils.isBlank(fileName)) {
-            logger.error("get the file, fileName is null");
+            logger.error("get file, fileName is null");
+            throw new IllegalArgumentException("get the file, fileName is null");
         }
         if (StringUtils.isBlank(key)) {
-            logger.error("get the file, key is null");
+            logger.error("get file, key is null");
+            throw new IllegalArgumentException("get file, key is null");
         }
 
-        String filesUrl = filePath + key + SLASH + fileName;
+        String filesUrl = key + SLASH + fileName;
         File file = new File(filesUrl);
         byte[] bytes = null;
         BufferedInputStream in = null;
@@ -96,38 +102,46 @@ public class FileStorageServiceImpl implements FileStorageService{
                 in = new BufferedInputStream(new FileInputStream(file));
                 bytes = IOUtils.toByteArray(in);
             } catch (FileNotFoundException e) {
-                logger.error("get the file failed, fileName: {}, error: {}", fileName, e.getMessage(), e);
+                logger.error("get file failed, fileName: {}, error: {}", fileName, e.getMessage(), e);
+                throw e;
             } catch (IOException e) {
-                logger.error("get the file IO failed, fileName: {}, error: {}", fileName, e.getMessage(), e);
+                logger.error("get file IO failed, fileName: {}, error: {}", fileName, e.getMessage(), e);
+                throw e;
             } finally {
                 try {
-                    in.close();
+                    if(in != null){
+                        in.close();
+                    }
                 } catch (IOException e) {
                     logger.error("get the file IO close failed, fileName: {}, error: {}", fileName, e.getMessage(), e);
                 }
             }
         } else {
-            logger.error("the file is not exist, fileName: {}", fileName);
+            logger.error("file is not exist, fileName: {}", fileName);
+            throw new FileNotFoundException("file is not exist");
         }
         return bytes;
     }
 
     @Override
-    public boolean delete(String fileName, String key) {
+    public boolean delete(String fileName, String key) throws ValidationException, FileNotFoundException {
 
         if (StringUtils.isBlank(fileName)) {
-            logger.error("delete the file, fileName is null");
+            logger.error("delete file, fileName is null");
+            throw new IllegalArgumentException("delete file, fileName is null");
         }
         if (StringUtils.isBlank(key)) {
             logger.error("delete the file, key is null");
+            throw new IllegalArgumentException("delete the file, key is null");
         }
-        String filesUrl = filePath + key + SLASH + fileName;
+        String filesUrl = key + SLASH + fileName;
         File file = new File(filesUrl);
         boolean flag = false;
         if (file.exists()) {
             flag = file.delete();
         } else {
             logger.error("delete the file, the file is not exist, fileName: {}", fileName);
+            throw new FileNotFoundException("delete the file, the file is not exist");
         }
         return flag;
     }

@@ -2,7 +2,7 @@ package cn.rongcapital.mkt.common.enums;
 
 public enum CouponCodeType {
 
-    UNIVERSALCODE("1", "通用码"), GENERATIONCODE("2", "平台生成码"), OWNCODE("3", "自有码");
+    COMMON("common", "通用码"), GENERATE("generate", "平台生成码"), OWN("own", "自有码");
 
 	private CouponCodeType(String code, String description) {
 		this.code = code;
