@@ -2,27 +2,24 @@ package cn.rongcapital.mkt.material.coupon.vo.in;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-
+import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
-
 import cn.rongcapital.mkt.vo.BaseInput;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.sun.istack.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class MaterialCouponInfoIn extends BaseInput{
 
     @JsonProperty("id")
     private Long id;
-    @NotEmpty
+    @NotBlank
     @JsonProperty("title")
     private String title;
-    @NotEmpty
+    @NotBlank
     @JsonProperty("source_code")
     private String source_code;
     @JsonProperty("rule")
@@ -34,7 +31,7 @@ public class MaterialCouponInfoIn extends BaseInput{
     @NotNull
     @JsonProperty("amount")
     private BigDecimal amount;
-    @NotEmpty
+    @NotBlank
     @JsonProperty("channel_code")
     private String channel_code;
     @NotNull
