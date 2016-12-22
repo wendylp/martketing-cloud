@@ -2,9 +2,12 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponStatusUpdateService;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponStatusUpdateVO;
 import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.service.SmsMaterialService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -44,6 +47,9 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
     @Autowired
     private SmsMaterialVariableMapDao smsMaterialVariableMapDao;
 
+    @Autowired
+    private MaterialCouponStatusUpdateService materialCouponStatusUpdateService;
+
     @Override
     public BaseOutput insertOrUpdateSmsMaterial(@NotEmpty SmsMaterialIn smsMaterialIn) {
         BaseOutput output = getNewSuccessBaseOutput();
@@ -69,11 +75,24 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
     private void modifySmsMaterialComponentAndVariable(@NotEmpty SmsMaterialIn smsMaterialIn, @NotNull Integer modifyType) {
         //0如果是修改,则删除以前的物料和变量数据
         if (modifyType.equals(MODIFY_TYPE_UPDATE)) {
+            //Todo:需要先把优惠券选出来,然后把原始的优惠券给释放掉
             SmsMaterialMaterielMap paramSmsMaterialMaterielMap = new SmsMaterialMaterielMap();
             paramSmsMaterialMaterielMap.setSmsMaterialId(Long.valueOf(smsMaterialIn.getId()));
             paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+            List<SmsMaterialMaterielMap> oldSmsMaterialMaterielMapList = smsMaterialMaterielMapDao.selectList(paramSmsMaterialMaterielMap);
+            if(CollectionUtils.isNotEmpty(oldSmsMaterialMaterielMapList)){
+                for(SmsMaterialMaterielMap smsMaterialMaterielMap : oldSmsMaterialMaterielMapList){
+                    MaterialCouponStatusUpdateVO paramMaterialCouponStatusUpdateVO = new MaterialCouponStatusUpdateVO();
+                    paramMaterialCouponStatusUpdateVO.setId(smsMaterialMaterielMap.getId());
+                    paramMaterialCouponStatusUpdateVO.setStatus(MaterialCouponStatusEnum.UNUSED.getCode());
+                    materialCouponStatusUpdateService.updateMaterialCouponStatus(paramMaterialCouponStatusUpdateVO);
+                }
+            }
+
+            //删除掉了优惠券的关联信息
             smsMaterialMaterielMapDao.deleteBySmsMaterialId(paramSmsMaterialMaterielMap);
 
+            //删除掉了变量的关联信息
             SmsMaterialVariableMap paramSmsMaterialVariableMap = new SmsMaterialVariableMap();
             paramSmsMaterialVariableMap.setSmsMaterialId(Long.valueOf(smsMaterialIn.getId()));
             paramSmsMaterialVariableMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
@@ -89,6 +108,12 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
                 insertSmsMaterialMaterielMap.setSmsMaterielType(smsMaterialMaterielIn.getMaterielType());
                 insertSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
                 smsMaterialMaterielMapDao.insert(insertSmsMaterialMaterielMap);
+
+                //Todo:更新优惠券的状态信息
+                MaterialCouponStatusUpdateVO paramMaterialCouponStatusUpdateVO = new MaterialCouponStatusUpdateVO();
+                paramMaterialCouponStatusUpdateVO.setId(smsMaterialMaterielIn.getMaterielId());
+                paramMaterialCouponStatusUpdateVO.setStatus(MaterialCouponStatusEnum.USED.getCode());
+                materialCouponStatusUpdateService.updateMaterialCouponStatus(paramMaterialCouponStatusUpdateVO);
             }
         }
 
