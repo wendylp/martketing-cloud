@@ -85,7 +85,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 		//String bitmap = dataPopulationLists.get(0).getBitmap();
 		//int keySize = getKeySizeByBitmap(bitmap);
 		
-		Set<String> bitmapList = new HashSet<String>();
+		List<String> bitmapList = getBitmaps(maxId);
 		
 		//拆分总总数据，分批同步
 		List<List<DataPopulation>> dataPopulationsList = ListSplit.getListSplit(dataPopulationLists, BATCH_SIZE);
@@ -103,7 +103,7 @@ public class DataPopulationToDataPartyImpl extends AbstractDataPartySyncService<
 	    				
     					if(!checkBitKey(dataObj)){
     						
-    						bitmapList.add(dataObj.getBitmap());
+    						//bitmapList.add(dataObj.getBitmap());
     						
     						createParty(dataObj);
     					}
