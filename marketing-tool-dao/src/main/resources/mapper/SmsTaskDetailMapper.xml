@@ -124,8 +124,8 @@
 			#{item.smsTaskHeadId},
 			#{item.receiveMobile},
 			#{item.sendMessage},
-			#{materielCouponCodeId},
-			#{materielCouponCodeCode},
+			#{item.materielCouponCodeId},
+			#{item.materielCouponCodeCode},
 			now(),
 			#{item.sendTime}
 			)
