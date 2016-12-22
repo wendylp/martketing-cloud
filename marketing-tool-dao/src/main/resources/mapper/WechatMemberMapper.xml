@@ -266,7 +266,6 @@
 	</select>
 
 	<select id="selectPeopleDetails" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.WechatMember">
-<!-- 		SELECT wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark -->		
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
