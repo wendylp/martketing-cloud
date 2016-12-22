@@ -85,7 +85,7 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
                 Iterator<Cell> dataCellIterator = row.cellIterator();
                 while (dataCellIterator.hasNext()) {
                     Cell dataColumnCell = dataCellIterator.next();
-                    if("1".equals(dataColumnCell.getCellType())){
+                    if(1 == dataColumnCell.getCellType()){
                         if(!StringUtils.isBlank(dataColumnCell.getStringCellValue())){
                             System.out.println(dataColumnCell.getStringCellValue());
                             num++;

@@ -81,18 +81,10 @@ public class SystemTagServiceImpl implements SystemTagService {
 
 		switch (navigateIndex) {
 		case ALL_TAG_FLAG:
-			output.getData().add(getTagSystemTreeTagOutList(null));
-			if (pageSourceType != null && pageSourceType == 1) {
-				List<Object> filteredList = new LinkedList<>();
-				filterTagCoverNonData(output,filteredList);
-			}
+			output.getData().add(getTagSystemTreeTagOutList(null,pageSourceType));
 			break;
 		case RECOMMEND_TAG_FLAG:
-			output.getData().add(getTagSystemTreeTagOutList(Query.query(Criteria.where("flag").is(true))));
-			if (pageSourceType != null && pageSourceType == 1) {
-				List<Object> filteredList = new LinkedList<>();
-				filterTagCoverNonData(output,filteredList);
-			}
+			output.getData().add(getTagSystemTreeTagOutList(Query.query(Criteria.where("flag").is(true)),pageSourceType));
 			break;
 		default:
 			output.getData().add(getTagTree(navigateIndex,pageSourceType));
@@ -108,7 +100,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 		if (CollectionUtils.isNotEmpty(output.getData())) {
 			for (Object object : output.getData()) {
 				if(object instanceof List){
-					for(Object obj : (List)object){
+					for(Object obj : (List<?>)object){
 						if (obj instanceof TagSystemTreeTagOut) {
 							if (commonUtilService.isTagCoverData(((TagSystemTreeTagOut) obj).getTagId())) {
 								filteredList.add(obj);
@@ -195,7 +187,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 	 *            查询条件
 	 * @return
 	 */
-	private List<TagSystemTreeTagOut> getTagSystemTreeTagOutList(Query query) {
+	private List<TagSystemTreeTagOut> getTagSystemTreeTagOutList(Query query,Integer pageSourceType) {
 		List<TagRecommend> tagRecommendList = mongoTemplate.find(query, TagRecommend.class);
 		// 返回结果
 		List<TagSystemTreeTagOut> resultList = new ArrayList<>();
@@ -204,7 +196,11 @@ public class SystemTagServiceImpl implements SystemTagService {
 			String tagName = tagRecommend.getTagName();
 			Boolean flag = tagRecommend.getFlag();
 			String tagCover = commonUtilService.getTagCover(tagId);
-			resultList.add(new TagSystemTreeTagOut(tagId, tagName, flag, tagCover));
+			if(pageSourceType != null && pageSourceType.equals(1) && !"0%".equals(tagCover)){
+				resultList.add(new TagSystemTreeTagOut(tagId, tagName, flag, tagCover));
+			}else if(pageSourceType == null || !pageSourceType.equals(1)){
+				resultList.add(new TagSystemTreeTagOut(tagId, tagName, flag, tagCover));
+			}
 		}
 		return resultList;
 	}
@@ -245,7 +241,8 @@ public class SystemTagServiceImpl implements SystemTagService {
 						String tagCover = commonUtilService.getTagCover(tagId);
 						TagSystemTreeTagOut tagOut = new TagSystemTreeTagOut(tagId, tag.getTagName(), tag.getFlag(),
 								tag.getTagList(), tagCover);
-						solveResultByPageSourceType(pageSourceType, tagTreeSecondOut, tagId, tagOut);
+						solveResultByPageSourceType(pageSourceType, tagTreeSecondOut, tagCover, tagOut);
+
 					}
 				}
 				tagTreeSecondOut.setIncludeCount(tagTreeSecondOut.getChildren().size());
@@ -258,12 +255,12 @@ public class SystemTagServiceImpl implements SystemTagService {
 		return resultList;
 	}
 
-	private void solveResultByPageSourceType(Integer pageSourceType, TagSystemTreeOut tagTreeSecondOut, String tagId, TagSystemTreeTagOut tagOut) {
-		if(pageSourceType != null && pageSourceType.equals(1) && commonUtilService.isTagCoverData(tagId)){
-            tagTreeSecondOut.getChildren().add(tagOut);
-        }else if(pageSourceType == null || !pageSourceType.equals(1)){
-            tagTreeSecondOut.getChildren().add(tagOut);
-        }
+	private void solveResultByPageSourceType(Integer pageSourceType, TagSystemTreeOut tagTreeSecondOut, String tagCover, TagSystemTreeTagOut tagOut) {
+		if(pageSourceType != null && pageSourceType.equals(1) && !"0%".equals(tagCover)){
+			tagTreeSecondOut.getChildren().add(tagOut);
+		}else if(pageSourceType == null || !pageSourceType.equals(1)){
+			tagTreeSecondOut.getChildren().add(tagOut);
+		}
 	}
 
 	@Override
@@ -283,7 +280,12 @@ public class SystemTagServiceImpl implements SystemTagService {
 			} else if (StringUtils.isEmpty(endValue)) {
 				tagList.add(">" + startValue);
 			} else {
-				tagList.add(startValue + "-" + endValue);
+				String str = startValue + "-" + endValue;
+				if(tagList.contains(str)){
+					output.setCode(ApiErrorCode.BIZ_ERROR.getCode());
+					return output;
+				}
+				tagList.add(str);
 			}
 		}
 		// 设置Mongo中标签的相关属性

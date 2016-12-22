@@ -319,8 +319,9 @@ public class MktSystemTagApi {
      */
     @GET
     @Path("/mkt.tag.custom.taxonomy.list.get")
-    public BaseOutput tagCustomTaxonomyListGet(@NotEmpty @QueryParam("tag_tree_id") String tagTreeId) {
-        return tagCustomTaxonomyListGetService.tagCustomTaxonomyListGet(tagTreeId);
+    public BaseOutput tagCustomTaxonomyListGet(@NotEmpty @QueryParam("tag_tree_id") String tagTreeId,
+                                               @QueryParam("page_source_type") Integer pageSourceType) {
+        return tagCustomTaxonomyListGetService.tagCustomTaxonomyListGet(tagTreeId,pageSourceType);
     }
 
     /**

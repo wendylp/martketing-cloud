@@ -85,7 +85,7 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 //		String bitmap = dataArchPointLists.get(0).getBitmap();
 //		int keySize = getKeySizeByBitmap(bitmap);
 		
-		List<String> bitmapList = getBitmaps(maxId);
+		Set<String> bitmapList = new HashSet<String>();
 		
 		List<List<DataArchPoint>> dataArchPointsList = ListSplit.getListSplit(dataArchPointLists, BATCH_SIZE);
 	    
@@ -101,7 +101,7 @@ public class DataArchPointToDataPartyImpl extends AbstractDataPartySyncService<I
 	    				
     					if(!checkBitKey(dataObj)){
     						
-    						//bitmapList.add(dataObj.getBitmap());
+    						bitmapList.add(dataObj.getBitmap());
     						
     						createParty(dataObj);
     					}

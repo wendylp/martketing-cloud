@@ -19,6 +19,7 @@ import com.alibaba.druid.support.json.JSONUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
@@ -51,12 +52,18 @@ public class MaterialCouponEditDetailServiceImpl implements MaterialCouponEditDe
                 ApiConstant.INT_ZERO, null);
 
         MaterialCoupon mcp = materialCouponDao.selectOneCoupon(id);
-
-        if (mcp != null && MaterialCouponStatusEnum.UNUSED.getCode().equals(mcp.getCouponStatus())) {
+       //20161222 删除掉非used 情况 
+        if (mcp != null) {
             List data = new ArrayList();
             CouPonEditInfoOut cpdi = new CouPonEditInfoOut();
             BeanUtils.copyProperties(mcp, cpdi);
-            cpdi.setRlObject(JSONUtils.parse(mcp.getRule()==null?"{}":mcp.getRule())); //JSON 字符串 转换成Object对象
+            // 20161222 适配文件上传own为自由码时 返回则是{}
+            if (MaterialCouponSourceCodeEnum.OWN.getCode().equals(mcp.getSourceCode())) {
+                cpdi.setRlObject(JSONUtils.parse("[]"));
+            } else {
+                cpdi.setRlObject(JSONUtils.parse(mcp.getRule() == null ? "{}" : mcp.getRule())); //json 转换 
+            }
+          
             cpdi.setAmount(mcp.getAmount()==null?0:mcp.getAmount().doubleValue());
             cpdi.setStartTime(mcp.getStartTime() == null ? 0 : mcp.getStartTime().getTime());
             cpdi.setEndTime(mcp.getEndTime() == null ? 0 : mcp.getEndTime().getTime());

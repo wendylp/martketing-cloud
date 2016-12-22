@@ -11,6 +11,7 @@ package cn.rongcapital.mkt.material.coupon.vo;
 import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -24,7 +25,7 @@ public class MaterialCouponCreateAudienceVO extends BaseInput{
     @JsonProperty("id")
     Long id;
     
-	@NotEmpty
+    @NotBlank
 	@JsonProperty("name")
     String name;
     

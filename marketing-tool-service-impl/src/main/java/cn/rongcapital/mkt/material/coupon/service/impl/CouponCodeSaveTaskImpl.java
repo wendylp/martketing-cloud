@@ -20,6 +20,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.eclipse.jetty.util.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeTypeEnum;
 import cn.rongcapital.mkt.common.regex.RegularValidation;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
+import cn.rongcapital.mkt.file.FileStorageService;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
@@ -64,6 +66,9 @@ public class CouponCodeSaveTaskImpl implements TaskService{
     
     @Autowired
     private MaterialCouponDao materialCouponDao;
+    
+    @Autowired
+    private FileStorageService fileStorageService;
     
     @Override
     public void task(Integer taskId) {
@@ -97,9 +102,16 @@ public class CouponCodeSaveTaskImpl implements TaskService{
             } else {
                 // //自有码
                 JSONArray rules = JSONArray.parseArray(rule);
-                getOwnCode(getNameList(rules), couponId, list, now);
+                List<String> nameList = getNameList(rules);
+                getOwnCode(nameList, couponId, list, now);
+                for(String name : nameList){
+                    String filesUrl = filePath + name;
+                    logger.info("delete file fileUrl is {}", filesUrl);
+                    fileStorageService.delete(filesUrl);
+                }
             }
             int totleSize = list.size();
+            logger.info("code size is {}", totleSize);
             if (totleSize > 0) {
                 int pageSize = 100000;
                 int num = totleSize / pageSize;
@@ -313,8 +325,12 @@ public class CouponCodeSaveTaskImpl implements TaskService{
                 } catch (Exception e) {
                     logger.error("CouponCodeSaveTaskImpl filesGetCode error", e);
                 }finally{
-                    in.close();
-                    is.close();
+                    if(in != null){
+                        in.close();
+                    }
+                    if(is != null){
+                        is.close();
+                    }
                 }
             }
             

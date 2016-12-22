@@ -13,5 +13,5 @@ public interface TagCustomTaxonomyListGetService {
      * @Date 2016.12.13
      * @author shuiyangyang
      */
-    public BaseOutput tagCustomTaxonomyListGet(String tagTreeId);
+    public BaseOutput tagCustomTaxonomyListGet(String tagTreeId,Integer pageSourceType);
 }
