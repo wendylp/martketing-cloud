@@ -29,7 +29,7 @@ public class TagCustomTaxonomyRootSaveServiceImpl implements TagCustomTaxonomyRo
     private static final int LEVEL_TWO = 2;
     private static final int DATA_VALID = 0;
     private static final int DATA_NOT_VALID = 1;
-    private static final long MAX_SHOW = 6;
+    private static final int TAG_CUSTOM_TAXONOMY_MAX_SHOW = ApiConstant.TAG_CUSTOM_TAXONOMY_MAX_SHOW;
     private static final Boolean IS_SHOW = true;
 
     @Autowired
@@ -96,7 +96,7 @@ public class TagCustomTaxonomyRootSaveServiceImpl implements TagCustomTaxonomyRo
     private Boolean isShow() {
         long count = mongoTemplate.count(new Query(new Criteria("isDeleted").is(DATA_VALID).and("is_show").is(true)),
                 SystemCustomTagTree.class);
-        return count < MAX_SHOW ? IS_SHOW : !IS_SHOW;
+        return count < TAG_CUSTOM_TAXONOMY_MAX_SHOW ? IS_SHOW : !IS_SHOW;
     }
     
     /**

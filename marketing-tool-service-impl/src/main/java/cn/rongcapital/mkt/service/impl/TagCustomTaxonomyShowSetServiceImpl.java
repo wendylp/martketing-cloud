@@ -30,7 +30,7 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
     private static final int LEVEL_ONE = 1;
     private static final Boolean IS_SHOW = true;
     private static final Boolean NOT_SHOW = false;
-    private static final int MAX_SIZE = 6;
+    private static final int TAG_CUSTOM_TAXONOMY_MAX_SHOW = ApiConstant.TAG_CUSTOM_TAXONOMY_MAX_SHOW;
     private static final int DATA_VALID = 0;
     private static final int DATA_NOT_VALID = 1;
     
@@ -67,7 +67,7 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
                 new Update().set("is_show", NOT_SHOW).set("update_time", new Date()), SystemCustomTagTree.class);
 
             int size = tagTreeIdLists.size();
-            size = size > MAX_SIZE ? MAX_SIZE : size;
+            size = size > TAG_CUSTOM_TAXONOMY_MAX_SHOW ? TAG_CUSTOM_TAXONOMY_MAX_SHOW : size;
 
             List<String> newTagTreeIdLists = new ArrayList<String>();
             for (int i = 0; i < size; i++) {
