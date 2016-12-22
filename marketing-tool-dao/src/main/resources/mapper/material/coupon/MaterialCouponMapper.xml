@@ -172,6 +172,7 @@
 		AND type = 'voucher'
 		AND channel_code = #{channelCode}
 		<if test="couponStatus != null"><![CDATA[AND coupon_status = #{couponStatus}]]></if>
+		<if test="endTime != null"><![CDATA[AND end_time >= #{endTime}]]></if>
 		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
 		ORDER BY create_time desc
 		LIMIT #{startIndex},#{pageSize}
@@ -185,6 +186,7 @@
 		AND type = 'voucher'
 		AND channel_code = #{channelCode}
 		<if test="couponStatus != null"><![CDATA[AND coupon_status = #{couponStatus}]]></if>
+		<if test="endTime != null"><![CDATA[AND end_time >= #{endTime}]]></if>
 		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
 	</select>
 

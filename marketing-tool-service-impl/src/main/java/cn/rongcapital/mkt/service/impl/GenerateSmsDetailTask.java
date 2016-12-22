@@ -6,8 +6,10 @@ import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.factory.CalcSmsTargetAudienceStrateyFactory;
 import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponEditDetailService;
@@ -16,9 +18,11 @@ import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.service.MQTopicService;
 
 import cn.rongcapital.mkt.vo.BaseOutput;
+import com.alibaba.druid.support.json.JSONUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -95,6 +99,9 @@ public class GenerateSmsDetailTask implements TaskService {
 
     @Autowired
     private AudienceCalcSmsTargetAudienceStrategy audienceCalcSmsTargetAudienceStrategy;
+
+    @Autowired
+    private MaterialCouponDao materialCouponDao;
 
     private Map<Integer,AbstractCalcSmsTargetAudienceStrategy> strategyMap = new HashMap<>();
 
@@ -249,8 +256,12 @@ public class GenerateSmsDetailTask implements TaskService {
             List<SmsMaterialMaterielMap> smsMaterialMaterielMapList = smsMaterialMaterielMapDao.selectList(paramSmsMaterialMaterielMap);
 
             //Todo:2.1查出这个素材对应的具体的优惠券信息
-            BaseOutput baseOutput = materialCouponEditDetailService.getCouponEditdes(smsMaterialMaterielMapList.get(0).getSmsMaterielId());
-            CouPonEditInfoOut couPonEditInfoOut = (CouPonEditInfoOut) baseOutput.getData().get(0);
+            MaterialCoupon mcp = materialCouponDao.selectOneCoupon(smsMaterialMaterielMapList.get(0).getSmsMaterielId());
+            CouPonEditInfoOut couPonEditInfoOut = new CouPonEditInfoOut();
+            BeanUtils.copyProperties(mcp, couPonEditInfoOut);
+            couPonEditInfoOut.setAmount(mcp.getAmount()==null?0:mcp.getAmount().doubleValue());
+            couPonEditInfoOut.setStartTime(mcp.getStartTime() == null ? 0 : mcp.getStartTime().getTime());
+            couPonEditInfoOut.setEndTime(mcp.getEndTime() == null ? 0 : mcp.getEndTime().getTime());
 
             //Todo:2.2创建一个方法传入变量名称和优惠券信息,返回该变量对应的值,需要增加物料类型在传入参数中,针对优惠码等特殊变量要传入额外字段,这块可以做成策略模式，方便日后做扩展
             //Todo:2查出对应的变量信息
@@ -299,7 +310,7 @@ public class GenerateSmsDetailTask implements TaskService {
                         String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
                         smsTaskDetail.setSendMessage(sendMessage);
                     }
-                    smsTaskDetail.setMaterielCouponCodeId(materialCouponCode.getCouponId());
+                    smsTaskDetail.setMaterielCouponCodeId(materialCouponCode.getId());
                     smsTaskDetail.setMaterielCouponCodeCode(materialCouponCode.getCode());
                     smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
                     smsTaskDetail.setSmsTaskHeadId(taskHeadId);

@@ -41,7 +41,7 @@ public class MaterialCouponCreateAudienceVO extends BaseInput{
 	@JsonProperty("expire_status")
     String expireStatus;
 	
-    @NotEmpty
+	@NotEmpty
     @JsonProperty("user_token")
     private String userToken = null;
     public MaterialCouponCreateAudienceVO(Long id, String name, String blurSearch, String releaseStatus,

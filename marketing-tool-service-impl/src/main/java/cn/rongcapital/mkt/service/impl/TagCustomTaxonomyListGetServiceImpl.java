@@ -26,12 +26,14 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
 
     private static final int DATA_VALID = 0;
     private static final int DATA_NOT_VALID = 1;
+    private static final Integer SEGMENT_PAGE_SOURCE = 1;
 
     @Autowired
     MongoTemplate mongoTemplate;
 
     @Autowired
     TagSystemCommonUtilService tagSystemCommonUtilService;
+
 
     /**
      * 功能描述：获得自定义分类子分类
@@ -44,7 +46,7 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
      * @author shuiyangyang
      */
     @Override
-    public BaseOutput tagCustomTaxonomyListGet(String tagTreeId) {
+    public BaseOutput tagCustomTaxonomyListGet(String tagTreeId,Integer pageSourceType) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ZERO, null);
 
@@ -56,7 +58,7 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
         if (systemCustomTagTree != null) {
             // 获取根标签分类的子标签分类
             List<TagSystemCustomTreeOut> TagSystemCustomTreeOutLists =
-                    getChildrenList(systemCustomTagTree.getChildren());
+                    getChildrenList(systemCustomTagTree.getChildren(),pageSourceType);
             if (TagSystemCustomTreeOutLists != null) {
                 result.getData().addAll(TagSystemCustomTreeOutLists);
                 result.setTotal(TagSystemCustomTreeOutLists.size());
@@ -73,7 +75,7 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
      * @Date 2016.12.13
      * @author shuiyangyang
      */
-    public List<TagSystemCustomTreeOut> getChildrenList(List<String> childrens) {
+    public List<TagSystemCustomTreeOut> getChildrenList(List<String> childrens,Integer pageSourceType) {
 
         if (CollectionUtils.isEmpty(childrens)) {
             return null;
@@ -92,11 +94,11 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
                                 systemCustomTagTree.getTagTreeName(), systemCustomTagTree.getLevel(), null, null, null);
                 // 设置标签输出
                 List<TagSystemTreeTagOut> childrenTagOutLists =
-                        generateTagOutByTagId(systemCustomTagTree.getChildrenTag());
+                        generateTagOutByTagId(systemCustomTagTree.getChildrenTag(),pageSourceType);
                 tagSystemCustomTreeOut.getChildrenTag().addAll(childrenTagOutLists);
                 Integer tagCount = childrenTagOutLists.size();
                 // 设置标签分类输出
-                List<TagSystemCustomTreeOut> outChildrenLists = getChildrenList(systemCustomTagTree.getChildren());
+                List<TagSystemCustomTreeOut> outChildrenLists = getChildrenList(systemCustomTagTree.getChildren(),pageSourceType);
                 if (outChildrenLists != null) {
                     tagSystemCustomTreeOut.getChildren().addAll(outChildrenLists);
 
@@ -159,7 +161,7 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
      * @Date 2016.12.13
      * @author shuiyangyang
      */
-    private List<TagSystemTreeTagOut> generateTagOutByTagId(List<String> tagIdLists) {
+    private List<TagSystemTreeTagOut> generateTagOutByTagId(List<String> tagIdLists,Integer pageSourceType) {
 
         List<TagSystemTreeTagOut> tagOutLists = new ArrayList<TagSystemTreeTagOut>();
 
@@ -171,7 +173,11 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
                     TagSystemTreeTagOut tagSystemTreeTagOut = new TagSystemTreeTagOut(tagRecommend.getTagId(),
                             tagRecommend.getTagName(), tagRecommend.getFlag(), tagRecommend.getTagNameEng(),
                             tagRecommend.getSearchMod(), tagCover, tagRecommend.getTagDesc());
-                    tagOutLists.add(tagSystemTreeTagOut);
+                    if(pageSourceType!=null && pageSourceType==SEGMENT_PAGE_SOURCE && !"0%".equals(tagCover)){
+                        tagOutLists.add(tagSystemTreeTagOut);
+                    }else if(pageSourceType == null || !pageSourceType.equals(1)){
+                        tagOutLists.add(tagSystemTreeTagOut);
+                    }
                 }
             }
         }
