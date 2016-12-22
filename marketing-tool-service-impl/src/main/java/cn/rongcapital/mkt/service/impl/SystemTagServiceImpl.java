@@ -108,7 +108,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 		if (CollectionUtils.isNotEmpty(output.getData())) {
 			for (Object object : output.getData()) {
 				if(object instanceof List){
-					for(Object obj : (List)object){
+					for(Object obj : (List<?>)object){
 						if (obj instanceof TagSystemTreeTagOut) {
 							if (commonUtilService.isTagCoverData(((TagSystemTreeTagOut) obj).getTagId())) {
 								filteredList.add(obj);
@@ -283,7 +283,12 @@ public class SystemTagServiceImpl implements SystemTagService {
 			} else if (StringUtils.isEmpty(endValue)) {
 				tagList.add(">" + startValue);
 			} else {
-				tagList.add(startValue + "-" + endValue);
+				String str = startValue + "-" + endValue;
+				if(tagList.contains(str)){
+					output.setCode(ApiErrorCode.BIZ_ERROR.getCode());
+					return output;
+				}
+				tagList.add(str);
 			}
 		}
 		// 设置Mongo中标签的相关属性
