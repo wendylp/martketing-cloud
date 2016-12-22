@@ -52,8 +52,8 @@ public class MaterialCouponEditDetailServiceImpl implements MaterialCouponEditDe
                 ApiConstant.INT_ZERO, null);
 
         MaterialCoupon mcp = materialCouponDao.selectOneCoupon(id);
-
-        if (mcp != null && MaterialCouponStatusEnum.UNUSED.getCode().equals(mcp.getCouponStatus())) {
+       //20161222 删除掉非used 情况 
+        if (mcp != null) {
             List data = new ArrayList();
             CouPonEditInfoOut cpdi = new CouPonEditInfoOut();
             BeanUtils.copyProperties(mcp, cpdi);
