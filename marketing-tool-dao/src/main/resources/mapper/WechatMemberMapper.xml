@@ -299,10 +299,10 @@
 	</select>
 
 	<select id="selectSearchInfo" parameterType="java.util.Map" resultType="java.util.Map">
-		SELECT wm.id,wx_name as name,sex,head_image_url,dp.id,wm.birthday
+		SELECT wm.id,wx_name as name,sex,head_image_url,dp.id as contact_id,wm.birthday
 		FROM wechat_member wm
-		LEFT JOIN data_party dp
-		ON wm.wx_code = dp.mapping_keyid
+		LEFT JOIN data_population dp
+		ON wm.wx_code = dp.wx_code
 		WHERE wx_name like CONCAT('%',#{wx_name},'%') AND 
 		<foreach collection="wechatAssetGroups" index="index" item="item" separator="OR" open="(" close=")">
 			(wm.wx_group_id=#{item.importGroupId} and wm.pub_id=#{item.wxAcct})
