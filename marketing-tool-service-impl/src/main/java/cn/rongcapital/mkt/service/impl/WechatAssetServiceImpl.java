@@ -18,9 +18,11 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
+import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
+import cn.rongcapital.mkt.po.DataPopulation;
 import cn.rongcapital.mkt.po.WechatAsset;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
 import cn.rongcapital.mkt.po.WechatMember;
@@ -56,6 +58,9 @@ public class WechatAssetServiceImpl implements WechatAssetService {
     @Autowired
     private WechatAssetGroupDao wechatAssetGroupDao;
     
+    @Autowired
+    private DataPopulationDao dataPopulationDao;
+    
 	/**
 	 * 取消关注公众号
 	 * @param wxCode 粉丝Code(wechat_member.wx_code)
@@ -79,6 +84,14 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 			wechatMember = wechatMemberList.get(0);
 			wechatMember.setStatus(UN_FOLLOW_STATUS);//取消关注
 			wechatMemberDao.updateById(wechatMember);
+			
+			Integer keyid = wechatMember.getKeyid();
+			if(keyid!=null&&keyid!=0){
+				DataPopulation t = new DataPopulation();
+				t.setId(keyid);
+				t.setStatus(1);
+				dataPopulationDao.updateById(t);
+			}
 			
 			//更新资产
 			WechatAsset wechatAsset = new WechatAsset();
