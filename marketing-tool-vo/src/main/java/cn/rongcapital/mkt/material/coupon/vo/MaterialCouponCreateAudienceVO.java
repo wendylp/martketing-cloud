@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -40,7 +41,7 @@ public class MaterialCouponCreateAudienceVO extends BaseInput{
 	@JsonProperty("expire_status")
     String expireStatus;
 	
-	@NotBlank
+	@NotEmpty
     @JsonProperty("user_token")
     private String userToken = null;
     public MaterialCouponCreateAudienceVO(Long id, String name, String blurSearch, String releaseStatus,

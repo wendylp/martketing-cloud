@@ -49,8 +49,8 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
                 ApiConstant.INT_ZERO, null);
 
         // 查询根标签分类
-        SystemCustomTagTree systemCustomTagTree = mongoTemplate.findOne(new Query(
-                new Criteria("tag_tree_id").is(tagTreeId).and("is_deleted").is(DATA_VALID).and("is_show").is(true)),
+        SystemCustomTagTree systemCustomTagTree = mongoTemplate.findOne(
+                new Query(new Criteria("tag_tree_id").is(tagTreeId).and("is_deleted").is(DATA_VALID)),
                 SystemCustomTagTree.class);
 
         if (systemCustomTagTree != null) {

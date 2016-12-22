@@ -38,4 +38,13 @@ public interface FileStorageService {
      * @throws FileNotFoundException 
      */
     boolean delete(String fileName, String key) throws ValidationException, FileNotFoundException;
+    
+    /**
+     * 文件删除
+     * @param filesUrl 全路径
+     * @return
+     * @throws ValidationException
+     * @throws FileNotFoundException
+     */
+    boolean delete(String filesUrl) throws ValidationException, FileNotFoundException;
 }
