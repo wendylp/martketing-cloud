@@ -69,8 +69,8 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
         }
         InputStream is = null;
         try {
-            InputStream inputStream = inputPart.getBody(InputStream.class, null);
-            byte[] bytes = IOUtils.toByteArray(inputStream);
+            is = inputPart.getBody(InputStream.class, null);
+            byte[] bytes = IOUtils.toByteArray(is);
             is = new ByteArrayInputStream(bytes);
             Workbook workbook = WorkbookFactory.create(is);
             Sheet sheet = workbook.getSheetAt(0);

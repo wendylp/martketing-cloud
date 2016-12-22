@@ -281,7 +281,7 @@ public class CouponSaveServiceImpl implements CouponSaveService {
         try {
             d = sdf.parse(dateNew);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("dateStart error", e);
         }
         return d;
     }

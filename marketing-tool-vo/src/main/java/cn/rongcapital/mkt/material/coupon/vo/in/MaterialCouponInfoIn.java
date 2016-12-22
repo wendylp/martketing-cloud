@@ -30,6 +30,7 @@ public class MaterialCouponInfoIn extends BaseInput{
     private Integer stock_total;
     @NotNull
     @JsonProperty("amount")
+    @Min(0) @Max(10000)
     private BigDecimal amount;
     @NotBlank
     @JsonProperty("channel_code")
