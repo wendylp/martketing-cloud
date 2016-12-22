@@ -36,6 +36,7 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeTypeEnum;
 import cn.rongcapital.mkt.common.regex.RegularValidation;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
+import cn.rongcapital.mkt.file.FileStorageService;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
@@ -64,6 +65,9 @@ public class CouponCodeSaveTaskImpl implements TaskService{
     
     @Autowired
     private MaterialCouponDao materialCouponDao;
+    
+    @Autowired
+    private FileStorageService fileStorageService;
     
     @Override
     public void task(Integer taskId) {
@@ -97,7 +101,12 @@ public class CouponCodeSaveTaskImpl implements TaskService{
             } else {
                 // //自有码
                 JSONArray rules = JSONArray.parseArray(rule);
-                getOwnCode(getNameList(rules), couponId, list, now);
+                List<String> nameList = getNameList(rules);
+                getOwnCode(nameList, couponId, list, now);
+                for(String name : nameList){
+                    String filesUrl = filePath + name;
+                    fileStorageService.delete(filesUrl);
+                }
             }
             int totleSize = list.size();
             if (totleSize > 0) {
