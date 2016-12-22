@@ -269,7 +269,7 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
-		WHERE
+		WHERE status = 0 and 
 		<foreach collection="list" index="index" item="item" separator="OR">
 			(wx_group_id=#{item.importGroupId} and pub_id=#{item.wxAcct})
 		</foreach>		
