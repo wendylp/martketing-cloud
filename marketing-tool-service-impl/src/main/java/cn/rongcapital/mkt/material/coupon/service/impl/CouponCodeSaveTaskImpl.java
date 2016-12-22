@@ -20,6 +20,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.eclipse.jetty.util.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,10 +106,12 @@ public class CouponCodeSaveTaskImpl implements TaskService{
                 getOwnCode(nameList, couponId, list, now);
                 for(String name : nameList){
                     String filesUrl = filePath + name;
+                    logger.info("delete file fileUrl is {}", filesUrl);
                     fileStorageService.delete(filesUrl);
                 }
             }
             int totleSize = list.size();
+            logger.info("code size is {}", totleSize);
             if (totleSize > 0) {
                 int pageSize = 100000;
                 int num = totleSize / pageSize;
@@ -322,8 +325,12 @@ public class CouponCodeSaveTaskImpl implements TaskService{
                 } catch (Exception e) {
                     logger.error("CouponCodeSaveTaskImpl filesGetCode error", e);
                 }finally{
-                    in.close();
-                    is.close();
+                    if(in != null){
+                        in.close();
+                    }
+                    if(is != null){
+                        is.close();
+                    }
                 }
             }
             
