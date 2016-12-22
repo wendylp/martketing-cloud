@@ -310,7 +310,7 @@ public class GenerateSmsDetailTask implements TaskService {
                         String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
                         smsTaskDetail.setSendMessage(sendMessage);
                     }
-                    smsTaskDetail.setMaterielCouponCodeId(materialCouponCode.getCouponId());
+                    smsTaskDetail.setMaterielCouponCodeId(materialCouponCode.getId());
                     smsTaskDetail.setMaterielCouponCodeCode(materialCouponCode.getCode());
                     smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
                     smsTaskDetail.setSmsTaskHeadId(taskHeadId);
