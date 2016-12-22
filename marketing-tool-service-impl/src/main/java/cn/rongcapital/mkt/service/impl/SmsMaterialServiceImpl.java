@@ -20,6 +20,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -51,6 +53,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
     private MaterialCouponStatusUpdateService materialCouponStatusUpdateService;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public BaseOutput insertOrUpdateSmsMaterial(@NotEmpty SmsMaterialIn smsMaterialIn) {
         BaseOutput output = getNewSuccessBaseOutput();
         SmsMaterial smsMaterial = getSmsMaterial(smsMaterialIn);
