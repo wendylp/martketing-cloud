@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponReadyStatusType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeTypeEnum;
+import cn.rongcapital.mkt.common.regex.RegularValidation;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
@@ -44,7 +46,7 @@ import com.alibaba.fastjson.JSONObject;
 @Service
 public class CouponCodeSaveTaskImpl implements TaskService{
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(CouponCodeSaveTaskImpl.class);
     
     private static final String[] DATABASE_LETTER = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
     
@@ -76,7 +78,6 @@ public class CouponCodeSaveTaskImpl implements TaskService{
             Date now = new Date();
             JSONObject jsonObject = JSONObject.parseObject(taskHeadIdStr);
             String SourceCode = jsonObject.getString("source_code");
-            String userId = jsonObject.getString("user_id");
             String rule = jsonObject.getString("rule");
             Integer stock_total = jsonObject.getInteger("stock_total");
             Long couponId = jsonObject.getLong("coupon_id");
@@ -96,7 +97,7 @@ public class CouponCodeSaveTaskImpl implements TaskService{
             } else {
                 // //自有码
                 JSONArray rules = JSONArray.parseArray(rule);
-                getOwnCode(getNameList(rules), userId, couponId, list, now);
+                getOwnCode(getNameList(rules), couponId, list, now);
             }
             int totleSize = list.size();
             if (totleSize > 0) {
@@ -123,7 +124,7 @@ public class CouponCodeSaveTaskImpl implements TaskService{
                 logger.info("MQ消费，结束时间" + System.currentTimeMillis());
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("CouponCodeSaveTaskImpl task error", e);
         }
 
     }
@@ -246,22 +247,27 @@ public class CouponCodeSaveTaskImpl implements TaskService{
      * @param list
      * @param now
      */
-    private void getOwnCode(List<String> fileNames, String user_token, Long couponId, List<MaterialCouponCode> list, Date now){
+    private void getOwnCode(List<String> fileNames, Long couponId, List<MaterialCouponCode> list, Date now){
         
-        String filesUrl = filePath + user_token + SLASH;
-        List<String> codeList = filesGetCode(fileNames, filesUrl);
-        for(String code : codeList){
-            String couponCode = code;
-            MaterialCouponCode materialCouponCode = new MaterialCouponCode();
-            materialCouponCode.setCode(couponCode);
-            materialCouponCode.setCouponId(couponId);
-            materialCouponCode.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRELEASED.getCode());
-            materialCouponCode.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
-            materialCouponCode.setStatus((byte) 0);
-            materialCouponCode.setCreateTime(now);
-            materialCouponCode.setUpdateTime(now);
-            list.add(materialCouponCode);
+        try {
+            List<String> codeList = filesGetCode(fileNames, filePath);
+            for(String code : codeList){
+                if(RegularValidation.alphanumericValidation(code)){
+                    MaterialCouponCode materialCouponCode = new MaterialCouponCode();
+                    materialCouponCode.setCode(code);
+                    materialCouponCode.setCouponId(couponId);
+                    materialCouponCode.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRELEASED.getCode());
+                    materialCouponCode.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
+                    materialCouponCode.setStatus((byte) 0);
+                    materialCouponCode.setCreateTime(now);
+                    materialCouponCode.setUpdateTime(now);
+                    list.add(materialCouponCode);
+                }
+            }
+        } catch (IOException e) {
+            logger.error("CouponCodeSaveTaskImpl getOwnCode error", e);
         }
+        
     }
     
     /**
@@ -269,20 +275,19 @@ public class CouponCodeSaveTaskImpl implements TaskService{
      * @param filesUrl
      * @param baseOutput
      * @return
+     * @throws IOException 
      */
-    private List<String> filesGetCode(List<String> fileNames, String filesUrl) {
+    private List<String> filesGetCode(List<String> fileNames, String filesUrl) throws IOException {
 
-        File file = new File(filesUrl);
-        File[] tempList = file.listFiles();
         List<String> codeList = new ArrayList<String>();
-        for (int i = 0; i < tempList.length; i++) {
-            if (tempList[i].isFile()
-                    && (tempList[i].getName().endsWith(".xls") || tempList[i].getName().endsWith(".xlsx"))
-                    && (fileNames.contains(tempList[i].getName()))) {
-                File fileNew = tempList[i];
+        for(String fileName : fileNames){
+            String path = filesUrl + fileName;
+            File file = new File(path);
+            if(file.getName().endsWith(".xls") || file.getName().endsWith(".xlsx")){
+                BufferedInputStream in = null;
                 InputStream is = null;
                 try {
-                    BufferedInputStream in = new BufferedInputStream(new FileInputStream(fileNew));
+                    in = new BufferedInputStream(new FileInputStream(file));
                     byte[] bytes = IOUtils.toByteArray(in);
                     is = new ByteArrayInputStream(bytes);
                     Workbook workbook = WorkbookFactory.create(is);
@@ -305,12 +310,14 @@ public class CouponCodeSaveTaskImpl implements TaskService{
                             }
                         }
                     }
-                    is.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    logger.error(e.getMessage());
+                    logger.error("CouponCodeSaveTaskImpl filesGetCode error", e);
+                }finally{
+                    in.close();
+                    is.close();
                 }
             }
+            
         }
         return codeList;
     }
