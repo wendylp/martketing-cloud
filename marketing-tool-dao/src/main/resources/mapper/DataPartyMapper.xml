@@ -805,4 +805,10 @@
 	<delete id="deleteDataById" parameterType="int">  
         DELETE FROM data_party WHERE id = #{id}  
     </delete> 
+    
+    <select id="getBitmaps" parameterType="int" resultType="String">
+		<![CDATA[  SELECT DISTINCT bitmap FROM data_party  WHERE id = #{id}]]>
+	</select>
+   
+    
 </mapper>

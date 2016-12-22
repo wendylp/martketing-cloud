@@ -321,4 +321,8 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 		
 	}
 	
+	protected List<String> getBitmaps(Integer id){
+		return dataPartyDao.getBitmaps(id);
+	}
+	
 }
