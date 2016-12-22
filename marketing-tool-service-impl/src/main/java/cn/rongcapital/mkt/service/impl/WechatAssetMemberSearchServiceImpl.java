@@ -56,8 +56,9 @@ public class WechatAssetMemberSearchServiceImpl implements WechatAssetMemberSear
         List<Map<String,Object>> searchResult = wechatMemberDao.selectSearchInfo(paramMap);
         if(searchResult != null && searchResult.size() > 0){
             for(Map<String,Object> map : searchResult){
-                Long id = (Long) map.get("id");
-                map.put("id",transformToDataPartyId(id));
+//                Integer id = (Integer) map.get("id");
+//                map.put("id",transformToDataPartyId(id));
+//                map.put("id",id);
                 if(map.get("sex") != null){
                     Integer sex = (Integer) map.get("sex");
                     map.put("gender", GenderUtils.byteToChar(sex.byteValue()));

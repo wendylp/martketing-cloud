@@ -15,11 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.FileNameEnum;
+import cn.rongcapital.mkt.common.enums.GenderEnum;
 import cn.rongcapital.mkt.common.util.FileUtil;
 import cn.rongcapital.mkt.dao.DataPopulationDao;
 import cn.rongcapital.mkt.po.DataParty;
@@ -40,10 +42,10 @@ public class AudienceSearchDownloadServiceImpl implements AudienceSearchDownload
 	public BaseOutput searchData(Integer audience_id) {
 
 		List<DataPopulation> dataList = dataPopulationDao.searchDataByAudienceId(audience_id);
-
+		dataList = getDataPopulationSex(dataList);
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
-		String[][] columnNameList = { { "name", "姓名" }, { "mobile", "手机号" }, { "gender", "性别" },
+		String[][] columnNameList = { { "name", "姓名" }, { "mobile", "手机号" }, { "sex", "性别" },
 				{ "birthdayExport", "出身年月日" }, { "provice", "省" }, { "city", "市" }, { "email", "邮箱" },
 				{ "identifyNo", "身份证号" }, { "drivingLicense", "驾驶证号" } };
 
@@ -62,5 +64,38 @@ public class AudienceSearchDownloadServiceImpl implements AudienceSearchDownload
 		result.getData().add(resultMap);
 
 		return result;
+	}
+	
+	private List<DataPopulation> getDataPopulationSex(List<DataPopulation> dataList){
+		if(CollectionUtils.isNotEmpty(dataList)){
+			for(DataPopulation dataPopulation:dataList){
+				if(dataPopulation!=null){
+					byte sex = dataPopulation.getGender();
+					switch(sex){
+	    				case(1):{
+	    					dataPopulation.setSex(GenderEnum.MALE.getDescription());
+	    					break;
+	    				}
+						case(2):{
+							dataPopulation.setSex(GenderEnum.FEMALE.getDescription());
+	    					break;    					
+						}
+						case(3):{
+							dataPopulation.setSex(GenderEnum.OTHER.getDescription());
+	    					break;
+						}
+						case(4):{
+							dataPopulation.setSex(GenderEnum.UNSURE.getDescription());
+	    					break;
+						}
+						default:{
+							dataPopulation.setSex(GenderEnum.UNSURE.getDescription());
+	    					break;
+						}    				
+					}
+				}
+			}
+		}
+		return dataList;
 	}
 }
