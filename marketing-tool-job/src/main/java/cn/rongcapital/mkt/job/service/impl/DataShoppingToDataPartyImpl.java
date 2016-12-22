@@ -6,8 +6,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -84,8 +87,10 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 		//获取目前最大Id以便检验重复时使用
 		Integer maxId = dataPartyDao.getMaxId();
 		maxId = maxId == null ? 0 : maxId;
-		String bitmap = dataShoppingLists.get(0).getBitmap();
-		int keySize = getKeySizeByBitmap(bitmap);
+//		String bitmap = dataShoppingLists.get(0).getBitmap();
+//		int keySize = getKeySizeByBitmap(bitmap);
+		
+		Set<String> bitmapList = new HashSet<String>();
 		
 		List<List<DataShopping>> dataShoppingsList = ListSplit.getListSplit(dataShoppingLists, BATCH_SIZE);
 	    
@@ -101,6 +106,9 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 	    				for (DataShopping dataObj : dataShoppings) {
 	    					
 	    					if(!checkBitKey(dataObj)){
+	    						
+	    						bitmapList.add(dataObj.getBitmap());
+	    						
 	    						createParty(dataObj);
 	    					}
 	    				
@@ -126,32 +134,39 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
     	  
     	  logger.info("======================校验重复数据==================== 校验开始id= "+maxId);
     	  
-    	  List<Map<String, Object>> repeatDatas = checkData(bitmap, maxId);
+      	Iterator<String> it = bitmapList.iterator();  
+      	while (it.hasNext()) {  
+      	 
+      		String bitmap = it.next();  
+      	  
+      		int keySize = getKeySizeByBitmap(bitmap);
     	  
-    	  logger.info("======================重复数据"+repeatDatas.size()+"组,开始处理重复数据==========");
+      		List<Map<String, Object>> repeatDatas = checkData(bitmap, maxId);
     	  
-    	  if(repeatDatas != null && repeatDatas.size() > 0){
-    		 for(Map<String, Object> repeatData : repeatDatas){
-    			 List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData,keySize);
+      		logger.info("======================重复数据"+repeatDatas.size()+"组,开始处理重复数据==========");
+    	  
+      		if(repeatDatas != null && repeatDatas.size() > 0){
+      			for(Map<String, Object> repeatData : repeatDatas){
+      				List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData,keySize,bitmap);
     			 
-     			if(repeatIds == null){
-    				continue;
-    			}
+      				if(repeatIds == null){
+      					continue;
+      				}
     			 
-    			 Integer id = distinctData(repeatIds);
+      				Integer id = distinctData(repeatIds);
     			 
-    			 for(Integer repeatId : repeatIds){
+      				for(Integer repeatId : repeatIds){
     				 
-    				 logger.info("==================repeatId:"+repeatId);
+      					logger.info("==================repeatId:"+repeatId);
     				 
-    				 Map<String,Object> paraMap = new HashMap<String,Object>();
-    				 paraMap.put("newkeyId",id);
-    				 paraMap.put("oldkeyId", repeatId);
-    				 dataShoppingDao.updateDataShoppingKeyid(paraMap);
-    			 }
-    			 
-    		 }
-    	  }
+      					Map<String,Object> paraMap = new HashMap<String,Object>();
+      					paraMap.put("newkeyId",id);
+      					paraMap.put("oldkeyId", repeatId);
+      					dataShoppingDao.updateDataShoppingKeyid(paraMap);
+      				}
+      			}
+      		}
+      	}
     	  
     	  logger.info("==========处理重复数据结束====================");
     	  
