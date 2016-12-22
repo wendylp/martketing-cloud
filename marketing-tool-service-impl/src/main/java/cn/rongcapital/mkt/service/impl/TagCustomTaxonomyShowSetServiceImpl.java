@@ -37,8 +37,6 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
     @Autowired
     private MongoTemplate mongoTemplate;
 
-//    @Autowired
-//    MongoSystemCustomTagTreeDao mongoSystemCustomTagTreeDao;
 
     /**
      * 功能描述：设置系统标签一级分类优先显示接口
@@ -62,7 +60,6 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
 
         if (CollectionUtils.isNotEmpty(tagTreeIdLists)) {
             // 重置is_show的状态
-//            mongoSystemCustomTagTreeDao.updateIsShowByLevel(LEVEL_ONE, NOT_SHOW);
             mongoTemplate.updateMulti(new Query(new Criteria("level").is(LEVEL_ONE).and("is_deleted").is(DATA_VALID)),
                 new Update().set("is_show", NOT_SHOW).set("update_time", new Date()), SystemCustomTagTree.class);
 
@@ -75,7 +72,6 @@ public class TagCustomTaxonomyShowSetServiceImpl implements TagCustomTaxonomySho
             }
 
             // 更新数据
-//            int updateCount = mongoSystemCustomTagTreeDao.updateIsShowByLevelTagTreeTd(LEVEL_ONE, newTagTreeIdLists, IS_SHOW);
             WriteResult writeResult = mongoTemplate.updateMulti(
                 new Query(new Criteria("level").is(LEVEL_ONE).and("is_deleted").is(DATA_VALID).and("tag_tree_id")
                         .in(newTagTreeIdLists)),
