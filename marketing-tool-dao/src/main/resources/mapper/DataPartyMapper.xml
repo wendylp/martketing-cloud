@@ -788,6 +788,7 @@
 		<![CDATA[ FROM data_party ]]>
 		<![CDATA[ WHERE ]]>        
 		<![CDATA[ id > #{id} ]]>
+		<![CDATA[ AND bitmap = #{bitmap} ]]>
 		<![CDATA[ GROUP BY ${bitmapColumn} HAVING COUNT(1) > 1]]>
 	</select>
 	
