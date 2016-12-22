@@ -23,6 +23,7 @@ public class SmsMaterialOut {
     private String createTime;
     private Integer editStatus;
     private Integer deleteStatus;
+    private Integer materielStockTotal;
     private List<SmsMaterialMaterielOut> smsMaterialMaterielOutList;
     private List<SmsMaterialVariableOut> smsMaterialVariableOutList;
 
@@ -132,6 +133,15 @@ public class SmsMaterialOut {
 
     public void setDeleteStatus(Integer deleteStatus) {
         this.deleteStatus = deleteStatus;
+    }
+
+    @JsonProperty("materiel_stock_total")
+    public Integer getMaterielStockTotal() {
+        return materielStockTotal;
+    }
+
+    public void setMaterielStockTotal(Integer materielStockTotal) {
+        this.materielStockTotal = materielStockTotal;
     }
 
     @JsonProperty("materiel_list")

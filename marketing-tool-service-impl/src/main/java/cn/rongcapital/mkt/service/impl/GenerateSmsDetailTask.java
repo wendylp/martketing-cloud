@@ -101,6 +101,8 @@ public class GenerateSmsDetailTask implements TaskService {
 
     private final String SEGMENTATION_HEAD_ID = "segmentation_head_id";
     private final int PAGE_SIZE = 10000;
+    private static final String FRONT_SMS_VARIABLE_MASK="{";
+    private static final String BACK_SMS_VARIABLE_MASK="}";
 
     public static final Integer POOL_INDEX = 2;
     
@@ -315,18 +317,22 @@ public class GenerateSmsDetailTask implements TaskService {
             case VARIABLE_COUPON_EFFECTIVE_TIME:
                 String startTime = DateUtil.getStringFromDate(new Date(couPonEditInfoOut.getStartTime()),"MM月dd日-");
                 String endTime = DateUtil.getStringFromDate(new Date(couPonEditInfoOut.getEndTime()),"MM月dd日");
-                variableToValueMap.put(smsMaterialVariableMap.getSmsVariableName(),startTime + endTime);
+                variableToValueMap.put(deractorSmsVariableName(smsMaterialVariableMap.getSmsVariableName()),startTime + endTime);
                 break;
             case VARIABLE_COUPON_AMOUNT:
-                variableToValueMap.put(smsMaterialVariableMap.getSmsVariableName(),couPonEditInfoOut.getAmount() + "");
+                variableToValueMap.put(deractorSmsVariableName(smsMaterialVariableMap.getSmsVariableName()),couPonEditInfoOut.getAmount() + "");
                 break;
             case VARIABLE_COUPON_CHANNEL_CODE:
-                variableToValueMap.put(smsMaterialVariableMap.getSmsVariableName(),couPonEditInfoOut.getChannelCode());
+                variableToValueMap.put(deractorSmsVariableName(smsMaterialVariableMap.getSmsVariableName()),couPonEditInfoOut.getChannelCode());
                 break;
             case VARIABLE_COUPON_COUPON_CODE:
-                variableToValueMap.put(smsMaterialVariableMap.getSmsVariableName(),specialTypeValue);
+                variableToValueMap.put(deractorSmsVariableName(smsMaterialVariableMap.getSmsVariableName()),specialTypeValue);
                 break;
         }
+    }
+
+    private String deractorSmsVariableName(String smsVariableName) {
+        return FRONT_SMS_VARIABLE_MASK + smsVariableName + BACK_SMS_VARIABLE_MASK;
     }
 
 

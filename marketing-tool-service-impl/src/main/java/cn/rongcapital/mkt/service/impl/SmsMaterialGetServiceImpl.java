@@ -103,7 +103,17 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
             paramSmsTemplet.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
             List<SmsTemplet> smsTempletList = smsTempletDao.selectList(paramSmsTemplet);
             String templateName = CollectionUtils.isEmpty(smsTempletList)?"":smsTempletList.get(0).getName();
-            SmsMaterialOut smsMaterialOut = getSmsMaterialOut(smsMaterial,templateName, null, null);
+
+            SmsMaterialMaterielMap paramSmsMaterialMaterielMap = new SmsMaterialMaterielMap();
+            paramSmsMaterialMaterielMap.setSmsMaterialId(smsMaterial.getId().longValue());
+            paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+            List<SmsMaterialMaterielMap> smsMaterialMaterielMapList = smsMaterialMaterielMapDao.selectList(paramSmsMaterialMaterielMap);
+
+            SmsMaterialOut smsMaterialOut = getSmsMaterialOut(smsMaterial,templateName, smsMaterialMaterielMapList, null);
+            if(!CollectionUtils.isEmpty(smsMaterialOut.getSmsMaterialMaterielOutList())){
+                smsMaterialOut.setMaterielStockTotal(smsMaterialOut.getSmsMaterialMaterielOutList().get(0).getMaterielStockTotal());
+                smsMaterialOut.setSmsMaterialMaterielOutList(null);
+            }
             baseOutput.getData().add(smsMaterialOut);
         }
 
