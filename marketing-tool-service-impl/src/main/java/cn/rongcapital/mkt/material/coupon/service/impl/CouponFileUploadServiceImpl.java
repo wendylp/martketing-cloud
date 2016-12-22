@@ -69,8 +69,8 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
         }
         InputStream is = null;
         try {
-            InputStream inputStream = inputPart.getBody(InputStream.class, null);
-            byte[] bytes = IOUtils.toByteArray(inputStream);
+            is = inputPart.getBody(InputStream.class, null);
+            byte[] bytes = IOUtils.toByteArray(is);
             is = new ByteArrayInputStream(bytes);
             Workbook workbook = WorkbookFactory.create(is);
             Sheet sheet = workbook.getSheetAt(0);
@@ -85,7 +85,7 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
                 Iterator<Cell> dataCellIterator = row.cellIterator();
                 while (dataCellIterator.hasNext()) {
                     Cell dataColumnCell = dataCellIterator.next();
-                    if("1".equals(dataColumnCell.getCellType())){
+                    if(1 == dataColumnCell.getCellType()){
                         if(!StringUtils.isBlank(dataColumnCell.getStringCellValue())){
                             System.out.println(dataColumnCell.getStringCellValue());
                             num++;

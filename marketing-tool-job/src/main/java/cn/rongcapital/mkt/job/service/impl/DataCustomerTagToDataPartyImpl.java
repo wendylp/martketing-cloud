@@ -84,7 +84,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
 //		String bitmap = dataCustomerTagsLists.get(0).getBitmap();
 //		int keySize = getKeySizeByBitmap(bitmap);
 		
-		List<String> bitmapList = getBitmaps(maxId);
+		Set<String> bitmapList = new HashSet<String>();
 		
 		List<List<DataCustomerTags>> dataCustomerTagssList = ListSplit.getListSplit(dataCustomerTagsLists, BATCH_SIZE);
 	    
@@ -99,7 +99,7 @@ public class DataCustomerTagToDataPartyImpl extends AbstractDataPartySyncService
 	    			public Void call() throws Exception {
 	    				
     					if(!checkBitKey(dataObj)){
-    						//bitmapList.add(dataObj.getBitmap());
+    						bitmapList.add(dataObj.getBitmap());
     						createParty(dataObj);
     					}
 	    				

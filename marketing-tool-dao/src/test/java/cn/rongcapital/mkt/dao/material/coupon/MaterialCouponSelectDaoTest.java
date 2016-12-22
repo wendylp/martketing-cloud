@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.tomcat.util.descriptor.web.ApplicationParameter;
+import cn.rongcapital.mkt.common.enums.MaterialCouponReadyStatusType;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -56,6 +56,7 @@ public class MaterialCouponSelectDaoTest extends AbstractUnitTest{
         paramMaterialCoupon.setTitle("贝贝熊TESTByXiexl短信引流优惠码活动");
         paramMaterialCoupon.setType("voucher");
         paramMaterialCoupon.setUpdateTime(new Date());
+        paramMaterialCoupon.setReadyStatus(MaterialCouponReadyStatusType.READY.getCode());
         meterialCouponDao.insert(paramMaterialCoupon);
     }
 

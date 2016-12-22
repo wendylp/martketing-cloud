@@ -101,8 +101,8 @@ public class MaterialCouponEditDetailServiceImplTest {
         mcp.setTitle("test");
         mcp.setRule("{\"coupon_code\": 48294}");
         mcp.setCouponStatus(MaterialCouponStatusEnum.USED.getCode());
-        BaseOutput fbase = new BaseOutput(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getCode(),
-                ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getMsg(), 1, null);
+        BaseOutput fbase = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+                ApiErrorCode.SUCCESS.getMsg(), 1, null);
         Mockito.when(materialCouponDao.selectOneCoupon(Mockito.anyLong())).thenReturn(mcp);
 
         BaseOutput bo2 = materialCouponEditDetailService.getCouponEditdes(id);
@@ -110,6 +110,8 @@ public class MaterialCouponEditDetailServiceImplTest {
 
         // 当返回为null时
         Mockito.when(materialCouponDao.selectOneCoupon(Mockito.anyLong())).thenReturn(null);
+        fbase = new BaseOutput(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getCode(),
+            ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_VALIDATE_ERROR.getMsg(), 1, null);
         bo2 = materialCouponEditDetailService.getCouponEditdes(id);
         Assert.assertEquals(fbase.getCode(), bo2.getCode());
 

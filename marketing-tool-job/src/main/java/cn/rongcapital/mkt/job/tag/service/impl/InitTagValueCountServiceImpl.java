@@ -47,7 +47,9 @@ public class InitTagValueCountServiceImpl implements TaskService,SystemTagSynchS
 	
 	@Override
 	public void task(Integer taskId) {
+		logger.info("同步MySQL中tag_value_count标签统计表，任务开始执行------------>");
 		initTagValueCount(null);
+		logger.info("同步MySQL中tag_value_count标签统计表，任务执行结束------------>");
 	}
 
 	@Override

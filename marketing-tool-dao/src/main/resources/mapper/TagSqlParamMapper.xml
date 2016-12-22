@@ -132,13 +132,14 @@
  			  tag_id = #{tagId}
   		</if>
 	    <if test="count == 0">
-	      	INSERT INTO tag_sql_param (tag_id,lower_limit_value,upper_limit_value,scope_value)
+	      	INSERT INTO tag_sql_param (tag_id,lower_limit_value,upper_limit_value,scope_value,tag_name)
 			VALUES
 			(
 			  #{tagId},
 			  #{lowerLimitValue},
 			  #{upperLimitValue},
-			  #{scopeValue}
+			  #{scopeValue},
+			  #{tagName}
 			)
 	    </if>
 	</insert>
