@@ -11,6 +11,7 @@ public enum DataTypeEnum {
     PAYMENT(6, "支付记录"), 
     SHOPPING(7, "购物记录"),
     WECHAT(8, "微信会员记录"),
+    WECHAT1(9, "微信粉丝"),
 
     ;
 

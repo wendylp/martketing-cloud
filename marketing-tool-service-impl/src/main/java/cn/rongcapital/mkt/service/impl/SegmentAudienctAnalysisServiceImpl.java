@@ -20,6 +20,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
  * Created by ljk on 2016-12-05.
  */
 @Service
+@PropertySource("classpath:${conf.dir}/application-api.properties")
 public class SegmentAudienctAnalysisServiceImpl implements SegmentAudienctAnalysisService{
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -36,6 +39,9 @@ public class SegmentAudienctAnalysisServiceImpl implements SegmentAudienctAnalys
 	@Autowired
 	private SegmentManageCalService segmentManageCalService;
 
+	@Autowired
+	Environment env;
+	
 	public static final  Integer POOL_INDEX = 2;
 	
 	public static final String TAG_COVER_ID_STR="tagcoverid:";
@@ -49,6 +55,10 @@ public class SegmentAudienctAnalysisServiceImpl implements SegmentAudienctAnalys
 	
 	@Override
 	public BaseOutput getSegmentAudienctAnalysis(String tagId, Integer headId) {
+		
+		String showMapTagIds = env.getProperty("segment.analysis.show.map");
+		
+		String[] arrTagIds = showMapTagIds.split("-");
 		
 		logger.info("===================================segment audienct analysis start ,tagId:"+tagId +",segmentHeadId:"+headId);
 		
@@ -66,10 +76,18 @@ public class SegmentAudienctAnalysisServiceImpl implements SegmentAudienctAnalys
 		//1.判断是否显示地图 1:饼图 2:地图
 		String showType = ApiConstant.SEGMENT_SHOW_PIE;
 	    
-		if(ApiConstant.DATA_PARTY_LOCATION_TAG_ID.equals(tagId) || ApiConstant.DATA_PARTY_ACTIVE_TAG_ID.equals(tagId)){
+		for(String showMapTagId : arrTagIds){
 			
-			showType = ApiConstant.SEGMENT_SHOW_MAP;
+			if(showMapTagId.equals(tagId)){
+				showType = ApiConstant.SEGMENT_SHOW_MAP;
+				break;
+			}
 		}
+		
+//		if(ApiConstant.DATA_PARTY_LOCATION_TAG_ID.equals(tagId) || ApiConstant.DATA_PARTY_ACTIVE_TAG_ID.equals(tagId)){
+//			
+//			showType = ApiConstant.SEGMENT_SHOW_MAP;
+//		}
 		logger.info("===================================segment audienct analysis ,show type" + showType);
 		segmentAudienctAnalysisDataOut.setShowType(showType);
 		
