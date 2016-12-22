@@ -90,7 +90,7 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 //		String bitmap = dataShoppingLists.get(0).getBitmap();
 //		int keySize = getKeySizeByBitmap(bitmap);
 		
-		Set<String> bitmapList = new HashSet<String>();
+		List<String> bitmapList = getBitmaps(maxId);
 		
 		List<List<DataShopping>> dataShoppingsList = ListSplit.getListSplit(dataShoppingLists, BATCH_SIZE);
 	    
@@ -107,7 +107,7 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 	    					
 	    					if(!checkBitKey(dataObj)){
 	    						
-	    						bitmapList.add(dataObj.getBitmap());
+	    						//bitmapList.add(dataObj.getBitmap());
 	    						
 	    						createParty(dataObj);
 	    					}
