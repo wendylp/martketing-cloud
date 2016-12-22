@@ -17,10 +17,11 @@ public interface MaterialCouponPageListService {
      * @param keyword 模糊查询关键字
      * @param index 当前页
      * @param size 当前页多少条数据
-     * @return BaseOutput 
+     * @param filterOverdue 是否过滤已经过期的数据
+     * @return BaseOutput
      * @author xie.xiaoliang
      * @since 2016年12月7日
      */
     MaterialCouponListOut getMaterialCouponListByKeyword(String channelCode, String couponStatus,
-            String keyword, Integer index, Integer size);
+                                                         String keyword, Integer index, Integer size, boolean filterOverdue);
 }

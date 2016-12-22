@@ -7,8 +7,10 @@
  *************************************************/
 package cn.rongcapital.mkt.material.coupon.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.SqlConvertUtils;
 
 import org.springframework.beans.BeanUtils;
@@ -46,7 +48,7 @@ public class MaterialCouponPageListServiceImpl implements MaterialCouponPageList
     @Override
     @ReadWrite(type = ReadWriteType.READ)
     public MaterialCouponListOut getMaterialCouponListByKeyword(String channelCode,
-            String couponStatus, String keyword, Integer index, Integer size) {
+                                                                String couponStatus, String keyword, Integer index, Integer size, boolean filterOverdue) {
         MaterialCouponListOut baseOutput = new MaterialCouponListOut(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ZERO);
 
@@ -64,6 +66,11 @@ public class MaterialCouponPageListServiceImpl implements MaterialCouponPageList
         paramMaterialCoupon.setChannelCode(channelCode);
         String paramCouponoStatus = StringUtils.isEmpty(couponStatus) ? null: couponStatus;
         paramMaterialCoupon.setCouponStatus(paramCouponoStatus);
+        if(filterOverdue ){
+            paramMaterialCoupon.setEndTime(new Date());
+        }else{
+            paramMaterialCoupon.setEndTime(null);
+        }
         paramMaterialCoupon.setTitle(SqlConvertUtils.escapeSQLCharacter(keyword));
         paramMaterialCoupon.setStartIndex((index - 1) * size);
         paramMaterialCoupon.setPageSize(size);
