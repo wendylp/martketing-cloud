@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.dao.SysTagViewDao;
+import cn.rongcapital.mkt.job.service.SystemTagSynchService;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 
 /*************************************************
@@ -24,10 +25,15 @@ public class SystemTagSynMongodbServiceImpl extends BaseSystemTagSyn implements 
 
 	@Autowired
 	private SysTagViewDao sysTagViewDao;
+	
+	@Autowired
+	private SystemTagSynchService systemTagSynchService;
+	
 
 	@Override
 	public void task(Integer taskId) {
 		try {
+			initMysqlTagInformation();
 			logger.info("同步系统标签任务开始执行------------------>");
 			initMongoTagList();
 			getTagViewList(sysTagViewDao);
@@ -37,5 +43,13 @@ public class SystemTagSynMongodbServiceImpl extends BaseSystemTagSyn implements 
 			logger.error("同步系统标签任务出现异常--------------->" + e.getMessage(), e);
 		}
 	}
+	
+	private void initMysqlTagInformation(){
+		logger.info("同步系统标签前置初始化MySQL方法开始执行------>");
+		systemTagSynchService.initTagValueCount(null);
+		logger.info("同步系统标签前置初始化MySQL方法开始结束------>");
+	}
+	
+	
 
 }
