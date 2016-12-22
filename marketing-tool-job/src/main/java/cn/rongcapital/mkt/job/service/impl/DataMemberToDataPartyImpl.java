@@ -85,7 +85,7 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
 //		String bitmap = dataMemberLists.get(0).getBitmap();
 //		int keySize = getKeySizeByBitmap(bitmap);
 		
-		Set<String> bitmapList = new HashSet<String>();
+		List<String> bitmapList = getBitmaps(maxId);
 		
 		List<List<DataMember>> dataMembersList = ListSplit.getListSplit(dataMemberLists, BATCH_SIZE);
 	    
@@ -101,7 +101,7 @@ public class DataMemberToDataPartyImpl extends AbstractDataPartySyncService<Inte
 	    				
     					if(!checkBitKey(dataObj)){
     						
-    						bitmapList.add(dataObj.getBitmap());
+    						//bitmapList.add(dataObj.getBitmap());
     						
     						createParty(dataObj);
     					}
