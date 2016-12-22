@@ -18,13 +18,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -34,11 +31,9 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
-import cn.rongcapital.mkt.vo.BaseInput;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.UploadFileOut;
 
@@ -66,7 +61,7 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
         UploadFileOut out = new UploadFileOut();
         InputPart inputPart = inputParts.get(0);
         String fileName = getFileName(inputPart.getHeaders());
-        out.setFile_name(fileName);
+        out.setFile_name(userId + "/" + fileName);
         if (!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx")) {
             baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
             baseOutput.setMsg("上传的文件不是预定格式");
@@ -90,9 +85,11 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
                 Iterator<Cell> dataCellIterator = row.cellIterator();
                 while (dataCellIterator.hasNext()) {
                     Cell dataColumnCell = dataCellIterator.next();
-                    if(!StringUtils.isBlank(dataColumnCell.getStringCellValue())){
-                        System.out.println(dataColumnCell.getStringCellValue());
-                        num++;
+                    if("1".equals(dataColumnCell.getCellType())){
+                        if(!StringUtils.isBlank(dataColumnCell.getStringCellValue())){
+                            System.out.println(dataColumnCell.getStringCellValue());
+                            num++;
+                        }
                     }
                 }
             }

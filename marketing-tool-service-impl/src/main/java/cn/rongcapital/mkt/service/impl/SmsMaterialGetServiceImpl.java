@@ -24,6 +24,8 @@ import org.springframework.util.CollectionUtils;
 import java.util.LinkedList;
 import java.util.List;
 
+import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.FIXED;
+
 /**
  * Created by byf on 11/9/16.
  */
@@ -114,6 +116,9 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
                 smsMaterialOut.setMaterielStockTotal(smsMaterialOut.getSmsMaterialMaterielOutList().get(0).getMaterielStockTotal());
                 smsMaterialOut.setSmsMaterialMaterielOutList(null);
             }
+            if(smsMaterialOut.getSmsType() == FIXED.getStatusCode()){   //Todo:说明:这句代码代表如果是固定短信,则优惠码总数设置为-1(下期重构一下这块)
+                smsMaterialOut.setMaterielStockTotal(-1);
+            }
             baseOutput.getData().add(smsMaterialOut);
         }
 
@@ -130,9 +135,9 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService{
         SmsMaterial paramSmsMaterial = new SmsMaterial();
         paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         paramSmsMaterial.setChannelType(channelType == -1?null:channelType.byteValue());
-        paramSmsMaterial.setSmsType(SmsTempletTypeEnum.FIXED.getStatusCode().byteValue());
+        paramSmsMaterial.setSmsType(FIXED.getStatusCode().byteValue());
         Integer fixedCount = smsMaterialDao.selectListCount(paramSmsMaterial);
-        smsMaterialCountOut.setSmsType(SmsTempletTypeEnum.FIXED.getStatusCode());
+        smsMaterialCountOut.setSmsType(FIXED.getStatusCode());
         smsMaterialCountOut.setSmsCount(fixedCount);
         baseOutput.getData().add(smsMaterialCountOut);
 

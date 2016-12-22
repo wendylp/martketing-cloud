@@ -85,7 +85,7 @@ public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integ
 //		String bitmap = dataLoginLists.get(0).getBitmap();
 //		int keySize = getKeySizeByBitmap(bitmap);
 		
-		Set<String> bitmapList = new HashSet<String>();
+		List<String> bitmapList = getBitmaps(maxId);
 		
 		List<List<DataLogin>> dataLoginsList = ListSplit.getListSplit(dataLoginLists, BATCH_SIZE);
 	    
@@ -101,7 +101,7 @@ public class DataLoginToDataPartyImpl extends AbstractDataPartySyncService<Integ
 	    				
     					if(!checkBitKey(dataObj)){
     						
-    						bitmapList.add(dataObj.getBitmap());
+    						//bitmapList.add(dataObj.getBitmap());
     						
     						createParty(dataObj);
     					}

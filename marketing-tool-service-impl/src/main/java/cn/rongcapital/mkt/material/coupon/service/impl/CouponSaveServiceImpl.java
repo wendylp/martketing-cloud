@@ -29,9 +29,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.CouponCodeType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponReadyStatusType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
+import cn.rongcapital.mkt.common.regex.RegularValidation;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
@@ -42,12 +44,13 @@ import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 @Service
 public class CouponSaveServiceImpl implements CouponSaveService {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(CouponSaveServiceImpl.class);
     
     @Autowired
     private MaterialCouponDao materialCouponDao;
@@ -72,22 +75,75 @@ public class CouponSaveServiceImpl implements CouponSaveService {
         Long id = couponInfo.getId();
         String title = couponInfo.getTitle();
         String SourceCode = couponInfo.getSource_code();
-        String userId = couponInfo.getUserId();
-        if(!("common".equals(SourceCode) || "generate".equals(SourceCode) || "own".equals(SourceCode))){
-            baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
-            baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
+        if (!RegularValidation.titleValidation(title)) {
+            logger.error("title error, title: {}", title);
+            baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR_TITLE.getCode());
+            baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR_TITLE.getMsg());
             return baseOutput;
         }
+
+        if (!(CouponCodeType.COMMON.getCode().equals(SourceCode)
+                || CouponCodeType.GENERATE.getCode().equals(SourceCode) || CouponCodeType.OWN.getCode().equals(
+                SourceCode))) {
+            logger.error("sourceCode error, sourceCode: {}", SourceCode);
+            baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR_SOURCECODE.getCode());
+            baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR_SOURCECODE.getMsg());
+            return baseOutput;
+        }
+
         String rule = couponInfo.getRule();
         try {
             JSONUtils.parse(rule);
         } catch (Exception e) {
-            baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
-            baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR.getMsg());
+            logger.error("JSON rule error, rule: {}", rule);
+            baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR_RULE.getCode());
+            baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR_RULE.getMsg());
             return baseOutput;
         }
-        
-        
+
+        if (CouponCodeType.GENERATE.getCode().equals(SourceCode)) {
+            try {
+                JSONObject.parseObject(rule);
+            } catch (Exception e) {
+                logger.error("平台生成码规则错误, rule: {}", rule, e);
+                baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR_GENERATE_RULE_ERROR.getCode());
+                baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR_GENERATE_RULE_ERROR.getMsg());
+                return baseOutput;
+            }
+        }
+
+
+
+        if (CouponCodeType.COMMON.getCode().equals(SourceCode)) {
+            try {
+                JSONObject ruleObject = JSONObject.parseObject(rule);
+                String unCode = ruleObject.getString("coupon_code");
+                if (!RegularValidation.alphanumericValidation(unCode)) {
+                    logger.error("通用码错误, coupon_code: {}", unCode);
+                    baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR_COUPON_CODE.getCode());
+                    baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR_COUPON_CODE.getMsg());
+                    return baseOutput;
+                }
+            } catch (Exception e) {
+                logger.error("通用码规则错误, rule: {}", rule, e);
+                baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR_COMMON_RULE_ERROR.getCode());
+                baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR_COMMON_RULE_ERROR.getMsg());
+                return baseOutput;
+            }
+
+        }
+
+        if ("own".equals(SourceCode)) {
+            try {
+                JSONArray.parseArray(rule);
+            } catch (Exception e) {
+                logger.error("自有码规则错误, rule: {}", rule, e);
+                baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR_OWN_RULE_ERROR.getCode());
+                baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR_OWN_RULE_ERROR.getMsg());
+                return baseOutput;
+            }
+        }
+
         Integer stock_total = couponInfo.getStock_total();
         BigDecimal amount = couponInfo.getAmount();
         String channel_code = couponInfo.getChannel_code();
@@ -99,7 +155,6 @@ public class CouponSaveServiceImpl implements CouponSaveService {
         json.put("rule", rule);
         json.put("source_code", SourceCode);
         json.put("stock_total", stock_total);
-        json.put("user_id", userId);
         if (id == null) {
             json.put("edit", false);
             MaterialCoupon coupon = new MaterialCoupon();
@@ -128,8 +183,8 @@ public class CouponSaveServiceImpl implements CouponSaveService {
                 baseOutput.setMsg(ApiErrorCode.DB_ERROR.getMsg());
                 return baseOutput;
             }
-            //优惠码未生成完不能编辑
-            if(MaterialCouponReadyStatusType.UNREADY.getCode().equals(coupon.getReadyStatus())){
+            // 优惠码未生成完不能编辑
+            if (MaterialCouponReadyStatusType.UNREADY.getCode().equals(coupon.getReadyStatus())) {
                 baseOutput.setCode(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_ERROR.getCode());
                 baseOutput.setMsg(ApiErrorCode.BIZ_ERROR_MATERIAL_COUPOON_CODE_ERROR.getMsg());
                 return baseOutput;
@@ -165,6 +220,7 @@ public class CouponSaveServiceImpl implements CouponSaveService {
             message.setMessage(json.toString());
             mqTopicService.senderMessage(MQ_CODE_SERVICE, message);
         } catch (JMSException e) {
+            logger.error("MQ发送信息异常", e.getMessage());
             baseOutput.setCode(ApiErrorCode.SYSTEM_ERROR.getCode());
             baseOutput.setMsg(ApiErrorCode.SYSTEM_ERROR.getMsg());
             return baseOutput;
