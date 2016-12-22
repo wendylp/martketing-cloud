@@ -389,4 +389,9 @@ public class ApiConstant {
      * SQL like ESCAPE CHAR
      */
     public static final String SQL_ESCAPE_CHARACTER = "\\";
+    
+    /**
+     * 系统标签自定义分类最大显示个数
+     */
+    public static final int TAG_CUSTOM_TAXONOMY_MAX_SHOW = 10;
 }
