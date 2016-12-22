@@ -146,4 +146,23 @@ public class FileStorageServiceImpl implements FileStorageService{
         }
         return flag;
     }
+    
+    @Override
+    public boolean delete(String filesUrl) throws ValidationException, FileNotFoundException {
+
+        if (StringUtils.isBlank(filesUrl)) {
+            logger.error("delete file, filesUrl is null");
+            throw new IllegalArgumentException("delete file, filesUrl is null");
+        }
+        File file = new File(filesUrl);
+        boolean flag = false;
+        if (file.exists()) {
+            flag = file.delete();
+            flag = true;
+        } else {
+            logger.error("delete the file, the file is not exist, filesUrl: {}", filesUrl);
+            throw new FileNotFoundException("delete the file, the file is not exist");
+        }
+        return flag;
+    }
 }
