@@ -1,26 +1,25 @@
-package cn.rongcapital.mkt.vo.in;
+package cn.rongcapital.mkt.material.coupon.vo.in;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-
+import javax.validation.constraints.NotNull;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
-
+import cn.rongcapital.mkt.vo.BaseInput;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.sun.istack.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class CouponInfoIn {
+public class MaterialCouponInfoIn extends BaseInput{
 
     @JsonProperty("id")
     private Long id;
-    @NotEmpty
+    @NotBlank
     @JsonProperty("title")
     private String title;
-    @NotEmpty
+    @NotBlank
     @JsonProperty("source_code")
     private String source_code;
     @JsonProperty("rule")
@@ -32,6 +31,7 @@ public class CouponInfoIn {
     @NotNull
     @JsonProperty("amount")
     private BigDecimal amount;
+    @NotBlank
     @JsonProperty("channel_code")
     private String channel_code;
     @NotNull
@@ -40,7 +40,10 @@ public class CouponInfoIn {
     @NotNull
     @JsonProperty("end_time")
     private Date end_time;
-
+    @NotEmpty
+    @JsonProperty("user_id")
+    private String userId;
+    
     public Long getId() {
         return id;
     }
@@ -112,5 +115,13 @@ public class CouponInfoIn {
     public void setEnd_time(Date end_time) {
         this.end_time = end_time;
     }
-    
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
 }

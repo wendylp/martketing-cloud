@@ -170,13 +170,14 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 		//新增起始ID
 		parmMap.put("id", beginId);
 		
+		parmMap.put("bitmap", bitmap);
 		
 		List<Map<String, Object>> repeatDatas = dataPartyDao.getRepeatDataByBitmapKeys(parmMap);
 	  
   		return repeatDatas;
 	}
 	
-	protected List<Integer> getIdsByRepeatByBitmapKeys(Map<String,Object> paramMap,int keySize){
+	protected List<Integer> getIdsByRepeatByBitmapKeys(Map<String,Object> paramMap,int keySize,String bitmap){
 		
 		DataParty dataParty = new DataParty();
 		
@@ -225,6 +226,7 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 			}
 		}
 		
+		dataParty.setBitmap(bitmap);
 		return dataPartyDao.getIdsByRepeatByBitmapKeys(dataParty);
 	}
 	
@@ -317,6 +319,10 @@ public abstract class AbstractDataPartySyncService<T> implements DataPartySyncSe
 		
 		return strlist.size();
 		
+	}
+	
+	protected List<String> getBitmaps(Integer id){
+		return dataPartyDao.getBitmaps(id);
 	}
 	
 }

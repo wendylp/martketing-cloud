@@ -9,12 +9,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 import cn.rongcapital.mkt.vo.BaseInput;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TagCustomTaxonomySaveIn extends BaseInput {
+public class TagCustomTaxonomyRootSaveIn extends BaseInput {
 
-    @NotEmpty
+
     private String tagTreeId;
+    @NotEmpty
+    private String tagTreeName;
+    
     private List<TagCustomTaxonomySaveChildrenIn> children;
-    private List<TagCustomTaxonomySaveChildrenTagIn> childrenTag;
 
     @JsonProperty("tag_tree_id")
     public String getTagTreeId() {
@@ -25,6 +27,15 @@ public class TagCustomTaxonomySaveIn extends BaseInput {
         this.tagTreeId = tagTreeId;
     }
 
+    @JsonProperty("tag_tree_name")
+    public String getTagTreeName() {
+        return tagTreeName;
+    }
+
+    public void setTagTreeName(String tagTreeName) {
+        this.tagTreeName = tagTreeName;
+    }
+
     @JsonProperty("children")
     public List<TagCustomTaxonomySaveChildrenIn> getChildren() {
         return children;
@@ -33,16 +44,6 @@ public class TagCustomTaxonomySaveIn extends BaseInput {
     public void setChildren(List<TagCustomTaxonomySaveChildrenIn> children) {
         this.children = children;
     }
-
-    @JsonProperty("children_tag")
-    public List<TagCustomTaxonomySaveChildrenTagIn> getChildrenTag() {
-        return childrenTag;
-    }
-
-    public void setChildrenTag(List<TagCustomTaxonomySaveChildrenTagIn> childrenTag) {
-        this.childrenTag = childrenTag;
-    }
-
 
 
 }

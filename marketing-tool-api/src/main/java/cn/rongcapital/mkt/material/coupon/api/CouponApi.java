@@ -51,11 +51,12 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralSe
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralService;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
+import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponCodeVerifyIn;
+import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponInfoIn;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.CouponInfoIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -164,6 +165,22 @@ public class CouponApi {
         return couponCodeListService.couponIssuedCodeList(id, index, size);
     }
     
+    
+    /**
+     * @author guozhenchao
+     * @功能简述: 获取文件上传url
+     * @param: String
+     *      userToken, String ver,String user_id
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.materiel.coupon.file.upload.get")
+    public Object getMigrationFileUploadUrl(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("user_id") String userId) throws Exception {
+        return couponFileUploadService.getCouponFileUploadUrlGet(userId);
+    }
+    
+    
     /**
      * @author guozhenchao
      * @功能简述:优惠券文件上传接口
@@ -174,8 +191,7 @@ public class CouponApi {
     @POST
     @Path("/mkt.materiel.coupon.file.upload")
     @Consumes("multipart/form-data")
-    public BaseOutput fileUpload(@NotEmpty @QueryParam("user_token") String userToken,
-                                      @NotEmpty @QueryParam("ver") String ver,@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
+    public BaseOutput fileUpload(@NotEmpty @QueryParam("user_id") String userId, MultipartFormDataInput input){
         return couponFileUploadService.uploadFile(input, userId);
     }
     /**
@@ -296,12 +312,13 @@ public class CouponApi {
     @Path("/mkt.material.coupon.verify.list")
     @Consumes({MediaType.APPLICATION_JSON})
     public BaseOutput listMaterialCouponCodeVerfy(@NotEmpty @QueryParam("user_token") String userToken,
-                    @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id,
-                    @QueryParam("blur_search") String blurSearch, @QueryParam("receive_status") String receiveStatus,
-                    @QueryParam("verify_status") String verifyStatus, @QueryParam("expire_status") String expireStatus,
-                    @QueryParam("index") Integer index, @QueryParam("size") Integer size) {
+            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("id") Long id,
+            @QueryParam("blur_search") String blurSearch, @QueryParam("receive_status") String receiveStatus,
+            @QueryParam("verify_status") String verifyStatus, @QueryParam("expire_status") String expireStatus,
+            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
         return materialCouponCodeVerifyListService.listMaterialCouponCodeVerfy(id, blurSearch, receiveStatus,
-                        verifyStatus, expireStatus, index, size);
+                verifyStatus, expireStatus, index, size);
     }
 
     /**
@@ -338,9 +355,8 @@ public class CouponApi {
     @POST
     @Path("/mkt.materiel.coupon.save")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public BaseOutput couponSave(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @Valid CouponInfoIn couponInfo){
-        return couponSaveService.save(couponInfo, userToken);
+    public BaseOutput couponSave(@Valid MaterialCouponInfoIn couponInfo){
+        return couponSaveService.save(couponInfo);
     }
     
     /**
@@ -355,16 +371,11 @@ public class CouponApi {
      * @author xie.xiaoliang
      * @since 2016年12月9日
      */
-    @GET
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON })
     @Path("/mkt.material.coupon.verify")
-    public BaseOutput materialCouponCodeVerify(
-            @NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, 
-            @NotNull  @QueryParam("id") Long id,
-            @NotEmpty @QueryParam("coupon_code") String couponCode,
-            @NotEmpty @QueryParam("user") String user) throws Exception {
-
-        return materialCouponCodeCheckService.materialCouponCodeVerify(id, couponCode, user);
+    public BaseOutput materialCouponCodeVerify(@Valid MaterialCouponCodeVerifyIn in) throws Exception {
+        return materialCouponCodeCheckService.materialCouponCodeVerify(in.getId(), in.getCoupon_code(), in.getUser());
     }
     
 	/**

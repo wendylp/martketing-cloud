@@ -82,35 +82,44 @@ public class SystemTagServiceImpl implements SystemTagService {
 		switch (navigateIndex) {
 		case ALL_TAG_FLAG:
 			output.getData().add(getTagSystemTreeTagOutList(null));
+			if (pageSourceType != null && pageSourceType == 1) {
+				List<Object> filteredList = new LinkedList<>();
+				filterTagCoverNonData(output,filteredList);
+			}
 			break;
 		case RECOMMEND_TAG_FLAG:
 			output.getData().add(getTagSystemTreeTagOutList(Query.query(Criteria.where("flag").is(true))));
+			if (pageSourceType != null && pageSourceType == 1) {
+				List<Object> filteredList = new LinkedList<>();
+				filterTagCoverNonData(output,filteredList);
+			}
 			break;
 		default:
-			output.getData().add(getTagTree(navigateIndex));
+			output.getData().add(getTagTree(navigateIndex,pageSourceType));
 			break;
 		}
 
-		if (pageSourceType != null && pageSourceType == 1) {
-			filterTagCoverNonData(output);
-		}
 		return output;
 	}
 
-	private void filterTagCoverNonData(BaseOutput output) {
+	private void filterTagCoverNonData(BaseOutput output,List<Object> filteredList) {
 		if (output == null)
 			return;
 		if (CollectionUtils.isNotEmpty(output.getData())) {
-			List<Object> filteredList = new LinkedList<>();
 			for (Object object : output.getData()) {
-				if (object instanceof TagSystemTreeTagOut) {
-					if (commonUtilService.isTagCoverData(((TagSystemTreeTagOut) object).getTagId())) {
-						filteredList.add(object);
+				if(object instanceof List){
+					for(Object obj : (List)object){
+						if (obj instanceof TagSystemTreeTagOut) {
+							if (commonUtilService.isTagCoverData(((TagSystemTreeTagOut) obj).getTagId())) {
+								filteredList.add(obj);
+							}
+						}
 					}
 				}
 			}
-			output.setData(filteredList);
 		}
+		output.getData().clear();
+		output.getData().add(filteredList);
 	}
 
 	@Override
@@ -123,7 +132,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 		try {
 
 			TagValueCount tagValueCount = new TagValueCount();
-			tagValueCount.setStartIndex(index - 1);
+			tagValueCount.setStartIndex((index - 1)*size);
 			tagValueCount.setPageSize(size);
 			tagValueCount.setIsTag("0");
 			tagValueCount.setTagId(tagId);
@@ -207,7 +216,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 	 *            一级分类ID
 	 * @return
 	 */
-	private List<TagSystemTreeOut> getTagTree(String rootTagId) {
+	private List<TagSystemTreeOut> getTagTree(String rootTagId,Integer pageSourceType) {
 		List<TagSystemTreeOut> resultList = new ArrayList<>();
 		try {
 			// 获取二级标签分类
@@ -236,7 +245,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 						String tagCover = commonUtilService.getTagCover(tagId);
 						TagSystemTreeTagOut tagOut = new TagSystemTreeTagOut(tagId, tag.getTagName(), tag.getFlag(),
 								tag.getTagList(), tagCover);
-						tagTreeSecondOut.getChildren().add(tagOut);
+						solveResultByPageSourceType(pageSourceType, tagTreeSecondOut, tagId, tagOut);
 					}
 				}
 				tagTreeSecondOut.setIncludeCount(tagTreeSecondOut.getChildren().size());
@@ -247,6 +256,14 @@ public class SystemTagServiceImpl implements SystemTagService {
 			logger.error("SystemTagServiceImpl getTagTree method Exception-------->" + e.getMessage(), e);
 		}
 		return resultList;
+	}
+
+	private void solveResultByPageSourceType(Integer pageSourceType, TagSystemTreeOut tagTreeSecondOut, String tagId, TagSystemTreeTagOut tagOut) {
+		if(pageSourceType != null && pageSourceType.equals(1) && commonUtilService.isTagCoverData(tagId)){
+            tagTreeSecondOut.getChildren().add(tagOut);
+        }else if(pageSourceType == null || !pageSourceType.equals(1)){
+            tagTreeSecondOut.getChildren().add(tagOut);
+        }
 	}
 
 	@Override
@@ -298,18 +315,23 @@ public class SystemTagServiceImpl implements SystemTagService {
 		List<TagRecommend> tagRecommendList = mongoTemplate.find(
 				Query.query(Criteria.where("update_flag").ne(2).and("status").is(ApiConstant.INT_ZERO)),
 				TagRecommend.class);
+		TagValueCount tagValueCount = new TagValueCount();
 		for (TagRecommend tagRecommend : tagRecommendList) {
 			String tagId = tagRecommend.getTagId();
+			tagValueCount.setTagId(tagId);
 			Integer countByTagId = segmentationBodyDao.getCountByTagId(tagId);
 			Update update = new Update();
 			if (countByTagId > 0) {
 				// 设置状态为不可编辑
 				update.set("update_flag", ApiConstant.INT_ZERO);
+				tagValueCount.setUpdateFlag(ApiConstant.INT_ZERO);
 			} else {
 				// 设置状态为可编辑
 				update.set("update_flag", ApiConstant.INT_ONE);
+				tagValueCount.setUpdateFlag(ApiConstant.INT_ONE);
 			}
 			mongoTemplate.findAndModify(Query.query(Criteria.where("tag_id").is(tagId)), update, TagRecommend.class);
+			tagValueCountDao.changeUpdateFlagByTagId(tagValueCount);
 		}
 	}
 

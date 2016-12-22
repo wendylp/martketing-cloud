@@ -35,6 +35,7 @@ import cn.rongcapital.mkt.service.SystemTagService;
 import cn.rongcapital.mkt.service.TagCustomTaxonomyDelService;
 import cn.rongcapital.mkt.service.TagCustomTaxonomyListGetService;
 import cn.rongcapital.mkt.service.TagCustomTaxonomyRootListGetService;
+import cn.rongcapital.mkt.service.TagCustomTaxonomyRootSaveService;
 import cn.rongcapital.mkt.service.TagCustomTaxonomySaveService;
 import cn.rongcapital.mkt.service.TagCustomTaxonomyShowSetService;
 import cn.rongcapital.mkt.service.TagDownloadCustomAudienceService;
@@ -46,6 +47,7 @@ import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
 import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyDelIn;
+import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyRootSaveIn;
 import cn.rongcapital.mkt.vo.in.TagCustomTaxonomySaveIn;
 import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyShowSetIn;
 import cn.rongcapital.mkt.vo.in.TagSystemFlagSetIn;
@@ -99,6 +101,9 @@ public class MktSystemTagApi {
 
     @Autowired
     private TagCustomTaxonomyShowSetService tagCustomTaxonomyShowSetService;
+    
+    @Autowired
+    private TagCustomTaxonomyRootSaveService tagCustomTaxonomyRootSaveService;
 
 
     /**
@@ -288,7 +293,7 @@ public class MktSystemTagApi {
     }
 
     /**
-     * 功能描述：创建自定义分类
+     * 功能描述：保存自定义分类子分类
      * 
      * @param body
      * @param securityContext
@@ -381,5 +386,22 @@ public class MktSystemTagApi {
     public BaseOutput systemTagValueUpdate(@Valid TagValueUpdateIn tagValueUpdateIn,
             @Context SecurityContext securityContext) {
 		return systemTagService.saveUpdateTagValue(tagValueUpdateIn);
+    }
+    
+    /**
+     * 功能描述：创建自定义分类跟分类
+     * 
+     * @param body
+     * @param securityContext
+     * @return
+     * @Date 2016.12.21
+     * @author shuiyangyang
+     */
+    @POST
+    @Path("/mkt.tag.custom.taxonomy.root.save")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public BaseOutput tagCustomTaxonomyRootSave(@Valid TagCustomTaxonomyRootSaveIn body,
+            @Context SecurityContext securityContext) {
+        return tagCustomTaxonomyRootSaveService.tagCustomTaxonomyRootSave(body, securityContext);
     }
 }

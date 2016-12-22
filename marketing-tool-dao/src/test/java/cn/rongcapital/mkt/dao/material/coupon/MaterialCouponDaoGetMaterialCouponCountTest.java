@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -22,10 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponReadyStatusType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponSourceCodeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
+import cn.rongcapital.mkt.common.util.SqlConvertUtils;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
@@ -48,6 +52,7 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
         coupon.setStockRest(2);
         coupon.setStockTotal(2);
+        coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
         coupon.setAmount(BigDecimal.valueOf(333));
         coupon.setStartTime(new Date());
         coupon.setEndTime(new Date());
@@ -64,6 +69,7 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
         coupon.setStockRest(2);
         coupon.setStockTotal(2);
+        coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
         coupon.setAmount(BigDecimal.valueOf(333));
         coupon.setStartTime(new Date());
         coupon.setEndTime(new Date());
@@ -80,6 +86,7 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
         coupon.setStockRest(2);
         coupon.setStockTotal(2);
+        coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
         coupon.setAmount(BigDecimal.valueOf(333));
         coupon.setStartTime(new Date());
         coupon.setEndTime(new Date());
@@ -94,6 +101,7 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
         coupon.setSourceCode(MaterialCouponSourceCodeEnum.COMMON.getCode());
         coupon.setStockRest(2);
         coupon.setStockTotal(2);
+        coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
         coupon.setAmount(BigDecimal.valueOf(333));
         coupon.setStartTime(new Date());
         coupon.setEndTime(new Date());
@@ -183,6 +191,127 @@ public class MaterialCouponDaoGetMaterialCouponCountTest extends AbstractUnitTes
     public void testGetMaterialCouponCount06() {
         Map<String, Object> paramMap = new HashMap<String, Object>();
         Assert.assertTrue(materialCouponDao.getMaterialCouponCount(paramMap) >= 4);
+    }
+    
+    
+    /**
+     * title 包含 _
+     * 
+     */
+    @Test
+    public void testGetMaterialCouponCount07() {
+        MaterialCoupon coupon = new MaterialCoupon();
+        coupon.setSourceCode(MaterialCouponSourceCodeEnum.COMMON.getCode());
+        coupon.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
+        coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
+        coupon.setStockRest(2);
+        coupon.setStockTotal(2);
+        coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
+        coupon.setAmount(BigDecimal.valueOf(333));
+        coupon.setStartTime(new Date());
+        coupon.setEndTime(new Date());
+        String like = UUID.randomUUID() + "_b";
+        coupon.setTitle("zhuxuelong" + like + "zhuxuelong");
+        coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
+        coupon.setStatus(Byte.valueOf("0"));
+        int count = materialCouponDao.selectListCount(coupon);
+        if (count == 0) {
+            materialCouponDao.insert(coupon);
+        }
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("chanelCode", MaterialCouponChannelCodeEnum.SMS.getCode());
+        paramMap.put("title", SqlConvertUtils.escapeSQLCharacter(like));
+        Assert.assertTrue(materialCouponDao.getMaterialCouponCount(paramMap) == 1);
+    }
+
+    /**
+     * title 包含%
+     * 
+     */
+    @Test
+    public void testGetMaterialCouponCount08() {
+        MaterialCoupon coupon = new MaterialCoupon();
+        coupon.setSourceCode(MaterialCouponSourceCodeEnum.COMMON.getCode());
+        coupon.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
+        coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
+        coupon.setStockRest(2);
+        coupon.setStockTotal(2);
+        coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
+        coupon.setAmount(BigDecimal.valueOf(333));
+        coupon.setStartTime(new Date());
+        coupon.setEndTime(new Date());
+        String like = UUID.randomUUID() + "%b";
+        coupon.setTitle("zhuxuelong" + like + "zhuxuelong");
+        coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
+        coupon.setStatus(Byte.valueOf("0"));
+        int count = materialCouponDao.selectListCount(coupon);
+        if (count == 0) {
+            materialCouponDao.insert(coupon);
+        }
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("chanelCode", MaterialCouponChannelCodeEnum.SMS.getCode());
+        paramMap.put("title", SqlConvertUtils.escapeSQLCharacter(like));
+        Assert.assertTrue(materialCouponDao.getMaterialCouponCount(paramMap) == 1);
+    }
+
+    /**
+     * title 包含escape符号
+     * 
+     */
+    @Test
+    public void testGetMaterialCouponCount09() {
+        MaterialCoupon coupon = new MaterialCoupon();
+        coupon.setSourceCode(MaterialCouponSourceCodeEnum.COMMON.getCode());
+        coupon.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
+        coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
+        coupon.setStockRest(2);
+        coupon.setStockTotal(2);
+        coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
+        coupon.setAmount(BigDecimal.valueOf(333));
+        coupon.setStartTime(new Date());
+        coupon.setEndTime(new Date());
+        String like = UUID.randomUUID() + ApiConstant.SQL_ESCAPE_CHARACTER + "b";
+        coupon.setTitle("zhuxuelong" + like + "zhuxuelong");
+        coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
+        coupon.setStatus(Byte.valueOf("0"));
+        int count = materialCouponDao.selectListCount(coupon);
+        if (count == 0) {
+            materialCouponDao.insert(coupon);
+        }
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("chanelCode", MaterialCouponChannelCodeEnum.SMS.getCode());
+        paramMap.put("title", SqlConvertUtils.escapeSQLCharacter(like));
+        Assert.assertTrue(materialCouponDao.getMaterialCouponCount(paramMap) == 1);
+    }
+    
+    /**
+     * title 包含转译符
+     * 
+     */
+    @Test
+    public void testGetMaterialCouponCount10() {
+        MaterialCoupon coupon = new MaterialCoupon();
+        coupon.setSourceCode(MaterialCouponSourceCodeEnum.COMMON.getCode());
+        coupon.setType(MaterialCouponTypeEnum.VOUCHER.getCode());
+        coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
+        coupon.setStockRest(2);
+        coupon.setStockTotal(2);
+        coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
+        coupon.setAmount(BigDecimal.valueOf(333));
+        coupon.setStartTime(new Date());
+        coupon.setEndTime(new Date());
+        String like = UUID.randomUUID() + "\\b";
+        coupon.setTitle("zhuxuelong" + like + "zhuxuelong");
+        coupon.setCouponStatus(MaterialCouponStatusEnum.RELEASED.getCode());
+        coupon.setStatus(Byte.valueOf("0"));
+        int count = materialCouponDao.selectListCount(coupon);
+        if (count == 0) {
+            materialCouponDao.insert(coupon);
+        }
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("chanelCode", MaterialCouponChannelCodeEnum.SMS.getCode());
+        paramMap.put("title", SqlConvertUtils.escapeSQLCharacter(like));
+        Assert.assertTrue(materialCouponDao.getMaterialCouponCount(paramMap) == 1);
     }
 
 }

@@ -275,4 +275,8 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      * @param id
      */
     void deleteDataById(Integer id);
+    
+    
+    List<String> getBitmaps(Integer id);
+    
 }

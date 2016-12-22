@@ -14,10 +14,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -29,6 +31,7 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -58,7 +61,7 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
         UploadFileOut out = new UploadFileOut();
         InputPart inputPart = inputParts.get(0);
         String fileName = getFileName(inputPart.getHeaders());
-        out.setFile_name(fileName);
+        out.setFile_name(userId + "/" + fileName);
         if (!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx")) {
             baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
             baseOutput.setMsg("上传的文件不是预定格式");
@@ -82,16 +85,17 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
                 Iterator<Cell> dataCellIterator = row.cellIterator();
                 while (dataCellIterator.hasNext()) {
                     Cell dataColumnCell = dataCellIterator.next();
-                    if(!StringUtils.isBlank(dataColumnCell.getStringCellValue())){
-                        System.out.println(dataColumnCell.getStringCellValue());
-                        num++;
+                    if("1".equals(dataColumnCell.getCellType())){
+                        if(!StringUtils.isBlank(dataColumnCell.getStringCellValue())){
+                            System.out.println(dataColumnCell.getStringCellValue());
+                            num++;
+                        }
                     }
                 }
             }
             out.setRecord_count(num);
             // 上传文件到服务器
             String fileUrl = filePath + userId + SLASH + fileName;
-            out.setFile_path(fileUrl);
             String dirUrl = filePath + userId;
             writeFile(bytes, fileUrl, dirUrl);
             is.close();
@@ -134,5 +138,17 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
         fop.write(content);
         fop.flush();
         fop.close();
+    }
+
+    @Override
+    public Object getCouponFileUploadUrlGet(String userId) {
+        BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),1,null);
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("user_id",userId);
+        map.put("file_url", ApiConstant.COUPON_FILE_UPLOAD_URL);
+        baseOutput.getData().add(map);
+        baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
+        baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
+        return Response.ok().entity(baseOutput).build();
     }
 }

@@ -1061,7 +1061,8 @@ public class MktWeChatApi {
         }
         imgTextAsset.setStartIndex((index-1)*size);
         imgTextAsset.setPageSize(size);
-        
+        imgTextAsset.setOrderField("create_time");
+        imgTextAsset.setOrderFieldType("DESC");
         return etWxImgTextAssetService.getWxImgTextAsset(imgTextAsset);
 	}
 	
