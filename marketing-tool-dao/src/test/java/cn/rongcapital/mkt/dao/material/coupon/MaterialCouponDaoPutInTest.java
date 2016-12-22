@@ -58,6 +58,7 @@ public class MaterialCouponDaoPutInTest extends AbstractUnitTest {
         mc.setAmount(new BigDecimal(10));// 金额;
         mc.setStockRest(200);;// 库存数量
         mc.setStartTime(new Date());
+        mc.setReadyStatus("ready");
         mc.setEndTime(new Date());
         materialCouponDao.insert(mc);
 

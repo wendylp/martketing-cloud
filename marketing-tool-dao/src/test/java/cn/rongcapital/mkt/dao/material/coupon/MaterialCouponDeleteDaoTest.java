@@ -62,6 +62,7 @@ public class MaterialCouponDeleteDaoTest extends AbstractUnitTest {
         mc.setStockRest(200);;// 库存数量
         mc.setStartTime(new Date());
         mc.setEndTime(new Date());
+        mc.setReadyStatus("ready");
         materialCouponDao.insert(mc);
 
         // 插入优惠码

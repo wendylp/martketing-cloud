@@ -79,6 +79,7 @@ public class MaterialCouponCodeDaoGetCCVerifyUserInfoList extends AbstractUnitTe
         coupon.setAmount(BigDecimal.valueOf(10));
         coupon.setStockTotal(314159265);
         coupon.setStockRest(2000);
+        coupon.setReadyStatus("ready");
 
         List<MaterialCoupon> dataList = materialCouponDao.selectList(coupon);
         if (dataList.size() == 0) {

@@ -98,14 +98,14 @@ public class MaterialCouponPageListServiceTest {
                 .argThat(new MaterialCouponPageListServiceTest.MaterialCouponMatcherMockTwo((paramMaterialCoupon)))))
                 .thenReturn(totalCount);
 
-        BaseOutput baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(null, null, keyword, index, size);
+        BaseOutput baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(null, null, keyword, index, size, Boolean.FALSE);
         
         BaseOutput expected = new BaseOutput(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
             ApiConstant.INT_ZERO, null);
         Assert.assertEquals(expected.getCode(), baseOutput.getCode());
 
         String channelCode = "ERROR";
-        baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(channelCode, null, keyword, index, size);
+        baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(channelCode, null, keyword, index, size, Boolean.FALSE);
 
         Assert.assertEquals(ApiErrorCode.PARAMETER_ERROR.getCode(), baseOutput.getCode());
     }
@@ -122,7 +122,7 @@ public class MaterialCouponPageListServiceTest {
         Integer size = 10;
         int totalCount = 20;
 
-        materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), couponStatus.getCode(), keyword, index, size);
+        materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), couponStatus.getCode(), keyword, index, size, Boolean.FALSE);
 
         paramMaterialCoupon.setTitle("贝贝熊");
         paramMaterialCoupon.setStartIndex(1);
@@ -142,7 +142,14 @@ public class MaterialCouponPageListServiceTest {
                 .thenReturn(totalCount);
 
         MaterialCouponListOut baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), couponStatus.getCode(),
-                keyword, index, size);
+                keyword, index, size, Boolean.FALSE);
+        Assert.assertEquals(baseOutput.getCode(), ApiErrorCode.SUCCESS.getCode());
+        Assert.assertEquals(totalCount, baseOutput.getTotalCount());
+        Assert.assertEquals(1, baseOutput.getListItems().size());
+
+
+         baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), couponStatus.getCode(),
+                keyword, index, size, Boolean.TRUE);
         Assert.assertEquals(baseOutput.getCode(), ApiErrorCode.SUCCESS.getCode());
         Assert.assertEquals(totalCount, baseOutput.getTotalCount());
         Assert.assertEquals(1, baseOutput.getListItems().size());
@@ -176,14 +183,14 @@ public class MaterialCouponPageListServiceTest {
                 .thenReturn(totalCount);
 
         BaseOutput baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), "error",
-                keyword, index, size);
+                keyword, index, size, Boolean.FALSE);
         BaseOutput expected = new BaseOutput(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
             ApiConstant.INT_ZERO, null);
         Assert.assertEquals(expected.getCode(), baseOutput.getCode());
 
 
          baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(),null,
-                keyword, index, size);
+                keyword, index, size, Boolean.FALSE);
 
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), baseOutput.getCode());
 
@@ -200,7 +207,7 @@ public class MaterialCouponPageListServiceTest {
         Integer size = 10;
         int totalCount = 20;
 
-        materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), couponStatus.getCode(), keyword, index, size);
+        materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), couponStatus.getCode(), keyword, index, size, Boolean.FALSE);
 
         paramMaterialCoupon.setTitle("贝贝熊");
         paramMaterialCoupon.setStartIndex(1);
@@ -219,7 +226,7 @@ public class MaterialCouponPageListServiceTest {
                 .thenReturn(totalCount);
 
         MaterialCouponListOut baseOutput = materialCouponPageListService.getMaterialCouponListByKeyword(chanelCode.getCode(), couponStatus.getCode(),
-                keyword, index, size);
+                keyword, index, size, Boolean.FALSE);
         Assert.assertEquals(baseOutput.getCode(), ApiErrorCode.SUCCESS.getCode());
         Assert.assertEquals(totalCount, baseOutput.getTotalCount());
         Assert.assertEquals(1, baseOutput.getListItems().size());

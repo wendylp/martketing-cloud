@@ -21,13 +21,11 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
-import cn.rongcapital.mkt.common.enums.MaterialCouponDictionaryTypeEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponExpiredEnum;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeDictionaryService;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryItemOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryOut;
-import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
 public class CouponCodeDictionaryServiceImpl implements CouponCodeDictionaryService {
