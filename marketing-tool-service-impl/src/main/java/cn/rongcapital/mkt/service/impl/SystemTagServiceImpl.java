@@ -196,7 +196,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 			String tagName = tagRecommend.getTagName();
 			Boolean flag = tagRecommend.getFlag();
 			String tagCover = commonUtilService.getTagCover(tagId);
-			if(pageSourceType != null && pageSourceType.equals(1) && !"%0".equals(tagCover)){
+			if(pageSourceType != null && pageSourceType.equals(1) && !"0%".equals(tagCover)){
 				resultList.add(new TagSystemTreeTagOut(tagId, tagName, flag, tagCover));
 			}else if(pageSourceType == null || !pageSourceType.equals(1)){
 				resultList.add(new TagSystemTreeTagOut(tagId, tagName, flag, tagCover));
@@ -256,7 +256,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 	}
 
 	private void solveResultByPageSourceType(Integer pageSourceType, TagSystemTreeOut tagTreeSecondOut, String tagCover, TagSystemTreeTagOut tagOut) {
-		if(pageSourceType != null && pageSourceType.equals(1) && !"%0".equals(tagCover)){
+		if(pageSourceType != null && pageSourceType.equals(1) && !"0%".equals(tagCover)){
 			tagTreeSecondOut.getChildren().add(tagOut);
 		}else if(pageSourceType == null || !pageSourceType.equals(1)){
 			tagTreeSecondOut.getChildren().add(tagOut);

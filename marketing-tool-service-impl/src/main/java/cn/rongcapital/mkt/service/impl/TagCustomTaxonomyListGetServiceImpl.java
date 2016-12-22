@@ -173,7 +173,7 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
                     TagSystemTreeTagOut tagSystemTreeTagOut = new TagSystemTreeTagOut(tagRecommend.getTagId(),
                             tagRecommend.getTagName(), tagRecommend.getFlag(), tagRecommend.getTagNameEng(),
                             tagRecommend.getSearchMod(), tagCover, tagRecommend.getTagDesc());
-                    if(pageSourceType!=null && pageSourceType==SEGMENT_PAGE_SOURCE && !"%0".equals(tagCover)){
+                    if(pageSourceType!=null && pageSourceType==SEGMENT_PAGE_SOURCE && !"0%".equals(tagCover)){
                         tagOutLists.add(tagSystemTreeTagOut);
                     }else if(pageSourceType == null || !pageSourceType.equals(1)){
                         tagOutLists.add(tagSystemTreeTagOut);
