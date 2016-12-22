@@ -75,6 +75,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
         return output;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     private void modifySmsMaterialComponentAndVariable(@NotEmpty SmsMaterialIn smsMaterialIn, @NotNull Integer modifyType) {
         //0如果是修改,则删除以前的物料和变量数据
         if (modifyType.equals(MODIFY_TYPE_UPDATE)) {
