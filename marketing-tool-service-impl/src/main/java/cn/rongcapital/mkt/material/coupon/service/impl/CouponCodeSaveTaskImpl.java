@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,7 +78,6 @@ public class CouponCodeSaveTaskImpl implements TaskService{
             Date now = new Date();
             JSONObject jsonObject = JSONObject.parseObject(taskHeadIdStr);
             String SourceCode = jsonObject.getString("source_code");
-            String userId = jsonObject.getString("user_id");
             String rule = jsonObject.getString("rule");
             Integer stock_total = jsonObject.getInteger("stock_total");
             Long couponId = jsonObject.getLong("coupon_id");
@@ -97,7 +97,7 @@ public class CouponCodeSaveTaskImpl implements TaskService{
             } else {
                 // //自有码
                 JSONArray rules = JSONArray.parseArray(rule);
-                getOwnCode(getNameList(rules), userId, couponId, list, now);
+                getOwnCode(getNameList(rules), couponId, list, now);
             }
             int totleSize = list.size();
             if (totleSize > 0) {
@@ -247,23 +247,27 @@ public class CouponCodeSaveTaskImpl implements TaskService{
      * @param list
      * @param now
      */
-    private void getOwnCode(List<String> fileNames, String userId, Long couponId, List<MaterialCouponCode> list, Date now){
+    private void getOwnCode(List<String> fileNames, Long couponId, List<MaterialCouponCode> list, Date now){
         
-        String filesUrl = filePath + userId + SLASH;
-        List<String> codeList = filesGetCode(fileNames, filesUrl);
-        for(String code : codeList){
-            if(RegularValidation.alphanumericValidation(code)){
-                MaterialCouponCode materialCouponCode = new MaterialCouponCode();
-                materialCouponCode.setCode(code);
-                materialCouponCode.setCouponId(couponId);
-                materialCouponCode.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRELEASED.getCode());
-                materialCouponCode.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
-                materialCouponCode.setStatus((byte) 0);
-                materialCouponCode.setCreateTime(now);
-                materialCouponCode.setUpdateTime(now);
-                list.add(materialCouponCode);
+        try {
+            List<String> codeList = filesGetCode(fileNames, filePath);
+            for(String code : codeList){
+                if(RegularValidation.alphanumericValidation(code)){
+                    MaterialCouponCode materialCouponCode = new MaterialCouponCode();
+                    materialCouponCode.setCode(code);
+                    materialCouponCode.setCouponId(couponId);
+                    materialCouponCode.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRELEASED.getCode());
+                    materialCouponCode.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
+                    materialCouponCode.setStatus((byte) 0);
+                    materialCouponCode.setCreateTime(now);
+                    materialCouponCode.setUpdateTime(now);
+                    list.add(materialCouponCode);
+                }
             }
+        } catch (IOException e) {
+            logger.error("CouponCodeSaveTaskImpl getOwnCode error", e);
         }
+        
     }
     
     /**
@@ -271,51 +275,50 @@ public class CouponCodeSaveTaskImpl implements TaskService{
      * @param filesUrl
      * @param baseOutput
      * @return
+     * @throws IOException 
      */
-    private List<String> filesGetCode(List<String> fileNames, String filesUrl) {
+    private List<String> filesGetCode(List<String> fileNames, String filesUrl) throws IOException {
 
-        File file = new File(filesUrl);
-        File[] tempList = file.listFiles();
         List<String> codeList = new ArrayList<String>();
-        if(tempList != null){
-            for (int i = 0; i < tempList.length; i++) {
-                if (tempList[i].isFile()
-                        && (tempList[i].getName().endsWith(".xls") || tempList[i].getName().endsWith(".xlsx"))
-                        && (fileNames.contains(tempList[i].getName()))) {
-                    File fileNew = tempList[i];
-                    InputStream is = null;
-                    try {
-                        BufferedInputStream in = new BufferedInputStream(new FileInputStream(fileNew));
-                        byte[] bytes = IOUtils.toByteArray(in);
-                        is = new ByteArrayInputStream(bytes);
-                        Workbook workbook = WorkbookFactory.create(is);
-                        Sheet sheet = workbook.getSheetAt(0);
-                        Iterator<Row> rowIterator = sheet.rowIterator();
-                        while (rowIterator.hasNext()) {
-                            Row row = rowIterator.next();
-                            Integer rowIndex = row.getRowNum();
-                            if (rowIndex == 0) {
-                                continue;
-                            }
-                            Iterator<Cell> dataCellIterator = row.cellIterator();
-                            while (dataCellIterator.hasNext()) {
-                                Cell dataColumnCell = dataCellIterator.next();
-                                int cellType = dataColumnCell.getCellType();
-                                if (cellType == 1) {
-                                    if (!codeList.contains(dataColumnCell.getStringCellValue())) {
-                                        codeList.add(dataColumnCell.getStringCellValue());
-                                    }
+        for(String fileName : fileNames){
+            String path = filesUrl + fileName;
+            File file = new File(path);
+            if(file.getName().endsWith(".xls") || file.getName().endsWith(".xlsx")){
+                BufferedInputStream in = null;
+                InputStream is = null;
+                try {
+                    in = new BufferedInputStream(new FileInputStream(file));
+                    byte[] bytes = IOUtils.toByteArray(in);
+                    is = new ByteArrayInputStream(bytes);
+                    Workbook workbook = WorkbookFactory.create(is);
+                    Sheet sheet = workbook.getSheetAt(0);
+                    Iterator<Row> rowIterator = sheet.rowIterator();
+                    while (rowIterator.hasNext()) {
+                        Row row = rowIterator.next();
+                        Integer rowIndex = row.getRowNum();
+                        if (rowIndex == 0) {
+                            continue;
+                        }
+                        Iterator<Cell> dataCellIterator = row.cellIterator();
+                        while (dataCellIterator.hasNext()) {
+                            Cell dataColumnCell = dataCellIterator.next();
+                            int cellType = dataColumnCell.getCellType();
+                            if (cellType == 1) {
+                                if (!codeList.contains(dataColumnCell.getStringCellValue())) {
+                                    codeList.add(dataColumnCell.getStringCellValue());
                                 }
                             }
                         }
-                        is.close();
-                    } catch (Exception e) {
-                        logger.error("CouponCodeSaveTaskImpl filesGetCode error", e);
                     }
+                } catch (Exception e) {
+                    logger.error("CouponCodeSaveTaskImpl filesGetCode error", e);
+                }finally{
+                    in.close();
+                    is.close();
                 }
             }
+            
         }
-        
         return codeList;
     }
 }
