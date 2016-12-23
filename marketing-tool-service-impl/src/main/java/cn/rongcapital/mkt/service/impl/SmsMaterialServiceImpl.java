@@ -82,7 +82,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
             //Todo:需要先把优惠券选出来,然后把原始的优惠券给释放掉
             SmsMaterialMaterielMap paramSmsMaterialMaterielMap = new SmsMaterialMaterielMap();
             paramSmsMaterialMaterielMap.setSmsMaterialId(Long.valueOf(smsMaterialIn.getId()));
-            paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+            paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
             List<SmsMaterialMaterielMap> oldSmsMaterialMaterielMapList = smsMaterialMaterielMapDao.selectList(paramSmsMaterialMaterielMap);
             if(CollectionUtils.isNotEmpty(oldSmsMaterialMaterielMapList)){
                 for(SmsMaterialMaterielMap smsMaterialMaterielMap : oldSmsMaterialMaterielMapList){
@@ -94,6 +94,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
             }
 
             //删除掉了优惠券的关联信息
+            paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
             smsMaterialMaterielMapDao.deleteBySmsMaterialId(paramSmsMaterialMaterielMap);
 
             //删除掉了变量的关联信息
@@ -147,7 +148,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
 
                 //1.干掉物料表
                 SmsMaterialMaterielMap paramSmsMaterialMaterielMap = new SmsMaterialMaterielMap();
-                paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+                paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
                 paramSmsMaterialMaterielMap.setSmsMaterialId(Long.valueOf(smsMaterialDeleteIn.getId()));
 
                 //Todo:这里要进行优惠券状态的回改.
@@ -161,6 +162,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
                     }
                 }
 
+                paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
                 smsMaterialMaterielMapDao.deleteBySmsMaterialId(paramSmsMaterialMaterielMap);
                 //2.干掉变量表
                 SmsMaterialVariableMap paramSmsMaterialVariableMap = new SmsMaterialVariableMap();
