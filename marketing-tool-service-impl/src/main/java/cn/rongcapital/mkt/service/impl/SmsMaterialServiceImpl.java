@@ -87,7 +87,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
             if(CollectionUtils.isNotEmpty(oldSmsMaterialMaterielMapList)){
                 for(SmsMaterialMaterielMap smsMaterialMaterielMap : oldSmsMaterialMaterielMapList){
                     MaterialCouponStatusUpdateVO paramMaterialCouponStatusUpdateVO = new MaterialCouponStatusUpdateVO();
-                    paramMaterialCouponStatusUpdateVO.setId(smsMaterialMaterielMap.getId());
+                    paramMaterialCouponStatusUpdateVO.setId(smsMaterialMaterielMap.getSmsMaterielId());
                     paramMaterialCouponStatusUpdateVO.setStatus(MaterialCouponStatusEnum.UNUSED.getCode());
                     materialCouponStatusUpdateService.updateMaterialCouponStatus(paramMaterialCouponStatusUpdateVO);
                 }
@@ -155,7 +155,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
                 if(CollectionUtils.isNotEmpty(oldSmsMaterialMaterielMapList)){
                     for(SmsMaterialMaterielMap smsMaterialMaterielMap : oldSmsMaterialMaterielMapList){
                         MaterialCouponStatusUpdateVO paramMaterialCouponStatusUpdateVO = new MaterialCouponStatusUpdateVO();
-                        paramMaterialCouponStatusUpdateVO.setId(smsMaterialMaterielMap.getId());
+                        paramMaterialCouponStatusUpdateVO.setId(smsMaterialMaterielMap.getSmsMaterielId());
                         paramMaterialCouponStatusUpdateVO.setStatus(MaterialCouponStatusEnum.UNUSED.getCode());
                         materialCouponStatusUpdateService.updateMaterialCouponStatus(paramMaterialCouponStatusUpdateVO);
                     }
