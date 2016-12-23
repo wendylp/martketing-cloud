@@ -16,6 +16,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.Xml2JsonUtil;
 import cn.rongcapital.mkt.dao.WebchatComponentVerifyTicketDao;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
+import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
 import cn.rongcapital.mkt.po.WebchatComponentVerifyTicket;
 import cn.rongcapital.mkt.po.WechatAsset;
@@ -36,6 +37,9 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 
 	@Autowired
 	private WechatAssetDao wechatAssetDao;
+	
+	@Autowired
+	private WechatQrcodeDao wechatQrcodeDao;
 
 	@Override
 	public void insert(String componentVerifyTicketXml) {
@@ -81,8 +85,12 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			 *
 			 */
 			if ("authorized".equals(infoType)) {
-
-
+				String authorizerAppId = myJsonObject.getString("AuthorizerAppid");
+				authorizerAppId = authorizerAppId.substring(2, authorizerAppId.length() - 2).trim();
+				logger.info("----authorizerAppId----:{}", authorizerAppId);
+				WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(authorizerAppId);
+				logger.info("----wx_acct----:{}", wechatRegister.getWxAcct());
+				this.updateStatusForWechat(wechatRegister.getWxAcct(), ApiConstant.TABLE_DATA_STATUS_VALID);
 			} 
 			if ("unauthorized".equals(infoType)) {
 				String authorizerAppId = myJsonObject.getString("AuthorizerAppid");
@@ -130,7 +138,11 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 		wechatAsset.setWxAcct(wxAcct);
 		wechatAsset.setStatus(status);
 		wechatAssetDao.updateByWxacct(wechatAsset);
-
+		if(status==0){
+			wechatQrcodeDao.authorizedByPubId(wxAcct);
+		}else if(status==1){
+			wechatQrcodeDao.unauthorizedByPubId(wxAcct);
+		}		
 	}
 
 	/**
