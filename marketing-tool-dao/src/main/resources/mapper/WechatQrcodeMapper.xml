@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,wx_name as wxName,wx_acct as wxAcct,ch_code as chCode,is_audience as isAudience,audience_name as audienceName,related_tags as relatedTags,comments as comments,create_time as createTime,expiration_time as expirationTime,status as status,qrcode_pic as qrcodePic,qrcode_url as qrcodeUrl,batch_id as batchId,ticket as ticket,qrcode_name as qrcodeName]]>
+		<![CDATA[ id as id,wx_name as wxName,wx_acct as wxAcct,ch_code as chCode,is_audience as isAudience,audience_name as audienceName,related_tags as relatedTags,comments as comments,create_time as createTime,expiration_time as expirationTime,status as status,qrcode_pic as qrcodePic,qrcode_url as qrcodeUrl,batch_id as batchId,ticket as ticket,qrcode_name as qrcodeName,authorization as authorization]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -29,6 +29,7 @@
 		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
 		    	<if test="ticket != null"><![CDATA[ AND ticket = #{ticket}]]></if>
 		    	<if test="qrcodeName != null"><![CDATA[ AND qrcode_name = #{qrcodeName}]]></if>
+		    	<if test="authorization != null"><![CDATA[ AND authorization = #{authorization}]]></if>
 		</where>
 	</sql>
 	
@@ -54,14 +55,15 @@
 		    	<if test="qrcodeUrl != null"><![CDATA[qrcode_url = #{qrcodeUrl},]]></if>
 		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
 		    	<if test="ticket != null"><![CDATA[ticket = #{ticket},]]></if>
-		    	<if test="qrcodeName != null"><![CDATA[qrcode_name = #{qrcodeName}]]></if>
+		    	<if test="qrcodeName != null"><![CDATA[qrcode_name = #{qrcodeName},]]></if>
+		    	<if test="authorization != null"><![CDATA[authorization = #{authorization}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatQrcode" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_qrcode (wx_name,wx_acct,ch_code,is_audience,audience_name,related_tags,comments,create_time,expiration_time,status,qrcode_pic,qrcode_url,batch_id,ticket,qrcode_name)
+			INSERT INTO wechat_qrcode (wx_name,wx_acct,ch_code,is_audience,audience_name,related_tags,comments,create_time,expiration_time,qrcode_pic,qrcode_url,batch_id,ticket,qrcode_name,authorization)
 			VALUES
 			(
 			  #{wxName},
@@ -78,7 +80,8 @@
 			  #{qrcodeUrl},
 			  #{batchId},
 			  #{ticket},
-			  #{qrcodeName}
+			  #{qrcodeName},
+			  #{authorization}
 			)
 		]]>
 	</insert>
@@ -128,7 +131,7 @@
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		<where>
-			<![CDATA[AND status != 2]]>
+			<![CDATA[AND status != 2 AND authorization = 0 ]]>
 			<if test="qrcodeName != null and qrcodeName != ''">
 				<bind name="fuzzy" value="'%' + _parameter.qrcodeName + '%'" />
 				<![CDATA[ AND qrcode_name like #{fuzzy}]]>
@@ -170,6 +173,7 @@
 		    	<if test="status == 0"><![CDATA[ AND status in (1, 3)]]></if>
 		    	<if test="expirationTimeStatus == 8"><![CDATA[ AND expiration_time IS NULL]]></if>		    	
 		    	<if test="expirationTime != null"><![CDATA[ AND expiration_time < #{expirationTime} AND expiration_time> #{expirationTimeNow}]]></if>
+		    	AND authorization = 0 
 		</where>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
@@ -187,5 +191,19 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<![CDATA[where ch_code = #{chCode} AND status in('1','3')]]>
 	</select>
+	
+		<!-- 通过Id更新 status -->
+	<update id="unauthorizedByPubId" parameterType="int">
+		<![CDATA[UPDATE wechat_qrcode]]>
+		set authorization = 1		
+		<![CDATA[WHERE wx_acct = #{pubId}]]>	
+	</update>
+	
+		<update id="authorizedByPubId" parameterType="int">
+		<![CDATA[UPDATE wechat_qrcode]]>
+		set authorization = 0		
+		<![CDATA[WHERE wx_acct = #{pubId}]]>	
+	</update>
+	
 	
 </mapper>
