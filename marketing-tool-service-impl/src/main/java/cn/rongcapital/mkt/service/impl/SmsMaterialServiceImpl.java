@@ -149,6 +149,18 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
                 SmsMaterialMaterielMap paramSmsMaterialMaterielMap = new SmsMaterialMaterielMap();
                 paramSmsMaterialMaterielMap.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
                 paramSmsMaterialMaterielMap.setSmsMaterialId(Long.valueOf(smsMaterialDeleteIn.getId()));
+
+                //Todo:这里要进行优惠券状态的回改.
+                List<SmsMaterialMaterielMap> oldSmsMaterialMaterielMapList = smsMaterialMaterielMapDao.selectList(paramSmsMaterialMaterielMap);
+                if(CollectionUtils.isNotEmpty(oldSmsMaterialMaterielMapList)){
+                    for(SmsMaterialMaterielMap smsMaterialMaterielMap : oldSmsMaterialMaterielMapList){
+                        MaterialCouponStatusUpdateVO paramMaterialCouponStatusUpdateVO = new MaterialCouponStatusUpdateVO();
+                        paramMaterialCouponStatusUpdateVO.setId(smsMaterialMaterielMap.getId());
+                        paramMaterialCouponStatusUpdateVO.setStatus(MaterialCouponStatusEnum.UNUSED.getCode());
+                        materialCouponStatusUpdateService.updateMaterialCouponStatus(paramMaterialCouponStatusUpdateVO);
+                    }
+                }
+
                 smsMaterialMaterielMapDao.deleteBySmsMaterialId(paramSmsMaterialMaterielMap);
                 //2.干掉变量表
                 SmsMaterialVariableMap paramSmsMaterialVariableMap = new SmsMaterialVariableMap();
