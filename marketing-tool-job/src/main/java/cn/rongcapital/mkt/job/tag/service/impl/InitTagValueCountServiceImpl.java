@@ -47,7 +47,9 @@ public class InitTagValueCountServiceImpl implements TaskService,SystemTagSynchS
 	
 	@Override
 	public void task(Integer taskId) {
+		logger.info("同步MySQL中tag_value_count标签统计表，任务开始执行------------>");
 		initTagValueCount(null);
+		logger.info("同步MySQL中tag_value_count标签统计表，任务执行结束------------>");
 	}
 
 	@Override
@@ -89,6 +91,9 @@ public class InitTagValueCountServiceImpl implements TaskService,SystemTagSynchS
 				Long tagCount = mongoTemplate.count(
 						new Query(Criteria.where("tagList").elemMatch(
 								Criteria.where("tagId").is(tagId))),DataParty.class);
+				if(targetTagId != null){
+					tagCount = 0L;
+				}
 				TagValueCount tagVo = new TagValueCount(tagId,tagName,tagName,tagCount, tagId, tagPath,IS_TAG,searchMod,updateFlag,tagDesc);
 				tagValueCountDao.insert(tagVo);
 				int sort = 0;
