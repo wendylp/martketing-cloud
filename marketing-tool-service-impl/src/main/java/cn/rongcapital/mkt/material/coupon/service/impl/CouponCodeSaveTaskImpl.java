@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -13,14 +14,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.eclipse.jetty.util.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import cn.rongcapital.mkt.common.enums.CouponCodeType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
@@ -41,7 +39,6 @@ import cn.rongcapital.mkt.file.FileStorageService;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
-
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -77,6 +74,7 @@ public class CouponCodeSaveTaskImpl implements TaskService{
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void task(String taskHeadIdStr) {
+        Long couponId = null;
         try {
             logger.info("MQ消费，起始时间" + System.currentTimeMillis());
             JSONUtils.parse(taskHeadIdStr);
@@ -85,7 +83,7 @@ public class CouponCodeSaveTaskImpl implements TaskService{
             String SourceCode = jsonObject.getString("source_code");
             String rule = jsonObject.getString("rule");
             Integer stock_total = jsonObject.getInteger("stock_total");
-            Long couponId = jsonObject.getLong("coupon_id");
+            couponId = jsonObject.getLong("coupon_id");
             List<MaterialCouponCode> list = new ArrayList<MaterialCouponCode>();
             Boolean editFlag = jsonObject.getBoolean("edit");
             if (editFlag) {
@@ -130,15 +128,15 @@ public class CouponCodeSaveTaskImpl implements TaskService{
                     }
                     materialCouponCodeDao.batchInsert(codeList);
                 }
-                MaterialCoupon coupon = materialCouponDao.selectOneCoupon(couponId);
-                coupon.setReadyStatus(MaterialCouponReadyStatusType.READY.getCode());
-                materialCouponDao.updateById(coupon);
-                logger.info("MQ消费，结束时间" + System.currentTimeMillis());
             }
         } catch (Exception e) {
             logger.error("CouponCodeSaveTaskImpl task error", e);
+        }finally{
+            MaterialCoupon coupon = materialCouponDao.selectOneCoupon(couponId);
+            coupon.setReadyStatus(MaterialCouponReadyStatusType.READY.getCode());
+            materialCouponDao.updateById(coupon);
+            logger.info("MQ消费，结束时间" + System.currentTimeMillis());
         }
-
     }
     
     /**
@@ -295,45 +293,49 @@ public class CouponCodeSaveTaskImpl implements TaskService{
         for(String fileName : fileNames){
             String path = filesUrl + fileName;
             File file = new File(path);
-            if(file.getName().endsWith(".xls") || file.getName().endsWith(".xlsx")){
-                BufferedInputStream in = null;
-                InputStream is = null;
-                try {
-                    in = new BufferedInputStream(new FileInputStream(file));
-                    byte[] bytes = IOUtils.toByteArray(in);
-                    is = new ByteArrayInputStream(bytes);
-                    Workbook workbook = WorkbookFactory.create(is);
-                    Sheet sheet = workbook.getSheetAt(0);
-                    Iterator<Row> rowIterator = sheet.rowIterator();
-                    while (rowIterator.hasNext()) {
-                        Row row = rowIterator.next();
-                        Integer rowIndex = row.getRowNum();
-                        if (rowIndex == 0) {
-                            continue;
-                        }
-                        Iterator<Cell> dataCellIterator = row.cellIterator();
-                        while (dataCellIterator.hasNext()) {
-                            Cell dataColumnCell = dataCellIterator.next();
-                            int cellType = dataColumnCell.getCellType();
-                            if (cellType == 1) {
-                                if (!codeList.contains(dataColumnCell.getStringCellValue())) {
-                                    codeList.add(dataColumnCell.getStringCellValue());
+            if(file.exists()){
+                if(file.getName().endsWith(".xls") || file.getName().endsWith(".xlsx")){
+                    BufferedInputStream in = null;
+                    InputStream is = null;
+                    try {
+                        in = new BufferedInputStream(new FileInputStream(file));
+                        byte[] bytes = IOUtils.toByteArray(in);
+                        is = new ByteArrayInputStream(bytes);
+                        Workbook workbook = WorkbookFactory.create(is);
+                        Sheet sheet = workbook.getSheetAt(0);
+                        Iterator<Row> rowIterator = sheet.rowIterator();
+                        while (rowIterator.hasNext()) {
+                            Row row = rowIterator.next();
+                            Integer rowIndex = row.getRowNum();
+                            if (rowIndex == 0) {
+                                continue;
+                            }
+                            Iterator<Cell> dataCellIterator = row.cellIterator();
+                            while (dataCellIterator.hasNext()) {
+                                Cell dataColumnCell = dataCellIterator.next();
+                                int cellType = dataColumnCell.getCellType();
+                                if (cellType == 1) {
+                                    if (!codeList.contains(dataColumnCell.getStringCellValue())) {
+                                        codeList.add(dataColumnCell.getStringCellValue());
+                                    }
                                 }
                             }
                         }
-                    }
-                } catch (Exception e) {
-                    logger.error("CouponCodeSaveTaskImpl filesGetCode error", e);
-                }finally{
-                    if(in != null){
-                        in.close();
-                    }
-                    if(is != null){
-                        is.close();
+                    } catch (Exception e) {
+                        logger.error("CouponCodeSaveTaskImpl filesGetCode error", e);
+                    }finally{
+                        if(in != null){
+                            in.close();
+                        }
+                        if(is != null){
+                            is.close();
+                        }
                     }
                 }
+            }else{
+                logger.error("文件不存在，文件:{}", filesUrl);
+                throw new FileNotFoundException("the file is not exist");
             }
-            
         }
         return codeList;
     }
