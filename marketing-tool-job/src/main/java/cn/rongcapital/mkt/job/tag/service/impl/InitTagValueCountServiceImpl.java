@@ -91,6 +91,9 @@ public class InitTagValueCountServiceImpl implements TaskService,SystemTagSynchS
 				Long tagCount = mongoTemplate.count(
 						new Query(Criteria.where("tagList").elemMatch(
 								Criteria.where("tagId").is(tagId))),DataParty.class);
+				if(targetTagId != null){
+					tagCount = 0L;
+				}
 				TagValueCount tagVo = new TagValueCount(tagId,tagName,tagName,tagCount, tagId, tagPath,IS_TAG,searchMod,updateFlag,tagDesc);
 				tagValueCountDao.insert(tagVo);
 				int sort = 0;
