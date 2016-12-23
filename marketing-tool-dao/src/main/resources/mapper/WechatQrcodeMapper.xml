@@ -193,13 +193,13 @@
 	</select>
 	
 		<!-- 通过Id更新 status -->
-	<update id="unauthorizedByPubId" parameterType="int">
+	<update id="unauthorizedByPubId" parameterType="java.lang.String">
 		<![CDATA[UPDATE wechat_qrcode]]>
 		set authorization = 1		
 		<![CDATA[WHERE wx_acct = #{pubId}]]>	
 	</update>
 	
-		<update id="authorizedByPubId" parameterType="int">
+		<update id="authorizedByPubId" parameterType="java.lang.String">
 		<![CDATA[UPDATE wechat_qrcode]]>
 		set authorization = 0		
 		<![CDATA[WHERE wx_acct = #{pubId}]]>	
