@@ -151,6 +151,12 @@ public class CouponSaveServiceImpl implements CouponSaveService {
         Date startTimeNew = dateStart(startTime, null);
         Date endTime = couponInfo.getEnd_time();
         Date endTimeNew = dateEnd(endTime, 23 * 60 * 60 + 59 * 60 + 59);
+        if(!dateCompare(startTime, endTime)){
+          logger.error("起始时间大于结束时间");
+          baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR_TIME_ERROR.getCode());
+          baseOutput.setMsg(ApiErrorCode.VALIDATE_ERROR_TIME_ERROR.getMsg());
+          return baseOutput;
+        }
         Date now = new Date();
         json.put("rule", rule);
         json.put("source_code", SourceCode);
@@ -230,7 +236,14 @@ public class CouponSaveServiceImpl implements CouponSaveService {
     }
 
 
-    
+    private boolean dateCompare(Date startTime, Date endTime){
+        boolean flag = true;
+        int result = startTime.compareTo(endTime);
+        if(result > 0){
+            flag = false;
+        }
+        return flag;
+    }
     
     /**
      * 生成码

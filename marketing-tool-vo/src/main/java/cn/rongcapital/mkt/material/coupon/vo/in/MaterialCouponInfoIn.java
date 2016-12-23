@@ -26,7 +26,7 @@ public class MaterialCouponInfoIn extends BaseInput{
     private String rule;
     @NotNull
     @JsonProperty("stock_total")
-    @Min(0) @Max(1000000)
+    @Min(1) @Max(1000000)
     private Integer stock_total;
     @NotNull
     @JsonProperty("amount")
