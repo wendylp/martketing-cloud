@@ -63,7 +63,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatQrcode" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO wechat_qrcode (wx_name,wx_acct,ch_code,is_audience,audience_name,related_tags,comments,create_time,expiration_time,qrcode_pic,qrcode_url,batch_id,ticket,qrcode_name,authorization)
+			INSERT INTO wechat_qrcode (wx_name,wx_acct,ch_code,is_audience,audience_name,related_tags,comments,create_time,expiration_time,status,qrcode_pic,qrcode_url,batch_id,ticket,qrcode_name,authorization)
 			VALUES
 			(
 			  #{wxName},
