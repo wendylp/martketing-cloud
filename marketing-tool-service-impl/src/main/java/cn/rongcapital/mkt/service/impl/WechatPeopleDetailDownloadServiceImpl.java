@@ -96,14 +96,6 @@ public class WechatPeopleDetailDownloadServiceImpl implements WechatPeopleDetail
 							wechatMember.setSexC(GenderEnum.FEMALE.getDescription());
 	    					break;    					
 						}
-						case(3):{
-							wechatMember.setSexC(GenderEnum.OTHER.getDescription());
-	    					break;
-						}
-						case(4):{
-							wechatMember.setSexC(GenderEnum.UNSURE.getDescription());
-	    					break;
-						}
 						default:{
 							wechatMember.setSexC(GenderEnum.UNSURE.getDescription());
 	    					break;

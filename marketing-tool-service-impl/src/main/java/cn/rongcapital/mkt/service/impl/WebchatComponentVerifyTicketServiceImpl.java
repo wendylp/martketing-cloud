@@ -84,34 +84,35 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 			 * <AuthorizerAppid>公众号appid</AuthorizerAppid> </xml>
 			 *
 			 */
-			if ("authorized".equals(infoType)) {
-				String authorizerAppId = myJsonObject.getString("AuthorizerAppid");
-				authorizerAppId = authorizerAppId.substring(2, authorizerAppId.length() - 2).trim();
-				logger.info("----authorizerAppId----:{}", authorizerAppId);
-				WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(authorizerAppId);
-				logger.info("----wx_acct----:{}", wechatRegister.getWxAcct());
-				this.updateStatusForWechat(wechatRegister.getWxAcct(), ApiConstant.TABLE_DATA_STATUS_VALID);
-			} 
-			if ("unauthorized".equals(infoType)) {
-				String authorizerAppId = myJsonObject.getString("AuthorizerAppid");
-				authorizerAppId = authorizerAppId.substring(2, authorizerAppId.length() - 2).trim();
-				logger.info("----authorizerAppId----:{}", authorizerAppId);
-				WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(authorizerAppId);
-				logger.info("----wx_acct----:{}", wechatRegister.getWxAcct());
-				this.updateStatusForWechat(wechatRegister.getWxAcct(), ApiConstant.TABLE_DATA_STATUS_INVALID);
-			} 
-			if ("component_verify_ticket".equals(infoType)){
-				String componentVerifyTicket = myJsonObject.getString("ComponentVerifyTicket");
-				componentVerifyTicket = componentVerifyTicket.substring(2, componentVerifyTicket.length() - 2);
-				logger.info("WebchatComponentVerifyTicketServiceImpl-------component_verify_ticket： {}", componentVerifyTicket);
-				WebchatComponentVerifyTicket webchatComponentVerifyTicket = new WebchatComponentVerifyTicket();
-				webchatComponentVerifyTicket.setAppId(appIdTemp);
-				webchatComponentVerifyTicket.setCreateTime(Long.parseLong(createTime));
-				webchatComponentVerifyTicket.setComponentVerifyTicket(componentVerifyTicket);
-				webchatComponentVerifyTicket.setInfoType(infoType);
-				webchatComponentVerifyTicketDao.insert(webchatComponentVerifyTicket);
+			switch (infoType){
+				case "authorized" :{
+					String authorizerAppId = myJsonObject.getString("AuthorizerAppid");
+					authorizerAppId = authorizerAppId.substring(2, authorizerAppId.length() - 2).trim();
+					logger.info("----authorizerAppId----:{}", authorizerAppId);
+					WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(authorizerAppId);
+					logger.info("----wx_acct----:{}", wechatRegister.getWxAcct());
+					this.updateStatusForWechat(wechatRegister.getWxAcct(), ApiConstant.TABLE_DATA_STATUS_VALID);
+				}
+				case "unauthorized" :{
+					String authorizerAppId = myJsonObject.getString("AuthorizerAppid");
+					authorizerAppId = authorizerAppId.substring(2, authorizerAppId.length() - 2).trim();
+					logger.info("----authorizerAppId----:{}", authorizerAppId);
+					WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(authorizerAppId);
+					logger.info("----wx_acct----:{}", wechatRegister.getWxAcct());
+					this.updateStatusForWechat(wechatRegister.getWxAcct(), ApiConstant.TABLE_DATA_STATUS_INVALID);
+				}
+				case "component_verify_ticket" :{
+					String componentVerifyTicket = myJsonObject.getString("ComponentVerifyTicket");
+					componentVerifyTicket = componentVerifyTicket.substring(2, componentVerifyTicket.length() - 2);
+					logger.info("WebchatComponentVerifyTicketServiceImpl-------component_verify_ticket： {}", componentVerifyTicket);
+					WebchatComponentVerifyTicket webchatComponentVerifyTicket = new WebchatComponentVerifyTicket();
+					webchatComponentVerifyTicket.setAppId(appIdTemp);
+					webchatComponentVerifyTicket.setCreateTime(Long.parseLong(createTime));
+					webchatComponentVerifyTicket.setComponentVerifyTicket(componentVerifyTicket);
+					webchatComponentVerifyTicket.setInfoType(infoType);
+					webchatComponentVerifyTicketDao.insert(webchatComponentVerifyTicket);
+				}
 			}
-
 		} catch (Exception e) {
 			logger.error("WebchatComponentVerifyTicketServiceImpl------Exception:", e);
 		}
@@ -119,14 +120,11 @@ public class WebchatComponentVerifyTicketServiceImpl implements WebchatComponent
 
 	/**
 	 * @功能简述: 取消微信公众号授权后设置显示公众号及组
-	 * 
-	 *
 	 * @param: wxAcct
-	 *             微信公众号id
+	 * 微信公众号id
 	 * @param: status
-	 *             状态
+	 * 状态
 	 * @return:
-	 * 
 	 */
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class,readOnly = false)
 	public void updateStatusForWechat(String wxAcct, byte status) {
