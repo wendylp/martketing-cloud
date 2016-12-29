@@ -506,6 +506,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 				wechatQrcodeDao.updateById(wechatQrcode);
 			}else{
 				wechatQrcode.setStatus(NumUtil.int2OneByte(0));
+				wechatQrcode.setAuthorization(NumUtil.int2OneByte(0));
 				wechatQrcodeDao.insert(wechatQrcode);
 			}
 			

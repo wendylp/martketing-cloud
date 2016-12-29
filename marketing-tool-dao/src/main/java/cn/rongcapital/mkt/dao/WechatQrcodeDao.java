@@ -87,4 +87,16 @@ public interface WechatQrcodeDao extends BaseDao<WechatQrcode>{
 	 * @return
 	 */
 	int selectUsedChannelCountBychCode(Integer chCode);
+	
+	/**
+	 * 根据公众号修改二维码取消授权
+	 * @param pubId
+	 */
+	void unauthorizedByPubId(String pubId);
+	
+	/**
+	 * 根据公众号修改二维码授权
+	 * @param pubId
+	 */
+	void authorizedByPubId(String pubId);
 }

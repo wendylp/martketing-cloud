@@ -10,8 +10,6 @@ package cn.rongcapital.mkt.material.coupon.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,10 +27,13 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.file.FileStorageService;
 import cn.rongcapital.mkt.material.coupon.service.CouponFileUploadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.UploadFileOut;
@@ -44,6 +45,9 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
     private String filePath;
     
     public final static String SLASH = File.separator;
+    
+    @Autowired
+    private FileStorageService fileStorageService;
     
     @Override
     public BaseOutput uploadFile(MultipartFormDataInput fileInput, String userId) {
@@ -87,7 +91,6 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
                     Cell dataColumnCell = dataCellIterator.next();
                     if(1 == dataColumnCell.getCellType()){
                         if(!StringUtils.isBlank(dataColumnCell.getStringCellValue())){
-                            System.out.println(dataColumnCell.getStringCellValue());
                             num++;
                         }
                     }
@@ -95,9 +98,8 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
             }
             out.setRecord_count(num);
             // 上传文件到服务器
-            String fileUrl = filePath + userId + SLASH + fileName;
             String dirUrl = filePath + userId;
-            writeFile(bytes, fileUrl, dirUrl);
+            fileStorageService.save(bytes, fileName, dirUrl);
             is.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,23 +123,6 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
             }
         }
         return "unknown";
-    }
-    
-    private void writeFile(byte[] content, String fileUrl, String dirUrl) throws IOException{
-        File file = new File(fileUrl);
-        File dirfile = new File(dirUrl);
-        if(!file.exists()){
-            boolean success = dirfile.mkdirs(); 
-            if(success){
-                file.createNewFile();
-            }
-        }else{
-            file.createNewFile();
-        }
-        FileOutputStream fop = new FileOutputStream(file);
-        fop.write(content);
-        fop.flush();
-        fop.close();
     }
 
     @Override

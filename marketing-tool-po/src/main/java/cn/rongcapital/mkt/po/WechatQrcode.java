@@ -35,6 +35,8 @@ public class WechatQrcode extends BaseQuery {
 
     private String qrcodeName;
 
+    private Byte authorization;
+    
     private String ticket;
 
     public Integer getId() {
@@ -157,6 +159,14 @@ public class WechatQrcode extends BaseQuery {
         this.qrcodeName = qrcodeName == null ? null : qrcodeName.trim();
     }
 
+    public Byte getAuthorization() {
+        return authorization;
+    }
+
+    public void setAuthorization(Byte authorization) {
+        this.authorization = authorization;
+    }
+    
     public String getTicket() {
         return ticket;
     }

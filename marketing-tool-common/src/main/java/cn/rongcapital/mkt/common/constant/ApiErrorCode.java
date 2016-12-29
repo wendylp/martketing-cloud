@@ -60,6 +60,7 @@ public enum ApiErrorCode {
 	VALIDATE_ERROR_OWN_RULE_ERROR(4009,"own rule validation failed"),//校验失败
 	VALIDATE_ERROR_COMMON_RULE_ERROR(4010,"common rule validation failed"),//校验失败
 	VALIDATE_ERROR_GENERATE_RULE_ERROR(4011,"generate rule validation failed"),//校验失败
+	VALIDATE_ERROR_TIME_ERROR(4012,"起始时间大于结束时间"),//校验失败
 	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
