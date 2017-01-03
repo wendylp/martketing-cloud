@@ -6,6 +6,8 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
+import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponStatusUpdateService;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponStatusUpdateVO;
 import cn.rongcapital.mkt.po.*;
@@ -33,6 +35,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
     private final String FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
     private final Integer MODIFY_TYPE_INSERT = 0;
     private final Integer MODIFY_TYPE_UPDATE = 1;
+    private final int COUPON_STATUS_EXPIRED = 1;
 
     @Autowired
     private SmsMaterialDao smsMaterialDao;
@@ -42,6 +45,9 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
 
     @Autowired
     private SmsTempletDao smsTempletDao;
+
+    @Autowired
+    private MaterialCouponDao materialCouponDao;
 
     @Autowired
     private SmsMaterialMaterielMapDao smsMaterialMaterielMapDao;
@@ -56,11 +62,17 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public BaseOutput insertOrUpdateSmsMaterial(@NotEmpty SmsMaterialIn smsMaterialIn) {
         BaseOutput output = getNewSuccessBaseOutput();
+        int couponStatus = 0;
         SmsMaterial smsMaterial = getSmsMaterial(smsMaterialIn);
         if (smsMaterial.getId() != null) {
             if (smsMaterialValidate(smsMaterial.getId())) {
+                couponStatus = modifySmsMaterialComponentAndVariable(smsMaterialIn, MODIFY_TYPE_UPDATE);
+                if(couponStatus == COUPON_STATUS_EXPIRED){
+                    output.setMsg("优惠券已过期,请重新选择优惠券");
+                    output.setCode(ApiErrorCode.SYSTEM_ERROR.getCode());
+                    return output;
+                }
                 smsMaterialDao.updateById(smsMaterial);
-                modifySmsMaterialComponentAndVariable(smsMaterialIn, MODIFY_TYPE_UPDATE);
             } else {
                 output.setCode(ApiErrorCode.SMS_ERROR_MATERIAL_CAN_NOT_UPDATE.getCode());
                 output.setMsg(ApiErrorCode.SMS_ERROR_MATERIAL_CAN_NOT_UPDATE.getMsg());
@@ -68,7 +80,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
         } else {
             smsMaterialDao.insert(smsMaterial);
             smsMaterialIn.setId(smsMaterial.getId());
-            modifySmsMaterialComponentAndVariable(smsMaterialIn, MODIFY_TYPE_INSERT);
+            couponStatus = modifySmsMaterialComponentAndVariable(smsMaterialIn, MODIFY_TYPE_INSERT);
         }
         output.getData().add(smsMaterial);
         output.setDate(DateUtil.getStringFromDate(new Date(), FORMAT_STRING));
@@ -76,7 +88,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    private void modifySmsMaterialComponentAndVariable(@NotEmpty SmsMaterialIn smsMaterialIn, @NotNull Integer modifyType) {
+    private int modifySmsMaterialComponentAndVariable(@NotEmpty SmsMaterialIn smsMaterialIn, @NotNull Integer modifyType) {
         //0如果是修改,则删除以前的物料和变量数据
         if (modifyType.equals(MODIFY_TYPE_UPDATE)) {
             //Todo:需要先把优惠券选出来,然后把原始的优惠券给释放掉
@@ -86,6 +98,18 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
             List<SmsMaterialMaterielMap> oldSmsMaterialMaterielMapList = smsMaterialMaterielMapDao.selectList(paramSmsMaterialMaterielMap);
             if(CollectionUtils.isNotEmpty(oldSmsMaterialMaterielMapList)){
                 for(SmsMaterialMaterielMap smsMaterialMaterielMap : oldSmsMaterialMaterielMapList){
+                    MaterialCoupon couple4Search = new MaterialCoupon();
+                    couple4Search.setId(smsMaterialMaterielMap.getSmsMaterielId());
+                    couple4Search.setStatus((byte) 0);
+                    List<MaterialCoupon> poList = materialCouponDao.selectList(couple4Search);
+                    if (poList.size() == 0) {
+                        return COUPON_STATUS_EXPIRED;
+                    }
+                    MaterialCoupon po = poList.get(0);
+                    if (po.getEndTime() != null && po.getEndTime().compareTo(new Date()) < 0) {
+                        return COUPON_STATUS_EXPIRED;
+                    }
+
                     MaterialCouponStatusUpdateVO paramMaterialCouponStatusUpdateVO = new MaterialCouponStatusUpdateVO();
                     paramMaterialCouponStatusUpdateVO.setId(smsMaterialMaterielMap.getSmsMaterielId());
                     paramMaterialCouponStatusUpdateVO.setStatus(MaterialCouponStatusEnum.UNUSED.getCode());
@@ -134,6 +158,8 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
                 smsMaterialVariableMapDao.insert(insertSmsMaterialVariableMap);
             }
         }
+
+        return 0;
     }
 
     @Override
