@@ -51,6 +51,12 @@ public class TagCustomTaxonomyRootSaveServiceImpl implements TagCustomTaxonomyRo
 
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ONE, null);
+        
+        if(body == null) {
+            result.setTotal(ApiConstant.INT_ZERO);
+            return result;
+        }
+        
         String tagTreeId = body.getTagTreeId();
         String tagTreeName = body.getTagTreeName();
 
