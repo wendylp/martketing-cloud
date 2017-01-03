@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
+import cn.rongcapital.mkt.service.TagSystemCommonUtilService;
 import cn.rongcapital.mkt.service.TagSystemFlagListGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.TagSystemFlagListGetOut;
@@ -22,6 +23,9 @@ public class TagSystemFlagListGetServiceImpl implements TagSystemFlagListGetServ
 
     @Autowired
     private MongoTemplate mongoTemplate;
+    
+	@Autowired
+	private TagSystemCommonUtilService commonUtilService;
 
     /**
      * 获取推荐标签
@@ -42,16 +46,22 @@ public class TagSystemFlagListGetServiceImpl implements TagSystemFlagListGetServ
                         TagRecommend.class);
         // 判断返回值是否为null和空
         if (flagTagList != null && flagTagList.size() > 0) {
-            result.setTotal(flagTagList.size());
             for (TagRecommend flagTag : flagTagList) {
+            	String tagId = flagTag.getTagId();
+            	String tagCover = commonUtilService.getTagCover(tagId);
+            	
                 TagSystemFlagListGetOut tagSystemFlagListGetOut = new TagSystemFlagListGetOut(
-                                flagTag.getTagId(), flagTag.getTagName(), flagTag.getTagList(),
+                		tagId, flagTag.getTagName(), flagTag.getTagList(),
                                 flagTag.getFlag(), flagTag.getTagDesc(), flagTag.getTagNameEng(),
                                 flagTag.getSeq(), flagTag.getSearchMod());
-                result.getData().add(tagSystemFlagListGetOut);
+                if(!"0%".equals(tagCover)){
+                	result.getData().add(tagSystemFlagListGetOut);
+                }
             }
+            result.setTotal(result.getData().size());
         }
         return result;
     }
+    
 
 }
