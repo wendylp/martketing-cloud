@@ -128,6 +128,8 @@ public class SystemTagServiceImpl implements SystemTagService {
 			tagValueCount.setPageSize(size);
 			tagValueCount.setIsTag("0");
 			tagValueCount.setTagId(tagId);
+			tagValueCount.setOrderField("value_count");
+			tagValueCount.setOrderFieldType("desc");
 			List<TagValueCount> tagList = tagValueCountDao.selectList(tagValueCount);
 			int selectListCount = tagValueCountDao.selectListCount(tagValueCount);
 			List<Map<String, Object>> tagValueList = new ArrayList<>();
