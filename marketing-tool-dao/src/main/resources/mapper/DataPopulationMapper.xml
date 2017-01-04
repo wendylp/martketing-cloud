@@ -399,6 +399,7 @@
 		from data_population a
  		inner join audience_list_party_map b on a.keyid = b.party_id
 		where b.audience_list_id =  #{audience_id} and a.status!=1
+		group by a.keyid
 	</select>
 	
 	<select id="segmentSearch" parameterType="cn.rongcapital.mkt.vo.in.SegmentSearchIn" resultType="cn.rongcapital.mkt.po.DataPopulation">
