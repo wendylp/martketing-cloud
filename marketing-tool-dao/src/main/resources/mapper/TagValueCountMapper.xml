@@ -157,6 +157,7 @@
 		<where>
 			<if test="tagValue != null"><![CDATA[ AND tag_value like CONCAT('%',#{tagValue},'%')]]></if>
 			<if test="isTag != null"><![CDATA[ AND is_tag = #{isTag}]]></if>
+			AND value_count > 0
 		</where>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
 	</select>
@@ -169,6 +170,7 @@
 		<where>
 			<if test="tagValue != null"><![CDATA[ AND tag_value like CONCAT('%',#{tagValue},'%')]]></if>
 			<if test="isTag != null"><![CDATA[ AND is_tag = #{isTag}]]></if>
+			AND value_count > 0
 		</where>
 	</select>
 	

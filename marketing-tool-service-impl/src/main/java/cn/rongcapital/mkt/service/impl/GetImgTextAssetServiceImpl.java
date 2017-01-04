@@ -89,10 +89,7 @@ public class GetImgTextAssetServiceImpl implements GetImgTextAssetService {
 		imgTextAsset.setPubId(pubId);
 		if(StringUtils.isNotEmpty(name)){
 			imgTextAsset.setName(name);
-		}else{
-			imgTextAsset.setStartIndex(0);
-			imgTextAsset.setPageSize(5);
-		}		
+		}				
 		imgTextAsset.setFirstAsset(NumUtil.int2OneByte(1));
 		List<ImgTextAsset> imgTextAssets = imgTextAssetDao.selectList(imgTextAsset);
 		List<ImgTextAssetVo> imgTextAssetVos = this.getImgTextAssetVos(imgTextAssets);

@@ -7,7 +7,6 @@ import java.util.List;
 import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -34,8 +33,6 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
     private static final int LEVEL_TWO = 2;
     private static final int DATA_VALID = 0;
     private static final int DATA_NOT_VALID = 1;
-    private static final long MAX_SHOW = 6;
-    private static final Boolean IS_SHOW = true;
 
     @Autowired
     MongoTemplate mongoTemplate;
@@ -68,44 +65,6 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
         tagCustomTaxonomySaveRoot.setTagTreeName(systemCustomTagTree.getTagTreeName());
         tagCustomTaxonomySaveRoot.setChildren(body.getChildren());
         tagCustomTaxonomySaveRoot.setChildrenTag(body.getChildrenTag());
-        
-
-//        List<String> childrenOne = null;
-//
-//        String tagTreeId = body.getTagTreeId();
-//        String tagTreeName = body.getTagTreeName();
-//        List<TagCustomTaxonomySaveChildrenTagIn> tagCustomTaxonomySaveChildrenTagInLists = body.getChildrenTag();
-//        List<String> childrenTag = checkTag(tagCustomTaxonomySaveChildrenTagInLists);
-//
-//        SystemCustomTagTree systemCustomTagTreeOne = findSystemCustomTagTreeById(tagTreeId);
-//        if (systemCustomTagTreeOne != null) {
-//            childrenOne = systemCustomTagTreeOne.getChildren();
-//        }
-//
-//        // 防止出现空指针异常
-//        if (childrenOne == null) {
-//            childrenOne = new ArrayList<String>();
-//        }
-//
-//        String childrenStr = null;
-//        if (CollectionUtils.isNotEmpty(body.getChildren())) {
-//            for (TagCustomTaxonomySaveChildrenIn tagCustomTaxonomySaveChildrenIn : body.getChildren()) {
-//                childrenStr = saveChildren(tagCustomTaxonomySaveChildrenIn, tagTreeName, LEVEL_TWO);
-//                if (childrenStr != null && !childrenOne.contains(childrenStr)) {
-//                    childrenOne.add(childrenStr);
-//                }
-//            }
-//        }
-//
-//        if (systemCustomTagTreeOne != null) {
-//            // 更新一级分类
-//            systemCustomTagTreeUpdateById(tagTreeId, tagTreeName, null, childrenOne, LEVEL_ONE, childrenTag);
-//        } else {
-//            tagTreeId = generateTagTreeId();
-//            SystemCustomTagTree systemCustomTagTreeLevelOne = new SystemCustomTagTree(null, tagTreeId, tagTreeName,
-//                    LEVEL_ONE, isDeleted, null, new Date(), new Date(), childrenOne, isShow(), childrenTag);
-//            systemCustomTagTreeInsert(systemCustomTagTreeLevelOne);
-//        }
         
         // 保存自定义分类
         saveChildren(tagCustomTaxonomySaveRoot, null, LEVEL_ONE);
@@ -190,9 +149,8 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
      * @Date 2016.12.13
      * @author shuiyangyang
      */
-    private String systemCustomTagTreeInsert(SystemCustomTagTree systemCustomTagTree) {
+    private void systemCustomTagTreeInsert(SystemCustomTagTree systemCustomTagTree) {
         mongoTemplate.insert(systemCustomTagTree);
-        return null;
     }
 
     /**
@@ -252,18 +210,6 @@ public class TagCustomTaxonomySaveServiceImpl implements TagCustomTaxonomySaveSe
         return GenerateUUid.generateShortUuid() + new Date().getTime();
     }
 
-//    /**
-//     * 功能描述：如果已经显示的数量超过6个则默认不显示
-//     * 
-//     * @return
-//     * @Date 2016.12.13
-//     * @author shuiyangyang
-//     */
-//    private Boolean isShow() {
-//        long count = mongoTemplate.count(new Query(new Criteria("isDeleted").is(DATA_VALID).and("is_show").is(true)),
-//                SystemCustomTagTree.class);
-//        return count < MAX_SHOW ? IS_SHOW : !IS_SHOW;
-//    }
 
     /**
      * 功能描述：根据tag_tree_list逻辑删除标签分类

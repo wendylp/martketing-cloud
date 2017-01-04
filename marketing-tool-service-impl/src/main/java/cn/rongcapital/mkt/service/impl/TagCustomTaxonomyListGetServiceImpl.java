@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -127,10 +126,6 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
      */
     private SystemCustomTagTree findSystemCustomTagTreeById(String tagTreeId) {
 
-        if (StringUtils.isEmpty(tagTreeId)) {
-            return null;
-        }
-
         return mongoTemplate.findOne(
                 new Query(new Criteria("tag_tree_id").is(tagTreeId).and("is_deleted").is(DATA_VALID)),
                 SystemCustomTagTree.class);
@@ -145,10 +140,6 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
      * @author shuiyangyang
      */
     private TagRecommend findTagRecommendById(String tagId) {
-        if (StringUtils.isEmpty(tagId)) {
-            return null;
-        }
-
         return mongoTemplate.findOne(new Query(new Criteria("tag_id").is(tagId).and("status").is(DATA_VALID)),
                 TagRecommend.class);
     }

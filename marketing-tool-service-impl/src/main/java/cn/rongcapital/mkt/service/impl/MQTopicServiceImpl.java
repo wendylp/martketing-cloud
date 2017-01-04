@@ -53,7 +53,7 @@ public class MQTopicServiceImpl implements MQTopicService {
 	private static final String MQ_SEGMENT_KEY = "mq.synSegment";
 	private static final String MQ_SMS_SERVICE = "smsSendTaskServiceImpl";
 	private static final String MQ_CODE_SERVICE = "couponCodeSaveTaskImpl";
-	private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask ";
+	private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask";
 	private static final String MQ_CREATE_TARGET_AUDIENCE_SERVICE = "createTargetAudienceGroupTask";
 
 	@Value("${spring.activemq.broker-url}")
