@@ -11,13 +11,17 @@ package cn.rongcapital.mkt.material.coupon.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.ws.rs.core.MultivaluedMap;
+
 import javax.ws.rs.core.Response;
+
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -64,7 +68,7 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
         }
         UploadFileOut out = new UploadFileOut();
         InputPart inputPart = inputParts.get(0);
-        String fileName = getFileName(inputPart.getHeaders());
+        String fileName = getFileName(inputPart);
         out.setFile_name(userId + "/" + fileName);
         if (!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx")) {
             baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
@@ -113,17 +117,33 @@ public class CouponFileUploadServiceImpl implements CouponFileUploadService {
         return baseOutput;
     }
 
-    private String getFileName(MultivaluedMap<String, String> header) {
-        String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
-        for(String filename : contentDisposition){
-            if((filename.trim().startsWith("filename"))){
-                String[] name = filename.split("=");
-                String finalFileName = name[1].trim().replaceAll("\"","");
-                return finalFileName;
-            }
-        }
-        return "unknown";
-    }
+	private String getFileName(InputPart inputPart) {
+
+		String finalFileName = null;
+		try {
+			Field field = inputPart.getClass().getDeclaredField("bodyPart");
+			field.setAccessible(true);
+			Object bodyPart = field.get(inputPart);
+			Method methodBodyPart = bodyPart.getClass().getMethod("getHeader", new Class[] {});
+			Iterable iterable = (Iterable) methodBodyPart.invoke(bodyPart, new Class[] {});
+			Object[] content = IteratorUtils.toArray(iterable.iterator());
+			Method methodContent = content[0].getClass().getMethod("getRaw",
+					new Class[] {});
+			String[] contentDisposition = methodContent.invoke(content[0], new Class[] {}).toString().split(";");
+			for (String filename : contentDisposition) {
+				if (filename.trim().startsWith("filename")) {
+					String[] name = filename.split("=");
+					finalFileName = name[1].trim().replaceAll("\"", "");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			finalFileName = "temp";
+
+		}
+		return finalFileName;
+	}
+    
 
     @Override
     public Object getCouponFileUploadUrlGet(String userId) {
