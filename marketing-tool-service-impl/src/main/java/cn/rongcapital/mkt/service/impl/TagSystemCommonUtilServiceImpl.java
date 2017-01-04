@@ -61,7 +61,7 @@ public class TagSystemCommonUtilServiceImpl implements TagSystemCommonUtilServic
         // 获取总数
         double allCount = mongoTemplate.count(null, DataParty.class);
         
-        if(allCount > 0) {
+        if(allCount > 0 && tagCount > 0) {
             DecimalFormat df = new DecimalFormat("0.00%");
             tagCover = df.format(tagCount / (double)allCount);
             if(TagSystemCommonUtilServiceImpl.ZERO_PERCENT.equals(tagCover)) {
