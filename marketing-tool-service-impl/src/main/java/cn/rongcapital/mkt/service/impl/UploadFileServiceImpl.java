@@ -513,7 +513,7 @@ public class UploadFileServiceImpl implements UploadFileService{
 		CsvWriter csvWriter = null;
 		for (InputPart inputPart : inputParts) {
 			try {
-				String fileName = getFileName(inputPart.getHeaders());
+				String fileName = getFileName(inputPart);
 				if (!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx")) {
 					baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
 					baseOutput.setMsg("上传的文件不是预定格式");
