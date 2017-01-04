@@ -293,7 +293,8 @@ public class UploadFileServiceImpl implements UploadFileService{
         for(InputPart inputPart : inputParts){
             try {
                 String fileName = getFileName(inputPart);
-                        getFileName(inputPart.getHeaders());
+                logger.info("当前上传的文件名称为：" + fileName);
+//                        getFileName(inputPart.getHeaders());
                 if(!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx") && !fileName.endsWith(".xlsm")){
                     baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
                     baseOutput.setMsg("上传的文件不是预定格式");
