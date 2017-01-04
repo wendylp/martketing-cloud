@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -30,6 +32,7 @@ import java.util.Set;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
@@ -289,7 +292,8 @@ public class UploadFileServiceImpl implements UploadFileService{
         List<InputPart> inputParts = uploadForm.get("uploadedFile");
         for(InputPart inputPart : inputParts){
             try {
-                String fileName = getFileName(inputPart.getHeaders());
+                String fileName = getFileName(inputPart);
+                        getFileName(inputPart.getHeaders());
                 if(!fileName.endsWith(".xls") && !fileName.endsWith(".xlsx") && !fileName.endsWith(".xlsm")){
                     baseOutput.setCode(ApiErrorCode.VALIDATE_ERROR.getCode());
                     baseOutput.setMsg("上传的文件不是预定格式");
@@ -463,6 +467,32 @@ public class UploadFileServiceImpl implements UploadFileService{
             }
         }
         return "unknown";
+    }
+
+    private String getFileName(InputPart inputPart){
+        String fileName = null;
+        try{
+            Field field = inputPart.getClass().getDeclaredField("bodyPart");
+            field.setAccessible(true);
+            Object bodyPart = field.get(inputPart);
+            Method methodBodyPart = bodyPart.getClass().getMethod("getHeader", new Class[]{});
+            Iterable iterable = (Iterable)methodBodyPart.invoke(bodyPart, new Class[]{});
+            Object[] content = IteratorUtils.toArray(iterable.iterator());
+            Method methodContent = content[0].getClass().getMethod("getRaw", new Class[]{});
+
+            String[] contentDisposition = methodContent.invoke(content[0], new Class[]{}).toString().split(";");
+
+            for (String filename : contentDisposition) {
+
+                if (filename.trim().startsWith("filename")) {
+                    String[] name = filename.split("=");
+                    fileName = name[1].trim().replaceAll("\"", "");
+                }
+            }
+        }catch (Exception e){
+
+        }
+        return fileName;
     }
 
 	@Override
