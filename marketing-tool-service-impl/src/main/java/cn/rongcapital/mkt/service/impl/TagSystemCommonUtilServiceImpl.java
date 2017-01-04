@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -21,6 +22,9 @@ public class TagSystemCommonUtilServiceImpl implements TagSystemCommonUtilServic
     
     @Autowired
     private MongoTemplate mongoTemplate;
+    
+    private static final String ZERO_PERCENT = "0.00%";
+    private static final String MIN_PERCENT = "0.01%";
 
     
     /**
@@ -36,7 +40,7 @@ public class TagSystemCommonUtilServiceImpl implements TagSystemCommonUtilServic
         // 标签覆盖人数
         double tagCount = 0;
         // 标签覆盖率
-        String tagCover = "0%";
+        String tagCover = TagSystemCommonUtilServiceImpl.ZERO_PERCENT;
         
         TagValueCount tagValueCount = new TagValueCount();
         if(StringUtil.emptyToNull(tagId) != null) {
@@ -58,7 +62,11 @@ public class TagSystemCommonUtilServiceImpl implements TagSystemCommonUtilServic
         double allCount = mongoTemplate.count(null, DataParty.class);
         
         if(allCount > 0) {
-            tagCover = (int)(tagCount*100 / allCount) + "%";
+            DecimalFormat df = new DecimalFormat("0.00%");
+            tagCover = df.format(tagCount / (double)allCount);
+            if(TagSystemCommonUtilServiceImpl.ZERO_PERCENT.equals(tagCover)) {
+                tagCover = TagSystemCommonUtilServiceImpl.MIN_PERCENT;
+            }
         }
         
         return tagCover;
