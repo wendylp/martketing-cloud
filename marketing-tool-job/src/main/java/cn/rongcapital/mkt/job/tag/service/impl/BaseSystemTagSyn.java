@@ -138,11 +138,10 @@ public class BaseSystemTagSyn {
 			// 标签Id
 			String tagId = tagRecommend.getTagId();
 			for (SystemTagResult systemTagResult : resultList) {
+				if(systemTagResult == null)continue;	
 				// 标签值
 				String tagValue = systemTagResult.getTag_value();
-				if(StringUtils.isEmpty(tagValue)){
-					continue;
-				}
+				if(StringUtils.isEmpty(tagValue))continue;
 				// keyId
 				Integer keyId = systemTagResult.getKeyId();
 				// 封装Tag属性
@@ -269,8 +268,10 @@ public class BaseSystemTagSyn {
 				String[] idArray = (String[]) vector.toArray(new String[vector.size()]);
 				JedisClient.sadd(REDIS_DB_INDEX, key, idArray);
 			}
-			String[] allIds = (String[]) result.toArray(new String[result.size()]);
-			JedisClient.sadd(REDIS_DB_INDEX, REDIS_IDS_KEY_PREFIX + tagId, allIds);
+			if(!CollectionUtils.isEmpty(result)){
+				String[] allIds = (String[]) result.toArray(new String[result.size()]);
+				JedisClient.sadd(REDIS_DB_INDEX, REDIS_IDS_KEY_PREFIX + tagId, allIds);
+			}
 		} catch (Exception e) {
 			logger.error("保存数据到Redis方法出现异常---------->" + e.getMessage(), e);
 		}
