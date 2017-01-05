@@ -50,13 +50,17 @@ public class MktWeChatMsgApi {
 	@Path("/mkt.weixin.qrcode.getMsgEvent/{appId}")
 	@Consumes({MediaType.TEXT_XML})
 	public String getMsgEvent(String textxml,@QueryParam("msg_signature") String msg_signature,@QueryParam("timestamp") String timestamp, @QueryParam("nonce") String nonce, @QueryParam("signature") String signature, @QueryParam("openid") String openid, @PathParam("appId") String appId){		
-		logger.info("获取监听事件的消息     textxml:"+textxml);
-		logger.info("获取监听事件的消息参数:   msg_signature："+msg_signature+";timestamp:"+timestamp+";nonce:"+nonce+";signature:"+signature+";openid:"+openid+";appId:"+appId);
+//		logger.info("获取监听事件的消息     textxml:"+textxml);
+//		logger.info("获取监听事件的消息参数:   msg_signature："+msg_signature+";timestamp:"+timestamp+";nonce:"+nonce+";signature:"+signature+";openid:"+openid+";appId:"+appId);
 		try {
-			processReceiveMessageOfWeiXinBiz.getMsgLog(textxml, msg_signature, timestamp, nonce, signature, openid,appId);
+			if(ApiConstant.WEIXIN_TEST_APPID.equals(appId)){
+				boolean isAuthCode = processReceiveMessageOfWeiXinBiz.validateMsgSendState(textxml, msg_signature, timestamp, nonce, signature, openid, appId);
+			}else{
+				processReceiveMessageOfWeiXinBiz.getMsgLog(textxml, msg_signature, timestamp, nonce, signature, openid,appId);
+			}			
 		} catch (Exception e) {
-			logger.info(e.getMessage());
-			logger.info("事件出现异常，给微信返回成功，使公众号可用。");
+//			logger.info(e.getMessage());
+//			logger.info("事件出现异常，给微信返回成功，使公众号可用。");
 		}
 		return "success";		
 	}

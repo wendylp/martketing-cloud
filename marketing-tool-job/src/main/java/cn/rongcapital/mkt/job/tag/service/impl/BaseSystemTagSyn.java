@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.job.tag.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +24,7 @@ import com.mongodb.WriteResult;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.dao.SystemTagResultDao;
+import cn.rongcapital.mkt.dao.TagDefinitionDao;
 import cn.rongcapital.mkt.dao.TagValueCountDao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SysTagView;
@@ -41,6 +43,10 @@ import cn.rongcapital.mkt.po.mongodb.TagRecommend;
  * @复审人:
  *************************************************/
 public class BaseSystemTagSyn {
+	
+	private static final String GENERAL_TAG = "0";
+	
+	private static final String VARIABLE_TAG = "1";
 
 	private static final String REDIS_IDS_KEY_PREFIX = "tagcoverid:";
 
@@ -59,6 +65,9 @@ public class BaseSystemTagSyn {
 
 	@Autowired
 	private TagValueCountDao tagValueCountDao;
+	
+	@Autowired
+	private TagDefinitionDao tagDefinitionDao;
 
 	/**
 	 * 获取标签视图映射集合
@@ -95,7 +104,19 @@ public class BaseSystemTagSyn {
 				return;
 			}
 			// 获取结果
-			List<SystemTagResult> resultList = systemTagResultDao.selectListByMap(viewName);
+			List<SystemTagResult> resultList = new ArrayList<>();
+			switch (sys.getField2()) {
+			case GENERAL_TAG:
+				resultList = systemTagResultDao.selectListByMap(viewName);
+				break;
+			case VARIABLE_TAG:
+				String sql = tagDefinitionDao.selectDefinitionSqlByTagName(tagName);
+				resultList = tagDefinitionDao.executeSql(sql);
+				break;
+			default:
+				break;
+			}
+			
 			logger.info("开始同步" + sys.getViewDesc() + "标签，-------->" + tagName);
 			if(CollectionUtils.isEmpty(resultList)){
 				logger.info("此标签无匹配结果,不进行后续处理---------->"+ tagName);
@@ -117,18 +138,19 @@ public class BaseSystemTagSyn {
 			// 标签Id
 			String tagId = tagRecommend.getTagId();
 			for (SystemTagResult systemTagResult : resultList) {
+				// 标签值
+				String tagValue = systemTagResult.getTag_value();
+				if(StringUtils.isEmpty(tagValue)){
+					continue;
+				}
+				// keyId
+				Integer keyId = systemTagResult.getKeyId();
+				// 封装Tag属性
+				Tag tag = new Tag(tagId, tagRecommend.getTagName(), tagRecommend.getTagNameEng(), tagValue, 1);
 
 				Runnable thread = new Runnable() {
-
 					@Override
 					public void run() {
-						// 标签值
-						String tagValue = systemTagResult.getTagValue();
-						// keyId
-						Integer keyId = systemTagResult.getKeyId();
-						// 封装Tag属性
-						Tag tag = new Tag(tagId, tagRecommend.getTagName(), tagRecommend.getTagNameEng(), tagValue, 1);
-
 						// 获取redis Key
 						String key = getKey(tagId, tagValue);
 						Vector<String> vector = paramMap.get(key);
@@ -253,5 +275,7 @@ public class BaseSystemTagSyn {
 			logger.error("保存数据到Redis方法出现异常---------->" + e.getMessage(), e);
 		}
 	}
+	
+	
 
 }

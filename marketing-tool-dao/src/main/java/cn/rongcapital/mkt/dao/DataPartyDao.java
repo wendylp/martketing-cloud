@@ -14,14 +14,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.po.*;
 import org.apache.ibatis.annotations.Param;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
-import cn.rongcapital.mkt.po.DataCountBySource;
-import cn.rongcapital.mkt.po.DataParty;
-import cn.rongcapital.mkt.po.HomePageMonthlyCount;
-import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.vo.in.SegmentSearchIn;
 import cn.rongcapital.mkt.vo.out.TagAudienceDownloadOut;
@@ -245,5 +242,41 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      * @return
      */
     List<TagAudienceDownloadOut> getTagAudienceDownloadList(@Param("idList") List<Integer> idList);
+
+	/**
+	 * 根据dataPartyId选择Id和Mobile
+	 * @param dataPartyIdList
+	 * @return
+	 */
+	List<AudienceIDAndMobilePO> selectCacheAudienceListByIdList(@Param("idList") List<Long> dataPartyIdList);
 	
+    /**
+     * 获取当前最大Id
+     * @return
+     */
+    Integer getMaxId();
+    
+    /**
+     * 获取重复的数据BitmapKeys
+     * @param paramMap
+     * @return
+     */
+    List<Map<String,Object>> getRepeatDataByBitmapKeys(Map<String,Object> map);
+    
+    /**
+     * 获取重复的数据Ids
+     * @param paramMap
+     * @return
+     */
+    List<Integer> getIdsByRepeatByBitmapKeys(DataParty dataParty);
+    
+    /**
+     * 删除主数据
+     * @param id
+     */
+    void deleteDataById(Integer id);
+    
+    
+    List<String> getBitmaps(Integer id);
+    
 }

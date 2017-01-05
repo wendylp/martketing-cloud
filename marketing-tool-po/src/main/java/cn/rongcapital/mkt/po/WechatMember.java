@@ -5,7 +5,13 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
 
 public class WechatMember extends BaseQuery {
-    private Long id;
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
 
     private String wxCode;
 
@@ -60,6 +66,11 @@ public class WechatMember extends BaseQuery {
     private Integer keyid;
 
     private String fansJson;
+    
+    /**
+     * 临时属性
+     */
+    private String sexC;
     
     public Long getId() {
         return id;
@@ -283,6 +294,16 @@ public class WechatMember extends BaseQuery {
 
 	public void setFansJson(String fansJson) {
 		this.fansJson = fansJson;
+	}
+
+	public String getSexC() {
+		return sexC;
+	}
+
+	public void setSexC(String sexC) {
+		this.sexC = sexC;
 	}    
     
+	
+	
 }

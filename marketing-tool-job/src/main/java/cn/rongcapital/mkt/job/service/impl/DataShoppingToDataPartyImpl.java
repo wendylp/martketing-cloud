@@ -1,14 +1,25 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -71,38 +82,94 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 			
 		}
 
+		logger.info("===================获取数据结束,开始同步.");
+		
+		//获取目前最大Id以便检验重复时使用
+		Integer maxId = dataPartyDao.getMaxId();
+		maxId = maxId == null ? 0 : maxId;
+//		String bitmap = dataShoppingLists.get(0).getBitmap();
+//		int keySize = getKeySizeByBitmap(bitmap);
+		
+		Set<String> bitmapList = new HashSet<String>();
+		
 		List<List<DataShopping>> dataShoppingsList = ListSplit.getListSplit(dataShoppingLists, BATCH_SIZE);
 	    
 	    for(List<DataShopping> dataShoppings :dataShoppingsList){
 	    	
-			List<Integer> idList = new ArrayList<>(dataShoppingLists.size());
-			for (DataShopping dataObj : dataShoppings) {
-
 	            executor.submit(new Callable<Void>() {
 
 	    			@Override
 	    			public Void call() throws Exception {
 	    				
-	    				createParty(dataObj);
+	    				List<Integer> idList = new ArrayList<>(dataShoppingLists.size());
 	    				
+	    				for (DataShopping dataObj : dataShoppings) {
+	    					
+	    					if(!checkBitKey(dataObj)){
+	    						
+	    						bitmapList.add(dataObj.getBitmap());
+	    						
+	    						createParty(dataObj);
+	    					}
+	    				
+	    					idList.add(dataObj.getId());
+	    				
+	    				}
+	    				
+	    				DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
+	    				dataPartySyncVO.setExtendDataList(idList);
+	    				doSyncAfter(dataPartySyncVO);
+
 	    				return null;
 	    			}
 	    			
 	            });
 				
-				idList.add(dataObj.getId());
-			}
-	    	
-			DataPartySyncVO<Integer> dataPartySyncVO = new DataPartySyncVO<>();
-			dataPartySyncVO.setExtendDataList(idList);
-			doSyncAfter(dataPartySyncVO);
 	    }
-	    
 	    
         executor.shutdown();
       try {
     	  //设置最大阻塞时间，所有线程任务执行完成再继续往下执行
     	  executor.awaitTermination(24, TimeUnit.HOURS);
+    	  
+    	  logger.info("======================校验重复数据==================== 校验开始id= "+maxId);
+    	  
+      	Iterator<String> it = bitmapList.iterator();  
+      	while (it.hasNext()) {  
+      	 
+      		String bitmap = it.next();  
+      	  
+      		int keySize = getKeySizeByBitmap(bitmap);
+    	  
+      		List<Map<String, Object>> repeatDatas = checkData(bitmap, maxId);
+    	  
+      		logger.info("======================重复数据"+repeatDatas.size()+"组,开始处理重复数据==========");
+    	  
+      		if(repeatDatas != null && repeatDatas.size() > 0){
+      			for(Map<String, Object> repeatData : repeatDatas){
+      				List<Integer> repeatIds = getIdsByRepeatByBitmapKeys(repeatData,keySize,bitmap);
+    			 
+      				if(repeatIds == null){
+      					continue;
+      				}
+    			 
+      				Integer id = distinctData(repeatIds);
+    			 
+      				for(Integer repeatId : repeatIds){
+    				 
+      					logger.info("==================repeatId:"+repeatId);
+    				 
+      					Map<String,Object> paraMap = new HashMap<String,Object>();
+      					paraMap.put("newkeyId",id);
+      					paraMap.put("oldkeyId", repeatId);
+      					dataShoppingDao.updateDataShoppingKeyid(paraMap);
+      				}
+      			}
+      		}
+      	}
+    	  
+    	  logger.info("==========处理重复数据结束====================");
+    	  
     	  long endTime = System.currentTimeMillis();
     	  
     	  logger.info("=====================同步购物记录到主数据结束,用时"+ (endTime-startTime) + "毫秒" );
@@ -124,6 +191,29 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 		dataShoppingDao.updateById(keyidObj);
 	}
 
+	/**
+	 * 校验主键是否为空
+	 * @param dataObj
+	 * @return
+	 */
+	private boolean checkBitKey(DataShopping dataObj){
+		String bitmap = dataObj.getBitmap();
+		
+		if (StringUtils.isNotBlank(bitmap)) {
+			try {
+				// 获取keyid
+				List<String> strlist = this.getAvailableKeyid(bitmap);
+				
+				return checkBitKeyByType(strlist, dataObj);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return true;
+	}
+	
 	private void createParty(DataShopping dataObj){
 		
 		String bitmap = dataObj.getBitmap();
@@ -133,7 +223,7 @@ public class DataShoppingToDataPartyImpl extends AbstractDataPartySyncService<In
 			this.updateKeyidByid(keyid, dataObj.getId());
 		} else {
 			DataParty dataParty = new DataParty();
-
+			BeanUtils.copyProperties(dataObj, dataParty);
 			dataParty.setMdType(DataTypeEnum.SHOPPING.getCode());
 			dataParty.setSource(dataObj.getSource());
 			dataParty.setBatchId(dataObj.getBatchId());

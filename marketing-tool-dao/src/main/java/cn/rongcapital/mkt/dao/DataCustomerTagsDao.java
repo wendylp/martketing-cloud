@@ -53,4 +53,11 @@ public interface DataCustomerTagsDao extends BaseDao<DataCustomerTags>, BaseData
 	 * @return
 	 */
 	int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
+	
+	/**
+	 * 更新Keyid
+	 * newkeyId-5
+	 * oldkeyId-6
+	 */
+	void updateDataCustomerTagsKeyid(Map<String,Object> map);
 }

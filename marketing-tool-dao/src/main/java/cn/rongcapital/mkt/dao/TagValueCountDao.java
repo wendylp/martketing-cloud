@@ -16,6 +16,7 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.TagValueCount;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TagValueCountDao extends BaseDao<TagValueCount>{
 	
@@ -45,4 +46,29 @@ public interface TagValueCountDao extends BaseDao<TagValueCount>{
      * @author shuiyangyang
      */
     int selectFuzzyTagValueCount(TagValueCount tagValueCount);
+    
+    TagValueCount selectTagByTagId(@Param("tagId") String tagId);
+    
+    /**
+     * 通过tagId删除标签
+     * @param tagId
+     * @return
+     */
+    int deleteTagByTagId(@Param("tagId") String tagId);
+    
+    /**
+     * 通过标签ID查询标签覆盖率
+     * @param tagId
+     * @return
+     */
+    Long getTagCountByTagId(@Param("tagId") String tagId);
+    
+    /**
+     * 通过标签ID修改是否可编辑状态
+     * @param paramMap 参数集合
+     * @return
+     */
+    int changeUpdateFlagByTagId(TagValueCount tagValueCount);
+    
+    
 }

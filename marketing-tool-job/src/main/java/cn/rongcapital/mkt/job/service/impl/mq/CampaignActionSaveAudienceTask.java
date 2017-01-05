@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
@@ -69,12 +70,21 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 				//if(message!=null) {
 					try {
 						//获取segment list数据对象
-					    logger.info("监听到消息 ================================== {}", message.toString());
+					    //原始的处理方法
 						List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
+						 logger.info("监听到消息 ================================== {}", segmentList.size());
 						if(CollectionUtils.isNotEmpty(segmentList)) {
 							processMqMessage(segmentList,campaignHeadId,
 											 itemId,campaignEndsList,campaignActionSaveAudience);
 						}
+					  /*  TextMessage tm = (TextMessage) message;
+					    String messageJson = tm.getText();
+					    logger.info("监听到消息 ================================== {}", messageJson);
+					    List<Segment> segmentList = JSONArray.parseArray(messageJson, Segment.class);
+					    if(CollectionUtils.isNotEmpty(segmentList)) {
+                            processMqMessage(segmentList,campaignHeadId,
+                                             itemId,campaignEndsList,campaignActionSaveAudience);
+                        }*/
 					} catch (Exception e) {
 						logger.error(e.getMessage(),e);
 					}
@@ -86,42 +96,12 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 			try {
 				//设置监听器
 				consumer.setMessageListener(listener);
-				consumerMap.put(campaignHeadId+"-"+itemId, consumer);
+				//先放一个消息
+				consumerMap.put(campaignHeadId+"-"+itemId + taskSchedule.getId(), consumer);
 			} catch (Exception e) {
 				logger.error(e.getMessage(),e);
 			}     
-		}else {
-		    logger.info("consumer is null======================================");
 		}
-		
-/*		MessageConsumer consumer = getQueueConsumer(campaignHeadId+"-"+itemId);//获取queue的消费者对象
-        try {
-            consumer.setMessageListener(new MessageListener() {
-                public void onMessage(Message message) {
-                    logger.info("message is ==========================={}", message);
-                    if(message!=null) {
-                        try {
-                            //获取segment list数据对象
-                            logger.info("监听到消息 ================== {}", message.toString());
-                            @SuppressWarnings("unchecked")
-                            List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
-                            if(CollectionUtils.isNotEmpty(segmentList)) {
-                                processMqMessage(segmentList,campaignHeadId,
-                                                 itemId,campaignEndsList,campaignActionSaveAudience);
-                            }
-                        } catch (Exception e) {
-                            logger.error(e.getMessage(),e);
-                        }
-                    }
-                }
-            });
-            if(null != consumer){
-                consumerMap.put(campaignHeadId+"-"+itemId, consumer);
-            }
-          
-        } catch (JMSException e) {
-            logger.error(e.getMessage(),e);
-        }*/
 	}
 	private void processMqMessage(List<Segment> segmentList,
 			  Integer campaignHeadId,String itemId,
@@ -155,6 +135,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
+	    //logger.info("CampaignActionSaveAudienceTask delete {}" ,taskSchedule.getCampaignHeadId()+taskSchedule.getCampaignItemId());
 		super.cancelCampaignInnerTask(taskSchedule);
 	}
 	

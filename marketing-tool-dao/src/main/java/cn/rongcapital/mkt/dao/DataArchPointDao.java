@@ -52,4 +52,12 @@ public interface DataArchPointDao extends BaseDao<DataArchPoint>, BaseDataFilter
 	 * @return
 	 */
 	int updateStatusByIds(@Param("list") List<Integer> idList, @Param("status") Integer status);
+	
+	/**
+	 * 更新Keyid
+	 * newkeyId-5
+	 * oldkeyId-6
+	 */
+	void updateDataArchPointKeyid(Map<String,Object> map);
+	
 }

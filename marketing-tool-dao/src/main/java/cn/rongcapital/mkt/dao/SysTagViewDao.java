@@ -10,6 +10,8 @@
 
 package cn.rongcapital.mkt.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SysTagView;
 
@@ -34,4 +36,11 @@ public interface SysTagViewDao extends BaseDao<SysTagView>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * 更新
+	 * @param tagName 标签名称
+	 * @return
+	 */
+	int updateField2ByTagName(@Param("tagName")String tagName);
 }

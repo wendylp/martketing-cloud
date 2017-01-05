@@ -9,6 +9,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,15 +25,18 @@ import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
+import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.po.SmsTemplet;
+import cn.rongcapital.mkt.po.SmsTempletMaterialMap;
 import cn.rongcapital.mkt.service.SmsTempletService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.ColumnsOut;
 import cn.rongcapital.mkt.vo.out.SmsTempletOut;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletListIn;
+import cn.rongcapital.mkt.vo.sms.in.SmstempletMaterialVo;
 import cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo;
 
 @Service
@@ -47,6 +51,9 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	
 	@Autowired
 	private SmsMaterialDao smsMaterialDao;
+	
+    @Autowired
+    private SmsTempletMaterialMapDao smsTempletMaterialMapDao;
 	
 	private final String TEMPLETE_ID= "模板ID";
 	
@@ -73,7 +80,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			smsTempletTemp.setChannelType(channelTypeInt.byteValue());
 		}
 		
-		if(StringUtils.isNotEmpty(type)){
+		if(!"-1".equals(type)){
 			smsTempletTemp.setType(NumUtil.int2OneByte(Integer.parseInt(type)));
 		}		
 		if(StringUtils.isNotEmpty(name)){
@@ -219,6 +226,13 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
 				smsTempletDao.insert(smsTemplet);
 			}
+			
+			//变量模板添加
+			if(smsTempletIn.getType().intValue() == SmsTempletTypeEnum.VARIABLE.getStatusCode()){
+				
+				updateMaterial(smsTempletIn,smsTemplet.getId());
+			}
+			
 			List<Object> smsTemplets = new ArrayList<Object>();
 			smsTemplets.add(smsTemplet);
 			output.setData(smsTemplets);
@@ -228,6 +242,29 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			output.setMsg(ApiErrorCode.PARAMETER_ERROR.getMsg());
 		}
 		return output;		
+	}
+
+	private void updateMaterial(SmsTempletIn smsTempletIn, Integer templetId) {
+
+		logger.info("create templet to material relations,templetId:"+ templetId);
+		//1.删除原来的关联关系
+		smsTempletMaterialMapDao.deleteByTempletId(templetId);
+		
+		//2.新增关联关系
+		SmsTempletMaterialMap smsTempletMaterialMap ;
+		
+		for(SmstempletMaterialVo smstempletMaterial : smsTempletIn.getMaterialList()){
+			
+			smsTempletMaterialMap = new SmsTempletMaterialMap();
+			
+			BeanUtils.copyProperties(smstempletMaterial, smsTempletMaterialMap);
+			
+			smsTempletMaterialMap.setSmsTempletId(templetId.longValue());
+			
+			smsTempletMaterialMapDao.insert(smsTempletMaterialMap);
+		}
+		
+		
 	}
 
 	/**

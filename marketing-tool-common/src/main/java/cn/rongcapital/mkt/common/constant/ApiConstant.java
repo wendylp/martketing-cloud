@@ -43,10 +43,16 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_PUBLISH_STATUS_FINISH = 3;//已结束
 	public static final byte CAMPAIGN_PUBLISH_STATUS_ALL = 4;//全部活动
 	
+	public static final byte SEGMENT_COMPILE_STATUS_YES = 0;//可编辑
+	public static final byte SEGMENT_COMPILE_STATUS_NO = 1;//不可编辑
+	
 	public static final int INT_ZERO = 0;
 	public static final int INT_ONE = 1;
 	
 	public static final String WECHAT_GROUP = "999";
+	
+	public static final String WECHAT_GROUP_M = "999,";
+	
 	public static final String WECHAT_GROUP_NAME = "未分组";
 	
 	public static final int PAGE_START_INDEX_DEFAULT = 0;//默认分页起始index值
@@ -54,6 +60,8 @@ public class ApiConstant {
 
 	public static final String FILE_UPLOAD_URL = "mkt.service.file.upload";   //文件上传地址
 
+	public static final String COUPON_FILE_UPLOAD_URL = "mkt.materiel.coupon.file.upload";   //文件上传地址
+	
 	public static final int WECHAT_ASSET_SERVER_NUMBER = 0;
 	public static final int WECHAT_ASSET_PERSONAL_NUMBER = 1;
 	public static final int WECHAT_ASSET_SUBSCRIPTION_NUMBER=2;
@@ -355,4 +363,35 @@ public class ApiConstant {
      */
     public static final String PROVINCE_DIC_TABLE_NAME = "province_dic";
     
+    /**
+     * 标签
+     */
+    public static final String IS_TAG = "1";
+    /**
+     * 标签值
+     */
+    public static final String IS_TAG_VALUE = "0";
+    
+    public static final String SEGMENT_SHOW_PIE = "1";//显示饼图
+    public static final String SEGMENT_SHOW_MAP = "2";//显示地图
+    
+    /**
+     * 微信图文的缩略图片存储
+     */
+    public static final String WEIXIN_MATERIAL_IMG_PATH = "/rc/data/downloads/material/";
+    public static final String WEIXIN_MATERIAL_IMG_PATH_TO_SHOW = "material/";
+
+    public static final String WEIXIN_TEST_APPID = "wx570bc396a51b8ff8";
+    
+    public static final String WEIXIN_AUDIENCE_SOURCE = "微信人群";
+    
+    /**
+     * SQL like ESCAPE CHAR
+     */
+    public static final String SQL_ESCAPE_CHARACTER = "\\";
+    
+    /**
+     * 系统标签自定义分类最大显示个数
+     */
+    public static final int TAG_CUSTOM_TAXONOMY_MAX_SHOW = 10;
 }

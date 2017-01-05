@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -133,6 +134,14 @@ public class SmsTempletDaoTest extends AbstractUnitTest {
     	smsTempletTest.setType(NumUtil.int2OneByte(SmsTempletTypeEnum.FIXED.getStatusCode()));
     	List<SmsTemplet> smsTempletLists = smsTempletDao.selectList(smsTempletTest);
     	Assert.assertEquals(1, smsTempletLists.size());
+    }
+    
+    @Test
+    public void getTempletCountByType(){
+    	List<Map<String, Object>> templetCountByType = smsTempletDao.getTempletCountByType("1");
+    	
+    //	Assert.assertEquals(2, templetCountByType.size()); 
+    	
     }
     
     @After

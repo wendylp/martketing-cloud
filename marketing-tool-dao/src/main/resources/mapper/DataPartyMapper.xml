@@ -772,4 +772,43 @@
 		</foreach>
 	</select>
 
+	<select id="selectCacheAudienceListByIdList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.AudienceIDAndMobilePO">
+		SELECT id as dataPartyId,mobile
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="getRepeatDataByBitmapKeys" parameterType="java.util.Map" resultType="java.util.Map">
+	
+		<![CDATA[ SELECT ]]>
+		<![CDATA[ ${bitmapColumn} , COUNT(1) AS su ]]>
+		<![CDATA[ FROM data_party ]]>
+		<![CDATA[ WHERE ]]>        
+		<![CDATA[ id > #{id} ]]>
+		<![CDATA[ AND bitmap = #{bitmap} ]]>
+		<![CDATA[ GROUP BY ${bitmapColumn} HAVING COUNT(1) > 1]]>
+	</select>
+	
+	<select id="getIdsByRepeatByBitmapKeys" parameterType="cn.rongcapital.mkt.po.DataParty" resultType="int">
+	
+		<![CDATA[ SELECT id FROM data_party]]>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<select id="getMaxId" resultType="int">
+		<![CDATA[ SELECT max(id) FROM data_party]]>
+	</select>
+	
+	<delete id="deleteDataById" parameterType="int">  
+        DELETE FROM data_party WHERE id = #{id}  
+    </delete> 
+    
+    <select id="getBitmaps" parameterType="int" resultType="String">
+		<![CDATA[  SELECT DISTINCT bitmap FROM data_party  WHERE id = #{id}]]>
+	</select>
+   
+    
 </mapper>

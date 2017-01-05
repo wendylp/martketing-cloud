@@ -76,6 +76,13 @@ public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilt
      * 
      */
 	int updateDataPopulation(DataPopulation dataPopulation);
+	
+	/**
+	 * 
+	 * @param dataPopulation
+	 * @return
+	 */
+	int updateDataPopulationByPubIdAndOpenId(DataPopulation dataPopulation);
 
 	/**
 	 * @功能简述 : 根据IdList获取KeyidList(keyidList即dataparty的Idlist)
@@ -124,4 +131,12 @@ public interface DataPopulationDao extends BaseDao<DataPopulation>, BaseDataFilt
 	 * @return
 	 */
 	List<TagAudienceDownloadOut> getTagAudienceDownloadList(@Param("idList") List<Integer> idList);
+	
+	/**
+	 * 更新Keyid
+	 * newkeyId-5
+	 * oldkeyId-6
+	 */
+	void updateDataPopulationKeyid(Map<String,Object> map);
+	
 }

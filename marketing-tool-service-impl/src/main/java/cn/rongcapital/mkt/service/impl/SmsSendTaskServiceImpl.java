@@ -1,6 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,35 +13,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.common.util.SmsSendUtilByIncake;
+import cn.rongcapital.mkt.dao.SmsMaterialMaterielMapDao;
 import cn.rongcapital.mkt.dao.SmsTaskDetailDao;
 import cn.rongcapital.mkt.dao.SmsTaskDetailStateDao;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeStatusUpdateService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponStatusUpdateService;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCodeStatusUpdateVO;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponStatusUpdateVO;
+import cn.rongcapital.mkt.po.SmsMaterialMaterielMap;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.po.SmsTaskDetailState;
 import cn.rongcapital.mkt.po.SmsTaskHead;
-/*
- * 大于0	提交成功，该数字为本批次的任务ID，提交成功后请自行保存发送记录。
--1	余额不足
--2	帐号或密码错误
--3	连接服务商失败
--4	超时
--5	其他错误，一般为网络问题，IP受限等
--6	短信内容为空
--7	目标号码为空
--8	用户通道设置不对，需要设置三个通道
--9	捕获未知异常
--10	超过最大定时时间限制
--11	目标号码在黑名单里
--13	没有权限使用该网关
-*/
+
 @Service
 public class SmsSendTaskServiceImpl implements TaskService{
 	 private Logger logger = LoggerFactory.getLogger(getClass());
 	 private Integer SMS_SEND_BACTH_COUNT = 500;
+	 private final Integer SMS_MATERIEL_TYPE = 0;
+	 
 	@Autowired
 	private SmsTaskHeadDao smsTaskHeadDao;
 	
@@ -50,6 +46,15 @@ public class SmsSendTaskServiceImpl implements TaskService{
 
 	@Autowired
 	private SmsTaskDetailStateDao smsTaskDetailStateDao;
+	
+	@Autowired
+	private SmsMaterialMaterielMapDao smsMaterialMaterielMapDao;
+	
+	@Autowired
+	private MaterialCouponStatusUpdateService materialCouponStatusUpdateService;
+	
+	@Autowired
+	private MaterialCouponCodeStatusUpdateService materialCouponCodeStatusUpdateService;
 	
 	@Override
 	public void task(Integer taskId) {}
@@ -70,6 +75,12 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				return;
 			}
 			smsHead = smsHeadList.get(0);
+			//回写优惠券的状态，改为投放中---v1.6
+			MaterialCouponStatusUpdateVO StatusUpdateVO = this.initMaterialCoupon(smsHead, MaterialCouponStatusEnum.RELEASING);
+			if(StatusUpdateVO != null) {
+                materialCouponStatusUpdateService.updateMaterialCouponStatus(StatusUpdateVO);
+            }
+			
 			//根据任务ID查询sms_task_detail表获取要发送的短信集合
 			SmsTaskDetail smsDetail = new SmsTaskDetail();
 			smsDetail.setSmsTaskHeadId(taskId);
@@ -118,6 +129,13 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_FINISH.getStatusCode());
 			smsHead.setWaitingNum(0);
 			smsTaskHeadDao.updateById(smsHead);
+			
+	         //回写优惠券的状态，改为已投放---v1.6
+            StatusUpdateVO = this.initMaterialCoupon(smsHead, MaterialCouponStatusEnum.RELEASED);
+            if(StatusUpdateVO != null) {
+                materialCouponStatusUpdateService.updateMaterialCouponStatus(StatusUpdateVO);
+            }
+			
 		} catch (Exception e) {
 			logger.error("exception {}" + e.getMessage());
 			e.printStackTrace();
@@ -131,7 +149,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	 * @param SmsBatchMap
 	 * @return Map<Long, Integer> 返回一个任务id， 和 短信调用网关的状态
 	 */
-	private  Map<Long, Integer> sendSmsBatchApi(Map<Long, String[]> SmsBatchMap){
+/*	private  Map<Long, Integer> sendSmsBatchApi(Map<Long, String[]> SmsBatchMap){
 		Map<Long, Integer> sendResultMap = new HashMap<>();
 		for(Entry<Long, String[]> entry : SmsBatchMap.entrySet()){
 			Long id = entry.getKey();
@@ -148,14 +166,23 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		}
 		return sendResultMap;
 		
-	}
+	}*/
 	
 	public void updateSmsDetailState(Map<Long, Integer> sendSmsResult, SmsTaskHead smsHead){
 		SmsTaskDetailState  smsTaskDetailState = null;
+		List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<>();
+		MaterialCouponCodeStatusUpdateVO materialCouponCodeStatusUpdateVO = null;
 		int successCount = 0;
 		int failCount = 0;
 		for(Entry<Long, Integer> entry : sendSmsResult.entrySet()) {
 			Long taskDetailId = entry.getKey();
+			
+			//根据短信优惠码回写状态
+			SmsTaskDetail detail = new SmsTaskDetail();
+			detail.setId(taskDetailId);
+			List<SmsTaskDetail> SmsTaskDetailList = smsTaskDetailDao.selectList(detail);
+			detail = SmsTaskDetailList.get(0);
+			
 			Integer gatewayState = entry.getValue();
 			smsTaskDetailState = new SmsTaskDetailState();
 			smsTaskDetailState.setSmsTaskDetailId(taskDetailId);
@@ -163,16 +190,21 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				//根据api大于0代表发送成功
 				successCount++;
 				smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_SEND_SUCCESS.getStateCode());
+				
+				materialCouponCodeStatusUpdateVO = this.initMaterialCouponCode(detail, MaterialCouponCodeReleaseStatusEnum.RECEIVED);
 			}else {
 				//其他情况则代表发送失败
 				failCount++;
 				smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_SEND_FAILURE.getStateCode());
+				materialCouponCodeStatusUpdateVO = this.initMaterialCouponCode(detail, MaterialCouponCodeReleaseStatusEnum.UNRECEIVED);
 			}
 			
 			smsTaskDetailStateDao.updateDetailState(smsTaskDetailState);
 			
+			voList.add(materialCouponCodeStatusUpdateVO);
 		}
-		
+		//修改一批优惠码的状态---v1.6
+		materialCouponCodeStatusUpdateService.updateMaterialCouponCodeStatus(voList);
 		//计算每批的成功和失败的个数
 		Integer smsSuccessCount = smsHead.getSendingSuccessNum();
 		Integer smsFailCount = smsHead.getSendingFailNum();
@@ -192,5 +224,37 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		Integer success = smsHead.getSendingSuccessNum();
 		Integer fail = smsHead.getSendingFailNum();
 		smsHead.setWaitingNum(smsCoverNum -(success + fail));
+	}
+	
+	private MaterialCouponStatusUpdateVO initMaterialCoupon(SmsTaskHead smsHead, MaterialCouponStatusEnum status){
+	    Long smsMaterialId = smsHead.getSmsTaskMaterialId();
+        SmsMaterialMaterielMap materielMap = new SmsMaterialMaterielMap();
+        materielMap.setSmsMaterialId(smsMaterialId);
+        materielMap.setSmsMaterielType(SMS_MATERIEL_TYPE);//优惠券
+        List<SmsMaterialMaterielMap> materielMapList = smsMaterialMaterielMapDao.selectList(materielMap);
+        if(CollectionUtils.isEmpty(materielMapList)){
+            logger.info("materielMapList is null!");
+            return null;
+        }
+        
+        materielMap = materielMapList.get(0);
+        MaterialCouponStatusUpdateVO materialCouponStatusUpdatevo = new MaterialCouponStatusUpdateVO();
+        materialCouponStatusUpdatevo.setId(materielMap.getSmsMaterielId());
+        materialCouponStatusUpdatevo.setTaskId(smsHead.getId());
+        materialCouponStatusUpdatevo.setTaskName(smsHead.getSmsTaskName());
+        materialCouponStatusUpdatevo.setStatus(status.getCode());
+        logger.info("smsMaterielId is {},taskId is {}, taskName is {}, status is {}", materielMap.getSmsMaterielId(),
+                        smsHead.getId(), smsHead.getSmsTaskName(), status.getCode());
+        return materialCouponStatusUpdatevo;
+	}
+	
+	private MaterialCouponCodeStatusUpdateVO initMaterialCouponCode(SmsTaskDetail detail, MaterialCouponCodeReleaseStatusEnum status){
+	    MaterialCouponCodeStatusUpdateVO  materialCouponCodevo = new  MaterialCouponCodeStatusUpdateVO();
+	    materialCouponCodevo.setId(detail.getMaterielCouponCodeId());
+	    materialCouponCodevo.setUser(detail.getReceiveMobile());
+	    materialCouponCodevo.setStatus(status.getCode());
+	    logger.info("couponCodeId is {}, mobile is {}, ststus is {}", detail.getMaterielCouponCodeId(), detail.getReceiveMobile(),
+	                    status.getCode());
+	    return materialCouponCodevo;
 	}
 }

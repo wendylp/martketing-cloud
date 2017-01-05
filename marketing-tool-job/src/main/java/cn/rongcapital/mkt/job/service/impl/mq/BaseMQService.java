@@ -8,13 +8,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
@@ -408,10 +411,13 @@ public class BaseMQService {
 	protected void cancelCampaignInnerTask(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
-		String consumerKey = campaignHeadId + "-" + itemId;
+		Integer id = taskSchedule.getId();
+		String consumerKey = campaignHeadId + "-" + itemId + id;
+		
 		MessageConsumer consumer = consumerMap.get(consumerKey);
 		if (null != consumer) {
 			try {
+			    logger.info("============================delete {}" ,consumerKey);
 				consumer.close();
 				consumerMap.remove(consumerKey);
 			} catch (Exception e) {
@@ -442,6 +448,7 @@ public class BaseMQService {
 			mongoTemplate.findAndModify(new Query(criteriaAll), update, NodeAudience.class);
 		}
 	}
+	
 
 	/**
 	 * 传递给后面节点的数据，从当前节点的mongo库里删除
@@ -568,6 +575,35 @@ public class BaseMQService {
 			}
 		}
 	}
+	
+	//采用原始的发送方法--by 李海光
+	protected void sendDynamicQueueByString(List<Segment> campaignSegmentList, String dest) {
+        if (CollectionUtils.isEmpty(campaignSegmentList) || StringUtils.isBlank(dest)) {
+            return;
+        }
+        Session session = null;
+        try {
+            session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            // 先获取queue,如果queue不存在，则创建1个新的,防止创建重复的queue
+            Destination destination = getDynamicQueue(dest);
+            if (null == destination) {
+                destination = session.createQueue(dest);
+            }
+            MessageProducer producer = session.createProducer(destination);
+            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+            TextMessage message = session.createTextMessage();
+            message.setText(JSON.toJSONString(campaignSegmentList));
+            producer.send(message);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            try {
+                session.close();
+            } catch (JMSException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+    }
 
 	protected MessageConsumer getQueueConsumer(Queue queue) {
 		MessageConsumer consumer = null;

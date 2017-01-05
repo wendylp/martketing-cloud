@@ -129,5 +129,11 @@
 	</select>		
 	<!-- 其它SQL语句 -->
 	
+	<!-- 分组计算数量 -->
+	<select id="getTempletCountByType" parameterType="String" resultType="Map">
+		<![CDATA[SELECT TYPE AS type ,COUNT(1) AS count FROM `sms_templet` WHERE STATUS = '0']]>
+		<if test="channelType != null"><![CDATA[AND channel_type = #{channelType}]]></if>
+		<![CDATA[   GROUP BY TYPE ]]>
+	</select>	
 	
 </mapper>

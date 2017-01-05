@@ -361,7 +361,7 @@
 	</select>
 
 	<select id="selectObjectById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataPopulation">
-		SELECT <include refid="QUERY_FROM_TABLE"/>
+		SELECT <include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE id = #{id}
 	</select>
@@ -379,6 +379,13 @@
 		<![CDATA[WHERE mobile = #{mobile}]]>
 	</update>
 
+	<!-- 修改记录通过手机号 -->
+	<update id="updateDataPopulationByPubIdAndOpenId" parameterType="cn.rongcapital.mkt.po.DataPopulation">
+		<![CDATA[UPDATE data_population]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE wxmp_id = #{wxmpId} and wx_code = #{wxCode}]]>
+	</update>
+	
 	<select id="selectKeyidListByIdList" parameterType="java.util.List" resultType="java.lang.Integer">
 		SELECT keyid
 		<include refid="QUERY_FROM_TABLE"/>
@@ -391,7 +398,8 @@
 		select IFNULL(a.name,'') as name,IFNULL(a.mobile,'') as mobile,IFNULL(a.gender,'') as gender,IFNULL(a.birthday,'') as birthdayExport,IFNULL(a.provice,'') as provice,IFNULL(a.city,'') as city,IFNULL(a.email,'') as email,IFNULL(a.identify_no,'') as identifyNo,IFNULL(a.driving_license,'') as drivingLicense 
 		from data_population a
  		inner join audience_list_party_map b on a.keyid = b.party_id
-		where b.audience_list_id =  #{audience_id}
+		where b.audience_list_id =  #{audience_id} and a.status!=1
+		group by a.keyid
 	</select>
 	
 	<select id="segmentSearch" parameterType="cn.rongcapital.mkt.vo.in.SegmentSearchIn" resultType="cn.rongcapital.mkt.po.DataPopulation">
@@ -494,4 +502,10 @@
 			#{item}
 		</foreach>
 	</select>
+	
+		<!-- 修改keyid -->
+	<update id="updateDataPopulationKeyid" parameterType="Map">
+		<![CDATA[UPDATE data_population SET keyid = #{newkeyId} WHERE keyid = #{oldkeyId}]]>
+	</update>
+	
 </mapper>

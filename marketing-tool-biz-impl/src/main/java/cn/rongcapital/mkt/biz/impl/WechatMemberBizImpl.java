@@ -133,7 +133,7 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
                 List<String> openidListTemps = openidLists.subList(fromIndex, size);
                 fromIndex = fromIndex + ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;;
                 size= fromIndex+ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;
-                String userInfoesStr = WxComponentServerApi.getBaseWxSdk().getBatchGetUserInfoResult(app, openidListTemps); 
+                String userInfoesStr = WxComponentServerApi.getBaseWxSdk().getBatchGetUserInfoResult(app, openidListTemps);
 				/**
 				 * 去掉特殊字符 例如表情符等等
 				 */
@@ -174,6 +174,28 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
 		return userInfoes;
     }
     
+    public UserInfo getUserInfoeByOpenid(App app, String openid){
+    	UserInfo userInfoBack = null;
+    	List<String> openidListTemps = new ArrayList<String>();
+    	openidListTemps.add(openid);
+    	/**
+    	 * 调用wechat_sdk接口获取用户信息
+    	 */
+    	String userInfoesStr = WxComponentServerApi.getBaseWxSdk().getBatchGetUserInfoResult(app, openidListTemps);
+		/**
+		 * 去掉特殊字符 例如表情符等等
+		 */
+        userInfoesStr = super.replaceAllUTF8mb4(userInfoesStr);
+        /**
+         * 转成用户对象
+         */
+		List<UserInfo> userInfoes = this.getUserInfoesByStr(userInfoesStr);
+		if(CollectionUtils.isNotEmpty(userInfoes)){
+			userInfoBack = userInfoes.get(0);
+		}
+		return userInfoBack;   	
+    }
+    
     /**
      * @param userInfo 获取粉丝基本信息
      * @param wxAcct
@@ -207,7 +229,7 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
                 sb.append(tagList.get(i));
                 sb.append(",");
             }
-            sb.deleteCharAt(sb.length() - 1);
+//            sb.deleteCharAt(sb.length() - 1);
         }
         wechatMember.setWxGroupId(sb.toString());
         wechatMember.setPubId(wxAcct);

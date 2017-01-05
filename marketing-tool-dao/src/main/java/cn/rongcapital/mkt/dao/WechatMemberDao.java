@@ -81,7 +81,7 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @param paramMap
 	 * @return list
 	 */
-	List<Map<String,Object>> selectPeopleDetails(List<WechatAssetGroup> wechatAssetGroups);
+	List<WechatMember> selectPeopleDetails(List<WechatAssetGroup> wechatAssetGroups);
 
 	/**
 	 * 批量插入微信组成员信息
@@ -168,5 +168,12 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return
 	 */
 	int deleteWechatMembersByIdsAndPubId(Map<String, Object> paramMap);
+	
+	/**
+	 * 
+	 * @param idLists
+	 * @return
+	 */
+	List<WechatMember> selectListByIdListNoSelected(List<Long> idLists);
 		
 }

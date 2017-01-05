@@ -49,6 +49,12 @@ public class TagRecommend implements Serializable {
     @Field(value = "search_mod")
     private Integer searchMod;
     
+    @Field(value = "update_flag")
+    private Integer updateFlag;
+    
+    @Field(value = "tag_version")
+    private Integer tagVersion;
+    
     public TagRecommend() {}
     
     public TagRecommend(String id, String tagId, String tagName, List<String> tagList, int status,
@@ -176,8 +182,25 @@ public class TagRecommend implements Serializable {
     public void setSearchMod(Integer searchMod) {
         this.searchMod = searchMod;
     }
+    
+    public Integer getUpdateFlag() {
+		return updateFlag;
+	}
 
-    @Override
+	public void setUpdateFlag(Integer updateFlag) {
+		this.updateFlag = updateFlag;
+	}
+	
+
+	public Integer getTagVersion() {
+		return tagVersion;
+	}
+
+	public void setTagVersion(Integer tagVersion) {
+		this.tagVersion = tagVersion;
+	}
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

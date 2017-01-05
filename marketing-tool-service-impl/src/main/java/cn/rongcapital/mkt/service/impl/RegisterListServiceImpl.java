@@ -8,8 +8,10 @@
 
 
 package cn.rongcapital.mkt.service.impl;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ import cn.rongcapital.mkt.po.AudienceList;
 import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.service.RegisterListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.weixin.RegisterAssetVo;
 import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
 import org.apache.commons.collections4.CollectionUtils;
@@ -33,7 +36,7 @@ import org.apache.commons.collections4.CollectionUtils;
 public class RegisterListServiceImpl implements RegisterListService {
  	
 	@Autowired
-	WechatRegisterDao wechatRegisterDao;
+	private WechatRegisterDao wechatRegisterDao;
 	
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
@@ -41,7 +44,7 @@ public class RegisterListServiceImpl implements RegisterListService {
 		
 		WechatRegister param = new WechatRegister();
 		param.setType(2);
-		
+		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		List<WechatRegister> reList = wechatRegisterDao.selectList(param);
 		
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
@@ -53,6 +56,7 @@ public class RegisterListServiceImpl implements RegisterListService {
 			for (WechatRegister s : reList) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("wxmp_id", s.getId());
+				map.put("head_image", s.getHeaderImage());
 				map.put("wx_acct", s.getWxAcct());
 				map.put("name", s.getName());
 				result.getData().add(map);
@@ -62,5 +66,44 @@ public class RegisterListServiceImpl implements RegisterListService {
 		result.setDate(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"));
 		
 		return result;
+	}
+	
+	@Override
+	public BaseOutput selectRegisterList() {
+		BaseOutput baseOutput = newSuccessBaseOutput();
+		WechatRegister param = new WechatRegister();
+		param.setType(2);
+		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		List<WechatRegister> dataList = wechatRegisterDao.selectList(param);
+		List<RegisterAssetVo> registerAssetVos = new ArrayList<RegisterAssetVo>();
+		if(CollectionUtils.isNotEmpty(dataList)){
+			for(Iterator<WechatRegister> iter = dataList.iterator(); iter.hasNext();){
+				WechatRegister wechatRegister = iter.next();
+				if(wechatRegister!=null){
+					RegisterAssetVo registerAssetVo = new RegisterAssetVo();
+					registerAssetVo.setAsset_id(wechatRegister.getId());
+					registerAssetVo.setWx_acct(wechatRegister.getWxAcct());
+					registerAssetVo.setAsset_name(wechatRegister.getName());
+					registerAssetVo.setHeaderImage(wechatRegister.getHeaderImage());
+					registerAssetVos.add(registerAssetVo);
+				}
+			}
+		}
+		this.setBaseOut(baseOutput, registerAssetVos);		
+		baseOutput.setDate(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd"));
+		return baseOutput;
+	}
+
+	private BaseOutput newSuccessBaseOutput() {
+		return new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
+				null);
+	}
+	
+	private <O> void setBaseOut(BaseOutput out, List<O> dataList) {
+		if (CollectionUtils.isEmpty(dataList)) {
+			return;
+		}
+		out.setTotal(dataList.size());
+		out.getData().addAll(dataList);
 	}
 }
