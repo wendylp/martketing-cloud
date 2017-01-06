@@ -36,6 +36,7 @@
 		<module>marketing-tool-biz</module>
 		<module>marketing-tool-biz-impl</module>
 		<module>marketing-tool-jmeter</module>
+		<module>marketing-tool-eventcenter</module>
 	</modules>
 	<!-- parent -->
 	<parent>
