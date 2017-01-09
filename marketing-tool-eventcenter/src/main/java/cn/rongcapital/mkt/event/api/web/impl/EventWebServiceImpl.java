@@ -29,8 +29,11 @@ import cn.rongcapital.mkt.event.api.EventWebService;
 import cn.rongcapital.mkt.event.po.EventObject;
 import cn.rongcapital.mkt.event.service.EventBehaviorService;
 import cn.rongcapital.mkt.event.service.EventObjectService;
+import cn.rongcapital.mkt.event.vo.in.EventObjectVo;
+import cn.rongcapital.mkt.event.vo.in.EventSourceVo;
 import cn.rongcapital.mkt.event.vo.out.EventListOut;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 
 @Controller
@@ -71,5 +74,29 @@ public final class EventWebServiceImpl implements EventWebService {
     public EventObject selectById(Integer eventObjectId) {
         LOGGER.info("=====================start get data======================");
         return this.eventObjectService.selectById(eventObjectId);
+    }
+
+    @Override
+    public BaseOutput getEventGeneral(Long eventId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public BaseOutput getEventObjProps(Long eventObjectId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public BaseOutput saveEventObj(EventObjectVo event) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public BaseOutput saveEventSource(EventSourceVo source) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
