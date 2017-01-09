@@ -30,7 +30,7 @@ public class EventObjectServiceImpl implements EventObjectService {
     /* (non-Javadoc)
      * @see cn.rongcapital.mkt.event.service.EventObjectService#selectById(long)
      */
-    @Cacheable(value = "EventObjectById",keyGenerator = "wiselyKeyGenerator")
+//    @Cacheable(value = "EventObjectById",keyGenerator = "wiselyKeyGenerator")
     @Override
     public EventObject selectById(Integer eventObjectId) {
         List<Integer> idList= new ArrayList<>();
