@@ -1,49 +1,93 @@
-/*************************************************
- * @功能及特点的描述简述: 事件行为类
- * 该类被编译测试过
- * @see （与该类关联的类）：
- * @对应项目名称：营销云系统
- * @author: 谢小良
- * @version: 版本v1.6
- * @date(创建、开发日期)：2017-01-07 
- * @date(最后修改日期)：2017-01-07 
- * @复审人：
- *************************************************/
 package cn.rongcapital.mkt.po.mongodb.event;
-
 import java.io.Serializable;
+import java.util.Map;
 
 import org.bson.types.BSONTimestamp;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-@Document(collection = "event_behavior")
-public class EventBehavior implements Serializable{
+import org.springframework.data.mongodb.core.mapping.Field;
 
-    private static final long serialVersionUID = 456107105313329296L;
+/**
+ * @author liuhaizhan
+ *
+ */
+@Document(collection = "event_behavior")
+public class EventBehavior implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     private String id;
-    private BSONTimestamp time;
-    private boolean subscribed;
+    
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
-  
-    
-    public BSONTimestamp getTime() {
+
+    @Field(value = "time")
+    private Long time;
+
+    public Long getTime() {
         return time;
     }
-    public void setTime(BSONTimestamp time) {
+
+    public void setTime(Long time) {
         this.time = time;
     }
-    public boolean isSubscribed() {
+
+    @Field(value = "object")
+    private Map<String, Object> object;
+
+    @Field(value = "subject")
+    private Map<String, Object> subject;
+
+    @Field(value = "event")
+    private Map<String, Object> event;
+
+    @Field(value = "subscribed")
+    private Boolean subscribed;
+
+    public Map<String, Object> getObject() {
+        return object;
+    }
+
+    public void setObject(Map<String, Object> object) {
+        this.object = object;
+    }
+
+    public Map<String, Object> getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Map<String, Object> subject) {
+        this.subject = subject;
+    }
+
+    public Map<String, Object> getEvent() {
+        return event;
+    }
+
+    public void setEvent(Map<String, Object> event) {
+        this.event = event;
+    }
+
+    public Boolean getSubscribed() {
         return subscribed;
     }
-    public void setSubscribed(boolean subscribed) {
+
+    public void setSubscribed(Boolean subscribed) {
         this.subscribed = subscribed;
     }
-    
-   
+
+    @Override
+    public String toString() {
+        return "EventBehavior [object=" + object + ", subject=" + subject
+                + ", event=" + event + ", subscribed=" + subscribed + "]";
+    }
+
+
+
 }
