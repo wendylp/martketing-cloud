@@ -20,7 +20,7 @@
 	<context:component-scan base-package="cn.rongcapital.mkt.event.activator"/>
 	
 	<!-- default poller -->
-	<int:poller default="true" fixed-delay="5000"/>
+	<int:poller default="true" fixed-delay="50"/>
 	
 	<!-- events channel -->
 	<int:channel id="events">
@@ -43,12 +43,12 @@
 	</int:header-value-router>
 	
 	<!-- process activator -->
-	<int:service-activator ref="systemEventProcessor" method="process" input-channel="systemEvents">
-		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/>
-	</int:service-activator>
-	<int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents">
-		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/>
-	</int:service-activator>
+<!-- 	<int:service-activator ref="systemEventProcessor" method="process" input-channel="systemEvents"> -->
+<!-- 		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/> -->
+<!-- 	</int:service-activator> -->
+<!-- 	<int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents"> -->
+<!-- 		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/> -->
+<!-- 	</int:service-activator> -->
 	
 	<!-- event dispatcher -->
 	<bean id="eventDispatcherActivator" class="cn.rongcapital.mkt.event.activator.EventDispatcherActivator">
@@ -56,8 +56,8 @@
 	</bean>
 	
 	<!-- FIXME event processors -->
-	<bean id="systemEventProcessor" class="cn.rongcapital.mkt.event.test.TestSystemEventProcessor"/>
-	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.test.TestMarketingEventProcessor"/>
+<!-- 	<bean id="systemEventProcessor" class="cn.rongcapital.mkt.event.test.TestSystemEventProcessor"/> -->
+<!-- 	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.test.TestMarketingEventProcessor"/> -->
 	
 	<!-- task executors -->
 	<bean id="routeExecutor" 

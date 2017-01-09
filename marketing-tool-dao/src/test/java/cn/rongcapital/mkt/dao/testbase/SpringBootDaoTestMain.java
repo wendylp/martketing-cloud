@@ -14,6 +14,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //@ImportResource({"classpath:spring/spring-config-mybatis-heracles.xml","classpath:spring/spring-config-schedule.xml"})
 //@ImportResource({"classpath:spring/spring-config-mybatis-heracles.xml","classpath:spring/spring-config-job.xml"})
 @PropertySource(value = {"classpath:conf_junit/application-api.properties","classpath:conf_junit/application-dao.properties"})
+@EnableMongoRepositories(basePackages = "cn.rongcapital.mkt.mongodb")
 public class SpringBootDaoTestMain {
 	
 	/**
