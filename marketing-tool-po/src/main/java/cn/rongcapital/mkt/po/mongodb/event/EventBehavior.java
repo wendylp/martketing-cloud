@@ -1,7 +1,4 @@
 package cn.rongcapital.mkt.po.mongodb.event;
-
-
-
 import java.io.Serializable;
 import java.util.Map;
 
