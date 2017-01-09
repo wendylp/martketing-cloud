@@ -11,6 +11,7 @@ package cn.rongcapital.mkt.event.vo.in;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
@@ -20,17 +21,20 @@ public class EventSourceVo extends BaseInput {
     /**
      * 事件源标识符
      */
+    @NotEmpty
     private String code;
 
     /**
      * 事件源名称
      */
+    @NotEmpty
     private String name;
 
     /**
      * 事件源平台
      */
     @JsonProperty("platform_code")
+    @NotEmpty
     private String platformCode;
 
     public String getCode() {

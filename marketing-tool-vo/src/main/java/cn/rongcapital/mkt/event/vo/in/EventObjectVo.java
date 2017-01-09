@@ -11,8 +11,11 @@ package cn.rongcapital.mkt.event.vo.in;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
@@ -22,22 +25,26 @@ public class EventObjectVo extends BaseInput {
     /**
      * 客体类别标识
      */
+    @NotEmpty
     private String code;
 
     /**
      * 客体类别名称
      */
+    @NotEmpty
     private String name;
 
     /**
      * 客体类别名称
      */
+    @NotEmpty
     @JsonProperty("instance_name_prop")
     private String instanceNameProp;
 
     /**
      * 客体类别对象名称
      */
+    @NotEmpty
     @JsonProperty("instance_name_label")
     private String instanceNameLabel;
 
@@ -45,6 +52,7 @@ public class EventObjectVo extends BaseInput {
      * 客体属性
      */
     @JsonProperty("attributes")
+    @Valid
     private List<EventObjecAttribure> attributes;
 
 

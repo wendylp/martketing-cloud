@@ -10,17 +10,20 @@
 package cn.rongcapital.mkt.event.vo.in;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EventObjecAttribure {
     /**
      * 属性值
      */
+    @NotEmpty
     private String name;
 
     /**
      * 名称
      */
+    @NotEmpty
     private String label;
 
     public String getName() {
