@@ -49,6 +49,7 @@ public enum ApiErrorCode {
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_ERROR(3020,"优惠码正在生成！请稍后操作"),
 	BIZ_ERROR_EVENT_SOURCE_CODE_ALREADY_EXIST(3021,"事件源标识已经存在"),
 	BIZ_ERROR_EVENT_SOURCE_PF_NOT_EXIST(3022,"事件源平台不存在"),
+	BIZ_ERROR_EVENT_OBJECT_CODE_ALREADY_EXIST(3023,"事件客体对象标识已经存在"),
 
 	SMS_ERROR_MATERIAL_CAN_NOT_DELETE(4001,"can not delete the material"),
 	SMS_ERROR_MATERIAL_CAN_NOT_UPDATE(4002,"can not update the material"),
