@@ -5,6 +5,8 @@
     xmlns:tx="http://www.springframework.org/schema/tx" 
     xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
                http://www.springframework.org/schema/beans/spring-beans.xsd
                http://www.springframework.org/schema/context
@@ -13,6 +15,10 @@
                http://www.springframework.org/schema/tx/spring-tx.xsd
                http://www.springframework.org/schema/aop
                http://www.springframework.org/schema/aop/spring-aop.xsd
+               http://www.springframework.org/schema/integration/amqp
+               http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+               http://www.springframework.org/schema/rabbit
+               http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
                http://www.springframework.org/schema/integration
 			   http://www.springframework.org/schema/integration/spring-integration.xsd">
 	
@@ -77,5 +83,13 @@
 		<property name="corePoolSize" value="4"/>
 		<property name="maxPoolSize" value="4"/>
 	</bean>
+	
+	<!-- rabbit -->
+	<rabbit:connection-factory id="connectionFactory" host="localhost" />
+	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory" />
+	<rabbit:admin connection-factory="connectionFactory" />
+	<rabbit:queue name="test.queue.events" />
+	<int-amqp:inbound-channel-adapter channel="events"
+		queue-names="test.queue.events" connection-factory="connectionFactory" />
 	
 </beans>

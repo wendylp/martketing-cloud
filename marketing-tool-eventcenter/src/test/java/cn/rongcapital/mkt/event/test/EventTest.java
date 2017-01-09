@@ -20,7 +20,8 @@ import cn.rongcapital.mkt.event.service.EventDispatcher;
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:event-center-test.xml" })
+// @ContextConfiguration(locations = { "classpath:event-center-test.xml" })
+@ContextConfiguration(locations = { "classpath:event-center-test-rabbit.xml" })
 public class EventTest {
 
 	@Mock
