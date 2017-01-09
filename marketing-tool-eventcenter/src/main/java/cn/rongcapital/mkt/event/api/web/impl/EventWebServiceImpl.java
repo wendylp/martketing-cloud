@@ -28,7 +28,11 @@ import org.springframework.stereotype.Controller;
 import cn.rongcapital.mkt.event.api.EventWebService;
 import cn.rongcapital.mkt.event.po.EventObject;
 import cn.rongcapital.mkt.event.service.EventBehaviorService;
+import cn.rongcapital.mkt.event.service.EventGeneralGetService;
+import cn.rongcapital.mkt.event.service.EventObjectPropsListService;
+import cn.rongcapital.mkt.event.service.EventObjectSaveService;
 import cn.rongcapital.mkt.event.service.EventObjectService;
+import cn.rongcapital.mkt.event.service.EventSourceSaveService;
 import cn.rongcapital.mkt.event.vo.in.EventObjectVo;
 import cn.rongcapital.mkt.event.vo.in.EventSourceVo;
 import cn.rongcapital.mkt.event.vo.out.EventListOut;
@@ -51,6 +55,18 @@ public final class EventWebServiceImpl implements EventWebService {
     
     @Autowired
     private EventObjectService eventObjectService;
+    
+    @Autowired
+    private EventGeneralGetService eventGeneralGetService;
+    
+    @Autowired
+    private EventObjectPropsListService eventObjectPropsListService;
+    
+    @Autowired
+    private EventObjectSaveService eventObjectSaveService;
+    
+    @Autowired
+    private EventSourceSaveService eventSourceSaveService;
 
     @Override
     public EventListOut getEventListByKeyword(@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword, @DefaultValue("1") @Min(1) @QueryParam("index") Integer index, @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
@@ -78,25 +94,21 @@ public final class EventWebServiceImpl implements EventWebService {
 
     @Override
     public BaseOutput getEventGeneral(Long eventId) {
-        // TODO Auto-generated method stub
-        return null;
+        return eventGeneralGetService.getEventGeneral(eventId);
     }
 
     @Override
     public BaseOutput getEventObjProps(Long eventObjectId) {
-        // TODO Auto-generated method stub
-        return null;
+        return eventObjectPropsListService.getEventObjProps(eventObjectId);
     }
 
     @Override
     public BaseOutput saveEventObj(EventObjectVo event) {
-        // TODO Auto-generated method stub
-        return null;
+        return eventObjectSaveService.saveEventObj(event);
     }
 
     @Override
     public BaseOutput saveEventSource(EventSourceVo source) {
-        // TODO Auto-generated method stub
-        return null;
+        return eventSourceSaveService.saveEventSource(source);
     }
 }
