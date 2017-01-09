@@ -12,6 +12,8 @@
 
 package cn.rongcapital.mkt.dao.mongo.event;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +32,7 @@ import com.alibaba.fastjson.JSONObject;
 import cn.rongcapital.mkt.dao.mongo.MongoBaseTagDao;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.mongodb.MongoEventRepository;
+import cn.rongcapital.mkt.mongodb.event.EventBehaviorRepository;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,19 +42,20 @@ public class MongoEventReceiveDaoTest extends AbstractUnitTest {
     
     
     @Autowired
-    private MongoEventRepository mongoEventRepository;
+    private EventBehaviorRepository eventBehaviorRepository;
    
     @Test
     public void test()
     {  
         
         long time =System.currentTimeMillis();
-        String json="{\"subject\": {\"openid\":2222456,\"mobile\":13842629999,\"mail\":\"ypslu@163.com\"},\"time\":"+time+",\"object\":"
-                + "{\"coupon_name\":\"10元优惠券\",\"attributes\":{\"color\":\"red\",\"value\":10}}}";
+        String json="{\"subject\": {\"openid\":10000,\"mobile\":13842629999,\"mail\":\"ypslu@163.com\"},\"time\":"+time+",\"object\":"
+                + "{\"coupon_name\":\"20元优惠券\",\"attributes\":{\"color\":\"red\",\"value\":10}}}";
         EventBehavior jsonob =JSON.parseObject(json,EventBehavior.class);
-        EventBehavior insert= mongoEventRepository.insert(jsonob); //插入 
-        EventBehavior query= mongoEventRepository.findById(insert.getId()); //查询刚插入的数据
-        Assert.assertEquals(insert.getTime(), query.getTime());
+        EventBehavior insert= eventBehaviorRepository.insert(jsonob); //插入 
+        List<EventBehavior> query= eventBehaviorRepository.findById(insert.getId()); //查询刚插入的数据
+        EventBehavior queryobject= (EventBehavior)query.get(0);
+        Assert.assertEquals(insert.getTime(),queryobject.getTime() );
 
     }
 }
