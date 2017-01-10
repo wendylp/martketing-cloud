@@ -69,6 +69,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
             logger.info(e.getMessage());
         }
 	    
+
         if(redisUserTokenVO.getCode()!=0){	       	
 //            requestContext.abortWith(Response.status(redisUserTokenVO.getCode()).entity(getBaseOutputBack(redisUserTokenVO)).build());       	
         	ResponseBuilderImpl builder = new ResponseBuilderImpl();
@@ -168,8 +169,8 @@ public class ApiRequestRouter implements ContainerRequestFilter {
             }else{
                 
                 
-                Map<String, String> user_token_map = JedisClient.getuser(userKey);
-                String userValue = user_token_map.get("token");
+               // Map<String, String> user_token_map = JedisClient.getuser(userKey);
+               // String userValue = user_token_map.get("token");
                 if(false){
                     redisUserTokenVO.setCode(ApiConstant.USER_TOKEN_LOGIN_CONFLICT);
                     backStr="登录冲突，请重新登录！";
@@ -177,7 +178,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
                 }else{
                     redisUserTokenVO.setCode(0);
                     int seconds = 36000;
-                    JedisClient.expireUser(userKey, seconds);
+                    //JedisClient.expireUser(userKey, seconds);
                 }
             }           
         }

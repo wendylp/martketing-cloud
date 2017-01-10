@@ -230,18 +230,18 @@ public class EventDaoGetEventModelCountListTest extends AbstractUnitTest {
     public void getEventModelCountList01() {
     	
     	List<EventModelCount> list = eventDao.getEventModelCountList();
-    	Integer c1 = new Integer("0");
+    	Long c1 = 0l;
     	for(EventModelCount e : list){
-    		switch (e.getChannel()){
-    			case "channel1": 
+    		switch (EventChannelEnum.getByCode(e.getChannel())){
+    			case CHANNEL1: 
     				c1=c1+e.getCount();
     				Assert.assertEquals(3, e.getCount().intValue());
     			break;
-    			case "channel2": 
+    			case CHANNEL2: 
     				c1=c1+e.getCount();
     				Assert.assertEquals(2, e.getCount().intValue());
     			break;
-    			case "channel3": 
+    			case CHANNEL3: 
     				c1=c1+e.getCount();
     				Assert.assertEquals(1, e.getCount().intValue());
     			break;

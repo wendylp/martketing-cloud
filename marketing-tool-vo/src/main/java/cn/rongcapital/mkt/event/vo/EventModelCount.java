@@ -11,17 +11,17 @@ package cn.rongcapital.mkt.event.vo;
 
 public class EventModelCount {
 	private String channel;
-	private Integer  count;
+	private Long  count;
 	public String getChannel() {
 		return channel;
 	}
 	public void setChannel(String channel) {
 		this.channel = channel;
 	}
-	public Integer getCount() {
+	public Long getCount() {
 		return count;
 	}
-	public void setCount(Integer count) {
+	public void setCount(Long count) {
 		this.count = count;
 	}
 	

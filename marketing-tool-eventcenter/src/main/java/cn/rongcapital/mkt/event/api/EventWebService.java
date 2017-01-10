@@ -30,6 +30,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.event.po.EventObject;
 import cn.rongcapital.mkt.event.vo.out.EventListOut;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Path(ApiConstant.API_PATH)
 @Consumes({ MediaType.APPLICATION_JSON })
@@ -58,4 +59,20 @@ public interface EventWebService {
     @GET
     @Path("/mkt.event.object")
     EventObject selectById(@QueryParam("event_object_id")Integer eventObjectId);
+    
+	/**
+	 * 事件库数量统计
+	 * 
+	 * 接口：mkt.event.eventModel.count
+	 * 
+	 * @param user_token
+	 * @param ver
+	 * @return BaseOutput
+	 * @author shanjingqi
+	 * @Date 2017-01-10
+	 */
+	@GET
+	@Path("/mkt.event.eventModel.count")
+	BaseOutput getEventModelCount(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String version);
 }
