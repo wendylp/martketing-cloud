@@ -68,6 +68,11 @@
 			<artifactId>spring-integration-amqp</artifactId>
 			<scope>provided</scope>
 	    </dependency>
+	    <dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-stream</artifactId>
+			<scope>test</scope>
+	    </dependency>
 	    
 	    <dependency>
 		    <groupId>org.codehaus.janino</groupId>

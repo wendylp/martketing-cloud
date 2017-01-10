@@ -6,6 +6,7 @@
     xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+    xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
 	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
                http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -17,6 +18,8 @@
                http://www.springframework.org/schema/aop/spring-aop.xsd
                http://www.springframework.org/schema/integration/amqp
                http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+               http://www.springframework.org/schema/integration/stream
+               http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
                http://www.springframework.org/schema/rabbit
                http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
                http://www.springframework.org/schema/integration
@@ -26,6 +29,11 @@
 	
 	<!-- default poller -->
 	<int:poller default="true" fixed-delay="5000"/>
+	
+	<!-- test events-source channel -->
+	<int:channel id="eventsSource">
+		<int:queue/>
+	</int:channel>
 	
 	<!-- events channel -->
 	<int:channel id="events">
@@ -41,21 +49,13 @@
 	</int:channel>
 	
 	<!-- route by header value -->
-	<int:header-value-router input-channel="events" header-name="type">
+	<int:header-value-router input-channel="events" header-name="eventCenter.eventType" default-output-channel="stdErr">
 		<int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
 		<int:mapping value="SYSTEM" channel="systemEvents"/>
 		<int:mapping value="MARKETING" channel="marketingEvents"/>
 	</int:header-value-router>
 	
 	<!-- process activator -->
-	<!-- 
-	<int:service-activator ref="systemEventProcessActivator" method="onEvent" input-channel="systemEvents">
-		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/>
-	</int:service-activator>
-	<int:service-activator ref="marketingEventProcessActivator" method="onEvent" input-channel="marketingEvents">
-		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/>
-	</int:service-activator>
-	 -->
 	<int:service-activator ref="systemEventProcessor" method="process" input-channel="systemEvents">
 		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/>
 	</int:service-activator>
@@ -65,7 +65,7 @@
 	
 	<!-- event dispatcher -->
 	<bean id="eventDispatcherActivator" class="cn.rongcapital.mkt.event.activator.EventDispatcherActivator">
-		<property name="channel" ref="events"/>
+		<property name="channel" ref="eventsSource"/>
 	</bean>
 	
 	<!-- event processors -->
@@ -84,12 +84,32 @@
 		<property name="maxPoolSize" value="4"/>
 	</bean>
 	
+	<!-- error -->
+	<int-stream:stderr-channel-adapter id="stdErr" append-newline="true" />
+	
 	<!-- rabbit -->
 	<rabbit:connection-factory id="connectionFactory" host="localhost" />
 	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory" />
 	<rabbit:admin connection-factory="connectionFactory" />
 	<rabbit:queue name="test.queue.events" />
-	<int-amqp:inbound-channel-adapter channel="events"
+	
+	<!-- AMQP header mapper -->
+	<bean id="customHeaderMapper" class="org.springframework.integration.amqp.support.DefaultAmqpHeaderMapper">
+		<property name="requestHeaderNames" value="eventCenter.eventType"/>
+	</bean>
+	
+	<!-- from source to events -->
+	<int-amqp:outbound-channel-adapter channel="eventsSource" header-mapper="customHeaderMapper"
+		amqp-template="amqpTemplate" exchange-name="test.exchange"
+		routing-key="test.binding" />
+	<rabbit:direct-exchange name="test.exchange">
+		<rabbit:bindings>
+			<rabbit:binding queue="test.queue.events" key="test.binding" />
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+	
+	<!-- from events to router -->
+	<int-amqp:inbound-channel-adapter channel="events" header-mapper="customHeaderMapper"
 		queue-names="test.queue.events" connection-factory="connectionFactory" />
 	
 </beans>
