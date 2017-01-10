@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.event.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -92,7 +93,7 @@ public interface EventWebService {
      */
     @POST
     @Path("/mkt.event.object.register")
-    BaseOutput saveEventObj(@NotNull EventObjectVo event);
+    BaseOutput saveEventObj(@NotNull @Valid EventObjectVo event);
 
     /**
      * @功能简述: 事件来源注册
@@ -102,5 +103,5 @@ public interface EventWebService {
      */
     @POST
     @Path("/mkt.event.source.register")
-    BaseOutput saveEventSource(@NotNull EventSourceVo source);
+    BaseOutput saveEventSource(@NotNull @Valid EventSourceVo source);
 }

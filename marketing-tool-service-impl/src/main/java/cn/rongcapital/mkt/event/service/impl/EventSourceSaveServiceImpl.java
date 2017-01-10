@@ -73,6 +73,7 @@ public class EventSourceSaveServiceImpl implements EventSourceSaveService {
                     ApiErrorCode.BIZ_ERROR_EVENT_SOURCE_PF_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
         }
         sourceDb.setPlatformId(platFormList.get(0).getId());
+        sourceDb.setSystemSource(false);
         eventSourceDao.insert(sourceDb);
         return result;
     }
