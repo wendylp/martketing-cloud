@@ -9,6 +9,9 @@
  *************************************************/
 package cn.rongcapital.mkt.event.service.impl;
 
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -39,6 +44,8 @@ public class EventObjectSaveServiceImpl implements EventObjectSaveService {
     private EventObjectDao eventObjectDao;
 
     @Override
+    @ReadWrite(type = ReadWriteType.WRITE)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public BaseOutput saveEventObj(EventObjectVo event) {
         BaseOutput result =
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
@@ -48,7 +55,7 @@ public class EventObjectSaveServiceImpl implements EventObjectSaveService {
         eventObjPo.setStatus((byte) 0);
         // 客体对象标识重复判断
         if (CollectionUtils.isNotEmpty(eventObjectDao.selectList(eventObjPo))) {
-            logger.error("param is {}, event object code {} already exist.", event, eventObjPo.getCode());
+            logger.error("param is {}, event object code {} already exist.", event, event.getCode());
             return new BaseOutput(ApiErrorCode.BIZ_ERROR_EVENT_OBJECT_CODE_ALREADY_EXIST.getCode(),
                     ApiErrorCode.BIZ_ERROR_EVENT_OBJECT_CODE_ALREADY_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
         }

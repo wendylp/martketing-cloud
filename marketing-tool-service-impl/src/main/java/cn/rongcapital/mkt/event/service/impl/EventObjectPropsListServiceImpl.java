@@ -58,13 +58,11 @@ public class EventObjectPropsListServiceImpl implements EventObjectPropsListServ
         List<EventObject> eventObjList = eventObjectDao.selectList(condition);
         if (CollectionUtils.isNotEmpty(eventObjList)) {
             EventObject eventObj = eventObjList.get(0);
-
             // 客体属性名称
             EventObjectPropsOut propInstance = new EventObjectPropsOut();
             propInstance.setName(eventObj.getInstanceNameProp());
             propInstance.setLabel(eventObj.getInstanceNameLabel());
             propsList.add(propInstance);
-
             // 其他属性
             if (StringUtils.isNotBlank(eventObj.getAttributes())) {
                 List<EventObjecAttribure> arributes =
@@ -76,7 +74,6 @@ public class EventObjectPropsListServiceImpl implements EventObjectPropsListServ
                     propsList.add(prop);
                 });
             }
-
             // 获取客体属性值
             EventObjectPropValue propCondition = new EventObjectPropValue();
             propCondition.setObjectId(eventObjectId);
@@ -85,14 +82,11 @@ public class EventObjectPropsListServiceImpl implements EventObjectPropsListServ
                 // 属性值分组
                 Map<String, List<EventObjectPropValue>> groupProps =
                         propList.stream().collect(Collectors.groupingBy(EventObjectPropValue::getPropName));
-
                 // 属性值设定
                 propsList.forEach(item -> {
                     if (CollectionUtils.isNotEmpty(groupProps.get(item.getName()))) {
-                        List<String> values =
-                                groupProps.get(item.getName()).stream().map(EventObjectPropValue::getPropValue)
-                                        .collect(Collectors.toList());
-                        item.setValues(values);
+                        item.setValues(groupProps.get(item.getName()).stream().map(EventObjectPropValue::getPropValue)
+                                .collect(Collectors.toList()));
                     }
                 });
             }
@@ -100,7 +94,6 @@ public class EventObjectPropsListServiceImpl implements EventObjectPropsListServ
             result.setTotalCount(result.getTotal());
             result.getData().addAll(propsList);
         }
-
         return result;
     }
 

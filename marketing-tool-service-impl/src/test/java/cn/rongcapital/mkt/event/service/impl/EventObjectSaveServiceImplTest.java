@@ -99,7 +99,7 @@ public class EventObjectSaveServiceImplTest {
     }
 
     /**
-     * 正常
+     * 正常（含有属性）
      */
     @Test
     public void testSaveEventObj03() {
@@ -135,6 +135,41 @@ public class EventObjectSaveServiceImplTest {
                 Assert.assertEquals(
                         "[{\"label\":\"label1\",\"name\":\"name1\"},{\"label\":\"label2\",\"name\":\"name2\"}]",
                         data.getAttributes());
+                return null;
+            }
+        }).when(eventObjectDao).insert(Mockito.any());
+
+        ReflectionTestUtils.setField(service, "eventObjectDao", eventObjectDao);
+
+        BaseOutput output = service.saveEventObj(event);
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), output.getMsg());
+    }
+
+    /**
+     * 正常（不含有属性）
+     */
+    @Test
+    public void testSaveEventObj04() {
+        EventObjectVo event = new EventObjectVo();
+        event.setCode("AAA");
+        event.setName("BBB");
+        event.setInstanceNameLabel("CCC");
+        event.setInstanceNameProp("DDD");
+
+        Mockito.when(eventObjectDao.selectList(Mockito.any(EventObject.class))).thenReturn(null);
+
+        Mockito.doAnswer(new Answer<Integer>() {
+            @Override
+            public Integer answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                EventObject data = (EventObject) args[0];
+                Assert.assertEquals("AAA", data.getCode());
+                Assert.assertEquals("BBB", data.getName());
+                Assert.assertEquals("CCC", data.getInstanceNameLabel());
+                Assert.assertEquals("DDD", data.getInstanceNameProp());
+                Assert.assertEquals(false, data.getSystemObject());
+                Assert.assertNull(data.getAttributes());
                 return null;
             }
         }).when(eventObjectDao).insert(Mockito.any());
