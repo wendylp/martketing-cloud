@@ -88,10 +88,12 @@ public class EventObjectPropsListServiceImpl implements EventObjectPropsListServ
 
                 // 属性值设定
                 propsList.forEach(item -> {
-                    List<String> values =
-                            groupProps.get(item.getName()).stream().map(EventObjectPropValue::getPropValue)
-                                    .collect(Collectors.toList());
-                    item.setValues(values);
+                    if (CollectionUtils.isNotEmpty(groupProps.get(item.getName()))) {
+                        List<String> values =
+                                groupProps.get(item.getName()).stream().map(EventObjectPropValue::getPropValue)
+                                        .collect(Collectors.toList());
+                        item.setValues(values);
+                    }
                 });
             }
             result.setTotal(propsList.size());

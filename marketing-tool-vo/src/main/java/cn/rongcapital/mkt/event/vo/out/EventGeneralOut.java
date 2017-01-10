@@ -78,4 +78,10 @@ public class EventGeneralOut {
         this.objectName = objectName;
     }
 
+    @Override
+    public String toString() {
+        return "EventGeneralOut [id=" + id + ", name=" + name + ", code=" + code + ", sourceId=" + sourceId
+                + ", objectId=" + objectId + ", objectName=" + objectName + "]";
+    }
+
 }

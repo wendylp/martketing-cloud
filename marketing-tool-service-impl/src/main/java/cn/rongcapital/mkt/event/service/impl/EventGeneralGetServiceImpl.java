@@ -66,10 +66,10 @@ public class EventGeneralGetServiceImpl implements EventGeneralGetService {
                     output.setObjectName(eventObjList.get(0).getName());
                 }
             }
+            result.setTotal(ApiConstant.INT_ONE);
+            result.setTotalCount(ApiConstant.INT_ONE);
+            result.getData().add(output);
         }
-        result.setTotal(ApiConstant.INT_ONE);
-        result.setTotalCount(ApiConstant.INT_ONE);
-        result.getData().add(output);
         return result;
     }
 
