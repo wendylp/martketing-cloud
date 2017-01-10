@@ -42,14 +42,6 @@
 	</int:header-value-router>
 	
 	<!-- process activator -->
-	<!-- 
-	<int:service-activator ref="systemEventProcessActivator" method="onEvent" input-channel="systemEvents">
-		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/>
-	</int:service-activator>
-	<int:service-activator ref="marketingEventProcessActivator" method="onEvent" input-channel="marketingEvents">
-		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/>
-	</int:service-activator>
-	 -->
 	<int:service-activator ref="systemEventProcessor" method="process" input-channel="systemEvents">
 		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/>
 	</int:service-activator>
