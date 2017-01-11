@@ -10,8 +10,12 @@
 
 package cn.rongcapital.mkt.dao.event;
 
+import java.util.List;
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.event.po.EventSource;
+import cn.rongcapital.mkt.event.vo.out.EventSourceListOut;
 
 public interface EventSourceDao extends BaseDao<EventSource>{
 	
@@ -34,4 +38,13 @@ public interface EventSourceDao extends BaseDao<EventSource>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+     * 根据事件途径获取事件源列表
+     * 
+     * @param paramMap
+     * @return List<String>
+     * @author shanjingqi
+     */
+    List<EventSourceListOut> getEventSourceListByChannel(Map<String,Object> paramMap);
 }
