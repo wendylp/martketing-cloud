@@ -31,8 +31,10 @@ import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.event.po.EventObject;
+import cn.rongcapital.mkt.event.vo.in.EventBehavierListIn;
 import cn.rongcapital.mkt.event.vo.in.EventObjectVo;
 import cn.rongcapital.mkt.event.vo.in.EventSourceVo;
+import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.event.vo.out.EventListOut;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -104,4 +106,14 @@ public interface EventWebService {
     @POST
     @Path("/mkt.event.source.register")
     BaseOutput saveEventSource(@NotNull @Valid EventSourceVo source);
+    
+    /**
+     * @author guozhenchao
+     * @功能简述: 事件行为查询列表
+     * @param eventBehavierListIn
+     * @return
+     */
+    @POST
+    @Path("/mkt.event.behavior.list")
+	EventBehaviorOut getEventBehavierList(@Valid EventBehavierListIn eventBehavierListIn);
 }

@@ -47,4 +47,6 @@ public interface EventSourceDao extends BaseDao<EventSource>{
      * @author shanjingqi
      */
     List<EventSourceListOut> getEventSourceListByChannel(Map<String,Object> paramMap);
+
+	EventSource getEventSource(EventSource es);
 }

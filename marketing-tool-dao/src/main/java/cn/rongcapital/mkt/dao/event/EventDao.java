@@ -47,4 +47,6 @@ public interface EventDao extends BaseDao<Event>{
      */
     List<EventModelCount> getEventModelCountList();
 
+	Event getEvent(Event event);
+
 }

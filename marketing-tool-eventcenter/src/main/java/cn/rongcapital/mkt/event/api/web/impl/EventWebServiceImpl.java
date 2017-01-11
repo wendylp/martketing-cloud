@@ -27,14 +27,17 @@ import org.springframework.stereotype.Controller;
 
 import cn.rongcapital.mkt.event.api.EventWebService;
 import cn.rongcapital.mkt.event.po.EventObject;
+import cn.rongcapital.mkt.event.service.EventBehaviorListService;
 import cn.rongcapital.mkt.event.service.EventBehaviorService;
 import cn.rongcapital.mkt.event.service.EventGeneralGetService;
 import cn.rongcapital.mkt.event.service.EventObjectPropsListService;
 import cn.rongcapital.mkt.event.service.EventObjectSaveService;
 import cn.rongcapital.mkt.event.service.EventObjectService;
 import cn.rongcapital.mkt.event.service.EventSourceSaveService;
+import cn.rongcapital.mkt.event.vo.in.EventBehavierListIn;
 import cn.rongcapital.mkt.event.vo.in.EventObjectVo;
 import cn.rongcapital.mkt.event.vo.in.EventSourceVo;
+import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.event.vo.out.EventListOut;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -68,6 +71,9 @@ public final class EventWebServiceImpl implements EventWebService {
     @Autowired
     private EventSourceSaveService eventSourceSaveService;
 
+    @Autowired
+	private EventBehaviorListService eventBehavierListService;
+    
     @Override
     public EventListOut getEventListByKeyword(@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword, @DefaultValue("1") @Min(1) @QueryParam("index") Integer index, @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
         return eventService.selectList();
@@ -111,4 +117,9 @@ public final class EventWebServiceImpl implements EventWebService {
     public BaseOutput saveEventSource(EventSourceVo source) {
         return eventSourceSaveService.saveEventSource(source);
     }
+
+	@Override
+	public EventBehaviorOut getEventBehavierList(EventBehavierListIn eventBehavierListIn) {
+		return eventBehavierListService.getEventBehavierList(eventBehavierListIn);
+	}
 }

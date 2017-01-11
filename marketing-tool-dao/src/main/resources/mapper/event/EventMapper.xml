@@ -120,5 +120,11 @@
 			group by ep.channel	
 		]]>
 	</select>
-	
+	<!-- 查询,通过条件 -->
+	<select id="getEvent" parameterType="cn.rongcapital.mkt.event.po.Event" resultType="cn.rongcapital.mkt.event.po.Event">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
 </mapper>
