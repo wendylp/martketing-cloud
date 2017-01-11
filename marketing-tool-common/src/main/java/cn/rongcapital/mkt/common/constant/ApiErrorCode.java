@@ -47,6 +47,10 @@ public enum ApiErrorCode {
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CREATE_AUDIENCE_FAILED(3018,"create target group of people faild"),//新建固定人群失败
 	BIZ_ERROR_MATERIAL_COUPOON_UPDATE_ERROR(3019,"只有未使用的优惠券才可以编辑！"),
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_ERROR(3020,"优惠码正在生成！请稍后操作"),
+	BIZ_ERROR_EVENT_SOURCE_CODE_ALREADY_EXIST(3021,"code of event source has already exist."),
+	BIZ_ERROR_EVENT_SOURCE_PF_NOT_EXIST(3022,"platform code of event source  is not exist."),
+	BIZ_ERROR_EVENT_OBJECT_CODE_ALREADY_EXIST(3023,"code of event object has already exist."),
+	BIZ_ERROR_EVENT_OBJECT_ATTRIBUTE_DUPLICATED(3024,"attribute of event object is duplicated."),
 
 	SMS_ERROR_MATERIAL_CAN_NOT_DELETE(4001,"can not delete the material"),
 	SMS_ERROR_MATERIAL_CAN_NOT_UPDATE(4002,"can not update the material"),
