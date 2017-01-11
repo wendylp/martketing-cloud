@@ -40,10 +40,10 @@ public class EventSend {
     }
     @NotNull
     private Long time;
-    //@NotNull
+    @NotNull
     private Map<String,Object> object;
     
-    private Boolean subscribed;
+  
 
     public Map<String, Object> getObject() {
         return object;
@@ -51,12 +51,14 @@ public class EventSend {
     public void setObject(Map<String, Object> object) {
         this.object = object;
     }
-    public Boolean getSubscribed() {
-        return subscribed;
+    @NotNull
+    private Map<String,Object> event;
+
+    public Map<String, Object> getEvent() {
+        return event;
     }
-    public void setSubscribed(Boolean subscribed) {
-        this.subscribed = subscribed;
+    public void setEvent(Map<String, Object> event) {
+        this.event = event;
     }
-    
     
 }

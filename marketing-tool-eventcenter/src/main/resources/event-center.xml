@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:tx="http://www.springframework.org/schema/tx" 
     xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+    xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
                http://www.springframework.org/schema/beans/spring-beans.xsd
                http://www.springframework.org/schema/context
@@ -13,6 +16,12 @@
                http://www.springframework.org/schema/tx/spring-tx.xsd
                http://www.springframework.org/schema/aop
                http://www.springframework.org/schema/aop/spring-aop.xsd
+               http://www.springframework.org/schema/integration/amqp
+               http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+               http://www.springframework.org/schema/integration/stream
+               http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+               http://www.springframework.org/schema/rabbit
+               http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
                http://www.springframework.org/schema/integration
 			   http://www.springframework.org/schema/integration/spring-integration.xsd">
 	
@@ -36,7 +45,7 @@
 	</int:channel>
 	
 	<!-- route by header value -->
-	<int:header-value-router input-channel="events" header-name="type">
+	<int:header-value-router input-channel="events" header-name="type" default-output-channel="stdErr">
 		<int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
 		<int:mapping value="SYSTEM" channel="systemEvents"/>
 		<int:mapping value="MARKETING" channel="marketingEvents"/>
@@ -46,9 +55,9 @@
 <!-- 	<int:service-activator ref="systemEventProcessor" method="process" input-channel="systemEvents"> -->
 <!-- 		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/> -->
 <!-- 	</int:service-activator> -->
-<!-- 	<int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents"> -->
-<!-- 		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/> -->
-<!-- 	</int:service-activator> -->
+ 	<int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents">
+		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/> 
+ 	</int:service-activator>
 	
 	<!-- event dispatcher -->
 	<bean id="eventDispatcherActivator" class="cn.rongcapital.mkt.event.activator.EventDispatcherActivator">
@@ -56,8 +65,12 @@
 	</bean>
 	
 	<!-- FIXME event processors -->
-<!-- 	<bean id="systemEventProcessor" class="cn.rongcapital.mkt.event.test.TestSystemEventProcessor"/> -->
-<!-- 	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.test.TestMarketingEventProcessor"/> -->
+  <!-- 	<bean id="systemEventProcessor" class="cn.rongcapital.mkt.event.test.TestSystemEventProcessor"/> -->
+   <bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.service.EventMCReceviceProcessorImpl"/>
+	
+	
+	<!-- error -->
+	<!--  <int-stream:stderr-channel-adapter id="stdErr" append-newline="true" /> -->
 	
 	<!-- task executors -->
 	<bean id="routeExecutor" 
@@ -70,5 +83,9 @@
 		<property name="corePoolSize" value="${event.processor.executor.corePoolSize}"/>
 		<property name="maxPoolSize" value="${event.processor.executor.maxPoolSize}"/>
 	</bean>
+	
+	<int-stream:stderr-channel-adapter id="stdErr" append-newline="true"/>
+	
+
 	
 </beans>

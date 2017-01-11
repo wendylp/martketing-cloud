@@ -15,23 +15,16 @@ package cn.rongcapital.mkt.dao.mongo.event;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
-import cn.rongcapital.mkt.dao.mongo.MongoBaseTagDao;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
-import cn.rongcapital.mkt.mongodb.MongoEventRepository;
 import cn.rongcapital.mkt.mongodb.event.EventBehaviorRepository;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 

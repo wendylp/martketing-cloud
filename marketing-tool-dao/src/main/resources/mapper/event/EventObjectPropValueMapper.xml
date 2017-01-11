@@ -88,4 +88,24 @@
 	<!-- 其它SQL语句 -->
 	
 	
+	<select id="selectByObjectId" parameterType="long" resultType="cn.rongcapital.mkt.event.po.EventPropValue">
+	   <![CDATA[SELECT object_id as objectId,prop_name as propName,prop_value as propValue ]]>
+		<include refid="QUERY_FROM_TABLE"/>
+	    <![CDATA[WHERE object_id = #{objid}]]>
+	</select>
+	
+	
+	<insert id="insertPropValue" parameterType="cn.rongcapital.mkt.event.po.EventPropValue" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO event_object_prop_value (object_id,prop_name,prop_value)
+			VALUES
+			(
+			  #{objectId},
+			  #{propName},
+			  #{propValue}
+			)
+		]]>
+	</insert>
+	
+	
 </mapper>
