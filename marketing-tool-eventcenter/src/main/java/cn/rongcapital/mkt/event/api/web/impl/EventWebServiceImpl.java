@@ -28,9 +28,16 @@ import org.springframework.stereotype.Controller;
 import cn.rongcapital.mkt.event.api.EventWebService;
 import cn.rongcapital.mkt.event.po.EventObject;
 import cn.rongcapital.mkt.event.service.EventBehaviorService;
+import cn.rongcapital.mkt.event.service.EventGeneralGetService;
+import cn.rongcapital.mkt.event.service.EventObjectPropsListService;
+import cn.rongcapital.mkt.event.service.EventObjectSaveService;
 import cn.rongcapital.mkt.event.service.EventObjectService;
+import cn.rongcapital.mkt.event.service.EventSourceSaveService;
+import cn.rongcapital.mkt.event.vo.in.EventObjectVo;
+import cn.rongcapital.mkt.event.vo.in.EventSourceVo;
 import cn.rongcapital.mkt.event.vo.out.EventListOut;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 
 @Controller
@@ -48,6 +55,18 @@ public final class EventWebServiceImpl implements EventWebService {
     
     @Autowired
     private EventObjectService eventObjectService;
+    
+    @Autowired
+    private EventGeneralGetService eventGeneralGetService;
+    
+    @Autowired
+    private EventObjectPropsListService eventObjectPropsListService;
+    
+    @Autowired
+    private EventObjectSaveService eventObjectSaveService;
+    
+    @Autowired
+    private EventSourceSaveService eventSourceSaveService;
 
     @Override
     public EventListOut getEventListByKeyword(@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword, @DefaultValue("1") @Min(1) @QueryParam("index") Integer index, @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
@@ -71,5 +90,25 @@ public final class EventWebServiceImpl implements EventWebService {
     public EventObject selectById(Integer eventObjectId) {
         LOGGER.info("=====================start get data======================");
         return this.eventObjectService.selectById(eventObjectId);
+    }
+
+    @Override
+    public BaseOutput getEventGeneral(Long eventId) {
+        return eventGeneralGetService.getEventGeneral(eventId);
+    }
+
+    @Override
+    public BaseOutput getEventObjProps(Long eventObjectId) {
+        return eventObjectPropsListService.getEventObjProps(eventObjectId);
+    }
+
+    @Override
+    public BaseOutput saveEventObj(EventObjectVo event) {
+        return eventObjectSaveService.saveEventObj(event);
+    }
+
+    @Override
+    public BaseOutput saveEventSource(EventSourceVo source) {
+        return eventSourceSaveService.saveEventSource(source);
     }
 }
