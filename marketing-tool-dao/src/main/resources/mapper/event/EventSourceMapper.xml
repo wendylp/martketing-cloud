@@ -94,6 +94,13 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+	<!-- 根据事件途径获取事件源列表 -->
+	<select id="getEventSourceListByChannel" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.event.vo.out.EventSourceListOut">
+		<![CDATA[ 	select es.id,es.name from event_platform ep, event_source es 
+			where ep.id = es.platform_id and es.status = 0 and ep.status = 0 
+		]]>
+		<if test="channel != null and channel !=''"><![CDATA[ and ep.channel = #{channel} ]]></if>
+		<![CDATA[	order by es.create_time desc ]]>
+	</select>
 	
 </mapper>

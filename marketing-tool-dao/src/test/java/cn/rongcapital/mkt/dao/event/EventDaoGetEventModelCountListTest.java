@@ -276,7 +276,7 @@ public class EventDaoGetEventModelCountListTest extends AbstractUnitTest {
         	eventSourceDao.updateById(e);
         }
           
-        logger.info("测试: MaterialCouponCodeDao getEventModelCountList 结束---------------------");
+        logger.info("测试: EventDao getEventModelCountList 结束---------------------");
     }
     
 }

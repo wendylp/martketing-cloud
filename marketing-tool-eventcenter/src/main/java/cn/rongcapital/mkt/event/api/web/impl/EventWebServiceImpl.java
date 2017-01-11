@@ -30,6 +30,7 @@ import cn.rongcapital.mkt.event.po.EventObject;
 import cn.rongcapital.mkt.event.service.EventBehaviorService;
 import cn.rongcapital.mkt.event.service.EventModelCountService;
 import cn.rongcapital.mkt.event.service.EventObjectService;
+import cn.rongcapital.mkt.event.service.EventSourceListService;
 import cn.rongcapital.mkt.event.vo.out.EventListOut;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -50,10 +51,6 @@ public final class EventWebServiceImpl implements EventWebService {
     
     @Autowired
     private EventObjectService eventObjectService;
-    
-    @Autowired
-    private EventModelCountService eEventModelCountService;
-    
 
     @Override
     public EventListOut getEventListByKeyword(@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword, @DefaultValue("1") @Min(1) @QueryParam("index") Integer index, @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
@@ -79,8 +76,4 @@ public final class EventWebServiceImpl implements EventWebService {
         return this.eventObjectService.selectById(eventObjectId);
     }
 
-	@Override
-	public BaseOutput getEventModelCount(String userToken, String version) {
-		return eEventModelCountService.getEventModelCountList();
-	}
 }

@@ -39,7 +39,7 @@ public interface EventDao extends BaseDao<Event>{
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
 	
 	/**
-     * 时间模板数量统计
+     * 事件模板数量统计
      * 
      * @param paramMap
      * @return List<String>
