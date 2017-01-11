@@ -66,6 +66,13 @@ public enum ApiErrorCode {
 	VALIDATE_ERROR_GENERATE_RULE_ERROR(4011,"generate rule validation failed"),//校验失败
 	VALIDATE_ERROR_TIME_ERROR(4012,"起始时间大于结束时间"),//校验失败
 	
+	EVENT_ERROR_NOT_FOUND_ERROR(5001,"Event not exist"),
+	EVENT_SOURCE_ERROR_NOT_FOUND_ERROR(5002,"Event Source not exist"),
+	EVENT_OBJECT_ERROR_NOT_FOUND_ERROR(5003,"Event Object not exist"),
+	EVENT_SOURCE_ID_NOT_FOUND(5004,"Event Source Id not found"),
+	EVENT_OBJECT_ID_NOT_FOUND(5005,"Event Object Id not found"),
+	VALIDATE_ERROR_ATTRIBUTES(5006,"attributes validation failed"),//校验失败
+	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
     private int code;
