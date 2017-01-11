@@ -12,7 +12,6 @@
 
 package cn.rongcapital.mkt.event.api;
 
-import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -22,7 +21,6 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.event.vo.in.EventSend;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Path(ApiConstant.API_PATH)
@@ -35,11 +33,11 @@ public interface EventReceviceApi {
     @POST
     @Path("/mkt.event.receive")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public  BaseOutput  eventReceive(@Valid EventSend eventSend);
+    public  BaseOutput  eventReceive(String eventSend);
     
     @POST
     @Path("/mkt.event.weixin.receive")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public BaseOutput WeixineventReceive(@Valid EventSend eventSend);
+    public BaseOutput weixineventReceive(String eventSend);
     
 }

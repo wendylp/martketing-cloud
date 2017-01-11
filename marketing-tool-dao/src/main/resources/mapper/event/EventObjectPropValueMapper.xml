@@ -95,16 +95,16 @@
 	</select>
 	
 	
-	<insert id="insertPropValue" parameterType="cn.rongcapital.mkt.event.po.EventPropValue" useGeneratedKeys="true" keyProperty="id">
-		<![CDATA[
-			INSERT INTO event_object_prop_value (object_id,prop_name,prop_value)
+	<insert id="insertBatchPropValue" parameterType="java.util.List">
+			INSERT IGNORE INTO event_object_prop_value (object_id,prop_name,prop_value)
 			VALUES
+			<foreach collection="list" item="item" index="index" separator="," >
 			(
-			  #{objectId},
-			  #{propName},
-			  #{propValue}
+			  #{item.objectId},
+			  #{item.propName},
+			  #{item.propValue}
 			)
-		]]>
+			</foreach>
 	</insert>
 	
 	

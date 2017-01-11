@@ -53,5 +53,5 @@ public interface EventObjectPropValueDao extends BaseDao<EventObjectPropValue>{
          * @param 
          * @return 
          */
-    int insertPropValue(EventPropValue evP);
+    int insertBatchPropValue(List<EventPropValue> evP);
 }

@@ -39,24 +39,14 @@ public class EventObjectPropValueServiceImpl implements EventObjectPropValueServ
     @Override
     public void insertPropValue(EventBehavior eventBehavior) {
         // TODO Auto-generated method stub
-        long objctid = Long.valueOf(eventBehavior.getId());// 从ID中获取Objctid值
-        List<EventPropValue> datas = eventObjectPropValueDao.selectByObjectId(objctid);
-        // 先判断原来是否存在已有属性值，没有直接入库,有则先去重,然后再入库.
+     
+        //List<EventPropValue> datas = eventObjectPropValueDao.selectByObjectId(objctid);
+           // 利用 insert ignore into 来完成有的则不插入,没有插入
         List<EventPropValue> tempdatas = getEventPropValue(eventBehavior);
-        if (CollectionUtils.isEmpty(datas)) {
-            for (EventPropValue ep : tempdatas) {
-                eventObjectPropValueDao.insertPropValue(ep);
-            }
+        if (CollectionUtils.isNotEmpty(tempdatas)) {
 
-        } else {
-
-            tempdatas.removeAll(datas);// 去重操作已重写equals 
-            for (EventPropValue ep : tempdatas) {
-                eventObjectPropValueDao.insertPropValue(ep); //不重复的入库
-            }
-
-        }
-
+            eventObjectPropValueDao.insertBatchPropValue(tempdatas);
+        } 
 
 
     }
@@ -76,7 +66,7 @@ public class EventObjectPropValueServiceImpl implements EventObjectPropValueServ
          if(StringUtils.isBlank(key)||map.get(key)==null||StringUtils.isBlank(map.get(key).toString()))
                   continue;
             EventPropValue eventObjectPropValue = new EventPropValue();
-            eventObjectPropValue.setObjectId(Long.valueOf(eventBehavior.getId()));
+            eventObjectPropValue.setObjectId(eventBehavior.getObjectId());
             eventObjectPropValue.setPropName(key);
             eventObjectPropValue.setPropValue(map.get(key).toString());
             list.add(eventObjectPropValue);

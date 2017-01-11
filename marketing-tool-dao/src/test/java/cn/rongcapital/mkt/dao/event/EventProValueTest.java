@@ -7,6 +7,7 @@
 
 package cn.rongcapital.mkt.dao.event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -29,13 +30,15 @@ public class EventProValueTest extends AbstractUnitTest {
     private EventPropValue epv =new EventPropValue();
 
     private long Objid = 2255;
-
+     
+    private List<EventPropValue> list =new ArrayList<EventPropValue>();
     @Before
     public void set() {
         epv.setObjectId(Objid);
         epv.setPropName("code_name");
         epv.setPropValue("優惠券");
-        eventObjectPropValueDao.insertPropValue(epv);
+        list.add(epv);
+        eventObjectPropValueDao.insertBatchPropValue(list);
     }
 
     @Test
