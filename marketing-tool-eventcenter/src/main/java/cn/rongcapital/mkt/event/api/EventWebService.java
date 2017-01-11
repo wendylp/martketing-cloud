@@ -13,17 +13,19 @@ package cn.rongcapital.mkt.event.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import cn.rongcapital.mkt.event.vo.in.EventSubscribeInput;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 
@@ -34,42 +36,37 @@ import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Path(ApiConstant.API_PATH)
-@Consumes({ MediaType.APPLICATION_JSON })
-@Produces({ MediaType.APPLICATION_JSON })
+@Consumes({MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_JSON})
 @ValidateRequest
 public interface EventWebService {
 
     @GET
     @Path("/mkt.event.list")
     EventListOut getEventListByKeyword(@NotEmpty @QueryParam("user_token") String userToken,
-                                                       @NotEmpty @QueryParam("ver") String ver,
-                                                       @QueryParam("keyword") String keyword,
-                                                       @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-                                                       @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size
-                                                       ) throws Exception ;
-    
+            @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword,
+            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception;
+
     @GET
     @Path("/mkt.event.behavior.list")
     List<EventBehavior> getEventBehaviorListByKeyword(@NotEmpty @QueryParam("user_token") String userToken,
-                                                       @NotEmpty @QueryParam("ver") String ver,
-                                                       @QueryParam("keyword") String keyword,
-                                                       @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-                                                       @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size
-                                                       ) throws Exception ;
-    
+            @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword,
+            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception;
+
     @GET
     @Path("/mkt.event.object")
-    EventObject selectById(@QueryParam("event_object_id")Integer eventObjectId);
+    EventObject selectById(@QueryParam("event_object_id") Integer eventObjectId);
 
     /**
      * @功能描述: 事件订阅与取消订阅
-     * @param eventId
-     * @param subscribe
+     * @param input
      * @return BaseOutput
      * @author xie.xiaoliang
      * @since 2017-01-10
      */
-    @GET
+    @POST
     @Path("/mkt.event.subscribe")
-    BaseOutput eventSubscribe(@NotNull @Min(0) @QueryParam("event_id")long eventId, @QueryParam("subscribe")boolean subscribe);
+    BaseOutput eventSubscribe(@Valid EventSubscribeInput input);
 }
