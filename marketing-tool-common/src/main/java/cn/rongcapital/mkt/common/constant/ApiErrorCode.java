@@ -62,6 +62,8 @@ public enum ApiErrorCode {
 	VALIDATE_ERROR_GENERATE_RULE_ERROR(4011,"generate rule validation failed"),//校验失败
 	VALIDATE_ERROR_TIME_ERROR(4012,"起始时间大于结束时间"),//校验失败
 	
+	VALIDATE_ERROR_EVENT_UNSUBSCRIBABLE(4013,"event subscribe can not cancel"),//事件订阅不可以被取消
+	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
     private int code;

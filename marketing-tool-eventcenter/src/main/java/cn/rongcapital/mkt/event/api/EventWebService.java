@@ -4,7 +4,7 @@
  * @see （与该类关联的类）：
  * @对应项目名称：营销云系统
  * @author: 谢小良
- * @version: 版本v1.6
+ * @version: 版本v1.7
  * @date(创建、开发日期)：2017-1-7
  * @date(最后修改日期)：2017-1-7
  * @复审人：
@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -30,6 +31,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.event.po.EventObject;
 import cn.rongcapital.mkt.event.vo.out.EventListOut;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Path(ApiConstant.API_PATH)
 @Consumes({ MediaType.APPLICATION_JSON })
@@ -58,4 +60,16 @@ public interface EventWebService {
     @GET
     @Path("/mkt.event.object")
     EventObject selectById(@QueryParam("event_object_id")Integer eventObjectId);
+
+    /**
+     * @功能描述: 事件订阅与取消订阅
+     * @param eventId
+     * @param subscribe
+     * @return BaseOutput
+     * @author xie.xiaoliang
+     * @since 2017-01-10
+     */
+    @GET
+    @Path("/mkt.event.subscribe")
+    BaseOutput eventSubscribe(@NotNull @Min(0) @QueryParam("event_id")long eventId, @QueryParam("subscribe")boolean subscribe);
 }

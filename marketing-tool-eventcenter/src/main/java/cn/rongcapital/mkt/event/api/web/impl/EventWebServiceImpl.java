@@ -19,6 +19,7 @@ import javax.validation.constraints.Min;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 
+import cn.rongcapital.mkt.event.service.EventSubscribeService;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import cn.rongcapital.mkt.event.service.EventBehaviorService;
 import cn.rongcapital.mkt.event.service.EventObjectService;
 import cn.rongcapital.mkt.event.vo.out.EventListOut;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 
 @Controller
@@ -48,6 +50,9 @@ public final class EventWebServiceImpl implements EventWebService {
     
     @Autowired
     private EventObjectService eventObjectService;
+
+    @Autowired
+    private EventSubscribeService eventSubscribeService;
 
     @Override
     public EventListOut getEventListByKeyword(@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword, @DefaultValue("1") @Min(1) @QueryParam("index") Integer index, @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
@@ -71,5 +76,13 @@ public final class EventWebServiceImpl implements EventWebService {
     public EventObject selectById(Integer eventObjectId) {
         LOGGER.info("=====================start get data======================");
         return this.eventObjectService.selectById(eventObjectId);
+    }
+
+    /* (non-Javadoc)
+     * @see cn.rongcapital.mkt.event.api.EventWebService#eventSubscribe(long, boolean)
+     */
+    @Override
+    public BaseOutput eventSubscribe(long  eventId, boolean subscribe) {
+        return this.eventSubscribeService.eventSubscribe(eventId,subscribe);
     }
 }
