@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.event.impl;
+package cn.rongcapital.mkt.event.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.event.EventDao;
