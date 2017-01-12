@@ -73,7 +73,7 @@ public enum ApiErrorCode {
 	EVENT_OBJECT_ERROR_NOT_FOUND_ERROR(5003,"Event Object not exist"),
 	EVENT_SOURCE_ID_NOT_FOUND(5004,"Event Source Id not found"),
 	EVENT_OBJECT_ID_NOT_FOUND(5005,"Event Object Id not found"),
-	VALIDATE_ERROR_ATTRIBUTES(5006,"attributes validation failed"),//校验失败
+	VALIDATE_JSON_ERROR(5006,"JSON validation error"),//校验失败
 	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
