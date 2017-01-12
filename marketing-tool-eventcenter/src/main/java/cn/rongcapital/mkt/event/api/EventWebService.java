@@ -16,6 +16,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -31,6 +32,10 @@ import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.event.po.EventObject;
+import cn.rongcapital.mkt.event.vo.in.EventBehavierListIn;
+import cn.rongcapital.mkt.event.vo.in.EventObjectVo;
+import cn.rongcapital.mkt.event.vo.in.EventSourceVo;
+import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.event.vo.out.EventListOut;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -69,4 +74,54 @@ public interface EventWebService {
     @POST
     @Path("/mkt.event.subscribe")
     BaseOutput eventSubscribe(@Valid EventSubscribeInput input);
+    
+    /**
+     * @功能简述: 获取事件概要信息
+     * @param eventId
+     * @return BaseOutput
+     * @author zhuxuelong
+     */
+    @GET
+    @Path("/mkt.event.general.get")
+    BaseOutput getEventGeneral(@NotNull @QueryParam("event_id") Long eventId);
+
+    /**
+     * @功能简述: 获取客体属性值列表
+     * @param eventObjectId
+     * @return BaseOutput
+     * @author zhuxuelong
+     */
+    @GET
+    @Path("/mkt.event.object.prop.list")
+    BaseOutput getEventObjProps(@NotNull @QueryParam("object_id") Long eventObjectId);
+
+    /**
+     * @功能简述: 事件客体注册
+     * @param event
+     * @return BaseOutput
+     * @author zhuxuelong
+     */
+    @POST
+    @Path("/mkt.event.object.register")
+    BaseOutput saveEventObj(@NotNull @Valid EventObjectVo event);
+
+    /**
+     * @功能简述: 事件来源注册
+     * @param source
+     * @return BaseOutput
+     * @author zhuxuelong
+     */
+    @POST
+    @Path("/mkt.event.source.register")
+    BaseOutput saveEventSource(@NotNull @Valid EventSourceVo source);
+    
+    /**
+     * @author guozhenchao
+     * @功能简述: 事件行为查询列表
+     * @param eventBehavierListIn
+     * @return
+     */
+    @POST
+    @Path("/mkt.event.behavior.list")
+	EventBehaviorOut getEventBehavierList(@Valid EventBehavierListIn eventBehavierListIn);
 }

@@ -29,8 +29,17 @@ import org.springframework.stereotype.Controller;
 
 import cn.rongcapital.mkt.event.api.EventWebService;
 import cn.rongcapital.mkt.event.po.EventObject;
+import cn.rongcapital.mkt.event.service.EventBehaviorListService;
 import cn.rongcapital.mkt.event.service.EventBehaviorService;
+import cn.rongcapital.mkt.event.service.EventGeneralGetService;
+import cn.rongcapital.mkt.event.service.EventObjectPropsListService;
+import cn.rongcapital.mkt.event.service.EventObjectSaveService;
 import cn.rongcapital.mkt.event.service.EventObjectService;
+import cn.rongcapital.mkt.event.service.EventSourceSaveService;
+import cn.rongcapital.mkt.event.vo.in.EventBehavierListIn;
+import cn.rongcapital.mkt.event.vo.in.EventObjectVo;
+import cn.rongcapital.mkt.event.vo.in.EventSourceVo;
+import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.event.vo.out.EventListOut;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -51,10 +60,25 @@ public final class EventWebServiceImpl implements EventWebService {
 
     @Autowired
     private EventObjectService eventObjectService;
+    
+    @Autowired
+    private EventGeneralGetService eventGeneralGetService;
+    
+    @Autowired
+    private EventObjectPropsListService eventObjectPropsListService;
+    
+    @Autowired
+    private EventObjectSaveService eventObjectSaveService;
+    
+    @Autowired
+    private EventSourceSaveService eventSourceSaveService;
 
     @Autowired
     private EventSubscribeService eventSubscribeService;
 
+    @Autowired
+	private EventBehaviorListService eventBehavierListService;
+    
     @Override
     public EventListOut getEventListByKeyword(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword,
@@ -97,4 +121,29 @@ public final class EventWebServiceImpl implements EventWebService {
     public BaseOutput eventSubscribe(EventSubscribeInput input) {
         return this.eventSubscribeService.eventSubscribe(input.getEventId(), input.isSubscribe());
     }
+
+    @Override
+    public BaseOutput getEventGeneral(Long eventId) {
+        return eventGeneralGetService.getEventGeneral(eventId);
+    }
+
+    @Override
+    public BaseOutput getEventObjProps(Long eventObjectId) {
+        return eventObjectPropsListService.getEventObjProps(eventObjectId);
+    }
+
+    @Override
+    public BaseOutput saveEventObj(EventObjectVo event) {
+        return eventObjectSaveService.saveEventObj(event);
+    }
+
+    @Override
+    public BaseOutput saveEventSource(EventSourceVo source) {
+        return eventSourceSaveService.saveEventSource(source);
+    }
+
+	@Override
+	public EventBehaviorOut getEventBehavierList(EventBehavierListIn eventBehavierListIn) {
+		return eventBehavierListService.getEventBehavierList(eventBehavierListIn);
+	}
 }
