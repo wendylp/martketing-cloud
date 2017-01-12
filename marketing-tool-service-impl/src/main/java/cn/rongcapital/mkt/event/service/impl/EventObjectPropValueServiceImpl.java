@@ -40,7 +40,6 @@ public class EventObjectPropValueServiceImpl implements EventObjectPropValueServ
     public void insertPropValue(EventBehavior eventBehavior) {
         // TODO Auto-generated method stub
      
-        //List<EventPropValue> datas = eventObjectPropValueDao.selectByObjectId(objctid);
            // 利用 insert ignore into 来完成有的则不插入,没有插入
         List<EventPropValue> tempdatas = getEventPropValue(eventBehavior);
         if (CollectionUtils.isNotEmpty(tempdatas)) {
@@ -63,8 +62,6 @@ public class EventObjectPropValueServiceImpl implements EventObjectPropValueServ
         Map<String, Object> map = (Map<String, Object>) eventBehavior.getObject().get("attributes");
         List<EventPropValue> list = new ArrayList<EventPropValue>();
         for (String key : map.keySet()) {
-         if(StringUtils.isBlank(key)||map.get(key)==null||StringUtils.isBlank(map.get(key).toString()))
-                  continue;
             EventPropValue eventObjectPropValue = new EventPropValue();
             eventObjectPropValue.setObjectId(eventBehavior.getObjectId());
             eventObjectPropValue.setPropName(key);
