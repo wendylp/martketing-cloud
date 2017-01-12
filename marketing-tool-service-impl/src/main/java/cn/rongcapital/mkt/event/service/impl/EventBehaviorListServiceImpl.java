@@ -12,7 +12,6 @@
 package cn.rongcapital.mkt.event.service.impl;
 
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -21,7 +20,6 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.event.EventDao;
@@ -36,8 +34,7 @@ import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.event.vo.out.EventBehaviorsOut;
 import cn.rongcapital.mkt.material.coupon.service.impl.CouponSaveServiceImpl;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehaviors;
-
-import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -113,64 +110,67 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 			eventBehaviorOut.setMsg(ApiErrorCode.EVENT_OBJECT_ERROR_NOT_FOUND_ERROR.getMsg());
 			return eventBehaviorOut;
 		}
+		Criteria cri = null;
 		try {
-			JSONUtils.parse(attribute);
+			cri = getCriteria(attribute);
+			int proIndex = (index == null || index.intValue() == 0) ? 1 : index;
+			int proSize = (size == null || size.intValue() == 0) ? 10 : size;
+			Query query = new Query();
+			query.addCriteria(cri);
+			query.skip((proIndex - 1) * proSize);
+			query.limit(proSize);
+			Query queryAll = new Query();
+			queryAll.addCriteria(cri);
+			List<EventBehaviors> list = mongoOperations.find(query, EventBehaviors.class);
+			long totle = mongoOperations.count(queryAll, EventBehaviors.class);
+			EventBehaviorsOut out = null;
+			for (EventBehaviors eventBehavior : list) {
+				eventBehavior.setEventName(eventDB.getName());
+				eventBehavior.setSourceName(esDb.getName());
+				String object = eventBehavior.getObject();
+				eventBehavior.setInstanceName(instanceName(object,eoDb.getInstanceNameProp()));
+				out = new EventBehaviorsOut();
+				BeanUtils.copyProperties(eventBehavior, out);
+				eventBehaviorOut.getListItems().add(out);
+			}
+			eventBehaviorOut.setTotal(eventBehaviorOut.getData().size());
+			eventBehaviorOut.setTotalCount(new Long(totle).intValue());
 		} catch (Exception e) {
-			logger.error("JSON attribute error, attribute: {}", attribute);
-			eventBehaviorOut.setCode(ApiErrorCode.VALIDATE_ERROR_ATTRIBUTES.getCode());
-			eventBehaviorOut.setMsg(ApiErrorCode.VALIDATE_ERROR_ATTRIBUTES.getMsg());
+			logger.error("JSON validation error", e);
+			eventBehaviorOut.setCode(ApiErrorCode.VALIDATE_JSON_ERROR.getCode());
+			eventBehaviorOut.setMsg(ApiErrorCode.VALIDATE_JSON_ERROR.getMsg());
 			return eventBehaviorOut;
 		}
-		
-        int proIndex = (index == null || index.intValue() == 0) ? 1 : index;
-        int proSize = (size == null || size.intValue() == 0) ? 10 : size;
-		Criteria cri = getCriteria(attribute);
-		Query query = new Query();
-		query.addCriteria(cri);
-		query.skip((proIndex - 1) * proSize);
-		query.limit(proSize);
-		Query queryAll = new Query();
-		queryAll.addCriteria(cri);
-		List<EventBehaviors> list = mongoOperations.find(query, EventBehaviors.class);
-		List<EventBehaviors> alllist = mongoOperations.find(queryAll, EventBehaviors.class);
-		EventBehaviorsOut out = null;
-		for(EventBehaviors eventBehavior : list){
-			eventBehavior.setEventName(eventDB.getName());
-			eventBehavior.setSourceName(esDb.getName());
-			eventBehavior.setInstanceName(eoDb.getName());
-			out = new EventBehaviorsOut();
-			BeanUtils.copyProperties(eventBehavior, out);
-			eventBehaviorOut.getListItems().add(out);
-		}
-		eventBehaviorOut.setTotal(eventBehaviorOut.getData().size());
-		eventBehaviorOut.setTotalCount(alllist.size());
 		return eventBehaviorOut;
 	}
 	
-	private Criteria getCriteria(String attribute){
+	private Criteria getCriteria(String attribute) {
 		Criteria cri = null;
 		cri = Criteria.where("subscribed").is(true);
 		JSONArray condition = JSONArray.parseArray(attribute);
 		int conditionSize = condition.size();
-		if(conditionSize > 0){
-			for(int i = 0; i < conditionSize; i++){
- 				JSONObject jsObject = condition.getJSONObject(i);
+		if (conditionSize > 0) {
+			for (int i = 0; i < conditionSize; i++) {
+				JSONObject jsObject = condition.getJSONObject(i);
 				String nameKey = jsObject.getString("name");
 				String field = ATTRIBUTES + nameKey;
 				JSONArray jsonArry = jsObject.getJSONArray("values");
-				List<?> list = null;
-				if(jsonArry.size() > 0){
-					if(String.class == jsonArry.get(0).getClass()){
-						 list = JSONArray.parseArray(jsonArry.toString(), String.class);
-					}else if(Boolean.class == jsonArry.get(0).getClass()){
-						 list = JSONArray.parseArray(jsonArry.toString(), Boolean.class);
-					}else{
-						 list = JSONArray.parseArray(jsonArry.toString(), Long.class);
-					}
+				if (jsonArry.size() > 0) {
+					List<String> list = JSONArray.parseArray(jsonArry.toString(), String.class);
+					cri.and(field).in(list);
 				}
-				cri.and(field).in(list);
 			}
 		}
 		return cri;
 	} 
+	
+	private String instanceName(String object, String instanceNameProp){
+		
+		JSONObject jsonObject = JSONObject.parseObject(object);
+		String instanceName = jsonObject.getString(instanceNameProp);
+		if(StringUtils.isEmpty(instanceName)){
+			instanceName = "";
+		}
+		return instanceName;
+	}
 }
