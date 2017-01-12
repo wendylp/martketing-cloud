@@ -12,6 +12,7 @@
 
 package cn.rongcapital.mkt.event.api.web.impl;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -24,8 +25,8 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public class EvenReceviceApiImpl implements EventReceviceApi {
 
     
-    @Autowired
-    private EventReceviceService eventReceviceService;
+   /* @Autowired
+    private EventReceviceService eventReceviceService;*/
     
     
     
@@ -41,7 +42,6 @@ public class EvenReceviceApiImpl implements EventReceviceApi {
         // TODO Auto-generated method stub
         BaseOutput base =new BaseOutput(0,"success",1,null);
         eventDispatcher.dispatch("MARKETING", eventSend);
-        //eventReceviceService.receviceEvent(eventbehavior);
         return base;
     }
 

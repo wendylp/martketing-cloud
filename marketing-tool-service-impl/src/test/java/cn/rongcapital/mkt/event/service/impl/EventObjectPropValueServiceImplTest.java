@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,24 +46,17 @@ public class EventObjectPropValueServiceImplTest {
    private EventObjectPropValueDao eventObjectPropValueDao;
    
    private EventBehavior  eventBehavior =new EventBehavior();
-   
-   List<EventPropValue> list =new ArrayList<EventPropValue>();
+  
    @Before
    public void set() {
        eventObjectPropValueService = new EventObjectPropValueServiceImpl();
-       eventBehavior.setId("10000");
+       eventBehavior.setObjectId(10000l);
        Map<String,Object> map =new HashMap<String,Object>();
        Map<String,Object> attribute =new HashMap<String,Object>();
        attribute.put("CODE", "Copon");
        attribute.put("VALUE", 100);
        map.put("attributes", attribute); 
        eventBehavior.setObject(map);
-       
-       EventPropValue event =new EventPropValue();
-       event.setObjectId(Long.valueOf(eventBehavior.getId()));
-       event.setPropName("CODE");
-       event.setPropValue("100");
-       list.add(event);
        
      ReflectionTestUtils.setField(eventObjectPropValueService, "eventObjectPropValueDao", eventObjectPropValueDao);
    }
@@ -70,19 +65,37 @@ public class EventObjectPropValueServiceImplTest {
    public void test()
    {
       // mock 为null 
-       
+       List<EventPropValue> event= getEventPropValue(eventBehavior);
        Mockito.when(eventObjectPropValueDao.selectByObjectId(Mockito.anyChar())).thenReturn(null);  
        eventObjectPropValueService.insertPropValue(eventBehavior);
-       
-       
-       Mockito.when(eventObjectPropValueDao.selectByObjectId(Mockito.anyChar())).thenReturn(list);  
+             
+       Mockito.when(eventObjectPropValueDao.selectByObjectId(Mockito.anyChar())).thenReturn(event);  
        
        eventObjectPropValueService.insertPropValue(eventBehavior);
-       
+              
+       Assert.assertEquals("CODE", event.get(0).getPropName());
+       Assert.assertEquals("Copon", event.get(0).getPropValue());
        
    }
    
    
+   
+   private List<EventPropValue> getEventPropValue(EventBehavior eventBehavior) {
+       Map<String, Object> map = (Map<String, Object>) eventBehavior.getObject().get("attributes");
+       List<EventPropValue> list = new ArrayList<EventPropValue>();
+       for (String key : map.keySet()) {
+        if(StringUtils.isBlank(key)||map.get(key)==null||StringUtils.isBlank(map.get(key).toString()))
+                 continue;
+           EventPropValue eventObjectPropValue = new EventPropValue();
+           eventObjectPropValue.setObjectId(eventBehavior.getObjectId());
+           eventObjectPropValue.setPropName(key);
+           eventObjectPropValue.setPropValue(map.get(key).toString());
+           list.add(eventObjectPropValue);
+       }
+
+       return list;
+   }
+
    
 
 }

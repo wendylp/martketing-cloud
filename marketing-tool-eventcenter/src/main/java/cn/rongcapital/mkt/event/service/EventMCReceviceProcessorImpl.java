@@ -12,9 +12,14 @@
 
 package cn.rongcapital.mkt.event.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.alibaba.fastjson.JSON;
 
@@ -34,14 +39,32 @@ public class EventMCReceviceProcessorImpl implements EventProcessor {
     @Override
     public void process(String event) {
         // TODO Auto-generated method stub
-        LOGGER.info("MARKETING event info {}:",event); 
-        EventBehavior eventbehavior =JSON.parseObject(event,EventBehavior.class);
-        eventReceviceService.receviceEvent(eventbehavior);
-        LOGGER.info("处理结束....");
+        try {
+            EventBehavior eventbehavior = JSON.parseObject(event, EventBehavior.class);
+            doObjectToString(eventbehavior,"object");
+            eventReceviceService.receviceEvent(eventbehavior);
+        } catch (Exception e) {
+            LOGGER.error("error,event:{},errmessage:{}", event, e.getMessage());
+            return;
+        }
+        LOGGER.info("done success...");
         
     }
-
+     
     
+    private void doObjectToString(EventBehavior evb, String label) {
+        Map<String, Object> object = (Map<String, Object>) ReflectionTestUtils.getField(evb, label);
+        Map<String, Object> attributesmap = (Map<String, Object>) object.get("attributes");
+        Map<String, String> temp = new HashMap<String, String>();
+        for (String key : attributesmap.keySet()) {
+            if (StringUtils.isBlank(key) || attributesmap.get(key) == null
+                    || StringUtils.isBlank(attributesmap.get(key).toString()))
+                continue;
+            temp.put(key, String.valueOf(attributesmap.get(key)));
+        }
+        object.put("attributes", temp);
+        ReflectionTestUtils.setField(evb, label, object);
+    }
     
     
     
