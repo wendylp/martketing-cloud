@@ -94,6 +94,19 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
-	
+	<!-- 根据事件途径获取事件源列表 -->
+	<select id="getEventSourceListByChannel" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.event.vo.out.EventSourceListOut">
+		<![CDATA[ 	select es.id,es.name from event_platform ep, event_source es 
+			where ep.id = es.platform_id and es.status = 0 and ep.status = 0 
+		]]>
+		<if test="channel != null and channel !=''"><![CDATA[ and ep.channel = #{channel} ]]></if>
+		<![CDATA[	order by es.create_time desc ]]>
+	</select>
+	<!-- 查询,通过条件 -->
+	<select id="getEventSource" parameterType="cn.rongcapital.mkt.event.po.EventSource" resultType="cn.rongcapital.mkt.event.po.EventSource">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
 </mapper>
