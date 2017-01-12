@@ -14,11 +14,15 @@ package cn.rongcapital.mkt.event.api.web.impl;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 
+import cn.rongcapital.mkt.event.service.EventRegisterService;
+import cn.rongcapital.mkt.event.vo.in.EventRegisterIn;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +53,9 @@ public final class EventWebServiceImpl implements EventWebService {
     @Autowired
     private EventObjectService eventObjectService;
 
+    @Autowired
+    private EventRegisterService eventRegisterService;
+
     @Override
     public EventListOut getEventListByKeyword(@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword, @DefaultValue("1") @Min(1) @QueryParam("index") Integer index, @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
         return eventService.selectList();
@@ -71,5 +78,11 @@ public final class EventWebServiceImpl implements EventWebService {
     public EventObject selectById(Integer eventObjectId) {
         LOGGER.info("=====================start get data======================");
         return this.eventObjectService.selectById(eventObjectId);
+    }
+
+    @Override
+    public BaseOutput eventRegister(@Valid EventRegisterIn registerIn) {
+        //设置当前事件为非预制事件、订阅事件、可以取消订阅事件
+        return this.eventRegisterService.register(registerIn, false, true, false);
     }
 }

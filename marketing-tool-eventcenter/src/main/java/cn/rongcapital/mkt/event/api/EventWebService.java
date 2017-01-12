@@ -13,16 +13,14 @@ package cn.rongcapital.mkt.event.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import cn.rongcapital.mkt.event.vo.in.EventRegisterIn;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 
@@ -58,4 +56,8 @@ public interface EventWebService {
     @GET
     @Path("/mkt.event.object")
     EventObject selectById(@QueryParam("event_object_id")Integer eventObjectId);
+
+    @POST
+    @Path("/mkt.event.register")
+    BaseOutput eventRegister(@Valid EventRegisterIn registerIn);
 }
