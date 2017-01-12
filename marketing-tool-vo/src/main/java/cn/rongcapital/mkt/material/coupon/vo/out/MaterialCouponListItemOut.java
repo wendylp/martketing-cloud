@@ -26,6 +26,7 @@ public class MaterialCouponListItemOut {
     private Integer stockRest;
     private BigDecimal amount;
     private String channelCode;
+    private String readyStatus;
     
     /**
      * @return the id
@@ -134,4 +135,11 @@ public class MaterialCouponListItemOut {
     public void setChannelCode(String channelCode) {
         this.channelCode = channelCode;
     }
+	public String getReadyStatus() {
+		return readyStatus;
+	}
+	@JsonProperty("ready_status")
+	public void setReadyStatus(String readyStatus) {
+		this.readyStatus = readyStatus;
+	}
 }
