@@ -16,16 +16,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class EventRegisterIn extends BaseInput {
     @NotBlank
     @JsonProperty("name")
+    @Size(min=1,max=50)
     private String name;
     @NotBlank
     @JsonProperty("code")
+    @Size(min=1,max=50)
     private String code;
     @NotBlank
     @JsonProperty("source_code")
@@ -35,12 +40,15 @@ public class EventRegisterIn extends BaseInput {
     private String objectCode;
     @NotBlank
     @JsonProperty("register_opportunity")
+    @Size(min=1,max=100)
     private String registerOpportunity;
     @NotBlank
     @JsonProperty("trigger_opportunity")
+    @Size(min=1,max=100)
     private String triggerOpportunity;
     @NotNull
     @JsonProperty("attributes")
+    @Valid
     private List<EventRegisterAttributeIn> attributes;
 
     public String getName() {
