@@ -66,6 +66,8 @@ public enum ApiErrorCode {
 	VALIDATE_ERROR_GENERATE_RULE_ERROR(4011,"generate rule validation failed"),//校验失败
 	VALIDATE_ERROR_TIME_ERROR(4012,"起始时间大于结束时间"),//校验失败
 	
+	VALIDATE_ERROR_EVENT_UNSUBSCRIBABLE(4013,"event subscribe can not cancel"),//事件订阅不可以被取消
+	
 	EVENT_ERROR_NOT_FOUND_ERROR(5001,"Event not exist"),
 	EVENT_SOURCE_ERROR_NOT_FOUND_ERROR(5002,"Event Source not exist"),
 	EVENT_OBJECT_ERROR_NOT_FOUND_ERROR(5003,"Event Object not exist"),
