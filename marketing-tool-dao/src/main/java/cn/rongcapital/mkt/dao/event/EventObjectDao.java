@@ -14,6 +14,8 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.event.po.EventObject;
 
 public interface EventObjectDao extends BaseDao<EventObject>{
+
+	EventObject getEventObject(EventObject eo);
 	
 	//自定义扩展
 	/**

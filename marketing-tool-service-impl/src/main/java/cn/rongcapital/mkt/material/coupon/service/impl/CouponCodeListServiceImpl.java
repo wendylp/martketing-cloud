@@ -32,8 +32,10 @@ public class CouponCodeListServiceImpl implements CouponCodeListService {
     public BaseOutput couponCodeList(Long id, Integer index, Integer size) {
         MaterialCouponCode code = new MaterialCouponCode();
         code.setCouponId(id);
-        code.setStartIndex(index);
-        code.setPageSize(size);
+        int proIndex = (index == null || index.intValue() == 0) ? 1 : index;
+        int proSize = (size == null || size.intValue() == 0) ? 10 : size;
+        code.setStartIndex((proIndex - 1) * proSize);
+        code.setPageSize(proSize);
         int totle = materialCouponCodeDao.getTotleListCount(code);
         List<MaterialCouponCode> codeList = materialCouponCodeDao.selectList(code);
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
@@ -49,9 +51,10 @@ public class CouponCodeListServiceImpl implements CouponCodeListService {
     public BaseOutput couponIssuedCodeList(Long id, Integer index, Integer size) {
         MaterialCouponCode code = new MaterialCouponCode();
         code.setCouponId(id);
-        code.setStartIndex(index);
-        code.setPageSize(size);
-        
+        int proIndex = (index == null || index.intValue() == 0) ? 1 : index;
+        int proSize = (size == null || size.intValue() == 0) ? 10 : size;
+        code.setStartIndex((proIndex - 1) * proSize);
+        code.setPageSize(proSize);
         int totle = materialCouponCodeDao.getTotleIssuedListCount(code);
         List<MaterialCouponCode> codeList = materialCouponCodeDao.selectIssuedList(code);
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
