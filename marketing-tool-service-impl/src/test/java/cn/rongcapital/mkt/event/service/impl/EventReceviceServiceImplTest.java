@@ -73,5 +73,7 @@ public class EventReceviceServiceImplTest {
         ev.setObjectId(10000l);
         Mockito.when(eventBehaviorRepository.insert(Mockito.any(EventBehavior.class))).thenReturn(ev);
         eventReceviceService.receviceEvent(eventBehavior);
+        Mockito.when(eventBehaviorRepository.insert(Mockito.any(EventBehavior.class))).thenReturn(null);
+        eventReceviceService.receviceEvent(eventBehavior);
     }
 }
