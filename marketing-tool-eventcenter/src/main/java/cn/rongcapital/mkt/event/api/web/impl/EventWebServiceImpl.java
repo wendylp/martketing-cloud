@@ -14,11 +14,15 @@ package cn.rongcapital.mkt.event.api.web.impl;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 
+import cn.rongcapital.mkt.event.service.EventRegisterService;
+import cn.rongcapital.mkt.event.vo.in.EventRegisterIn;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.event.service.EventSubscribeService;
 import cn.rongcapital.mkt.event.vo.in.EventSubscribeInput;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -74,6 +78,9 @@ public final class EventWebServiceImpl implements EventWebService {
     private EventSourceSaveService eventSourceSaveService;
 
     @Autowired
+    private EventRegisterService eventRegisterService;
+
+    @Autowired
     private EventSubscribeService eventSubscribeService;
 
     @Autowired
@@ -120,6 +127,12 @@ public final class EventWebServiceImpl implements EventWebService {
     @Override
     public BaseOutput eventSubscribe(EventSubscribeInput input) {
         return this.eventSubscribeService.eventSubscribe(input.getEventId(), input.isSubscribe());
+    }
+
+    @Override
+    public BaseOutput eventRegister(@Valid EventRegisterIn registerIn) {
+        //设置当前事件为非预制事件、订阅事件、可以取消订阅事件
+        return this.eventRegisterService.register(registerIn, false, true, false);
     }
 
     @Override
