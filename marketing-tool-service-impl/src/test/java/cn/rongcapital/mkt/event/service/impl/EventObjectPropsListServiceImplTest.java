@@ -79,8 +79,6 @@ public class EventObjectPropsListServiceImplTest {
         eventObj.setId(33L);
         eventObj.setCode("CCC");
         eventObj.setName("DDD");
-        eventObj.setInstanceNameLabel("饮品名称");
-        eventObj.setInstanceNameProp("drinkName");
 
         List<EventObjecAttribure> attriList = new ArrayList<EventObjecAttribure>();
         EventObjecAttribure attr = new EventObjecAttribure();
@@ -102,13 +100,13 @@ public class EventObjectPropsListServiceImplTest {
         BaseOutput output = service.getEventObjProps(11L);
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
         Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), output.getMsg());
-        Assert.assertEquals(3, output.getTotal());
-        Assert.assertEquals(3, output.getTotalCount());
+        Assert.assertEquals(2, output.getTotal());
+        Assert.assertEquals(2, output.getTotalCount());
         Assert.assertTrue(CollectionUtils.isNotEmpty(output.getData()));
-        Assert.assertEquals(output.getData().size(), 3);
+        Assert.assertEquals(output.getData().size(), 2);
         Assert.assertEquals(
                 output.getData().toString(),
-                "[EventObjectPropsOut [name=drinkName, label=饮品名称, values=[]], EventObjectPropsOut [name=taste, label=口味, values=[]], EventObjectPropsOut [name=color, label=颜色, values=[]]]");
+                "[EventObjectPropsOut [name=taste, label=口味, values=[]], EventObjectPropsOut [name=color, label=颜色, values=[]]]");
     }
 
     /**
@@ -121,8 +119,6 @@ public class EventObjectPropsListServiceImplTest {
         eventObj.setId(33L);
         eventObj.setCode("CCC");
         eventObj.setName("DDD");
-        eventObj.setInstanceNameLabel("饮品名称");
-        eventObj.setInstanceNameProp("drinkName");
 
         List<EventObjecAttribure> attriList = new ArrayList<EventObjecAttribure>();
         EventObjecAttribure attr = new EventObjecAttribure();
@@ -194,12 +190,12 @@ public class EventObjectPropsListServiceImplTest {
         BaseOutput output = service.getEventObjProps(11L);
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
         Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), output.getMsg());
-        Assert.assertEquals(3, output.getTotal());
-        Assert.assertEquals(3, output.getTotalCount());
+        Assert.assertEquals(2, output.getTotal());
+        Assert.assertEquals(2, output.getTotalCount());
         Assert.assertTrue(CollectionUtils.isNotEmpty(output.getData()));
-        Assert.assertEquals(output.getData().size(), 3);
+        Assert.assertEquals(output.getData().size(), 2);
         Assert.assertEquals(
-                "[EventObjectPropsOut [name=drinkName, label=饮品名称, values=[可乐, 雪碧]], EventObjectPropsOut [name=taste, label=口味, values=[香, 甜]], EventObjectPropsOut [name=color, label=颜色, values=[红, 黄]]]",
+                "[EventObjectPropsOut [name=taste, label=口味, values=[香, 甜]], EventObjectPropsOut [name=color, label=颜色, values=[红, 黄]]]",
                 output.getData().toString());
 
     }
@@ -214,8 +210,6 @@ public class EventObjectPropsListServiceImplTest {
         eventObj.setId(33L);
         eventObj.setCode("CCC");
         eventObj.setName("DDD");
-        eventObj.setInstanceNameLabel("饮品名称");
-        eventObj.setInstanceNameProp("drinkName");
 
         List<EventObjecAttribure> attriList = new ArrayList<EventObjecAttribure>();
         EventObjecAttribure attr = new EventObjecAttribure();
@@ -263,12 +257,12 @@ public class EventObjectPropsListServiceImplTest {
         BaseOutput output = service.getEventObjProps(11L);
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
         Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), output.getMsg());
-        Assert.assertEquals(3, output.getTotal());
-        Assert.assertEquals(3, output.getTotalCount());
+        Assert.assertEquals(2, output.getTotal());
+        Assert.assertEquals(2, output.getTotalCount());
         Assert.assertTrue(CollectionUtils.isNotEmpty(output.getData()));
-        Assert.assertEquals(output.getData().size(), 3);
+        Assert.assertEquals(output.getData().size(), 2);
         Assert.assertEquals(
-                "[EventObjectPropsOut [name=drinkName, label=饮品名称, values=[可乐, 雪碧]], EventObjectPropsOut [name=taste, label=口味, values=[香, 甜]], EventObjectPropsOut [name=color, label=颜色, values=[]]]",
+                "[EventObjectPropsOut [name=taste, label=口味, values=[香, 甜]], EventObjectPropsOut [name=color, label=颜色, values=[]]]",
                 output.getData().toString());
 
     }
@@ -283,8 +277,6 @@ public class EventObjectPropsListServiceImplTest {
         eventObj.setId(33L);
         eventObj.setCode("CCC");
         eventObj.setName("DDD");
-        eventObj.setInstanceNameLabel("饮品名称");
-        eventObj.setInstanceNameProp("drinkName");
         eventObjList.add(eventObj);
         Mockito.when(eventObjectDao.selectList(Mockito.any(EventObject.class))).thenReturn(eventObjList);
         ReflectionTestUtils.setField(service, "eventObjectDao", eventObjectDao);
@@ -315,13 +307,9 @@ public class EventObjectPropsListServiceImplTest {
         BaseOutput output = service.getEventObjProps(11L);
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
         Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), output.getMsg());
-        Assert.assertEquals(1, output.getTotal());
-        Assert.assertEquals(1, output.getTotalCount());
-        Assert.assertTrue(CollectionUtils.isNotEmpty(output.getData()));
-        Assert.assertEquals(output.getData().size(), 1);
-        Assert.assertEquals("[EventObjectPropsOut [name=drinkName, label=饮品名称, values=[可乐, 雪碧]]]", output.getData()
-                .toString());
-
+        Assert.assertEquals(0, output.getTotal());
+        Assert.assertEquals(0, output.getTotalCount());
+        Assert.assertTrue(CollectionUtils.isEmpty(output.getData()));
     }
 
 }

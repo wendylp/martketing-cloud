@@ -24,6 +24,13 @@ import cn.rongcapital.mkt.vo.BaseInput;
 public class EventObjectVo extends BaseInput {
 
     /**
+     * 类别
+     */
+    @NotEmpty
+    @Length(min = 1, max = 100)
+    private String type;
+
+    /**
      * 客体类别标识
      */
     @NotEmpty
@@ -38,27 +45,21 @@ public class EventObjectVo extends BaseInput {
     private String name;
 
     /**
-     * 客体类别名称
-     */
-    @NotEmpty
-    @Length(min = 1, max = 50)
-    @JsonProperty("instance_name_prop")
-    private String instanceNameProp;
-
-    /**
-     * 客体类别对象名称
-     */
-    @NotEmpty
-    @Length(min = 1, max = 50)
-    @JsonProperty("instance_name_label")
-    private String instanceNameLabel;
-
-    /**
      * 客体属性
      */
     @JsonProperty("attributes")
     @Valid
     private List<EventObjecAttribure> attributes;
+
+
+    public String getType() {
+        return type;
+    }
+
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
 
     public String getCode() {
@@ -80,27 +81,6 @@ public class EventObjectVo extends BaseInput {
         this.name = name;
     }
 
-
-    public String getInstanceNameProp() {
-        return instanceNameProp;
-    }
-
-
-    public void setInstanceNameProp(String instanceNameProp) {
-        this.instanceNameProp = instanceNameProp;
-    }
-
-
-    public String getInstanceNameLabel() {
-        return instanceNameLabel;
-    }
-
-
-    public void setInstanceNameLabel(String instanceNameLabel) {
-        this.instanceNameLabel = instanceNameLabel;
-    }
-
-
     public List<EventObjecAttribure> getAttributes() {
         return attributes;
     }
@@ -113,8 +93,7 @@ public class EventObjectVo extends BaseInput {
 
     @Override
     public String toString() {
-        return "EventObjectVo [code=" + code + ", name=" + name + ", instanceNameProp=" + instanceNameProp
-                + ", instanceNameLabel=" + instanceNameLabel + ", attributes=" + attributes + "]";
+        return "EventObjectVo [type=" + type + ", code=" + code + ", name=" + name + ", attributes=" + attributes + "]";
     }
 
 }
