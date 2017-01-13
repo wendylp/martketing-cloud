@@ -34,7 +34,7 @@ public class EventBehaviors implements Serializable {
 	@Field(value = "subscribed")
 	private boolean subscribed;
 	private String sourceName;
-	private String instanceName;
+	private String objectName;
 	private String eventName;
 
 	public EventBehaviors(String id,Long time,String object,String subject,String event, boolean subscribed){
@@ -103,12 +103,12 @@ public class EventBehaviors implements Serializable {
 		this.sourceName = sourceName;
 	}
 
-	public String getInstanceName() {
-		return instanceName;
+	public String getObjectName() {
+		return objectName;
 	}
 
-	public void setInstanceName(String instanceName) {
-		this.instanceName = instanceName;
+	public void setObjectName(String objectName) {
+		this.objectName = objectName;
 	}
 
 	public String getEventName() {
