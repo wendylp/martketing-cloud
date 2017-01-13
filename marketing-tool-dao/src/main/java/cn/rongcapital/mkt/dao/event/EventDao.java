@@ -37,6 +37,17 @@ public interface EventDao extends BaseDao<Event>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+
+    
+    
+       /**
+         * @author liuhaizhan
+         * @功能简述: 根据事件标示查询
+         * @param 
+         * @return 
+         */
+    Event selectByCode(String code);
+
 	
 	/**
      * 事件模板数量统计
@@ -48,5 +59,6 @@ public interface EventDao extends BaseDao<Event>{
     List<EventModelCount> getEventModelCountList();
 
 	Event getEvent(Event event);
+
 
 }
