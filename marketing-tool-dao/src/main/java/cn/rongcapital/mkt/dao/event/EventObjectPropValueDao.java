@@ -10,8 +10,11 @@
 
 package cn.rongcapital.mkt.dao.event;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.event.po.EventObjectPropValue;
+import cn.rongcapital.mkt.event.po.EventPropValue;
 
 public interface EventObjectPropValueDao extends BaseDao<EventObjectPropValue>{
 	
@@ -34,4 +37,21 @@ public interface EventObjectPropValueDao extends BaseDao<EventObjectPropValue>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    
+      /**
+         * @author liuhaizhan
+         * @功能简述:根据客体ID查询
+         * @param 
+         * @return 
+         */
+    List<EventPropValue> selectByObjectId(long objid);
+    
+      /**
+         * @author liuhaizhan
+         * @功能简述: 插入属性值
+         * @param 
+         * @return 
+         */
+    int insertBatchPropValue(List<EventPropValue> evP);
 }

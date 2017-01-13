@@ -14,11 +14,17 @@ package cn.rongcapital.mkt.event.api.web.impl;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 
+import cn.rongcapital.mkt.event.service.EventRegisterService;
+import cn.rongcapital.mkt.event.vo.in.EventRegisterIn;
+import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.event.service.EventSubscribeService;
+import cn.rongcapital.mkt.event.vo.in.EventSubscribeInput;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +58,10 @@ public final class EventWebServiceImpl implements EventWebService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventWebServiceImpl.class);
     @Autowired(required = false)
     private cn.rongcapital.mkt.event.service.EventService eventService;
-    
+
     @Autowired(required = false)
     private EventBehaviorService eventBehaviorService;
-    
+
     @Autowired
     private EventObjectService eventObjectService;
     
@@ -72,30 +78,61 @@ public final class EventWebServiceImpl implements EventWebService {
     private EventSourceSaveService eventSourceSaveService;
 
     @Autowired
+    private EventRegisterService eventRegisterService;
+
+    @Autowired
+    private EventSubscribeService eventSubscribeService;
+
+    @Autowired
 	private EventBehaviorListService eventBehavierListService;
     
     @Override
-    public EventListOut getEventListByKeyword(@NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword, @DefaultValue("1") @Min(1) @QueryParam("index") Integer index, @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
+    public EventListOut getEventListByKeyword(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword,
+            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception {
         return eventService.selectList();
     }
 
-    /* (non-Javadoc)
-     * @see cn.rongcapital.mkt.event.api.EventService#getEventBehaviorListByKeyword(java.lang.String, java.lang.String, java.lang.String, java.lang.Integer, java.lang.Integer)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cn.rongcapital.mkt.event.api.EventService#getEventBehaviorListByKeyword(java.lang.String,
+     * java.lang.String, java.lang.String, java.lang.Integer, java.lang.Integer)
      */
     @Override
-    public List<EventBehavior> getEventBehaviorListByKeyword(String userToken, String ver, String keyword, Integer index,
-            Integer size) throws Exception {
+    public List<EventBehavior> getEventBehaviorListByKeyword(String userToken, String ver, String keyword,
+            Integer index, Integer size) throws Exception {
         LOGGER.info("=====================start get data======================");
         return eventBehaviorService.selectList();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see cn.rongcapital.mkt.event.api.EventService#selectById(java.lang.Integer)
      */
     @Override
     public EventObject selectById(Integer eventObjectId) {
         LOGGER.info("=====================start get data======================");
         return this.eventObjectService.selectById(eventObjectId);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see cn.rongcapital.mkt.event.api.EventWebService#eventSubscribe(long, boolean)
+     */
+    @Override
+    public BaseOutput eventSubscribe(EventSubscribeInput input) {
+        return this.eventSubscribeService.eventSubscribe(input.getEventId(), input.isSubscribe());
+    }
+
+    @Override
+    public BaseOutput eventRegister(@Valid EventRegisterIn registerIn) {
+        //设置当前事件为非预制事件、订阅事件、可以取消订阅事件
+        return this.eventRegisterService.register(registerIn, false, true, false);
     }
 
     @Override
