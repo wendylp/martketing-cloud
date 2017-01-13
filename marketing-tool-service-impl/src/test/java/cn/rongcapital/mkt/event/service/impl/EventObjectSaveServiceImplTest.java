@@ -1,3 +1,12 @@
+/*************************************************
+ * @功能简述: EventObjectSaveService实现测试类
+ * @项目名称: marketing cloud
+ * @see:
+ * @author: zhuxuelong
+ * @version: 0.0.1
+ * @date: 2016-12-07
+ * @复审人:
+ *************************************************/
 package cn.rongcapital.mkt.event.service.impl;
 
 import java.util.ArrayList;
@@ -45,10 +54,9 @@ public class EventObjectSaveServiceImplTest {
     @Test
     public void testSaveEventObj01() {
         EventObjectVo event = new EventObjectVo();
+        event.setType("TT");
         event.setCode("AAA");
         event.setName("BBB");
-        event.setInstanceNameLabel("CCC");
-        event.setInstanceNameProp("DDD");
 
         List<EventObject> eventObjList = new ArrayList<EventObject>();
         EventObject eventObj = new EventObject();
@@ -69,10 +77,9 @@ public class EventObjectSaveServiceImplTest {
     @Test
     public void testSaveEventObj02() {
         EventObjectVo event = new EventObjectVo();
+        event.setType("TT");
         event.setCode("AAA");
         event.setName("BBB");
-        event.setInstanceNameLabel("CCC");
-        event.setInstanceNameProp("DDD");
         List<EventObjecAttribure> attributes = new ArrayList<EventObjecAttribure>();
         EventObjecAttribure item = new EventObjecAttribure();
         item.setLabel("label1");
@@ -104,10 +111,9 @@ public class EventObjectSaveServiceImplTest {
     @Test
     public void testSaveEventObj03() {
         EventObjectVo event = new EventObjectVo();
+        event.setType("TT");
         event.setCode("AAA");
         event.setName("BBB");
-        event.setInstanceNameLabel("CCC");
-        event.setInstanceNameProp("DDD");
         List<EventObjecAttribure> attributes = new ArrayList<EventObjecAttribure>();
         EventObjecAttribure item = new EventObjecAttribure();
         item.setLabel("label1");
@@ -127,10 +133,9 @@ public class EventObjectSaveServiceImplTest {
             public Integer answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
                 EventObject data = (EventObject) args[0];
+                Assert.assertEquals("TT", data.getType());
                 Assert.assertEquals("AAA", data.getCode());
                 Assert.assertEquals("BBB", data.getName());
-                Assert.assertEquals("CCC", data.getInstanceNameLabel());
-                Assert.assertEquals("DDD", data.getInstanceNameProp());
                 Assert.assertEquals(false, data.getSystemObject());
                 Assert.assertEquals(
                         "[{\"label\":\"label1\",\"name\":\"name1\"},{\"label\":\"label2\",\"name\":\"name2\"}]",
@@ -152,10 +157,9 @@ public class EventObjectSaveServiceImplTest {
     @Test
     public void testSaveEventObj04() {
         EventObjectVo event = new EventObjectVo();
+        event.setType("TT");
         event.setCode("AAA");
         event.setName("BBB");
-        event.setInstanceNameLabel("CCC");
-        event.setInstanceNameProp("DDD");
 
         Mockito.when(eventObjectDao.selectList(Mockito.any(EventObject.class))).thenReturn(null);
 
@@ -164,10 +168,9 @@ public class EventObjectSaveServiceImplTest {
             public Integer answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
                 EventObject data = (EventObject) args[0];
+                Assert.assertEquals("TT", data.getType());
                 Assert.assertEquals("AAA", data.getCode());
                 Assert.assertEquals("BBB", data.getName());
-                Assert.assertEquals("CCC", data.getInstanceNameLabel());
-                Assert.assertEquals("DDD", data.getInstanceNameProp());
                 Assert.assertEquals(false, data.getSystemObject());
                 Assert.assertNull(data.getAttributes());
                 return null;

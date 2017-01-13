@@ -1,3 +1,12 @@
+/*************************************************
+ * @功能简述: EventSourceSaveService实现测试类
+ * @项目名称: marketing cloud
+ * @see:
+ * @author: zhuxuelong
+ * @version: 0.0.1
+ * @date: 2016-12-07
+ * @复审人:
+ *************************************************/
 package cn.rongcapital.mkt.event.service.impl;
 
 import java.util.ArrayList;

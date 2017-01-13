@@ -51,6 +51,7 @@ public class EventObjectSaveServiceImpl implements EventObjectSaveService {
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
                         null);
         EventObject eventObjPo = new EventObject();
+        eventObjPo.setType(event.getType());
         eventObjPo.setCode(event.getCode());
         eventObjPo.setStatus((byte) 0);
         // 客体对象标识重复判断
@@ -60,8 +61,6 @@ public class EventObjectSaveServiceImpl implements EventObjectSaveService {
                     ApiErrorCode.BIZ_ERROR_EVENT_OBJECT_CODE_ALREADY_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
         }
         eventObjPo.setName(event.getName());
-        eventObjPo.setInstanceNameLabel(event.getInstanceNameLabel());
-        eventObjPo.setInstanceNameProp(event.getInstanceNameProp());
 
         List<EventObjecAttribure> attributes = event.getAttributes();
         if (CollectionUtils.isNotEmpty(attributes)) {
