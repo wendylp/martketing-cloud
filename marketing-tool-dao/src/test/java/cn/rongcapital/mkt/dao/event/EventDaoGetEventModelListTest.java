@@ -92,8 +92,6 @@ public class EventDaoGetEventModelListTest extends AbstractUnitTest{
         
         eventObject.setCode("TEST_"+UUID.randomUUID().toString().substring(0, 20));
         eventObject.setName("getEventModelList_测试数据");
-        eventObject.setInstanceNameProp("[{\"label\":\"颜色\",\"name\":\"color\"}]");
-        eventObject.setInstanceNameLabel("二维码名称");
         eventObject.setStatus((byte)0);
         eventObject.setCreateTime(new Date());
         eventObject.setSystemObject(false);

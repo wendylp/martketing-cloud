@@ -98,6 +98,13 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
+	<!-- 查询,通过条件 -->
+	<select id="getEventObject" parameterType="cn.rongcapital.mkt.event.po.EventObject" resultType="cn.rongcapital.mkt.event.po.EventObject">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
 	
 	<!-- 其它SQL语句 -->
 	

@@ -51,7 +51,8 @@ public enum ApiErrorCode {
 	BIZ_ERROR_EVENT_SOURCE_PF_NOT_EXIST(3022,"platform code of event source  is not exist."),
 	BIZ_ERROR_EVENT_OBJECT_CODE_ALREADY_EXIST(3023,"code of event object has already exist."),
 	BIZ_ERROR_EVENT_OBJECT_ATTRIBUTE_DUPLICATED(3024,"attribute of event object is duplicated."),
-
+	BIZ_ERROR_EVENT_IS_EXIST(3021,"event code is exist"),//事件code已经存在
+	
 	SMS_ERROR_MATERIAL_CAN_NOT_DELETE(4001,"can not delete the material"),
 	SMS_ERROR_MATERIAL_CAN_NOT_UPDATE(4002,"can not update the material"),
 	SMS_ERROR_TEMPLETE_CAN_NOT_DELETE(4003,"can not delete the templete"),
@@ -65,6 +66,15 @@ public enum ApiErrorCode {
 	VALIDATE_ERROR_COMMON_RULE_ERROR(4010,"common rule validation failed"),//校验失败
 	VALIDATE_ERROR_GENERATE_RULE_ERROR(4011,"generate rule validation failed"),//校验失败
 	VALIDATE_ERROR_TIME_ERROR(4012,"起始时间大于结束时间"),//校验失败
+	
+	VALIDATE_ERROR_EVENT_UNSUBSCRIBABLE(4013,"event subscribe can not cancel"),//事件订阅不可以被取消
+	
+	EVENT_ERROR_NOT_FOUND_ERROR(5001,"Event not exist"),
+	EVENT_SOURCE_ERROR_NOT_FOUND_ERROR(5002,"Event Source not exist"),
+	EVENT_OBJECT_ERROR_NOT_FOUND_ERROR(5003,"Event Object not exist"),
+	EVENT_SOURCE_ID_NOT_FOUND(5004,"Event Source Id not found"),
+	EVENT_OBJECT_ID_NOT_FOUND(5005,"Event Object Id not found"),
+	VALIDATE_JSON_ERROR(5006,"JSON validation error"),//校验失败
 	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
