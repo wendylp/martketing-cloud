@@ -29,6 +29,7 @@
    		<module>marketing-tool-service</module>
    		<module>marketing-tool-service-impl</module>
    		<module>marketing-tool-dao</module>
+		<module>marketing-tool-mongo-dao</module>
    		<module>marketing-tool-po</module>
    		<module>marketing-tool-vo</module>
    		<module>marketing-tool-job</module>
