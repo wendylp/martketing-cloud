@@ -110,9 +110,16 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 			eventBehaviorOut.setMsg(ApiErrorCode.EVENT_OBJECT_ERROR_NOT_FOUND_ERROR.getMsg());
 			return eventBehaviorOut;
 		}
+		
+		Query query = new Query();
+		Query queryAll = new Query();
 		Criteria cri = null;
 		try {
-			cri = getCriteria(attribute);
+			if(!StringUtils.isEmpty(attribute)){
+				cri = getCriteria(attribute);
+				query.addCriteria(cri);
+				queryAll.addCriteria(cri);
+			}
 		} catch (Exception e) {
 			logger.error("JSON validation error", e);
 			eventBehaviorOut.setCode(ApiErrorCode.VALIDATE_JSON_ERROR.getCode());
@@ -121,12 +128,8 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 		}
 		int proIndex = (index == null || index.intValue() == 0) ? 1 : index;
 		int proSize = (size == null || size.intValue() == 0) ? 10 : size;
-		Query query = new Query();
-		query.addCriteria(cri);
 		query.skip((proIndex - 1) * proSize);
 		query.limit(proSize);
-		Query queryAll = new Query();
-		queryAll.addCriteria(cri);
 		List<EventBehaviors> list = mongoOperations.find(query, EventBehaviors.class);
 		long totle = mongoOperations.count(queryAll, EventBehaviors.class);
 		EventBehaviorsOut out = null;
