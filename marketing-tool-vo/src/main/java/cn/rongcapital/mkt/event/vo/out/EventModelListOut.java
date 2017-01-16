@@ -27,6 +27,7 @@ public class EventModelListOut{
 	
 	private String source;
 	
+	@JsonProperty("system_event")
 	private Boolean systemEvent;
 	
 	@JsonProperty("bind_count")
