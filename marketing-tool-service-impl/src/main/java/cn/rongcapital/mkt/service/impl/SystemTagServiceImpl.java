@@ -49,6 +49,8 @@ public class SystemTagServiceImpl implements SystemTagService {
 	private static final String ALLTAG_TAB_NAME = "全部标签";
 
 	private static final String RECOMMEND_TAB_NAME = "推荐标签";
+	
+	private static final String percentZero = "0.00%";
 
 	@Autowired
 	protected MongoTemplate mongoTemplate;
@@ -198,7 +200,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 			String tagName = tagRecommend.getTagName();
 			Boolean flag = tagRecommend.getFlag();
 			String tagCover = commonUtilService.getTagCover(tagId);
-			if(pageSourceType != null && pageSourceType.equals(1) && !"0%".equals(tagCover)){
+			if(pageSourceType != null && pageSourceType.equals(1) && !percentZero.equals(tagCover)){
 				resultList.add(new TagSystemTreeTagOut(tagId, tagName, flag, tagCover));
 			}else if(pageSourceType == null || !pageSourceType.equals(1)){
 				resultList.add(new TagSystemTreeTagOut(tagId, tagName, flag, tagCover));
@@ -258,7 +260,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 	}
 
 	private void solveResultByPageSourceType(Integer pageSourceType, TagSystemTreeOut tagTreeSecondOut, String tagCover, TagSystemTreeTagOut tagOut) {
-		if(pageSourceType != null && pageSourceType.equals(1) && !"0%".equals(tagCover)){
+		if(pageSourceType != null && pageSourceType.equals(1) && !percentZero.equals(tagCover)){
 			tagTreeSecondOut.getChildren().add(tagOut);
 		}else if(pageSourceType == null || !pageSourceType.equals(1)){
 			tagTreeSecondOut.getChildren().add(tagOut);

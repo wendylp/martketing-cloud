@@ -20,6 +20,8 @@ import cn.rongcapital.mkt.vo.out.TagSystemFlagListGetOut;
 public class TagSystemFlagListGetServiceImpl implements TagSystemFlagListGetService {
 
     private static final Integer DATA_STATUS_VALID = 0;
+    
+    private static final String percentZero = "0.00%";
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -54,7 +56,7 @@ public class TagSystemFlagListGetServiceImpl implements TagSystemFlagListGetServ
                 		tagId, flagTag.getTagName(), flagTag.getTagList(),
                                 flagTag.getFlag(), flagTag.getTagDesc(), flagTag.getTagNameEng(),
                                 flagTag.getSeq(), flagTag.getSearchMod());
-                if(!"0%".equals(tagCover)){
+                if(!percentZero.equals(tagCover)){
                 	result.getData().add(tagSystemFlagListGetOut);
                 }
             }
