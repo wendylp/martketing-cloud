@@ -95,6 +95,7 @@ public class EventDaoGetEventModelListTest extends AbstractUnitTest{
         eventObject.setStatus((byte)0);
         eventObject.setCreateTime(new Date());
         eventObject.setSystemObject(false);
+        eventObject.setType("type");
         eventObjectDao.insert(eventObject);
         eoList.add(eventObject);
         

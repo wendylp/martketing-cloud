@@ -89,7 +89,8 @@
 	<!-- rabbit start   -->
 	
 	<rabbit:connection-factory id="connectionFactory" host="${rabbitmq.host}" username="${rabbitmq.username}"
-	password="${rabbitmq.password}"/>
+	password="${rabbitmq.password}" port="${rabbitmq.port}"/>
+	
 	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory" />
 	<rabbit:admin connection-factory="connectionFactory" />
 	<rabbit:queue name="queue.events" />
