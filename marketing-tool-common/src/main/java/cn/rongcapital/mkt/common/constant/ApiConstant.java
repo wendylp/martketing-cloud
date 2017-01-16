@@ -16,6 +16,7 @@ public class ApiConstant {
 	
 	public static final String API_METHOD = "method";//api的method参数
 	public static final String API_PATH = "/api";//api的路径
+	public static final String EVENT_API_PATH = "/event/api";//事件中心api的路径
 	public static final String API_USER_TOKEN = "user_token";//api的user_token参数
 	public static final String API_USER_TOKEN_VALUE = "123";//api的user_token参数
 	public static final String API_USER_ID = "user_id";//api的user_id参数	

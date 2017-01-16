@@ -233,6 +233,40 @@
 				<maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
             </properties>
         </profile>
+        
+        <!-- 事件中心相关配置 -->
+        <profile>
+            <id>event_dev</id>
+            <properties>
+                <mvnvar.log.path>/rc/log/event/dev</mvnvar.log.path>
+                <mvnvar.conf.path>event_conf_dev</mvnvar.conf.path>
+                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>event_test</id>
+            <properties>
+            	<mvnvar.log.path>/rc/log/event/test</mvnvar.log.path>
+                <mvnvar.conf.path>event_conf_test</mvnvar.conf.path>
+                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>event_production</id>
+            <properties>
+                <mvnvar.log.path>/rc/log/event/production</mvnvar.log.path>
+                <mvnvar.conf.path>event_conf</mvnvar.conf.path>
+                <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>event_production_gbs</id>
+            <properties>
+                <mvnvar.log.path>/rc/log/event/production_gws</mvnvar.log.path>
+                <mvnvar.conf.path>event_conf_gbs</mvnvar.conf.path>
+                <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
+            </properties>
+        </profile>
     </profiles>
     
     <repositories>

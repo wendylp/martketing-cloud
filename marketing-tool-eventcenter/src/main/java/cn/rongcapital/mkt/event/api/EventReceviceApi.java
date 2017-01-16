@@ -23,7 +23,7 @@ import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
-@Path(ApiConstant.API_PATH)
+@Path(ApiConstant.EVENT_API_PATH)
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 @ValidateRequest
