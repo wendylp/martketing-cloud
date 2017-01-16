@@ -80,7 +80,11 @@
 		<property name="maxPoolSize" value="${event.router.executor.maxPoolSize}"/>
 	</bean>
 
+    
+
 	<int-stream:stderr-channel-adapter id="stdErr" append-newline="true"  />
+	
+	
 	
 	 <!-- 默认消息的错误处理 -->
 	<bean id="defaultErrorHandServiceActivator" class="cn.rongcapital.mkt.event.activator.DefaultErrorHandlingServiceActivator"/>
@@ -90,7 +94,6 @@
 	
 	<rabbit:connection-factory id="connectionFactory" host="${rabbitmq.host}" username="${rabbitmq.username}"
 	password="${rabbitmq.password}" port="${rabbitmq.port}"/>
-	
 	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory" />
 	<rabbit:admin connection-factory="connectionFactory" />
 	<rabbit:queue name="queue.events" />
