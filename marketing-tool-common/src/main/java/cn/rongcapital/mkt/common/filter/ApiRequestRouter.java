@@ -80,7 +80,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	   		String appId = "";
 	   		if(StringUtils.isNotEmpty(url)&&url.contains(ApiConstant.API_PATH)){
 	   			if(url.length()>=5){
-	   				appId = url.substring(5);
+	   				appId =url.substring(1,url.length() - ApiConstant.API_PATH.length());
 	   			}	   			
 		   		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 	   			
 		   		    if(redisUserTokenVO.getCode()==0&&StringUtils.isNotEmpty(redisUserTokenVO.getMsg())){
@@ -95,7 +95,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 			            requestContext.abortWith(builder.build());
 		   			}else{
 		   				if(StringUtils.isNotEmpty(appId)){				
-			   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
+			   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path("/" + appId+ApiConstant.API_PATH+"/"+method).build();
 			   				requestContext.setRequestUri(newRequestURI);			   				
 			   			}else{
 			   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()

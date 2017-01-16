@@ -43,7 +43,7 @@ import cn.rongcapital.mkt.event.vo.out.EventListOut;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
-@Path(ApiConstant.API_PATH)
+@Path(ApiConstant.EVENT_API_PATH)
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 @ValidateRequest
