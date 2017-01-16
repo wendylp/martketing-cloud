@@ -29,6 +29,7 @@
    		<module>marketing-tool-service</module>
    		<module>marketing-tool-service-impl</module>
    		<module>marketing-tool-dao</module>
+		<module>marketing-tool-mongo-dao</module>
    		<module>marketing-tool-po</module>
    		<module>marketing-tool-vo</module>
    		<module>marketing-tool-job</module>
@@ -215,12 +216,13 @@
                 <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
             </properties>
         </profile>
+        <!-- 把原有阿里云环境配置换成生产验证环境 -->
         <profile>
-            <id>cloud_dev</id>
+            <id>production_sit</id>
             <properties>
-            	<mvnvar.log.path>/rc/log/mkt/dev</mvnvar.log.path>
+            	<mvnvar.log.path>/rc/log/mkt/production_sit</mvnvar.log.path>
                 <mvnvar.conf.path>cloud_dev</mvnvar.conf.path>
-                <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
+                <maven.repository.remote.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.remote.url>
             </properties>
         </profile>
         <profile>

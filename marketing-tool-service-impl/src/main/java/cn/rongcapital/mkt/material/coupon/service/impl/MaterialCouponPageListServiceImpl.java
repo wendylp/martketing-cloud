@@ -97,4 +97,56 @@ public class MaterialCouponPageListServiceImpl implements MaterialCouponPageList
         return baseOutput;
     }
 
+    @Override
+    @ReadWrite(type = ReadWriteType.READ)
+    public MaterialCouponListOut getMaterialCouponReadyListByKeyword(String channelCode,
+                                                                String couponStatus, String keyword, Integer index, Integer size, boolean filterOverdue) {
+        MaterialCouponListOut baseOutput = new MaterialCouponListOut(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                ApiConstant.INT_ZERO);
+
+        MaterialCoupon paramMaterialCoupon = new MaterialCoupon();
+        
+        if(StringUtils.isEmpty(channelCode) || !MaterialCouponChannelCodeEnum.contains(channelCode)){
+            return new MaterialCouponListOut(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
+                ApiConstant.INT_ZERO); 
+        }
+        if(!StringUtils.isEmpty(couponStatus) && !MaterialCouponStatusEnum.contains(couponStatus)){
+            return new MaterialCouponListOut(ApiErrorCode.PARAMETER_ERROR.getCode(), ApiErrorCode.VALIDATE_ERROR.getMsg(),
+                ApiConstant.INT_ZERO);
+        }
+        
+        paramMaterialCoupon.setChannelCode(channelCode);
+        String paramCouponoStatus = StringUtils.isEmpty(couponStatus) ? null: couponStatus;
+        paramMaterialCoupon.setCouponStatus(paramCouponoStatus);
+        if(filterOverdue ){
+            paramMaterialCoupon.setEndTime(new Date());
+        }else{
+            paramMaterialCoupon.setEndTime(null);
+        }
+        paramMaterialCoupon.setTitle(SqlConvertUtils.escapeSQLCharacter(keyword));
+        paramMaterialCoupon.setStartIndex((index - 1) * size);
+        paramMaterialCoupon.setPageSize(size);
+
+        List<MaterialCoupon> meterialCouponList = meterialCouponDao.selectReadyListByKeyword(paramMaterialCoupon);
+        int totalCount = meterialCouponDao.selectReadyListByKeywordCount(paramMaterialCoupon);
+        // 如果查询的列表数据未空，则直接返回空列表给前段
+        if (CollectionUtils.isEmpty(meterialCouponList)) {
+            return baseOutput;
+        }
+        MaterialCouponListItemOut materialCouponListOut = null;
+        //遍历查询的结果集
+        for (MaterialCoupon item : meterialCouponList) {
+            materialCouponListOut = new MaterialCouponListItemOut();
+            //按照相同字段进行复制
+            BeanUtils.copyProperties(item,materialCouponListOut);
+            String createTimeStamp = String.valueOf( item.getCreateTime().getTime()/1000);
+            materialCouponListOut.setCreateTime(createTimeStamp);
+            //保存在结果对象中
+            baseOutput.getListItems().add(materialCouponListOut);
+        }
+         baseOutput.setTotal(baseOutput.getListItems().size());
+         baseOutput.setTotalCount(totalCount);
+        return baseOutput;
+    }
+    
 }

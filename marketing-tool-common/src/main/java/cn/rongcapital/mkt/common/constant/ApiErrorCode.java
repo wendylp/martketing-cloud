@@ -51,7 +51,8 @@ public enum ApiErrorCode {
 	BIZ_ERROR_EVENT_SOURCE_PF_NOT_EXIST(3022,"platform code of event source  is not exist."),
 	BIZ_ERROR_EVENT_OBJECT_CODE_ALREADY_EXIST(3023,"code of event object has already exist."),
 	BIZ_ERROR_EVENT_OBJECT_ATTRIBUTE_DUPLICATED(3024,"attribute of event object is duplicated."),
-
+	BIZ_ERROR_EVENT_IS_EXIST(3021,"event code is exist"),//事件code已经存在
+	
 	SMS_ERROR_MATERIAL_CAN_NOT_DELETE(4001,"can not delete the material"),
 	SMS_ERROR_MATERIAL_CAN_NOT_UPDATE(4002,"can not update the material"),
 	SMS_ERROR_TEMPLETE_CAN_NOT_DELETE(4003,"can not delete the templete"),

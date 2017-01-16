@@ -7,13 +7,11 @@ import java.util.Date;
 public class EventObject extends BaseQuery {
     private Long id;
 
+    private String type;
+    
     private String code;
 
     private String name;
-
-    private String instanceNameProp;
-
-    private String instanceNameLabel;
 
     private Byte status;
 
@@ -33,6 +31,14 @@ public class EventObject extends BaseQuery {
         this.id = id;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type == null ? null : type.trim();
+    }
+
     public String getCode() {
         return code;
     }
@@ -47,22 +53,6 @@ public class EventObject extends BaseQuery {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
-    }
-
-    public String getInstanceNameProp() {
-        return instanceNameProp;
-    }
-
-    public void setInstanceNameProp(String instanceNameProp) {
-        this.instanceNameProp = instanceNameProp == null ? null : instanceNameProp.trim();
-    }
-
-    public String getInstanceNameLabel() {
-        return instanceNameLabel;
-    }
-
-    public void setInstanceNameLabel(String instanceNameLabel) {
-        this.instanceNameLabel = instanceNameLabel == null ? null : instanceNameLabel.trim();
     }
 
     public Byte getStatus() {

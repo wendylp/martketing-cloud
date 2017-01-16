@@ -112,6 +112,19 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
+
+	
+	
+	<!--  按照事件标示Code 查询 事件主体-->
+	<select id="selectByCode" parameterType="String" resultType="cn.rongcapital.mkt.event.po.Event">
+	  <![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+	    <include refid="QUERY_FROM_TABLE"/>
+	    <![CDATA[WHERE code = #{code} and status=0]]>
+	</select>
+	
+	
+
 	<!-- 事件库数量统计 -->
 	<select id="getEventModelCountList"  resultType="cn.rongcapital.mkt.event.vo.EventModelCount">
 		<![CDATA[ 	select count(e.id) as count ,ep.channel from event e, event_source es, event_platform ep 
@@ -120,6 +133,34 @@
 			group by ep.channel	
 		]]>
 	</select>
+	<!-- 事件库(分页)数量统计 -->
+	<select id="getEventModelListCnt" parameterType="java.util.Map" resultType="int">
+		<![CDATA[ 	select count(e.id ) from event e, event_source es, event_platform ep ,event_object eo
+			where e.source_id = es.id and es.platform_id = ep.id and e.object_id = eo.id and e.status = 0 and es.status = 0 and ep.status = 0 and eo.status = 0	
+		]]>
+		<if test="event_name != null and event_name != ''">
+    		<bind name="namelike" value="'%'+event_name+'%'"/>
+	    	<![CDATA[ AND e.name like #{namelike}]]>
+    	</if>
+    	<if test="source_id != null and source_id != ''"><![CDATA[ AND e.source_id = #{source_id}]]></if>
+    	<if test="channel != null and channel != ''"><![CDATA[ AND ep.channel = #{channel}]]></if>
+	</select>
+	<!-- 事件库(分页)列表查询 -->
+	<select id="getEventModelList" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.event.vo.out.EventModelListOut">
+		<![CDATA[ 	select e.id as id , e.code as code, e.name as name, ep.channel as channel, ep.name as platform, es.name as source ,e.system_event as systemEvent , 0 as bindCount, 
+			e.subscribed, e.unsubscribable, eo.id as objectId, eo.name as objectName 
+			from event e, event_source es, event_platform ep ,event_object eo
+			where e.source_id = es.id and es.platform_id = ep.id and e.object_id = eo.id and e.status = 0 and es.status = 0 and ep.status = 0 and eo.status = 0	
+		]]>
+		<if test="event_name != null and event_name != ''">
+    		<bind name="namelike" value="'%'+event_name+'%'"/>
+	    	<![CDATA[ AND e.name like #{namelike}]]>
+    	</if>
+    	<if test="source_id != null and source_id != ''"><![CDATA[ AND e.source_id = #{source_id}]]></if>
+    	<if test="channel != null and channel != ''"><![CDATA[ AND ep.channel = #{channel}]]></if>
+    	<![CDATA[ order by e.create_time desc]]>
+    	<![CDATA[ LIMIT #{index},#{size}]]>
+	</select>
 	<!-- 查询,通过条件 -->
 	<select id="getEvent" parameterType="cn.rongcapital.mkt.event.po.Event" resultType="cn.rongcapital.mkt.event.po.Event">
 		<![CDATA[SELECT]]>
@@ -127,4 +168,5 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
+
 </mapper>

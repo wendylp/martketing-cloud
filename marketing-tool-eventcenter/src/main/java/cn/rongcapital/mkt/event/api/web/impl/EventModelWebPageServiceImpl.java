@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 
 import cn.rongcapital.mkt.event.api.EventModelWebPageService;
 import cn.rongcapital.mkt.event.service.EventModelCountService;
+import cn.rongcapital.mkt.event.service.EventModelListService;
 import cn.rongcapital.mkt.event.service.EventSourceListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -22,6 +23,9 @@ public class EventModelWebPageServiceImpl implements EventModelWebPageService{
     
     @Autowired
     private EventSourceListService eventSourceListService;
+    
+    @Autowired
+    private EventModelListService eventModelListService;
 
 	@Override
 	public BaseOutput getEventModelCount(String userToken, String version) {
@@ -31,6 +35,12 @@ public class EventModelWebPageServiceImpl implements EventModelWebPageService{
 	@Override
 	public BaseOutput getEventSourceListByChannel(String userToken, String version, String channel) {
 		return eventSourceListService.getEventSourceListByChannel(channel);
+	}
+
+	@Override
+	public BaseOutput getEventModelList(String userToken, String version, String channel, Long sourceId,
+			String eventName, Integer index, Integer size) {
+		return eventModelListService.getEventModelList(channel, sourceId, eventName, index, size);
 	}
 
 }

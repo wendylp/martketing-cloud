@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.*;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -26,6 +27,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import cn.rongcapital.mkt.event.vo.in.EventRegisterIn;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.event.vo.in.EventSubscribeInput;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
@@ -74,6 +77,10 @@ public interface EventWebService {
     @POST
     @Path("/mkt.event.subscribe")
     BaseOutput eventSubscribe(@Valid EventSubscribeInput input);
+
+    @POST
+    @Path("/mkt.event.register")
+    BaseOutput eventRegister(@Valid EventRegisterIn registerIn);
     
     /**
      * @功能简述: 获取事件概要信息
