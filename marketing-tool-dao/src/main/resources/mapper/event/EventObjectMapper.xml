@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,code as code,name as name,instance_name_prop as instanceNameProp,instance_name_label as instanceNameLabel,attributes as attributes,status as status,create_time as createTime,update_time as updateTime,system_object as systemObject]]>
+		<![CDATA[ id as id,type as type,code as code,name as name,attributes as attributes,status as status,create_time as createTime,update_time as updateTime,system_object as systemObject]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -14,10 +14,9 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
 		    	<if test="code != null"><![CDATA[ AND code = #{code}]]></if>
 		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
-		    	<if test="instanceNameProp != null"><![CDATA[ AND instance_name_prop = #{instanceNameProp}]]></if>
-		    	<if test="instanceNameLabel != null"><![CDATA[ AND instance_name_label = #{instanceNameLabel}]]></if>
 		    	<if test="attributes != null"><![CDATA[ AND attributes = #{attributes}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
@@ -35,10 +34,9 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
+		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
 		    	<if test="code != null"><![CDATA[code = #{code},]]></if>
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
-		    	<if test="instanceNameProp != null"><![CDATA[instance_name_prop = #{instanceNameProp},]]></if>
-		    	<if test="instanceNameLabel != null"><![CDATA[instance_name_label = #{instanceNameLabel},]]></if>
 		    	<if test="attributes != null"><![CDATA[attributes = #{attributes},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="systemObject != null"><![CDATA[system_object = #{systemObject}]]></if>
@@ -48,13 +46,12 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.event.po.EventObject" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO event_object (code,name,instance_name_prop,instance_name_label,attributes,create_time,system_object)
+			INSERT INTO event_object (type,code,name,attributes,create_time,system_object)
 			VALUES
 			(
+			  #{type},
 			  #{code},
 			  #{name},
-			  #{instanceNameProp},
-			  #{instanceNameLabel},
 			  #{attributes},
 			  now(),
 			  #{systemObject}
