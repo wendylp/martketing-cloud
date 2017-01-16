@@ -88,4 +88,24 @@
 	<!-- 其它SQL语句 -->
 	
 	
+	<select id="selectByObjectId" parameterType="long" resultType="cn.rongcapital.mkt.event.po.EventPropValue">
+	   <![CDATA[SELECT object_id as objectId,prop_name as propName,prop_value as propValue ]]>
+		<include refid="QUERY_FROM_TABLE"/>
+	    <![CDATA[WHERE object_id = #{objid}]]>
+	</select>
+	
+	
+	<insert id="insertBatchPropValue" parameterType="java.util.List">
+			INSERT IGNORE INTO event_object_prop_value (object_id,prop_name,prop_value)
+			VALUES
+			<foreach collection="list" item="item" index="index" separator="," >
+			(
+			  #{item.objectId},
+			  #{item.propName},
+			  #{item.propValue}
+			)
+			</foreach>
+	</insert>
+	
+	
 </mapper>

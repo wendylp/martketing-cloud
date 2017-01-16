@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //@ImportResource({"classpath:spring/spring-config-mybatis-heracles.xml","classpath:spring/spring-config-schedule.xml"})
 //@ImportResource({"classpath:spring/spring-config-mybatis-heracles.xml","classpath:spring/spring-config-job.xml"})
 @PropertySource(value = {"classpath:conf_junit/application-api.properties","classpath:conf_junit/application-dao.properties"})
-@EnableMongoRepositories(basePackages = "cn.rongcapital.mkt.mongodb")
+@EnableMongoRepositories(basePackages ="cn.rongcapital.mkt.mongodb.event")
 public class SpringBootDaoTestMain {
 	
 	/**

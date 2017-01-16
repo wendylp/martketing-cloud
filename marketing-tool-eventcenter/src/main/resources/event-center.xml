@@ -5,6 +5,9 @@
     xmlns:tx="http://www.springframework.org/schema/tx" 
     xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+    xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
                http://www.springframework.org/schema/beans/spring-beans.xsd
                http://www.springframework.org/schema/context
@@ -13,51 +16,50 @@
                http://www.springframework.org/schema/tx/spring-tx.xsd
                http://www.springframework.org/schema/aop
                http://www.springframework.org/schema/aop/spring-aop.xsd
+               http://www.springframework.org/schema/integration/amqp
+               http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+               http://www.springframework.org/schema/integration/stream
+               http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+               http://www.springframework.org/schema/rabbit
+               http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
                http://www.springframework.org/schema/integration
 			   http://www.springframework.org/schema/integration/spring-integration.xsd">
 	
-	<context:component-scan base-package="cn.rongcapital.mkt.event.service"/>
 	<context:component-scan base-package="cn.rongcapital.mkt.event.activator"/>
 	
 	<!-- default poller -->
-	<int:poller default="true" fixed-delay="50"/>
+	<int:poller default="true"  fixed-delay="5000"/>
 	
-	<!-- events channel -->
-	<int:channel id="events">
+	<!-- test events-source channel -->
+	<int:channel id="eventsSource" >
 		<int:queue/>
 	</int:channel>
 	
+	<int:channel id="events">
+		<int:queue/>
+	</int:channel>
+	 
 	<!-- internal events channels -->
 	<int:channel id="systemEvents">
 		<int:queue/>
 	</int:channel>
-	<int:channel id="marketingEvents">
+
+	 <int:channel id="marketingEvents">
 		<int:queue/>
 	</int:channel>
 	
-	<!-- route by header value -->
-	<int:header-value-router input-channel="events" header-name="type">
+	<!-- route by header value 这个地方到时候需要动态的来更换成其他的内容  -->
+	<int:header-value-router input-channel="events" header-name="eventCenter.eventType" default-output-channel="stdErr"> 
 		<int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
 		<int:mapping value="SYSTEM" channel="systemEvents"/>
 		<int:mapping value="MARKETING" channel="marketingEvents"/>
 	</int:header-value-router>
 	
-	<!-- process activator -->
-<!-- 	<int:service-activator ref="systemEventProcessor" method="process" input-channel="systemEvents"> -->
-<!-- 		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/> -->
-<!-- 	</int:service-activator> -->
-<!-- 	<int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents"> -->
-<!-- 		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/> -->
-<!-- 	</int:service-activator> -->
 	
 	<!-- event dispatcher -->
 	<bean id="eventDispatcherActivator" class="cn.rongcapital.mkt.event.activator.EventDispatcherActivator">
-		<property name="channel" ref="events"/>
+		<property name="channel" ref="eventsSource"/>
 	</bean>
-	
-	<!-- FIXME event processors -->
-<!-- 	<bean id="systemEventProcessor" class="cn.rongcapital.mkt.event.test.TestSystemEventProcessor"/> -->
-<!-- 	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.test.TestMarketingEventProcessor"/> -->
 	
 	<!-- task executors -->
 	<bean id="routeExecutor" 
@@ -67,8 +69,108 @@
 	</bean>
 	<bean id="processExecutor" 
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<property name="corePoolSize" value="${event.processor.executor.corePoolSize}"/>
-		<property name="maxPoolSize" value="${event.processor.executor.maxPoolSize}"/>
+		<property name="corePoolSize" value="${event.router.executor.maxPoolSize}"/>
+		<property name="maxPoolSize" value="${event.router.executor.maxPoolSize}"/>
 	</bean>
 	
+	
+	<bean id="errorExecutor" 
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="${event.router.executor.corePoolSize}"/>
+		<property name="maxPoolSize" value="${event.router.executor.maxPoolSize}"/>
+	</bean>
+
+    
+
+	<int-stream:stderr-channel-adapter id="stdErr" append-newline="true"  />
+	
+	
+	
+	 <!-- 默认消息的错误处理 -->
+	<bean id="defaultErrorHandServiceActivator" class="cn.rongcapital.mkt.event.activator.DefaultErrorHandlingServiceActivator"/>
+	
+	<!--  <int:service-activator  input-channel="errorChannel" ref="defaultErrorHandServiceActivator"/> -->
+	<!-- rabbit start   -->
+	
+	<rabbit:connection-factory id="connectionFactory" host="${rabbitmq.host}" username="${rabbitmq.username}"
+	password="${rabbitmq.password}" port="${rabbitmq.port}"/>
+	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory" />
+	<rabbit:admin connection-factory="connectionFactory" />
+	<rabbit:queue name="queue.events" />
+	<rabbit:queue name="queue.marketingEvents"/>
+	<rabbit:queue name="queue.error"/>
+	
+	<bean id="customHeaderMapper" class="org.springframework.integration.amqp.support.DefaultAmqpHeaderMapper">
+		<property name="requestHeaderNames" value="eventCenter.eventType"/>
+	</bean>
+	
+    <int-amqp:outbound-channel-adapter channel="eventsSource" 
+		amqp-template="amqpTemplate" exchange-name="tomq.exchange"
+		routing-key="tomq.binding"  header-mapper="customHeaderMapper" />
+		
+	<rabbit:direct-exchange name="tomq.exchange">
+		<rabbit:bindings>
+			<rabbit:binding queue="queue.events" key="tomq.binding"/>
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+	
+	
+	<!-- from events to router -->
+	 <int-amqp:inbound-channel-adapter channel="events" 
+		queue-names="queue.events" connection-factory="connectionFactory" 
+		header-mapper="customHeaderMapper" />
+		 		 
+       <!--  从内存到临时队列 -->
+     <int-amqp:outbound-channel-adapter channel="marketingEvents" 
+		amqp-template="amqpTemplate" exchange-name="MKing.exchange"
+		routing-key="Mking.binding" header-mapper="customHeaderMapper" />
+		
+      <rabbit:direct-exchange name="MKing.exchange">
+        <rabbit:bindings>
+        <rabbit:binding queue="queue.marketingEvents" key="Mking.binding"/>
+        </rabbit:bindings>
+      </rabbit:direct-exchange>
+      
+       <!-- 定义临时channel -->
+	 <int:channel id="marketingEvents_temp">
+		<int:queue/>
+	 </int:channel>
+	     
+     <int-amqp:inbound-channel-adapter channel="marketingEvents_temp" 
+		queue-names="queue.marketingEvents" connection-factory="connectionFactory" header-mapper="customHeaderMapper"/>
+       <!-- 队列处理类  -->
+	   
+	<int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents_temp" >
+	  <int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="10"/>
+	</int:service-activator>
+	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.service.EventMCReceviceProcessorImpl"/>
+	  
+     
+     <!-- errorChannel to rabbit -->
+     
+      <int-amqp:outbound-channel-adapter channel="errorChannel" 
+		amqp-template="amqpTemplate" exchange-name="error.exchange"
+		routing-key="error.binding"/>
+		
+	   <rabbit:direct-exchange name="error.exchange">
+        <rabbit:bindings>
+        <rabbit:binding queue="queue.error" key="error.binding"/>
+        </rabbit:bindings>
+      </rabbit:direct-exchange>	
+		
+     <int:channel id="error_temp">
+		<int:queue/>
+	 </int:channel>
+	 
+	  <int-amqp:inbound-channel-adapter channel="error_temp" 
+		queue-names="queue.error" connection-factory="connectionFactory"/>
+	
+	 
+	 <int:service-activator  input-channel="error_temp" ref="defaultErrorHandServiceActivator">
+	  <int:poller max-messages-per-poll="1" task-executor="errorExecutor" fixed-rate="10"/>
+	</int:service-activator>
+	
+		
+	
+	<!-- rabbit end  -->
 </beans>

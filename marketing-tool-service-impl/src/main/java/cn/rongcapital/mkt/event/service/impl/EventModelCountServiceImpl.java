@@ -11,6 +11,9 @@
 package cn.rongcapital.mkt.event.service.impl;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -27,6 +30,8 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 @Service
 public class EventModelCountServiceImpl implements EventModelCountService{
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
     @Autowired
     private EventDao eventDao;
 	@Override
@@ -39,14 +44,15 @@ public class EventModelCountServiceImpl implements EventModelCountService{
 		if (!CollectionUtils.isEmpty(list)) {
 			for (EventModelCount e : list) {
 				if(e != null && e.getChannel()!=null && EventChannelEnum.contains(e.getChannel())){
-		 			switch (EventChannelEnum.getByCode(e.getChannel())){
+					EventChannelEnum ecEnum = EventChannelEnum.getByCode(e.getChannel());
+					switch (ecEnum){
 						case CHANNEL1: 
 							emCount.setFirstChannelCount(e.getCount()==null ? 0l: e.getCount().longValue());
 							break;
 						case CHANNEL2: 
 							emCount.setSecondChannelCount(e.getCount()==null ? 0l: e.getCount().longValue());
 							break;
-						case CHANNEL3: 
+						default :
 							emCount.setThirdChannelCount(e.getCount()==null ? 0l: e.getCount().longValue());
 							break;
 					}
