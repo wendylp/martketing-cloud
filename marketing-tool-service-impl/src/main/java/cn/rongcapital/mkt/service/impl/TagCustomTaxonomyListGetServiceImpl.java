@@ -26,6 +26,7 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
     private static final int DATA_VALID = 0;
     private static final int DATA_NOT_VALID = 1;
     private static final Integer SEGMENT_PAGE_SOURCE = 1;
+    private static final String percentZero = "0.00%";
 
     @Autowired
     MongoTemplate mongoTemplate;
@@ -164,7 +165,7 @@ public class TagCustomTaxonomyListGetServiceImpl implements TagCustomTaxonomyLis
                     TagSystemTreeTagOut tagSystemTreeTagOut = new TagSystemTreeTagOut(tagRecommend.getTagId(),
                             tagRecommend.getTagName(), tagRecommend.getFlag(), tagRecommend.getTagNameEng(),
                             tagRecommend.getSearchMod(), tagCover, tagRecommend.getTagDesc());
-                    if(pageSourceType!=null && pageSourceType.equals(SEGMENT_PAGE_SOURCE) && !"0%".equals(tagCover)){
+                    if(pageSourceType!=null && pageSourceType.equals(SEGMENT_PAGE_SOURCE) && !percentZero.equals(tagCover)){
                         tagOutLists.add(tagSystemTreeTagOut);
                     }else if(pageSourceType == null || !pageSourceType.equals(1)){
                         tagOutLists.add(tagSystemTreeTagOut);
