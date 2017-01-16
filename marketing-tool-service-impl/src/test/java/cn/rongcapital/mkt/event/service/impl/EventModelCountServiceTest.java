@@ -192,6 +192,43 @@ public class EventModelCountServiceTest {
         logger.info("测试方法: getEventModelCountList end");
     }
     
+    @Test
+    public void testGetEventModelCountList07() {
+    	logger.info("测试方法: getEventModelCountList start");
+    	EventModelCount emc = new EventModelCount();
+    	emc.setChannel("sdf");
+    	emc.setCount(null);
+    	EventModelCount emc2 = new EventModelCount();
+    	emc2.setChannel(EventChannelEnum.CHANNEL1.getCode());
+    	emc2.setCount(1l);
+    	EventModelCount emc3 = new EventModelCount();
+    	emc3.setChannel(EventChannelEnum.CHANNEL2.getCode());
+    	emc3.setCount(null);
+    	EventModelCount emc4 = new EventModelCount();
+    	emc4.setChannel(EventChannelEnum.CHANNEL3.getCode());
+    	emc4.setCount(null);
+    	EventModelCount emc5 = new EventModelCount();
+    	emc5.setChannel("test");
+    	emc5.setCount(5l);
+    	List<EventModelCount> list = new ArrayList<EventModelCount>();
+    	list.add(emc);
+    	list.add(emc2);
+    	list.add(emc3);
+    	list.add(emc4);
+    	list.add(emc5);
+    	Mockito.when( eventDao.getEventModelCountList()).thenReturn(list);
+
+    	BaseOutput result = emcService.getEventModelCountList();
+    	
+    	Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
+    	EventModelCountOut emCount = (EventModelCountOut) result.getData().get(0);
+        Assert.assertEquals(1l, emCount.getTotalCount().longValue());
+        Assert.assertEquals(1l, emCount.getFirstChannelCount().longValue());
+        Assert.assertEquals(0l, emCount.getSecondChannelCount().longValue());
+        Assert.assertEquals(0l, emCount.getThirdChannelCount().longValue());
+        logger.info("测试方法: getEventModelCountList end");
+    }
+    
     @After
     public void tearDown() throws Exception {
         logger.info("测试：EventModelCountService 结束---------------------");
