@@ -59,4 +59,21 @@ public interface EventModelWebPageService {
 	@Path("/mkt.event.source.list")
 	BaseOutput getEventSourceListByChannel(@NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("ver") String version,@NotEmpty @QueryParam("channel") String channel);
+	
+	/**
+	 * 事件库查询(分页)
+	 * 
+	 * 接口：mkt.event.eventModel.list
+	 * 
+	 * @param user_token
+	 * @param ver
+	 * @return BaseOutput
+	 * @author shanjingqi
+	 * @Date 2017-01-11
+	 */
+	@GET
+	@Path("/mkt.event.eventModel.list")
+	BaseOutput getEventModelList(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String version,@NotEmpty @QueryParam("channel") String channel, @QueryParam("source_id") Long sourceId, @QueryParam("event_name") String eventName, @QueryParam("index") Integer index,@QueryParam("size") Integer size);
+
 }
