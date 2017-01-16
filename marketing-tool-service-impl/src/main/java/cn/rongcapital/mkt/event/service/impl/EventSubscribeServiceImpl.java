@@ -37,6 +37,7 @@ public class EventSubscribeServiceImpl implements EventSubscribeService {
         BaseOutput successOutput= new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
         Event event = new Event();
         event.setId(eventId);
+        event.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         List<Event> events = this.eventDao.selectList(event);
         if (events != null && events.size() > 0) {
             Event item = events.get(0);

@@ -46,7 +46,6 @@ public class EventRegisterIn extends BaseInput {
     @JsonProperty("trigger_opportunity")
     @Size(min=1,max=100)
     private String triggerOpportunity;
-    @NotNull
     @JsonProperty("attributes")
     @Valid
     private List<EventRegisterAttributeIn> attributes;
