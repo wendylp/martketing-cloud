@@ -269,6 +269,36 @@ public class CouponApi {
         return couponPageListService.getMaterialCouponListByKeyword(channelCode, couponStatus, keyword, index, size, filterOverdue);
     }
     
+    
+    
+    /**
+     * @功能描述: message
+     * @param userToken
+     * @param ver
+     * @param searchWord
+     * @param channelType
+     * @param index
+     * @param size
+     * @return
+     * @throws Exception BaseOutput
+     * @author guozhenchao
+     * @since 2017年1月13日
+     */
+    @GET
+    @Path("/mkt.material.coupon.ready.list")
+    public MaterialCouponListOut getMaterialCouponReadyListByKeyword(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("channel_code") String channelCode,
+            @QueryParam("keyword") String keyword, @QueryParam("coupon_status") String couponStatus,
+            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
+            @QueryParam("filter_overdue") boolean filterOverdue) throws Exception {
+    
+        return couponPageListService.getMaterialCouponReadyListByKeyword(channelCode, couponStatus, keyword, index, size, filterOverdue);
+    }
+    
+    
+    
+    
     /**
      * @功能简述: 获取当前系统时间
      * @return BaseOutput

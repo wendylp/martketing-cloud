@@ -24,6 +24,8 @@ public class MaterialCouponCode extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+    
+    private String readyStatus;
 
     public Long getId() {
         return id;
@@ -104,4 +106,12 @@ public class MaterialCouponCode extends BaseQuery {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+	public String getReadyStatus() {
+		return readyStatus;
+	}
+
+	public void setReadyStatus(String readyStatus) {
+		this.readyStatus = readyStatus;
+	}
 }

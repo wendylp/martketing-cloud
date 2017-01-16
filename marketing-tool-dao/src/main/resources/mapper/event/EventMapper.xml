@@ -112,6 +112,19 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
+
+	
+	
+	<!--  按照事件标示Code 查询 事件主体-->
+	<select id="selectByCode" parameterType="String" resultType="cn.rongcapital.mkt.event.po.Event">
+	  <![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+	    <include refid="QUERY_FROM_TABLE"/>
+	    <![CDATA[WHERE code = #{code} and status=0]]>
+	</select>
+	
+	
+
 	<!-- 事件库数量统计 -->
 	<select id="getEventModelCountList"  resultType="cn.rongcapital.mkt.event.vo.EventModelCount">
 		<![CDATA[ 	select count(e.id) as count ,ep.channel from event e, event_source es, event_platform ep 
@@ -127,4 +140,5 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
+
 </mapper>

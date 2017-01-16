@@ -24,4 +24,7 @@ public interface MaterialCouponPageListService {
      */
     MaterialCouponListOut getMaterialCouponListByKeyword(String channelCode, String couponStatus,
                                                          String keyword, Integer index, Integer size, boolean filterOverdue);
+
+	MaterialCouponListOut getMaterialCouponReadyListByKeyword(String channelCode, String couponStatus, String keyword,
+			Integer index, Integer size, boolean filterOverdue);
 }
