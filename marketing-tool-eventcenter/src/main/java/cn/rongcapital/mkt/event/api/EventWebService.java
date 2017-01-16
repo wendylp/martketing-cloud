@@ -32,7 +32,7 @@ import cn.rongcapital.mkt.event.vo.in.EventSubscribeInput;
 import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
-@Path(ApiConstant.API_PATH)
+@Path(ApiConstant.EVENT_API_PATH)
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 @ValidateRequest
