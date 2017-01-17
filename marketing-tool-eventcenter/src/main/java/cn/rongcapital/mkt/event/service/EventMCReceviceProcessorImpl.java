@@ -14,6 +14,7 @@ package cn.rongcapital.mkt.event.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ public class EventMCReceviceProcessorImpl implements EventProcessor {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(EventMCReceviceProcessorImpl.class);
     
+    private final AtomicInteger sendCount = new AtomicInteger();
     @Autowired
     private EventReceviceService eventReceviceService; 
     
@@ -43,11 +45,12 @@ public class EventMCReceviceProcessorImpl implements EventProcessor {
             EventBehavior eventbehavior = JSON.parseObject(event, EventBehavior.class);
             doObjectToString(eventbehavior,"object");
             eventReceviceService.receviceEvent(eventbehavior);
+            sendCount.incrementAndGet();
         } catch (Exception e) {
             LOGGER.error("error,event:{},errmessage:{}", event, e.getMessage());
             return;
         }
-        LOGGER.info("done success...");
+        LOGGER.info("done success...count : "+sendCount.get()+"个");
         
     }
      
