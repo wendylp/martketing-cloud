@@ -134,6 +134,15 @@
        <!-- 定义临时channel -->
 	 <int:channel id="marketingEvents_temp">
 		<int:queue/>
+		<int:interceptors>
+    <bean class="cn.rongcapital.mkt.event.activator.PayloadAwareTimingInterceptor">
+				<constructor-arg>
+					<array>
+						<value>MARKETING</value>
+					</array>
+				</constructor-arg>
+			</bean>  
+    </int:interceptors>
 	 </int:channel>
 	     
      <int-amqp:inbound-channel-adapter channel="marketingEvents_temp" 
