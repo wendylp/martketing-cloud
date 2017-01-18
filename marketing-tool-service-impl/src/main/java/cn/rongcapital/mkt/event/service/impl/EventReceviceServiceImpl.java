@@ -43,7 +43,7 @@ public class EventReceviceServiceImpl implements EventReceviceService {
         Map<String, Object> event =eventbehavior.getEvent();
         String eventcode=event.get("code").toString();
         Event eventOb=eventDao.selectByCode(eventcode); //取得事件主体
-        eventbehavior.setSubscribed(eventOb.getSubscribed()); //更新是否订阅
+        eventbehavior.setSubscribed(eventOb!=null?eventOb.getSubscribed():false); //更新是否订阅
         EventBehavior eb= eventBehaviorRepository.insert(eventbehavior);
         if(eb!=null) //插入成功
         {
