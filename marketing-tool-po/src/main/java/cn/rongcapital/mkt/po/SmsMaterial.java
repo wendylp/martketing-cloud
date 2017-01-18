@@ -37,6 +37,8 @@ public class SmsMaterial extends BaseQuery {
 
     private Date updateTime;
 
+    private Byte useStatus;
+
     private String smsTempletContent;
 
     public Integer getId() {
@@ -141,6 +143,14 @@ public class SmsMaterial extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Byte getUseStatus() {
+        return useStatus;
+    }
+
+    public void setUseStatus(Byte useStatus) {
+        this.useStatus = useStatus;
     }
 
     public String getSmsTempletContent() {
