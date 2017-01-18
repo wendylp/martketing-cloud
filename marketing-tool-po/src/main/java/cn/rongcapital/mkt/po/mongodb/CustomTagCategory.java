@@ -25,6 +25,9 @@ public class CustomTagCategory implements Serializable{
     @Field(value = "custom_tag_category_name")
     private String customTagCategoryName;
 
+    @Field(value = "custom_tag_category_type")
+    private Integer customTagCategoryType;
+
     @Field(value = "level")
     private Integer level;
 
@@ -71,6 +74,14 @@ public class CustomTagCategory implements Serializable{
 
     public void setCustomTagCategoryName(String customTagCategoryName) {
         this.customTagCategoryName = customTagCategoryName;
+    }
+
+    public Integer getCustomTagCategoryType() {
+        return customTagCategoryType;
+    }
+
+    public void setCustomTagCategoryType(Integer customTagCategoryType) {
+        this.customTagCategoryType = customTagCategoryType;
     }
 
     public Integer getLevel() {

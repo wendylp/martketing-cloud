@@ -24,6 +24,9 @@ public class CustomTag implements Serializable {
     @Field(value = "custom_tag_name")
     private String customTagName;
 
+    @Field(value = "custom_tag_type")
+    private Integer customTagType;
+
     @Field(value = "parent_id")
     private String parentId;
 
@@ -64,6 +67,14 @@ public class CustomTag implements Serializable {
 
     public void setCustomTagName(String customTagName) {
         this.customTagName = customTagName;
+    }
+
+    public Integer getCustomTagType() {
+        return customTagType;
+    }
+
+    public void setCustomTagType(Integer customTagType) {
+        this.customTagType = customTagType;
     }
 
     public String getParentId() {
