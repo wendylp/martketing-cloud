@@ -47,6 +47,9 @@ public class ApiConstant {
 	public static final byte SEGMENT_COMPILE_STATUS_YES = 0;//可编辑
 	public static final byte SEGMENT_COMPILE_STATUS_NO = 1;//不可编辑
 	
+	public static final byte SEGMENT_TYPE_SYSTEM_TAG = 0;//系统标签
+	public static final byte SEGMENT_TYPE_CUSTOM_TAG = 1;//自定义标签
+	
 	public static final int INT_ZERO = 0;
 	public static final int INT_ONE = 1;
 	

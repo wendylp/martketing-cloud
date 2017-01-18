@@ -15,6 +15,10 @@ public class SegmentationBody extends BaseQuery {
 
     private Integer groupIndex;
 
+    private String tagCategoryId;
+
+    private String tagCategoryName;
+
     private String tagId;
 
     private String tagName;
@@ -24,6 +28,10 @@ public class SegmentationBody extends BaseQuery {
     private String tagValueId;
 
     private String tagValueName;
+
+    private Byte tagType;
+
+    private Byte tagStatus;
 
     private Byte status;
 
@@ -73,6 +81,22 @@ public class SegmentationBody extends BaseQuery {
         this.groupIndex = groupIndex;
     }
 
+    public String getTagCategoryId() {
+        return tagCategoryId;
+    }
+
+    public void setTagCategoryId(String tagCategoryId) {
+        this.tagCategoryId = tagCategoryId == null ? null : tagCategoryId.trim();
+    }
+
+    public String getTagCategoryName() {
+        return tagCategoryName;
+    }
+
+    public void setTagCategoryName(String tagCategoryName) {
+        this.tagCategoryName = tagCategoryName == null ? null : tagCategoryName.trim();
+    }
+
     public String getTagId() {
         return tagId;
     }
@@ -111,6 +135,22 @@ public class SegmentationBody extends BaseQuery {
 
     public void setTagValueName(String tagValueName) {
         this.tagValueName = tagValueName == null ? null : tagValueName.trim();
+    }
+
+    public Byte getTagType() {
+        return tagType;
+    }
+
+    public void setTagType(Byte tagType) {
+        this.tagType = tagType;
+    }
+
+    public Byte getTagStatus() {
+        return tagStatus;
+    }
+
+    public void setTagStatus(Byte tagStatus) {
+        this.tagStatus = tagStatus;
     }
 
     public Byte getStatus() {
