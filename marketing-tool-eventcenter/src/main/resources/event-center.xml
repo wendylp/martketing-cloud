@@ -80,7 +80,11 @@
 		<property name="maxPoolSize" value="${event.router.executor.maxPoolSize}"/>
 	</bean>
 
+    
+
 	<int-stream:stderr-channel-adapter id="stdErr" append-newline="true"  />
+	
+	
 	
 	 <!-- 默认消息的错误处理 -->
 	<bean id="defaultErrorHandServiceActivator" class="cn.rongcapital.mkt.event.activator.DefaultErrorHandlingServiceActivator"/>
@@ -89,7 +93,7 @@
 	<!-- rabbit start   -->
 	
 	<rabbit:connection-factory id="connectionFactory" host="${rabbitmq.host}" username="${rabbitmq.username}"
-	password="${rabbitmq.password}"/>
+	password="${rabbitmq.password}" port="${rabbitmq.port}"/>
 	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory" />
 	<rabbit:admin connection-factory="connectionFactory" />
 	<rabbit:queue name="queue.events" />
@@ -130,6 +134,15 @@
        <!-- 定义临时channel -->
 	 <int:channel id="marketingEvents_temp">
 		<int:queue/>
+		<int:interceptors>
+    <bean class="cn.rongcapital.mkt.event.activator.PayloadAwareTimingInterceptor">
+				<constructor-arg>
+					<array>
+						<value>MARKETING</value>
+					</array>
+				</constructor-arg>
+			</bean>  
+    </int:interceptors>
 	 </int:channel>
 	     
      <int-amqp:inbound-channel-adapter channel="marketingEvents_temp" 

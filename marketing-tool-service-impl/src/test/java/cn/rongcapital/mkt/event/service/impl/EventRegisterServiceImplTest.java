@@ -221,6 +221,10 @@ public class EventRegisterServiceImplTest {
         List<Event> events = new ArrayList<>();
         events.add(event);
         Mockito.when(this.eventDao.selectList(Matchers.any(Event.class))).thenReturn(events);
+        
+        Mockito.when(this.eventSourceDao.selectList(Matchers.any(EventSource.class))).thenReturn(eventSources);
+
+        Mockito.when(this.eventObjectDao.selectList(Matchers.any(EventObject.class))).thenReturn(eventObjects);
         BaseOutput actual = this.eventRegisterService.register(this.registerIn, false, true, false);
 
         Assert.assertEquals(expect.getCode(), actual.getCode());

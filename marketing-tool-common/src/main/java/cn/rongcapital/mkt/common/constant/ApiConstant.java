@@ -16,6 +16,7 @@ public class ApiConstant {
 	
 	public static final String API_METHOD = "method";//api的method参数
 	public static final String API_PATH = "/api";//api的路径
+	public static final String EVENT_API_PATH = "/event/api";//事件中心api的路径
 	public static final String API_USER_TOKEN = "user_token";//api的user_token参数
 	public static final String API_USER_TOKEN_VALUE = "123";//api的user_token参数
 	public static final String API_USER_ID = "user_id";//api的user_id参数	
@@ -45,6 +46,9 @@ public class ApiConstant {
 	
 	public static final byte SEGMENT_COMPILE_STATUS_YES = 0;//可编辑
 	public static final byte SEGMENT_COMPILE_STATUS_NO = 1;//不可编辑
+	
+	public static final byte SEGMENT_TYPE_SYSTEM_TAG = 0;//系统标签
+	public static final byte SEGMENT_TYPE_CUSTOM_TAG = 1;//自定义标签
 	
 	public static final int INT_ZERO = 0;
 	public static final int INT_ONE = 1;

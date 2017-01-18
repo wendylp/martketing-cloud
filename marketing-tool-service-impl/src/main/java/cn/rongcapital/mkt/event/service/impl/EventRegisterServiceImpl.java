@@ -50,38 +50,44 @@ public class EventRegisterServiceImpl implements EventRegisterService {
 
         BaseOutput success = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ZERO, null);
+        
+        final Event event = new Event();
+
+        BeanUtils.copyProperties(eventRegisterIn, event);
+        
+        // 根据事件源code获取事件源信息
+        final EventSource eventSource = new EventSource();
+        eventSource.setCode(eventRegisterIn.getSourceCode());
+        eventSource.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        List<EventSource> eventSources = this.eventSourceDao.selectList(eventSource);
+        if (eventSources != null && eventSources.size() > 0) {
+            event.setSourceId(eventSources.get(0).getId());
+        } else {
+            return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
+                    ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ONE, null);
+        }
+        
+     // 根据事件客体code获取事件客体信息
+        EventObject eventObject = new EventObject();
+        eventObject.setCode(eventRegisterIn.getObjectCode());
+        eventObject.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        List<EventObject> eventObjects = this.eventObjectDao.selectList(eventObject);
+        if (eventObjects != null && eventObjects.size() > 0) {
+            event.setObjectId(eventObjects.get(0).getId());
+        } else {
+            return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
+                    ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ONE, null);
+        }
+        
         Event eventP = new Event();
         eventP.setCode(eventRegisterIn.getCode());
+        eventP.setSourceId(event.getSourceId());
+        eventP.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         final List<Event> events = this.eventDao.selectList(eventP);
         if (events != null && events.size() > 0) {
             return new BaseOutput(ApiErrorCode.BIZ_ERROR_EVENT_IS_EXIST.getCode(),
                     ApiErrorCode.BIZ_ERROR_EVENT_IS_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
         } else {
-            final Event event = new Event();
-
-            BeanUtils.copyProperties(eventRegisterIn, event);
-
-            // 根据事件源code获取事件源信息
-            final EventSource eventSource = new EventSource();
-            eventSource.setCode(eventRegisterIn.getSourceCode());
-            List<EventSource> eventSources = this.eventSourceDao.selectList(eventSource);
-            if (eventSources != null && eventSources.size() > 0) {
-                event.setSourceId(eventSources.get(0).getId());
-            } else {
-                return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
-                        ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ONE, null);
-            }
-
-            // 根据事件客体code获取事件客体信息
-            EventObject eventObject = new EventObject();
-            eventObject.setCode(eventRegisterIn.getObjectCode());
-            List<EventObject> eventObjects = this.eventObjectDao.selectList(eventObject);
-            if (eventObjects != null && eventObjects.size() > 0) {
-                event.setObjectId(eventObjects.get(0).getId());
-            } else {
-                return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
-                        ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ONE, null);
-            }
             // 设置系统预制事件标识
             event.setSystemEvent(systemEvent);
             // 设置是否订阅标识

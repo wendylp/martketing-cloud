@@ -11,10 +11,12 @@
 package cn.rongcapital.mkt.dao.event;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.event.po.Event;
 import cn.rongcapital.mkt.event.vo.EventModelCount;
+import cn.rongcapital.mkt.event.vo.out.EventModelListOut;
 
 public interface EventDao extends BaseDao<Event>{
 	
@@ -58,6 +60,24 @@ public interface EventDao extends BaseDao<Event>{
      */
     List<EventModelCount> getEventModelCountList();
 
+	/**
+     * 事件库查询总数(分页)
+     * 
+     * @param paramMap
+     * @return List<String>
+     * @author shanjingqi
+     */
+    int getEventModelListCnt(Map<String, Object> paramMa);
+    
+	/**
+     * 事件库查询列表(分页)
+     * 
+     * @param paramMap
+     * @return List<String>
+     * @author shanjingqi
+     */
+    List<EventModelListOut> getEventModelList(Map<String, Object> paramMap);
+    
 	Event getEvent(Event event);
 
 
