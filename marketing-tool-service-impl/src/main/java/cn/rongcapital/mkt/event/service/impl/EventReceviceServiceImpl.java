@@ -47,7 +47,7 @@ public class EventReceviceServiceImpl implements EventReceviceService {
         EventBehavior eb= eventBehaviorRepository.insert(eventbehavior);
         if(eb!=null) //插入成功
         {
-            eb.setObjectId(eventOb.getObjectId()); //设置事件客体ID值
+            eb.setObjectId(eventOb!=null?eventOb.getObjectId():000000); //设置事件客体ID值
             eventObjectPropValueService.insertPropValue(eb);//属性值的入库
         }
         
