@@ -82,19 +82,45 @@ public class SegmentDetailGetServiceImpl implements SegmentDetailGetService{
             tagGroupsOut.setGroupName(segmentationBodies.get(0).getGroupName());
             Set<String> tagIds = new HashSet<>();
             for(SegmentationBody segmentationBody : segmentationBodies){
-                tagIds.add(segmentationBody.getTagId());
+            	
+            	if(segmentationBody.getTagType() == ApiConstant.SEGMENT_TYPE_SYSTEM_TAG){
+            		tagIds.add(segmentationBody.getTagId());
+            	}else{
+            		tagIds.add(segmentationBody.getTagCategoryId());//自定义标签时保存分类
+            	}
+                
             }
             for(String tagId : tagIds){
                 SystemTagOut systemTagOut = new SystemTagOut();
                 for(SegmentationBody segmentationBody : segmentationBodies){
-                    if(tagId != null && tagId.equals(segmentationBody.getTagId())){
-                        systemTagOut.setTagId(tagId);
+                	
+                	//系统标签显示 标签和标签值;自定义标签 显示标签分类和标签
+                    if(segmentationBody.getTagType() == ApiConstant.SEGMENT_TYPE_SYSTEM_TAG 
+                    		&& tagId != null && tagId.equals(segmentationBody.getTagId())){
+
+                    	systemTagOut.setTagId(tagId);
                         systemTagOut.setTagIndex(segmentationBody.getTagSeq());
                         systemTagOut.setTagName(segmentationBody.getTagName());
                         systemTagOut.setTagExclude(segmentationBody.getTagExclude());
+                        systemTagOut.setTagType(segmentationBody.getTagType().intValue());
                         SystemTagValueOut systemTagValueOut = new SystemTagValueOut();
                         systemTagValueOut.setTagValueId(segmentationBody.getTagValueId());
                         systemTagValueOut.setTagValue(segmentationBody.getTagValueName());
+                        systemTagValueOut.setTagStatus(segmentationBody.getTagStatus().intValue());
+                        systemTagOut.getTagValueList().add(systemTagValueOut);
+
+                    }else if(segmentationBody.getTagType() == ApiConstant.SEGMENT_TYPE_CUSTOM_TAG 
+                    		&& tagId != null && tagId.equals(segmentationBody.getTagCategoryId())){
+                    	
+                        systemTagOut.setTagId(segmentationBody.getTagCategoryId());//自定义标签时保存分类ID
+                        systemTagOut.setTagIndex(segmentationBody.getTagSeq());
+                        systemTagOut.setTagName(segmentationBody.getTagCategoryName());//自定义标签时保存分类名称
+                        systemTagOut.setTagExclude(segmentationBody.getTagExclude());
+                        systemTagOut.setTagType(segmentationBody.getTagType().intValue());
+                        SystemTagValueOut systemTagValueOut = new SystemTagValueOut();
+                        systemTagValueOut.setTagValueId(segmentationBody.getTagId());//自定义标签时保存标签ID
+                        systemTagValueOut.setTagValue(segmentationBody.getTagName());//自定义标签时保存标签名称
+                        systemTagValueOut.setTagStatus(segmentationBody.getTagStatus().intValue());
                         systemTagOut.getTagValueList().add(systemTagValueOut);
                     }
                 }
