@@ -113,7 +113,7 @@ public class SegmentAudienctAnalysisServiceImpl implements SegmentAudienctAnalys
 			segmentManageCalService.sinterstore(POOL_INDEX, uuid.get() ,TAG_COVER_ID_STR+tagvalueCount.getTagValueSeq(), SEGMENT_COVER_ID_STR+headId);
 			Long count = segmentManageCalService.scard(POOL_INDEX, uuid.get());
 			
-			if(ACTIVE_OTHER.equals(tagvalueCount.getTagValueSeq()) || LOCATION_OTHER.equals(tagvalueCount.getTagValueSeq())){
+			if(ApiConstant.SEGMENT_SHOW_MAP.equals(showType) && (tagId+"_34").equals(tagvalueCount.getTagValueSeq())){
 				foreignPopulationCount = count.intValue();
 				continue;
 			}

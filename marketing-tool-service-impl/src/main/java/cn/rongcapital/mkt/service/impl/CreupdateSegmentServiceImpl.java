@@ -147,13 +147,30 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
                     segmentationBody.setGroupId(tagGroupsIn.getGroupId());
                     segmentationBody.setGroupName(tagGroupsIn.getGroupName());
                     segmentationBody.setGroupIndex(tagGroupsIn.getGroupIndex());
-                    segmentationBody.setTagId(systemTagIn.getTagId());
-                    segmentationBody.setTagName(systemTagIn.getTagName());
-                    segmentationBody.setTagSeq(systemTagIn.getTagIndex());
-                    segmentationBody.setTagExclude(systemTagIn.getTagExclude());
-                    segmentationBody.setTagValueId(systemValueIn.getTagValueId());
-                    segmentationBody.setTagValueName(systemValueIn.getTagValue());
-                    segmentationBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                    
+                    if(systemTagIn.getTagType().byteValue() == ApiConstant.SEGMENT_TYPE_SYSTEM_TAG){
+                        segmentationBody.setTagId(systemTagIn.getTagId());
+                        segmentationBody.setTagName(systemTagIn.getTagName());
+                        segmentationBody.setTagSeq(systemTagIn.getTagIndex());
+                        segmentationBody.setTagExclude(systemTagIn.getTagExclude());
+                        segmentationBody.setTagType(systemTagIn.getTagType().byteValue());
+                        segmentationBody.setTagValueId(systemValueIn.getTagValueId());
+                        segmentationBody.setTagValueName(systemValueIn.getTagValue());
+                        segmentationBody.setTagStatus(systemValueIn.getTagStatus().byteValue());
+                        segmentationBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                    }else{
+                        segmentationBody.setTagCategoryId(systemTagIn.getTagId());//自定义标签时保存分类ID
+                        segmentationBody.setTagCategoryName(systemTagIn.getTagName());//自定义标签时保存分类名称
+                        segmentationBody.setTagSeq(systemTagIn.getTagIndex());
+                        segmentationBody.setTagExclude(systemTagIn.getTagExclude());
+                        segmentationBody.setTagType(systemTagIn.getTagType().byteValue());
+                        segmentationBody.setTagId(systemValueIn.getTagValueId());//自定义标签时保存标签Id
+                        segmentationBody.setTagName(systemValueIn.getTagValue());//自定义标签时保存标签名称
+                        segmentationBody.setTagStatus(systemValueIn.getTagStatus().byteValue());
+                        segmentationBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                    }
+                    
+
                     segmentationBodyDao.insert(segmentationBody);
                 }
             }

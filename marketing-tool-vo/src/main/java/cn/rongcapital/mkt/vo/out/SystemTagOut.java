@@ -27,6 +27,9 @@ public class SystemTagOut {
     private Integer tagExclude;
 
     @NotNull
+    private Integer tagType;
+    
+    @NotNull
     private List<SystemTagValueOut> tagValueList = new ArrayList<>();
 
     @JsonProperty("tag_id")
@@ -73,4 +76,14 @@ public class SystemTagOut {
     public void setTagValueList(List<SystemTagValueOut> tagValueList) {
         this.tagValueList = tagValueList;
     }
+
+    @JsonProperty("tag_type")
+	public Integer getTagType() {
+		return tagType;
+	}
+
+	public void setTagType(Integer tagType) {
+		this.tagType = tagType;
+	}
+    
 }

@@ -8,4 +8,6 @@ import cn.rongcapital.mkt.po.mongodb.CustomTag;
 public interface MongoCustomTagDao {
 
     void insertCustomTag(CustomTag customTag);
+    
+    CustomTag findByCustomTagId(String customTagId);
 }
