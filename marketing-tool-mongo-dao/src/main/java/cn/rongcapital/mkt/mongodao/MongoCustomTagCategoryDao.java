@@ -7,6 +7,8 @@ import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
  */
 public interface MongoCustomTagCategoryDao {
 
+    void insertMongoCustomTagCategory(CustomTagCategory customTagCategory);
+
 	public CustomTagCategory findByCategoryId(String categoryId);
-	
+
 }
