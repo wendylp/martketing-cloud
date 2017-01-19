@@ -34,7 +34,7 @@ public class CustomTag implements Serializable {
     private Integer isDeleted;
 
     @Field(value = "recommend_flag")
-    private Integer recommnedFlag;
+    private Integer recommendFlag;
 
     @Field(value = "create_time")
     private Date createTime;
@@ -93,12 +93,12 @@ public class CustomTag implements Serializable {
         this.isDeleted = isDeleted;
     }
 
-    public Integer getRecommnedFlag() {
-        return recommnedFlag;
+    public Integer getRecommendFlag() {
+        return recommendFlag;
     }
 
-    public void setRecommnedFlag(Integer recommnedFlag) {
-        this.recommnedFlag = recommnedFlag;
+    public void setRecommendFlag(Integer recommnedFlag) {
+        this.recommendFlag = recommnedFlag;
     }
 
     public Date getCreateTime() {

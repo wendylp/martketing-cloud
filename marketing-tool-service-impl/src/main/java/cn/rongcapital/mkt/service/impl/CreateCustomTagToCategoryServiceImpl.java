@@ -46,7 +46,7 @@ public class CreateCustomTagToCategoryServiceImpl implements CreateCustomTagToCa
         insertCustomTag.setCustomTagType(ApiConstant.CUSTOM_TAG_CATEGORY_TYPE_DEFINE);
         insertCustomTag.setUpdateTime(new Date());
         insertCustomTag.setCustomTagSource("预留来源字段");
-        insertCustomTag.setRecommnedFlag(0);
+        insertCustomTag.setRecommendFlag(0);
         insertCustomTag.setIsDeleted(Integer.valueOf(ApiConstant.TABLE_DATA_STATUS_VALID));
         mongoCustomTagDao.insertCustomTag(insertCustomTag);
 
