@@ -44,6 +44,12 @@ public class CustomTag implements Serializable {
 
     @Field(value = "custom_tag_source")
     private String customTagSource;
+    
+    @Field(value = "cover_number")
+    private Integer coverNumber;// 覆盖人数
+    
+    @Field(value = "cover_frequency")
+    private Integer coverFrequency;// 覆盖人次
 
     public String getId() {
         return id;
@@ -124,6 +130,24 @@ public class CustomTag implements Serializable {
     public void setCustomTagSource(String customTagSource) {
         this.customTagSource = customTagSource;
     }
+
+    public Integer getCoverNumber() {
+        return coverNumber;
+    }
+
+    public void setCoverNumber(Integer coverNumber) {
+        this.coverNumber = coverNumber;
+    }
+
+    public Integer getCoverFrequency() {
+        return coverFrequency;
+    }
+
+    public void setCoverFrequency(Integer coverFrequency) {
+        this.coverFrequency = coverFrequency;
+    }
+    
+    
 }
 
 
