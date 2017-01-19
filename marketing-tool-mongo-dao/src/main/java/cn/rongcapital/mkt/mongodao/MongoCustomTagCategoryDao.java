@@ -9,4 +9,6 @@ public interface MongoCustomTagCategoryDao {
 
     void insertMongoCustomTagCategory(CustomTagCategory customTagCategory);
 
+	public CustomTagCategory findByCategoryId(String categoryId);
+
 }

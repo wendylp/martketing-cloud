@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.vo.in;
 
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -16,6 +18,9 @@ public class SystemValueIn {
     @NotEmpty
     private String tagValue;
 
+    @NotNull
+    private Integer tagStatus;
+    
     @JsonProperty("tag_value_id")
     public String getTagValueId() {
         return tagValueId;
@@ -33,4 +38,15 @@ public class SystemValueIn {
     public void setTagValue(String tagValue) {
         this.tagValue = tagValue;
     }
+
+    @JsonProperty("tag_status")
+	public Integer getTagStatus() {
+		return tagStatus;
+	}
+
+	public void setTagStatus(Integer tagStatus) {
+		this.tagStatus = tagStatus;
+	}
+    
+    
 }

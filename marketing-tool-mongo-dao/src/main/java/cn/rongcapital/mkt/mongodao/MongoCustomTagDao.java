@@ -12,4 +12,6 @@ public interface MongoCustomTagDao {
     void insertCustomTag(CustomTag paramCustomTag);
 
     List<String> findCustomTagNames(CustomTag paramCustomTag);
+
+    CustomTag findByCustomTagId(String customTagId);
 }

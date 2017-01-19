@@ -1,5 +1,8 @@
 package cn.rongcapital.mkt.service;
 
+import java.util.List;
+
+import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 /**
@@ -7,4 +10,6 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  */
 public interface CustomTagActionService {
     BaseOutput insertCustomTag();
+    
+    List<CustomTag> findCustomTagsByCategoryId(String categoryId);
 }
