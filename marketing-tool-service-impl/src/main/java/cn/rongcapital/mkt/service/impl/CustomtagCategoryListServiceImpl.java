@@ -26,6 +26,7 @@ public class CustomtagCategoryListServiceImpl implements CustomtagCategoryListSe
 
     /**
      * 功能描述：自定义分类列表
+     * 
      * 接口：mkt.customtag.category.list
      * 
      * @return
@@ -41,8 +42,9 @@ public class CustomtagCategoryListServiceImpl implements CustomtagCategoryListSe
         List<CustomTagCategory> customTagCategoryLists = mongoCustomTagCategoryDao.find(customTagCategory);
 
         if (CollectionUtils.isNotEmpty(customTagCategoryLists)) {
+            // customTagCategoryLists.removeIf(null)
             result.setTotal(customTagCategoryLists.size());
-            
+
             for (CustomTagCategory cTagCategory : customTagCategoryLists) {
                 // 获取有效自定义标签个数
                 long customTagCount = mongoCustomTagDao.validCustomTagCount(cTagCategory.getChildrenCustomTagList());
@@ -50,7 +52,14 @@ public class CustomtagCategoryListServiceImpl implements CustomtagCategoryListSe
                 CustomTagCategoryOut customTagCategoryOut =
                         new CustomTagCategoryOut(cTagCategory.getCustomTagCategoryId(),
                                 cTagCategory.getCustomTagCategoryName(), cTagCategory.getLevel(), customTagCount);
-                result.getData().add(customTagCategoryOut);
+
+                // 把未分类置顶
+                if (ApiConstant.CUSTOM_TAG_DEFAULT_CATEGORY_ID.equals(customTagCategoryOut.getCustomTagCategoryId())) {
+                    result.getData().add(0, customTagCategoryOut);
+                } else {
+                    result.getData().add(customTagCategoryOut);
+                }
+
             }
         }
 
