@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.CustomTagActionService;
+import cn.rongcapital.mkt.service.CustomtagCategoryLessListService;
 import cn.rongcapital.mkt.service.CustomtagCategoryListService;
 import cn.rongcapital.mkt.service.CustomtagFuzzyNameListService;
 import cn.rongcapital.mkt.service.CustomtagListService;
@@ -53,6 +54,9 @@ public class MktCustomTagApi {
     
     @Autowired
     private CustomtagFuzzyNameListService customtagFuzzyNameListService;
+    
+    @Autowired
+    private CustomtagCategoryLessListService customtagCategoryLessListService;
 
     /**
      * 功能描述：自定义分类列表
@@ -119,6 +123,18 @@ public class MktCustomTagApi {
             @NotEmpty @QueryParam("custom_tag_category_id") String customTagCategoryId,
             @NotNull @QueryParam("custom_tag_name") String customTagName) {
         return customtagFuzzyNameListService.customtagFuzzyNameListGet(customTagCategoryId, customTagName);
+    }
+    
+    /**
+     * 功能描述：未分类标签添加到指定分类，分类列表查询(不显示未分类)
+     * 
+     * @return
+     */
+    @GET
+    @Path("/mkt.customtag.category.less.list")
+    public BaseOutput customtagCategoryLessListGet(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken) {
+        return customtagCategoryLessListService.customtagCategoryLessListGet();
     }
 
 }
