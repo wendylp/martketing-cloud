@@ -40,6 +40,7 @@ public class EventSourceListServiceImpl implements EventSourceListService{
         paramMap.put("channel", channel);
         List<EventSourceListOut> list = eventSourceDao.getEventSourceListByChannel(paramMap);
         if (!CollectionUtils.isEmpty(list)) {
+        	result.setTotal(list.size());
         	result.getData().addAll(list);
         }
 		return result;

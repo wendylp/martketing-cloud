@@ -2,11 +2,21 @@ package cn.rongcapital.mkt.service.impl;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.mongodao.MongoCustomTagCategoryDao;
 import cn.rongcapital.mkt.mongodao.MongoCustomTagDao;
 import cn.rongcapital.mkt.po.mongodb.CustomTag;
+import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
 import cn.rongcapital.mkt.service.CustomTagActionService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,6 +28,9 @@ public class CustomTagActionServiceImpl implements CustomTagActionService{
     @Autowired
     private MongoCustomTagDao mongoCustomTagDao;
 
+    @Autowired
+    private MongoCustomTagCategoryDao mongoCustomTagCategoryDao;
+    
     @Override
     public BaseOutput insertCustomTag() {
         CustomTag customTag = new CustomTag();
@@ -26,4 +39,54 @@ public class CustomTagActionServiceImpl implements CustomTagActionService{
         mongoCustomTagDao.insertCustomTag(customTag);
         return new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
     }
+
+	@Override
+	public List<CustomTag> findCustomTagsByCategoryId(String categoryId) {
+		
+		CustomTagCategory customTagCategory = mongoCustomTagCategoryDao.findByCategoryId(categoryId);
+		
+		List<CustomTag> customTagList = new ArrayList<CustomTag>();
+		
+		CustomTag customTag;
+		
+		if(customTagCategory != null){
+		
+			List<String> customTagIdList = customTagCategory.getChildrenCustomTagList();
+			
+			for(String customTagId : customTagIdList){
+				customTag = mongoCustomTagDao.findByCustomTagId(customTagId);
+				
+				if(customTag != null){
+					customTagList.add(customTag);
+				}
+			}
+		}
+		
+		return customTagList;
+	}
+    
+	/**
+	 * 查询最热标签(覆盖人次最多的标签)
+	 */
+	public List<CustomTag> findCustomTagTopList(Integer topType){
+		
+        Criteria criteria = new Criteria("is_deleted").is(0);
+		Query query = new Query(criteria);
+		
+		//排序
+		query.with(new Sort(Direction.DESC, "cover_frequency"));
+		
+		if(topType == 1){
+			query.limit(25);
+		}else if(topType == 2){
+			query.limit(50);
+		}else if(topType == 3){
+			query.limit(100);
+		}
+
+		List<CustomTag> customTagList = mongoCustomTagDao.find(query);
+		
+		return customTagList;
+	}
+    
 }

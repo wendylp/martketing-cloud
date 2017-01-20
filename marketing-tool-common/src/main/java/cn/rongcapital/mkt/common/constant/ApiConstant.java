@@ -47,6 +47,9 @@ public class ApiConstant {
 	public static final byte SEGMENT_COMPILE_STATUS_YES = 0;//可编辑
 	public static final byte SEGMENT_COMPILE_STATUS_NO = 1;//不可编辑
 	
+	public static final byte SEGMENT_TYPE_SYSTEM_TAG = 0;//系统标签
+	public static final byte SEGMENT_TYPE_CUSTOM_TAG = 1;//自定义标签
+	
 	public static final int INT_ZERO = 0;
 	public static final int INT_ONE = 1;
 	
@@ -395,4 +398,15 @@ public class ApiConstant {
      * 系统标签自定义分类最大显示个数
      */
     public static final int TAG_CUSTOM_TAXONOMY_MAX_SHOW = 10;
+
+	/*
+	 *自定义标签分类类型 预置分类:0 自定义分类:1
+	 */
+	public static final int CUSTOM_TAG_CATEGORY_TYPE_PRESET = 0;
+	public static final int CUSTOM_TAG_CATEGORY_TYPE_DEFINE = 1;
+
+    /*
+     *自定义标签未分类对应的分类ID
+     */
+    public static final String CUSTOM_TAG_DEFAULT_CATEGORY_ID = "yr1oorLSpl1484637382955";
 }

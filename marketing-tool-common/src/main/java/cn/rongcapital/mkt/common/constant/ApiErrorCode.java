@@ -52,6 +52,9 @@ public enum ApiErrorCode {
 	BIZ_ERROR_EVENT_OBJECT_CODE_ALREADY_EXIST(3023,"code of event object has already exist."),
 	BIZ_ERROR_EVENT_OBJECT_ATTRIBUTE_DUPLICATED(3024,"attribute of event object is duplicated."),
 	BIZ_ERROR_EVENT_IS_EXIST(3021,"event code is exist"),//事件code已经存在
+
+	//自定义标签错误相关代码
+	BIZ_ERROR_CUSTOM_TAG_DUPLICATED_ERROR(3026,"custom tag aleady exists in the category"),
 	
 	SMS_ERROR_MATERIAL_CAN_NOT_DELETE(4001,"can not delete the material"),
 	SMS_ERROR_MATERIAL_CAN_NOT_UPDATE(4002,"can not update the material"),

@@ -24,6 +24,9 @@ public class CustomTag implements Serializable {
     @Field(value = "custom_tag_name")
     private String customTagName;
 
+    @Field(value = "custom_tag_type")
+    private Integer customTagType;
+
     @Field(value = "parent_id")
     private String parentId;
 
@@ -31,7 +34,7 @@ public class CustomTag implements Serializable {
     private Integer isDeleted;
 
     @Field(value = "recommend_flag")
-    private Integer recommnedFlag;
+    private Integer recommendFlag;
 
     @Field(value = "create_time")
     private Date createTime;
@@ -41,6 +44,12 @@ public class CustomTag implements Serializable {
 
     @Field(value = "custom_tag_source")
     private String customTagSource;
+    
+    @Field(value = "cover_number")
+    private Integer coverNumber;// 覆盖人数
+    
+    @Field(value = "cover_frequency")
+    private Integer coverFrequency;// 覆盖人次
 
     public String getId() {
         return id;
@@ -66,6 +75,14 @@ public class CustomTag implements Serializable {
         this.customTagName = customTagName;
     }
 
+    public Integer getCustomTagType() {
+        return customTagType;
+    }
+
+    public void setCustomTagType(Integer customTagType) {
+        this.customTagType = customTagType;
+    }
+
     public String getParentId() {
         return parentId;
     }
@@ -82,12 +99,12 @@ public class CustomTag implements Serializable {
         this.isDeleted = isDeleted;
     }
 
-    public Integer getRecommnedFlag() {
-        return recommnedFlag;
+    public Integer getRecommendFlag() {
+        return recommendFlag;
     }
 
-    public void setRecommnedFlag(Integer recommnedFlag) {
-        this.recommnedFlag = recommnedFlag;
+    public void setRecommendFlag(Integer recommnedFlag) {
+        this.recommendFlag = recommnedFlag;
     }
 
     public Date getCreateTime() {
@@ -113,6 +130,24 @@ public class CustomTag implements Serializable {
     public void setCustomTagSource(String customTagSource) {
         this.customTagSource = customTagSource;
     }
+
+    public Integer getCoverNumber() {
+        return coverNumber;
+    }
+
+    public void setCoverNumber(Integer coverNumber) {
+        this.coverNumber = coverNumber;
+    }
+
+    public Integer getCoverFrequency() {
+        return coverFrequency;
+    }
+
+    public void setCoverFrequency(Integer coverFrequency) {
+        this.coverFrequency = coverFrequency;
+    }
+    
+    
 }
 
 
