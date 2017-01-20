@@ -139,13 +139,11 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 			eventBehavior.setEventName(eventDB.getName());
 			eventBehavior.setSourceName(esDb.getName());
 			eventBehavior.setObjectName(eoDb.getName());
-//			String object = eventBehavior.getObject();
-//			eventBehavior.setInstanceName(instanceName(object, eoDb.getInstanceNameProp()));
 			out = new EventBehaviorsOut();
 			BeanUtils.copyProperties(eventBehavior, out);
 			eventBehaviorOut.getListItems().add(out);
 		}
-		eventBehaviorOut.setTotal(eventBehaviorOut.getData().size());
+		eventBehaviorOut.setTotal(eventBehaviorOut.getListItems().size());
 		eventBehaviorOut.setTotalCount(new Long(totle).intValue());
 
 		return eventBehaviorOut;
