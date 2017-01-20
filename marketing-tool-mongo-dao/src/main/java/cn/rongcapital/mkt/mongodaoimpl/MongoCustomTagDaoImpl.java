@@ -140,6 +140,18 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
         return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
     }
     
+    @Override
+    public List<CustomTag> findByCustomTagNameFuzzy(String customTagName, Integer size) {
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName))
+                .limit(size);
+        return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
+    }
+
+    @Override
+    public long countByCustomTagNameFuzzy(String customTagName) {
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName));
+        return mongoTemplate.count(query, CUSTOM_TAG_CLASS);
+    }
     
 
     /**
