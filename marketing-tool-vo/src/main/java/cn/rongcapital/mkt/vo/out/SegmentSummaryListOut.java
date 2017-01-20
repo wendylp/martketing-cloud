@@ -10,18 +10,18 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public class SegmentSummaryListOut extends BaseOutput {
 
 	
-	List<SegmentPublishstatusListDataOut> dataCustom = new ArrayList<SegmentPublishstatusListDataOut>();
+	List<SegmentSummaryListDataOut> dataCustom = new ArrayList<SegmentSummaryListDataOut>();
 	
 	public SegmentSummaryListOut(int code, String msg, int total){
 		super(code, msg, total, null);
 	}
 
 	@JsonProperty("data")
-	public List<SegmentPublishstatusListDataOut> getDataCustom() {
+	public List<SegmentSummaryListDataOut> getDataCustom() {
 		return dataCustom;
 	}
 
-	public void setDataCustom(List<SegmentPublishstatusListDataOut> dataCustom) {
+	public void setDataCustom(List<SegmentSummaryListDataOut> dataCustom) {
 		this.dataCustom = dataCustom;
 	}
 	

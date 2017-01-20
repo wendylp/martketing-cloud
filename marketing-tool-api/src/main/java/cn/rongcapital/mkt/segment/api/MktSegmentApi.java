@@ -47,6 +47,7 @@ import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.service.SegmentSearchDownloadService;
 import cn.rongcapital.mkt.service.SegmentSearchGetService;
 import cn.rongcapital.mkt.service.SegmentSecondaryTaglistSearchService;
+import cn.rongcapital.mkt.service.SegmentAllSummaryListService;
 import cn.rongcapital.mkt.service.SegmentTagGetService;
 import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
@@ -70,6 +71,7 @@ import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.TagGroupsListIn;
 import cn.rongcapital.mkt.vo.in.TagListSecondarySearchIn;
 import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListOut;
+import cn.rongcapital.mkt.vo.out.SegmentSummaryListOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -116,6 +118,9 @@ public class MktSegmentApi {
 
     @Autowired
     private SegmentPublishstatusListService segmentPublishstatusListService;
+
+    @Autowired
+    private SegmentAllSummaryListService segmentAllSummaryListService;
 
     @Autowired
     private SegmentSearchGetService segmentSearchGetServer;
@@ -411,6 +416,19 @@ public class MktSegmentApi {
             @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword) throws Exception {
         return segmentPublishstatusListService.segmentPublishstatusList(userToken, publishStatus, index, size, ver,
                 keyword);
+    }
+
+    /**
+     * @功能简述: 获取某个发布状态下的符合指定keyword过滤要求的全部segment概要信息，如细分名称+id+覆盖人数+状态等。
+     * @param: String userToken, String ver, 
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.segment.allsummary.list.get")
+    public SegmentSummaryListOut segmentAllSummaryList(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotNull @QueryParam("publish_status") Integer publishStatus,
+            @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword) throws Exception {
+        return segmentAllSummaryListService.segmentAllSummaryList(userToken, publishStatus, ver, keyword);
     }
 
     /**
