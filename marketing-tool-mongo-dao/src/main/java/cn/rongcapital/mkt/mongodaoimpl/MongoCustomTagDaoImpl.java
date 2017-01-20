@@ -132,6 +132,15 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
 
         return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
     }
+    
+    @Override
+    public List<CustomTag> findByCustomTagIdListAndNameFuzzy(List<String> customTagList, String customTagName) {
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_ID).in(customTagList)
+                .and(CUSTOM_TAG_NAME).regex(customTagName));
+        return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
+    }
+    
+    
 
     /**
      * 功能描述：根据对象生成对象的mongodb查询条件

@@ -101,7 +101,7 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
     /**
      * 功能描述：根据对象生成对象的mongodb查询条件
      * 
-     * @param customTag
+     * @param object
      * @return
      * @throws SecurityException
      * @throws NoSuchMethodException
