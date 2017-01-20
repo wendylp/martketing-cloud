@@ -118,7 +118,11 @@ public class HttpClientUtil {
         if (httpUrl == null) return null;
 
         HostConfiguration config = new HostConfiguration();
-        config.setHost(httpUrl.getHost(), httpUrl.getPort());
+        if(httpUrl.getPort()!=0){
+        	config.setHost(httpUrl.getHost(), httpUrl.getPort());
+        }else{
+        	config.setHost(httpUrl.getHost());
+        }
         PostMethod post = new PostMethod(httpUrl.getPath());
         String encoding = httpUrl.getEncoding();
         if (encoding != null) {
