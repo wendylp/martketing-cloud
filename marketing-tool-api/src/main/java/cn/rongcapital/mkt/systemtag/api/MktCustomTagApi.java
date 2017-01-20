@@ -11,6 +11,7 @@ package cn.rongcapital.mkt.systemtag.api;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -18,8 +19,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.service.CustomTagActionService;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
@@ -28,7 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.CustomTagActionService;
 import cn.rongcapital.mkt.service.CustomtagCategoryListService;
+import cn.rongcapital.mkt.service.CustomtagFuzzyNameListService;
 import cn.rongcapital.mkt.service.CustomtagListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -48,6 +50,9 @@ public class MktCustomTagApi {
 
     @Autowired
     private CustomtagListService customtagListService;
+    
+    @Autowired
+    private CustomtagFuzzyNameListService customtagFuzzyNameListService;
 
     /**
      * 功能描述：自定义分类列表
@@ -98,6 +103,22 @@ public class MktCustomTagApi {
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
             @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
         return customtagListService.customtagListGet(customTagCategoryId,index,size);
+    }
+    
+    /**
+     * 功能描述：添加标签时， 查询已存在类似标签列表
+     * 
+     * @param customTagCategoryId
+     * @param customTagName
+     * @return
+     */
+    @GET
+    @Path("/mkt.customtag.fuzzy.name.list")
+    public BaseOutput customtagFuzzyNameListGet(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("custom_tag_category_id") String customTagCategoryId,
+            @NotNull @QueryParam("custom_tag_name") String customTagName) {
+        return customtagFuzzyNameListService.customtagFuzzyNameListGet(customTagCategoryId, customTagName);
     }
 
 }
