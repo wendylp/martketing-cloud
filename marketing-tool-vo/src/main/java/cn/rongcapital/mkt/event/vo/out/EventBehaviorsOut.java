@@ -22,9 +22,9 @@ public class EventBehaviorsOut{
 	private String event;
 	private boolean subscribed;
 	private String sourceName;
-	private String instanceName;
 	private String eventName;
-
+	private String objectName;
+	
 	public String getId() {
 		return id;
 	}
@@ -81,14 +81,6 @@ public class EventBehaviorsOut{
 		this.sourceName = sourceName;
 	}
 
-	public String getInstanceName() {
-		return instanceName;
-	}
-
-	public void setInstanceName(String instanceName) {
-		this.instanceName = instanceName;
-	}
-
 	public String getEventName() {
 		return eventName;
 	}
@@ -96,4 +88,13 @@ public class EventBehaviorsOut{
 	public void setEventName(String eventName) {
 		this.eventName = eventName;
 	}
+
+	public String getObjectName() {
+		return objectName;
+	}
+
+	public void setObjectName(String objectName) {
+		this.objectName = objectName;
+	}
+	
 }
