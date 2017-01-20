@@ -1,6 +1,16 @@
 package cn.rongcapital.mkt.mongodaoimpl;
 
 import cn.rongcapital.mkt.mongodao.MongoCustomTagCategoryDao;
+import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
+import cn.rongcapital.mkt.po.mongodb.TagRecommend;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -8,4 +18,19 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao{
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+
+    @Override
+    public void insertMongoCustomTagCategory(CustomTagCategory customTagCategory) {
+        mongoTemplate.insert(customTagCategory);
+    }
+
+	@Override
+	public CustomTagCategory findByCategoryId(String categoryId) {
+
+		return mongoTemplate.findOne(new Query(Criteria.where("customTagCategoryId").is(categoryId)), CustomTagCategory.class);
+	}
 }
