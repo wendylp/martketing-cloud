@@ -15,4 +15,6 @@ public interface CustomTagActionService {
     List<CustomTag> findCustomTagsByCategoryId(String categoryId);
 
     List<CustomTag> insertCustomTagListIntoDefaultCategory(ArrayList<String> customTags);
+
+    List<CustomTag> findCustomTagTopList(Integer topType);
 }
