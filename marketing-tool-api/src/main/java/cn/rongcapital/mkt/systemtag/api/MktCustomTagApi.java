@@ -11,6 +11,7 @@ package cn.rongcapital.mkt.systemtag.api;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -26,7 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.service.CustomTagActionService;
 import cn.rongcapital.mkt.service.CustomtagCategoryListService;
+import cn.rongcapital.mkt.service.CustomtagFuzzyNameListService;
 import cn.rongcapital.mkt.service.CustomtagListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -37,15 +41,40 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public class MktCustomTagApi {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+
+    @Autowired
+    private CustomTagActionService customTagActionService;
+
     @Autowired
     private CustomtagCategoryListService customtagCategoryListService;
 
     @Autowired
     private CustomtagListService customtagListService;
+    
+    @Autowired
+    private CustomtagFuzzyNameListService customtagFuzzyNameListService;
 
     /**
      * 功能描述：自定义分类列表
-     * 
+     * 接口：mkt.customtag.category.list
+     *
+     * @return
+     */
+    @GET
+    @Path("/mkt.customtag.test")
+    public BaseOutput customtagTest(@NotEmpty @QueryParam("user_token") String userToken) {
+//        ArrayList<String> customTagList = new ArrayList<>();
+//        customTagList.add("wangweiqiang1");
+//        customTagList.add("wangweiqiang2");
+//        customTagList.add("wangweiqiang3");
+//        customTagList.add("wangweiqiang1");
+//        customTagActionService.insertCustomTagListIntoDefaultCategory(customTagList);
+        return new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
+    }
+
+    /**
+     * 功能描述：自定义分类列表
+     *
      * 接口：mkt.customtag.category.list
      * 
      * @return
@@ -56,11 +85,11 @@ public class MktCustomTagApi {
             @NotEmpty @QueryParam("user_token") String userToken) {
         return customtagCategoryListService.customtagCategoryListGet();
     }
-    
+
 
     /**
      * 功能描述：标签列表(分页， 分类名称展示)
-     * 
+     *
      * @param customTagCategoryId
      * @param index
      * @param size
@@ -74,6 +103,22 @@ public class MktCustomTagApi {
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
             @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
         return customtagListService.customtagListGet(customTagCategoryId,index,size);
+    }
+    
+    /**
+     * 功能描述：添加标签时， 查询已存在类似标签列表
+     * 
+     * @param customTagCategoryId
+     * @param customTagName
+     * @return
+     */
+    @GET
+    @Path("/mkt.customtag.fuzzy.name.list")
+    public BaseOutput customtagFuzzyNameListGet(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("custom_tag_category_id") String customTagCategoryId,
+            @NotNull @QueryParam("custom_tag_name") String customTagName) {
+        return customtagFuzzyNameListService.customtagFuzzyNameListGet(customTagCategoryId, customTagName);
     }
 
 }

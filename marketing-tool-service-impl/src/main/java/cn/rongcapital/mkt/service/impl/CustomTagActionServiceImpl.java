@@ -10,8 +10,10 @@ import cn.rongcapital.mkt.service.CustomTagActionService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -44,18 +46,12 @@ public class CustomTagActionServiceImpl implements CustomTagActionService{
 	public List<CustomTag> findCustomTagsByCategoryId(String categoryId) {
 		
 		CustomTagCategory customTagCategory = mongoCustomTagCategoryDao.findByCategoryId(categoryId);
-		
 		List<CustomTag> customTagList = new ArrayList<CustomTag>();
-		
 		CustomTag customTag;
-		
 		if(customTagCategory != null){
-		
 			List<String> customTagIdList = customTagCategory.getChildrenCustomTagList();
-			
 			for(String customTagId : customTagIdList){
 				customTag = mongoCustomTagDao.findByCustomTagId(customTagId);
-				
 				if(customTag != null){
 					customTagList.add(customTag);
 				}
@@ -64,18 +60,62 @@ public class CustomTagActionServiceImpl implements CustomTagActionService{
 		
 		return customTagList;
 	}
-    
+
+	@Override
+	public List<CustomTag> insertCustomTagListIntoDefaultCategory(ArrayList<String> customTags) {
+		List<CustomTag> customTagList = new ArrayList();
+
+		for(String customTagName : customTags){
+			if(!isCustomTagExists(customTagName)){
+				CustomTag insertCustomTag = new CustomTag();
+				insertCustomTag.setParentId(ApiConstant.CUSTOM_TAG_DEFAULT_CATEGORY_ID);     //父节点Id
+				insertCustomTag.setCustomTagId(RandomStringUtils.random(10,true,true) + System.currentTimeMillis());    //子节点Id
+				insertCustomTag.setCustomTagName(customTagName);  //子节点名称
+				insertCustomTag.setCustomTagSource(null);
+				insertCustomTag.setCreateTime(new Date());
+				insertCustomTag.setUpdateTime(new Date());
+				insertCustomTag.setCustomTagType(ApiConstant.CUSTOM_TAG_CATEGORY_TYPE_DEFINE);
+				insertCustomTag.setIsDeleted(Integer.valueOf(ApiConstant.TABLE_DATA_STATUS_VALID));
+				insertCustomTag.setRecommendFlag(null);
+				mongoCustomTagDao.insertCustomTag(insertCustomTag);
+			}
+		}
+
+		for(String customTagName : customTags){
+			CustomTag paramCustomTag = new CustomTag();
+			paramCustomTag.setCustomTagName(customTagName);
+			paramCustomTag.setCustomTagType(ApiConstant.CUSTOM_TAG_CATEGORY_TYPE_DEFINE);
+			paramCustomTag.setParentId(ApiConstant.CUSTOM_TAG_DEFAULT_CATEGORY_ID);
+			customTagList.add(mongoCustomTagDao.findOne(paramCustomTag));
+		}
+		return customTagList;
+	}
+
+	private boolean isCustomTagExists(String customTagName) {
+		boolean flag = false;
+		CustomTag paramCustomTag = new CustomTag();
+		paramCustomTag.setCustomTagName(customTagName);
+		paramCustomTag.setCustomTagType(ApiConstant.CUSTOM_TAG_CATEGORY_TYPE_DEFINE);
+		paramCustomTag.setParentId(ApiConstant.CUSTOM_TAG_DEFAULT_CATEGORY_ID);
+		if(mongoCustomTagDao.findOne(paramCustomTag) != null){
+			flag = true;
+		}
+		return flag;
+	}
+
+
+
 	/**
 	 * 查询最热标签(覆盖人次最多的标签)
 	 */
 	public List<CustomTag> findCustomTagTopList(Integer topType){
-		
+
         Criteria criteria = new Criteria("is_deleted").is(0);
 		Query query = new Query(criteria);
-		
+
 		//排序
 		query.with(new Sort(Direction.DESC, "cover_frequency"));
-		
+
 		if(topType == 1){
 			query.limit(25);
 		}else if(topType == 2){
@@ -85,8 +125,8 @@ public class CustomTagActionServiceImpl implements CustomTagActionService{
 		}
 
 		List<CustomTag> customTagList = mongoCustomTagDao.find(query);
-		
+
 		return customTagList;
 	}
-    
+
 }
