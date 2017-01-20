@@ -2,10 +2,10 @@ package cn.rongcapital.mkt.vo.out;
 
 public class CustomTagCategoryOut {
 
-    String customTagCategoryId;
-    String customTagCategoryName;
-    Integer level;
-    long customTagCount;
+    private String customTagCategoryId;
+    private String customTagCategoryName;
+    private Integer level;
+    private long customTagCount;
 
     public CustomTagCategoryOut() {}
 

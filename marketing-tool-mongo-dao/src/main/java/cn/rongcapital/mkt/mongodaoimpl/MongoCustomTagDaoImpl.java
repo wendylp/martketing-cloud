@@ -6,6 +6,8 @@ import cn.rongcapital.mkt.po.mongodb.CustomTag;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -37,6 +39,8 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
     private static final String CREATE_TIME = "create_time";
     private static final String UPDATE_TIME = "update_time";
     private static final String CUSTOM_TAG_SOURCE = "custom_tag_source";
+    private static final String COVER_NUMBER = "cover_number";
+    private static final String COVER_FREQUENCY = "cover_frequency";
 
     // 设置需要查询的字段
     private static final String[] QUERY_LISTS =
@@ -76,7 +80,7 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
     }
 
     @Override
-    public long validCustomTagCount(List<String> customTagId) {
+    public long countValidCustomTag(List<String> customTagId) {
         if (CollectionUtils.isNotEmpty(customTagId)) {
             Criteria criteria = Criteria.where(MongoCustomTagDaoImpl.IS_DELETED).is(MongoCustomTagDaoImpl.DATA_VALID)
                     .and(CUSTOM_TAG_ID).in(customTagId);
@@ -100,9 +104,34 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
     @Override
     public CustomTag findByCustomTagId(String customTagId) {
 
-        return mongoTemplate.findOne(new Query(Criteria.where("customTagId").is(customTagId)), CustomTag.class);
+        return findByCustomTagId(customTagId, DATA_VALID);
     }
 
+    @Override
+    public CustomTag findByCustomTagId(String customTagId, Integer isDeleted) {
+        return mongoTemplate.findOne(
+                new Query(Criteria.where(CUSTOM_TAG_ID).is(customTagId).and(IS_DELETED).is(isDeleted)),
+                CUSTOM_TAG_CLASS);
+    }
+
+    @Override
+    public List<CustomTag> findByCustomTagIdList(List<String> customTagList) {
+        return mongoTemplate.find(
+                new Query(Criteria.where(CUSTOM_TAG_ID).in(customTagList).and(IS_DELETED).is(DATA_VALID)),
+                CUSTOM_TAG_CLASS);
+    }
+    
+    @Override
+    public List<CustomTag> findByCustomTagIdList(List<String> customTagList, Integer index, Integer size) {
+        Query query = new Query(Criteria.where(CUSTOM_TAG_ID).in(customTagList).and(IS_DELETED).is(DATA_VALID));
+        // 设置排序规则
+        query.with(new Sort(Direction.DESC, COVER_NUMBER, COVER_FREQUENCY));
+        // 设置分页规则
+        query.skip((index - 1) * size);
+        query.limit(size);
+
+        return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
+    }
 
     /**
      * 功能描述：根据对象生成对象的mongodb查询条件
@@ -112,7 +141,7 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
      * @throws SecurityException
      * @throws NoSuchMethodException
      */
-    public Query generatorQuery(CustomTag customTag) {
+    private Query generatorQuery(CustomTag customTag) {
         if (customTag == null) {
             return null;
         }

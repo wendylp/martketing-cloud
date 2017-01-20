@@ -18,7 +18,7 @@ public interface MongoCustomTagCategoryDao {
      * @param customTag
      * @return
      */
-    CustomTagCategory findOne(CustomTagCategory customTag);
+    public CustomTagCategory findOne(CustomTagCategory customTag);
     
     /**
      * 功能描述：根据自定义条件查询一条数据
@@ -26,7 +26,7 @@ public interface MongoCustomTagCategoryDao {
      * @param query
      * @return
      */
-    CustomTagCategory findOne(Query query);
+    public CustomTagCategory findOne(Query query);
     
     /**
      * 
@@ -35,7 +35,7 @@ public interface MongoCustomTagCategoryDao {
      * @param customTag
      * @return
      */
-    List<CustomTagCategory> find(CustomTagCategory customTag);
+    public List<CustomTagCategory> find(CustomTagCategory customTag);
     
     /**
      * 功能描述：根据自定义条件查询多条记录
@@ -43,12 +43,27 @@ public interface MongoCustomTagCategoryDao {
      * @param query
      * @return
      */
-    List<CustomTagCategory> find(Query query);
+    public List<CustomTagCategory> find(Query query);
     
     
 
     void insertMongoCustomTagCategory(CustomTagCategory customTagCategory);
 
+    /**
+     * 功能描述：根据自定义分类id查询有效数据
+     * 
+     * @param categoryId
+     * @return
+     */
 	public CustomTagCategory findByCategoryId(String categoryId);
+	
+	/**
+	 * 功能描述：根据自定义分类Id及删除状态查询数据
+	 * 
+	 * @param categoryId
+	 * @param isDeleted
+	 * @return
+	 */
+	public CustomTagCategory findByCategoryId(String categoryId, Integer isDeleted);
 
 }
