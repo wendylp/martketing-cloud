@@ -12,4 +12,6 @@ public interface CustomTagActionService {
     BaseOutput insertCustomTag();
     
     List<CustomTag> findCustomTagsByCategoryId(String categoryId);
+    
+    List<CustomTag> findCustomTagTopList(Integer topType);
 }

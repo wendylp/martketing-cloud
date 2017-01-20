@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.GenerateUUid;
-import cn.rongcapital.mkt.dao.CustomTagValueCountDao;
-import cn.rongcapital.mkt.po.CustomTagValueCount;
 import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.service.CustomTagActionService;
 import cn.rongcapital.mkt.service.SegmentAnalysisCustomService;
@@ -37,9 +35,6 @@ public class SegmentAnalysisCustomServiceImpl implements SegmentAnalysisCustomSe
 	@Autowired
 	private CustomTagActionService customTagActionService;
 	
-	@Autowired
-	private CustomTagValueCountDao customTagValueCountDao;
-	
 	public static final  Integer POOL_INDEX = 2;
 	
 	public static final String TAG_COVER_ID_STR="tagcoverid:";
@@ -56,35 +51,19 @@ public class SegmentAnalysisCustomServiceImpl implements SegmentAnalysisCustomSe
 		
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 
-		CustomTagValueCount customTagValueCount = new CustomTagValueCount();
-		if(topType == 0){
-			customTagValueCount.setPageSize(null);
-			customTagValueCount.setStartIndex(null);
-		}else if(topType == 1){
-			customTagValueCount.setPageSize(25);
-			customTagValueCount.setStartIndex(0);
-		}else if(topType == 2){
-			customTagValueCount.setPageSize(50);
-			customTagValueCount.setStartIndex(0);
-		}else if(topType == 3){
-			customTagValueCount.setPageSize(100);
-			customTagValueCount.setStartIndex(0);
-		}
-		//排序
-		customTagValueCount.setOrderField("cover_frequency");
-		customTagValueCount.setOrderFieldType(ApiConstant.SORT_DESC);
-		//查询出自定义标签
-		List<CustomTagValueCount> customTagValueCountList = customTagValueCountDao.selectList(customTagValueCount);
+		logger.info("========================show top custom tags,topType:{} =====================",topType);
 		
+		//查询出自定义标签
+		List<CustomTag> customTagList = customTagActionService.findCustomTagTopList(topType);
 		List<SegmentAnalysisCustomVO> customList = new ArrayList<SegmentAnalysisCustomVO>();
 		SegmentAnalysisCustomVO segmentAnalysisCustomVO;
 		
-		for(CustomTagValueCount customTagValueCountTemp : customTagValueCountList){
+		for(CustomTag customTag : customTagList){
 			
 			segmentAnalysisCustomVO = new SegmentAnalysisCustomVO();
-			segmentAnalysisCustomVO.setTagId(customTagValueCountTemp.getCustomTagId());
-			segmentAnalysisCustomVO.setTagName(customTagValueCountTemp.getCustomTagName());
-			segmentAnalysisCustomVO.setCoverCount(customTagValueCountTemp.getCoverFrequency().intValue());
+			segmentAnalysisCustomVO.setTagId(customTag.getCustomTagId());
+			segmentAnalysisCustomVO.setTagName(customTag.getCustomTagName());
+			segmentAnalysisCustomVO.setCoverCount(customTag.getCoverFrequency() == null ? 0 :customTag.getCoverFrequency().intValue());
 			customList.add(segmentAnalysisCustomVO);
 			
 		}
