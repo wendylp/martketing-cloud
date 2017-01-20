@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
+import com.alibaba.fastjson.JSONArray;
+
 public class EventBehavierListIn extends BaseInput {
 
 	 @NotNull
@@ -14,7 +16,7 @@ public class EventBehavierListIn extends BaseInput {
 	 private Long eventId;
 	 
 	 @JsonProperty("attributes")
-	 private String attributes;
+	 private JSONArray attributes;
 	 
 	 @NotEmpty
 	 @JsonProperty("user_id")
@@ -28,11 +30,11 @@ public class EventBehavierListIn extends BaseInput {
 		this.eventId = eventId;
 	}
 
-	public String getAttributes() {
+	public JSONArray getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(String attributes) {
+	public void setAttributes(JSONArray attributes) {
 		this.attributes = attributes;
 	}
 
