@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.rongcapital.mkt.po.mongodb.CustomTag;
@@ -12,4 +13,6 @@ public interface CustomTagActionService {
     BaseOutput insertCustomTag();
     
     List<CustomTag> findCustomTagsByCategoryId(String categoryId);
+
+    List<CustomTag> insertCustomTagListIntoDefaultCategory(ArrayList<String> customTags);
 }
