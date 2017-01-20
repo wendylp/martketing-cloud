@@ -50,11 +50,45 @@ public interface MongoCustomTagDao {
      * @param customTagId
      * @return
      */
-    long validCustomTagCount(List<String> customTagId);
+    long countValidCustomTag(List<String> customTagId);
 
     void insertCustomTag(CustomTag paramCustomTag);
 
     List<String> findCustomTagNames(CustomTag paramCustomTag);
 
-    CustomTag findByCustomTagId(String customTagId);
+    /**
+     * 功能描述：根据自定义分类id查询有效数据
+     * 
+     * @param customTagId
+     * @return
+     */
+    public CustomTag findByCustomTagId(String customTagId);
+    
+    /**
+     * 功能描述：根据自定义分类Id及删除状态查询数据
+     * 
+     * @param customTagId
+     * @param isDeleted
+     * @return
+     */
+    public CustomTag findByCustomTagId(String customTagId, Integer isDeleted);
+    
+    /**
+     * 功能描述：根据自定义分类id list查询有效数据
+     * 
+     * @param customTagList
+     * @return
+     */
+    public List<CustomTag> findByCustomTagIdList(List<String> customTagList);
+    
+    /**
+     * 功能描述：根据自定义分类id list查询有效数据,按覆盖人数排序，带有分页功能
+     * 
+     * @param customTagList
+     * @param index
+     * @param size
+     * @return
+     */
+    public List<CustomTag> findByCustomTagIdList(List<String> customTagList, Integer index, Integer size);
+    
 }

@@ -47,7 +47,7 @@ public class CustomtagCategoryListServiceImpl implements CustomtagCategoryListSe
 
             for (CustomTagCategory cTagCategory : customTagCategoryLists) {
                 // 获取有效自定义标签个数
-                long customTagCount = mongoCustomTagDao.validCustomTagCount(cTagCategory.getChildrenCustomTagList());
+                long customTagCount = mongoCustomTagDao.countValidCustomTag(cTagCategory.getChildrenCustomTagList());
 
                 CustomTagCategoryOut customTagCategoryOut =
                         new CustomTagCategoryOut(cTagCategory.getCustomTagCategoryId(),
