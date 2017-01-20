@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.event.vo.out;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+import com.alibaba.fastjson.JSONObject;
+
 /*************************************************
  * @功能及特点的描述简述: 事件行为
  * 
@@ -17,9 +19,9 @@ public class EventBehaviorsOut{
 
 	private String id;
 	private Long time;
-	private String object;
-	private String subject;
-	private String event;
+	private JSONObject object;
+	private JSONObject subject;
+	private JSONObject event;
 	private boolean subscribed;
 	private String sourceName;
 	private String eventName;
@@ -41,27 +43,52 @@ public class EventBehaviorsOut{
 		this.time = time;
 	}
 
-	public String getObject() {
+	
+//	public String getObject() {
+//		return object;
+//	}
+//
+//	public void setObject(String object) {
+//		this.object = object;
+//	}
+//
+//	public String getSubject() {
+//		return subject;
+//	}
+//
+//	public void setSubject(String subject) {
+//		this.subject = subject;
+//	}
+//
+//	public String getEvent() {
+//		return event;
+//	}
+//
+//	public void setEvent(String event) {
+//		this.event = event;
+//	}
+
+	public JSONObject getObject() {
 		return object;
 	}
 
-	public void setObject(String object) {
+	public void setObject(JSONObject object) {
 		this.object = object;
 	}
 
-	public String getSubject() {
+	public JSONObject getSubject() {
 		return subject;
 	}
 
-	public void setSubject(String subject) {
+	public void setSubject(JSONObject subject) {
 		this.subject = subject;
 	}
 
-	public String getEvent() {
+	public JSONObject getEvent() {
 		return event;
 	}
 
-	public void setEvent(String event) {
+	public void setEvent(JSONObject event) {
 		this.event = event;
 	}
 
