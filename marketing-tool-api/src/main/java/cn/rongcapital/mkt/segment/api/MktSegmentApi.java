@@ -420,15 +420,15 @@ public class MktSegmentApi {
 
     /**
      * @功能简述: 获取某个发布状态下的符合指定keyword过滤要求的全部segment概要信息，如细分名称+id+覆盖人数+状态等。
-     * @param: String userToken, String ver, 
+     * @param: String userToken, String publishStatus, String ver, 
      * @return: Object
      */
     @GET
     @Path("/mkt.segment.allsummary.list.get")
     public SegmentSummaryListOut segmentAllSummaryList(@NotEmpty @QueryParam("user_token") String userToken,
             @NotNull @QueryParam("publish_status") Integer publishStatus,
-            @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword) throws Exception {
-        return segmentAllSummaryListService.segmentAllSummaryList(userToken, publishStatus, ver, keyword);
+            @NotEmpty @QueryParam("ver") String ver) throws Exception {
+        return segmentAllSummaryListService.segmentAllSummaryList(userToken, publishStatus, ver);
     }
 
     /**

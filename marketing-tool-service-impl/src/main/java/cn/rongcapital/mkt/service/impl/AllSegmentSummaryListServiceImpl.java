@@ -40,15 +40,14 @@ public class AllSegmentSummaryListServiceImpl implements SegmentAllSummaryListSe
 	
     /**
      * @功能简述: mkt.segment.summary.list.get
-     * @param: String method, String userToken, 
-	 *		   Integer publishStatus, String ver 
+     * @param: String userToken, Integer publishStatus, String ver 
      * @return: Object
      */
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
 	public SegmentSummaryListOut segmentAllSummaryList(String userToken, 
-										   Integer publishStatus,String ver,String keyword) {
-		SegmentationHead head = constructSegmentationHead(publishStatus, keyword);
+										   Integer publishStatus,String ver) {
+		SegmentationHead head = constructSegmentationHead(publishStatus);
 		int totalCount = segmentationHeadDao.selectListCount(head);
 		adjustmentSegmentationHead(head, totalCount);		
 		SegmentSummaryListOut segSummaryList = new SegmentSummaryListOut(
@@ -92,7 +91,7 @@ public class AllSegmentSummaryListServiceImpl implements SegmentAllSummaryListSe
 		return data;
 	}
 
-	private SegmentationHead constructSegmentationHead(Integer publishStatus, String keyword) {
+	private SegmentationHead constructSegmentationHead(Integer publishStatus) {
 		SegmentationHead head = new SegmentationHead();
 		head.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		if(ApiConstant.SEGMENT_PUBLISH_STATUS_ALL == publishStatus.byteValue()){
@@ -109,7 +108,7 @@ public class AllSegmentSummaryListServiceImpl implements SegmentAllSummaryListSe
 			head.setOrderFieldType("desc");
 			head.setOrderField("create_time");
 		}
-		head.getCustomMap().put("keyword", keyword);
+
 		return head;
 	}
 
