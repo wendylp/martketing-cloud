@@ -179,7 +179,9 @@ public class EventBehaviorListServiceTest {
     	array.add(obj);
     	EventBehavierListIn ebli = new EventBehavierListIn();
     	ebli.setEventId(1L);
-    	ebli.setAttributes("aaa");
+    	JSONArray js = new JSONArray();
+    	js.add("aaa");
+    	ebli.setAttributes(js);
     	Mockito.when(eventDao.getEvent(Mockito.any(Event.class))).thenReturn(eventT);
     	Mockito.when(eventSourceDao.getEventSource(Mockito.any(EventSource.class))).thenReturn(esRtn);
     	Mockito.when(eventObjectDao.getEventObject(Mockito.any(EventObject.class))).thenReturn(eoRtn);
@@ -281,7 +283,7 @@ public class EventBehaviorListServiceTest {
     	array.add(obj);
     	EventBehavierListIn ebli = new EventBehavierListIn();
     	ebli.setEventId(1L);
-    	ebli.setAttributes(array.toJSONString());
+    	ebli.setAttributes(array);
     	Mockito.when(eventDao.getEvent(Mockito.any(Event.class))).thenReturn(eventT);
     	Mockito.when(eventSourceDao.getEventSource(Mockito.any(EventSource.class))).thenReturn(esRtn);
     	Mockito.when(eventObjectDao.getEventObject(Mockito.any(EventObject.class))).thenReturn(eoRtn);
@@ -313,7 +315,7 @@ public class EventBehaviorListServiceTest {
     	array.add(obj);
     	EventBehavierListIn ebli = new EventBehavierListIn();
     	ebli.setEventId(1L);
-    	ebli.setAttributes(array.toJSONString());
+    	ebli.setAttributes(array);
     	ebli.setIndex(1);
     	ebli.setSize(10);
     	Mockito.when(eventDao.getEvent(Mockito.any(Event.class))).thenReturn(eventT);
@@ -346,7 +348,7 @@ public class EventBehaviorListServiceTest {
 //    	array.add(obj);
     	EventBehavierListIn ebli = new EventBehavierListIn();
     	ebli.setEventId(1L);
-    	ebli.setAttributes(array.toJSONString());
+    	ebli.setAttributes(array);
     	ebli.setIndex(1);
     	ebli.setSize(10);
     	Mockito.when(eventDao.getEvent(Mockito.any(Event.class))).thenReturn(eventT);
