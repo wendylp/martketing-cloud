@@ -65,5 +65,13 @@ public interface MongoCustomTagCategoryDao {
 	 * @return
 	 */
 	public CustomTagCategory findByCategoryId(String categoryId, Integer isDeleted);
+	
+    /**
+     * 功能描述：根据自定义标签id查询父分类
+     * 
+     * @param childrenCustomTagList
+     * @return
+     */
+    public CustomTagCategory findByChildrenCustomTagList(String childrenCustomTagList);
 
 }

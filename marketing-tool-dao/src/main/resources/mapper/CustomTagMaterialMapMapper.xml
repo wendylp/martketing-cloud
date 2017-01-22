@@ -106,5 +106,25 @@
 	
 	<!-- 其它SQL语句 -->
 	
+	<!-- 根据物料属性进行物理删除 -->
+	<delete id="deleteByMaterialParam" parameterType="java.lang.String">
+		DELETE 
+		FROM custom_tag_material_map 
+		<where>
+			material_code = #{materialCode}
+			AND material_type = #{materialType}
+		</where>
+	</delete>
+	
+	<!-- 通过物料参数获取标签ID -->
+	<select id="getCustomTagIdByMaterialParam" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT custom_tag_id
+		FROM custom_tag_material_map
+		<where>
+			material_code = #{materialCode}
+			AND material_type = #{materialType}
+		</where>
+	</select>
+	
 	
 </mapper>

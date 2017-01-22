@@ -115,6 +115,33 @@
       <OnMismatch>ACCEPT</OnMismatch>
     </filter>
   </appender>
+  
+  
+  
+   <!-- 设置消息日志输出路径及规则 -->
+  <appender name="MESSAGEFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- encoder defaults to ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+    <encoder>
+        <pattern>
+            [ %-5level] [%thread] [%date{yyyy-MM-dd HH:mm:ss}] %logger{96} [%line] - %msg%n
+        </pattern>
+        <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- rollover daily 配置日志所生成的目录以及生成文件名的规则 -->
+      <fileNamePattern>${LOG_FILE}/messagemktlog-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- or whenever the file size reaches 64 MB -->
+        <maxFileSize>64 MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+    <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
+    <prudent>true</prudent>
+  </appender>
+  
+  
+  
   <!-- 配置打印sql 打印结果：设置级别为TRACE-->
     <logger name="cn.rongcapital.mkt.dao" level="INFO" additivity="true">
         <!-- 打印sql日志到sql日志文件 -->
@@ -138,6 +165,11 @@
         additivity="true">
         <appender-ref ref="SQLFILE" />
         <appender-ref ref="STDOUT" />
+    </logger>
+    
+    
+    <logger name="cn.rongcapital.mkt.event.interceptor.CountInterceptor" level="info" additivity="true">
+        <appender-ref ref="MESSAGEFILE" />
     </logger>
     
   <!-- Enable FILE and STDOUT appenders for all log messages.

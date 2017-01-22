@@ -146,27 +146,14 @@ public class CustomTag implements Serializable {
     public void setCoverFrequency(Integer coverFrequency) {
         this.coverFrequency = coverFrequency;
     }
-    
+
+    @Override
+    public String toString() {
+        return "CustomTag [id=" + id + ", customTagId=" + customTagId + ", customTagName=" + customTagName
+                + ", customTagType=" + customTagType + ", parentId=" + parentId + ", isDeleted=" + isDeleted
+                + ", recommendFlag=" + recommendFlag + ", createTime=" + createTime + ", updateTime=" + updateTime
+                + ", customTagSource=" + customTagSource + ", coverNumber=" + coverNumber + ", coverFrequency="
+                + coverFrequency + "]";
+    }
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

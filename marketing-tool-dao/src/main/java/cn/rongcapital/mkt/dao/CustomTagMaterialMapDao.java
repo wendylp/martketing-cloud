@@ -1,14 +1,18 @@
 /*************************************************
- * @功能简述: DAO接口类
+ * @功能简述: 自定义标签与物料关系映射DAO接口类
  * @项目名称: marketing cloud
  * @see: 
- * @author: 宋世涛
+ * @author: 王伟强
  * @version: 0.0.1
- * @date: 2016/5/16
+ * @date: 2017/1/18
  * @复审人: 
 *************************************************/
 
 package cn.rongcapital.mkt.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CustomTagMaterialMap;
@@ -34,4 +38,20 @@ public interface CustomTagMaterialMapDao extends BaseDao<CustomTagMaterialMap>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	/**
+	 * 通过参数进行物理删除
+	 * @param materialCode	物料code
+	 * @param materialType	物料类型
+	 * @return
+	 */
+	int deleteByMaterialParam(@Param("materialCode") String materialCode,@Param("materialType")String materialType);
+	
+	/**
+	 * 通过物料参数获取标签ID
+	 * @param materialCode
+	 * @param materialType
+	 * @return
+	 */
+	List<String> getCustomTagIdByMaterialParam(@Param("materialCode") String materialCode,@Param("materialType")String materialType);
 }

@@ -3,31 +3,59 @@ package cn.rongcapital.mkt.po;
 
 import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
-
+/*************************************************
+ * @功能简述: 自定义标签与物料关系映射pojo
+ * @项目名称: marketing cloud
+ * @see:
+ * @author: 王伟强
+ * @version: 0.0.1
+ * @date: 2017/1/18
+ * @复审人:
+ *************************************************/
 public class CustomTagMaterialMap extends BaseQuery {
-    private Long id;
+	
+	private static final long serialVersionUID = 1L;
 
-    private String customTagId;
+	private Long id;
 
-    private String customTagName;
+    private String customTagId;		//标签ID
 
-    private String materialCode;
+    private String customTagName;	//标签名称
 
-    private String materialType;
+    private String materialCode;	//物料code
 
-    private Integer status;
+    private String materialType;	//物料类型
 
-    private Date createTime;
+    private Integer status;			//状态
+    
+    private Date createTime;		//创建时间
 
-    private String reserve1;
+    private String reserve1;		//备用字段
 
-    private String reserve2;
+    private String reserve2;		//备用字段
 
-    private String reserve3;
+    private String reserve3;		//备用字段
 
-    private String reserve4;
+    private String reserve4;		//备用字段
+    
+    
+    public CustomTagMaterialMap() {
+	}
+    
 
-    public Long getId() {
+	public CustomTagMaterialMap(String customTagId, String customTagName, String materialCode, String materialType,
+			Integer status, Date createTime) {
+		this.customTagId = customTagId;
+		this.customTagName = customTagName;
+		this.materialCode = materialCode;
+		this.materialType = materialType;
+		this.status = status;
+		this.createTime = createTime;
+	}
+
+
+
+	public Long getId() {
         return id;
     }
 
