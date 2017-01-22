@@ -8,8 +8,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -20,13 +18,13 @@ import cn.rongcapital.mkt.mongodao.MongoCustomTagDao;
 import cn.rongcapital.mkt.po.TagValueCount;
 import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
-import cn.rongcapital.mkt.service.TagSegmentFuzzyListService;
+import cn.rongcapital.mkt.service.TagCampaignFuzzyListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.out.CustomTagSegmentOut;
-import cn.rongcapital.mkt.vo.out.SystemTagSegmentOut;
+import cn.rongcapital.mkt.vo.out.CustomTagCampaignOut;
+import cn.rongcapital.mkt.vo.out.SystemTagCampaignOut;
 
 @Service
-public class TagSegmentFuzzyListServiceImpl implements TagSegmentFuzzyListService {
+public class TagCampaignFuzzyListServiceImpl implements TagCampaignFuzzyListService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -42,15 +40,15 @@ public class TagSegmentFuzzyListServiceImpl implements TagSegmentFuzzyListServic
     private MongoCustomTagDao mongoCustomTagDao;
 
     /**
-     * 功能描述：细分分析---标签搜索
+     * 功能描述：标签查询、 自定义标签查询 活动编排
      * 
-     * 接口:mkt.tag.segment.fuzzy.list
+     * 接口：mkt.tag.campaign.fuzzy.list
      * 
      * @param name
      * @return
      */
     @Override
-    public BaseOutput tagSegmentFuzzyListGet(String name) {
+    public BaseOutput tagCampaignFuzzyListGet(String name) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ONE, null);
         Map<String, Object> map = new HashMap<String, Object>();
@@ -84,22 +82,24 @@ public class TagSegmentFuzzyListServiceImpl implements TagSegmentFuzzyListServic
 
         TagValueCount tagValueCountSelect = new TagValueCount();
         tagValueCountSelect.setTagValue(name);
+        // 设置只搜索标签值
+        tagValueCountSelect.setIsTag("0");
         tagValueCountSelect.setPageSize(SIZE);
         List<TagValueCount> tagValueCountLists = tagValueCountDao.selectFuzzyTagValue(tagValueCountSelect);
 
 
         if (tagValueCountLists != null && tagValueCountLists.size() > 0) {
             // 设置数量
-
             result.setTotal(tagValueCountLists.size());
+
             for (TagValueCount tagValueCountList : tagValueCountLists) {
                 // 设置输出
-                SystemTagSegmentOut systemTagSegmentOut = new SystemTagSegmentOut(tagValueCountList.getTagId(),
+                SystemTagCampaignOut systemTagCampaignOut = new SystemTagCampaignOut(tagValueCountList.getTagId(),
                         tagValueCountList.getTagName(), tagValueCountList.getTagValue(), tagValueCountList.getTagPath(),
-                        tagValueCountList.getIsTag(), tagValueCountList.getSearchMod(),
                         tagValueCountList.getTagValueSeq());
-                result.getData().add(systemTagSegmentOut);
+                result.getData().add(systemTagCampaignOut);
             }
+
             // 设置总数
             result.setTotalCount(tagValueCountDao.selectFuzzyTagValueCount(tagValueCountSelect));
         }
@@ -134,14 +134,13 @@ public class TagSegmentFuzzyListServiceImpl implements TagSegmentFuzzyListServic
                     customTagCategoryName = customTagCategory.getCustomTagCategoryName();
                 }
 
-                CustomTagSegmentOut customTagSegmentOut = new CustomTagSegmentOut(customTagList.getCustomTagId(),
+                CustomTagCampaignOut customTagCampaignOut = new CustomTagCampaignOut(customTagList.getCustomTagId(),
                         customTagList.getCustomTagName(), tagPath, customTagCategoryId, customTagCategoryName);
-                result.getData().add(customTagSegmentOut);
+                result.getData().add(customTagCampaignOut);
             }
             result.setTotalCount(Integer.valueOf((int) mongoCustomTagDao.countByCustomTagNameFuzzy(name)));
         }
 
         return result;
     }
-
 }
