@@ -11,6 +11,8 @@
  *************************************************/
 package cn.rongcapital.mkt.event.api;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -102,4 +104,16 @@ public interface EventWebService {
     @POST
     @Path("/mkt.event.behavior.list")
 	EventBehaviorOut getEventBehavierList(@Valid EventBehavierListIn eventBehavierListIn);
+    
+    /**
+     * @author guozhenchao
+     * @功能简述: 通过物料的相关属性，返回物料、事件、主体的相关关联关系及相关具体信息。通过物料的唯一标识，查询该物料在指定事件段内所发生的事件以及相关的主体信息。(API调用)
+     * @param eventBehavierListIn
+     * @return
+     */
+    @GET
+    @Path("/mkt.event.behavior.list.get")
+    BaseOutput getEventBehavierListGet(@NotNull @QueryParam("object_code") String objectCode,
+			@NotNull @QueryParam("qrcode_id") Long qrcodeId, @NotNull @QueryParam("begin_time") Long beginTime, @NotNull @QueryParam("end_time") Long endTime,
+			@NotNull @QueryParam("index") Integer index, @NotNull @QueryParam("size") Integer size);
 }
