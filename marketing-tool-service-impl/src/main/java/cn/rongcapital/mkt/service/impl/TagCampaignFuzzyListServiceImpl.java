@@ -117,7 +117,7 @@ public class TagCampaignFuzzyListServiceImpl implements TagCampaignFuzzyListServ
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ZERO, null);
 
-        List<CustomTag> customTagLists = mongoCustomTagDao.findByCustomTagNameFuzzy(name, SIZE);
+        List<CustomTag> customTagLists = mongoCustomTagDao.findByCustomTagNameFuzzyAndCoverNumber(name, SIZE);
 
         if (CollectionUtils.isNotEmpty(customTagLists)) {
             result.setTotal(customTagLists.size());
@@ -138,7 +138,7 @@ public class TagCampaignFuzzyListServiceImpl implements TagCampaignFuzzyListServ
                         customTagList.getCustomTagName(), tagPath, customTagCategoryId, customTagCategoryName);
                 result.getData().add(customTagCampaignOut);
             }
-            result.setTotalCount(Integer.valueOf((int) mongoCustomTagDao.countByCustomTagNameFuzzy(name)));
+            result.setTotalCount(Integer.valueOf((int) mongoCustomTagDao.countByCustomTagNameFuzzyAndCoverNumber(name)));
         }
 
         return result;
