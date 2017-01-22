@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,code as code,name as name,channel_type as channelType,sms_type as smsType,sms_templet_id as smsTempletId,sms_templet_content as smsTempletContent,sms_sign_id as smsSignId,sms_sign_name as smsSignName,status as status,creator as creator,create_time as createTime,update_user as updateUser,update_time as updateTime]]>
+		<![CDATA[ id as id,code as code,name as name,channel_type as channelType,sms_type as smsType,sms_templet_id as smsTempletId,sms_templet_content as smsTempletContent,sms_sign_id as smsSignId,sms_sign_name as smsSignName,status as status,creator as creator,create_time as createTime,update_user as updateUser,update_time as updateTime,use_status as useStatus]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -27,6 +27,7 @@
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateUser != null"><![CDATA[ AND update_user = #{updateUser}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="useStatus != null"><![CDATA[ AND use_status = #{useStatus}]]></if>
 		</where>
 	</sql>
 	
@@ -49,14 +50,15 @@
 		    	<if test="smsSignName != null"><![CDATA[sms_sign_name = #{smsSignName},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
 		    	<if test="creator != null"><![CDATA[creator = #{creator},]]></if>
-		    	<if test="updateUser != null"><![CDATA[update_user = #{updateUser}]]></if>
+		    	<if test="updateUser != null"><![CDATA[update_user = #{updateUser},]]></if>
+		    	<if test="useStatus != null"><![CDATA[use_status = #{useStatus}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SmsMaterial" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO sms_material (code,name,channel_type,sms_type,sms_templet_id,sms_templet_content,sms_sign_id,sms_sign_name,creator,create_time,update_user)
+			INSERT INTO sms_material (code,name,channel_type,sms_type,sms_templet_id,sms_templet_content,sms_sign_id,sms_sign_name,creator,create_time,update_user,use_status)
 			VALUES
 			(
 			  #{code},
@@ -69,7 +71,8 @@
 			  #{smsSignName},
 			  #{creator},
 			  now(),
-			  #{updateUser}
+			  #{updateUser},
+			  #{useStatus}
 			)
 		]]>
 	</insert>

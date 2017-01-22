@@ -12,6 +12,7 @@
 package cn.rongcapital.mkt.event.service.impl;
 
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +21,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.event.EventDao;
@@ -34,7 +36,7 @@ import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.event.vo.out.EventBehaviorsOut;
 import cn.rongcapital.mkt.material.coupon.service.impl.CouponSaveServiceImpl;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehaviors;
-import com.alibaba.druid.util.StringUtils;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -62,7 +64,7 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 
 		EventBehaviorOut eventBehaviorOut = new EventBehaviorOut(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO);
-		String attribute = eventBehavierListIn.getAttributes();
+		JSONArray attribute = eventBehavierListIn.getAttributes();
 		Long eventId = eventBehavierListIn.getEventId();
 		Integer index = eventBehavierListIn.getIndex();
 		Integer size = eventBehavierListIn.getSize();
@@ -115,7 +117,7 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 		Query queryAll = new Query();
 		Criteria cri = null;
 		try {
-			if(!StringUtils.isEmpty(attribute)){
+			if(attribute != null){
 				cri = getCriteria(attribute);
 				query.addCriteria(cri);
 				queryAll.addCriteria(cri);
@@ -137,26 +139,23 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 			eventBehavior.setEventName(eventDB.getName());
 			eventBehavior.setSourceName(esDb.getName());
 			eventBehavior.setObjectName(eoDb.getName());
-//			String object = eventBehavior.getObject();
-//			eventBehavior.setInstanceName(instanceName(object, eoDb.getInstanceNameProp()));
 			out = new EventBehaviorsOut();
 			BeanUtils.copyProperties(eventBehavior, out);
 			eventBehaviorOut.getListItems().add(out);
 		}
-		eventBehaviorOut.setTotal(eventBehaviorOut.getData().size());
+		eventBehaviorOut.setTotal(eventBehaviorOut.getListItems().size());
 		eventBehaviorOut.setTotalCount(new Long(totle).intValue());
 
 		return eventBehaviorOut;
 	}
 
-	private Criteria getCriteria(String attribute) {
+	private Criteria getCriteria(JSONArray attribute) {
 		Criteria cri = null;
 		cri = Criteria.where("subscribed").is(true);
-		JSONArray condition = JSONArray.parseArray(attribute);
-		int conditionSize = condition.size();
+		int conditionSize = attribute.size();
 		if (conditionSize > 0) {
 			for (int i = 0; i < conditionSize; i++) {
-				JSONObject jsObject = condition.getJSONObject(i);
+				JSONObject jsObject = attribute.getJSONObject(i);
 				String nameKey = jsObject.getString("name");
 				String field = ATTRIBUTES + nameKey;
 				JSONArray jsonArry = jsObject.getJSONArray("values");
