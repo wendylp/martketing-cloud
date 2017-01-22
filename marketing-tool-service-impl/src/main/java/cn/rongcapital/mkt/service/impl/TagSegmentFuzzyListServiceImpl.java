@@ -50,7 +50,7 @@ public class TagSegmentFuzzyListServiceImpl implements TagSegmentFuzzyListServic
      * @return
      */
     @Override
-    public BaseOutput tagSegmentFuzzyListService(String name) {
+    public BaseOutput tagSegmentFuzzyListGet(String name) {
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ONE, null);
         Map<String, Object> map = new HashMap<String, Object>();

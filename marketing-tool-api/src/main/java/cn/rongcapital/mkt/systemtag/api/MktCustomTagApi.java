@@ -151,9 +151,9 @@ public class MktCustomTagApi {
      */
     @GET
     @Path("/mkt.tag.segment.fuzzy.list")
-    public BaseOutput tagSegmentFuzzyListService(@NotEmpty @QueryParam("method") String method,
+    public BaseOutput tagSegmentFuzzyListGet(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("name") String name) {
-        return tagSegmentFuzzyListService.tagSegmentFuzzyListService(name);
+        return tagSegmentFuzzyListService.tagSegmentFuzzyListGet(name);
     }
 
 }

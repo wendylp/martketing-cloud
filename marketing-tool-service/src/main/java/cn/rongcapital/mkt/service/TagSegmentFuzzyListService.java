@@ -11,5 +11,5 @@ public interface TagSegmentFuzzyListService {
      * @param name
      * @return
      */
-    public BaseOutput tagSegmentFuzzyListService(String name);
+    public BaseOutput tagSegmentFuzzyListGet(String name);
 }
