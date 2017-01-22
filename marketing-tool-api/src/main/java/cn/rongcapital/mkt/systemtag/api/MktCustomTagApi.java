@@ -33,6 +33,7 @@ import cn.rongcapital.mkt.service.CustomtagCategoryLessListService;
 import cn.rongcapital.mkt.service.CustomtagCategoryListService;
 import cn.rongcapital.mkt.service.CustomtagFuzzyNameListService;
 import cn.rongcapital.mkt.service.CustomtagListService;
+import cn.rongcapital.mkt.service.CustomtagQrcodeFuzzyListService;
 import cn.rongcapital.mkt.service.TagCampaignFuzzyListService;
 import cn.rongcapital.mkt.service.TagSegmentFuzzyListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -65,6 +66,9 @@ public class MktCustomTagApi {
     
     @Autowired
     private TagCampaignFuzzyListService tagCampaignFuzzyListService;
+    
+    @Autowired
+    private CustomtagQrcodeFuzzyListService customtagQrcodeFuzzyListService;
 
     /**
      * 功能描述：自定义分类列表
@@ -176,4 +180,21 @@ public class MktCustomTagApi {
         return tagCampaignFuzzyListService.tagCampaignFuzzyListGet(name);
     }
 
+    /**
+     * 功能描述：微信二维码，搜索自定义标签列表
+     * 
+     * @param customTagName
+     * @param index
+     * @param size
+     * @return
+     */
+    @GET
+    @Path("/mkt.customtag.qrcode.fuzzy.list")
+    public BaseOutput customtagQrcodeFuzzyListGet(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotNull @QueryParam("custom_tag_name") String customTagName,
+            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
+        return customtagQrcodeFuzzyListService.customtagQrcodeFuzzyListGet(customTagName, index, size);
+    }
 }
