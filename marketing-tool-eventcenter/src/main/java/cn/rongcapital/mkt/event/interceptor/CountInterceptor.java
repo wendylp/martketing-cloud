@@ -31,10 +31,15 @@ import redis.clients.jedis.Jedis;
 public class CountInterceptor implements ThrowsAdvice, AfterReturningAdvice {
 
     final static MetricRegistry metrics = new MetricRegistry();
-    final static Slf4jReporter reporter =
-            Slf4jReporter.forRegistry(metrics).outputTo(LoggerFactory.getLogger(CountInterceptor.class))
-                    .convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS).build();
     
+    static 
+    {
+       Slf4jReporter reporter =
+                Slf4jReporter.forRegistry(metrics).outputTo(LoggerFactory.getLogger(CountInterceptor.class))
+                        .convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS).build();
+        reporter.start(5, TimeUnit.MINUTES);
+        
+    }
     
     /*
      * (non-Javadoc)
@@ -46,7 +51,7 @@ public class CountInterceptor implements ThrowsAdvice, AfterReturningAdvice {
     public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
         // TODO Auto-generated method stub 
         ReportI ReportIAnnotation = AnnotationUtils.findAnnotation(getTargetMed(target,method), ReportI.class);
-        reporter.start(30, TimeUnit.SECONDS);
+       
         Counter successJobs = metrics.counter(ReportIAnnotation.value()+",SUCCESS");
         successJobs.inc();
     
@@ -60,7 +65,6 @@ public class CountInterceptor implements ThrowsAdvice, AfterReturningAdvice {
     public void afterThrowing(Method method, Object[] args, Object target, RuntimeException ex) throws Throwable {
         ReportI ReportIAnnotation = AnnotationUtils.findAnnotation(getTargetMed(target,method), ReportI.class);
         Counter failsJobs = metrics.counter(ReportIAnnotation.value()+",FAILS");
-        reporter.start(30, TimeUnit.SECONDS);
         failsJobs.inc();
         
         JedisClient.incr(ReportIAnnotation.value()+"_Full_F"); //获取整个集群的失败数量
