@@ -35,14 +35,21 @@ public class DefaultErrorHandlingServiceActivator {
      {
          Throwable throwable= errorMessage.getPayload();
        //LOGGER.info(String.format("message: %s,statck trace: %s",throwable.getMessage(),ExceptionUtils.getFullStackTrace(throwable)));
-         if(throwable instanceof MessagingException)
+        if(throwable instanceof MessagingException)
          {
              Message<?> failedMessage=((MessagingException)throwable).getFailedMessage();
              if(failedMessage !=null)
              {   
                  String json="{\"payload\":"+failedMessage.getPayload()+",\"header\":\""+
                failedMessage.getHeaders().get("eventCenter.eventType")+"\",\"message\":\""+throwable.getMessage()+"\"}";
-                 mongoTemplate.insert(JSON.parse(json),errinfo);
+                Object object =null; // 为了不让error队列阻塞
+                try {
+                    object = JSON.parse(json);
+                } catch (Exception e) {
+                    object = JSON.parse("{\"payload\":\"消息体出错不符合JSON 格式,\",,\"header\":\""
+                            + failedMessage.getHeaders().get("eventCenter.eventType") + "\",\"message\":\"error\"}");
+                }
+                 mongoTemplate.insert(object,errinfo);
              }
              
          }
