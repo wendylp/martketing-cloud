@@ -97,6 +97,13 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
                 new Query(Criteria.where("customTagCategoryId").is(categoryId).and(IS_DELETED).is(isDeleted)),
                 CUSTOM_TAG_CATEGORY_CLASS);
     }
+    
+    @Override
+    public CustomTagCategory findByChildrenCustomTagList(String childrenCustomTagList) {
+        return mongoTemplate.findOne(new Query(
+                Criteria.where(CHILDREN_CUSTOM_TAG_LIST).is(childrenCustomTagList).and(IS_DELETED).is(DATA_VALID)),
+                CUSTOM_TAG_CATEGORY_CLASS);
+    }
 
     /**
      * 功能描述：根据对象生成对象的mongodb查询条件
