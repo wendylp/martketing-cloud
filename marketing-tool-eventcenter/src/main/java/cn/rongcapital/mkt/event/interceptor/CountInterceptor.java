@@ -21,7 +21,10 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Slf4jReporter;
 
+import cn.rongcapital.mkt.common.jedis.JedisClient;
+import cn.rongcapital.mkt.common.jedis.JedisConnectionManager;
 import cn.rongcapital.mkt.event.service.EventMCReceviceProcessorImpl;
+import redis.clients.jedis.Jedis;
 
 @Aspect
 @Component
@@ -31,7 +34,8 @@ public class CountInterceptor implements ThrowsAdvice, AfterReturningAdvice {
     final static Slf4jReporter reporter =
             Slf4jReporter.forRegistry(metrics).outputTo(LoggerFactory.getLogger(CountInterceptor.class))
                     .convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS).build();
-
+    
+    
     /*
      * (non-Javadoc)
      * 
@@ -45,6 +49,12 @@ public class CountInterceptor implements ThrowsAdvice, AfterReturningAdvice {
         reporter.start(30, TimeUnit.SECONDS);
         Counter successJobs = metrics.counter(ReportIAnnotation.value()+",SUCCESS");
         successJobs.inc();
+    
+       JedisClient.incr(ReportIAnnotation.value()+"_Full_S"); //获取整个集群的成功数量
+       
+       JedisClient.hset(ReportIAnnotation.value()+"_Single_S", ConfigBoot.getIpPort(), String.valueOf(successJobs.getCount())); //获取单独的成功数量
+       
+        
     }
 
     public void afterThrowing(Method method, Object[] args, Object target, RuntimeException ex) throws Throwable {
@@ -52,6 +62,9 @@ public class CountInterceptor implements ThrowsAdvice, AfterReturningAdvice {
         Counter failsJobs = metrics.counter(ReportIAnnotation.value()+",FAILS");
         reporter.start(30, TimeUnit.SECONDS);
         failsJobs.inc();
+        
+        JedisClient.incr(ReportIAnnotation.value()+"_Full_F"); //获取整个集群的失败数量
+        JedisClient.hset(ReportIAnnotation.value()+"_Single_F", ConfigBoot.getIpPort(), String.valueOf(failsJobs.getCount()));//获取单独的失败数量
     }
 
 
