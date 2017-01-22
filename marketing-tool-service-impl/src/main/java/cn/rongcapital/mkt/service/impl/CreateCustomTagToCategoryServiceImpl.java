@@ -8,7 +8,6 @@ import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.service.CreateCustomTagToCategoryService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.CustomTagCreateIn;
-import com.sun.tools.corba.se.idl.InterfaceGen;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
