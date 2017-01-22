@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.mongodaoimpl;
 
-import cn.rongcapital.mkt.common.util.CamelNameUtil;
-import cn.rongcapital.mkt.mongodao.MongoCustomTagDao;
-import cn.rongcapital.mkt.po.mongodb.CustomTag;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
+import cn.rongcapital.mkt.common.util.CamelNameUtil;
+import cn.rongcapital.mkt.mongodao.MongoCustomTagDao;
+import cn.rongcapital.mkt.po.mongodb.CustomTag;
 
 /**
  * Created by byf on 1/15/17.
@@ -140,6 +140,19 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
         return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
     }
     
+    @Override
+    public List<CustomTag> findByCustomTagNameFuzzy(String customTagName, Integer size) {
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName)
+                .and(COVER_NUMBER).gt(0)).limit(size);
+        return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
+    }
+
+    @Override
+    public long countByCustomTagNameFuzzy(String customTagName) {
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName)
+                .and(COVER_NUMBER).gt(0));
+        return mongoTemplate.count(query, CUSTOM_TAG_CLASS);
+    }
     
 
     /**
