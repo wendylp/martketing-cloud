@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.tag.service.impl;
 
 import javax.ws.rs.core.SecurityContext;
 
+import org.springframework.stereotype.Service;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.tag.service.CustomtagCategoryCreateService;
@@ -19,6 +21,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  * 最后修改日期: 2017-1-20
  * @复审人: 丛树林
   *************************************************/
+@Service
 public class CustomtagCategoryCreateServiceImpl implements CustomtagCategoryCreateService {
 	
     /**
