@@ -12,6 +12,8 @@
 package cn.rongcapital.mkt.event.api.web.impl;
 
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -105,5 +107,10 @@ public final class EventWebServiceImpl implements EventWebService {
 	@Override
 	public EventBehaviorOut getEventBehavierList(EventBehavierListIn eventBehavierListIn) {
 		return eventBehavierListService.getEventBehavierList(eventBehavierListIn);
+	}
+
+	@Override
+	public BaseOutput getEventBehavierListGet(String objectCode, Long qrcodeId, Long beginTime, Long endTime, Integer index, Integer size) {
+		return eventBehavierListService.getEventBehavierListGet(objectCode, qrcodeId, beginTime, endTime, index, size);
 	}
 }

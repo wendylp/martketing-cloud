@@ -36,6 +36,7 @@ import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.event.vo.out.EventBehaviorsOut;
 import cn.rongcapital.mkt.material.coupon.service.impl.CouponSaveServiceImpl;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehaviors;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -139,13 +140,11 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 			eventBehavior.setEventName(eventDB.getName());
 			eventBehavior.setSourceName(esDb.getName());
 			eventBehavior.setObjectName(eoDb.getName());
-//			String object = eventBehavior.getObject();
-//			eventBehavior.setInstanceName(instanceName(object, eoDb.getInstanceNameProp()));
 			out = new EventBehaviorsOut();
 			BeanUtils.copyProperties(eventBehavior, out);
 			eventBehaviorOut.getListItems().add(out);
 		}
-		eventBehaviorOut.setTotal(eventBehaviorOut.getData().size());
+		eventBehaviorOut.setTotal(eventBehaviorOut.getListItems().size());
 		eventBehaviorOut.setTotalCount(new Long(totle).intValue());
 
 		return eventBehaviorOut;
@@ -170,13 +169,42 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 		return cri;
 	}
 
-//	private String instanceName(String object, String instanceNameProp) {
-//
-//		JSONObject jsonObject = JSONObject.parseObject(object);
-//		String instanceName = jsonObject.getString(instanceNameProp);
-//		if (StringUtils.isEmpty(instanceName)) {
-//			instanceName = "";
-//		}
-//		return instanceName;
-//	}
+	@Override
+	public BaseOutput getEventBehavierListGet(String objectCode, Long qrcodeId, Long beginTime, Long endTime, Integer index, Integer size) {
+		
+		BaseOutput eventBehaviorOut = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
+                null);
+		if(beginTime.compareTo(endTime) > 0){
+			logger.error("起始时间大于结束时间");
+			eventBehaviorOut.setCode(ApiErrorCode.DATE_VALIDATE_ERROR.getCode());
+			eventBehaviorOut.setMsg(ApiErrorCode.DATE_VALIDATE_ERROR.getMsg());
+			return eventBehaviorOut;
+		}
+		
+		Criteria cri = getCriteria(objectCode, qrcodeId, beginTime, endTime);
+		int proIndex = (index == null || index.intValue() == 0) ? 1 : index;
+		int proSize = (size == null || size.intValue() == 0) ? 10 : size;
+		Query query = new Query();
+		query.addCriteria(cri);
+		Query queryAll = new Query();
+		queryAll.addCriteria(cri);
+		query.skip((proIndex - 1) * proSize);
+		query.limit(proSize);
+		List<EventBehaviors> list = mongoOperations.find(query, EventBehaviors.class);
+		long totle = mongoOperations.count(queryAll, EventBehaviors.class);
+		for (EventBehaviors eventBehavior : list) {
+			eventBehaviorOut.getData().add(eventBehavior);
+		}
+		eventBehaviorOut.setTotal(eventBehaviorOut.getData().size());
+		eventBehaviorOut.setTotalCount(new Long(totle).intValue());
+
+		return eventBehaviorOut;
+	}
+	
+	private Criteria getCriteria(String objectCode, Long qrcodeId,Long startTime, Long endTime) {
+		Criteria cri = null;
+		cri = Criteria.where("subscribed").is(true);
+		cri.and("object.code").is(objectCode).and("object.attributes.qrcode_id").is(qrcodeId).and("time").gte(startTime).lte(endTime);
+		return cri;
+	}
 }

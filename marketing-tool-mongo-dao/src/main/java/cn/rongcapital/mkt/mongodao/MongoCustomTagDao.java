@@ -57,7 +57,7 @@ public interface MongoCustomTagDao {
     List<String> findCustomTagNames(CustomTag paramCustomTag);
 
     /**
-     * 功能描述：根据自定义分类id查询有效数据
+     * 功能描述：根据自定义标签id查询有效数据
      * 
      * @param customTagId
      * @return
@@ -65,7 +65,7 @@ public interface MongoCustomTagDao {
     public CustomTag findByCustomTagId(String customTagId);
     
     /**
-     * 功能描述：根据自定义分类Id及删除状态查询数据
+     * 功能描述：根据自定义标签Id及删除状态查询数据
      * 
      * @param customTagId
      * @param isDeleted
@@ -74,7 +74,7 @@ public interface MongoCustomTagDao {
     public CustomTag findByCustomTagId(String customTagId, Integer isDeleted);
     
     /**
-     * 功能描述：根据自定义分类id list查询有效数据
+     * 功能描述：根据自定义标签id list查询有效数据
      * 
      * @param customTagList
      * @return
@@ -82,7 +82,7 @@ public interface MongoCustomTagDao {
     public List<CustomTag> findByCustomTagIdList(List<String> customTagList);
     
     /**
-     * 功能描述：根据自定义分类id list查询有效数据,按覆盖人数排序，带有分页功能
+     * 功能描述：根据自定义标签id list查询有效数据,按覆盖人数排序，带有分页功能
      * 
      * @param customTagList
      * @param index
@@ -90,5 +90,48 @@ public interface MongoCustomTagDao {
      * @return
      */
     public List<CustomTag> findByCustomTagIdList(List<String> customTagList, Integer index, Integer size);
+    
+    /**
+     * 功能描述：根据自定义标签id list查询有效数据并模糊搜索自定义标签name
+     * 
+     * @param customTagList
+     * @param customTagName
+     * @return
+     */
+    public List<CustomTag> findByCustomTagIdListAndNameFuzzy(List<String> customTagList, String customTagName);
+    
+    /**
+     * 功能描述：模糊查询自定义标签name，有效数据 过滤覆盖人数小于零
+     * 
+     * @param customTagName
+     * @return
+     */
+    public List<CustomTag> findByCustomTagNameFuzzyAndCoverNumber(String customTagName, Integer size);
+
+    /**
+     * 功能描述：统计模糊查询自定义标签name的数据条数 过滤覆盖人数小于零
+     * 
+     * @param customTagName
+     * @return
+     */
+    public long countByCustomTagNameFuzzyAndCoverNumber(String customTagName);
+    
+    /**
+     * 功能描述：模糊搜索自定义标签名，如果index和size有一个为空则返回全部数据
+     * @param customTagName
+     * @param index
+     * @param size
+     * @return
+     */
+    public List<CustomTag> findByCustomTagNameFuzzy(String customTagName, Integer index, Integer size);
+    
+    /**
+     * 功能描述：统计总数 ：模糊搜索自定义标签名，如果index和size有一个为空则返回全部数据
+     * 
+     * @param customTagName
+     * @return
+     */
+    public long countByCustomTagNameFuzzy(String customTagName);
+
     
 }
