@@ -33,6 +33,7 @@ import cn.rongcapital.mkt.service.CustomtagCategoryLessListService;
 import cn.rongcapital.mkt.service.CustomtagCategoryListService;
 import cn.rongcapital.mkt.service.CustomtagFuzzyNameListService;
 import cn.rongcapital.mkt.service.CustomtagListService;
+import cn.rongcapital.mkt.service.TagCampaignFuzzyListService;
 import cn.rongcapital.mkt.service.TagSegmentFuzzyListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -61,6 +62,9 @@ public class MktCustomTagApi {
     
     @Autowired
     private TagSegmentFuzzyListService tagSegmentFuzzyListService;
+    
+    @Autowired
+    private TagCampaignFuzzyListService tagCampaignFuzzyListService;
 
     /**
      * 功能描述：自定义分类列表
@@ -154,6 +158,22 @@ public class MktCustomTagApi {
     public BaseOutput tagSegmentFuzzyListGet(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("name") String name) {
         return tagSegmentFuzzyListService.tagSegmentFuzzyListGet(name);
+    }
+    
+    
+    /**
+     * 功能描述：标签查询、 自定义标签查询 活动编排
+     * 
+     * 接口：mkt.tag.campaign.fuzzy.list
+     * 
+     * @param name
+     * @return
+     */
+    @GET
+    @Path("/mkt.tag.campaign.fuzzy.list")
+    public BaseOutput tagCampaignFuzzyListService(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("name") String name) {
+        return tagCampaignFuzzyListService.tagCampaignFuzzyListGet(name);
     }
 
 }
