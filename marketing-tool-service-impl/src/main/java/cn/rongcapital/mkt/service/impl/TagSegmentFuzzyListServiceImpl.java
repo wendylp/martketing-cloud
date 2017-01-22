@@ -1,12 +1,15 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -24,6 +27,8 @@ import cn.rongcapital.mkt.vo.out.SystemTagSegmentOut;
 
 @Service
 public class TagSegmentFuzzyListServiceImpl implements TagSegmentFuzzyListService {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final Integer SIZE = 10;
 
@@ -51,16 +56,16 @@ public class TagSegmentFuzzyListServiceImpl implements TagSegmentFuzzyListServic
         Map<String, Object> map = new HashMap<String, Object>();
 
         // 设置系统标签搜索结果
-        Map<String, Object> systemTagMap = systemTagNameFuzzyListGet(name);
-        map.put("system_total", systemTagMap.get("system_total"));
-        map.put("system_total_count", systemTagMap.get("system_total_count"));
-        map.put("system_tag", systemTagMap.get("system_tag"));
+        BaseOutput systemTagBaseOutput = systemTagNameFuzzyListGet(name);
+        map.put("system_total", systemTagBaseOutput.getTotal());
+        map.put("system_total_count", systemTagBaseOutput.getTotalCount());
+        map.put("system_tag", systemTagBaseOutput.getData());
 
         // 设置自定义标签搜索结果
-        Map<String, Object> customTagMap = customTagNameFuzzyListGet(name);
-        map.put("custom_total", customTagMap.get("custom_total"));
-        map.put("custom_total_count", customTagMap.get("custom_total_count"));
-        map.put("custom_tag", customTagMap.get("custom_tag"));
+        BaseOutput customTagBaseOutput = customTagNameFuzzyListGet(name);
+        map.put("custom_total", customTagBaseOutput.getTotal());
+        map.put("custom_total_count", customTagBaseOutput.getTotalCount());
+        map.put("custom_tag", customTagBaseOutput.getData());
 
         result.getData().add(map);
 
@@ -73,13 +78,9 @@ public class TagSegmentFuzzyListServiceImpl implements TagSegmentFuzzyListServic
      * @param name
      * @return
      */
-    private Map<String, Object> systemTagNameFuzzyListGet(String name) {
-
-        Map<String, Object> result = new HashMap<String, Object>();
-        Integer systemTotal = 0;
-        Integer systemTotalCount = 0;
-
-        List<SystemTagSegmentOut> data = new ArrayList<SystemTagSegmentOut>();
+    private BaseOutput systemTagNameFuzzyListGet(String name) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                ApiConstant.INT_ZERO, null);
 
         TagValueCount tagValueCountSelect = new TagValueCount();
         tagValueCountSelect.setTagValue(name);
@@ -90,22 +91,19 @@ public class TagSegmentFuzzyListServiceImpl implements TagSegmentFuzzyListServic
         if (tagValueCountLists != null && tagValueCountLists.size() > 0) {
             // 设置数量
 
-            systemTotal = tagValueCountLists.size();
+            result.setTotal(tagValueCountLists.size());
             for (TagValueCount tagValueCountList : tagValueCountLists) {
                 // 设置输出
                 SystemTagSegmentOut systemTagSegmentOut = new SystemTagSegmentOut(tagValueCountList.getTagId(),
                         tagValueCountList.getTagName(), tagValueCountList.getTagValue(), tagValueCountList.getTagPath(),
                         tagValueCountList.getIsTag(), tagValueCountList.getSearchMod(),
                         tagValueCountList.getTagValueSeq());
-                data.add(systemTagSegmentOut);
+                result.getData().add(systemTagSegmentOut);
             }
             // 设置总数
-            systemTotalCount = tagValueCountDao.selectFuzzyTagValueCount(tagValueCountSelect);
+            result.setTotalCount(tagValueCountDao.selectFuzzyTagValueCount(tagValueCountSelect));
         }
 
-        result.put("system_total", systemTotal);
-        result.put("system_total_count", systemTotalCount);
-        result.put("system_tag", data);
         return result;
     }
 
@@ -115,17 +113,14 @@ public class TagSegmentFuzzyListServiceImpl implements TagSegmentFuzzyListServic
      * @param name
      * @return
      */
-    private Map<String, Object> customTagNameFuzzyListGet(String name) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        Integer customTotal = 0;
-        Integer customTotalCount = 0;
-
-        List<CustomTagSegmentOut> data = new ArrayList<CustomTagSegmentOut>();
+    private BaseOutput customTagNameFuzzyListGet(String name) {
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                ApiConstant.INT_ZERO, null);
 
         List<CustomTag> customTagLists = mongoCustomTagDao.findByCustomTagNameFuzzy(name, SIZE);
 
         if (CollectionUtils.isNotEmpty(customTagLists)) {
-            customTotal = customTagLists.size();
+            result.setTotal(customTagLists.size());
             for (CustomTag customTagList : customTagLists) {
                 CustomTagCategory customTagCategory =
                         mongoCustomTagCategoryDao.findByChildrenCustomTagList(customTagList.getCustomTagId());
@@ -141,14 +136,11 @@ public class TagSegmentFuzzyListServiceImpl implements TagSegmentFuzzyListServic
 
                 CustomTagSegmentOut customTagSegmentOut = new CustomTagSegmentOut(customTagList.getCustomTagId(),
                         customTagList.getCustomTagName(), tagPath, customTagCategoryId, customTagCategoryName);
-                data.add(customTagSegmentOut);
+                result.getData().add(customTagSegmentOut);
             }
-            customTotalCount = Integer.valueOf((int) mongoCustomTagDao.countByCustomTagNameFuzzy(name));
+            result.setTotalCount(Integer.valueOf((int) mongoCustomTagDao.countByCustomTagNameFuzzy(name)));
         }
 
-        result.put("custom_total", customTotal);
-        result.put("custom_total_count", customTotalCount);
-        result.put("custom_tag", data);
         return result;
     }
 
