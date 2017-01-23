@@ -31,6 +31,7 @@ import cn.rongcapital.mkt.event.po.Event;
 import cn.rongcapital.mkt.event.po.EventObject;
 import cn.rongcapital.mkt.event.po.EventSource;
 import cn.rongcapital.mkt.event.service.EventBehaviorListService;
+import cn.rongcapital.mkt.event.vo.in.EventBehavierIn;
 import cn.rongcapital.mkt.event.vo.in.EventBehavierListIn;
 import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.event.vo.out.EventBehaviorsOut;
@@ -170,10 +171,17 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 	}
 
 	@Override
-	public BaseOutput getEventBehavierListGet(String objectCode, Long qrcodeId, Long beginTime, Long endTime, Integer index, Integer size) {
+	public BaseOutput getEventBehavierListGet(EventBehavierIn in) {
 		
 		BaseOutput eventBehaviorOut = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
                 null);
+		Long beginTime = in.getBeginTime();
+		Long endTime = in.getEndTime();
+		String objectCode = in.getObjectCode();
+		Long qrcodeId = in.getQrcodeId();
+		Integer index = in.getIndex();
+		Integer size = in.getSize();
+		
 		if(beginTime.compareTo(endTime) > 0){
 			logger.error("起始时间大于结束时间");
 			eventBehaviorOut.setCode(ApiErrorCode.DATE_VALIDATE_ERROR.getCode());
