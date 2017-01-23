@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CreupdateSegmentService;
+import cn.rongcapital.mkt.service.CustomtagListService;
 import cn.rongcapital.mkt.service.SegmentAnalysisCustomService;
 import cn.rongcapital.mkt.service.SegmentAudienctAnalysisService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
@@ -160,6 +161,10 @@ public class MktSegmentApi {
     
     @Autowired
     private SegmentAnalysisCustomService segmentAnalysisCustomService;
+    
+    @Autowired
+    private CustomtagListService customtagListService;
+    
     /**
      * 获取创建联系人表单界面中，右侧的显示列表
      * 
@@ -610,6 +615,20 @@ public class MktSegmentApi {
     @Path("/mkt.segment.analysis.top.custom.list")
     public BaseOutput getSegmentAnalysisTopCustomList(@NotNull @QueryParam("top_type") Integer topType) {
         return segmentAnalysisCustomService.getSegmentAnalysisTopCustomList(topType);
+    }
+    
+    /**
+     * 功能描述：细分中查询自定义标签列表
+     * @param customTagCategoryId
+     * 						自定义标签分类id
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.segment.customtag.get")
+    public BaseOutput getCustomtagList(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotNull @QueryParam("custom_tag_category_id") String customTagCategoryId) {
+        return customtagListService.getCustomtagList(customTagCategoryId);
     }
     
 }

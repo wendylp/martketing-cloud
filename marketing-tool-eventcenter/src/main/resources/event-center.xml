@@ -134,7 +134,8 @@
        <!-- 定义临时channel -->
 	 <int:channel id="marketingEvents_temp">
 		<int:queue/>
-		<int:interceptors>
+		<!-- channel拦截器 -->
+	<!-- 	<int:interceptors>
     <bean class="cn.rongcapital.mkt.event.activator.PayloadAwareTimingInterceptor">
 				<constructor-arg>
 					<array>
@@ -142,7 +143,7 @@
 					</array>
 				</constructor-arg>
 			</bean>  
-    </int:interceptors>
+    </int:interceptors> -->
 	 </int:channel>
 	     
      <int-amqp:inbound-channel-adapter channel="marketingEvents_temp" 
@@ -150,7 +151,7 @@
        <!-- 队列处理类  -->
 	   
 	<int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents_temp" >
-	  <int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="10"/>
+	   <int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="10"/>
 	</int:service-activator>
 	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.service.EventMCReceviceProcessorImpl"/>
 	  
@@ -178,8 +179,12 @@
 	 <int:service-activator  input-channel="error_temp" ref="defaultErrorHandServiceActivator">
 	  <int:poller max-messages-per-poll="1" task-executor="errorExecutor" fixed-rate="10"/>
 	</int:service-activator>
-	
-		
+
 	
 	<!-- rabbit end  -->
+	
+	<aop:aspectj-autoproxy/>	
+	
+   
+    
 </beans>
