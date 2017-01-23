@@ -11,8 +11,6 @@
  *************************************************/
 package cn.rongcapital.mkt.event.api;
 
-import java.util.Date;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -26,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.event.vo.in.EventBehavierIn;
 import cn.rongcapital.mkt.event.vo.in.EventBehavierListIn;
 import cn.rongcapital.mkt.event.vo.in.EventObjectVo;
 import cn.rongcapital.mkt.event.vo.in.EventRegisterIn;
@@ -111,9 +110,7 @@ public interface EventWebService {
      * @param eventBehavierListIn
      * @return
      */
-    @GET
-    @Path("/mkt.event.behavior.list.get")
-    BaseOutput getEventBehavierListGet(@NotNull @QueryParam("object_code") String objectCode,
-			@NotNull @QueryParam("qrcode_id") Long qrcodeId, @NotNull @QueryParam("begin_time") Long beginTime, @NotNull @QueryParam("end_time") Long endTime,
-			@NotNull @QueryParam("index") Integer index, @NotNull @QueryParam("size") Integer size);
+	 @POST
+	 @Path("/mkt.event.behavior.list.get")
+	 BaseOutput getEventBehavierListGet(@Valid EventBehavierIn in);
 }
