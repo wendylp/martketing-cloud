@@ -69,6 +69,8 @@ public class SegmentDetailGetServiceImplTest {
         segmentationBody.setTagName("性别");
         segmentationBody.setTagSeq(0);
         segmentationBody.setTagExclude(0);
+        segmentationBody.setTagType((byte) 0);
+        segmentationBody.setTagStatus((byte) 0);
         segmentationBody.setTagValueId("LBej3qLy_0");
         segmentationBody.setTagValueName("男");
         rsList.add(segmentationBody);
@@ -81,6 +83,8 @@ public class SegmentDetailGetServiceImplTest {
         segmentationBody.setTagName("忠诚客户");
         segmentationBody.setTagSeq(0);
         segmentationBody.setTagExclude(0);
+        segmentationBody.setTagType((byte) 0);
+        segmentationBody.setTagStatus((byte) 0);
         segmentationBody.setTagValueId("ttM3RRWl_0");
         segmentationBody.setTagValueName("是");
         rsList.add(segmentationBody);
