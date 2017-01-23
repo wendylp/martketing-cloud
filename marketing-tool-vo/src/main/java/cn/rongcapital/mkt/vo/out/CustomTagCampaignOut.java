@@ -67,6 +67,47 @@ public class CustomTagCampaignOut {
         this.customTagCategoryName = customTagCategoryName;
     }
 
+    @Override
+    public String toString() {
+        return "CustomTagCampaignOut [customTagId=" + customTagId + ", customTagName=" + customTagName + ", tagPath="
+                + tagPath + ", customTagCategoryId=" + customTagCategoryId + ", customTagCategoryName="
+                + customTagCategoryName + "]";
+    }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((customTagCategoryId == null) ? 0 : customTagCategoryId.hashCode());
+        result = prime * result + ((customTagCategoryName == null) ? 0 : customTagCategoryName.hashCode());
+        result = prime * result + ((customTagId == null) ? 0 : customTagId.hashCode());
+        result = prime * result + ((customTagName == null) ? 0 : customTagName.hashCode());
+        result = prime * result + ((tagPath == null) ? 0 : tagPath.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        CustomTagCampaignOut other = (CustomTagCampaignOut) obj;
+        if (customTagCategoryId == null) {
+            if (other.customTagCategoryId != null) return false;
+        } else if (!customTagCategoryId.equals(other.customTagCategoryId)) return false;
+        if (customTagCategoryName == null) {
+            if (other.customTagCategoryName != null) return false;
+        } else if (!customTagCategoryName.equals(other.customTagCategoryName)) return false;
+        if (customTagId == null) {
+            if (other.customTagId != null) return false;
+        } else if (!customTagId.equals(other.customTagId)) return false;
+        if (customTagName == null) {
+            if (other.customTagName != null) return false;
+        } else if (!customTagName.equals(other.customTagName)) return false;
+        if (tagPath == null) {
+            if (other.tagPath != null) return false;
+        } else if (!tagPath.equals(other.tagPath)) return false;
+        return true;
+    }
 
 }

@@ -147,5 +147,72 @@ public class CustomTagCategory implements Serializable{
     public void setChildrenCustomTagList(ArrayList<String> childrenCustomTagList) {
         this.childrenCustomTagList = childrenCustomTagList;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((childrenCustomTagCategoryList == null) ? 0 : childrenCustomTagCategoryList.hashCode());
+        result = prime * result + ((childrenCustomTagList == null) ? 0 : childrenCustomTagList.hashCode());
+        result = prime * result + ((createTime == null) ? 0 : createTime.hashCode());
+        result = prime * result + ((customTagCategoryId == null) ? 0 : customTagCategoryId.hashCode());
+        result = prime * result + ((customTagCategoryName == null) ? 0 : customTagCategoryName.hashCode());
+        result = prime * result + ((customTagCategorySource == null) ? 0 : customTagCategorySource.hashCode());
+        result = prime * result + ((customTagCategoryType == null) ? 0 : customTagCategoryType.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((isDeleted == null) ? 0 : isDeleted.hashCode());
+        result = prime * result + ((level == null) ? 0 : level.hashCode());
+        result = prime * result + ((parentId == null) ? 0 : parentId.hashCode());
+        result = prime * result + ((updateTime == null) ? 0 : updateTime.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        CustomTagCategory other = (CustomTagCategory) obj;
+        if (childrenCustomTagCategoryList == null) {
+            if (other.childrenCustomTagCategoryList != null) return false;
+        } else if (!childrenCustomTagCategoryList.equals(other.childrenCustomTagCategoryList)) return false;
+        if (childrenCustomTagList == null) {
+            if (other.childrenCustomTagList != null) return false;
+        } else if (!childrenCustomTagList.equals(other.childrenCustomTagList)) return false;
+        if (createTime == null) {
+            if (other.createTime != null) return false;
+        } else if (!createTime.equals(other.createTime)) return false;
+        if (customTagCategoryId == null) {
+            if (other.customTagCategoryId != null) return false;
+        } else if (!customTagCategoryId.equals(other.customTagCategoryId)) return false;
+        if (customTagCategoryName == null) {
+            if (other.customTagCategoryName != null) return false;
+        } else if (!customTagCategoryName.equals(other.customTagCategoryName)) return false;
+        if (customTagCategorySource == null) {
+            if (other.customTagCategorySource != null) return false;
+        } else if (!customTagCategorySource.equals(other.customTagCategorySource)) return false;
+        if (customTagCategoryType == null) {
+            if (other.customTagCategoryType != null) return false;
+        } else if (!customTagCategoryType.equals(other.customTagCategoryType)) return false;
+        if (id == null) {
+            if (other.id != null) return false;
+        } else if (!id.equals(other.id)) return false;
+        if (isDeleted == null) {
+            if (other.isDeleted != null) return false;
+        } else if (!isDeleted.equals(other.isDeleted)) return false;
+        if (level == null) {
+            if (other.level != null) return false;
+        } else if (!level.equals(other.level)) return false;
+        if (parentId == null) {
+            if (other.parentId != null) return false;
+        } else if (!parentId.equals(other.parentId)) return false;
+        if (updateTime == null) {
+            if (other.updateTime != null) return false;
+        } else if (!updateTime.equals(other.updateTime)) return false;
+        return true;
+    }
+    
+    
 }
 

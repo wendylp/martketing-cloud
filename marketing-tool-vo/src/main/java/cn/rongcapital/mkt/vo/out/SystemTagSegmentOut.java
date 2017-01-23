@@ -94,4 +94,54 @@ public class SystemTagSegmentOut {
         this.tagValueSeq = tagValueSeq;
     }
 
+    @Override
+    public String toString() {
+        return "SystemTagSegmentOut [tagId=" + tagId + ", tagName=" + tagName + ", tagValue=" + tagValue + ", tagPath="
+                + tagPath + ", isTag=" + isTag + ", searchMod=" + searchMod + ", tagValueSeq=" + tagValueSeq + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((isTag == null) ? 0 : isTag.hashCode());
+        result = prime * result + ((searchMod == null) ? 0 : searchMod.hashCode());
+        result = prime * result + ((tagId == null) ? 0 : tagId.hashCode());
+        result = prime * result + ((tagName == null) ? 0 : tagName.hashCode());
+        result = prime * result + ((tagPath == null) ? 0 : tagPath.hashCode());
+        result = prime * result + ((tagValue == null) ? 0 : tagValue.hashCode());
+        result = prime * result + ((tagValueSeq == null) ? 0 : tagValueSeq.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        SystemTagSegmentOut other = (SystemTagSegmentOut) obj;
+        if (isTag == null) {
+            if (other.isTag != null) return false;
+        } else if (!isTag.equals(other.isTag)) return false;
+        if (searchMod == null) {
+            if (other.searchMod != null) return false;
+        } else if (!searchMod.equals(other.searchMod)) return false;
+        if (tagId == null) {
+            if (other.tagId != null) return false;
+        } else if (!tagId.equals(other.tagId)) return false;
+        if (tagName == null) {
+            if (other.tagName != null) return false;
+        } else if (!tagName.equals(other.tagName)) return false;
+        if (tagPath == null) {
+            if (other.tagPath != null) return false;
+        } else if (!tagPath.equals(other.tagPath)) return false;
+        if (tagValue == null) {
+            if (other.tagValue != null) return false;
+        } else if (!tagValue.equals(other.tagValue)) return false;
+        if (tagValueSeq == null) {
+            if (other.tagValueSeq != null) return false;
+        } else if (!tagValueSeq.equals(other.tagValueSeq)) return false;
+        return true;
+    }
+    
 }

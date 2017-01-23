@@ -50,6 +50,15 @@ public class CustomTag implements Serializable {
     
     @Field(value = "cover_frequency")
     private Integer coverFrequency;// 覆盖人次
+    
+
+    public CustomTag() {}
+
+    public CustomTag(String customTagId, String customTagName) {
+        super();
+        this.customTagId = customTagId;
+        this.customTagName = customTagName;
+    }
 
     public String getId() {
         return id;
@@ -155,5 +164,71 @@ public class CustomTag implements Serializable {
                 + ", customTagSource=" + customTagSource + ", coverNumber=" + coverNumber + ", coverFrequency="
                 + coverFrequency + "]";
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((coverFrequency == null) ? 0 : coverFrequency.hashCode());
+        result = prime * result + ((coverNumber == null) ? 0 : coverNumber.hashCode());
+        result = prime * result + ((createTime == null) ? 0 : createTime.hashCode());
+        result = prime * result + ((customTagId == null) ? 0 : customTagId.hashCode());
+        result = prime * result + ((customTagName == null) ? 0 : customTagName.hashCode());
+        result = prime * result + ((customTagSource == null) ? 0 : customTagSource.hashCode());
+        result = prime * result + ((customTagType == null) ? 0 : customTagType.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((isDeleted == null) ? 0 : isDeleted.hashCode());
+        result = prime * result + ((parentId == null) ? 0 : parentId.hashCode());
+        result = prime * result + ((recommendFlag == null) ? 0 : recommendFlag.hashCode());
+        result = prime * result + ((updateTime == null) ? 0 : updateTime.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        CustomTag other = (CustomTag) obj;
+        if (coverFrequency == null) {
+            if (other.coverFrequency != null) return false;
+        } else if (!coverFrequency.equals(other.coverFrequency)) return false;
+        if (coverNumber == null) {
+            if (other.coverNumber != null) return false;
+        } else if (!coverNumber.equals(other.coverNumber)) return false;
+        if (createTime == null) {
+            if (other.createTime != null) return false;
+        } else if (!createTime.equals(other.createTime)) return false;
+        if (customTagId == null) {
+            if (other.customTagId != null) return false;
+        } else if (!customTagId.equals(other.customTagId)) return false;
+        if (customTagName == null) {
+            if (other.customTagName != null) return false;
+        } else if (!customTagName.equals(other.customTagName)) return false;
+        if (customTagSource == null) {
+            if (other.customTagSource != null) return false;
+        } else if (!customTagSource.equals(other.customTagSource)) return false;
+        if (customTagType == null) {
+            if (other.customTagType != null) return false;
+        } else if (!customTagType.equals(other.customTagType)) return false;
+        if (id == null) {
+            if (other.id != null) return false;
+        } else if (!id.equals(other.id)) return false;
+        if (isDeleted == null) {
+            if (other.isDeleted != null) return false;
+        } else if (!isDeleted.equals(other.isDeleted)) return false;
+        if (parentId == null) {
+            if (other.parentId != null) return false;
+        } else if (!parentId.equals(other.parentId)) return false;
+        if (recommendFlag == null) {
+            if (other.recommendFlag != null) return false;
+        } else if (!recommendFlag.equals(other.recommendFlag)) return false;
+        if (updateTime == null) {
+            if (other.updateTime != null) return false;
+        } else if (!updateTime.equals(other.updateTime)) return false;
+        return true;
+    }
+    
+    
     
 }
