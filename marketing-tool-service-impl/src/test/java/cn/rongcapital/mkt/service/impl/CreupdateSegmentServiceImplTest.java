@@ -90,10 +90,11 @@ public class CreupdateSegmentServiceImplTest {
         systemTagIn.setTagName("标签1");
         systemTagIn.setTagIndex(1);
         systemTagIn.setTagExclude(1);
-
+        systemTagIn.setTagType(0);
         SystemValueIn systemValueIn = new SystemValueIn();
         systemValueIn.setTagValueId("标签ID-01-值01");
         systemValueIn.setTagValue("是");
+        systemValueIn.setTagStatus(0);
         systemTagIn.getTagValueList().add(systemValueIn);
         tagGroupsIn.getTagList().add(systemTagIn);
 
@@ -102,6 +103,7 @@ public class CreupdateSegmentServiceImplTest {
         systemTagIn.setTagName("");
         systemTagIn.setTagExclude(0);
         systemTagIn.setTagIndex(2);
+        systemValueIn.setTagStatus(0);
         tagGroupsIn.getTagList().add(systemTagIn);
 
         notContainTagValueIn.getFilterGroups().add(tagGroupsIn);
