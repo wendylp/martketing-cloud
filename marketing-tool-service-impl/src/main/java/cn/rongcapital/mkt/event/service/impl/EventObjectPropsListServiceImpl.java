@@ -72,6 +72,7 @@ public class EventObjectPropsListServiceImpl implements EventObjectPropsListServ
             // 获取客体属性值
             EventObjectPropValue propCondition = new EventObjectPropValue();
             propCondition.setObjectId(eventObjectId);
+            propCondition.setPageSize(Integer.MAX_VALUE);
             List<EventObjectPropValue> propList = eventObjectPropValueDao.selectList(propCondition);
             if (CollectionUtils.isNotEmpty(propList)) {
                 // 属性值分组
