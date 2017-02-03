@@ -113,7 +113,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				
 				if(count >= SMS_SEND_BACTH_COUNT) {
 					//调用发送API接口（批量）
-					Map<Long, Integer> sendSmsResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
+					Map<Long, Double> sendSmsResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
 					//统计一批短信的成功和失败的个数,根据短信API判断状态回写sms_task_detail_state表和head表
 					updateSmsDetailState(sendSmsResult, smsHead);
 					//修改当前任务这一批短信的成功和失败个数
@@ -168,13 +168,13 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		
 	}*/
 	
-	public void updateSmsDetailState(Map<Long, Integer> sendSmsResult, SmsTaskHead smsHead){
+	public void updateSmsDetailState(Map<Long, Double> sendSmsResult, SmsTaskHead smsHead){
 		SmsTaskDetailState  smsTaskDetailState = null;
 		List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<>();
 		MaterialCouponCodeStatusUpdateVO materialCouponCodeStatusUpdateVO = null;
 		int successCount = 0;
 		int failCount = 0;
-		for(Entry<Long, Integer> entry : sendSmsResult.entrySet()) {
+		for(Entry<Long, Double> entry : sendSmsResult.entrySet()) {
 			Long taskDetailId = entry.getKey();
 			
 			//根据短信优惠码回写状态
@@ -183,7 +183,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			List<SmsTaskDetail> SmsTaskDetailList = smsTaskDetailDao.selectList(detail);
 			detail = SmsTaskDetailList.get(0);
 			
-			Integer gatewayState = entry.getValue();
+			double gatewayState = entry.getValue();
 			smsTaskDetailState = new SmsTaskDetailState();
 			smsTaskDetailState.setSmsTaskDetailId(taskDetailId);
 			if(gatewayState > 0) {
