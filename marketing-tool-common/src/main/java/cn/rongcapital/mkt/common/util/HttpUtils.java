@@ -8,6 +8,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -18,7 +21,9 @@ import java.util.Map;
  */
 public class HttpUtils {
 
-    public static final String baseUrl = "http://test.h5plus.net/auth-template/api/?";
+    private static Logger logger = LoggerFactory.getLogger(HttpUtils.class);
+
+    public static final String baseUrl = "http://h5plus.net/auth-template/api/?";
 
     public static HttpResponse requestH5Interface(Map<String, String> paramMap){
         HttpClient httpClient = new DefaultHttpClient();
@@ -28,6 +33,7 @@ public class HttpUtils {
         }
         url = url.replace(" ","");
         try {
+            logger.info("h5PlusUrl: " + url);
             HttpGet httpGet = new HttpGet(url);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             if(httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) return httpResponse;

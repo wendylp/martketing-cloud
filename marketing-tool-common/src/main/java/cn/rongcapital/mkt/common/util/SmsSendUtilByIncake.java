@@ -36,14 +36,14 @@ public class SmsSendUtilByIncake {
     private static final String CONTENT_TYPE_TEXT_JSON = "text/json";
     private static final int HTTP_STATUS_OK = 200;
     private static final String HTTP_ERROR = "-99";
-    private static final Integer HTTP_ERROR_INTEGER = -99;
+    private static final double HTTP_ERROR_INTEGER = -99;
 //    private static final String MESSAGE_SEND_URL = "http://43.254.53.81:8040/YunXiangSMS/SendCRMSms";
 //    private static final String MESSAGE_SEND_URL = "http://gk.incake.net/YiMa/YiMaOrder";
     private static final String MESSAGE_SEND_URL = "http://gk.incake.net/YunXiangSMS/SendCRMSms";
     private static final String DEFAULT_PARTNER_NAME = "云像";
     private static final String DEFAULT_PARTNER_NO = "001";
-//    private static final String INCAKE_NUM = "6415DAE359507AE62A875533B90A80B6";
-    private static final String INCAKE_NUM = "ERROR_INCAKE_NUM";
+    private static final String INCAKE_NUM = "6415DAE359507AE62A875533B90A80B6";
+    //private static final String INCAKE_NUM = "ERROR_INCAKE_NUM";
     private static final String[] BATCH_RETURN_ERROR_CODE_LIST = {"-1001", "-1004", "-0000"};
     
     /* 
@@ -184,8 +184,8 @@ public class SmsSendUtilByIncake {
     }
     
     
-    public static Map<Long, Integer> sendSms(Map<Long, String[]> SmsBatchMap) {
-        Map<Long, Integer> resultMap = new HashMap<>();
+    public static Map<Long, Double> sendSms(Map<Long, String[]> SmsBatchMap) {
+        Map<Long, Double> resultMap = new HashMap<>();
         
         // 处理返回空map的情况
         if(SmsBatchMap ==null || SmsBatchMap.isEmpty()) {
@@ -221,7 +221,7 @@ public class SmsSendUtilByIncake {
                 logger.info("返回结果解析错误,短信id:{}, 返回信息 ：{}", idLists.toString(), result);
             } else {
                 if(outVoList.size() == 1 && isBatchReturnErrorCode(outVoList.get(0).get_Code())) {
-                    resultMap = batchSetError(idLists, Integer.valueOf(outVoList.get(0).get_Code()));
+                    resultMap = batchSetError(idLists, Double.valueOf(outVoList.get(0).get_Code()));
                 } else {
                     // 检测接口是否正常
                     if (outVoList.size() != idLists.size()) {
@@ -230,7 +230,7 @@ public class SmsSendUtilByIncake {
                     }
                     int idListsCount = 0;
                     for(SmsResponseVo out : outVoList){
-                        resultMap.put(idLists.get(idListsCount++), Integer.valueOf(out.get_Code()));
+                        resultMap.put(idLists.get(idListsCount++), Double.valueOf(out.get_Code()));
                     }
                 }
             }
@@ -240,8 +240,8 @@ public class SmsSendUtilByIncake {
         return resultMap;
     }
     
-    private static Map<Long, Integer> batchSetError(List<Long> idLists, Integer error) {
-        Map<Long, Integer> resultMap = new HashMap<>();
+    private static Map<Long, Double> batchSetError(List<Long> idLists, Double error) {
+        Map<Long, Double> resultMap = new HashMap<>();
         for(Long idList : idLists) {
             resultMap.put(idList, error);
         }
@@ -286,9 +286,9 @@ public class SmsSendUtilByIncake {
         sms2[1] = "【INCAKE】测试短信，大伟2";
         SmsBatchMap.put((long) 2, sms2);
         
-        Map<Long, Integer> sendSms = sendSms(SmsBatchMap);
+        Map<Long, Double> sendSms = sendSms(SmsBatchMap);
         
-        for(Entry<Long, Integer> entry : sendSms.entrySet()){
+        for(Entry<Long, Double> entry : sendSms.entrySet()){
            System.out.println("id is " + entry.getKey() + "  code is " + entry.getValue()); 
         }
     }
