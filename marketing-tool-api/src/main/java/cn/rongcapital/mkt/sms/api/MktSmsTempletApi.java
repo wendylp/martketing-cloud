@@ -21,11 +21,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.service.SmsTempletCancelShareService;
 import cn.rongcapital.mkt.service.SmsTempletService;
+import cn.rongcapital.mkt.service.SmsTempletShareService;
 import cn.rongcapital.mkt.service.SmstempletCountGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.SmsTempletOut;
+import cn.rongcapital.mkt.vo.sms.in.SmsTempletCancelShareIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
+import cn.rongcapital.mkt.vo.sms.in.SmsTempletShareIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -40,6 +44,12 @@ public class MktSmsTempletApi {
 	
 	@Autowired
 	private SmstempletCountGetService smstempletCountGetService;
+	
+	@Autowired
+    private SmsTempletShareService smsTempletShareService;
+	
+    @Autowired
+    private SmsTempletCancelShareService smsTempletCancelShareService;
 	
 	
 	/**
@@ -94,4 +104,29 @@ public class MktSmsTempletApi {
         return smstempletCountGetService.getSmsTempletCount(channelType, orgId);
     }
 	
+    /**
+     * 模板分享
+     * @param smsTempletShareIn
+     * @return
+     * @throws Exception
+     */
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/mkt.sms.smstemplet.share")
+    public BaseOutput shareSmsTemple(@Valid SmsTempletShareIn smsTempletShareIn) throws Exception {       
+        return smsTempletShareService.shareSmsTemplet(smsTempletShareIn);
+    }
+    
+    /**
+     * 取消模板分享
+     * @param smsTempleCancelShareIn
+     * @return
+     * @throws Exception
+     */
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/mkt.sms.smstemplet.share.cancel")
+    public BaseOutput shareSmsTemple(@Valid SmsTempletCancelShareIn smsTempleCancelShareIn) throws Exception {       
+        return smsTempletCancelShareService.cancelShareSmsTemplet(smsTempleCancelShareIn);
+    }
 }
