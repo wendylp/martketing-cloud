@@ -28,7 +28,7 @@ public class BaseQuery implements Serializable{
 
     private transient String orderFieldType;// 排序字段类型:asc,desc
     
-    
+    private transient Integer orgId; //组织ID
     
     private transient String mid;    //主数据ID
     private transient String md_type;//主数据类型
@@ -126,4 +126,11 @@ public class BaseQuery implements Serializable{
         this.mapping_keyid = mapping_keyid;
     }
 
+	public Integer getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Integer orgId) {
+		this.orgId = orgId;
+	}
 }

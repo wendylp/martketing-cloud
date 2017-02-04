@@ -37,6 +37,14 @@
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
+	<!-- 组织机构 添加在表名后 -->
+	<sql id="QUERY_ORGANIZATION">
+		<if test="orgId != null"> 
+    		<![CDATA[ INNER JOIN data_auth da ON da.table_name='sms_templet' AND da.resource_id = id AND da.org_id = #{orgId} ]]>
+   		   	<if test="firsthand != null "><![CDATA[ AND da.firsthand = #{firsthand}]]></if>
+   		</if>
+	</sql>
+
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
