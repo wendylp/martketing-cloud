@@ -43,6 +43,7 @@ public class DataAuthServiceImpl implements DataAuthService {
      * @see DataAuthService#put(long, java.lang.String, long)
      */
     @Override
+    @Transactional
     public void put(long orgId, String resourceType, long resourceId) {
         
         DataAuth auth = new DataAuth();
@@ -86,6 +87,7 @@ public class DataAuthServiceImpl implements DataAuthService {
      * @see DataAuthService#evict(java.lang.String, long)
      */
     @Override
+    @Transactional
     public void evict(String resourceType, long resourceId) {
         DataAuth dataAuth = new DataAuth();
         dataAuth.setTableName(resourceType);
@@ -97,6 +99,7 @@ public class DataAuthServiceImpl implements DataAuthService {
      * @see DataAuthService#share(java.lang.String, java.lang.String, long, long, long, boolean)
      */
     @Override
+    @Transactional
     public void share(String resourceType, long resourceId, long fromOrgId, long toOrgId, boolean writeable) {
         String shareId = UUID.randomUUID().toString();
         shareLoop(DataAuthTypeEnum.SHARE.getCode(), resourceType, resourceId, fromOrgId, toOrgId, writeable, shareId, true);
@@ -189,6 +192,7 @@ public class DataAuthServiceImpl implements DataAuthService {
      * @see DataAuthService#unshare(java.lang.String, java.lang.String, long, long, long)
      */
     @Override
+    @Transactional
     public void unshare(String shareType, String resourceType, long resourceId, long fromOrgId, long toOrgId) {
         // TODO Auto-generated method stub
         
