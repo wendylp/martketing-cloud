@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
@@ -18,6 +18,7 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.common.util.SmsSendUtilByIncake;
+import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsMaterialMaterielMapDao;
 import cn.rongcapital.mkt.dao.SmsTaskDetailDao;
 import cn.rongcapital.mkt.dao.SmsTaskDetailStateDao;
@@ -27,6 +28,7 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeStatusUpdate
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponStatusUpdateService;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCodeStatusUpdateVO;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponStatusUpdateVO;
+import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsMaterialMaterielMap;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.po.SmsTaskDetailState;
@@ -37,6 +39,8 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	 private Logger logger = LoggerFactory.getLogger(getClass());
 	 private Integer SMS_SEND_BACTH_COUNT = 500;
 	 private final Integer SMS_MATERIEL_TYPE = 0;
+	 
+	 private final static Byte SMS_TYPE_DYNAMICS = 1;
 	 
 	@Autowired
 	private SmsTaskHeadDao smsTaskHeadDao;
@@ -55,6 +59,9 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	
 	@Autowired
 	private MaterialCouponCodeStatusUpdateService materialCouponCodeStatusUpdateService;
+	
+	@Autowired
+	private SmsMaterialDao smsMaterialDao;
 	
 	@Override
 	public void task(Integer taskId) {}
@@ -203,8 +210,15 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			
 			voList.add(materialCouponCodeStatusUpdateVO);
 		}
-		//修改一批优惠码的状态---v1.6
-		materialCouponCodeStatusUpdateService.updateMaterialCouponCodeStatus(voList);
+		
+		// 只有变量短信回写状态
+		List<Integer> smsMaterialIdLists = new ArrayList<Integer>();
+		smsMaterialIdLists.add(smsHead.getSmsTaskMaterialId().intValue());
+		List<SmsMaterial> smsMaterialLists = smsMaterialDao.selectListByIdList(smsMaterialIdLists);
+		if(CollectionUtils.isNotEmpty(smsMaterialLists) && SMS_TYPE_DYNAMICS.equals(smsMaterialLists.get(0).getSmsType())) {
+    		//修改一批优惠码的状态---v1.6
+    		materialCouponCodeStatusUpdateService.updateMaterialCouponCodeStatus(voList);
+		}
 		//计算每批的成功和失败的个数
 		Integer smsSuccessCount = smsHead.getSendingSuccessNum();
 		Integer smsFailCount = smsHead.getSendingFailNum();
