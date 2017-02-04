@@ -39,8 +39,9 @@ public class SmsTempletCancelShareServiceImpl implements SmsTempletCancelShareSe
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public BaseOutput cancelShareSmsTemplet(SmsTempletCancelShareIn smsTempleCancelShareIn) {
         BaseOutput result =
-                new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE, null);
-        dataAuthService.unshare(smsTempleCancelShareIn.getShare_id());
+                new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
+                        null);
+        dataAuthService.unshare(smsTempleCancelShareIn.getShareId());
         return result;
     }
 

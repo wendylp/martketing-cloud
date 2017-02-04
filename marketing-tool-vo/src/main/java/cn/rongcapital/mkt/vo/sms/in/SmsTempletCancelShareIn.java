@@ -26,7 +26,7 @@ public class SmsTempletCancelShareIn {
 
     @NotEmpty
     @JsonProperty("share_id")
-    private String share_id;
+    private String shareId;
 
     public Long getOrgId() {
         return orgId;
@@ -36,17 +36,17 @@ public class SmsTempletCancelShareIn {
         this.orgId = orgId;
     }
 
-    public String getShare_id() {
-        return share_id;
+    public String getShareId() {
+        return shareId;
     }
 
-    public void setShare_id(String share_id) {
-        this.share_id = share_id;
+    public void setShareId(String shareId) {
+        this.shareId = shareId;
     }
 
     @Override
     public String toString() {
-        return "SmsTempletCancelShareIn [orgId=" + orgId + ", share_id=" + share_id + "]";
+        return "SmsTempletCancelShareIn [orgId=" + orgId + ", shareId=" + shareId + "]";
     }
 
 }

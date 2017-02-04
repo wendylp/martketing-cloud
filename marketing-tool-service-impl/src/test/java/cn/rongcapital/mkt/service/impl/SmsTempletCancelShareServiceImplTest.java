@@ -48,20 +48,20 @@ public class SmsTempletCancelShareServiceImplTest {
     public void testCancelShareSmsTemplet() {
         SmsTempletCancelShareIn smsTempleCancelShareIn = new SmsTempletCancelShareIn();
         smsTempleCancelShareIn.setOrgId(9L);
-        smsTempleCancelShareIn.setShare_id("DDDDD");
+        smsTempleCancelShareIn.setShareId("DDDDD");
         Mockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 return null;
             }
-        }).when(dataAuthService).unshare(smsTempleCancelShareIn.getShare_id());
+        }).when(dataAuthService).unshare(smsTempleCancelShareIn.getShareId());
         ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
 
         BaseOutput output = service.cancelShareSmsTemplet(smsTempleCancelShareIn);
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
         Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), output.getMsg());
-        Assert.assertEquals(1, output.getTotal());
-        Assert.assertEquals(1, output.getTotalCount());
+        Assert.assertEquals(0, output.getTotal());
+        Assert.assertEquals(0, output.getTotalCount());
         Assert.assertTrue(CollectionUtils.isEmpty(output.getData()));
     }
 
