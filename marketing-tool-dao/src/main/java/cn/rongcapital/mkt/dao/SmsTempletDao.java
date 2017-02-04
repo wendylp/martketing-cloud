@@ -62,4 +62,11 @@ public interface SmsTempletDao extends BaseDao<SmsTemplet>{
      */
     public List<Map<String, Object>> getTempletCountByType(@Param(value = "channelType") String channelType,
             @Param(value = "orgId") Long orgId);
+    
+	/**
+	 * 查询短信模板
+	 * @param map
+	 * @return
+	 */
+	public SmsTemplet selectByIdAndOrgId(Map<String, Integer> map);
 }
