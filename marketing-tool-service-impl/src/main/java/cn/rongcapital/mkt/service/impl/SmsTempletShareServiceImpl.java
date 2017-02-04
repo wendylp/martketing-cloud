@@ -46,12 +46,14 @@ public class SmsTempletShareServiceImpl implements SmsTempletShareService {
     @ReadWrite(type = ReadWriteType.WRITE)
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public BaseOutput shareSmsTemplet(SmsTempletShareIn smsTempletShareIn) {
-        logger.info("organization{} share sms templet:{} to organization:{}.", smsTempletShareIn.getFromOrgId(),
+        logger.debug("organization{} sharing sms templet:{} to organization:{}.", smsTempletShareIn.getFromOrgId(),
                 smsTempletShareIn.getResourceId(), smsTempletShareIn.getToOrgId());
         BaseOutput result =
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ONE, null);
         dataAuthService.share("sms_templet", smsTempletShareIn.getResourceId(), smsTempletShareIn.getFromOrgId(),
                 smsTempletShareIn.getToOrgId(), smsTempletShareIn.getWriteable());
+        logger.debug("organization{} shared sms templet:{} to organization:{}.", smsTempletShareIn.getFromOrgId(),
+                smsTempletShareIn.getResourceId(), smsTempletShareIn.getToOrgId());
         return result;
     }
 
