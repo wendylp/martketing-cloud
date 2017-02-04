@@ -140,4 +140,18 @@
 		<![CDATA[   GROUP BY TYPE ]]>
 	</select>	
 	
+	<sql id="QUERY_COLUMN_LIST_T">
+		<![CDATA[ id as id,code as code,channel_type as channelType,type as type,content as content,audit_status as auditStatus,auditor as auditor,status as status,creator as creator,t.create_time as createTime,t.update_user as updateUser,t.update_time as updateTime,name as name,audit_reason as auditReason,audit_time as auditTime]]>
+	</sql>
+	<sql id="QUERY_WHERE_CLAUSE_ID">
+		<if test="orgId != null"><![CDATA[as t inner join data_auth da on da.table_name='sms_templet' and da.resource_id = t.id and da.org_id = #{orgId} ]]></if>
+		<if test="id != null"><![CDATA[ AND t.id = #{id}]]></if>
+	</sql>
+	<!-- 查询,通过条件 -->
+	<select id="selectByIdAndOrgId" parameterType="hashMap" resultType="cn.rongcapital.mkt.po.SmsTemplet">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST_T"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE_ID"/>
+	</select>
 </mapper>
