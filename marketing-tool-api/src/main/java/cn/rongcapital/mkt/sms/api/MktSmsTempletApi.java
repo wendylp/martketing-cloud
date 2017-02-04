@@ -80,18 +80,18 @@ public class MktSmsTempletApi {
 		return smsTempletService.saveOrUpdateSmsTemplet(smsTempletIn);
 	}
 	
-	/**
-	 * 分类获取模板数量
-	 * @return
-	 * @throws Exception
-	 */
-	@GET
-	@Path("/mkt.sms.smstemplet.count.get")
-	public BaseOutput smsTempletCountGet(@NotEmpty @QueryParam("user_token") String userToken
-			,@NotEmpty @QueryParam("user_id") String userId
-			,@NotEmpty @QueryParam("ver") String ver
-			,@QueryParam("channel_type") String channelType) throws Exception {		
-		return smstempletCountGetService.getSmsTempletCount(channelType);
-	}
+    /**
+     * 分类获取模板数量
+     * 
+     * @return
+     * @throws Exception
+     */
+    @GET
+    @Path("/mkt.sms.smstemplet.count.get")
+    public BaseOutput smsTempletCountGet(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,
+            @QueryParam("channel_type") String channelType, @NotNull @QueryParam("org_id") Long orgId) throws Exception {
+        return smstempletCountGetService.getSmsTempletCount(channelType, orgId);
+    }
 	
 }

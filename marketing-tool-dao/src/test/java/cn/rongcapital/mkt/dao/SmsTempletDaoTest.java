@@ -138,7 +138,7 @@ public class SmsTempletDaoTest extends AbstractUnitTest {
     
     @Test
     public void getTempletCountByType(){
-    	List<Map<String, Object>> templetCountByType = smsTempletDao.getTempletCountByType("1");
+    	List<Map<String, Object>> templetCountByType = smsTempletDao.getTempletCountByType("1", 1L);
     	
     //	Assert.assertEquals(2, templetCountByType.size()); 
     	
