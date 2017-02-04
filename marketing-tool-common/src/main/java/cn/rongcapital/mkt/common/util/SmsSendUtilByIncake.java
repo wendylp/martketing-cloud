@@ -145,45 +145,7 @@ public class SmsSendUtilByIncake {
         // 字符数组组合成字符串返回
         return new String(resultCharArray);
     }
-    
-    public Map<String, String> sendSms(List<String> phones, String message) {
-        if(phones == null || phones.size() < 1) {
-            logger.error("phones illegal!");
-            return null;
-        }
-        if(message == null){
-            logger.error("message illegal!");
-            return null;
-        }
-        SmsRequestVo smsVo  =  null;
-        List<SmsRequestVo> smsVoList = new ArrayList<>();
-        for(String phone : phones){
-            smsVo = new SmsRequestVo();
-            smsVo.setPartner_Name(DEFAULT_PARTNER_NAME);
-            smsVo.setPartner_No(DEFAULT_PARTNER_NO);
-            smsVo.setPartner_Phone(phone);
-            smsVo.setPartner_Msg(message);
-            smsVo.setPartner_Time(DateUtil.getStringFromDate(new Date(), "yyyy-MM-dd HH:mm:ss:SSS"));
-            smsVoList.add(smsVo);
-        }
-        String jsonString = JSONObject.toJSONString(smsVoList);
-        String md5String =  stringMD5(jsonString + INCAKE_NUM);
         
-        String requestBody = "order="+ jsonString +"&sagin="+ md5String;
-        
-        String result = send(MESSAGE_SEND_URL, requestBody);
-        
-        List<SmsResponseVo> outVoList = JSONArray.parseArray(result, SmsResponseVo.class);
-        
-        Map<String, String> resultMap = new HashMap<>();
-        for(SmsResponseVo out : outVoList){
-            logger.info("msg is {}" , out.get_Msg());
-            resultMap.put(out.get_Phone(), out.get_Code());
-        }
-        return resultMap;
-    }
-    
-    
     public static Map<Long, Double> sendSms(Map<Long, String[]> SmsBatchMap) {
         Map<Long, Double> resultMap = new HashMap<>();
         
@@ -259,21 +221,9 @@ public class SmsSendUtilByIncake {
     
     
     public static void main(String[] args) {
-//        test1();
         test2();
     }
-    
-    private static void test1() {
-        SmsSendUtilByIncake sms = new SmsSendUtilByIncake();
-        List<String> phones = new ArrayList<String>();
-        phones.add("135521347181");
-        Map<String, String> sendSms = sms.sendSms(phones, "【INCAKE】测试短信");
         
-        for(Entry<String, String> entry : sendSms.entrySet()){
-           System.out.println("phone is " + entry.getKey() + "code is " + entry.getValue()); 
-        }
-    }
-    
     private static void test2() {
         
         Map<Long, String[]> SmsBatchMap = new LinkedHashMap<>();
