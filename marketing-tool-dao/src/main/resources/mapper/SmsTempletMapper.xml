@@ -37,6 +37,14 @@
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
 	</sql>
 
+	<!-- 组织机构 添加在表名后 -->
+	<sql id="QUERY_ORGANIZATION">
+		<if test="orgId != null"> 
+    		<![CDATA[ INNER JOIN data_auth da ON da.table_name='sms_templet' AND da.resource_id = id AND da.org_id = #{orgId} ]]>
+   		   	<if test="firsthand != null "><![CDATA[ AND da.firsthand = #{firsthand}]]></if>
+   		</if>
+	</sql>
+
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
@@ -103,6 +111,7 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_ORGANIZATION"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
@@ -111,12 +120,14 @@
 	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_ORGANIZATION"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 
 	<select id="selectListCountGroupByType" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo">
 		<![CDATA[SELECT COUNT(id) AS dataCount,type]]>
 		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_ORGANIZATION"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<![CDATA[ GROUP BY type]]>
 	</select>
@@ -124,6 +135,7 @@
 	<select id="selectListCountGroupByAuditStatus" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo">
 		<![CDATA[SELECT COUNT(id) AS dataCount,audit_status as auditStatus]]>
 		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_ORGANIZATION"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<![CDATA[ GROUP BY audit_status]]>
 	</select>		
