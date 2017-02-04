@@ -7,7 +7,6 @@
 		<set>
 			<if test="parentId != null"><![CDATA[parent_id = #{parentId},]]></if>
 			<if test="name != null"><![CDATA[name = #{name},]]></if>
-			<if test="type != null"><![CDATA[type = #{type},]]></if>
 			<if test="status != null"><![CDATA[status = #{status},]]></if>
 		</set>
 	</sql>
@@ -19,14 +18,13 @@
 		    	<if test="parentId != null"><![CDATA[ AND parent_Id = #{parentId}]]></if>
 		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
-		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
 		</where>
 	</sql>
 
 	<insert id="insert" parameterType="cn.rongcapital.mkt.dataauth.po.Organization"
 		useGeneratedKeys="true" keyProperty="org_id">
 		<![CDATA[
-			insert into organization (parent_id,name,type,create_time) values(#{parentId},#{name},#{type},now());
+			insert into organization (parent_id,name,create_time) values(#{parentId},#{name},now());
 		]]>
 	</insert>
 
@@ -39,23 +37,15 @@
 	
 	<!-- 查询,通过条件 -->
 	<select id="selectList" parameterType="cn.rongcapital.mkt.dataauth.po.Organization" resultType="cn.rongcapital.mkt.dataauth.po.Organization">
-		<![CDATA[SELECT org_id as orgId, parent_id as parentId, name as name, type as type, status as status]]>
+		<![CDATA[SELECT org_id as orgId, parent_id as parentId, name as name, status as status]]>
 		<![CDATA[ from organization ]]>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 	
-	<!-- 根据id查询组织类别 -->
-	<select id="determinOrgTypeById" parameterType="long"
-		resultType="java.lang.String">
-		<![CDATA[select  type from organization]]>
-		<![CDATA[WHERE status = 0]]>
-		<![CDATA[and org_id = #{id}]]>
-	</select>
-
 	<!-- 根据id查询组织节点 -->
 	<select id="getNodeById" parameterType="long"
 		resultType="cn.rongcapital.mkt.dataauth.po.Organization">
-		<![CDATA[select org_id as orgId, parent_id as parentId, name as name, type as type, status as status from organization ]]>
+		<![CDATA[select org_id as orgId, parent_id as parentId, name as name, status as status from organization ]]>
 		<![CDATA[WHERE status = 0]]>
 		<![CDATA[and org_id = #{id}]]>
 	</select>
@@ -63,7 +53,7 @@
 	<!-- 根据id查询当前节点下一层叶子节点 -->
 	<select id="getChildNodeById" parameterType="long"
 		resultType="cn.rongcapital.mkt.dataauth.po.Organization">
-		<![CDATA[select org_id as orgId, parent_id as parentId, name as name, type as type, status as status from organization ]]>
+		<![CDATA[select org_id as orgId, parent_id as parentId, name as name, status as status from organization ]]>
 		<![CDATA[WHERE status = 0]]>
 		<![CDATA[and parent_id = #{id}]]>
 	</select>

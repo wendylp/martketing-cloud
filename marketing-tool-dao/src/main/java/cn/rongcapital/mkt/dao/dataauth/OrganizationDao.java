@@ -10,8 +10,6 @@ public interface OrganizationDao  {
 	
 	int updateById(Organization org);
 
-	String determinOrgTypeById(Long id);
-	
 	Organization getNodeById(Long id);
 	
 	List<Organization> getChildNodeById(Long id);
