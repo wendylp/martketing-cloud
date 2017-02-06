@@ -11,18 +11,16 @@ import cn.rongcapital.mkt.vo.BaseInput;
  * @see （与该类关联的类): CustomtagCreateService
  * @对应项目名称: MC系统
  * @author: 丛树林
- * @version: v1.7
- * @date(创建、开发日期): 2017-1-20
- * 最后修改日期: 2017-1-20
+ * @version: v1.7 @date(创建、开发日期): 2017-1-20 最后修改日期: 2017-1-20
  * @复审人: 丛树林
-  *************************************************/
+ *************************************************/
 public class CustomTagCategoryIn extends BaseInput {
 
 	@NotEmpty
 	private String userToken = null;
 
 	private String customTagCategoryId = null;
-	
+
 	@NotEmpty
 	private String customTagCategoryName = null;
 
@@ -34,7 +32,7 @@ public class CustomTagCategoryIn extends BaseInput {
 	public void setUserToken(String userToken) {
 		this.userToken = userToken;
 	}
-	
+
 	@JsonProperty("custom_tag_category_id")
 	public String getCustomTagCategoryId() {
 		return customTagCategoryId;
@@ -52,5 +50,5 @@ public class CustomTagCategoryIn extends BaseInput {
 	public void setCustomTagCategoryName(String customTagCategoryName) {
 		this.customTagCategoryName = customTagCategoryName;
 	}
-	
+
 }
