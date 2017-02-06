@@ -1,7 +1,9 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
-import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
@@ -45,41 +46,67 @@ public class SmsSmstempletIdGetServiceImpl implements SmsSmstempletIdGetService 
      * @Date 2016-11-11
      * @author shuiyangyang
      */
+//    @Override
+//    public BaseOutput getSmsSmstempletById(Integer id) {
+//
+//        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
+//                        ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+//
+//        SmsTemplet smsTempletSelect = new SmsTemplet();
+//        smsTempletSelect.setId(id);
+//        List<SmsTemplet> smsTempletList = smsTempletDao.selectList(smsTempletSelect);
+//
+//        if (smsTempletList != null && smsTempletList.size() > 0) {
+//            // 如果返回多个则只显示第一个
+//            SmsTemplet smsTempletresult = smsTempletList.get(0);
+//
+//            SmsSmstempletIdGetOut smsSmstempletIdGetOut = new SmsSmstempletIdGetOut(
+//                            smsTempletresult.getId(), smsTempletresult.getChannelType(),
+//                            smsTempletresult.getType(), smsTempletresult.getAuditStatus(),
+//                            smsTempletresult.getName(), smsTempletresult.getAuditReason(), null,
+//                            smsTempletresult.getContent(), true,
+//                            deleteCheck(smsTempletresult.getId()));
+//            smsSmstempletIdGetOut.setAuditTime(DateUtil.getStringFromDate(
+//                            smsTempletresult.getAuditTime(), "yyyy-MM-dd HH:mm:ss"));
+//            
+//            if(smsTempletresult.getType().intValue() == SmsTempletTypeEnum.VARIABLE.getStatusCode()){
+//            	
+//                List<SmsSmstempletMaterialData> materialList = getMaterialData(id);
+//                
+//                smsSmstempletIdGetOut.setMaterialList(materialList);
+//            }
+//            
+//            result.getData().add(smsSmstempletIdGetOut);
+//            result.setTotal(ApiConstant.INT_ONE);
+//        }
+//        return result;
+//    }
     @Override
-    public BaseOutput getSmsSmstempletById(Integer id) {
+    public BaseOutput getSmsSmstempletById(Integer id, Integer orgId) {
 
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
-        SmsTemplet smsTempletSelect = new SmsTemplet();
-        smsTempletSelect.setId(id);
-        List<SmsTemplet> smsTempletList = smsTempletDao.selectList(smsTempletSelect);
-
-        if (smsTempletList != null && smsTempletList.size() > 0) {
-            // 如果返回多个则只显示第一个
-            SmsTemplet smsTempletresult = smsTempletList.get(0);
-
-            SmsSmstempletIdGetOut smsSmstempletIdGetOut = new SmsSmstempletIdGetOut(
-                            smsTempletresult.getId(), smsTempletresult.getChannelType(),
-                            smsTempletresult.getType(), smsTempletresult.getAuditStatus(),
-                            smsTempletresult.getName(), smsTempletresult.getAuditReason(), null,
-                            smsTempletresult.getContent(), true,
-                            deleteCheck(smsTempletresult.getId()));
-            smsSmstempletIdGetOut.setAuditTime(DateUtil.getStringFromDate(
-                            smsTempletresult.getAuditTime(), "yyyy-MM-dd HH:mm:ss"));
-            
-            if(smsTempletresult.getType().intValue() == SmsTempletTypeEnum.VARIABLE.getStatusCode()){
-            	
-                List<SmsSmstempletMaterialData> materialList = getMaterialData(id);
-                
-                smsSmstempletIdGetOut.setMaterialList(materialList);
-            }
-            
-            result.getData().add(smsSmstempletIdGetOut);
-            result.setTotal(ApiConstant.INT_ONE);
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        map.put("id", id);
+        map.put("orgId", orgId);
+        SmsTemplet sms = smsTempletDao.selectByIdAndOrgId(map);
+        if(sms != null){
+    		SmsSmstempletIdGetOut smsSmstempletIdGetOut = new SmsSmstempletIdGetOut(
+    				sms.getId(), sms.getChannelType(), sms.getType(),
+    				sms.getAuditStatus(), sms.getName(), sms.getAuditReason(),
+    				null, sms.getContent(), true, deleteCheck(sms.getId()));
+    		smsSmstempletIdGetOut.setAuditTime(DateUtil.getStringFromDate(sms.getAuditTime(), "yyyy-MM-dd HH:mm:ss"));
+    		if(sms.getType().intValue() == SmsTempletTypeEnum.VARIABLE.getStatusCode()){
+    			  List<SmsSmstempletMaterialData> materialList = getMaterialData(id);
+                  smsSmstempletIdGetOut.setMaterialList(materialList);
+    		}
+    		 result.getData().add(smsSmstempletIdGetOut);
+             result.setTotal(ApiConstant.INT_ONE);
         }
         return result;
     }
+    
     /**
      * 检查模板是否被素材用到
      * 用到不能删除 false

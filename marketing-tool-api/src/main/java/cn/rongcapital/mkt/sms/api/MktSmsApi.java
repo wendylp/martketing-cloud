@@ -237,9 +237,9 @@ public class MktSmsApi {
     @GET
     @Path("/mkt.sms.smstemplet.id.get")
     public BaseOutput smsSmstempletIdGet(@NotEmpty @QueryParam("user_token") String userToken,
-                    @QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id)
+                    @QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id,  @NotNull @QueryParam("org_id") Integer orgId)
                     throws Exception {
-        return smsSmstempletIdGetService.getSmsSmstempletById(id);
+        return smsSmstempletIdGetService.getSmsSmstempletById(id, orgId);
     }
     
     /**
