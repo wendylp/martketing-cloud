@@ -27,6 +27,7 @@ import cn.rongcapital.mkt.dao.CampaignActionSaveAudienceDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendH5Dao;
 import cn.rongcapital.mkt.dao.CampaignActionSendPrivtDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
+import cn.rongcapital.mkt.dao.CampaignActionSendSmsDao;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
@@ -52,6 +53,7 @@ import cn.rongcapital.mkt.po.CampaignActionSaveAudience;
 import cn.rongcapital.mkt.po.CampaignActionSendH5;
 import cn.rongcapital.mkt.po.CampaignActionSendPrivt;
 import cn.rongcapital.mkt.po.CampaignActionSendPub;
+import cn.rongcapital.mkt.po.CampaignActionSendSms;
 import cn.rongcapital.mkt.po.CampaignActionSetTag;
 import cn.rongcapital.mkt.po.CampaignActionWait;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
@@ -80,6 +82,7 @@ import cn.rongcapital.mkt.vo.in.CampaignActionSaveAudienceIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionSendH5In;
 import cn.rongcapital.mkt.vo.in.CampaignActionSendPrivtIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionSendPubIn;
+import cn.rongcapital.mkt.vo.in.CampaignActionSendSmsIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionSetTagIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionWaitIn;
 import cn.rongcapital.mkt.vo.in.CampaignAudienceTargetIn;
@@ -111,6 +114,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignActionSendH5Dao campaignActionSendH5Dao;
 	@Autowired
 	private CampaignActionSendPrivtDao campaignActionSendPrivtDao;
+	@Autowired
+	private CampaignActionSendSmsDao campaignActionSendSmsDao;
 	@Autowired
 	private CampaignActionSendPubDao campaignActionSendPubDao;
 	@Autowired
@@ -359,6 +364,17 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					if(null != campaignActionSendPrivt) {
 						campaignActionSendPrivtDao.insert(campaignActionSendPrivt);
 					}
+					break;
+				case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS://发送短信
+					taskSchedule = initTaskActionSendSms(campaignNodeChainIn,campaignHeadId);
+					taskScheduleDao.insert(taskSchedule);
+					taskId = taskSchedule.getId();
+					CampaignActionSendSms campaignActionSendSms = initCampaignActionSendSms(campaignNodeChainIn,campaignHeadId);
+					if(null != campaignActionSendSms) {
+						campaignActionSendSmsDao.insert(campaignActionSendSms);
+					}
+					break;
+				default:
 					break;
 				}
 			}
@@ -659,6 +675,16 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
 		return taskSchedule;
 	}
+	
+	private TaskSchedule initTaskActionSendSms(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		TaskSchedule taskSchedule = new TaskSchedule();
+		taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_ACTION_SEND_SMS);
+		taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+		taskSchedule.setCampaignHeadId(campaignHeadId);
+		taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+		return taskSchedule;
+	}
+	
 	private List<CampaignSwitch> initCampaignSwitchList(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		List<CampaignSwitchIn> campaignSwitchInList = campaignNodeChainIn.getCampaignSwitchList();
 		List<CampaignSwitch> campaignSwitchList = new ArrayList<CampaignSwitch>();
@@ -909,6 +935,19 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSaveAudience.setAudienceId(campaignActionSaveAudienceIn.getAudienceId());
 		campaignActionSaveAudience.setAudienceName(campaignActionSaveAudienceIn.getAudienceName());
 		return campaignActionSaveAudience;
+	}
+	
+	private CampaignActionSendSms initCampaignActionSendSms(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignActionSendSms campaignActionSendSms = new CampaignActionSendSms();
+		CampaignActionSendSmsIn campaignActionSendSmsIn = 
+					jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendSmsIn.class);
+		if(null == campaignActionSendSmsIn) return null;
+		campaignActionSendSms.setName(campaignActionSendSmsIn.getName());
+		campaignActionSendSms.setItemId(campaignNodeChainIn.getItemId());
+		campaignActionSendSms.setCampaignHeadId(campaignHeadId);
+		campaignActionSendSms.setSmsMaterialId(campaignActionSendSmsIn.getSmsMaterialId());
+		campaignActionSendSms.setSmsCategoryType(campaignActionSendSmsIn.getSmsCategoryType());
+		return campaignActionSendSms;
 	}
 	
 	private CampaignActionWait initCampaignActionWait(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {

@@ -20,6 +20,7 @@ import cn.rongcapital.mkt.dao.CampaignActionSaveAudienceDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendH5Dao;
 import cn.rongcapital.mkt.dao.CampaignActionSendPrivtDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
+import cn.rongcapital.mkt.dao.CampaignActionSendSmsDao;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
@@ -40,6 +41,7 @@ import cn.rongcapital.mkt.po.CampaignActionSaveAudience;
 import cn.rongcapital.mkt.po.CampaignActionSendH5;
 import cn.rongcapital.mkt.po.CampaignActionSendPrivt;
 import cn.rongcapital.mkt.po.CampaignActionSendPub;
+import cn.rongcapital.mkt.po.CampaignActionSendSms;
 import cn.rongcapital.mkt.po.CampaignActionSetTag;
 import cn.rongcapital.mkt.po.CampaignActionWait;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
@@ -64,6 +66,7 @@ import cn.rongcapital.mkt.vo.out.CampaignActionSaveAudienceOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionSendH5Out;
 import cn.rongcapital.mkt.vo.out.CampaignActionSendPrivtOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionSendPubOut;
+import cn.rongcapital.mkt.vo.out.CampaignActionSendSmsOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionSetTagOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionWaitOut;
 import cn.rongcapital.mkt.vo.out.CampaignAudienceTargetOut;
@@ -94,6 +97,8 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	private CampaignActionSendPubDao campaignActionSendPubDao;
 	@Autowired
 	private CampaignActionSetTagDao campaignActionSetTagDao;
+	@Autowired
+	private CampaignActionSendSmsDao campaignActionSendSmsDao;
 	@Autowired
 	private CampaignActionWaitDao campaignActionWaitDao;
 	@Autowired
@@ -251,6 +256,11 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 						CampaignActionSetTagOut campaignActionSetTagOut = queryCampaignActionSetTag(
 								campaignNodeChainOut, campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignActionSetTagOut);
+						break;
+					case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS:// 设置标签
+						CampaignActionSendSmsOut campaignActionSendSmsOut = queryCampaignActionSendSms(
+								campaignNodeChainOut, campaignHeadId);
+						campaignNodeChainOut.setInfo(campaignActionSendSmsOut);
 						break;
 					case ApiConstant.CAMPAIGN_ITEM_ACTION_ADD_CAMPAIGN:// 添加到其它活动
 						break;
@@ -433,6 +443,23 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 					.setTagNames(Arrays.asList(StringUtils.split(campaignActionSetTag.getTagNames(), ',')));
 		}
 		return campaignActionSetTagOut;
+	}
+	
+	private CampaignActionSendSmsOut queryCampaignActionSendSms(CampaignNodeChainOut campaignNodeChainOut,
+			int campaignHeadId) {
+		CampaignActionSendSms t = new CampaignActionSendSms();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setCampaignHeadId(campaignHeadId);
+		t.setItemId(campaignNodeChainOut.getItemId());		
+		List<CampaignActionSendSms> resList = campaignActionSendSmsDao.selectList(t);
+		CampaignActionSendSmsOut campaignActionSendSmsOut = new CampaignActionSendSmsOut();
+		if (CollectionUtils.isNotEmpty(resList)) {
+			CampaignActionSendSms campaignActionSendSms = resList.get(0);
+			campaignActionSendSmsOut.setName(campaignActionSendSms.getName());
+			campaignActionSendSmsOut.setSmsCategoryType(campaignActionSendSms.getSmsCategoryType());
+			campaignActionSendSmsOut.setSmsMaterialId(campaignActionSendSms.getSmsMaterialId());
+		}
+		return campaignActionSendSmsOut;
 	}
 
 	private CampaignActionSaveAudienceOut queryCampaignActionSaveAudience(CampaignNodeChainOut campaignNodeChainOut,
