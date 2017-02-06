@@ -20,7 +20,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -62,16 +64,18 @@ public class SmsTempletShareServiceImplTest {
         smsTempletShareIn.setOrgIds(orgIds);
         smsTempletShareIn.setResourceId(12L);
         smsTempletShareIn.setWriteable(true);
-//        Mockito.doAnswer(new Answer<Void>() {
-//            @Override
-//            public Void answer(InvocationOnMock invocation) throws Throwable {
-//                return null;
-//            }
-//        })
-//                .when(dataAuthService)
-//                .share("sms_templet", smsTempletShareIn.getResourceId(), smsTempletShareIn.getFromOrgId(),
-//                        smsTempletShareIn.getToOrgId(), smsTempletShareIn.getWriteable());
-//        ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
+
+        orgIds.forEach(item -> {
+            Mockito.doAnswer(new Answer<Void>() {
+                @Override
+                public Void answer(InvocationOnMock invocation) throws Throwable {
+                    return null;
+                }
+            }).when(dataAuthService)
+                    .share("sms_templet", smsTempletShareIn.getResourceId(), item, smsTempletShareIn.getWriteable());
+        });
+
+        ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
 
         List<SmsTemplet> smsTempletList = new ArrayList<SmsTemplet>();
         SmsTemplet item = new SmsTemplet();
