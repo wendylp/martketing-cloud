@@ -101,6 +101,9 @@ public class GenerateSmsDetailTask implements TaskService {
     private AudienceCalcSmsTargetAudienceStrategy audienceCalcSmsTargetAudienceStrategy;
 
     @Autowired
+    private CampaignCalcSmsTargetAudienceStrategy campaignCalcSmsTargetAudienceStrategy;
+    
+    @Autowired
     private MaterialCouponDao materialCouponDao;
 
     private Map<Integer,AbstractCalcSmsTargetAudienceStrategy> strategyMap = new HashMap<>();
@@ -123,7 +126,8 @@ public class GenerateSmsDetailTask implements TaskService {
     public void task(String taskHeadIdStr) {
         strategyMap.put(SmsTargetAudienceTypeEnum.SMS_TARGET_SEGMENTATION.getTypeCode(),segmentCalcSmsTargetAudienceStrategy);
         strategyMap.put(SmsTargetAudienceTypeEnum.SMS_TARGET_AUDIENCE.getTypeCode(), audienceCalcSmsTargetAudienceStrategy);
-
+        strategyMap.put(SmsTargetAudienceTypeEnum.SMS_TARGET_CAMPAIGN.getTypeCode(), campaignCalcSmsTargetAudienceStrategy);
+        
         logger.info("taskHeadId :" + taskHeadIdStr);
         Long taskHeadId = Long.valueOf(taskHeadIdStr);
 
