@@ -23,6 +23,7 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.service.SmsTempletCancelShareService;
+import cn.rongcapital.mkt.service.SmsTempletService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletCancelShareIn;
 
@@ -34,17 +35,29 @@ public class SmsTempletCancelShareServiceImpl implements SmsTempletCancelShareSe
     @Autowired
     private DataAuthService dataAuthService;
 
+    @Autowired
+    private SmsTempletService smsTempletService;
+
     @Override
     @ReadWrite(type = ReadWriteType.WRITE)
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public BaseOutput cancelShareSmsTemplet(SmsTempletCancelShareIn smsTempleCancelShareIn) {
+        // 验证数据有效性
+        if (smsTempletService.smsTempletValidate(smsTempleCancelShareIn.getResourceId().intValue())) {
+            logger.debug("table sms_templet data[id:{}] not exist.", smsTempleCancelShareIn.getResourceId());
+            return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
+                    ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
+        }
+        // 取消分享
+        logger.debug("organization{} unsharing sms templet:{} share_id:{}.", smsTempleCancelShareIn.getOrgId(),
+                smsTempleCancelShareIn.getResourceId(), smsTempleCancelShareIn.getShareId());
         BaseOutput result =
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
                         null);
         dataAuthService.unshare(smsTempleCancelShareIn.getShareId());
+        logger.debug("organization{} unshared sms templet:{} share_id:{}.", smsTempleCancelShareIn.getOrgId(),
+                smsTempleCancelShareIn.getResourceId(), smsTempleCancelShareIn.getShareId());
         return result;
     }
-
-
 
 }
