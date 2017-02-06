@@ -1,6 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -47,7 +46,7 @@ public class SmsMessageSendTestServiceImpl implements SmsMessageSendTestService{
             String[] sms = {receiveMobileArrays[i],sendMessage};
             SmsBatchMap.put(Long.valueOf(i), sms);
         }
-        Map<Long, Integer> sendResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
+        Map<Long, Double> sendResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
         
         // 输出日志
         if(sendResult != null) {

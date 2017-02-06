@@ -51,14 +51,15 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	@Autowired
 	private SmsTempletDao smsTempletDao;
 	
+	//新增权限service lhz
+	@Autowired
+    private DataAuthService  dataAuthService;
+	
 	@Autowired
 	private SmsMaterialDao smsMaterialDao;
 	
     @Autowired
     private SmsTempletMaterialMapDao smsTempletMaterialMapDao;
-    
-    @Autowired
-    private DataAuthService dataAuthService;
 	
 	private final String TEMPLETE_ID= "模板ID";
 	
@@ -233,6 +234,8 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			}else{
 				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
 				smsTempletDao.insert(smsTemplet);
+				 //新增权限数据 lhz 
+				dataAuthService.put(smsTempletIn.getOrgid(),"sms_templet", smsTemplet.getId());;
 			}
 			
 			//变量模板添加

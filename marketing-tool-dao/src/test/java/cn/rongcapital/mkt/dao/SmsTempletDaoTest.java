@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +50,54 @@ public class SmsTempletDaoTest extends AbstractUnitTest {
         }*/
         
     }
+    
+    //组织id存在
+    @Test
+    public void testSelectByIdAndOrgId01(){
+    	 Map<String, Integer> map = new HashMap<String, Integer>();
+         map.put("id", 1);
+         map.put("orgId", 13);
+         List<SmsTemplet> sms = smsTempletDao.selectByIdAndOrgId(map);
+         Assert.assertEquals(Integer.valueOf(1), sms.get(0).getId());
+    }
+    
+    //组织id存在,资源id 为null
+    @Test
+    public void testSelectByIdAndOrgId02(){
+    	 Map<String, Integer> map = new HashMap<String, Integer>();
+         map.put("orgId", 13);
+         List<SmsTemplet> sms = smsTempletDao.selectByIdAndOrgId(map);
+         Assert.assertTrue(sms.size() == 0);
+    }
+    //组织id为null
+    @Test
+    public void testSelectByIdAndOrgId03(){
+    	 Map<String, Integer> map = new HashMap<String, Integer>();
+    	 map.put("id", 1);
+         List<SmsTemplet> sms = smsTempletDao.selectByIdAndOrgId(map);
+         Assert.assertTrue(sms.size() == 0);
+    }
+    
+    //资源id 不存在
+    @Test
+    public void testSelectByIdAndOrgId04(){
+    	 Map<String, Integer> map = new HashMap<String, Integer>();
+    	 map.put("id", 1000);
+    	 map.put("orgId", 13);
+         List<SmsTemplet> sms = smsTempletDao.selectByIdAndOrgId(map);
+         Assert.assertTrue(sms.size() == 0);
+    }
+    
+    //组织id 不存在
+    @Test
+    public void testSelectByIdAndOrgId05(){
+    	 Map<String, Integer> map = new HashMap<String, Integer>();
+    	 map.put("id", 1);
+    	 map.put("orgId", 1000);
+         List<SmsTemplet> sms = smsTempletDao.selectByIdAndOrgId(map);
+         Assert.assertTrue(sms.size() == 0);
+    }
+    
     
     @Test
     public void testSelectList() {
@@ -138,7 +187,7 @@ public class SmsTempletDaoTest extends AbstractUnitTest {
     
     @Test
     public void getTempletCountByType(){
-    	List<Map<String, Object>> templetCountByType = smsTempletDao.getTempletCountByType("1");
+    	List<Map<String, Object>> templetCountByType = smsTempletDao.getTempletCountByType("1", 1L);
     	
     //	Assert.assertEquals(2, templetCountByType.size()); 
     	
