@@ -2,9 +2,14 @@ package cn.rongcapital.mkt.vo.in;
 
 public class TagIn {
 
+	public static final String TAG_TYPE_CUSTOM = "1";
+	public static final String TAG_TYPE_SYS = "0";
+
 	private String tag_name;
 	
 	private String tag_id;
+
+	private String tagType;
 
 	public String getTag_name() {
 		return tag_name;
@@ -20,6 +25,14 @@ public class TagIn {
 
 	public void setTag_id(String tag_id) {
 		this.tag_id = tag_id;
+	}
+
+	public String getTagType() {
+		return tagType;
+	}
+
+	public void setTagType(String tagType) {
+		this.tagType = tagType;
 	}
 	
 	
