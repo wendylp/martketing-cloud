@@ -133,5 +133,12 @@ public interface MongoCustomTagDao {
      */
     public long countByCustomTagNameFuzzy(String customTagName);
 
+    /**
+     * 功能描述：计算自定义标签的有效个数
+     * 
+     * @return
+     */
+    public long countAll();
+    
     
 }
