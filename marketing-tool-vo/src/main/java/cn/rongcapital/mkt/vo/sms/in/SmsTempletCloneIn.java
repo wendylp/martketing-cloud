@@ -14,10 +14,7 @@ public class SmsTempletCloneIn {
 	private Integer id;
 	
 	@NotNull
-	private Integer fromOrgId;
-	
-	@NotNull
-	private Integer toOrgId;
+	private Long[] orgIds;
 	
 	@NotNull
 	private String creator;
@@ -33,23 +30,14 @@ public class SmsTempletCloneIn {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	@JsonProperty("from_org_id")
-	public Integer getFromOrgId() {
-		return fromOrgId;
+	
+	@JsonProperty("org_ids")
+	public Long[] getOrgIds() {
+		return orgIds;
 	}
 
-	public void setFromOrgId(Integer fromOrgId) {
-		this.fromOrgId = fromOrgId;
-	}
-
-	@JsonProperty("to_org_id")
-	public Integer getToOrgId() {
-		return toOrgId;
-	}
-
-	public void setToOrgId(Integer toOrgId) {
-		this.toOrgId = toOrgId;
+	public void setOrgIds(Long[] orgIds) {
+		this.orgIds = orgIds;
 	}
 
 	@JsonProperty("creator")
