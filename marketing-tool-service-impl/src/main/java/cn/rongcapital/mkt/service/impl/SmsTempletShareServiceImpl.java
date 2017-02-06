@@ -62,20 +62,20 @@ public class SmsTempletShareServiceImpl implements SmsTempletShareService {
             return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
                     ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
         }
-        // 分享
-        logger.debug("organization{} sharing sms templet:{} to organization:{}.", smsTempletShareIn.getFromOrgId(),
-                smsTempletShareIn.getResourceId(), smsTempletShareIn.getToOrgId());
         BaseOutput result =
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
                         null);
-        dataAuthService.share("sms_templet", smsTempletShareIn.getResourceId(), smsTempletShareIn.getFromOrgId(),
-                smsTempletShareIn.getToOrgId(), smsTempletShareIn.getWriteable());
-        logger.debug("organization{} shared sms templet:{} to organization:{}.", smsTempletShareIn.getFromOrgId(),
-                smsTempletShareIn.getResourceId(), smsTempletShareIn.getToOrgId());
+        // 分享
+        smsTempletShareIn.getOrgIds().forEach(item -> {
+            logger.debug("sharing sms templet:{} to organization:{}.", smsTempletShareIn.getResourceId(), item);
+            // dataAuthService.share("sms_templet", smsTempletShareIn.getResourceId(), 14L, item,
+            // smsTempletShareIn.getWriteable());
+                logger.debug("shared sms templet:{} to organization:{}.", smsTempletShareIn.getResourceId(), item);
+            });
         return result;
     }
-    
-    
+
+
     /**
      * 验证模板是否存在
      * 

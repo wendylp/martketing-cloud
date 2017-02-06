@@ -10,46 +10,30 @@
 package cn.rongcapital.mkt.vo.sms.in;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SmsTempletShareIn {
 
     @NotNull
-    @JsonProperty("from_org_id")
-    private Long fromOrgId;
-
-    @NotNull
-    @JsonProperty("to_org_id")
-    private Long toOrgId;
-
-    @NotNull
     @JsonProperty("resource_id")
     private Long resourceId;
+
+    @NotEmpty
+    @JsonProperty("org_ids")
+    private List<Long> orgIds = new ArrayList<Long>();
 
     @NotNull
     @JsonProperty("writeable")
     private Boolean writeable;
-
-    public Long getFromOrgId() {
-        return fromOrgId;
-    }
-
-    public void setFromOrgId(Long fromOrgId) {
-        this.fromOrgId = fromOrgId;
-    }
-
-    public Long getToOrgId() {
-        return toOrgId;
-    }
-
-    public void setToOrgId(Long toOrgId) {
-        this.toOrgId = toOrgId;
-    }
 
     public Long getResourceId() {
         return resourceId;
@@ -57,6 +41,14 @@ public class SmsTempletShareIn {
 
     public void setResourceId(Long resourceId) {
         this.resourceId = resourceId;
+    }
+
+    public List<Long> getOrgIds() {
+        return orgIds;
+    }
+
+    public void setOrgIds(List<Long> orgIds) {
+        this.orgIds = orgIds;
     }
 
     public Boolean getWriteable() {
@@ -69,8 +61,7 @@ public class SmsTempletShareIn {
 
     @Override
     public String toString() {
-        return "SmsTempletShareIn [fromOrgId=" + fromOrgId + ", toOrgId=" + toOrgId + ", resourceId=" + resourceId
-                + ", writeable=" + writeable + "]";
+        return "SmsTempletShareIn [resourceId=" + resourceId + ", orgIds=" + orgIds + ", writeable=" + writeable + "]";
     }
 
 }

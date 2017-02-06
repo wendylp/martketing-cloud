@@ -10,6 +10,8 @@
 package cn.rongcapital.mkt.vo.sms.in;
 
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -21,24 +23,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class SmsTempletCancelShareIn {
 
     @NotNull
-    @JsonProperty("org_id")
-    private Long orgId;
-
-    @NotNull
     @JsonProperty("resource_id")
     private Long resourceId;
 
     @NotEmpty
-    @JsonProperty("share_id")
-    private String shareId;
-
-    public Long getOrgId() {
-        return orgId;
-    }
-
-    public void setOrgId(Long orgId) {
-        this.orgId = orgId;
-    }
+    @JsonProperty("share_ids")
+    private List<String> shareIds;
 
     public Long getResourceId() {
         return resourceId;
@@ -48,17 +38,17 @@ public class SmsTempletCancelShareIn {
         this.resourceId = resourceId;
     }
 
-    public String getShareId() {
-        return shareId;
+    public List<String> getShareIds() {
+        return shareIds;
     }
 
-    public void setShareId(String shareId) {
-        this.shareId = shareId;
+    public void setShareIds(List<String> shareIds) {
+        this.shareIds = shareIds;
     }
 
     @Override
     public String toString() {
-        return "SmsTempletCancelShareIn [orgId=" + orgId + ", resourceId=" + resourceId + ", shareId=" + shareId + "]";
+        return "SmsTempletCancelShareIn [resourceId=" + resourceId + ", shareIds=" + shareIds + "]";
     }
 
 }
