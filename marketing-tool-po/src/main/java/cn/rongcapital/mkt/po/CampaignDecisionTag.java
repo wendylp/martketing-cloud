@@ -17,6 +17,8 @@ public class CampaignDecisionTag extends BaseQuery {
 
     private String tagIds;
 
+    private String tagTypes;
+
     private Byte status;
 
     private Date createTime;
@@ -70,6 +72,10 @@ public class CampaignDecisionTag extends BaseQuery {
     public void setTagIds(String tagIds) {
         this.tagIds = tagIds == null ? null : tagIds.trim();
     }
+    
+    public void setTagTypes(String tagTypes) {
+        this.tagTypes = tagTypes == null ? null : tagTypes.trim();
+    }
 
     public Byte getStatus() {
         return status;
@@ -94,4 +100,9 @@ public class CampaignDecisionTag extends BaseQuery {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+	public String getTagTypes() {
+		return tagTypes;
+	}    
+    
 }
