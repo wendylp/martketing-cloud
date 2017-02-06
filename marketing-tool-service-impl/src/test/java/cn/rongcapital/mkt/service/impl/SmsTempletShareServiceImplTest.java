@@ -20,9 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -58,20 +56,22 @@ public class SmsTempletShareServiceImplTest {
     @Test
     public void testShareSmsTemplet01() {
         SmsTempletShareIn smsTempletShareIn = new SmsTempletShareIn();
-        smsTempletShareIn.setFromOrgId(11L);
-        smsTempletShareIn.setToOrgId(10L);
+        List<Long> orgIds = new ArrayList<Long>();
+        orgIds.add(11L);
+        orgIds.add(12L);
+        smsTempletShareIn.setOrgIds(orgIds);
         smsTempletShareIn.setResourceId(12L);
         smsTempletShareIn.setWriteable(true);
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                return null;
-            }
-        })
-                .when(dataAuthService)
-                .share("sms_templet", smsTempletShareIn.getResourceId(), smsTempletShareIn.getToOrgId(),
-                        smsTempletShareIn.getWriteable());
-        ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
+//        Mockito.doAnswer(new Answer<Void>() {
+//            @Override
+//            public Void answer(InvocationOnMock invocation) throws Throwable {
+//                return null;
+//            }
+//        })
+//                .when(dataAuthService)
+//                .share("sms_templet", smsTempletShareIn.getResourceId(), smsTempletShareIn.getFromOrgId(),
+//                        smsTempletShareIn.getToOrgId(), smsTempletShareIn.getWriteable());
+//        ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
 
         List<SmsTemplet> smsTempletList = new ArrayList<SmsTemplet>();
         SmsTemplet item = new SmsTemplet();
@@ -93,20 +93,12 @@ public class SmsTempletShareServiceImplTest {
     @Test
     public void testShareSmsTemplet02() {
         SmsTempletShareIn smsTempletShareIn = new SmsTempletShareIn();
-        smsTempletShareIn.setFromOrgId(11L);
-        smsTempletShareIn.setToOrgId(10L);
+        List<Long> orgIds = new ArrayList<Long>();
+        orgIds.add(11L);
+        orgIds.add(12L);
+        smsTempletShareIn.setOrgIds(orgIds);
         smsTempletShareIn.setResourceId(12L);
         smsTempletShareIn.setWriteable(true);
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                return null;
-            }
-        })
-                .when(dataAuthService)
-                .share("sms_templet", smsTempletShareIn.getResourceId(), smsTempletShareIn.getToOrgId(),
-                        smsTempletShareIn.getWriteable());
-        ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
 
         Mockito.when(smsTempletDao.selectList(Mockito.any())).thenReturn(null);
         ReflectionTestUtils.setField(service, "smsTempletDao", smsTempletDao);

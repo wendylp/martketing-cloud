@@ -58,15 +58,20 @@ public class SmsTempletCancelShareServiceImplTest {
     @Test
     public void testCancelShareSmsTemplet01() {
         SmsTempletCancelShareIn smsTempleCancelShareIn = new SmsTempletCancelShareIn();
-        smsTempleCancelShareIn.setOrgId(9L);
         smsTempleCancelShareIn.setResourceId(10L);
-        smsTempleCancelShareIn.setShareId("DDDDD");
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                return null;
-            }
-        }).when(dataAuthService).unshare(smsTempleCancelShareIn.getShareId());
+        List<String> shareids = new ArrayList<String>();
+        shareids.add("AAA");
+        shareids.add("BBB");
+        smsTempleCancelShareIn.setShareIds(shareids);
+
+        shareids.forEach(item -> {
+            Mockito.doAnswer(new Answer<Void>() {
+                @Override
+                public Void answer(InvocationOnMock invocation) throws Throwable {
+                    return null;
+                }
+            }).when(dataAuthService).unshare(item);
+        });
         ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
 
         List<SmsTemplet> smsTempletList = new ArrayList<SmsTemplet>();
@@ -84,21 +89,16 @@ public class SmsTempletCancelShareServiceImplTest {
     }
 
     /**
-     * 短信模板存在
+     * 短信模板不存在
      */
     @Test
     public void testCancelShareSmsTemplet02() {
         SmsTempletCancelShareIn smsTempleCancelShareIn = new SmsTempletCancelShareIn();
-        smsTempleCancelShareIn.setOrgId(9L);
         smsTempleCancelShareIn.setResourceId(10L);
-        smsTempleCancelShareIn.setShareId("DDDDD");
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                return null;
-            }
-        }).when(dataAuthService).unshare(smsTempleCancelShareIn.getShareId());
-        ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
+        List<String> shareids = new ArrayList<String>();
+        shareids.add("AAA");
+        shareids.add("BBB");
+        smsTempleCancelShareIn.setShareIds(shareids);
 
         Mockito.when(smsTempletDao.selectList(Mockito.any())).thenReturn(null);
         ReflectionTestUtils.setField(service, "smsTempletDao", smsTempletDao);
