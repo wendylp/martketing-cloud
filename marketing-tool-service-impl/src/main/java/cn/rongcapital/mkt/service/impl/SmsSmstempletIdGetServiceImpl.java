@@ -90,8 +90,9 @@ public class SmsSmstempletIdGetServiceImpl implements SmsSmstempletIdGetService 
         Map<String, Integer> map = new HashMap<String, Integer>();
         map.put("id", id);
         map.put("orgId", orgId);
-        SmsTemplet sms = smsTempletDao.selectByIdAndOrgId(map);
-        if(sms != null){
+        List<SmsTemplet> SmsTemplet = smsTempletDao.selectByIdAndOrgId(map);
+        if(SmsTemplet.size() > 0){
+        	SmsTemplet sms = SmsTemplet.get(0);
     		SmsSmstempletIdGetOut smsSmstempletIdGetOut = new SmsSmstempletIdGetOut(
     				sms.getId(), sms.getChannelType(), sms.getType(),
     				sms.getAuditStatus(), sms.getName(), sms.getAuditReason(),
