@@ -96,5 +96,4 @@ public interface DataAuthService {
      * @since 2017-02-06
      */
     boolean validateWriteable(String resouceType,long resourceId,long orgId) throws NoWriteablePermissionException;
- 
 }
