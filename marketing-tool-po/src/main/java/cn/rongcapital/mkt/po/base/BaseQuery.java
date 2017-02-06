@@ -30,6 +30,8 @@ public class BaseQuery implements Serializable{
     
     private transient Integer orgId; //组织ID
     
+    private transient Boolean firsthand;
+    
     private transient String mid;    //主数据ID
     private transient String md_type;//主数据类型
     private transient String mapping_keyid;//主数据keyid
@@ -132,5 +134,13 @@ public class BaseQuery implements Serializable{
 
 	public void setOrgId(Integer orgId) {
 		this.orgId = orgId;
+	}
+
+	public Boolean getFirsthand() {
+		return firsthand;
+	}
+
+	public void setFirsthand(Boolean firsthand) {
+		this.firsthand = firsthand;
 	}
 }

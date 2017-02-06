@@ -37,7 +37,7 @@ public class SmsTempletShareServiceImpl implements SmsTempletShareService {
 
     @Autowired
     private SmsTempletService smsTempletService;
-    
+
     /**
      * 短信模板分享
      * 
@@ -50,15 +50,18 @@ public class SmsTempletShareServiceImpl implements SmsTempletShareService {
     @ReadWrite(type = ReadWriteType.WRITE)
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public BaseOutput shareSmsTemplet(SmsTempletShareIn smsTempletShareIn) {
-        if(smsTempletService.smsTempletValidate(smsTempletShareIn.getResourceId().intValue())){
-            logger.debug("table sms_templet data[id:{}] not exist.", 
-                smsTempletShareIn.getResourceId());
-            return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(), ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
+        // 验证数据有效性
+        if (smsTempletService.smsTempletValidate(smsTempletShareIn.getResourceId().intValue())) {
+            logger.debug("table sms_templet data[id:{}] not exist.", smsTempletShareIn.getResourceId());
+            return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
+                    ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
         }
+        // 分享
         logger.debug("organization{} sharing sms templet:{} to organization:{}.", smsTempletShareIn.getFromOrgId(),
                 smsTempletShareIn.getResourceId(), smsTempletShareIn.getToOrgId());
         BaseOutput result =
-                new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+                new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
+                        null);
         dataAuthService.share("sms_templet", smsTempletShareIn.getResourceId(), smsTempletShareIn.getFromOrgId(),
                 smsTempletShareIn.getToOrgId(), smsTempletShareIn.getWriteable());
         logger.debug("organization{} shared sms templet:{} to organization:{}.", smsTempletShareIn.getFromOrgId(),

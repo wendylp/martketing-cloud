@@ -26,6 +26,7 @@ import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.po.SmsTemplet;
@@ -48,6 +49,10 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	
 	@Autowired
 	private SmsTempletDao smsTempletDao;
+	
+	//新增权限service lhz
+	@Autowired
+    private DataAuthService  dataAuthService;
 	
 	@Autowired
 	private SmsMaterialDao smsMaterialDao;
@@ -225,6 +230,8 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			}else{
 				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
 				smsTempletDao.insert(smsTemplet);
+				 //新增权限数据 lhz 
+				dataAuthService.put(smsTempletIn.getOrgid(),"sms_templet", smsTemplet.getId());;
 			}
 			
 			//变量模板添加

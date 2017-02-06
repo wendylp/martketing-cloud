@@ -11,6 +11,8 @@
  *************************************************/
 package cn.rongcapital.mkt.dataauth.service;
 
+import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
+
 public interface DataAuthService {
     
     /**
@@ -82,5 +84,17 @@ public interface DataAuthService {
      */
     void clone(String resourceType,long resourceId,long fromOrgId,long fromResourceId,long toOrgId,boolean writeable);
     
+    /**
+     * 判断当前组织对该资源是否具有writeable 可写权限
+     * @功能描述: 判断当前组织对该资源是否具有writeable 可写权限
+     * @param resouceType 资源表名称
+     * @param resouceId 资源ID
+     * @param orgId 组织ID
+     * @return boolean 验证是否通过
+     * @exception NoWriteablePermissionException 无可写权限异常
+     * @author xie.xiaoliang
+     * @since 2017-02-06
+     */
+    boolean validateWriteable(String resouceType,long resourceId,long orgId) throws NoWriteablePermissionException;
  
 }
