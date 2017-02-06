@@ -5,8 +5,8 @@ import java.util.List;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.SmsTempletOut;
+import cn.rongcapital.mkt.vo.sms.in.SmsTempletCloneIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
-import cn.rongcapital.mkt.vo.sms.in.SmsTempletListIn;
 
 public interface SmsTempletService {
 	
@@ -40,5 +40,12 @@ public interface SmsTempletService {
 	 * @return
 	 */
 	public List<SmsTemplet> setSmsTempletView(List<SmsTemplet> dataList);
+	
+	/**
+	 * 短信模板克隆
+	 * @param dataList
+	 * @return
+	 */
+	public BaseOutput smsTempletClone(SmsTempletCloneIn clone);
 	
 }

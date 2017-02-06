@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.qos.logback.classic.Logger;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsSmstempletDelService;
@@ -33,6 +33,13 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
 
     @Autowired
     private SmsTempletMaterialMapDao smsTempletMaterialMapDao;
+    
+    @Autowired
+    private DataAuthService dataAuthService;
+    
+    private static final String TABLE_NAME = "sms_templet";// 资源对应表名
+
+    
     
     /**
      * 短信模板删除
@@ -77,6 +84,8 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
         // 删除数据
         smsTempletDel.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
         int delCount = smsTempletDao.updateById(smsTempletDel);
+        // 删除短信模板对应权限记录
+        dataAuthService.evict(TABLE_NAME, smsTempletDel.getId());
         
 		//变量模板时
 		if(SmsTempletTypeEnum.VARIABLE.getStatusCode() == smsTempletLists.get(0).getType().intValue()){
@@ -114,5 +123,5 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
             return code;
         }
     }
-
+    
 }

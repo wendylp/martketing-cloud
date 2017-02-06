@@ -27,6 +27,7 @@ import cn.rongcapital.mkt.service.SmsTempletShareService;
 import cn.rongcapital.mkt.service.SmstempletCountGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.SmsTempletOut;
+import cn.rongcapital.mkt.vo.sms.in.SmsTempletCloneIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletCancelShareIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletShareIn;
@@ -103,6 +104,17 @@ public class MktSmsTempletApi {
             @QueryParam("channel_type") String channelType, @NotNull @QueryParam("org_id") Long orgId) throws Exception {
         return smstempletCountGetService.getSmsTempletCount(channelType, orgId);
     }
+	
+	/**
+	 * 短信模板克隆
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@Path("/mkt.sms.smstemplet.clone")
+	public BaseOutput smsTempletClone(@Valid SmsTempletCloneIn clone) throws Exception {		
+		return smsTempletService.smsTempletClone(clone);
+	}
 	
     /**
      * 模板分享
