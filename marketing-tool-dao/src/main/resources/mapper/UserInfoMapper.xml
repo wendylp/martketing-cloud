@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,user_id as userId,comp_id as compId,comp_name as compName,status as status]]>
+		<![CDATA[ id as id,user_id as userId,user_code as userCode,comp_id as compId,comp_name as compName,org_id as orgId,status as status]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -15,8 +15,10 @@
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
 		    	<if test="userId != null"><![CDATA[ AND user_id = #{userId}]]></if>
+		    	<if test="userCode != null"><![CDATA[ AND user_code = #{userCode}]]></if>
 		    	<if test="compId != null"><![CDATA[ AND comp_id = #{compId}]]></if>
 		    	<if test="compName != null"><![CDATA[ AND comp_name = #{compName}]]></if>
+		    	<if test="orgId != null"><![CDATA[ AND org_id = #{orgId}]]></if>
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		</where>
 	</sql>
@@ -31,8 +33,10 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 		    	<if test="userId != null"><![CDATA[user_id = #{userId},]]></if>
+		    	<if test="userCode != null"><![CDATA[user_code = #{userCode},]]></if>
 		    	<if test="compId != null"><![CDATA[comp_id = #{compId},]]></if>
 		    	<if test="compName != null"><![CDATA[comp_name = #{compName},]]></if>
+		    	<if test="orgId != null"><![CDATA[org_id = #{orgId},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
 		</set>
 	</sql>
@@ -40,12 +44,14 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.UserInfo" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO user_info (user_id,comp_id,comp_name)
+			INSERT INTO user_info (user_id,user_code,comp_id,comp_name,org_id)
 			VALUES
 			(
 			  #{userId},
+			  #{userCode}
 			  #{compId},
-			  #{compName}
+			  #{compName},
+			  #{orgId}
 			)
 		]]>
 	</insert>
