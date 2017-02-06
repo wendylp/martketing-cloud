@@ -40,13 +40,12 @@ public interface DataAuthService {
      * @功能描述: 分享数据权限
      * @param resourceType 相应数据表名
      * @param resourceId 主键ID
-     * @param fromOrgId 从哪个组织分享来的
      * @param toOrgId 分享给哪个组织
      * @param writeable 是否可写权限
      * @author xie.xiaoliang
      * @since 2017-02-03
      */
-    void share(String resourceType,long resourceId,long fromOrgId,long toOrgId,boolean writeable);
+    void share(String resourceType,long resourceId,long toOrgId,boolean writeable);
     
     /**
      * 取消分享
@@ -75,20 +74,19 @@ public interface DataAuthService {
      * @功能描述: 克隆数据权限
      * @param resourceType 相应的数据表名
      * @param resourceId 主键ID
-     * @param fromOrgId 从哪个组织克隆
      * @param fromResourceId 从哪个数据ID克隆
      * @param toOrgId 克隆给哪个组织
      * @param writeable 可写权限
      * @author xie.xiaoliang
      * @since 2017-02-03
      */
-    void clone(String resourceType,long resourceId,long fromOrgId,long fromResourceId,long toOrgId,boolean writeable);
+    void clone(String resourceType,long resourceId,long fromResourceId,long toOrgId,boolean writeable);
     
     /**
      * 判断当前组织对该资源是否具有writeable 可写权限
      * @功能描述: 判断当前组织对该资源是否具有writeable 可写权限
-     * @param resourceType 资源表名称
-     * @param resourceId 资源ID
+     * @param resouceType 资源表名称
+     * @param resouceId 资源ID
      * @param orgId 组织ID
      * @return boolean 验证是否通过
      * @exception NoWriteablePermissionException 无可写权限异常

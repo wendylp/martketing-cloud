@@ -72,6 +72,16 @@ public interface DataAuthMapper {
      * @since 2017-01-31 
      */
     List<DataAuth> selectByFromOrgIds(@Param("tableName")String tableName,@Param("fromResourceId")long fromResourceId,@Param("fromOrgId")long fromOrgId);
+
+
+    /**
+     * @功能描述: message
+     * @param resourceType
+     * @param resourceId void
+     * @author xie.xiaoliang
+     * @since 2017-02-06 
+     */
+    DataAuth selectOwnerByResouceId(@Param("tableName")String resourceType,@Param("resourceId") long resourceId);
     
     
 }

@@ -101,10 +101,12 @@ public class DataAuthServiceImpl implements DataAuthService {
      */
     @Override
     @Transactional
-    public void share(String resourceType, long resourceId, long fromOrgId, long toOrgId, boolean writeable) {
+    public void share(String resourceType, long resourceId, long toOrgId, boolean writeable) {
         String shareId = UUID.randomUUID().toString();
+        
+        DataAuth fromDataAuth = this.dataAuthMapper.selectOwnerByResouceId(resourceType,resourceId);
+        long fromOrgId = fromDataAuth.getOrgId();
         shareLoop(DataAuthTypeEnum.SHARE.getCode(), resourceType, resourceId, fromOrgId, toOrgId, writeable, shareId, true);
-
         // 回写数据的分享状态
         writeBackShareStatus(resourceType, resourceId, fromOrgId,Boolean.TRUE);
     }
@@ -289,8 +291,11 @@ public class DataAuthServiceImpl implements DataAuthService {
      */
     @Override
     @Transactional
-    public void clone(String resourceType, long resourceId, long fromOrgId, long fromResourceId, long toOrgId,
-            boolean writeable) {
+    public void clone(String resourceType, long resourceId, long fromResourceId, long toOrgId, boolean writeable) {
+    
+        DataAuth fromDataAuth = this.dataAuthMapper.selectOwnerByResouceId(resourceType,fromResourceId);
+        long fromOrgId = fromDataAuth.getOrgId();
+        
         DataAuth auth = new DataAuth();
         auth.setTableName(resourceType);
         auth.setResourceId(resourceId);

@@ -57,13 +57,13 @@ public class DataAuthServiceTest extends AbstractUnitTest{
     @Test
     public void TestShare(){
         String shareType = DataAuthTypeEnum.SHARE.getCode();
-        String resourceType = "business";
+        String resourceType = "sms_templet";
         long resourceId = 1l;
         long fromOrgId = 16l;
         long toOrgIds = 18l;
         boolean writeable = Boolean.TRUE;
         
-        this.dataAuthService.share(resourceType, resourceId, fromOrgId, toOrgIds, writeable);
+        this.dataAuthService.share(resourceType, resourceId, toOrgIds, writeable);
     }
     
     @Test
@@ -76,13 +76,13 @@ public class DataAuthServiceTest extends AbstractUnitTest{
     @Test
     public void TestClone(){
         
-        String resourceType="business";
-        long resourceId = 17l;
+        String resourceType="sms_templet";
+        long resourceId = 800l;
         long fromOrgId = 16L;
         long fromResourceId = 1l;
         long toOrgId = 18l;
         boolean writeable = Boolean.TRUE;
-        this.dataAuthService.clone(resourceType, resourceId, fromOrgId, fromResourceId, toOrgId, writeable);
+        this.dataAuthService.clone(resourceType, resourceId, fromResourceId, toOrgId, writeable);
     }
 
 }
