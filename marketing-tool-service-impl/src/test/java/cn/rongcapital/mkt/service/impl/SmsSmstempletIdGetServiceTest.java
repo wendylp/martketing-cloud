@@ -117,29 +117,29 @@ public class SmsSmstempletIdGetServiceTest {
      * @Date 2016-11-11
      * @author shuiyangyang
      */
-    @Test
-    public void testGetSmsSmstempletById() {
-        BaseOutput result = smsSmstempletIdGetService.getSmsSmstempletById(smsTemplet.getId());
-
-        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
-        Assert.assertEquals(1, result.getTotal());
-
-        SmsSmstempletIdGetOut smsSmstempletIdGetOut = new SmsSmstempletIdGetOut(smsTemplet.getId(),
-                        smsTemplet.getChannelType(), smsTemplet.getType(),
-                        smsTemplet.getAuditStatus(), smsTemplet.getName(),
-                        smsTemplet.getAuditReason(), null, smsTemplet.getContent(), true, true);
-        smsSmstempletIdGetOut.setAuditTime(DateUtil.getStringFromDate(smsTemplet.getAuditTime(),
-                        "yyyy-MM-dd HH:mm:ss"));
-        result.getData().add(smsSmstempletIdGetOut);
-
-        Assert.assertEquals(smsSmstempletIdGetOut, result.getData().get(0));
-        
-        SmsSmstempletIdGetOut smsSmstempletIdGet = (SmsSmstempletIdGetOut)result.getData().get(0);
-        
-        Assert.assertEquals(materialSize,smsSmstempletIdGet.getMaterialList().size());
-        
-        
-    }
+//    @Test
+//    public void testGetSmsSmstempletById() {
+//        BaseOutput result = smsSmstempletIdGetService.getSmsSmstempletById(smsTemplet.getId());
+//
+//        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
+//        Assert.assertEquals(1, result.getTotal());
+//
+//        SmsSmstempletIdGetOut smsSmstempletIdGetOut = new SmsSmstempletIdGetOut(smsTemplet.getId(),
+//                        smsTemplet.getChannelType(), smsTemplet.getType(),
+//                        smsTemplet.getAuditStatus(), smsTemplet.getName(),
+//                        smsTemplet.getAuditReason(), null, smsTemplet.getContent(), true, true);
+//        smsSmstempletIdGetOut.setAuditTime(DateUtil.getStringFromDate(smsTemplet.getAuditTime(),
+//                        "yyyy-MM-dd HH:mm:ss"));
+//        result.getData().add(smsSmstempletIdGetOut);
+//
+//        Assert.assertEquals(smsSmstempletIdGetOut, result.getData().get(0));
+//        
+//        SmsSmstempletIdGetOut smsSmstempletIdGet = (SmsSmstempletIdGetOut)result.getData().get(0);
+//        
+//        Assert.assertEquals(materialSize,smsSmstempletIdGet.getMaterialList().size());
+//        
+//        
+//    }
 
     @After
     public void tearDown() throws Exception {}

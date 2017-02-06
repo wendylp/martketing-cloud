@@ -13,5 +13,5 @@ public interface SmsSmstempletIdGetService {
      * @Date 2016-11-11
      * @author shuiyangyang
      */
-    public BaseOutput getSmsSmstempletById(Integer id);
+	public BaseOutput getSmsSmstempletById(Integer id, Integer orgId);
 }
