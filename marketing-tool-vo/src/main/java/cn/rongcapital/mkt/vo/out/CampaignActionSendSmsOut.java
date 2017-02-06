@@ -13,6 +13,10 @@ public class CampaignActionSendSmsOut {
     private Integer smsMaterialId;
 
     private Integer smsCategoryType;
+    
+    private String smsMaterialName;
+    
+    private String smsCategoryName;
 
     @JsonProperty("name")
     public String getName() {
@@ -40,4 +44,24 @@ public class CampaignActionSendSmsOut {
     public void setSmsCategoryType(Integer smsCategoryType) {
         this.smsCategoryType = smsCategoryType;
     }
+    
+    @JsonProperty("sms_material_name")
+	public String getSmsMaterialName() {
+		return smsMaterialName;
+	}
+
+	public void setSmsMaterialName(String smsMaterialName) {
+		this.smsMaterialName = smsMaterialName;
+	}
+
+    @JsonProperty("sms_category_name")
+	public String getSmsCategoryName() {
+		return smsCategoryName;
+	}
+
+	public void setSmsCategoryName(String smsCategoryName) {
+		this.smsCategoryName = smsCategoryName;
+	}
+    
+    
 }
