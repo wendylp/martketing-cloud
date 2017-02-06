@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.enums.dataauth.DataAuthTypeEnum;
+import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.dao.dataauth.DataAuthMapper;
 import cn.rongcapital.mkt.dataauth.po.DataAuth;
 import cn.rongcapital.mkt.dataauth.po.Organization;
@@ -309,6 +310,18 @@ public class DataAuthServiceImpl implements DataAuthService {
         writeBackShareStatus(resourceType, fromResourceId, fromOrgId,Boolean.TRUE);
     }
 
-   
+    /* (non-Javadoc)
+     * @see cn.rongcapital.mkt.dataauth.service.DataAuthService#validateWriteable(java.lang.String, long, long)
+     */
+    @Override
+    public boolean validateWriteable(String resouceType, long resourceId, long orgId)
+            throws NoWriteablePermissionException {
+        DataAuth dataAuth = this.dataAuthMapper.selectByTableNameResourceIDOrgId(resouceType, orgId, resourceId);
+        if(dataAuth !=null && dataAuth.getWriteable()){
+            return true;
+        }
+        String excMsg = "The organization do not have writeable permission.";
+        throw new NoWriteablePermissionException(excMsg);
+    }
 
 }
