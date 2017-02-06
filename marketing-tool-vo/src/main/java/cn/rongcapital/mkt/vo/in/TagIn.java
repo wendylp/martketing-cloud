@@ -9,7 +9,7 @@ public class TagIn {
 	
 	private String tag_id;
 
-	private String tagType;
+	private String tag_type;
 
 	public String getTag_name() {
 		return tag_name;
@@ -27,14 +27,11 @@ public class TagIn {
 		this.tag_id = tag_id;
 	}
 
-	public String getTagType() {
-		return tagType;
+	public String getTag_type() {
+		return tag_type;
 	}
 
-	public void setTagType(String tagType) {
-		this.tagType = tagType;
-	}
-	
-	
-	
+	public void setTag_type(String tag_type) {
+		this.tag_type = tag_type;
+	}	
 }

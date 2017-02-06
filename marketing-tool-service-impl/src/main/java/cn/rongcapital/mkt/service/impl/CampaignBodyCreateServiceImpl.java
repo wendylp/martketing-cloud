@@ -955,7 +955,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private String extractTagTypes(List<TagIn> tagList) {
 		List<String> tagTypeList = new ArrayList<String>();
 		for(TagIn tagIn:tagList) {
-			String tagType = tagIn.getTagType();
+			String tagType = tagIn.getTag_type();
 			if (tagType == null) {
 				tagType = TagIn.TAG_TYPE_CUSTOM; //向下兼容
 			}
