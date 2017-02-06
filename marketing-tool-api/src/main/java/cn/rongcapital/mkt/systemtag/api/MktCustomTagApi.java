@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.CustomTagActionService;
+import cn.rongcapital.mkt.service.CustomtagAllCountService;
 import cn.rongcapital.mkt.service.CustomtagCategoryLessListService;
 import cn.rongcapital.mkt.service.CustomtagCategoryListService;
 import cn.rongcapital.mkt.service.CustomtagFuzzyNameListService;
@@ -78,6 +79,9 @@ public class MktCustomTagApi {
 
 	@Autowired
 	private CustomtagCategoryCreateService customtagCategoryCreateService;
+	
+	@Autowired
+	private CustomtagAllCountService customtagAllCountService;
 
 	/**
 	 * 功能描述：自定义分类列表 接口：mkt.customtag.category.list
@@ -218,4 +222,16 @@ public class MktCustomTagApi {
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
 		return customtagQrcodeFuzzyListService.customtagQrcodeFuzzyListGet(customTagName, index, size);
 	}
+	
+    /**
+     * 功能描述：自定义标签个数
+     * 
+     * @return
+     */
+    @GET
+    @Path("/mkt.customtag.all.count")
+    public BaseOutput customtagAllCount(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken) {
+        return customtagAllCountService.customtagAllCount();
+    }
 }

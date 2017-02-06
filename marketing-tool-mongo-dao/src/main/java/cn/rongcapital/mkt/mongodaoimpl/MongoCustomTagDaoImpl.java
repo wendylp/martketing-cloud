@@ -173,6 +173,12 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
         return mongoTemplate.count(query, CUSTOM_TAG_CLASS);
     }
 
+    @Override
+    public long countAll() {
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID));
+        return mongoTemplate.count(query, CUSTOM_TAG_CLASS);
+    }
+    
     /**
      * 功能描述：根据对象生成对象的mongodb查询条件
      * 
