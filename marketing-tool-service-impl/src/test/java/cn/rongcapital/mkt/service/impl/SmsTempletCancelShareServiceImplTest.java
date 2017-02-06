@@ -9,6 +9,9 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -23,9 +26,10 @@ import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
+import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsTempletCancelShareService;
-import cn.rongcapital.mkt.service.SmsTempletService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletCancelShareIn;
 
@@ -36,7 +40,7 @@ public class SmsTempletCancelShareServiceImplTest {
     private DataAuthService dataAuthService;
 
     @Mock
-    private SmsTempletService smsTempletService;
+    private SmsTempletDao smsTempletDao;
 
     private SmsTempletCancelShareService service;
 
@@ -65,9 +69,11 @@ public class SmsTempletCancelShareServiceImplTest {
         }).when(dataAuthService).unshare(smsTempleCancelShareIn.getShareId());
         ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
 
-        Mockito.when(smsTempletService.smsTempletValidate(smsTempleCancelShareIn.getResourceId().intValue()))
-                .thenReturn(false);
-        ReflectionTestUtils.setField(service, "smsTempletService", smsTempletService);
+        List<SmsTemplet> smsTempletList = new ArrayList<SmsTemplet>();
+        SmsTemplet item = new SmsTemplet();
+        smsTempletList.add(item);
+        Mockito.when(smsTempletDao.selectList(Mockito.any())).thenReturn(smsTempletList);
+        ReflectionTestUtils.setField(service, "smsTempletDao", smsTempletDao);
 
         BaseOutput output = service.cancelShareSmsTemplet(smsTempleCancelShareIn);
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), output.getCode());
@@ -94,9 +100,8 @@ public class SmsTempletCancelShareServiceImplTest {
         }).when(dataAuthService).unshare(smsTempleCancelShareIn.getShareId());
         ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
 
-        Mockito.when(smsTempletService.smsTempletValidate(smsTempleCancelShareIn.getResourceId().intValue()))
-                .thenReturn(true);
-        ReflectionTestUtils.setField(service, "smsTempletService", smsTempletService);
+        Mockito.when(smsTempletDao.selectList(Mockito.any())).thenReturn(null);
+        ReflectionTestUtils.setField(service, "smsTempletDao", smsTempletDao);
 
         BaseOutput output = service.cancelShareSmsTemplet(smsTempleCancelShareIn);
         Assert.assertEquals(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(), output.getCode());
