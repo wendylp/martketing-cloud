@@ -82,5 +82,4 @@ public interface DataAuthService {
      */
     void clone(String resourceType,long resourceId,long fromOrgId,long fromResourceId,long toOrgId,boolean writeable);
     
- 
 }

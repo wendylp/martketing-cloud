@@ -3,7 +3,6 @@ package cn.rongcapital.mkt.sms.api;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -25,6 +24,7 @@ import cn.rongcapital.mkt.service.SmsTempletService;
 import cn.rongcapital.mkt.service.SmstempletCountGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.SmsTempletOut;
+import cn.rongcapital.mkt.vo.sms.in.SmsTempletCloneIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
 
 @Component
@@ -92,6 +92,17 @@ public class MktSmsTempletApi {
 			,@NotEmpty @QueryParam("ver") String ver
 			,@QueryParam("channel_type") String channelType) throws Exception {		
 		return smstempletCountGetService.getSmsTempletCount(channelType);
+	}
+	
+	/**
+	 * 短信模板克隆
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@Path("/mkt.sms.smstemplet.clone")
+	public BaseOutput smsTempletClone(@Valid SmsTempletCloneIn clone) throws Exception {		
+		return smsTempletService.smsTempletClone(clone);
 	}
 	
 }

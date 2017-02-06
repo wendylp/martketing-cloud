@@ -26,6 +26,7 @@ import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.po.SmsTemplet;
@@ -34,6 +35,7 @@ import cn.rongcapital.mkt.service.SmsTempletService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.ColumnsOut;
 import cn.rongcapital.mkt.vo.out.SmsTempletOut;
+import cn.rongcapital.mkt.vo.sms.in.SmsTempletCloneIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletListIn;
 import cn.rongcapital.mkt.vo.sms.in.SmstempletMaterialVo;
@@ -54,6 +56,9 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	
     @Autowired
     private SmsTempletMaterialMapDao smsTempletMaterialMapDao;
+    
+    @Autowired
+    private DataAuthService dataAuthService;
 	
 	private final String TEMPLETE_ID= "模板ID";
 	
@@ -66,6 +71,9 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	private final String TEMPLETE_TYPE="模板类型";
 	
 	private final String AUDIT_REASON="无";
+	
+	private static final String TABLE_NAME = "sms_templet";// 资源对应表名
+
 		
 	@Override
 	public SmsTempletOut smsTempletList(String userId, Integer index, Integer size, String channelType,
@@ -384,6 +392,44 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		columnsOut4.setColName(this.TEMPLETE_TYPE);
 		columnsOutList.add(columnsOut4);
 		return columnsOutList;		
+	}
+
+	/**
+	 * 短信模板克隆
+	 * @param SmsTempletCloneIn
+	 * @return
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public BaseOutput smsTempletClone(SmsTempletCloneIn clone) {
+		BaseOutput output = this.newSuccessBaseOutput();
+		SmsTemplet from = new SmsTemplet();
+		from.setId(clone.getId());
+		from.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		List<SmsTemplet> t = smsTempletDao.selectList(from);
+		if (!CollectionUtils.isEmpty(t)) {
+			SmsTemplet to = t.get(0);
+			to.setAuditor(clone.getCreator());
+			to.setCreator(clone.getCreator());
+			to.setUpdateUser(clone.getUpdateUser());
+			smsTempletDao.insert(to);
+
+			SmsTempletMaterialMap targetSTMM = new SmsTempletMaterialMap();
+			targetSTMM.setSmsTempletId(from.getId().longValue());
+			targetSTMM.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			targetSTMM.setStartIndex(null); //防止selectList方法的order_limit条件生效 锁定返回条数为10的情况发生
+			List<SmsTempletMaterialMap> list = smsTempletMaterialMapDao.selectList(targetSTMM);
+			if (!CollectionUtils.isEmpty(list)) {
+				for (SmsTempletMaterialMap temp : list) {
+					temp.setSmsTempletId(to.getId().longValue());
+					smsTempletMaterialMapDao.insert(temp);
+				}
+			}
+
+			dataAuthService.clone(TABLE_NAME, to.getId(), clone.getFromOrgId(), from.getId(), clone.getToOrgId(),
+					Boolean.TRUE);
+		}
+		return output;
 	}
 	
 }
