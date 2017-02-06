@@ -178,7 +178,7 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 		Long beginTime = in.getBeginTime();
 		Long endTime = in.getEndTime();
 		String objectCode = in.getObjectCode();
-		Long qrcodeId = in.getQrcodeId();
+		String qrcodeId = in.getQrcodeId();
 		Integer index = in.getIndex();
 		Integer size = in.getSize();
 		
@@ -209,7 +209,7 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 		return eventBehaviorOut;
 	}
 	
-	private Criteria getCriteria(String objectCode, Long qrcodeId,Long startTime, Long endTime) {
+	private Criteria getCriteria(String objectCode, String qrcodeId,Long startTime, Long endTime) {
 		Criteria cri = null;
 		cri = Criteria.where("subscribed").is(true);
 		cri.and("object.code").is(objectCode).and("object.attributes.qrcode_id").is(qrcodeId).and("time").gte(startTime).lte(endTime);
