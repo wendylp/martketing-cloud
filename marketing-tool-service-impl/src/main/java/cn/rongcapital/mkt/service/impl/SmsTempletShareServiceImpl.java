@@ -66,12 +66,16 @@ public class SmsTempletShareServiceImpl implements SmsTempletShareService {
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
                         null);
         // 分享
-        smsTempletShareIn.getOrgIds().forEach(item -> {
-            logger.debug("sharing sms templet:{} to organization:{}.", smsTempletShareIn.getResourceId(), item);
-            // dataAuthService.share("sms_templet", smsTempletShareIn.getResourceId(), 14L, item,
-            // smsTempletShareIn.getWriteable());
-                logger.debug("shared sms templet:{} to organization:{}.", smsTempletShareIn.getResourceId(), item);
-            });
+        smsTempletShareIn.getOrgIds()
+                .forEach(
+                        item -> {
+                            logger.debug("sharing sms templet:{} to organization:{}.",
+                                    smsTempletShareIn.getResourceId(), item);
+                            dataAuthService.share("sms_templet", smsTempletShareIn.getResourceId(), item,
+                                    smsTempletShareIn.getWriteable());
+                            logger.debug("shared sms templet:{} to organization:{}.",
+                                    smsTempletShareIn.getResourceId(), item);
+                        });
         return result;
     }
 
