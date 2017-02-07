@@ -67,7 +67,6 @@ public class SmsTempletShareServiceImpl implements SmsTempletShareService {
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
                         null);
         // 分享
-
         for (Long item : smsTempletShareIn.getOrgIds()) {
             logger.debug("sharing sms templet:{} to organization:{}.", smsTempletShareIn.getResourceId(), item);
             try {
@@ -75,7 +74,7 @@ public class SmsTempletShareServiceImpl implements SmsTempletShareService {
                         smsTempletShareIn.getWriteable());
             } catch (CannotShareToOwnerException e) {
                 logger.debug(
-                        String.format("can not share sms templet:[%s] to organization:[%s].",
+                        String.format("can not share sms templet:%s to organization:%s.",
                                 smsTempletShareIn.getResourceId(), item), e);
                 return new BaseOutput(ApiErrorCode.SMS_ERROR_TEMPLETE_CAN_SHARE.getCode(),
                         ApiErrorCode.SMS_ERROR_TEMPLETE_CAN_SHARE.getMsg(), ApiConstant.INT_ZERO, null);
