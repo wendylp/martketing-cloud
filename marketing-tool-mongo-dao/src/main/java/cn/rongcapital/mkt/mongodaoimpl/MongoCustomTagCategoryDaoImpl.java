@@ -126,7 +126,7 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
      * @throws SecurityException
      * @throws NoSuchMethodException
      */
-    public Query generatorQuery(Object object) {
+    private Query generatorQuery(Object object) {
         if (object == null) {
             return null;
         }
