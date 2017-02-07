@@ -513,7 +513,8 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			}else{
 				wechatQrcode.setStatus(NumUtil.int2OneByte(0));
 				wechatQrcode.setAuthorization(NumUtil.int2OneByte(0));
-				materialCode = wechatQrcodeDao.insert(wechatQrcode);
+				wechatQrcodeDao.insert(wechatQrcode);
+				materialCode = wechatQrcode.getId();
 			}
 			//微信二维码自定义标签相关
 			List<CustomTagIn> customTagList = wechatQrcodeIn.getCustomTagList();
