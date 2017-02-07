@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.service.CustomTagMaterialMapService;
 import cn.rongcapital.mkt.service.FindCustomTagInfoService;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatQrcode;
 import cn.rongcapital.mkt.service.WeixinQrcodeInfoService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.CustomTagIn;
 
 /**
  * 
@@ -46,6 +48,9 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService {
 
 	@Autowired
 	private FindCustomTagInfoService findCustomTagInfoService;
+	
+	@Autowired
+	private CustomTagMaterialMapService customTagMaterialMapService;
 
 	private static final String RELATION_TAG_SEPARATOR = ";";
 
@@ -121,8 +126,14 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService {
 			} else {
 				map.put("fixed_audience", "");
 			}
+			//此二维码相关自定义标签
+			//TODO 物料类型需要进行修改  wangweiqiang
+			Integer id = wechatQrcode.getId();
+			List<CustomTagIn> customTagList = customTagMaterialMapService.getCustomTagByMaterialCode(id.toString(),ApiConstant.MATERIAL_TYPE_WECHAT);
+			map.put("custom_tag_list", customTagList);
+			
 			// 关联标签
-			String relatedTag = wechatQrcode.getRelatedTags();
+/*			String relatedTag = wechatQrcode.getRelatedTags();
 			if(relatedTag != null){
 				BaseTag baseTag = null;
 				if(relatedTag.contains(";")){
@@ -153,7 +164,7 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService {
 			}else {
 				map.put("association_tags", new ArrayList<String>());
 			}
-
+*/
 			if (wechatQrcode.getComments() != null) {
 				map.put("comment", wechatQrcode.getComments());
 			} else {
@@ -163,4 +174,5 @@ public class WeixinQrcodeInfoServiceImpl implements WeixinQrcodeInfoService {
 		
 	}
 
+	
 }
