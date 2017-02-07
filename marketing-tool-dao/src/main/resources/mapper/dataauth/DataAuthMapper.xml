@@ -329,7 +329,7 @@
     table_name=#{tableName}
     and resource_id=#{resourceId}
     and firsthand = 1
-    and share_type is null
+    order by share_type
   </select>
   
   

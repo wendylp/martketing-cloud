@@ -11,6 +11,7 @@
  *************************************************/
 package cn.rongcapital.mkt.dataauth.service;
 
+import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 
 public interface DataAuthService {
@@ -43,9 +44,10 @@ public interface DataAuthService {
      * @param toOrgId 分享给哪个组织
      * @param writeable 是否可写权限
      * @author xie.xiaoliang
+     * @throws CannotShareToOwnerException 
      * @since 2017-02-03
      */
-    void share(String resourceType,long resourceId,long toOrgId,boolean writeable);
+    void share(String resourceType,long resourceId,long toOrgId,boolean writeable) throws CannotShareToOwnerException;
     
     /**
      * 取消分享
