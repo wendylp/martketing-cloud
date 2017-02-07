@@ -22,6 +22,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
+        <dependency>
+        	<groupId>cn.rongcapital.mkt</groupId>
+        	<artifactId>marketing-tool-dao</artifactId>
+        	<version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

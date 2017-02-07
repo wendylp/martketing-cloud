@@ -24,6 +24,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.service.*;
+import cn.rongcapital.mkt.vo.in.CustomTagSaveToCategoryIn;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
@@ -33,18 +35,11 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.service.CustomTagActionService;
-import cn.rongcapital.mkt.service.CustomtagAllCountService;
-import cn.rongcapital.mkt.service.CustomtagCategoryLessListService;
-import cn.rongcapital.mkt.service.CustomtagCategoryListService;
-import cn.rongcapital.mkt.service.CustomtagFuzzyNameListService;
-import cn.rongcapital.mkt.service.CustomtagListService;
-import cn.rongcapital.mkt.service.CustomtagQrcodeFuzzyListService;
-import cn.rongcapital.mkt.service.TagCampaignFuzzyListService;
-import cn.rongcapital.mkt.service.TagSegmentFuzzyListService;
 import cn.rongcapital.mkt.tag.service.CustomtagCategoryCreateService;
 import cn.rongcapital.mkt.tag.vo.in.CustomTagCategoryIn;
 import cn.rongcapital.mkt.vo.BaseOutput;
+
+import java.util.ArrayList;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -83,6 +78,9 @@ public class MktCustomTagApi {
 	@Autowired
 	private CustomtagAllCountService customtagAllCountService;
 
+	@Autowired
+	private CreateCustomTagToCategoryService createCustomTagToCategoryService;
+
 	/**
 	 * 功能描述：自定义分类列表 接口：mkt.customtag.category.list
 	 *
@@ -91,12 +89,12 @@ public class MktCustomTagApi {
 	@GET
 	@Path("/mkt.customtag.test")
 	public BaseOutput customtagTest(@NotEmpty @QueryParam("user_token") String userToken) {
-		// ArrayList<String> customTagList = new ArrayList<>();
-		// customTagList.add("wangweiqiang1");
-		// customTagList.add("wangweiqiang2");
-		// customTagList.add("wangweiqiang3");
-		// customTagList.add("wangweiqiang1");
-		// customTagActionService.insertCustomTagListIntoDefaultCategory(customTagList);
+		 ArrayList<String> customTagList = new ArrayList<>();
+		 customTagList.add("wangweiqiang15");
+		 customTagList.add("wangweiqiang5");
+		 customTagList.add("wangweiqiang6");
+		 customTagList.add("wangweiqiang4");
+		 customTagActionService.insertCustomTagListIntoDefaultCategory(customTagList);
 		return new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
 				null);
 	}
@@ -118,7 +116,7 @@ public class MktCustomTagApi {
 	/**
 	 * 功能描述：创建、编辑自定义标签的分类
 	 * 
-	 * @param customTagCategoryId
+	 * @param body
 	 * @return BaseOutput
 	 */
 	@POST
@@ -234,4 +232,19 @@ public class MktCustomTagApi {
             @NotEmpty @QueryParam("user_token") String userToken) {
         return customtagAllCountService.customtagAllCount();
     }
+
+	/**
+	 * 功能描述：保存自定义标签到分类
+	 *
+	 * @param customTagSaveToCategoryIn
+	 * @param securityContext
+	 * @return BaseOutput
+	 */
+	@POST
+	@Path("/mkt.customtag.create.tocategory")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput createCustomTagToCategory(@Valid CustomTagSaveToCategoryIn customTagSaveToCategoryIn,
+											  @Context SecurityContext securityContext) {
+		return createCustomTagToCategoryService.createCustomTagToCategory(customTagSaveToCategoryIn);
+	}
 }
