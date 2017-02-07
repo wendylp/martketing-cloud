@@ -185,7 +185,7 @@ public class WechatQrcodeIn extends BaseInput{
 	public void setExpiration_time(String expiration_time) {
 		this.expiration_time = expiration_time;
 	}
-	@JsonProperty("customTag_list")
+	@JsonProperty("custom_tag_list")
 	public List<CustomTagIn> getCustomTagList() {
 		return customTagList;
 	}

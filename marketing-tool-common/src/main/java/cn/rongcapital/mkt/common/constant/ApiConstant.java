@@ -409,4 +409,9 @@ public class ApiConstant {
      *自定义标签未分类对应的分类ID
      */
     public static final String CUSTOM_TAG_DEFAULT_CATEGORY_ID = "yr1oorLSpl1484637382955";
+    
+    /**
+     * 物料类型-微信
+     */
+    public static final String MATERIAL_TYPE_WECHAT = "qrcode_attr";
 }
