@@ -253,5 +253,20 @@ public class MongoCustomTagDaoTest extends AbstractUnitTest {
         long result = mongoCustomTagDao.countAll();
         Assert.assertEquals(3, result);
     }
+    
+    @Test
+    public void testCountValidCustomTagAndCoverNumber() {
+        List<String> customTagIdSelect = null;
+        long countResult = mongoCustomTagDao.countValidCustomTagAndCoverNumber(customTagIdSelect);
+        Assert.assertEquals(0, countResult);
+        
+        customTagIdSelect = new ArrayList<String>();
+        customTagIdSelect.add(customTagLists.get(0).getCustomTagId());
+        customTagIdSelect.add(customTagLists.get(1).getCustomTagId());
+        customTagIdSelect.add(customTagLists.get(2).getCustomTagId());
+        customTagIdSelect.add(customTagLists.get(3).getCustomTagId());
+        countResult = mongoCustomTagDao.countValidCustomTagAndCoverNumber(customTagIdSelect);
+        Assert.assertEquals(2, countResult);
+    }
 
 }
