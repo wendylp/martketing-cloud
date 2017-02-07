@@ -48,7 +48,7 @@
 			VALUES
 			(
 			  #{userId},
-			  #{userCode}
+			  #{userCode},
 			  #{compId},
 			  #{compName},
 			  #{orgId}
@@ -98,10 +98,11 @@
 	<!-- 通过userid获取用户信息 -->
 	<select id="getUserInfo" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.UserInfo">
 		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
-		WHERE user_id = #{userId}
-		AND status = '1'
+		u.id as id,u.user_id as userId,u.user_code as userCode,u.comp_id as compId,u.comp_name as compName,u.org_id as orgId,o.name as orgName, u.status as status
+		FROM user_info u,organization o
+		WHERE u.user_id = #{userId}
+		AND u.org_id = o.org_id 
+		AND u.status = '1'
 	</select>
 	
 	

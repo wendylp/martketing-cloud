@@ -71,6 +71,7 @@ public enum ApiErrorCode {
 	VALIDATE_ERROR_TIME_ERROR(4012,"起始时间大于结束时间"),//校验失败
 	
 	VALIDATE_ERROR_EVENT_UNSUBSCRIBABLE(4013,"event subscribe can not cancel"),//事件订阅不可以被取消
+	SMS_ERROR_TEMPLETE_CAN_SHARE(4014,"can not share the templete"),
 	
 	EVENT_ERROR_NOT_FOUND_ERROR(5001,"Event not exist"),
 	EVENT_SOURCE_ERROR_NOT_FOUND_ERROR(5002,"Event Source not exist"),
@@ -79,6 +80,11 @@ public enum ApiErrorCode {
 	EVENT_OBJECT_ID_NOT_FOUND(5005,"Event Object Id not found"),
 	VALIDATE_JSON_ERROR(5006,"JSON validation error"),//校验失败
 	DATE_VALIDATE_ERROR(5007,"起始时间大于结束时间"),
+	
+	UNALLOCATED_ERROR(6001,"待分配"),
+	ORG_ID_IS_NULL_ERROR(6002,"组织ID不能为空"),
+	THE_PRESON_NOT_FOUND(6003,"未找到该用户"),
+	ORG_IS_NOT_FOUND(6004,"该组织未找到"),
 	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	

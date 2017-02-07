@@ -2,10 +2,8 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.UserInfoDao;
@@ -27,13 +25,14 @@ public class GetUserInfoServiceImpl implements GetUserInfoService{
         Map<String, Object> resultMap = new HashMap<>();
         UserInfo userInfo = userInfoDao.getUserInfo(userId);
         if(null != userInfo){
-            resultMap.put("comp_id", userInfo.getCompId());
-            resultMap.put("comp_name", userInfo.getCompName());
+            resultMap.put("org_id", userInfo.getOrgId());
+            resultMap.put("org_name", userInfo.getOrgName());
+        }else{
+        	baseOutput.setCode(ApiErrorCode.THE_PRESON_NOT_FOUND.getCode());
+    		baseOutput.setMsg(ApiErrorCode.THE_PRESON_NOT_FOUND.getMsg());
+			return baseOutput;
         }
         baseOutput.getData().add(resultMap);
         return baseOutput;
     }
-
-    
-    
 }
