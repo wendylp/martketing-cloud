@@ -122,7 +122,7 @@ public class CustomtagListServiceImpl implements CustomtagListService {
 				result.setTotal(dataList.size());
 				result.setTotalCount(dataList.size());
 			}
-			result.getData().add(dataList);
+			result.getData().addAll(dataList);
 
 		}
 		return result;
