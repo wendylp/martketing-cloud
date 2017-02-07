@@ -83,7 +83,8 @@ public enum ApiErrorCode {
 	
 	UNALLOCATED_ERROR(6001,"待分配"),
 	ORG_ID_IS_NULL_ERROR(6002,"组织ID不能为空"),
-	ORG_IS_NOT_FOUND(6003,"该组织未找到"),
+	THE_PRESON_NOT_FOUND(6003,"未找到该用户"),
+	ORG_IS_NOT_FOUND(6004,"该组织未找到"),
 	
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
