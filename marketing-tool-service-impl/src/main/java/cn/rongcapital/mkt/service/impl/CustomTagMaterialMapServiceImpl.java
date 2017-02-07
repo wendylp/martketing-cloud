@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CustomTagMaterialMapDao;
@@ -36,7 +37,7 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 
 	@Override
 	public void buildTagMaterialRealation(List<CustomTagIn> customTagInList, String materialCode, String materialType) {
-		customTagMaterialMapDao.deleteByMaterialParam(materialCode, materialType);
+		List<String> customTagIdList = new ArrayList<>();
 		Date currentDate = new Date();
 		for (CustomTagIn customTagIn : customTagInList) {
 			String customTagId = customTagIn.getCustomTagId(); // 自定义标签ID
@@ -50,10 +51,15 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 			}
 			// 封装
 			CustomTagMaterialMap customTagMaterialMap = new CustomTagMaterialMap(customTagId, customTagName,
-					materialCode, materialType, Integer.valueOf(ApiConstant.TABLE_DATA_STATUS_VALID), currentDate);
-			// 插入数据
-			customTagMaterialMapDao.insert(customTagMaterialMap);
+					materialCode, materialType, ApiConstant.INT_ZERO, currentDate);
+			if(CollectionUtils.isEmpty(customTagMaterialMapDao.selectList(new CustomTagMaterialMap(customTagId, materialCode, materialType, ApiConstant.INT_ZERO)))){
+				// 插入数据
+				customTagMaterialMapDao.insert(customTagMaterialMap);
+			}
+			customTagIdList.add(customTagId);
 		}
+		//多余数据清理
+		customTagMaterialMapDao.clearSpareData(materialCode, materialType, customTagIdList);
 	}
 
 	@Override
@@ -64,6 +70,9 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 		for (String customTagId : customTagIdList) {
 			CustomTag customTag = customTagDao.getCustomTagByTagId(customTagId);
 			CustomTagCategory customTagCategory = customTagCategoryDao.findByChildrenCustomTagList(customTagId);
+			if(customTagCategory == null){		//为Null表示错误数据
+				continue;
+			}
 			resultList.add(new CustomTagIn(customTagId, customTag.getCustomTagName(), customTag.getParentId(),
 					customTagCategory.getCustomTagCategoryName(), customTag.getIsDeleted()));
 		}
