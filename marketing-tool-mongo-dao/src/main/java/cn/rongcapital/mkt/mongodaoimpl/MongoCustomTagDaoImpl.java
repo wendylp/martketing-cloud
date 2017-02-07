@@ -156,14 +156,14 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
     
     @Override
     public List<CustomTag> findByCustomTagNameFuzzy(String customTagName, Integer index, Integer size) {
-        Integer skip = null;
-        Integer limit = null;
+        
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName));
+        
         if (index != null && size != null) {
-            skip = (index - 1) * size;
-            limit = size;
+            Integer skip = (index - 1) * size;
+            Integer limit = size;
+            query.skip(skip).limit(limit);
         }
-        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName))
-                .skip(skip).limit(limit);
         return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
     }
     
