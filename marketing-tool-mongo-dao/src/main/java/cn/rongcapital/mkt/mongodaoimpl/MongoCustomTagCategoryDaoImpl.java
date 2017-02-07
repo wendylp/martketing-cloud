@@ -2,17 +2,11 @@ package cn.rongcapital.mkt.mongodaoimpl;
 
 import cn.rongcapital.mkt.common.util.CamelNameUtil;
 import cn.rongcapital.mkt.mongodao.MongoCustomTagCategoryDao;
-import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
-import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -112,7 +106,7 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
      * @throws SecurityException
      * @throws NoSuchMethodException
      */
-    public Query generatorQuery(Object object) {
+    private Query generatorQuery(Object object) {
         if (object == null) {
             return null;
         }
