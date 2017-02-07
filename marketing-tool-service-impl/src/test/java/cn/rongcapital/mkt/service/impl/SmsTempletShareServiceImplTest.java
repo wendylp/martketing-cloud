@@ -26,6 +26,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsTemplet;
@@ -54,23 +55,30 @@ public class SmsTempletShareServiceImplTest {
 
     /**
      * 短信模板存在
+     * 
+     * @throws CannotShareToOwnerException
      */
     @Test
-    public void testShareSmsTemplet01() {
+    public void testShareSmsTemplet01() throws CannotShareToOwnerException {
         SmsTempletShareIn smsTempletShareIn = new SmsTempletShareIn();
-        smsTempletShareIn.setFromOrgId(11L);
-        smsTempletShareIn.setToOrgId(10L);
+        List<Long> orgIds = new ArrayList<Long>();
+        orgIds.add(11L);
+        orgIds.add(12L);
+        smsTempletShareIn.setOrgIds(orgIds);
         smsTempletShareIn.setResourceId(12L);
         smsTempletShareIn.setWriteable(true);
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                return null;
-            }
-        })
-                .when(dataAuthService)
-                .share("sms_templet", smsTempletShareIn.getResourceId(), smsTempletShareIn.getFromOrgId(),
-                        smsTempletShareIn.getToOrgId(), smsTempletShareIn.getWriteable());
+
+
+        for (Long item : orgIds) {
+            Mockito.doAnswer(new Answer<Void>() {
+                @Override
+                public Void answer(InvocationOnMock invocation) throws Throwable {
+                    return null;
+                }
+            }).when(dataAuthService)
+                    .share("sms_templet", smsTempletShareIn.getResourceId(), item, smsTempletShareIn.getWriteable());
+        }
+
         ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
 
         List<SmsTemplet> smsTempletList = new ArrayList<SmsTemplet>();
@@ -93,26 +101,53 @@ public class SmsTempletShareServiceImplTest {
     @Test
     public void testShareSmsTemplet02() {
         SmsTempletShareIn smsTempletShareIn = new SmsTempletShareIn();
-        smsTempletShareIn.setFromOrgId(11L);
-        smsTempletShareIn.setToOrgId(10L);
+        List<Long> orgIds = new ArrayList<Long>();
+        orgIds.add(11L);
+        orgIds.add(12L);
+        smsTempletShareIn.setOrgIds(orgIds);
         smsTempletShareIn.setResourceId(12L);
         smsTempletShareIn.setWriteable(true);
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                return null;
-            }
-        })
-                .when(dataAuthService)
-                .share("sms_templet", smsTempletShareIn.getResourceId(), smsTempletShareIn.getFromOrgId(),
-                        smsTempletShareIn.getToOrgId(), smsTempletShareIn.getWriteable());
-        ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
 
         Mockito.when(smsTempletDao.selectList(Mockito.any())).thenReturn(null);
         ReflectionTestUtils.setField(service, "smsTempletDao", smsTempletDao);
         BaseOutput output = service.shareSmsTemplet(smsTempletShareIn);
         Assert.assertEquals(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(), output.getCode());
         Assert.assertEquals(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), output.getMsg());
+        Assert.assertEquals(0, output.getTotal());
+        Assert.assertEquals(0, output.getTotalCount());
+        Assert.assertTrue(CollectionUtils.isEmpty(output.getData()));
+    }
+
+
+    /**
+     * 短信模板分享异常
+     * 
+     * @throws CannotShareToOwnerException
+     */
+    @Test
+    public void testShareSmsTemplet03() throws CannotShareToOwnerException {
+        SmsTempletShareIn smsTempletShareIn = new SmsTempletShareIn();
+        List<Long> orgIds = new ArrayList<Long>();
+        orgIds.add(11L);
+        orgIds.add(12L);
+        smsTempletShareIn.setOrgIds(orgIds);
+        smsTempletShareIn.setResourceId(12L);
+        smsTempletShareIn.setWriteable(true);
+
+        for (Long item : orgIds) {
+            Mockito.doThrow(new CannotShareToOwnerException("XXXX")).when(dataAuthService)
+                    .share("sms_templet", smsTempletShareIn.getResourceId(), item, smsTempletShareIn.getWriteable());
+        }
+        ReflectionTestUtils.setField(service, "dataAuthService", dataAuthService);
+
+        List<SmsTemplet> smsTempletList = new ArrayList<SmsTemplet>();
+        SmsTemplet item = new SmsTemplet();
+        smsTempletList.add(item);
+        Mockito.when(smsTempletDao.selectList(Mockito.any())).thenReturn(smsTempletList);
+        ReflectionTestUtils.setField(service, "smsTempletDao", smsTempletDao);
+        BaseOutput output = service.shareSmsTemplet(smsTempletShareIn);
+        Assert.assertEquals(ApiErrorCode.SMS_ERROR_TEMPLETE_CAN_SHARE.getCode(), output.getCode());
+        Assert.assertEquals(ApiErrorCode.SMS_ERROR_TEMPLETE_CAN_SHARE.getMsg(), output.getMsg());
         Assert.assertEquals(0, output.getTotal());
         Assert.assertEquals(0, output.getTotalCount());
         Assert.assertTrue(CollectionUtils.isEmpty(output.getData()));

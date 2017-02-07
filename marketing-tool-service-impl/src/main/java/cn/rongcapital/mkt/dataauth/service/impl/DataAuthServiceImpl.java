@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.enums.dataauth.DataAuthTypeEnum;
+import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.dao.dataauth.DataAuthMapper;
 import cn.rongcapital.mkt.dataauth.po.DataAuth;
@@ -101,10 +102,26 @@ public class DataAuthServiceImpl implements DataAuthService {
      */
     @Override
     @Transactional
-    public void share(String resourceType, long resourceId, long fromOrgId, long toOrgId, boolean writeable) {
+    public void share(String resourceType, long resourceId, long toOrgId, boolean writeable) throws CannotShareToOwnerException {
+        List<DataAuth> fromDataAuth = this.dataAuthMapper.selectOwnerByResouceId(resourceType,resourceId);
+        long fromOrgId = fromDataAuth.get(0).getOrgId();
+        
+        List<Organization> orgParentList = this.organizationService.getOrgLineListById(fromOrgId);
+        List<Long> orgIdList = new ArrayList<>();
+        for (Organization organization : orgParentList) {
+            orgIdList.add(organization.getOrgId());
+        }
+        orgIdList.add(fromOrgId);
+        if(orgIdList.contains(toOrgId)){
+            String message = "To org is the owner of current resource,can not be shared.";
+            throw new CannotShareToOwnerException(message );
+        }
+        
+        
         String shareId = UUID.randomUUID().toString();
+        
+       
         shareLoop(DataAuthTypeEnum.SHARE.getCode(), resourceType, resourceId, fromOrgId, toOrgId, writeable, shareId, true);
-
         // 回写数据的分享状态
         writeBackShareStatus(resourceType, resourceId, fromOrgId,Boolean.TRUE);
     }
@@ -289,8 +306,11 @@ public class DataAuthServiceImpl implements DataAuthService {
      */
     @Override
     @Transactional
-    public void clone(String resourceType, long resourceId, long fromOrgId, long fromResourceId, long toOrgId,
-            boolean writeable) {
+    public void clone(String resourceType, long resourceId, long fromResourceId, long toOrgId, boolean writeable) {
+    
+        List<DataAuth> fromDataAuth = this.dataAuthMapper.selectOwnerByResouceId(resourceType,fromResourceId);
+        long fromOrgId = fromDataAuth.get(0).getOrgId();
+        
         DataAuth auth = new DataAuth();
         auth.setTableName(resourceType);
         auth.setResourceId(resourceId);
@@ -314,6 +334,7 @@ public class DataAuthServiceImpl implements DataAuthService {
      * @see cn.rongcapital.mkt.dataauth.service.DataAuthService#validateWriteable(java.lang.String, long, long)
      */
     @Override
+    @Transactional
     public boolean validateWriteable(String resouceType, long resourceId, long orgId)
             throws NoWriteablePermissionException {
         DataAuth dataAuth = this.dataAuthMapper.selectByTableNameResourceIDOrgId(resouceType, orgId, resourceId);

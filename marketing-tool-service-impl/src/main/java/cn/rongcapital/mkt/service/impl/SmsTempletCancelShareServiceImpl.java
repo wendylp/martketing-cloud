@@ -54,15 +54,15 @@ public class SmsTempletCancelShareServiceImpl implements SmsTempletCancelShareSe
             return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
                     ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
         }
-        // 取消分享
-        logger.debug("organization{} unsharing sms templet:{} share_id:{}.", smsTempleCancelShareIn.getOrgId(),
-                smsTempleCancelShareIn.getResourceId(), smsTempleCancelShareIn.getShareId());
         BaseOutput result =
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
                         null);
-        dataAuthService.unshare(smsTempleCancelShareIn.getShareId());
-        logger.debug("organization{} unshared sms templet:{} share_id:{}.", smsTempleCancelShareIn.getOrgId(),
-                smsTempleCancelShareIn.getResourceId(), smsTempleCancelShareIn.getShareId());
+        // 取消分享
+        smsTempleCancelShareIn.getShareIds().forEach(item -> {
+            logger.debug("unsharing sms templet:{} share_id:{}.", smsTempleCancelShareIn.getResourceId(), item);
+            dataAuthService.unshare(item);
+            logger.debug("unshared sms templet:{} share_id:{}.", smsTempleCancelShareIn.getResourceId(), item);
+        });
         return result;
     }
 

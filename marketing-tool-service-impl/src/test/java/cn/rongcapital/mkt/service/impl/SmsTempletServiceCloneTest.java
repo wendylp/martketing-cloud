@@ -107,16 +107,18 @@ public class SmsTempletServiceCloneTest {
 
 				return null;
 			}
-		}).when(dataAuthService).clone("", 1l, 1l, 1l, 1l, Boolean.TRUE);
+		}).when(dataAuthService).clone("", 1l, 1l, 1l, Boolean.TRUE);
     	
+    	Long[] a = new Long[2] ;
+    	a[0] = 1l;
+    	a[1] = 2l;
     	clone = new SmsTempletCloneIn();
     	clone.setId(1);
     	clone.setCreator("creator");
-    	clone.setFromOrgId(2);
-    	clone.setToOrgId(2);
     	clone.setUpdateUser("updateUser");
+    	clone.setOrgIds(a);
         BaseOutput result = smsTempletService.smsTempletClone(clone);
-        
+    	
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
         

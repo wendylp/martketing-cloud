@@ -321,5 +321,16 @@
     and from_org_id=#{fromOrgId}
   </select>
   
+  <select id="selectOwnerByResouceId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from data_auth
+    where 
+    table_name=#{tableName}
+    and resource_id=#{resourceId}
+    and firsthand = 1
+    order by share_type
+  </select>
+  
   
 </mapper>

@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
@@ -62,20 +63,28 @@ public class SmsTempletShareServiceImpl implements SmsTempletShareService {
             return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
                     ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
         }
-        // 分享
-        logger.debug("organization{} sharing sms templet:{} to organization:{}.", smsTempletShareIn.getFromOrgId(),
-                smsTempletShareIn.getResourceId(), smsTempletShareIn.getToOrgId());
         BaseOutput result =
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
                         null);
-        dataAuthService.share("sms_templet", smsTempletShareIn.getResourceId(), smsTempletShareIn.getFromOrgId(),
-                smsTempletShareIn.getToOrgId(), smsTempletShareIn.getWriteable());
-        logger.debug("organization{} shared sms templet:{} to organization:{}.", smsTempletShareIn.getFromOrgId(),
-                smsTempletShareIn.getResourceId(), smsTempletShareIn.getToOrgId());
+        // 分享
+        for (Long item : smsTempletShareIn.getOrgIds()) {
+            logger.debug("sharing sms templet:{} to organization:{}.", smsTempletShareIn.getResourceId(), item);
+            try {
+                dataAuthService.share("sms_templet", smsTempletShareIn.getResourceId(), item,
+                        smsTempletShareIn.getWriteable());
+            } catch (CannotShareToOwnerException e) {
+                logger.error(
+                        String.format("can not share sms templet:%s to organization:%s.",
+                                smsTempletShareIn.getResourceId(), item), e);
+                return new BaseOutput(ApiErrorCode.SMS_ERROR_TEMPLETE_CAN_SHARE.getCode(),
+                        ApiErrorCode.SMS_ERROR_TEMPLETE_CAN_SHARE.getMsg(), ApiConstant.INT_ZERO, null);
+            }
+            logger.debug("shared sms templet:{} to organization:{}.", smsTempletShareIn.getResourceId(), item);
+        }
         return result;
     }
-    
-    
+
+
     /**
      * 验证模板是否存在
      * 
