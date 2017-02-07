@@ -9,16 +9,20 @@ package cn.rongcapital.mkt.dataauth.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.dataauth.OrganizationDao;
 import cn.rongcapital.mkt.dataauth.po.Organization;
 import cn.rongcapital.mkt.dataauth.service.OrganizationService;
 import cn.rongcapital.mkt.dataauth.vo.OrgChildTreeOutPut;
 import cn.rongcapital.mkt.dataauth.vo.OrgParentLineOutPut;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
@@ -31,8 +35,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 	/**
 	 * @author
 	 * @功能简述: 根据节点ID获取其所有叶子节点，并以树形结构返回
-	 * @param fileTagUpdateIn
-	 * @return BaseOutput
+	 * @param Long id
+	 * @return OrgChildTreeOutPut
 	 */
 	@Override
 	public OrgChildTreeOutPut getOrgTreeById(Long id) {
@@ -67,8 +71,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 	/**
 	 * @author
 	 * @功能简述: 根据节点ID获取其所有父节点，并以树形结构返回
-	 * @param fileTagUpdateIn
-	 * @return BaseOutput
+	 * @param Long id
+	 * @return OrgParentLineOutPut
 	 */
 	@Override
 	public OrgParentLineOutPut getOrgLineById(Long id) {
@@ -92,7 +96,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	 * @author
 	 * @功能简述: 根据节点ID获取其所有父节点，并以list形式返回
 	 * @param fileTagUpdateIn
-	 * @return BaseOutput
+	 * @return List<Organization>
 	 */
 	@Override
 	public List<Organization> getOrgLineListById(Long id) {
@@ -116,7 +120,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	 * @author
 	 * @功能简述: 根据节点ID获取其所有子节点，并以list形式返回
 	 * @param fileTagUpdateIn
-	 * @return BaseOutput
+	 * @return List<Organization>
 	 */
 	@Override
 	public List<Organization> getChildOrgListById(Long id) {
@@ -139,6 +143,26 @@ public class OrganizationServiceImpl implements OrganizationService {
 		}
 	}
 
+	/**
+	 * @author
+	 * @功能简述: 根据节点ID获取其所有子节点，并以list形式返回
+	 * @param fileTagUpdateIn
+	 * @return BaseOutput
+	 */
+	@Override
+	public BaseOutput getOrgListById(Long id) {
+		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
+				null);
+		
+		List<Organization> list = getChildOrgListById(id);
+		if(!CollectionUtils.isEmpty(list)){
+			output.setTotal(list.size());
+			output.getData().addAll(list);
+		}
+		
+		return output;
+	}
+
 	@Override
 	public Organization getOrgById(Long id) {
 		return organizationDao.getNodeById(id);
@@ -153,5 +177,4 @@ public class OrganizationServiceImpl implements OrganizationService {
 	public int update(Organization org) {
 		return organizationDao.updateById(org);
 	}
-
 }
