@@ -22,8 +22,23 @@ public class CustomTagIn {
 	private String parentName;	//分类名称
 	
     private Integer isDeleted;	//0-正常，1-过期
+    
+    public CustomTagIn() {
+	}
+    
+	public CustomTagIn(String customTagId, String customTagName, String parentId, String parentName,
+			Integer isDeleted) {
+		super();
+		this.customTagId = customTagId;
+		this.customTagName = customTagName;
+		this.parentId = parentId;
+		this.parentName = parentName;
+		this.isDeleted = isDeleted;
+	}
 
-    @JsonProperty("custom_tag_id")
+
+
+	@JsonProperty("custom_tag_id")
 	public String getCustomTagId() {
 		return customTagId;
 	}
