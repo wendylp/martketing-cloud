@@ -218,7 +218,7 @@ public class MktCustomTagApi {
 			@NotNull @QueryParam("custom_tag_name") String customTagName,
 			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
-		return customtagQrcodeFuzzyListService.customtagQrcodeFuzzyListGet(customTagName, index, size);
+	    return customtagQrcodeFuzzyListService.customtagQrcodeFuzzyListGet(customTagName, null, null);
 	}
 	
     /**

@@ -935,14 +935,34 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionTag.setRule(campaignDecisionTagIn.getRule());
 		List<TagIn> tagList =  campaignDecisionTagIn.getTags();
 		if(CollectionUtils.isNotEmpty(tagList)) {//TO DO:优化,前端参数直接传递1个逗号分隔的tag_id的字符串
-			List<String> tagIdList = new ArrayList<String>();
-			for(TagIn tagIn:tagList) {
-				tagIdList.add(tagIn.getTag_id());
-			}
-			String tagIds = StringUtils.join(tagIdList, ",");
+			String tagIds = extractTagIDs(tagList);
+			String tagTypes = extractTagTypes(tagList);
 			campaignDecisionTag.setTagIds(tagIds);
+			campaignDecisionTag.setTagTypes(tagTypes);
 		}
 		return campaignDecisionTag;
+	}
+
+	private String extractTagIDs(List<TagIn> tagList) {
+		List<String> tagIdList = new ArrayList<String>();
+		for(TagIn tagIn:tagList) {
+			tagIdList.add(tagIn.getTag_id());
+		}
+		String tagIds = StringUtils.join(tagIdList, ",");
+		return tagIds;
+	}
+	
+	private String extractTagTypes(List<TagIn> tagList) {
+		List<String> tagTypeList = new ArrayList<String>();
+		for(TagIn tagIn:tagList) {
+			String tagType = tagIn.getTag_type();
+			if (tagType == null) {
+				tagType = TagIn.TAG_TYPE_CUSTOM; //向下兼容
+			}
+			tagTypeList.add(tagType);
+		}
+		String tagTypes = StringUtils.join(tagTypeList, ",");
+		return tagTypes;
 	}
 	
 	private CampaignDecisionPrvtFriends initCampaignDecisionPrvtFriends(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
