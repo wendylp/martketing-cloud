@@ -145,7 +145,10 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
     @Override
     public List<CustomTag> findByCustomTagNameFuzzyAndCoverNumber(String customTagName, Integer size) {
         Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName)
-                .and(COVER_NUMBER).gt(0)).limit(size);
+                .and(COVER_NUMBER).gt(0));
+        if (size != null) {
+            query.limit(size);
+        }
         return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
     }
 
