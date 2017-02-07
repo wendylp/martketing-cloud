@@ -58,6 +58,7 @@ import cn.rongcapital.mkt.po.WechatAsset;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
 import cn.rongcapital.mkt.po.base.BaseTag;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
+import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.vo.out.CampaignActionSaveAudienceOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionSendH5Out;
@@ -484,22 +485,44 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 			campaignDecisionTagOut.setName(campaignDecisionTag.getName());
 			campaignDecisionTagOut.setRule(campaignDecisionTag.getRule());
 			String tagIds = campaignDecisionTag.getTagIds();
+			String tagTypes = campaignDecisionTag.getTagTypes();
 			if (StringUtils.isNotBlank(tagIds)) {
 				List<TagOut> tags = new ArrayList<TagOut>();
 				List<String> tagIdsStrList = Arrays.asList(StringUtils.split(tagIds, ','));
-				for (String tagIdStr : tagIdsStrList) {
+				List<String> tagTypeList = new ArrayList<String>(0);
+				if (tagTypes != null) {
+					tagTypeList = Arrays.asList(StringUtils.split(tagTypes, ','));
+				}
+				for (int i = 0; i < tagIdsStrList.size(); i++) {
+					String tagIdStr = tagIdsStrList.get(i);					
+					boolean isCustomTag =  tagTypeList.size() == 0 
+										|| TagOut.TAG_TYPE_CUSTOM.endsWith(tagTypeList.get(i));
+					String tagType = isCustomTag ? TagOut.TAG_TYPE_CUSTOM : TagOut.TAG_TYPE_SYS;
+					String tagName = getTagNameById(isCustomTag, tagIdStr);					
 					TagOut tagOut = new TagOut();
-			        Query query = new Query(Criteria.where("tag_id").is(tagIdStr));
-			        BaseTag targetTag = mongoTemplate.findOne(query,BaseTag.class);
-					Log.info("--------------" + targetTag.getTagName());
 					tagOut.setTagId(tagIdStr);
-					tagOut.setTagName(targetTag.getTagName());
+					tagOut.setTagName(tagName);
+					tagOut.setTagType(tagType);
 					tags.add(tagOut);
 				}
 				campaignDecisionTagOut.setTags(tags);
 			}
 		}
 		return campaignDecisionTagOut;
+	}
+
+	private String getTagNameById(boolean isCustomTag, String tagId) {
+		String tagName = null;
+		Query query = new Query(Criteria.where("tag_id").is(tagId));
+		if (isCustomTag) {
+		    BaseTag targetTag = mongoTemplate.findOne(query,BaseTag.class);
+		    tagName = targetTag.getTagName();				        
+		} else {
+			TagRecommend targetTag = mongoTemplate.findOne(query, TagRecommend.class);
+		    tagName = targetTag.getTagName();
+		}
+		Log.info("--------------" + tagName);
+		return tagName;
 	}
 
 	private CampaignDecisionPrvtFriendsOut queryCampaignDecisionPrvtFriends(CampaignNodeChainOut campaignNodeChainOut,

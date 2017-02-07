@@ -18,4 +18,11 @@ public interface UserInfoDao extends BaseDao<CampaignActionSendPub>{
      */
     public UserInfo getUserInfo(@Param("userId") String userId);
     
+    
+     //add by lhz
+    public UserInfo getMappingUserInfo(@Param("userId") String userId,@Param("userCode") String userCode);
+    
+    //add by lhz
+    public int insert(UserInfo t);
+    
 }

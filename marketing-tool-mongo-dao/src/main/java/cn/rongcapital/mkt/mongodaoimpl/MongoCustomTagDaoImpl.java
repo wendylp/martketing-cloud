@@ -156,14 +156,14 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
     
     @Override
     public List<CustomTag> findByCustomTagNameFuzzy(String customTagName, Integer index, Integer size) {
-        Integer skip = null;
-        Integer limit = null;
+        
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName));
+        
         if (index != null && size != null) {
-            skip = (index - 1) * size;
-            limit = size;
+            Integer skip = (index - 1) * size;
+            Integer limit = size;
+            query.skip(skip).limit(limit);
         }
-        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName))
-                .skip(skip).limit(limit);
         return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
     }
     
@@ -173,6 +173,12 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
         return mongoTemplate.count(query, CUSTOM_TAG_CLASS);
     }
 
+    @Override
+    public long countAll() {
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID));
+        return mongoTemplate.count(query, CUSTOM_TAG_CLASS);
+    }
+    
     /**
      * 功能描述：根据对象生成对象的mongodb查询条件
      * 

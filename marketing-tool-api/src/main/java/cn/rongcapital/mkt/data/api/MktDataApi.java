@@ -10,37 +10,88 @@
 
 package cn.rongcapital.mkt.data.api;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.po.ContactWay;
-import cn.rongcapital.mkt.po.TaskRunLog;
-import cn.rongcapital.mkt.service.*;
-import cn.rongcapital.mkt.vo.in.*;
-import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
-import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dataauth.service.OrganizationService;
+import cn.rongcapital.mkt.po.ContactWay;
+import cn.rongcapital.mkt.po.TaskRunLog;
+import cn.rongcapital.mkt.service.AudienceAllListService;
+import cn.rongcapital.mkt.service.AudienceIdListService;
+import cn.rongcapital.mkt.service.AudienceListDeleteService;
+import cn.rongcapital.mkt.service.AudienceListService;
+import cn.rongcapital.mkt.service.AudienceNameListService;
+import cn.rongcapital.mkt.service.AudienceSearchDownloadService;
+import cn.rongcapital.mkt.service.AudienceSearchService;
+import cn.rongcapital.mkt.service.DataDeleteMainService;
+import cn.rongcapital.mkt.service.DataDownloadMainListService;
+import cn.rongcapital.mkt.service.DataDownloadQualityIllegalDataService;
+import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
+import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
+import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
+import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
+import cn.rongcapital.mkt.service.DataGetMainCountService;
+import cn.rongcapital.mkt.service.DataGetMainListService;
+import cn.rongcapital.mkt.service.DataGetQualityCountService;
+import cn.rongcapital.mkt.service.DataGetQualityListService;
+import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
+import cn.rongcapital.mkt.service.DataGetViewListService;
+import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
+import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
+import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
+import cn.rongcapital.mkt.service.FileTagUpdateService;
+import cn.rongcapital.mkt.service.FileTemplateDownloadService;
+import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
+import cn.rongcapital.mkt.service.GetDataMainSearchService;
+import cn.rongcapital.mkt.service.GetUserInfoService;
+import cn.rongcapital.mkt.service.HomePageDataCountListService;
+import cn.rongcapital.mkt.service.HomePageDataSourceListService;
+import cn.rongcapital.mkt.service.HomePageUserCountListService;
+import cn.rongcapital.mkt.service.MainActionInfoGetService;
+import cn.rongcapital.mkt.service.MainBasicInfoGetService;
+import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
+import cn.rongcapital.mkt.service.MigrationFileTemplateService;
+import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
+import cn.rongcapital.mkt.service.TagGetCustomService;
+import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
+import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
+import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
+import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
+import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
+import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
+import cn.rongcapital.mkt.vo.in.UserInfoIn;
+import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
+import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -163,7 +214,12 @@ public class MktDataApi {
 	@Autowired
 	private AudienceSearchDownloadService audienceSearchDownloadService;
 
-
+	@Autowired
+	private OrganizationService organizationService;
+	
+	
+	@Autowired
+    private Environment env;
 	/**
 	 * @功能简述: 获取某条主数据详细信息
 	 * @param userToken
@@ -786,4 +842,35 @@ public class MktDataApi {
 
 		return audienceSearchDownloadService.searchData(audience_id);
 	}
+	
+	/**
+	 * 获取组织结构列表
+	 * @param id
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.organization.child.list")
+	public BaseOutput getChildOrgListById(@NotNull @QueryParam("id") Long id) {
+
+		return organizationService.getOrgListById(id);
+	}
+	    
+	
+	    /**
+	     *   根据user_id,user_code 查询
+	         * @author liuhaizhan
+	         * @功能简述: 
+	         * @param 
+	         * @return
+	     */
+	    @POST
+	    @Path("/mkt.data.userinfo.mapping")
+	    @Consumes({ MediaType.APPLICATION_JSON })
+	    public BaseOutput getUserMappInfo(@Valid UserInfoIn userofIn)
+	    {   
+	        Integer orgid=Integer.valueOf(env.getProperty("default.orgid"));
+	        userofIn.setOrgId(orgid);
+	        return userInfoService.getUserMappInfo(userofIn);
+	    }
+
 }
