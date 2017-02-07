@@ -105,16 +105,18 @@ public class CustomtagListServiceImpl implements CustomtagListService {
 				List<CustomTag> customTagLists = mongoCustomTagDao.findByCustomTagIdList(customTagIdLists);
 				if (CollectionUtils.isNotEmpty(customTagLists)) {
 					for (CustomTag customTagList : customTagLists) {
-						Map<String, Object> map = new HashMap<String, Object>();
-						Integer coverNumber = customTagList.getCoverNumber();
-						if (coverNumber != null && coverNumber.intValue() != 0) {
-							map.put("custom_tag_id", customTagList.getCustomTagId());
-							map.put("custom_tag_name", customTagList.getCustomTagName());
-							map.put("cover_number", coverNumber);
-							map.put("cover_frequency",
-									customTagList.getCoverFrequency() == null ? 0 : customTagList.getCoverFrequency());
-						}
-						dataList.add(map);
+						
+                        Integer coverNumber = customTagList.getCoverNumber();
+                        if (coverNumber != null && coverNumber.intValue() != 0) {
+                            Map<String, Object> map = new HashMap<String, Object>();
+                            map.put("custom_tag_id", customTagList.getCustomTagId());
+                            map.put("custom_tag_name", customTagList.getCustomTagName());
+                            map.put("cover_number", coverNumber);
+                            map.put("cover_frequency",
+                                    customTagList.getCoverFrequency() == null ? 0 : customTagList.getCoverFrequency());
+                            dataList.add(map);
+                        }
+						
 					}
 				}
 				result.setTotal(dataList.size());
