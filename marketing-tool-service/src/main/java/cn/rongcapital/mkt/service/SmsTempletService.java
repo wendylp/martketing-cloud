@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.service;
 
 import java.util.List;
 
+import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.SmsTempletOut;
@@ -25,7 +26,7 @@ public interface SmsTempletService {
 	 * @param smsTempletIn
 	 * @return
 	 */
-	public BaseOutput saveOrUpdateSmsTemplet(SmsTempletIn smsTempletIn);
+	public BaseOutput saveOrUpdateSmsTemplet(SmsTempletIn smsTempletIn) throws NoWriteablePermissionException;
 	
 	/**
 	 * 验证模板是否可以被删除或者编辑

@@ -2,6 +2,8 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -10,6 +12,7 @@ import cn.rongcapital.mkt.dao.UserInfoDao;
 import cn.rongcapital.mkt.po.UserInfo;
 import cn.rongcapital.mkt.service.GetUserInfoService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.UserInfoIn;
 
 @Service
 public class GetUserInfoServiceImpl implements GetUserInfoService{
@@ -35,4 +38,18 @@ public class GetUserInfoServiceImpl implements GetUserInfoService{
         baseOutput.getData().add(resultMap);
         return baseOutput;
     }
+    
+
+    @Override
+public BaseOutput getUserMappInfo(UserInfoIn userInfo) {
+   UserInfo userInfoT = userInfoDao.getMappingUserInfo(userInfo.getUserId(), userInfo.getUserCode());
+   if(userInfoT==null)
+   {
+       userInfoT=new UserInfo();
+       BeanUtils.copyProperties(userInfo, userInfoT);
+       userInfoDao.insert(userInfoT);
+       
+   }
+   return getUserInfo(userInfoT.getUserId());
+}
 }

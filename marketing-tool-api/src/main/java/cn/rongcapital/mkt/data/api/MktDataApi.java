@@ -36,6 +36,7 @@ import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -88,6 +89,7 @@ import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
 import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
+import cn.rongcapital.mkt.vo.in.UserInfoIn;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 
@@ -214,6 +216,10 @@ public class MktDataApi {
 
 	@Autowired
 	private OrganizationService organizationService;
+	
+	
+	@Autowired
+    private Environment env;
 	/**
 	 * @功能简述: 获取某条主数据详细信息
 	 * @param userToken
@@ -848,4 +854,23 @@ public class MktDataApi {
 
 		return organizationService.getOrgListById(id);
 	}
+	    
+	
+	    /**
+	     *   根据user_id,user_code 查询
+	         * @author liuhaizhan
+	         * @功能简述: 
+	         * @param 
+	         * @return
+	     */
+	    @POST
+	    @Path("/mkt.data.userinfo.mapping")
+	    @Consumes({ MediaType.APPLICATION_JSON })
+	    public BaseOutput getUserMappInfo(@Valid UserInfoIn userofIn)
+	    {   
+	        Integer orgid=Integer.valueOf(env.getProperty("default.orgid"));
+	        userofIn.setOrgId(orgid);
+	        return userInfoService.getUserMappInfo(userofIn);
+	    }
+
 }

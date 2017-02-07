@@ -21,6 +21,7 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
@@ -224,13 +225,15 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public BaseOutput saveOrUpdateSmsTemplet(SmsTempletIn smsTempletIn) {
+	public BaseOutput saveOrUpdateSmsTemplet(SmsTempletIn smsTempletIn) throws NoWriteablePermissionException {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTemplet smsTemplet = this.getSmsTempletBySmsTempletIn(smsTempletIn);
 		if(smsTemplet!=null){
 			if(smsTemplet.getId()!=null&&smsTemplet.getId()!=0){
 				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
-				smsTempletDao.updateById(smsTemplet);
+				//新增更新权限判断LHZ
+				if(dataAuthService.validateWriteable("sms_templet", smsTempletIn.getId(), smsTempletIn.getOrgid()))
+				   smsTempletDao.updateById(smsTemplet);
 			}else{
 				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
 				smsTempletDao.insert(smsTemplet);

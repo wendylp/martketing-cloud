@@ -105,6 +105,15 @@
 		AND u.status = '1'
 	</select>
 	
+	<!-- 通过userid,orgid获取用户信息 -->
+	
+	<select id="getMappingUserInfo" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.UserInfo">
+	      <![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		 WHERE user_id=#{userId} and  user_code=#{userCode} and status = '1'
+	    
+	</select>
 	
 	
 	
