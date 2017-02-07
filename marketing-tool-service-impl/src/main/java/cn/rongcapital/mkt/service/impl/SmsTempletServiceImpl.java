@@ -227,12 +227,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-<<<<<<< HEAD
-	@DataAuthPut(resourceType="sms_templet",resourceId="801",orgId="16",type=ParamType.Default)
-	public BaseOutput saveOrUpdateSmsTemplet(SmsTempletIn smsTempletIn) {
-=======
 	public BaseOutput saveOrUpdateSmsTemplet(SmsTempletIn smsTempletIn) throws NoWriteablePermissionException {
->>>>>>> branch 'dev_role' of http://gitlab.dataengine.com/songshitao/marketing-cloud.git
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTemplet smsTemplet = this.getSmsTempletBySmsTempletIn(smsTempletIn);
 		if(smsTemplet!=null){
