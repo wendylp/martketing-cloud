@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.rongcapital.mkt.common.enums.dataauth.DataAuthTypeEnum;
+import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.unittest.AbstractUnitTest;
 
@@ -54,13 +55,13 @@ public class DataAuthServiceTest extends AbstractUnitTest{
         long resourceId = 2;
         this.dataAuthService.evict(resourceType, resourceId);
     }
-    @Test
-    public void TestShare(){
+    @Test(expected=CannotShareToOwnerException.class)
+    public void TestShare() throws CannotShareToOwnerException{
         String shareType = DataAuthTypeEnum.SHARE.getCode();
         String resourceType = "sms_templet";
-        long resourceId = 1l;
+        long resourceId = 800l;
         long fromOrgId = 16l;
-        long toOrgIds = 18l;
+        long toOrgIds = 14l;
         boolean writeable = Boolean.TRUE;
         
         this.dataAuthService.share(resourceType, resourceId, toOrgIds, writeable);

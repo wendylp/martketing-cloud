@@ -81,7 +81,7 @@ public interface DataAuthMapper {
      * @author xie.xiaoliang
      * @since 2017-02-06 
      */
-    DataAuth selectOwnerByResouceId(@Param("tableName")String resourceType,@Param("resourceId") long resourceId);
+    List<DataAuth> selectOwnerByResouceId(@Param("tableName")String resourceType,@Param("resourceId") long resourceId);
     
     
 }
