@@ -45,6 +45,7 @@ import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
+import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
@@ -70,6 +71,7 @@ import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.ImgTextAsset;
+import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.WechatAsset;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
@@ -144,6 +146,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignNodeItemDao campaignNodeItemDao;
 	@Autowired
 	private TaskScheduleDao taskScheduleDao;
+    @Autowired
+    private SmsMaterialDao smsMaterialDao;
 	@Autowired
 	private WechatAssetDao wechatAssetDao;
 	@Autowired
@@ -171,10 +175,11 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		int campaignHeadId = body.getCampaignHeadId();
 		
 		
-		CampaignBodyCreateOut out = checkCampaignBiz(campaignHeadId);
+		CampaignBodyCreateOut out = checkCampaignBiz(campaignHeadId, body);
 		if(null != out) {
 			return out;
 		}
+		
 		deleteOldCampaignTask(campaignHeadId);//删除旧任务
 		deleteOldCampaignData(campaignHeadId);//删除旧数据 
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
@@ -396,9 +401,10 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	 * 校验业务逻辑:
 	 * 1.活动头必须存在且只存在1个
 	 * 2.只有未发布和已发布状态的活动才能编辑/创建 body
+	 * @param body 
 	 * @return
 	 */
-	private CampaignBodyCreateOut checkCampaignBiz(int campaignHeadId) {
+	private CampaignBodyCreateOut checkCampaignBiz(int campaignHeadId, CampaignBodyCreateIn body) {
 		CampaignBodyCreateOut out = null;
 		CampaignHead ch = new CampaignHead();
 		ch.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
@@ -415,8 +421,11 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getCode(),
 													   ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
 													   ApiConstant.INT_ZERO,null);
+			} else if(!validSmsStatus(body)){
+				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getCode(),
+						ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getMsg(),
+						ApiConstant.INT_ZERO,null);				
 			}
-
 		}else{
 			out = new CampaignBodyCreateOut(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
 								 			ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(),
@@ -426,6 +435,31 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return out;
 	}
 	
+	private boolean validSmsStatus(CampaignBodyCreateIn body) {
+		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
+			if(campaignNodeChainIn.getNodeType() != ApiConstant.CAMPAIGN_NODE_ACTION
+					|| campaignNodeChainIn.getItemType() != ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS)
+				continue;
+			
+			CampaignActionSendSmsIn campaignActionSendSmsIn = 
+						jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendSmsIn.class);
+			if(null == campaignActionSendSmsIn) 
+				continue;
+			
+			int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
+			SmsMaterial paramSmsMaterial = new SmsMaterial();
+			paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			paramSmsMaterial.setId(smsMaterialId);
+			paramSmsMaterial.setUseStatus(SmsMaterial.USE_STATUS_YES);
+			List<SmsMaterial> targetSmsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
+			if (CollectionUtils.isNotEmpty(targetSmsMaterialList)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
 	private void deleteOldCampaignData (int campaignHeadId) {
 		campaignSwitchDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignDecisionWechatSentDao.deleteByCampaignHeadId(campaignHeadId);
@@ -941,7 +975,9 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		CampaignActionSendSms campaignActionSendSms = new CampaignActionSendSms();
 		CampaignActionSendSmsIn campaignActionSendSmsIn = 
 					jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendSmsIn.class);
-		if(null == campaignActionSendSmsIn) return null;
+		if(null == campaignActionSendSmsIn) 
+			return null;
+		
 		campaignActionSendSms.setName(campaignActionSendSmsIn.getName());
 		campaignActionSendSms.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSendSms.setCampaignHeadId(campaignHeadId);
