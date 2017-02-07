@@ -17,6 +17,8 @@ public class UserInfo extends BaseQuery{
     private String userCode;
     
     private Byte status;
+    
+    private String orgName;
 
     public Long getId() {
         return id;
@@ -65,4 +67,13 @@ public class UserInfo extends BaseQuery{
 	public void setUserCode(String userCode) {
 		this.userCode = userCode;
 	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	
 }
