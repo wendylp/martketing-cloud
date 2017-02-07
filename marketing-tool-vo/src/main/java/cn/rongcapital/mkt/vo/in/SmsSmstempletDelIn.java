@@ -24,6 +24,9 @@ public class SmsSmstempletDelIn extends BaseInput {
     
     @NotNull
     private Integer id ;
+    
+    @NotNull
+    private Long orgId;
 
     @JsonProperty("user_token")
     public String getUserToken() {
@@ -43,8 +46,13 @@ public class SmsSmstempletDelIn extends BaseInput {
         this.id = id;
     }
 
-   
-    
-    
+    @JsonProperty("org_id")
+	public Long getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Long orgId) {
+		this.orgId = orgId;
+	}
 
 }
