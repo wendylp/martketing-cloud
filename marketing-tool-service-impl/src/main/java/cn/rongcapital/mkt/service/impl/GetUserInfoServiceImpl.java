@@ -25,8 +25,8 @@ public class GetUserInfoServiceImpl implements GetUserInfoService{
         Map<String, Object> resultMap = new HashMap<>();
         UserInfo userInfo = userInfoDao.getUserInfo(userId);
         if(null != userInfo){
-            resultMap.put("com_id", userInfo.getCompId());
-            resultMap.put("com_name", userInfo.getCompName());
+            resultMap.put("org_id", userInfo.getCompId());
+            resultMap.put("org_name", userInfo.getCompName());
         }else{
         	baseOutput.setCode(ApiErrorCode.THE_PRESON_NOT_FOUND.getCode());
     		baseOutput.setMsg(ApiErrorCode.THE_PRESON_NOT_FOUND.getMsg());
