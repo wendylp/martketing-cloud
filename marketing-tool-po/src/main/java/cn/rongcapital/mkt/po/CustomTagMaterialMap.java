@@ -43,6 +43,16 @@ public class CustomTagMaterialMap extends BaseQuery {
 	}
     
 
+	public CustomTagMaterialMap(String customTagId, String materialCode, String materialType, Integer status) {
+		super();
+		this.customTagId = customTagId;
+		this.materialCode = materialCode;
+		this.materialType = materialType;
+		this.status = status;
+	}
+
+
+
 	public CustomTagMaterialMap(String customTagId, String customTagName, String materialCode, String materialType,
 			Integer status, Date createTime) {
 		this.customTagId = customTagId;
