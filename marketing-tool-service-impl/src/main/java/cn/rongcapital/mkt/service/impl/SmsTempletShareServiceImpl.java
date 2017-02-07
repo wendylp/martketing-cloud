@@ -73,7 +73,7 @@ public class SmsTempletShareServiceImpl implements SmsTempletShareService {
                 dataAuthService.share("sms_templet", smsTempletShareIn.getResourceId(), item,
                         smsTempletShareIn.getWriteable());
             } catch (CannotShareToOwnerException e) {
-                logger.debug(
+                logger.error(
                         String.format("can not share sms templet:%s to organization:%s.",
                                 smsTempletShareIn.getResourceId(), item), e);
                 return new BaseOutput(ApiErrorCode.SMS_ERROR_TEMPLETE_CAN_SHARE.getCode(),
