@@ -149,7 +149,7 @@ public class MongoCustomTagCategoryDaoTest extends AbstractUnitTest {
     @Test
     public void testInsertMongoCustomTagCategory() {
 
-        CustomTagCategory customTagCategory = new CustomTagCategory("CategoryAA0000000000002", "新插入的分类", 0, null);
+        CustomTagCategory customTagCategory = new CustomTagCategory("newCategoryAA0000000000000", "新插入的分类", 0, null);
         mongoCustomTagCategoryDao.insertMongoCustomTagCategory(customTagCategory);
 
         CustomTagCategory customTagCategoryResult = mongoTemplate.findOne(

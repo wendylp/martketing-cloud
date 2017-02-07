@@ -126,9 +126,11 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
         Query query = new Query(Criteria.where(CUSTOM_TAG_ID).in(customTagList).and(IS_DELETED).is(DATA_VALID));
         // 设置排序规则
         query.with(new Sort(Direction.DESC, COVER_NUMBER, COVER_FREQUENCY));
-        // 设置分页规则
-        query.skip((index - 1) * size);
-        query.limit(size);
+        if (index != null && size != null) {
+            // 设置分页规则
+            query.skip((index - 1) * size);
+            query.limit(size);
+        }
 
         return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
     }
@@ -143,7 +145,10 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
     @Override
     public List<CustomTag> findByCustomTagNameFuzzyAndCoverNumber(String customTagName, Integer size) {
         Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName)
-                .and(COVER_NUMBER).gt(0)).limit(size);
+                .and(COVER_NUMBER).gt(0));
+        if (size != null) {
+            query.limit(size);
+        }
         return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
     }
 
