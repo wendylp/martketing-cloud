@@ -47,6 +47,10 @@ public class GetUserInfoServiceImpl implements GetUserInfoService{
         	}
             resultMap.put("org_id", organization.getOrgId());
             resultMap.put("org_name", organization.getName());
+        }else{
+        	baseOutput.setCode(ApiErrorCode.THE_PRESON_NOT_FOUND.getCode());
+    		baseOutput.setMsg(ApiErrorCode.THE_PRESON_NOT_FOUND.getMsg());
+			return baseOutput;
         }
         baseOutput.getData().add(resultMap);
         return baseOutput;
