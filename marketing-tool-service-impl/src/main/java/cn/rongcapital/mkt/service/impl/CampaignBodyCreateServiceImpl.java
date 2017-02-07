@@ -978,12 +978,22 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		if(null == campaignActionSendSmsIn) 
 			return null;
 		
+		int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
+		updateSmsUseStatus(smsMaterialId);
+		
 		campaignActionSendSms.setName(campaignActionSendSmsIn.getName());
 		campaignActionSendSms.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSendSms.setCampaignHeadId(campaignHeadId);
-		campaignActionSendSms.setSmsMaterialId(campaignActionSendSmsIn.getSmsMaterialId());
+		campaignActionSendSms.setSmsMaterialId(smsMaterialId);
 		campaignActionSendSms.setSmsCategoryType(campaignActionSendSmsIn.getSmsCategoryType());
 		return campaignActionSendSms;
+	}
+
+	private void updateSmsUseStatus(int smsMaterialId) {
+		SmsMaterial paramSmsMaterial = new SmsMaterial();
+		paramSmsMaterial.setId(smsMaterialId);
+		paramSmsMaterial.setUseStatus(SmsMaterial.USE_STATUS_YES);
+		smsMaterialDao.updateById(paramSmsMaterial);
 	}
 	
 	private CampaignActionWait initCampaignActionWait(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
