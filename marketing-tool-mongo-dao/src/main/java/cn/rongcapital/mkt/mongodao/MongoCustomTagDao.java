@@ -148,5 +148,14 @@ public interface MongoCustomTagDao {
      */
     public CustomTag getCustomTagByTagId(String customTagId);
     
+    /**
+     * 功能描述：根据自定义标签id列表统计其中有效数据且覆盖人数大于零 的个数
+     * 
+     * @param customTagId
+     * @return
+     */
+    long countValidCustomTagAndCoverNumber(List<String> customTagId);
+    
+    
     
 }
