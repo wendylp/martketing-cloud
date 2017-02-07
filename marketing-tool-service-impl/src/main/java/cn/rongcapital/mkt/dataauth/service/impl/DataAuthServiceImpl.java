@@ -334,6 +334,7 @@ public class DataAuthServiceImpl implements DataAuthService {
      * @see cn.rongcapital.mkt.dataauth.service.DataAuthService#validateWriteable(java.lang.String, long, long)
      */
     @Override
+    @Transactional
     public boolean validateWriteable(String resouceType, long resourceId, long orgId)
             throws NoWriteablePermissionException {
         DataAuth dataAuth = this.dataAuthMapper.selectByTableNameResourceIDOrgId(resouceType, orgId, resourceId);

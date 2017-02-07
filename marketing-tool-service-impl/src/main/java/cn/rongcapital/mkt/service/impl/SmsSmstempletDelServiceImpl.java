@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
+import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
@@ -49,11 +50,12 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
      * @param securityContext
      * @return
      * @author shuiyangyang
+     * @throws NoWriteablePermissionException 
      * @Date 2016-11-14
      */
     @Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public BaseOutput delSmsTemple(SmsSmstempletDelIn body, SecurityContext securityContext) {
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false ,rollbackFor= NoWriteablePermissionException.class)
+    public BaseOutput delSmsTemple(SmsSmstempletDelIn body, SecurityContext securityContext) throws  NoWriteablePermissionException {
         
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
@@ -84,8 +86,13 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
         // 删除数据
         smsTempletDel.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
         int delCount = smsTempletDao.updateById(smsTempletDel);
-        // 删除短信模板对应权限记录
-        dataAuthService.evict(TABLE_NAME, smsTempletDel.getId());
+        
+        // 判断用户是否具有删除短信模板对应权限记录的权限
+		if(dataAuthService.validateWriteable(TABLE_NAME, smsTempletDel.getId(), body.getOrgId())){
+		    // 删除短信模板对应权限记录
+		    dataAuthService.evict(TABLE_NAME, smsTempletDel.getId());
+		}
+		
         
 		//变量模板时
 		if(SmsTempletTypeEnum.VARIABLE.getStatusCode() == smsTempletLists.get(0).getType().intValue()){

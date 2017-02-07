@@ -48,7 +48,7 @@
 			VALUES
 			(
 			  #{userId},
-			  #{userCode}
+			  #{userCode},
 			  #{compId},
 			  #{compName},
 			  #{orgId}

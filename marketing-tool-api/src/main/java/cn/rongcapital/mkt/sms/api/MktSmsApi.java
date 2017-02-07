@@ -1,8 +1,40 @@
 package cn.rongcapital.mkt.sms.api;
 
+import javax.jms.JMSException;
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
+import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.service.*;
+import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
+import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
+import cn.rongcapital.mkt.service.SmsMaterialGetService;
+import cn.rongcapital.mkt.service.SmsMessageSendRecordGetService;
+import cn.rongcapital.mkt.service.SmsMessageSendTestService;
+import cn.rongcapital.mkt.service.SmsSignatureListGetService;
+import cn.rongcapital.mkt.service.SmsSmstempletDelService;
+import cn.rongcapital.mkt.service.SmsSmstempletIdGetService;
+import cn.rongcapital.mkt.service.SmsTargetAudienceListGetService;
+import cn.rongcapital.mkt.service.SmsTaskDeleteService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
 import cn.rongcapital.mkt.vo.in.SmsMessageSendTestIn;
@@ -10,22 +42,6 @@ import cn.rongcapital.mkt.vo.in.SmsSmstempletDelIn;
 import cn.rongcapital.mkt.vo.in.SmsTaskDeleteIn;
 import cn.rongcapital.mkt.vo.out.SmsSignatureListOut;
 import cn.rongcapital.mkt.vo.out.SmsTargetAudienceListOut;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
-
-import javax.jms.JMSException;
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 
 /**
  * Created by byf on 10/18/16.
@@ -255,7 +271,7 @@ public class MktSmsApi {
     @Path("/mkt.sms.smstemplet.del")
     @Consumes({ MediaType.APPLICATION_JSON })
     public BaseOutput smsSmstempletDel(@Valid SmsSmstempletDelIn body,
-                    @Context SecurityContext securityContext) {
+                    @Context SecurityContext securityContext)  throws NoWriteablePermissionException {
         return smsSmstempletDelService.delSmsTemple(body, securityContext);
         
     }
