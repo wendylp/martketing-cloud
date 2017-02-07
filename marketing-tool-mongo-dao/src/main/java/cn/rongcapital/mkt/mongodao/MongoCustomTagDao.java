@@ -140,5 +140,13 @@ public interface MongoCustomTagDao {
      */
     public long countAll();
     
+    /**
+     * 功能描述：根据自定义标签id查询自定义标签
+     * 
+     * @param customTagId	自定义标签ID
+     * @return
+     */
+    public CustomTag getCustomTagByTagId(String customTagId);
+    
     
 }
