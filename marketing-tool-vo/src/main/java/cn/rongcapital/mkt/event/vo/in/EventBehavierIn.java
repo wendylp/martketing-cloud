@@ -12,7 +12,7 @@ public class EventBehavierIn extends BaseInput{
 	 
 	 @NotNull
 	 @JsonProperty("qrcode_id")
-	 private Long qrcodeId;
+	 private String qrcodeId;
 	 
 	 @NotNull
 	 @JsonProperty("begin_time")
@@ -30,11 +30,11 @@ public class EventBehavierIn extends BaseInput{
 		this.objectCode = objectCode;
 	}
 
-	public Long getQrcodeId() {
+	public String getQrcodeId() {
 		return qrcodeId;
 	}
 
-	public void setQrcodeId(Long qrcodeId) {
+	public void setQrcodeId(String qrcodeId) {
 		this.qrcodeId = qrcodeId;
 	}
 
