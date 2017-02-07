@@ -222,5 +222,11 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
 
     }
 
+	@Override
+	public CustomTag getCustomTagByTagId(String customTagId) {
+		 return mongoTemplate.findOne(
+	                new Query(Criteria.where(CUSTOM_TAG_ID).is(customTagId)),
+	                CUSTOM_TAG_CLASS);
+	}
 
 }

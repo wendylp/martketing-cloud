@@ -90,7 +90,7 @@ public class MktCustomTagApi {
 	@Path("/mkt.customtag.test")
 	public BaseOutput customtagTest(@NotEmpty @QueryParam("user_token") String userToken) {
 		 ArrayList<String> customTagList = new ArrayList<>();
-		 customTagList.add("wangweiqiang7");
+		 customTagList.add("wangweiqiang15");
 		 customTagList.add("wangweiqiang5");
 		 customTagList.add("wangweiqiang6");
 		 customTagList.add("wangweiqiang4");
