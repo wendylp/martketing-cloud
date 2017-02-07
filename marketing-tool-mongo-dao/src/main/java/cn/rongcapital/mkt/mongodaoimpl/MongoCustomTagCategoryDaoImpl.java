@@ -2,13 +2,18 @@ package cn.rongcapital.mkt.mongodaoimpl;
 
 import cn.rongcapital.mkt.common.util.CamelNameUtil;
 import cn.rongcapital.mkt.mongodao.MongoCustomTagCategoryDao;
+import cn.rongcapital.mkt.po.base.BaseTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
@@ -18,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -29,7 +35,7 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
     @Autowired
     private MongoTemplate mongoTemplate;
 
-
+    private Logger logger = LoggerFactory.getLogger(MongoCustomTagCategoryDaoImpl.class);
     private final static Class<CustomTagCategory> CUSTOM_TAG_CATEGORY_CLASS = CustomTagCategory.class;
 
     private static final String CUSTOM_TAG_CATEGORY_ID = "custom_tag_category_id";
@@ -49,6 +55,8 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
     
     private static final int DATA_VALID = 0;// 正常数据
     private static final int DATA_INVALID = 1;// 数据已经被删除
+
+    private ConcurrentHashMap<String, Field[]> filedMap = new ConcurrentHashMap<>();
 
     @Override
     public CustomTagCategory findOne(CustomTagCategory customTagCategory) {
@@ -104,6 +112,12 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
                 CUSTOM_TAG_CATEGORY_CLASS);
     }
 
+    @Override
+    public void updateCustomTagCategoryFirstRowByQuery(String customTagCategoryId, CustomTagCategory customTagCategory) {
+        Query query = new Query(Criteria.where(CUSTOM_TAG_CATEGORY_ID).is(customTagCategoryId).and(IS_DELETED).is(DATA_VALID));
+        mongoTemplate.updateFirst(query,buildBaseUpdate(customTagCategory),CustomTagCategory.class);
+    }
+
     /**
      * 功能描述：根据对象生成对象的mongodb查询条件
      * 
@@ -138,5 +152,26 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
         }
         return new Query(criteria);
 
+    }
+
+    private Update buildBaseUpdate(CustomTagCategory customTagCategory) {
+        Update update = new Update();
+        String className = CustomTagCategory.class.getName();
+        Field[] fields = filedMap.get(className);
+        if (fields == null) {
+            fields = CustomTagCategory.class.getDeclaredFields();
+            filedMap.putIfAbsent(className, fields);
+        }
+        for (Field field : fields) {
+            try {
+                Object value = field.get(customTagCategory);
+                if (value != null) {
+                    update.set(field.getName(), value);
+                }
+            } catch (Exception e) {
+                logger.error("buildBaseUpdate failed", e);
+            }
+        }
+        return update;
     }
 }
