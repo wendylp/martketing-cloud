@@ -447,12 +447,12 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 
 	@Override
 	public BaseOutput getOrgs(long resourceId, long orgId, String oprType, int index, int size) {
-		return dataAuthService.getOrgFromResShare(resourceId, orgId, "sms_templet", ShareOrgTypeEnum.TOORGS.getCode(), oprType, index, size);
+		return dataAuthService.getOrgFromResShare(resourceId, orgId, TABLE_NAME, ShareOrgTypeEnum.TOORGS.getCode(), oprType, index, size);
 	}
 	
 	@Override
 	public BaseOutput getOrg(long resourceId, long orgId, String oprType) {
-		return dataAuthService.getOrgFromResShare(resourceId, orgId, "sms_templet", ShareOrgTypeEnum.ORGTO.getCode(), oprType, null, null);
+		return dataAuthService.getOrgFromResShare(resourceId, orgId, TABLE_NAME, ShareOrgTypeEnum.ORGTO.getCode(), oprType, null, null);
 	}
 	
 }
