@@ -124,6 +124,8 @@ public class DataAuthWriteableInterceptTest {
         writeableBean.setResourceId(802);
         writeableBean.setOrgId(1);
         proxy.writeable(writeableBean);
+        
+        Mockito.verify(dataAuthService,Mockito.times(1)).validateWriteable(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong());
     }
 
     @Test
@@ -145,6 +147,8 @@ public class DataAuthWriteableInterceptTest {
         writeableBean.setResourceId(802);
         writeableBean.setOrgId(1);
         proxy.writeable(writeableBean);
+        
+        Mockito.verify(dataAuthService,Mockito.times(1)).validateWriteable(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong());
     }
 
     @Test(expected = NoSuchElementException.class)

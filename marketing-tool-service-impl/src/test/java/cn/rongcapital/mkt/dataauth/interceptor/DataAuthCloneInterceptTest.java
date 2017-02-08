@@ -134,6 +134,7 @@ public class DataAuthCloneInterceptTest {
         putBean.setToOrgId(2);
         putBean.setWriteable(Boolean.TRUE);
         proxy.clone(putBean);
+        Mockito.verify(dataAuthService,Mockito.times(1)).clone(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyBoolean());
     }
 
     @Test
@@ -157,6 +158,7 @@ public class DataAuthCloneInterceptTest {
         putBean.setToOrgId(2);
         putBean.setWriteable(Boolean.TRUE);
         proxy.clone(putBean);
+        Mockito.verify(dataAuthService,Mockito.times(1)).clone(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyBoolean());
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -180,6 +182,8 @@ public class DataAuthCloneInterceptTest {
         putBean.setToOrgId(2);
         putBean.setWriteable(Boolean.TRUE);
         proxy.clone(putBean);
+        
+        
     }
 
 }

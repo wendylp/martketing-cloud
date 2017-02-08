@@ -117,6 +117,8 @@ public class DataAuthPutInterceptTest {
         putBean.setResourceId(802);
         putBean.setOrgId(1);
         proxy.save(putBean);
+        Mockito.verify(dataAuthService,Mockito.times(1)).put(Mockito.any(long.class), Mockito.any(String.class),
+                Mockito.any(long.class));
     }
 
     @Test
@@ -138,6 +140,9 @@ public class DataAuthPutInterceptTest {
         putBean.setResourceId(802);
         putBean.setOrgId(1);
         proxy.save(putBean);
+        
+        Mockito.verify(dataAuthService,Mockito.times(1)).put(Mockito.any(long.class), Mockito.any(String.class),
+            Mockito.any(long.class));
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -159,6 +164,7 @@ public class DataAuthPutInterceptTest {
         putBean.setResourceId(802);
         putBean.setOrgId(1);
         proxy.save(putBean);
+        
     }
 
 }
