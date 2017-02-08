@@ -31,7 +31,7 @@
     from_resource_id, shared, share_id, da_create_time, da_update_time
   </sql>
   <sql id="DataAuth_Organization_Column">
-    o.org_id as orgId,o.name as name,d.create_time as createTime,d.resource_id as resourceId
+    o.org_id as orgId,o.name as name,d.da_update_time as createTime,d.resource_id as resourceId
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--
