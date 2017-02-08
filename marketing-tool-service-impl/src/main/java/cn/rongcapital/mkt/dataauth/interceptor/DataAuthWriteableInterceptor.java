@@ -38,14 +38,12 @@ public class DataAuthWriteableInterceptor {
 
     @AfterReturning("writeableServiceAspect()")
     @Transactional
-    public void doAfterMethod(JoinPoint joinPoint) throws NoWriteablePermissionException  {
+    public void doAfterMethod(JoinPoint joinPoint) throws NoSuchElementException,NoWriteablePermissionException  {
         Method method = ExpressionHelper.getMethod(joinPoint);
-        if (method != null && method.isAnnotationPresent(DataAuthPut.class)) {
-            DataAuthPut annotation = method.getAnnotation(DataAuthPut.class);
+        if (method != null && method.isAnnotationPresent(DataAuthWriteable.class)) {
+            DataAuthWriteable annotation = method.getAnnotation(DataAuthWriteable.class);
             String resourceIdTemp = annotation.resourceId();
             String orgIdTemp = annotation.orgId();
-            
-            
             String resourceType = annotation.resourceType();
             Long resourceIdObj =null;
             Long orgIdObj = null;
