@@ -439,19 +439,6 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 				to.setCreator(clone.getCreator());
 				to.setUpdateUser(clone.getUpdateUser());
 				this.smsTempletDao.insert(to);
-	
-				SmsTempletMaterialMap targetSTMM = new SmsTempletMaterialMap();
-				targetSTMM.setSmsTempletId(from.getId().longValue());
-				targetSTMM.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-				targetSTMM.setStartIndex(null); //防止selectList方法的order_limit条件生效 锁定返回条数为10的情况发生
-				List<SmsTempletMaterialMap> list = smsTempletMaterialMapDao.selectList(targetSTMM);
-				if (!CollectionUtils.isEmpty(list)) {
-					for (SmsTempletMaterialMap temp : list) {
-						temp.setSmsTempletId(to.getId().longValue());
-						smsTempletMaterialMapDao.insert(temp);
-					}
-				}
-	
 				dataAuthService.clone(TABLE_NAME, to.getId(), from.getId(), clone.getOrgIds()[i], Boolean.TRUE);
 			}
 		}
