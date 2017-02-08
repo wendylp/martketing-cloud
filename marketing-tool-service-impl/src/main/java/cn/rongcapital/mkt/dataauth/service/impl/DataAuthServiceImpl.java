@@ -24,14 +24,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.dataauth.DataAuthTypeEnum;
+import cn.rongcapital.mkt.common.enums.dataauth.ShareOrgTypeEnum;
 import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.dao.dataauth.DataAuthMapper;
 import cn.rongcapital.mkt.dataauth.po.DataAuth;
 import cn.rongcapital.mkt.dataauth.po.Organization;
+import cn.rongcapital.mkt.dataauth.po.OutPutOrganization;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.dataauth.service.OrganizationService;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
 public class DataAuthServiceImpl implements DataAuthService {
@@ -344,5 +349,33 @@ public class DataAuthServiceImpl implements DataAuthService {
         String excMsg = "The organization do not have writeable permission.";
         throw new NoWriteablePermissionException(excMsg);
     }
+
+	@Override
+	public BaseOutput getOrgFromResShare(long resourceId, long orgId, String tableName, String type, String oprType, Integer index, Integer size) {
+		
+		int startIndex = (index == null || index.intValue() == 0) ? 1 : index;
+		int pageSize = (size == null || size.intValue() == 0) ? 10 : size;
+		
+		if(StringUtils.isEmpty(type)){
+			throw new IllegalArgumentException("type is empty");
+		}
+		
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+		 
+		//分享给哪些组织
+		if(ShareOrgTypeEnum.TOORGS.getCode().equals(type)){
+			List<OutPutOrganization> orgList = dataAuthMapper.getOrgs(resourceId, orgId, tableName, oprType, (startIndex - 1) * pageSize, pageSize);
+			int totle = dataAuthMapper.getOrgsTotleCount(resourceId, orgId, tableName, oprType);
+			orgList.forEach(out -> result.getData().add(out));
+	        result.setTotal(result.getData().size());
+	        result.setTotalCount(totle);
+		}
+		//某个组织分享来得
+		if(ShareOrgTypeEnum.ORGTO.getCode().equals(type)){
+			List<OutPutOrganization> out =dataAuthMapper.getOrg(resourceId, orgId, tableName, oprType);
+			result.getData().add(out);
+		}
+		return result;
+	}
 
 }

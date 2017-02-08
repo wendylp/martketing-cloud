@@ -27,8 +27,8 @@ import cn.rongcapital.mkt.service.SmsTempletShareService;
 import cn.rongcapital.mkt.service.SmstempletCountGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.SmsTempletOut;
-import cn.rongcapital.mkt.vo.sms.in.SmsTempletCloneIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletCancelShareIn;
+import cn.rongcapital.mkt.vo.sms.in.SmsTempletCloneIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletShareIn;
 
@@ -144,4 +144,40 @@ public class MktSmsTempletApi {
     public BaseOutput shareSmsTemple(@Valid SmsTempletCancelShareIn smsTempleCancelShareIn) throws Exception {       
         return smsTempletCancelShareService.cancelShareSmsTemplet(smsTempleCancelShareIn);
     }
+    
+	/**
+	 * 当前资源查询分享给了哪些组织、及分享时间
+	 * @return
+	 * @throws Exception
+	 */
+	@GET
+	@Path("/mkt.sms.smstemplet.orgs.list")
+	public BaseOutput getOrgs(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,
+			@NotNull @QueryParam("resource_id") long resourceId, @NotNull @QueryParam("org_id") long orgId,
+			@NotEmpty @QueryParam("opr_type") String oprType,
+			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {		
+		return smsTempletService.getOrgs(resourceId, orgId, oprType, index, size);
+	}
+    
+	/**
+	 * 当前被分享资源查询是从哪个组织分享来的、及分享时间；
+	 * @param userToken
+	 * @param userId
+	 * @param ver
+	 * @param resourceId
+	 * @param orgId
+	 * @param oprType
+	 * @return
+	 */
+	@GET
+	@Path("/mkt.sms.smstemplet.org.get")
+	public BaseOutput getOrg(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,
+			@NotNull @QueryParam("resource_id") long resourceId, @NotNull @QueryParam("org_id") long orgId,
+			@NotEmpty @QueryParam("opr_type") String oprType) {		
+		return smsTempletService.getOrg(resourceId, orgId, oprType);
+	}
+	
 }

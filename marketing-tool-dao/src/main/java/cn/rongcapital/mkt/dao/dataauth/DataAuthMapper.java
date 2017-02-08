@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.dataauth.po.DataAuth;
+import cn.rongcapital.mkt.dataauth.po.OutPutOrganization;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface DataAuthMapper {
@@ -82,6 +84,14 @@ public interface DataAuthMapper {
      * @since 2017-02-06 
      */
     List<DataAuth> selectOwnerByResouceId(@Param("tableName")String resourceType,@Param("resourceId") long resourceId);
-    
+
+
+	List<OutPutOrganization> getOrgs(@Param("resourceId")long resourceId, @Param("orgId")long orgId, @Param("tableName")String tableName, @Param("oprType")String oprType, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize);
+
+
+	int getOrgsTotleCount(@Param("resourceId")long resourceId, @Param("orgId")long orgId, @Param("tableName")String tableName, @Param("oprType")String oprType);
+
+
+	List<OutPutOrganization> getOrg(@Param("resourceId")long resourceId, @Param("orgId")long orgId, @Param("tableName")String tableName, @Param("oprType")String oprType);
     
 }

@@ -51,4 +51,22 @@ public interface SmsTempletService {
 	 */
 	public BaseOutput smsTempletClone(SmsTempletCloneIn clone);
 	
+	/**
+	 * 当前资源查询分享给了哪些组织、及分享时间
+	 * @param resourceId
+	 * @param orgId
+	 * @param oprType
+	 * @return
+	 */
+	public BaseOutput getOrgs(long resourceId, long orgId, String oprType, int index, int size);
+	
+	/**
+	 * 当前被分享资源查询是从哪个组织分享来的、及分享时间；
+	 * @param resourceId
+	 * @param orgId
+	 * @param oprType
+	 * @return
+	 */
+	public BaseOutput getOrg(long resourceId, long orgId, String oprType);
+	
 }

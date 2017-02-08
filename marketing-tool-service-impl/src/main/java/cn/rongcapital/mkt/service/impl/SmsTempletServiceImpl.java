@@ -16,11 +16,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
+
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.enums.dataauth.ShareOrgTypeEnum;
 import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
@@ -453,6 +456,16 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			}
 		}
 		return output;
+	}
+
+	@Override
+	public BaseOutput getOrgs(long resourceId, long orgId, String oprType, int index, int size) {
+		return dataAuthService.getOrgFromResShare(resourceId, orgId, TABLE_NAME, ShareOrgTypeEnum.TOORGS.getCode(), oprType, index, size);
+	}
+	
+	@Override
+	public BaseOutput getOrg(long resourceId, long orgId, String oprType) {
+		return dataAuthService.getOrgFromResShare(resourceId, orgId, TABLE_NAME, ShareOrgTypeEnum.ORGTO.getCode(), oprType, null, null);
 	}
 	
 }
