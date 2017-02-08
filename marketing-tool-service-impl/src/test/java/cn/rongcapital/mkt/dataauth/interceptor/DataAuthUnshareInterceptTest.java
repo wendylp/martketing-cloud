@@ -104,6 +104,7 @@ public class DataAuthUnshareInterceptTest {
         putBean.setOrgId(1);
         
         proxy.unshare(putBean);
+        Mockito.verify(dataAuthService,Mockito.times(1)).unshare(Mockito.any(String.class));
     }
 
     @Test
@@ -125,6 +126,7 @@ public class DataAuthUnshareInterceptTest {
         putBean.setOrgId(1);
         
         proxy.unshare(putBean);
+        Mockito.verify(dataAuthService,Mockito.times(1)).unshare(Mockito.any(String.class));
     }
 
     @Test(expected = NoSuchElementException.class)

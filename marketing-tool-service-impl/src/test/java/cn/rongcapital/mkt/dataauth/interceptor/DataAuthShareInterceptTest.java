@@ -124,6 +124,8 @@ public class DataAuthShareInterceptTest {
         putBean.setToOrgId(2);
         putBean.setWriteable(Boolean.TRUE);
         proxy.share(putBean);
+        
+        Mockito.verify(dataAuthService,Mockito.times(1)).share(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyBoolean());
     }
 
     @Test
@@ -146,6 +148,7 @@ public class DataAuthShareInterceptTest {
         putBean.setToOrgId(2);
         putBean.setWriteable(Boolean.TRUE);
         proxy.share(putBean);
+        Mockito.verify(dataAuthService,Mockito.times(1)).share(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyBoolean());
     }
 
     @Test(expected = NoSuchElementException.class)

@@ -107,6 +107,9 @@ public class DataAuthEvictInterceptTest {
         putBean.setResourceId(802);
         
         proxy.evict(putBean);
+        
+        Mockito.verify(dataAuthService,Mockito.times(1)).evict(Mockito.any(String.class),
+            Mockito.any(long.class));
     }
 
     @Test
@@ -128,6 +131,9 @@ public class DataAuthEvictInterceptTest {
         putBean.setResourceId(802);
         
         proxy.evict(putBean);
+        
+        Mockito.verify(dataAuthService,Mockito.times(1)).evict(Mockito.any(String.class),
+            Mockito.any(long.class));
     }
 
     @Test(expected = NoSuchElementException.class)
