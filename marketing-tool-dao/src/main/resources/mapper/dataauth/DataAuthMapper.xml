@@ -30,6 +30,9 @@
     da_id, `table_name`, resource_id, org_id, firsthand, share_type, writeable, from_org_id, 
     from_resource_id, shared, share_id, create_time, update_time
   </sql>
+  <sql id="DataAuth_Organization_Column">
+    o.org_id as orgId,o.name as name,d.create_time as createTime,d.resource_id as resourceId
+  </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
@@ -332,5 +335,43 @@
     order by share_type
   </select>
   
+  <select id="getOrgs" resultType="cn.rongcapital.mkt.dataauth.po.OutPutOrganization">
+    select 
+    <include refid="DataAuth_Organization_Column" />
+    from data_auth d, organization o
+    where 
+    d.from_resource_id = #{resourceId}
+    AND d.share_type = #{oprType}
+    AND d.firsthand = '1'
+    AND d.from_org_id = #{orgId}
+    AND d.table_name= #{tableName}
+    AND d.org_id = o.org_id
+    LIMIT #{startIndex},#{pageSize}
+  </select>
+  
+   <select id="getOrgsTotleCount" resultType="int">
+    select 
+    count(1)
+    from data_auth d, organization o
+    where 
+    d.from_resource_id = #{resourceId}
+    AND d.share_type = #{oprType}
+    AND d.firsthand = '1'
+    AND d.from_org_id = #{orgId}
+    AND d.table_name= #{tableName}
+    AND d.org_id = o.org_id
+  </select>
+  
+  <select id="getOrg" resultType="cn.rongcapital.mkt.dataauth.po.OutPutOrganization">
+    select 
+    <include refid="DataAuth_Organization_Column" />
+    from data_auth d, organization o
+    where 
+    d.from_resource_id = #{resourceId}
+    AND d.share_type = #{oprType}
+    AND d.org_id = #{orgId}
+    AND d.table_name= #{tableName}
+    AND d.from_org_id = o.org_id
+  </select>
   
 </mapper>

@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.dataauth.service;
 
 import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface DataAuthService {
     
@@ -97,4 +98,16 @@ public interface DataAuthService {
      */
     boolean validateWriteable(String resourceType,long resourceId,long orgId) throws NoWriteablePermissionException;
  
+    /**
+     * 
+     * @param resourceId 资源id
+     * @param orgId 组织id
+     * @param tableName 表名
+     * @param type toOrgs(分享给了哪些组织),orgsTo(从哪个组织分享来的)
+     * @param oprType 操作类型 分享/克隆
+     * @return 返回组织列表
+     * @author xie.xiaoliang
+     * @since 2017-02-08
+     */
+    BaseOutput getOrgFromResShare(long resourceId, long orgId, String tableName, String type, String oprType, Integer index, Integer size);
 }
