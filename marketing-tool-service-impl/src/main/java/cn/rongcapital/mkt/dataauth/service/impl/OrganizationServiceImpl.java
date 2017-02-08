@@ -34,7 +34,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	/**
 	 * @author
-	 * @功能简述: 根据节点ID获取其所有叶子节点，并以树形结构返回
+	 * @功能简述: 根据节点ID获取当前节点及其所有叶子节点，并以树形结构返回
 	 * @param Long id
 	 * @return OrgChildTreeOutPut
 	 */
@@ -70,7 +70,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	/**
 	 * @author
-	 * @功能简述: 根据节点ID获取其所有父节点，并以树形结构返回
+	 * @功能简述: 根据节点ID获取取当前节点及其所有父节点，并以树形结构返回
 	 * @param Long id
 	 * @return OrgParentLineOutPut
 	 */
@@ -93,8 +93,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	/**
 	 * @author
-	 * @功能简述: 根据节点ID获取其所有父节点，并以list形式返回
-	 * @param fileTagUpdateIn
+	 * @功能简述: 根据节点ID获取当前节点以及其所有父节点，并以list形式返回
+	 * @param Long id
 	 * @return List<Organization>
 	 */
 	@Override
@@ -119,8 +119,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	/**
 	 * @author
-	 * @功能简述: 根据节点ID获取其所有子节点，并以list形式返回
-	 * @param fileTagUpdateIn
+	 * @功能简述: 根据节点ID获取其所有子节点，不包含当前节点，并以list形式返回
+	 * @param Long id
 	 * @return List<Organization>
 	 */
 	@Override
@@ -146,8 +146,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	/**
 	 * @author
-	 * @功能简述: 根据节点ID获取其所有子节点，并以list形式返回
-	 * @param fileTagUpdateIn
+	 * @功能简述: 根据节点ID获取当前节点以及其所有子节点，并以list形式返回
+	 * @param Long id
 	 * @return BaseOutput
 	 */
 	@Override
@@ -155,10 +155,15 @@ public class OrganizationServiceImpl implements OrganizationService {
 		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
 				null);
 		
-		List<Organization> list = getChildOrgListById(id);
-		if(!CollectionUtils.isEmpty(list)){
-			output.setTotal(list.size());
-			output.getData().addAll(list);
+		Organization org = organizationDao.getNodeById(id);
+		if (org != null) {
+			List<Organization> list = new ArrayList<Organization>();
+			list.add(org);
+			list.addAll(getChildOrgListById(id));
+			if(!CollectionUtils.isEmpty(list)){
+				output.setTotal(list.size());
+				output.getData().addAll(list);
+			}
 		}
 		
 		return output;
