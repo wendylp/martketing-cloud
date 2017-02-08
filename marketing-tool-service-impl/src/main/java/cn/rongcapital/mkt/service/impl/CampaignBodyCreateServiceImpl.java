@@ -1031,7 +1031,13 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private String extractTagIDs(List<TagIn> tagList) {
 		List<String> tagIdList = new ArrayList<String>();
 		for(TagIn tagIn:tagList) {
-			tagIdList.add(tagIn.getTag_id());
+			String id = tagIn.getTag_id();
+			String tagType = tagIn.getTag_type();
+			if (TagIn.TAG_TYPE_SYS.equals(tagType)) {
+				id += ":" + tagIn.getTag_name();
+			}
+
+			tagIdList.add(id);
 		}
 		String tagIds = StringUtils.join(tagIdList, ",");
 		return tagIds;
