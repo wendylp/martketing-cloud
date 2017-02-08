@@ -85,8 +85,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 		OrgParentLineOutPut orgFL = null;
 		if (org != null) {
 			orgFL = new OrgParentLineOutPut(org);
-			Organization temp = organizationDao.getNodeById(org.getOrgId());
-			OrgParentLineOutPut node = generateOrgLine(temp.getParentId());
+			OrgParentLineOutPut node = generateOrgLine(org.getParentId());
 			orgFL.setOrganization(node);
 		}
 		return orgFL;
@@ -108,10 +107,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	private void ConvertLineToList(OrgParentLineOutPut orgFL, List<Organization> list) {
 		if (orgFL != null && orgFL.getOrganization() != null) {
+			list.add(orgFL);
 			OrgParentLineOutPut temp = orgFL.getOrganization();
-			list.add(temp);
 			if (temp.getOrganization() != null && temp.getOrganization().getOrgId() != null) {
 				ConvertLineToList(temp, list);
+			}else{
+				list.add(temp);
 			}
 		}
 	}
