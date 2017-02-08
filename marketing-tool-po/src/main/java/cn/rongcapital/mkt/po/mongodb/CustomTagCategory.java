@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by byf on 1/15/17.
@@ -51,6 +52,17 @@ public class CustomTagCategory implements Serializable{
 
     @Field(value = "children_custom_tag_list")
     private ArrayList<String> childrenCustomTagList;
+    
+    public CustomTagCategory(){}
+    
+    public CustomTagCategory(String customTagCategoryId, String customTagCategoryName, Integer isDeleted,
+            List<String> childrenCustomTagList) {
+        super();
+        this.customTagCategoryId = customTagCategoryId;
+        this.customTagCategoryName = customTagCategoryName;
+        this.isDeleted = isDeleted;
+        this.childrenCustomTagList = (ArrayList)childrenCustomTagList;
+    }
 
     public String getId() {
         return id;
@@ -211,6 +223,16 @@ public class CustomTagCategory implements Serializable{
             if (other.updateTime != null) return false;
         } else if (!updateTime.equals(other.updateTime)) return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomTagCategory [id=" + id + ", customTagCategoryId=" + customTagCategoryId
+                + ", customTagCategoryName=" + customTagCategoryName + ", customTagCategoryType="
+                + customTagCategoryType + ", level=" + level + ", isDeleted=" + isDeleted + ", parentId=" + parentId
+                + ", createTime=" + createTime + ", updateTime=" + updateTime + ", customTagCategorySource="
+                + customTagCategorySource + ", childrenCustomTagCategoryList=" + childrenCustomTagCategoryList
+                + ", childrenCustomTagList=" + childrenCustomTagList + "]";
     }
     
     

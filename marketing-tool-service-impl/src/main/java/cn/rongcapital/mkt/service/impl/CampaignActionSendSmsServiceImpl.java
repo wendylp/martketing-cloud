@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,16 +30,25 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 	
 	public static final Integer SMS_TARGET_CAMPAIGN=2;
 	
+	public static final Integer SMS_TASK_TYPE_CAMPAIGN=1;
+	
+	public static final String SMS_TASK_NAME="（活动）";
+	
+	
+	
 	@Autowired
 	public SmsMaterialDao smsMaterialDao;
 	
 	@Override
 	public SmsActivationCreateIn getSmsActivationCreateIn(Integer campaignHeadId, String itemId,
-			CampaignActionSendSms campaignActionSendSms) {
+			CampaignActionSendSms campaignActionSendSms,Set<Integer> dataPartyIds) {
 		SmsActivationCreateIn smsActivationCreateIn = new SmsActivationCreateIn();
 		smsActivationCreateIn.setTaskAppType(campaignActionSendSms.getSmsCategoryType());
 		smsActivationCreateIn.setTaskMaterialId(Long.parseLong(String.valueOf(campaignActionSendSms.getSmsMaterialId())));
-		smsActivationCreateIn.setTaskName(campaignActionSendSms.getName());
+		smsActivationCreateIn.setTaskName(SMS_TASK_NAME+campaignActionSendSms.getName());
+		String smsTaskCode = campaignHeadId+"-"+itemId;
+		smsActivationCreateIn.setSmsTaskCode(smsTaskCode);
+		smsActivationCreateIn.setSmsTaskType(SMS_TASK_TYPE_CAMPAIGN);
 		SmsMaterial smsMaterialTemp = new SmsMaterial();
 		smsMaterialTemp.setId(campaignActionSendSms.getSmsMaterialId());
 		List<SmsMaterial> smsMaterials = smsMaterialDao.selectList(smsMaterialTemp);
@@ -52,17 +62,28 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 			SmsTargetAudienceIn smsTargetAudienceIn = new SmsTargetAudienceIn();
 			smsTargetAudienceIn.setTargetAudienceId(Long.parseLong(String.valueOf(campaignActionSendSms.getId())));
 			smsTargetAudienceIn.setTargetAudienceName(campaignActionSendSms.getName());
-			smsTargetAudienceIn.setTargetAudienceType(SMS_TARGET_CAMPAIGN);			
+			smsTargetAudienceIn.setTargetAudienceType(SMS_TARGET_CAMPAIGN);		
+			smsTargetAudienceInArrayList.add(smsTargetAudienceIn);
 			smsActivationCreateIn.setSmsTargetAudienceInArrayList(smsTargetAudienceInArrayList);
-		}		
+		}
+		smsActivationCreateIn.setDataPartyIds(dataPartyIds);
 		return smsActivationCreateIn;
 	}
 
 	@Override
-	public void storeDataPartyIds(Set<Integer> dataPartyIds,Integer targetId) {
-		String[] dataPartyIdsStr = (String[]) dataPartyIds.toArray();
+	public void storeDataPartyIds(Set<Integer> dataPartyIds,Long targetId) {
 		try {
-			JedisClient.sadd(POOL_INDEX,"campaigncoverid:"+targetId, dataPartyIdsStr);
+			if(dataPartyIds!=null&&dataPartyIds.size()>0){
+				String[] dataPartyIdsStr = new String[dataPartyIds.size()];
+				List<String> dataPartyIdsL = new ArrayList<String>();
+				for(Integer dataPartyId:dataPartyIds){
+					String dataPartyIdStr = String.valueOf(dataPartyId);
+					dataPartyIdsL.add(dataPartyIdStr);					
+				}
+				dataPartyIdsStr=dataPartyIdsL.toArray(dataPartyIdsStr);
+				JedisClient.sadd(POOL_INDEX,"campaigncoverid:"+targetId, dataPartyIdsStr);
+			}
+			
 		} catch (JedisException e) {			
 			logger.info(" campaigncoverid:"+targetId+" store into redis fail,"+e.getMessage());
 		}

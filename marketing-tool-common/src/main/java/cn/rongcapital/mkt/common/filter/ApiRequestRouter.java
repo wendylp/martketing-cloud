@@ -101,20 +101,21 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 		   				ResponseBuilderImpl builder = getBuilder();           
 			            requestContext.abortWith(builder.build());
 		   			}else{
-		   				if(StringUtils.isNotEmpty(appId)){				
-			   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
-			   				requestContext.setRequestUri(newRequestURI);			   				
-			   			}if(StringUtils.isNotEmpty(eventAppId)){	
-			   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path(ApiConstant.EVENT_API_PATH +"/"+method).build();
-			   				requestContext.setRequestUri(newRequestURI);	
+		   				if(StringUtils.isNotEmpty(appId)||StringUtils.isNotEmpty(eventAppId)){	
+		   					if(StringUtils.isNotEmpty(appId)){
+		   						URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
+				   				requestContext.setRequestUri(newRequestURI);	
+		   					}else{
+		   						URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path(ApiConstant.EVENT_API_PATH +"/"+method).build();
+				   				requestContext.setRequestUri(newRequestURI);	
+		   					}
 			   			}else{
 			   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
 			   						.path(ApiConstant.API_PATH+"/"+method).build();
 			   				requestContext.setRequestUri(newRequestURI);
 			   			}
 		   			}		   			
-		   		}
-		   		
+		   		}		   		
 	   		}else{
 //	   			requestContext.abortWith(Response.status(404).entity("Api not found").build());	   			
 	   			ResponseBuilderImpl builder = getBuilder();         

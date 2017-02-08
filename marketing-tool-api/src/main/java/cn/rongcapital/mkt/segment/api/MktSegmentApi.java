@@ -34,10 +34,12 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CreupdateSegmentService;
 import cn.rongcapital.mkt.service.CustomtagListService;
+import cn.rongcapital.mkt.service.SegmentAllSummaryListService;
 import cn.rongcapital.mkt.service.SegmentAnalysisCustomService;
 import cn.rongcapital.mkt.service.SegmentAudienctAnalysisService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
 import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
+import cn.rongcapital.mkt.service.SegmentCustomtagCategoryListService;
 import cn.rongcapital.mkt.service.SegmentDetailGetService;
 import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
@@ -48,7 +50,6 @@ import cn.rongcapital.mkt.service.SegmentPublishstatusListService;
 import cn.rongcapital.mkt.service.SegmentSearchDownloadService;
 import cn.rongcapital.mkt.service.SegmentSearchGetService;
 import cn.rongcapital.mkt.service.SegmentSecondaryTaglistSearchService;
-import cn.rongcapital.mkt.service.SegmentAllSummaryListService;
 import cn.rongcapital.mkt.service.SegmentTagGetService;
 import cn.rongcapital.mkt.service.SegmentTagUpdateService;
 import cn.rongcapital.mkt.service.SegmentTagkeyTagListService;
@@ -164,6 +165,9 @@ public class MktSegmentApi {
     
     @Autowired
     private CustomtagListService customtagListService;
+    
+    @Autowired
+    private SegmentCustomtagCategoryListService segmentCustomtagCategoryListService;
     
     /**
      * 获取创建联系人表单界面中，右侧的显示列表
@@ -631,4 +635,17 @@ public class MktSegmentApi {
         return customtagListService.getCustomtagList(customTagCategoryId);
     }
     
+    /**
+     * 功能描述：自定义分类列表 去除覆盖人数为零的列表
+     * 
+     * 接口：mkt.segment.customtag.category.list
+     * 
+     * @return
+     */
+    @GET
+    @Path("/mkt.segment.customtag.category.list")
+    public BaseOutput getSegmentCustomTagCategoryList(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken) {
+        return segmentCustomtagCategoryListService.getSegmentCustomTagCategoryList();
+    }
 }

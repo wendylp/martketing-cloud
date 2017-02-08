@@ -32,7 +32,7 @@ public class CustomTagActionServiceImpl implements CustomTagActionService{
 
     @Autowired
     private MongoCustomTagCategoryDao mongoCustomTagCategoryDao;
-    
+
     @Override
     public BaseOutput insertCustomTag() {
         CustomTag customTag = new CustomTag();
@@ -78,6 +78,13 @@ public class CustomTagActionServiceImpl implements CustomTagActionService{
 				insertCustomTag.setIsDeleted(Integer.valueOf(ApiConstant.TABLE_DATA_STATUS_VALID));
 				insertCustomTag.setRecommendFlag(null);
 				mongoCustomTagDao.insertCustomTag(insertCustomTag);
+				
+				//Todo:更新CustomTagCategory的ChildrenList。
+				CustomTagCategory paramCustomTagCategory = new CustomTagCategory();
+				paramCustomTagCategory.setCustomTagCategoryId(ApiConstant.CUSTOM_TAG_DEFAULT_CATEGORY_ID);
+				CustomTagCategory customTagCategory = mongoCustomTagCategoryDao.findOne(paramCustomTagCategory);
+			    customTagCategory.getChildrenCustomTagList().add(insertCustomTag.getCustomTagId());
+			    mongoCustomTagCategoryDao.updateCustomTagCategoryFirstRowByQuery(ApiConstant.CUSTOM_TAG_DEFAULT_CATEGORY_ID,customTagCategory);
 			}
 		}
 

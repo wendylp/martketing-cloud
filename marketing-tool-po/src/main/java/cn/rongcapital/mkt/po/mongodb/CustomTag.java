@@ -59,6 +59,16 @@ public class CustomTag implements Serializable {
         this.customTagId = customTagId;
         this.customTagName = customTagName;
     }
+    
+    public CustomTag(String customTagId, String customTagName, Integer isDeleted, Integer coverNumber,
+            Integer coverFrequency) {
+        super();
+        this.customTagId = customTagId;
+        this.customTagName = customTagName;
+        this.isDeleted = isDeleted;
+        this.coverNumber = coverNumber;
+        this.coverFrequency = coverFrequency;
+    }
 
     public String getId() {
         return id;

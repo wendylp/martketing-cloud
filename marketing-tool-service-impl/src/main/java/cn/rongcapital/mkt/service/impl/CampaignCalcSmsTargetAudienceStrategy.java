@@ -5,11 +5,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisException;
 
+@Service
 public class CampaignCalcSmsTargetAudienceStrategy extends AbstractCalcSmsTargetAudienceStrategy {
 
 	public static final Integer POOL_INDEX = 3;

@@ -114,8 +114,9 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_ITEM_ACTION_ADD_CAMPAIGN = 3;//添加到其它活动
 	public static final byte CAMPAIGN_ITEM_ACTION_MOVE_CAMPAIGN = 4;//转移到其它活动
 	public static final byte CAMPAIGN_ITEM_ACTION_SEND_WECHAT_H5 = 5;//发送微信图文
-	public static final byte CAMPAIGN_ITEM_ACTION_SEND_H5 = 6;//发送H5活动
+	public static final byte CAMPAIGN_ITEM_ACTION_SEND_SMS = 6;//发送短信
 	public static final byte CAMPAIGN_ITEM_ACTION_SEND_PRVT_INFO = 7;//发送个人号信息
+	public static final byte CAMPAIGN_ITEM_ACTION_SEND_H5 = 8;//发送H5活动
 	
 	public static final byte TASK_STATUS_VALID = 0;//任务可运行
 	public static final byte TASK_STATUS_INVALID = 1;//任务不可运行
@@ -149,6 +150,8 @@ public class ApiConstant {
 	public static final String TASK_NAME_CAMPAIGN_ACTION_PUBWECHAT_SEND_H5 = "campaignActionPubWechatSendH5Task";
 	//发送个人号消息
 	public static final String TASK_NAME_CAMPAIGN_ACTION_WECHAT_PRV_SEND_INFO = "campaignActionPrvWechatSendInfoTask";
+	//发送短信
+	public static final String TASK_NAME_CAMPAIGN_ACTION_SEND_SMS = "campaignActionSendSmsTask";
 	//公众号发送H5图文:个人号暂时不支持发送H5图文
 	public static final String TASK_NAME_CAMPAIGN_ACTION_WECHAT_SEND_H5 = "campaignActionWechatSendH5Task";
 	//等待
@@ -409,4 +412,9 @@ public class ApiConstant {
      *自定义标签未分类对应的分类ID
      */
     public static final String CUSTOM_TAG_DEFAULT_CATEGORY_ID = "yr1oorLSpl1484637382955";
+    
+    /**
+     * 物料类型-微信
+     */
+    public static final String MATERIAL_TYPE_WECHAT = "qrcode_attr";
 }
