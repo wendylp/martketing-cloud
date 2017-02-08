@@ -18,8 +18,8 @@
     <result column="from_resource_id" jdbcType="BIGINT" property="fromResourceId" />
     <result column="shared" jdbcType="BIT" property="shared" />
     <result column="share_id" jdbcType="VARCHAR" property="shareId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="da_create_time" jdbcType="TIMESTAMP" property="daCreateTime" />
+    <result column="da_update_time" jdbcType="TIMESTAMP" property="daUpdateTime" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
@@ -28,7 +28,7 @@
       This element was generated on Thu Jan 26 22:08:15 CST 2017.
     -->
     da_id, `table_name`, resource_id, org_id, firsthand, share_type, writeable, from_org_id, 
-    from_resource_id, shared, share_id, create_time, update_time
+    from_resource_id, shared, share_id, da_create_time, da_update_time
   </sql>
   <sql id="DataAuth_Organization_Column">
     o.org_id as orgId,o.name as name,d.create_time as createTime,d.resource_id as resourceId
@@ -62,13 +62,13 @@
     insert into data_auth ( `table_name`, resource_id, 
       org_id, firsthand, share_type, 
       writeable, from_org_id, from_resource_id, 
-      shared, share_id, create_time, 
-      update_time)
+      shared, share_id, da_create_time, 
+      da_update_time)
     values ( #{tableName,jdbcType=VARCHAR}, #{resourceId,jdbcType=BIGINT}, 
       #{orgId,jdbcType=BIGINT}, #{firsthand,jdbcType=BIT}, #{shareType,jdbcType=CHAR}, 
       #{writeable,jdbcType=BIT}, #{fromOrgId,jdbcType=BIGINT}, #{fromResourceId,jdbcType=BIGINT}, 
-      #{shared,jdbcType=BIT}, #{shareId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{shared,jdbcType=BIT}, #{shareId,jdbcType=VARCHAR}, #{daCreateTime,jdbcType=TIMESTAMP}, 
+      #{daUpdateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.rongcapital.mkt.dataauth.po.DataAuth">
     <!--
@@ -111,11 +111,11 @@
       <if test="shareId != null">
         share_id,
       </if>
-      <if test="createTime != null">
-        create_time,
+      <if test="daCreateTime != null">
+        da_create_time,
       </if>
-      <if test="updateTime != null">
-        update_time,
+      <if test="daUpdateTime != null">
+        da_update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -152,11 +152,11 @@
       <if test="shareId != null">
         #{shareId,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
+      <if test="daCreateTime != null">
+        #{daCreateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
+      <if test="daUpdateTime != null">
+        #{daUpdateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -198,11 +198,11 @@
       <if test="shareId != null">
         share_id = #{shareId,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+      <if test="daCreateTime != null">
+        da_create_time = #{daCreateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      <if test="daUpdateTime != null">
+        da_update_time = #{daUpdateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where da_id = #{daId,jdbcType=BIGINT}
@@ -224,8 +224,8 @@
       from_resource_id = #{fromResourceId,jdbcType=BIGINT},
       shared = #{shared,jdbcType=BIT},
       share_id = #{shareId,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      da_create_time = #{daCreateTime,jdbcType=TIMESTAMP},
+      da_update_time = #{daUpdateTime,jdbcType=TIMESTAMP}
     where da_id = #{daId,jdbcType=BIGINT}
   </update>
   

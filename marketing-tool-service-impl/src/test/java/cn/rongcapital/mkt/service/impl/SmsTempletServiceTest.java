@@ -16,7 +16,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -30,7 +29,6 @@ import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
-import cn.rongcapital.mkt.po.SmsTaskDetailState;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsTempletService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -135,7 +133,7 @@ public class SmsTempletServiceTest {
 
     @Test
     public void testSmsTempletList() {
-        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, "0", "1", "测试","");
+        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, "0", "1", "测试","",1 , Boolean.TRUE);
         
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());

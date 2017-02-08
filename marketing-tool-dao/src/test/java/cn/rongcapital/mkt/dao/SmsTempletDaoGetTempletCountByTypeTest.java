@@ -64,7 +64,7 @@ public class SmsTempletDaoGetTempletCountByTypeTest extends AbstractUnitTest {
                 auth.setWriteable(Boolean.TRUE);// 设置具有写权限
                 auth.setShared(Boolean.FALSE);// 设置是否被分享过
                 Date date = new Date();
-                auth.setCreateTime(date);
+                auth.setDaCreateTime(date);
                 dataAuthMapper.insertSelective(auth);
             }
         }

@@ -61,7 +61,7 @@ public class DataAuthServiceImpl implements DataAuthService {
         auth.setWriteable(Boolean.TRUE);//设置具有写权限
         auth.setShared(Boolean.FALSE);//设置是否被分享过
         Date date = new Date();
-        auth.setCreateTime(date);
+        auth.setDaCreateTime(date);
         this.dataAuthMapper.insert(auth);
         
         // 其次插入当前资源的间接权限
@@ -188,7 +188,7 @@ public class DataAuthServiceImpl implements DataAuthService {
             }
         }else{//并没有在原数据权限表中查询到数据，需要新增一条数据
             dataAuth = new DataAuth();
-            dataAuth.setCreateTime(new Date());
+            dataAuth.setDaCreateTime(new Date());
             dataAuth.setFirsthand(firsthand);
             dataAuth.setFromOrgId(fromOrgId);
             dataAuth.setFromResourceId(resourceId);
@@ -326,7 +326,7 @@ public class DataAuthServiceImpl implements DataAuthService {
         auth.setFromOrgId(fromOrgId);
         auth.setFromResourceId(fromResourceId);
         auth.setShared(Boolean.FALSE);
-        auth.setCreateTime(new Date());
+        auth.setDaCreateTime(new Date());
         this.dataAuthMapper.insert(auth);
         //再次插入当前资源的间接权限
         insertSecondhandAccess(toOrgId, auth);

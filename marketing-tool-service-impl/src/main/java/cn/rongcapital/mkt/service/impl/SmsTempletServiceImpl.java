@@ -34,7 +34,6 @@ import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
 import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
-import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.po.SmsTempletMaterialMap;
 import cn.rongcapital.mkt.service.SmsTempletService;
@@ -43,7 +42,6 @@ import cn.rongcapital.mkt.vo.out.ColumnsOut;
 import cn.rongcapital.mkt.vo.out.SmsTempletOut;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletCloneIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
-import cn.rongcapital.mkt.vo.sms.in.SmsTempletListIn;
 import cn.rongcapital.mkt.vo.sms.in.SmstempletMaterialVo;
 import cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo;
 
@@ -84,7 +82,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		
 	@Override
 	public SmsTempletOut smsTempletList(String userId, Integer index, Integer size, String channelType,
-			String type, String name,String content) {
+										String type, String name, String content, Integer orgId, Boolean firsthand) {
 		logger.info("this is SmsTempletServiceImpl.smsTempletList");
 		
 		SmsTempletOut smsTempletOut = this.newSuccessSmsTempletOut();
@@ -109,6 +107,8 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		smsTempletTemp.setOrderFieldType("DESC");
 		smsTempletTemp.setStartIndex((index-1)*size);
 		smsTempletTemp.setPageSize(size);
+		smsTempletTemp.setOrgId(orgId);
+		smsTempletTemp.setFirsthand(firsthand);
 		
 		/**
 		 * 统计总数
@@ -241,7 +241,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 				   smsTempletDao.updateById(smsTemplet);
 			}else{
 				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
-				smsTempletDao.insert(smsTemplet);
+				insert(smsTemplet, smsTempletIn.getOrgid());
 				 //新增权限数据 lhz 
 				dataAuthService.put(smsTempletIn.getOrgid(),"sms_templet", smsTemplet.getId());;
 			}
@@ -262,6 +262,19 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		}
 		return output;		
 	}
+
+    /**
+     * @功能描述: message
+     * @param smsTemplet 
+     * @param orgId 
+     * @author xie.xiaoliang
+     * @since 2017-02-07 
+     */
+	@DataAuthPut(resourceType="sms_templet",orgId="#orgid",resourceId="#smsTemplet.id",type=ParamType.SpEl)
+	@Transactional
+    private void insert(SmsTemplet smsTemplet, long orgId) {
+        smsTempletDao.insert(smsTemplet);
+    }
 
 	private void updateMaterial(SmsTempletIn smsTempletIn, Integer templetId) {
 
@@ -425,20 +438,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 				SmsTemplet to = t.get(0);
 				to.setCreator(clone.getCreator());
 				to.setUpdateUser(clone.getUpdateUser());
-				smsTempletDao.insert(to);
-	
-				SmsTempletMaterialMap targetSTMM = new SmsTempletMaterialMap();
-				targetSTMM.setSmsTempletId(from.getId().longValue());
-				targetSTMM.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-				targetSTMM.setStartIndex(null); //防止selectList方法的order_limit条件生效 锁定返回条数为10的情况发生
-				List<SmsTempletMaterialMap> list = smsTempletMaterialMapDao.selectList(targetSTMM);
-				if (!CollectionUtils.isEmpty(list)) {
-					for (SmsTempletMaterialMap temp : list) {
-						temp.setSmsTempletId(to.getId().longValue());
-						smsTempletMaterialMapDao.insert(temp);
-					}
-				}
-	
+				this.smsTempletDao.insert(to);
 				dataAuthService.clone(TABLE_NAME, to.getId(), from.getId(), clone.getOrgIds()[i], Boolean.TRUE);
 			}
 		}

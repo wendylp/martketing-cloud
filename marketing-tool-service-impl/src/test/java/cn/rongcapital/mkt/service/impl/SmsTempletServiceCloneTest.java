@@ -23,7 +23,6 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
-import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.po.SmsTempletMaterialMap;
@@ -42,14 +41,9 @@ public class SmsTempletServiceCloneTest {
     private SmsTempletDao smsTempletDao;
     
     @Mock
-	private SmsTempletMaterialMapDao smsTempletMaterialMapDao;
-    
-    @Mock
     private DataAuthService dataAuthService;
     
     private List<SmsTemplet> dataList;
-    
-    private List<SmsTempletMaterialMap> smsMaterialMap;
     
     private SmsTempletCloneIn clone;
     
@@ -60,7 +54,6 @@ public class SmsTempletServiceCloneTest {
         smsTempletService = new SmsTempletServiceImpl();
         
         ReflectionTestUtils.setField(smsTempletService, "smsTempletDao", smsTempletDao);
-        ReflectionTestUtils.setField(smsTempletService, "smsTempletMaterialMapDao", smsTempletMaterialMapDao);
         ReflectionTestUtils.setField(smsTempletService, "dataAuthService", dataAuthService);
     }
 
@@ -75,7 +68,6 @@ public class SmsTempletServiceCloneTest {
         smsTemplet.setContent("content");
         dataList.add(smsTemplet);
         
-        smsMaterialMap = new ArrayList<SmsTempletMaterialMap>();
         SmsTempletMaterialMap stmm = new SmsTempletMaterialMap();
         stmm.setId(111l);
         stmm.setMaterialType("materialType");
@@ -91,16 +83,7 @@ public class SmsTempletServiceCloneTest {
 			}
 		}).when(smsTempletDao).insert(any());
     	
-    	Mockito.when(smsTempletMaterialMapDao.selectList(any())).thenReturn(smsMaterialMap);
         
-    	Mockito.doAnswer(new Answer<Void>() {
-			@Override
-			public Void answer(InvocationOnMock invocation) throws Throwable {
-
-				return null;
-			}
-		}).when(smsTempletMaterialMapDao).insert(any());
-    	
     	Mockito.doAnswer(new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
