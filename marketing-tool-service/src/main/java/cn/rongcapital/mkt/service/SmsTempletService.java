@@ -18,9 +18,11 @@ public interface SmsTempletService {
 	 * @param channelType
 	 * @param type
 	 * @param name
+	 * @param orgId
+	 * @param firsthand
 	 * @return
 	 */
-	public SmsTempletOut smsTempletList(String userId,Integer index,Integer size,String channelType,String type,String name,String content);
+	public SmsTempletOut smsTempletList(String userId, Integer index, Integer size, String channelType, String type, String name, String content, Integer orgId, Boolean firsthand);
 	
 	/**
 	 * @param smsTempletIn
