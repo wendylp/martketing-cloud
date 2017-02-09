@@ -16,8 +16,8 @@ import java.util.NoSuchElementException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ public class DataAuthWriteableInterceptor {
     @Pointcut("@annotation(cn.rongcapital.mkt.dataauth.interceptor.DataAuthWriteable)")
     public void writeableServiceAspect() {}
 
-    @AfterReturning("writeableServiceAspect()")
+    @Before("writeableServiceAspect()")
     @Transactional
     public void doAfterMethod(JoinPoint joinPoint) throws NoSuchElementException,NoWriteablePermissionException  {
         Method method = ExpressionHelper.getMethod(joinPoint);

@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.dataauth.interceptor.DataAuthEvict;
-import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,6 +20,7 @@ import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsSmstempletDelService;
+import cn.rongcapital.mkt.service.SmsTempletOrganizationService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SmsSmstempletDelIn;
 @Service
@@ -46,8 +45,10 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
     @Autowired
     private DataAuthService dataAuthService;
     
-    private static final String TABLE_NAME = SMS_TEMPLET;// 资源对应表名
+    
 
+    @Autowired
+    private SmsTempletOrganizationService smsSmstempletOrganizationDelService;
     
     
     /**
@@ -92,7 +93,7 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
         
         // 删除数据
         smsTempletDel.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-        int delCount = delete(smsTempletDel);
+        int delCount = smsSmstempletOrganizationDelService.delete(smsTempletDel, body.getOrgId());
         
 //        // 判断用户是否具有删除短信模板对应权限记录的权限
 //		if(dataAuthService.validateWriteable(TABLE_NAME, smsTempletDel.getId(), body.getOrgId())){
@@ -112,18 +113,6 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
         result.setTotal(delCount);
         
         return result;
-    }
-
-    /**
-     * @功能描述: message
-     * @param smsTempletDel
-     * @return intaspectjweaver
-     * @author xie.xiaoliang
-     * @since 2017-02-08 
-     */
-    @DataAuthEvict(resourceType = SMS_TEMPLET,resourceId = "#smsTempletDel.id",type = ParamType.SpEl)
-    public int delete(SmsTemplet smsTempletDel) {
-        return smsTempletDao.updateById(smsTempletDel);
     }
 
     // 自定义返回状态
