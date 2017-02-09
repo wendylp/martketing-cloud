@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthEvict;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,6 +27,12 @@ import cn.rongcapital.mkt.vo.in.SmsSmstempletDelIn;
 @Service
 public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
     
+    /**
+     * Description:
+     */
+    private static final String SMS_TEMPLET = "sms_templet";//当前对应资源的数据表名称
+
+
     @Autowired
     private SmsMaterialDao smsMaterialDao;
     
@@ -38,7 +46,7 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
     @Autowired
     private DataAuthService dataAuthService;
     
-    private static final String TABLE_NAME = "sms_templet";// 资源对应表名
+    private static final String TABLE_NAME = SMS_TEMPLET;// 资源对应表名
 
     
     
@@ -70,7 +78,6 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
             result.setMsg(ReturnCode.DATA_IS_USE.getMsg());
             return result;
         }
-            
         SmsTemplet smsTempletDel = new SmsTemplet();
         smsTempletDel.setId(body.getId());
         smsTempletDel.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
@@ -85,13 +92,13 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
         
         // 删除数据
         smsTempletDel.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-        int delCount = smsTempletDao.updateById(smsTempletDel);
+        int delCount = delete(smsTempletDel);
         
-        // 判断用户是否具有删除短信模板对应权限记录的权限
-		if(dataAuthService.validateWriteable(TABLE_NAME, smsTempletDel.getId(), body.getOrgId())){
-		    // 删除短信模板对应权限记录
-		    dataAuthService.evict(TABLE_NAME, smsTempletDel.getId());
-		}
+//        // 判断用户是否具有删除短信模板对应权限记录的权限
+//		if(dataAuthService.validateWriteable(TABLE_NAME, smsTempletDel.getId(), body.getOrgId())){
+//		    // 删除短信模板对应权限记录
+//		    dataAuthService.evict(TABLE_NAME, smsTempletDel.getId());
+//		}
 		
         
 		//变量模板时
@@ -106,7 +113,19 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
         
         return result;
     }
-    
+
+    /**
+     * @功能描述: message
+     * @param smsTempletDel
+     * @return intaspectjweaver
+     * @author xie.xiaoliang
+     * @since 2017-02-08 
+     */
+    @DataAuthEvict(resourceType = SMS_TEMPLET,resourceId = "#smsTempletDel.id",type = ParamType.SpEl)
+    public int delete(SmsTemplet smsTempletDel) {
+        return smsTempletDao.updateById(smsTempletDel);
+    }
+
     // 自定义返回状态
     private enum ReturnCode {
         SUCCESS(0, "SUCCESS"), 
