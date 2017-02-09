@@ -64,7 +64,7 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
      */
     @Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false ,rollbackFor= NoWriteablePermissionException.class)
-    public BaseOutput delSmsTemple(SmsSmstempletDelIn body, SecurityContext securityContext) throws  NoWriteablePermissionException {
+	public BaseOutput delSmsTemple(SmsSmstempletDelIn body, SecurityContext securityContext) throws  NoWriteablePermissionException {
         
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
@@ -82,7 +82,7 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
         SmsTemplet smsTempletDel = new SmsTemplet();
         smsTempletDel.setId(body.getId());
         smsTempletDel.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-        
+        smsTempletDel.setOrgId(Integer.parseInt(String.valueOf(body.getOrgId())));
         // 判断数据是否存在
         List<SmsTemplet> smsTempletLists = smsTempletDao.selectList(smsTempletDel);
         if(smsTempletLists ==null || smsTempletLists.size() <= 0) {
@@ -93,7 +93,7 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
         
         // 删除数据
         smsTempletDel.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-        int delCount = smsSmstempletOrganizationDelService.delete(smsTempletDel, body.getOrgId());
+        int delCount = smsSmstempletOrganizationDelService.delete(smsTempletDel);
         
 //        // 判断用户是否具有删除短信模板对应权限记录的权限
 //		if(dataAuthService.validateWriteable(TABLE_NAME, smsTempletDel.getId(), body.getOrgId())){

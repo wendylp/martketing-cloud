@@ -16,6 +16,6 @@ import cn.rongcapital.mkt.po.SmsTemplet;
 public interface SmsTempletOrganizationService {
     
     
-    int delete(SmsTemplet smsTempletDel, long orgId);
+    int delete(SmsTemplet smsTempletDel);
 
 }

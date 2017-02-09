@@ -33,7 +33,7 @@ public class SmsTempletOrganizationServiceImpl implements SmsTempletOrganization
     @Override
     @DataAuthWriteable(resourceType=TABLE_NAME,resourceId="#smsTempletDel.id",orgId="#orgId",type = ParamType.SpEl)
     @DataAuthEvict(resourceType = TABLE_NAME,resourceId = "#smsTempletDel.id",type = ParamType.SpEl)
-    public int delete(SmsTemplet smsTempletDel, long orgId) {
+    public int delete(SmsTemplet smsTempletDel) {
        return this.smstempletDao.updateById(smsTempletDel);
 
     }
