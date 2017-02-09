@@ -30,6 +30,7 @@ import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendSmsDao;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
+import cn.rongcapital.mkt.dao.CampaignAudienceFixDao;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPropCompareDao;
@@ -57,6 +58,7 @@ import cn.rongcapital.mkt.po.CampaignActionSendPub;
 import cn.rongcapital.mkt.po.CampaignActionSendSms;
 import cn.rongcapital.mkt.po.CampaignActionSetTag;
 import cn.rongcapital.mkt.po.CampaignActionWait;
+import cn.rongcapital.mkt.po.CampaignAudienceFix;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignBody;
 import cn.rongcapital.mkt.po.CampaignDecisionPropCompare;
@@ -87,6 +89,7 @@ import cn.rongcapital.mkt.vo.in.CampaignActionSendPubIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionSendSmsIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionSetTagIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionWaitIn;
+import cn.rongcapital.mkt.vo.in.CampaignAudienceFixIn;
 import cn.rongcapital.mkt.vo.in.CampaignAudienceTargetIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignDecisionPropCompareIn;
@@ -126,6 +129,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignActionWaitDao campaignActionWaitDao;
 	@Autowired
 	private CampaignAudienceTargetDao CampaignAudienceTargetDao;
+	@Autowired
+	private CampaignAudienceFixDao campaignAudienceFixDao;
 	@Autowired
 	private CampaignDecisionPropCompareDao campaignDecisionPropCompareDao;
 	@Autowired
@@ -210,19 +215,34 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					break;
 				}
 			}
-			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_AUDIENCE){
+			if (campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_AUDIENCE) {
+				TaskSchedule taskSchedule = null;
 				switch (campaignNodeChainIn.getItemType()) {
-				case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_TARGET://目标人群
-					TaskSchedule taskSchedule = initTaskAudienceTarget(campaignNodeChainIn,campaignHeadId);
-					if(null != taskSchedule) {
+				case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_TARGET:// 细分人群
+					taskSchedule = initTaskAudienceTarget(campaignNodeChainIn, campaignHeadId);
+					if (null != taskSchedule) {
 						taskScheduleDao.insert(taskSchedule);
-						
 						taskId = taskSchedule.getId();
 					}
-					CampaignAudienceTarget campaignAudienceTarget = initCampaignAudienceTarget(campaignNodeChainIn,campaignHeadId);
-					if(null != campaignAudienceTarget) {
+					CampaignAudienceTarget campaignAudienceTarget = initCampaignAudienceTarget(campaignNodeChainIn,
+							campaignHeadId);
+					if (null != campaignAudienceTarget) {
 						CampaignAudienceTargetDao.insert(campaignAudienceTarget);
 					}
+					break;
+				case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_FIX:// 固定人群
+					taskSchedule = initTaskAudienceFix(campaignNodeChainIn, campaignHeadId);
+					if (null != taskSchedule) {
+						taskScheduleDao.insert(taskSchedule);
+						taskId = taskSchedule.getId();
+					}
+					CampaignAudienceFix campaignAudienceFix = initCampaignAudienceFix(campaignNodeChainIn,
+							campaignHeadId);
+					if (null != campaignAudienceFix) {
+						campaignAudienceFixDao.insert(campaignAudienceFix);
+					}
+					break;
+				default:
 					break;
 				}
 			}
@@ -546,14 +566,14 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	}
 	
 	private TaskSchedule initTaskAudienceTarget(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
-		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
-		if(null != campaignAudienceTargetIn) {
-			Byte allowedNew = campaignAudienceTargetIn.getAllowedNew();
+		CampaignAudienceTargetIn campaignAudienceFixIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
+		if(null != campaignAudienceFixIn) {
+			Byte allowedNew = campaignAudienceFixIn.getAllowedNew();
 			if(null!=allowedNew) {
 				if(allowedNew==0) {
 					TaskSchedule taskSchedule = new TaskSchedule();
-					Float intervalMinutes = tranlateToMinutes(campaignAudienceTargetIn.getRefreshInterval(),
-							campaignAudienceTargetIn.getRefreshIntervalType());
+					Float intervalMinutes = tranlateToMinutes(campaignAudienceFixIn.getRefreshInterval(),
+							campaignAudienceFixIn.getRefreshIntervalType());
 					taskSchedule.setIntervalMinutes(intervalMinutes);
 					taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_AUDIENCE_TARGET);
 					taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
@@ -570,6 +590,19 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					return taskSchedule;
 				}
 			}
+		}
+		return null;
+	}
+	
+	private TaskSchedule initTaskAudienceFix(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignAudienceFixIn campaignAudienceFixIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceFixIn.class);
+		if(null != campaignAudienceFixIn) {
+			TaskSchedule taskSchedule = new TaskSchedule();
+			taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_AUDIENCE_FIX);
+			taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+			taskSchedule.setCampaignHeadId(campaignHeadId);
+			taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+			return taskSchedule;
 		}
 		return null;
 	}
@@ -1272,7 +1305,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignTriggerTimer.setEndTime(DateUtil.getDateFromString(campaignTriggerTimerIn.getEndTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
 		return campaignTriggerTimer;
 	}
-	
+
 	private CampaignAudienceTarget initCampaignAudienceTarget(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignAudienceTarget campaignAudienceTarget = new CampaignAudienceTarget();
 		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
@@ -1286,5 +1319,21 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignAudienceTarget.setRefreshInterval(campaignAudienceTargetIn.getRefreshInterval());
 		campaignAudienceTarget.setRefreshIntervalType(campaignAudienceTargetIn.getRefreshIntervalType());
 		return campaignAudienceTarget;
+	}
+
+	private CampaignAudienceFix initCampaignAudienceFix(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignAudienceFix campaignAudienceFix = new CampaignAudienceFix();
+		CampaignAudienceFixIn campaignAudienceFixIn = 
+					jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceFixIn.class);
+		if(null == campaignAudienceFixIn) 
+			return null;
+		
+		campaignAudienceFix.setName(campaignAudienceFixIn.getName());
+		campaignAudienceFix.setCampaignHeadId(campaignHeadId);
+		campaignAudienceFix.setItemId(campaignNodeChainIn.getItemId());
+		campaignAudienceFix.setAudienceFixId(campaignAudienceFixIn.getAudienceFixId());
+		campaignAudienceFix.setAudienceFixName(campaignAudienceFixIn.getAudienceFixName());
+		
+		return campaignAudienceFix;
 	}
 }

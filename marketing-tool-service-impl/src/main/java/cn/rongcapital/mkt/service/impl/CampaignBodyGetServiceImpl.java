@@ -24,6 +24,7 @@ import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendSmsDao;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
+import cn.rongcapital.mkt.dao.CampaignAudienceFixDao;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPropCompareDao;
@@ -46,6 +47,7 @@ import cn.rongcapital.mkt.po.CampaignActionSendPub;
 import cn.rongcapital.mkt.po.CampaignActionSendSms;
 import cn.rongcapital.mkt.po.CampaignActionSetTag;
 import cn.rongcapital.mkt.po.CampaignActionWait;
+import cn.rongcapital.mkt.po.CampaignAudienceFix;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignBody;
 import cn.rongcapital.mkt.po.CampaignDecisionPropCompare;
@@ -72,6 +74,7 @@ import cn.rongcapital.mkt.vo.out.CampaignActionSendPubOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionSendSmsOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionSetTagOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionWaitOut;
+import cn.rongcapital.mkt.vo.out.CampaignAudienceFixOut;
 import cn.rongcapital.mkt.vo.out.CampaignAudienceTargetOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignDecisionPropCompareOut;
@@ -108,6 +111,8 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	private CampaignActionWaitDao campaignActionWaitDao;
 	@Autowired
 	private CampaignAudienceTargetDao campaignAudienceTargetDao;
+	@Autowired
+	private CampaignAudienceFixDao campaignAudienceFixDao;
 	@Autowired
 	private CampaignDecisionPropCompareDao campaignDecisionPropCompareDao;
 	@Autowired
@@ -198,10 +203,15 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				}
 				if (campaignNodeChainOut.getNodeType() == ApiConstant.CAMPAIGN_NODE_AUDIENCE) {
 					switch (campaignNodeChainOut.getItemType()) {
-					case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_TARGET:// 目标人群
+					case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_TARGET:// 细分人群
 						CampaignAudienceTargetOut campaignAudienceTargetOut = queryCampaignAudienceTarget(
 								campaignNodeChainOut, campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignAudienceTargetOut);
+						break;
+					case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_FIX:// 固定人群
+						CampaignAudienceFixOut campaignAudienceFixOut = queryCampaignFixTarget(
+								campaignNodeChainOut, campaignHeadId);
+						campaignNodeChainOut.setInfo(campaignAudienceFixOut);
 						break;
 					}
 				}
@@ -795,6 +805,24 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 
 		}
 		return campaignAudienceTargetOut;
+	}
+	
+	private CampaignAudienceFixOut queryCampaignFixTarget(CampaignNodeChainOut campaignNodeChainOut,
+			int campaignHeadId) {
+		CampaignAudienceFix t = new CampaignAudienceFix();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setCampaignHeadId(campaignHeadId);
+		t.setItemId(campaignNodeChainOut.getItemId());
+		List<CampaignAudienceFix> resList = campaignAudienceFixDao.selectList(t);
+		
+		CampaignAudienceFixOut campaignAudienceFixOut = new CampaignAudienceFixOut();
+		if (CollectionUtils.isNotEmpty(resList)) {
+			CampaignAudienceFix campaignAudienceTarget = resList.get(0);
+			campaignAudienceFixOut.setName(campaignAudienceTarget.getName());
+			campaignAudienceFixOut.setAudienceFixId(campaignAudienceTarget.getAudienceFixId());
+			campaignAudienceFixOut.setAudienceFixName(campaignAudienceTarget.getAudienceFixName());
+		}
+		return campaignAudienceFixOut;
 	}
 
 	private CampaignTriggerTimerOut queryCampaignTriggerTimer(CampaignNodeChainOut campaignNodeChainOut,
