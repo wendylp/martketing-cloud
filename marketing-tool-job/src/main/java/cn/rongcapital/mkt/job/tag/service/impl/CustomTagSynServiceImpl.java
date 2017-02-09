@@ -16,7 +16,7 @@ import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.po.CustomTag;
+import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.MaterialRelatedEvent;
 import cn.rongcapital.mkt.po.mongodb.MaterialRelation;
@@ -109,7 +109,7 @@ public class CustomTagSynServiceImpl implements TaskService {
 	private void statCount(CustomTagIn customTag, List<MaterialRelatedEvent> eventList, Set<Integer> midList) {
 		String customTagId = customTag.getCustomTagId();
 		if (!CollectionUtils.isEmpty(eventList) && !CollectionUtils.isEmpty(midList)) {
-			Query query = Query.query(Criteria.where("custom_tag_id").in(customTagId));
+			Query query = Query.query(Criteria.where("custom_tag_id").is(customTagId));
 			mongoTemplate.updateFirst(query,
 					new Update().inc("cover_number", midList.size()).inc("cover_frequency", eventList.size()),
 					CustomTag.class);
