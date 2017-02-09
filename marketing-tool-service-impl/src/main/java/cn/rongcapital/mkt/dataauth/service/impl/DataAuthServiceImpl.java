@@ -373,7 +373,9 @@ public class DataAuthServiceImpl implements DataAuthService {
 		//某个组织分享来得
 		if(ShareOrgTypeEnum.ORGTO.getCode().equals(type)){
 			List<OutPutOrganization> out =dataAuthMapper.getOrg(resourceId, orgId, tableName, oprType);
-			result.getData().add(out);
+			if(out.size() > 0){
+				result.getData().add(out.get(0));
+			}
 		}
 		return result;
 	}
