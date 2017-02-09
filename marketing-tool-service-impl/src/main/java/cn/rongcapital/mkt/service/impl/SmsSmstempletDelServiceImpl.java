@@ -16,22 +16,18 @@ import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthEvict;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthWriteable;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsSmstempletDelService;
-import cn.rongcapital.mkt.service.SmsTempletOrganizationService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SmsSmstempletDelIn;
 @Service
 public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
     
-    /**
-     * Description:
-     */
-    private static final String SMS_TEMPLET = "sms_templet";//当前对应资源的数据表名称
-
-
     @Autowired
     private SmsMaterialDao smsMaterialDao;
     
@@ -45,10 +41,7 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
     @Autowired
     private DataAuthService dataAuthService;
     
-    
-
-    @Autowired
-    private SmsTempletOrganizationService smsSmstempletOrganizationDelService;
+    private static final String TABLE_NAME ="sms_templet";// 资源对应表名
     
     
     /**
@@ -64,6 +57,8 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
      */
     @Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false ,rollbackFor= NoWriteablePermissionException.class)
+    @DataAuthWriteable(resourceType=TABLE_NAME,resourceId="#body.id",orgId="#body.orgId",type = ParamType.SpEl)
+    @DataAuthEvict(resourceType = TABLE_NAME,resourceId = "#body.id",type = ParamType.SpEl)
     public BaseOutput delSmsTemple(SmsSmstempletDelIn body, SecurityContext securityContext) throws  NoWriteablePermissionException {
         
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
@@ -93,7 +88,7 @@ public class SmsSmstempletDelServiceImpl implements SmsSmstempletDelService{
         
         // 删除数据
         smsTempletDel.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-        int delCount = smsSmstempletOrganizationDelService.delete(smsTempletDel, body.getOrgId());
+        int delCount = this.smsTempletDao.updateById(smsTempletDel);
         
 //        // 判断用户是否具有删除短信模板对应权限记录的权限
 //		if(dataAuthService.validateWriteable(TABLE_NAME, smsTempletDel.getId(), body.getOrgId())){

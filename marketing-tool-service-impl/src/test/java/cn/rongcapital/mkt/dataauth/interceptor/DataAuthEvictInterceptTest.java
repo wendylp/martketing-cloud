@@ -13,6 +13,10 @@ package cn.rongcapital.mkt.dataauth.interceptor;
 
 import java.util.NoSuchElementException;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.exception.ReturnTypeMustBaseOutputException;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,8 +55,10 @@ public class DataAuthEvictInterceptTest {
     }
 
     public class PutBeanService {
-        public void evict(PutBean putBean) {
-
+        public BaseOutput evict(PutBean putBean)  {
+            BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                    ApiConstant.INT_ZERO, null);
+            return baseOutput;
         }
     }
     public class PutBean {
@@ -94,8 +100,10 @@ public class DataAuthEvictInterceptTest {
         AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
             @Override
             @DataAuthEvict(resourceType = "business", resourceId = "#putBean.resourceId",  type = ParamType.SpEl)
-            public void evict(PutBean putBean) {
-
+            public BaseOutput evict(PutBean putBean) {
+                BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+                return baseOutput;
             }
         });
         factory.setProxyTargetClass(true);
@@ -112,14 +120,38 @@ public class DataAuthEvictInterceptTest {
             Mockito.any(long.class));
     }
 
+    @Test(expected = ReturnTypeMustBaseOutputException.class)
+    public void testReturnNull() throws Throwable {
+
+        AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
+            @Override
+            @DataAuthEvict(resourceType = "business", resourceId = "#putBean.resourceId",  type = ParamType.SpEl)
+            public BaseOutput evict(PutBean putBean) {
+                return null;
+            }
+        });
+        factory.setProxyTargetClass(true);
+        factory.addAspect(aspect);
+
+        PutBeanService proxy = factory.getProxy();
+        PutBean putBean = new PutBean();
+        putBean.setResourceType("business");
+        putBean.setResourceId(802);
+
+        proxy.evict(putBean);
+
+    }
+
     @Test
     public void testParamDefault() throws Throwable {
 
         AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
             @Override
             @DataAuthEvict(resourceType = "business", resourceId = "1", type = ParamType.Default)
-            public void evict(PutBean putBean) {
-
+            public BaseOutput evict(PutBean putBean) {
+                BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+                return baseOutput;
             }
         });
         factory.setProxyTargetClass(true);
@@ -142,8 +174,10 @@ public class DataAuthEvictInterceptTest {
         AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
             @Override
             @DataAuthEvict(resourceType = "", resourceId = "#putBean.resourceId",  type = ParamType.SpEl)
-            public void evict(PutBean putBean) {
-
+            public BaseOutput evict(PutBean putBean) {
+                BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+                return baseOutput;
             }
         });
         factory.setProxyTargetClass(true);

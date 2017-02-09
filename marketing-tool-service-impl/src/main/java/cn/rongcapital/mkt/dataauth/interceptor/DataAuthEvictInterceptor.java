@@ -14,6 +14,9 @@ package cn.rongcapital.mkt.dataauth.interceptor;
 import java.lang.reflect.Method;
 import java.util.NoSuchElementException;
 
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.exception.ReturnTypeMustBaseOutputException;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -35,9 +38,9 @@ public class DataAuthEvictInterceptor {
     @Pointcut("@annotation(cn.rongcapital.mkt.dataauth.interceptor.DataAuthEvict)")
     public void evictServiceAspect() {}
 
-    @AfterReturning("evictServiceAspect()")
+    @AfterReturning(pointcut = "evictServiceAspect()",returning = "returnValue")
     @Transactional
-    public void doAfterMethod(JoinPoint joinPoint) throws Throwable {
+    public void doAfterMethod(JoinPoint joinPoint,Object returnValue) throws Throwable {
         Method method = ExpressionHelper.getMethod(joinPoint);
         if (method != null && method.isAnnotationPresent(DataAuthEvict.class)) {
             DataAuthEvict annotation = method.getAnnotation(DataAuthEvict.class);
@@ -57,9 +60,22 @@ public class DataAuthEvictInterceptor {
             if(StringUtils.isBlank(resourceType )){
                 throw new NoSuchElementException();
             }
+
+
+            if(! (returnValue instanceof  BaseOutput)){
+                String error = "return value must is BaseOutPut.";
+                throw new ReturnTypeMustBaseOutputException(error);
+            }
+
+
             long resourceId = resourceIdObj.longValue();
-            //将新增数据保存对应的数据权限
-            this.dataAuthService.evict(resourceType, resourceId);
+
+            //判断当前删除数据成功，继续执行删除数据权限，否者，不删除
+            BaseOutput baseOutput = (BaseOutput) returnValue;
+            if(ApiErrorCode.SUCCESS.getCode() ==  baseOutput.getCode()){
+                //将新增数据保存对应的数据权限
+                this.dataAuthService.evict(resourceType, resourceId);
+            }
         }
     }
 }
