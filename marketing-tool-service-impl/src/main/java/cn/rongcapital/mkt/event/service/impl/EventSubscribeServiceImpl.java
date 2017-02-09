@@ -41,7 +41,7 @@ public class EventSubscribeServiceImpl implements EventSubscribeService {
         List<Event> events = this.eventDao.selectList(event);
         if (events != null && events.size() > 0) {
             Event item = events.get(0);
-            if (item.getUnsubscribable()) {//不可取消订阅则不能被修改订阅状态
+            if (!item.getUnsubscribable()) {//不可取消订阅则不能被修改订阅状态
                 return new BaseOutput(ApiErrorCode.VALIDATE_ERROR_EVENT_UNSUBSCRIBABLE.getCode(), ApiErrorCode.VALIDATE_ERROR_EVENT_UNSUBSCRIBABLE.getMsg(), ApiConstant.INT_ZERO, null);
             }else{
                 item.setSubscribed(subscribe);
