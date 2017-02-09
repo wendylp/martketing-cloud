@@ -57,9 +57,17 @@ public class DataAuthGetOrgFromResShareTest {
     	
     	Mockito.when(dataAuthMapper.getOrgs(Mockito.any(long.class), Mockito.any(long.class), Mockito.any(String.class), Mockito.any(String.class), Mockito.any(int.class), Mockito.any(int.class))).thenReturn(list);
         ReflectionTestUtils.setField(dataAuthService, "dataAuthMapper", dataAuthMapper);
-        
         BaseOutput outPut = dataAuthService.getOrgFromResShare(resourceId, orgId, tableName, type1, oprType, index, size);
         Assert.assertEquals(1, outPut.getData().size());
+    }
+    
+    @Test
+    public void getOrgFromResShare04(){
+    	List<OutPutOrganization> list2 = new ArrayList<OutPutOrganization>();
+    	Mockito.when(dataAuthMapper.getOrgs(Mockito.any(long.class), Mockito.any(long.class), Mockito.any(String.class), Mockito.any(String.class), Mockito.any(int.class), Mockito.any(int.class))).thenReturn(list2);
+        ReflectionTestUtils.setField(dataAuthService, "dataAuthMapper", dataAuthMapper);
+        BaseOutput outPut = dataAuthService.getOrgFromResShare(resourceId, orgId, tableName, type1, oprType, index, size);
+        Assert.assertEquals(0, outPut.getData().size());
     }
     
     @Test
@@ -69,6 +77,15 @@ public class DataAuthGetOrgFromResShareTest {
         ReflectionTestUtils.setField(dataAuthService, "dataAuthMapper", dataAuthMapper);
         BaseOutput outPut = dataAuthService.getOrgFromResShare(resourceId, orgId, tableName, type2, oprType, index, size);
         Assert.assertEquals(1, outPut.getData().size());
+    }
+    
+    @Test
+    public void getOrgFromResShare03(){
+    	List<OutPutOrganization> list1 = new ArrayList<OutPutOrganization>();
+    	Mockito.when(dataAuthMapper.getOrg(Mockito.any(long.class), Mockito.any(long.class), Mockito.any(String.class), Mockito.any(String.class))).thenReturn(list1);
+        ReflectionTestUtils.setField(dataAuthService, "dataAuthMapper", dataAuthMapper);
+        BaseOutput outPut = dataAuthService.getOrgFromResShare(resourceId, orgId, tableName, type2, oprType, index, size);
+        Assert.assertEquals(0, outPut.getData().size());
     }
     
     @After
