@@ -38,7 +38,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  * @date: 2017/2/4
  * @复审人:
  *************************************************/
-@Service("mater")
+@Service
 public class MaterialEventHandleServiceImpl implements TaskService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
