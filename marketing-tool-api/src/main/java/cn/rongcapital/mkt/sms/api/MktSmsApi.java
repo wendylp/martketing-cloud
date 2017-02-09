@@ -269,7 +269,7 @@ public class MktSmsApi {
 	 * @return:BaseOutput
 	 */
 	@GET
-	@Path("/mkt.sms.material.get")
+	@Path("/mkt.sms.material.usestatus.get")
 	public BaseOutput getMaterialStatusByMaterialId(@NotEmpty @QueryParam("user_token") String userToken,
 			@QueryParam("ver") String ver, @QueryParam("sms_material_id") String smsMaterialId) throws Exception {
 		return smsMaterialGetService.getMaterialStatusByMaterialId(smsMaterialId);

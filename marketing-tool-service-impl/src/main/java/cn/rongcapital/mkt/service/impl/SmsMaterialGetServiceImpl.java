@@ -1,14 +1,31 @@
 package cn.rongcapital.mkt.service.impl;
 
+import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.FIXED;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsMaterialVariableTypeEnum;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.dao.SmsMaterialDao;
+import cn.rongcapital.mkt.dao.SmsMaterialMaterielMapDao;
+import cn.rongcapital.mkt.dao.SmsMaterialVariableMapDao;
+import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
-import cn.rongcapital.mkt.po.*;
+import cn.rongcapital.mkt.po.SmsMaterial;
+import cn.rongcapital.mkt.po.SmsMaterialMaterielMap;
+import cn.rongcapital.mkt.po.SmsMaterialVariableMap;
+import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsMaterialGetService;
 import cn.rongcapital.mkt.service.SmsMaterialService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -16,15 +33,6 @@ import cn.rongcapital.mkt.vo.out.SmsMaterialCountOut;
 import cn.rongcapital.mkt.vo.out.SmsMaterialMaterielOut;
 import cn.rongcapital.mkt.vo.out.SmsMaterialOut;
 import cn.rongcapital.mkt.vo.out.SmsMaterialVariableOut;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.FIXED;
 
 /**
  * Created by byf on 11/9/16.
@@ -225,6 +233,22 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
+		SmsMaterial paramSmsMaterial = new SmsMaterial();
+		paramSmsMaterial.setName(smsMaterialName);
+		paramSmsMaterial.setChannelType(channelType.byteValue());
+		paramSmsMaterial.setUseStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		List<SmsMaterial> smsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
+		for (SmsMaterial smsMaterial : smsMaterialList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("sms_material_id", smsMaterial.getId());
+			map.put("sms_material_name", smsMaterial.getName());
+			baseOutput.getData().add(map);
+		}
+
+		baseOutput.setTotal(baseOutput.getData().size());
+		baseOutput.setTotalCount(baseOutput.getData().size());
+		
 		return baseOutput;
 	}
 
@@ -237,7 +261,23 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService {
 	public BaseOutput getMaterialStatusByMaterialId(String smsMaterialId) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
+		SmsMaterial paramSmsMaterial = new SmsMaterial();
+		paramSmsMaterial.setId(Integer.parseInt(smsMaterialId));
+		List<SmsMaterial> smsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
+		SmsMaterial smsMaterial = smsMaterialList.get(0);
+		Byte useStatus = smsMaterial.getUseStatus();
+		boolean flag = false;
+		if (useStatus == 1) {
+			flag = true;
+		}
 
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("sms_material_id", smsMaterialId);
+		map.put("flag", flag);
+		baseOutput.getData().add(map);
+		baseOutput.setTotal(1);
+		baseOutput.setTotalCount(1);
+		
 		return baseOutput;
 	}
 }
