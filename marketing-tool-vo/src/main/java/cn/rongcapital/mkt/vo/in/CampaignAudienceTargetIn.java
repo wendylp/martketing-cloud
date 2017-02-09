@@ -12,9 +12,9 @@ public class CampaignAudienceTargetIn {
 
     private String name;
 
-    private Integer fixAudienceId;
+    private Integer segmentationId;
 
-    private String fixAudienceName;
+    private String segmentationName;
 
     private Byte allowedNew;
 
@@ -51,20 +51,20 @@ public class CampaignAudienceTargetIn {
 
     @JsonProperty("segmentation_id")
     public Integer getSegmentationId() {
-        return fixAudienceId;
+        return segmentationId;
     }
 
     public void setSegmentationId(Integer segmentationId) {
-        this.fixAudienceId = segmentationId;
+        this.segmentationId = segmentationId;
     }
 
     @JsonProperty("segmentation_name")
     public String getSegmentationName() {
-        return fixAudienceName;
+        return segmentationName;
     }
 
     public void setSegmentationName(String segmentationName) {
-        this.fixAudienceName = segmentationName == null ? null : segmentationName.trim();
+        this.segmentationName = segmentationName == null ? null : segmentationName.trim();
     }
 
     @JsonProperty("allowed_new")

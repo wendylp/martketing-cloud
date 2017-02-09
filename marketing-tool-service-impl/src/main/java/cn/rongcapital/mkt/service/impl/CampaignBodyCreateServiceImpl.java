@@ -566,14 +566,14 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	}
 	
 	private TaskSchedule initTaskAudienceTarget(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
-		CampaignAudienceTargetIn campaignAudienceFixIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
-		if(null != campaignAudienceFixIn) {
-			Byte allowedNew = campaignAudienceFixIn.getAllowedNew();
+		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
+		if(null != campaignAudienceTargetIn) {
+			Byte allowedNew = campaignAudienceTargetIn.getAllowedNew();
 			if(null!=allowedNew) {
 				if(allowedNew==0) {
 					TaskSchedule taskSchedule = new TaskSchedule();
-					Float intervalMinutes = tranlateToMinutes(campaignAudienceFixIn.getRefreshInterval(),
-							campaignAudienceFixIn.getRefreshIntervalType());
+					Float intervalMinutes = tranlateToMinutes(campaignAudienceTargetIn.getRefreshInterval(),
+							campaignAudienceTargetIn.getRefreshIntervalType());
 					taskSchedule.setIntervalMinutes(intervalMinutes);
 					taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_AUDIENCE_TARGET);
 					taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
