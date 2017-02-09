@@ -80,7 +80,7 @@ public final class EventWebServiceImpl implements EventWebService {
     @Override
     public BaseOutput eventRegister(@Valid EventRegisterIn registerIn) {
         //设置当前事件为非预制事件、订阅事件、可以取消订阅事件
-        return this.eventRegisterService.register(registerIn, false, true, false);
+        return this.eventRegisterService.register(registerIn, false, true, true);
     }
 
     @Override
