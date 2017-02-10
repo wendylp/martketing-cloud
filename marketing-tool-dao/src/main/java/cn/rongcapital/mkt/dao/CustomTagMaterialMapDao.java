@@ -54,4 +54,6 @@ public interface CustomTagMaterialMapDao extends BaseDao<CustomTagMaterialMap>{
 	 * @return
 	 */
 	List<String> getCustomTagIdByMaterialParam(@Param("materialCode") String materialCode,@Param("materialType")String materialType);
+
+    void updateCustomTagNameByCustomTagId(CustomTagMaterialMap paramCustomTagMaterialMap);
 }

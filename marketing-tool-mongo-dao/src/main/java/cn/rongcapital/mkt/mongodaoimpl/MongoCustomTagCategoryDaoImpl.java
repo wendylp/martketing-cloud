@@ -113,10 +113,17 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
     }
 
     @Override
-    public void updateCustomTagCategoryFirstRowByQuery(String customTagCategoryId, CustomTagCategory customTagCategory) {
+    public void updateCustomTagCategoryChildrenListById(String customTagCategoryId, CustomTagCategory customTagCategory) {
         if(customTagCategory == null) return;
         Query query = new Query(Criteria.where(CUSTOM_TAG_CATEGORY_ID).is(customTagCategoryId).and(IS_DELETED).is(DATA_VALID));
         mongoTemplate.updateFirst(query,new Update().set(CHILDREN_CUSTOM_TAG_LIST,customTagCategory.getChildrenCustomTagList()),CustomTagCategory.class);
+    }
+
+    @Override
+    public void logicalDeleteCustomTagCategoryById(String customTagCategoryId) {
+        Query query = new Query(Criteria.where(CUSTOM_TAG_CATEGORY_ID).is(customTagCategoryId).and(IS_DELETED).is(DATA_VALID));
+        Update update = new Update().set(IS_DELETED,DATA_INVALID);
+        mongoTemplate.updateFirst(query,update,CustomTagCategory.class);
     }
 
     /**

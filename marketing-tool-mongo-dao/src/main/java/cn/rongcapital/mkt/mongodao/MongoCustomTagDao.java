@@ -147,6 +147,28 @@ public interface MongoCustomTagDao {
      * @return
      */
     public CustomTag getCustomTagByTagId(String customTagId);
-    
-    
+
+    /**
+     * 功能描述：根据自定义标签id更新自定义标签的父Id
+     *
+     * @param customTagId	自定义标签ID
+     * @return
+     */
+    void updateCustomTagParentIdByCustomTagId(String customTagId,String parentId);
+
+    /**
+     * 功能描述：根据自定义标签id更新自定义标签的名称
+     *
+     * @param customTagId	自定义标签ID
+     * @return
+     */
+    void updateCustomTagNameByCustomTagId(String customTagId,String CustomTagName);
+
+    /**
+     * 功能描述：根据自定义标签id逻辑删除自定义标签
+     *
+     * @param customTagId	自定义标签ID
+     * @return
+     */
+    void logicalDeleteCustomTagByCustomTagId(String customTagId);
 }

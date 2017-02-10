@@ -77,10 +77,16 @@ public interface MongoCustomTagCategoryDao {
 
     /** 功能描述：传入一个CustomTagCategory的Id，一个新的CustomTagCategory，跟新第一条符合Query的字段，
      *
-     * @param query
-     * @param update
-     * @param collectionName
+     * @param customTagCategoryId
+     * @param customTagCategory
      * @return
      */
-    void updateCustomTagCategoryFirstRowByQuery(String customTagCategoryId, CustomTagCategory customTagCategory);
+    void updateCustomTagCategoryChildrenListById(String customTagCategoryId, CustomTagCategory customTagCategory);
+
+    /** 功能描述：根据CustomTagCategoryId逻辑删除这个自定义标签分类
+     *
+     * @param customTagCategoryId
+     * @return
+     */
+    void logicalDeleteCustomTagCategoryById(String customTagCategoryId);
 }

@@ -125,6 +125,10 @@
 			AND material_type = #{materialType}
 		</where>
 	</select>
-	
-	
+
+	<update id="updateCustomTagNameByCustomTagId" parameterType="cn.rongcapital.mkt.po.CustomTagMaterialMap">
+		<![CDATA[UPDATE custom_tag_material_map]]>
+		SET custom_tag_name = #{customTagName}
+		<![CDATA[WHERE custom_tag_id = #{customTagId} AND status = 0]]>
+	</update>
 </mapper>

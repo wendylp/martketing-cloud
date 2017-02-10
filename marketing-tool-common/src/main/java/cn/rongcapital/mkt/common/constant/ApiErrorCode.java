@@ -55,7 +55,11 @@ public enum ApiErrorCode {
 
 	//自定义标签错误相关代码
 	BIZ_ERROR_CUSTOM_TAG_DUPLICATED_ERROR(3026,"custom tag aleady exists in the category"),
-	
+	BIZ_ERROR_CUSTOM_TAG_CATEGORY_NO_CHILDREN(3027, "custom tag category has no children, please check input parameter."),
+    BIZ_ERROR_CUSTOM_TAG_DEFAULT_CATEGORY_CANT_DELETE(3028,"custom tag default category - undefined category can't deleted."),
+    BIZ_ERROR_CUSTOM_TAG_CATEGORY_NOT_EXIST(3029,"custom tag category has already not existed"),
+    BIZ_ERROR_CUSTOM_TAG_CATEGORY_HAS_CHILDREN(3030,"custom tag category has children, so it can't be deleted."),
+
 	SMS_ERROR_MATERIAL_CAN_NOT_DELETE(4001,"can not delete the material"),
 	SMS_ERROR_MATERIAL_CAN_NOT_UPDATE(4002,"can not update the material"),
 	SMS_ERROR_TEMPLETE_CAN_NOT_DELETE(4003,"can not delete the templete"),
