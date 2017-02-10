@@ -208,6 +208,14 @@
                 <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
             </properties>
         </profile>
+		<profile>
+			<id>poc</id>
+			<properties>
+				<mvnvar.log.path>/rc/log/mkt/poc</mvnvar.log.path>
+				<mvnvar.conf.path>conf_poc</mvnvar.conf.path>
+				<maven.repository.remote.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.remote.url>
+			</properties>
+		</profile>
         <profile>
             <id>production_gbs</id>
             <properties>
@@ -259,6 +267,14 @@
                 <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
             </properties>
         </profile>
+		<profile>
+			<id>event_poc</id>
+			<properties>
+				<mvnvar.log.path>/rc/log/event/poc</mvnvar.log.path>
+				<mvnvar.conf.path>event_poc</mvnvar.conf.path>
+				<maven.repository.remote.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.remote.url>
+			</properties>
+		</profile>
         <profile>
             <id>event_production_gbs</id>
             <properties>
