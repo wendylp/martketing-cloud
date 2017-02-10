@@ -12,6 +12,8 @@
 package cn.rongcapital.mkt.dataauth.interceptor;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -47,18 +49,17 @@ public class DataAuthShareInterceptor {
             
             String resourceType = annotation.resourceType();
             Long resourceId =null;
-            Long toOrgId = null;
+            List<Long> toOrgId = new ArrayList<Long>();
             Boolean writeable = false;
             
             switch(annotation.type()){
                 case SpEl:
                     resourceId = ExpressionHelper.executeTemplate(resourceIdTemp, joinPoint,Long.class);
-                    toOrgId = ExpressionHelper.executeTemplate(toOrgIdTemp, joinPoint, Long.class);
+                    toOrgId = ExpressionHelper.executeTemplate(toOrgIdTemp, joinPoint, List.class);
                     writeable = ExpressionHelper.executeTemplate(writeableTemp, joinPoint, Boolean.class);
                     break;
                 default:
                     resourceId =Long.parseLong(resourceIdTemp);
-                    toOrgId = Long.parseLong(toOrgIdTemp);
                     writeable = Boolean.parseBoolean(writeableTemp);
                     break;
                 }
@@ -67,7 +68,9 @@ public class DataAuthShareInterceptor {
                 throw new NoSuchElementException();
             }
             //将新增数据保存对应的数据权限
-            this.dataAuthService.share(resourceType, resourceId, toOrgId, writeable);
+            for(Long orgId : toOrgId){
+            	this.dataAuthService.share(resourceType, resourceId, orgId, writeable);
+            }
         }
     }
 }
