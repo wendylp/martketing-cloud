@@ -28,6 +28,8 @@ import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthShare;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsTempletShareService;
@@ -56,31 +58,32 @@ public class SmsTempletShareServiceImpl implements SmsTempletShareService {
     @Override
     @ReadWrite(type = ReadWriteType.WRITE)
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @DataAuthShare(resourceId = "#smsTempletShareIn.resourceId", resourceType = "sms_templet", toOrgId = "#smsTempletShareIn.orgIds", writeable = "#smsTempletShareIn.writeable",type = ParamType.SpEl)
     public BaseOutput shareSmsTemplet(SmsTempletShareIn smsTempletShareIn) {
         // 验证数据有效性
-        if (smsTempletValidate(smsTempletShareIn.getResourceId().intValue())) {
-            logger.debug("table sms_templet data[id:{}] not exist.", smsTempletShareIn.getResourceId());
-            return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
-                    ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
-        }
+//        if (smsTempletValidate(smsTempletShareIn.getResourceId().intValue())) {
+//            logger.debug("table sms_templet data[id:{}] not exist.", smsTempletShareIn.getResourceId());
+//            return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
+//                    ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
+//        }
         BaseOutput result =
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
                         null);
         // 分享
-        for (Long item : smsTempletShareIn.getOrgIds()) {
-            logger.debug("sharing sms templet:{} to organization:{}.", smsTempletShareIn.getResourceId(), item);
-            try {
-                dataAuthService.share("sms_templet", smsTempletShareIn.getResourceId(), item,
-                        smsTempletShareIn.getWriteable());
-            } catch (CannotShareToOwnerException e) {
-                logger.error(
-                        String.format("can not share sms templet:%s to organization:%s.",
-                                smsTempletShareIn.getResourceId(), item), e);
-                return new BaseOutput(ApiErrorCode.SMS_ERROR_TEMPLETE_CAN_SHARE.getCode(),
-                        ApiErrorCode.SMS_ERROR_TEMPLETE_CAN_SHARE.getMsg(), ApiConstant.INT_ZERO, null);
-            }
-            logger.debug("shared sms templet:{} to organization:{}.", smsTempletShareIn.getResourceId(), item);
-        }
+//        for (Long item : smsTempletShareIn.getOrgIds()) {
+//            logger.debug("sharing sms templet:{} to organization:{}.", smsTempletShareIn.getResourceId(), item);
+//            try {
+//                dataAuthService.share("sms_templet", smsTempletShareIn.getResourceId(), item,
+//                        smsTempletShareIn.getWriteable());
+//            } catch (CannotShareToOwnerException e) {
+//                logger.error(
+//                        String.format("can not share sms templet:%s to organization:%s.",
+//                                smsTempletShareIn.getResourceId(), item), e);
+//                return new BaseOutput(ApiErrorCode.SMS_ERROR_TEMPLETE_CAN_SHARE.getCode(),
+//                        ApiErrorCode.SMS_ERROR_TEMPLETE_CAN_SHARE.getMsg(), ApiConstant.INT_ZERO, null);
+//            }
+//            logger.debug("shared sms templet:{} to organization:{}.", smsTempletShareIn.getResourceId(), item);
+//        }
         return result;
     }
 
