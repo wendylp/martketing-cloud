@@ -47,6 +47,11 @@ public class DataAuthWriteableInterceptor {
             String resourceType = annotation.resourceType();
             Long resourceIdObj =null;
             Long orgIdObj = null;
+
+            if(StringUtils.isBlank( resourceIdTemp)) {
+                return;
+            }
+
             switch(annotation.type()){
                 case SpEl:
                     resourceIdObj = ExpressionHelper.executeTemplate(resourceIdTemp, joinPoint,Long.class);
@@ -61,10 +66,12 @@ public class DataAuthWriteableInterceptor {
             if(StringUtils.isBlank(resourceType )){
                 throw new NoSuchElementException();
             }
-            long resourceId = resourceIdObj.longValue();
-            long orgId =  orgIdObj.longValue();
-            //将新增数据保存对应的数据权限
-            this.dataAuthService.validateWriteable(resourceType, resourceId, orgId);
+            if(resourceIdObj != null && resourceIdObj.longValue() >0) {
+                long resourceId = resourceIdObj.longValue();
+                long orgId =  orgIdObj.longValue();
+                //进行数据校验
+                this.dataAuthService.validateWriteable(resourceType, resourceId, orgId);
+            }
         }
     }
 }
