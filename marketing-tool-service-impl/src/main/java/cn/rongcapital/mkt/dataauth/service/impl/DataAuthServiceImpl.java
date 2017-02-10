@@ -141,10 +141,12 @@ public class DataAuthServiceImpl implements DataAuthService {
      */
     private void writeBackShareStatus(String resourceType, long resourceId, long fromOrgId,boolean shared) {
         DataAuth fromDataAuth = this.dataAuthMapper.selectByTableNameResourceIDOrgId(resourceType, fromOrgId, resourceId);
-        fromDataAuth.setShared(shared);
-        this.dataAuthMapper.updateByPrimaryKey(fromDataAuth);
+        if(fromDataAuth.getShared().compareTo(shared) != 0){
+            fromDataAuth.setShared(shared);
+            this.dataAuthMapper.updateByPrimaryKey(fromDataAuth);
+        }
     }
-
+    
     /**
      * @功能描述: message
      * @param shareType
@@ -174,17 +176,17 @@ public class DataAuthServiceImpl implements DataAuthService {
                 over = true;
             }else{
                 //当前组织不是当前数据权限的拥有者，且具有最高权限，则不需要再吃分享
-                if(dataAuth.getWriteable()){
-                    resultMap.put("result", "当前数据已经被分享过，不需要再分享");
-                    over = true;
-                }else{
+//                if(dataAuth.getWriteable()){
+//                    resultMap.put("result", "当前数据已经被分享过，不需要再分享");
+//                    over = true;
+//                }else{
                     //需要再次分享，设置当前状态为分享的状态,并更新数据
                     dataAuth.setWriteable(writeable);
                     dataAuth.setShareId(shareId);
                     dataAuth.setFirsthand(firsthand);
                     this.dataAuthMapper.updateByPrimaryKey(dataAuth);
                     over = false;
-                }
+//                }
             }
         }else{//并没有在原数据权限表中查询到数据，需要新增一条数据
             dataAuth = new DataAuth();
