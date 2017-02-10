@@ -15,9 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
@@ -31,6 +28,7 @@ import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
 import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthWriteable;
 import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
@@ -228,7 +226,9 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		}
 	}
 
-	@Override
+    @DataAuthWriteable(resourceType = "sms_templet", orgId = "#smsTempletIn.orgid", resourceId = "#smsTempletIn.id", type = ParamType.SpEl)
+    @DataAuthPut(resourceType = "sms_templet", orgId = "#smsTempletIn.orgid", resourceId = "#smsTempletIn.id", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
+    @Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public BaseOutput saveOrUpdateSmsTemplet(SmsTempletIn smsTempletIn) throws NoWriteablePermissionException {
 		BaseOutput output = this.newSuccessBaseOutput();
@@ -236,14 +236,10 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		if(smsTemplet!=null){
 			if(smsTemplet.getId()!=null&&smsTemplet.getId()!=0){
 				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
-				//新增更新权限判断LHZ
-				if(dataAuthService.validateWriteable("sms_templet", smsTempletIn.getId(), smsTempletIn.getOrgid()))
-				   smsTempletDao.updateById(smsTemplet);
+				smsTempletDao.updateById(smsTemplet);
 			}else{
 				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
 				insert(smsTemplet, smsTempletIn.getOrgid());
-				 //新增权限数据 lhz 
-				dataAuthService.put(smsTempletIn.getOrgid(),"sms_templet", smsTemplet.getId());;
 			}
 			
 			//变量模板添加
@@ -270,7 +266,6 @@ public class SmsTempletServiceImpl implements SmsTempletService {
      * @author xie.xiaoliang
      * @since 2017-02-07 
      */
-	@DataAuthPut(resourceType="sms_templet",orgId="#orgid",resourceId="#smsTemplet.id",type=ParamType.SpEl)
 	@Transactional
     private void insert(SmsTemplet smsTemplet, long orgId) {
         smsTempletDao.insert(smsTemplet);
