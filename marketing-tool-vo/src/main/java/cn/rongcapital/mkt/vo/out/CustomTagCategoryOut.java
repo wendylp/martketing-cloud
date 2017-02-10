@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.vo.out;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class CustomTagCategoryOut {
 
     private String customTagCategoryId;
@@ -18,6 +20,7 @@ public class CustomTagCategoryOut {
         this.customTagCount = customTagCount;
     }
 
+    @JsonProperty("custom_tag_category_id")
     public String getCustomTagCategoryId() {
         return customTagCategoryId == null ? "" : customTagCategoryId;
     }
@@ -26,6 +29,7 @@ public class CustomTagCategoryOut {
         this.customTagCategoryId = customTagCategoryId;
     }
 
+    @JsonProperty("custom_tag_category_name")
     public String getCustomTagCategoryName() {
         return customTagCategoryName == null ? "" : customTagCategoryName;
     }
@@ -34,6 +38,7 @@ public class CustomTagCategoryOut {
         this.customTagCategoryName = customTagCategoryName;
     }
 
+    @JsonProperty("level")
     public Integer getLevel() {
         return level;
     }
@@ -42,6 +47,7 @@ public class CustomTagCategoryOut {
         this.level = level;
     }
 
+    @JsonProperty("custom_tag_count")
     public long getCustomTagCount() {
         return customTagCount;
     }

@@ -45,7 +45,7 @@ public interface CustomTagMaterialMapDao extends BaseDao<CustomTagMaterialMap>{
 	 * @param materialType	物料类型
 	 * @return
 	 */
-	int deleteByMaterialParam(@Param("materialCode") String materialCode,@Param("materialType")String materialType);
+	List<CustomTagMaterialMap> getUnbindTag(@Param("materialCode") String materialCode,@Param("materialType")String materialType,@Param("customTagIdList") List<String> customTagIdList);
 	
 	/**
 	 * 通过物料参数获取标签ID
@@ -56,4 +56,16 @@ public interface CustomTagMaterialMapDao extends BaseDao<CustomTagMaterialMap>{
 	List<String> getCustomTagIdByMaterialParam(@Param("materialCode") String materialCode,@Param("materialType")String materialType);
 
     void updateCustomTagNameByCustomTagId(CustomTagMaterialMap paramCustomTagMaterialMap);
+	/**
+	 * 获取所有数据，物料分组
+	 * @return
+	 */
+	List<CustomTagMaterialMap> getAllData();
+
+	/**
+	 * 删除数据
+	 * @param customTagMaterialMap
+	 * @return
+	 */
+	int deleteById(CustomTagMaterialMap customTagMaterialMap);
 }

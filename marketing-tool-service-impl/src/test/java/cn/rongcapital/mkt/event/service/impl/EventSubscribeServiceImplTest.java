@@ -81,6 +81,7 @@ public class EventSubscribeServiceImplTest {
        
         Mockito.when(eventDao.selectList(Matchers.any())).thenReturn(eventList);
         event.setSubscribed(false);
+        event.setUnsubscribable(true);
         Mockito.when(eventDao.updateById(event)).thenReturn(1);
         BaseOutput actual = this.eventSubscribeService.eventSubscribe(1l, false);
         BaseOutput expired = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
@@ -95,7 +96,7 @@ public class EventSubscribeServiceImplTest {
     public void testEventSubscribeUnsubscribable() throws Exception {
         Mockito.when(eventDao.selectList(Matchers.any())).thenReturn(eventList);
         event.setSubscribed(false);
-        event.setUnsubscribable(true);
+        event.setUnsubscribable(false);
         Mockito.when(eventDao.updateById(event)).thenReturn(1);
         BaseOutput actual = this.eventSubscribeService.eventSubscribe(1l, false);
         BaseOutput expired = new BaseOutput(ApiErrorCode.VALIDATE_ERROR_EVENT_UNSUBSCRIBABLE.getCode(),

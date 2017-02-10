@@ -809,6 +809,17 @@
     <select id="getBitmaps" parameterType="int" resultType="String">
 		<![CDATA[  SELECT DISTINCT bitmap FROM data_party  WHERE id = #{id}]]>
 	</select>
-   
-    
+	
+	
+	<!-- 通过微信信息查询主键ID -->
+	<select id="getIdByWechartInformation" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+			id
+		FROM
+			`data_party`
+		WHERE
+			wx_code = #{wxCode}
+		AND wxmp_id = #{wxmpId}
+	</select>
+	
 </mapper>
