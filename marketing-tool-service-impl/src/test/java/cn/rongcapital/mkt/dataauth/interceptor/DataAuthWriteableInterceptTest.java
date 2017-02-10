@@ -64,8 +64,8 @@ public class DataAuthWriteableInterceptTest {
     }
     public class WriteableBean {
         private String resourceType;
-        private long resourceId;
-        private long orgId;
+        private Long resourceId;
+        private Long orgId;
 
         public String getResourceType() {
             return resourceType;
@@ -75,23 +75,21 @@ public class DataAuthWriteableInterceptTest {
             this.resourceType = resourceType;
         }
 
-        public long getResourceId() {
+        public Long getResourceId() {
             return resourceId;
         }
 
-        public void setResourceId(long resourceId) {
+        public void setResourceId(Long resourceId) {
             this.resourceId = resourceId;
         }
 
-        public long getOrgId() {
+        public Long getOrgId() {
             return orgId;
         }
 
-        public void setOrgId(long orgId) {
+        public void setOrgId(Long orgId) {
             this.orgId = orgId;
         }
-
-
     }
 
 
@@ -121,8 +119,8 @@ public class DataAuthWriteableInterceptTest {
         WriteableBeanService proxy = factory.getProxy();
         WriteableBean writeableBean = new WriteableBean();
         writeableBean.setResourceType("business");
-        writeableBean.setResourceId(802);
-        writeableBean.setOrgId(1);
+        writeableBean.setResourceId(802l);
+        writeableBean.setOrgId(1l);
         proxy.writeable(writeableBean);
         
         Mockito.verify(dataAuthService,Mockito.times(1)).validateWriteable(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong());
@@ -144,8 +142,8 @@ public class DataAuthWriteableInterceptTest {
         WriteableBeanService proxy = factory.getProxy();
         WriteableBean writeableBean = new WriteableBean();
         writeableBean.setResourceType("business");
-        writeableBean.setResourceId(802);
-        writeableBean.setOrgId(1);
+        writeableBean.setResourceId(802l);
+        writeableBean.setOrgId(1l);
         proxy.writeable(writeableBean);
         
         Mockito.verify(dataAuthService,Mockito.times(1)).validateWriteable(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong());
@@ -167,8 +165,8 @@ public class DataAuthWriteableInterceptTest {
         WriteableBeanService proxy = factory.getProxy();
         WriteableBean writeableBean = new WriteableBean();
         writeableBean.setResourceType("");
-        writeableBean.setResourceId(802);
-        writeableBean.setOrgId(1);
+        writeableBean.setResourceId(802l);
+        writeableBean.setOrgId(1l);
         proxy.writeable(writeableBean);
     }
     @Test(expected = NoWriteablePermissionException.class)
@@ -189,9 +187,55 @@ public class DataAuthWriteableInterceptTest {
         WriteableBeanService proxy = factory.getProxy();
         WriteableBean writeableBean = new WriteableBean();
         writeableBean.setResourceType("");
-        writeableBean.setResourceId(802);
-        writeableBean.setOrgId(1);
+        writeableBean.setResourceId(802l);
+        writeableBean.setOrgId(1l);
         proxy.writeable(writeableBean);
+    }
+    @Test
+    public void testNoWriteableResourceIdIsnull() throws Throwable {
+        Mockito.doThrow(new NoWriteablePermissionException()).when(dataAuthService).validateWriteable(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong());
+        ReflectionTestUtils.setField(aspect, "dataAuthService", dataAuthService);
+        AspectJProxyFactory factory = new AspectJProxyFactory(new WriteableBeanService() {
+            @Override
+            @Transactional
+            @DataAuthWriteable(resourceType = "business", resourceId = "#writeableBean.resourceId", orgId = "#writeableBean.orgId", type = ParamType.SpEl)
+            public void writeable(WriteableBean writeableBean) throws NoWriteablePermissionException {
+
+            }
+        });
+        factory.setProxyTargetClass(true);
+        factory.addAspect(aspect);
+
+        WriteableBeanService proxy = factory.getProxy();
+        WriteableBean writeableBean = new WriteableBean();
+        writeableBean.setResourceType("");
+        writeableBean.setResourceId(null);
+        writeableBean.setOrgId(1l);
+        proxy.writeable(writeableBean);
+        Mockito.verify(dataAuthService,Mockito.times(0)).validateWriteable(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong());
+    }
+    @Test
+    public void testNoWriteableResourceIdIsBlank() throws Throwable {
+        Mockito.doThrow(new NoWriteablePermissionException()).when(dataAuthService).validateWriteable(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong());
+        ReflectionTestUtils.setField(aspect, "dataAuthService", dataAuthService);
+        AspectJProxyFactory factory = new AspectJProxyFactory(new WriteableBeanService() {
+            @Override
+            @Transactional
+            @DataAuthWriteable(resourceType = "business", resourceId = "", orgId = "#writeableBean.orgId", type = ParamType.SpEl)
+            public void writeable(WriteableBean writeableBean) throws NoWriteablePermissionException {
+
+            }
+        });
+        factory.setProxyTargetClass(true);
+        factory.addAspect(aspect);
+
+        WriteableBeanService proxy = factory.getProxy();
+        WriteableBean writeableBean = new WriteableBean();
+        writeableBean.setResourceType("");
+        writeableBean.setResourceId(null);
+        writeableBean.setOrgId(1l);
+        proxy.writeable(writeableBean);
+        Mockito.verify(dataAuthService,Mockito.times(0)).validateWriteable(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong());
     }
     
    
