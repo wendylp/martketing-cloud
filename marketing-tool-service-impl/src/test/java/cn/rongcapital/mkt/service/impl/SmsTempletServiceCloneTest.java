@@ -92,14 +92,14 @@ public class SmsTempletServiceCloneTest {
 			}
 		}).when(dataAuthService).clone("", 1l, 1l, 1l, Boolean.TRUE);
     	
-    	Long[] a = new Long[2] ;
-    	a[0] = 1l;
-    	a[1] = 2l;
+    	List<Long> b= new ArrayList<>();
+    	b.add(1l);
+    	b.add(2l);
     	clone = new SmsTempletCloneIn();
     	clone.setId(1);
     	clone.setCreator("creator");
     	clone.setUpdateUser("updateUser");
-    	clone.setOrgIds(a);
+    	clone.setOrgIds(b);
         BaseOutput result = smsTempletService.smsTempletClone(clone);
     	
         // 断言

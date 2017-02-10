@@ -15,9 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
@@ -30,7 +27,9 @@ import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthClone;
 import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthWriteable;
 import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
@@ -228,7 +227,9 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		}
 	}
 
-	@Override
+    @DataAuthWriteable(resourceType = "sms_templet", orgId = "#smsTempletIn.orgid", resourceId = "#smsTempletIn.id", type = ParamType.SpEl)
+    @DataAuthPut(resourceType = "sms_templet", orgId = "#smsTempletIn.orgid", resourceId = "#smsTempletIn.id", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
+    @Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public BaseOutput saveOrUpdateSmsTemplet(SmsTempletIn smsTempletIn) throws NoWriteablePermissionException {
 		BaseOutput output = this.newSuccessBaseOutput();
@@ -236,14 +237,10 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		if(smsTemplet!=null){
 			if(smsTemplet.getId()!=null&&smsTemplet.getId()!=0){
 				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
-				//新增更新权限判断LHZ
-				if(dataAuthService.validateWriteable("sms_templet", smsTempletIn.getId(), smsTempletIn.getOrgid()))
-				   smsTempletDao.updateById(smsTemplet);
+				smsTempletDao.updateById(smsTemplet);
 			}else{
 				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
 				insert(smsTemplet, smsTempletIn.getOrgid());
-				 //新增权限数据 lhz 
-				dataAuthService.put(smsTempletIn.getOrgid(),"sms_templet", smsTemplet.getId());;
 			}
 			
 			//变量模板添加
@@ -270,7 +267,6 @@ public class SmsTempletServiceImpl implements SmsTempletService {
      * @author xie.xiaoliang
      * @since 2017-02-07 
      */
-	@DataAuthPut(resourceType="sms_templet",orgId="#orgid",resourceId="#smsTemplet.id",type=ParamType.SpEl)
 	@Transactional
     private void insert(SmsTemplet smsTemplet, long orgId) {
         smsTempletDao.insert(smsTemplet);
@@ -425,6 +421,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@DataAuthClone(fromResourceId = "#clone.id", resourceId = "#toIds", resourceType = TABLE_NAME, toOrgId = "#clone.orgIds", writeable = "true",type = ParamType.SpEl)
 	public BaseOutput smsTempletClone(SmsTempletCloneIn clone) {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTemplet from = new SmsTemplet();
@@ -432,16 +429,25 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		from.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		List<SmsTemplet> t = smsTempletDao.selectList(from);
 		
-		for (int i = 0; i < clone.getOrgIds().length; i++) {
+		List<Long> toIds = new ArrayList<>();
+		for (int i = 0; i < clone.getOrgIds().size(); i++) {
 			if (!CollectionUtils.isEmpty(t)) {
 				
 				SmsTemplet to = t.get(0);
 				to.setCreator(clone.getCreator());
 				to.setUpdateUser(clone.getUpdateUser());
 				this.smsTempletDao.insert(to);
-				dataAuthService.clone(TABLE_NAME, to.getId(), from.getId(), clone.getOrgIds()[i], Boolean.TRUE);
+				//通过插入代码实现克隆权限
+				//dataAuthService.clone(TABLE_NAME, to.getId(), from.getId(), clone.getOrgIds().get(i), Boolean.TRUE);
+				
+				//通过注解做克隆权限 step1
+				toIds.add(to.getId().longValue());
 			}
 		}
+		
+		//通过注解做克隆权限 step2
+		output.getData().addAll(toIds);
+		
 		return output;
 	}
 

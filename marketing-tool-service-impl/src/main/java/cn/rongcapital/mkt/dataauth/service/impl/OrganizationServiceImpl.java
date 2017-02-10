@@ -58,16 +58,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 		return orgCT;
 	}
 
-	private void ConvertLineToList(OrgChildTreeOutPut orgFL, List<Organization> list) {
-		if (orgFL != null && orgFL.getOrgList() != null && orgFL.getOrgList().size() > 0) {
-			List<OrgChildTreeOutPut> temp = orgFL.getOrgList();
-			list.add((Organization) temp);
-			for (OrgChildTreeOutPut childTemp : temp) {
-				ConvertLineToList(childTemp, list);
-			}
-		}
-	}
-
 	/**
 	 * @author
 	 * @功能简述: 根据节点ID获取取当前节点及其所有父节点，并以树形结构返回
@@ -93,26 +83,28 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	/**
 	 * @author
-	 * @功能简述: 根据节点ID获取当前节点以及其所有父节点，并以list形式返回
+	 * @功能简述: 根据节点ID获取当前节点所有父节点(不包含当前节点)，并以list形式返回
 	 * @param Long id
 	 * @return List<Organization>
 	 */
 	@Override
 	public List<Organization> getOrgLineListById(Long id) {
-		OrgParentLineOutPut orgFL = generateOrgLine(id);
 		List<Organization> orgList = new ArrayList<Organization>();
-		ConvertLineToList(orgFL, orgList);
+		
+		Organization org = organizationDao.getNodeById(id);
+		if(org!=null && org.getParentId()!=null){
+			getParentLineList(org.getParentId(), orgList);
+		}
+		
 		return orgList;
 	}
-
-	private void ConvertLineToList(OrgParentLineOutPut orgFL, List<Organization> list) {
-		if (orgFL != null && orgFL.getOrganization() != null) {
-			list.add(orgFL);
-			OrgParentLineOutPut temp = orgFL.getOrganization();
-			if (temp.getOrganization() != null && temp.getOrganization().getOrgId() != null) {
-				ConvertLineToList(temp, list);
-			}else{
-				list.add(temp);
+	
+	private void getParentLineList(Long id, List<Organization> list) {
+		Organization org = organizationDao.getNodeById(id);
+		if(org!=null){
+			list.add(org);
+			if(org.getParentId()!=null){
+				getParentLineList(org.getParentId(), list);
 			}
 		}
 	}

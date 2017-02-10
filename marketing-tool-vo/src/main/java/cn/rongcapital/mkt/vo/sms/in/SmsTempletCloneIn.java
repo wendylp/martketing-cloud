@@ -1,6 +1,8 @@
 package cn.rongcapital.mkt.vo.sms.in;
 
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -14,7 +16,7 @@ public class SmsTempletCloneIn {
 	private Integer id;
 	
 	@NotNull
-	private Long[] orgIds;
+	private List<Long> orgIds;
 	
 	@NotNull
 	private String creator;
@@ -32,11 +34,11 @@ public class SmsTempletCloneIn {
 	}
 	
 	@JsonProperty("org_ids")
-	public Long[] getOrgIds() {
+	public List<Long> getOrgIds() {
 		return orgIds;
 	}
 
-	public void setOrgIds(Long[] orgIds) {
+	public void setOrgIds(List<Long> orgIds) {
 		this.orgIds = orgIds;
 	}
 

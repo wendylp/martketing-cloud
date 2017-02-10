@@ -22,11 +22,13 @@ import java.lang.annotation.Target;
 @Documented
 public @interface DataAuthPut{
     
-    String resourceType() default "";
+    String resourceType() ;
 
-    String resourceId() ;
+    String resourceId() default "";
 
     String orgId() ;
+    
+    String outputResourceId();
 
     ParamType type() default ParamType.Default;
 
