@@ -27,6 +27,7 @@ import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthClone;
 import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
 import cn.rongcapital.mkt.dataauth.interceptor.DataAuthWriteable;
 import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
@@ -420,6 +421,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@DataAuthClone(fromResourceId = "#clone.id", resourceId = "#toIds", resourceType = TABLE_NAME, toOrgId = "#clone.orgIds", writeable = "true",type = ParamType.SpEl)
 	public BaseOutput smsTempletClone(SmsTempletCloneIn clone) {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTemplet from = new SmsTemplet();
@@ -427,16 +429,25 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		from.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		List<SmsTemplet> t = smsTempletDao.selectList(from);
 		
-		for (int i = 0; i < clone.getOrgIds().length; i++) {
+		List<Long> toIds = new ArrayList<>();
+		for (int i = 0; i < clone.getOrgIds().size(); i++) {
 			if (!CollectionUtils.isEmpty(t)) {
 				
 				SmsTemplet to = t.get(0);
 				to.setCreator(clone.getCreator());
 				to.setUpdateUser(clone.getUpdateUser());
 				this.smsTempletDao.insert(to);
-				dataAuthService.clone(TABLE_NAME, to.getId(), from.getId(), clone.getOrgIds()[i], Boolean.TRUE);
+				//通过插入代码实现克隆权限
+				//dataAuthService.clone(TABLE_NAME, to.getId(), from.getId(), clone.getOrgIds().get(i), Boolean.TRUE);
+				
+				//通过注解做克隆权限 step1
+				toIds.add(to.getId().longValue());
 			}
 		}
+		
+		//通过注解做克隆权限 step2
+		output.getData().addAll(toIds);
+		
 		return output;
 	}
 

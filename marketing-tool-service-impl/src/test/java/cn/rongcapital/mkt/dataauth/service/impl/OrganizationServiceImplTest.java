@@ -102,12 +102,12 @@ public class OrganizationServiceImplTest {
     	logger.info(org1.toString()+"_"+org2.toString()+"_"+org3.toString()+"_"+org4.toString()+"_"+org5.toString()+"_"+org6.toString()+"_"+org7.toString());
     	
     	Mockito.when(organizationDao.getNodeById(Mockito.anyLong())).thenReturn(org5,org2,org1,null);
+
     	List<Organization> orgList = organizationService.getOrgLineListById(17l);
     	
-    	Assert.assertEquals(3,orgList.size());
-    	Assert.assertEquals(5l,orgList.get(0).getOrgId().longValue());
-    	Assert.assertEquals(2l,orgList.get(1).getOrgId().longValue());
-    	Assert.assertEquals(1l,orgList.get(2).getOrgId().longValue());
+    	Assert.assertEquals(2,orgList.size());
+    	Assert.assertEquals(2l,orgList.get(0).getOrgId().longValue());
+    	Assert.assertEquals(1l,orgList.get(1).getOrgId().longValue());
     }
     
     @Test
