@@ -1,11 +1,5 @@
 package cn.rongcapital.mkt.mongodaoimpl;
 
-import cn.rongcapital.mkt.common.util.CamelNameUtil;
-import cn.rongcapital.mkt.mongodao.MongoCustomTagCategoryDao;
-import cn.rongcapital.mkt.po.base.BaseTag;
-import cn.rongcapital.mkt.po.mongodb.CustomTag;
-import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,15 +10,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
-import cn.rongcapital.mkt.po.mongodb.TagRecommend;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
+import com.mongodb.WriteResult;
+
+import cn.rongcapital.mkt.common.util.CamelNameUtil;
+import cn.rongcapital.mkt.mongodao.MongoCustomTagCategoryDao;
+import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
 
 /**
  * Created by byf on 1/15/17.
@@ -118,6 +113,32 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
         Query query = new Query(Criteria.where(CUSTOM_TAG_CATEGORY_ID).is(customTagCategoryId).and(IS_DELETED).is(DATA_VALID));
         mongoTemplate.updateFirst(query,new Update().set(CHILDREN_CUSTOM_TAG_LIST,customTagCategory.getChildrenCustomTagList()),CustomTagCategory.class);
     }
+    
+	/**
+	 * 功能描述：根据自定义条件查询数量
+	 * 
+	 * @param customTagCategory
+	 * @return
+	 */
+	@Override
+	public long countByCustomTagCategoryName(CustomTagCategory customTagCategory) {
+		Query query = new Query(Criteria.where(CUSTOM_TAG_CATEGORY_NAME)
+				.is(customTagCategory.getCustomTagCategoryName()).and(IS_DELETED).is(DATA_VALID));
+		return mongoTemplate.count(query, CUSTOM_TAG_CATEGORY_CLASS);
+	}
+
+	@Override
+	public boolean updateCategoryNameById(CustomTagCategory customTagCategory) {
+		boolean flag = false;
+		Query query = new Query(Criteria.where(CUSTOM_TAG_CATEGORY_ID).is(customTagCategory.getCustomTagCategoryId()));
+		Update update = buildBaseUpdate(customTagCategory);
+		WriteResult wr = mongoTemplate.upsert(query, update, CUSTOM_TAG_CATEGORY_CLASS);
+		int n = wr.getN();
+		if (n > 0) {
+			return true;
+		}
+		return flag;
+	}
 
     @Override
     public void logicalDeleteCustomTagCategoryById(String customTagCategoryId) {

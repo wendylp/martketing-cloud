@@ -89,4 +89,20 @@ public interface MongoCustomTagCategoryDao {
      * @return
      */
     void logicalDeleteCustomTagCategoryById(String customTagCategoryId);
+
+    /**
+     * 功能描述：根据自定义条件查询数量
+     *
+     * @param customTagCategory
+     * @return count
+     */
+    public long countByCustomTagCategoryName(CustomTagCategory customTagCategory);
+
+    /**
+     * 功能描述：根据自定义分类Id更新自定义分类信息
+     *
+     * @param customTagCategory
+     * @return long
+     */
+	public boolean updateCategoryNameById(CustomTagCategory customTagCategory);
 }
