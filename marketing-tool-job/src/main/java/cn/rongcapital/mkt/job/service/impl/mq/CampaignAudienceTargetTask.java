@@ -80,9 +80,8 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 			executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
 			List<Future<List<Segment>>> resultList = new ArrayList<Future<List<Segment>>>();
 			try {
-				Set<String> smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + cat.getSnapSegmentationId(), 2);
-				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + cat.getSnapSegmentationId(),
-						smembers.size());
+				Set<String> smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + snapID, 2);
+				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + snapID, smembers.size());
 				if (CollectionUtils.isNotEmpty(smembers)) {
 					List<List<String>> setList = ListSplit.getSetSplit(smembers, BATCH_SIZE);
 					for (List<String> segmentIdList : setList) {
