@@ -46,6 +46,8 @@ import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
+import cn.rongcapital.mkt.dao.SegmentationBodyDao;
+import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
@@ -73,6 +75,9 @@ import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.ImgTextAsset;
+import cn.rongcapital.mkt.po.SegmentBodyWithName;
+import cn.rongcapital.mkt.po.SegmentationBody;
+import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.WechatAsset;
@@ -101,14 +106,20 @@ import cn.rongcapital.mkt.vo.in.CampaignDecisionWechatReadIn;
 import cn.rongcapital.mkt.vo.in.CampaignNodeChainIn;
 import cn.rongcapital.mkt.vo.in.CampaignSwitchIn;
 import cn.rongcapital.mkt.vo.in.CampaignTriggerTimerIn;
+import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
 import cn.rongcapital.mkt.vo.in.TagIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 
 @Service
 public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService {
 
+
+	@Autowired
+	SegmentationBodyDao segmentationBodyDao;
 	@Autowired
 	private CampaignHeadDao campaignHeadDao;
+    @Autowired
+    private SegmentationHeadDao segmentationHeadDao;
 	@Autowired
 	private CampaignBodyDao campaignBodyDao;
 	@Autowired
@@ -1309,16 +1320,60 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignAudienceTarget initCampaignAudienceTarget(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignAudienceTarget campaignAudienceTarget = new CampaignAudienceTarget();
 		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
-		if(null == campaignAudienceTargetIn) return null;
+		if(null == campaignAudienceTargetIn) 
+			return null;
+		
+		int segId = campaignAudienceTargetIn.getSegmentationId();
+		String segName = campaignAudienceTargetIn.getSegmentationName();
+		int snapId = snapSegementation(segId);
+		if (snapId == 0) {
+			return null;
+		}
 		campaignAudienceTarget.setName(campaignAudienceTargetIn.getName());
 		campaignAudienceTarget.setCampaignHeadId(campaignHeadId);
 		campaignAudienceTarget.setItemId(campaignNodeChainIn.getItemId());
-		campaignAudienceTarget.setSegmentationId(campaignAudienceTargetIn.getSegmentationId());
-		campaignAudienceTarget.setSegmentationName(campaignAudienceTargetIn.getSegmentationName());
+		campaignAudienceTarget.setSegmentationId(segId);		
+		campaignAudienceTarget.setSnapSegmentationId(snapId);		
+		campaignAudienceTarget.setSegmentationName(segName);
 		campaignAudienceTarget.setAllowedNew(campaignAudienceTargetIn.getAllowedNew());
 		campaignAudienceTarget.setRefreshInterval(campaignAudienceTargetIn.getRefreshInterval());
 		campaignAudienceTarget.setRefreshIntervalType(campaignAudienceTargetIn.getRefreshIntervalType());
 		return campaignAudienceTarget;
+	}
+
+	/*
+	 * 对细分结构做快照，以后活动将从此快照取覆盖人群。
+	 */
+	private int snapSegementation(int segId) {
+        int snapSegmentationHead = snapSegmentationHead(segId);      
+        if (snapSegmentationHead != 0 ) {
+            snapSegmentationBody(segId, snapSegmentationHead);		        	
+        }
+        
+		return snapSegmentationHead;
+	}
+
+	private void snapSegmentationBody(int orgSegmentationHead, int snapSegmentationHead) {
+		SegmentationBody paramSegmentationBody = new SegmentationBody();
+        paramSegmentationBody.setHeadId(orgSegmentationHead);
+       List<SegmentationBody> segmentationBodyList = segmentationBodyDao.selectList(paramSegmentationBody);
+       for (SegmentationBody body : segmentationBodyList) {    	  
+    	   body.setHeadId(snapSegmentationHead);
+    	   segmentationBodyDao.insert(body);
+       }
+	}
+
+	private int snapSegmentationHead(int segId) {
+		SegmentationHead segmentationHead = new SegmentationHead();
+        segmentationHead.setId(segId);
+        List<SegmentationHead> segmentationHeadList = segmentationHeadDao.selectList(segmentationHead);
+        if(CollectionUtils.isEmpty(segmentationHeadList)){
+        	return 0;
+        }        
+        
+        segmentationHead = segmentationHeadList.get(0);        
+        segmentationHeadDao.insert(segmentationHead);        
+        return segmentationHead.getId();
 	}
 
 	private CampaignAudienceFix initCampaignAudienceFix(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {

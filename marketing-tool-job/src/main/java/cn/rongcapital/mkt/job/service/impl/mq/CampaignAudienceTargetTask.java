@@ -69,13 +69,19 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 		List<Segment> segmentListUnique = new ArrayList<Segment>(); // 去重后的segment
 		if (CollectionUtils.isNotEmpty(campaignAudienceTargetList)) {
 			CampaignAudienceTarget cat = campaignAudienceTargetList.get(0);
+			int snapID = cat.getSnapSegmentationId();
+			if (snapID == 0) {
+				//快照id无效，取原来的细分id
+				snapID = cat.getSegmentationId();
+			}
+			
 			// TODO congshulin mongo转成redis
 			long startTime = System.currentTimeMillis();
 			executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
 			List<Future<List<Segment>>> resultList = new ArrayList<Future<List<Segment>>>();
 			try {
-				Set<String> smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(), 2);
-				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + cat.getSegmentationId(),
+				Set<String> smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + cat.getSnapSegmentationId(), 2);
+				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + cat.getSnapSegmentationId(),
 						smembers.size());
 				if (CollectionUtils.isNotEmpty(smembers)) {
 					List<List<String>> setList = ListSplit.getSetSplit(smembers, BATCH_SIZE);

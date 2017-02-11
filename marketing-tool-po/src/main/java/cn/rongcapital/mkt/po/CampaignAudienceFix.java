@@ -23,10 +23,6 @@ public class CampaignAudienceFix extends BaseQuery {
 
     private Date updateTime;
 
-    private Boolean invalid = Boolean.FALSE;
-
-    private Date invalidateTime;
-
     public Integer getId() {
         return id;
     }
@@ -97,21 +93,5 @@ public class CampaignAudienceFix extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Boolean getInvalid() {
-        return invalid;
-    }
-
-    public void setInvalid(Boolean invalid) {
-        this.invalid = invalid;
-    }
-
-    public Date getInvalidateTime() {
-        return invalidateTime;
-    }
-
-    public void setInvalidateTime(Date invalidateTime) {
-        this.invalidateTime = invalidateTime;
     }
 }
