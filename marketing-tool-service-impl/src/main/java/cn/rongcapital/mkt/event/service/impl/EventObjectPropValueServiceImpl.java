@@ -61,14 +61,15 @@ public class EventObjectPropValueServiceImpl implements EventObjectPropValueServ
     private List<EventPropValue> getEventPropValue(EventBehavior eventBehavior) {
         Map<String, Object> map = (Map<String, Object>) eventBehavior.getObject().get("attributes");
         List<EventPropValue> list = new ArrayList<EventPropValue>();
-        for (String key : map.keySet()) {
+        for(Map.Entry<String,Object> entry:map.entrySet())  
+        {
             EventPropValue eventObjectPropValue = new EventPropValue();
             eventObjectPropValue.setObjectId(eventBehavior.getObjectId());
-            eventObjectPropValue.setPropName(key);
-            eventObjectPropValue.setPropValue(map.get(key).toString());
+            eventObjectPropValue.setPropName(entry.getKey());
+            eventObjectPropValue.setPropValue(entry.getValue().toString());
             list.add(eventObjectPropValue);
         }
-
+        
         return list;
     }
 
