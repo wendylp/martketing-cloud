@@ -518,7 +518,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			}
 			//微信二维码自定义标签相关
 			List<CustomTagIn> customTagList = wechatQrcodeIn.getCustomTagList();
-			if(materialCode != null){
+			if(materialCode != null && !CollectionUtils.isEmpty(customTagList)){
 				//TODO 物料类型需要进行修改
 				customTagMaterialMapService.buildTagMaterialRealation(customTagList, materialCode.toString(), ApiConstant.MATERIAL_TYPE_WECHAT);
 			}
