@@ -99,10 +99,10 @@ public interface MongoCustomTagCategoryDao {
     public long countByCustomTagCategoryName(CustomTagCategory customTagCategory);
 
     /**
-     * 功能描述：根据自定义分类Id更新自定义分类信息
+     * 功能描述：根据自定义分类Id更新自定义分类name
      *
      * @param customTagCategory
      * @return long
      */
-	public boolean updateCategoryNameById(CustomTagCategory customTagCategory);
+	public boolean updateCategoryNameById(String customTagCategoryId,String customTagCategoryName);
 }
