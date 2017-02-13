@@ -76,7 +76,7 @@ public class CampaignActionSendSmsTask extends BaseMQService implements TaskServ
 			@Override
 			public void onMessage(Message message) {
 				if(message!=null) {
-					try {
+					try {						
 						//获取segment list数据对象
 						List<Segment> segmentList = (List<Segment>)((ObjectMessage)message).getObject();
 						if(CollectionUtils.isNotEmpty(segmentList)) {
@@ -98,7 +98,6 @@ public class CampaignActionSendSmsTask extends BaseMQService implements TaskServ
 				logger.error(e.getMessage(),e);
 			}     
 		}
-		
 	}
 	
 	private void processMqMessage(List<Segment> segmentList,
@@ -132,8 +131,7 @@ public class CampaignActionSendSmsTask extends BaseMQService implements TaskServ
 		
 		//创建发送短信
 		try {
-			campaignActionSendSmsService.storeDataPartyIds(dataPartyIds,campaignActionSendSms.getId());
-			SmsActivationCreateIn smsActivationCreateIn = campaignActionSendSmsService.getSmsActivationCreateIn(campaignHeadId, itemId, campaignActionSendSms);
+			SmsActivationCreateIn smsActivationCreateIn = campaignActionSendSmsService.getSmsActivationCreateIn(campaignHeadId, itemId, campaignActionSendSms,dataPartyIds);
 			smsActivationCreateOrUpdateService.createOrUpdateSmsActivation(smsActivationCreateIn);
 		} catch (JMSException e) {
 			logger.info(queueKey+"-out:"+JSON.toJSONString(e.getMessage()));
