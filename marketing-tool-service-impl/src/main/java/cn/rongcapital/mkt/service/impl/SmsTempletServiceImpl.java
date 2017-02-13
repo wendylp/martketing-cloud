@@ -445,7 +445,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 			}
 		}
 		
-		//通过注解做克隆权限 step2
+		//通过注解做克隆权限 step2，toIds需要通过baseOutput.getData()返回值被注解获得。
 		output.getData().addAll(toIds);
 		
 		return output;

@@ -11,7 +11,10 @@
  *************************************************/
 package cn.rongcapital.mkt.dataauth.interceptor;
 
-import cn.rongcapital.mkt.dataauth.service.DataAuthService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +25,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.NoSuchElementException;
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataAuthUnshareInterceptTest {
@@ -49,23 +55,26 @@ public class DataAuthUnshareInterceptTest {
     }
 
     public class PutBeanService {
-        public void unshare(PutBean putBean) {
-
+        public BaseOutput unshare(PutBean putBean) {
+        	BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                    ApiConstant.INT_ZERO, null);
+            return baseOutput;
         }
     }
     public class PutBean {
-        private String shareId;
+        private List<String> shareId;
         private long orgId;
 
-        public String getShareId() {
-            return shareId;
-        }
 
-        public void setShareId(String shareId) {
-            this.shareId = shareId;
-        }
+        public List<String> getShareId() {
+			return shareId;
+		}
 
-        public long getOrgId() {
+		public void setShareId(List<String> shareId) {
+			this.shareId = shareId;
+		}
+
+		public long getOrgId() {
             return orgId;
         }
 
@@ -91,8 +100,10 @@ public class DataAuthUnshareInterceptTest {
         AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
             @Override
             @DataAuthUnshare(shareId = "#putBean.shareId",orgId = "#putBean.orgId",  type = ParamType.SpEl)
-            public void unshare(PutBean putBean) {
-
+            public BaseOutput unshare(PutBean putBean) {
+            	BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+                return baseOutput;
             }
         });
         factory.setProxyTargetClass(true);
@@ -100,11 +111,12 @@ public class DataAuthUnshareInterceptTest {
 
         PutBeanService proxy = factory.getProxy();
         PutBean putBean = new PutBean();
-        putBean.setShareId("123123123123");
+        List<String> a = new ArrayList<>();
+        putBean.setShareId(a);
         putBean.setOrgId(1);
         
         proxy.unshare(putBean);
-        Mockito.verify(dataAuthService,Mockito.times(1)).unshare(Mockito.any(String.class));
+        Mockito.verify(dataAuthService,Mockito.times(0)).unshare(Mockito.any(String.class));
     }
 
     @Test
@@ -113,8 +125,10 @@ public class DataAuthUnshareInterceptTest {
         AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
             @Override
             @DataAuthUnshare(shareId = "123123",orgId = "1", type = ParamType.Default)
-            public void unshare(PutBean putBean) {
-
+            public BaseOutput unshare(PutBean putBean) {
+            	BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+                return baseOutput;
             }
         });
         factory.setProxyTargetClass(true);
@@ -122,7 +136,8 @@ public class DataAuthUnshareInterceptTest {
 
         PutBeanService proxy = factory.getProxy();
         PutBean putBean = new PutBean();
-        putBean.setShareId("12312312312321");
+        List<String> a = new ArrayList<>();
+        putBean.setShareId(a);
         putBean.setOrgId(1);
         
         proxy.unshare(putBean);
@@ -134,9 +149,11 @@ public class DataAuthUnshareInterceptTest {
 
         AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
             @Override
-            @DataAuthUnshare(shareId = "#putBean.shareId",orgId = "#putBean.orgId",  type = ParamType.SpEl)
-            public void unshare(PutBean putBean) {
-
+            @DataAuthUnshare(shareId = "#putBean.shareId",orgId = "",  type = ParamType.SpEl)
+            public BaseOutput unshare(PutBean putBean) {
+            	BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                        ApiConstant.INT_ZERO, null);
+                return baseOutput;
             }
         });
         factory.setProxyTargetClass(true);
@@ -144,7 +161,10 @@ public class DataAuthUnshareInterceptTest {
 
         PutBeanService proxy = factory.getProxy();
         PutBean putBean = new PutBean();
-        putBean.setShareId("");
+        List<String> a = new ArrayList<>();
+        a.add("sss");
+        a.add(null);
+        putBean.setShareId(a);
         putBean.setOrgId(1);
         
         proxy.unshare(putBean);

@@ -9,9 +9,6 @@
  *************************************************/
 package cn.rongcapital.mkt.service.impl;
 
-import heracles.data.common.annotation.ReadWrite;
-import heracles.data.common.util.ReadWriteType;
-
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -27,11 +24,15 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthUnshare;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsTempletCancelShareService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletCancelShareIn;
+import heracles.data.common.annotation.ReadWrite;
+import heracles.data.common.util.ReadWriteType;
 
 @Service
 public class SmsTempletCancelShareServiceImpl implements SmsTempletCancelShareService {
@@ -47,6 +48,7 @@ public class SmsTempletCancelShareServiceImpl implements SmsTempletCancelShareSe
     @Override
     @ReadWrite(type = ReadWriteType.WRITE)
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @DataAuthUnshare(shareId = "#smsTempleCancelShareIn.shareIds",orgId="",type = ParamType.SpEl)
     public BaseOutput cancelShareSmsTemplet(SmsTempletCancelShareIn smsTempleCancelShareIn) {
         // 验证数据有效性
         if (smsTempletValidate(smsTempleCancelShareIn.getResourceId().intValue())) {
@@ -57,12 +59,13 @@ public class SmsTempletCancelShareServiceImpl implements SmsTempletCancelShareSe
         BaseOutput result =
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
                         null);
+        //通过代码实现取消分享权限
         // 取消分享
-        smsTempleCancelShareIn.getShareIds().forEach(item -> {
+/*        smsTempleCancelShareIn.getShareIds().forEach(item -> {
             logger.debug("unsharing sms templet:{} share_id:{}.", smsTempleCancelShareIn.getResourceId(), item);
             dataAuthService.unshare(item);
             logger.debug("unshared sms templet:{} share_id:{}.", smsTempleCancelShareIn.getResourceId(), item);
-        });
+        });*/
         return result;
     }
 
