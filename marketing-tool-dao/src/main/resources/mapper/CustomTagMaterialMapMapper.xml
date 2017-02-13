@@ -107,8 +107,9 @@
 	<!-- 其它SQL语句 -->
 	
 	<!-- 根据物料属性进行物理删除 -->
-	<delete id="clearSpareData" parameterType="java.lang.String">
-		DELETE 
+	<select id="getUnbindTag" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.CustomTagMaterialMap">
+		SELECT
+		<include refid="QUERY_COLUMN_LIST"/>
 		FROM custom_tag_material_map 
 		<where>
 			material_code = #{materialCode}
@@ -118,7 +119,7 @@
 				#{tagId}
 			</foreach>
 		</where>
-	</delete>
+	</select>
 	
 	<!-- 通过物料参数获取标签ID -->
 	<select id="getCustomTagIdByMaterialParam" parameterType="java.lang.String" resultType="java.lang.String">
@@ -129,6 +130,27 @@
 			AND material_type = #{materialType}
 		</where>
 	</select>
-	
-	
+
+	<update id="updateCustomTagNameByCustomTagId" parameterType="cn.rongcapital.mkt.po.CustomTagMaterialMap">
+		<![CDATA[UPDATE custom_tag_material_map]]>
+		SET custom_tag_name = #{customTagName}
+		<![CDATA[WHERE custom_tag_id = #{customTagId} AND status = 0]]>
+	</update>
+
+	<!-- 获取所有数据，物料code类型分组 -->
+	<select id="getAllData" resultType="cn.rongcapital.mkt.po.CustomTagMaterialMap">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		GROUP BY material_code,material_type
+	</select>
+
+	<!-- 通过ID删除 -->
+	<delete id="deleteById" parameterType="cn.rongcapital.mkt.po.CustomTagMaterialMap">
+		DELETE
+		FROM custom_tag_material_map
+		WHERE id = #{id}
+	</delete>
+
+
 </mapper>

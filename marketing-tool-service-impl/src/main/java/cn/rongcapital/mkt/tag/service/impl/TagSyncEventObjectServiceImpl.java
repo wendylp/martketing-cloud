@@ -1,8 +1,5 @@
 package cn.rongcapital.mkt.tag.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -50,29 +47,6 @@ public class TagSyncEventObjectServiceImpl implements TagSyncEventObjectService 
 	public BaseOutput getEventBehavierListGet(TagSyncEventObjectIn tagSyncEventObjectIn) {
 		String eventReceiveUrl = env.getProperty("mkt.event.behavior.get");
 		String hostHeaderAddr = env.getProperty("host.header.addr");
-
-		tagSyncEventObjectIn = new TagSyncEventObjectIn();
-		tagSyncEventObjectIn.setUserId("test1");
-		tagSyncEventObjectIn.setUserToken("1");
-		tagSyncEventObjectIn.setVer("1.7");
-		tagSyncEventObjectIn.setObjectCode("qrcode_attr");
-		tagSyncEventObjectIn.setQrcodeId("78");
-		tagSyncEventObjectIn.setIndex(1);
-		tagSyncEventObjectIn.setSize(10000);
-		String startStr = "201701221302";
-		String endStr = "201701221502";
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmm");
-		long startSeconds = 1L;
-		long endSeconds = 1L;
-		try {
-			startSeconds = sdf.parse(startStr).getTime();// 毫秒
-			endSeconds = sdf.parse(endStr).getTime();// 毫秒
-		} catch (ParseException e1) {
-			logger.error("datatime convert millionSeconds Exception:", e1);
-		}
-
-		tagSyncEventObjectIn.setBeginTime(startSeconds);
-		tagSyncEventObjectIn.setEndTime(endSeconds);
 
 		ObjectMapper mapper = new ObjectMapper();
 

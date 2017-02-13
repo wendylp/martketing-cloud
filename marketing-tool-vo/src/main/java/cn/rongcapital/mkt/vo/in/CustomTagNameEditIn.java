@@ -3,24 +3,19 @@ package cn.rongcapital.mkt.vo.in;
 import cn.rongcapital.mkt.vo.BaseInput;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import java.util.ArrayList;
 
 /**
- * Created by hiro on 17/2/6.
+ * Created by hiro on 17/2/7.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class CustomTagSaveToCategoryIn extends BaseInput{
+public class CustomTagNameEditIn extends BaseInput{
 
-    @NotEmpty
     private String userToken;
-    @NotEmpty
     private String customTagCategoryId;
-    @NotEmpty
     private String customTagCategoryName;
-    @NotEmpty
-    private ArrayList<CustomTagNameIn> customTagList;
+    private String customTagId;
+    private String customTagOldName;
+    private String customTagNewName;
 
     @JsonProperty("user_token")
     public String getUserToken() {
@@ -49,13 +44,30 @@ public class CustomTagSaveToCategoryIn extends BaseInput{
         this.customTagCategoryName = customTagCategoryName;
     }
 
-    @JsonProperty("custom_tag_list")
-    public ArrayList<CustomTagNameIn> getCustomTagList() {
-        return customTagList;
+    @JsonProperty("custom_tag_id")
+    public String getCustomTagId() {
+        return customTagId;
     }
 
-    public void setCustomTagList(ArrayList<CustomTagNameIn> customTagList) {
-        this.customTagList = customTagList;
+    public void setCustomTagId(String customTagId) {
+        this.customTagId = customTagId;
+    }
+
+    @JsonProperty("custom_tag_old_name")
+    public String getCustomTagOldName() {
+        return customTagOldName;
+    }
+
+    public void setCustomTagOldName(String customTagOldName) {
+        this.customTagOldName = customTagOldName;
+    }
+
+    @JsonProperty("custom_tag_new_name")
+    public String getCustomTagNewName() {
+        return customTagNewName;
+    }
+
+    public void setCustomTagNewName(String customTagNewName) {
+        this.customTagNewName = customTagNewName;
     }
 }
-

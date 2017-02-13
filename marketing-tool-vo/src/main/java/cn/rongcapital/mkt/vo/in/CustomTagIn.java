@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.vo.in;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /*************************************************
  * @功能简述: 自定标签vo
@@ -13,14 +14,19 @@ import org.codehaus.jackson.annotate.JsonProperty;
  *************************************************/
 public class CustomTagIn {
 
+	@Field("custom_tag_id")
 	private String customTagId;		//自定义标签ID
 
+	@Field("custom_tag_name")
 	private String customTagName;	//自定义标签名称
 
+	@Field("parent_id")
 	private String parentId;	//分类ID
 	
+	@Field("parent_name")
 	private String parentName;	//分类名称
 	
+	@Field("is_deleted")
     private Integer isDeleted;	//0-正常，1-过期
     
     public CustomTagIn() {

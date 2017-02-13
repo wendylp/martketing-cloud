@@ -570,7 +570,18 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 					boolean isCustomTag =  tagTypeList.size() == 0 
 										|| TagOut.TAG_TYPE_CUSTOM.endsWith(tagTypeList.get(i));
 					String tagType = isCustomTag ? TagOut.TAG_TYPE_CUSTOM : TagOut.TAG_TYPE_SYS;
-					String tagName = getTagNameById(isCustomTag, tagIdStr);					
+					String tagName = null;
+					if (isCustomTag) {
+						Query query = new Query(Criteria.where("tag_id").is(tagIdStr));
+						BaseTag targetTag = mongoTemplate.findOne(query,BaseTag.class);
+						tagName = targetTag.getTagName();			
+					} else {
+						String[] infos = tagIdStr.split(":");
+						tagIdStr = infos[0];
+						tagName = infos[1];
+					}
+					Log.info("--------------" + tagName);
+										
 					TagOut tagOut = new TagOut();
 					tagOut.setTagId(tagIdStr);
 					tagOut.setTagName(tagName);
@@ -581,20 +592,6 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 			}
 		}
 		return campaignDecisionTagOut;
-	}
-
-	private String getTagNameById(boolean isCustomTag, String tagId) {
-		String tagName = null;
-		Query query = new Query(Criteria.where("tag_id").is(tagId));
-		if (isCustomTag) {
-		    BaseTag targetTag = mongoTemplate.findOne(query,BaseTag.class);
-		    tagName = targetTag.getTagName();				        
-		} else {
-			TagRecommend targetTag = mongoTemplate.findOne(query, TagRecommend.class);
-		    tagName = targetTag.getTagName();
-		}
-		Log.info("--------------" + tagName);
-		return tagName;
 	}
 
 	private CampaignDecisionPrvtFriendsOut queryCampaignDecisionPrvtFriends(CampaignNodeChainOut campaignNodeChainOut,
