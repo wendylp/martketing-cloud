@@ -141,7 +141,7 @@ public class MktSmsTempletApi {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/mkt.sms.smstemplet.share.cancel")
-    public BaseOutput shareSmsTemple(@Valid SmsTempletCancelShareIn smsTempleCancelShareIn) throws Exception {       
+    public BaseOutput unShareSmsTemple(@Valid SmsTempletCancelShareIn smsTempleCancelShareIn) throws Exception {       
         return smsTempletCancelShareService.cancelShareSmsTemplet(smsTempleCancelShareIn);
     }
     
