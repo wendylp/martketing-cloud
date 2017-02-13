@@ -1330,17 +1330,19 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			return null;
 		
 		int segId = campaignAudienceTargetIn.getSegmentationId();
-		String segName = campaignAudienceTargetIn.getSegmentationName();
-		int snapId = snapSegementation(segId);
-		if (snapId == 0) {
-			return null;
+		Byte allowedNew = campaignAudienceTargetIn.getAllowedNew();		
+		if ((allowedNew != null) && (allowedNew == 0)) {
+			int snapId = snapSegementation(segId);
+			if (snapId != 0) {
+				campaignAudienceTarget.setSnapSegmentationId(snapId);
+			}	
 		}
+		
 		campaignAudienceTarget.setName(campaignAudienceTargetIn.getName());
 		campaignAudienceTarget.setCampaignHeadId(campaignHeadId);
 		campaignAudienceTarget.setItemId(campaignNodeChainIn.getItemId());
 		campaignAudienceTarget.setSegmentationId(segId);		
-		campaignAudienceTarget.setSnapSegmentationId(snapId);		
-		campaignAudienceTarget.setSegmentationName(segName);
+		campaignAudienceTarget.setSegmentationName(campaignAudienceTargetIn.getSegmentationName());
 		campaignAudienceTarget.setAllowedNew(campaignAudienceTargetIn.getAllowedNew());
 		campaignAudienceTarget.setRefreshInterval(campaignAudienceTargetIn.getRefreshInterval());
 		campaignAudienceTarget.setRefreshIntervalType(campaignAudienceTargetIn.getRefreshIntervalType());
