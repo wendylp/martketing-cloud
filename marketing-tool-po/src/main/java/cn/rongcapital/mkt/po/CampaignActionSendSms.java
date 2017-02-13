@@ -5,13 +5,7 @@ import java.util.Date;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class CampaignActionSendSms extends BaseQuery {
-	
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	private Integer id;
+    private Integer id;
 
     private Integer campaignHeadId;
 

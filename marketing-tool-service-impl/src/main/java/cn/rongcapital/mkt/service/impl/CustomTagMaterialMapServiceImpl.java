@@ -6,6 +6,10 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -30,6 +34,9 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 	private CustomTagActionService customTagActionService;
 
 	@Autowired
+	private MongoTemplate mongoTemplate;
+
+	@Autowired
 	private MongoCustomTagDao customTagDao;
 
 	@Autowired
@@ -52,14 +59,24 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 			// 封装
 			CustomTagMaterialMap customTagMaterialMap = new CustomTagMaterialMap(customTagId, customTagName,
 					materialCode, materialType, ApiConstant.INT_ZERO, currentDate);
-			if(CollectionUtils.isEmpty(customTagMaterialMapDao.selectList(new CustomTagMaterialMap(customTagId, materialCode, materialType, ApiConstant.INT_ZERO)))){
+			if (CollectionUtils.isEmpty(customTagMaterialMapDao.selectList(
+					new CustomTagMaterialMap(customTagId, materialCode, materialType, ApiConstant.INT_ZERO)))) {
 				// 插入数据
 				customTagMaterialMapDao.insert(customTagMaterialMap);
 			}
 			customTagIdList.add(customTagId);
 		}
-		//多余数据清理
-		customTagMaterialMapDao.clearSpareData(materialCode, materialType, customTagIdList);
+		// 查询解绑标签
+		List<CustomTagMaterialMap> unbindTagList = new ArrayList<>();
+		if(CollectionUtils.isEmpty(customTagIdList)){
+			unbindTagList = customTagMaterialMapDao.selectList(new CustomTagMaterialMap(null, materialCode, materialType, null));
+		}else{
+			unbindTagList = customTagMaterialMapDao.getUnbindTag(materialCode, materialType,
+					customTagIdList);
+		}
+		
+		// 数据初始化
+		initData(unbindTagList);
 	}
 
 	@Override
@@ -70,7 +87,7 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 		for (String customTagId : customTagIdList) {
 			CustomTag customTag = customTagDao.getCustomTagByTagId(customTagId);
 			CustomTagCategory customTagCategory = customTagCategoryDao.findByChildrenCustomTagList(customTagId);
-			if(customTagCategory == null){		//为Null表示错误数据
+			if (customTagCategory == null) { // 为Null表示错误数据
 				continue;
 			}
 			resultList.add(new CustomTagIn(customTagId, customTag.getCustomTagName(), customTag.getParentId(),
@@ -81,9 +98,24 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 
 	@Override
 	public List<CustomTagMaterialMap> getAllData() {
-		CustomTagMaterialMap customTagMatertalMap = new CustomTagMaterialMap();
-		customTagMatertalMap.setPageSize(null);
-		return customTagMaterialMapDao.selectList(customTagMatertalMap );
+		return customTagMaterialMapDao.getAllData();
+	}
+
+	/**
+	 * 数据初始化（解绑标签人数初始化及数据清理）
+	 * @param unbindTagList		解绑标签
+	 */
+	private void initData(List<CustomTagMaterialMap> unbindTagList) {
+		for (CustomTagMaterialMap customTagMaterialMap : unbindTagList) {
+			// 自定义标签ID
+			String customTagId = customTagMaterialMap.getCustomTagId();
+			// 初始化人数
+			Query query = Query.query(Criteria.where("custom_tag_id").is(customTagId));
+			mongoTemplate.updateFirst(query, new Update().set("cover_number", 0).set("cover_frequency", 0),
+					CustomTag.class);
+			// 数据清理
+			customTagMaterialMapDao.deleteById(customTagMaterialMap);
+		}
 	}
 
 }
