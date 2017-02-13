@@ -21,22 +21,27 @@ import com.alibaba.fastjson.JSON;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.util.ListSplit;
+import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
+import cn.rongcapital.mkt.dao.CampaignAudienceFixDao;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.po.CampaignAudienceTarget;
+import cn.rongcapital.mkt.po.CampaignAudienceFix;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
-public class CampaignAudienceTargetTask extends BaseMQService implements TaskService {
+public class CampaignAudienceFixTask extends BaseMQService implements TaskService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private CampaignAudienceTargetDao campaignAudienceTargetDao;
-	
+	private CampaignAudienceFixDao campaignAudienceFixDao;
+
+	@Autowired
+	private AudienceListPartyMapDao audienceListPartyMapDao;
+
 	@Autowired
 	private CampaignActionSaveAudienceTask campaignActionSaveAudienceTask;
 
@@ -45,8 +50,6 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 	
 	@Autowired
 	private TaskScheduleDao taskScheduleDao;
-
-	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverid:";
 
 	private ExecutorService executor = null;
 
@@ -59,36 +62,33 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
 		String queueKey = campaignHeadId + "-" + itemId;
-		CampaignAudienceTarget campaignAudienceTarget = new CampaignAudienceTarget();
-		campaignAudienceTarget.setCampaignHeadId(campaignHeadId);
-		campaignAudienceTarget.setItemId(itemId);
-		campaignAudienceTarget.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		
+		CampaignAudienceFix campaignAudienceFix = new CampaignAudienceFix();
+		campaignAudienceFix.setCampaignHeadId(campaignHeadId);
+		campaignAudienceFix.setItemId(itemId);
+		campaignAudienceFix.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		// 查询mysql中该节点对应的segmentId
-		List<CampaignAudienceTarget> campaignAudienceTargetList = campaignAudienceTargetDao
-				.selectList(campaignAudienceTarget);
+		List<CampaignAudienceFix> campaignAudienceFixList = campaignAudienceFixDao
+				.selectList(campaignAudienceFix);
+		
 		List<Segment> segmentListUnique = new ArrayList<Segment>(); // 去重后的segment
-		if (CollectionUtils.isNotEmpty(campaignAudienceTargetList)) {
-			CampaignAudienceTarget cat = campaignAudienceTargetList.get(0);
-			int snapID = cat.getSnapSegmentationId();
-			if (snapID == 0) {
-				//快照id无效，取原来的细分id
-				snapID = cat.getSegmentationId();
-			}
-			
+		if (CollectionUtils.isNotEmpty(campaignAudienceFixList)) {
+			CampaignAudienceFix cat = campaignAudienceFixList.get(0);
 			// TODO congshulin mongo转成redis
 			long startTime = System.currentTimeMillis();
 			executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
 			List<Future<List<Segment>>> resultList = new ArrayList<Future<List<Segment>>>();
 			try {
-				Set<String> smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + snapID, 2);
-				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + snapID, smembers.size());
+				Integer id = cat.getAudienceFixId();
+				List<String> smembers = audienceListPartyMapDao.selectPartyIdLIistByAudienceId(String.valueOf(id));
+				logger.info(" fixid {} get value {}.",  id, smembers.size());
 				if (CollectionUtils.isNotEmpty(smembers)) {
-					List<List<String>> setList = ListSplit.getSetSplit(smembers, BATCH_SIZE);
-					for (List<String> segmentIdList : setList) {
+					List<List<String>> setList = ListSplit.getListSplit(smembers, BATCH_SIZE);
+					for (List<String> IdList : setList) {
 						Future<List<Segment>> segmentFutureList = executor.submit(new Callable<List<Segment>>() {
 							@Override
 							public List<Segment> call() throws Exception {
-								List<Segment> selectSegmentByIdList = dataPartyDao.selectSegmentByIdList(segmentIdList);
+								List<Segment> selectSegmentByIdList = dataPartyDao.selectSegmentByIdList(IdList);
 								return selectSegmentByIdList;
 							}
 						});
@@ -111,7 +111,6 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 						List<Segment> list = fs.get(); // 打印各个线程（任务）执行的结果
 						if (CollectionUtils.isNotEmpty(list)) {
 							for (Segment segment : list) {
-								segment.setSegmentationHeadId(cat.getSegmentationId());
 								boolean audienceExist = checkNodeAudienceExist(campaignHeadId, itemId,
 										segment.getDataId());
 								if (!audienceExist) {// 只存node_audience表中不存在的数据

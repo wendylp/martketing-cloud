@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
+
+import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class CampaignAudienceTarget extends BaseQuery {
     private Integer id;
@@ -28,6 +28,8 @@ public class CampaignAudienceTarget extends BaseQuery {
     private Date createTime;
 
     private Date updateTime;
+
+    private Integer snapSegmentationId;
 
     public Integer getId() {
         return id;
@@ -123,5 +125,13 @@ public class CampaignAudienceTarget extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getSnapSegmentationId() {
+        return snapSegmentationId;
+    }
+
+    public void setSnapSegmentationId(Integer snapSegmentationId) {
+        this.snapSegmentationId = snapSegmentationId;
     }
 }
