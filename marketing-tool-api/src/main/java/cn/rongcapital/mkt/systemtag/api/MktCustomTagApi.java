@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 import cn.rongcapital.mkt.service.*;
-import cn.rongcapital.mkt.vo.in.CustomTagSaveToCategoryIn;
+import cn.rongcapital.mkt.vo.in.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
@@ -81,6 +81,17 @@ public class MktCustomTagApi {
 	@Autowired
 	private CreateCustomTagToCategoryService createCustomTagToCategoryService;
 
+	@Autowired
+	private CustomTagMoveToSpecifyCategoryService customTagMoveToSpecifyCategoryService;
+
+	@Autowired
+	private CustomTagNameEditService customTagNameEditService;
+
+	@Autowired
+	private CustomTagCategoryDeleteService customTagCategoryDeleteService;
+
+	@Autowired
+	private CustomTagToDeleteService customTagToDeleteService;
 	/**
 	 * 功能描述：自定义分类列表 接口：mkt.customtag.category.list
 	 *
@@ -246,5 +257,65 @@ public class MktCustomTagApi {
 	public BaseOutput createCustomTagToCategory(@Valid CustomTagSaveToCategoryIn customTagSaveToCategoryIn,
 											  @Context SecurityContext securityContext) {
 		return createCustomTagToCategoryService.createCustomTagToCategory(customTagSaveToCategoryIn);
+	}
+
+	/**
+	 * 功能描述：移动未分类下的某个标签到特定的自定义分类
+	 *
+	 * @param ctMoveToSpeCategoryIn
+	 * @param securityContext
+	 * @return BaseOutput
+	 */
+	@POST
+	@Path("/mkt.customtag.add.tocategory")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput moveCustomTagToSpecifyCategory(@Valid CtMoveToSpeCategoryIn ctMoveToSpeCategoryIn,
+												@Context SecurityContext securityContext) {
+		return customTagMoveToSpecifyCategoryService.moveCustomTagToSpecifyCategory(ctMoveToSpeCategoryIn);
+	}
+
+	/**
+	 * 功能描述：编辑标签名称
+	 *
+	 * @param customTagNameEditIn
+	 * @param securityContext
+	 * @return BaseOutput
+	 */
+	@POST
+	@Path("/mkt.customtag.edit")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput editCustomTagName(@Valid CustomTagNameEditIn customTagNameEditIn,
+										@Context SecurityContext securityContext) {
+		return customTagNameEditService.editCustomTagName(customTagNameEditIn);
+	}
+
+	/**
+	 * 功能描述：删除自定义标签分类
+	 *
+	 * @param customTagCategoryDeleteIn
+	 * @param securityContext
+	 * @return BaseOutput
+	 */
+	@POST
+	@Path("/mkt.customtag.category.delete")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput deleteCustomTagCategory(@Valid CustomTagCategoryDeleteIn customTagCategoryDeleteIn,
+										@Context SecurityContext securityContext) {
+		return customTagCategoryDeleteService.deleteCustomTagCategory(customTagCategoryDeleteIn);
+	}
+
+	/**
+	 * 功能描述：删除自定义标签
+	 *
+	 * @param customTagToDeleteIn
+	 * @param securityContext
+	 * @return BaseOutput
+	 */
+	@POST
+	@Path("/mkt.customtag.delete")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public BaseOutput deleteCustomTag(@Valid CustomTagToDeleteIn customTagToDeleteIn,
+											  @Context SecurityContext securityContext) {
+		return customTagToDeleteService.deleteCustomTag(customTagToDeleteIn);
 	}
 }
