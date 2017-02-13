@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by byf on 10/18/16.
@@ -32,7 +33,18 @@ public class SmsActivationCreateIn extends BaseInput{
 
     @NotNull
     private Integer taskSendType;
+    
     private Integer taskAppType;
+    /**
+     * 0:短信平台短信任务，1:活动编排中的任务 默认是0
+     */
+    private Integer smsTaskType=0;
+    /**
+     * 任务的编码，相同分组的任务的code是相同的
+     */
+    private String smsTaskCode;
+    
+    private Set<Integer> dataPartyIds;
 
     @JsonProperty("task_id")
     public Long getTaskId() {
@@ -105,4 +117,30 @@ public class SmsActivationCreateIn extends BaseInput{
     public void setTaskAppType(Integer taskAppType) {
         this.taskAppType = taskAppType;
     }
+
+	public Integer getSmsTaskType() {
+		return smsTaskType;
+	}
+
+	public void setSmsTaskType(Integer smsTaskType) {
+		this.smsTaskType = smsTaskType;
+	}
+
+	public String getSmsTaskCode() {
+		return smsTaskCode;
+	}
+
+	public void setSmsTaskCode(String smsTaskCode) {
+		this.smsTaskCode = smsTaskCode;
+	}
+
+	public Set<Integer> getDataPartyIds() {
+		return dataPartyIds;
+	}
+
+	public void setDataPartyIds(Set<Integer> dataPartyIds) {
+		this.dataPartyIds = dataPartyIds;
+	}
+    
+    
 }

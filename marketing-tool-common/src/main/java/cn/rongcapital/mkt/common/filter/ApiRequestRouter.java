@@ -115,8 +115,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 			   				requestContext.setRequestUri(newRequestURI);
 			   			}
 		   			}		   			
-		   		}
-		   		
+		   		}		   		
 	   		}else{
 //	   			requestContext.abortWith(Response.status(404).entity("Api not found").build());	   			
 	   			ResponseBuilderImpl builder = getBuilder();         
