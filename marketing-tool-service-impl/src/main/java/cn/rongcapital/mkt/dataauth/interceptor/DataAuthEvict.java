@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 @Documented
 public @interface DataAuthEvict{
     
-    String resourceType() default "";
+    String resourceType();
 
     String resourceId() ;
 
