@@ -212,7 +212,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
 			<properties>
-				<mvnvar.log.path>D:/log</mvnvar.log.path>
+				<mvnvar.log.path>/rc/log/mkt/poc</mvnvar.log.path>
 				<mvnvar.conf.path>conf_poc</mvnvar.conf.path>
 				<maven.repository.remote.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.remote.url>
 			</properties>
