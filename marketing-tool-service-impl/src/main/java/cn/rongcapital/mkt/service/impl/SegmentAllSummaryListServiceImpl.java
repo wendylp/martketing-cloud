@@ -26,7 +26,7 @@ import heracles.data.common.annotation.ReadWrite;
 import heracles.data.common.util.ReadWriteType;
 
 @Service
-public class AllSegmentSummaryListServiceImpl implements SegmentAllSummaryListService {
+public class SegmentAllSummaryListServiceImpl implements SegmentAllSummaryListService {
 
 	public static final  Integer POOL_INDEX = 2;
 	

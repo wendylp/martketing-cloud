@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.TagSourceEnum;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.CampaignActionSaveAudienceDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendH5Dao;
@@ -113,6 +115,7 @@ import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 @Service
 public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService {
 
+	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverid:";
 
 	@Autowired
 	SegmentationBodyDao segmentationBodyDao;
@@ -452,7 +455,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getCode(),
 													   ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
 													   ApiConstant.INT_ZERO,null);
-			} else if(!validSmsStatus(body)){
+			} else if(!validSmsUsed(body)){
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getCode(),
 						ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getMsg(),
 						ApiConstant.INT_ZERO,null);				
@@ -466,7 +469,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return out;
 	}
 	
-	private boolean validSmsStatus(CampaignBodyCreateIn body) {
+	private boolean validSmsEmpty(CampaignBodyCreateIn body) {
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
 			if(campaignNodeChainIn.getNodeType() != ApiConstant.CAMPAIGN_NODE_ACTION
 					|| campaignNodeChainIn.getItemType() != ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS)
@@ -474,7 +477,22 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			
 			CampaignActionSendSmsIn campaignActionSendSmsIn = 
 						jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendSmsIn.class);
-			if(null == campaignActionSendSmsIn) 
+			if(null == campaignActionSendSmsIn || campaignActionSendSmsIn.getSmsMaterialId() == null)  
+				return false;
+		}
+		
+		return true;
+	}
+
+	private boolean validSmsUsed(CampaignBodyCreateIn body) {
+		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
+			if(campaignNodeChainIn.getNodeType() != ApiConstant.CAMPAIGN_NODE_ACTION
+					|| campaignNodeChainIn.getItemType() != ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS)
+				continue;
+			
+			CampaignActionSendSmsIn campaignActionSendSmsIn = 
+						jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendSmsIn.class);
+			if(null == campaignActionSendSmsIn || campaignActionSendSmsIn.getSmsMaterialId() == null)  
 				continue;
 			
 			int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
@@ -1022,13 +1040,15 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		if(null == campaignActionSendSmsIn) 
 			return null;
 		
-		int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
-		updateSmsUseStatus(smsMaterialId);
+		if (campaignActionSendSmsIn.getSmsMaterialId() != null) {
+			int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
+			updateSmsUseStatus(smsMaterialId);			
+		}		
 		
 		campaignActionSendSms.setName(campaignActionSendSmsIn.getName());
 		campaignActionSendSms.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSendSms.setCampaignHeadId(campaignHeadId);
-		campaignActionSendSms.setSmsMaterialId(smsMaterialId);
+		campaignActionSendSms.setSmsMaterialId(campaignActionSendSmsIn.getSmsMaterialId());
 		campaignActionSendSms.setSmsCategoryType(campaignActionSendSmsIn.getSmsCategoryType());
 		return campaignActionSendSms;
 	}
@@ -1328,19 +1348,21 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
 		if(null == campaignAudienceTargetIn) 
 			return null;
-		
-		int segId = campaignAudienceTargetIn.getSegmentationId();
-		String segName = campaignAudienceTargetIn.getSegmentationName();
-		int snapId = snapSegementation(segId);
-		if (snapId == 0) {
-			return null;
+
+		Integer segId = campaignAudienceTargetIn.getSegmentationId();
+		Byte allowedNew = campaignAudienceTargetIn.getAllowedNew();		
+		if ((allowedNew != null) && (allowedNew == 0) && (segId != null) ) {
+			int snapId = snapSegementation(segId);
+			if (snapId != 0) {
+				campaignAudienceTarget.setSnapSegmentationId(snapId);
+			}	
 		}
+		
 		campaignAudienceTarget.setName(campaignAudienceTargetIn.getName());
 		campaignAudienceTarget.setCampaignHeadId(campaignHeadId);
 		campaignAudienceTarget.setItemId(campaignNodeChainIn.getItemId());
 		campaignAudienceTarget.setSegmentationId(segId);		
-		campaignAudienceTarget.setSnapSegmentationId(snapId);		
-		campaignAudienceTarget.setSegmentationName(segName);
+		campaignAudienceTarget.setSegmentationName(campaignAudienceTargetIn.getSegmentationName());
 		campaignAudienceTarget.setAllowedNew(campaignAudienceTargetIn.getAllowedNew());
 		campaignAudienceTarget.setRefreshInterval(campaignAudienceTargetIn.getRefreshInterval());
 		campaignAudienceTarget.setRefreshIntervalType(campaignAudienceTargetIn.getRefreshIntervalType());
@@ -1352,11 +1374,26 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	 */
 	private int snapSegementation(int segId) {
         int snapSegmentationHead = snapSegmentationHead(segId);      
-        if (snapSegmentationHead != 0 ) {
-            snapSegmentationBody(segId, snapSegmentationHead);		        	
+        if (snapSegmentationHead == 0 ) {
+        	return 0;
         }
         
+        if (!snapCoveredIDs(segId, snapSegmentationHead)) {
+            return 0;
+        }
+        
+        snapSegmentationBody(segId, snapSegmentationHead);		        	        	        
 		return snapSegmentationHead;
+	}
+
+	private boolean snapCoveredIDs(int segId, int snapSegmentationHead) {
+		try {
+			JedisClient.sunionstore(2, REDIS_IDS_KEY_PREFIX + snapSegmentationHead, REDIS_IDS_KEY_PREFIX + segId);			
+		} catch (JedisException e) {				
+			e.printStackTrace();
+			return false;
+		}		
+		return true;		
 	}
 
 	private void snapSegmentationBody(int orgSegmentationHead, int snapSegmentationHead) {
