@@ -41,7 +41,7 @@ public class CreateCustomTagToCategoryServiceImpl implements CreateCustomTagToCa
             return baseOutput;
         }
 
-        //Todo:0判断分类是否存在，如果不存在，返回相关的错误代码
+        //0判断分类是否存在，如果不存在，返回相关的错误代码
         CustomTagCategory paramCustomTagCategory = new CustomTagCategory();
         paramCustomTagCategory.setCustomTagCategoryId(customTagSaveToCategoryIn.getCustomTagCategoryId());
         CustomTagCategory resutlCustomTagCategory = mongoCustomTagCategoryDao.findOne(paramCustomTagCategory);
@@ -51,7 +51,7 @@ public class CreateCustomTagToCategoryServiceImpl implements CreateCustomTagToCa
             return baseOutput;
         }
 
-        //Todo:1选出当前分类下的所有标签，与前端所传的List进行逐个对比，没有被包含的添加到新的List当中。
+        //1选出当前分类下的所有标签，与前端所传的List进行逐个对比，没有被包含的添加到新的List当中。
         CustomTag paramCustomTag = new CustomTag();
         paramCustomTag.setParentId(customTagSaveToCategoryIn.getCustomTagCategoryId());
         List<CustomTag> customTagList = mongoCustomTagDao.find(paramCustomTag);
@@ -76,7 +76,7 @@ public class CreateCustomTagToCategoryServiceImpl implements CreateCustomTagToCa
             }
         }
 
-        //Todo:2如果没有,新建标签,更新这个标签的相关属性
+        //2如果没有,新建标签,更新这个标签的相关属性
         if(CollectionUtils.isEmpty(insertCustomTagNameList)) return baseOutput;
         for(String insertTagName : insertCustomTagNameList){
             CustomTag insertCustomTag = new CustomTag();
