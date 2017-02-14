@@ -455,10 +455,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getCode(),
 													   ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
 													   ApiConstant.INT_ZERO,null);
-			} else if (!validSmsEmpty(body)) {
-				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_EMPTY.getCode(),
-						ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_EMPTY.getMsg(),
-						ApiConstant.INT_ZERO,null);			
 			} else if(!validSmsUsed(body)){
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getCode(),
 						ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getMsg(),
@@ -496,7 +492,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			
 			CampaignActionSendSmsIn campaignActionSendSmsIn = 
 						jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendSmsIn.class);
-			if(null == campaignActionSendSmsIn)  
+			if(null == campaignActionSendSmsIn || campaignActionSendSmsIn.getSmsMaterialId() == null)  
 				continue;
 			
 			int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
@@ -1044,13 +1040,15 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		if(null == campaignActionSendSmsIn) 
 			return null;
 		
-		int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
-		updateSmsUseStatus(smsMaterialId);
+		if (campaignActionSendSmsIn.getSmsMaterialId() != null) {
+			int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
+			updateSmsUseStatus(smsMaterialId);			
+		}		
 		
 		campaignActionSendSms.setName(campaignActionSendSmsIn.getName());
 		campaignActionSendSms.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSendSms.setCampaignHeadId(campaignHeadId);
-		campaignActionSendSms.setSmsMaterialId(smsMaterialId);
+		campaignActionSendSms.setSmsMaterialId(campaignActionSendSmsIn.getSmsMaterialId());
 		campaignActionSendSms.setSmsCategoryType(campaignActionSendSmsIn.getSmsCategoryType());
 		return campaignActionSendSms;
 	}
@@ -1350,10 +1348,10 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
 		if(null == campaignAudienceTargetIn) 
 			return null;
-		
-		int segId = campaignAudienceTargetIn.getSegmentationId();
+
+		Integer segId = campaignAudienceTargetIn.getSegmentationId();
 		Byte allowedNew = campaignAudienceTargetIn.getAllowedNew();		
-		if ((allowedNew != null) && (allowedNew == 0)) {
+		if ((allowedNew != null) && (allowedNew == 0) && (segId != null) ) {
 			int snapId = snapSegementation(segId);
 			if (snapId != 0) {
 				campaignAudienceTarget.setSnapSegmentationId(snapId);
