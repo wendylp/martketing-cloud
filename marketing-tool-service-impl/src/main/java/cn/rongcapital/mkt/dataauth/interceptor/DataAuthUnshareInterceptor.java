@@ -12,6 +12,7 @@
 package cn.rongcapital.mkt.dataauth.interceptor;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Aspect
 @Component
@@ -35,33 +39,48 @@ public class DataAuthUnshareInterceptor {
     @Pointcut("@annotation(cn.rongcapital.mkt.dataauth.interceptor.DataAuthUnshare)")
     public void unshareServiceAspect() {}
 
-    @AfterReturning("unshareServiceAspect()")
+    @AfterReturning(pointcut ="unshareServiceAspect()", returning = "returnValue")
     @Transactional
-    public void doAfterMethod(JoinPoint joinPoint) throws Throwable {
+    public void doAfterMethod(JoinPoint joinPoint,Object returnValue) throws Throwable {
         Method method = ExpressionHelper.getMethod(joinPoint);
         if (method != null && method.isAnnotationPresent(DataAuthUnshare.class)) {
             DataAuthUnshare annotation = method.getAnnotation(DataAuthUnshare.class);
-            String orgIdTemp = annotation.orgId();
             String shareIdTemp = annotation.shareId();
-            String shareId = null;
-            long orgId;
-            switch(annotation.type()){
-                case SpEl:
-                    shareId = ExpressionHelper.executeTemplate(shareIdTemp, joinPoint,String.class);
-                    orgId = ExpressionHelper.executeTemplate(orgIdTemp, joinPoint, Long.class);
-                    break;
-                default:
-                    shareId =shareIdTemp;
-                    orgId = Long.parseLong(orgIdTemp);
-                    break;
-                }
-            //参数校验
-            if(StringUtils.isBlank(shareId )){
-                throw new NoSuchElementException();
-            }
             
-            //调用业务处理方法
-            this.dataAuthService.unshare(shareId);
+            //判断当前克隆数据成功，继续执行克隆数据权限
+            BaseOutput baseOutput = (BaseOutput) returnValue;
+            if(ApiErrorCode.SUCCESS.getCode() ==  baseOutput.getCode()){
+            	String shareId = null;
+                switch(annotation.type()){
+                    case SpEl:
+                    	unShareWithSpel(joinPoint, shareIdTemp);                    
+                    	break;
+                    default:
+                        shareId =shareIdTemp;
+                        unShareWithNormal(shareId);
+                        break;
+                }
+            }
         }
     }
+
+	private void unShareWithSpel(JoinPoint joinPoint, String shareIdTemp)
+			throws NoWriteablePermissionException {
+		List<String> shareIds;
+		shareIds = ExpressionHelper.executeTemplate(shareIdTemp, joinPoint,List.class);
+
+		for (String string : shareIds) {
+	        unShareWithNormal(string);
+		}
+	}
+
+	private void unShareWithNormal(String string) throws NoWriteablePermissionException {
+		//参数校验
+		if(StringUtils.isBlank(string )){
+		    throw new NoSuchElementException();
+		}
+		//判断用户是否对该分享资源有读写权限
+		//调用业务处理方法
+		this.dataAuthService.unshare(string);
+	}
 }
