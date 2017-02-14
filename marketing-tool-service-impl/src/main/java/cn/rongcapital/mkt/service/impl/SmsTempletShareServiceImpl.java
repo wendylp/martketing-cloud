@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
-import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dataauth.interceptor.DataAuthShare;
@@ -60,12 +59,12 @@ public class SmsTempletShareServiceImpl implements SmsTempletShareService {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @DataAuthShare(resourceId = "#smsTempletShareIn.resourceId", resourceType = "sms_templet", toOrgId = "#smsTempletShareIn.orgIds", writeable = "#smsTempletShareIn.writeable",type = ParamType.SpEl)
     public BaseOutput shareSmsTemplet(SmsTempletShareIn smsTempletShareIn) {
-        // 验证数据有效性
-//        if (smsTempletValidate(smsTempletShareIn.getResourceId().intValue())) {
-//            logger.debug("table sms_templet data[id:{}] not exist.", smsTempletShareIn.getResourceId());
-//            return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
-//                    ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
-//        }
+        //验证数据有效性
+        if (smsTempletValidate(smsTempletShareIn.getResourceId().intValue())) {
+            logger.debug("table sms_templet data[id:{}] not exist.", smsTempletShareIn.getResourceId());
+            return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
+                    ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
+        }
         BaseOutput result =
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
                         null);
