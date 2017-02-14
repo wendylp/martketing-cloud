@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.TagSourceEnum;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.CampaignActionSaveAudienceDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendH5Dao;
@@ -113,6 +115,7 @@ import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 @Service
 public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService {
 
+	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverid:";
 
 	@Autowired
 	SegmentationBodyDao segmentationBodyDao;
@@ -1373,11 +1376,26 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	 */
 	private int snapSegementation(int segId) {
         int snapSegmentationHead = snapSegmentationHead(segId);      
-        if (snapSegmentationHead != 0 ) {
-            snapSegmentationBody(segId, snapSegmentationHead);		        	
+        if (snapSegmentationHead == 0 ) {
+        	return 0;
         }
         
+        if (!snapCoveredIDs(segId, snapSegmentationHead)) {
+            return 0;
+        }
+        
+        snapSegmentationBody(segId, snapSegmentationHead);		        	        	        
 		return snapSegmentationHead;
+	}
+
+	private boolean snapCoveredIDs(int segId, int snapSegmentationHead) {
+		try {
+			JedisClient.sunionstore(2, REDIS_IDS_KEY_PREFIX + snapSegmentationHead, REDIS_IDS_KEY_PREFIX + segId);			
+		} catch (JedisException e) {				
+			e.printStackTrace();
+			return false;
+		}		
+		return true;		
 	}
 
 	private void snapSegmentationBody(int orgSegmentationHead, int snapSegmentationHead) {
