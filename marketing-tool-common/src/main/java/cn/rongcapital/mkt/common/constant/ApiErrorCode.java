@@ -34,7 +34,8 @@ public enum ApiErrorCode {
 	BIZ_ERROR_CANPAIGN_CAN_NOT_MANUAL_START(3006,"campaign can not manual start"),//活动无法手动开启
 	BIZ_ERROR_CANPAIGN_CAN_NOT_START(3009,"campaign can not start"),//活动无法开启
 	BIZ_ERROR_CONTACTINFO_KEYID(3010,"can not get the keyid"),//
-	BIZ_ERROR_CONTACTINFO_SMS_USED(3011,"can not send a sms in used"),//短信发送节点中的短信不能被占用
+	BIZ_ERROR_CONTACTINFO_SMS_EMPTY(3011,"can not send a empty sms"),//短信发送节点中的短信不能为空
+	BIZ_ERROR_CONTACTINFO_SMS_USED(3012,"can not send a sms in used"),//短信发送节点中的短信不能被占用
 	
 	//优惠码校验接口的错误代码
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CHECK_DELETE(3011,"coupon code status is not undelete"),//当前数据已经不是未删除状态，表示该数据不可用

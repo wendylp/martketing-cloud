@@ -452,7 +452,11 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getCode(),
 													   ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
 													   ApiConstant.INT_ZERO,null);
-			} else if(!validSmsStatus(body)){
+			} else if (!validSmsEmpty(body)) {
+				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_EMPTY.getCode(),
+						ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_EMPTY.getMsg(),
+						ApiConstant.INT_ZERO,null);			
+			} else if(!validSmsUsed(body)){
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getCode(),
 						ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getMsg(),
 						ApiConstant.INT_ZERO,null);				
@@ -466,7 +470,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return out;
 	}
 	
-	private boolean validSmsStatus(CampaignBodyCreateIn body) {
+	private boolean validSmsEmpty(CampaignBodyCreateIn body) {
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
 			if(campaignNodeChainIn.getNodeType() != ApiConstant.CAMPAIGN_NODE_ACTION
 					|| campaignNodeChainIn.getItemType() != ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS)
@@ -474,7 +478,22 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			
 			CampaignActionSendSmsIn campaignActionSendSmsIn = 
 						jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendSmsIn.class);
-			if(null == campaignActionSendSmsIn) 
+			if(null == campaignActionSendSmsIn || campaignActionSendSmsIn.getSmsMaterialId() == null)  
+				return false;
+		}
+		
+		return true;
+	}
+
+	private boolean validSmsUsed(CampaignBodyCreateIn body) {
+		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
+			if(campaignNodeChainIn.getNodeType() != ApiConstant.CAMPAIGN_NODE_ACTION
+					|| campaignNodeChainIn.getItemType() != ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS)
+				continue;
+			
+			CampaignActionSendSmsIn campaignActionSendSmsIn = 
+						jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendSmsIn.class);
+			if(null == campaignActionSendSmsIn)  
 				continue;
 			
 			int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
