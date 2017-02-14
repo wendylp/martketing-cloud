@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import cn.rongcapital.mkt.common.util.CamelNameUtil;
@@ -238,5 +239,26 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
 	                new Query(Criteria.where(CUSTOM_TAG_ID).is(customTagId)),
 	                CUSTOM_TAG_CLASS);
 	}
+
+    @Override
+    public void updateCustomTagParentIdByCustomTagId(String customTagId, String parentId) {
+        Query query = new Query(Criteria.where(CUSTOM_TAG_ID).is(customTagId).and(IS_DELETED).is(DATA_VALID));
+        Update update = new Update().set(PARENT_ID,parentId);
+        mongoTemplate.updateFirst(query,update,CustomTag.class);
+    }
+
+    @Override
+    public void updateCustomTagNameByCustomTagId(String customTagId, String customTagName) {
+       Query query = new Query(Criteria.where(CUSTOM_TAG_ID).is(customTagId).and(IS_DELETED).is(DATA_VALID));
+       Update update = new Update().set(CUSTOM_TAG_NAME,customTagName);
+       mongoTemplate.updateFirst(query,update,CustomTag.class);
+    }
+
+    @Override
+    public void logicalDeleteCustomTagByCustomTagId(String customTagId) {
+        Query query = new Query(Criteria.where(CUSTOM_TAG_ID).is(customTagId).and(IS_DELETED).is(DATA_VALID));
+        Update update = new Update().set(IS_DELETED,DATA_INVALID);
+        mongoTemplate.updateFirst(query,update,CustomTag.class);
+    }
 
 }

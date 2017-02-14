@@ -5,7 +5,13 @@ import java.util.Date;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class SmsTaskHead extends BaseQuery{
-    private Long id;
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
 
     private String smsTaskName;
 
@@ -36,6 +42,12 @@ public class SmsTaskHead extends BaseQuery{
     private Integer sendingFailNum;
 
     private Integer audienceGenerateStatus;
+    
+    private String smsTaskCode;
+
+    private Integer smsTaskBatch;
+
+    private Byte smsTaskType;
     
     /**
      * 临时属性
@@ -238,5 +250,27 @@ public class SmsTaskHead extends BaseQuery{
 		this.sendingFailNumPer = sendingFailNumPer;
 	}
     
-    
+    public String getSmsTaskCode() {
+        return smsTaskCode;
+    }
+
+    public void setSmsTaskCode(String smsTaskCode) {
+        this.smsTaskCode = smsTaskCode == null ? null : smsTaskCode.trim();
+    }
+
+    public Integer getSmsTaskBatch() {
+		return smsTaskBatch;
+	}
+
+	public void setSmsTaskBatch(Integer smsTaskBatch) {
+		this.smsTaskBatch = smsTaskBatch;
+	}
+
+	public Byte getSmsTaskType() {
+        return smsTaskType;
+    }
+
+    public void setSmsTaskType(Byte smsTaskType) {
+        this.smsTaskType = smsTaskType;
+    }
 }

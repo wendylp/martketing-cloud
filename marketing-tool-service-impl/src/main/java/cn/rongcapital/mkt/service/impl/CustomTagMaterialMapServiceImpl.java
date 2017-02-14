@@ -110,7 +110,7 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 			// 自定义标签ID
 			String customTagId = customTagMaterialMap.getCustomTagId();
 			// 初始化人数
-			Query query = Query.query(Criteria.where("custom_tag_id").in(customTagId));
+			Query query = Query.query(Criteria.where("custom_tag_id").is(customTagId));
 			mongoTemplate.updateFirst(query, new Update().set("cover_number", 0).set("cover_frequency", 0),
 					CustomTag.class);
 			// 数据清理

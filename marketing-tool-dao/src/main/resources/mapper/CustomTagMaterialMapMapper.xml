@@ -108,7 +108,7 @@
 	
 	<!-- 根据物料属性进行物理删除 -->
 	<select id="getUnbindTag" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.CustomTagMaterialMap">
-		SELECT 
+		SELECT
 		<include refid="QUERY_COLUMN_LIST"/>
 		FROM custom_tag_material_map 
 		<where>
@@ -130,7 +130,13 @@
 			AND material_type = #{materialType}
 		</where>
 	</select>
-	
+
+	<update id="updateCustomTagNameByCustomTagId" parameterType="cn.rongcapital.mkt.po.CustomTagMaterialMap">
+		<![CDATA[UPDATE custom_tag_material_map]]>
+		SET custom_tag_name = #{customTagName}
+		<![CDATA[WHERE custom_tag_id = #{customTagId} AND status = 0]]>
+	</update>
+
 	<!-- 获取所有数据，物料code类型分组 -->
 	<select id="getAllData" resultType="cn.rongcapital.mkt.po.CustomTagMaterialMap">
 		<![CDATA[SELECT]]>
@@ -138,13 +144,13 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		GROUP BY material_code,material_type
 	</select>
-	
+
 	<!-- 通过ID删除 -->
 	<delete id="deleteById" parameterType="cn.rongcapital.mkt.po.CustomTagMaterialMap">
-		DELETE 
+		DELETE
 		FROM custom_tag_material_map
 		WHERE id = #{id}
 	</delete>
-	
-	
+
+
 </mapper>

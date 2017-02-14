@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
  * @date: 2017/2/4
  * @复审人:
  *************************************************/
-@Service("mater")
+@Service
 public class MaterialEventHandleServiceImpl implements TaskService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -49,9 +50,9 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 	private static final String FIELD_PUB_ID = "pub_id";
 
 	private static final String FIELD_OPENID = "openid";
-	
+
 	private static final String NOT_NULL_FIELD = "1";
-	
+
 	private static final String BIT_MAP = "00000011000000000";
 
 	@Autowired
@@ -62,7 +63,7 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
+
 	@Autowired
 	private DataPartyDao dataPartyDao;
 
@@ -152,8 +153,8 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 	 */
 	private Integer midMap(String openId, String pubId) {
 		Integer mid = dataPartyDao.getIdByWechartInformation(openId, pubId);
-		//如果数据不存在，执行插入
-		if(mid == null){
+		// 如果数据不存在，执行插入
+		if (mid == null) {
 			DataParty dataParty = new DataParty();
 			dataParty.setWxCode(openId);
 			dataParty.setWxmpId(pubId);
@@ -172,8 +173,17 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 	private void clearData(List<MaterialRelation> materialMongoList) {
 		try {
 			List<MaterialRelation> allData = mongoTemplate.findAll(MaterialRelation.class);
-			allData.removeAll(materialMongoList);
+			List<MaterialRelation> tempList = new ArrayList<>();
+			tempList.addAll(allData);
 			for (MaterialRelation materialRelation : allData) {
+				for (MaterialRelation m : materialMongoList) {
+					if (StringUtils.equals(materialRelation.getMaterialCode(), m.getMaterialCode())
+							&& StringUtils.equals(materialRelation.getMaterialType(), m.getMaterialType())) {
+						tempList.remove(materialRelation);
+					}
+				}
+			}
+			for (MaterialRelation materialRelation : tempList) {
 				mongoTemplate.remove(materialRelation);
 			}
 		} catch (Exception e) {
@@ -181,6 +191,5 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 			logger.error("MaterialEventHandleServiceImpl clearData method Exception-------->" + e.getMessage(), e);
 		}
 	}
-	
-	
+
 }

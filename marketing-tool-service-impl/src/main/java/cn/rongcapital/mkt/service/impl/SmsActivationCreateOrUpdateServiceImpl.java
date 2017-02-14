@@ -7,6 +7,7 @@ import cn.rongcapital.mkt.dao.SmsTaskBodyDao;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
 import cn.rongcapital.mkt.po.SmsTaskBody;
 import cn.rongcapital.mkt.po.SmsTaskHead;
+import cn.rongcapital.mkt.service.CampaignActionSendSmsService;
 import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
 import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
@@ -36,8 +37,13 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 
     @Autowired
     private MQTopicService mqTopicService;
+    
+	@Autowired
+	private CampaignActionSendSmsService campaignActionSendSmsService;
 
     private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask";
+    
+	public static final Integer SMS_TASK_TYPE_CAMPAIGN=1;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -47,7 +53,17 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
         if(smsActivationCreateIn.getTaskId() == null){
             //1将task_head的信息存到head表中
             SmsTaskHead insertSmsTaskHead = new SmsTaskHead();
-            insertSmsTaskHead.setSmsTaskName(smsActivationCreateIn.getTaskName());
+            
+            if(smsActivationCreateIn.getSmsTaskType()==SMS_TASK_TYPE_CAMPAIGN){
+            	SmsTaskHead insertSmsTaskHeadTemp = new SmsTaskHead();
+            	insertSmsTaskHeadTemp.setSmsTaskCode(smsActivationCreateIn.getSmsTaskCode());
+            	int smsTaskBatch = smsTaskHeadDao.selectListCount(insertSmsTaskHeadTemp);
+            	insertSmsTaskHead.setSmsTaskBatch(smsTaskBatch);
+            	insertSmsTaskHead.setSmsTaskName(smsActivationCreateIn.getTaskName()+"第"+smsTaskBatch+"批");
+            }else{
+            	insertSmsTaskHead.setSmsTaskBatch(ApiConstant.INT_ZERO);
+            	insertSmsTaskHead.setSmsTaskName(smsActivationCreateIn.getTaskName());
+            }           
             insertSmsTaskHead.setSmsTaskSignatureId(smsActivationCreateIn.getTaskSignatureId());
             insertSmsTaskHead.setSmsTaskMaterialId(smsActivationCreateIn.getTaskMaterialId());
             insertSmsTaskHead.setSmsTaskMaterialContent(smsActivationCreateIn.getTaskMaterialContent());
@@ -59,13 +75,21 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
             insertSmsTaskHead.setSendingSuccessNum(ApiConstant.INT_ZERO);
             insertSmsTaskHead.setSendingFailNum(ApiConstant.INT_ZERO);
             insertSmsTaskHead.setAudienceGenerateStatus(ApiConstant.INT_ONE);
+            insertSmsTaskHead.setSmsTaskType(smsActivationCreateIn.getSmsTaskType().byteValue());
+            insertSmsTaskHead.setSmsTaskCode(smsActivationCreateIn.getSmsTaskCode());
             smsTaskHeadDao.insert(insertSmsTaskHead);
+            /**
+             * 活动编排发短信节点 存储增量dataPartyId
+             */
+            if(smsActivationCreateIn.getSmsTaskType()==SMS_TASK_TYPE_CAMPAIGN){
+            	campaignActionSendSmsService.storeDataPartyIds(smsActivationCreateIn.getDataPartyIds(),insertSmsTaskHead.getId());
+            }
             //2获取task_head的Id,然后将相应得信息分条存储到body表中
             if(!CollectionUtils.isEmpty(smsActivationCreateIn.getSmsTargetAudienceInArrayList())){
                 for(SmsTargetAudienceIn smsTargetAudienceIn : smsActivationCreateIn.getSmsTargetAudienceInArrayList()){
                     SmsTaskBody insertSmsTaskBody = new SmsTaskBody();
                     insertSmsTaskBody.setSmsTaskHeadId(insertSmsTaskHead.getId());
-                    insertSmsTaskBody.setTargetId(smsTargetAudienceIn.getTargetAudienceId());
+                    insertSmsTaskBody.setTargetId(insertSmsTaskHead.getId());
                     insertSmsTaskBody.setTargetName(smsTargetAudienceIn.getTargetAudienceName());
                     insertSmsTaskBody.setTargetType(smsTargetAudienceIn.getTargetAudienceType());
                     smsTaskBodyDao.insert(insertSmsTaskBody);

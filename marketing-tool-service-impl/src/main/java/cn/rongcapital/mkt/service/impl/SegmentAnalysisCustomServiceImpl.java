@@ -93,7 +93,7 @@ public class SegmentAnalysisCustomServiceImpl implements SegmentAnalysisCustomSe
 		
 	    //2.为了保持和系统标签返回格式一致,设置默认显示饼图
 		logger.info("===================================segment custom analysis ,show type :{}",ApiConstant.SEGMENT_SHOW_MAP);
-		segmentCustomAnalysisDataOut.setShowType(ApiConstant.SEGMENT_SHOW_MAP);
+		segmentCustomAnalysisDataOut.setShowType(ApiConstant.SEGMENT_SHOW_PIE);
 	    
 		//3.根据分类ID查询所属标签ID
 		List<CustomTag> CustomTagList = customTagActionService.findCustomTagsByCategoryId(categoryId);

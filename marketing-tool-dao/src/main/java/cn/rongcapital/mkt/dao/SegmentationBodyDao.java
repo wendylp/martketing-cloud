@@ -68,5 +68,10 @@ public interface SegmentationBodyDao extends BaseDao<SegmentationBody>{
      * @return Integer
      */
 	Integer getCountByTagId(@Param("tagId") String tagId);
-	
+
+    void updateCategoryInfoByTagId(SegmentationBody paramSegmentationBody);
+
+	void updateCustomTagNameByCustomTagId(SegmentationBody paramSegmentationBody);
+
+	void updateCustomTagStatusByCutsomTagId(SegmentationBody paramSegmentationBody);
 }
