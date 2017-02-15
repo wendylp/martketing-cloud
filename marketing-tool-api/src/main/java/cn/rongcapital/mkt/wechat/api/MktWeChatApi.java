@@ -19,6 +19,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -65,6 +66,7 @@ import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXinImpl;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.jedis.JedisException;
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
@@ -1093,5 +1095,29 @@ public class MktWeChatApi {
 			@NotEmpty @QueryParam("ver") String ver) {
 		return registerListService.selectRegisterList();
 	}
-
+	
+	
+	/**********   dev 测试，手动出发定时任务  *************/
+	@Resource(name ="MaterialEventHandleServiceImpl")
+	private TaskService MaterialEventHandleServiceImpl;
+	
+	@Resource(name = "CustomTagSynServiceImpl")
+	private TaskService CustomTagSynServiceImpl;
+	
+	@GET
+	@Path("/mkt.custom.tag.test1")
+	public void test1(@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver) {
+		MaterialEventHandleServiceImpl.task(1);
+	}
+	
+	@GET
+	@Path("/mkt.custom.tag.test1")
+	public void test2(@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("user_token") String userToken,
+			@NotEmpty @QueryParam("ver") String ver) {
+		CustomTagSynServiceImpl.task(1);
+	}
+	
+	/**********   dev 测试，手动出发定时任务  *************/
+	
 }
