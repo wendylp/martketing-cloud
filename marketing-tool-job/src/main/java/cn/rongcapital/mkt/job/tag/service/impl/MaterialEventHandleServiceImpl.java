@@ -54,6 +54,8 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 	private static final String NOT_NULL_FIELD = "1";
 
 	private static final String BIT_MAP = "00000011000000000";
+	
+	private static final Integer MD_TYPE = 1;
 
 	@Autowired
 	private CustomTagMaterialMapService customTagMaterialMapService;
@@ -158,6 +160,7 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 			DataParty dataParty = new DataParty();
 			dataParty.setWxCode(openId);
 			dataParty.setWxmpId(pubId);
+			dataParty.setMdType(MD_TYPE);
 			dataParty.setBitmap(BIT_MAP);
 			dataPartyDao.insert(dataParty);
 			mid = dataParty.getId();
