@@ -82,7 +82,7 @@ public interface MongoCustomTagDao {
     public List<CustomTag> findByCustomTagIdList(List<String> customTagList);
     
     /**
-     * 功能描述：根据自定义标签id list查询有效数据,按覆盖人数排序，带有分页功能
+     * 功能描述：根据自定义标签id list查询有效数据,按创建时间倒序排序，带有分页功能
      * 
      * @param customTagList
      * @param index
