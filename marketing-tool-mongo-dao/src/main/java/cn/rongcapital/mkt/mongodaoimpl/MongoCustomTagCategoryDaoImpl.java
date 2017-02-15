@@ -97,7 +97,7 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
     @Override
     public CustomTagCategory findByCategoryId(String categoryId,Integer isDeleted) {
         return mongoTemplate.findOne(
-                new Query(Criteria.where("customTagCategoryId").is(categoryId).and(IS_DELETED).is(isDeleted)),
+                new Query(Criteria.where(CUSTOM_TAG_CATEGORY_ID).is(categoryId).and(IS_DELETED).is(isDeleted)),
                 CUSTOM_TAG_CATEGORY_CLASS);
     }
     

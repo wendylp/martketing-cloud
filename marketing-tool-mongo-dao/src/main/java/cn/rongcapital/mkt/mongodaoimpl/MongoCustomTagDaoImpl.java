@@ -126,7 +126,7 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
     public List<CustomTag> findByCustomTagIdList(List<String> customTagList, Integer index, Integer size) {
         Query query = new Query(Criteria.where(CUSTOM_TAG_ID).in(customTagList).and(IS_DELETED).is(DATA_VALID));
         // 设置排序规则
-        query.with(new Sort(Direction.DESC, COVER_NUMBER, COVER_FREQUENCY));
+        query.with(new Sort(Direction.DESC, CREATE_TIME));
         if (index != null && size != null) {
             // 设置分页规则
             query.skip((index - 1) * size);

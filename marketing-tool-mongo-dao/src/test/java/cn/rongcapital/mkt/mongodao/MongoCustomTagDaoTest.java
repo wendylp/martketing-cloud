@@ -1,8 +1,8 @@
 package cn.rongcapital.mkt.mongodao;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
@@ -36,10 +36,19 @@ public class MongoCustomTagDaoTest extends AbstractUnitTest {
 
     @Before
     public void setUp() throws Exception {
+        Calendar  calendar = Calendar.getInstance();
+        
         CustomTag customTagOne = new CustomTag("CustomTagA0000000000001", "自定义标签1", 0, 100, 1000);
+        customTagOne.setCreateTime(calendar.getTime());
         CustomTag customTagTwo = new CustomTag("CustomTagA0000000000002", "自定义标签2", 0, 200, 2000);
+        calendar.add(Calendar.SECOND,10);
+        customTagTwo.setCreateTime(calendar.getTime());
         CustomTag customTagThree = new CustomTag("CustomTagA0000000000003", "自定义标签3", 0, 0, 0);
+        calendar.add(Calendar.SECOND,10);
+        customTagThree.setCreateTime(calendar.getTime());
         CustomTag customTagFour = new CustomTag("CustomTagA0000000000004", "自定义标签4", 1, 400, 4000);
+        calendar.add(Calendar.SECOND,10);
+        customTagFour.setCreateTime(calendar.getTime());
 
         customTagLists.add(customTagOne);
         customTagLists.add(customTagTwo);
@@ -198,7 +207,7 @@ public class MongoCustomTagDaoTest extends AbstractUnitTest {
         Assert.assertEquals(1, customTagResultLists.size());
         
         // 返回结果默认顺序有关
-        CustomTag customTag = customTagLists.get(1);
+        CustomTag customTag = customTagLists.get(2);
         Assert.assertEquals(customTag.getCustomTagId(), customTagResultLists.get(0).getCustomTagId());
         Assert.assertEquals(customTag.getCustomTagName(), customTagResultLists.get(0).getCustomTagName());
     }
