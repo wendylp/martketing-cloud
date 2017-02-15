@@ -60,6 +60,7 @@ public class DataAuthShareInterceptor {
                     break;
                 default:
                     resourceId =Long.parseLong(resourceIdTemp);
+                    toOrgId =  checkOrgIds(toOrgIdTemp);
                     writeable = Boolean.parseBoolean(writeableTemp);
                     break;
                 }
@@ -73,4 +74,18 @@ public class DataAuthShareInterceptor {
             }
         }
     }
+    
+    private static List<Long> checkOrgIds(String orgIds){
+    	if(!orgIds.startsWith("[") && orgIds.endsWith("]")){
+    		 throw new IllegalArgumentException("toOrgId 格式错误，以[开始，以]结束");
+    	}
+    	String orgs = orgIds.substring(1, orgIds.length()-1);
+    	String[] org = orgs.split(",");
+    	List<Long> orgList = new ArrayList<Long>();
+    	for(String org1: org){
+    		orgList.add(Long.parseLong(org1));
+    	}
+		return orgList;
+    }
+    
 }
