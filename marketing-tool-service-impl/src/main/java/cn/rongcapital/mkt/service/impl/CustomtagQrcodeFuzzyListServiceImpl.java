@@ -47,7 +47,7 @@ public class CustomtagQrcodeFuzzyListServiceImpl implements CustomtagQrcodeFuzzy
 
                 // 获取分类id和name
                 CustomTagCategory customTagCategory =
-                        mongoCustomTagCategoryDao.findByChildrenCustomTagList(customTagList.getCustomTagName());
+                        mongoCustomTagCategoryDao.findByChildrenCustomTagList(customTagList.getCustomTagId());
                 String customTagCategoryId = "";
                 String customTagCategoryName = "";
                 if (customTagCategory != null) {
