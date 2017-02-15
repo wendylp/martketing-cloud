@@ -20,6 +20,7 @@ import cn.rongcapital.mkt.mongodao.MongoCustomTagDao;
 import cn.rongcapital.mkt.po.CustomTagMaterialMap;
 import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.service.CustomTagActionService;
 import cn.rongcapital.mkt.service.CustomTagMaterialMapService;
 import cn.rongcapital.mkt.vo.in.CustomTagIn;
@@ -111,8 +112,12 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 			String customTagId = customTagMaterialMap.getCustomTagId();
 			// 初始化人数
 			Query query = Query.query(Criteria.where("custom_tag_id").is(customTagId));
-			mongoTemplate.updateFirst(query, new Update().set("cover_number", 0).set("cover_frequency", 0),
+			mongoTemplate.updateMulti(query, new Update().set("cover_number", 0).set("cover_frequency", 0),
 					CustomTag.class);
+			CustomTagIn customTagIn = new CustomTagIn();
+			customTagIn.setCustomTagId(customTagId);
+			//将标签从人身上移除
+			mongoTemplate.updateMulti(null, new Update().pull("custom_tag_list", customTagIn), DataParty.class);
 			// 数据清理
 			customTagMaterialMapDao.deleteById(customTagMaterialMap);
 		}
