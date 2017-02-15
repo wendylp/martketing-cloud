@@ -59,7 +59,7 @@ public class SmstempletCountGetServiceTest {
         mapList.add(map2);
 
         smstempletCountGetService = new SmstempletCountGetServiceImpl();
-        Mockito.when(smsTempletDao.getTempletCountByType(any(), any())).thenReturn(mapList);
+        Mockito.when(smsTempletDao.getTempletCountByType(any(), any(), any())).thenReturn(mapList);
 
         // 把mock的dao set进入service
         ReflectionTestUtils.setField(smstempletCountGetService, "smsTempletDao", smsTempletDao);
@@ -68,7 +68,7 @@ public class SmstempletCountGetServiceTest {
 
     @Test
     public void testGetSmsTempletCount() throws Exception {
-        BaseOutput result = smstempletCountGetService.getSmsTempletCount("1", 1L);
+        BaseOutput result = smstempletCountGetService.getSmsTempletCount("1", 1L, false);
 
         // 测试正常情况
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());

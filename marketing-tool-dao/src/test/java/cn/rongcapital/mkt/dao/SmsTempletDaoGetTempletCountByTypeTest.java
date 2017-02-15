@@ -77,7 +77,7 @@ public class SmsTempletDaoGetTempletCountByTypeTest extends AbstractUnitTest {
     @Test
     public void testGetTempletCountByType() {
         List<Map<String, Object>> reslult =
-                smsTempletDao.getTempletCountByType(SmsTaskAppEnum.ADVERT_SMS.getStatus().toString(), orgId);
+                smsTempletDao.getTempletCountByType(SmsTaskAppEnum.ADVERT_SMS.getStatus().toString(), orgId, Boolean.TRUE);
         Assert.assertEquals(2, reslult.size());
         Assert.assertTrue(((Long) reslult.get(0).get("count")) > 1);
         Assert.assertTrue(((Long) reslult.get(1).get("count")) > 1);

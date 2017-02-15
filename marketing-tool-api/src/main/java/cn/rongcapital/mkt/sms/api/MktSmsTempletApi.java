@@ -104,8 +104,9 @@ public class MktSmsTempletApi {
     @Path("/mkt.sms.smstemplet.count.get")
     public BaseOutput smsTempletCountGet(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,
-            @QueryParam("channel_type") String channelType, @NotNull @QueryParam("org_id") Long orgId) throws Exception {
-        return smstempletCountGetService.getSmsTempletCount(channelType, orgId);
+            @QueryParam("channel_type") String channelType, @QueryParam("org_id") Long orgId,
+            @QueryParam("firsthand") Boolean firsthand) throws Exception {
+        return smstempletCountGetService.getSmsTempletCount(channelType, orgId, firsthand);
     }
 	
 	/**

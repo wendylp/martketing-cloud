@@ -144,9 +144,7 @@
 	<!-- 分组计算数量 -->
 	<select id="getTempletCountByType" parameterType="String" resultType="Map">
 		<![CDATA[SELECT TYPE AS type ,COUNT(1) AS count FROM `sms_templet`]]>
-	    <if test="orgId != null"> 
-	    	<![CDATA[INNER JOIN data_auth da ON da.table_name='sms_templet' AND da.resource_id = id AND da.org_id = #{orgId} ]]>
-	   	</if>
+        <include refid="QUERY_ORGANIZATION"/>
 		<![CDATA[WHERE STATUS = '0']]>
 		<if test="channelType != null"><![CDATA[AND channel_type = #{channelType}]]></if>
 		<![CDATA[   GROUP BY TYPE ]]>
