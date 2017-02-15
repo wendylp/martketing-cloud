@@ -74,4 +74,6 @@ public interface SegmentationBodyDao extends BaseDao<SegmentationBody>{
 	void updateCustomTagNameByCustomTagId(SegmentationBody paramSegmentationBody);
 
 	void updateCustomTagStatusByCutsomTagId(SegmentationBody paramSegmentationBody);
+
+	void deleteByHeadID(Integer headId);
 }

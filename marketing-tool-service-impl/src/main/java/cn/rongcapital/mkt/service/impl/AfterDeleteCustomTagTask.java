@@ -20,6 +20,8 @@ public class AfterDeleteCustomTagTask implements TaskService{
     @Autowired
     private SegmentationBodyDao segmentationBodyDao;
 
+    private static final Byte TAG_LOGIC_DELETED = 1;
+
     @Override
     public void task(Integer taskId) {
 
@@ -38,6 +40,7 @@ public class AfterDeleteCustomTagTask implements TaskService{
         //Todo:2更新segmentation_body表，根据CustomTagId更新表状态。
         SegmentationBody paramSegmentationBody = new SegmentationBody();
         paramSegmentationBody.setTagId(customTagId);
+        paramSegmentationBody.setTagStatus(TAG_LOGIC_DELETED);
         segmentationBodyDao.updateCustomTagStatusByCutsomTagId(paramSegmentationBody);
     }
 }
