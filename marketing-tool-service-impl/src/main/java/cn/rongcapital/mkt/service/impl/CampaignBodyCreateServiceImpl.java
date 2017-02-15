@@ -111,7 +111,6 @@ import cn.rongcapital.mkt.vo.in.CampaignTriggerTimerIn;
 import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
 import cn.rongcapital.mkt.vo.in.TagIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
-import cn.rongcapital.mkt.vo.out.CampaignNodeChainOut;
 
 @Service
 public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService {
@@ -202,6 +201,15 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		
 		deleteOldCampaignTask(campaignHeadId);//删除旧任务
 		deleteOldCampaignData(campaignHeadId);//删除旧数据 
+		if(!validSmsUsed(body)){
+			out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getCode(),
+					ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getMsg(),
+					ApiConstant.INT_ZERO,null);				
+			if(null != out) {
+				return out;
+			}
+		}
+				
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
 			Integer taskId= null;//定时任务id
 			List<CampaignSwitch> campaignSwitchList = initCampaignSwitchList(campaignNodeChainIn,campaignHeadId);
@@ -456,10 +464,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getCode(),
 													   ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
 													   ApiConstant.INT_ZERO,null);
-			} else if(!validSmsUsed(body)){
-				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getCode(),
-						ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getMsg(),
-						ApiConstant.INT_ZERO,null);				
 			}
 		}else{
 			out = new CampaignBodyCreateOut(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
@@ -519,7 +523,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionPubFansDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignDecisionPrvtFriendsDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignDecisionPropCompareDao.deleteByCampaignHeadId(campaignHeadId);
-		CampaignAudienceTargetDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionWaitDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionSetTagDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionSendPubDao.deleteByCampaignHeadId(campaignHeadId);
@@ -529,11 +532,34 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignTriggerTimerDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);		
 		deleteSendSms(campaignHeadId);
-		
-		//固定人群
-		//细分快照的删除
+		campaignAudienceFixDao.deleteByCampaignHeadId(campaignHeadId);
+		deleteAudienceTarget(campaignHeadId);
 	}
 	
+	private void deleteAudienceTarget(int campaignHeadId) {
+		deleteSnapSegmentaions(campaignHeadId);		
+		CampaignAudienceTargetDao.deleteByCampaignHeadId(campaignHeadId);		
+	}
+
+	private void deleteSnapSegmentaions(int campaignHeadId) {
+		CampaignAudienceTarget t = new CampaignAudienceTarget();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setCampaignHeadId(campaignHeadId);
+		List<CampaignAudienceTarget> resList = CampaignAudienceTargetDao.selectList(t);
+		for (CampaignAudienceTarget audience: resList) {
+			Integer snapID = audience.getSnapSegmentationId();
+			if (snapID == null)
+				continue;
+			
+			deleteSnapSegmentation(snapID);			
+		}
+	}
+
+	private void deleteSnapSegmentation(Integer snapID) {
+		this.segmentationHeadDao.deleteByID(snapID);
+		this.segmentationBodyDao.deleteByHeadID(snapID);		
+	}
+
 	private void deleteSendSms(int campaignHeadId) {
 		freeSmsUsedStatusForHead(campaignHeadId);		
 		campaignActionSendSmsDao.deleteByCampaignHeadId(campaignHeadId);		
