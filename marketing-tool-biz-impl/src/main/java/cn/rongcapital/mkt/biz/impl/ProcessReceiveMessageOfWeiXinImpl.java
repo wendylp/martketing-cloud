@@ -430,12 +430,19 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 		}else{			
 			wechatQrcode = getWechatQrcodeScanInForSCAN(qrCodeTicket,openid);			
 		}
+		String createTime = msgMap.get("createTime");
+		long createTimeL =0l;
+		if(StringUtils.isEmpty(createTime)){
+			return "";
+		}else{
+			createTimeL=Long.parseLong(createTime)*1000;
+		}
 		StringBuffer eventCenterSB = new StringBuffer("");
 		eventCenterSB.append("{");
 		eventCenterSB.append("\"subject\": {");
 		eventCenterSB.append("\"openid\": \"").append(openid).append("\"");
 		eventCenterSB.append("},");
-		eventCenterSB.append("\"time\": ").append(msgMap.get("createTime")).append(",");
+		eventCenterSB.append("\"time\": ").append(createTimeL).append(",");
 		eventCenterSB.append("\"object\": {");
 		eventCenterSB.append("\"code\": \"qrcode_attr\",");
 		eventCenterSB.append("\"attributes\": {");
