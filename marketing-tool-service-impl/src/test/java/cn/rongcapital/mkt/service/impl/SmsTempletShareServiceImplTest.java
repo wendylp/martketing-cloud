@@ -27,6 +27,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
+import cn.rongcapital.mkt.common.exception.NotFoundResourceException;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsTemplet;
@@ -57,9 +58,10 @@ public class SmsTempletShareServiceImplTest {
      * 短信模板存在
      * 
      * @throws CannotShareToOwnerException
+     * @throws NotFoundResourceException 
      */
     @Test
-    public void testShareSmsTemplet01() throws CannotShareToOwnerException {
+    public void testShareSmsTemplet01() throws CannotShareToOwnerException, NotFoundResourceException {
         SmsTempletShareIn smsTempletShareIn = new SmsTempletShareIn();
         List<Long> orgIds = new ArrayList<Long>();
         orgIds.add(11L);

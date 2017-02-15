@@ -30,6 +30,7 @@ import cn.rongcapital.mkt.common.enums.dataauth.DataAuthTypeEnum;
 import cn.rongcapital.mkt.common.enums.dataauth.ShareOrgTypeEnum;
 import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
+import cn.rongcapital.mkt.common.exception.NotFoundResourceException;
 import cn.rongcapital.mkt.dao.dataauth.DataAuthMapper;
 import cn.rongcapital.mkt.dataauth.po.DataAuth;
 import cn.rongcapital.mkt.dataauth.po.Organization;
@@ -107,8 +108,11 @@ public class DataAuthServiceImpl implements DataAuthService {
      */
     @Override
     @Transactional
-    public void share(String resourceType, long resourceId, long toOrgId, boolean writeable) throws CannotShareToOwnerException {
+    public void share(String resourceType, long resourceId, long toOrgId, boolean writeable) throws CannotShareToOwnerException, NotFoundResourceException {
         List<DataAuth> fromDataAuth = this.dataAuthMapper.selectOwnerByResouceId(resourceType,resourceId);
+        if(fromDataAuth.size() == 0){
+        	throw new NotFoundResourceException("The Resource Can Not Be Found.");
+        }
         long fromOrgId = fromDataAuth.get(0).getOrgId();
         
         List<Organization> orgParentList = this.organizationService.getOrgLineListById(fromOrgId);

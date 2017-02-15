@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.rongcapital.mkt.common.enums.dataauth.DataAuthTypeEnum;
 import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
+import cn.rongcapital.mkt.common.exception.NotFoundResourceException;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.unittest.AbstractUnitTest;
 
@@ -56,7 +57,7 @@ public class DataAuthServiceTest extends AbstractUnitTest{
         this.dataAuthService.evict(resourceType, resourceId);
     }
     @Test(expected=CannotShareToOwnerException.class)
-    public void TestShare() throws CannotShareToOwnerException{
+    public void TestShare() throws CannotShareToOwnerException, NotFoundResourceException{
         String shareType = DataAuthTypeEnum.SHARE.getCode();
         String resourceType = "sms_templet";
         long resourceId = 800l;
