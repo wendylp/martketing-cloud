@@ -111,6 +111,7 @@ import cn.rongcapital.mkt.vo.in.CampaignTriggerTimerIn;
 import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
 import cn.rongcapital.mkt.vo.in.TagIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
+import cn.rongcapital.mkt.vo.out.CampaignNodeChainOut;
 
 @Service
 public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService {
@@ -526,7 +527,39 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSendH5Dao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionSaveAudienceDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignTriggerTimerDao.deleteByCampaignHeadId(campaignHeadId);
-		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);		
+		deleteSendSms(campaignHeadId);
+		
+		//固定人群
+		//细分快照的删除
+	}
+	
+	private void deleteSendSms(int campaignHeadId) {
+		freeSmsUsedStatusForHead(campaignHeadId);		
+		campaignActionSendSmsDao.deleteByCampaignHeadId(campaignHeadId);		
+	}
+
+	private void freeSmsUsedStatusForHead(int campaignHeadId) {			
+		CampaignActionSendSms t = new CampaignActionSendSms();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setCampaignHeadId(campaignHeadId);
+		List<CampaignActionSendSms> resList = campaignActionSendSmsDao.selectList(t);
+		for (CampaignActionSendSms smsNode: resList) {
+			freeSmsUsedStatusForSmsNode(smsNode);
+		}
+	}
+
+	private void freeSmsUsedStatusForSmsNode(CampaignActionSendSms smsNode) {
+		Integer smsMaterialId = smsNode.getSmsMaterialId();
+		SmsMaterial paramSmsMaterial = new SmsMaterial();
+		paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		paramSmsMaterial.setId(smsMaterialId);
+		List<SmsMaterial> targetSmsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
+		if (CollectionUtils.isNotEmpty(targetSmsMaterialList)) {
+			SmsMaterial m = targetSmsMaterialList.get(0);
+			m.setUseStatus(SmsMaterial.USE_STATUS_NO);
+			smsMaterialDao.updateById(m);
+		}
 	}
 	
 	private void deleteOldCampaignTask (int campaignHeadId) {
