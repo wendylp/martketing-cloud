@@ -1112,7 +1112,7 @@ public class MktWeChatApi {
 	}
 	
 	@GET
-	@Path("/mkt.custom.tag.test1")
+	@Path("/mkt.custom.tag.test2")
 	public void test2(@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("user_token") String userToken,
 			@NotEmpty @QueryParam("ver") String ver) {
 		CustomTagSynServiceImpl.task(1);
