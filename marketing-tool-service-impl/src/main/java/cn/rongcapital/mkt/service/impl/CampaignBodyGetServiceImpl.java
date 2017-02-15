@@ -473,17 +473,17 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	private void fillCampaignActionSendSmsOut(CampaignActionSendSmsOut campaignActionSendSmsOut, 
 			CampaignActionSendSms campaignActionSendSms) {
 		campaignActionSendSmsOut.setName(campaignActionSendSms.getName());
-		int categoryType = campaignActionSendSms.getSmsCategoryType();
+		Integer categoryType = campaignActionSendSms.getSmsCategoryType();
 		campaignActionSendSmsOut.setSmsCategoryType(categoryType);
-		int smsMaterialId = campaignActionSendSms.getSmsMaterialId();
+		Integer smsMaterialId = campaignActionSendSms.getSmsMaterialId();
 		campaignActionSendSmsOut.setSmsMaterialId(smsMaterialId);
-		String smsCategoryName = SmsTaskAppEnum.getDescriptionByStatus((byte)categoryType);
+		String smsCategoryName = (categoryType == null) ? "" : SmsTaskAppEnum.getDescriptionByStatus(categoryType.byteValue());
 		campaignActionSendSmsOut.setSmsCategoryName(smsCategoryName);
-		String smsMaterialName = getSmsMaterialNameById(smsMaterialId);
+		String smsMaterialName = smsMaterialId == null ? "" : getSmsMaterialNameById(smsMaterialId);
 		campaignActionSendSmsOut.setSmsMaterialName(smsMaterialName);
 	}
 
-	private String getSmsMaterialNameById(int smsMaterialId) {
+	private String getSmsMaterialNameById(Integer smsMaterialId) {
 		SmsMaterial paramSmsMaterial = new SmsMaterial();
 		paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		paramSmsMaterial.setId(smsMaterialId);
