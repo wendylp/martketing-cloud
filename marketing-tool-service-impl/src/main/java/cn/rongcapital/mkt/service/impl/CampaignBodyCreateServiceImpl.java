@@ -201,6 +201,15 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		
 		deleteOldCampaignTask(campaignHeadId);//删除旧任务
 		deleteOldCampaignData(campaignHeadId);//删除旧数据 
+		if(!validSmsUsed(body)){
+			out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getCode(),
+					ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getMsg(),
+					ApiConstant.INT_ZERO,null);				
+			if(null != out) {
+				return out;
+			}
+		}
+				
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
 			Integer taskId= null;//定时任务id
 			List<CampaignSwitch> campaignSwitchList = initCampaignSwitchList(campaignNodeChainIn,campaignHeadId);
@@ -455,10 +464,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getCode(),
 													   ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
 													   ApiConstant.INT_ZERO,null);
-			} else if(!validSmsUsed(body)){
-				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getCode(),
-						ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getMsg(),
-						ApiConstant.INT_ZERO,null);				
 			}
 		}else{
 			out = new CampaignBodyCreateOut(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
@@ -518,7 +523,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionPubFansDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignDecisionPrvtFriendsDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignDecisionPropCompareDao.deleteByCampaignHeadId(campaignHeadId);
-		CampaignAudienceTargetDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionWaitDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionSetTagDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionSendPubDao.deleteByCampaignHeadId(campaignHeadId);
@@ -526,7 +530,62 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSendH5Dao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionSaveAudienceDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignTriggerTimerDao.deleteByCampaignHeadId(campaignHeadId);
-		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);		
+		deleteSendSms(campaignHeadId);
+		campaignAudienceFixDao.deleteByCampaignHeadId(campaignHeadId);
+		deleteAudienceTarget(campaignHeadId);
+	}
+	
+	private void deleteAudienceTarget(int campaignHeadId) {
+		deleteSnapSegmentaions(campaignHeadId);		
+		CampaignAudienceTargetDao.deleteByCampaignHeadId(campaignHeadId);		
+	}
+
+	private void deleteSnapSegmentaions(int campaignHeadId) {
+		CampaignAudienceTarget t = new CampaignAudienceTarget();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setCampaignHeadId(campaignHeadId);
+		List<CampaignAudienceTarget> resList = CampaignAudienceTargetDao.selectList(t);
+		for (CampaignAudienceTarget audience: resList) {
+			Integer snapID = audience.getSnapSegmentationId();
+			if (snapID == null)
+				continue;
+			
+			deleteSnapSegmentation(snapID);			
+		}
+	}
+
+	private void deleteSnapSegmentation(Integer snapID) {
+		this.segmentationHeadDao.deleteByID(snapID);
+		this.segmentationBodyDao.deleteByHeadID(snapID);		
+	}
+
+	private void deleteSendSms(int campaignHeadId) {
+		freeSmsUsedStatusForHead(campaignHeadId);		
+		campaignActionSendSmsDao.deleteByCampaignHeadId(campaignHeadId);		
+	}
+
+	private void freeSmsUsedStatusForHead(int campaignHeadId) {			
+		CampaignActionSendSms t = new CampaignActionSendSms();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setCampaignHeadId(campaignHeadId);
+		List<CampaignActionSendSms> resList = campaignActionSendSmsDao.selectList(t);
+		for (CampaignActionSendSms smsNode: resList) {
+			freeSmsUsedStatusForSmsNode(smsNode);
+		}
+	}
+
+	private void freeSmsUsedStatusForSmsNode(CampaignActionSendSms smsNode) {
+		Integer smsMaterialId = smsNode.getSmsMaterialId();
+		SmsMaterial paramSmsMaterial = new SmsMaterial();
+		paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		paramSmsMaterial.setId(smsMaterialId);
+		List<SmsMaterial> targetSmsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
+		if (CollectionUtils.isNotEmpty(targetSmsMaterialList)) {
+			SmsMaterial m = targetSmsMaterialList.get(0);
+			m.setUseStatus(SmsMaterial.USE_STATUS_NO);
+			smsMaterialDao.updateById(m);
+		}
 	}
 	
 	private void deleteOldCampaignTask (int campaignHeadId) {

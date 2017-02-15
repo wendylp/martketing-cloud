@@ -14,6 +14,8 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CampaignActionSendSms;
 
 public interface CampaignActionSendSmsDao extends BaseDao<CampaignActionSendSms>{
+
+	void deleteByCampaignHeadId(int campaignHeadId);
 	
 	//自定义扩展
 	/**

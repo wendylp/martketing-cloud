@@ -14,6 +14,8 @@ import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CampaignAudienceFix;
 
 public interface CampaignAudienceFixDao extends BaseDao<CampaignAudienceFix>{
+
+	void deleteByCampaignHeadId(int campaignHeadId);
 	
 	//自定义扩展
 	/**

@@ -180,5 +180,12 @@
 		SET tag_status = #{tagStatus}
 		<![CDATA[WHERE tag_id = #{tagId}  AND status = 0 AND tag_type = 1]]>
 	</update>
+	
+	<delete id="deleteByHeadID" parameterType="int">
+		delete 
+		<include refid="QUERY_FROM_TABLE"/>
+		where head_id = #{headId}
+	</delete>
+	
 
 </mapper>

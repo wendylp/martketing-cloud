@@ -63,9 +63,8 @@ import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.WechatAsset;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
-import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
-import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.vo.out.CampaignActionSaveAudienceOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionSendH5Out;
@@ -572,9 +571,9 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 					String tagType = isCustomTag ? TagOut.TAG_TYPE_CUSTOM : TagOut.TAG_TYPE_SYS;
 					String tagName = null;
 					if (isCustomTag) {
-						Query query = new Query(Criteria.where("tag_id").is(tagIdStr));
-						BaseTag targetTag = mongoTemplate.findOne(query,BaseTag.class);
-						tagName = targetTag.getTagName();			
+						Query query = new Query(Criteria.where("custom_tag_id").is(tagIdStr));
+						CustomTag targetTag = mongoTemplate.findOne(query,CustomTag.class);
+						tagName = targetTag.getCustomTagName();			
 					} else {
 						String[] infos = tagIdStr.split(":");
 						tagIdStr = infos[0];

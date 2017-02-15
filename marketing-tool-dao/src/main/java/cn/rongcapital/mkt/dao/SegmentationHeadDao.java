@@ -60,4 +60,6 @@ public interface SegmentationHeadDao extends BaseDao<SegmentationHead>{
      */
 	int incrementReferCampaignCount(@Param("id") Integer id, @Param("referCampaignCount") Integer referCampaignCount);
 
+	void deleteByID(Integer snapID);
+
 }
