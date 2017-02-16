@@ -232,6 +232,7 @@ public class GenerateSmsDetailTask implements TaskService {
 
     //Todo:如果是固定短信,按照现有的生成方法保持不变;如果是变量短信按照规则一步一步生成.
     private void generateSmsTaskDetailAccordSmsType(Long taskHeadId, SmsTaskHead targetHead, Set<String> targetDistinctReceiveMobiles, List<SmsTaskDetail> smsTaskDetailList, SmsSignature smsSignature) {
+        String targetMaterialContentCopy = targetHead.getSmsTaskMaterialContent();   //备份出原始的带有变量的内容
         SmsMaterial paramSmsMaterial = new SmsMaterial();
         paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         paramSmsMaterial.setId(targetHead.getSmsTaskMaterialId().intValue());
@@ -312,6 +313,7 @@ public class GenerateSmsDetailTask implements TaskService {
                         }
 
                         String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
+                        targetHead.setSmsTaskMaterialContent(targetMaterialContentCopy);
                         smsTaskDetail.setSendMessage(sendMessage);
                     }
                     smsTaskDetail.setMaterielCouponCodeId(materialCouponCode.getId());
