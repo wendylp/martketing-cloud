@@ -132,7 +132,7 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 					materialMongoList.add(materialRelation);
 				} else { // 存在执行更新
 					mongoTemplate.updateFirst(query,
-							new Update().update("event_list", events).update("last_time", endTime),
+							new Update().push("event_list", events).update("last_time", endTime),
 							MaterialRelation.class);
 					materialMongoList.add(material);
 				}
