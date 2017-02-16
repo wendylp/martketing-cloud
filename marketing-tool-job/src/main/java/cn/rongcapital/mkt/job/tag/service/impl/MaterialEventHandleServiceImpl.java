@@ -93,7 +93,6 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 						.query(Criteria.where("material_code").is(materialCode).and("material_type").is(materialType));
 				MaterialRelation material = mongoTemplate.findOne(query, MaterialRelation.class);
 				if (material != null) {
-					events = material.getEventList();
 					beginTime = material.getLastTime();
 				}
 				TagSyncEventObjectIn eventObjectIn = new TagSyncEventObjectIn();
@@ -132,7 +131,7 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 					materialMongoList.add(materialRelation);
 				} else { // 存在执行更新
 					mongoTemplate.updateFirst(query,
-							new Update().push("event_list", events).update("last_time", endTime),
+							new Update().pushAll("event_list", events.toArray()).set("last_time", endTime),
 							MaterialRelation.class);
 					materialMongoList.add(material);
 				}
