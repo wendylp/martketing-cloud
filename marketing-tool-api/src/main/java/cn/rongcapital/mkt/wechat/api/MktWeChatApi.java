@@ -48,6 +48,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import com.tagsin.wechat_sdk.App;
@@ -69,6 +71,7 @@ import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
@@ -117,6 +120,7 @@ import cn.rongcapital.mkt.vo.ImgtextHostIn;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
+import cn.rongcapital.mkt.vo.in.CustomTagIn;
 import cn.rongcapital.mkt.vo.in.TagBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
@@ -1096,28 +1100,5 @@ public class MktWeChatApi {
 		return registerListService.selectRegisterList();
 	}
 	
-	
-	/**********   dev 测试，手动出发定时任务  *************/
-	@Resource(name ="MaterialEventHandleServiceImpl")
-	private TaskService MaterialEventHandleServiceImpl;
-	
-	@Resource(name = "CustomTagSynServiceImpl")
-	private TaskService CustomTagSynServiceImpl;
-	
-	@GET
-	@Path("/mkt.custom.tag.test1")
-	public void test1(@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
-		MaterialEventHandleServiceImpl.task(1);
-	}
-	
-	@GET
-	@Path("/mkt.custom.tag.test2")
-	public void test2(@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String ver) {
-		CustomTagSynServiceImpl.task(1);
-	}
-	
-	/**********   dev 测试，手动出发定时任务  *************/
 	
 }
