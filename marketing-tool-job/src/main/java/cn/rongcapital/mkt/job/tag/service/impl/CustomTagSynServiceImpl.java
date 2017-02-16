@@ -32,7 +32,7 @@ import cn.rongcapital.mkt.vo.in.CustomTagIn;
  * @date: 2017/2/4
  * @复审人:
  *************************************************/
-@Service("CustomTagSynServiceImpl")
+@Service
 public class CustomTagSynServiceImpl implements TaskService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
