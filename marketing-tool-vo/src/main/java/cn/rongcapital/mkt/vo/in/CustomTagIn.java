@@ -28,19 +28,30 @@ public class CustomTagIn {
 	
 	@Field("is_deleted")
     private Integer isDeleted;	//0-正常，1-过期
+	
+	@Field(value = "material_code")
+	private String materialCode; // 物料CODE
+
+	@Field(value = "material_type")
+	private String materialType; // 物料类型
     
     public CustomTagIn() {
 	}
     
-	public CustomTagIn(String customTagId, String customTagName, String parentId, String parentName,
-			Integer isDeleted) {
+
+	public CustomTagIn(String customTagId, String customTagName, String parentId, String parentName, Integer isDeleted,
+			String materialCode, String materialType) {
 		super();
 		this.customTagId = customTagId;
 		this.customTagName = customTagName;
 		this.parentId = parentId;
 		this.parentName = parentName;
 		this.isDeleted = isDeleted;
+		this.materialCode = materialCode;
+		this.materialType = materialType;
 	}
+
+
 
 
 
@@ -88,6 +99,21 @@ public class CustomTagIn {
 	public void setIsDeleted(Integer isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-	
+
+	public String getMaterialCode() {
+		return materialCode;
+	}
+
+	public void setMaterialCode(String materialCode) {
+		this.materialCode = materialCode;
+	}
+
+	public String getMaterialType() {
+		return materialType;
+	}
+
+	public void setMaterialType(String materialType) {
+		this.materialType = materialType;
+	}
 
 }
