@@ -20,6 +20,9 @@ import cn.rongcapital.mkt.mongodao.MongoCustomTagDao;
 import cn.rongcapital.mkt.po.CustomTagMaterialMap;
 import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
+import cn.rongcapital.mkt.po.mongodb.MaterialRelatedEvent;
+import cn.rongcapital.mkt.po.mongodb.MaterialRelation;
 import cn.rongcapital.mkt.service.CustomTagActionService;
 import cn.rongcapital.mkt.service.CustomTagMaterialMapService;
 import cn.rongcapital.mkt.vo.in.CustomTagIn;
@@ -50,7 +53,7 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 			String customTagId = customTagIn.getCustomTagId(); // 自定义标签ID
 			String customTagName = customTagIn.getCustomTagName(); // 自定义标签名称
 			if (StringUtils.isEmpty(customTagId)) {
-				// TODO 标签插入
+				// 标签插入
 				List<String> customTags = new ArrayList<>();
 				customTags.add(customTagName);
 				customTagId = customTagActionService
@@ -68,13 +71,13 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 		}
 		// 查询解绑标签
 		List<CustomTagMaterialMap> unbindTagList = new ArrayList<>();
-		if(CollectionUtils.isEmpty(customTagIdList)){
-			unbindTagList = customTagMaterialMapDao.selectList(new CustomTagMaterialMap(null, materialCode, materialType, null));
-		}else{
-			unbindTagList = customTagMaterialMapDao.getUnbindTag(materialCode, materialType,
-					customTagIdList);
+		if (CollectionUtils.isEmpty(customTagIdList)) {
+			unbindTagList = customTagMaterialMapDao
+					.selectList(new CustomTagMaterialMap(null, materialCode, materialType, null));
+		} else {
+			unbindTagList = customTagMaterialMapDao.getUnbindTag(materialCode, materialType, customTagIdList);
 		}
-		
+
 		// 数据初始化
 		initData(unbindTagList);
 	}
@@ -91,7 +94,8 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 				continue;
 			}
 			resultList.add(new CustomTagIn(customTagId, customTag.getCustomTagName(), customTag.getParentId(),
-					customTagCategory.getCustomTagCategoryName(), customTag.getIsDeleted()));
+					customTagCategory.getCustomTagCategoryName(), customTag.getIsDeleted(), materialCode,
+					materialType));
 		}
 		return resultList;
 	}
@@ -103,15 +107,39 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 
 	/**
 	 * 数据初始化（解绑标签人数初始化及数据清理）
-	 * @param unbindTagList		解绑标签
+	 * 
+	 * @param unbindTagList
+	 *            解绑标签
 	 */
 	private void initData(List<CustomTagMaterialMap> unbindTagList) {
 		for (CustomTagMaterialMap customTagMaterialMap : unbindTagList) {
-			// 自定义标签ID
-			String customTagId = customTagMaterialMap.getCustomTagId();
+			String customTagId = customTagMaterialMap.getCustomTagId(); // 自定义标签ID
+			String materialCode = customTagMaterialMap.getMaterialCode(); // 物料code
+			String materialType = customTagMaterialMap.getMaterialType(); // 物料类型
+			// 将标签从人身上移除
+			CustomTagIn customTagIn = new CustomTagIn();
+			customTagIn.setCustomTagId(customTagId);
+			customTagIn.setMaterialCode(materialCode);
+			customTagIn.setMaterialType(materialType);
+			mongoTemplate.updateMulti(null, new Update().pull("custom_tag_list", customTagIn), DataParty.class);
 			// 初始化人数
+			// 计算覆盖人数
+			Long coverNumber = mongoTemplate.count(new Query(
+					Criteria.where("custom_tag_list").elemMatch(Criteria.where("custom_tag_id").is(customTagId))),
+					DataParty.class);
+			// 计算覆盖人次
+			int frequencyCount = 0;
+			MaterialRelation materialRelation = mongoTemplate.findOne(
+					Query.query(Criteria.where("material_code").is(materialCode).and("material_type").is(materialType)),
+					MaterialRelation.class);
+			if (materialRelation != null) {
+				List<MaterialRelatedEvent> eventList = materialRelation.getEventList();
+				frequencyCount = CollectionUtils.isEmpty(eventList) ? 0 : eventList.size();
+			}
+			// TODO 计算覆盖人次
 			Query query = Query.query(Criteria.where("custom_tag_id").is(customTagId));
-			mongoTemplate.updateFirst(query, new Update().set("cover_number", 0).set("cover_frequency", 0),
+			mongoTemplate.updateMulti(query,
+					new Update().set("cover_number", coverNumber).set("cover_frequency", frequencyCount),
 					CustomTag.class);
 			// 数据清理
 			customTagMaterialMapDao.deleteById(customTagMaterialMap);

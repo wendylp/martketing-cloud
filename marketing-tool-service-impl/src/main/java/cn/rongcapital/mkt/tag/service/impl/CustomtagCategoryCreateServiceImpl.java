@@ -67,7 +67,7 @@ public class CustomtagCategoryCreateServiceImpl implements CustomtagCategoryCrea
 		}
 
 		if (toBean.getCustomTagCategoryId() != null) {
-			mongoCustomTagCategoryDao.updateCategoryNameById(toBean);
+			mongoCustomTagCategoryDao.updateCategoryNameById(toBean.getCustomTagCategoryId(),toBean.getCustomTagCategoryName());
 		} else {
 			toBean.setCustomTagCategoryId(RandomStringUtils.random(10,true,true) + System.currentTimeMillis());
 			toBean.setCustomTagCategoryType(1);

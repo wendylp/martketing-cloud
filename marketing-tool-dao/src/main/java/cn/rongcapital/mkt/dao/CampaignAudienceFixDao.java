@@ -11,9 +11,9 @@
 package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.CampaignActionSendSms;
+import cn.rongcapital.mkt.po.CampaignAudienceFix;
 
-public interface CampaignActionSendSmsDao extends BaseDao<CampaignActionSendSms>{
+public interface CampaignAudienceFixDao extends BaseDao<CampaignAudienceFix>{
 
 	void deleteByCampaignHeadId(int campaignHeadId);
 	

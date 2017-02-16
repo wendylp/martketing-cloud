@@ -93,8 +93,9 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_ITEM_TRIGGER_TIMMER = 0;//时间触发
 	public static final byte CAMPAIGN_ITEM_TRIGGER_MANUAL = 1;//手动触发
 
-	public static final byte CAMPAIGN_ITEM_AUDIENCE_TARGET = 0;//目标人群
-	public static final byte CAMPAIGN_ITEM_AUDIENCE_EVENT = 1;//事件人群
+	public static final byte CAMPAIGN_ITEM_AUDIENCE_TARGET = 0;//细分人群
+	public static final byte CAMPAIGN_ITEM_AUDIENCE_FIX = 1;//固定人群
+	//public static final byte CAMPAIGN_ITEM_AUDIENCE_EVENT = 1;//事件人群
 	
 	public static final int TAG_ITEM_SYSTEM = 0;//系统标签
 	public static final int TAG_ITEM_CUSTOM = 1;//自定义标签
@@ -132,8 +133,10 @@ public class ApiConstant {
 
 	//时间触发节点
 	public static final String TASK_NAME_CAMPAIGN_TRUGGER_TIME = "campaignTriggerTimeTask";
-	//目标人群节点
+	//细分人群节点
 	public static final String TASK_NAME_CAMPAIGN_AUDIENCE_TARGET = "campaignAudienceTargetTask";
+	//固定人群节点
+	public static final String TASK_NAME_CAMPAIGN_AUDIENCE_FIX = "campaignAudienceFixTask";
 	//微信是否发送节点(已去掉)
 //	public static final String TASK_NAME_CAMPAIGN_DECISION_WECHAT_SENT = "campaignDecisionWechatSentTask";
 	//微信是否阅读节点

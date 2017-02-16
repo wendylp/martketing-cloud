@@ -83,10 +83,7 @@ public class CampaignBodyGetServiceTest  {
     
     @Mock
     private CampaignNodeItemDao campaignNodeItemDao;
-    
-    @Mock
-    private TagDao tagDao;
-    
+     
     @Mock
     private WechatAssetDao wechatAssetDao;
     
@@ -123,7 +120,6 @@ public class CampaignBodyGetServiceTest  {
         ReflectionTestUtils.setField(campaignBodyGetService, "campaignSwitchDao", campaignSwitchDao);
         ReflectionTestUtils.setField(campaignBodyGetService, "campaignTriggerTimerDao", campaignTriggerTimerDao);
         ReflectionTestUtils.setField(campaignBodyGetService, "campaignNodeItemDao", campaignNodeItemDao);
-        ReflectionTestUtils.setField(campaignBodyGetService, "tagDao", tagDao);
         ReflectionTestUtils.setField(campaignBodyGetService, "wechatAssetDao", wechatAssetDao);
         ReflectionTestUtils.setField(campaignBodyGetService, "wechatAssetGroupDao", wechatAssetGroupDao);
         ReflectionTestUtils.setField(campaignBodyGetService, "imgTextAssetDao", imgTextAssetDao);

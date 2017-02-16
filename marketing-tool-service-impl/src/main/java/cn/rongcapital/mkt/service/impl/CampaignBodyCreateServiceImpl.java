@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.TagSourceEnum;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
+import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.CampaignActionSaveAudienceDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendH5Dao;
@@ -30,6 +32,7 @@ import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendSmsDao;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
+import cn.rongcapital.mkt.dao.CampaignAudienceFixDao;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPropCompareDao;
@@ -45,6 +48,8 @@ import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
+import cn.rongcapital.mkt.dao.SegmentationBodyDao;
+import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
@@ -57,6 +62,7 @@ import cn.rongcapital.mkt.po.CampaignActionSendPub;
 import cn.rongcapital.mkt.po.CampaignActionSendSms;
 import cn.rongcapital.mkt.po.CampaignActionSetTag;
 import cn.rongcapital.mkt.po.CampaignActionWait;
+import cn.rongcapital.mkt.po.CampaignAudienceFix;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignBody;
 import cn.rongcapital.mkt.po.CampaignDecisionPropCompare;
@@ -71,6 +77,9 @@ import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
 import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.ImgTextAsset;
+import cn.rongcapital.mkt.po.SegmentBodyWithName;
+import cn.rongcapital.mkt.po.SegmentationBody;
+import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.WechatAsset;
@@ -87,6 +96,7 @@ import cn.rongcapital.mkt.vo.in.CampaignActionSendPubIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionSendSmsIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionSetTagIn;
 import cn.rongcapital.mkt.vo.in.CampaignActionWaitIn;
+import cn.rongcapital.mkt.vo.in.CampaignAudienceFixIn;
 import cn.rongcapital.mkt.vo.in.CampaignAudienceTargetIn;
 import cn.rongcapital.mkt.vo.in.CampaignBodyCreateIn;
 import cn.rongcapital.mkt.vo.in.CampaignDecisionPropCompareIn;
@@ -98,14 +108,21 @@ import cn.rongcapital.mkt.vo.in.CampaignDecisionWechatReadIn;
 import cn.rongcapital.mkt.vo.in.CampaignNodeChainIn;
 import cn.rongcapital.mkt.vo.in.CampaignSwitchIn;
 import cn.rongcapital.mkt.vo.in.CampaignTriggerTimerIn;
+import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
 import cn.rongcapital.mkt.vo.in.TagIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 
 @Service
 public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService {
 
+	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverid:";
+
+	@Autowired
+	SegmentationBodyDao segmentationBodyDao;
 	@Autowired
 	private CampaignHeadDao campaignHeadDao;
+    @Autowired
+    private SegmentationHeadDao segmentationHeadDao;
 	@Autowired
 	private CampaignBodyDao campaignBodyDao;
 	@Autowired
@@ -126,6 +143,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	private CampaignActionWaitDao campaignActionWaitDao;
 	@Autowired
 	private CampaignAudienceTargetDao CampaignAudienceTargetDao;
+	@Autowired
+	private CampaignAudienceFixDao campaignAudienceFixDao;
 	@Autowired
 	private CampaignDecisionPropCompareDao campaignDecisionPropCompareDao;
 	@Autowired
@@ -182,6 +201,15 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		
 		deleteOldCampaignTask(campaignHeadId);//删除旧任务
 		deleteOldCampaignData(campaignHeadId);//删除旧数据 
+		if(!validSmsUsed(body)){
+			out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getCode(),
+					ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getMsg(),
+					ApiConstant.INT_ZERO,null);				
+			if(null != out) {
+				return out;
+			}
+		}
+				
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
 			Integer taskId= null;//定时任务id
 			List<CampaignSwitch> campaignSwitchList = initCampaignSwitchList(campaignNodeChainIn,campaignHeadId);
@@ -210,19 +238,34 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					break;
 				}
 			}
-			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_AUDIENCE){
+			if (campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_AUDIENCE) {
+				TaskSchedule taskSchedule = null;
 				switch (campaignNodeChainIn.getItemType()) {
-				case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_TARGET://目标人群
-					TaskSchedule taskSchedule = initTaskAudienceTarget(campaignNodeChainIn,campaignHeadId);
-					if(null != taskSchedule) {
+				case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_TARGET:// 细分人群
+					taskSchedule = initTaskAudienceTarget(campaignNodeChainIn, campaignHeadId);
+					if (null != taskSchedule) {
 						taskScheduleDao.insert(taskSchedule);
-						
 						taskId = taskSchedule.getId();
 					}
-					CampaignAudienceTarget campaignAudienceTarget = initCampaignAudienceTarget(campaignNodeChainIn,campaignHeadId);
-					if(null != campaignAudienceTarget) {
+					CampaignAudienceTarget campaignAudienceTarget = initCampaignAudienceTarget(campaignNodeChainIn,
+							campaignHeadId);
+					if (null != campaignAudienceTarget) {
 						CampaignAudienceTargetDao.insert(campaignAudienceTarget);
 					}
+					break;
+				case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_FIX:// 固定人群
+					taskSchedule = initTaskAudienceFix(campaignNodeChainIn, campaignHeadId);
+					if (null != taskSchedule) {
+						taskScheduleDao.insert(taskSchedule);
+						taskId = taskSchedule.getId();
+					}
+					CampaignAudienceFix campaignAudienceFix = initCampaignAudienceFix(campaignNodeChainIn,
+							campaignHeadId);
+					if (null != campaignAudienceFix) {
+						campaignAudienceFixDao.insert(campaignAudienceFix);
+					}
+					break;
+				default:
 					break;
 				}
 			}
@@ -421,10 +464,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getCode(),
 													   ApiErrorCode.BIZ_ERROR_CANPAIGN_FINISH.getMsg(),
 													   ApiConstant.INT_ZERO,null);
-			} else if(!validSmsStatus(body)){
-				out = new CampaignBodyCreateOut(ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getCode(),
-						ApiErrorCode.BIZ_ERROR_CONTACTINFO_SMS_USED.getMsg(),
-						ApiConstant.INT_ZERO,null);				
 			}
 		}else{
 			out = new CampaignBodyCreateOut(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(),
@@ -435,7 +474,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return out;
 	}
 	
-	private boolean validSmsStatus(CampaignBodyCreateIn body) {
+	private boolean validSmsEmpty(CampaignBodyCreateIn body) {
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
 			if(campaignNodeChainIn.getNodeType() != ApiConstant.CAMPAIGN_NODE_ACTION
 					|| campaignNodeChainIn.getItemType() != ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS)
@@ -443,7 +482,22 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			
 			CampaignActionSendSmsIn campaignActionSendSmsIn = 
 						jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendSmsIn.class);
-			if(null == campaignActionSendSmsIn) 
+			if(null == campaignActionSendSmsIn || campaignActionSendSmsIn.getSmsMaterialId() == null)  
+				return false;
+		}
+		
+		return true;
+	}
+
+	private boolean validSmsUsed(CampaignBodyCreateIn body) {
+		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
+			if(campaignNodeChainIn.getNodeType() != ApiConstant.CAMPAIGN_NODE_ACTION
+					|| campaignNodeChainIn.getItemType() != ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS)
+				continue;
+			
+			CampaignActionSendSmsIn campaignActionSendSmsIn = 
+						jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignActionSendSmsIn.class);
+			if(null == campaignActionSendSmsIn || campaignActionSendSmsIn.getSmsMaterialId() == null)  
 				continue;
 			
 			int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
@@ -469,7 +523,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignDecisionPubFansDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignDecisionPrvtFriendsDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignDecisionPropCompareDao.deleteByCampaignHeadId(campaignHeadId);
-		CampaignAudienceTargetDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionWaitDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionSetTagDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionSendPubDao.deleteByCampaignHeadId(campaignHeadId);
@@ -477,7 +530,62 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSendH5Dao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionSaveAudienceDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignTriggerTimerDao.deleteByCampaignHeadId(campaignHeadId);
-		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);		
+		deleteSendSms(campaignHeadId);
+		campaignAudienceFixDao.deleteByCampaignHeadId(campaignHeadId);
+		deleteAudienceTarget(campaignHeadId);
+	}
+	
+	private void deleteAudienceTarget(int campaignHeadId) {
+		deleteSnapSegmentaions(campaignHeadId);		
+		CampaignAudienceTargetDao.deleteByCampaignHeadId(campaignHeadId);		
+	}
+
+	private void deleteSnapSegmentaions(int campaignHeadId) {
+		CampaignAudienceTarget t = new CampaignAudienceTarget();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setCampaignHeadId(campaignHeadId);
+		List<CampaignAudienceTarget> resList = CampaignAudienceTargetDao.selectList(t);
+		for (CampaignAudienceTarget audience: resList) {
+			Integer snapID = audience.getSnapSegmentationId();
+			if (snapID == null)
+				continue;
+			
+			deleteSnapSegmentation(snapID);			
+		}
+	}
+
+	private void deleteSnapSegmentation(Integer snapID) {
+		this.segmentationHeadDao.deleteByID(snapID);
+		this.segmentationBodyDao.deleteByHeadID(snapID);		
+	}
+
+	private void deleteSendSms(int campaignHeadId) {
+		freeSmsUsedStatusForHead(campaignHeadId);		
+		campaignActionSendSmsDao.deleteByCampaignHeadId(campaignHeadId);		
+	}
+
+	private void freeSmsUsedStatusForHead(int campaignHeadId) {			
+		CampaignActionSendSms t = new CampaignActionSendSms();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setCampaignHeadId(campaignHeadId);
+		List<CampaignActionSendSms> resList = campaignActionSendSmsDao.selectList(t);
+		for (CampaignActionSendSms smsNode: resList) {
+			freeSmsUsedStatusForSmsNode(smsNode);
+		}
+	}
+
+	private void freeSmsUsedStatusForSmsNode(CampaignActionSendSms smsNode) {
+		Integer smsMaterialId = smsNode.getSmsMaterialId();
+		SmsMaterial paramSmsMaterial = new SmsMaterial();
+		paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		paramSmsMaterial.setId(smsMaterialId);
+		List<SmsMaterial> targetSmsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
+		if (CollectionUtils.isNotEmpty(targetSmsMaterialList)) {
+			SmsMaterial m = targetSmsMaterialList.get(0);
+			m.setUseStatus(SmsMaterial.USE_STATUS_NO);
+			smsMaterialDao.updateById(m);
+		}
 	}
 	
 	private void deleteOldCampaignTask (int campaignHeadId) {
@@ -570,6 +678,19 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 					return taskSchedule;
 				}
 			}
+		}
+		return null;
+	}
+	
+	private TaskSchedule initTaskAudienceFix(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignAudienceFixIn campaignAudienceFixIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceFixIn.class);
+		if(null != campaignAudienceFixIn) {
+			TaskSchedule taskSchedule = new TaskSchedule();
+			taskSchedule.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_AUDIENCE_FIX);
+			taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);//新增的任务,默认设置为不可运行
+			taskSchedule.setCampaignHeadId(campaignHeadId);
+			taskSchedule.setCampaignItemId(campaignNodeChainIn.getItemId());
+			return taskSchedule;
 		}
 		return null;
 	}
@@ -978,13 +1099,15 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		if(null == campaignActionSendSmsIn) 
 			return null;
 		
-		int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
-		updateSmsUseStatus(smsMaterialId);
+		if (campaignActionSendSmsIn.getSmsMaterialId() != null) {
+			int smsMaterialId = campaignActionSendSmsIn.getSmsMaterialId();			
+			updateSmsUseStatus(smsMaterialId);			
+		}		
 		
 		campaignActionSendSms.setName(campaignActionSendSmsIn.getName());
 		campaignActionSendSms.setItemId(campaignNodeChainIn.getItemId());
 		campaignActionSendSms.setCampaignHeadId(campaignHeadId);
-		campaignActionSendSms.setSmsMaterialId(smsMaterialId);
+		campaignActionSendSms.setSmsMaterialId(campaignActionSendSmsIn.getSmsMaterialId());
 		campaignActionSendSms.setSmsCategoryType(campaignActionSendSmsIn.getSmsCategoryType());
 		return campaignActionSendSms;
 	}
@@ -1278,19 +1401,96 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignTriggerTimer.setEndTime(DateUtil.getDateFromString(campaignTriggerTimerIn.getEndTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
 		return campaignTriggerTimer;
 	}
-	
+
 	private CampaignAudienceTarget initCampaignAudienceTarget(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignAudienceTarget campaignAudienceTarget = new CampaignAudienceTarget();
 		CampaignAudienceTargetIn campaignAudienceTargetIn = jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceTargetIn.class);
-		if(null == campaignAudienceTargetIn) return null;
+		if(null == campaignAudienceTargetIn) 
+			return null;
+
+		Integer segId = campaignAudienceTargetIn.getSegmentationId();
+		Byte allowedNew = campaignAudienceTargetIn.getAllowedNew();		
+		if ((allowedNew != null) && (allowedNew == 0) && (segId != null) ) {
+			int snapId = snapSegementation(segId);
+			if (snapId != 0) {
+				campaignAudienceTarget.setSnapSegmentationId(snapId);
+			}	
+		}
+		
 		campaignAudienceTarget.setName(campaignAudienceTargetIn.getName());
 		campaignAudienceTarget.setCampaignHeadId(campaignHeadId);
 		campaignAudienceTarget.setItemId(campaignNodeChainIn.getItemId());
-		campaignAudienceTarget.setSegmentationId(campaignAudienceTargetIn.getSegmentationId());
+		campaignAudienceTarget.setSegmentationId(segId);		
 		campaignAudienceTarget.setSegmentationName(campaignAudienceTargetIn.getSegmentationName());
 		campaignAudienceTarget.setAllowedNew(campaignAudienceTargetIn.getAllowedNew());
 		campaignAudienceTarget.setRefreshInterval(campaignAudienceTargetIn.getRefreshInterval());
 		campaignAudienceTarget.setRefreshIntervalType(campaignAudienceTargetIn.getRefreshIntervalType());
 		return campaignAudienceTarget;
+	}
+
+	/*
+	 * 对细分结构做快照，以后活动将从此快照取覆盖人群。
+	 */
+	private int snapSegementation(int segId) {
+        int snapSegmentationHead = snapSegmentationHead(segId);      
+        if (snapSegmentationHead == 0 ) {
+        	return 0;
+        }
+        
+        if (!snapCoveredIDs(segId, snapSegmentationHead)) {
+            return 0;
+        }
+        
+        snapSegmentationBody(segId, snapSegmentationHead);		        	        	        
+		return snapSegmentationHead;
+	}
+
+	private boolean snapCoveredIDs(int segId, int snapSegmentationHead) {
+		try {
+			JedisClient.sunionstore(2, REDIS_IDS_KEY_PREFIX + snapSegmentationHead, REDIS_IDS_KEY_PREFIX + segId);			
+		} catch (JedisException e) {				
+			e.printStackTrace();
+			return false;
+		}		
+		return true;		
+	}
+
+	private void snapSegmentationBody(int orgSegmentationHead, int snapSegmentationHead) {
+		SegmentationBody paramSegmentationBody = new SegmentationBody();
+        paramSegmentationBody.setHeadId(orgSegmentationHead);
+       List<SegmentationBody> segmentationBodyList = segmentationBodyDao.selectList(paramSegmentationBody);
+       for (SegmentationBody body : segmentationBodyList) {    	  
+    	   body.setHeadId(snapSegmentationHead);
+    	   segmentationBodyDao.insert(body);
+       }
+	}
+
+	private int snapSegmentationHead(int segId) {
+		SegmentationHead segmentationHead = new SegmentationHead();
+        segmentationHead.setId(segId);
+        List<SegmentationHead> segmentationHeadList = segmentationHeadDao.selectList(segmentationHead);
+        if(CollectionUtils.isEmpty(segmentationHeadList)){
+        	return 0;
+        }        
+        
+        segmentationHead = segmentationHeadList.get(0);        
+        segmentationHeadDao.insert(segmentationHead);        
+        return segmentationHead.getId();
+	}
+
+	private CampaignAudienceFix initCampaignAudienceFix(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
+		CampaignAudienceFix campaignAudienceFix = new CampaignAudienceFix();
+		CampaignAudienceFixIn campaignAudienceFixIn = 
+					jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignAudienceFixIn.class);
+		if(null == campaignAudienceFixIn) 
+			return null;
+		
+		campaignAudienceFix.setName(campaignAudienceFixIn.getName());
+		campaignAudienceFix.setCampaignHeadId(campaignHeadId);
+		campaignAudienceFix.setItemId(campaignNodeChainIn.getItemId());
+		campaignAudienceFix.setAudienceFixId(campaignAudienceFixIn.getAudienceFixId());
+		campaignAudienceFix.setAudienceFixName(campaignAudienceFixIn.getAudienceFixName());
+		
+		return campaignAudienceFix;
 	}
 }

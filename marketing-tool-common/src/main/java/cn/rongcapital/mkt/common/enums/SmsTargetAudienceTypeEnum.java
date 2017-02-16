@@ -6,7 +6,8 @@ package cn.rongcapital.mkt.common.enums;
 public enum SmsTargetAudienceTypeEnum {
 
     SMS_TARGET_SEGMENTATION(0,"受众细分"),
-    SMS_TARGET_AUDIENCE(1,"固定人群")
+    SMS_TARGET_AUDIENCE(1,"固定人群"),
+    SMS_TARGET_CAMPAIGN(2,"活动目标人群"),
     ;
 
     private Integer typeCode;

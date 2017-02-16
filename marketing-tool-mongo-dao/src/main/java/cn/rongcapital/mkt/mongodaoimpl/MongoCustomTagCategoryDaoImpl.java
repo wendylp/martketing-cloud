@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +97,7 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
     @Override
     public CustomTagCategory findByCategoryId(String categoryId,Integer isDeleted) {
         return mongoTemplate.findOne(
-                new Query(Criteria.where("customTagCategoryId").is(categoryId).and(IS_DELETED).is(isDeleted)),
+                new Query(Criteria.where(CUSTOM_TAG_CATEGORY_ID).is(categoryId).and(IS_DELETED).is(isDeleted)),
                 CUSTOM_TAG_CATEGORY_CLASS);
     }
     
@@ -126,19 +127,26 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
 				.is(customTagCategory.getCustomTagCategoryName()).and(IS_DELETED).is(DATA_VALID));
 		return mongoTemplate.count(query, CUSTOM_TAG_CATEGORY_CLASS);
 	}
+	
+    @Override
+    public boolean updateCategoryNameById(String customTagCategoryId, String customTagCategoryName) {
+        boolean flag = false;
+        if (StringUtils.isNoneBlank(customTagCategoryId)) {
+            Query query = new Query(
+                    Criteria.where(CUSTOM_TAG_CATEGORY_ID).is(customTagCategoryId).and(IS_DELETED).is(DATA_VALID));
+            Update update = new Update().set(CUSTOM_TAG_CATEGORY_NAME, customTagCategoryName);
+            WriteResult writeResult = mongoTemplate.updateFirst(query, update, CUSTOM_TAG_CATEGORY_CLASS);
 
-	@Override
-	public boolean updateCategoryNameById(CustomTagCategory customTagCategory) {
-		boolean flag = false;
-		Query query = new Query(Criteria.where(CUSTOM_TAG_CATEGORY_ID).is(customTagCategory.getCustomTagCategoryId()));
-		Update update = buildBaseUpdate(customTagCategory);
-		WriteResult wr = mongoTemplate.upsert(query, update, CUSTOM_TAG_CATEGORY_CLASS);
-		int n = wr.getN();
-		if (n > 0) {
-			return true;
-		}
-		return flag;
-	}
+            if (writeResult.getN() == 1) {
+                flag = true;
+            } else {
+                logger.info("修改自定义标签名出错,customTagCategoryId：{},customTagCategoryName:{},WriteResult:{}",
+                        customTagCategoryId, customTagCategoryName, writeResult);
+            }
+        }
+
+        return flag;
+    }
 
     @Override
     public void logicalDeleteCustomTagCategoryById(String customTagCategoryId) {
@@ -181,26 +189,5 @@ public class MongoCustomTagCategoryDaoImpl implements MongoCustomTagCategoryDao 
         }
         return new Query(criteria);
 
-    }
-
-    private Update buildBaseUpdate(CustomTagCategory customTagCategory) {
-        Update update = new Update();
-        String className = CustomTagCategory.class.getName();
-        Field[] fields = filedMap.get(className);
-        if (fields == null) {
-            fields = CustomTagCategory.class.getDeclaredFields();
-            filedMap.putIfAbsent(className, fields);
-        }
-        for (Field field : fields) {
-            try {
-                Object value = field.get(customTagCategory);
-                if (value != null) {
-                    update.set(field.getName(), value);
-                }
-            } catch (Exception e) {
-                logger.error("buildBaseUpdate failed", e);
-            }
-        }
-        return update;
     }
 }

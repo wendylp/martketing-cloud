@@ -236,6 +236,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
         smsMaterial.setSmsSignName(getValidateString(smsMaterialIn.getSmsSignName()));
         smsMaterial.setSmsType(getValidateInteger(smsMaterialIn.getSmsType()).byteValue());
         smsMaterial.setSmsTempletId(getValidateInteger(smsMaterialIn.getSmsTempletId()));
+        smsMaterial.setUseStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         if (smsMaterialIn.getSmsTempletId() != null && smsMaterialIn.getSmsTempletId() != 0) {
             SmsTemplet paramSmsTemplet = new SmsTemplet();
             paramSmsTemplet.setId(smsMaterialIn.getSmsTempletId());
