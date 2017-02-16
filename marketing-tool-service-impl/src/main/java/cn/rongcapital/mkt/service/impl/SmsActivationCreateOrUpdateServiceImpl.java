@@ -88,8 +88,12 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
             if(!CollectionUtils.isEmpty(smsActivationCreateIn.getSmsTargetAudienceInArrayList())){
                 for(SmsTargetAudienceIn smsTargetAudienceIn : smsActivationCreateIn.getSmsTargetAudienceInArrayList()){
                     SmsTaskBody insertSmsTaskBody = new SmsTaskBody();
-                    insertSmsTaskBody.setSmsTaskHeadId(insertSmsTaskHead.getId());
-                    insertSmsTaskBody.setTargetId(insertSmsTaskHead.getId());
+                    insertSmsTaskBody.setSmsTaskHeadId(insertSmsTaskHead.getId());                   
+                    if(smsActivationCreateIn.getSmsTaskType()==SMS_TASK_TYPE_CAMPAIGN){
+                    	insertSmsTaskBody.setTargetId(insertSmsTaskHead.getId());
+                    }else{
+                    	insertSmsTaskBody.setTargetId(smsTargetAudienceIn.getTargetAudienceId());
+                    }                    
                     insertSmsTaskBody.setTargetName(smsTargetAudienceIn.getTargetAudienceName());
                     insertSmsTaskBody.setTargetType(smsTargetAudienceIn.getTargetAudienceType());
                     smsTaskBodyDao.insert(insertSmsTaskBody);
