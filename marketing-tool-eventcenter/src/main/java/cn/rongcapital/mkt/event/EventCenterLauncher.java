@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 })
 @ImportResource(value = {"classpath:spring/spring-config-mybatis-heracles.xml",
         "classpath:spring/spring-config-mongodb.xml", 
-        "classpath:event-center.xml"})
+        "classpath:event-center-acmq.xml"})
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 @ComponentScan({"cn.rongcapital.mkt.common", "cn.rongcapital.mkt.event", "cn.rongcapital.mkt.dao.event",
         "cn.rongcapital.mkt.redis"})
