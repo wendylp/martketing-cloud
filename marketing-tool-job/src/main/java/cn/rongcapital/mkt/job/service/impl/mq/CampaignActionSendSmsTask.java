@@ -122,9 +122,10 @@ public class CampaignActionSendSmsTask extends BaseMQService implements TaskServ
 					cn.rongcapital.mkt.po.DataParty dataParty = new cn.rongcapital.mkt.po.DataParty();
 					dataParty.setId(mid);
 					List<cn.rongcapital.mkt.po.DataParty> dataPartyList = dataPartyDao.selectList(dataParty);
-					
-					segmentListToNext.add(segment);//数据放入向后面节点传递的list里
-					dataPartyIds.add(dp.getMid());
+					if(CollectionUtils.isNotEmpty(dataPartyList)){
+						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
+						dataPartyIds.add(dp.getMid());	
+					}
 				}
 			}
 		}
