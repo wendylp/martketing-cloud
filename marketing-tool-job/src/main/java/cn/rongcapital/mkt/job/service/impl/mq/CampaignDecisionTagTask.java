@@ -25,6 +25,7 @@ import com.alibaba.fastjson.JSON;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.CampaignTagTypeEnum;
 import cn.rongcapital.mkt.dao.CampaignDecisionTagDao;
+//import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignSwitch;
@@ -41,6 +42,8 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 	private CampaignDecisionTagDao campaignDecisionTagDao;
 	@Autowired
 	private MongoTemplate mongoTemplate;
+//	@Autowired
+//	private DataPartyDao dataPartyDao;
 	
 	@Override
 	public void task(TaskSchedule taskSchedule) {
@@ -106,7 +109,15 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 				logger.error(e.getMessage(),e);
 			}     
 		}
-	}
+		
+		/**
+		 * 测试用代码
+		 */
+/*		List<String> segmentIdList = new ArrayList<String>();
+		segmentIdList.add("1");
+		List<Segment> segmentListUnique = dataPartyDao.selectSegmentByIdList(segmentIdList);
+		sendDynamicQueue(segmentListUnique, campaignHeadId + "-" + itemId);
+*/	}
 	
 	//处理listener接收到的数据
 	private void processMqMessage(Message message,List<Segment> segmentList,
@@ -130,7 +141,13 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 						if(CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(Integer.parseInt(tagTypeStr))){
 							String tagIdStr = tagIdList.get(i);
 							String[] tagIdsStr = tagIdStr.split(":");
-							criteria = criteria.andOperator(Criteria.where("tag_list.tag_id").is(tagIdsStr[0]).andOperator(Criteria.where("tag_list.tag_value").is(tagIdsStr[1])));
+							String tagId0Str = tagIdsStr[0];
+							//tagId0Str="BrTJgfab_0";
+							String[] tagId0Strs = tagId0Str.split("_");							
+//							criteria = criteria.andOperator(Criteria.where("tag_list.tag_id").is(tagId0Strs[0]).andOperator(Criteria.where("tag_list.tag_value").is(tagIdsStr[1])));
+							criteria = criteria.and("tag_list")
+									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
+						
 						}else{
 							criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 						}
@@ -160,7 +177,12 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 						if(CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(Integer.parseInt(tagTypeStr))){
 							String tagIdStr = tagIdList.get(i);
 							String[] tagIdsStr = tagIdStr.split(":");
-							criteria = criteria.andOperator(Criteria.where("tag_list.tag_id").is(tagIdsStr[0]).andOperator(Criteria.where("tag_list.tag_value").is(tagIdsStr[1])));
+							String tagId0Str = tagIdsStr[0];
+							//tagId0Str="BrTJgfab_0";
+							String[] tagId0Strs = tagId0Str.split("_");							
+//							criteria = criteria.elemMatch(Criteria.where("tag_list.tag_id").is(tagId0Strs[0]).elemMatch(Criteria.where("tag_list.tag_value").is(tagIdsStr[1])));
+							criteria = criteria.and("tag_list")
+									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
 						}else{
 							criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 						}
@@ -191,7 +213,13 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 						if(CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(Integer.parseInt(tagTypeStr))){
 							String tagIdStr = tagIdList.get(i);
 							String[] tagIdsStr = tagIdStr.split(":");
-							criteria3 = criteria3.andOperator(Criteria.where("tag_list.tag_id").is(tagIdsStr[0]).andOperator(Criteria.where("tag_list.tag_value").is(tagIdsStr[1])));
+							String tagId0Str = tagIdsStr[0];
+							//tagId0Str="BrTJgfab_0";
+							String[] tagId0Strs = tagId0Str.split("_");							
+//							criteria3 = criteria3.andOperator(Criteria.where("tag_list.tag_id").is(tagId0Strs[0]).andOperator(Criteria.where("tag_list.tag_value").is(tagIdsStr[1])));
+							criteria3 = criteria3.and("tag_list")
+									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
+
 						}else{
 							criteria3 = criteria3.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 						}
