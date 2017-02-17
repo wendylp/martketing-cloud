@@ -85,7 +85,7 @@ public class TagCampaignFuzzyListServiceImpl implements TagCampaignFuzzyListServ
         // 设置只搜索标签值
         tagValueCountSelect.setIsTag("0");
         tagValueCountSelect.setPageSize(SIZE);
-        List<TagValueCount> tagValueCountLists = tagValueCountDao.selectFuzzyTagValue(tagValueCountSelect);
+        List<TagValueCount> tagValueCountLists = tagValueCountDao.selectFuzzyTagValueAll(tagValueCountSelect);
 
 
         if (tagValueCountLists != null && tagValueCountLists.size() > 0) {
@@ -101,7 +101,7 @@ public class TagCampaignFuzzyListServiceImpl implements TagCampaignFuzzyListServ
             }
 
             // 设置总数
-            result.setTotalCount(tagValueCountDao.selectFuzzyTagValueCount(tagValueCountSelect));
+            result.setTotalCount(tagValueCountDao.selectFuzzyTagValueCountAll(tagValueCountSelect));
         }
 
         return result;
@@ -117,7 +117,7 @@ public class TagCampaignFuzzyListServiceImpl implements TagCampaignFuzzyListServ
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                 ApiConstant.INT_ZERO, null);
 
-        List<CustomTag> customTagLists = mongoCustomTagDao.findByCustomTagNameFuzzyAndCoverNumber(name, SIZE);
+        List<CustomTag> customTagLists = mongoCustomTagDao.findByCustomTagNameFuzzyAndCoverNumberAll(name, SIZE);
 
         if (CollectionUtils.isNotEmpty(customTagLists)) {
             result.setTotal(customTagLists.size());
@@ -138,7 +138,7 @@ public class TagCampaignFuzzyListServiceImpl implements TagCampaignFuzzyListServ
                         customTagList.getCustomTagName(), tagPath, customTagCategoryId, customTagCategoryName);
                 result.getData().add(customTagCampaignOut);
             }
-            result.setTotalCount(Integer.valueOf((int) mongoCustomTagDao.countByCustomTagNameFuzzyAndCoverNumber(name)));
+            result.setTotalCount(Integer.valueOf((int) mongoCustomTagDao.countByCustomTagNameFuzzyAndCoverNumberAll(name)));
         }
 
         return result;

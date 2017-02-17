@@ -162,6 +162,18 @@
 		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
 	</select>
 
+	<select id="selectFuzzyTagValueAll" parameterType="cn.rongcapital.mkt.po.TagValueCount"
+		resultType="cn.rongcapital.mkt.po.TagValueCount">
+        <![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST" />
+		<include refid="QUERY_FROM_TABLE" />
+		<where>
+			<if test="tagValue != null"><![CDATA[ AND tag_value like CONCAT('%',#{tagValue},'%')]]></if>
+			<if test="isTag != null"><![CDATA[ AND is_tag = #{isTag}]]></if>
+		</where>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
+	</select>
+
 	<!-- 模糊搜索标签值和标签名 统计总数 -->
 	<select id="selectFuzzyTagValueCount" parameterType="cn.rongcapital.mkt.po.TagValueCount"
 		resultType="int">
@@ -173,6 +185,16 @@
 			AND value_count > 0
 		</where>
 	</select>
+	
+	   <select id="selectFuzzyTagValueCountAll" parameterType="cn.rongcapital.mkt.po.TagValueCount"
+        resultType="int">
+        <![CDATA[SELECT COUNT(1) AS dataCount]]>
+        <include refid="QUERY_FROM_TABLE" />
+        <where>
+            <if test="tagValue != null"><![CDATA[ AND tag_value like CONCAT('%',#{tagValue},'%')]]></if>
+            <if test="isTag != null"><![CDATA[ AND is_tag = #{isTag}]]></if>
+        </where>
+    </select>
 	
 	<!-- 通过标签ID查询标签 -->
 	<select id="selectTagByTagId" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.TagValueCount">
