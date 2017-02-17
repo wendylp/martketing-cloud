@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
@@ -27,6 +28,7 @@ import cn.rongcapital.mkt.common.enums.CampaignTagTypeEnum;
 import cn.rongcapital.mkt.dao.CampaignDecisionTagDao;
 //import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.job.service.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
@@ -72,12 +74,18 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 		Byte rule = campaignDecisionTag.getRule();//标签判断规则
 		//查询该规则对应的标签list
 		String tagIdsStr =  campaignDecisionTag.getTagIds();
-		List<String> tagIdsStrList = Arrays.asList(tagIdsStr);
+		List<String> tagIdsStrListTemp = null;
+		if(StringUtils.isNotEmpty(tagIdsStr)){
+			String[] tagIdsStrListTemp1 = tagIdsStr.split(",");
+			tagIdsStrListTemp = Arrays.asList(tagIdsStrListTemp1);
+		}
+		List<String> tagIdsStrList = tagIdsStrListTemp;
 		//查询该规则对应的标签类型list
 		String tagTypesStr = campaignDecisionTag.getTagTypes();
 		List<String> tagTypesStrListTemp = null;
 		if(StringUtils.isNotEmpty(tagTypesStr)){
-			tagTypesStrListTemp = Arrays.asList(tagTypesStr);
+			String[] tagTypesStrListTemp1 = tagTypesStr.split(",");
+			tagTypesStrListTemp = Arrays.asList(tagTypesStrListTemp1);
 		}		
 		List<String> tagTypesStrList =tagTypesStrListTemp;
 		
@@ -277,4 +285,14 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 	public void task(Integer taskId) {
 	}
 	
+	
+    public static void main(String[] args) {
+    	String tagTypesStr = "1,2,3,4";
+		List<String> tagTypesStrListTemp = null;
+		if(StringUtils.isNotEmpty(tagTypesStr)){
+			tagTypesStrListTemp = Arrays.asList(tagTypesStr);
+			String[] tagTypesStrListTemp1 = tagTypesStr.split(",");
+			tagTypesStrListTemp = Arrays.asList(tagTypesStrListTemp1);
+		}
+    }
 }
