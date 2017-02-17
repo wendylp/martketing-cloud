@@ -49,6 +49,7 @@ import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
 import cn.rongcapital.mkt.dao.CustomTagDao;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
 import cn.rongcapital.mkt.dao.SegmentationBodyDao;
+import cn.rongcapital.mkt.dao.SegmentationBodySnapDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.TaskScheduleDao;
@@ -116,9 +117,12 @@ import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService {
 
 	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverid:";
+	private static final String REDIS_SNAP_IDS_KEY_PREFIX = "segmentsnapcoverid:";
 
 	@Autowired
 	SegmentationBodyDao segmentationBodyDao;
+	@Autowired
+	SegmentationBodySnapDao segmentationBodySnapDao;
 	@Autowired
 	private CampaignHeadDao campaignHeadDao;
     @Autowired
@@ -557,7 +561,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 
 	private void deleteSnapSegmentation(Integer snapID) {
 		this.segmentationHeadDao.deleteByID(snapID);
-		this.segmentationBodyDao.deleteByHeadID(snapID);		
+		this.segmentationBodySnapDao.deleteByHeadID(snapID);		
 	}
 
 	private void deleteSendSms(int campaignHeadId) {
@@ -1432,22 +1436,17 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	 * 对细分结构做快照，以后活动将从此快照取覆盖人群。
 	 */
 	private int snapSegementation(int segId) {
-        int snapSegmentationHead = snapSegmentationHead(segId);      
-        if (snapSegmentationHead == 0 ) {
-        	return 0;
-        }
-        
-        if (!snapCoveredIDs(segId, snapSegmentationHead)) {
+        if (!snapCoveredIDs(segId)) {
             return 0;
         }
         
-        snapSegmentationBody(segId, snapSegmentationHead);		        	        	        
-		return snapSegmentationHead;
+        snapSegmentationBody(segId);		        	        	        
+		return segId;
 	}
 
-	private boolean snapCoveredIDs(int segId, int snapSegmentationHead) {
+	private boolean snapCoveredIDs(int segId) {
 		try {
-			JedisClient.sunionstore(2, REDIS_IDS_KEY_PREFIX + snapSegmentationHead, REDIS_IDS_KEY_PREFIX + segId);			
+			JedisClient.sunionstore(2, REDIS_SNAP_IDS_KEY_PREFIX + segId, REDIS_IDS_KEY_PREFIX + segId);			
 		} catch (JedisException e) {				
 			e.printStackTrace();
 			return false;
@@ -1455,27 +1454,13 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		return true;		
 	}
 
-	private void snapSegmentationBody(int orgSegmentationHead, int snapSegmentationHead) {
+	private void snapSegmentationBody(int orgSegmentationHead) {
 		SegmentationBody paramSegmentationBody = new SegmentationBody();
         paramSegmentationBody.setHeadId(orgSegmentationHead);
        List<SegmentationBody> segmentationBodyList = segmentationBodyDao.selectList(paramSegmentationBody);
        for (SegmentationBody body : segmentationBodyList) {    	  
-    	   body.setHeadId(snapSegmentationHead);
-    	   segmentationBodyDao.insert(body);
+    	   segmentationBodySnapDao.insert(body);
        }
-	}
-
-	private int snapSegmentationHead(int segId) {
-		SegmentationHead segmentationHead = new SegmentationHead();
-        segmentationHead.setId(segId);
-        List<SegmentationHead> segmentationHeadList = segmentationHeadDao.selectList(segmentationHead);
-        if(CollectionUtils.isEmpty(segmentationHeadList)){
-        	return 0;
-        }        
-        
-        segmentationHead = segmentationHeadList.get(0);        
-        segmentationHeadDao.insert(segmentationHead);        
-        return segmentationHead.getId();
 	}
 
 	private CampaignAudienceFix initCampaignAudienceFix(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
