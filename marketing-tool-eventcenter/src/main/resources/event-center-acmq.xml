@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:jms="http://www.springframework.org/schema/integration/jms"
+    xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context.xsd
+               http://www.springframework.org/schema/tx
+               http://www.springframework.org/schema/tx/spring-tx.xsd
+               http://www.springframework.org/schema/aop
+               http://www.springframework.org/schema/aop/spring-aop.xsd
+               http://www.springframework.org/schema/integration/jms
+			   http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
+               http://www.springframework.org/schema/integration/stream
+               http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+               http://www.springframework.org/schema/integration
+			   http://www.springframework.org/schema/integration/spring-integration.xsd">
+	
+	<context:component-scan base-package="cn.rongcapital.mkt.event.activator"/>
+	
+	<!-- default poller -->
+	<int:poller default="true"  fixed-delay="5000"/>
+	
+	<!-- test events-source channel -->
+	<int:channel id="eventsSource" >
+		<int:queue/>
+	</int:channel>
+	
+	<int:channel id="events">
+		<int:queue/>
+	</int:channel>
+	 
+	<!-- internal events channels -->
+	<int:channel id="systemEvents">
+		<int:queue/>
+	</int:channel>
+
+	 <int:channel id="marketingEvents">
+		<int:queue/>
+	</int:channel>
+	
+	
+	<int:header-value-router input-channel="events" header-name="eventCenter.eventType" default-output-channel="stdErr"> 
+		<int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
+		<int:mapping value="SYSTEM" channel="systemEvents"/>
+		<int:mapping value="MARKETING" channel="marketingEvents"/>
+	</int:header-value-router>
+	
+	
+	<!-- event dispatcher -->
+	<bean id="eventDispatcherActivator" class="cn.rongcapital.mkt.event.activator.EventDispatcherActivator">
+		<property name="channel" ref="eventsSource"/>
+	</bean>
+	
+	<!-- task executors -->
+	<bean id="routeExecutor" 
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="${event.router.executor.corePoolSize}"/>
+		<property name="maxPoolSize" value="${event.router.executor.maxPoolSize}"/>
+	</bean>
+	<bean id="processExecutor" 
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="${event.router.executor.maxPoolSize}"/>
+		<property name="maxPoolSize" value="${event.router.executor.maxPoolSize}"/>
+	</bean>
+	
+	
+	<bean id="errorExecutor" 
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="${event.router.executor.corePoolSize}"/>
+		<property name="maxPoolSize" value="${event.router.executor.maxPoolSize}"/>
+	</bean>
+
+    
+
+	<int-stream:stderr-channel-adapter id="stdErr" append-newline="true"/>
+	
+	 <!-- 默认消息的错误处理 -->
+	<bean id="defaultErrorHandServiceActivator" class="cn.rongcapital.mkt.event.activator.DefaultErrorHandlingServiceActivator"/>
+	
+	
+	<!-- actmq start   -->
+	
+	<bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory">
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
+				<property name="brokerURL" value="${activemq.url}"/>
+			</bean>
+		</property>
+		<property name="sessionCacheSize" value="10"/>
+	</bean>
+	
+	
+	
+	<!-- 定义队列名称 -->
+
+    <bean id="queue_events" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="queue.events"/>
+	</bean>
+	<bean id="queue_marketingEvents" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="queue.marketingEvents"/>
+	</bean>
+	
+    <bean id="queue_error" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="queue.error"/>
+	</bean>	
+		
+	<jms:outbound-channel-adapter id="toMq" 
+	channel="eventsSource" connection-factory="connectionFactory" destination="queue_events"/>
+	
+	<jms:inbound-channel-adapter id="torouter" channel="events" connection-factory="connectionFactory" 
+	destination="queue_events" />
+	
+	 <int:channel id="marketingEvents_temp">
+		<int:queue />
+	 </int:channel>
+	
+	<jms:outbound-channel-adapter id="toMarkEvent" channel="marketingEvents" connection-factory="connectionFactory" 
+	destination="queue_marketingEvents" />
+	
+    <jms:inbound-channel-adapter id="tomkque" channel="marketingEvents_temp" destination="queue_marketingEvents" 
+	 connection-factory="connectionFactory" />
+	
+
+	 <!-- mk处理类 -->
+	 
+	 <int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents_temp" >
+	   <int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="10"/>
+	</int:service-activator>
+	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.service.EventMCReceviceProcessorImpl"/>
+	
+	 <jms:outbound-channel-adapter id="toerror" channel="errorChannel"
+	connection-factory="connectionFactory" destination="queue_error"
+	/>
+	
+	 <int:channel id="error_temp">
+		<int:queue/>
+	 </int:channel>
+	 
+	 <jms:inbound-channel-adapter id="toerrorque" channel="error_temp"
+	 destination="queue_error" connection-factory="connectionFactory"
+	 />
+	 
+	  <int:service-activator  input-channel="error_temp" ref="defaultErrorHandServiceActivator">
+	  <int:poller max-messages-per-poll="1" task-executor="errorExecutor" fixed-rate="10"/>
+	 </int:service-activator>
+	 
+	<!-- actmq end  -->
+	
+	
+	<aop:aspectj-autoproxy/>	
+	
+   
+    
+</beans>
