@@ -67,14 +67,16 @@ public class CustomTagSynServiceImpl implements TaskService {
 				}
 			}
 			for (CustomTagIn customTag : customeTagList) {
-				Query query = Query.query(Criteria.where("mid").in(midList));
-				// 是否包含此标签
-				long count = mongoTemplate.count(Query.query(Criteria.where("mid").in(midList)
-						.and("custom_tag_list.custom_tag_id").is(customTag.getCustomTagId())), DataParty.class);
-				if (count > 0) {
-					continue;
+				for (Integer mid : midList) {
+					// 是否包含此标签
+					long count = mongoTemplate.count(Query.query(Criteria.where("mid").is(mid)
+							.and("custom_tag_list.custom_tag_id").is(customTag.getCustomTagId())), DataParty.class);
+					if (count > 0) {
+						continue;
+					}
+					mongoTemplate.updateMulti(Query.query(Criteria.where("mid").is(mid)),
+							new Update().push("custom_tag_list", customTag), DataParty.class);
 				}
-				mongoTemplate.updateMulti(query, new Update().push("custom_tag_list", customTag), DataParty.class);
 				// 将自定义标签保存到Redis中
 				saveDataToReids(customTag, valueList);
 				// 计算覆盖人数和覆盖人次
