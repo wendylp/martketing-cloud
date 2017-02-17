@@ -68,6 +68,12 @@ public class CustomTagSynServiceImpl implements TaskService {
 			}
 			for (CustomTagIn customTag : customeTagList) {
 				Query query = Query.query(Criteria.where("mid").in(midList));
+				// 是否包含此标签
+				long count = mongoTemplate.count(Query.query(Criteria.where("mid").in(midList)
+						.and("custom_tag_list.custom_tag_id").is(customTag.getCustomTagId())), DataParty.class);
+				if (count > 0) {
+					continue;
+				}
 				mongoTemplate.updateMulti(query, new Update().push("custom_tag_list", customTag), DataParty.class);
 				// 将自定义标签保存到Redis中
 				saveDataToReids(customTag, valueList);
@@ -89,8 +95,10 @@ public class CustomTagSynServiceImpl implements TaskService {
 			String key = REDIS_IDS_KEY_PREFIX + customTagId;
 			boolean delete = JedisClient.delete(REDIS_DB_INDEX, key);
 			logger.info("删除redis数据方法执行结束，key为------>" + key, ",是否成功标识----->" + delete);
-			String[] idArray = (String[]) midList.toArray(new String[midList.size()]);
-			JedisClient.sadd(REDIS_DB_INDEX, key, idArray);
+			if (CollectionUtils.isEmpty(midList)) {
+				String[] idArray = (String[]) midList.toArray(new String[midList.size()]);
+				JedisClient.sadd(REDIS_DB_INDEX, key, idArray);
+			}
 		} catch (Exception e) {
 			logger.error("保存数据到Redis方法出现异常---------->" + e.getMessage(), e);
 		}
