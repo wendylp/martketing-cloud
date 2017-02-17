@@ -71,8 +71,8 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 		List<Segment> segmentListUnique = new ArrayList<Segment>(); // 去重后的segment
 		if (CollectionUtils.isNotEmpty(campaignAudienceTargetList)) {
 			CampaignAudienceTarget cat = campaignAudienceTargetList.get(0);
-			int snapID = cat.getSnapSegmentationId();			
-			String mongoKey = snapID == 0 ? REDIS_IDS_KEY_PREFIX + cat.getSegmentationId()
+			Integer  snapID = cat.getSnapSegmentationId();			
+			String mongoKey = snapID == null ? REDIS_IDS_KEY_PREFIX + cat.getSegmentationId()
 										:REDIS_SNAP_IDS_KEY_PREFIX + cat.getSegmentationId();
 			
 			// TODO congshulin mongo转成redis
