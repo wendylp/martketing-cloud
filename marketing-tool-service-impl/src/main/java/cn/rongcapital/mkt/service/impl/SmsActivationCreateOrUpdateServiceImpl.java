@@ -58,6 +58,7 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
             	SmsTaskHead insertSmsTaskHeadTemp = new SmsTaskHead();
             	insertSmsTaskHeadTemp.setSmsTaskCode(smsActivationCreateIn.getSmsTaskCode());
             	int smsTaskBatch = smsTaskHeadDao.selectListCount(insertSmsTaskHeadTemp);
+            	smsTaskBatch= smsTaskBatch+1;
             	insertSmsTaskHead.setSmsTaskBatch(smsTaskBatch);
             	insertSmsTaskHead.setSmsTaskName(smsActivationCreateIn.getTaskName()+"第"+smsTaskBatch+"批");
             }else{
