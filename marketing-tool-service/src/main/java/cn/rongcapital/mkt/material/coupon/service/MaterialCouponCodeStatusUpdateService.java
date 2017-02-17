@@ -11,6 +11,7 @@ package cn.rongcapital.mkt.material.coupon.service;
 
 import java.util.List;
 
+import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCodeStatusUpdateVO;
 
 
@@ -24,5 +25,12 @@ public interface MaterialCouponCodeStatusUpdateService {
      * @date: 2016/12/7
      */
     public void updateMaterialCouponCodeStatus(List<MaterialCouponCodeStatusUpdateVO> voList);
+    
+    /**
+     * 批量获取MaterialCouponCodeStatusUpdateVO对象，通过List<MaterialCouponCode>
+     * @param codeList
+     * @return
+     */
+    public List<MaterialCouponCodeStatusUpdateVO> getReleasedMaterialCouponCodeStatusUpdateVOes(List<Object> codeList);
 
 }

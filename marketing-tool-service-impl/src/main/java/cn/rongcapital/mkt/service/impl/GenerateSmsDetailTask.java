@@ -12,7 +12,9 @@ import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeStatusUpdateService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponEditDetailService;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCodeStatusUpdateVO;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouPonEditInfoOut;
 import cn.rongcapital.mkt.po.*;
 import cn.rongcapital.mkt.service.MQTopicService;
@@ -90,6 +92,9 @@ public class GenerateSmsDetailTask implements TaskService {
 
     @Autowired
     private CouponCodeListService couponCodeListService;
+    
+    @Autowired
+    private MaterialCouponCodeStatusUpdateService materialCouponCodeStatusUpdateService;
 
     @Autowired
     private CalcSmsTargetAudienceStrateyFactory calcSmsTargetAudienceStrateyFactory;
@@ -280,7 +285,9 @@ public class GenerateSmsDetailTask implements TaskService {
             for(int index = 0; index < totalPage; index++){
                 //Todo:1选出每页所需要的优惠码
                 BaseOutput couponCodeList = couponCodeListService.couponCodeList(smsMaterialMaterielMapList.get(0).getSmsMaterielId(),index*PAGE_SIZE,PAGE_SIZE);
-
+                List<MaterialCouponCodeStatusUpdateVO> materialCouponCodeStatusUpdateVOes = materialCouponCodeStatusUpdateService.getReleasedMaterialCouponCodeStatusUpdateVOes(couponCodeList.getData());
+                materialCouponCodeStatusUpdateService.updateMaterialCouponCodeStatus(materialCouponCodeStatusUpdateVOes);
+                
                 //Todo:2拆分出每页的手机号
                 List<String> subTargetDistinctReceiveMobileList = null;
                 if(index == totalPage-1){

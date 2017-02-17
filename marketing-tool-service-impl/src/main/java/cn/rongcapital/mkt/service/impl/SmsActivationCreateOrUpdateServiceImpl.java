@@ -61,14 +61,16 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
             	smsTaskBatch= smsTaskBatch+1;
             	insertSmsTaskHead.setSmsTaskBatch(smsTaskBatch);
             	insertSmsTaskHead.setSmsTaskName(smsActivationCreateIn.getTaskName()+"第"+smsTaskBatch+"批");
+            	insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode());
             }else{
             	insertSmsTaskHead.setSmsTaskBatch(ApiConstant.INT_ZERO);
             	insertSmsTaskHead.setSmsTaskName(smsActivationCreateIn.getTaskName());
+            	insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_UNSTART.getStatusCode());
             }           
             insertSmsTaskHead.setSmsTaskSignatureId(smsActivationCreateIn.getTaskSignatureId());
             insertSmsTaskHead.setSmsTaskMaterialId(smsActivationCreateIn.getTaskMaterialId());
             insertSmsTaskHead.setSmsTaskMaterialContent(smsActivationCreateIn.getTaskMaterialContent());
-            insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_UNSTART.getStatusCode());
+            
             insertSmsTaskHead.setSmsTaskSendType(smsActivationCreateIn.getTaskSendType());
             insertSmsTaskHead.setSmsTaskAppType(smsActivationCreateIn.getTaskAppType());
             insertSmsTaskHead.setTotalCoverNum(ApiConstant.INT_ZERO);

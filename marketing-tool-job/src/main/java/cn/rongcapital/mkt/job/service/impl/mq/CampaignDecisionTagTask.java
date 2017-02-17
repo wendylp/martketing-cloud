@@ -149,10 +149,14 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
 						
 						}else{
-							criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
+							criteria = criteria.and("custom_tag_list")
+									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
+//							criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 						}
 					}else{
-						criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
+						criteria = criteria.and("custom_tag_list")
+								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
+//						criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 					}					
 					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
 					if(CollectionUtils.isEmpty(dpListM1)) {
@@ -184,10 +188,15 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 							criteria = criteria.and("tag_list")
 									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
 						}else{
-							criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
+//							criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
+							criteria = criteria.and("custom_tag_list")
+									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
 						}
 					}else{
-						criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
+//						criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
+						criteria = criteria.and("custom_tag_list")
+								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
+
 					}					
 					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
 					if(CollectionUtils.isNotEmpty(dpListM1)) {
@@ -221,10 +230,14 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
 
 						}else{
-							criteria3 = criteria3.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
+//							criteria3 = criteria3.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
+							criteria3 = criteria3.and("custom_tag_list")
+									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
 						}
 					}else{
-						criteria3 = criteria3.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
+//						criteria3 = criteria3.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
+						criteria3 = criteria3.and("custom_tag_list")
+								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
 					}
 					
 					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria3), DataParty.class);
