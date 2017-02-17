@@ -107,6 +107,14 @@ public interface MongoCustomTagDao {
      * @return
      */
     public List<CustomTag> findByCustomTagNameFuzzyAndCoverNumber(String customTagName, Integer size);
+    
+    /**
+     * 功能描述：模糊查询自定义标签name，有效数据 
+     * 
+     * @param customTagName
+     * @return
+     */
+    public List<CustomTag> findByCustomTagNameFuzzyAndCoverNumberAll(String customTagName, Integer size);
 
     /**
      * 功能描述：统计模糊查询自定义标签name的数据条数 过滤覆盖人数小于零
@@ -115,6 +123,14 @@ public interface MongoCustomTagDao {
      * @return
      */
     public long countByCustomTagNameFuzzyAndCoverNumber(String customTagName);
+    
+    /**
+     * 功能描述：统计模糊查询自定义标签name的数据条数 
+     * 
+     * @param customTagName
+     * @return
+     */
+    public long countByCustomTagNameFuzzyAndCoverNumberAll(String customTagName);
     
     /**
      * 功能描述：模糊搜索自定义标签名，如果index和size有一个为空则返回全部数据
