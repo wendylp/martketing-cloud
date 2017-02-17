@@ -537,33 +537,9 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);		
 		deleteSendSms(campaignHeadId);
 		campaignAudienceFixDao.deleteByCampaignHeadId(campaignHeadId);
-		deleteAudienceTarget(campaignHeadId);
-	}
-	
-	private void deleteAudienceTarget(int campaignHeadId) {
-		deleteSnapSegmentaions(campaignHeadId);		
 		CampaignAudienceTargetDao.deleteByCampaignHeadId(campaignHeadId);		
 	}
-
-	private void deleteSnapSegmentaions(int campaignHeadId) {
-		CampaignAudienceTarget t = new CampaignAudienceTarget();
-		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		t.setCampaignHeadId(campaignHeadId);
-		List<CampaignAudienceTarget> resList = CampaignAudienceTargetDao.selectList(t);
-		for (CampaignAudienceTarget audience: resList) {
-			Integer snapID = audience.getSnapSegmentationId();
-			if (snapID == null)
-				continue;
-			
-			deleteSnapSegmentation(snapID);			
-		}
-	}
-
-	private void deleteSnapSegmentation(Integer snapID) {
-		this.segmentationHeadDao.deleteByID(snapID);
-		this.segmentationBodySnapDao.deleteByHeadID(snapID);		
-	}
-
+	
 	private void deleteSendSms(int campaignHeadId) {
 		freeSmsUsedStatusForHead(campaignHeadId);		
 		campaignActionSendSmsDao.deleteByCampaignHeadId(campaignHeadId);		
