@@ -95,7 +95,7 @@ public class CustomTagSynServiceImpl implements TaskService {
 			String key = REDIS_IDS_KEY_PREFIX + customTagId;
 			boolean delete = JedisClient.delete(REDIS_DB_INDEX, key);
 			logger.info("删除redis数据方法执行结束，key为------>" + key, ",是否成功标识----->" + delete);
-			if (CollectionUtils.isEmpty(midList)) {
+			if (!CollectionUtils.isEmpty(midList)) {
 				String[] idArray = (String[]) midList.toArray(new String[midList.size()]);
 				JedisClient.sadd(REDIS_DB_INDEX, key, idArray);
 			}
