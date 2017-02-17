@@ -47,6 +47,8 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 	private TaskScheduleDao taskScheduleDao;
 
 	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverid:";
+	private static final String REDIS_SNAP_IDS_KEY_PREFIX = "segmentsnapcoverid:";
+
 
 	private ExecutorService executor = null;
 
@@ -69,19 +71,17 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 		List<Segment> segmentListUnique = new ArrayList<Segment>(); // 去重后的segment
 		if (CollectionUtils.isNotEmpty(campaignAudienceTargetList)) {
 			CampaignAudienceTarget cat = campaignAudienceTargetList.get(0);
-			int snapID = cat.getSnapSegmentationId();
-			if (snapID == 0) {
-				//快照id无效，取原来的细分id
-				snapID = cat.getSegmentationId();
-			}
+			int snapID = cat.getSnapSegmentationId();			
+			String mongoKey = snapID == 0 ? REDIS_IDS_KEY_PREFIX + cat.getSegmentationId()
+										:REDIS_SNAP_IDS_KEY_PREFIX + cat.getSegmentationId();
 			
 			// TODO congshulin mongo转成redis
 			long startTime = System.currentTimeMillis();
 			executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
 			List<Future<List<Segment>>> resultList = new ArrayList<Future<List<Segment>>>();
 			try {
-				Set<String> smembers = JedisClient.smembers(REDIS_IDS_KEY_PREFIX + snapID, 2);
-				logger.info("redis key {} get value {}.", REDIS_IDS_KEY_PREFIX + snapID, smembers.size());
+				Set<String> smembers = JedisClient.smembers(mongoKey, 2);
+				logger.info("redis key {} get value {}.", mongoKey, smembers.size());
 				if (CollectionUtils.isNotEmpty(smembers)) {
 					List<List<String>> setList = ListSplit.getSetSplit(smembers, BATCH_SIZE);
 					for (List<String> segmentIdList : setList) {
