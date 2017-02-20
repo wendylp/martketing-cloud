@@ -128,7 +128,10 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 					}
 				};
 				ScheduledFuture<?> scheduledFuture = null;
-				if(null != realativeType && null != relativeValue) {
+			    if(null != specificTime) {
+						scheduledFuture = taskSchedule.schedule(task, specificTime);
+						logger.info(queueKey+"-processMqMessage:  spec time"+(specificTime));
+			    } else if(null != realativeType && null != relativeValue) {
 					DateTime now = new DateTime();
 					DateTime execTime = null;
 					switch (realativeType) {
@@ -150,10 +153,6 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 						break;
 					}
 					logger.info(queueKey+"-processMqMessage:  relative time"+(execTime));
-				} else if(null != specificTime) {
-					scheduledFuture = taskSchedule.schedule(task, specificTime);
-					logger.info(queueKey+"-processMqMessage:  spec time"+(specificTime));
-
 				}
 				if(null != scheduledFuture) {
 					waitTaskMap.put(cs.getCampaignHeadId()+"-"+cs.getNextItemId()+"-"+System.currentTimeMillis()+"-"+segmentListToNext.hashCode(), scheduledFuture);
