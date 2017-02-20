@@ -149,8 +149,11 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 						scheduledFuture = taskSchedule.schedule(task, execTime.toDate());
 						break;
 					}
+					logger.info(queueKey+"-processMqMessage:  relative time"+(execTime));
 				} else if(null != specificTime) {
 					scheduledFuture = taskSchedule.schedule(task, specificTime);
+					logger.info(queueKey+"-processMqMessage:  spec time"+(specificTime));
+
 				}
 				if(null != scheduledFuture) {
 					waitTaskMap.put(cs.getCampaignHeadId()+"-"+cs.getNextItemId()+"-"+System.currentTimeMillis()+"-"+segmentListToNext.hashCode(), scheduledFuture);
