@@ -152,19 +152,16 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 							String tagId0Str = tagIdsStr[0];
 							//tagId0Str="BrTJgfab_0";
 							String[] tagId0Strs = tagId0Str.split("_");							
-//							criteria = criteria.andOperator(Criteria.where("tag_list.tag_id").is(tagId0Strs[0]).andOperator(Criteria.where("tag_list.tag_value").is(tagIdsStr[1])));
 							criteria = criteria.and("tag_list")
 									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
 						
 						}else{
 							criteria = criteria.and("custom_tag_list")
 									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
-//							criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 						}
 					}else{
 						criteria = criteria.and("custom_tag_list")
 								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
-//						criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 					}					
 					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
 					if(CollectionUtils.isEmpty(dpListM1)) {
@@ -192,16 +189,13 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 							String tagId0Str = tagIdsStr[0];
 							//tagId0Str="BrTJgfab_0";
 							String[] tagId0Strs = tagId0Str.split("_");							
-//							criteria = criteria.elemMatch(Criteria.where("tag_list.tag_id").is(tagId0Strs[0]).elemMatch(Criteria.where("tag_list.tag_value").is(tagIdsStr[1])));
 							criteria = criteria.and("tag_list")
 									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
 						}else{
-//							criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 							criteria = criteria.and("custom_tag_list")
 									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
 						}
 					}else{
-//						criteria = criteria.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 						criteria = criteria.and("custom_tag_list")
 								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
 
@@ -233,17 +227,14 @@ public class CampaignDecisionTagTask extends BaseMQService implements TaskServic
 							String tagId0Str = tagIdsStr[0];
 							//tagId0Str="BrTJgfab_0";
 							String[] tagId0Strs = tagId0Str.split("_");							
-//							criteria3 = criteria3.andOperator(Criteria.where("tag_list.tag_id").is(tagId0Strs[0]).andOperator(Criteria.where("tag_list.tag_value").is(tagIdsStr[1])));
 							criteria3 = criteria3.and("tag_list")
 									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
 
 						}else{
-//							criteria3 = criteria3.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 							criteria3 = criteria3.and("custom_tag_list")
 									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
 						}
 					}else{
-//						criteria3 = criteria3.andOperator(Criteria.where("custom_tag_list").is(tagIdList.get(i)));
 						criteria3 = criteria3.and("custom_tag_list")
 								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
 					}
