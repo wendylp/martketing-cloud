@@ -42,7 +42,7 @@ public class CustomTagToDeleteServiceImpl implements CustomTagToDeleteService {
     public BaseOutput deleteCustomTag(CustomTagToDeleteIn customTagToDeleteIn) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
 
-        //Todo:1在该自定义标签所属的分类中移除这个自定义标签
+        //1在该自定义标签所属的分类中移除这个自定义标签
         CustomTagCategory paramCustomTagCategory = new CustomTagCategory();
         paramCustomTagCategory.setCustomTagCategoryId(customTagToDeleteIn.getCustomTagCategoryId());
         CustomTagCategory upadateCustomTagCategory = mongoCustomTagCategoryDao.findOne(paramCustomTagCategory);
@@ -54,10 +54,10 @@ public class CustomTagToDeleteServiceImpl implements CustomTagToDeleteService {
         upadateCustomTagCategory.getChildrenCustomTagList().remove(customTagToDeleteIn.getCustomTagId());
         mongoCustomTagCategoryDao.updateCustomTagCategoryChildrenListById(customTagToDeleteIn.getCustomTagCategoryId(),upadateCustomTagCategory);
 
-        //Todo:2逻辑删除这个自定义标签
+        //2逻辑删除这个自定义标签
         mongoCustomTagDao.logicalDeleteCustomTagByCustomTagId(customTagToDeleteIn.getCustomTagId());
 
-        //Todo:3发送自己被删除的消息通知其他模块进行相应的处理
+        //3发送自己被删除的消息通知其他模块进行相应的处理
         try {
             ActiveMqMessageVO message = new ActiveMqMessageVO();
             message.setTaskName("自定义标签删除导致细分更新");

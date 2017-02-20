@@ -89,7 +89,8 @@ public class CustomTagMaterialMapServiceImpl implements CustomTagMaterialMapServ
 				materialType);
 		for (String customTagId : customTagIdList) {
 			CustomTag customTag = customTagDao.getCustomTagByTagId(customTagId);
-			CustomTagCategory customTagCategory = customTagCategoryDao.findByChildrenCustomTagList(customTagId);
+			CustomTagCategory customTagCategory = mongoTemplate.findOne(
+					new Query(Criteria.where("custom_tag_category_id").is(customTag.getParentId())), CustomTagCategory.class);
 			if (customTagCategory == null) { // 为Null表示错误数据
 				continue;
 			}

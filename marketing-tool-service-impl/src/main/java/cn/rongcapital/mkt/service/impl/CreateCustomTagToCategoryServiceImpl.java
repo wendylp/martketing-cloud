@@ -93,7 +93,7 @@ public class CreateCustomTagToCategoryServiceImpl implements CreateCustomTagToCa
             insertCustomTag.setCoverFrequency(new Integer(0));
             mongoCustomTagDao.insertCustomTag(insertCustomTag);
 
-            //Todo:3更新他所属分类的儿子节点列表
+            //3更新他所属分类的儿子节点列表
             paramCustomTagCategory = new CustomTagCategory();
             paramCustomTagCategory.setCustomTagCategoryId(customTagSaveToCategoryIn.getCustomTagCategoryId());
             CustomTagCategory customTagCategory = mongoCustomTagCategoryDao.findOne(paramCustomTagCategory);

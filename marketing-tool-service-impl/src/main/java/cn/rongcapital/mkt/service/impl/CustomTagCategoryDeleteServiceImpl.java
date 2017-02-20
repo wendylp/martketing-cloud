@@ -21,21 +21,18 @@ public class CustomTagCategoryDeleteServiceImpl implements CustomTagCategoryDele
     @Autowired
     private MongoCustomTagCategoryDao mongoCustomTagCategoryDao;
 
-    @Autowired
-    private MongoCustomTagDao mongoCustomTagDao;
-
     @Override
     public BaseOutput deleteCustomTagCategory(CustomTagCategoryDeleteIn customTagCategoryDeleteIn) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
 
-        //Todo:1判断是否是未定义分类，如果是返回未定义分类不能删除的提示信息，否则下一步
+        //1判断是否是未定义分类，如果是返回未定义分类不能删除的提示信息，否则下一步
         if(customTagCategoryDeleteIn.getCustomTagCategoryId().equals(ApiConstant.CUSTOM_TAG_DEFAULT_CATEGORY_ID)){
             baseOutput.setCode(ApiErrorCode.BIZ_ERROR_CUSTOM_TAG_DEFAULT_CATEGORY_CANT_DELETE.getCode());
             baseOutput.setMsg(ApiErrorCode.BIZ_ERROR_CUSTOM_TAG_DEFAULT_CATEGORY_CANT_DELETE.getMsg());
             return baseOutput;
         }
 
-        //Todo:1.5判断是否是有效的自定义分类，如果是不存在的分类则直接返回错误
+        //1.5判断是否是有效的自定义分类，如果是不存在的分类则直接返回错误
         CustomTagCategory verifyCustomTagCategory = new CustomTagCategory();
         verifyCustomTagCategory.setCustomTagCategoryId(customTagCategoryDeleteIn.getCustomTagCategoryId());
         CustomTagCategory resultCustomTagCategory = mongoCustomTagCategoryDao.findOne(verifyCustomTagCategory);
@@ -45,7 +42,7 @@ public class CustomTagCategoryDeleteServiceImpl implements CustomTagCategoryDele
             return baseOutput;
         }
 
-        //Todo:2判断该分类下是否有自定义标签，如果有返回相应的信息，否则下一步
+        //2判断该分类下是否有自定义标签，如果有返回相应的信息，否则下一步
         CustomTagCategory paramCustomTagCategory = new CustomTagCategory();
         paramCustomTagCategory.setCustomTagCategoryId(customTagCategoryDeleteIn.getCustomTagCategoryId());
         CustomTagCategory toDeleteCustomTagCategory = mongoCustomTagCategoryDao.findOne(paramCustomTagCategory);
@@ -59,10 +56,8 @@ public class CustomTagCategoryDeleteServiceImpl implements CustomTagCategoryDele
             baseOutput.setMsg(ApiErrorCode.BIZ_ERROR_CUSTOM_TAG_CATEGORY_HAS_CHILDREN.getMsg());
             return baseOutput;
         }
-        //Todo:3对该自定义标签分类进行逻辑删除
+        //3对该自定义标签分类进行逻辑删除
         mongoCustomTagCategoryDao.logicalDeleteCustomTagCategoryById(customTagCategoryDeleteIn.getCustomTagCategoryId());
-
-        //Todo:4发送信息，从而修改其他部分的连带逻辑，经验证删除自定义标签分类时不需要进行相关逻辑的修改
 
         return baseOutput;
     }

@@ -45,7 +45,7 @@ public class CustomTagMoveToSpecifyCategoryServiceImpl implements CustomTagMoveT
     public BaseOutput moveCustomTagToSpecifyCategory(CtMoveToSpeCategoryIn ctMoveToSpeCategoryIn) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
-        //Todo:0判断传递的分类是否是有效分类，如果是无效分类，则返回相应的错误码。
+        //0判断传递的分类是否是有效分类，如果是无效分类，则返回相应的错误码。
         CustomTagCategory verifyCustomTagCategory = new CustomTagCategory();
         verifyCustomTagCategory.setCustomTagCategoryId(ctMoveToSpeCategoryIn.getCustomTagOldCategoryId());
         CustomTagCategory targetOldCustomTagCategory = mongoCustomTagCategoryDao.findOne(verifyCustomTagCategory);
@@ -57,7 +57,7 @@ public class CustomTagMoveToSpecifyCategoryServiceImpl implements CustomTagMoveT
             return baseOutput;
         }
 
-        //Todo:1根据要被移动的标签的名称选出他的所有的ParentId集合。
+        //1根据要被移动的标签的名称选出他的所有的ParentId集合。
         CustomTag paramCustomTag = new CustomTag();
         paramCustomTag.setCustomTagName(ctMoveToSpeCategoryIn.getCustomTagName());
         List<CustomTag> customTagList = mongoCustomTagDao.find(paramCustomTag);
@@ -66,14 +66,14 @@ public class CustomTagMoveToSpecifyCategoryServiceImpl implements CustomTagMoveT
             customTagParentIdList.add(customTag.getParentId());
         }
 
-        //Todo:2判断这个集合是否包含了新的分类Id，如果是返回无法移动，如果不是，进行下一步。
+        //2判断这个集合是否包含了新的分类Id，如果是返回无法移动，如果不是，进行下一步。
         if(customTagParentIdList.contains(ctMoveToSpeCategoryIn.getCustomTagNewCategoryId())){
             baseOutput.setCode(ApiErrorCode.BIZ_ERROR_CUSTOM_TAG_DUPLICATED_ERROR.getCode());
             baseOutput.setMsg(ApiErrorCode.BIZ_ERROR_CUSTOM_TAG_DUPLICATED_ERROR.getMsg());
             return baseOutput;
         }
 
-        //Todo:3更新原分类的children_tag_list，去掉被移动的标签Id
+        //3更新原分类的children_tag_list，去掉被移动的标签Id
         CustomTagCategory paramOldCustomCategory = new CustomTagCategory();
         paramOldCustomCategory.setCustomTagCategoryId(ctMoveToSpeCategoryIn.getCustomTagOldCategoryId());
         CustomTagCategory oldCustomTagCategory = mongoCustomTagCategoryDao.findOne(paramOldCustomCategory);
@@ -85,14 +85,14 @@ public class CustomTagMoveToSpecifyCategoryServiceImpl implements CustomTagMoveT
         oldCustomTagCategory.getChildrenCustomTagList().remove(ctMoveToSpeCategoryIn.getCustomTagId());
         mongoCustomTagCategoryDao.updateCustomTagCategoryChildrenListById(ctMoveToSpeCategoryIn.getCustomTagOldCategoryId(),oldCustomTagCategory);
 
-        //Todo:4更新新的分类的children_tag_list，添加被移动的标签Id
+        //4更新新的分类的children_tag_list，添加被移动的标签Id
         CustomTagCategory paramNewcustomTagCategory = new CustomTagCategory();
         paramNewcustomTagCategory.setCustomTagCategoryId(ctMoveToSpeCategoryIn.getCustomTagNewCategoryId());
         CustomTagCategory newCustomTagCategory = mongoCustomTagCategoryDao.findOne(paramNewcustomTagCategory);
         newCustomTagCategory.getChildrenCustomTagList().add(ctMoveToSpeCategoryIn.getCustomTagId());
         mongoCustomTagCategoryDao.updateCustomTagCategoryChildrenListById(ctMoveToSpeCategoryIn.getCustomTagNewCategoryId(),newCustomTagCategory);
 
-        //Todo:5更新标签的ParentId
+        //5更新标签的ParentId
         CustomTag paramUpdateCustomTag = new CustomTag();
         paramUpdateCustomTag.setCustomTagId(ctMoveToSpeCategoryIn.getCustomTagId());
         CustomTag updateCustomTag = mongoCustomTagDao.findOne(paramUpdateCustomTag);
@@ -104,7 +104,7 @@ public class CustomTagMoveToSpecifyCategoryServiceImpl implements CustomTagMoveT
         updateCustomTag.setParentId(ctMoveToSpeCategoryIn.getCustomTagNewCategoryId());
         mongoCustomTagDao.updateCustomTagParentIdByCustomTagId(ctMoveToSpeCategoryIn.getCustomTagId(),ctMoveToSpeCategoryIn.getCustomTagNewCategoryId());
 
-        //Todo:6发送自定义标签从一个分类移动到另一个分类的消息
+        //6发送自定义标签从一个分类移动到另一个分类的消息
         try {
             ActiveMqMessageVO message = new ActiveMqMessageVO();
             message.setTaskName("自定义标签更改分类导致细分更新");
