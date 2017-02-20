@@ -121,7 +121,7 @@ public class CustomTagSynServiceImpl implements TaskService {
 		if (!CollectionUtils.isEmpty(eventList) && !CollectionUtils.isEmpty(midList)) {
 			Query query = Query.query(Criteria.where("custom_tag_id").is(customTagId));
 			mongoTemplate.updateFirst(query,
-					new Update().inc("cover_number", midList.size()).inc("cover_frequency", eventList.size()),
+					new Update().set("cover_number", midList.size()).set("cover_frequency", eventList.size()),
 					CustomTag.class);
 		}
 	}
