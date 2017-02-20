@@ -64,12 +64,18 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 		Date specificTime = campaignActionWaitList.get(0).getSpecificTime();
 		
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
+
 		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
+		logger.info(campaignHeadId+"-"+itemId+"-queue:"+JSON.toJSONString(queue)
+				+ "-consumer:"+JSON.toJSONString(consumer));
+
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onMessage(Message message) {
+				logger.info(campaignHeadId+"-"+itemId+"-onMessage:"+JSON.toJSONString(message));
+
 				if(message!=null) {
 					try {
 						//获取segment list数据对象
@@ -106,6 +112,12 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 				segmentListToNext.add(segment);
 			}
 		}
+		logger.info(campaignHeadId+"-"+itemId+"-processMqMessage:"+segmentListToNext.size() 
+				+ "@campaignEndsList=" + (campaignEndsList == null ? 0 : campaignEndsList.size())
+				+ ",realativeType=" + realativeType.byteValue()
+				+ ",relativeValue=" + relativeValue
+				+ ",specificTime=" + specificTime);
+
 		if(CollectionUtils.isNotEmpty(campaignEndsList)) {
 			for(CampaignSwitch cs:campaignEndsList) {
 				Runnable task = new Runnable() {
@@ -143,6 +155,8 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 				if(null != scheduledFuture) {
 					waitTaskMap.put(cs.getCampaignHeadId()+"-"+cs.getNextItemId()+"-"+System.currentTimeMillis()+"-"+segmentListToNext.hashCode(), scheduledFuture);
 				}
+				logger.info(queueKey+"-processMqMessage:"+JSON.toJSONString(scheduledFuture));
+
 			}
 		}
 	}	
