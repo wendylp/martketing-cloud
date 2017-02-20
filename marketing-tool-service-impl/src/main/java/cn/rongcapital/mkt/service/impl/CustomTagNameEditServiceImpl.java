@@ -44,7 +44,7 @@ public class CustomTagNameEditServiceImpl implements CustomTagNameEditService{
     public BaseOutput editCustomTagName(CustomTagNameEditIn customTagNameEditIn) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
 
-        //Todo:1通过分类Id查询所有标签的集合，构造出标签名称的集合
+        //1通过分类Id查询所有标签的集合，构造出标签名称的集合
         CustomTag paramCustomTag = new CustomTag();
         paramCustomTag.setParentId(customTagNameEditIn.getCustomTagCategoryId());
         List<CustomTag> customTagList = mongoCustomTagDao.find(paramCustomTag);
@@ -57,16 +57,16 @@ public class CustomTagNameEditServiceImpl implements CustomTagNameEditService{
         for(CustomTag customTag : customTagList){
             existCustomTagNameList.add(customTag.getCustomTagName());
         }
-        //Todo:2判断是否包含了要修改的标签名称，如果有则返回相应的错误信息，没有进行下一步
+        //2判断是否包含了要修改的标签名称，如果有则返回相应的错误信息，没有进行下一步
         if(existCustomTagNameList.contains(customTagNameEditIn.getCustomTagNewName())){
             baseOutput.setCode(ApiErrorCode.BIZ_ERROR_CUSTOM_TAG_DUPLICATED_ERROR.getCode());
             baseOutput.setMsg(ApiErrorCode.BIZ_ERROR_CUSTOM_TAG_DUPLICATED_ERROR.getMsg());
             return baseOutput;
         }
-        //Todo:3如果没有则进行名称修改
+        //3如果没有则进行名称修改
         mongoCustomTagDao.updateCustomTagNameByCustomTagId(customTagNameEditIn.getCustomTagId(),customTagNameEditIn.getCustomTagNewName());
 
-        //Todo:4发送标签名称发生修改的消息
+        //4发送标签名称发生修改的消息
         try {
             ActiveMqMessageVO message = new ActiveMqMessageVO();
             message.setTaskName("自定义标签更新名称导致细分更新");
