@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisException;
+import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.po.CampaignActionSendSms;
+import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.service.CampaignActionSendSmsService;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
@@ -39,13 +41,20 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 	@Autowired
 	public SmsMaterialDao smsMaterialDao;
 	
+	@Autowired
+	public CampaignHeadDao campaignHeadDao;
+	
 	@Override
 	public SmsActivationCreateIn getSmsActivationCreateIn(Integer campaignHeadId, String itemId,
 			CampaignActionSendSms campaignActionSendSms,Set<Integer> dataPartyIds) {
 		SmsActivationCreateIn smsActivationCreateIn = new SmsActivationCreateIn();
 		smsActivationCreateIn.setTaskAppType(campaignActionSendSms.getSmsCategoryType());
 		smsActivationCreateIn.setTaskMaterialId(Long.parseLong(String.valueOf(campaignActionSendSms.getSmsMaterialId())));
-		smsActivationCreateIn.setTaskName(SMS_TASK_NAME+campaignActionSendSms.getName());
+		CampaignHead campaignHeadTemp = new CampaignHead();
+		campaignHeadTemp.setId(campaignHeadId);
+		List<CampaignHead> campaignHeads = campaignHeadDao.selectList(campaignHeadTemp);
+		CampaignHead campaignHead = campaignHeads.get(0);
+		smsActivationCreateIn.setTaskName(SMS_TASK_NAME+campaignHead.getName()+"_"+campaignActionSendSms.getName());
 		String smsTaskCode = campaignHeadId+"-"+itemId;
 		smsActivationCreateIn.setSmsTaskCode(smsTaskCode);
 		smsActivationCreateIn.setSmsTaskType(SMS_TASK_TYPE_CAMPAIGN);

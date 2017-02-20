@@ -58,16 +58,19 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
             	SmsTaskHead insertSmsTaskHeadTemp = new SmsTaskHead();
             	insertSmsTaskHeadTemp.setSmsTaskCode(smsActivationCreateIn.getSmsTaskCode());
             	int smsTaskBatch = smsTaskHeadDao.selectListCount(insertSmsTaskHeadTemp);
+            	smsTaskBatch= smsTaskBatch+1;
             	insertSmsTaskHead.setSmsTaskBatch(smsTaskBatch);
             	insertSmsTaskHead.setSmsTaskName(smsActivationCreateIn.getTaskName()+"第"+smsTaskBatch+"批");
+            	insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode());
             }else{
             	insertSmsTaskHead.setSmsTaskBatch(ApiConstant.INT_ZERO);
             	insertSmsTaskHead.setSmsTaskName(smsActivationCreateIn.getTaskName());
+            	insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_UNSTART.getStatusCode());
             }           
             insertSmsTaskHead.setSmsTaskSignatureId(smsActivationCreateIn.getTaskSignatureId());
             insertSmsTaskHead.setSmsTaskMaterialId(smsActivationCreateIn.getTaskMaterialId());
             insertSmsTaskHead.setSmsTaskMaterialContent(smsActivationCreateIn.getTaskMaterialContent());
-            insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_UNSTART.getStatusCode());
+            
             insertSmsTaskHead.setSmsTaskSendType(smsActivationCreateIn.getTaskSendType());
             insertSmsTaskHead.setSmsTaskAppType(smsActivationCreateIn.getTaskAppType());
             insertSmsTaskHead.setTotalCoverNum(ApiConstant.INT_ZERO);
@@ -88,8 +91,12 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
             if(!CollectionUtils.isEmpty(smsActivationCreateIn.getSmsTargetAudienceInArrayList())){
                 for(SmsTargetAudienceIn smsTargetAudienceIn : smsActivationCreateIn.getSmsTargetAudienceInArrayList()){
                     SmsTaskBody insertSmsTaskBody = new SmsTaskBody();
-                    insertSmsTaskBody.setSmsTaskHeadId(insertSmsTaskHead.getId());
-                    insertSmsTaskBody.setTargetId(insertSmsTaskHead.getId());
+                    insertSmsTaskBody.setSmsTaskHeadId(insertSmsTaskHead.getId());                   
+                    if(smsActivationCreateIn.getSmsTaskType()==SMS_TASK_TYPE_CAMPAIGN){
+                    	insertSmsTaskBody.setTargetId(insertSmsTaskHead.getId());
+                    }else{
+                    	insertSmsTaskBody.setTargetId(smsTargetAudienceIn.getTargetAudienceId());
+                    }                    
                     insertSmsTaskBody.setTargetName(smsTargetAudienceIn.getTargetAudienceName());
                     insertSmsTaskBody.setTargetType(smsTargetAudienceIn.getTargetAudienceType());
                     smsTaskBodyDao.insert(insertSmsTaskBody);

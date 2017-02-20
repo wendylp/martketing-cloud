@@ -32,7 +32,7 @@ import cn.rongcapital.mkt.vo.in.CustomTagIn;
  * @date: 2017/2/4
  * @复审人:
  *************************************************/
-@Service("CustomTagSynServiceImpl")
+@Service
 public class CustomTagSynServiceImpl implements TaskService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -67,8 +67,16 @@ public class CustomTagSynServiceImpl implements TaskService {
 				}
 			}
 			for (CustomTagIn customTag : customeTagList) {
-				Query query = Query.query(Criteria.where("mid").in(midList));
-				mongoTemplate.updateMulti(query, new Update().push("custom_tag_list", customTag), DataParty.class);
+				for (Integer mid : midList) {
+					// 是否包含此标签
+					long count = mongoTemplate.count(Query.query(Criteria.where("mid").is(mid)
+							.and("custom_tag_list.custom_tag_id").is(customTag.getCustomTagId())), DataParty.class);
+					if (count > 0) {
+						continue;
+					}
+					mongoTemplate.updateMulti(Query.query(Criteria.where("mid").is(mid)),
+							new Update().push("custom_tag_list", customTag), DataParty.class);
+				}
 				// 将自定义标签保存到Redis中
 				saveDataToReids(customTag, valueList);
 				// 计算覆盖人数和覆盖人次
@@ -89,8 +97,10 @@ public class CustomTagSynServiceImpl implements TaskService {
 			String key = REDIS_IDS_KEY_PREFIX + customTagId;
 			boolean delete = JedisClient.delete(REDIS_DB_INDEX, key);
 			logger.info("删除redis数据方法执行结束，key为------>" + key, ",是否成功标识----->" + delete);
-			String[] idArray = (String[]) midList.toArray(new String[midList.size()]);
-			JedisClient.sadd(REDIS_DB_INDEX, key, idArray);
+			if (!CollectionUtils.isEmpty(midList)) {
+				String[] idArray = (String[]) midList.toArray(new String[midList.size()]);
+				JedisClient.sadd(REDIS_DB_INDEX, key, idArray);
+			}
 		} catch (Exception e) {
 			logger.error("保存数据到Redis方法出现异常---------->" + e.getMessage(), e);
 		}
@@ -111,7 +121,7 @@ public class CustomTagSynServiceImpl implements TaskService {
 		if (!CollectionUtils.isEmpty(eventList) && !CollectionUtils.isEmpty(midList)) {
 			Query query = Query.query(Criteria.where("custom_tag_id").is(customTagId));
 			mongoTemplate.updateFirst(query,
-					new Update().inc("cover_number", midList.size()).inc("cover_frequency", eventList.size()),
+					new Update().set("cover_number", midList.size()).set("cover_frequency", eventList.size()),
 					CustomTag.class);
 		}
 	}
