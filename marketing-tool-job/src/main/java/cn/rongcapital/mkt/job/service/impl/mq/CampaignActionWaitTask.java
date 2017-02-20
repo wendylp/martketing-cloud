@@ -66,15 +66,15 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 		Queue queue = getDynamicQueue(campaignHeadId+"-"+itemId);//获取MQ中的当前节点对应的queue
 
 		MessageConsumer consumer = getQueueConsumer(queue);//获取queue的消费者对象
-		logger.info(campaignHeadId+"-"+itemId+"-queue:"+JSON.toJSONString(queue)
-				+ "-consumer:"+JSON.toJSONString(consumer));
+		logger.info(campaignHeadId+"-"+itemId+"-queue:"+(queue)
+				+ "-consumer:"+(consumer));
 
 		//监听MQ的listener
 		MessageListener listener = new MessageListener() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onMessage(Message message) {
-				logger.info(campaignHeadId+"-"+itemId+"-onMessage:"+JSON.toJSONString(message));
+				logger.info(campaignHeadId+"-"+itemId+"-onMessage:"+message);
 
 				if(message!=null) {
 					try {
