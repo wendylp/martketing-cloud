@@ -27,6 +27,9 @@ public class SystemTagIn {
     private Integer tagExclude;
 
     @NotNull
+    private Integer tagType;
+    
+    @NotNull
     private List<SystemValueIn> tagValueList = new ArrayList<>();
 
     @JsonProperty("tag_id")
@@ -64,8 +67,17 @@ public class SystemTagIn {
     public void setTagExclude(Integer tagExclude) {
         this.tagExclude = tagExclude;
     }
+    
+    @JsonProperty("tag_type")
+    public Integer getTagType() {
+		return tagType;
+	}
 
-    @JsonProperty("tag_value_list")
+	public void setTagType(Integer tagType) {
+		this.tagType = tagType;
+	}
+
+	@JsonProperty("tag_value_list")
     public List<SystemValueIn> getTagValueList() {
         return tagValueList;
     }

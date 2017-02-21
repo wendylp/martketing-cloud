@@ -222,7 +222,7 @@ public class CampaignHeaderGetServiceImpl implements CampaignHeaderGetService {
 					// TODO congshulin 从redis取segment
 					try {
 						List<String> hmget = JedisClient.hmget(REDIS_KEY_PREFIX + segmentHeadId, "segmentcount");
-						if (CollectionUtils.isNotEmpty(hmget)) {
+						if (CollectionUtils.isNotEmpty(hmget) && hmget.get(0) != null) {
 							populationCount = Long.parseLong(hmget.get(0));
 						} else {
 							populationCount = 0L;

@@ -21,6 +21,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
+import cn.rongcapital.mkt.service.*;
+import cn.rongcapital.mkt.vo.in.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
@@ -29,29 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.service.CustomTagDeleteService;
-import cn.rongcapital.mkt.service.CustomTagGetService;
-import cn.rongcapital.mkt.service.SystemTagService;
-import cn.rongcapital.mkt.service.TagCustomTaxonomyDelService;
-import cn.rongcapital.mkt.service.TagCustomTaxonomyListGetService;
-import cn.rongcapital.mkt.service.TagCustomTaxonomyRootListGetService;
-import cn.rongcapital.mkt.service.TagCustomTaxonomyRootSaveService;
-import cn.rongcapital.mkt.service.TagCustomTaxonomySaveService;
-import cn.rongcapital.mkt.service.TagCustomTaxonomyShowSetService;
-import cn.rongcapital.mkt.service.TagDownloadCustomAudienceService;
-import cn.rongcapital.mkt.service.TagSystemFlagSetService;
-import cn.rongcapital.mkt.service.TagSystemListGetService;
-import cn.rongcapital.mkt.service.TagSystemTagcountService;
-import cn.rongcapital.mkt.service.TaggroupSystemListGetService;
-import cn.rongcapital.mkt.service.TaggroupSystemMenulistGetService;
 import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.in.CustomTagDeleteIn;
-import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyDelIn;
-import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyRootSaveIn;
-import cn.rongcapital.mkt.vo.in.TagCustomTaxonomySaveIn;
-import cn.rongcapital.mkt.vo.in.TagCustomTaxonomyShowSetIn;
-import cn.rongcapital.mkt.vo.in.TagSystemFlagSetIn;
-import cn.rongcapital.mkt.vo.in.TagValueUpdateIn;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -105,6 +85,8 @@ public class MktSystemTagApi {
     @Autowired
     private TagCustomTaxonomyRootSaveService tagCustomTaxonomyRootSaveService;
 
+    @Autowired
+    private CreateCustomTagToCategoryService createCustomTagToCategoryService;
 
     /**
      * 获取系统标签组列表
@@ -405,4 +387,18 @@ public class MktSystemTagApi {
             @Context SecurityContext securityContext) {
         return tagCustomTaxonomyRootSaveService.tagCustomTaxonomyRootSave(body, securityContext);
     }
+
+
+//    /**
+//     * 创建自定义标签
+//     *
+//     */
+//    @POST
+//    @Path("/mkt.customtag.create.tocategory")
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    public BaseOutput createCustomTagToCategory( CustomTagCreateIn customTagCreateIn,
+//                                       @Context SecurityContext securityContext) {
+////        return createCustomTagToCategoryService.createCustomTagToCategory(customTagCreateIn);
+//         return null;
+//    }
 }

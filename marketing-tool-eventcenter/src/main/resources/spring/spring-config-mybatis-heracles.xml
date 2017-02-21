@@ -137,6 +137,6 @@
         <property name="basePackage" value="cn.rongcapital.mkt.dao.event"/>
     </bean>
 
-<!-- 	<bean class="cn.rongcapital.mkt.common.jedis.JedisConnectionManager"> -->
-<!-- 	</bean> -->
+	<bean class="cn.rongcapital.mkt.common.jedis.JedisConnectionManager">
+	</bean>
 </beans>

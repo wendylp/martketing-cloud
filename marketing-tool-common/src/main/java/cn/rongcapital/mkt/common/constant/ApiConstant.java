@@ -16,6 +16,7 @@ public class ApiConstant {
 	
 	public static final String API_METHOD = "method";//api的method参数
 	public static final String API_PATH = "/api";//api的路径
+	public static final String EVENT_API_PATH = "/event/api";//事件中心api的路径
 	public static final String API_USER_TOKEN = "user_token";//api的user_token参数
 	public static final String API_USER_TOKEN_VALUE = "123";//api的user_token参数
 	public static final String API_USER_ID = "user_id";//api的user_id参数	
@@ -45,6 +46,9 @@ public class ApiConstant {
 	
 	public static final byte SEGMENT_COMPILE_STATUS_YES = 0;//可编辑
 	public static final byte SEGMENT_COMPILE_STATUS_NO = 1;//不可编辑
+	
+	public static final byte SEGMENT_TYPE_SYSTEM_TAG = 0;//系统标签
+	public static final byte SEGMENT_TYPE_CUSTOM_TAG = 1;//自定义标签
 	
 	public static final int INT_ZERO = 0;
 	public static final int INT_ONE = 1;
@@ -89,8 +93,9 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_ITEM_TRIGGER_TIMMER = 0;//时间触发
 	public static final byte CAMPAIGN_ITEM_TRIGGER_MANUAL = 1;//手动触发
 
-	public static final byte CAMPAIGN_ITEM_AUDIENCE_TARGET = 0;//目标人群
-	public static final byte CAMPAIGN_ITEM_AUDIENCE_EVENT = 1;//事件人群
+	public static final byte CAMPAIGN_ITEM_AUDIENCE_TARGET = 0;//细分人群
+	public static final byte CAMPAIGN_ITEM_AUDIENCE_FIX = 1;//固定人群
+	//public static final byte CAMPAIGN_ITEM_AUDIENCE_EVENT = 1;//事件人群
 	
 	public static final int TAG_ITEM_SYSTEM = 0;//系统标签
 	public static final int TAG_ITEM_CUSTOM = 1;//自定义标签
@@ -110,8 +115,9 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_ITEM_ACTION_ADD_CAMPAIGN = 3;//添加到其它活动
 	public static final byte CAMPAIGN_ITEM_ACTION_MOVE_CAMPAIGN = 4;//转移到其它活动
 	public static final byte CAMPAIGN_ITEM_ACTION_SEND_WECHAT_H5 = 5;//发送微信图文
-	public static final byte CAMPAIGN_ITEM_ACTION_SEND_H5 = 6;//发送H5活动
+	public static final byte CAMPAIGN_ITEM_ACTION_SEND_SMS = 6;//发送短信
 	public static final byte CAMPAIGN_ITEM_ACTION_SEND_PRVT_INFO = 7;//发送个人号信息
+	public static final byte CAMPAIGN_ITEM_ACTION_SEND_H5 = 8;//发送H5活动
 	
 	public static final byte TASK_STATUS_VALID = 0;//任务可运行
 	public static final byte TASK_STATUS_INVALID = 1;//任务不可运行
@@ -127,8 +133,10 @@ public class ApiConstant {
 
 	//时间触发节点
 	public static final String TASK_NAME_CAMPAIGN_TRUGGER_TIME = "campaignTriggerTimeTask";
-	//目标人群节点
+	//细分人群节点
 	public static final String TASK_NAME_CAMPAIGN_AUDIENCE_TARGET = "campaignAudienceTargetTask";
+	//固定人群节点
+	public static final String TASK_NAME_CAMPAIGN_AUDIENCE_FIX = "campaignAudienceFixTask";
 	//微信是否发送节点(已去掉)
 //	public static final String TASK_NAME_CAMPAIGN_DECISION_WECHAT_SENT = "campaignDecisionWechatSentTask";
 	//微信是否阅读节点
@@ -145,6 +153,8 @@ public class ApiConstant {
 	public static final String TASK_NAME_CAMPAIGN_ACTION_PUBWECHAT_SEND_H5 = "campaignActionPubWechatSendH5Task";
 	//发送个人号消息
 	public static final String TASK_NAME_CAMPAIGN_ACTION_WECHAT_PRV_SEND_INFO = "campaignActionPrvWechatSendInfoTask";
+	//发送短信
+	public static final String TASK_NAME_CAMPAIGN_ACTION_SEND_SMS = "campaignActionSendSmsTask";
 	//公众号发送H5图文:个人号暂时不支持发送H5图文
 	public static final String TASK_NAME_CAMPAIGN_ACTION_WECHAT_SEND_H5 = "campaignActionWechatSendH5Task";
 	//等待
@@ -394,4 +404,20 @@ public class ApiConstant {
      * 系统标签自定义分类最大显示个数
      */
     public static final int TAG_CUSTOM_TAXONOMY_MAX_SHOW = 10;
+
+	/*
+	 *自定义标签分类类型 预置分类:0 自定义分类:1
+	 */
+	public static final int CUSTOM_TAG_CATEGORY_TYPE_PRESET = 0;
+	public static final int CUSTOM_TAG_CATEGORY_TYPE_DEFINE = 1;
+
+    /*
+     *自定义标签未分类对应的分类ID
+     */
+    public static final String CUSTOM_TAG_DEFAULT_CATEGORY_ID = "yr1oorLSpl1484637382955";
+    
+    /**
+     * 物料类型-微信
+     */
+    public static final String MATERIAL_TYPE_WECHAT = "qrcode_attr";
 }

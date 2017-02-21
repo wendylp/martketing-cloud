@@ -49,6 +49,17 @@ public class EventBehavior implements Serializable {
 
     @Field(value = "subscribed")
     private Boolean subscribed;
+    
+    
+    private Long ObjectId;
+
+    public Long getObjectId() {
+        return ObjectId;
+    }
+
+    public void setObjectId(Long objectId) {
+        ObjectId = objectId;
+    }
 
     public Map<String, Object> getObject() {
         return object;
@@ -82,6 +93,8 @@ public class EventBehavior implements Serializable {
         this.subscribed = subscribed;
     }
 
+    
+    
     @Override
     public String toString() {
         return "EventBehavior [object=" + object + ", subject=" + subject

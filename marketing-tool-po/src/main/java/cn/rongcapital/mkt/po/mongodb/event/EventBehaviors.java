@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.alibaba.fastjson.JSONObject;
+
 /*************************************************
  * @功能及特点的描述简述: 事件行为
  * 
@@ -26,18 +28,18 @@ public class EventBehaviors implements Serializable {
 	@Field(value = "time")
 	private Long time;
 	@Field(value = "object")
-	private String object;
+	private JSONObject object;
 	@Field(value = "subject")
-	private String subject;
+	private JSONObject subject;
 	@Field(value = "event")
-	private String event;
+	private JSONObject event;
 	@Field(value = "subscribed")
 	private boolean subscribed;
 	private String sourceName;
-	private String instanceName;
+	private String objectName;
 	private String eventName;
 
-	public EventBehaviors(String id,Long time,String object,String subject,String event, boolean subscribed){
+	public EventBehaviors(String id,Long time,JSONObject object,JSONObject subject,JSONObject event, boolean subscribed){
 		super();
 		this.id = id;
 		this.time = time;
@@ -63,27 +65,27 @@ public class EventBehaviors implements Serializable {
 		this.time = time;
 	}
 
-	public String getObject() {
+	public JSONObject getObject() {
 		return object;
 	}
 
-	public void setObject(String object) {
+	public void setObject(JSONObject object) {
 		this.object = object;
 	}
 
-	public String getSubject() {
+	public JSONObject getSubject() {
 		return subject;
 	}
 
-	public void setSubject(String subject) {
+	public void setSubject(JSONObject subject) {
 		this.subject = subject;
 	}
 
-	public String getEvent() {
+	public JSONObject getEvent() {
 		return event;
 	}
 
-	public void setEvent(String event) {
+	public void setEvent(JSONObject event) {
 		this.event = event;
 	}
 
@@ -103,12 +105,12 @@ public class EventBehaviors implements Serializable {
 		this.sourceName = sourceName;
 	}
 
-	public String getInstanceName() {
-		return instanceName;
+	public String getObjectName() {
+		return objectName;
 	}
 
-	public void setInstanceName(String instanceName) {
-		this.instanceName = instanceName;
+	public void setObjectName(String objectName) {
+		this.objectName = objectName;
 	}
 
 	public String getEventName() {

@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,campaign_head_id as campaignHeadId,item_id as itemId,name as name,segmentation_id as segmentationId,segmentation_name as segmentationName,allowed_new as allowedNew,refresh_interval as refreshInterval,refresh_interval_type as refreshIntervalType,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,campaign_head_id as campaignHeadId,item_id as itemId,name as name,segmentation_id as segmentationId,segmentation_name as segmentationName,allowed_new as allowedNew,refresh_interval as refreshInterval,refresh_interval_type as refreshIntervalType,status as status,create_time as createTime,update_time as updateTime,snap_segmentation_id as snapSegmentationId]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -25,6 +25,7 @@
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="snapSegmentationId != null"><![CDATA[ AND snap_segmentation_id = #{snapSegmentationId}]]></if>
 		</where>
 	</sql>
 	
@@ -45,14 +46,15 @@
 		    	<if test="allowedNew != null"><![CDATA[allowed_new = #{allowedNew},]]></if>
 		    	<if test="refreshInterval != null"><![CDATA[refresh_interval = #{refreshInterval},]]></if>
 		    	<if test="refreshIntervalType != null"><![CDATA[refresh_interval_type = #{refreshIntervalType},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="snapSegmentationId != null"><![CDATA[snap_segmentation_id = #{snapSegmentationId}]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignAudienceTarget" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_audience_target (campaign_head_id,item_id,name,segmentation_id,segmentation_name,allowed_new,refresh_interval,refresh_interval_type,create_time)
+			INSERT INTO campaign_audience_target (campaign_head_id,item_id,name,segmentation_id,segmentation_name,allowed_new,refresh_interval,refresh_interval_type,create_time,snap_segmentation_id)
 			VALUES
 			(
 			  #{campaignHeadId},
@@ -63,7 +65,8 @@
 			  #{allowedNew},
 			  #{refreshInterval},
 			  #{refreshIntervalType},
-			  now()
+			  now(),
+			  #{snapSegmentationId}
 			)
 		]]>
 	</insert>
@@ -105,7 +108,7 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 	
-	<!-- 其它SQL语句 -->
+	<!-- 其它SQL语句 -->	
 	<delete id="deleteByCampaignHeadId" parameterType="int">
 		delete 
 		<include refid="QUERY_FROM_TABLE"/>

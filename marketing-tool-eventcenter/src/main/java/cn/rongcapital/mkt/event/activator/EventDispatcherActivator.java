@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageChannel;
 
+import cn.rongcapital.mkt.event.interceptor.ReportI;
 import cn.rongcapital.mkt.event.service.EventDispatcher;
 
 /**
@@ -31,6 +32,7 @@ public final class EventDispatcherActivator implements EventDispatcher {
 	 * String, java.lang.String)
 	 */
 	@Override
+	@ReportI("MK Send")
 	public void dispatch(String eventType, String event) {
 		try {
 			LOGGER.debug("dispatching the event, type: {}, event: {}", eventType, event);

@@ -1,13 +1,9 @@
 package cn.rongcapital.mkt.vo.in;
 
-import java.util.Date;
 import java.util.List;
-
-import javax.validation.constraints.NotNull;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import cn.rongcapital.mkt.vo.BaseInput;
 
@@ -46,6 +42,8 @@ public class WechatQrcodeIn extends BaseInput{
     private String qrcode_url;
  
     private String ticket;
+    
+    private List<CustomTagIn> customTagList;
 
     @JsonProperty("wx_name")
 	public String getWx_name() {
@@ -187,5 +185,15 @@ public class WechatQrcodeIn extends BaseInput{
 	public void setExpiration_time(String expiration_time) {
 		this.expiration_time = expiration_time;
 	}
+	@JsonProperty("custom_tag_list")
+	public List<CustomTagIn> getCustomTagList() {
+		return customTagList;
+	}
+
+	public void setCustomTagList(List<CustomTagIn> customTagList) {
+		this.customTagList = customTagList;
+	}
+	
+	
 
 }

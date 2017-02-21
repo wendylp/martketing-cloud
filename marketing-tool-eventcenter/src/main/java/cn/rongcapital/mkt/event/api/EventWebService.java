@@ -11,14 +11,9 @@
  *************************************************/
 package cn.rongcapital.mkt.event.api;
 
-import java.util.List;
-
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -26,43 +21,23 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import cn.rongcapital.mkt.event.vo.in.EventSubscribeInput;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.event.po.EventObject;
+import cn.rongcapital.mkt.event.vo.in.EventBehavierIn;
 import cn.rongcapital.mkt.event.vo.in.EventBehavierListIn;
 import cn.rongcapital.mkt.event.vo.in.EventObjectVo;
+import cn.rongcapital.mkt.event.vo.in.EventRegisterIn;
 import cn.rongcapital.mkt.event.vo.in.EventSourceVo;
+import cn.rongcapital.mkt.event.vo.in.EventSubscribeInput;
 import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
-import cn.rongcapital.mkt.event.vo.out.EventListOut;
-import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
-@Path(ApiConstant.API_PATH)
+@Path(ApiConstant.EVENT_API_PATH)
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 @ValidateRequest
 public interface EventWebService {
-
-    @GET
-    @Path("/mkt.event.list")
-    EventListOut getEventListByKeyword(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword,
-            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception;
-
-    @GET
-    @Path("/mkt.event.behavior.list")
-    List<EventBehavior> getEventBehaviorListByKeyword(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword,
-            @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-            @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) throws Exception;
-
-    @GET
-    @Path("/mkt.event.object")
-    EventObject selectById(@QueryParam("event_object_id") Integer eventObjectId);
 
     /**
      * @功能描述: 事件订阅与取消订阅
@@ -74,6 +49,10 @@ public interface EventWebService {
     @POST
     @Path("/mkt.event.subscribe")
     BaseOutput eventSubscribe(@Valid EventSubscribeInput input);
+
+    @POST
+    @Path("/mkt.event.register")
+    BaseOutput eventRegister(@Valid EventRegisterIn registerIn);
     
     /**
      * @功能简述: 获取事件概要信息
@@ -124,4 +103,14 @@ public interface EventWebService {
     @POST
     @Path("/mkt.event.behavior.list")
 	EventBehaviorOut getEventBehavierList(@Valid EventBehavierListIn eventBehavierListIn);
+    
+    /**
+     * @author guozhenchao
+     * @功能简述: 通过物料的相关属性，返回物料、事件、主体的相关关联关系及相关具体信息。通过物料的唯一标识，查询该物料在指定事件段内所发生的事件以及相关的主体信息。(API调用)
+     * @param eventBehavierListIn
+     * @return
+     */
+	 @POST
+	 @Path("/mkt.event.behavior.list.get")
+	 BaseOutput getEventBehavierListGet(@Valid EventBehavierIn in);
 }

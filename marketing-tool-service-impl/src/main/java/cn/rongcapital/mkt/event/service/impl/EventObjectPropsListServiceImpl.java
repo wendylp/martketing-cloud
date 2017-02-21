@@ -58,12 +58,7 @@ public class EventObjectPropsListServiceImpl implements EventObjectPropsListServ
         List<EventObject> eventObjList = eventObjectDao.selectList(condition);
         if (CollectionUtils.isNotEmpty(eventObjList)) {
             EventObject eventObj = eventObjList.get(0);
-            // 客体属性名称
-            EventObjectPropsOut propInstance = new EventObjectPropsOut();
-            propInstance.setName(eventObj.getInstanceNameProp());
-            propInstance.setLabel(eventObj.getInstanceNameLabel());
-            propsList.add(propInstance);
-            // 其他属性
+            // 客体属性
             if (StringUtils.isNotBlank(eventObj.getAttributes())) {
                 List<EventObjecAttribure> arributes =
                         JSON.parseArray(eventObj.getAttributes(), EventObjecAttribure.class);
@@ -77,6 +72,7 @@ public class EventObjectPropsListServiceImpl implements EventObjectPropsListServ
             // 获取客体属性值
             EventObjectPropValue propCondition = new EventObjectPropValue();
             propCondition.setObjectId(eventObjectId);
+            propCondition.setPageSize(Integer.MAX_VALUE);
             List<EventObjectPropValue> propList = eventObjectPropValueDao.selectList(propCondition);
             if (CollectionUtils.isNotEmpty(propList)) {
                 // 属性值分组

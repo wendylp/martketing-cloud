@@ -8,11 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
@@ -23,26 +25,22 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.qq.weixin.mp.aes.AesException;
 import com.qq.weixin.mp.aes.WXBizMsgCrypt;
-import com.tagsin.tutils.http.HttpResult;
-import com.tagsin.tutils.http.Requester;
-import com.tagsin.tutils.http.Requester.Method;
-import com.tagsin.tutils.json.JsonUtils;
-import com.tagsin.tutils.okhttp.OkHttpUtil;
-import com.tagsin.tutils.okhttp.OkHttpUtil.RequestMediaType;
 import com.tagsin.wechat_sdk.App;
-import com.tagsin.wechat_sdk.WXServerApiException;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
-import com.tagsin.wechat_sdk.token.TokenType;
 import com.tagsin.wechat_sdk.user.UserInfo;
-import com.tagsin.wechat_sdk.vo.AuthInfo;
 
 import cn.rongcapital.mkt.biz.ProcessReceiveMessageOfWeiXinBiz;
 import cn.rongcapital.mkt.biz.WechatMemberBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.util.HttpClientUtil;
+import cn.rongcapital.mkt.common.util.HttpUrl;
 import cn.rongcapital.mkt.common.util.Xml2JsonUtil;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
 import cn.rongcapital.mkt.dao.WechatMemberDao;
@@ -58,10 +56,9 @@ import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.service.QrcodeFocusInsertService;
 import cn.rongcapital.mkt.service.WechatAssetService;
 import cn.rongcapital.mkt.service.WeixinAnalysisQrcodeScanService;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
-import cn.rongcapital.mkt.vo.in.WechatQrcodeScanIn;
 import cn.rongcapital.mkt.vo.weixin.WXMsgVO;
-import okhttp3.Response;
 
 
 @Service
@@ -110,6 +107,8 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
     private String LOCATION_FROM_CALLBACK="from_callback";	
     
     private String QUERY_AUTH_CODE = "QUERY_AUTH_CODE";
+    
+    private String SUCCESS = "success";
 	
 	private ComponentVerifyTicketIn getComponentVerifyTicketInFromTextXml(String textXml) throws JAXBException{
 			JAXBContext context = JAXBContext.newInstance(ComponentVerifyTicketIn.class);  
@@ -308,6 +307,7 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			WXBizMsgCrypt pc = new WXBizMsgCrypt(weixin_token, weixin_encoding_aes_key, weixin_appid); 
 			String resultXml = pc.decryptMsg(msg_signature, timestamp, nonce, textXml);		
 			logger.info("解密后明文: " + resultXml);
+//			resultXml="<xml><ToUserName><![CDATA[gh_12835b596a25]]></ToUserName><FromUserName><![CDATA[o0gycwIqxXT7DDkwqY-NyqmLb8Pg]]></FromUserName><CreateTime>1473748010</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[SCAN]]></Event><EventKey><![CDATA[230]]></EventKey><Ticket><![CDATA[gQFK8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2pVUDlOM2JtSDd4bWJDUEI5VzltAAIEZrRqVgMEAAAAAA==]]></Ticket></xml>";
 			Map<String, String> msgMap = this.parserMsgToMap(resultXml);
 			App app = this.getApp();
 			WebchatAuthInfo webchatAuthInfo = this.getWebchatAuthInfoByAuthAppId(authAppId);
@@ -322,11 +322,14 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			if(StringUtils.isNotEmpty(createTime)){
 				date = new Date(Long.parseLong(createTime)*1000);
 			}
-			
+			/**
+			 * 记录扫描二维码事件
+			 */
 			if(StringUtils.isNotEmpty(event)){
+				logger.info(" event is not empty ");
 				switch(event){
 				  case "SCAN":{
-				      this.insertWechatQrcodeScan(qrCodeTicket, openid);
+				      this.insertWechatQrcodeScan(qrCodeTicket, openid);				      
 					  break; 
 				  }
 				  case "subscribe":{
@@ -351,7 +354,132 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 					  break;
 				  }
 				}
+				/**
+				 * 发送事件信息到事件中心
+				 */
+				sendEventToEventCenter(msgMap);
 			}
+	}
+	
+	
+	/**
+	 * @param msgMap
+	 * @throws Exception 
+	 */
+	private void sendEventToEventCenter(Map<String, String> msgMap) {
+		logger.info(" this is sendEventToEventCenter ");
+		String eventReceiveUrl = env.getProperty("mkt.event.receive");
+		String hostHeaderAddr = env.getProperty("host.header.addr");		
+        String httpParamsJson = getEventCenterJson(msgMap);
+        if(StringUtils.isNotEmpty(httpParamsJson)){
+        	logger.info(httpParamsJson);
+            HttpUrl httpUrl = new HttpUrl();
+            httpUrl.setHost(hostHeaderAddr);
+            httpUrl.setPath(eventReceiveUrl);
+            httpUrl.setRequetsBody(httpParamsJson);
+            httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);       
+            HttpClientUtil httpClientUtil;
+    		try {
+    			httpClientUtil = HttpClientUtil.getInstance();
+    	        PostMethod postResult = httpClientUtil.postExt(httpUrl);
+    	        String postResStr = postResult.getResponseBodyAsString();
+    	        BaseOutput baseOutput = JSON.parseObject(postResStr,BaseOutput.class);
+    	        String msg = baseOutput.getMsg();
+    	        if(!msg.equals(SUCCESS)){
+    	        	logger.info("qrcode register to EventCenter fail ");
+    	        }
+    		} catch (Exception e) {
+    			logger.info("qrcode register to EventCenter disconnection ");
+    		}
+        }		
+	}
+	
+	/**
+	 * @param msgMap
+	 * @return
+	 * {
+		    "subject": {
+		        "openid": "o0gycwPRSkdEoP3dBLWMpe-JCKBQ"
+		    },
+		    "time": 1482982590,
+		    "object": {
+		        "code": "qrcode_attr",
+		        "attributes": {
+		            "qrcode_id": "1",
+		            "pub_id": "gh_4685d4eef135",
+		            "openid": "o0gycwPRSkdEoP3dBLWMpe-JCKBQ",
+		            "eventKey": "qrscene_123123",
+		            "ticket": "gQGu8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL05EdGZXcjNsQnh0X2kwMHhlQmNXAAIEEb62VwMEAAAAAA=="
+		        }
+		    },
+		    "event": {
+		        "code": "wechat_qrcode_scan",
+		        "attributes": {
+		            "event_type": "SCAN"
+		        }
+		    }
+		}
+	 */
+	private String getEventCenterJson(Map<String, String> msgMap){
+		String qrCodeTicket = msgMap.get("ticket");
+		String openid = msgMap.get("fromUserName");
+		String event = msgMap.get("event");
+		WechatQrcode wechatQrcode = null;
+		if(StringUtils.isEmpty(qrCodeTicket)){
+			return "";
+		}else{			
+			wechatQrcode = getWechatQrcodeScanInForSCAN(qrCodeTicket,openid);			
+		}
+		String createTime = msgMap.get("createTime");
+		long createTimeL =0l;
+		if(StringUtils.isEmpty(createTime)){
+			return "";
+		}else{
+			createTimeL=Long.parseLong(createTime)*1000;
+		}
+		StringBuffer eventCenterSB = new StringBuffer("");
+		eventCenterSB.append("{");
+		eventCenterSB.append("\"subject\": {");
+		eventCenterSB.append("\"openid\": \"").append(openid).append("\"");
+		eventCenterSB.append("},");
+		eventCenterSB.append("\"time\": ").append(createTimeL).append(",");
+		eventCenterSB.append("\"object\": {");
+		eventCenterSB.append("\"code\": \"qrcode_attr\",");
+		eventCenterSB.append("\"attributes\": {");
+		eventCenterSB.append("\"qrcode_id\":").append(wechatQrcode.getId()).append(",");
+		eventCenterSB.append("\"pub_id\": \"").append(msgMap.get("toUserName")).append("\",");
+		eventCenterSB.append("\"openid\": \"").append(openid).append("\",");
+		eventCenterSB.append("\"eventKey\": \"").append(msgMap.get("eventKey")).append("\",");
+		eventCenterSB.append("\"ticket\": \"").append(qrCodeTicket).append("\"");
+		eventCenterSB.append("}");
+		eventCenterSB.append("},");
+		eventCenterSB.append("\"event\": {");	
+		if(StringUtils.isNotEmpty(event)){
+			switch(event){
+			  case "SCAN":{	
+				  eventCenterSB.append("\"code\": \"wechat_qrcode_scan\",");
+				  break; 
+			  }
+			  case "subscribe":{
+				  eventCenterSB.append("\"code\": \"wechat_qrcode_subscribe\",");
+				  break;
+			  }
+			  case "unsubscribe":{
+				  eventCenterSB.append("\"code\": \"wechat_account_unsubscribe\",");
+				  break;
+			  }
+			  default :{
+				  eventCenterSB.append("\"code\": \"wechat_account_subscribe\",");
+				  break;
+			  }
+			}
+		}			
+		eventCenterSB.append("\"attributes\": {");
+		eventCenterSB.append("\"event_type\": \"").append(msgMap.get("event")).append("\"");
+		eventCenterSB.append("}");
+		eventCenterSB.append("}");
+		eventCenterSB.append("}");
+		return eventCenterSB.toString();		
 	}
 	
 	private WechatQrcode getWechatQrcodeScanInForSCAN(String qrCodeTicket,String openid){

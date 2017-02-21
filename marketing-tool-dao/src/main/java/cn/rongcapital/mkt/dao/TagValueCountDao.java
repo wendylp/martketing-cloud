@@ -38,6 +38,16 @@ public interface TagValueCountDao extends BaseDao<TagValueCount>{
      */
     List<TagValueCount> selectFuzzyTagValue(TagValueCount tagValueCount);
     
+    
+    /**
+     * 模糊搜索标签值和标签名 不过滤覆盖人数为零
+     * @param tagValue
+     * @return
+     * @Date 2016-11-10
+     * @author shuiyangyang
+     */
+    List<TagValueCount> selectFuzzyTagValueAll(TagValueCount tagValueCount);
+    
     /**
      * 模糊搜索标签值和标签名    统计总数
      * @param tagValue
@@ -46,6 +56,15 @@ public interface TagValueCountDao extends BaseDao<TagValueCount>{
      * @author shuiyangyang
      */
     int selectFuzzyTagValueCount(TagValueCount tagValueCount);
+    
+    /**
+     * 模糊搜索标签值和标签名    统计总数 不过滤覆盖人数为零
+     * @param tagValue
+     * @return
+     * @Date 2016-11-11
+     * @author shuiyangyang
+     */
+    int selectFuzzyTagValueCountAll(TagValueCount tagValueCount);
     
     TagValueCount selectTagByTagId(@Param("tagId") String tagId);
     

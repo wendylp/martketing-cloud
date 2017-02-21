@@ -11,6 +11,9 @@ public class SmsMaterial extends BaseQuery {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	public static final Byte USE_STATUS_YES = 1;
+	public static final Byte USE_STATUS_NO = 0;
+
 	private Integer id;
 
     private String code;
@@ -36,6 +39,8 @@ public class SmsMaterial extends BaseQuery {
     private String updateUser;
 
     private Date updateTime;
+
+    private Byte useStatus;
 
     private String smsTempletContent;
 
@@ -141,6 +146,14 @@ public class SmsMaterial extends BaseQuery {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Byte getUseStatus() {
+        return useStatus;
+    }
+
+    public void setUseStatus(Byte useStatus) {
+        this.useStatus = useStatus;
     }
 
     public String getSmsTempletContent() {
