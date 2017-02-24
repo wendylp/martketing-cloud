@@ -59,6 +59,15 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
         SegmentCreupdateOut segmentCreupdateOut = new SegmentCreupdateOut();
 
+        
+        if(checkExpire(segmentCreUpdateIn)){
+        	
+            baseOutput.setCode(ApiErrorCode.VALIDATE_TAG_EXPIRE.getCode());
+            baseOutput.setMsg(ApiErrorCode.VALIDATE_TAG_EXPIRE.getMsg());
+            return baseOutput;
+        }
+        
+        
         if(segmentCreUpdateIn.getSegmentHeadId() == null){
             //不包含了id,则为创建操作
             //1.首先更新segmentHead表,将相关的数据设置进去.
@@ -177,4 +186,35 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
         }
     }
 
+    /**
+     * 验证是否存在过期标签(存在返回true)
+     * @param segmentCreUpdateIn
+     * @return
+     */
+    private boolean checkExpire(SegmentCreUpdateIn segmentCreUpdateIn){
+    	
+    	List<TagGroupsIn> filterGroups = segmentCreUpdateIn.getFilterGroups();
+    	
+        if(CollectionUtils.isEmpty(filterGroups)){
+        	return false;
+        }
+    	
+    	for(TagGroupsIn tagGroupsIn : filterGroups){
+            List<SystemTagIn> tagInList = tagGroupsIn.getTagList();
+            if(CollectionUtils.isEmpty(tagInList)) continue;
+            for(SystemTagIn systemTagIn : tagInList){
+                List<SystemValueIn> systemValueIns = systemTagIn.getTagValueList();
+                if(CollectionUtils.isEmpty(systemValueIns)) continue;
+                for(SystemValueIn systemValueIn : systemValueIns){
+                    
+                	if(systemValueIn.getTagStatus() == 1){
+                		return true;
+                	}
+                }
+            }
+        }
+    	
+    	return false;
+    }
+    
 }
