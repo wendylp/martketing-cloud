@@ -51,6 +51,7 @@ public class EventBehaviorListServiceTest {
 	private EventObjectDao eventObjectDao;
 	
 	Event eventF = new Event();
+	Event eventC = new Event();
 	Event eventT = new Event();
 	Event eventS = new Event();
 	Event eventO = new Event();
@@ -67,22 +68,33 @@ public class EventBehaviorListServiceTest {
 		//事件为订阅
 		eventF.setId(1L);
 		eventF.setName("扫描二维码");
+		eventF.setCode("code");
 		eventF.setSourceId(1L);
 		eventF.setObjectId(1L);
 		eventF.setSubscribed(false);
 		
+		eventC.setId(1L);
+		eventC.setName("扫描二维码");
+		eventC.setSourceId(1L);
+		eventC.setObjectId(1L);
+		eventC.setSubscribed(false);
+		
+		
 		eventS.setId(1L);
 		eventS.setName("扫描二维码");
+		eventS.setCode("code");
 		eventS.setObjectId(1L);
 		eventS.setSubscribed(false);
 		
 		eventO.setId(1L);
 		eventO.setName("扫描二维码");
+		eventO.setCode("code");
 		eventO.setSourceId(1L);
 		eventO.setSubscribed(false);
 		
 		eventT.setId(1L);
 		eventT.setName("扫描二维码");
+		eventT.setCode("code");
 		eventT.setSourceId(1L);
 		eventT.setObjectId(1L);
 		eventT.setSubscribed(true);
@@ -135,6 +147,20 @@ public class EventBehaviorListServiceTest {
     	ReflectionTestUtils.setField(service, "eventObjectDao", eventObjectDao);
     	EventBehaviorOut out = service.getEventBehavierList(ebli);
     	Assert.assertEquals(ApiErrorCode.EVENT_SOURCE_ERROR_NOT_FOUND_ERROR.getCode(), out.getCode());
+    }
+    
+    @Test
+    public void Test010(){
+    	EventBehavierListIn ebli = new EventBehavierListIn();
+    	ebli.setEventId(1L);
+    	Mockito.when(eventDao.getEvent(Mockito.any(Event.class))).thenReturn(eventC);
+    	Mockito.when(eventSourceDao.getEventSource(es)).thenReturn(null);
+    	Mockito.when(eventObjectDao.getEventObject(eo)).thenReturn(null);
+    	ReflectionTestUtils.setField(service, "eventDao", eventDao);
+    	ReflectionTestUtils.setField(service, "eventSourceDao", eventSourceDao);
+    	ReflectionTestUtils.setField(service, "eventObjectDao", eventObjectDao);
+    	EventBehaviorOut out = service.getEventBehavierList(ebli);
+    	Assert.assertEquals(ApiErrorCode.EVENT_CODE_NOT_FOUND_ERROR.getCode(), out.getCode());
     }
     
   
