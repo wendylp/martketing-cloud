@@ -85,7 +85,7 @@ public enum ApiErrorCode {
 	EVENT_OBJECT_ID_NOT_FOUND(5005,"Event Object Id not found"),
 	VALIDATE_JSON_ERROR(5006,"JSON validation error"),//校验失败
 	DATE_VALIDATE_ERROR(5007,"起始时间大于结束时间"),
-	
+	EVENT_CODE_NOT_FOUND_ERROR(5008,"Event Code not exist"),
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
     private int code;
