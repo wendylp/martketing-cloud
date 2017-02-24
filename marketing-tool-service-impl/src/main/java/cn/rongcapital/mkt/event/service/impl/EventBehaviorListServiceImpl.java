@@ -21,6 +21,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -80,6 +81,14 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 			eventBehaviorOut.setMsg(ApiErrorCode.EVENT_ERROR_NOT_FOUND_ERROR.getMsg());
 			return eventBehaviorOut;
 		}
+		
+		String eventCode = eventDB.getCode();
+		if(StringUtils.isEmpty(eventCode)){
+			logger.error("该事件code不存在，事件id为：{}", eventId);
+			eventBehaviorOut.setCode(ApiErrorCode.EVENT_CODE_NOT_FOUND_ERROR.getCode());
+			eventBehaviorOut.setMsg(ApiErrorCode.EVENT_CODE_NOT_FOUND_ERROR.getMsg());
+			return eventBehaviorOut;
+		}
 		// 事件源
 		Long sourceId = eventDB.getSourceId();
 		if (sourceId == null) {
@@ -120,7 +129,7 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 		Criteria cri = null;
 		try {
 			if(attribute != null){
-				cri = getCriteria(attribute);
+				cri = getCriteria(attribute, eventCode);
 				query.addCriteria(cri);
 				queryAll.addCriteria(cri);
 			}
@@ -151,9 +160,10 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 		return eventBehaviorOut;
 	}
 
-	private Criteria getCriteria(JSONArray attribute) {
+	private Criteria getCriteria(JSONArray attribute, String eventCode) {
 		Criteria cri = null;
 		cri = Criteria.where("subscribed").is(true);
+		cri.and("event.code").is(eventCode);
 		int conditionSize = attribute.size();
 		if (conditionSize > 0) {
 			for (int i = 0; i < conditionSize; i++) {
