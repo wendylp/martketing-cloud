@@ -86,6 +86,7 @@ public enum ApiErrorCode {
 	VALIDATE_JSON_ERROR(5006,"JSON validation error"),//校验失败
 	DATE_VALIDATE_ERROR(5007,"起始时间大于结束时间"),
 	EVENT_CODE_NOT_FOUND_ERROR(5008,"Event Code not exist"),
+	VALIDATE_TAG_EXPIRE(6001,"当前有过期标签，请移除"),//校验失败
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
     private int code;
