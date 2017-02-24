@@ -12,7 +12,7 @@ package cn.rongcapital.mkt.common.enums;
 
 public enum MaterialCouponCodeReleaseStatusEnum {
 
-    UNRELEASED("unreleased", "未发放"), RECEIVED("received", "收到"), UNRECEIVED("unreceived", "未收到");
+    UNRELEASED("unreleased", "未发放"),RELEASED("released", "已发放"), RECEIVED("received", "收到"), UNRECEIVED("unreceived", "未收到");
 
     private String code = "";
     private String description = "";

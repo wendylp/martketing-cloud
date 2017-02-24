@@ -82,7 +82,7 @@ public interface MongoCustomTagDao {
     public List<CustomTag> findByCustomTagIdList(List<String> customTagList);
     
     /**
-     * 功能描述：根据自定义标签id list查询有效数据,按覆盖人数排序，带有分页功能
+     * 功能描述：根据自定义标签id list查询有效数据,按创建时间倒序排序，带有分页功能
      * 
      * @param customTagList
      * @param index
@@ -107,6 +107,14 @@ public interface MongoCustomTagDao {
      * @return
      */
     public List<CustomTag> findByCustomTagNameFuzzyAndCoverNumber(String customTagName, Integer size);
+    
+    /**
+     * 功能描述：模糊查询自定义标签name，有效数据 
+     * 
+     * @param customTagName
+     * @return
+     */
+    public List<CustomTag> findByCustomTagNameFuzzyAndCoverNumberAll(String customTagName, Integer size);
 
     /**
      * 功能描述：统计模糊查询自定义标签name的数据条数 过滤覆盖人数小于零
@@ -115,6 +123,14 @@ public interface MongoCustomTagDao {
      * @return
      */
     public long countByCustomTagNameFuzzyAndCoverNumber(String customTagName);
+    
+    /**
+     * 功能描述：统计模糊查询自定义标签name的数据条数 
+     * 
+     * @param customTagName
+     * @return
+     */
+    public long countByCustomTagNameFuzzyAndCoverNumberAll(String customTagName);
     
     /**
      * 功能描述：模糊搜索自定义标签名，如果index和size有一个为空则返回全部数据
@@ -133,5 +149,53 @@ public interface MongoCustomTagDao {
      */
     public long countByCustomTagNameFuzzy(String customTagName);
 
+    /**
+     * 功能描述：计算自定义标签的有效个数
+     * 
+     * @return
+     */
+    public long countAll();
     
+    /**
+     * 功能描述：根据自定义标签id查询自定义标签
+     * 
+     * @param customTagId	自定义标签ID
+     * @return
+     */
+    public CustomTag getCustomTagByTagId(String customTagId);
+
+    /**
+     * 功能描述：根据自定义标签id更新自定义标签的父Id
+     *
+     * @param customTagId	自定义标签ID
+     * @return
+     */
+    void updateCustomTagParentIdByCustomTagId(String customTagId,String parentId);
+
+    /**
+     * 功能描述：根据自定义标签id更新自定义标签的名称
+     *
+     * @param customTagId	自定义标签ID
+     * @return
+     */
+    void updateCustomTagNameByCustomTagId(String customTagId,String CustomTagName);
+
+    /**
+     * 功能描述：根据自定义标签id逻辑删除自定义标签
+     *
+     * @param customTagId	自定义标签ID
+     * @return
+     */
+    void logicalDeleteCustomTagByCustomTagId(String customTagId);
+
+    /**
+     * 功能描述：根据自定义标签id列表统计其中有效数据且覆盖人数大于零 的个数
+     *
+     * @param customTagId
+     * @return
+     */
+    long countValidCustomTagAndCoverNumber(List<String> customTagId);
+
+
+
 }

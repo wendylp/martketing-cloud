@@ -389,15 +389,16 @@ public class MktSystemTagApi {
     }
 
 
-    /**
-     * 创建自定义标签
-     *
-     */
-    @POST
-    @Path("/mkt.customtag.create.tocategory")
-    @Consumes({MediaType.APPLICATION_JSON})
-    public BaseOutput createCustomTagToCategory( CustomTagCreateIn customTagCreateIn,
-                                       @Context SecurityContext securityContext) {
-        return createCustomTagToCategoryService.createCustomTagToCategory(customTagCreateIn);
-    }
+//    /**
+//     * 创建自定义标签
+//     *
+//     */
+//    @POST
+//    @Path("/mkt.customtag.create.tocategory")
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    public BaseOutput createCustomTagToCategory( CustomTagCreateIn customTagCreateIn,
+//                                       @Context SecurityContext securityContext) {
+////        return createCustomTagToCategoryService.createCustomTagToCategory(customTagCreateIn);
+//         return null;
+//    }
 }

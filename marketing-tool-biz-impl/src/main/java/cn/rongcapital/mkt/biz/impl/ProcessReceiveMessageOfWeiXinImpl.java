@@ -307,13 +307,13 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			WXBizMsgCrypt pc = new WXBizMsgCrypt(weixin_token, weixin_encoding_aes_key, weixin_appid); 
 			String resultXml = pc.decryptMsg(msg_signature, timestamp, nonce, textXml);		
 			logger.info("解密后明文: " + resultXml);
-			resultXml="<xml><ToUserName><![CDATA[gh_12835b596a25]]></ToUserName><FromUserName><![CDATA[o0gycwIqxXT7DDkwqY-NyqmLb8Pg]]></FromUserName><CreateTime>1473748010</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[SCAN]]></Event><EventKey><![CDATA[230]]></EventKey><Ticket><![CDATA[gQFK8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2pVUDlOM2JtSDd4bWJDUEI5VzltAAIEZrRqVgMEAAAAAA==]]></Ticket></xml>";
+//			resultXml="<xml><ToUserName><![CDATA[gh_12835b596a25]]></ToUserName><FromUserName><![CDATA[o0gycwIqxXT7DDkwqY-NyqmLb8Pg]]></FromUserName><CreateTime>1473748010</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[SCAN]]></Event><EventKey><![CDATA[230]]></EventKey><Ticket><![CDATA[gQFK8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2pVUDlOM2JtSDd4bWJDUEI5VzltAAIEZrRqVgMEAAAAAA==]]></Ticket></xml>";
 			Map<String, String> msgMap = this.parserMsgToMap(resultXml);
-/*			App app = this.getApp();
+			App app = this.getApp();
 			WebchatAuthInfo webchatAuthInfo = this.getWebchatAuthInfoByAuthAppId(authAppId);
 			app.setAuthAppId(webchatAuthInfo.getAuthorizerAppid());
 			app.setAuthRefreshToken(webchatAuthInfo.getAuthorizerRefreshToken());
-			WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(authAppId);*/
+			WechatRegister wechatRegister = this.getWechatRegisterByAuthAppId(authAppId);
 			int status = 0;
 			String event = msgMap.get("event");
 			String createTime = msgMap.get("createTime");
@@ -326,7 +326,8 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			 * 记录扫描二维码事件
 			 */
 			if(StringUtils.isNotEmpty(event)){
-/*				switch(event){
+				logger.info(" event is not empty ");
+				switch(event){
 				  case "SCAN":{
 				      this.insertWechatQrcodeScan(qrCodeTicket, openid);				      
 					  break; 
@@ -353,7 +354,7 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 					  break;
 				  }
 				}
-*/				/**
+				/**
 				 * 发送事件信息到事件中心
 				 */
 				sendEventToEventCenter(msgMap);
@@ -366,6 +367,7 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 	 * @throws Exception 
 	 */
 	private void sendEventToEventCenter(Map<String, String> msgMap) {
+		logger.info(" this is sendEventToEventCenter ");
 		String eventReceiveUrl = env.getProperty("mkt.event.receive");
 		String hostHeaderAddr = env.getProperty("host.header.addr");		
         String httpParamsJson = getEventCenterJson(msgMap);
@@ -428,12 +430,19 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 		}else{			
 			wechatQrcode = getWechatQrcodeScanInForSCAN(qrCodeTicket,openid);			
 		}
+		String createTime = msgMap.get("createTime");
+		long createTimeL =0l;
+		if(StringUtils.isEmpty(createTime)){
+			return "";
+		}else{
+			createTimeL=Long.parseLong(createTime)*1000;
+		}
 		StringBuffer eventCenterSB = new StringBuffer("");
 		eventCenterSB.append("{");
 		eventCenterSB.append("\"subject\": {");
 		eventCenterSB.append("\"openid\": \"").append(openid).append("\"");
 		eventCenterSB.append("},");
-		eventCenterSB.append("\"time\": ").append(msgMap.get("createTime")).append(",");
+		eventCenterSB.append("\"time\": ").append(createTimeL).append(",");
 		eventCenterSB.append("\"object\": {");
 		eventCenterSB.append("\"code\": \"qrcode_attr\",");
 		eventCenterSB.append("\"attributes\": {");

@@ -9,6 +9,7 @@
 package cn.rongcapital.mkt.material.coupon.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
@@ -170,4 +172,21 @@ public class MaterialCouponCodeStatusUpdateServiceImpl implements MaterialCoupon
         }
         return list;
     }
+
+	@Override
+	public List<MaterialCouponCodeStatusUpdateVO> getReleasedMaterialCouponCodeStatusUpdateVOes(
+			List<Object> codeList) {
+		List<MaterialCouponCodeStatusUpdateVO> materialCouponCodeStatusUpdateVOes= new ArrayList<MaterialCouponCodeStatusUpdateVO>();
+		if(CollectionUtils.isNotEmpty(codeList)){
+			for(Iterator<Object> iter = codeList.iterator();iter.hasNext();){
+				MaterialCouponCode materialCouponCode = (MaterialCouponCode) iter.next();
+				MaterialCouponCodeStatusUpdateVO materialCouponCodeStatusUpdateVO = new MaterialCouponCodeStatusUpdateVO();
+				materialCouponCodeStatusUpdateVO.setId(materialCouponCode.getId());
+				materialCouponCodeStatusUpdateVO.setStatus(MaterialCouponCodeReleaseStatusEnum.RELEASED.getCode());
+			}
+		}
+		return materialCouponCodeStatusUpdateVOes;
+	}
+    
+    
 }

@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.po.mongodb.CustomTagCategory;
+import org.springframework.data.mongodb.core.query.Update;
 
 /**
  * Created by byf on 1/15/17.
@@ -74,4 +75,34 @@ public interface MongoCustomTagCategoryDao {
      */
     public CustomTagCategory findByChildrenCustomTagList(String childrenCustomTagList);
 
+    /** 功能描述：传入一个CustomTagCategory的Id，一个新的CustomTagCategory，跟新第一条符合Query的字段，
+     *
+     * @param customTagCategoryId
+     * @param customTagCategory
+     * @return
+     */
+    void updateCustomTagCategoryChildrenListById(String customTagCategoryId, CustomTagCategory customTagCategory);
+
+    /** 功能描述：根据CustomTagCategoryId逻辑删除这个自定义标签分类
+     *
+     * @param customTagCategoryId
+     * @return
+     */
+    void logicalDeleteCustomTagCategoryById(String customTagCategoryId);
+
+    /**
+     * 功能描述：根据自定义条件查询数量
+     *
+     * @param customTagCategory
+     * @return count
+     */
+    public long countByCustomTagCategoryName(CustomTagCategory customTagCategory);
+
+    /**
+     * 功能描述：根据自定义分类Id更新自定义分类name
+     *
+     * @param customTagCategory
+     * @return long
+     */
+	public boolean updateCategoryNameById(String customTagCategoryId,String customTagCategoryName);
 }

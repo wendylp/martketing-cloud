@@ -55,6 +55,9 @@ public class MQTopicServiceImpl implements MQTopicService {
 	private static final String MQ_CODE_SERVICE = "couponCodeSaveTaskImpl";
 	private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask";
 	private static final String MQ_CREATE_TARGET_AUDIENCE_SERVICE = "createTargetAudienceGroupTask";
+    private static final String MQ_CUSTOM_TAG_UPDATE_PARENT_TOPIC = "customTagUpdateParentTopic";
+	private static final String MQ_CUSTOM_TAG_NAME_EDIT_TOPIC = "customTagNameEditTopic";
+	private static final String MQ_CUSTOM_TAG_DELETE_TOPIC = "customTagDeleteTopic";
 
 	@Value("${spring.activemq.broker-url}")
 	private String providerUrl;
@@ -192,6 +195,9 @@ public class MQTopicServiceImpl implements MQTopicService {
 			receiverMessageComm(connection, MQ_CODE_SERVICE);
 			receiverMessageComm(connection, MQ_SMS_GENERATE_DETAIL_SERVICE);
 			receiverMessageComm(connection, MQ_CREATE_TARGET_AUDIENCE_SERVICE);
+			receiverMessageComm(connection,MQ_CUSTOM_TAG_UPDATE_PARENT_TOPIC);
+			receiverMessageComm(connection,MQ_CUSTOM_TAG_NAME_EDIT_TOPIC);
+			receiverMessageComm(connection,MQ_CUSTOM_TAG_DELETE_TOPIC);
 			
 		} catch (JMSException e) {
 			e.printStackTrace();

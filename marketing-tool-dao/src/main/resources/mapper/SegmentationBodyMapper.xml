@@ -162,5 +162,30 @@
 			tag_id = #{tagId}
 		AND status = 0
 	</select>
+
+	<update id="updateCategoryInfoByTagId" parameterType="cn.rongcapital.mkt.po.SegmentationBody">
+		<![CDATA[UPDATE segmentation_body]]>
+		SET tag_category_id = #{tagCategoryId}, tag_category_name = #{tagCategoryName}
+		<![CDATA[WHERE tag_id = #{tagId}  AND status = 0 AND tag_type = 1]]>
+	</update>
+
+	<update id="updateCustomTagNameByCustomTagId" parameterType="cn.rongcapital.mkt.po.SegmentationBody">
+		<![CDATA[UPDATE segmentation_body]]>
+		SET tag_name = #{tagName}
+		<![CDATA[WHERE tag_id = #{tagId}  AND status = 0 AND tag_type = 1]]>
+	</update>
+
+	<update id="updateCustomTagStatusByCutsomTagId" parameterType="cn.rongcapital.mkt.po.SegmentationBody">
+		<![CDATA[UPDATE segmentation_body]]>
+		SET tag_status = #{tagStatus}
+		<![CDATA[WHERE tag_id = #{tagId}  AND status = 0 AND tag_type = 1]]>
+	</update>
 	
+	<delete id="deleteByHeadID" parameterType="int">
+		delete 
+		<include refid="QUERY_FROM_TABLE"/>
+		where head_id = #{headId}
+	</delete>
+	
+
 </mapper>

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import cn.rongcapital.mkt.common.util.CamelNameUtil;
@@ -125,10 +126,12 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
     public List<CustomTag> findByCustomTagIdList(List<String> customTagList, Integer index, Integer size) {
         Query query = new Query(Criteria.where(CUSTOM_TAG_ID).in(customTagList).and(IS_DELETED).is(DATA_VALID));
         // 设置排序规则
-        query.with(new Sort(Direction.DESC, COVER_NUMBER, COVER_FREQUENCY));
-        // 设置分页规则
-        query.skip((index - 1) * size);
-        query.limit(size);
+        query.with(new Sort(Direction.DESC, CREATE_TIME));
+        if (index != null && size != null) {
+            // 设置分页规则
+            query.skip((index - 1) * size);
+            query.limit(size);
+        }
 
         return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
     }
@@ -143,7 +146,19 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
     @Override
     public List<CustomTag> findByCustomTagNameFuzzyAndCoverNumber(String customTagName, Integer size) {
         Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName)
-                .and(COVER_NUMBER).gt(0)).limit(size);
+                .and(COVER_NUMBER).gt(0));
+        if (size != null) {
+            query.limit(size);
+        }
+        return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
+    }
+    
+    @Override
+    public List<CustomTag> findByCustomTagNameFuzzyAndCoverNumberAll(String customTagName, Integer size) {
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName));
+        if (size != null) {
+            query.limit(size);
+        }
         return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
     }
 
@@ -155,15 +170,21 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
     }
     
     @Override
+    public long countByCustomTagNameFuzzyAndCoverNumberAll(String customTagName) {
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName));
+        return mongoTemplate.count(query, CUSTOM_TAG_CLASS);
+    }
+    
+    @Override
     public List<CustomTag> findByCustomTagNameFuzzy(String customTagName, Integer index, Integer size) {
-        Integer skip = null;
-        Integer limit = null;
+        
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName));
+        
         if (index != null && size != null) {
-            skip = (index - 1) * size;
-            limit = size;
+            Integer skip = (index - 1) * size;
+            Integer limit = size;
+            query.skip(skip).limit(limit);
         }
-        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID).and(CUSTOM_TAG_NAME).regex(customTagName))
-                .skip(skip).limit(limit);
         return mongoTemplate.find(query, CUSTOM_TAG_CLASS);
     }
     
@@ -173,6 +194,22 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
         return mongoTemplate.count(query, CUSTOM_TAG_CLASS);
     }
 
+    @Override
+    public long countAll() {
+        Query query = new Query(Criteria.where(IS_DELETED).is(DATA_VALID));
+        return mongoTemplate.count(query, CUSTOM_TAG_CLASS);
+    }
+    
+    @Override
+    public long countValidCustomTagAndCoverNumber(List<String> customTagId) {
+        if (CollectionUtils.isNotEmpty(customTagId)) {
+            Criteria criteria = Criteria.where(MongoCustomTagDaoImpl.IS_DELETED).is(MongoCustomTagDaoImpl.DATA_VALID)
+                    .and(CUSTOM_TAG_ID).in(customTagId).and(COVER_NUMBER).gt(0);
+            return mongoTemplate.count(new Query(criteria), CUSTOM_TAG_CLASS);
+        }
+        return 0;
+    }
+    
     /**
      * 功能描述：根据对象生成对象的mongodb查询条件
      * 
@@ -211,5 +248,32 @@ public class MongoCustomTagDaoImpl implements MongoCustomTagDao {
 
     }
 
+	@Override
+	public CustomTag getCustomTagByTagId(String customTagId) {
+		 return mongoTemplate.findOne(
+	                new Query(Criteria.where(CUSTOM_TAG_ID).is(customTagId)),
+	                CUSTOM_TAG_CLASS);
+	}
+
+    @Override
+    public void updateCustomTagParentIdByCustomTagId(String customTagId, String parentId) {
+        Query query = new Query(Criteria.where(CUSTOM_TAG_ID).is(customTagId).and(IS_DELETED).is(DATA_VALID));
+        Update update = new Update().set(PARENT_ID,parentId);
+        mongoTemplate.updateFirst(query,update,CustomTag.class);
+    }
+
+    @Override
+    public void updateCustomTagNameByCustomTagId(String customTagId, String customTagName) {
+       Query query = new Query(Criteria.where(CUSTOM_TAG_ID).is(customTagId).and(IS_DELETED).is(DATA_VALID));
+       Update update = new Update().set(CUSTOM_TAG_NAME,customTagName);
+       mongoTemplate.updateFirst(query,update,CustomTag.class);
+    }
+
+    @Override
+    public void logicalDeleteCustomTagByCustomTagId(String customTagId) {
+        Query query = new Query(Criteria.where(CUSTOM_TAG_ID).is(customTagId).and(IS_DELETED).is(DATA_VALID));
+        Update update = new Update().set(IS_DELETED,DATA_INVALID);
+        mongoTemplate.updateFirst(query,update,CustomTag.class);
+    }
 
 }
