@@ -45,12 +45,21 @@
 		<int:queue/>
 	</int:channel>
 	
+	 <!--  动态ruter  -->
+	<int:router input-channel="events" ref="mcrouter"  default-output-channel="stdErr"  
+	method="route">
+	 <int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
+	  <int:mapping value="SYSTEM" channel="systemEvents"/>
+      <int:mapping value="MARKETING" channel="marketingEvents"/>
+	</int:router>
 	
-	<int:header-value-router input-channel="events" header-name="eventCenter.eventType" default-output-channel="stdErr"> 
+    <bean id="mcrouter"   class="cn.rongcapital.mkt.event.activator.Roulter"/>
+	<!-- <int:header-value-router input-channel="events" header-name="eventCenter.eventType" 
+	default-output-channel="stdErr"  > 
 		<int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
 		<int:mapping value="SYSTEM" channel="systemEvents"/>
 		<int:mapping value="MARKETING" channel="marketingEvents"/>
-	</int:header-value-router>
+	</int:header-value-router> -->
 	
 	
 	<!-- event dispatcher -->
