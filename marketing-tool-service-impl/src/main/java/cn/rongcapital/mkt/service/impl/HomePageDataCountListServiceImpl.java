@@ -131,7 +131,7 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 			}
 		}
 
-		Query countQuery = new Query(Criteria.where("custom_tag_type").is("1"));
+		Query countQuery = new Query(Criteria.where("custom_tag_type").is(1).and("is_deleted").is(0));
 		Long totalTagCount = mongoTemplate.count(countQuery, CustomTag.class);
 		int count = new Long(totalTagCount).intValue();
 		tagCountListObj.setId(TAG.getId());
