@@ -27,39 +27,37 @@
 	<!-- default poller -->
 	<int:poller default="true"  fixed-delay="5000"/>
 	
-	<!-- test events-source channel -->
-	<int:channel id="eventsSource" >
-		<int:queue/>
+	<int:channel id="eventsSource">
+	<int:queue/>
 	</int:channel>
-	
 	<int:channel id="events">
-		<int:queue/>
+	<int:queue/>
 	</int:channel>
-	 
-	<!-- internal events channels -->
 	<int:channel id="systemEvents">
-		<int:queue/>
+	<int:queue/>
+	</int:channel>
+	<int:channel id="marketingEvents">
+	<int:queue/>
 	</int:channel>
 
-	 <int:channel id="marketingEvents">
-		<int:queue/>
-	</int:channel>
-	
+     <!--增加监听来达到复制消息功能 -->
+     <int:channel id="streamEvents">  
+      <int:interceptors>
+	     <int:wire-tap channel="marketingEvents"/>
+	   </int:interceptors>
+     </int:channel>  
+ 
 	 <!--  动态ruter  -->
 	<int:router input-channel="events" ref="mcrouter"  default-output-channel="stdErr"  
 	method="route">
 	 <int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
 	  <int:mapping value="SYSTEM" channel="systemEvents"/>
       <int:mapping value="MARKETING" channel="marketingEvents"/>
+      <int:mapping value="STREAM" channel="streamEvents"/>
 	</int:router>
 	
     <bean id="mcrouter"   class="cn.rongcapital.mkt.event.activator.Roulter"/>
-	<!-- <int:header-value-router input-channel="events" header-name="eventCenter.eventType" 
-	default-output-channel="stdErr"  > 
-		<int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
-		<int:mapping value="SYSTEM" channel="systemEvents"/>
-		<int:mapping value="MARKETING" channel="marketingEvents"/>
-	</int:header-value-router> -->
+	
 	
 	
 	<!-- event dispatcher -->
@@ -87,7 +85,8 @@
 	</bean>
 
     
-
+  
+    
 	<int-stream:stderr-channel-adapter id="stdErr" append-newline="true"/>
 	
 	 <!-- 默认消息的错误处理 -->
@@ -112,17 +111,33 @@
     <bean id="queue_events" class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg value="queue.events"/>
 	</bean>
+	
 	<bean id="queue_marketingEvents" class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg value="queue.marketingEvents"/>
 	</bean>
 	
+	<bean id="queue_systemEvents" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="queue.systemEvents"/>
+	</bean>
+	
+	
+	<bean id="queue_streamEvents" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="queue.streamEvents"/>
+	</bean>
+	
+
     <bean id="queue_error" class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg value="queue.error"/>
 	</bean>	
+	
 		
 	<jms:outbound-channel-adapter id="toMq" 
 	channel="eventsSource" connection-factory="connectionFactory" destination="queue_events"/>
 	
+	  <!-- stream -->
+	 <jms:outbound-channel-adapter id="tostreamMq" 
+	channel="streamEvents" connection-factory="connectionFactory" destination="queue_streamEvents"/>
+
 	<jms:inbound-channel-adapter id="torouter" channel="events" connection-factory="connectionFactory" 
 	destination="queue_events" />
 	
@@ -132,14 +147,13 @@
 	
 	<jms:outbound-channel-adapter id="toMarkEvent" channel="marketingEvents" connection-factory="connectionFactory" 
 	destination="queue_marketingEvents" />
-	
-    <jms:inbound-channel-adapter id="tomkque" channel="marketingEvents_temp" destination="queue_marketingEvents" 
-	 connection-factory="connectionFactory" />
-	
+
 
 	 <!-- mk处理类 -->
 	 
-	 <int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents_temp" >
+	 <jms:inbound-channel-adapter id="tomkque" channel="marketingEvents_temp" destination="queue_marketingEvents" 
+	 connection-factory="connectionFactory" />
+	  <int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents_temp" >
 	   <int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="10"/>
 	</int:service-activator>
 	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.service.EventMCReceviceProcessorImpl"/>
