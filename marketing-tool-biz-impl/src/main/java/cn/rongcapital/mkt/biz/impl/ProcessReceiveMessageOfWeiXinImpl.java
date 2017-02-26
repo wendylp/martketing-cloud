@@ -397,38 +397,46 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 	/**
 	 * @param msgMap
 	 * @return
-	 * {
-		    "subject": {
-		        "openid": "o0gycwPRSkdEoP3dBLWMpe-JCKBQ"
-		    },
-		    "time": 1482982590,
-		    "object": {
-		        "code": "qrcode_attr",
-		        "attributes": {
-		            "qrcode_id": "1",
-		            "pub_id": "gh_4685d4eef135",
-		            "openid": "o0gycwPRSkdEoP3dBLWMpe-JCKBQ",
-		            "eventKey": "qrscene_123123",
-		            "ticket": "gQGu8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL05EdGZXcjNsQnh0X2kwMHhlQmNXAAIEEb62VwMEAAAAAA=="
-		        }
-		    },
-		    "event": {
-		        "code": "wechat_qrcode_scan",
-		        "attributes": {
-		            "event_type": "SCAN"
-		        }
+	 *{
+		  "subject": {
+		    "openid": "o0gycwIqxXT7DDkwqY-NyqmLb8Pg",
+		    "appid": "gh_4685d4eef135"
+		  },
+		  "time": 1487903800000,
+		  "object": {
+		    "code": "qr_code",
+		    "attributes": {
+		      "qrcode_id":2,
+		      "qr_code_name": "yy",
+		      "qr_code_ticket": "gQHC8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2VEdndFSTdscVJ2UXZnRjYxeGNXAAIE9L22VwMEAAAAAA==",
+		      "to_account_name": "瑞雪营销云",
+		      "to_user_name": "gh_4685d4eef135"
 		    }
+		  },
+		  "event": {
+		    "code": "wechat_qrcode_subscribe",
+		    "attributes": {
+		      "to_user_name": "gh_4685d4eef135",
+		      "from_user_name": "o0gycwIqxXT7DDkwqY-NyqmLb8Pg",
+		      "create_time": 1487903800000,
+		      "msg_type": "event",
+		      "event": "subscribe",
+		      "event_key": "26",
+		      "ticket": "gQHC8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2VEdndFSTdscVJ2UXZnRjYxeGNXAAIE9L22VwMEAAAAAA=="
+		    }
+		  }		  
 		}
 	 */
 	private String getEventCenterJson(Map<String, String> msgMap){
-		String qrCodeTicket = msgMap.get("ticket");
 		String openid = msgMap.get("fromUserName");
-		String event = msgMap.get("event");
-		WechatQrcode wechatQrcode = null;
-		if(StringUtils.isEmpty(qrCodeTicket)){
+		if(StringUtils.isEmpty(openid)){
 			return "";
-		}else{			
-			wechatQrcode = getWechatQrcodeScanInForSCAN(qrCodeTicket,openid);			
+		}
+		String qrCodeTicket = msgMap.get("ticket");
+		String event = msgMap.get("event");
+		WechatQrcode wechatQrcode = null;		
+		if(StringUtils.isNotEmpty(qrCodeTicket)){
+			wechatQrcode = getWechatQrcodeScanInForSCAN(qrCodeTicket,openid);
 		}
 		String createTime = msgMap.get("createTime");
 		long createTimeL =0l;
@@ -440,19 +448,65 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 		StringBuffer eventCenterSB = new StringBuffer("");
 		eventCenterSB.append("{");
 		eventCenterSB.append("\"subject\": {");
-		eventCenterSB.append("\"openid\": \"").append(openid).append("\"");
+		eventCenterSB.append("\"openid\": \"").append(openid).append("\",");
+		eventCenterSB.append("\"appid\": \"").append(msgMap.get("toUserName")).append("\"");
 		eventCenterSB.append("},");
 		eventCenterSB.append("\"time\": ").append(createTimeL).append(",");
-		eventCenterSB.append("\"object\": {");
-		eventCenterSB.append("\"code\": \"qrcode_attr\",");
-		eventCenterSB.append("\"attributes\": {");
-		eventCenterSB.append("\"qrcode_id\":").append(wechatQrcode.getId()).append(",");
-		eventCenterSB.append("\"pub_id\": \"").append(msgMap.get("toUserName")).append("\",");
-		eventCenterSB.append("\"openid\": \"").append(openid).append("\",");
-		eventCenterSB.append("\"eventKey\": \"").append(msgMap.get("eventKey")).append("\",");
-		eventCenterSB.append("\"ticket\": \"").append(qrCodeTicket).append("\"");
+		eventCenterSB.append(getObjectString(qrCodeTicket,msgMap,wechatQrcode));
+		eventCenterSB.append(getEventString(qrCodeTicket,event,msgMap,openid,createTimeL));
 		eventCenterSB.append("}");
-		eventCenterSB.append("},");
+		return eventCenterSB.toString();		
+	}
+	
+	/**
+	 * 获取Object段落的字符串
+	 * @param qrCodeTicket
+	 * @param msgMap
+	 * @param wechatQrcode
+	 * @return
+	 */
+	private String getObjectString(String qrCodeTicket,Map<String, String> msgMap,WechatQrcode wechatQrcode){
+		StringBuffer eventCenterSB = new StringBuffer("");
+		if(StringUtils.isEmpty(qrCodeTicket)){
+			WechatRegister wechatRegisterTemp = new WechatRegister();
+			wechatRegisterTemp.setWxAcct(msgMap.get("toUserName"));
+			List<WechatRegister> WechatRegisters = wechatRegisterDao.selectList(wechatRegisterTemp);
+			if(CollectionUtils.isNotEmpty(WechatRegisters)){
+				WechatRegister wechatRegister = WechatRegisters.get(0);
+				eventCenterSB.append("\"object\": {");
+				eventCenterSB.append("\"code\": \"wechat_account\",");
+				eventCenterSB.append("\"attributes\": {");
+				eventCenterSB.append("\"to_account_name\": \"").append(wechatRegister.getName()).append("\",");
+				eventCenterSB.append("\"to_user_name\": \"").append(msgMap.get("toUserName")).append("\"");
+				eventCenterSB.append("}");
+				eventCenterSB.append("},");
+			}
+		}else{
+			eventCenterSB.append("\"object\": {");
+			eventCenterSB.append("\"code\": \"qr_code\",");
+			eventCenterSB.append("\"attributes\": {");
+			eventCenterSB.append("\"qrcode_id\":").append(wechatQrcode.getId()).append(",");
+			eventCenterSB.append("\"qr_code_name\": \"").append(wechatQrcode.getQrcodeName()).append("\",");
+			eventCenterSB.append("\"qr_code_ticket\": \"").append(qrCodeTicket).append("\",");
+			eventCenterSB.append("\"to_account_name\": \"").append(wechatQrcode.getWxName()).append("\",");
+			eventCenterSB.append("\"to_user_name\": \"").append(msgMap.get("toUserName")).append("\"");
+			eventCenterSB.append("}");
+			eventCenterSB.append("},");
+		}
+		return eventCenterSB.toString();
+	}
+
+	/**
+	 * 获取Event段落的字符串
+	 * @param qrCodeTicket
+	 * @param event
+	 * @param msgMap
+	 * @param openid
+	 * @param createTimeL
+	 * @return
+	 */
+	private String getEventString(String qrCodeTicket,String event,Map<String, String> msgMap,String openid,long createTimeL){
+		StringBuffer eventCenterSB = new StringBuffer("");
 		eventCenterSB.append("\"event\": {");	
 		if(StringUtils.isNotEmpty(event)){
 			switch(event){
@@ -475,12 +529,22 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			}
 		}			
 		eventCenterSB.append("\"attributes\": {");
-		eventCenterSB.append("\"event_type\": \"").append(msgMap.get("event")).append("\"");
+		eventCenterSB.append("\"to_user_name\": \"").append(msgMap.get("toUserName")).append("\",");
+		eventCenterSB.append("\"from_user_name\": \"").append(openid).append("\",");
+		eventCenterSB.append("\"create_time\": ").append(createTimeL).append(",");
+		eventCenterSB.append("\"event_type\": \"event\",");		
+		if(StringUtils.isNotEmpty(qrCodeTicket)){
+			eventCenterSB.append("\"event\": \"").append(msgMap.get("event")).append("\",");
+			eventCenterSB.append("\"event_key\": \"").append(msgMap.get("eventKey")).append("\",");
+			eventCenterSB.append("\"ticket\": \"").append(qrCodeTicket).append("\"");
+		}else{
+			eventCenterSB.append("\"event\": \"").append(msgMap.get("event")).append("\"");
+		}
 		eventCenterSB.append("}");
 		eventCenterSB.append("}");
-		eventCenterSB.append("}");
-		return eventCenterSB.toString();		
+		return eventCenterSB.toString();
 	}
+
 	
 	private WechatQrcode getWechatQrcodeScanInForSCAN(String qrCodeTicket,String openid){
 	    if(StringUtils.isNotEmpty(qrCodeTicket)&&StringUtils.isNotEmpty(openid)){
