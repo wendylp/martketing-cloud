@@ -327,37 +327,43 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			 */
 			if(StringUtils.isNotEmpty(event)){
 				logger.info(" event is not empty ");
-				switch(event){
-				  case "SCAN":{
-				      this.insertWechatQrcodeScan(qrCodeTicket, openid);				      
-					  break; 
-				  }
-				  case "subscribe":{
-					  UserInfo userInfo = wechatMemberBiz.getUserInfoeByOpenid(app, openid);
-					  if(wechatRegister!=null){
-						  wechatAssetService.follow(userInfo, wechatRegister.getWxAcct());
+				try {
+					switch(event){
+					  case "SCAN":{
+					      this.insertWechatQrcodeScan(qrCodeTicket, openid);				      
+						  break; 
 					  }
-					  status = 0;
-					  qrcodeFocusInsertService.insertQrcodeFoucsInfo(qrCodeTicket, openid, date, status, wechatRegister.getWxAcct());
-					  this.insertWechatQrcodeScan(qrCodeTicket, openid);
-					  break;
-				  }
-				  case "unsubscribe":{
-					  if(wechatRegister!=null){
-						  wechatAssetService.unfollow(openid, wechatRegister.getWxAcct());
+					  case "subscribe":{
+						  UserInfo userInfo = wechatMemberBiz.getUserInfoeByOpenid(app, openid);
+						  if(wechatRegister!=null){
+							  wechatAssetService.follow(userInfo, wechatRegister.getWxAcct());
+						  }
+						  status = 0;
+						  qrcodeFocusInsertService.insertQrcodeFoucsInfo(qrCodeTicket, openid, date, status, wechatRegister.getWxAcct());
+						  this.insertWechatQrcodeScan(qrCodeTicket, openid);
+						  break;
 					  }
-					  status = 1;
-					  qrcodeFocusInsertService.insertQrcodeFoucsInfo(qrCodeTicket, openid, date, status, wechatRegister.getWxAcct());				  
-					  break;
-				  }
-				  default :{
-					  break;
-				  }
+					  case "unsubscribe":{
+						  if(wechatRegister!=null){
+							  wechatAssetService.unfollow(openid, wechatRegister.getWxAcct());
+						  }
+						  status = 1;
+						  qrcodeFocusInsertService.insertQrcodeFoucsInfo(qrCodeTicket, openid, date, status, wechatRegister.getWxAcct());				  
+						  break;
+					  }
+					  default :{
+						  break;
+					  }
+					}
+				} catch (Exception e) {
+					logger.info(e.getMessage());
+				}finally {
+					/**
+					 * 发送事件信息到事件中心
+					 */
+					sendEventToEventCenter(msgMap);
 				}
-				/**
-				 * 发送事件信息到事件中心
-				 */
-				sendEventToEventCenter(msgMap);
+				
 			}
 	}
 	
@@ -523,7 +529,7 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 				  break;
 			  }
 			  default :{
-				  eventCenterSB.append("\"code\": \"wechat_account_subscribe\",");
+				  eventCenterSB.append("\"code\": \"").append(msgMap.get("event")).append("\",");
 				  break;
 			  }
 			}
