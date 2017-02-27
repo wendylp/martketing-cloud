@@ -51,6 +51,8 @@ public class CustomTagSynServiceImpl implements TaskService {
 	public void task(Integer taskId) {
 
 		List<MaterialRelation> allData = mongoTemplate.findAll(MaterialRelation.class);
+		// 人数初始化
+		mongoTemplate.updateMulti(null, new Update().set("cover_number", 0).set("cover_frequency", 0), CustomTag.class);
 		for (MaterialRelation materialRelation : allData) {
 			String materialCode = materialRelation.getMaterialCode();
 			String materialType = materialRelation.getMaterialType();
@@ -80,7 +82,7 @@ public class CustomTagSynServiceImpl implements TaskService {
 				// 将自定义标签保存到Redis中
 				saveDataToReids(customTag, valueList);
 				// 计算覆盖人数和覆盖人次
-				statCount(customTag, midList);
+				statCount(customTag, eventList, midList);
 			}
 		}
 
@@ -116,12 +118,12 @@ public class CustomTagSynServiceImpl implements TaskService {
 	 * @param midList
 	 *            Mid集合
 	 */
-	private void statCount(CustomTagIn customTag, Set<Integer> midList) {
+	private void statCount(CustomTagIn customTag, List<MaterialRelatedEvent> eventList, Set<Integer> midList) {
 		String customTagId = customTag.getCustomTagId();
-		if (!CollectionUtils.isEmpty(midList)) {
+		if (!CollectionUtils.isEmpty(eventList) && !CollectionUtils.isEmpty(midList)) {
 			Query query = Query.query(Criteria.where("custom_tag_id").is(customTagId));
 			mongoTemplate.updateFirst(query,
-					new Update().set("cover_number", midList.size()),
+					new Update().set("cover_number", midList.size()).inc("cover_frequency", eventList.size()),
 					CustomTag.class);
 		}
 	}
