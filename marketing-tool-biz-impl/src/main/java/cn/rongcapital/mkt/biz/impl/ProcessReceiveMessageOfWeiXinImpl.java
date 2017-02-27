@@ -521,7 +521,11 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 				  break; 
 			  }
 			  case "subscribe":{
-				  eventCenterSB.append("\"code\": \"wechat_qrcode_subscribe\",");
+				  	if(StringUtils.isNotEmpty(qrCodeTicket)){
+				  		eventCenterSB.append("\"code\": \"wechat_qrcode_subscribe\",");
+					}else{
+						eventCenterSB.append("\"code\": \"wechat_account_subscribe\",");
+					}
 				  break;
 			  }
 			  case "unsubscribe":{
