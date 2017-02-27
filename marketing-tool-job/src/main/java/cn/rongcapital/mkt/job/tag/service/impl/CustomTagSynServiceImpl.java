@@ -80,7 +80,7 @@ public class CustomTagSynServiceImpl implements TaskService {
 				// 将自定义标签保存到Redis中
 				saveDataToReids(customTag, valueList);
 				// 计算覆盖人数和覆盖人次
-				statCount(customTag, eventList, midList);
+				statCount(customTag, midList);
 			}
 		}
 
@@ -116,12 +116,12 @@ public class CustomTagSynServiceImpl implements TaskService {
 	 * @param midList
 	 *            Mid集合
 	 */
-	private void statCount(CustomTagIn customTag, List<MaterialRelatedEvent> eventList, Set<Integer> midList) {
+	private void statCount(CustomTagIn customTag, Set<Integer> midList) {
 		String customTagId = customTag.getCustomTagId();
-		if (!CollectionUtils.isEmpty(eventList) && !CollectionUtils.isEmpty(midList)) {
+		if (!CollectionUtils.isEmpty(midList)) {
 			Query query = Query.query(Criteria.where("custom_tag_id").is(customTagId));
 			mongoTemplate.updateFirst(query,
-					new Update().set("cover_number", midList.size()).set("cover_frequency", eventList.size()),
+					new Update().set("cover_number", midList.size()),
 					CustomTag.class);
 		}
 	}

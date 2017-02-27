@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -22,6 +23,7 @@ import cn.rongcapital.mkt.event.vo.out.EventBehaviorsOut;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CustomTagMaterialMap;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.po.mongodb.MaterialRelatedEvent;
 import cn.rongcapital.mkt.po.mongodb.MaterialRelation;
 import cn.rongcapital.mkt.service.CustomTagMaterialMapService;
@@ -54,7 +56,7 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 	private static final String NOT_NULL_FIELD = "1";
 
 	private static final String BIT_MAP = "00000011000000000";
-	
+
 	private static final Integer MD_TYPE = 1;
 
 	@Autowired
@@ -135,9 +137,22 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 							MaterialRelation.class);
 					materialMongoList.add(material);
 				}
-				// 数据清理
-				clearData(materialMongoList);
+				// 计算覆盖人次
+				MaterialRelation materialRelation = mongoTemplate.findOne(
+						Query.query(
+								Criteria.where("material_code").is(materialCode).and("material_type").is(materialType)),
+						MaterialRelation.class);
+				int number = 0;
+				if (materialRelation != null) {
+					List<MaterialRelatedEvent> eventList = materialRelation.getEventList();
+					number = CollectionUtils.isEmpty(eventList) ? number : eventList.size();
+				}
+				mongoTemplate.updateFirst(
+						Query.query(Criteria.where("custom_tag_id").is(customTagMaterialMap.getCustomTagId())),
+						new Update().set("cover_frequency", number), CustomTag.class);
 			}
+			// 数据清理
+			clearData(materialMongoList);
 			logger.info("MaterialEventHandleServiceImpl dataPreprocessing method was the end------------->");
 		} catch (Exception e) {
 			e.printStackTrace();
