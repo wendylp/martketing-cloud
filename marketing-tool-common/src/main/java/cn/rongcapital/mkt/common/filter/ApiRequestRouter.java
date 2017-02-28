@@ -77,11 +77,18 @@ public class ApiRequestRouter implements ContainerRequestFilter {
             requestContext.abortWith(builder.build());
        }else{
 	   		String url = requestContext.getUriInfo().getPath();
+	   		logger.info("-----url------{}",url);
 	   		String appId = "";
+	   		String eventAppId = "";
 	   		if(StringUtils.isNotEmpty(url)&&url.contains(ApiConstant.API_PATH)){
 	   			if(url.length()>=5){
-	   				appId = url.substring(5);
-	   			}	   			
+	   				if(url.contains(ApiConstant.EVENT_API_PATH)){
+	   					eventAppId = url.substring(1,url.length() - ApiConstant.API_PATH.length());
+	   				}else{
+		   				appId = url.substring(5);
+	   				}
+
+	   			}
 		   		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 	   			
 		   		    if(redisUserTokenVO.getCode()==0&&StringUtils.isNotEmpty(redisUserTokenVO.getMsg())){
 		   		        requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
@@ -94,17 +101,21 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 		   				ResponseBuilderImpl builder = getBuilder();           
 			            requestContext.abortWith(builder.build());
 		   			}else{
-		   				if(StringUtils.isNotEmpty(appId)){				
-			   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
-			   				requestContext.setRequestUri(newRequestURI);			   				
+		   				if(StringUtils.isNotEmpty(appId)||StringUtils.isNotEmpty(eventAppId)){	
+		   					if(StringUtils.isNotEmpty(appId)){
+		   						URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path(ApiConstant.API_PATH+"/"+method+"/"+appId).build();
+				   				requestContext.setRequestUri(newRequestURI);	
+		   					}else{
+		   						URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder().path(ApiConstant.EVENT_API_PATH +"/"+method).build();
+				   				requestContext.setRequestUri(newRequestURI);	
+		   					}
 			   			}else{
 			   				URI newRequestURI = requestContext.getUriInfo().getBaseUriBuilder()
 			   						.path(ApiConstant.API_PATH+"/"+method).build();
 			   				requestContext.setRequestUri(newRequestURI);
 			   			}
 		   			}		   			
-		   		}
-		   		
+		   		}		   		
 	   		}else{
 //	   			requestContext.abortWith(Response.status(404).entity("Api not found").build());	   			
 	   			ResponseBuilderImpl builder = getBuilder();         

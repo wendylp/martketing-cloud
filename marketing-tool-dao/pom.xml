@@ -3,7 +3,7 @@
   <parent>
     <groupId>cn.rongcapital.mkt</groupId>
     <artifactId>marketing-cloud</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.7.0</version>
   </parent>
   <artifactId>marketing-tool-dao</artifactId>
 
@@ -12,6 +12,15 @@
 			<groupId>cn.rongcapital.mkt</groupId>
 			<artifactId>marketing-tool-po</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+		<!-- 增加mongodb支持 -->
+	    <dependency>
+	       <groupId>org.springframework.boot</groupId>
+	       <artifactId>spring-boot-starter-data-mongodb</artifactId>
+	    </dependency>
+		<dependency>  
+		    <groupId>redis.clients</groupId>  
+		    <artifactId>jedis</artifactId>  
 		</dependency>
  		<!--JDBC support-->
 		<dependency>

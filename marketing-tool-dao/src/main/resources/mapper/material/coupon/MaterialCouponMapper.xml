@@ -178,6 +178,24 @@
 		LIMIT #{startIndex},#{pageSize}
 	</select>
 	
+	
+	<!-- 模糊查询状态为ready优惠券列表 -->
+	<select id="selectReadyListByKeyword" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCoupon" resultType="cn.rongcapital.mkt.material.coupon.po.MaterialCoupon">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = 0
+		AND ready_status ='ready'
+		AND type = 'voucher'
+		AND channel_code = #{channelCode}
+		<if test="couponStatus != null"><![CDATA[AND coupon_status = #{couponStatus}]]></if>
+		<if test="endTime != null"><![CDATA[AND end_time >= #{endTime}]]></if>
+		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
+		ORDER BY create_time desc
+		LIMIT #{startIndex},#{pageSize}
+	</select>
+	
+	
 	<!-- 模糊查询优惠券的数量  -->
 	<select id="selectListByKeywordCount" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCoupon" resultType="int">
 		<![CDATA[SELECT count(id)]]>
@@ -190,6 +208,19 @@
 		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
 	</select>
 
+
+	<!-- 模糊查询优惠券状态为ready的数量  -->
+	<select id="selectReadyListByKeywordCount" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCoupon" resultType="int">
+		<![CDATA[SELECT count(id)]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = 0
+		AND ready_status ='ready'
+		AND type = 'voucher'
+		AND channel_code = #{channelCode}
+		<if test="couponStatus != null"><![CDATA[AND coupon_status = #{couponStatus}]]></if>
+		<if test="endTime != null"><![CDATA[AND end_time >= #{endTime}]]></if>
+		<if test="title != null"><![CDATA[AND title like CONCAT('%',#{title},'%')]]></if>
+	</select>
 
 	<!-- 通过券码ID，查询券码价值 -->
 	<select id="selecCouponAmountByCouponId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.material.coupon.po.MaterialCoupon">

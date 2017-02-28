@@ -33,9 +33,13 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CreupdateSegmentService;
+import cn.rongcapital.mkt.service.CustomtagListService;
+import cn.rongcapital.mkt.service.SegmentAllSummaryListService;
+import cn.rongcapital.mkt.service.SegmentAnalysisCustomService;
 import cn.rongcapital.mkt.service.SegmentAudienctAnalysisService;
 import cn.rongcapital.mkt.service.SegmentBodyGetService;
 import cn.rongcapital.mkt.service.SegmentBodyUpdateService;
+import cn.rongcapital.mkt.service.SegmentCustomtagCategoryListService;
 import cn.rongcapital.mkt.service.SegmentDetailGetService;
 import cn.rongcapital.mkt.service.SegmentFilterGetService;
 import cn.rongcapital.mkt.service.SegmentHeaderCreateService;
@@ -69,6 +73,7 @@ import cn.rongcapital.mkt.vo.in.SegmentTagUpdateIn;
 import cn.rongcapital.mkt.vo.in.TagGroupsListIn;
 import cn.rongcapital.mkt.vo.in.TagListSecondarySearchIn;
 import cn.rongcapital.mkt.vo.out.SegmentPublishstatusListOut;
+import cn.rongcapital.mkt.vo.out.SegmentSummaryListOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -117,6 +122,9 @@ public class MktSegmentApi {
     private SegmentPublishstatusListService segmentPublishstatusListService;
 
     @Autowired
+    private SegmentAllSummaryListService segmentAllSummaryListService;
+
+    @Autowired
     private SegmentSearchGetService segmentSearchGetServer;
 
     @Autowired
@@ -152,7 +160,15 @@ public class MktSegmentApi {
     @Autowired
     private SegmentSecondaryTaglistSearchService segmentSecondaryTaglistSearchService;
     
-
+    @Autowired
+    private SegmentAnalysisCustomService segmentAnalysisCustomService;
+    
+    @Autowired
+    private CustomtagListService customtagListService;
+    
+    @Autowired
+    private SegmentCustomtagCategoryListService segmentCustomtagCategoryListService;
+    
     /**
      * 获取创建联系人表单界面中，右侧的显示列表
      * 
@@ -184,6 +200,22 @@ public class MktSegmentApi {
         return segmentAudienctAnalysisService.getSegmentAudienctAnalysis(tagId, segmentHeadId);
     }
 
+    /**
+     * 细分管理分析
+     * 
+     * @param userToken
+     * @param var
+     * @param contactId
+     * @return
+     */
+    @GET
+    @Path("mkt.segment.audienct.custom.analysis.get")
+    public BaseOutput getSegmentCustomAnalysis(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("category_id") String categoryId,
+            @NotNull @QueryParam("segment_head_id") Integer segmentHeadId) {
+        return segmentAnalysisCustomService.getSegmentCustomAnalysis(categoryId, segmentHeadId);
+    }
+    
     /**
      * 系统标签（树形）结构接口
      * 
@@ -396,6 +428,19 @@ public class MktSegmentApi {
     }
 
     /**
+     * @功能简述: 获取某个发布状态下的符合指定keyword过滤要求的全部segment概要信息，如细分名称+id+覆盖人数+状态等。
+     * @param: String userToken, String publishStatus, String ver, 
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.segment.allsummary.list.get")
+    public SegmentSummaryListOut segmentAllSummaryList(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotNull @QueryParam("publish_status") Integer publishStatus,
+            @NotEmpty @QueryParam("ver") String ver) throws Exception {
+        return segmentAllSummaryListService.segmentAllSummaryList(userToken, publishStatus, ver);
+    }
+
+    /**
      * 根据输入名字模糊查询都有哪些人在人群中
      * 
      * @param head_id
@@ -564,4 +609,43 @@ public class MktSegmentApi {
         return segmentBodyGetService.getSegmentBody(userToken, segmentHeadId);
     }
 
+    /**
+     * @功能简述: 显示top标签列表人次
+     * @param userToken
+     * @param topType
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.segment.analysis.top.custom.list")
+    public BaseOutput getSegmentAnalysisTopCustomList(@NotNull @QueryParam("top_type") Integer topType) {
+        return segmentAnalysisCustomService.getSegmentAnalysisTopCustomList(topType);
+    }
+    
+    /**
+     * 功能描述：细分中查询自定义标签列表
+     * @param customTagCategoryId
+     * 						自定义标签分类id
+     * @return BaseOutput
+     */
+    @GET
+    @Path("/mkt.segment.customtag.get")
+    public BaseOutput getCustomtagList(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken,
+            @NotNull @QueryParam("custom_tag_category_id") String customTagCategoryId) {
+        return customtagListService.getCustomtagList(customTagCategoryId);
+    }
+    
+    /**
+     * 功能描述：自定义分类列表 去除覆盖人数为零的列表
+     * 
+     * 接口：mkt.segment.customtag.category.list
+     * 
+     * @return
+     */
+    @GET
+    @Path("/mkt.segment.customtag.category.list")
+    public BaseOutput getSegmentCustomTagCategoryList(@NotEmpty @QueryParam("method") String method,
+            @NotEmpty @QueryParam("user_token") String userToken) {
+        return segmentCustomtagCategoryListService.getSegmentCustomTagCategoryList();
+    }
 }

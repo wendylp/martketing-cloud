@@ -279,4 +279,12 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
     
     List<String> getBitmaps(Integer id);
     
+    /**
+     * 通过微信信息查询主键ID 
+     * @param wxCode	微信号
+     * @param wxmpId	公众号
+     * @return
+     */
+    Integer getIdByWechartInformation(@Param("wxCode")String wxCode,@Param("wxmpId")String wxmpId);
+    
 }

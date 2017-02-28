@@ -59,6 +59,15 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
         SegmentCreupdateOut segmentCreupdateOut = new SegmentCreupdateOut();
 
+        
+        if(checkExpire(segmentCreUpdateIn)){
+        	
+            baseOutput.setCode(ApiErrorCode.VALIDATE_TAG_EXPIRE.getCode());
+            baseOutput.setMsg(ApiErrorCode.VALIDATE_TAG_EXPIRE.getMsg());
+            return baseOutput;
+        }
+        
+        
         if(segmentCreUpdateIn.getSegmentHeadId() == null){
             //不包含了id,则为创建操作
             //1.首先更新segmentHead表,将相关的数据设置进去.
@@ -147,17 +156,65 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
                     segmentationBody.setGroupId(tagGroupsIn.getGroupId());
                     segmentationBody.setGroupName(tagGroupsIn.getGroupName());
                     segmentationBody.setGroupIndex(tagGroupsIn.getGroupIndex());
-                    segmentationBody.setTagId(systemTagIn.getTagId());
-                    segmentationBody.setTagName(systemTagIn.getTagName());
-                    segmentationBody.setTagSeq(systemTagIn.getTagIndex());
-                    segmentationBody.setTagExclude(systemTagIn.getTagExclude());
-                    segmentationBody.setTagValueId(systemValueIn.getTagValueId());
-                    segmentationBody.setTagValueName(systemValueIn.getTagValue());
-                    segmentationBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                    
+                    if(systemTagIn.getTagType().byteValue() == ApiConstant.SEGMENT_TYPE_SYSTEM_TAG){
+                        segmentationBody.setTagId(systemTagIn.getTagId());
+                        segmentationBody.setTagName(systemTagIn.getTagName());
+                        segmentationBody.setTagSeq(systemTagIn.getTagIndex());
+                        segmentationBody.setTagExclude(systemTagIn.getTagExclude());
+                        segmentationBody.setTagType(systemTagIn.getTagType().byteValue());
+                        segmentationBody.setTagValueId(systemValueIn.getTagValueId());
+                        segmentationBody.setTagValueName(systemValueIn.getTagValue());
+                        segmentationBody.setTagStatus(systemValueIn.getTagStatus().byteValue());
+                        segmentationBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                    }else{
+                        segmentationBody.setTagCategoryId(systemTagIn.getTagId());//自定义标签时保存分类ID
+                        segmentationBody.setTagCategoryName(systemTagIn.getTagName());//自定义标签时保存分类名称
+                        segmentationBody.setTagSeq(systemTagIn.getTagIndex());
+                        segmentationBody.setTagExclude(systemTagIn.getTagExclude());
+                        segmentationBody.setTagType(systemTagIn.getTagType().byteValue());
+                        segmentationBody.setTagId(systemValueIn.getTagValueId());//自定义标签时保存标签Id
+                        segmentationBody.setTagName(systemValueIn.getTagValue());//自定义标签时保存标签名称
+                        segmentationBody.setTagStatus(systemValueIn.getTagStatus().byteValue());
+                        segmentationBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+                    }
+                    
+
                     segmentationBodyDao.insert(segmentationBody);
                 }
             }
         }
     }
 
+    /**
+     * 验证是否存在过期标签(存在返回true)
+     * @param segmentCreUpdateIn
+     * @return
+     */
+    private boolean checkExpire(SegmentCreUpdateIn segmentCreUpdateIn){
+    	
+    	List<TagGroupsIn> filterGroups = segmentCreUpdateIn.getFilterGroups();
+    	
+        if(CollectionUtils.isEmpty(filterGroups)){
+        	return false;
+        }
+    	
+    	for(TagGroupsIn tagGroupsIn : filterGroups){
+            List<SystemTagIn> tagInList = tagGroupsIn.getTagList();
+            if(CollectionUtils.isEmpty(tagInList)) continue;
+            for(SystemTagIn systemTagIn : tagInList){
+                List<SystemValueIn> systemValueIns = systemTagIn.getTagValueList();
+                if(CollectionUtils.isEmpty(systemValueIns)) continue;
+                for(SystemValueIn systemValueIn : systemValueIns){
+                    
+                	if(systemValueIn.getTagStatus() == 1){
+                		return true;
+                	}
+                }
+            }
+        }
+    	
+    	return false;
+    }
+    
 }

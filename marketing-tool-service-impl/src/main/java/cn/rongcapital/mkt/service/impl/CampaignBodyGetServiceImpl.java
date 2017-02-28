@@ -15,13 +15,16 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.SmsTaskAppEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.CampaignActionSaveAudienceDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendH5Dao;
 import cn.rongcapital.mkt.dao.CampaignActionSendPrivtDao;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
+import cn.rongcapital.mkt.dao.CampaignActionSendSmsDao;
 import cn.rongcapital.mkt.dao.CampaignActionSetTagDao;
 import cn.rongcapital.mkt.dao.CampaignActionWaitDao;
+import cn.rongcapital.mkt.dao.CampaignAudienceFixDao;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionPropCompareDao;
@@ -34,14 +37,17 @@ import cn.rongcapital.mkt.dao.CampaignNodeItemDao;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
 import cn.rongcapital.mkt.dao.ImgTextAssetDao;
+import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.WechatAssetDao;
 import cn.rongcapital.mkt.dao.WechatAssetGroupDao;
 import cn.rongcapital.mkt.po.CampaignActionSaveAudience;
 import cn.rongcapital.mkt.po.CampaignActionSendH5;
 import cn.rongcapital.mkt.po.CampaignActionSendPrivt;
 import cn.rongcapital.mkt.po.CampaignActionSendPub;
+import cn.rongcapital.mkt.po.CampaignActionSendSms;
 import cn.rongcapital.mkt.po.CampaignActionSetTag;
 import cn.rongcapital.mkt.po.CampaignActionWait;
+import cn.rongcapital.mkt.po.CampaignAudienceFix;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignBody;
 import cn.rongcapital.mkt.po.CampaignDecisionPropCompare;
@@ -54,17 +60,20 @@ import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
 import cn.rongcapital.mkt.po.ImgTextAsset;
+import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.WechatAsset;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
-import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.vo.out.CampaignActionSaveAudienceOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionSendH5Out;
 import cn.rongcapital.mkt.vo.out.CampaignActionSendPrivtOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionSendPubOut;
+import cn.rongcapital.mkt.vo.out.CampaignActionSendSmsOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionSetTagOut;
 import cn.rongcapital.mkt.vo.out.CampaignActionWaitOut;
+import cn.rongcapital.mkt.vo.out.CampaignAudienceFixOut;
 import cn.rongcapital.mkt.vo.out.CampaignAudienceTargetOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignDecisionPropCompareOut;
@@ -94,9 +103,15 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	@Autowired
 	private CampaignActionSetTagDao campaignActionSetTagDao;
 	@Autowired
+	private CampaignActionSendSmsDao campaignActionSendSmsDao;
+    @Autowired
+    private SmsMaterialDao smsMaterialDao;
+	@Autowired
 	private CampaignActionWaitDao campaignActionWaitDao;
 	@Autowired
 	private CampaignAudienceTargetDao campaignAudienceTargetDao;
+	@Autowired
+	private CampaignAudienceFixDao campaignAudienceFixDao;
 	@Autowired
 	private CampaignDecisionPropCompareDao campaignDecisionPropCompareDao;
 	@Autowired
@@ -187,10 +202,15 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 				}
 				if (campaignNodeChainOut.getNodeType() == ApiConstant.CAMPAIGN_NODE_AUDIENCE) {
 					switch (campaignNodeChainOut.getItemType()) {
-					case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_TARGET:// 目标人群
+					case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_TARGET:// 细分人群
 						CampaignAudienceTargetOut campaignAudienceTargetOut = queryCampaignAudienceTarget(
 								campaignNodeChainOut, campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignAudienceTargetOut);
+						break;
+					case ApiConstant.CAMPAIGN_ITEM_AUDIENCE_FIX:// 固定人群
+						CampaignAudienceFixOut campaignAudienceFixOut = queryCampaignFixTarget(
+								campaignNodeChainOut, campaignHeadId);
+						campaignNodeChainOut.setInfo(campaignAudienceFixOut);
 						break;
 					}
 				}
@@ -250,6 +270,11 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 						CampaignActionSetTagOut campaignActionSetTagOut = queryCampaignActionSetTag(
 								campaignNodeChainOut, campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignActionSetTagOut);
+						break;
+					case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS:// 发送短信
+						CampaignActionSendSmsOut campaignActionSendSmsOut = queryCampaignActionSendSms(
+								campaignNodeChainOut, campaignHeadId);
+						campaignNodeChainOut.setInfo(campaignActionSendSmsOut);
 						break;
 					case ApiConstant.CAMPAIGN_ITEM_ACTION_ADD_CAMPAIGN:// 添加到其它活动
 						break;
@@ -433,6 +458,53 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		}
 		return campaignActionSetTagOut;
 	}
+	
+	private CampaignActionSendSmsOut queryCampaignActionSendSms(CampaignNodeChainOut campaignNodeChainOut,
+			int campaignHeadId) {
+		CampaignActionSendSmsOut campaignActionSendSmsOut = new CampaignActionSendSmsOut();
+		CampaignActionSendSms campaignActionSendSms = getCampaignActionSendSmsById(campaignNodeChainOut, campaignHeadId);
+		if (campaignNodeChainOut != null) {
+			fillCampaignActionSendSmsOut(campaignActionSendSmsOut, campaignActionSendSms);
+		}
+		
+		return campaignActionSendSmsOut;
+	}
+
+	private void fillCampaignActionSendSmsOut(CampaignActionSendSmsOut campaignActionSendSmsOut, 
+			CampaignActionSendSms campaignActionSendSms) {
+		campaignActionSendSmsOut.setName(campaignActionSendSms.getName());
+		Integer categoryType = campaignActionSendSms.getSmsCategoryType();
+		campaignActionSendSmsOut.setSmsCategoryType(categoryType);
+		Integer smsMaterialId = campaignActionSendSms.getSmsMaterialId();
+		campaignActionSendSmsOut.setSmsMaterialId(smsMaterialId);
+		String smsCategoryName = (categoryType == null) ? "" : SmsTaskAppEnum.getDescriptionByStatus(categoryType.byteValue());
+		campaignActionSendSmsOut.setSmsCategoryName(smsCategoryName);
+		String smsMaterialName = smsMaterialId == null ? "" : getSmsMaterialNameById(smsMaterialId);
+		campaignActionSendSmsOut.setSmsMaterialName(smsMaterialName);
+	}
+
+	private String getSmsMaterialNameById(Integer smsMaterialId) {
+		SmsMaterial paramSmsMaterial = new SmsMaterial();
+		paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		paramSmsMaterial.setId(smsMaterialId);
+		List<SmsMaterial> targetSmsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
+		String smsMaterialName = "";
+		if (CollectionUtils.isNotEmpty(targetSmsMaterialList)) {
+			smsMaterialName = targetSmsMaterialList.get(0).getName();
+		}
+		return smsMaterialName;
+	}
+	
+	private CampaignActionSendSms getCampaignActionSendSmsById(
+			CampaignNodeChainOut campaignNodeChainOut, int campaignHeadId) {
+		CampaignActionSendSms t = new CampaignActionSendSms();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setCampaignHeadId(campaignHeadId);
+		t.setItemId(campaignNodeChainOut.getItemId());
+		List<CampaignActionSendSms> resList = campaignActionSendSmsDao.selectList(t);
+		return CollectionUtils.isEmpty(resList) ? null : resList.get(0);
+	}
+	
 
 	private CampaignActionSaveAudienceOut queryCampaignActionSaveAudience(CampaignNodeChainOut campaignNodeChainOut,
 			int campaignHeadId) {
@@ -484,16 +556,35 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 			campaignDecisionTagOut.setName(campaignDecisionTag.getName());
 			campaignDecisionTagOut.setRule(campaignDecisionTag.getRule());
 			String tagIds = campaignDecisionTag.getTagIds();
+			String tagTypes = campaignDecisionTag.getTagTypes();
 			if (StringUtils.isNotBlank(tagIds)) {
 				List<TagOut> tags = new ArrayList<TagOut>();
 				List<String> tagIdsStrList = Arrays.asList(StringUtils.split(tagIds, ','));
-				for (String tagIdStr : tagIdsStrList) {
+				List<String> tagTypeList = new ArrayList<String>(0);
+				if (tagTypes != null) {
+					tagTypeList = Arrays.asList(StringUtils.split(tagTypes, ','));
+				}
+				for (int i = 0; i < tagIdsStrList.size(); i++) {
+					String tagIdStr = tagIdsStrList.get(i);					
+					boolean isCustomTag =  tagTypeList.size() == 0 
+										|| TagOut.TAG_TYPE_CUSTOM.endsWith(tagTypeList.get(i));
+					String tagType = isCustomTag ? TagOut.TAG_TYPE_CUSTOM : TagOut.TAG_TYPE_SYS;
+					String tagName = null;
+					if (isCustomTag) {
+						Query query = new Query(Criteria.where("custom_tag_id").is(tagIdStr));
+						CustomTag targetTag = mongoTemplate.findOne(query,CustomTag.class);
+						tagName = targetTag.getCustomTagName();			
+					} else {
+						String[] infos = tagIdStr.split(":");
+						tagIdStr = infos[0];
+						tagName = infos[1];
+					}
+					Log.info("--------------" + tagName);
+										
 					TagOut tagOut = new TagOut();
-			        Query query = new Query(Criteria.where("tag_id").is(tagIdStr));
-			        BaseTag targetTag = mongoTemplate.findOne(query,BaseTag.class);
-					Log.info("--------------" + targetTag.getTagName());
 					tagOut.setTagId(tagIdStr);
-					tagOut.setTagName(targetTag.getTagName());
+					tagOut.setTagName(tagName);
+					tagOut.setTagType(tagType);
 					tags.add(tagOut);
 				}
 				campaignDecisionTagOut.setTags(tags);
@@ -710,6 +801,24 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 
 		}
 		return campaignAudienceTargetOut;
+	}
+	
+	private CampaignAudienceFixOut queryCampaignFixTarget(CampaignNodeChainOut campaignNodeChainOut,
+			int campaignHeadId) {
+		CampaignAudienceFix t = new CampaignAudienceFix();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setCampaignHeadId(campaignHeadId);
+		t.setItemId(campaignNodeChainOut.getItemId());
+		List<CampaignAudienceFix> resList = campaignAudienceFixDao.selectList(t);
+		
+		CampaignAudienceFixOut campaignAudienceFixOut = new CampaignAudienceFixOut();
+		if (CollectionUtils.isNotEmpty(resList)) {
+			CampaignAudienceFix campaignAudienceTarget = resList.get(0);
+			campaignAudienceFixOut.setName(campaignAudienceTarget.getName());
+			campaignAudienceFixOut.setAudienceFixId(campaignAudienceTarget.getAudienceFixId());
+			campaignAudienceFixOut.setAudienceFixName(campaignAudienceTarget.getAudienceFixName());
+		}
+		return campaignAudienceFixOut;
 	}
 
 	private CampaignTriggerTimerOut queryCampaignTriggerTimer(CampaignNodeChainOut campaignNodeChainOut,

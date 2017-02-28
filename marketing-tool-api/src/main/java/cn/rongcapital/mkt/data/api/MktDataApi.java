@@ -110,6 +110,9 @@ public class MktDataApi {
 	private AudienceListService audienceListService;
 
 	@Autowired
+	private AudienceAllListService audienceAllListService;
+
+	@Autowired
 	private AudienceNameListService audienceNameListService;
 
 	@Autowired
@@ -510,6 +513,18 @@ public class MktDataApi {
 								   @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 								   @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
 		return audienceListService.audienceList(userToken, size, index);
+	}
+
+	/**
+	 * @功能简述: 获取全部人群list,并给出基本信息
+	 * @param: String
+	 *             userToken
+	 * @return: Object
+	 */
+	@GET
+	@Path("/mkt.audience.all.list.get")
+	public BaseOutput audienceAllList(@NotEmpty @QueryParam("user_token") String userToken) {
+		return audienceAllListService.audienceAllList(userToken);
 	}
 
 

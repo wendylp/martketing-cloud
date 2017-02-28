@@ -31,7 +31,7 @@ import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.WechatMember;
-import cn.rongcapital.mkt.po.base.BaseTag;
+import cn.rongcapital.mkt.po.mongodb.CustomTag;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.po.mongodb.TagTree;
 import cn.rongcapital.mkt.service.HomePageDataCountListService;
@@ -131,8 +131,8 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 			}
 		}
 
-		Query countQuery = new Query(Criteria.where("tag_type").is(ApiConstant.CUSTOM_TAG_LEAF_TYPE));
-		Long totalTagCount = mongoTemplate.count(countQuery, BaseTag.class);
+		Query countQuery = new Query(Criteria.where("custom_tag_type").is(1).and("is_deleted").is(0));
+		Long totalTagCount = mongoTemplate.count(countQuery, CustomTag.class);
 		int count = new Long(totalTagCount).intValue();
 		tagCountListObj.setId(TAG.getId());
 		tagCountListObj.setCount(tagCount + count);

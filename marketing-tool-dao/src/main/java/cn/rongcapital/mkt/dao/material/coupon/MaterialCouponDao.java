@@ -112,4 +112,10 @@ public interface MaterialCouponDao extends BaseDao<MaterialCoupon> {
      * @author zhuxuelong
      */
     void updateCouponStockRest(@Param("id") Long id, @Param("count") int count);
+
+
+	List<MaterialCoupon> selectReadyListByKeyword(MaterialCoupon paramMaterialCoupon);
+
+
+	int selectReadyListByKeywordCount(MaterialCoupon paramMaterialCoupon);
 }

@@ -34,6 +34,7 @@ public enum ApiErrorCode {
 	BIZ_ERROR_CANPAIGN_CAN_NOT_MANUAL_START(3006,"campaign can not manual start"),//活动无法手动开启
 	BIZ_ERROR_CANPAIGN_CAN_NOT_START(3009,"campaign can not start"),//活动无法开启
 	BIZ_ERROR_CONTACTINFO_KEYID(3010,"can not get the keyid"),//
+	BIZ_ERROR_CONTACTINFO_SMS_USED(3011,"can not send a sms in used"),//短信发送节点中的短信不能被占用
 	
 	//优惠码校验接口的错误代码
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CHECK_DELETE(3011,"coupon code status is not undelete"),//当前数据已经不是未删除状态，表示该数据不可用
@@ -47,6 +48,18 @@ public enum ApiErrorCode {
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_CREATE_AUDIENCE_FAILED(3018,"create target group of people faild"),//新建固定人群失败
 	BIZ_ERROR_MATERIAL_COUPOON_UPDATE_ERROR(3019,"只有未使用的优惠券才可以编辑！"),
 	BIZ_ERROR_MATERIAL_COUPOON_CODE_ERROR(3020,"优惠码正在生成！请稍后操作"),
+	BIZ_ERROR_EVENT_SOURCE_CODE_ALREADY_EXIST(3021,"code of event source has already exist."),
+	BIZ_ERROR_EVENT_SOURCE_PF_NOT_EXIST(3022,"platform code of event source  is not exist."),
+	BIZ_ERROR_EVENT_OBJECT_CODE_ALREADY_EXIST(3023,"code of event object has already exist."),
+	BIZ_ERROR_EVENT_OBJECT_ATTRIBUTE_DUPLICATED(3024,"attribute of event object is duplicated."),
+	BIZ_ERROR_EVENT_IS_EXIST(3021,"event code is exist"),//事件code已经存在
+
+	//自定义标签错误相关代码
+	BIZ_ERROR_CUSTOM_TAG_DUPLICATED_ERROR(3026,"custom tag aleady exists in the category"),
+	BIZ_ERROR_CUSTOM_TAG_CATEGORY_NO_CHILDREN(3027, "custom tag category has no children, please check input parameter."),
+    BIZ_ERROR_CUSTOM_TAG_DEFAULT_CATEGORY_CANT_DELETE(3028,"custom tag default category - undefined category can't deleted."),
+    BIZ_ERROR_CUSTOM_TAG_CATEGORY_NOT_EXIST(3029,"custom tag category has already not existed"),
+    BIZ_ERROR_CUSTOM_TAG_CATEGORY_HAS_CHILDREN(3030,"custom tag category has children, so it can't be deleted."),
 
 	SMS_ERROR_MATERIAL_CAN_NOT_DELETE(4001,"can not delete the material"),
 	SMS_ERROR_MATERIAL_CAN_NOT_UPDATE(4002,"can not update the material"),
@@ -62,6 +75,18 @@ public enum ApiErrorCode {
 	VALIDATE_ERROR_GENERATE_RULE_ERROR(4011,"generate rule validation failed"),//校验失败
 	VALIDATE_ERROR_TIME_ERROR(4012,"起始时间大于结束时间"),//校验失败
 	
+	VALIDATE_ERROR_EVENT_UNSUBSCRIBABLE(4013,"event subscribe can not cancel"),//事件订阅不可以被取消
+	VALIDATE_ERROR_CATEGORY_EXISTS(4014,"当前分类已存在"),
+	
+	EVENT_ERROR_NOT_FOUND_ERROR(5001,"Event not exist"),
+	EVENT_SOURCE_ERROR_NOT_FOUND_ERROR(5002,"Event Source not exist"),
+	EVENT_OBJECT_ERROR_NOT_FOUND_ERROR(5003,"Event Object not exist"),
+	EVENT_SOURCE_ID_NOT_FOUND(5004,"Event Source Id not found"),
+	EVENT_OBJECT_ID_NOT_FOUND(5005,"Event Object Id not found"),
+	VALIDATE_JSON_ERROR(5006,"JSON validation error"),//校验失败
+	DATE_VALIDATE_ERROR(5007,"起始时间大于结束时间"),
+	EVENT_CODE_NOT_FOUND_ERROR(5008,"Event Code not exist"),
+	VALIDATE_TAG_EXPIRE(6001,"当前有过期标签，请移除"),//校验失败
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
     private int code;

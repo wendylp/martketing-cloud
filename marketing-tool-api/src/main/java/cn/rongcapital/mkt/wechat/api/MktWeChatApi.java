@@ -19,6 +19,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -47,6 +48,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import com.tagsin.wechat_sdk.App;
@@ -65,8 +68,10 @@ import cn.rongcapital.mkt.biz.impl.ProcessReceiveMessageOfWeiXinImpl;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.jedis.JedisException;
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.ImgTextAsset;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.service.AssetWechatAudiencelistMatchGetService;
 import cn.rongcapital.mkt.service.DeleteImgTextAssetService;
 import cn.rongcapital.mkt.service.GetImgTextAssetService;
@@ -115,6 +120,7 @@ import cn.rongcapital.mkt.vo.ImgtextHostIn;
 import cn.rongcapital.mkt.vo.SaveWechatAssetListIn;
 import cn.rongcapital.mkt.vo.UpdateNicknameIn;
 import cn.rongcapital.mkt.vo.in.ComponentVerifyTicketIn;
+import cn.rongcapital.mkt.vo.in.CustomTagIn;
 import cn.rongcapital.mkt.vo.in.TagBodyUpdateIn;
 import cn.rongcapital.mkt.vo.in.WechatPersonalAuthIn;
 import cn.rongcapital.mkt.vo.in.WechatPublicAuthCallbackIn;
@@ -1093,5 +1099,6 @@ public class MktWeChatApi {
 			@NotEmpty @QueryParam("ver") String ver) {
 		return registerListService.selectRegisterList();
 	}
-
+	
+	
 }
