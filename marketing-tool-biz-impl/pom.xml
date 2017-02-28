@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>cn.rongcapital.mkt</groupId>
 		<artifactId>marketing-cloud</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.7.0</version>
 	</parent>
 
 	<artifactId>marketing-tool-biz-impl</artifactId>
