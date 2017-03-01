@@ -2,7 +2,9 @@ package cn.rongcapital.mkt.usersource.po;
 
 import java.util.Date;
 
-public class Usersource {
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
+public class Usersource extends BaseQuery{
     private Byte id;
 
     private String name;
