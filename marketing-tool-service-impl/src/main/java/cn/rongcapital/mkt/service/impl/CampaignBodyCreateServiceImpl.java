@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.SecurityContext;
 
@@ -76,11 +77,8 @@ import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
-import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.ImgTextAsset;
-import cn.rongcapital.mkt.po.SegmentBodyWithName;
 import cn.rongcapital.mkt.po.SegmentationBody;
-import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.WechatAsset;
@@ -109,7 +107,6 @@ import cn.rongcapital.mkt.vo.in.CampaignDecisionWechatReadIn;
 import cn.rongcapital.mkt.vo.in.CampaignNodeChainIn;
 import cn.rongcapital.mkt.vo.in.CampaignSwitchIn;
 import cn.rongcapital.mkt.vo.in.CampaignTriggerTimerIn;
-import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
 import cn.rongcapital.mkt.vo.in.TagIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 
@@ -198,10 +195,15 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		int campaignHeadId = body.getCampaignHeadId();
 		
 		
-		CampaignBodyCreateOut out = checkCampaignBiz(campaignHeadId, body);
-		if(null != out) {
-			return out;
-		}
+        CampaignBodyCreateOut out = checkCampaignBiz(campaignHeadId, body);
+        if (null != out) {
+            return out;
+        }
+        // 节点细节校验
+        out = checkCampaignNodes(body);
+        if (null != out) {
+            return out;
+        }
 		
 		deleteOldCampaignTask(campaignHeadId);//删除旧任务
 		deleteOldCampaignData(campaignHeadId);//删除旧数据 
@@ -477,6 +479,38 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		}
 		return out;
 	}
+	
+    /**
+     * 节点详细校验业务逻辑
+     * 
+     * 1.发送短信节点短信名称“必填”
+     * 
+     * @param body
+     * @return
+     */
+    private CampaignBodyCreateOut checkCampaignNodes(CampaignBodyCreateIn body) {
+        CampaignBodyCreateOut out = null;
+        for (CampaignNodeChainIn campaignNode : body.getCampaignNodeChain()) {
+            // 行动节点
+            if (campaignNode.getNodeType() == ApiConstant.CAMPAIGN_NODE_ACTION) {
+                switch (campaignNode.getItemType()) {
+                // 发送短信
+                    case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS:
+                        CampaignActionSendSmsIn sendSms =
+                                jacksonObjectMapper.convertValue(campaignNode.getInfo(), CampaignActionSendSmsIn.class);
+                        if (sendSms == null || StringUtils.isBlank(sendSms.getName())) {
+                            out =
+                                    new CampaignBodyCreateOut(ApiErrorCode.VALIDATE_ERROR.getCode(),
+                                            ApiErrorCode.VALIDATE_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return out;
+    }
 	
 	private boolean validSmsEmpty(CampaignBodyCreateIn body) {
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
