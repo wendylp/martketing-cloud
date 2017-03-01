@@ -49,7 +49,7 @@
 			  #{ id},
 			  #{parentId},
 			  #{name},
-			  #{initialData},
+			  1,
 			  now()
 			)
 		]]>

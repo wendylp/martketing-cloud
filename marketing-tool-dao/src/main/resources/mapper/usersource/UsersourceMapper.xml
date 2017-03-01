@@ -56,7 +56,7 @@
 			  #{available},
 			  #{description},
 			  #{classificationId},
-			  #{initialData},
+			  1,
 			  now()
 			)
 		]]>
