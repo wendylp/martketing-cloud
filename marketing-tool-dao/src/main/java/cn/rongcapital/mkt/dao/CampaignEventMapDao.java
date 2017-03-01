@@ -34,4 +34,6 @@ public interface CampaignEventMapDao extends BaseDao<CampaignEventMap>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    int deleteByCampaignHeadId(int campaignHeadId);
 }
