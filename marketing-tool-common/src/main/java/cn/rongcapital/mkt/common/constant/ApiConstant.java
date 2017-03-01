@@ -419,5 +419,5 @@ public class ApiConstant {
     /**
      * 物料类型-微信
      */
-    public static final String MATERIAL_TYPE_WECHAT = "qrcode_attr";
+    public static final String MATERIAL_TYPE_WECHAT = "qr_code";
 }

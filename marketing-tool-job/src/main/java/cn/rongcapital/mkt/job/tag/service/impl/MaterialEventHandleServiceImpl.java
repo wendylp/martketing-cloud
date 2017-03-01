@@ -47,7 +47,7 @@ public class MaterialEventHandleServiceImpl implements TaskService {
 
 	private static final String FIELD_ATTRIBUTES = "attributes";
 
-	private static final String FIELD_PUB_ID = "pub_id";
+	private static final String FIELD_PUB_ID = "to_user_name";
 
 	private static final String FIELD_OPENID = "openid";
 
