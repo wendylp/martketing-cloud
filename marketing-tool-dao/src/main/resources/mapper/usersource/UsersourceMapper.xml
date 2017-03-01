@@ -48,7 +48,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.usersource.po.Usersource" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO usersource (name,identity_id,available,description,classification_id,initial_data,create_time)
+			INSERT INTO usersource (name,identity_id,available,description,classification_id,create_time)
 			VALUES
 			(
 			  #{name},
@@ -56,7 +56,6 @@
 			  #{available},
 			  #{description},
 			  #{classificationId},
-			  1,
 			  now()
 			)
 		]]>

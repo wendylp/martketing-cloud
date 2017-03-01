@@ -43,13 +43,12 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.usersource.po.UsersourceClassification" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO usersource_classification ( id,parent_id,name,initial_data,create_time)
+			INSERT INTO usersource_classification ( id,parent_id,name,create_time)
 			VALUES
 			(
 			  #{ id},
 			  #{parentId},
 			  #{name},
-			  1,
 			  now()
 			)
 		]]>
