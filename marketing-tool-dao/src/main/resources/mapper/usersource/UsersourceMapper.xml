@@ -46,7 +46,7 @@
 	</sql>
 
 	<!-- 插入action记录 -->
-	<insert id="insert" parameterType="cn.rongcapital.mkt.po.Usersource" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="cn.rongcapital.mkt.usersource.po.Usersource" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO usersource (name,identity_id,available,description,classification_id,initial_data,create_time)
 			VALUES
@@ -66,14 +66,14 @@
 	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
 
 	<!-- 修改记录通过主键 -->
-	<update id="updateById" parameterType="cn.rongcapital.mkt.po.Usersource">
+	<update id="updateById" parameterType="cn.rongcapital.mkt.usersource.po.Usersource">
 		<![CDATA[UPDATE usersource]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.Usersource" resultType="cn.rongcapital.mkt.po.Usersource">
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.usersource.po.Usersource" resultType="cn.rongcapital.mkt.usersource.po.Usersource">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -84,7 +84,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectList" parameterType="cn.rongcapital.mkt.po.Usersource" resultType="cn.rongcapital.mkt.po.Usersource">
+	<select id="selectList" parameterType="cn.rongcapital.mkt.usersource.po.Usersource" resultType="cn.rongcapital.mkt.usersource.po.Usersource">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -93,7 +93,7 @@
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.Usersource" resultType="int">
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.usersource.po.Usersource" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
