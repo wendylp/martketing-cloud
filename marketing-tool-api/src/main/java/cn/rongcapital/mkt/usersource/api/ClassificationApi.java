@@ -33,8 +33,8 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 @ValidateRequest
 @PropertySource("classpath:${conf.dir}/application-api.properties")
 public class ClassificationApi {
-	 
-	private Logger logger = LoggerFactory.getLogger(getClass());
+     
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private UsersourceClassificationService usersourceClassificationService;
@@ -53,6 +53,6 @@ public class ClassificationApi {
     @POST
     @Path("/mkt.classification.save")
     public BaseOutput saveUsersourceClassification(@Valid UsersourceClassificationIn in){
-    	return usersourceClassificationService.saveUsersourceClassification(in);
+        return usersourceClassificationService.saveUsersourceClassification(in);
     }
 }

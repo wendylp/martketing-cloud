@@ -7,6 +7,7 @@
     xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:jms="http://www.springframework.org/schema/integration/jms"
     xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+    xmlns:int-kafka="http://www.springframework.org/schema/integration/kafka"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
                http://www.springframework.org/schema/beans/spring-beans.xsd
                http://www.springframework.org/schema/context
@@ -20,37 +21,46 @@
                http://www.springframework.org/schema/integration/stream
                http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
                http://www.springframework.org/schema/integration
-			   http://www.springframework.org/schema/integration/spring-integration.xsd">
+			   http://www.springframework.org/schema/integration/spring-integration.xsd
+			   http://www.springframework.org/schema/integration/kafka
+               http://www.springframework.org/schema/integration/kafka/spring-integration-kafka.xsd">
 	
 	<context:component-scan base-package="cn.rongcapital.mkt.event.activator"/>
 	
 	<!-- default poller -->
 	<int:poller default="true"  fixed-delay="5000"/>
 	
-	<!-- test events-source channel -->
-	<int:channel id="eventsSource" >
-		<int:queue/>
+	<int:channel id="eventsSource">
+	<int:queue/>
 	</int:channel>
-	
 	<int:channel id="events">
-		<int:queue/>
+	<int:queue/>
 	</int:channel>
-	 
-	<!-- internal events channels -->
 	<int:channel id="systemEvents">
-		<int:queue/>
+	<int:queue/>
+	</int:channel>
+	<int:channel id="marketingEvents">
+	<int:queue/>
 	</int:channel>
 
-	 <int:channel id="marketingEvents">
-		<int:queue/>
-	</int:channel>
+     <!--增加监听来达到复制消息功能 -->
+     <int:channel id="streamEvents">  
+      <int:interceptors>
+	     <int:wire-tap channel="marketingEvents"/>
+	   </int:interceptors>
+     </int:channel>  
+ 
+	 <!--  动态ruter  -->
+	<int:router input-channel="events" ref="mcrouter"  default-output-channel="stdErr"  
+	method="route">
+	 <int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
+	  <int:mapping value="SYSTEM" channel="systemEvents"/>
+      <int:mapping value="MARKETING" channel="marketingEvents"/>
+      <int:mapping value="STREAM" channel="streamEvents"/>
+	</int:router>
 	
+    <bean id="mcrouter"   class="cn.rongcapital.mkt.event.activator.Roulter"/>
 	
-	<int:header-value-router input-channel="events" header-name="eventCenter.eventType" default-output-channel="stdErr"> 
-		<int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
-		<int:mapping value="SYSTEM" channel="systemEvents"/>
-		<int:mapping value="MARKETING" channel="marketingEvents"/>
-	</int:header-value-router>
 	
 	
 	<!-- event dispatcher -->
@@ -78,7 +88,8 @@
 	</bean>
 
     
-
+  
+    
 	<int-stream:stderr-channel-adapter id="stdErr" append-newline="true"/>
 	
 	 <!-- 默认消息的错误处理 -->
@@ -103,17 +114,33 @@
     <bean id="queue_events" class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg value="queue.events"/>
 	</bean>
+	
 	<bean id="queue_marketingEvents" class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg value="queue.marketingEvents"/>
 	</bean>
 	
+	<bean id="queue_systemEvents" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="queue.systemEvents"/>
+	</bean>
+	
+	
+	<bean id="queue_streamEvents" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="queue.streamEvents"/>
+	</bean>
+	
+
     <bean id="queue_error" class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg value="queue.error"/>
 	</bean>	
+	
 		
 	<jms:outbound-channel-adapter id="toMq" 
 	channel="eventsSource" connection-factory="connectionFactory" destination="queue_events"/>
 	
+	  <!-- stream -->
+	 <jms:outbound-channel-adapter id="tostreamMq" 
+	channel="streamEvents" connection-factory="connectionFactory" destination="queue_streamEvents"/>
+
 	<jms:inbound-channel-adapter id="torouter" channel="events" connection-factory="connectionFactory" 
 	destination="queue_events" />
 	
@@ -123,14 +150,13 @@
 	
 	<jms:outbound-channel-adapter id="toMarkEvent" channel="marketingEvents" connection-factory="connectionFactory" 
 	destination="queue_marketingEvents" />
-	
-    <jms:inbound-channel-adapter id="tomkque" channel="marketingEvents_temp" destination="queue_marketingEvents" 
-	 connection-factory="connectionFactory" />
-	
+
 
 	 <!-- mk处理类 -->
 	 
-	 <int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents_temp" >
+	 <jms:inbound-channel-adapter id="tomkque" channel="marketingEvents_temp" destination="queue_marketingEvents" 
+	 connection-factory="connectionFactory" />
+	  <int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents_temp" >
 	   <int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="10"/>
 	</int:service-activator>
 	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.service.EventMCReceviceProcessorImpl"/>
@@ -154,7 +180,91 @@
 	<!-- actmq end  -->
 	
 	
-	<aop:aspectj-autoproxy/>	
+	
+	<!--  kafka 配置  -->
+   
+    <!--  生成者配置  -->
+	<!-- <bean id="producerProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="topic.metadata.refresh.interval.ms">3600000</prop>
+                <prop key="message.send.max.retries">5</prop>
+                <prop key="serializer.class">kafka.serializer.StringEncoder</prop>
+                <prop key="request.required.acks">1</prop>
+            </props>
+        </property>
+    </bean> -->
+	
+	
+	<!-- end -->
+	
+	<!--  消费者配置 -->
+	<int:channel id="inputFromKafka">
+        <int:queue/>   
+    </int:channel>
+	 <bean id="consumerProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="auto.offset.reset">smallest</prop>
+                <prop key="socket.receive.buffer.bytes">10485760</prop> <!-- 10M -->
+                <prop key="fetch.message.max.bytes">5242880</prop>
+                <prop key="auto.commit.interval.ms">1000</prop>
+               <!--  <prop key="serializer.class">kafka.serializer.StringEncoder</prop> -->
+            </props>
+        </property>
+    </bean>
+ 
+     <int-kafka:consumer-context id="consumerContext"
+        consumer-timeout="4000" zookeeper-connect="zookeeperConnect" consumer-properties="consumerProperties">
+        <int-kafka:consumer-configurations>
+            <int-kafka:consumer-configuration
+                group-id="mcgroup" max-messages="5000">
+                <int-kafka:topic id="streamtomc" streams="4" />
+            </int-kafka:consumer-configuration>
+            <!-- <int-kafka:consumer-configuration group-id="default3" value-decoder="kafkaSpecificDecoder"
+                key-decoder="kafkaReflectionDecoder" max-messages="10"> <int-kafka:topic-filter 
+                pattern="regextopic.*" streams="4" exclude="false" /> </int-kafka:consumer-configuration> -->
+        </int-kafka:consumer-configurations>
+    </int-kafka:consumer-context>
+    
+    <int-kafka:zookeeper-connect id="zookeeperConnect"
+        zk-connect="10.200.11.36:2181" zk-connection-timeout="40000"
+        zk-session-timeout="40000" zk-sync-time="200" />
+    
+	<int-kafka:inbound-channel-adapter
+        id="kafkaInboundChannelAdapter" kafka-consumer-context-ref="consumerContext"
+         channel="inputFromKafka"  >
+        <int:poller fixed-delay="10" time-unit="MILLISECONDS"
+            max-messages-per-poll="5" />
+    </int-kafka:inbound-channel-adapter> 
+	 
+	
+	 <!-- <int:service-activator  input-channel="inputFromKafka" ref="kfkServiceActivator">
+	   <int:poller max-messages-per-poll="1" task-executor="errorExecutor" fixed-rate="10"/> 
+	 </int:service-activator>
+	
+	<bean id="kfkServiceActivator"  class="cn.rongcapital.mkt.event.service.KafKaConsumer"/>  -->
+	
+	<!--  转换器1  -->
+	<int:transformer input-channel="inputFromKafka" 
+	output-channel="events"  ref="streamTransformer" method="transformStream"/>
+	
+	<bean id="streamTransformer" class="cn.rongcapital.mkt.event.activator.StreamTransformer"/>
+	
+	<!-- 消息增强器(Enricher)2 -->
+	<!-- <int:chain input-channel="inputFromKafka" output-channel="events">
+	<int:enricher>
+   <int:header name="eventCenter.eventType" value="STREAM"/>	
+	</int:enricher>
+	</int:chain> -->
+	
+	<!-- end -->
+	
+	
+	
+   <aop:aspectj-autoproxy/>	
 	
    
     
