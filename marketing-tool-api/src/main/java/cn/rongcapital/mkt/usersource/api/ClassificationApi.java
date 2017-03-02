@@ -32,7 +32,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 @Produces({ MediaType.APPLICATION_JSON })
 @ValidateRequest
 @PropertySource("classpath:${conf.dir}/application-api.properties")
-public class ClassificationAPI {
+public class ClassificationApi {
 	 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
