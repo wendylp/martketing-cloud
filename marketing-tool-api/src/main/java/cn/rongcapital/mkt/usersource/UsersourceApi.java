@@ -28,7 +28,7 @@ public class UsersourceApi {
 	
     @GET
     @Path("/mkt.usersource.file.upload.get")
-    public BaseOutput getMaterialCouponCount(@NotEmpty @QueryParam("user_token") String userToken,
+    public BaseOutput getUserSourceCount(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("user_id") String userId){
     	return usersourceFlieUploadGetService.getUsersourceUploadUrlGet();
     }
@@ -39,4 +39,12 @@ public class UsersourceApi {
     public BaseOutput fileUpload(MultipartFormDataInput input){
         return usersourceFlieUploadGetService.uploadFile(input);
     }
+    
+    @GET
+    @Path("/mkt.usersource.data.import")
+    public BaseOutput importUsersourceDate(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("file_id") String fileId){
+    	return usersourceFlieUploadGetService.importUsersourceDate(fileId);
+    }
+    
 }
