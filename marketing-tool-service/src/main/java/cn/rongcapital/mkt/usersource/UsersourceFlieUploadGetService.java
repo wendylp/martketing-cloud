@@ -10,4 +10,6 @@ public interface UsersourceFlieUploadGetService {
 
 	BaseOutput uploadFile(MultipartFormDataInput input);
 
+	BaseOutput importUsersourceDate(String fileId);
+
 }
