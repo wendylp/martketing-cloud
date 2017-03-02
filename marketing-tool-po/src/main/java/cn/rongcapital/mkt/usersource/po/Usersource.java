@@ -5,7 +5,7 @@ import java.util.Date;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class Usersource extends BaseQuery{
-    private Byte id;
+    private Long id;
 
     private String name;
 
@@ -15,7 +15,7 @@ public class Usersource extends BaseQuery{
 
     private String description;
 
-    private Byte classificationId;
+    private Long classificationId;
 
     private Byte status;
 
@@ -25,11 +25,11 @@ public class Usersource extends BaseQuery{
 
     private Date updateTime;
 
-    public Byte getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Byte id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -65,11 +65,11 @@ public class Usersource extends BaseQuery{
         this.description = description == null ? null : description.trim();
     }
 
-    public Byte getClassificationId() {
+    public Long getClassificationId() {
         return classificationId;
     }
 
-    public void setClassificationId(Byte classificationId) {
+    public void setClassificationId(Long classificationId) {
         this.classificationId = classificationId;
     }
 
