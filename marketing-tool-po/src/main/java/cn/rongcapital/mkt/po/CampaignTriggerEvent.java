@@ -1,21 +1,26 @@
 package cn.rongcapital.mkt.po;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 
 public class CampaignTriggerEvent {
 
     /**
      * 事件主键
      */
+    @JsonProperty("event_id")
     private Long eventId;
 
     /**
      * 事件编码
      */
+    @JsonProperty("event_code")
     private String eventCode;
 
     /**
      * 事件名称
      */
+    @JsonProperty("event_name")
     private String eventName;
 
     public Long getEventId() {
