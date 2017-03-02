@@ -120,7 +120,7 @@
 	  <![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 	    <include refid="QUERY_FROM_TABLE"/>
-	    <![CDATA[WHERE code = #{code} and status=0]]>
+	    <![CDATA[WHERE code = #{code} and status=0 and subscribed=1 ]]>
 	</select>
 	
 	
