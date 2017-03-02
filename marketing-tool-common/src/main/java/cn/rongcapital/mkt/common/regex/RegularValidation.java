@@ -16,6 +16,8 @@ public class RegularValidation {
     
     public static final String TITLE ="^[a-zA-Z0-9\u4E00-\u9FA5_-]+$";
     
+    public static final String USER_SOURCE_NAME ="^[\\+\\(\\)\\/a-zA-Z0-9\u4E00-\u9FA5_-]+$";
+    
     private static boolean getFlag(String template, String str){
         Matcher matcher  = Pattern.compile(template).matcher(str);
         return matcher.find();
@@ -56,6 +58,19 @@ public class RegularValidation {
         boolean flag = false;
         if (StringUtils.isNotEmpty(str)) {
             flag = getFlag(ALPHANUMERIC_VALIDATE, str);
+        }
+        return flag;
+    }
+    
+    /**
+     * 汉字数字字母-_+()/校验
+     * @param str
+     * @return
+     */
+    public static boolean nameValidation(String str) {
+        boolean flag = false;
+        if (StringUtils.isNotEmpty(str)) {
+            flag = getFlag(USER_SOURCE_NAME, str);
         }
         return flag;
     }
