@@ -18,4 +18,7 @@ public interface UsersourceClassificationService {
 
 	BaseOutput saveUsersourceClassification(UsersourceClassificationIn in);
 	
+	BaseOutput classificationList();
+	
+	
 }

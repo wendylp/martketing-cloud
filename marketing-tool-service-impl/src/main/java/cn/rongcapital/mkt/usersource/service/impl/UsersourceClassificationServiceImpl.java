@@ -9,6 +9,7 @@
  *************************************************/
 package cn.rongcapital.mkt.usersource.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import cn.rongcapital.mkt.material.coupon.service.impl.CouponSaveServiceImpl;
 import cn.rongcapital.mkt.usersource.po.UsersourceClassification;
 import cn.rongcapital.mkt.usersource.service.UsersourceClassificationService;
 import cn.rongcapital.mkt.usersource.vo.in.UsersourceClassificationIn;
+import cn.rongcapital.mkt.usersource.vo.out.UsersourceClassificationOut;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
@@ -63,6 +65,45 @@ public class UsersourceClassificationServiceImpl implements UsersourceClassifica
 		}
 		
 		return baseOutput;
+	}
+
+	@Override
+	public BaseOutput classificationList() {
+		EventBehaviorOut baseOutput = new EventBehaviorOut(ApiErrorCode.SUCCESS.getCode(),
+				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO);
+		
+		UsersourceClassification parm = new UsersourceClassification();
+		parm.setParentId(-1L);
+		parm.setStatus((byte)0);
+		List<UsersourceClassification> rootList = classificationDao.selectList(parm);
+		List<UsersourceClassification> resultList = new ArrayList<UsersourceClassification>();
+
+		for (UsersourceClassification root : rootList) {
+			generateClassificationList(resultList, root);
+		}
+		baseOutput.getData().addAll(resultList);
+		
+		return baseOutput;
+	}
+
+	private void generateClassificationList(List<UsersourceClassification> resultList, UsersourceClassification root) {
+		UsersourceClassification temp;
+		temp = new UsersourceClassification();
+		temp.setParentId(root.getId());
+		List<UsersourceClassification> list = classificationDao.selectList(temp);
+		if(CollectionUtils.isEmpty(list)){
+			resultList.add(root);
+		}else{
+			for(UsersourceClassification classification : list){
+				generateClassificationList(resultList,classification);
+			}
+		}
+	}
+	
+	private UsersourceClassificationOut convert(UsersourceClassification mc){
+		
+		UsersourceClassificationOut out = new UsersourceClassificationOut();
+		return null;
 	}
 
 }

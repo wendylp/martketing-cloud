@@ -55,4 +55,19 @@ public class ClassificationApi {
     public BaseOutput saveUsersourceClassification(@Valid UsersourceClassificationIn in){
     	return usersourceClassificationService.saveUsersourceClassification(in);
     }
+    
+    /**
+     * 用户分类列表
+     * 
+     * 接口：mkt.classification.list 
+     * 
+     * @return BaseOutput
+     * @author shanjingqi
+     * @Date 2017-03-01
+     */
+    @POST
+    @Path("/mkt.classification.list")
+    public BaseOutput classificationList(){
+    	return usersourceClassificationService.classificationList();
+    }
 }
