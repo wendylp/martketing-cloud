@@ -1,5 +1,8 @@
 package cn.rongcapital.mkt.usersource.service;
 
+import cn.rongcapital.mkt.usersource.vo.in.UsersourceIn;
+import cn.rongcapital.mkt.vo.BaseOutput;
+
 /*************************************************
  * @功能及特点的描述简述: 用户来源Service
  * 该类被编译测试过
@@ -13,6 +16,6 @@ package cn.rongcapital.mkt.usersource.service;
  *************************************************/
 public interface UsersourceService {
 
-	
+	BaseOutput saveUsersource(UsersourceIn in);
 
 }
