@@ -37,6 +37,7 @@ public class CampaignEventMapDaoTest extends AbstractUnitTest {
     public void tearDown() throws Exception {}
 
     /**
+     * Normal
      * 
      * @author zhuxuelong
      */
@@ -59,5 +60,21 @@ public class CampaignEventMapDaoTest extends AbstractUnitTest {
         Assert.assertNotNull(list);
         Assert.assertEquals(0, list.size());
     }
+
+    /**
+     * Normal
+     * 
+     * @author zhuxuelong
+     */
+    @Test
+    public void testGetFirstMQNodeByEventCode01() {}
+
+    /**
+     * Normal
+     * 
+     * @author zhuxuelong
+     */
+    @Test
+    public void testGetFirstMQNodeByEventCodeCnt01() {}
 
 }
