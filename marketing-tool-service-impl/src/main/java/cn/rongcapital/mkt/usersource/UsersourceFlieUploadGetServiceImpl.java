@@ -165,6 +165,13 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 			baseOutput.setMsg(ApiErrorCode.USERSOURCE_FORMAT_ERROR.getMsg());
 			return baseOutput;
 		}
+		//二级分类不存在，三级分类存在
+		if(StringUtils.isEmpty(usersc.getTwoLevelClassification())&&!StringUtils.isEmpty(usersc.getThreeLevelClassification())){
+			baseOutput.setCode(ApiErrorCode.CECLASS_ERROR.getCode());
+			baseOutput.setMsg(ApiErrorCode.CECLASS_ERROR.getMsg());
+			return baseOutput;
+		}
+		
 		//用户来源不存在
 		if(StringUtils.isEmpty(usersc.getName())){
 			baseOutput.setCode(ApiErrorCode.USERSOURCE_NOT_FOUND.getCode());
@@ -353,14 +360,23 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 				usersource.setAvailable(true);
 				usersource.setDescription(usersc.getDescription());
 				if(threeId != null){
-//					usersource.setClassificationId(threeId);
+					usersource.setClassificationId(threeId);
+				}else if(twoId != null){
+					usersource.setClassificationId(twoId);
+				}else{
+					usersource.setClassificationId(priId);
 				}
+				usersource.setStatus((byte) 0);
+				usersource.setInitialData(true);
+				usersource.setCreateTime(now);
+				usersource.setUpdateTime(now);
+				usersourceDao.insert(usersource);
 			}
 		} catch (JedisException e) {
 			baseOutput.setCode(ApiErrorCode.REDIS_GET_DATA_ERROR.getCode());
 			baseOutput.setMsg(ApiErrorCode.REDIS_GET_DATA_ERROR.getMsg());
 			return baseOutput;
 		}
-		return null;
+		return baseOutput;
 	}
 }

@@ -97,7 +97,7 @@ public enum ApiErrorCode {
 	SOURCECLASS_FOUND(7003,"分类或来源系统已存在"),
 	REDIS_GET_DATA_ERROR(7004,"redis取数据异常"),
 	SOURCE_FOUND(7005,"来源系统已存在"),
-	
+	CECLASS_ERROR(7006,"分类错误"),
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
     private int code;
