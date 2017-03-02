@@ -26,13 +26,13 @@ import org.springframework.messaging.Message;
 
 public class StreamTransformer {
  
-    private static final String HEADER_KEY_EVENT_TYPE = "eventCenter.eventType";
+    private static final String HEADER_KEY_EVENT_TYPE =EventConstant.EVENT_HEADER;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(StreamTransformer.class);
     
     public Message<?> transformStream(final Message<?> streammessage)
     {
-        return MessageBuilder.withPayload(formatMessage((Map)streammessage.getPayload())).setHeader(HEADER_KEY_EVENT_TYPE,"STREAM").build();
+        return MessageBuilder.withPayload(formatMessage((Map)streammessage.getPayload())).setHeader(HEADER_KEY_EVENT_TYPE,EventConstant.EVENT_STREAM).build();
     }
     
     private String formatMessage(final Map message)
