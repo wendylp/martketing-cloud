@@ -65,7 +65,7 @@ public class StreamEventProcessServiceImpl {
         List<Segment> segments = Arrays.asList(segment);
         // 2.获取活动包含事件触发的任务首节点
         int pageSizeCnt = 100;
-        int pageSize = (int) Math.floor(getFirstMQNodeByEventCodeCnt(eventCode) / pageSizeCnt + 1);
+        int pageSize = (int) Math.ceil(getFirstMQNodeByEventCodeCnt(eventCode) / pageSizeCnt);
         for (int i = 1; i <= pageSize; i++) {
             List<CampaignNode> campaignNodes =
                     getCampaignFirstMQNodesByEventCode(eventCode, (pageSize - 1) * pageSizeCnt, pageSizeCnt);
@@ -84,9 +84,9 @@ public class StreamEventProcessServiceImpl {
             if (eventbehavior == null || eventbehavior.getEvent() == null || eventbehavior.getEvent().isEmpty()
                     || !eventbehavior.getEvent().containsKey("code")
                     || StringUtils.isBlank(eventbehavior.getEvent().get("code").toString())
-                    || eventbehavior.getObject() == null || eventbehavior.getObject().isEmpty()
                     || eventbehavior.getSubject() == null || eventbehavior.getSubject().isEmpty()) {
                 eventbehavior = null;
+                logger.error("stream event [%s] is illegal.", event);
             }
         } catch (Exception e) {
             logger.error(String.format("parse stream event [%s] occurs error.", event), e);
