@@ -101,10 +101,8 @@
 		where campaign_head_id = #{campaignHeadId}
 	</delete>
 	
-	
-	<!-- 总数查询,通过条件 -->
-	<select id="getFirstMQNodeByEventCode" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.vo.CampaignNode">
-		SELECT first_nodes.campaign_head_id, first_nodes.next_item_id
+	<!-- 通过事件Code获取配置事件触发的第一个MQ节点 -->
+	<sql id="QUERY_GET_FIRST_MQ_NODE">
 		FROM campaign_head head
 		INNER JOIN campaign_event_map map ON head.id = map.campaign_head_id
 		INNER JOIN
@@ -117,25 +115,18 @@
 		) first_nodes ON map.campaign_head_id = first_nodes.campaign_head_id
 		WHERE map.event_code = #{eventCode} AND map.status = 0
 		AND head.status= 0 AND head.publish_status = 2
+	</sql>
+	
+	<select id="getFirstMQNodeByEventCode" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.vo.CampaignNode">
+		SELECT first_nodes.campaign_head_id as campaignHeadId, first_nodes.next_item_id as itemId
+		<include refid="QUERY_GET_FIRST_MQ_NODE"/>
 		ORDER BY first_nodes.campaign_head_id,first_nodes.next_item_id ASC
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
 	
-	<!-- 总数查询,通过条件 -->
 	<select id="getFirstMQNodeByEventCodeCnt" parameterType="java.util.Map" resultType="int">
 		SELECT COUNT(1)
-		FROM campaign_head head
-		INNER JOIN campaign_event_map map ON head.id = map.campaign_head_id
-		INNER JOIN
-		(
-			select switch.campaign_head_id, switch.next_item_id
-			FROM campaign_body body 
-			INNER JOIN campaign_switch switch  
-			ON body.head_id = switch.campaign_head_id AND body.item_id = switch.item_id 
-			WHERE body.node_type = 0 AND body.status = 0 AND switch.status = 0
-		) first_nodes ON map.campaign_head_id = first_nodes.campaign_head_id
-		WHERE map.event_code = #{eventCode} AND map.status = 0
-		AND head.status= 0 AND head.publish_status = 2
+		<include refid="QUERY_GET_FIRST_MQ_NODE"/>
 	</select>
 	
 </mapper>
