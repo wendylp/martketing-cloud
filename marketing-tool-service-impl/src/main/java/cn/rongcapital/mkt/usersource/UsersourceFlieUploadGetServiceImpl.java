@@ -22,8 +22,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -109,7 +111,8 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 				if (rowIndex == 0) {
 					continue;
 				}
-				Usersc usersc = getUsersc(row);
+//				Usersc usersc = getUsersc(row);
+				Usersc usersc = returnUsersc(row);
 				if(usersc != null){
 					BaseOutput outPut = checkUsersc(lists, usersc, baseOutput);
 					if(outPut.getCode() != 0){
@@ -172,11 +175,6 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 	
 	private BaseOutput checkUsersc(List<Usersc> lists, Usersc usersc, BaseOutput baseOutput){
 		
-		if(usersc.isError()){
-			baseOutput.setCode(ApiErrorCode.USERSOURCE_FORMAT_ERROR.getCode());
-			baseOutput.setMsg(ApiErrorCode.USERSOURCE_FORMAT_ERROR.getMsg());
-			return baseOutput;
-		}
 		//二级分类不存在，三级分类存在
 		if(StringUtils.isEmpty(usersc.getTwoLevelClassification())&&!StringUtils.isEmpty(usersc.getThreeLevelClassification())){
 			baseOutput.setCode(ApiErrorCode.CECLASS_ERROR.getCode());
@@ -235,57 +233,74 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 	}
 	
 	
-	private Usersc getUsersc(Row row) throws Exception{
-		Class rowClass = (Class) row.getClass(); 
-		Field[] rowfs = rowClass.getDeclaredFields(); 
-		Field rowf = rowfs[1];
-		rowf.setAccessible(true);
-		Object val = rowf.get(row);
-		String valString = val.toString();
-		Usersc usersc = null;
-		if(valString.length() > 5){
-			String trValue = valString.replace(" ", "");
-			String valNew = trValue.substring(1, trValue.length()-1);
-			String[] vals = valNew.split(",");
-			usersc = new Usersc();
-			//防止模板出现多余的逗号
-			if(vals.length > 6){
-				usersc.setError(true);
-				return usersc;
+	private static Usersc returnUsersc(Row row) throws Exception {
+		int celllength = row.getLastCellNum();
+		Usersc usersc = new Usersc();
+		String[] name = { "primaryClassification", "twoLevelClassification", "threeLevelClassification", "name",
+				"description", "remarks" };
+		for (int i = 0; i <= 6; i++) {
+			Cell cell = row.getCell(i);
+			String str = "";
+			if (cell == null) {
+				continue;
 			}
-			for(String value : vals){
-				String[] cell = value.split("=");
-				String valu = null;
-				String key = cell[0];
-				if(cell.length == 2){
-					 valu = cell[1];
-				}
-				switch (key) {
-				case "0":
-					usersc.setPrimaryClassification(valu);
-					break;
-				case "1":
-					usersc.setTwoLevelClassification(valu);
-					break;
-				case "2":
-					usersc.setThreeLevelClassification(valu);
-					break;
-				case "3":
-					usersc.setName(valu);
-					break;
-				case "4":
-					usersc.setDescription(valu);
-					break;
-				case "5":
-					usersc.setRemarks(valu);
-					break;
-				default:
-					break;
-				}
-			}
+			str = cell.getStringCellValue();
+			BeanUtils.setProperty(usersc, name[i], str);
 		}
 		return usersc;
 	}
+	
+//	private Usersc getUsersc(Row row) throws Exception{
+//		Class rowClass = (Class) row.getClass(); 
+//		Field[] rowfs = rowClass.getDeclaredFields(); 
+//		Field rowf = rowfs[1];
+//		rowf.setAccessible(true);
+//		Object val = rowf.get(row);
+//		String valString = val.toString();
+//		Usersc usersc = null;
+//		if(valString.length() > 5){
+//			String trValue = valString.replace(" ", "");
+//			String valNew = trValue.substring(1, trValue.length()-1);
+//			String[] vals = valNew.split(",");
+//			usersc = new Usersc();
+//			//防止模板出现多余的逗号
+//			if(vals.length > 6){
+//				usersc.setError(true);
+//				return usersc;
+//			}
+//			for(String value : vals){
+//				String[] cell = value.split("=");
+//				String valu = null;
+//				String key = cell[0];
+//				if(cell.length == 2){
+//					 valu = cell[1];
+//				}
+//				switch (key) {
+//				case "0":
+//					usersc.setPrimaryClassification(valu);
+//					break;
+//				case "1":
+//					usersc.setTwoLevelClassification(valu);
+//					break;
+//				case "2":
+//					usersc.setThreeLevelClassification(valu);
+//					break;
+//				case "3":
+//					usersc.setName(valu);
+//					break;
+//				case "4":
+//					usersc.setDescription(valu);
+//					break;
+//				case "5":
+//					usersc.setRemarks(valu);
+//					break;
+//				default:
+//					break;
+//				}
+//			}
+//		}
+//		return usersc;
+//	}
 
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	@Override
@@ -414,6 +429,7 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 			flag = true;
 		}
 		UsersourceClassification usersc = new UsersourceClassification();
+		usersc.setInitialData(true);
 		List<UsersourceClassification> usersclist = usersourceClassificationDao.selectListByInitialData(usersc);
 		if(usersclist.size() > 0){
 			flag = true;
