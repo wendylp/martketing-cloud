@@ -65,6 +65,14 @@ public class UsersourceApi {
     @Autowired
     private UsersourceFlieUploadGetService usersourceFlieUploadGetService;
 	
+    /**
+     * 获取文件上传路径
+     * 接口：mkt.usersource.file.upload.get
+     * 
+     * @return BaseOutput
+     * @author guozhenchao
+     * @Date 2017-03-01
+     */
     @GET
     @Path("/mkt.usersource.file.upload.get")
     public BaseOutput getUserSourceCount(@NotEmpty @QueryParam("user_token") String userToken,
@@ -72,6 +80,14 @@ public class UsersourceApi {
     	return usersourceFlieUploadGetService.getUsersourceUploadUrlGet();
     }
     
+    /**
+     * 文件上传
+     * 接口：mkt.usersource.file.upload
+     * @param file_input
+     * @return BaseOutput
+     * @author guozhenchao
+     * @Date 2017-03-01
+     */
     @POST
     @Path("/mkt.usersource.file.upload")
     @Consumes("multipart/form-data")
@@ -79,6 +95,14 @@ public class UsersourceApi {
         return usersourceFlieUploadGetService.uploadFile(input);
     }
     
+    /**
+     * 文件上传数据导入
+     * 接口：mkt.usersource.data.import
+     * @param file_id
+     * @return BaseOutput
+     * @author guozhenchao
+     * @Date 2017-03-01
+     */
     @GET
     @Path("/mkt.usersource.data.import")
     public BaseOutput importUsersourceDate(@NotEmpty @QueryParam("user_token") String userToken,
@@ -86,6 +110,13 @@ public class UsersourceApi {
     	return usersourceFlieUploadGetService.importUsersourceDate(fileId);
     }
     
+    /**
+     * 用户来源分类校验
+     * 接口：mkt.usersource.classification.check
+     * @return BaseOutput
+     * @author guozhenchao
+     * @Date 2017-03-01
+     */
     @GET
     @Path("/mkt.usersource.classification.check")
     public BaseOutput usersourceCheck(@NotEmpty @QueryParam("user_token") String userToken,

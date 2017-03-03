@@ -1,3 +1,13 @@
+/*************************************************
+ * @功能简述: UsersourceFlieUploadGetService 实现类
+ * @项目名称: marketing cloud
+ * @see:
+ * @author: guozhenchao
+ * @version: 0.0.1
+ * @date:	2017.03.03
+ * @复审人:
+ *************************************************/
+
 package cn.rongcapital.mkt.usersource;
 
 import java.io.ByteArrayInputStream;
