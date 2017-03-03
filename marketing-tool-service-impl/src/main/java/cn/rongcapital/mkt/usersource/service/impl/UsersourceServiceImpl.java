@@ -10,7 +10,6 @@
 package cn.rongcapital.mkt.usersource.service.impl;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,7 @@ import org.springframework.util.CollectionUtils;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.regex.RegularValidation;
-import cn.rongcapital.mkt.common.util.GenerateUUid;
+import cn.rongcapital.mkt.common.uuid.UUIDGenerator;
 import cn.rongcapital.mkt.dao.usersource.UsersourceDao;
 import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.material.coupon.service.impl.CouponSaveServiceImpl;
@@ -58,7 +57,7 @@ public class UsersourceServiceImpl implements UsersourceService{
 		if(CollectionUtils.isEmpty(list)){
 			parm.setClassificationId(in.getId());
 			parm.setAvailable(false); //通过页面新建的来源默认未启用
-			parm.setIdentityId(GenerateUUid.generateShortUuid()); //识别标识符全局唯一，打标签用。
+			parm.setIdentityId(UUIDGenerator.getUUID()); //识别标识符全局唯一，打标签用。
 			parm.setDescription(in.getDescription()!=null ? in.getDescription() : null);
 			usersourceDao.insert(parm);
 		}else{

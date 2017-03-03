@@ -10,6 +10,7 @@
 package cn.rongcapital.mkt.usersource.api;
 
 import javax.validation.Valid;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -33,8 +34,8 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 @ValidateRequest
 @PropertySource("classpath:${conf.dir}/application-api.properties")
 public class ClassificationApi {
-     
-    private Logger logger = LoggerFactory.getLogger(getClass());
+	 
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private UsersourceClassificationService usersourceClassificationService;
@@ -53,6 +54,21 @@ public class ClassificationApi {
     @POST
     @Path("/mkt.classification.save")
     public BaseOutput saveUsersourceClassification(@Valid UsersourceClassificationIn in){
-        return usersourceClassificationService.saveUsersourceClassification(in);
+    	return usersourceClassificationService.saveUsersourceClassification(in);
+    }
+    
+    /**
+     * 用户分类列表
+     * 
+     * 接口：mkt.classification.list 
+     * 
+     * @return BaseOutput
+     * @author shanjingqi
+     * @Date 2017-03-01
+     */
+    @GET
+    @Path("/mkt.classification.list")
+    public BaseOutput classificationList(){
+    	return usersourceClassificationService.classificationList();
     }
 }

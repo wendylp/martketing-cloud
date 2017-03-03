@@ -14,6 +14,7 @@ import java.util.List;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.usersource.po.UsersourceClassification;
+import cn.rongcapital.mkt.usersource.vo.out.UsersourceClassificationOut;
 
 public interface UsersourceClassificationDao extends BaseDao<UsersourceClassification>{
 
@@ -38,4 +39,6 @@ public interface UsersourceClassificationDao extends BaseDao<UsersourceClassific
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+	
+	List<UsersourceClassificationOut> selectClassificationList(UsersourceClassificationOut out);
 }
