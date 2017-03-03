@@ -12,32 +12,34 @@ package cn.rongcapital.mkt.event.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
+import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.HttpClientUtil;
 import cn.rongcapital.mkt.common.util.HttpUrl;
 import cn.rongcapital.mkt.event.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 @Service
 public class EventSubjectCombineServiceImpl implements EventSubjectCombineService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @Value("${host.header.addr}")
     private String host;
 
     @Value("${mkt.event.idmapping.get}")
     private String mappingUri;
-    
+
     @Override
     public boolean needCombine(String eventCode) {
         // TODO Auto-generated method stub
@@ -58,8 +60,7 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
             case "apply_submit_mc":
                 mobile = (String) subject.get("o_mc_contact_soc_mobile_phone");
                 email = (String) subject.get("o_mc_contact_soc_mail");
-                // TODO
-                strategy = "";
+                strategy = "EventStrategy";
                 break;
             default:
                 logger.error("combine stream master data [%s] meet illegal event code.", eventCode);
@@ -71,13 +72,21 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
             HttpUrl httpUrl = new HttpUrl();
             httpUrl.setHost(host);
             httpUrl.setPath(mappingUri);
+            httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
             HashMap<Object, Object> params = new HashMap<Object, Object>();
-            params.put("mobile", mobile);
-            params.put("memberId", memberId);
-            params.put("email", email);
+            if(StringUtils.isNotBlank(mobile)){
+                params.put("mobile", mobile);
+            }
+            if(StringUtils.isNotBlank(memberId)){
+                params.put("memberId", memberId);
+            }
+            if(StringUtils.isNotBlank(email)){
+                params.put("email", email);
+            }
             params.put("strategy", strategy);
-            httpUrl.setParams(params);
-            String response = http.get(httpUrl, HttpClientUtil.DefaultEncoding);
+            httpUrl.setRequetsBody(JSON.toJSONString(params));
+            PostMethod postResult = http.postExt(httpUrl);
+            String response = postResult.getResponseBodyAsString();
             if (StringUtils.isNotBlank(response)) {
                 JSONObject jsonObj = JSON.parseObject(response);
                 if (jsonObj != null && jsonObj.containsKey("mid")) {

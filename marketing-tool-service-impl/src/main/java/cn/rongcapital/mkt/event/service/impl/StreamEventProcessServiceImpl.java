@@ -65,7 +65,7 @@ public class StreamEventProcessServiceImpl {
         List<Segment> segments = Arrays.asList(segment);
         // 2.获取活动包含事件触发的任务首节点
         int pageSizeCnt = 100;
-        int pageSize = (int) Math.ceil(getFirstMQNodeByEventCodeCnt(eventCode) / pageSizeCnt);
+        int pageSize = (int) Math.ceil(getFirstMQNodeByEventCodeCnt(eventCode) / (float) pageSizeCnt);
         for (int i = 1; i <= pageSize; i++) {
             List<CampaignNode> campaignNodes =
                     getCampaignFirstMQNodesByEventCode(eventCode, (pageSize - 1) * pageSizeCnt, pageSizeCnt);
