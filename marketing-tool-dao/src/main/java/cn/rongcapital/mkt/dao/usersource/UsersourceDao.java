@@ -10,10 +10,14 @@
 
 package cn.rongcapital.mkt.dao.usersource;
 
+import java.util.List;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.usersource.po.Usersource;
 
 public interface UsersourceDao extends BaseDao<Usersource>{
+
+	List<Usersource> selectListByInitialData(Usersource usersource);
 	
 	//自定义扩展
 	/**

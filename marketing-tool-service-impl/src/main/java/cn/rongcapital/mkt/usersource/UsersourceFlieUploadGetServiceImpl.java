@@ -22,6 +22,8 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
@@ -275,14 +277,22 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 		return usersc;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	@Override
 	public BaseOutput importUsersourceDate(String fileId) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), 1, null);
-		//判断一次todo
-		
+		BaseOutput out = usersourceCheck();
+		if(out.getCode() != 0){
+			return out;
+		}
 		Date now = new Date();
 		try {
 			byte[] val = JedisClient.get(fileId.getBytes());
+			if(val == null){
+				baseOutput.setCode(ApiErrorCode.ID_NOTFOUND_ERROR.getCode());
+				baseOutput.setMsg(ApiErrorCode.ID_NOTFOUND_ERROR.getMsg());
+				return baseOutput;
+			}
 			List<Usersc> list = (List<Usersc>) SerializeUtil.unserialize(val);
 			for(Usersc usersc : list){
 				//一级分类
@@ -338,6 +348,8 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 						ucThree.setUpdateTime(now);
 						usersourceClassificationDao.insert(ucThree);
 						threeId = ucThree.getId();
+					}else{
+						threeId = listusThree.get(0).getId();
 					}
 				}
 				//来源
@@ -372,9 +384,33 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 				usersource.setUpdateTime(now);
 				usersourceDao.insert(usersource);
 			}
+			JedisClient.delete(fileId.getBytes());
 		} catch (JedisException e) {
 			baseOutput.setCode(ApiErrorCode.REDIS_GET_DATA_ERROR.getCode());
 			baseOutput.setMsg(ApiErrorCode.REDIS_GET_DATA_ERROR.getMsg());
+			return baseOutput;
+		}
+		return baseOutput;
+	}
+
+	@Override
+	public BaseOutput usersourceCheck() {
+		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), 1, null);
+		Usersource usersource = new Usersource();
+		usersource.setInitialData(true);
+		List<Usersource> userslist = usersourceDao.selectListByInitialData(usersource);
+		boolean flag = false;
+		if(userslist.size() > 0){
+			flag = true;
+		}
+		UsersourceClassification usersc = new UsersourceClassification();
+		List<UsersourceClassification> usersclist = usersourceClassificationDao.selectListByInitialData(usersc);
+		if(usersclist.size() > 0){
+			flag = true;
+		}
+		if(flag){
+			baseOutput.setCode(ApiErrorCode.USERSOURCE_CLASSIFICATION_IMP_ERROR.getCode());
+			baseOutput.setMsg(ApiErrorCode.USERSOURCE_CLASSIFICATION_IMP_ERROR.getMsg());
 			return baseOutput;
 		}
 		return baseOutput;

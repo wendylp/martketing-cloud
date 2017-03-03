@@ -12,4 +12,6 @@ public interface UsersourceFlieUploadGetService {
 
 	BaseOutput importUsersourceDate(String fileId);
 
+	BaseOutput usersourceCheck();
+
 }

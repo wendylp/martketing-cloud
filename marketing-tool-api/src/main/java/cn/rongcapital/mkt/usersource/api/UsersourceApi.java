@@ -85,4 +85,12 @@ public class UsersourceApi {
             @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("file_id") String fileId){
     	return usersourceFlieUploadGetService.importUsersourceDate(fileId);
     }
+    
+    @GET
+    @Path("/mkt.usersource.classification.check")
+    public BaseOutput usersourceCheck(@NotEmpty @QueryParam("user_token") String userToken,
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("user_id") String userId){
+    	return usersourceFlieUploadGetService.usersourceCheck();
+    }
+    
 }

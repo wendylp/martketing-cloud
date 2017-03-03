@@ -98,6 +98,8 @@ public enum ApiErrorCode {
 	REDIS_GET_DATA_ERROR(7004,"redis取数据异常"),
 	SOURCE_FOUND(7005,"来源系统已存在"),
 	CECLASS_ERROR(7006,"分类错误"),
+	ID_NOTFOUND_ERROR(7007,"file_id不存在"),
+	USERSOURCE_CLASSIFICATION_IMP_ERROR(7008,"用户来源或分类已创建或导入过"),
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
     private int code;
