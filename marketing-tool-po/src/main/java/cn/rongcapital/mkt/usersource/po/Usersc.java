@@ -21,6 +21,16 @@ public class Usersc implements Serializable{
 	
 	private String remarks; //备注
 
+	private boolean error;
+	
+	public boolean isError() {
+		return error;
+	}
+
+	public void setError(boolean error) {
+		this.error = error;
+	}
+
 	public String getName() {
 		return name;
 	}

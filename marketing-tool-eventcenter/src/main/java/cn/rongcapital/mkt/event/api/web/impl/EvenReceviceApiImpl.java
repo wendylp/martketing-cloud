@@ -16,6 +16,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import cn.rongcapital.mkt.event.activator.EventConstant;
 import cn.rongcapital.mkt.event.api.EventReceviceApi;
 import cn.rongcapital.mkt.event.service.EventDispatcher;
 import cn.rongcapital.mkt.event.service.EventReceviceService;
@@ -41,7 +42,8 @@ public class EvenReceviceApiImpl implements EventReceviceApi {
     public BaseOutput eventReceive(String eventSend) {
         // TODO Auto-generated method stub
         BaseOutput base =new BaseOutput(0,"success",1,null);
-        eventDispatcher.dispatch("MARKETING", eventSend);
+        //eventDispatcher.dispatch("MARKETING", eventSend);
+        eventDispatcher.dispatch(EventConstant.EVENT_MK, eventSend);
         return base;
     }
 

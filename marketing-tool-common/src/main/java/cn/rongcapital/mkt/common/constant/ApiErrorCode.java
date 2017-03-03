@@ -90,6 +90,14 @@ public enum ApiErrorCode {
 	DATE_VALIDATE_ERROR(5007,"起始时间大于结束时间"),
 	EVENT_CODE_NOT_FOUND_ERROR(5008,"Event Code not exist"),
 	VALIDATE_TAG_EXPIRE(6001,"当前有过期标签，请移除"),//校验失败
+	
+	USERSOURCE_FORMAT_ERROR(7001,"分类或来源存在非法字符"),
+	USERSOURCE_NOT_FOUND(7002,"用户来源不能为空"),
+	PRIMARYCLASSIFICATION_NOT_FOUND(7003,"来源一级分类不能为空"),
+	SOURCECLASS_FOUND(7003,"分类或来源系统已存在"),
+	REDIS_GET_DATA_ERROR(7004,"redis取数据异常"),
+	SOURCE_FOUND(7005,"来源系统已存在"),
+	CECLASS_ERROR(7006,"分类错误"),
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
     private int code;
