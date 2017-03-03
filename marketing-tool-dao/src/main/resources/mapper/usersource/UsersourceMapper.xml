@@ -26,6 +26,13 @@
 		</where>
 	</sql>
 	
+	<!-- 初始化data条件 -->
+	<sql id="QUERY_WHERE_CLAUSE_INITIAL_DATA">
+		<where>
+		    	<if test="initialData != null"><![CDATA[ AND initial_data = #{initialData}]]></if>
+		</where>
+	</sql>
+	
 	<!-- 智能排序与分页 -->
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
 		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
@@ -48,7 +55,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.usersource.po.Usersource" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO usersource (name,identity_id,available,description,classification_id,initial_data,create_time)
+			INSERT INTO usersource (name,identity_id,available,description,classification_id,create_time)
 			VALUES
 			(
 			  #{name},
@@ -56,7 +63,6 @@
 			  #{available},
 			  #{description},
 			  #{classificationId},
-			  #{initialData},
 			  now()
 			)
 		]]>
@@ -100,6 +106,12 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
-	
+		<!-- 查询,通过条件 -->
+	<select id="selectListByInitialData" parameterType="cn.rongcapital.mkt.usersource.po.Usersource" resultType="cn.rongcapital.mkt.usersource.po.Usersource">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE_INITIAL_DATA"/>
+	</select>
 	
 </mapper>

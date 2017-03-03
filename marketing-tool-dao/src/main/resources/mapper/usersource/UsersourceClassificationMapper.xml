@@ -43,13 +43,12 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.usersource.po.UsersourceClassification" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO usersource_classification ( id,parent_id,name,initial_data,create_time)
+			INSERT INTO usersource_classification ( id,parent_id,name,create_time)
 			VALUES
 			(
 			  #{ id},
 			  #{parentId},
 			  #{name},
-			  #{initialData},
 			  now()
 			)
 		]]>
@@ -93,6 +92,17 @@
 	</select>
 	
 	<!-- 其它SQL语句 -->
+	<select id="selectListByInitialData" parameterType="cn.rongcapital.mkt.usersource.po.UsersourceClassification" resultType="cn.rongcapital.mkt.usersource.po.UsersourceClassification">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE_INITIAL_DATA"/>
+	</select>
 	
-	
+		<!-- 初始化data条件 -->
+	<sql id="QUERY_WHERE_CLAUSE_INITIAL_DATA">
+		<where>
+		    	<if test="initialData != null"><![CDATA[ AND initial_data = #{initialData}]]></if>
+		</where>
+	</sql>
 </mapper>

@@ -2,7 +2,9 @@ package cn.rongcapital.mkt.usersource.po;
 
 import java.util.Date;
 
-public class UsersourceClassification {
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
+public class UsersourceClassification extends BaseQuery{
     private Long id;
 
     private Long parentId;

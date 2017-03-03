@@ -2,8 +2,10 @@ package cn.rongcapital.mkt.usersource.po;
 
 import java.util.Date;
 
-public class Usersource {
-    private Byte id;
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
+public class Usersource extends BaseQuery{
+    private Long id;
 
     private String name;
 
@@ -13,7 +15,7 @@ public class Usersource {
 
     private String description;
 
-    private Byte classificationId;
+    private Long classificationId;
 
     private Byte status;
 
@@ -23,11 +25,11 @@ public class Usersource {
 
     private Date updateTime;
 
-    public Byte getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Byte id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,11 +65,11 @@ public class Usersource {
         this.description = description == null ? null : description.trim();
     }
 
-    public Byte getClassificationId() {
+    public Long getClassificationId() {
         return classificationId;
     }
 
-    public void setClassificationId(Byte classificationId) {
+    public void setClassificationId(Long classificationId) {
         this.classificationId = classificationId;
     }
 
