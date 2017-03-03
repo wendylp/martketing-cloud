@@ -36,8 +36,7 @@ public class EventReceviceServiceImplTest {
 
     @Mock
     private EventBehaviorRepository  eventBehaviorRepository;
-    @Mock
-    private EventDao eventDao;
+  
     @Mock
     private EventObjectPropValueService  eventObjectPropValueService;
     
@@ -60,15 +59,11 @@ public class EventReceviceServiceImplTest {
         eventBehavior.setEvent(event);
         ReflectionTestUtils.setField(eventReceviceService, "eventBehaviorRepository", eventBehaviorRepository);
         ReflectionTestUtils.setField(eventReceviceService, "eventObjectPropValueService", eventObjectPropValueService);
-        ReflectionTestUtils.setField(eventReceviceService, "eventDao", eventDao);
     }
     
     @Test
     public void test()
     {
-        Event eventOb=new Event ();
-        eventOb.setSubscribed(true);
-        Mockito.when(eventDao.selectByCode(Mockito.anyString())).thenReturn(eventOb);
         EventBehavior ev =new EventBehavior();
         ev.setObjectId(10000l);
         Mockito.when(eventBehaviorRepository.insert(Mockito.any(EventBehavior.class))).thenReturn(ev);

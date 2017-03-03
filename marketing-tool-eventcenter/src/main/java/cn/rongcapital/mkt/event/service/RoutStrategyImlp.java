@@ -54,7 +54,6 @@ public class RoutStrategyImlp implements RoutStrategy {
         });
         if (ObjectId > -1L) {
             // 增加缓存objectID
-            System.out.println(CacheManage.cache.size());
             return true;
         }
         return false;
