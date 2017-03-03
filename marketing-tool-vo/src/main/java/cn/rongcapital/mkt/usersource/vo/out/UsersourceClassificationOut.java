@@ -1,24 +1,25 @@
 package cn.rongcapital.mkt.usersource.vo.out;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown=true)
-public class UsersourceClassificationOut {
+public class UsersourceClassificationOut{
 	
-	@JsonProperty("id")
 	private Long id;
 	
 	@JsonProperty("parent_id")
 	private Long parentId;
 	
-	@JsonProperty("name")
 	private String name;
 	
-	@JsonProperty("count")
 	private Long count;
 	
+	private Byte status; 
+	
+	@JsonProperty("children_node")
+	private List<UsersourceClassificationOut> list = new ArrayList<>();
 	
 	public UsersourceClassificationOut(){};
 	public UsersourceClassificationOut(Long id, Long parentId, String name, Long count) {
@@ -59,6 +60,20 @@ public class UsersourceClassificationOut {
 
 	public void setCount(Long count) {
 		this.count = count;
+	}
+	
+	public Byte getStatus() {
+		return status;
+	}
+	public void setStatus(Byte status) {
+		this.status = status;
+	}
+	public List<UsersourceClassificationOut> getList() {
+		return list;
+	}
+	
+	public void setList(List<UsersourceClassificationOut> list) {
+		this.list = list;
 	}
 	
 	

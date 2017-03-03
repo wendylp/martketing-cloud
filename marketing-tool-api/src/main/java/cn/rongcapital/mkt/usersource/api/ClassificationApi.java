@@ -10,6 +10,7 @@
 package cn.rongcapital.mkt.usersource.api;
 
 import javax.validation.Valid;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -65,7 +66,7 @@ public class ClassificationApi {
      * @author shanjingqi
      * @Date 2017-03-01
      */
-    @POST
+    @GET
     @Path("/mkt.classification.list")
     public BaseOutput classificationList(){
     	return usersourceClassificationService.classificationList();
