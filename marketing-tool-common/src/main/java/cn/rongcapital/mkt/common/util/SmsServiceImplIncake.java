@@ -1,6 +1,11 @@
 package cn.rongcapital.mkt.common.util;
 
-import java.util.Map;
+import java.io.IOException;
+import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -10,64 +15,190 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+
+import com.alibaba.fastjson.JSONObject;
 
 public class SmsServiceImplIncake implements SmsService {
 
-	private static final String APPLICATION_JSON = "application/x-www-form-urlencoded";
-	private static final String CONTENT_TYPE_TEXT_JSON = "text/json";
-	private static final int HTTP_STATUS_OK = 200;
-	private static final String HTTP_ERROR = "-99";
-	private static final double HTTP_ERROR_INTEGER = -99;
-	private static final String MESSAGE_SEND_URL = "http://gk.incake.net/YunXiangSMS/SendCRMSms";
-	private static final String DEFAULT_PARTNER_NAME = "云像";
-	private static final String DEFAULT_PARTNER_NO = "001";
-	private static final String INCAKE_NUM = "ERROR_INCAKE_NUM";
-	private static final String[] BATCH_RETURN_ERROR_CODE_LIST = { "-1001", "-1004", "-0000" };
+	@Value("${sms.incake.url}")
+	private String message_send_url;
+	@Value("${sms.incake.name}")
+	private String default_partner_name;
+	@Value("${sms.incake.no}")
+	private String default_partner_no;
+	@Value("${sms.incake.key}")
+	private String incake_num;
 
-	private CloseableHttpClient httpclient = null;
-	private Logger logger = LoggerFactory.getLogger(SmsServiceImplIncake.class);
+	private CloseableHttpClient httpclient = HttpClients.createDefault();
+	private HttpPost httpPost = new HttpPost(message_send_url);
 
 	@Override
-	public boolean sendSms(String httpUrl, String phoneNum, String msg, Map<String, Object> param) {
-		if (httpclient == null) {
-			this.httpclient = HttpClients.createDefault();
+	public boolean sendSms(String phoneNum, String msg) {
+		List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>(1);
+		SmsServiceImplIncake.SmsRequestVo sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, phoneNum, msg);
+		smses.add(sms);
+		logger.debug("sms phone nuber is {}, content is {}.", phoneNum, msg);
+		return this.send(smses);
+	}
+
+	@Override
+	public boolean sendMultSms(String[] phoneNum, String msg) {
+		List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>(phoneNum.length);
+		SmsServiceImplIncake.SmsRequestVo sms = null;
+		for (String num : phoneNum) {
+			sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, num, msg);
+			smses.add(sms);
+		}
+		logger.debug("sms phone nuber is {}, content is {}.", phoneNum, msg);
+		return this.send(smses);
+	}
+
+	@Override
+	public boolean sendMultSms(String[] phoneNum, String[] msg) {
+		if (phoneNum.length != msg.length) {
+			return FAILURE;
 		}
 
-		HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
+		List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>(phoneNum.length);
+		SmsServiceImplIncake.SmsRequestVo sms = null;
+		for (int i = 0; i < phoneNum.length; i++) {
+			sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, phoneNum[i], msg[i]);
+			smses.add(sms);
+		}
+		logger.debug("sms phone nuber is {}, content is {}.", phoneNum, msg);
+		return this.send(smses);
+	}
+
+	private boolean send(List<SmsServiceImplIncake.SmsRequestVo> smses) {
+
 		httpPost.addHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON); // 设置请求头
-
+		String json = JSONObject.toJSONString(smses);
+		String data = "order=" + json + "&sagin=" + stringMD5(json + incake_num); // 签名方式：md5(json + key)
+		StringEntity stringEntity = new StringEntity(data, "UTF-8");// 设置post的body
+		stringEntity.setContentType(CONTENT_TYPE);
+		stringEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON));
+		httpPost.setEntity(stringEntity);
+		CloseableHttpResponse response = null;
 		try {
-			// 设置post的body
-			StringEntity stringEntity = new StringEntity(msg, "utf-8");
-			stringEntity.setContentType(CONTENT_TYPE_TEXT_JSON);
-			stringEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON));
-			httpPost.setEntity(stringEntity);
-
-			CloseableHttpResponse response = httpclient.execute(httpPost);// 发送请求
-			StatusLine statusLine = response.getStatusLine();// 获取状态码
-			int statusCode = statusLine.getStatusCode();
-			logger.debug("短信状态码：{}", statusCode);
-
+			response = httpclient.execute(httpPost);// 发送请求
 		} catch (Exception e) {
-			logger.info(e.getMessage());
+			logger.debug(e.getMessage());
+			return FAILURE;
+		} finally {
+			if (response != null) {
+				try {
+					response.close();
+				} catch (IOException e) {
+					logger.debug(e.getMessage());
+				}
+			}
 		}
-		return false;
+		StatusLine statusLine = response.getStatusLine();// 获取状态码
+		int code = statusLine.getStatusCode();
+		logger.debug("短信状态码：{}", code);
+		if (code > 0) {
+			return SUCCESS;
+		}
+		return FAILURE;
 	}
 
-	@Override
-	public boolean sendMultSms(String httpUrl, String[] phoneNum, String msg, Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		SmsService.super.sendMultSms(httpUrl, phoneNum, msg, param);
-		return SmsService.SUCCESS;
+	public static String stringMD5(String input) {
+		try {
+			// 拿到一个MD5转换器（如果想要SHA1参数换成”SHA1”）
+			MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+
+			// 输入的字符串转换成字节数组
+			byte[] inputByteArray = input.getBytes();
+
+			// inputByteArray是输入字符串转换得到的字节数组
+			messageDigest.update(inputByteArray);
+
+			// 转换并返回结果，也是字节数组，包含16个元素
+			byte[] resultByteArray = messageDigest.digest();
+
+			// 字符数组转换成字符串返回
+			return byteArrayToHex(resultByteArray);
+		} catch (NoSuchAlgorithmException e) {
+			return null;
+		}
 	}
 
-	@Override
-	public boolean sendMultSms(String httpUrl, String[] phoneNum, String[] msg, Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		SmsService.super.sendMultSms(httpUrl, phoneNum, msg, param);
-		return SmsService.SUCCESS;
+	public static String byteArrayToHex(byte[] byteArray) {
+		// 首先初始化一个字符数组，用来存放每个16进制字符
+		char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+		// new一个字符数组，这个就是用来组成结果字符串的（解释一下：一个byte是八位二进制，也就是2位十六进制字符（2的8次方等于16的2次方））
+		char[] resultCharArray = new char[byteArray.length * 2];
+		// 遍历字节数组，通过位运算（位运算效率高），转换成字符放到字符数组中去
+		int index = 0;
+		for (byte b : byteArray) {
+			resultCharArray[index++] = hexDigits[b >>> 4 & 0xf];
+			resultCharArray[index++] = hexDigits[b & 0xf];
+		}
+		// 字符数组组合成字符串返回
+		return new String(resultCharArray);
 	}
 
+	public class SmsRequestVo implements Serializable {
+
+		private static final long serialVersionUID = 1L;
+		private String partner_Name;
+		private String partner_No;
+		private String partner_Phone;
+		private String partner_Msg;
+		private String partner_Time;
+
+		public SmsRequestVo() {
+			super();
+		}
+
+		public SmsRequestVo(String partner_Name, String partner_No, String partner_Phone, String partner_Msg) {
+			super();
+			this.partner_Name = partner_Name;
+			this.partner_No = partner_No;
+			this.partner_Phone = partner_Phone;
+			this.partner_Msg = partner_Msg;
+		}
+
+		public String getPartner_Name() {
+			return partner_Name;
+		}
+
+		public void setPartner_Name(String partner_Name) {
+			this.partner_Name = partner_Name;
+		}
+
+		public String getPartner_No() {
+			return partner_No;
+		}
+
+		public void setPartner_No(String partner_No) {
+			this.partner_No = partner_No;
+		}
+
+		public String getPartner_Phone() {
+			return partner_Phone;
+		}
+
+		public void setPartner_Phone(String partner_Phone) {
+			this.partner_Phone = partner_Phone;
+		}
+
+		public String getPartner_Msg() {
+			return partner_Msg;
+		}
+
+		public void setPartner_Msg(String partner_Msg) {
+			this.partner_Msg = partner_Msg;
+		}
+
+		public String getPartner_Time() {
+			return partner_Time;
+		}
+
+		public void setPartner_Time(String partner_Time) {
+			this.partner_Time = partner_Time;
+		}
+
+	}
 }
