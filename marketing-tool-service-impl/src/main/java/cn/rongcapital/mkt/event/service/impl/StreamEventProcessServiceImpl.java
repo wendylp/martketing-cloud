@@ -57,7 +57,7 @@ public class StreamEventProcessServiceImpl {
         if (!eventSubjectCombineService.needCombine(eventCode)) {
             return;
         }
-        Segment segment = combineStreamData(eventbehavior);
+        Segment segment = eventSubjectCombineService.combineStreamData(eventbehavior);
         if (segment == null) {
             logger.error("combine master data from stream event [{}] occurs problem.", event);
             return;
@@ -93,13 +93,6 @@ public class StreamEventProcessServiceImpl {
         }
         return eventbehavior;
     }
-
-
-    private Segment combineStreamData(EventBehavior eventbehavior) {
-        Segment segment = new Segment();
-        return segment;
-    }
-
 
     private List<CampaignNode> getCampaignFirstMQNodesByEventCode(String eventCode, int index, int size) {
         Map<String, Object> param = new HashMap<String, Object>();

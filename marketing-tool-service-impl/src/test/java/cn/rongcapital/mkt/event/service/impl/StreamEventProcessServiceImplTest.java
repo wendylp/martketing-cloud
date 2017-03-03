@@ -36,10 +36,10 @@ public class StreamEventProcessServiceImplTest {
 
     @Mock
     private EventSubjectCombineService eventSubjectCombineService;
-    
+
     @Mock
     private CampaignEventMapDao campaignEventMapDao;
-    
+
     @Mock
     private JmsOperations jmsOperations;
 
@@ -116,23 +116,37 @@ public class StreamEventProcessServiceImplTest {
         ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
         service.process(event);
     }
-    
+
+    /**
+     * 主数据不合并
+     */
+    @Test
+    public void testProcess07_1() {
+        String event = "{\"event\":{\"code\" :\"XXX\"},\"subject\":{\"openid\":\"12345\"}}";
+        Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
+        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(null);
+        ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
+        service.process(event);
+    }
+
     /**
      * 无包含事件触发的活动
      */
     @Test
     public void testProcess08() {
-        String event = "{\"event\":{\"code\" :\"XXX\"},\"subject\":{\"openid\":\"12345\"}}";
+        String event =
+                "{\"event\":{\"code\" :\"apply_submit_stream\"},\"subject\":{\"o_mc_contact_soc_mobile_phone\":\"12345\",\"o_mc_contact_soc_mail\":\"12345\"}}";
         Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
+
+        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(new Segment());
         ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
-        
+
         Mockito.when(campaignEventMapDao.getFirstMQNodeByEventCodeCnt(Mockito.any())).thenReturn(0);
         ReflectionTestUtils.setField(service, "campaignEventMapDao", campaignEventMapDao);
-        
+
         service.process(event);
     }
-    
-    
+
     /**
      * 包含事件触发的活动(不翻页)
      */
@@ -140,10 +154,11 @@ public class StreamEventProcessServiceImplTest {
     public void testProcess09() {
         String event = "{\"event\":{\"code\" :\"XXX\"},\"subject\":{\"openid\":\"12345\"}}";
         Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
+        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(new Segment());
         ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
-        
+
         Mockito.when(campaignEventMapDao.getFirstMQNodeByEventCodeCnt(Mockito.any())).thenReturn(10);
-        
+
         List<CampaignNode> nodes = new ArrayList<CampaignNode>();
         for (int i = 0; i < 10; i++) {
             CampaignNode node = new CampaignNode();
@@ -153,7 +168,7 @@ public class StreamEventProcessServiceImplTest {
         }
         Mockito.when(campaignEventMapDao.getFirstMQNodeByEventCode(Mockito.any())).thenReturn(nodes);
         ReflectionTestUtils.setField(service, "campaignEventMapDao", campaignEventMapDao);
-        
+
         Mockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -163,7 +178,7 @@ public class StreamEventProcessServiceImplTest {
         ReflectionTestUtils.setField(service, "jmsOperations", jmsOperations);
         service.process(event);
     }
-    
+
     /**
      * 包含事件触发的活动(翻页)
      */
@@ -171,10 +186,11 @@ public class StreamEventProcessServiceImplTest {
     public void testProcess10() {
         String event = "{\"event\":{\"code\" :\"XXX\"},\"subject\":{\"openid\":\"12345\"}}";
         Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
+        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(new Segment());
         ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
-        
+
         Mockito.when(campaignEventMapDao.getFirstMQNodeByEventCodeCnt(Mockito.any())).thenReturn(105);
-        
+
         List<CampaignNode> nodes = new ArrayList<CampaignNode>();
         for (int i = 0; i < 105; i++) {
             CampaignNode node = new CampaignNode();
@@ -184,7 +200,7 @@ public class StreamEventProcessServiceImplTest {
         }
         Mockito.when(campaignEventMapDao.getFirstMQNodeByEventCode(Mockito.any())).thenReturn(nodes);
         ReflectionTestUtils.setField(service, "campaignEventMapDao", campaignEventMapDao);
-        
+
         Mockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
