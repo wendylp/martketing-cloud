@@ -103,5 +103,18 @@
     	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		<![CDATA[ORDER BY create_time desc,id desc]]>
 	</select>
+	<select id="selectListByInitialData" parameterType="cn.rongcapital.mkt.usersource.po.UsersourceClassification" resultType="cn.rongcapital.mkt.usersource.po.UsersourceClassification">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE_INITIAL_DATA"/>
+	</select>
 	
+
+		<!-- 初始化data条件 -->
+	<sql id="QUERY_WHERE_CLAUSE_INITIAL_DATA">
+		<where>
+		    	<if test="initialData != null"><![CDATA[ AND initial_data = #{initialData}]]></if>
+		</where>
+	</sql>
 </mapper>

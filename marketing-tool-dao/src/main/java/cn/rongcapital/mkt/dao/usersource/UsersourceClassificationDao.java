@@ -17,6 +17,8 @@ import cn.rongcapital.mkt.usersource.po.UsersourceClassification;
 import cn.rongcapital.mkt.usersource.vo.out.UsersourceClassificationOut;
 
 public interface UsersourceClassificationDao extends BaseDao<UsersourceClassification>{
+
+	List<UsersourceClassification> selectListByInitialData(UsersourceClassification usersc);
 	
 	//自定义扩展
 	/**
