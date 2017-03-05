@@ -16,9 +16,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 
+@Service("smsServiceImplIncake")
 public class SmsServiceImplIncake implements SmsService {
 
 	@Value("${sms.incake.url}")
@@ -31,7 +33,7 @@ public class SmsServiceImplIncake implements SmsService {
 	private String incake_num;
 
 	private CloseableHttpClient httpclient = HttpClients.createDefault();
-	private HttpPost httpPost = new HttpPost(message_send_url);
+	private HttpPost httpPost = null;
 
 	@Override
 	public boolean sendSms(String phoneNum, String msg) {
@@ -71,6 +73,9 @@ public class SmsServiceImplIncake implements SmsService {
 	}
 
 	private boolean send(List<SmsServiceImplIncake.SmsRequestVo> smses) {
+		if (httpPost == null) {
+			httpPost = new HttpPost(message_send_url);
+		}
 
 		httpPost.addHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON); // 设置请求头
 		String json = JSONObject.toJSONString(smses);
