@@ -28,7 +28,7 @@
 	<context:component-scan base-package="cn.rongcapital.mkt.event.activator"/>
 	
 	<!-- default poller -->
-	<int:poller default="true"  fixed-delay="5000"/>
+	<int:poller default="true"  fixed-delay="1000"/>
 	
 	<int:channel id="eventsSource">
 	<int:queue/>
@@ -184,17 +184,52 @@
 	<!--  kafka 配置  -->
    
     <!--  生成者配置  -->
-	<!-- <bean id="producerProperties"
+    
+    <int:channel id="inputToKafka">
+        <int:queue />
+    </int:channel>
+    
+      
+     <bean id="producerProperties"
         class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
             <props>
-                <prop key="topic.metadata.refresh.interval.ms">3600000</prop>
+                <prop key="topic.metadata.refresh.interval.ms">-1</prop>
                 <prop key="message.send.max.retries">5</prop>
                 <prop key="serializer.class">kafka.serializer.StringEncoder</prop>
                 <prop key="request.required.acks">1</prop>
+                <prop key="value.serializer">org.apache.kafka.common.serialization.ByteArraySerializer</prop>
+				<prop key="key.serializer">org.apache.kafka.common.serialization.ByteArraySerializer</prop>
             </props>
         </property>
-    </bean> -->
+    </bean> 
+    
+	
+	<bean id="stringSerializer" class="org.apache.kafka.common.serialization.StringSerializer"/>
+	<int-kafka:producer-context id="kafkaProducerContext"
+        producer-properties="producerProperties">
+        <int-kafka:producer-configurations>
+            <int-kafka:producer-configuration
+                broker-list="10.200.11.36:9092" topic="streamtomc" 
+                 key-serializer="stringSerializer"
+                 value-serializer="stringSerializer"
+                value-class-type="java.lang.String"
+               />
+        </int-kafka:producer-configurations>
+    </int-kafka:producer-context>
+	
+	
+	<int-kafka:outbound-channel-adapter id="kafkaOutboundChannelAdapter"
+                                        kafka-producer-context-ref="kafkaProducerContext"
+                                        auto-startup="true"
+                                        channel="inputToKafka"
+                                        order="1"
+                                                                            
+            >
+    <int:poller fixed-delay="1000" time-unit="MILLISECONDS"/>
+    </int-kafka:outbound-channel-adapter>
+	
+	
 	
 	
 	<!-- end -->
@@ -211,7 +246,7 @@
                 <prop key="socket.receive.buffer.bytes">10485760</prop> <!-- 10M -->
                 <prop key="fetch.message.max.bytes">5242880</prop>
                 <prop key="auto.commit.interval.ms">1000</prop>
-               <!--  <prop key="serializer.class">kafka.serializer.StringEncoder</prop> -->
+                <prop key="serializer.class">kafka.serializer.StringEncoder</prop>
             </props>
         </property>
     </bean>

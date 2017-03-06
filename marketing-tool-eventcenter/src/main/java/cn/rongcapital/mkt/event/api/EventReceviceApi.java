@@ -40,4 +40,10 @@ public interface EventReceviceApi {
     @Consumes({ MediaType.APPLICATION_JSON })
     public BaseOutput weixineventReceive(String eventSend);
     
+    
+    @POST
+    @Path("/mkt.event.stream.testData")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput postTestData(String eventSend);
+    
 }
