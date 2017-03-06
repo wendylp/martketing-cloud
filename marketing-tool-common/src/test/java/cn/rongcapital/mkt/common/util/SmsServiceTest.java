@@ -56,4 +56,13 @@ public class SmsServiceTest {
 		}
 		incake.sendMultSms(new String[] { "18704282857", "18704282857" }, new String[] { str + "【多条不同内容发送】", str + "【多条不同内容发送】" });
 	}
+
+	/**
+	 * 梦网科技短信测试
+	 */
+	@Test
+	public void sendSmsServiceImplmw() {
+
+	}
 }
+
