@@ -21,7 +21,7 @@ public final class EventDispatcherActivator implements EventDispatcher {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EventDispatcherActivator.class);
 
-	private static final String HEADER_KEY_EVENT_TYPE = "eventCenter.eventType";
+	
 
 	private MessageChannel channel;
 
@@ -36,7 +36,7 @@ public final class EventDispatcherActivator implements EventDispatcher {
 	public void dispatch(String eventType, String event) {
 		try {
 			LOGGER.debug("dispatching the event, type: {}, event: {}", eventType, event);
-			this.channel.send(MessageBuilder.withPayload(event).setHeader(HEADER_KEY_EVENT_TYPE, eventType).build());
+			this.channel.send(MessageBuilder.withPayload(event).setHeader(EventConstant.EVENT_HEADER, eventType).build());
 			LOGGER.info("the event dispatched, type: {}, event: {}", eventType, event);
 		} catch (Exception e) {
 			LOGGER.error("dispatch the event failed, eventType: " + eventType + ", event: " + event + ", error: "
