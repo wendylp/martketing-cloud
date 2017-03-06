@@ -7,7 +7,7 @@
  * @date: 2017/3/1
  * @复审人:
  *************************************************/
-package cn.rongcapital.mkt.event.service;
+package cn.rongcapital.mkt.campaign.service;
 
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;

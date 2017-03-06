@@ -7,7 +7,7 @@
  * @date: 2017/3/1
  * @复审人:
  *************************************************/
-package cn.rongcapital.mkt.event.service.impl;
+package cn.rongcapital.mkt.campaign.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,10 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.campaign.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.HttpClientUtil;
 import cn.rongcapital.mkt.common.util.HttpUrl;
-import cn.rongcapital.mkt.event.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 
