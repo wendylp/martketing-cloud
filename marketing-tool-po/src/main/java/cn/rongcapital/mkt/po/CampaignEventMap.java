@@ -14,6 +14,8 @@ public class CampaignEventMap extends BaseQuery{
 
     private Integer campaignHeadId;
 
+    private String name;
+    
     private Long eventId;
 
     private String eventCode;
@@ -40,6 +42,14 @@ public class CampaignEventMap extends BaseQuery{
 
     public void setCampaignHeadId(Integer campaignHeadId) {
         this.campaignHeadId = campaignHeadId;
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getEventId() {

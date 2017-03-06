@@ -166,6 +166,7 @@ public class CampaignBodyGetServiceTest {
 
         List<CampaignEventMap> mapList = new ArrayList<CampaignEventMap>();
         CampaignEventMap map = new CampaignEventMap();
+        map.setName("节点名称");
         map.setEventCode("XXX");
         map.setEventName("XX名称");
         map.setEventId(123L);
@@ -195,6 +196,7 @@ public class CampaignBodyGetServiceTest {
         Assert.assertEquals(123, eventOut.getEventId().intValue());
         Assert.assertEquals("XXX", eventOut.getEventCode());
         Assert.assertEquals("XX名称", eventOut.getEventName());
+        Assert.assertEquals("节点名称", eventOut.getName());
     }
 
 
