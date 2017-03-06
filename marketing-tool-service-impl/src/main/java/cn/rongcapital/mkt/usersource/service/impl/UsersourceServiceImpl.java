@@ -9,7 +9,9 @@
  *************************************************/
 package cn.rongcapital.mkt.usersource.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +70,37 @@ public class UsersourceServiceImpl implements UsersourceService{
 		}
 		
 		return baseOutput;
+	}
+
+	@Override
+	public BaseOutput getUsersourceList(Long id, Integer index, Integer size) {
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                ApiConstant.INT_ZERO, null);
+        
+        Usersource temp = new Usersource(index,size);
+        temp.setClassificationId(id);
+        temp.setOrderField("create_time");
+        temp.setOrderFieldType("desc");
+        
+        int totalCnt = usersourceDao.selectListCount(temp);
+        result.setTotalCount(totalCnt);
+        if(totalCnt >0){
+        	List<Usersource> list = usersourceDao.selectList(temp);
+            if (!CollectionUtils.isEmpty(list)) {
+            	for (Usersource e : list) {
+    				Map<String, Object> map = new HashMap<String, Object>();
+    				map.put("id", e.getId());
+    				map.put("name", e.getName());
+    				map.put("identity_id", e.getIdentityId());
+    				map.put("available", e.getAvailable() ? 1L : 0L);
+    				map.put("description", e.getDescription()!=null ? e.getDescription(): "");
+    				result.getData().add(map);
+    			}
+                result.setTotal(list.size());
+            }
+        }
+		
+		return result;
 	}
 
 }

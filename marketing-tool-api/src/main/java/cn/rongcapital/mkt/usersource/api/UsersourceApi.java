@@ -10,7 +10,10 @@
 package cn.rongcapital.mkt.usersource.api;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -123,5 +126,20 @@ public class UsersourceApi {
             @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("user_id") String userId){
     	return usersourceFlieUploadGetService.usersourceCheck();
     }
+    
+    /**
+     * 用户来源列表
+     * 接口：mkt.source.list
+     * @return BaseOutput
+     * @author shanjingqi
+     * @Date 2017-03-03
+     */
+    @GET
+    @Path("/mkt.source.list")
+	public BaseOutput usersourceList(@NotNull @QueryParam("id") Long id, @QueryParam("index") Integer index,
+			@QueryParam("size") Integer size) {
+		return usersourceService.getUsersourceList(id, index, size);
+	}
+    
     
 }
