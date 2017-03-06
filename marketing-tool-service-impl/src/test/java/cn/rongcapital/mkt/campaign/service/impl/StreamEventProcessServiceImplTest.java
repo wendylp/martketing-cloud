@@ -7,7 +7,7 @@
  * @date:
  * @复审人:
  *************************************************/
-package cn.rongcapital.mkt.event.service.impl;
+package cn.rongcapital.mkt.campaign.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import cn.rongcapital.mkt.campaign.service.impl.StreamEventProcessServiceImpl;
 import cn.rongcapital.mkt.dao.CampaignEventMapDao;
 import cn.rongcapital.mkt.event.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.po.mongodb.Segment;

@@ -7,7 +7,7 @@
  * @date: 2017/3/1
  * @复审人:
  *************************************************/
-package cn.rongcapital.mkt.event.service.impl;
+package cn.rongcapital.mkt.campaign.service.impl;
 
 import java.util.Arrays;
 import java.util.HashMap;
