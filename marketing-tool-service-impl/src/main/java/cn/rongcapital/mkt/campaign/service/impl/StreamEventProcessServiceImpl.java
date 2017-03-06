@@ -22,8 +22,8 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.mkt.campaign.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.dao.CampaignEventMapDao;
-import cn.rongcapital.mkt.event.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 import cn.rongcapital.mkt.vo.CampaignNode;

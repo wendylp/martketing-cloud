@@ -51,8 +51,7 @@ import cn.rongcapital.mkt.usersource.po.Usersource;
 import cn.rongcapital.mkt.usersource.po.UsersourceClassification;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.UploadFileOut;
-
-import com.alibaba.druid.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 @Service
 public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadGetService{
 
@@ -113,7 +112,7 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 				}
 //				Usersc usersc = getUsersc(row);
 				Usersc usersc = returnUsersc(row);
-				if(usersc != null){
+				if(usersc != null && (StringUtils.isNotBlank(usersc.getName()) && StringUtils.isNotBlank(usersc.getPrimaryClassification()))){
 					BaseOutput outPut = checkUsersc(lists, usersc, baseOutput);
 					if(outPut.getCode() != 0){
 						return outPut;
