@@ -4,6 +4,11 @@ package cn.rongcapital.mkt.vo.out;
 public class CampaignTriggerEventOut {
 
     /**
+     * 节点名称
+     */
+    private String name;
+    
+    /**
      * 事件主键
      */
     private Long eventId;
@@ -17,6 +22,14 @@ public class CampaignTriggerEventOut {
      * 事件名称
      */
     private String eventName;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getEventId() {
         return eventId;
@@ -44,7 +57,8 @@ public class CampaignTriggerEventOut {
 
     @Override
     public String toString() {
-        return "CampaignTriggerEventOut [eventId=" + eventId + ", eventCode=" + eventCode + ", eventName=" + eventName
-                + "]";
+        return "CampaignTriggerEventOut [name=" + name + ", eventId=" + eventId + ", eventCode=" + eventCode
+                + ", eventName=" + eventName + "]";
     }
+
 }

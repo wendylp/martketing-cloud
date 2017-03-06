@@ -6,6 +6,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class CampaignTriggerEvent {
 
     /**
+     * 节点名称
+     */
+    @JsonProperty("name")
+    private String name;
+    
+    /**
      * 事件主键
      */
     @JsonProperty("event_id")
@@ -22,6 +28,14 @@ public class CampaignTriggerEvent {
      */
     @JsonProperty("event_name")
     private String eventName;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getEventId() {
         return eventId;
@@ -49,9 +63,8 @@ public class CampaignTriggerEvent {
 
     @Override
     public String toString() {
-        return "CampaignTriggerEvent [eventId=" + eventId + ", eventCode=" + eventCode + ", eventName=" + eventName
-                + "]";
+        return "CampaignTriggerEvent [name=" + name + ", eventId=" + eventId + ", eventCode=" + eventCode
+                + ", eventName=" + eventName + "]";
     }
-
 
 }
