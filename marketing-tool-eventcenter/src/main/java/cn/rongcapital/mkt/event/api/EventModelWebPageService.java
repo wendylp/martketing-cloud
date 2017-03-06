@@ -74,6 +74,6 @@ public interface EventModelWebPageService {
 	@GET
 	@Path("/mkt.event.eventModel.list")
 	BaseOutput getEventModelList(@NotEmpty @QueryParam("user_token") String userToken,
-			@NotEmpty @QueryParam("ver") String version,@NotEmpty @QueryParam("channel") String channel, @QueryParam("source_id") Long sourceId, @QueryParam("event_name") String eventName, @QueryParam("index") Integer index,@QueryParam("size") Integer size);
+			@NotEmpty @QueryParam("ver") String version, @QueryParam("channel") String channel, @QueryParam("source_id") Long sourceId, @QueryParam("event_name") String eventName, @QueryParam("index") Integer index,@QueryParam("size") Integer size);
 
 }
