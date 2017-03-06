@@ -1,7 +1,6 @@
 package cn.rongcapital.mkt.usersource.service;
 
 import cn.rongcapital.mkt.usersource.vo.in.UsersourceIn;
-import cn.rongcapital.mkt.usersource.vo.in.UsersourceListIn;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 /*************************************************

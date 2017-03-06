@@ -26,11 +26,9 @@ import cn.rongcapital.mkt.common.uuid.UUIDGenerator;
 import cn.rongcapital.mkt.dao.usersource.UsersourceDao;
 import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.material.coupon.service.impl.CouponSaveServiceImpl;
-import cn.rongcapital.mkt.po.AudienceList;
 import cn.rongcapital.mkt.usersource.po.Usersource;
 import cn.rongcapital.mkt.usersource.service.UsersourceService;
 import cn.rongcapital.mkt.usersource.vo.in.UsersourceIn;
-import cn.rongcapital.mkt.usersource.vo.in.UsersourceListIn;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Service
