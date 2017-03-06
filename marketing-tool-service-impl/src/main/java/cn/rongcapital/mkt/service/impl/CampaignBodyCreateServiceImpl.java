@@ -42,6 +42,7 @@ import cn.rongcapital.mkt.dao.CampaignDecisionTagDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatForwardDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatReadDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatSentDao;
+import cn.rongcapital.mkt.dao.CampaignEventMapDao;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.dao.CampaignNodeItemDao;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
@@ -72,15 +73,14 @@ import cn.rongcapital.mkt.po.CampaignDecisionPubFans;
 import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatForward;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatRead;
+import cn.rongcapital.mkt.po.CampaignEventMap;
 import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
+import cn.rongcapital.mkt.po.CampaignTriggerEvent;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
-import cn.rongcapital.mkt.po.CustomTag;
 import cn.rongcapital.mkt.po.ImgTextAsset;
-import cn.rongcapital.mkt.po.SegmentBodyWithName;
 import cn.rongcapital.mkt.po.SegmentationBody;
-import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.WechatAsset;
@@ -109,7 +109,6 @@ import cn.rongcapital.mkt.vo.in.CampaignDecisionWechatReadIn;
 import cn.rongcapital.mkt.vo.in.CampaignNodeChainIn;
 import cn.rongcapital.mkt.vo.in.CampaignSwitchIn;
 import cn.rongcapital.mkt.vo.in.CampaignTriggerTimerIn;
-import cn.rongcapital.mkt.vo.in.SegmentCreUpdateIn;
 import cn.rongcapital.mkt.vo.in.TagIn;
 import cn.rongcapital.mkt.vo.out.CampaignBodyCreateOut;
 
@@ -184,6 +183,9 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 	//mongo要用到的dao
 	@Autowired
 	private MongoTemplate mongoTemplate;
+    @Autowired
+    private CampaignEventMapDao campaignEventMapDao;
+	
 	
 	@Autowired
 	private InsertCustomTagService insertCustomTagServiceImpl;
@@ -198,10 +200,15 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		int campaignHeadId = body.getCampaignHeadId();
 		
 		
-		CampaignBodyCreateOut out = checkCampaignBiz(campaignHeadId, body);
-		if(null != out) {
-			return out;
-		}
+        CampaignBodyCreateOut out = checkCampaignBiz(campaignHeadId, body);
+        if (null != out) {
+            return out;
+        }
+        // 节点细节校验
+        out = checkCampaignNodes(body);
+        if (null != out) {
+            return out;
+        }
 		
 		deleteOldCampaignTask(campaignHeadId);//删除旧任务
 		deleteOldCampaignData(campaignHeadId);//删除旧数据 
@@ -228,19 +235,27 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 				}
 			}
 			if(campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_TRIGGER){
-				switch (campaignNodeChainIn.getItemType()) {
-				case ApiConstant.CAMPAIGN_ITEM_TRIGGER_TIMMER://定时触发
-					TaskSchedule taskSchedule = initTaskTimeTrigger(campaignNodeChainIn,campaignHeadId);
-					if(null != taskSchedule) {
-						taskScheduleDao.insert(taskSchedule);
-						taskId = taskSchedule.getId();
-					}
-					CampaignTriggerTimer campaignTriggerTimer = initCampaignTriggerTimer(campaignNodeChainIn,campaignHeadId);
-					if(null != campaignTriggerTimer) {
-						campaignTriggerTimerDao.insert(campaignTriggerTimer);
-					}
-					break;
-				}
+                switch (campaignNodeChainIn.getItemType()) {
+                    case ApiConstant.CAMPAIGN_ITEM_TRIGGER_TIMMER:// 定时触发
+                        TaskSchedule taskSchedule = initTaskTimeTrigger(campaignNodeChainIn, campaignHeadId);
+                        if (null != taskSchedule) {
+                            taskScheduleDao.insert(taskSchedule);
+                            taskId = taskSchedule.getId();
+                        }
+                        CampaignTriggerTimer campaignTriggerTimer =
+                                initCampaignTriggerTimer(campaignNodeChainIn, campaignHeadId);
+                        if (null != campaignTriggerTimer) {
+                            campaignTriggerTimerDao.insert(campaignTriggerTimer);
+                        }
+                        break;
+                    case ApiConstant.CAMPAIGN_ITEM_EVENT_MANUAL:// 事件触发
+                        CampaignEventMap campaignEventMap =
+                                initCampaignTriggerEvent(campaignNodeChainIn, campaignHeadId);
+                        if (null != campaignEventMap) {
+                            campaignEventMapDao.insert(campaignEventMap);
+                        }
+                        break;
+                }
 			}
 			if (campaignNodeChainIn.getNodeType() == ApiConstant.CAMPAIGN_NODE_AUDIENCE) {
 				TaskSchedule taskSchedule = null;
@@ -435,10 +450,10 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			if(null != campaignNodeItem) {
 				campaignNodeItemDao.updateById(campaignNodeItem);
 			}
-			CampaignBody campaignBody = initCampaignBody(campaignNodeChainIn,campaignHeadId,taskId);
-			if(null != campaignBody) {
-				campaignBodyDao.insert(campaignBody);
-			}
+            CampaignBody campaignBody = initCampaignBody(campaignNodeChainIn,campaignHeadId,taskId);
+            if(null != campaignBody) {
+                campaignBodyDao.insert(campaignBody);
+            }
 		}
 		out = new CampaignBodyCreateOut(ApiConstant.INT_ZERO,ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
 		return out;
@@ -477,6 +492,38 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		}
 		return out;
 	}
+	
+    /**
+     * 节点详细校验业务逻辑
+     * 
+     * 1.发送短信节点短信名称“必填”
+     * 
+     * @param body
+     * @return
+     */
+    private CampaignBodyCreateOut checkCampaignNodes(CampaignBodyCreateIn body) {
+        CampaignBodyCreateOut out = null;
+        for (CampaignNodeChainIn campaignNode : body.getCampaignNodeChain()) {
+            // 行动节点
+            if (campaignNode.getNodeType() == ApiConstant.CAMPAIGN_NODE_ACTION) {
+                switch (campaignNode.getItemType()) {
+                // 发送短信
+                    case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS:
+                        CampaignActionSendSmsIn sendSms =
+                                jacksonObjectMapper.convertValue(campaignNode.getInfo(), CampaignActionSendSmsIn.class);
+                        if (sendSms == null || StringUtils.isBlank(sendSms.getName())) {
+                            out =
+                                    new CampaignBodyCreateOut(ApiErrorCode.VALIDATE_ERROR.getCode(),
+                                            ApiErrorCode.VALIDATE_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return out;
+    }
 	
 	private boolean validSmsEmpty(CampaignBodyCreateIn body) {
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
@@ -534,6 +581,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignActionSendH5Dao.deleteByCampaignHeadId(campaignHeadId);
 		campaignActionSaveAudienceDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignTriggerTimerDao.deleteByCampaignHeadId(campaignHeadId);
+		campaignEventMapDao.deleteByCampaignHeadId(campaignHeadId);
 		campaignBodyDao.deleteByCampaignHeadId(campaignHeadId);		
 		deleteSendSms(campaignHeadId);
 		campaignAudienceFixDao.deleteByCampaignHeadId(campaignHeadId);
@@ -1381,6 +1429,19 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		campaignTriggerTimer.setEndTime(DateUtil.getDateFromString(campaignTriggerTimerIn.getEndTime(), ApiConstant.DATE_FORMAT_yyyy_MM_dd_HH_mm_ss));
 		return campaignTriggerTimer;
 	}
+	
+    private CampaignEventMap initCampaignTriggerEvent(CampaignNodeChainIn campaignNodeChainIn, int campaignHeadId) {
+        CampaignEventMap campaignEventMap = new CampaignEventMap();
+        CampaignTriggerEvent campaignTriggerEvent =
+                jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignTriggerEvent.class);
+        if (null == campaignTriggerEvent) return null;
+        campaignEventMap.setCampaignHeadId(campaignHeadId);
+        campaignEventMap.setEventId(campaignTriggerEvent.getEventId());
+        campaignEventMap.setEventCode(campaignTriggerEvent.getEventCode());
+        campaignEventMap.setEventName(campaignTriggerEvent.getEventName());
+        campaignEventMap.setCreateTime(new Date());
+        return campaignEventMap;
+    }
 
 	private CampaignAudienceTarget initCampaignAudienceTarget(CampaignNodeChainIn campaignNodeChainIn,int campaignHeadId) {
 		CampaignAudienceTarget campaignAudienceTarget = new CampaignAudienceTarget();
