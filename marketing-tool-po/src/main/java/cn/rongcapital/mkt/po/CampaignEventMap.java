@@ -2,7 +2,14 @@ package cn.rongcapital.mkt.po;
 
 import java.util.Date;
 
-public class CampaignEventMap {
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
+public class CampaignEventMap extends BaseQuery{
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     private Integer id;
 
     private Integer campaignHeadId;
