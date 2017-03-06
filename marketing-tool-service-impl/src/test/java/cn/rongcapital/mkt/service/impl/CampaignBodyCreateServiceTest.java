@@ -226,7 +226,7 @@ public class CampaignBodyCreateServiceTest {
     public void testCampaignBodyCreate03() {
         CampaignBodyCreateIn body =
                 JSON.parseObject(
-                        "{\"campaign_head_id\": \"368\",\"campaign_node_chain\": [{\"info\": {\"event_id\": 123,\"event_code\": \"XXX\", \"event_name\": \"XXX名称\"},\"item_type\": \"3\",\"node_type\": \"0\"},{\"code\": \"send-sms\",\"info\": {\"name\": \"短信名称\"},\"item_type\": 6,\"sms_material_id\": 6,\"node_type\": 3}]}",
+                        "{\"campaign_head_id\": \"368\",\"campaign_node_chain\": [{\"info\": {\"name\": \"3333\",\"event_id\": 123,\"event_code\": \"XXX\", \"event_name\": \"XXX名称\"},\"item_type\": \"3\",\"node_type\": \"0\"},{\"code\": \"send-sms\",\"info\": {\"name\": \"短信名称\"},\"item_type\": 6,\"sms_material_id\": 6,\"node_type\": 3}]}",
                         CampaignBodyCreateIn.class);
 
         ReflectionTestUtils.setField(campaignBodyCreateService, "campaignHeadDao", campaignHeadDao);
@@ -396,6 +396,7 @@ public class CampaignBodyCreateServiceTest {
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
                 CampaignEventMap data = (CampaignEventMap) args[0];
+                Assert.assertEquals("3333", data.getName());
                 Assert.assertEquals("XXX", data.getEventCode());
                 Assert.assertEquals(123, data.getEventId().intValue());
                 Assert.assertEquals("XXX名称", data.getEventName());

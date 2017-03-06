@@ -861,6 +861,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
         if (CollectionUtils.isNotEmpty(resList)) {
             CampaignEventMap campaignTriggerTimer = resList.get(0);
             campaignTriggerEventOut.setEventId(campaignTriggerTimer.getEventId());
+            campaignTriggerEventOut.setName(campaignTriggerTimer.getName());
             campaignTriggerEventOut.setEventCode(campaignTriggerTimer.getEventCode());
             campaignTriggerEventOut.setEventName(campaignTriggerTimer.getEventName());
         }
