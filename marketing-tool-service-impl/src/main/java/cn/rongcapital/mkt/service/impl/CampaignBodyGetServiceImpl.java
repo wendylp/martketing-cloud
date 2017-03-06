@@ -33,6 +33,7 @@ import cn.rongcapital.mkt.dao.CampaignDecisionPubFansDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionTagDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatForwardDao;
 import cn.rongcapital.mkt.dao.CampaignDecisionWechatReadDao;
+import cn.rongcapital.mkt.dao.CampaignEventMapDao;
 import cn.rongcapital.mkt.dao.CampaignNodeItemDao;
 import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.CampaignTriggerTimerDao;
@@ -56,6 +57,7 @@ import cn.rongcapital.mkt.po.CampaignDecisionPubFans;
 import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatForward;
 import cn.rongcapital.mkt.po.CampaignDecisionWechatRead;
+import cn.rongcapital.mkt.po.CampaignEventMap;
 import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.CampaignTriggerTimer;
@@ -84,6 +86,7 @@ import cn.rongcapital.mkt.vo.out.CampaignDecisionWechatForwardOut;
 import cn.rongcapital.mkt.vo.out.CampaignDecisionWechatReadOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeChainOut;
 import cn.rongcapital.mkt.vo.out.CampaignSwitchOut;
+import cn.rongcapital.mkt.vo.out.CampaignTriggerEventOut;
 import cn.rongcapital.mkt.vo.out.CampaignTriggerTimerOut;
 import cn.rongcapital.mkt.vo.out.TagOut;
 
@@ -140,7 +143,9 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 	private ImgTextAssetDao imgTextAssetDao;
 	@Autowired
 	private MongoTemplate mongoTemplate;
-
+    @Autowired
+    private CampaignEventMapDao campaignEventMapDao;
+    
 	@Override
 	public CampaignBodyGetOut campaignBodyGet(String userToken, String ver, int campaignHeadId) {
 		CampaignBodyGetOut campaignBodyGetOut = new CampaignBodyGetOut(0, ApiErrorCode.SUCCESS.getMsg(), 0, null);
@@ -198,7 +203,12 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 								campaignNodeChainOut, campaignHeadId);
 						campaignNodeChainOut.setInfo(campaignTriggerTimerOut);
 						break;
-					}
+                        case ApiConstant.CAMPAIGN_ITEM_EVENT_MANUAL:// 事件触发
+                        CampaignTriggerEventOut campaignTriggerEventOut =
+                                queryCampaignTriggerEvent(campaignNodeChainOut, campaignHeadId);
+                        campaignNodeChainOut.setInfo(campaignTriggerEventOut);
+                        break;
+                    }
 				}
 				if (campaignNodeChainOut.getNodeType() == ApiConstant.CAMPAIGN_NODE_AUDIENCE) {
 					switch (campaignNodeChainOut.getItemType()) {
@@ -840,6 +850,23 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 		}
 		return campaignTriggerTimerOut;
 	}
+	
+    private CampaignTriggerEventOut queryCampaignTriggerEvent(CampaignNodeChainOut campaignNodeChainOut,
+            int campaignHeadId) {
+        CampaignEventMap t = new CampaignEventMap();
+        t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+        t.setCampaignHeadId(campaignHeadId);
+        List<CampaignEventMap> resList = campaignEventMapDao.selectList(t);
+        CampaignTriggerEventOut campaignTriggerEventOut = new CampaignTriggerEventOut();
+        if (CollectionUtils.isNotEmpty(resList)) {
+            CampaignEventMap campaignTriggerTimer = resList.get(0);
+            campaignTriggerEventOut.setEventId(campaignTriggerTimer.getEventId());
+            campaignTriggerEventOut.setName(campaignTriggerTimer.getName());
+            campaignTriggerEventOut.setEventCode(campaignTriggerTimer.getEventCode());
+            campaignTriggerEventOut.setEventName(campaignTriggerTimer.getEventName());
+        }
+        return campaignTriggerEventOut;
+    }
 
 	private List<CampaignSwitchOut> queryCampaignSwitchList(int campaignHeadId, String itemId) {
 		List<CampaignSwitchOut> campaignSwitchOutList = new ArrayList<CampaignSwitchOut>();

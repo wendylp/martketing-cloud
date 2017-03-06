@@ -94,6 +94,7 @@ public class ApiConstant {
 	
 	public static final byte CAMPAIGN_ITEM_TRIGGER_TIMMER = 0;//时间触发
 	public static final byte CAMPAIGN_ITEM_TRIGGER_MANUAL = 1;//手动触发
+	public static final byte CAMPAIGN_ITEM_EVENT_MANUAL = 3;//事件触发
 
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_TARGET = 0;//细分人群
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_FIX = 1;//固定人群
