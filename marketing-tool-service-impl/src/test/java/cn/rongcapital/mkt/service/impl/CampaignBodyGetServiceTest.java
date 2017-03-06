@@ -55,6 +55,7 @@ import cn.rongcapital.mkt.po.CampaignBody;
 import cn.rongcapital.mkt.po.CampaignEventMap;
 import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
+import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeChainOut;
@@ -172,7 +173,7 @@ public class CampaignBodyGetServiceTest {
         Mockito.when(campaignEventMapDao.selectList(Mockito.any())).thenReturn(mapList);
         ReflectionTestUtils.setField(campaignBodyGetService, "campaignEventMapDao", campaignEventMapDao);
 
-        Mockito.when(mongoTemplate.count(Mockito.any(), Mockito.any())).thenReturn(1L);
+        Mockito.when(mongoTemplate.count(Mockito.any(), Mockito.eq(NodeAudience.class))).thenReturn(1L);
         ReflectionTestUtils.setField(campaignBodyGetService, "mongoTemplate", mongoTemplate);
 
         List<CampaignSwitch> switchList = new ArrayList<CampaignSwitch>();
