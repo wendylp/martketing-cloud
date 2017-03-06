@@ -1436,6 +1436,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
                 jacksonObjectMapper.convertValue(campaignNodeChainIn.getInfo(), CampaignTriggerEvent.class);
         if (null == campaignTriggerEvent) return null;
         campaignEventMap.setCampaignHeadId(campaignHeadId);
+        campaignEventMap.setName(campaignTriggerEvent.getName());
         campaignEventMap.setEventId(campaignTriggerEvent.getEventId());
         campaignEventMap.setEventCode(campaignTriggerEvent.getEventCode());
         campaignEventMap.setEventName(campaignTriggerEvent.getEventName());
