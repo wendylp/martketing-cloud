@@ -22,6 +22,8 @@ public class EventConstant {
     
     public static final String EVENT_STREAM="STREAM";
     
+    public static final String KAFKA_SRM_TOPIC="streamtomc";
+    
 }
 
 

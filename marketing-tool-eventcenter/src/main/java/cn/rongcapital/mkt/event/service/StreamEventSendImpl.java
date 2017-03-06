@@ -18,6 +18,8 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.event.activator.EventConstant;
+
 @Service
 public class StreamEventSendImpl implements StreamEventSend {
 
@@ -32,8 +34,7 @@ public class StreamEventSendImpl implements StreamEventSend {
     @Override
     public void sendDate(String event) {
         // TODO Auto-generated method stub
-        String topic="streamtomc";
-        inputToKafka.send(MessageBuilder.withPayload(event).setHeader(KafkaHeaders.TOPIC,topic).build());    
+        inputToKafka.send(MessageBuilder.withPayload(event).setHeader(KafkaHeaders.TOPIC,EventConstant.KAFKA_SRM_TOPIC).build());    
     }
 
 }
