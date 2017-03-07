@@ -30,7 +30,6 @@ public class Usersource extends BaseQuery{
 	}
 
 	public Usersource() {
-		super();
 	}
 
 	public Long getId() {
