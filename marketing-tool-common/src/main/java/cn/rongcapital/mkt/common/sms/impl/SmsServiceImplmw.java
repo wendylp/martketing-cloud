@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.common.sms.impl;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -15,7 +16,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 
-import cn.rongcapital.mkt.common.util.SmsService;
+import cn.rongcapital.mkt.common.sms.SmsService;
 
 /**
  * 梦网科技短信接口实现
@@ -36,56 +37,59 @@ public class SmsServiceImplmw implements SmsService {
 
 	@Override
 	public boolean sendSms(String phoneNum, String msg) {
+
 		// TODO Auto-generated method stub
 		return SmsService.super.sendSms(phoneNum, msg);
 	}
 
 	@Override
-	public boolean sendMultSms(String[] phoneNum, String msg) {
+	public int sendMultSms(String[] phoneNum, String msg) {
+
+		List<Sms extends NameValuePair> list = new ArrayList<NameValuePair>();
+		Sms sms = new Sms();
+		list.add(e)
+
+		HttpPost httpPost = new HttpPost(httpUrl);// 创建连接
+		httpPost.setEntity(new UrlEncodedFormEntity(params, "utf-8"));
+
+		CloseableHttpResponse response = httpclient.execute(httpPost); // 在MC中到达这一步就算短信发送成功
 		// TODO Auto-generated method stub
 		return SmsService.super.sendMultSms(phoneNum, msg);
 	}
 
 	@Override
-	public boolean sendMultSms(String[] phoneNum, String[] msg) {
+	public int sendMultSms(String[] phoneNum, String[] msg) {
 		// TODO Auto-generated method stub
 		return SmsService.super.sendMultSms(phoneNum, msg);
 	}
 
 
-	public boolean sendSms(List<? extends NameValuePair> params, Integer sendFailureCount) {
+	public boolean send(String url, List<? extends NameValuePair> params) {
 		HttpPost httpPost = new HttpPost(httpUrl);// 创建连接
-		CloseableHttpResponse response = null; // 返回结果
-
+		CloseableHttpResponse response = null;
 		try {
-			httpPost.setEntity(new UrlEncodedFormEntity(params, "utf-8"));// 设置参数的编码UTF-8
-			response = httpclient.execute(httpPost);
-			HttpEntity entity = response.getEntity();// Http请求网关
-			if (entity != null && entity.getContentLength() > 0) {// 返回值不为空，且长度大于0
-				String result = EntityUtils.toString(entity);// 将返回值转换成字符串
-			}// 处理返回结果
-
-			return SUCCESS;// 返回返回值
+			httpPost.setEntity(new UrlEncodedFormEntity(params, "utf-8"));
+			response = httpclient.execute(httpPost); // 在MC中到达这一步就算短信发送成功
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error("短信编码异常", e);
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			logger.error("短信协议异常", e);
 		} catch (IOException e) {
-			e.printStackTrace();
-		}finally{
-			if (response != null) {
-				try {
+			logger.debug("发送短信失败", e);
+		} finally {
+			try {
+				if (response != null) {
 					response.close();
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
-		return FAILURE;
+
 	}
 
 
-	public class Param {
+	public class Sms implements NameValuePair {
 
 		private String userId; // 用户账号
 		private String password; // 用户密码
@@ -176,6 +180,18 @@ public class SmsServiceImplmw implements SmsService {
 
 		public void setMultixmt(String multixmt) {
 			this.multixmt = multixmt;
+		}
+
+		@Override
+		public String getName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getValue() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}
