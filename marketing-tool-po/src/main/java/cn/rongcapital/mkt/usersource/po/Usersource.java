@@ -25,7 +25,14 @@ public class Usersource extends BaseQuery{
 
     private Date updateTime;
 
-    public Long getId() {
+    public Usersource(Integer startIndex, Integer pageSize) {
+		super(startIndex, pageSize);
+	}
+
+	public Usersource() {
+	}
+
+	public Long getId() {
         return id;
     }
 
