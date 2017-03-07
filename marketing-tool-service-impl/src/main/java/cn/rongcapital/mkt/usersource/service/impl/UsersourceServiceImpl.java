@@ -28,6 +28,7 @@ import cn.rongcapital.mkt.event.vo.out.EventBehaviorOut;
 import cn.rongcapital.mkt.material.coupon.service.impl.CouponSaveServiceImpl;
 import cn.rongcapital.mkt.usersource.po.Usersource;
 import cn.rongcapital.mkt.usersource.service.UsersourceService;
+import cn.rongcapital.mkt.usersource.vo.in.UsersourceAvailableIn;
 import cn.rongcapital.mkt.usersource.vo.in.UsersourceIn;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -103,4 +104,21 @@ public class UsersourceServiceImpl implements UsersourceService{
 		return result;
 	}
 
+	@Override
+	public BaseOutput usersourceAvailable(UsersourceAvailableIn in) {
+		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                ApiConstant.INT_ZERO, null);
+		
+		Usersource temp = new Usersource();
+		temp.setId(in.getId());
+		int i = usersourceDao.selectListCount(temp);
+		if(i>0){
+			temp.setAvailable(in.getAvailable().longValue() == ApiConstant.USER_SOURCE_AVAILABLE ? true :false); // 是否启用  0：不启用 1：启用
+			usersourceDao.updateById(temp);
+			return result;
+		}else{
+			return new BaseOutput(ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getCode(), ApiErrorCode.DB_ERROR_TABLE_DATA_NOT_EXIST.getMsg(), ApiConstant.INT_ZERO, null);
+		}
+		
+	}
 }

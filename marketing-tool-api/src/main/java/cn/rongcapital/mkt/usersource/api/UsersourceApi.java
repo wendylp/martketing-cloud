@@ -10,10 +10,8 @@
 package cn.rongcapital.mkt.usersource.api;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -33,6 +31,7 @@ import org.springframework.stereotype.Component;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.usersource.UsersourceFlieUploadGetService;
 import cn.rongcapital.mkt.usersource.service.UsersourceService;
+import cn.rongcapital.mkt.usersource.vo.in.UsersourceAvailableIn;
 import cn.rongcapital.mkt.usersource.vo.in.UsersourceIn;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
@@ -53,8 +52,7 @@ public class UsersourceApi {
      * 
      * 接口：mkt.source.save
      * 
-     * @param name
-     * @param id
+     * @param UsersourceIn
      * @return BaseOutput
      * @author shanjingqi
      * @Date 2017-03-02
@@ -141,5 +139,18 @@ public class UsersourceApi {
 		return usersourceService.getUsersourceList(id, index, size);
 	}
     
-    
+    /**
+     * 禁用/启用来源
+     * 接口：mkt.source.available
+     * @param Long id
+     * @param Long available
+     * @return BaseOutput
+     * @author shanjingqi
+     * @Date 2017-03-07
+     */
+    @POST
+    @Path("/mkt.source.available")
+	public BaseOutput usersourceAvailable(@Valid UsersourceAvailableIn in) {
+		return usersourceService.usersourceAvailable(in);
+	}
 }
