@@ -423,4 +423,9 @@ public class ApiConstant {
      * 物料类型-微信
      */
     public static final String MATERIAL_TYPE_WECHAT = "qr_code";
+    
+    /**
+     * 用户来源
+     */
+    public static final long USER_SOURCE_AVAILABLE = 1; // 是否启用  0：不启用 1：启用
 }
