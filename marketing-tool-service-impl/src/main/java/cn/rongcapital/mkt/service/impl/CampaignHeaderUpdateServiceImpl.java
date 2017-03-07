@@ -64,8 +64,9 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
         Byte triggerType = body.getTriggerType();
         modifyReferData(existsCampaignHead, publishStatus, triggerType);
 
-        if (triggerType != null && triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL &&
-                    ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus.byteValue()) {
+        if (triggerType != null
+                && (triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL || triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_EVENT_MANUAL)
+                && ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus.byteValue()) {
             publishStatus = ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS;
         }
 		CampaignHead t = new CampaignHead();
@@ -93,7 +94,8 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
         logger.info("CampaignHead Info: 开始修改相关数据");
         Integer campaignHeadId = existsCampaignHead.getId();
         Byte oldPublishStatus = existsCampaignHead.getPublishStatus();
-        if (triggerType != null && triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL) {
+        if (triggerType != null
+                && (triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL || triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_EVENT_MANUAL)) {
             if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus) {
                 logger.info("CampaignHeader Info: 进入第一重处理逻辑" );
                 changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(1));
