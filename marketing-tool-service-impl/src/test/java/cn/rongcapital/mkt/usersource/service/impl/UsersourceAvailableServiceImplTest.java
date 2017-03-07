@@ -52,11 +52,23 @@ public class UsersourceAvailableServiceImplTest {
 	}
 	
 	@Test
-	public void testUsersourceAvailable01(){
+	public void testUsersourceAvailable01_1(){
 		
 		Mockito.when(dao.selectListCount(Mockito.any())).thenReturn(1);
 		Mockito.when(dao.updateById(Mockito.any())).thenReturn(1);
 		
+		BaseOutput result = service.usersourceAvailable(in);
+		Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
+		Assert.assertEquals(0, result.getTotal());
+	}
+	
+	@Test
+	public void testUsersourceAvailable01_2(){
+		
+		Mockito.when(dao.selectListCount(Mockito.any())).thenReturn(1);
+		Mockito.when(dao.updateById(Mockito.any())).thenReturn(1);
+		
+		in.setAvailable(1L);
 		BaseOutput result = service.usersourceAvailable(in);
 		Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
 		Assert.assertEquals(0, result.getTotal());

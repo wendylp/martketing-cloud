@@ -83,6 +83,7 @@ public class UsersourceServiceImplTest {
 		
 		Mockito.when(dao.selectList(Mockito.any())).thenReturn(list);
 		in.setName("123");
+		in.setDescription("description");
 		BaseOutput result = service.saveUsersource(in);
 		
 		Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());

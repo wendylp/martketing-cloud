@@ -55,20 +55,29 @@ public class UsersourceListServiceImplTest {
 		po.setAvailable(false);
 		po.setDescription("description");
 		list.add(po);
+		
+		Usersource po2 = new Usersource();
+		po2.setId(1L);
+		po2.setName("Test");
+		po2.setIdentityId("ASDFGHJ");
+		po2.setAvailable(true);
+		po2.setDescription(null);
+		list.add(po2);
+		
 	}
 	
 	/**
 	 * 正常流程
 	 */
 	@Test
-	public void testGetUsersourceList01() {
+	public void testGetUsersourceList01_1() {
 		
 		Mockito.when(dao.selectListCount(Mockito.any())).thenReturn(20);
 		Mockito.when(dao.selectList(Mockito.any())).thenReturn(list);
 		
 		BaseOutput result = service.getUsersourceList(1L, 2, 3);
 		Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
-		Assert.assertEquals(1, result.getTotal());
+		Assert.assertEquals(2, result.getTotal());
 		Assert.assertEquals(20, result.getTotalCount());
 
 		Map<String,Object> po = (Map<String,Object>)result.getData().get(0);
@@ -77,6 +86,28 @@ public class UsersourceListServiceImplTest {
 		Assert.assertEquals("ASDFGHJ", po.get("identity_id"));
 		Assert.assertEquals(0L, po.get("available"));
 		Assert.assertEquals("description", po.get("description"));
+	}
+	
+	/**
+	 * 正常流程
+	 */
+	@Test
+	public void testGetUsersourceList01_2() {
+		
+		Mockito.when(dao.selectListCount(Mockito.any())).thenReturn(20);
+		Mockito.when(dao.selectList(Mockito.any())).thenReturn(list);
+		
+		BaseOutput result = service.getUsersourceList(1L, 2, 3);
+		Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
+		Assert.assertEquals(2, result.getTotal());
+		Assert.assertEquals(20, result.getTotalCount());
+
+		Map<String,Object> po = (Map<String,Object>)result.getData().get(1);
+		Assert.assertEquals(1L, po.get("id"));
+		Assert.assertEquals("Test", po.get("name"));
+		Assert.assertEquals("ASDFGHJ", po.get("identity_id"));
+		Assert.assertEquals(1L, po.get("available"));
+		Assert.assertEquals("", po.get("description"));
 	}
 	
 	/**
