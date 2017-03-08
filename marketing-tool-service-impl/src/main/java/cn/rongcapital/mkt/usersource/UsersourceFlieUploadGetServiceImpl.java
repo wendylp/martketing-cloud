@@ -51,6 +51,7 @@ import cn.rongcapital.mkt.usersource.po.Usersource;
 import cn.rongcapital.mkt.usersource.po.UsersourceClassification;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.UploadFileOut;
+
 import org.apache.commons.lang.StringUtils;
 @Service
 public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadGetService{
@@ -305,10 +306,7 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 	@Override
 	public BaseOutput importUsersourceDate(String fileId) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), 1, null);
-		BaseOutput out = usersourceCheck();
-		if(out.getCode() != 0){
-			return out;
-		}
+
 		Date now = new Date();
 		try {
 			byte[] val = JedisClient.get(fileId.getBytes());
@@ -317,6 +315,16 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 				baseOutput.setMsg(ApiErrorCode.ID_NOTFOUND_ERROR.getMsg());
 				return baseOutput;
 			}
+			
+			BaseOutput out = usersourceCheck();
+			Map<String,Boolean> map = (Map<String, Boolean>) out.getData().get(0);
+			Boolean flag = map.get("file_exit");
+			if(flag){
+				baseOutput.setCode(ApiErrorCode.USERSOURCE_CLASSIFICATION_IMP_ERROR.getCode());
+				baseOutput.setMsg(ApiErrorCode.USERSOURCE_CLASSIFICATION_IMP_ERROR.getMsg());
+				return baseOutput;
+			}
+			
 			List<Usersc> list = (List<Usersc>) SerializeUtil.unserialize(val);
 			for(Usersc usersc : list){
 				//一级分类
@@ -433,11 +441,18 @@ public class UsersourceFlieUploadGetServiceImpl implements UsersourceFlieUploadG
 		if(usersclist.size() > 0){
 			flag = true;
 		}
+		Map<String,Boolean> map = new HashMap<String,Boolean>();
 		if(flag){
-			baseOutput.setCode(ApiErrorCode.USERSOURCE_CLASSIFICATION_IMP_ERROR.getCode());
-			baseOutput.setMsg(ApiErrorCode.USERSOURCE_CLASSIFICATION_IMP_ERROR.getMsg());
-			return baseOutput;
+			//文件已存在
+			map.put("file_exit", true);
+			
+		}else{
+			//文件不存在
+			map.put("file_exit", false);
 		}
+		List<Object> list = new ArrayList<Object>();
+		list.add(map);
+		baseOutput.setData(list);
 		return baseOutput;
 	}
 }
