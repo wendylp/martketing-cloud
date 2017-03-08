@@ -11,8 +11,10 @@ package cn.rongcapital.mkt.campaign.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,57 +50,65 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
 
     @Override
     public Segment combineStreamData(EventBehavior eventbehavior) {
-        String eventCode = eventbehavior.getEvent().get("code").toString();
-        Map<String, Object> subject = eventbehavior.getSubject();
-        String mobile = null;
-        String memberId = null;
-        String email = null;
-        String strategy = null;
-        Segment segment = null;
-        switch (eventCode) {
-        // STREAM申请试用表单 MC申请试用表单
-            case "apply_submit_stream":
-            case "apply_submit_mc":
-                mobile = (String) subject.get("o_mc_contact_soc_mobile_phone");
-                email = (String) subject.get("o_mc_contact_soc_mail");
-                strategy = "EventStrategy";
-                break;
-            default:
-                logger.error("combine stream master data [%s] meet illegal event code.", eventCode);
-                return segment;
-        }
-        try {
-            HttpClientUtil http = HttpClientUtil.getInstance();
-            HttpUrl httpUrl = new HttpUrl();
-            httpUrl.setHost(host);
-            httpUrl.setPath(mappingUri);
-            httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
-            HashMap<Object, Object> params = new HashMap<Object, Object>();
-            if(StringUtils.isNotBlank(mobile)){
-                params.put("mobile", mobile);
-            }
-            if(StringUtils.isNotBlank(memberId)){
-                params.put("memberId", memberId);
-            }
-            if(StringUtils.isNotBlank(email)){
-                params.put("email", email);
-            }
-            params.put("strategy", strategy);
-            httpUrl.setRequetsBody(JSON.toJSONString(params));
-            PostMethod postResult = http.postExt(httpUrl);
-            String response = postResult.getResponseBodyAsString();
-            if (StringUtils.isNotBlank(response)) {
-                JSONObject jsonObj = JSON.parseObject(response);
-                if (jsonObj != null && jsonObj.containsKey("mid")) {
-                    segment = new Segment();
-                    segment.setDataId(jsonObj.getInteger("mid"));
-                }
-            }
-        } catch (Exception e) {
-            logger.error(String.format("combine stream master data [%s] occurs error.", eventbehavior.getSubject()), e);
-        }
+        Segment segment = new Segment();
+        segment.setDataId(RandomUtils.nextInt(1000000));
+        segment.setName(UUID.randomUUID().toString());
         return segment;
     }
+
+//    @Override
+//    public Segment combineStreamData(EventBehavior eventbehavior) {
+//        String eventCode = eventbehavior.getEvent().get("code").toString();
+//        Map<String, Object> subject = eventbehavior.getSubject();
+//        String mobile = null;
+//        String memberId = null;
+//        String email = null;
+//        String strategy = null;
+//        Segment segment = null;
+//        switch (eventCode) {
+//        // STREAM申请试用表单 MC申请试用表单
+//            case "apply_submit_stream":
+//            case "apply_submit_mc":
+//                mobile = (String) subject.get("o_mc_contact_soc_mobile_phone");
+//                email = (String) subject.get("o_mc_contact_soc_mail");
+//                strategy = "EventStrategy";
+//                break;
+//            default:
+//                logger.error("combine stream master data [%s] meet illegal event code.", eventCode);
+//                return segment;
+//        }
+//        try {
+//            HttpClientUtil http = HttpClientUtil.getInstance();
+//            HttpUrl httpUrl = new HttpUrl();
+//            httpUrl.setHost(host);
+//            httpUrl.setPath(mappingUri);
+//            httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
+//            HashMap<Object, Object> params = new HashMap<Object, Object>();
+//            if(StringUtils.isNotBlank(mobile)){
+//                params.put("mobile", mobile);
+//            }
+//            if(StringUtils.isNotBlank(memberId)){
+//                params.put("memberId", memberId);
+//            }
+//            if(StringUtils.isNotBlank(email)){
+//                params.put("email", email);
+//            }
+//            params.put("strategy", strategy);
+//            httpUrl.setRequetsBody(JSON.toJSONString(params));
+//            PostMethod postResult = http.postExt(httpUrl);
+//            String response = postResult.getResponseBodyAsString();
+//            if (StringUtils.isNotBlank(response)) {
+//                JSONObject jsonObj = JSON.parseObject(response);
+//                if (jsonObj != null && jsonObj.containsKey("mid")) {
+//                    segment = new Segment();
+//                    segment.setDataId(jsonObj.getInteger("mid"));
+//                }
+//            }
+//        } catch (Exception e) {
+//            logger.error(String.format("combine stream master data [%s] occurs error.", eventbehavior.getSubject()), e);
+//        }
+//        return segment;
+//    }
 
 
 
