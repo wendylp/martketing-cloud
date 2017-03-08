@@ -513,8 +513,8 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
                                 jacksonObjectMapper.convertValue(campaignNode.getInfo(), CampaignActionSendSmsIn.class);
                         if (sendSms == null || StringUtils.isBlank(sendSms.getName())) {
                             out =
-                                    new CampaignBodyCreateOut(ApiErrorCode.VALIDATE_ERROR.getCode(),
-                                            ApiErrorCode.VALIDATE_ERROR.getMsg(), ApiConstant.INT_ZERO, null);
+                                    new CampaignBodyCreateOut(ApiErrorCode.VALIDATE_ERROR.getCode(), "请设置发送短信节点的名称",
+                                            ApiConstant.INT_ZERO, null);
                         }
                         break;
                     default:

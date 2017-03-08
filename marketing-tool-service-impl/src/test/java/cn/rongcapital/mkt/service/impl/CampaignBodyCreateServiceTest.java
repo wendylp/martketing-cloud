@@ -191,7 +191,7 @@ public class CampaignBodyCreateServiceTest {
         Mockito.when(campaignHeadDao.selectList(Mockito.any())).thenReturn(headList);
         CampaignBodyCreateOut output = campaignBodyCreateService.campaignBodyCreate(body, null);
         Assert.assertEquals(ApiErrorCode.VALIDATE_ERROR.getCode(), output.getCode());
-        Assert.assertEquals(ApiErrorCode.VALIDATE_ERROR.getMsg(), output.getMsg());
+        Assert.assertEquals("请设置发送短信节点的名称", output.getMsg());
     }
 
     /**
@@ -215,7 +215,7 @@ public class CampaignBodyCreateServiceTest {
 
         CampaignBodyCreateOut output = campaignBodyCreateService.campaignBodyCreate(body, null);
         Assert.assertEquals(ApiErrorCode.VALIDATE_ERROR.getCode(), output.getCode());
-        Assert.assertEquals(ApiErrorCode.VALIDATE_ERROR.getMsg(), output.getMsg());
+        Assert.assertEquals("请设置发送短信节点的名称", output.getMsg());
     }
 
     /**
