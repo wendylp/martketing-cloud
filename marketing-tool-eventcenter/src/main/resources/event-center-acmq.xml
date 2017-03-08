@@ -74,10 +74,10 @@
 	<!-- task executors -->
 	
 	 <task:executor id="routeExecutor" pool-size="${event.router.executor.PoolSize}"
-        keep-alive="120" queue-capacity="500"  />
+        keep-alive="120" queue-capacity="1000"  />
 	
 	<task:executor id="processExecutor" pool-size="${event.processor.executor.PoolSize}"
-        keep-alive="120" queue-capacity="500"  />
+        keep-alive="120" queue-capacity="1000"   />
 	
 
 	<task:executor id="errorExecutor" pool-size="${event.error.executor.PoolSize}"
