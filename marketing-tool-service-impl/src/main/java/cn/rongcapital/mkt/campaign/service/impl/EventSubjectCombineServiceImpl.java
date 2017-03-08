@@ -54,6 +54,7 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
         String memberId = null;
         String email = null;
         String strategy = null;
+        Segment segment = null;
         switch (eventCode) {
         // STREAM申请试用表单 MC申请试用表单
             case "apply_submit_stream":
@@ -64,9 +65,8 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
                 break;
             default:
                 logger.error("combine stream master data [%s] meet illegal event code.", eventCode);
-                break;
+                return segment;
         }
-        Segment segment = null;
         try {
             HttpClientUtil http = HttpClientUtil.getInstance();
             HttpUrl httpUrl = new HttpUrl();
