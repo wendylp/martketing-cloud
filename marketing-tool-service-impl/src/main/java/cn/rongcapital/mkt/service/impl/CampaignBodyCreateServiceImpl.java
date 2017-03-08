@@ -204,11 +204,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
         if (null != out) {
             return out;
         }
-        // 节点细节校验
-        out = checkCampaignNodes(body);
-        if (null != out) {
-            return out;
-        }
 		
 		deleteOldCampaignTask(campaignHeadId);//删除旧任务
 		deleteOldCampaignData(campaignHeadId);//删除旧数据 
@@ -492,38 +487,6 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 		}
 		return out;
 	}
-	
-    /**
-     * 节点详细校验业务逻辑
-     * 
-     * 1.发送短信节点短信名称“必填”
-     * 
-     * @param body
-     * @return
-     */
-    private CampaignBodyCreateOut checkCampaignNodes(CampaignBodyCreateIn body) {
-        CampaignBodyCreateOut out = null;
-        for (CampaignNodeChainIn campaignNode : body.getCampaignNodeChain()) {
-            // 行动节点
-            if (campaignNode.getNodeType() == ApiConstant.CAMPAIGN_NODE_ACTION) {
-                switch (campaignNode.getItemType()) {
-                // 发送短信
-                    case ApiConstant.CAMPAIGN_ITEM_ACTION_SEND_SMS:
-                        CampaignActionSendSmsIn sendSms =
-                                jacksonObjectMapper.convertValue(campaignNode.getInfo(), CampaignActionSendSmsIn.class);
-                        if (sendSms == null || StringUtils.isBlank(sendSms.getName())) {
-                            out =
-                                    new CampaignBodyCreateOut(ApiErrorCode.VALIDATE_ERROR.getCode(), "请设置发送短信节点的名称",
-                                            ApiConstant.INT_ZERO, null);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-        return out;
-    }
 	
 	private boolean validSmsEmpty(CampaignBodyCreateIn body) {
 		for(CampaignNodeChainIn campaignNodeChainIn:body.getCampaignNodeChain()){
