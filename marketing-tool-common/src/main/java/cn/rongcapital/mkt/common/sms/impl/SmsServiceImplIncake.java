@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.common.util;
+package cn.rongcapital.mkt.common.sms.impl;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 
+import cn.rongcapital.mkt.common.sms.SmsService;
+
 @Service("smsServiceImplIncake")
 public class SmsServiceImplIncake implements SmsService {
 
@@ -37,39 +39,56 @@ public class SmsServiceImplIncake implements SmsService {
 
 	@Override
 	public boolean sendSms(String phoneNum, String msg) {
-		List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>(1);
-		SmsServiceImplIncake.SmsRequestVo sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, phoneNum, msg);
-		smses.add(sms);
-		logger.debug("sms phone nuber is {}, content is {}.", phoneNum, msg);
-		return this.send(smses);
+		if (isPhoneLegal(phoneNum)) {
+			List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>(1);
+			SmsServiceImplIncake.SmsRequestVo sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, phoneNum, msg);
+			smses.add(sms);
+			logger.debug("sms phone nuber is {}, content is {}.", phoneNum, msg);
+			return this.send(smses);
+		}
+		return FAILURE;
 	}
 
 	@Override
-	public boolean sendMultSms(String[] phoneNum, String msg) {
+	public int sendMultSms(String[] phoneNum, String msg) {
+		int len = 0; // 成功发送计数器
 		List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>(phoneNum.length);
 		SmsServiceImplIncake.SmsRequestVo sms = null;
 		for (String num : phoneNum) {
-			sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, num, msg);
-			smses.add(sms);
+			if (isPhoneLegal(num)) {
+				sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, num, msg);
+				smses.add(sms);
+			}
+			len++;
 		}
 		logger.debug("sms phone nuber is {}, content is {}.", phoneNum, msg);
-		return this.send(smses);
+		if (this.send(smses)) {
+			return len;
+		}
+		return 0;
 	}
 
 	@Override
-	public boolean sendMultSms(String[] phoneNum, String[] msg) {
-		if (phoneNum.length != msg.length) {
-			return FAILURE;
-		}
+	public int sendMultSms(String[] phoneNum, String[] msg) {
 
+		if (phoneNum.length != msg.length) {
+			return 0;
+		}
+		int len = 0; // 成功发送计数器
 		List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>(phoneNum.length);
 		SmsServiceImplIncake.SmsRequestVo sms = null;
 		for (int i = 0; i < phoneNum.length; i++) {
-			sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, phoneNum[i], msg[i]);
-			smses.add(sms);
+			if (isPhoneLegal(phoneNum[i])) {
+				sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, phoneNum[i], msg[i]);
+				smses.add(sms);
+			}
+			len++;
 		}
 		logger.debug("sms phone nuber is {}, content is {}.", phoneNum, msg);
-		return this.send(smses);
+		if (this.send(smses)) {
+			return len;
+		}
+		return 0;
 	}
 
 	private boolean send(List<SmsServiceImplIncake.SmsRequestVo> smses) {
