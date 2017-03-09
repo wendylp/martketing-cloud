@@ -1,26 +1,33 @@
 package cn.rongcapital.mkt.vo.out;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class CampaignTriggerEventOut {
 
     /**
      * 节点名称
      */
+    @JsonProperty("name")
     private String name;
     
     /**
      * 事件主键
      */
+    @JsonProperty("event_id")
     private Long eventId;
 
     /**
      * 事件编码
      */
+    @JsonProperty("event_code")
     private String eventCode;
 
     /**
      * 事件名称
      */
+    @JsonProperty("event_name")
     private String eventName;
 
     public String getName() {

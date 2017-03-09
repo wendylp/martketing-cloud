@@ -82,7 +82,7 @@ public class UsersourceClassificationServiceImplTest {
 	}
 	
 	@Test
-	public void testSaveUsersourceClassification01() {
+	public void testSaveUsersourceClassification01_1() {
 		Mockito.doAnswer(new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -92,6 +92,24 @@ public class UsersourceClassificationServiceImplTest {
 		
 		Mockito.when(dao.selectList(Mockito.any())).thenReturn(null);
 		in.setName("AAA");
+		BaseOutput result = uscService.saveUsersourceClassification(in);
+		
+		Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
+		Assert.assertEquals(0, result.getTotal());
+	}
+	
+	@Test
+	public void testSaveUsersourceClassification01_2() {
+		Mockito.doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				return null;
+			}
+		}).when(dao).insert(Mockito.any());
+		
+		Mockito.when(dao.selectList(Mockito.any())).thenReturn(null);
+		in.setName("AAA");
+		in.setId(1L);
 		BaseOutput result = uscService.saveUsersourceClassification(in);
 		
 		Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());

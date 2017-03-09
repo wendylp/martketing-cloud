@@ -96,6 +96,7 @@ public class AudienceListServiceImpl implements AudienceListService {
 				map.put("audience_count", s.getAudienceRows());
 				map.put("source_name", s.getSource());
 				map.put("create_time", df.format(s.getCreateTime()));
+				map.put("update_time", df.format(s.getUpdateTime()));
 				result.getData().add(map);
 			}
 		}

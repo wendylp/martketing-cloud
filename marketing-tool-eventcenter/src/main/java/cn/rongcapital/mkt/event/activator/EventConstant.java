@@ -16,11 +16,13 @@ public class EventConstant {
 
     public static final String EVENT_HEADER="eventCenter.eventType";
     
-    public static final String EVENT_SYSTEM="STREAM";
+    public static final String EVENT_SYSTEM="SYSTEM";
     
     public static final String EVENT_MK="MARKETING";
     
     public static final String EVENT_STREAM="STREAM";
+    
+    public static final String KAFKA_SRM_TOPIC="streamtomc";
     
 }
 

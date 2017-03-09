@@ -24,9 +24,9 @@ import org.mockito.stubbing.Answer;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import cn.rongcapital.mkt.campaign.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.campaign.service.impl.StreamEventProcessServiceImpl;
 import cn.rongcapital.mkt.dao.CampaignEventMapDao;
-import cn.rongcapital.mkt.event.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.vo.CampaignNode;
 

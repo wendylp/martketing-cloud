@@ -96,7 +96,8 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
         Byte oldPublishStatus = existsCampaignHead.getPublishStatus();
 
         //业务逻辑描述：如果是手动启动的，设置当前状态为已发布，
-        if (triggerType != null && triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL) {
+        if (triggerType != null
+                && (triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL || triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_EVENT_MANUAL)) {
             if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus) {
                 logger.info("CampaignHeader Info: 进入第一重处理逻辑" );
                 changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(1));

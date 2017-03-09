@@ -6,6 +6,7 @@
     xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:jms="http://www.springframework.org/schema/integration/jms"
+    xmlns:task="http://www.springframework.org/schema/task"
     xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
     xmlns:int-kafka="http://www.springframework.org/schema/integration/kafka"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -22,13 +23,15 @@
                http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
                http://www.springframework.org/schema/integration
 			   http://www.springframework.org/schema/integration/spring-integration.xsd
+			   http://www.springframework.org/schema/task
+			   http://www.springframework.org/schema/task/spring-task.xsd
 			   http://www.springframework.org/schema/integration/kafka
                http://www.springframework.org/schema/integration/kafka/spring-integration-kafka.xsd">
 	
 	<context:component-scan base-package="cn.rongcapital.mkt.event.activator"/>
 	
 	<!-- default poller -->
-	<int:poller default="true"  fixed-delay="5000"/>
+	<int:poller default="true"  fixed-delay="1000"/>
 	
 	<int:channel id="eventsSource">
 	<int:queue/>
@@ -53,7 +56,7 @@
 	 <!--  动态ruter  -->
 	<int:router input-channel="events" ref="mcrouter"  default-output-channel="stdErr"  
 	method="route">
-	 <int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
+	 <int:poller max-messages-per-poll="5" task-executor="routeExecutor"  fixed-delay="500"/>
 	  <int:mapping value="SYSTEM" channel="systemEvents"/>
       <int:mapping value="MARKETING" channel="marketingEvents"/>
       <int:mapping value="STREAM" channel="streamEvents"/>
@@ -69,25 +72,18 @@
 	</bean>
 	
 	<!-- task executors -->
-	<bean id="routeExecutor" 
-		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<property name="corePoolSize" value="${event.router.executor.corePoolSize}"/>
-		<property name="maxPoolSize" value="${event.router.executor.maxPoolSize}"/>
-	</bean>
-	<bean id="processExecutor" 
-		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<property name="corePoolSize" value="${event.router.executor.maxPoolSize}"/>
-		<property name="maxPoolSize" value="${event.router.executor.maxPoolSize}"/>
-	</bean>
 	
+	 <task:executor id="routeExecutor" pool-size="${event.router.executor.PoolSize}"
+        keep-alive="120" queue-capacity="1000"  />
 	
-	<bean id="errorExecutor" 
-		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		<property name="corePoolSize" value="${event.router.executor.corePoolSize}"/>
-		<property name="maxPoolSize" value="${event.router.executor.maxPoolSize}"/>
-	</bean>
+	<task:executor id="processExecutor" pool-size="${event.processor.executor.PoolSize}"
+        keep-alive="120" queue-capacity="1000"   />
+	
 
-    
+	<task:executor id="errorExecutor" pool-size="${event.error.executor.PoolSize}"
+        keep-alive="120" queue-capacity="500"  />
+
+    <!-- task end -->
   
     
 	<int-stream:stderr-channel-adapter id="stdErr" append-newline="true"/>
@@ -157,7 +153,7 @@
 	 <jms:inbound-channel-adapter id="tomkque" channel="marketingEvents_temp" destination="queue_marketingEvents" 
 	 connection-factory="connectionFactory" />
 	  <int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents_temp" >
-	   <int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="10"/>
+	   <int:poller max-messages-per-poll="5" task-executor="processExecutor"  fixed-delay="500"/>
 	</int:service-activator>
 	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.service.EventMCReceviceProcessorImpl"/>
 	
@@ -174,7 +170,7 @@
 	 />
 	 
 	  <int:service-activator  input-channel="error_temp" ref="defaultErrorHandServiceActivator">
-	  <int:poller max-messages-per-poll="1" task-executor="errorExecutor" fixed-rate="10"/>
+	  <int:poller max-messages-per-poll="1" task-executor="errorExecutor" fixed-delay="500" /> 
 	 </int:service-activator>
 	 
 	<!-- actmq end  -->
@@ -184,17 +180,52 @@
 	<!--  kafka 配置  -->
    
     <!--  生成者配置  -->
-	<!-- <bean id="producerProperties"
+    
+    <int:channel id="inputToKafka">
+        <int:queue />
+    </int:channel>
+    
+      
+     <bean id="producerProperties"
         class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
             <props>
-                <prop key="topic.metadata.refresh.interval.ms">3600000</prop>
+                <prop key="topic.metadata.refresh.interval.ms">-1</prop>
                 <prop key="message.send.max.retries">5</prop>
                 <prop key="serializer.class">kafka.serializer.StringEncoder</prop>
                 <prop key="request.required.acks">1</prop>
+                <prop key="value.serializer">org.apache.kafka.common.serialization.ByteArraySerializer</prop>
+				<prop key="key.serializer">org.apache.kafka.common.serialization.ByteArraySerializer</prop>
             </props>
         </property>
-    </bean> -->
+    </bean> 
+    
+	
+	<bean id="stringSerializer" class="org.apache.kafka.common.serialization.StringSerializer"/>
+	<int-kafka:producer-context id="kafkaProducerContext"
+        producer-properties="producerProperties">
+        <int-kafka:producer-configurations>
+            <int-kafka:producer-configuration
+                broker-list="${kakfa.producer.url}" topic="streamtomc" 
+                 key-serializer="stringSerializer"
+                 value-serializer="stringSerializer"
+                value-class-type="java.lang.String"
+               />
+        </int-kafka:producer-configurations>
+    </int-kafka:producer-context>
+	
+	
+	<int-kafka:outbound-channel-adapter id="kafkaOutboundChannelAdapter"
+                                        kafka-producer-context-ref="kafkaProducerContext"
+                                        auto-startup="true"
+                                        channel="inputToKafka"
+                                        order="1"
+                                                                            
+            >
+    <int:poller fixed-delay="1000" />
+    </int-kafka:outbound-channel-adapter>
+	
+	
 	
 	
 	<!-- end -->
@@ -211,7 +242,7 @@
                 <prop key="socket.receive.buffer.bytes">10485760</prop> <!-- 10M -->
                 <prop key="fetch.message.max.bytes">5242880</prop>
                 <prop key="auto.commit.interval.ms">1000</prop>
-               <!--  <prop key="serializer.class">kafka.serializer.StringEncoder</prop> -->
+                <prop key="serializer.class">kafka.serializer.StringEncoder</prop>
             </props>
         </property>
     </bean>
@@ -230,13 +261,13 @@
     </int-kafka:consumer-context>
     
     <int-kafka:zookeeper-connect id="zookeeperConnect"
-        zk-connect="10.200.11.36:2181" zk-connection-timeout="40000"
+        zk-connect="${kakfa.zookeeper.url}" zk-connection-timeout="40000"
         zk-session-timeout="40000" zk-sync-time="200" />
     
 	<int-kafka:inbound-channel-adapter
         id="kafkaInboundChannelAdapter" kafka-consumer-context-ref="consumerContext"
          channel="inputFromKafka"  >
-        <int:poller fixed-delay="10" time-unit="MILLISECONDS"
+        <int:poller fixed-delay="1000"
             max-messages-per-poll="5" />
     </int-kafka:inbound-channel-adapter> 
 	 
