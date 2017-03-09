@@ -78,8 +78,8 @@ public enum ApiErrorCode {
 	VALIDATE_ERROR_EVENT_UNSUBSCRIBABLE(4013,"event subscribe can not cancel"),//事件订阅不可以被取消
 	VALIDATE_ERROR_CATEGORY_EXISTS(4014,"当前分类已存在"),
 	
-	VALIDATE_ERROR_NAME(4015,"name validation failed"), //name不符合规则
-	VALIDATE_ERROR_NAME_EXISTS(4016,"name already exists"), //name已存在
+	VALIDATE_ERROR_NAME(4015,"名称不符合规则"), //name不符合规则 name validation failed
+	VALIDATE_ERROR_NAME_EXISTS(4016,"名称已存在"), //name already exists
 	
 	EVENT_ERROR_NOT_FOUND_ERROR(5001,"Event not exist"),
 	EVENT_SOURCE_ERROR_NOT_FOUND_ERROR(5002,"Event Source not exist"),

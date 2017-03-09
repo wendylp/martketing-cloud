@@ -42,6 +42,9 @@ public class UsersourceClassificationServiceImpl implements UsersourceClassifica
 	@Autowired
 	private UsersourceDao usersourceDao;
 	
+	private static final Long ROOT_NODE_ID = -1L;// 父节点id(根节点默认值为-1)
+
+	
 	@Override
 	public BaseOutput saveUsersourceClassification(UsersourceClassificationIn in) {
 		BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
@@ -59,7 +62,7 @@ public class UsersourceClassificationServiceImpl implements UsersourceClassifica
 		parm.setStatus((byte)0);
 		List<UsersourceClassification> nameList = classificationDao.selectList(parm);
 		if(CollectionUtils.isEmpty(nameList)){
-			parm.setParentId( in.getId()!=null ? in.getId() : -1L);
+			parm.setParentId( in.getId()!=null ? in.getId() : ROOT_NODE_ID);
 			classificationDao.insert(parm);
 		}else{
 			logger.error("name already exists, name: {}", in.getName());
@@ -78,7 +81,7 @@ public class UsersourceClassificationServiceImpl implements UsersourceClassifica
 				ApiConstant.INT_ZERO, null);
 		
 		UsersourceClassificationOut parm = new UsersourceClassificationOut();
-		parm.setParentId(-1L);
+		parm.setParentId(ROOT_NODE_ID);
 		parm.setStatus((byte)0);
 		List<UsersourceClassificationOut>  rootList= classificationDao.selectClassificationList(parm);
 		List<UsersourceClassificationOut> resultList= new ArrayList<UsersourceClassificationOut>();
