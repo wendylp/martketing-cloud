@@ -63,6 +63,11 @@ public class TaskManager {
         }
     };
 
+    /**
+     * 手动初始化任务
+     * @param taskId
+     * @param taskName
+     */
     public synchronized void manualInitTask(int taskId, String taskName) {
         scanTask();
         prepareTasks();
@@ -79,6 +84,10 @@ public class TaskManager {
         concurrentTaskScheduler.scheduleAtFixedRate(prepareTasks, ApiConstant.TASK_DO_INTERVAL_MILLS);
     }
 
+    /**
+     * 扫描数据库中的任务列表，扫描整个task_schedule表，按照每页100条数据进行处理
+     * 将数据库中最新的数据更新到内存TaskMananger.taskPropMap变量中
+     */
     private synchronized void scanTask() {
         logger.debug("scanTask");
         ConcurrentHashMap<String, TaskSchedule> taskPropMapTmp = new ConcurrentHashMap<String, TaskSchedule>();
@@ -110,6 +119,12 @@ public class TaskManager {
     	});
     }
 
+    /**
+     * 准备任务和开始任务，
+     * 如果TaskManager.taskMap根据k能够查询到ScheduledFuture，说明任务已经在运行了，不需要再次开始
+     * 如果任务的开始时间和截数据时间为null，或者当前事件在开始于结束事件之间，则任务是要立即执行
+     * 如果此任务状态已经被设置为不可用，或者已经到了任务的结束事件，则执行取消任务操作
+     */
     private synchronized void prepareTasks() {
         logger.debug("prepareTasks");
         TaskManager.taskPropMap.forEach((k, v) -> {
