@@ -1,9 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.ws.rs.core.SecurityContext;
 
@@ -64,11 +61,14 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
         Byte triggerType = body.getTriggerType();
         modifyReferData(existsCampaignHead, publishStatus, triggerType);
 
-        if (triggerType != null
-                && (triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL || triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_EVENT_MANUAL)
-                && ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus.byteValue()) {
+        //modify by xiexiaoliang at v1.8 删掉已发布的状态，启动后获得状态变为 "活动中"  ----start
+//        if (triggerType != null && triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL &&
+//                    ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus.byteValue()) {
+        if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus.byteValue()){
+        //modify by xiexiaoliang at v1.8 删掉已发布的状态，启动后获得状态变为 "活动中"  ----end
             publishStatus = ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS;
         }
+
 		CampaignHead t = new CampaignHead();
         t.setId(campaignHeadId);
     	t.setName(body.getCampaignName());
@@ -94,6 +94,8 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
         logger.info("CampaignHead Info: 开始修改相关数据");
         Integer campaignHeadId = existsCampaignHead.getId();
         Byte oldPublishStatus = existsCampaignHead.getPublishStatus();
+
+        //业务逻辑描述：如果是手动启动的，设置当前状态为已发布，
         if (triggerType != null
                 && (triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_TRIGGER_MANUAL || triggerType.byteValue() == ApiConstant.CAMPAIGN_ITEM_EVENT_MANUAL)) {
             if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH == publishStatus) {
@@ -144,6 +146,11 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
 
 	}
 
+    /**
+     * 修改细分被活动引用了多少次
+     * @param campaignHeadId
+     * @param referCampaignCount
+     */
     private void changeSegmentReferCampaignCount(Integer campaignHeadId, Integer referCampaignCount) {
         CampaignAudienceTarget campaignAudienceTarget = new CampaignAudienceTarget();
         campaignAudienceTarget.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
@@ -173,6 +180,15 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
         }
     }
 
+    /**
+     * 如果查找到数据进行状态机制的校验
+     * 1、如果要调整的状态为未发布，当前状态不是未发布、已发布，则不能修改
+     * 2、如果要调整的状态为已发布，当前状态不是未发布，则不能修改
+     * 3、当前要调整的状态为已结束，当前状态不是活动中，则不能调整
+     * @param existsCampaignHead
+     * @param publishStatus
+     * @return
+     */
 	private BaseOutput validate(CampaignHead existsCampaignHead, byte publishStatus) {
         BaseOutput ur = null;
         if(existsCampaignHead != null) {

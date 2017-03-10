@@ -94,7 +94,7 @@
 	<!-- 其它SQL语句 -->
 	<!-- 查询 UsersourceClassificationOut 列表-->
 	<select id="selectClassificationList" parameterType="cn.rongcapital.mkt.usersource.vo.out.UsersourceClassificationOut" resultType="cn.rongcapital.mkt.usersource.vo.out.UsersourceClassificationOut">
-		<![CDATA[SELECT id ,parent_id as parentId, name]]>
+		<![CDATA[SELECT id ,parent_id as parentId, name, 0 as count]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<![CDATA[where 1=1]]>
 		<if test=" id != null"><![CDATA[ AND  id = #{ id}]]></if>
