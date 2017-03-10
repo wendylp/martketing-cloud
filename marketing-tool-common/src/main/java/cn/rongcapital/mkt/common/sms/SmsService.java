@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.common.sms;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -32,7 +34,40 @@ public interface SmsService {
 	 * @param msg
 	 * @return 发送成功返回true, 发送失败返回false.
 	 */
-	default public boolean sendSms(String phoneNum, String msg) {
+	default public Map<String, SmsResponse> sendSms(String phoneNum, String msg) {
+		return null;
+	}
+
+	/**
+	 * 群发相同内容,例如：批量发送订单状态通知，活动信息群发
+	 * 
+	 * @param phoneNum
+	 * @param msg
+	 * @return 发送成功短信总数.
+	 */
+	default public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String msg) {
+		return null;
+	}
+
+	/**
+	 * 群发不相同内容,例如：批量发送短信内容带变量的订单状态通知，活动信息群发
+	 * 
+	 * @param phoneNum
+	 * @param msg
+	 * @return 发送成功短信总数.
+	 */
+	default public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String[] msg) {
+		return new HashMap<String, SmsResponse>();
+	}
+
+	/**
+	 * 单条短信发送
+	 * 
+	 * @param phoneNum
+	 * @param msg
+	 * @return 发送成功返回true, 发送失败返回false.
+	 */
+	default public boolean sendSmsA(String phoneNum, String msg) {
 		logger.info("\r\n手  机  号：" + phoneNum + "\r\n短信内容：" + msg + "\r\n");
 		return SUCCESS;
 	}
@@ -44,7 +79,7 @@ public interface SmsService {
 	 * @param msg
 	 * @return 发送成功短信总数.
 	 */
-	default public int sendMultSms(String[] phoneNum, String msg) {
+	default public int sendMultSmsA(String[] phoneNum, String msg) {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (String phone : phoneNum) {
 			stringBuilder.append("手  机  号：" + phone + "\r\n短信内容：" + msg + "\r\n");
@@ -60,7 +95,7 @@ public interface SmsService {
 	 * @param msg
 	 * @return 发送成功短信总数.
 	 */
-	default public int sendMultSms(String[] phoneNum, String[] msg) {
+	default public int sendMultSmsA(String[] phoneNum, String[] msg) {
 		if (phoneNum.length != msg.length) {
 			throw new IllegalArgumentException("短信格式错误");
 		}

@@ -5,8 +5,11 @@ import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -15,12 +18,16 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
-
+import cn.rongcapital.mkt.common.sms.SmsResponse;
 import cn.rongcapital.mkt.common.sms.SmsService;
+import cn.rongcapital.mkt.vo.sms.out.SmsResponseVo;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 @Service("smsServiceImplIncake")
 public class SmsServiceImplIncake implements SmsService {
@@ -38,60 +45,39 @@ public class SmsServiceImplIncake implements SmsService {
 	private HttpPost httpPost = null;
 
 	@Override
-	public boolean sendSms(String phoneNum, String msg) {
-		if (isPhoneLegal(phoneNum)) {
-			List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>(1);
-			SmsServiceImplIncake.SmsRequestVo sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, phoneNum, msg);
-			smses.add(sms);
-			logger.debug("sms phone nuber is {}, content is {}.", phoneNum, msg);
-			return this.send(smses);
-		}
-		return FAILURE;
+	public Map<String, SmsResponse> sendSms(String phoneNum, String msg) {
+		List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>(1);
+		SmsServiceImplIncake.SmsRequestVo sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, phoneNum, msg);
+		smses.add(sms);
+		logger.debug("sms phone nuber is {}, content is {}.", phoneNum, msg);
+		return this.send(smses);
 	}
 
 	@Override
-	public int sendMultSms(String[] phoneNum, String msg) {
-		int len = 0; // 成功发送计数器
-		List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>(phoneNum.length);
+	public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String msg) {
+		List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>();
 		SmsServiceImplIncake.SmsRequestVo sms = null;
 		for (String num : phoneNum) {
-			if (isPhoneLegal(num)) {
-				sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, num, msg);
-				smses.add(sms);
-			}
-			len++;
+			sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, num, msg);
+			smses.add(sms);
 		}
 		logger.debug("sms phone nuber is {}, content is {}.", phoneNum, msg);
-		if (this.send(smses)) {
-			return len;
-		}
-		return 0;
+		return this.send(smses);
 	}
 
 	@Override
-	public int sendMultSms(String[] phoneNum, String[] msg) {
-
-		if (phoneNum.length != msg.length) {
-			return 0;
-		}
-		int len = 0; // 成功发送计数器
-		List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>(phoneNum.length);
+	public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String[] msg) {
+		List<SmsServiceImplIncake.SmsRequestVo> smses = new ArrayList<SmsServiceImplIncake.SmsRequestVo>();
 		SmsServiceImplIncake.SmsRequestVo sms = null;
 		for (int i = 0; i < phoneNum.length; i++) {
-			if (isPhoneLegal(phoneNum[i])) {
-				sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, phoneNum[i], msg[i]);
-				smses.add(sms);
-			}
-			len++;
+			sms = new SmsServiceImplIncake.SmsRequestVo(default_partner_name, default_partner_no, phoneNum[i], msg[i]);
+			smses.add(sms);
 		}
 		logger.debug("sms phone nuber is {}, content is {}.", phoneNum, msg);
-		if (this.send(smses)) {
-			return len;
-		}
-		return 0;
+		return this.send(smses);
 	}
 
-	private boolean send(List<SmsServiceImplIncake.SmsRequestVo> smses) {
+	private Map<String, SmsResponse> send(List<SmsServiceImplIncake.SmsRequestVo> smses) {
 		if (httpPost == null) {
 			httpPost = new HttpPost(message_send_url);
 		}
@@ -104,11 +90,23 @@ public class SmsServiceImplIncake implements SmsService {
 		stringEntity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON));
 		httpPost.setEntity(stringEntity);
 		CloseableHttpResponse response = null;
+		Map<String, SmsResponse> res = new HashMap<String, SmsResponse>();
 		try {
 			response = httpclient.execute(httpPost);// 发送请求
+			StatusLine statusLine = response.getStatusLine();// 获取状态码
+			res.put("0000", new SmsResponse("", String.valueOf(statusLine.getStatusCode()), statusLine.getReasonPhrase()));
+
+			if (statusLine.getStatusCode() == 200) { // 成功返回
+				HttpEntity entity = response.getEntity();
+				String result = EntityUtils.toString(entity, "utf-8");
+				List<SmsResponseVo> outVoList = JSONArray.parseArray(result, SmsResponseVo.class);
+				for (SmsResponseVo vo : outVoList) {
+					res.put(vo.get_Phone(), new SmsResponse(vo.get_Phone(), vo.get_Code(), vo.get_Msg()));
+				}
+			}
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
-			return FAILURE;
+			res.put("0000", new SmsResponse("", "", e.getMessage()));
 		} finally {
 			if (response != null) {
 				try {
@@ -118,13 +116,8 @@ public class SmsServiceImplIncake implements SmsService {
 				}
 			}
 		}
-		StatusLine statusLine = response.getStatusLine();// 获取状态码
-		int code = statusLine.getStatusCode();
-		logger.debug("短信状态码：{}", code);
-		if (code > 0) {
-			return SUCCESS;
-		}
-		return FAILURE;
+
+		return res;
 	}
 
 	public static String stringMD5(String input) {

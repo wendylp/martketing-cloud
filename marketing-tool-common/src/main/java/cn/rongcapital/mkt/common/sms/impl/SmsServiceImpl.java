@@ -17,12 +17,4 @@ public class SmsServiceImpl implements SmsService {
 	@Value("${sms.incake.key}")
 	private String incake_num;
 
-	@Override
-	public boolean sendSms(String phoneNum, String msg) {
-		System.out.println("======================>>>" + message_send_url);
-		return SUCCESS;
-	}
-
-
-
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.NameValuePair;
@@ -17,6 +18,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.common.sms.SmsResponse;
 import cn.rongcapital.mkt.common.sms.SmsService;
 
 /**
@@ -38,7 +40,7 @@ public class SmsServiceImplmw implements SmsService {
 	private CloseableHttpClient httpclient = HttpClients.createDefault();// 创建HttpClient
 
 	@Override
-	public boolean sendSms(String phoneNum, String msg) {
+	public Map<String, SmsResponse> sendSms(String phoneNum, String msg) {
 		List<BasicNameValuePair> params = this.generate();
 		BasicNameValuePair nameValuePair = null;
 		nameValuePair = new BasicNameValuePair("pszMobis", phoneNum);
@@ -48,11 +50,11 @@ public class SmsServiceImplmw implements SmsService {
 		nameValuePair = new BasicNameValuePair("iMobiCount", "1");
 		params.add(nameValuePair);
 		this.send(httpUrl, params);
-		return SUCCESS;
+		return null;
 	}
 
 	@Override
-	public int sendMultSms(String[] phoneNum, String msg) {
+	public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String msg) {
 		StringBuilder sb = new StringBuilder();
 		for(String num : phoneNum){
 			sb.append(num + ",");
@@ -67,14 +69,14 @@ public class SmsServiceImplmw implements SmsService {
 		nameValuePair = new BasicNameValuePair("iMobiCount", phoneNum.length + "");
 		params.add(nameValuePair);
 		this.send(httpUrl, params);
-		return phoneNum.length;
+		return null;
 	}
 
 
 
 
 	@Override
-	public int sendMultSms(String[] phoneNum, String[] msg) {
+	public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String[] msg) {
 		int len = 0; // 发送成功计数器
 		StringBuffer multixmt = new StringBuffer();// 批量请求包字符串
 		for (int i = 0; i < phoneNum.hashCode(); i++) {
@@ -94,7 +96,7 @@ public class SmsServiceImplmw implements SmsService {
 		BasicNameValuePair nameValuePair = new BasicNameValuePair("multixmt", multixmt_tostring);
 		params.add(nameValuePair);
 		this.send(httpUrl, params);
-		return len;
+		return null;
 	}
 
 	/**

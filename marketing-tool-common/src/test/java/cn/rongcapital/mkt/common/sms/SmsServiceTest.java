@@ -50,17 +50,18 @@ public class SmsServiceTest {
 		String str = "林清轩山茶花润肤油30ml山茶花油精华油滋养肌肤补水保湿修护商品热卖至3月8日，请尽快购买！\r\n";
 
 		// 单挑发送
-		System.out.println(incakeSms.sendSms("18704282857", str + "【单挑发送】"));
+		// System.out.println(incakeSms.sendSms("18704282857", str + "【单挑发送】"));
 
 		// 多条相同内容发送
-		incakeSms.sendMultSms(new String[] { "18704282857", "18704282857" }, str + "【多条相同内容发送】");
+		Map<String, SmsResponse> rx = incakeSms.sendMultSms(new String[] { "18704282857", "1870428285712" }, str + "【多条相同内容发送】");
+		rx.forEach((key, value) -> System.out.println(key + " : " + value));
 
 		// 多条不同内容发送
 		Map<String, Object> map = new HashMap<>();
 		for (int i = 0; i < 10; i++) {
 			map.putIfAbsent(i + "", "val_" + i);
 		}
-		incakeSms.sendMultSms(new String[] { "18704282857", "18704282857" }, new String[] { str + "【多条不同内容发送】", str + "【多条不同内容发送】" });
+		// incakeSms.sendMultSms(new String[] { "18704282857", "18704282857" }, new String[] { str + "【多条不同内容发送】", str + "【多条不同内容发送】" });
 	}
 
 	/**
