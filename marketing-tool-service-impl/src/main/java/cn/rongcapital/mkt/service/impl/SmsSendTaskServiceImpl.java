@@ -10,6 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -17,7 +18,8 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
-import cn.rongcapital.mkt.common.util.SmsSendUtilByIncake;
+import cn.rongcapital.mkt.common.sms.SmsResponse;
+import cn.rongcapital.mkt.common.sms.SmsService;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsMaterialMaterielMapDao;
 import cn.rongcapital.mkt.dao.SmsTaskDetailDao;
@@ -63,6 +65,10 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	@Autowired
 	private SmsMaterialDao smsMaterialDao;
 	
+	@Autowired
+	@Qualifier("smsServiceImplIncake")
+	private SmsService incakeSms;
+
 	@Override
 	public void task(Integer taskId) {}
 
@@ -82,6 +88,8 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				return;
 			}
 			smsHead = smsHeadList.get(0);
+			Integer sms_task_send_type = smsHead.getSmsTaskSendType(); // 任务类型:\n1:立即发送\n2:预约发送\n3:事件触发
+
 			//回写优惠券的状态，改为投放中---v1.6
 			MaterialCouponStatusUpdateVO StatusUpdateVO = this.initMaterialCoupon(smsHead, MaterialCouponStatusEnum.RELEASING);
 			if(StatusUpdateVO != null) {
@@ -105,24 +113,32 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			
 			Integer count = 0;
 			
-			Map<Long, String[]> SmsBatchMap = new LinkedHashMap<>();
+			List<String> receiveMobiles = new ArrayList<String>(); // 手机号集合
+			List<String> sendMessages = new ArrayList<String>(); // 短信内容集合
+
+			Map<Long, String> SmsBatchMap = new LinkedHashMap<Long, String>();
 			for(SmsTaskDetail detail : smsDetailList) {
-				//对短短信进行封装
-				count++;
+
 				Long id = detail.getId();
 				String receiveMobile = detail.getReceiveMobile();
 				String sendMessage = detail.getSendMessage();
+
+				receiveMobiles.add(receiveMobile);
+				sendMessages.add(sendMessage);
+
+				//对短短信进行封装
+				count++;
 				//logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
-				String[] sms = new String[2];
-				sms[0] = receiveMobile;
-				sms[1] = sendMessage;
-				SmsBatchMap.put(id, sms);
+
+				SmsBatchMap.put(id, receiveMobile);
 				
 				if(count >= SMS_SEND_BACTH_COUNT) {
 					//调用发送API接口（批量）
-					Map<Long, Double> sendSmsResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
+					Map<String, SmsResponse> rs = incakeSms.sendMultSms((String[]) receiveMobiles.toArray(), (String[]) sendMessages.toArray());
+
+					// Map<Long, Double> sendSmsResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
 					//统计一批短信的成功和失败的个数,根据短信API判断状态回写sms_task_detail_state表和head表
-					updateSmsDetailState(sendSmsResult, smsHead);
+					updateSmsDetailState(rs, SmsBatchMap, smsHead);
 					//修改当前任务这一批短信的成功和失败个数
 					smsTaskHeadDao.updateById(smsHead);
 					count = 0;
@@ -130,8 +146,10 @@ public class SmsSendTaskServiceImpl implements TaskService{
 					continue;
 				}
 			}
+
+			Map<String, SmsResponse> rs = incakeSms.sendMultSms((String[]) receiveMobiles.toArray(), (String[]) sendMessages.toArray());
 			//处理不满一批的短信
-			updateSmsDetailState(SmsSendUtilByIncake.sendSms(SmsBatchMap), smsHead);
+			updateSmsDetailState(rs, SmsBatchMap, smsHead);
 			//最后把任务状态改为已完成,把等待的个数置为0
 			smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_FINISH.getStatusCode());
 			smsHead.setWaitingNum(0);
@@ -216,6 +234,71 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		smsMaterialIdLists.add(smsHead.getSmsTaskMaterialId().intValue());
 		List<SmsMaterial> smsMaterialLists = smsMaterialDao.selectListByIdList(smsMaterialIdLists);
 		if(CollectionUtils.isNotEmpty(smsMaterialLists) && SMS_TYPE_DYNAMICS.equals(smsMaterialLists.get(0).getSmsType())) {
+			// 修改一批优惠码的状态---v1.6
+			materialCouponCodeStatusUpdateService.updateMaterialCouponCodeStatus(voList);
+		}
+		// 计算每批的成功和失败的个数
+		Integer smsSuccessCount = smsHead.getSendingSuccessNum();
+		Integer smsFailCount = smsHead.getSendingFailNum();
+
+		if (smsSuccessCount == null || smsSuccessCount == 0) {
+			smsHead.setSendingSuccessNum(successCount);
+		} else {
+			smsHead.setSendingSuccessNum(smsSuccessCount + successCount);
+		}
+		if (smsFailCount == null || smsFailCount == 0) {
+			smsHead.setSendingFailNum(failCount);
+		} else {
+			smsHead.setSendingFailNum(smsFailCount + failCount);
+		}
+		// 每批都更新成功失败以及等待的个数
+		Integer smsCoverNum = smsHead.getTotalCoverNum();
+		Integer success = smsHead.getSendingSuccessNum();
+		Integer fail = smsHead.getSendingFailNum();
+		smsHead.setWaitingNum(smsCoverNum - (success + fail));
+	}
+
+	public void updateSmsDetailState(Map<String, SmsResponse> sendSmsResult, Map<Long, String> SmsBatchMap, SmsTaskHead smsHead) {
+		SmsTaskDetailState smsTaskDetailState = null;
+		List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<>();
+		MaterialCouponCodeStatusUpdateVO materialCouponCodeStatusUpdateVO = null;
+		int successCount = 0;
+		int failCount = 0;
+		for (Entry<Long, String> entry : SmsBatchMap.entrySet()) {
+			Long taskDetailId = entry.getKey();
+
+			// 根据短信优惠码回写状态
+			SmsTaskDetail detail = new SmsTaskDetail();
+			detail.setId(taskDetailId);
+			List<SmsTaskDetail> SmsTaskDetailList = smsTaskDetailDao.selectList(detail);
+			detail = SmsTaskDetailList.get(0);
+
+			double gatewayState = Double.parseDouble(sendSmsResult.get(entry.getValue()).getCode()); // 短信状态
+			smsTaskDetailState = new SmsTaskDetailState();
+			smsTaskDetailState.setSmsTaskDetailId(taskDetailId);
+			if (gatewayState > 0) {
+				// 根据api大于0代表发送成功
+				successCount++;
+				smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_SEND_SUCCESS.getStateCode());
+
+				materialCouponCodeStatusUpdateVO = this.initMaterialCouponCode(detail, MaterialCouponCodeReleaseStatusEnum.RECEIVED);
+			} else {
+				// 其他情况则代表发送失败
+				failCount++;
+				smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_SEND_FAILURE.getStateCode());
+				materialCouponCodeStatusUpdateVO = this.initMaterialCouponCode(detail, MaterialCouponCodeReleaseStatusEnum.UNRECEIVED);
+			}
+
+			smsTaskDetailStateDao.updateDetailState(smsTaskDetailState);
+
+			voList.add(materialCouponCodeStatusUpdateVO);
+		}
+
+		// 只有变量短信回写状态
+		List<Integer> smsMaterialIdLists = new ArrayList<Integer>();
+		smsMaterialIdLists.add(smsHead.getSmsTaskMaterialId().intValue());
+		List<SmsMaterial> smsMaterialLists = smsMaterialDao.selectListByIdList(smsMaterialIdLists);
+		if (CollectionUtils.isNotEmpty(smsMaterialLists) && SMS_TYPE_DYNAMICS.equals(smsMaterialLists.get(0).getSmsType())) {
     		//修改一批优惠码的状态---v1.6
     		materialCouponCodeStatusUpdateService.updateMaterialCouponCodeStatus(voList);
 		}
