@@ -22,12 +22,12 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import cn.rongcapital.mkt.common.sms.SmsResponse;
 import cn.rongcapital.mkt.common.sms.SmsService;
 import cn.rongcapital.mkt.vo.sms.out.SmsResponseVo;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 @Service("smsServiceImplIncake")
 public class SmsServiceImplIncake implements SmsService {
@@ -94,7 +94,7 @@ public class SmsServiceImplIncake implements SmsService {
 		try {
 			response = httpclient.execute(httpPost);// 发送请求
 			StatusLine statusLine = response.getStatusLine();// 获取状态码
-			res.put("0000", new SmsResponse("", String.valueOf(statusLine.getStatusCode()), statusLine.getReasonPhrase()));
+			res.put("0000", new SmsResponse("0000", String.valueOf(statusLine.getStatusCode()), statusLine.getReasonPhrase()));
 
 			if (statusLine.getStatusCode() == 200) { // 成功返回
 				HttpEntity entity = response.getEntity();

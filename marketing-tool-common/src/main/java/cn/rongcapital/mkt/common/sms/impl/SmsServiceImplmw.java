@@ -3,11 +3,14 @@ package cn.rongcapital.mkt.common.sms.impl;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -15,11 +18,15 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
+
 import cn.rongcapital.mkt.common.sms.SmsResponse;
 import cn.rongcapital.mkt.common.sms.SmsService;
+import cn.rongcapital.mkt.vo.sms.out.SmsResponseVo;
 
 /**
  * 梦网科技短信接口实现
@@ -49,17 +56,16 @@ public class SmsServiceImplmw implements SmsService {
 		params.add(nameValuePair);
 		nameValuePair = new BasicNameValuePair("iMobiCount", "1");
 		params.add(nameValuePair);
-		this.send(httpUrl, params);
-		return null;
+		return this.send(httpUrl, params);
 	}
 
 	@Override
 	public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String msg) {
 		StringBuilder sb = new StringBuilder();
-		for(String num : phoneNum){
+		for (String num : phoneNum) {
 			sb.append(num + ",");
 		}
-		sb.substring(0, sb.length()-1);
+		sb.substring(0, sb.length() - 1);
 		List<BasicNameValuePair> params = this.generate();
 		BasicNameValuePair nameValuePair = null;
 		nameValuePair = new BasicNameValuePair("pszMobis", sb.toString());
@@ -68,16 +74,11 @@ public class SmsServiceImplmw implements SmsService {
 		params.add(nameValuePair);
 		nameValuePair = new BasicNameValuePair("iMobiCount", phoneNum.length + "");
 		params.add(nameValuePair);
-		this.send(httpUrl, params);
-		return null;
+		return this.send(httpUrl, params);
 	}
-
-
-
 
 	@Override
 	public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String[] msg) {
-		int len = 0; // 发送成功计数器
 		StringBuffer multixmt = new StringBuffer();// 批量请求包字符串
 		for (int i = 0; i < phoneNum.hashCode(); i++) {
 			try {
@@ -86,7 +87,6 @@ public class SmsServiceImplmw implements SmsService {
 				multixmt.append(phoneNum[i]).append("|");// 设置手机号码
 				String strBase64Msg = new String(Base64.encodeBase64(msg[i].getBytes("GBK")));// 设置短信内容
 				multixmt.append(strBase64Msg).append(",");
-				len++;
 			} catch (UnsupportedEncodingException e) {
 				logger.debug("错误的短信编码", e);
 			}
@@ -95,8 +95,7 @@ public class SmsServiceImplmw implements SmsService {
 		List<BasicNameValuePair> params = this.generate();
 		BasicNameValuePair nameValuePair = new BasicNameValuePair("multixmt", multixmt_tostring);
 		params.add(nameValuePair);
-		this.send(httpUrl, params);
-		return null;
+		return this.send(httpUrl, params);
 	}
 
 	/**
@@ -120,13 +119,23 @@ public class SmsServiceImplmw implements SmsService {
 		return params;
 	}
 
-	public boolean send(String url, List<? extends NameValuePair> params) {
+	public Map<String, SmsResponse> send(String url, List<? extends NameValuePair> params) {
 		HttpPost httpPost = new HttpPost(httpUrl);// 创建连接
 		CloseableHttpResponse response = null;
+		Map<String, SmsResponse> res = new HashMap<String, SmsResponse>();
 		try {
 			httpPost.setEntity(new UrlEncodedFormEntity(params, "utf-8"));
-			response = httpclient.execute(httpPost); // 在MC中到达这一步就算短信发送成功
-			return SUCCESS;
+			response = httpclient.execute(httpPost);
+			StatusLine statusLine = response.getStatusLine();// 获取状态码
+			res.put("0000", new SmsResponse("0000", String.valueOf(statusLine.getStatusCode()), statusLine.getReasonPhrase()));
+			HttpEntity entity = response.getEntity();// HTTP请求网关
+			if (entity != null && entity.getContentLength() > 0) {// 返回值不为空，且长度大于0
+				String result = EntityUtils.toString(entity, "utf-8");
+				List<SmsResponseVo> outVoList = JSONArray.parseArray(result, SmsResponseVo.class);
+				for (SmsResponseVo vo : outVoList) {
+					res.put(vo.get_Phone(), new SmsResponse(vo.get_Phone(), vo.get_Code(), vo.get_Msg()));
+				}
+			} // 处理返回结果
 		} catch (UnsupportedEncodingException e) {
 			logger.error("短信编码异常", e);
 		} catch (ClientProtocolException e) {
@@ -142,6 +151,6 @@ public class SmsServiceImplmw implements SmsService {
 				e.printStackTrace();
 			}
 		}
-		return FAILURE;
+		return res;
 	}
 }

@@ -19,11 +19,6 @@ public interface SmsService {
 
 	public Logger logger = LoggerFactory.getLogger(SmsService.class);
 
-	/**
-	 * 短信发送结果
-	 */
-	public final static boolean SUCCESS = true;
-	public final static boolean FAILURE = false;
 	public final static String APPLICATION_JSON = "application/x-www-form-urlencoded";
 	public final static String CONTENT_TYPE = "text/json";
 
@@ -35,7 +30,11 @@ public interface SmsService {
 	 * @return 发送成功返回true, 发送失败返回false.
 	 */
 	default public Map<String, SmsResponse> sendSms(String phoneNum, String msg) {
-		return null;
+		logger.info("\r\n手  机  号：" + phoneNum + "\r\n短信内容：" + msg + "\r\n");
+		Map<String, SmsResponse> result = new HashMap<String, SmsResponse>();
+		result.put("0000", new SmsResponse("0000", "200", "this is default implements, sms report"));
+		result.put(phoneNum, new SmsResponse(phoneNum, "888888", "send success"));
+		return result;
 	}
 
 	/**
@@ -46,7 +45,15 @@ public interface SmsService {
 	 * @return 发送成功短信总数.
 	 */
 	default public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String msg) {
-		return null;
+		StringBuilder stringBuilder = new StringBuilder();
+		Map<String, SmsResponse> result = new HashMap<String, SmsResponse>(); // 返回结果集
+		result.put("0000", new SmsResponse("0000", "200", "this is default implements, sms report"));
+		for (String phone : phoneNum) {
+			stringBuilder.append("手  机  号：" + phone + "\r\n短信内容：" + msg + "\r\n");
+			result.put(phone, new SmsResponse(phone, "8888888", "this is default implements, sms content is send success"));
+		}
+		logger.info("\r\n" + stringBuilder.toString());
+		return result;
 	}
 
 	/**
@@ -57,54 +64,17 @@ public interface SmsService {
 	 * @return 发送成功短信总数.
 	 */
 	default public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String[] msg) {
-		return new HashMap<String, SmsResponse>();
-	}
-
-	/**
-	 * 单条短信发送
-	 * 
-	 * @param phoneNum
-	 * @param msg
-	 * @return 发送成功返回true, 发送失败返回false.
-	 */
-	default public boolean sendSmsA(String phoneNum, String msg) {
-		logger.info("\r\n手  机  号：" + phoneNum + "\r\n短信内容：" + msg + "\r\n");
-		return SUCCESS;
-	}
-
-	/**
-	 * 群发相同内容,例如：批量发送订单状态通知，活动信息群发
-	 * 
-	 * @param phoneNum
-	 * @param msg
-	 * @return 发送成功短信总数.
-	 */
-	default public int sendMultSmsA(String[] phoneNum, String msg) {
-		StringBuilder stringBuilder = new StringBuilder();
-		for (String phone : phoneNum) {
-			stringBuilder.append("手  机  号：" + phone + "\r\n短信内容：" + msg + "\r\n");
-		}
-		logger.info("\r\n" + stringBuilder.toString());
-		return phoneNum.length;
-	}
-
-	/**
-	 * 群发不相同内容,例如：批量发送短信内容带变量的订单状态通知，活动信息群发
-	 * 
-	 * @param phoneNum
-	 * @param msg
-	 * @return 发送成功短信总数.
-	 */
-	default public int sendMultSmsA(String[] phoneNum, String[] msg) {
 		if (phoneNum.length != msg.length) {
 			throw new IllegalArgumentException("短信格式错误");
 		}
 		StringBuilder stringBuilder = new StringBuilder();
+		Map<String, SmsResponse> result = new HashMap<String, SmsResponse>(); // 返回结果集
 		for (int i = 0; i < phoneNum.length; i++) {
 			stringBuilder.append("手  机  号：" + phoneNum[i] + "\r\n短信内容：" + msg[i] + "\r\n");
+			result.put(phoneNum[i], new SmsResponse(phoneNum[i], "8888888", "this is default implements, sms content is send success"));
 		}
 		logger.info("\r\n" + stringBuilder.toString());
-		return phoneNum.length;
+		return result;
 	}
 
 	/**
