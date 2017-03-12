@@ -15,6 +15,8 @@ public class SmsTaskHead extends BaseQuery{
 
     private String smsTaskName;
 
+	private Integer campaignHeadId;
+
     private Long smsTaskSignatureId;
 
     private Long smsTaskMaterialId;
@@ -273,4 +275,12 @@ public class SmsTaskHead extends BaseQuery{
     public void setSmsTaskType(Byte smsTaskType) {
         this.smsTaskType = smsTaskType;
     }
+
+	public Integer getCampaignHeadId() {
+		return campaignHeadId;
+	}
+
+	public void setCampaignHeadId(Integer campaignHeadId) {
+		this.campaignHeadId = campaignHeadId;
+	}
 }

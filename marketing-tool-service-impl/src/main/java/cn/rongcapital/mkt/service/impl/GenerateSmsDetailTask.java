@@ -1,26 +1,17 @@
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.enums.*;
-import cn.rongcapital.mkt.common.jedis.JedisClient;
-import cn.rongcapital.mkt.common.jedis.JedisException;
-import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.dao.*;
-import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
-import cn.rongcapital.mkt.factory.CalcSmsTargetAudienceStrateyFactory;
-import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
-import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
-import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
-import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeStatusUpdateService;
-import cn.rongcapital.mkt.material.coupon.service.MaterialCouponEditDetailService;
-import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCodeStatusUpdateVO;
-import cn.rongcapital.mkt.material.coupon.vo.out.CouPonEditInfoOut;
-import cn.rongcapital.mkt.po.*;
-import cn.rongcapital.mkt.service.MQTopicService;
+import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.FIXED;
+import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.VARIABLE;
 
-import cn.rongcapital.mkt.vo.BaseOutput;
-import com.alibaba.druid.support.json.JSONUtils;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +23,44 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
-
-import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.FIXED;
-import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.VARIABLE;
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
+import cn.rongcapital.mkt.common.enums.SmsMaterialVariableEnum;
+import cn.rongcapital.mkt.common.enums.SmsTargetAudienceTypeEnum;
+import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
+import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.dao.AudienceListDao;
+import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
+import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.SmsMaterialDao;
+import cn.rongcapital.mkt.dao.SmsMaterialMaterielMapDao;
+import cn.rongcapital.mkt.dao.SmsMaterialVariableMapDao;
+import cn.rongcapital.mkt.dao.SmsSignatureDao;
+import cn.rongcapital.mkt.dao.SmsTaskBodyDao;
+import cn.rongcapital.mkt.dao.SmsTaskDetailDao;
+import cn.rongcapital.mkt.dao.SmsTaskDetailStateDao;
+import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
+import cn.rongcapital.mkt.dao.SmsTaskTargetAudienceCacheDao;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
+import cn.rongcapital.mkt.factory.CalcSmsTargetAudienceStrateyFactory;
+import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
+import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
+import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeStatusUpdateService;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponEditDetailService;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCodeStatusUpdateVO;
+import cn.rongcapital.mkt.material.coupon.vo.out.CouPonEditInfoOut;
+import cn.rongcapital.mkt.po.SmsMaterial;
+import cn.rongcapital.mkt.po.SmsMaterialMaterielMap;
+import cn.rongcapital.mkt.po.SmsMaterialVariableMap;
+import cn.rongcapital.mkt.po.SmsSignature;
+import cn.rongcapital.mkt.po.SmsTaskBody;
+import cn.rongcapital.mkt.po.SmsTaskDetail;
+import cn.rongcapital.mkt.po.SmsTaskDetailState;
+import cn.rongcapital.mkt.po.SmsTaskHead;
+import cn.rongcapital.mkt.service.MQTopicService;
+import cn.rongcapital.mkt.vo.BaseOutput;
 
 /**
  * Created by byf on 10/18/16.
@@ -150,9 +175,12 @@ public class GenerateSmsDetailTask implements TaskService {
         SmsTaskBody paramSmsTaskBody = new SmsTaskBody();
         paramSmsTaskBody.setSmsTaskHeadId(taskHeadId);
         paramSmsTaskBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		paramSmsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
         List<SmsTaskBody> smsTaskBodies = smsTaskBodyDao.selectList(paramSmsTaskBody);
         if(CollectionUtils.isEmpty(smsTaskBodies)) return;
         for(SmsTaskBody smsTaskBody : smsTaskBodies){
+			smsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
+			smsTaskBodyDao.updateById(smsTaskBody);
             AbstractCalcSmsTargetAudienceStrategy strategy = strategyMap.get(smsTaskBody.getTargetType());
             List<String> receiveMobileList = strategy.queryReceiveMobileList(smsTaskBody.getSmsTaskHeadId(),smsTaskBody.getTargetId());
             if(CollectionUtils.isEmpty(receiveMobileList)) continue;
@@ -327,6 +355,7 @@ public class GenerateSmsDetailTask implements TaskService {
                     smsTaskDetail.setMaterielCouponCodeCode(materialCouponCode.getCode());
                     smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
                     smsTaskDetail.setSmsTaskHeadId(taskHeadId);
+					smsTaskDetail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
                     smsTaskDetailList.add(smsTaskDetail);
                 }
             }

@@ -1,7 +1,8 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
+
+import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class SmsTaskDetail extends BaseQuery {
     private Long id;
@@ -23,6 +24,8 @@ public class SmsTaskDetail extends BaseQuery {
     private Date updateTime;
 
     private String sendMobile;
+
+	private Integer sendStatus;
 
     private Date sendTime;
 
@@ -142,4 +145,12 @@ public class SmsTaskDetail extends BaseQuery {
     public void setSendTime(Date sendTime) {
         this.sendTime = sendTime;
     }
+
+	public Integer getSendStatus() {
+		return sendStatus;
+	}
+
+	public void setSendStatus(Integer sendStatus) {
+		this.sendStatus = sendStatus;
+	}
 }

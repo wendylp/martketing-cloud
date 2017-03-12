@@ -21,6 +21,8 @@ public class SmsTaskBody extends BaseQuery{
 
     private Date updateTime;
 
+	private Integer sendStatus;
+
     public Long getId() {
         return id;
     }
@@ -84,4 +86,12 @@ public class SmsTaskBody extends BaseQuery{
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+	public Integer getSendStatus() {
+		return sendStatus;
+	}
+
+	public void setSendStatus(Integer sendStatus) {
+		this.sendStatus = sendStatus;
+	}
 }
