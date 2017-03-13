@@ -25,8 +25,9 @@ import org.springframework.jms.core.JmsOperations;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.campaign.service.EventSubjectCombineService;
-import cn.rongcapital.mkt.campaign.service.impl.StreamEventProcessServiceImpl;
 import cn.rongcapital.mkt.dao.CampaignEventMapDao;
+import cn.rongcapital.mkt.mongodb.EventInvolvedDataPartyRepository;
+import cn.rongcapital.mkt.po.mongodb.EventInvolvedDataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.vo.CampaignNode;
 
@@ -44,6 +45,9 @@ public class StreamEventProcessServiceImplTest {
     @Mock
     private JmsOperations jmsOperations;
 
+    @Mock
+    private EventInvolvedDataPartyRepository eventInvolvedDataPartyRepository;
+    
     @Before
     public void setUp() throws Exception {
         service = new StreamEventProcessServiceImpl();
@@ -155,7 +159,9 @@ public class StreamEventProcessServiceImplTest {
     public void testProcess09() {
         String event = "{\"event\":{\"code\" :\"XXX\"},\"subject\":{\"openid\":\"12345\"}}";
         Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
-        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(new Segment());
+        Segment segment = new Segment();
+        segment.setDataId(3);
+        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(segment);
         ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
 
         Mockito.when(campaignEventMapDao.getFirstMQNodeByEventCodeCnt(Mockito.any())).thenReturn(10);
@@ -177,6 +183,15 @@ public class StreamEventProcessServiceImplTest {
             }
         }).when(jmsOperations).convertAndSend(Mockito.anyString(), Mockito.anyCollectionOf(Segment.class));
         ReflectionTestUtils.setField(service, "jmsOperations", jmsOperations);
+        
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(eventInvolvedDataPartyRepository).insert(Mockito.any(EventInvolvedDataParty.class));
+        ReflectionTestUtils.setField(service, "eventInvolvedDataPartyRepository", eventInvolvedDataPartyRepository);
+        
         service.process(event);
     }
 
@@ -187,7 +202,9 @@ public class StreamEventProcessServiceImplTest {
     public void testProcess10() {
         String event = "{\"event\":{\"code\" :\"XXX\"},\"subject\":{\"openid\":\"12345\"}}";
         Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
-        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(new Segment());
+        Segment segment = new Segment();
+        segment.setDataId(3);
+        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(segment);
         ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
 
         Mockito.when(campaignEventMapDao.getFirstMQNodeByEventCodeCnt(Mockito.any())).thenReturn(105);
@@ -209,6 +226,14 @@ public class StreamEventProcessServiceImplTest {
             }
         }).when(jmsOperations).convertAndSend(Mockito.anyString(), Mockito.anyCollectionOf(Segment.class));
         ReflectionTestUtils.setField(service, "jmsOperations", jmsOperations);
+        
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(eventInvolvedDataPartyRepository).insert(Mockito.any(EventInvolvedDataParty.class));
+        ReflectionTestUtils.setField(service, "eventInvolvedDataPartyRepository", eventInvolvedDataPartyRepository);
         service.process(event);
     }
 
