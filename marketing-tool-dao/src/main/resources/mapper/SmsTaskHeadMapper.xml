@@ -45,6 +45,7 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
+                <if test="campaignHeadId != null"><![CDATA[campaign_head_id = #{campaignHeadId},]]></if>
 		    	<if test="smsTaskName != null"><![CDATA[sms_task_name = #{smsTaskName},]]></if>
 		    	<if test="smsTaskSignatureId != null"><![CDATA[sms_task_signature_id = #{smsTaskSignatureId},]]></if>
 		    	<if test="smsTaskMaterialId != null"><![CDATA[sms_task_material_id = #{smsTaskMaterialId},]]></if>
@@ -169,5 +170,13 @@
 		SELECT COUNT(h.sms_task_status) 
 		FROM sms_task_head h,sms_task_body b 
 		WHERE h.id = b.sms_task_head_id and (h.sms_task_status =1 or h.sms_task_status =2 or h.sms_task_status =3) and b.target_type = #{targetType} and b.target_id = #{targetId}
+	</select>
+  
+	<!-- 根据活动id查询当前活动的短信任务  -->
+	<select id="selectListByCampaignHeadId" parameterType="cn.rongcapital.mkt.po.SmsTaskBody" resultType="cn.rongcapital.mkt.po.SmsTaskHead">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+        <include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 </mapper>

@@ -20,15 +20,16 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import cn.rongcapital.mkt.common.sms.SmsResponse;
 import cn.rongcapital.mkt.common.sms.SmsService;
 import cn.rongcapital.mkt.vo.sms.out.SmsResponseVo;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
-//@Service("smsServiceImplIncake")
+@Service("smsServiceImplIncake")
 public class SmsServiceImplIncake implements SmsService {
 
 	@Value("${sms.incake.url}")

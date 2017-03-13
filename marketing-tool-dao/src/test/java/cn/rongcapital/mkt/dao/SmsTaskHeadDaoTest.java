@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.alibaba.fastjson.JSONObject;
+
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.vo.sms.out.SmsTaskSendStatusVo;
-
-import com.alibaba.fastjson.JSONObject;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SmsTaskHeadDaoTest extends AbstractUnitTest{
@@ -150,6 +150,22 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
 		Assert.assertEquals(1, smsTaskHeads.size());
 		Assert.assertNotNull("活动ID保存失败", smsTaskHeads.get(0).getCampaignHeadId());
     }
+
+	@Test
+	public void testSmsTaskHeadList1() {
+		/**
+		 * 设置查询条件 查询所有、名称模糊查询、应用通道、任务执行状态条件筛选查询
+		 */
+		Byte status = 0;
+		SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
+
+		smsTaskHeadTemp.setCampaignHeadId(1000);
+		smsTaskHeadTemp.setStatus(status);
+
+		List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectList(smsTaskHeadTemp);
+		Assert.assertEquals(1, smsTaskHeads.size());
+		Assert.assertNotNull("活动ID保存失败", smsTaskHeads.get(0).getCampaignHeadId());
+	}
     
     @Test
     public void testSelectListCount(){
