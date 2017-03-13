@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.campaign.service.EventDataJoinStatisticsService;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.dao.CustomTagDao;
@@ -66,6 +67,9 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
+	@Autowired
+	private EventDataJoinStatisticsService eventDataJoinStatisticsService;
+	
 	@Override
 	public List<HomePageDataCountListOut> getDataCountList() {
 
@@ -89,7 +93,11 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 		WechatMember wechatMember = new WechatMember();
 		wechatMember.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		Integer accessNumberByWechat = wechatMemberDao.selectListCount(wechatMember);
-		Integer accessTotalCount = accessNumberByFileUpload + accessNumberByWechat;
+		
+		//统计事件接入数据次数
+		long eventJoinStatisticsCount = eventDataJoinStatisticsService.dataJoinStatisticsCount();
+		
+		Integer accessTotalCount = accessNumberByFileUpload + accessNumberByWechat + (int) eventJoinStatisticsCount;
 
 		accessCountListObj.setId(ACCESS_COUNT.getId());
 		accessCountListObj.setCount(accessTotalCount);
