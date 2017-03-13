@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,sms_task_name as smsTaskName,sms_task_signature_id as smsTaskSignatureId,sms_task_material_id as smsTaskMaterialId,sms_task_material_content as smsTaskMaterialContent,sms_task_send_type as smsTaskSendType,sms_task_app_type as smsTaskAppType,sms_task_status as smsTaskStatus,status as status,create_time as createTime,update_time as updateTime,total_cover_num as totalCoverNum,sending_success_num as sendingSuccessNum,waiting_num as waitingNum,sending_fail_num as sendingFailNum,audience_generate_status as audienceGenerateStatus,sms_task_code as smsTaskCode,sms_task_batch as smsTaskBatch,sms_task_type as smsTaskType]]>
+		<![CDATA[ id as id, campaign_head_id as campaignHeadId, sms_task_name as smsTaskName,sms_task_signature_id as smsTaskSignatureId,sms_task_material_id as smsTaskMaterialId,sms_task_material_content as smsTaskMaterialContent,sms_task_send_type as smsTaskSendType,sms_task_app_type as smsTaskAppType,sms_task_status as smsTaskStatus,status as status,create_time as createTime,update_time as updateTime,total_cover_num as totalCoverNum,sending_success_num as sendingSuccessNum,waiting_num as waitingNum,sending_fail_num as sendingFailNum,audience_generate_status as audienceGenerateStatus,sms_task_code as smsTaskCode,sms_task_batch as smsTaskBatch,sms_task_type as smsTaskType]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -14,6 +14,7 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="campaignHeadId != null"><![CDATA[ AND campaign_head_id = #{campaignHeadId}]]></if>
 		    	<if test="smsTaskName != null"><![CDATA[ AND sms_task_name like CONCAT('%',#{smsTaskName},'%' )]]></if>
 		    	<if test="smsTaskSignatureId != null"><![CDATA[ AND sms_task_signature_id = #{smsTaskSignatureId}]]></if>
 		    	<if test="smsTaskMaterialId != null"><![CDATA[ AND sms_task_material_id = #{smsTaskMaterialId}]]></if>
@@ -66,9 +67,10 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SmsTaskHead" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO sms_task_head (sms_task_name,sms_task_signature_id,sms_task_material_id,sms_task_material_content,sms_task_send_type,sms_task_app_type,sms_task_status,create_time,total_cover_num,sending_success_num,waiting_num,sending_fail_num,audience_generate_status,sms_task_code,sms_task_batch,sms_task_type)
+			INSERT INTO sms_task_head (campaign_head_id, sms_task_name,sms_task_signature_id,sms_task_material_id,sms_task_material_content,sms_task_send_type,sms_task_app_type,sms_task_status,create_time,total_cover_num,sending_success_num,waiting_num,sending_fail_num,audience_generate_status,sms_task_code,sms_task_batch,sms_task_type)
 			VALUES
 			(
+			  #{campaignHeadId},
 			  #{smsTaskName},
 			  #{smsTaskSignatureId},
 			  #{smsTaskMaterialId},

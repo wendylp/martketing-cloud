@@ -5,7 +5,12 @@ import java.util.Date;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class SmsTaskDetail extends BaseQuery {
-    private Long id;
+	/**
+	 * 短信任务详细
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
 
     private Long smsTaskHeadId;
 

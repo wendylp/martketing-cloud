@@ -10,7 +10,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -65,8 +64,8 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	@Autowired
 	private SmsMaterialDao smsMaterialDao;
 	
-	@Autowired
-	@Qualifier("smsServiceImplIncake")
+	// @Autowired
+	// @Qualifier("smsServiceImplIncake")
 	private SmsService incakeSms;
 
 	@Override

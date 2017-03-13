@@ -2,7 +2,6 @@ package cn.rongcapital.mkt.dao;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -11,17 +10,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.alibaba.fastjson.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.vo.sms.out.SmsTaskSendStatusVo;
+
+import com.alibaba.fastjson.JSONObject;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SmsTaskHeadDaoTest extends AbstractUnitTest{
@@ -33,6 +31,7 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
 	
     @Before
     public void setUp() throws Exception {
+		Integer[] campaignHeadIds = { 1000, 2000, 3000 };
     	String[] smsTaskNames = {"测试短信发送2", "测试短信发送3", "测试短信发送4"} ;
     	Long[] smsTaskSignatureIds = {1l,2l,3l};
     	Long[] smsTaskMaterialIds = {1l,2l,3l};
@@ -49,6 +48,7 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
         
         for(int i =0 ; i < 3; i++) {
         	SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
+			smsTaskHeadTemp.setCampaignHeadId(campaignHeadIds[i]);
         	smsTaskHeadTemp.setSmsTaskName(smsTaskNames[i]);
         	smsTaskHeadTemp.setSmsTaskSignatureId(smsTaskSignatureIds[i]);
         	smsTaskHeadTemp.setSmsTaskMaterialId(smsTaskMaterialIds[i]);
@@ -147,7 +147,8 @@ public class SmsTaskHeadDaoTest extends AbstractUnitTest{
 		smsTaskHeadTemp.setPageSize(12);		
 		
 		List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectList(smsTaskHeadTemp);
-		Assert.assertEquals(1, smsTaskHeads.size());		 
+		Assert.assertEquals(1, smsTaskHeads.size());
+		Assert.assertNotNull("活动ID保存失败", smsTaskHeads.get(0).getCampaignHeadId());
     }
     
     @Test
