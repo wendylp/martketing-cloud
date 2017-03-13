@@ -24,6 +24,8 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.campaign.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.dao.CampaignEventMapDao;
+import cn.rongcapital.mkt.mongodb.EventInvolvedDataPartyRepository;
+import cn.rongcapital.mkt.po.mongodb.EventInvolvedDataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 import cn.rongcapital.mkt.vo.CampaignNode;
@@ -44,6 +46,9 @@ public class StreamEventProcessServiceImpl {
     @Autowired
     private CampaignEventMapDao campaignEventMapDao;
 
+    @Autowired
+    private EventInvolvedDataPartyRepository eventInvolvedDataPartyRepository;
+    
     @JmsListener(destination = "queue.streamEvents")
     public void process(String event) {
         // 0.事件对象映射校验
@@ -70,6 +75,12 @@ public class StreamEventProcessServiceImpl {
             List<CampaignNode> campaignNodes =
                     getCampaignFirstMQNodesByEventCode(eventCode, (pageSize - 1) * pageSizeCnt, pageSizeCnt);
             for (CampaignNode campaignNode : campaignNodes) {
+                // 通过事件接入的主数据和活动建立关联
+                EventInvolvedDataParty entity = new EventInvolvedDataParty();
+                entity.setEventCode(eventCode);
+                entity.setCampaignHeadId(campaignNode.getCampaignHeadId());
+                entity.setDataId(segment.getDataId());
+                eventInvolvedDataPartyRepository.insert(entity);
                 // 3.创建首节点需要的队列并传输主数据
                 jmsOperations.convertAndSend(campaignNode.getCampaignHeadId() + "-" + campaignNode.getItemId(),
                         segments);
