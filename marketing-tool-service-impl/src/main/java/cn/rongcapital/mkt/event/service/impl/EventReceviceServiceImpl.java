@@ -13,12 +13,19 @@
 package cn.rongcapital.mkt.event.service.impl;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
+import cn.rongcapital.mkt.common.util.CacheManage;
 import cn.rongcapital.mkt.dao.event.EventDao;
-import cn.rongcapital.mkt.event.po.Event;
 import cn.rongcapital.mkt.event.service.EventObjectPropValueService;
 import cn.rongcapital.mkt.event.service.EventReceviceService;
 import cn.rongcapital.mkt.mongodb.event.EventBehaviorRepository;
@@ -29,29 +36,31 @@ public class EventReceviceServiceImpl implements EventReceviceService {
     @Autowired
     private EventBehaviorRepository  eventBehaviorRepository;
     
-    
-    @Autowired
-    private EventDao eventDao;
-
     @Autowired
     private EventObjectPropValueService  eventObjectPropValueService;
 
+    
    
     @Override
     public void receviceEvent(EventBehavior eventbehavior) {
         // TODO Auto-generated method stub
         Map<String, Object> event =eventbehavior.getEvent();
         String eventcode=event.get("code").toString();
-        Event eventOb=eventDao.selectByCode(eventcode); //取得事件主体
-        eventbehavior.setSubscribed(eventOb!=null?eventOb.getSubscribed():false); //更新是否订阅
         EventBehavior eb= eventBehaviorRepository.insert(eventbehavior);
         if(eb!=null) //插入成功
         {
-            eb.setObjectId(eventOb!=null?eventOb.getObjectId():000000); //设置事件客体ID值
+            try {
+                eb.setObjectId(CacheManage.cache.get(eventcode));
+            } catch (ExecutionException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } //设置事件客体ID值
             eventObjectPropValueService.insertPropValue(eb);//属性值的入库
         }
         
     }
+    
    
+ 
 
 }

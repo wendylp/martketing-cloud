@@ -66,6 +66,8 @@ public class ApiConstant {
 
 	public static final String COUPON_FILE_UPLOAD_URL = "mkt.materiel.coupon.file.upload";   //文件上传地址
 	
+	public static final String USERSOURCE_FILE_UPLOAD = "mkt.usersource.file.upload";
+	
 	public static final int WECHAT_ASSET_SERVER_NUMBER = 0;
 	public static final int WECHAT_ASSET_PERSONAL_NUMBER = 1;
 	public static final int WECHAT_ASSET_SUBSCRIPTION_NUMBER=2;
@@ -92,6 +94,7 @@ public class ApiConstant {
 	
 	public static final byte CAMPAIGN_ITEM_TRIGGER_TIMMER = 0;//时间触发
 	public static final byte CAMPAIGN_ITEM_TRIGGER_MANUAL = 1;//手动触发
+	public static final byte CAMPAIGN_ITEM_EVENT_MANUAL = 3;//事件触发
 
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_TARGET = 0;//细分人群
 	public static final byte CAMPAIGN_ITEM_AUDIENCE_FIX = 1;//固定人群
@@ -421,6 +424,14 @@ public class ApiConstant {
      */
     public static final String MATERIAL_TYPE_WECHAT = "qr_code";
 
+	/*
+	 * 短信状态
+	 */
 	public static final Integer SMS_TASK_PROCESS_STATUS_WRITING = 0; // 任务状态 0：未处理 1：已处理
 	public static final Integer SMS_TASK_PROCESS_STATUS_DONE = 1; // 任务状态 0：未处理 1：已处理
+    
+    /**
+     * 用户来源
+     */
+    public static final long USER_SOURCE_AVAILABLE = 1; // 是否启用  0：不启用 1：启用
 }

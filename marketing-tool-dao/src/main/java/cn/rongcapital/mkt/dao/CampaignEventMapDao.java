@@ -10,8 +10,12 @@
 
 package cn.rongcapital.mkt.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CampaignEventMap;
+import cn.rongcapital.mkt.vo.CampaignNode;
 
 public interface CampaignEventMapDao extends BaseDao<CampaignEventMap>{
 	
@@ -34,4 +38,10 @@ public interface CampaignEventMapDao extends BaseDao<CampaignEventMap>{
 	 * @return list
 	 */
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
+    
+    int deleteByCampaignHeadId(int campaignHeadId);
+    
+    List<CampaignNode> getFirstMQNodeByEventCode(Map<String, Object> param);
+    
+    int getFirstMQNodeByEventCodeCnt(Map<String, Object> param);
 }
