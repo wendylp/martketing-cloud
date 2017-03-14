@@ -43,7 +43,7 @@
 		    	<if test="materielCouponCodeId != null"><![CDATA[materiel_coupon_code_id = #{materielCouponCodeId},]]></if>
 		    	<if test="materielCouponCodeCode != null"><![CDATA[materiel_coupon_code_code = #{materielCouponCodeCode},]]></if>
 		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
-                <if test="sendStatus != null"><![CDATA[send_status = #{sendStatus}]]></if>
+                <if test="sendStatus != null"><![CDATA[send_status = #{sendStatus},]]></if>
 		    	<if test="sendMobile != null"><![CDATA[send_mobile = #{sendMobile},]]></if>
 		    	<if test="sendTime != null"><![CDATA[send_time = #{sendTime}]]></if>
 		</set>

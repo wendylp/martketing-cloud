@@ -10,6 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -63,9 +64,9 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	
 	@Autowired
 	private SmsMaterialDao smsMaterialDao;
-	
-	// @Autowired
-	// @Qualifier("smsServiceImplIncake")
+
+	@Autowired
+	@Qualifier("smsServiceImplIncake")
 	private SmsService incakeSms;
 
 	@Override
@@ -87,7 +88,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				return;
 			}
 			smsHead = smsHeadList.get(0);
-			Integer sms_task_send_type = smsHead.getSmsTaskSendType(); // 任务类型:\n1:立即发送\n2:预约发送\n3:事件触发
+			Integer sms_task_trigger = smsHead.getSmsTaskTrigger(); // 发送类型：0多条，1单条
 
 			//回写优惠券的状态，改为投放中---v1.6
 			MaterialCouponStatusUpdateVO StatusUpdateVO = this.initMaterialCoupon(smsHead, MaterialCouponStatusEnum.RELEASING);
@@ -149,7 +150,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				}
 			}
 			Map<String, SmsResponse> rs = null;
-			if (sms_task_send_type == 3) {// 事件类型
+			if (sms_task_trigger == 1 && receiveMobiles.size() == 1) {// 事件类型
 				rs = incakeSms.sendSms(receiveMobiles.get(0), sendMessages.get(0));
 			}else{
 				rs = incakeSms.sendMultSms((String[]) receiveMobiles.toArray(), (String[]) sendMessages.toArray());
@@ -158,8 +159,11 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			//处理不满一批的短信
 			updateSmsDetailState(rs, SmsBatchMap, smsHead);
 			//最后把任务状态改为已完成,把等待的个数置为0
-			smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_FINISH.getStatusCode());
-			smsHead.setWaitingNum(0);
+			if (sms_task_trigger == 0) { // 非事件类型的短信
+				smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_FINISH.getStatusCode());
+				smsHead.setWaitingNum(0);
+			}
+
 			smsTaskHeadDao.updateById(smsHead);
 			
 	         //回写优惠券的状态，改为已投放---v1.6
@@ -241,6 +245,9 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	}
 
 	public void updateSmsDetailState(Map<String, SmsResponse> sendSmsResult, Map<Long, String> SmsBatchMap, SmsTaskHead smsHead) {
+		SmsResponse result = sendSmsResult.get("0000");
+		String code = result.getCode();
+
 		SmsTaskDetailState smsTaskDetailState = null;
 		List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<>();
 		MaterialCouponCodeStatusUpdateVO materialCouponCodeStatusUpdateVO = null;
@@ -255,7 +262,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			List<SmsTaskDetail> SmsTaskDetailList = smsTaskDetailDao.selectList(detail);
 			detail = SmsTaskDetailList.get(0);
 
-			double gatewayState = Double.parseDouble(sendSmsResult.get(entry.getValue()).getCode()); // 短信状态
+			double gatewayState = "200".equals(code) ? Double.parseDouble(sendSmsResult.get(entry.getValue()).getCode()) : 0; // 短信状态
 			smsTaskDetailState = new SmsTaskDetailState();
 			smsTaskDetailState.setSmsTaskDetailId(taskDetailId);
 			if (gatewayState > 0) {

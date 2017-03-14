@@ -51,6 +51,8 @@ public class SmsTaskHead extends BaseQuery{
 
     private Byte smsTaskType;
     
+	private Integer smsTaskTrigger;
+
     /**
      * 临时属性
      */
@@ -282,5 +284,13 @@ public class SmsTaskHead extends BaseQuery{
 
 	public void setCampaignHeadId(Integer campaignHeadId) {
 		this.campaignHeadId = campaignHeadId;
+	}
+
+	public Integer getSmsTaskTrigger() {
+		return smsTaskTrigger;
+	}
+
+	public void setSmsTaskTrigger(Integer smsTaskTrigger) {
+		this.smsTaskTrigger = smsTaskTrigger;
 	}
 }
