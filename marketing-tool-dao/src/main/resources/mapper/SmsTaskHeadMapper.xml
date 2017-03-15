@@ -89,7 +89,7 @@
 			  #{smsTaskCode},
 			  #{smsTaskBatch},
 			  #{smsTaskType},
-              #{sms_task_trigger}
+              #{smsTaskTrigger}
 			)
 		]]>
 	</insert>
