@@ -111,7 +111,7 @@
 		<dependency>
 		    <groupId>com.alibaba</groupId>
 		    <artifactId>fastjson</artifactId>
-		    <version>1.2.9</version>
+		    <version>1.2.28</version>
 		</dependency>
 
 		<!-- 文件上传所依赖的第三方Jar包 -->
