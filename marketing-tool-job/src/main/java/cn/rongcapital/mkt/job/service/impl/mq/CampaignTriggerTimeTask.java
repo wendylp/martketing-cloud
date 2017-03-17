@@ -80,6 +80,16 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 				isNeedCancel = true;
 			}
 		}
+		
+		//判断当前活动是否已经处于已结束的状态
+        CampaignHead campaignHead = new CampaignHead();
+        campaignHead.setId(taskSchedule.getCampaignHeadId());
+        List<CampaignHead> campaignHeads = this.campaignHeadDao.selectList(campaignHead);
+        if(CollectionUtils.isNotEmpty(campaignHeads)){
+            if(campaignHeads.get(0).getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH){
+                isNeedCancel = true;
+            }
+        }
 		if(false == isNeedCancel) {
 			return;
 		}

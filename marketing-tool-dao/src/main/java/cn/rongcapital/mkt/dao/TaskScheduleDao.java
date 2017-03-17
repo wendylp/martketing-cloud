@@ -12,6 +12,9 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.TaskSchedule;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TaskScheduleDao extends BaseDao<TaskSchedule>{
 	
@@ -47,4 +50,12 @@ public interface TaskScheduleDao extends BaseDao<TaskSchedule>{
 	 * @return list
 	 */
 	public int selectIdByServiceName(String serviceName);
+
+	/**
+	 * 查询此任务参与活动的上一个节点任务
+	 * @param campaignHeadId
+	 * @param campaignItemId
+	 * @return
+	 */
+	public List<TaskSchedule> selectPreByCampaignIdAndItemId(@Param("campaignHeadId") int campaignHeadId,@Param("campaignItemId") String campaignItemId);
 }

@@ -138,6 +138,17 @@ public class TaskManager {
                         }
                     }
                 }
+
+                if(null != taskSchedule && taskSchedule.isDone()) {
+                    // 停止内嵌的任务/线程
+                    String serviceName = getServiceName(v.getServiceName());
+                    //logger.info("coming {},itemid is {}, serviceName is {}", v.getId(), v.getCampaignItemId(),serviceName);
+                    Object serviceBean = cotext.getBean(serviceName);
+                    if (serviceBean instanceof TaskService) {
+                        TaskService taskService = (TaskService) serviceBean;
+                        taskService.cancelInnerTask(v);
+                    }
+                }
             }
 
             if (v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID
@@ -145,17 +156,11 @@ public class TaskManager {
 //                            || (v.getStartTime() != null && v.getStartTime().after(Calendar.getInstance().getTime()))
                             || (v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime()))) {
                 if (null != taskSchedule && !taskSchedule.isDone() && !taskSchedule.isCancelled()) {
-                    taskSchedule.cancel(true);
-                }
-                // 停止内嵌的任务/线程
-                String serviceName = getServiceName(v.getServiceName());
-                //logger.info("coming {},itemid is {}, serviceName is {}", v.getId(), v.getCampaignItemId(),serviceName); 
-                Object serviceBean = cotext.getBean(serviceName);
-                if (serviceBean instanceof TaskService) {
-                    TaskService taskService = (TaskService) serviceBean;
-                    taskService.cancelInnerTask(v);
+                    //对当前任务进行取消，已经在执行的任务需要执行完毕
+                    taskSchedule.cancel(false);
                 }
             }
+
         });
     }
 

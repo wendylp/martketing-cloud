@@ -110,7 +110,7 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
                     changeSegmentReferCampaignCount(campaignHeadId, Integer.valueOf(-1));
                 }
                 logger.info("CampaignHeader Info: 进入第三重处理逻辑" );
-                taskScheduleDao.deActivateTaskByCampaignHeadId(campaignHeadId);
+                //taskScheduleDao.deActivateTaskByCampaignHeadId(campaignHeadId);
             }
         } else {
 
@@ -134,6 +134,7 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
                     } else if(publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH ||
                                       publishStatus == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH) {
                         taskSchedule.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+                        taskSchedule.setStatus(ApiConstant.TASK_STATUS_INVALID);
                     } else {
                         continue;
                     }

@@ -42,7 +42,7 @@ import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
-public class CampaignActionPubWechatSendH5Task extends BaseMQService implements TaskService {
+public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
@@ -221,7 +221,7 @@ public class CampaignActionPubWechatSendH5Task extends BaseMQService implements 
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		super.cancelCampaignInnerTask(taskSchedule);
+		super.cancelInnerTask(taskSchedule);
 	}
 	
 	@Override
