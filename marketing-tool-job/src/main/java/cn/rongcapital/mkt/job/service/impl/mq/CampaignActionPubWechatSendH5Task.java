@@ -197,7 +197,7 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 		try {
 			String pubId = campaignActionSendPub.getPubId();
 			WechatRegister wechatRegister = new WechatRegister();
-			wechatRegister.setType(0);
+			wechatRegister.setType(2);
 			wechatRegister.setWxAcct(pubId);
 			WechatRegister register = wechatRegisterDao.selectList(wechatRegister).get(0);
 			//公众号不存在
