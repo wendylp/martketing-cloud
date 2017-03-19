@@ -1,17 +1,34 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
@@ -35,6 +52,7 @@ import cn.rongcapital.mkt.po.SmsMaterialMaterielMap;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.po.SmsTaskDetailState;
 import cn.rongcapital.mkt.po.SmsTaskHead;
+import cn.rongcapital.mkt.vo.sms.out.SmsResponseVo;
 
 @Service
 public class SmsSendTaskServiceImpl implements TaskService{
@@ -69,8 +87,11 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	@Qualifier("smsServiceImplIncake")
 	private SmsService incakeSms;
 
+	private CloseableHttpClient httpclient = HttpClients.createDefault();
+
 	@Override
-	public void task(Integer taskId) {}
+	public void task(Integer taskId) {
+	}
 
 	@Override
 	public void task(String jsonMessage) {
@@ -343,4 +364,46 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	                    status.getCode());
 	    return materialCouponCodevo;
 	}
+
+	private String req(String receive, String msg) {
+		JSONObject json = new JSONObject();
+		json.put("receive", receive);
+		json.put("msg", msg);
+
+		String url = "http://localhost:8080/MWGate/wmgw.asmx/MongateSendSubmit";
+		HttpPost httpPost = new HttpPost(url);
+		httpPost.addHeader(HTTP.CONTENT_TYPE, "text/json");
+		StringEntity se;
+		try {
+			se = new StringEntity(json.toJSONString());
+			se.setContentType("text/json");
+			se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+			httpPost.setEntity(se);
+			CloseableHttpResponse response = httpclient.execute(httpPost);
+			StatusLine sl = response.getStatusLine();
+			if (sl.getStatusCode() == 200) {
+				HttpEntity entity = response.getEntity();
+				if (entity != null && entity.getContentLength() > 0) {// 返回值不为空，且长度大于0
+					Map<String, Info> sms = new HashMap<String, SmsService.Info>();
+					String result = EntityUtils.toString(entity, "utf-8");
+					List<SmsResponseVo> outVoList = JSONArray.parseArray(result, SmsResponseVo.class);
+					for (SmsResponseVo vo : outVoList) {
+						sms.put(vo.get_Phone(), new Info(vo.get_Code(), vo.get_Msg()));
+					}
+					res.put("data", sms);
+				} // 处理返回结果
+			}
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+
+	}
+
 }
