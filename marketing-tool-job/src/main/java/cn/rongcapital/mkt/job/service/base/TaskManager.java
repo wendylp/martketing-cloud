@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -41,9 +42,9 @@ public class TaskManager {
     private TaskRunLogDao taskRunLogDao;
 
     private static final int pageSize = 100;
-    
+
     private final String TASK_SCHEDULE_SERVICE_NAME="campaignActionPubWechatSendH5Task";
-    
+
     private static final ConcurrentHashMap<String, ScheduledFuture<?>> taskMap =
                     new ConcurrentHashMap<String, ScheduledFuture<?>>();
 
@@ -139,7 +140,7 @@ public class TaskManager {
                         }
                     }
                 }
-                
+
                 // 停止内嵌的任务/线程
                 String serviceName = getServiceName(v.getServiceName());
                 //logger.info("coming {},itemid is {}, serviceName is {}", v.getId(), v.getCampaignItemId(),serviceName);
@@ -151,7 +152,15 @@ public class TaskManager {
                     }
 
                     if(null != taskSchedule && taskSchedule.isDone()){
-                        logger.info("Task name : {} ,run shutdown.",v.getServiceName());
+                        try {
+                            logger.info("Task name : {} ,run shutdown,result : {}",v.getServiceName(),taskSchedule.get());
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            logger.error(e.toString());
+                        } catch (ExecutionException e) {
+                            // TODO Auto-generated catch block
+                            logger.error(e.toString());
+                        }
                         taskService.updateTaskStatus(v);
                     }
                 }
@@ -177,7 +186,7 @@ public class TaskManager {
             taskRunLogT.setTaskType((byte)TaskTypeEnum.HIDE.getCode());
         }
         taskRunLogT.setTaskId(taskSchedulePo.getId());
-        taskRunLogT.setStartTime(new Date());        
+        taskRunLogT.setStartTime(new Date());
         taskRunLogDao.insert(taskRunLogT);
         return taskRunLogT;
     }
@@ -237,7 +246,7 @@ public class TaskManager {
         String sname = String.valueOf(serviceNameChar);
         return sname;
     }
-    
+
     /**
      * 启动需要在前端页面显示task名称进度的task
      * @param serviceName:任务名称
