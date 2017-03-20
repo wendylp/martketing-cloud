@@ -60,55 +60,6 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		//激活该活动对应的全部任务
 		taskScheduleDao.activateTaskByCampaignHeadId(campaignHeadId);
 	}
-	
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
-		boolean isNeedCancel = false;//double check,查询数据库的任务表，看是否真的需要停止任务
-		TaskSchedule taskScheduleT = new TaskSchedule();
-//		taskScheduleT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		taskScheduleT.setCampaignHeadId(campaignHeadId);
-		taskScheduleT.setServiceName(ApiConstant.TASK_NAME_CAMPAIGN_TRUGGER_TIME);
-		List<TaskSchedule> taskScheduleList = taskScheduleDao.selectList(taskScheduleT);
-		if(CollectionUtils.isNotEmpty(taskScheduleList)){
-			TaskSchedule v = taskScheduleList.get(0);
-			if(v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID ||
-//			   v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_INVALID
-//			   (v.getStartTime() != null && v.getStartTime().after(Calendar.getInstance().getTime())) ||
-			   (v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime()))
-					) {
-				isNeedCancel = true;
-			}
-		}
-		
-		//判断当前活动是否已经处于已结束的状态
-        CampaignHead campaignHead = new CampaignHead();
-        campaignHead.setId(taskSchedule.getCampaignHeadId());
-        List<CampaignHead> campaignHeads = this.campaignHeadDao.selectList(campaignHead);
-        if(CollectionUtils.isNotEmpty(campaignHeads)){
-            if(campaignHeads.get(0).getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH){
-                isNeedCancel = true;
-            }
-        }
-		if(false == isNeedCancel) {
-			return;
-		}
-		//停止该活动对应的全部任务
-		taskScheduleDao.deActivateTaskByCampaignHeadId(campaignHeadId);
-		//如果活动状态为运行中，则设置活动状态为:已结束
-		 CampaignHead t = new CampaignHead(); 
-		 t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		 t.setId(campaignHeadId);
-		 List<CampaignHead> camList = campaignHeadDao.selectList(t);
-		 if(CollectionUtils.isNotEmpty(camList)) {
-			 CampaignHead ch = camList.get(0);
-			 campaignHeaderUpdateService.decreaseSegmentReferCampaignCount(campaignHeadId);
-			 if(ch.getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
-				 t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH);
-				 campaignHeadDao.updateById(t);
-			 }
-		 }
-	}
 
 	@Override
 	public void task(Integer taskId) {

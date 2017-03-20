@@ -135,10 +135,6 @@ public class CampaignAudienceFixTask extends CampaignAutoCancelTaskService {
 		}
 
 	}
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		super.cancelInnerTask(taskSchedule);
-	}
 
 	@Override
 	public void task(Integer taskId) {

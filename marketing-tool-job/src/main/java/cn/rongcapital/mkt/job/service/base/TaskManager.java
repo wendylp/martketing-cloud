@@ -129,8 +129,7 @@ public class TaskManager {
         logger.debug("prepareTasks");
         TaskManager.taskPropMap.forEach((k, v) -> {
             ScheduledFuture<?> taskSchedule = TaskManager.taskMap.get(k);
-            if (v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_VALID
-                            && v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_VALID) {
+            if (v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_VALID) {
                 if (null == taskSchedule || taskSchedule.isCancelled()) {
                     if (v.getStartTime() == null || v.getStartTime().before(Calendar.getInstance().getTime())) {
                         if (v.getEndTime() == null || v.getEndTime().after(Calendar.getInstance().getTime())) {
@@ -138,29 +137,28 @@ public class TaskManager {
                         }
                     }
                 }
+                
+                // 停止内嵌的任务/线程
+                String serviceName = getServiceName(v.getServiceName());
+                //logger.info("coming {},itemid is {}, serviceName is {}", v.getId(), v.getCampaignItemId(),serviceName);
+                Object serviceBean = cotext.getBean(serviceName);
+                if (serviceBean instanceof TaskService) {
+                    TaskService taskService = (TaskService) serviceBean;
+                    if(null != taskSchedule && !taskSchedule.isDone()) {
+                        taskService.cancelInnerTask(v,taskSchedule);
+                    }
 
-                if(null != taskSchedule && taskSchedule.isDone()) {
-                    // 停止内嵌的任务/线程
-                    String serviceName = getServiceName(v.getServiceName());
-                    //logger.info("coming {},itemid is {}, serviceName is {}", v.getId(), v.getCampaignItemId(),serviceName);
-                    Object serviceBean = cotext.getBean(serviceName);
-                    if (serviceBean instanceof TaskService) {
-                        TaskService taskService = (TaskService) serviceBean;
-                        taskService.cancelInnerTask(v);
+                    if(null != taskSchedule && taskSchedule.isDone()){
+                        taskService.updateTaskStatus(v);
                     }
                 }
             }
 
-            if (v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID
-//                            || v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_INVALID
-//                            || (v.getStartTime() != null && v.getStartTime().after(Calendar.getInstance().getTime()))
-                            || (v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime()))) {
-                if (null != taskSchedule && !taskSchedule.isDone() && !taskSchedule.isCancelled()) {
-                    //对当前任务进行取消，已经在执行的任务需要执行完毕
-                    taskSchedule.cancel(false);
-                }
+            if((v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID
+                    || (v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime())))
+                    && (null != taskSchedule  && !taskSchedule.isCancelled())){
+                taskSchedule.cancel(false);
             }
-
         });
     }
 
@@ -239,9 +237,9 @@ public class TaskManager {
     
     /**
      * 启动需要在前端页面显示task名称进度的task
-     * @param taskName:任务名称
+     * @param serviceName:任务名称
      * @param serviceName:定时任务的service类名称
-     * @param taskType:0:显示,1:不显示
+     * @param taskTypeEnum:0:显示,1:不显示
      */
     public void initFrontTask(TaskNameEnum taskNameEnum,String serviceName,TaskTypeEnum taskTypeEnum) {
     	serviceName = getServiceName(serviceName);

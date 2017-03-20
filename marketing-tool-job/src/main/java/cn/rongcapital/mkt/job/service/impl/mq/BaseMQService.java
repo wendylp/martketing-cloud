@@ -183,7 +183,7 @@ public class BaseMQService {
 		if (CollectionUtils.isNotEmpty(segList)) {
 			CampaignHead ch = segList.get(0);
 			// 只有发布状态的活动才能被手动开启
-			if (ch.getPublishStatus() != ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH) {
+			if (ch.getPublishStatus() != ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
 				ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_CAN_NOT_START.getCode(),
 						ApiErrorCode.BIZ_ERROR_CANPAIGN_CAN_NOT_START.getMsg(), ApiConstant.INT_ZERO, null);
 			}
