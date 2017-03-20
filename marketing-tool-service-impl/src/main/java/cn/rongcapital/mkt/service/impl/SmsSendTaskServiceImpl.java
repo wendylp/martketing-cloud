@@ -1,7 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -10,33 +8,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
-import cn.rongcapital.mkt.common.sms.SmsResponse;
-import cn.rongcapital.mkt.common.sms.SmsService;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsMaterialMaterielMapDao;
 import cn.rongcapital.mkt.dao.SmsTaskDetailDao;
@@ -52,7 +37,9 @@ import cn.rongcapital.mkt.po.SmsMaterialMaterielMap;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.po.SmsTaskDetailState;
 import cn.rongcapital.mkt.po.SmsTaskHead;
-import cn.rongcapital.mkt.vo.sms.out.SmsResponseVo;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 @Service
 public class SmsSendTaskServiceImpl implements TaskService{
@@ -83,14 +70,21 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	@Autowired
 	private SmsMaterialDao smsMaterialDao;
 
-	@Autowired
-	@Qualifier("smsServiceImplIncake")
-	private SmsService incakeSms;
+	// @Autowired
+	// @Qualifier("smsServiceImplIncake")
+	// private SmsService incakeSms;
 
-	private CloseableHttpClient httpclient = HttpClients.createDefault();
+	private ResteasyClient client = new ResteasyClientBuilder().build();
+
+	@Value("${sms.url.service}")
+	private String smsUrlService;
+
+	private SmsApi smsApi;
 
 	@Override
 	public void task(Integer taskId) {
+		ResteasyWebTarget target = client.target(smsUrlService);
+		this.smsApi = target.proxy(SmsApi.class);
 	}
 
 	@Override
@@ -130,26 +124,30 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				return;
 			}
 
+			ResteasyWebTarget target = null;
+
 			Integer smsCount = smsDetailList.size();
 			logger.info("sms count is {}" , smsCount);
 			
 			Integer count = 0;
-			
-			List<String> receiveMobiles = new ArrayList<String>(); // 手机号集合
-			List<String> sendMessages = new ArrayList<String>(); // 短信内容集合
 
 			Map<Long, String> SmsBatchMap = new LinkedHashMap<Long, String>();
+			List<Map<String, String>> receives = new ArrayList<Map<String, String>>();
+			Map<String, String> mapTmp = null;
 			for(SmsTaskDetail detail : smsDetailList) {
 
+
 				detail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
-				smsTaskDetailDao.updateById(detail);
+				smsTaskDetailDao.updateById(detail); // 更新发送状态为完成
+
 				Long id = detail.getId();
 				String receiveMobile = detail.getReceiveMobile();
 				String sendMessage = detail.getSendMessage();
 
-				receiveMobiles.add(receiveMobile);
-				sendMessages.add(sendMessage);
-
+				mapTmp = new HashMap<String, String>();
+				mapTmp.put("receive", receiveMobile);
+				mapTmp.put("msg", sendMessage);
+				receives.add(mapTmp);
 				//对短短信进行封装
 				count++;
 				//logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
@@ -158,11 +156,12 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				
 				if(count >= SMS_SEND_BACTH_COUNT) {
 					//调用发送API接口（批量）
-					Map<String, SmsResponse> rs = incakeSms.sendMultSms((String[]) receiveMobiles.toArray(), (String[]) sendMessages.toArray());
+					// Map<String, SmsResponse> rs = incakeSms.sendMultSms((String[]) receiveMobiles.toArray(), (String[]) sendMessages.toArray());
+					String str = this.smsApi.sendMultSmsDiff(JSONArray.toJSONString(receives));
 
 					// Map<Long, Double> sendSmsResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
 					//统计一批短信的成功和失败的个数,根据短信API判断状态回写sms_task_detail_state表和head表
-					updateSmsDetailState(rs, SmsBatchMap, smsHead);
+					updateSmsDetailState(str, SmsBatchMap, smsHead);
 					//修改当前任务这一批短信的成功和失败个数
 					smsTaskHeadDao.updateById(smsHead);
 					count = 0;
@@ -170,15 +169,18 @@ public class SmsSendTaskServiceImpl implements TaskService{
 					continue;
 				}
 			}
-			Map<String, SmsResponse> rs = null;
-			if (sms_task_trigger == 1 && receiveMobiles.size() == 1) {// 事件类型
-				rs = incakeSms.sendSms(receiveMobiles.get(0), sendMessages.get(0));
+			// Map<String, SmsResponse> rs = null;
+			String str = "";
+			if (sms_task_trigger == 1 && receives.size() == 1) {// 事件类型
+				// rs = incakeSms.sendSms(receiveMobiles.get(0), sendMessages.get(0));
+				str = this.smsApi.sendSms(JSONObject.toJSONString(receives.get(0)));
 			}else{
-				rs = incakeSms.sendMultSms((String[]) receiveMobiles.toArray(), (String[]) sendMessages.toArray());
+				// rs = incakeSms.sendMultSms((String[]) receiveMobiles.toArray(), (String[])
+				str = this.smsApi.sendMultSmsDiff(JSONArray.toJSONString(receives));
 			}
 
 			//处理不满一批的短信
-			updateSmsDetailState(rs, SmsBatchMap, smsHead);
+			updateSmsDetailState(str, SmsBatchMap, smsHead);
 			//最后把任务状态改为已完成,把等待的个数置为0
 			if (sms_task_trigger == 0) { // 非事件类型的短信
 				smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_FINISH.getStatusCode());
@@ -265,12 +267,14 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		smsHead.setWaitingNum(smsCoverNum - (success + fail));
 	}
 
-	public void updateSmsDetailState(Map<String, SmsResponse> sendSmsResult, Map<Long, String> SmsBatchMap, SmsTaskHead smsHead) {
-		SmsResponse result = sendSmsResult.get("0000");
-		String code = result.getCode();
+	@SuppressWarnings("unchecked")
+	public void updateSmsDetailState(String rs, Map<Long, String> SmsBatchMap, SmsTaskHead smsHead) {
+		Map<String, Object> map = JSONObject.parseObject(rs);
+		Map<String, Object> data = (Map<String, Object>) map.get("data");
+		Map<String, Object> item = null;
 
 		SmsTaskDetailState smsTaskDetailState = null;
-		List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<>();
+		List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<>(); // 优惠券状态
 		MaterialCouponCodeStatusUpdateVO materialCouponCodeStatusUpdateVO = null;
 		int successCount = 0;
 		int failCount = 0;
@@ -282,15 +286,14 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			detail.setId(taskDetailId);
 			List<SmsTaskDetail> SmsTaskDetailList = smsTaskDetailDao.selectList(detail);
 			detail = SmsTaskDetailList.get(0);
-
-			double gatewayState = "200".equals(code) ? Double.parseDouble(sendSmsResult.get(entry.getValue()).getCode()) : 0; // 短信状态
+			item = (Map<String, Object>) data.get(entry.getValue());
+			double gatewayState = "200".equals(map.get("errcode")) ? Double.parseDouble(item.get("errcode").toString()) : 0; // 短信状态
 			smsTaskDetailState = new SmsTaskDetailState();
 			smsTaskDetailState.setSmsTaskDetailId(taskDetailId);
 			if (gatewayState > 0) {
 				// 根据api大于0代表发送成功
 				successCount++;
 				smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_SEND_SUCCESS.getStateCode());
-
 				materialCouponCodeStatusUpdateVO = this.initMaterialCouponCode(detail, MaterialCouponCodeReleaseStatusEnum.RECEIVED);
 			} else {
 				// 其他情况则代表发送失败
@@ -298,9 +301,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_SEND_FAILURE.getStateCode());
 				materialCouponCodeStatusUpdateVO = this.initMaterialCouponCode(detail, MaterialCouponCodeReleaseStatusEnum.UNRECEIVED);
 			}
-
 			smsTaskDetailStateDao.updateDetailState(smsTaskDetailState);
-
 			voList.add(materialCouponCodeStatusUpdateVO);
 		}
 
@@ -363,47 +364,6 @@ public class SmsSendTaskServiceImpl implements TaskService{
 	    logger.info("couponCodeId is {}, mobile is {}, ststus is {}", detail.getMaterielCouponCodeId(), detail.getReceiveMobile(),
 	                    status.getCode());
 	    return materialCouponCodevo;
-	}
-
-	private String req(String receive, String msg) {
-		JSONObject json = new JSONObject();
-		json.put("receive", receive);
-		json.put("msg", msg);
-
-		String url = "http://localhost:8080/MWGate/wmgw.asmx/MongateSendSubmit";
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.addHeader(HTTP.CONTENT_TYPE, "text/json");
-		StringEntity se;
-		try {
-			se = new StringEntity(json.toJSONString());
-			se.setContentType("text/json");
-			se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-			httpPost.setEntity(se);
-			CloseableHttpResponse response = httpclient.execute(httpPost);
-			StatusLine sl = response.getStatusLine();
-			if (sl.getStatusCode() == 200) {
-				HttpEntity entity = response.getEntity();
-				if (entity != null && entity.getContentLength() > 0) {// 返回值不为空，且长度大于0
-					Map<String, Info> sms = new HashMap<String, SmsService.Info>();
-					String result = EntityUtils.toString(entity, "utf-8");
-					List<SmsResponseVo> outVoList = JSONArray.parseArray(result, SmsResponseVo.class);
-					for (SmsResponseVo vo : outVoList) {
-						sms.put(vo.get_Phone(), new Info(vo.get_Code(), vo.get_Msg()));
-					}
-					res.put("data", sms);
-				} // 处理返回结果
-			}
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-
-
 	}
 
 }

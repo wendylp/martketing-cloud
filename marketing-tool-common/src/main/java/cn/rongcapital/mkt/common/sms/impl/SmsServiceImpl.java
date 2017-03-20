@@ -1,11 +1,10 @@
 package cn.rongcapital.mkt.common.sms.impl;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.sms.SmsService;
 
-@Service("smsServiceImpl")
+//@Service("smsServiceImpl")
 public class SmsServiceImpl implements SmsService {
 
 	@Value("${sms.incake.url}")

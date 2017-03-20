@@ -20,13 +20,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONArray;
 
 import cn.rongcapital.mkt.common.sms.SmsResponse;
 import cn.rongcapital.mkt.common.sms.SmsService;
 import cn.rongcapital.mkt.vo.sms.out.SmsResponseVo;
+
+import com.alibaba.fastjson.JSONArray;
 
 /**
  * 梦网科技短信接口实现
@@ -34,7 +33,7 @@ import cn.rongcapital.mkt.vo.sms.out.SmsResponseVo;
  * @author LiuQ
  * @email Liuqi@rongcapital.cn
  */
-@Service("smsServiceImplmw")
+// @Service("smsServiceImplmw")
 public class SmsServiceImplmw implements SmsService {
 
 	@Value("${sms.mw.httpUrl}")
