@@ -63,7 +63,7 @@ public abstract class CampaignAutoCancelTaskService extends BaseMQService implem
 
         if (schedules != null) {
             for (TaskSchedule schedule : schedules) {
-                if (schedule.getTaskStatus() == ApiConstant.TASK_STATUS_VALID) {
+                if (schedule.getTaskStatus() == ApiConstant.TASK_STATUS_VALID ||schedule.getStatus() == ApiConstant.TABLE_DATA_STATUS_VALID ) {
                     needCancel = false;
                 }
             }
