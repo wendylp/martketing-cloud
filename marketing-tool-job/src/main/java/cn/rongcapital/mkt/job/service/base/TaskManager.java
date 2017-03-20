@@ -149,6 +149,7 @@ public class TaskManager {
                     }
 
                     if(null != taskSchedule && taskSchedule.isDone()){
+                        logger.info("Task name : {} ,run shutdown.",v.getServiceName());
                         taskService.updateTaskStatus(v);
                     }
                 }
