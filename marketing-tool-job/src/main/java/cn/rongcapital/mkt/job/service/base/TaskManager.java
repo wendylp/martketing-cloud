@@ -130,7 +130,9 @@ public class TaskManager {
         TaskManager.taskPropMap.forEach((k, v) -> {
             ScheduledFuture<?> taskSchedule = TaskManager.taskMap.get(k);
             if (v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_VALID) {
-                if (null == taskSchedule || taskSchedule.isCancelled()) {
+                if (null == taskSchedule
+//                        || taskSchedule.isCancelled()
+                        ) {
                     if (v.getStartTime() == null || v.getStartTime().before(Calendar.getInstance().getTime())) {
                         if (v.getEndTime() == null || v.getEndTime().after(Calendar.getInstance().getTime())) {
                             startTask(v);
