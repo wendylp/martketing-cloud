@@ -9,27 +9,17 @@
  *************************************************/
 package cn.rongcapital.mkt.campaign.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.math.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.campaign.service.EventSubjectCombineService;
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.util.HttpClientUtil;
-import cn.rongcapital.mkt.common.util.HttpUrl;
-import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.dao.event.EventDao;
+import cn.rongcapital.mkt.event.vo.EventSubjectCombineResult;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
 @Service
 public class EventSubjectCombineServiceImpl implements EventSubjectCombineService {
@@ -42,6 +32,9 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
     @Value("${mkt.event.idmapping.get}")
     private String mappingUri;
 
+    @Autowired
+    private EventDao eventDao;
+    
     @Override
     public boolean needCombine(String eventCode) {
         // TODO Auto-generated method stub
@@ -49,16 +42,22 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
     }
 
     @Override
-    public Segment combineStreamData(EventBehavior eventbehavior) {
-        Segment segment = new Segment();
-        segment.setDataId(RandomUtils.nextInt(1000000));
-        segment.setName(UUID.randomUUID().toString());
+    public EventSubjectCombineResult combineStreamData(EventBehavior eventbehavior) {
+        EventSubjectCombineResult segment = new EventSubjectCombineResult();
+        segment.setMid(String.valueOf(RandomUtils.nextInt(1000000)));
+        segment.setInserted(false);
         return segment;
     }
 
 //    @Override
-//    public Segment combineStreamData(EventBehavior eventbehavior) {
+//    public EventSubjectCombineResult combineStreamData(EventBehavior eventbehavior) {
+//        EventSubjectCombineResult result = null;
 //        String eventCode = eventbehavior.getEvent().get("code").toString();
+//        Event event = eventDao.selectByCode(eventCode);
+//        if (event == null) {
+//            logger.error("event [{}] not exist or unsubscribed.", eventCode);
+//            return result;
+//        }
 //        Map<String, Object> subject = eventbehavior.getSubject();
 //        String mobile = null;
 //        String email = null;
@@ -66,7 +65,6 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
 //        String name = null;
 //        String source = null;
 //        String strategy = null;
-//        Segment segment = null;
 //        switch (eventCode) {
 //        // STREAM申请试用表单 MC申请试用表单
 //            case "apply_submit_ruixuesoft":
@@ -78,8 +76,8 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
 //                strategy = "EventStrategy";
 //                break;
 //            default:
-//                logger.error("combine stream master data [%s] meet illegal event code.", eventCode);
-//                return segment;
+//                logger.error("combine stream main data [{}] meets illegal event code.", eventCode);
+//                return result;
 //        }
 //        try {
 //            HttpClientUtil http = HttpClientUtil.getInstance();
@@ -103,23 +101,18 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
 //            if(StringUtils.isNotBlank(source)){
 //                params.put("source", source);
 //            }
+//            params.put("id", event.getId());
 //            params.put("strategy", strategy);
 //            httpUrl.setRequetsBody(JSON.toJSONString(params));
 //            PostMethod postResult = http.postExt(httpUrl);
 //            String response = postResult.getResponseBodyAsString();
 //            if (StringUtils.isNotBlank(response)) {
-//                JSONObject jsonObj = JSON.parseObject(response);
-//                if (jsonObj != null && jsonObj.containsKey("mid")) {
-//                    segment = new Segment();
-//                    segment.setDataId(jsonObj.getInteger("mid"));
-//                }
+//                result = JSON.parseObject(response, EventSubjectCombineResult.class);
 //            }
 //        } catch (Exception e) {
 //            logger.error(String.format("combine stream master data [%s] occurs error.", eventbehavior.getSubject()), e);
 //        }
-//        return segment;
+//        return result;
 //    }
-
-
 
 }
