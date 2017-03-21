@@ -61,16 +61,20 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
 //        String eventCode = eventbehavior.getEvent().get("code").toString();
 //        Map<String, Object> subject = eventbehavior.getSubject();
 //        String mobile = null;
-//        String memberId = null;
 //        String email = null;
+//        String qq = null;
+//        String name = null;
+//        String source = null;
 //        String strategy = null;
 //        Segment segment = null;
 //        switch (eventCode) {
 //        // STREAM申请试用表单 MC申请试用表单
-//            case "apply_submit_stream":
-//            case "apply_submit_mc":
+//            case "apply_submit_ruixuesoft":
 //                mobile = (String) subject.get("o_mc_contact_soc_mobile_phone");
 //                email = (String) subject.get("o_mc_contact_soc_mail");
+//                qq = (String) subject.get("o_mc_contact_soc_qq");
+//                name = (String) subject.get("o_mc_contact_attr_name");
+//                source = (String) subject.get("o_mc_contact_sys_source");
 //                strategy = "EventStrategy";
 //                break;
 //            default:
@@ -87,11 +91,17 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
 //            if(StringUtils.isNotBlank(mobile)){
 //                params.put("mobile", mobile);
 //            }
-//            if(StringUtils.isNotBlank(memberId)){
-//                params.put("memberId", memberId);
-//            }
 //            if(StringUtils.isNotBlank(email)){
 //                params.put("email", email);
+//            }
+//            if(StringUtils.isNotBlank(qq)){
+//                params.put("qq", qq);
+//            }
+//            if(StringUtils.isNotBlank(name)){
+//                params.put("name", name);
+//            }
+//            if(StringUtils.isNotBlank(source)){
+//                params.put("source", source);
 //            }
 //            params.put("strategy", strategy);
 //            httpUrl.setRequetsBody(JSON.toJSONString(params));
