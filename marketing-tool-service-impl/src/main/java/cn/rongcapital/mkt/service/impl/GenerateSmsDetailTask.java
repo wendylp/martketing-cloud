@@ -292,7 +292,7 @@ public class GenerateSmsDetailTask implements TaskService {
         paramSmsMaterial.setId(targetHead.getSmsTaskMaterialId().intValue());
         List<SmsMaterial> targetSmsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
         if(CollectionUtils.isEmpty(targetSmsMaterialList)) return;
-        Integer smsType = targetSmsMaterialList.get(0).getSmsType().intValue();
+		Integer smsType = targetSmsMaterialList.get(0).getSmsType().intValue(); // 短信类型：0:固定短信,1:变量短信
 
         if(smsType.equals(FIXED.getStatusCode())){
             for(String distinctReceiveMobile : targetDistinctReceiveMobiles){

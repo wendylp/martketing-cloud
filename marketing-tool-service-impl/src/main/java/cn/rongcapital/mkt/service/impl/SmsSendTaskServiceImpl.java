@@ -42,40 +42,35 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 @Service
-public class SmsSendTaskServiceImpl implements TaskService{
-	 private Logger logger = LoggerFactory.getLogger(getClass());
-	 private Integer SMS_SEND_BACTH_COUNT = 500;
-	 private final Integer SMS_MATERIEL_TYPE = 0;
-	 
-	 private final static Byte SMS_TYPE_DYNAMICS = 1;
-	 
+public class SmsSendTaskServiceImpl implements TaskService {
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	private Integer SMS_SEND_BACTH_COUNT = 500;
+	private final Integer SMS_MATERIEL_TYPE = 0;
+
+	private final static Byte SMS_TYPE_DYNAMICS = 1;
+
 	@Autowired
 	private SmsTaskHeadDao smsTaskHeadDao;
-	
+
 	@Autowired
 	private SmsTaskDetailDao smsTaskDetailDao;
 
 	@Autowired
 	private SmsTaskDetailStateDao smsTaskDetailStateDao;
-	
+
 	@Autowired
 	private SmsMaterialMaterielMapDao smsMaterialMaterielMapDao;
-	
+
 	@Autowired
 	private MaterialCouponStatusUpdateService materialCouponStatusUpdateService;
-	
+
 	@Autowired
 	private MaterialCouponCodeStatusUpdateService materialCouponCodeStatusUpdateService;
-	
+
 	@Autowired
 	private SmsMaterialDao smsMaterialDao;
 
-	// @Autowired
-	// @Qualifier("smsServiceImplIncake")
-	// private SmsService incakeSms;
-
 	private ResteasyClient client = new ResteasyClientBuilder().build();
-
 	@Value("${sms.url.service}")
 	private String smsUrlService;
 
@@ -83,35 +78,39 @@ public class SmsSendTaskServiceImpl implements TaskService{
 
 	@Override
 	public void task(Integer taskId) {
-		ResteasyWebTarget target = client.target(smsUrlService);
-		this.smsApi = target.proxy(SmsApi.class);
+
 	}
 
 	@Override
 	public void task(String jsonMessage) {
+		if (this.smsApi == null) {
+			ResteasyWebTarget target = client.target(smsUrlService);
+			this.smsApi = target.proxy(SmsApi.class);
+		}
+
 		logger.info("mq task coming, id is {}", jsonMessage);
-		//根据任务ID查询sms_task_head表 判断 sms_task_status 是否是执行中状态
+		// 根据任务ID查询sms_task_head表 判断 sms_task_status 是否是执行中状态
 		Long taskId = Long.valueOf(jsonMessage);
 		SmsTaskHead smsHead = new SmsTaskHead();
-		smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode());//执行中
-		smsHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);//未删除
+		smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode());// 执行中
+		smsHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);// 未删除
 		smsHead.setId(taskId);
 		try {
 			List<SmsTaskHead> smsHeadList = smsTaskHeadDao.selectList(smsHead);
-			if(CollectionUtils.isEmpty(smsHeadList)){
+			if (CollectionUtils.isEmpty(smsHeadList)) {
 				logger.warn("task state is not sending(2) or No corresponding task ,taskId：{}", jsonMessage);
 				return;
 			}
 			smsHead = smsHeadList.get(0);
 			Integer sms_task_trigger = smsHead.getSmsTaskTrigger(); // 发送类型：0多条，1单条
 
-			//回写优惠券的状态，改为投放中---v1.6
+			// 回写优惠券的状态，改为投放中---v1.6
 			MaterialCouponStatusUpdateVO StatusUpdateVO = this.initMaterialCoupon(smsHead, MaterialCouponStatusEnum.RELEASING);
-			if(StatusUpdateVO != null) {
-                materialCouponStatusUpdateService.updateMaterialCouponStatus(StatusUpdateVO);
-            }
-			
-			//根据任务ID查询sms_task_detail表获取要发送的短信集合
+			if (StatusUpdateVO != null) {
+				materialCouponStatusUpdateService.updateMaterialCouponStatus(StatusUpdateVO);
+			}
+
+			// 根据任务ID查询sms_task_detail表获取要发送的短信集合
 			SmsTaskDetail smsDetail = new SmsTaskDetail();
 			smsDetail.setSmsTaskHeadId(taskId);
 			smsDetail.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
@@ -119,23 +118,20 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			smsDetail.setStartIndex(null);
 			smsDetail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
 			List<SmsTaskDetail> smsDetailList = smsTaskDetailDao.selectList(smsDetail);
-			if(CollectionUtils.isEmpty(smsDetailList)){
-				logger.warn("no send message,taskId is: {}" , jsonMessage);
+			if (CollectionUtils.isEmpty(smsDetailList)) {
+				logger.warn("no send message,taskId is: {}", jsonMessage);
 				return;
 			}
 
-			ResteasyWebTarget target = null;
-
 			Integer smsCount = smsDetailList.size();
-			logger.info("sms count is {}" , smsCount);
-			
+			logger.info("sms count is {}", smsCount);
+
 			Integer count = 0;
 
 			Map<Long, String> SmsBatchMap = new LinkedHashMap<Long, String>();
 			List<Map<String, String>> receives = new ArrayList<Map<String, String>>();
 			Map<String, String> mapTmp = null;
-			for(SmsTaskDetail detail : smsDetailList) {
-
+			for (SmsTaskDetail detail : smsDetailList) {
 
 				detail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
 				smsTaskDetailDao.updateById(detail); // 更新发送状态为完成
@@ -148,21 +144,21 @@ public class SmsSendTaskServiceImpl implements TaskService{
 				mapTmp.put("receive", receiveMobile);
 				mapTmp.put("msg", sendMessage);
 				receives.add(mapTmp);
-				//对短短信进行封装
+				// 对短短信进行封装
 				count++;
-				//logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
+				// logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
 
 				SmsBatchMap.put(id, receiveMobile);
-				
-				if(count >= SMS_SEND_BACTH_COUNT) {
-					//调用发送API接口（批量）
+
+				if (count >= SMS_SEND_BACTH_COUNT) {
+					// 调用发送API接口（批量）
 					// Map<String, SmsResponse> rs = incakeSms.sendMultSms((String[]) receiveMobiles.toArray(), (String[]) sendMessages.toArray());
 					String str = this.smsApi.sendMultSmsDiff(JSONArray.toJSONString(receives));
 
 					// Map<Long, Double> sendSmsResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
-					//统计一批短信的成功和失败的个数,根据短信API判断状态回写sms_task_detail_state表和head表
+					// 统计一批短信的成功和失败的个数,根据短信API判断状态回写sms_task_detail_state表和head表
 					updateSmsDetailState(str, SmsBatchMap, smsHead);
-					//修改当前任务这一批短信的成功和失败个数
+					// 修改当前任务这一批短信的成功和失败个数
 					smsTaskHeadDao.updateById(smsHead);
 					count = 0;
 					SmsBatchMap.clear();
@@ -174,34 +170,34 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			if (sms_task_trigger == 1 && receives.size() == 1) {// 事件类型
 				// rs = incakeSms.sendSms(receiveMobiles.get(0), sendMessages.get(0));
 				str = this.smsApi.sendSms(JSONObject.toJSONString(receives.get(0)));
-			}else{
+			} else {
 				// rs = incakeSms.sendMultSms((String[]) receiveMobiles.toArray(), (String[])
 				str = this.smsApi.sendMultSmsDiff(JSONArray.toJSONString(receives));
 			}
 
-			//处理不满一批的短信
+			// 处理不满一批的短信
 			updateSmsDetailState(str, SmsBatchMap, smsHead);
-			//最后把任务状态改为已完成,把等待的个数置为0
+			// 最后把任务状态改为已完成,把等待的个数置为0
 			if (sms_task_trigger == 0) { // 非事件类型的短信
 				smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_FINISH.getStatusCode());
 				smsHead.setWaitingNum(0);
 			}
 
 			smsTaskHeadDao.updateById(smsHead);
-			
-	         //回写优惠券的状态，改为已投放---v1.6
-            StatusUpdateVO = this.initMaterialCoupon(smsHead, MaterialCouponStatusEnum.RELEASED);
-            if(StatusUpdateVO != null) {
-                materialCouponStatusUpdateService.updateMaterialCouponStatus(StatusUpdateVO);
-            }
-			
+
+			// 回写优惠券的状态，改为已投放---v1.6
+			StatusUpdateVO = this.initMaterialCoupon(smsHead, MaterialCouponStatusEnum.RELEASED);
+			if (StatusUpdateVO != null) {
+				materialCouponStatusUpdateService.updateMaterialCouponStatus(StatusUpdateVO);
+			}
+
 		} catch (Exception e) {
 			logger.error("exception {}" + e.getMessage());
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void updateSmsDetailState(Map<Long, Double> sendSmsResult, SmsTaskHead smsHead) {
 		SmsTaskDetailState smsTaskDetailState = null;
 		List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<>();
@@ -287,7 +283,7 @@ public class SmsSendTaskServiceImpl implements TaskService{
 			List<SmsTaskDetail> SmsTaskDetailList = smsTaskDetailDao.selectList(detail);
 			detail = SmsTaskDetailList.get(0);
 			item = (Map<String, Object>) data.get(entry.getValue());
-			double gatewayState = "200".equals(map.get("errcode")) ? Double.parseDouble(item.get("errcode").toString()) : 0; // 短信状态
+			double gatewayState = "200".equals(map.get("errcode").toString()) ? Double.parseDouble(item.get("errcode").toString()) : 0; // 短信状态
 			smsTaskDetailState = new SmsTaskDetailState();
 			smsTaskDetailState.setSmsTaskDetailId(taskDetailId);
 			if (gatewayState > 0) {
@@ -310,60 +306,59 @@ public class SmsSendTaskServiceImpl implements TaskService{
 		smsMaterialIdLists.add(smsHead.getSmsTaskMaterialId().intValue());
 		List<SmsMaterial> smsMaterialLists = smsMaterialDao.selectListByIdList(smsMaterialIdLists);
 		if (CollectionUtils.isNotEmpty(smsMaterialLists) && SMS_TYPE_DYNAMICS.equals(smsMaterialLists.get(0).getSmsType())) {
-    		//修改一批优惠码的状态---v1.6
-    		materialCouponCodeStatusUpdateService.updateMaterialCouponCodeStatus(voList);
+			// 修改一批优惠码的状态---v1.6
+			materialCouponCodeStatusUpdateService.updateMaterialCouponCodeStatus(voList);
 		}
-		//计算每批的成功和失败的个数
+		// 计算每批的成功和失败的个数
 		Integer smsSuccessCount = smsHead.getSendingSuccessNum();
 		Integer smsFailCount = smsHead.getSendingFailNum();
-		
-		if(smsSuccessCount== null || smsSuccessCount == 0) {
+
+		if (smsSuccessCount == null || smsSuccessCount == 0) {
 			smsHead.setSendingSuccessNum(successCount);
-		}else {
+		} else {
 			smsHead.setSendingSuccessNum(smsSuccessCount + successCount);
 		}
-		if(smsFailCount == null || smsFailCount == 0){
+		if (smsFailCount == null || smsFailCount == 0) {
 			smsHead.setSendingFailNum(failCount);
-		}else {
+		} else {
 			smsHead.setSendingFailNum(smsFailCount + failCount);
 		}
-		//每批都更新成功失败以及等待的个数
+		// 每批都更新成功失败以及等待的个数
 		Integer smsCoverNum = smsHead.getTotalCoverNum();
 		Integer success = smsHead.getSendingSuccessNum();
 		Integer fail = smsHead.getSendingFailNum();
-		smsHead.setWaitingNum(smsCoverNum -(success + fail));
+		smsHead.setWaitingNum(smsCoverNum - (success + fail));
 	}
-	
-	private MaterialCouponStatusUpdateVO initMaterialCoupon(SmsTaskHead smsHead, MaterialCouponStatusEnum status){
-	    Long smsMaterialId = smsHead.getSmsTaskMaterialId();
-        SmsMaterialMaterielMap materielMap = new SmsMaterialMaterielMap();
-        materielMap.setSmsMaterialId(smsMaterialId);
-        materielMap.setSmsMaterielType(SMS_MATERIEL_TYPE);//优惠券
-        List<SmsMaterialMaterielMap> materielMapList = smsMaterialMaterielMapDao.selectList(materielMap);
-        if(CollectionUtils.isEmpty(materielMapList)){
-            logger.info("materielMapList is null!");
-            return null;
-        }
-        
-        materielMap = materielMapList.get(0);
-        MaterialCouponStatusUpdateVO materialCouponStatusUpdatevo = new MaterialCouponStatusUpdateVO();
-        materialCouponStatusUpdatevo.setId(materielMap.getSmsMaterielId());
-        materialCouponStatusUpdatevo.setTaskId(smsHead.getId());
-        materialCouponStatusUpdatevo.setTaskName(smsHead.getSmsTaskName());
-        materialCouponStatusUpdatevo.setStatus(status.getCode());
-        logger.info("smsMaterielId is {},taskId is {}, taskName is {}, status is {}", materielMap.getSmsMaterielId(),
-                        smsHead.getId(), smsHead.getSmsTaskName(), status.getCode());
-        return materialCouponStatusUpdatevo;
+
+	private MaterialCouponStatusUpdateVO initMaterialCoupon(SmsTaskHead smsHead, MaterialCouponStatusEnum status) {
+		Long smsMaterialId = smsHead.getSmsTaskMaterialId();
+		SmsMaterialMaterielMap materielMap = new SmsMaterialMaterielMap();
+		materielMap.setSmsMaterialId(smsMaterialId);
+		materielMap.setSmsMaterielType(SMS_MATERIEL_TYPE);// 优惠券
+		List<SmsMaterialMaterielMap> materielMapList = smsMaterialMaterielMapDao.selectList(materielMap);
+		if (CollectionUtils.isEmpty(materielMapList)) {
+			logger.info("materielMapList is null!");
+			return null;
+		}
+
+		materielMap = materielMapList.get(0);
+		MaterialCouponStatusUpdateVO materialCouponStatusUpdatevo = new MaterialCouponStatusUpdateVO();
+		materialCouponStatusUpdatevo.setId(materielMap.getSmsMaterielId());
+		materialCouponStatusUpdatevo.setTaskId(smsHead.getId());
+		materialCouponStatusUpdatevo.setTaskName(smsHead.getSmsTaskName());
+		materialCouponStatusUpdatevo.setStatus(status.getCode());
+		logger.info("smsMaterielId is {},taskId is {}, taskName is {}, status is {}", materielMap.getSmsMaterielId(), smsHead.getId(),
+				smsHead.getSmsTaskName(), status.getCode());
+		return materialCouponStatusUpdatevo;
 	}
-	
-	private MaterialCouponCodeStatusUpdateVO initMaterialCouponCode(SmsTaskDetail detail, MaterialCouponCodeReleaseStatusEnum status){
-	    MaterialCouponCodeStatusUpdateVO  materialCouponCodevo = new  MaterialCouponCodeStatusUpdateVO();
-	    materialCouponCodevo.setId(detail.getMaterielCouponCodeId());
-	    materialCouponCodevo.setUser(detail.getReceiveMobile());
-	    materialCouponCodevo.setStatus(status.getCode());
-	    logger.info("couponCodeId is {}, mobile is {}, ststus is {}", detail.getMaterielCouponCodeId(), detail.getReceiveMobile(),
-	                    status.getCode());
-	    return materialCouponCodevo;
+
+	private MaterialCouponCodeStatusUpdateVO initMaterialCouponCode(SmsTaskDetail detail, MaterialCouponCodeReleaseStatusEnum status) {
+		MaterialCouponCodeStatusUpdateVO materialCouponCodevo = new MaterialCouponCodeStatusUpdateVO();
+		materialCouponCodevo.setId(detail.getMaterielCouponCodeId());
+		materialCouponCodevo.setUser(detail.getReceiveMobile());
+		materialCouponCodevo.setStatus(status.getCode());
+		logger.info("couponCodeId is {}, mobile is {}, ststus is {}", detail.getMaterielCouponCodeId(), detail.getReceiveMobile(), status.getCode());
+		return materialCouponCodevo;
 	}
 
 }
