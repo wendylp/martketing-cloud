@@ -22,6 +22,9 @@ public class EventInvolvedDataParty implements Serializable {
 
     @Field(value = "campaign_head_id")
     private Long campaignHeadId;
+    
+    @Field(value = "inserted")
+    private Boolean inserted;
 
     public String getId() {
         return id;
@@ -53,6 +56,14 @@ public class EventInvolvedDataParty implements Serializable {
 
     public void setCampaignHeadId(Long campaignHeadId) {
         this.campaignHeadId = campaignHeadId;
+    }
+
+    public Boolean getInserted() {
+        return inserted;
+    }
+
+    public void setInserted(Boolean inserted) {
+        this.inserted = inserted;
     }
 
 }

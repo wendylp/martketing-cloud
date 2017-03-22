@@ -9,7 +9,7 @@
  *************************************************/
 package cn.rongcapital.mkt.campaign.service;
 
-import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.event.vo.EventSubjectCombineResult;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
 
 
@@ -29,9 +29,9 @@ public interface EventSubjectCombineService {
      * 根据事件主体获取主数据
      * 
      * @param eventbehavior
-     * @return Segment
+     * @return EventSubjectCombineResult
      * @author zhuxuelong
      * @date: 2017/3/1
      */
-    Segment combineStreamData(EventBehavior eventbehavior);
+    EventSubjectCombineResult combineStreamData(EventBehavior eventbehavior);
 }
