@@ -1,7 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.api.Sms;
 import cn.rongcapital.mkt.api.SmsApi;
+import cn.rongcapital.mkt.api.SmsStatus;
+import cn.rongcapital.mkt.api.SmsStatusResponse;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
@@ -38,9 +40,6 @@ import cn.rongcapital.mkt.po.SmsMaterialMaterielMap;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.po.SmsTaskDetailState;
 import cn.rongcapital.mkt.po.SmsTaskHead;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 @Service
 public class SmsSendTaskServiceImpl implements TaskService {
@@ -131,8 +130,8 @@ public class SmsSendTaskServiceImpl implements TaskService {
 			Integer count = 0;
 
 			Map<Long, String> SmsBatchMap = new LinkedHashMap<Long, String>();
-			List<Map<String, String>> receives = new ArrayList<Map<String, String>>();
-			Map<String, String> mapTmp = null;
+			List<Sms> smsList = new ArrayList<Sms>();
+			SmsStatusResponse response = null;
 			for (SmsTaskDetail detail : smsDetailList) {
 
 				detail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
@@ -142,10 +141,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 				String receiveMobile = detail.getReceiveMobile();
 				String sendMessage = detail.getSendMessage();
 
-				mapTmp = new HashMap<String, String>();
-				mapTmp.put("receive", receiveMobile);
-				mapTmp.put("msg", sendMessage);
-				receives.add(mapTmp);
+				smsList.add(new Sms(receiveMobile, sendMessage));
 				// 对短短信进行封装
 				count++;
 				// logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
@@ -154,11 +150,11 @@ public class SmsSendTaskServiceImpl implements TaskService {
 
 				if (count >= SMS_SEND_BACTH_COUNT) {
 					// 调用发送API接口（批量）
-					String str = this.smsApi.sendMultSms(JSONArray.toJSONString(receives));
+					response = this.smsApi.sendMultSms(smsList);
 
 					// Map<Long, Double> sendSmsResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
 					// 统计一批短信的成功和失败的个数,根据短信API判断状态回写sms_task_detail_state表和head表
-					updateSmsDetailState(str, SmsBatchMap, smsHead);
+					updateSmsDetailState(response, SmsBatchMap, smsHead);
 					// 修改当前任务这一批短信的成功和失败个数
 					smsTaskHeadDao.updateById(smsHead);
 					count = 0;
@@ -167,15 +163,14 @@ public class SmsSendTaskServiceImpl implements TaskService {
 				}
 			}
 			// Map<String, SmsResponse> rs = null;
-			String str = "";
-			if (sms_task_trigger == 1 && receives.size() == 1) {// 事件类型
-				str = this.smsApi.sendSms(JSONObject.toJSONString(receives.get(0)));
+			if (sms_task_trigger == 1 && smsList.size() == 1) {// 事件类型
+				response = this.smsApi.sendSms(smsList.get(0));
 			} else {
-				str = this.smsApi.sendMultSms(JSONArray.toJSONString(receives));
+				response = this.smsApi.sendMultSms(smsList);
 			}
 
 			// 处理不满一批的短信
-			updateSmsDetailState(str, SmsBatchMap, smsHead);
+			updateSmsDetailState(response, SmsBatchMap, smsHead);
 			// 最后把任务状态改为已完成,把等待的个数置为0
 			if (sms_task_trigger == 0) { // 非事件类型的短信
 				smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_FINISH.getStatusCode());
@@ -270,10 +265,8 @@ public class SmsSendTaskServiceImpl implements TaskService {
 		smsHead.setWaitingNum(smsCoverNum - (success + fail));
 	}
 
-	@SuppressWarnings("unchecked")
-	public void updateSmsDetailState(String rs, Map<Long, String> SmsBatchMap, SmsTaskHead smsHead) {
-		Map<String, Object> map = JSONObject.parseObject(rs);
-		Map<String, Object> data = (Map<String, Object>) map.get("data");
+	public void updateSmsDetailState(SmsStatusResponse response, Map<Long, String> SmsBatchMap, SmsTaskHead smsHead) {
+		Map<String, SmsStatus> data = response.getSmsMap();
 
 		SmsTaskDetailState smsTaskDetailState = null;
 		List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<>(); // 优惠券状态
@@ -281,7 +274,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 		int successCount = 0;
 		int failCount = 0;
 
-		boolean isSuccess = "200".equals(map.get("errcode").toString()); // 本次推送短信请求是否成功
+		boolean isSuccess = "200".equals(response.getErrorCode()); // 本次推送短信请求是否成功
 		for (Entry<Long, String> entry : SmsBatchMap.entrySet()) {
 			Long taskDetailId = entry.getKey();
 
@@ -293,9 +286,9 @@ public class SmsSendTaskServiceImpl implements TaskService {
 
 			double gatewayState = -1;
 			if (isSuccess) {
-				Map<String, Object> item = (Map<String, Object>) data.get(entry.getValue()); // 本条短信返回状态
-				if (item != null) {
-					gatewayState = Double.parseDouble(item.get("errcode").toString());
+				SmsStatus smsStatus = data.get(entry.getValue()); // 本条短信返回状态
+				if (smsStatus != null) {
+					gatewayState = Double.parseDouble(smsStatus.getErrorCode());
 				}
 			}
 
