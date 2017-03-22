@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
+import cn.rongcapital.mc.datatag.agent.DataTagAgent;
+import cn.rongcapital.mc.datatag.agent.DataType;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.*;
@@ -46,6 +48,9 @@ public class ImportContactsDataToMDataServiceImpl implements ImportContactsDataT
 
     @Autowired
     private DataPopulationDao dataPopulationDao;
+    
+    @Autowired
+    private DataTagAgent dataTagAgent;
 
     @Override
     public BaseOutput importContactsDataToMData(Long contactId) {
@@ -141,6 +146,9 @@ public class ImportContactsDataToMDataServiceImpl implements ImportContactsDataT
         dataPopulation.setRemark(upContactList.getRemark());
         dataPopulationDao.insert(dataPopulation);
         keyId = dataPopulation.getId();
+        
+        dataTagAgent.proceedWithDataAccess(DataType.POPULATION);
+        
         return keyId;
     }
 

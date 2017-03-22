@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @ImportResource({"classpath:spring/spring-config-mybatis-heracles.xml","classpath:spring/spring-config-schedule.xml"})
 //@ImportResource({"classpath:spring/spring-config-mybatis-heracles.xml","classpath:spring/spring-config-job.xml"})
-@PropertySource(value = {"classpath:${conf.dir}/application-api.properties","classpath:${conf.dir}/application-dao.properties"})
+@PropertySource(value = {"classpath:${conf.dir}/application-api.properties","classpath:${conf.dir}/application-dao.properties","classpath:${conf.dir}/datatag-agent.properties"})
 public class SpringBootMain {
 	
 	/**

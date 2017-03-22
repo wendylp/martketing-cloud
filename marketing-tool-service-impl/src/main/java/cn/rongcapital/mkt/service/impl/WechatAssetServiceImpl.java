@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tagsin.wechat_sdk.user.UserInfo;
+
+import cn.rongcapital.mc.datatag.agent.DataTagAgent;
+import cn.rongcapital.mc.datatag.agent.DataType;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
@@ -61,6 +64,9 @@ public class WechatAssetServiceImpl implements WechatAssetService {
     @Autowired
     private DataPopulationDao dataPopulationDao;
     
+    @Autowired
+    private DataTagAgent dataTagAgent;
+    
 	/**
 	 * 取消关注公众号
 	 * @param wxCode 粉丝Code(wechat_member.wx_code)
@@ -91,6 +97,7 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 				t.setId(keyid);
 				t.setStatus(1);
 				dataPopulationDao.updateById(t);
+				dataTagAgent.proceedWithDataAccess(DataType.POPULATION);
 			}
 			
 			//更新资产
