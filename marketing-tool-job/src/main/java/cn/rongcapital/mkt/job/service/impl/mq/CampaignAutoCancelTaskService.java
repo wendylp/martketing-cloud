@@ -69,6 +69,7 @@ public abstract class CampaignAutoCancelTaskService extends BaseMQService implem
      * @param taskSchedule
      * @return
      */
+    @Transactional
     protected boolean validAndUpdateTaskSchedule(TaskSchedule taskSchedule){
         //验证当前任务节点所处活动是否停止
         //验证上一个节点是否已经停止

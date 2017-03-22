@@ -68,6 +68,7 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 	}
 
 	@Override
+	@Transactional
 	public void stopTimerTriggerTask(TaskSchedule taskSchedule) {
 		CampaignHead t = new CampaignHead();
 		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
