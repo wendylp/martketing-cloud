@@ -12,15 +12,14 @@
 
 package cn.rongcapital.mkt.job.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.RunnableScheduledFuture;
-import java.util.concurrent.ScheduledFuture;
+import java.util.*;
+import java.util.concurrent.*;
 
 import javax.jms.JMSException;
 import javax.jms.Queue;
 
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.job.util.ScheduledFutureExecutor;
 import org.apache.activemq.command.ActiveMQTempQueue;
 import org.junit.After;
 import org.junit.Assert;
@@ -34,6 +33,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
@@ -75,150 +75,81 @@ public class CampaignAutoCancelTaskServiceTest {
     @After
     public void after() throws Exception {
     }
-
-    /**
-     * Method: cancelInnerTask(TaskSchedule taskSchedule)
-     */
     @Test
-    public void testCancelInnerTask() throws Exception {
+    public  void testValidateAndUpdateTaskStatus() throws Exception {
+        TaskSchedule taskSchedule = new TaskSchedule();
+        ScheduledFutureExecutor scheduledScheduledFutureExecutor = null;
+        PowerMockito.doReturn( true ).when( service, "validCampaignHead", Mockito.any());
+        PowerMockito.doReturn( true ).when( service, "validPreNode", Mockito.any());
+        PowerMockito.doReturn( true ).when( service, "validQueueSize", Mockito.any());
+        PowerMockito.doReturn( true ).when( service, "cancelCampaignInnerTask", Mockito.any());
+        PowerMockito.doReturn( true ).when( service, "validScheduleFutureRunning", Mockito.any());
+        PowerMockito.doNothing().when( service, "updateDataStatus", Mockito.any());
+        boolean result = this.service.validateAndUpdateTaskStatus(taskSchedule, scheduledScheduledFutureExecutor);
+        Assert.assertEquals(Boolean.TRUE,result);
+    }
+    @Test
+    public  void testValidateAndUpdateTaskStatusFalse() throws Exception {
+        TaskSchedule taskSchedule = new TaskSchedule();
+        ScheduledFutureExecutor scheduledScheduledFutureExecutor = null;
+        PowerMockito.doReturn( false ).when( service, "validCampaignHead", Mockito.any());
+        PowerMockito.doReturn( false ).when( service, "validPreNode", Mockito.any());
+        PowerMockito.doReturn( false ).when( service, "validQueueSize", Mockito.any());
+        PowerMockito.doReturn( false ).when( service, "cancelCampaignInnerTask", Mockito.any());
+        PowerMockito.doReturn( false ).when( service, "validScheduleFutureRunning", Mockito.any());
+        PowerMockito.doNothing().when( service, "updateDataStatus", Mockito.any());
+        boolean result = this.service.validateAndUpdateTaskStatus(taskSchedule, scheduledScheduledFutureExecutor);
+        Assert.assertEquals(Boolean.FALSE,result);
+    }
 
-        TaskSchedule campaignActionWaitTask = new TaskSchedule();
-        campaignActionWaitTask.setServiceName("campaignActionWaitTask");
-        campaignActionWaitTask.setTaskStatus(Byte.valueOf("1"));
-        campaignActionWaitTask.setStatus(Byte.valueOf("1"));
-        campaignActionWaitTask.setCampaignHeadId(468);
-        campaignActionWaitTask.setCampaignItemId("1489028042642");
+    @Test
+    public  void testValidAndUpdateTaskSchedule() throws Exception {
+        TaskSchedule taskSchedule = new TaskSchedule();
+        ScheduledFutureExecutor scheduledScheduledFutureExecutor = null;
+        PowerMockito.doReturn( true ).when( service, "validCampaignHead", Mockito.any());
+        PowerMockito.doReturn( true ).when( service, "validPreNode", Mockito.any());
+        PowerMockito.doReturn( true ).when( service, "validQueueSize", Mockito.any());
+        PowerMockito.doReturn( true ).when( service, "cancelCampaignInnerTask", Mockito.any());
+        PowerMockito.doReturn( true ).when( service, "validScheduleFutureRunning", Mockito.any());
+        PowerMockito.doNothing().when( service, "updateDataStatus", Mockito.any());
+        boolean result =   Whitebox.invokeMethod(this.service,"validAndUpdateTaskSchedule",taskSchedule);
+        Assert.assertEquals(Boolean.TRUE,result);
+    }
 
+    @Test
+    public  void testValidAndUpdateTaskScheduleFalse() throws Exception {
+        TaskSchedule taskSchedule = new TaskSchedule();
+        PowerMockito.doReturn( false ).when( service, "validCampaignHead", Mockito.any());
+        PowerMockito.doReturn( false ).when( service, "validPreNode", Mockito.any());
+        PowerMockito.doReturn( false ).when( service, "validQueueSize", Mockito.any());
+        PowerMockito.doReturn( false ).when( service, "cancelCampaignInnerTask", Mockito.any());
+        PowerMockito.doReturn( false ).when( service, "validScheduleFutureRunning", Mockito.any());
+        PowerMockito.doNothing().when( service, "updateDataStatus", Mockito.any());
+        boolean result =   Whitebox.invokeMethod(this.service,"validAndUpdateTaskSchedule",taskSchedule);
+        Assert.assertEquals(Boolean.FALSE,result);
+    }
+
+
+
+
+    @Test
+    public void testValidScheduleFutureRunning() throws Exception {
         ScheduledFuture<?> scheduledFuture = null;
-        PowerMockito.doReturn( true ).when( service, "isNeedCancel", Mockito.any());
-        service.cancelInnerTask(campaignActionWaitTask,scheduledFuture);
-        Mockito.verify(taskScheduleDao,Mockito.times(1)).updateById(Mockito.any(TaskSchedule.class));
+    ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+        Date startTime = new Date();
+        ConcurrentTaskScheduler concurrentTaskScheduler = new ConcurrentTaskScheduler(scheduledExecutor);
+
+        ScheduledFuture<?> schedule = concurrentTaskScheduler.schedule(new Runnable() {
+            public void run() {
+
+            }
+        }, startTime);
+        Thread.sleep(1*1000);
+        ScheduledFutureExecutor executor = new ScheduledFutureExecutor(scheduledFuture, scheduledExecutor) ;
+
+        boolean result =   Whitebox.invokeMethod(this.service,"validScheduleFutureRunning",executor);
+        Assert.assertEquals(Boolean.FALSE,result);
     }
-
-    @Test
-    public void testCancelInnerTaskIsFalse() throws Exception {
-
-        TaskSchedule campaignActionWaitTask = new TaskSchedule();
-        campaignActionWaitTask.setServiceName("campaignActionWaitTask");
-        campaignActionWaitTask.setTaskStatus(Byte.valueOf("1"));
-        campaignActionWaitTask.setStatus(Byte.valueOf("1"));
-        campaignActionWaitTask.setCampaignHeadId(468);
-        campaignActionWaitTask.setCampaignItemId("1489028042642");
-
-        ScheduledFuture<?> scheduledFuture = null;
-        PowerMockito.doReturn( false ).when( service, "isNeedCancel", Mockito.any());
-        service.cancelInnerTask(campaignActionWaitTask,scheduledFuture);
-        Mockito.verify(taskScheduleDao,Mockito.times(0)).updateById(Mockito.any(TaskSchedule.class));
-    }
-
-    @Test
-    public void testIsNeedCancel() throws Exception {
-
-        CampaignHead campaignHead = new CampaignHead();
-        campaignHead.setId(468);
-        campaignHead.setName("xiexiaoliang_test_24");
-        campaignHead.setPublishStatus(Byte.valueOf("3"));
-        campaignHead.setStatus(Byte.valueOf("0"));
-        TaskSchedule campaignTriggerTimeTask = new TaskSchedule();
-        campaignTriggerTimeTask.setServiceName("campaignTriggerTimeTask");
-        campaignTriggerTimeTask.setTaskStatus(Byte.valueOf("0"));
-        campaignTriggerTimeTask.setStatus(Byte.valueOf("0"));
-        campaignTriggerTimeTask.setCampaignHeadId(468);
-        campaignTriggerTimeTask.setCampaignItemId("1489028037209");
-        List<CampaignHead> campaignHeads = new ArrayList<>();
-        campaignHeads.add(campaignHead);
-        PowerMockito.when(this.campaignHeadDao.selectList(Mockito.any(CampaignHead.class))).thenReturn(campaignHeads);
-
-        List<TaskSchedule> schedules = new ArrayList<>();
-        schedules.add(campaignTriggerTimeTask);
-        PowerMockito.when(this.taskScheduleDao.selectPreByCampaignIdAndItemId(Mockito.anyInt(),Mockito.anyString())).thenReturn(null);
-
-        PowerMockito.doReturn(null).when(this.service,"getDynamicQueue",Mockito.anyString());
-        boolean isNeedCancel =   Whitebox.invokeMethod(this.service,"isNeedCancel",campaignTriggerTimeTask);
-        Assert.assertEquals(Boolean.TRUE,isNeedCancel);
-    }
-
-    @Test
-    public void testIsNeedCancelCampasignInProcess() throws Exception {
-
-        CampaignHead campaignHead = new CampaignHead();
-        campaignHead.setId(468);
-        campaignHead.setName("xiexiaoliang_test_24");
-        campaignHead.setPublishStatus(Byte.valueOf("2"));
-        campaignHead.setStatus(Byte.valueOf("0"));
-        TaskSchedule campaignTriggerTimeTask = new TaskSchedule();
-        campaignTriggerTimeTask.setServiceName("campaignTriggerTimeTask");
-        campaignTriggerTimeTask.setTaskStatus(Byte.valueOf("0"));
-        campaignTriggerTimeTask.setStatus(Byte.valueOf("0"));
-        campaignTriggerTimeTask.setCampaignHeadId(468);
-        campaignTriggerTimeTask.setCampaignItemId("1489028037209");
-        List<CampaignHead> campaignHeads = new ArrayList<>();
-        campaignHeads.add(campaignHead);
-        PowerMockito.when(this.campaignHeadDao.selectList(Mockito.any(CampaignHead.class))).thenReturn(campaignHeads);
-
-        List<TaskSchedule> schedules = new ArrayList<>();
-        schedules.add(campaignTriggerTimeTask);
-        PowerMockito.when(this.taskScheduleDao.selectPreByCampaignIdAndItemId(Mockito.anyInt(),Mockito.anyString())).thenReturn(null);
-
-        PowerMockito.doReturn(null).when(this.service,"getDynamicQueue",Mockito.anyString());
-        boolean isNeedCancel =   Whitebox.invokeMethod(this.service,"isNeedCancel",campaignTriggerTimeTask);
-        Assert.assertEquals(Boolean.FALSE,isNeedCancel);
-    }
-
-    @Test
-    public void testIsNeedCancelPreTaskIsValid() throws Exception {
-
-        CampaignHead campaignHead = new CampaignHead();
-        campaignHead.setId(468);
-        campaignHead.setName("xiexiaoliang_test_24");
-        campaignHead.setPublishStatus(Byte.valueOf("3"));
-        campaignHead.setStatus(Byte.valueOf("0"));
-        TaskSchedule campaignTriggerTimeTask = new TaskSchedule();
-        campaignTriggerTimeTask.setServiceName("campaignTriggerTimeTask");
-        campaignTriggerTimeTask.setTaskStatus(Byte.valueOf("0"));
-        campaignTriggerTimeTask.setStatus(Byte.valueOf("0"));
-        campaignTriggerTimeTask.setCampaignHeadId(468);
-        campaignTriggerTimeTask.setCampaignItemId("1489028037209");
-        List<CampaignHead> campaignHeads = new ArrayList<>();
-        campaignHeads.add(campaignHead);
-        PowerMockito.when(this.campaignHeadDao.selectList(Mockito.any(CampaignHead.class))).thenReturn(campaignHeads);
-
-        List<TaskSchedule> schedules = new ArrayList<>();
-        schedules.add(campaignTriggerTimeTask);
-        PowerMockito.when(this.taskScheduleDao.selectPreByCampaignIdAndItemId(Mockito.anyInt(),Mockito.anyString())).thenReturn(schedules);
-
-        PowerMockito.doReturn(null).when(this.service,"getDynamicQueue",Mockito.anyString());
-        boolean isNeedCancel =   Whitebox.invokeMethod(this.service,"isNeedCancel",campaignTriggerTimeTask);
-        Assert.assertEquals(Boolean.FALSE,isNeedCancel);
-    }
-
-    @Test
-    public void testIsNeedCancelPreTaskIsInValid() throws Exception {
-
-        CampaignHead campaignHead = new CampaignHead();
-        campaignHead.setId(468);
-        campaignHead.setName("xiexiaoliang_test_24");
-        campaignHead.setPublishStatus(Byte.valueOf("3"));
-        campaignHead.setStatus(Byte.valueOf("0"));
-        TaskSchedule campaignTriggerTimeTask = new TaskSchedule();
-        campaignTriggerTimeTask.setServiceName("campaignTriggerTimeTask");
-        campaignTriggerTimeTask.setTaskStatus(Byte.valueOf("1"));
-        campaignTriggerTimeTask.setStatus(Byte.valueOf("1"));
-        campaignTriggerTimeTask.setCampaignHeadId(468);
-        campaignTriggerTimeTask.setCampaignItemId("1489028037209");
-        List<CampaignHead> campaignHeads = new ArrayList<>();
-        campaignHeads.add(campaignHead);
-        PowerMockito.when(this.campaignHeadDao.selectList(Mockito.any(CampaignHead.class))).thenReturn(campaignHeads);
-
-        List<TaskSchedule> schedules = new ArrayList<>();
-        schedules.add(campaignTriggerTimeTask);
-        PowerMockito.when(this.taskScheduleDao.selectPreByCampaignIdAndItemId(Mockito.anyInt(),Mockito.anyString())).thenReturn(schedules);
-
-        PowerMockito.doReturn(null).when(this.service,"getDynamicQueue",Mockito.anyString());
-        boolean isNeedCancel =   Whitebox.invokeMethod(this.service,"isNeedCancel",campaignTriggerTimeTask);
-        Assert.assertEquals(Boolean.TRUE,isNeedCancel);
-    }
-
     @Test
     public void testIsNeedCancelPreTaskQueueHasSize() throws Exception {
 
@@ -243,12 +174,13 @@ public class CampaignAutoCancelTaskServiceTest {
 
         PowerMockito.doReturn(new ActiveMQTempQueue()).when(this.service,"getDynamicQueue",Mockito.anyString());
         PowerMockito.doReturn(1).when(this.service,"getQueueSize",Mockito.any(Queue.class));
-        boolean isNeedCancel =   Whitebox.invokeMethod(this.service,"isNeedCancel",campaignTriggerTimeTask);
-        Assert.assertEquals(Boolean.FALSE,isNeedCancel);
+        boolean result =   Whitebox.invokeMethod(this.service,"validQueueSize",campaignTriggerTimeTask);
+        Assert.assertEquals(Boolean.TRUE,result);
     }
 
     @Test
-    public void teetUpdateTaskStatus() throws Exception {
+    public void testUpdateDataStatus() throws Exception {
+
         TaskSchedule campaignActionWaitTask = new TaskSchedule();
         campaignActionWaitTask.setServiceName("campaignActionWaitTask");
         campaignActionWaitTask.setTaskStatus(Byte.valueOf("1"));
@@ -256,9 +188,47 @@ public class CampaignAutoCancelTaskServiceTest {
         campaignActionWaitTask.setCampaignHeadId(468);
         campaignActionWaitTask.setCampaignItemId("1489028042642");
 
-        ScheduledFuture<?> scheduledFuture = null;
-        PowerMockito.doReturn( true ).when( service, "isNeedCancel", Mockito.any());
-        service.updateTaskStatus(campaignActionWaitTask);
-        Mockito.verify(taskScheduleDao,Mockito.times(1)).updateById(Mockito.any(TaskSchedule.class));
+        Whitebox.invokeMethod(this.service,"updateDataStatus",campaignActionWaitTask);
+        campaignActionWaitTask.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);
+        campaignActionWaitTask.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+        Mockito.verify(this.taskScheduleDao,Mockito.times(1)).updateById(campaignActionWaitTask);
+    }
+    @Test
+    public  void testValidPreNode() throws Exception {
+        TaskSchedule campaignTriggerTimeTask = new TaskSchedule();
+        campaignTriggerTimeTask.setServiceName("campaignTriggerTimeTask");
+        campaignTriggerTimeTask.setTaskStatus(Byte.valueOf("0"));
+        campaignTriggerTimeTask.setStatus(Byte.valueOf("0"));
+        campaignTriggerTimeTask.setCampaignHeadId(468);
+        campaignTriggerTimeTask.setCampaignItemId("1489028037209");
+
+        List<TaskSchedule> schedules = new ArrayList<>();
+        schedules.add(campaignTriggerTimeTask);
+        PowerMockito.when(this.taskScheduleDao.selectPreByCampaignIdAndItemId(Mockito.anyInt(),Mockito.anyString())).thenReturn(schedules);
+
+        boolean result =   Whitebox.invokeMethod(this.service,"validPreNode",campaignTriggerTimeTask);
+        Assert.assertEquals(Boolean.TRUE,result);
+    }
+
+    @Test
+    public  void testValidCampaignHead() throws Exception {
+        CampaignHead campaignHead = new CampaignHead();
+        campaignHead.setId(468);
+        campaignHead.setName("xiexiaoliang_test_24");
+        campaignHead.setPublishStatus(Byte.valueOf("2"));
+        campaignHead.setStatus(Byte.valueOf("0"));
+
+        TaskSchedule campaignTriggerTimeTask = new TaskSchedule();
+        campaignTriggerTimeTask.setServiceName("campaignTriggerTimeTask");
+        campaignTriggerTimeTask.setTaskStatus(Byte.valueOf("0"));
+        campaignTriggerTimeTask.setStatus(Byte.valueOf("0"));
+        campaignTriggerTimeTask.setCampaignHeadId(468);
+        campaignTriggerTimeTask.setCampaignItemId("1489028037209");
+
+        List<CampaignHead> campaignHeads = new ArrayList<>();
+        campaignHeads.add(campaignHead);
+        PowerMockito.when(this.campaignHeadDao.selectList(Mockito.any(CampaignHead.class))).thenReturn(campaignHeads);
+        boolean result =   Whitebox.invokeMethod(this.service,"validCampaignHead",campaignTriggerTimeTask);
+        Assert.assertEquals(Boolean.TRUE,result);
     }
 } 

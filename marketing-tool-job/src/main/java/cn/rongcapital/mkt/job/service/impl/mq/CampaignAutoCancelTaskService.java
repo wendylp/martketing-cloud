@@ -16,6 +16,7 @@ import java.util.concurrent.*;
 
 import javax.jms.Queue;
 
+import cn.rongcapital.mkt.job.util.ScheduledFutureExecutor;
 import cn.rongcapital.mkt.po.CampaignHead;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public abstract class CampaignAutoCancelTaskService extends BaseMQService implem
 
     @Override
     @Transactional
-    public boolean validateAndUpdateTaskStatus(TaskSchedule taskSchedule, ScheduledFuture<?> scheduleFuture) {
+    public boolean validateAndUpdateTaskStatus(TaskSchedule taskSchedule, ScheduledFutureExecutor scheduledScheduledFutureExecutor) {
 
         //验证当前任务节点所处活动是否停止
         //验证上一个节点是否已经停止
@@ -51,8 +52,9 @@ public abstract class CampaignAutoCancelTaskService extends BaseMQService implem
         if (validCampaignHead(taskSchedule)
                 ||validPreNode(taskSchedule)
                 ||validQueueSize(taskSchedule)
-                ||validScheduleFutureRunning(scheduleFuture)
-                ||super.cancelCampaignInnerTask(taskSchedule)) {
+                ||super.cancelCampaignInnerTask(taskSchedule)
+                ||validScheduleFutureRunning(scheduledScheduledFutureExecutor)
+                ) {
             return true;
         }
         logger.info("Task schedule id is {}, service name is {}，need to set stop.",taskSchedule.getId(),taskSchedule.getServiceName());
@@ -78,35 +80,21 @@ public abstract class CampaignAutoCancelTaskService extends BaseMQService implem
                 ||super.cancelCampaignInnerTask(taskSchedule)){
             return true;
         }
-
         updateDataStatus(taskSchedule);
         return false;
     }
 
     /**
      * 校验当前任务线程是否已经执行完毕
-     * @param scheduleFuture
+     * @param scheduledFutureExecutor
      * @return
      */
-    private boolean validScheduleFutureRunning(ScheduledFuture<?> scheduleFuture){
-    //当前任务线程是否正常停止了
-        if(scheduleFuture.isDone()  ){
-            try {
-                scheduleFuture.get(1, TimeUnit.MILLISECONDS);
-                return false;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return true;
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-                return true;
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-                return true;
-            }
-        }else {
+    private boolean validScheduleFutureRunning(ScheduledFutureExecutor scheduledFutureExecutor){
+        scheduledFutureExecutor.getScheduledExecutor().shutdown();
+        if(!scheduledFutureExecutor.getScheduledExecutor().isShutdown()){
             return true;
         }
+        return  false;
     }
 
     /**

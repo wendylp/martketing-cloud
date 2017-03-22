@@ -1,7 +1,6 @@
 package cn.rongcapital.mkt.job.service.base;
 
-import java.util.concurrent.ScheduledFuture;
-
+import cn.rongcapital.mkt.job.util.ScheduledFutureExecutor;
 import cn.rongcapital.mkt.po.TaskSchedule;
 
 public interface TaskService {
@@ -15,9 +14,9 @@ public interface TaskService {
 	/**
 	 * 验证当前任务节点是否可以停止，如果可以，则将数据库状态进行设置为不可用
 	 * @param taskSchedule
-	 * @param scheduleFuture
+	 * @param scheduledScheduledFutureExecutor
 	 */
-	default boolean validateAndUpdateTaskStatus(TaskSchedule taskSchedule, ScheduledFuture<?> scheduleFuture) {
+	default boolean validateAndUpdateTaskStatus(TaskSchedule taskSchedule, ScheduledFutureExecutor scheduledScheduledFutureExecutor) {
 		return false;
 	}
 
