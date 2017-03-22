@@ -28,7 +28,9 @@ public interface SmsService {
 	 * @param phoneNum
 	 * @param msg
 	 * @return 发送成功返回true, 发送失败返回false.
+	 * @since 1.8.0
 	 */
+	@Deprecated
 	default public Map<String, SmsResponse> sendSms(String phoneNum, String msg) {
 		logger.info("\r\n手  机  号：" + phoneNum + "\r\n短信内容：" + msg + "\r\n");
 		Map<String, SmsResponse> result = new HashMap<String, SmsResponse>();
@@ -43,7 +45,9 @@ public interface SmsService {
 	 * @param phoneNum
 	 * @param msg
 	 * @return 发送成功短信总数.
+	 * @since 1.8.0
 	 */
+	@Deprecated
 	default public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String msg) {
 		StringBuilder stringBuilder = new StringBuilder();
 		Map<String, SmsResponse> result = new HashMap<String, SmsResponse>(); // 返回结果集
@@ -62,7 +66,9 @@ public interface SmsService {
 	 * @param phoneNum
 	 * @param msg
 	 * @return 发送成功短信总数.
+	 * @since 1.8.0
 	 */
+	@Deprecated
 	default public Map<String, SmsResponse> sendMultSms(String[] phoneNum, String[] msg) {
 		if (phoneNum.length != msg.length) {
 			throw new IllegalArgumentException("短信格式错误");
