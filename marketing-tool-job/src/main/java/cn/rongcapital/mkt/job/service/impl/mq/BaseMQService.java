@@ -418,7 +418,7 @@ public class BaseMQService {
 		return isSent;
 	}
 
-	protected void cancelCampaignInnerTask(TaskSchedule taskSchedule) {
+	protected boolean cancelCampaignInnerTask(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
 		Integer id = taskSchedule.getId();
@@ -432,8 +432,10 @@ public class BaseMQService {
 				consumerMap.remove(consumerKey);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	/**

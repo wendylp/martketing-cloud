@@ -3,9 +3,7 @@ package cn.rongcapital.mkt.job.service.base;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.*;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -93,6 +91,7 @@ public class TaskManager {
         logger.debug("scanTask");
         ConcurrentHashMap<String, TaskSchedule> taskPropMapTmp = new ConcurrentHashMap<String, TaskSchedule>();
         TaskSchedule t = new TaskSchedule();
+        t.setTaskStatus(ApiConstant.TASK_STATUS_VALID);
         int totalRecord = taskScheduleDao.selectListCount(t);
         int totalPage = (totalRecord + pageSize -1) / pageSize;
         for(int index = 1; index <= totalPage; index++) {
@@ -131,9 +130,7 @@ public class TaskManager {
         TaskManager.taskPropMap.forEach((k, v) -> {
             ScheduledFuture<?> taskSchedule = TaskManager.taskMap.get(k);
             if (v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_VALID) {
-                if (null == taskSchedule
-//                        || taskSchedule.isCancelled()
-                        ) {
+                if (null == taskSchedule) {
                     if (v.getStartTime() == null || v.getStartTime().before(Calendar.getInstance().getTime())) {
                         if (v.getEndTime() == null || v.getEndTime().after(Calendar.getInstance().getTime())) {
                             startTask(v);
@@ -141,35 +138,20 @@ public class TaskManager {
                     }
                 }
 
-                // 停止内嵌的任务/线程
+                // 校验是否需要停止任务，如果需要停止，则只是将数据库中的task_status 和status字段修改，
+                // 不对线程终止，当下一次scanTask时，直接删除任务线程
                 String serviceName = getServiceName(v.getServiceName());
-                //logger.info("coming {},itemid is {}, serviceName is {}", v.getId(), v.getCampaignItemId(),serviceName);
                 Object serviceBean = cotext.getBean(serviceName);
                 if (serviceBean instanceof TaskService) {
                     TaskService taskService = (TaskService) serviceBean;
-                    if(null != taskSchedule && !taskSchedule.isDone()) {
-                        taskService.cancelInnerTask(v,taskSchedule);
+                    if(null != taskSchedule) {
+                        taskService.validateAndUpdateTaskStatus(v,taskSchedule);
                     }
-
-                    if(null != taskSchedule && taskSchedule.isDone()){
-                        try {
-                            logger.info("Task name : {} ,run shutdown,result : {}",v.getServiceName(),taskSchedule.get());
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            logger.error(e.toString());
-                        } catch (ExecutionException e) {
-                            // TODO Auto-generated catch block
-                            logger.error(e.toString());
-                        }
-                        taskService.updateTaskStatus(v);
+                    //事件触发活动，到了结束的时间，需要将相应的活动状态发生改变
+                    if(v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime())){
+                        taskService.stopTimerTriggerTask(v);
                     }
                 }
-            }
-
-            if((v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID
-                    || (v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime())))
-                    && (null != taskSchedule  && !taskSchedule.isCancelled())){
-                taskSchedule.cancel(false);
             }
         });
     }
@@ -220,7 +202,8 @@ public class TaskManager {
         ScheduledFuture<?> scheduledFuture = null;
         String cronStr = taskSchedulePo.getSchedule();
         if (StringUtils.isNotBlank(cronStr)) {
-        	ConcurrentTaskScheduler concurrentTaskScheduler = new ConcurrentTaskScheduler();
+            ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+        	ConcurrentTaskScheduler concurrentTaskScheduler = new ConcurrentTaskScheduler(scheduledExecutor);
             Trigger triger = new CronTrigger(cronStr);
             scheduledFuture = concurrentTaskScheduler.schedule(task, triger);
         } else {

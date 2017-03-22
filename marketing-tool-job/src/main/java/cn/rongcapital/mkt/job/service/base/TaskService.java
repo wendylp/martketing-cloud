@@ -11,10 +11,21 @@ public interface TaskService {
 	default void task (TaskSchedule taskSchedule) {}
 	
 	default void cancelInnerTask(TaskSchedule taskSchedule) {}
-	
-	default void cancelInnerTask(TaskSchedule taskSchedule,ScheduledFuture<?> scheduleFuture) {}
-	
-	public default void updateTaskStatus(TaskSchedule taskSchedule) {}
+
+	/**
+	 * 验证当前任务节点是否可以停止，如果可以，则将数据库状态进行设置为不可用
+	 * @param taskSchedule
+	 * @param scheduleFuture
+	 */
+	default boolean validateAndUpdateTaskStatus(TaskSchedule taskSchedule, ScheduledFuture<?> scheduleFuture) {
+		return false;
+	}
+
+	/**
+	 * 停止时间触发活动
+	 * @param taskSchedule
+	 */
+	default void stopTimerTriggerTask(TaskSchedule taskSchedule) {}
 	
 	default void task (){}
 	

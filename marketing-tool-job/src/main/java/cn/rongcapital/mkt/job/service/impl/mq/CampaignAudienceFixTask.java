@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 
@@ -51,8 +49,13 @@ public class CampaignAudienceFixTask extends CampaignAutoCancelTaskService {
 
 	@Override
 	public void task(TaskSchedule taskSchedule) {
+		if(!super.validAndUpdateTaskSchedule(taskSchedule)){
+			return;
+		}
+
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
+
 		String queueKey = campaignHeadId + "-" + itemId;
 		
 		CampaignAudienceFix campaignAudienceFix = new CampaignAudienceFix();

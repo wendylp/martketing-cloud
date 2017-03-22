@@ -66,5 +66,19 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		// TODO Auto-generated method stub
 		
 	}
-	
+
+	@Override
+	public void stopTimerTriggerTask(TaskSchedule taskSchedule) {
+		CampaignHead t = new CampaignHead();
+		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		t.setId(taskSchedule.getCampaignHeadId());
+		List<CampaignHead> campaignHeads = campaignHeadDao.selectList(t);
+		if(campaignHeads != null && campaignHeads.size() >0){
+			CampaignHead campaignHead = campaignHeads.get(0);
+			if( ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS == campaignHead.getPublishStatus()){
+				campaignHead.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH);
+				campaignHeadDao.updateById(campaignHead);
+			}
+		}
+	}
 }

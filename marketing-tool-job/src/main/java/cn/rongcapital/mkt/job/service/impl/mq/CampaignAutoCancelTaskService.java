@@ -12,20 +12,18 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
 import java.util.List;
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.*;
 
 import javax.jms.Queue;
 
 import cn.rongcapital.mkt.po.CampaignHead;
-import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
-import cn.rongcapital.mkt.dao.CampaignSwitchDao;
 import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.TaskSchedule;
@@ -38,59 +36,138 @@ public abstract class CampaignAutoCancelTaskService extends BaseMQService implem
     @Autowired
     private  CampaignHeadDao campaignHeadDao;
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void cancelInnerTask(TaskSchedule taskSchedule,ScheduledFuture<?> scheduleFuture) {
+    private static Logger logger = LoggerFactory.getLogger(CampaignAutoCancelTaskService.class);
 
-        boolean needCancel = isNeedCancel(taskSchedule);
 
-        //当前任务节点的所以前置节点都没有相应的队列数据时，方可停掉当前任务
-        if(needCancel) {
-//            super.cancelCampaignInnerTask(taskSchedule);
-            taskSchedule.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-            this.taskScheduleDao.updateById(taskSchedule);
+    @Override
+    @Transactional
+    public boolean validateAndUpdateTaskStatus(TaskSchedule taskSchedule, ScheduledFuture<?> scheduleFuture) {
+
+        //验证当前任务节点所处活动是否停止
+        //验证上一个节点是否已经停止
+        //验证当前节点对应的MQ 队列的数据已经全部消费掉
+        //验证任务线程是否已经执行完毕
+        //当前节点对应的MQ consumer 关闭
+        if (validCampaignHead(taskSchedule)
+                ||validPreNode(taskSchedule)
+                ||validQueueSize(taskSchedule)
+                ||validScheduleFutureRunning(scheduleFuture)
+                ||super.cancelCampaignInnerTask(taskSchedule)) {
+            return true;
+        }
+        logger.info("Task schedule id is {}, service name is {}，need to set stop.",taskSchedule.getId(),taskSchedule.getServiceName());
+        //修改此节点对应的数据库状态
+        updateDataStatus(taskSchedule);
+
+        return false;
+    }
+
+    /**
+     *
+     * @param taskSchedule
+     * @return
+     */
+    protected boolean validAndUpdateTaskSchedule(TaskSchedule taskSchedule){
+        //验证当前任务节点所处活动是否停止
+        //验证上一个节点是否已经停止
+        //验证当前节点对应的MQ 队列的数据已经全部消费掉
+        //当前节点对应的MQ consumer 关闭
+        if (validCampaignHead(taskSchedule)
+                ||validPreNode(taskSchedule)
+                ||validQueueSize(taskSchedule)
+                ||super.cancelCampaignInnerTask(taskSchedule)){
+            return true;
+        }
+
+        updateDataStatus(taskSchedule);
+        return false;
+    }
+
+    /**
+     * 校验当前任务线程是否已经执行完毕
+     * @param scheduleFuture
+     * @return
+     */
+    private boolean validScheduleFutureRunning(ScheduledFuture<?> scheduleFuture){
+    //当前任务线程是否正常停止了
+        if(scheduleFuture.isDone()  ){
+            try {
+                scheduleFuture.get(1, TimeUnit.MILLISECONDS);
+                return false;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return true;
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+                return true;
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+                return true;
+            }
+        }else {
+            return true;
         }
     }
 
-    private boolean isNeedCancel(TaskSchedule taskSchedule) {
-        boolean needCancel  = true;
-        CampaignHead t = new CampaignHead();
-        t.setId(taskSchedule.getCampaignHeadId());
-        List<CampaignHead> campaignHeads = this.campaignHeadDao.selectList(t);
-        if(campaignHeads.get(0).getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS){
-            needCancel = false;
-        }
-        List<TaskSchedule> schedules = this.taskScheduleDao.selectPreByCampaignIdAndItemId(taskSchedule.getCampaignHeadId(), taskSchedule.getCampaignItemId());
-
-        if (schedules != null) {
-            for (TaskSchedule schedule : schedules) {
-                if (schedule.getTaskStatus() == ApiConstant.TASK_STATUS_VALID ||schedule.getStatus() == ApiConstant.TABLE_DATA_STATUS_VALID ) {
-                    needCancel = false;
-                }
-            }
-        }
-
+    /**
+     * 校验队列是否还有未处理的信息
+     * @param taskSchedule
+     * @return
+     */
+    private boolean validQueueSize(TaskSchedule taskSchedule) {
         //查看心相应的Queue中是否包含了未处理的数据
         Queue queue = getDynamicQueue(taskSchedule.getCampaignHeadId()+"-"+taskSchedule.getCampaignItemId());//获取MQ中的当前节点对应的queue
         if(queue != null) {
             int queueSize= getQueueSize(queue);//获取MQ数据大小
             if(queueSize>0){
-                needCancel = false;
+                return true;
             }
         }
-        return needCancel;
+        return false;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void updateTaskStatus(TaskSchedule taskSchedule) {
-        boolean needCancel = isNeedCancel(taskSchedule);;
+    /**
+     * 更新节点对应的数据库状态
+     * @param taskSchedule
+     */
+    private void updateDataStatus(TaskSchedule taskSchedule) {
+        //修改此节点对应的数据库状态
+        taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);
+        taskSchedule.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+        this.taskScheduleDao.updateById(taskSchedule);
+    }
 
-        if(needCancel) {
-            super.cancelCampaignInnerTask(taskSchedule);
-            taskSchedule.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);
-            taskSchedule.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-            this.taskScheduleDao.updateById(taskSchedule);
+    /**
+     * 校验上一节点是否已经停止
+     * @param taskSchedule
+     * @return
+     */
+    private boolean validPreNode(TaskSchedule taskSchedule) {
+        //验证此节点的上一级节点是否已经停止
+        List<TaskSchedule> schedules = this.taskScheduleDao.selectPreByCampaignIdAndItemId(taskSchedule.getCampaignHeadId(), taskSchedule.getCampaignItemId());
+        if (schedules != null) {
+            for (TaskSchedule schedule : schedules) {
+                if (schedule.getTaskStatus() == ApiConstant.TASK_STATUS_VALID || schedule.getStatus() == ApiConstant.TABLE_DATA_STATUS_VALID) {
+                    return true;
+                }
+            }
         }
-
+        return false;
     }
-   
+
+    /**
+     * 校验任务所处活动是否不再活动中
+     * @param taskSchedule
+     * @return
+     */
+    private boolean validCampaignHead(TaskSchedule taskSchedule) {
+        //验证当前任务节点所处活动是否已经停止了
+        CampaignHead t = new CampaignHead();
+        t.setId(taskSchedule.getCampaignHeadId());
+        List<CampaignHead> campaignHeads = this.campaignHeadDao.selectList(t);
+        if(campaignHeads.get(0).getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS){
+            return true;
+        }
+        return false;
+    }
 }
