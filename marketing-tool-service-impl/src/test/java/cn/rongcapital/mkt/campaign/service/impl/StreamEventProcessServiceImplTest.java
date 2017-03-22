@@ -26,6 +26,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.campaign.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.dao.CampaignEventMapDao;
+import cn.rongcapital.mkt.event.vo.EventSubjectCombineResult;
 import cn.rongcapital.mkt.mongodb.EventInvolvedDataPartyRepository;
 import cn.rongcapital.mkt.po.mongodb.EventInvolvedDataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
@@ -123,13 +124,26 @@ public class StreamEventProcessServiceImplTest {
     }
 
     /**
-     * 主数据不合并
+     * 主数据合并(返回合并结果为空)
      */
     @Test
     public void testProcess07_1() {
         String event = "{\"event\":{\"code\" :\"XXX\"},\"subject\":{\"openid\":\"12345\"}}";
         Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
         Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(null);
+        ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
+        service.process(event);
+    }
+    
+    /**
+     * 主数据合并(返回合并结果MID为空)
+     */
+    @Test
+    public void testProcess07_2() {
+        String event = "{\"event\":{\"code\" :\"XXX\"},\"subject\":{\"openid\":\"12345\"}}";
+        Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
+        EventSubjectCombineResult result = new EventSubjectCombineResult();
+        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(result);
         ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
         service.process(event);
     }
@@ -143,7 +157,7 @@ public class StreamEventProcessServiceImplTest {
                 "{\"event\":{\"code\" :\"apply_submit_stream\"},\"subject\":{\"o_mc_contact_soc_mobile_phone\":\"12345\",\"o_mc_contact_soc_mail\":\"12345\"}}";
         Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
 
-        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(new Segment());
+        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(new EventSubjectCombineResult());
         ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
 
         Mockito.when(campaignEventMapDao.getFirstMQNodeByEventCodeCnt(Mockito.any())).thenReturn(0);
@@ -159,8 +173,8 @@ public class StreamEventProcessServiceImplTest {
     public void testProcess09() {
         String event = "{\"event\":{\"code\" :\"XXX\"},\"subject\":{\"openid\":\"12345\"}}";
         Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
-        Segment segment = new Segment();
-        segment.setDataId(3);
+        EventSubjectCombineResult segment = new EventSubjectCombineResult();
+        segment.setMid("3");
         Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(segment);
         ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
 
@@ -202,8 +216,8 @@ public class StreamEventProcessServiceImplTest {
     public void testProcess10() {
         String event = "{\"event\":{\"code\" :\"XXX\"},\"subject\":{\"openid\":\"12345\"}}";
         Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
-        Segment segment = new Segment();
-        segment.setDataId(3);
+        EventSubjectCombineResult segment = new EventSubjectCombineResult();
+        segment.setMid("3");
         Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(segment);
         ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
 

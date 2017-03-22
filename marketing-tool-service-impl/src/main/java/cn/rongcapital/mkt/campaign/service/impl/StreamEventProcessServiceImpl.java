@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.campaign.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.dao.CampaignEventMapDao;
+import cn.rongcapital.mkt.event.vo.EventSubjectCombineResult;
 import cn.rongcapital.mkt.mongodb.EventInvolvedDataPartyRepository;
 import cn.rongcapital.mkt.po.mongodb.EventInvolvedDataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
@@ -48,7 +49,7 @@ public class StreamEventProcessServiceImpl {
 
     @Autowired
     private EventInvolvedDataPartyRepository eventInvolvedDataPartyRepository;
-    
+
     @JmsListener(destination = "queue.streamEvents")
     public void process(String event) {
         // 0.事件对象映射校验
@@ -62,11 +63,13 @@ public class StreamEventProcessServiceImpl {
         if (!eventSubjectCombineService.needCombine(eventCode)) {
             return;
         }
-        Segment segment = eventSubjectCombineService.combineStreamData(eventbehavior);
-        if (segment == null) {
-            logger.error("combine master data from stream event [{}] occurs problem.", event);
+        EventSubjectCombineResult result = eventSubjectCombineService.combineStreamData(eventbehavior);
+        if (result == null || StringUtils.isBlank(result.getMid())) {
+            logger.error("combine main data from stream event [{}] occurs error.", event);
             return;
         }
+        Segment segment = new Segment();
+        segment.setDataId(Integer.valueOf(result.getMid()));
         List<Segment> segments = Arrays.asList(segment);
         // 2.获取活动包含事件触发的任务首节点
         int pageSizeCnt = 100;
@@ -80,6 +83,7 @@ public class StreamEventProcessServiceImpl {
                 entity.setEventCode(eventCode);
                 entity.setCampaignHeadId(campaignNode.getCampaignHeadId());
                 entity.setDataId(segment.getDataId());
+                entity.setInserted(result.isInserted());
                 eventInvolvedDataPartyRepository.insert(entity);
                 // 3.创建首节点需要的队列并传输主数据
                 jmsOperations.convertAndSend(campaignNode.getCampaignHeadId() + "-" + campaignNode.getItemId(),
