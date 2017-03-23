@@ -852,7 +852,7 @@ public class MktDataApi {
 	@Path("/mkt.organization.child.list")
 	public BaseOutput getChildOrgListById(@NotNull @QueryParam("id") Long id) {
 
-		return organizationService.getOrgListById(id);
+		return organizationService.getOrgTreeByIdForUI(id);
 	}
 	    
 	
