@@ -49,7 +49,7 @@ public class ImportContactsDataToMDataServiceImpl implements ImportContactsDataT
     @Autowired
     private DataPopulationDao dataPopulationDao;
     
-    @Autowired
+    @Autowired(required = false)
     private DataTagAgent dataTagAgent;
 
     @Override

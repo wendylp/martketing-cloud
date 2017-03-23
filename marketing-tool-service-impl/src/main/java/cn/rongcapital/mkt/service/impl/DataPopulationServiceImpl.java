@@ -44,7 +44,7 @@ public class DataPopulationServiceImpl implements DataPopulationService {
     @Autowired
     private CityDicDao cityDicDao;
     
-    @Autowired
+    @Autowired(required = false)
     private DataTagAgent dataTagAgent;
     
 /*    private Map<String, ProvinceDic> provinceDicMap;

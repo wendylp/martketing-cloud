@@ -13,6 +13,7 @@ package cn.rongcapital.mkt.data.api;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +44,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mc.datatag.agent.DataTagAgent;
+import cn.rongcapital.mc.datatag.agent.dto.Column;
 import cn.rongcapital.mc.datatag.agent.dto.DataResult;
 import cn.rongcapital.mc.datatag.agent.dto.DataTotal;
+import cn.rongcapital.mc.datatag.agent.dto.DataTypeCount;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.FileNameEnum;
@@ -64,6 +67,7 @@ import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
 import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
 import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
 import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
+import cn.rongcapital.mkt.service.DataGetMainCountService;
 import cn.rongcapital.mkt.service.DataGetMainListService;
 import cn.rongcapital.mkt.service.DataGetQualityCountService;
 import cn.rongcapital.mkt.service.DataGetQualityListService;
@@ -89,6 +93,7 @@ import cn.rongcapital.mkt.service.TagGetCustomService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
+import cn.rongcapital.mkt.vo.in.CustomizeViewCheckboxIn;
 import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
 import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
@@ -96,6 +101,7 @@ import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
 import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
+import cn.rongcapital.mkt.vo.out.DataGetMainCountOut;
 import cn.rongcapital.mkt.vo.out.DataGetMainListOut;
 
 @Component
@@ -126,8 +132,8 @@ public class MktDataApi {
     @Autowired
     private DataGetUnqualifiedCountService dataGetUnqualifiedCountService;
 
-    //@Autowired
-    //private DataGetMainCountService dataGetMainCountService;
+    @Autowired
+    private DataGetMainCountService dataGetMainCountService;
 
     @Autowired
     private DataGetMainListService dataGetMainListService;
@@ -219,7 +225,7 @@ public class MktDataApi {
     @Autowired
     private AudienceSearchDownloadService audienceSearchDownloadService;
 
-    @Autowired
+    @Autowired(required = false)
     private DataTagAgent dataTagAgent;
 
     /**
@@ -333,7 +339,13 @@ public class MktDataApi {
     public Object getUnqualifiedCount(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver) {
         DataTotal dataTotal = dataTagAgent.statistic();
-        return Response.ok().entity(dataTotal).build();
+        DataGetMainCountOut result = new DataGetMainCountOut(ApiErrorCode.SUCCESS.getCode(),
+                ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+        result.setDataSourceCount(dataTotal.getData_source_count());
+        result.getData().addAll(dataTotal.getData());
+        result.setTotal(result.getData().size());
+        return Response.ok().entity(result).build();
+        //return dataGetMainCountService.getMainCount(method, userToken, ver);
     }
 
     /**
@@ -377,7 +389,13 @@ public class MktDataApi {
     public Object getViewList(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("md_type") Integer mdType,
             @NotEmpty @QueryParam("ver") String ver) {
-        return Response.ok().entity(dataTagAgent.getColumns(mdType.toString())).build();
+        List<Column> columnList = dataTagAgent.getColumns(mdType.toString());
+        BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
+                ApiConstant.INT_ZERO, null);
+        result.getData().addAll(columnList);
+        result.setTotal(result.getData().size());
+        return Response.ok().entity(result).build();
+        //return dataGetViewListService.getViewList(method, userToken, ver, mdType);
     }
 
     /**
@@ -447,6 +465,17 @@ public class MktDataApi {
     @Path("/mkt.data.filter.audiences.get")
     @Consumes({ MediaType.APPLICATION_JSON })
     public Object getFilterAudiences(@Valid DataGetFilterAudiencesIn dataGetFilterAudiencesIn) {
+        List<CustomizeViewCheckboxIn> customizeViews = dataGetFilterAudiencesIn.getCustomizeViews();
+        if (customizeViews != null && !customizeViews.isEmpty()) {
+            List<String> selected = new ArrayList<>();
+            for (CustomizeViewCheckboxIn column : customizeViews) {
+                if (column.getIsSelected()) {
+                    selected.add(column.getColName());
+                }
+            }
+            dataTagAgent.updateColumnSelection(dataGetFilterAudiencesIn.getMdType().toString(), selected);
+        }
+
         Integer timeCondition = dataGetFilterAudiencesIn.getTimeCondition();
         String timeRange = null;
         switch (timeCondition) {
@@ -479,7 +508,32 @@ public class MktDataApi {
         DataResult dataResult = dataTagAgent.search(statictisTypeIds, timeRange, contactWay,
                 dataGetFilterAudiencesIn.getMdType().toString(), dataGetFilterAudiencesIn.getSize(),
                 (dataGetFilterAudiencesIn.getIndex() - 1) * dataGetFilterAudiencesIn.getSize());
-        return Response.ok().entity(dataResult).build();
+        List<DataTypeCount> countList = dataResult.getCountList();
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        for (DataTypeCount dataTypeCount : countList) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("md_type", dataTypeCount.getMd_type());
+            map.put("tag_name", dataTypeCount.getTag_name());
+            map.put("count_rows", dataTypeCount.getCount_rows());
+            mapList.add(map);
+        }
+
+        DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(),
+                ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+
+        result.getData().addAll(dataResult.getData());
+        result.setTotalCount((int) dataResult.getTotal_count());
+        result.setTotal(result.getData().size());
+        result.setCountList(mapList);
+        result.getColNames().addAll(dataResult.getCol_names());
+        return Response.ok().entity(result).build();
+
+        //                return dataGetFilterAudiencesService.getFilterAudiences(dataGetFilterAudiencesIn.getMethod(),
+        //                        dataGetFilterAudiencesIn.getUserToken(), dataGetFilterAudiencesIn.getVer(),
+        //                        dataGetFilterAudiencesIn.getIndex(), dataGetFilterAudiencesIn.getSize(),
+        //                        dataGetFilterAudiencesIn.getMdType(), dataGetFilterAudiencesIn.getMdTypes(),
+        //                        dataGetFilterAudiencesIn.getContactIds(), dataGetFilterAudiencesIn.getCustomizeViews(),
+        //                        dataGetFilterAudiencesIn.getTimeCondition(),dataGetFilterAudiencesIn.getContactWayList());
     }
 
     /**
@@ -787,18 +841,21 @@ public class MktDataApi {
     public Object downloadMainList(@NotEmpty @QueryParam("user_token") String userToken,
             @NotNull @QueryParam("md_type") Integer dataType) throws FileNotFoundException {
         StringBuilder filePath = new StringBuilder();
-        filePath.append(ApiConstant.DOWNLOAD_BASE_DIR).append(FileNameEnum.getNameByCode(dataType)).append("_")
+        //        filePath.append(ApiConstant.DOWNLOAD_BASE_DIR).append(FileNameEnum.getNameByCode(dataType)).append("_")
+        //                .append(new Date().getTime()).append(".csv");
+        filePath.append("/Users/zhaohai/dev/mc/downloads/").append(FileNameEnum.getNameByCode(dataType)).append("_")
                 .append(new Date().getTime()).append(".csv");
         File file = new File(filePath.toString());
-        
+
         this.dataTagAgent.download(dataType.toString(), new FileOutputStream(file));
-        
+
         DataGetMainListOut result = new DataGetMainListOut(ApiErrorCode.SUCCESS.getCode(),
                 ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("download_file_name", file.getName());
         result.getData().add(resultMap);
         return result;
+        //return dataDownloadMainListService.downloadMainList(userToken, dataType);
     }
 
     /**

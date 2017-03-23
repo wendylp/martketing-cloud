@@ -64,7 +64,7 @@ public class WechatAssetServiceImpl implements WechatAssetService {
     @Autowired
     private DataPopulationDao dataPopulationDao;
     
-    @Autowired
+    @Autowired(required = false)
     private DataTagAgent dataTagAgent;
     
 	/**

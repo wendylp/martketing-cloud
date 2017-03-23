@@ -56,7 +56,7 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
     @Autowired
     private CityDicDao cityDicDao;
     
-    @Autowired
+    @Autowired(required = false)
     private DataTagAgent dataTagAgent;
     
     private Map<String, ProvinceDic> provinceDicMap;

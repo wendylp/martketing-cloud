@@ -66,7 +66,7 @@ public class ParseUploadFileImpl {
     @Autowired
     private KeyidMapBlockDao keyidMapBlockDao;
 
-    @Autowired
+    @Autowired(required = false)
     private DataTagAgent dataTagAgent;
 
     private final Integer UNIQUE_ID_ROW_IN_FILE = 0;
