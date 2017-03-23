@@ -12,6 +12,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class SmsTempletCloneIn {
 
+    @NotNull
+    @JsonProperty("org_id")
+    private Long orgid;
+    
 	@NotNull
 	private Integer id;
 	
@@ -24,6 +28,14 @@ public class SmsTempletCloneIn {
 	@NotNull
 	private String updateUser;
     
+    public Long getOrgid() {
+        return orgid;
+    }
+
+    public void setOrgid(Long orgid) {
+        this.orgid = orgid;
+    }
+
     @JsonProperty("id")
     public Integer getId() {
 		return id;
