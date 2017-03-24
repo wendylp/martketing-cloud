@@ -37,7 +37,7 @@ import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
 
 @Service
-public class CampaignActionSendSmsTask extends BaseMQService implements TaskService {
+public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -149,7 +149,7 @@ public class CampaignActionSendSmsTask extends BaseMQService implements TaskServ
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		super.cancelCampaignInnerTask(taskSchedule);
+		super.cancelInnerTask(taskSchedule);
 	}
 	
 	@Override

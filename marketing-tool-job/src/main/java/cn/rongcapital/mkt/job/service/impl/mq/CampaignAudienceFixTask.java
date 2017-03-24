@@ -2,7 +2,6 @@ package cn.rongcapital.mkt.job.service.impl.mq;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -19,21 +18,17 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
 import cn.rongcapital.mkt.dao.CampaignAudienceFixDao;
-import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.dao.TaskScheduleDao;
-import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignAudienceFix;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
-public class CampaignAudienceFixTask extends BaseMQService implements TaskService {
+public class CampaignAudienceFixTask extends CampaignAutoCancelTaskService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -43,13 +38,8 @@ public class CampaignAudienceFixTask extends BaseMQService implements TaskServic
 	private AudienceListPartyMapDao audienceListPartyMapDao;
 
 	@Autowired
-	private CampaignActionSaveAudienceTask campaignActionSaveAudienceTask;
-
-	@Autowired
 	private DataPartyDao dataPartyDao;
 	
-	@Autowired
-	private TaskScheduleDao taskScheduleDao;
 
 	private ExecutorService executor = null;
 
@@ -59,8 +49,13 @@ public class CampaignAudienceFixTask extends BaseMQService implements TaskServic
 
 	@Override
 	public void task(TaskSchedule taskSchedule) {
+		if(!super.validAndUpdateTaskSchedule(taskSchedule)){
+			return;
+		}
+
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
+
 		String queueKey = campaignHeadId + "-" + itemId;
 		
 		CampaignAudienceFix campaignAudienceFix = new CampaignAudienceFix();
