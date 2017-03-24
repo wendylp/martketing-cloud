@@ -32,7 +32,7 @@ import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
-public class CampaignActionWaitTask extends BaseMQService implements TaskService {
+public class CampaignActionWaitTask extends CampaignAutoCancelTaskService  {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
@@ -165,9 +165,9 @@ public class CampaignActionWaitTask extends BaseMQService implements TaskService
 		String prefixKey = campaignHeadId+"-"+itemId;
 		waitTaskMap.forEach((key,scheduledFuture)->{
 			if(StringUtils.isNotBlank(key) && key.startsWith(prefixKey))
-			scheduledFuture.cancel(true);
+			scheduledFuture.cancel(false);
 		});
-		super.cancelCampaignInnerTask(taskSchedule);
+		super.cancelInnerTask(taskSchedule);
 	}
 	
 	@Override
