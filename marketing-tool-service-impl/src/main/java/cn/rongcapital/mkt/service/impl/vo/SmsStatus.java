@@ -1,4 +1,4 @@
-package cn.rongcapital.mkt.api;
+package cn.rongcapital.mkt.service.impl.vo;
 
 public class SmsStatus {
 

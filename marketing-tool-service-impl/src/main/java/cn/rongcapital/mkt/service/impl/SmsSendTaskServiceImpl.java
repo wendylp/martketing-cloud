@@ -17,10 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import cn.rongcapital.mkt.api.Sms;
-import cn.rongcapital.mkt.api.SmsApi;
-import cn.rongcapital.mkt.api.SmsStatus;
-import cn.rongcapital.mkt.api.SmsStatusResponse;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
@@ -41,6 +37,10 @@ import cn.rongcapital.mkt.po.SmsMaterialMaterielMap;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.po.SmsTaskDetailState;
 import cn.rongcapital.mkt.po.SmsTaskHead;
+import cn.rongcapital.mkt.service.impl.vo.Sms;
+import cn.rongcapital.mkt.service.impl.vo.SmsApi;
+import cn.rongcapital.mkt.service.impl.vo.SmsStatus;
+import cn.rongcapital.mkt.service.impl.vo.SmsStatusResponse;
 
 @Service
 public class SmsSendTaskServiceImpl implements TaskService {

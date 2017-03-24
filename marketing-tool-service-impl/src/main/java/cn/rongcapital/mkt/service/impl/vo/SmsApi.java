@@ -2,7 +2,7 @@
  * 
  */
 
-package cn.rongcapital.mkt.api;
+package cn.rongcapital.mkt.service.impl.vo;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
  * @author LiuQ
  *
  */
-@Path("/sms")
+@Path("/")
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 public interface SmsApi {
