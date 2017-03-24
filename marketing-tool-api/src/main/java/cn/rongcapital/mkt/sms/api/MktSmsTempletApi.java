@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.caas.agent.spring.CaasAuth;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.SmsTempletCancelShareService;
 import cn.rongcapital.mkt.service.SmsTempletService;
@@ -68,6 +69,7 @@ public class MktSmsTempletApi {
 	 */
 	@GET
 	@Path("/mkt.sms.smstemplet.list.get")
+    @CaasAuth(res = "#orgId", oper = "'#{T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ}'", type = CaasAuth.Type.SpEl)
 	public SmsTempletOut smsTempletList(@NotEmpty @QueryParam("user_token") String userToken,@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,			
 			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
@@ -90,6 +92,7 @@ public class MktSmsTempletApi {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Path("/mkt.sms.smstemplet.saveorupdate")
+	@CaasAuth(res = "#{smsTempletIn.orgid}", oper = "'#{T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE}'", type = CaasAuth.Type.SpEl)
 	public BaseOutput saveOrUpdateSmsTemplet(@Valid SmsTempletIn smsTempletIn) throws Exception {		
 		return smsTempletService.saveOrUpdateSmsTemplet(smsTempletIn);
 	}
@@ -102,6 +105,7 @@ public class MktSmsTempletApi {
      */
     @GET
     @Path("/mkt.sms.smstemplet.count.get")
+    @CaasAuth(res = "#orgId", oper = "'#{T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ}'", type = CaasAuth.Type.SpEl)
     public BaseOutput smsTempletCountGet(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,
             @QueryParam("channel_type") String channelType, @QueryParam("org_id") Long orgId,
@@ -116,6 +120,7 @@ public class MktSmsTempletApi {
 	 */
 	@POST
 	@Path("/mkt.sms.smstemplet.clone")
+	@CaasAuth(res = "#{clone.orgid}", oper = "'#{T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_CLONE}'", type = CaasAuth.Type.SpEl)
 	public BaseOutput smsTempletClone(@Valid SmsTempletCloneIn clone) throws Exception {		
 		return smsTempletService.smsTempletClone(clone);
 	}
@@ -129,6 +134,7 @@ public class MktSmsTempletApi {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/mkt.sms.smstemplet.share")
+    @CaasAuth(res = "#{smsTempletShareIn.orgid}", oper = "'#{T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_SHARE}'", type = CaasAuth.Type.SpEl)
     public BaseOutput shareSmsTemple(@Valid SmsTempletShareIn smsTempletShareIn) throws Exception {       
         return smsTempletShareService.shareSmsTemplet(smsTempletShareIn);
     }
@@ -142,6 +148,7 @@ public class MktSmsTempletApi {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/mkt.sms.smstemplet.share.cancel")
+    @CaasAuth(res = "#{smsTempleCancelShareIn.orgid}", oper = "'#{T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_SHARE}'", type = CaasAuth.Type.SpEl)
     public BaseOutput unShareSmsTemple(@Valid SmsTempletCancelShareIn smsTempleCancelShareIn) throws Exception {       
         return smsTempletCancelShareService.cancelShareSmsTemplet(smsTempleCancelShareIn);
     }
