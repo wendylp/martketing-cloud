@@ -5,7 +5,12 @@ import java.util.Date;
 import cn.rongcapital.mkt.po.base.BaseQuery;
 
 public class SmsTaskBody extends BaseQuery{
-    private Long id;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
 
     private Long smsTaskHeadId;
 
@@ -20,6 +25,8 @@ public class SmsTaskBody extends BaseQuery{
     private Date createTime;
 
     private Date updateTime;
+
+	private Integer sendStatus;
 
     public Long getId() {
         return id;
@@ -84,4 +91,12 @@ public class SmsTaskBody extends BaseQuery{
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+	public Integer getSendStatus() {
+		return sendStatus;
+	}
+
+	public void setSendStatus(Integer sendStatus) {
+		this.sendStatus = sendStatus;
+	}
 }

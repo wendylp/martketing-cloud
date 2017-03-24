@@ -1,13 +1,15 @@
 package cn.rongcapital.mkt.vo.in;
 
-import cn.rongcapital.mkt.vo.BaseInput;
+import java.util.List;
+import java.util.Set;
+
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Set;
+import cn.rongcapital.mkt.vo.BaseInput;
 
 /**
  * Created by byf on 10/18/16.
@@ -16,6 +18,8 @@ import java.util.Set;
 public class SmsActivationCreateIn extends BaseInput{
 
     private Long taskId;
+
+	private Integer campaignHeadId;
 
     @NotEmpty
     private String taskName;
@@ -140,6 +144,14 @@ public class SmsActivationCreateIn extends BaseInput{
 
 	public void setDataPartyIds(Set<Integer> dataPartyIds) {
 		this.dataPartyIds = dataPartyIds;
+	}
+
+	public Integer getCampaignHeadId() {
+		return campaignHeadId;
+	}
+
+	public void setCampaignHeadId(Integer campaignHeadId) {
+		this.campaignHeadId = campaignHeadId;
 	}
     
     

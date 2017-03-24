@@ -21,8 +21,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSendSmsDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
@@ -35,6 +33,8 @@ import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.CampaignActionSendSmsService;
 import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
+
+import com.alibaba.fastjson.JSON;
 
 @Service
 public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
@@ -100,6 +100,14 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 		}
 	}
 	
+	/**
+	 * @since 1.8 Add event campaign
+	 * @param segmentList
+	 * @param campaignHeadId
+	 * @param itemId
+	 * @param campaignEndsList
+	 * @param campaignActionSendSms
+	 */
 	private void processMqMessage(List<Segment> segmentList,
 								  Integer campaignHeadId,String itemId,
 								  List<CampaignSwitch> campaignEndsList,
