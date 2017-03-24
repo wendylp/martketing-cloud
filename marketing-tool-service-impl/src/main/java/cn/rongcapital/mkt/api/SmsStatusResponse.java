@@ -1,13 +1,13 @@
 package cn.rongcapital.mkt.api;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SmsStatusResponse {
 
 	private String errorCode;
 	private String errorMsg;
-	private Map<String, SmsStatus> smsMap = new HashMap<String, SmsStatus>();
+	private List<SmsStatus> smsList = new ArrayList<SmsStatus>();
 
 	public SmsStatusResponse() {
 	}
@@ -33,17 +33,16 @@ public class SmsStatusResponse {
 		this.errorMsg = errorMsg;
 	}
 
-	public Map<String, SmsStatus> getSmsMap() {
-		return smsMap;
+	public List<SmsStatus> getSmsList() {
+		return smsList;
 	}
 
-	public void setSmsMap(Map<String, SmsStatus> smsMap) {
-		this.smsMap = smsMap;
+	public void setSmsList(List<SmsStatus> smsList) {
+		this.smsList = smsList;
 	}
 
 	@Override
 	public String toString() {
-		return "SmsStatusResponse [errorCode=" + errorCode + ", errorMsg=" + errorMsg + ", smsMap=" + smsMap + "]";
+		return "SmsStatusResponse [errorCode=" + errorCode + ", errorMsg=" + errorMsg + ", smsList=" + smsList + "]";
 	}
-
 }

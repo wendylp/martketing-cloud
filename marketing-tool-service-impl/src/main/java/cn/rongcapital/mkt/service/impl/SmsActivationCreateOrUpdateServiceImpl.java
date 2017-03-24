@@ -85,7 +85,7 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 			SmsTaskHead insertSmsTaskHead = null;
 			if (isEventTask && isHaveRecord) { // 事件类型
 				insertSmsTaskHead = SmsTaskHeadList.get(0);
-				insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode());
+				insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()); // 短信任务执行中
 				this.smsTaskHeadDao.updateById(insertSmsTaskHead);
 			} else {
 				insertSmsTaskHead = new SmsTaskHead();
@@ -96,7 +96,7 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 					smsTaskBatch = smsTaskBatch + 1;
 					insertSmsTaskHead.setSmsTaskBatch(smsTaskBatch);
 					insertSmsTaskHead.setSmsTaskName(smsActivationCreateIn.getTaskName() + "第" + smsTaskBatch + "批");
-					insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode());
+					insertSmsTaskHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()); // 短信任务执行中
 					if (isEventTask) {
 						Integer smsTaskTrigger = 1; // 事件类型的活动
 						insertSmsTaskHead.setSmsTaskTrigger(smsTaskTrigger);

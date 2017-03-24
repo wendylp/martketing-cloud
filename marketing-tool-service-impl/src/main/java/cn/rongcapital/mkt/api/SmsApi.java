@@ -21,11 +21,23 @@ import javax.ws.rs.core.MediaType;
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 public interface SmsApi {
-	
+
+	/**
+	 * 单条发送短信
+	 * 
+	 * @param sms
+	 * @return
+	 */
 	@POST
 	@Path("/single")
 	SmsStatusResponse sendSms(@Valid Sms sms);
 
+	/**
+	 * 批量发送短信
+	 * 
+	 * @param multSms
+	 * @return
+	 */
 	@POST
 	@Path("/mult")
 	SmsStatusResponse sendMultSms(@Valid List<Sms> multSms);

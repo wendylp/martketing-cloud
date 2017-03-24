@@ -232,7 +232,7 @@ public class GenerateSmsDetailTask implements TaskService {
         if(CollectionUtils.isEmpty(smsTaskHeads)) return;
         SmsTaskHead currentTaskHead = smsTaskHeads.get(0);
         //4检测TaskHead的发送状态
-		if (currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode() || true) {
+		if (currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()) {
             mqTopicService.sendSmsByTaskId(taskHeadIdStr);
         }
         

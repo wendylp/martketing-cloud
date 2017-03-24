@@ -2,13 +2,16 @@ package cn.rongcapital.mkt.api;
 
 public class SmsStatus {
 
+	private String receive;
 	private String errorCode;
 	private String errorMsg;
 
 	public SmsStatus() {
+
 	}
 
-	public SmsStatus(String errorCode, String errorMsg) {
+	public SmsStatus(String receive, String errorCode, String errorMsg) {
+		this.receive = receive;
 		this.errorCode = errorCode;
 		this.errorMsg = errorMsg;
 	}
@@ -28,4 +31,18 @@ public class SmsStatus {
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
 	}
+
+	public String getReceive() {
+		return receive;
+	}
+
+	public void setReceive(String receive) {
+		this.receive = receive;
+	}
+
+	@Override
+	public String toString() {
+		return "SmsStatus [receive=" + receive + ", errorCode=" + errorCode + ", errorMsg=" + errorMsg + "]";
+	}
+
 }

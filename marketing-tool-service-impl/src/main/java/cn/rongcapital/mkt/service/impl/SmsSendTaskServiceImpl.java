@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,8 +94,8 @@ public class SmsSendTaskServiceImpl implements TaskService {
 		// 根据任务ID查询sms_task_head表 判断 sms_task_status 是否是执行中状态
 		Long taskId = Long.valueOf(jsonMessage);
 		SmsTaskHead smsHead = new SmsTaskHead();
-		smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode());// 执行中
-		smsHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);// 未删除
+		smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode());// 短信任务执行中
+		smsHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);// 短信任务有效性：未删除
 		smsHead.setId(taskId);
 		try {
 			List<SmsTaskHead> smsHeadList = smsTaskHeadDao.selectList(smsHead);
@@ -173,7 +174,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 			updateSmsDetailState(response, SmsBatchMap, smsHead);
 			// 最后把任务状态改为已完成,把等待的个数置为0
 			if (sms_task_trigger == 0) { // 非事件类型的短信
-				smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_FINISH.getStatusCode());
+				smsHead.setSmsTaskStatus(SmsTaskStatusEnum.TASK_FINISH.getStatusCode()); // 短信发送状态：已结束
 				smsHead.setWaitingNum(0);
 			}
 
@@ -266,7 +267,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 	}
 
 	public void updateSmsDetailState(SmsStatusResponse response, Map<Long, String> SmsBatchMap, SmsTaskHead smsHead) {
-		Map<String, SmsStatus> data = response.getSmsMap();
+		Map<String, SmsStatus> data = this.listConvertMap(response.getSmsList());
 
 		SmsTaskDetailState smsTaskDetailState = null;
 		List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<>(); // 优惠券状态
@@ -367,6 +368,16 @@ public class SmsSendTaskServiceImpl implements TaskService {
 		materialCouponCodevo.setStatus(status.getCode());
 		logger.info("couponCodeId is {}, mobile is {}, ststus is {}", detail.getMaterielCouponCodeId(), detail.getReceiveMobile(), status.getCode());
 		return materialCouponCodevo;
+	}
+
+	private Map<String, SmsStatus> listConvertMap(List<SmsStatus> list) {
+		Map<String, SmsStatus> map = new HashMap<String, SmsStatus>();
+		if (list != null && !list.isEmpty()) {
+			for (SmsStatus cur : list) {
+				map.put(cur.getReceive(), cur);
+			}
+		}
+		return map;
 	}
 
 }
