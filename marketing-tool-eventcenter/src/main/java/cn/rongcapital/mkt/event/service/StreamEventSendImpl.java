@@ -13,6 +13,7 @@
 package cn.rongcapital.mkt.event.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.integration.kafka.support.KafkaHeaders;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageChannel;
@@ -28,13 +29,17 @@ public class StreamEventSendImpl implements StreamEventSend {
      */
     
     @Autowired
+    private Environment env;
+    
+    @Autowired
     private MessageChannel inputToKafka; 
     
     
     @Override
     public void sendDate(String event) {
         // TODO Auto-generated method stub
-        inputToKafka.send(MessageBuilder.withPayload(event).setHeader(KafkaHeaders.TOPIC,EventConstant.KAFKA_SRM_TOPIC).build());    
+        //event.contains("\"event\":\"apply_submit_ruixuesoft\"");
+        inputToKafka.send(MessageBuilder.withPayload(event).setHeader(KafkaHeaders.TOPIC,env.getProperty("kakfa.stream.topic")).build());    
     }
 
 }
