@@ -6,7 +6,7 @@ import java.util.List;
 import cn.rongcapital.mkt.dataauth.po.Organization;
 
 
-public class OrgChildTreeOutPut extends Organization {
+public class OrgChildTreeOutPut extends OrganizationOut {
 	private List<OrgChildTreeOutPut> orgList = new ArrayList<OrgChildTreeOutPut>();
 	public List<OrgChildTreeOutPut> getOrgList() {
 		return orgList;
