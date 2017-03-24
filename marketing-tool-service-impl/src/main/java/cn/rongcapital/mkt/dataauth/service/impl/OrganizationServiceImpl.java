@@ -40,15 +40,15 @@ public class OrganizationServiceImpl implements OrganizationService {
 	 */
 	@Override
 	public OrgChildTreeOutPut getOrgTreeById(Long id) {
-		logger.info("id:" + id);
 		return generateOrgTree(id);
 	}
 
 	private OrgChildTreeOutPut generateOrgTree(Long id) {
 
 		Organization org = organizationDao.getNodeById(id);
-		OrgChildTreeOutPut orgCT = new OrgChildTreeOutPut(org);
+		OrgChildTreeOutPut orgCT = null;
 		if (org != null) {
+			orgCT = new OrgChildTreeOutPut(org);
 			List<Organization> clist = organizationDao.getChildNodeById(id);
 			for (Organization child : clist) {
 				OrgChildTreeOutPut node = generateOrgTree(child.getOrgId());
@@ -56,6 +56,15 @@ public class OrganizationServiceImpl implements OrganizationService {
 			}
 		}
 		return orgCT;
+	}
+	
+	@Override
+	public BaseOutput getOrgTreeByIdForUI(Long id) {
+		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
+				null);
+		OrgChildTreeOutPut tree = getOrgTreeById(id);
+		output.getData().add(tree);
+		return output;
 	}
 
 	/**
@@ -175,4 +184,5 @@ public class OrganizationServiceImpl implements OrganizationService {
 	public int update(Organization org) {
 		return organizationDao.updateById(org);
 	}
+
 }

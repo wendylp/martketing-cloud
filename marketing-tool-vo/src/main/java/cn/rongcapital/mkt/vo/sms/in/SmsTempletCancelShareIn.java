@@ -23,12 +23,24 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class SmsTempletCancelShareIn {
 
     @NotNull
+    @JsonProperty("org_id")
+    private Long orgid;
+    
+    @NotNull
     @JsonProperty("resource_id")
     private Long resourceId;
 
     @NotEmpty
     @JsonProperty("share_ids")
     private List<String> shareIds;
+
+    public Long getOrgid() {
+        return orgid;
+    }
+
+    public void setOrgid(Long orgid) {
+        this.orgid = orgid;
+    }
 
     public Long getResourceId() {
         return resourceId;
@@ -48,7 +60,8 @@ public class SmsTempletCancelShareIn {
 
     @Override
     public String toString() {
-        return "SmsTempletCancelShareIn [resourceId=" + resourceId + ", shareIds=" + shareIds + "]";
+        return "SmsTempletCancelShareIn [orgid=" + orgid + ", resourceId=" + resourceId + ", shareIds=" + shareIds
+                + "]";
     }
-
+    
 }
