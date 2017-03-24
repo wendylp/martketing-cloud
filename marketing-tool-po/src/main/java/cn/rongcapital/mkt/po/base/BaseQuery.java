@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class BaseQuery implements Serializable{
 
@@ -138,7 +139,7 @@ public class BaseQuery implements Serializable{
     public void setMapping_keyid(String mapping_keyid) {
         this.mapping_keyid = mapping_keyid;
     }
-
+    @JsonProperty("org_id")
 	public Integer getOrgId() {
 		return orgId;
 	}
