@@ -21,8 +21,8 @@ import cn.rongcapital.mkt.service.OriginalDataArchPointScheduleService;
 import cn.rongcapital.mkt.service.OriginalDataPopulationService;
 import cn.rongcapital.mkt.service.OriginalDataShoppingScheduleService;
 
-@Configuration
-@EnableAutoConfiguration
+//@Configuration
+//@EnableAutoConfiguration
 @ImportResource({ "classpath:spring/spring-config-mybatis-heracles.xml" })
 @PropertySource(value = { "classpath:conf_mockup/application-api.properties",
         "classpath:conf_mockup/application-dao.properties" })
