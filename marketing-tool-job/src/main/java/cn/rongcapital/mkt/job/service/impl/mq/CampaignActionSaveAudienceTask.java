@@ -36,7 +36,7 @@ import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
-public class CampaignActionSaveAudienceTask extends BaseMQService implements TaskService {
+public class CampaignActionSaveAudienceTask extends CampaignAutoCancelTaskService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
@@ -136,7 +136,7 @@ public class CampaignActionSaveAudienceTask extends BaseMQService implements Tas
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
 	    //logger.info("CampaignActionSaveAudienceTask delete {}" ,taskSchedule.getCampaignHeadId()+taskSchedule.getCampaignItemId());
-		super.cancelCampaignInnerTask(taskSchedule);
+		super.cancelInnerTask(taskSchedule);
 	}
 	
 	@Override

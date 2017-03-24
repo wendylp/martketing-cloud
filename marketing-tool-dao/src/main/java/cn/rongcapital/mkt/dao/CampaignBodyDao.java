@@ -13,6 +13,8 @@ package cn.rongcapital.mkt.dao;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CampaignBody;
 
+import java.util.List;
+
 public interface CampaignBodyDao extends BaseDao<CampaignBody>{
 
 	//自定义扩展
@@ -44,4 +46,5 @@ public interface CampaignBodyDao extends BaseDao<CampaignBody>{
 	int selectCampaignAudienceCount();
 	
 	int deleteByCampaignHeadId(int campaignHeadId);
+
 }

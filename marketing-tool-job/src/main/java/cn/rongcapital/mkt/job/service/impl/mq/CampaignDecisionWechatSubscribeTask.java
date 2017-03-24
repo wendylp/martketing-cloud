@@ -27,7 +27,7 @@ import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
-public class CampaignDecisionWechatSubscribeTask extends BaseMQService implements TaskService {
+public class CampaignDecisionWechatSubscribeTask extends CampaignAutoCancelTaskService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
@@ -36,6 +36,11 @@ public class CampaignDecisionWechatSubscribeTask extends BaseMQService implement
 	private MongoTemplate mongoTemplate;
 	
 	public void task (TaskSchedule taskSchedule) {
+		//验证当前活动是否已经停止
+		if(!super.validAndUpdateTaskSchedule(taskSchedule)){
+			return;
+		}
+
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
 		String queueKey = campaignHeadId+"-"+itemId;

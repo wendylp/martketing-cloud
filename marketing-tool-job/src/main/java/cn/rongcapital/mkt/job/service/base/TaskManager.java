@@ -3,9 +3,9 @@ package cn.rongcapital.mkt.job.service.base;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.*;
 
+import cn.rongcapital.mkt.job.util.ScheduledFutureExecutor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,11 +41,11 @@ public class TaskManager {
     private TaskRunLogDao taskRunLogDao;
 
     private static final int pageSize = 100;
-    
+
     private final String TASK_SCHEDULE_SERVICE_NAME="campaignActionPubWechatSendH5Task";
-    
-    private static final ConcurrentHashMap<String, ScheduledFuture<?>> taskMap =
-                    new ConcurrentHashMap<String, ScheduledFuture<?>>();
+
+    private static final ConcurrentHashMap<String, ScheduledFutureExecutor> taskMap =
+            new ConcurrentHashMap<>();
 
     private static final ConcurrentHashMap<String, TaskSchedule> taskPropMap =
                     new ConcurrentHashMap<String, TaskSchedule>();
@@ -92,10 +92,12 @@ public class TaskManager {
         logger.debug("scanTask");
         ConcurrentHashMap<String, TaskSchedule> taskPropMapTmp = new ConcurrentHashMap<String, TaskSchedule>();
         TaskSchedule t = new TaskSchedule();
+        t.setTaskStatus(ApiConstant.TASK_STATUS_VALID);
         int totalRecord = taskScheduleDao.selectListCount(t);
         int totalPage = (totalRecord + pageSize -1) / pageSize;
         for(int index = 1; index <= totalPage; index++) {
         	t = new TaskSchedule(index,pageSize);
+            t.setTaskStatus(ApiConstant.TASK_STATUS_VALID);
         	List<TaskSchedule> taskScheduleList = taskScheduleDao.selectList(t);
         	if(CollectionUtils.isEmpty(taskScheduleList)) {
         		break;
@@ -111,9 +113,14 @@ public class TaskManager {
     		if (!taskPropMapTmp.containsKey(k)) {// 任务已被物理删除
     			v.setTaskStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
     			v.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
-    			ScheduledFuture<?> scheduledFuture = TaskManager.taskMap.get(k);
-    			if (null != scheduledFuture && scheduledFuture.isDone()) {
-    				TaskManager.taskMap.remove(k);// 任务从内存中删除
+//    			ScheduledFuture<?> scheduledFuture = TaskManager.taskMap.get(k);
+                ScheduledFutureExecutor scheduledFutureExecutor = TaskManager.taskMap.get(k);
+                if (null != scheduledFutureExecutor && scheduledFutureExecutor.getScheduledFuture().isDone()) {
+                    //将任务线程所在的线程池停掉
+                    scheduledFutureExecutor.getScheduledExecutor().shutdown();
+                    if(scheduledFutureExecutor.getScheduledExecutor().isShutdown()) {
+                        TaskManager.taskMap.remove(k);// 任务从内存中删除
+                    }
     			}
     		}
     	});
@@ -128,10 +135,10 @@ public class TaskManager {
     private synchronized void prepareTasks() {
         logger.debug("prepareTasks");
         TaskManager.taskPropMap.forEach((k, v) -> {
-            ScheduledFuture<?> taskSchedule = TaskManager.taskMap.get(k);
-            if (v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_VALID
-                            && v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_VALID) {
-                if (null == taskSchedule || taskSchedule.isCancelled()) {
+            ScheduledFutureExecutor scheduledFutureExecutor = TaskManager.taskMap.get(k);
+            if (v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_VALID) {
+
+                if (null == scheduledFutureExecutor) {
                     if (v.getStartTime() == null || v.getStartTime().before(Calendar.getInstance().getTime())) {
                         if (v.getEndTime() == null || v.getEndTime().after(Calendar.getInstance().getTime())) {
                             startTask(v);
@@ -139,21 +146,18 @@ public class TaskManager {
                     }
                 }
             }
-
-            if (v.getStatus().byteValue() == ApiConstant.TABLE_DATA_STATUS_INVALID
-//                            || v.getTaskStatus().byteValue() == ApiConstant.TASK_STATUS_INVALID
-//                            || (v.getStartTime() != null && v.getStartTime().after(Calendar.getInstance().getTime()))
-                            || (v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime()))) {
-                if (null != taskSchedule && !taskSchedule.isDone() && !taskSchedule.isCancelled()) {
-                    taskSchedule.cancel(true);
+            // 校验是否需要停止任务，如果需要停止，则只是将数据库中的task_status 和status字段修改，
+            // 不对线程终止，当下一次scanTask时，直接删除任务线程
+            String serviceName = getServiceName(v.getServiceName());
+            Object serviceBean = cotext.getBean(serviceName);
+            if (serviceBean instanceof TaskService) {
+                TaskService taskService = (TaskService) serviceBean;
+                if(null != scheduledFutureExecutor) {
+                    taskService.validateAndUpdateTaskStatus(v,scheduledFutureExecutor);
                 }
-                // 停止内嵌的任务/线程
-                String serviceName = getServiceName(v.getServiceName());
-                //logger.info("coming {},itemid is {}, serviceName is {}", v.getId(), v.getCampaignItemId(),serviceName); 
-                Object serviceBean = cotext.getBean(serviceName);
-                if (serviceBean instanceof TaskService) {
-                    TaskService taskService = (TaskService) serviceBean;
-                    taskService.cancelInnerTask(v);
+                //事件触发活动，到了结束的时间，需要将相应的活动状态发生改变
+                if(v.getEndTime() != null && v.getEndTime().before(Calendar.getInstance().getTime())){
+                    taskService.stopTimerTriggerTask(v);
                 }
             }
         });
@@ -171,7 +175,7 @@ public class TaskManager {
             taskRunLogT.setTaskType((byte)TaskTypeEnum.HIDE.getCode());
         }
         taskRunLogT.setTaskId(taskSchedulePo.getId());
-        taskRunLogT.setStartTime(new Date());        
+        taskRunLogT.setStartTime(new Date());
         taskRunLogDao.insert(taskRunLogT);
         return taskRunLogT;
     }
@@ -204,12 +208,12 @@ public class TaskManager {
         };
         ScheduledFuture<?> scheduledFuture = null;
         String cronStr = taskSchedulePo.getSchedule();
+        ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+        ConcurrentTaskScheduler concurrentTaskScheduler = new ConcurrentTaskScheduler(scheduledExecutor);
         if (StringUtils.isNotBlank(cronStr)) {
-        	ConcurrentTaskScheduler concurrentTaskScheduler = new ConcurrentTaskScheduler();
             Trigger triger = new CronTrigger(cronStr);
             scheduledFuture = concurrentTaskScheduler.schedule(task, triger);
         } else {
-        	ConcurrentTaskScheduler concurrentTaskScheduler = new ConcurrentTaskScheduler();
             Date startTime = taskSchedulePo.getStartTime() == null ? Calendar.getInstance().getTime()
                             : taskSchedulePo.getStartTime();
             Float interMinutes = taskSchedulePo.getIntervalMinutes();
@@ -221,7 +225,8 @@ public class TaskManager {
             }
         }
         if (null != scheduledFuture) {
-            TaskManager.taskMap.put(taskSchedulePo.getId().toString(), scheduledFuture);
+
+            TaskManager.taskMap.put(taskSchedulePo.getId().toString(), new ScheduledFutureExecutor(scheduledFuture,scheduledExecutor));
         }
     }
 
@@ -231,12 +236,12 @@ public class TaskManager {
         String sname = String.valueOf(serviceNameChar);
         return sname;
     }
-    
+
     /**
      * 启动需要在前端页面显示task名称进度的task
-     * @param taskName:任务名称
+     * @param serviceName:任务名称
      * @param serviceName:定时任务的service类名称
-     * @param taskType:0:显示,1:不显示
+     * @param taskTypeEnum:0:显示,1:不显示
      */
     public void initFrontTask(TaskNameEnum taskNameEnum,String serviceName,TaskTypeEnum taskTypeEnum) {
     	serviceName = getServiceName(serviceName);
