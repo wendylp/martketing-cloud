@@ -10,6 +10,8 @@ package cn.rongcapital.mkt.event.service;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.rongcapital.mkt.common.util.CacheManage;
 import cn.rongcapital.mkt.dao.event.EventDao;
+import cn.rongcapital.mkt.event.activator.StreamTransformer;
 import cn.rongcapital.mkt.event.po.Event;
 
 @Service
@@ -30,6 +33,7 @@ public class RoutStrategyImlp implements RoutStrategy {
      * 
      * 
      */
+    private static final Logger LOGGER = LoggerFactory.getLogger(RoutStrategyImlp.class);
     @Autowired
     private EventDao eventDao;
 
@@ -40,7 +44,9 @@ public class RoutStrategyImlp implements RoutStrategy {
      */
     @Override
     public boolean iFRouter(String message) throws ExecutionException {
-        // TODO Auto-generated method stub
+       
+        LOGGER.info("msg is "+message);
+        
         JSONObject event = JSON.parseObject(message);
         event = event.getJSONObject("event");
         String code = event.getString("code");
