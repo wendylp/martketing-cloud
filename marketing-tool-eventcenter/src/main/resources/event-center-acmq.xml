@@ -82,6 +82,15 @@
 
 	<task:executor id="errorExecutor" pool-size="${event.error.executor.PoolSize}"
         keep-alive="120" queue-capacity="500"  />
+        
+        
+   <task:executor id="filterExecutor" pool-size="${event.filter.executor.PoolSize}"
+        keep-alive="120" queue-capacity="500"  />
+        
+        
+  <task:executor id="transExecutor" pool-size="${event.trans.executor.PoolSize}"
+        keep-alive="120" queue-capacity="500"  />      
+             
 
     <!-- task end -->
   
@@ -185,6 +194,10 @@
         <int:queue />
     </int:channel>
     
+    
+    <int:channel id="streamTomc">
+      <int:queue/>
+    </int:channel>
       
      <bean id="producerProperties"
         class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -206,7 +219,7 @@
         producer-properties="producerProperties">
         <int-kafka:producer-configurations>
             <int-kafka:producer-configuration
-                broker-list="${kakfa.producer.url}" topic="streamtomc" 
+                broker-list="${kakfa.producer.url}" topic="${kakfa.stream.topic}" 
                  key-serializer="stringSerializer"
                  value-serializer="stringSerializer"
                 value-class-type="java.lang.String"
@@ -252,7 +265,7 @@
         <int-kafka:consumer-configurations>
             <int-kafka:consumer-configuration
                 group-id="mcgroup" max-messages="5000">
-                <int-kafka:topic id="streamtomc" streams="4" />
+                <int-kafka:topic id="${kakfa.stream.topic}" streams="4" />
             </int-kafka:consumer-configuration>
             <!-- <int-kafka:consumer-configuration group-id="default3" value-decoder="kafkaSpecificDecoder"
                 key-decoder="kafkaReflectionDecoder" max-messages="10"> <int-kafka:topic-filter 
@@ -278,9 +291,18 @@
 	
 	<bean id="kfkServiceActivator"  class="cn.rongcapital.mkt.event.service.KafKaConsumer"/>  -->
 	
+	  <!--  -->
+	 <int:filter input-channel="inputFromKafka" ref="streamFilter" method="isMc"  output-channel="streamTomc">
+	   <int:poller max-messages-per-poll="5" task-executor="filterExecutor"  fixed-delay="500"/>
+	 </int:filter> 
+     
+     <bean id="streamFilter" class="cn.rongcapital.mkt.event.activator.StreamFilter"/>	
+     
 	<!--  转换器1  -->
-	<int:transformer input-channel="inputFromKafka" 
-	output-channel="events"  ref="streamTransformer" method="transformStream"/>
+	<int:transformer input-channel="streamTomc" 
+	output-channel="events"  ref="streamTransformer" method="transformStream">
+	<int:poller max-messages-per-poll="5" task-executor="transExecutor"  fixed-delay="500"/>
+	</int:transformer>
 	
 	<bean id="streamTransformer" class="cn.rongcapital.mkt.event.activator.StreamTransformer"/>
 	

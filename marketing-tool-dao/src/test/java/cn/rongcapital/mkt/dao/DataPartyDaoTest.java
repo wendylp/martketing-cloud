@@ -12,6 +12,7 @@ package cn.rongcapital.mkt.dao;
 
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 
@@ -23,12 +24,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.Before;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
 public class DataPartyDaoTest extends AbstractUnitTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -68,7 +72,19 @@ public class DataPartyDaoTest extends AbstractUnitTest {
 	
 	@Test
 	public void testSelectSourceGroupCount() {
-	    logger.info("测试方法: selectSourceGroupCount ");    
+	    logger.info("测试方法: selectSourceGroupCount ");
+		DataParty dataParty = new DataParty();
+		dataParty.setMobile("17010236548");
+		dataParty.setName("沈小姐");
+		dataParty.setGender(Byte.valueOf("2"));
+		dataParty.setBirthday(new Date());
+		dataParty.setProvice("湖北省");
+		this.dataPartyDao.insert(dataParty);
+		List<HomePageSourceGroupCount> homePageSourceGroupCounts = this.dataPartyDao.selectSourceGroupCount();
+		Assert.assertNotNull(homePageSourceGroupCounts);
+
+		logger.info("测试方法: selectSourceGroupCount ");
+
 	}
 	
 	@Test
