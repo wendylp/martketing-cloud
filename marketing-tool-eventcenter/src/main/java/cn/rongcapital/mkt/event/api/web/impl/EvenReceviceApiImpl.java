@@ -12,13 +12,13 @@
 
 package cn.rongcapital.mkt.event.api.web.impl;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import cn.rongcapital.mkt.event.activator.EventConstant;
 import cn.rongcapital.mkt.event.api.EventReceviceApi;
 import cn.rongcapital.mkt.event.service.EventDispatcher;
-import cn.rongcapital.mkt.event.service.EventReceviceService;
+import cn.rongcapital.mkt.event.service.StreamEventSend;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 @Controller
@@ -34,6 +34,13 @@ public class EvenReceviceApiImpl implements EventReceviceApi {
     private EventDispatcher eventDispatcher;
     
     
+    @Autowired
+    private StreamEventSend streamEventSend;
+    
+    
+    
+    
+    
     /* (non-Javadoc)
      * @see cn.rongcapital.mkt.event.api.EventReceviceApi#eventReceive(cn.rongcapital.mkt.event.vo.in.EventSend)
      */
@@ -41,7 +48,8 @@ public class EvenReceviceApiImpl implements EventReceviceApi {
     public BaseOutput eventReceive(String eventSend) {
         // TODO Auto-generated method stub
         BaseOutput base =new BaseOutput(0,"success",1,null);
-        eventDispatcher.dispatch("MARKETING", eventSend);
+        //eventDispatcher.dispatch("MARKETING", eventSend);
+        eventDispatcher.dispatch(EventConstant.EVENT_MK, eventSend);
         return base;
     }
 
@@ -54,6 +62,19 @@ public class EvenReceviceApiImpl implements EventReceviceApi {
     public BaseOutput weixineventReceive(String eventSend) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+
+
+    /* (non-Javadoc)
+     * @see cn.rongcapital.mkt.event.api.EventReceviceApi#postTestData(java.lang.String)
+     */
+    @Override
+    public BaseOutput postTestData(String eventSend) {
+        // TODO Auto-generated method stub
+        BaseOutput base =new BaseOutput(0,"success",1,null);
+        streamEventSend.sendDate(eventSend);
+        return base;
     }
 
 }

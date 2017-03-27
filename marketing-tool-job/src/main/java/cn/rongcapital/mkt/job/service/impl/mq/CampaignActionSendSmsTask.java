@@ -21,8 +21,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSendSmsDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
@@ -36,8 +34,10 @@ import cn.rongcapital.mkt.service.CampaignActionSendSmsService;
 import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
 
+import com.alibaba.fastjson.JSON;
+
 @Service
-public class CampaignActionSendSmsTask extends BaseMQService implements TaskService {
+public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -100,6 +100,14 @@ public class CampaignActionSendSmsTask extends BaseMQService implements TaskServ
 		}
 	}
 	
+	/**
+	 * @since 1.8 Add event campaign
+	 * @param segmentList
+	 * @param campaignHeadId
+	 * @param itemId
+	 * @param campaignEndsList
+	 * @param campaignActionSendSms
+	 */
 	private void processMqMessage(List<Segment> segmentList,
 								  Integer campaignHeadId,String itemId,
 								  List<CampaignSwitch> campaignEndsList,
@@ -149,7 +157,7 @@ public class CampaignActionSendSmsTask extends BaseMQService implements TaskServ
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		super.cancelCampaignInnerTask(taskSchedule);
+		super.cancelInnerTask(taskSchedule);
 	}
 	
 	@Override

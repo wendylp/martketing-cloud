@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,audience_name as audienceName,audience_rows as audienceRows,source as source,create_time as createTime]]>
+		<![CDATA[ id as id,audience_name as audienceName,audience_rows as audienceRows,source as source,create_time as createTime,update_time as updateTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->

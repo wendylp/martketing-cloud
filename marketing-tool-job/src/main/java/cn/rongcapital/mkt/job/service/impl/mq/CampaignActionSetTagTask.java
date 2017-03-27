@@ -31,7 +31,7 @@ import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
-public class CampaignActionSetTagTask extends BaseMQService implements TaskService {
+public class CampaignActionSetTagTask extends CampaignAutoCancelTaskService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
@@ -122,7 +122,7 @@ public class CampaignActionSetTagTask extends BaseMQService implements TaskServi
 	}
 	
 	public void cancelInnerTask(TaskSchedule taskSchedule) {
-		super.cancelCampaignInnerTask(taskSchedule);
+		super.cancelInnerTask(taskSchedule);
 	}
 
 	@Override

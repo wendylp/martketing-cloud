@@ -10,25 +10,34 @@
 
 package cn.rongcapital.mkt.dao;
 
-import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
-import cn.rongcapital.mkt.dao.CampaignBodyDao;
+import java.util.Date;
+import java.util.List;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.Before;
-import org.junit.After;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
+import cn.rongcapital.mkt.po.CampaignBody;
+import cn.rongcapital.mkt.po.CampaignSwitch;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
 public class CampaignBodyDaoTest extends AbstractUnitTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     
     @Autowired
     private CampaignBodyDao campaignBodyDao;
+    @Autowired
+    private CampaignSwitchDao campaignSwitchDao;
     
     @Before  
     public void setUp() throws Exception {
@@ -75,4 +84,5 @@ public class CampaignBodyDaoTest extends AbstractUnitTest {
     public void tearDown() throws Exception {
         logger.info("测试: CampaignBodyDao 结束---------------------");
     }
+   
 }

@@ -6,5 +6,5 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 public interface CouponSaveService {
 
     BaseOutput save(MaterialCouponInfoIn couponInfo);
-
+    
 }
