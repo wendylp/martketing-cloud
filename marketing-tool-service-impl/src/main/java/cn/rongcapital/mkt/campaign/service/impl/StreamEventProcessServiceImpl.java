@@ -52,6 +52,13 @@ public class StreamEventProcessServiceImpl {
 
     @JmsListener(destination = "queue.streamEvents")
     public void process(String event) {
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("consumer messgage{}", event);
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
         // 0.事件对象映射校验
         EventBehavior eventbehavior = parseSafeParam(event);
         if (eventbehavior == null) {
@@ -88,8 +95,23 @@ public class StreamEventProcessServiceImpl {
                 // 3.创建首节点需要的队列并传输主数据
                 jmsOperations.convertAndSend(campaignNode.getCampaignHeadId() + "-" + campaignNode.getItemId(),
                         segments);
+                logger.info("############################################");
+                logger.info("############################################");
+                logger.info("############################################");
+                logger.info("sended message {} to next item", 
+                    event, campaignNode.getCampaignHeadId() + "-" + campaignNode.getItemId());
+                logger.info("############################################");
+                logger.info("############################################");
+                logger.info("############################################");
             }
         }
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("consumer messgage{}", event);
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
     }
 
     private EventBehavior parseSafeParam(String event) {
