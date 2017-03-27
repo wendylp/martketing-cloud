@@ -130,7 +130,7 @@ public class StreamTransformer {
         mcInfo.append("},\"time\":").append(getDateTime(EventConstant.getParam(mes,"\\\"time\\\":\\\"", "\\\",")));
         mcInfo.append(",\"object\":{\"code\": \"form_signup_ruixuesoft\",\"attributes\":{");
         mcInfo.append(EventConstant.getParam(mes, "\\\"object\\\":{","},"));
-        mcInfo.append("}},\"event\":{\"code\": \"apply_submit_stream\",\"attributes\":{");
+        mcInfo.append("}},\"event\":{\"code\": \"apply_submit_ruixuesoft\",\"attributes\":{");
         mcInfo.append(EventConstant.getParam(mes, "\\\"properties\\\":{",",\\\"b_dollar_os\\\":"));
         mcInfo.append("}}}"); 
         return mcInfo.toString().replaceAll("\\\\", "");
