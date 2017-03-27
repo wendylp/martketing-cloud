@@ -58,7 +58,19 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
     @Override
     public EventSubjectCombineResult combineStreamData(EventBehavior eventbehavior) {
         EventSubjectCombineResult segment = new EventSubjectCombineResult();
-        segment.setMid(String.valueOf(RandomUtils.nextInt(1000000)));
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        String mid = String.valueOf(RandomUtils.nextInt(1000000));
+        logger.info("###################"+mid+"#########################");
+        segment.setMid(mid);
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
         segment.setInserted(false);
         return segment;
     }
