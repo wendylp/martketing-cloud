@@ -3,13 +3,10 @@
  */
 package cn.rongcapital.mkt.dao;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -83,6 +80,34 @@ public class SmsTaskDetailDaoTest extends AbstractUnitTest {
         smsTaskDetailStateDao.insert(smsTaskDetailStateSecond);
 
     }
+
+	@Test
+	public void testInsert() {
+		Byte status = 0;
+		SmsTaskDetail detail = new SmsTaskDetail();
+		detail.setSmsTaskHeadId(99L);
+		detail.setReceiveMobile("13516243987");
+		detail.setSendMessage("msg");
+		detail.setStatus(status);
+		detail.setUpdateTime(new Date());
+		this.smsTaskDetailDao.insert(detail);
+
+	}
+
+	@Test
+	public void testInsertSelect() {
+		SmsTaskDetail detail = new SmsTaskDetail();
+		detail.setSmsTaskHeadId(99L);
+		detail.setSendStatus(0);
+		List<SmsTaskDetail> list = this.smsTaskDetailDao.selectList(detail);
+		detail = list.get(0);
+		detail.setSendStatus(1);
+		this.smsTaskDetailDao.updateById(detail);
+		detail = new SmsTaskDetail();
+		detail.setSendStatus(1);
+		list = this.smsTaskDetailDao.selectList(detail);
+		Assert.assertEquals("短信详情测试通过", 1, list.size());
+	}
 
     @Test
     public void testMessageSendRecordGet() {

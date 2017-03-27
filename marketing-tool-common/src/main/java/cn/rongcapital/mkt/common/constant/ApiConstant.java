@@ -423,6 +423,12 @@ public class ApiConstant {
      * 物料类型-微信
      */
     public static final String MATERIAL_TYPE_WECHAT = "qr_code";
+
+	/*
+	 * 短信状态
+	 */
+	public static final Integer SMS_TASK_PROCESS_STATUS_WRITING = 0; // 任务状态 0：未处理 1：已处理
+	public static final Integer SMS_TASK_PROCESS_STATUS_DONE = 1; // 任务状态 0：未处理 1：已处理
     
     /**
      * 用户来源
