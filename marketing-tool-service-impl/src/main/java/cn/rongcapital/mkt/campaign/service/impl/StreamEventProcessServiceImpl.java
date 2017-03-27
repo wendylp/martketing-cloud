@@ -52,17 +52,11 @@ public class StreamEventProcessServiceImpl {
 
     @JmsListener(destination = "queue.streamEvents")
     public void process(String event) {
-        logger.info("############################################");
-        logger.info("############################################");
-        logger.info("############################################");
-        logger.info("consumer messgage{}", event);
-        logger.info("############################################");
-        logger.info("############################################");
-        logger.info("############################################");
+        logger.info(">>>>>>>>>>>>>>>>>>consume message {} start.", event);
         // 0.事件对象映射校验
         EventBehavior eventbehavior = parseSafeParam(event);
         if (eventbehavior == null) {
-            logger.error("stream event [{}] is illegal.", event);
+            logger.error(">>>>>>>>>>>>>>>>>>stream event [{}] is illegal.", event);
             return;
         }
         // 1.根据事件编码判断是否需要主数据合并
@@ -72,15 +66,18 @@ public class StreamEventProcessServiceImpl {
         }
         EventSubjectCombineResult result = eventSubjectCombineService.combineStreamData(eventbehavior);
         if (result == null || StringUtils.isBlank(result.getMid())) {
-            logger.error("combine main data from stream event [{}] occurs error.", event);
+            logger.error(">>>>>>>>>>>>>>>>>>combine main data from stream event [{}] occurs error.", event);
             return;
         }
+        logger.info(">>>>>>>>>>>>>>>>>>combine main data result {} from message {}.", result, event);
         Segment segment = new Segment();
         segment.setDataId(Integer.valueOf(result.getMid()));
         List<Segment> segments = Arrays.asList(segment);
         // 2.获取活动包含事件触发的任务首节点
         int pageSizeCnt = 100;
-        int pageSize = (int) Math.ceil(getFirstMQNodeByEventCodeCnt(eventCode) / (float) pageSizeCnt);
+        int campainCount = getFirstMQNodeByEventCodeCnt(eventCode);
+        logger.info(">>>>>>>>>>>>>>>>>>{} campaigns subscribe event {}.", campainCount, eventCode);
+        int pageSize = (int) Math.ceil(campainCount / (float) pageSizeCnt);
         for (int i = 1; i <= pageSize; i++) {
             List<CampaignNode> campaignNodes =
                     getCampaignFirstMQNodesByEventCode(eventCode, (pageSize - 1) * pageSizeCnt, pageSizeCnt);
@@ -95,23 +92,11 @@ public class StreamEventProcessServiceImpl {
                 // 3.创建首节点需要的队列并传输主数据
                 jmsOperations.convertAndSend(campaignNode.getCampaignHeadId() + "-" + campaignNode.getItemId(),
                         segments);
-                logger.info("############################################");
-                logger.info("############################################");
-                logger.info("############################################");
-                logger.info("sended message {} to next item", 
-                    event, campaignNode.getCampaignHeadId() + "-" + campaignNode.getItemId());
-                logger.info("############################################");
-                logger.info("############################################");
-                logger.info("############################################");
+                logger.info(">>>>>>>>>>>>>>>>>>sent message {} to next item {}.", event, campaignNode.getCampaignHeadId() + "-"
+                        + campaignNode.getItemId());
             }
         }
-        logger.info("############################################");
-        logger.info("############################################");
-        logger.info("############################################");
-        logger.info("consumer messgage{}", event);
-        logger.info("############################################");
-        logger.info("############################################");
-        logger.info("############################################");
+        logger.info(">>>>>>>>>>>>>>>>>>consume message {} end.", event);
     }
 
     private EventBehavior parseSafeParam(String event) {
