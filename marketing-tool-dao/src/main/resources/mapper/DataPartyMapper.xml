@@ -621,7 +621,17 @@
 
 	<select id="selectSourceGroupCount" resultType="cn.rongcapital.mkt.po.HomePageSourceGroupCount">
 	<![CDATA[
-		select count(id) as sourceCount , source from data_party group by source
+        SELECT
+			COUNT(dp.id) AS sourceCount,
+			IF(dp.usersource_identity_id IS NULL,
+				'未知来源',
+				u.name) AS source
+		FROM
+			data_party dp
+				LEFT JOIN
+			usersource u ON dp.usersource_identity_id = u.identity_id
+		GROUP BY dp.usersource_identity_id
+		ORDER BY sourceCount DESC
 	]]>
 	</select>
 	
