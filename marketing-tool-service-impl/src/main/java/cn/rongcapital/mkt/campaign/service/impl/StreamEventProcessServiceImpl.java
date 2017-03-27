@@ -53,11 +53,7 @@ public class StreamEventProcessServiceImpl {
     @JmsListener(destination = "queue.streamEvents")
     public void process(String event) {
         logger.info("############################################");
-        logger.info("############################################");
-        logger.info("############################################");
-        logger.info("consumer messgage{}", event);
-        logger.info("############################################");
-        logger.info("############################################");
+        logger.info("consume message {} start.", event);
         logger.info("############################################");
         // 0.事件对象映射校验
         EventBehavior eventbehavior = parseSafeParam(event);
@@ -75,12 +71,19 @@ public class StreamEventProcessServiceImpl {
             logger.error("combine main data from stream event [{}] occurs error.", event);
             return;
         }
+        logger.info("############################################");
+        logger.info("combine main data result {} from message {}.", result, event);
+        logger.info("############################################");
         Segment segment = new Segment();
         segment.setDataId(Integer.valueOf(result.getMid()));
         List<Segment> segments = Arrays.asList(segment);
         // 2.获取活动包含事件触发的任务首节点
         int pageSizeCnt = 100;
-        int pageSize = (int) Math.ceil(getFirstMQNodeByEventCodeCnt(eventCode) / (float) pageSizeCnt);
+        int campainCount = getFirstMQNodeByEventCodeCnt(eventCode);
+        logger.info("############################################");
+        logger.info("{} campaigns subscribe event {}.", campainCount, eventCode);
+        logger.info("############################################");
+        int pageSize = (int) Math.ceil(campainCount / (float) pageSizeCnt);
         for (int i = 1; i <= pageSize; i++) {
             List<CampaignNode> campaignNodes =
                     getCampaignFirstMQNodesByEventCode(eventCode, (pageSize - 1) * pageSizeCnt, pageSizeCnt);
@@ -96,21 +99,13 @@ public class StreamEventProcessServiceImpl {
                 jmsOperations.convertAndSend(campaignNode.getCampaignHeadId() + "-" + campaignNode.getItemId(),
                         segments);
                 logger.info("############################################");
-                logger.info("############################################");
-                logger.info("############################################");
-                logger.info("sended message {} to next item", 
-                    event, campaignNode.getCampaignHeadId() + "-" + campaignNode.getItemId());
-                logger.info("############################################");
-                logger.info("############################################");
+                logger.info("sent message {} to next item {}.", event, campaignNode.getCampaignHeadId() + "-"
+                        + campaignNode.getItemId());
                 logger.info("############################################");
             }
         }
         logger.info("############################################");
-        logger.info("############################################");
-        logger.info("############################################");
-        logger.info("consumer messgage{}", event);
-        logger.info("############################################");
-        logger.info("############################################");
+        logger.info("consume message {} end.", event);
         logger.info("############################################");
     }
 
