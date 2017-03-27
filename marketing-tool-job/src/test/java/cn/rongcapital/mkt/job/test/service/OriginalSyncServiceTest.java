@@ -8,6 +8,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.rongcapital.mkt.job.service.DataPartySyncService;
+import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.job.tag.service.impl.SystemTagSynMongodbServiceImpl;
 import cn.rongcapital.mkt.job.test.GlobalConfiguration;
 import cn.rongcapital.mkt.service.OriginalDataArchPointScheduleService;
 import cn.rongcapital.mkt.service.OriginalDataPopulationService;
@@ -34,12 +36,21 @@ public class OriginalSyncServiceTest {
     @Qualifier("dataShoppingToDataParty")
     private DataPartySyncService<Integer> dataShoppingToDataParty;
 
+    @Autowired
+    @Qualifier("dataPartySyncMongoTaskService")
+    private TaskService dataPartySyncMongoTaskService;
+
+    @Autowired
+    @Qualifier("systemTagSynMongodbService")
+    private TaskService systemTagSynMongodbService;
+
     @Test
     public void sync() {
         //originalDataPopulationService.cleanData();
         //originalDataShoppingScheduleService.cleanData();
-
-        dataPopulationToDataParty.doSync();
-        dataShoppingToDataParty.doSync();
+        //dataPopulationToDataParty.doSync();
+        //dataShoppingToDataParty.doSync();
+        //dataPartySyncMongoTaskService.task(0);
+        systemTagSynMongodbService.task(0);
     }
 }
