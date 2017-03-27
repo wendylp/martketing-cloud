@@ -4,7 +4,6 @@ import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.FIXED;
 import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.VARIABLE;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -184,16 +183,14 @@ public class GenerateSmsDetailTask implements TaskService {
 		paramSmsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
         List<SmsTaskBody> smsTaskBodies = smsTaskBodyDao.selectList(paramSmsTaskBody);
         if(CollectionUtils.isEmpty(smsTaskBodies)) return;
-		for (SmsTaskBody smsTaskBody : smsTaskBodies) {
-			smsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE); // @since 1.8.0 短信发送状态
+        for(SmsTaskBody smsTaskBody : smsTaskBodies){
+			smsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
 			smsTaskBodyDao.updateById(smsTaskBody);
-			// TODO 模拟目标手机号码
-			// AbstractCalcSmsTargetAudienceStrategy strategy = strategyMap.get(smsTaskBody.getTargetType());
-			// List<String> receiveMobileList = strategy.queryReceiveMobileList(smsTaskBody.getSmsTaskHeadId(), smsTaskBody.getTargetId());
-			List<String> receiveMobileList = Arrays.asList("18704282857");
-			if (CollectionUtils.isEmpty(receiveMobileList)) {
-				continue;
-			}
+			AbstractCalcSmsTargetAudienceStrategy strategy = strategyMap.get(smsTaskBody.getTargetType());
+			List<String> receiveMobileList = new ArrayList<String>();
+			// TODO strategy.queryReceiveMobileList(smsTaskBody.getSmsTaskHeadId(), smsTaskBody.getTargetId());
+			receiveMobileList.add("18704282857");
+            if(CollectionUtils.isEmpty(receiveMobileList)) continue;
             logger.info("sms list distinct mobile size: " + receiveMobileList.size());
             targetDistinctReceiveMobiles.addAll(receiveMobileList);
         }
@@ -208,7 +205,7 @@ public class GenerateSmsDetailTask implements TaskService {
         }
         //3.5如果targetDistinctReceiveMobiles的容量为空,则不执行下面得短信生成语句
         if(CollectionUtils.isEmpty(targetDistinctReceiveMobiles)) return;
-		insertDataToSmsDetailAndDetailState(taskHeadId, targetHead, targetDistinctReceiveMobiles); // 生产短信详细
+        insertDataToSmsDetailAndDetailState(taskHeadId, targetHead, targetDistinctReceiveMobiles);
 
         //4更新SmsTaskHead表的人群相关的字段
         targetHead.setAudienceGenerateStatus(ApiConstant.INT_ZERO);
@@ -253,7 +250,7 @@ public class GenerateSmsDetailTask implements TaskService {
         		smsSignature = smsSignatures.get(0);
         	}
 
-			// TODO:添加方法,在这里根据短信类型生成不同类型的短信.
+        	//Todo:添加方法,在这里根据短信类型生成不同类型的短信.
             generateSmsTaskDetailAccordSmsType(taskHeadId, targetHead, targetDistinctReceiveMobiles, smsTaskDetailList, smsSignature);
         }
 
@@ -301,15 +298,10 @@ public class GenerateSmsDetailTask implements TaskService {
             for(String distinctReceiveMobile : targetDistinctReceiveMobiles){
                 SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
                 smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
-				String sendMessage = targetHead.getSmsTaskMaterialContent(); // 短信内容
-				if (smsSignature != null && StringUtils.isNotEmpty(smsSignature.getSmsSignatureName())
-						&& smsSignature.getSmsSignatureName().startsWith("【")) {
-					/*
-					 * @since 1.8.0 一些短信平台自带短信签名，取消mc的短信签名。
-					 */
-					sendMessage = smsSignature.getSmsSignatureName() + sendMessage;
-				}
-				smsTaskDetail.setSendMessage(sendMessage);
+                if(smsSignature!=null&& StringUtils.isNotEmpty(smsSignature.getSmsSignatureName())){
+                    String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
+                    smsTaskDetail.setSendMessage(sendMessage);
+                }
                 smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
                 smsTaskDetail.setSmsTaskHeadId(taskHeadId);
                 smsTaskDetailList.add(smsTaskDetail);
@@ -337,7 +329,7 @@ public class GenerateSmsDetailTask implements TaskService {
             paramSmsMaterialVariableMap.setSmsMaterialId(targetHead.getSmsTaskMaterialId());
             List<SmsMaterialVariableMap> smsMaterialVariableMapList = smsMaterialVariableMapDao.selectList(paramSmsMaterialVariableMap);
 
-			// Todo:5优惠码必定比手机号要多,將手机号拆成1W一页的然后逐页生成
+            //Todo:5优惠码必定比手机号要多,將手机号拆成1W一页的然后逐页生成
             List<String> targetDistinctReceiveMobileList = new ArrayList<>(targetDistinctReceiveMobiles);
             int totalPage = (targetDistinctReceiveMobileList.size() + PAGE_SIZE) / PAGE_SIZE;
             for(int index = 0; index < totalPage; index++){
@@ -356,45 +348,40 @@ public class GenerateSmsDetailTask implements TaskService {
 
                 //Todo:3进行短信内容的生成
                 int couponCodeIndex = 0;
-				for (String distinctReceiveMobile : subTargetDistinctReceiveMobileList) {
-					MaterialCouponCode materialCouponCode = (MaterialCouponCode) couponCodeList.getData().get(couponCodeIndex);
-					couponCodeIndex++;
-					SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
-					smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
-					// Todo:3进行一次初始替换,替换变量值,然后用一个Map保存起来
-					Map<String, String> variableToValueMap = new HashMap<>();
-					for (SmsMaterialVariableMap smsMaterialVariableMap : smsMaterialVariableMapList) {
-						if (SmsMaterialVariableEnum.VARIABLE_COUPON_COUPON_CODE.getVariableName()
-								.equals(smsMaterialVariableMap.getSmsVariableValue())) {
-							setVariableValueInMaterialVariable(variableToValueMap, smsMaterialVariableMap, couPonEditInfoOut,
-									materialCouponCode.getCode());
-							continue;
-						}
-						setVariableValueInMaterialVariable(variableToValueMap, smsMaterialVariableMap, couPonEditInfoOut, null);
-					}
+                for(String distinctReceiveMobile : subTargetDistinctReceiveMobileList){
+                    MaterialCouponCode materialCouponCode = (MaterialCouponCode) couponCodeList.getData().get(couponCodeIndex);
+                    couponCodeIndex++;
+                    SmsTaskDetail smsTaskDetail = new SmsTaskDetail();
+                    smsTaskDetail.setReceiveMobile(distinctReceiveMobile);
+                    if(smsSignature != null && StringUtils.isNotEmpty(smsSignature.getSmsSignatureName())){
+                        //Todo:3进行一次初始替换,替换变量值,然后用一个Map保存起来
+                        Map<String,String> variableToValueMap = new HashMap<>();
+                        for(SmsMaterialVariableMap smsMaterialVariableMap : smsMaterialVariableMapList){
+                            if(SmsMaterialVariableEnum.VARIABLE_COUPON_COUPON_CODE.getVariableName().equals(smsMaterialVariableMap.getSmsVariableValue())){
+                                setVariableValueInMaterialVariable(variableToValueMap,smsMaterialVariableMap,couPonEditInfoOut,materialCouponCode.getCode());
+                                continue;
+                            }
+                            setVariableValueInMaterialVariable(variableToValueMap,smsMaterialVariableMap,couPonEditInfoOut,null);
+                        }
 
-					for (String key : variableToValueMap.keySet()) {
-						targetHead.setSmsTaskMaterialContent(targetHead.getSmsTaskMaterialContent().replace(key, variableToValueMap.get(key)));
-					}
+                        for(String key : variableToValueMap.keySet()){
+                            targetHead.setSmsTaskMaterialContent(targetHead.getSmsTaskMaterialContent().replace(key,variableToValueMap.get(key)));
+                        }
 
-					String sendMessage = targetHead.getSmsTaskMaterialContent();
-					targetHead.setSmsTaskMaterialContent(targetMaterialContentCopy);
-					if (smsSignature != null && StringUtils.isNotEmpty(smsSignature.getSmsSignatureName())
-							&& smsSignature.getSmsSignatureName().startsWith("【")) {
-						/*
-						 * @since 1.8.0 同固定短信
-						 */
-						sendMessage = smsSignature.getSmsSignatureName() + sendMessage;
-					}
-					smsTaskDetail.setSendMessage(sendMessage);
-					smsTaskDetail.setMaterielCouponCodeId(materialCouponCode.getId());
-					smsTaskDetail.setMaterielCouponCodeCode(materialCouponCode.getCode());
-					smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
-					smsTaskDetail.setSmsTaskHeadId(taskHeadId);
+                        String sendMessage = smsSignature.getSmsSignatureName()+targetHead.getSmsTaskMaterialContent();
+                        targetHead.setSmsTaskMaterialContent(targetMaterialContentCopy);
+                        smsTaskDetail.setSendMessage(sendMessage);
+                    }
+                    smsTaskDetail.setMaterielCouponCodeId(materialCouponCode.getId());
+                    smsTaskDetail.setMaterielCouponCodeCode(materialCouponCode.getCode());
+                    smsTaskDetail.setSendTime(new Date(System.currentTimeMillis()));
+                    smsTaskDetail.setSmsTaskHeadId(taskHeadId);
 					smsTaskDetail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
-					smsTaskDetailList.add(smsTaskDetail);
-				}
+                    smsTaskDetailList.add(smsTaskDetail);
+                }
             }
+
+
         }
     }
 
