@@ -44,9 +44,7 @@ public class RoutStrategyImlp implements RoutStrategy {
      */
     @Override
     public boolean iFRouter(String message) throws ExecutionException {
-       
-        LOGGER.info("msg is "+message);
-        
+             LOGGER.info("from_Router_msg:{}",message);  
         JSONObject event = JSON.parseObject(message);
         event = event.getJSONObject("event");
         String code = event.getString("code");

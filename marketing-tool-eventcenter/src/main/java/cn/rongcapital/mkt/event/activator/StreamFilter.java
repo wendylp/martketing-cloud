@@ -21,9 +21,9 @@ public class StreamFilter {
     
     public boolean isMc(final Message<?> input)
     {
-         String message =EventConstant.formatMessage((Map)input.getPayload());
-        return  message.contains("apply_submit_ruixuesoft");
-         
+        /* String message =EventConstant.formatMessage((Map)input.getPayload());
+        return  message.contains("apply_submit_ruixuesoft");*/
+         return true;
     }
     
    
