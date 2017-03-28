@@ -95,6 +95,7 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 			if(keyid!=null&&keyid!=0){
 				DataPopulation t = new DataPopulation();
 				t.setId(keyid);
+				// setting status=1 means deleted
 				t.setStatus(1);
 				dataPopulationDao.updateById(t);
 				dataTagAgent.proceedWithDataAccess(DataType.POPULATION);

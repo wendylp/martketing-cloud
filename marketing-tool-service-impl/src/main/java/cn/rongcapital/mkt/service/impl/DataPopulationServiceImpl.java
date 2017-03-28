@@ -99,6 +99,7 @@ public class DataPopulationServiceImpl implements DataPopulationService {
                 dataPopulation = cleanProvinceDicAndCityDic(dataPopulation,provinceDicMap,cityDicMap);
                 if (updateWechatMemberKeyidByBitmap(wechatMember)){
                     // setting status=-1 means updated
+                    dataPopulation.setStatus(-1);
                 	dataPopulationDao.updateDataPopulationByPubIdAndOpenId(dataPopulation);
                 }else{
                     dataPopulationDao.insert(dataPopulation);
