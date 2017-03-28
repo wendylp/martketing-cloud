@@ -75,14 +75,14 @@ public class OrganizationServiceImplTest {
     	
     	Assert.assertEquals(3, ocop.getOrgList().size());
     	for (int i = 0; i < ocop.getOrgList().size(); i++) {
-    		Assert.assertEquals(i+2, ocop.getOrgList().get(i).getOrgId().intValue());
+    		Assert.assertEquals(i+2, ocop.getOrgList().get(i).getOrg_id().intValue());
 		}
     	
     	for (int i = 0; i < ocop.getOrgList().get(0).getOrgList().size(); i++) {
-    		Assert.assertEquals(i+5, ocop.getOrgList().get(0).getOrgList().get(i).getOrgId().intValue());
+    		Assert.assertEquals(i+5, ocop.getOrgList().get(0).getOrgList().get(i).getOrg_id().intValue());
     	}
     	
-    	Assert.assertEquals(7, ocop.getOrgList().get(1).getOrgList().get(0).getOrgId().intValue());
+    	Assert.assertEquals(7, ocop.getOrgList().get(1).getOrgList().get(0).getOrg_id().intValue());
     }
     
     @Test

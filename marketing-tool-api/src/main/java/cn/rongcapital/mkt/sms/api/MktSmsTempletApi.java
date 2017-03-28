@@ -77,7 +77,7 @@ public class MktSmsTempletApi {
 			@QueryParam("type") String type,
 			@QueryParam("name") String name,
 			@QueryParam("content") String content,
-			@QueryParam("orgId") Integer orgId,
+			@QueryParam("org_id") Integer orgId,
 			@QueryParam("firsthand")Boolean firsthand) throws Exception {
 
 		return smsTempletService.smsTempletList(userId, index, size, channelType, type, name,content,orgId, firsthand);
