@@ -12,6 +12,7 @@
 
 package cn.rongcapital.mkt.event.activator;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -32,9 +33,10 @@ public class EventConstant {
     //public static final String KAFKA_SRM_TOPIC="streamtomc";
     
     
-    public static String formatMessage(final Map message)
+    public static List<String> formatMessage(final Map message)
     {
         Set<Map.Entry> set = message.entrySet();
+        List<String> msinfo=new ArrayList<String>();
         for (Map.Entry entry : set) {
             String topic = (String) entry.getKey();
             ConcurrentHashMap<Integer, List<byte[]>> messages =
@@ -43,13 +45,12 @@ public class EventConstant {
             for (Iterator<List<byte[]>> iterator = values.iterator(); iterator.hasNext();) {
                 List<byte[]> list = iterator.next();
                 for (byte[] object : list) {
-                    return new String(object);
-
+                    msinfo.add(new String(object));
                 }
             }
         }
 
-        return null;
+        return msinfo;
 
     }
     

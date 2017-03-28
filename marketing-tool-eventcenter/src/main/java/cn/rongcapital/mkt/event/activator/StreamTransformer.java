@@ -33,8 +33,9 @@ public class StreamTransformer {
     
     public Message<?> transformStream(final Message<?> streammessage)
     {
-        String message =EventConstant.formatMessage((Map)streammessage.getPayload());
-        return MessageBuilder.withPayload(convertMessage(message)).setHeader(HEADER_KEY_EVENT_TYPE,EventConstant.EVENT_STREAM).build();
+         //String message =EventConstant.formatMessage((Map)streammessage.getPayload());
+        //return MessageBuilder.withPayload(convertMessage(message)).setHeader(HEADER_KEY_EVENT_TYPE,EventConstant.EVENT_STREAM).build();
+        return null;
     }
     
     
