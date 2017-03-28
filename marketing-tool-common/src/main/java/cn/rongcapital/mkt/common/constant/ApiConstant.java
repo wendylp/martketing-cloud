@@ -413,19 +413,19 @@ public class ApiConstant {
     /*
      *CAAS_读取
      */
-    public final String CAAS_READ = "1";
+    public static final String CAAS_READ = "READ";
     /*
      *CAAS_写入
      */
-    public final String CAAS_WRITE = "2";
+    public static final String CAAS_WRITE = "WRITE";
+    
+    /*
+     *CAAS_下发
+     */
+    public static final String CAAS_SHARE = "SHARE";
     
     /*
      *CAAS_分享
      */
-    public final String CAAS_SHARE = "3";
-    
-    /*
-     *CAAS_克隆
-     */
-    public final String CAAS_CLONE = "4";
+    public static final String CAAS_CLONE = "CLONE";
 }
