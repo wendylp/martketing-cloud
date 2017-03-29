@@ -24,7 +24,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class SmsTempletShareIn {
 
     @NotNull
-    @JsonProperty("resource_id")
+    @JsonProperty("id")
     private Long resourceId;
 
     @NotEmpty
