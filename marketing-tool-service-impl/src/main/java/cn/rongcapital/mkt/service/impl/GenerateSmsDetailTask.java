@@ -184,15 +184,13 @@ public class GenerateSmsDetailTask implements TaskService {
         List<SmsTaskBody> smsTaskBodies = smsTaskBodyDao.selectList(paramSmsTaskBody);
         if(CollectionUtils.isEmpty(smsTaskBodies)) return;
         for(SmsTaskBody smsTaskBody : smsTaskBodies){
-			smsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
-			smsTaskBodyDao.updateById(smsTaskBody);
 			AbstractCalcSmsTargetAudienceStrategy strategy = strategyMap.get(smsTaskBody.getTargetType());
-			List<String> receiveMobileList = new ArrayList<String>();
-			// TODO strategy.queryReceiveMobileList(smsTaskBody.getSmsTaskHeadId(), smsTaskBody.getTargetId());
-			receiveMobileList.add("18704282857");
+			List<String> receiveMobileList = strategy.queryReceiveMobileList(smsTaskBody.getSmsTaskHeadId(), smsTaskBody.getTargetId());
             if(CollectionUtils.isEmpty(receiveMobileList)) continue;
             logger.info("sms list distinct mobile size: " + receiveMobileList.size());
             targetDistinctReceiveMobiles.addAll(receiveMobileList);
+			smsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
+			smsTaskBodyDao.updateById(smsTaskBody);
         }
 
         logger.info("sms task audience size:" + targetDistinctReceiveMobiles.size());
