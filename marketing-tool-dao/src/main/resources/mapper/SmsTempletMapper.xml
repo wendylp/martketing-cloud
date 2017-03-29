@@ -9,7 +9,9 @@
 	</sql>
 	<!-- 所有数据权限列 -->
 	<sql id="QUERY_DATA_COLUMN_LIST">
+		<if test="orgId != null"> 
 		<![CDATA[ ,da.org_id as orgId,da.firsthand as firsthand, da.share_type as shareType,da.from_org_id as fromOrgId, da.from_resource_id as fromResourceId, da.shared as shared,da.da_create_time as daCreateTime]]>
+		</if>
 	</sql>
 
 	<!-- 查询列来源表-->

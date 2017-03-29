@@ -44,7 +44,7 @@ public class MKTokenHolder implements TokenHolder {
         AccessTokenInfo access=new AccessTokenInfo();
         try {
             Map<String, String> user_token_map=JedisClient.getuser(userKey);
-             user_token_map.get("accessToken"); 
+            userKey=user_token_map.get("access_token"); 
              access.setAccessToken(userKey);
         } catch (JedisException e) {
             // TODO Auto-generated catch block
