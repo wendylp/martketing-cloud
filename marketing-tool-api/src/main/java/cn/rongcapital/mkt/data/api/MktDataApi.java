@@ -856,6 +856,17 @@ public class MktDataApi {
 	}
 	    
 	
+	/**
+	 * 获取组织结构列表
+	 * @param id
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.organization.child.brother.list")
+	public BaseOutput getChildAndBrotherOrgListById(@NotNull @QueryParam("id") Long id) {
+		return organizationService.getChildTreeAndBrotherListById(id);
+	}
+	
 	    /**
 	     *   根据user_id,user_code 查询
 	         * @author liuhaizhan

@@ -1,29 +1,33 @@
 package cn.rongcapital.mkt.dataauth.vo;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import cn.rongcapital.mkt.dataauth.po.Organization;
 
 public class OrganizationOut {
-	private Long org_id;
+	
+	@JsonProperty("org_id")
+	private Long orgId;
 	private Long parentId;
 	private String name;
 	private Byte status;
 
-	public OrganizationOut(Long org_id, Long parentId, String name,  Byte status) {
-		this.org_id = org_id;
+	public OrganizationOut(Long orgId, Long parentId, String name,  Byte status) {
+		this.orgId = orgId;
 		this.parentId = parentId;
 		this.name = name;
 		this.status = status;
 	}
 
-	public OrganizationOut(Long org_id, Long parentId, String name, Integer status) {
-		this.org_id = org_id;
+	public OrganizationOut(Long orgId, Long parentId, String name, Integer status) {
+		this.orgId = orgId;
 		this.parentId = parentId;
 		this.name = name;
 		this.status = Byte.valueOf(status.toString());
 	}
 	
 	public OrganizationOut(Organization org) {
-		this.org_id = org.getOrgId() != null ? org.getOrgId() : null;
+		this.orgId = org.getOrgId() != null ? org.getOrgId() : null;
 		this.parentId = org.getParentId() != null ? org.getParentId() : null;
 		this.name = org.getName() != null ? org.getName() : "";
 		this.status = org.getStatus() != null ? Byte.valueOf(org.getStatus()) : null;
@@ -35,11 +39,11 @@ public class OrganizationOut {
 
 
 	public Long getOrg_id() {
-		return org_id;
+		return orgId;
 	}
 
-	public void setOrg_id(Long org_id) {
-		this.org_id = org_id;
+	public void setOrg_id(Long orgId) {
+		this.orgId = orgId;
 	}
 
 	public Long getParentId() {
@@ -68,7 +72,7 @@ public class OrganizationOut {
 
 	@Override
 	public String toString() {
-		return "Organization[ org_id:" + org_id + ", parentId:" + parentId + ", name:" + name + ", status:" + status + " ]";
+		return "Organization[ orgId:" + orgId + ", parentId:" + parentId + ", name:" + name + ", status:" + status + " ]";
 	}
 
 }

@@ -63,7 +63,38 @@ public class OrganizationServiceImpl implements OrganizationService {
 		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
 				null);
 		OrgChildTreeOutPut tree = getOrgTreeById(id);
+		List<OrgChildTreeOutPut> list = new ArrayList<>();
+		list.add(tree);
+		output.getData().add(list);
+		output.setTotal(list.size());
+		
+		return output;
+	}
+	
+	@Override
+	public BaseOutput getChildTreeAndBrotherListById(Long id) {
+		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
+				null);
+		OrgChildTreeOutPut tree = getOrgTreeById(id);
 		output.getData().add(tree);
+		
+		if(tree.getParentId() == null){ //只有根节点没有parent id，目前系统只支持一个root
+			Organization org = new Organization();
+			org.setParentId(tree.getParentId());
+			org.setStatus((byte)0);
+			List<Organization> brotherList =  organizationDao.selectList(org);
+			
+			OrgChildTreeOutPut brother = null;
+			if(!CollectionUtils.isEmpty(brotherList)){
+				for (Organization temp : brotherList) {
+					if(temp.getOrgId().longValue() != id.longValue()){
+						brother = new OrgChildTreeOutPut(temp);
+						output.getData().add(brother);
+					}
+				}
+			}
+		}
+
 		return output;
 	}
 
