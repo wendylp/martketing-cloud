@@ -607,21 +607,35 @@
 	<select id="selectMonthlyCount" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.HomePageMonthlyCount">
 	<![CDATA[
 		SELECT
-		    COUNT(id) AS monthlyCount,
-		    DATE_FORMAT(create_time, '%Y-%m') AS month
+			COUNT(t.sourceCount) AS sourceCount, t.source
 		FROM
-		    data_party
-		WHERE
-		    create_time >= #{startTime}
-		        AND create_time < #{endTime}
-		GROUP BY DATE_FORMAT(create_time, '%Y%m')
-		ORDER BY month
+			(SELECT
+				dp.id AS sourceCount,
+					IF(dp.usersource_identity_id IS NULL
+						OR u.name IS NULL, '未知来源', u.name) AS source,
+					u.identity_id
+			FROM
+				data_party dp
+			LEFT JOIN usersource u ON dp.usersource_identity_id = u.identity_id
+				AND u.available = 1) AS t
+		GROUP BY t.identity_id
+		ORDER BY sourceCount DESC
 	]]>
 	</select>
 
 	<select id="selectSourceGroupCount" resultType="cn.rongcapital.mkt.po.HomePageSourceGroupCount">
 	<![CDATA[
-		select count(id) as sourceCount , source from data_party group by source
+        SELECT
+			COUNT(dp.id) AS sourceCount,
+			IF(dp.usersource_identity_id IS NULL,
+				'未知来源',
+				u.name) AS source
+		FROM
+			data_party dp
+				LEFT JOIN
+			usersource u ON dp.usersource_identity_id = u.identity_id
+		GROUP BY dp.usersource_identity_id
+		ORDER BY sourceCount DESC
 	]]>
 	</select>
 	
