@@ -409,4 +409,23 @@ public class ApiConstant {
      *自定义标签未分类对应的分类ID
      */
     public static final String CUSTOM_TAG_DEFAULT_CATEGORY_ID = "yr1oorLSpl1484637382955";
+    
+    /*
+     *CAAS_读取
+     */
+    public static final String CAAS_READ = "READ";
+    /*
+     *CAAS_写入
+     */
+    public static final String CAAS_WRITE = "WRITE";
+    
+    /*
+     *CAAS_下发
+     */
+    public static final String CAAS_SHARE = "SHARE";
+    
+    /*
+     *CAAS_分享
+     */
+    public static final String CAAS_CLONE = "CLONE";
 }

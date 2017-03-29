@@ -32,6 +32,10 @@ public class SmsTempletShareIn {
     private List<Long> orgIds = new ArrayList<Long>();
 
     @NotNull
+    @JsonProperty("org_id")
+    private Long orgid;
+    
+    @NotNull
     @JsonProperty("writeable")
     private Boolean writeable;
 
@@ -59,9 +63,19 @@ public class SmsTempletShareIn {
         this.writeable = writeable;
     }
 
-    @Override
-    public String toString() {
-        return "SmsTempletShareIn [resourceId=" + resourceId + ", orgIds=" + orgIds + ", writeable=" + writeable + "]";
+    
+    public Long getOrgid() {
+        return orgid;
     }
 
+    public void setOrgid(Long orgid) {
+        this.orgid = orgid;
+    }
+
+    @Override
+    public String toString() {
+        return "SmsTempletShareIn [resourceId=" + resourceId + ", orgIds=" + orgIds + ", orgid=" + orgid
+                + ", writeable=" + writeable + "]";
+    }
+    
 }

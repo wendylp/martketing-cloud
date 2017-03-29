@@ -5,6 +5,13 @@
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
 		<![CDATA[ id as id,code as code,channel_type as channelType,type as type,content as content,audit_status as auditStatus,auditor as auditor,status as status,creator as creator,create_time as createTime,update_user as updateUser,update_time as updateTime,name as name,audit_reason as auditReason,audit_time as auditTime]]>
+		<include refid="QUERY_DATA_COLUMN_LIST"/>
+	</sql>
+	<!-- 所有数据权限列 -->
+	<sql id="QUERY_DATA_COLUMN_LIST">
+		<if test="orgId != null"> 
+		<![CDATA[ ,da.org_id as orgId,da.firsthand as firsthand, da.share_type as shareType,da.from_org_id as fromOrgId, da.from_resource_id as fromResourceId, da.shared as shared,da.da_create_time as daCreateTime]]>
+		</if>
 	</sql>
 
 	<!-- 查询列来源表-->

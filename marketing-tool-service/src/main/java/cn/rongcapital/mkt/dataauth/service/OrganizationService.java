@@ -22,6 +22,14 @@ public interface OrganizationService {
 	 * @return OrgChildTreeOutPut
 	 */
     public OrgChildTreeOutPut getOrgTreeById(Long id);
+    
+	/**
+	 * @author
+	 * @功能简述: 根据节点ID获取当前节点及其所有叶子节点，并以树形结构返回
+	 * @param Long id
+	 * @return BaseOutput
+	 */
+	public BaseOutput getOrgTreeByIdForUI(Long id);
 
 	/**
 	 * @author
