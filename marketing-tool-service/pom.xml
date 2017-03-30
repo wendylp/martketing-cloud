@@ -40,7 +40,7 @@
 		</dependency>
         
         <dependency>
-            <groupId>cn.rongcapital.datatag</groupId>
+            <groupId>cn.rongcapital.mc.datatag</groupId>
             <artifactId>mc-data-tag-agent-temp</artifactId>
             <version>1.0.0</version>
         </dependency>
