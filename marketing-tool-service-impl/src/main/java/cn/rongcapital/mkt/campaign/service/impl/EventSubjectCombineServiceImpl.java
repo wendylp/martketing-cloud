@@ -9,7 +9,12 @@
  *************************************************/
 package cn.rongcapital.mkt.campaign.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +22,28 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.campaign.service.EventSubjectCombineService;
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.util.HttpClientUtil;
+import cn.rongcapital.mkt.common.util.HttpUrl;
 import cn.rongcapital.mkt.dao.event.EventDao;
+import cn.rongcapital.mkt.event.po.Event;
 import cn.rongcapital.mkt.event.vo.EventSubjectCombineResult;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
+
+import com.alibaba.fastjson.JSON;
 
 @Service
 public class EventSubjectCombineServiceImpl implements EventSubjectCombineService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${host.header.addr}")
+    @Value("${mc.data.tag.ip}")
     private String host;
+    
+    @Value("${mc.data.tag.port}")
+    private int port;
 
-    @Value("${mkt.event.idmapping.get}")
+    @Value("${mc.data.tag.idmapping.uri}")
     private String mappingUri;
 
     @Autowired
@@ -44,7 +58,19 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
     @Override
     public EventSubjectCombineResult combineStreamData(EventBehavior eventbehavior) {
         EventSubjectCombineResult segment = new EventSubjectCombineResult();
-        segment.setMid(String.valueOf(RandomUtils.nextInt(1000000)));
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        String mid = String.valueOf(RandomUtils.nextInt(1000000));
+        logger.info("###################"+mid+"#########################");
+        segment.setMid(mid);
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
+        logger.info("############################################");
         segment.setInserted(false);
         return segment;
     }
@@ -83,6 +109,7 @@ public class EventSubjectCombineServiceImpl implements EventSubjectCombineServic
 //            HttpClientUtil http = HttpClientUtil.getInstance();
 //            HttpUrl httpUrl = new HttpUrl();
 //            httpUrl.setHost(host);
+//            httpUrl.setPort(port);
 //            httpUrl.setPath(mappingUri);
 //            httpUrl.setContentType(ApiConstant.CONTENT_TYPE_JSON);
 //            HashMap<Object, Object> params = new HashMap<Object, Object>();

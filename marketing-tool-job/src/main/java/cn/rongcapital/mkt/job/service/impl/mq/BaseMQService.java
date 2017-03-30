@@ -1,6 +1,8 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -16,12 +18,11 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
+import javax.jms.QueueBrowser;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-
-import cn.rongcapital.mkt.dao.*;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.collections4.CollectionUtils;
@@ -48,6 +49,15 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.HttpClientUtil;
 import cn.rongcapital.mkt.common.util.HttpUrl;
+import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
+import cn.rongcapital.mkt.dao.CampaignHeadDao;
+import cn.rongcapital.mkt.dao.CampaignSwitchDao;
+import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.SegmentationHeadDao;
+import cn.rongcapital.mkt.dao.TenementDao;
+import cn.rongcapital.mkt.dao.WechatGroupDao;
+import cn.rongcapital.mkt.dao.WechatMemberDao;
+import cn.rongcapital.mkt.dao.WechatPersonalUuidDao;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.CampaignSwitch;
@@ -173,7 +183,7 @@ public class BaseMQService {
 		if (CollectionUtils.isNotEmpty(segList)) {
 			CampaignHead ch = segList.get(0);
 			// 只有发布状态的活动才能被手动开启
-			if (ch.getPublishStatus() != ApiConstant.CAMPAIGN_PUBLISH_STATUS_PUBLISH) {
+			if (ch.getPublishStatus() != ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS) {
 				ur = new CampaignManualStartOut(ApiErrorCode.BIZ_ERROR_CANPAIGN_CAN_NOT_START.getCode(),
 						ApiErrorCode.BIZ_ERROR_CANPAIGN_CAN_NOT_START.getMsg(), ApiConstant.INT_ZERO, null);
 			}
@@ -408,7 +418,7 @@ public class BaseMQService {
 		return isSent;
 	}
 
-	protected void cancelCampaignInnerTask(TaskSchedule taskSchedule) {
+	protected boolean cancelCampaignInnerTask(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
 		Integer id = taskSchedule.getId();
@@ -422,8 +432,10 @@ public class BaseMQService {
 				consumerMap.remove(consumerKey);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	/**
@@ -652,4 +664,23 @@ public class BaseMQService {
 		return pid;
 	}
 
+	/**
+     * 获取队列的长度
+     * @param queue
+     * @return
+     */
+    protected int getQueueSize(Queue queue) {
+        int size = 0;
+        try {
+            Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+            QueueBrowser browser = session.createBrowser(queue);
+            Enumeration enumeration = browser.getEnumeration();
+             size = Collections.list(enumeration).size();
+            session.close();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        return  size;
+    }
 }
