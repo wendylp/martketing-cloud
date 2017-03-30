@@ -38,8 +38,8 @@
 	</bean>
 	 
 	    
-	<bean class="cn.rongcapital.caas.agent.spring.filter.CaasAuthFilter">
-	</bean>
-	  
+	<!-- <bean class="cn.rongcapital.caas.agent.spring.filter.CaasAuthFilter"/> -->
 	
+	  
+	<bean class="cn.rongcapital.mkt.api.RepeatlyReadFilter"/>
 </beans>

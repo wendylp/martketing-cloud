@@ -39,7 +39,11 @@ public class MKTokenHolder implements TokenHolder {
     public AccessTokenInfo getToken() throws IOException {
         // TODO Auto-generated method stub
         HttpServletRequest httpRequest = RequestHolder.currentRequest();
-        String user_id=httpRequest.getParameter(ApiConstant.API_USER_ID); //t
+        String user_id=httpRequest.getParameter(ApiConstant.API_USER_ID);
+        if(user_id==null)
+        {
+            user_id=(String)httpRequest.getAttribute(ApiConstant.API_USER_ID); //t
+        }
         String userKey ="user:"+user_id;
         AccessTokenInfo access=new AccessTokenInfo();
         try {

@@ -175,6 +175,34 @@ public class OrganizationServiceImplTest {
 		}
     	
     }
+    
+    @Test
+    public void getChildTreeBrotherListByIdTest() {
+        	logger.info(org1.toString()+"_"+org2.toString()+"_"+org3.toString()+"_"+org4.toString()+"_"+org5.toString()+"_"+org6.toString()+"_"+org7.toString());
+        	
+        	List<Organization> clist1 = new ArrayList<>();
+        	clist1.add(org5);
+        	clist1.add(org6);
+        	
+        	List<Organization> clist2 = new ArrayList<>();
+        	clist2.add(org2);
+        	clist2.add(org3);
+        	clist2.add(org4);
+        	
+        	List<Organization> clist4 = new ArrayList<>();
+        	
+        	Mockito.when(organizationDao.getNodeById(Mockito.anyLong())).thenReturn(org2,org5,org6);
+        	Mockito.when(organizationDao.getChildNodeById(Mockito.anyLong())).thenReturn(clist1,clist4,clist4,clist2,clist4);
+
+        	BaseOutput result = organizationService.getChildTreeAndBrotherListById(2L);
+        	List<Object> list = result.getData();
+        	
+        	Assert.assertEquals(3, list.size());
+        	OrgChildTreeOutPut org2 = (OrgChildTreeOutPut)list.get(0);
+        	Assert.assertEquals(2, org2.getOrg_id().longValue());
+
+        	Assert.assertEquals(2, org2.getOrgList());
+    }
 
     @After
     public void tearDown() throws Exception {
