@@ -473,7 +473,7 @@ public class MktDataApi {
                     selected.add(column.getColName());
                 }
             }
-            dataTagAgent.updateColumnSelection(dataGetFilterAudiencesIn.getMdType().toString(), selected);
+            dataTagAgent.updateColumnSelection(customizeViews.get(0).getDataType(), selected);
         }
 
         Integer timeCondition = dataGetFilterAudiencesIn.getTimeCondition();
