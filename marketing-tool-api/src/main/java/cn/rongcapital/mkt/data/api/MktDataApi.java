@@ -841,9 +841,7 @@ public class MktDataApi {
     public Object downloadMainList(@NotEmpty @QueryParam("user_token") String userToken,
             @NotNull @QueryParam("md_type") Integer dataType) throws FileNotFoundException {
         StringBuilder filePath = new StringBuilder();
-        //        filePath.append(ApiConstant.DOWNLOAD_BASE_DIR).append(FileNameEnum.getNameByCode(dataType)).append("_")
-        //                .append(new Date().getTime()).append(".csv");
-        filePath.append("/Users/zhaohai/dev/mc/downloads/").append(FileNameEnum.getNameByCode(dataType)).append("_")
+        filePath.append(ApiConstant.DOWNLOAD_BASE_DIR).append(FileNameEnum.getNameByCode(dataType)).append("_")
                 .append(new Date().getTime()).append(".csv");
         File file = new File(filePath.toString());
 
