@@ -817,7 +817,8 @@ public class MktDataApi {
     @Path("/mkt.data.inbound.file.tag.update")
     @Consumes({ MediaType.APPLICATION_JSON })
     public BaseOutput fileTagUpdate(FileTagUpdateIn fileTagUpdateIn) {
-        return fileTagUpdateService.updateFileTag(fileTagUpdateIn);
+        return new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,null);
+        //return fileTagUpdateService.updateFileTag(fileTagUpdateIn);
     }
 
     /**
