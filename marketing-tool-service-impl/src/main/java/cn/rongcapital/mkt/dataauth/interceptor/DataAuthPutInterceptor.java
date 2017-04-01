@@ -82,7 +82,7 @@ public class DataAuthPutInterceptor {
             if (resourceIdObj != null && resourceIdObj.longValue() > 0) {
                 return;
             }
-            if (orgIdObj == null || orgIdObj.longValue() == 0) {
+            if (orgIdObj == null) {
                 throw new NoSuchElementException("calculate orgId from expression is illegal.");
             }
             // 没有输出的情况
