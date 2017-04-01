@@ -202,7 +202,14 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 						smsTemplet.setDeleteCheck(true);
 					}else{						
 						smsTemplet.setDeleteCheck(false);
-					}					
+					}
+
+					//v1.9增加数据权限的判断  add by xiexiaoliang
+					if(!smsTemplet.getWriteable()){
+						smsTemplet.setEditCheck(false);
+						smsTemplet.setDeleteCheck(false);
+					}
+					//v1.9增加数据权限的判断  add by xiexiaoliang end
 				}				
 			}
 		}
