@@ -77,7 +77,7 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
             } else {
                 baseOutput.setMsg("用户没有上传标签");
             }
-            updateOriginalDataStatus(fileUnique, fileType);
+            //updateOriginalDataStatus(fileUnique, fileType);
             importDataHistory.setStatus(Byte.valueOf((byte)0));
             importDataHistory.setImportEndTime(new Date(System.currentTimeMillis()));
             importDataHistory.setName(getTaskName(fileType));
@@ -188,31 +188,31 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
         switch (fileType){
             case 1:
                 originalDataPopulationDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                //taskManager.initFrontTask(TaskNameEnum.POPULATION, "originalDataPopulationServiceImpl", TaskTypeEnum.DISPLAY);
+                taskManager.initFrontTask(TaskNameEnum.POPULATION, "originalDataPopulationServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 2:
                 originalDataCustomerTagsDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                //taskManager.initFrontTask(TaskNameEnum.CUSTOMER_TAGS, "originalDataCustomTagScheduleServiceImpl", TaskTypeEnum.DISPLAY);
+                taskManager.initFrontTask(TaskNameEnum.CUSTOMER_TAGS, "originalDataCustomTagScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 3:
                 originalDataArchPointDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                //taskManager.initFrontTask(TaskNameEnum.ARCH_POINT, "originalDataArchPointScheduleServiceImpl", TaskTypeEnum.DISPLAY);
+                taskManager.initFrontTask(TaskNameEnum.ARCH_POINT, "originalDataArchPointScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 4:
                 originalDataMemberDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                //taskManager.initFrontTask(TaskNameEnum.MEMBER, "originalDataMemberScheduleServiceImpl", TaskTypeEnum.DISPLAY);
+                taskManager.initFrontTask(TaskNameEnum.MEMBER, "originalDataMemberScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 5:
                 originalDataLoginDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                //taskManager.initFrontTask(TaskNameEnum.LOGIN, "originalDataLoginScheduleServiceImpl", TaskTypeEnum.DISPLAY);
+                taskManager.initFrontTask(TaskNameEnum.LOGIN, "originalDataLoginScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 6:
                 originalDataPaymentDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                //taskManager.initFrontTask(TaskNameEnum.PAYMENT, "originalDataPaymentScheduleServiceImpl", TaskTypeEnum.DISPLAY);
+                taskManager.initFrontTask(TaskNameEnum.PAYMENT, "originalDataPaymentScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
             case 7:
                 originalDataShoppingDao.updateStatusByFileUnique(fileUnique, StatusEnum.ACTIVE.getStatusCode());
-                //taskManager.initFrontTask(TaskNameEnum.SHOPPING, "originalDataShoppingScheduleServiceImpl", TaskTypeEnum.DISPLAY);
+                taskManager.initFrontTask(TaskNameEnum.SHOPPING, "originalDataShoppingScheduleServiceImpl", TaskTypeEnum.DISPLAY);
                 break;
         }
     }
