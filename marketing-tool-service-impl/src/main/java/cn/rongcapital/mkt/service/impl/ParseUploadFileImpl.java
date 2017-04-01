@@ -533,7 +533,7 @@ public class ParseUploadFileImpl {
             }
         }
 
-        insertMap.put(ImportConstant.STATUS_FIELD, StatusEnum.DELETED.getStatusCode());
+        insertMap.put(ImportConstant.STATUS_FIELD, StatusEnum.ACTIVE.getStatusCode());
 
     }
 
