@@ -107,7 +107,7 @@ public class EventBehaviorListServiceTest {
 		eoRtn.setId(eventF.getObjectId());
 		eoRtn.setName("扫一扫事件推送");
 		
-		EventBehaviors eb = new EventBehaviors("1", 1L, null, null, null, false);
+		EventBehaviors eb = new EventBehaviors("1", 1L, null, null, null);
 		list.add(eb);
 		
 	}
