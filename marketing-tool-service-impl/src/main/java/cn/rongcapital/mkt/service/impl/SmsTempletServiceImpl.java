@@ -428,7 +428,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	@DataAuthClone(fromResourceId = "#clone.id", fromOrgId = "#orgId", resourceId = "#toIds", resourceType = TABLE_NAME, toOrgId = "#clone.orgIds", writeable = "true",type = ParamType.SpEl)
+	@DataAuthClone(fromResourceId = "#clone.id", fromOrgId = "#clone.orgid", resourceId = "#toIds", resourceType = TABLE_NAME, toOrgId = "#clone.orgIds", writeable = "true",type = ParamType.SpEl)
 	public BaseOutput smsTempletClone(SmsTempletCloneIn clone) {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTemplet from = new SmsTemplet();
