@@ -50,7 +50,7 @@ public class DataAuthCloneInterceptTest {
     public void setUp() throws Exception {
         aspect = new DataAuthCloneInterceptor();
 
-        Mockito.doNothing().when(dataAuthService).clone(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyBoolean());
+        Mockito.doNothing().when(dataAuthService).clone(Mockito.anyString(),Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyBoolean());
         ReflectionTestUtils.setField(aspect, "dataAuthService", dataAuthService);
 
     }
@@ -66,6 +66,7 @@ public class DataAuthCloneInterceptTest {
 
         private String resourceType;
         private long resourceId;
+        private long fromOrgId;
         private long fromResourceId;
         private List<Long> toOrgId;
         private boolean writeable;
@@ -84,6 +85,14 @@ public class DataAuthCloneInterceptTest {
 
         public void setResourceId(long resourceId) {
             this.resourceId = resourceId;
+        }
+
+        public long getFromOrgId() {
+            return fromOrgId;
+        }
+
+        public void setFromOrgId(long fromOrgId) {
+            this.fromOrgId = fromOrgId;
         }
 
         public long getFromResourceId() {
@@ -127,7 +136,7 @@ public class DataAuthCloneInterceptTest {
 
         AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
             @Override
-            @DataAuthClone(resourceType = "business", resourceId = "#putBean.resourceId",fromResourceId = "#putBean.fromResourceId",toOrgId = "#putBean.toOrgId",writeable = "#putBean.writeable", type = ParamType.SpEl)
+            @DataAuthClone(resourceType = "business", resourceId = "#putBean.resourceId", fromOrgId ="#putBean.fromOrgId",fromResourceId = "#putBean.fromResourceId",toOrgId = "#putBean.toOrgId",writeable = "#putBean.writeable", type = ParamType.SpEl)
             public BaseOutput clone(PutBean putBean) {
             	BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
@@ -154,7 +163,7 @@ public class DataAuthCloneInterceptTest {
         putBean.setToOrgId(orgs);
         putBean.setWriteable(Boolean.TRUE);
         proxy.clone(putBean);
-        Mockito.verify(dataAuthService,Mockito.times(2)).clone(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyBoolean());
+        Mockito.verify(dataAuthService,Mockito.times(2)).clone(Mockito.anyString(),Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyBoolean());
     }
 
     @Test
@@ -162,7 +171,7 @@ public class DataAuthCloneInterceptTest {
 
         AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
             @Override
-            @DataAuthClone(resourceType = "business",resourceId = "802",fromResourceId = "1",toOrgId = "1",writeable = "true", type = ParamType.Default)
+            @DataAuthClone(resourceType = "business",resourceId = "802",fromOrgId ="0",fromResourceId = "1",toOrgId = "1",writeable = "true", type = ParamType.Default)
             public BaseOutput clone(PutBean putBean) {
             	BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
@@ -180,11 +189,12 @@ public class DataAuthCloneInterceptTest {
         PutBean putBean = new PutBean();
         putBean.setResourceType("business");
         putBean.setResourceId(802);
+        putBean.setFromOrgId(0);
         putBean.setFromResourceId(1);
         putBean.setToOrgId(orgs);
         putBean.setWriteable(Boolean.TRUE);
         proxy.clone(putBean);
-        Mockito.verify(dataAuthService,Mockito.times(1)).clone(Mockito.anyString(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyLong(),Mockito.anyBoolean());
+        Mockito.verify(dataAuthService,Mockito.times(1)).clone(Mockito.anyString(),Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyBoolean());
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -192,7 +202,7 @@ public class DataAuthCloneInterceptTest {
 
         AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
             @Override
-            @DataAuthClone(resourceType = "", resourceId = "#putBean.resourceId",fromResourceId = "#putBean.fromResourceId",toOrgId = "#putBean.toOrgId",writeable = "#putBean.writeable", type = ParamType.SpEl)
+            @DataAuthClone(resourceType = "", resourceId = "#putBean.resourceId",fromOrgId ="#putBean.fromOrgId",fromResourceId = "#putBean.fromResourceId",toOrgId = "#putBean.toOrgId",writeable = "#putBean.writeable", type = ParamType.SpEl)
             public BaseOutput clone(PutBean putBean) {
             	BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);

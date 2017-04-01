@@ -5,6 +5,9 @@ import static org.mockito.Matchers.any;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.rongcapital.mkt.common.exception.CannotCloneBySharerException;
+import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
+import cn.rongcapital.mkt.common.exception.NotFoundResourceException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,7 +61,7 @@ public class SmsTempletServiceCloneTest {
     }
 
     @Test
-    public void testSmsTempletClone() {
+    public void testSmsTempletClone() throws CannotShareToOwnerException, NotFoundResourceException, CannotCloneBySharerException {
     	
     	dataList = new ArrayList<SmsTemplet>();
         SmsTemplet smsTemplet = new SmsTemplet();
@@ -90,7 +93,7 @@ public class SmsTempletServiceCloneTest {
 
 				return null;
 			}
-		}).when(dataAuthService).clone("", 1l, 1l, 1l, Boolean.TRUE);
+		}).when(dataAuthService).clone("", 1l,1l , 1l, 1l, Boolean.TRUE);
     	
     	List<Long> b= new ArrayList<>();
     	b.add(1l);

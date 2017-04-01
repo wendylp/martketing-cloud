@@ -25,7 +25,9 @@ public @interface DataAuthClone{
     String resourceType() ;
 
     String resourceId() ;
-    
+
+    String fromOrgId();
+
     String fromResourceId();
     
     String toOrgId();

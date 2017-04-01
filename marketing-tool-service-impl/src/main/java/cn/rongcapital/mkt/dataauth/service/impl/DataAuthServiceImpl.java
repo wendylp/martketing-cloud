@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import cn.rongcapital.mkt.common.exception.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,6 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.dataauth.DataAuthTypeEnum;
 import cn.rongcapital.mkt.common.enums.dataauth.ShareOrgTypeEnum;
-import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
-import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
-import cn.rongcapital.mkt.common.exception.NotFoundResourceException;
 import cn.rongcapital.mkt.dao.dataauth.DataAuthMapper;
 import cn.rongcapital.mkt.dataauth.po.DataAuth;
 import cn.rongcapital.mkt.dataauth.po.Organization;
@@ -317,11 +315,29 @@ public class DataAuthServiceImpl implements DataAuthService {
      */
     @Override
     @Transactional
-    public void clone(String resourceType, long resourceId, long fromResourceId, long toOrgId, boolean writeable) {
+    public void clone(String resourceType, long resourceId, long fromOrgId, long fromResourceId, long toOrgId, boolean writeable) throws NotFoundResourceException, CannotShareToOwnerException, CannotCloneBySharerException {
     
         List<DataAuth> fromDataAuth = this.dataAuthMapper.selectOwnerByResouceId(resourceType,fromResourceId);
-        long fromOrgId = fromDataAuth.get(0).getOrgId();
-        
+
+        if(fromDataAuth.size() == 0){
+            throw new NotFoundResourceException("The Resource Can Not Be Found.");
+        }
+
+        if(fromDataAuth.get(0).getOrgId() != fromOrgId){
+            throw new CannotCloneBySharerException("Not the owner cannot be cloned.");
+        }
+
+        List<Organization> orgParentList = this.organizationService.getOrgLineListById(fromOrgId);
+        List<Long> orgIdList = new ArrayList<>();
+        for (Organization organization : orgParentList) {
+            orgIdList.add(organization.getOrgId());
+        }
+        orgIdList.add(fromOrgId);
+        if(orgIdList.contains(toOrgId)){
+            String message = "To org is the owner of current resource,can not be shared.";
+            throw new CannotShareToOwnerException(message );
+        }
+
         DataAuth auth = new DataAuth();
         auth.setTableName(resourceType);
         auth.setResourceId(resourceId);

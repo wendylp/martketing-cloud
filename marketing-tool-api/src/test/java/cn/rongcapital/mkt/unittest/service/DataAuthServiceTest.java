@@ -12,6 +12,7 @@
 package cn.rongcapital.mkt.unittest.service;
 
 
+import cn.rongcapital.mkt.common.exception.CannotCloneBySharerException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +25,9 @@ import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.common.exception.NotFoundResourceException;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.unittest.AbstractUnitTest;
+import org.springframework.transaction.annotation.Transactional;
 
-
+@Transactional
 public class DataAuthServiceTest extends AbstractUnitTest{
     
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -76,15 +78,18 @@ public class DataAuthServiceTest extends AbstractUnitTest{
     }
     
     @Test
-    public void TestClone(){
-        
-        String resourceType="sms_templet";
-        long resourceId = 800l;
-        long fromOrgId = 16L;
-        long fromResourceId = 1l;
+    public void TestClone() throws CannotShareToOwnerException, NotFoundResourceException, CannotCloneBySharerException {
+        long orgId = 14l;
+        String resourceType = "sms_templet";
+        long resourceId = -1;
+
+        this.dataAuthService.put(orgId, resourceType, resourceId);
+        resourceId = -2;
+        long fromOrgId = 14L;
+        long fromResourceId = -1l;
         long toOrgId = 18l;
         boolean writeable = Boolean.TRUE;
-        this.dataAuthService.clone(resourceType, resourceId, fromResourceId, toOrgId, writeable);
+        this.dataAuthService.clone(resourceType, resourceId, fromOrgId, fromResourceId, toOrgId, writeable);
     }
 
 }

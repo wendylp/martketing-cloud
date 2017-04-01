@@ -12,18 +12,18 @@
 package cn.rongcapital.mkt.dataauth.interceptor;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import cn.rongcapital.mkt.common.exception.CannotCloneBySharerException;
+import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
+import cn.rongcapital.mkt.common.exception.NotFoundResourceException;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +48,7 @@ public class DataAuthCloneInterceptor {
         if (method != null && method.isAnnotationPresent(DataAuthClone.class)) {
             DataAuthClone annotation = method.getAnnotation(DataAuthClone.class);
             String resourceIdTemp = annotation.resourceId();
+            String fromOrgIdTemp = annotation.fromOrgId();
             String fromResourceIdTemp = annotation.fromResourceId();
             String toOrgIdTemp = annotation.toOrgId();
             String writeableTemp  =annotation.writeable();
@@ -66,41 +67,46 @@ public class DataAuthCloneInterceptor {
             	List<Object> resourceIds = baseOutput.getData();
                 switch(annotation.type()){
                 case SpEl:
-                	prepareSpel(joinPoint, fromResourceIdTemp, toOrgIdTemp, writeableTemp, resourceIds, resourceType);
+                	prepareSpel(joinPoint,fromOrgIdTemp, fromResourceIdTemp, toOrgIdTemp, writeableTemp, resourceIds, resourceType);
                 	break;
                 default:
-                	prepareNormal(resourceIdTemp, fromResourceIdTemp, toOrgIdTemp, writeableTemp, resourceType);
+                	prepareNormal(resourceIdTemp,fromOrgIdTemp , fromResourceIdTemp, toOrgIdTemp, writeableTemp, resourceType);
                     break;
                 }
             }
         }
     }
 
-	private void prepareNormal(String resourceIdTemp, String fromResourceIdTemp, String toOrgIdTemp,
-			String writeableTemp,String  resourceType) {
+	private void prepareNormal(String resourceIdTemp, String fromOrgIdTemp, String fromResourceIdTemp, String toOrgIdTemp,
+                               String writeableTemp, String resourceType) throws NotFoundResourceException, CannotShareToOwnerException, CannotCloneBySharerException {
 		Long resourceId =Long.parseLong(resourceIdTemp);
+        Long fromOrgId = Long.parseLong(fromOrgIdTemp);
 		Long fromResourceId = Long.parseLong(fromResourceIdTemp);
 		Long toOrgId = Long.parseLong(toOrgIdTemp);
 		Boolean writeable = Boolean.parseBoolean(writeableTemp);
+
+
 		//将新增数据保存对应的数据权限
-        this.dataAuthService.clone(resourceType, resourceId, fromResourceId, toOrgId, writeable);
+        this.dataAuthService.clone(resourceType, resourceId, fromOrgId, fromResourceId, toOrgId, writeable);
 
 	}
 
-	private void prepareSpel(JoinPoint joinPoint, String fromResourceIdTemp, String toOrgIdTemp, String writeableTemp,
-			List<Object> resourceIds,String  resourceType) {
+	private void prepareSpel(JoinPoint joinPoint,String fromOrgIdTemp, String fromResourceIdTemp, String toOrgIdTemp, String writeableTemp,
+                             List<Object> resourceIds, String resourceType) throws NotFoundResourceException, CannotShareToOwnerException, CannotCloneBySharerException {
 		Long resourceId;
+		Long fromOrgId;
 		Long fromResourceId;
 		Long toOrgId;
 		Boolean writeable;
 		List<Long> toOrgIds = ExpressionHelper.executeTemplate(toOrgIdTemp, joinPoint, List.class);
 		for (int j = 0; j < toOrgIds.size(); j++) {
 			resourceId = (Long)resourceIds.get(j);
+            fromOrgId = ExpressionHelper.executeTemplate(fromOrgIdTemp,joinPoint,Long.class);
 		    fromResourceId = ExpressionHelper.executeTemplate(fromResourceIdTemp, joinPoint,Long.class);
 		    toOrgId =  toOrgIds.get(j);
 		    writeable = ExpressionHelper.executeTemplate(writeableTemp, joinPoint, Boolean.class);
 		    //将新增数据保存对应的数据权限
-            this.dataAuthService.clone(resourceType, resourceId, fromResourceId, toOrgId, writeable);
+            this.dataAuthService.clone(resourceType, resourceId, fromOrgId, fromResourceId, toOrgId, writeable);
 		}
 	}
     

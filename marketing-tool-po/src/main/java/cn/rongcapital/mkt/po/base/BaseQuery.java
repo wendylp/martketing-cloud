@@ -36,6 +36,8 @@ public class BaseQuery implements Serializable{
 
     private String shareType;//分享类型
 
+    private Boolean writeable = false;//可写权限
+
     private Integer fromOrgId;//来自哪个组织
 
     private Integer fromResourceId;//来自哪个资源
@@ -162,6 +164,14 @@ public class BaseQuery implements Serializable{
 
     public void setShareType(String shareType) {
         this.shareType = shareType;
+    }
+
+    public Boolean getWriteable() {
+        return writeable;
+    }
+
+    public void setWriteable(Boolean writeable) {
+        this.writeable = writeable;
     }
 
     public Integer getFromOrgId() {

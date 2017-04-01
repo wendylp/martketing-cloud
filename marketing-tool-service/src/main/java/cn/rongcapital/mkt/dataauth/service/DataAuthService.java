@@ -11,6 +11,7 @@
  *************************************************/
 package cn.rongcapital.mkt.dataauth.service;
 
+import cn.rongcapital.mkt.common.exception.CannotCloneBySharerException;
 import cn.rongcapital.mkt.common.exception.CannotShareToOwnerException;
 import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.common.exception.NotFoundResourceException;
@@ -79,13 +80,13 @@ public interface DataAuthService {
      * @功能描述: 克隆数据权限
      * @param resourceType 相应的数据表名
      * @param resourceId 主键ID
+     * @param fromOrgId
      * @param fromResourceId 从哪个数据ID克隆
      * @param toOrgId 克隆给哪个组织
-     * @param writeable 可写权限
-     * @author xie.xiaoliang
+     * @param writeable 可写权限    @author xie.xiaoliang
      * @since 2017-02-03
      */
-    void clone(String resourceType,long resourceId,long fromResourceId,long toOrgId,boolean writeable);
+    void clone(String resourceType, long resourceId, long fromOrgId, long fromResourceId, long toOrgId, boolean writeable) throws NotFoundResourceException, CannotShareToOwnerException, CannotCloneBySharerException;
     
     /**
      * 判断当前组织对该资源是否具有writeable 可写权限
