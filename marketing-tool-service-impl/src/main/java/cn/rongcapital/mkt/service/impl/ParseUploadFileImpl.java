@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import cn.rongcapital.mc.datatag.agent.DataTagAgent;
-import cn.rongcapital.mc.datatag.agent.DataType;
 import cn.rongcapital.mkt.common.enums.GenderEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
@@ -84,35 +83,7 @@ public class ParseUploadFileImpl {
         if (legalDataList.size() > 0) {
             effectRows = insertParsedData(legalDataList, fileType);
         }
-        
-        DataType dataType = null;
-        switch (fileType) {
-        case ImportConstant.POPULATION_FILE:
-            dataType = DataType.ORIGINAL_POPULATION;
-            break;
-        case ImportConstant.CUSTOMER_TAG_FILE:
-            dataType = DataType.ORIGINAL_CUSTOMER_TAG;
-            break;
-        case ImportConstant.ARCH_POINT_FILE:
-            dataType = DataType.ORIGINAL_BURYING_POINT;
-            break;
-        case ImportConstant.MEMBER_FILE:
-            dataType = DataType.ORIGINAL_MEMBER;
-            break;
-        case ImportConstant.LOGIN_FILE:
-            dataType = DataType.ORIGINAL_LOGIN;
-            break;
-        case ImportConstant.PAYMENT_FILE:
-            dataType = DataType.ORIGINAL_PAYMENT;
-            break;
-        case ImportConstant.SHOPPING_FILE:
-            dataType = DataType.ORIGINAL_SHOPPING;
-            break;
-        default:
-            break;
-        }
-        dataTagAgent.proceedWithDataAccess(dataType);
-        
+
         UploadFileProcessVO uploadFileProcessVO = new UploadFileProcessVO();
         uploadFileProcessVO.setTotalRows(parseFileVO.getTotalRows());
         uploadFileProcessVO.setLegalRows(effectRows);
