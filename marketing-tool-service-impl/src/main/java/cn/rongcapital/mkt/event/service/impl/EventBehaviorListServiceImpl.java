@@ -162,8 +162,9 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 
 	private Criteria getCriteria(JSONArray attribute, String eventCode) {
 		Criteria cri = null;
-		cri = Criteria.where("subscribed").is(true);
-		cri.and("event.code").is(eventCode);
+//		cri = Criteria.where("subscribed").is(true);
+//		cri.and("event.code").is(eventCode);
+		cri = Criteria.where("event.code").is(eventCode);
 		int conditionSize = attribute.size();
 		if (conditionSize > 0) {
 			for (int i = 0; i < conditionSize; i++) {
@@ -221,8 +222,9 @@ public class EventBehaviorListServiceImpl implements EventBehaviorListService {
 	
 	private Criteria getCriteria(String objectCode, String qrcodeId,Long startTime, Long endTime) {
 		Criteria cri = null;
-		cri = Criteria.where("subscribed").is(true);
-		cri.and("object.code").is(objectCode).and("object.attributes.qrcode_id").is(qrcodeId).and("time").gte(startTime).lte(endTime);
+//		cri = Criteria.where("subscribed").is(true);
+//		cri.and("object.code").is(objectCode).and("object.attributes.qrcode_id").is(qrcodeId).and("time").gte(startTime).lte(endTime);
+		cri = Criteria.where("object.code").is(objectCode).and("object.attributes.qrcode_id").is(qrcodeId).and("time").gte(startTime).lte(endTime);
 		return cri;
 	}
 }
