@@ -1,5 +1,20 @@
 package cn.rongcapital.mkt.job.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import cn.rongcapital.mc.datatag.agent.DataTagAgent;
+import cn.rongcapital.mc.datatag.agent.DataType;
 import cn.rongcapital.mkt.common.enums.DirectlyCityEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.CityDicDao;
@@ -11,19 +26,6 @@ import cn.rongcapital.mkt.po.CityDic;
 import cn.rongcapital.mkt.po.DataPopulation;
 import cn.rongcapital.mkt.po.ProvinceDic;
 import cn.rongcapital.mkt.po.WechatMember;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Yunfeng on 2016-8-9.
@@ -53,6 +55,9 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
     
     @Autowired
     private CityDicDao cityDicDao;
+    
+    @Autowired(required = false)
+    private DataTagAgent dataTagAgent;
     
     private Map<String, ProvinceDic> provinceDicMap;
     
@@ -120,12 +125,15 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
                  */
                 dataPopulation = cleanProvinceDicAndCityDic(dataPopulation);
                 if (updateWechatMemberKeyidByBitmap(wechatMember)){
+                    // setting status=-1 means updated
+                    dataPopulation.setStatus(-1);
                 	dataPopulationDao.updateDataPopulationByPubIdAndOpenId(dataPopulation);
                 }else{
                     dataPopulationDao.insert(dataPopulation);
                     wechatMember.setKeyid(dataPopulation.getId());
                     updateKeyIdInWechatMember(wechatMember);
-                } 
+                }
+                dataTagAgent.proceedWithDataAccess(DataType.POPULATION);
             }
         }
         return true;

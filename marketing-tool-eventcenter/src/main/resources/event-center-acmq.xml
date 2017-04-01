@@ -84,13 +84,10 @@
         keep-alive="120" queue-capacity="500"  />
         
         
-   <task:executor id="filterExecutor" pool-size="${event.filter.executor.PoolSize}"
+   <task:executor id="kafkaCustomerExecutor" pool-size="${event.kafkaconsumer.executor.PoolSize}"
         keep-alive="120" queue-capacity="500"  />
         
-        
-  <task:executor id="transExecutor" pool-size="${event.trans.executor.PoolSize}"
-        keep-alive="120" queue-capacity="500"  />      
-             
+       
 
     <!-- task end -->
   
@@ -247,6 +244,11 @@
 	<int:channel id="inputFromKafka">
         <int:queue/>   
     </int:channel>
+ 
+    <int:channel id="tempToMC">
+        <int:queue/>   
+    </int:channel>
+    
 	 <bean id="consumerProperties"
         class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
@@ -264,7 +266,7 @@
         consumer-timeout="4000" zookeeper-connect="zookeeperConnect" consumer-properties="consumerProperties">
         <int-kafka:consumer-configurations>
             <int-kafka:consumer-configuration
-                group-id="mcgroup" max-messages="5000">
+                group-id="${kakfa.stream.group}" max-messages="5000">
                 <int-kafka:topic id="${kakfa.stream.topic}" streams="4" />
             </int-kafka:consumer-configuration>
             <!-- <int-kafka:consumer-configuration group-id="default3" value-decoder="kafkaSpecificDecoder"
@@ -285,34 +287,30 @@
     </int-kafka:inbound-channel-adapter> 
 	 
 	
-	 <!-- <int:service-activator  input-channel="inputFromKafka" ref="kfkServiceActivator">
-	   <int:poller max-messages-per-poll="1" task-executor="errorExecutor" fixed-rate="10"/> 
+	  <int:service-activator  input-channel="inputFromKafka" ref="kfkServiceActivator" method="process">
+	   <int:poller max-messages-per-poll="5" task-executor="kafkaCustomerExecutor" fixed-delay="500"/> 
 	 </int:service-activator>
 	
-	<bean id="kfkServiceActivator"  class="cn.rongcapital.mkt.event.service.KafKaConsumer"/>  -->
+	<bean id="kfkServiceActivator"  class="cn.rongcapital.mkt.event.service.KafKaConsumer">
+	   <property name="channel" ref="events"/>
+	</bean>  
 	
-	  <!--  -->
+      <!-- 
 	 <int:filter input-channel="inputFromKafka" ref="streamFilter" method="isMc"  output-channel="streamTomc">
 	   <int:poller max-messages-per-poll="5" task-executor="filterExecutor"  fixed-delay="500"/>
 	 </int:filter> 
      
      <bean id="streamFilter" class="cn.rongcapital.mkt.event.activator.StreamFilter"/>	
-     
-	<!--  转换器1  -->
+      -->
+	<!--   转换器1 
 	<int:transformer input-channel="streamTomc" 
 	output-channel="events"  ref="streamTransformer" method="transformStream">
 	<int:poller max-messages-per-poll="5" task-executor="transExecutor"  fixed-delay="500"/>
 	</int:transformer>
 	
 	<bean id="streamTransformer" class="cn.rongcapital.mkt.event.activator.StreamTransformer"/>
-	
-	<!-- 消息增强器(Enricher)2 -->
-	<!-- <int:chain input-channel="inputFromKafka" output-channel="events">
-	<int:enricher>
-   <int:header name="eventCenter.eventType" value="STREAM"/>	
-	</int:enricher>
-	</int:chain> -->
-	
+	-->
+		
 	<!-- end -->
 	
 	

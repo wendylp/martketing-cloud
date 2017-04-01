@@ -12,24 +12,27 @@ package cn.rongcapital.mkt;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@ImportResource({"classpath:spring/spring-config-mybatis-heracles.xml","classpath:spring/spring-config-schedule.xml"})
+@ImportResource({ "classpath:spring/spring-config-mybatis-heracles.xml",
+        "classpath:spring/spring-config-schedule.xml" })
 //@ImportResource({"classpath:spring/spring-config-mybatis-heracles.xml","classpath:spring/spring-config-job.xml"})
-@PropertySource(value = {"classpath:${conf.dir}/application-api.properties","classpath:${conf.dir}/application-dao.properties"})
+@PropertySource(value = { "classpath:${conf.dir}/application-api.properties",
+        "classpath:${conf.dir}/application-dao.properties", "classpath:${conf.dir}/datatag-agent.properties" })
+@ComponentScan(basePackages = { "cn.rongcapital.mkt.*", "cn.rongcapital.mc.datatag.*" })
 public class SpringBootMain {
-	
-	/**
-	 * @功能简述: 启动spring boot工程
-	 * @param: args 
-	 * @return: void
-	 */
+
+    /**
+     * @功能简述: 启动spring boot工程
+     * @param: args 
+     * @return: void
+     */
     public static void main(String[] args) {
-	    SpringApplication.run(SpringBootMain.class, args);
+        SpringApplication.run(SpringBootMain.class, args);
     }
 }
-
