@@ -25,16 +25,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import java.util.Set;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
@@ -45,14 +49,11 @@ import org.springframework.util.CollectionUtils;
 
 import com.csvreader.CsvWriter;
 
-import cn.rongcapital.mc.datatag.agent.DataTagAgent;
-import cn.rongcapital.mc.datatag.agent.DataType;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.IllegalDataHeadTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.FileUtil;
-import cn.rongcapital.mkt.common.util.ZipCreater;
 import cn.rongcapital.mkt.dao.IllegalDataDao;
 import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
 import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
@@ -70,7 +71,6 @@ import cn.rongcapital.mkt.po.WechatQrcodeLog;
 import cn.rongcapital.mkt.po.WechatQrcodeTicket;
 import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.service.UploadFileService;
-import cn.rongcapital.mkt.service.impl.ParseUploadFileImpl.ImportConstant;
 import cn.rongcapital.mkt.service.impl.vo.UploadFileProcessVO;
 import cn.rongcapital.mkt.service.impl.vo.UploadFileVO;
 import cn.rongcapital.mkt.service.impl.vo.WXMoudelVO;
@@ -124,9 +124,6 @@ public class UploadFileServiceImpl implements UploadFileService{
 	
 	@Autowired
 	WechatQrcodeTicketDao wechatQrcodeTicketDao;
-	
-	@Autowired(required = false)
-    private DataTagAgent dataTagAgent;
 
     @Override
     public Object uploadFile(String fileUnique, MultipartFormDataInput fileInput) {
@@ -356,37 +353,6 @@ public class UploadFileServiceImpl implements UploadFileService{
                 }
 
                 processVO = parseUploadFile.parseAndInsertUploadFileByType(fileUnique,fileType, batchId, bytes);
-                
-                // add by zhaohai start
-                DataType dataType = null;
-                switch (fileType) {
-                case ImportConstant.POPULATION_FILE:
-                    dataType = DataType.ORIGINAL_POPULATION;
-                    break;
-                case ImportConstant.CUSTOMER_TAG_FILE:
-                    dataType = DataType.ORIGINAL_CUSTOMER_TAG;
-                    break;
-                case ImportConstant.ARCH_POINT_FILE:
-                    dataType = DataType.ORIGINAL_BURYING_POINT;
-                    break;
-                case ImportConstant.MEMBER_FILE:
-                    dataType = DataType.ORIGINAL_MEMBER;
-                    break;
-                case ImportConstant.LOGIN_FILE:
-                    dataType = DataType.ORIGINAL_LOGIN;
-                    break;
-                case ImportConstant.PAYMENT_FILE:
-                    dataType = DataType.ORIGINAL_PAYMENT;
-                    break;
-                case ImportConstant.SHOPPING_FILE:
-                    dataType = DataType.ORIGINAL_SHOPPING;
-                    break;
-                default:
-                    break;
-                }
-                dataTagAgent.proceedWithDataAccess(dataType);
-                // add by zhaohai end
-                
                 String downloadFileName = FileUtil.generateFileforDownload(bytes);
                 uploadFileVO.setFileName(fileName);
                 uploadFileVO.setDownloadFileName(downloadFileName);

@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mc.datatag.agent.DataTagAgent;
+import cn.rongcapital.mc.datatag.agent.DataType;
 import cn.rongcapital.mc.datatag.agent.dto.Column;
 import cn.rongcapital.mc.datatag.agent.dto.DataResult;
 import cn.rongcapital.mc.datatag.agent.dto.DataTotal;
@@ -103,6 +104,7 @@ import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 import cn.rongcapital.mkt.vo.out.DataGetMainCountOut;
 import cn.rongcapital.mkt.vo.out.DataGetMainListOut;
+import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -587,7 +589,37 @@ public class MktDataApi {
     @Path("/mkt.service.file.upload")
     @Consumes("multipart/form-data")
     public Object fileUpload(@NotEmpty @QueryParam("file_unique") String fileUnique, MultipartFormDataInput input) {
-        return uploadFileService.uploadFile(fileUnique, input);
+        Response result = (Response) uploadFileService.uploadFile(fileUnique, input);
+        BaseOutput baseOutput = (BaseOutput) result.getEntity();
+        UploadFileAccordTemplateOut out = (UploadFileAccordTemplateOut) baseOutput.getData().get(0);
+        DataType dataType = null;
+        switch (Integer.parseInt(out.getFileType())) {
+        case 1:
+            dataType = DataType.ORIGINAL_POPULATION;
+            break;
+        case 2:
+            dataType = DataType.ORIGINAL_CUSTOMER_TAG;
+            break;
+        case 3:
+            dataType = DataType.ORIGINAL_BURYING_POINT;
+            break;
+        case 4:
+            dataType = DataType.ORIGINAL_MEMBER;
+            break;
+        case 5:
+            dataType = DataType.ORIGINAL_LOGIN;
+            break;
+        case 6:
+            dataType = DataType.ORIGINAL_PAYMENT;
+            break;
+        case 7:
+            dataType = DataType.ORIGINAL_SHOPPING;
+            break;
+        default:
+            break;
+        }
+        dataTagAgent.proceedWithDataAccess(dataType);
+        return result;
     }
 
     /**
