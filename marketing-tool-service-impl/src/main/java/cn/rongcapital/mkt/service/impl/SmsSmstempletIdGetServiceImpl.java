@@ -97,6 +97,12 @@ public class SmsSmstempletIdGetServiceImpl implements SmsSmstempletIdGetService 
     				sms.getId(), sms.getChannelType(), sms.getType(),
     				sms.getAuditStatus(), sms.getName(), sms.getAuditReason(),
     				null, sms.getContent(), true, deleteCheck(sms.getId()));
+
+    		if(!sms.getWriteable()) {
+                smsSmstempletIdGetOut.setEditCheck(false);
+                smsSmstempletIdGetOut.setDeleteCheck(false);
+            }
+
     		smsSmstempletIdGetOut.setAuditTime(DateUtil.getStringFromDate(sms.getAuditTime(), "yyyy-MM-dd HH:mm:ss"));
     		if(sms.getType().intValue() == SmsTempletTypeEnum.VARIABLE.getStatusCode()){
     			  List<SmsSmstempletMaterialData> materialList = getMaterialData(id);
