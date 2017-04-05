@@ -80,6 +80,7 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 					smsTaskTrigger = 1;
 					SmsTaskHead selectSmsTaskHeadTemp = new SmsTaskHead();
 					selectSmsTaskHeadTemp.setCampaignHeadId(smsActivationCreateIn.getCampaignHeadId());
+					selectSmsTaskHeadTemp.setSmsTaskCode(smsActivationCreateIn.getSmsTaskCode());
 					SmsTaskHeadList = this.smsTaskHeadDao.selectListByCampaignHeadId(selectSmsTaskHeadTemp);
 					boolean isExistSmsTask = SmsTaskHeadList != null && !SmsTaskHeadList.isEmpty() && SmsTaskHeadList.size() == 1; // 事件活动，有且只有一个短信任务
 					if (isExistSmsTask) {
