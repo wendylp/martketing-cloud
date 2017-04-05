@@ -6,6 +6,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class CustomizeViewCheckboxIn {
     
+    private String dataType;
+    
     private String colName;
     
     private Boolean isSelected;
@@ -26,5 +28,14 @@ public class CustomizeViewCheckboxIn {
 
     public void setIsSelected(Boolean isSelected) {
         this.isSelected = isSelected;
+    }
+
+    @JsonProperty("data_type")
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 }

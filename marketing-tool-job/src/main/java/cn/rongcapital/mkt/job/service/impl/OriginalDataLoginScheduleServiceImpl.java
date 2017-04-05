@@ -85,6 +85,6 @@ public class OriginalDataLoginScheduleServiceImpl implements OriginalDataLoginSc
 
     @Override
     public void task(Integer taskId) {
-        cleanData();
+        //cleanData();
     }
 }

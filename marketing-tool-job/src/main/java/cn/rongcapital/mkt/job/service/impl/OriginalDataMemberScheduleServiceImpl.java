@@ -89,7 +89,7 @@ public class OriginalDataMemberScheduleServiceImpl implements OriginalDataMember
     
     @Override
     public void task(Integer taskId) {
-        cleanData();
+        //cleanData();
     }
 
 }
