@@ -77,7 +77,7 @@ public class FileTagUpdateServiceImpl implements FileTagUpdateService {
             } else {
                 baseOutput.setMsg("用户没有上传标签");
             }
-            updateOriginalDataStatus(fileUnique, fileType);
+            //updateOriginalDataStatus(fileUnique, fileType);
             importDataHistory.setStatus(Byte.valueOf((byte)0));
             importDataHistory.setImportEndTime(new Date(System.currentTimeMillis()));
             importDataHistory.setName(getTaskName(fileType));

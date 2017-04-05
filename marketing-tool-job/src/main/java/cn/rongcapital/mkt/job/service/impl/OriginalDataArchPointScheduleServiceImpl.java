@@ -90,7 +90,7 @@ public class OriginalDataArchPointScheduleServiceImpl implements OriginalDataArc
 
     @Override
     public void task(Integer taskId) {
-        cleanData();
+        //cleanData();
     }
 
 }

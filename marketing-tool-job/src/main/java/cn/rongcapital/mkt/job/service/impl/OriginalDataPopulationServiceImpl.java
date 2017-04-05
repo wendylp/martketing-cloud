@@ -130,6 +130,6 @@ public class OriginalDataPopulationServiceImpl implements OriginalDataPopulation
 
     @Override
     public void task(Integer taskId) {
-        cleanData();
+        //cleanData();
     }
 }

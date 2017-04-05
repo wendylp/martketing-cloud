@@ -126,6 +126,6 @@ public class OriginalDataShoppingScheduleServiceImpl implements OriginalDataShop
 
     @Override
     public void task(Integer taskId) {
-        cleanData();
+        //cleanData();
     }
 }
