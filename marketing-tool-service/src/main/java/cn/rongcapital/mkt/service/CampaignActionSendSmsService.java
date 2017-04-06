@@ -10,6 +10,6 @@ public interface CampaignActionSendSmsService {
 	
 	public SmsActivationCreateIn getSmsActivationCreateIn(Integer campaignHeadId,String itemId,CampaignActionSendSms campaignActionSendSms,Set<Integer> dataPartyIds);
 	
-	public void storeDataPartyIds(Set<Integer> dataPartyIds,Long targetId);
+	public void storeDataPartyIds(Set<Integer> dataPartyIds, Long targetId, boolean isEventTask);
 	
 }
