@@ -173,7 +173,7 @@ public class DataAuthServiceImpl implements DataAuthService {
         
         if(dataAuth != null){
             //当前组织已经是当前数据的拥有者时，返回警告不能再分享
-            if(StringUtils.isEmpty( dataAuth.getShareType())){
+            if(!StringUtils.isEmpty( dataAuth.getShareType())){
                 resultMap.put("result", "当前已经为当前数据的拥有者，不能再进行分享");
                 over = true;
             }else{
