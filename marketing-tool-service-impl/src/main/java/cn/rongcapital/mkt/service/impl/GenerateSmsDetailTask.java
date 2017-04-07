@@ -142,13 +142,9 @@ public class GenerateSmsDetailTask implements TaskService {
     private MaterialCouponDao materialCouponDao;
 
     private Map<Integer,AbstractCalcSmsTargetAudienceStrategy> strategyMap = new HashMap<>();
-
-
-    private final String SEGMENTATION_HEAD_ID = "segmentation_head_id";
     private final int PAGE_SIZE = 10000;
     private static final String FRONT_SMS_VARIABLE_MASK="{";
     private static final String BACK_SMS_VARIABLE_MASK="}";
-
     public static final Integer POOL_INDEX = 2;
     
     @Override
