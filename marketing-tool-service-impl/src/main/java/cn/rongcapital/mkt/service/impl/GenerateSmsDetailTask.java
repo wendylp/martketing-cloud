@@ -180,7 +180,7 @@ public class GenerateSmsDetailTask implements TaskService {
         SmsTaskBody paramSmsTaskBody = new SmsTaskBody();
         paramSmsTaskBody.setSmsTaskHeadId(taskHeadId);
         paramSmsTaskBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-		paramSmsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
+		// paramSmsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
         List<SmsTaskBody> smsTaskBodies = smsTaskBodyDao.selectList(paramSmsTaskBody);
         if(CollectionUtils.isEmpty(smsTaskBodies)) return;
         for(SmsTaskBody smsTaskBody : smsTaskBodies){
@@ -189,8 +189,8 @@ public class GenerateSmsDetailTask implements TaskService {
             if(CollectionUtils.isEmpty(receiveMobileList)) continue;
             logger.info("sms list distinct mobile size: " + receiveMobileList.size());
             targetDistinctReceiveMobiles.addAll(receiveMobileList);
-			smsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
-			smsTaskBodyDao.updateById(smsTaskBody);
+			// smsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
+			// smsTaskBodyDao.updateById(smsTaskBody);
         }
 
         logger.info("sms task audience size:" + targetDistinctReceiveMobiles.size());
