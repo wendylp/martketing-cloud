@@ -32,33 +32,33 @@ import cn.rongcapital.mkt.vo.in.SmsTargetAudienceIn;
  */
 
 @Service
-public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCreateOrUpdateService{
+public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCreateOrUpdateService {
 
 	@Autowired
 	private CampaignBodyDao campaignBodyDao;
 
-    @Autowired
-    private SmsTaskHeadDao smsTaskHeadDao;
+	@Autowired
+	private SmsTaskHeadDao smsTaskHeadDao;
 
-    @Autowired
-    private SmsTaskBodyDao smsTaskBodyDao;
+	@Autowired
+	private SmsTaskBodyDao smsTaskBodyDao;
 
-    @Autowired
-    private MQTopicService mqTopicService;
-    
+	@Autowired
+	private MQTopicService mqTopicService;
+
 	@Autowired
 	private CampaignActionSendSmsService campaignActionSendSmsService;
 
-    private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask";
-    
-	public static final Integer SMS_TASK_TYPE_CAMPAIGN=1;
+	private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask";
+
+	public static final Integer SMS_TASK_TYPE_CAMPAIGN = 1;
 	public static final Integer SMS_TASK_SEND_TYPE = 3;
 
 	/**
 	 * @since 1.8
 	 */
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public BaseOutput createOrUpdateSmsActivation(SmsActivationCreateIn smsActivationCreateIn) throws JMSException {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
@@ -148,7 +148,12 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 			 * 活动编排发短信节点存储增量dataPartyId
 			 */
 			if (smsActivationCreateIn.getSmsTaskType() == SMS_TASK_TYPE_CAMPAIGN) {
-				campaignActionSendSmsService.storeDataPartyIds(smsActivationCreateIn.getDataPartyIds(), insertSmsTaskHead.getId(), isEventTask);
+				campaignActionSendSmsService.storeDataPartyIds(smsActivationCreateIn.getDataPartyIds(), insertSmsTaskHead.getId());
+				if (isEventTask) {
+					for (Integer dataPartyId : smsActivationCreateIn.getDataPartyIds()) {
+						campaignActionSendSmsService.storeDataPartyId(dataPartyId, insertSmsTaskHead.getId());
+					}
+				}
 			}
 
 			// 3将head_id做为参数发送一个Message.
