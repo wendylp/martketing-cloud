@@ -140,6 +140,6 @@ public class OriginalDataCustomTagScheduleServiceImpl implements OriginalDataCus
 
     @Override
     public void task(Integer taskId) {
-        cleanData();
+        //cleanData();
     }
 }

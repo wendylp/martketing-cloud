@@ -33,20 +33,19 @@ public class EventBehaviors implements Serializable {
 	private JSONObject subject;
 	@Field(value = "event")
 	private JSONObject event;
-	@Field(value = "subscribed")
-	private boolean subscribed;
+//	@Field(value = "subscribed")
+//	private boolean subscribed;
 	private String sourceName;
 	private String objectName;
 	private String eventName;
 
-	public EventBehaviors(String id,Long time,JSONObject object,JSONObject subject,JSONObject event, boolean subscribed){
+	public EventBehaviors(String id,Long time,JSONObject object,JSONObject subject,JSONObject event){
 		super();
 		this.id = id;
 		this.time = time;
 		this.object = object;
 		this.subject = subject;
 		this.event = event;
-		this.subscribed = subscribed;
 	}
 
 	public String getId() {
@@ -87,14 +86,6 @@ public class EventBehaviors implements Serializable {
 
 	public void setEvent(JSONObject event) {
 		this.event = event;
-	}
-
-	public boolean isSubscribed() {
-		return subscribed;
-	}
-
-	public void setSubscribed(boolean subscribed) {
-		this.subscribed = subscribed;
 	}
 
 	public String getSourceName() {

@@ -28,7 +28,7 @@ import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
-public class CampaignDecisionWechatReadTask extends BaseMQService implements TaskService {
+public class CampaignDecisionWechatReadTask extends CampaignAutoCancelTaskService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired

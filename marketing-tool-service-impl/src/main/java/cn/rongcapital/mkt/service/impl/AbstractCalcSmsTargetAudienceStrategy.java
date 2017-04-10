@@ -1,19 +1,30 @@
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.common.enums.SmsTargetAudienceTypeEnum;
-import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.dao.SmsTaskTargetAudienceCacheDao;
-import cn.rongcapital.mkt.po.AudienceIDAndMobilePO;
-import cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache;
-import cn.rongcapital.mkt.service.QueryReceiveMobileListService;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import javax.validation.constraints.NotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.util.CollectionUtils;
 
-import javax.validation.constraints.NotNull;
-import java.util.*;
+import cn.rongcapital.mkt.common.enums.SmsTargetAudienceTypeEnum;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
+import cn.rongcapital.mkt.common.jedis.JedisException;
+import cn.rongcapital.mkt.dao.DataPartyDao;
+import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
+import cn.rongcapital.mkt.dao.SmsTaskTargetAudienceCacheDao;
+import cn.rongcapital.mkt.po.AudienceIDAndMobilePO;
+import cn.rongcapital.mkt.po.SmsTaskHead;
+import cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache;
+import cn.rongcapital.mkt.service.QueryReceiveMobileListService;
 
 /**
  * Created by byf on 12/19/16.
@@ -23,6 +34,8 @@ public abstract class AbstractCalcSmsTargetAudienceStrategy implements QueryRece
 
     @Autowired
     private DataPartyDao dataPartyDao;
+	@Autowired
+	private SmsTaskHeadDao smsTaskHeadDao;
 
     @Autowired
     private SmsTaskTargetAudienceCacheDao smsTaskTargetAudienceCacheDao;
@@ -32,8 +45,33 @@ public abstract class AbstractCalcSmsTargetAudienceStrategy implements QueryRece
 
     abstract protected List<Long> queryDataPartyIdList(@NotNull Long targetId);
 
+	private Long queryDataPartyId(Long targetId) {
+		try {
+			String dataPartyId = JedisClient.get("campaigncoverid-event:" + targetId);
+			return Long.valueOf(dataPartyId);
+		} catch (JedisException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
     public List<String> queryReceiveMobileList(@NotNull Long taskHeadId,@NotNull Long targetId){
-        List<Long> dataPartyIdList = queryDataPartyIdList(targetId);
+
+		List<Long> dataPartyIdList = null;
+
+		/*
+		 * @since 1.8
+		 */
+		SmsTaskHead selectSmsTaskHeadTemp = new SmsTaskHead();
+		selectSmsTaskHeadTemp.setId(taskHeadId);
+		List<SmsTaskHead> smsTaskHeadList = this.smsTaskHeadDao.selectListByCampaignHeadId(selectSmsTaskHeadTemp);
+		selectSmsTaskHeadTemp = smsTaskHeadList.size() == 1 ? smsTaskHeadList.get(0) : null;
+		if (selectSmsTaskHeadTemp != null && selectSmsTaskHeadTemp.getSmsTaskTrigger() == 1) { // 事件类型的活动
+			dataPartyIdList = Arrays.asList(this.queryDataPartyId(targetId));
+		} else {
+			dataPartyIdList = queryDataPartyIdList(targetId);
+		}
+		
 
         //3将选出来的这些数据做缓存存到cache表中,一开始先一条一条插入,后续优化成使用batchInsert进行插入
         if(CollectionUtils.isEmpty(dataPartyIdList)) return null;

@@ -52,6 +52,7 @@
             </props>
         </property>
         <property name="maximumPoolSize" value="500"/>
+        <property name="minimumIdle" value="20"/>
     </bean>
    <bean id="dataSourceSlave" class="com.zaxxer.hikari.HikariDataSource"  destroy-method="close">
         <property name="poolName" value="springHikariCP"/>
@@ -70,6 +71,7 @@
             </props>
         </property>
          <property name="maximumPoolSize" value="500"/>
+        <property name="minimumIdle" value="20"/>
     </bean>
   <!-- group 1, default -->
     <bean id="metads" class="heracles.data.datasource.ReadWriteDataSource">

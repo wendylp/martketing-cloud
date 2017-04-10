@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import cn.rongcapital.mc.datatag.agent.DataTagAgent;
+import cn.rongcapital.mc.datatag.agent.DataType;
 import cn.rongcapital.mkt.common.enums.DirectlyCityEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.CityDicDao;
@@ -41,6 +43,9 @@ public class DataPopulationServiceImpl implements DataPopulationService {
     
     @Autowired
     private CityDicDao cityDicDao;
+    
+    @Autowired(required = false)
+    private DataTagAgent dataTagAgent;
     
 /*    private Map<String, ProvinceDic> provinceDicMap;
     
@@ -93,12 +98,15 @@ public class DataPopulationServiceImpl implements DataPopulationService {
                  */
                 dataPopulation = cleanProvinceDicAndCityDic(dataPopulation,provinceDicMap,cityDicMap);
                 if (updateWechatMemberKeyidByBitmap(wechatMember)){
+                    // setting status=-1 means updated
+                    dataPopulation.setStatus(-1);
                 	dataPopulationDao.updateDataPopulationByPubIdAndOpenId(dataPopulation);
                 }else{
                     dataPopulationDao.insert(dataPopulation);
                     wechatMember.setKeyid(dataPopulation.getId());
                     updateKeyIdInWechatMember(wechatMember);
-                } 
+                }
+                dataTagAgent.proceedWithDataAccess(DataType.POPULATION);
             }
         }
         return true;

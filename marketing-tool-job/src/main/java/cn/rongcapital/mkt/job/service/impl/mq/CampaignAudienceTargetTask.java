@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 
@@ -23,28 +25,20 @@ import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.util.ListSplit;
 import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.dao.TaskScheduleDao;
-import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 @Service
-public class CampaignAudienceTargetTask extends BaseMQService implements TaskService {
+public class CampaignAudienceTargetTask extends CampaignAutoCancelTaskService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private CampaignAudienceTargetDao campaignAudienceTargetDao;
-	
-	@Autowired
-	private CampaignActionSaveAudienceTask campaignActionSaveAudienceTask;
-
 	@Autowired
 	private DataPartyDao dataPartyDao;
 	
-	@Autowired
-	private TaskScheduleDao taskScheduleDao;
 
 	private static final String REDIS_IDS_KEY_PREFIX = "segmentcoverid:";
 	private static final String REDIS_SNAP_IDS_KEY_PREFIX = "segmentsnapcoverid:";
@@ -58,6 +52,11 @@ public class CampaignAudienceTargetTask extends BaseMQService implements TaskSer
 
 	@Override
 	public void task(TaskSchedule taskSchedule) {
+		//验证当前活动是否已经停止
+		if(!super.validAndUpdateTaskSchedule(taskSchedule)){
+			return;
+		}
+
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
 		String queueKey = campaignHeadId + "-" + itemId;

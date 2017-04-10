@@ -25,22 +25,27 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import java.util.Set;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.csvreader.CsvWriter;
@@ -50,7 +55,6 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.IllegalDataHeadTypeEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.FileUtil;
-import cn.rongcapital.mkt.common.util.ZipCreater;
 import cn.rongcapital.mkt.dao.IllegalDataDao;
 import cn.rongcapital.mkt.dao.ImportDataHistoryDao;
 import cn.rongcapital.mkt.dao.ImportDataModifyLogDao;
@@ -121,8 +125,8 @@ public class UploadFileServiceImpl implements UploadFileService{
 	
 	@Autowired
 	WechatQrcodeTicketDao wechatQrcodeTicketDao;
-	
 
+	@Transactional
     @Override
     public Object uploadFile(String fileUnique, MultipartFormDataInput fileInput) {
         UploadFileVO uploadFileVO = processEachUploadFile(fileUnique, fileInput, false);

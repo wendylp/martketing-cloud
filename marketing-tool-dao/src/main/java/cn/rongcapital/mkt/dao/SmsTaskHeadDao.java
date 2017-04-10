@@ -61,4 +61,11 @@ public interface SmsTaskHeadDao extends BaseDao<SmsTaskHead>{
 	 * @return count
 	 */
 	public int selectTaskStatusCount(SmsTaskBody smsTaskBody);
+
+	/**
+	 * 
+	 * @param t
+	 * @return
+	 */
+	public List<SmsTaskHead> selectListByCampaignHeadId(SmsTaskHead t);
 }

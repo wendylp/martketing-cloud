@@ -3,10 +3,10 @@
  */
 package cn.rongcapital.mkt.vo.out;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.jboss.resteasy.util.DateUtil;
 
 /**
  * @author shuiyangyang
@@ -28,6 +28,8 @@ public class MessageSendRecordGetOut {
     
     private Integer smsTaskSendStatus;
     
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     public MessageSendRecordGetOut(){}
     
     
@@ -49,7 +51,7 @@ public class MessageSendRecordGetOut {
         this.receiveMobile = receiveMobile == null ? "" : receiveMobile.trim();
         this.sendMessage = sendMessage == null ? "" : sendMessage.trim();
         this.sendMobile = sendMobile == null ? "" : sendMobile.trim();
-        this.sendTime = sendTime == null ? "" : DateUtil.formatDate(sendTime, "yyyy-MM-dd HH:mm:ss");
+		this.sendTime = sendTime == null ? "" : sdf.format(sendTime);
         this.smsTaskSendStatus = smsTaskSendStatus;
     }
 
@@ -106,7 +108,7 @@ public class MessageSendRecordGetOut {
     }
 
     public void setSendTime(Date sendTime) {
-        this.sendTime = sendTime == null ? "" : DateUtil.formatDate(sendTime, "yyyy-MM-dd HH:mm:ss");
+		this.sendTime = sendTime == null ? "" : sdf.format(sendTime);
     }
 
     @JsonProperty("sms_task_send_status")

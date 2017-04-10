@@ -1,6 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
@@ -56,6 +54,7 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 		CampaignHead campaignHead = campaignHeads.get(0);
 		smsActivationCreateIn.setTaskName(SMS_TASK_NAME+campaignHead.getName()+"_"+campaignActionSendSms.getName());
 		String smsTaskCode = campaignHeadId+"-"+itemId;
+		smsActivationCreateIn.setCampaignHeadId(campaignHeadId); // 活动HEAD_ID
 		smsActivationCreateIn.setSmsTaskCode(smsTaskCode);
 		smsActivationCreateIn.setSmsTaskType(SMS_TASK_TYPE_CAMPAIGN);
 		SmsMaterial smsMaterialTemp = new SmsMaterial();
@@ -80,7 +79,7 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 	}
 
 	@Override
-	public void storeDataPartyIds(Set<Integer> dataPartyIds,Long targetId) {
+	public void storeDataPartyIds(Set<Integer> dataPartyIds, Long targetId) {
 		try {
 			if(dataPartyIds!=null&&dataPartyIds.size()>0){
 				String[] dataPartyIdsStr = new String[dataPartyIds.size()];
@@ -90,7 +89,7 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 					dataPartyIdsL.add(dataPartyIdStr);					
 				}
 				dataPartyIdsStr=dataPartyIdsL.toArray(dataPartyIdsStr);
-				JedisClient.sadd(POOL_INDEX,"campaigncoverid:"+targetId, dataPartyIdsStr);
+				JedisClient.sadd(POOL_INDEX, "campaigncoverid:" + targetId, dataPartyIdsStr);
 			}
 			
 		} catch (JedisException e) {			
@@ -98,4 +97,14 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 		}
 	}
 
+	@Override
+	public void storeDataPartyId(Integer dataPartyId, Long targetId) {
+		try {
+			if (dataPartyId != null) {
+				JedisClient.set("campaigncoverid-event:" + targetId, String.valueOf(dataPartyId));
+			}
+		} catch (JedisException e) {
+			logger.info(" campaigncoverid-event:" + targetId + " store into redis fail," + e.getMessage());
+		}
+	}
 }

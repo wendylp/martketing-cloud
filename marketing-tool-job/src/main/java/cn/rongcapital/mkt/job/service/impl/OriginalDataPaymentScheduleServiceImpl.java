@@ -83,6 +83,6 @@ public class OriginalDataPaymentScheduleServiceImpl implements OriginalDataPayme
 
     @Override
     public void task(Integer taskId) {
-        cleanData();
+        //cleanData();
     }
 }

@@ -138,4 +138,19 @@
 		<include refid="QUERY_FROM_TABLE"/>
         WHERE service_name = #{serviceName}
 	</select>
+
+    <select id="selectPreByCampaignIdAndItemId" resultType="cn.rongcapital.mkt.po.TaskSchedule">
+		SELECT
+		<![CDATA[ ts.id as id,ts.task_name as taskName,ts.task_descript as taskDescript,ts.task_type as taskType,ts.start_time as startTime,ts.end_time as endTime,ts.interval_minutes as intervalMinutes,
+				ts.schedule as schedule,ts.service_name as serviceName,ts.task_status as taskStatus,ts.status as status,ts.create_time as createTime,ts.update_time as updateTime,ts.campaign_head_id as campaignHeadId,ts.campaign_item_id as campaignItemId]]>
+		FROM
+			campaign_switch cs
+		INNER JOIN
+			campaign_body cb ON cb.head_id = cs.campaign_head_id AND cs.item_id = cb.item_id
+		INNER JOIN
+			task_schedule ts ON ts.campaign_head_id = cb.head_id AND ts.campaign_item_id = cb.item_id
+		WHERE
+			cs.campaign_head_id = #{campaignHeadId}
+			AND cs.next_item_id = #{campaignItemId}
+	</select>
 </mapper>
