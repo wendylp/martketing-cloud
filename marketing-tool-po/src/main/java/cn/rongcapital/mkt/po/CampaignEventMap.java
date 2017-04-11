@@ -27,6 +27,8 @@ public class CampaignEventMap extends BaseQuery{
     private Date createTime;
 
     private Date updateTime;
+    
+    private Integer caringTime;
 
     public Integer getId() {
         return id;
@@ -99,4 +101,12 @@ public class CampaignEventMap extends BaseQuery{
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+	public Integer getCaringTime() {
+		return caringTime;
+	}
+
+	public void setCaringTime(Integer caringTime) {
+		this.caringTime = caringTime;
+	}
 }
