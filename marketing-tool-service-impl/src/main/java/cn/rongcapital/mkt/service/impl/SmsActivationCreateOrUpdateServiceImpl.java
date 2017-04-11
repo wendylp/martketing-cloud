@@ -32,39 +32,40 @@ import cn.rongcapital.mkt.vo.in.SmsTargetAudienceIn;
  */
 
 @Service
-public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCreateOrUpdateService{
+public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCreateOrUpdateService {
 
 	@Autowired
 	private CampaignBodyDao campaignBodyDao;
 
-    @Autowired
-    private SmsTaskHeadDao smsTaskHeadDao;
+	@Autowired
+	private SmsTaskHeadDao smsTaskHeadDao;
 
-    @Autowired
-    private SmsTaskBodyDao smsTaskBodyDao;
+	@Autowired
+	private SmsTaskBodyDao smsTaskBodyDao;
 
-    @Autowired
-    private MQTopicService mqTopicService;
-    
+	@Autowired
+	private MQTopicService mqTopicService;
+
 	@Autowired
 	private CampaignActionSendSmsService campaignActionSendSmsService;
 
-    private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask";
-    
-	public static final Integer SMS_TASK_TYPE_CAMPAIGN=1;
+	private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask";
+
+	public static final Integer SMS_TASK_TYPE_CAMPAIGN = 1;
 	public static final Integer SMS_TASK_SEND_TYPE = 3;
 
 	/**
 	 * @since 1.8
 	 */
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public BaseOutput createOrUpdateSmsActivation(SmsActivationCreateIn smsActivationCreateIn) throws JMSException {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
 		if (smsActivationCreateIn.getTaskId() == null) {
 			SmsTaskHead insertSmsTaskHead = null;
 			Integer smsTaskTrigger = 0; // 事件类型的活动
+			boolean isEventTask = false;
 			if (smsActivationCreateIn.getSmsTaskType() == SMS_TASK_TYPE_CAMPAIGN) { // 1:活动编排中的任务
 				// 检查是否是事件类型的活动
 				CampaignBody campaignBody = new CampaignBody();
@@ -74,7 +75,7 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 				campaignBody.setNodeType(nodeType);
 				campaignBody.setItemType(itemType);
 				List<CampaignBody> campaignBodyList = this.campaignBodyDao.selectList(campaignBody);
-				boolean isEventTask = campaignBodyList != null && !campaignBodyList.isEmpty(); // 事件类型活动
+				isEventTask = campaignBodyList != null && !campaignBodyList.isEmpty(); // 事件类型活动
 				List<SmsTaskHead> SmsTaskHeadList = null;
 				if (isEventTask) { // 事件类型活动
 					smsTaskTrigger = 1;
@@ -124,6 +125,23 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 				insertSmsTaskHead.setSmsTaskCode(smsActivationCreateIn.getSmsTaskCode());
 				insertSmsTaskHead.setCampaignHeadId(smsActivationCreateIn.getCampaignHeadId()); // 保存活动头id
 				smsTaskHeadDao.insert(insertSmsTaskHead); // 短信头部
+
+				// 2:获取task_head的Id,然后将相应得信息分条存储到body表中
+				if (!CollectionUtils.isEmpty(smsActivationCreateIn.getSmsTargetAudienceInArrayList())) {
+					for (SmsTargetAudienceIn smsTargetAudienceIn : smsActivationCreateIn.getSmsTargetAudienceInArrayList()) {
+						SmsTaskBody insertSmsTaskBody = new SmsTaskBody();
+						insertSmsTaskBody.setSmsTaskHeadId(insertSmsTaskHead.getId());
+						if (smsActivationCreateIn.getSmsTaskType() == SMS_TASK_TYPE_CAMPAIGN) {
+							insertSmsTaskBody.setTargetId(insertSmsTaskHead.getId());
+							// insertSmsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
+						} else {
+							insertSmsTaskBody.setTargetId(smsTargetAudienceIn.getTargetAudienceId());
+						}
+						insertSmsTaskBody.setTargetName(smsTargetAudienceIn.getTargetAudienceName());
+						insertSmsTaskBody.setTargetType(smsTargetAudienceIn.getTargetAudienceType());
+						smsTaskBodyDao.insert(insertSmsTaskBody);
+					}
+				}
 			}
 
 			/**
@@ -131,21 +149,10 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 			 */
 			if (smsActivationCreateIn.getSmsTaskType() == SMS_TASK_TYPE_CAMPAIGN) {
 				campaignActionSendSmsService.storeDataPartyIds(smsActivationCreateIn.getDataPartyIds(), insertSmsTaskHead.getId());
-			}
-			// 2获取task_head的Id,然后将相应得信息分条存储到body表中
-			if (!CollectionUtils.isEmpty(smsActivationCreateIn.getSmsTargetAudienceInArrayList())) {
-				for (SmsTargetAudienceIn smsTargetAudienceIn : smsActivationCreateIn.getSmsTargetAudienceInArrayList()) {
-					SmsTaskBody insertSmsTaskBody = new SmsTaskBody();
-					insertSmsTaskBody.setSmsTaskHeadId(insertSmsTaskHead.getId());
-					if (smsActivationCreateIn.getSmsTaskType() == SMS_TASK_TYPE_CAMPAIGN) {
-						insertSmsTaskBody.setTargetId(insertSmsTaskHead.getId());
-						insertSmsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
-					} else {
-						insertSmsTaskBody.setTargetId(smsTargetAudienceIn.getTargetAudienceId());
+				if (isEventTask) {
+					for (Integer dataPartyId : smsActivationCreateIn.getDataPartyIds()) {
+						campaignActionSendSmsService.storeDataPartyId(dataPartyId, insertSmsTaskHead.getId());
 					}
-					insertSmsTaskBody.setTargetName(smsTargetAudienceIn.getTargetAudienceName());
-					insertSmsTaskBody.setTargetType(smsTargetAudienceIn.getTargetAudienceType());
-					smsTaskBodyDao.insert(insertSmsTaskBody);
 				}
 			}
 
@@ -163,9 +170,4 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 		baseOutput.setMsg(ApiErrorCode.BIZ_ERROR.getMsg());
 		return baseOutput;
 	}
-
-	private void createSmsTask() {
-
-	}
-
 }
