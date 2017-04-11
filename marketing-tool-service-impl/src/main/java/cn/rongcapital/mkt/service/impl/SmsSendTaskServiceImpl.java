@@ -151,7 +151,12 @@ public class SmsSendTaskServiceImpl implements TaskService {
 
 				if (count >= SMS_SEND_BACTH_COUNT) {
 					// 调用发送API接口（批量）
-					response = this.smsApi.sendMultSms(smsList);
+					try {
+						response = this.smsApi.sendMultSms(smsList);
+					} catch (Exception e) {
+						logger.error("短信服务器连接失败", e);
+						response = new SmsStatusResponse("-1", "短信服务器连接失败");
+					}
 
 					// Map<Long, Double> sendSmsResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
 					// 统计一批短信的成功和失败的个数,根据短信API判断状态回写sms_task_detail_state表和head表
@@ -165,9 +170,19 @@ public class SmsSendTaskServiceImpl implements TaskService {
 			}
 			// Map<String, SmsResponse> rs = null;
 			if (sms_task_trigger == 1 && smsList.size() == 1) {// 事件类型
-				response = this.smsApi.sendSms(smsList.get(0));
+				try {
+					response = this.smsApi.sendSms(smsList.get(0));
+				} catch (Exception e) {
+					logger.error("短信服务器连接失败", e);
+					response = new SmsStatusResponse("-1", "短信服务器连接失败");
+				}
 			} else {
-				response = this.smsApi.sendMultSms(smsList);
+				try {
+					response = this.smsApi.sendMultSms(smsList);
+				} catch (Exception e) {
+					logger.error("短信服务器连接失败", e);
+					response = new SmsStatusResponse("-1", "短信服务器连接失败");
+				}
 			}
 
 			// 处理不满一批的短信
@@ -191,79 +206,6 @@ public class SmsSendTaskServiceImpl implements TaskService {
 			e.printStackTrace();
 		}
 
-	}
-
-	/**
-	 * 建议调用： updateSmsDetailState(String rs, SmsTaskHead smsHead)
-	 * 
-	 * @param sendSmsResult
-	 * @param smsHead
-	 * @since 1.8.0
-	 */
-	@Deprecated
-	public void updateSmsDetailState(Map<Long, Double> sendSmsResult, SmsTaskHead smsHead) {
-		SmsTaskDetailState smsTaskDetailState = null;
-		List<MaterialCouponCodeStatusUpdateVO> voList = new ArrayList<>();
-		MaterialCouponCodeStatusUpdateVO materialCouponCodeStatusUpdateVO = null;
-		int successCount = 0;
-		int failCount = 0;
-		for (Entry<Long, Double> entry : sendSmsResult.entrySet()) {
-			Long taskDetailId = entry.getKey();
-
-			// 根据短信优惠码回写状态
-			SmsTaskDetail detail = new SmsTaskDetail();
-			detail.setId(taskDetailId);
-			List<SmsTaskDetail> SmsTaskDetailList = smsTaskDetailDao.selectList(detail);
-			detail = SmsTaskDetailList.get(0);
-
-			double gatewayState = entry.getValue();
-			smsTaskDetailState = new SmsTaskDetailState();
-			smsTaskDetailState.setSmsTaskDetailId(taskDetailId);
-			if (gatewayState > 0) {
-				// 根据api大于0代表发送成功
-				successCount++;
-				smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_SEND_SUCCESS.getStateCode());
-
-				materialCouponCodeStatusUpdateVO = this.initMaterialCouponCode(detail, MaterialCouponCodeReleaseStatusEnum.RECEIVED);
-			} else {
-				// 其他情况则代表发送失败
-				failCount++;
-				smsTaskDetailState.setSmsTaskSendStatus(SmsDetailSendStateEnum.SMS_DETAIL_SEND_FAILURE.getStateCode());
-				materialCouponCodeStatusUpdateVO = this.initMaterialCouponCode(detail, MaterialCouponCodeReleaseStatusEnum.UNRECEIVED);
-			}
-
-			smsTaskDetailStateDao.updateDetailState(smsTaskDetailState);
-
-			voList.add(materialCouponCodeStatusUpdateVO);
-		}
-
-		// 只有变量短信回写状态
-		List<Integer> smsMaterialIdLists = new ArrayList<Integer>();
-		smsMaterialIdLists.add(smsHead.getSmsTaskMaterialId().intValue());
-		List<SmsMaterial> smsMaterialLists = smsMaterialDao.selectListByIdList(smsMaterialIdLists);
-		if (CollectionUtils.isNotEmpty(smsMaterialLists) && SMS_TYPE_DYNAMICS.equals(smsMaterialLists.get(0).getSmsType())) {
-			// 修改一批优惠码的状态---v1.6
-			materialCouponCodeStatusUpdateService.updateMaterialCouponCodeStatus(voList);
-		}
-		// 计算每批的成功和失败的个数
-		Integer smsSuccessCount = smsHead.getSendingSuccessNum();
-		Integer smsFailCount = smsHead.getSendingFailNum();
-
-		if (smsSuccessCount == null || smsSuccessCount == 0) {
-			smsHead.setSendingSuccessNum(successCount);
-		} else {
-			smsHead.setSendingSuccessNum(smsSuccessCount + successCount);
-		}
-		if (smsFailCount == null || smsFailCount == 0) {
-			smsHead.setSendingFailNum(failCount);
-		} else {
-			smsHead.setSendingFailNum(smsFailCount + failCount);
-		}
-		// 每批都更新成功失败以及等待的个数
-		Integer smsCoverNum = smsHead.getTotalCoverNum();
-		Integer success = smsHead.getSendingSuccessNum();
-		Integer fail = smsHead.getSendingFailNum();
-		smsHead.setWaitingNum(smsCoverNum - (success + fail));
 	}
 
 	public void updateSmsDetailState(SmsStatusResponse response, Map<Long, String> SmsBatchMap, SmsTaskHead smsHead) {
@@ -379,5 +321,4 @@ public class SmsSendTaskServiceImpl implements TaskService {
 		}
 		return map;
 	}
-
 }
