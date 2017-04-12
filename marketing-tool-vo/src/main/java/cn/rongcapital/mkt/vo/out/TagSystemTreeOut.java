@@ -2,6 +2,7 @@ package cn.rongcapital.mkt.vo.out;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -15,6 +16,8 @@ public class TagSystemTreeOut {
     private String tagId;
     private String tagName;
     private Integer level;
+    @JsonIgnore
+    private TagSystemTreeOut parent;
     private List<Object> children;
     private Integer includeCount;	//包含标签个数
     
@@ -53,6 +56,14 @@ public class TagSystemTreeOut {
 
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    public TagSystemTreeOut getParent() {
+        return parent;
+    }
+
+    public void setParent(TagSystemTreeOut parent) {
+        this.parent = parent;
     }
 
     @JsonProperty("children")
