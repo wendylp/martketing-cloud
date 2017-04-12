@@ -259,6 +259,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 							}
 						} catch (Exception e) {
 							logger.info(e.getMessage());
+							e.printStackTrace();
 							continue;
 						}
 					}
