@@ -45,7 +45,9 @@ import cn.rongcapital.mkt.service.impl.vo.SmsStatusResponse;
 @Service
 public class SmsSendTaskServiceImpl implements TaskService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	private Integer SMS_SEND_BACTH_COUNT = 500;
+	
+	@Value("${sms.batch.count}")
+	private Integer SMS_SEND_BACTH_COUNT;
 	private final Integer SMS_MATERIEL_TYPE = 0;
 
 	private final static Byte SMS_TYPE_DYNAMICS = 1;
