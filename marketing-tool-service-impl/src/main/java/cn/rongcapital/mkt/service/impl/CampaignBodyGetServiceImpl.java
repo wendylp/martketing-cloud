@@ -864,6 +864,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
             campaignTriggerEventOut.setName(campaignTriggerTimer.getName());
             campaignTriggerEventOut.setEventCode(campaignTriggerTimer.getEventCode());
             campaignTriggerEventOut.setEventName(campaignTriggerTimer.getEventName());
+            campaignTriggerEventOut.setCaringTime(campaignTriggerTimer.getCaringTime());
         }
         return campaignTriggerEventOut;
     }

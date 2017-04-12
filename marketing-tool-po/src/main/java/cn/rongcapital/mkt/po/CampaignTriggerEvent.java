@@ -31,6 +31,12 @@ public class CampaignTriggerEvent {
     @JsonProperty("event_name")
     private String eventName;
 
+    /**
+     * 关怀时间
+     */
+    @JsonProperty("caring_time")
+    private Integer caringTime;
+    
     public String getName() {
         return name;
     }
@@ -63,10 +69,18 @@ public class CampaignTriggerEvent {
         this.eventName = eventName;
     }
 
-    @Override
+    public Integer getCaringTime() {
+		return caringTime;
+	}
+
+	public void setCaringTime(Integer caringTime) {
+		this.caringTime = caringTime;
+	}
+
+	@Override
     public String toString() {
         return "CampaignTriggerEvent [name=" + name + ", eventId=" + eventId + ", eventCode=" + eventCode
-                + ", eventName=" + eventName + "]";
+                + ", eventName=" + eventName + ", caringTime=" + caringTime + "]";
     }
 
 }
