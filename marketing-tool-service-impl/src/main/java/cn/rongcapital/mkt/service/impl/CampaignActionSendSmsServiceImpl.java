@@ -79,7 +79,7 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 	}
 
 	@Override
-	public void storeDataPartyIds(Set<Integer> dataPartyIds,Long targetId) {
+	public void storeDataPartyIds(Set<Integer> dataPartyIds, Long targetId) {
 		try {
 			if(dataPartyIds!=null&&dataPartyIds.size()>0){
 				String[] dataPartyIdsStr = new String[dataPartyIds.size()];
@@ -89,7 +89,7 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 					dataPartyIdsL.add(dataPartyIdStr);					
 				}
 				dataPartyIdsStr=dataPartyIdsL.toArray(dataPartyIdsStr);
-				JedisClient.sadd(POOL_INDEX,"campaigncoverid:"+targetId, dataPartyIdsStr);
+				JedisClient.sadd(POOL_INDEX, "campaigncoverid:" + targetId, dataPartyIdsStr);
 			}
 			
 		} catch (JedisException e) {			
@@ -97,4 +97,14 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 		}
 	}
 
+	@Override
+	public void storeDataPartyId(Integer dataPartyId, Long targetId) {
+		try {
+			if (dataPartyId != null) {
+				JedisClient.set("campaigncoverid-event:" + targetId, String.valueOf(dataPartyId));
+			}
+		} catch (JedisException e) {
+			logger.info(" campaigncoverid-event:" + targetId + " store into redis fail," + e.getMessage());
+		}
+	}
 }
