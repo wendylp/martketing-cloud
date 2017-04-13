@@ -175,6 +175,7 @@ public class SystemTagServiceImpl_GetTagTreeTest {
         PowerMockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
+                Assert.fail();
                 return null;
             }
         }).when(service, "changeTagIncludeCount", Mockito.any(), Mockito.anyInt());
@@ -277,6 +278,7 @@ public class SystemTagServiceImpl_GetTagTreeTest {
         PowerMockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
+                Assert.fail();
                 return null;
             }
         }).when(service, "changeTagIncludeCount", Mockito.any(), Mockito.anyInt());

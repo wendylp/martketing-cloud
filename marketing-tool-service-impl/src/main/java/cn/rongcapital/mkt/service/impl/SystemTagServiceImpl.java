@@ -324,7 +324,7 @@ public class SystemTagServiceImpl implements SystemTagService {
                 }
             }
             // 更新标签分类的标签数量
-            if (childrenIsTag) {
+            if (childrenIsTag && parentTagOut.getChildren().size() > 0) {
                 changeTagIncludeCount(parentTagOut, parentTagOut.getChildren().size());
             }
         }

@@ -77,8 +77,8 @@ public class TagSystemTreeOut {
     
     @JsonProperty("includeCount")
     public Integer getIncludeCount() {
-		return includeCount;
-	}
+        return includeCount == null ? 0 : includeCount;
+    }
 
 	public void setIncludeCount(Integer includeCount) {
 		this.includeCount = includeCount;
