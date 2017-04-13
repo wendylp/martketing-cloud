@@ -76,7 +76,7 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
         WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatMemberBizImpl",
                         "getOpenidLists", userString, new Date());
         wechatInterfaceLogService.insert(wechatInterfaceLog);
-        logger.debug("根据app获取的粉丝列表内容为：{}", userString);
+        logger.info("根据app获取的粉丝列表内容为：{}", userString);
         JSONObject userJson = JSON.parseObject(userString);
 
         Integer jsonInt = userJson.getInteger("errcode");
@@ -98,7 +98,7 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
                                 userString, new Date());
                 wechatInterfaceLogService.insert(wechatInterfaceLog);
 
-                logger.debug("根据app获取的粉丝列表内容为：{}", userString);
+                logger.info("根据app获取的粉丝列表内容为：{}", userString);
                 userJson = JSON.parseObject(userString);
                 count = userJson.getIntValue("count");
                 if (count > 0) {
