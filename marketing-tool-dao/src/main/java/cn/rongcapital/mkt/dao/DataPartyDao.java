@@ -14,11 +14,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import cn.rongcapital.mkt.po.*;
 import org.apache.ibatis.annotations.Param;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.dao.base.BaseDataFilterDao;
+import cn.rongcapital.mkt.po.AudienceIDAndMobilePO;
+import cn.rongcapital.mkt.po.DataCountBySource;
+import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.HomePageMonthlyCount;
+import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.vo.in.SegmentSearchIn;
 import cn.rongcapital.mkt.vo.out.TagAudienceDownloadOut;
@@ -287,4 +291,6 @@ public interface DataPartyDao extends BaseDao<DataParty>, BaseDataFilterDao<Data
      */
     Integer getIdByWechartInformation(@Param("wxCode")String wxCode,@Param("wxmpId")String wxmpId);
     
+	List<DataParty> selectDataPartyList(@Param("idList") List<Integer> idList);
+
 }
