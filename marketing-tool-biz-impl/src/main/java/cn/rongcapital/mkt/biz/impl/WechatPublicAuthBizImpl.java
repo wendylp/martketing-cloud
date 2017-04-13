@@ -101,7 +101,6 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 	}
 	
 	@Override
-	@Transactional
 	public BaseOutput authWechatPublicCodeAccount(String authorizationCode) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 		App app = this.getApp();
