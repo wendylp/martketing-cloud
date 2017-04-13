@@ -186,7 +186,7 @@ public class GetH5PubListServiceImpl implements TaskService {
 		} else {
 			wechatGroupinfo.setId(Integer.valueOf(id.toString()));
 			wechatGroupinfo.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-			wechatGroupDao.updateById(wechatGroup);
+			wechatGroupDao.updateById(wechatGroupinfo);
 			logger.info("update wechat_group id:" + id);
 		}
 		map.clear();

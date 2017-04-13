@@ -40,6 +40,7 @@ import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.PublicAuthOut;
 import okhttp3.Response;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @PropertySource("classpath:${conf.dir}/application-api.properties")
@@ -100,9 +101,11 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 	}
 	
 	@Override
+	@Transactional
 	public BaseOutput authWechatPublicCodeAccount(String authorizationCode) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 		App app = this.getApp();
+		logger.info("Get authorizationCode is {}",authorizationCode);
 		AuthInfo authInfo = WxComponentServerApi.queryAuthByAuthCode(app, authorizationCode);
     	/**
     	 * 记入接口日志到数据库
@@ -110,7 +113,7 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 		WechatInterfaceLog wechatInterfaceLog = new WechatInterfaceLog("WechatPublicAuthBizImpl","authWechatPublicCodeAccount",authInfoToString(authInfo),new Date());
 		wechatInterfaceLogService.insert(wechatInterfaceLog);
 		/**
-		 * 记入授权公众号到数据库
+		 * 记入授权公众号到数据库authWechatPublicAccount
 		 */
 		String authorizer_appid = authInfo.getAuthorizer_appid();
 		String authorizer_access_token = authInfo.getAuthorizer_access_token();
@@ -141,6 +144,7 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 		try {
 			this.startJob();
 		} catch (JMSException e) {
+			logger.info("auth wechat is error,{}",e.getMessage());
 			baseOutput.setCode(ApiErrorCode.BIZ_ERROR.getCode());
 	        baseOutput.setMsg(e.getMessage());
 		}
