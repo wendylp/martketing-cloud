@@ -55,6 +55,7 @@ import cn.rongcapital.mkt.common.enums.FileNameEnum;
 import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.AudienceAllListService;
+import cn.rongcapital.mkt.service.AudienceCreateService;
 import cn.rongcapital.mkt.service.AudienceIdListService;
 import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
@@ -93,6 +94,7 @@ import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.TagGetCustomService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.AudienceCreateIn;
 import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
 import cn.rongcapital.mkt.vo.in.CustomizeViewCheckboxIn;
 import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
@@ -229,6 +231,9 @@ public class MktDataApi {
 
     @Autowired(required = false)
     private DataTagAgent dataTagAgent;
+    
+    @Autowired
+    private AudienceCreateService audienceCreateService;
 
     /**
      * @功能简述: 获取某条主数据详细信息
@@ -673,6 +678,17 @@ public class MktDataApi {
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
             @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
         return audienceListService.audienceList(userToken, size, index);
+    }
+    
+    /**
+     * @功能简述: 创建固定人群(第三方调用 )
+     * @param: in
+     * @return: Object
+     */
+    @POST
+    @Path("/mkt.audience.create")
+    public BaseOutput audienceCreate(@NotNull @Valid AudienceCreateIn in) {
+        return audienceCreateService.createAudience(in);
     }
 
     /**

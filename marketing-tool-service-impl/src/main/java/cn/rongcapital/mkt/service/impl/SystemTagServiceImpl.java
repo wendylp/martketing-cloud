@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -209,55 +210,134 @@ public class SystemTagServiceImpl implements SystemTagService {
 		return resultList;
 	}
 
-	/**
-	 * 树形结构展示
-	 * 
-	 * @param rootTagId
-	 *            一级分类ID
-	 * @return
-	 */
-	private List<TagSystemTreeOut> getTagTree(String rootTagId,Integer pageSourceType) {
-		List<TagSystemTreeOut> resultList = new ArrayList<>();
-		try {
-			// 获取二级标签分类
-			TagTree root = mongoTemplate.findOne(
-					new Query(Criteria.where("tag_id").is(rootTagId).and("status").is(ApiConstant.INT_ZERO)),
-					TagTree.class);
-			if (root == null) {
-				return null;
-			}
-			// 获取tag的tag_id列表
-			List<String> tagIdLists = root.getChildren();
-			for (String parentTagId : tagIdLists) {
-				TagTree parentTag = mongoTemplate.findOne(
-						new Query(Criteria.where("tag_id").is(parentTagId).and("status").is(ApiConstant.INT_ZERO)),
-						TagTree.class);
-				List<String> childrenTagIdList = parentTag.getChildren();
-				TagSystemTreeOut tagTreeSecondOut = new TagSystemTreeOut(parentTag.getTagId(), parentTag.getTagName(),
-						parentTag.getLevel(), new ArrayList<Object>());
-				for (String tagId : childrenTagIdList) {
-					// 根据tag_id获取tag
-					TagRecommend tag = mongoTemplate.findOne(
-							new Query(Criteria.where("tag_id").is(tagId).and("status").is(ApiConstant.INT_ZERO)),
-							TagRecommend.class);
-					if (tag != null) {
-						// 覆盖率计算
-						String tagCover = commonUtilService.getTagCover(tagId);
-						TagSystemTreeTagOut tagOut = new TagSystemTreeTagOut(tagId, tag.getTagName(), tag.getFlag(),
-								tag.getTagList(), tagCover);
-						solveResultByPageSourceType(pageSourceType, tagTreeSecondOut, tagCover, tagOut);
+//	/**
+//	 * 树形结构展示
+//	 * 
+//	 * @param rootTagId
+//	 *            一级分类ID
+//	 * @return
+//	 */
+//	private List<TagSystemTreeOut> getTagTree(String rootTagId,Integer pageSourceType) {
+//		List<TagSystemTreeOut> resultList = new ArrayList<>();
+//		try {
+//			// 获取二级标签分类
+//			TagTree root = mongoTemplate.findOne(
+//					new Query(Criteria.where("tag_id").is(rootTagId).and("status").is(ApiConstant.INT_ZERO)),
+//					TagTree.class);
+//			if (root == null) {
+//				return null;
+//			}
+//			// 获取tag的tag_id列表
+//			List<String> tagIdLists = root.getChildren();
+//			for (String parentTagId : tagIdLists) {
+//				TagTree parentTag = mongoTemplate.findOne(
+//						new Query(Criteria.where("tag_id").is(parentTagId).and("status").is(ApiConstant.INT_ZERO)),
+//						TagTree.class);
+//				List<String> childrenTagIdList = parentTag.getChildren();
+//				TagSystemTreeOut tagTreeSecondOut = new TagSystemTreeOut(parentTag.getTagId(), parentTag.getTagName(),
+//						parentTag.getLevel(), new ArrayList<Object>());
+//				for (String tagId : childrenTagIdList) {
+//					// 根据tag_id获取tag
+//					TagRecommend tag = mongoTemplate.findOne(
+//							new Query(Criteria.where("tag_id").is(tagId).and("status").is(ApiConstant.INT_ZERO)),
+//							TagRecommend.class);
+//					if (tag != null) {
+//						// 覆盖率计算
+//						String tagCover = commonUtilService.getTagCover(tagId);
+//						TagSystemTreeTagOut tagOut = new TagSystemTreeTagOut(tagId, tag.getTagName(), tag.getFlag(),
+//								tag.getTagList(), tagCover);
+//						solveResultByPageSourceType(pageSourceType, tagTreeSecondOut, tagCover, tagOut);
+//
+//					}
+//				}
+//				tagTreeSecondOut.setIncludeCount(tagTreeSecondOut.getChildren().size());
+//				resultList.add(tagTreeSecondOut);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			logger.error("SystemTagServiceImpl getTagTree method Exception-------->" + e.getMessage(), e);
+//		}
+//		return resultList;
+//	}
+	
+    /**
+     * 树形结构展示
+     * 
+     * @param rootTagId 一级分类ID
+     * @return
+     */
+    private List<Object> getTagTree(String rootTagId, Integer pageSourceType) {
+        TagTree parentTagTree =
+                mongoTemplate.findOne(
+                        new Query(Criteria.where("tag_id").is(rootTagId).and("status").is(ApiConstant.INT_ZERO)),
+                        TagTree.class);
+        if (parentTagTree == null) {
+            return null;
+        }
+        TagSystemTreeOut parentTagOut =
+                new TagSystemTreeOut(parentTagTree.getTagId(), parentTagTree.getTagName(), parentTagTree.getLevel(),
+                        new ArrayList<Object>());
+        getTagTreeRecursion(pageSourceType, parentTagOut, parentTagTree);
+        return parentTagOut.getChildren();
+    }
 
-					}
-				}
-				tagTreeSecondOut.setIncludeCount(tagTreeSecondOut.getChildren().size());
-				resultList.add(tagTreeSecondOut);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("SystemTagServiceImpl getTagTree method Exception-------->" + e.getMessage(), e);
-		}
-		return resultList;
-	}
+    private void getTagTreeRecursion(Integer pageSourceType, TagSystemTreeOut parentTagOut, TagTree parentTagTree) {
+        List<String> children = parentTagTree.getChildren();
+        boolean childrenIsTag = false;
+        if (CollectionUtils.isNotEmpty(children)) {
+            // 判断子节点是否是标签(叶子节点)
+            if (parentTagTree.getBottomClassification() == 1) {
+                childrenIsTag = true;
+            }
+            for (String childTagId : children) {
+                // 标签的情况
+                if (childrenIsTag) {
+                    TagRecommend childTag =
+                            mongoTemplate.findOne(
+                                    new Query(Criteria.where("tag_id").is(childTagId).and("status")
+                                            .is(ApiConstant.INT_ZERO)), TagRecommend.class);
+                    if (childTag != null) {
+                        // 覆盖率计算
+                        String tagCover = commonUtilService.getTagCover(childTagId);
+                        TagSystemTreeTagOut tagOut =
+                                new TagSystemTreeTagOut(childTag.getTagId(), childTag.getTagName(), childTag.getFlag(),
+                                        childTag.getTagList(), tagCover);
+                        if (pageSourceType != null && pageSourceType.equals(1) && percentZero.equals(tagCover)) {
+                            continue;
+                        }
+                        parentTagOut.getChildren().add(tagOut);
+                    }
+                } else {
+                    // 标签分类的情况
+                    TagTree childTagTree =
+                            mongoTemplate.findOne(
+                                    new Query(Criteria.where("tag_id").is(childTagId).and("status")
+                                            .is(ApiConstant.INT_ZERO)), TagTree.class);
+                    if (childTagTree != null) {
+                        TagSystemTreeOut childTagTreeOut =
+                                new TagSystemTreeOut(childTagTree.getTagId(), childTagTree.getTagName(),
+                                        childTagTree.getLevel(), new ArrayList<Object>());
+                        childTagTreeOut.setParent(parentTagOut);
+                        parentTagOut.getChildren().add(childTagTreeOut);
+                        this.getTagTreeRecursion(pageSourceType, childTagTreeOut, childTagTree);
+                    }
+                }
+            }
+            // 更新标签分类的标签数量
+            if (childrenIsTag && parentTagOut.getChildren().size() > 0) {
+                changeTagIncludeCount(parentTagOut, parentTagOut.getChildren().size());
+            }
+        }
+    }
+
+
+    private void changeTagIncludeCount(TagSystemTreeOut parentTag, int count) {
+        int existCount = parentTag.getIncludeCount() == null ? 0 : parentTag.getIncludeCount().intValue();
+        parentTag.setIncludeCount(existCount + count);
+        if (parentTag.getParent() != null) {
+            this.changeTagIncludeCount(parentTag.getParent(), count);
+        }
+    }
 
 	private void solveResultByPageSourceType(Integer pageSourceType, TagSystemTreeOut tagTreeSecondOut, String tagCover, TagSystemTreeTagOut tagOut) {
 		if(pageSourceType != null && pageSourceType.equals(1) && !percentZero.equals(tagCover)){
