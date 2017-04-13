@@ -11,6 +11,7 @@ package cn.rongcapital.mkt.vo.in;
 
 import java.util.List;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class AudienceCreateIn {
@@ -19,12 +20,14 @@ public class AudienceCreateIn {
      * 人群名称
      */
     @NotEmpty
+    @Length(min = 1, max = 45)
     private String name;
 
     /**
      * 来源
      */
     @NotEmpty
+    @Length(min = 1, max = 512)
     private String source;
 
     /**
