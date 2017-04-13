@@ -51,7 +51,7 @@ public class DataPartQueryTaskServiceTest extends AbstractUnitTest {
     @Autowired
     private MongoTemplate mongoTemplate;
     
-    private final int[] brithdays={1,3,7,31};
+    private final int[] brithdays={1,3,7,30};
     
     private  LocalDate currdate =LocalDate.now();
     

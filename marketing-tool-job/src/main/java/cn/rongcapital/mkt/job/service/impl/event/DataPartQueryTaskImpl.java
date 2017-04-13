@@ -34,9 +34,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.po.mongodb.DataParty;
-
+@Component
 public class DataPartQueryTaskImpl {
 
     private Logger logger = LoggerFactory.getLogger(getClass());  
@@ -44,7 +45,7 @@ public class DataPartQueryTaskImpl {
     @Autowired
     private MongoTemplate mongoTemplate;
     
-    private final int[] brithdays={1,3,7,31};
+    private final int[] brithdays={1,3,7,30};
     
     private  LocalDate currdate =LocalDate.now();
     
