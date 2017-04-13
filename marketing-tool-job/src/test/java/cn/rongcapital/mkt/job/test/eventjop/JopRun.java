@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import cn.rongcapital.mkt.job.service.impl.event.BrithDayDataSendMQ;
 import cn.rongcapital.mkt.job.service.impl.event.DataPartQueryTaskImpl;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.testbase.AbstractUnitTest;
@@ -33,16 +34,21 @@ import cn.rongcapital.mkt.testbase.AbstractUnitTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JopRun extends AbstractUnitTest {
+    
     @Autowired
     private DataPartQueryTaskImpl dataPartQueryTaskImpl;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+    
+    @Autowired
+    private BrithDayDataSendMQ  brithDayDataSendMQ;
 
      
     @Test
     public void test() {
 
         Map<Integer, List<DataParty>> dataParty = dataPartQueryTaskImpl.getDataBritDay();
+        
         for (Map.Entry<Integer, List<DataParty>> entry : dataParty.entrySet()) {
             List<DataParty> list = entry.getValue();
             for (DataParty dp : list) {
@@ -52,6 +58,14 @@ public class JopRun extends AbstractUnitTest {
 
         }
 
+        if(!dataParty.isEmpty()&&dataParty.size()>0)
+        {
+            logger.info("进入发送生日提醒状态....!!!");
+            brithDayDataSendMQ.sendMQ(dataParty);
+        }
+        
+        logger.info("生日发送提醒状态结束...开始发送至事件中心!!!");
+        
     }
 
 }
