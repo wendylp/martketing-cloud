@@ -1403,7 +1403,11 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
         campaignEventMap.setEventId(campaignTriggerEvent.getEventId());
         campaignEventMap.setEventCode(campaignTriggerEvent.getEventCode());
         campaignEventMap.setEventName(campaignTriggerEvent.getEventName());
-        campaignEventMap.setCaringTime(campaignTriggerEvent.getCaringTime());
+        if(ApiConstant.CARING_EVENT_CODE.equals(campaignTriggerEvent.getEventCode()) && campaignTriggerEvent.getCaringTime() == null){
+        	campaignEventMap.setCaringTime(ApiConstant.CARING_EVENT_TIME);
+        }else{
+        	campaignEventMap.setCaringTime(campaignTriggerEvent.getCaringTime());
+        }
         campaignEventMap.setCreateTime(new Date());
         return campaignEventMap;
     }
