@@ -335,14 +335,13 @@ public class GetPubFansListServiceImpl implements TaskService {
     				wxFansListVO.setFansList(fansListTemps);
     				Map<String, Object> mapTemp = fansListTemps.get(0);
     				wxFansListVO.setPubId(String.valueOf(mapTemp.get("pub_id")));				
-//    				try {
+    				try {
 						wechatMemberDao.deleteFansByVO(wxFansListVO);
 						wechatMemberDao.batchInsertFans(fansListTemps);
-//					} catch (Exception e) {
-//						logger.info("更新粉丝失败："+JSONObject.toJSONString(fansListTemps));
-//						e.printStackTrace();
-//						continue;
-//					}
+					} catch (Exception e) {
+						logger.info("更新粉丝失败："+JSONObject.toJSONString(fansListTemps));
+						continue;
+					}
                 }    
 				/*logger.info("now page number add list size: " + fansList.size());
 				WXFansListVO wxFansListVO = new WXFansListVO();
