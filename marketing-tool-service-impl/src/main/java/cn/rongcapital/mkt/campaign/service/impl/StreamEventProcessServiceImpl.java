@@ -24,8 +24,10 @@ import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.campaign.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.dao.CampaignEventMapDao;
+import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.event.vo.EventSubjectCombineResult;
 import cn.rongcapital.mkt.mongodb.EventInvolvedDataPartyRepository;
+import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.mongodb.EventInvolvedDataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.po.mongodb.event.EventBehavior;
@@ -47,6 +49,9 @@ public class StreamEventProcessServiceImpl {
     @Autowired
     private CampaignEventMapDao campaignEventMapDao;
 
+    @Autowired
+    private DataPartyDao dataPartyDao;
+    
     @Autowired
     private EventInvolvedDataPartyRepository eventInvolvedDataPartyRepository;
 
@@ -70,8 +75,14 @@ public class StreamEventProcessServiceImpl {
             return;
         }
         logger.info(">>>>>>>>>>>>>>>>>>combine main data result {} from message {}.", result, event);
+        DataParty party = dataPartyDao.getDataById(Integer.valueOf(result.getMid()));
+        if (party == null) {
+            logger.error(">>>>>>>>>>>>>>>>>>combine main data result {} from message {} is illegal.", result, event);
+            return;
+        }
         Segment segment = new Segment();
-        segment.setDataId(Integer.valueOf(result.getMid()));
+        segment.setDataId(party.getId());
+        segment.setName(party.getName());
         List<Segment> segments = Arrays.asList(segment);
         // 2.获取活动包含事件触发的任务首节点
         int pageSizeCnt = 100;

@@ -26,8 +26,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.campaign.service.EventSubjectCombineService;
 import cn.rongcapital.mkt.dao.CampaignEventMapDao;
+import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.event.vo.EventSubjectCombineResult;
 import cn.rongcapital.mkt.mongodb.EventInvolvedDataPartyRepository;
+import cn.rongcapital.mkt.po.DataParty;
 import cn.rongcapital.mkt.po.mongodb.EventInvolvedDataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.vo.CampaignNode;
@@ -48,6 +50,9 @@ public class StreamEventProcessServiceImplTest {
 
     @Mock
     private EventInvolvedDataPartyRepository eventInvolvedDataPartyRepository;
+    
+    @Mock
+    private DataPartyDao dataPartyDao;
     
     @Before
     public void setUp() throws Exception {
@@ -147,6 +152,22 @@ public class StreamEventProcessServiceImplTest {
         ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
         service.process(event);
     }
+    
+    /**
+     * 主数据合并(DataParty不存在)
+     */
+    @Test
+    public void testProcess07_3() {
+        String event = "{\"event\":{\"code\" :\"XXX\"},\"subject\":{\"openid\":\"12345\"}}";
+        Mockito.when(eventSubjectCombineService.needCombine("XXX")).thenReturn(true);
+        EventSubjectCombineResult result = new EventSubjectCombineResult();
+        result.setMid("12");
+        Mockito.when(eventSubjectCombineService.combineStreamData(Mockito.any())).thenReturn(result);
+        Mockito.when(dataPartyDao.getDataById(12)).thenReturn(null);
+        ReflectionTestUtils.setField(service, "eventSubjectCombineService", eventSubjectCombineService);
+        ReflectionTestUtils.setField(service, "dataPartyDao", dataPartyDao);
+        service.process(event);
+    }
 
     /**
      * 无包含事件触发的活动
@@ -163,6 +184,10 @@ public class StreamEventProcessServiceImplTest {
         Mockito.when(campaignEventMapDao.getFirstMQNodeByEventCodeCnt(Mockito.any())).thenReturn(0);
         ReflectionTestUtils.setField(service, "campaignEventMapDao", campaignEventMapDao);
 
+        ReflectionTestUtils.setField(service, "dataPartyDao", dataPartyDao);
+        Mockito.when(dataPartyDao.getDataById(Mockito.any())).thenReturn(new DataParty());
+        ReflectionTestUtils.setField(service, "dataPartyDao", dataPartyDao);
+        
         service.process(event);
     }
 
@@ -205,7 +230,8 @@ public class StreamEventProcessServiceImplTest {
             }
         }).when(eventInvolvedDataPartyRepository).insert(Mockito.any(EventInvolvedDataParty.class));
         ReflectionTestUtils.setField(service, "eventInvolvedDataPartyRepository", eventInvolvedDataPartyRepository);
-        
+        Mockito.when(dataPartyDao.getDataById(Mockito.any())).thenReturn(new DataParty());
+        ReflectionTestUtils.setField(service, "dataPartyDao", dataPartyDao);
         service.process(event);
     }
 
@@ -248,6 +274,8 @@ public class StreamEventProcessServiceImplTest {
             }
         }).when(eventInvolvedDataPartyRepository).insert(Mockito.any(EventInvolvedDataParty.class));
         ReflectionTestUtils.setField(service, "eventInvolvedDataPartyRepository", eventInvolvedDataPartyRepository);
+        Mockito.when(dataPartyDao.getDataById(Mockito.any())).thenReturn(new DataParty());
+        ReflectionTestUtils.setField(service, "dataPartyDao", dataPartyDao);
         service.process(event);
     }
 
