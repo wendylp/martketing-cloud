@@ -15,6 +15,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
+import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
@@ -139,6 +140,28 @@ public class HttpClientUtil {
         if (result != 200)
             throw new Exception("wrong HttpClient.executeMethod post method !");
         return post;
+    }
+    
+    public void delete(HttpUrl httpUrl) throws Exception{
+        if (httpUrl == null) return;
+
+        HostConfiguration config = new HostConfiguration();
+        if(httpUrl.getPort()!=0){
+        	config.setHost(httpUrl.getHost(), httpUrl.getPort());
+        }else{
+        	config.setHost(httpUrl.getHost());
+        }
+        DeleteMethod post = new DeleteMethod(httpUrl.getPath());
+        String encoding = httpUrl.getEncoding();
+        if (encoding != null) {
+            post.getParams().setContentCharset(encoding);
+        }
+        int result = httpClient.executeMethod(config, post);
+        if (log.isDebugEnabled()) {
+            log.debug("HttpClient.executeMethod returns result = [" + result + "]");
+        }
+        if (result != 200 || result != 204)
+            throw new Exception("wrong HttpClient.executeMethod delete method !");
     }
     
     public GetMethod get(PostUrl postUrl) throws Exception {
