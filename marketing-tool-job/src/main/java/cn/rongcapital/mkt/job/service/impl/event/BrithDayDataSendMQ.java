@@ -59,7 +59,7 @@ public class BrithDayDataSendMQ {
                     for (CampaignNode cn : campaignNodes) {
                         jmsOperations.convertAndSend(cn.getCampaignHeadId() + "-" + cn.getItemId(),
                                 changeDataPartTOSegment(datamap, cn.getCaringTime()));
-                        logger.info("消息队列名称:{}", +cn.getCampaignHeadId() + "-" + cn.getItemId());
+                        logger.info("消息队列名称:{},时间周期:{}", +cn.getCampaignHeadId() + "-" + cn.getItemId(),cn.getCaringTime());
                     }
 
                 }

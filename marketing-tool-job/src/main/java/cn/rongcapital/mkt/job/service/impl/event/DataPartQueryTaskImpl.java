@@ -125,7 +125,7 @@ public class DataPartQueryTaskImpl {
             
         }
         
-        logger.info("生日提醒数据准备Suess end 耗时....{}",(System.currentTimeMillis()-begin));
+        logger.info("生日提醒数据准备Suess_end_耗时:{}",(System.currentTimeMillis()-begin));
          return mapdata;
     }
     

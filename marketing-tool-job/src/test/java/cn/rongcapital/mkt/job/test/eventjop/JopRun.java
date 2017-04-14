@@ -26,6 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.rongcapital.mkt.job.service.impl.event.BrithDayDataSendMQ;
 import cn.rongcapital.mkt.job.service.impl.event.DataPartQueryTaskImpl;
+import cn.rongcapital.mkt.job.service.impl.event.SendBrithDayToEventCenter;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.testbase.AbstractUnitTest;
 
@@ -42,6 +43,9 @@ public class JopRun extends AbstractUnitTest {
     
     @Autowired
     private BrithDayDataSendMQ  brithDayDataSendMQ;
+    
+    @Autowired
+    private SendBrithDayToEventCenter  sendBrithDayToEventCenter;
 
      
     @Test
@@ -60,11 +64,14 @@ public class JopRun extends AbstractUnitTest {
 
         if(!dataParty.isEmpty()&&dataParty.size()>0)
         {
-            logger.info("进入发送生日提醒状态....!!!");
+            
             brithDayDataSendMQ.sendMQ(dataParty);
+            sendBrithDayToEventCenter.SendBrithEventCenter(dataParty);
+            
         }
         
-        logger.info("生日发送提醒状态结束...开始发送至事件中心!!!");
+  
+        logger.info("生日发送提醒任务结束...");
         
     }
 
