@@ -533,6 +533,7 @@ public class MktDataApi {
         result.setTotal(result.getData().size());
         result.setCountList(mapList);
         result.getColNames().addAll(dataResult.getCol_names());
+        result.setMdType(dataGetFilterAudiencesIn.getMdType());
         return Response.ok().entity(result).build();
 
         //                return dataGetFilterAudiencesService.getFilterAudiences(dataGetFilterAudiencesIn.getMethod(),
