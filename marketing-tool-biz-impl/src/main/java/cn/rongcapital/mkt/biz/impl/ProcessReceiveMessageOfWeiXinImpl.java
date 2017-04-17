@@ -327,7 +327,7 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 			 */
 			if(StringUtils.isNotEmpty(event)){
 				logger.info(" event is not empty ");
-				try {
+				//try {
 					switch(event){
 					  case "SCAN":{
 					      this.insertWechatQrcodeScan(qrCodeTicket, openid);				      
@@ -355,15 +355,15 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 						  break;
 					  }
 					}
-				} catch (Exception e) {
+				/*} catch (Exception e) {
 					logger.info(e.getMessage());
 					e.printStackTrace();
-				}finally {
+				}finally {*/
 					/**
 					 * 发送事件信息到事件中心
 					 */
 					sendEventToEventCenter(msgMap);
-				}
+				//}
 				
 			}
 	}
