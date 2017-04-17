@@ -39,13 +39,14 @@ import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
+import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.service.SyncETLMaterialCouponDataService;
 import cn.rongcapital.mkt.po.mongodb.Coupon;
 
 @Service
-public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCouponDataService{
+public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCouponDataService ,TaskService{
 	private static final Logger logger = LoggerFactory.getLogger(SyncETLMaterialCouponDataServiceImpl.class);
     
 	@Autowired
@@ -56,6 +57,11 @@ public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCoup
     
     @Autowired
     private MaterialCouponDao materialCouponDao;
+    
+	@Override
+	public void task(Integer taskId) {
+		this.sync();
+	}
     
     public int sync(){
     	
@@ -179,5 +185,5 @@ public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCoup
     	
     	return flag;
     }
-    
+
 }
