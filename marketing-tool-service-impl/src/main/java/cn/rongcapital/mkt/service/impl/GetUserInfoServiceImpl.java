@@ -41,15 +41,18 @@ public class GetUserInfoServiceImpl implements GetUserInfoService{
     
 
     @Override
-public BaseOutput getUserMappInfo(UserInfoIn userInfo) {
-   UserInfo userInfoT = userInfoDao.getMappingUserInfo(userInfo.getUserId(), userInfo.getUserCode());
-   if(userInfoT==null)
-   {
-       userInfoT=new UserInfo();
-       BeanUtils.copyProperties(userInfo, userInfoT);
-       userInfoDao.insert(userInfoT);
-       
-   }
-   return getUserInfo(userInfoT.getUserId());
-}
+	public BaseOutput getUserMappInfo(UserInfoIn userInfo) {
+		UserInfo userInfoT = userInfoDao.getMappingUserInfo(userInfo.getUserId(), userInfo.getUserCode());
+		if (userInfoT == null) {
+			userInfoT = new UserInfo();
+			BeanUtils.copyProperties(userInfo, userInfoT);
+			userInfoDao.insert(userInfoT);
+		}else{
+			if(userInfo.getOrgId().intValue() != userInfoT.getOrgId().intValue()){
+				BeanUtils.copyProperties(userInfo, userInfoT);
+				userInfoDao.updateById(userInfoT);
+			}
+		}
+		return getUserInfo(userInfoT.getUserId());
+	}
 }

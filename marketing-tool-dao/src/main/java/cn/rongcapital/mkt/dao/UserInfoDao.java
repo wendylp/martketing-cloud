@@ -3,10 +3,9 @@ package cn.rongcapital.mkt.dao;
 import org.apache.ibatis.annotations.Param;
 
 import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.CampaignActionSendPub;
 import cn.rongcapital.mkt.po.UserInfo;
 
-public interface UserInfoDao extends BaseDao<CampaignActionSendPub>{
+public interface UserInfoDao extends BaseDao<UserInfo>{
     
     /**
      * @Title: getUserInfo   

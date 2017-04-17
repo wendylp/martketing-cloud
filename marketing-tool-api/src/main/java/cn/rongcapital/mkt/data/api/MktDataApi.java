@@ -880,7 +880,9 @@ public class MktDataApi {
 	    public BaseOutput getUserMappInfo(@Valid UserInfoIn userofIn)
 	    {   
 	        Integer orgid=Integer.valueOf(env.getProperty("default.orgid"));
-	        userofIn.setOrgId(orgid);
+	        if(userofIn.getOrgId() ==null){
+	        	userofIn.setOrgId(orgid);
+	        }
 	        return userInfoService.getUserMappInfo(userofIn);
 	    }
 
