@@ -89,8 +89,8 @@ public class CampaignDetailServiceImplTest extends AbstractUnitTest {
 		NodeAudience au3 = new NodeAudience();
 		au3.setDataId(789);
 		// Criteria criteria = Criteria.where("campaignHeadId").is(123).and("itemId").is("456");
-		Mockito.when(mongoTemplate.find(Mockito.anyObject(), Mockito.anyObject())).thenReturn(Arrays.asList(au1, au2, au3));
-		Mockito.when(mongoTemplate.count(Mockito.any(Query.class), Mockito.anyObject())).thenReturn(3L);
+		Mockito.when(mongoTemplate.find(Mockito.any(Query.class), NodeAudience.class)).thenReturn(Arrays.asList(au1, au2, au3));
+		Mockito.when(mongoTemplate.count(Mockito.any(Query.class), NodeAudience.class)).thenReturn(3L);
 
 		CampaignSwitch query = new CampaignSwitch();
 		query.setCampaignHeadId(campaignHeadId);
