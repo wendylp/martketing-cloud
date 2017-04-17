@@ -108,7 +108,7 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 		logger.debug("活动的行动节点：{}", campaignBodyList);
 		if (campaignBodyList != null && !campaignBodyList.isEmpty()) {
 			for (CampaignBody cur : campaignBodyList) {
-				if (cur.getItemType() == WX_TYPE || cur.getItemType() == SMS_TYPE || true) {
+				if (cur.getItemType() == WX_TYPE || cur.getItemType() == SMS_TYPE) {
 					String audiencesTypeName = this.selectTriggerName(cur.getNodeType(), cur.getItemType()); // 活动触达方式
 					CampaignItemInfo campaignItemInfo = new CampaignItemInfo(audiencesTypeName);
 					campaignItemInfo.setAudiences(this.selectCampaignItemAudiencesInfoList(campaignHeadId, cur.getItemId()));
