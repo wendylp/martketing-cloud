@@ -1,16 +1,13 @@
 package cn.rongcapital.mkt.service.impl;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.SecurityContext;
 
-import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
-import cn.rongcapital.mkt.dao.SegmentationHeadDao;
-import cn.rongcapital.mkt.job.service.impl.mq.BaseMQService;
-import cn.rongcapital.mkt.po.CampaignAudienceTarget;
-import cn.rongcapital.mkt.po.SegmentationHead;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.spi.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,9 +18,13 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.UserSessionUtil;
+import cn.rongcapital.mkt.dao.CampaignAudienceTargetDao;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
+import cn.rongcapital.mkt.dao.SegmentationHeadDao;
 import cn.rongcapital.mkt.dao.TaskScheduleDao;
+import cn.rongcapital.mkt.po.CampaignAudienceTarget;
 import cn.rongcapital.mkt.po.CampaignHead;
+import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -73,6 +74,11 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
         t.setId(campaignHeadId);
     	t.setName(body.getCampaignName());
     	t.setPublishStatus(publishStatus);
+		if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS == publishStatus.byteValue()) {
+			t.setStartTime(new Date()); // @since 1.9 记录活动启动时间
+		} else if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH == publishStatus.byteValue()) {
+			t.setEndTime(new Date()); // @since 1.9 记录活动手动停止时间
+		}
     	campaignHeadDao.updateById(t);
 
     	Map<String,Object> map = new HashMap<String,Object>();

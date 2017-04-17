@@ -11,6 +11,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -100,12 +101,18 @@ public class CampaignDetailServiceImplTest extends AbstractUnitTest {
 		CampaignHead ch1 = new CampaignHead();
 		ch1.setId(123);
 		ch1.setName("123");
+		ch1.setStartTime(new Date());
+		ch1.setEndTime(new Date());
 		CampaignHead ch2 = new CampaignHead();
 		ch2.setId(456);
 		ch2.setName("456");
+		ch2.setStartTime(new Date());
+		ch2.setEndTime(new Date());
 		CampaignHead ch3 = new CampaignHead();
 		ch3.setId(789);
 		ch3.setName("789");
+		ch3.setStartTime(new Date());
+		ch3.setEndTime(new Date());
 		Mockito.when(campaignHeadDao.selectCampaignProgressStatusListByPublishStatus(Mockito.anyObject()))//
 				.thenReturn(Arrays.asList(ch1, ch2, ch3));
 
