@@ -10,6 +10,7 @@ public class CampaignItemAudiencesInfo {
 	private Integer mid;
 	private String mobile;
 	private String openid;
+	private String wxid;
 
 	public CampaignItemAudiencesInfo() {
 	}
@@ -23,8 +24,15 @@ public class CampaignItemAudiencesInfo {
 		this.mobile = mobile;
 	}
 
-	public CampaignItemAudiencesInfo(Integer mid, String mobile, String openid) {
+	public CampaignItemAudiencesInfo(Integer mid, String openid, String wxid) {
 		this.mid = mid;
+		this.wxid = wxid;
+		this.openid = openid;
+	}
+
+	public CampaignItemAudiencesInfo(Integer mid, String mobile, String openid, String wxid) {
+		this.mid = mid;
+		this.wxid = wxid;
 		this.mobile = mobile;
 		this.openid = openid;
 	}
@@ -56,6 +64,14 @@ public class CampaignItemAudiencesInfo {
 	@Override
 	public String toString() {
 		return "CampaignItemAudiencesInfo [mid=" + mid + ", mobile=" + mobile + ", openid=" + openid + "]";
+	}
+
+	public String getWxid() {
+		return wxid;
+	}
+
+	public void setWxid(String wxid) {
+		this.wxid = wxid;
 	}
 
 }

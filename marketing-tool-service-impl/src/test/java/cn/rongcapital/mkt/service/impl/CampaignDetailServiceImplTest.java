@@ -119,12 +119,15 @@ public class CampaignDetailServiceImplTest extends AbstractUnitTest {
 		CampaignBody cb1 = new CampaignBody();
 		cb1.setItemType(TRIGGER_TYPE);
 		cb1.setItemId("123");
+		cb1.setItemType((byte) 5);
 		CampaignBody cb2 = new CampaignBody();
 		cb2.setItemType(TRIGGER_TYPE);
 		cb2.setItemId("456");
+		cb2.setItemType((byte) 5);
 		CampaignBody cb3 = new CampaignBody();
 		cb3.setItemType(TRIGGER_TYPE);
 		cb3.setItemId("789");
+		cb3.setItemType((byte) 5);
 		Mockito.when(campaignBodyDao.selectList(Mockito.anyObject())).thenReturn(Arrays.asList(cb1, cb2, cb3));
 
 		CampaignNodeItem cni = new CampaignNodeItem();

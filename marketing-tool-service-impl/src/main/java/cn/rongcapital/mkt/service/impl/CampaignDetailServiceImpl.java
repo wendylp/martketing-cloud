@@ -51,7 +51,8 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 
 	public final static Byte TRIGGER_TYPE = 0; // 触发类型
 	public final static Byte ACTION_TYPE = 3; // 行动类型
-	public final static Byte ITEM_PTYPE = 3; // 节点父类型 @see mysql.campaign_node_item.ptype
+	public final static Byte WX_TYPE = 5; // 发送微信图文
+	public final static Byte SMS_TYPE = 6; // 发送短信
 
 	@Override
 	public CampaignDetailOut campaignDetail(String name) {
@@ -107,10 +108,12 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 		logger.debug("活动的行动节点：{}", campaignBodyList);
 		if (campaignBodyList != null && !campaignBodyList.isEmpty()) {
 			for (CampaignBody cur : campaignBodyList) {
-				String audiencesTypeName = this.selectTriggerName(ITEM_PTYPE, cur.getItemType()); // 活动触达方式
-				CampaignItemInfo campaignItemInfo = new CampaignItemInfo(audiencesTypeName);
-				campaignItemInfo.setAudiences(this.selectCampaignItemAudiencesInfoList(campaignHeadId, cur.getItemId()));
-				campaignItemInfos.add(campaignItemInfo);
+				if (cur.getItemType() == WX_TYPE || cur.getItemType() == SMS_TYPE || true) {
+					String audiencesTypeName = this.selectTriggerName(cur.getNodeType(), cur.getItemType()); // 活动触达方式
+					CampaignItemInfo campaignItemInfo = new CampaignItemInfo(audiencesTypeName);
+					campaignItemInfo.setAudiences(this.selectCampaignItemAudiencesInfoList(campaignHeadId, cur.getItemId()));
+					campaignItemInfos.add(campaignItemInfo);
+				}
 			}
 		}
 		return campaignItemInfos;
@@ -138,7 +141,7 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 			return campaignItemAudiencesInfoList;
 		}
 		for (DataParty cur : dataPartyList) {
-			CampaignItemAudiencesInfo audiencesInfo = new CampaignItemAudiencesInfo(cur.getId(), cur.getMobile(), cur.getWxCode());
+			CampaignItemAudiencesInfo audiencesInfo = new CampaignItemAudiencesInfo(cur.getId(), cur.getMobile(), cur.getWxCode(), cur.getWxmpId());
 			campaignItemAudiencesInfoList.add(audiencesInfo);
 		}
 		logger.info("活动head_id={}，itemId={}， 受众人群：{}", campaignHeadId, itemId, campaignItemAudiencesInfoList);
