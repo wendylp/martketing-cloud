@@ -244,6 +244,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
     	whiteMapOfMethod.put("mkt.contact.list.info.get","mkt.contact.list.info.get");
     	whiteMapOfMethod.put("mkt.contacts.commit.save","mkt.contacts.commit.save");
     	whiteMapOfMethod.put("mkt.contacts.longurl.get","mkt.contacts.longurl.get");
+    	whiteMapOfMethod.put("mkt.audience.create","mkt.audience.create");
 		return whiteMapOfMethod;   	
     }
 }
