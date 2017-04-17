@@ -357,6 +357,7 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 					}
 				} catch (Exception e) {
 					logger.info(e.getMessage());
+					e.printStackTrace();
 				}finally {
 					/**
 					 * 发送事件信息到事件中心
