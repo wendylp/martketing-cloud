@@ -41,12 +41,13 @@ public class TagTree implements Serializable {
     private String source;
 
 	private List<String> children;
+	@Field(value = "bottom_classification")
+	private int bottomClassification;
 	
 	public TagTree() {}
 	
-	public TagTree(String id, String tagId, String tagName, int level, String path, int status,
-                    String parent, Date createTime, Date updateTime, String source,
-                    List<String> children) {
+    public TagTree(String id, String tagId, String tagName, int level, String path, int status, String parent,
+            Date createTime, Date updateTime, String source, List<String> children) {
         super();
         this.id = id;
         this.tagId = tagId;
@@ -59,6 +60,24 @@ public class TagTree implements Serializable {
         this.updateTime = updateTime;
         this.source = source;
         this.children = children;
+    }
+	   
+	public TagTree(String id, String tagId, String tagName, int level, String path, int status,
+                    String parent, Date createTime, Date updateTime, String source,
+                    List<String> children, int bottomClassification) {
+        super();
+        this.id = id;
+        this.tagId = tagId;
+        this.tagName = tagName;
+        this.level = level;
+        this.path = path;
+        this.status = status;
+        this.parent = parent;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.source = source;
+        this.children = children;
+        this.bottomClassification = bottomClassification;
     }
 
 
@@ -151,6 +170,14 @@ public class TagTree implements Serializable {
 		this.source = source;
 	}
 
+    public int getBottomClassification() {
+        return bottomClassification;
+    }
+
+    public void setBottomClassification(int bottomClassification) {
+        this.bottomClassification = bottomClassification;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -166,6 +193,7 @@ public class TagTree implements Serializable {
         result = prime * result + ((tagId == null) ? 0 : tagId.hashCode());
         result = prime * result + ((tagName == null) ? 0 : tagName.hashCode());
         result = prime * result + ((updateTime == null) ? 0 : updateTime.hashCode());
+        result = prime * result + bottomClassification;
         return result;
     }
 
@@ -226,6 +254,8 @@ public class TagTree implements Serializable {
             if (other.updateTime != null)
                 return false;
         } else if (!updateTime.equals(other.updateTime))
+            return false;
+        if (bottomClassification != other.bottomClassification)
             return false;
         return true;
     }
