@@ -434,4 +434,11 @@ public class ApiConstant {
      * 用户来源
      */
     public static final long USER_SOURCE_AVAILABLE = 1; // 是否启用  0：不启用 1：启用
+    
+    /**
+     * 生日关怀CODE
+     */
+    public static final String CARING_EVENT_CODE = "campaign_event_map"; 
+    
+    public static final Integer CARING_EVENT_TIME = 7; 
 }

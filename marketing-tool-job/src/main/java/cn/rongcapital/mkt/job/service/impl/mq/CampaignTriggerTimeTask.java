@@ -1,13 +1,10 @@
 package cn.rongcapital.mkt.job.service.impl.mq;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.jms.MessageConsumer;
 
-import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
-import com.alibaba.fastjson.JSON;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +18,7 @@ import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.TaskSchedule;
+import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
 import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 
 @Service
@@ -56,6 +54,7 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		CampaignHead t = new CampaignHead();
 		t.setId(campaignHeadId);
 		t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS);
+		t.setStartTime(new Date()); // @since 1.9 记录活动启动时间
 		campaignHeadDao.updateById(t);
 		//激活该活动对应的全部任务
 		taskScheduleDao.activateTaskByCampaignHeadId(campaignHeadId);
@@ -78,6 +77,7 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 			CampaignHead campaignHead = campaignHeads.get(0);
 			if( ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS == campaignHead.getPublishStatus()){
 				campaignHead.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH);
+				campaignHead.setEndTime(new Date()); // @since 1.9 记录活动手动停止时间
 				campaignHeadDao.updateById(campaignHead);
 			}
 		}
