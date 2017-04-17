@@ -10,29 +10,26 @@
 
 package cn.rongcapital.mkt.dao;
 
-import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
-import cn.rongcapital.mkt.po.DataParty;
-import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
-import cn.rongcapital.mkt.po.SmsTemplet;
-import cn.rongcapital.mkt.dao.DataPartyDao;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.Before;
-
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
+import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.HomePageSourceGroupCount;
+
+//@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@Transactional
 public class DataPartyDaoTest extends AbstractUnitTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -159,6 +156,14 @@ public class DataPartyDaoTest extends AbstractUnitTest {
 	
 	@Test
 	public void testInsert() {
+		DataParty dp = new DataParty();
+		dp.setName("xv_insert_test");
+		dp.setMobile("15812369852");
+		dp.setWxCode("gh_ce89dcb24ea1");
+		dp.setCreateTime(new Date());
+		int count = this.dataPartyDao.insert(dp);
+		Assert.assertEquals(1, count);
+		Assert.assertNotNull(dp.getId());
 	    logger.info("测试方法: insert ");    
 	}
 	
@@ -227,6 +232,21 @@ public class DataPartyDaoTest extends AbstractUnitTest {
 	    logger.info("测试方法: selectMappingKeyId ");    
 	}
 	
+	@Test
+	public void testSelectDataPartyList() {
+		DataParty dp = new DataParty();
+		dp.setName("xv_SelectDataPartyList_test");
+		dp.setMobile("15812369852");
+		dp.setWxCode("gh_ce89dcb24ea1");
+		dp.setCreateTime(new Date());
+		this.dataPartyDao.insert(dp);
+		List<DataParty> dataParties = this.dataPartyDao.selectDataPartyList(Arrays.asList(dp.getId()));
+		Assert.assertNotNull(dataParties);
+		Assert.assertFalse(dataParties.isEmpty());
+		Assert.assertEquals("15812369852", dataParties.get(0).getMobile());
+		logger.info("测试方法: selectDataPartyList ");
+	}
+
 	@Test
 	public void testSelectListByContactId() {
 		
