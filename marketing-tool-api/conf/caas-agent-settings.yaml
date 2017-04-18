@@ -1,0 +1,8 @@
+
+caasApiUrl: "http://caas-mktpoc-user.cssrv.dataengine.com/api/v1"
+sslEnabled: true
+proxyEnabled: false
+proxyHost: "your http proxy host"
+proxyPort: 3182
+appKey: "110e146883ca45d4a31cf5a4f104bf30"
+appSecret: "16a6b24725da41d4aec200d8de2397bc"

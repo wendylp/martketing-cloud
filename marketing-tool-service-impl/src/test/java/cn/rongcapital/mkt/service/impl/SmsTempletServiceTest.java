@@ -22,12 +22,13 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTaskAppEnum;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
+import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
-import cn.rongcapital.mkt.po.SmsTaskDetailState;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsTempletService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -48,6 +49,8 @@ public class SmsTempletServiceTest {
     @Mock
 	private SmsTempletMaterialMapDao smsTempletMaterialMapDao;
     
+    @Mock
+    private DataAuthService  dataAuthService;
     
     private int selectListCountResult = 10;
     
@@ -97,6 +100,8 @@ public class SmsTempletServiceTest {
         
         Mockito.when(smsTempletDao.insert(any())).thenReturn(insertResult);
         
+        Mockito.when(dataAuthService.validateWriteable(Mockito.anyString(),Mockito.anyLong() , Mockito.anyLong())).thenReturn(true);
+        
     	Mockito.doAnswer(new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -121,11 +126,14 @@ public class SmsTempletServiceTest {
         ReflectionTestUtils.setField(smsTempletService, "smsMaterialDao", smsMaterialDao);
         
         ReflectionTestUtils.setField(smsTempletService, "smsTempletMaterialMapDao", smsTempletMaterialMapDao);
+        
+        ReflectionTestUtils.setField(smsTempletService, "dataAuthService", dataAuthService);
+        
     }
 
     @Test
     public void testSmsTempletList() {
-        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, "0", "1", "测试","");
+        BaseOutput result = smsTempletService.smsTempletList("111", 0, 10, "0", "1", "测试","",1 , Boolean.TRUE);
         
         // 断言
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
@@ -135,12 +143,13 @@ public class SmsTempletServiceTest {
     }
     
     @Test
-    public void testSaveOrUpdateSmsTemplet() {
+    public void testSaveOrUpdateSmsTemplet() throws NoWriteablePermissionException {
         SmsTempletIn smsTempletIn = new SmsTempletIn();
         /**
          * 插入参数
          */
         smsTempletIn.setId(1);
+        smsTempletIn.setOrgid(2l);
         smsTempletIn.setType(NumUtil.int2OneByte(SmsTempletTypeEnum.FIXED.getStatusCode()));
         smsTempletIn.setChannelType(SmsTaskAppEnum.ADVERT_SMS.getStatus());
         smsTempletIn.setContent("测试模板");
@@ -160,7 +169,16 @@ public class SmsTempletServiceTest {
         smsTempletIn.setType(NumUtil.int2OneByte(SmsTempletTypeEnum.VARIABLE.getStatusCode()));
         smsTempletIn.setChannelType(SmsTaskAppEnum.ADVERT_SMS.getStatus());
         smsTempletIn.setContent("测试变量模板");
+        smsTempletIn1.setOrgid(99l);
         smsTempletIn.setCreator("user2");
+        
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+
+                return null;
+            }
+        }).when(dataAuthService).put(Mockito.anyLong(), Mockito.anyString(), Mockito.anyLong());
 
         BaseOutput result2 = smsTempletService.saveOrUpdateSmsTemplet(smsTempletIn);
         

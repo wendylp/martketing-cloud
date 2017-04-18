@@ -15,27 +15,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum;
 import cn.rongcapital.mkt.common.enums.SmsTempleteAuditStatusEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
+import cn.rongcapital.mkt.common.enums.dataauth.ShareOrgTypeEnum;
+import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthClone;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthWriteable;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
-import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.po.SmsTempletMaterialMap;
 import cn.rongcapital.mkt.service.SmsTempletService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.ColumnsOut;
 import cn.rongcapital.mkt.vo.out.SmsTempletOut;
+import cn.rongcapital.mkt.vo.sms.in.SmsTempletCloneIn;
 import cn.rongcapital.mkt.vo.sms.in.SmsTempletIn;
-import cn.rongcapital.mkt.vo.sms.in.SmsTempletListIn;
 import cn.rongcapital.mkt.vo.sms.in.SmstempletMaterialVo;
 import cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo;
 
@@ -48,6 +53,10 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	
 	@Autowired
 	private SmsTempletDao smsTempletDao;
+	
+	//新增权限service lhz
+	@Autowired
+    private DataAuthService  dataAuthService;
 	
 	@Autowired
 	private SmsMaterialDao smsMaterialDao;
@@ -66,10 +75,13 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 	private final String TEMPLETE_TYPE="模板类型";
 	
 	private final String AUDIT_REASON="无";
+	
+	private static final String TABLE_NAME = "sms_templet";// 资源对应表名
+
 		
 	@Override
 	public SmsTempletOut smsTempletList(String userId, Integer index, Integer size, String channelType,
-			String type, String name,String content) {
+										String type, String name, String content, Integer orgId, Boolean firsthand) {
 		logger.info("this is SmsTempletServiceImpl.smsTempletList");
 		
 		SmsTempletOut smsTempletOut = this.newSuccessSmsTempletOut();
@@ -94,6 +106,8 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		smsTempletTemp.setOrderFieldType("DESC");
 		smsTempletTemp.setStartIndex((index-1)*size);
 		smsTempletTemp.setPageSize(size);
+		smsTempletTemp.setOrgId(orgId);
+		smsTempletTemp.setFirsthand(firsthand);
 		
 		/**
 		 * 统计总数
@@ -188,7 +202,14 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 						smsTemplet.setDeleteCheck(true);
 					}else{						
 						smsTemplet.setDeleteCheck(false);
-					}					
+					}
+
+					//v1.9增加数据权限的判断  add by xiexiaoliang
+					if(!smsTemplet.getWriteable()){
+						smsTemplet.setEditCheck(false);
+						smsTemplet.setDeleteCheck(false);
+					}
+					//v1.9增加数据权限的判断  add by xiexiaoliang end
 				}				
 			}
 		}
@@ -213,9 +234,11 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		}
 	}
 
-	@Override
+    @DataAuthWriteable(resourceType = "sms_templet", orgId = "#smsTempletIn.orgid", resourceId = "#smsTempletIn.id", type = ParamType.SpEl)
+    @DataAuthPut(resourceType = "sms_templet", orgId = "#smsTempletIn.orgid", resourceId = "#smsTempletIn.id", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
+    @Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public BaseOutput saveOrUpdateSmsTemplet(SmsTempletIn smsTempletIn) {
+	public BaseOutput saveOrUpdateSmsTemplet(SmsTempletIn smsTempletIn) throws NoWriteablePermissionException {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTemplet smsTemplet = this.getSmsTempletBySmsTempletIn(smsTempletIn);
 		if(smsTemplet!=null){
@@ -224,7 +247,7 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 				smsTempletDao.updateById(smsTemplet);
 			}else{
 				smsTemplet = setSmsTempletAuditProperties(smsTemplet);
-				smsTempletDao.insert(smsTemplet);
+				insert(smsTemplet, smsTempletIn.getOrgid());
 			}
 			
 			//变量模板添加
@@ -243,6 +266,18 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		}
 		return output;		
 	}
+
+    /**
+     * @功能描述: message
+     * @param smsTemplet 
+     * @param orgId 
+     * @author xie.xiaoliang
+     * @since 2017-02-07 
+     */
+	@Transactional
+    private void insert(SmsTemplet smsTemplet, long orgId) {
+        smsTempletDao.insert(smsTemplet);
+    }
 
 	private void updateMaterial(SmsTempletIn smsTempletIn, Integer templetId) {
 
@@ -384,6 +419,53 @@ public class SmsTempletServiceImpl implements SmsTempletService {
 		columnsOut4.setColName(this.TEMPLETE_TYPE);
 		columnsOutList.add(columnsOut4);
 		return columnsOutList;		
+	}
+
+	/**
+	 * 短信模板克隆
+	 * @param SmsTempletCloneIn
+	 * @return
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@DataAuthClone(fromResourceId = "#clone.id", fromOrgId = "#clone.orgid", resourceId = "#toIds", resourceType = TABLE_NAME, toOrgId = "#clone.orgIds", writeable = "true",type = ParamType.SpEl)
+	public BaseOutput smsTempletClone(SmsTempletCloneIn clone) {
+		BaseOutput output = this.newSuccessBaseOutput();
+		SmsTemplet from = new SmsTemplet();
+		from.setId(clone.getId());
+		from.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		List<SmsTemplet> t = smsTempletDao.selectList(from);
+		
+		List<Long> toIds = new ArrayList<>();
+		for (int i = 0; i < clone.getOrgIds().size(); i++) {
+			if (!CollectionUtils.isEmpty(t)) {
+				
+				SmsTemplet to = t.get(0);
+				to.setCreator(clone.getCreator());
+				to.setUpdateUser(clone.getUpdateUser());
+				this.smsTempletDao.insert(to);
+				//通过插入代码实现克隆权限
+				//dataAuthService.clone(TABLE_NAME, to.getId(), from.getId(), clone.getOrgIds().get(i), Boolean.TRUE);
+				
+				//通过注解做克隆权限 step1
+				toIds.add(to.getId().longValue());
+			}
+		}
+		
+		//通过注解做克隆权限 step2，toIds需要通过baseOutput.getData()返回值被注解获得。
+		output.getData().addAll(toIds);
+		
+		return output;
+	}
+
+	@Override
+	public BaseOutput getOrgs(long resourceId, long orgId, String oprType, int index, int size) {
+		return dataAuthService.getOrgFromResShare(resourceId, orgId, TABLE_NAME, ShareOrgTypeEnum.TOORGS.getCode(), oprType, index, size);
+	}
+	
+	@Override
+	public BaseOutput getOrg(long resourceId, long orgId, String oprType) {
+		return dataAuthService.getOrgFromResShare(resourceId, orgId, TABLE_NAME, ShareOrgTypeEnum.ORGTO.getCode(), oprType, null, null);
 	}
 	
 }

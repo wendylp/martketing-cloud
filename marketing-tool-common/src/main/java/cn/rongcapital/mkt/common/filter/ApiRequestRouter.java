@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -91,7 +92,14 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	   			}
 		   		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 	   			
 		   		    if(redisUserTokenVO.getCode()==0&&StringUtils.isNotEmpty(redisUserTokenVO.getMsg())){
-		   		        requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
+		   		      InputStream   inputStream =requestContext.getEntityStream();
+		   		      if(inputStream!=null)
+		   		      {
+		   		          String temp=IOUtils.toString(inputStream);
+		   		              if(!"".equals(temp))
+		   		      requestContext.setProperty(ApiConstant.API_USER_ID,JSON.parseObject(temp).getString(ApiConstant.API_USER_ID));
+		   		      }
+		   		      requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
 		   		    }
 		   		   
 		   			List<String> pList = requestContext.getUriInfo().getQueryParameters().get(ApiConstant.API_METHOD);
