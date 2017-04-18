@@ -59,7 +59,7 @@ public class MktWeChatMsgApi {
 				processReceiveMessageOfWeiXinBiz.getMsgLog(textxml, msg_signature, timestamp, nonce, signature, openid,appId);
 			}			
 		} catch (Exception e) {
-			//logger.info(e.getMessage());
+			logger.info(e.getMessage());
 		    e.fillInStackTrace();
 			e.printStackTrace();
 			logger.info("_事件出现异常，给微信返回成功，使公众号可用。");
