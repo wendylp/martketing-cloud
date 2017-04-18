@@ -8,8 +8,66 @@
 	</parent>
 	<artifactId>marketing-tool-api</artifactId>
 	<packaging>jar</packaging>
+	
+	<!--  caas 版本定义  -->
+	<properties>
+	<caas.version>1.4.0</caas.version>
+	<service-platform-commons.version>1.12.0-SNAPSHOT</service-platform-commons.version>
+	</properties>
+	<!-- caas end   -->
+	
+	
+	
     <!-- dependencies -->
 	<dependencies>
+	    
+	    <!-- caas st -->
+	    
+	     <dependency>
+            <groupId>cn.rongcapital.caas</groupId>
+            <artifactId>caas-api</artifactId>
+            <version>${caas.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.rongcapital.caas</groupId>
+            <artifactId>caas-agent</artifactId>
+            <version>${caas.version}</version>
+              <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.rongcapital.caas</groupId>
+            <artifactId>caas-agent-oauth2</artifactId>
+            <version>${caas.version}</version>
+            <scope>provided</scope>
+        </dependency>   
+	      
+	    <dependency>
+            <groupId>com.ruixue.serviceplatform</groupId>
+            <artifactId>service-platform-commons</artifactId>
+            <version>${service-platform-commons.version}</version>
+        </dependency>
+            
+            
+            
+            
+	    <!-- resteasy client -->
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-client</artifactId>
+			<version>3.0.11.Final</version>
+			<scope>provided</scope>
+		</dependency>
+	    
+	    
+	    <!-- caas end -->
+	
+	
+	
+	
+	
+	
+	
 		<dependency>
 			<groupId>cn.rongcapital.mkt</groupId>
 			<artifactId>marketing-tool-service</artifactId>

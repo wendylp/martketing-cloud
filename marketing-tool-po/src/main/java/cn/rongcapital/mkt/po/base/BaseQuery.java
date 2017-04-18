@@ -11,10 +11,12 @@
 package cn.rongcapital.mkt.po.base;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class BaseQuery implements Serializable{
 
@@ -28,7 +30,21 @@ public class BaseQuery implements Serializable{
 
     private transient String orderFieldType;// 排序字段类型:asc,desc
     
+    private transient Integer orgId; //组织ID
     
+    private transient Boolean firsthand;
+
+    private String shareType;//分享类型
+
+    private Boolean writeable = false;//可写权限
+
+    private Integer fromOrgId;//来自哪个组织
+
+    private Integer fromResourceId;//来自哪个资源
+
+    private Boolean shared;//当前组织是否被分享过
+
+    private Date daCreateTime;//当前数据的创建时间
     
     private transient String mid;    //主数据ID
     private transient String md_type;//主数据类型
@@ -125,5 +141,68 @@ public class BaseQuery implements Serializable{
     public void setMapping_keyid(String mapping_keyid) {
         this.mapping_keyid = mapping_keyid;
     }
+    @JsonProperty("org_id")
+	public Integer getOrgId() {
+		return orgId;
+	}
 
+	public void setOrgId(Integer orgId) {
+		this.orgId = orgId;
+	}
+
+	public Boolean getFirsthand() {
+		return firsthand;
+	}
+
+	public void setFirsthand(Boolean firsthand) {
+		this.firsthand = firsthand;
+	}
+
+    public String getShareType() {
+        return shareType;
+    }
+
+    public void setShareType(String shareType) {
+        this.shareType = shareType;
+    }
+
+    public Boolean getWriteable() {
+        return writeable;
+    }
+
+    public void setWriteable(Boolean writeable) {
+        this.writeable = writeable;
+    }
+
+    public Integer getFromOrgId() {
+        return fromOrgId;
+    }
+
+    public void setFromOrgId(Integer fromOrgId) {
+        this.fromOrgId = fromOrgId;
+    }
+
+    public Integer getFromResourceId() {
+        return fromResourceId;
+    }
+
+    public void setFromResourceId(Integer fromResourceId) {
+        this.fromResourceId = fromResourceId;
+    }
+
+    public Boolean getShared() {
+        return shared;
+    }
+
+    public void setShared(Boolean shared) {
+        this.shared = shared;
+    }
+
+    public Date getDaCreateTime() {
+        return daCreateTime;
+    }
+
+    public void setDaCreateTime(Date daCreateTime) {
+        this.daCreateTime = daCreateTime;
+    }
 }
