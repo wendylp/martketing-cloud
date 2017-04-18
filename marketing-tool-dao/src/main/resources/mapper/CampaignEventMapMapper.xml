@@ -4,7 +4,7 @@
 
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,campaign_head_id as campaignHeadId,name as name,event_id as eventId,event_code as eventCode,event_name as eventName,status as status,create_time as createTime,update_time as updateTime]]>
+		<![CDATA[ id as id,campaign_head_id as campaignHeadId,name as name,event_id as eventId,event_code as eventCode,event_name as eventName,status as status,create_time as createTime,update_time as updateTime,caring_time as caringTime]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -46,7 +46,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CampaignEventMap" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO campaign_event_map (campaign_head_id,name,event_id,event_code,event_name,create_time)
+			INSERT INTO campaign_event_map (campaign_head_id,name,event_id,event_code,event_name,create_time,caring_time)
 			VALUES
 			(
 			  #{campaignHeadId},
@@ -54,7 +54,8 @@
 			  #{eventId},
 			  #{eventCode},
 			  #{eventName},
-			  now()
+			  now(),
+			  #{caringTime}
 			)
 		]]>
 	</insert>
@@ -121,7 +122,7 @@
 	</sql>
 	
 	<select id="getFirstMQNodeByEventCode" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.vo.CampaignNode">
-		SELECT first_nodes.campaign_head_id as campaignHeadId, first_nodes.next_item_id as itemId
+		SELECT first_nodes.campaign_head_id as campaignHeadId, first_nodes.next_item_id as itemId,map.caring_time as caringTime
 		<include refid="QUERY_GET_FIRST_MQ_NODE"/>
 		ORDER BY first_nodes.campaign_head_id,first_nodes.next_item_id ASC
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>

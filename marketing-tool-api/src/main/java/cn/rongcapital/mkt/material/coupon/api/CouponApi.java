@@ -49,6 +49,7 @@ import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPageListService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponPutInGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponReleaseGeneralService;
 import cn.rongcapital.mkt.material.coupon.service.MaterialCouponVerifyGeneralService;
+import cn.rongcapital.mkt.material.coupon.service.SyncETLMaterialCouponDataService;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponCodeVerifyIn;
@@ -494,4 +495,24 @@ public class CouponApi {
     public BaseOutput createTargetAudienceGroup(@Valid MaterialCouponCreateAudienceVO mcca) throws JMSException {
         return materialCouponAudienceCreateService.createTargetAudienceGroup(mcca);
     }
+	
+	
+	@Autowired
+	private SyncETLMaterialCouponDataService syncETLMaterialCouponDataService;
+	
+    /**
+     * 同步贝贝熊ETL优惠券从 Mongo 到MySQL
+     * 
+     * 接口：mkt.material.coupon.sync
+     * 
+     * @author shanjingqi
+     * @throws JMSException 
+     * @Date 2016-7-17
+     */ 
+    @GET
+    @Path("/mkt.material.coupon.sync")
+    public int sync() {
+        return syncETLMaterialCouponDataService.sync();
+    }
+
 }
