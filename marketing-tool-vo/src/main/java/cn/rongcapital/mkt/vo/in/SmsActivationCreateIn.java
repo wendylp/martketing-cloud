@@ -50,6 +50,17 @@ public class SmsActivationCreateIn extends BaseInput{
     
     private Set<Integer> dataPartyIds;
 
+    @NotNull
+    private Long orgId;
+    @JsonProperty("org_id")
+    public Long getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Long orgId) {
+		this.orgId = orgId;
+	}
+    
     @JsonProperty("task_id")
     public Long getTaskId() {
         return taskId;
