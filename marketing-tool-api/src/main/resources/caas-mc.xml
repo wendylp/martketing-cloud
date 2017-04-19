@@ -12,10 +12,11 @@
                http://www.springframework.org/schema/aop/spring-aop.xsd">
        
 	 
+	<bean id="caasAgentSettings" class="cn.rongcapital.caas.agent.CaasAgentSettings" />
+    
 	<bean id="caasAgent" class="cn.rongcapital.caas.agent.CaasOauth2Agent" init-method="start" destroy-method="stop">
-		<property name="settingsYamlFile" value="${app_name}/caas-agent-settings.yaml"/>
+		<property name="settings" ref="caasAgentSettings"/>
 	</bean>
-	
     
 	<bean id="tokenHolder" class="cn.rongcapital.mkt.api.MKTokenHolder"/>	
 	 
