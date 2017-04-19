@@ -37,14 +37,14 @@ public class CampaignSummaryGetServiceImpl implements CampaignSummaryGetService 
 	 * @return BaseOutput
 	 */
 	@Override
-	public BaseOutput campaignSummaryGet() {
+	public BaseOutput campaignSummaryGet(Integer orgId, Boolean firsthand) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 		Map<String, Object> result = new HashMap<String, Object>();
 
-		int totalCampaignCount = campaignHeadDao.selectCampaignCount();
+		int totalCampaignCount = campaignHeadDao.selectCampaignCount(orgId, firsthand);
 		int totalCampaignAudienceCount = campaignBodyDao
-				.selectCampaignAudienceCount();
+				.selectCampaignAudienceCount(orgId, firsthand);
 
 		result.put("total_campaign_count", totalCampaignCount);
 		result.put("total_campaign_audience_count", totalCampaignAudienceCount);
