@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.caas.agent.spring.CaasAuth;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.service.CampaignBodyCreateService;
@@ -324,6 +325,7 @@ public class MktCampaignApi {
     @POST
     @Path("/mkt.campaign.node.audience.save")
     @Consumes({ MediaType.APPLICATION_JSON })
+    @CaasAuth(res = "#audience.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
     public Object saveCampaignAudience(@Valid Audience audience, @Context SecurityContext securityContext) {
         return saveCampaignAudienceService.saveCampaignAudience(audience, securityContext);
     }

@@ -1,5 +1,8 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.AudienceListDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.po.AudienceList;
 import cn.rongcapital.mkt.service.SaveCampaignAudienceService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -24,7 +29,8 @@ public class SaveCampaignAudienceServiceImpl implements SaveCampaignAudienceServ
     private AudienceListDao audienceListDao;
     
 
-    @Override    
+    @Override
+    @DataAuthPut(resourceType = "audience_list", orgId = "#audience.orgid", outputResourceId = "entity.code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && entity.data!=null && entity.data.size()>0?entity.data[0].id:null", type = ParamType.SpEl)
     public Object saveCampaignAudience(Audience audience, SecurityContext securityContext) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 
@@ -43,7 +49,9 @@ public class SaveCampaignAudienceServiceImpl implements SaveCampaignAudienceServ
         audienceListT.setAudienceRows(0);
         audienceListT.setSource(ApiConstant.AUDIENCE_SOUCE_NAME_CAMPAIGN);
         audienceListDao.insert(audienceListT);
-
+        List<Object> list = new ArrayList<Object>();
+        list.add(audienceListT);
+        baseOutput.setData(list);
         baseOutput.setCode(ApiErrorCode.SUCCESS.getCode());
         baseOutput.setMsg(ApiErrorCode.SUCCESS.getMsg());
         baseOutput.setTotal(0);
