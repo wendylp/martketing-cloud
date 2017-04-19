@@ -40,7 +40,7 @@ public class MktSmsMaterialApi {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Path("/mkt.sms.smsmaterial.saveorupdate")
-	@CaasAuth(res = "#smsMaterialIn.orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
+//	@CaasAuth(res = "#smsMaterialIn.orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
 	public BaseOutput insertOrUpdateSmsMaterial(@Valid SmsMaterialIn smsMaterialIn) throws Exception {
 		return smsMaterialService.insertOrUpdateSmsMaterial(smsMaterialIn);
 	}
