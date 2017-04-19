@@ -195,12 +195,15 @@ public class MktSmsApi {
 	 *                   ver
 	 * @return: Object
 	 */
-	@GET
-	@Path("/mkt.sms.smsmaterial.count.get")
-	public BaseOutput getSmsMaterialCount(@NotEmpty @QueryParam("user_token") String userToken,
-			@QueryParam("ver") String ver, @NotNull @QueryParam("channel_type") Integer channelType) throws Exception {
-		return smsMaterialGetService.getSmsMaterialCount(channelType);
-	}
+    @GET
+    @Path("/mkt.sms.smsmaterial.count.get")
+//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    public BaseOutput getSmsMaterialCount(@NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("ver") String ver, @NotNull @DefaultValue("16") @QueryParam("org_id") Integer orgId,
+            @DefaultValue("true") @QueryParam("firsthand") Boolean firsthand,
+            @NotNull @QueryParam("channel_type") Integer channelType) throws Exception {
+        return smsMaterialGetService.getSmsMaterialCount(orgId, firsthand, channelType);
+    }
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -223,14 +226,17 @@ public class MktSmsApi {
      */
     @GET
     @Path("/mkt.sms.smsmaterial.getlist")
+//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput getSmsMaterial(@NotEmpty @QueryParam("user_token") String userToken,
                                      @QueryParam("ver") String ver,
+                                     @NotNull @DefaultValue("16") @QueryParam("org_id") Integer orgId,
+                                     @DefaultValue("true") @QueryParam("firsthand") Boolean firsthand,
                                      @QueryParam("search_word") String searchWord,
                                      @QueryParam("channel_type") Integer channelType,
                                      @NotNull @QueryParam("sms_type") Integer smsType,
                                      @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
                                      @DefaultValue("10") @Min(1) @Max(100) @QueryParam("page_size") Integer size) throws Exception {
-        return smsMaterialGetService.getSmsMaterialListByKeyword(searchWord,channelType,smsType,index,size);
+        return smsMaterialGetService.getSmsMaterialListByKeyword(orgId, firsthand, searchWord,channelType,smsType,index,size);
     }
     
     /**
@@ -275,13 +281,16 @@ public class MktSmsApi {
 	 * @param:smsMaterialName 短信素材名称
 	 * @return:BaseOutput
 	 */
-	@GET
-	@Path("/mkt.sms.material.get")
-	public BaseOutput getSmsMaterialByStatus(@NotEmpty @QueryParam("user_token") String userToken,
-			@QueryParam("ver") String ver, @NotNull @QueryParam("channel_type") Integer channelType,
-			@QueryParam("sms_material_name") String smsMaterialName) throws Exception {
-		return smsMaterialGetService.getSmsMaterialByStatus(channelType, smsMaterialName);
-	}
+    @GET
+    @Path("/mkt.sms.material.get")
+//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    public BaseOutput getSmsMaterialByStatus(@NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("ver") String ver, @NotNull @DefaultValue("16") @QueryParam("org_id") Integer orgId,
+            @DefaultValue("true") @QueryParam("firsthand") Boolean firsthand,
+            @NotNull @QueryParam("channel_type") Integer channelType,
+            @QueryParam("sms_material_name") String smsMaterialName) throws Exception {
+        return smsMaterialGetService.getSmsMaterialByStatus(orgId, firsthand, channelType, smsMaterialName);
+    }
 
 	/**
 	 * @功能简述:根据素材id查询选中的短信素材是否被占用

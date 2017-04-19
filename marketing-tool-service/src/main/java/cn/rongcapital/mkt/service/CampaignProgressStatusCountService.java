@@ -4,5 +4,5 @@ import cn.rongcapital.mkt.vo.out.CampaignProgressStatusCountOut;
 
 public interface CampaignProgressStatusCountService {
 	
-	public CampaignProgressStatusCountOut campaignProgressStatusCountGet();
+    public CampaignProgressStatusCountOut campaignProgressStatusCountGet(Integer orgId, Boolean firsthand);
 }

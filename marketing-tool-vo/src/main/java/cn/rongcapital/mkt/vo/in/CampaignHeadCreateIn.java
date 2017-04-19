@@ -30,6 +30,11 @@ public class CampaignHeadCreateIn extends BaseInput {
     @NotEmpty
     private String userToken = null;
   
+    @NotNull
+    @JsonProperty("org_id")
+    // TODO MOCK
+    private Integer orgId = 16;
+    
     @JsonProperty("publish_status")
     public Byte getPublishStatus() {
 	    return publishStatus;
@@ -56,6 +61,14 @@ public class CampaignHeadCreateIn extends BaseInput {
 	public void setCampaignName(String campaignName) {
 		this.campaignName = campaignName;
 	}
+
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
+    }
   
 }
 
