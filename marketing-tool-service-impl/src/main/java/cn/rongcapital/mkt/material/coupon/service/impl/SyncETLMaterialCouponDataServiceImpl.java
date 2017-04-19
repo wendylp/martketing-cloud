@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -58,6 +59,9 @@ public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCoup
     @Autowired
     private MaterialCouponDao materialCouponDao;
     
+	@Value("${mkt.coupon.sync.stock.total}")
+	private int STOCK_TOTAL;
+    
 	@Override
 	public void task(Integer taskId) {
 		this.sync();
@@ -88,9 +92,8 @@ public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCoup
 	                json.put("StockRest", "0");
 	                json.put("StockTotal", "0");
 	                coupon.setRule(json.toJSONString());
-	                //TODO coupon.setStockRest(0); coupon.setStockTotal(0);
-	                coupon.setStockRest(0);
-	                coupon.setStockTotal(0);
+	                coupon.setStockRest(STOCK_TOTAL);
+	                coupon.setStockTotal(STOCK_TOTAL);
 	                coupon.setAmount(temp.getCouponValue() !=null ? BigDecimal.valueOf(temp.getCouponValue()) : BigDecimal.valueOf(0));
 	                coupon.setSourceCode(CouponCodeType.COMMON.getCode());
 	                coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
@@ -114,8 +117,7 @@ public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCoup
 	                
 	                String unCode = json.getString("coupon_code");
 	                list = new ArrayList<MaterialCouponCode>(); 
-	                //TODO 2 stock_total
-	                for(int i = 0; i< 2; i ++){
+	                for(int i = 0; i< STOCK_TOTAL; i ++){
 	                	code = new MaterialCouponCode();
 	                    code.setCode(unCode);
 	                    code.setCouponId(coupon.getId());
