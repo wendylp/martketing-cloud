@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
@@ -40,6 +42,8 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 	@Mock
     private MaterialCouponDao materialCouponDao;
     
+	private Integer total = 10;
+	
     private SyncETLMaterialCouponDataService service; 
     
     private List<Coupon> nodeAudienceList = new ArrayList<Coupon>();
@@ -64,7 +68,6 @@ public class SyncETLMaterialCouponDataServiceImplTest {
     	ReflectionTestUtils.setField(service, "mongoTemplate", mongoTemplate);
 		ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
 		ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
-		
     }
     
     
@@ -74,7 +77,7 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		nodeAudienceList.add(c1);
 		Mockito.when(mongoTemplate.find(Query.query(Criteria.where("SyncFlag").exists(false)), Coupon.class)).thenReturn(nodeAudienceList);
 		Mockito.when(materialCouponDao.insert(any())).thenReturn(0);
-        Mockito.doAnswer(new Answer<Void>() {
+		Mockito.doAnswer(new Answer<Void>() {
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 return null;
             }

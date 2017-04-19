@@ -54,9 +54,11 @@ public class CampaignProgressStatusListServiceImpl implements
 	 * @return Object
 	 */
 	@Override
-	public BaseOutput campaignProgressStatusList(Byte publishStatus,
-			String campaignName, Integer index, Integer size) {
+    public BaseOutput campaignProgressStatusList(Integer orgId, Boolean firsthand, Byte publishStatus,
+            String campaignName, Integer index, Integer size) {
 		CampaignHead t = new CampaignHead();
+		t.setOrgId(orgId);
+		t.setFirsthand(firsthand);
 		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		if(publishStatus != ApiConstant.CAMPAIGN_PUBLISH_STATUS_ALL){
 			t.setPublishStatus(publishStatus);
