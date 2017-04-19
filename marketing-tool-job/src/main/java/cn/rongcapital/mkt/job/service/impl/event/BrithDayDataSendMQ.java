@@ -7,6 +7,7 @@
 
 package cn.rongcapital.mkt.job.service.impl.event;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,6 +88,8 @@ public class BrithDayDataSendMQ {
         List<Segment> sg = new ArrayList<Segment>();
         if (CollectionUtils.isNotEmpty(dpy)) {
             for (DataParty dpt : dpy) {
+           logger.info("提前生日天数:{},生日日期是:{},主MID:{}",time,
+         dpt.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), dpt.getMid());
                 Segment sgt = new Segment();
                 sgt.setDataId(dpt.getMid());
                 sgt.setName(dpt.getName());
@@ -97,7 +100,6 @@ public class BrithDayDataSendMQ {
 
 
     }
-
 
     private int getFirstMQNodeByEventCodeCnt(String eventCode) {
         Map<String, Object> param = new HashMap<String, Object>();
