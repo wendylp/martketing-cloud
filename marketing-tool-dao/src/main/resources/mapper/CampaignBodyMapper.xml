@@ -118,11 +118,17 @@
 	<select id="selectCampaignAudienceCount" resultType="int">
 		<![CDATA[
 			SELECT
-				IFNULL(SUM(audience_count), 0) AS total_campaign_audience_count
+				IFNULL(SUM(body.audience_count), 0) AS total_campaign_audience_count
 			FROM
-				campaign_body
-			WHERE
-				STATUS = 0
+				campaign_head head
+				INNER JOIN campaign_body body ON head.id = body.head_id
+	    ]]>
+		<if test="orgId != null"> 
+    		<![CDATA[ INNER JOIN data_auth da ON da.table_name='campaign_head' AND da.resource_id = head.id AND da.org_id = #{orgId} ]]>
+   		   	<if test="firsthand != null "><![CDATA[ AND da.firsthand = #{firsthand}]]></if>
+   		</if>
+		<![CDATA[		
+			WHERE head.STATUS = 0 AND body.STATUS = 0
 		]]>
 	</select>
 	

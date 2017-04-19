@@ -1,5 +1,7 @@
 package cn.rongcapital.mkt.vo.in;
 
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -15,7 +17,18 @@ public class Audience extends BaseInput{
     @JsonProperty("user_token")
     private String userToken;
 	
-	@JsonProperty("user_token")
+	@NotNull
+    @JsonProperty("org_id")
+    private Long orgid;
+	
+	public Long getOrgid() {
+		return orgid;
+	}
+
+	public void setOrgid(Long orgid) {
+		this.orgid = orgid;
+	}
+
 	public String getUserToken() {
 		return userToken;
 	}
@@ -24,7 +37,6 @@ public class Audience extends BaseInput{
 		this.userToken = userToken;
 	}
 
-	@JsonProperty("audience_name")
     public String getAudience_name() {
         return audience_name;
     }

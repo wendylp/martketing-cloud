@@ -539,12 +539,7 @@ public class DataAuthPutInterceptTest {
         PutBean putBean = new PutBean();
         putBean.setResourceType("business");
         putBean.setOrgId(1L);
-        try {
-            proxy.save(putBean);
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertEquals("calculate generated resource_id from expression is illegal.", e.getMessage());
-        }
+        proxy.save(putBean);
 
         Mockito.verify(dataAuthService, Mockito.times(0)).put(Mockito.any(long.class), Mockito.any(String.class),
                 Mockito.any(long.class));
@@ -584,12 +579,7 @@ public class DataAuthPutInterceptTest {
         PutBean putBean = new PutBean();
         putBean.setResourceType("business");
         putBean.setOrgId(1L);
-        try {
-            proxy.save(putBean);
-            Assert.fail();
-        } catch (Exception e) {
-            Assert.assertEquals("calculate generated resource_id from expression is illegal.", e.getMessage());
-        }
+        proxy.save(putBean);
 
         Mockito.verify(dataAuthService, Mockito.times(0)).put(Mockito.any(long.class), Mockito.any(String.class),
                 Mockito.any(long.class));
@@ -641,51 +631,51 @@ public class DataAuthPutInterceptTest {
                 Mockito.any(long.class));
     }
     
-    /**
-     * @功能描述: 解析的orgid0的情况（表达式为SPEL）
-     * @throws java.lang.Exception void
-     * @author xie.xiaoliang
-     * @since 2017-02-07
-     */
-    @Test
-    public void testGetOrgidIs0() throws Throwable {
-
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Assert.fail();
-                return null;
-            }
-        }).when(dataAuthService).put(Mockito.any(long.class), Mockito.any(String.class), Mockito.any(long.class));
-
-        ReflectionTestUtils.setField(aspect, "dataAuthService", dataAuthService);
-
-        AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
-            @Override
-            @DataAuthPut(resourceType = "business", orgId = "#putBean.orgId", outputResourceId = "outputId", type = ParamType.SpEl)
-            public ReturnBean save(PutBean putBean) {
-                ReturnBean ret = new ReturnBean();
-                ret.setOutputId(99L);
-                return ret;
-            }
-        });
-        factory.setProxyTargetClass(true);
-        factory.addAspect(aspect);
-
-
-        PutBeanService proxy = factory.getProxy();
-        PutBean putBean = new PutBean();
-        putBean.setResourceType("business");
-        putBean.setResourceId(802L);
-        putBean.setOrgId(0L);
-        try {
-            proxy.save(putBean);
-        } catch (Exception e) {
-            Assert.assertEquals("calculate orgId from expression is illegal.", e.getMessage());
-        }
-
-        Mockito.verify(dataAuthService, Mockito.times(0)).put(Mockito.any(long.class), Mockito.any(String.class),
-                Mockito.any(long.class));
-    }
+//    /**
+//     * @功能描述: 解析的orgid0的情况（表达式为SPEL）
+//     * @throws java.lang.Exception void
+//     * @author xie.xiaoliang
+//     * @since 2017-02-07
+//     */
+//    @Test
+//    public void testGetOrgidIs0() throws Throwable {
+//
+//        Mockito.doAnswer(new Answer<Void>() {
+//            @Override
+//            public Void answer(InvocationOnMock invocation) throws Throwable {
+//                Assert.fail();
+//                return null;
+//            }
+//        }).when(dataAuthService).put(Mockito.any(long.class), Mockito.any(String.class), Mockito.any(long.class));
+//
+//        ReflectionTestUtils.setField(aspect, "dataAuthService", dataAuthService);
+//
+//        AspectJProxyFactory factory = new AspectJProxyFactory(new PutBeanService() {
+//            @Override
+//            @DataAuthPut(resourceType = "business", orgId = "#putBean.orgId", outputResourceId = "outputId", type = ParamType.SpEl)
+//            public ReturnBean save(PutBean putBean) {
+//                ReturnBean ret = new ReturnBean();
+//                ret.setOutputId(99L);
+//                return ret;
+//            }
+//        });
+//        factory.setProxyTargetClass(true);
+//        factory.addAspect(aspect);
+//
+//
+//        PutBeanService proxy = factory.getProxy();
+//        PutBean putBean = new PutBean();
+//        putBean.setResourceType("business");
+//        putBean.setResourceId(802L);
+//        putBean.setOrgId(0L);
+//        try {
+//            proxy.save(putBean);
+//        } catch (Exception e) {
+//            Assert.assertEquals("calculate orgId from expression is illegal.", e.getMessage());
+//        }
+//
+//        Mockito.verify(dataAuthService, Mockito.times(0)).put(Mockito.any(long.class), Mockito.any(String.class),
+//                Mockito.any(long.class));
+//    }
 
 }

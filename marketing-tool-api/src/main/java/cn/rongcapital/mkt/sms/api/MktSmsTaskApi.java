@@ -52,8 +52,9 @@ public class MktSmsTaskApi {
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
 			@QueryParam("sms_task_app_type") String smsTaskAppType,
 			@QueryParam("sms_task_status") String smsTaskStatus,
-			@QueryParam("sms_task_name") String smsTaskName) throws Exception {		
-		return smsTaskHeadService.smsTaskHeadList(userId, index, size, smsTaskAppType, smsTaskStatus, smsTaskName);
+			@QueryParam("sms_task_name") String smsTaskName,
+			@NotNull @QueryParam("org_id") Integer orgId) throws Exception {		
+		return smsTaskHeadService.smsTaskHeadList(userId, index, size, smsTaskAppType, smsTaskStatus, smsTaskName,orgId);
 	}
 		
 	/**
