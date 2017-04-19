@@ -18,6 +18,6 @@ public interface CampaignProgressStatusListService {
 	 * @param publishStatus campaignName index size
 	 * @return 
 	 */
-	BaseOutput campaignProgressStatusList(Byte publishStatus,
-			String campaignName, Integer index, Integer size);
+    BaseOutput campaignProgressStatusList(Integer orgId, Boolean firsthand, Byte publishStatus, String campaignName,
+            Integer index, Integer size);
 }

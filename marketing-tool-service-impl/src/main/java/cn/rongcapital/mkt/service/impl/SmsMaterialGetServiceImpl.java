@@ -97,12 +97,14 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService {
 	}
 
 	@Override
-	public BaseOutput getSmsMaterialListByKeyword(String searchWord, Integer channelType, Integer smsType,
+	public BaseOutput getSmsMaterialListByKeyword(Integer orgId, Boolean firsthand, String searchWord, Integer channelType, Integer smsType,
 			Integer index, Integer size) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
 		SmsMaterial paramSmsMaterial = new SmsMaterial();
+		paramSmsMaterial.setOrgId(orgId);
+		paramSmsMaterial.setFirsthand(firsthand);
 		paramSmsMaterial.setName(searchWord);
 		paramSmsMaterial.setChannelType(channelType == null ? null : channelType.byteValue());
 		paramSmsMaterial.setSmsType(smsType == -1 ? null : smsType.byteValue());
@@ -146,12 +148,14 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService {
 	}
 
 	@Override
-	public BaseOutput getSmsMaterialCount(Integer channelType) {
+	public BaseOutput getSmsMaterialCount(Integer orgId, Boolean firsthand, Integer channelType) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
 		SmsMaterialCountOut smsMaterialCountOut = new SmsMaterialCountOut();
 		SmsMaterial paramSmsMaterial = new SmsMaterial();
+		paramSmsMaterial.setOrgId(orgId);
+		paramSmsMaterial.setFirsthand(firsthand);
 		paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		paramSmsMaterial.setChannelType(channelType == -1 ? null : channelType.byteValue());
 		paramSmsMaterial.setSmsType(FIXED.getStatusCode().byteValue());
@@ -229,11 +233,13 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService {
 	 * @param:smsMaterialName 短信素材名称
 	 * @return:BaseOutput
 	 */
-	public BaseOutput getSmsMaterialByStatus(Integer channelType, String smsMaterialName) {
+	public BaseOutput getSmsMaterialByStatus(Integer orgId, Boolean firsthand, Integer channelType, String smsMaterialName) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 
 		SmsMaterial paramSmsMaterial = new SmsMaterial();
+		paramSmsMaterial.setOrgId(orgId);
+		paramSmsMaterial.setFirsthand(firsthand);
 		paramSmsMaterial.setName(smsMaterialName);
 		paramSmsMaterial.setChannelType(channelType.byteValue());
 		paramSmsMaterial.setUseStatus(ApiConstant.TABLE_DATA_STATUS_VALID);

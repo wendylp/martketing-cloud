@@ -33,11 +33,13 @@ public class CampaignProgressStatusCountServiceImpl implements
 	 * @return BaseOutput
 	 */
 	@Override
-	public CampaignProgressStatusCountOut campaignProgressStatusCountGet() {
+	public CampaignProgressStatusCountOut campaignProgressStatusCountGet(Integer orgId, Boolean firsthand) {
 		CampaignProgressStatusCountOut baseOutput = new CampaignProgressStatusCountOut(ApiErrorCode.SUCCESS.getCode(),
 																					   ApiErrorCode.SUCCESS.getMsg(), 
 																					   ApiConstant.INT_ZERO);
 		CampaignHead t = new CampaignHead();
+		t.setOrgId(orgId);
+		t.setFirsthand(firsthand);
 		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_NOT_PUBLISH);
 		int notPublishCount = campaignHeadDao.selectListCount(t);
