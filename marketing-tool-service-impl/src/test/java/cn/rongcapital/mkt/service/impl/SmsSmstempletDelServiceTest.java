@@ -21,6 +21,7 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTempletDao;
 import cn.rongcapital.mkt.dao.SmsTempletMaterialMapDao;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTemplet;
 import cn.rongcapital.mkt.service.SmsSmstempletDelService;
@@ -39,6 +40,9 @@ public class SmsSmstempletDelServiceTest {
     
     @Mock
     private SmsTempletMaterialMapDao smsTempletMaterialMapDao;
+    
+    @Mock
+    private DataAuthService dataAuthService;
     
     private List<SmsMaterial> smsMaterialLists;
     
@@ -62,13 +66,12 @@ public class SmsSmstempletDelServiceTest {
         
         body = new SmsSmstempletDelIn();
         body.setId(1);
-        
+    	body.setOrgId(0l);
         smsSmstempletDelService = new SmsSmstempletDelServiceImpl();
         
         Mockito.when(smsMaterialDao.selectList(any())).thenReturn(smsMaterialLists);
         Mockito.when(smsTempletDao.selectList(any())).thenReturn(smsTempletLists);
         Mockito.when(smsTempletDao.updateById(any())).thenReturn(delCount);
-        
 
     	Mockito.doAnswer(new Answer<Void>() {
 			@Override
@@ -82,11 +85,44 @@ public class SmsSmstempletDelServiceTest {
         ReflectionTestUtils.setField(smsSmstempletDelService, "smsMaterialDao", smsMaterialDao);
         ReflectionTestUtils.setField(smsSmstempletDelService, "smsTempletDao", smsTempletDao);
         ReflectionTestUtils.setField(smsSmstempletDelService, "smsTempletMaterialMapDao", smsTempletMaterialMapDao);
+        ReflectionTestUtils.setField(smsSmstempletDelService, "dataAuthService", dataAuthService);
     }
     
     
     @Test
     public void testDelSmsTemple() throws Exception {
+        BaseOutput result = smsSmstempletDelService.delSmsTemple(body, null);
+        // 测试正常情况
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
+        Assert.assertEquals(ApiErrorCode.SUCCESS.getMsg(), result.getMsg());
+        
+        // 测试数据不存在
+        smsTempletLists.clear();
+        result = smsSmstempletDelService.delSmsTemple(body, null);
+        Assert.assertEquals(2, result.getCode());
+        Assert.assertEquals("数据不存在", result.getMsg());
+        
+        // 测试数据使用中
+        smsMaterialLists.add(new SmsMaterial());
+        result = smsSmstempletDelService.delSmsTemple(body, null);
+        Assert.assertEquals(1, result.getCode());
+        Assert.assertEquals("当前内容被使用中 不能删除请稍后再试", result.getMsg());
+        
+        
+    }
+    
+    @Test
+    public void testDelSmsTempleWithDataAuth() throws Exception {
+
+        Mockito.when(dataAuthService.validateWriteable(Mockito.anyString(), Mockito.anyLong(), Mockito.anyLong())).thenReturn(true);
+
+    	Mockito.doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				return null;
+			}
+		}).when(dataAuthService).evict(Mockito.anyString(),Mockito.anyLong());
+    	
         BaseOutput result = smsSmstempletDelService.delSmsTemple(body, null);
         // 测试正常情况
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());

@@ -37,6 +37,7 @@ import cn.rongcapital.mkt.service.CampaignBodyCreateService;
 import cn.rongcapital.mkt.service.CampaignBodyGetService;
 import cn.rongcapital.mkt.service.CampaignBodyItemAudienceSearchService;
 import cn.rongcapital.mkt.service.CampaignDeleteService;
+import cn.rongcapital.mkt.service.CampaignDetailService;
 import cn.rongcapital.mkt.service.CampaignHeaderCreateService;
 import cn.rongcapital.mkt.service.CampaignHeaderGetService;
 import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
@@ -59,6 +60,7 @@ import cn.rongcapital.mkt.vo.out.CampaignBodyGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignBodyItemAudienceSearchOut;
 import cn.rongcapital.mkt.vo.out.CampaignConvertChartListOut;
 import cn.rongcapital.mkt.vo.out.CampaignCustomSourceListOut;
+import cn.rongcapital.mkt.vo.out.CampaignDetailOut;
 import cn.rongcapital.mkt.vo.out.CampaignHeaderGetOut;
 import cn.rongcapital.mkt.vo.out.CampaignNodeItemListOut;
 import cn.rongcapital.mkt.vo.out.CampaignProfileOut;
@@ -117,6 +119,8 @@ public class MktCampaignApi {
     @Autowired
     private CampaignBodyItemAudienceSearchService campaignBodyItemAudienceSearchService;
     
+	@Autowired
+	private CampaignDetailService campaignDetailService;
     
 
     /**
@@ -355,5 +359,21 @@ public class MktCampaignApi {
             @NotNull @QueryParam("item_id") String itemId) {
         return campaignBodyItemAudienceSearchService.campaignBodyItemAudienceSearch(name, campaignHeadId, itemId);
     }
+
+	/**
+	 * 查询活动明细数据
+	 * 
+	 * @param userToken
+	 * @param ver
+	 * @param name
+	 * @param campaignHeadId
+	 * @param itemId
+	 * @return
+	 */
+	@GET
+	@Path("/mkt.campaign.detail.list.get")
+	public CampaignDetailOut campaignDetailSearch(@QueryParam("campaign_name") String campaign_name) {
+		return campaignDetailService.campaignDetail(campaign_name);
+	}
 
 }

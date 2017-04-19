@@ -1,6 +1,6 @@
 <!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
 <configuration scan="true" scanPeriod="10 seconds">
-
+	<property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}" />
   <!-- Simple file output -->
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <!-- encoder defaults to ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
@@ -13,7 +13,7 @@
 
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <!-- rollover daily 配置日志所生成的目录以及生成文件名的规则 -->
-      <fileNamePattern>${LOG_FILE}/mktlog-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <fileNamePattern>${LOG_PATH}/mktlog-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
       <timeBasedFileNamingAndTriggeringPolicy
           class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
         <!-- or whenever the file size reaches 64 MB -->
@@ -74,7 +74,7 @@
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <!-- rollover daily 配置日志所生成的目录以及生成文件名的规则 -->
-      <fileNamePattern>${LOG_FILE}/sqlmktlog-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <fileNamePattern>${LOG_PATH}/sqlmktlog-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
       <timeBasedFileNamingAndTriggeringPolicy
           class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
         <!-- or whenever the file size reaches 64 MB -->

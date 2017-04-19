@@ -10,23 +10,27 @@
 
 package cn.rongcapital.mkt.dao;
 
-import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
-import cn.rongcapital.mkt.common.jedis.JedisClient;
-import cn.rongcapital.mkt.common.jedis.JedisException;
-import cn.rongcapital.mkt.dao.CampaignHeadDao;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.Before;
 
-import java.util.List;
+import cn.rongcapital.mkt.common.jedis.JedisClient;
+import cn.rongcapital.mkt.common.jedis.JedisException;
+import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
+import cn.rongcapital.mkt.po.CampaignHead;
 
-import org.junit.After;
-
+//@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CampaignHeadDaoTest extends AbstractUnitTest {
 
@@ -67,6 +71,14 @@ public class CampaignHeadDaoTest extends AbstractUnitTest {
 	
 	@Test
 	public void testSelectCampaignProgressStatusListByPublishStatus() {
+		Map<String, Object> customMap = new HashMap<String, Object>();
+		customMap.put("keyword", "xv");
+		CampaignHead query = new CampaignHead();
+		// query.setStatus((byte) 0);
+		query.setCustomMap(customMap);
+		List<CampaignHead> campaignHeads = campaignHeadDao.selectCampaignProgressStatusListByPublishStatus(query);
+		Assert.assertNotNull(campaignHeads);
+		Assert.assertFalse(campaignHeads.isEmpty());
 	    logger.info("测试方法: selectCampaignProgressStatusListByPublishStatus ");    
 	}
 	
@@ -92,6 +104,14 @@ public class CampaignHeadDaoTest extends AbstractUnitTest {
 	
 	@Test
 	public void testInsert() {
+		CampaignHead head = new CampaignHead();
+		head.setName("xv_insert_test");
+		Byte noPublish = 0;
+		head.setPublishStatus(noPublish);
+		head.setCreateTime(new Date());
+		int count = this.campaignHeadDao.insert(head);
+		Assert.assertEquals(1, count);
+		Assert.assertNotNull(head.getId());
 	    logger.info("测试方法: insert ");    
 	}
 	
@@ -102,6 +122,18 @@ public class CampaignHeadDaoTest extends AbstractUnitTest {
 	
 	@Test
 	public void testUpdateById() {
+		CampaignHead head = new CampaignHead();
+		head.setName("xv_update_test");
+		Byte noPublish = 0;
+		head.setPublishStatus(noPublish);
+		head.setCreateTime(new Date());
+		this.campaignHeadDao.insert(head);
+
+		head.setPublishStatus((byte) 2);
+		head.setStartTime(new Date());
+		head.setEndTime(new Date());
+		int count = this.campaignHeadDao.updateById(head);
+		Assert.assertEquals(1, count);
 	    logger.info("测试方法: updateById ");    
 	}
 	
@@ -114,7 +146,7 @@ public class CampaignHeadDaoTest extends AbstractUnitTest {
 	public void testSelectListByIdList() {
 	    logger.info("测试方法: selectListByIdList ");    
 	}
-	
+
     
     @After
     public void tearDown() throws Exception {
