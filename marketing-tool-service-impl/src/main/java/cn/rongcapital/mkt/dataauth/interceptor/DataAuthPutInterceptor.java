@@ -102,7 +102,7 @@ public class DataAuthPutInterceptor {
             }
             // 输出资源ID不合法的情况
             if (outputId == null || outputId.longValue() == 0) {
-                throw new NoSuchElementException("calculate generated resource_id from expression is illegal.");
+                return;
             }
             // 将新增数据保存对应的数据权限
             this.dataAuthService.put(orgIdObj.longValue(), resourceType, outputId.longValue());
