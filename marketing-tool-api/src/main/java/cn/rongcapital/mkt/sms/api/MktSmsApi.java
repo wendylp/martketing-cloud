@@ -118,8 +118,9 @@ public class MktSmsApi {
 	@GET
 	@Path("/mkt.sms.audienct.get")
 	public SmsTargetAudienceListOut smsAudienceListGet(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotNull @QueryParam("org_id") Integer orgId,
 			@QueryParam("ver") String ver) throws Exception {
-		return smsTargetAudienceListGetService.getSmsTargetAudienceList();
+		return smsTargetAudienceListGetService.getSmsTargetAudienceList(orgId);
 	}
 
 	/**
