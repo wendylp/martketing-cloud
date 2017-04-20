@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.caas.agent.spring.CaasAuth;
 import cn.rongcapital.mc.datatag.agent.DataTagAgent;
 import cn.rongcapital.mc.datatag.agent.DataType;
 import cn.rongcapital.mc.datatag.agent.dto.Column;
@@ -53,52 +54,11 @@ import cn.rongcapital.mc.datatag.agent.dto.DataTypeCount;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.FileNameEnum;
-import cn.rongcapital.mkt.po.ContactWay;
-import cn.rongcapital.mkt.po.TaskRunLog;
-import cn.rongcapital.mkt.service.AudienceAllListService;
-import cn.rongcapital.mkt.service.AudienceCreateService;
-import cn.rongcapital.mkt.service.AudienceIdListService;
-import cn.rongcapital.mkt.service.AudienceListDeleteService;
-import cn.rongcapital.mkt.service.AudienceListService;
-import cn.rongcapital.mkt.service.AudienceNameListService;
-import cn.rongcapital.mkt.service.AudienceSearchDownloadService;
-import cn.rongcapital.mkt.service.AudienceSearchService;
-import cn.rongcapital.mkt.service.DataDeleteMainService;
-import cn.rongcapital.mkt.service.DataDownloadMainListService;
-import cn.rongcapital.mkt.service.DataDownloadQualityIllegalDataService;
-import cn.rongcapital.mkt.service.DataDownloadQualityLogService;
-import cn.rongcapital.mkt.service.DataGetFilterAudiencesService;
-import cn.rongcapital.mkt.service.DataGetFilterContactwayService;
-import cn.rongcapital.mkt.service.DataGetFilterRecentTaskService;
-import cn.rongcapital.mkt.service.DataGetMainCountService;
-import cn.rongcapital.mkt.service.DataGetMainListService;
-import cn.rongcapital.mkt.service.DataGetQualityCountService;
-import cn.rongcapital.mkt.service.DataGetQualityListService;
-import cn.rongcapital.mkt.service.DataGetUnqualifiedCountService;
-import cn.rongcapital.mkt.service.DataGetViewListService;
-import cn.rongcapital.mkt.service.DataMainBasicInfoUpdateService;
-import cn.rongcapital.mkt.service.DataMainRadarInfoGetService;
-import cn.rongcapital.mkt.service.DataUpateMainSegmenttagService;
-import cn.rongcapital.mkt.service.FileTagUpdateService;
-import cn.rongcapital.mkt.service.FileTemplateDownloadService;
-import cn.rongcapital.mkt.service.GetDataMainSearchByIdService;
-import cn.rongcapital.mkt.service.GetDataMainSearchService;
-import cn.rongcapital.mkt.service.GetUserInfoService;
-import cn.rongcapital.mkt.service.HomePageDataCountListService;
-import cn.rongcapital.mkt.service.HomePageDataSourceListService;
-import cn.rongcapital.mkt.service.HomePageUserCountListService;
-import cn.rongcapital.mkt.service.MainActionInfoGetService;
-import cn.rongcapital.mkt.service.MainBasicInfoGetService;
-import cn.rongcapital.mkt.service.MigrationFileGeneralInfoService;
-import cn.rongcapital.mkt.service.MigrationFileTemplateService;
-import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
-import cn.rongcapital.mkt.service.TagGetCustomService;
-import cn.rongcapital.mkt.service.UploadFileService;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dataauth.service.OrganizationService;
 import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.AudienceAllListService;
+import cn.rongcapital.mkt.service.AudienceCreateService;
 import cn.rongcapital.mkt.service.AudienceIdListService;
 import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
@@ -145,20 +105,12 @@ import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
 import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
+import cn.rongcapital.mkt.vo.in.UserInfoIn;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 import cn.rongcapital.mkt.vo.out.DataGetMainCountOut;
 import cn.rongcapital.mkt.vo.out.DataGetMainListOut;
 import cn.rongcapital.mkt.vo.out.UploadFileAccordTemplateOut;
-import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
-import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
-import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
-import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
-import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
-import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
-import cn.rongcapital.mkt.vo.in.UserInfoIn;
-import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
-import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 
 @Component
 @Path(ApiConstant.API_PATH)
@@ -733,10 +685,12 @@ public class MktDataApi {
      */
     @GET
     @Path("/mkt.audience.list.get")
+//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
+    		@NotNull @QueryParam("org_id") Integer orgId,
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
             @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
-        return audienceListService.audienceList(userToken, size, index);
+        return audienceListService.audienceList(userToken, size, index, orgId);
     }
 
     /**
@@ -758,8 +712,8 @@ public class MktDataApi {
      */
     @GET
     @Path("/mkt.audience.all.list.get")
-    public BaseOutput audienceAllList(@NotEmpty @QueryParam("user_token") String userToken) {
-        return audienceAllListService.audienceAllList(userToken);
+    public BaseOutput audienceAllList(@NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId) {
+        return audienceAllListService.audienceAllList(userToken, orgId);
     }
 
     /**

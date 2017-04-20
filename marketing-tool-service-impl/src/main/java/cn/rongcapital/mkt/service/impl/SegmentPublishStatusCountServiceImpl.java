@@ -40,13 +40,15 @@ public class SegmentPublishStatusCountServiceImpl implements SegmentPublishStatu
 	 */
     @Override
     @ReadWrite(type=ReadWriteType.READ)
-    public Object segmentPublishstatusCount(String userToken,String ver) {
+    public Object segmentPublishstatusCount(String userToken,String ver,Integer orgId) {
     	SegmentationHead t = new SegmentationHead();
     	t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
     	t.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_NOT_PUBLISH);
+    	t.setOrgId(orgId); //lhz add
     	int countNotPublish = segmentationHeadDao.selectListCount(t);
     	
     	t.setPublishStatus(ApiConstant.SEGMENT_PUBLISH_STATUS_PUBLISH);
+    	t.setOrgId(orgId); //lhz add 
     	int countPublish = segmentationHeadDao.selectListCount(t);
     	
     	int countAll = countNotPublish + countPublish;

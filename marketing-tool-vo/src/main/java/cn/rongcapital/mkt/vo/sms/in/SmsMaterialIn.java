@@ -36,8 +36,7 @@ public class SmsMaterialIn {
     
     @NotNull
     @JsonProperty("org_id")
-    // TODO MOCK
-    private Integer orgId = 16;
+    private Integer orgId;
     
 	public Integer getId() {
 		return id;
