@@ -6,6 +6,9 @@ import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.SegmentationBodyDao;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthWriteable;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.po.SegmentationBody;
 import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.po.mongodb.Segment;
@@ -54,6 +57,8 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
     private SegmentCalcService segmentCalcService;
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @DataAuthWriteable(resourceType = "segmentation_head", orgId = "#segmentCreUpdateIn.orgid", resourceId = "#segmentCreUpdateIn.segmentHeadId", type = ParamType.SpEl)
+    @DataAuthPut(resourceType = "segmentation_head", orgId = "#segmentCreUpdateIn.orgid", resourceId = "#segmentCreUpdateIn.segmentHeadId", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
     @Override
     public BaseOutput creupdateSegment(@NotEmpty SegmentCreUpdateIn segmentCreUpdateIn) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(),ApiConstant.INT_ZERO,null);
@@ -126,8 +131,9 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
             return baseOutput;
         }
 
-        //生成返回值信息
+        //生成返回值信息  
         getResultValue(segmentCreUpdateIn, baseOutput, segmentCreupdateOut);
+        segmentCreUpdateIn.setSegmentHeadId(null);
         return baseOutput;
     }
 
@@ -135,6 +141,7 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
         segmentCreupdateOut.setId(segmentCreUpdateIn.getSegmentHeadId());
         segmentCreupdateOut.setUpdatetime(DateUtil.getStringFromDate(new Date(),"yyyy-MM-dd hh:mm:ss"));
         segmentCreupdateOut.setOper("Mock 奥巴马");
+        
         baseOutput.getData().add(segmentCreupdateOut);
         baseOutput.setTotal(baseOutput.getData().size());
     }
