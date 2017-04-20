@@ -57,7 +57,7 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
     private SegmentCalcService segmentCalcService;
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @DataAuthWriteable(resourceType = "segmentation_head", orgId = "#segmentCreUpdateIn.orgid", resourceId = "#segmentCreUpdateIn.segmentHeadId", type = ParamType.SpEl)
+    //@DataAuthWriteable(resourceType = "segmentation_head", orgId = "#segmentCreUpdateIn.orgid", resourceId = "#segmentCreUpdateIn.segmentHeadId", type = ParamType.SpEl)
     @DataAuthPut(resourceType = "segmentation_head", orgId = "#segmentCreUpdateIn.orgid", resourceId = "#segmentCreUpdateIn.segmentHeadId", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
     @Override
     public BaseOutput creupdateSegment(@NotEmpty SegmentCreUpdateIn segmentCreUpdateIn) {
@@ -72,7 +72,7 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
             return baseOutput;
         }
         
-        
+        boolean isUpdate=true;
         if(segmentCreUpdateIn.getSegmentHeadId() == null){
             //不包含了id,则为创建操作
             //1.首先更新segmentHead表,将相关的数据设置进去.
@@ -89,6 +89,7 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
         }else {
             //2.包含了id,则为更新操作
             //1检查现在的细分状态是否能够更新,不能够更新返回相应的提示信息
+            isUpdate=false;
             SegmentationHead paramSegmentationHead = new SegmentationHead();
             paramSegmentationHead.setId(segmentCreUpdateIn.getSegmentHeadId().intValue());
             paramSegmentationHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
@@ -133,6 +134,7 @@ public class CreupdateSegmentServiceImpl implements CreupdateSegmentService {
 
         //生成返回值信息  
         getResultValue(segmentCreUpdateIn, baseOutput, segmentCreupdateOut);
+                   if(isUpdate)
         segmentCreUpdateIn.setSegmentHeadId(null);
         return baseOutput;
     }

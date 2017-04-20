@@ -68,8 +68,7 @@ public class SegmentHeaderCreateServiceImpl implements SegmentHeaderCreateServic
 	 */
 	@Override
 	@ReadWrite(type = ReadWriteType.WRITE)
-	@DataAuthWriteable(resourceType = "segmentation_head", orgId = "#body.orgid", resourceId = "#segmentCreUpdateIn.id", type = ParamType.SpEl)
-    @DataAuthPut(resourceType = "segmentation_head", orgId = "#body.orgid", resourceId = "#segmentCreUpdateIn.id", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
+    @DataAuthPut(resourceType = "segmentation_head", orgId = "#body.orgid", resourceId = "#body.id", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
 	public BaseOutput segmentHeaderCreate(SegmentHeadCreateIn body, SecurityContext securityContext) {
 		SegmentationHead t = new SegmentationHead();
 		t.setName(body.getSegmentName());
