@@ -165,7 +165,7 @@ public class SmsTaskHeadServiceTest {
          */
     	BaseOutput result = null;
         try {
-			result = smsTaskHeadService.smsTaskHeadList("", 0, 12, "null", "1", "测试",null);
+			result = smsTaskHeadService.smsTaskHeadList("", 0, 12, "null", "1", "测试",null,null);
 		} catch (Exception e) {			
 			e.printStackTrace();
 		}
