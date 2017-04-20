@@ -32,8 +32,7 @@ public class CampaignHeadCreateIn extends BaseInput {
   
     @NotNull
     @JsonProperty("org_id")
-    // TODO MOCK
-    private Integer orgId = 16;
+    private Integer orgId;
     
     @JsonProperty("publish_status")
     public Byte getPublishStatus() {
