@@ -30,8 +30,10 @@ import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCodeStatusUpdateVO;
 import cn.rongcapital.mkt.mongodb.bbx.TBBXOrderPayDetailRepository;
 import cn.rongcapital.mkt.po.DataMember;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
+import cn.rongcapital.mkt.po.mongodb.SystemCustomTagTree;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -70,6 +72,18 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    public class CouponRule{
+
+        private long couponId;
+
+        public long getCouponId() {
+            return couponId;
+        }
+
+        public void setCouponId(long couponId) {
+            this.couponId = couponId;
+        }
+    }
 
     @Override
     @Transactional
@@ -86,8 +100,10 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             // 需要根据电话号码将相应的会员号码找到
             TBBXMember member = mongoTemplate.findOne(new Query(Criteria.where("phone").is(couponCode.getUser())), TBBXMember.class);
             bbxCouponCode.setVipId(member.getMemberid());
-            //只有贝贝熊的数据是这么处理的，优惠券rule字段存储的是贝贝熊crm系统中的couponId
-            bbxCouponCode.setCouponId(Integer.valueOf(coupon.getRule()));
+            //只有贝贝熊的数据是这么处理的，优惠券rule字段存储着贝贝熊crm系统中的couponId
+            String rule = coupon.getRule();
+            CouponRule couponRule = JSON.parseObject(rule, CouponRule.class);
+            bbxCouponCode.setCouponId((int) couponRule.getCouponId());
             bbxCouponCode.setCouponMoney(coupon.getAmount().doubleValue());
             bbxCouponCode.setCanUseBeginDate(DateUtil.getStringFromDate(coupon.getStartTime(),ApiConstant.DATE_FORMAT_yyyy_MM_dd) );
             bbxCouponCode.setCanUserEndDate(DateUtil.getStringFromDate(coupon.getEndTime(),ApiConstant.DATE_FORMAT_yyyy_MM_dd));
@@ -96,6 +112,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             bbxCouponCode.setSynchronizeable(Boolean.FALSE);
             bbxCouponCode.setSynchronizedTime(null);
             bbxCouponCode.setPhone(vo.getUser());
+
             bbxCouponCode.setCouponCodeId(couponCode.getCouponId());
             list.add(bbxCouponCode);
         }
@@ -146,15 +163,15 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             for (TBBXOrderPayDetail detail: payDetails) {
                 TBBXTransactionHeadAndDetail head = this.mongoTemplate.findOne(new Query(Criteria.where("orderid").is(detail.getOrderid())), TBBXTransactionHeadAndDetail.class);
                 if (head != null) {
-                    long memberid = head.getMemberid();
-                    long couponid = detail.getCouponid();
+                    long memberId = head.getMemberid();
+                    long couponId = detail.getCouponid();
                     long couponCodeId = 0;
                     String phone = "";
 
                     //根据贝贝熊couponId会员电话号码查询相应的优惠码
                     BbxCouponCodeAdd bbxCouponCodeAddParam = new BbxCouponCodeAdd();
-                    bbxCouponCodeAddParam.setVipId((int) memberid);
-                    bbxCouponCodeAddParam.setCouponId((int) couponid);
+                    bbxCouponCodeAddParam.setVipId((int) memberId);
+                    bbxCouponCodeAddParam.setCouponId((int) couponId);
                     bbxCouponCodeAddParam.setChecked(false);
                     List<BbxCouponCodeAdd> bbxCouponCodeAdds = this.bbxCouponCodeAddDao.selectList(bbxCouponCodeAddParam);
 
@@ -179,6 +196,10 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                         }
                     }
                 }
+
+                //不管是否已经核销完毕都要将checked置为true;
+                mongoTemplate.updateFirst(new Query(new Criteria("id").is(detail.getId())),
+                        new Update().set("checked", true), TBBXOrderPayDetail.class);
             }
         }
     }
