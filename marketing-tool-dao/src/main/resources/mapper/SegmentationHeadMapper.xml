@@ -87,11 +87,23 @@
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
+ 
+     
+      <!-- 组织机构 添加在表名后 -->
+	<sql id="QUERY_ORGANIZATION">
+		<if test="orgId != null"> 
+    		<![CDATA[ INNER JOIN data_auth da ON da.table_name='segmentation_head' AND da.resource_id = id AND da.org_id = #{orgId} ]]>
+   		   	<if test="firsthand != null "><![CDATA[ AND da.firsthand = #{firsthand}]]></if>
+   		</if>
+	</sql>
+
+
 
 	<!-- 总数查询,通过条件 -->
 	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.SegmentationHead" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_ORGANIZATION"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 	
@@ -103,6 +115,7 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_ORGANIZATION"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<if test="customMap.keyword != null and customMap.keyword != ''"> 
 		    and name like CONCAT('%',#{customMap.keyword},'%' )
