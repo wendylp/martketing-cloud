@@ -54,13 +54,7 @@ public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCoup
 	private MongoTemplate mongoTemplate;
 	
     @Autowired
-    private MaterialCouponCodeDao materialCouponCodeDao;
-    
-    @Autowired
     private MaterialCouponDao materialCouponDao;
-    
-	@Value("${mkt.coupon.sync.stock.total}")
-	private int STOCK_TOTAL;
     
 	@Override
 	public void task(Integer taskId) {
@@ -74,8 +68,6 @@ public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCoup
 	    
 	    JSONObject json = new JSONObject();
         MaterialCoupon coupon = new MaterialCoupon();
-        List<MaterialCouponCode> list = null;
-        MaterialCouponCode code = null;
         boolean procced ;
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");  
         int result = 0;
@@ -92,13 +84,13 @@ public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCoup
 	                json.put("StockRest", "0");
 	                json.put("StockTotal", "0");
 	                coupon.setRule(json.toJSONString());
-	                coupon.setStockRest(STOCK_TOTAL);
-	                coupon.setStockTotal(STOCK_TOTAL);
+	                coupon.setStockRest(0); //贝贝熊逻辑为 页面弹出框输入券码数量。
+	                coupon.setStockTotal(0);//贝贝熊逻辑为 页面弹出框输入券码数量。
 	                coupon.setAmount(temp.getCouponValue() !=null ? BigDecimal.valueOf(temp.getCouponValue()) : BigDecimal.valueOf(0));
 	                coupon.setSourceCode(CouponCodeType.COMMON.getCode());
 	                coupon.setChannelCode(MaterialCouponChannelCodeEnum.SMS.getCode());
 	                coupon.setCouponStatus(MaterialCouponStatusEnum.UNUSED.getCode());
-	                coupon.setReadyStatus(MaterialCouponReadyStatusType.UNREADY.getCode());
+	                coupon.setReadyStatus(MaterialCouponReadyStatusType.READY.getCode()); // 按照之前逻辑，码没有生成应该为 unready，但是unready不能修改优惠券码数量，所以这里做单独适配，为ready
 	                coupon.setCreateTime( new Date());
 	                coupon.setUpdateTime( new Date());
 					coupon.setStartTime(sdf.parse(temp.getBeginTime()) );
@@ -114,42 +106,6 @@ public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCoup
 	            
 	            if(procced){
 	            	materialCouponDao.insert(coupon);
-	                
-	                String unCode = json.getString("coupon_code");
-	                list = new ArrayList<MaterialCouponCode>(); 
-	                for(int i = 0; i< STOCK_TOTAL; i ++){
-	                	code = new MaterialCouponCode();
-	                    code.setCode(unCode);
-	                    code.setCouponId(coupon.getId());
-	                    code.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.UNRELEASED.getCode());
-	                    code.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.UNVERIFY.getCode());
-	                    code.setStatus((byte) 0);
-	                    code.setCreateTime(new Date());
-	                    code.setUpdateTime(new Date());
-	                    list.add(code);
-	                }
-	                
-	                int totleSize = list.size();
-	                logger.info("code size is {}", totleSize);
-	                if (totleSize > 0) {
-	                    int pageSize = 100000;
-	                    int num = totleSize / pageSize;
-	                    int surplus = totleSize % pageSize;
-	                    boolean surplusFlag = false;
-	                    if (surplus > 0) {
-	                        num = num + 1;
-	                        surplusFlag = true;
-	                    }
-	                    for (int i = 0; i < num; i++) {
-	                        List<MaterialCouponCode> codeList = null;
-	                        if (surplusFlag && (i == num - 1)) {
-	                            codeList = list.subList(i * pageSize, (i * pageSize + surplus));
-	                        } else {
-	                            codeList = list.subList(i * pageSize, (i + 1) * pageSize);
-	                        }
-	                        materialCouponCodeDao.batchInsert(codeList);
-	                    }
-	                }
 	                //标记mongo中已同步到MySQL的优惠券
 	                //Query query2 = Query.query(Criteria.where("couponid").is(temp.getCouponId()).and("couponstate").is("1"));
 	                //Update update = new Update().update("couponstate", 2).update("AA", 0);
