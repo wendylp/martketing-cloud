@@ -18,6 +18,8 @@ import cn.rongcapital.mkt.po.TagValueCount;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.TagRecommend;
 import cn.rongcapital.mkt.po.mongodb.TagTree;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 /*************************************************
  * @功能简述: 初始化标签值数量
@@ -81,11 +83,13 @@ public class InitTagValueCountServiceImpl implements TaskService,SystemTagSynchS
 				//标签值集合
 				List<String> tagValues = tagRecommend.getTagList();
 				
-				List<TagTree> tagTreeList = mongoTemplate.find(new Query(Criteria.where("children").in(tagId)), TagTree.class);
-				TagTree tagTree = tagTreeList.get(0);
-				String tName = tagTree.getTagName();
-				String root = tagTree.getParent();
-				String tagPath = root+">"+tName+">";
+//				List<TagTree> tagTreeList = mongoTemplate.find(new Query(Criteria.where("children").in(tagId)), TagTree.class);
+//				TagTree tagTree = tagTreeList.get(0);
+//				String tName = tagTree.getTagName();
+//				String root = tagTree.getParent();
+//				String tagPath = root+">"+tName+">";
+
+				String tagPath = this.getTagPath(tagId);
 				
 				//标签数量
 				Long tagCount = mongoTemplate.count(
@@ -114,6 +118,60 @@ public class InitTagValueCountServiceImpl implements TaskService,SystemTagSynchS
 			e.printStackTrace();
 			logger.error("初始化标签值数量出现异常"+e.getMessage(),e);
 		}
+	}
+
+	/**
+	 * 根据叶子节点tagId 获得该标签的全路径，样例为：leve1_name>level2_name>.......>selfTagName>
+	 * @param leafTagId
+	 * @return
+	 */
+	private String getTagPath(String leafTagId) {
+
+		//获取该标签的父分级，一定存在
+		List<TagTree> tagTreeList = mongoTemplate.find(new Query(Criteria.where("children").in(leafTagId)), TagTree.class);
+		TagTree tagTree = tagTreeList.get(0);
+		String tName = tagTree.getTagName();
+		String curTagParent = tagTree.getParent();
+		if (StringUtils.isEmpty(curTagParent) || StringUtils.isEmpty(curTagParent)) {
+			logger.error("tagId为: "+leafTagId+" 的标签，标签名称或父分级parent为空");
+			return "";
+		}
+		StringBuilder tagPath = new StringBuilder(curTagParent).append(">").append(new StringBuilder(tName).append(">"));
+
+		//递归获取该标签父节点 以上所有的分级，并拼接path
+		while(true) {
+			//获取当前分级 curTagParent 的父分级 parentTagName
+			StringBuilder parentTagName = this.getParentLevelName(curTagParent);
+
+			//当  当前分级的 父分级为空时，说明当前分级为根，停止递归
+			if (StringUtils.isEmpty(parentTagName)) {
+				break;
+			}
+			tagPath = new StringBuilder(parentTagName).append(">").append(tagPath);
+			curTagParent = parentTagName.toString();
+		}
+		return tagPath.toString();
+	}
+
+	/**
+	 * 根据子节点tag名称获取父层 level_name
+	 * @param childTagName
+	 * @return
+	 */
+	private StringBuilder getParentLevelName (String childTagName) {
+		//获取当前节点的tagId
+		List<TagTree> tagsList = mongoTemplate.find(new Query(Criteria.where("tag_name").is(childTagName)), TagTree.class);
+
+		if (tagsList == null || tagsList.size() == 0) {
+			return new StringBuilder("");
+		}
+
+		String tagId = tagsList.get(0).getTagId();
+		//获取父节点
+		List<TagTree> tagTreeList = mongoTemplate.find(new Query(Criteria.where("children").in(tagId)), TagTree.class);
+
+		return CollectionUtils.isEmpty(tagTreeList) ? null : new StringBuilder(tagTreeList.get(0).getTagName());
+
 	}
 
 }
