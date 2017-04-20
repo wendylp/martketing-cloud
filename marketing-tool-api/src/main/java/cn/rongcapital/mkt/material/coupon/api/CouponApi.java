@@ -54,6 +54,7 @@ import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponCodeVerifyIn;
 import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponInfoIn;
+import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponStockTotalIn;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
@@ -513,6 +514,19 @@ public class CouponApi {
     @Path("/mkt.material.coupon.sync")
     public int sync() {
         return syncETLMaterialCouponDataService.sync();
+    }
+    
+    /**
+     * @author shanjingqi
+     * @功能简述:优惠券设置stock_total，并生成对应数量的码（贝贝熊）
+     * @param input
+     * @return
+     */
+    @POST
+    @Path("/mkt.materiel.coupon.totalCount.save")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public BaseOutput couponSaveForBBX(@Valid MaterialCouponStockTotalIn couponInfo){
+        return couponSaveService.saveForBBX(couponInfo);
     }
 
 }
