@@ -27,7 +27,23 @@ public class SegmentHeadCreateIn extends BaseInput {
   
     @NotEmpty
     private String userToken = null;
-  
+    
+    
+    
+    @NotNull
+    private Integer orgid;
+    
+    
+    
+    @JsonProperty("org_id")
+    public Integer getOrgid() {
+        return orgid;
+    }
+
+    public void setOrgid(Integer orgid) {
+        this.orgid = orgid;
+    }
+
     @JsonProperty("publish_status")
     public Integer getPublishStatus() {
 	    return publishStatus;

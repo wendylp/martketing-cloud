@@ -22,6 +22,20 @@ public class SegmentCreUpdateIn extends BaseInput{
 
     @NotNull
     private Integer publishStatus;
+    
+    
+    @NotNull
+    private Integer orgid;
+    
+    
+    @JsonProperty("org_id")
+    public Integer getOrgid() {
+        return orgid;
+    }
+
+    public void setOrgid(Integer orgid) {
+        this.orgid = orgid;
+    }
 
     private List<TagGroupsIn> filterGroups = new ArrayList<>();
 
