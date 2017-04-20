@@ -18,10 +18,15 @@ import java.io.Serializable;
 import java.util.Date;
 @Document(collection = "TBBXTransactionHeadAndDetail")
 public class TBBXTransactionHeadAndDetail implements Serializable {
+    /**
+     * Description:
+     */
+    private static final long serialVersionUID = -2008386200111533822L;
     @Id
     private String id;
     private Long memberid;
     private Long orderid;
+    private Date saletime;
 
     public String getId() {
         return id;
@@ -46,4 +51,20 @@ public class TBBXTransactionHeadAndDetail implements Serializable {
     public void setOrderid(Long orderid) {
         this.orderid = orderid;
     }
+
+    /**
+     * @return the saletime
+     */
+    public Date getSaletime() {
+        return saletime;
+    }
+
+    /**
+     * @param saletime the saletime to set
+     */
+    public void setSaletime(Date saletime) {
+        this.saletime = saletime;
+    }
+    
+    
 }
