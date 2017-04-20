@@ -685,7 +685,7 @@ public class MktDataApi {
      */
     @GET
     @Path("/mkt.audience.list.get")
-    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
     		@NotNull @QueryParam("org_id") Integer orgId,
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
