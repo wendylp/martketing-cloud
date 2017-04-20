@@ -723,8 +723,8 @@ public class MktDataApi {
      */
     @GET
     @Path("/mkt.audience.count.get")
-    public BaseOutput audienceCount(@NotEmpty @QueryParam("user_token") String userToken) {
-        return audienceListService.audienceCount(userToken);
+    public BaseOutput audienceCount(@NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId) {
+        return audienceListService.audienceCount(userToken, orgId);
     }
 
     /**
