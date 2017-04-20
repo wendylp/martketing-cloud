@@ -16,6 +16,7 @@ import cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd;
 import cn.rongcapital.mkt.dao.base.BaseDao;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BbxCouponCodeAddDao extends BaseDao<BbxCouponCodeAdd>{
 	
@@ -44,4 +45,6 @@ public interface BbxCouponCodeAddDao extends BaseDao<BbxCouponCodeAdd>{
 	 * @param list
 	 */
 	int batchInsert(List<BbxCouponCodeAdd> list);
+	
+	Map<String,Object> selectCampaignSmsItemByCouponId(long couponCodeId);
 }

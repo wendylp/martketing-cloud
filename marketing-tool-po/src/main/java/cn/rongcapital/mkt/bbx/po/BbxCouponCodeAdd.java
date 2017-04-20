@@ -5,6 +5,11 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 import java.util.Date;
 
 public class BbxCouponCodeAdd extends BaseQuery{
+    /**
+     * Description:
+     */
+    private static final long serialVersionUID = -7416627429507594664L;
+
     private Integer id;
 
     private Integer vipId;
@@ -32,6 +37,12 @@ public class BbxCouponCodeAdd extends BaseQuery{
     private Long couponCodeId;
 
     private Boolean checked;
+
+    private String mainId;
+
+    private Long campsignId;
+
+    private Long itemId;
 
     public Integer getId() {
         return id;
@@ -143,5 +154,29 @@ public class BbxCouponCodeAdd extends BaseQuery{
 
     public void setChecked(Boolean checked) {
         this.checked = checked;
+    }
+
+    public String getMainId() {
+        return mainId;
+    }
+
+    public void setMainId(String mainId) {
+        this.mainId = mainId == null ? null : mainId.trim();
+    }
+
+    public Long getCampsignId() {
+        return campsignId;
+    }
+
+    public void setCampsignId(Long campsignId) {
+        this.campsignId = campsignId;
+    }
+
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 }

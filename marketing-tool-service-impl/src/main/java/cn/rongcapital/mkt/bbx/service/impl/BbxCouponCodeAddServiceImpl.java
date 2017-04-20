@@ -18,6 +18,8 @@ import cn.rongcapital.mkt.bbx.po.TBBXTransactionHeadAndDetail;
 import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
+import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.bbx.BbxCouponCodeAddDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
@@ -51,6 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
@@ -65,10 +68,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private TBBXOrderPayDetailRepository tbbxOrderPayDetailRepository;
-
-    @Autowired
-    private MaterialCouponCodeCheckService codeVerifyService;
+    private MaterialCouponCodeDao couponCodeDao;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -91,8 +91,18 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         List<BbxCouponCodeAdd> list = new ArrayList<>();
 
         for (MaterialCouponCodeStatusUpdateVO vo : voList) {
+            //发送失败的数据不同步给贝贝熊
+            if(MaterialCouponCodeReleaseStatusEnum.UNRECEIVED.getCode().equals( vo.getStatus())){
+                continue;
+            }
             MaterialCouponCode couponCode = this.getCouponIdByCodeId(vo.getId());
             MaterialCoupon coupon = this.getCouponById(couponCode.getCouponId());
+            
+            Map<String,Object> campasignMap = this.bbxCouponCodeAddDao.selectCampaignSmsItemByCouponId(vo.getId());
+            
+            long campsignId = (long)campasignMap.get("campaignHeadId");
+            long itemId = (long)campasignMap.get("itemId");
+            
 
             //为贝贝熊同步一份优惠码的数据
             BbxCouponCodeAdd bbxCouponCode = new BbxCouponCodeAdd();
@@ -112,8 +122,10 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             bbxCouponCode.setSynchronizeable(Boolean.FALSE);
             bbxCouponCode.setSynchronizedTime(null);
             bbxCouponCode.setPhone(vo.getUser());
-
-            bbxCouponCode.setCouponCodeId(couponCode.getCouponId());
+            bbxCouponCode.setMainId(String.valueOf( member.getMid()));
+            bbxCouponCode.setCampsignId(campsignId);
+            bbxCouponCode.setItemId(itemId);
+            bbxCouponCode.setCouponCodeId(couponCode.getId());
             list.add(bbxCouponCode);
         }
 
@@ -122,6 +134,10 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         List<List<BbxCouponCodeAdd>> partitionList = Lists.partition(list, pageSize);
         for (List<BbxCouponCodeAdd> item : partitionList) {
             bbxCouponCodeAddDao.batchInsert(item);
+            
+            for (BbxCouponCodeAdd bbxCouponCodeAdd : item) {
+              //TODO 将数据发送给刘奇的统计数据
+            }
         }
     }
 
@@ -179,21 +195,17 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                         BbxCouponCodeAdd bbxCouponCodeAdd = bbxCouponCodeAdds.get(0);
                         couponCodeId = bbxCouponCodeAdd.getCouponCodeId();
                         phone = bbxCouponCodeAdd.getPhone();
-
-                        BaseOutput baseOutput = this.codeVerifyService.materialCouponCodeVerify(couponCodeId, null, phone);
-                        if (ApiErrorCode.SUCCESS.getCode() == baseOutput.getCode()) {
-                            //将核销的标识值为已核销
-                            Criteria criteria = Criteria.where("id").is(detail.getId());
-                            Query couponQuery = new Query(criteria);
-                            Update update = new Update().set("checked", true);
-                            mongoTemplate.updateFirst(couponQuery, update, TBBXOrderPayDetail.class);
-
-                            bbxCouponCodeAdd.setChecked(true);
-                            this.bbxCouponCodeAddDao.updateById(bbxCouponCodeAdd);
-
-                        } else {
-                            logger.info("Verify coupon code faild, message is {}", baseOutput.getMsg());
-                        }
+                        
+                        MaterialCouponCode code = new MaterialCouponCode();
+                       
+                        code.setId(couponCodeId);
+                        code.setUser(phone);
+                        code.setReleaseStatus(MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());
+                        code.setVerifyTime(head.getSaletime());
+                        this.couponCodeDao.updateByIdAndStatus(code);
+                        
+                        //TODO 将数据发送给刘奇的统计数据
+                      
                     }
                 }
 

@@ -16,6 +16,8 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.po.DataMember;
+
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -64,6 +67,10 @@ public class BbxCouponCodeAddDaoTest extends AbstractUnitTest {
         int i = this.dao.batchInsert(list);
         Assert.assertEquals(100,i);
     }
-
+    @Test
+    public void testSelectCampaignSmsItemByCouponCodeId(){
+        Map<String,Object> result =  this.dao.selectCampaignSmsItemByCouponId(18518757);
+        Assert.assertEquals(100,result.get(""));
+    }
 
 }

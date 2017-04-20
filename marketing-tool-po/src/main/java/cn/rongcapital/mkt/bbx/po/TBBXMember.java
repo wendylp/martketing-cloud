@@ -25,6 +25,7 @@ public class TBBXMember implements Serializable {
     private Date birthday;
     private String membercode;
     private Integer memberid;
+    private Integer mid;
     private String name;
     private String phone;
     private int sex;
@@ -73,6 +74,20 @@ public class TBBXMember implements Serializable {
 
     public void setMemberid(Integer memberid) {
         this.memberid = memberid;
+    }
+    
+    /**
+     * @return the mid
+     */
+    public Integer getMid() {
+        return mid;
+    }
+
+    /**
+     * @param mid the mid to set
+     */
+    public void setMid(Integer mid) {
+        this.mid = mid;
     }
 
     public String getName() {
