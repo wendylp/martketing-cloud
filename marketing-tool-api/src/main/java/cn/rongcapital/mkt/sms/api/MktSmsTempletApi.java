@@ -92,7 +92,7 @@ public class MktSmsTempletApi {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Path("/mkt.sms.smstemplet.saveorupdate")
-	@CaasAuth(res = "#smsTempletIn.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
+//	@CaasAuth(res = "#smsTempletIn.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
 	public BaseOutput saveOrUpdateSmsTemplet(@Valid SmsTempletIn smsTempletIn) throws Exception {		
 		return smsTempletService.saveOrUpdateSmsTemplet(smsTempletIn);
 	}

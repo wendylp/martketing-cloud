@@ -6,7 +6,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface AudienceListService {
 
-    public BaseOutput audienceList(String userToken, Integer size, Integer index);
+    public BaseOutput audienceList(String userToken, Integer size, Integer index, Integer orgId);
 
     /**
      * mkt.audience.listbyid.get
