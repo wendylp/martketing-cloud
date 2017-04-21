@@ -101,6 +101,7 @@
 		u.id as id,u.user_id as userId,u.user_code as userCode,u.comp_id as compId,u.comp_name as compName,u.org_id as orgId,o.name as orgName, u.status as status
 		FROM user_info u,organization o
 		WHERE u.user_id = #{userId}
+<!-- 		AND u.user_code =#{userCode} -->
 		AND u.org_id = o.org_id 
 		AND u.status = '1'
 	</select>
