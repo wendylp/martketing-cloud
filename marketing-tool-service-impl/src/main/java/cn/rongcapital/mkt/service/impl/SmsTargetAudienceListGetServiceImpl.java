@@ -71,6 +71,7 @@ public class SmsTargetAudienceListGetServiceImpl implements SmsTargetAudienceLis
         AudienceList paramAudienceList = new AudienceList();
         paramAudienceList.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         paramAudienceList.setPageSize(Integer.MAX_VALUE);
+        paramAudienceList.setOrgId(orgId);
         List<AudienceList> audienceListList = audienceListDao.selectList(paramAudienceList);
 
         if(!CollectionUtils.isEmpty(audienceListList)){
