@@ -136,7 +136,7 @@ public class InitTagValueCountServiceImpl implements TaskService,SystemTagSynchS
 			logger.error("tagId为: "+leafTagId+" 的标签，标签名称或父分级parent为空");
 			return "";
 		}
-		StringBuilder tagPath = new StringBuilder(curTagParent).append(">").append(new StringBuilder(tName).append(">"));
+		StringBuilder tagPath = new StringBuilder(curTagParent).append(">").append(tName).append(">");
 
 		//递归获取该标签父节点 以上所有的分级，并拼接path
 		while(true) {
@@ -147,7 +147,7 @@ public class InitTagValueCountServiceImpl implements TaskService,SystemTagSynchS
 			if (StringUtils.isEmpty(parentTagName)) {
 				break;
 			}
-			tagPath = new StringBuilder(parentTagName).append(">").append(tagPath);
+			tagPath = parentTagName.append(">").append(tagPath);
 			curTagParent = parentTagName.toString();
 		}
 		return tagPath.toString();
