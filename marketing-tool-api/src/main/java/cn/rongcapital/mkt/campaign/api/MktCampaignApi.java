@@ -330,7 +330,7 @@ public class MktCampaignApi {
     @POST
     @Path("/mkt.campaign.node.audience.save")
     @Consumes({ MediaType.APPLICATION_JSON })
-//    @CaasAuth(res = "#audience.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#audience.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
     public Object saveCampaignAudience(@Valid Audience audience, @Context SecurityContext securityContext) {
         return saveCampaignAudienceService.saveCampaignAudience(audience, securityContext);
     }

@@ -36,9 +36,10 @@ public class AudienceAllListServiceImpl implements AudienceAllListService {
 	
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
-	public BaseOutput audienceAllList(String userToken, Integer orgId) {		
+	public BaseOutput audienceAllList(String userToken, Integer orgId, Boolean firsthand) {		
 		AudienceList param = new AudienceList();
 		param.setOrgId(orgId);
+		param.setFirsthand(firsthand);
 		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		int totalCount = audienceListDao.selectListCount(param);
 		param.setPageSize(totalCount);
