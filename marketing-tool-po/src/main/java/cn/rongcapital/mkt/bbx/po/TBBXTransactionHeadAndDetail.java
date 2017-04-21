@@ -26,7 +26,7 @@ public class TBBXTransactionHeadAndDetail implements Serializable {
     private String id;
     private Long memberid;
     private Long orderid;
-    private Date saletime;
+    private String saletime;
 
     public String getId() {
         return id;
@@ -52,19 +52,11 @@ public class TBBXTransactionHeadAndDetail implements Serializable {
         this.orderid = orderid;
     }
 
-    /**
-     * @return the saletime
-     */
-    public Date getSaletime() {
+    public String getSaletime() {
         return saletime;
     }
 
-    /**
-     * @param saletime the saletime to set
-     */
-    public void setSaletime(Date saletime) {
+    public void setSaletime(String saletime) {
         this.saletime = saletime;
     }
-    
-    
 }

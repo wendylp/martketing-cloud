@@ -126,8 +126,8 @@
 	
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsert" parameterType="cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd" useGeneratedKeys="false">
-			INSERT INTO bbx_coupon_code_add (vip_id,coupon_id,action_id,coupon_money,can_use_begin_date,can_user_end_date,store_code,create_time,is_synchronized,synchronized_time,phone,coupon_code_id)
-			VALUES
+		INSERT INTO bbx_coupon_code_add (vip_id,coupon_id,action_id,coupon_money,can_use_begin_date,can_user_end_date,store_code,create_time,synchronizeable,synchronized_time,phone,coupon_code_id,checked,main_id,campsign_id,item_id)
+		VALUES
 			<foreach collection="list" item="model" separator=",">
 				(
 				  #{model.vipId},
@@ -137,7 +137,7 @@
 				  #{model.canUseBeginDate},
 				  #{model.canUserEndDate},
 				  #{model.storeCode},
-				  now(),
+				  #{model.createTime},
 				  #{model.synchronizeable},
 				  #{model.synchronizedTime},
 				  #{model.phone},
