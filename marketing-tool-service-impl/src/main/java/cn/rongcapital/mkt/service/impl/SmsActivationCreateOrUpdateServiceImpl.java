@@ -61,8 +61,8 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 	/**
 	 * @since 1.8
 	 */
-	@DataAuthWriteable(resourceType = "sms_task_head", orgId = "#smsActivationCreateIn.orgId", resourceId = "#smsActivationCreateIn.campaignHeadId", type = ParamType.SpEl)
-    @DataAuthPut(resourceType = "sms_task_head", orgId = "#smsActivationCreateIn.orgId", resourceId = "#smsActivationCreateIn.campaignHeadId", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
+	@DataAuthWriteable(resourceType = "sms_task_head", orgId = "#smsActivationCreateIn.orgId", resourceId = "", type = ParamType.SpEl)
+    @DataAuthPut(resourceType = "sms_task_head", orgId = "#smsActivationCreateIn.orgId", resourceId = "", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public BaseOutput createOrUpdateSmsActivation(SmsActivationCreateIn smsActivationCreateIn) throws JMSException {
