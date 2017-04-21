@@ -132,7 +132,7 @@ public class MktSmsApi {
 	@POST
 	@Path("/mkt.sms.message.createorupdate")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	//@CaasAuth(res = "#smsActivationCreateIn.orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
+	@CaasAuth(res = "#smsActivationCreateIn.orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
 	public BaseOutput createOrUpdateSmsMessage(@Valid SmsActivationCreateIn smsActivationCreateIn,
 			@Context SecurityContext securityContext) throws JMSException {
 		return smsActivationCreateOrUpdateService.createOrUpdateSmsActivation(smsActivationCreateIn);
