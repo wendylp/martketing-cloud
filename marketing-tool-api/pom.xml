@@ -27,19 +27,19 @@
             <groupId>cn.rongcapital.caas</groupId>
             <artifactId>caas-api</artifactId>
             <version>${caas.version}</version>
-            <scope>provided</scope>
+<!--             <scope>provided</scope> -->
         </dependency>
         <dependency>
             <groupId>cn.rongcapital.caas</groupId>
             <artifactId>caas-agent</artifactId>
             <version>${caas.version}</version>
-              <scope>provided</scope>
+<!--               <scope>provided</scope> -->
         </dependency>
         <dependency>
             <groupId>cn.rongcapital.caas</groupId>
             <artifactId>caas-agent-oauth2</artifactId>
             <version>${caas.version}</version>
-            <scope>provided</scope>
+<!--             <scope>provided</scope> -->
         </dependency>   
 	      
 	    <dependency>
@@ -56,7 +56,7 @@
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-client</artifactId>
 			<version>3.0.11.Final</version>
-			<scope>provided</scope>
+<!-- 			<scope>provided</scope> -->
 		</dependency>
 	    
 	    
