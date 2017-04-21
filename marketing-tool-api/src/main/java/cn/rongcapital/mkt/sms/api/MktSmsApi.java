@@ -198,7 +198,7 @@ public class MktSmsApi {
 	 */
     @GET
     @Path("/mkt.sms.smsmaterial.count.get")
-//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput getSmsMaterialCount(@NotEmpty @QueryParam("user_token") String userToken,
             @QueryParam("ver") String ver, @NotNull @QueryParam("org_id") Integer orgId,
             @QueryParam("firsthand") Boolean firsthand, @NotNull @QueryParam("channel_type") Integer channelType)
@@ -227,7 +227,7 @@ public class MktSmsApi {
      */
     @GET
     @Path("/mkt.sms.smsmaterial.getlist")
-//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput getSmsMaterial(@NotEmpty @QueryParam("user_token") String userToken,
                                      @QueryParam("ver") String ver,
                                      @NotNull @QueryParam("org_id") Integer orgId,
@@ -284,7 +284,7 @@ public class MktSmsApi {
 	 */
     @GET
     @Path("/mkt.sms.material.get")
-//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput getSmsMaterialByStatus(@NotEmpty @QueryParam("user_token") String userToken,
             @QueryParam("ver") String ver, @NotNull @QueryParam("org_id") Integer orgId,
             @QueryParam("firsthand") Boolean firsthand, @NotNull @QueryParam("channel_type") Integer channelType,
