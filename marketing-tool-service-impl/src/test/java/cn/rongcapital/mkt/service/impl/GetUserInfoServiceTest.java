@@ -69,16 +69,16 @@ public class GetUserInfoServiceTest  {
     @Test
     public void testGetUserInfo01(){
         logger.info("测试方法: getUserInfo ");
-        Mockito.when(userInfoDao.getUserInfo(any())).thenReturn(user);
-        BaseOutput out = getUserInfoService.getUserInfo(userId);
+        Mockito.when(userInfoDao.getUserInfo(any(),any())).thenReturn(user);
+        BaseOutput out = getUserInfoService.getUserInfo(userId,any());
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), out.getCode());
     }
     
     @Test
     public void testGetUserInfo02(){
         logger.info("测试方法: getUserInfo ");
-        Mockito.when(userInfoDao.getUserInfo(any())).thenReturn(null);
-        BaseOutput out = getUserInfoService.getUserInfo(userId);
+        Mockito.when(userInfoDao.getUserInfo(any(),any())).thenReturn(null);
+        BaseOutput out = getUserInfoService.getUserInfo(userId,any());
         Assert.assertEquals(ApiErrorCode.THE_PRESON_NOT_FOUND.getCode(), out.getCode());
     }
    

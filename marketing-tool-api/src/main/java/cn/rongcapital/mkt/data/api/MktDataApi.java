@@ -968,9 +968,9 @@ public class MktDataApi {
     @GET
     @Path("/mkt.data.userinfo.get")
     public BaseOutput getUserInfo(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("personnel_id") String userId) {
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("personnel_id") String userId, @NotEmpty @QueryParam("personnel_code") String userCode) {
         logger.info(" into mkt.data.userinfo.get");
-        return userInfoService.getUserInfo(userId);
+        return userInfoService.getUserInfo(userId, userCode);
     }
 
     /**

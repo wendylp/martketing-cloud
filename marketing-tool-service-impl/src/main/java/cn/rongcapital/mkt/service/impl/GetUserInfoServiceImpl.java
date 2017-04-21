@@ -21,12 +21,12 @@ public class GetUserInfoServiceImpl implements GetUserInfoService{
     private UserInfoDao userInfoDao;
 
     @Override
-    public BaseOutput getUserInfo(String userId) {
+    public BaseOutput getUserInfo(String userId, String userCode) {
         BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                         ApiConstant.INT_ZERO, null);
         //返回结果集
         Map<String, Object> resultMap = new HashMap<>();
-        UserInfo userInfo = userInfoDao.getUserInfo(userId);
+        UserInfo userInfo = userInfoDao.getUserInfo(userId, userCode);
         if(null != userInfo){
             resultMap.put("org_id", userInfo.getOrgId());
             resultMap.put("org_name", userInfo.getOrgName());
@@ -53,6 +53,6 @@ public class GetUserInfoServiceImpl implements GetUserInfoService{
 				userInfoDao.updateById(userInfoT);
 			}
 		}
-		return getUserInfo(userInfoT.getUserId());
+		return getUserInfo(userInfoT.getUserId(), userInfoT.getUserCode());
 	}
 }
