@@ -34,6 +34,10 @@ public class SmsMaterialIn {
 
 	private List<SmsMaterialVariableIn> smsMaterialVariableInList;
     
+    @NotNull
+    @JsonProperty("org_id")
+    private Integer orgId;
+    
 	public Integer getId() {
 		return id;
 	}
@@ -123,4 +127,12 @@ public class SmsMaterialIn {
 	public void setSmsMaterialVariableInList(List<SmsMaterialVariableIn> smsMaterialVariableInList) {
 		this.smsMaterialVariableInList = smsMaterialVariableInList;
 	}
+
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
+    }
 }

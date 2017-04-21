@@ -122,7 +122,7 @@
 	</sql>
 	
 	<select id="getFirstMQNodeByEventCode" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.vo.CampaignNode">
-		SELECT first_nodes.campaign_head_id as campaignHeadId, first_nodes.next_item_id as itemId
+		SELECT first_nodes.campaign_head_id as campaignHeadId, first_nodes.next_item_id as itemId,map.caring_time as caringTime
 		<include refid="QUERY_GET_FIRST_MQ_NODE"/>
 		ORDER BY first_nodes.campaign_head_id,first_nodes.next_item_id ASC
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>

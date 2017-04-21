@@ -13,8 +13,12 @@ public class UserInfo extends BaseQuery{
     private String compId;
 
     private String compName;
-
+    
+    private String userCode;
+    
     private Byte status;
+    
+    private String orgName;
 
     public Long getId() {
         return id;
@@ -55,4 +59,21 @@ public class UserInfo extends BaseQuery{
     public void setStatus(Byte status) {
         this.status = status;
     }
+
+	public String getUserCode() {
+		return userCode;
+	}
+
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	
 }

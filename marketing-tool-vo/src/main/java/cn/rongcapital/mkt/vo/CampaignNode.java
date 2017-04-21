@@ -15,6 +15,18 @@ public class CampaignNode {
     private Long campaignHeadId;
 
     private String itemId;
+    
+    //新增一些生日属性设置
+    
+    private Integer caringTime;
+
+    public Integer getCaringTime() {
+        return caringTime;
+    }
+
+    public void setCaringTime(Integer caringTime) {
+        this.caringTime = caringTime;
+    }
 
     public Long getCampaignHeadId() {
         return campaignHeadId;

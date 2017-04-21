@@ -7,6 +7,10 @@ import cn.rongcapital.mkt.po.base.BaseQuery;
 public class AudienceList extends BaseQuery {
     private Integer id;
 
+    private Integer orgId;
+    
+    private Boolean firsthand;
+    
     private String audienceName;
 
     private Integer audienceRows;
@@ -21,7 +25,24 @@ public class AudienceList extends BaseQuery {
 
     public AudienceList() {}
 
-    public AudienceList(Integer index, Integer size) {
+    
+    public Boolean getFirsthand() {
+		return firsthand;
+	}
+
+	public void setFirsthand(Boolean firsthand) {
+		this.firsthand = firsthand;
+	}
+
+	public Integer getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Integer orgId) {
+		this.orgId = orgId;
+	}
+
+	public AudienceList(Integer index, Integer size) {
         super(index, size);
     }
 

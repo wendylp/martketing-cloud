@@ -48,6 +48,8 @@ public class SmsSmstempletIdGetServiceTest {
     private List<SmsTemplet> smsTempletList;
     private int materialSize = 0;
     
+    private int org_id =11;
+    
     @Before
     public void setUp() throws Exception {
 //    	//固定模板
@@ -98,7 +100,7 @@ public class SmsSmstempletIdGetServiceTest {
         
         
         smsSmstempletIdGetService = new SmsSmstempletIdGetServiceImpl();
-
+        Mockito.when(smsTempletDao.selectByIdAndOrgId(any())).thenReturn(smsTempletList);
         Mockito.when(smsTempletDao.selectList(any())).thenReturn(smsTempletList);
         Mockito.when(smsMaterialDao.selectList(any())).thenReturn(null);
         Mockito.when(smsTempletMaterialMapDao.selectList(any())).thenReturn(smsTempletMaterialMapList);
@@ -117,9 +119,10 @@ public class SmsSmstempletIdGetServiceTest {
      * @Date 2016-11-11
      * @author shuiyangyang
      */
+    
     @Test
     public void testGetSmsSmstempletById() {
-        BaseOutput result = smsSmstempletIdGetService.getSmsSmstempletById(smsTemplet.getId());
+        BaseOutput result = smsSmstempletIdGetService.getSmsSmstempletById(smsTemplet.getId(), org_id);
 
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
         Assert.assertEquals(1, result.getTotal());

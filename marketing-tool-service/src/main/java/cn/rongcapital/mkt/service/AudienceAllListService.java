@@ -4,5 +4,5 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface AudienceAllListService {
 
-    public BaseOutput audienceAllList(String userToken);
+    public BaseOutput audienceAllList(String userToken, Integer orgId, Boolean firsthand);
 }

@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jms.JMSException;
@@ -16,6 +17,9 @@ import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.SmsTaskBodyDao;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthWriteable;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.po.CampaignBody;
 import cn.rongcapital.mkt.po.SmsTaskBody;
 import cn.rongcapital.mkt.po.SmsTaskHead;
@@ -57,6 +61,8 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 	/**
 	 * @since 1.8
 	 */
+	@DataAuthWriteable(resourceType = "sms_task_head", orgId = "#smsActivationCreateIn.orgId", resourceId = "", type = ParamType.SpEl)
+    @DataAuthPut(resourceType = "sms_task_head", orgId = "#smsActivationCreateIn.orgId", resourceId = "", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public BaseOutput createOrUpdateSmsActivation(SmsActivationCreateIn smsActivationCreateIn) throws JMSException {
@@ -163,6 +169,9 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 			message.setMessage(String.valueOf(insertSmsTaskHead.getId()));
 			mqTopicService.senderMessage(MQ_SMS_GENERATE_DETAIL_SERVICE, message);
 
+			List<Object> smsTaskHeadList = new ArrayList<Object>();
+			smsTaskHeadList.add(insertSmsTaskHead);
+			baseOutput.setData(smsTaskHeadList);
 			return baseOutput;
 		}
 
