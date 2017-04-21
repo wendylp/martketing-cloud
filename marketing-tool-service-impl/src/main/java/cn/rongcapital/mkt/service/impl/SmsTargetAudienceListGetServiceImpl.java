@@ -40,13 +40,13 @@ public class SmsTargetAudienceListGetServiceImpl implements SmsTargetAudienceLis
     private AudienceListPartyMapDao audienceListPartyMapDao;
 
     @Override
-    public SmsTargetAudienceListOut getSmsTargetAudienceList() {
+    public SmsTargetAudienceListOut getSmsTargetAudienceList(Integer orgId) {
         SmsTargetAudienceListOut smsTargetAudienceListOut = new SmsTargetAudienceListOut(ApiErrorCode.SUCCESS.getCode(),ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO);
 
         SegmentationHead paramSegmentationHead = new SegmentationHead();
         paramSegmentationHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         paramSegmentationHead.setPageSize(Integer.MAX_VALUE);
-
+        paramSegmentationHead.setOrgId(orgId);
         List<SegmentationHead> segmentationHeadList = segmentationHeadDao.selectList(paramSegmentationHead);
         if(!CollectionUtils.isEmpty(segmentationHeadList)){
             for(SegmentationHead segmentationHead : segmentationHeadList){
@@ -71,6 +71,7 @@ public class SmsTargetAudienceListGetServiceImpl implements SmsTargetAudienceLis
         AudienceList paramAudienceList = new AudienceList();
         paramAudienceList.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         paramAudienceList.setPageSize(Integer.MAX_VALUE);
+        paramAudienceList.setOrgId(orgId);
         List<AudienceList> audienceListList = audienceListDao.selectList(paramAudienceList);
 
         if(!CollectionUtils.isEmpty(audienceListList)){

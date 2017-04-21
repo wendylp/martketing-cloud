@@ -48,6 +48,7 @@ import cn.rongcapital.mkt.job.service.base.SpringDataPageable;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCodeStatusUpdateVO;
+import cn.rongcapital.mkt.service.CampaignDetailService;
 
 @Service
 public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
@@ -63,6 +64,9 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
 
     @Autowired
     private MaterialCouponCodeDao couponCodeDao;
+    
+    @Autowired
+    private CampaignDetailService campaignDetailService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -124,10 +128,9 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             bbxCouponCodeAddDao.batchInsert(item);
             
             for (BbxCouponCodeAdd bbxCouponCodeAdd : item) {
-              //TODO 将数据发送给刘奇的统计数据
                 //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
                 if(bbxCouponCodeAdd.getCampsignId() != null){
-
+                    this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId().intValue(),String.valueOf( bbxCouponCodeAdd.getItemId()),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 0, bbxCouponCodeAdd.getCouponId());
                 }
             }
         }
@@ -197,8 +200,10 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                         code.setVerifyTime(DateUtil.getDateFromString(head.getSaletime(),"yyyy-MM-dd HH:mm:ss") );
                         this.couponCodeDao.updateByIdAndStatus(code);
                         
-                        //TODO 将数据发送给刘奇的统计数据
-
+                      //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
+                        if(bbxCouponCodeAdd.getCampsignId() != null){
+                            this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId().intValue(),String.valueOf( bbxCouponCodeAdd.getItemId()),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1, bbxCouponCodeAdd.getCouponId());
+                        }
                     }
                 }
 

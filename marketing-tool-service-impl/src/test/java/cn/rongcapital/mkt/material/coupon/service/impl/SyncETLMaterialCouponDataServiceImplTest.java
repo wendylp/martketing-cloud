@@ -37,13 +37,8 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 	private MongoTemplate mongoTemplate;
 	
 	@Mock
-    private MaterialCouponCodeDao materialCouponCodeDao;
-    
-	@Mock
     private MaterialCouponDao materialCouponDao;
     
-	private Integer total = 10;
-	
     private SyncETLMaterialCouponDataService service; 
     
     private List<Coupon> nodeAudienceList = new ArrayList<Coupon>();
@@ -66,7 +61,6 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		c1.setEndTime("2016-01-02");
 		
     	ReflectionTestUtils.setField(service, "mongoTemplate", mongoTemplate);
-		ReflectionTestUtils.setField(service, "materialCouponCodeDao", materialCouponCodeDao);
 		ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
     }
     
@@ -77,11 +71,6 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		nodeAudienceList.add(c1);
 		Mockito.when(mongoTemplate.find(Query.query(Criteria.where("SyncFlag").exists(false)), Coupon.class)).thenReturn(nodeAudienceList);
 		Mockito.when(materialCouponDao.insert(any())).thenReturn(0);
-		Mockito.doAnswer(new Answer<Void>() {
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                return null;
-            }
-        }).when(this.materialCouponCodeDao).batchInsert(any());
         
 		int result = service.sync();
 		Assert.assertEquals(result,0);
@@ -92,11 +81,6 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		
 		Mockito.when(mongoTemplate.find(Query.query(Criteria.where("SyncFlag").exists(false)), Coupon.class)).thenReturn(null);
 		Mockito.when(materialCouponDao.insert(any())).thenReturn(0);
-        Mockito.doAnswer(new Answer<Void>() {
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                return null;
-            }
-        }).when(this.materialCouponCodeDao).batchInsert(any());
         
 		int result = service.sync();
 		Assert.assertEquals(result,0);
@@ -140,11 +124,6 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		
 		Mockito.when(mongoTemplate.find(Query.query(Criteria.where("SyncFlag").exists(false)), Coupon.class)).thenReturn(nodeAudienceList);
 		Mockito.when(materialCouponDao.insert(any())).thenReturn(0);
-        Mockito.doAnswer(new Answer<Void>() {
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                return null;
-            }
-        }).when(this.materialCouponCodeDao).batchInsert(any());
         
 		int result = service.sync();
 		Assert.assertEquals(result,4);
@@ -181,11 +160,6 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		
 		Mockito.when(mongoTemplate.find(Query.query(Criteria.where("SyncFlag").exists(false)), Coupon.class)).thenReturn(nodeAudienceList);
 		Mockito.when(materialCouponDao.insert(any())).thenReturn(0);
-        Mockito.doAnswer(new Answer<Void>() {
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                return null;
-            }
-        }).when(this.materialCouponCodeDao).batchInsert(any());
         
 		int result = service.sync();
 		Assert.assertEquals(result,2);

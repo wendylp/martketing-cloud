@@ -191,8 +191,8 @@ public class MktCampaignApi {
     @Consumes({MediaType.APPLICATION_JSON})
 //    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
-            @NotEmpty @QueryParam("user_token") String userToken, @NotNull @DefaultValue("16") @QueryParam("org_id") Integer orgId,
-            @DefaultValue("true") @QueryParam("firsthand") Boolean firsthand, @NotNull @QueryParam("publish_status") Byte publishStatus,
+            @NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId,
+            @QueryParam("firsthand") Boolean firsthand, @NotNull @QueryParam("publish_status") Byte publishStatus,
             @QueryParam("campaign_name") String campaignName,
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
             @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
@@ -209,8 +209,8 @@ public class MktCampaignApi {
     @Consumes({MediaType.APPLICATION_JSON})
 //    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public CampaignProgressStatusCountOut campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
-            @NotEmpty @QueryParam("user_token") String userToken, @NotNull @DefaultValue("16") @QueryParam("org_id") Integer orgId,
-            @DefaultValue("true") @QueryParam("firsthand") Boolean firsthand) {
+            @NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId,
+            @QueryParam("firsthand") Boolean firsthand) {
         return campaignProgressStatusCountService.campaignProgressStatusCountGet(orgId, firsthand);
     }
 
@@ -330,7 +330,7 @@ public class MktCampaignApi {
     @POST
     @Path("/mkt.campaign.node.audience.save")
     @Consumes({ MediaType.APPLICATION_JSON })
-    @CaasAuth(res = "#audience.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
+//    @CaasAuth(res = "#audience.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
     public Object saveCampaignAudience(@Valid Audience audience, @Context SecurityContext securityContext) {
         return saveCampaignAudienceService.saveCampaignAudience(audience, securityContext);
     }
@@ -345,8 +345,8 @@ public class MktCampaignApi {
     @Consumes({MediaType.APPLICATION_JSON})
 //    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
-            @NotEmpty @QueryParam("user_token") String userToken, @NotNull @DefaultValue("16") @QueryParam("org_id") Integer orgId,
-            @DefaultValue("true") @QueryParam("firsthand") Boolean firsthand) {
+            @NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId,
+            @QueryParam("firsthand") Boolean firsthand) {
         return campaignSummaryGetService.campaignSummaryGet(orgId, firsthand);
     }
     
