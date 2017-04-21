@@ -369,13 +369,13 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 		}
 		DataParty dataParty = new DataParty();
 		dataParty.setId(mid);
-		List<DataParty> dataParties= this.dataPartyDao.selectList(dataParty);
-		if(dataParties == null || dataParties.isEmpty()){
+		List<DataParty> dataParties = this.dataPartyDao.selectList(dataParty);
+		if (dataParties == null || dataParties.isEmpty()) {
 			logger.error("没有找到对应的主数据： mid={}", mid);
 			return;
 		}
 		DataParty dp = dataParties.get(0);
-		CampaignMember member = new CampaignMember(campaignId,itemId,dp.getId());
+		CampaignMember member = new CampaignMember(campaignId, itemId, dp.getId());
 		member.setMemberId(0);
 		member.setPhone(dp.getMobile());
 		member.setWxId(dp.getWxmpId());
