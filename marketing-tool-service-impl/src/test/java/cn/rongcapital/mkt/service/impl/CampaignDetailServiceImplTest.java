@@ -12,8 +12,11 @@ package cn.rongcapital.mkt.service.impl;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +37,8 @@ import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.mongodb.CampaignDetail;
+import cn.rongcapital.mkt.po.mongodb.CampaignMember;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.service.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.vo.out.CampaignDetailOut;
@@ -45,8 +50,10 @@ import com.alibaba.fastjson.JSONArray;
 @RunWith(MockitoJUnitRunner.class)
 public class CampaignDetailServiceImplTest extends AbstractUnitTest {
 
-	private String itemId = "456";
 	private Integer campaignHeadId = 123;
+	private String itemId = "456";
+	private Integer campaignId = 123;
+	private Integer mid = 1002;
 	private final static Byte TRIGGER_TYPE = 0; // 触发类型
 	private final static Byte ACTION_TYPE = 3; // 行动类型
 	private final static Byte ITEM_PTYPE = 3; // 节点父类型 @see mysql.campaign_node_item.ptype
@@ -88,9 +95,21 @@ public class CampaignDetailServiceImplTest extends AbstractUnitTest {
 		au2.setDataId(456);
 		NodeAudience au3 = new NodeAudience();
 		au3.setDataId(789);
-		// Criteria criteria = Criteria.where("campaignHeadId").is(123).and("itemId").is("456");
-		Mockito.when(mongoTemplate.find(Mockito.any(Query.class), NodeAudience.class)).thenReturn(Arrays.asList(au1, au2, au3));
-		Mockito.when(mongoTemplate.count(Mockito.any(Query.class), NodeAudience.class)).thenReturn(3L);
+
+		Mockito.when(mongoTemplate.find(Mockito.any(Query.class), Mockito.anyObject())).thenReturn(Arrays.asList(au1, au2, au3));
+		Mockito.when(mongoTemplate.count(Mockito.any(Query.class), Mockito.anyObject())).thenReturn(3L);
+
+		CampaignDetail detail = new CampaignDetail();
+		detail.setCampaignId(campaignId);
+		detail.setIsHaveSubTable(0);
+		detail.setItemId(itemId);
+		detail.setCampaignEndTime(new Date());
+		detail.setCampaignStartTime(new Date());
+		detail.setIsHaveSubTable(0);
+		detail.setItemType(0);
+		detail.setCampaignName("活动");
+		detail.setCampaignMemberNum(1000);
+		Mockito.when(mongoTemplate.findOne(Mockito.any(Query.class), Mockito.anyObject())).thenReturn(detail);
 
 		CampaignSwitch query = new CampaignSwitch();
 		query.setCampaignHeadId(campaignHeadId);
@@ -116,6 +135,8 @@ public class CampaignDetailServiceImplTest extends AbstractUnitTest {
 		ch3.setEndTime(new Date());
 		Mockito.when(campaignHeadDao.selectCampaignProgressStatusListByPublishStatus(Mockito.anyObject()))//
 				.thenReturn(Arrays.asList(ch1, ch2, ch3));
+		Mockito.when(campaignHeadDao.selectList(Mockito.any(CampaignHead.class))).thenReturn(Arrays.asList(ch1, ch2, ch3));
+		
 
 		CampaignBody cb1 = new CampaignBody();
 		cb1.setItemType(TRIGGER_TYPE);
@@ -215,4 +236,65 @@ public class CampaignDetailServiceImplTest extends AbstractUnitTest {
 			System.out.println(cur.getId() + ", " + cur.getMobile() + ", " + cur.getWxCode());
 		}
 	}
+
+	@Test
+	public void saveCampaignDetailTest() {
+		serviceImpl.saveCampaignDetail(campaignId);
+	}
+
+	@Test
+	public void saveCampaignMemberTest() {
+		CampaignMember member = new CampaignMember();
+		member.setCouponId(12345);
+		member.setDealSum(1002.1);
+		member.setIsBuy(0);
+		member.setIsRespond(0);
+		member.setIsTouch(0);
+		member.setMemberId(0);
+		member.setMid(1002);
+		member.setOpenId("123");
+		member.setOrderId(1003L);
+		member.setPhone("15647236987");
+		member.setUpdateTime(new Date());
+		member.setWxId("gh_what");
+		serviceImpl.saveCampaignMember(campaignId, itemId, mid);
+	}
+
+	@Test
+	public void updateCampaignDetailSubTableStatusTest() {
+		serviceImpl.updateCampaignDetailSubTableStatus(campaignId, itemId, 1);
+	}
+
+	@Test
+	public void selectCampaignDetailTest() {
+		CampaignDetail detail = serviceImpl.selectCampaignDetail(campaignId, itemId);
+		System.out.println(detail);
+	}
+
+	@Test
+	public void updateCampaignMemberCouponIdTest() {
+		serviceImpl.updateCampaignMemberCouponId(campaignId, itemId, mid, 6001, 6002);
+		serviceImpl.updateCampaignMemberCouponId(campaignId, itemId, null, 6001, 6002);
+		serviceImpl.updateCampaignMemberCouponId(campaignId, "", mid, 6001, 6002);
+		serviceImpl.updateCampaignMemberCouponId(null, "", mid, 6001, 6002);
+	}
+
+	@Test
+	public void testCreateKey() {
+		Assert.assertEquals("创建key测试失败", serviceImpl.createKey(campaignId, itemId), "key:" + campaignId + ":" + itemId);
+		Assert.assertNull("创建key测试失败", serviceImpl.createKey(campaignId, ""));
+		Assert.assertNull("创建key测试失败", serviceImpl.createKey(campaignId, null));
+		Assert.assertNull("创建key测试失败", serviceImpl.createKey(null, null));
+	}
+
+	@Test
+	public void testMap() {
+		CampaignDetail detail = new CampaignDetail();
+		Map<String, CampaignDetail> cache = new HashMap<String, CampaignDetail>();
+		cache.put("ok", detail);
+		System.out.println(cache);
+		detail.setIsHaveSubTable(1);
+		System.out.println(cache);
+	}
+
 }
