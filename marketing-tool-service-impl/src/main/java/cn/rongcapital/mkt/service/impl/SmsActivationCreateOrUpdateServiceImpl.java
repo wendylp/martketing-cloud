@@ -17,9 +17,7 @@ import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.SmsTaskBodyDao;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
-import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
-import cn.rongcapital.mkt.dataauth.interceptor.DataAuthWriteable;
-import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.CampaignBody;
 import cn.rongcapital.mkt.po.SmsTaskBody;
 import cn.rongcapital.mkt.po.SmsTaskHead;
@@ -52,6 +50,9 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 
 	@Autowired
 	private CampaignActionSendSmsService campaignActionSendSmsService;
+	
+	@Autowired
+	private DataAuthService dataAuthService;	
 
 	private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask";
 
@@ -61,8 +62,6 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 	/**
 	 * @since 1.8
 	 */
-	@DataAuthWriteable(resourceType = "sms_task_head", orgId = "#smsActivationCreateIn.orgId", resourceId = "", type = ParamType.SpEl)
-    @DataAuthPut(resourceType = "sms_task_head", orgId = "#smsActivationCreateIn.orgId", resourceId = "", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public BaseOutput createOrUpdateSmsActivation(SmsActivationCreateIn smsActivationCreateIn) throws JMSException {
@@ -131,7 +130,8 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 				insertSmsTaskHead.setSmsTaskCode(smsActivationCreateIn.getSmsTaskCode());
 				insertSmsTaskHead.setCampaignHeadId(smsActivationCreateIn.getCampaignHeadId()); // 保存活动头id
 				smsTaskHeadDao.insert(insertSmsTaskHead); // 短信头部
-
+				dataAuthService.put(smsActivationCreateIn.getOrgId(), "sms_task_head", insertSmsTaskHead.getId()); //数据权限插入语句
+				
 				// 2:获取task_head的Id,然后将相应得信息分条存储到body表中
 				if (!CollectionUtils.isEmpty(smsActivationCreateIn.getSmsTargetAudienceInArrayList())) {
 					for (SmsTargetAudienceIn smsTargetAudienceIn : smsActivationCreateIn.getSmsTargetAudienceInArrayList()) {
@@ -146,6 +146,7 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 						insertSmsTaskBody.setTargetName(smsTargetAudienceIn.getTargetAudienceName());
 						insertSmsTaskBody.setTargetType(smsTargetAudienceIn.getTargetAudienceType());
 						smsTaskBodyDao.insert(insertSmsTaskBody);
+						
 					}
 				}
 			}
