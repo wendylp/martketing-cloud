@@ -71,11 +71,12 @@ public class AudienceListServiceImpl implements AudienceListService {
 	
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
-	public BaseOutput audienceList(String userToken,Integer size,Integer index,Integer orgId) {
+	public BaseOutput audienceList(String userToken,Integer size,Integer index,Integer orgId, Boolean firsthand) {
 		
 		AudienceList param = new AudienceList();
 		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		param.setOrgId(orgId);
+		param.setFirsthand(firsthand);
 		int totalCount = audienceListDao.selectListCount(param);
 		param.setPageSize(size);
 		param.setStartIndex((index-1)*size);

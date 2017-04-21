@@ -117,10 +117,12 @@ public class MktSmsApi {
 	 */
 	@GET
 	@Path("/mkt.sms.audienct.get")
+	@CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
 	public SmsTargetAudienceListOut smsAudienceListGet(@NotEmpty @QueryParam("user_token") String userToken,
 			@NotNull @QueryParam("org_id") Integer orgId,
-			@QueryParam("ver") String ver) throws Exception {
-		return smsTargetAudienceListGetService.getSmsTargetAudienceList(orgId);
+			@QueryParam("ver") String ver,
+			@QueryParam("firsthand") Boolean firsthand) throws Exception {
+		return smsTargetAudienceListGetService.getSmsTargetAudienceList(orgId, firsthand);
 	}
 
 	/**

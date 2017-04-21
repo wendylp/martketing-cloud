@@ -685,12 +685,13 @@ public class MktDataApi {
      */
     @GET
     @Path("/mkt.audience.list.get")
-//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
     		@NotNull @QueryParam("org_id") Integer orgId,
+            @QueryParam("firsthand") Boolean firsthand,
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
             @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
-        return audienceListService.audienceList(userToken, size, index, orgId);
+        return audienceListService.audienceList(userToken, size, index, orgId, firsthand);
     }
 
     /**
@@ -712,8 +713,9 @@ public class MktDataApi {
      */
     @GET
     @Path("/mkt.audience.all.list.get")
-    public BaseOutput audienceAllList(@NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId) {
-        return audienceAllListService.audienceAllList(userToken, orgId);
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    public BaseOutput audienceAllList(@NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId, @QueryParam("firsthand") Boolean firsthand) {
+        return audienceAllListService.audienceAllList(userToken, orgId, firsthand);
     }
 
     /**
