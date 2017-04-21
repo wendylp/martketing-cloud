@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.caas.agent.spring.CaasAuth;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.CreupdateSegmentService;
 import cn.rongcapital.mkt.service.CustomtagListService;
@@ -315,6 +316,7 @@ public class MktSegmentApi {
     @POST
     @Path("/mkt.segment.creupdate")
     @Consumes({MediaType.APPLICATION_JSON})
+    @CaasAuth(res = "#segmentCreUpdateIn.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
     public BaseOutput createOrUpdateSegment(SegmentCreUpdateIn segmentCreUpdateIn,
             @Context SecurityContext securityContext) {
         return creupdateSegmentService.creupdateSegment(segmentCreUpdateIn);
@@ -418,6 +420,7 @@ public class MktSegmentApi {
      */
     @GET
     @Path("/mkt.segment.publishstatus.list.get")
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public SegmentPublishstatusListOut segmentPublishstatusList(@NotEmpty @QueryParam("user_token") String userToken,
             @NotNull @QueryParam("publish_status") Integer publishStatus,
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
@@ -434,6 +437,7 @@ public class MktSegmentApi {
      */
     @GET
     @Path("/mkt.segment.allsummary.list.get")
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public SegmentSummaryListOut segmentAllSummaryList(@NotEmpty @QueryParam("user_token") String userToken,
             @NotNull @QueryParam("publish_status") Integer publishStatus,
             @NotEmpty @QueryParam("ver") String ver,@NotNull @QueryParam("org_id") Integer orgId,@QueryParam("firsthand") Boolean firsthand) throws Exception {
@@ -491,6 +495,7 @@ public class MktSegmentApi {
     @POST
     @Path("/mkt.segment.header.create")
     @Consumes({ MediaType.APPLICATION_JSON })
+    @CaasAuth(res = "#body.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
     public BaseOutput segmentHeaderCreate(@Valid SegmentHeadCreateIn body, @Context SecurityContext securityContext) {
         return segmentHeaderService.segmentHeaderCreate(body, securityContext);
     }
@@ -503,6 +508,7 @@ public class MktSegmentApi {
      */
     @GET
     @Path("/mkt.segment.publishstatus.count.get")
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public Object segmentPublishstatusCount(@NotEmpty @QueryParam("user_token") String userToken,
             @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("org_id") Integer orgId,@QueryParam("firsthand") Boolean firsthand) throws Exception {
         return segmentPublishStatusCountService.segmentPublishstatusCount(userToken, ver,orgId,firsthand);
