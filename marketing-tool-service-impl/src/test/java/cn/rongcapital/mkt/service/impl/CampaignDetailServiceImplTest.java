@@ -96,8 +96,8 @@ public class CampaignDetailServiceImplTest extends AbstractUnitTest {
 		NodeAudience au3 = new NodeAudience();
 		au3.setDataId(789);
 
-		Mockito.when(mongoTemplate.find(Mockito.any(Query.class), Mockito.anyObject())).thenReturn(Arrays.asList(au1, au2, au3));
-		Mockito.when(mongoTemplate.count(Mockito.any(Query.class), Mockito.anyObject())).thenReturn(3L);
+		// Mockito.when(mongoTemplate.find(Mockito.any(Query.class), Mockito.anyObject())).thenReturn(Arrays.asList(au1, au2, au3));
+		// Mockito.when(mongoTemplate.count(Mockito.any(Query.class), Mockito.anyObject())).thenReturn(3L);
 
 		CampaignDetail detail = new CampaignDetail();
 		detail.setCampaignId(campaignId);
