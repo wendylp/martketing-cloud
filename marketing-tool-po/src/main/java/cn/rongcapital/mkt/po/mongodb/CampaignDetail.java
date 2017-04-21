@@ -1,9 +1,7 @@
 package cn.rongcapital.mkt.po.mongodb;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -39,11 +37,20 @@ public class CampaignDetail implements Serializable {
 	@Field(value = "item_type")
 	private Integer ItemType;
 	@Field(value = "is_have_sub_table")
-	private Integer IsHaveSubTable;
+	private Integer isHaveSubTable = 0;
 	@Field(value = "update_time")
-	private Date updateTime;
-	@Field(value = "campaign_member_list")
-	private List<CampaignMember> campaignMemberList = new ArrayList<CampaignMember>();
+	private Date updateTime = new Date();
+
+	public CampaignDetail() {
+
+	}
+
+	public CampaignDetail(Integer campaignId, String campaignName, Date campaignStartTime, String ItemId) {
+		this.campaignId = campaignId;
+		this.campaignName = campaignName;
+		this.campaignStartTime = campaignStartTime;
+		this.ItemId = ItemId;
+	}
 
 	public Integer getCampaignId() {
 		return campaignId;
@@ -102,11 +109,11 @@ public class CampaignDetail implements Serializable {
 	}
 
 	public Integer getIsHaveSubTable() {
-		return IsHaveSubTable;
+		return isHaveSubTable;
 	}
 
 	public void setIsHaveSubTable(Integer isHaveSubTable) {
-		IsHaveSubTable = isHaveSubTable;
+		this.isHaveSubTable = isHaveSubTable;
 	}
 
 	public Date getUpdateTime() {
@@ -117,20 +124,13 @@ public class CampaignDetail implements Serializable {
 		this.updateTime = updateTime;
 	}
 
-	public List<CampaignMember> getCampaignMemberList() {
-		return campaignMemberList;
-	}
-
-	public void setCampaignMemberList(List<CampaignMember> campaignMemberList) {
-		this.campaignMemberList = campaignMemberList;
-	}
 
 	@Override
 	public String toString() {
 		return "CampaignDetail [id=" + id + ", campaignId=" + campaignId + ", campaignName=" + campaignName
 				+ ", campaignStartTime=" + campaignStartTime + ", campaignEndTime=" + campaignEndTime + ", campaignMemberNum="
-				+ campaignMemberNum + ", ItemId=" + ItemId + ", ItemType=" + ItemType + ", IsHaveSubTable=" + IsHaveSubTable
-				+ ", updateTime=" + updateTime + ", campaignMemberList=" + campaignMemberList + "]";
+				+ campaignMemberNum + ", ItemId=" + ItemId + ", ItemType=" + ItemType + ", isHaveSubTable=" + isHaveSubTable
+				+ ", updateTime=" + updateTime + "]";
 	}
 
 }

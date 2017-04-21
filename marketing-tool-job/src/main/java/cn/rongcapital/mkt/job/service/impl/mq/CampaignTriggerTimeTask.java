@@ -18,6 +18,7 @@ import cn.rongcapital.mkt.dao.TaskScheduleDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.TaskSchedule;
+import cn.rongcapital.mkt.service.CampaignDetailService;
 import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
 import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 
@@ -31,7 +32,8 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
     MessageConsumer consumer = null;
 	@Autowired
 	CampaignHeadDao campaignHeadDao;
-
+	@Autowired
+	private CampaignDetailService campaignDetailService;
     @Autowired
     CampaignHeaderUpdateService campaignHeaderUpdateService;
 	
@@ -55,6 +57,7 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		t.setId(campaignHeadId);
 		t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS);
 		t.setStartTime(new Date()); // @since 1.9 记录活动启动时间
+		this.campaignDetailService.saveCampaignDetail(campaignHeadId); // @since 1.9 记录活动统计数据
 		campaignHeadDao.updateById(t);
 		//激活该活动对应的全部任务
 		taskScheduleDao.activateTaskByCampaignHeadId(campaignHeadId);
@@ -79,6 +82,7 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 				campaignHead.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH);
 				campaignHead.setEndTime(new Date()); // @since 1.9 记录活动手动停止时间
 				campaignHeadDao.updateById(campaignHead);
+				this.campaignDetailService.updateCampaignDetailMemberTotal(campaignHead.getId()); // @since 1.9 记录活动统计数据
 			}
 		}
 	}

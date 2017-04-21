@@ -1,7 +1,10 @@
 package cn.rongcapital.mkt.po.mongodb;
 
+import java.io.Serializable;
 import java.util.Date;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
@@ -9,31 +12,73 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author LiuQ
  * @email Liuqi@rongcapital.cn
  */
-
-public class CampaignMember {
-
+@Document(collection = "campaign_member")
+public class CampaignMember implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@Id
+	private String id;
+	@Field(value = "campaign_id")
+	private Integer campaignId;
+	@Field(value = "item_id")
+	private String itemId;
 	private Integer mid;
 	@Field(value = "member_id")
-	private Integer MemberId;
-	private String Phone;
+	private Integer memberId;
+	private String phone;
 	@Field("wx_id")
-	private String WxId;
+	private String wxId;
 	@Field("open_id")
-	private String OpenId;
+	private String openId;
 	@Field("is_touch")
-	private Integer IsTouch;
+	private Integer isTouch = 0;
 	@Field("is_respond")
-	private Integer IsRespond;
+	private Integer isRespond = 0;
 	@Field("is_buy")
-	private Integer IsBuy;
+	private Integer isBuy = 0;
 	@Field("deal_sum")
-	private Double DealSum;
+	private Double dealSum;
 	@Field("coupon_id")
-	private Integer CouponId;
+	private Integer couponId;
 	@Field("order_id")
-	private Long OrderId;
+	private Long orderId;
 	@Field("update_time")
-	private Date updateTime;
+	private Date updateTime = new Date();
+
+	public CampaignMember() {
+	}
+
+	public CampaignMember(Integer campaignId, String itemId, Integer mid) {
+		this.campaignId = campaignId;
+		this.itemId = itemId;
+		this.mid = mid;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Integer getCampaignId() {
+		return campaignId;
+	}
+
+	public void setCampaignId(Integer campaignId) {
+		this.campaignId = campaignId;
+	}
+
+	public String getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(String itemId) {
+		this.itemId = itemId;
+	}
 
 	public Integer getMid() {
 		return mid;
@@ -44,83 +89,83 @@ public class CampaignMember {
 	}
 
 	public Integer getMemberId() {
-		return MemberId;
+		return memberId;
 	}
 
 	public void setMemberId(Integer memberId) {
-		MemberId = memberId;
+		this.memberId = memberId;
 	}
 
 	public String getPhone() {
-		return Phone;
+		return phone;
 	}
 
 	public void setPhone(String phone) {
-		Phone = phone;
+		this.phone = phone;
 	}
 
 	public String getWxId() {
-		return WxId;
+		return wxId;
 	}
 
 	public void setWxId(String wxId) {
-		WxId = wxId;
+		this.wxId = wxId;
 	}
 
 	public String getOpenId() {
-		return OpenId;
+		return openId;
 	}
 
 	public void setOpenId(String openId) {
-		OpenId = openId;
+		this.openId = openId;
 	}
 
 	public Integer getIsTouch() {
-		return IsTouch;
+		return isTouch;
 	}
 
 	public void setIsTouch(Integer isTouch) {
-		IsTouch = isTouch;
+		this.isTouch = isTouch;
 	}
 
 	public Integer getIsRespond() {
-		return IsRespond;
+		return isRespond;
 	}
 
 	public void setIsRespond(Integer isRespond) {
-		IsRespond = isRespond;
+		this.isRespond = isRespond;
 	}
 
 	public Integer getIsBuy() {
-		return IsBuy;
+		return isBuy;
 	}
 
 	public void setIsBuy(Integer isBuy) {
-		IsBuy = isBuy;
+		this.isBuy = isBuy;
 	}
 
 	public Double getDealSum() {
-		return DealSum;
+		return dealSum;
 	}
 
 	public void setDealSum(Double dealSum) {
-		DealSum = dealSum;
+		this.dealSum = dealSum;
 	}
 
 	public Integer getCouponId() {
-		return CouponId;
+		return couponId;
 	}
 
 	public void setCouponId(Integer couponId) {
-		CouponId = couponId;
+		this.couponId = couponId;
 	}
 
 	public Long getOrderId() {
-		return OrderId;
+		return orderId;
 	}
 
 	public void setOrderId(Long orderId) {
-		OrderId = orderId;
+		this.orderId = orderId;
 	}
 
 	public Date getUpdateTime() {
@@ -133,9 +178,10 @@ public class CampaignMember {
 
 	@Override
 	public String toString() {
-		return "CampaignMember [mid=" + mid + ", MemberId=" + MemberId + ", Phone=" + Phone + ", WxId=" + WxId + ", OpenId="
-				+ OpenId + ", IsTouch=" + IsTouch + ", IsRespond=" + IsRespond + ", IsBuy=" + IsBuy + ", DealSum=" + DealSum
-				+ ", CouponId=" + CouponId + ", OrderId=" + OrderId + ", updateTime=" + updateTime + "]";
+		return "CampaignMember [campaignId=" + campaignId + ", itemId=" + itemId + ", mid=" + mid + ", memberId=" + memberId
+				+ ", phone=" + phone + ", wxId=" + wxId + ", openId=" + openId + ", isTouch=" + isTouch + ", isRespond="
+				+ isRespond + ", isBuy=" + isBuy + ", dealSum=" + dealSum + ", couponId=" + couponId + ", orderId=" + orderId
+				+ ", updateTime=" + updateTime + "]";
 	}
 
 }
