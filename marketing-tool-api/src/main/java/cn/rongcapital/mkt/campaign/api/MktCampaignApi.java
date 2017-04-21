@@ -144,7 +144,7 @@ public class MktCampaignApi {
     @POST
     @Path("/mkt.campaign.header.create")
     @Consumes({MediaType.APPLICATION_JSON})
-//    @CaasAuth(res = "#body.orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#body.orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
     public BaseOutput campaignHeaderCreate(@Valid CampaignHeadCreateIn body, @Context SecurityContext securityContext) {
         return campaignHeaderCreateService.campaignHeaderCreate(body, securityContext);
     }
@@ -189,7 +189,7 @@ public class MktCampaignApi {
     @GET
     @Path("/mkt.campaign.progressstatus.list.get")
     @Consumes({MediaType.APPLICATION_JSON})
-//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput campaignProgressStatusListGet(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId,
             @QueryParam("firsthand") Boolean firsthand, @NotNull @QueryParam("publish_status") Byte publishStatus,
@@ -207,7 +207,7 @@ public class MktCampaignApi {
     @GET
     @Path("/mkt.campaign.progressstatus.count.get")
     @Consumes({MediaType.APPLICATION_JSON})
-//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public CampaignProgressStatusCountOut campaignProgressStatusCount(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId,
             @QueryParam("firsthand") Boolean firsthand) {
@@ -330,7 +330,7 @@ public class MktCampaignApi {
     @POST
     @Path("/mkt.campaign.node.audience.save")
     @Consumes({ MediaType.APPLICATION_JSON })
-//    @CaasAuth(res = "#audience.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#audience.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
     public Object saveCampaignAudience(@Valid Audience audience, @Context SecurityContext securityContext) {
         return saveCampaignAudienceService.saveCampaignAudience(audience, securityContext);
     }
@@ -343,7 +343,7 @@ public class MktCampaignApi {
     @GET
     @Path("/mkt.campaign.summary.get")
     @Consumes({MediaType.APPLICATION_JSON})
-//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput campaignSummaryGet(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId,
             @QueryParam("firsthand") Boolean firsthand) {

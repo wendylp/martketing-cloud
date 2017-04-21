@@ -12,6 +12,6 @@ package cn.rongcapital.mkt.service;
 
 public interface SegmentPublishStatusCountService {
   
-    public Object segmentPublishstatusCount(String userToken,String ver,Integer orgId);
+    public Object segmentPublishstatusCount(String userToken,String ver,Integer orgId,Boolean firsthand);
   
 }

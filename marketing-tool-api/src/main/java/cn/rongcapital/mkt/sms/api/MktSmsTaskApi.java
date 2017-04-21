@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.caas.agent.spring.CaasAuth;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.service.SmsTaskHeadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -47,6 +48,7 @@ public class MktSmsTaskApi {
 	 */
 	@GET
 	@Path("/mkt.sms.smstaskhead.list.get")
+	@CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
 	public BaseOutput smsTaskHeadList(@NotEmpty @QueryParam("user_token") String userToken,@NotEmpty @QueryParam("user_id") String userId, @NotEmpty @QueryParam("ver") String ver,			
 			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
 			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
