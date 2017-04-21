@@ -44,6 +44,8 @@ public class BbxCouponCodeAdd extends BaseQuery{
 
     private Long itemId;
 
+    private String errorMsg;
+
     public Integer getId() {
         return id;
     }
@@ -178,5 +180,13 @@ public class BbxCouponCodeAdd extends BaseQuery{
 
     public void setItemId(Long itemId) {
         this.itemId = itemId;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg == null ? null : errorMsg.trim();
     }
 }

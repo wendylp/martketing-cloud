@@ -69,12 +69,11 @@ public class BbxSynchronizeCouponServiceImpl implements TaskService {
             if(result.getSuccess()){
                 item.setSynchronizeable(Boolean.TRUE);
                 item.setSynchronizedTime(new Date());
-                this.bbxCouponCodeAddDao.updateById(item);
             }else{
-                logger.info("Send coupone code is error,message is :{}",result.getMsg());
-                Thread.sleep(5000);
-                loopSender(item);
+                item.setErrorMsg(result.getMsg());
             }
+            //如果没有异常出现，则做日志记录
+            this.bbxCouponCodeAddDao.updateById(item);
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("Send coupone code is error,message is :{}",e.getMessage());
