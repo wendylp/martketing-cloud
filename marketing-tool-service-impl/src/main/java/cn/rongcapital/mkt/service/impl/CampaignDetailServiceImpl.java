@@ -506,9 +506,12 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 	}
 
 	public String createKey(Integer campaignId, String itemId) {
-		if (campaignId == null || campaignId.intValue() == 0 || StringUtils.isBlank(itemId)) {
-			logger.error("无效的参数, campaignId={}, itemId={}", campaignId, itemId);
+		if (campaignId == null || campaignId.intValue() == 0) {
+			logger.error("无效的参数, campaignId={}", campaignId);
 			return null;
+		}
+		if (StringUtils.isBlank(itemId)) {
+			return "key:" + campaignId + ":";
 		}
 		return "key:" + campaignId + ":" + itemId;
 	}
