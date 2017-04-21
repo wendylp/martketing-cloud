@@ -93,7 +93,7 @@ public class SegmentPublishstatusListServiceTest  {
     public void testSegmentPublishstatusList() {
         logger.info("测试方法: segmentPublishstatusList ");
         
-        SegmentPublishstatusListOut segmentPublishstatusListOut1 = segmentPublishstatusListService.segmentPublishstatusList("", 0, 1, 7, "106", "",null);
+        SegmentPublishstatusListOut segmentPublishstatusListOut1 = segmentPublishstatusListService.segmentPublishstatusList("", 0, 1, 7, "106", "",null,true);
         
         Assert.assertEquals(2, segmentPublishstatusListOut1.getDataCustom().size());
         

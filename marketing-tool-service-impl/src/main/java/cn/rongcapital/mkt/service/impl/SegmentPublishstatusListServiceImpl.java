@@ -65,7 +65,7 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 	@ReadWrite(type=ReadWriteType.READ)
 	public SegmentPublishstatusListOut segmentPublishstatusList(String userToken, 
 										   Integer publishStatus, Integer index,
-										   Integer size, String ver,String keyword,Integer orgId) {
+										   Integer size, String ver,String keyword,Integer orgId,Boolean firsthand) {
 		SegmentationHead t = new SegmentationHead();
 		t.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		if(ApiConstant.SEGMENT_PUBLISH_STATUS_ALL == publishStatus.byteValue()){
@@ -84,9 +84,11 @@ public class SegmentPublishstatusListServiceImpl implements SegmentPublishstatus
 		}
 		//lhz 添加组织机构 
 		t.setOrgId(orgId);
+		t.setFirsthand(firsthand);
 		t.setPageSize(size);
 		t.setStartIndex((index-1)*size);
 		t.getCustomMap().put("keyword", keyword);
+		
 //		t.setOrderFieldType("desc");
 //		t.setOrderField("update_time");
 		int totalCount = segmentationHeadDao.selectListCount(t);

@@ -47,7 +47,7 @@ public class SegmentAllSummaryListServiceImplTest {
 	@Test
 	public void testInvalidPublishStatus() {
 		Mockito.when(segmentationHeadDao.selectListCount(any())).thenReturn(0);
-		SegmentSummaryListOut list = segmentAllSummaryListServiceImpl.segmentAllSummaryList("userToken", 99, "ver",null);
+		SegmentSummaryListOut list = segmentAllSummaryListServiceImpl.segmentAllSummaryList("userToken", 99, "ver",null,true);
 		Assert.assertEquals(0, list.getDataCustom().size());
 	}
 	
@@ -62,7 +62,7 @@ public class SegmentAllSummaryListServiceImplTest {
 		Mockito.when(segmentationHeadDao.selectListByKeyword(any())).thenReturn(expectedList);
 		Mockito.when(segmentManageCalService.scard(any(), any())).thenReturn((long) 10);		
 		
-		SegmentSummaryListOut list = segmentAllSummaryListServiceImpl.segmentAllSummaryList("userToken", 3, "ver",null);
+		SegmentSummaryListOut list = segmentAllSummaryListServiceImpl.segmentAllSummaryList("userToken", 3, "ver",null,true);
 		Assert.assertEquals(1, list.getDataCustom().size());
 		Assert.assertEquals("testhead", list.getDataCustom().get(0).getSegmentName());
 		Assert.assertEquals(10, list.getDataCustom().get(0).getCoverCount().intValue());
