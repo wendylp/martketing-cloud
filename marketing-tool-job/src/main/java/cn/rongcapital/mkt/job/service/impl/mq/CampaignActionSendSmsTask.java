@@ -59,12 +59,6 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 	@Autowired
 	private SmsActivationCreateOrUpdateService smsActivationCreateOrUpdateService;
 	
-    @Autowired
-    private DataAuthMapper dataAuthMapper;
-    
-    @Autowired
-    private DataAuthService service;
-	
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
@@ -151,22 +145,7 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 		//创建发送短信
 		try {
 			SmsActivationCreateIn smsActivationCreateIn = campaignActionSendSmsService.getSmsActivationCreateIn(campaignHeadId, itemId, campaignActionSendSms,dataPartyIds);
-			BaseOutput output = smsActivationCreateOrUpdateService.createOrUpdateSmsActivation(smsActivationCreateIn);
-            if (output.getCode() == ApiErrorCode.SUCCESS.getCode() && CollectionUtils.isNotEmpty(output.getData())) {
-                // 获取ORGID
-                List<DataAuth> owners = dataAuthMapper.selectOwnerByResouceId("campaign_head", campaignHeadId);
-                if (CollectionUtils.isNotEmpty(owners)) {
-                    Long orgId = owners.get(0).getOrgId();
-                    // 添加Auth
-                    SmsTaskHead smsTaskHead = (SmsTaskHead) output.getData().get(0);
-                    DataAuth dataAuth =
-                            this.dataAuthMapper.selectByTableNameResourceIDOrgId("sms_task_head", orgId,
-                                    smsTaskHead.getId());
-                    if (dataAuth == null) {
-                        service.put(orgId, "sms_task_head", smsTaskHead.getId());
-                    }
-                }
-            }
+			smsActivationCreateOrUpdateService.createOrUpdateSmsActivation(smsActivationCreateIn);
 		} catch (JMSException e) {
 			logger.info(queueKey+"-out:"+JSON.toJSONString(e.getMessage()));
 		}
