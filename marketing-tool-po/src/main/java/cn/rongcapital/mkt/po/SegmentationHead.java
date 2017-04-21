@@ -11,6 +11,8 @@ public class SegmentationHead extends BaseQuery {
 	private Integer id;
 	
 	private Integer orgId;
+	
+	private Boolean firsthand;
 
     private String name;
 
@@ -28,7 +30,15 @@ public class SegmentationHead extends BaseQuery {
 
     private String tagIds;
     
-    public Integer getOrgId() {
+    public Boolean getFirsthand() {
+		return firsthand;
+	}
+
+	public void setFirsthand(Boolean firsthand) {
+		this.firsthand = firsthand;
+	}
+
+	public Integer getOrgId() {
 		return orgId;
 	}
 
