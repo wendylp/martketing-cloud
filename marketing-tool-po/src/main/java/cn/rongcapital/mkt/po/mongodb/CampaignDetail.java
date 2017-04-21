@@ -33,9 +33,9 @@ public class CampaignDetail implements Serializable {
 	@Field(value = "campaign_member_num")
 	private Integer campaignMemberNum;
 	@Field(value = "item_id")
-	private String ItemId;
+	private String itemId;
 	@Field(value = "item_type")
-	private Integer ItemType;
+	private Integer itemType;
 	@Field(value = "is_have_sub_table")
 	private Integer isHaveSubTable = 0;
 	@Field(value = "update_time")
@@ -45,11 +45,11 @@ public class CampaignDetail implements Serializable {
 
 	}
 
-	public CampaignDetail(Integer campaignId, String campaignName, Date campaignStartTime, String ItemId) {
+	public CampaignDetail(Integer campaignId, String campaignName, Date campaignStartTime, String itemId) {
 		this.campaignId = campaignId;
 		this.campaignName = campaignName;
 		this.campaignStartTime = campaignStartTime;
-		this.ItemId = ItemId;
+		this.itemId = itemId;
 	}
 
 	public Integer getCampaignId() {
@@ -93,19 +93,19 @@ public class CampaignDetail implements Serializable {
 	}
 
 	public String getItemId() {
-		return ItemId;
+		return itemId;
 	}
 
 	public void setItemId(String itemId) {
-		ItemId = itemId;
+		this.itemId = itemId;
 	}
 
 	public Integer getItemType() {
-		return ItemType;
+		return itemType;
 	}
 
 	public void setItemType(Integer itemType) {
-		ItemType = itemType;
+		this.itemType = itemType;
 	}
 
 	public Integer getIsHaveSubTable() {
@@ -129,7 +129,7 @@ public class CampaignDetail implements Serializable {
 	public String toString() {
 		return "CampaignDetail [id=" + id + ", campaignId=" + campaignId + ", campaignName=" + campaignName
 				+ ", campaignStartTime=" + campaignStartTime + ", campaignEndTime=" + campaignEndTime + ", campaignMemberNum="
-				+ campaignMemberNum + ", ItemId=" + ItemId + ", ItemType=" + ItemType + ", isHaveSubTable=" + isHaveSubTable
+				+ campaignMemberNum + ", ItemId=" + itemId + ", ItemType=" + itemType + ", isHaveSubTable=" + isHaveSubTable
 				+ ", updateTime=" + updateTime + "]";
 	}
 
