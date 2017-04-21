@@ -15,7 +15,7 @@ public interface UserInfoDao extends BaseDao<UserInfo>{
      * @return: UserInfo      
      * @throws
      */
-    public UserInfo getUserInfo(@Param("userId") String userId, @Param("userCode") String userCode);
+    public UserInfo getUserInfo(@Param("userId") String userId);
     
     
      //add by lhz

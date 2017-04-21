@@ -13,7 +13,7 @@ public interface GetUserInfoService {
      * @return: UserInfo      
      * @throws
      */
-     BaseOutput getUserInfo(String userId, String userCode);
+     BaseOutput getUserInfo(String userId);
      
      
      
